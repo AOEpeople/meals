@@ -21,6 +21,11 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface {
      */
     protected $dishes = array();
 
+    /**
+     * @var int
+     */
+    protected $counter = 0;
+
     function load(ObjectManager $manager) {
         $this->objectManager = $manager;
         $this->loadDishes();
@@ -35,6 +40,7 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface {
                 $meal->setDateTime(clone $date);
                 $meal->setDish($this->getRandomDish());
                 $this->objectManager->persist($meal);
+                $this->addReference('meal-' . $this->counter++, $meal);
             }
 
             $date->modify('+1 day');

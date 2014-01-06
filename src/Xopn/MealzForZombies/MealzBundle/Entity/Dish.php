@@ -98,4 +98,8 @@ class Dish
         return $this->title;
     }
 
+    public function __toString() {
+        return $this->getTitle();
+    }
+
 }

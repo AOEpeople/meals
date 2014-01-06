@@ -1,0 +1,23 @@
+{% extends '::base.html.twig' %}
+{% block body %}
+	<h1>Login</h1>
+	{% if error %}
+		<div class="alert alert-danger">{{ error.message }}</div>
+	{% endif %}
+
+	<form action="{{ path('XopnMealzForZombiesZombiesBundle_checkLogin') }}" method="post">
+		<div class="input-group input-group-lg">
+			<span class="input-group-addon">@</span>
+			<input type="text" class="form-control" placeholder="Username" id="username" name="_username" value="{{ last_username }}" />
+		</div>
+
+		<div class="input-group input-group-lg">
+			<span class="input-group-addon">*</span>
+			<input type="password" class="form-control" placeholder="Password" id="password" name="_password" />
+		</div>
+
+		<button type="submit" class="btn btn-default navbar-btn">Login</button>
+	</form>
+
+
+{% endblock %}

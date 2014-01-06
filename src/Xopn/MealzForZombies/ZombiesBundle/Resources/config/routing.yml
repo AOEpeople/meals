@@ -1,0 +1,12 @@
+XopnMealzForZombiesZombiesBundle_login:
+    pattern:  /login
+    defaults: { _controller: "XopnMealzForZombiesZombiesBundle:Security:login" }
+    methods:  [GET]
+
+XopnMealzForZombiesZombiesBundle_checkLogin:
+    pattern:  /login
+    # magic method that Symfony intercepts and is therefore never called
+
+XopnMealzForZombiesZombiesBundle_logout:
+    pattern:  /logout
+    # magic method that Symfony intercepts and is therefore never called

@@ -1,9 +1,7 @@
 xopn_mealz_for_zombies_zombies:
-    resource: "@XopnMealzForZombiesZombiesBundle/Controller/"
-    type:     annotation
+    resource: "@XopnMealzForZombiesZombiesBundle/Resources/config/routing.yml"
     prefix:   /
 
 xopn_mealz_for_zombies_mealz:
-    resource: "@XopnMealzForZombiesMealzBundle/Controller/"
-    type:     annotation
+    resource: "@XopnMealzForZombiesMealzBundle/Resources/config/routing.yml"
     prefix:   /

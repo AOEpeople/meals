@@ -5,3 +5,7 @@ XopnMealzForZombiesMealzBundle_home:
 XopnMealzForZombiesMealzBundle_Meal_list:
     pattern:  /menu
     defaults: { _controller: "XopnMealzForZombiesMealzBundle:Meal:list" }
+
+XopnMealzForZombiesMealzBundle_Meal_show:
+    pattern:  /menu/{meal}
+    defaults: { _controller: "XopnMealzForZombiesMealzBundle:Meal:show" }

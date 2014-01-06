@@ -87,6 +87,14 @@ class Meal
         return $this->dish;
     }
 
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getParticipants()
+    {
+        return $this->participants;
+    }
+
     function __toString() {
         return $this->getDateTime()->format('Y-m-d H:i:s') . ' ' . $this->getDish();
     }

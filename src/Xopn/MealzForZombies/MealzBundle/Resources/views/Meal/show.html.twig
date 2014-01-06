@@ -1,0 +1,26 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+	{% set dish = meal.dish %}
+	<h1>{{ dish.title }}</h1>
+	<p class="text-muted">on {{ meal.dateTime | date('Y-m-d H:i') }}</p>
+
+	<h2>
+		{% if meal.participants | length > 1 %}
+			{{ meal.participants | length }} Participants
+		{% elseif meal.participants | length == 1 %}One Participant
+		{% else %}No Participants
+		{% endif %}
+	</h2>
+	<table class="table table-striped">
+		<tbody>
+		{% for participant in meal.participants %}
+			{% set user=participant.user %}
+			<tr>
+				<td>{{ user.username }}</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
+
+{% endblock %}

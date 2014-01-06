@@ -6,6 +6,7 @@ namespace Xopn\MealzForZombies\MealzBundle\Controller;
 
 use Doctrine\ORM\Query;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Xopn\MealzForZombies\MealzBundle\Entity\Meal;
 
 class MealController extends Controller {
 
@@ -41,6 +42,12 @@ class MealController extends Controller {
 
         return $this->render('XopnMealzForZombiesMealzBundle:Meal:list.html.twig', array(
             'meals' => $meals
+        ));
+    }
+
+    public function showAction(Meal $meal) {
+        return $this->render('XopnMealzForZombiesMealzBundle:Meal:show.html.twig', array(
+            'meal' => $meal
         ));
     }
 

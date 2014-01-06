@@ -1,0 +1,9 @@
+xopn_mealz_for_zombies_zombies:
+    resource: "@XopnMealzForZombiesZombiesBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+xopn_mealz_for_zombies_mealz:
+    resource: "@XopnMealzForZombiesMealzBundle/Controller/"
+    type:     annotation
+    prefix:   /

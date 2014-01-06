@@ -169,4 +169,8 @@ class Zombie implements UserInterface, \Serializable
     {
         // nothing to do here
     }
+
+    public function __toString() {
+        return $this->getUsername();
+    }
 }

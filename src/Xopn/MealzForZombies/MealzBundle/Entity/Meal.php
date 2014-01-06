@@ -2,6 +2,7 @@
 
 namespace Xopn\MealzForZombies\MealzBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -33,6 +34,16 @@ class Meal
      * @var \DateTime
      */
     protected $dateTime;
+
+    /**
+     * @var ArrayCollection
+     * @ORM\OneToMany(targetEntity="Participant", mappedBy="meal")
+     */
+    protected $participants;
+
+    public function __construct() {
+        $this->participants = new ArrayCollection();
+    }
 
     /**
      * Get id

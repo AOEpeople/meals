@@ -22,7 +22,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="{{ path('XopnMealzForZombiesMealzBundle_home') }}">Mealz for Zombies</a>
+				<a class="navbar-brand" href="{{ path('MealzMealBundle_home') }}">Mealz for Zombies</a>
 			</div>
 			{#<div class="collapse navbar-collapse">#}
 				{#<ul class="nav navbar-nav">#}
@@ -34,13 +34,13 @@
 			<div class="navbar-collapse collapse">
 			{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
 				<div class="navbar-form navbar-right">
-					<a class="btn btn-danger" href="{{ path('XopnMealzForZombiesZombiesBundle_logout') }}">Log out</a>
+					<a class="btn btn-danger" href="{{ path('MealzUserBundle_logout') }}">Log out</a>
 				</div>
 				<div class="navbar-text navbar-right ">
 					Hi <strong>{{ app.user.username }}</strong>
 				</div>
 			{% else %}
-				<form class="navbar-form navbar-right" role="form" action="{{ path('XopnMealzForZombiesZombiesBundle_checkLogin') }}" method="post">
+				<form class="navbar-form navbar-right" role="form" action="{{ path('MealzUserBundle_checkLogin') }}" method="post">
 					<div class="form-group">
 						<input type="text" placeholder="Username" class="form-control" name="_username" />
 					</div>

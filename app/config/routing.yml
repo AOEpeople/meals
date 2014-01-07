@@ -1,7 +1,7 @@
 xopn_mealz_for_zombies_zombies:
-    resource: "@XopnMealzForZombiesZombiesBundle/Resources/config/routing.yml"
+    resource: "@MealzUserBundle/Resources/config/routing.yml"
     prefix:   /
 
 xopn_mealz_for_zombies_mealz:
-    resource: "@XopnMealzForZombiesMealzBundle/Resources/config/routing.yml"
+    resource: "@MealzMealBundle/Resources/config/routing.yml"
     prefix:   /

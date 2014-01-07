@@ -1,0 +1,31 @@
+{% extends '::base.html.twig' %}
+
+{% block header %}
+	<div class="container">
+		<h1>Mealz for Zombies</h1>
+		<p>
+			Scavenging for something eatable?
+		</p>
+		<p>
+			Your friendly humans at AOE prepared some meals for you. Just register and stop by.
+		</p>
+		<p>
+			<a class="btn btn-success btn-lg" role="button" href="{{ path('MealzMealBundle_Meal_list') }}">Current menu</a>
+			<a class="btn btn-primary btn-lg" role="button" href="{{ path('MealzMealBundle_Meal_list') }}">Register now &raquo;</a>
+		</p>
+	</div>
+{% endblock %}
+
+{% block body %}
+	<h1>Coming up</h1>
+	<div class="row">
+	{% for meal in meals %}
+		{% set dish=meal.dish %}
+		<div class="col-md-3">
+			<h2>{{ dish.title }}</h2>
+			{% if dish.description %}<p>{{ dish.description }}</p>{% endif %}
+		</div>
+	{% endfor %}
+	</div>
+
+{% endblock %}

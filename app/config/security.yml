@@ -1,6 +1,6 @@
 security:
     encoders:
-        Xopn\MealzForZombies\ZombiesBundle\Entity\Zombie:
+        Mealz\UserBundle\Entity\Zombie:
             algorithm:        sha1
             encode_as_base64: false
             iterations:       1
@@ -10,17 +10,17 @@ security:
 
     providers:
         user:
-            entity: { class: XopnMealzForZombiesZombiesBundle:Zombie, property: username }
+            entity: { class: MealzUserBundle:Zombie, property: username }
 
     firewalls:
         mealz:
             pattern: ^/
             anonymous: ~
             form_login:
-                login_path:  XopnMealzForZombiesZombiesBundle_login
-                check_path:  XopnMealzForZombiesZombiesBundle_checkLogin
+                login_path:  MealzUserBundle_login
+                check_path:  MealzUserBundle_checkLogin
             logout:
-                path:   XopnMealzForZombiesZombiesBundle_logout
+                path:   MealzUserBundle_logout
                 target: /
         dev:
             pattern:  ^/(_(profiler|wdt)|css|images|js)/

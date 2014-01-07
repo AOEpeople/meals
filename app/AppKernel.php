@@ -16,8 +16,8 @@ class AppKernel extends Kernel
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
-            new Xopn\MealzForZombies\MealzBundle\XopnMealzForZombiesMealzBundle(),
-            new Xopn\MealzForZombies\ZombiesBundle\XopnMealzForZombiesZombiesBundle(),
+            new Mealz\MealBundle\MealzMealBundle(),
+            new Mealz\UserBundle\MealzUserBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

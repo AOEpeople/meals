@@ -1,3 +1,9 @@
-parameters: ~
+parameters:
+  mealz_meal.participant.class: Mealz\MealBundle\Service\ParticipantService
 
-services: ~
+services:
+  mealz_meal.participant:
+    class: %mealz_meal.participant.class%
+    arguments: [ @doctrine.orm.default_entity_manager ]
+    tags:
+      - { name: twig.extension }

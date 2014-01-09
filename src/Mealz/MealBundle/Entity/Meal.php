@@ -13,91 +13,91 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Meal
 {
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+	/**
+	 * @var integer
+	 *
+	 * @ORM\Column(name="id", type="integer")
+	 * @ORM\Id
+	 * @ORM\GeneratedValue(strategy="AUTO")
+	 */
+	private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Dish")
-     * @ORM\JoinColumn(name="dish_id", referencedColumnName="id")
-     * @var Dish
-     */
-    protected $dish;
+	/**
+	 * @ORM\ManyToOne(targetEntity="Dish")
+	 * @ORM\JoinColumn(name="dish_id", referencedColumnName="id")
+	 * @var Dish
+	 */
+	protected $dish;
 
-    /**
-     * @ORM\Column(type="datetime", nullable=FALSE)
-     * @var \DateTime
-     */
-    protected $dateTime;
+	/**
+	 * @ORM\Column(type="datetime", nullable=FALSE)
+	 * @var \DateTime
+	 */
+	protected $dateTime;
 
-    /**
-     * @var ArrayCollection
-     * @ORM\OneToMany(targetEntity="Participant", mappedBy="meal")
-     */
-    protected $participants;
+	/**
+	 * @var ArrayCollection
+	 * @ORM\OneToMany(targetEntity="Participant", mappedBy="meal")
+	 */
+	protected $participants;
 
-    public function __construct() {
-        $this->participants = new ArrayCollection();
-    }
+	public function __construct() {
+		$this->participants = new ArrayCollection();
+	}
 
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+	/**
+	 * Get id
+	 *
+	 * @return integer
+	 */
+	public function getId()
+	{
+		return $this->id;
+	}
 
-    /**
-     * @param \DateTime $dateTime
-     */
-    public function setDateTime($dateTime)
-    {
-        $this->dateTime = $dateTime;
-    }
+	/**
+	 * @param \DateTime $dateTime
+	 */
+	public function setDateTime($dateTime)
+	{
+		$this->dateTime = $dateTime;
+	}
 
-    /**
-     * @return \DateTime
-     */
-    public function getDateTime()
-    {
-        return $this->dateTime;
-    }
+	/**
+	 * @return \DateTime
+	 */
+	public function getDateTime()
+	{
+		return $this->dateTime;
+	}
 
-    /**
-     * @param \Mealz\MealBundle\Entity\Dish $dish
-     */
-    public function setDish($dish)
-    {
-        $this->dish = $dish;
-    }
+	/**
+	 * @param \Mealz\MealBundle\Entity\Dish $dish
+	 */
+	public function setDish($dish)
+	{
+		$this->dish = $dish;
+	}
 
-    /**
-     * @return \Mealz\MealBundle\Entity\Dish
-     */
-    public function getDish()
-    {
-        return $this->dish;
-    }
+	/**
+	 * @return \Mealz\MealBundle\Entity\Dish
+	 */
+	public function getDish()
+	{
+		return $this->dish;
+	}
 
-    /**
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getParticipants()
-    {
-        return $this->participants;
-    }
+	/**
+	 * @return \Doctrine\Common\Collections\ArrayCollection
+	 */
+	public function getParticipants()
+	{
+		return $this->participants;
+	}
 
-    function __toString() {
-        return $this->getDateTime()->format('Y-m-d H:i:s') . ' ' . $this->getDish();
-    }
+	function __toString() {
+		return $this->getDateTime()->format('Y-m-d H:i:s') . ' ' . $this->getDish();
+	}
 
 
 }

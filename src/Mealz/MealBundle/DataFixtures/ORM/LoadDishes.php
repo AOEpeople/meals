@@ -10,38 +10,38 @@ use Mealz\MealBundle\Entity\Dish;
 
 class LoadDishes extends AbstractFixture implements OrderedFixtureInterface {
 
-    /**
-     * @var ObjectManager
-     */
-    protected $objectManager;
+	/**
+	 * @var ObjectManager
+	 */
+	protected $objectManager;
 
-    /**
-     * @var int
-     */
-    protected $counter = 0;
+	/**
+	 * @var int
+	 */
+	protected $counter = 0;
 
-    function load(ObjectManager $manager) {
-        $this->objectManager = $manager;
+	function load(ObjectManager $manager) {
+		$this->objectManager = $manager;
 
-        $this->addDish('Braaaaaiiinnnzzzzzz with Tomato-Sauce');
-        $this->addDish('Tasty Worms');
-        $this->addDish('Braaaaaiiinnnzzzzzz with Cheese-Sauce');
-        $this->addDish('Fish (so juicy sweat)');
-        $this->addDish('Limbs');
+		$this->addDish('Braaaaaiiinnnzzzzzz with Tomato-Sauce');
+		$this->addDish('Tasty Worms');
+		$this->addDish('Braaaaaiiinnnzzzzzz with Cheese-Sauce');
+		$this->addDish('Fish (so juicy sweat)');
+		$this->addDish('Limbs');
 
-        $this->objectManager->flush();
-    }
+		$this->objectManager->flush();
+	}
 
-    protected function addDish($title) {
-        $dish = new Dish();
-        $dish->setTitle($title);
+	protected function addDish($title) {
+		$dish = new Dish();
+		$dish->setTitle($title);
 
-        $this->objectManager->persist($dish);
-        $this->addReference('dish-' . $this->counter++, $dish);
-    }
+		$this->objectManager->persist($dish);
+		$this->addReference('dish-' . $this->counter++, $dish);
+	}
 
-    public function getOrder()
-    {
-        return 1;
-    }
+	public function getOrder()
+	{
+		return 1;
+	}
 }

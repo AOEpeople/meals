@@ -62,6 +62,13 @@
 
 	{% if block('body') %}
 	<div class="container">
+		{% for severity in ['danger', 'warning', 'info', 'success'] %}
+			{% for flashMessage in app.session.flashbag.get(severity) %}
+				<div class="alert alert-{{ severity }}">
+					{{ flashMessage }}
+				</div>
+			{% endfor %}
+		{% endfor %}
 		{% block body %}{% endblock %}
 	</div>
 	{% endif %}

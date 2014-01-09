@@ -1,9 +1,22 @@
 parameters:
-  mealz_meal.participant.class: Mealz\MealBundle\Service\ParticipantService
+  mealz_meal.twig_extension.participant.class: Mealz\MealBundle\Twig\Extension\Participant
+  mealz_meal.twig_extension.doorman.class: Mealz\MealBundle\Twig\Extension\Doorman
+  mealz_meal.doorman.class: Mealz\MealBundle\Service\Doorman
 
 services:
-  mealz_meal.participant:
-    class: %mealz_meal.participant.class%
-    arguments: [ @doctrine.orm.default_entity_manager ]
+
+  mealz_meal.doorman:
+    class: %mealz_meal.doorman.class%
+    arguments: [ @security.context ]
+
+  mealz_meal.twig_extension.participant:
+    class: %mealz_meal.twig_extension.participant.class%
+    arguments: [ @doctrine.orm.default_entity_manager, @security.context ]
+    tags:
+      - { name: twig.extension }
+
+  mealz_meal.twig_extension.doorman:
+    class: %mealz_meal.twig_extension.doorman.class%
+    arguments: [ @mealz_meal.doorman ]
     tags:
       - { name: twig.extension }

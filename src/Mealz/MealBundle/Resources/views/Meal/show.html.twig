@@ -6,10 +6,32 @@
 	<p class="text-muted">on {{ meal.dateTime | date('Y-m-d H:i') }}</p>
 
 	{% if app.user %}
-		{% if app.user|is_participant(meal) %}
-			<span class="btn btn-success">You are attending</span>
-		{% else %}
-			<span class="btn btn-danger">You are not attending</span>
+		{% if is_granted('ROLE_USER') %}
+			<div class="btn-group">
+				{% if is_participant(meal) %}
+					<span class="btn btn-info">you join</span>
+					{% if is_allowed_to_leave(meal) %}
+						<a
+								class="btn btn-default"
+								href="{{ path('MealzMealBundle_Participant_leave', {meal:meal.id}) }}"
+								title="Leave"
+								>
+							<strong>-</strong>
+						</a>
+					{% endif %}
+				{% else %}
+					<span class="btn btn-default">you do not join</span>
+					{% if is_allowed_to_join(meal) %}
+						<a
+								class="btn btn-default"
+								href="{{ path('MealzMealBundle_Participant_join', {meal:meal.id}) }}"
+								title="Join"
+								>
+							<strong>+</strong>
+						</a>
+					{% endif %}
+				{% endif %}
+			</div>
 		{% endif %}
 	{% endif %}
 

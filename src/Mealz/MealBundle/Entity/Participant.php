@@ -9,7 +9,7 @@ use Mealz\UserBundle\Entity\Zombie;
  * Dish
  *
  * @ORM\Table(name="participant")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Mealz\MealBundle\Entity\ParticipantRepository")
  */
 class Participant
 {

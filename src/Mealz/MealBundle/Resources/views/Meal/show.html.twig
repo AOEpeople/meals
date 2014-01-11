@@ -9,7 +9,8 @@
 	{% if app.user %}
 		{% if is_granted('ROLE_USER') %}
 			<div class="btn-group">
-				{% if is_participant(meal) %}
+				{% set participant = meal.getParticipant(app.user) %}
+				{% if participant %}
 					<span class="btn btn-info">you join</span>
 					{% if is_allowed_to_leave(meal) %}
 						<a

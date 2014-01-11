@@ -6,7 +6,6 @@ namespace Mealz\MealBundle\Controller;
 
 use Doctrine\ORM\Query;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Mealz\MealBundle\Entity\Meal;
 
 class MealController extends Controller {
 
@@ -31,9 +30,11 @@ class MealController extends Controller {
 	public function listAction() {
 		/** @var Query $query */
 		$query = $this->getDoctrine()->getManager()->createQuery('
-			SELECT m,d
+			SELECT m,d,p,u
 			FROM MealzMealBundle:Meal m
 			JOIN m.dish d
+			LEFT JOIN m.participants p
+			LEFT JOIN p.user u
 			WHERE m.dateTime > :min_date
 			ORDER BY m.dateTime ASC
 		');
@@ -45,7 +46,24 @@ class MealController extends Controller {
 		));
 	}
 
-	public function showAction(Meal $meal) {
+	public function showAction($meal) {
+		/** @var Query $query */
+		$query = $this->getDoctrine()->getManager()->createQuery('
+			SELECT m,d,p,u
+			FROM MealzMealBundle:Meal m
+			JOIN m.dish d
+			LEFT JOIN m.participants p
+			LEFT JOIN p.user u
+			WHERE m.id = :meal_id
+		');
+		$query->setMaxResults(1);
+		$meal = $query->execute(array('meal_id' => intval($meal)));
+		if(!$meal) {
+			throw $this->createNotFoundException('The given meal does not exist');
+		} else {
+			$meal = current($meal);
+		}
+
 		return $this->render('MealzMealBundle:Meal:show.html.twig', array(
 			'meal' => $meal
 		));

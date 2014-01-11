@@ -21,7 +21,7 @@ class ParticipantRepository extends EntityRepository {
 		$em->getConnection()->beginTransaction();
 
 		try {
-			if($this->checkIfIsParticipant($participant->getUser(), $participant->getMeal())) {
+			if($this->isParticipant($participant->getUser(), $participant->getMeal())) {
 				// if user is already registered
 				throw new \InvalidArgumentException(sprintf(
 					'User %s already joined %s.',
@@ -89,22 +89,12 @@ class ParticipantRepository extends EntityRepository {
 		}
 	}
 
-	public function isParticipant(Zombie $user, Meal $meal)  {
-		/* @TODO: the idea is to have some kind of preloading here, so just one query is needed to fetch the
-		/* info which meals in a list the currently logged in user has booked.
-		 */
-
-		// @TODO: some kind of cache
-
-		return $this->checkIfIsParticipant($user, $meal);
-	}
-
 	/**
 	 * @param Zombie $user
 	 * @param Meal $meal
 	 * @return bool
 	 */
-	protected function checkIfIsParticipant(Zombie $user, Meal $meal) {
+	protected function isParticipant(Zombie $user, Meal $meal) {
 		/** @var Query $query */
 		$query = $this->getEntityManager()->createQuery('
 			SELECT COUNT(p.id)

@@ -4,6 +4,7 @@ namespace Mealz\MealBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Mealz\UserBundle\Entity\Zombie;
 
 /**
  * Meal
@@ -93,6 +94,22 @@ class Meal
 	public function getParticipants()
 	{
 		return $this->participants;
+	}
+
+	/**
+	 * get the participant object of the given user if he is registered
+	 *
+	 * @param Zombie $user
+	 * @return \Mealz\MealBundle\Entity\Participant|null
+	 */
+	public function getParticipant(Zombie $user) {
+		foreach($this->participants as $participant) {
+			/** @var Participant $participant */
+			if($participant->getUser() === $user) {
+				return $participant;
+			}
+		}
+		return NULL;
 	}
 
 	function __toString() {

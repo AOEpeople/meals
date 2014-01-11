@@ -82,6 +82,12 @@ class ParticipantController extends BaseController {
 		return $this->redirect($this->generateUrlTo($meal));
 	}
 
+	/**
+	 * @param Meal $meal
+	 * @param Request $request
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+	 * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+	 */
 	public function commentAction(Meal $meal, Request $request) {
 		if(!$this->getUser() instanceof Zombie) {
 			throw new AccessDeniedException();

@@ -21,6 +21,8 @@ class Doorman extends \Twig_Extension {
 		return array(
 			'is_allowed_to_join' => new \Twig_Function_Method($this, 'isUserAllowedToJoin'),
 			'is_allowed_to_leave' => new \Twig_Function_Method($this, 'isUserAllowedToLeave'),
+			'is_allowed_to_add_guest' => new \Twig_Function_Method($this, 'isUserAllowedToAddGuest'),
+			'is_allowed_to_remove_guest' => new \Twig_Function_Method($this, 'isUserAllowedToRemoveGuest'),
 		);
 	}
 
@@ -32,6 +34,16 @@ class Doorman extends \Twig_Extension {
 	public function isUserAllowedToLeave(Meal $meal) {
 		// proxy method
 		return $this->doormanService->isUserAllowedToLeave($meal);
+	}
+
+	public function isUserAllowedToAddGuest(Meal $meal) {
+		// proxy method
+		return $this->doormanService->isUserAllowedToAddGuest($meal);
+	}
+
+	public function isUserAllowedToRemoveGuest(Meal $meal) {
+		// proxy method
+		return $this->doormanService->isUserAllowedToRemoveGuest($meal);
 	}
 
 	/**

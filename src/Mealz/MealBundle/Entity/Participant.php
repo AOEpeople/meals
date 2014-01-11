@@ -45,6 +45,13 @@ class Participant
 	protected $comment;
 
 	/**
+	 * @Assert\Length(min=3, max=255)
+	 * @ORM\Column(type="string", length=255, nullable=TRUE)
+	 * @var string
+	 */
+	protected $guestName;
+
+	/**
 	 * @return int
 	 */
 	public function getId()
@@ -98,6 +105,29 @@ class Participant
 	public function getComment()
 	{
 		return $this->comment;
+	}
+
+	/**
+	 * @param string $guestName
+	 */
+	public function setGuestName($guestName)
+	{
+		$this->guestName = $guestName ?: NULL;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isGuest() {
+		return (bool)$this->getGuestName();
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getGuestName()
+	{
+		return $this->guestName;
 	}
 
 	function __toString()

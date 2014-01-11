@@ -1,5 +1,6 @@
-Installation
-------------
+# Mealz for Zombies
+
+## Installation
 
     composer install
 
@@ -34,3 +35,9 @@ Apache configuration
     </VirtualHost>
 
 Point your webbrowser to http://mealz.local
+
+## Troubleshooting
+
+### SQLSTATE[42S22]: Column not found: 1054 Unknown column
+
+    php app/console doctrine:schema:update --force --env=dev

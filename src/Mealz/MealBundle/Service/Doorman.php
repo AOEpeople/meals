@@ -56,6 +56,16 @@ class Doorman {
 		return FALSE;
 	}
 
+	public function isUserAllowedToAddGuest(Meal $meal) {
+		// @TODO: add a separate role for that
+		return $this->isUserAllowedToJoin($meal);
+	}
+
+	public function isUserAllowedToRemoveGuest(Meal $meal) {
+		// @TODO: add a separate role for that
+		return $this->isUserAllowedToLeave($meal);
+	}
+
 
 
 }

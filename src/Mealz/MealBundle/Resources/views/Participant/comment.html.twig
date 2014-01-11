@@ -1,0 +1,9 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+	<div class="container">
+		<h1>Comment on "{{ meal.dish.title }}"</h1>
+
+		{{ form(form) }}
+	</div>
+{% endblock %}

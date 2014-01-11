@@ -121,4 +121,24 @@ class ParticipantRepository extends EntityRepository {
 		return $query->execute(null, Query::HYDRATE_SINGLE_SCALAR) > 0;
 	}
 
+	/**
+	 * @param Zombie $user
+	 * @param Meal $meal
+	 * @return Participant|null
+	 */
+	public function getParticipantByUserAndMeal(Zombie $user, Meal $meal) {
+		$query = $this->getEntityManager()->createQuery('
+			SELECT p,m,u
+			FROM MealzMealBundle:Participant p
+			JOIN p.meal m
+			JOIN p.user u
+			WHERE m = :meal AND u = :user
+		');
+		$participants = $query->execute(array(
+			'meal' => $meal->getId(),
+			'user' => $user->getUsername()
+		));
+		return $participants ? current($participants) : NULL;
+	}
+
 }

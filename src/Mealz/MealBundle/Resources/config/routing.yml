@@ -17,3 +17,7 @@ MealzMealBundle_Participant_join:
 MealzMealBundle_Participant_leave:
     pattern:  /menu/{meal}/leave
     defaults: { _controller: "MealzMealBundle:Participant:leave" }
+
+MealzMealBundle_Participant_comment:
+    pattern:  /menu/{meal}/comment
+    defaults: { _controller: "MealzMealBundle:Participant:comment" }

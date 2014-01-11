@@ -11,6 +11,7 @@ use Mealz\MealBundle\Service\Doorman;
 use Mealz\UserBundle\Entity\Zombie;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Mealz\MealBundle\Entity\Meal;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class ParticipantController extends Controller {
@@ -22,6 +23,20 @@ class ParticipantController extends Controller {
 		return $this->get('mealz_meal.doorman');
 	}
 
+	/**
+	 * @return ParticipantRepository
+	 */
+	protected function getParticipantRepository() {
+		return $this->getDoctrine()->getRepository('MealzMealBundle:Participant');
+	}
+
+	/**
+	 * let the currently logged in user join the given meal
+	 *
+	 * @param Meal $meal
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+	 */
 	public function joinAction(Meal $meal) {
 		if(!$this->getUser() instanceof Zombie) {
 			throw new AccessDeniedException();
@@ -35,10 +50,8 @@ class ParticipantController extends Controller {
 			$participant->setUser($this->getUser());
 			$participant->setMeal($meal);
 
-			/** @var ParticipantRepository $participantRepository */
-			$participantRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Participant');
-			// that method ensures consistency by using a transaction
-			$participantRepository->addParticipant($participant);
+					// that method ensures consistency by using a transaction
+			$this->getParticipantRepository()->addParticipant($participant);
 
 			$this->get('session')->getFlashBag()->add(
 				'success',
@@ -54,6 +67,13 @@ class ParticipantController extends Controller {
 		return $this->redirect($this->generateUrl('MealzMealBundle_Meal_show', array('meal' => $meal->getId())));
 	}
 
+	/**
+	 * let the currently logged in user leave the meal
+	 *
+	 * @param Meal $meal
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+	 */
 	public function leaveAction(Meal $meal) {
 		if(!$this->getUser() instanceof Zombie) {
 			throw new AccessDeniedException();
@@ -63,10 +83,8 @@ class ParticipantController extends Controller {
 		}
 
 		try {
-			/** @var ParticipantRepository $participantRepository */
-			$participantRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Participant');
 			// that method ensures consistency by using a transaction
-			$participantRepository->removeParticipantByUserAndMeal($this->getUser(), $meal);
+			$this->getParticipantRepository()->removeParticipantByUserAndMeal($this->getUser(), $meal);
 
 			$this->get('session')->getFlashBag()->add(
 				'success',
@@ -80,6 +98,49 @@ class ParticipantController extends Controller {
 		}
 
 		return $this->redirect($this->generateUrl('MealzMealBundle_Meal_show', array('meal' => $meal->getId())));
+	}
+
+	public function commentAction(Meal $meal, Request $request) {
+		if(!$this->getUser() instanceof Zombie) {
+			throw new AccessDeniedException();
+		}
+
+		$form = $this->getCommentForm($this->getUser(), $meal);
+
+		if($request->isMethod('POST')) {
+			$form->handleRequest($request);
+
+			if ($form->isValid()) {
+				/** @var Participant $participant */
+				$participant = $form->getData();
+				$em = $this->getDoctrine()->getManager();
+				$em->persist($participant);
+				$em->flush();
+
+				return $this->redirect($this->generateUrl('MealzMealBundle_Meal_show', array('meal' => $meal->getId())));
+			}
+		}
+
+		return $this->render('MealzMealBundle:Participant:comment.html.twig', array(
+			'meal' => $meal,
+			'form' => $form->createView()
+		));
+	}
+
+	protected function getCommentForm(Zombie $user, Meal $meal) {
+		$participant = $this->getParticipantRepository()->getParticipantByUserAndMeal($user, $meal);
+
+		if($participant === NULL) {
+			throw $this->createNotFoundException('You need to join the meal in order to comment.');
+		}
+
+		return $this->createFormBuilder($participant)
+			->add('comment', 'textarea', array(
+				'required' => FALSE
+			))
+			->add('save', 'submit')
+			->getForm()
+		;
 	}
 
 }

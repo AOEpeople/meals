@@ -4,6 +4,7 @@ namespace Mealz\MealBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Mealz\UserBundle\Entity\Zombie;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Dish
@@ -35,6 +36,13 @@ class Participant
 	 * @var Zombie
 	 */
 	protected $user;
+
+	/**
+	 * @Assert\Length(min=3, max=2048)
+	 * @ORM\Column(type="string", length=2048, nullable=TRUE)
+	 * @var string
+	 */
+	protected $comment;
 
 	/**
 	 * @return int
@@ -76,6 +84,21 @@ class Participant
 		return $this->user;
 	}
 
+	/**
+	 * @param string $comment
+	 */
+	public function setComment($comment)
+	{
+		$this->comment = $comment;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getComment()
+	{
+		return $this->comment;
+	}
 
 	function __toString()
 	{

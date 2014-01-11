@@ -1,6 +1,7 @@
 {% extends '::base.html.twig' %}
 
 {% block header %}
+	<div class="jumbotron">
 	<div class="container">
 		<h1>Mealz for Zombies</h1>
 		<p>
@@ -14,18 +15,21 @@
 			<a class="btn btn-primary btn-lg" role="button" href="{{ path('MealzMealBundle_Meal_list') }}">Register now &raquo;</a>
 		</p>
 	</div>
+	</div>
 {% endblock %}
 
 {% block body %}
-	<h1>Coming up</h1>
-	<div class="row">
-	{% for meal in meals %}
-		{% set dish=meal.dish %}
-		<div class="col-md-3">
-			<h2>{{ dish.title }}</h2>
-			{% if dish.description %}<p>{{ dish.description }}</p>{% endif %}
+	<div class="container">
+		<h1>Coming up</h1>
+		<div class="row">
+		{% for meal in meals %}
+			{% set dish=meal.dish %}
+			<div class="col-md-3">
+				<h2>{{ dish.title }}</h2>
+				{% if dish.description %}<p>{{ dish.description }}</p>{% endif %}
+			</div>
+		{% endfor %}
 		</div>
-	{% endfor %}
 	</div>
 
 {% endblock %}

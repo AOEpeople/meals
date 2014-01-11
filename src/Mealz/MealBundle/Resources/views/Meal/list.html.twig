@@ -10,7 +10,7 @@
 			<tr>
 				<td>{{ meal.dateTime | date('Y-m-d H:i') }}</td>
 				<td>
-					<p><a href="{{ path('MealzMealBundle_Meal_show', {'meal': meal.id}) }}">{{ dish.title }}</a></p>
+					<p><a href="{{ link(meal) }}">{{ dish.title }}</a></p>
 					{% if dish.description %}<p class="text-muted">{{ dish.description }}</p>{% endif %}
 				</td>
 				<td>

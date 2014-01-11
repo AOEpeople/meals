@@ -10,14 +10,14 @@ MealzMealBundle_Meal_show:
     pattern:  /menu/{meal}
     defaults: { _controller: "MealzMealBundle:Meal:show" }
 
-MealzMealBundle_Participant_join:
+MealzMealBundle_Meal_join:
     pattern:  /menu/{meal}/join
     defaults: { _controller: "MealzMealBundle:Participant:join" }
 
-MealzMealBundle_Participant_leave:
+MealzMealBundle_Meal_leave:
     pattern:  /menu/{meal}/leave
     defaults: { _controller: "MealzMealBundle:Participant:leave" }
 
-MealzMealBundle_Participant_comment:
+MealzMealBundle_Meal_comment:
     pattern:  /menu/{meal}/comment
     defaults: { _controller: "MealzMealBundle:Participant:comment" }

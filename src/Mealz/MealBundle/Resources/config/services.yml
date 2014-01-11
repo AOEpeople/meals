@@ -1,6 +1,8 @@
 parameters:
   mealz_meal.twig_extension.doorman.class: Mealz\MealBundle\Twig\Extension\Doorman
+  mealz_meal.twig_extension.link.class: Mealz\MealBundle\Twig\Extension\Link
   mealz_meal.doorman.class: Mealz\MealBundle\Service\Doorman
+  mealz_meal.link.class: Mealz\MealBundle\Service\Link
 
 services:
 
@@ -11,5 +13,15 @@ services:
   mealz_meal.twig_extension.doorman:
     class: %mealz_meal.twig_extension.doorman.class%
     arguments: [ @mealz_meal.doorman ]
+    tags:
+      - { name: twig.extension }
+
+  mealz_meal.link:
+    class: %mealz_meal.link.class%
+    arguments: [ @router ]
+
+  mealz_meal.twig_extension.link:
+    class: %mealz_meal.twig_extension.link.class%
+    arguments: [ @mealz_meal.link ]
     tags:
       - { name: twig.extension }

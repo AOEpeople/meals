@@ -5,9 +5,8 @@ namespace Mealz\MealBundle\Controller;
 
 
 use Doctrine\ORM\Query;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class MealController extends Controller {
+class MealController extends BaseController {
 
 	public function indexAction() {
 		/** @var Query $query */

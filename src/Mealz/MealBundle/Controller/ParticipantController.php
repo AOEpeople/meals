@@ -7,21 +7,12 @@ namespace Mealz\MealBundle\Controller;
 use Doctrine\ORM\Query;
 use Mealz\MealBundle\Entity\Participant;
 use Mealz\MealBundle\Entity\ParticipantRepository;
-use Mealz\MealBundle\Service\Doorman;
 use Mealz\UserBundle\Entity\Zombie;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Mealz\MealBundle\Entity\Meal;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-class ParticipantController extends Controller {
-
-	/**
-	 * @return Doorman
-	 */
-	protected function getDoorman() {
-		return $this->get('mealz_meal.doorman');
-	}
+class ParticipantController extends BaseController {
 
 	/**
 	 * @return ParticipantRepository
@@ -58,13 +49,10 @@ class ParticipantController extends Controller {
 				'You joined as participant to the meal.'
 			);
 		} catch (\InvalidArgumentException $e) {
-			$this->get('session')->getFlashBag()->add(
-				'info',
-				'You are already joining this meal.'
-			);
+			$this->addFlashMessage('You are already joining this meal.', 'info');
 		}
 
-		return $this->redirect($this->generateUrl('MealzMealBundle_Meal_show', array('meal' => $meal->getId())));
+		return $this->redirect($this->generateUrlTo($meal));
 	}
 
 	/**
@@ -86,18 +74,12 @@ class ParticipantController extends Controller {
 			// that method ensures consistency by using a transaction
 			$this->getParticipantRepository()->removeParticipantByUserAndMeal($this->getUser(), $meal);
 
-			$this->get('session')->getFlashBag()->add(
-				'success',
-				'You were removed as participant to the meal.'
-			);
+			$this->addFlashMessage('You were removed as participant to the meal.', 'success');
 		} catch (\InvalidArgumentException $e) {
-			$this->get('session')->getFlashBag()->add(
-				'info',
-				'You have not joined the meal.'
-			);
+			$this->addFlashMessage('You have not joined the meal.', 'info');
 		}
 
-		return $this->redirect($this->generateUrl('MealzMealBundle_Meal_show', array('meal' => $meal->getId())));
+		return $this->redirect($this->generateUrlTo($meal));
 	}
 
 	public function commentAction(Meal $meal, Request $request) {
@@ -117,7 +99,7 @@ class ParticipantController extends Controller {
 				$em->persist($participant);
 				$em->flush();
 
-				return $this->redirect($this->generateUrl('MealzMealBundle_Meal_show', array('meal' => $meal->getId())));
+				return $this->redirect($this->generateUrlTo($meal));
 			}
 		}
 

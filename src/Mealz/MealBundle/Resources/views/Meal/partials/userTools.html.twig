@@ -10,7 +10,7 @@
 			{% if is_allowed_to_leave(meal) %}
 				<a
 						class="btn btn-default {{ button_class }}"
-						href="{{ path('MealzMealBundle_Participant_leave', {meal:meal.id}) }}"
+						href="{{ link(meal, 'leave') }}"
 						title="Leave"
 						>
 					<strong>-</strong>
@@ -18,7 +18,7 @@
 			{% endif %}
 			<a
 					class="btn btn-default {{ button_class }}"
-					href="{{ path('MealzMealBundle_Participant_comment', {meal:meal.id}) }}"
+					href="{{ link(meal, 'comment') }}"
 					title="Comment"
 					>
 				<span class="glyphicon glyphicon-comment"></span>
@@ -28,7 +28,7 @@
 			{% if is_allowed_to_join(meal) %}
 				<a
 						class="btn btn-default {{ button_class }}"
-						href="{{ path('MealzMealBundle_Participant_join', {meal:meal.id}) }}"
+						href="{{ link(meal, 'join') }}"
 						title="Join"
 						>
 					<strong>+</strong>

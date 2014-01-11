@@ -24,7 +24,7 @@ class Participant
 	private $id;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="Meal")
+	 * @ORM\ManyToOne(targetEntity="Meal",inversedBy="participants")
 	 * @ORM\JoinColumn(name="meal_id", referencedColumnName="id")
 	 * @var Meal
 	 */

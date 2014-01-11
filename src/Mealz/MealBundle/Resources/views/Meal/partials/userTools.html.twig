@@ -1,0 +1,39 @@
+{# buttons for the user to edit his participation #}
+{% if is_granted('ROLE_USER') %}
+	{% if button_class is not defined %}
+		{% set button_class='' %}
+	{% endif %}
+	<div class="btn-group">
+		{% set participant = meal.getParticipant(app.user) %}
+		{% if participant %}
+			<span class="btn btn-info {{ button_class }}">you join</span>
+			{% if is_allowed_to_leave(meal) %}
+				<a
+						class="btn btn-default {{ button_class }}"
+						href="{{ path('MealzMealBundle_Participant_leave', {meal:meal.id}) }}"
+						title="Leave"
+						>
+					<strong>-</strong>
+				</a>
+			{% endif %}
+			<a
+					class="btn btn-default {{ button_class }}"
+					href="{{ path('MealzMealBundle_Participant_comment', {meal:meal.id}) }}"
+					title="Comment"
+					>
+				<span class="glyphicon glyphicon-comment"></span>
+			</a>
+		{% else %}
+			<span class="btn btn-default {{ button_class }}">you do not join</span>
+			{% if is_allowed_to_join(meal) %}
+				<a
+						class="btn btn-default {{ button_class }}"
+						href="{{ path('MealzMealBundle_Participant_join', {meal:meal.id}) }}"
+						title="Join"
+						>
+					<strong>+</strong>
+				</a>
+			{% endif %}
+		{% endif %}
+	</div>
+{% endif %}

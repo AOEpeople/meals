@@ -118,12 +118,12 @@ class ParticipantController extends BaseController {
 		$em->flush();
 
 		if($participant->isGuest()) {
-			$this->addFlashMessage('You were removed as participant to the meal.', 'success');
-		} else {
 			$this->addFlashMessage(
 				sprintf('Removed %s as participant to the meal.', $participant->getGuestName()),
 				'success'
 			);
+		} else {
+			$this->addFlashMessage('You were removed as participant to the meal.', 'success');
 		}
 
 

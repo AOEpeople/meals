@@ -7,6 +7,8 @@ namespace Mealz\MealBundle\Controller;
 use Doctrine\ORM\Query;
 use Mealz\MealBundle\Entity\Participant;
 use Mealz\MealBundle\Entity\ParticipantRepository;
+use Mealz\MealBundle\Form\Type\ParticipantForm;
+use Mealz\MealBundle\Form\Type\ParticipantGuestForm;
 use Mealz\UserBundle\Entity\Zombie;
 use Mealz\MealBundle\Entity\Meal;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,14 +23,7 @@ class ParticipantController extends BaseController {
 		return $this->getDoctrine()->getRepository('MealzMealBundle:Participant');
 	}
 
-	/**
-	 * let the currently logged in user join the given meal
-	 *
-	 * @param Meal $meal
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
-	 * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
-	 */
-	public function joinAction(Meal $meal) {
+	public function newAction(Request $request, Meal $meal) {
 		if(!$this->getUser() instanceof Zombie) {
 			throw new AccessDeniedException();
 		}
@@ -36,99 +31,104 @@ class ParticipantController extends BaseController {
 			throw new AccessDeniedException('You are not allowed to join this meal.');
 		}
 
-		try {
-			$participant = new Participant();
-			$participant->setUser($this->getUser());
-			$participant->setMeal($meal);
+		$participant = new Participant();
+		$participant->setMeal($meal);
+		$participant->setUser($this->getUser());
+		$form = $this->createForm(
+			new ParticipantForm(),
+			$participant,
+			array('allow_guest' => $this->getDoorman()->isUserAllowedToAddGuest($meal))
+		);
 
-					// that method ensures consistency by using a transaction
-			$this->getParticipantRepository()->addParticipant($participant);
-
-			$this->get('session')->getFlashBag()->add(
-				'success',
-				'You joined as participant to the meal.'
-			);
-		} catch (\InvalidArgumentException $e) {
-			$this->addFlashMessage('You are already joining this meal.', 'info');
-		}
-
-		return $this->redirect($this->generateUrlTo($meal));
-	}
-
-	/**
-	 * let the currently logged in user leave the meal
-	 *
-	 * @param Meal $meal
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
-	 * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
-	 */
-	public function leaveAction(Meal $meal) {
-		if(!$this->getUser() instanceof Zombie) {
-			throw new AccessDeniedException();
-		}
-		if(!$this->getDoorman()->isUserAllowedToLeave($meal)) {
-			throw new AccessDeniedException('You are not allowed to leave this meal.');
-		}
-
-		try {
-			// that method ensures consistency by using a transaction
-			$this->getParticipantRepository()->removeParticipantByUserAndMeal($this->getUser(), $meal);
-
-			$this->addFlashMessage('You were removed as participant to the meal.', 'success');
-		} catch (\InvalidArgumentException $e) {
-			$this->addFlashMessage('You have not joined the meal.', 'info');
-		}
-
-		return $this->redirect($this->generateUrlTo($meal));
-	}
-
-	/**
-	 * @param Meal $meal
-	 * @param Request $request
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-	 * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
-	 */
-	public function commentAction(Meal $meal, Request $request) {
-		if(!$this->getUser() instanceof Zombie) {
-			throw new AccessDeniedException();
-		}
-
-		$form = $this->getCommentForm($this->getUser(), $meal);
-
+		// handle form submission
 		if($request->isMethod('POST')) {
 			$form->handleRequest($request);
 
 			if ($form->isValid()) {
-				/** @var Participant $participant */
-				$participant = $form->getData();
-				$em = $this->getDoctrine()->getManager();
-				$em->persist($participant);
-				$em->flush();
+				// that method ensures consistency by using a transaction
+				$this->getParticipantRepository()->addParticipant($participant);
+
+				if($participant->isGuest()) {
+					$this->addFlashMessage(
+						sprintf('Added %s as participant to the meal.', $participant->getGuestName()),
+						'success'
+					);
+				} else {
+					$this->addFlashMessage('You joined as participant to the meal.', 'success');
+				}
+
 
 				return $this->redirect($this->generateUrlTo($meal));
 			}
 		}
 
-		return $this->render('MealzMealBundle:Participant:comment.html.twig', array(
+		return $this->render('MealzMealBundle:Participant:form.html.twig', array(
 			'meal' => $meal,
 			'form' => $form->createView()
 		));
 	}
 
-	protected function getCommentForm(Zombie $user, Meal $meal) {
-		$participant = $this->getParticipantRepository()->getParticipantByUserAndMeal($user, $meal);
-
-		if($participant === NULL) {
-			throw $this->createNotFoundException('You need to join the meal in order to comment.');
+	public function editAction(Request $request, Participant $participant) {
+		if(!$this->getUser() instanceof Zombie) {
+			throw new AccessDeniedException();
+		}
+		if($this->getUser() !== $participant->getUser()) {
+			throw new AccessDeniedException();
 		}
 
-		return $this->createFormBuilder($participant)
-			->add('comment', 'textarea', array(
-				'required' => FALSE
-			))
-			->add('save', 'submit')
-			->getForm()
-		;
+		if($participant->isGuest()) {
+			$form = $this->createForm(new ParticipantGuestForm(), $participant);
+		} else {
+			$form = $this->createForm(new ParticipantForm(), $participant, array('allow_guest' => FALSE));
+		}
+
+		// handle form submission
+		if($request->isMethod('POST')) {
+			$form->handleRequest($request);
+
+			if ($form->isValid()) {
+				$em = $this->getDoctrine()->getManager();
+				$em->persist($participant);
+				$em->flush();
+
+				$this->addFlashMessage('Your changes were stored.', 'success');
+
+				return $this->redirect($this->generateUrlTo($participant->getMeal()));
+			}
+		}
+
+		return $this->render('MealzMealBundle:Participant:form.html.twig', array(
+			'meal' => $participant->getMeal(),
+			'form' => $form->createView()
+		));
+	}
+
+	public function deleteAction(Participant $participant) {
+		if(!$this->getUser() instanceof Zombie) {
+			throw new AccessDeniedException();
+		}
+		if($this->getUser() !== $participant->getUser()) {
+			throw new AccessDeniedException();
+		}
+		if(!$this->getDoorman()->isUserAllowedToLeave($participant->getMeal())) {
+			throw new AccessDeniedException('You are not allowed to leave this meal.');
+		}
+
+		$em = $this->getDoctrine()->getManager();
+		$em->remove($participant);
+		$em->flush();
+
+		if($participant->isGuest()) {
+			$this->addFlashMessage('You were removed as participant to the meal.', 'success');
+		} else {
+			$this->addFlashMessage(
+				sprintf('Removed %s as participant to the meal.', $participant->getGuestName()),
+				'success'
+			);
+		}
+
+
+		return $this->redirect($this->generateUrlTo($participant->getMeal()));
 	}
 
 }

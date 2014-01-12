@@ -21,7 +21,7 @@ class ParticipantRepository extends EntityRepository {
 		$em->getConnection()->beginTransaction();
 
 		try {
-			if($this->isParticipant($participant->getUser(), $participant->getMeal())) {
+			if($this->participantExists($participant->getUser(), $participant->getMeal(), $participant->getGuestName())) {
 				// if user is already registered
 				throw new \InvalidArgumentException(sprintf(
 					'User %s already joined %s.',
@@ -41,94 +41,33 @@ class ParticipantRepository extends EntityRepository {
 	}
 
 	/**
-	 * remove a participant while assuring consistency by using a transaction
-	 *
 	 * @param Zombie $user
 	 * @param Meal $meal
-	 * @throws \Exception
-	 * @return integer number of deleted records
-	 */
-	public function removeParticipantByUserAndMeal(Zombie $user, Meal $meal) {
-		$em = $this->getEntityManager();
-		$em->getConnection()->beginTransaction();
-
-		try {
-			$query = $this->getEntityManager()->createQuery('
-				SELECT p.id
-				FROM MealzMealBundle:Participant p
-				JOIN p.meal m
-				JOIN p.user u
-				WHERE m = :meal AND u = :user
-			');
-			$query->setParameters(array(
-				'meal' => $meal->getId(),
-				'user' => $user->getUsername()
-			));
-
-			$participantIds = $query->execute(null,Query::HYDRATE_SCALAR);
-			if(empty($participantIds)) {
-				throw new \InvalidArgumentException(sprintf(
-					'User %s did not join %s.',
-					$user,
-					$meal
-				));
-			}
-
-			$count = $this->getEntityManager()->createQuery('
-				DELETE FROM MealzMealBundle:Participant p
-				WHERE p.id IN (:ids)
-			')->execute(array('ids' => $participantIds));
-
-			$em->getConnection()->commit();
-
-			return $count;
-		} catch (\Exception $e) {
-			$em->getConnection()->rollback();
-			$em->close();
-			throw $e;
-		}
-	}
-
-	/**
-	 * @param Zombie $user
-	 * @param Meal $meal
+	 * @param $guestName
 	 * @return bool
 	 */
-	protected function isParticipant(Zombie $user, Meal $meal) {
+	protected function participantExists(Zombie $user, Meal $meal, $guestName) {
+		$qb = $this->getEntityManager()->createQueryBuilder();
+
+		$qb
+			->select('COUNT(p.id)')
+			->from('MealzMealBundle:Participant', 'p')
+			->join('p.meal', 'm')
+			->join('p.user','u')
+			->where('m = :meal AND u = :user')
+		;
+		if($guestName) {
+			$qb->andWhere('p.guestName = :guestName');
+			$qb->setParameter('guestName', $guestName);
+		} else {
+			$qb->andWHere('p.guestName IS NULL');
+		}
 		/** @var Query $query */
-		$query = $this->getEntityManager()->createQuery('
-			SELECT COUNT(p.id)
-			FROM MealzMealBundle:Participant p
-			JOIN p.meal m
-			JOIN p.user u
-			WHERE m = :meal AND u = :user
-		');
-		$query->setParameters(array(
-			'meal' => $meal->getId(),
-			'user' => $user->getUsername()
-		));
+		$query = $qb->getQuery();
+		$query->setParameter('meal', $meal->getId());
+		$query->setParameter('user', $user->getUsername());
 
 		return $query->execute(null, Query::HYDRATE_SINGLE_SCALAR) > 0;
-	}
-
-	/**
-	 * @param Zombie $user
-	 * @param Meal $meal
-	 * @return Participant|null
-	 */
-	public function getParticipantByUserAndMeal(Zombie $user, Meal $meal) {
-		$query = $this->getEntityManager()->createQuery('
-			SELECT p,m,u
-			FROM MealzMealBundle:Participant p
-			JOIN p.meal m
-			JOIN p.user u
-			WHERE m = :meal AND u = :user
-		');
-		$participants = $query->execute(array(
-			'meal' => $meal->getId(),
-			'user' => $user->getUsername()
-		));
-		return $participants ? current($participants) : NULL;
 	}
 
 }

@@ -21,8 +21,35 @@
 		{% for participant in meal.participants %}
 			{% set user=participant.user %}
 			<tr>
-				<td>{{ user.username }}</td>
+				<td>
+					{% if participant.isGuest %}
+						{{ participant.guestName }} <span class="text-muted">via {{ user.username }}</span>
+					{% else %}
+						{{ user.username }}
+					{% endif %}
+				</td>
 				<td>{% if participant.comment %}<span class="text-muted">{{ participant.comment }}</span>{% endif %}</td>
+				<td>{% if is_granted('ROLE_USER') and participant.user == app.user %}
+					<div class="btn-group">
+						{% if is_allowed_to_leave(meal) %}
+							<a
+									class="btn btn-default btn-xs"
+									href="{{ link(participant, 'delete') }}"
+									title="Leave"
+									>
+								<strong>-</strong>
+							</a>
+						{% endif %}
+						<a
+								class="btn btn-default btn-xs"
+								href="{{ link(participant, 'edit') }}"
+								title="Comment"
+								>
+							<span class="glyphicon glyphicon-comment"></span>
+						</a>
+					</div>
+					{% endif %}
+				</td>
 			</tr>
 		{% endfor %}
 		</tbody>

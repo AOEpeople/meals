@@ -5,35 +5,54 @@
 	{% endif %}
 	<div class="btn-group">
 		{% set participant = meal.getParticipant(app.user) %}
+		{% set usersGuests = meal.getGuestParticipants(app.user) %}
 		{% if participant %}
-			<span class="btn btn-info {{ button_class }}">you join</span>
+			<a
+				class="btn btn-success {{ button_class }}"
+				href="{{ link(participant, 'edit') }}"
+				title="Edit"
+			>you join</a>
 			{% if is_allowed_to_leave(meal) %}
 				<a
-						class="btn btn-default {{ button_class }}"
-						href="{{ link(meal, 'leave') }}"
-						title="Leave"
-						>
-					<strong>-</strong>
-				</a>
+					class="btn btn-danger {{ button_class }}"
+					href="{{ link(participant, 'delete') }}"
+					title="Leave"
+				>–</a>
 			{% endif %}
-			<a
-					class="btn btn-default {{ button_class }}"
-					href="{{ link(meal, 'comment') }}"
-					title="Comment"
-					>
-				<span class="glyphicon glyphicon-comment"></span>
-			</a>
 		{% else %}
-			<span class="btn btn-default {{ button_class }}">you do not join</span>
 			{% if is_allowed_to_join(meal) %}
 				<a
-						class="btn btn-default {{ button_class }}"
-						href="{{ link(meal, 'join') }}"
-						title="Join"
-						>
-					<strong>+</strong>
-				</a>
+					class="btn btn-default {{ button_class }}"
+					href="{{ link(meal, 'join') }}"
+					title="Join"
+				>you do not join</a>
+			{% else %}
+				<span class="btn btn-default {{ button_class }}">you do not join</span>
 			{% endif %}
 		{% endif %}
+
+		{% if usersGuests | length > 0 %}
+			<button class="btn btn-success {{ button_class }} dropdown-toggle" data-toggle="dropdown">
+				{% if usersGuests | length == 1 %}1 Guest{% else %}{{ usersGuests | length }} Guests{% endif %}
+			</button>
+			<ul class="dropdown-menu" role="menu">
+				{% if is_allowed_to_add_guest(meal) %}
+					<li><a href="{{ link(meal, 'newParticipant') }}">Add a guest</a></li>
+					<li class="divider"></li>
+				{% endif %}
+				{% for guestParticipant in usersGuests %}
+					<li><a href="{{ link(guestParticipant, 'edit') }}">{{ guestParticipant.guestName }}</a></li>
+				{% endfor %}
+			</ul>
+		{% else %}
+			{% if is_allowed_to_add_guest(meal) %}
+				<a
+					class="btn btn-default {{ button_class }}"
+					href="{{ link(meal, 'newParticipant') }}"
+					title="Add a guest"
+				><span class="glyphicon glyphicon-user"></span></a>
+			{% endif %}
+		{% endif %}
+
 	</div>
 {% endif %}

@@ -105,11 +105,28 @@ class Meal
 	public function getParticipant(Zombie $user) {
 		foreach($this->participants as $participant) {
 			/** @var Participant $participant */
-			if($participant->getUser() === $user) {
+			if(!$participant->isGuest() && $participant->getUser() === $user) {
 				return $participant;
 			}
 		}
 		return NULL;
+	}
+
+	/**
+	 * get all guests that the given user has invited
+	 *
+	 * @param Zombie $user
+	 * @return Participant|null
+	 */
+	public function getGuestParticipants(Zombie $user) {
+		$participants = array();
+		foreach($this->participants as $participant) {
+			/** @var Participant $participant */
+			if($participant->isGuest() && $participant->getUser() === $user) {
+				$participants[] = $participant;
+			}
+		}
+		return $participants;
 	}
 
 	function __toString() {

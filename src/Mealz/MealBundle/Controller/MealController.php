@@ -5,8 +5,20 @@ namespace Mealz\MealBundle\Controller;
 
 
 use Doctrine\ORM\Query;
+use Mealz\MealBundle\Entity\Meal;
+use Mealz\MealBundle\Entity\Participant;
+use Mealz\MealBundle\Entity\ParticipantRepository;
+use Mealz\UserBundle\Entity\Zombie;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class MealController extends BaseController {
+
+	/**
+	 * @return ParticipantRepository
+	 */
+	protected function getParticipantRepository() {
+		return $this->getDoctrine()->getRepository('MealzMealBundle:Participant');
+	}
 
 	public function indexAction() {
 		/** @var Query $query */
@@ -55,7 +67,6 @@ class MealController extends BaseController {
 			LEFT JOIN p.user u
 			WHERE m.id = :meal_id
 		');
-		$query->setMaxResults(1);
 		$meal = $query->execute(array('meal_id' => intval($meal)));
 		if(!$meal) {
 			throw $this->createNotFoundException('The given meal does not exist');
@@ -66,6 +77,40 @@ class MealController extends BaseController {
 		return $this->render('MealzMealBundle:Meal:show.html.twig', array(
 			'meal' => $meal
 		));
+	}
+
+	/**
+	 * let the currently logged in user join the given meal
+	 *
+	 * @param Meal $meal
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+	 */
+	public function joinAction(Meal $meal) {
+		if(!$this->getUser() instanceof Zombie) {
+			throw new AccessDeniedException();
+		}
+		if(!$this->getDoorman()->isUserAllowedToJoin($meal)) {
+			throw new AccessDeniedException('You are not allowed to join this meal.');
+		}
+
+		try {
+			$participant = new Participant();
+			$participant->setUser($this->getUser());
+			$participant->setMeal($meal);
+
+			// that method ensures consistency by using a transaction
+			$this->getParticipantRepository()->addParticipant($participant);
+
+			$this->get('session')->getFlashBag()->add(
+				'success',
+				'You joined as participant to the meal.'
+			);
+		} catch (\InvalidArgumentException $e) {
+			$this->addFlashMessage('You are already joining this meal.', 'info');
+		}
+
+		return $this->redirect($this->generateUrlTo($meal));
 	}
 
 }

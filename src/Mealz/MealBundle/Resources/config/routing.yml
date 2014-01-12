@@ -2,7 +2,7 @@ MealzMealBundle_home:
     pattern:  /
     defaults: { _controller: "MealzMealBundle:Meal:index" }
 
-MealzMealBundle_Meal_list:
+MealzMealBundle_Meal:
     pattern:  /menu
     defaults: { _controller: "MealzMealBundle:Meal:list" }
 
@@ -38,7 +38,7 @@ MealzMealBundle_Participant_delete:
     pattern:  /menu/meal/{participant}/delete
     defaults: { _controller: "MealzMealBundle:Participant:delete" }
 
-MealzMealBundle_Dish_list:
+MealzMealBundle_Dish:
     pattern:  /dish
     defaults: { _controller: "MealzMealBundle:Dish:list" }
 

@@ -88,6 +88,6 @@ class DishAdminController extends BaseController {
 			$this->addFlashMessage(sprintf('Record "%s" was deleted.', $dish->getTitle()), 'success');
 		}
 
-		return $this->redirect($this->generateUrl('MealzMealBundle_Dish_list'));
+		return $this->redirect($this->generateUrl('MealzMealBundle_Dish'));
 	}
 }

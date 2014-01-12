@@ -87,6 +87,6 @@ class MealAdminController extends BaseController {
 			$this->addFlashMessage(sprintf('Meal "%s" was deleted.', $meal->getDish()->getTitle()), 'success');
 		}
 
-		return $this->redirect($this->generateUrl('MealzMealBundle_Meal_list'));
+		return $this->redirect($this->generateUrl('MealzMealBundle_Meal'));
 	}
 }

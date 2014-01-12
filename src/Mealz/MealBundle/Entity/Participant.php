@@ -24,6 +24,8 @@ class Participant
 	private $id;
 
 	/**
+	 * @Assert\NotNull()
+	 * @Assert\Type(type="Mealz\MealBundle\Entity\Meal")
 	 * @ORM\ManyToOne(targetEntity="Meal",inversedBy="participants")
 	 * @ORM\JoinColumn(name="meal_id", referencedColumnName="id")
 	 * @var Meal
@@ -31,6 +33,8 @@ class Participant
 	protected $meal;
 
 	/**
+	 * @Assert\NotNull()
+	 * @Assert\Type(type="Mealz\UserBundle\Entity\Zombie")
 	 * @ORM\ManyToOne(targetEntity="Mealz\UserBundle\Entity\Zombie")
 	 * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
 	 * @var Zombie

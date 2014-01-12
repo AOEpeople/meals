@@ -3,7 +3,7 @@
 namespace Mealz\MealBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Mealz\UserBundle\Entity\Zombie;
+use Mealz\UserBundle\Entity\User;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -34,10 +34,10 @@ class Participant
 
 	/**
 	 * @Assert\NotNull()
-	 * @Assert\Type(type="Mealz\UserBundle\Entity\Zombie")
-	 * @ORM\ManyToOne(targetEntity="Mealz\UserBundle\Entity\Zombie")
+	 * @Assert\Type(type="Mealz\UserBundle\Entity\User")
+	 * @ORM\ManyToOne(targetEntity="Mealz\UserBundle\Entity\User")
 	 * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-	 * @var Zombie
+	 * @var User
 	 */
 	protected $user;
 
@@ -80,7 +80,7 @@ class Participant
 	}
 
 	/**
-	 * @param \Mealz\UserBundle\Entity\Zombie $user
+	 * @param \Mealz\UserBundle\Entity\User $user
 	 */
 	public function setUser($user)
 	{
@@ -88,7 +88,7 @@ class Participant
 	}
 
 	/**
-	 * @return \Mealz\UserBundle\Entity\Zombie
+	 * @return \Mealz\UserBundle\Entity\User
 	 */
 	public function getUser()
 	{

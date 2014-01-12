@@ -8,7 +8,7 @@ use Doctrine\ORM\Query;
 use Mealz\MealBundle\Entity\Meal;
 use Mealz\MealBundle\Entity\Participant;
 use Mealz\MealBundle\Entity\ParticipantRepository;
-use Mealz\UserBundle\Entity\Zombie;
+use Mealz\UserBundle\Entity\User;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class MealController extends BaseController {
@@ -87,7 +87,7 @@ class MealController extends BaseController {
 	 * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
 	 */
 	public function joinAction(Meal $meal) {
-		if(!$this->getUser() instanceof Zombie) {
+		if(!$this->getUser() instanceof User) {
 			throw new AccessDeniedException();
 		}
 		if(!$this->getDoorman()->isUserAllowedToJoin($meal)) {

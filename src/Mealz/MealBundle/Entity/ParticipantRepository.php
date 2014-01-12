@@ -6,7 +6,7 @@ namespace Mealz\MealBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
-use Mealz\UserBundle\Entity\Zombie;
+use Mealz\UserBundle\Entity\User;
 
 class ParticipantRepository extends EntityRepository {
 

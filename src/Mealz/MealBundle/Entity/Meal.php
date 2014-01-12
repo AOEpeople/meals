@@ -4,7 +4,7 @@ namespace Mealz\MealBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Mealz\UserBundle\Entity\Zombie;
+use Mealz\UserBundle\Entity\User;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -104,10 +104,10 @@ class Meal
 	/**
 	 * get the participant object of the given user if he is registered
 	 *
-	 * @param Zombie $user
+	 * @param User $user
 	 * @return \Mealz\MealBundle\Entity\Participant|null
 	 */
-	public function getParticipant(Zombie $user) {
+	public function getParticipant(User $user) {
 		foreach($this->participants as $participant) {
 			/** @var Participant $participant */
 			if(!$participant->isGuest() && $participant->getUser() === $user) {
@@ -120,10 +120,10 @@ class Meal
 	/**
 	 * get all guests that the given user has invited
 	 *
-	 * @param Zombie $user
+	 * @param User $user
 	 * @return Participant|null
 	 */
-	public function getGuestParticipants(Zombie $user) {
+	public function getGuestParticipants(User $user) {
 		$participants = array();
 		foreach($this->participants as $participant) {
 			/** @var Participant $participant */

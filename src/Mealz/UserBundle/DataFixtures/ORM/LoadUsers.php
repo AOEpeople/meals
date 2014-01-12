@@ -9,10 +9,10 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
-use Mealz\UserBundle\Entity\Zombie;
+use Mealz\UserBundle\Entity\User;
 
 
-class LoadZombies extends AbstractFixture implements OrderedFixtureInterface,ContainerAwareInterface {
+class LoadUsers extends AbstractFixture implements OrderedFixtureInterface,ContainerAwareInterface {
 
 	/**
 	 * @var ObjectManager
@@ -42,7 +42,7 @@ class LoadZombies extends AbstractFixture implements OrderedFixtureInterface,Con
 	}
 
 	protected function addUser($name) {
-		$user = new Zombie();
+		$user = new User();
 		$user->setUsername($name);
 		$user->setSalt(md5(uniqid(null, true)));
 

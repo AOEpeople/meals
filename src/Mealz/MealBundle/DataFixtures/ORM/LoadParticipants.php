@@ -8,7 +8,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Mealz\MealBundle\Entity\Dish;
 use Mealz\MealBundle\Entity\Meal;
 use Mealz\MealBundle\Entity\Participant;
-use Mealz\UserBundle\Entity\Zombie;
+use Mealz\UserBundle\Entity\User;
 
 
 class LoadParticipants extends AbstractFixture implements OrderedFixtureInterface {
@@ -36,7 +36,7 @@ class LoadParticipants extends AbstractFixture implements OrderedFixtureInterfac
 			/** @var $meal Meal */
 			$users = $this->getRandomUsers();
 			foreach($users as $user) {
-				/** @var $user Zombie */
+				/** @var $user User */
 				$participant = new Participant();
 				$participant->setMeal($meal);
 				$participant->setUser($user);
@@ -53,7 +53,7 @@ class LoadParticipants extends AbstractFixture implements OrderedFixtureInterfac
 				// we can't just use $reference here, because
 				// getReference() does some doctrine magic that getReferences() does not
 				$this->meals[] = $this->getReference($referenceName);
-			} elseif($reference instanceof Zombie) {
+			} elseif($reference instanceof User) {
 				$this->users[] = $this->getReference($referenceName);
 			}
 		}

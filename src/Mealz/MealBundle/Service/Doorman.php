@@ -3,7 +3,7 @@
 
 namespace Mealz\MealBundle\Service;
 use Mealz\MealBundle\Entity\Meal;
-use Mealz\UserBundle\Entity\Zombie;
+use Mealz\UserBundle\Entity\User;
 use Symfony\Component\Security\Core\SecurityContext;
 
 /**
@@ -35,7 +35,7 @@ class Doorman {
 	}
 
 	public function isUserAllowedToJoin(Meal $meal) {
-		if(!$this->securityContext->getToken()->getUser() instanceof Zombie) {
+		if(!$this->securityContext->getToken()->getUser() instanceof User) {
 			return FALSE;
 		}
 		if($meal->getDateTime()->getTimestamp() - 7200 > $this->now->getTimestamp()) {
@@ -46,7 +46,7 @@ class Doorman {
 	}
 
 	public function isUserAllowedToLeave(Meal $meal) {
-		if(!$this->securityContext->getToken()->getUser() instanceof Zombie) {
+		if(!$this->securityContext->getToken()->getUser() instanceof User) {
 			return FALSE;
 		}
 		if($meal->getDateTime()->getTimestamp() - 7200 > $this->now->getTimestamp()) {

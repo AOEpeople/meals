@@ -11,10 +11,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *
  * This is a placeholder implementation and should be replaced with some LDAP empowered user management
  *
- * @ORM\Table(name="zombie")
+ * @ORM\Table(name="user")
  * @ORM\Entity
  */
-class Zombie implements UserInterface, \Serializable
+class User implements UserInterface, \Serializable
 {
 	/**
 	 * @var string

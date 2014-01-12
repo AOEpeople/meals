@@ -9,7 +9,7 @@ use Mealz\MealBundle\Entity\Participant;
 use Mealz\MealBundle\Entity\ParticipantRepository;
 use Mealz\MealBundle\Form\Type\ParticipantForm;
 use Mealz\MealBundle\Form\Type\ParticipantGuestForm;
-use Mealz\UserBundle\Entity\Zombie;
+use Mealz\UserBundle\Entity\User;
 use Mealz\MealBundle\Entity\Meal;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -24,7 +24,7 @@ class ParticipantController extends BaseController {
 	}
 
 	public function newAction(Request $request, Meal $meal) {
-		if(!$this->getUser() instanceof Zombie) {
+		if(!$this->getUser() instanceof User) {
 			throw new AccessDeniedException();
 		}
 		if(!$this->getDoorman()->isUserAllowedToJoin($meal)) {
@@ -69,7 +69,7 @@ class ParticipantController extends BaseController {
 	}
 
 	public function editAction(Request $request, Participant $participant) {
-		if(!$this->getUser() instanceof Zombie) {
+		if(!$this->getUser() instanceof User) {
 			throw new AccessDeniedException();
 		}
 		if($this->getUser() !== $participant->getUser()) {
@@ -103,7 +103,7 @@ class ParticipantController extends BaseController {
 	}
 
 	public function deleteAction(Participant $participant) {
-		if(!$this->getUser() instanceof Zombie) {
+		if(!$this->getUser() instanceof User) {
 			throw new AccessDeniedException();
 		}
 		if($this->getUser() !== $participant->getUser()) {

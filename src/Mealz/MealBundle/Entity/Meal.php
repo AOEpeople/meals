@@ -5,6 +5,7 @@ namespace Mealz\MealBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Mealz\UserBundle\Entity\Zombie;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Meal
@@ -24,13 +25,17 @@ class Meal
 	private $id;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="Dish")
+	 * @Assert\NotBlank()
+	 * @Assert\Type(type="Mealz\MealBundle\Entity\Dish")
+	 * @ORM\ManyToOne(targetEntity="Dish", inversedBy="meals")
 	 * @ORM\JoinColumn(name="dish_id", referencedColumnName="id")
 	 * @var Dish
 	 */
 	protected $dish;
 
 	/**
+	 * @Assert\NotBlank()
+	 * @Assert\Type(type="DateTime")
 	 * @ORM\Column(type="datetime", nullable=FALSE)
 	 * @var \DateTime
 	 */

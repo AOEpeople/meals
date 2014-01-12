@@ -2,7 +2,9 @@
 
 namespace Mealz\MealBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Dish
@@ -22,12 +24,15 @@ class Dish
 	private $id;
 
 	/**
+	 * @Assert\NotBlank()
+	 * @Assert\Length(min=8, max=255)
 	 * @ORM\Column(type="string", length=255, nullable=FALSE)
 	 * @var string
 	 */
 	protected $title;
 
 	/**
+	 * @Assert\Length(max=4096)
 	 * @ORM\Column(type="text", nullable=TRUE)
 	 * @var null|string
 	 */
@@ -39,6 +44,21 @@ class Dish
 	 */
 	protected $price = NULL;
 
+	/**
+	 * @ORM\Column(type="boolean", nullable=FALSE)
+	 * @var bool
+	 */
+	protected $enabled = TRUE;
+
+	/**
+	 * @ORM\OneToMany(targetEntity="Meal", mappedBy="dish")
+	 * @var ArrayCollection
+	 */
+	protected $meals;
+
+	public function __construct() {
+		$this->meals = new ArrayCollection();
+	}
 
 	/**
 	 * Get id
@@ -96,6 +116,29 @@ class Dish
 	public function getTitle()
 	{
 		return $this->title;
+	}
+
+	/**
+	 * @param boolean $enabled
+	 */
+	public function setEnabled($enabled)
+	{
+		$this->enabled = $enabled;
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function isEnabled()
+	{
+		return $this->enabled;
+	}
+
+	/**
+	 * @return ArrayCollection
+	 */
+	public function getMeals() {
+		return $this->meals;
 	}
 
 	public function __toString() {

@@ -3,6 +3,7 @@
 {% block body %}
 	<div class="container">
 	<h1>Menu</h1>
+	{% include ':partials:flashMessages.html.twig' %}
 	<table class="table table-striped">
 		<tbody>
 		{% for meal in meals %}
@@ -16,6 +17,11 @@
 				<td>
 					{% include 'MealzMealBundle:Meal/partials:userTools.html.twig' with {'button_class': 'btn-xs'} %}
 				</td>
+				{% if is_granted('ROLE_KITCHEN_STAFF') %}
+				<td>
+					{% include 'MealzMealBundle:MealAdmin/partials:userTools.html.twig' with {'button_class': 'btn-xs'} %}
+				</td>
+				{% endif %}
 			</tr>
 		{% endfor %}
 		</tbody>

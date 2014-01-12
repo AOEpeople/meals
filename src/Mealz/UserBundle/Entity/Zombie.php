@@ -9,6 +9,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * your standard website user entity
  *
+ * This is a placeholder implementation and should be replaced with some LDAP empowered user management
+ *
  * @ORM\Table(name="zombie")
  * @ORM\Entity
  */
@@ -156,7 +158,12 @@ class Zombie implements UserInterface, \Serializable
 	 */
 	public function getRoles()
 	{
-		return array('ROLE_USER');
+		$roles = array('ROLE_USER');
+		if($this->getUsername() === 'kochomi') {
+			$roles[] = 'ROLE_KITCHEN_STAFF';
+		}
+
+		return $roles;
 	}
 
 	/**

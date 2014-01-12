@@ -2,7 +2,7 @@
 
 {% block body %}
 	<div class="container">
-		<h1>Comment on "{{ meal.dish.title }}"</h1>
+		<h1>{% if meal is defined %}Edit "{% if meal.dish %}{{ meal.dish.title }}{% endif %}"{% else %}Create new meal{% endif %}</h1>
 
 		{% include ':partials:flashMessages.html.twig' %}
 

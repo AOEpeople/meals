@@ -1,9 +1,9 @@
 <?php
 
 namespace Mealz\MealBundle\Service;
+use Mealz\MealBundle\Entity\Dish;
 use Mealz\MealBundle\Entity\Meal;
 use Mealz\MealBundle\Entity\Participant;
-use Mealz\UserBundle\Entity\Zombie;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -30,6 +30,8 @@ class Link {
 			return $this->linkMeal($object, $action, $referenceType);
 		} elseif($object instanceof Participant) {
 			return $this->linkParticipant($object, $action, $referenceType);
+		} elseif($object instanceof Dish) {
+			return $this->linkDish($object, $action, $referenceType);
 		} else {
 			throw new \InvalidArgumentException(sprintf(
 				'linking a %s object is not configured.',
@@ -44,6 +46,9 @@ class Link {
 			return $this->router->generate('MealzMealBundle_Meal_' . $action, array('meal' => $meal->getId()), $referenceType);
 		} elseif($action === 'newParticipant') {
 			return $this->router->generate('MealzMealBundle_Participant_new', array('meal' => $meal->getId()), $referenceType);
+		} elseif($action === 'edit' || $action === 'delete') {
+			// admin actions
+			return $this->router->generate('MealzMealBundle_Meal_' . $action, array('meal' => $meal->getId()), $referenceType);
 		} else {
 			throw new \InvalidArgumentException(sprintf(
 				'linking to "%s" action on a %s object is not configured.',
@@ -62,6 +67,20 @@ class Link {
 				'linking to "%s" action on a %s object is not configured.',
 				$action,
 				get_class($participant)
+			));
+		}
+	}
+
+	public function linkDish(Dish $dish, $action = NULL, $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH) {
+		$action = $action ?: 'edit';
+		if($action === 'edit' || $action === 'delete') {
+			// admin actions
+			return $this->router->generate('MealzMealBundle_Dish_' . $action, array('dish' => $dish->getId()), $referenceType);
+		} else {
+			throw new \InvalidArgumentException(sprintf(
+				'linking to "%s" action on a %s object is not configured.',
+				$action,
+				get_class($dish)
 			));
 		}
 	}

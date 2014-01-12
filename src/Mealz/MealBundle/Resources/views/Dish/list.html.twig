@@ -1,0 +1,31 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+	<div class="container">
+		<h1>Dishes</h1>
+		{% if is_granted('ROLE_KITCHEN_STAFF') %}
+			<div class="btn-group">
+				<a
+					class="btn btn-success"
+					href="{{ path('MealzMealBundle_Dish_new') }}"
+				>Add dish</a>
+			</div>
+		{% endif %}
+		{% include ':partials:flashMessages.html.twig' %}
+		<table class="table table-striped">
+			<tbody>
+			{% for dish in dishes %}
+				<tr>
+					<td>{{ dish.title }}</td>
+					{% if is_granted('ROLE_KITCHEN_STAFF') %}
+					<td>
+						{% include 'MealzMealBundle:DishAdmin/partials:userTools.html.twig' with {'button_class': 'btn-xs'} %}
+					</td>
+					{% endif %}
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	</div>
+
+{% endblock %}

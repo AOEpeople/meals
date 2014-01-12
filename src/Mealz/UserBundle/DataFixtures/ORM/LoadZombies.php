@@ -36,6 +36,7 @@ class LoadZombies extends AbstractFixture implements OrderedFixtureInterface,Con
 		$this->addUser('bob');
 		$this->addUser('john');
 		$this->addUser('jane');
+		$this->addUser('kochomi');
 
 		$this->objectManager->flush();
 	}

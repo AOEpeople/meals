@@ -16,20 +16,17 @@ class ParticipantRepository extends EntityRepository {
 	 * @param Participant $participant
 	 * @throws \Exception
 	 */
-	public function addParticipant(Participant $participant) {
+	public function persist(Participant $participant) {
 		$em = $this->getEntityManager();
 		$em->getConnection()->beginTransaction();
 
 		try {
-			if($this->participantExists($participant->getUser(), $participant->getMeal(), $participant->getGuestName())) {
+			if($this->participantExists($participant)) {
 				// if user is already registered
-				throw new \InvalidArgumentException(sprintf(
-					'User %s already joined %s.',
-					$participant->getUser(),
-					$participant->getMeal()
-				));
+				throw new \InvalidArgumentException(
+					'This participant has alredy joined: '. $participant
+				);
 			}
-
 			$em->persist($participant);
 			$em->flush();
 			$em->getConnection()->commit();
@@ -41,12 +38,10 @@ class ParticipantRepository extends EntityRepository {
 	}
 
 	/**
-	 * @param Zombie $user
-	 * @param Meal $meal
-	 * @param $guestName
+	 * @param Participant $participant
 	 * @return bool
 	 */
-	protected function participantExists(Zombie $user, Meal $meal, $guestName) {
+	protected function participantExists(Participant $participant) {
 		$qb = $this->getEntityManager()->createQueryBuilder();
 
 		$qb
@@ -56,16 +51,20 @@ class ParticipantRepository extends EntityRepository {
 			->join('p.user','u')
 			->where('m = :meal AND u = :user')
 		;
-		if($guestName) {
+		if($participant->isGuest()) {
 			$qb->andWhere('p.guestName = :guestName');
-			$qb->setParameter('guestName', $guestName);
+			$qb->setParameter('guestName', $participant->getGuestName());
 		} else {
 			$qb->andWHere('p.guestName IS NULL');
 		}
+		if($participant->getId()) {
+			$qb->andWhere('p.id != :id');
+			$qb->setParameter('id', $participant->getId());
+		}
 		/** @var Query $query */
 		$query = $qb->getQuery();
-		$query->setParameter('meal', $meal->getId());
-		$query->setParameter('user', $user->getUsername());
+		$query->setParameter('meal', $participant->getMeal()->getId());
+		$query->setParameter('user', $participant->getUser()->getUsername());
 
 		return $query->execute(null, Query::HYDRATE_SINGLE_SCALAR) > 0;
 	}

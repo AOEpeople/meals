@@ -100,7 +100,7 @@ class MealController extends BaseController {
 			$participant->setMeal($meal);
 
 			// that method ensures consistency by using a transaction
-			$this->getParticipantRepository()->addParticipant($participant);
+			$this->getParticipantRepository()->persist($participant);
 
 			$this->get('session')->getFlashBag()->add(
 				'success',

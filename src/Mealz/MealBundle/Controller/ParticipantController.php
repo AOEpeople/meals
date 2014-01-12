@@ -46,7 +46,7 @@ class ParticipantController extends BaseController {
 
 			if ($form->isValid()) {
 				// that method ensures consistency by using a transaction
-				$this->getParticipantRepository()->addParticipant($participant);
+				$this->getParticipantRepository()->persist($participant);
 
 				if($participant->isGuest()) {
 					$this->addFlashMessage(
@@ -87,9 +87,8 @@ class ParticipantController extends BaseController {
 			$form->handleRequest($request);
 
 			if ($form->isValid()) {
-				$em = $this->getDoctrine()->getManager();
-				$em->persist($participant);
-				$em->flush();
+				// that method ensures consistency by using a transaction
+				$this->getParticipantRepository()->persist($participant);
 
 				$this->addFlashMessage('Your changes were stored.', 'success');
 

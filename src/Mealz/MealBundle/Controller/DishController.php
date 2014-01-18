@@ -12,7 +12,7 @@ class DishController extends BaseController {
 			SELECT d
 			FROM MealzMealBundle:Dish d
 			WHERE d.enabled = TRUE
-			ORDER BY d.title ASC
+			ORDER BY d.title_en ASC
 		');
 
 		$dishes = $query->execute();

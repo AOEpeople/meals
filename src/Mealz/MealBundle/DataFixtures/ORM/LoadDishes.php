@@ -34,7 +34,7 @@ class LoadDishes extends AbstractFixture implements OrderedFixtureInterface {
 
 	protected function addDish($title) {
 		$dish = new Dish();
-		$dish->setTitle($title);
+		$dish->setTitleEn($title);
 
 		$this->objectManager->persist($dish);
 		$this->addReference('dish-' . $this->counter++, $dish);

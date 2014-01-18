@@ -29,14 +29,28 @@ class Dish
 	 * @ORM\Column(type="string", length=255, nullable=FALSE)
 	 * @var string
 	 */
-	protected $title;
+	protected $title_en;
 
 	/**
 	 * @Assert\Length(max=4096)
 	 * @ORM\Column(type="text", nullable=TRUE)
 	 * @var null|string
 	 */
-	protected $description = NULL;
+	protected $description_en = NULL;
+
+	/**
+	 * @Assert\Length(min=8, max=255)
+	 * @ORM\Column(type="string", length=255, nullable=TRUE)
+	 * @var string
+	 */
+	protected $title_de;
+
+	/**
+	 * @Assert\Length(max=4096)
+	 * @ORM\Column(type="text", nullable=TRUE)
+	 * @var null|string
+	 */
+	protected $description_de = NULL;
 
 	/**
 	 * @ORM\Column(type="decimal", precision=10, scale=4, nullable=TRUE)
@@ -56,11 +70,13 @@ class Dish
 	 */
 	protected $meals;
 
-	public function __construct($title = NULL) {
+	/**
+	 * @var string
+	 */
+	protected $currentLocale = 'en';
+
+	public function __construct() {
 		$this->meals = new ArrayCollection();
-		if($title !== NULL) {
-			$this->setTitle($title);
-		}
 	}
 
 	/**
@@ -74,11 +90,12 @@ class Dish
 	}
 
 	/**
+	 * @deprecated use setDescriptionEn() instead
 	 * @param null|string $description
 	 */
 	public function setDescription($description)
 	{
-		$this->description = $description;
+		$this->setDescriptionEn($description);
 	}
 
 	/**
@@ -86,7 +103,11 @@ class Dish
 	 */
 	public function getDescription()
 	{
-		return $this->description;
+		if($this->currentLocale == 'de' && $this->description_de) {
+			return $this->getDescriptionDe();
+		} else {
+			return $this->getDescriptionEn();
+		}
 	}
 
 	/**
@@ -107,10 +128,11 @@ class Dish
 
 	/**
 	 * @param string $title
+	 * @deprecated use setTitleEn() or setTitleDe() instead
 	 */
 	public function setTitle($title)
 	{
-		$this->title = $title;
+		$this->setTitleEn($title);
 	}
 
 	/**
@@ -118,7 +140,11 @@ class Dish
 	 */
 	public function getTitle()
 	{
-		return $this->title;
+		if($this->currentLocale == 'de' && $this->title_de) {
+			return $this->getTitleDe();
+		} else {
+			return $this->getTitleEn();
+		}
 	}
 
 	/**
@@ -143,6 +169,88 @@ class Dish
 	public function getMeals() {
 		return $this->meals;
 	}
+
+	/**
+	 * @param string $currentLocale
+	 */
+	public function setCurrentLocale($currentLocale)
+	{
+		$this->currentLocale = $currentLocale;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getCurrentLocale()
+	{
+		return $this->currentLocale;
+	}
+
+	/**
+	 * @param null|string $description_de
+	 */
+	public function setDescriptionDe($description_de)
+	{
+		$this->description_de = $description_de;
+	}
+
+	/**
+	 * @return null|string
+	 */
+	public function getDescriptionDe()
+	{
+		return $this->description_de;
+	}
+
+	/**
+	 * @param null|string $description_en
+	 */
+	public function setDescriptionEn($description_en)
+	{
+		$this->description_en = $description_en;
+	}
+
+	/**
+	 * @return null|string
+	 */
+	public function getDescriptionEn()
+	{
+		return $this->description_en;
+	}
+
+	/**
+	 * @param string $title_de
+	 */
+	public function setTitleDe($title_de)
+	{
+		$this->title_de = $title_de;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getTitleDe()
+	{
+		return $this->title_de;
+	}
+
+	/**
+	 * @param string $title_en
+	 */
+	public function setTitleEn($title_en)
+	{
+		$this->title_en = $title_en;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getTitleEn()
+	{
+		return $this->title_en;
+	}
+
+
 
 	public function __toString() {
 		return $this->getTitle();

@@ -66,7 +66,7 @@ abstract class AbstractRepositoryTestCase extends WebTestCase {
 	 */
 	protected function createDish() {
 		$dish = new Dish();
-		$dish->setTitle('Test ' . rand());
+		$dish->setTitleEn('Test ' . rand());
 
 		return $dish;
 	}

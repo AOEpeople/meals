@@ -13,8 +13,10 @@ class DishAdminForm extends AbstractType {
 
 	public function buildForm(FormBuilderInterface $builder, array $options) {
 		$builder
-			->add('title')
-			->add('description', 'textarea', array('required' => FALSE))
+			->add('title_en')
+			->add('title_de', 'text', array('required' => FALSE))
+			->add('description_en', 'textarea', array('required' => FALSE))
+			->add('description_de', 'textarea', array('required' => FALSE))
 			->add('save', 'submit')
 		;
 	}

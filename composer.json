@@ -20,8 +20,11 @@
         "sensio/generator-bundle": "~2.3",
         "incenteev/composer-parameter-handler": "~2.0",
 
-        "doctrine/doctrine-fixtures-bundle": "~2.2",
         "braincrafted/bootstrap-bundle": "~2.0"
+    },
+    "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "~2.2",
+        "phpunit/phpunit": "~3.7"
     },
     "scripts": {
         "post-install-cmd": [

@@ -4,21 +4,16 @@
 namespace Mealz\MealBundle\Controller;
 
 
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query;
 use Mealz\MealBundle\Entity\Meal;
 use Mealz\MealBundle\Entity\Participant;
-use Mealz\MealBundle\Entity\ParticipantRepository;
+use Mealz\MealBundle\EventListener\ParticipantNotUniqueException;
 use Mealz\UserBundle\Entity\User;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class MealController extends BaseController {
 
-	/**
-	 * @return ParticipantRepository
-	 */
-	protected function getParticipantRepository() {
-		return $this->getDoctrine()->getRepository('MealzMealBundle:Participant');
-	}
 
 	public function indexAction() {
 		/** @var Query $query */
@@ -99,14 +94,17 @@ class MealController extends BaseController {
 			$participant->setUser($this->getUser());
 			$participant->setMeal($meal);
 
-			// that method ensures consistency by using a transaction
-			$this->getParticipantRepository()->persist($participant);
+			$em = $this->getDoctrine()->getManager();
+			$em->transactional(function(EntityManager $em) use($participant) {
+				$em->persist($participant);
+				$em->flush();
+			});
 
 			$this->get('session')->getFlashBag()->add(
 				'success',
 				'You joined as participant to the meal.'
 			);
-		} catch (\InvalidArgumentException $e) {
+		} catch (ParticipantNotUniqueException $e) {
 			$this->addFlashMessage('You are already joining this meal.', 'info');
 		}
 

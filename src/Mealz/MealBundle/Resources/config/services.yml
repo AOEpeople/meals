@@ -4,6 +4,8 @@ parameters:
   mealz_meal.doorman.class: Mealz\MealBundle\Service\Doorman
   mealz_meal.link.class: Mealz\MealBundle\Service\Link
 
+  mealz_meal.event_listener.participant_persistence.class: Mealz\MealBundle\EventListener\ParticipantPersistenceListener
+
 services:
 
   mealz_meal.doorman:
@@ -25,3 +27,9 @@ services:
     arguments: [ @mealz_meal.link ]
     tags:
       - { name: twig.extension }
+
+  mealz_meal.event_listener.participant_persistence:
+    class: %mealz_meal.event_listener.participant_persistence.class%
+    tags:
+        - { name: doctrine.event_listener, event: prePersist }
+        - { name: doctrine.event_listener, event: preUpdate }

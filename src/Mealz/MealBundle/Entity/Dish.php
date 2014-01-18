@@ -56,8 +56,11 @@ class Dish
 	 */
 	protected $meals;
 
-	public function __construct() {
+	public function __construct($title = NULL) {
 		$this->meals = new ArrayCollection();
+		if($title !== NULL) {
+			$this->setTitle($title);
+		}
 	}
 
 	/**

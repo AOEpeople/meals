@@ -30,6 +30,10 @@ abstract class BaseController extends Controller {
 		return $linkService->link($object, $action, $referenceType);
 	}
 
+	/**
+	 * @param $message
+	 * @param $severity  "danger", "warning", "info", "success"
+	 */
 	public function addFlashMessage($message, $severity) {
 		$this->get('session')->getFlashBag()->add($severity, $message);
 	}

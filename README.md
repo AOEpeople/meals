@@ -61,3 +61,14 @@ It generates dishes, meals and users.
 
 You can use "john", "jane, "alice" and "bob" to login. Their password is just their username.
 The User "kochomi" is allowed to modify dishes and edit meals.
+
+### Running tests
+
+Some tests require a working database. The database dedicated for running tests can be configured by setting
+the database name in `app/config/parameters.yml` as `database_name_testing`. Credentials should be the same
+as for the dev environment.
+
+Before running phpunit make sure the database schema is up-to-date:
+
+    php app/console doctrine:schema:update --env=test --force
+    bin/phpunit

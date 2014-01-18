@@ -2,7 +2,8 @@ parameters:
     database_driver:   pdo_mysql
     database_host:     127.0.0.1
     database_port:     ~
-    database_name:     symfony
+    database_name:     mealz
+    database_name_testing: mealz_test
     database_user:     root
     database_password: ~
 

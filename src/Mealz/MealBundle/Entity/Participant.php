@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Dish
  *
  * @ORM\Table(name="participant")
- * @ORM\Entity(repositoryClass="Mealz\MealBundle\Entity\ParticipantRepository")
+ * @ORM\Entity()
  */
 class Participant
 {
@@ -137,6 +137,10 @@ class Participant
 	function __toString()
 	{
 		return $this->getMeal() . ' ' . $this->getUser();
+	}
+
+	public function __clone() {
+		$this->id = NULL;
 	}
 
 

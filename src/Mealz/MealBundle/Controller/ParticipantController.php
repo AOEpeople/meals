@@ -4,9 +4,10 @@
 namespace Mealz\MealBundle\Controller;
 
 
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query;
 use Mealz\MealBundle\Entity\Participant;
-use Mealz\MealBundle\Entity\ParticipantRepository;
+use Mealz\MealBundle\EventListener\ParticipantNotUniqueException;
 use Mealz\MealBundle\Form\Type\ParticipantForm;
 use Mealz\MealBundle\Form\Type\ParticipantGuestForm;
 use Mealz\UserBundle\Entity\User;
@@ -15,13 +16,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class ParticipantController extends BaseController {
-
-	/**
-	 * @return ParticipantRepository
-	 */
-	protected function getParticipantRepository() {
-		return $this->getDoctrine()->getRepository('MealzMealBundle:Participant');
-	}
 
 	public function newAction(Request $request, Meal $meal) {
 		if(!$this->getUser() instanceof User) {
@@ -45,16 +39,23 @@ class ParticipantController extends BaseController {
 			$form->handleRequest($request);
 
 			if ($form->isValid()) {
-				// that method ensures consistency by using a transaction
-				$this->getParticipantRepository()->persist($participant);
+				try {
+					$em = $this->getDoctrine()->getManager();
+					$em->transactional(function(EntityManager $em) use($participant) {
+						$em->persist($participant);
+						$em->flush();
+					});
 
-				if($participant->isGuest()) {
-					$this->addFlashMessage(
-						sprintf('Added %s as participant to the meal.', $participant->getGuestName()),
-						'success'
-					);
-				} else {
-					$this->addFlashMessage('You joined as participant to the meal.', 'success');
+					if($participant->isGuest()) {
+						$this->addFlashMessage(
+							sprintf('Added %s as participant to the meal.', $participant->getGuestName()),
+							'success'
+						);
+					} else {
+						$this->addFlashMessage('You joined as participant to the meal.', 'success');
+					}
+				} catch(ParticipantNotUniqueException $e) {
+					$this->addFlashMessage('A participant with the same properties already exists in the database.', 'danger');
 				}
 
 
@@ -87,10 +88,17 @@ class ParticipantController extends BaseController {
 			$form->handleRequest($request);
 
 			if ($form->isValid()) {
-				// that method ensures consistency by using a transaction
-				$this->getParticipantRepository()->persist($participant);
+				try {
+					$em = $this->getDoctrine()->getManager();
+					$em->transactional(function(EntityManager $em) use($participant) {
+						$em->persist($participant);
+						$em->flush();
+					});
 
-				$this->addFlashMessage('Your changes were stored.', 'success');
+					$this->addFlashMessage('Your changes were stored.', 'success');
+				} catch(ParticipantNotUniqueException $e) {
+					$this->addFlashMessage('The participant could not be changed, because a participant with the same properties is already in the database.', 'danger');
+				}
 
 				return $this->redirect($this->generateUrlTo($participant->getMeal()));
 			}

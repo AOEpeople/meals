@@ -1,0 +1,72 @@
+'empty header returns first locale':
+  locales: ['en', 'de']
+  header: ~ #empty
+  expected: 'en'
+'no matching header returns first locale':
+  locales: ['en', 'de']
+  header: 'foo,bar'
+  expected: 'en'
+'first matching header is returned nr1':
+  locales: ['en', 'de']
+  header: 'en,de'
+  expected: 'en'
+'first matching header is returned nr2':
+  locales: ['en', 'de']
+  header: 'foo,de'
+  expected: 'de'
+'header is case insensitive':
+  locales: ['en', 'de']
+  header: 'DE'
+  expected: 'de'
+'star matches the default language':
+  locales: ['en', 'de']
+  header: '*'
+  expected: 'en'
+
+# sub-languages
+'sub languages match':
+  locales: ['default', 'en-gb']
+  header: 'en-GB'
+  expected: 'en-gb'
+'similar sub languages dont match':
+  locales: ['default', 'en-gb']
+  header: 'en-US'
+  expected: 'default'
+'sub languages also match shortened version':
+  locales: ['default', 'en']
+  header: 'en-GB'
+  expected: 'en'
+'sub languages match even if there is a perfect match later on':
+  locales: ['default', 'en', 'de']
+  header: 'foo, de-DE, en'
+  expected: 'de'
+
+# quality
+'quality is paid respect to':
+  locales: ['default', 'en', 'de']
+  header: 'foo;q=1, de-DE;q=0.8, en;q=0.7'
+  expected: 'de'
+'quality items can be random order':
+  locales: ['default', 'en', 'de']
+  header: 'foo;q=1, en;q=0.7, de-DE;q=0.8'
+  expected: 'de'
+'default quality is 1':
+  locales: ['default', 'en', 'de']
+  header: 'foo;q=0.8, en;q=0.7, de-DE'
+  expected: 'de'
+'items with quality 0 are ignored':
+  locales: ['default', 'en', 'de']
+  header: 'foo;q=1, de;q=0'
+  expected: 'default'
+'star matches the default language with quality nr1':
+  locales: ['default', 'en', 'de']
+  header: 'foo;q=1, *;q=0.2'
+  expected: 'default'
+'star matches the default language with quality nr2':
+  locales: ['en', 'de']
+  header: 'foo;q=1, *;q=0.5, de;q=0.2'
+  expected: 'en'
+'when multiple languages with same quality then first one wins':
+  locales: ['default', 'en', 'de']
+  header: 'foo;q=1, de;q=0.5, en;q=0.5'
+  expected: 'de'

@@ -3,8 +3,10 @@ parameters:
   mealz_meal.twig_extension.link.class: Mealz\MealBundle\Twig\Extension\Link
   mealz_meal.doorman.class: Mealz\MealBundle\Service\Doorman
   mealz_meal.link.class: Mealz\MealBundle\Service\Link
+  mealz_meal.http_header_utility.class: Mealz\MealBundle\Service\HttpHeaderUtility
 
   mealz_meal.event_listener.participant_persistence.class: Mealz\MealBundle\EventListener\ParticipantPersistenceListener
+  mealz_meal.event_listener.localisation.class: Mealz\MealBundle\EventListener\LocalisationListener
 
 services:
 
@@ -28,8 +30,23 @@ services:
     tags:
       - { name: twig.extension }
 
+  mealz_meal.http_header_utility:
+    class: %mealz_meal.http_header_utility.class%
+    calls:
+      - [setLocales, [[%locale%, en, de]]]
+
   mealz_meal.event_listener.participant_persistence:
     class: %mealz_meal.event_listener.participant_persistence.class%
     tags:
         - { name: doctrine.event_listener, event: prePersist }
         - { name: doctrine.event_listener, event: preUpdate }
+
+  mealz_meal.event_listener.localisation:
+    class: %mealz_meal.event_listener.localisation.class%
+    arguments: [@request_stack, @mealz_meal.http_header_utility]
+    tags:
+      # set locale in request
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+      # set locale in dish entities
+      - { name: doctrine.event_listener, event: postLoad }
+

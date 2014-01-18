@@ -8,6 +8,7 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Mealz\MealBundle\Entity\Dish;
 use Mealz\MealBundle\Service\HttpHeaderUtility;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 class LocalisationListener {
@@ -53,6 +54,11 @@ class LocalisationListener {
 			$locale = $this->httpHeaderUtility->getLocaleFromAcceptLanguageHeader($request->headers->get('Accept-Language'));
 			$request->setLocale($locale);
 		}
+	}
+
+	public function onKernelResponse(FilterResponseEvent $filterResponseEvent) {
+		$response = $filterResponseEvent->getResponse();
+		$response->headers->add('Vary: Accept-Language');
 	}
 
 }

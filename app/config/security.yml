@@ -43,8 +43,8 @@ security:
 
 imag_ldap:
   client:
-    host: mealz.local
-    port: 389
+    host: %ldap_host%
+    port: %ldap_port%
     skip_roles: True
     version: 3 # Optional
 #    username: foo # Optional
@@ -55,9 +55,9 @@ imag_ldap:
 
   user_class: Mealz\UserBundle\User\LdapUser
   user:
-    base_dn: ou=Mealz,dc=mealz,dc=local
+    base_dn: %ldap_base_dn%
 #    filter: (&(foo=bar)(ObjectClass=Person)) #Optional
-    name_attribute: cn
+    name_attribute: %ldap_name_attribute%
 #  role:
 #    base_dn: ou=group, dc=host, dc=foo
 ##    filter: (ou=group) #Optional

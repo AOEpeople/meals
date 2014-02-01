@@ -14,3 +14,10 @@ parameters:
 
     locale:            en
     secret:            ThisTokenIsNotSoSecretChangeIt
+
+    ldap_host:           ~
+    #ssl by default, use 389 for unencrypted connection
+    ldap_port:           636 #ssl by default
+    ldap_base_dn:        ~
+    ldap_name_attribute: cn
+

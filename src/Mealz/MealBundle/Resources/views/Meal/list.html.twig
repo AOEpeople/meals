@@ -4,28 +4,7 @@
 	<div class="container">
 	<h1>Menu</h1>
 	{% include ':partials:flashMessages.html.twig' %}
-	<table class="table table-striped">
-		<tbody>
-		{% for meal in meals %}
-			{% set dish=meal.dish %}
-			<tr>
-				<td>{{ meal.dateTime | date('Y-m-d H:i') }}</td>
-				<td>
-					<p><a href="{{ link(meal) }}">{{ dish.title }}</a></p>
-					{% if dish.description %}<p class="text-muted">{{ dish.description }}</p>{% endif %}
-				</td>
-				<td>
-					{% include 'MealzMealBundle:Meal/partials:userTools.html.twig' with {'button_class': 'btn-xs'} %}
-				</td>
-				{% if is_granted('ROLE_KITCHEN_STAFF') %}
-				<td>
-					{% include 'MealzMealBundle:MealAdmin/partials:userTools.html.twig' with {'button_class': 'btn-xs'} %}
-				</td>
-				{% endif %}
-			</tr>
-		{% endfor %}
-		</tbody>
-	</table>
+	{% include 'MealzMealBundle:Meal/partials:mealTable.html.twig' with {showDate: true}%}
 	</div>
 
 {% endblock %}

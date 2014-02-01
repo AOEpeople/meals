@@ -32,8 +32,13 @@ class MealController extends BaseController {
 			)
 		);
 
+		// nextWeek has to be the last day of the week to
+		// avoid problems when linking to the last week of a year.
+		$nextWeek = new \DateTime('this Sunday +1 week');
+
 		return $this->render('MealzMealBundle:Meal:index.html.twig', array(
-			'meals' => $meals
+			'meals' => $meals,
+			'next_week' => $nextWeek,
 		));
 	}
 
@@ -62,6 +67,47 @@ class MealController extends BaseController {
 
 		return $this->render('MealzMealBundle:Meal:show.html.twig', array(
 			'meal' => $meal
+		));
+	}
+
+	public function weekAction($week) {
+		try {
+			$startTime = new \DateTime($week);
+		} catch(\Exception $e) {
+			throw $this->createNotFoundException('Invalid Date', $e);
+		}
+
+		$endTime = clone $startTime;
+		$endTime->modify('+1 week');
+
+		$meals = $this->getMealRepository()->getSortedMeals(
+			$startTime,
+			$endTime,
+			NULL,
+			array(
+				'load_dish' => TRUE,
+				'load_participants' => TRUE,
+			)
+		);
+
+		$firstDay = clone $startTime;
+		$lastDay = clone $endTime;
+		$lastDay->modify('-1 second');
+		// nextWeek and previous week have to be the last day of the week to
+		// avoid problems when linking to the last week of a year.
+		$nextWeek = clone $startTime;
+		$nextWeek->modify('+2 weeks -1 day');
+		$previousWeek = clone $startTime;
+		$previousWeek->modify('-1 day');
+
+		return $this->render('MealzMealBundle:Meal:week.html.twig', array(
+			'meals' => $meals,
+			'days' => $this->groupByDay($meals),
+			'week' => $week,
+			'first_day' => $firstDay,
+			'last_day' => $lastDay,
+			'next_week' => $nextWeek,
+			'previous_week' => $previousWeek,
 		));
 	}
 
@@ -100,6 +146,20 @@ class MealController extends BaseController {
 		}
 
 		return $this->redirect($this->generateUrlTo($meal));
+	}
+
+	protected function groupByDay($meals) {
+		$return = array();
+		foreach($meals as $meal) {
+			/** @var Meal $meal */
+			$day = $meal->getDateTime()->format('Y-m-d');
+			if(!array_key_exists($day, $return)) {
+				$return[$day] = array();
+			}
+			$return[$day][] = $meal;
+		}
+
+		return $return;
 	}
 
 }

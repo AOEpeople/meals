@@ -1,0 +1,23 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+	<div class="container">
+	<h1>Menu from {{ first_day | date('d F Y') }} to {{ last_day | date('d F Y') }}</h1>
+	{% include ':partials:flashMessages.html.twig' %}
+
+	<ul class="pager">
+		<li class="previous"><a href="{{ path('MealzMealBundle_Meal_week', {week: previous_week|date('Y\\\WW')}) }}">&larr; Previous Week</a></li>
+		<li class="next"><a href="{{ path('MealzMealBundle_Meal_week', {week: next_week|date('Y\\\WW')}) }}">Next Week &rarr;</a></li>
+	</ul>
+
+	{% if meals | length > 0 %}
+		{% for day,meals in days %}
+			<h4>{{ day | date('l, d F Y') }}</h4>
+			{% include 'MealzMealBundle:Meal/partials:mealTable.html.twig' with {showDate: false}%}
+		{% endfor %}
+	{% else %}
+		<div class="alert alert-warning">No meals this week.</div>
+	{% endif %}
+	</div>
+
+{% endblock %}

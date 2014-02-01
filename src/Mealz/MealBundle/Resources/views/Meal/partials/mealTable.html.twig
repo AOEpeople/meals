@@ -1,0 +1,31 @@
+{% if showDate is not defined %}
+	{% set showDate = TRUE %}
+{% endif %}
+<table class="table table-striped table-meals">
+	<tbody>
+	{% for meal in meals %}
+		{% set dish=meal.dish %}
+		<tr>
+			<td class="table-meal-date">
+				{% if showDate %}
+				{{ meal.dateTime | date('Y-m-d H:i') }}
+				{% else %}
+				{{ meal.dateTime | date('H:i') }}
+				{% endif %}
+			</td>
+			<td class="table-meal-dish">
+				<p><a href="{{ link(meal) }}">{{ dish.title }}</a></p>
+				{% if dish.description %}<p class="text-muted">{{ dish.description }}</p>{% endif %}
+			</td>
+			<td class="table-meal-user">
+				{% include 'MealzMealBundle:Meal/partials:userTools.html.twig' with {'button_class': 'btn-xs'} %}
+			</td>
+			{% if is_granted('ROLE_KITCHEN_STAFF') %}
+				<td class="table-meal-kitchen">
+					{% include 'MealzMealBundle:MealAdmin/partials:userTools.html.twig' with {'button_class': 'btn-xs'} %}
+				</td>
+			{% endif %}
+		</tr>
+	{% endfor %}
+	</tbody>
+</table>

@@ -12,7 +12,7 @@
 		</p>
 		<p>
 			<a class="btn btn-success btn-lg" role="button" href="{{ path('MealzMealBundle_Meal') }}">Current menu</a>
-			<a class="btn btn-primary btn-lg" role="button" href="{{ path('MealzMealBundle_Meal') }}">Register now &raquo;</a>
+			<a class="btn btn-primary btn-lg" role="button" href="{{ path('MealzMealBundle_Meal_week', {week: next_week|date('Y\\\WW')}) }}">Next week &raquo;</a>
 		</p>
 	</div>
 	</div>

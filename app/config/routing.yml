@@ -5,3 +5,6 @@ xopn_mealz_for_zombies_zombies:
 xopn_mealz_for_zombies_mealz:
     resource: "@MealzMealBundle/Resources/config/routing.yml"
     prefix:   /
+
+imag_ldap:
+  resource: "@IMAGLdapBundle/Resources/config/routing.yml"

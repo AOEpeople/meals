@@ -3,19 +3,22 @@
 namespace Mealz\MealBundle\Controller;
 
 use Doctrine\ORM\Query;
+use Mealz\MealBundle\Entity\DishRepository;
 
 class DishController extends BaseController {
 
-	public function listAction() {
-		/** @var Query $query */
-		$query = $this->getDoctrine()->getManager()->createQuery('
-			SELECT d
-			FROM MealzMealBundle:Dish d
-			WHERE d.enabled = TRUE
-			ORDER BY d.title_en ASC
-		');
+	/**
+	 * @return DishRepository
+	 */
+	public function getMealRepository() {
+		$repository = $this->getDoctrine()->getRepository('MealzMealBundle:Dish');
+		$repository->setCurrentLocale($this->getRequest()->getLocale());
 
-		$dishes = $query->execute();
+		return $repository;
+	}
+
+	public function listAction() {
+		$dishes = $this->getMealRepository()->getSortedDishes();
 
 		return $this->render('MealzMealBundle:Dish:list.html.twig', array(
 			'dishes' => $dishes

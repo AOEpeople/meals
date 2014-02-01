@@ -7,25 +7,30 @@ namespace Mealz\MealBundle\Controller;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query;
 use Mealz\MealBundle\Entity\Meal;
+use Mealz\MealBundle\Entity\MealRepository;
 use Mealz\MealBundle\Entity\Participant;
 use Mealz\MealBundle\EventListener\ParticipantNotUniqueException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class MealController extends BaseController {
 
+	/**
+	 * @return MealRepository
+	 */
+	public function getMealRepository() {
+		return $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
+	}
+
 
 	public function indexAction() {
-		/** @var Query $query */
-		$query = $this->getDoctrine()->getManager()->createQuery('
-			SELECT m,d
-			FROM MealzMealBundle:Meal m
-			JOIN m.dish d
-			WHERE m.dateTime > :min_date
-			ORDER BY m.dateTime ASC
-		');
-		$query->setParameter('min_date', new \DateTime());
-		$query->setMaxResults(4);
-		$meals = $query->execute();
+		$meals = $this->getMealRepository()->getSortedMeals(
+			new \DateTime(),   // minDate
+			NULL,              // maxDate
+			4,                 // limit
+			array(
+				'load_dish' => TRUE
+			)
+		);
 
 		return $this->render('MealzMealBundle:Meal:index.html.twig', array(
 			'meals' => $meals
@@ -33,18 +38,15 @@ class MealController extends BaseController {
 	}
 
 	public function listAction() {
-		/** @var Query $query */
-		$query = $this->getDoctrine()->getManager()->createQuery('
-			SELECT m,d,p,u
-			FROM MealzMealBundle:Meal m
-			JOIN m.dish d
-			LEFT JOIN m.participants p
-			LEFT JOIN p.profile u
-			WHERE m.dateTime > :min_date
-			ORDER BY m.dateTime ASC
-		');
-		$query->setParameter('min_date', new \DateTime('-2 hours'));
-		$meals = $query->execute();
+		$meals = $this->getMealRepository()->getSortedMeals(
+			new \DateTime('-2 hours'),
+			NULL,
+			NULL,
+			array(
+				'load_dish' => TRUE,
+				'load_participants' => TRUE,
+			)
+		);
 
 		return $this->render('MealzMealBundle:Meal:list.html.twig', array(
 			'meals' => $meals
@@ -52,20 +54,10 @@ class MealController extends BaseController {
 	}
 
 	public function showAction($meal) {
-		/** @var Query $query */
-		$query = $this->getDoctrine()->getManager()->createQuery('
-			SELECT m,d,p,u
-			FROM MealzMealBundle:Meal m
-			JOIN m.dish d
-			LEFT JOIN m.participants p
-			LEFT JOIN p.profile u
-			WHERE m.id = :meal_id
-		');
-		$meal = $query->execute(array('meal_id' => intval($meal)));
+		$meal = $this->getMealRepository()->findOneById($meal, array('load_dish' => TRUE, 'load_participants' => TRUE));
+
 		if(!$meal) {
 			throw $this->createNotFoundException('The given meal does not exist');
-		} else {
-			$meal = current($meal);
 		}
 
 		return $this->render('MealzMealBundle:Meal:show.html.twig', array(

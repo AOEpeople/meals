@@ -9,7 +9,6 @@ use Doctrine\ORM\Query;
 use Mealz\MealBundle\Entity\Meal;
 use Mealz\MealBundle\Entity\Participant;
 use Mealz\MealBundle\EventListener\ParticipantNotUniqueException;
-use Mealz\UserBundle\Entity\User;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class MealController extends BaseController {
@@ -40,7 +39,7 @@ class MealController extends BaseController {
 			FROM MealzMealBundle:Meal m
 			JOIN m.dish d
 			LEFT JOIN m.participants p
-			LEFT JOIN p.user u
+			LEFT JOIN p.profile u
 			WHERE m.dateTime > :min_date
 			ORDER BY m.dateTime ASC
 		');
@@ -59,7 +58,7 @@ class MealController extends BaseController {
 			FROM MealzMealBundle:Meal m
 			JOIN m.dish d
 			LEFT JOIN m.participants p
-			LEFT JOIN p.user u
+			LEFT JOIN p.profile u
 			WHERE m.id = :meal_id
 		');
 		$meal = $query->execute(array('meal_id' => intval($meal)));
@@ -82,7 +81,7 @@ class MealController extends BaseController {
 	 * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
 	 */
 	public function joinAction(Meal $meal) {
-		if(!$this->getUser() instanceof User) {
+		if(!$this->getUser()) {
 			throw new AccessDeniedException();
 		}
 		if(!$this->getDoorman()->isUserAllowedToJoin($meal)) {
@@ -91,7 +90,7 @@ class MealController extends BaseController {
 
 		try {
 			$participant = new Participant();
-			$participant->setUser($this->getUser());
+			$participant->setProfile($this->getProfile());
 			$participant->setMeal($meal);
 
 			$em = $this->getDoctrine()->getManager();

@@ -8,7 +8,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Mealz\MealBundle\Entity\Dish;
 use Mealz\MealBundle\Entity\Meal;
 use Mealz\MealBundle\Entity\Participant;
-use Mealz\UserBundle\Entity\User;
+use Mealz\UserBundle\Entity\Profile;
 
 
 class LoadParticipants extends AbstractFixture implements OrderedFixtureInterface {
@@ -26,7 +26,7 @@ class LoadParticipants extends AbstractFixture implements OrderedFixtureInterfac
 	/**
 	 * @var array
 	 */
-	protected $users = array();
+	protected $profiles = array();
 
 	function load(ObjectManager $manager) {
 		$this->objectManager = $manager;
@@ -36,10 +36,10 @@ class LoadParticipants extends AbstractFixture implements OrderedFixtureInterfac
 			/** @var $meal Meal */
 			$users = $this->getRandomUsers();
 			foreach($users as $user) {
-				/** @var $user User */
+				/** @var $user Profile */
 				$participant = new Participant();
 				$participant->setMeal($meal);
-				$participant->setUser($user);
+				$participant->setProfile($user);
 
 				$this->objectManager->persist($participant);
 			}
@@ -53,8 +53,8 @@ class LoadParticipants extends AbstractFixture implements OrderedFixtureInterfac
 				// we can't just use $reference here, because
 				// getReference() does some doctrine magic that getReferences() does not
 				$this->meals[] = $this->getReference($referenceName);
-			} elseif($reference instanceof User) {
-				$this->users[] = $this->getReference($referenceName);
+			} elseif($reference instanceof Profile) {
+				$this->profiles[] = $this->getReference($referenceName);
 			}
 		}
 	}
@@ -63,15 +63,15 @@ class LoadParticipants extends AbstractFixture implements OrderedFixtureInterfac
 	 * @return array<Users>
 	 */
 	protected function getRandomUsers() {
-		$number = rand(0,count($this->users));
+		$number = rand(0,count($this->profiles));
 		$users = array();
 
 		if($number > 1) {
-			foreach(array_rand($this->users, $number) as $user_key) {
-				$users[] = $this->users[$user_key];
+			foreach(array_rand($this->profiles, $number) as $user_key) {
+				$users[] = $this->profiles[$user_key];
 			}
 		} elseif($number == 1) {
-			$users[] = $this->users[array_rand($this->users)];
+			$users[] = $this->profiles[array_rand($this->profiles)];
 		}
 		return $users;
 	}

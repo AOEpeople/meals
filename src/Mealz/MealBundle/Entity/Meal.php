@@ -4,7 +4,7 @@ namespace Mealz\MealBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Mealz\UserBundle\Entity\User;
+use Mealz\UserBundle\Entity\Profile;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -102,15 +102,15 @@ class Meal
 	}
 
 	/**
-	 * get the participant object of the given user if he is registered
+	 * get the participant object of the given profile if it is registered
 	 *
-	 * @param User $user
+	 * @param Profile $profile
 	 * @return \Mealz\MealBundle\Entity\Participant|null
 	 */
-	public function getParticipant(User $user) {
+	public function getParticipant(Profile $profile) {
 		foreach($this->participants as $participant) {
 			/** @var Participant $participant */
-			if(!$participant->isGuest() && $participant->getUser() === $user) {
+			if(!$participant->isGuest() && $participant->getProfile() === $profile) {
 				return $participant;
 			}
 		}
@@ -118,16 +118,16 @@ class Meal
 	}
 
 	/**
-	 * get all guests that the given user has invited
+	 * get all guests that the given profile has invited
 	 *
-	 * @param User $user
+	 * @param Profile $profile
 	 * @return Participant|null
 	 */
-	public function getGuestParticipants(User $user) {
+	public function getGuestParticipants(Profile $profile) {
 		$participants = array();
 		foreach($this->participants as $participant) {
 			/** @var Participant $participant */
-			if($participant->isGuest() && $participant->getUser() === $user) {
+			if($participant->isGuest() && $participant->getProfile() === $profile) {
 				$participants[] = $participant;
 			}
 		}

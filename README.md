@@ -50,6 +50,7 @@ The following roles are in use:
 
   * ROLE_USER: basically everyone who is allowed to join the meals
   * ROLE_KITCHEN_STAFF: allowed to create and edit dishes and meals
+  * ROLE_LOGIN_LDAP: for users who are authenticated via LDAP
 
 ### Test data
 

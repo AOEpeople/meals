@@ -1,25 +1,29 @@
 security:
     encoders:
         IMAG\LdapBundle\User\LdapUser: plaintext
-#        Mealz\UserBundle\Entity\User:
-#            algorithm:        sha1
-#            encode_as_base64: false
-#            iterations:       1
+        Mealz\UserBundle\Entity\Login:
+            algorithm:        sha1
+            encode_as_base64: false
+            iterations:       1
 
     role_hierarchy:
         ROLE_ADMIN:       ROLE_USER
 
     providers:
+        default:
+          chain:
+              providers: [ldap, database]
         ldap:
-            id: imag_ldap.security.user.provider
-        user:
-            entity: { class: MealzUserBundle:User, property: username }
+          # an extended imag_ldap.security.user.provider
+          id: mealz_user.security.user.provider
+        database:
+          entity: { class: Mealz\UserBundle\Entity\Login, property: username }
 
     firewalls:
         mealz:
             pattern: ^/
             anonymous: ~
-            provider:         ldap
+            provider:         default
             imag_ldap:        ~
             # alternative configuration
             # imag_ldap:
@@ -49,6 +53,7 @@ imag_ldap:
 #    referrals_enabled: true # Optional
 #    bind_username_before: true # Optional
 
+  user_class: Mealz\UserBundle\User\LdapUser
   user:
     base_dn: ou=Mealz,dc=mealz,dc=local
 #    filter: (&(foo=bar)(ObjectClass=Person)) #Optional

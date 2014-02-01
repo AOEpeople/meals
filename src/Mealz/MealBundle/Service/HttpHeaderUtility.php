@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Mealz\MealBundle\Service;
-
 
 class HttpHeaderUtility {
 

@@ -1,3 +1,29 @@
-parameters: ~
+parameters:
+  mealz_user.post_login.class: Mealz\UserBundle\Service\PostLogin
+  mealz_user.security.user.provider.class: Mealz\UserBundle\Provider\LdapUserProvider
 
-services: ~
+  mealz_user.event_listener.authentication.class: Mealz\UserBundle\EventListener\AuthenticationListener
+
+
+
+services:
+
+  mealz_user.post_login:
+    class: %mealz_user.post_login.class%
+    arguments: [ @doctrine.orm.default_entity_manager, @logger ]
+
+  mealz_user.event_listener.authentication:
+    class: %mealz_user.event_listener.authentication.class%
+    arguments: [ @mealz_user.post_login ]
+    tags:
+      - { name: kernel.event_subscriber }
+
+  # overridden version of "imag_ldap.security.user.provider"
+  # update here is the original signature was changed
+  mealz_user.security.user.provider:
+    class: %mealz_user.security.user.provider.class%
+    arguments:
+      - @doctrine.orm.default_entity_manager
+      - @imag_ldap.ldap_manager
+      - %imag_ldap.authentication.bind_username_before%
+      - %imag_ldap.model.user_class%

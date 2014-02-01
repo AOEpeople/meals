@@ -4,8 +4,8 @@
 		{% set button_class='' %}
 	{% endif %}
 	<div class="btn-group">
-		{% set participant = meal.getParticipant(app.user) %}
-		{% set usersGuests = meal.getGuestParticipants(app.user) %}
+		{% set participant = meal.getParticipant(app.user.profile) %}
+		{% set usersGuests = meal.getGuestParticipants(app.user.profile) %}
 		{% if participant %}
 			<a
 				class="btn btn-success {{ button_class }}"

@@ -6,6 +6,7 @@ namespace Mealz\MealBundle\Controller;
 
 use Mealz\MealBundle\Service\Doorman;
 use Mealz\MealBundle\Service\Link;
+use Mealz\UserBundle\Entity\Profile;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -16,6 +17,13 @@ abstract class BaseController extends Controller {
 	 */
 	protected function getDoorman() {
 		return $this->get('mealz_meal.doorman');
+	}
+
+	/**
+	 * @return Profile|null
+	 */
+	protected function getProfile() {
+		return $this->getUser() ? $this->getUser()->getProfile() : NULL;
 	}
 
 	/**

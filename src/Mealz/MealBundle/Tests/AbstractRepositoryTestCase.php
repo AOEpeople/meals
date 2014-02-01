@@ -10,7 +10,7 @@ use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Mealz\MealBundle\Entity\Dish;
 use Mealz\MealBundle\Entity\Meal;
-use Mealz\UserBundle\Entity\User;
+use Mealz\UserBundle\Entity\Profile;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 abstract class AbstractRepositoryTestCase extends WebTestCase {
@@ -84,15 +84,15 @@ abstract class AbstractRepositoryTestCase extends WebTestCase {
 	}
 
 	/**
-	 * @return User
+	 * @return Profile
 	 */
-	protected function createUser() {
-		$user = new User();
-		$user->setUsername('Test ' . rand());
-		$user->setSalt('salt');
-		$user->setPassword('password');
+	protected function createProfile() {
+		$profile = new Profile();
+		$profile->setUsername('Test ' . rand());
+		$profile->setSalt('salt');
+		$profile->setPassword('password');
 
-		return $user;
+		return $profile;
 	}
 
 	public function persistAndFlushAll($entities) {

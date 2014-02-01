@@ -19,17 +19,17 @@
 	<table class="table table-striped">
 		<tbody>
 		{% for participant in meal.participants %}
-			{% set user=participant.user %}
+			{% set profile=participant.profile %}
 			<tr>
 				<td>
 					{% if participant.isGuest %}
-						{{ participant.guestName }} <span class="text-muted">via {{ user.username }}</span>
+						{{ participant.guestName }} <span class="text-muted">via {{ profile.username }}</span>
 					{% else %}
-						{{ user.username }}
+						{{ profile.username }}
 					{% endif %}
 				</td>
 				<td>{% if participant.comment %}<span class="text-muted">{{ participant.comment }}</span>{% endif %}</td>
-				<td>{% if is_granted('ROLE_USER') and participant.user == app.user %}
+				<td>{% if is_granted('ROLE_USER') and participant.profile == app.user.profile %}
 					<div class="btn-group">
 						{% if is_allowed_to_leave(meal) %}
 							<a

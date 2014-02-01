@@ -3,7 +3,7 @@
 namespace Mealz\MealBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Mealz\UserBundle\Entity\User;
+use Mealz\UserBundle\Entity\Profile;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -34,12 +34,12 @@ class Participant
 
 	/**
 	 * @Assert\NotNull()
-	 * @Assert\Type(type="Mealz\UserBundle\Entity\User")
-	 * @ORM\ManyToOne(targetEntity="Mealz\UserBundle\Entity\User")
-	 * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-	 * @var User
+	 * @Assert\Type(type="Mealz\UserBundle\Entity\Profile")
+	 * @ORM\ManyToOne(targetEntity="Mealz\UserBundle\Entity\Profile")
+	 * @ORM\JoinColumn(name="profile_id", referencedColumnName="id")
+	 * @var Profile
 	 */
-	protected $user;
+	protected $profile;
 
 	/**
 	 * @Assert\Length(min=3, max=2048)
@@ -80,19 +80,19 @@ class Participant
 	}
 
 	/**
-	 * @param \Mealz\UserBundle\Entity\User $user
+	 * @param \Mealz\UserBundle\Entity\Profile $profile
 	 */
-	public function setUser($user)
+	public function setProfile($profile)
 	{
-		$this->user = $user;
+		$this->profile = $profile;
 	}
 
 	/**
-	 * @return \Mealz\UserBundle\Entity\User
+	 * @return \Mealz\UserBundle\Entity\Profile
 	 */
-	public function getUser()
+	public function getProfile()
 	{
-		return $this->user;
+		return $this->profile;
 	}
 
 	/**
@@ -136,7 +136,7 @@ class Participant
 
 	function __toString()
 	{
-		return $this->getMeal() . ' ' . $this->getUser();
+		return $this->getMeal() . ' ' . $this->getProfile();
 	}
 
 	public function __clone() {

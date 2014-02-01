@@ -5,11 +5,12 @@ namespace Mealz\UserBundle\DataFixtures\ORM;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
+use Mealz\UserBundle\Entity\Login;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
-use Mealz\UserBundle\Entity\User;
+use Mealz\UserBundle\Entity\Profile;
 
 
 class LoadUsers extends AbstractFixture implements OrderedFixtureInterface,ContainerAwareInterface {
@@ -42,16 +43,24 @@ class LoadUsers extends AbstractFixture implements OrderedFixtureInterface,Conta
 	}
 
 	protected function addUser($name) {
-		$user = new User();
-		$user->setUsername($name);
-		$user->setSalt(md5(uniqid(null, true)));
+		$login = new Login();
+		$login->setUsername($name);
+		$login->setSalt(md5(uniqid(null, true)));
 
 		/** @var EncoderFactory $encoder */
-		$encoder = $this->container->get('security.encoder_factory')->getEncoder($user);
-		$user->setPassword($encoder->encodePassword($name, $user->getSalt()));
+		$encoder = $this->container->get('security.encoder_factory')->getEncoder($login);
+		$login->setPassword($encoder->encodePassword($name, $login->getSalt()));
 
-		$this->objectManager->persist($user);
-		$this->addReference('user-' . $this->counter++, $user);
+		$profile = new Profile();
+		$profile->setUsername($name);
+		$profile->setName($name);
+		$login->setProfile($profile);
+
+		$this->objectManager->persist($profile);
+		$this->objectManager->persist($login);
+
+		$this->addReference('profile-' . $this->counter++, $profile);
+		$this->addReference('login-' . $this->counter, $login);
 	}
 
 	public function getOrder()

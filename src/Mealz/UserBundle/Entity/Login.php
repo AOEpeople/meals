@@ -3,19 +3,19 @@
 namespace Mealz\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\Role\Role;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Mealz\UserBundle\User\UserInterface as MealzUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
 
 /**
- * your standard website user entity
+ * a set of credentials that allow logging in without LDAP
  *
- * This is a placeholder implementation and should be replaced with some LDAP empowered user management
+ * This can be used for development (easier to set up then LDAP) and special roles
+ * like login for a special app in the kitchen where you can check people as participated.
  *
- * @ORM\Table(name="user")
+ * @ORM\Table(name="login")
  * @ORM\Entity
  */
-class User implements UserInterface, \Serializable
-{
+class Login implements SymfonyUserInterface, \Serializable, MealzUserInterface {
 	/**
 	 * @var string
 	 *
@@ -24,12 +24,6 @@ class User implements UserInterface, \Serializable
 	 * @ORM\GeneratedValue(strategy="NONE")
 	 */
 	private $username;
-
-	/**
-	 * @ORM\Column(type="string", length=255, nullable=TRUE)
-	 * @var string
-	 */
-	protected $name;
 
 	/**
 	 * @ORM\Column(type="string", length=32)
@@ -42,6 +36,13 @@ class User implements UserInterface, \Serializable
 	 * @var string
 	 */
 	protected $password;
+
+	/**
+	 * @ORM\OneToOne(targetEntity="Profile")
+	 * @ORM\JoinColumn(name="profile_id", referencedColumnName="id")
+	 * @var Profile
+	 */
+	protected $profile;
 
 	/**
 	 * @param string $username
@@ -60,52 +61,19 @@ class User implements UserInterface, \Serializable
 	}
 
 	/**
-	 * @param string $name
+	 * @param \Mealz\UserBundle\Entity\Profile $profile
 	 */
-	public function setName($name)
+	public function setProfile(Profile $profile = NULL)
 	{
-		$this->name = $name;
+		$this->profile = $profile;
 	}
 
 	/**
-	 * @return string
+	 * @return \Mealz\UserBundle\Entity\Profile
 	 */
-	public function getName()
+	public function getProfile()
 	{
-		return $this->name;
-	}
-
-	/**
-	 * (PHP 5 &gt;= 5.1.0)<br/>
-	 * String representation of object
-	 * @link http://php.net/manual/en/serializable.serialize.php
-	 * @return string the string representation of the object or null
-	 */
-	public function serialize()
-	{
-		return serialize(array(
-			$this->username,
-			$this->salt,
-			$this->password,
-		));
-	}
-
-	/**
-	 * (PHP 5 &gt;= 5.1.0)<br/>
-	 * Constructs the object
-	 * @link http://php.net/manual/en/serializable.unserialize.php
-	 * @param string $serialized <p>
-	 * The string representation of the object.
-	 * </p>
-	 * @return void
-	 */
-	public function unserialize($serialized)
-	{
-		list (
-			$this->username,
-			$this->salt,
-			$this->password,
-			) = unserialize($serialized);
+		return $this->profile;
 	}
 
 	/**
@@ -140,6 +108,43 @@ class User implements UserInterface, \Serializable
 		return $this->salt;
 	}
 
+	public function __toString() {
+		return $this->getUsername();
+	}
+
+	/**
+	 * (PHP 5 &gt;= 5.1.0)<br/>
+	 * String representation of object
+	 * @link http://php.net/manual/en/serializable.serialize.php
+	 * @return string the string representation of the object or null
+	 */
+	public function serialize()
+	{
+		return serialize(array(
+			$this->username,
+			$this->salt,
+			$this->password,
+		));
+	}
+
+	/**
+	 * (PHP 5 &gt;= 5.1.0)<br/>
+	 * Constructs the object
+	 * @link http://php.net/manual/en/serializable.unserialize.php
+	 * @param string $serialized <p>
+	 * The string representation of the object.
+	 * </p>
+	 * @return void
+	 */
+	public function unserialize($serialized)
+	{
+		list (
+			$this->username,
+			$this->salt,
+			$this->password,
+		) = unserialize($serialized);
+	}
+
 	/**
 	 * Returns the roles granted to the user.
 	 *
@@ -159,7 +164,7 @@ class User implements UserInterface, \Serializable
 	public function getRoles()
 	{
 		$roles = array('ROLE_USER');
-		if($this->getUsername() === 'kochomi') {
+		if ($this->getUsername() === 'kochomi') {
 			$roles[] = 'ROLE_KITCHEN_STAFF';
 		}
 
@@ -175,9 +180,5 @@ class User implements UserInterface, \Serializable
 	public function eraseCredentials()
 	{
 		// nothing to do here
-	}
-
-	public function __toString() {
-		return $this->getUsername();
 	}
 }

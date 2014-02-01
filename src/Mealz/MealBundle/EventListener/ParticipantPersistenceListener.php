@@ -52,8 +52,8 @@ class ParticipantPersistenceListener {
 			->select('COUNT(p.id)')
 			->from('MealzMealBundle:Participant', 'p')
 			->join('p.meal', 'm')
-			->join('p.user','u')
-			->where('m = :meal AND u = :user')
+			->join('p.profile','u')
+			->where('m = :meal AND u = :profile')
 		;
 		if($participant->isGuest()) {
 			$qb->andWhere('p.guestName = :guestName');
@@ -68,7 +68,7 @@ class ParticipantPersistenceListener {
 		/** @var Query $query */
 		$query = $qb->getQuery();
 		$query->setParameter('meal', $participant->getMeal()->getId());
-		$query->setParameter('user', $participant->getUser()->getUsername());
+		$query->setParameter('profile', $participant->getProfile()->getUsername());
 		$query->useResultCache(false);
 		return $query->execute(null, Query::HYDRATE_SINGLE_SCALAR) > 0;
 	}

@@ -10,7 +10,7 @@ use Mealz\MealBundle\Entity\Participant;
 use Mealz\MealBundle\EventListener\ParticipantNotUniqueException;
 use Mealz\MealBundle\Form\Type\ParticipantForm;
 use Mealz\MealBundle\Form\Type\ParticipantGuestForm;
-use Mealz\UserBundle\Entity\User;
+use Mealz\UserBundle\Entity\Profile;
 use Mealz\MealBundle\Entity\Meal;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class ParticipantController extends BaseController {
 
 	public function newAction(Request $request, Meal $meal) {
-		if(!$this->getUser() instanceof User) {
+		if(!$this->getUser()) {
 			throw new AccessDeniedException();
 		}
 		if(!$this->getDoorman()->isUserAllowedToJoin($meal)) {
@@ -27,7 +27,7 @@ class ParticipantController extends BaseController {
 
 		$participant = new Participant();
 		$participant->setMeal($meal);
-		$participant->setUser($this->getUser());
+		$participant->setProfile($this->getProfile());
 		$form = $this->createForm(
 			new ParticipantForm(),
 			$participant,
@@ -70,10 +70,10 @@ class ParticipantController extends BaseController {
 	}
 
 	public function editAction(Request $request, Participant $participant) {
-		if(!$this->getUser() instanceof User) {
+		if(!$this->getUser()) {
 			throw new AccessDeniedException();
 		}
-		if($this->getUser() !== $participant->getUser()) {
+		if($this->getProfile() !== $participant->getProfile()) {
 			throw new AccessDeniedException();
 		}
 
@@ -111,10 +111,10 @@ class ParticipantController extends BaseController {
 	}
 
 	public function deleteAction(Participant $participant) {
-		if(!$this->getUser() instanceof User) {
+		if(!$this->getUser()) {
 			throw new AccessDeniedException();
 		}
-		if($this->getUser() !== $participant->getUser()) {
+		if($this->getProfile() !== $participant->getProfile()) {
 			throw new AccessDeniedException();
 		}
 		if(!$this->getDoorman()->isUserAllowedToLeave($participant->getMeal())) {

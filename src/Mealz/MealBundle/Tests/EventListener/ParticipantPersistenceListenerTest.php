@@ -18,12 +18,12 @@ class ParticipantPersistenceListenerTest extends AbstractRepositoryTestCase {
 
 		// load test data
 		$meal = $this->createMeal();
-		$user = $this->createUser();
+		$profile = $this->createProfile();
 		$participant = new Participant();
-		$participant->setUser($user);
+		$participant->setProfile($profile);
 		$participant->setMeal($meal);
 		$participant2 = clone $participant;
-		$this->persistAndFlushAll(array($meal, $meal->getDish(), $user, $participant));
+		$this->persistAndFlushAll(array($meal, $meal->getDish(), $profile, $participant));
 
 
 		// persist second participant
@@ -42,14 +42,14 @@ class ParticipantPersistenceListenerTest extends AbstractRepositoryTestCase {
 		// load test data
 		$meal = $this->createMeal();
 		$meal2 = $this->createMeal();
-		$user = $this->createUser();
+		$profile = $this->createProfile();
 		$participant = new Participant();
-		$participant->setUser($user);
+		$participant->setProfile($profile);
 		$participant->setMeal($meal);
 		$participant2 = new Participant();
-		$participant2->setUser($user);
+		$participant2->setProfile($profile);
 		$participant2->setMeal($meal2);
-		$this->persistAndFlushAll(array($meal, $meal->getDish(), $meal2, $meal2->getDish(), $user, $participant, $participant2));
+		$this->persistAndFlushAll(array($meal, $meal->getDish(), $meal2, $meal2->getDish(), $profile, $participant, $participant2));
 
 		// change first participant
 		$this->setExpectedException('Mealz\\MealBundle\\EventListener\\ParticipantNotUniqueException');
@@ -71,14 +71,14 @@ class ParticipantPersistenceListenerTest extends AbstractRepositoryTestCase {
 
 		// load test data
 		$meal = $this->createMeal();
-		$user = $this->createUser();
-		$this->persistAndFlushAll(array($meal, $meal->getDish(), $user));
+		$profile = $this->createProfile();
+		$this->persistAndFlushAll(array($meal, $meal->getDish(), $profile));
 
 
 		$this->setExpectedException('RuntimeException');
 
 		$participant = new Participant();
-		$participant->setUser($user);
+		$participant->setProfile($profile);
 		$participant->setMeal($meal);
 
 		$em->persist($participant);
@@ -90,12 +90,12 @@ class ParticipantPersistenceListenerTest extends AbstractRepositoryTestCase {
 
 		// load test data
 		$meal = $this->createMeal();
-		$user = $this->createUser();
+		$profile = $this->createProfile();
 		$participant = new Participant();
-		$participant->setUser($user);
+		$participant->setProfile($profile);
 		$participant->setMeal($meal);
 
-		$this->persistAndFlushAll(array($meal, $meal->getDish(), $user, $participant));
+		$this->persistAndFlushAll(array($meal, $meal->getDish(), $profile, $participant));
 
 		// now add a guest
 		$participant2 = clone $participant;

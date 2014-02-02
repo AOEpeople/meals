@@ -17,6 +17,7 @@ class DishAdminForm extends AbstractType {
 			->add('title_de', 'text', array('required' => FALSE))
 			->add('description_en', 'textarea', array('required' => FALSE))
 			->add('description_de', 'textarea', array('required' => FALSE))
+			->add('image', 'file', array('required' => FALSE))
 			->add('save', 'submit')
 		;
 	}

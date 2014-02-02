@@ -5,6 +5,8 @@ namespace Mealz\MealBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Xopn\DoctrineFileBundle\Annotations as Xopn;
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * Dish
@@ -69,6 +71,13 @@ class Dish
 	 * @var ArrayCollection
 	 */
 	protected $meals;
+
+	/**
+	 * @ORM\Column(type="string", length=256, nullable=true)
+	 * @Xopn\File(path="%kernel.root_dir%/../uploads/dish")
+	 * @var File
+	 */
+	protected $image;
 
 	/**
 	 * @var string
@@ -248,6 +257,28 @@ class Dish
 	public function getTitleEn()
 	{
 		return $this->title_en;
+	}
+
+	/**
+	 * @param mixed $image
+	 */
+	public function setImage($image = NULL) {
+		// @see removeImage if you want to unset the image
+		// this logic is needed if this entity is used in forms
+		if(!empty($image)) {
+			$this->image = $image;
+		}
+	}
+
+	/**
+	 * @return File|null
+	 */
+	public function getImage() {
+		return $this->image;
+	}
+
+	public function removeImage() {
+		$this->image = NULL;
 	}
 
 

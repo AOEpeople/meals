@@ -22,6 +22,7 @@ class AppKernel extends Kernel
 			new IMAG\LdapBundle\IMAGLdapBundle(),
 			new Xopn\DoctrineFileBundle\DoctrineFileBundle(),
 			new Liip\ImagineBundle\LiipImagineBundle(),
+			new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
 
 			new Mealz\MealBundle\MealzMealBundle(),
 			new Mealz\UserBundle\MealzUserBundle(),

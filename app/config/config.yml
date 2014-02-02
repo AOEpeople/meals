@@ -82,3 +82,8 @@ liip_imagine:
             quality: 90
             filters:
                 thumbnail: { size: [263, 176], mode: outbound }
+
+stof_doctrine_extensions:
+    orm:
+        default:
+            sluggable: true

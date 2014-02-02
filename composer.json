@@ -22,7 +22,8 @@
 
         "braincrafted/bootstrap-bundle": "~2.0",
         "imag/ldap-bundle": "dev-master",
-        "liip/imagine-bundle": "dev-master"
+        "liip/imagine-bundle": "dev-master",
+        "stof/doctrine-extensions-bundle": "~1.1@dev"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "~2.2",

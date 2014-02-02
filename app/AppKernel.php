@@ -20,6 +20,7 @@ class AppKernel extends Kernel
 			// for form theming
 			new Braincrafted\Bundle\BootstrapBundle\BraincraftedBootstrapBundle(),
 			new IMAG\LdapBundle\IMAGLdapBundle(),
+			new Xopn\DoctrineFileBundle\DoctrineFileBundle(),
 
 			new Mealz\MealBundle\MealzMealBundle(),
 			new Mealz\UserBundle\MealzUserBundle(),

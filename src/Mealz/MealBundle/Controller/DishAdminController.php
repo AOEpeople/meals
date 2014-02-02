@@ -39,9 +39,14 @@ class DishAdminController extends BaseController {
 		));
 	}
 
-	public function editAction(Request $request, Dish $dish) {
+	public function editAction(Request $request, $slug) {
 		if(!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
 			throw new AccessDeniedException();
+		}
+
+		$dish = $this->getDoctrine()->getRepository('MealzMealBundle:Dish')->findOneBy(array('slug' => $slug));
+		if(!$dish) {
+			throw $this->createNotFoundException();
 		}
 
 		$form = $this->createForm(new DishAdminForm(), $dish);
@@ -67,9 +72,13 @@ class DishAdminController extends BaseController {
 		));
 	}
 
-	public function deleteAction(Dish $dish) {
+	public function deleteAction($slug) {
 		if(!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
 			throw new AccessDeniedException();
+		}
+		$dish = $this->getDoctrine()->getRepository('MealzMealBundle:Dish')->findOneBy(array('slug' => $slug));
+		if(!$dish) {
+			throw $this->createNotFoundException();
 		}
 
 		$em = $this->getDoctrine()->getManager();

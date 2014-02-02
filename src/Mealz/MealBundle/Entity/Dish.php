@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Xopn\DoctrineFileBundle\Annotations as Xopn;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Xopn\DoctrineFileBundle\File\File;
 
 /**
@@ -24,6 +25,13 @@ class Dish
 	 * @ORM\GeneratedValue(strategy="AUTO")
 	 */
 	private $id;
+
+	/**
+	 * @Gedmo\Slug(fields={"title_en"})
+	 * @ORM\Column(length=128, unique=true)
+	 * @var string
+	 */
+	protected $slug;
 
 	/**
 	 * @Assert\NotBlank()
@@ -96,6 +104,13 @@ class Dish
 	public function getId()
 	{
 		return $this->id;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getSlug() {
+		return $this->slug;
 	}
 
 	/**

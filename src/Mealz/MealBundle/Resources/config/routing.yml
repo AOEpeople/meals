@@ -54,9 +54,9 @@ MealzMealBundle_Dish_new:
     defaults: { _controller: "MealzMealBundle:DishAdmin:new" }
 
 MealzMealBundle_Dish_edit:
-    pattern:  /dish/{dish}/edit
+    pattern:  /dish/{slug}/edit
     defaults: { _controller: "MealzMealBundle:DishAdmin:edit" }
 
 MealzMealBundle_Dish_delete:
-    pattern:  /dish/{dish}/delete
+    pattern:  /dish/{slug}/delete
     defaults: { _controller: "MealzMealBundle:DishAdmin:delete" }

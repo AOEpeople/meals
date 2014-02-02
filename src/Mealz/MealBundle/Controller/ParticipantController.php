@@ -17,9 +17,13 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class ParticipantController extends BaseController {
 
-	public function newAction(Request $request, Meal $meal) {
+	public function newAction(Request $request, $date, $dish) {
 		if(!$this->getUser()) {
 			throw new AccessDeniedException();
+		}
+		$meal = $this->getMealRepository()->findOneByDateAndDish($date, $dish);
+		if(!$meal) {
+			throw $this->createNotFoundException('The given meal does not exist');
 		}
 		if(!$this->getDoorman()->isUserAllowedToJoin($meal)) {
 			throw new AccessDeniedException('You are not allowed to join this meal.');

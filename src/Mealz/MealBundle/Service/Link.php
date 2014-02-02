@@ -43,9 +43,15 @@ class Link {
 	public function linkMeal(Meal $meal, $action = NULL, $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH) {
 		$action = $action ?: 'show';
 		if($action === 'show' || $action === 'join') {
-			return $this->router->generate('MealzMealBundle_Meal_' . $action, array('meal' => $meal->getId()), $referenceType);
+			return $this->router->generate('MealzMealBundle_Meal_' . $action, array(
+				'date' => $meal->getDateTime()->format('Y-m-d'),
+				'dish' => $meal->getDish()->getSlug(),
+			), $referenceType);
 		} elseif($action === 'newParticipant') {
-			return $this->router->generate('MealzMealBundle_Participant_new', array('meal' => $meal->getId()), $referenceType);
+			return $this->router->generate('MealzMealBundle_Participant_new', array(
+				'date' => $meal->getDateTime()->format('Y-m-d'),
+				'dish' => $meal->getDish()->getSlug(),
+			), $referenceType);
 		} elseif($action === 'edit' || $action === 'delete') {
 			// admin actions
 			return $this->router->generate('MealzMealBundle_Meal_' . $action, array('meal' => $meal->getId()), $referenceType);

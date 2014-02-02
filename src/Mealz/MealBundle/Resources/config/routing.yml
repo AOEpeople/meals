@@ -26,15 +26,15 @@ MealzMealBundle_Meal_delete:
     defaults: { _controller: "MealzMealBundle:MealAdmin:delete" }
 
 MealzMealBundle_Meal_show:
-    pattern:  /menu/{meal}
+    pattern:  /menu/{date}/{dish}
     defaults: { _controller: "MealzMealBundle:Meal:show" }
 
 MealzMealBundle_Meal_join:
-    pattern:  /menu/{meal}/join
+    pattern:  /menu/{date}/{dish}/join
     defaults: { _controller: "MealzMealBundle:Meal:join" }
 
 MealzMealBundle_Participant_new:
-    pattern:  /menu/{meal}/add
+    pattern:  /menu/{date}/{dish}/add
     defaults: { _controller: "MealzMealBundle:Participant:new" }
 
 MealzMealBundle_Participant_edit:

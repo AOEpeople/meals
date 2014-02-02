@@ -4,6 +4,8 @@
 namespace Mealz\MealBundle\Controller;
 
 
+use Mealz\MealBundle\Entity\DishRepository;
+use Mealz\MealBundle\Entity\MealRepository;
 use Mealz\MealBundle\Service\Doorman;
 use Mealz\MealBundle\Service\Link;
 use Mealz\UserBundle\Entity\Profile;
@@ -11,6 +13,24 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 abstract class BaseController extends Controller {
+	/**
+	 * @return MealRepository
+	 */
+	public function getMealRepository()
+	{
+		return $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
+	}
+
+	/**
+	 * @return DishRepository
+	 */
+	public function getDishRepository()
+	{
+		$repository = $this->getDoctrine()->getRepository('MealzMealBundle:Dish');
+		$repository->setCurrentLocale($this->getRequest()->getLocale());
+
+		return $repository;
+	}
 
 	/**
 	 * @return Doorman

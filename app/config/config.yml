@@ -75,3 +75,10 @@ braincrafted_bootstrap:
         twig: true
         knp_menu: false
         knp_paginator: false
+
+liip_imagine:
+    filter_sets:
+        thumbnail:
+            quality: 90
+            filters:
+                thumbnail: { size: [263, 176], mode: outbound }

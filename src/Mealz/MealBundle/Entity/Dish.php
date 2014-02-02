@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Xopn\DoctrineFileBundle\Annotations as Xopn;
-use Symfony\Component\HttpFoundation\File\File;
+use Xopn\DoctrineFileBundle\File\File;
 
 /**
  * Dish
@@ -74,7 +74,7 @@ class Dish
 
 	/**
 	 * @ORM\Column(type="string", length=256, nullable=true)
-	 * @Xopn\File(path="%kernel.root_dir%/../uploads/dish")
+	 * @Xopn\File(path="%kernel.root_dir%/../web/media/dish")
 	 * @var File
 	 */
 	protected $image;

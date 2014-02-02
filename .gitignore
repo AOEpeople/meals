@@ -12,4 +12,5 @@
 /bin/
 /composer.phar
 /phpunit.xml
-/uploads
+/web/media/*
+!/web/media/.gitkeep

@@ -1,13 +1,27 @@
 {% extends '::base.html.twig' %}
 
 {% block body %}
-	<div class="container">
 	{% set dish = meal.dish %}
+	<div class="container">
 	<h1>{{ dish.title }}</h1>
-	<p class="text-muted">on {{ meal.dateTime | date('Y-m-d H:i') }}</p>
+	<div class="row">
+		<div class="col-md-9">
+			<p class="text-muted">on {{ meal.dateTime | date('Y-m-d H:i') }}</p>
 
-	{% include 'MealzMealBundle:Meal/partials:userTools.html.twig' %}
+			{% if dish.description %}
+				<p>{{ dish.description | nl2br }}</p>
+			{% endif %}
 
+			{% include 'MealzMealBundle:Meal/partials:userTools.html.twig' %}
+		</div>
+		<div class="col-md-3">
+			{% if dish.image %}
+				<img src="{{ dish.image.webPath | imagine_filter('thumbnail') }}" />
+			{% else %}
+				<img src="{{ 'img/placeholder.jpg' | imagine_filter('thumbnail') }}" />
+			{% endif %}
+		</div>
+	</div>
 	<h2>
 		{% if meal.participants | length > 1 %}
 			{{ meal.participants | length }} Participants

@@ -25,7 +25,15 @@
 		{% for meal in meals %}
 			{% set dish=meal.dish %}
 			<div class="col-md-3">
-				<h2>{{ dish.title }}</h2>
+				<a href="{{ link(meal) }}">
+					{% if dish.image %}
+						<img src="{{ dish.image.webPath | imagine_filter('thumbnail') }}" />
+					{% else %}
+						<img src="{{ 'img/placeholder.jpg' | imagine_filter('thumbnail') }}" />
+					{% endif %}
+					<h4>{{ dish.title }}</h4>
+				</a>
+
 				{% if dish.description %}<p>{{ dish.description }}</p>{% endif %}
 			</div>
 		{% endfor %}

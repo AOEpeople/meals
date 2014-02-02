@@ -21,6 +21,7 @@ class AppKernel extends Kernel
 			new Braincrafted\Bundle\BootstrapBundle\BraincraftedBootstrapBundle(),
 			new IMAG\LdapBundle\IMAGLdapBundle(),
 			new Xopn\DoctrineFileBundle\DoctrineFileBundle(),
+			new Liip\ImagineBundle\LiipImagineBundle(),
 
 			new Mealz\MealBundle\MealzMealBundle(),
 			new Mealz\UserBundle\MealzUserBundle(),

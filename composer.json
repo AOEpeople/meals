@@ -21,7 +21,8 @@
         "incenteev/composer-parameter-handler": "~2.0",
 
         "braincrafted/bootstrap-bundle": "~2.0",
-        "imag/ldap-bundle": "dev-master"
+        "imag/ldap-bundle": "dev-master",
+        "liip/imagine-bundle": "dev-master"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "~2.2",

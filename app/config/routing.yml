@@ -8,3 +8,8 @@ xopn_mealz_for_zombies_mealz:
 
 imag_ldap:
   resource: "@IMAGLdapBundle/Resources/config/routing.yml"
+
+# resized images
+_imagine:
+  resource: .
+  type:     imagine

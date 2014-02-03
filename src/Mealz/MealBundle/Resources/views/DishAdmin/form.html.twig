@@ -6,6 +6,34 @@
 
 		{% include ':partials:flashMessages.html.twig' %}
 
-		{{ form(form) }}
+		{{ form_start(form) }}
+			<div class="row">
+				<div class="col-md-6">
+					{{ form_row(form.title_en) }}
+					{{ form_row(form.description_en) }}
+				</div>
+				<div class="col-md-6">
+				{{ form_row(form.title_de) }}
+				{{ form_row(form.description_de) }}
+				</div>
+			</div>
+			<div class="form-group">
+				{{ form_label(form.image) }}
+				{{ form_errors(form.image) }}
+				{{ form_widget(form.image) }}
+				{% if dish is defined and dish.image %}
+					<a href="{{ dish.image.webPath }}" >{{ dish.image.fileName }}</a>
+				{% endif %}
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+
+				</div>
+				<div class="col-md-6">
+
+				</div>
+			</div>
+			{{ form_rest(form) }}
+		{{ form_end(form) }}
 	</div>
 {% endblock %}

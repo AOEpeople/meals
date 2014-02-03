@@ -4,7 +4,7 @@
 	<div class="container">
 		<h1>Dishes</h1>
 		{% if is_granted('ROLE_KITCHEN_STAFF') %}
-			<div class="btn-group">
+			<div class="btn-group bottom-buffer">
 				<a
 					class="btn btn-success"
 					href="{{ path('MealzMealBundle_Dish_new') }}"

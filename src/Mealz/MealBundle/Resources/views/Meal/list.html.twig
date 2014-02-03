@@ -3,6 +3,14 @@
 {% block body %}
 	<div class="container">
 	<h1>Menu</h1>
+	{% if is_granted('ROLE_KITCHEN_STAFF') %}
+		<div class="btn-group bottom-buffer">
+			<a
+				class="btn btn-success"
+				href="{{ path('MealzMealBundle_Meal_new') }}"
+				>Add meal</a>
+		</div>
+	{% endif %}
 	{% include ':partials:flashMessages.html.twig' %}
 	{% include 'MealzMealBundle:Meal/partials:mealTable.html.twig' with {showDate: true}%}
 	</div>

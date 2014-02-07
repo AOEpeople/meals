@@ -2,6 +2,7 @@
 
 namespace Mealz\MealBundle\Controller;
 
+use Doctrine\ORM\UnitOfWork;
 use Mealz\MealBundle\Entity\Meal;
 use Mealz\MealBundle\Form\Type\MealAdminForm;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,6 +25,11 @@ class MealAdminController extends BaseController {
 
 			if ($form->isValid()) {
 				$em = $this->getDoctrine()->getManager();
+				if($em->getUnitOfWork()->getEntityState($meal->getDish()) === UnitOfWork::STATE_NEW) {
+					// if Dish is new
+					$em->persist($meal->getDish());
+				}
+
 				$em->persist($meal);
 				$em->flush();
 
@@ -51,6 +57,10 @@ class MealAdminController extends BaseController {
 
 			if ($form->isValid()) {
 				$em = $this->getDoctrine()->getManager();
+				if($em->getUnitOfWork()->getEntityState($meal->getDish()) === UnitOfWork::STATE_NEW) {
+					// if Dish is new
+					$em->persist($meal->getDish());
+				}
 				$em->persist($meal);
 				$em->flush();
 

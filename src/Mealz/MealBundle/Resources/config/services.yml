@@ -50,3 +50,8 @@ services:
       # set locale in dish entities
       - { name: doctrine.event_listener, event: postLoad }
 
+  mealz_meal.form.type.dish_selector_creator:
+        class: Mealz\MealBundle\Form\Type\DishSelectorCreatorType
+        arguments: []
+        tags:
+            - { name: form.type, alias: dish_selector_creator }

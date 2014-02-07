@@ -14,7 +14,11 @@ class MealAdminForm extends AbstractType {
 	public function buildForm(FormBuilderInterface $builder, array $options) {
 		$builder
 			->add('dateTime', 'datetime', array('widget' => 'single_text'))
-			->add('dish')
+			// "dish_selector_creator" see DishSelectorCreatorType
+			->add('dish', 'dish_selector_creator', array(
+				'class' => 'MealzMealBundle:Dish',
+				'property' => 'title_en',
+			))
 			->add('save', 'submit')
 		;
 	}

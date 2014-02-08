@@ -4,6 +4,7 @@ parameters:
   mealz_meal.doorman.class: Mealz\MealBundle\Service\Doorman
   mealz_meal.link.class: Mealz\MealBundle\Service\Link
   mealz_meal.http_header_utility.class: Mealz\MealBundle\Service\HttpHeaderUtility
+  mealz_meal.workday.class: Mealz\MealBundle\Service\Workday
 
   mealz_meal.event_listener.participant_persistence.class: Mealz\MealBundle\EventListener\ParticipantPersistenceListener
   mealz_meal.event_listener.localisation.class: Mealz\MealBundle\EventListener\LocalisationListener
@@ -34,6 +35,11 @@ services:
     class: %mealz_meal.http_header_utility.class%
     calls:
       - [setLocales, [[%locale%, en, de]]]
+
+  mealz_meal.workday:
+    class: %mealz_meal.workday.class%
+    calls:
+      - [setDayBlacklist, [['01-01', '05-01', '10-31', '12-24', '12-25', '12-26', '12-27', '12-28', '12-29', '12-30', '12-31']]]
 
   mealz_meal.event_listener.participant_persistence:
     class: %mealz_meal.event_listener.participant_persistence.class%

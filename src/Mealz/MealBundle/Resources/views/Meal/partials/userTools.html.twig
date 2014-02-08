@@ -20,20 +20,19 @@
 				>–</a>
 			{% endif %}
 		{% else %}
+			<span class="btn btn-default {{ button_class }}">you do not join</span>
 			{% if is_allowed_to_join(meal) %}
 				<a
-					class="btn btn-default {{ button_class }}"
+					class="btn btn-success {{ button_class }}"
 					href="{{ link(meal, 'join') }}"
 					title="Join"
-				>you do not join</a>
-			{% else %}
-				<span class="btn btn-default {{ button_class }}">you do not join</span>
+				>+</a>
 			{% endif %}
 		{% endif %}
 
 		{% if usersGuests | length > 0 %}
 			<button class="btn btn-success {{ button_class }} dropdown-toggle" data-toggle="dropdown">
-				{% if usersGuests | length == 1 %}1 Guest{% else %}{{ usersGuests | length }} Guests{% endif %}
+				<span class="glyphicon glyphicon-user"></span> {{ usersGuests | length }}
 			</button>
 			<ul class="dropdown-menu" role="menu">
 				{% if is_allowed_to_add_guest(meal) %}
@@ -50,7 +49,7 @@
 					class="btn btn-default {{ button_class }}"
 					href="{{ link(meal, 'newParticipant') }}"
 					title="Add a guest"
-				><span class="glyphicon glyphicon-user"></span></a>
+				><span class="glyphicon glyphicon-user"></span> +</a>
 			{% endif %}
 		{% endif %}
 

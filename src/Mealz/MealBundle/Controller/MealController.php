@@ -76,16 +76,6 @@ class MealController extends BaseController {
 			)
 		);
 
-		$firstDay = clone $startTime;
-		$lastDay = clone $endTime;
-		$lastDay->modify('-1 second');
-		// nextWeek and previous week have to be the last day of the week to
-		// avoid problems when linking to the last week of a year.
-		$nextWeek = clone $startTime;
-		$nextWeek->modify('+2 weeks -1 day');
-		$previousWeek = clone $startTime;
-		$previousWeek->modify('-1 day');
-
 		return $this->render('MealzMealBundle:Meal:week.html.twig', array(
 			'meals' => $meals,
 			'days' => $this->groupByDay($meals),

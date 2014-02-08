@@ -4,7 +4,7 @@ namespace Mealz\MealBundle\Controller;
 
 use Doctrine\ORM\UnitOfWork;
 use Mealz\MealBundle\Entity\Meal;
-use Mealz\MealBundle\Form\Type\MealAdminForm;
+use Mealz\MealBundle\Form\MealAdminForm;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 

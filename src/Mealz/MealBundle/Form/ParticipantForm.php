@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Mealz\MealBundle\Form\Type;
+namespace Mealz\MealBundle\Form;
 
 
 use Symfony\Component\Form\AbstractType;

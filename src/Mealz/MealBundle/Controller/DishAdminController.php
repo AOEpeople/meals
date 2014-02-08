@@ -3,7 +3,7 @@
 namespace Mealz\MealBundle\Controller;
 
 use Mealz\MealBundle\Entity\Dish;
-use Mealz\MealBundle\Form\Type\DishAdminForm;
+use Mealz\MealBundle\Form\DishAdminForm;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 

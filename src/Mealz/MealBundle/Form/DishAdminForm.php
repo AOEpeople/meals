@@ -1,31 +1,30 @@
 <?php
 
-namespace Mealz\MealBundle\Form\Type;
+namespace Mealz\MealBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * form to add or edit a meal
+ * form to add or edit a dish
  */
-class MealAdminForm extends AbstractType {
+class DishAdminForm extends AbstractType {
 
 	public function buildForm(FormBuilderInterface $builder, array $options) {
 		$builder
-			->add('dateTime', 'datetime', array('widget' => 'single_text'))
-			// "dish_selector_creator" see DishSelectorCreatorType
-			->add('dish', 'dish_selector_creator', array(
-				'class' => 'MealzMealBundle:Dish',
-				'property' => 'title_en',
-			))
+			->add('title_en')
+			->add('title_de', 'text', array('required' => FALSE))
+			->add('description_en', 'textarea', array('required' => FALSE))
+			->add('description_de', 'textarea', array('required' => FALSE))
+			->add('image', 'file', array('required' => FALSE))
 			->add('save', 'submit')
 		;
 	}
 
 	public function setDefaultOptions(OptionsResolverInterface $resolver) {
 		$resolver->setDefaults(array(
-			'data_class' => 'Mealz\MealBundle\Entity\Meal',
+			'data_class' => 'Mealz\MealBundle\Entity\Dish',
 		));
 	}
 
@@ -35,6 +34,6 @@ class MealAdminForm extends AbstractType {
 	 * @return string The name of this type
 	 */
 	public function getName() {
-		return 'meal';
+		return 'dish';
 	}
 }

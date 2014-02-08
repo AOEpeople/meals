@@ -147,4 +147,35 @@ class MealRepository extends EntityRepository {
 		return $qb;
 	}
 
+	/**
+	 * get the date of the last submitted meal
+	 *
+	 * @return \DateTime|null
+	 */
+	public function getLastMealDate() {
+		$qb = $this->createQueryBuilder('m');
+
+		$qb->select('m.dateTime');
+		$qb->orderBy('m.dateTime', 'DESC');
+		$qb->setMaxResults(1);
+
+		$date = $qb->getQuery()->execute(array(), Query::HYDRATE_SINGLE_SCALAR);
+		return $date ? new \DateTime($date) : NULL;
+	}
+
+	/**
+	 * @param \DateTime $dateTime
+	 * @return int
+	 */
+	public function countMealsAt(\DateTime $dateTime) {
+		$qb = $this->createQueryBuilder('m');
+
+		$qb->select('COUNT(m)');
+		$qb->andWhere('m.dateTime = :dateTime');
+		$qb->setParameter('dateTime', $dateTime);
+
+		return intval($qb->getQuery()->execute(array(), Query::HYDRATE_SINGLE_SCALAR));
+	}
+
+
 }

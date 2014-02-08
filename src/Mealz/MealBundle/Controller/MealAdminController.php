@@ -5,6 +5,7 @@ namespace Mealz\MealBundle\Controller;
 use Doctrine\ORM\UnitOfWork;
 use Mealz\MealBundle\Entity\Meal;
 use Mealz\MealBundle\Form\MealAdminForm;
+use Mealz\MealBundle\Service\Workday;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -16,6 +17,7 @@ class MealAdminController extends BaseController {
 		}
 
 		$meal = new Meal();
+		$meal->setDateTime($this->guessNextMealDate());
 
 		$form = $this->createForm(new MealAdminForm(), $meal);
 
@@ -98,5 +100,25 @@ class MealAdminController extends BaseController {
 		}
 
 		return $this->redirect($this->generateUrl('MealzMealBundle_Meal'));
+	}
+
+	/**
+	 * guess when the next meal will take place
+	 *
+	 * @return \DateTime
+	 */
+	protected function guessNextMealDate() {
+		$lastMeal = $this->getMealRepository()->getLastMealDate();
+		if(!$lastMeal) {
+			return new \DateTime();
+		}
+		$count = $this->getMealRepository()->countMealsAt($lastMeal);
+		if($count >= 2) {
+			/** @var Workday $workdayService */
+			$workdayService = $this->get('mealz_meal.workday');
+			return $workdayService->getNextWorkday($lastMeal);
+		} else {
+			return $lastMeal;
+		}
 	}
 }

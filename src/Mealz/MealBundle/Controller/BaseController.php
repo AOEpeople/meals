@@ -6,6 +6,7 @@ namespace Mealz\MealBundle\Controller;
 
 use Mealz\MealBundle\Entity\DishRepository;
 use Mealz\MealBundle\Entity\MealRepository;
+use Mealz\MealBundle\Entity\ParticipantRepository;
 use Mealz\MealBundle\Service\Doorman;
 use Mealz\MealBundle\Service\Link;
 use Mealz\UserBundle\Entity\Profile;
@@ -30,6 +31,13 @@ abstract class BaseController extends Controller {
 		$repository->setCurrentLocale($this->getRequest()->getLocale());
 
 		return $repository;
+	}
+
+	/**
+	 * @return ParticipantRepository
+	 */
+	public function getParticipantRepository() {
+		return $this->getDoctrine()->getRepository('MealzMealBundle:Participant');
 	}
 
 	/**

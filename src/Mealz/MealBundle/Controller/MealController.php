@@ -56,6 +56,23 @@ class MealController extends BaseController {
 		));
 	}
 
+	public function dayAction($day) {
+		try {
+			$day = new \DateTime($day);
+		} catch(\Exception $e) {
+			throw $this->createNotFoundException('Invalid Date', $e);
+		}
+
+		$meals = $this->getMealRepository()->getSortedMealsOnDay($day);
+		$participants = $this->getParticipantRepository()->getParticipantsOnDay($day);
+
+		return $this->render('MealzMealBundle:Meal:day.html.twig', array(
+			'meals' => $meals,
+			'participants' => $participants,
+			'day' => $day,
+		));
+	}
+
 	public function weekAction($week) {
 		try {
 			$startTime = new \DateTime($week);

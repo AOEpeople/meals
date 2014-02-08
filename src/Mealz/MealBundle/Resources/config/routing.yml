@@ -13,6 +13,13 @@ MealzMealBundle_Meal_week:
         # format "2014W12" 12th week in 2014
         week: 20\d{2}W[0-5]\d
 
+MealzMealBundle_Meal_day:
+    pattern:  /menu/{day}
+    defaults: { _controller: "MealzMealBundle:Meal:day" }
+    requirements:
+        # format "2014-02-17" 17th February, 2014
+        day: 20\d{2}\-[01]\d\-[0-3]\d
+
 MealzMealBundle_Meal_new:
     pattern:  /menu/new
     defaults: { _controller: "MealzMealBundle:MealAdmin:new" }

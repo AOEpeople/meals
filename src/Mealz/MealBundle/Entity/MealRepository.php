@@ -62,6 +62,21 @@ class MealRepository extends EntityRepository {
 	}
 
 	/**
+	 * @param \DateTime $date
+	 * @param null $limit
+	 * @param array $options
+	 * @return mixed
+	 */
+	public function getSortedMealsOnDay(\DateTime $date, $limit = NULL, $options = array()) {
+		$minDate = clone $date;
+		$minDate->setTime(0,0,0);
+		$maxDate = clone $minDate;
+		$maxDate->modify('+1 day -1 second');
+
+		return $this->getSortedMeals($minDate, $maxDate, $limit, $options);
+	}
+
+	/**
 	 * @param $id
 	 * @param array $options
 	 * @return Meal|null

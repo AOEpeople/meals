@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Dish
  *
  * @ORM\Table(name="participant")
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="ParticipantRepository")
  */
 class Participant
 {

@@ -1,0 +1,47 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+	<div class="container">
+	<h1>Menu on {{ day | date('l, F d, Y') }}</h1>
+	{% include ':partials:flashMessages.html.twig' %}
+
+	<ul class="pager">
+		<li class="previous"><a href="{{ path('MealzMealBundle_Meal_day', {day: day | date_modify('-1 day') | date('Y-m-d')}) }}">&larr; Previous Day</a></li>
+		<li class="next"><a href="{{ path('MealzMealBundle_Meal_day', {day: day | date_modify('+1 day') | date('Y-m-d')}) }}">Next Day &rarr;</a></li>
+	</ul>
+
+	{% if meals | length > 0 %}
+		<div class="row">
+			{% for meal in meals %}
+				{% include 'MealzMealBundle:Meal/partials:mealColumn.html.twig' %}
+			{% endfor %}
+		</div>
+
+		{% if participants | length > 0 %}
+			<table class="table table-striped">
+				{% for participant in participants %}
+					{% set profile=participant.profile %}
+					<tr>
+						<td>
+							{% if participant.isGuest %}
+								{{ participant.guestName }} <span class="text-muted">via {{ profile.username }}</span>
+							{% else %}
+								{{ profile.username }}
+							{% endif %}
+						</td>
+						<td>
+							{{ participant.meal.dish }}
+						</td>
+						<td>{% if participant.comment %}<span class="text-muted">{{ participant.comment }}</span>{% endif %}</td>
+					</tr>
+				{% endfor %}
+			</table>
+		{% else %}
+			<div class="alert alert-warning">No participants this day.</div>
+		{% endif %}
+	{% else %}
+		<div class="alert alert-warning">No meals this day.</div>
+	{% endif %}
+	</div>
+
+{% endblock %}

@@ -1,0 +1,20 @@
+{% set dish=meal.dish %}
+<div class="col-md-6">
+	<div class="row bottom-buffer">
+		<div class="col-md-6">
+			<a href="{{ link(meal) }}">
+				{% if dish.image %}
+					<img src="{{ dish.image.webPath | imagine_filter('thumbnail') }}" />
+				{% else %}
+					<img src="{{ 'img/placeholder.jpg' | imagine_filter('thumbnail') }}" />
+				{% endif %}
+			</a>
+		</div>
+		<div class="col-md-6">
+			<h4><a href="{{ link(meal) }}">{{ dish.title }}</a></h4>
+			<p class="text-muted">{{ meal.dateTime | date('H:i') }}</p>
+			{% include 'MealzMealBundle:Meal/partials:userTools.html.twig' %}
+			{% if dish.description %}<p>{{ dish.description }}</p>{% endif %}
+		</div>
+	</div>
+</div>

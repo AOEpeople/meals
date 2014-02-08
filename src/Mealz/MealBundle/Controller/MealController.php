@@ -24,13 +24,8 @@ class MealController extends BaseController {
 			)
 		);
 
-		// nextWeek has to be the last day of the week to
-		// avoid problems when linking to the last week of a year.
-		$nextWeek = new \DateTime('this Sunday +1 week');
-
 		return $this->render('MealzMealBundle:Meal:index.html.twig', array(
 			'meals' => $meals,
-			'next_week' => $nextWeek,
 		));
 	}
 
@@ -95,10 +90,6 @@ class MealController extends BaseController {
 			'meals' => $meals,
 			'days' => $this->groupByDay($meals),
 			'week' => $week,
-			'first_day' => $firstDay,
-			'last_day' => $lastDay,
-			'next_week' => $nextWeek,
-			'previous_week' => $previousWeek,
 		));
 	}
 

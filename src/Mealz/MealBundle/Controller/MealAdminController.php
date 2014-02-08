@@ -37,7 +37,7 @@ class MealAdminController extends BaseController {
 
 				$this->addFlashMessage('Meal has been added.', 'success');
 
-				return $this->redirect($this->generateUrlTo($meal));
+				return $this->redirect($this->generateUrl('MealzMealBundle_Meal_new'));
 			}
 		}
 

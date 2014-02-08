@@ -1,9 +1,9 @@
 {% block dish_selector_creator_widget %}
 	{% spaceless %}
-		{% set attr={list:'foobar'} %}
+		{% set attr={list:'dish_selector', autocomplete:'off'} %}
 		{{ block('form_widget') }}
 		{% set options = choices %}
-		<datalist id="foobar">
+		<datalist id="dish_selector">
 			{% for group_label, choice in options %}
 				<option value="{{ choice.label }}"{% if choice is selectedchoice(label) %} selected="selected"{% endif %}></option>
 			{% endfor %}

@@ -6,6 +6,18 @@
 
 		{% include ':partials:flashMessages.html.twig' %}
 
+		{{ form_start(form) }}
+			<div class="row">
+				<div class="col-md-4">
+					{{ form_row(form.dateTime) }}
+				</div>
+				<div class="col-md-8">
+					{{ form_row(form.dish) }}
+				</div>
+			</div>
+			{{ form_rest(form) }}
+		{{ form_end(form) }}
+
 		{{ form(form) }}
 	</div>
 {% endblock %}

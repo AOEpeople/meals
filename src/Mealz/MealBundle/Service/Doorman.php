@@ -38,7 +38,7 @@ class Doorman {
 		if(!$this->securityContext->getToken()->getUser()->getProfile() instanceof Profile) {
 			return FALSE;
 		}
-		if($meal->getDateTime()->getTimestamp() - 7200 > $this->now->getTimestamp()) {
+		if($meal->getDateTime()->getTimestamp() - 9000 > $this->now->getTimestamp()) {
 			// if: meal is in two hours or earlier
 			return TRUE;
 		}
@@ -49,7 +49,7 @@ class Doorman {
 		if(!$this->securityContext->getToken()->getUser()->getProfile() instanceof Profile) {
 			return FALSE;
 		}
-		if($meal->getDateTime()->getTimestamp() - 7200 > $this->now->getTimestamp()) {
+		if($meal->getDateTime()->getTimestamp() - 9000 > $this->now->getTimestamp()) {
 			// if: meal is in two hours or earlier
 			return TRUE;
 		}

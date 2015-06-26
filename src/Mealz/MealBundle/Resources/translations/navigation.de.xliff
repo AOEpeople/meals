@@ -36,11 +36,11 @@
             </trans-unit>
             <trans-unit id="9">
                 <source>you joined</source>
-                <target>du bist angemeldet</target>
+                <target>eingetragen</target>
             </trans-unit>
             <trans-unit id="10">
                 <source>join now</source>
-                <target>jetzt anmelden</target>
+                <target>jetzt eintragen</target>
             </trans-unit>
             <trans-unit id="11">
                 <source>Add dish</source>

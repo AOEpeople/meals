@@ -24,9 +24,9 @@
 	</div>
 
     <h2>
-        {% if meal.participants | length > 1 %}Currently {{ meal.participants | length }} participants
-        {% elseif meal.participants | length == 1 %}One Participant
-        {% else %}No Participants
+        {% if meal.participants | length > 1 %}{{ 'Currently'|trans({},'general') }} {{ meal.participants | length }} {{ 'participants'|trans({},'general') }}
+        {% elseif meal.participants | length == 1 %}{{ 'One participant'|trans({},'general') }}
+        {% else %}{{ 'No participants'|trans({},'general') }}
         {% endif %}
     </h2>
 
@@ -36,11 +36,34 @@
 
 	{% include ':partials:flashMessages.html.twig' %}
 
-	<table class="table table-striped">
+	<table class="table table-striped participant-table">
 		<tbody>
 		{% for participant in meal.participants %}
 			{% set profile=participant.profile %}
 			<tr>
+				<td>
+					{% if (is_granted('ROLE_USER') and participant.profile == app.user.profile) or is_granted('ROLE_KITCHEN_STAFF')%}
+						<div class="btn-group">
+							{% if is_allowed_to_leave(meal) or is_granted('ROLE_KITCHEN_STAFF')%}
+								<a
+										class="btn btn-default btn-xs"
+										href="{{ link(participant, 'delete') }}"
+										title="Leave"
+										>
+									<strong>-</strong>
+								</a>
+							{% endif %}
+							<a
+									class="btn btn-default btn-xs"
+									href="{{ link(participant, 'edit') }}"
+									title="Comment"
+									>
+								<span class="glyphicon glyphicon-comment"></span>
+							</a>
+						</div>
+					{% endif %}
+				</td>
+
 				<td>
 					{% if participant.isGuest %}
 						{{ participant.guestName }} <span class="text-muted">via {{ profile.username }}</span>
@@ -49,27 +72,6 @@
 					{% endif %}
 				</td>
 				<td>{% if participant.comment %}<span class="text-muted">{{ participant.comment }}</span>{% endif %}</td>
-				<td>{% if (is_granted('ROLE_USER') and participant.profile == app.user.profile) or is_granted('ROLE_KITCHEN_STAFF')%}
-					<div class="btn-group">
-						{% if is_allowed_to_leave(meal) or is_granted('ROLE_KITCHEN_STAFF')%}
-							<a
-									class="btn btn-default btn-xs"
-									href="{{ link(participant, 'delete') }}"
-									title="Leave"
-									>
-								<strong>-</strong>
-							</a>
-						{% endif %}
-						<a
-								class="btn btn-default btn-xs"
-								href="{{ link(participant, 'edit') }}"
-								title="Comment"
-								>
-							<span class="glyphicon glyphicon-comment"></span>
-						</a>
-					</div>
-					{% endif %}
-				</td>
 			</tr>
 		{% endfor %}
 		</tbody>

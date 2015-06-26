@@ -11,6 +11,7 @@ use Mealz\MealBundle\Entity\MealRepository;
 use Mealz\MealBundle\Entity\Participant;
 use Mealz\MealBundle\EventListener\ParticipantNotUniqueException;
 use Mealz\MealBundle\Form\MealProfileForm;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -153,9 +154,11 @@ class MealController extends BaseController {
 				$em->flush();
 			});
 
+			/** @var Translator $translator */
+			$translator = $this->get('translator');
 			$this->get('session')->getFlashBag()->add(
 				'success',
-				'You joined as participant to the meal.'
+				$translator->addLoader()->trans('You joined as participant to the meal.')
 			);
 		} catch (ParticipantNotUniqueException $e) {
 			$this->addFlashMessage('You are already joining this meal.', 'info');

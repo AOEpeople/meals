@@ -10,6 +10,22 @@
                 <source>Dishes</source>
                 <target>Gerichte</target>
             </trans-unit>
+            <trans-unit id="3">
+                <source>Meals</source>
+                <target>Mahlzeiten</target>
+            </trans-unit>
+            <trans-unit id="4">
+                <source>Coming up</source>
+                <target>Demnächst</target>
+            </trans-unit>
+            <trans-unit id="5">
+                <source>Current week</source>
+                <target>aktuelle Woche</target>
+            </trans-unit>
+            <trans-unit id="6">
+                <source>Next week</source>
+                <target>nächste Woche</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -11,8 +11,8 @@
 			Your friendly humans at AOE prepared some meals for you. Just register and stop by.
 		</p>
 		<p>
-			<a class="btn btn-primary btn-lg" role="button" href="{{ path('MealzMealBundle_Meal_week', {week: 'this sunday' | date('Y\\\WW')}) }}#{{ 'now' | date('Y-m-d') }}">Current week</a>
-			<a class="btn btn-default btn-lg" role="button" href="{{ path('MealzMealBundle_Meal_week', {week: 'this sunday +1 week' | date('Y\\\WW')}) }}">Next week</a>
+			<a class="btn btn-primary btn-lg" role="button" href="{{ path('MealzMealBundle_Meal_week', {week: 'this sunday' | date('Y\\\WW')}) }}#{{ 'now' | date('Y-m-d') }}">{{ 'Current week'|trans({},'general') }}</a>
+			<a class="btn btn-default btn-lg" role="button" href="{{ path('MealzMealBundle_Meal_week', {week: 'this sunday +1 week' | date('Y\\\WW')}) }}">{{ 'Next week'|trans({},'general') }}</a>
 		</p>
 	</div>
 	</div>
@@ -20,7 +20,7 @@
 
 {% block body %}
 	<div class="container">
-		<h1>Coming up</h1>
+		<h1>{{ 'Coming up'|trans({},'general') }}</h1>
 		<div class="row">
 		{% for meal in meals %}
 			{% set dish=meal.dish %}

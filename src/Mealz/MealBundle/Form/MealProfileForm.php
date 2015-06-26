@@ -9,7 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 /**
  * form to add or edit a dish
  */
-class MealParticipantForm extends AbstractType {
+class MealProfileForm extends AbstractType {
 
 	public function buildForm(FormBuilderInterface $builder, array $options) {
 

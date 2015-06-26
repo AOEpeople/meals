@@ -6470,9 +6470,6 @@ button.close {
   .table-striped > tbody > tr:nth-of-type(even) {
     background-color: #FFFFFF; }
 
-#participant label {
-  display: none; }
-
 #participant .form-group {
   float: left; }
 

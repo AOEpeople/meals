@@ -10,22 +10,22 @@
 			<a
 				class="btn btn-success {{ button_class }}"
 				href="{{ link(participant, 'edit') }}"
-				title="Edit"
-			>you joined</a>
+				title="{{ 'Edit'|trans({},'navigation') }}"
+			>{{ 'you joined'|trans({},'navigation') }}</a>
 			{% if is_allowed_to_leave(meal) %}
 				<a
 					class="btn btn-danger {{ button_class }}"
 					href="{{ link(participant, 'delete') }}"
-					title="Leave"
+					title="{{ 'Leave'|trans({},'navigation') }}"
 				>–</a>
 			{% endif %}
 		{% else %}
-			<span class="btn btn-default {{ button_class }}">join now</span>
+			<span class="btn btn-default {{ button_class }}">{{ 'join now'|trans({},'navigation') }}</span>
 			{% if is_allowed_to_join(meal) %}
 				<a
 					class="btn btn-success {{ button_class }}"
 					href="{{ link(meal, 'join') }}"
-					title="Join"
+					title="{{ 'Join'|trans({},'navigation') }}"
 				>+</a>
 			{% endif %}
 		{% endif %}
@@ -36,7 +36,7 @@
 			</button>
 			<ul class="dropdown-menu" role="menu">
 				{% if is_allowed_to_add_guest(meal) %}
-					<li><a href="{{ link(meal, 'newParticipant') }}">Add a guest</a></li>
+					<li><a href="{{ link(meal, 'newParticipant') }}">{{ 'Add a guest'|trans({},'navigation') }}</a></li>
 					<li class="divider"></li>
 				{% endif %}
 				{% for guestParticipant in usersGuests %}

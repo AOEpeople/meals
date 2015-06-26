@@ -6,12 +6,12 @@
 		<a
 			class="btn btn-success {{ button_class }}"
 			href="{{ link(dish, 'edit') }}"
-			title="Edit"
+			title="{{ 'Edit'|trans({},'navigation') }}"
 		><span class="glyphicon glyphicon-edit"><span class="sr-only">Edit</span></span></a>
 		<a
 			class="btn btn-danger {{ button_class }}"
 			href="{{ link(dish, 'delete') }}"
-			title="Delete"
+			title="{{ 'Delete'|trans({},'navigation') }}"
 		><span class="glyphicon glyphicon-remove"><span class="sr-only">Delete</span></span></a>
 	</div>
 {% endif %}

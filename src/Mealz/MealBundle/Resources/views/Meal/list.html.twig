@@ -2,13 +2,13 @@
 
 {% block body %}
 	<div class="container">
-	<h1>Menu</h1>
+	<h1>{{ 'Menu'|trans({},'general') }}</h1>
 	{% if is_granted('ROLE_KITCHEN_STAFF') %}
 		<div class="btn-group bottom-buffer">
 			<a
 				class="btn btn-success"
 				href="{{ path('MealzMealBundle_Meal_new') }}"
-				>Add meal</a>
+				>{{ 'Add meal'|trans({},'navigation') }}</a>
 		</div>
 	{% endif %}
 	{% include ':partials:flashMessages.html.twig' %}

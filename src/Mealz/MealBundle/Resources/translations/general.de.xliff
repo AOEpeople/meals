@@ -26,6 +26,10 @@
                 <source>Next week</source>
                 <target>nächste Woche</target>
             </trans-unit>
+            <trans-unit id="7">
+                <source>Menu</source>
+                <target>Menü</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

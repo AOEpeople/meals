@@ -10,6 +10,42 @@
                 <source>Next Week</source>
                 <target>Nächste Woche</target>
             </trans-unit>
+            <trans-unit id="3">
+                <source>Add meal</source>
+                <target>Mahlzeit hinzufügen</target>
+            </trans-unit>
+            <trans-unit id="4">
+                <source>Join</source>
+                <target>Anmelden</target>
+            </trans-unit>
+            <trans-unit id="5">
+                <source>Leave</source>
+                <target>Abmelden</target>
+            </trans-unit>
+            <trans-unit id="6">
+                <source>Edit</source>
+                <target>Bearbeiten</target>
+            </trans-unit>
+            <trans-unit id="7">
+                <source>Delete</source>
+                <target>Löschen</target>
+            </trans-unit>
+            <trans-unit id="8">
+                <source>Add a guest</source>
+                <target>Gast hinzufügen</target>
+            </trans-unit>
+            <trans-unit id="9">
+                <source>you joined</source>
+                <target>du bist angemeldet</target>
+            </trans-unit>
+            <trans-unit id="10">
+                <source>join now</source>
+                <target>jetzt anmelden</target>
+            </trans-unit>
+            <trans-unit id="11">
+                <source>Add dish</source>
+                <target>Gericht hinzufügen</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

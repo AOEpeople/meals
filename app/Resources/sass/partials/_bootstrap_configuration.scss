@@ -1,2 +1,48 @@
 $font-family-sans-serif: "DINRegular";
-$gray-dark: #637B98;
+
+// general
+$border-radius-base: 0px;
+$border-radius-large: 0px;
+$border-radius-small: 0px;
+
+// navbar
+// Navbar overrides are not working
+
+// headings
+$headings-color: $color-aoe-orange;
+$headings-font-family: "DINLight";
+
+// buttons
+$btn-primary-bg: $color-aoe-blue;
+
+// input
+$input-bg: $color-aoe-background-one;
+$input-border-radius: 0;
+$input-color: $color-aoe-blue;
+$input-border-focus: $color-aoe-blue;
+$input-border: rgba(255,255,255,0);
+$input-color-placeholder: $color-dark-gray;
+
+// link
+$link-hover-decoration: none;
+
+/*
+$input-bg-disabled
+$input-border
+$input-border-radius
+$input-border-radius-large
+$input-border-radius-small
+$input-border-focus
+$input-color-placeholder
+$input-height-base
+$input-height-large
+$input-height-small
+$form-group-margin-bottom
+$legend-color $legend-border-color
+$input-group-addon-bg
+$input-group-addon-border-color
+$cursor-disabled
+*/
+
+
+$jumbotron-bg: $color-aoe-background-one;

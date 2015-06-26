@@ -1,0 +1,23 @@
+.navbar-custom {
+  background-color: $color-aoe-orange;
+  border-bottom: 0;
+  a {
+    color: $color-white;
+  }
+  li a {
+    &:hover {
+      background-color: $color-aoe-blue;
+    }
+  }
+  .navbar-brand {
+    padding-top: 13px;
+  }
+  .btn-success {
+    padding-top: 8px;
+    padding-bottom: 7px;
+    margin-left: -1px;
+    background-color: $color-aoe-blue;
+    color: white;
+    border: 0;
+  }
+}

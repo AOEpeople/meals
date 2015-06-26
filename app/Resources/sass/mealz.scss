@@ -1,7 +1,9 @@
 // set variables
 @import "partials/fonts";
+@import "partials/colors";
 @import "partials/bootstrap_configuration";
-@import "../bower_components/bootstrap-sass/vendor/assets/stylesheets/bootstrap";
+@import "../bower_components/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
+@import "partials/navbar.scss";
 
 body {
   padding-top: 50px;
@@ -19,4 +21,9 @@ table.table-meals td.table-meal-dish {
 
 .bottom-buffer {
   margin-bottom: 10px;
+}
+
+.jumbotron h1 {
+  color: $color-aoe-orange;
+  margin-left: -3px;
 }

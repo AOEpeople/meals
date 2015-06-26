@@ -45,7 +45,7 @@ class Meal
 	 * @var ArrayCollection
 	 * @ORM\OneToMany(targetEntity="Participant", mappedBy="meal")
 	 */
-	protected $participants;
+	public $participants;
 
 	public function __construct() {
 		$this->participants = new ArrayCollection();

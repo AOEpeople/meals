@@ -1,0 +1,21 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+	<div class="container">
+		<h1>{{ 'Accounting'|trans({},'general') }}</h1>
+		{% if is_granted('ROLE_KITCHEN_STAFF') %}
+            <table class="table table-striped table-accounting">
+                <tr>
+                    <th class="table-accounting-name">Name</th><th class="table-accounting-total">total</th>
+                </tr>
+                {% for participant in participants %}
+                    <tr>
+                        <td>{{ participant.profile.username }}</td>
+                        <td></td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+	</div>
+
+{% endblock %}

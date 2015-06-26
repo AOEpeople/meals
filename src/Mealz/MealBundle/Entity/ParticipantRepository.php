@@ -65,6 +65,25 @@ class ParticipantRepository extends EntityRepository {
 		return $this->sortParticipantsByName($participants);
 	}
 
+    public function getParticipants(\DateTime $minDate, \DateTime $maxDate,  $options = array()) {
+        $options = array_merge($options, array(
+            'load_meal' => TRUE,
+            'load_profile' => TRUE,
+        ));
+        $qb = $this->getQueryBuilderWithOptions($options);
+
+        $qb->andWhere('m.dateTime >= :minDate');
+        $qb->andWhere('m.dateTime <= :maxDate');
+        $qb->setParameter('minDate', $minDate);
+        $qb->setParameter('maxDate', $maxDate);
+
+        $qb->orderBy('u.name', 'ASC');
+
+        $participants = $qb->getQuery()->execute();
+
+        return $this->sortParticipantsByName($participants);
+    }
+
 	/**
 	 * helper function to sort participants by their name or guest name
 	 */

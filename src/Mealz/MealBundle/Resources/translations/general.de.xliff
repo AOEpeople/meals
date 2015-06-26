@@ -30,28 +30,6 @@
                 <source>Menu</source>
                 <target>Menü</target>
             </trans-unit>
-            <trans-unit id="8">
-                <source>Currently</source>
-                <target>Momentan</target>
-            </trans-unit>
-            <trans-unit id="9">
-                <source>participants</source>
-                <target>Teilnehmer</target>
-            </trans-unit>
-            <trans-unit id="10">
-                <source>One participant</source>
-                <target>Ein Teilnehmer</target>
-            </trans-unit>
-            <trans-unit id="11">
-                <source>No participants</source>
-                <target>Keine Teilnehmer</target>
-            </trans-unit>
-            <trans-unit id="12">
-                <source>You joined as participant to the meal.</source>
-                <target>Du hast dich für dieses Essen erfolgreich eintragen.</target>
-            </trans-unit>
-
-
         </body>
     </file>
 </xliff>

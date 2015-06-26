@@ -30,6 +30,10 @@
                 <source>Menu</source>
                 <target>Menü</target>
             </trans-unit>
+            <trans-unit id="8">
+                <source>Accounting</source>
+                <target>Abrechnung</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

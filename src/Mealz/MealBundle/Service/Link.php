@@ -66,7 +66,7 @@ class Link {
 
 	public function linkParticipant(Participant $participant, $action = NULL, $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH) {
 		$action = $action ?: 'edit';
-		if($action === 'edit' || $action === 'delete' || $action === 'new') {
+		if($action === 'edit' || $action === 'delete') {
 			return $this->router->generate('MealzMealBundle_Participant_' . $action, array('participant' => $participant->getId()), $referenceType);
 		} else {
 			throw new \InvalidArgumentException(sprintf(

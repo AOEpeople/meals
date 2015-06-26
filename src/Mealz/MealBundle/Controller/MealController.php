@@ -10,7 +10,9 @@ use Mealz\MealBundle\Entity\Meal;
 use Mealz\MealBundle\Entity\MealRepository;
 use Mealz\MealBundle\Entity\Participant;
 use Mealz\MealBundle\EventListener\ParticipantNotUniqueException;
-use Mealz\MealBundle\Form\MealParticipantForm;
+use Mealz\MealBundle\Form\MealProfileForm;
+use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class MealController extends BaseController {
@@ -46,14 +48,17 @@ class MealController extends BaseController {
 		));
 	}
 
+	private function getParticipantForm($meal) {
+		return $this->createForm(new MealProfileForm(),null,array('action' => $this->generateUrlTo($meal,"join")));
+	}
+
 	public function showAction($date, $dish) {
 		$meal = $this->getMealRepository()->findOneByDateAndDish($date, $dish, array('load_dish' => TRUE, 'load_participants' => TRUE));
 		if(!$meal) {
 			throw $this->createNotFoundException('The given meal does not exist');
 		}
 
-		$dishes = $this->getDishRepository()->getSortedDishes();
-		$form = $this->createForm(new MealParticipantForm(), $dishes);
+		$form = $this->getParticipantForm( $meal);
 
 		return $this->render('MealzMealBundle:Meal:show.html.twig', array(
 			'meal' => $meal, 'form' => $form->createView()
@@ -111,7 +116,7 @@ class MealController extends BaseController {
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
 	 * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
 	 */
-	public function joinAction($date, $dish) {
+	public function joinAction(Request $request, $date, $dish) {
 		if(!$this->getUser()) {
 			throw new AccessDeniedException();
 		}
@@ -123,9 +128,23 @@ class MealController extends BaseController {
 			throw new AccessDeniedException('You are not allowed to join this meal.');
 		}
 
+		/** @var Form $form */
+		$form = $this->getParticipantForm( $meal);
+		$form->handleRequest($request);
+
+		$profile=null;
+		if ($form->isValid()) {
+			// perform some action, such as saving the task to the database
+			$profile = $form->get("participant")->getData();
+		}
+
+
 		try {
+
 			$participant = new Participant();
-			$participant->setProfile($this->getProfile());
+
+			$participant->setProfile(($profile === null) ? $this->getProfile():$profile);
+
 			$participant->setMeal($meal);
 
 			$em = $this->getDoctrine()->getManager();
@@ -144,6 +163,7 @@ class MealController extends BaseController {
 
 		return $this->redirect($this->generateUrlTo($meal));
 	}
+
 
 	protected function groupByDay($meals) {
 		$return = array();

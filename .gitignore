@@ -14,3 +14,7 @@
 /phpunit.xml
 /web/media/*
 !/web/media/.gitkeep
+node_modules/
+bower_components/
+web/*.js
+web/*.css

@@ -1,17 +1,21 @@
+// set variables
+
+@import "../bower_components/bootstrap-sass/vendor/assets/stylesheets/bootstrap";
+
 body {
-    padding-top: 50px;
+  padding-top: 50px;
 }
 
 table.table-meals td.table-meal-date,
 table.table-meals td.table-meal-user,
 table.table-meals td.table-meal-kitchen {
-    width: 15%;
+  width: 15%;
 }
 table.table-meals td.table-meal-dish {
-    width: 55%;
+  width: 55%;
 }
 
 
 .bottom-buffer {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }

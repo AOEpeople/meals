@@ -3,14 +3,7 @@
 <head>
 	<title>Mealz for Zombies</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-	{% stylesheets output="css/bootstrap.css" filter="?yui_css"
-		"../app/Resources/css/bootstrap.css"
-		"../app/Resources/css/bootstrap-theme.css"
-		"../app/Resources/css/main.css"
-	%}
-	<link rel="stylesheet" href="{{ asset_url }}" />
-	{% endstylesheets %}
+    <link rel="stylesheet" href="{{ asset('mealz.css') }}" />
 </head>
 <body>
 	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -55,13 +48,6 @@
 
 	{% block body %}{% endblock %}
 
-
-
-	{% javascripts output="js/bootstrap.js" filter="?closure"
-		'../app/Resources/js/jquery-1.10.2.js'
-		'../app/Resources/js/bootstrap.js'
-	%}
-		<script src="{{ asset_url }}"></script>
-	{% endjavascripts %}
+    <script src="{{ asset('mealz.js') }}"></script>
 	</body>
 </html>

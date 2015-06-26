@@ -89,8 +89,6 @@ abstract class AbstractRepositoryTestCase extends WebTestCase {
 	protected function createProfile() {
 		$profile = new Profile();
 		$profile->setUsername('Test ' . rand());
-		$profile->setSalt('salt');
-		$profile->setPassword('password');
 
 		return $profile;
 	}

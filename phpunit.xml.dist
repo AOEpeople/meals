@@ -22,6 +22,7 @@
 
     <php>
         <server name="KERNEL_DIR" value="app/" />
+        <server name="SYMFONY_ENV" value="test" />
     </php>
 
 

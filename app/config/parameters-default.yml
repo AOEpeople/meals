@@ -5,7 +5,9 @@ parameters:
     database_name:     mealz
     database_name_testing: mealz_test
     database_user:     root
+    database_user_testing: root
     database_password: ~
+    database_password_testing: ~
 
     mailer_transport:  smtp
     mailer_host:       127.0.0.1

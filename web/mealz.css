@@ -3174,23 +3174,23 @@ fieldset[disabled] a.btn {
 
 .btn-danger {
   color: #fff;
-  background-color: #d9534f;
-  border-color: #d43f3a; }
+  background-color: #CD5206;
+  border-color: #b44805; }
   .btn-danger:focus,
   .btn-danger.focus {
     color: #fff;
-    background-color: #c9302c;
-    border-color: #761c19; }
+    background-color: #9b3e05;
+    border-color: #381702; }
   .btn-danger:hover {
     color: #fff;
-    background-color: #c9302c;
-    border-color: #ac2925; }
+    background-color: #9b3e05;
+    border-color: #793004; }
   .btn-danger:active,
   .btn-danger.active,
   .open > .btn-danger.dropdown-toggle {
     color: #fff;
-    background-color: #c9302c;
-    border-color: #ac2925; }
+    background-color: #9b3e05;
+    border-color: #793004; }
     .btn-danger:active:hover,
     .btn-danger:active:focus,
     .btn-danger:active.focus,
@@ -3201,8 +3201,8 @@ fieldset[disabled] a.btn {
     .open > .btn-danger.dropdown-toggle:focus,
     .open > .btn-danger.dropdown-toggle.focus {
       color: #fff;
-      background-color: #ac2925;
-      border-color: #761c19; }
+      background-color: #793004;
+      border-color: #381702; }
   .btn-danger:active,
   .btn-danger.active,
   .open > .btn-danger.dropdown-toggle {
@@ -3225,10 +3225,10 @@ fieldset[disabled] a.btn {
   fieldset[disabled] .btn-danger.focus,
   fieldset[disabled] .btn-danger:active,
   fieldset[disabled] .btn-danger.active {
-    background-color: #d9534f;
-    border-color: #d43f3a; }
+    background-color: #CD5206;
+    border-color: #b44805; }
   .btn-danger .badge {
-    color: #d9534f;
+    color: #CD5206;
     background-color: #fff; }
 
 .btn-link {
@@ -6099,20 +6099,24 @@ button.close {
 
 .navbar-custom {
   background-color: #f57C00;
-  border-bottom: 0; }
+  border-bottom: 0;
+  color: #FFFFFF; }
   .navbar-custom a {
     color: #FFFFFF; }
   .navbar-custom li a:hover {
     background-color: #637B98; }
   .navbar-custom .navbar-brand {
     padding-top: 13px; }
-  .navbar-custom .btn-success {
+  .navbar-custom .btn-success, .navbar-custom .btn-danger {
     padding-top: 8px;
     padding-bottom: 7px;
     margin-left: -1px;
-    background-color: #637B98;
     color: white;
     border: 0; }
+  .navbar-custom .btn-success {
+    background-color: #637B98; }
+    .navbar-custom .btn-success:active {
+      background-color: #637B98; }
 
 body {
   padding-top: 50px; }

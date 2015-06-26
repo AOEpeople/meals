@@ -1,6 +1,7 @@
 .navbar-custom {
   background-color: $color-aoe-orange;
   border-bottom: 0;
+  color: $color-white;
   a {
     color: $color-white;
   }
@@ -12,12 +13,17 @@
   .navbar-brand {
     padding-top: 13px;
   }
-  .btn-success {
+  .btn-success, .btn-danger {
     padding-top: 8px;
     padding-bottom: 7px;
     margin-left: -1px;
-    background-color: $color-aoe-blue;
     color: white;
     border: 0;
+  }
+  .btn-success {
+    background-color: $color-aoe-blue;
+    &:active {
+      background-color: $color-aoe-blue;
+    }
   }
 }

@@ -27,7 +27,7 @@
 						<a class="btn btn-danger" href="{{ path('MealzUserBundle_logout') }}">Log out</a>
 					</div>
 					<div class="navbar-text navbar-right ">
-						Hi <strong>{{ app.user.username }}</strong>
+						Herzlich willkommen <strong>{{ app.user.username }}</strong>
 					</div>
 				{% else %}
 					<form class="navbar-form navbar-right" role="form" action="{{ path('MealzUserBundle_checkLogin') }}" method="post">

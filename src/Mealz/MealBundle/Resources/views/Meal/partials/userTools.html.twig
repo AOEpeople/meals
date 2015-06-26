@@ -11,7 +11,7 @@
 				class="btn btn-success {{ button_class }}"
 				href="{{ link(participant, 'edit') }}"
 				title="Edit"
-			>you join</a>
+			>you joined</a>
 			{% if is_allowed_to_leave(meal) %}
 				<a
 					class="btn btn-danger {{ button_class }}"
@@ -20,7 +20,7 @@
 				>–</a>
 			{% endif %}
 		{% else %}
-			<span class="btn btn-default {{ button_class }}">you do not join</span>
+			<span class="btn btn-default {{ button_class }}">join now</span>
 			{% if is_allowed_to_join(meal) %}
 				<a
 					class="btn btn-success {{ button_class }}"

@@ -34,6 +34,87 @@
                 <source>Accounting</source>
                 <target>Abrechnung</target>
             </trans-unit>
+            <trans-unit id="9">
+                <source>Currently</source>
+                <target>Momentan</target>
+            </trans-unit>
+            <trans-unit id="10">
+                <source>participants</source>
+                <target>Teilnehmer</target>
+            </trans-unit>
+            <trans-unit id="11">
+                <source>One participant</source>
+                <target>Ein Teilnehmer</target>
+            </trans-unit>
+            <trans-unit id="12">
+                <source>No participants</source>
+                <target>Keine Teilnehmer</target>
+            </trans-unit>
+            <trans-unit id="13">
+                <source>You joined as participant to the meal.</source>
+                <target>Du hast dich für dieses Essen erfolgreich eintragen.</target>
+            </trans-unit>
+            <trans-unit id="13b">
+                <source>joined as participant to the meal.</source>
+                <target>ist für dieses Essen erfolgreich eintragen worden.</target>
+            </trans-unit>
+            <trans-unit id="13c">
+                <source>is already joining this meal.</source>
+                <target>ist für dieses Essen schon eingetragen.</target>
+            </trans-unit>
+            <trans-unit id="14">
+                <source>The given meal does not exist</source>
+                <target>Das verwendete Essen ist nicht vorhanden.</target>
+            </trans-unit>
+            <trans-unit id="15">
+                <source>Invalid Date</source>
+                <target>Falsches Datum</target>
+            </trans-unit>
+            <trans-unit id="16">
+                <source>You are not allowed to join this meal.</source>
+                <target>An diesem Essen kannst Du leider nicht teilnehmen.</target>
+            </trans-unit>
+            <trans-unit id="17">
+                <source>Added %s as participant to the meal.</source>
+                <target>%s wurde als Teilnehmer für das Essen eingetragen</target>
+            </trans-unit>
+            <trans-unit id="18">
+                <source>You joined as participant to the meal.</source>
+                <target>Du hast dich für dieses Essen eingetragen.</target>
+            </trans-unit>
+            <trans-unit id="19">
+                <source>A participant with the same properties already exists in the database.</source>
+                <target>Ein Teilnehmer mit den gleichen Eigenschaften existiert schon in der Datenbank.</target>
+            </trans-unit>
+            <trans-unit id="20">
+                <source>The participant could not be changed, because a participant with the same properties is already in the database.</source>
+                <target>Der Teilnehmer konnte nicht verändert werden, weil es einen Teilnehmer mit diesen Eigenschaften schon inder Datenbank gibt</target>
+            </trans-unit>
+            <trans-unit id="21">
+                <source>Your changes were stored.</source>
+                <target>Eine Änderungen wurden gespeichert.</target>
+            </trans-unit>
+            <trans-unit id="22">
+                <source>You are not allowed to leave this meal.</source>
+                <target>Du darfst dich nicht aus diesem Essen austragen.</target>
+            </trans-unit>
+            <trans-unit id="23">
+                <source>Removed %s as participant to the meal.</source>
+                <target>%s wurde als Teilnehmer des Essens ausgetragen.</target>
+            </trans-unit>
+            <trans-unit id="24">
+                <source>removed as participant to the meal.</source>
+                <target>wurde als Teilnehmer des Essens ausgetragen.</target>
+            </trans-unit>
+            <trans-unit id="25">
+                <source>was removed as participant to the meal.</source>
+                <target>wurde als Teilnehmer des Essens ausgetragen.</target>
+            </trans-unit>
+            <trans-unit id="26">
+                <source>Add participant</source>
+                <target>Teilnehmer eintragen</target>
+            </trans-unit>
+
         </body>
     </file>
 </xliff>

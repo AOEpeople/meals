@@ -24,10 +24,10 @@ class ParticipantController extends BaseController {
 		}
 		$meal = $this->getMealRepository()->findOneByDateAndDish($date, $dish);
 		if(!$meal) {
-			throw $this->createNotFoundException('The given meal does not exist');
+			throw $this->createNotFoundException($this->get('translator')->trans('The given meal does not exist',array(),'general'));
 		}
 		if(!$this->getDoorman()->isUserAllowedToJoin($meal)) {
-			throw new AccessDeniedException('You are not allowed to join this meal.');
+			throw new AccessDeniedException($this->get('translator')->trans('You are not allowed to join this meal.',array(),'general'));
 		}
 
 		$participant = new Participant();
@@ -53,14 +53,14 @@ class ParticipantController extends BaseController {
 
 					if($participant->isGuest()) {
 						$this->addFlashMessage(
-							sprintf('Added %s as participant to the meal.', $participant->getGuestName()),
+							sprintf($this->get('translator')->trans('Added %s as participant to the meal.',array(),'general'), $participant->getGuestName()),
 							'success'
 						);
 					} else {
-						$this->addFlashMessage('You joined as participant to the meal.', 'success');
+						$this->addFlashMessage($this->get('translator')->trans('You joined as participant to the meal.',array(),'general'), 'success');
 					}
 				} catch(ParticipantNotUniqueException $e) {
-					$this->addFlashMessage('A participant with the same properties already exists in the database.', 'danger');
+					$this->addFlashMessage($this->get('translator')->trans('You joined as participant to the meal.',array(),'general'), 'danger');
 				}
 
 
@@ -100,9 +100,9 @@ class ParticipantController extends BaseController {
 						$em->flush();
 					});
 
-					$this->addFlashMessage('Your changes were stored.', 'success');
+					$this->addFlashMessage($this->get('translator')->trans('Your changes were stored.',array(),'general'), 'success');
 				} catch(ParticipantNotUniqueException $e) {
-					$this->addFlashMessage('The participant could not be changed, because a participant with the same properties is already in the database.', 'danger');
+					$this->addFlashMessage($this->get('translator')->trans('The participant could not be changed, because a participant with the same properties is already in the database.',array(),'general'), 'danger');
 				}
 
 				return $this->redirect($this->generateUrlTo($participant->getMeal()));
@@ -124,7 +124,7 @@ class ParticipantController extends BaseController {
 		}
 
 		if(!$this->getDoorman()->isUserAllowedToLeave($participant->getMeal())) {
-			throw new AccessDeniedException('You are not allowed to leave this meal.');
+			throw new AccessDeniedException($this->get('translator')->trans('You are not allowed to leave this meal.',array(),'general'));
 		}
 
 		$em = $this->getDoctrine()->getManager();
@@ -133,14 +133,14 @@ class ParticipantController extends BaseController {
 
 		if($participant->isGuest()) {
 			$this->addFlashMessage(
-				sprintf('Removed %s as participant to the meal.', $participant->getGuestName()),
+				sprintf($this->get('translator')->trans('Removed %s as participant to the meal.',array(),'general'), $participant->getGuestName()),
 				'success'
 			);
 		} else {
 			if ($this->getProfile() !== $participant->getProfile()) {
-				$this->addFlashMessage($participant->getProfile()->getUsername().' has been removed as participant to the meal.', 'success');
+				$this->addFlashMessage($participant->getProfile()->getUsername().' '.$this->get('translator')->trans('removed as participant to the meal.',array(),'general'), 'success');
 			} else {
-				$this->addFlashMessage('You were removed as participant to the meal.', 'success');
+				$this->addFlashMessage($participant->getProfile()->getUsername().' '.$this->get('translator')->trans('was removed as participant to the meal.',array(),'general'), 'success');
 			}
 		}
 

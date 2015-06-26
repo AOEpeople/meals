@@ -11,6 +11,12 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
  */
 class MealProfileForm extends AbstractType {
 
+	private $label;
+
+	function __construct($inLabel) {
+		$this->label = $inLabel;
+	}
+
 	public function buildForm(FormBuilderInterface $builder, array $options) {
 
 		// TODO: limit users to those who are not yet in the participants list
@@ -18,7 +24,7 @@ class MealProfileForm extends AbstractType {
 			->add('participant', 'entity', array(
 			'class' => 'MealzUserBundle:Profile',
 			'label' => false))
-		->add('Add participant', 'submit')
+		->add($this->label, 'submit')
 		;
 
 	}

@@ -50,13 +50,13 @@ class MealController extends BaseController {
 	}
 
 	private function getParticipantForm($meal) {
-		return $this->createForm(new MealProfileForm(),null,array('action' => $this->generateUrlTo($meal,"join")));
+		return $this->createForm(new MealProfileForm($this->get('translator')->trans('Add participant',array(),'general')),null,array('action' => $this->generateUrlTo($meal,"join")));
 	}
 
 	public function showAction($date, $dish) {
 		$meal = $this->getMealRepository()->findOneByDateAndDish($date, $dish, array('load_dish' => TRUE, 'load_participants' => TRUE));
 		if(!$meal) {
-			throw $this->createNotFoundException('The given meal does not exist');
+			throw $this->createNotFoundException($this->get('translator')->trans('The given meal does not exist',array(),'general'));
 		}
 
 		$form = $this->getParticipantForm( $meal);
@@ -70,7 +70,7 @@ class MealController extends BaseController {
 		try {
 			$day = new \DateTime($day);
 		} catch(\Exception $e) {
-			throw $this->createNotFoundException('Invalid Date', $e);
+			throw $this->createNotFoundException($this->get('translator')->trans('Invalid Date',array(),'general'), $e);
 		}
 
 		$meals = $this->getMealRepository()->getSortedMealsOnDay($day);
@@ -87,7 +87,7 @@ class MealController extends BaseController {
 		try {
 			$startTime = new \DateTime($week);
 		} catch(\Exception $e) {
-			throw $this->createNotFoundException('Invalid Date', $e);
+			throw $this->createNotFoundException($this->get('translator')->trans('Invalid Date',array(),'general'), $e);
 		}
 
 		$endTime = clone $startTime;
@@ -123,10 +123,10 @@ class MealController extends BaseController {
 		}
 		$meal = $this->getMealRepository()->findOneByDateAndDish($date, $dish);
 		if(!$meal) {
-			throw $this->createNotFoundException('The given meal does not exist');
+			throw $this->createNotFoundException($this->get('translator')->trans('The given meal does not exist',array(),'general'));
 		}
 		if(!$this->getDoorman()->isUserAllowedToJoin($meal)) {
-			throw new AccessDeniedException('You are not allowed to join this meal.');
+			throw new AccessDeniedException($this->get('translator')->trans('You are not allowed to join this meal.',array(),'general'));
 		}
 
 		/** @var Form $form */
@@ -154,14 +154,12 @@ class MealController extends BaseController {
 				$em->flush();
 			});
 
-			/** @var Translator $translator */
-			$translator = $this->get('translator');
 			$this->get('session')->getFlashBag()->add(
-				'success',
-				$translator->trans('You joined as participant to the meal.',array(),'general')
+				'success',$profile->getUsername().' '.
+				$this->get('translator')->trans('joined as participant to the meal.',array(),'general')
 			);
 		} catch (ParticipantNotUniqueException $e) {
-			$this->addFlashMessage('You are already joining this meal.', 'info');
+			$this->addFlashMessage($profile->getUsername().' '.$this->get('translator')->trans('is already joining this meal.',array(),'general'), 'info');
 		}
 
 		return $this->redirect($this->generateUrlTo($meal));

@@ -158,7 +158,7 @@ class MealController extends BaseController {
 			$translator = $this->get('translator');
 			$this->get('session')->getFlashBag()->add(
 				'success',
-				$translator->addLoader()->trans('You joined as participant to the meal.')
+				$translator->trans('You joined as participant to the meal.',array(),'general')
 			);
 		} catch (ParticipantNotUniqueException $e) {
 			$this->addFlashMessage('You are already joining this meal.', 'info');

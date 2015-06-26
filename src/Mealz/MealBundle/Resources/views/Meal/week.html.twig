@@ -2,7 +2,7 @@
 
 {% block body %}
 	<div class="container">
-	<h1>Menu on week {{ week | date('W') }} in {{ week | date('Y') }}</h1>
+	<h1>{{ 'Menu on week'|trans({},'general') }} {{ week | date('W') }} in {{ week | date('Y') }}</h1>
 	{% include ':partials:flashMessages.html.twig' %}
 
 	<ul class="pager">

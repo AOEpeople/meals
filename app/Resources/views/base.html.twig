@@ -20,7 +20,7 @@
 				</div>
 				<ul class="nav navbar-nav navbar-left">
 					<li><a href="{{ path('MealzMealBundle_Meal') }}">Meals</a></li>
-					<li><a href="{{ path('MealzMealBundle_Dish') }}">Dishes</a></li>
+					<li><a href="{{ path('MealzMealBundle_Dish') }}">{{ 'Dishes'|trans({},'general') }}</a></li>
 				</ul>
 				{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
 					<div class="navbar-form navbar-right">

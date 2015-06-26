@@ -39,7 +39,7 @@ class Doorman {
 			return FALSE;
 		}
 		if($meal->getDateTime()->getTimestamp() - 9000 > $this->now->getTimestamp()) {
-			// if: meal is in two hours or earlier
+			// if: meal is in two and a half hours or earlier
 			return TRUE;
 		}
 		return FALSE;
@@ -50,7 +50,7 @@ class Doorman {
 			return FALSE;
 		}
 		if($meal->getDateTime()->getTimestamp() - 9000 > $this->now->getTimestamp()) {
-			// if: meal is in two hours or earlier
+			// if: meal is in two and a half hours or earlier
 			return TRUE;
 		}
 		return FALSE;

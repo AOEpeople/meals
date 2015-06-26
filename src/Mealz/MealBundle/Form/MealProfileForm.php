@@ -17,8 +17,8 @@ class MealProfileForm extends AbstractType {
 		$builder
 			->add('participant', 'entity', array(
 			'class' => 'MealzUserBundle:Profile',
-			'label' => 'Add '))
-		->add('save', 'submit')
+			'label' => false))
+		->add('Add participant', 'submit')
 		;
 
 	}

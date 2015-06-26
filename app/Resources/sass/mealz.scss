@@ -2,8 +2,12 @@
 @import "partials/fonts";
 @import "partials/colors";
 @import "partials/bootstrap_configuration";
-@import "../bower_components/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
-@import "partials/navbar.scss";
+@import "../bower_components/bootstrap-sass/assets/stylesheets/_bootstrap";
+@import "partials/navbar";
+@import "partials/chosen";
+@import "partials/tables";
+
+@import "partials/pages/participant";
 
 body {
   padding-top: 50px;

@@ -22,19 +22,20 @@
 			{% endif %}
 		</div>
 	</div>
-	<h2>
-		{% if meal.participants | length > 1 %}
-			{{ meal.participants | length }} Participants
-		{% elseif meal.participants | length == 1 %}One Participant
-		{% else %}No Participants
-		{% endif %}
 
-		{% if is_granted('ROLE_KITCHEN_STAFF')%}
-			{{ form(form) }}
-		{%  endif %}
+    <h2>
+        {% if meal.participants | length > 1 %}Currently {{ meal.participants | length }} participants
+        {% elseif meal.participants | length == 1 %}One Participant
+        {% else %}No Participants
+        {% endif %}
+    </h2>
 
-	</h2>
+    {% if is_granted('ROLE_KITCHEN_STAFF')%}
+        {{ form(form) }}
+    {%  endif %}
+
 	{% include ':partials:flashMessages.html.twig' %}
+
 	<table class="table table-striped">
 		<tbody>
 		{% for participant in meal.participants %}

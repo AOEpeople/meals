@@ -37,10 +37,10 @@
 ### Frontend build
 
 ```
-    cd /var/www/mealz/devbox/app/Resources
-    npm install 
-    ./node_modules/.bin/bower install
-    ./node_modules/.bin/gulp
+cd /var/www/mealz/devbox/app/Resources
+npm install 
+./node_modules/.bin/bower install
+./node_modules/.bin/gulp
 ```
 
 ### You're done

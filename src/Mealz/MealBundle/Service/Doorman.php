@@ -46,7 +46,7 @@ class Doorman {
 	}
 
 	public function isUserAllowedToLeave(Meal $meal) {
-		if(!$this->securityContext->getToken()->getUser()->getProfile() instanceof Profile) {
+		if(!$this->securityContext->getToken()->getUser()->getProfile() instanceof Profile || !$this->isKitchenStaff()) {
 			return FALSE;
 		}
 		if($meal->getDateTime()->getTimestamp() - 9000 > $this->now->getTimestamp()) {
@@ -54,6 +54,10 @@ class Doorman {
 			return TRUE;
 		}
 		return FALSE;
+	}
+
+	public function isKitchenStaff() {
+		return $this->securityContext->isGranted('ROLE_KITCHEN_STAFF');
 	}
 
 	public function isUserAllowedToAddGuest(Meal $meal) {

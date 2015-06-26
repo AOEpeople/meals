@@ -118,9 +118,10 @@ class ParticipantController extends BaseController {
 		if(!$this->getUser()) {
 			throw new AccessDeniedException();
 		}
-		if($this->getProfile() !== $participant->getProfile()) {
+		if($this->getProfile() !== $participant->getProfile() && !$this->getDoorman()->isKitchenStaff()) {
 			throw new AccessDeniedException();
 		}
+
 		if(!$this->getDoorman()->isUserAllowedToLeave($participant->getMeal())) {
 			throw new AccessDeniedException('You are not allowed to leave this meal.');
 		}
@@ -135,7 +136,11 @@ class ParticipantController extends BaseController {
 				'success'
 			);
 		} else {
-			$this->addFlashMessage('You were removed as participant to the meal.', 'success');
+			if ($this->getProfile() !== $participant->getProfile()) {
+				$this->addFlashMessage($participant->getProfile()->getUsername().' removed as participant to the meal.', 'success');
+			} else {
+				$this->addFlashMessage('You were removed as participant to the meal.', 'success');
+			}
 		}
 
 

@@ -28,6 +28,11 @@
 		{% elseif meal.participants | length == 1 %}One Participant
 		{% else %}No Participants
 		{% endif %}
+
+		{% if is_granted('ROLE_KITCHEN_STAFF')%}
+			{{ form(form) }}
+		{%  endif %}
+
 	</h2>
 	{% include ':partials:flashMessages.html.twig' %}
 	<table class="table table-striped">
@@ -43,9 +48,9 @@
 					{% endif %}
 				</td>
 				<td>{% if participant.comment %}<span class="text-muted">{{ participant.comment }}</span>{% endif %}</td>
-				<td>{% if is_granted('ROLE_USER') and participant.profile == app.user.profile %}
+				<td>{% if (is_granted('ROLE_USER') and participant.profile == app.user.profile) or is_granted('ROLE_KITCHEN_STAFF')%}
 					<div class="btn-group">
-						{% if is_allowed_to_leave(meal) %}
+						{% if is_allowed_to_leave(meal) or is_granted('ROLE_KITCHEN_STAFF')%}
 							<a
 									class="btn btn-default btn-xs"
 									href="{{ link(participant, 'delete') }}"

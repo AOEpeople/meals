@@ -10,6 +10,7 @@ use Mealz\MealBundle\Entity\Meal;
 use Mealz\MealBundle\Entity\MealRepository;
 use Mealz\MealBundle\Entity\Participant;
 use Mealz\MealBundle\EventListener\ParticipantNotUniqueException;
+use Mealz\MealBundle\Form\MealParticipantForm;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class MealController extends BaseController {
@@ -51,8 +52,11 @@ class MealController extends BaseController {
 			throw $this->createNotFoundException('The given meal does not exist');
 		}
 
+		$dishes = $this->getDishRepository()->getSortedDishes();
+		$form = $this->createForm(new MealParticipantForm(), $dishes);
+
 		return $this->render('MealzMealBundle:Meal:show.html.twig', array(
-			'meal' => $meal
+			'meal' => $meal, 'dishes' => $dishes, 'form' => $form->createView()
 		));
 	}
 

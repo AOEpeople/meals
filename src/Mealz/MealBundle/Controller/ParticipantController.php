@@ -17,6 +17,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class ParticipantController extends BaseController {
 
+
 	public function newAction(Request $request, $date, $dish) {
 		if(!$this->getUser()) {
 			throw new AccessDeniedException();
@@ -137,7 +138,7 @@ class ParticipantController extends BaseController {
 			);
 		} else {
 			if ($this->getProfile() !== $participant->getProfile()) {
-				$this->addFlashMessage($participant->getProfile()->getUsername().' removed as participant to the meal.', 'success');
+				$this->addFlashMessage($participant->getProfile()->getUsername().' has been removed as participant to the meal.', 'success');
 			} else {
 				$this->addFlashMessage('You were removed as participant to the meal.', 'success');
 			}

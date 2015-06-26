@@ -14,10 +14,12 @@ class MealParticipantForm extends AbstractType {
 	public function buildForm(FormBuilderInterface $builder, array $options) {
 
 		// TODO: limit users to those who are not yet in the participants list
-		$builder->add('participant', 'entity', array(
+		$builder
+			->add('participant', 'entity', array(
 			'class' => 'MealzUserBundle:Profile',
-			'label' => 'Add '
-		));
+			'label' => 'Add '))
+		->add('save', 'submit')
+		;
 
 	}
 

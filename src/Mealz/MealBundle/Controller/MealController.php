@@ -56,7 +56,7 @@ class MealController extends BaseController {
 		$form = $this->createForm(new MealParticipantForm(), $dishes);
 
 		return $this->render('MealzMealBundle:Meal:show.html.twig', array(
-			'meal' => $meal, 'dishes' => $dishes, 'form' => $form->createView()
+			'meal' => $meal, 'form' => $form->createView()
 		));
 	}
 

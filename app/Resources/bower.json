@@ -1,0 +1,19 @@
+{
+  "name": "mealz",
+  "version": "0.0.1",
+  "homepage": "https://github.com/czenker/mealz-for-zombies",
+  "authors": [
+    "Marc Dix <marc.dix@aoe.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap-sass": "v3.1.0"
+  }
+}

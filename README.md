@@ -10,7 +10,7 @@
 
     php app/console doctrine:schema:update --force
 
-Apache configuration
+### Apache configuration
 
     <VirtualHost *:80>
             ServerName mealz.local
@@ -33,6 +33,17 @@ Apache configuration
 
             </Directory>
     </VirtualHost>
+
+### Frontend build
+
+```
+    cd /var/www/mealz/devbox/app/Resources
+    npm install 
+    ./node_modules/.bin/bower install
+    ./node_modules/.bin/gulp
+```
+
+### You're done
 
 Point your webbrowser to http://mealz.local
 

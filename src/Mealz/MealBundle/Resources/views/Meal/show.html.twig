@@ -41,7 +41,7 @@
 		{% for participant in meal.participants %}
 			{% set profile=participant.profile %}
 			<tr>
-				<td>
+				<td style="width: 1%">
 					{% if (is_granted('ROLE_USER') and participant.profile == app.user.profile) or is_granted('ROLE_KITCHEN_STAFF')%}
 						<div class="btn-group">
 							{% if is_allowed_to_leave(meal) or is_granted('ROLE_KITCHEN_STAFF')%}

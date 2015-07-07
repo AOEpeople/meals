@@ -40,6 +40,7 @@ class LoadParticipants extends AbstractFixture implements OrderedFixtureInterfac
 				$participant = new Participant();
 				$participant->setMeal($meal);
 				$participant->setProfile($user);
+				$participant->setAoePays(false);
 
 				$this->objectManager->persist($participant);
 			}

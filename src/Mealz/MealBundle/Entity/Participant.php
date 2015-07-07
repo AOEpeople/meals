@@ -56,6 +56,28 @@ class Participant
 	protected $guestName;
 
 	/**
+	 * @ORM\Column(type="boolean", nullable=false, options={"default": false})
+	 * @var boolean
+	 */
+	protected $aoePays=false;
+
+	/**
+	 * @return boolean
+	 */
+	public function isAoePays()
+	{
+		return $this->aoePays;
+	}
+
+	/**
+	 * @param boolean $aoePays
+	 */
+	public function setAoePays($aoePays)
+	{
+		$this->aoePays = $aoePays;
+	}
+
+	/**
 	 * @return int
 	 */
 	public function getId()

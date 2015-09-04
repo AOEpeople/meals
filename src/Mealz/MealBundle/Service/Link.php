@@ -42,7 +42,7 @@ class Link {
 
 	public function linkMeal(Meal $meal, $action = NULL, $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH) {
 		$action = $action ?: 'show';
-		if($action === 'show' || $action === 'join') {
+		if($action === 'show' || $action === 'join' || $action === 'join_someone') {
 			return $this->router->generate('MealzMealBundle_Meal_' . $action, array(
 				'date' => $meal->getDateTime()->format('Y-m-d'),
 				'dish' => $meal->getDish()->getSlug(),

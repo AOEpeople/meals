@@ -11,6 +11,7 @@ use Mealz\MealBundle\Entity\MealRepository;
 use Mealz\MealBundle\Entity\Participant;
 use Mealz\MealBundle\EventListener\ParticipantNotUniqueException;
 use Mealz\MealBundle\Form\MealProfileForm;
+use Mealz\UserBundle\Entity\Profile;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,20 +50,35 @@ class MealController extends BaseController {
 		));
 	}
 
-	private function getParticipantForm($meal) {
-		return $this->createForm(new MealProfileForm($this->get('translator')->trans('Add participant',array(),'general')),null,array('action' => $this->generateUrlTo($meal,"join")));
+	/**
+	 * @param Meal $meal
+	 * @return Form
+	 */
+	private function getAddParticipantForm($meal) {
+		return $this->createForm(new MealProfileForm($this->get('translator')->trans('Add participant',array(),'general')),null,array('action' => $this->generateUrlTo($meal,"join_someone")));
 	}
 
+	/**
+	 * @param $date
+	 * @param $dish
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
 	public function showAction($date, $dish) {
 		$meal = $this->getMealRepository()->findOneByDateAndDish($date, $dish, array('load_dish' => TRUE, 'load_participants' => TRUE));
 		if(!$meal) {
 			throw $this->createNotFoundException($this->get('translator')->trans('The given meal does not exist',array(),'general'));
 		}
 
-		$form = $this->getParticipantForm( $meal);
+		if($this->getDoorman()->isKitchenStaff()) {
+			// form that allows kitchen staff to add arbitrary users
+			$addParticipantForm = $this->getAddParticipantForm($meal);
+		} else {
+			$addParticipantForm = NULL;
+		}
 
 		return $this->render('MealzMealBundle:Meal:show.html.twig', array(
-			'meal' => $meal, 'form' => $form->createView()
+			'meal' => $meal,
+			'addParticipantForm' => $addParticipantForm ? $addParticipantForm->createView() : NULL
 		));
 	}
 
@@ -113,9 +129,10 @@ class MealController extends BaseController {
 	/**
 	 * let the currently logged in user join the given meal
 	 *
-	 * @param Meal $meal
+	 * @param Request $request
+	 * @param string $date
+	 * @param string $dish
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
-	 * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
 	 */
 	public function joinAction(Request $request, $date, $dish) {
 		if(!$this->getUser()) {
@@ -129,23 +146,12 @@ class MealController extends BaseController {
 			throw new AccessDeniedException($this->get('translator')->trans('You are not allowed to join this meal.',array(),'general'));
 		}
 
-		/** @var Form $form */
-		$form = $this->getParticipantForm( $meal);
-		$form->handleRequest($request);
-
-		$profile=null;
-		if ($form->isValid()) {
-			// perform some action, such as saving the task to the database
-			$profile = $form->get("participant")->getData();
-		}
-
+		$profile = $this->getProfile();
 
 		try {
 
 			$participant = new Participant();
-
-			$participant->setProfile(($profile === null) ? $this->getProfile():$profile);
-
+			$participant->setProfile($profile);
 			$participant->setMeal($meal);
 
 			$em = $this->getDoctrine()->getManager();
@@ -154,13 +160,74 @@ class MealController extends BaseController {
 				$em->flush();
 			});
 
-			$this->get('session')->getFlashBag()->add(
-				'success',$profile->getUsername().' '.
-				$this->get('translator')->trans('joined as participant to the meal.',array(),'general')
+			$this->addFlashMessage(
+				$this->get('translator')->trans('You joined as participant to the meal.',array(),'general'),
+				'success'
 			);
 		} catch (ParticipantNotUniqueException $e) {
-			$this->addFlashMessage($profile->getUsername().' '.$this->get('translator')->trans('is already joining this meal.',array(),'general'), 'info');
+			$this->addFlashMessage(
+				$this->get('translator')->trans('You are already joining this meal.',array(),'general'),
+				'info'
+			);
 		}
+
+		return $this->redirect($this->generateUrlTo($meal));
+	}
+
+	/**
+	 * let some user join the given meal
+	 *
+	 * @param Request $request
+	 * @param string $date
+	 * @param string $dish
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 */
+	public function joinSomeoneAction(Request $request, $date, $dish) {
+		if (!$this->getUser()) {
+			throw new AccessDeniedException();
+		}
+		if (!$this->getDoorman()->isKitchenStaff()) {
+			throw new AccessDeniedException($this->get('translator')->trans('You are not allowed to add users to this meal.', array(), 'general'));
+		}
+		$meal = $this->getMealRepository()->findOneByDateAndDish($date, $dish);
+		if (!$meal) {
+			throw $this->createNotFoundException($this->get('translator')->trans('The given meal does not exist', array(), 'general'));
+		}
+
+		$form = $this->getAddParticipantForm($meal);
+		$form->handleRequest($request);
+
+		if ($form->isValid()) {
+			/** @var Profile $profile */
+			$profile = $form->get("participant")->getData();
+
+			try {
+
+				$participant = new Participant();
+				$participant->setProfile($profile);
+				$participant->setMeal($meal);
+
+				$em = $this->getDoctrine()->getManager();
+				$em->transactional(function (EntityManager $em) use ($participant) {
+					$em->persist($participant);
+					$em->flush();
+				});
+
+				$this->addFlashMessage(
+					$this->get('translator')->trans('%username% joined as participant to the meal.', array('%username%' => $profile->getUsername()), 'general'),
+					'success'
+				);
+			} catch (ParticipantNotUniqueException $e) {
+				$this->addFlashMessage(
+					$this->get('translator')->trans('%username% is already joining this meal.', array('%username%' => $profile->getUsername()), 'general'),
+					'info'
+				);
+			}
+		} else {
+
+		}
+
+
 
 		return $this->redirect($this->generateUrlTo($meal));
 	}

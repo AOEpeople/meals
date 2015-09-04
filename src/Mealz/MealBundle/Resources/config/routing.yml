@@ -44,6 +44,10 @@ MealzMealBundle_Meal_join:
     pattern:  /menu/{date}/{dish}/join
     defaults: { _controller: "MealzMealBundle:Meal:join" }
 
+MealzMealBundle_Meal_join_someone:
+    pattern:  /menu/{date}/{dish}/join-someone
+    defaults: { _controller: "MealzMealBundle:Meal:joinSomeone" }
+
 MealzMealBundle_Participant_new:
     pattern:  /menu/{date}/{dish}/add
     defaults: { _controller: "MealzMealBundle:Participant:new" }

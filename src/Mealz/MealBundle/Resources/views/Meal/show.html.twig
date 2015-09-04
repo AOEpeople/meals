@@ -30,8 +30,8 @@
         {% endif %}
     </h2>
 
-    {% if is_granted('ROLE_KITCHEN_STAFF')%}
-        {{ form(form) }}
+    {% if addParticipantForm %}
+        {{ form(addParticipantForm) }}
     {%  endif %}
 
 	{% include ':partials:flashMessages.html.twig' %}
@@ -41,7 +41,7 @@
 		{% for participant in meal.participants %}
 			{% set profile=participant.profile %}
 			<tr>
-				<td style="width: 1%">
+				<td>
 					{% if (is_granted('ROLE_USER') and participant.profile == app.user.profile) or is_granted('ROLE_KITCHEN_STAFF')%}
 						<div class="btn-group">
 							{% if is_allowed_to_leave(meal) or is_granted('ROLE_KITCHEN_STAFF')%}
@@ -67,6 +67,9 @@
 				<td>
 					{% if participant.isGuest %}
 						{{ participant.guestName }} <span class="text-muted">via {{ profile.username }}</span>
+						{% if participant.isCostAbsorbed and (participant.profile == app.user.profile or is_granted('ROLE_KITCHEN_STAFF')) %}
+							<span class="text-muted">({{ 'does not pay' | trans([], 'general') }})</span>
+						{% endif %}
 					{% else %}
 						{{ profile.username }}
 					{% endif %}

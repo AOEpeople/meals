@@ -36,7 +36,10 @@ class ParticipantController extends BaseController {
 		$form = $this->createForm(
 			new ParticipantForm(),
 			$participant,
-			array('allow_guest' => $this->getDoorman()->isUserAllowedToAddGuest($meal))
+			array(
+				'allow_guest' => $this->getDoorman()->isUserAllowedToAddGuest($meal),
+				'allow_cost_absorption' => $this->getDoorman()->isUserAllowedToAddGuest($meal) && $this->getDoorman()->isUserAllowedToRequestCostAbsorption($meal),
+			)
 		);
 
 		// handle form submission
@@ -83,9 +86,13 @@ class ParticipantController extends BaseController {
 		}
 
 		if($participant->isGuest()) {
-			$form = $this->createForm(new ParticipantGuestForm(), $participant);
+			$form = $this->createForm(new ParticipantGuestForm(), $participant, array(
+				'allow_cost_absorption' => $this->getDoorman()->isUserAllowedToRequestCostAbsorption($participant->getMeal()),
+			));
 		} else {
-			$form = $this->createForm(new ParticipantForm(), $participant, array('allow_guest' => FALSE));
+			$form = $this->createForm(new ParticipantForm(), $participant, array(
+				'allow_guest' => FALSE
+			));
 		}
 
 		// handle form submission

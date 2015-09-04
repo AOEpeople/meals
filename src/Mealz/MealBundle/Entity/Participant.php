@@ -59,22 +59,20 @@ class Participant
 	 * @ORM\Column(type="boolean", nullable=false, options={"default": false})
 	 * @var boolean
 	 */
-	protected $aoePays=false;
+	protected $costAbsorbed = false;
 
 	/**
 	 * @return boolean
 	 */
-	public function isAoePays()
-	{
-		return $this->aoePays;
+	public function isCostAbsorbed() {
+		return $this->costAbsorbed;
 	}
 
 	/**
-	 * @param boolean $aoePays
+	 * @param boolean $costAbsorbed
 	 */
-	public function setAoePays($aoePays)
-	{
-		$this->aoePays = $aoePays;
+	public function setCostAbsorbed($costAbsorbed) {
+		$this->costAbsorbed = $costAbsorbed;
 	}
 
 	/**

@@ -50,17 +50,25 @@
                 <source>No participants</source>
                 <target>Keine Teilnehmer</target>
             </trans-unit>
+            <trans-unit id="12b">
+                <source>does not pay</source>
+                <target>zahlt nicht</target>
+            </trans-unit>
             <trans-unit id="13">
                 <source>You joined as participant to the meal.</source>
                 <target>Du hast dich für dieses Essen erfolgreich eintragen.</target>
             </trans-unit>
             <trans-unit id="13b">
-                <source>joined as participant to the meal.</source>
-                <target>ist für dieses Essen erfolgreich eintragen worden.</target>
+                <source>%username% joined as participant to the meal.</source>
+                <target>%username% ist für dieses Essen erfolgreich eintragen worden.</target>
             </trans-unit>
             <trans-unit id="13c">
-                <source>is already joining this meal.</source>
-                <target>ist für dieses Essen schon eingetragen.</target>
+                <source>You are already joining this meal.</source>
+                <target>Du bist für dieses Essen schon eingetragen.</target>
+            </trans-unit>
+            <trans-unit id="13d">
+                <source>%username% is already joining this meal.</source>
+                <target>%username% ist für dieses Essen schon eingetragen.</target>
             </trans-unit>
             <trans-unit id="14">
                 <source>The given meal does not exist</source>

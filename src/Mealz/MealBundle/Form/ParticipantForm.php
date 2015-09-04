@@ -19,6 +19,11 @@ class ParticipantForm extends AbstractType {
 				'required' => FALSE
 			));
 		}
+		if($options['allow_cost_absorption']) {
+			$builder->add('costAbsorbed', 'checkbox', array(
+				'required' => FALSE,
+			));
+		}
 		$builder
 			->add('comment', 'textarea', array(
 				'required' => FALSE
@@ -31,6 +36,7 @@ class ParticipantForm extends AbstractType {
 		$resolver->setDefaults(array(
 			'data_class' => 'Mealz\MealBundle\Entity\Participant',
 			'allow_guest' => FALSE,
+			'allow_cost_absorption' => FALSE,
 		));
 	}
 

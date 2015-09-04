@@ -19,6 +19,11 @@ class ParticipantGuestForm extends ParticipantForm {
 				new NotBlank(), // user should not be allowed to remove the name
 			),
 		));
+		if ($options['allow_cost_absorption']) {
+			$builder->add('costAbsorbed', 'checkbox', array(
+				'required' => FALSE,
+			));
+		}
 		$builder
 			->add('comment', 'textarea', array(
 				'required' => FALSE
@@ -30,6 +35,7 @@ class ParticipantGuestForm extends ParticipantForm {
 	public function setDefaultOptions(OptionsResolverInterface $resolver) {
 		$resolver->setDefaults(array(
 			'data_class' => 'Mealz\MealBundle\Entity\Participant',
+			'allow_cost_absorption' => FALSE,
 		));
 	}
 

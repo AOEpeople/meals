@@ -1,0 +1,3 @@
+MealzAccountingBundle_Accounting:
+    pattern:  /accounting
+    defaults: { _controller: "MealzAccountingBundle:Accounting:list" }

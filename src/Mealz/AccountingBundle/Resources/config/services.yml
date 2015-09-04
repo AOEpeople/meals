@@ -1,0 +1,7 @@
+parameters:
+#    mealz_accounting.example.class: Mealz\AccountingBundle\Example
+
+services:
+#    mealz_accounting.example:
+#        class: %mealz_accounting.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

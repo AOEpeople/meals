@@ -26,6 +26,7 @@ class AppKernel extends Kernel
 
 			new Mealz\MealBundle\MealzMealBundle(),
 			new Mealz\UserBundle\MealzUserBundle(),
+            new Mealz\AccountingBundle\MealzAccountingBundle(),
 		);
 
 		if (in_array($this->getEnvironment(), array('dev', 'test'))) {

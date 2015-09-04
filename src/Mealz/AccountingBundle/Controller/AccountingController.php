@@ -1,8 +1,9 @@
 <?php
 
-namespace Mealz\MealBundle\Controller;
+namespace Mealz\AccountingBundle\Controller;
 
 use Doctrine\ORM\Query;
+use Mealz\MealBundle\Controller\BaseController;
 use Mealz\MealBundle\Entity\DishRepository;
 use Mealz\MealBundle\Entity\Meal;
 use Mealz\MealBundle\Entity\Participant;
@@ -17,7 +18,7 @@ class AccountingController extends BaseController {
 
         $participants = $this->getParticipantRepository()->getParticipants($startTime, $endTime);
 
-		return $this->render('MealzMealBundle:Accounting:list.html.twig', array(
+		return $this->render('MealzAccountingBundle:Accounting:list.html.twig', array(
 			'participants' => $participants
 		));
 	}

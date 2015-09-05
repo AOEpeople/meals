@@ -2,6 +2,7 @@
 namespace Mealz\AccountingBundle\ParticipantList;
 
 use Mealz\MealBundle\Entity\ParticipantRepository;
+use Mealz\UserBundle\Entity\Profile;
 
 class ParticipantListFactory {
 
@@ -20,10 +21,11 @@ class ParticipantListFactory {
 	/**
 	 * @param \DateTime $minDate
 	 * @param \DateTime $maxDate
+	 * @param Profile $profile
 	 * @return ParticipantList
 	 */
-	public function getList(\DateTime $minDate, \DateTime $maxDate) {
-		$participants = $this->participantRepository->getParticipantsOnDays($minDate, $maxDate);
+	public function getList(\DateTime $minDate, \DateTime $maxDate, Profile $profile = NULL) {
+		$participants = $this->participantRepository->getParticipantsOnDays($minDate, $maxDate, $profile);
 
 		return new ParticipantList($participants);
 	}

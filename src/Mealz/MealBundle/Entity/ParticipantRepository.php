@@ -4,6 +4,7 @@ namespace Mealz\MealBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
+use Mealz\UserBundle\Entity\Profile;
 
 class ParticipantRepository extends EntityRepository {
 
@@ -45,11 +46,14 @@ class ParticipantRepository extends EntityRepository {
 		return $this->getParticipantsOnDays($date, $date, $options);
 	}
 
-	public function getParticipantsOnDays(\DateTime $minDate, \DateTime $maxDate, $options = array()) {
+	public function getParticipantsOnDays(\DateTime $minDate, \DateTime $maxDate, Profile $profile = NULL, $options = array()) {
 		$options = array_merge($options, array(
 			'load_meal' => TRUE,
 			'load_profile' => TRUE,
 		));
+		if ($profile) {
+			$options['load_profile'] = TRUE;
+		}
 		$qb = $this->getQueryBuilderWithOptions($options);
 
 		$minDate = clone $minDate;
@@ -61,6 +65,11 @@ class ParticipantRepository extends EntityRepository {
 		$qb->andWhere('m.dateTime <= :maxDate');
 		$qb->setParameter('minDate', $minDate);
 		$qb->setParameter('maxDate', $maxDate);
+
+		if ($profile) {
+			$qb->andWhere('u.username = :username');
+			$qb->setParameter('username', $profile->getUsername());
+		}
 
 		$qb->orderBy('u.name', 'ASC');
 

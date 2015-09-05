@@ -21,7 +21,7 @@
 				<ul class="nav navbar-nav navbar-left">
 					<li><a href="{{ path('MealzMealBundle_Meal') }}">{{ 'Meals'|trans({},'general') }}</a></li>
                     <li><a href="{{ path('MealzMealBundle_Dish') }}">{{ 'Dishes'|trans({},'general') }}</a></li>
-                    {% if is_granted('ROLE_KITCHEN_STAFF') %}
+                    {% if is_granted('ROLE_USER') %}
                     <li><a href="{{ path('MealzAccountingBundle_Accounting') }}">{{ 'Accounting'|trans({},'general') }}</a></li>
                     {% endif %}
                 </ul>

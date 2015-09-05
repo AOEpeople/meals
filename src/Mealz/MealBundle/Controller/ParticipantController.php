@@ -9,7 +9,6 @@ use Doctrine\ORM\Query;
 use Mealz\MealBundle\Entity\Participant;
 use Mealz\MealBundle\EventListener\ParticipantNotUniqueException;
 use Mealz\MealBundle\Form\ParticipantForm;
-use Mealz\MealBundle\Form\ParticipantGuestForm;
 use Mealz\UserBundle\Entity\Profile;
 use Mealz\MealBundle\Entity\Meal;
 use Symfony\Component\HttpFoundation\Request;
@@ -81,19 +80,14 @@ class ParticipantController extends BaseController {
 		if(!$this->getUser()) {
 			throw new AccessDeniedException();
 		}
-		if($this->getProfile() !== $participant->getProfile()) {
+		if(!$this->getDoorman()->isKitchenStaff() && $this->getProfile() !== $participant->getProfile()) {
 			throw new AccessDeniedException();
 		}
 
-		if($participant->isGuest()) {
-			$form = $this->createForm(new ParticipantGuestForm(), $participant, array(
-				'allow_cost_absorption' => $this->getDoorman()->isUserAllowedToRequestCostAbsorption($participant->getMeal()),
-			));
-		} else {
-			$form = $this->createForm(new ParticipantForm(), $participant, array(
-				'allow_guest' => FALSE
-			));
-		}
+		$form = $this->createForm(new ParticipantForm(), $participant, array(
+			'allow_guest' => $participant->isGuest(),
+			'allow_cost_absorption' => $participant->isCostAbsorbed() || $this->getDoorman()->isUserAllowedToRequestCostAbsorption($participant->getMeal()),
+		));
 
 		// handle form submission
 		if($request->isMethod('POST')) {

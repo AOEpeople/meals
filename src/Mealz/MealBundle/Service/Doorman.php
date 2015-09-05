@@ -35,6 +35,9 @@ class Doorman {
 	}
 
 	public function isUserAllowedToJoin(Meal $meal) {
+		if ($this->isKitchenStaff()) {
+			return TRUE;
+		}
 		if(!$this->securityContext->getToken()->getUser()->getProfile() instanceof Profile) {
 			return FALSE;
 		}
@@ -65,17 +68,17 @@ class Doorman {
 
 	public function isUserAllowedToAddGuest(Meal $meal) {
 		// @TODO: add a separate role for that
-		return $this->isUserAllowedToJoin($meal);
+		return $this->isKitchenStaff() || $this->isUserAllowedToJoin($meal);
 	}
 
 	public function isUserAllowedToRemoveGuest(Meal $meal) {
 		// @TODO: add a separate role for that
-		return $this->isUserAllowedToLeave($meal);
+		return $this->isKitchenStaff() || $this->isUserAllowedToLeave($meal);
 	}
 
 	public function isUserAllowedToRequestCostAbsorption(Meal $meal) {
 		// @TODO: add a separate role for that
-		return $this->isUserAllowedToAddGuest($meal);
+		return $this->isKitchenStaff() || $this->isUserAllowedToAddGuest($meal);
 	}
 
 }

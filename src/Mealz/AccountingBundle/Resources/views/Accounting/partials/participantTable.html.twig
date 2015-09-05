@@ -4,6 +4,28 @@
 		{% set meal = participation.meal %}
 		{% set dish = meal.dish %}
 		<tr>
+			<td>
+				{% if is_granted('ROLE_KITCHEN_STAFF') %}
+					<div class="btn-group">
+						{% if is_allowed_to_leave(meal) %}
+							<a
+									class="btn btn-default btn-xs"
+									href="{{ link(participation, 'delete') }}"
+									title="Leave"
+									>
+								<strong>X</strong>
+							</a>
+						{% endif %}
+						<a
+								class="btn btn-default btn-xs"
+								href="{{ link(participation, 'edit') }}"
+								title="Comment"
+								>
+							<span class="glyphicon glyphicon-comment"></span>
+						</a>
+					</div>
+				{% endif %}
+			</td>
 			<td>{{ meal.dateTime | date('Y-m-d') }}</td>
 			<td>{{ dish.title }}</td>
 			<td>
@@ -16,6 +38,7 @@
 	</tbody>
 	<tfoot>
 		<tr>
+			<td></td>
 			<td></td>
 			<td></td>
 			<td></td>

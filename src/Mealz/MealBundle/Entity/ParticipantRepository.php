@@ -42,16 +42,20 @@ class ParticipantRepository extends EntityRepository {
 	}
 
 	public function getParticipantsOnDay(\DateTime $date, $options = array()) {
+		return $this->getParticipantsOnDays($date, $date, $options);
+	}
+
+	public function getParticipantsOnDays(\DateTime $minDate, \DateTime $maxDate, $options = array()) {
 		$options = array_merge($options, array(
 			'load_meal' => TRUE,
 			'load_profile' => TRUE,
 		));
 		$qb = $this->getQueryBuilderWithOptions($options);
 
-		$minDate = clone $date;
-		$minDate->setTime(0,0,0);
-		$maxDate = clone $minDate;
-		$maxDate->modify('+1 day -1 second');
+		$minDate = clone $minDate;
+		$minDate->setTime(0, 0, 0);
+		$maxDate = clone $maxDate;
+		$maxDate->setTime(23, 59, 59);
 
 		$qb->andWhere('m.dateTime >= :minDate');
 		$qb->andWhere('m.dateTime <= :maxDate');
@@ -64,25 +68,6 @@ class ParticipantRepository extends EntityRepository {
 
 		return $this->sortParticipantsByName($participants);
 	}
-
-    public function getParticipants(\DateTime $minDate, \DateTime $maxDate,  $options = array()) {
-        $options = array_merge($options, array(
-            'load_meal' => TRUE,
-            'load_profile' => TRUE,
-        ));
-        $qb = $this->getQueryBuilderWithOptions($options);
-
-        $qb->andWhere('m.dateTime >= :minDate');
-        $qb->andWhere('m.dateTime <= :maxDate');
-        $qb->setParameter('minDate', $minDate);
-        $qb->setParameter('maxDate', $maxDate);
-
-        $qb->orderBy('u.name', 'ASC');
-
-        $participants = $qb->getQuery()->execute();
-
-        return $this->sortParticipantsByName($participants);
-    }
 
 	/**
 	 * helper function to sort participants by their name or guest name

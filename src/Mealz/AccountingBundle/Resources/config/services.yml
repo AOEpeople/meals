@@ -1,7 +1,4 @@
-parameters:
-#    mealz_accounting.example.class: Mealz\AccountingBundle\Example
-
 services:
-#    mealz_accounting.example:
-#        class: %mealz_accounting.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
+    mealz_accounting.participant_list_factory:
+        class: 'Mealz\AccountingBundle\ParticipantList\ParticipantListFactory'
+        arguments: [ '@mealz_meal.repository.participant' ]

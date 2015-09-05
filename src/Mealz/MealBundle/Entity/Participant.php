@@ -76,6 +76,13 @@ class Participant
 	}
 
 	/**
+	 * @return bool
+	 */
+	public function isAccountable() {
+		return !$this->isCostAbsorbed();
+	}
+
+	/**
 	 * @return int
 	 */
 	public function getId()

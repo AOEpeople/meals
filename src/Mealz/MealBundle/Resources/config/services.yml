@@ -56,6 +56,13 @@ services:
       # set locale in dish entities
       - { name: doctrine.event_listener, event: postLoad }
 
+  mealz_meal.repository.participant:
+    class: Mealz\MealBundle\Entity\ParticipantRepository
+    factory_service: doctrine.orm.entity_manager
+    factory_method: getRepository
+    arguments:
+        - 'MealzMealBundle:Participant'
+
   mealz_meal.form.type.dish_selector_creator:
         class: Mealz\MealBundle\Form\Type\DishSelectorCreatorType
         arguments: []

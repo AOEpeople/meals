@@ -3,23 +3,24 @@
 namespace Mealz\AccountingBundle\Controller;
 
 use Doctrine\ORM\Query;
+use Mealz\AccountingBundle\ParticipantList\ParticipantListFactory;
 use Mealz\MealBundle\Controller\BaseController;
-use Mealz\MealBundle\Entity\DishRepository;
-use Mealz\MealBundle\Entity\Meal;
-use Mealz\MealBundle\Entity\Participant;
 
 class AccountingController extends BaseController {
 
 	public function listAction() {
-        $startTime = new \DateTime();
-        $startTime->setTime(0,0,0);
-        $endTime = clone $startTime;
-        $endTime->modify('+1 day -1 second');
+		/** @var ParticipantListFactory $participantListFactory */
+		$participantListFactory = $this->get('mealz_accounting.participant_list_factory');
 
-        $participants = $this->getParticipantRepository()->getParticipants($startTime, $endTime);
+		$startDay = new \DateTime('first day of last month');
+		$endDay = new \DateTime('last day of last month');
+
+		$participantList = $participantListFactory->getList($startDay, $endDay);
 
 		return $this->render('MealzAccountingBundle:Accounting:list.html.twig', array(
-			'participants' => $participants
+			'startDay' => $startDay,
+			'endDay' => $endDay,
+			'participantList' => $participantList
 		));
 	}
 

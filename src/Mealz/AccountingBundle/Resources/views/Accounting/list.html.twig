@@ -2,20 +2,17 @@
 
 {% block body %}
 	<div class="container">
-		<h1>{{ 'Accounting'|trans({},'general') }}</h1>
-		{% if is_granted('ROLE_KITCHEN_STAFF') %}
-            <table class="table table-striped table-accounting">
-                <tr>
-                    <th class="table-accounting-name">Name</th><th class="table-accounting-total">total</th>
-                </tr>
-                {% for participant in participants %}
-                    <tr>
-                        <td>{{ participant.profile.username }}</td>
-                        <td></td>
-                    </tr>
-                {% endfor %}
-            </table>
-        {% endif %}
+		<h1>{{ 'Accounting'|trans({},'general') }} ({{ '%from% to %to%' | trans({
+				'%from%': startDay | date('Y-m-d'),
+				'%to%': endDay | date('Y-m-d'),
+			}, 'general') }})</h1>
+		{% for profile in participantList.profiles %}
+			<h2>{{ profile.username }}</h2>
+			{% include 'MealzAccountingBundle:Accounting/partials:participantTable.html.twig' with {
+				participations: participantList.participations(profile),
+				countAccountableParticipations: participantList.countAccountableParticipations(profile),
+			} %}
+		{% endfor %}
 	</div>
 
 {% endblock %}

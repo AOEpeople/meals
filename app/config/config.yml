@@ -32,6 +32,8 @@ twig:
     form:
         resources:
             - ':Form:fields.html.twig'
+    globals:
+        meal_cost: 3.10
 
 # Assetic Configuration
 assetic:

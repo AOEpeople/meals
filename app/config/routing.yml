@@ -14,6 +14,5 @@ imag_ldap:
   resource: "@IMAGLdapBundle/Resources/config/routing.yml"
 
 # resized images
-_imagine:
-  resource: .
-  type:     imagine
+_liip_imagine:
+  resource: "@LiipImagineBundle/Resources/config/routing.xml"

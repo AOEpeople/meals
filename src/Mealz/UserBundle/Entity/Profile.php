@@ -31,6 +31,12 @@ class Profile {
 	protected $name;
 
 	/**
+	 * @ORM\OneToMany(targetEntity="Mealz\AccountingBundle\Entity\Transaction", mappedBy="user")
+	 * @var ArrayCollection
+	 */
+	protected $transactions;
+
+	/**
 	 * @param string $username
 	 */
 	public function setUsername($username)

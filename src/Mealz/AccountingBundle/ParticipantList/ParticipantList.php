@@ -77,6 +77,11 @@ class ParticipantList {
 	 * @return int
 	 */
 	public function countAccountableParticipations(Profile $profile) {
-		return count($this->getAccountableParticipations($profile));
+		$price = 0;
+		$participations = $this->getAccountableParticipations($profile);
+		foreach ($participations as $participation) {
+			$price += $participation->getMeal()->getPrice();
+		}
+		return $price;
 	}
 }

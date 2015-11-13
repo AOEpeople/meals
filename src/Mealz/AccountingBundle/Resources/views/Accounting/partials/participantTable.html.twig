@@ -32,7 +32,7 @@
 				{% if participation.isGuest %}<span class="text-muted">({{ participation.guestName }})</span><br>{% endif %}
 				{% if participation.comment %}<span class="text-muted">{{ participation.comment }}{% endif %}</span>
 			</td>
-			<td class="text-right">{% if participation.isAccountable %}{{ meal_cost | number_format(2) }}&nbsp;€{% else %}&ndash;{% endif %}</td>
+			<td class="text-right">{% if participation.isAccountable %}{{ meal.price | number_format(2) }}&nbsp;€{% else %}&ndash;{% endif %}</td>
 		</tr>
 	{% endfor %}
 	</tbody>
@@ -42,7 +42,7 @@
 			<td></td>
 			<td></td>
 			<td></td>
-			<td class="text-right"><strong>{{ (countAccountableParticipations * meal_cost) | number_format(2) }}&nbsp;€</strong></td>
+			<td class="text-right"><strong>{{ (countAccountableParticipations) | number_format(2) }}&nbsp;€</strong></td>
 		</tr>
 	</tfoot>
 </table>

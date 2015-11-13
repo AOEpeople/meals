@@ -35,6 +35,14 @@ class Meal
 
 	/**
 	 * @Assert\NotBlank()
+	 * @Assert\Type(type="float")
+	 * @ORM\Column(type="decimal", precision=10, scale=4, nullable=FALSE)
+	 * @var float
+	 */
+	protected $price;
+
+	/**
+	 * @Assert\NotBlank()
 	 * @Assert\Type(type="DateTime")
 	 * @ORM\Column(type="datetime", nullable=FALSE)
 	 * @var \DateTime
@@ -59,6 +67,22 @@ class Meal
 	public function getId()
 	{
 		return $this->id;
+	}
+
+	/**
+	 * @param float $price
+	 */
+	public function setPrice($price)
+	{
+		$this->price = $price;
+	}
+
+	/**
+	 * @return float
+	 */
+	public function getPrice()
+	{
+		return $this->price;
 	}
 
 	/**

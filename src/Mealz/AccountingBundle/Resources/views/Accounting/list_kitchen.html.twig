@@ -7,7 +7,7 @@
 				'%to%': endDay | date('Y-m-d'),
 			}, 'general') }})</h1>
 		{% for profile in participantList.profiles %}
-			<h2>{{ profile.username }}</h2>
+			<h2>{{ profile.username }} ({{ 'Wallet'|trans }}: {{ wallet.balance(profile) }})</h2>
 			{% include 'MealzAccountingBundle:Accounting/partials:participantTable.html.twig' with {
 				participations: participantList.participations(profile),
 				countAccountableParticipations: participantList.countAccountableParticipations(profile),

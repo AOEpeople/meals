@@ -4,6 +4,7 @@ namespace Mealz\AccountingBundle\Controller;
 
 use Doctrine\ORM\Query;
 use Mealz\AccountingBundle\ParticipantList\ParticipantListFactory;
+use Mealz\AccountingBundle\Service\Wallet;
 use Mealz\MealBundle\Controller\BaseController;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -23,12 +24,16 @@ class AccountingController extends BaseController {
 		/** @var ParticipantListFactory $participantListFactory */
 		$participantListFactory = $this->get('mealz_accounting.participant_list_factory');
 
+		/** @var Wallet $wallet */
+		$wallet = $this->get('mealz_accounting.wallet');
+
 		$startDay = new \DateTime('first day of last month');
 		$endDay = new \DateTime('last day of last month');
 
 		$participantList = $participantListFactory->getList($startDay, $endDay);
 
 		return $this->render('MealzAccountingBundle:Accounting:list_kitchen.html.twig', array(
+			'wallet' => $wallet,
 			'startDay' => $startDay,
 			'endDay' => $endDay,
 			'participantList' => $participantList
@@ -39,6 +44,9 @@ class AccountingController extends BaseController {
 		/** @var ParticipantListFactory $participantListFactory */
 		$participantListFactory = $this->get('mealz_accounting.participant_list_factory');
 
+		/** @var Wallet $wallet */
+		$wallet = $this->get('mealz_accounting.wallet');
+
 		$startDay = new \DateTime('first day of last month');
 		$endDay = new \DateTime('last day of last month');
 
@@ -47,6 +55,7 @@ class AccountingController extends BaseController {
 		$participantList = $participantListFactory->getList($startDay, $endDay, $profile);
 
 		return $this->render('MealzAccountingBundle:Accounting:list_individual.html.twig', array(
+			'walletBalance' => $wallet->getBalance($profile),
 			'startDay' => $startDay,
 			'endDay' => $endDay,
 			'participations' => $participantList->getParticipations($profile),

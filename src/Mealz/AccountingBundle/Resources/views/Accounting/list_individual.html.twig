@@ -2,6 +2,7 @@
 
 {% block body %}
 	<div class="container">
+		{{ 'Wallet'|trans }}: {{ walletBalance }}
 		<h1>{{ 'Accounting'|trans({},'general') }} ({{ '%from% to %to%' | trans({
 				'%from%': startDay | date('Y-m-d'),
 				'%to%': endDay | date('Y-m-d'),

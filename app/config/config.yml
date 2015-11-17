@@ -92,3 +92,8 @@ stof_doctrine_extensions:
         default:
             sluggable: true
             timestampable: true
+
+mealz_accounting:
+    paypal:
+        id: "%paypal.id%"
+        secret: "%paypal.secret%"

@@ -1,3 +1,15 @@
 MealzAccountingBundle_Accounting:
     pattern:  /accounting
     defaults: { _controller: "MealzAccountingBundle:Accounting:list" }
+
+mealz_accounting_payment_create:
+    pattern: /payment
+    defaults: { _controller: "MealzAccountingBundle:Payment:createPayment" }
+
+mealz_accounting_payment_execute:
+    pattern: /payment/success
+    defaults: { _controller: "MealzAccountingBundle:Payment:executePayment" }
+
+mealz_accounting_payment_cancel:
+    pattern: /payment/cancel
+    defaults: { _controller: "MealzAccountingBundle:Payment:cancelPayment" }

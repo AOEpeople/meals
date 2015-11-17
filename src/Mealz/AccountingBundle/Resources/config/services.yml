@@ -1,10 +1,13 @@
 parameters:
+    mealz_accounting.participant_list_factory.class: Mealz\AccountingBundle\ParticipantList\ParticipantListFactory
     mealz_accounting.wallet.class: Mealz\AccountingBundle\Service\Wallet
 
 services:
+
     mealz_accounting.participant_list_factory:
-        class: 'Mealz\AccountingBundle\ParticipantList\ParticipantListFactory'
-        arguments: [ '@mealz_meal.repository.participant' ]
+        class: %mealz_accounting.participant_list_factory.class%
+        arguments:
+            - '@mealz_meal.repository.participant'
 
     mealz_accounting.repository.transaction:
         class: Mealz\AccountingBundle\Entity\TransactionRepository

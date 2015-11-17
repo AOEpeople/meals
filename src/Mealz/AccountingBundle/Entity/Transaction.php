@@ -77,7 +77,7 @@ class Transaction
     }
 
     /**
-     * @param string $amount
+     * @param integer $amount
      *
      * @return Transaction
      */
@@ -116,12 +116,9 @@ class Transaction
         return $this->user;
     }
 
-    /**
-     * @param bool $successful
-     */
-    public function setSuccessful($successful)
+    public function setSuccessful()
     {
-        $this->successful = $successful;
+        $this->successful = true;
     }
 
     /**

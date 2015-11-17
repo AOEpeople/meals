@@ -3,6 +3,7 @@
 namespace Mealz\AccountingBundle\Service;
 
 use Mealz\AccountingBundle\ParticipantList\ParticipantListFactory;
+use Mealz\AccountingBundle\ParticipantList\ParticipantList;
 use Mealz\AccountingBundle\Entity\TransactionRepository;
 use Mealz\UserBundle\Entity\Profile;
 
@@ -25,9 +26,12 @@ class Wallet
     public function getBalance(Profile $profile)
     {
         $costs = $this->participantList->countAccountableParticipations($profile);
-        $transactions = $this->transactionRepository->findByUser($profile->getName());
+        $transactions = $this->transactionRepository->findBy(array(
+            'user' => $profile->getName(),
+            'successful' => 1
+        ));
 
-        return $this->getTransactionsAmount($transactions) - $costs;
+        return bcsub($this->getTransactionsAmount($transactions), $costs, 4);
     }
 
     /**

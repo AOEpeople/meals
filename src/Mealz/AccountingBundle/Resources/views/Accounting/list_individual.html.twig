@@ -3,9 +3,15 @@
 {% block body %}
 	<div class="container">
 		{% include 'MealzAccountingBundle:Accounting/partials:flashMessages.html.twig' %}
+
 		{% include 'MealzAccountingBundle:Accounting/partials:wallet.html.twig' with {
 			walletBalance: walletBalance
 		} %}
+
+		{% include 'MealzAccountingBundle:Accounting/partials:timePeriodForm.html.twig' with {
+			form: timePeriodForm
+        } %}
+
 		<h1>{{ 'Accounting'|trans({},'general') }} ({{ '%from% to %to%' | trans({
 				'%from%': startDay | date('Y-m-d'),
 				'%to%': endDay | date('Y-m-d'),

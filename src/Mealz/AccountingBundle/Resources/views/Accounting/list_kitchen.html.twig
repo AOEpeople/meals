@@ -6,6 +6,10 @@
 
 		{% render url('mealz_accounting_payment_cash') %}
 
+		{% include 'MealzAccountingBundle:Accounting/partials:timePeriodForm.html.twig' with {
+			form: timePeriodForm
+        } %}
+
 		<h1>{{ 'Accounting'|trans({},'general') }} ({{ '%from% to %to%' | trans({
 				'%from%': startDay | date('Y-m-d'),
 				'%to%': endDay | date('Y-m-d'),

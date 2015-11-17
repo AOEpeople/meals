@@ -21,3 +21,8 @@ services:
         arguments:
             - '@mealz_accounting.participant_list_factory'
             - '@mealz_accounting.repository.transaction'
+
+    twig.extension.intl:
+        class: Twig_Extensions_Extension_Intl
+        tags:
+            - { name: twig.extension }

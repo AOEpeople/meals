@@ -2,7 +2,10 @@
 
 {% block body %}
 	<div class="container">
-		{{ 'Wallet'|trans }}: {{ walletBalance }}
+		{% include 'MealzAccountingBundle:Accounting/partials:flashMessages.html.twig' %}
+		{% include 'MealzAccountingBundle:Accounting/partials:wallet.html.twig' with {
+			walletBalance: walletBalance
+		} %}
 		<h1>{{ 'Accounting'|trans({},'general') }} ({{ '%from% to %to%' | trans({
 				'%from%': startDay | date('Y-m-d'),
 				'%to%': endDay | date('Y-m-d'),

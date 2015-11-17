@@ -2,12 +2,13 @@
 
 {% block body %}
 	<div class="container">
+		{% include 'MealzAccountingBundle:Accounting/partials:flashMessages.html.twig' %}
 		<h1>{{ 'Accounting'|trans({},'general') }} ({{ '%from% to %to%' | trans({
 				'%from%': startDay | date('Y-m-d'),
 				'%to%': endDay | date('Y-m-d'),
 			}, 'general') }})</h1>
 		{% for profile in participantList.profiles %}
-			<h2>{{ profile.username }} ({{ 'Wallet'|trans }}: {{ wallet.balance(profile) }})</h2>
+			<h2>{{ profile.username }} ({{ 'Wallet'|trans }}: {{ wallet.balance(profile)|localizedcurrency('EUR','de') }})</h2>
 			{% include 'MealzAccountingBundle:Accounting/partials:participantTable.html.twig' with {
 				participations: participantList.participations(profile),
 				countAccountableParticipations: participantList.countAccountableParticipations(profile),

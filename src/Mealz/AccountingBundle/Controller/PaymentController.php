@@ -6,6 +6,7 @@ use Mealz\AccountingBundle\Entity\Transaction;
 use Mealz\AccountingBundle\Entity\TransactionRepository;
 use Mealz\AccountingBundle\Service\Wallet;
 use Mealz\MealBundle\Controller\BaseController;
+use Mealz\AccountingBundle\Form\CashPaymentAdminForm;
 use PayPal\Api\Amount;
 use PayPal\Api\Payer;
 use PayPal\Api\Payment;
@@ -130,6 +131,36 @@ class PaymentController extends BaseController
         );
 
         return $this->redirectToRoute('MealzAccountingBundle_Accounting');
+    }
+
+    public function addCashPaymentAction(Request $request)
+    {
+        $transaction = new Transaction();
+        $transaction->setId(uniqid('BAR-'));
+        $transaction->setSuccessful();
+
+        $form = $this->createForm(new CashPaymentAdminForm(), $transaction, array(
+            'action' => $this->generateUrl('mealz_accounting_payment_cash')
+        ));
+
+        // handle form submission
+        if ($request->isMethod('POST')) {
+            $form->handleRequest($request);
+
+            if ($form->isValid()) {
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($transaction);
+                $em->flush();
+
+                $this->addFlashMessage('Cash payment has been added.', 'notice');
+
+                return $this->redirectToRoute('MealzAccountingBundle_Accounting');
+            }
+        }
+
+        return $this->render('MealzAccountingBundle:Accounting:payment_cash.html.twig', array(
+            'form' => $form->createView()
+        ));
     }
 
     private function getApiContext()

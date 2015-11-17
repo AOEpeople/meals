@@ -1,0 +1,14 @@
+{{ form_start(form) }}
+	<div class="row">
+		<div class="col-md-4">
+			{{ form_row(form.user) }}
+		</div>
+		<div class="col-md-2">
+			{{ form_row(form.amount) }}
+		</div>
+		<div class="col-md-2">
+			{{ form_row(form.save) }}
+		</div>
+	</div>
+	{{ form_rest(form) }}
+{{ form_end(form) }}

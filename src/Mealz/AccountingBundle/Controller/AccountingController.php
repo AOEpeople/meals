@@ -4,7 +4,6 @@ namespace Mealz\AccountingBundle\Controller;
 
 use Doctrine\ORM\Query;
 use Mealz\AccountingBundle\Entity\Transaction;
-use Mealz\AccountingBundle\Form\CashPaymentAdminForm;
 use Mealz\AccountingBundle\ParticipantList\ParticipantListFactory;
 use Mealz\AccountingBundle\Service\Wallet;
 use Mealz\MealBundle\Controller\BaseController;
@@ -38,33 +37,11 @@ class AccountingController extends BaseController
 
         $participantList = $participantListFactory->getList($startDay, $endDay);
 
-        $transaction = new Transaction();
-        $transaction->setId(uniqid('BAR-'));
-        $transaction->setSuccessful();
-
-        $form = $this->createForm(new CashPaymentAdminForm(), $transaction);
-
-        // handle form submission
-        if ($request->isMethod('POST')) {
-            $form->handleRequest($request);
-
-            if ($form->isValid()) {
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($transaction);
-                $em->flush();
-
-                $this->addFlashMessage('Cash payment has been added.', 'notice');
-
-                return $this->redirectToRoute('MealzAccountingBundle_Accounting');
-            }
-        }
-
         return $this->render('MealzAccountingBundle:Accounting:list_kitchen.html.twig', array(
             'wallet' => $wallet,
             'startDay' => $startDay,
             'endDay' => $endDay,
-            'participantList' => $participantList,
-            'form' => $form->createView()
+            'participantList' => $participantList
         ));
     }
 

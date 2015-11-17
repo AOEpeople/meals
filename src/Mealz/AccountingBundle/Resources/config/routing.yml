@@ -13,3 +13,7 @@ mealz_accounting_payment_execute:
 mealz_accounting_payment_cancel:
     pattern: /payment/cancel
     defaults: { _controller: "MealzAccountingBundle:Payment:cancelPayment" }
+
+mealz_accounting_payment_cash:
+    pattern: /payment/cash
+    defaults: { _controller: "MealzAccountingBundle:Payment:addCashPayment" }

@@ -19,7 +19,7 @@ services:
     mealz_accounting.wallet:
         class: %mealz_accounting.wallet.class%
         arguments:
-            - '@mealz_accounting.participant_list_factory'
+            - '@mealz_meal.repository.participant'
             - '@mealz_accounting.repository.transaction'
 
     twig.extension.intl:

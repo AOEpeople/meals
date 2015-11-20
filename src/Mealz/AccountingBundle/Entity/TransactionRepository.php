@@ -2,6 +2,8 @@
 
 namespace Mealz\AccountingBundle\Entity;
 
+use Mealz\UserBundle\Entity\Profile;
+
 /**
  * TransactionRepository
  *
@@ -10,4 +12,26 @@ namespace Mealz\AccountingBundle\Entity;
  */
 class TransactionRepository extends \Doctrine\ORM\EntityRepository
 {
+    const COLUMN_NAME = 'amount';
+
+    /**
+     * Get total amount of transactions. Prevent unnecessary ORM mapping.
+     *
+     * @param Profile $profile
+     * @return float
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function getTotalAmount(Profile $profile)
+    {
+        $sql = 'SELECT SUM(amount) as :amount FROM transaction WHERE user = :user';
+        $stmt = $this->getEntityManager()
+            ->getConnection()
+            ->prepare($sql);
+        $stmt->bindValue('user', $profile->getName(), 'string');
+        $stmt->bindValue('amount', self::COLUMN_NAME, 'string');
+        $stmt->execute();
+        $amount = $stmt->fetch()[self::COLUMN_NAME];
+
+        return floatval($amount);
+    }
 }

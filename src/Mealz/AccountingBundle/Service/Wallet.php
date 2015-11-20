@@ -2,48 +2,37 @@
 
 namespace Mealz\AccountingBundle\Service;
 
-use Mealz\AccountingBundle\ParticipantList\ParticipantListFactory;
-use Mealz\AccountingBundle\ParticipantList\ParticipantList;
 use Mealz\AccountingBundle\Entity\TransactionRepository;
+use Mealz\MealBundle\Entity\ParticipantRepository;
 use Mealz\UserBundle\Entity\Profile;
 
 class Wallet
 {
-    protected $participantList;
+    /**
+     * @var ParticipantRepository
+     */
+    protected $participantRepository;
 
+    /**
+     * @var TransactionRepository
+     */
     protected $transactionRepository;
 
-    public function __construct(ParticipantListFactory $participantListFactory, TransactionRepository $transactionRepository)
+    public function __construct(ParticipantRepository $participantRepository, TransactionRepository $transactionRepository)
     {
+        $this->participantRepository = $participantRepository;
         $this->transactionRepository = $transactionRepository;
-        $this->participantList = $participantListFactory->getList(new \DateTime('2015-01-01'), new \DateTime());
     }
 
     /**
      * @param Profile $profile
-     * @return int
+     * @return float
      */
     public function getBalance(Profile $profile)
     {
-        $costs = $this->participantList->countAccountableParticipations($profile);
-        $transactions = $this->transactionRepository->findBy(array(
-            'user' => $profile->getName(),
-            'successful' => 1
-        ));
+        $costs = $this->participantRepository->getTotalCost($profile);
+        $transactions = $this->transactionRepository->getTotalAmount($profile);
 
-        return bcsub($this->getTransactionsAmount($transactions), $costs, 4);
-    }
-
-    /**
-     * @param array $transactions
-     * @return int
-     */
-    private function getTransactionsAmount($transactions)
-    {
-        $paymentValue = 0;
-        foreach ($transactions as $transaction) {
-            $paymentValue += $transaction->getAmount();
-        }
-        return $paymentValue;
+        return bcsub($transactions, $costs, 4);
     }
 }

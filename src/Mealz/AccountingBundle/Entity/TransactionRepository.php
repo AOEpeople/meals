@@ -23,7 +23,7 @@ class TransactionRepository extends \Doctrine\ORM\EntityRepository
      */
     public function getTotalAmount(Profile $profile)
     {
-        $sql = 'SELECT SUM(amount) as :amount FROM transaction WHERE user = :user';
+        $sql = 'SELECT SUM(amount) as :amount FROM transaction WHERE user = :user AND successful = 1';
         $stmt = $this->getEntityManager()
             ->getConnection()
             ->prepare($sql);
@@ -31,7 +31,6 @@ class TransactionRepository extends \Doctrine\ORM\EntityRepository
         $stmt->bindValue('amount', self::COLUMN_NAME, 'string');
         $stmt->execute();
         $amount = $stmt->fetch()[self::COLUMN_NAME];
-
         return floatval($amount);
     }
 }

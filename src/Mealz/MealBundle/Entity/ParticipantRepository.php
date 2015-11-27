@@ -103,7 +103,8 @@ class ParticipantRepository extends EntityRepository {
 	 */
 	public function getTotalCost(Profile $profile)
 	{
-		$sql = 'SELECT SUM(price) as :columnPrice FROM meal WHERE id IN(SELECT meal_id FROM participant WHERE profile_id = :user)';
+		$sql = 'SELECT SUM(price) as :columnPrice FROM meal
+				WHERE id IN(SELECT meal_id FROM participant WHERE profile_id = :user AND costAbsorbed = 0)';
 
 		$stmt = $this->getEntityManager()
 			->getConnection()

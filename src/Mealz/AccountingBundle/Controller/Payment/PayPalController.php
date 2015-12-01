@@ -1,26 +1,26 @@
 <?php
 
-namespace Mealz\AccountingBundle\Controller;
+namespace Mealz\AccountingBundle\Controller\Payment;
 
 use Mealz\AccountingBundle\Entity\Transaction;
 use Mealz\AccountingBundle\Entity\TransactionRepository;
 use Mealz\AccountingBundle\Service\Wallet;
 use Mealz\MealBundle\Controller\BaseController;
-use Mealz\AccountingBundle\Form\CashPaymentAdminForm;
 use PayPal\Api\Amount;
 use PayPal\Api\Payer;
 use PayPal\Api\Payment;
 use PayPal\Api\PaymentExecution;
 use PayPal\Api\RedirectUrls;
 use PayPal\Api\Transaction as PayPalTransaction;
-use PayPal\Exception\PayPalConnectionException;
-use Symfony\Component\HttpFoundation\Request;
+use PayPal\Auth\OAuthTokenCredential;
+use PayPal\Rest\ApiContext;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-class PaymentController extends BaseController
+class PayPalController extends BaseController
 {
-    public function createPaymentAction()
+
+    public function createBalancePaymentAction()
     {
         if ($this->get('security.context')->isGranted('ROLE_USER')) {
             $profile = $this->getProfile();
@@ -59,7 +59,7 @@ class PaymentController extends BaseController
         $paypalTransaction->setAmount($amount);
         $paypalTransaction->setDescription('Tasty meals.');
 
-        $returnUrl = $this->generateUrl('mealz_accounting_payment_execute', array(), true);
+        $returnUrl = $this->generateUrl('mealz_accounting_payment_paypal_execute', array(), true);
         $cancelUrl = $this->generateUrl('MealzAccountingBundle_Accounting', array(), true);
         $redirectUrls = new RedirectUrls();
         $redirectUrls->setReturnUrl($returnUrl);
@@ -84,7 +84,7 @@ class PaymentController extends BaseController
         $em->flush();
 
         // redirect to PayPal, append useraction=commit to show amount in PayPal checkout
-        return $this->redirect($response->getApprovalLink()."&useraction=commit");
+        return $this->redirect($response->getApprovalLink() . "&useraction=commit");
     }
 
     public function executePaymentAction(Request $request)
@@ -133,40 +133,10 @@ class PaymentController extends BaseController
         return $this->redirectToRoute('MealzAccountingBundle_Accounting');
     }
 
-    public function addCashPaymentAction(Request $request)
-    {
-        $transaction = new Transaction();
-        $transaction->setId(uniqid('BAR-'));
-        $transaction->setSuccessful();
-
-        $form = $this->createForm(new CashPaymentAdminForm(), $transaction, array(
-            'action' => $this->generateUrl('mealz_accounting_payment_cash')
-        ));
-
-        // handle form submission
-        if ($request->isMethod('POST')) {
-            $form->handleRequest($request);
-
-            if ($form->isValid()) {
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($transaction);
-                $em->flush();
-
-                $this->addFlashMessage('Cash payment has been added.', 'notice');
-
-                return $this->redirectToRoute('MealzAccountingBundle_Accounting');
-            }
-        }
-
-        return $this->render('MealzAccountingBundle:Accounting:payment_cash.html.twig', array(
-            'form' => $form->createView()
-        ));
-    }
-
     private function getApiContext()
     {
-        return new \PayPal\Rest\ApiContext(
-            new \PayPal\Auth\OAuthTokenCredential(
+        return new ApiContext(
+            new OAuthTokenCredential(
                 $this->getParameter('paypal.id'),
                 $this->getParameter('paypal.secret')
             )

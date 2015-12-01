@@ -32,7 +32,7 @@
 				{% if participation.isGuest %}<span class="text-muted">({{ participation.guestName }})</span><br>{% endif %}
 				{% if participation.comment %}<span class="text-muted">{{ participation.comment }}{% endif %}</span>
 			</td>
-			<td class="text-right">{% if participation.isAccountable %}{{ meal.price | number_format(2) }}&nbsp;€{% else %}&ndash;{% endif %}</td>
+			<td class="text-right">{% if participation.isAccountable %}{{ meal.price | localizedcurrency('EUR','de') }}{% else %}&ndash;{% endif %}</td>
 		</tr>
 	{% endfor %}
 	</tbody>

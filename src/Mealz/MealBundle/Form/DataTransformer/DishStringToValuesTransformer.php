@@ -6,7 +6,7 @@ use Doctrine\Common\Inflector\Inflector;
 use Doctrine\ORM\EntityManager;
 use Mealz\MealBundle\Entity\Dish;
 use Symfony\Component\Form\Exception\TransformationFailedException;
-use Symfony\Component\Form\Extension\Core\ChoiceList\ChoiceListInterface;
+use Symfony\Component\Form\ChoiceList\ChoiceListInterface;
 use Symfony\Component\Form\Extension\Core\DataTransformer\ChoiceToValueTransformer;
 
 /**

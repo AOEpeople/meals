@@ -73,4 +73,4 @@ services:
         class: Mealz\MealBundle\Form\MealParticipantForm
         arguments: []
         tags:
-            - { name: form.type, alias: dish_selector_creator }
+            - { name: form.type, alias: participant }

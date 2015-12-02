@@ -34,11 +34,13 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface {
 		$maxDate = new \DateTime('+1 month');
 
 		while($date < $maxDate) {
+			$dish = null;
 			for($i=0; $i<=1; $i++) {
 				// 2 meals a day
 				$meal = new Meal();
 				$meal->setDateTime(clone $date);
-				$meal->setDish($this->getRandomDish());
+				$dish = $this->getRandomDish($dish);
+				$meal->setDish($dish);
 				$this->objectManager->persist($meal);
 				$this->addReference('meal-' . $this->counter++, $meal);
 			}
@@ -60,11 +62,16 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface {
 	}
 
 	/**
+	 * @param Dish $previousDish
 	 * @return Dish
 	 */
-	protected function getRandomDish() {
-		$key = array_rand($this->dishes);
-		return $this->dishes[$key];
+	protected function getRandomDish($previousDish) {
+		do {
+			$key = array_rand($this->dishes);
+			$dish = $this->dishes[$key];
+		} while ($dish === $previousDish);
+
+		return $dish;
 	}
 
 	public function getOrder()

@@ -22,8 +22,11 @@
 					<li><a href="{{ path('MealzMealBundle_Meal') }}">{{ 'Meals'|trans({},'general') }}</a></li>
                     <li><a href="{{ path('MealzMealBundle_Dish') }}">{{ 'Dishes'|trans({},'general') }}</a></li>
                     {% if is_granted('ROLE_USER') %}
-                    <li><a href="{{ path('MealzAccountingBundle_Accounting') }}">{{ 'Accounting'|trans({},'general') }}</a></li>
-                    {% endif %}
+                    	<li><a href="{{ path('MealzAccountingBundle_Accounting') }}">{{ 'Accounting'|trans({},'general') }}</a></li>
+						{% if false == is_granted('ROLE_KITCHEN_STAFF') %}
+							<li><a href="{{ path('MealzAccountingBundle_Wallet') }}">{{ 'Wallet'|trans({},'general') }}</a></li>
+						{% endif %}
+					{% endif %}
                 </ul>
 				{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
 					<div class="navbar-form navbar-right">

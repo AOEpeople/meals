@@ -8,6 +8,8 @@ use Mealz\UserBundle\Entity\Profile;
 
 class ParticipantRepository extends EntityRepository {
 
+	const COLUM_PRICE = 'price';
+
 	protected $defaultOptions = array(
 		'load_meal' => FALSE,
 		'load_profile' => TRUE,
@@ -90,6 +92,29 @@ class ParticipantRepository extends EntityRepository {
 		$name1 = $participant1->isGuest() ? $participant1->getGuestName() : $participant1->getProfile()->getName();
 		$name2 = $participant2->isGuest() ? $participant2->getGuestName() : $participant2->getProfile()->getName();
 		return strcasecmp($name1, $name2);
+	}
+
+	/**
+	 * Get total costs of participations. Prevent unnecessary ORM mapping.
+	 *
+	 * @param Profile $profile
+	 * @return float
+	 * @throws \Doctrine\DBAL\DBALException
+	 */
+	public function getTotalCost(Profile $profile)
+	{
+		$sql = 'SELECT SUM(price) as :columnPrice FROM meal
+				WHERE id IN(SELECT meal_id FROM participant WHERE profile_id = :user AND costAbsorbed = 0)';
+
+		$stmt = $this->getEntityManager()
+			->getConnection()
+			->prepare($sql);
+		$stmt->bindValue('user', $profile->getName());
+		$stmt->bindValue('columnPrice', self::COLUM_PRICE);
+		$stmt->execute();
+
+		$costs = $stmt->fetch()[self::COLUM_PRICE];
+		return floatval($costs);
 	}
 
 }

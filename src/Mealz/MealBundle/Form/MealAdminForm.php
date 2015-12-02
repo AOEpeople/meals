@@ -22,6 +22,9 @@ class MealAdminForm extends AbstractType {
 				'class' => 'MealzMealBundle:Dish',
 				'property' => 'title_en',
 			))
+			->add('price', 'money', array(
+				'scale' => 4
+			))
 			->add('save', 'submit')
 		;
 	}

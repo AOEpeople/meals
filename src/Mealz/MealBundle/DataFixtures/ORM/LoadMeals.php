@@ -30,7 +30,7 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface {
 		$this->objectManager = $manager;
 		$this->loadDishes();
 
-		$date = new \DateTime('-7 days 12:00:00');
+		$date = new \DateTime('-1 month 12:00:00');
 		$maxDate = new \DateTime('+1 month');
 
 		while($date < $maxDate) {
@@ -41,6 +41,7 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface {
 				$meal->setDateTime(clone $date);
 				$dish = $this->getRandomDish($dish);
 				$meal->setDish($dish);
+				$meal->setPrice(mt_rand(290,320)/100);
 				$this->objectManager->persist($meal);
 				$this->addReference('meal-' . $this->counter++, $meal);
 			}

@@ -23,7 +23,8 @@
         "braincrafted/bootstrap-bundle": "~2.0",
         "imag/ldap-bundle": "2.3.1",
         "liip/imagine-bundle": "dev-master",
-        "stof/doctrine-extensions-bundle": "~1.1@dev"
+        "stof/doctrine-extensions-bundle": "~1.1@dev",
+        "paypal/rest-api-sdk-php": "*"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "~2.2",

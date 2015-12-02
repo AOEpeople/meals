@@ -32,8 +32,6 @@ twig:
     form:
         resources:
             - ':Form:fields.html.twig'
-    globals:
-        meal_cost: 3.10
 
 # Assetic Configuration
 assetic:
@@ -93,3 +91,4 @@ stof_doctrine_extensions:
     orm:
         default:
             sluggable: true
+            timestampable: true

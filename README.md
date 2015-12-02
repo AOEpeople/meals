@@ -34,11 +34,16 @@
             </Directory>
     </VirtualHost>
 
+### PayPal API configuration
+
+Export your client id and secret as environment variables.
+See http://symfony.com/doc/current/cookbook/configuration/external_parameters.html
+
 ### Frontend build
 
 ```
 cd /var/www/mealz/devbox/app/Resources
-npm install 
+npm install
 ./node_modules/.bin/bower install
 ./node_modules/.bin/gulp
 ```

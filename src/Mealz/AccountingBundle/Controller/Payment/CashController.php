@@ -9,15 +9,20 @@ use Mealz\AccountingBundle\Form\CashPaymentAdminForm;
 
 class CashController extends BaseController
 {
-    public function createPaymentAction(Request $request)
+    public function createPaymentAction($profile)
     {
+        $request = $this->get('request');
+
+        $profileEntity = $this->getDoctrine()
+            ->getRepository('MealzUserBundle:Profile')
+            ->find($profile);
+
         $transaction = new Transaction();
         $transaction->setId(uniqid('BAR-'));
+        $transaction->setUser($profileEntity);
         $transaction->setSuccessful();
 
-        $form = $this->createForm(new CashPaymentAdminForm(), $transaction, array(
-            'action' => $this->generateUrl('mealz_accounting_payment_cash')
-        ));
+        $form = $this->createForm(new CashPaymentAdminForm(), $transaction);
 
         // handle form submission
         if ($request->isMethod('POST')) {
@@ -34,7 +39,7 @@ class CashController extends BaseController
             }
         }
 
-        return $this->render('MealzAccountingBundle:Accounting:payment_cash.html.twig', array(
+        return $this->render('MealzAccountingBundle:Accounting\\partials:form_payment_cash.html.twig', array(
             'form' => $form->createView()
         ));
     }

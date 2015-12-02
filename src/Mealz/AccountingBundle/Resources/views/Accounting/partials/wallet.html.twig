@@ -1,4 +1,0 @@
-{{ 'Wallet'|trans }} {{ walletBalance|localizedcurrency('EUR','de') }}
-{% if walletBalance < 0 %}
-	<a href="{{ path('mealz_accounting_payment_paypal_balance') }}">Balance</a>
-{% endif %}

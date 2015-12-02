@@ -2,6 +2,18 @@ MealzAccountingBundle_Accounting:
     pattern:  /accounting
     defaults: { _controller: "MealzAccountingBundle:Accounting:list" }
 
+mealz_accounting_accounting_detail:
+    pattern: /accounting/{profile}
+    defaults: { _controller: "MealzAccountingBundle:Accounting:detailForKitchenStaff" }
+
+MealzAccountingBundle_Wallet:
+    pattern:  /wallet
+    defaults: { _controller: "MealzAccountingBundle:Wallet:show" }
+
+mealz_accounting_payment_paypal_custom:
+    pattern: /payment/paypal/custom
+    defaults: { _controller: "MealzAccountingBundle:Payment\\PayPal:createCustomPayment" }
+
 mealz_accounting_payment_paypal_balance:
     pattern: /payment/paypal/balance
     defaults: { _controller: "MealzAccountingBundle:Payment\\PayPal:createBalancePayment" }
@@ -11,5 +23,5 @@ mealz_accounting_payment_paypal_execute:
     defaults: { _controller: "MealzAccountingBundle:Payment\\PayPal:executePayment" }
 
 mealz_accounting_payment_cash:
-    pattern: /payment/cash
+    pattern: /payment/cash/{profile}
     defaults: { _controller: "MealzAccountingBundle:Payment\\Cash:createPayment" }

@@ -1,0 +1,20 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+	<div class="container">
+		{% include 'MealzAccountingBundle:Accounting/partials:flashMessages.html.twig' %}
+
+		{{ form_start(paypalVariablePaymentForm) }}
+		<div class="row">
+			<div class="col-md-2">
+				{{ form_row(paypalVariablePaymentForm.amount) }}
+			</div>
+			<div class="col-md-2">
+				{{ form_row(paypalVariablePaymentForm.save) }}
+			</div>
+		</div>
+		{{ form_rest(paypalVariablePaymentForm) }}
+		{{ form_end(paypalVariablePaymentForm) }}
+	</div>
+
+{% endblock %}

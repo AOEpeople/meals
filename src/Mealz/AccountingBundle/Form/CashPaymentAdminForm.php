@@ -11,12 +11,9 @@ class CashPaymentAdminForm extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('user', 'entity', array(
-                'class' => 'MealzUserBundle:Profile',
-                'choice_label' => 'username'
-            ))
             ->add('amount', 'money', array(
-                'scale' => 4
+                'scale' => 4,
+                'label' => false
             ))
             ->add('save', 'submit');
     }

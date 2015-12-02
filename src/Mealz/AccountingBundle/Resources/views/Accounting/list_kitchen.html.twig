@@ -4,22 +4,22 @@
 	<div class="container">
 		{% include 'MealzAccountingBundle:Accounting/partials:flashMessages.html.twig' %}
 
-		{% render url('mealz_accounting_payment_cash') %}
-
-		{% include 'MealzAccountingBundle:Accounting/partials:timePeriodForm.html.twig' with {
-			form: timePeriodForm
-        } %}
-
-		<h1>{{ 'Accounting'|trans({},'general') }} ({{ '%from% to %to%' | trans({
-				'%from%': startDay | date('Y-m-d'),
-				'%to%': endDay | date('Y-m-d'),
-			}, 'general') }})</h1>
-		{% for profile in participantList.profiles %}
-			<h2>{{ profile.username }} ({{ 'Wallet'|trans }}: {{ wallet.balance(profile)|localizedcurrency('EUR','de') }})</h2>
-			{% include 'MealzAccountingBundle:Accounting/partials:participantTable.html.twig' with {
-				participations: participantList.participations(profile),
-				countAccountableParticipations: participantList.countAccountableParticipations(profile),
-			} %}
+		{% for profile in profiles %}
+			<div class="row">
+				<div class="col-md-2">
+					<a href="{{ path('mealz_accounting_accounting_detail', {'profile': profile.username}) }}">
+						{{ profile.username }}
+					</a>
+				</div>
+				<div class="col-md-2">
+					{{ wallet.balance(profile)|localizedcurrency('EUR','de') }}
+				</div>
+				<div class="col-md-2">
+					<a href="{{ path('mealz_accounting_payment_cash', {'profile': profile.username}) }}">
+						<span class="glyphicon glyphicon-piggy-bank"></span>
+					</a>
+				</div>
+			</div>
 		{% endfor %}
 	</div>
 

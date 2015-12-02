@@ -4,11 +4,7 @@
 	<div class="container">
 		{% include 'MealzAccountingBundle:Accounting/partials:flashMessages.html.twig' %}
 
-		{% include 'MealzAccountingBundle:Accounting/partials:wallet.html.twig' with {
-			walletBalance: walletBalance
-		} %}
-
-		{% include 'MealzAccountingBundle:Accounting/partials:timePeriodForm.html.twig' with {
+		{% include 'MealzAccountingBundle:Accounting/partials:form_timePeriod.html.twig' with {
 			form: timePeriodForm
         } %}
 

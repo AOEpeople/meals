@@ -6,34 +6,24 @@ use Doctrine\ORM\Query;
 use Mealz\AccountingBundle\ParticipantList\ParticipantListFactory;
 use Mealz\AccountingBundle\Service\Wallet;
 use Mealz\MealBundle\Controller\BaseController;
+use Mealz\UserBundle\Entity\Profile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Form\Form;
 
 class AccountingController extends BaseController
 {
-    /** @var ParticipantListFactory $participantListFactory */
-    protected $participantListFactory;
-
     /** @var Wallet $wallet */
     protected $wallet;
 
-    protected $formView;
-
-    /** @var \DateTime $startDay */
-    protected $startDay;
-
-    /** @var \DateTime $endDay */
-    protected $endDay;
-
-    public function listAction(Request $request)
+    public function listAction()
     {
-        $this->initialize($request);
+        $this->wallet = $this->get('mealz_accounting.wallet');
 
         if ($this->getDoorman()->isKitchenStaff()) {
             return $this->listForKitchenStaffAction();
         } elseif ($this->get('security.context')->isGranted('ROLE_USER')) {
-            return $this->listForIndividualAction();
+            return $this->listForIndividualAction($this->getProfile());
         } else {
             throw new AccessDeniedException();
         }
@@ -41,57 +31,58 @@ class AccountingController extends BaseController
 
     public function listForKitchenStaffAction()
     {
-        $participantList = $this->participantListFactory->getList($this->startDay, $this->endDay);
+        $profiles = $this->getDoctrine()
+            ->getRepository('MealzUserBundle:Profile')
+            ->findAll();
 
         return $this->render('MealzAccountingBundle:Accounting:list_kitchen.html.twig', array(
-            'wallet' => $this->wallet,
-            'startDay' => $this->startDay,
-            'endDay' => $this->endDay,
-            'participantList' => $participantList,
-            'timePeriodForm' => $this->formView
+            'profiles' => $profiles,
+            'wallet' => $this->wallet
         ));
     }
 
-    public function listForIndividualAction()
+    public function listForIndividualAction(Profile $profile)
     {
-        $profile = $this->getProfile();
-
-        $participantList = $this->participantListFactory->getList($this->startDay, $this->endDay, $profile);
-
-        return $this->render('MealzAccountingBundle:Accounting:list_individual.html.twig', array(
-            'walletBalance' => $this->wallet->getBalance($profile),
-            'startDay' => $this->startDay,
-            'endDay' => $this->endDay,
-            'participations' => $participantList->getParticipations($profile),
-            'countAccountableParticipations' => $participantList->countAccountableParticipations($profile),
-            'timePeriodForm' => $this->formView
-        ));
-    }
-
-    /**
-     * Initialize everything, which is used by both list actions
-     *
-     * @param Request $request
-     */
-    private function initialize(Request $request)
-    {
-        $this->participantListFactory = $this->get('mealz_accounting.participant_list_factory');
-        $this->wallet = $this->get('mealz_accounting.wallet');
+        $request = $this->get('request');
 
         $form = $this->generateTimePeriodForm();
-        $this->formView = $form->createView();
+        $formView = $form->createView();
 
         // handle form submission
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
 
             if ($form->isValid()) {
-                $this->startDay = $form->get('from')->getData();
-                $this->endDay = $form->get('to')->getData();
+                $startDay = $form->get('from')->getData();
+                $endDay = $form->get('to')->getData();
             }
         } else {
-            $this->startDay = new \DateTime('first day of last month');
-            $this->endDay = new \DateTime('last day of last month');
+            $startDay = new \DateTime('first day of last month');
+            $endDay = new \DateTime('last day of last month');
+        }
+
+        $participantListFactory = $this->get('mealz_accounting.participant_list_factory');
+        $participantList = $participantListFactory->getList($startDay, $endDay, $profile);
+
+        return $this->render('MealzAccountingBundle:Accounting:list_individual.html.twig', array(
+            'startDay' => $startDay,
+            'endDay' => $endDay,
+            'participations' => $participantList->getParticipations($profile),
+            'countAccountableParticipations' => $participantList->countAccountableParticipations($profile),
+            'timePeriodForm' => $formView
+        ));
+    }
+
+    public function detailForKitchenStaffAction($profile)
+    {
+        if ($this->getDoorman()->isKitchenStaff()) {
+            $profileEntity = $this->getDoctrine()
+                ->getRepository('MealzUserBundle:Profile')
+                ->find($profile);
+
+            return $this->listForIndividualAction($profileEntity);
+        } else {
+            throw new AccessDeniedException();
         }
     }
 

@@ -6,8 +6,8 @@
 	{% include ':partials:flashMessages.html.twig' %}
 
 	<ul class="pager">
-		<li class="previous"><a href="{{ path('MealzMealBundle_Meal_week', {week: week | date_modify('-1 day') | date('Y\\\WW')}) }}">&larr; {{ 'Previous Week'|trans({},'navigation') }} </a></li>
-		<li class="next"><a href="{{ path('MealzMealBundle_Meal_week', {week: week | date_modify('+2 weeks -1 day') | date('Y\\\WW')}) }}">{{ 'Next Week'|trans({},'navigation') }} &rarr;</a></li>
+		<li class="previous"><a href="{{ path('MealzMealBundle_Meal_week', {week: week | date_modify('-1 day') | date('o\\\WW')}) }}">&larr; {{ 'Previous Week'|trans({},'navigation') }} </a></li>
+		<li class="next"><a href="{{ path('MealzMealBundle_Meal_week', {week: week | date_modify('+2 weeks -1 day') | date('o\\\WW')}) }}">{{ 'Next Week'|trans({},'navigation') }} &rarr;</a></li>
 	</ul>
 
 	{% if meals | length > 0 %}

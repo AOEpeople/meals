@@ -79,6 +79,7 @@ abstract class AbstractRepositoryTestCase extends WebTestCase {
 		$meal = new Meal();
 		$meal->setDish($dish ?: $this->createDish());
 		$meal->setDateTime(new \DateTime());
+		$meal->setPrice(1.23);
 
 		return $meal;
 	}

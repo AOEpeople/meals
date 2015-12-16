@@ -2,21 +2,8 @@
 
 {% block body %}
 	<div class="container">
+		<h1>{{ profile.name }}'s Accounting</h1>
 		{% include 'MealzAccountingBundle:Accounting/partials:flashMessages.html.twig' %}
-
-		{% if goForm %}
-			{{ form_start(goForm) }}
-			<div class="row">
-				<div class="col-md-2">
-					{{ form_row(goForm.profile) }}
-				</div>
-				<div class="col-md-2">
-					{{ form_row(goForm.details) }}
-				</div>
-			</div>
-			{{ form_rest(goForm) }}
-			{{ form_end(goForm) }}
-		{% endif %}
 
 		<div class="container bg-warning">
 			<h4>{{ 'Wallet'|trans }}</h4>
@@ -24,16 +11,9 @@
 			<p><strong>{{ walletBalance|localizedcurrency('EUR', app.request.locale) }}</strong></p>
 
 			<div class="btn-group">
-				{% if walletBalance < 0 %}
-					<a
-						class="btn btn-primary"
-						href="{{ path('mealz_accounting_payment_paypal_balance') }}"
-						title="balance"
-						>balance</a>
-				{% endif %}
 				<a
 					class="btn btn-default"
-					href="{{ path('mealz_accounting_payment_paypal_custom') }}"
+					href="{{ path('mealz_accounting_payment_cash', {profile: profile.username}) }}"
 					title="add money"
 					>add money</a>
 			</div>
@@ -45,14 +25,14 @@
 				{% include 'MealzAccountingBundle:Accounting/partials:participantTable.html.twig' with {
 					participations: participations,
 				} %}
-				<a href="{{ path('MealzAccountingBundle_Accounting_participation') }}">All Participations</a>
+				<a href="{{ path('MealzAccountingBundle_Accounting_Admin_participation', {profile: profile.username}) }}">All Participations</a>
 			</div>
 			<div class="col-md-6">
 				<h4>{{ 'Last Transactions'|trans({},'general') }}</h4>
 				{% include 'MealzAccountingBundle:Accounting/partials:transactionTable.html.twig' with {
 					transactions: transactions,
 				} %}
-				<a href="{{ path('MealzAccountingBundle_Accounting_transaction') }}">All Transactions</a>
+				<a href="{{ path('MealzAccountingBundle_Accounting_Admin_transaction', {profile: profile.username}) }}">All Transactions</a>
 			</div>
 		</div>
 	</div>

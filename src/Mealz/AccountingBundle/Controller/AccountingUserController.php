@@ -15,7 +15,8 @@ class AccountingUserController extends BaseController {
 		return $this->render('MealzAccountingBundle:Accounting/User:index.html.twig', array(
 			'participations' => $this->getParticipantRepository()->getLastAccountableParticipations($this->getProfile(), 5),
 			'transactions' => $this->getTransactionRepository()->getLastSuccessfulTransactions($this->getProfile(), 3),
-			'walletBalance' => $this->getWallet()->getBalance($this->getProfile())
+			'walletBalance' => $this->getWallet()->getBalance($this->getProfile()),
+			'goForm' => $this->getDoorman()->isKitchenStaff() ? $this->generateGoActionForm()->createView() : NULL,
 		));
 	}
 
@@ -80,6 +81,22 @@ class AccountingUserController extends BaseController {
 			->add('from', 'date', array('widget' => 'single_text'))
 			->add('to', 'date', array('widget' => 'single_text'))
 			->add('send', 'submit')
+			->getForm();
+	}
+
+	/**
+	 * @return Form
+	 */
+	private function generateGoActionForm() {
+		return $this->container->get('form.factory')->createNamedBuilder(NULL, 'form', NULL,[
+			'method' => 'GET',
+			'action' => $this->generateUrl('MealzAccountingBundle_Accounting_Admin_go'),
+			'csrf_protection' => FALSE,
+		])
+			->add('profile', 'entity', array(
+				'class' => 'MealzUserBundle:Profile',
+				'label' => false))
+			->add('details', 'submit')
 			->getForm();
 	}
 

@@ -6,11 +6,15 @@ use Mealz\MealBundle\Controller\BaseController;
 use Mealz\AccountingBundle\Entity\Transaction;
 use Symfony\Component\HttpFoundation\Request;
 use Mealz\AccountingBundle\Form\CashPaymentAdminForm;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class CashController extends BaseController
 {
     public function createPaymentAction($profile)
     {
+        if (!$this->getDoorman()->isKitchenStaff()) {
+            throw new AccessDeniedException();
+        }
         $request = $this->get('request');
 
         $profileEntity = $this->getDoctrine()
@@ -35,7 +39,7 @@ class CashController extends BaseController
 
                 $this->addFlashMessage('Cash payment has been added.', 'notice');
 
-                return $this->redirectToRoute('MealzAccountingBundle_Accounting');
+                return $this->redirectToRoute('MealzAccountingBundle_Accounting_Admin', ['profile' => $profile]);
             }
         }
 

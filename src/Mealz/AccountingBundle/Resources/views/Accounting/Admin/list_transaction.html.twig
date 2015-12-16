@@ -9,12 +9,12 @@
 		} %}
 
 		<div class="container">
-			<h1>{{ 'Participations'|trans({},'general') }} ({{ '%from% to %to%' | trans({
+			<h1>{{ profile.name }}'s {{ 'Transaction'|trans({},'general') }} ({{ '%from% to %to%' | trans({
 				'%from%': startDay | date('Y-m-d'),
 				'%to%': endDay | date('Y-m-d'),
 			}, 'general') }})</h1>
-			{% include 'MealzAccountingBundle:Accounting/partials:participantTable.html.twig' with {
-				participations: participations,
+			{% include 'MealzAccountingBundle:Accounting/partials:transactionTable.html.twig' with {
+				transactions: transactions,
 			} %}
 		</div>
 	</div>

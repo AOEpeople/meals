@@ -9,7 +9,7 @@
 		} %}
 
 		<div class="container">
-			<h1>{{ 'Participations'|trans({},'general') }} ({{ '%from% to %to%' | trans({
+			<h1>{{ profile.name }}'s {{ 'Participations'|trans({},'general') }} ({{ '%from% to %to%' | trans({
 				'%from%': startDay | date('Y-m-d'),
 				'%to%': endDay | date('Y-m-d'),
 			}, 'general') }})</h1>

@@ -23,3 +23,8 @@ parameters:
     ldap_base_dn:        ~
     ldap_name_attribute: cn
 
+    # get credentials for sandboxing here: https://developer.paypal.com/developer/applications/
+    paypal.id: ~
+    paypal.secret: ~
+
+

@@ -91,7 +91,17 @@ class ParticipantRepository extends EntityRepository {
 	protected function compareNameOfParticipants(Participant $participant1, Participant $participant2) {
 		$name1 = $participant1->isGuest() ? $participant1->getGuestName() : $participant1->getProfile()->getName();
 		$name2 = $participant2->isGuest() ? $participant2->getGuestName() : $participant2->getProfile()->getName();
-		return strcasecmp($name1, $name2);
+		$result = strcasecmp($name1, $name2);
+
+		if ($result !== 0) {
+			return $result;
+		} elseif ($participant1->getMeal()->getDateTime() < $participant2->getMeal()->getDateTime()) {
+			return 1;
+		} elseif ($participant1->getMeal()->getDateTime() > $participant2->getMeal()->getDateTime()) {
+			return -1;
+		}
+
+		return 0;
 	}
 
 	/**
@@ -101,20 +111,48 @@ class ParticipantRepository extends EntityRepository {
 	 * @return float
 	 * @throws \Doctrine\DBAL\DBALException
 	 */
-	public function getTotalCost(Profile $profile)
-	{
-		$sql = 'SELECT SUM(price) as :columnPrice FROM meal
-				WHERE id IN(SELECT meal_id FROM participant WHERE profile_id = :user AND costAbsorbed = 0)';
+	public function getTotalCost(Profile $profile) {
+		$qb = $this->getQueryBuilderWithOptions([
+			'load_meal' => TRUE,
+			'load_profile' => FALSE,
+		]);
 
-		$stmt = $this->getEntityManager()
-			->getConnection()
-			->prepare($sql);
-		$stmt->bindValue('user', $profile->getName());
-		$stmt->bindValue('columnPrice', self::COLUM_PRICE);
-		$stmt->execute();
+		$qb->select('SUM(m.price) as blubber');
+		$qb->andWhere('p.profile = :user');
+		$qb->setParameter('user', $profile);
+		$qb->andWhere('p.costAbsorbed = :costAbsorbed');
+		$qb->setParameter('costAbsorbed', FALSE);
+		$qb->andWhere('m.dateTime <= :now');
+		$qb->setParameter('now', new \DateTime());
 
-		$costs = $stmt->fetch()[self::COLUM_PRICE];
-		return floatval($costs);
+		return floatval($qb->getQuery()->getSingleScalarResult());
+	}
+
+	/**
+	 * @param Profile $profile
+	 * @param int $limit
+	 * @return Participant[]
+	 */
+	public function getLastAccountableParticipations(Profile $profile, $limit = NULL) {
+		$qb = $this->getQueryBuilderWithOptions([
+			'load_meal' => TRUE,
+			'load_profile' => FALSE,
+		]);
+
+		$qb->andWhere('p.profile = :user');
+		$qb->setParameter('user', $profile);
+		$qb->andWhere('p.costAbsorbed = :costAbsorbed');
+		$qb->setParameter('costAbsorbed', FALSE);
+		$qb->andWhere('m.dateTime <= :now');
+		$qb->setParameter('now', new \DateTime());
+
+		$qb->orderBy('m.dateTime', 'desc');
+		if ($limit) {
+			$qb->setMaxResults($limit);
+		}
+
+		return $qb->getQuery()->execute();
+
 	}
 
 }

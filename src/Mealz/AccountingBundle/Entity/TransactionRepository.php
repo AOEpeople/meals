@@ -23,14 +23,64 @@ class TransactionRepository extends \Doctrine\ORM\EntityRepository
      */
     public function getTotalAmount(Profile $profile)
     {
-        $sql = 'SELECT SUM(amount) as :amount FROM transaction WHERE user = :user AND successful = 1';
-        $stmt = $this->getEntityManager()
-            ->getConnection()
-            ->prepare($sql);
-        $stmt->bindValue('user', $profile->getName(), 'string');
-        $stmt->bindValue('amount', self::COLUMN_NAME, 'string');
-        $stmt->execute();
-        $amount = $stmt->fetch()[self::COLUMN_NAME];
-        return floatval($amount);
+        $qb = $this->createQueryBuilder('t');
+        $qb->select('SUM(t.amount) AS amount');
+        $qb->andWhere('t.user = :user');
+        $qb->setParameter('user', $profile);
+        $qb->andWhere('t.successful = :successful');
+        $qb->setParameter('successful', TRUE);
+
+        return floatval($qb->getQuery()->getSingleScalarResult());
+    }
+
+    /**
+     * @param Profile $profile
+     * @return Transaction[]
+     */
+    public function getLastSuccessfulTransactions(Profile $profile, $limit = NULL) {
+        $qb = $this->createQueryBuilder('t');
+        $qb->select('t');
+        $qb->andWhere('t.user = :user');
+        $qb->setParameter('user', $profile);
+        $qb->andWhere('t.successful = :successful');
+        $qb->setParameter('successful', TRUE);
+
+        $qb->orderBy('t.date', 'desc');
+        if ($limit) {
+            $qb->setMaxResults($limit);
+        }
+
+        return $qb->getQuery()->execute();
+    }
+
+
+    /**
+     * @param \DateTime $minDate
+     * @param \DateTime $maxDate
+     * @param Profile $profile
+     * @return Transaction[]
+     */
+    public function getSuccessfulTransactionsOnDays(\DateTime $minDate, \DateTime $maxDate, Profile $profile) {
+        $qb = $this->createQueryBuilder('t');
+        $qb->select('t');
+
+        $minDate = clone $minDate;
+        $minDate->setTime(0, 0, 0);
+        $maxDate = clone $maxDate;
+        $maxDate->setTime(23, 59, 59);
+
+        $qb->andWhere('t.date >= :minDate');
+        $qb->andWhere('t.date <= :maxDate');
+        $qb->setParameter('minDate', $minDate);
+        $qb->setParameter('maxDate', $maxDate);
+
+        $qb->andWhere('t.user = :user');
+        $qb->setParameter('user', $profile);
+        $qb->andWhere('t.successful = :successful');
+        $qb->setParameter('successful', TRUE);
+
+        $qb->orderBy('t.date', 'DESC');
+
+        return $qb->getQuery()->execute();
     }
 }

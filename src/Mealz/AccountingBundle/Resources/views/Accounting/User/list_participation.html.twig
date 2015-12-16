@@ -6,16 +6,17 @@
 
 		{% include 'MealzAccountingBundle:Accounting/partials:form_timePeriod.html.twig' with {
 			form: timePeriodForm
-        } %}
+		} %}
 
-		<h1>{{ 'Accounting'|trans({},'general') }} ({{ '%from% to %to%' | trans({
+		<div class="container">
+			<h1>{{ 'Accounting'|trans({},'general') }} ({{ '%from% to %to%' | trans({
 				'%from%': startDay | date('Y-m-d'),
 				'%to%': endDay | date('Y-m-d'),
 			}, 'general') }})</h1>
-		{% include 'MealzAccountingBundle:Accounting/partials:participantTable.html.twig' with {
-			participations: participations,
-			countAccountableParticipations: countAccountableParticipations,
-		} %}
+			{% include 'MealzAccountingBundle:Accounting/partials:participantTable.html.twig' with {
+				participations: participations,
+			} %}
+		</div>
 	</div>
 
 {% endblock %}

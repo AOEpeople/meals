@@ -3,11 +3,11 @@ parameters:
     database_host:     127.0.0.1
     database_port:     ~
     database_name:     mealz
+    database_user:     mealz
+    database_password: mealz
     database_name_testing: mealz_test
-    database_user:     root
-    database_user_testing: root
-    database_password: ~
-    database_password_testing: ~
+    database_user_testing: mealz_test
+    database_password_testing: mealz_test
 
     mailer_transport:  smtp
     mailer_host:       127.0.0.1
@@ -17,10 +17,10 @@ parameters:
     locale:            en
     secret:            ThisTokenIsNotSoSecretChangeIt
 
-    ldap_host:           ~
+    ldap_host:           placeholder
     #ssl by default, use 389 for unencrypted connection
     ldap_port:           636 #ssl by default
-    ldap_base_dn:        ~
+    ldap_base_dn:        placeholder
     ldap_name_attribute: cn
 
     # get credentials for sandboxing here: https://developer.paypal.com/developer/applications/

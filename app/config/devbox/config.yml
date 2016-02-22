@@ -1,5 +1,4 @@
 imports:
-    - { resource: parameters-default.yml }
     - { resource: parameters.yml }
     - { resource: security.yml }
 
@@ -8,8 +7,9 @@ framework:
     translator:      { fallback: en}
     secret:          "%secret%"
     router:
-        resource: "%kernel.root_dir%/config/routing.yml"
-        strict_requirements: ~
+        resource: "%kernel.root_dir%/config/%kernel.environment%/routing.yml"
+        strict_requirements: true
+    profiler: { only_exceptions: false }
     form:            ~
     csrf_protection: ~
     validation:      { enable_annotations: true }
@@ -36,7 +36,7 @@ twig:
 # Assetic Configuration
 assetic:
     debug:          "%kernel.debug%"
-    use_controller: false
+    use_controller: true
     bundles:        [ ]
     #java: /usr/bin/java
     filters:
@@ -73,7 +73,7 @@ swiftmailer:
     spool:     { type: memory }
 
 braincrafted_bootstrap:
-    less_filter: none
+    #less_filter: none
     auto_configure:
         assetic: false
         twig: true
@@ -92,3 +92,25 @@ stof_doctrine_extensions:
         default:
             sluggable: true
             timestampable: true
+
+monolog:
+    handlers:
+        main:
+            type:   stream
+            path:   "%kernel.logs_dir%/%kernel.environment%.log"
+            level:  debug
+        console:
+            type:   console
+            bubble: false
+        # uncomment to get logging in your browser
+        # you may have to allow bigger header sizes in your Web server configuration
+        #firephp:
+        #    type:   firephp
+        #    level:  info
+        #chromephp:
+        #    type:   chromephp
+        #    level:  info
+
+web_profiler:
+    toolbar: true
+    intercept_redirects: false

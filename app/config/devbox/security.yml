@@ -12,10 +12,10 @@ security:
     providers:
         default:
           chain:
-              providers: [ldap, database]
-        ldap:
+              providers: [database]
+        #ldap:
           # an extended imag_ldap.security.user.provider
-          id: mealz_user.security.user.provider
+          # id: mealz_user.security.user.provider
         database:
           entity: { class: Mealz\UserBundle\Entity\Login, property: username }
 
@@ -24,7 +24,7 @@ security:
             pattern: ^/
             anonymous: ~
             provider:         default
-            imag_ldap:        ~
+            # imag_ldap:        ~
             # alternative configuration
             # imag_ldap:
             #   login_path:   /ninja/login

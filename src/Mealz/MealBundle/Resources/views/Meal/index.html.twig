@@ -34,7 +34,7 @@
 					{# display meals for given day #}
 					<div class="col-sm-10">
 						{% for meal in meals %}
-							{% if is_granted('USER') %}
+							{% if is_granted('ROLE_USER') %}
 								{% set mealMargin = is_allowed_to_join(meal)
 													or is_allowed_to_leave(meal)
 													or is_granted('ROLE_KITCHEN_STAFF')

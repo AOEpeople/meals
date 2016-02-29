@@ -153,7 +153,7 @@ class MealController extends BaseController {
 		$ajaxResponse->setData(array(
 			'btnAddClass' => 'btn-danger',
 			'btnRemoveClass' => 'btn-success',
-			'btnText' => $this->get('translator')->trans('leave', array(), 'action'),
+			'btnText' => $this->get('translator')->trans('meal.leave', array(), 'action'),
 			'btnUrl' => $this->generateUrl('MealzMealBundle_Participant_delete', array(
 				'participant' => $participant->getId()
 			))

@@ -1,6 +1,6 @@
 MealzMealBundle_home:
     pattern:  /
-    defaults: { _controller: "MealzMealBundle:Meal:index" }
+    defaults: { _controller: "MealzMealBundle:Meal:index", week: %current_week% }
 
 MealzMealBundle_Meal:
     pattern:  /menu
@@ -8,7 +8,7 @@ MealzMealBundle_Meal:
 
 MealzMealBundle_Meal_week:
     pattern:  /menu/{week}
-    defaults: { _controller: "MealzMealBundle:Meal:week" }
+    defaults: { _controller: "MealzMealBundle:Meal:index" }
     requirements:
         # format "2014W12" 12th week in 2014
         week: 20\d{2}W[0-5]\d

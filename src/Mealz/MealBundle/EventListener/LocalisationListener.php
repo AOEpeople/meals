@@ -52,7 +52,7 @@ class LocalisationListener {
 		$request = $getResponseEvent->getRequest();
 		if($request->headers->has('Accept-Language')) {
 			$locale = $this->httpHeaderUtility->getLocaleFromAcceptLanguageHeader($request->headers->get('Accept-Language'));
-			$request->setLocale($locale);
+			$request->setLocale('de');
 		}
 	}
 

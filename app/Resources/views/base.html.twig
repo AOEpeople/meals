@@ -19,10 +19,10 @@
 					<a class="navbar-brand" href="{{ path('MealzMealBundle_home') }}">Mealz for Zombies</a>
 				</div>
 				<ul class="nav navbar-nav navbar-left">
-					<li><a href="{{ path('MealzMealBundle_Meal') }}">{{ 'Meals'|trans({},'general') }}</a></li>
-                    <li><a href="{{ path('MealzMealBundle_Dish') }}">{{ 'Dishes'|trans({},'general') }}</a></li>
+					<li><a href="{{ path('MealzMealBundle_Meal') }}">{{ 'meals'|trans({},'general') }}</a></li>
+                    <li><a href="{{ path('MealzMealBundle_Dish') }}">{{ 'dishes'|trans({},'general') }}</a></li>
                     {% if is_granted('ROLE_USER') %}
-                    	<li><a href="{{ path('MealzAccountingBundle_Accounting') }}">{{ 'Accounting'|trans({},'general') }}</a></li>
+                    	<li><a href="{{ path('MealzAccountingBundle_Accounting') }}">{{ 'accounting'|trans({},'general') }}</a></li>
 					{% endif %}
                 </ul>
 				{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}

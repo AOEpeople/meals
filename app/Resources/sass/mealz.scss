@@ -31,3 +31,45 @@ table.table-meals td.table-meal-dish {
   color: $color-aoe-orange;
   margin-left: -3px;
 }
+
+.h3-no-margin {
+  margin: 0;
+}
+
+.meals-week {
+
+  >h1 {
+    text-align: center;
+  }
+
+  .meal-seperator-xs {
+    height: 15px;
+  }
+
+  .btn {
+    $width: 100px;
+    $height: $width / 2;
+    width: $width;
+    height: $height;
+    line-height: $height;
+  }
+
+  .user-tools-wrapper {
+    text-align: right;
+  }
+}
+
+@media (max-width: $screen-xs-max) {
+  .meals-week {
+    .meal-date {
+      text-align: right;
+    }
+
+    .btn-group {
+      width: 100%;
+      .btn {
+        width: 50%;
+      }
+    }
+  }
+}

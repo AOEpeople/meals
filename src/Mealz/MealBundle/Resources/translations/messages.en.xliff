@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="13">
+            	<source>meal.you_joined</source>
+                <target>You joined as participant to the meal.</target>
+            </trans-unit>
+            <trans-unit id="13b">
+            	<source>meal.placeholder_joined</source>
+                <target>%username% joined as participant to the meal.</target>
+            </trans-unit>
+            <trans-unit id="13d">
+            	<source>meal.placeholder_already_joined</source>
+                <target>%username% is already joining this meal.</target>
+            </trans-unit>
+            <trans-unit id="14">
+            	<source>meal.does_not_exist</source>
+                <target>The given meal does not exist</target>
+            </trans-unit>
+            <trans-unit id="16">
+            	<source>meal.not_allowed_to_join</source>
+                <target>You are not allowed to join this meal.</target>
+            </trans-unit>
+            <trans-unit id="20">
+            	<source>error.edit.participant_exists</source>
+                <target>The participant could not be changed, because a participant with the same properties is already in the database.</target>
+            </trans-unit>
+            <trans-unit id="21">
+            	<source>changes_stored</source>
+                <target>Your changes were stored.</target>
+            </trans-unit>
+            <trans-unit id="22">
+            	<source>meal.not_allowed_to_leave</source>
+                <target>You are not allowed to leave this meal.</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

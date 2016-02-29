@@ -24,9 +24,9 @@
 	</div>
 
     <h2>
-        {% if meal.participants | length > 1 %}{{ 'Currently'|trans({},'general') }} {{ meal.participants | length }} {{ 'participants'|trans({},'general') }}
-        {% elseif meal.participants | length == 1 %}{{ 'One participant'|trans({},'general') }}
-        {% else %}{{ 'No participants'|trans({},'general') }}
+        {% if meal.participants | length > 1 %}{{ 'currently'|trans({},'general') }} {{ meal.participants | length }} {{ 'participant.multiple'|trans({},'general') }}
+        {% elseif meal.participants | length == 1 %}{{ 'participant.one'|trans({},'general') }}
+        {% else %}{{ 'participant.none'|trans({},'general') }}
         {% endif %}
     </h2>
 
@@ -71,7 +71,7 @@
 						{{ profile.username }}
 					{% endif %}
 					{% if participant.isCostAbsorbed and (participant.profile == app.user.profile or is_granted('ROLE_KITCHEN_STAFF')) %}
-						<span class="text-muted">({{ 'does not pay' | trans([], 'general') }})</span>
+						<span class="text-muted">({{ 'does_not_pay' | trans([], 'general') }})</span>
 					{% endif %}
 				</td>
 				<td>{% if participant.comment %}<span class="text-muted">{{ participant.comment }}</span>{% endif %}</td>

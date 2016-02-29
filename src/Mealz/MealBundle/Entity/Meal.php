@@ -158,9 +158,26 @@ class Meal
 		return $participants;
 	}
 
+	/**
+	 * Return the number of total confirmed participations.
+	 * @TODO don't load every participant object (raw sql query in repo?)
+	 *
+	 * @return int
+	 */
+	public function getTotalConfirmedParticipations() {
+		$totalConfirmedParticipations = 0;
+
+		foreach($this->getParticipants() as $participation) {
+			/* @var Participant $participation */
+			if($participation->isConfirmed()) {
+				$totalConfirmedParticipations += 1;
+			}
+		}
+
+		return $totalConfirmedParticipations;
+	}
+
 	function __toString() {
 		return $this->getDateTime()->format('Y-m-d H:i:s') . ' ' . $this->getDish();
 	}
-
-
 }

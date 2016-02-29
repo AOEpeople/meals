@@ -1,42 +1,21 @@
 {# buttons for the user to edit his participation #}
 {% if is_granted('ROLE_USER') %}
+	{% set button_state='' %}
 	{% if button_class is not defined %}
 		{% set button_class='' %}
 	{% endif %}
+	{% set participant = meal.getParticipant(app.user.profile) %}
+	{% set usersGuests = meal.getGuestParticipants(app.user.profile) %}
 	<div class="btn-group">
-		{% set participant = meal.getParticipant(app.user.profile) %}
-		{% set usersGuests = meal.getGuestParticipants(app.user.profile) %}
-		{% if participant %}
-			<a
-				class="btn btn-success {{ button_class }}"
-				href="{{ link(participant, 'edit') }}"
-				title="{{ 'Edit'|trans({},'navigation') }}"
-			>{{ 'you joined'|trans({},'navigation') }}</a>
-			{% if is_allowed_to_leave(meal) %}
-				<a
-					class="btn btn-danger {{ button_class }}"
-					href="{{ link(participant, 'delete') }}"
-					title="{{ 'Leave'|trans({},'navigation') }}"
-				>–</a>
-			{% endif %}
-		{% else %}
-			<span class="btn btn-default {{ button_class }}">{{ 'join now'|trans({},'navigation') }}</span>
-			{% if is_allowed_to_join(meal) %}
-				<a
-					class="btn btn-success {{ button_class }}"
-					href="{{ link(meal, 'join') }}"
-					title="{{ 'Join'|trans({},'navigation') }}"
-				>+</a>
-			{% endif %}
-		{% endif %}
 
+		{# guest button #}
 		{% if usersGuests | length > 0 %}
-			<button class="btn btn-success {{ button_class }} dropdown-toggle" data-toggle="dropdown">
-				<span class="glyphicon glyphicon-user"></span> {{ usersGuests | length }}
+			<button class="btn btn-default {{ button_class }} dropdown-toggle" data-toggle="dropdown">
+				+ {{ usersGuests | length }} guest
 			</button>
 			<ul class="dropdown-menu" role="menu">
 				{% if is_allowed_to_add_guest(meal) %}
-					<li><a href="{{ link(meal, 'newParticipant') }}">{{ 'Add a guest'|trans({},'navigation') }}</a></li>
+					<li><a href="{{ link(meal, 'newParticipant') }}">{{ 'meal.guest.add'|trans({},'action') }}</a></li>
 					<li class="divider"></li>
 				{% endif %}
 				{% for guestParticipant in usersGuests %}
@@ -46,12 +25,31 @@
 		{% else %}
 			{% if is_allowed_to_add_guest(meal) %}
 				<a
-					class="btn btn-default {{ button_class }}"
-					href="{{ link(meal, 'newParticipant') }}"
-					title="Add a guest"
-				><span class="glyphicon glyphicon-user"></span> +</a>
+						class="btn btn-default {{ button_class }}"
+						href="{{ link(meal, 'newParticipant') }}"
+						title="Add guest"
+				>{{ 'meal.guest.add'|trans({},'action') }}</a>
 			{% endif %}
 		{% endif %}
 
+		{# join / leave button #}
+		{% if participant %}
+			{% if is_allowed_to_leave(meal) %}
+				<a
+					class="btn btn-danger btn-participation {{ button_state }} {{ button_class }}"
+					href="{{ link(participant, 'delete') }}"
+					title="{{ 'meal.leave'|trans({},'action') }}"
+				>{{ 'meal.leave'|trans({},'action') }}</a>
+			{% endif %}
+		{% else %}
+			{% if is_allowed_to_join(meal) %}
+				<a
+					class="btn btn-success btn-participation {{ button_state }} {{ button_class }}"
+					href="{{ link(meal, 'join') }}"
+					title="{{ 'meal.join'|trans({},'action') }}"
+				>{{ 'meal.join'|trans({},'action') }}</a>
+			{% endif %}
+
+		{% endif %}
 	</div>
 {% endif %}

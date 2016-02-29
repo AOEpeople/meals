@@ -1,20 +1,26 @@
 {% set dish=meal.dish %}
-<div class="col-md-6">
-	<div class="row bottom-buffer">
-		<div class="col-md-6">
-			<a href="{{ link(meal) }}">
-				{% if dish.image %}
-					<img src="{{ dish.image.webPath | imagine_filter('thumbnail') }}" />
-				{% else %}
-					<img src="{{ 'img/placeholder.jpg' | imagine_filter('thumbnail') }}" />
-				{% endif %}
-			</a>
-		</div>
-		<div class="col-md-6">
-			<h4><a href="{{ link(meal) }}">{{ dish.title }}</a></h4>
-			<p class="text-muted">{{ meal.dateTime | date('H:i') }}</p>
-			{% include 'MealzMealBundle:Meal/partials:userTools.html.twig' %}
-			{% if dish.description %}<p>{{ dish.description }}</p>{% endif %}
-		</div>
-	</div>
+{% if is_granted('ROLE_KITCHEN_STAFF') %}
+	<div class="col-sm-8 col-xs-8">
+{% else %}
+	<div class="col-md-8 col-sm-7 col-xs-12">
+{% endif %}
+
+	<h4><a href="{{ link(meal) }}">{{ dish.title }}</a></h4>
 </div>
+
+{% if mealMargin %}
+
+		{% if is_granted('ROLE_KITCHEN_STAFF') %}
+			<div class="col-xs-4 user-tools-wrapper">
+				<h4>
+					<div class="label label-default">
+						{{ meal.totalConfirmedParticipations }} / {{ meal.participants | length }}
+					</div>
+				</h4>
+			</div>
+		{% else %}
+			<div class="col-md-4 col-sm-5 col-xs-12 user-tools-wrapper">
+				{% include 'MealzMealBundle:Meal/partials:userTools.html.twig' with {'button_class': 'btn-xs'} %}
+			</div>
+		{% endif %}
+{% endif %}

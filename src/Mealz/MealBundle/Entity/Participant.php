@@ -62,6 +62,28 @@ class Participant
 	protected $costAbsorbed = false;
 
 	/**
+	 * @ORM\Column(type="boolean", nullable=false, options={"default": false})
+	 * @var boolean
+	 */
+	protected $confirmed = false;
+
+	/**
+	 * @return boolean
+	 */
+	public function isConfirmed()
+	{
+		return $this->confirmed;
+	}
+
+	/**
+	 * @param boolean $isConfirmed
+	 */
+	public function setConfirmed($isConfirmed)
+	{
+		$this->isConfirmed = $confirmed;
+	}
+
+	/**
 	 * @return boolean
 	 */
 	public function isCostAbsorbed() {

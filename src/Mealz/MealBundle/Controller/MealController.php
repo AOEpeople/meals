@@ -16,23 +16,9 @@ use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class MealController extends BaseController {
-
-	public function indexAction() {
-		$meals = $this->getMealRepository()->getSortedMeals(
-			new \DateTime(),   // minDate
-			NULL,              // maxDate
-			4,                 // limit
-			array(
-				'load_dish' => TRUE
-			)
-		);
-
-		return $this->render('MealzMealBundle:Meal:index.html.twig', array(
-			'meals' => $meals,
-		));
-	}
 
 	public function listAction() {
 		$meals = $this->getMealRepository()->getSortedMeals(
@@ -55,7 +41,7 @@ class MealController extends BaseController {
 	 * @return Form
 	 */
 	private function getAddParticipantForm($meal) {
-		return $this->createForm(new MealProfileForm($this->get('translator')->trans('Add participant',array(),'general')),null,array('action' => $this->generateUrlTo($meal,"join_someone")));
+		return $this->createForm(new MealProfileForm($this->get('translator')->trans('meal.participant.add',array(),'action')),null,array('action' => $this->generateUrlTo($meal,"join_someone")));
 	}
 
 	/**
@@ -66,7 +52,7 @@ class MealController extends BaseController {
 	public function showAction($date, $dish) {
 		$meal = $this->getMealRepository()->findOneByDateAndDish($date, $dish, array('load_dish' => TRUE, 'load_participants' => TRUE));
 		if(!$meal) {
-			throw $this->createNotFoundException($this->get('translator')->trans('The given meal does not exist',array(),'general'));
+			throw $this->createNotFoundException($this->get('translator')->trans('meal.does_not_exist',array(),'messages'));
 		}
 
 		if($this->getDoorman()->isKitchenStaff()) {
@@ -99,7 +85,7 @@ class MealController extends BaseController {
 		));
 	}
 
-	public function weekAction($week) {
+	public function indexAction($week) {
 		try {
 			$startTime = new \DateTime($week);
 		} catch(\Exception $e) {
@@ -119,7 +105,7 @@ class MealController extends BaseController {
 			)
 		);
 
-		return $this->render('MealzMealBundle:Meal:week.html.twig', array(
+		return $this->render('MealzMealBundle:Meal:index.html.twig', array(
 			'meals' => $meals,
 			'days' => $this->groupByDay($meals),
 			'week' => $week,
@@ -140,10 +126,10 @@ class MealController extends BaseController {
 		}
 		$meal = $this->getMealRepository()->findOneByDateAndDish($date, $dish);
 		if(!$meal) {
-			throw $this->createNotFoundException($this->get('translator')->trans('The given meal does not exist',array(),'general'));
+			throw $this->createNotFoundException($this->get('translator')->trans('meal.does_not_exist',array(),'messages'));
 		}
 		if(!$this->getDoorman()->isUserAllowedToJoin($meal)) {
-			throw new AccessDeniedException($this->get('translator')->trans('You are not allowed to join this meal.',array(),'general'));
+			throw new AccessDeniedException($this->get('translator')->trans('meal.does_not_exist',array(),'messages'));
 		}
 
 		$profile = $this->getProfile();
@@ -159,19 +145,21 @@ class MealController extends BaseController {
 				$em->persist($participant);
 				$em->flush();
 			});
-
-			$this->addFlashMessage(
-				$this->get('translator')->trans('You joined as participant to the meal.',array(),'general'),
-				'success'
-			);
 		} catch (ParticipantNotUniqueException $e) {
-			$this->addFlashMessage(
-				$this->get('translator')->trans('You are already joining this meal.',array(),'general'),
-				'info'
-			);
+
 		}
 
-		return $this->redirect($this->generateUrlTo($meal));
+		$ajaxResponse = new JsonResponse();
+		$ajaxResponse->setData(array(
+			'btnAddClass' => 'btn-danger',
+			'btnRemoveClass' => 'btn-success',
+			'btnText' => $this->get('translator')->trans('leave', array(), 'action'),
+			'btnUrl' => $this->generateUrl('MealzMealBundle_Participant_delete', array(
+				'participant' => $participant->getId()
+			))
+		));
+
+		return $ajaxResponse;;
 	}
 
 	/**
@@ -191,7 +179,7 @@ class MealController extends BaseController {
 		}
 		$meal = $this->getMealRepository()->findOneByDateAndDish($date, $dish);
 		if (!$meal) {
-			throw $this->createNotFoundException($this->get('translator')->trans('The given meal does not exist', array(), 'general'));
+			throw $this->createNotFoundException($this->get('translator')->trans('meal.does_not_exist', array(), 'messages'));
 		}
 
 		$form = $this->getAddParticipantForm($meal);
@@ -214,12 +202,12 @@ class MealController extends BaseController {
 				});
 
 				$this->addFlashMessage(
-					$this->get('translator')->trans('%username% joined as participant to the meal.', array('%username%' => $profile->getUsername()), 'general'),
+					$this->get('translator')->trans('meal.placeholder_joined', array('%username%' => $profile->getUsername()), 'messages'),
 					'success'
 				);
 			} catch (ParticipantNotUniqueException $e) {
 				$this->addFlashMessage(
-					$this->get('translator')->trans('%username% is already joining this meal.', array('%username%' => $profile->getUsername()), 'general'),
+					$this->get('translator')->trans('meal.placeholder_already_joined', array('%username%' => $profile->getUsername()), 'messages'),
 					'info'
 				);
 			}

@@ -24,5 +24,10 @@ class MealzMealExtension extends Extension
 
 		$loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
 		$loader->load('services.yml');
+
+		$container->setParameter(
+			'current_week',
+			date('Y\\WW', strtotime('this sunday'))
+		);
 	}
 }

@@ -13,6 +13,7 @@ use Mealz\UserBundle\Entity\Profile;
 use Mealz\MealBundle\Entity\Meal;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ParticipantController extends BaseController {
 
@@ -23,10 +24,10 @@ class ParticipantController extends BaseController {
 		}
 		$meal = $this->getMealRepository()->findOneByDateAndDish($date, $dish);
 		if(!$meal) {
-			throw $this->createNotFoundException($this->get('translator')->trans('The given meal does not exist',array(),'general'));
+			throw $this->createNotFoundException($this->get('translator')->trans('meal.does_not_exist',array(),'messages'));
 		}
 		if(!$this->getDoorman()->isUserAllowedToJoin($meal)) {
-			throw new AccessDeniedException($this->get('translator')->trans('You are not allowed to join this meal.',array(),'general'));
+			throw new AccessDeniedException($this->get('translator')->trans('meal.not_allowed_to_join',array(),'messages'));
 		}
 
 		$participant = new Participant();
@@ -55,14 +56,14 @@ class ParticipantController extends BaseController {
 
 					if($participant->isGuest()) {
 						$this->addFlashMessage(
-							sprintf($this->get('translator')->trans('Added %s as participant to the meal.',array(),'general'), $participant->getGuestName()),
+							sprintf($this->get('translator')->trans('meal.placeholder_joined',array(),'messages'), $participant->getGuestName()),
 							'success'
 						);
 					} else {
-						$this->addFlashMessage($this->get('translator')->trans('You joined as participant to the meal.',array(),'general'), 'success');
+						$this->addFlashMessage($this->get('translator')->trans('meal.you_joined',array(),'messages'), 'success');
 					}
 				} catch(ParticipantNotUniqueException $e) {
-					$this->addFlashMessage($this->get('translator')->trans('You joined as participant to the meal.',array(),'general'), 'danger');
+					$this->addFlashMessage($this->get('translator')->trans('meal.you_joined',array(),'messages'), 'danger');
 				}
 
 
@@ -101,9 +102,9 @@ class ParticipantController extends BaseController {
 						$em->flush();
 					});
 
-					$this->addFlashMessage($this->get('translator')->trans('Your changes were stored.',array(),'general'), 'success');
+					$this->addFlashMessage($this->get('translator')->trans('changes_stored',array(),'messages'), 'success');
 				} catch(ParticipantNotUniqueException $e) {
-					$this->addFlashMessage($this->get('translator')->trans('The participant could not be changed, because a participant with the same properties is already in the database.',array(),'general'), 'danger');
+					$this->addFlashMessage($this->get('translator')->trans('error.edit.participant_exists',array(),'messages'), 'danger');
 				}
 
 				return $this->redirect($this->generateUrlTo($participant->getMeal()));
@@ -116,7 +117,7 @@ class ParticipantController extends BaseController {
 		));
 	}
 
-	public function deleteAction(Participant $participant) {
+	public function deleteAction(Request $request, Participant $participant) {
 		if(!$this->getUser()) {
 			throw new AccessDeniedException();
 		}
@@ -125,28 +126,32 @@ class ParticipantController extends BaseController {
 		}
 
 		if(!$this->getDoorman()->isUserAllowedToLeave($participant->getMeal())) {
-			throw new AccessDeniedException($this->get('translator')->trans('You are not allowed to leave this meal.',array(),'general'));
+			throw new AccessDeniedException($this->get('translator')->trans('meal.not_allowed_to_leave',array(),'messages'));
 		}
+
+		$date = $participant->getMeal()->getDateTime()->format('Y-m-d');
+		$dish = $participant->getMeal()->getDish()->getSlug();
 
 		$em = $this->getDoctrine()->getManager();
 		$em->remove($participant);
 		$em->flush();
 
-		if($participant->isGuest()) {
-			$this->addFlashMessage(
-				sprintf($this->get('translator')->trans('Removed %s as participant to the meal.',array(),'general'), $participant->getGuestName()),
-				'success'
-			);
+		if ($request->isXmlHttpRequest()) {
+			$ajaxResponse = new JsonResponse();
+			$ajaxResponse->setData(array(
+				'btnAddClass' => 'btn-success',
+				'btnRemoveClass' => 'btn-danger',
+				'btnText' => $this->get('translator')->trans('meal.join', array(), 'action'),
+				'btnUrl' => $this->generateUrl('MealzMealBundle_Meal_join', array(
+					'date' => $date,
+					'dish' => $dish
+				))
+			));
+
+			return $ajaxResponse;
 		} else {
-			if ($this->getProfile() !== $participant->getProfile()) {
-				$this->addFlashMessage($participant->getProfile()->getUsername().' '.$this->get('translator')->trans('removed as participant to the meal.',array(),'general'), 'success');
-			} else {
-				$this->addFlashMessage($participant->getProfile()->getUsername().' '.$this->get('translator')->trans('was removed as participant to the meal.',array(),'general'), 'success');
-			}
+			return $this->redirect($this->generateUrlTo($participant->getMeal()));
 		}
-
-
-		return $this->redirect($this->generateUrlTo($participant->getMeal()));
 	}
 
 }

@@ -3,44 +3,44 @@
     <file source-language="en" datatype="plaintext" original="file.ext">
         <body>
             <trans-unit id="1">
-                <source>week</source>
-                <target>KW</target>
+            	<source>week</source>
+                <target>Week</target>
             </trans-unit>
             <trans-unit id="2">
-                <source>dishes</source>
-                <target>Gerichte</target>
+            	<source>dishes</source>
+                <target>Dishes</target>
             </trans-unit>
             <trans-unit id="3">
-                <source>meals</source>
-                <target>Mahlzeiten</target>
+            	<source>meals</source>
+                <target>Meals</target>
             </trans-unit>
             <trans-unit id="7">
-                <source>menu</source>
-                <target>Menü</target>
+            	<source>menu</source>
+                <target>Menu</target>
             </trans-unit>
             <trans-unit id="8">
-                <source>accounting</source>
-                <target>Abrechnung</target>
+            	<source>accounting</source>
+                <target>Accounting</target>
             </trans-unit>
             <trans-unit id="9">
-                <source>currently</source>
-                <target>Momentan</target>
+            	<source>currently</source>
+                <target>Currently</target>
             </trans-unit>
             <trans-unit id="10">
-                <source>participant.multiple</source>
-                <target>Teilnehmer</target>
+            	<source>participant.multiple</source>
+                <target>participants</target>
             </trans-unit>
             <trans-unit id="11">
-                <source>participant.one</source>
-                <target>Ein Teilnehmer</target>
+            	<source>participant.one</source>
+                <target>One participant</target>
             </trans-unit>
             <trans-unit id="12">
-                <source>participant.none</source>
-                <target>Keine Teilnehmer</target>
+            	<source>participant.none</source>
+                <target>No participants</target>
             </trans-unit>
             <trans-unit id="12b">
                 <source>does_not_pay</source>
-                <target>zahlt nicht</target>
+                <target>does not pay</target>
             </trans-unit>
         </body>
     </file>

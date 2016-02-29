@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="1">
+            	<source>week.previous</source>
+                <target>Previous Week</target>
+            </trans-unit>
+            <trans-unit id="2">
+            	<source>week.next</source>
+                <target>Next Week</target>
+            </trans-unit>
+            <trans-unit id="3">
+            	<source>meal.add</source>
+                <target>Add meal</target>
+            </trans-unit>
+            <trans-unit id="4">
+            	<source>meal.join</source>
+                <target>Join</target>
+            </trans-unit>
+            <trans-unit id="5">
+            	<source>meal.leave</source>
+                <target>Leave</target>
+            </trans-unit>
+            <trans-unit id="6">
+            	<source>edit</source>
+                <target>Edit</target>
+            </trans-unit>
+            <trans-unit id="7">
+            	<source>delete</source>
+                <target>Delete</target>
+            </trans-unit>
+            <trans-unit id="8">
+            	<source>meal.guest.add</source>
+                <target>Add guest</target>
+            </trans-unit>
+			<trans-unit id="9">
+				<source>meal.participant.add</source>
+				<target>Add participant</target>
+			</trans-unit>
+            <trans-unit id="11">
+            	<source>dish.add</source>
+                <target>Add dish</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

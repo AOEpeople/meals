@@ -1,0 +1,17 @@
+{% extends is_granted('ROLE_KITCHEN_STAFF') ? 'base.html.twig' : 'MealzMealBundle::base.confirmation.html.twig' %}
+
+{% block body %}
+	<div class="container confirmation-index text-center">
+		{% for letter in 'A'..'Z' %}
+			{% if letter in availableLetters %}
+				<a
+					class="btn btn-success"
+					href="{{ path('MealzMealBundle_Participation_confirm_index_letter', {'letter': letter}) }}"
+					title="letter"
+				>{{ letter }}</a>
+			{% else %}
+				<span class="btn btn-default disabled">{{ letter }}</span>
+			{% endif %}
+		{% endfor %}
+	</div>
+{% endblock %}

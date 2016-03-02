@@ -1,0 +1,31 @@
+{% extends is_granted('ROLE_KITCHEN_STAFF') ? 'base.html.twig' : 'MealzMealBundle::base.confirmation.html.twig' %}
+
+{% block body %}
+	<div class="container">
+		<div class="btn-group confirmation-index-letter">
+			<div class="btn btn-success btn-md disabled">{{ letter }}</div>
+			<a
+				class="btn btn-default btn-md"
+				href="{{ path('MealzMealBundle_Participation_confirm_index') }}"
+				title="Back"
+			><i class="glyphicon glyphicon-repeat glyphicon-flip-horizontal"></i></a>
+		</div>
+		<table class="table table-striped table-meals">
+			<tbody>
+				{% for participation in participations %}
+					<tr>
+						<td class="table-meal-user">{{ participation.profile.username }}</td>
+						<td class="table-meal-dish">{{ participation.meal.dish.title }}</td>
+						<td class="text-right">
+							<a
+								class="btn btn-success btn-lg"
+								href="{{ link(participation, 'confirm') }}"
+								title="Confirm"
+							>Confirm</a>
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+{% endblock %}

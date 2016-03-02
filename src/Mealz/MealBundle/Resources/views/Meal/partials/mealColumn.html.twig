@@ -11,7 +11,7 @@
 {% if mealMargin %}
 
 		{% if is_granted('ROLE_KITCHEN_STAFF') %}
-			<div class="col-xs-4 user-tools-wrapper">
+			<div class="col-xs-4 text-right">
 				<h4>
 					<div class="label label-default">
 						{{ meal.totalConfirmedParticipations }} / {{ meal.participants | length }}
@@ -19,7 +19,7 @@
 				</h4>
 			</div>
 		{% else %}
-			<div class="col-md-4 col-sm-5 col-xs-12 user-tools-wrapper">
+			<div class="col-md-4 col-sm-5 col-xs-12 text-right">
 				{% include 'MealzMealBundle:Meal/partials:userTools.html.twig' with {'button_class': 'btn-xs'} %}
 			</div>
 		{% endif %}

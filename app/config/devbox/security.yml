@@ -5,6 +5,7 @@ security:
             algorithm:        sha1
             encode_as_base64: false
             iterations:       1
+        Symfony\Component\Security\Core\User\User: plaintext
 
     role_hierarchy:
         ROLE_ADMIN:       ROLE_USER
@@ -12,12 +13,18 @@ security:
     providers:
         default:
           chain:
-              providers: [database]
+              providers: [database, in_memory]
         #ldap:
           # an extended imag_ldap.security.user.provider
           # id: mealz_user.security.user.provider
         database:
           entity: { class: Mealz\UserBundle\Entity\Login, property: username }
+        in_memory:
+          memory:
+            users:
+              confirmation:
+                password: confirm
+                roles: 'ROLE_CONFIRMATION'
 
     firewalls:
         mealz:
@@ -40,6 +47,7 @@ security:
 
     access_control:
         #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
+        - { path: ^/menu/meal/confirmation, roles: ROLE_CONFIRMATION }
 
 imag_ldap:
   client:

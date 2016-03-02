@@ -78,9 +78,9 @@ class Participant
 	/**
 	 * @param boolean $isConfirmed
 	 */
-	public function setConfirmed($isConfirmed)
+	public function setConfirmed($confirmed)
 	{
-		$this->isConfirmed = $confirmed;
+		$this->confirmed = $confirmed;
 	}
 
 	/**

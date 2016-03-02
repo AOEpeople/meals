@@ -59,13 +59,13 @@
 
 						{% endfor %}
 					</div>
-
-					{# seperator between days #}
-					{% if not loop.last %}
-						<div class="row"><div class="col-sm-12"><hr></div></div>
-					{% endif %}
-
 				</div>
+
+				{# seperator between days #}
+				{% if not loop.last %}
+					<div class="row"><hr></div>
+				{% endif %}
+
 			{% endfor %}
 
 		{% else %}

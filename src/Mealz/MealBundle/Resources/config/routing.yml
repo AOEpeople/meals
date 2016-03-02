@@ -35,6 +35,8 @@ MealzMealBundle_Meal_delete:
 MealzMealBundle_Meal_show:
     pattern:  /menu/{date}/{dish}
     defaults: { _controller: "MealzMealBundle:Meal:show" }
+    requirements:
+      date: 20\d{2}\-[01]\d\-[0-3]\d
 
 MealzMealBundle_Meal_join:
     pattern:  /menu/{date}/{dish}/join
@@ -55,6 +57,20 @@ MealzMealBundle_Participant_edit:
 MealzMealBundle_Participant_delete:
     pattern:  /menu/meal/{participant}/delete
     defaults: { _controller: "MealzMealBundle:Participant:delete" }
+
+MealzMealBundle_Participation_confirm_index:
+    pattern:  /menu/meal/confirmation
+    defaults: { _controller: "MealzMealBundle:ParticipationConfirmation:index" }
+
+MealzMealBundle_Participation_confirm_index_letter:
+    pattern:  /menu/meal/confirmation/{letter}
+    defaults: { _controller: "MealzMealBundle:ParticipationConfirmation:indexByLetter" }
+    requirements:
+      letter: \w{1}
+
+MealzMealBundle_Participant_confirm:
+    pattern:  /menu/meal/confirmation/{participant}
+    defaults: { _controller: "MealzMealBundle:ParticipationConfirmation:confirmParticipation" }
 
 MealzMealBundle_Dish:
     pattern:  /dish

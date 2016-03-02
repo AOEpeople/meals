@@ -9,8 +9,18 @@
 
 @import "partials/pages/participant";
 
+@mixin square-button($size) {
+  width: $size;
+  height: $size;
+  line-height: $size;
+}
+
 body {
   padding-top: 50px;
+}
+
+table.table-meals > tbody td {
+  vertical-align: middle;
 }
 
 table.table-meals td.table-meal-date,
@@ -53,10 +63,30 @@ table.table-meals td.table-meal-dish {
     height: $height;
     line-height: $height;
   }
+}
 
-  .user-tools-wrapper {
-    text-align: right;
+.confirmation-index {
+  font-size: 0;
+  .btn {
+    @include square-button(135px);
+    font-size: 18px;
   }
+}
+
+.confirmation-index-letter {
+  .btn {
+    @include square-button(75px);
+    font-size: 24px;
+  }
+}
+
+.glyphicon-flip-horizontal {
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=0, mirror=1);
+  -webkit-transform: scale(-1, 1);
+  -moz-transform: scale(-1, 1);
+  -ms-transform: scale(-1, 1);
+  -o-transform: scale(-1, 1);
+  transform: scale(-1, 1);
 }
 
 @media (max-width: $screen-xs-max) {

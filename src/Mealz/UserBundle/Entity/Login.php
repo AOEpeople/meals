@@ -165,7 +165,7 @@ class Login implements SymfonyUserInterface, \Serializable, MealzUserInterface {
 	{
 		$roles = array('ROLE_USER');
 		if ($this->getUsername() === 'kochomi') {
-			$roles[] = 'ROLE_KITCHEN_STAFF';
+			array_push($roles, 'ROLE_KITCHEN_STAFF', 'ROLE_CONFIRMATION');
 		}
 
 		return $roles;

@@ -22,7 +22,7 @@
 			<h4>{{ 'Wallet'|trans }}</h4>
 
 			<p><strong>{{ walletBalance|localizedcurrency('EUR', app.request.locale) }}</strong></p>
-
+			{# disabled PayPal integration
 			<div class="btn-group">
 				{% if walletBalance < 0 %}
 					<a
@@ -37,24 +37,25 @@
 					title="add money"
 					>add money</a>
 			</div>
-		</div>
+			#}
+</div>
 
-		<div class="row">
-			<div class="col-md-6">
-				<h4>{{ 'Last Participations'|trans({},'general') }}</h4>
-				{% include 'MealzAccountingBundle:Accounting/partials:participantTable.html.twig' with {
-					participations: participations,
-				} %}
-				<a href="{{ path('MealzAccountingBundle_Accounting_participation') }}">All Participations</a>
-			</div>
-			<div class="col-md-6">
-				<h4>{{ 'Last Transactions'|trans({},'general') }}</h4>
-				{% include 'MealzAccountingBundle:Accounting/partials:transactionTable.html.twig' with {
-					transactions: transactions,
-				} %}
-				<a href="{{ path('MealzAccountingBundle_Accounting_transaction') }}">All Transactions</a>
-			</div>
-		</div>
-	</div>
+<div class="row">
+<div class="col-md-6">
+	<h4>{{ 'Last Participations'|trans({},'general') }}</h4>
+	{% include 'MealzAccountingBundle:Accounting/partials:participantTable.html.twig' with {
+		participations: participations,
+	} %}
+	<a href="{{ path('MealzAccountingBundle_Accounting_participation') }}">All Participations</a>
+</div>
+<div class="col-md-6">
+	<h4>{{ 'Last Transactions'|trans({},'general') }}</h4>
+	{% include 'MealzAccountingBundle:Accounting/partials:transactionTable.html.twig' with {
+		transactions: transactions,
+	} %}
+	<a href="{{ path('MealzAccountingBundle_Accounting_transaction') }}">All Transactions</a>
+</div>
+</div>
+</div>
 
 {% endblock %}

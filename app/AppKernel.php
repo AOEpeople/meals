@@ -45,7 +45,6 @@ class AppKernel extends Kernel
 
             // for form theming
             new Braincrafted\Bundle\BootstrapBundle\BraincraftedBootstrapBundle(),
-            new IMAG\LdapBundle\IMAGLdapBundle(),
             new Xopn\DoctrineFileBundle\DoctrineFileBundle(),
             new Liip\ImagineBundle\LiipImagineBundle(),
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),

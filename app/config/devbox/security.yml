@@ -1,6 +1,5 @@
 security:
     encoders:
-        IMAG\LdapBundle\User\LdapUser: plaintext
         Mealz\UserBundle\Entity\Login:
             algorithm:        sha1
             encode_as_base64: false
@@ -30,11 +29,7 @@ security:
         mealz:
             pattern: ^/
             anonymous: ~
-            provider:         default
-            # imag_ldap:        ~
-            # alternative configuration
-            # imag_ldap:
-            #   login_path:   /ninja/login
+            provider: default
             form_login:
                 login_path:  MealzUserBundle_login
                 check_path:  MealzUserBundle_checkLogin
@@ -48,27 +43,3 @@ security:
     access_control:
         #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
         - { path: ^/menu/meal/confirmation, roles: ROLE_CONFIRMATION }
-
-imag_ldap:
-  client:
-    host: %ldap_host%
-    port: %ldap_port%
-    skip_roles: True
-    version: 3 # Optional
-#    username: foo # Optional
-#    password: bar # Optional
-#    network_timeout: 10 # Optional
-#    referrals_enabled: true # Optional
-#    bind_username_before: true # Optional
-
-  user_class: Mealz\UserBundle\User\LdapUser
-  user:
-    base_dn: %ldap_base_dn%
-#    filter: (&(foo=bar)(ObjectClass=Person)) #Optional
-    name_attribute: %ldap_name_attribute%
-#  role:
-#    base_dn: ou=group, dc=host, dc=foo
-##    filter: (ou=group) #Optional
-#    name_attribute: cn
-#    user_attribute: member
-#    user_id: [ dn or username ]

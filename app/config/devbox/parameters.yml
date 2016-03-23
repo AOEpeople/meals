@@ -17,12 +17,6 @@ parameters:
     locale:            en
     secret:            ThisTokenIsNotSoSecretChangeIt
 
-    ldap_host:           placeholder
-    #ssl by default, use 389 for unencrypted connection
-    ldap_port:           636 #ssl by default
-    ldap_base_dn:        placeholder
-    ldap_name_attribute: cn
-
     # get credentials for sandboxing here: https://developer.paypal.com/developer/applications/
     paypal.id: ~
     paypal.secret: ~

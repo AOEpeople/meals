@@ -1,29 +1,43 @@
-.navbar-custom {
-  background-color: $color-aoe-orange;
+.navbar-default {
   border-bottom: 0;
-  color: $color-white;
-  a {
-    color: $color-white;
-  }
-  li a {
-    &:hover {
-      background-color: $color-aoe-blue;
-    }
-  }
+
+  padding-bottom: 20px;
+
   .navbar-brand {
-    padding-top: 13px;
+    font-size: 26px;
+    font-family: ClanOTBold;
   }
-  .btn-success, .btn-danger {
-    padding-top: 8px;
-    padding-bottom: 7px;
-    margin-left: -1px;
-    color: white;
-    border: 0;
-  }
-  .btn-success {
-    background-color: $color-aoe-blue;
-    &:active {
-      background-color: $color-aoe-blue;
+
+  .navbar-form {
+    .form-group {
+      margin-right: 10px;
     }
+  }
+
+  .navbar-text {
+    font-size: 12px;
+    line-height: 12px;
+    @include navbar-vertical-align(12px);
+    strong {
+      padding-left: 5px;
+      color: $color-white;
+      font-family: ClanOTMedium;
+      font-weight: normal;
+    }
+  }
+
+  .btn-link {
+    padding: 7px 5px 5px 0px;
+  }
+
+  .btn-login {
+    padding: 10px 20px 8px 20px;
+
+    font-family: ClanOTMedium;
+    font-size: 12px;
+
+    background-color: $color-aoe-gray-dark;
+    color: $color-white;
+    border: 0;
   }
 }

@@ -7,7 +7,7 @@
 	{% block head %}{% endblock %}
 </head>
 <body>
-	<div class="navbar navbar-fixed-top navbar-custom" role="navigation">
+	<div class="navbar navbar-fixed-top navbar-default" role="navigation">
 		<div class="container">
 			<div class="navbar-collapse collapse">
 				<div class="navbar-header">
@@ -17,8 +17,12 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-					<a class="navbar-brand" href="{{ path('MealzMealBundle_home') }}">Mealz for Zombies</a>
+					<a class="navbar-brand" href="{{ path('MealzMealBundle_home') }}">
+						<span><img src="/images/logo.png"/></span>
+						AOEMEALS
+					</a>
 				</div>
+				{# currently additional link in navbar aren't needed
 				<ul class="nav navbar-nav navbar-left">
 					<li><a href="{{ path('MealzMealBundle_Meal') }}">{{ 'meals'|trans({},'general') }}</a></li>
                     <li><a href="{{ path('MealzMealBundle_Dish') }}">{{ 'dishes'|trans({},'general') }}</a></li>
@@ -26,12 +30,18 @@
                     	<li><a href="{{ path('MealzAccountingBundle_Accounting') }}">{{ 'accounting'|trans({},'general') }}</a></li>
 					{% endif %}
                 </ul>
+                #}
 				{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
 					<div class="navbar-form navbar-right">
-						<a class="btn btn-danger" href="{{ path('MealzUserBundle_logout') }}">Log out</a>
+						<a class="btn btn-link btn-settings" href="#">
+							<i class="glyphicon glyphicon-cog"></i>
+						</a>
+						<a class="btn btn-link btn-logout" href="{{ path('MealzUserBundle_logout') }}">
+							<i class="glyphicon glyphicon-log-out"></i>
+						</a>
 					</div>
 					<div class="navbar-text navbar-right ">
-						Herzlich willkommen <strong>{{ app.user.username }}</strong>
+						You are logged in as: <strong>{{ app.user.username }}</strong>
 					</div>
 				{% else %}
 					<form class="navbar-form navbar-right" role="form" action="{{ path('MealzUserBundle_checkLogin') }}" method="post">
@@ -41,7 +51,7 @@
 						<div class="form-group">
 							<input type="password" placeholder="Password" class="form-control" name="_password" />
 						</div>
-						<button type="submit" class="btn btn-success">Sign in</button>
+						<button type="submit" class="btn btn-login">LOGIN</button>
 					</form>
 				{% endif %}
 			</div>

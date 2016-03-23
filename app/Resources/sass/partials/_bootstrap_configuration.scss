@@ -1,4 +1,4 @@
-$font-family-sans-serif: "DINRegular";
+$font-family-sans-serif: "ClanOTRegular";
 
 // general
 $border-radius-base: 0;
@@ -47,3 +47,15 @@ $cursor-disabled
 
 
 $jumbotron-bg: $color-aoe-background-one;
+
+$navbar-height: 100px;
+$navbar-padding-vertical: 33px;
+$navbar-default-color: $color-aoe-gray-text;
+$navbar-default-bg : $color-aoe-gray-darker;
+$navbar-default-link-color : $color-aoe-gray;
+$navbar-default-link-hover-color : $color-white;
+$navbar-default-link-active-color : $color-white;
+$navbar-default-link-active-bg : transparent;
+$navbar-default-brand-color : $color-white;
+$navbar-default-brand-hover-color : $color-white;
+

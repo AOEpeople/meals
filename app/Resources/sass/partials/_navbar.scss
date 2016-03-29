@@ -4,6 +4,8 @@
   padding-bottom: 20px;
 
   .navbar-brand {
+    padding-top: 32px;
+
     font-size: 26px;
     font-family: ClanOTBold;
   }
@@ -17,7 +19,8 @@
   .navbar-text {
     font-size: 12px;
     line-height: 12px;
-    @include navbar-vertical-align(12px);
+    margin-top: 45px;
+    margin-bottom: 43px;
     strong {
       padding-left: 5px;
       color: $color-white;
@@ -28,10 +31,14 @@
 
   .btn-link {
     padding: 7px 5px 5px 0px;
+
+    & i.glyphicon.glyphicon-cog {
+      top: 2px;
+    }
   }
 
   .btn-login {
-    padding: 10px 20px 8px 20px;
+    padding: 9px 20px 8px 20px;
 
     font-family: ClanOTMedium;
     font-size: 12px;

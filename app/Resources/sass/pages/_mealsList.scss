@@ -1,4 +1,6 @@
 .meals-list {
+  @include clearfix();
+
   .headline {
     text-align: center;
     font-family: "ClanOTBold", sans-serif;
@@ -12,5 +14,26 @@
       display: block;
       font-size: 14px;
     }
+  }
+
+  .weeks {
+    @include clearfix();
+  }
+
+  .week {
+    width: 50%;
+    float: left;
+  }
+
+  .no-meals {
+    width: 350px;
+    margin: 200px auto 0;
+    background: url("../images/meal.png") top left 130px no-repeat;
+    padding-top: 150px;
+    font-family: $font-bold;
+    font-size: 18px;
+    line-height: 1.5;
+    color: $color-secondary;
+    text-align: center;
   }
 }

@@ -29,7 +29,14 @@
 		</div>
 	</header>
 
-	{% block body %}{% endblock %}
+	{% if wrapperClass is not defined %}
+		{% set wrapperClass = '' %}
+	{% endif %}
+
+	<div class="container content-wrapper {{ wrapperClass }}">
+		{% block body %}
+		{% endblock %}
+	</div>
 
     <script src="{{ asset('mealz.js') }}"></script>
 	</body>

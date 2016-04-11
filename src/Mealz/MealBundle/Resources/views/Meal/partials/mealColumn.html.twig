@@ -1,26 +1,43 @@
 {% set dish=meal.dish %}
-{% if is_granted('ROLE_KITCHEN_STAFF') %}
-	<div class="col-sm-8 col-xs-8">
-{% else %}
-	<div class="col-md-8 col-sm-7 col-xs-12">
-{% endif %}
 
-	<h4><a href="{{ link(meal) }}">{{ dish.title }}</a></h4>
+
+<div class="col-xs-8">
+	<h4 class="h3-no-margin">
+		<div class="row"><div class="col-sm-12">{{ dish.title }}</div></div>
+		<div class="row"><div class="col-sm-12">
+			<small>{{ dish.description }}</small>
+		</div></div>
+	</h4>
 </div>
 
-{% if mealMargin %}
+<div class="col-xs-2">
+	{{ meal.participants | length }}
+</div>
 
-		{% if is_granted('ROLE_KITCHEN_STAFF') %}
-			<div class="col-xs-4 text-right">
-				<h4>
-					<div class="label label-default">
-						{{ meal.totalConfirmedParticipations }} / {{ meal.participants | length }}
-					</div>
-				</h4>
-			</div>
+<div class="col-xs-2">
+	{% if is_granted('ROLE_USER') %}
+		{% set participant = meal.getParticipant(app.user.profile) %}
+
+		{# join / leave using a checkbox #}
+		{% if participant and is_allowed_to_leave(meal) %}
+			<input type="checkbox" class="participation-checkbox"
+				   value="{{ link(participant, 'delete') }}"
+				   checked
+				   data-action-type="leave"
+			>
 		{% else %}
-			<div class="col-md-4 col-sm-5 col-xs-12 text-right">
-				{% include 'MealzMealBundle:Meal/partials:userTools.html.twig' with {'button_class': 'btn-xs'} %}
-			</div>
+			{% if is_allowed_to_join(meal) %}
+				<input type="checkbox"
+					   class="participation-checkbox"
+					   value="{{ link(meal, 'join') }}"
+					   data-action-type="join"
+				>
+			{% else %}
+				<input type="checkbox" class="participation-checkbox disabled" value="">
+			{% endif %}
 		{% endif %}
-{% endif %}
+
+	{% else %}
+		<input type="checkbox" class="participation-checkbox disabled" value="">
+	{% endif %}
+</div>

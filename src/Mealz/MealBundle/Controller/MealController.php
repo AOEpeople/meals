@@ -85,9 +85,9 @@ class MealController extends BaseController {
 		));
 	}
 
-	public function indexAction($week) {
+	public function indexAction() {
 		try {
-			$startTime = new \DateTime($week);
+			$startTime = new \DateTime();
 		} catch(\Exception $e) {
 			throw $this->createNotFoundException($this->get('translator')->trans('Invalid Date',array(),'general'), $e);
 		}

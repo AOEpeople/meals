@@ -1,6 +1,6 @@
 MealzMealBundle_home:
     pattern:  /
-    defaults: { _controller: "MealzMealBundle:Meal:index", week: %current_week% }
+    defaults: { _controller: "MealzMealBundle:Meal:index" }
 
 MealzMealBundle_Meal:
     pattern:  /menu

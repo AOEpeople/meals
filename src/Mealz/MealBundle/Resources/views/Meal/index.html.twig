@@ -5,28 +5,17 @@
 		<h1>{{ 'week'|trans({},'general') }} {{ week | date('W') }} in {{ week | date('Y') }}</h1>
 		{% include ':partials:flashMessages.html.twig' %}
 
-		<ul class="pager">
-			<li class="previous">
-				<a href="{{ path('MealzMealBundle_Meal_week', {week: week | date_modify('-1 day') | date('o\\\WW')}) }}">&larr; {{ 'week.previous'|trans({},'action') }} </a>
-			</li>
-			<li class="next">
-				<a href="{{ path('MealzMealBundle_Meal_week', {week: week | date_modify('+2 weeks -1 day') | date('o\\\WW')}) }}">{{ 'week.next'|trans({},'action') }} &rarr;</a>
-			</li>
-		</ul>
-
-
 		{% if meals | length > 0 %}
 
 			{% for day,meals in days %}
 				<div class="row">
 
 					{# display week day and date #}
-					<div class="col-sm-2">
+					<div class="col-sm-1 meals-week-day">
 						<div class="row">
 							<h3 class="h3-no-margin">
 								<a name="{{ day | date('Y-m-d') }}"></a>
-								<div class="col-sm-12 col-xs-5">{{ day | date('l') }}</div>
-								<div class="col-sm-12 col-sm-offset-0 col-xs-4 col-xs-offset-3 meal-date"><small>{{ day | date('d.m.Y') }}</small></div>
+								<div class="col-sm-12 col-xs-5">{{ day | date('D') }}</div>
 							</h3>
 						</div>
 					</div>
@@ -71,7 +60,7 @@
 		{% else %}
 			<div class="alert alert-warning">No meals this week.</div>
 		{% endif %}
-
+		<button type="button" class="btn btn-default participation-submit">Save</button>
 	</div>
 
 {% endblock %}

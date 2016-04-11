@@ -15,15 +15,9 @@
 			</a>
 			<div class="header-right">
 			{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-				<div class="header-text">
-					You are logged in as: <strong>{{ app.user.username }}</strong>
-				</div>
-				<a class="btn-icon" href="#">
-					<i class="glyphicon glyphicon-cog"></i>
-				</a>
-				<a class="btn-icon" href="{{ path('MealzUserBundle_logout') }}">
-					<i class="glyphicon glyphicon-log-out"></i>
-				</a>
+				<div class="header-text">You are logged in as: <strong>{{ app.user.username }}</strong></div>
+				<a class="glyphicon glyphicon-cog" href="#"></a>
+				<a class="glyphicon glyphicon-log-out" href="{{ path('MealzUserBundle_logout') }}"></a>
 			{% else %}
 				<form class="login-form" action="{{ path('MealzUserBundle_checkLogin') }}" method="post">
 					<input type="text" placeholder="Username" class="form-control" name="_username" />

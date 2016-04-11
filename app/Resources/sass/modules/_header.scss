@@ -2,6 +2,8 @@ header {
 
   height: $header-height;
   background-color: $header-bg;
+  padding-top: 30px;
+  box-sizing: border-box;
 
   .logo {
     @include clearfix();
@@ -15,6 +17,7 @@ header {
     }
 
     span {
+      color: $color-white;
       padding: 8px 0 0 5px;
     }
   }
@@ -24,10 +27,9 @@ header {
   }
 
   .header-text {
+    display: inline-block;
     font-size: 12px;
-    line-height: 12px;
-    margin-top: 45px;
-    margin-bottom: 43px;
+    padding-top: 13px;
     strong {
       padding-left: 5px;
       color: $color-white;
@@ -41,6 +43,11 @@ header {
       height: 35px;
       padding: 0;
       border: 0;
+    }
+
+    input {
+      padding-left: 5px;
+      margin-right: 10px;
     }
 
     .btn-login {

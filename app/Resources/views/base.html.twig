@@ -7,56 +7,33 @@
 	{% block head %}{% endblock %}
 </head>
 <body>
-	<div class="navbar navbar-fixed-top navbar-default" role="navigation">
+	<header>
 		<div class="container">
-			<div class="navbar-collapse collapse">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-						<span class="sr-only">Toggle navigation</span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</button>
-					<a class="navbar-brand" href="{{ path('MealzMealBundle_home') }}">
-						<span><img src="/images/logo.png"/></span>
-						AOEMEALS
-					</a>
+			<a class="logo" href="{{ path('MealzMealBundle_home') }}">
+				<span><img src="/images/logo.png"/></span>
+				AOEMEALS
+			</a>
+			<div class="header-right">
+			{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+				<div class="header-text">
+					You are logged in as: <strong>{{ app.user.username }}</strong>
 				</div>
-				{# currently additional link in navbar aren't needed
-				<ul class="nav navbar-nav navbar-left">
-					<li><a href="{{ path('MealzMealBundle_Meal') }}">{{ 'meals'|trans({},'general') }}</a></li>
-                    <li><a href="{{ path('MealzMealBundle_Dish') }}">{{ 'dishes'|trans({},'general') }}</a></li>
-                    {% if is_granted('ROLE_USER') %}
-                    	<li><a href="{{ path('MealzAccountingBundle_Accounting') }}">{{ 'accounting'|trans({},'general') }}</a></li>
-					{% endif %}
-                </ul>
-                #}
-				{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-					<div class="navbar-form navbar-right">
-						<a class="btn btn-link btn-settings" href="#">
-							<i class="glyphicon glyphicon-cog"></i>
-						</a>
-						<a class="btn btn-link btn-logout" href="{{ path('MealzUserBundle_logout') }}">
-							<i class="glyphicon glyphicon-log-out"></i>
-						</a>
-					</div>
-					<div class="navbar-text navbar-right ">
-						You are logged in as: <strong>{{ app.user.username }}</strong>
-					</div>
-				{% else %}
-					<form class="navbar-form navbar-right" role="form" action="{{ path('MealzUserBundle_checkLogin') }}" method="post">
-						<div class="form-group">
-							<input type="text" placeholder="Username" class="form-control" name="_username" />
-						</div>
-						<div class="form-group">
-							<input type="password" placeholder="Password" class="form-control" name="_password" />
-						</div>
-						<button type="submit" class="btn btn-login">LOGIN</button>
-					</form>
-				{% endif %}
+				<a class="btn-icon" href="#">
+					<i class="glyphicon glyphicon-cog"></i>
+				</a>
+				<a class="btn-icon" href="{{ path('MealzUserBundle_logout') }}">
+					<i class="glyphicon glyphicon-log-out"></i>
+				</a>
+			{% else %}
+				<form class="login-form" action="{{ path('MealzUserBundle_checkLogin') }}" method="post">
+					<input type="text" placeholder="Username" class="form-control" name="_username" />
+					<input type="password" placeholder="Password" class="form-control" name="_password" />
+					<button type="submit" class="btn-login">LOGIN</button>
+				</form>
+			{% endif %}
 			</div>
 		</div>
-	</div>
+	</header>
 
 	{% block body %}{% endblock %}
 

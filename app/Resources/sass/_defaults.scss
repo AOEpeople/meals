@@ -36,14 +36,13 @@ $input-color-placeholder: $color-dark-gray;
 // Link
 $link-hover-decoration: none;
 
-$navbar-height: 100px;
-$navbar-padding-vertical: 33px;
-$navbar-default-color: $color-aoe-gray-text;
-$navbar-default-bg : $color-aoe-gray-darker;
-$navbar-default-link-color : $color-aoe-gray;
-$navbar-default-link-hover-color : $color-white;
-$navbar-default-link-active-color : $color-white;
-$navbar-default-link-active-bg : transparent;
-$navbar-default-brand-color : $color-white;
-$navbar-default-brand-hover-color : $color-white;
+$header-height: 100px;
+$header-color: $color-aoe-gray-text;
+$header-bg : $color-aoe-gray-darker;
+$header-link-color : $color-aoe-gray;
+$header-link-hover-color : $color-white;
+$header-link-active-color : $color-white;
+$header-link-active-bg : transparent;
+$header-brand-color : $color-white;
+$header-brand-hover-color : $color-white;
 

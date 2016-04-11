@@ -1,0 +1,52 @@
+header {
+
+  height: $header-height;
+  background-color: $header-bg;
+
+  .logo {
+    float: left;
+    font-size: 26px;
+    font-family: ClanOTBold;
+  }
+
+  .header-right {
+    float: right;
+  }
+
+  .header-text {
+    font-size: 12px;
+    line-height: 12px;
+    margin-top: 45px;
+    margin-bottom: 43px;
+    strong {
+      padding-left: 5px;
+      color: $color-white;
+      font-family: ClanOTMedium;
+      font-weight: normal;
+    }
+  }
+
+  .login-form {
+    input, button {
+      height: 35px;
+      padding: 0;
+      border: 0;
+    }
+
+    .btn-login {
+      width: 75px;
+      font-family: ClanOTMedium;
+      font-size: 12px;
+      background-color: $color-aoe-gray-dark;
+      color: $color-white;
+      vertical-align: top;
+    }
+  }
+
+
+  .btn-icon {
+    & i.glyphicon.glyphicon-cog {
+      top: 2px;
+    }
+  }
+}

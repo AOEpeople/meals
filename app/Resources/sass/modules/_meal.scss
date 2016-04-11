@@ -7,6 +7,10 @@
   background: $color-gray-light;
   border-left: $mealBorderWidth solid $color-gray-secondary;
 
+  &:last-child {
+    margin-bottom: 0;
+  }
+
   .week-day {
     color: #fff;
     font-weight: bold;

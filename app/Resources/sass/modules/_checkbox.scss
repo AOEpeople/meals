@@ -29,6 +29,19 @@ input[type="checkbox"] {
       height: 100%;
       top: 1px;
       left: 0;
+      animation: tick .2s ease-in;
     }
+  }
+}
+
+@keyframes tick {
+  0% {
+    transform: scale(0)
+  }
+  90% {
+    transform: scale(1.5)
+  }
+  100% {
+    transform: scale(1)
   }
 }

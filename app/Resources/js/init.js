@@ -11,9 +11,6 @@ Array.prototype.remove = function () {
 
 $(document).ready(function() {
 
-
-    $('#participant_participant').chosen();
-
     var participations = [];
 
     $('.participation-checkbox').click(function(e){

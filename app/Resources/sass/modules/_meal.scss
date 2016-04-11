@@ -45,13 +45,17 @@
   }
 
   .text {
-    width: 70%;
+    width: 80%;
   }
 
   .participants,
   .action {
-    width: 15%;
+    width: 10%;
     text-align: center;
+  }
+
+  .action {
+    padding-top: 4px;
   }
 
   .participants {

@@ -1,3 +1,12 @@
 body {
 	font-size: 14px;
+	font-family: ClanOT-News;
+	color: $color-aoe-gray-darker;
+}
+
+.container {
+	@include clearfix();
+	width: 1220px;
+	margin: 0 auto;
+	padding: 0 70px;
 }

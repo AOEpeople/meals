@@ -34,7 +34,7 @@ gulp.task('glyphs', ['clean'], function() {
 });
 
 gulp.task('images', ['clean'], function() {
-    gulp.src(['./sass/images/**/*', './bower_components/chosen/chosen*.png'])
+    gulp.src(['./images/**/*', './bower_components/chosen/chosen*.png'])
         .pipe(gulp.dest('../../web/images/'))
 });
 

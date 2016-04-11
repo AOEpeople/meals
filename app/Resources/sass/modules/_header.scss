@@ -4,9 +4,19 @@ header {
   background-color: $header-bg;
 
   .logo {
+    @include clearfix();
     float: left;
     font-size: 26px;
     font-family: ClanOTBold;
+
+    img,
+    span {
+      float: left;
+    }
+
+    span {
+      padding: 8px 0 0 5px;
+    }
   }
 
   .header-right {

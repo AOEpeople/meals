@@ -1,7 +1,19 @@
 body {
 	font-size: 14px;
-	font-family: ClanOT-News;
+	font-family: ClanOTNews;
 	color: $color-aoe-gray-darker;
+}
+
+$a-tags: 'a, a:active, a:hover, a:visited';
+$a-tags-hover: 'a:active, a:hover';
+
+#{$a-tags} {
+	color: $color-aoe-gray;
+	text-decoration: none;
+}
+
+#{$a-tags-hover} {
+	color: $color-white;
 }
 
 .container {

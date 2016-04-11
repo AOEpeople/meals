@@ -1,9 +1,14 @@
 @import "defaults";
+
 @import "helpers/reset";
 @import "helpers/mixins";
 @import "helpers/glyphicons";
+
 @import "modules/fonts";
 @import "modules/chosen";
 @import "modules/header";
+@import "modules/meal";
+
 @import "pages/base";
+@import "pages/mealsList";
 @import "pages/participant";

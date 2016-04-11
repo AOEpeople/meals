@@ -1,66 +1,39 @@
 {% extends '::base.html.twig' %}
 
 {% block body %}
-	<div class="container meals-week">
-		<h1>{{ 'week'|trans({},'general') }} {{ week | date('W') }} in {{ week | date('Y') }}</h1>
+	<div class="container content-wrapper meals-list">
+		<div class="headline">
+			{{ 'week'|trans({},'general') }} {{ week | date('W') }} in {{ week | date('Y') }}
+			<span>Lorem ipsum dolor sit amet</span>
+		</div>
+
 		{% include ':partials:flashMessages.html.twig' %}
 
 		{% if meals | length > 0 %}
 
 			{% for day,meals in days %}
-				<div class="row">
+				<div class="meal">
 
 					{# display week day and date #}
-					<div class="col-sm-1 meals-week-day">
-						<div class="row">
-							<h3 class="h3-no-margin">
-								<a name="{{ day | date('Y-m-d') }}"></a>
-								<div class="col-sm-12 col-xs-5">{{ day | date('D') }}</div>
-							</h3>
-						</div>
+					<div class="week-day">
+						<a name="{{ day | date('Y-m-d') }}"></a>
+						<span>
+							{{ day | date('D') }}
+						</span>
 					</div>
 
 					{# display meals for given day #}
-					<div class="col-sm-10">
-						{% for meal in meals %}
-							{% if is_granted('ROLE_USER') %}
-								{% set mealMargin = is_allowed_to_join(meal)
-													or is_allowed_to_leave(meal)
-													or is_granted('ROLE_KITCHEN_STAFF')
-								%}
-							{% else %}
-								{% set mealMargin = false %}
-							{% endif %}
+					{% for meal in meals %}
+						{% include 'MealzMealBundle:Meal/partials:mealColumn.html.twig'  %}
+					{% endfor %}
 
-							<div class="row">
-								{% include 'MealzMealBundle:Meal/partials:mealColumn.html.twig'  %}
-							</div>
-
-							{# seperator / spacing between meals #}
-							{% if not loop.last %}
-								<div class="row">
-									<hr class="hidden-xs">
-									{% if mealMargin %}
-										<div class="visible-xs-block meal-seperator-xs"></div>
-									{% endif %}
-								</div>
-							{% endif %}
-
-						{% endfor %}
-					</div>
 				</div>
-
-				{# seperator between days #}
-				{% if not loop.last %}
-					<div class="row"><hr></div>
-				{% endif %}
-
 			{% endfor %}
 
 		{% else %}
 			<div class="alert alert-warning">No meals this week.</div>
 		{% endif %}
-		<button type="button" class="btn btn-default participation-submit">Save</button>
+		<button type="button" class="btn btn-save">Save</button>
 	</div>
 
 {% endblock %}

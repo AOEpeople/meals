@@ -1,7 +1,13 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
-	font-size: 14px;
-	font-family: ClanOTNews;
-	color: $color-aoe-gray-text;
+  font-size: 14px;
+  font-family: "ClanOTNews", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  color: $color-aoe-gray-darker;
+  background: $color-light-gray;
 }
 
 $a-tags: 'a, a:active, a:hover, a:visited';
@@ -20,5 +26,12 @@ $a-tags-hover: 'a:active, a:hover';
 	@include clearfix();
 	width: 1220px;
 	margin: 0 auto;
-	padding: 0 70px;
+	padding: 0 40px;
+}
+
+.content-wrapper {
+  background: #fff;
+  z-index: 10;
+  margin-top: -25px;
+  padding-top: 25px;
 }

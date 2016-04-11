@@ -1,43 +1,47 @@
-{% set dish=meal.dish %}
+{% set dish = meal.dish %}
 
+<div class="meal-row">
+	<div class="text">
+		<div class="title">
+			{{ dish.title }}
+		</div>
+		<div class="description">
+			desciption here
+			{{ dish.description }}
+		</div>
+	</div>
+	<div class="participants">
+		<span>
+			<span>
+				{{ meal.participants | length }}
+			</span>
+		</span>
+	</div>
+	<div class="action">
+		{% if is_granted('ROLE_USER') %}
+			{% set participant = meal.getParticipant(app.user.profile) %}
 
-<div class="col-xs-8">
-	<h4 class="h3-no-margin">
-		<div class="row"><div class="col-sm-12">{{ dish.title }}</div></div>
-		<div class="row"><div class="col-sm-12">
-			<small>{{ dish.description }}</small>
-		</div></div>
-	</h4>
-</div>
-
-<div class="col-xs-2">
-	{{ meal.participants | length }}
-</div>
-
-<div class="col-xs-2">
-	{% if is_granted('ROLE_USER') %}
-		{% set participant = meal.getParticipant(app.user.profile) %}
-
-		{# join / leave using a checkbox #}
-		{% if participant and is_allowed_to_leave(meal) %}
-			<input type="checkbox" class="participation-checkbox"
-				   value="{{ link(participant, 'delete') }}"
-				   checked
-				   data-action-type="leave"
-			>
-		{% else %}
-			{% if is_allowed_to_join(meal) %}
-				<input type="checkbox"
-					   class="participation-checkbox"
-					   value="{{ link(meal, 'join') }}"
-					   data-action-type="join"
+			{# join / leave using a checkbox #}
+			{% if participant and is_allowed_to_leave(meal) %}
+				<input type="checkbox" class="participation-checkbox"
+					   value="{{ link(participant, 'delete') }}"
+					   checked
+					   data-action-type="leave"
 				>
 			{% else %}
-				<input type="checkbox" class="participation-checkbox disabled" value="">
+				{% if is_allowed_to_join(meal) %}
+					<input type="checkbox"
+						   class="participation-checkbox"
+						   value="{{ link(meal, 'join') }}"
+						   data-action-type="join"
+					>
+				{% else %}
+					<input type="checkbox" class="participation-checkbox disabled" value="">
+				{% endif %}
 			{% endif %}
-		{% endif %}
 
-	{% else %}
-		<input type="checkbox" class="participation-checkbox disabled" value="">
-	{% endif %}
+		{% else %}
+			<input type="checkbox" class="participation-checkbox disabled" value="">
+		{% endif %}
+	</div>
 </div>

@@ -1,0 +1,74 @@
+.meal {
+  $mealBorderWidth: 25px;
+
+  width: 100%;
+  position: relative;
+  margin-bottom: 20px;
+  background: $color-aoe-gray-light;
+  border-left: $mealBorderWidth solid $color-aoe-gray-dark;
+
+  .week-day {
+    color: #fff;
+    font-weight: bold;
+    line-height: $mealBorderWidth;
+    position: absolute;
+    height: 100%;
+    width: $mealBorderWidth;
+    top: 0;
+    left: $mealBorderWidth * -1;
+
+    span {
+      display: block;
+      position: relative;
+      top: 50%;
+      transform: translateY(-50%) rotate(-90deg);
+    }
+  }
+
+  .meal-row {
+    @include clearfix();
+
+    padding: 20px;
+
+    &:not(:last-child) {
+      border-bottom: 2px solid #d6dee2;
+    }
+
+    .title {
+      font-family: "ClanOTBold", sans-serif;
+      margin-bottom: 5px;
+    }
+  }
+
+  .text, .participants, .action {
+    float: left;
+  }
+
+  .text {
+    width: 70%;
+  }
+
+  .participants,
+  .action {
+    width: 15%;
+    text-align: center;
+  }
+
+  .participants {
+    span {
+      display: table;
+      width: 28px;
+      height: 28px;
+      margin: 0 auto;
+      border-radius: 50%;
+      color: $color-white;
+      background: $color-aoe-gray-dark;
+      text-align: center;
+
+      span {
+        display: table-cell;
+        vertical-align: middle;
+      }
+    }
+  }
+}

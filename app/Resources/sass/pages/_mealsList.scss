@@ -1,0 +1,14 @@
+.meals-list {
+  .headline {
+    text-align: center;
+    font-family: "ClanOTBold", sans-serif;
+    font-size: 24px;
+    margin-bottom: 20px;
+    
+    span {
+      font-family: $font-family-sans-serif;
+      display: block;
+      font-size: 14px;
+    }
+  }
+}

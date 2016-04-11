@@ -1,48 +1,17 @@
-// Colors
-$color-white: #FFFFFF;
-$color-light-gray: #F8F8F8;
-$color-dark-gray: #DCE2E6;
+// Font colors
+$color-white: #fff;
+$color-base: #606b72;
+$color-secondary: #acbdc7;
+$color-body: #f2f5f7;
 
-$color-aoe-orange: #f57C00;
-$color-aoe-blue: #637B98;
-$color-aoe-background-one: $color-light-gray;
-$color-aoe-background-two: $color-white;
+$color-gray-primary: $color-base;
+$color-gray-secondary: #9aa9b3;
 
-$color-aoe-gray: #9AA9B3;
-$color-aoe-gray-text: #acbdc7;
-$color-aoe-gray-light: #ECF2F5;
-$color-aoe-gray-dark: #7B8B93;
-$color-aoe-gray-darker: #606B72;
+$color-gray-light: #ecf2f5;
 
 // Font
-$font-family-sans-serif: "ClanOTRegular";
-$headings-font-family: "DINLight";
-
-// Headings
-$headings-color: $color-aoe-orange;
-
-// Buttons
-$btn-primary-bg: $color-aoe-blue;
-$btn-danger-bg: #CD5206; // temp dark orange
-
-// Input
-$input-bg: $color-aoe-background-one;
-$input-border-radius: 0;
-$input-color: $color-aoe-blue;
-$input-border-focus: $color-aoe-blue;
-$input-border: rgba(255,255,255,0);
-$input-color-placeholder: $color-dark-gray;
-
-// Link
-$link-hover-decoration: none;
-
-$header-height: 120px;
-$header-color: $color-aoe-gray-text;
-$header-bg : $color-aoe-gray-darker;
-$header-link-color : $color-aoe-gray;
-$header-link-hover-color : $color-white;
-$header-link-active-color : $color-white;
-$header-link-active-bg : transparent;
-$header-brand-color : $color-white;
-$header-brand-hover-color : $color-white;
+$font-default: "ClanOTRegular", sans-serif;
+$font-light: "ClanOTLight", sans-serif;
+$font-medium: "ClanOTMedium", sans-serif;
+$font-bold: "ClanOTBold", sans-serif;
 

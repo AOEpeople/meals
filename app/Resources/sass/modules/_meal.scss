@@ -4,8 +4,8 @@
   width: 100%;
   position: relative;
   margin-bottom: 20px;
-  background: $color-aoe-gray-light;
-  border-left: $mealBorderWidth solid $color-aoe-gray-dark;
+  background: $color-gray-light;
+  border-left: $mealBorderWidth solid $color-gray-secondary;
 
   .week-day {
     color: #fff;
@@ -62,7 +62,7 @@
       margin: 0 auto;
       border-radius: 50%;
       color: $color-white;
-      background: $color-aoe-gray-dark;
+      background: $color-gray-secondary;
       text-align: center;
 
       span {

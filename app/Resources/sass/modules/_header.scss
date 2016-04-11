@@ -1,15 +1,19 @@
-header {
+$header-height: 120px;
+$header-background : $color-gray-primary;
+$header-login-button-background: #7b8b93;
+$header-link-color: #acbdc7;
 
+header {
   height: $header-height;
-  background-color: $header-bg;
+  background-color: $header-background;
   padding-top: 30px;
-  box-sizing: border-box;
 
   .logo {
     @include clearfix();
+
     float: left;
     font-size: 26px;
-    font-family: ClanOTBold;
+    font-family: $font-bold;
 
     img,
     span {
@@ -24,17 +28,26 @@ header {
 
   .header-right {
     float: right;
+
+    a {
+      color: $header-link-color;
+
+      &:hover {
+        color: $color-white;
+      }
+    }
   }
 
   .header-text {
     display: inline-block;
     font-size: 12px;
     padding-top: 13px;
+    color: $header-link-color;
+
     strong {
       padding-left: 5px;
       color: $color-white;
-      font-family: ClanOTMedium;
-      font-weight: normal;
+      font-family: $font-bold;
     }
   }
 
@@ -51,12 +64,12 @@ header {
     }
 
     .btn-login {
-      width: 75px;
-      font-family: ClanOTMedium;
+      padding: 0 20px;
       font-size: 12px;
-      background-color: $color-aoe-gray-dark;
+      font-family: $font-medium;
+      background-color: $header-login-button-background;
       color: $color-white;
-      vertical-align: top;
+      cursor: pointer;
     }
   }
 

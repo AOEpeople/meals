@@ -1,14 +1,25 @@
+/**************************************
+  Defaults
+**************************************/
 @import "defaults";
 
+/**************************************
+  Helpers
+**************************************/
 @import "helpers/reset";
 @import "helpers/mixins";
 @import "helpers/glyphicons";
 
+/**************************************
+  Modules
+**************************************/
 @import "modules/fonts";
-@import "modules/chosen";
 @import "modules/header";
 @import "modules/meal";
 
+/**************************************
+  Pages
+**************************************/
 @import "pages/base";
 @import "pages/mealsList";
 @import "pages/participant";

@@ -6,7 +6,9 @@
     margin-bottom: 20px;
     
     span {
-      font-family: $font-family-sans-serif;
+      font-family: $font-default;
+      color: $color-secondary;
+      margin-top: 5px;
       display: block;
       font-size: 14px;
     }

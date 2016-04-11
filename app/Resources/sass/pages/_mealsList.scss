@@ -1,6 +1,8 @@
 .meals-list {
   @include clearfix();
 
+  background: url("../images/list-background.png") top center $color-white repeat-y;
+
   .headline {
     text-align: center;
     font-family: "ClanOTBold", sans-serif;
@@ -21,8 +23,16 @@
   }
 
   .week {
-    width: 50%;
+    width: 46%;
     float: left;
+
+    &:last-child {
+      float: right;
+    }
+  }
+
+  .save {
+    text-align: center;
   }
 
   .no-meals {

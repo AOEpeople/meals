@@ -3,14 +3,15 @@
 {% set wrapperClass = 'meals-list' %}
 
 {% block body %}
+
+{% include ':partials:flashMessages.html.twig' %}
+
 <div class="weeks">
 	<div class="week">
 		<div class="headline">
 			{{ 'week'|trans({},'general') }} {{ week | date('W') }} in {{ week | date('Y') }}
 			<span>Mo. 21.3.- Do.24.3.2016</span>
 		</div>
-
-		{% include ':partials:flashMessages.html.twig' %}
 
 		{% if meals | length > 0 %}
 

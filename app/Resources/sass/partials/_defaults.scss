@@ -1,22 +1,31 @@
+// Colors
+$color-white: #FFFFFF;
+$color-light-gray: #F8F8F8;
+$color-dark-gray: #DCE2E6;
+
+$color-aoe-orange: #f57C00;
+$color-aoe-blue: #637B98;
+$color-aoe-background-one: $color-light-gray;
+$color-aoe-background-two: $color-white;
+
+$color-aoe-gray: #9AA9B3;
+$color-aoe-gray-text: #acbdc7;
+$color-aoe-gray-light: #ECF2F5;
+$color-aoe-gray-dark: #7B8B93;
+$color-aoe-gray-darker: #606B72;
+
+// Font
 $font-family-sans-serif: "ClanOTRegular";
-
-// general
-$border-radius-base: 0;
-$border-radius-large: 0;
-$border-radius-small: 0;
-
-// navbar
-// Navbar overrides are not working
-
-// headings
-$headings-color: $color-aoe-orange;
 $headings-font-family: "DINLight";
 
-// buttons
+// Headings
+$headings-color: $color-aoe-orange;
+
+// Buttons
 $btn-primary-bg: $color-aoe-blue;
 $btn-danger-bg: #CD5206; // temp dark orange
 
-// input
+// Input
 $input-bg: $color-aoe-background-one;
 $input-border-radius: 0;
 $input-color: $color-aoe-blue;
@@ -24,29 +33,8 @@ $input-border-focus: $color-aoe-blue;
 $input-border: rgba(255,255,255,0);
 $input-color-placeholder: $color-dark-gray;
 
-// link
+// Link
 $link-hover-decoration: none;
-
-/*
-$input-bg-disabled
-$input-border
-$input-border-radius
-$input-border-radius-large
-$input-border-radius-small
-$input-border-focus
-$input-color-placeholder
-$input-height-base
-$input-height-large
-$input-height-small
-$form-group-margin-bottom
-$legend-color $legend-border-color
-$input-group-addon-bg
-$input-group-addon-border-color
-$cursor-disabled
-*/
-
-
-$jumbotron-bg: $color-aoe-background-one;
 
 $navbar-height: 100px;
 $navbar-padding-vertical: 33px;

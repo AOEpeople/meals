@@ -108,7 +108,7 @@ class MealController extends BaseController {
 		return $this->render('MealzMealBundle:Meal:index.html.twig', array(
 			'meals' => $meals,
 			'days' => $this->groupByDay($meals),
-			'week' => $week,
+			'week' => $startTime,
 		));
 	}
 

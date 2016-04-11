@@ -1,8 +1,6 @@
 // set variables
+@import "partials/defaults";
 @import "partials/fonts";
-@import "partials/colors";
-@import "partials/bootstrap_configuration";
-@import "../bower_components/bootstrap-sass/assets/stylesheets/_bootstrap";
 @import "partials/navbar";
 @import "partials/chosen";
 @import "partials/tables";
@@ -88,19 +86,4 @@ table.table-meals td.table-meal-dish {
   -ms-transform: scale(-1, 1);
   -o-transform: scale(-1, 1);
   transform: scale(-1, 1);
-}
-
-@media (max-width: $screen-xs-max) {
-  .meals-week {
-    .meal-date {
-      text-align: right;
-    }
-
-    .btn-group {
-      width: 100%;
-      .btn {
-        width: 50%;
-      }
-    }
-  }
 }

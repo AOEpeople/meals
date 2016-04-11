@@ -62,7 +62,7 @@ $chosen-highlighted-list-element-bg: $color-aoe-blue;
   overflow: hidden;
   padding: $chosen-dropdown-padding;
   height: $chosen-dropdown-height;
-  border-radius: $border-radius-base;
+  border-radius: 0;
   background-color: $chosen-dropdown-background-color;
   background-clip: padding-box;
   color: #444;
@@ -138,12 +138,12 @@ $chosen-highlighted-list-element-bg: $color-aoe-blue;
   font-size: 1em;
   font-family: sans-serif;
   line-height: normal;
-  border-radius: $border-radius-base;
+  border-radius: 0;
 }
 
 .chosen-container-single .chosen-drop {
   margin-top: -1px;
-  border-radius: 0 0 $border-radius-base $border-radius-base;
+  border-radius: 0;
   background-clip: padding-box
 }
 
@@ -252,7 +252,7 @@ $chosen-highlighted-list-element-bg: $color-aoe-blue;
   margin: 3px 5px 3px 0;
   padding: 3px 20px 3px 5px;
   max-width: 100%;
-  border-radius: $border-radius-base;
+  border-radius: 0;
   background-color: #eee;
   background-size: 100% 19px;
   background-repeat: repeat-x;

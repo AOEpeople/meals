@@ -35,7 +35,7 @@
 			{% endfor %}
 
 		{% else %}
-			<div class="alert alert-warning">No meals this week.</div>
+			{% include 'MealzMealBundle:Meal/partials:noMeals.html.twig'  %}
 		{% endif %}
 	</div>
 
@@ -45,10 +45,7 @@
 			<span>Mo. 21.3.- Do.24.3.2016</span>
 		</div>
 
-		<div class="no-meals">
-			Be patient - we don't have
-			a menu yet but we're working on it :)
-		</div>
+		{% include 'MealzMealBundle:Meal/partials:noMeals.html.twig'  %}
 	</div>
 </div>
 

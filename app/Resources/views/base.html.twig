@@ -1,36 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Mealz for Zombies</title>
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<title>AOEMeals</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('mealz.css') }}" />
 	{% block head %}{% endblock %}
 </head>
 <body>
-	<header>
-		<div class="container">
-			<a class="logo" href="{{ path('MealzMealBundle_home') }}">
-				<img src="../images/logo.png"/>
-				<span>AOEMEALS</span>
-			</a>
-			<div class="header-right">
-			{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-				<div class="header-text">You are logged in as: <strong>{{ app.user.username }}</strong></div>
-				<a class="glyphicon glyphicon-cog" href="#"></a>
-				<a class="glyphicon glyphicon-log-out" href="{{ path('MealzUserBundle_logout') }}"></a>
-			{% else %}
-				<form class="login-form" action="{{ path('MealzUserBundle_checkLogin') }}" method="post">
-					<input type="text" placeholder="Username" class="form-control" name="_username" />
-					<input type="password" placeholder="Password" class="form-control" name="_password" />
-					<button type="submit" class="btn-login">LOGIN</button>
-				</form>
-			{% endif %}
-			</div>
-			<div class="header-toggle hamburger">
-				<span>toggle</span>
-			</div>
-		</div>
-	</header>
+
+	{% include 'header.html.twig'  %}
 
 	{% if wrapperClass is not defined %}
 		{% set wrapperClass = '' %}

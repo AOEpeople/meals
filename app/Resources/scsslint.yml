@@ -1,0 +1,31 @@
+linters:
+  BorderZero:
+    enabled: true
+    convention: none
+
+  ElsePlacement:
+    enabled: true
+    style: new_line
+
+  EmptyLineBetweenBlocks:
+    enabled: true
+    ignore_single_line_blocks: false
+
+  EmptyRule:
+    enabled: true
+
+  NestingDepth:
+    enabled: true
+    max_depth: 4
+    ignore_parent_selectors: true
+
+  PlaceholderInExtend:
+    enabled: true
+
+  SelectorDepth:
+    enabled: true
+    max_depth: 4
+
+  StringQuotes:
+    enabled: true
+    style: single_quotes # or double_quotes

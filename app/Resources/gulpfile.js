@@ -1,7 +1,8 @@
-var gulp = require('gulp');
-var rimraf = require('gulp-rimraf');
-var concat = require('gulp-concat');
-var sass = require('gulp-sass');
+var gulp        = require('gulp');
+var rimraf      = require('gulp-rimraf');
+var concat      = require('gulp-concat');
+var sass        = require('gulp-sass');
+var scsslint    = require('gulp-scss-lint');
 
 gulp.task('clean', function() {
     return gulp.src(['../../web/mealz.css', '../../web/mealz.js', '../../web/fonts', '../../web/images'], {read: false})
@@ -18,6 +19,9 @@ gulp.task('js', ['clean'], function() {
 gulp.task('css', ['clean'], function() {
     gulp.src('./sass/**/*.scss')
         .pipe(sass().on('error', sass.logError))
+        //.pipe(scsslint({
+        //    'config': 'scsslint.yml'
+        //}))
         .pipe(gulp.dest('../../web/'));
 });
 

@@ -55,12 +55,20 @@
   .text {
     width: 80%;
     padding-right: 10px;
+
+    @include breakpoint(small) {
+      width: 70%;
+    }
   }
 
   .participants,
   .action {
     width: 10%;
     text-align: center;
+
+    @include breakpoint(small) {
+      width: 15%;
+    }
   }
 
   .action {

@@ -101,6 +101,8 @@
 
     @include breakpoint(medium) {
       margin-top: 40px;
+      width: 100%;
+      background-position: top left 60%;
     }
   }
 }

@@ -26,8 +26,20 @@ header {
     }
   }
 
+  .header-toggle {
+    display: none;
+
+    @include breakpoint(small) {
+      display: block;
+    }
+  }
+
   .header-right {
     float: right;
+
+    @include breakpoint(small) {
+      display: none;
+    }
 
     a {
       color: $header-link-color;

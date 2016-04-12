@@ -52,6 +52,11 @@ $(document).ready(function() {
     var mealz = new Mealz();
     mealz.styleCheckboxes();
 
+    $('.hamburger').on('click', function() {
+        $(this).toggleClass('is-active');
+        // Todo: Show Login / Navigation
+    });
+
     var participations = [];
 
     $('.participation-checkbox').click(function(e){

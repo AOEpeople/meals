@@ -1,3 +1,6 @@
+/**************************************
+  Clearfix
+**************************************/
 @mixin clearfix() {
 	&:before,
 	&:after {
@@ -7,4 +10,22 @@
 	&:after {
 		clear: both;
 	}
+}
+
+/**************************************
+  Breakpoints
+**************************************/
+@mixin breakpoint($point) {
+  @if $point == large {
+    @media (min-width: $bp-large) { @content ; }
+  }
+  @else if $point == medium {
+    @media (max-width: $bp-medium) { @content ; }
+  }
+  @else if $point == small {
+    @media (max-width: $bp-small) { @content ; }
+  }
+  @else if $point == smaller {
+    @media (max-width: $bp-smaller) { @content ; }
+  }
 }

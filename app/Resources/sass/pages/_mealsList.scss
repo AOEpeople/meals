@@ -1,8 +1,6 @@
 .meals-list {
   @include clearfix();
 
-  background: url("../images/list-background.png") top center $color-white repeat-y;
-
   .headline {
     text-align: center;
     font-family: "ClanOTBold", sans-serif;
@@ -20,11 +18,30 @@
 
   .weeks {
     @include clearfix();
+
+    background: url("../images/list-background.png") top center $color-white repeat-y;
+    margin-top: -25px;
+    padding: 25px 0 40px 0;
+    box-shadow: inset 0px -40px 35px rgba(255,255,255,1);
+
+    @include breakpoint(medium) {
+      background-image: none;
+      box-shadow: none;
+    }
   }
 
   .week {
     width: 46%;
     float: left;
+
+    @include breakpoint(medium) {
+      float: none;
+      width: 100%;
+
+      &:last-child {
+        margin-top: 40px;
+      }
+    }
 
     &:last-child {
       float: right;
@@ -52,5 +69,9 @@
     line-height: 1.5;
     color: $color-secondary;
     text-align: center;
+
+    @include breakpoint(medium) {
+      margin-top: 40px;
+    }
   }
 }

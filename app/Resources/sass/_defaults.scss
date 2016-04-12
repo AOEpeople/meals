@@ -1,4 +1,6 @@
-// Font colors
+/**************************************
+  Colors
+**************************************/
 $color-white: #fff;
 $color-base: #606b72;
 $color-secondary: #acbdc7;
@@ -9,9 +11,18 @@ $color-gray-secondary: #9aa9b3;
 
 $color-gray-light: #ecf2f5;
 
-// Font
+/**************************************
+  Fonts
+**************************************/
 $font-default: "ClanOTRegular", sans-serif;
 $font-light: "ClanOTLight", sans-serif;
 $font-medium: "ClanOTMedium", sans-serif;
 $font-bold: "ClanOTBold", sans-serif;
 
+/**************************************
+  Breakpoints
+**************************************/
+$bp-smaller: 360px;
+$bp-small: 660px;
+$bp-medium: 850px;
+$bp-large: 1220px;

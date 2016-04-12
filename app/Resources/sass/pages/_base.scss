@@ -14,25 +14,24 @@ $a-tags: 'a, a:active, a:hover, a:visited';
 $a-tags-hover: 'a:active, a:hover';
 
 #{$a-tags} {
-	color: $color-gray-primary;
-	text-decoration: none;
+  color: $color-gray-primary;
+  text-decoration: none;
 }
 
 #{$a-tags-hover} {
-	color: $color-white;
+  color: $color-white;
 }
 
 .container {
-	@include clearfix();
+  @include clearfix();
 
-	width: 1220px;
-	margin: 0 auto;
-	padding: 0 40px;
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 0 40px;
 }
 
 .content-wrapper {
   background: $color-white;
-  z-index: 10;
   margin-top: -25px;
   padding-top: 25px;
   padding-bottom: 25px;

@@ -54,7 +54,7 @@ $(document).ready(function() {
 
     $('.hamburger').on('click', function() {
         $(this).toggleClass('is-active');
-        // Todo: Show Login / Navigation
+        $('.header-right').toggleClass('is-open');
     });
 
     var participations = [];

@@ -36,9 +36,36 @@ header {
 
   .header-right {
     float: right;
+    z-index: 10;
+    transition: all .3s ease;
 
     @include breakpoint(small) {
-      display: none;
+      opacity: 0;
+      background: $header-background;
+      width: 100%;
+      position: absolute;
+      left: 0;
+      top: 65px;
+      padding: 20px;
+
+      &.is-open {
+        opacity: 1;
+        top: 70px;
+      }
+
+      .login-form {
+        @include clearfix();
+
+        input {
+          max-width: 100%;
+          width: 100%;
+          margin-bottom: 15px;
+        }
+
+        button {
+          float: right;
+        }
+      }
     }
 
     a {

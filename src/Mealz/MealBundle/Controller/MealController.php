@@ -86,14 +86,9 @@ class MealController extends BaseController {
 	}
 
 	public function indexAction() {
-		try {
-			$startTime = new \DateTime();
-		} catch(\Exception $e) {
-			throw $this->createNotFoundException($this->get('translator')->trans('Invalid Date',array(),'general'), $e);
-		}
-
+		$startTime = new \DateTime('monday this week');
 		$endTime = clone $startTime;
-		$endTime->modify('+1 week');
+		$endTime->modify('+5 days');
 
 		$meals = $this->getMealRepository()->getSortedMeals(
 			$startTime,

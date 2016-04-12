@@ -1,5 +1,6 @@
 .meals-list {
   @include clearfix();
+  padding-bottom: 40px;
 
   .headline {
     text-align: center;
@@ -56,6 +57,34 @@
       text-transform: uppercase;
       font-size: 14px;
       padding: 15px 20px;
+    }
+  }
+
+  .legend {
+    li {
+      display: inline-block;
+      margin-right: 20px;
+
+      @include breakpoint(medium) {
+        margin-bottom: 20px;
+      }
+
+      &:before {
+        display: inline-block;
+        width: 25px;
+        height: 25px;
+        position: relative;
+        top: 6px;
+        margin-right: 10px;
+        content: "";
+        background: $color-gray-secondary;
+      }
+
+      &:first-child {
+        &:before {
+          background: $color-green;
+        }
+      }
     }
   }
 

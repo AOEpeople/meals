@@ -66,13 +66,13 @@ header {
   .login-form {
     input, button {
       height: 35px;
-      padding: 0;
       border: 0;
     }
 
     input {
-      padding-left: 5px;
+      padding: 0 10px;
       margin-right: 10px;
+      max-width: 130px;
     }
 
     .btn-login {
@@ -80,8 +80,10 @@ header {
       font-size: 12px;
       font-family: $font-medium;
       background-color: $header-login-button-background;
-      color: $color-white;
-      cursor: pointer;
+
+      &:hover {
+        background: darken($header-login-button-background, 5%);
+      }
     }
   }
 

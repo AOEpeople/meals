@@ -1,4 +1,4 @@
-button[type="button"] {
+button {
   border: 0;
   background: $color-base;
   color: $color-white;
@@ -6,4 +6,20 @@ button[type="button"] {
   font-size: 12px;
   cursor: pointer;
   padding: 5px 20px;
+  transition: all .3s ease;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+input {
+  font-family: $font-light;
+  font-size: 12px;
+  color: $color-gray-primary;
+  -webkit-font-smoothing: antialiased;
+
+  &:focus {
+    outline: none;
+  }
 }

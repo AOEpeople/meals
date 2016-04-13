@@ -22,12 +22,16 @@
 			{% set participant = meal.getParticipant(app.user.profile) %}
 
 			{# join / leave using a checkbox #}
-			{% if participant and is_allowed_to_leave(meal) %}
-				<input type="checkbox" class="participation-checkbox"
-					   value="{{ link(participant, 'delete') }}"
-					   checked
-					   data-action-type="leave"
-				>
+			{% if participant %}
+				{% if is_allowed_to_leave(meal) %}
+					<input type="checkbox" class="participation-checkbox"
+						   value="{{ link(participant, 'delete') }}"
+						   checked
+						   data-action-type="leave"
+					>
+				{% else %}
+					<input type="checkbox" class="participation-checkbox" checked="checked" disabled="disabled">
+				{% endif %}
 			{% else %}
 				{% if is_allowed_to_join(meal) %}
 					<input type="checkbox"
@@ -36,12 +40,12 @@
 						   data-action-type="join"
 					>
 				{% else %}
-					<input type="checkbox" class="participation-checkbox disabled" value="">
+					<input type="checkbox" class="participation-checkbox" disabled="disabled">
 				{% endif %}
 			{% endif %}
 
 		{% else %}
-			<input type="checkbox" class="participation-checkbox disabled" value="">
+			<input type="checkbox" class="participation-checkbox" disabled="disabled">
 		{% endif %}
 	</div>
 </div>

@@ -3,9 +3,13 @@
     <file source-language="en" datatype="plaintext" original="file.ext">
         <body>
             <trans-unit id="1">
-                <source>week</source>
-                <target>KW</target>
+                <source>week.current</source>
+                <target>Aktuelle Woche</target>
             </trans-unit>
+            <trans-unit id="1b">
+				<source>week.next</source>
+				<target>Nächste Woche</target>
+			</trans-unit>
             <trans-unit id="2">
                 <source>dishes</source>
                 <target>Gerichte</target>

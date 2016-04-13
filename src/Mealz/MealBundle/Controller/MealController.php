@@ -17,6 +17,7 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Mealz\MealBundle\Entity\Week;
 
 class MealController extends BaseController {
 
@@ -86,24 +87,17 @@ class MealController extends BaseController {
 	}
 
 	public function indexAction() {
-		$startTime = new \DateTime('monday this week');
-		$endTime = clone $startTime;
-		$endTime->modify('+5 days');
+		$startTimeCurrentWeek = new \DateTime('monday this week');
+		$currentWeek = $this->getWeek($startTimeCurrentWeek);
 
-		$meals = $this->getMealRepository()->getSortedMeals(
-			$startTime,
-			$endTime,
-			NULL,
-			array(
-				'load_dish' => TRUE,
-				'load_participants' => TRUE,
-			)
-		);
+		$startTimeNextWeek = clone $startTimeCurrentWeek;
+		$startTimeNextWeek->modify('+7 days');
+		$nextWeek = $this->getWeek($startTimeNextWeek);
+
+		$weeks = array($currentWeek, $nextWeek);
 
 		return $this->render('MealzMealBundle:Meal:index.html.twig', array(
-			'meals' => $meals,
-			'days' => $this->groupByDay($meals),
-			'week' => $startTime,
+			'weeks' => $weeks
 		));
 	}
 
@@ -230,4 +224,29 @@ class MealController extends BaseController {
 		return $return;
 	}
 
+	protected function getWeek(\DateTime $startTime) {
+		$endTime = clone $startTime;
+		$endTime->modify('+4 days');
+		$endTime->setTime(23,59,59);
+
+		$meals = $this->getMealRepository()->getSortedMeals(
+			$startTime,
+			$endTime,
+			null,
+			array(
+				'load_dish' => true,
+				'load_participants' => true,
+			)
+		);
+
+		$days = $this->groupByDay($meals);
+
+		$week = new Week();
+		$week->setStartTime($startTime);
+		$week->setEndTime($endTime);
+		$week->setMealsCount(count($meals));
+		$week->setDays($days);
+
+		return $week;
+	}
 }

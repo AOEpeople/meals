@@ -1,0 +1,36 @@
+<div class="week">
+	<div class="headline">
+		{% if 'now' | date('U') < week.startTime | date('U') %}
+			{{ 'week.next'|trans({},'general') }}
+		{% else %}
+			{{ 'week.current'|trans({},'general') }}
+		{% endif %}
+
+		<span>{{ week.startTime | date('D d.m.') }} - {{ week.endTime | date('D d.m.') }}</span>
+	</div>
+
+	{% if week.mealsCount | length > 0 %}
+
+		{% for day,meals in week.days %}
+			<div class="meal">
+
+				{# display week day and date #}
+				<div class="week-day">
+					<a name="{{ day | date('Y-m-d') }}"></a>
+				<span>
+					{{ day | date('D') }}
+				</span>
+				</div>
+
+				{# display meals for given day #}
+				{% for meal in meals %}
+					{% include 'MealzMealBundle:Meal/partials:meal.html.twig' %}
+				{% endfor %}
+
+			</div>
+		{% endfor %}
+
+	{% else %}
+		{% include 'MealzMealBundle:Meal/partials:noMeals.html.twig' %}
+	{% endif %}
+</div>

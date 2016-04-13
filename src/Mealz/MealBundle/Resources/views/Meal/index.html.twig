@@ -7,46 +7,9 @@
 {% include ':partials:flashMessages.html.twig' %}
 
 <div class="weeks">
-	<div class="week">
-		<div class="headline">
-			{{ 'week'|trans({},'general') }} {{ week | date('W') }} in {{ week | date('Y') }}
-			<span>Mo. 21.3.- Do.24.3.2016</span>
-		</div>
-
-		{% if meals | length > 0 %}
-
-			{% for day,meals in days %}
-				<div class="meal">
-
-					{# display week day and date #}
-					<div class="week-day">
-						<a name="{{ day | date('Y-m-d') }}"></a>
-				<span>
-					{{ day | date('D') }}
-				</span>
-					</div>
-
-					{# display meals for given day #}
-					{% for meal in meals %}
-						{% include 'MealzMealBundle:Meal/partials:mealColumn.html.twig'  %}
-					{% endfor %}
-
-				</div>
-			{% endfor %}
-
-		{% else %}
-			{% include 'MealzMealBundle:Meal/partials:noMeals.html.twig'  %}
-		{% endif %}
-	</div>
-
-	<div class="week">
-		<div class="headline">
-			{{ 'week'|trans({},'general') }} {{ week | date('W') }} in {{ week | date('Y') }}
-			<span>Mo. 21.3.- Do.24.3.2016</span>
-		</div>
-
-		{% include 'MealzMealBundle:Meal/partials:noMeals.html.twig'  %}
-	</div>
+	{% for week in weeks %}
+		{% include 'MealzMealBundle:Meal/partials:week.html.twig' %}
+	{% endfor %}
 </div>
 
 <ul class="legend">

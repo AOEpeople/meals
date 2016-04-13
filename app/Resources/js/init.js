@@ -57,23 +57,11 @@ $(document).ready(function() {
         $('.header-right').toggleClass('is-open');
     });
 
-    var participations = [];
-
     $('.participation-checkbox').click(function(e){
+        var checkbox = $(this);
         var link = $(this).attr('value');
-        if ($.inArray(link, participations) != -1) {
-            participations.remove(link);
-        } else {
-            participations.push(link);
-        }
-    });
-
-    $('.participation-submit').click(function(e){
-        var i = 0;
-        for (var arrayLength = participations.length; i < arrayLength; i++) {
-            $.get(participations[i], null, function(){
-                location.reload();
-            });
-        }
+        $.get(link, null, function(data){
+            checkbox.attr('value', data.url)
+        });
     });
 });

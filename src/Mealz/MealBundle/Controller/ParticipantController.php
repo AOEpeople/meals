@@ -139,10 +139,10 @@ class ParticipantController extends BaseController {
 		if ($request->isXmlHttpRequest()) {
 			$ajaxResponse = new JsonResponse();
 			$ajaxResponse->setData(array(
-				'btnAddClass' => 'btn-success',
-				'btnRemoveClass' => 'btn-danger',
-				'btnText' => $this->get('translator')->trans('meal.join', array(), 'action'),
-				'btnUrl' => $this->generateUrl('MealzMealBundle_Meal_join', array(
+				'addClass' => 'btn-success',
+				'removeClass' => 'btn-danger',
+				'text' => $this->get('translator')->trans('meal.join', array(), 'action'),
+				'url' => $this->generateUrl('MealzMealBundle_Meal_join', array(
 					'date' => $date,
 					'dish' => $dish
 				))

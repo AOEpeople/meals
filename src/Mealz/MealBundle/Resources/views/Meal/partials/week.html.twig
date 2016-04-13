@@ -12,7 +12,16 @@
 	{% if week.mealsCount | length > 0 %}
 
 		{% for day,meals in week.days %}
-			<div class="meal">
+
+			{# make is-available css class depend on "is (user) allowed to join" instead of date or time #}
+			{% set available = true %}
+			{% for meal in meals %}
+				{% if not is_allowed_to_join(meal) %}
+					{% set available = false %}
+				{% endif %}
+			{% endfor %}
+
+			<div class="meal {{ available ? 'is-available' : '' }}">
 
 				{# display week day and date #}
 				<div class="week-day">

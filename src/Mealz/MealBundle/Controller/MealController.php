@@ -107,48 +107,50 @@ class MealController extends BaseController {
 	 * @param Request $request
 	 * @param string $date
 	 * @param string $dish
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 * @return \Symfony\Component\HttpFoundation\JsonResponse
 	 */
 	public function joinAction(Request $request, $date, $dish) {
+		$ajaxResponse = new JsonResponse();
+
+
 		if(!$this->getUser()) {
-			throw new AccessDeniedException();
-		}
-		$meal = $this->getMealRepository()->findOneByDateAndDish($date, $dish);
-		if(!$meal) {
-			throw $this->createNotFoundException($this->get('translator')->trans('meal.does_not_exist',array(),'messages'));
-		}
-		if(!$this->getDoorman()->isUserAllowedToJoin($meal)) {
-			throw new AccessDeniedException($this->get('translator')->trans('meal.does_not_exist',array(),'messages'));
+			return new JsonResponse(null, 401);
 		}
 
-		$profile = $this->getProfile();
+		$meal = $this->getMealRepository()->findOneByDateAndDish($date, $dish);
+
+		if(!$meal) {
+			return new JsonResponse(null, 404);
+		}
+
+		if(!$this->getDoorman()->isUserAllowedToJoin($meal)) {
+			return new JsonResponse(null, 403);
+		}
 
 		try {
-
+			$profile = $this->getProfile();
 			$participant = new Participant();
 			$participant->setProfile($profile);
 			$participant->setMeal($meal);
 
 			$em = $this->getDoctrine()->getManager();
-			$em->transactional(function(EntityManager $em) use($participant) {
+			$em->transactional(function (EntityManager $em) use ($participant) {
 				$em->persist($participant);
 				$em->flush();
 			});
 		} catch (ParticipantNotUniqueException $e) {
-
+			return new JsonResponse(null, 422);
 		}
 
 		$ajaxResponse = new JsonResponse();
 		$ajaxResponse->setData(array(
-			'addClass' => '',
-			'removeClass' => '',
-			'text' => $this->get('translator')->trans('meal.leave', array(), 'action'),
+			'participantsCount' => $this->getParticipantRepository()->getTotalParticipationsForMeal($meal),
 			'url' => $this->generateUrl('MealzMealBundle_Participant_delete', array(
 				'participant' => $participant->getId()
 			))
 		));
 
-		return $ajaxResponse;;
+		return $ajaxResponse;
 	}
 
 	/**

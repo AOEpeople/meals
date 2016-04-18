@@ -215,4 +215,21 @@ class ParticipantRepository extends EntityRepository
 
 		return $qb->getQuery()->execute();
 	}
+
+	public function getTotalParticipationsForMeal($meal)
+	{
+		$options = array(
+			'load_meal' => false,
+			'load_profile' => false,
+		);
+
+		$qb = $this->getQueryBuilderWithOptions($options);
+
+		$qb->andWhere('p.meal = :meal');
+		$qb->setParameter('meal', $meal);
+
+		$qb->select('COUNT(p.id)');
+
+		return $qb->getQuery()->getSingleScalarResult();
+	}
 }

@@ -117,16 +117,16 @@ class ParticipantController extends BaseController {
 		));
 	}
 
-	public function deleteAction(Request $request, Participant $participant) {
+	public function deleteAction(Participant $participant) {
 		if(!$this->getUser()) {
-			throw new AccessDeniedException();
+			return new JsonResponse(null, 401);
 		}
 		if($this->getProfile() !== $participant->getProfile() && !$this->getDoorman()->isKitchenStaff()) {
-			throw new AccessDeniedException();
+			return new JsonResponse(null, 403);
 		}
 
 		if(!$this->getDoorman()->isUserAllowedToLeave($participant->getMeal())) {
-			throw new AccessDeniedException($this->get('translator')->trans('meal.not_allowed_to_leave',array(),'messages'));
+			return new JsonResponse(null, 403);
 		}
 
 		$date = $participant->getMeal()->getDateTime()->format('Y-m-d');
@@ -136,22 +136,15 @@ class ParticipantController extends BaseController {
 		$em->remove($participant);
 		$em->flush();
 
-		if ($request->isXmlHttpRequest()) {
-			$ajaxResponse = new JsonResponse();
-			$ajaxResponse->setData(array(
-				'addClass' => 'btn-success',
-				'removeClass' => 'btn-danger',
-				'text' => $this->get('translator')->trans('meal.join', array(), 'action'),
-				'url' => $this->generateUrl('MealzMealBundle_Meal_join', array(
-					'date' => $date,
-					'dish' => $dish
-				))
-			));
+		$ajaxResponse = new JsonResponse();
+		$ajaxResponse->setData(array(
+			'participantsCount' => $this->getParticipantRepository()->getTotalParticipationsForMeal($participant->getMeal()),
+			'url' => $this->generateUrl('MealzMealBundle_Meal_join', array(
+				'date' => $date,
+				'dish' => $dish
+			))
+		));
 
-			return $ajaxResponse;
-		} else {
-			return $this->redirect($this->generateUrlTo($participant->getMeal()));
-		}
+		return $ajaxResponse;
 	}
-
 }

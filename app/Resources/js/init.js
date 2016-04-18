@@ -47,6 +47,26 @@ Mealz.prototype.styleCheckboxes = function() {
     });
 };
 
+Mealz.prototype.toggleParticipation = function ($checkbox) {
+    var $participantsCount = $checkbox.closest('.meal-row').find('.participants-count');
+    var url = $checkbox.attr('value');
+    $.ajax({
+        method: 'GET',
+        url: url,
+        dataType: 'json',
+        success: function (data) {
+            $checkbox.attr('value', data.url)
+            $participantsCount.fadeOut('fast', function () {
+                $participantsCount.text(data.participantsCount);
+                $participantsCount.fadeIn('fast');
+            });
+        },
+        error: function (xhr, statusText, errorThrown) {
+            console.log(xhr.status + ': ' + xhr.statusText);
+        }
+    });
+};
+
 $(document).ready(function() {
 
     var mealz = new Mealz();
@@ -57,11 +77,7 @@ $(document).ready(function() {
         $('.header-right').toggleClass('is-open');
     });
 
-    $('.participation-checkbox').click(function(e){
-        var checkbox = $(this);
-        var link = $(this).attr('value');
-        $.get(link, null, function(data){
-            checkbox.attr('value', data.url)
-        });
+    $('.participation-checkbox').on('click', function () {
+        mealz.toggleParticipation($(this));
     });
 });

@@ -15,23 +15,24 @@ var Mealz = function () {
     this.$body = $('body');
 };
 
+Mealz.prototype.applyCheckboxClasses = function ($checkbox) {
+    var that = this;
+
+    var $checkboxWrapper = $checkbox.closest('.' + that.checkboxWrapperClass);
+
+    $checkboxWrapper.toggleClass('checked', $checkbox.is(':checked'));
+    $checkboxWrapper.toggleClass('disabled', $checkbox.is(':disabled'));
+};
+
 Mealz.prototype.styleCheckboxes = function() {
     var that = this;
 
     this.$checkboxes.wrap('<div class="' + this.checkboxWrapperClass + '"></div>');
 
-    // Helper function to apply certain classes
-    var applyCheckboxClasses = function($checkbox) {
-        var $checkboxWrapper = $checkbox.closest('.' + that.checkboxWrapperClass);
-
-        $checkboxWrapper.toggleClass('checked', $checkbox.is(':checked'));
-        $checkboxWrapper.toggleClass('disabled', $checkbox.is(':disabled'));
-    };
-
     // Check checkbox states
     this.$checkboxes.each(function(idx, checkbox) {
         var $checkbox = $(checkbox);
-        applyCheckboxClasses($checkbox);
+        that.applyCheckboxClasses($checkbox);
     });
 
     // Handle click event on checkbox representer
@@ -43,13 +44,15 @@ Mealz.prototype.styleCheckboxes = function() {
     // Handle change event on checkboxes
     this.$checkboxes.on('change', function() {
         var $checkbox = $(this);
-        applyCheckboxClasses($checkbox);
+        that.toggleParticipation($(this));
     });
 };
 
 Mealz.prototype.toggleParticipation = function ($checkbox) {
+    var that = this;
     var $participantsCount = $checkbox.closest('.meal-row').find('.participants-count');
     var url = $checkbox.attr('value');
+
     $.ajax({
         method: 'GET',
         url: url,
@@ -57,6 +60,7 @@ Mealz.prototype.toggleParticipation = function ($checkbox) {
         success: function (data) {
             $checkbox.attr('value', data.url)
             $participantsCount.fadeOut('fast', function () {
+                that.applyCheckboxClasses($checkbox);
                 $participantsCount.text(data.participantsCount);
                 $participantsCount.fadeIn('fast');
             });
@@ -75,9 +79,5 @@ $(document).ready(function() {
     $('.hamburger').on('click', function() {
         $(this).toggleClass('is-active');
         $('.header-right').toggleClass('is-open');
-    });
-
-    $('.participation-checkbox').on('click', function () {
-        mealz.toggleParticipation($(this));
     });
 });

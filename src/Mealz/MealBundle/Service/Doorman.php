@@ -29,9 +29,10 @@ class Doorman {
 	 */
 	protected $securityContext;
 
-	public function __construct(SecurityContext $securityContext, \DateTime $now = NULL) {
+	public function __construct(SecurityContext $securityContext, $lockToggleParticipationAt = '-1 day 12:00') {
 		$this->securityContext = $securityContext;
-		$this->now = $now ?: new \DateTime();
+		$this->now = time();
+		$this->lockToggleParticipationAt = $lockToggleParticipationAt;
 	}
 
 	public function isUserAllowedToJoin(Meal $meal) {
@@ -41,11 +42,8 @@ class Doorman {
 		if(!$this->securityContext->getToken()->getUser()->getProfile() instanceof Profile) {
 			return FALSE;
 		}
-		if($meal->getDateTime()->getTimestamp() - 9000 > $this->now->getTimestamp()) {
-			// if: meal is in two and a half hours or earlier
-			return TRUE;
-		}
-		return FALSE;
+
+		return $this->isUserAllowedToToggleParticipation($meal->getDateTime());
 	}
 
 	public function isUserAllowedToLeave(Meal $meal) {
@@ -55,11 +53,8 @@ class Doorman {
 		if(!$this->securityContext->getToken()->getUser()->getProfile() instanceof Profile) {
 			return FALSE;
 		}
-		if($meal->getDateTime()->getTimestamp() - 9000 > $this->now->getTimestamp()) {
-			// if: meal is in two and a half hours or earlier
-			return TRUE;
-		}
-		return FALSE;
+
+		return $this->isUserAllowedToToggleParticipation($meal->getDateTime());
 	}
 
 	public function isKitchenStaff() {
@@ -81,4 +76,15 @@ class Doorman {
 		return $this->isKitchenStaff() || $this->isUserAllowedToAddGuest($meal);
 	}
 
+	private function isUserAllowedToToggleParticipation(\DateTime $mealDateTime)
+	{
+		$mealDateTime->modify($this->lockToggleParticipationAt);
+
+		if ($mealDateTime->getTimestamp() > $this->now) {
+			// if: meal is in mealDateTime + $lockToggleParticipationAt (for instance meal time -1 day)
+			return TRUE;
+		}
+
+		return FALSE;
+	}
 }

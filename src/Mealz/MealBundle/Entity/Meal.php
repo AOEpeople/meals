@@ -98,7 +98,7 @@ class Meal
 	 */
 	public function getDateTime()
 	{
-		return $this->dateTime;
+		return clone $this->dateTime;
 	}
 
 	/**

@@ -13,7 +13,7 @@ services:
 
   mealz_meal.doorman:
     class: %mealz_meal.doorman.class%
-    arguments: [ @security.context ]
+    arguments: [ @security.context, %mealz.lock_toggle_participation_at%]
 
   mealz_meal.twig_extension.doorman:
     class: %mealz_meal.twig_extension.doorman.class%

@@ -43,7 +43,6 @@ Mealz.prototype.styleCheckboxes = function() {
 
     // Handle change event on checkboxes
     this.$checkboxes.on('change', function() {
-        var $checkbox = $(this);
         that.toggleParticipation($(this));
     });
 };
@@ -58,7 +57,7 @@ Mealz.prototype.toggleParticipation = function ($checkbox) {
         url: url,
         dataType: 'json',
         success: function (data) {
-            $checkbox.attr('value', data.url)
+            $checkbox.attr('value', data.url);
             $participantsCount.fadeOut('fast', function () {
                 that.applyCheckboxClasses($checkbox);
                 $participantsCount.text(data.participantsCount);

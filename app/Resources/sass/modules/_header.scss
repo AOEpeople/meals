@@ -1,12 +1,12 @@
 $header-height: 120px;
-$header-background : $color-gray-primary;
+$header-background: $color-gray-primary;
 $header-login-button-background: #7b8b93;
 $header-link-color: #acbdc7;
 
 header {
   height: $header-height;
-  background-color: $header-background;
   padding-top: 30px;
+  background-color: $header-background;
 
   .logo {
     @include clearfix();
@@ -21,8 +21,8 @@ header {
     }
 
     span {
-      color: $color-white;
       padding: 8px 0 0 5px;
+      color: $color-white;
     }
   }
 
@@ -35,30 +35,30 @@ header {
   }
 
   .header-right {
-    float: right;
     z-index: 10;
+    float: right;
     transition: all .3s ease;
 
     @include breakpoint(small) {
-      opacity: 0;
-      background: $header-background;
-      width: 100%;
       position: absolute;
-      left: 0;
       top: 65px;
+      left: 0;
+      width: 100%;
       padding: 20px;
+      background: $header-background;
+      opacity: 0;
 
       &.is-open {
-        opacity: 1;
         top: 70px;
+        opacity: 1;
       }
 
       .login-form {
         @include clearfix();
 
         input {
-          max-width: 100%;
           width: 100%;
+          max-width: 100%;
           margin-bottom: 15px;
         }
 
@@ -79,9 +79,9 @@ header {
 
   .header-text {
     display: inline-block;
-    font-size: 12px;
     padding-top: 13px;
     color: $header-link-color;
+    font-size: 12px;
 
     strong {
       padding-left: 5px;
@@ -91,22 +91,23 @@ header {
   }
 
   .login-form {
-    input, button {
+    input,
+    button {
       height: 35px;
-      border: 0;
+      border: none;
     }
 
     input {
-      padding: 0 10px;
-      margin-right: 10px;
       max-width: 130px;
+      margin-right: 10px;
+      padding: 0 10px;
     }
 
     .btn-login {
       padding: 0 20px;
+      background-color: $header-login-button-background;
       font-size: 12px;
       font-family: $font-medium;
-      background-color: $header-login-button-background;
 
       &:hover {
         background: darken($header-login-button-background, 5%);

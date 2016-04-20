@@ -1,30 +1,30 @@
-/**************************************
-  Defaults
-**************************************/
-@import "defaults";
+//**************************************
+//  Defaults
+//**************************************
+@import 'defaults';
 
-/**************************************
-  Helpers
-**************************************/
-@import "helpers/reset";
-@import "helpers/mixins";
-@import "helpers/glyphicons";
+//**************************************
+//  Helpers
+//**************************************
+@import 'helpers/reset';
+@import 'helpers/mixins';
+@import 'helpers/glyphicons';
 
-/**************************************
-  Modules
-**************************************/
-@import "modules/fonts";
-@import "modules/forms";
-@import "modules/checkbox";
-@import "modules/hamburger";
-@import "modules/header";
-@import "modules/meal";
-@import "modules/table";
-@import "modules/headline";
+//**************************************
+//  Modules
+//**************************************
+@import 'modules/font';
+@import 'modules/form';
+@import 'modules/checkbox';
+@import 'modules/hamburger';
+@import 'modules/header';
+@import 'modules/meal';
+@import 'modules/table';
+@import 'modules/headline';
 
-/**************************************
-  Pages
-**************************************/
-@import "pages/base";
-@import "pages/mealsList";
-@import "pages/dishList";
+//**************************************
+//  Pages
+//**************************************
+@import 'pages/base';
+@import 'pages/mealsList';
+@import 'pages/dishList';

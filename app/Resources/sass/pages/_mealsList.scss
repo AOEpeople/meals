@@ -3,27 +3,27 @@
   padding-bottom: 40px;
 
   .headline {
-    text-align: center;
-    font-family: "ClanOTBold", sans-serif;
-    font-size: 24px;
     margin-bottom: 20px;
-    
+    font-size: 24px;
+    font-family: "ClanOTBold", sans-serif;
+    text-align: center;
+
     span {
-      font-family: $font-default;
-      color: $color-secondary;
-      margin-top: 5px;
       display: block;
+      margin-top: 5px;
+      color: $color-secondary;
       font-size: 14px;
+      font-family: $font-default;
     }
   }
 
   .weeks {
     @include clearfix();
 
-    background: url("../images/list-background.png") top center $color-white repeat-y;
     margin-top: -25px;
-    padding: 25px 0 40px 0;
-    box-shadow: inset 0px -40px 35px rgba(255,255,255,1);
+    padding: 25px 0 40px;
+    background: url('../images/list-background.png') top center $color-white repeat-y;
+    box-shadow: inset 0 -40px 35px rgba($color-white, 1);
 
     @include breakpoint(medium) {
       background-image: none;
@@ -32,8 +32,8 @@
   }
 
   .week {
-    width: 46%;
     float: left;
+    width: 46%;
 
     @include breakpoint(medium) {
       float: none;
@@ -50,13 +50,13 @@
   }
 
   .save {
-    text-align: center;
     padding-top: 20px;
+    text-align: center;
 
     .btn-save {
-      text-transform: uppercase;
-      font-size: 14px;
       padding: 15px 20px;
+      font-size: 14px;
+      text-transform: uppercase;
     }
   }
 
@@ -69,19 +69,19 @@
         margin-bottom: 20px;
       }
 
-      &:before {
+      &::before {
+        position: relative;
+        top: 6px;
         display: inline-block;
         width: 25px;
         height: 25px;
-        position: relative;
-        top: 6px;
         margin-right: 10px;
-        content: "";
+        content: '';
         background: $color-gray-secondary;
       }
 
       &:first-child {
-        &:before {
+        &::before {
           background: $color-green;
         }
       }
@@ -91,17 +91,17 @@
   .no-meals {
     width: 350px;
     margin: 200px auto 0;
-    background: url("../images/meal.png") top left 130px no-repeat;
     padding-top: 150px;
-    font-family: $font-bold;
-    font-size: 18px;
-    line-height: 1.5;
     color: $color-secondary;
+    background: url('../images/meal.png') top left 130px no-repeat;
+    font-size: 18px;
+    font-family: $font-bold;
+    line-height: 1.5;
     text-align: center;
 
     @include breakpoint(medium) {
-      margin-top: 40px;
       width: 100%;
+      margin-top: 40px;
       background-position: top left 60%;
     }
   }

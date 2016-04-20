@@ -1,20 +1,21 @@
-/**************************************
-  Clearfix
-**************************************/
+//**************************************
+//  Clearfix
+//**************************************
 @mixin clearfix() {
-	&:before,
-	&:after {
-		content: "";
-		display: table;
-	}
-	&:after {
-		clear: both;
-	}
+  &::before,
+  &::after {
+    display: table;
+    content: '';
+  }
+
+  &::after {
+    clear: both;
+  }
 }
 
-/**************************************
-  Breakpoints
-**************************************/
+//**************************************
+//  Breakpoints
+//**************************************
 @mixin breakpoint($point) {
   @if $point == large {
     @media (min-width: $bp-large) { @content ; }

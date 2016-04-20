@@ -19,9 +19,12 @@
 @import "modules/hamburger";
 @import "modules/header";
 @import "modules/meal";
+@import "modules/table";
+@import "modules/headline";
 
 /**************************************
   Pages
 **************************************/
 @import "pages/base";
 @import "pages/mealsList";
+@import "pages/dishList";

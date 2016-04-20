@@ -1,0 +1,36 @@
+.table {
+
+  .table-header {
+    @include clearfix();
+
+    color: $color-gray-secondary;
+    font-size: 12px;
+    font-family: $font-bold;
+    margin-bottom: 15px;
+
+    @include breakpoint(small) {
+      display: none;
+    }
+  }
+
+  .table-row {
+    @include clearfix();
+
+    font-size: 16px;
+    border-bottom: 1px solid $color-gray-light;
+    margin-bottom: 20px;
+  }
+
+  .table-header,
+  .table-row {
+    > div {
+      float: left;
+      padding: 5px 0;
+
+      @include breakpoint(small) {
+        float: none;
+        width: 100%;
+      }
+    }
+  }
+}

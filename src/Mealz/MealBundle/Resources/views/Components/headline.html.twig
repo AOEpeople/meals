@@ -1,0 +1,18 @@
+{% macro create(order, label, id, class, tools)  %}
+	{%- spaceless -%}
+		<div class="headline-container {{ class }}">
+			<h{{ order }} class="headline" id="{{ id }}">
+				{{ label }}
+			</h{{ order }}>
+			{% if tools|length > 0 %}
+				<div class="headline-tool">
+					{%- for tool in tools -%}
+						<div class="headline-tool">
+							{{ tool|raw }}
+						</div>
+					{% endfor %}
+				</div>
+			{% endif %}
+		</div>
+	{%- endspaceless -%}
+{% endmacro %}

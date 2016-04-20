@@ -1,2 +1,18 @@
 .dish-list {
+  .dish-title {
+    width: 50%;
+  }
+
+  .dish-category {
+    width: 30%
+  }
+
+  .dish-actions {
+    width: 20%;
+  }
+
+  .dish-title,
+  .dish-category {
+    font-family: $font-bold;
+  }
 }

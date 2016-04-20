@@ -5,18 +5,17 @@
 {% block body %}
 
 {% include ':partials:flashMessages.html.twig' %}
-<div class="headline">
-	<h2>{{ 'dishes'|trans({},'general') }}</h2>
-	<div class="actions"></div>
-</div>
+
+{{ MealzHeadline.create(1, 'dishes'|trans({},'general'), '', '', []) }}
+
 <div class="table">
-	<div class="table-headings">
+	<div class="table-header">
 		<div class="dish-title">Title</div>
 		<div class="dish-category">Category</div>
 		<div class="dish-actions">Actions</div>
 	</div>
 	{% for dish in dishes %}
-	<div class="dish-row">
+	<div class="table-row">
 		<div class="dish-title">{{ dish.title }}</div>
 		<div class="dish-category">dish category</div>
 		<div class="dish-actions">

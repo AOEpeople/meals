@@ -1,5 +1,31 @@
-h1 {
-  margin-bottom: 40px;
-  font-size: 24px;
-  font-family: $font-bold;
+.headline-container {
+
+  &.centered {
+    text-align: center;
+  }
+
+  &.left {
+    text-align: left;
+  }
+
+  &.right {
+    text-align: right;
+  }
+
+  &-h1 {
+    margin-bottom: 40px;
+  }
+
+  .sub {
+    display: block;
+    margin-top: 5px;
+    color: $color-secondary;
+    font-size: 14px;
+    font-family: $font-default;
+  }
+
+  h1 {
+    font-size: 24px;
+    font-family: $font-bold;
+  }
 }

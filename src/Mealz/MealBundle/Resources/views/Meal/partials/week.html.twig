@@ -1,13 +1,13 @@
 <div class="week">
-	<div class="headline">
-		{% if 'now' | date('U') < week.startTime | date('U') %}
-			{{ 'week.next'|trans({},'general') }}
-		{% else %}
-			{{ 'week.current'|trans({},'general') }}
-		{% endif %}
 
-		<span>{{ week.startTime | date('D d.m.') }} - {{ week.endTime | date('D d.m.') }}</span>
-	</div>
+	{% set headline = 'week.current'|trans({},'general') %}
+	{% if 'now' | date('U') < week.startTime | date('U') %}
+		{% set headline = 'week.next'|trans({},'general') %}
+	{% endif %}
+
+	{% set headlineSub = week.startTime | date('D d.m.') ~ ' - ' ~ week.endTime | date('D d.m.') %}
+
+	{{ MealzHeadline.create(1, headline, '', 'centered', [], headlineSub) }}
 
 	{% if week.mealsCount | length > 0 %}
 

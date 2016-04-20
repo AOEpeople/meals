@@ -2,21 +2,6 @@
   @include clearfix();
   padding-bottom: 40px;
 
-  .headline {
-    margin-bottom: 20px;
-    font-size: 24px;
-    font-family: "ClanOTBold", sans-serif;
-    text-align: center;
-
-    span {
-      display: block;
-      margin-top: 5px;
-      color: $color-secondary;
-      font-size: 14px;
-      font-family: $font-default;
-    }
-  }
-
   .weeks {
     @include clearfix();
 

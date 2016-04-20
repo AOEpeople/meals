@@ -1,18 +1,22 @@
 .dish-list {
+  .dish-title,
+  .dish-category {
+    font-family: $font-bold;
+  }
+
   .dish-title {
     width: 50%;
   }
 
   .dish-category {
     width: 30%;
+
+    @include breakpoint(small) {
+      font-family: $font-default;
+    }
   }
 
   .dish-actions {
     width: 20%;
-  }
-
-  .dish-title,
-  .dish-category {
-    font-family: $font-bold;
   }
 }

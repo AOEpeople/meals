@@ -17,11 +17,11 @@ gulp.task('js', ['clean'], function() {
 });
 
 gulp.task('css', ['clean'], function() {
-    gulp.src('./sass/**/*.scss')
+    gulp.src(['./sass/**/*.scss', '!./sass/helpers/_glyphicons.scss'])
+        .pipe(scsslint({
+            'config': 'scsslint.yml'
+        }))
         .pipe(sass().on('error', sass.logError))
-        //.pipe(scsslint({
-        //    'config': 'scsslint.yml'
-        //}))
         .pipe(gulp.dest('../../web/'));
 });
 

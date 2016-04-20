@@ -1,3 +1,12 @@
+{###
+# Creates a headline
+#
+# @param order			string      Headline order
+# @param label          string      Headline text
+# @param id             string      Id tag of the headline
+# @param class			string      Additional CSS Classes
+# @param tools			string      Additional elements related to the headline
+#}
 {% macro create(order, label, id, class, tools, sub)  %}
 	{%- import 'MealzMealBundle::Components/_common.html.twig' as commonlib -%}
 	{%- spaceless -%}

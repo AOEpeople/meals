@@ -27,8 +27,6 @@ Mealz.prototype.applyCheckboxClasses = function ($checkbox) {
 Mealz.prototype.styleCheckboxes = function() {
     var that = this;
 
-    this.$checkboxes.wrap('<div class="' + this.checkboxWrapperClass + '"></div>');
-
     // Check checkbox states
     this.$checkboxes.each(function(idx, checkbox) {
         var $checkbox = $(checkbox);

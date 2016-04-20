@@ -1,0 +1,78 @@
+{###
+# Creates a Button (with a <a> as base)
+#
+# @param href       string      Link Target
+# @param icon       string      Icon Name (icon without 'icon-' prefix, fontawesome icon with 'fa-' prefix. (Optional)
+# @param iconPosition string	Position of the Icon (left / right)
+# @param label      string      Label of the button (could be '') for icon only (Translated)
+# @param id         string      Id Tag of the button
+# @param classes    string      Additional CSS Classes (Available classes are: accent (+flat), flat, chromeless, link (+nopadding) )
+# @param tooltip    string      Tooltip Text (Optional, Translated)
+# @param additionalAttributes array of Attributes of the link Object
+#}
+{% macro link(href, icon, iconPosition, label, id, classes, tooltip, additionalAttributes) %}
+    {%- import 'MealzMealBundle::Components/_common.html.twig' as commonlib -%}
+    {%- spaceless -%}
+        {#- support for glyphicon -#}
+        {% if icon|slice(0, 10) == 'glyphicon-' %}
+            {% set glyphicon = icon %}
+            {% set icon = 'glyphicon' %}
+        {% endif %}
+
+        {% set hrefAttr = href | escape %}
+
+        {# set Button href to # if nothing is set (i.e: info tooltips) #}
+        {% if href == '' %}
+            {% set hrefAttr = '#' %}
+        {% endif %}
+
+        <a class="button{% if icon != '' %} icon-{{- icon -}}{% if iconPosition == 'right' %} icon-right{% endif %}{% endif %} {{ classes }}" {# -#}
+           href="{{ hrefAttr | raw }}"
+                {{- commonlib.optionalAttribute('id', id) -}}
+                {{- commonlib.optionalAttribute('title', tooltip) -}}
+                {{- commonlib.additionalAttributes(additionalAttributes) -}}
+        >
+            {%- if icon != '' -%}
+                {% set icon %}
+                    {%- if icon == 'glyphicon' -%}
+                        <i class="glyphicon {{ glyphicon }}"></i>
+
+                    {%- else -%}
+                        <span aria-hidden="true" class="icon"></span>
+                    {%- endif -%}
+                {% endset %}
+            {%- endif -%}
+
+            {%- if iconPosition != 'right' %}
+                {{- icon -}}
+            {% endif -%}
+
+            {%- if label %}
+                {{- label|trans -}}
+            {% endif -%}
+
+            {%- if iconPosition == 'right' %}
+                {{- icon -}}
+            {% endif -%}
+        </a>
+    {%- endspaceless -%}
+{% endmacro %}
+
+{###
+# Creates a form checkbox
+#
+# @param label      string      Label of the button (could be '') for icon only
+# @param classes    string      Additional CSS Classes (Available classes are: accent, flat)
+# @param additionalAttributes array of attributes of the checkbox object
+#}
+{% macro checkbox(label, classes, additionalAttributes) %}
+    {%- import 'MealzMealBundle::Components/_common.html.twig' as commonlib -%}
+    {%- spaceless -%}
+        <div class="checkbox-wrapper">
+            <input type="checkbox" {# -#}
+                    {{- commonlib.optionalAttribute('class', classes) -}}
+                    {{- commonlib.additionalAttributes(additionalAttributes) -}}{# -#}
+                   value="{{- label -}}"/>
+        </div>
+    {%- endspaceless -%}
+{% endmacro %}

@@ -1,31 +1,30 @@
 {% extends '::base.html.twig' %}
 
-{% block body %}
-	<div class="container">
-		<h1>{{ 'dishes'|trans({},'general') }}</h1>
-		{% if is_granted('ROLE_KITCHEN_STAFF') %}
-			<div class="btn-group bottom-buffer">
-				<a
-					class="btn btn-success"
-					href="{{ path('MealzMealBundle_Dish_new') }}"
-				>{{ 'dish.add'|trans({},'action') }}</a>
-			</div>
-		{% endif %}
-		{% include ':partials:flashMessages.html.twig' %}
-		<table class="table table-striped">
-			<tbody>
-			{% for dish in dishes %}
-				<tr>
-					<td>{{ dish.title }}</td>
-					{% if is_granted('ROLE_KITCHEN_STAFF') %}
-					<td>
-						{% include 'MealzMealBundle:DishAdmin/partials:userTools.html.twig' with {'button_class': 'btn-xs'} %}
-					</td>
-					{% endif %}
-				</tr>
-			{% endfor %}
-			</tbody>
-		</table>
-	</div>
+{% set wrapperClass = 'dish-list' %}
 
+{% block body %}
+
+{% include ':partials:flashMessages.html.twig' %}
+<div class="headline">
+	<h2>{{ 'dishes'|trans({},'general') }}</h2>
+	<div class="actions"></div>
+</div>
+<div class="table">
+	<div class="table-headings">
+		<div class="dish-title">Title</div>
+		<div class="dish-category">Category</div>
+		<div class="dish-actions">Actions</div>
+	</div>
+	{% for dish in dishes %}
+	<div class="dish-row">
+		<div class="dish-title">{{ dish.title }}</div>
+		<div class="dish-category">dish category</div>
+		<div class="dish-actions">
+			{% if is_granted('ROLE_KITCHEN_STAFF') %}
+				{% include 'MealzMealBundle:DishAdmin/partials:userTools.html.twig' with {'button_class': 'btn-xs'} %}
+			{% endif %}
+		</div>
+	</div>
+	{% endfor %}
+</div>
 {% endblock %}

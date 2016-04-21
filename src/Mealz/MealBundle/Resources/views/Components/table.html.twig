@@ -1,0 +1,36 @@
+{###
+# Creates a table
+#
+# @param id         string      Id tag of the table
+# @param class      string      Additional CSS Classes
+# @param header     array       Data for the header
+# @param data       array       Data for the content
+#}
+{% macro create(id, class, header, data)  %}
+    {%- import 'MealzMealBundle::Components/_common.html.twig' as commonlib -%}
+    {%- spaceless -%}
+        <div class="table">
+            {% if header | length > 0 %}
+            <div class="table-header">
+                {% for headline in header %}
+                    <div class="table-head {{ headline.class }}">
+                        {{- headline.label | trans -}}
+                    </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if data | length > 0 %}
+                {% for row in data %}
+                    <div class="table-row">
+                        {% for col in row %}
+                            <div class="table-data {{ col.class }}">
+                                {{- col.content | trans | raw -}}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    {%- endspaceless -%}
+{% endmacro %}

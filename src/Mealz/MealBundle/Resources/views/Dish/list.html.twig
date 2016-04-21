@@ -6,26 +6,46 @@
 
 {% include ':partials:flashMessages.html.twig' %}
 
+{# Set data for table header #}
+
+{% set tableHeader = [{
+        'label': 'Title',
+        'class': 'dish-title'
+    }, {
+        'label': 'Category',
+        'class': 'dish-category'
+    }, {
+        'label': 'Actions',
+        'class': 'dish-actions'
+    }]
+%}
+
+{# Set data for table content #}
+
+{% set tableContent = [] %}
+{% for dish in dishes %}
+    {% set tableContent = [{
+        'title': {
+            'content': dish.title,
+            'class': 'dish-title'
+        },
+        'category': {
+            'content': 'category here',
+            'class': 'dish-category'
+        },
+        'actions': {
+            'content': 'actions here',
+            'class': 'dish-actions'
+        }
+    }] | merge(tableContent) %}
+{% endfor %}
+
+{# Start tempalte #}
+
 {{ MealzHeadline.create(1, 'dishes'|trans({},'general'), '', '', [
     MealzButton.link('', 'Create Dish', '', 'transparent', 'glyphicon-pencil')
 ], '') }}
 
-    <div class="table">
-	<div class="table-header">
-		<div class="dish-title">Title</div>
-		<div class="dish-category">Category</div>
-		<div class="dish-actions">Actions</div>
-	</div>
-	{% for dish in dishes %}
-	<div class="table-row">
-		<div class="dish-title">{{ dish.title }}</div>
-		<div class="dish-category">dish category</div>
-		<div class="dish-actions">
-			{% if is_granted('ROLE_KITCHEN_STAFF') %}
-				{% include 'MealzMealBundle:DishAdmin/partials:userTools.html.twig' with {'button_class': 'btn-xs'} %}
-			{% endif %}
-		</div>
-	</div>
-	{% endfor %}
-</div>
+{{ MealzTable.create('dish-table', '', tableHeader, tableContent) }}
+
 {% endblock %}

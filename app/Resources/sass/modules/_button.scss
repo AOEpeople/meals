@@ -44,3 +44,16 @@ a.button {
     padding: 0;
   }
 }
+
+.buttonbar-container {
+  @include clearfix();
+
+  .buttonbar-element {
+    float: left;
+    margin-right: 20px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}

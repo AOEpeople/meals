@@ -55,3 +55,23 @@
         </a>
     {%- endspaceless -%}
 {% endmacro %}
+
+{###
+# Creates a Buttonbar
+#
+# @param id         string      Id Tag of the Buttonbar
+# @param class      string      Additional CSS Classes
+# @param elements   array       Array of Elements to display
+#}
+{% macro buttonbar(id, classes, elements) %}
+    {%- import 'MealzMealBundle::Components/_common.html.twig' as commonlib -%}
+    <div {{ commonlib.optionalAttribute('id', id) -}} {{ commonlib.optionalAttribute('class', 'buttonbar-container '~classes) -}}>
+        {%- for idx, element in elements -%}
+            {% if element is not empty %}
+                <div class="buttonbar-element buttonbar-element-{{ idx }}">
+                    {{- element | raw -}}
+                </div>
+            {% endif %}
+        {%- endfor -%}
+    </div>
+{% endmacro %}

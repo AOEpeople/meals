@@ -34,7 +34,10 @@
             'class': 'dish-category'
         },
         'actions': {
-            'content': 'actions here',
+            'content': MealzButton.buttonbar('', '', [
+                            MealzButton.link('', 'Edit', '', 'transparent', 'glyphicon-pencil'),
+                            MealzButton.link('', 'Delete', '', 'transparent', 'glyphicon-remove')
+                       ]),
             'class': 'dish-actions'
         }
     }] | merge(tableContent) %}

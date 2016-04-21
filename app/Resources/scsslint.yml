@@ -37,3 +37,5 @@ linters:
 
   QualifyingElement:
       allow_element_with_attribute: true
+      allow_element_with_class: true
+      allow_element_with_id: true

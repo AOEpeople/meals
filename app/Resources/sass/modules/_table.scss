@@ -21,6 +21,20 @@
     font-size: 16px;
   }
 
+  .table-data {
+    .button {
+      padding: 0;
+      font-family: $font-default;
+      line-height: 15px;
+      text-transform: none;
+
+      i {
+        top: 2px;
+        font-size: 15px;
+      }
+    }
+  }
+
   .table-header,
   .table-row {
     > div {

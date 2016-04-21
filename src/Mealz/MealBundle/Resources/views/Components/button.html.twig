@@ -57,22 +57,3 @@
         </a>
     {%- endspaceless -%}
 {% endmacro %}
-
-{###
-# Creates a form checkbox
-#
-# @param label      string      Label of the button (could be '') for icon only
-# @param classes    string      Additional CSS Classes (Available classes are: accent, flat)
-# @param additionalAttributes array of attributes of the checkbox object
-#}
-{% macro checkbox(label, classes, additionalAttributes) %}
-    {%- import 'MealzMealBundle::Components/_common.html.twig' as commonlib -%}
-    {%- spaceless -%}
-        <div class="checkbox-wrapper">
-            <input type="checkbox" {# -#}
-                    {{- commonlib.optionalAttribute('class', classes) -}}
-                    {{- commonlib.additionalAttributes(additionalAttributes) -}}{# -#}
-                   value="{{- label -}}"/>
-        </div>
-    {%- endspaceless -%}
-{% endmacro %}

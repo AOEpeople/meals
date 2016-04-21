@@ -23,20 +23,20 @@
 			{# join / leave using a checkbox #}
 			{% if participant %}
 				{% if is_allowed_to_leave(meal) %}
-					{{ MealzButton.checkbox(link(participant, 'delete') ,'participation-checkbox', {'checked': 'checked'}) }}
+					{{ MealzCheckbox.create(link(participant, 'delete') ,'participation-checkbox', {'checked': 'checked'}) }}
 				{% else %}
-					{{ MealzButton.checkbox('' ,'participation-checkbox', {'checked': 'checked', 'disabled': 'disabled'}) }}
+					{{ MealzCheckbox.create('' ,'participation-checkbox', {'checked': 'checked', 'disabled': 'disabled'}) }}
 				{% endif %}
 			{% else %}
 				{% if is_allowed_to_join(meal) %}
-					{{ MealzButton.checkbox(link(meal, 'join') ,'participation-checkbox') }}
+					{{ MealzCheckbox.create(link(meal, 'join') ,'participation-checkbox') }}
 				{% else %}
-					{{ MealzButton.checkbox('' ,'participation-checkbox', {'disabled': 'disabled'}) }}
+					{{ MealzCheckbox.create('' ,'participation-checkbox', {'disabled': 'disabled'}) }}
 				{% endif %}
 			{% endif %}
 
 		{% else %}
-			{{ MealzButton.checkbox('' ,'participation-checkbox', {'disabled': 'disabled'}) }}
+			{{ MealzCheckbox.create('' ,'participation-checkbox', {'disabled': 'disabled'}) }}
 		{% endif %}
 	</div>
 </div>

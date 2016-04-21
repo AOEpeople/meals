@@ -1,4 +1,10 @@
 .dish-list {
+  .headline-container {
+    .button {
+      color: $color-orange;
+    }
+  }
+
   .dish-title,
   .dish-category {
     font-family: $font-bold;

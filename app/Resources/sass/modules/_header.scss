@@ -69,6 +69,7 @@ header {
     }
 
     a {
+      margin-left: 10px;
       color: $header-link-color;
 
       &:hover {
@@ -103,7 +104,7 @@ header {
       padding: 0 10px;
     }
 
-    .btn-login {
+    .button-login {
       padding: 0 20px;
       background-color: $header-login-button-background;
       font-size: 12px;

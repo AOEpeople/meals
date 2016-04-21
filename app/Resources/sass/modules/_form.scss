@@ -1,18 +1,3 @@
-button {
-  padding: 5px 20px;
-  border: none;
-  color: $color-white;
-  background: $color-base;
-  font-size: 12px;
-  font-family: $font-medium;
-  transition: all .3s ease;
-  cursor: pointer;
-
-  &:focus {
-    outline: none;
-  }
-}
-
 input {
   color: $color-gray-primary;
   font-size: 12px;

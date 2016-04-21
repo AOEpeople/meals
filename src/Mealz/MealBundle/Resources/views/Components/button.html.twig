@@ -1,18 +1,18 @@
 {###
 # Creates a Button (with a <a> as base)
 #
-# @param href       string      Link Target
-# @param icon       string      Icon Name (icon without 'icon-' prefix, fontawesome icon with 'fa-' prefix. (Optional)
-# @param iconPosition string	Position of the Icon (left / right)
-# @param label      string      Label of the button (could be '') for icon only (Translated)
-# @param id         string      Id Tag of the button
-# @param classes    string      Additional CSS Classes (Available classes are: accent (+flat), flat, chromeless, link (+nopadding) )
-# @param tooltip    string      Tooltip Text (Optional, Translated)
-# @param additionalAttributes array of Attributes of the link Object
+# @param href                   string      Link Target
+# @param label                  string      Label of the button (could be '') for icon only (Translated)
+# @param id                     string      Id Tag of the button
+# @param class                  string      Additional CSS Classes
+# @param icon                   string      Icon Name (icon without 'icon-' prefix, glyphicon icon with 'glyphicon-' prefix. (Optional)
+# @param iconPosition           string      Position of the Icon (left / right)
+# @param additionalAttributes   array       Array of Attributes of the link Object
 #}
-{% macro link(href, icon, iconPosition, label, id, classes, tooltip, additionalAttributes) %}
+{% macro link(href, label, id, class, icon, iconPosition, additionalAttributes) %}
     {%- import 'MealzMealBundle::Components/_common.html.twig' as commonlib -%}
     {%- spaceless -%}
+
         {#- support for glyphicon -#}
         {% if icon|slice(0, 10) == 'glyphicon-' %}
             {% set glyphicon = icon %}
@@ -26,17 +26,15 @@
             {% set hrefAttr = '#' %}
         {% endif %}
 
-        <a class="button{% if icon != '' %} icon-{{- icon -}}{% if iconPosition == 'right' %} icon-right{% endif %}{% endif %} {{ classes }}" {# -#}
+        <a class="button {% if icon != '' %}icon icon-{{- icon -}}{% if iconPosition == 'right' %} icon-right{% endif %}{% endif %}{% if label == '' %} icon-only{% endif %} {{ class }}" {# -#}
            href="{{ hrefAttr | raw }}"
                 {{- commonlib.optionalAttribute('id', id) -}}
-                {{- commonlib.optionalAttribute('title', tooltip) -}}
                 {{- commonlib.additionalAttributes(additionalAttributes) -}}
         >
             {%- if icon != '' -%}
                 {% set icon %}
                     {%- if icon == 'glyphicon' -%}
                         <i class="glyphicon {{ glyphicon }}"></i>
-
                     {%- else -%}
                         <span aria-hidden="true" class="icon"></span>
                     {%- endif -%}

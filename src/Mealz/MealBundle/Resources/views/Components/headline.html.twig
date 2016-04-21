@@ -11,12 +11,12 @@
 {% macro create(order, label, id, class, tools, sub)  %}
 	{%- import 'MealzMealBundle::Components/_common.html.twig' as commonlib -%}
 	{%- spaceless -%}
-		<div class="headline-container headline-container-h{{ order }} {{ class }}"  {{- commonlib.optionalAttribute('id', id) -}}>
+		<div class="headline-container headline-container-h{{ order }} {% if tools|length > 0 %}headline-container-with-tools{% endif %} {{ class }}"  {{- commonlib.optionalAttribute('id', id) -}}>
 			<h{{ order }} class="headline">
 				{{ label }}
 			</h{{ order }}>
 			{% if tools|length > 0 %}
-				<div class="headline-tool">
+				<div class="headline-tools">
 					{%- for tool in tools -%}
 						<div class="headline-tool">
 							{{ tool|raw }}

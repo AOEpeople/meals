@@ -16,6 +16,7 @@ input[type="checkbox"] {
 
   &.disabled {
     opacity: .7;
+    cursor: not-allowed;
   }
 
   &.checked {

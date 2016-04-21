@@ -1,4 +1,5 @@
 .headline-container {
+  @include clearfix();
 
   &.centered {
     text-align: center;
@@ -14,6 +15,21 @@
 
   &-h1 {
     margin-bottom: 40px;
+  }
+
+  &-with-tools {
+    .headline {
+      float: left;
+    }
+
+    .headline-tools {
+      float: right;
+
+      a.button,
+      button.button {
+        padding: 0;
+      }
+    }
   }
 
   .sub {

@@ -6,9 +6,11 @@
 
 {% include ':partials:flashMessages.html.twig' %}
 
-{{ MealzHeadline.create(1, 'dishes'|trans({},'general'), '', '', [], '') }}
+{{ MealzHeadline.create(1, 'dishes'|trans({},'general'), '', '', [
+    MealzButton.link('', 'Create Dish', '', 'transparent', 'glyphicon-pencil')
+], '') }}
 
-<div class="table">
+    <div class="table">
 	<div class="table-header">
 		<div class="dish-title">Title</div>
 		<div class="dish-category">Category</div>

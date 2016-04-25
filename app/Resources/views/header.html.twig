@@ -1,9 +1,29 @@
+{% set activeRoute = app.request.attributes.get('_route') %}
+
 <header>
 	<div class="container">
 		<a class="logo" href="{{ path('MealzMealBundle_home') }}">
 			<img src="{{ asset('images/logo.png') }}" alt="AOE" />
 			<span>AOEMEALS</span>
 		</a>
+
+		<ul class="navbar">
+			<li>
+				<a href="{{ path('MealzMealBundle_Dish') }}"
+				   class="{{ activeRoute == 'MealzMealBundle_Dish' ? 'active' }}"
+				>
+					Dishes
+				</a>
+			</li>
+			<li>
+				<a href="{{ path('MealzMealBundle_Dish') }}"
+				   class="{{ activeRoute == 'MealzMealBundle_Dish' ? 'active' }}"
+				>
+					Dishesasdasdas
+				</a>
+			</li>
+		</ul>
+
 		<div class="header-right">
 			{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
 				<div class="header-text">You are logged in as: <strong>{{ app.user.username }}</strong></div>

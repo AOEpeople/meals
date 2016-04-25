@@ -26,6 +26,36 @@ header {
     }
   }
 
+  // @TODO: responsive layout for navbar
+  .navbar {
+    float: left;
+    margin-left: 120px;
+    padding-top: 14px;
+
+    li {
+      display: inline-block;
+      margin-right: 30px;
+    }
+
+    a {
+      position: relative;
+      color: $color-white;
+      font-size: 16px;
+      font-family: "ClanOTBold", sans-serif;
+
+      &.active::after {
+        position: absolute;
+        top: 32px;
+        left: 50%;
+        margin-left: -10px;
+        border: 10px solid transparent;
+        border-bottom-color: $color-white;
+        content: ' ';
+        pointer-events: none;
+      }
+    }
+  }
+
   .header-toggle {
     display: none;
 

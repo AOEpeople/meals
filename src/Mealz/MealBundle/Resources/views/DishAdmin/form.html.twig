@@ -5,7 +5,7 @@
 {% block body %}
 
 {% if dish is defined %}
-	{% set headline = 'Edit dish' %}
+	{% set headline = 'Edit dish "' ~ dish.title ~ '"' %}
 {% else %}
 	{% set headline = 'Create new dish' %}
 {% endif %}

@@ -6,6 +6,17 @@
   }
 
   .table {
+
+    .table-row {
+      .dish-title,
+      .dish-category,
+      .dish-actions {
+        @include breakpoint(small) {
+          width: 100%;
+        }
+      }
+    }
+
     .dish-title,
     .dish-category {
       font-family: $font-bold;
@@ -20,8 +31,8 @@
 
       @include breakpoint(small) {
         padding-top: 0;
-        font-family: $font-default;
         font-size: 13px;
+        font-family: $font-default;
       }
     }
 
@@ -34,15 +45,15 @@
     }
 
     // Special button and buttonbar style on mobile view
-    @include breakpoint(small) {
-      .buttonbar-element {
+    .buttonbar-element {
+      @include breakpoint(small) {
         width: 48%;
         margin-right: 0;
 
         a {
           display: block;
-          background: $color-gray-light;
           padding: 10px 15px;
+          background: $color-gray-light;
         }
 
         &:last-child {

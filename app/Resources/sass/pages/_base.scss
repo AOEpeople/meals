@@ -40,3 +40,25 @@ $a-tags-hover: 'a:active, a:hover';
   padding-bottom: 25px;
   background: $color-white;
 }
+
+button {
+  border: none;
+  padding: 12px 20px;
+  color: $color-white;
+  background-color: $color-gray-primary;
+  font-family: "ClanOTMedium", sans-serif;
+}
+
+input,
+select {
+  border: none;
+  font-family: "ClanOTMedium", sans-serif;
+}
+
+input {
+  padding: 10px;
+}
+
+select {
+  padding: 5px;
+}

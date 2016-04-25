@@ -1,7 +1,9 @@
+$fieldset-padding: 13px;
+
 .dish-form {
 
   .wrapper-form {
-    padding: 37px;
+    padding: 40px;
     background-color: $color-gray-light;
     text-align: center;
 
@@ -13,7 +15,7 @@
   fieldset {
     float: left;
     width: 50%;
-    padding: 13px 13px 0;
+    padding: $fieldset-padding $fieldset-padding 0;
     text-align: left;
 
     @include breakpoint(small) {
@@ -28,11 +30,11 @@
   }
 
   select {
-    width: 40%;
+    width: 50%;
     margin-bottom: 30px;
 
     @include breakpoint(small) {
-      width: calc(100% - 26px);
+      width: calc(100% - (#{$fieldset-padding} * 2));
     }
   }
 }

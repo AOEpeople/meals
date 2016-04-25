@@ -2,12 +2,19 @@
 
 namespace Mealz\MealBundle\Controller;
 
-use Doctrine\ORM\Query;
-use Mealz\MealBundle\Entity\DishRepository;
+use Mealz\MealBundle\Entity\Dish;
+use Mealz\MealBundle\Form\DishForm;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class DishController extends BaseController {
 
-	public function listAction() {
+	public function listAction()
+	{
+		if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
+			throw new AccessDeniedException();
+		}
+
 		$dishes = $this->getDishRepository()->getSortedDishes();
 
 		return $this->render('MealzMealBundle:Dish:list.html.twig', array(
@@ -15,4 +22,94 @@ class DishController extends BaseController {
 		));
 	}
 
+	public function newAction(Request $request) {
+		if(!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
+			throw new AccessDeniedException();
+		}
+
+		$dish = new Dish();
+
+		$form = $this->createForm(new DishForm(), $dish);
+
+		// handle form submission
+		if($request->isMethod('POST')) {
+			$form->handleRequest($request);
+
+			if ($form->isValid()) {
+				$em = $this->getDoctrine()->getManager();
+				$em->persist($dish);
+				$em->flush();
+
+				$this->addFlashMessage('Dish has been added.', 'success');
+
+				return $this->redirect($this->generateUrlTo($dish));
+			}
+		}
+
+		return $this->render('MealzMealBundle:Dish:form.html.twig', array(
+//			'dish' => $dish,
+			'form' => $form->createView()
+		));
+	}
+
+	public function editAction(Request $request, $slug) {
+		if(!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
+			throw new AccessDeniedException();
+		}
+
+		$dish = $this->getDoctrine()->getRepository('MealzMealBundle:Dish')->findOneBy(array('slug' => $slug));
+		if(!$dish) {
+			throw $this->createNotFoundException();
+		}
+
+		$form = $this->createForm(new DishForm(), $dish);
+
+		// handle form submission
+		if($request->isMethod('POST')) {
+			$form->handleRequest($request);
+
+			if ($form->isValid()) {
+				$em = $this->getDoctrine()->getManager();
+				$em->persist($dish);
+				$em->flush();
+
+				$this->addFlashMessage('Dish was modified.', 'success');
+
+				return $this->redirect($this->generateUrlTo($dish));
+			}
+		}
+
+		return $this->render('MealzMealBundle:Dish:form.html.twig', array(
+			'dish' => $dish,
+			'form' => $form->createView()
+		));
+	}
+
+	public function deleteAction($slug) {
+		if(!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
+			throw new AccessDeniedException();
+		}
+		$dish = $this->getDoctrine()->getRepository('MealzMealBundle:Dish')->findOneBy(array('slug' => $slug));
+		if(!$dish) {
+			throw $this->createNotFoundException();
+		}
+
+		$em = $this->getDoctrine()->getManager();
+
+		if($dish->getMeals()->count() > 0) {
+			// if there are meals assigned: just hide this record, but do not delete it
+			$dish->setEnabled(FALSE);
+			$em->persist($dish);
+			$em->flush();
+			$this->addFlashMessage(sprintf('Record "%s" was hidden.', $dish->getTitle()), 'success');
+		} else {
+			// else: no need to keep an unused record
+			$em->remove($dish);
+			$em->flush();
+
+			$this->addFlashMessage(sprintf('Record "%s" was deleted.', $dish->getTitle()), 'success');
+		}
+
+		return $this->redirect($this->generateUrl('MealzMealBundle_Dish'));
+	}
 }

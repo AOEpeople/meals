@@ -7,6 +7,7 @@
 			<span>AOEMEALS</span>
 		</a>
 
+		{% if is_granted('ROLE_KITCHEN_STAFF') %}
 		<ul class="navbar">
 			<li>
 				<a href="{{ path('MealzMealBundle_Dish') }}"
@@ -15,14 +16,8 @@
 					Dishes
 				</a>
 			</li>
-			<li>
-				<a href="{{ path('MealzMealBundle_Dish') }}"
-				   class="{{ activeRoute == 'MealzMealBundle_Dish' ? 'active' }}"
-				>
-					Dishesasdasdas
-				</a>
-			</li>
 		</ul>
+		{% endif %}
 
 		<div class="header-right">
 			{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}

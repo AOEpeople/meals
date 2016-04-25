@@ -14,6 +14,10 @@
                 <source>dishes</source>
                 <target>Gerichte</target>
             </trans-unit>
+            <trans-unit id="2b">
+                <source>list.dish</source>
+                <target>Liste der Gerichte</target>
+            </trans-unit>
             <trans-unit id="3">
                 <source>meals</source>
                 <target>Mahlzeiten</target>
@@ -45,6 +49,14 @@
             <trans-unit id="12b">
                 <source>does_not_pay</source>
                 <target>zahlt nicht</target>
+            </trans-unit>
+            <trans-unit id="13">
+                <source>title</source>
+                <target>Titel</target>
+            </trans-unit>
+            <trans-unit id="14">
+                <source>description</source>
+                <target>Beschreibung</target>
             </trans-unit>
         </body>
     </file>

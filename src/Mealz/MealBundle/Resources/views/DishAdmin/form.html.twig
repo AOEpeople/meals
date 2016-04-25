@@ -1,39 +1,38 @@
 {% extends '::base.html.twig' %}
 
+{% set wrapperClass = 'dish-form' %}
+
 {% block body %}
-	<div class="container">
-		<h1>{% if dish is defined %}Edit "{{ dish.title }}"{% else %}Create new dish{% endif %}</h1>
 
-		{% include ':partials:flashMessages.html.twig' %}
+{% include ':partials:flashMessages.html.twig' %}
 
-		{{ form_start(form) }}
-			<div class="row">
-				<div class="col-md-6">
-					{{ form_row(form.title_en) }}
-					{{ form_row(form.description_en) }}
-				</div>
-				<div class="col-md-6">
-				{{ form_row(form.title_de) }}
-				{{ form_row(form.description_de) }}
-				</div>
-			</div>
-			<div class="form-group">
-				{{ form_label(form.image) }}
-				{{ form_errors(form.image) }}
-				{{ form_widget(form.image) }}
-				{% if dish is defined and dish.image %}
-					<a href="{{ dish.image.webPath }}" >{{ dish.image.fileName }}</a>
-				{% endif %}
-			</div>
-			<div class="row">
-				<div class="col-md-6">
+{% if dish is defined %}
+	{% set headline = 'Edit dish' %}
+{% else %}
+	{% set headline = 'Create new dish' %}
+{% endif %}
 
-				</div>
-				<div class="col-md-6">
+{{ MealzHeadline.create(1, headline) }}
 
-				</div>
-			</div>
-			{{ form_rest(form) }}
-		{{ form_end(form) }}
-	</div>
+<div class="wrapper-form">
+	{{ form_start(form) }}
+
+	<fieldset>
+		<legend>English</legend>
+		{{ form_widget(form.title_en) }}
+		{{ form_widget(form.description_en) }}
+	</fieldset>
+
+	<fieldset>
+		<legend>Deutsch</legend>
+		{{ form_widget(form.title_de) }}
+		{{ form_widget(form.description_de) }}
+	</fieldset>
+
+	{{ form_widget(form.category) }}
+
+	{{ form_rest(form) }}
+	{{ form_end(form) }}
+</div>
+
 {% endblock %}

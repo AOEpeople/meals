@@ -1,0 +1,26 @@
+.dish-form {
+
+  .wrapper-form {
+    background-color: $color-gray-light;
+    padding: 37px;
+    text-align: center;
+  }
+
+  fieldset {
+    text-align: left;
+    width: 50%;
+    float: left;
+    padding: 13px 13px 0 13px;
+
+    input {
+      margin-bottom: 20px;
+      width: 100%;
+    }
+
+  }
+
+  select {
+    width: 40%;
+    margin-bottom: 30px;
+  }
+}

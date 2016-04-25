@@ -35,8 +35,8 @@
         },
         'actions': {
             'content': MealzButton.buttonbar('', 'buttonbar-dish-actions', [
-                            MealzButton.link('', 'Edit', '', 'transparent', 'glyphicon-pencil'),
-                            MealzButton.link('', 'Delete', '', 'transparent', 'glyphicon-remove')
+                            MealzButton.link(link(dish, 'edit'), 'Edit', '', 'transparent', 'glyphicon-pencil'),
+                            MealzButton.link(link(dish, 'delete'), 'Delete', '', 'transparent', 'glyphicon-remove')
                        ]),
             'class': 'dish-actions'
         }
@@ -45,8 +45,8 @@
 
 {# Start tempalte #}
 
-{{ MealzHeadline.create(1, 'dishes'|trans({},'general'), '', '', [
-    MealzButton.link('', 'Create Dish', '', 'transparent', 'glyphicon-pencil')
+{{ MealzHeadline.create(1, 'list.dish'|trans({},'general'), '', '', [
+    MealzButton.link(path('MealzMealBundle_Dish_new'), 'Create Dish', '', 'transparent', 'glyphicon-pencil')
 ], '') }}
 
 {{ MealzTable.create('dish-table', '', tableHeader, tableContent) }}

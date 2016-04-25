@@ -21,12 +21,17 @@ input {
 
 select {
   @extend %base-styling;
+
+  position: relative;
   padding: 10px;
   border: none;
   border-radius: 0;
   background: $color-white;
   cursor: pointer;
+  text-indent: 1px;
+  text-overflow: '';
   -webkit-appearance: none;
+  -moz-appearance: none;
 
   &:focus {
     outline: none;

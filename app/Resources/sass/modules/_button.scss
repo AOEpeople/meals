@@ -33,6 +33,11 @@ a.button {
     background: transparent;
   }
 
+  &.small {
+    padding: 10px 20px;
+    line-height: 15px;
+  }
+
   &.icon-right {
     i {
       margin-right: 0;

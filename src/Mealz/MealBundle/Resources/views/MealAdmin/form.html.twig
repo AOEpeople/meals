@@ -4,8 +4,6 @@
 	<div class="container">
 		<h1>{% if meal is defined %}Edit "{% if meal.dish %}{{ meal.dish.title }}{% endif %}"{% else %}Create new meal{% endif %}</h1>
 
-		{% include ':partials:flashMessages.html.twig' %}
-
 		{{ form_start(form) }}
 			<div class="row">
 				<div class="col-md-4">

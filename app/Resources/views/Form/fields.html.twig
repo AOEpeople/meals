@@ -10,3 +10,9 @@
 		</datalist>
 	{% endspaceless %}
 {% endblock %}
+
+{%- block form_widget_simple -%}
+    {%- set type = type|default('text') -%}
+    asd
+    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+{%- endblock form_widget_simple -%}

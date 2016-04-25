@@ -22,6 +22,9 @@
 	{% endif %}
 
 	<div class="container content-wrapper {{ wrapperClass }}">
+
+        {% include ':partials:flashMessages.html.twig' %}
+
 		{% block body %}
 		{% endblock %}
 	</div>

@@ -1,10 +1,43 @@
-input {
+%base-styling {
+  border: none;
   color: $color-gray-primary;
   font-size: 12px;
   font-family: $font-light;
+}
+
+input {
+  @extend %base-styling;
   -webkit-font-smoothing: antialiased;
+
+  &[type="text"] {
+    width: 100%;
+    padding: 10px;
+  }
 
   &:focus {
     outline: none;
+  }
+}
+
+select {
+  @extend %base-styling;
+  padding: 10px;
+  border: none;
+  border-radius: 0;
+  background: $color-white;
+  cursor: pointer;
+  -webkit-appearance: none;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+fieldset {
+  width: 100%;
+
+  legend {
+    font-size: 12px;
+    font-family: $font-bold;
   }
 }

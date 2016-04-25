@@ -1,22 +1,20 @@
 .dish-form {
 
   .wrapper-form {
-    background-color: $color-gray-light;
     padding: 37px;
+    background-color: $color-gray-light;
     text-align: center;
   }
 
   fieldset {
-    text-align: left;
-    width: 50%;
     float: left;
-    padding: 13px 13px 0 13px;
+    width: 50%;
+    padding: 13px 13px 0;
+    text-align: left;
+  }
 
-    input {
-      margin-bottom: 20px;
-      width: 100%;
-    }
-
+  input {
+    margin-bottom: 20px;
   }
 
   select {

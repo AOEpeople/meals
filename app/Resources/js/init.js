@@ -68,6 +68,23 @@ Mealz.prototype.toggleParticipation = function ($checkbox) {
     });
 };
 
+Mealz.prototype.createDish = function ($link) {
+    var that = this;
+    var url = $link.attr('href');
+
+    $.ajax({
+        method: 'GET',
+        url: url,
+        dataType: 'json',
+        success: function (data) {
+            $('.test').html(data);
+        },
+        error: function (xhr, statusText, errorThrown) {
+            console.log(xhr.status + ': ' + xhr.statusText);
+        }
+    });
+};
+
 $(document).ready(function() {
 
     var mealz = new Mealz();
@@ -76,5 +93,15 @@ $(document).ready(function() {
     $('.hamburger').on('click', function() {
         $(this).toggleClass('is-active');
         $('.header-right').toggleClass('is-open');
+    });
+
+    $('.dish-create').on('click', function(e) {
+        e.preventDefault();
+        mealz.createDish($(this));
+    });
+
+    $('.dish-edit').on('click', function (e) {
+        e.preventDefault();
+        mealz.createDish($(this));
     });
 });

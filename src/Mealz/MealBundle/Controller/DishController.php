@@ -4,8 +4,10 @@ namespace Mealz\MealBundle\Controller;
 
 use Mealz\MealBundle\Entity\Dish;
 use Mealz\MealBundle\Form\DishForm;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\VarDumper\VarDumper;
 
 class DishController extends BaseController {
 
@@ -20,6 +22,56 @@ class DishController extends BaseController {
 		return $this->render('MealzMealBundle:Dish:list.html.twig', array(
 			'dishes' => $dishes
 		));
+	}
+
+	public function getDishFormAction(Request $request) {
+		if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
+			throw new AccessDeniedException();
+		}
+
+		$dish = $this->getDoctrine()->getRepository('MealzMealBundle:Dish')->findOneBy(array('slug' => $slug));
+
+		if (!$dish) {
+			$dish = new Dish();
+		}
+
+		$form = $this->createForm(new DishForm(), $dish, array(
+			'action' => $this->generateUrl('MealzMealBundle_Dish_new'),
+		));
+		$renderedForm = $this->render(
+			'MealzMealBundle:Dish/partials:form.html.twig',
+			array(
+				'form' => $form->createView()
+			))->getContent()
+		;
+
+		return new JsonResponse($renderedForm);
+	}
+
+	public function getEditDishFormAction(Request $request, $slug)
+	{
+		if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
+			throw new AccessDeniedException();
+		}
+
+		$dish = $this->getDoctrine()->getRepository('MealzMealBundle:Dish')->findOneBy(array('slug' => $slug));
+
+		if (!$dish) {
+			// @TODO: json response 404
+			throw $this->createNotFoundException();
+		}
+
+		$form = $this->createForm(new DishForm(), $dish, array(
+			'action' => $this->generateUrl('MealzMealBundle_Dish_edit', array('slug' => $slug)),
+		));
+
+		$renderedForm = $this->render(
+			'MealzMealBundle:Dish/partials:form.html.twig',
+			array(
+				'form' => $form->createView()
+			))->getContent();
+
+		return new JsonResponse($renderedForm);
 	}
 
 	public function newAction(Request $request) {
@@ -46,10 +98,7 @@ class DishController extends BaseController {
 			}
 		}
 
-		return $this->render('MealzMealBundle:Dish:form.html.twig', array(
-//			'dish' => $dish,
-			'form' => $form->createView()
-		));
+		return $this->redirectToRoute('MealzMealBundle_Dish');
 	}
 
 	public function editAction(Request $request, $slug) {
@@ -74,15 +123,10 @@ class DishController extends BaseController {
 				$em->flush();
 
 				$this->addFlashMessage('Dish was modified.', 'success');
-
-				return $this->redirect($this->generateUrlTo($dish));
 			}
 		}
 
-		return $this->render('MealzMealBundle:Dish:form.html.twig', array(
-			'dish' => $dish,
-			'form' => $form->createView()
-		));
+		return $this->redirectToRoute('MealzMealBundle_Dish');
 	}
 
 	public function deleteAction($slug) {
@@ -110,6 +154,6 @@ class DishController extends BaseController {
 			$this->addFlashMessage(sprintf('Record "%s" was deleted.', $dish->getTitle()), 'success');
 		}
 
-		return $this->redirect($this->generateUrl('MealzMealBundle_Dish'));
+		return $this->redirectToRoute('MealzMealBundle_Dish');
 	}
 }

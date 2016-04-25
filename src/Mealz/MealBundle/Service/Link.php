@@ -79,9 +79,11 @@ class Link {
 
 	public function linkDish(Dish $dish, $action = NULL, $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH) {
 		$action = $action ?: 'edit';
-		if($action === 'edit' || $action === 'delete') {
+		if($action === 'delete') {
 			// admin actions
 			return $this->router->generate('MealzMealBundle_Dish_' . $action, array('slug' => $dish->getSlug()), $referenceType);
+		} elseif ($action === 'edit') {
+			return $this->router->generate('MealzMealBundle_Dish_Form_' . $action, array('slug' => $dish->getSlug()), $referenceType);
 		} else {
 			throw new \InvalidArgumentException(sprintf(
 				'linking to "%s" action on a %s object is not configured.',

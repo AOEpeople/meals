@@ -12,7 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 /**
  * form to add or edit a dish
  */
-class DishAdminForm extends AbstractType {
+class DishForm extends AbstractType {
 
 	public function buildForm(FormBuilderInterface $builder, array $options) {
 		$builder

@@ -68,16 +68,16 @@ Mealz.prototype.toggleParticipation = function ($checkbox) {
     });
 };
 
-Mealz.prototype.createDish = function ($link) {
-    var that = this;
-    var url = $link.attr('href');
+Mealz.prototype.loadDishForm = function ($element) {
+    var url = $element.attr('href');
 
     $.ajax({
         method: 'GET',
         url: url,
         dataType: 'json',
         success: function (data) {
-            $('.test').html(data);
+            $('.dish-form').html(data);
+            $('.dish-form').removeClass('hidden');
         },
         error: function (xhr, statusText, errorThrown) {
             console.log(xhr.status + ': ' + xhr.statusText);
@@ -95,13 +95,8 @@ $(document).ready(function() {
         $('.header-right').toggleClass('is-open');
     });
 
-    $('.dish-create').on('click', function(e) {
+    $('.dish-load-form').on('click', function(e) {
         e.preventDefault();
-        mealz.createDish($(this));
-    });
-
-    $('.dish-edit').on('click', function (e) {
-        e.preventDefault();
-        mealz.createDish($(this));
+        mealz.loadDishForm($(this));
     });
 });

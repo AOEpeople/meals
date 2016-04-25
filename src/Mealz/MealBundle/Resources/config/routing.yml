@@ -76,13 +76,13 @@ MealzMealBundle_Dish:
     pattern:  /dish
     defaults: { _controller: "MealzMealBundle:Dish:list" }
 
-MealzMealBundle_Dish_Form:
+MealzMealBundle_Dish_Form_empty:
     pattern:  /dish/form
-    defaults: { _controller: "MealzMealBundle:Dish:getDishForm" }
+    defaults: { _controller: "MealzMealBundle:Dish:getEmptyForm" }
 
-MealzMealBundle_Dish_Form_edit:
+MealzMealBundle_Dish_Form_preFilled:
     pattern:  /dish/form/{slug}
-    defaults: { _controller: "MealzMealBundle:Dish:getEditDishForm" }
+    defaults: { _controller: "MealzMealBundle:Dish:getPreFilledForm" }
 
 MealzMealBundle_Dish_new:
     pattern:  /dish/new

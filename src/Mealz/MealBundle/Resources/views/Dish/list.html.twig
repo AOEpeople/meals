@@ -33,7 +33,7 @@
         },
         'actions': {
             'content': MealzButton.buttonbar('', 'buttonbar-dish-actions', [
-                            MealzButton.link(link(dish, 'edit'), 'Edit', '', 'dish-edit transparent', 'glyphicon-pencil'),
+                            MealzButton.link(link(dish, 'edit'), 'Edit', '', 'dish-edit dish-load-form transparent', 'glyphicon-pencil'),
                             MealzButton.link(link(dish, 'delete'), 'Delete', '', 'transparent', 'glyphicon-remove')
                        ]),
             'class': 'dish-actions'
@@ -44,10 +44,11 @@
 {# Start tempalte #}
 
 {{ MealzHeadline.create(1, 'list.dish'|trans({},'general'), '', '', [
-    MealzButton.link(path('MealzMealBundle_Dish_Form'), 'Create Dish', '', 'dish-create transparent', 'glyphicon-pencil')
+    MealzButton.link(path('MealzMealBundle_Dish_Form_empty'), 'Create Dish', '', 'dish-create dish-load-form transparent', 'glyphicon-pencil')
 ], '') }}
+
+<div class="dish-form hidden"></div>
 
 {{ MealzTable.create('dish-table', '', tableHeader, tableContent) }}
 
-    <div class="test"></div>
 {% endblock %}

@@ -83,7 +83,7 @@ class Link {
 			// admin actions
 			return $this->router->generate('MealzMealBundle_Dish_' . $action, array('slug' => $dish->getSlug()), $referenceType);
 		} elseif ($action === 'edit') {
-			return $this->router->generate('MealzMealBundle_Dish_Form_' . $action, array('slug' => $dish->getSlug()), $referenceType);
+			return $this->router->generate('MealzMealBundle_Dish_Form_preFilled', array('slug' => $dish->getSlug()), $referenceType);
 		} else {
 			throw new \InvalidArgumentException(sprintf(
 				'linking to "%s" action on a %s object is not configured.',

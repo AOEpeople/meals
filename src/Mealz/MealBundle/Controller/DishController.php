@@ -24,31 +24,18 @@ class DishController extends BaseController {
 		));
 	}
 
-	public function getDishFormAction(Request $request) {
+	public function getEmptyFormAction(Request $request) {
 		if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
 			throw new AccessDeniedException();
 		}
 
-		$dish = $this->getDoctrine()->getRepository('MealzMealBundle:Dish')->findOneBy(array('slug' => $slug));
+		$dish = new Dish();
+		$action = $this->generateUrl('MealzMealBundle_Dish_new');
 
-		if (!$dish) {
-			$dish = new Dish();
-		}
-
-		$form = $this->createForm(new DishForm(), $dish, array(
-			'action' => $this->generateUrl('MealzMealBundle_Dish_new'),
-		));
-		$renderedForm = $this->render(
-			'MealzMealBundle:Dish/partials:form.html.twig',
-			array(
-				'form' => $form->createView()
-			))->getContent()
-		;
-
-		return new JsonResponse($renderedForm);
+		return new JsonResponse($this->getRenderedDishForm($dish, $action));
 	}
 
-	public function getEditDishFormAction(Request $request, $slug)
+	public function getPreFilledFormAction(Request $request, $slug)
 	{
 		if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
 			throw new AccessDeniedException();
@@ -57,21 +44,12 @@ class DishController extends BaseController {
 		$dish = $this->getDoctrine()->getRepository('MealzMealBundle:Dish')->findOneBy(array('slug' => $slug));
 
 		if (!$dish) {
-			// @TODO: json response 404
-			throw $this->createNotFoundException();
+			return new JsonResponse(null, 404);
 		}
 
-		$form = $this->createForm(new DishForm(), $dish, array(
-			'action' => $this->generateUrl('MealzMealBundle_Dish_edit', array('slug' => $slug)),
-		));
+		$action = $this->generateUrl('MealzMealBundle_Dish_edit', array('slug' => $slug));
 
-		$renderedForm = $this->render(
-			'MealzMealBundle:Dish/partials:form.html.twig',
-			array(
-				'form' => $form->createView()
-			))->getContent();
-
-		return new JsonResponse($renderedForm);
+		return new JsonResponse($this->getRenderedDishForm($dish, $action));
 	}
 
 	public function newAction(Request $request) {
@@ -93,8 +71,6 @@ class DishController extends BaseController {
 				$em->flush();
 
 				$this->addFlashMessage('Dish has been added.', 'success');
-
-				return $this->redirect($this->generateUrlTo($dish));
 			}
 		}
 
@@ -155,5 +131,16 @@ class DishController extends BaseController {
 		}
 
 		return $this->redirectToRoute('MealzMealBundle_Dish');
+	}
+
+	private function getRenderedDishForm(Dish $dish, $action)
+	{
+		$form = $this->createForm(new DishForm(), $dish, array(
+			'action' => $action,
+		));
+
+		$renderedForm = $this->render('MealzMealBundle:Dish/partials:form.html.twig', array('form' => $form->createView()));
+
+		return $renderedForm->getContent();
 	}
 }

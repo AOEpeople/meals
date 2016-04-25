@@ -15,7 +15,7 @@
   }
 
   .dish-category {
-    width: 30%;
+    width: 37%;
 
     @include breakpoint(small) {
       font-family: $font-default;
@@ -23,6 +23,6 @@
   }
 
   .dish-actions {
-    width: 20%;
+    width: 13%;
   }
 }

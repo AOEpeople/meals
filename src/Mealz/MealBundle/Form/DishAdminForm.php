@@ -58,7 +58,7 @@ class DishAdminForm extends AbstractType {
 				'mapped' => false
 			])
 			->add('save', SubmitType::class, array(
-				'label' => 'SAVE',
+				'label' => 'Save',
                 'attr' => [
                     'class' => 'button small'
                 ]

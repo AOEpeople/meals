@@ -4,6 +4,10 @@
     padding: 37px;
     background-color: $color-gray-light;
     text-align: center;
+
+    @include breakpoint(small) {
+      padding: 20px;
+    }
   }
 
   fieldset {
@@ -11,6 +15,12 @@
     width: 50%;
     padding: 13px 13px 0;
     text-align: left;
+
+    @include breakpoint(small) {
+      float: none;
+      width: 100%;
+      margin-bottom: 20px;
+    }
   }
 
   input {
@@ -20,5 +30,9 @@
   select {
     width: 40%;
     margin-bottom: 30px;
+
+    @include breakpoint(small) {
+      width: calc(100% - 26px);
+    }
   }
 }

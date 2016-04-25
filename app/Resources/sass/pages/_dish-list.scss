@@ -5,24 +5,50 @@
     }
   }
 
-  .dish-title,
-  .dish-category {
-    font-family: $font-bold;
-  }
-
-  .dish-title {
-    width: 50%;
-  }
-
-  .dish-category {
-    width: 37%;
-
-    @include breakpoint(small) {
-      font-family: $font-default;
+  .table {
+    .dish-title,
+    .dish-category {
+      font-family: $font-bold;
     }
-  }
 
-  .dish-actions {
-    width: 13%;
+    .dish-title {
+      width: 50%;
+    }
+
+    .dish-category {
+      width: 37%;
+
+      @include breakpoint(small) {
+        padding-top: 0;
+        font-family: $font-default;
+        font-size: 13px;
+      }
+    }
+
+    .dish-actions {
+      width: 13%;
+
+      @include breakpoint(small) {
+        padding-bottom: 20px;
+      }
+    }
+
+    // Special button and buttonbar style on mobile view
+    @include breakpoint(small) {
+      .buttonbar-element {
+        width: 48%;
+        margin-right: 0;
+
+        a {
+          display: block;
+          background: $color-gray-light;
+          padding: 10px 15px;
+        }
+
+        &:last-child {
+          float: right;
+        }
+      }
+    }
   }
 }

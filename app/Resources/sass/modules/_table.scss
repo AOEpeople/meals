@@ -42,8 +42,8 @@
       padding: 5px 0;
 
       @include breakpoint(small) {
-        float: none;
-        width: 100%;
+        float: none!important;
+        width: 100%!important;
       }
     }
   }

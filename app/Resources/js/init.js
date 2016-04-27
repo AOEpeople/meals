@@ -70,14 +70,21 @@ Mealz.prototype.toggleParticipation = function ($checkbox) {
 
 Mealz.prototype.loadDishForm = function ($element) {
     var url = $element.attr('href');
+    var $form = $('.dish-form');
+
+    if ($element.hasClass('dish-create')) {
+        $form.addClass('form-dish-create');
+    } else {
+        $form.removeClass('form-dish-create');
+    }
 
     $.ajax({
         method: 'GET',
         url: url,
         dataType: 'json',
         success: function (data) {
-            $('.dish-form').html(data);
-            $('.dish-form').removeClass('hidden');
+            $form.html(data);
+            $form.removeClass('hidden');
         },
         error: function (xhr, statusText, errorThrown) {
             console.log(xhr.status + ': ' + xhr.statusText);

@@ -6,12 +6,31 @@ $fieldset-padding: 13px;
   margin-bottom: 40px;
 
   .wrapper-form {
+
+    position: relative;
+
     padding: 40px;
     background-color: $color-gray-light;
     text-align: center;
 
     @include breakpoint(small) {
       padding: 20px;
+    }
+  }
+
+  &.form-dish-create .wrapper-form {
+    &::after {
+      position: absolute;
+      top: -20px;
+      right: 50px;
+      margin-left: -10px;
+      border: 10px solid transparent;
+      border-bottom-color: $color-gray-light;
+      content: ' ';
+
+      @include breakpoint(small) {
+        border: none;
+      }
     }
   }
 

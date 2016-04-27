@@ -3,10 +3,17 @@ var rimraf      = require('gulp-rimraf');
 var concat      = require('gulp-concat');
 var sass        = require('gulp-sass');
 var scsslint    = require('gulp-scss-lint');
+var jshint      = require('gulp-jshint');
 
 gulp.task('clean', function() {
     return gulp.src(['../../web/mealz.css', '../../web/mealz.js', '../../web/fonts', '../../web/images'], {read: false})
         .pipe(rimraf({force: true}))
+});
+
+gulp.task('jshint', ['clean'], function() {
+    gulp.src('js/**/*.js')
+        .pipe(jshint())
+        .pipe(jshint.reporter('jshint-stylish'));
 });
 
 gulp.task('js', ['clean'], function() {
@@ -40,5 +47,5 @@ gulp.task('watch', function() {
     gulp.watch(['./sass/**/*', 'js/**/*.js'], ['default']);
 });
 
-gulp.task('default', ['fonts', 'images', 'js', 'css']);
+gulp.task('default', ['fonts', 'images', 'jshint', 'js', 'css']);
 

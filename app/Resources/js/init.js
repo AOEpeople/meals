@@ -2,7 +2,7 @@ var Mealz = function () {
     this.checkboxWrapperClass = 'checkbox-wrapper';
     this.$checkboxes = $('input.checkbox, input[type="checkbox"]');
     this.selectWrapperClass = 'select-wrapper';
-    this.$selects = $('select');
+    this.$selects = $("select");
     this.$body = $('body');
 };
 

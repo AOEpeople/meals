@@ -23,18 +23,19 @@ class LoadDishes extends AbstractFixture implements OrderedFixtureInterface {
 	function load(ObjectManager $manager) {
 		$this->objectManager = $manager;
 
-		$this->addDish('Braaaaaiiinnnzzzzzz with Tomato-Sauce');
-		$this->addDish('Tasty Worms');
-		$this->addDish('Braaaaaiiinnnzzzzzz with Cheese-Sauce');
-		$this->addDish('Fish (so juicy sweat)');
-		$this->addDish('Limbs');
+		$this->addDish('Braaaaaiiinnnzzzzzz with Tomato-Sauce', 'Braaaaaiiinnnzzzzzz with Tomato-Sauce DE');
+		$this->addDish('Tasty Worms', 'Tast Worms DE');
+		$this->addDish('Braaaaaiiinnnzzzzzz with Cheese-Sauce', 'Braaaaaiiinnnzzzzzz with Cheese-Sauce DE');
+		$this->addDish('Fish (so juicy sweat)', 'Fish (so juicy sweat) DE');
+		$this->addDish('Limbs', 'Limbs DE');
 
 		$this->objectManager->flush();
 	}
 
-	protected function addDish($title) {
+	protected function addDish($title, $titleDe) {
 		$dish = new Dish();
 		$dish->setTitleEn($title);
+		$dish->setTitleDe($titleDe);
 
 		$this->objectManager->persist($dish);
 		$this->addReference('dish-' . $this->counter++, $dish);

@@ -49,8 +49,9 @@ class Dish
 	protected $description_en = NULL;
 
 	/**
+	 * @Assert\NotBlank()
 	 * @Assert\Length(min=8, max=255)
-	 * @ORM\Column(type="string", length=255, nullable=TRUE)
+	 * @ORM\Column(type="string", length=255, nullable=FALSE)
 	 * @var string
 	 */
 	protected $title_de;

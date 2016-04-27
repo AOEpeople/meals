@@ -17,11 +17,18 @@
 
     width: 100%;
 
+    thead {
+      @include breakpoint(small) {
+        display: none;
+      }
+    }
+
     .table-row {
       .dish-title,
       .dish-category,
       .dish-actions {
         @include breakpoint(small) {
+          display: block;
           width: 100%;
         }
       }

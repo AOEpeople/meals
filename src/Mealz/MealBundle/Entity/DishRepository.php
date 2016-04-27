@@ -47,7 +47,7 @@ class DishRepository extends EntityRepository {
 		$qb->where('d.enabled = 1');
 
 		// ORDER BY
-		$qb->orderBy('d.title_' . $this->currentLocale, 'ASC');
+		$qb->orderBy('d.title_' . $this->currentLocale, 'DESC');
 
 		return $qb->getQuery()->execute();
 

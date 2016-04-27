@@ -68,6 +68,23 @@ Mealz.prototype.toggleParticipation = function ($checkbox) {
     });
 };
 
+Mealz.prototype.loadDishForm = function ($element) {
+    var url = $element.attr('href');
+
+    $.ajax({
+        method: 'GET',
+        url: url,
+        dataType: 'json',
+        success: function (data) {
+            $('.dish-form').html(data);
+            $('.dish-form').removeClass('hidden');
+        },
+        error: function (xhr, statusText, errorThrown) {
+            console.log(xhr.status + ': ' + xhr.statusText);
+        }
+    });
+};
+
 $(document).ready(function() {
 
     var mealz = new Mealz();
@@ -76,5 +93,10 @@ $(document).ready(function() {
     $('.hamburger').on('click', function() {
         $(this).toggleClass('is-active');
         $('.header-content').toggleClass('is-open');
+    });
+
+    $('.dish-load-form').on('click', function(e) {
+        e.preventDefault();
+        mealz.loadDishForm($(this));
     });
 });

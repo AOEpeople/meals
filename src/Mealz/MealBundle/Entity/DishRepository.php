@@ -43,6 +43,9 @@ class DishRepository extends EntityRepository {
 			$qb->leftJoin('d.meals', 'm');
 		}
 
+		// WHERE
+		$qb->where('d.enabled = 1');
+
 		// ORDER BY
 		$qb->orderBy('d.title_' . $this->currentLocale, 'ASC');
 

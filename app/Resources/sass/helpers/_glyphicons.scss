@@ -309,3 +309,17 @@ $icon-font-svg-id: "glyphicons_halflingsregular";
 .glyphicon-menu-right             { &:before { content: "\e258"; } }
 .glyphicon-menu-down              { &:before { content: "\e259"; } }
 .glyphicon-menu-up                { &:before { content: "\e260"; } }
+
+
+.icon-svg {
+  .icon {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    margin-right: 10px;
+  }
+}
+
+.svg-dish {
+  @include svg-icon('dish', $color-orange);
+}

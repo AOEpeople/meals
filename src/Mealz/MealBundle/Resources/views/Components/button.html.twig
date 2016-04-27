@@ -19,6 +19,11 @@
             {% set icon = 'glyphicon' %}
         {% endif %}
 
+        {% if icon|slice(0, 4) == 'svg-' %}
+            {% set svgIcon = icon %}
+            {% set icon = 'svg' %}
+        {% endif %}
+
         {% set hrefAttr = href | escape %}
 
         {# set Button href to # if nothing is set (i.e: info tooltips) #}
@@ -26,7 +31,7 @@
             {% set hrefAttr = '#' %}
         {% endif %}
 
-        <a class="button {% if icon != '' %}icon icon-{{- icon -}}{% if iconPosition == 'right' %} icon-right{% endif %}{% endif %}{% if label == '' %} icon-only{% endif %} {{ class }}" {# -#}
+        <a class="button {% if icon != '' %}icon icon-{{- icon -}} {% if iconPosition == 'right' %} icon-right{% endif %}{% endif %}{% if label == '' %} icon-only{% endif %} {{ class }}" {# -#}
            href="{{ hrefAttr | raw }}"
                 {{- commonlib.optionalAttribute('id', id) -}}
                 {{- commonlib.additionalAttributes(additionalAttributes) -}}
@@ -36,7 +41,7 @@
                     {%- if icon == 'glyphicon' -%}
                         <i class="glyphicon {{ glyphicon }}"></i>
                     {%- else -%}
-                        <span aria-hidden="true" class="icon"></span>
+                        <span aria-hidden="true" class="icon {{ svgIcon }}"></span>
                     {%- endif -%}
                 {% endset %}
             {%- endif -%}

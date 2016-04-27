@@ -1,7 +1,15 @@
 .dish-list {
   .headline-container {
     .button {
+      margin-top: -10px;
       color: $color-orange;
+    }
+
+    .icon.svg-dish {
+      position: relative;
+      top: 4px;
+      width: 30px;
+      height: 30px;
     }
   }
 

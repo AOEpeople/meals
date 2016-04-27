@@ -12,6 +12,8 @@ Array.prototype.remove = function () {
 var Mealz = function () {
     this.checkboxWrapperClass = 'checkbox-wrapper';
     this.$checkboxes = $('input.checkbox, input[type="checkbox"]');
+    this.selectWrapperClass = 'select-wrapper';
+    this.$selects = $('select');
     this.$body = $('body');
 };
 
@@ -43,6 +45,10 @@ Mealz.prototype.styleCheckboxes = function() {
     this.$checkboxes.on('change', function() {
         that.toggleParticipation($(this));
     });
+};
+
+Mealz.prototype.styleSelects = function() {
+    this.$selects.wrap('<div class="' + this.selectWrapperClass + '"></div>');
 };
 
 Mealz.prototype.toggleParticipation = function ($checkbox) {
@@ -96,6 +102,7 @@ $(document).ready(function() {
 
     var mealz = new Mealz();
     mealz.styleCheckboxes();
+    mealz.styleSelects();
 
     $('.hamburger').on('click', function() {
         $(this).toggleClass('is-active');

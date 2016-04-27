@@ -51,8 +51,9 @@ $fieldset-padding: 13px;
     margin-bottom: 20px;
   }
 
-  select {
+  .select-wrapper {
     width: 50%;
+    margin: 0 auto;
     margin-bottom: 30px;
 
     @include breakpoint(small) {

@@ -24,6 +24,7 @@ select {
   @extend %base-styling;
 
   position: relative;
+  width: 100%;
   padding: 10px;
   border: none;
   border-radius: 0;
@@ -36,6 +37,21 @@ select {
 
   &:focus {
     outline: none;
+  }
+}
+
+.select-wrapper {
+  position: relative;
+  display: inline-block;
+
+  &::after {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    border: 5px solid transparent;
+    border-top-color: $color-gray-primary;
+    content: ' ';
+    pointer-events: none;
   }
 }
 

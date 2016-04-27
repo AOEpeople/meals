@@ -18,6 +18,7 @@ gulp.task('jshint', ['clean'], function() {
 
 gulp.task('js', ['clean'], function() {
     gulp.src(['bower_components/jquery/dist/jquery.js',
+              'bower_components/datatables.net/js/jquery.dataTables.js',
               'js/**/*.js'])
         .pipe(concat('mealz.js'))
         .pipe(gulp.dest('../../web/'));

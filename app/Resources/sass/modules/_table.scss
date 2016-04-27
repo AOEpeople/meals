@@ -1,27 +1,26 @@
 .table {
 
   .table-header {
-    @include clearfix();
-
-    margin-bottom: 15px;
     color: $color-gray-secondary;
     font-size: 12px;
     font-family: $font-bold;
+    text-align: left;
 
-    @include breakpoint(small) {
-      display: none;
+    .table-head {
+      padding-bottom: 5px;
     }
   }
 
   .table-row {
-    @include clearfix();
-
-    margin-bottom: 20px;
     border-bottom: 1px solid $color-gray-light;
     font-size: 16px;
   }
 
   .table-data {
+
+    padding-top: 20px;
+    padding-bottom: 5px;
+
     .button {
       padding: 0;
       font-family: $font-default;
@@ -35,16 +34,9 @@
     }
   }
 
-  .table-header,
-  .table-row {
-    > div {
-      float: left;
-      padding: 5px 0;
-
-      @include breakpoint(small) {
-        float: none;
-        width: 100%;
-      }
+  &.table-sortable {
+    .table-head {
+      outline: none;
     }
   }
 }

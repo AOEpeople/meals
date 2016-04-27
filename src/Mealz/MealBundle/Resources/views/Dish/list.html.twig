@@ -14,7 +14,7 @@
         'class': 'dish-category'
     }, {
         'label': 'Actions',
-        'class': 'dish-actions'
+        'class': 'dish-actions no-sort'
     }]
 %}
 
@@ -49,6 +49,6 @@
 
 <div class="dish-form" style="display: none"></div>
 
-{{ MealzTable.create('dish-table', '', tableHeader, tableContent) }}
+{{ MealzTable.create('dish-table', 'table-sortable', tableHeader, tableContent) }}
 
 {% endblock %}

@@ -82,8 +82,10 @@ Mealz.prototype.loadDishForm = function ($element) {
         url: url,
         dataType: 'json',
         success: function (data) {
-            $('.dish-form').html(data);
-            $('.dish-form').removeClass('hidden');
+            var $dishForm = $('.dish-form');
+            $dishForm.html(data);
+            $dishForm.removeClass('hidden');
+            new Mealz().styleSelects();
         },
         error: function (xhr, statusText, errorThrown) {
             console.log(xhr.status + ': ' + xhr.statusText);

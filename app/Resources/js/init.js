@@ -114,4 +114,14 @@ $(document).ready(function() {
         e.preventDefault();
         mealz.loadDishForm($(this));
     });
+
+    $('#dish-table').DataTable({
+        paging: false,
+        searching: false,
+        info: false,
+        columnDefs: [{
+            targets: 'no-sort',
+            orderable: false
+        }]
+    });
 });

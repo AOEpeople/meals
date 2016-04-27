@@ -7,6 +7,8 @@
 
   .table {
 
+    width: 100%;
+
     .table-row {
       .dish-title,
       .dish-category,
@@ -15,11 +17,6 @@
           width: 100%;
         }
       }
-    }
-
-    .dish-title,
-    .dish-category {
-      font-family: $font-bold;
     }
 
     .dish-title {

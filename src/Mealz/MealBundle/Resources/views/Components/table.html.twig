@@ -9,28 +9,32 @@
 {% macro create(id, class, header, data)  %}
     {%- import 'MealzMealBundle::Components/_common.html.twig' as commonlib -%}
     {%- spaceless -%}
-        <div class="table">
+        <table {% if id %}id="{{ id }}"{% endif %} class="table {{ class }}">
             {% if header | length > 0 %}
-            <div class="table-header">
+            <thead>
+                <tr class="table-header">
                 {% for headline in header %}
-                    <div class="table-head {{ headline.class }}">
+                    <th class="table-head {{ headline.class }}">
                         {{- headline.label | trans -}}
-                    </div>
+                    </th>
                 {% endfor %}
-            </div>
+                </tr>
+            </thead>
             {% endif %}
 
             {% if data | length > 0 %}
+                <tbody>
                 {% for row in data %}
-                    <div class="table-row">
+                    <tr class="table-row">
                         {% for col in row %}
-                            <div class="table-data {{ col.class }}">
+                            <td class="table-data {{ col.class }}">
                                 {{- col.content | trans | raw -}}
-                            </div>
+                            </td>
                         {% endfor %}
-                    </div>
+                    </tr>
                 {% endfor %}
+                </tbody>
             {% endif %}
-        </div>
+        </table>
     {%- endspaceless -%}
 {% endmacro %}

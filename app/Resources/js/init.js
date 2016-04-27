@@ -76,12 +76,12 @@ Mealz.prototype.toggleParticipation = function ($checkbox) {
 
 Mealz.prototype.loadDishForm = function ($element) {
     var url = $element.attr('href');
-    var $form = $('.dish-form');
+    var $dishForm = $('.dish-form');
 
     if ($element.hasClass('dish-create')) {
-        $form.addClass('form-dish-create');
+        $dishForm.addClass('form-dish-create');
     } else {
-        $form.removeClass('form-dish-create');
+        $dishForm.removeClass('form-dish-create');
     }
 
     $.ajax({
@@ -89,8 +89,9 @@ Mealz.prototype.loadDishForm = function ($element) {
         url: url,
         dataType: 'json',
         success: function (data) {
-            $form.html(data);
-            $form.removeClass('hidden');
+            $dishForm.html(data);
+            $dishForm.removeClass('hidden');
+            new Mealz().styleSelects();
         },
         error: function (xhr, statusText, errorThrown) {
             console.log(xhr.status + ': ' + xhr.statusText);

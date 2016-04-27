@@ -7,30 +7,29 @@
 			<span>AOEMEALS</span>
 		</a>
 
-		{% if is_granted('ROLE_KITCHEN_STAFF') %}
-		<ul class="navbar">
-			<li>
-				<a href="{{ path('MealzMealBundle_Dish') }}"
-				   class="{{ activeRoute == 'MealzMealBundle_Dish' ? 'active' }}"
-				>
-					Dishes
-				</a>
-			</li>
-		</ul>
-		{% endif %}
-
-		<div class="header-right">
-			{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-				<div class="header-text">You are logged in as: <strong>{{ app.user.username }}</strong></div>
-				{{ MealzButton.link('', '', '', '', 'glyphicon-cog') }}
-				{{ MealzButton.link(path('MealzUserBundle_logout'), '', '', '', 'glyphicon-log-out') }}
-			{% else %}
-				<form class="login-form" action="{{ path('MealzUserBundle_checkLogin') }}" method="post">
-					<input type="text" placeholder="Username" class="form-control" name="_username" />
-					<input type="password" placeholder="Password" class="form-control" name="_password" />
-					<button type="submit" class="button button-login">LOGIN</button>
-				</form>
-			{% endif %}
+		<div class="header-content">
+            {% if is_granted('ROLE_KITCHEN_STAFF') %}
+                <ul class="navbar">
+                    <li>
+                        <a href="{{ path('MealzMealBundle_Dish') }}" class="{{ activeRoute == 'MealzMealBundle_Dish' ? 'active' }}">
+                            Dishes
+                        </a>
+                    </li>
+                </ul>
+            {% endif %}
+            <div class="login">
+                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                    <div class="login-text">You are logged in as: <strong>{{ app.user.username }}</strong></div>
+                    {{ MealzButton.link('', '', '', '', 'glyphicon-cog') }}
+                    {{ MealzButton.link(path('MealzUserBundle_logout'), '', '', '', 'glyphicon-log-out') }}
+                {% else %}
+                    <form class="login-form" action="{{ path('MealzUserBundle_checkLogin') }}" method="post">
+                        <input type="text" placeholder="Username" class="form-control" name="_username" />
+                        <input type="password" placeholder="Password" class="form-control" name="_password" />
+                        <button type="submit" class="button button-login">LOGIN</button>
+                    </form>
+                {% endif %}
+            </div>
 		</div>
 		<div class="header-toggle hamburger">
 			<span>toggle</span>

@@ -3,6 +3,8 @@ $header-background: $color-gray-primary;
 $header-login-button-background: #7b8b93;
 $header-link-color: #acbdc7;
 
+$logo-width: 260px;
+
 header {
   height: $header-height;
   padding-top: 30px;
@@ -11,6 +13,7 @@ header {
   .logo {
     @include clearfix();
 
+    width: $logo-width;
     float: left;
     font-size: 26px;
     font-family: $font-bold;
@@ -26,32 +29,51 @@ header {
     }
   }
 
-  // @TODO: responsive layout for navbar
   .navbar {
     float: left;
-    margin-left: 120px;
-    padding-top: 14px;
+
+    @include breakpoint(small) {
+      float: none;
+      margin-bottom: 20px;
+      padding: 20px 0;
+      border-top: 1px solid lighten($header-background, 10%);
+      border-bottom: 1px solid lighten($header-background, 10%);
+    }
 
     li {
       display: inline-block;
       margin-right: 30px;
+
+      &:last-child {
+        margin-right: 0;
+      }
     }
 
     a {
       position: relative;
       color: $color-white;
       font-size: 16px;
-      font-family: "ClanOTBold", sans-serif;
+      font-family: $font-bold;
+
+      @include breakpoint(small) {
+        &.active {
+          text-decoration: underline;
+        }
+      }
 
       &.active::after {
         position: absolute;
-        top: 32px;
+        top: 34px;
         left: 50%;
         margin-left: -10px;
         border: 10px solid transparent;
         border-bottom-color: $color-white;
         content: ' ';
         pointer-events: none;
+
+        @include breakpoint(small) {
+          border: none;
+        }
       }
     }
   }
@@ -64,9 +86,11 @@ header {
     }
   }
 
-  .header-right {
+  .header-content {
+    width: calc(100% - #{$logo-width});
+    padding-top: 15px;
     z-index: 10;
-    float: right;
+    float: left;
     transition: all .3s ease;
 
     @include breakpoint(small) {
@@ -98,26 +122,33 @@ header {
       }
     }
 
-    a {
-      margin-left: 10px;
-      color: $header-link-color;
+    .login {
+      float: right;
 
-      &:hover {
-        color: $color-white;
+      @include breakpoint(small) {
+        float: none;
       }
-    }
-  }
 
-  .header-text {
-    display: inline-block;
-    padding-top: 13px;
-    color: $header-link-color;
-    font-size: 12px;
+      &-text {
+        display: inline-block;
+        color: $header-link-color;
+        font-size: 12px;
 
-    strong {
-      padding-left: 5px;
-      color: $color-white;
-      font-family: $font-bold;
+        strong {
+          padding-left: 5px;
+          color: $color-white;
+          font-family: $font-bold;
+        }
+      }
+
+      a {
+        margin-left: 10px;
+        color: $header-link-color;
+
+        &:hover {
+          color: $color-white;
+        }
+      }
     }
   }
 

@@ -75,6 +75,6 @@ $(document).ready(function() {
 
     $('.hamburger').on('click', function() {
         $(this).toggleClass('is-active');
-        $('.header-right').toggleClass('is-open');
+        $('.header-content').toggleClass('is-open');
     });
 });

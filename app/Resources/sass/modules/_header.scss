@@ -87,7 +87,6 @@ header {
   }
 
   .header-content {
-    z-index: 10;
     float: left;
     width: calc(100% - #{$logo-width});
     padding-top: 15px;

@@ -1,14 +1,3 @@
-Array.prototype.remove = function () {
-    var what, a = arguments, L = a.length, ax;
-    while (L && this.length) {
-        what = a[--L];
-        while ((ax = $.inArray(what, this)) != -1) {
-            this.splice(ax, 1);
-        }
-    }
-    return this;
-};
-
 var Mealz = function () {
     this.checkboxWrapperClass = 'checkbox-wrapper';
     this.$checkboxes = $('input.checkbox, input[type="checkbox"]');
@@ -68,7 +57,7 @@ Mealz.prototype.toggleParticipation = function ($checkbox) {
                 $participantsCount.fadeIn('fast');
             });
         },
-        error: function (xhr, statusText, errorThrown) {
+        error: function (xhr) {
             console.log(xhr.status + ': ' + xhr.statusText);
         }
     });
@@ -77,6 +66,12 @@ Mealz.prototype.toggleParticipation = function ($checkbox) {
 Mealz.prototype.loadDishForm = function ($element) {
     var url = $element.attr('href');
     var $dishForm = $('.dish-form');
+    var animationDuration = 150;
+
+    if($element.hasClass('dish-create') && $dishForm.is(':visible')) {
+        $dishForm.slideUp(animationDuration);
+        return false;
+    }
 
     if ($element.hasClass('dish-create')) {
         $dishForm.addClass('form-dish-create');
@@ -90,10 +85,10 @@ Mealz.prototype.loadDishForm = function ($element) {
         dataType: 'json',
         success: function (data) {
             $dishForm.html(data);
-            $dishForm.removeClass('hidden');
             new Mealz().styleSelects();
+            $dishForm.slideDown(animationDuration);
         },
-        error: function (xhr, statusText, errorThrown) {
+        error: function (xhr) {
             console.log(xhr.status + ': ' + xhr.statusText);
         }
     });

@@ -109,6 +109,7 @@ $(document).ready(function() {
     });
 
     $('#dish-table').DataTable({
+        'aaSorting': [], // Disable initial sort
         paging: false,
         searching: false,
         info: false,

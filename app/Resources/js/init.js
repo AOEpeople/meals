@@ -68,7 +68,7 @@ Mealz.prototype.loadDishForm = function ($element) {
     var $dishForm = $('.dish-form');
     var animationDuration = 150;
 
-    if($element.hasClass('dish-create') && $dishForm.is(':visible')) {
+    if($element.hasClass('dish-create') && $dishForm.is(':visible') && $dishForm.hasClass('form-dish-create')) {
         $dishForm.slideUp(animationDuration);
         return false;
     }

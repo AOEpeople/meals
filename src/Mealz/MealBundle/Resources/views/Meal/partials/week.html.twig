@@ -13,18 +13,13 @@
 
 		{% for day,meals in week.days %}
 
-			{% set available = true %}
+			{% set available = false %}
 
-			{# if user is logged in, is-available styling depends on "is (user) allowed to join" instead of date #}
-			{% if is_granted('ROLE_USER') %}
-				{% for meal in meals %}
-					{% if not is_allowed_to_join(meal) %}
-						{% set available = false %}
-					{% endif %}
-				{% endfor %}
-			{% elseif 'now' | date('U') > day | date('U') %}
-				{% set available = false %}
-			{% endif %}
+			{% for meal in meals %}
+				{% if meal.dateTime | date_modify(lock_toggle_participation_at) | date('U') > 'now' | date('U') %}
+					{% set available = true %}
+				{% endif %}
+			{% endfor %}
 
 			<div class="meal {{ available ? 'is-available' : '' }}">
 

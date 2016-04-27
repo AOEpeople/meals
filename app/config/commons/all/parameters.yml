@@ -1,2 +1,3 @@
 parameters:
+    # @TODO: rename mealz.lock_toggle_participation_at
     mealz.lock_toggle_participation_at: '-1 day 14:00'

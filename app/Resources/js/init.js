@@ -73,11 +73,7 @@ Mealz.prototype.loadDishForm = function ($element) {
         return false;
     }
 
-    if ($element.hasClass('dish-create')) {
-        $dishForm.addClass('form-dish-create');
-    } else {
-        $dishForm.removeClass('form-dish-create');
-    }
+    $dishForm.toggleClass('form-dish-create', $element.hasClass('dish-create'));
 
     $.ajax({
         method: 'GET',
@@ -86,7 +82,9 @@ Mealz.prototype.loadDishForm = function ($element) {
         success: function (data) {
             $dishForm.html(data);
             new Mealz().styleSelects();
-            $dishForm.slideDown(animationDuration);
+            if(!$dishForm.is(':visible')) {
+                $dishForm.slideDown(animationDuration);
+            }
         },
         error: function (xhr) {
             console.log(xhr.status + ': ' + xhr.statusText);

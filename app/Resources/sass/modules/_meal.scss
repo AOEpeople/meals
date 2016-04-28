@@ -37,7 +37,7 @@
   .meal-row {
     @include clearfix();
 
-    padding: 20px;
+    padding: 15px;
 
     &:not(:last-child) {
       border-bottom: 2px solid $meal-border-color;

@@ -32,7 +32,7 @@ gulp.task('clean', function() {
 /**
  * Hint .js files using jshint and jshint-stylish
  */
-gulp.task('jshint', ['clean'], function() {
+gulp.task('jshint', function() {
     gulp.src('js/**/*.js')
         .pipe(jshint())
         .pipe(jshint.reporter('jshint-stylish'));
@@ -41,7 +41,7 @@ gulp.task('jshint', ['clean'], function() {
 /**
  * Concat all used js files into one
  */
-gulp.task('js', ['clean'], function() {
+gulp.task('js', function() {
     gulp.src([
             'bower_components/jquery/dist/jquery.js',
             'bower_components/datatables.net/js/jquery.dataTables.js',
@@ -55,7 +55,7 @@ gulp.task('js', ['clean'], function() {
 /**
  * Compile SCSS to CSS
  */
-gulp.task('css', ['clean'], function() {
+gulp.task('css', function() {
     gulp.src(['./sass/**/*.scss', '!./sass/helpers/_glyphicons.scss'])
         .pipe(scsslint({
             'config': 'scsslint.yml'
@@ -77,7 +77,7 @@ gulp.task('fonts', ['clean'], function() {
 /**
  * Copy favicon to /web directory
  */
-gulp.task('favicon', ['clean'], function() {
+gulp.task('favicon', function() {
     gulp.src(['./favicon/**/*'])
         .pipe(gulp.dest('../../web/'))
 });
@@ -107,4 +107,4 @@ gulp.task('default', ['jshint', 'js', 'css']);
  * Task to build the whole stuff, including fonts and images
  * Run "gulp build --production" on production environment
  */
-gulp.task('build', ['fonts', 'images','favicon', 'jshint', 'js', 'css']);
+gulp.task('build', ['clean', 'fonts', 'images','favicon', 'jshint', 'js', 'css']);

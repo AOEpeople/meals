@@ -5,6 +5,12 @@ var sass        = require('gulp-sass');
 var sourcemaps  = require('gulp-sourcemaps');
 var scsslint    = require('gulp-scss-lint');
 var jshint      = require('gulp-jshint');
+var util        = require('gulp-util');
+var uglify      = require('gulp-uglify');
+
+var config = {
+    production: !!util.env.production
+};
 
 /**
  * Clean css, js, font and image directory before creating new files
@@ -42,6 +48,7 @@ gulp.task('js', ['clean'], function() {
             'js/**/*.js'
         ])
         .pipe(concat('mealz.js'))
+        .pipe(config.production ? uglify() : util.noop())
         .pipe(gulp.dest('../../web/'));
 });
 
@@ -53,9 +60,9 @@ gulp.task('css', ['clean'], function() {
         .pipe(scsslint({
             'config': 'scsslint.yml'
         }))
-        .pipe(sourcemaps.init())
-        .pipe(sass().on('error', sass.logError))
-        .pipe(sourcemaps.write())
+        .pipe(config.production ? util.noop() : sourcemaps.init())
+        .pipe(sass(config.production ? {outputStyle: 'compressed'} : util.noop()).on('error', sass.logError))
+        .pipe(config.production ? util.noop() : sourcemaps.write())
         .pipe(gulp.dest('../../web/'));
 });
 
@@ -98,5 +105,6 @@ gulp.task('default', ['jshint', 'js', 'css']);
 
 /**
  * Task to build the whole stuff, including fonts and images
+ * Run "gulp build --production" on production environment
  */
 gulp.task('build', ['fonts', 'images','favicon', 'jshint', 'js', 'css']);

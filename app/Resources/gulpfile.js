@@ -2,6 +2,7 @@ var gulp        = require('gulp');
 var rimraf      = require('gulp-rimraf');
 var concat      = require('gulp-concat');
 var sass        = require('gulp-sass');
+var sourcemaps  = require('gulp-sourcemaps');
 var scsslint    = require('gulp-scss-lint');
 var jshint      = require('gulp-jshint');
 
@@ -52,6 +53,7 @@ gulp.task('css', ['clean'], function() {
         .pipe(scsslint({
             'config': 'scsslint.yml'
         }))
+        .pipe(sourcemaps.init())
         .pipe(sass().on('error', sass.logError))
         .pipe(sourcemaps.write())
         .pipe(gulp.dest('../../web/'));

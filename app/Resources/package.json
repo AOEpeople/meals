@@ -16,6 +16,7 @@
     "gulp-rimraf": "0.1.1",
     "gulp-sass": "2.0.2",
     "gulp-scss-lint": "^0.3.9",
+    "gulp-sourcemaps": "^2.0.0-alpha",
     "jshint": "^2.9.2",
     "jshint-stylish": "^2.1.0"
   }

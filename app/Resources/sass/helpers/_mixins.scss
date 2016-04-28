@@ -14,6 +14,14 @@
 }
 
 //**************************************
+//  Crossbrowser opacity
+//**************************************
+@mixin opacity($opacity) {
+  opacity: $opacity;
+  filter: alpha(opacity = $opacity * 100);
+}
+
+//**************************************
 //  Breakpoints
 //**************************************
 @mixin breakpoint($point) {

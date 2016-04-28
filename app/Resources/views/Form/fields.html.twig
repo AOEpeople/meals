@@ -11,8 +11,11 @@
 	{% endspaceless %}
 {% endblock %}
 
-{%- block form_widget_simple -%}
-    {%- set type = type|default('text') -%}
-    asd
-    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
-{%- endblock form_widget_simple -%}
+{% block form_row %}
+    {% spaceless %}
+        <div class="form-row">
+            {{ form_widget(form) }}
+            {{ form_errors(form) }}
+        </div>
+    {% endspaceless %}
+{% endblock form_row %}

@@ -42,6 +42,11 @@ $a-tags-hover: 'a:active, a:hover';
   background: $color-white;
 }
 
+
 .hidden {
   display: none;
+}
+
+.clear {
+  @include clearfix();
 }

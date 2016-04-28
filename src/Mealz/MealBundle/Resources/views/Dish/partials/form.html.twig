@@ -1,19 +1,23 @@
+{% form_theme form ':Form:fields.html.twig' %}
+
 <div class="wrapper-form">
     {{ form_start(form) }}
 
     <fieldset>
         <legend>Deutsch</legend>
-        {{ form_widget(form.title_de) }}
-        {{ form_widget(form.description_de) }}
+        {{ form_row(form.title_de) }}
+        {{ form_row(form.description_de) }}
     </fieldset>
 
     <fieldset>
         <legend>English</legend>
-        {{ form_widget(form.title_en) }}
-        {{ form_widget(form.description_en) }}
+        {{ form_row(form.title_en) }}
+        {{ form_row(form.description_en) }}
     </fieldset>
 
-    {{ form_widget(form.category) }}
+    <div class="clear"></div>
+
+    {{ form_row(form.category) }}
 
     {{ form_rest(form) }}
     {{ form_end(form) }}

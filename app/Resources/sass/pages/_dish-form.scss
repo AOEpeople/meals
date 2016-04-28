@@ -2,7 +2,7 @@ $fieldset-padding: 13px;
 
 .dish-form {
 
-  margin-top: -20px;
+  margin-top: -10px;
   margin-bottom: 40px;
 
   .wrapper-form {
@@ -47,14 +47,9 @@ $fieldset-padding: 13px;
     }
   }
 
-  input {
-    margin-bottom: 20px;
-  }
-
   .select-wrapper {
     width: 50%;
-    margin: 0 auto;
-    margin-bottom: 30px;
+    margin: 0 auto 10px;
 
     @include breakpoint(small) {
       width: calc(100% - (#{$fieldset-padding} * 2));

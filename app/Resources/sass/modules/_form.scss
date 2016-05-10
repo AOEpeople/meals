@@ -66,4 +66,16 @@ fieldset {
 .form-row {
   width: 100%;
   margin-bottom: 20px;
+
+  input.invalid {
+    padding: 9px;
+    border: 1px solid $color-red;
+  }
+}
+
+.help-block {
+  position: absolute;
+  color: $color-red;
+  font-size: 11px;
+  line-height: 20px;
 }

@@ -47,7 +47,13 @@
     MealzButton.link(path('MealzMealBundle_Dish_Form_empty'), 'Create Dish', '', 'dish-create dish-load-form transparent', 'svg-dish')
 ], '') }}
 
-<div class="dish-form" style="display: none"></div>
+    {% if form is defined %}
+        <div class="dish-form">
+        {% include 'MealzMealBundle:Dish/partials:form.html.twig' %}
+        </div>
+    {% else %}
+        <div class="dish-form" style="display: none"></div>
+    {% endif %}
 
 {{ MealzTable.create('dish-table', 'table-sortable', tableHeader, tableContent) }}
 

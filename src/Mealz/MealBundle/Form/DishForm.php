@@ -23,7 +23,6 @@ class DishForm extends AbstractType {
 				'translation_domain' => 'general'
 			))
 			->add('title_de', TextType::class, array(
-				'required' => FALSE,
 				'attr' => array(
 					'placeholder' => 'title'
 				),

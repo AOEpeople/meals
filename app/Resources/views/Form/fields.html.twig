@@ -14,8 +14,12 @@
 {% block form_row %}
     {% spaceless %}
         <div class="form-row">
-            {{ form_widget(form) }}
-            {{ form_errors(form) }}
+			{% if errors | length > 0 %}
+			{{ form_widget(form, {'attr': {'class': 'invalid'}}) }}
+			{% else %}
+			{{ form_widget(form) }}
+			{% endif %}
+			{{ form_errors(form) }}
         </div>
     {% endspaceless %}
 {% endblock form_row %}

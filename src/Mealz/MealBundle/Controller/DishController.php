@@ -7,7 +7,6 @@ use Mealz\MealBundle\Form\DishForm;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\VarDumper\VarDumper;
 
 class DishController extends BaseController {
 
@@ -24,7 +23,7 @@ class DishController extends BaseController {
 		));
 	}
 
-	public function getEmptyFormAction(Request $request) {
+	public function getEmptyFormAction() {
 		if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
 			throw new AccessDeniedException();
 		}
@@ -35,12 +34,13 @@ class DishController extends BaseController {
 		return new JsonResponse($this->getRenderedDishForm($dish, $action));
 	}
 
-	public function getPreFilledFormAction(Request $request, $slug)
+	public function getPreFilledFormAction($slug)
 	{
 		if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
 			throw new AccessDeniedException();
 		}
 
+		/* @var Dish $dish */
 		$dish = $this->getDoctrine()->getRepository('MealzMealBundle:Dish')->findOneBy(array('slug' => $slug));
 
 		if (!$dish) {
@@ -57,24 +57,7 @@ class DishController extends BaseController {
 			throw new AccessDeniedException();
 		}
 
-		$dish = new Dish();
-
-		$form = $this->createForm(new DishForm(), $dish);
-
-		// handle form submission
-		if($request->isMethod('POST')) {
-			$form->handleRequest($request);
-
-			if ($form->isValid()) {
-				$em = $this->getDoctrine()->getManager();
-				$em->persist($dish);
-				$em->flush();
-
-				$this->addFlashMessage('Dish has been added.', 'success');
-			}
-		}
-
-		return $this->redirectToRoute('MealzMealBundle_Dish');
+		return $this->dishFormHandling($request, new Dish(), 'Dish has been added.');
 	}
 
 	public function editAction(Request $request, $slug) {
@@ -82,27 +65,13 @@ class DishController extends BaseController {
 			throw new AccessDeniedException();
 		}
 
+		/* @var Dish $dish */
 		$dish = $this->getDoctrine()->getRepository('MealzMealBundle:Dish')->findOneBy(array('slug' => $slug));
 		if(!$dish) {
 			throw $this->createNotFoundException();
 		}
 
-		$form = $this->createForm(new DishForm(), $dish);
-
-		// handle form submission
-		if($request->isMethod('POST')) {
-			$form->handleRequest($request);
-
-			if ($form->isValid()) {
-				$em = $this->getDoctrine()->getManager();
-				$em->persist($dish);
-				$em->flush();
-
-				$this->addFlashMessage('Dish was modified.', 'success');
-			}
-		}
-
-		return $this->redirectToRoute('MealzMealBundle_Dish');
+		return $this->dishFormHandling($request, $dish, 'Dish has been modified.');
 	}
 
 	public function deleteAction($slug) {
@@ -121,13 +90,13 @@ class DishController extends BaseController {
 			$dish->setEnabled(FALSE);
 			$em->persist($dish);
 			$em->flush();
-			$this->addFlashMessage(sprintf('Record "%s" was hidden.', $dish->getTitle()), 'success');
+			$this->addFlashMessage(sprintf('Dish "%s" has been hidden.', $dish->getTitle()), 'success');
 		} else {
 			// else: no need to keep an unused record
 			$em->remove($dish);
 			$em->flush();
 
-			$this->addFlashMessage(sprintf('Record "%s" was deleted.', $dish->getTitle()), 'success');
+			$this->addFlashMessage(sprintf('Dish "%s" has been deleted.', $dish->getTitle()), 'success');
 		}
 
 		return $this->redirectToRoute('MealzMealBundle_Dish');
@@ -142,5 +111,32 @@ class DishController extends BaseController {
 		$renderedForm = $this->render('MealzMealBundle:Dish/partials:form.html.twig', array('form' => $form->createView()));
 
 		return $renderedForm->getContent();
+	}
+
+	private function dishFormHandling(Request $request, Dish $dish, $successMessage)
+	{
+		$form = $this->createForm(new DishForm(), $dish);
+
+		// handle form submission
+		if ($request->isMethod('POST')) {
+			$form->handleRequest($request);
+
+			if ($form->isValid()) {
+				$em = $this->getDoctrine()->getManager();
+				$em->persist($dish);
+				$em->flush();
+
+				$this->addFlashMessage($successMessage, 'success');
+			} else {
+				$dishes = $this->getDishRepository()->getSortedDishes();
+
+				return $this->render('MealzMealBundle:Dish:list.html.twig', array(
+					'dishes' => $dishes,
+					'form' => $form->createView()
+				));
+			}
+		}
+
+		return $this->redirectToRoute('MealzMealBundle_Dish');
 	}
 }

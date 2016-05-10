@@ -2,10 +2,10 @@
   width: 100%;
   margin-bottom: 20px;
   padding: 15px;
-  background: $color-white;
+  color: $color-white;
+  background: $color-gray-primary;
 
   &-success {
-    color: darken($color-green, 35%);
     background: $color-green;
   }
 }

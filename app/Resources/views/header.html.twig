@@ -11,7 +11,7 @@
             {% if is_granted('ROLE_KITCHEN_STAFF') %}
                 <ul class="navbar">
                     <li>
-                        <a href="{{ path('MealzMealBundle_Dish') }}" class="{{ activeRoute == 'MealzMealBundle_Dish' ? 'active' }}">
+                        <a href="{{ path('MealzMealBundle_Dish') }}" class="{{ activeRoute matches '/MealzMealBundle_Dish.*/' ? 'active' }}">
                             Dishes
                         </a>
                     </li>

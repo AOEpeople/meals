@@ -9,7 +9,3 @@ xopn_mealz_for_zombies_mealz:
 xopn_mealz_for_zombies_accounting:
     resource: "@MealzAccountingBundle/Resources/config/routing.yml"
     prefix:   /
-
-# resized images
-_liip_imagine:
-  resource: "@LiipImagineBundle/Resources/config/routing.xml"

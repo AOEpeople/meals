@@ -72,21 +72,6 @@ swiftmailer:
     password:  "%mailer_password%"
     spool:     { type: memory }
 
-braincrafted_bootstrap:
-    # less_filter: none
-    auto_configure:
-        assetic: false
-        twig: true
-        knp_menu: false
-        knp_paginator: false
-
-liip_imagine:
-    filter_sets:
-        thumbnail:
-            quality: 90
-            filters:
-                thumbnail: { size: [263, 176], mode: outbound }
-
 stof_doctrine_extensions:
     orm:
         default:

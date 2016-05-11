@@ -15,11 +15,21 @@
     {% spaceless %}
         <div class="form-row">
 			{% if errors | length > 0 %}
-			{{ form_widget(form, {'attr': {'class': 'invalid'}}) }}
+				{{ form_widget(form, {'attr': {'class': 'form-field-invalid'}}) }}
+				{{ form_errors(form) }}
 			{% else %}
-			{{ form_widget(form) }}
+				{{ form_widget(form) }}
 			{% endif %}
-			{{ form_errors(form) }}
         </div>
     {% endspaceless %}
 {% endblock form_row %}
+
+{%- block form_errors -%}
+	{%- if errors|length > 0 -%}
+		<ul class="form-field-errors">
+			{%- for error in errors -%}
+				<li>{{ error.message }}</li>
+			{%- endfor -%}
+		</ul>
+	{%- endif -%}
+{%- endblock form_errors -%}

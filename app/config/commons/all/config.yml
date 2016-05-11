@@ -28,7 +28,7 @@ twig:
     strict_variables: "%kernel.debug%"
     form:
         resources:
-            - ':Form:fields.html.twig'
+            - 'MealzTemplateBundle:Form:fields.html.twig'
     globals:
         # @TODO: rename lock_toggle_participation_at
         lock_toggle_participation_at: %mealz.lock_toggle_participation_at%

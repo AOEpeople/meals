@@ -47,6 +47,7 @@ class AppKernel extends Kernel
             new Mealz\MealBundle\MealzMealBundle(),
             new Mealz\UserBundle\MealzUserBundle(),
             new Mealz\AccountingBundle\MealzAccountingBundle(),
+            new Mealz\TemplateBundle\MealzTemplateBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('devbox', 'deploy'))) {

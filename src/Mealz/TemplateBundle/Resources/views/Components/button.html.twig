@@ -10,7 +10,7 @@
 # @param additionalAttributes   array       Array of Attributes of the link Object
 #}
 {% macro link(href, label, id, class, icon, iconPosition, additionalAttributes) %}
-    {%- import 'MealzMealBundle::Components/_common.html.twig' as commonlib -%}
+    {%- import 'MealzTemplateBundle::Components/_common.html.twig' as commonlib -%}
     {%- spaceless -%}
 
         {#- support for glyphicon -#}
@@ -69,7 +69,7 @@
 # @param elements   array       Array of Elements to display
 #}
 {% macro buttonbar(id, classes, elements) %}
-    {%- import 'MealzMealBundle::Components/_common.html.twig' as commonlib -%}
+    {%- import 'MealzTemplateBundle::Components/_common.html.twig' as commonlib -%}
     <div {{ commonlib.optionalAttribute('id', id) -}} {{ commonlib.optionalAttribute('class', 'buttonbar-container '~classes) -}}>
         {%- for idx, element in elements -%}
             {% if element is not empty %}

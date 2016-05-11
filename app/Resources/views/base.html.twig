@@ -1,7 +1,7 @@
-{% import 'MealzMealBundle::Components/headline.html.twig' as MealzHeadline %}
-{% import 'MealzMealBundle::Components/button.html.twig' as MealzButton %}
-{% import 'MealzMealBundle::Components/checkbox.html.twig' as MealzCheckbox %}
-{% import 'MealzMealBundle::Components/table.html.twig' as MealzTable %}
+{% import 'MealzTemplateBundle::Components/headline.html.twig' as MealzHeadline %}
+{% import 'MealzTemplateBundle::Components/button.html.twig' as MealzButton %}
+{% import 'MealzTemplateBundle::Components/checkbox.html.twig' as MealzCheckbox %}
+{% import 'MealzTemplateBundle::Components/table.html.twig' as MealzTable %}
 
 <!DOCTYPE html>
 <html>
@@ -23,7 +23,7 @@
 
 	<div class="container content-wrapper {{ wrapperClass }}">
 
-        {% include ':partials:flashMessages.html.twig' %}
+        {% include 'MealzTemplateBundle::partials/flashMessages.html.twig' %}
 
 		{% block body %}
 		{% endblock %}

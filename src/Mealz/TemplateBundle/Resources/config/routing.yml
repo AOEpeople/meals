@@ -1,0 +1,3 @@
+mealz_template_homepage:
+    path:     /review
+    defaults: { _controller: MealzTemplateBundle:Review:index }

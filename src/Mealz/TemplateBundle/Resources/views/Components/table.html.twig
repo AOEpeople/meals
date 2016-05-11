@@ -7,7 +7,7 @@
 # @param data       array       Data for the content
 #}
 {% macro create(id, class, header, data)  %}
-    {%- import 'MealzMealBundle::Components/_common.html.twig' as commonlib -%}
+    {%- import 'MealzTemplateBundle::Components/_common.html.twig' as commonlib -%}
     {%- spaceless -%}
         <table {% if id %}id="{{ id }}"{% endif %} class="table {{ class }}">
             {% if header | length > 0 %}

@@ -3,7 +3,7 @@
 {% endmacro %}
 
 {% macro additionalAttributes(attributes) %}
-	{%- import 'MealzMealBundle::Components/_common.html.twig' as self -%}
+	{%- import 'MealzTemplateBundle::Components/_common.html.twig' as self -%}
 	{%- for attributeName,content in attributes -%}
 		{{- self.optionalAttribute(attributeName, content) -}}
 	{%- endfor -%}

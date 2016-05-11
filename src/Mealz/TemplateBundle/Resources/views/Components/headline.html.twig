@@ -9,7 +9,7 @@
 # @param sub			string      Additional Text to show below the headline
 #}
 {% macro create(order, label, id, class, tools, sub)  %}
-	{%- import 'MealzMealBundle::Components/_common.html.twig' as commonlib -%}
+	{%- import 'MealzTemplateBundle::Components/_common.html.twig' as commonlib -%}
 	{%- spaceless -%}
 		<div class="headline-container headline-container-h{{ order }} {% if tools|length > 0 %}headline-container-with-tools{% endif %} {{ class }}"  {{- commonlib.optionalAttribute('id', id) -}}>
 			<h{{ order }} class="headline">

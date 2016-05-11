@@ -19,8 +19,7 @@
         "sensio/framework-extra-bundle": "~3.0",
         "sensio/generator-bundle": "~2.3",
         "incenteev/composer-parameter-handler": "~2.0",
-
-        "paypal/rest-api-sdk-php": "*"
+        "stof/doctrine-extensions-bundle": "~1.2.2"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "~2.2",

@@ -58,6 +58,10 @@
                 <source>description</source>
                 <target>Description</target>
             </trans-unit>
+            <trans-unit id="15">
+                <source>no_service</source>
+                <target>No service</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

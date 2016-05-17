@@ -212,12 +212,25 @@ class MealController extends BaseController {
 	}
 
 
-	protected function groupByDay($meals) {
+	protected function groupByDay(\DateTime $startTime, $meals) {
 		$return = array();
+
+		$return[$startTime->format('Y-m-d')] = array();
+
+		for ($i = 1; $i < 5; $i++) {
+			$day = clone($startTime);
+			$day->modify('+' . $i . ' days');
+			$day->setTime(23, 59, 59);
+			$return[$day->format('Y-m-d')] = array();
+		}
+
 		foreach($meals as $meal) {
 			/** @var Meal $meal */
 			$day = $meal->getDateTime()->format('Y-m-d');
 			if(!array_key_exists($day, $return)) {
+				/*
+				 * @TODO: throw new Error?
+				 */
 				$return[$day] = array();
 			}
 			$return[$day][] = $meal;
@@ -241,7 +254,7 @@ class MealController extends BaseController {
 			)
 		);
 
-		$days = $this->groupByDay($meals);
+		$days = $this->groupByDay($startTime, $meals);
 
 		$week = new Week();
 		$week->setStartTime($startTime);

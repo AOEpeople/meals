@@ -43,10 +43,23 @@
       border-bottom: 2px solid $meal-border-color;
     }
 
+    &.no-meal {
+      padding-top: 37px;
+      padding-bottom: 37px;
+      line-height: 56px;
+    }
+
+    &.one-meal {
+      padding-top: 18px;
+      padding-bottom: 18px;
+      line-height: 28px;
+    }
+
     .title {
-      margin-bottom: 5px;
+      margin-bottom: 6px;
       font-family: "ClanOTBold", sans-serif;
     }
+
   }
 
   .text,

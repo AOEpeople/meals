@@ -9,7 +9,7 @@
 
 	{{ MealzHeadline.create(1, headline, '', 'centered', [], headlineSub) }}
 
-	{% if week.mealsCount | length > 0 %}
+	{% if week.mealsCount > 0 %}
 
 		{% for day,meals in week.days %}
 
@@ -32,9 +32,16 @@
 				</div>
 
 				{# display meals for given day #}
+
 				{% for meal in meals %}
 					{% include 'MealzMealBundle:Meal/partials:meal.html.twig' %}
 				{% endfor %}
+				{% if meals | length == 1 %}
+					<div class="meal-row one-meal">{{ 'no_service'|trans({},'general') }}</div>
+				{% elseif meals | length == 0 %}
+					<div class="meal-row no-meal">{{ 'no_service'|trans({},'general') }}</div>
+				{% endif %}
+
 
 			</div>
 		{% endfor %}

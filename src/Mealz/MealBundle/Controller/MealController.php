@@ -9,6 +9,7 @@ use Doctrine\ORM\Query;
 use Mealz\MealBundle\Entity\Meal;
 use Mealz\MealBundle\Entity\MealRepository;
 use Mealz\MealBundle\Entity\Participant;
+use Mealz\MealBundle\Entity\WeekRepository;
 use Mealz\MealBundle\EventListener\ParticipantNotUniqueException;
 use Mealz\MealBundle\Form\MealProfileForm;
 use Mealz\UserBundle\Entity\Profile;
@@ -87,14 +88,23 @@ class MealController extends BaseController {
 	}
 
 	public function indexAction() {
-		$startTimeCurrentWeek = new \DateTime('monday this week');
-		$currentWeek = $this->getWeek($startTimeCurrentWeek);
+		/** @var WeekRepository $weekRepository */
+		$weekRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Week');
 
-		$startTimeNextWeek = clone $startTimeCurrentWeek;
-		$startTimeNextWeek->modify('+7 days');
-		$nextWeek = $this->getWeek($startTimeNextWeek);
+		$currentWeek = $weekRepository->getCurrentWeek();
+		if (null === $currentWeek) {
+			$currentWeek = $this->createWeek(new \DateTime());
+		}
 
-		$weeks = array($currentWeek, $nextWeek);
+		$nextWeek = $weekRepository->getNextWeek();
+		if (null === $nextWeek) {
+			$nextWeek = $this->createWeek(new \DateTime('next week'));
+		}
+
+		$weeks = array(
+			array($currentWeek, $weekRepository->getWeeksMealCount($currentWeek)),
+			array($nextWeek, $weekRepository->getWeeksMealCount($nextWeek))
+		);
 
 		return $this->render('MealzMealBundle:Meal:index.html.twig', array(
 			'weeks' => $weeks
@@ -110,8 +120,6 @@ class MealController extends BaseController {
 	 * @return \Symfony\Component\HttpFoundation\JsonResponse
 	 */
 	public function joinAction(Request $request, $date, $dish) {
-		$ajaxResponse = new JsonResponse();
-
 
 		if(!$this->getUser()) {
 			return new JsonResponse(null, 401);
@@ -126,7 +134,6 @@ class MealController extends BaseController {
 		if(!$this->getDoorman()->isUserAllowedToJoin($meal)) {
 			return new JsonResponse(null, 403);
 		}
-
 		try {
 			$profile = $this->getProfile();
 			$participant = new Participant();
@@ -217,10 +224,9 @@ class MealController extends BaseController {
 
 		$return[$startTime->format('Y-m-d')] = array();
 
-		for ($i = 1; $i < 5; $i++) {
+		for ($i = 0; $i < 5; $i++) {
 			$day = clone($startTime);
 			$day->modify('+' . $i . ' days');
-			$day->setTime(23, 59, 59);
 			$return[$day->format('Y-m-d')] = array();
 		}
 
@@ -261,6 +267,20 @@ class MealController extends BaseController {
 		$week->setEndTime($endTime);
 		$week->setMealsCount(count($meals));
 		$week->setDays($days);
+
+		return $week;
+	}
+
+	private function createWeek(\DateTime $dateTime)
+	{
+		$week = new Week();
+		$week->setCalendarWeek($dateTime->format('W'));
+		$week->setYear($dateTime->format('Y'));
+
+		$em = $this->getDoctrine()->getManager();
+		$em->persist($week);
+		$em->flush();
+		$em->refresh($week);
 
 		return $week;
 	}

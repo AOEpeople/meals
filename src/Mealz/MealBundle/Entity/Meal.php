@@ -27,7 +27,7 @@ class Meal
 	/**
 	 * @Assert\NotBlank()
 	 * @Assert\Type(type="Mealz\MealBundle\Entity\Dish")
-	 * @ORM\ManyToOne(targetEntity="Dish", inversedBy="meals")
+	 * @ORM\ManyToOne(targetEntity="Dish"	)
 	 * @ORM\JoinColumn(name="dish_id", referencedColumnName="id")
 	 * @var Dish
 	 */
@@ -40,6 +40,13 @@ class Meal
 	 * @var float
 	 */
 	protected $price;
+
+	/**
+	 * @ORM\ManyToOne(targetEntity="Day", inversedBy="meals")
+	 * @ORM\JoinColumn(name="day", referencedColumnName="id")
+	 * @var Day
+	 */
+	protected $day;
 
 	/**
 	 * @Assert\NotBlank()
@@ -86,22 +93,6 @@ class Meal
 	}
 
 	/**
-	 * @param \DateTime $dateTime
-	 */
-	public function setDateTime($dateTime)
-	{
-		$this->dateTime = $dateTime;
-	}
-
-	/**
-	 * @return \DateTime
-	 */
-	public function getDateTime()
-	{
-		return clone $this->dateTime;
-	}
-
-	/**
 	 * @param \Mealz\MealBundle\Entity\Dish $dish
 	 */
 	public function setDish($dish)
@@ -123,6 +114,38 @@ class Meal
 	public function getParticipants()
 	{
 		return $this->participants;
+	}
+
+	/**
+	 * @return Day
+	 */
+	public function getDay()
+	{
+		return $this->day;
+	}
+
+	/**
+	 * @param Day $day
+	 */
+	public function setDay($day)
+	{
+		$this->day = $day;
+	}
+
+	/**
+	 * @param \DateTime $dateTime
+	 */
+	public function setDateTime($dateTime)
+	{
+		$this->dateTime = $dateTime;
+	}
+
+	/**
+	 * @return \DateTime
+	 */
+	public function getDateTime()
+	{
+		return $this->dateTime;
 	}
 
 	/**
@@ -177,7 +200,8 @@ class Meal
 		return $totalConfirmedParticipations;
 	}
 
-	function __toString() {
+	function __toString()
+	{
 		return $this->getDateTime()->format('Y-m-d H:i:s') . ' ' . $this->getDish();
 	}
 }

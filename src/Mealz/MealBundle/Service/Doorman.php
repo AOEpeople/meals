@@ -78,9 +78,10 @@ class Doorman {
 
 	private function isUserAllowedToToggleParticipation(\DateTime $mealDateTime)
 	{
-		$mealDateTime->modify($this->lockToggleParticipationAt);
+		$date = clone($mealDateTime);
+		$date->modify($this->lockToggleParticipationAt);
 
-		if ($mealDateTime->getTimestamp() > $this->now) {
+		if ($date->getTimestamp() > $this->now) {
 			// if: meal is in mealDateTime + $lockToggleParticipationAt (for instance meal time -1 day)
 			return TRUE;
 		}

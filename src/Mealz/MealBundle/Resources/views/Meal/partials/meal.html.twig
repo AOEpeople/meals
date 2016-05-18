@@ -20,7 +20,6 @@
 	<div class="action">
 		{% if is_granted('ROLE_USER') %}
 			{% set participant = meal.getParticipant(app.user.profile) %}
-
 			{# join / leave using a checkbox #}
 			{% if participant %}
 				{% if is_allowed_to_leave(meal) %}

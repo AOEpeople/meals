@@ -1,85 +1,60 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: jonathan.klauck
- * Date: 13.04.2016
- * Time: 13:29
- */
 
 namespace Mealz\MealBundle\Entity;
 
-class Week
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * Week
+ *
+ * @ORM\Table(name="week")
+ * @ORM\Entity(repositoryClass="WeekRepository")
+ */
+class Week extends AbstractMessage
 {
-    /*
-     * @var \DateTime $starTime
+    /**
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     * @var integer $id
      */
-    private $startTime;
+    private $id;
 
-    /*
-     * @var \DateTime $endTime
+    /**
+     * @ORM\Column(type="smallint", nullable=FALSE)
+     * @var integer $year
      */
-    private $endTime;
+    private $year;
 
-    /*
-     * @var int $mealsCount
+    /**
+     * @ORM\Column(type="smallint", nullable=FALSE)
+     * @var integer $calendarWeek
      */
-    private $mealsCount;
+    private $calendarWeek;
 
-    /*
-     * @var array $days
+    /**
+     * @ORM\OneToMany(targetEntity="Day", mappedBy="week")
+     * @var ArrayCollection $days
      */
     private $days;
 
-    /**
-     * @return \DateTime
-     */
-    public function getStartTime()
+    public function __construct()
     {
-        return $this->startTime;
+        $this->days = new ArrayCollection();
     }
 
     /**
-     * @param \DateTime $startTime
+     * @return integer
      */
-    public function setStartTime($startTime)
+    public function getId()
     {
-        $this->startTime = $startTime;
+        return $this->id;
     }
 
     /**
-     * @return \DateTime
-     */
-    public function getEndTime()
-    {
-        return $this->endTime;
-    }
-
-    /**
-     * @param \DateTime $endTime
-     */
-    public function setEndTime($endTime)
-    {
-        $this->endTime = $endTime;
-    }
-
-    /**
-     * @return int
-     */
-    public function getMealsCount()
-    {
-        return $this->mealsCount;
-    }
-
-    /**
-     * @param int $mealsCount
-     */
-    public function setMealsCount($mealsCount)
-    {
-        $this->mealsCount = $mealsCount;
-    }
-
-    /**
-     * @return array
+     * @return ArrayCollection
      */
     public function getDays()
     {
@@ -87,10 +62,61 @@ class Week
     }
 
     /**
-     * @param array $days
+     * @param ArrayCollection $days
      */
     public function setDays($days)
     {
         $this->days = $days;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getYear()
+    {
+        return $this->year;
+    }
+
+    /**
+     * @param integer $year
+     */
+    public function setYear($year)
+    {
+        $this->year = $year;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getCalendarWeek()
+    {
+        return $this->calendarWeek;
+    }
+
+    /**
+     * @param integer $calendarWeek
+     */
+    public function setCalendarWeek($calendarWeek)
+    {
+        $this->calendarWeek = $calendarWeek;
+    }
+
+    public function getStartTime()
+    {
+        return $this->getWeekDateTime();
+    }
+
+    public function getEndTime()
+    {
+        $endTime = $this->getWeekDateTime();
+        $endTime->modify('+4 days');
+        return $endTime;
+    }
+
+    private function getWeekDateTime()
+    {
+        $dateTime = new \DateTime();
+        $dateTime->setISODate($this->getYear(), $this->getCalendarWeek());
+        return $dateTime;
     }
 }

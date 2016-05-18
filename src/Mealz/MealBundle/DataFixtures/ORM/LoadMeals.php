@@ -5,6 +5,7 @@ namespace Mealz\MealBundle\DataFixtures\ORM;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
+use Mealz\MealBundle\Entity\Day;
 use Mealz\MealBundle\Entity\Dish;
 use Mealz\MealBundle\Entity\Meal;
 
@@ -22,6 +23,11 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface {
 	protected $dishes = array();
 
 	/**
+	 * @var Day[]
+	 */
+	protected $days = array();
+
+	/**
 	 * @var int
 	 */
 	protected $counter = 0;
@@ -29,24 +35,21 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface {
 	function load(ObjectManager $manager) {
 		$this->objectManager = $manager;
 		$this->loadDishes();
+		$this->loadDays();
 
-		$date = new \DateTime('-1 month 12:00:00');
-		$maxDate = new \DateTime('+1 month');
-
-		while($date < $maxDate) {
+		foreach ($this->days as $day) {
 			$dish = null;
-			for($i=0; $i<=1; $i++) {
+			for ($i = 0; $i <= 1; $i++) {
 				// 2 meals a day
 				$meal = new Meal();
-				$meal->setDateTime(clone $date);
+				$meal->setDay($day);
+				$meal->setDateTime($day->getDateTime());
 				$dish = $this->getRandomDish($dish);
 				$meal->setDish($dish);
-				$meal->setPrice(mt_rand(290,320)/100);
+				$meal->setPrice(mt_rand(290, 320) / 100);
 				$this->objectManager->persist($meal);
 				$this->addReference('meal-' . $this->counter++, $meal);
 			}
-
-			$date->modify('+1 day');
 		}
 
 		$this->objectManager->flush();
@@ -58,6 +61,17 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface {
 				// we can't just use $reference here, because
 				// getReference() does some doctrine magic that getReferences() does not
 				$this->dishes[] = $this->getReference($referenceName);
+			}
+		}
+	}
+
+	protected function loadDays()
+	{
+		foreach ($this->referenceRepository->getReferences() as $referenceName => $reference) {
+			if ($reference instanceof Day) {
+				// we can't just use $reference here, because
+				// getReference() does some doctrine magic that getReferences() does not
+				$this->days[] = $this->getReference($referenceName);
 			}
 		}
 	}
@@ -77,6 +91,6 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface {
 
 	public function getOrder()
 	{
-		return 2;
+		return 4;
 	}
 }

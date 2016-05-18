@@ -74,19 +74,9 @@ class Dish
 	protected $enabled = TRUE;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="Meal", mappedBy="dish")
-	 * @var ArrayCollection
-	 */
-	protected $meals;
-
-	/**
 	 * @var string
 	 */
 	protected $currentLocale = 'en';
-
-	public function __construct() {
-		$this->meals = new ArrayCollection();
-	}
 
 	/**
 	 * Get id
@@ -177,13 +167,6 @@ class Dish
 	public function isEnabled()
 	{
 		return $this->enabled;
-	}
-
-	/**
-	 * @return ArrayCollection
-	 */
-	public function getMeals() {
-		return $this->meals;
 	}
 
 	/**

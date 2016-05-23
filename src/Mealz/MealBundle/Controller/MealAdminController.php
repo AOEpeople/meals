@@ -11,6 +11,11 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class MealAdminController extends BaseController {
 
+	public function listAction()
+	{
+		return $this->render('MealzMealBundle:MealAdmin:list.html.twig');
+	}
+
 	public function newAction(Request $request) {
 		if(!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
 			throw new AccessDeniedException();

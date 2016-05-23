@@ -10,6 +10,10 @@
 				<source>week.next</source>
 				<target>Nächste Woche</target>
 			</trans-unit>
+            <trans-unit id="1c">
+                <source>week.list</source>
+                <target>Liste der Wochen</target>
+            </trans-unit>
             <trans-unit id="2">
                 <source>dishes</source>
                 <target>Gerichte</target>

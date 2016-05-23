@@ -1,0 +1,29 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+
+    {{ MealzHeadline.create(1, 'week.list'|trans({},'general'), '', '', []) }}
+
+    <div class="meal">
+
+        {# display week day and date #}
+        <div class="week-day">
+            <a name="{{ 'now' | date('Y-m-d') }}"></a>
+            <span>
+                {{ 'now' | date('D') }}
+            </span>
+        </div>
+
+        {# display meals for given day #}
+        {% for i in 0..1 %}
+            <div class="meal-row">
+                <div class="text">
+                    <div class="title">
+                        dish
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+    </div>
+{% endblock %}

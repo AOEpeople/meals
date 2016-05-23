@@ -218,59 +218,6 @@ class MealController extends BaseController {
 		return $this->redirect($this->generateUrlTo($meal));
 	}
 
-
-	protected function groupByDay(\DateTime $startTime, $meals) {
-		$return = array();
-
-		$return[$startTime->format('Y-m-d')] = array();
-
-		for ($i = 0; $i < 5; $i++) {
-			$day = clone($startTime);
-			$day->modify('+' . $i . ' days');
-			$return[$day->format('Y-m-d')] = array();
-		}
-
-		foreach($meals as $meal) {
-			/** @var Meal $meal */
-			$day = $meal->getDateTime()->format('Y-m-d');
-			if(!array_key_exists($day, $return)) {
-				/*
-				 * @TODO: throw new Error?
-				 */
-				$return[$day] = array();
-			}
-			$return[$day][] = $meal;
-		}
-
-		return $return;
-	}
-
-	protected function getWeek(\DateTime $startTime) {
-		$endTime = clone $startTime;
-		$endTime->modify('+4 days');
-		$endTime->setTime(23,59,59);
-
-		$meals = $this->getMealRepository()->getSortedMeals(
-			$startTime,
-			$endTime,
-			null,
-			array(
-				'load_dish' => true,
-				'load_participants' => true,
-			)
-		);
-
-		$days = $this->groupByDay($startTime, $meals);
-
-		$week = new Week();
-		$week->setStartTime($startTime);
-		$week->setEndTime($endTime);
-		$week->setMealsCount(count($meals));
-		$week->setDays($days);
-
-		return $week;
-	}
-
 	private function createWeek(\DateTime $dateTime)
 	{
 		$week = new Week();

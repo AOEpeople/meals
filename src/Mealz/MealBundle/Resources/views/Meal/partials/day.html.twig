@@ -1,0 +1,30 @@
+{% set available = false %}
+
+{% for meal in day.meals %}
+    {% if meal.dateTime | date_modify(lock_toggle_participation_at) | date('U') > 'now' | date('U') %}
+        {% set available = true %}
+    {% endif %}
+{% endfor %}
+
+<div class="meal {{ available ? 'is-available' : '' }}">
+
+    {# display week day and date #}
+    <div class="week-day">
+        <a name="{{ day.dateTime | date('Y-m-d') }}"></a>
+        <span>
+            {{ day.dateTime | date('D') }}
+        </span>
+    </div>
+
+    {# display meals for given day #}
+
+    {% for meal in day.meals %}
+        {% include 'MealzMealBundle:Meal/partials:meal.html.twig' %}
+    {% endfor %}
+    {% if day.meals | length == 1 %}
+        <div class="meal-row one-meal">{{ 'no_service'|trans({},'general') }}</div>
+    {% elseif day.meals | length == 0 %}
+        <div class="meal-row no-meal">{{ 'no_service'|trans({},'general') }}</div>
+    {% endif %}
+
+</div>

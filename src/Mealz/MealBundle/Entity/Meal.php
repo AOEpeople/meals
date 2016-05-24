@@ -27,7 +27,7 @@ class Meal
 	/**
 	 * @Assert\NotBlank()
 	 * @Assert\Type(type="Mealz\MealBundle\Entity\Dish")
-	 * @ORM\ManyToOne(targetEntity="Dish"	)
+	 * @ORM\ManyToOne(targetEntity="Dish", cascade={"refresh"}, fetch="EAGER")
 	 * @ORM\JoinColumn(name="dish_id", referencedColumnName="id")
 	 * @var Dish
 	 */

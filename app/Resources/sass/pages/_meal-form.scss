@@ -1,0 +1,19 @@
+.meal-form {
+  .week-form {
+
+    width: 70%;
+    margin: 0 auto;
+
+    text-align: center;
+
+    .meal {
+      .meal-row .form-row {
+        margin-bottom: 0;
+      }
+
+      .week-day-action {
+        width: 10%;
+      }
+    }
+  }
+}

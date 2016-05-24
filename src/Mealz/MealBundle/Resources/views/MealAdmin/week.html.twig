@@ -1,0 +1,43 @@
+{% extends '::base.html.twig' %}
+
+{% set wrapperClass = 'meal-form' %}
+
+{% form_theme form _self %}
+
+{% block datetime_widget -%}
+    {{ value }}
+{%- endblock datetime_widget %}
+
+{% block body %}
+
+    {{ MealzHeadline.create(1, 'week.create'|trans({},'general'), '', '', []) }}
+
+    <div class="week-form">
+    {{ form_start(form) }}
+    {{ form_widget(form.disabled) }}
+    {# render the task's only field: description #}
+        {# iterate over each existing tag and render its only field: name #}
+        {% for day in form.days %}
+            <div class="meal">
+                {# display week day and date #}
+                <div class="week-day">
+                    <span>
+                        {{ form_widget(day.dateTime) }}
+                    </span>
+                </div>
+
+                {# display meals for given day #}
+                {% for meal in day.meals %}
+                <div class="meal-row">
+                    {{ form_widget(meal) }}
+                </div>
+                {% endfor %}
+
+                <div class="week-day-action">
+                    {{ form_widget(day.disabled) }}
+                </div>
+            </div>
+        {% endfor %}
+    {{ form_end(form) }}
+    </div>
+{% endblock %}

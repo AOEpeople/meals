@@ -7,6 +7,7 @@ var scsslint    = require('gulp-scss-lint');
 var jshint      = require('gulp-jshint');
 var util        = require('gulp-util');
 var uglify      = require('gulp-uglify');
+var merge       = require('merge-stream');
 
 var config = {
     production: !!util.env.production
@@ -45,6 +46,7 @@ gulp.task('js', function() {
     gulp.src([
             'bower_components/jquery/dist/jquery.js',
             'bower_components/datatables.net/js/jquery.dataTables.js',
+            'bower_components/switchery/dist/switchery.min.js',
             'js/**/*.js'
         ])
         .pipe(concat('mealz.js'))
@@ -56,13 +58,19 @@ gulp.task('js', function() {
  * Compile SCSS to CSS
  */
 gulp.task('css', function() {
-    gulp.src(['./sass/**/*.scss', '!./sass/helpers/_glyphicons.scss'])
+
+    var sassStream = gulp.src(['./sass/**/*.scss', '!./sass/helpers/_glyphicons.scss'])
         .pipe(scsslint({
             'config': 'scsslint.yml'
         }))
         .pipe(config.production ? util.noop() : sourcemaps.init())
         .pipe(sass(config.production ? {outputStyle: 'compressed'} : util.noop()).on('error', sass.logError))
-        .pipe(config.production ? util.noop() : sourcemaps.write())
+        .pipe(config.production ? util.noop() : sourcemaps.write());
+
+    var cssStream = gulp.src(['bower_components/switchery/dist/switchery.min.css'])
+
+    return merge(sassStream, cssStream)
+        .pipe(concat('mealz.css'))
         .pipe(gulp.dest('../../web/'));
 });
 

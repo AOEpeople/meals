@@ -30,7 +30,11 @@ class WeekRepository extends EntityRepository
         return $qb->getQuery()->getSingleScalarResult();
     }
 
-    private function findWeekByDate(\DateTime $date)
+    /**
+     * @param \DateTime $date
+     * @return null|Week
+     */
+    public function findWeekByDate(\DateTime $date)
     {
         return $this->findOneBy(array(
             'year' => $date->format('Y'),

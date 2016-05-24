@@ -4,26 +4,19 @@
 
     {{ MealzHeadline.create(1, 'week.list'|trans({},'general'), '', '', []) }}
 
-    <div class="meal">
-
+    {% for week in weeks %}
         {# display week day and date #}
-        <div class="week-day">
-            <a name="{{ 'now' | date('Y-m-d') }}"></a>
-            <span>
-                {{ 'now' | date('D') }}
-            </span>
-        </div>
+        <!-- @TODO: use week.id instead of weekIdentifier -->
+        {% if week.id %}
+        <a href="{{ path('MealzMealBundle_Meal_edit', {'week': week.id}) }}" class="week">
+            {{ week.startTime | date('d.m.Y') }} - {{ week.EndTime | date('d.m.Y') }}
+        </a>
+        {% else %}
+        <a href="{{ path('MealzMealBundle_Meal_new', {'date': week.year~'W'~week.calendarWeek}) }}"
+           class="week">
+            {{ week.startTime | date('d.m.Y') }} - {{ week.EndTime | date('d.m.Y') }}
+        </a>
+        {% endif %}
+    {% endfor %}
 
-        {# display meals for given day #}
-        {% for i in 0..1 %}
-            <div class="meal-row">
-                <div class="text">
-                    <div class="title">
-                        dish
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
-
-    </div>
 {% endblock %}

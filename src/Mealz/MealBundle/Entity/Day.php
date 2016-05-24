@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Day extends AbstractMessage
 {
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      * @var integer $id
@@ -37,10 +37,15 @@ class Day extends AbstractMessage
     private $week;
 
     /**
-     * @ORM\OneToMany(targetEntity="Meal", mappedBy="day")
+     * @ORM\OneToMany(targetEntity="Meal", mappedBy="day", cascade={"all"})
      * @var ArrayCollection $meals
      */
     private $meals;
+
+    public function __construct()
+    {
+        $this->meals = new ArrayCollection();
+    }
 
     /**
      * @return \DateTime

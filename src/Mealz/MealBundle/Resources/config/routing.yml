@@ -6,6 +6,17 @@ MealzMealBundle_Meal:
     pattern:  /menu
     defaults: { _controller: "MealzMealBundle:MealAdmin:list" }
 
+MealzMealBundle_Meal_new:
+    pattern:  /menu/{date}/new
+    defaults: { _controller: "MealzMealBundle:MealAdmin:new" }
+    requirements:
+        # format "2014W12" 12th week in 2014
+        date: 20\d{2}W[0-5]\d
+
+MealzMealBundle_Meal_edit:
+    pattern:  /menu/{week}/edit
+    defaults: { _controller: "MealzMealBundle:MealAdmin:edit" }
+
 #MealzMealBundle_Meal_week:
 #    pattern:  /menu/{week}
 #    defaults: { _controller: "MealzMealBundle:Meal:index" }

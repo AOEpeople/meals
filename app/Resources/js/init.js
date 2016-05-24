@@ -1,6 +1,7 @@
 var Mealz = function () {
     this.checkboxWrapperClass = 'checkbox-wrapper';
-    this.$checkboxes = $('input.checkbox, input[type="checkbox"]');
+    this.$weekCheckboxes = $('.meal-form input.checkbox, .meal-form input[type="checkbox"]');
+    this.$participationCheckboxes = $('.meals-list input.checkbox, .meals-list input[type = "checkbox"]');
     this.selectWrapperClass = 'select-wrapper';
     this.$selects = $("select");
     this.$body = $('body');
@@ -19,7 +20,12 @@ Mealz.prototype.styleCheckboxes = function() {
     var that = this;
 
     // Check checkbox states
-    this.$checkboxes.each(function(idx, checkbox) {
+    this.$weekCheckboxes.each(function (idx, checkbox) {
+        new Switchery(checkbox);
+    });
+
+    // Check checkbox states
+    this.$participationCheckboxes.each(function(idx, checkbox) {
         var $checkbox = $(checkbox);
         that.applyCheckboxClasses($checkbox);
     });
@@ -31,7 +37,7 @@ Mealz.prototype.styleCheckboxes = function() {
     });
 
     // Handle change event on checkboxes
-    this.$checkboxes.on('change', function() {
+    this.$participationCheckboxes.on('change', function() {
         that.toggleParticipation($(this));
     });
 };

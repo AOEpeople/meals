@@ -5,6 +5,7 @@ namespace Mealz\MealBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
+/** @ORM\MappedSuperclass */
 abstract class AbstractMessage
 {
     /**
@@ -14,9 +15,8 @@ abstract class AbstractMessage
     private $disabled = FALSE;
 
     /**
-     * @Assert\NotBlank()
      * @Assert\Length(min=8, max=255)
-     * @ORM\Column(type="string", length=255, nullable=FALSE)
+     * @ORM\Column(type="string", length=255, nullable=TRUE)
      * @var string
      */
     private $message;

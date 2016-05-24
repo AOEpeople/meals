@@ -35,7 +35,8 @@ class Week extends AbstractMessage
     private $calendarWeek;
 
     /**
-     * @ORM\OneToMany(targetEntity="Day", mappedBy="week")
+     * @ORM\OneToMany(targetEntity="Day", mappedBy="week", cascade={"all"})
+     * @ORM\OrderBy({"dateTime" = "ASC"})
      * @var ArrayCollection $days
      */
     private $days;

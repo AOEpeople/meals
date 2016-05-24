@@ -2,128 +2,198 @@
 
 namespace Mealz\MealBundle\Controller;
 
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\UnitOfWork;
+use Mealz\MealBundle\Entity\Day;
 use Mealz\MealBundle\Entity\Meal;
-use Mealz\MealBundle\Form\MealAdminForm;
-use Mealz\MealBundle\Service\Workday;
+use Mealz\MealBundle\Entity\Week;
+use Mealz\MealBundle\Entity\WeekRepository;
+use Mealz\MealBundle\Form\WeekForm;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class MealAdminController extends BaseController {
 
-	public function listAction()
-	{
-		return $this->render('MealzMealBundle:MealAdmin:list.html.twig');
-	}
+    public function listAction()
+    {
+        if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
+            throw new AccessDeniedException();
+        }
 
-	public function newAction(Request $request) {
-		if(!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
-			throw new AccessDeniedException();
-		}
+        /** @var WeekRepository $weekRepository */
+        $weekRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Week');
 
-		$meal = new Meal();
-		$meal->setDateTime($this->guessNextMealDate());
+        $weeks = array();
 
-		$form = $this->createForm(new MealAdminForm(), $meal);
+        $dateTime = new \DateTime();
 
-		// handle form submission
-		if($request->isMethod('POST')) {
-			$form->handleRequest($request);
+        for ($i = 0; $i < 4; $i++) {
+            $dateTime->modify('+' . $i . ' weeks monday');
 
-			if ($form->isValid()) {
-				$em = $this->getDoctrine()->getManager();
-				if($em->getUnitOfWork()->getEntityState($meal->getDish()) === UnitOfWork::STATE_NEW) {
-					// if Dish is new
-					$em->persist($meal->getDish());
-				}
+            $week = $weekRepository->findOneBy(array(
+                'year' => $dateTime->format('Y'),
+                'calendarWeek' => $dateTime->format('W')
+            ));
 
-				$em->persist($meal);
-				$em->flush();
+            if (null === $week) {
+                $week = new Week();
+                $weekDateTime = clone($dateTime);
+                $week->setYear($weekDateTime->format('Y'));
+                $week->setCalendarWeek($weekDateTime->format('W'));
+            }
 
-				$this->addFlashMessage('Meal has been added.', 'success');
+            array_push($weeks, $week);
+        }
 
-				return $this->redirect($this->generateUrl('MealzMealBundle_Meal_new'));
-			}
-		}
+        return $this->render('MealzMealBundle:MealAdmin:list.html.twig', array(
+            'weeks' => $weeks
+        ));
+    }
 
-		return $this->render('MealzMealBundle:MealAdmin:form.html.twig', array(
-			'form' => $form->createView()
-		));
-	}
+    public function newAction(Request $request,\DateTime $date)
+    {
+        if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
+            throw new AccessDeniedException();
+        }
 
-	public function editAction(Request $request, Meal $meal) {
-		if(!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
-			throw new AccessDeniedException();
-		}
+        /** @var WeekRepository $weekRepository */
+        $weekRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Week');
+        $week = $weekRepository->findWeekByDate($date);
 
-		$form = $this->createForm(new MealAdminForm(), $meal);
+        if (null !== $week) {
+            return $this->redirectToRoute('MealzMealBundle_Meal_edit', array(
+                'week' => $week->getId()
+            ));
+        }
 
-		// handle form submission
-		if($request->isMethod('POST')) {
-			$form->handleRequest($request);
+        $week = $this->generateEmptyWeek($date);
 
-			if ($form->isValid()) {
-				$em = $this->getDoctrine()->getManager();
-				if($em->getUnitOfWork()->getEntityState($meal->getDish()) === UnitOfWork::STATE_NEW) {
-					// if Dish is new
-					$em->persist($meal->getDish());
-				}
-				$em->persist($meal);
-				$em->flush();
+        $form = $this->createForm(new WeekForm(), $week);
 
-				$this->addFlashMessage('Meal was modified.', 'success');
+        // handle form submission
+        if ($request->isMethod('POST')) {
+            $form->handleRequest($request);
 
-				return $this->redirect($this->generateUrlTo($meal));
-			}
-		}
+            if ($form->isValid()) {
 
-		return $this->render('MealzMealBundle:MealAdmin:form.html.twig', array(
-			'meal' => $meal,
-			'form' => $form->createView()
-		));
-	}
+                foreach ($week->getDays() as $day) {
+                    /** @var Day $day */
+                    foreach ($day->getMeals() as $meal) {
+                        /** @var Meal $meal */
+                        if (null === $meal->getDish()) {
+                            $day->getMeals()->removeElement($meal);
+                        }
+                    }
+                }
 
-	public function deleteAction(Meal $meal) {
-		if(!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
-			throw new AccessDeniedException();
-		}
+                /** @var EntityManager $em */
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($week);
+                $em->flush();
 
-		$em = $this->getDoctrine()->getManager();
+                $this->addFlashMessage('Week has been created.', 'success');
+                return $this->redirect($this->generateUrl('MealzMealBundle_Meal_edit', array(
+                    'week' => $week->getId()
+                )));
+            }
+        }
 
-		if($meal->getParticipants()->count() > 0) {
-			// if: there are already participants
-			$this->addFlashMessage(
-				'Removing this meal is not allowed, because there are already participants.',
-				'danger'
-			);
-		} else {
-			// else: no need to keep an unused record
-			$em->remove($meal);
-			$em->flush();
+        return $this->render('MealzMealBundle:MealAdmin:week.html.twig', array(
+            'form' => $form->createView()
+        ));
+    }
 
-			$this->addFlashMessage(sprintf('Meal "%s" was deleted.', $meal->getDish()->getTitle()), 'success');
-		}
+    public function editAction(Request $request, Week $week)
+    {
+        if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
+            throw new AccessDeniedException();
+        }
 
-		return $this->redirect($this->generateUrl('MealzMealBundle_Meal'));
-	}
+        foreach($week->getDays() as $day) {
+            $this->generateEmptyMealsForDay($day);
+        }
 
-	/**
-	 * guess when the next meal will take place
-	 *
-	 * @return \DateTime
-	 */
-	protected function guessNextMealDate() {
-		$lastMeal = $this->getMealRepository()->getLastMealDate();
-		if(!$lastMeal) {
-			return new \DateTime();
-		}
-		$count = $this->getMealRepository()->countMealsAt($lastMeal);
-		if($count >= 2) {
-			/** @var Workday $workdayService */
-			$workdayService = $this->get('mealz_meal.workday');
-			return $workdayService->getNextWorkday($lastMeal);
-		} else {
-			return $lastMeal;
-		}
-	}
+        $form = $this->createForm(new WeekForm(), $week);
+
+        // handle form submission
+        if ($request->isMethod('POST')) {
+            $form->handleRequest($request);
+
+            if ($form->isValid()) {
+                /** @var EntityManager $em */
+                $em = $this->getDoctrine()->getManager();
+
+                foreach ($week->getDays() as $day) {
+                    /** @var Day $day */
+                    foreach ($day->getMeals() as $meal) {
+                        /** @var Meal $meal */
+                        if (null === $meal->getDish()) {
+                            if ($meal->getParticipants()->count() > 0) {
+                                $this->addFlashMessage(
+                                    sprintf(
+                                        'There are already participation for the meal on "%s"',
+                                        $meal->getDateTime()->format('D')
+                                    ),
+                                    'danger'
+                                );
+                                return $this->redirectToRoute('MealzMealBundle_Meal_edit', array(
+                                    'week' => $week->getId()
+                                ));
+                            } else if ($em->getUnitOfWork()->getEntityState($meal) !== UnitOfWork::STATE_NEW){
+                                $em->remove($meal);
+                                $em->flush();
+                            } else {
+                                $day->getMeals()->removeElement($meal);
+                            }
+                        }
+                    }
+                }
+
+                $em->persist($week);
+                $em->flush();
+                $this->addFlashMessage('Week has been modified.', 'success');
+
+                return $this->redirectToRoute('MealzMealBundle_Meal_edit', array(
+                    'week' => $week->getId()
+                ));
+            }
+        }
+
+        return $this->render('MealzMealBundle:MealAdmin:week.html.twig', array(
+            'form' => $form->createView()
+        ));
+    }
+
+    protected function generateEmptyWeek(\DateTime $dateTime)
+    {
+        $week = new Week();
+        $week->setYear($dateTime->format('Y'));
+        $week->setCalendarWeek($dateTime->format('W'));
+
+        $days = $week->getDays();
+        for ($i = 0; $i < 5; $i++) {
+            $dayDateTime = clone($week->getStartTime());
+            $dayDateTime->modify('+' . $i . ' days');
+            $day = new Day();
+            $day->setDateTime($dayDateTime);
+            $this->generateEmptyMealsForDay($day);
+            $day->setWeek($week);
+            $days->add($day);
+        }
+
+        return $week;
+    }
+
+    protected function generateEmptyMealsForDay(Day $day)
+    {
+        while(count($day->getMeals()) < 2) {
+            $meal = new Meal();
+            $meal->setDay($day);
+            $mealDateTime = clone($day->getDateTime());
+            $mealDateTime->setTime(12, 00);
+            $meal->setDateTime($mealDateTime);
+            $meal->setPrice('3.10');
+            $day->getMeals()->add($meal);
+        }
+    }
 }

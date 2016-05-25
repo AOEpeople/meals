@@ -28,18 +28,17 @@ class MealAdminController extends BaseController {
         $dateTime = new \DateTime();
 
         for ($i = 0; $i < 4; $i++) {
-            $dateTime->modify('+' . $i . ' weeks monday');
-
+            $modifiedDateTime = clone($dateTime);
+            $modifiedDateTime->modify('+' . $i . ' weeks');
             $week = $weekRepository->findOneBy(array(
-                'year' => $dateTime->format('Y'),
-                'calendarWeek' => $dateTime->format('W')
+                'year' => $modifiedDateTime->format('Y'),
+                'calendarWeek' => $modifiedDateTime->format('W')
             ));
 
             if (null === $week) {
                 $week = new Week();
-                $weekDateTime = clone($dateTime);
-                $week->setYear($weekDateTime->format('Y'));
-                $week->setCalendarWeek($weekDateTime->format('W'));
+                $week->setYear($modifiedDateTime->format('Y'));
+                $week->setCalendarWeek($modifiedDateTime->format('W'));
             }
 
             array_push($weeks, $week);

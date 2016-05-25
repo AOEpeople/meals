@@ -1,29 +1,31 @@
-.meal-form {
-  .week-form {
+.week-form {
 
-    width: 70%;
-    margin: 0 auto;
+  width: 70%;
+  margin: 0 auto;
 
-    text-align: center;
+  text-align: center;
 
-    .meal {
+  .meal {
 
-      border-right: 70px solid transparent;
+    border-right: 70px solid transparent;
 
-      .meal-row .form-row {
-        margin-bottom: 0;
-      }
-
-      .meal-rows-wrapper {
-        border-right: 1px solid #d6dee2;
-      }
-
-      .week-day-action {
-        position: absolute;
-        top: 50%;
-        right: -61px;
-        margin-top: -16px;
-      }
+    .meal-row .form-row {
+      margin-bottom: 0;
     }
+
+    .meal-rows-wrapper {
+      border-right: 1px solid $meal-border-color;
+    }
+
+    .week-day-action {
+      position: absolute;
+      top: 50%;
+      right: -61px;
+      margin-top: -16px;
+    }
+  }
+
+  .select-wrapper {
+    display: block;
   }
 }

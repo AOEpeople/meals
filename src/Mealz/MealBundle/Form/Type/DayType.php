@@ -26,7 +26,7 @@ class DayType extends AbstractType
                 'allow_delete' => true,
                 'delete_empty' => true
             ))
-            ->add('disabled', CheckboxType::class, array(
+            ->add('enabled', CheckboxType::class, array(
                 'required' => false,
                 'attr' => array('class' => 'js-switch')
             ))

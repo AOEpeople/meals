@@ -21,7 +21,7 @@ class WeekForm extends AbstractType
             ->add('days', CollectionType::class, array(
                 'entry_type' => DayType::class
             ))
-            ->add('disabled', CheckboxType::class, array(
+            ->add('enabled', CheckboxType::class, array(
                 'required' => false,
                 'attr' => array('class' => 'js-switch')
             ))

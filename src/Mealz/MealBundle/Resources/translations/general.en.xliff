@@ -19,6 +19,10 @@
                 <target>Create week</target>
             </trans-unit>
             <trans-unit id="1e">
+                <source>week.edit</source>
+                <target>Edit week</target>
+            </trans-unit>
+            <trans-unit id="1f">
                 <source>week.disabled</source>
                 <target>This week is disabled!</target>
             </trans-unit>

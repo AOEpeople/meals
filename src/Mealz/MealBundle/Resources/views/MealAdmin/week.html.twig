@@ -10,12 +10,20 @@
 
 {% block body %}
 
-    {{ MealzHeadline.create(1, 'week.create'|trans({},'general'), '', '', []) }}
+    {% set action %}
+        {% if week.id is not null %}
+            {{ 'week.edit'|trans({},'general') }}
+        {% else %}
+            {{ 'week.create'|trans({},'general') }}
+        {% endif %}
+    {% endset %}
+
+    {{ MealzHeadline.create(1, action ~ week.startTime | date('d.m.-') ~ week.endTime | date('d.m.Y'), '', '', []) }}
 
     <div class="week-form">
         {{ form_start(form) }}
         <div class="week-disable">
-            {{ form_widget(form.disabled) }}
+            {{ form_widget(form.enabled) }}
         </div>
 
         {% for day in form.days %}
@@ -37,7 +45,7 @@
             </div>
 
             <div class="week-day-action">
-                {{ form_widget(day.disabled) }}
+                {{ form_widget(day.enabled) }}
             </div>
         </div>
         {% endfor %}

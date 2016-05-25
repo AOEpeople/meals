@@ -11,7 +11,7 @@
 
 	{{ MealzHeadline.create(1, headline, '', 'centered', [], headlineSub) }}
 
-	{% if week.disabled %}
+	{% if not week.enabled %}
 		{% include 'MealzMealBundle:Meal/partials:noMeals.html.twig' %}
 	{% elseif weekMealsCount > 0 %}
 		{% for day in week.days %}

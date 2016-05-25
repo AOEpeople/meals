@@ -1,7 +1,7 @@
 {% set available = false %}
 
 
-{% if not day.disabled %}
+{% if day.enabled %}
     {% for meal in day.meals %}
         {% if meal.dateTime | date_modify(lock_toggle_participation_at) | date('U') > 'now' | date('U') %}
             {% set available = true %}
@@ -19,7 +19,7 @@
         </span>
     </div>
 
-    {% if day.disabled %}
+    {% if not day.enabled %}
         <div class="meal-row no-meal">{{ 'day.disabled'|trans({},'general') }}</div>
     {% else %}
         {# display meals for given day #}

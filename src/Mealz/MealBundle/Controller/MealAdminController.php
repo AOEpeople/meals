@@ -27,7 +27,7 @@ class MealAdminController extends BaseController {
 
         $dateTime = new \DateTime();
 
-        for ($i = 0; $i < 4; $i++) {
+        for ($i = 0; $i < 6; $i++) {
             $modifiedDateTime = clone($dateTime);
             $modifiedDateTime->modify('+' . $i . ' weeks');
             $week = $weekRepository->findOneBy(array(
@@ -98,7 +98,8 @@ class MealAdminController extends BaseController {
         }
 
         return $this->render('MealzMealBundle:MealAdmin:week.html.twig', array(
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'week' => $week
         ));
     }
 
@@ -159,7 +160,8 @@ class MealAdminController extends BaseController {
         }
 
         return $this->render('MealzMealBundle:MealAdmin:week.html.twig', array(
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'week' => $week
         ));
     }
 

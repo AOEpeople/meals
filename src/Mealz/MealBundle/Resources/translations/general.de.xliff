@@ -19,6 +19,10 @@
                 <target>Woche erstellen</target>
             </trans-unit>
             <trans-unit id="1e">
+                <source>week.edit</source>
+                <target>Woche bearbeiten</target>
+            </trans-unit>
+            <trans-unit id="1f">
                 <source>week.disabled</source>
                 <target>Diese Woche ist deaktiviert!</target>
             </trans-unit>

@@ -12,7 +12,7 @@ abstract class AbstractMessage
      * @ORM\Column(type="boolean", nullable=FALSE)
      * @var bool
      */
-    private $disabled = FALSE;
+    private $enabled = TRUE;
 
     /**
      * @Assert\Length(min=8, max=255)
@@ -24,17 +24,17 @@ abstract class AbstractMessage
     /**
      * @return boolean
      */
-    public function isDisabled()
+    public function isEnabled()
     {
-        return $this->disabled;
+        return $this->enabled;
     }
 
     /**
      * @param boolean $disabled
      */
-    public function setDisabled($disabled)
+    public function setEnabled($disabled)
     {
-        $this->disabled = $disabled;
+        $this->enabled = $disabled;
     }
 
     /**

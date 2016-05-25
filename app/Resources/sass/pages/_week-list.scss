@@ -1,12 +1,11 @@
 .week-list {
   a.week {
-    float: left;
-    text-align: center;
-    padding: 10px;
-    margin: 10px;
-    border: 1px solid $color-gray-primary;
-
     @include clearfix();
+    float: left;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid $color-gray-primary;
+    text-align: center;
 
     &:hover {
       color: inherit;

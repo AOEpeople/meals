@@ -1,5 +1,5 @@
 <div class="no-meals">
-	{% if week.disabled%}
+	{% if not week.enabled%}
 		{{ 'week.disabled' | trans({}, 'general') }}
 	{% else %}
 	Be patient - we don't have

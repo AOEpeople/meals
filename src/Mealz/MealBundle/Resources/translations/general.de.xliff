@@ -18,6 +18,14 @@
                 <source>week.create</source>
                 <target>Woche erstellen</target>
             </trans-unit>
+            <trans-unit id="1e">
+                <source>week.disabled</source>
+                <target>Diese Woche ist deaktiviert!</target>
+            </trans-unit>
+            <trans-unit id="16">
+                <source>day.disabled</source>
+                <target>Dieser Tag ist deaktiviert!</target>
+            </trans-unit>
             <trans-unit id="2">
                 <source>dishes</source>
                 <target>Gerichte</target>

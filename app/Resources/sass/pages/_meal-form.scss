@@ -7,12 +7,22 @@
     text-align: center;
 
     .meal {
+
+      border-right: 70px solid transparent;
+
       .meal-row .form-row {
         margin-bottom: 0;
       }
 
+      .meal-rows-wrapper {
+        border-right: 1px solid #d6dee2;
+      }
+
       .week-day-action {
-        width: 10%;
+        position: absolute;
+        top: 50%;
+        right: -61px;
+        margin-top: -16px;
       }
     }
   }

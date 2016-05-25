@@ -1,5 +1,7 @@
 {% extends '::base.html.twig' %}
 
+{% set wrapperClass = 'week-list' %}
+
 {% block body %}
 
     {{ MealzHeadline.create(1, 'week.list'|trans({},'general'), '', '', []) }}
@@ -9,14 +11,12 @@
         <!-- @TODO: use week.id instead of weekIdentifier -->
         {% if week.id %}
         <a href="{{ path('MealzMealBundle_Meal_edit', {'week': week.id}) }}" class="week">
-            {{ week.startTime | date('d.m.Y') }} - {{ week.EndTime | date('d.m.Y') }}
-        </a>
         {% else %}
         <a href="{{ path('MealzMealBundle_Meal_new', {'date': week.year~'W'~week.calendarWeek}) }}"
-           class="week">
-            {{ week.startTime | date('d.m.Y') }} - {{ week.EndTime | date('d.m.Y') }}
-        </a>
+           class="week week-create">
         {% endif %}
+            {{ week.startTime | date('d.m.Y') }}<br>-<br>{{ week.EndTime | date('d.m.Y') }}
+        </a>
     {% endfor %}
 
 {% endblock %}

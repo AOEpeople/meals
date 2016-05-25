@@ -1,10 +1,13 @@
 {% set available = false %}
 
-{% for meal in day.meals %}
-    {% if meal.dateTime | date_modify(lock_toggle_participation_at) | date('U') > 'now' | date('U') %}
-        {% set available = true %}
-    {% endif %}
-{% endfor %}
+
+{% if not day.disabled %}
+    {% for meal in day.meals %}
+        {% if meal.dateTime | date_modify(lock_toggle_participation_at) | date('U') > 'now' | date('U') %}
+            {% set available = true %}
+        {% endif %}
+    {% endfor %}
+{% endif %}
 
 <div class="meal {{ available ? 'is-available' : '' }}">
 
@@ -16,15 +19,18 @@
         </span>
     </div>
 
-    {# display meals for given day #}
-
-    {% for meal in day.meals %}
-        {% include 'MealzMealBundle:Meal/partials:meal.html.twig' %}
-    {% endfor %}
-    {% if day.meals | length == 1 %}
-        <div class="meal-row one-meal">{{ 'no_service'|trans({},'general') }}</div>
-    {% elseif day.meals | length == 0 %}
-        <div class="meal-row no-meal">{{ 'no_service'|trans({},'general') }}</div>
+    {% if day.disabled %}
+        <div class="meal-row no-meal">{{ 'day.disabled'|trans({},'general') }}</div>
+    {% else %}
+        {# display meals for given day #}
+        {% for meal in day.meals %}
+            {% include 'MealzMealBundle:Meal/partials:meal.html.twig' %}
+        {% endfor %}
+        {% if day.meals | length == 1 %}
+            <div class="meal-row one-meal">{{ 'no_service'|trans({},'general') }}</div>
+        {% elseif day.meals | length == 0 %}
+            <div class="meal-row no-meal">{{ 'no_service'|trans({},'general') }}</div>
+        {% endif %}
     {% endif %}
 
 </div>

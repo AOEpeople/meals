@@ -11,12 +11,12 @@
 
 	{{ MealzHeadline.create(1, headline, '', 'centered', [], headlineSub) }}
 
-	{% if weekMealsCount > 0 %}
-
+	{% if week.disabled %}
+		{% include 'MealzMealBundle:Meal/partials:noMeals.html.twig' %}
+	{% elseif weekMealsCount > 0 %}
 		{% for day in week.days %}
 			{% include 'MealzMealBundle:Meal/partials:day.html.twig' %}
 		{% endfor %}
-
 	{% else %}
 		{% include 'MealzMealBundle:Meal/partials:noMeals.html.twig' %}
 	{% endif %}

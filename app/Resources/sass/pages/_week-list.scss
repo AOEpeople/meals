@@ -1,0 +1,19 @@
+.week-list {
+  a.week {
+    float: left;
+    text-align: center;
+    padding: 10px;
+    margin: 10px;
+    border: 1px solid $color-gray-primary;
+
+    @include clearfix();
+
+    &:hover {
+      color: inherit;
+    }
+
+    &.week-create {
+      color: $color-green;
+    }
+  }
+}

@@ -1,4 +1,8 @@
 <div class="no-meals">
+	{% if week.disabled%}
+		{{ 'week.disabled' | trans({}, 'general') }}
+	{% else %}
 	Be patient - we don't have
 	a menu yet but we're working on it :)
+	{% endif %}
 </div>

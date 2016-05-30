@@ -1,6 +1,7 @@
 var Mealz = function () {
     this.checkboxWrapperClass = 'checkbox-wrapper';
-    this.$weekCheckboxes = $('.meal-form input.checkbox, .meal-form input[type="checkbox"]');
+    this.weekCheckbox = $('.meal-form .week-disable input[type="checkbox"]')[0];
+    this.$weekDayCheckboxes = $('.meal-form .week-day-action input[type="checkbox"]');
     this.$participationCheckboxes = $('.meals-list input.checkbox, .meals-list input[type = "checkbox"]');
     this.selectWrapperClass = 'select-wrapper';
     this.$selects = $("select");
@@ -16,13 +17,60 @@ Mealz.prototype.applyCheckboxClasses = function ($checkbox) {
     $checkboxWrapper.toggleClass('disabled', $checkbox.is(':disabled'));
 };
 
+Mealz.prototype.applySwitcheryStates = function (call) {
+    var that = this;
+
+    //// disable all days in disabled week
+    //that.$weekDayCheckboxes.each(function (idx, checkbox) {
+    //    console.log(that.weekCheckbox.checked);
+    //    console.log(checkbox.checked);
+    //    if (that.weekCheckbox.checked !== checkbox.checked) {
+    //        checkbox.click();
+    //        console.log(checkbox.checked);
+    //    }
+    //});
+
+    // disable all day checkboxes in disabled week
+    if (typeof(call) === 'undefined') {
+        call = that.weekCheckbox.checked ? 'enable' : 'disable';
+    }
+
+    for (var i = 0; i < that.weekDaySwitchery.length; i++) {
+        // if enable is called on a already enabled switchery element, you can't switch
+        // its status anymore by clicking (see https://github.com/abpetkov/switchery/issues/103)
+        var weekDaySwitcheryIsDisabled = that.weekDaySwitchery[i].isDisabled();
+        if (weekDaySwitcheryIsDisabled && call === 'enable' ||
+            !weekDaySwitcheryIsDisabled && call === 'disable') {
+            that.weekDaySwitchery[i][call]();
+        }
+    }
+};
+
 Mealz.prototype.styleCheckboxes = function() {
     var that = this;
 
-    // Check checkbox states
-    this.$weekCheckboxes.each(function (idx, checkbox) {
-        new Switchery(checkbox);
-    });
+    if (this.weekCheckbox && this.$weekDayCheckboxes) {
+        // Enable switchery for week days
+        that.weekDaySwitchery = [];
+        this.$weekDayCheckboxes.each(function (idx, checkbox) {
+            that.weekDaySwitchery.push(new Switchery(checkbox));
+        });
+
+        // Enable switchery for week
+        new Switchery(this.weekCheckbox);
+        var weekSwitchery = $('.meal-form .week-disable > .switchery').detach();
+        weekSwitchery.appendTo('.meal-form .headline-tool');
+
+        that.applySwitcheryStates();
+        this.weekCheckbox.onchange = function () {
+            that.applySwitcheryStates();
+        };
+
+        // enable checkboxes before submit, otherwise they will be set to false
+        $('.meal-form .week-form > form').on('submit', function () {
+            that.applySwitcheryStates('enable');
+        });
+    }
 
     // Check checkbox states
     this.$participationCheckboxes.each(function(idx, checkbox) {

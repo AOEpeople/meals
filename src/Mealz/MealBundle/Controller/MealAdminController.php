@@ -71,7 +71,11 @@ class MealAdminController extends BaseController {
 
         // handle form submission
         if ($request->isMethod('POST')) {
+
             $form->handleRequest($request);
+            if ($form->get('Cancel')->isClicked()) {
+                return $this->redirectToRoute('MealzMealBundle_Meal');
+            }
 
             if ($form->isValid()) {
 
@@ -117,7 +121,11 @@ class MealAdminController extends BaseController {
 
         // handle form submission
         if ($request->isMethod('POST')) {
+
             $form->handleRequest($request);
+            if ($form->get('Cancel')->isClicked()) {
+                return $this->redirectToRoute('MealzMealBundle_Meal');
+            }
 
             if ($form->isValid()) {
                 /** @var EntityManager $em */

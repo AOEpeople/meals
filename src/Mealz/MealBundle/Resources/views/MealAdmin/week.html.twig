@@ -49,6 +49,8 @@
             </div>
         </div>
         {% endfor %}
+        {{ form_widget(form.Cancel) }}
+        {{ form_widget(form.Save) }}
         {{ form_end(form) }}
     </div>
 {% endblock %}

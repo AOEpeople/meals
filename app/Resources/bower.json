@@ -15,6 +15,7 @@
   ],
   "dependencies": {
     "jquery": ">= 1.9.0",
-    "datatables.net": "1.10.11"
+    "datatables.net": "1.10.11",
+    "switchery": "^0.8.1"
   }
 }

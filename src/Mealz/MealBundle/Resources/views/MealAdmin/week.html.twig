@@ -18,7 +18,14 @@
         {% endif %}
     {% endset %}
 
-    {{ MealzHeadline.create(1, action ~ week.startTime | date('d.m.-') ~ week.endTime | date('d.m.Y'), '', '', ['']) }}
+    {% set weekInfo %}
+        {% spaceless %}
+            #{{ week.startTime | date('W')}}
+            ({{ week.startTime | date('d.m.') }}-{{ week.endTime | date('d.m.')}})
+        {% endspaceless %}
+    {% endset %}
+
+    {{ MealzHeadline.create(1, action ~ weekInfo , '', '', ['']) }}
 
     <div class="week-form">
         {{ form_start(form) }}

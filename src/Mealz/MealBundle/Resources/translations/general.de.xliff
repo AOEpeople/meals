@@ -24,11 +24,11 @@
             </trans-unit>
             <trans-unit id="1f">
                 <source>week.disabled</source>
-                <target>Diese Woche ist deaktiviert!</target>
+                <target>Leider kein Angebot in dieser Woche!</target>
             </trans-unit>
             <trans-unit id="16">
                 <source>day.disabled</source>
-                <target>Dieser Tag ist deaktiviert!</target>
+                <target>Leider kein Angebot für diesen Tag!</target>
             </trans-unit>
             <trans-unit id="2">
                 <source>dishes</source>

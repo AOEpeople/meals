@@ -37,6 +37,10 @@ select {
   &:focus {
     outline: none;
   }
+
+  &:disabled {
+    opacity: .5;
+  }
 }
 
 .select-wrapper {

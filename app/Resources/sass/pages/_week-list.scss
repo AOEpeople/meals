@@ -1,10 +1,15 @@
-.week-list {
+.weeks-wrapper {
   a.week {
     @include clearfix();
+    position: relative;
     float: left;
-    margin: 10px;
+    width: 270px;
+    height: 180px;
+    margin-right: 20px;
+    margin-bottom: 30px;
     padding: 10px;
-    border: 1px solid $color-gray-primary;
+    color: $color-base;
+    background-color: $color-gray-light;
     text-align: center;
 
     &:hover {
@@ -12,7 +17,27 @@
     }
 
     &.week-create {
-      color: $color-green;
+      background-color: $color-gray-lighter;
+    }
+
+    &:nth-child(1) {
+      border: 5px solid $color-secondary;
+    }
+
+    &:nth-child(4n) {
+      margin-right: 0;
+    }
+
+    .week-info {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+
+      .week-number {
+        padding: 5px;
+        font-family: "ClanOTBold", sans-serif;
+      }
     }
   }
 }

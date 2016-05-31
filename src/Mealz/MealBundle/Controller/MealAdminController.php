@@ -27,7 +27,7 @@ class MealAdminController extends BaseController {
 
         $dateTime = new \DateTime();
 
-        for ($i = 0; $i < 6; $i++) {
+        for ($i = 0; $i < 8; $i++) {
             $modifiedDateTime = clone($dateTime);
             $modifiedDateTime->modify('+' . $i . ' weeks');
             $week = $weekRepository->findOneBy(array(

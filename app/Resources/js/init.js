@@ -68,7 +68,13 @@ Mealz.prototype.styleCheckboxes = function() {
 
         // enable checkboxes before submit, otherwise they will be set to false
         $('.meal-form .week-form > form').on('submit', function () {
-            that.applySwitcheryStates('enable');
+            for (var i = 0; i < that.weekDaySwitchery.length; i++) {
+                var current = that.weekDaySwitchery[i];
+                if (current.isDisabled()) {
+                    current.enable();
+                    current.switcher.style.opacity = 0.5;
+                }
+            }
         });
     }
 

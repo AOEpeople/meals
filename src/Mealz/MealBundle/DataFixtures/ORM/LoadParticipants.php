@@ -79,6 +79,6 @@ class LoadParticipants extends AbstractFixture implements OrderedFixtureInterfac
 
 	public function getOrder()
 	{
-		return 5;
+		return 6;
 	}
 }

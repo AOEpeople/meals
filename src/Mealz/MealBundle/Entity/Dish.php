@@ -2,7 +2,6 @@
 
 namespace Mealz\MealBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -60,6 +59,13 @@ class Dish
 	 * @var null|string
 	 */
 	protected $description_de = NULL;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Category", inversedBy="dishes")
+     * @ORM\JoinColumn(name="category_id", referencedColumnName="id", onDelete="SET NULL")
+     * @var null|Category
+     */
+    protected $category = NULL;
 
 	/**
 	 * @ORM\Column(type="decimal", precision=10, scale=4, nullable=TRUE)
@@ -253,4 +259,19 @@ class Dish
 		return $this->getTitle();
 	}
 
+    /**
+     * @return Category
+     */
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
+    /**
+     * @param Category $category
+     */
+    public function setCategory(Category $category)
+    {
+        $this->category = $category;
+    }
 }

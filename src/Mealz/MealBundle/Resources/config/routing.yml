@@ -106,3 +106,27 @@ MealzMealBundle_Dish_edit:
 MealzMealBundle_Dish_delete:
     pattern:  /dish/{slug}/delete
     defaults: { _controller: "MealzMealBundle:Dish:delete" }
+
+MealzMealBundle_Category:
+    pattern:  /category
+    defaults: {_controller: "MealzMealBundle:Category:list"}
+
+MealzMealBundle_Category_new:
+    pattern:  /category/new
+    defaults: { _controller: "MealzMealBundle:Category:new" }
+
+MealzMealBundle_Category_edit:
+    pattern:  /category/{slug}/edit
+    defaults: {_controller: "MealzMealBundle:Category:edit"}
+
+MealzMealBundle_Category_delete:
+    pattern:  /category/{slug}/delete
+    defaults: {_controller: "MealzMealBundle:Category:delete"}
+
+MealzMealBundle_Category_Form_empty:
+    pattern:  /category/form
+    defaults: { _controller: "MealzMealBundle:Category:getEmptyForm" }
+
+MealzMealBundle_Category_Form_preFilled:
+    pattern:  /category/form/{slug}
+    defaults: { _controller: "MealzMealBundle:Category:getPreFilledForm" }

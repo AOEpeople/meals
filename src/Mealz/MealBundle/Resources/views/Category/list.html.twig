@@ -10,9 +10,6 @@
         'label': 'Title',
         'class': 'dish-title'
     }, {
-        'label': 'Category',
-        'class': 'dish-category'
-    }, {
         'label': 'Actions',
         'class': 'dish-actions no-sort'
     }]
@@ -21,20 +18,16 @@
 {# Set data for table content #}
 
 {% set tableContent = [] %}
-{% for dish in dishes %}
+{% for category in categories %}
     {% set tableContent = [{
         'title': {
-            'content': dish.title,
+            'content': category.title,
             'class': 'dish-title'
-        },
-        'category': {
-            'content': dish.category,
-            'class': 'dish-category'
         },
         'actions': {
             'content': MealzButton.buttonbar('', 'buttonbar-dish-actions', [
-                            MealzButton.link(link(dish, 'edit'), 'Edit', '', 'dish-edit dish-load-form transparent', 'glyphicon-pencil'),
-                            MealzButton.link(link(dish, 'delete'), 'Delete', '', 'transparent', 'glyphicon-remove')
+                            MealzButton.link(link(category, 'edit'), 'Edit', '', 'dish-edit category-load-form transparent', 'glyphicon-pencil'),
+                            MealzButton.link(link(category, 'delete'), 'Delete', '', 'transparent', 'glyphicon-remove')
                        ]),
             'class': 'dish-actions'
         }
@@ -44,7 +37,7 @@
 {# Start tempalte #}
 
 {{ MealzHeadline.create(1, 'list.dish'|trans({},'general'), '', '', [
-    MealzButton.link(path('MealzMealBundle_Dish_Form_empty'), 'Create Dish', '', 'dish-create dish-load-form transparent', 'svg-dish')
+    MealzButton.link(path('MealzMealBundle_Category_Form_empty'), 'Create Category', '', 'dish-create category-load-form transparent', 'svg-dish')
 ], '') }}
 
     {% if form is defined %}

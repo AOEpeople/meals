@@ -4,6 +4,7 @@
 namespace Mealz\MealBundle\Controller;
 
 
+use Mealz\MealBundle\Entity\CategoryRepository;
 use Mealz\MealBundle\Entity\DishRepository;
 use Mealz\MealBundle\Entity\MealRepository;
 use Mealz\MealBundle\Entity\ParticipantRepository;
@@ -38,6 +39,14 @@ abstract class BaseController extends Controller {
 	 */
 	public function getParticipantRepository() {
 		return $this->getDoctrine()->getRepository('MealzMealBundle:Participant');
+	}
+
+	/**
+	 * @return CategoryRepository
+	 */
+	public function getCategoryRepository()
+	{
+		return $this->getDoctrine()->getRepository('MealzMealBundle:Category');
 	}
 
 	/**

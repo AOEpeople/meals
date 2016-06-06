@@ -161,6 +161,35 @@ Mealz.prototype.loadDishForm = function ($element) {
     });
 };
 
+Mealz.prototype.loadCategoryForm = function ($element) {
+    var url = $element.attr('href');
+    var $dishForm = $('.dish-form');
+    var animationDuration = 150;
+
+    if ($element.hasClass('dish-create') && $dishForm.is(':visible') && $dishForm.hasClass('form-dish-create')) {
+        $dishForm.slideUp(animationDuration);
+        return false;
+    }
+
+    $dishForm.toggleClass('form-dish-create', $element.hasClass('dish-create'));
+
+    $.ajax({
+        method: 'GET',
+        url: url,
+        dataType: 'json',
+        success: function (data) {
+            $dishForm.html(data);
+            new Mealz().styleSelects();
+            if (!$dishForm.is(':visible')) {
+                $dishForm.slideDown(animationDuration);
+            }
+        },
+        error: function (xhr) {
+            console.log(xhr.status + ': ' + xhr.statusText);
+        }
+    });
+};
+
 $(document).ready(function() {
 
     var mealz = new Mealz();
@@ -175,6 +204,11 @@ $(document).ready(function() {
     $('.dish-load-form').on('click', function(e) {
         e.preventDefault();
         mealz.loadDishForm($(this));
+    });
+
+    $('.category-load-form').on('click', function (e) {
+        e.preventDefault();
+        mealz.loadCategoryForm($(this));
     });
 
     $('#dish-table').DataTable({

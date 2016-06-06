@@ -1,6 +1,7 @@
 <?php
 
 namespace Mealz\MealBundle\Service;
+use Mealz\MealBundle\Entity\Category;
 use Mealz\MealBundle\Entity\Dish;
 use Mealz\MealBundle\Entity\Meal;
 use Mealz\MealBundle\Entity\Participant;
@@ -32,6 +33,8 @@ class Link {
 			return $this->linkParticipant($object, $action, $referenceType);
 		} elseif($object instanceof Dish) {
 			return $this->linkDish($object, $action, $referenceType);
+		} elseif ($object instanceof Category) {
+			return $this->linkCategory($object, $action, $referenceType);
 		} else {
 			throw new \InvalidArgumentException(sprintf(
 				'linking a %s object is not configured.',
@@ -89,6 +92,27 @@ class Link {
 				'linking to "%s" action on a %s object is not configured.',
 				$action,
 				get_class($dish)
+			));
+		}
+	}
+
+	public function linkCategory(
+		Category $category,
+		$action = null,
+		$referenceType = UrlGeneratorInterface::ABSOLUTE_PATH
+	) {
+		$parameters = array('slug' => $category->getSlug());
+		if ($action === 'edit'){
+			return $this->router->generate('MealzMealBundle_Category_Form_preFilled', $parameters,
+				$referenceType);
+		} elseif (null !== $action) {
+			return $this->router->generate('MealzMealBundle_Category_' . $action, $parameters,
+				$referenceType);
+		} else {
+			throw new \InvalidArgumentException(sprintf(
+				'linking to "%s" action on a %s object is not configured.',
+				$action,
+				get_class($category)
 			));
 		}
 	}

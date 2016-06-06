@@ -5,6 +5,7 @@ namespace Mealz\MealBundle\EventListener;
 
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Mealz\MealBundle\Entity\Category;
 use Mealz\MealBundle\Entity\Dish;
 use Mealz\MealBundle\Service\HttpHeaderUtility;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -36,7 +37,7 @@ class LocalisationListener {
 	public function postLoad(LifecycleEventArgs $args) {
 		$entity = $args->getEntity();
 
-		if($entity instanceof Dish) {
+		if($entity instanceof Dish || $entity instanceof Category) {
 			$currentLocale = 'en';
 			if($this->requestStack->getCurrentRequest()) {
 				$locale = substr($this->requestStack->getCurrentRequest()->getLocale(), 0, 2);

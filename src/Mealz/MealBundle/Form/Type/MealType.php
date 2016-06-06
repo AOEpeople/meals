@@ -2,6 +2,8 @@
 
 namespace Mealz\MealBundle\Form\Type;
 
+use Mealz\MealBundle\Entity\Day;
+use Mealz\MealBundle\Entity\Week;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -20,8 +22,12 @@ class MealType extends AbstractType
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use ($builder) {
             $meal = $event->getData();
+            /** @var Day $day */
+            $day = $meal->getDay();
+            /** @var Week $week */
+            $week = $day->getWeek();
 
-            if (false === $meal->getDay()->isEnabled()) {
+            if (false === $day->isEnabled() || false === $week->isEnabled()) {
                 $form = $event->getForm();
                 $config = $form->get('dish')->getConfig();
                 $options = $config->getOptions();

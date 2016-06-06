@@ -85,10 +85,6 @@ Mealz.prototype.styleCheckboxes = function() {
                 }
             }
         });
-
-        // Trigger setting of switchery and dropdown states on first load
-        this.applySwitcheryStates();
-        this.applyDropdownStatesByWeekState();
     }
 
     // Check checkbox states

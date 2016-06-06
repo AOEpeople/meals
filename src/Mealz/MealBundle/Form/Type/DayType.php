@@ -8,6 +8,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 
 class DayType extends AbstractType
 {
@@ -31,6 +33,27 @@ class DayType extends AbstractType
                 'attr' => array('class' => 'js-switch')
             ))
         ;
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($builder) {
+            $day = $event->getData();
+
+            if (false === $day->getWeek()->isEnabled()) {
+                $form = $event->getForm();
+                $config = $form->get('enabled')->getConfig();
+                $options = $config->getOptions();
+
+                $form->add(
+                    'enabled',
+                    $config->getType()->getName(),
+                    array_replace(
+                        $options,
+                        [
+                            'disabled' => true
+                        ]
+                    )
+                );
+            }
+        });
     }
 
     public function configureOptions(OptionsResolver $resolver)

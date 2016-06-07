@@ -29,7 +29,7 @@ class WeekForm extends AbstractType
                 'attr' => array('class' => 'js-switch')
             ))
             ->add('Cancel', SubmitType::class, array(
-                'attr' => array('class' => 'button')
+                'attr' => array('class' => 'button button-cancel')
             ))
             ->add('Save', SubmitType::class, array(
                 'attr' => array('class' => 'button')

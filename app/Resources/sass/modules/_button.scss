@@ -48,6 +48,10 @@ a.button {
   &.icon-only {
     padding: 0;
   }
+
+  &.button-cancel {
+    background-color: $color-gray-secondary;
+  }
 }
 
 .buttonbar-container {

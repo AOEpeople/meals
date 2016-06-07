@@ -89,17 +89,22 @@ class CategoryController extends BaseController {
 
         $action = $this->generateUrl('MealzMealBundle_Category_edit', array('slug' => $slug));
 
-        return new JsonResponse($this->getRenderedCategoryForm($category, $action));
+        return new JsonResponse($this->getRenderedCategoryForm($category, $action, true));
     }
 
-    private function getRenderedCategoryForm(Category $category, $action)
+    private function getRenderedCategoryForm(Category $category, $action, $wrapInTr = false)
     {
         $form = $this->createForm(new CategoryForm(), $category, array(
             'action' => $action,
         ));
 
-        $renderedForm = $this->render('MealzMealBundle:Category/partials:form.html.twig',
-            array('form' => $form->createView()));
+        if ($wrapInTr) {
+            $template = "MealzMealBundle:Category/partials:formTable.html.twig";
+        } else {
+            $template = "MealzMealBundle:Category/partials:form.html.twig";
+        }
+
+        $renderedForm = $this->render($template, array('form' => $form->createView()));
 
         return $renderedForm->getContent();
     }

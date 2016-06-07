@@ -82,6 +82,10 @@
                 <source>no_service</source>
                 <target>No service</target>
             </trans-unit>
+            <trans-unit id="17">
+                <source>list.category</source>
+                <target>List of categories</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

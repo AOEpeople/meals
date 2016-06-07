@@ -49,7 +49,7 @@ class DishController extends BaseController {
 
 		$action = $this->generateUrl('MealzMealBundle_Dish_edit', array('slug' => $slug));
 
-		return new JsonResponse($this->getRenderedDishForm($dish, $action));
+		return new JsonResponse($this->getRenderedDishForm($dish, $action, true));
 	}
 
 	public function newAction(Request $request) {
@@ -102,13 +102,19 @@ class DishController extends BaseController {
 		return $this->redirectToRoute('MealzMealBundle_Dish');
 	}
 
-	private function getRenderedDishForm(Dish $dish, $action)
+	private function getRenderedDishForm(Dish $dish, $action, $wrapInTr = false)
 	{
 		$form = $this->createForm(new DishForm(), $dish, array(
 			'action' => $action,
 		));
 
-		$renderedForm = $this->render('MealzMealBundle:Dish/partials:form.html.twig', array('form' => $form->createView()));
+		if ($wrapInTr) {
+			$template = "MealzMealBundle:Dish/partials:formTable.html.twig";
+		} else {
+			$template = "MealzMealBundle:Dish/partials:form.html.twig";
+		}
+
+		$renderedForm = $this->render($template, array('form' => $form->createView()));
 
 		return $renderedForm->getContent();
 	}

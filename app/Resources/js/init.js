@@ -132,57 +132,47 @@ Mealz.prototype.toggleParticipation = function ($checkbox) {
     });
 };
 
-Mealz.prototype.loadDishForm = function ($element) {
+Mealz.prototype.loadAjaxForm = function ($element) {
+    var that = this;
+
     var url = $element.attr('href');
-    var $dishForm = $('.dish-form');
     var animationDuration = 150;
 
-    if($element.hasClass('dish-create') && $dishForm.is(':visible') && $dishForm.hasClass('form-dish-create')) {
-        $dishForm.slideUp(animationDuration);
-        return false;
-    }
+    var $createForm = $('.create-form');
+    var $editFormWrapper = $('.edit-form');
+    var $editForm = $editFormWrapper.find('form');
 
-    $dishForm.toggleClass('form-dish-create', $element.hasClass('dish-create'));
+    if ($element.hasClass('load-create-form') && $createForm.is(':visible')) {
+        $createForm.slideUp(animationDuration);
+        return false;
+    } else if ($element.hasClass('load-create-form')) {
+        $editForm.slideUp(animationDuration, function () {
+            $editFormWrapper.remove();
+        });
+    } else if ($element.hasClass('load-edit-form') && $editForm.length > 0) {
+        $editForm.slideUp(animationDuration, function () {
+            $editFormWrapper.remove();
+        });
+    } else if ($element.hasClass('load-edit-form')) {
+        $createForm.slideUp(animationDuration);
+    }
 
     $.ajax({
         method: 'GET',
         url: url,
         dataType: 'json',
         success: function (data) {
-            $dishForm.html(data);
-            new Mealz().styleSelects();
-            if(!$dishForm.is(':visible')) {
-                $dishForm.slideDown(animationDuration);
+            $(".table-row-form").remove();
+            if ($element.hasClass('load-create-form')) {
+                $createForm.html(data);
+                $createForm.slideDown(animationDuration);
+            } else {
+                var $parentRow = $element.closest('.table-row');
+                $parentRow.after(data);
+                $('.edit-form form').slideDown(animationDuration);
             }
-        },
-        error: function (xhr) {
-            console.log(xhr.status + ': ' + xhr.statusText);
-        }
-    });
-};
-
-Mealz.prototype.loadCategoryForm = function ($element) {
-    var url = $element.attr('href');
-    var $dishForm = $('.dish-form');
-    var animationDuration = 150;
-
-    if ($element.hasClass('dish-create') && $dishForm.is(':visible') && $dishForm.hasClass('form-dish-create')) {
-        $dishForm.slideUp(animationDuration);
-        return false;
-    }
-
-    $dishForm.toggleClass('form-dish-create', $element.hasClass('dish-create'));
-
-    $.ajax({
-        method: 'GET',
-        url: url,
-        dataType: 'json',
-        success: function (data) {
-            $dishForm.html(data);
-            new Mealz().styleSelects();
-            if (!$dishForm.is(':visible')) {
-                $dishForm.slideDown(animationDuration);
-            }
+            that.$selects = $("select");
+            that.styleSelects();
         },
         error: function (xhr) {
             console.log(xhr.status + ': ' + xhr.statusText);
@@ -201,17 +191,12 @@ $(document).ready(function() {
         $('.header-content').toggleClass('is-open');
     });
 
-    $('.dish-load-form').on('click', function(e) {
+    $('.load-ajax-form').on('click', function(e) {
         e.preventDefault();
-        mealz.loadDishForm($(this));
+        mealz.loadAjaxForm($(this));
     });
 
-    $('.category-load-form').on('click', function (e) {
-        e.preventDefault();
-        mealz.loadCategoryForm($(this));
-    });
-
-    $('#dish-table').DataTable({
+    $('.table-sortable').DataTable({
         'aaSorting': [], // Disable initial sort
         paging: false,
         searching: false,

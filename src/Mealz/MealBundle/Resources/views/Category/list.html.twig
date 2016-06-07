@@ -1,6 +1,6 @@
 {% extends '::base.html.twig' %}
 
-{% set wrapperClass = 'dish-list' %}
+{% set wrapperClass = 'category-list form-ajax' %}
 
 {% block body %}
 
@@ -8,10 +8,10 @@
 
 {% set tableHeader = [{
         'label': 'Title',
-        'class': 'dish-title'
+        'class': 'category-title'
     }, {
         'label': 'Actions',
-        'class': 'dish-actions no-sort'
+        'class': 'category-actions no-sort'
     }]
 %}
 
@@ -22,32 +22,32 @@
     {% set tableContent = [{
         'title': {
             'content': category.title,
-            'class': 'dish-title'
+            'class': 'category-title'
         },
         'actions': {
-            'content': MealzButton.buttonbar('', 'buttonbar-dish-actions', [
-                            MealzButton.link(link(category, 'edit'), 'Edit', '', 'dish-edit category-load-form transparent', 'glyphicon-pencil'),
+            'content': MealzButton.buttonbar('', 'buttonbar-category-actions', [
+                            MealzButton.link(link(category, 'edit'), 'Edit', '', 'load-ajax-form load-edit-form transparent', 'glyphicon-pencil'),
                             MealzButton.link(link(category, 'delete'), 'Delete', '', 'transparent', 'glyphicon-remove')
                        ]),
-            'class': 'dish-actions'
+            'class': 'category-actions'
         }
     }] | merge(tableContent) %}
 {% endfor %}
 
 {# Start tempalte #}
 
-{{ MealzHeadline.create(1, 'list.dish'|trans({},'general'), '', '', [
-    MealzButton.link(path('MealzMealBundle_Category_Form_empty'), 'Create Category', '', 'dish-create category-load-form transparent', 'svg-dish')
+{{ MealzHeadline.create(1, 'list.category'|trans({},'general'), '', '', [
+    MealzButton.link(path('MealzMealBundle_Category_Form_empty'), 'Create Category', '', 'load-ajax-form load-create-form transparent', 'svg-dish')
 ], '') }}
 
     {% if form is defined %}
-        <div class="dish-form">
-        {% include 'MealzMealBundle:Dish/partials:form.html.twig' %}
+        <div class="create-form">
+        {% include 'MealzMealBundle:AjaxForms:form.html.twig' %}
         </div>
     {% else %}
-        <div class="dish-form" style="display: none"></div>
+        <div class="create-form" style="display: none"></div>
     {% endif %}
 
-{{ MealzTable.create('dish-table', 'table-sortable', tableHeader, tableContent) }}
+{{ MealzTable.create('category-table', 'table-sortable', tableHeader, tableContent) }}
 
 {% endblock %}

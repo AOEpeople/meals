@@ -38,6 +38,10 @@
                 <source>list.dish</source>
                 <target>Liste der Gerichte</target>
             </trans-unit>
+            <trans-unit id="2c">
+                <source>dish.no_description</source>
+                <target>Keine Beschreibung</target>
+            </trans-unit>
             <trans-unit id="3">
                 <source>meals</source>
                 <target>Mahlzeiten</target>

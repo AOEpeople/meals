@@ -38,6 +38,10 @@
                 <source>list.dish</source>
                 <target>List of dishes</target>
             </trans-unit>
+            <trans-unit id="2c">
+                <source>dish.no_description</source>
+                <target>No description</target>
+            </trans-unit>
             <trans-unit id="3">
             	<source>meals</source>
                 <target>Meals</target>

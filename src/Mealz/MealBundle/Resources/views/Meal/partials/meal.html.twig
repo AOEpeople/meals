@@ -6,8 +6,11 @@
 			{{ dish.title }}
 		</div>
 		<div class="description">
-            category
-			{{ dish.description }}
+			{% if dish.description %}
+				{{ dish.description }}
+			{% else %}
+				{{ 'dish.no_description'|trans({},'general') }}
+			{% endif %}
 		</div>
 	</div>
 	<div class="participants">

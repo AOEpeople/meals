@@ -9,6 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 abstract class AbstractMessage
 {
     /**
+     * @Assert\NotNull()
      * @ORM\Column(type="boolean", nullable=FALSE)
      * @var bool
      */

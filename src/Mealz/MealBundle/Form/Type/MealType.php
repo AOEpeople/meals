@@ -50,6 +50,7 @@ class MealType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Mealz\MealBundle\Entity\Meal',
+            'error_bubbling' => false
         ));
     }
 

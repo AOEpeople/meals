@@ -6,10 +6,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Mealz\UserBundle\Entity\Profile;
 use Symfony\Component\Validator\Constraints as Assert;
+use Mealz\MealBundle\Validator\Constraints as MealBundleAssert;
 
 /**
  * Meal
  *
+ * @MealBundleAssert\DishConstraint()
  * @ORM\Table(name="meal")
  * @ORM\Entity(repositoryClass="MealRepository")
  */
@@ -25,8 +27,6 @@ class Meal
 	private $id;
 
 	/**
-	 * @Assert\NotBlank()
-	 * @Assert\Type(type="Mealz\MealBundle\Entity\Dish")
 	 * @ORM\ManyToOne(targetEntity="Dish", cascade={"refresh"}, fetch="EAGER")
 	 * @ORM\JoinColumn(name="dish_id", referencedColumnName="id")
 	 * @var Dish
@@ -35,7 +35,6 @@ class Meal
 
 	/**
 	 * @Assert\NotBlank()
-	 * @Assert\Type(type="float")
 	 * @ORM\Column(type="decimal", precision=10, scale=4, nullable=FALSE)
 	 * @var float
 	 */

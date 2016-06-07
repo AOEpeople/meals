@@ -74,3 +74,15 @@ services:
         arguments: []
         tags:
             - { name: form.type, alias: participant }
+
+  mealz_meal.form.type.day:
+    class: Mealz\MealBundle\Form\Type\DayType
+    arguments: ['@doctrine.orm.entity_manager']
+    tags:
+      - { name: form.type }
+
+  validator.meal.dish:
+    class: Mealz\MealBundle\Validator\Constraints\DishConstraintValidator
+    arguments: ['@doctrine.orm.entity_manager']
+    tags:
+      - { name: validator.constraint_validator, alias: validator_meal_dish }

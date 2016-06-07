@@ -3,7 +3,6 @@
 namespace Mealz\MealBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\UnitOfWork;
 use Mealz\MealBundle\Entity\Day;
 use Mealz\MealBundle\Entity\Meal;
 use Mealz\MealBundle\Entity\Week;
@@ -78,23 +77,13 @@ class MealAdminController extends BaseController {
             }
 
             if ($form->isValid()) {
-
-                foreach ($week->getDays() as $day) {
-                    /** @var Day $day */
-                    foreach ($day->getMeals() as $meal) {
-                        /** @var Meal $meal */
-                        if (null === $meal->getDish()) {
-                            $day->getMeals()->removeElement($meal);
-                        }
-                    }
-                }
-
                 /** @var EntityManager $em */
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($week);
                 $em->flush();
 
                 $this->addFlashMessage('Week has been created.', 'success');
+
                 return $this->redirect($this->generateUrl('MealzMealBundle_Meal_edit', array(
                     'week' => $week->getId()
                 )));
@@ -123,6 +112,7 @@ class MealAdminController extends BaseController {
         if ($request->isMethod('POST')) {
 
             $form->handleRequest($request);
+
             if ($form->get('Cancel')->isClicked()) {
                 return $this->redirectToRoute('MealzMealBundle_Meal');
             }
@@ -130,35 +120,9 @@ class MealAdminController extends BaseController {
             if ($form->isValid()) {
                 /** @var EntityManager $em */
                 $em = $this->getDoctrine()->getManager();
-
-                foreach ($week->getDays() as $day) {
-                    /** @var Day $day */
-                    foreach ($day->getMeals() as $meal) {
-                        /** @var Meal $meal */
-                        if (null === $meal->getDish()) {
-                            if ($meal->getParticipants()->count() > 0) {
-                                $this->addFlashMessage(
-                                    sprintf(
-                                        'There are already participation for the meal on "%s"',
-                                        $meal->getDateTime()->format('D')
-                                    ),
-                                    'danger'
-                                );
-                                return $this->redirectToRoute('MealzMealBundle_Meal_edit', array(
-                                    'week' => $week->getId()
-                                ));
-                            } else if ($em->getUnitOfWork()->getEntityState($meal) !== UnitOfWork::STATE_NEW){
-                                $em->remove($meal);
-                                $em->flush();
-                            } else {
-                                $day->getMeals()->removeElement($meal);
-                            }
-                        }
-                    }
-                }
-
                 $em->persist($week);
                 $em->flush();
+
                 $this->addFlashMessage('Week has been modified.', 'success');
 
                 return $this->redirectToRoute('MealzMealBundle_Meal_edit', array(

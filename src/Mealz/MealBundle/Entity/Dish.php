@@ -32,7 +32,7 @@ class Dish
 
 	/**
 	 * @Assert\NotBlank()
-	 * @Assert\Length(min=8, max=255)
+	 * @Assert\Length(max=255)
 	 * @ORM\Column(type="string", length=255, nullable=FALSE)
 	 * @var string
 	 */
@@ -47,7 +47,7 @@ class Dish
 
 	/**
 	 * @Assert\NotBlank()
-	 * @Assert\Length(min=8, max=255)
+	 * @Assert\Length(max=255)
 	 * @ORM\Column(type="string", length=255, nullable=FALSE)
 	 * @var string
 	 */

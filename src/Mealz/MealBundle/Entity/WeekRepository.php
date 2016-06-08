@@ -23,7 +23,6 @@ class WeekRepository extends EntityRepository
         $qb = $this->createQueryBuilder('w');
         $qb->leftJoin('w.days', 'days');
         $qb->leftJoin('days.meals', 'meals');
-        // $qb->expr()->count('meal')
         $qb->select($qb->expr()->count('meals'));
         $qb->where('w.id = ?1')
             ->setParameter(1, $week->getId());
@@ -36,9 +35,27 @@ class WeekRepository extends EntityRepository
      */
     public function findWeekByDate(\DateTime $date)
     {
-        return $this->findOneBy(array(
-            'year' => $date->format('Y'),
-            'calendarWeek' => $date->format('W')
-        ));
+        $qb = $this->createQueryBuilder('w');
+        $qb->select('w,da,m,d,p,u');
+
+        $qb->leftJoin('w.days', 'da');
+        $qb->leftJoin('da.meals', 'm');
+        $qb->leftJoin('m.dish', 'd');
+        $qb->leftJoin('m.participants', 'p');
+        $qb->leftJoin('p.profile', 'u');
+
+        $qb->andWhere('w.year = :year');
+        $qb->andWhere('w.calendarWeek = :calendarWeek');
+
+        $qb->setParameter('year', $date->format('Y'));
+        $qb->setParameter('calendarWeek', $date->format('W'));
+
+        $result = $qb->getQuery()->getSingleResult();
+
+        if (count($result) > 1) {
+            throw new \LogicException('Found more then one week matching the given requirements.');
+        }
+
+        return $result ? current($result) : null;
     }
 }

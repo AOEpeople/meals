@@ -102,8 +102,8 @@ class MealController extends BaseController {
 		}
 
 		$weeks = array(
-			array($currentWeek, $weekRepository->getWeeksMealCount($currentWeek)),
-			array($nextWeek, $weekRepository->getWeeksMealCount($nextWeek))
+			array($currentWeek, $currentWeek->getDays()->count()),
+			array($nextWeek, $nextWeek->getDays()->count())
 		);
 
 		return $this->render('MealzMealBundle:Meal:index.html.twig', array(

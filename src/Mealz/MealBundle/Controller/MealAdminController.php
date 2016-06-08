@@ -56,7 +56,10 @@ class MealAdminController extends BaseController {
 
         /** @var WeekRepository $weekRepository */
         $weekRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Week');
-        $week = $weekRepository->findWeekByDate($date);
+        $week = $weekRepository->findOneBy(array(
+            'year' => $date->format('Y'),
+            'calendarWeek' => $date->format('W')
+        ));
 
         if (null !== $week) {
             return $this->redirectToRoute('MealzMealBundle_Meal_edit', array(

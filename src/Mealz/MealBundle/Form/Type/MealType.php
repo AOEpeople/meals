@@ -3,6 +3,7 @@
 namespace Mealz\MealBundle\Form\Type;
 
 use Mealz\MealBundle\Entity\Day;
+use Mealz\MealBundle\Entity\Dish;
 use Mealz\MealBundle\Entity\Meal;
 use Mealz\MealBundle\Entity\Week;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -18,7 +19,10 @@ class MealType extends AbstractType
     {
         $builder->add('dish', EntityType::class, array(
             'class' => 'MealzMealBundle:Dish',
-            'required' => false
+            'required' => false,
+            'group_by' => function(Dish $dish) {
+                return $dish->getCategory();
+            }
         ));
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use ($builder) {

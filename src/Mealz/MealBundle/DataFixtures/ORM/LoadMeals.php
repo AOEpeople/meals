@@ -46,7 +46,7 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface {
 				$meal->setDateTime($day->getDateTime());
 				$dish = $this->getRandomDish($dish);
 				$meal->setDish($dish);
-				$meal->setPrice(mt_rand(290, 320) / 100);
+				$meal->setPrice($dish->getPrice());
 				$this->objectManager->persist($meal);
 				$this->addReference('meal-' . $this->counter++, $meal);
 			}

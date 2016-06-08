@@ -3,6 +3,7 @@
 namespace Mealz\MealBundle\Form\Type;
 
 use Mealz\MealBundle\Entity\Day;
+use Mealz\MealBundle\Entity\Meal;
 use Mealz\MealBundle\Entity\Week;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -42,6 +43,16 @@ class MealType extends AbstractType
                         ]
                     )
                 );
+            }
+        });
+
+        $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) use ($builder) {
+            /** @var Meal $meal */
+            $meal = $event->getData();
+            if (null !== $meal->getDish()) {
+                $dishPrice = $meal->getDish()->getPrice();
+                $meal->setPrice($dishPrice);
+                $event->setData($meal);
             }
         });
     }

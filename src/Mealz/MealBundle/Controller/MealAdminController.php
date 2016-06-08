@@ -165,7 +165,6 @@ class MealAdminController extends BaseController {
             $mealDateTime = clone($day->getDateTime());
             $mealDateTime->setTime(12, 00);
             $meal->setDateTime($mealDateTime);
-            $meal->setPrice('3.10');
             $day->getMeals()->add($meal);
         }
     }

@@ -42,6 +42,7 @@ class LoadDishes extends AbstractFixture implements OrderedFixtureInterface {
 
 	protected function addDish($title, $titleDe) {
 		$dish = new Dish();
+		$dish->setPrice(3.12);
 		$dish->setTitleEn($title);
 		$dish->setTitleDe($titleDe);
 		$randomCategory = $this->categories[array_rand($this->categories, 1)];

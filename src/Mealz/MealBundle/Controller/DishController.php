@@ -57,7 +57,10 @@ class DishController extends BaseController {
 			throw new AccessDeniedException();
 		}
 
-		return $this->dishFormHandling($request, new Dish(), 'Dish has been added.');
+		$dish = new Dish();
+		$dish->setPrice($this->getParameter('mealz.meal.price'));
+
+		return $this->dishFormHandling($request, $dish, 'Dish has been added.');
 	}
 
 	public function editAction(Request $request, $slug) {

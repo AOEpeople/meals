@@ -8,7 +8,7 @@ use Doctrine\ORM\Query;
 class DishRepository extends EntityRepository {
 
 	protected $defaultOptions = array(
-		'load_meals' => FALSE,
+		'load_category' => FALSE,
 	);
 
 	protected $currentLocale = 'en';
@@ -33,14 +33,14 @@ class DishRepository extends EntityRepository {
 
 		// SELECT
 		$select = 'd';
-		if($options['load_meals']) {
-			$select .= ',m';
+		if($options['load_category']) {
+			$select .= ',c';
 		}
 		$qb->select($select);
 
 		// JOIN
-		if($options['load_meals']) {
-			$qb->leftJoin('d.meals', 'm');
+		if($options['load_category']) {
+			$qb->leftJoin('d.category', 'c');
 		}
 
 		// WHERE

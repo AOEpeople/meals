@@ -16,7 +16,9 @@ class DishController extends BaseController {
 			throw new AccessDeniedException();
 		}
 
-		$dishes = $this->getDishRepository()->getSortedDishes();
+		$dishes = $this->getDishRepository()->getSortedDishes(array(
+			'load_category' => true
+		));
 
 		return $this->render('MealzMealBundle:Dish:list.html.twig', array(
 			'dishes' => $dishes
@@ -137,7 +139,9 @@ class DishController extends BaseController {
 
 				$this->addFlashMessage($successMessage, 'success');
 			} else {
-				$dishes = $this->getDishRepository()->getSortedDishes();
+				$dishes = $this->getDishRepository()->getSortedDishes(array(
+					'load_category' => true
+				));
 
 				return $this->render('MealzMealBundle:Dish:list.html.twig', array(
 					'dishes' => $dishes,

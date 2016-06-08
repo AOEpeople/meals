@@ -16,13 +16,7 @@ class DishController extends BaseController {
 			throw new AccessDeniedException();
 		}
 
-		$dishes = $this->getDishRepository()->getSortedDishes(array(
-			'load_category' => true
-		));
-
-		return $this->render('MealzMealBundle:Dish:list.html.twig', array(
-			'dishes' => $dishes
-		));
+		return $this->renderDishList();
 	}
 
 	public function getEmptyFormAction() {
@@ -139,12 +133,7 @@ class DishController extends BaseController {
 
 				$this->addFlashMessage($successMessage, 'success');
 			} else {
-				$dishes = $this->getDishRepository()->getSortedDishes(array(
-					'load_category' => true
-				));
-
-				return $this->render('MealzMealBundle:Dish:list.html.twig', array(
-					'dishes' => $dishes,
+				return $this->renderDishList(array(
 					'form' => $form->createView()
 				));
 			}
@@ -152,4 +141,20 @@ class DishController extends BaseController {
 
 		return $this->redirectToRoute('MealzMealBundle_Dish');
 	}
+
+	private function renderDishList($parameters = array())
+	{
+		$dishes = $this->getDishRepository()->getSortedDishes(array(
+			'load_category' => true
+		));
+
+		$defaultParameters = array(
+			'dishes' => $dishes
+		);
+
+		$mergedParameters = array_merge($defaultParameters, $parameters);
+
+		return $this->render('MealzMealBundle:Dish:list.html.twig', $mergedParameters);
+	}
+
 }

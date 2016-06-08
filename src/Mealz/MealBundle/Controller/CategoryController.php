@@ -3,6 +3,7 @@
 namespace Mealz\MealBundle\Controller;
 
 use Mealz\MealBundle\Entity\Category;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,11 +16,7 @@ class CategoryController extends BaseController {
             throw new AccessDeniedException();
         }
 
-        $categories = $this->getCategoryRepository()->findAll();
-
-        return $this->render('MealzMealBundle:Category:list.html.twig', array(
-            'categories' => $categories
-        ));
+        return $this->renderCategoryList();
     }
 
     public function newAction(Request $request)
@@ -123,9 +120,26 @@ class CategoryController extends BaseController {
                 $em->flush();
 
                 $this->addFlashMessage($successMessage, 'success');
+            } else {
+                return $this->renderCategoryList(array(
+                    'form' => $form->createView()
+                ));
             }
         }
 
         return $this->redirectToRoute('MealzMealBundle_Category');
+    }
+
+    private function renderCategoryList($parameters = array())
+    {
+        $categories = $this->getCategoryRepository()->findAll();
+
+        $defaultParameters = array(
+            'categories' => $categories
+        );
+
+        $mergedParameters = array_merge($defaultParameters, $parameters);
+
+        return $this->render('MealzMealBundle:Category:list.html.twig', $mergedParameters);
     }
 }

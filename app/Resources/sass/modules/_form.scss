@@ -87,10 +87,12 @@ fieldset {
 $fieldset-padding: 13px;
 
 .form-ajax {
-  .create-form {
+  .top-form {
     margin-top: -10px;
     margin-bottom: 40px;
+  }
 
+  .create-form {
     form::after {
       position: absolute;
       top: -20px;

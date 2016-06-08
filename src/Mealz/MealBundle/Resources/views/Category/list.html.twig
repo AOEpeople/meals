@@ -41,11 +41,11 @@
 ], '') }}
 
     {% if form is defined %}
-        <div class="create-form">
+        <div class="error-form top-form">
         {% include 'MealzMealBundle:Category/partials:form.html.twig' %}
         </div>
     {% else %}
-        <div class="create-form" style="display: none"></div>
+        <div class="create-form top-form" style="display: none"></div>
     {% endif %}
 
 {{ MealzTable.create('category-table', 'table-sortable', tableHeader, tableContent) }}

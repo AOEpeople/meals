@@ -134,3 +134,7 @@ MealzMealBundle_Category_Form_preFilled:
 MealzMealBundle_Print_costSheet:
     pattern: /print/costsheet
     defaults: { _controller: "MealzMealBundle:Print:costSheet" }
+
+MealzMealBundle_Print_participations:
+    pattern: /print/participations/{week}
+    defaults: { _controller: "MealzMealBundle:Print:participations" }

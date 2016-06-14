@@ -1,0 +1,65 @@
+.print-participations {
+  @media print {
+    @page {
+      size: landscape;
+    }
+  }
+
+  .table {
+    table-layout: fixed;
+    width: 100%;
+  }
+
+  .table-row {
+    border: none;
+  }
+
+  .table-head {
+    .day {
+      text-align: center;
+    }
+
+    .meal-title {
+      float: left;
+      width: 50%;
+      word-wrap: break-word;
+      padding: 5px;
+      text-align: center;
+    }
+  }
+
+  .table-content {
+    .table-data {
+      height: 50px;
+      padding: 0;
+    }
+
+    .user {
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    .meal-participation {
+      float: left;
+      width: 50%;
+      height: 100%;
+
+      &.participating {
+        background-color: $color-green;
+      }
+    }
+  }
+
+  // table borders
+  .table-head,
+  .table-data {
+    border-right: 1px solid $color-gray-primary;
+    border-bottom: 1px solid $color-gray-primary;
+  }
+
+  .meal-participation {
+    &:first-child {
+      border-right: 1px solid $color-gray-primary;
+    }
+  }
+}

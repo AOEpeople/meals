@@ -4,6 +4,8 @@ namespace Mealz\MealBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Mealz\MealBundle\Entity\Week;
+use Mealz\MealBundle\Entity\WeekRepository;
 
 class PrintController extends BaseController
 {
@@ -50,4 +52,26 @@ class PrintController extends BaseController
         ));
     }
 
+    public function participationsAction(Week $week)
+    {
+        /** @var WeekRepository $weekRepository */
+        $weekRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Week');
+        $week = $weekRepository->findWeekByDate($week->getStartTime());
+
+        $participantRepository = $this->getParticipantRepository();
+        $participations = $participantRepository->getParticipantsOnDays(
+            $week->getStartTime(),
+            $week->getEndTime()
+        );
+
+        /**
+         * @TODO: get participants through week entity
+         */
+        $groupedParticipations = $participantRepository->groupParticipantsByName($participations);
+
+        return $this->render('MealzMealBundle:Print:participations.html.twig', array(
+            'week' => $week,
+            'users' => $groupedParticipations
+        ));
+    }
 }

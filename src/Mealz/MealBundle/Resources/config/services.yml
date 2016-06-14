@@ -31,6 +31,11 @@ services:
     tags:
       - { name: twig.extension }
 
+  mealz_meal.twig_extension.isParticipant:
+    class: Mealz\MealBundle\Twig\Extension\Participation
+    tags:
+      - { name: twig.extension }
+
   mealz_meal.http_header_utility:
     class: %mealz_meal.http_header_utility.class%
     calls:

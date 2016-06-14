@@ -39,6 +39,10 @@ class LoadUsers extends AbstractFixture implements OrderedFixtureInterface,Conta
 		$this->addUser('jane');
 		$this->addUser('kochomi');
 
+		for ($i = 0; $i < 100; $i++) {
+			$this->addUser(uniqid());
+		}
+
 		$this->objectManager->flush();
 	}
 

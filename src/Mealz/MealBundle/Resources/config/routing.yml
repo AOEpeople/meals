@@ -130,3 +130,7 @@ MealzMealBundle_Category_Form_empty:
 MealzMealBundle_Category_Form_preFilled:
     pattern:  /category/form/{slug}
     defaults: { _controller: "MealzMealBundle:Category:getPreFilledForm" }
+
+MealzMealBundle_Print_costSheet:
+    pattern: /print/costsheet
+    defaults: { _controller: "MealzMealBundle:Print:costSheet" }

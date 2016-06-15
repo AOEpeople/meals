@@ -50,6 +50,6 @@ class WeekRepository extends EntityRepository
         $qb->setParameter('year', $date->format('Y'));
         $qb->setParameter('calendarWeek', $date->format('W'));
 
-        return $qb->getQuery()->getSingleResult();
+        return $qb->getQuery()->getOneOrNullResult();
     }
 }

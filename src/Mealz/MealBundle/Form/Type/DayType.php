@@ -31,7 +31,7 @@ class DayType extends AbstractType
     {
         $builder
             ->add('dateTime', DateTimeType::class, array(
-                'format' => 'ccc',
+                'format' => 'E',
                 'html5' => false,
                 'widget' => 'single_text',
                 'disabled' => true

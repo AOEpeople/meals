@@ -2,7 +2,9 @@
 
 namespace Mealz\MealBundle\Controller;
 
+use Doctrine\ORM\EntityManager;
 use Mealz\MealBundle\Entity\Dish;
+use Mealz\MealBundle\Entity\DishRepository;
 use Mealz\MealBundle\Form\DishForm;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -77,14 +79,21 @@ class DishController extends BaseController {
 		if(!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
 			throw new AccessDeniedException();
 		}
-		$dish = $this->getDoctrine()->getRepository('MealzMealBundle:Dish')->findOneBy(array('slug' => $slug));
+
+		/** @var DishRepository $dishRepository */
+		$dishRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Dish');
+
+		/** @var Dish $dish */
+		$dish = $dishRepository->findOneBy(array('slug' => $slug));
+
 		if(!$dish) {
 			throw $this->createNotFoundException();
 		}
 
+		/** @var EntityManager $em */
 		$em = $this->getDoctrine()->getManager();
 
-		if($dish->getMeals()->count() > 0) {
+		if($dishRepository->hasDishAssociatedMeals($dish)) {
 			// if there are meals assigned: just hide this record, but do not delete it
 			$dish->setEnabled(FALSE);
 			$em->persist($dish);

@@ -50,6 +50,19 @@ class DishRepository extends EntityRepository {
 		$qb->orderBy('d.title_' . $this->currentLocale, 'DESC');
 
 		return $qb->getQuery()->execute();
+	}
 
+	/**
+	 * @param Dish $dish
+	 * @return integer
+	 */
+	public function hasDishAssociatedMeals(Dish $dish)
+	{
+		$qb = $this->_em->createQueryBuilder();
+		$qb->select('COUNT(m.dish)');
+		$qb->from('Mealz\MealBundle\Entity\Meal', 'm');
+		$qb->where('m.dish = :dish');
+		$qb->setParameter('dish', $dish);
+		return $qb->getQuery()->getSingleScalarResult();
 	}
 }

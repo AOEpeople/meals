@@ -28,12 +28,12 @@ class MealController extends BaseController {
 
 		$currentWeek = $weekRepository->getCurrentWeek();
 		if (null === $currentWeek) {
-			$currentWeek = $this->createWeek(new \DateTime());
+			$currentWeek = $this->createEmptyNonPersistentWeek(new \DateTime());
 		}
 
 		$nextWeek = $weekRepository->getNextWeek();
 		if (null === $nextWeek) {
-			$nextWeek = $this->createWeek(new \DateTime('next week'));
+			$nextWeek = $this->createEmptyNonPersistentWeek(new \DateTime('next week'));
 		}
 
 		$weeks = array(
@@ -96,17 +96,11 @@ class MealController extends BaseController {
 		return $ajaxResponse;
 	}
 
-	private function createWeek(\DateTime $dateTime)
+	private function createEmptyNonPersistentWeek(\DateTime $dateTime)
 	{
 		$week = new Week();
 		$week->setCalendarWeek($dateTime->format('W'));
 		$week->setYear($dateTime->format('Y'));
-
-		$em = $this->getDoctrine()->getManager();
-		$em->persist($week);
-		$em->flush();
-		$em->refresh($week);
-
 		return $week;
 	}
 }

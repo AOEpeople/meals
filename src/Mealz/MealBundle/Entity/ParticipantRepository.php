@@ -45,11 +45,6 @@ class ParticipantRepository extends EntityRepository
 		return $qb;
 	}
 
-	public function getParticipantsOnDay(\DateTime $date, $options = array())
-	{
-		return $this->getParticipantsOnDays($date, $date, $options);
-	}
-
 	public function getParticipantsOnDays(
 		\DateTime $minDate,
 		\DateTime $maxDate,
@@ -163,73 +158,5 @@ class ParticipantRepository extends EntityRepository
 		}
 
 		return $qb->getQuery()->execute();
-
-	}
-
-	public function getAvailableLetters()
-	{
-		$likeToday = date("Y-m-d%");
-		$conn = $this->getEntityManager()->getConnection();
-
-		$query = $conn->prepare("
-			SELECT DISTINCT UPPER(LEFT(LTRIM(profile_id), 1))
-			FROM participant
-			INNER JOIN meal ON participant.meal_id = meal.id
-			WHERE confirmed = 0 AND dateTime LIKE :today
-			ORDER BY profile_id
-		");
-
-		$query->bindValue('today', $likeToday);
-		$query->execute();
-
-		/**
-		 * PDO::FETCH_COLUMN = 7
-		 *
-		 * Specifies that the fetch method shall return only a single requested
-		 * column from the next row in the result set.
-		 * @link http://php.net/manual/en/pdo.constants.php
-		 */
-		return $query->fetchAll(7);
-	}
-
-	public function getParticipantsTodayByLetter($letter)
-	{
-		$likeToday = date("Y-m-d%");
-
-		$qb = $this->getQueryBuilderWithOptions(array(
-			'load_meal' => true,
-			'load_profile' => true,
-		));
-
-		$and_cond = $qb->expr()->andX();
-
-		$and_cond->add($qb->expr()->like('m.dateTime', ':today'));
-		$qb->setParameter('today', $likeToday);
-
-		$and_cond->add($qb->expr()->like('u.username', ':letter'));
-		$qb->setParameter('letter', $letter . '%');
-
-		$qb->andWhere($and_cond);
-		$qb->andWhere('p.confirmed = 0');
-		$qb->orderBy('u.username');
-
-		return $qb->getQuery()->execute();
-	}
-
-	public function getTotalParticipationsForMeal($meal)
-	{
-		$options = array(
-			'load_meal' => false,
-			'load_profile' => false,
-		);
-
-		$qb = $this->getQueryBuilderWithOptions($options);
-
-		$qb->andWhere('p.meal = :meal');
-		$qb->setParameter('meal', $meal);
-
-		$qb->select('COUNT(p.id)');
-
-		return $qb->getQuery()->getSingleScalarResult();
 	}
 }

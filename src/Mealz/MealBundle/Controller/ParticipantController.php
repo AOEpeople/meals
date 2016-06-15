@@ -16,107 +16,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ParticipantController extends BaseController {
-
-
-	public function newAction(Request $request, $date, $dish) {
-		if(!$this->getUser()) {
-			throw new AccessDeniedException();
-		}
-		$meal = $this->getMealRepository()->findOneByDateAndDish($date, $dish);
-		if(!$meal) {
-			throw $this->createNotFoundException($this->get('translator')->trans('meal.does_not_exist',array(),'messages'));
-		}
-		if(!$this->getDoorman()->isUserAllowedToJoin($meal)) {
-			throw new AccessDeniedException($this->get('translator')->trans('meal.not_allowed_to_join',array(),'messages'));
-		}
-
-		$participant = new Participant();
-		$participant->setMeal($meal);
-		$participant->setProfile($this->getProfile());
-		$form = $this->createForm(
-			new ParticipantForm(),
-			$participant,
-			array(
-				'allow_guest' => $this->getDoorman()->isUserAllowedToAddGuest($meal),
-				'allow_cost_absorption' => $this->getDoorman()->isUserAllowedToAddGuest($meal) && $this->getDoorman()->isUserAllowedToRequestCostAbsorption($meal),
-			)
-		);
-
-		// handle form submission
-		if($request->isMethod('POST')) {
-			$form->handleRequest($request);
-
-			if ($form->isValid()) {
-				try {
-					$em = $this->getDoctrine()->getManager();
-					$em->transactional(function(EntityManager $em) use($participant) {
-						$em->persist($participant);
-						$em->flush();
-					});
-
-					if($participant->isGuest()) {
-						$this->addFlashMessage(
-							sprintf($this->get('translator')->trans('meal.placeholder_joined',array(),'messages'), $participant->getGuestName()),
-							'success'
-						);
-					} else {
-						$this->addFlashMessage($this->get('translator')->trans('meal.you_joined',array(),'messages'), 'success');
-					}
-				} catch(ParticipantNotUniqueException $e) {
-					$this->addFlashMessage($this->get('translator')->trans('meal.you_joined',array(),'messages'), 'danger');
-				}
-
-
-				return $this->redirect($this->generateUrlTo($meal));
-			}
-		}
-
-		return $this->render('MealzMealBundle:Participant:form.html.twig', array(
-			'meal' => $meal,
-			'form' => $form->createView()
-		));
-	}
-
-	public function editAction(Request $request, Participant $participant) {
-		if(!$this->getUser()) {
-			throw new AccessDeniedException();
-		}
-		if(!$this->getDoorman()->isKitchenStaff() && $this->getProfile() !== $participant->getProfile()) {
-			throw new AccessDeniedException();
-		}
-
-		$form = $this->createForm(new ParticipantForm(), $participant, array(
-			'allow_guest' => $participant->isGuest(),
-			'allow_cost_absorption' => $participant->isCostAbsorbed() || $this->getDoorman()->isUserAllowedToRequestCostAbsorption($participant->getMeal()),
-		));
-
-		// handle form submission
-		if($request->isMethod('POST')) {
-			$form->handleRequest($request);
-
-			if ($form->isValid()) {
-				try {
-					$em = $this->getDoctrine()->getManager();
-					$em->transactional(function(EntityManager $em) use($participant) {
-						$em->persist($participant);
-						$em->flush();
-					});
-
-					$this->addFlashMessage($this->get('translator')->trans('changes_stored',array(),'messages'), 'success');
-				} catch(ParticipantNotUniqueException $e) {
-					$this->addFlashMessage($this->get('translator')->trans('error.edit.participant_exists',array(),'messages'), 'danger');
-				}
-
-				return $this->redirect($this->generateUrlTo($participant->getMeal()));
-			}
-		}
-
-		return $this->render('MealzMealBundle:Participant:form.html.twig', array(
-			'meal' => $participant->getMeal(),
-			'form' => $form->createView()
-		));
-	}
-
 	public function deleteAction(Participant $participant) {
 		if(!$this->getUser()) {
 			return new JsonResponse(null, 401);
@@ -138,7 +37,7 @@ class ParticipantController extends BaseController {
 
 		$ajaxResponse = new JsonResponse();
 		$ajaxResponse->setData(array(
-			'participantsCount' => $this->getParticipantRepository()->getTotalParticipationsForMeal($participant->getMeal()),
+			'participantsCount' => $participant->getMeal()->getParticipants()->count(),
 			'url' => $this->generateUrl('MealzMealBundle_Meal_join', array(
 				'date' => $date,
 				'dish' => $dish

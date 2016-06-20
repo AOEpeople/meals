@@ -190,6 +190,11 @@ class ParticipantRepository extends EntityRepository
 		$qb->select('u.name AS username, SUBSTRING(m.dateTime, 1, 7) AS yearMonth, SUM(m.price) AS costs');
 		$qb->leftJoin('p.meal', 'm');
 		$qb->leftJoin('p.profile', 'u');
+		/**
+		 * @TODO: optimize query. where clause costs a lot of time.
+		 */
+		$qb->where('m.dateTime < :now');
+		$qb->setParameter('now', date('Y-m-d H:i:s'));
 		$qb->groupBy('username');
 		$qb->addGroupBy('yearMonth');
 

@@ -23,11 +23,11 @@ class PrintController extends BaseController
         foreach ($users as &$user) {
             $userCosts = array_fill_keys(array_values($columnNames), '0');
             foreach ($user as $cost) {
-                $monthName = date('F', $cost['timestamp']);
                 $monthCosts = $cost['costs'];
                 if ($cost['timestamp'] < $earlierTimestamp) {
                     $userCosts['earlier'] = bcadd($userCosts['earlier'], $monthCosts, 4);
-                } else if (array_key_exists($monthName, $userCosts)) {
+                } else {
+                    $monthName = date('F', $cost['timestamp']);
                     $userCosts[$monthName] = $monthCosts;
                 }
                 $userCosts['total'] = bcadd($userCosts['total'], $monthCosts, 4);

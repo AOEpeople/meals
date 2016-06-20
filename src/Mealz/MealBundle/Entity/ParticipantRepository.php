@@ -168,14 +168,15 @@ class ParticipantRepository extends EntityRepository
 
 		foreach ($costs as $cost) {
 			$username = $cost['username'];
-			$yearMonth = $cost['yearMonth'];
+			$timestamp = strtotime($cost['yearMonth']);
 			$costByMonth = array(
-				$cost['yearMonth'] => $cost['costs']
+				'timestamp' => $timestamp,
+				'costs' => $cost['costs']
 			);
 			if (isset($result[$username])) {
-				$result[$username][$yearMonth] = $cost['costs'];
+				$result[$username][] = $costByMonth;
 			} else {
-				$result[$username] = $costByMonth;
+				$result[$username] = array($costByMonth);
 			}
 		}
 

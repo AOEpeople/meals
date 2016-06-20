@@ -1,4 +1,28 @@
 {% extends '::base.html.twig' %}
 
+{% set wrapperClass = 'print-costsheet' %}
+
 {% block body %}
+
+    <table>
+        <thead>
+            <tr>
+                <td></td>
+                {% for columnName in columnNames %}
+                <td>{{ columnName }}</td>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for user, costs in users %}
+            <tr>
+                <td>{{ user }}</td>
+                {% for cost in costs %}
+                <td>{{ cost | number_format(2) | localizedcurrency('EUR') }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
 {% endblock %}

@@ -4,21 +4,25 @@
 
 {% block body %}
 
-    <table>
+    <table class="table">
         <thead>
-            <tr>
-                <td></td>
+            <tr class="table-header">
+                <th class="table-head">Name</th>
                 {% for columnName in columnNames %}
-                <td>{{ columnName }}</td>
+                    {% if columnName == 'now' | date('F') %}
+                        <th class="table-head">{{ 'now' | date('d.m.') }}</th>
+                    {% else %}
+                        <th class="table-head">{{ columnName }}</th>
+                    {% endif %}
                 {% endfor %}
             </tr>
         </thead>
         <tbody>
             {% for user, costs in users %}
-            <tr>
-                <td>{{ user }}</td>
+            <tr class="table-row">
+                <td class="table-data">{{ user }}</td>
                 {% for cost in costs %}
-                <td>{{ cost | number_format(2) | localizedcurrency('EUR') }}</td>
+                <td class="table-data">{{ cost | number_format(2) | localizedcurrency('EUR') }}</td>
                 {% endfor %}
             </tr>
             {% endfor %}

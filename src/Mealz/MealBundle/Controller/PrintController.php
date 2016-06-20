@@ -2,10 +2,16 @@
 
 namespace Mealz\MealBundle\Controller;
 
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+
 class PrintController extends BaseController
 {
     public function costSheetAction()
     {
+        if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
+            throw new AccessDeniedException();
+        }
+
         $participantRepository = $this->getParticipantRepository();
 
         $users = $participantRepository->findCostsGroupedByUserGroupedByMonth();

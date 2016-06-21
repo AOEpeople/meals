@@ -18,7 +18,7 @@
 {# Set data for table content #}
 
 {% set tableContent = [] %}
-{% for category in categories %}
+{% for category in entities %}
     {% set tableContent = [{
         'title': {
             'content': category.title,

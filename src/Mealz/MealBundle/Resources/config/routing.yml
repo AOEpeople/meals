@@ -85,51 +85,51 @@ MealzMealBundle_Participant_delete:
 
 MealzMealBundle_Dish:
     pattern:  /dish
-    defaults: { _controller: "MealzMealBundle:Dish:list" }
+    defaults: { _controller: "mealz_meal.controller.dish:listAction" }
 
 MealzMealBundle_Dish_Form_empty:
     pattern:  /dish/form
-    defaults: { _controller: "MealzMealBundle:Dish:getEmptyForm" }
+    defaults: { _controller: "mealz_meal.controller.dish:getEmptyFormAction" }
 
 MealzMealBundle_Dish_Form_preFilled:
     pattern:  /dish/form/{slug}
-    defaults: { _controller: "MealzMealBundle:Dish:getPreFilledForm" }
+    defaults: { _controller: "mealz_meal.controller.dish:getPreFilledFormAction" }
 
 MealzMealBundle_Dish_new:
     pattern:  /dish/new
-    defaults: { _controller: "MealzMealBundle:Dish:new" }
+    defaults: { _controller: "mealz_meal.controller.dish:newAction" }
 
 MealzMealBundle_Dish_edit:
     pattern:  /dish/{slug}/edit
-    defaults: { _controller: "MealzMealBundle:Dish:edit" }
+    defaults: { _controller: "mealz_meal.controller.dish:editAction" }
 
 MealzMealBundle_Dish_delete:
     pattern:  /dish/{slug}/delete
-    defaults: { _controller: "MealzMealBundle:Dish:delete" }
+    defaults: { _controller: "mealz_meal.controller.dish:deleteAction" }
 
 MealzMealBundle_Category:
     pattern:  /category
-    defaults: {_controller: "MealzMealBundle:Category:list"}
+    defaults: {_controller: "mealz_meal.controller.category:listAction"}
 
 MealzMealBundle_Category_new:
     pattern:  /category/new
-    defaults: { _controller: "MealzMealBundle:Category:new" }
+    defaults: { _controller: "mealz_meal.controller.category:newAction" }
 
 MealzMealBundle_Category_edit:
     pattern:  /category/{slug}/edit
-    defaults: {_controller: "MealzMealBundle:Category:edit"}
+    defaults: {_controller: "mealz_meal.controller.category:editAction"}
 
 MealzMealBundle_Category_delete:
     pattern:  /category/{slug}/delete
-    defaults: {_controller: "MealzMealBundle:Category:delete"}
+    defaults: {_controller: "mealz_meal.controller.category:deleteAction"}
 
 MealzMealBundle_Category_Form_empty:
     pattern:  /category/form
-    defaults: { _controller: "MealzMealBundle:Category:getEmptyForm" }
+    defaults: { _controller: "mealz_meal.controller.category:getEmptyFormAction" }
 
 MealzMealBundle_Category_Form_preFilled:
     pattern:  /category/form/{slug}
-    defaults: { _controller: "MealzMealBundle:Category:getPreFilledForm" }
+    defaults: { _controller: "mealz_meal.controller.category:getPreFilledFormAction" }
 
 MealzMealBundle_Print_costSheet:
     pattern: /print/costsheet

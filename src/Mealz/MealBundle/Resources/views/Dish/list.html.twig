@@ -21,7 +21,7 @@
 {# Set data for table content #}
 
 {% set tableContent = [] %}
-{% for dish in dishes %}
+{% for dish in entities %}
     {% set tableContent = [{
         'title': {
             'content': dish.title,

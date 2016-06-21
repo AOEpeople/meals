@@ -54,7 +54,10 @@
   .table-head,
   .table-data {
     border-right: 1px solid $color-gray-primary;
-    border-bottom: 1px solid $color-gray-primary;
+  }
+
+  .table-data {
+    border-top: 1px solid $color-gray-primary;
   }
 
   .meal-participation {

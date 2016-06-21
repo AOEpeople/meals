@@ -90,6 +90,14 @@
                 <source>list.category</source>
                 <target>List of categories</target>
             </trans-unit>
+            <trans-unit id="18">
+                <source>costs.earlier</source>
+                <target>Prior to that</target>
+            </trans-unit>
+            <trans-unit id="19">
+                <source>costs.total</source>
+                <target>Total</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

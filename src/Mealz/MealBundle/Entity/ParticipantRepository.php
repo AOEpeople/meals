@@ -159,4 +159,45 @@ class ParticipantRepository extends EntityRepository
 
 		return $qb->getQuery()->execute();
 	}
+
+	public function findCostsGroupedByUserGroupedByMonth()
+	{
+		$costs = $this->findCostsPerMonthPerUser();
+
+		$result = array();
+
+		foreach ($costs as $cost) {
+			$username = $cost['username'];
+			$timestamp = strtotime($cost['yearMonth']);
+			$costByMonth = array(
+				'timestamp' => $timestamp,
+				'costs' => $cost['costs']
+			);
+			if (isset($result[$username])) {
+				$result[$username][] = $costByMonth;
+			} else {
+				$result[$username] = array($costByMonth);
+			}
+		}
+
+		return $result;
+
+	}
+
+	private function findCostsPerMonthPerUser()
+	{
+		$qb = $this->createQueryBuilder('p');
+		$qb->select('u.name AS username, SUBSTRING(m.dateTime, 1, 7) AS yearMonth, SUM(m.price) AS costs');
+		$qb->leftJoin('p.meal', 'm');
+		$qb->leftJoin('p.profile', 'u');
+		/**
+		 * @TODO: optimize query. where clause costs a lot of time.
+		 */
+		$qb->where('m.dateTime < :now');
+		$qb->setParameter('now', date('Y-m-d H:i:s'));
+		$qb->groupBy('username');
+		$qb->addGroupBy('yearMonth');
+
+		return $qb->getQuery()->getArrayResult();
+	}
 }

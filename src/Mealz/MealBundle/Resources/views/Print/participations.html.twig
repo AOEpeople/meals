@@ -1,0 +1,45 @@
+{% extends '::base.html.twig' %}
+
+{% set wrapperClass = 'print-participations' %}
+
+{% block body %}
+
+    <table>
+
+        <table class="table">
+            <thead class="table-header">
+                <th class="table-head"></th>
+            {% for day in week.days %}
+                <th class="table-head">
+                    <div class="day">{{ day.dateTime | date('l') }}</div>
+                    {% for meal in day.meals %}
+                    <div class="meal-title"><span>{{ meal.dish.title }} ({{ meal.participants | length }})</span></div>
+                    {% endfor %}
+                </th>
+            {% endfor %}
+            </thead>
+
+            <tbody class="table-content">
+                {% for name, participations in users %}
+                    <tr class="table-row">
+                        <th class="user table-data">{{ name }}</th>
+                        {% for day in week.days %}
+                            <td class="day table-data">
+                                {% for meal in day.meals %}
+                                    {% if isParticipant(participations, meal.participants) %}
+                                    <div class="meal-participation participating"></div>
+                                    {% else %}
+                                    <div class="meal-participation"></div>
+                                    {% endif %}
+
+                                {% endfor %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+
+    </table>
+{% endblock %}

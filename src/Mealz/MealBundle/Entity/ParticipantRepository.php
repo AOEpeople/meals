@@ -200,4 +200,21 @@ class ParticipantRepository extends EntityRepository
 
 		return $qb->getQuery()->getArrayResult();
 	}
+
+	public function groupParticipantsByName($participations)
+	{
+		$result = array();
+
+		foreach ($participations as $participation) {
+			/** @var Participant $participation */
+			$name = $participation->getProfile()->getName();
+			if (isset($result[$name])) {
+				$result[$name][] = $participation;
+			} else {
+				$result[$name] = array($participation);
+			}
+		}
+
+		return $result;
+	}
 }

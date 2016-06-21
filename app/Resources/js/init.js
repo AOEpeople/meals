@@ -62,7 +62,7 @@ Mealz.prototype.styleCheckboxes = function() {
         // Enable switchery for week
         var weekSwitchery = new Switchery(this.weekCheckbox);
         weekSwitchery = $(weekSwitchery.switcher).detach();
-        weekSwitchery.appendTo('.meal-form .headline-tool');
+        weekSwitchery.appendTo('.meal-form .headline-tool .switchery-placeholder');
 
         // Toggle day switcher and dropdown state on changed week state
         this.weekCheckbox.onchange = function () {

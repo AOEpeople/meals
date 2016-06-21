@@ -25,7 +25,17 @@
         {% endspaceless %}
     {% endset %}
 
-    {{ MealzHeadline.create(1, action ~ weekInfo , '', '', ['']) }}
+    {{ MealzHeadline.create(1, action ~ weekInfo , '', '',[
+        MealzButton.link(
+            path('MealzMealBundle_Print_participations', {'week': week.id}),
+            'Print',
+            '',
+            'transparent',
+            'glyphicon-print'
+        ),
+        "<div class='switchery-placeholder'></div>"
+    ])
+    }}
 
     <div class="week-form">
         {{ form_start(form) }}

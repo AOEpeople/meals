@@ -1,4 +1,29 @@
-.table {
-  table-layout: fixed;
-  width: 100%;
+.print-costsheet {
+  .table {
+    table-layout: fixed;
+    width: 100%;
+
+    // Highlight last month
+    th:nth-child(5),
+    td:nth-child(5) {
+      padding: 10px;
+      border-left: 1px solid $color-orange;
+      border-right: 1px solid $color-orange;
+    }
+
+    th:nth-child(5) {
+      border-top: 1px solid $color-orange;
+    }
+
+    th:nth-child(6),
+    td:nth-child(6) {
+      padding-left: 10px;
+    }
+
+    tr:last-child {
+      td:nth-child(5) {
+        border-bottom: 1px solid $color-orange;
+      }
+    }
+  }
 }

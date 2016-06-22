@@ -3,20 +3,19 @@
 {% set wrapperClass = 'print-participations' %}
 
 {% block body %}
-
-    <table>
-
         <table class="table">
             <thead class="table-header">
-                <th class="table-head"></th>
-            {% for day in week.days %}
-                <th class="table-head">
-                    <div class="day">{{ day.dateTime | date('l') }}</div>
-                    {% for meal in day.meals %}
-                    <div class="meal-title"><span>{{ meal.dish.title }} ({{ meal.participants | length }})</span></div>
+                <tr>
+                    <th class="table-head"></th>
+                    {% for day in week.days %}
+                    <th class="table-head">
+                        <div class="day">{{ day.dateTime | date('l') }}</div>
+                        {% for meal in day.meals %}
+                        <div class="meal-title"><span>{{ meal.dish.title }} ({{ meal.participants | length }})</span></div>
+                        {% endfor %}
+                    </th>
                     {% endfor %}
-                </th>
-            {% endfor %}
+                </tr>
             </thead>
 
             <tbody class="table-content">
@@ -39,7 +38,4 @@
                 {% endfor %}
             </tbody>
         </table>
-
-
-    </table>
 {% endblock %}

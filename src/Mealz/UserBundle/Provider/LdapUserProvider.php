@@ -2,7 +2,6 @@
 
 namespace Mealz\UserBundle\Provider;
 
-use Doctrine\ORM\EntityManager;
 use Mealz\UserBundle\Service\PostLogin;
 use Mealz\UserBundle\User\LdapUser;
 use Symfony\Component\Ldap\LdapClientInterface;
@@ -10,12 +9,6 @@ use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\LdapUserProvider as SymfonyLdapUserProvider;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-/**
- * LdapUserProvider is a simple user provider on top of ldap.
- *
- * @author Grégoire Pineau <lyrixx@lyrixx.info>
- * @author Charles Sarrazin <charles@sarraz.in>
- */
 class LdapUserProvider extends SymfonyLdapUserProvider
 {
 
@@ -30,7 +23,7 @@ class LdapUserProvider extends SymfonyLdapUserProvider
      * @param array $defaultRoles
      * @param string $uidKey
      * @param string $filter
-     * @param EntityManager $entityManager
+     * @param PostLogin $postLogin
      */
     public function __construct(
         LdapClientInterface $ldap,
@@ -49,8 +42,13 @@ class LdapUserProvider extends SymfonyLdapUserProvider
 
     public function loadUser($username, $user)
     {
-        $ldapUser = new LdapUser($username, $this->childDefaultRoles);
-        $ldapUser->setDisplayname($user["displayname"][0]);
+        $ldapUser = new LdapUser(
+            $user['samaccountname'][0],
+            $user['displayname'][0],
+            $user['givenname'][0],
+            $user['sn'][0],
+            $this->childDefaultRoles
+        );
         $this->postLogin->assureProfileExists($ldapUser);
 
         return $ldapUser;
@@ -65,7 +63,13 @@ class LdapUserProvider extends SymfonyLdapUserProvider
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($user)));
         }
 
-        $ldapUser = new LdapUser($user->getUsername(), $user->getRoles());
+        $ldapUser = new LdapUser(
+            $user->getUsername(),
+            $user->getDisplayname(),
+            $user->getGivenname(),
+            $user->getSurname(),
+            $this->childDefaultRoles
+        );
         $this->postLogin->assureProfileExists($ldapUser);
 
         return $ldapUser;

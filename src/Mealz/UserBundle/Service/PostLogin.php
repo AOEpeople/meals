@@ -9,7 +9,6 @@ use Mealz\UserBundle\User\LdapUser;
 use Mealz\UserBundle\User\UserInterface as MealzUserInterface;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * actions that might be taken after login
@@ -67,7 +66,7 @@ class PostLogin {
 
 			$profile = $this->entityManager->find('MealzUserBundle:Profile', $username);
 			if(!$profile) {
-				$profile = $this->createProfile($user, $username);
+				$profile = $this->createProfile($user);
 			}
 
 			$user->setProfile($profile);
@@ -92,9 +91,11 @@ class PostLogin {
 		$profile = new Profile();
 		$profile->setUsername($username);
 		if ($user instanceof LdapUser) {
-			$profile->setName($user->getDisplayname());
+			$profile->setName($user->getSurname());
+			$profile->setFirstName($user->getGivenname());
 		} else {
 			$profile->setName($username);
+			$profile->setFirstName($username);
 		}
 
 		$this->entityManager->persist($profile);

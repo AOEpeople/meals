@@ -3,8 +3,7 @@
 namespace Mealz\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\Role\Role;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * A profile is some kind of user record in the database that does not know anything about logins.
@@ -29,6 +28,12 @@ class Profile {
 	 * @var string
 	 */
 	protected $name;
+
+	/**
+	 * @ORM\Column(type="string", length=255, nullable=TRUE)
+	 * @var string
+	 */
+	protected $firstName;
 
 	/**
 	 * @ORM\OneToMany(targetEntity="Mealz\AccountingBundle\Entity\Transaction", mappedBy="user")
@@ -66,6 +71,22 @@ class Profile {
 	public function getName()
 	{
 		return $this->name;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getFirstName()
+	{
+		return $this->firstName;
+	}
+
+	/**
+	 * @param string $firstName
+	 */
+	public function setFirstName($firstName)
+	{
+		$this->firstName = $firstName;
 	}
 
 	public function __toString() {

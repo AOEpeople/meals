@@ -18,9 +18,12 @@ class LdapUser implements LdapUserInterface
     protected $roles = array();
     protected $attributes = array();
 
-    public function __construct($username, $roles = array())
+    public function __construct($username, $displayname, $givenname, $surname, $roles)
     {
         $this->username = $username;
+        $this->displayname = $displayname;
+        $this->givenname = $givenname;
+        $this->surname = $surname;
         $this->roles = $roles;
     }
 

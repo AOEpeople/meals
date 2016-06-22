@@ -13,7 +13,9 @@
                     {% endfor %}
                 </tr>
                 <tr>
-                    <th class="table-head wide-row"></th>
+                    <th class="table-head wide-row week-date">
+                        <span>{{ week.startTime | date('d.m.') }}-{{ week.endTime | date('d.m.') }}</span>
+                    </th>
                     {% for day in week.days %}
                         {% for meal in day.meals %}
                             <th class="table-head meal-title"><span>{{ meal.dish.title }}</span></th>

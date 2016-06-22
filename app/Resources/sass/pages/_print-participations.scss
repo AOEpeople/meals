@@ -1,8 +1,13 @@
+$border-color: $color-base;
+$text-color: $color-base;
+
 .print-participations {
+
   font-size: 12px;
 
-  thead {
+  thead.table-header {
     display: table-row-group;
+    color: $text-color;
   }
 
   .table {
@@ -32,6 +37,7 @@
     .table-data {
       height: 40px;
       padding: 0;
+      color: $text-color;
     }
 
     .text {
@@ -50,16 +56,16 @@
   // table borders
   .table-head,
   .table-data {
-    border-right: 1px solid $color-gray-primary;
+    border-right: 1px solid $border-color;
   }
 
   .table-data {
-    border-top:  1px solid $color-gray-primary;
+    border-top: 1px solid $border-color;
   }
 
   .meal-participation {
     &:first-child {
-      border-right: 1px solid $color-gray-primary;
+      border-right: 1px solid $border-color;
     }
   }
 }

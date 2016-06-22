@@ -7,14 +7,17 @@
         <table class="table">
             <thead class="table-header">
                 <tr>
-                    <th class="table-head"></th>
+                    <th class="table-head wide-row"></th>
                     {% for day in week.days %}
-                    <th class="table-head">
-                        <div class="day">{{ day.dateTime | date('l') }}</div>
+                    <th class="table-head day" colspan="2">{{ day.dateTime | date('l') }}</th>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    <th class="table-head wide-row"></th>
+                    {% for day in week.days %}
                         {% for meal in day.meals %}
-                        <div class="meal-title"><span>{{ meal.dish.title }} ({{ meal.participants | length }})</span></div>
+                            <th class="table-head meal-title"><span>{{ meal.dish.title }}</span></th>
                         {% endfor %}
-                    </th>
                     {% endfor %}
                 </tr>
             </thead>
@@ -22,21 +25,26 @@
             <tbody class="table-content">
                 {% for name, participations in users %}
                     <tr class="table-row">
-                        <th class="user table-data">{{ name }}</th>
+                        <td class="text table-data wide-row">{{ name }}</td>
                         {% for day in week.days %}
-                            <td class="day table-data">
                                 {% for meal in day.meals %}
                                     {% if isParticipant(participations, meal.participants) %}
-                                    <div class="meal-participation participating"></div>
+                                    <td class="meal-participation participating table-data"></td>
                                     {% else %}
-                                    <div class="meal-participation"></div>
+                                    <td class="meal-participation table-data"></td>
                                     {% endif %}
-
                                 {% endfor %}
-                            </td>
                         {% endfor %}
                     </tr>
                 {% endfor %}
+                <tr>
+                    <td class="text table-data wide-row">Gesamt</td>
+                    {% for day in week.days %}
+                            {% for meal in day.meals %}
+                                <td class="meal-count text text-center table-data"><span>{{ meal.participants | length }}</span></td>
+                            {% endfor %}
+                    {% endfor %}
+                </tr>
             </tbody>
         </table>
 {% endblock %}

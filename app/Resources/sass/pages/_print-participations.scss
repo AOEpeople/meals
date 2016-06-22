@@ -15,12 +15,14 @@
     font-size: 12px;
   }
 
+  .wide-row {
+    width: 200px;
+  }
+
   .table-head {
     text-align: center;
 
-    .meal-title {
-      float: left;
-      width: 50%;
+    &.meal-title {
       word-wrap: break-word;
       padding: 5px;
     }
@@ -32,19 +34,16 @@
       padding: 0;
     }
 
-    .user {
-      text-align: left;
+    .text {
       vertical-align: middle;
     }
 
-    .meal-participation {
-      float: left;
-      width: 50%;
-      height: 100%;
+    .text-center {
+      text-align: center;
+    }
 
-      &.participating {
+    .meal-participation.participating {
         background-color: $color-green;
-      }
     }
   }
 
@@ -55,7 +54,7 @@
   }
 
   .table-data {
-    border-top: 1px solid $color-gray-primary;
+    border-top:  1px solid $color-gray-primary;
   }
 
   .meal-participation {

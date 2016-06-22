@@ -1,8 +1,8 @@
 .print-participations {
-  @media print {
-    @page {
-      size: landscape;
-    }
+  font-size: 12px;
+
+  thead {
+    display: table-row-group;
   }
 
   .table {
@@ -12,25 +12,23 @@
 
   .table-row {
     border: none;
+    font-size: 12px;
   }
 
   .table-head {
-    .day {
-      text-align: center;
-    }
+    text-align: center;
 
     .meal-title {
       float: left;
       width: 50%;
       word-wrap: break-word;
       padding: 5px;
-      text-align: center;
     }
   }
 
   .table-content {
     .table-data {
-      height: 50px;
+      height: 40px;
       padding: 0;
     }
 

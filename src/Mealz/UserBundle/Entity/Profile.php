@@ -89,6 +89,14 @@ class Profile {
 		$this->firstName = $firstName;
 	}
 
+	/**
+	 * @return string
+	 */
+	public function getFullName()
+	{
+		return "$this->name, $this->firstName";
+	}
+
 	public function __toString() {
 		return $this->getUsername();
 	}

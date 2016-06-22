@@ -207,7 +207,7 @@ class ParticipantRepository extends EntityRepository
 
 		foreach ($participations as $participation) {
 			/** @var Participant $participation */
-			$name = $participation->getProfile()->getName();
+			$name = $participation->getProfile()->getUsername();
 			if (isset($result[$name])) {
 				$result[$name][] = $participation;
 			} else {

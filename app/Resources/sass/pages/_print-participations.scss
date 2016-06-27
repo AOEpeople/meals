@@ -3,8 +3,6 @@ $text-color: $color-base;
 
 .print-participations {
 
-  font-size: 12px;
-
   thead.table-header {
     display: table-row-group;
     color: $text-color;
@@ -18,10 +16,6 @@ $text-color: $color-base;
   .table-row {
     border: none;
     font-size: 12px;
-  }
-
-  .wide-row {
-    width: 200px;
   }
 
   .table-head {
@@ -56,6 +50,15 @@ $text-color: $color-base;
 
     .meal-participation.participating {
       background-color: $color-green;
+    }
+  }
+
+  .table-head,
+  .table-data {
+    &.wide-cell {
+      width: 200px;
+      word-wrap: break-word;
+      padding-right: 5px;
     }
   }
 

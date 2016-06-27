@@ -8,20 +8,21 @@
     margin-right: 20px;
     margin-bottom: 30px;
     padding: 10px;
-    color: $color-base;
-    background-color: $color-gray-light;
+    color: $color-white;
+    background-color: $color-green;
     text-align: center;
 
     &:hover {
-      color: inherit;
+      color: $color-white;
     }
 
     &.week-create {
-      background-color: $color-gray-lighter;
+      color: $color-base;
+      background-color: $color-gray-light;
     }
 
     &:nth-child(1) {
-      border: 5px solid $color-secondary;
+      border: 5px solid $color-gray-primary;
     }
 
     &:nth-child(4n) {

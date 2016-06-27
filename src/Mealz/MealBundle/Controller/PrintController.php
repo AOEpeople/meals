@@ -9,6 +9,9 @@ use Mealz\MealBundle\Entity\WeekRepository;
 
 class PrintController extends BaseController
 {
+    /**
+     * @TODO: use own data model for user costs
+     */
     public function costSheetAction()
     {
         if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
@@ -22,6 +25,7 @@ class PrintController extends BaseController
 
         $users = $participantRepository->findCostsGroupedByUserGroupedByMonth();
 
+        // create column names
         $numberOfMonths = 3;
         $columnNames = array('earlier' => $translator->trans('costs.earlier', array(), 'general'));
         $dateTime = new \DateTime("first day of -$numberOfMonths month 00:00");
@@ -32,9 +36,10 @@ class PrintController extends BaseController
         }
         $columnNames['total'] = $translator->trans('costs.total', array(), 'general');
 
+        // create table rows
         foreach ($users as &$user) {
             $userCosts = array_fill_keys(array_keys($columnNames), '0');
-            foreach ($user as $cost) {
+            foreach ($user['costs'] as $cost) {
                 $monthCosts = $cost['costs'];
                 if ($cost['timestamp'] < $earlierTimestamp) {
                     $userCosts['earlier'] = bcadd($userCosts['earlier'], $monthCosts, 4);
@@ -43,7 +48,7 @@ class PrintController extends BaseController
                 }
                 $userCosts['total'] = bcadd($userCosts['total'], $monthCosts, 4);
             }
-            $user = $userCosts;
+            $user['costs'] = $userCosts;
         }
 
         return $this->render('MealzMealBundle:Print:costSheet.html.twig', array(

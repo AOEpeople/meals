@@ -7,7 +7,7 @@
     <table class="table">
         <thead>
             <tr class="table-header">
-                <th class="table-head">Name</th>
+                <th class="table-head wide-row">Name</th>
                 {% for columnName in columnNames %}
                     {% if columnName == 'now' | date('F') %}
                         <th class="table-head">{{ 'now' | date('d.m.') }}</th>
@@ -18,10 +18,10 @@
             </tr>
         </thead>
         <tbody>
-            {% for user, costs in users %}
+            {% for user in users %}
             <tr class="table-row">
-                <td class="table-data">{{ user }}</td>
-                {% for cost in costs %}
+                <td class="table-data wide-row">{{ user.name }}, {{ user.firstName }}</td>
+                {% for cost in user.costs %}
                 <td class="table-data">{{ cost | number_format(2) | localizedcurrency('EUR') }}</td>
                 {% endfor %}
             </tr>

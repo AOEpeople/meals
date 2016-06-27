@@ -3,6 +3,10 @@
     table-layout: fixed;
     width: 100%;
 
+    .wide-row {
+      width: 200px;
+    }
+
     // Highlight last month
     th:nth-child(5),
     td:nth-child(5) {

@@ -174,9 +174,13 @@ class ParticipantRepository extends EntityRepository
 				'costs' => $cost['costs']
 			);
 			if (isset($result[$username])) {
-				$result[$username][] = $costByMonth;
+				$result[$username]['costs'][] = $costByMonth;
 			} else {
-				$result[$username] = array($costByMonth);
+				$result[$username] = array(
+					'name' => $cost['name'],
+					'firstName' => $cost['firstName'],
+					'costs' => array($costByMonth)
+				);
 			}
 		}
 
@@ -187,7 +191,7 @@ class ParticipantRepository extends EntityRepository
 	private function findCostsPerMonthPerUser()
 	{
 		$qb = $this->createQueryBuilder('p');
-		$qb->select('u.name AS username, SUBSTRING(m.dateTime, 1, 7) AS yearMonth, SUM(m.price) AS costs');
+		$qb->select('u.username, u.name, u.firstName, SUBSTRING(m.dateTime, 1, 7) AS yearMonth, SUM(m.price) AS costs');
 		$qb->leftJoin('p.meal', 'm');
 		$qb->leftJoin('p.profile', 'u');
 		/**
@@ -195,7 +199,7 @@ class ParticipantRepository extends EntityRepository
 		 */
 		$qb->where('m.dateTime < :now');
 		$qb->setParameter('now', date('Y-m-d H:i:s'));
-		$qb->groupBy('username');
+		$qb->groupBy('u.username');
 		$qb->addGroupBy('yearMonth');
 
 		return $qb->getQuery()->getArrayResult();

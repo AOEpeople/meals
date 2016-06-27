@@ -25,17 +25,21 @@
         {% endspaceless %}
     {% endset %}
 
-    {{ MealzHeadline.create(1, action ~ weekInfo , '', '',[
-        MealzButton.link(
+    {% set additionalHeaderItems = ["<div class='switchery-placeholder'></div>"] %}
+
+    {% if week.id is not null %}
+        {% set additionalHeaderItems = [
+            MealzButton.link(
             path('MealzMealBundle_Print_participations', {'week': week.id}),
             'Print',
             '',
             'transparent',
             'glyphicon-print'
-        ),
-        "<div class='switchery-placeholder'></div>"
-    ])
-    }}
+            )
+        ] | merge(additionalHeaderItems) %}
+    {% endif %}
+
+    {{ MealzHeadline.create(1, action ~ weekInfo , '', '', additionalHeaderItems) }}
 
     <div class="week-form">
         {{ form_start(form) }}

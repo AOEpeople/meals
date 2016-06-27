@@ -1,7 +1,4 @@
 <div class="week">
-	{% set week = weekInfo[0] %}
-	{% set weekMealsCount = weekInfo[1] %}
-
 	{% set headline = 'week.current'|trans({},'general') %}
 	{% if 'now' | date('U') < week.startTime | date('U') %}
 		{% set headline = 'week.next'|trans({},'general') %}
@@ -13,7 +10,7 @@
 
 	{% if not week.enabled %}
 		{% include 'MealzMealBundle:Meal/partials:noMeals.html.twig' %}
-	{% elseif weekMealsCount > 0 %}
+	{% elseif week.days | length > 0 %}
 		{% for day in week.days %}
 			{% include 'MealzMealBundle:Meal/partials:day.html.twig' %}
 		{% endfor %}

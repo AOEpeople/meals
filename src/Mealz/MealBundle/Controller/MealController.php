@@ -36,10 +36,7 @@ class MealController extends BaseController {
 			$nextWeek = $this->createEmptyNonPersistentWeek(new \DateTime('next week'));
 		}
 
-		$weeks = array(
-			array($currentWeek, $currentWeek->getDays()->count()),
-			array($nextWeek, $nextWeek->getDays()->count())
-		);
+		$weeks = array($currentWeek, $nextWeek);
 
 		return $this->render('MealzMealBundle:Meal:index.html.twig', array(
 			'weeks' => $weeks

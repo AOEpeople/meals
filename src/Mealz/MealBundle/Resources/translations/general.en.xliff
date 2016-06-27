@@ -98,6 +98,10 @@
                 <source>costs.total</source>
                 <target>Total</target>
             </trans-unit>
+            <trans-unit id="20">
+                <source>costs.none</source>
+                <target>No costs</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -3,6 +3,7 @@
 {% set wrapperClass = 'print-participations' %}
 
 {% block body %}
+    {% if users is not empty %}
         <table class="table">
             <thead class="table-header">
                 <tr>
@@ -49,4 +50,7 @@
                 </tr>
             </tbody>
         </table>
+    {% else %}
+        {{ 'participant.none' | trans({}, 'general') }}
+    {% endif %}
 {% endblock %}

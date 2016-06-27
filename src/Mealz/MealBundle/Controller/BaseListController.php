@@ -1,15 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: jonathan.klauck
- * Date: 08.06.2016
- * Time: 17:46
- */
 
 namespace Mealz\MealBundle\Controller;
 
 use Doctrine\ORM\EntityRepository;
-use Mealz\MealBundle\Entity\Category;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -63,7 +56,7 @@ abstract class BaseListController extends BaseController
             throw new AccessDeniedException();
         }
 
-        return $this->categoryFormHandling(
+        return $this->entityFormHandling(
             $request,
             new $this->entityClassPath,
             $this->entityName . ' has been added.'
@@ -81,7 +74,7 @@ abstract class BaseListController extends BaseController
             throw $this->createNotFoundException();
         }
 
-        return $this->categoryFormHandling($request, $entity, $this->entityName . ' has been modified.');
+        return $this->entityFormHandling($request, $entity, $this->entityName . ' has been modified.');
     }
 
     public function deleteAction($slug)
@@ -94,7 +87,7 @@ abstract class BaseListController extends BaseController
         $em->remove($entity);
         $em->flush();
 
-        $this->addFlashMessage(sprintf('Deleted category: "%s"', $entity->getTitle()), 'success');
+        $this->addFlashMessage(sprintf('%s "%s" has been deleted.', $this->entityName, $entity->getTitle()), 'success');
 
         return $this->redirectToRoute('MealzMealBundle_' . $this->entityName);
     }
@@ -108,7 +101,7 @@ abstract class BaseListController extends BaseController
         $entity = new $this->entityClassPath();
         $action = $this->generateUrl('MealzMealBundle_' . $this->entityName . '_new');
 
-        return new JsonResponse($this->getRenderedCategoryForm($entity, $action));
+        return new JsonResponse($this->getRenderedEntityForm($entity, $action));
     }
 
     public function getPreFilledFormAction($slug)
@@ -117,7 +110,6 @@ abstract class BaseListController extends BaseController
             throw new AccessDeniedException();
         }
 
-        /* @var Category $entity */
         $entity = $this->repository->findOneBy(array('slug' => $slug));
 
         if (!$entity) {
@@ -126,16 +118,15 @@ abstract class BaseListController extends BaseController
 
         $action = $this->generateUrl('MealzMealBundle_' . $this->entityName . '_edit', array('slug' => $slug));
 
-        return new JsonResponse($this->getRenderedCategoryForm($entity, $action, true));
+        return new JsonResponse($this->getRenderedEntityForm($entity, $action, true));
     }
 
-    private function getRenderedCategoryForm($entity, $action, $wrapInTr = false)
+    private function getRenderedEntityForm($entity, $action, $wrapInTr = false)
     {
         $form = $this->createForm(new $this->entityFormName(), $entity, array(
             'action' => $action,
         ));
 
-        /** @TODO */
         if ($wrapInTr) {
             $template = "MealzMealBundle:$this->entityName/partials:formTable.html.twig";
         } else {
@@ -147,9 +138,8 @@ abstract class BaseListController extends BaseController
         return $renderedForm->getContent();
     }
 
-    private function categoryFormHandling(Request $request, $entity, $successMessage)
+    private function entityFormHandling(Request $request, $entity, $successMessage)
     {
-        /** @TODO */
         $form = $this->createForm(new $this->entityFormName(), $entity);
 
         // handle form submission
@@ -169,11 +159,10 @@ abstract class BaseListController extends BaseController
             }
         }
 
-        /** @TODO */
         return $this->redirectToRoute('MealzMealBundle_' . $this->entityName);
     }
 
-    private function renderEntityList($parameters = array())
+    protected function renderEntityList($parameters = array())
     {
         $entities = $this->repository->findAll();
 
@@ -183,7 +172,6 @@ abstract class BaseListController extends BaseController
 
         $mergedParameters = array_merge($defaultParameters, $parameters);
 
-        /** @TODO */
         return $this->render('MealzMealBundle:' . $this->entityName . ':list.html.twig', $mergedParameters);
     }
 }

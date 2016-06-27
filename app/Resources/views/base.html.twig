@@ -14,9 +14,7 @@
 	{% block head %}{% endblock %}
 </head>
 <body>
-	{% if noHeader is not defined %}
-		{% include 'header.html.twig'  %}
-	{% endif %}
+	{% include 'header.html.twig'  %}
 
 	{% if wrapperClass is not defined %}
 		{% set wrapperClass = '' %}

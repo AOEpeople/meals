@@ -8,6 +8,9 @@ use Mealz\MealBundle\Entity\DishRepository;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class DishController extends BaseListController {
+    /** @var  DishRepository $repository */
+    protected $repository;
+
     public function deleteAction($slug)
     {
         if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
@@ -42,5 +45,17 @@ class DishController extends BaseListController {
         }
 
         return $this->redirectToRoute('MealzMealBundle_Dish');
+    }
+
+    protected function getEntities()
+    {
+        $parameters = array(
+            'load_category' => true,
+            'orderBy_category' => false
+        );
+
+        $dishesQueryBuilder = $this->repository->getSortedDishesQueryBuilder($parameters);
+
+        return $dishesQueryBuilder->getQuery()->execute();
     }
 }

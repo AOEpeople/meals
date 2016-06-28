@@ -12,7 +12,7 @@ abstract class BaseListController extends BaseController
     /**
      * @var EntityRepository
      */
-    private $repository;
+    protected $repository;
 
     /**
      * @var string
@@ -164,7 +164,7 @@ abstract class BaseListController extends BaseController
 
     protected function renderEntityList($parameters = array())
     {
-        $entities = $this->repository->findAll();
+        $entities = $this->getEntities();
 
         $defaultParameters = array(
             'entities' => $entities
@@ -173,5 +173,9 @@ abstract class BaseListController extends BaseController
         $mergedParameters = array_merge($defaultParameters, $parameters);
 
         return $this->render('MealzMealBundle:' . $this->entityName . ':list.html.twig', $mergedParameters);
+    }
+
+    protected function getEntities() {
+        return $this->repository->findAll();
     }
 }

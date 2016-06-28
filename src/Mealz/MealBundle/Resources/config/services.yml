@@ -54,7 +54,14 @@ services:
 
   mealz_meal.event_listener.localisation:
     class: %mealz_meal.event_listener.localisation.class%
-    arguments: [@request_stack, @mealz_meal.http_header_utility]
+    arguments: [@mealz_meal.http_header_utility]
+    tags:
+      # set locale in request
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+  mealz_meal.event_listener.localisation.entity:
+    class: Mealz\MealBundle\EventListener\EntityLocalisationListener
+    arguments: [@mealz_meal.http_header_utility, @request_stack]
     tags:
       # set locale in request
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
@@ -68,6 +75,12 @@ services:
     arguments:
         - 'MealzMealBundle:Participant'
 
+  mealz_meal.factory.localized_repository:
+    class: Mealz\MealBundle\Service\LocalizedRepositoryFactory
+    arguments:
+      - '@doctrine.orm.entity_manager'
+      - '@mealz_meal.event_listener.localisation'
+
   mealz_meal.repository.category:
     class: Mealz\MealBundle\Entity\CategoryRepository
     factory_service: doctrine.orm.entity_manager
@@ -75,10 +88,13 @@ services:
     arguments:
       - 'MealzMealBundle:Category'
 
+  mealz_meal.repository.abstract.localized:
+    abstract: true
+    factory: ['@mealz_meal.factory.localized_repository', createLocalizedRepository]
+
   mealz_meal.repository.dish:
     class: Mealz\MealBundle\Entity\DishRepository
-    factory_service: doctrine.orm.entity_manager
-    factory_method: getRepository
+    parent: mealz_meal.repository.abstract.localized
     arguments:
       - 'MealzMealBundle:Dish'
 
@@ -93,6 +109,12 @@ services:
         arguments: []
         tags:
             - { name: form.type, alias: participant }
+
+  mealz_meal.form.type.meal:
+    class: Mealz\MealBundle\Form\Type\MealType
+    arguments: ['@mealz_meal.repository.dish']
+    tags:
+      - { name: form.type }
 
   mealz_meal.form.type.day:
     class: Mealz\MealBundle\Form\Type\DayType

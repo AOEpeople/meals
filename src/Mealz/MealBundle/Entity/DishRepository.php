@@ -2,31 +2,25 @@
 
 namespace Mealz\MealBundle\Entity;
 
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 
-class DishRepository extends EntityRepository {
+class DishRepository extends LocalizedRepository {
 
 	protected $defaultOptions = array(
-		'load_category' => FALSE,
+		'load_category' => true,
+		'orderBy_category' => true
 	);
 
-	protected $currentLocale = 'en';
-
 	/**
-	 * @param string $currentLocale
-	 */
-	public function setCurrentLocale($currentLocale) {
-		$this->currentLocale = $currentLocale;
-	}
-
-	/**
-	 * get a sorted list of dishes
+	 * get a query builder for sorted list of dishes
 	 *
 	 * @param array $options
-	 * @return array
+	 * @return QueryBuilder
 	 */
-	public function getSortedDishes($options = array()) {
+	public function getSortedDishesQueryBuilder($options = array()) {
+		$currentLocale = $this->localizationListener->getLocale();
+
 		$options = array_merge($this->defaultOptions, $options);
 
 		$qb = $this->createQueryBuilder('d');
@@ -47,9 +41,14 @@ class DishRepository extends EntityRepository {
 		$qb->where('d.enabled = 1');
 
 		// ORDER BY
-		$qb->orderBy('d.title_' . $this->currentLocale, 'DESC');
+		if($options['load_category'] && $options['orderBy_category']) {
+			$qb->orderBy('c.title_' . $currentLocale);
+			$qb->addOrderBy('d.title_' . $currentLocale);
+		} else {
+			$qb->orderBy('d.title_' . $currentLocale, 'DESC');
+		}
 
-		return $qb->getQuery()->execute();
+		return $qb;
 	}
 
 	/**

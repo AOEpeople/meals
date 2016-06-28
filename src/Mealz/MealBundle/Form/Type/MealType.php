@@ -4,6 +4,7 @@ namespace Mealz\MealBundle\Form\Type;
 
 use Mealz\MealBundle\Entity\Day;
 use Mealz\MealBundle\Entity\Dish;
+use Mealz\MealBundle\Entity\DishRepository;
 use Mealz\MealBundle\Entity\Meal;
 use Mealz\MealBundle\Entity\Week;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -15,10 +16,18 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MealType extends AbstractType
 {
+    protected $dishRepository;
+
+    public function __construct(DishRepository $dishRepository)
+    {
+        $this->dishRepository = $dishRepository;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('dish', EntityType::class, array(
             'class' => 'MealzMealBundle:Dish',
+            'query_builder' => $this->dishRepository->getSortedDishesQueryBuilder(),
             'required' => false,
             'group_by' => function(Dish $dish) {
                 return $dish->getCategory();

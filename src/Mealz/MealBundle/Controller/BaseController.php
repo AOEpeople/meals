@@ -28,10 +28,7 @@ abstract class BaseController extends Controller {
 	 */
 	public function getDishRepository()
 	{
-		$repository = $this->getDoctrine()->getRepository('MealzMealBundle:Dish');
-		$repository->setCurrentLocale($this->getRequest()->getLocale());
-
-		return $repository;
+		return $this->getDoctrine()->getRepository('MealzMealBundle:Dish');
 	}
 
 	/**

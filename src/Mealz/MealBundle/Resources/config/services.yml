@@ -57,7 +57,7 @@ services:
     arguments: [@mealz_meal.http_header_utility]
     tags:
       # set locale in request
-      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 12 }
 
   mealz_meal.event_listener.localisation.entity:
     class: Mealz\MealBundle\EventListener\EntityLocalisationListener

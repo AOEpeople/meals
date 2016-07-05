@@ -201,6 +201,7 @@ class ParticipantRepository extends EntityRepository
 		$qb->setParameter('now', date('Y-m-d H:i:s'));
 		$qb->groupBy('u.username');
 		$qb->addGroupBy('yearMonth');
+		$qb->addOrderBy('u.name');
 
 		return $qb->getQuery()->getArrayResult();
 	}

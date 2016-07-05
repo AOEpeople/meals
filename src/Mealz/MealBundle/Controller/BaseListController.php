@@ -3,9 +3,10 @@
 namespace Mealz\MealBundle\Controller;
 
 use Doctrine\ORM\EntityRepository;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 abstract class BaseListController extends BaseController
 {
@@ -69,19 +70,14 @@ abstract class BaseListController extends BaseController
             throw new AccessDeniedException();
         }
 
-        $entity = $this->repository->findOneBy(array('slug' => $slug));
-        if (null === $entity) {
-            throw $this->createNotFoundException();
-        }
+        $entity = $this->findBySlugOrThrowException($slug);
 
         return $this->entityFormHandling($request, $entity, $this->entityName . ' has been modified.');
     }
 
     public function deleteAction($slug)
     {
-        $entity = $this->repository->findOneBy(array(
-            'slug' => $slug
-        ));
+        $entity = $this->findBySlugOrThrowException($slug);
 
         $em = $this->getDoctrine()->getManager();
         $em->remove($entity);
@@ -177,5 +173,21 @@ abstract class BaseListController extends BaseController
 
     protected function getEntities() {
         return $this->repository->findAll();
+    }
+
+    /**
+     * @param $slug
+     *
+     * @return object
+     *
+     * @throws NotFoundHttpException if entity not found
+     */
+    protected function findBySlugOrThrowException($slug)
+    {
+        $entity = $this->repository->findOneBy(array('slug' => $slug));
+        if (null === $entity) {
+            throw $this->createNotFoundException();
+        }
+        return $entity;
     }
 }

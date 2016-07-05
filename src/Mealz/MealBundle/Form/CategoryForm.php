@@ -39,6 +39,7 @@ class CategoryForm extends AbstractType {
 	public function setDefaultOptions(OptionsResolverInterface $resolver) {
 		$resolver->setDefaults(array(
 			'data_class' => 'Mealz\MealBundle\Entity\Category',
+			'intention' => 'category_type'
 		));
 	}
 

@@ -1,0 +1,4 @@
+security:
+    firewalls:
+        mealz:
+          http_basic: ~

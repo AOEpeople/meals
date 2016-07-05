@@ -8,6 +8,7 @@ use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
+use Doctrine\ORM\EntityManager;
 use Mealz\MealBundle\Entity\Dish;
 use Mealz\MealBundle\Entity\Meal;
 use Mealz\UserBundle\Entity\Profile;
@@ -96,10 +97,14 @@ abstract class AbstractRepositoryTestCase extends WebTestCase {
 		return $profile;
 	}
 
+	/**
+	 * @param array $entities
+	 */
 	public function persistAndFlushAll($entities) {
 		$em = $this->getDoctrine()->getManager();
 
 		$em->transactional(function($em) use ($entities) {
+			/** @var EntityManager $em */
 			// transaction is need for Participant entities
 			foreach($entities as $entity) {
 				$em->persist($entity);
@@ -107,8 +112,4 @@ abstract class AbstractRepositoryTestCase extends WebTestCase {
 			$em->flush();
 		});
 	}
-
-
-
-
 }

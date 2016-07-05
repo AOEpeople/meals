@@ -3,9 +3,9 @@
 namespace Mealz\MealBundle\Tests\EventListener;
 
 use Mealz\MealBundle\Entity\Participant;
-use Mealz\MealBundle\Tests\AbstractRepositoryTestCase;
+use Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 
-class ParticipantPersistenceListenerTest extends AbstractRepositoryTestCase {
+class ParticipantPersistenceListenerTest extends AbstractDatabaseTestCase {
 
 	public function setUp() {
 		parent::setUp();

@@ -9,12 +9,13 @@ use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
+use Mealz\MealBundle\Entity\Category;
 use Mealz\MealBundle\Entity\Dish;
 use Mealz\MealBundle\Entity\Meal;
 use Mealz\UserBundle\Entity\Profile;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-abstract class AbstractRepositoryTestCase extends WebTestCase {
+abstract class AbstractDatabaseTestCase extends WebTestCase {
 
 	public function setUp() {
 		parent::setUp();
@@ -95,6 +96,19 @@ abstract class AbstractRepositoryTestCase extends WebTestCase {
 		$profile->setUsername('Test ' . rand());
 
 		return $profile;
+	}
+
+	/**
+	 * @return Category
+	 */
+	protected function createCategory()
+	{
+		$rand = rand();
+		$category = new Category();
+		$category->setTitleDe('Title DE ' . $rand);
+		$category->setTitleEn('Title EN ' . $rand);
+
+		return $category;
 	}
 
 	/**

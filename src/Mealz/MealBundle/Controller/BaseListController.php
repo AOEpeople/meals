@@ -77,6 +77,10 @@ abstract class BaseListController extends BaseController
 
     public function deleteAction($slug)
     {
+        if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
+            throw new AccessDeniedException();
+        }
+
         $entity = $this->findBySlugOrThrowException($slug);
 
         $em = $this->getDoctrine()->getManager();

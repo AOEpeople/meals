@@ -64,13 +64,16 @@ abstract class AbstractDatabaseTestCase extends WebTestCase {
 	}
 
 	/**
+	 * @param Category $category
 	 * @return Dish
 	 */
-	protected function createDish() {
+	protected function createDish(Category $category = null) {
 		$dish = new Dish();
-		$rand = rand();
-		$dish->setTitleEn('Test EN ' . $rand);
-		$dish->setTitleDe('Test DE ' . $rand);
+		$dish->setTitleEn('Test EN ' . rand());
+		$dish->setTitleDe('Test DE ' . rand());
+		if ($category) {
+			$dish->setCategory($category);
+		}
 
 		return $dish;
 	}
@@ -103,10 +106,9 @@ abstract class AbstractDatabaseTestCase extends WebTestCase {
 	 */
 	protected function createCategory()
 	{
-		$rand = rand();
 		$category = new Category();
-		$category->setTitleDe('Title DE ' . $rand);
-		$category->setTitleEn('Title EN ' . $rand);
+		$category->setTitleDe('Title DE ' . rand());
+		$category->setTitleEn('Title EN ' . rand());
 
 		return $category;
 	}

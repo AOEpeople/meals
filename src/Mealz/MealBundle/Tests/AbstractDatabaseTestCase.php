@@ -95,8 +95,11 @@ abstract class AbstractDatabaseTestCase extends WebTestCase {
 	 * @return Profile
 	 */
 	protected function createProfile() {
+		$rand = rand();
 		$profile = new Profile();
-		$profile->setUsername('Test ' . rand());
+		$profile->setUsername('TestUsername' . $rand);
+		$profile->setName('TestName' . $rand);
+		$profile->setFirstName('TestFirstName' . $rand);
 
 		return $profile;
 	}

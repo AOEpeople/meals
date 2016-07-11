@@ -12,8 +12,10 @@ use Doctrine\ORM\EntityManager;
 use Mealz\MealBundle\Entity\Category;
 use Mealz\MealBundle\Entity\Dish;
 use Mealz\MealBundle\Entity\Meal;
+use Mealz\UserBundle\Entity\Login;
 use Mealz\UserBundle\Entity\Profile;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 
 abstract class AbstractDatabaseTestCase extends WebTestCase {
 
@@ -102,6 +104,24 @@ abstract class AbstractDatabaseTestCase extends WebTestCase {
 		$profile->setFirstName('TestFirstName' . $rand);
 
 		return $profile;
+	}
+
+	protected function createLogin(Profile $profile = null)
+	{
+		$name = $profile ? $profile->getName() : rand();
+		$login = new Login();
+		$login->setUsername($name);
+		$login->setSalt(md5(uniqid(null, true)));
+
+		/** @var PasswordEncoderInterface $encoder */
+		$encoder = static::$kernel->getContainer()->get('security.encoder_factory')->getEncoder($login);
+		$login->setPassword($encoder->encodePassword($name, $login->getSalt()));
+
+		if ($profile) {
+			$login->setProfile($profile);
+		}
+
+		return $login;
 	}
 
 	/**

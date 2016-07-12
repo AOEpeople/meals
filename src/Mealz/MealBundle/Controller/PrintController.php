@@ -22,6 +22,8 @@ class PrintController extends BaseController
         $translator = $this->get('translator');
 
         $participantRepository = $this->getParticipantRepository();
+        $transactionRepository = $this->getDoctrine()->getRepository('MealzAccountingBundle:Transaction');
+        $transactionsPerUser = $transactionRepository->findTotalAmountOfTransactionsPerUser();
 
         $users = $participantRepository->findCostsGroupedByUserGroupedByMonth();
 
@@ -37,16 +39,19 @@ class PrintController extends BaseController
         $columnNames['total'] = $translator->trans('costs.total', array(), 'general');
 
         // create table rows
-        foreach ($users as &$user) {
+        foreach ($users as $username => &$user) {
             $userCosts = array_fill_keys(array_keys($columnNames), '0');
             foreach ($user['costs'] as $cost) {
-                $monthCosts = $cost['costs'];
+                $monthCosts = $this->getRemainingCosts($cost['costs'], $transactionsPerUser[$username]);
                 if ($cost['timestamp'] < $earlierTimestamp) {
                     $userCosts['earlier'] = bcadd($userCosts['earlier'], $monthCosts, 4);
                 } else {
                     $userCosts[$cost['timestamp']] = $monthCosts;
                 }
                 $userCosts['total'] = bcadd($userCosts['total'], $monthCosts, 4);
+            }
+            if ($transactionsPerUser[$username] > 0) {
+                $userCosts['total'] = '+'.$transactionsPerUser[$username];
             }
             $user['costs'] = $userCosts;
         }
@@ -82,5 +87,18 @@ class PrintController extends BaseController
             'week' => $week,
             'users' => $groupedParticipations
         ));
+    }
+
+    private function getRemainingCosts($costs, &$transactions)
+    {
+        $result = bcsub($costs, $transactions, 4);
+        $transactions = abs($result);
+        if ($result < 0) {
+            $transactions = abs($result);
+        } else {
+            $transactions = 0;
+        }
+
+        return ($result < 0) ? 0 : $result * -1;
     }
 }

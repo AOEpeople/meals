@@ -83,4 +83,22 @@ class TransactionRepository extends \Doctrine\ORM\EntityRepository
 
         return $qb->getQuery()->execute();
     }
+
+    public function findTotalAmountOfTransactionsPerUser()
+    {
+        $qb = $this->createQueryBuilder('t');
+        $qb->select('p.username, SUM(t.amount) AS amount');
+        $qb->leftJoin('t.profile', 'p');
+        $qb->andWhere('t.successful = 1');
+        $qb->groupBy('p.username');
+        $queryResult = $qb->getQuery()->getArrayResult();
+
+        $result = array();
+
+        foreach($queryResult as $item) {
+            $result[$item['username']] = $item['amount'];
+        }
+
+        return $result;
+    }
 }

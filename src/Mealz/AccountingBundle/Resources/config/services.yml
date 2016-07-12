@@ -26,3 +26,9 @@ services:
         class: Twig_Extensions_Extension_Intl
         tags:
             - { name: twig.extension }
+
+    mealz_accounting.form.payment.cash:
+      class: Mealz\AccountingBundle\Form\CashPaymentAdminForm
+      arguments: ['@doctrine.orm.entity_manager']
+      tags:
+        - { name: form.type }

@@ -30,6 +30,10 @@
             	<source>delete</source>
                 <target>Delete</target>
             </trans-unit>
+            <trans-unit id="7a">
+                <source>deleted</source>
+                <target>deleted</target>
+            </trans-unit>
             <trans-unit id="8">
             	<source>meal.guest.add</source>
                 <target>Add guest</target>
@@ -41,6 +45,10 @@
             <trans-unit id="11">
             	<source>dish.add</source>
                 <target>Add dish</target>
+            </trans-unit>
+            <trans-unit id="12">
+                <source>added</source>
+                <target>added</target>
             </trans-unit>
         </body>
     </file>

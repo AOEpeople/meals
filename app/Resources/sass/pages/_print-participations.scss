@@ -37,11 +37,8 @@ $text-color: $color-base;
     .table-data {
       height: 40px;
       padding: 0;
-      color: $text-color;
-    }
-
-    .text {
       vertical-align: middle;
+      color: $text-color;
     }
 
     .text-center {
@@ -50,11 +47,22 @@ $text-color: $color-base;
 
     .meal-participation.participating {
       background-color: $color-green;
+
+      a,
+      a:hover {
+        color: $color-white;
+      }
     }
 
     a {
       display: block;
-      height: 100%;
+      height: 39px;
+      line-height: 40px;
+      text-align: center;
+
+      &:hover {
+        color: $text-color;
+      }
     }
   }
 

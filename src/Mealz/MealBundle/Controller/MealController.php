@@ -71,11 +71,11 @@ class MealController extends BaseController {
 
 		if (null === $profile) {
 			$profile = $this->getProfile();
-		} else if ($this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
+		} else if ($this->getProfile()->getUsername() === $profile || $this->getDoorman()->isKitchenStaff()) {
 			$profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
 			$profile = $profileRepository->find($profile);
 		} else {
-			throw new AccessDeniedException();
+			return new JsonResponse(null, 403);
 		}
 
 		try {
@@ -97,7 +97,8 @@ class MealController extends BaseController {
 			'participantsCount' => $meal->getParticipants()->count(),
 			'url' => $this->generateUrl('MealzMealBundle_Participant_delete', array(
 				'participant' => $participant->getId()
-			))
+			)),
+			'actionText' => $this->get('translator')->trans('added', array(), 'action')
 		));
 
 		return $ajaxResponse;

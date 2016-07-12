@@ -9,6 +9,25 @@
       word-wrap: break-word;
     }
 
+    .icon-cell {
+      width: 200px;
+      text-align: center;
+    }
+
+    form {
+      padding: 10px;
+      background-color: $color-gray-light;
+
+      button,
+      input {
+        display: inline-block;
+      }
+
+      input[type="text"] {
+        width: 60px;
+      }
+    }
+
     // Highlight last month
     th:nth-child(5),
     td:nth-child(5) {

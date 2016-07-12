@@ -198,6 +198,26 @@ Mealz.prototype.loadAjaxForm = function ($element) {
     });
 };
 
+Mealz.prototype.loadAjaxFormPayment = function($element) {
+    var url = $element.attr('href');
+    var $iconCells = $('.icon-cell');
+
+    $.ajax({
+        method: 'GET',
+        url: url,
+        dataType: 'json',
+        success: function (data) {
+            $iconCells.find('form').remove();
+            $iconCells.find('a').show();
+            $element.hide();
+            $element.parent().append(data);
+        },
+        error: function (xhr) {
+            console.log(xhr.status + ': ' + xhr.statusText);
+        }
+    });
+};
+
 $(document).ready(function() {
 
     var mealz = new Mealz();
@@ -217,6 +237,11 @@ $(document).ready(function() {
     $('.print-participations .meal-participation a').on('click', function(e) {
         e.preventDefault();
         mealz.toggleParticipationAdmin($(this));
+    });
+
+    $('.load-payment-form').on('click', function (e) {
+        e.preventDefault();
+        mealz.loadAjaxFormPayment($(this));
     });
 
     $('.table-sortable').DataTable({

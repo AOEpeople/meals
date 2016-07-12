@@ -49,9 +49,10 @@ class MealController extends BaseController {
 	 * @param Request $request
 	 * @param string $date
 	 * @param string $dish
+	 * @param string $profile
 	 * @return \Symfony\Component\HttpFoundation\JsonResponse
 	 */
-	public function joinAction(Request $request, $date, $dish) {
+	public function joinAction(Request $request, $date, $dish, $profile) {
 
 		if(!$this->getUser()) {
 			return new JsonResponse(null, 401);
@@ -67,8 +68,17 @@ class MealController extends BaseController {
 		if(!$this->getDoorman()->isUserAllowedToJoin($meal)) {
 			return new JsonResponse(null, 403);
 		}
-		try {
+
+		if (null === $profile) {
 			$profile = $this->getProfile();
+		} else if ($this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
+			$profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
+			$profile = $profileRepository->find($profile);
+		} else {
+			throw new AccessDeniedException();
+		}
+
+		try {
 			$participant = new Participant();
 			$participant->setProfile($profile);
 			$participant->setMeal($meal);

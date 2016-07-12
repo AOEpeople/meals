@@ -51,6 +51,11 @@ $text-color: $color-base;
     .meal-participation.participating {
       background-color: $color-green;
     }
+
+    a {
+      display: block;
+      height: 100%;
+    }
   }
 
   .table-head,

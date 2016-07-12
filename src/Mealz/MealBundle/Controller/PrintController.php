@@ -59,6 +59,10 @@ class PrintController extends BaseController
 
     public function participationsAction(Week $week)
     {
+        if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
+            throw new AccessDeniedException();
+        }
+
         /** @var WeekRepository $weekRepository */
         $weekRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Week');
         $week = $weekRepository->findWeekByDate($week->getStartTime());

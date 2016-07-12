@@ -37,7 +37,7 @@ class LoadTransactions extends AbstractFixture implements OrderedFixtureInterfac
         $transaction->setId($this->generateRandomString());
         $transaction->setAmount(mt_rand(1000, 5000)/100);
         $transaction->setSuccessful(mt_rand(0, 1));
-        $transaction->setUser($user);
+        $transaction->setProfile($user);
         $this->objectManager->persist($transaction);
     }
 

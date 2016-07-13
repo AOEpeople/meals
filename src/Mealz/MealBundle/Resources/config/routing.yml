@@ -50,8 +50,8 @@ MealzMealBundle_Meal_edit:
 #      date: 20\d{2}\-[01]\d\-[0-3]\d
 
 MealzMealBundle_Meal_join:
-    pattern:  /menu/{date}/{dish}/join
-    defaults: { _controller: "MealzMealBundle:Meal:join" }
+    pattern:  /menu/{date}/{dish}/join/{profile}
+    defaults: { _controller: "MealzMealBundle:Meal:join", profile: null }
 
 #MealzMealBundle_Meal_join_someone:
 #    pattern:  /menu/{date}/{dish}/join-someone

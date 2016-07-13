@@ -31,10 +31,10 @@
         {% set additionalHeaderItems = [
             MealzButton.link(
             path('MealzMealBundle_Print_participations', {'week': week.id}),
-            'Print',
+            'Participations',
             '',
             'transparent',
-            'glyphicon-print'
+            'glyphicon-th-list'
             )
         ] | merge(additionalHeaderItems) %}
     {% endif %}

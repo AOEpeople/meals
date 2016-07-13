@@ -31,10 +31,21 @@
                         <td class="text table-data wide-cell">{{ profile.fullName }}</td>
                         {% for day in week.days %}
                                 {% for meal in day.meals %}
-                                    {% if isParticipant(participations, meal.participants) %}
-                                    <td class="meal-participation participating table-data"></td>
+                                    {% set participation = isParticipant(participations, meal.participants) %}
+                                    {% if participation is not null%}
+                                    <td class="meal-participation participating table-data">
+                                        <a href="{{ path('MealzMealBundle_Participant_delete',{
+                                            'participant': participation.id
+                                        }) }}"></a>
+                                    </td>
                                     {% else %}
-                                    <td class="meal-participation table-data"></td>
+                                    <td class="meal-participation table-data">
+                                        <a href="{{ path('MealzMealBundle_Meal_join', {
+                                            date: meal.dateTime | date('Y-m-d'),
+                                            dish: meal.dish.slug,
+                                            profile: profile.username
+                                        }) }}"></a>
+                                    </td>
                                     {% endif %}
                                 {% endfor %}
                         {% endfor %}

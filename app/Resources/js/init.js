@@ -132,6 +132,24 @@ Mealz.prototype.toggleParticipation = function ($checkbox) {
     });
 };
 
+Mealz.prototype.toggleParticipationAdmin = function ($element) {
+    var url = $element.attr('href');
+
+    $.ajax({
+        method: 'GET',
+        url: url,
+        dataType: 'json',
+        success: function (data) {
+            $element.attr('href', data.url);
+            $element.parent().toggleClass('participating');
+            $element.text(data.actionText);
+        },
+        error: function (xhr) {
+            console.log(xhr.status + ': ' + xhr.statusText);
+        }
+    });
+};
+
 Mealz.prototype.loadAjaxForm = function ($element) {
     var that = this;
 
@@ -194,6 +212,11 @@ $(document).ready(function() {
     $('.load-ajax-form').on('click', function(e) {
         e.preventDefault();
         mealz.loadAjaxForm($(this));
+    });
+
+    $('.print-participations .meal-participation a').on('click', function(e) {
+        e.preventDefault();
+        mealz.toggleParticipationAdmin($(this));
     });
 
     $('.table-sortable').DataTable({

@@ -30,6 +30,7 @@ class ParticipantController extends BaseController {
 
 		$date = $participant->getMeal()->getDateTime()->format('Y-m-d');
 		$dish = $participant->getMeal()->getDish()->getSlug();
+		$profile = $participant->getProfile()->getUsername();
 
 		$em = $this->getDoctrine()->getManager();
 		$em->remove($participant);
@@ -40,8 +41,10 @@ class ParticipantController extends BaseController {
 			'participantsCount' => $participant->getMeal()->getParticipants()->count(),
 			'url' => $this->generateUrl('MealzMealBundle_Meal_join', array(
 				'date' => $date,
-				'dish' => $dish
-			))
+				'dish' => $dish,
+				'profile' => $profile
+			)),
+			'actionText' => $this->get('translator')->trans('deleted', array(), 'action')
 		));
 
 		return $ajaxResponse;

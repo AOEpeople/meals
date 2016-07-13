@@ -24,11 +24,11 @@ class Participation extends \Twig_Extension
     {
         foreach ($userParticipations as $participation) {
             if($mealParticipations->contains($participation)) {
-                return true;
+                return $participation;
             }
         }
 
-        return false;
+        return null;
     }
 
     /**

@@ -1,8 +1,10 @@
 var Mealz = function () {
     this.checkboxWrapperClass = 'checkbox-wrapper';
+    this.hiddenClass = 'hidden';
     this.weekCheckbox = $('.meal-form .week-disable input[type="checkbox"]')[0];
     this.$weekDayCheckboxes = $('.meal-form .week-day-action input[type="checkbox"]');
     this.$participationCheckboxes = $('.meals-list input.checkbox, .meals-list input[type = "checkbox"]');
+    this.$iconCells = $('.icon-cell');
     this.selectWrapperClass = 'select-wrapper';
     this.mealRowsWrapperClassSelector = '.meal-rows-wrapper';
     this.$selects = $("select");
@@ -199,18 +201,26 @@ Mealz.prototype.loadAjaxForm = function ($element) {
 };
 
 Mealz.prototype.loadAjaxFormPayment = function($element) {
+    var that = this;
     var url = $element.attr('href');
-    var $iconCells = $('.icon-cell');
+    var $elementParent = $element.parent();
+    var $form = $elementParent.find('form');
+
+    if ($form.length !== 0) {
+        $form.toggleClass(this.hiddenClass);
+        return;
+    }
 
     $.ajax({
         method: 'GET',
         url: url,
         dataType: 'json',
         success: function (data) {
-            $iconCells.find('form').remove();
-            $iconCells.find('a').show();
-            $element.hide();
-            $element.parent().append(data);
+            that.$iconCells.find('form').addClass(that.hiddenClass);
+            $element.after(data);
+            $elementParent.children('form').on('click', function(e){
+                e.stopPropagation();
+            });
         },
         error: function (xhr) {
             console.log(xhr.status + ': ' + xhr.statusText);
@@ -241,7 +251,12 @@ $(document).ready(function() {
 
     $('.load-payment-form').on('click', function (e) {
         e.preventDefault();
+        e.stopPropagation();
         mealz.loadAjaxFormPayment($(this));
+    });
+
+    $('body').on('click', function() {
+        mealz.$iconCells.find('form').addClass(mealz.hiddenClass);
     });
 
     $('.table-sortable').DataTable({

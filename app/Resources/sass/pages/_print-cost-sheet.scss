@@ -1,21 +1,32 @@
 .print-costsheet {
+  position: relative;
+
   .table {
     table-layout: fixed;
     width: 100%;
+
+    .table-head {
+      text-align: center;
+    }
 
     .table-data {
       vertical-align: middle;
       padding: 15px 5px;
       word-wrap: break-word;
-    }
-
-    .icon-cell {
-      width: 200px;
+      font-size: 14px;
       text-align: center;
     }
 
+    .icon-cell {
+      width: 50px;
+    }
+
     form {
-      padding: 10px;
+      position: absolute;
+      margin-top: 17px;
+      right: 28px;
+      z-index: 1;
+      padding: 20px;
       background-color: $color-gray-light;
 
       button,
@@ -24,7 +35,18 @@
       }
 
       input[type="text"] {
-        width: 60px;
+        width: 80px;
+        padding: 11px 10px 9px 10px;
+      }
+
+      &::after {
+        position: absolute;
+        top: -20px;
+        right: 15%;
+        border: 10px solid transparent;
+        border-bottom-color: #ecf2f5;
+        content: ' ';
+        pointer-events: none;
       }
     }
 
@@ -56,6 +78,10 @@
     table {
       .table-row {
         font-size: 12px;
+      }
+
+      .icon-cell {
+        display: none;
       }
     }
   }

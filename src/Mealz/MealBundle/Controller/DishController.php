@@ -58,4 +58,9 @@ class DishController extends BaseListController {
 
         return $dishesQueryBuilder->getQuery()->execute();
     }
+
+    protected function getNewForm()
+    {
+        return new $this->entityFormName($this->getParameter('mealz.meal.price'));
+    }
 }

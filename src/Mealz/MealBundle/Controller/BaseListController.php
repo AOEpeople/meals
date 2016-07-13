@@ -18,17 +18,17 @@ abstract class BaseListController extends BaseController
     /**
      * @var string
      */
+    protected $entityFormName;
+
+    /**
+     * @var string
+     */
     private $entityName;
 
     /**
      * @var string
      */
     private $entityClassPath;
-
-    /**
-     * @var string
-     */
-    private $entityFormName;
 
     public function setEntityName($entityName)
     {
@@ -123,7 +123,7 @@ abstract class BaseListController extends BaseController
 
     private function getRenderedEntityForm($entity, $action, $wrapInTr = false)
     {
-        $form = $this->createForm(new $this->entityFormName(), $entity, array(
+        $form = $this->createForm($this->getNewForm(), $entity, array(
             'action' => $action,
         ));
 
@@ -140,7 +140,7 @@ abstract class BaseListController extends BaseController
 
     private function entityFormHandling(Request $request, $entity, $successMessage)
     {
-        $form = $this->createForm(new $this->entityFormName(), $entity);
+        $form = $this->createForm($this->getNewForm(), $entity);
 
         // handle form submission
         if ($request->isMethod('POST')) {
@@ -193,5 +193,9 @@ abstract class BaseListController extends BaseController
             throw $this->createNotFoundException();
         }
         return $entity;
+    }
+
+    protected function getNewForm() {
+        return new $this->entityFormName();
     }
 }

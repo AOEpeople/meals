@@ -3,18 +3,35 @@
 namespace Mealz\MealBundle\Form;
 
 use Mealz\MealBundle\Entity\Category;
+use Mealz\MealBundle\Entity\Dish;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * form to add or edit a dish
  */
 class DishForm extends AbstractType {
+
+	/**
+	 * @var integer $price
+	 */
+	protected $price;
+
+	/**
+	 * DishForm constructor.
+	 * @param integer $price
+	 */
+	public function __construct($price)
+	{
+		$this->price = $price;
+	}
 
 	public function buildForm(FormBuilderInterface $builder, array $options) {
 		$builder
@@ -59,6 +76,13 @@ class DishForm extends AbstractType {
                 ]
 			))
 		;
+
+		$builder->addEventListener(FormEvents::POST_SUBMIT, function(FormEvent $event){
+			/** @var Dish $dish */
+			$dish = $event->getData();
+			$dish->setPrice($this->price);
+			$event->setData($dish);
+		});
 	}
 
 	public function setDefaultOptions(OptionsResolverInterface $resolver) {

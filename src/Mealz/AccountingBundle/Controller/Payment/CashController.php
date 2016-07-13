@@ -2,31 +2,56 @@
 
 namespace Mealz\AccountingBundle\Controller\Payment;
 
+use Doctrine\ORM\EntityManager;
 use Mealz\MealBundle\Controller\BaseController;
 use Mealz\AccountingBundle\Entity\Transaction;
+use Mealz\UserBundle\Entity\Profile;
 use Symfony\Component\HttpFoundation\Request;
 use Mealz\AccountingBundle\Form\CashPaymentAdminForm;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class CashController extends BaseController
 {
-    public function createPaymentAction($profile)
+
+    public function getPaymentFormForProfileAction($profile)
     {
-        if (!$this->getDoorman()->isKitchenStaff()) {
+        if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
             throw new AccessDeniedException();
         }
-        $request = $this->get('request');
 
-        $profileEntity = $this->getDoctrine()
-            ->getRepository('MealzUserBundle:Profile')
-            ->find($profile);
+        /** @var EntityManager $em */
+        $em = $this->getDoctrine()->getManager();
+        $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
 
+        $profile = $profileRepository->find($profile);
+        $action = $this->generateUrl('mealz_accounting_payment_cash_form_submit');
+
+        $form = $this->createForm(
+            new CashPaymentAdminForm($em),
+            new Transaction(),
+            array(
+                'action' => $action,
+                'profile' => $profile,
+            )
+        );
+
+        $template = "MealzAccountingBundle:Accounting/Payment/Cash:form_cash_amount.html.twig";
+        $renderedForm = $this->render($template, array('form' => $form->createView()));
+
+        return new JsonResponse($renderedForm->getContent());
+    }
+
+    public function paymentFormHandlingAction(Request $request)
+    {
+        if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
+            throw new AccessDeniedException();
+        }
+
+        /** @var EntityManager $em */
+        $em = $this->getDoctrine()->getManager();
         $transaction = new Transaction();
-        $transaction->setId(uniqid('BAR-'));
-        $transaction->setUser($profileEntity);
-        $transaction->setSuccessful();
-
-        $form = $this->createForm(new CashPaymentAdminForm(), $transaction);
+        $form = $this->createForm(new CashPaymentAdminForm($em), $transaction);
 
         // handle form submission
         if ($request->isMethod('POST')) {
@@ -34,17 +59,20 @@ class CashController extends BaseController
 
             if ($form->isValid()) {
                 $em = $this->getDoctrine()->getManager();
+                $transaction->setId(uniqid('BAR-'));
+                $transaction->setSuccessful(1);
                 $em->persist($transaction);
                 $em->flush();
 
-                $this->addFlashMessage('Cash payment has been added.', 'notice');
-
-                return $this->redirectToRoute('MealzAccountingBundle_Accounting_Admin', ['profile' => $profile]);
+                $this->addFlashMessage('Booked cash payment of ' . $transaction->getAmount() . '€ for ' . $transaction->getProfile()->getFullName(), 'success');
             }
         }
 
-        return $this->render('MealzAccountingBundle:Accounting\\partials:form_payment_cash.html.twig', array(
-            'form' => $form->createView()
+        $weekRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Week');
+        $week = $weekRepository->getCurrentWeek();
+
+        return $this->redirectToRoute('MealzMealBundle_Print_costSheet', array(
+            'week' => $week->getId()
         ));
     }
 }

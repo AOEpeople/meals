@@ -27,10 +27,10 @@ class Transaction
      * @Assert\NotBlank()
      * @Assert\Type(type="Mealz\UserBundle\Entity\Profile")
      * @ORM\ManyToOne(targetEntity="Mealz\UserBundle\Entity\Profile", inversedBy="transactions")
-     * @ORM\JoinColumn(name="user", referencedColumnName="id", nullable=FALSE)
+     * @ORM\JoinColumn(name="profile", referencedColumnName="id", nullable=FALSE)
      * @var Profile
      */
-    private $user;
+    private $profile;
 
     /**
      * @ORM\Column(type="datetime")
@@ -97,13 +97,13 @@ class Transaction
     }
 
     /**
-     * @param \Mealz\UserBundle\Entity\Profile $user
+     * @param \Mealz\UserBundle\Entity\Profile $profile
      *
      * @return Transaction
      */
-    public function setUser(\Mealz\UserBundle\Entity\Profile $user)
+    public function setProfile(\Mealz\UserBundle\Entity\Profile $profile)
     {
-        $this->user = $user;
+        $this->profile = $profile;
 
         return $this;
     }
@@ -111,14 +111,17 @@ class Transaction
     /**
      * @return \Mealz\UserBundle\Entity\Profile
      */
-    public function getUser()
+    public function getProfile()
     {
-        return $this->user;
+        return $this->profile;
     }
 
-    public function setSuccessful()
+    /**
+     * @param bool $successful
+     */
+    public function setSuccessful($successful)
     {
-        $this->successful = true;
+        $this->successful = $successful;
     }
 
     /**

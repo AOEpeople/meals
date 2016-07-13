@@ -36,7 +36,7 @@ class Profile {
 	protected $firstName;
 
 	/**
-	 * @ORM\OneToMany(targetEntity="Mealz\AccountingBundle\Entity\Transaction", mappedBy="user")
+	 * @ORM\OneToMany(targetEntity="Mealz\AccountingBundle\Entity\Transaction", mappedBy="profile")
 	 * @var ArrayCollection
 	 */
 	protected $transactions;

@@ -43,3 +43,11 @@ MealzAccountingBundle_Accounting_Admin_transaction:
 mealz_accounting_payment_cash:
     pattern: /payment/cash/{profile}
     defaults: { _controller: "MealzAccountingBundle:Payment\\Cash:createPayment" }
+
+mealz_accounting_payment_cash_form_submit:
+    path: /payment/cash/form/submit
+    defaults: { _controller: "MealzAccountingBundle:Payment\\Cash:paymentFormHandling" }
+
+mealz_accounting_payment_cash_form:
+    path: /payment/cash/form/{profile}
+    defaults: { _controller: "MealzAccountingBundle:Payment\\Cash:getPaymentFormForProfile" }

@@ -310,6 +310,10 @@ $icon-font-svg-id: "glyphicons_halflingsregular";
 .glyphicon-menu-down              { &:before { content: "\e259"; } }
 .glyphicon-menu-up                { &:before { content: "\e260"; } }
 
+.glyphicon-euro {
+  top: 0;
+  font-size: 75%;
+}
 
 .icon-svg {
   .icon {

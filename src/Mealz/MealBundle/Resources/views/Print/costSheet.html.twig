@@ -2,6 +2,10 @@
 
 {% set wrapperClass = 'print-costsheet' %}
 
+{%- block cost_widget -%}
+    {{ cost | number_format(2) }}<i class="glyphicon glyphicon-euro"></i>
+{%- endblock cost_widget -%}
+
 {% block body %}
     {% if users is not empty %}
         <table class="table">
@@ -25,9 +29,9 @@
                     {% for cost in user.costs %}
                         <td class="table-data">
                         {% if cost > 0 %}
-                            +{{ cost | number_format(2) }}€
+                            +{{ block('cost_widget') }}
                         {% else %}
-                            {{ cost | number_format(2) }}€
+                            {{ block('cost_widget') }}
                         {% endif %}
                         </td>
                     {% endfor %}

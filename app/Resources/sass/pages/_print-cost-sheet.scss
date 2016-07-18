@@ -23,9 +23,9 @@
 
     form {
       position: absolute;
-      margin-top: 17px;
       right: 28px;
       z-index: 1;
+      margin-top: 17px;
       padding: 20px;
       background-color: $color-gray-light;
 
@@ -36,7 +36,7 @@
 
       input[type="text"] {
         width: 80px;
-        padding: 11px 10px 9px 10px;
+        padding: 11px 10px 9px;
       }
 
       &::after {
@@ -44,7 +44,7 @@
         top: -20px;
         right: 15%;
         border: 10px solid transparent;
-        border-bottom-color: #ecf2f5;
+        border-bottom-color: $color-gray-light;
         content: ' ';
         pointer-events: none;
       }

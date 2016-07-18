@@ -61,6 +61,6 @@ class DishController extends BaseListController {
 
     protected function getNewForm()
     {
-        return new $this->entityFormName($this->getParameter('mealz.meal.price'));
+        return $this->get('mealz_meal.form.dish');
     }
 }

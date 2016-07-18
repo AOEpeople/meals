@@ -116,6 +116,12 @@ services:
     tags:
       - { name: form.type }
 
+  mealz_meal.form.dish:
+    class: Mealz\MealBundle\Form\DishForm
+    arguments: ['%mealz.meal.price%']
+    tags:
+      - { name: form.type }
+
   mealz_meal.form.type.day:
     class: Mealz\MealBundle\Form\Type\DayType
     arguments: ['@doctrine.orm.entity_manager']

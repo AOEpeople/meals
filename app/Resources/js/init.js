@@ -159,22 +159,44 @@ Mealz.prototype.loadAjaxForm = function ($element) {
     var animationDuration = 150;
 
     var $createForm = $('.create-form');
-    var $editFormWrapper = $('.edit-form');
-    var $editForm = $editFormWrapper.find('form');
+    var $editFormWrapper = $('.edit-form:visible');
+    var $elementParentRow = $element.closest('.table-row');
+    var $ajaxRow;
 
-    if ($element.hasClass('load-create-form') && $createForm.is(':visible')) {
+    if ($createForm.is(':visible')) {
         $createForm.slideUp(animationDuration);
-        return false;
-    } else if ($element.hasClass('load-create-form')) {
-        $editForm.slideUp(animationDuration, function () {
-            $editFormWrapper.remove();
+        if ($element.hasClass('load-create-form')) {
+            return;
+        }
+    } else if ($element.hasClass('load-create-form') && $element.hasClass('loaded')){
+        $createForm.slideDown(animationDuration);
+        $editFormWrapper.find('form').slideUp(animationDuration, function () {
+            $editFormWrapper.hide();
         });
-    } else if ($element.hasClass('load-edit-form') && $editForm.length > 0) {
-        $editForm.slideUp(animationDuration, function () {
-            $editFormWrapper.remove();
+        return;
+    }
+
+    if ($editFormWrapper.length > 0) {
+        $ajaxRow = $elementParentRow.next('.table-row-form');
+
+        var ajaxRowVisible = ($ajaxRow.length > 0 && $ajaxRow.is(':visible')) ? true : false;
+
+        $editFormWrapper.find('form').slideUp(animationDuration, function() {
+            $editFormWrapper.hide();
         });
-    } else if ($element.hasClass('load-edit-form')) {
-        $createForm.slideUp(animationDuration);
+
+        if (!ajaxRowVisible && $element.hasClass('load-edit-form') && $element.hasClass('loaded')) {
+            $ajaxRow.show();
+            $ajaxRow.find('form').slideDown(animationDuration);
+            return;
+        } else if (ajaxRowVisible) {
+            return;
+        }
+    } else if ($element.hasClass('load-edit-form') && $element.hasClass('loaded')){
+        $ajaxRow = $elementParentRow.next('.table-row-form');
+        $ajaxRow.show();
+        $ajaxRow.find('form').slideDown(animationDuration);
+        return;
     }
 
     $.ajax({
@@ -182,17 +204,21 @@ Mealz.prototype.loadAjaxForm = function ($element) {
         url: url,
         dataType: 'json',
         success: function (data) {
-            $(".table-row-form").remove();
+            var $wrapperForm;
+
             if ($element.hasClass('load-create-form')) {
                 $createForm.html(data);
                 $createForm.slideDown(animationDuration);
+                $wrapperForm = $createForm;
             } else {
-                var $parentRow = $element.closest('.table-row');
-                $parentRow.after(data);
-                $('.edit-form form').slideDown(animationDuration);
+                $wrapperForm = $(data).insertAfter($elementParentRow);
+                $wrapperForm.find('form').slideDown(animationDuration);
             }
-            that.$selects = $("select");
-            that.styleSelects();
+
+            // Style selects
+            $wrapperForm.find('select').wrap('<div class="' + that.selectWrapperClass + '"></div>');
+
+            $element.addClass('loaded');
         },
         error: function (xhr) {
             console.log(xhr.status + ': ' + xhr.statusText);

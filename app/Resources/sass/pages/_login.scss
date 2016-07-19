@@ -1,0 +1,13 @@
+.login-page {
+  form {
+    padding: 20px;
+    background-color: $color-gray-light;
+    text-align: center;
+
+    input {
+      display: block;
+      max-width: 300px;
+      margin: 20px auto;
+    }
+  }
+}

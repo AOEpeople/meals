@@ -9,7 +9,8 @@ input {
   @extend %base-styling;
   -webkit-font-smoothing: antialiased;
 
-  &[type="text"] {
+  &[type="text"],
+  &[type="password"] {
     width: 100%;
     padding: 10px;
   }

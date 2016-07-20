@@ -94,6 +94,10 @@ abstract class BaseListController extends BaseController
 
     public function getEmptyFormAction()
     {
+        if (!$this->getUser()) {
+            $this->ajaxSessionExpiredRedirect();
+        }
+
         if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
             throw new AccessDeniedException();
         }
@@ -106,6 +110,10 @@ abstract class BaseListController extends BaseController
 
     public function getPreFilledFormAction($slug)
     {
+        if (!$this->getUser()) {
+            $this->ajaxSessionExpiredRedirect();
+        }
+
         if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
             throw new AccessDeniedException();
         }

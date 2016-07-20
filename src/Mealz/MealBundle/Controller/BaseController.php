@@ -13,6 +13,7 @@ use Mealz\MealBundle\Service\Link;
 use Mealz\UserBundle\Entity\Profile;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 abstract class BaseController extends Controller {
 	/**
@@ -80,5 +81,12 @@ abstract class BaseController extends Controller {
 		$this->get('session')->getFlashBag()->add($severity, $message);
 	}
 
-
+	protected function ajaxSessionExpiredRedirect()
+	{
+		$this->addFlashMessage('Session expired', 'info');
+		$response = array(
+			'redirect' => $this->generateUrl('MealzUserBundle_login')
+		);
+		return new JsonResponse($response);
+	}
 }

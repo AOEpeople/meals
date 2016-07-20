@@ -121,6 +121,9 @@ Mealz.prototype.toggleParticipation = function ($checkbox) {
         url: url,
         dataType: 'json',
         success: function (data) {
+            if (data.redirect) {
+                window.location.replace(data.redirect);
+            }
             $checkbox.attr('value', data.url);
             $participantsCount.fadeOut('fast', function () {
                 that.applyCheckboxClasses($checkbox);

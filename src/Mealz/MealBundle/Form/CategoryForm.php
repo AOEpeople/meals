@@ -17,18 +17,19 @@ class CategoryForm extends AbstractType {
 		$builder
 			->add('title_en', TextType::class, array(
 				'attr' => array(
-					'placeholder' => 'title'
+					'placeholder' => 'form.placeholder.title'
 				),
 				'translation_domain' => 'general'
 			))
 			->add('title_de', TextType::class, array(
 				'attr' => array(
-					'placeholder' => 'title'
+					'placeholder' => 'form.placeholder.title'
 				),
 				'translation_domain' => 'general'
 			))
 			->add('save', SubmitType::class, array(
-				'label' => 'Save',
+				'label' => 'button.save',
+				'translation_domain' => 'actions',
                 'attr' => [
                     'class' => 'button small'
                 ]

@@ -29,14 +29,14 @@ class PrintController extends BaseController
 
         // create column names
         $numberOfMonths = 3;
-        $columnNames = array('earlier' => $translator->trans('costs.earlier', array(), 'general'));
+        $columnNames = array('earlier' => $translator->trans('table.prior_to_that', array(), 'general'));
         $dateTime = new \DateTime("first day of -$numberOfMonths month 00:00");
         $earlierTimestamp = $dateTime->getTimestamp();
         for ($i = 0; $i < $numberOfMonths + 1; $i++) {
             $columnNames[$dateTime->getTimestamp()] = $dateTime->format('F');
             $dateTime->modify("+1 month");
         }
-        $columnNames['total'] = $translator->trans('costs.total', array(), 'general');
+        $columnNames['total'] = $translator->trans('table.total', array(), 'general');
 
         // create table rows
         foreach ($users as $username => &$user) {

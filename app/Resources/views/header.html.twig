@@ -13,33 +13,32 @@
                     <li>
                         <a href="{{ path('MealzMealBundle_Meal') }}"
                            class="{{ activeRoute matches '/MealzMealBundle_Meal.*/' ? 'active' }}">
-                            Menu
+                            {{ 'header.navigation.menu'|trans({}, 'general') }}
                         </a>
                     </li>
                     <li>
                         <a href="{{ path('MealzMealBundle_Dish') }}"
                            class="{{ activeRoute matches '/MealzMealBundle_Dish.*/' ? 'active' }}">
-                            Dishes
+                            {{ 'header.navigation.dishes'|trans({}, 'general') }}
                         </a>
                     </li>
                     <li>
                         <a href="{{ path('MealzMealBundle_Category') }}"
                            class="{{ activeRoute matches '/MealzMealBundle_Category.*/' ? 'active' }}">
-                            Categories
+                            {{ 'header.navigation.categories'|trans({}, 'general') }}
                         </a>
                     </li>
                     <li>
                         <a href="{{ path('MealzMealBundle_Print_costSheet') }}"
                            class="{{ activeRoute == 'MealzMealBundle_Print_costSheet' ? 'active' }}">
-                            Costs
+                            {{ 'header.navigation.costs'|trans({}, 'general') }}
                         </a>
                     </li>
                 </ul>
             {% endif %}
             <div class="login">
                 {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-                    <div class="login-text">You are logged in as: <strong>{{ app.user.username }}</strong></div>
-                    {{ MealzButton.link('', '', '', '', 'glyphicon-cog') }}
+                    <div class="login-text">{{ 'header.logged_in_text'|trans({}, 'general') }}: <strong>{{ app.user.username }}</strong></div>
                     {{ MealzButton.link(path('MealzUserBundle_logout'), '', '', '', 'glyphicon-log-out') }}
                 {% else %}
                     <form class="login-form" action="{{ path('MealzUserBundle_checkLogin') }}" method="post">

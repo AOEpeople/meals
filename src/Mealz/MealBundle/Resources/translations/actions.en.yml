@@ -1,0 +1,12 @@
+button:
+  ok: OK
+  save: Save
+  cancel: Cancel
+  edit: Edit
+  delete: Delete
+
+dish:
+  create: Create dish
+
+category:
+  create: Create category

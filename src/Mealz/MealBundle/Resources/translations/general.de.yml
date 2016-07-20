@@ -1,0 +1,56 @@
+header:
+  navigation:
+    menu: Mahlzeiten
+    dishes: Gerichte
+    categories: Kategorien
+    costs: Kosten
+  logged_in_text: Eingeloggt als
+  balance: Kontostand
+
+headings:
+  week:
+    list: Liste der Wochen
+    create: Erstelle Woche
+    edit: Editiere Woche
+    participations: Teilnahmen
+  dishes:
+    list: Liste der Gerichte
+  categories:
+    list: Liste der Kategorien
+
+table:
+  title: Titel
+  actions: Aktionen
+  prior_to_that: Davor
+  total: Gesamt
+  name: Name
+  category: Kategorie
+
+content:
+  participation:
+    week:
+      current: Diese Woche
+      next: Nächste Woche
+      disabled: Kein Angebot für diese Woche!
+      no_meals: |
+        Gedulde dich - noch haben wir kein Essen
+        für dich, aber wir arbeiten daran :)
+    day:
+      disabled: Kein Angebot für diesen Tag!
+    meal:
+      no_service: Kein Angebot!
+    dish:
+      no_description: Keine Beschreibung
+    legend:
+      available: Verfügbar
+      unavailable: Nicht bestellbar
+    no_service: Kein Service
+  menu:
+    week: Woche
+    no_service: Kein Service
+
+form:
+  placeholder:
+    title: Titel
+    description: Beschreibung
+    category: Keine Kategorie

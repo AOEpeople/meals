@@ -37,27 +37,27 @@ class DishForm extends AbstractType {
 		$builder
 			->add('title_en', TextType::class, array(
 				'attr' => array(
-					'placeholder' => 'title'
+					'placeholder' => 'form.placeholder.title'
 				),
 				'translation_domain' => 'general'
 			))
 			->add('title_de', TextType::class, array(
 				'attr' => array(
-					'placeholder' => 'title'
+					'placeholder' => 'form.placeholder.title'
 				),
 				'translation_domain' => 'general'
 			))
 			->add('description_en', TextType::class, array(
 				'required' => FALSE,
 				'attr' => array(
-					'placeholder' => 'description'
+					'placeholder' => 'form.placeholder.description'
 				),
 				'translation_domain' => 'general'
 			))
 			->add('description_de', TextType::class, array(
 				'required' => FALSE,
 				'attr' => array(
-					'placeholder' => 'description'
+					'placeholder' => 'form.placeholder.description'
 				),
 				'translation_domain' => 'general'
 			))
@@ -67,10 +67,13 @@ class DishForm extends AbstractType {
                 'choice_label' => function ($category) {
                     /** @var Category $category */
                     return $category->getTitle();
-                }
+                },
+				'placeholder' => 'form.placeholder.category',
+				'translation_domain' => 'general',
 			))
 			->add('save', SubmitType::class, array(
-				'label' => 'Save',
+				'label' => 'button.save',
+				'translation_domain' => 'actions',
                 'attr' => [
                     'class' => 'button small'
                 ]

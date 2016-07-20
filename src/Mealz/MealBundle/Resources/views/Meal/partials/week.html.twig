@@ -1,7 +1,7 @@
 <div class="week">
-	{% set headline = 'week.current'|trans({},'general') %}
+	{% set headline = 'content.participation.week.current'|trans({},'general') %}
 	{% if 'now' | date('U') < week.startTime | date('U') %}
-		{% set headline = 'week.next'|trans({},'general') %}
+		{% set headline = 'content.participation.week.next'|trans({},'general') %}
 	{% endif %}
 
 	{% set headlineSub = week.startTime | date('D d.m.') ~ ' - ' ~ week.endTime | date('D d.m.') %}

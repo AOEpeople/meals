@@ -1,0 +1,56 @@
+header:
+  navigation:
+    menu: Menu
+    dishes: Dishes
+    categories: Categories
+    costs: Costs
+  logged_in_text: You are logged in as
+  balance: Balance
+
+headings:
+  week:
+    list: List of weeks
+    create: Create week
+    edit: Edit week
+    participations: Participations
+  dishes:
+    list: List of dishes
+  categories:
+    list: List of categories
+
+table:
+  title: Title
+  actions: Actions
+  prior_to_that: Prior to that
+  total: Total
+  name: Name
+  category: Category
+
+content:
+  participation:
+    week:
+      current: Current week
+      next: Next week
+      disabled: No service this week!
+      no_meals: |
+        Be patient - we don't have
+        a menu yet but we're working on it :)
+    day:
+      disabled: No service this day!
+    meal:
+      no_service: No service!
+    dish:
+      no_description: No description
+    legend:
+      available: Available
+      unavailable: Unavailable for order
+    no_service: No service
+  menu:
+    week: Woche
+    no_service: Kein Service
+
+form:
+  placeholder:
+    title: Title
+    description: Description
+    category: No category

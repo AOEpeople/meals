@@ -20,16 +20,16 @@
     </div>
 
     {% if not day.enabled %}
-        <div class="meal-row no-meal">{{ 'day.disabled'|trans({},'general') }}</div>
+        <div class="meal-row no-meal">{{ 'content.participation.day.disabled'|trans({},'general') }}</div>
     {% else %}
         {# display meals for given day #}
         {% for meal in day.meals %}
             {% include 'MealzMealBundle:Meal/partials:meal.html.twig' %}
         {% endfor %}
         {% if day.meals | length == 1 %}
-            <div class="meal-row one-meal">{{ 'no_service'|trans({},'general') }}</div>
+            <div class="meal-row one-meal">{{ 'content.participation.meal.no_service'|trans({},'general') }}</div>
         {% elseif day.meals | length == 0 %}
-            <div class="meal-row no-meal">{{ 'no_service'|trans({},'general') }}</div>
+            <div class="meal-row no-meal">{{ 'content.participation.meal.no_service'|trans({},'general') }}</div>
         {% endif %}
     {% endif %}
 

@@ -6,16 +6,21 @@ use Doctrine\ORM\EntityRepository;
 
 class WeekRepository extends EntityRepository
 {
-    public function getCurrentWeek($onlyEnabledDays = FALSE)
+    protected $defaultOptions = array(
+        'load_participants' => true,
+        'only_enabled_days' => false
+    );
+
+    public function getCurrentWeek($options = array())
     {
         $now = new \DateTime();
-        return $this->findWeekByDate($now, $onlyEnabledDays);
+        return $this->findWeekByDate($now, $options);
     }
 
-    public function getNextWeek($onlyEnabledDays = FALSE)
+    public function getNextWeek($options = array())
     {
         $nextWeek = new \DateTime('next week');
-        return $this->findWeekByDate($nextWeek, $onlyEnabledDays);
+        return $this->findWeekByDate($nextWeek);
     }
 
     public function getWeeksMealCount(Week $week)
@@ -31,23 +36,32 @@ class WeekRepository extends EntityRepository
 
     /**
      * @param \DateTime $date
-     * @param boolean $onlyEnabledDays
      * @return null|Week
      */
-    public function findWeekByDate(\DateTime $date, $onlyEnabledDays = FALSE)
+    public function findWeekByDate(\DateTime $date, $options = array())
     {
+        $options = array_merge($this->defaultOptions, $options);
+
         $qb = $this->createQueryBuilder('w');
-        $qb->select('w,da,m,d,p,u');
+
+        $select = 'w,da,m,d';
+        if ($options['load_participants']) {
+            $select .= ',p,u';
+        }
+        $qb->select($select);
 
         $qb->leftJoin('w.days', 'da');
         $qb->leftJoin('da.meals', 'm');
         $qb->leftJoin('m.dish', 'd');
-        $qb->leftJoin('m.participants', 'p');
-        $qb->leftJoin('p.profile', 'u');
+
+        if ($options['load_participants']) {
+            $qb->leftJoin('m.participants', 'p');
+            $qb->leftJoin('p.profile', 'u');
+        }
 
         $qb->andWhere('w.year = :year');
         $qb->andWhere('w.calendarWeek = :calendarWeek');
-        if (TRUE === $onlyEnabledDays) {
+        if (TRUE === $options['only_enabled_days']) {
             $qb->andWhere('da.enabled = 1');
         }
 

@@ -67,7 +67,9 @@ class PrintController extends BaseController
 
         /** @var WeekRepository $weekRepository */
         $weekRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Week');
-        $week = $weekRepository->findWeekByDate($week->getStartTime(), TRUE);
+        $week = $weekRepository->findWeekByDate($week->getStartTime(), array(
+            'only_enabled_days' => true
+        ));
 
         $participantRepository = $this->getParticipantRepository();
         $participations = $participantRepository->getParticipantsOnDays(

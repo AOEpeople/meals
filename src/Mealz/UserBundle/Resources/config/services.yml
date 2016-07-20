@@ -5,3 +5,7 @@ services:
   mealz_user.post_login:
     class: %mealz_user.post_login.class%
     arguments: [ @doctrine.orm.default_entity_manager, @logger ]
+
+  mealz_user.provider.login:
+    class: Symfony\Bridge\Doctrine\Security\User\EntityUserProvider
+    arguments: [ "@doctrine", "Mealz\\UserBundle\\Entity\\Login", "username" ]

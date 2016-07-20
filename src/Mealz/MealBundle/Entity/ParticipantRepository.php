@@ -9,8 +9,6 @@ use Mealz\UserBundle\Entity\Profile;
 class ParticipantRepository extends EntityRepository
 {
 
-	const COLUM_PRICE = 'price';
-
 	protected $defaultOptions = array(
 		'load_meal' => false,
 		'load_profile' => true,
@@ -194,10 +192,14 @@ class ParticipantRepository extends EntityRepository
 		$qb->select('u.username, u.name, u.firstName, SUBSTRING(m.dateTime, 1, 7) AS yearMonth, SUM(m.price) AS costs');
 		$qb->leftJoin('p.meal', 'm');
 		$qb->leftJoin('p.profile', 'u');
+		$qb->leftJoin('m.day', 'd');
+		$qb->leftJoin('d.week', 'w');
 		/**
 		 * @TODO: optimize query. where clause costs a lot of time.
 		 */
 		$qb->where('m.dateTime < :now');
+		$qb->andWhere('d.enabled = 1');
+		$qb->andWhere('w.enabled = 1');
 		$qb->setParameter('now', date('Y-m-d H:i:s'));
 		$qb->groupBy('u.username');
 		$qb->addGroupBy('yearMonth');

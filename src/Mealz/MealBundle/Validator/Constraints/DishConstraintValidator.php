@@ -34,9 +34,8 @@ class DishConstraintValidator extends ConstraintValidator
             $this->em->remove($entity);
             $this->em->flush();
         } else {
-            $this->em->refresh($entity);
-            $this->context->buildViolation($constraint->message)
-                ->setParameter('%string%', $entity->getDish()->getTitle())
+            $this->context
+                ->buildViolation($constraint->message)
                 ->addViolation();
         }
     }

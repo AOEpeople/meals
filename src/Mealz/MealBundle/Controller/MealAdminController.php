@@ -8,8 +8,10 @@ use Mealz\MealBundle\Entity\Meal;
 use Mealz\MealBundle\Entity\Week;
 use Mealz\MealBundle\Entity\WeekRepository;
 use Mealz\MealBundle\Form\WeekForm;
+use Mealz\MealBundle\Validator\Constraints\DishConstraint;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Validator\ConstraintViolation;
 
 class MealAdminController extends BaseController {
 
@@ -127,11 +129,20 @@ class MealAdminController extends BaseController {
                 $em->flush();
 
                 $this->addFlashMessage('Week has been modified.', 'success');
-
-                return $this->redirectToRoute('MealzMealBundle_Meal_edit', array(
-                    'week' => $week->getId()
-                ));
+            } else {
+                $errors = $form->getErrors(true);
+                foreach ($errors as $error) {
+                    if ($error->getCause() instanceof ConstraintViolation &&
+                        $error->getCause()->getConstraint() instanceof DishConstraint
+                    ) {
+                        $this->addFlashMessage("You can't change a meal which already has participants", 'danger');
+                    }
+                }
             }
+
+            return $this->redirectToRoute('MealzMealBundle_Meal_edit', array(
+                    'week' => $week->getId()
+            ));
         }
 
         return $this->render('MealzMealBundle:MealAdmin:week.html.twig', array(

@@ -5,7 +5,7 @@
 {% form_theme form _self %}
 
 {% block datetime_widget -%}
-    {{ value }}
+    {{ value | trans({}, 'date') }}
 {%- endblock datetime_widget %}
 
 {% block body %}

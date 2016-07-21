@@ -46,8 +46,8 @@ content:
       unavailable: Unavailable for order
     no_service: No service
   menu:
-    week: Woche
-    no_service: Kein Service
+    week: Week
+    no_service: No Service
 
 form:
   placeholder:

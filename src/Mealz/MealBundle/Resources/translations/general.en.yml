@@ -21,8 +21,6 @@ headings:
 table:
   title: Title
   actions: Actions
-  prior_to_that: Prior to that
-  total: Total
   name: Name
   category: Category
 
@@ -48,6 +46,9 @@ content:
   menu:
     week: Week
     no_service: No Service
+  print:
+    costs:
+      no_data: There exist no costs.
 
 form:
   placeholder:

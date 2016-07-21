@@ -1,0 +1,15 @@
+week:
+  created: Woche wurde angelegt.
+  modified: Woche wurde geändert.
+entity:
+  added: %entityName% wurde hinzugefügt.
+  modified: %entityName% wurde geändert.
+  deleted: %entityName% "%entity%" wurde gelöscht.
+  Dish: Gericht
+  Category: Kategorie
+dish:
+  hidden: Gericht "%dish%" wurde verborgen.
+  deleted: Gericht "%dish%" wurde gelöscht.
+error:
+  meal:
+    has_participants: Mahlzeiten, welche bereits Teilnehmer besitzen, können nicht geändert werden.

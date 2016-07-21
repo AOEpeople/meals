@@ -57,11 +57,16 @@ abstract class BaseListController extends BaseController
             throw new AccessDeniedException();
         }
 
-        return $this->entityFormHandling(
-            $request,
-            new $this->entityClassPath,
-            $this->entityName . ' has been added.'
+        $translator = $this->get('translator');
+        $translatedEntityName = $translator->trans("entity.$this->entityName", [], 'messages');
+        $message = $translator->trans(
+            'entity.added',
+            array(
+                '%entityName%' => $translatedEntityName,
+            ),
+            'messages'
         );
+        return $this->entityFormHandling($request, new $this->entityClassPath, $message);
     }
 
     public function editAction(Request $request, $slug)
@@ -72,7 +77,16 @@ abstract class BaseListController extends BaseController
 
         $entity = $this->findBySlugOrThrowException($slug);
 
-        return $this->entityFormHandling($request, $entity, $this->entityName . ' has been modified.');
+        $translator = $this->get('translator');
+        $translatedEntityName = $translator->trans("entity.$this->entityName", [], 'messages');
+        $message = $translator->trans(
+            'entity.modified',
+            array(
+                '%entityName%' => $translatedEntityName,
+            ),
+            'messages'
+        );
+        return $this->entityFormHandling($request, $entity, $message);
     }
 
     public function deleteAction($slug)
@@ -87,7 +101,17 @@ abstract class BaseListController extends BaseController
         $em->remove($entity);
         $em->flush();
 
-        $this->addFlashMessage(sprintf('%s "%s" has been deleted.', $this->entityName, $entity->getTitle()), 'success');
+        $translator = $this->get('translator');
+        $translatedEntityName = $translator->trans("entity.$this->entityName", [], 'messages');
+        $message = $this->translator->trans(
+            'entity.deleted',
+            array(
+                '%entityName%' => $translatedEntityName,
+                '%entity%' => $entity->getTitle(),
+            ),
+            'messages'
+        );
+        $this->addFlashMessage($message, 'success');
 
         return $this->redirectToRoute('MealzMealBundle_' . $this->entityName);
     }

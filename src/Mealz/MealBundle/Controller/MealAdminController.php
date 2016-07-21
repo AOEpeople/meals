@@ -87,7 +87,8 @@ class MealAdminController extends BaseController {
                 $em->persist($week);
                 $em->flush();
 
-                $this->addFlashMessage('Week has been created.', 'success');
+                $message = $this->get('translator')->trans('week.created', [], 'messages');
+                $this->addFlashMessage($message, 'success');
 
                 return $this->redirect($this->generateUrl('MealzMealBundle_Meal_edit', array(
                     'week' => $week->getId()
@@ -128,14 +129,16 @@ class MealAdminController extends BaseController {
                 $em->persist($week);
                 $em->flush();
 
-                $this->addFlashMessage('Week has been modified.', 'success');
+                $message = $this->get('translator')->trans('week.modified', [], 'messages');
+                $this->addFlashMessage($message, 'success');
             } else {
                 $errors = $form->getErrors(true);
                 foreach ($errors as $error) {
                     if ($error->getCause() instanceof ConstraintViolation &&
                         $error->getCause()->getConstraint() instanceof DishConstraint
                     ) {
-                        $this->addFlashMessage("You can't change a meal which already has participants", 'danger');
+                        $message = $this->get('translator')->trans('error.meal.has_participants', [], 'messages');
+                        $this->addFlashMessage($message, 'danger');
                     }
                 }
             }

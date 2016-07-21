@@ -83,7 +83,8 @@ abstract class BaseController extends Controller {
 
 	protected function ajaxSessionExpiredRedirect()
 	{
-		$this->addFlashMessage('Session expired', 'info');
+		$message = $this->get('translator')->trans('session.expired', [], 'messages');
+		$this->addFlashMessage($message, 'info');
 		$response = array(
 			'redirect' => $this->generateUrl('MealzUserBundle_login')
 		);

@@ -64,7 +64,15 @@ class CashController extends BaseController
                 $em->persist($transaction);
                 $em->flush();
 
-                $this->addFlashMessage('Booked cash payment of ' . $transaction->getAmount() . '€ for ' . $transaction->getProfile()->getFullName(), 'success');
+                $message = $this->get('translator')->trans(
+                    'payment.cash.success',
+                    array(
+                        '%amount%' => $transaction->getAmount(),
+                        '%name%' => $transaction->getProfile()->getFullName()
+                    ),
+                    'messages'
+                );
+                $this->addFlashMessage($message, 'success');
             }
         }
 

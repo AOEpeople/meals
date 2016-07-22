@@ -236,7 +236,11 @@ Mealz.prototype.loadAjaxFormPayment = function($element) {
     var $form = $elementParent.find('form');
 
     if ($form.length !== 0) {
+        that.$iconCells.find('form').addClass(that.hiddenClass);
         $form.toggleClass(this.hiddenClass);
+        if (!$form.hasClass(this.hiddenClass)) {
+            $form.find("input[type=text]").focus();
+        }
         return;
     }
 
@@ -247,6 +251,7 @@ Mealz.prototype.loadAjaxFormPayment = function($element) {
         success: function (data) {
             that.$iconCells.find('form').addClass(that.hiddenClass);
             $element.after(data);
+            $elementParent.find('form').find('input[type=text]').focus();
             $elementParent.children('form').on('click', function(e){
                 e.stopPropagation();
             });

@@ -42,6 +42,16 @@ class LdapUserProvider extends SymfonyLdapUserProvider
 
     public function loadUser($username, $user)
     {
+        $roles = $this->childDefaultRoles;
+
+        if (isset($user['memberof']) && array_search(
+                'CN=MealsAdmins_User,OU=_Permission_Groups,OU=_AOE,DC=aoemedia,DC=lan',
+                $user['memberof']
+            )
+        ) {
+            array_push($roles, 'ROLE_KITCHEN_STAFF');
+        }
+
         $ldapUser = new LdapUser(
             $user['samaccountname'][0],
             $user['displayname'][0],

@@ -39,7 +39,9 @@
             <div class="login">
                 {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                     <div class="login-text">You are logged in as: <strong>{{ app.user.username }}</strong></div>
-                    <div class="balance-text">Balance: <strong>{{ wallet.getBalance(app.user.profile) }}€</strong></div>
+                    <div class="balance-text">
+                        {{ 'header.balance'|trans({}, 'general') }}: <strong>{{ wallet.getBalance(app.user.profile) }}€</strong>
+                    </div>
                     {{ MealzButton.link('', '', '', '', 'glyphicon-cog') }}
                     {{ MealzButton.link(path('MealzUserBundle_logout'), '', '', '', 'glyphicon-log-out') }}
                 {% else %}

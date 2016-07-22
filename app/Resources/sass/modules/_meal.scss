@@ -34,8 +34,7 @@
   }
 
   .meal-row {
-    @include clearfix();
-
+    position: relative;
     padding: 15px;
 
     &:not(:last-child) {
@@ -62,9 +61,10 @@
   }
 
   .text,
+  .wrapper-vertical-center,
   .participants,
   .action {
-    float: left;
+    display: inline-block;
   }
 
   .text {
@@ -76,14 +76,27 @@
     }
   }
 
-  .participants,
-  .action {
-    width: 10%;
-    text-align: center;
+  .wrapper-vertical-center {
+    position: absolute;
+    top: 50%;
+    width: 20%;
+    height: 30px;
+    margin-top: -15px;
 
     @include breakpoint(small) {
-      width: 15%;
+      width: 30%;
     }
+  }
+
+  .participants,
+  .action {
+    width: 50%;
+    text-align: center;
+  }
+
+  .action,
+  .checkbox-wrapper {
+    vertical-align: top;
   }
 
   .action {

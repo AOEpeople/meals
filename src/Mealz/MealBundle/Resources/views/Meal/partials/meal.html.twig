@@ -1,6 +1,7 @@
 {% set dish = meal.dish %}
 
 <div class="meal-row">
+	{% spaceless %}
 	<div class="text">
 		<div class="title">
 			{{ dish.title }}
@@ -13,33 +14,36 @@
 			{% endif %}
 		</div>
 	</div>
-	<div class="participants">
-		<span>
-			<span class="participants-count">
-				{{ meal.participants | length }}
+	<div class="wrapper-vertical-center">
+		<div class="participants">
+			<span>
+				<span class="participants-count">
+					{{ meal.participants | length }}
+				</span>
 			</span>
-		</span>
-	</div>
-	<div class="action">
-		{% if is_granted('ROLE_USER') %}
-			{% set participant = meal.getParticipant(app.user.profile) %}
-			{# join / leave using a checkbox #}
-			{% if participant %}
-				{% if is_allowed_to_leave(meal) %}
-					{{ MealzCheckbox.create(link(participant, 'delete') ,'participation-checkbox', {'checked': 'checked'}) }}
+		</div>
+		<div class="action">
+			{% if is_granted('ROLE_USER') %}
+				{% set participant = meal.getParticipant(app.user.profile) %}
+				{# join / leave using a checkbox #}
+				{% if participant %}
+					{% if is_allowed_to_leave(meal) %}
+						{{ MealzCheckbox.create(link(participant, 'delete') ,'participation-checkbox', {'checked': 'checked'}) }}
+					{% else %}
+						{{ MealzCheckbox.create('' ,'participation-checkbox', {'checked': 'checked', 'disabled': 'disabled'}) }}
+					{% endif %}
 				{% else %}
-					{{ MealzCheckbox.create('' ,'participation-checkbox', {'checked': 'checked', 'disabled': 'disabled'}) }}
+					{% if is_allowed_to_join(meal) %}
+						{{ MealzCheckbox.create(link(meal, 'join') ,'participation-checkbox') }}
+					{% else %}
+						{{ MealzCheckbox.create('' ,'participation-checkbox', {'disabled': 'disabled'}) }}
+					{% endif %}
 				{% endif %}
-			{% else %}
-				{% if is_allowed_to_join(meal) %}
-					{{ MealzCheckbox.create(link(meal, 'join') ,'participation-checkbox') }}
-				{% else %}
-					{{ MealzCheckbox.create('' ,'participation-checkbox', {'disabled': 'disabled'}) }}
-				{% endif %}
-			{% endif %}
 
-		{% else %}
-			{{ MealzCheckbox.create('' ,'participation-checkbox', {'disabled': 'disabled'}) }}
-		{% endif %}
+			{% else %}
+				{{ MealzCheckbox.create('' ,'participation-checkbox', {'disabled': 'disabled'}) }}
+			{% endif %}
+		</div>
 	</div>
+	{% endspaceless %}
 </div>

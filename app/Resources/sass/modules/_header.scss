@@ -129,8 +129,10 @@ header {
         float: none;
       }
 
-      &-text {
+      &-text,
+      .balance-text {
         display: inline-block;
+        margin-right: 10px;
         color: $header-link-color;
         font-size: 12px;
 

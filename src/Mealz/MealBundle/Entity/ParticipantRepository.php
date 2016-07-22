@@ -109,11 +109,11 @@ class ParticipantRepository extends EntityRepository
 	/**
 	 * Get total costs of participations. Prevent unnecessary ORM mapping.
 	 *
-	 * @param Profile $profile
+	 * @param string $username
 	 * @return float
 	 * @throws \Doctrine\DBAL\DBALException
 	 */
-	public function getTotalCost(Profile $profile)
+	public function getTotalCost($username)
 	{
 		$qb = $this->getQueryBuilderWithOptions([
 			'load_meal' => true,
@@ -121,10 +121,13 @@ class ParticipantRepository extends EntityRepository
 		]);
 
 		$qb->select('SUM(m.price) as blubber');
+		$qb->leftJoin('m.day', 'day');
+		$qb->leftJoin('day.week', 'w');
 		$qb->andWhere('p.profile = :user');
-		$qb->setParameter('user', $profile);
-		$qb->andWhere('p.costAbsorbed = :costAbsorbed');
-		$qb->setParameter('costAbsorbed', false);
+		$qb->setParameter('user', $username);
+		$qb->andWhere('p.costAbsorbed = 0');
+		$qb->andWhere('day.enabled = 1');
+		$qb->andWhere('w.enabled = 1');
 		$qb->andWhere('m.dateTime <= :now');
 		$qb->setParameter('now', new \DateTime());
 

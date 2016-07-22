@@ -17,18 +17,17 @@ class TransactionRepository extends \Doctrine\ORM\EntityRepository
     /**
      * Get total amount of transactions. Prevent unnecessary ORM mapping.
      *
-     * @param Profile $profile
+     * @param string $username
      * @return float
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function getTotalAmount(Profile $profile)
+    public function getTotalAmount($username)
     {
         $qb = $this->createQueryBuilder('t');
         $qb->select('SUM(t.amount) AS amount');
-        $qb->andWhere('t.user = :user');
-        $qb->setParameter('user', $profile);
-        $qb->andWhere('t.successful = :successful');
-        $qb->setParameter('successful', TRUE);
+        $qb->andWhere('t.profile = :user');
+        $qb->setParameter('user', $username);
+        $qb->andWhere('t.successful = 1');
 
         return floatval($qb->getQuery()->getSingleScalarResult());
     }

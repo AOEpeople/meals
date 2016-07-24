@@ -32,11 +32,7 @@ class MealType extends AbstractType
             )),
             'required' => false,
             'group_by' => function(Dish $dish) {
-                if ($dish->isEnabled() && $category = $dish->getCategory()) {
-                    return $category;
-                } else {
-                    return 'form.placeholder.category';
-                }
+                return ($dish->isEnabled() && $category = $dish->getCategory()) ? $category : null;
             },
             'choice_attr' => function (Dish $dish, $value, $index) {
                 return ($dish->isEnabled()) ? [] : ['disabled' => 'disabled'];

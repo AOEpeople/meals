@@ -27,14 +27,25 @@ class MealType extends AbstractType
     {
         $builder->add('dish', EntityType::class, array(
             'class' => 'MealzMealBundle:Dish',
-            'query_builder' => $this->dishRepository->getSortedDishesQueryBuilder(),
+            'query_builder' => $this->dishRepository->getSortedDishesQueryBuilder(array(
+                'load_disabled' => true
+            )),
             'required' => false,
             'group_by' => function(Dish $dish) {
-                return $dish->getCategory();
-            }
+                if ($dish->isEnabled() && $category = $dish->getCategory()) {
+                    return $category;
+                } else {
+                    return 'form.placeholder.category';
+                }
+            },
+            'choice_attr' => function (Dish $dish, $value, $index) {
+                return ($dish->isEnabled()) ? [] : ['disabled' => 'disabled'];
+            },
+            'choice_translation_domain' => 'general'
         ));
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use ($builder) {
+            /** @var Meal $meal */
             $meal = $event->getData();
             /** @var Day $day */
             $day = $meal->getDay();

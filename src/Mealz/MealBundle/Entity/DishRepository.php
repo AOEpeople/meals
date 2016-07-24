@@ -9,7 +9,8 @@ class DishRepository extends LocalizedRepository {
 
 	protected $defaultOptions = array(
 		'load_category' => true,
-		'orderBy_category' => true
+		'orderBy_category' => true,
+		'load_disabled' => false
 	);
 
 	/**
@@ -38,7 +39,9 @@ class DishRepository extends LocalizedRepository {
 		}
 
 		// WHERE
-		$qb->where('d.enabled = 1');
+		if(!$options['load_disabled']) {
+			$qb->where('d.enabled = 1');
+		}
 
 		// ORDER BY
 		if($options['load_category'] && $options['orderBy_category']) {

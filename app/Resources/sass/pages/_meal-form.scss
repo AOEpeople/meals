@@ -34,6 +34,14 @@
 
   .select-wrapper {
     display: block;
+
+    select option[disabled="disabled"] {
+      display: none;
+
+      &[selected="selected"] {
+        display: block;
+      }
+    }
   }
 
   button {

@@ -12,4 +12,4 @@ dish:
   deleted: Gericht "%dish%" wurde gelöscht.
 error:
   meal:
-    has_participants: Mahlzeiten, welche bereits Teilnehmer besitzen, können nicht geändert werden.
+    has_participants: Es gibt bereits Teilnehmer für "%dish%" am %day%.

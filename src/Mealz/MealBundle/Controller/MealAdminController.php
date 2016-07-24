@@ -137,7 +137,12 @@ class MealAdminController extends BaseController {
                     if ($error->getCause() instanceof ConstraintViolation &&
                         $error->getCause()->getConstraint() instanceof DishConstraint
                     ) {
-                        $message = $this->get('translator')->trans('error.meal.has_participants', [], 'messages');
+                        $translator = $this->get('translator');
+                        $messageTemplate = $error->getMessageTemplate();
+                        $messageParameters = $error->getMessageParameters();
+                        $day = $messageParameters['%day%'];
+                        $messageParameters['%day%'] = $translator->trans($day, [], 'date');
+                        $message = $translator->trans($messageTemplate, $messageParameters, 'messages');
                         $this->addFlashMessage($message, 'danger');
                     }
                 }

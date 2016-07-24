@@ -12,4 +12,4 @@ dish:
   deleted: Dish "%dish%" has been deleted.
 error:
   meal:
-    has_participants: You can't change a meal which already has participants.
+    has_participants: There are already participants for "%dish%" on %day%.

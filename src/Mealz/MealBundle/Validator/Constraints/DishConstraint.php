@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraint;
  */
 class DishConstraint extends Constraint
 {
-    public $message = "There are already participants for '%string%' ";
+    public $message = "error.meal.has_participants";
 
     public function getTargets()
     {

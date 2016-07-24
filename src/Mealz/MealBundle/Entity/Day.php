@@ -94,4 +94,9 @@ class Day extends AbstractMessage
     {
         $this->meals = $meals;
     }
+
+    public function __toString()
+    {
+        return $this->dateTime->format('l');
+    }
 }

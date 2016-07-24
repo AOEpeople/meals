@@ -4,12 +4,11 @@
 
 {% block body %}
 
-    {{ MealzHeadline.create(1, 'week.list'|trans({},'general'), '', '', []) }}
+    {{ MealzHeadline.create(1, 'headings.week.list'|trans({},'general'), '', '', []) }}
 
     <div class="weeks-wrapper">
     {% for week in weeks %}
         {# display week day and date #}
-        <!-- @TODO: use week.id instead of weekIdentifier -->
         {% if week.id %}
         <a href="{{ path('MealzMealBundle_Meal_edit', {'week': week.id}) }}" class="week">
         {% else %}
@@ -18,19 +17,18 @@
         {% endif %}
             <div class="week-info">
                 <div class="week-number">
-                    Week #{{ week.startTime | date('W') }}
+                    {{ 'content.menu.week'|trans({},'general') }} #{{ week.startTime | date('W') }}
                 </div>
                 <div class="week-range">
                     {{ week.startTime | date('d.m.') }}-{{ week.EndTime | date('d.m.') }}
                 </div>
                 {% if not week.enabled %}
                 <div class="week-disabled">
-                    (No service)
+                    ({{ 'content.menu.no_service'|trans({},'general') }})
                 </div>
                 {% endif %}
             </div>
         </a>
     {% endfor %}
     </div>
-
 {% endblock %}

@@ -35,13 +35,23 @@ class DishController extends BaseListController {
             $dish->setEnabled(false);
             $em->persist($dish);
             $em->flush();
-            $this->addFlashMessage(sprintf('Dish "%s" has been hidden.', $dish->getTitle()), 'success');
+            $message = $this->translator->trans(
+                'dish.hidden',
+                array('%dish%' => $dish->getTitle()),
+                'messages'
+            );
+            $this->addFlashMessage($message, 'success');
         } else {
             // else: no need to keep an unused record
             $em->remove($dish);
             $em->flush();
 
-            $this->addFlashMessage(sprintf('Dish "%s" has been deleted.', $dish->getTitle()), 'success');
+            $message = $this->translator->trans(
+                'dish.deleted',
+                array('%dish%' => $dish->getTitle()),
+                'messages'
+            );
+            $this->addFlashMessage($message, 'success');
         }
 
         return $this->redirectToRoute('MealzMealBundle_Dish');

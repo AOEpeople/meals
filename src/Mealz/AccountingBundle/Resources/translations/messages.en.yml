@@ -1,0 +1,3 @@
+payment:
+  cash:
+    success: Booked cash payment of %amount%€ for %name%

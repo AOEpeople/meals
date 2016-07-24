@@ -5,16 +5,16 @@
 {% form_theme form _self %}
 
 {% block datetime_widget -%}
-    {{ value }}
+    {{ value | trans({}, 'date') }}
 {%- endblock datetime_widget %}
 
 {% block body %}
 
     {% set action %}
         {% if week.id is not null %}
-            {{ 'week.edit'|trans({},'general') }}
+            {{ 'headings.week.edit'|trans({},'general') }}
         {% else %}
-            {{ 'week.create'|trans({},'general') }}
+            {{ 'headings.week.create'|trans({},'general') }}
         {% endif %}
     {% endset %}
 
@@ -31,7 +31,7 @@
         {% set additionalHeaderItems = [
             MealzButton.link(
             path('MealzMealBundle_Print_participations', {'week': week.id}),
-            'Participations',
+            'headings.week.participations'|trans({},'general'),
             '',
             'transparent',
             'glyphicon-th-list'

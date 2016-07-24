@@ -1,0 +1,3 @@
+payment:
+  cash:
+    success: Einzahlung für %name% in Höhe von %amount%€ wurde verbucht.

@@ -7,10 +7,10 @@
 {# Set data for table header #}
 
 {% set tableHeader = [{
-        'label': 'Title',
+        'label': 'table.title'|trans({}, 'general'),
         'class': 'category-title'
     }, {
-        'label': 'Actions',
+        'label': 'table.actions'|trans({}, 'general'),
         'class': 'category-actions no-sort'
     }]
 %}
@@ -26,8 +26,8 @@
         },
         'actions': {
             'content': MealzButton.buttonbar('', 'buttonbar-category-actions', [
-                            MealzButton.link(link(category, 'edit'), 'Edit', '', 'button-table load-ajax-form load-edit-form transparent', 'glyphicon-pencil'),
-                            MealzButton.link(link(category, 'delete'), 'Delete', '', 'button-table transparent', 'glyphicon-remove')
+                            MealzButton.link(link(category, 'edit'), 'button.edit'|trans({}, 'actions'), '', 'button-table load-ajax-form load-edit-form transparent', 'glyphicon-pencil'),
+                            MealzButton.link(link(category, 'delete'), 'button.delete'|trans({}, 'actions'), '', 'button-table transparent', 'glyphicon-remove')
                        ]),
             'class': 'category-actions'
         }
@@ -36,8 +36,8 @@
 
 {# Start tempalte #}
 
-{{ MealzHeadline.create(1, 'list.category'|trans({},'general'), '', '', [
-    MealzButton.link(path('MealzMealBundle_Category_Form_empty'), 'Create Category', '', 'load-ajax-form load-create-form transparent', 'svg-dish')
+{{ MealzHeadline.create(1, 'headings.categories.list'|trans({},'general'), '', '', [
+    MealzButton.link(path('MealzMealBundle_Category_Form_empty'), 'category.create'|trans({},'actions'), '', 'load-ajax-form load-create-form transparent', 'svg-dish')
 ], '') }}
 
     {% if form is defined %}

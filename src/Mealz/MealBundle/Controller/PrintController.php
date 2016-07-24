@@ -18,9 +18,6 @@ class PrintController extends BaseController
             throw new AccessDeniedException();
         }
 
-        /** @var Translator $translator */
-        $translator = $this->get('translator');
-
         $participantRepository = $this->getParticipantRepository();
         $transactionRepository = $this->getDoctrine()->getRepository('MealzAccountingBundle:Transaction');
         $transactionsPerUser = $transactionRepository->findTotalAmountOfTransactionsPerUser();
@@ -29,14 +26,14 @@ class PrintController extends BaseController
 
         // create column names
         $numberOfMonths = 3;
-        $columnNames = array('earlier' => $translator->trans('costs.earlier', array(), 'general'));
+        $columnNames = array('earlier' => 'Prior to that');
         $dateTime = new \DateTime("first day of -$numberOfMonths month 00:00");
         $earlierTimestamp = $dateTime->getTimestamp();
         for ($i = 0; $i < $numberOfMonths + 1; $i++) {
             $columnNames[$dateTime->getTimestamp()] = $dateTime->format('F');
             $dateTime->modify("+1 month");
         }
-        $columnNames['total'] = $translator->trans('costs.total', array(), 'general');
+        $columnNames['total'] = 'Total';
 
         // create table rows
         foreach ($users as $username => &$user) {

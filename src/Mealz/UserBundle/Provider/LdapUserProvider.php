@@ -57,7 +57,7 @@ class LdapUserProvider extends SymfonyLdapUserProvider
             $user['displayname'][0],
             $user['givenname'][0],
             $user['sn'][0],
-            $this->childDefaultRoles
+            $roles
         );
         $this->postLogin->assureProfileExists($ldapUser);
 

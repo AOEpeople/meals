@@ -104,6 +104,7 @@ header {
       &.is-open {
         top: 70px;
         z-index: 10;
+        padding-bottom: 40px;
         opacity: 1;
       }
 
@@ -127,6 +128,12 @@ header {
 
       @include breakpoint(small) {
         float: none;
+
+        .balance-text {
+          position: absolute;
+          top: 45px;
+          left: 20px;
+        }
       }
 
       &-text,
@@ -135,12 +142,12 @@ header {
         margin-right: 10px;
         color: $header-link-color;
         font-size: 12px;
+      }
 
-        strong {
-          padding-left: 5px;
-          color: $color-white;
-          font-family: $font-bold;
-        }
+      strong {
+        padding-left: 5px;
+        color: $color-white;
+        font-family: $font-bold;
       }
 
       a {

@@ -32,6 +32,7 @@ twig:
     globals:
         # @TODO: rename lock_toggle_participation_at
         lock_toggle_participation_at: %mealz.lock_toggle_participation_at%
+        wallet: "@mealz_accounting.wallet"
 
 # Assetic Configuration
 assetic:

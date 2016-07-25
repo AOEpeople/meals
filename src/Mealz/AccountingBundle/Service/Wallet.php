@@ -30,9 +30,10 @@ class Wallet
      */
     public function getBalance(Profile $profile)
     {
-        $costs = $this->participantRepository->getTotalCost($profile);
-        $transactions = $this->transactionRepository->getTotalAmount($profile);
+        $username = $profile->getUsername();
+        $costs = $this->participantRepository->getTotalCost($username);
+        $transactions = $this->transactionRepository->getTotalAmount($username);
 
-        return bcsub($transactions, $costs, 4);
+        return bcsub($transactions, $costs, 2);
     }
 }

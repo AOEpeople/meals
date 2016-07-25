@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class ParticipantController extends BaseController {
 	public function deleteAction(Participant $participant) {
 		if(!$this->getUser()) {
-			$this->ajaxSessionExpiredRedirect();
+			return $this->ajaxSessionExpiredRedirect();
 		}
 		if($this->getProfile() !== $participant->getProfile() && !$this->getDoorman()->isKitchenStaff()) {
 			return new JsonResponse(null, 403);

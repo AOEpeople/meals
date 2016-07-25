@@ -55,7 +55,7 @@ class MealController extends BaseController {
 	public function joinAction(Request $request, $date, $dish, $profile) {
 
 		if(!$this->getUser()) {
-			$this->ajaxSessionExpiredRedirect();
+			return $this->ajaxSessionExpiredRedirect();
 		}
 
 		/** @var Meal $meal */

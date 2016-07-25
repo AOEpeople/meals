@@ -47,7 +47,7 @@ class LdapUserProvider extends SymfonyLdapUserProvider
         if (isset($user['memberof']) && array_search(
                 'CN=MealsAdmins_User,OU=_Permission_Groups,OU=_AOE,DC=aoemedia,DC=lan',
                 $user['memberof']
-            )
+            ) !== false
         ) {
             array_push($roles, 'ROLE_KITCHEN_STAFF');
         }

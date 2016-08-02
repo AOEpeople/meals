@@ -10,7 +10,7 @@ umask(0002);
 require_once __DIR__ . '/../app/AppEnvironment.php';
 
 $environment = AppEnvironment::fromDefault();
-$debug = $environment->getEnvironment() !== 'prod';
+$debug = $environment->getEnvironment() !== 'production';
 
 //if ($debug) {
 $loader = require_once __DIR__ . '/../app/autoload.php';

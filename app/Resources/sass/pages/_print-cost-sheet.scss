@@ -37,6 +37,16 @@
       input[type="text"] {
         width: 80px;
         padding: 11px 10px 9px;
+        vertical-align: super;
+      }
+
+      button {
+        vertical-align: bottom;
+        line-height: 14px;
+
+        @-moz-document url-prefix() {
+          line-height: 10px;
+        }
       }
 
       &::after {

@@ -9,6 +9,6 @@ while IFS='=' read -r name value ; do
     parameter=${name#SYMFONY__}
     parameter=${parameter//__/\.}
     parameter=${parameter,,}
-    echo "  ${parameter}: $value" >> $out
+    echo "  ${parameter}: \"$value\"" >> $out
   fi
 done < <(env)

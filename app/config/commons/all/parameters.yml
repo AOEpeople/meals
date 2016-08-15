@@ -2,3 +2,18 @@ parameters:
     # @TODO: rename mealz.lock_toggle_participation_at
     mealz.lock_toggle_participation_at: '-1 day 16:00'
     mealz.meal.price: 3.20
+
+    database_driver:   mysqli
+    database_host:     127.0.0.1
+    database_port:
+
+    mailer_transport:  smtp
+    mailer_host:       127.0.0.1
+    mailer_user:       ~
+    mailer_password:   ~
+
+    locale:            en
+
+    # get credentials for sandboxing here: https://developer.paypal.com/developer/applications/
+    paypal.id: ~
+    paypal.secret: ~

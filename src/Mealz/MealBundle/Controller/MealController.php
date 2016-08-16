@@ -95,9 +95,9 @@ class MealController extends BaseController {
 		if ($this->getDoorman()->isKitchenStaff()) {
 			$logger = $this->get('monolog.logger.balance');
 			$logger->addInfo(
-				'added {profile} to {meal} (Participant:{participant})',
+				'admin added {profile} to {meal} (Participant: {participantId})',
 				array(
-					"participant" => $participant->getId(),
+					"participantId" => $participant->getId(),
 					"profile" => $participant->getProfile(),
 					"meal" => $meal
 				)

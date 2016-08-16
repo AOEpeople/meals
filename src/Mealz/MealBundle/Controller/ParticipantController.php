@@ -40,10 +40,11 @@ class ParticipantController extends BaseController {
 		if($this->getDoorman()->isKitchenStaff()) {
 			$logger = $this->get('monolog.logger.balance');
 			$logger->addInfo(
-				'removed {profile} from {meal}',
+				'admin removed {profile} from {meal} (Meal: {mealId})',
 				array(
 					"profile" => $participant->getProfile(),
-					"meal" => $meal
+					"meal" => $meal,
+					"mealId" => $meal->getId()
 				)
 			);
 		}

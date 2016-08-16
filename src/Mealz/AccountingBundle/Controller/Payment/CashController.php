@@ -73,6 +73,12 @@ class CashController extends BaseController
                     'messages'
                 );
                 $this->addFlashMessage($message, 'success');
+
+                $logger = $this->get('monolog.logger.balance');
+                $logger->addInfo('added {transaction}€ into wallet (Transaction: {transactionId})', array(
+                    "transaction" => $transaction,
+                    "transactionId" => $transaction->getId()
+                ));
             }
         }
 

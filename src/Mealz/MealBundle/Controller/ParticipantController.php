@@ -24,21 +24,33 @@ class ParticipantController extends BaseController {
 			return new JsonResponse(null, 403);
 		}
 
-		if(!$this->getDoorman()->isUserAllowedToLeave($participant->getMeal())) {
+		$meal = $participant->getMeal();
+		if(!$this->getDoorman()->isUserAllowedToLeave($meal)) {
 			return new JsonResponse(null, 403);
 		}
 
-		$date = $participant->getMeal()->getDateTime()->format('Y-m-d');
-		$dish = $participant->getMeal()->getDish()->getSlug();
+		$date = $meal->getDateTime()->format('Y-m-d');
+		$dish = $meal->getDish()->getSlug();
 		$profile = $participant->getProfile()->getUsername();
 
 		$em = $this->getDoctrine()->getManager();
 		$em->remove($participant);
 		$em->flush();
 
+		if($this->getDoorman()->isKitchenStaff()) {
+			$logger = $this->get('monolog.logger.balance');
+			$logger->addInfo(
+				'removed {profile} from {meal}',
+				array(
+					"profile" => $participant->getProfile(),
+					"meal" => $meal
+				)
+			);
+		}
+
 		$ajaxResponse = new JsonResponse();
 		$ajaxResponse->setData(array(
-			'participantsCount' => $participant->getMeal()->getParticipants()->count(),
+			'participantsCount' => $meal->getParticipants()->count(),
 			'url' => $this->generateUrl('MealzMealBundle_Meal_join', array(
 				'date' => $date,
 				'dish' => $dish,

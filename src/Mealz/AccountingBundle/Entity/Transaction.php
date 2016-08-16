@@ -131,4 +131,9 @@ class Transaction
     {
         return $this->successful;
     }
+
+    public function __toString()
+    {
+        return $this->profile . ' ' . $this->amount;
+    }
 }

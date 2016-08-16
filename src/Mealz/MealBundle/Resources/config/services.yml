@@ -152,3 +152,8 @@ services:
     calls:
       - [setRepository, ["@mealz_meal.repository.dish"]]
       - [setEntityName, ["Dish"]]
+
+  mealz_meal.monolog.processor.psr:
+      class: Monolog\Processor\PsrLogMessageProcessor
+      tags:
+          - { name: monolog.processor }

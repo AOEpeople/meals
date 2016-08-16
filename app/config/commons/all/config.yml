@@ -80,11 +80,18 @@ stof_doctrine_extensions:
             timestampable: true
 
 monolog:
+    channels: ["balance"]
     handlers:
+        balance:
+            type: stream
+            path: "%kernel.logs_dir%/%kernel.environment%.admin-balance-change.log"
+            level:  info
+            channels: [balance]
         main:
             type:   stream
             path:   "%kernel.logs_dir%/%kernel.environment%.log"
             level:  debug
+            channels: [!balance]
         console:
             type:   console
             bubble: false

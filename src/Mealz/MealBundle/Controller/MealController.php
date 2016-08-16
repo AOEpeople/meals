@@ -92,6 +92,18 @@ class MealController extends BaseController {
 			return new JsonResponse(null, 422);
 		}
 
+		if ($this->getDoorman()->isKitchenStaff()) {
+			$logger = $this->get('monolog.logger.balance');
+			$logger->addInfo(
+				'added {profile} to {meal} (Participant:{participant})',
+				array(
+					"participant" => $participant->getId(),
+					"profile" => $participant->getProfile(),
+					"meal" => $meal
+				)
+			);
+		}
+
 		$ajaxResponse = new JsonResponse();
 		$ajaxResponse->setData(array(
 			'participantsCount' => $meal->getParticipants()->count(),

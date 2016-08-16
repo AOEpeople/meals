@@ -46,6 +46,12 @@ $text-color: $color-base;
       text-align: center;
     }
 
+    .meal-participation a[href] {
+      @media print {
+        display: none;
+      }
+    }
+
     .meal-participation.participating {
       background-color: $color-green;
 

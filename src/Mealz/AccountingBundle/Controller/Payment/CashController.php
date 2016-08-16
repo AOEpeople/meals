@@ -59,8 +59,6 @@ class CashController extends BaseController
 
             if ($form->isValid()) {
                 $em = $this->getDoctrine()->getManager();
-                $transaction->setId(uniqid('BAR-'));
-                $transaction->setSuccessful(1);
                 $em->persist($transaction);
                 $em->flush();
 

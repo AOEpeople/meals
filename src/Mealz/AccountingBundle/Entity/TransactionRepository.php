@@ -27,7 +27,6 @@ class TransactionRepository extends \Doctrine\ORM\EntityRepository
         $qb->select('SUM(t.amount) AS amount');
         $qb->andWhere('t.profile = :user');
         $qb->setParameter('user', $username);
-        $qb->andWhere('t.successful = 1');
 
         return floatval($qb->getQuery()->getSingleScalarResult());
     }
@@ -41,8 +40,6 @@ class TransactionRepository extends \Doctrine\ORM\EntityRepository
         $qb->select('t');
         $qb->andWhere('t.user = :user');
         $qb->setParameter('user', $profile);
-        $qb->andWhere('t.successful = :successful');
-        $qb->setParameter('successful', TRUE);
 
         $qb->orderBy('t.date', 'desc');
         if ($limit) {
@@ -75,8 +72,6 @@ class TransactionRepository extends \Doctrine\ORM\EntityRepository
 
         $qb->andWhere('t.user = :user');
         $qb->setParameter('user', $profile);
-        $qb->andWhere('t.successful = :successful');
-        $qb->setParameter('successful', TRUE);
 
         $qb->orderBy('t.date', 'DESC');
 
@@ -88,7 +83,6 @@ class TransactionRepository extends \Doctrine\ORM\EntityRepository
         $qb = $this->createQueryBuilder('t');
         $qb->select('p.username, SUM(t.amount) AS amount');
         $qb->leftJoin('t.profile', 'p');
-        $qb->andWhere('t.successful = 1');
         $qb->groupBy('p.username');
         $queryResult = $qb->getQuery()->getArrayResult();
 

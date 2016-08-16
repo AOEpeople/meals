@@ -16,49 +16,39 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Transaction
 {
     /**
-     * @ORM\Column(name="id", length=128)
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
-     * @var string
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
+     * @var Profile
+     *
      * @Assert\NotBlank()
      * @Assert\Type(type="Mealz\UserBundle\Entity\Profile")
      * @ORM\ManyToOne(targetEntity="Mealz\UserBundle\Entity\Profile", inversedBy="transactions")
      * @ORM\JoinColumn(name="profile", referencedColumnName="id", nullable=FALSE)
-     * @var Profile
      */
     private $profile;
 
     /**
+     * @var \DateTime
+     *
      * @ORM\Column(type="datetime")
      * @Gedmo\Timestampable(on="create")
-     * @var \DateTime
      */
     private $date;
 
     /**
+     * @var float
+     *
      * @Assert\NotBlank()
      * @ORM\Column(type="decimal", precision=10, scale=4, nullable=FALSE)
-     * @var float
      */
     private $amount;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=FALSE, options={"default": false})
-     * @var boolean
-     */
-    protected $successful = false;
-
-    /**
-     * @param string $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
 
     /**
      * @return string
@@ -97,7 +87,7 @@ class Transaction
     }
 
     /**
-     * @param \Mealz\UserBundle\Entity\Profile $profile
+     * @param Profile $profile
      *
      * @return Transaction
      */
@@ -109,27 +99,11 @@ class Transaction
     }
 
     /**
-     * @return \Mealz\UserBundle\Entity\Profile
+     * @return Profile
      */
     public function getProfile()
     {
         return $this->profile;
-    }
-
-    /**
-     * @param bool $successful
-     */
-    public function setSuccessful($successful)
-    {
-        $this->successful = $successful;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getSuccessful()
-    {
-        return $this->successful;
     }
 
     public function __toString()

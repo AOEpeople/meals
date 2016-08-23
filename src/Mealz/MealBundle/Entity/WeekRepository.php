@@ -6,16 +6,16 @@ use Doctrine\ORM\EntityRepository;
 
 class WeekRepository extends EntityRepository
 {
-    public function getCurrentWeek()
+    public function getCurrentWeek($onlyEnabledDays = FALSE)
     {
         $now = new \DateTime();
-        return $this->findWeekByDate($now);
+        return $this->findWeekByDate($now, $onlyEnabledDays);
     }
 
-    public function getNextWeek()
+    public function getNextWeek($onlyEnabledDays = FALSE)
     {
         $nextWeek = new \DateTime('next week');
-        return $this->findWeekByDate($nextWeek);
+        return $this->findWeekByDate($nextWeek, $onlyEnabledDays);
     }
 
     public function getWeeksMealCount(Week $week)
@@ -31,9 +31,10 @@ class WeekRepository extends EntityRepository
 
     /**
      * @param \DateTime $date
+     * @param boolean $onlyEnabledDays
      * @return null|Week
      */
-    public function findWeekByDate(\DateTime $date)
+    public function findWeekByDate(\DateTime $date, $onlyEnabledDays = FALSE)
     {
         $qb = $this->createQueryBuilder('w');
         $qb->select('w,da,m,d,p,u');
@@ -46,6 +47,9 @@ class WeekRepository extends EntityRepository
 
         $qb->andWhere('w.year = :year');
         $qb->andWhere('w.calendarWeek = :calendarWeek');
+        if (TRUE === $onlyEnabledDays) {
+            $qb->andWhere('da.enabled = 1');
+        }
 
         $qb->setParameter('year', $date->format('Y'));
         $qb->setParameter('calendarWeek', $date->format('W'));

@@ -59,6 +59,14 @@ class Transaction
     }
 
     /**
+     * @param \DateTime $date
+     */
+    public function setDate(\DateTime $date)
+    {
+        $this->date = $date;
+    }
+
+    /**
      * @return \DateTime
      */
     public function getDate()

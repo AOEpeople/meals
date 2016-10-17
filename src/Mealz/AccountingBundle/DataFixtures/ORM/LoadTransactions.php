@@ -21,20 +21,35 @@ class LoadTransactions extends AbstractFixture implements OrderedFixtureInterfac
         $randomUsers = $this->getRandomUsers();
         for ($i = 0; $i < 6; $i++) {
             foreach ($randomUsers as $user) {
-                $this->addTransaction($user);
+                $this->addTransaction($user, mt_rand(1000, 5000)/100);
+                $this->addLastMonthTransaction($user, mt_rand(1000, 5000)/100);
             }
         }
 
         $this->objectManager->flush();
     }
 
-    /**
-     * @param $user
-     */
-    private function addTransaction($user)
+    private function addLastMonthTransaction($user, $amount)
     {
+        // Generate some random date from last month
+        $lastMonthTimestamp = strtotime('first day of previous month') + (mt_rand(1, 27) * 86400);
+        $this->addTransaction($user, $amount, new \DateTime('@' . $lastMonthTimestamp));
+    }
+
+    /**
+     * @param Profile   $user
+     * @param float     $amount
+     * @param \DateTime $date
+     */
+    private function addTransaction($user, $amount, \DateTime $date = NULL)
+    {
+        if (is_null($date)) {
+            $date = new \DateTime();
+        }
+
         $transaction = new Transaction();
-        $transaction->setAmount(mt_rand(1000, 5000)/100);
+        $transaction->setDate($date);
+        $transaction->setAmount($amount);
         $transaction->setProfile($user);
         $this->objectManager->persist($transaction);
     }

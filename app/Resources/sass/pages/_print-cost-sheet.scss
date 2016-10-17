@@ -1,6 +1,15 @@
 .print-costsheet {
   position: relative;
 
+  .headline-container {
+    .button {
+      color: $color-orange;
+      &::before {
+        padding-right: 6px;
+      }
+    }
+  }
+
   .table {
     table-layout: fixed;
     width: 100%;

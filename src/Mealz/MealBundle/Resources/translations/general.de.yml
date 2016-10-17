@@ -17,6 +17,8 @@ headings:
     list: Liste der Gerichte
   categories:
     list: Liste der Kategorien
+  costs:
+    list: Liste der Kosten
 
 table:
   title: Titel

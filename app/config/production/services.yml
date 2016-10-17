@@ -1,0 +1,4 @@
+services:
+    app.ldap:
+      class: Mealz\UserBundle\Service\LdapClient
+      arguments: [%ldap_host%, 636, 3, true]

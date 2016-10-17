@@ -1,0 +1,39 @@
+{% import 'MealzTemplateBundle::Components/headline.html.twig' as MealzHeadline %}
+{% import 'MealzTemplateBundle::Components/button.html.twig' as MealzButton %}
+{% import 'MealzTemplateBundle::Components/checkbox.html.twig' as MealzCheckbox %}
+{% import 'MealzTemplateBundle::Components/table.html.twig' as MealzTable %}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<title>AOEMeals</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ asset('mealz.css') }}" />
+	{% block head %}{% endblock %}
+</head>
+<body>
+	{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+		{% set balance = wallet.getBalance(app.user.profile) %}
+	{% endif %}
+
+	{% include 'MealzTemplateBundle::partials/balanceNotification.html.twig' %}
+
+	{% include 'header.html.twig'  %}
+
+	{% if wrapperClass is not defined %}
+		{% set wrapperClass = '' %}
+	{% endif %}
+
+	<div class="container content-wrapper {{ wrapperClass }}">
+
+        {% include 'MealzTemplateBundle::partials/flashMessages.html.twig' %}
+
+		{% block body %}
+		{% endblock %}
+	</div>
+
+    <script src="{{ asset('mealz.js') }}"></script>
+	</body>
+</html>

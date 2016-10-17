@@ -1,0 +1,35 @@
+{% block dish_selector_creator_widget %}
+	{% spaceless %}
+		{% set attr={list:'dish_selector', autocomplete:'off'} %}
+		{{ block('form_widget') }}
+		{% set options = choices %}
+		<datalist id="dish_selector">
+			{% for group_label, choice in options %}
+				<option value="{{ choice.label }}"{% if choice is selectedchoice(label) %} selected="selected"{% endif %}></option>
+			{% endfor %}
+		</datalist>
+	{% endspaceless %}
+{% endblock %}
+
+{% block form_row %}
+    {% spaceless %}
+        <div class="form-row">
+			{% if errors | length > 0 %}
+				{{ form_widget(form, {'attr': {'class': 'form-field-invalid'}}) }}
+				{{ form_errors(form) }}
+			{% else %}
+				{{ form_widget(form) }}
+			{% endif %}
+        </div>
+    {% endspaceless %}
+{% endblock form_row %}
+
+{%- block form_errors -%}
+	{%- if errors|length > 0 -%}
+		<ul class="form-field-errors">
+			{%- for error in errors -%}
+				<li>{{ error.message }}</li>
+			{%- endfor -%}
+		</ul>
+	{%- endif -%}
+{%- endblock form_errors -%}

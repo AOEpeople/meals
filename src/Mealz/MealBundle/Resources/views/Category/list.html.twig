@@ -1,0 +1,53 @@
+{% extends '::base.html.twig' %}
+
+{% set wrapperClass = 'category-list form-ajax' %}
+
+{% block body %}
+
+{# Set data for table header #}
+
+{% set tableHeader = [{
+        'label': 'table.title'|trans({}, 'general'),
+        'class': 'category-title'
+    }, {
+        'label': 'table.actions'|trans({}, 'general'),
+        'class': 'category-actions no-sort'
+    }]
+%}
+
+{# Set data for table content #}
+
+{% set tableContent = [] %}
+{% for category in entities %}
+    {% set tableContent = [{
+        'title': {
+            'content': category.title,
+            'class': 'category-title'
+        },
+        'actions': {
+            'content': MealzButton.buttonbar('', 'buttonbar-category-actions', [
+                            MealzButton.link(link(category, 'edit'), 'button.edit'|trans({}, 'actions'), '', 'button-table load-ajax-form load-edit-form transparent', 'glyphicon-pencil'),
+                            MealzButton.link(link(category, 'delete'), 'button.delete'|trans({}, 'actions'), '', 'button-table transparent', 'glyphicon-remove')
+                       ]),
+            'class': 'category-actions'
+        }
+    }] | merge(tableContent) %}
+{% endfor %}
+
+{# Start tempalte #}
+
+{{ MealzHeadline.create(1, 'headings.categories.list'|trans({},'general'), '', '', [
+    MealzButton.link(path('MealzMealBundle_Category_Form_empty'), 'category.create'|trans({},'actions'), '', 'load-ajax-form load-create-form transparent', 'svg-dish')
+], '') }}
+
+    {% if form is defined %}
+        <div class="error-form top-form">
+        {% include 'MealzMealBundle:Category/partials:form.html.twig' %}
+        </div>
+    {% else %}
+        <div class="create-form top-form" style="display: none"></div>
+    {% endif %}
+
+{{ MealzTable.create('category-table', 'table-sortable', tableHeader, tableContent) }}
+
+{% endblock %}

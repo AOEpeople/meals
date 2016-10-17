@@ -1,0 +1,58 @@
+$fieldset-padding: 13px;
+
+.dish-form {
+
+  margin-top: -10px;
+  margin-bottom: 40px;
+
+  .wrapper-form {
+
+    position: relative;
+
+    padding: 40px;
+    background-color: $color-gray-light;
+    text-align: center;
+
+    @include breakpoint(small) {
+      padding: 20px;
+    }
+  }
+
+  &.form-dish-create .wrapper-form {
+    &::after {
+      position: absolute;
+      top: -20px;
+      right: 50px;
+      margin-left: -10px;
+      border: 10px solid transparent;
+      border-bottom-color: $color-gray-light;
+      content: ' ';
+
+      @include breakpoint(small) {
+        border: none;
+      }
+    }
+  }
+
+  fieldset {
+    float: left;
+    width: 50%;
+    padding: $fieldset-padding $fieldset-padding 0;
+    text-align: left;
+
+    @include breakpoint(small) {
+      float: none;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+  }
+
+  .select-wrapper {
+    width: 50%;
+    margin: 0 auto 10px;
+
+    @include breakpoint(small) {
+      width: calc(100% - (#{$fieldset-padding} * 2));
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{% extends '::base.html.twig' %}
+
+{% set wrapperClass = 'meals-list' %}
+
+{% block body %}
+
+<div class="weeks">
+	{% for week in weeks %}
+		{% include 'MealzMealBundle:Meal/partials:week.html.twig' %}
+	{% endfor %}
+</div>
+
+<ul class="legend">
+	<li>{{ 'content.participation.legend.available' | trans({}, 'general') }}</li>
+	<li>{{ 'content.participation.legend.unavailable' | trans({}, 'general') }}</li>
+</ul>
+
+{% endblock %}

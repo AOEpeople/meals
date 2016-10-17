@@ -1,0 +1,68 @@
+button.button,
+a.button {
+  position: relative;
+  display: inline-block;
+  padding: 15px 20px;
+  border: none;
+  color: $color-white;
+  background: $color-base;
+  font-size: 13px;
+  font-family: $font-bold;
+  text-transform: uppercase;
+  transition: all .3s ease;
+  cursor: pointer;
+  -webkit-font-smoothing: antialiased;
+
+  &:not(.icon-only) {
+    line-height: 20px;
+
+    i {
+      position: relative;
+      top: 5px;
+      margin-right: 10px;
+      font-size: 20px;
+    }
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &.transparent {
+    color: inherit;
+    background: transparent;
+  }
+
+  &.small {
+    padding: 10px 20px;
+    line-height: 15px;
+  }
+
+  &.icon-right {
+    i {
+      margin-right: 0;
+      margin-left: 10px;
+    }
+  }
+
+  &.icon-only {
+    padding: 0;
+  }
+
+  &.button-cancel {
+    background-color: $color-gray-secondary;
+  }
+}
+
+.buttonbar-container {
+  @include clearfix();
+
+  .buttonbar-element {
+    float: left;
+    margin-right: 20px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}

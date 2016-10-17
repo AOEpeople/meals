@@ -1,0 +1,26 @@
+{
+  "name": "mealz",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "bower": "1.4.1",
+    "gulp": "3.9.1",
+    "gulp-concat": "2.6.0",
+    "gulp-jshint": "^2.0.0",
+    "gulp-rimraf": "0.1.1",
+    "gulp-sass": "2.0.2",
+    "gulp-scss-lint": "^0.3.9",
+    "gulp-sourcemaps": "2.0.0-alpha",
+    "gulp-uglify": "^1.5.3",
+    "gulp-util": "^3.0.7",
+    "jshint": "^2.9.2",
+    "jshint-stylish": "^2.1.0",
+    "merge-stream": "^1.0.0"
+  }
+}

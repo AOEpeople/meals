@@ -1,0 +1,41 @@
+linters:
+  BorderZero:
+    enabled: true
+    convention: none
+
+  ElsePlacement:
+    enabled: true
+    style: new_line
+
+  EmptyLineBetweenBlocks:
+    enabled: true
+    ignore_single_line_blocks: false
+
+  EmptyRule:
+    enabled: true
+
+  NestingDepth:
+    enabled: true
+    max_depth: 4
+    ignore_parent_selectors: true
+
+  PlaceholderInExtend:
+    enabled: true
+
+  SelectorDepth:
+    enabled: true
+    max_depth: 4
+
+  StringQuotes:
+    enabled: true
+    style: single_quotes # or double_quotes
+
+  PropertySortOrder:
+      enabled: true
+      order: ["position", "top", "right", "bottom", "left", "z-index", "display", "visibility", "overflow", "overflow-x", "overflow-y", "float", "clear", "table-layout", "border-collapse", "empty-cells", "box-sizing", "width", "min-width", "max-width", "height", "min-height", "max-height", "margin", "margin-top", "margin-right", "margin-bottom", "margin-left", "padding", "padding-top", "padding-right", "padding-bottom", "padding-left", "border", "border-width", "border-style", "border-color", "border-radius", "border-top", "border-top-width", "border-top-style", "border-top-color", "border-right", "border-right-width", "border-right-style", "border-right-color", "border-bottom", "border-bottom-width", "border-bottom-style", "border-bottom-color", "border-left", "border-left-width", "border-left-style", "border-left-color", "border-top-left-radius", "border-top-right-radius", "border-bottom-right-radius", "border-bottom-left-radius", "white-space", "content", "color", "background", "background-color", "background-image", "background-repeat", "background-attachment", "background-position", "background-size", "opacity", "font", "font-weight", "font-style", "font-variant", "font-size", "font-family", "letter-spacing", "line-height", "list-style", "list-style-type", "list-style-position", "list-style-image", "outline", "outline-width", "outline-style", "outline-color", "text-align", "text-decoration", "text-indent", "text-transform", "text-shadow", "animation", "transform", "transition", "box-shadow"]
+      ignore_unspecified: true
+
+  QualifyingElement:
+      allow_element_with_attribute: true
+      allow_element_with_class: true
+      allow_element_with_id: true

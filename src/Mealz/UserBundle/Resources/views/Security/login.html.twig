@@ -1,0 +1,20 @@
+{% extends '::base.html.twig' %}
+
+{% set wrapperClass = 'login-page' %}
+
+{% block body %}
+
+	{{ MealzHeadline.create(1, 'Login') }}
+
+	{% if error %}
+		<div class="alert alert-danger">{{ error.message }}</div>
+	{% endif %}
+
+	<form action="{{ path('MealzUserBundle_checkLogin') }}" method="post">
+		<input type="text" class="form-control" placeholder="Username" id="username" name="_username" value="{{ last_username }}" autofocus />
+		<input type="password" class="form-control" placeholder="Password" id="password" name="_password" />
+		<button type="submit" class="button small">Login</button>
+	</form>
+
+
+{% endblock %}

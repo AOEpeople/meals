@@ -1,0 +1,62 @@
+{% set activeRoute = app.request.attributes.get('_route') %}
+
+<header>
+	<div class="container">
+		<a class="logo" href="{{ path('MealzMealBundle_home') }}">
+			<img src="{{ asset('images/logo.png') }}" alt="AOE" />
+			<span>AOEMEALS</span>
+		</a>
+
+		<div class="header-content">
+            {% if is_granted('ROLE_KITCHEN_STAFF') %}
+                <ul class="navbar">
+                    <li>
+                        <a href="{{ path('MealzMealBundle_Meal') }}"
+                           class="{{ activeRoute matches '/MealzMealBundle_Meal.*/' ? 'active' }}">
+                            {{ 'header.navigation.menu'|trans({}, 'general') }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('MealzMealBundle_Dish') }}"
+                           class="{{ activeRoute matches '/MealzMealBundle_Dish.*/' ? 'active' }}">
+                            {{ 'header.navigation.dishes'|trans({}, 'general') }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('MealzMealBundle_Category') }}"
+                           class="{{ activeRoute matches '/MealzMealBundle_Category.*/' ? 'active' }}">
+                            {{ 'header.navigation.categories'|trans({}, 'general') }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('MealzMealBundle_Print_costSheet') }}"
+                           class="{{ activeRoute == 'MealzMealBundle_Print_costSheet' ? 'active' }}">
+                            {{ 'header.navigation.costs'|trans({}, 'general') }}
+                        </a>
+                    </li>
+                </ul>
+            {% endif %}
+            <div class="login {{ (is_granted('IS_AUTHENTICATED_REMEMBERED')) ? 'logged-in' : '' }}">
+                <a class="language-switch" href="{{ path('MealzMealBundle_language_switch') }}">
+                    <img src="{{ asset('images/flag-' ~ app.request.getLocale ~ '.png') }}" />
+                </a>
+                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                    <div class="login-text">{{ 'header.logged_in_text'|trans({}, 'general') }}: <strong>{{ app.user.username }}</strong></div>
+                    <div class="balance-text">
+                        {{ 'header.balance'|trans({}, 'general') }}: <strong>{{ balance }}€</strong>
+                    </div>
+                    {{ MealzButton.link(path('MealzUserBundle_logout'), '', '', '', 'glyphicon-log-out') }}
+                {% else %}
+                    <form class="login-form" action="{{ path('MealzUserBundle_checkLogin') }}" method="post">
+                        <input type="text" placeholder="Username" class="form-control" name="_username" autofocus />
+                        <input type="password" placeholder="Password" class="form-control" name="_password" />
+                        <button type="submit" class="button button-login">LOGIN</button>
+                    </form>
+                {% endif %}
+            </div>
+		</div>
+		<div class="header-toggle hamburger">
+			<span>toggle</span>
+		</div>
+	</div>
+</header>

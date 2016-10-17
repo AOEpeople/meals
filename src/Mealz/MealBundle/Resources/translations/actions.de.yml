@@ -1,0 +1,12 @@
+button:
+  ok: OK
+  save: Speichern
+  cancel: Abbrechen
+  edit: Editieren
+  delete: Löschen
+
+dish:
+  create: Gericht erstellen
+
+category:
+  create: Kategorie erstellen

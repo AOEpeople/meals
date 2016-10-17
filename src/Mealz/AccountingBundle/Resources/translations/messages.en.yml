@@ -1,0 +1,6 @@
+payment:
+  cash:
+    success: Booked cash payment of %amount%€ for %name%
+  acknowledge_debts:
+    text: I know that my account balance is %amount%€ in the red and I will pay my debt very soon.
+    button: Understood!

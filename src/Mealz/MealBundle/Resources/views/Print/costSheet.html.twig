@@ -1,0 +1,54 @@
+{% extends '::base.html.twig' %}
+
+{% set wrapperClass = 'print-costsheet' %}
+
+{%- block cost_widget -%}
+    {{ cost | number_format(2) }}<i class="glyphicon glyphicon-euro"></i>
+{%- endblock cost_widget -%}
+
+{% block body %}
+    {% if users is not empty %}
+        <table class="table">
+            <thead>
+                <tr class="table-header">
+                    <th class="table-head">Name</th>
+                    {% for columnName in columnNames %}
+                        {% if columnName == 'now' | date('F') %}
+                            <th class="table-head">{{ 'now' | date('d.m.') }}</th>
+                        {% else %}
+                            <th class="table-head">{{ columnName }}</th>
+                        {% endif %}
+                    {% endfor %}
+                    <th class="table-head icon-cell"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for username, user in users %}
+                <tr class="table-row">
+                    <td class="table-data">{{ user.name }}, {{ user.firstName }}</td>
+                    {% for cost in user.costs %}
+                        <td class="table-data">
+                        {% if cost > 0 %}
+                            +{{ block('cost_widget') }}
+                        {% else %}
+                            {{ block('cost_widget') }}
+                        {% endif %}
+                        </td>
+                    {% endfor %}
+                    <td class="table-data icon-cell">
+                        {{ MealzButton.link(
+                            path('mealz_accounting_payment_cash_form', {profile: username}),
+                            '',
+                            '',
+                            'load-payment-form transparent',
+                            'glyphicon-plus'
+                        )}}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        {{ 'content.print.costs.no_data' | trans({}, 'general') }}
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends '::base.html.twig' %}
+
+{% set wrapperClass = 'dish-list form-ajax' %}
+
+{% block body %}
+
+{# Set data for table header #}
+
+{% set tableHeader = [{
+        'label': 'table.title'|trans({}, 'general'),
+        'class': 'dish-title'
+    }, {
+        'label': 'table.category'|trans({}, 'general'),
+        'class': 'dish-category'
+    }, {
+        'label': 'table.actions'|trans({}, 'general'),
+        'class': 'dish-actions no-sort'
+    }]
+%}
+
+{# Set data for table content #}
+
+{% set tableContent = [] %}
+{% for dish in entities %}
+    {% set tableContent = [{
+        'title': {
+            'content': dish.title,
+            'class': 'dish-title'
+        },
+        'category': {
+            'content': dish.category,
+            'class': 'dish-category'
+        },
+        'actions': {
+            'content': MealzButton.buttonbar('', 'buttonbar-dish-actions', [
+                            MealzButton.link(link(dish, 'edit'), 'button.edit'|trans({}, 'actions'), '', 'button-table load-ajax-form load-edit-form transparent', 'glyphicon-pencil'),
+                            MealzButton.link(link(dish, 'delete'), 'button.delete'|trans({}, 'actions'), '', 'button-table transparent', 'glyphicon-remove')
+                       ]),
+            'class': 'dish-actions'
+        }
+    }] | merge(tableContent) %}
+{% endfor %}
+
+{# Start tempalte #}
+
+{{ MealzHeadline.create(1, 'headings.dishes.list'|trans({},'general'), '', '', [
+    MealzButton.link(path('MealzMealBundle_Dish_Form_empty'), 'dish.create'|trans({}, 'actions'), '', 'load-ajax-form load-create-form transparent', 'svg-dish')
+], '') }}
+
+    {% if form is defined %}
+        <div class="error-form top-form">
+        {% include 'MealzMealBundle:Dish/partials:form.html.twig' %}
+        </div>
+    {% else %}
+        <div class="create-form top-form" style="display: none"></div>
+    {% endif %}
+
+{{ MealzTable.create('dish-table', 'table-sortable', tableHeader, tableContent) }}
+
+{% endblock %}

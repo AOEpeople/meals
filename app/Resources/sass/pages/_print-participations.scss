@@ -1,0 +1,91 @@
+$border-color: $color-base;
+$text-color: $color-base;
+
+.print-participations {
+
+  thead.table-header {
+    display: table-row-group;
+    color: $text-color;
+  }
+
+  .table {
+    table-layout: fixed;
+    width: 100%;
+  }
+
+  .table-row {
+    border: none;
+    font-size: 12px;
+  }
+
+  .table-head {
+    text-align: center;
+
+    &.week-date {
+      vertical-align: top;
+      font-size: 24px;
+      text-align: left;
+    }
+
+    &.meal-title {
+      word-wrap: break-word;
+      padding: 5px;
+      font-family: $font-default;
+    }
+  }
+
+  .table-content {
+    .table-data {
+      height: 40px;
+      padding: 0;
+      vertical-align: middle;
+      color: $text-color;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .meal-participation a[href] {
+      @media print {
+        display: none;
+      }
+    }
+
+    .meal-participation.participating {
+      background-color: $color-green;
+
+      a,
+      a:hover {
+        color: $color-white;
+      }
+    }
+
+    a {
+      display: block;
+      height: 39px;
+      line-height: 40px;
+      text-align: center;
+
+      &:hover {
+        color: $text-color;
+      }
+    }
+  }
+
+  .table-head,
+  .table-data {
+    border-left: 1px solid $border-color;
+
+    &.wide-cell {
+      width: 200px;
+      word-wrap: break-word;
+      padding-right: 5px;
+      border-left: none;
+    }
+  }
+
+  .table-data {
+    border-top: 1px solid $border-color;
+  }
+}

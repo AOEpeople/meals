@@ -1,0 +1,125 @@
+.meal {
+  $meal-border-width: 25px;
+
+  position: relative;
+  width: 100%;
+  margin-bottom: 20px;
+  border-left: $meal-border-width solid $color-gray-secondary;
+  background: $color-gray-light;
+
+  &.is-available {
+    border-color: $color-green;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  .week-day {
+    position: absolute;
+    top: 0;
+    left: $meal-border-width * -1;
+    width: $meal-border-width;
+    height: 100%;
+    color: $color-white;
+    font-weight: bold;
+    line-height: $meal-border-width;
+
+    span {
+      position: relative;
+      top: 50%;
+      display: block;
+      transform: translateY(-50%) rotate(-90deg);
+    }
+  }
+
+  .meal-row {
+    position: relative;
+    padding: 15px;
+
+    &:not(:last-child) {
+      border-bottom: 2px solid $meal-border-color;
+    }
+
+    &.no-meal {
+      padding-top: 37px;
+      padding-bottom: 37px;
+      line-height: 56px;
+    }
+
+    &.one-meal {
+      padding-top: 18px;
+      padding-bottom: 18px;
+      line-height: 28px;
+    }
+
+    .title {
+      margin-bottom: 6px;
+      font-family: $font-bold;
+    }
+
+  }
+
+  .text,
+  .wrapper-vertical-center,
+  .participants,
+  .action {
+    display: inline-block;
+  }
+
+  .text {
+    width: 80%;
+    padding-right: 10px;
+
+    @include breakpoint(small) {
+      width: 70%;
+    }
+  }
+
+  .wrapper-vertical-center {
+    position: absolute;
+    top: 50%;
+    width: 20%;
+    height: 30px;
+    margin-top: -15px;
+
+    @include breakpoint(small) {
+      width: 30%;
+    }
+  }
+
+  .participants,
+  .action {
+    width: 50%;
+    text-align: center;
+  }
+
+  .action,
+  .checkbox-wrapper {
+    vertical-align: top;
+  }
+
+  .action {
+    padding-top: 4px;
+  }
+
+  .participants {
+    span {
+      display: table;
+      width: 28px;
+      height: 28px;
+      margin: 0 auto;
+      border-radius: 50%;
+      color: $color-white;
+      background: $color-gray-secondary;
+      font-size: 12px;
+      font-family: $font-bold;
+      text-align: center;
+
+      span {
+        display: table-cell;
+        vertical-align: middle;
+      }
+    }
+  }
+}

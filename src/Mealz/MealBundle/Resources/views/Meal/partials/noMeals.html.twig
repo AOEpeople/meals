@@ -1,0 +1,7 @@
+<div class="no-meals">
+	{% if not week.enabled%}
+		{{ 'content.participation.week.disabled' | trans({}, 'general') }}
+	{% else %}
+	{{ 'content.participation.week.no_meals'|trans({},'general') }}
+	{% endif %}
+</div>

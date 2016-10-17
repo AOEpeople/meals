@@ -1,0 +1,50 @@
+//**************************************
+//  Clearfix
+//**************************************
+@mixin clearfix() {
+  &::before,
+  &::after {
+    display: table;
+    content: '';
+  }
+
+  &::after {
+    clear: both;
+  }
+}
+
+//**************************************
+//  Crossbrowser opacity
+//**************************************
+@mixin opacity($opacity) {
+  opacity: $opacity;
+  filter: alpha(opacity = $opacity * 100);
+}
+
+//**************************************
+//  Breakpoints
+//**************************************
+@mixin breakpoint($point) {
+  @if $point == large {
+    @media (min-width: $bp-large) { @content ; }
+  }
+  @else if $point == medium {
+    @media (max-width: $bp-medium) { @content ; }
+  }
+  @else if $point == small {
+    @media (max-width: $bp-small) { @content ; }
+  }
+  @else if $point == smaller {
+    @media (max-width: $bp-smaller) { @content ; }
+  }
+}
+
+//**************************************
+//  SVG Icons
+//**************************************
+@mixin svg-icon($iconname, $color) {
+  @if $iconname == dish {
+    background: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22127.994%22%20height%3D%22130.075%22%20viewBox%3D%220%200%20246%20250%22%3E%0A%20%20%3Cpath%20fill%3D%22#{$color}%22%20id%3D%22Rounded_Rectangle_1%22%20data-name%3D%22Rounded%20Rectangle%201%22%20d%3D%22M240.5%2C251H5.5a5.5%2C5.5%2C0%2C0%2C1%2C0-11h235A5.5%2C5.5%2C0%2C0%2C1%2C240.5%2C251ZM111.946%2C126a19.463%2C19.463%2C0%2C0%2C1-3.488-32.82c0.282-.23.582-0.453%2C0.893-0.668%2C0.2-.14.406-0.274%2C0.612-0.406%2C0.188-.117.375-0.235%2C0.574-0.348A19.377%2C19.377%2C0%2C0%2C1%2C120.5%2C89c0.661%2C0%2C1.313.035%2C1.957%2C0.1L123%2C89l0.4%2C0.239a19.471%2C19.471%2C0%2C0%2C1%2C5.617%2C36.783C186.566%2C126.352%2C230.163%2C174.031%2C230%2C232H14C20.4%2C174.86%2C52.35%2C128.275%2C111.946%2C126ZM41%2C219c4.779-.489%2C8.489-20.431%2C20-39%2C19.055-30.741%2C48.1-31.067%2C39-37-14.281-9.313-52.647%2C25-62%2C57C35.227%2C209.49%2C32.748%2C219.845%2C41%2C219ZM152%2C84c-10.906-27.449%2C2.726-50.635%2C8-79%2C15.735%2C15.65-.733%2C60.311-5%2C81Zm-33-3c-14.388-35.493%2C6-44.056%2C7-80%2C12.272%2C8.865%2C1.624%2C69.938-6%2C80h-1ZM88%2C94c-14.1-34.849%2C6.313-43.25%2C7-80%2C14.2%2C10.179%2C1.829%2C65.522-5%2C81Z%22%20transform%3D%22translate%280%20-1%29%22%2F%3E%0A%3C%2Fsvg%3E%0A');
+    background-size: 100%;
+  }
+}

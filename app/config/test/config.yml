@@ -1,0 +1,16 @@
+imports:
+    - { resource: ../commons/all/config.yml }
+    - { resource: ../commons/development/security.yml }
+    - { resource: ../devbox/parameters.yml }
+
+doctrine:
+    dbal:
+        dbname:   "%database_name_testing%"
+        user:     "%database_user_testing%"
+        password: "%database_password_testing%"
+
+framework:
+    router:
+        resource: "%kernel.root_dir%/config/commons/all/routing.yml"
+        strict_requirements: true
+    test: ~

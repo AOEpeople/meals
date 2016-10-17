@@ -1,0 +1,10 @@
+<table class="table table-striped">
+	<tbody>
+	{% for transaction in transactions %}
+		<tr>
+			<td>{{ transaction.date | date('Y-m-d') }}</td>
+			<td class="text-right">{{ transaction.amount | localizedcurrency('EUR','de') }}</td>
+		</tr>
+	{% endfor %}
+	</tbody>
+</table>

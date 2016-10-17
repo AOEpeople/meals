@@ -1,0 +1,24 @@
+security:
+    encoders:
+        Mealz\UserBundle\Entity\Login:
+            algorithm:        sha1
+            encode_as_base64: false
+            iterations:       1
+        Symfony\Component\Security\Core\User\User: plaintext
+
+    role_hierarchy:
+        ROLE_ADMIN:       ROLE_USER
+
+    firewalls:
+        mealz:
+            pattern: ^/
+            anonymous: ~
+            logout:
+                path:   MealzUserBundle_logout
+                target: /
+        dev:
+            pattern:  ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+    access_control:
+        #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }

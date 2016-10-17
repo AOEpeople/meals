@@ -1,0 +1,34 @@
+{###
+# Creates a headline
+#
+# @param order			string      Headline order (1,2,3,4,5,6)
+# @param label          string      Headline text
+# @param id             string      Id tag of the headline
+# @param class			string      Additional CSS Classes
+# @param tools			array       Additional elements related to the headline
+# @param sub			string      Additional Text to show below the headline
+#}
+{% macro create(order, label, id, class, tools, sub)  %}
+	{%- import 'MealzTemplateBundle::Components/_common.html.twig' as commonlib -%}
+	{%- spaceless -%}
+		<div class="headline-container headline-container-h{{ order }} {% if tools|length > 0 %}headline-container-with-tools{% endif %} {{ class }}"  {{- commonlib.optionalAttribute('id', id) -}}>
+			<h{{ order }} class="headline">
+				{{ label }}
+			</h{{ order }}>
+			{% if tools|length > 0 %}
+				<div class="headline-tools">
+					{%- for tool in tools -%}
+						<div class="headline-tool">
+							{{ tool|raw }}
+						</div>
+					{% endfor %}
+				</div>
+			{% endif %}
+			{% if sub|length > 0 %}
+				<div class="sub">
+					{{ sub }}
+				</div>
+			{% endif %}
+		</div>
+	{%- endspaceless -%}
+{% endmacro %}

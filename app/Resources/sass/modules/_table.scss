@@ -1,0 +1,53 @@
+.table {
+  .table-header {
+    color: $color-gray-secondary;
+    font-size: 12px;
+    font-family: $font-bold;
+    text-align: left;
+
+    .table-head {
+      padding-bottom: 5px;
+
+      // scss-lint:disable SelectorFormat
+      &.sorting,
+      &.sorting_desc,
+      &.sorting_asc {
+        cursor: pointer;
+      }
+      // scss-lint:enable SelectorFormat
+    }
+  }
+
+  .table-row {
+    border-bottom: 1px solid $color-gray-light;
+    font-size: 16px;
+  }
+
+  .table-data {
+
+    padding-top: 20px;
+    padding-bottom: 10px;
+
+    .button.button-table {
+      padding: 0;
+      font-family: $font-default;
+      line-height: 15px;
+      text-transform: none;
+
+      i {
+        top: 2px;
+        font-size: 15px;
+      }
+    }
+
+    .glyphicon-plus {
+      vertical-align: super;
+    }
+  }
+
+  &.table-sortable {
+    .table-head {
+      outline: none;
+    }
+  }
+}

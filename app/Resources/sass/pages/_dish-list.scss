@@ -1,0 +1,77 @@
+.dish-list {
+  .headline-container {
+    .button {
+      margin-top: -10px;
+      color: $color-orange;
+    }
+
+    .icon.svg-dish {
+      position: relative;
+      top: 4px;
+      width: 30px;
+      height: 30px;
+    }
+  }
+
+  .table {
+
+    width: 100%;
+
+    thead {
+      @include breakpoint(small) {
+        display: none;
+      }
+    }
+
+    .table-row {
+      .dish-title,
+      .dish-category,
+      .dish-actions {
+        @include breakpoint(small) {
+          display: block;
+          width: 100%;
+        }
+      }
+    }
+
+    .dish-title {
+      width: 50%;
+    }
+
+    .dish-category {
+      width: 34%;
+
+      @include breakpoint(small) {
+        padding-top: 0;
+        font-size: 13px;
+        font-family: $font-default;
+      }
+    }
+
+    .dish-actions {
+      width: 16%;
+
+      @include breakpoint(small) {
+        padding-bottom: 20px;
+      }
+    }
+
+    // Special button and buttonbar style on mobile view
+    .buttonbar-element {
+      @include breakpoint(small) {
+        width: 48%;
+        margin-right: 0;
+
+        a {
+          display: block;
+          padding: 10px 15px;
+          background: $color-gray-light;
+        }
+
+        &:last-child {
+          float: right;
+        }
+      }
+    }
+  }
+}

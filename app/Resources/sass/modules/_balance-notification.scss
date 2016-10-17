@@ -1,0 +1,29 @@
+.fancybox-wrap {
+  z-index: 99999;
+}
+
+.fancybox-overlay {
+  z-index: 1;
+  background: $notification-background;
+}
+
+.fancybox-skin {
+  border-radius: 0;
+  color: $color-white;
+  background-color: $color-orange;
+}
+
+.fancybox-opened .fancybox-skin { box-shadow: none; }
+
+.fancybox {
+  // to hide the box before popup is applied
+  display: none;
+  font-size: 24px;
+  font-family: $font-bold;
+  line-height: 30px;
+
+  p { margin-bottom: 20px; }
+
+  .button:visited { color: $color-white; }
+
+}

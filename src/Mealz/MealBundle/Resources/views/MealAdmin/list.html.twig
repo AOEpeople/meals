@@ -1,0 +1,34 @@
+{% extends '::base.html.twig' %}
+
+{% set wrapperClass = 'week-list' %}
+
+{% block body %}
+
+    {{ MealzHeadline.create(1, 'headings.week.list'|trans({},'general'), '', '', []) }}
+
+    <div class="weeks-wrapper">
+    {% for week in weeks %}
+        {# display week day and date #}
+        {% if week.id %}
+        <a href="{{ path('MealzMealBundle_Meal_edit', {'week': week.id}) }}" class="week">
+        {% else %}
+        <a href="{{ path('MealzMealBundle_Meal_new', {'date': week.year~'W'~week.calendarWeek}) }}"
+           class="week week-create">
+        {% endif %}
+            <div class="week-info">
+                <div class="week-number">
+                    {{ 'content.menu.week'|trans({},'general') }} #{{ week.startTime | date('W') }}
+                </div>
+                <div class="week-range">
+                    {{ week.startTime | date('d.m.') }}-{{ week.EndTime | date('d.m.') }}
+                </div>
+                {% if not week.enabled %}
+                <div class="week-disabled">
+                    ({{ 'content.menu.no_service'|trans({},'general') }})
+                </div>
+                {% endif %}
+            </div>
+        </a>
+    {% endfor %}
+    </div>
+{% endblock %}

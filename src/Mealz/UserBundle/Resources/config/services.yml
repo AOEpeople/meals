@@ -1,0 +1,7 @@
+parameters:
+  mealz_user.post_login.class: Mealz\UserBundle\Service\PostLogin
+
+services:
+  mealz_user.post_login:
+    class: %mealz_user.post_login.class%
+    arguments: [ @doctrine.orm.default_entity_manager, @logger ]

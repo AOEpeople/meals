@@ -1,0 +1,46 @@
+.meal-form {
+  .headline-container .headline-tool {
+    float: left;
+    margin-left: 30px;
+  }
+}
+
+.week-form {
+
+  width: 70%;
+  margin: 0 auto;
+
+  text-align: center;
+
+  .meal {
+
+    border-right: 70px solid transparent;
+
+    .meal-row .form-row {
+      margin-bottom: 0;
+    }
+
+    .meal-rows-wrapper {
+      border-right: 1px solid $meal-border-color;
+    }
+
+    .week-day-action {
+      position: absolute;
+      top: 50%;
+      right: -61px;
+      margin-top: -16px;
+    }
+  }
+
+  .select-wrapper {
+    display: block;
+
+    select option[disabled="disabled"] {
+      display: none;
+
+      &[selected="selected"] {
+        display: block;
+      }
+    }
+  }
+}

@@ -1,32 +1,32 @@
-MealzAccountingBundle_Accounting:
-    pattern:  /accounting
-    defaults: { _controller: "MealzAccountingBundle:AccountingUser:index" }
-    methods:  [GET]
-
-MealzAccountingBundle_Accounting_participation:
-    pattern:  /accounting/participation
-    defaults: { _controller: "MealzAccountingBundle:AccountingUser:listParticipation" }
-
-MealzAccountingBundle_Accounting_transaction:
-    pattern:  /accounting/transaction
-    defaults: { _controller: "MealzAccountingBundle:AccountingUser:listTransaction" }
-
-MealzAccountingBundle_Accounting_Admin_go:
-    pattern:  /accounting/go
-    defaults: { _controller: "MealzAccountingBundle:AccountingAdmin:go" }
-    methods:  [GET]
-
-MealzAccountingBundle_Accounting_Admin:
-    pattern:  /accounting/{profile}
-    defaults: { _controller: "MealzAccountingBundle:AccountingAdmin:index" }
-
-MealzAccountingBundle_Accounting_Admin_participation:
-    pattern:  /accounting/{profile}/participation
-    defaults: { _controller: "MealzAccountingBundle:AccountingAdmin:listParticipation" }
-
-MealzAccountingBundle_Accounting_Admin_transaction:
-    pattern:  /accounting/{profile}/transaction
-    defaults: { _controller: "MealzAccountingBundle:AccountingAdmin:listTransaction" }
+#MealzAccountingBundle_Accounting:
+#    pattern:  /accounting
+#    defaults: { _controller: "MealzAccountingBundle:AccountingUser:index" }
+#    methods:  [GET]
+#
+#MealzAccountingBundle_Accounting_participation:
+#    pattern:  /accounting/participation
+#    defaults: { _controller: "MealzAccountingBundle:AccountingUser:listParticipation" }
+#
+#MealzAccountingBundle_Accounting_transaction:
+#    pattern:  /accounting/transaction
+#    defaults: { _controller: "MealzAccountingBundle:AccountingUser:listTransaction" }
+#
+#MealzAccountingBundle_Accounting_Admin_go:
+#    pattern:  /accounting/go
+#    defaults: { _controller: "MealzAccountingBundle:AccountingAdmin:go" }
+#    methods:  [GET]
+#
+#MealzAccountingBundle_Accounting_Admin:
+#    pattern:  /accounting/{profile}
+#    defaults: { _controller: "MealzAccountingBundle:AccountingAdmin:index" }
+#
+#MealzAccountingBundle_Accounting_Admin_participation:
+#    pattern:  /accounting/{profile}/participation
+#    defaults: { _controller: "MealzAccountingBundle:AccountingAdmin:listParticipation" }
+#
+#MealzAccountingBundle_Accounting_Admin_transaction:
+#    pattern:  /accounting/{profile}/transaction
+#    defaults: { _controller: "MealzAccountingBundle:AccountingAdmin:listTransaction" }
 
 #mealz_accounting_payment_paypal_custom:
 #    pattern: /payment/paypal/custom
@@ -51,3 +51,7 @@ mealz_accounting_payment_cash_form_submit:
 mealz_accounting_payment_cash_form:
     path: /payment/cash/form/{profile}
     defaults: { _controller: "MealzAccountingBundle:Payment\\Cash:getPaymentFormForProfile" }
+
+mealz_accounting_accounting_book:
+    path: /accounting/book
+    defaults: { _controller: "MealzAccountingBundle:AccountingBook:list" }

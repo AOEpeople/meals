@@ -78,7 +78,14 @@ class TransactionRepository extends \Doctrine\ORM\EntityRepository
         return $qb->getQuery()->execute();
     }
 
-    public function findTotalAmountOfTransactionsPerUser($minDate = null, $maxDate = null)
+    /**
+     * Get first name, last name and amount of transactions in the given time per user.
+     *
+     * @param \DateTime $minDate
+     * @param \DateTime $maxDate
+     * @return array
+     */
+    public function findTotalAmountOfTransactionsPerUser(\DateTime $minDate = null, \DateTime $maxDate = null)
     {
         $qb = $this->createQueryBuilder('t');
         $qb->select('p.username, p.firstName, p.name, SUM(t.amount) AS amount');

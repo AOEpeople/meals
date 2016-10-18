@@ -81,7 +81,7 @@ class TransactionRepository extends \Doctrine\ORM\EntityRepository
     public function findTotalAmountOfTransactionsPerUser($minDate = null, $maxDate = null)
     {
         $qb = $this->createQueryBuilder('t');
-        $qb->select('p.username, SUM(t.amount) AS amount');
+        $qb->select('p.username, p.firstName, p.name, SUM(t.amount) AS amount');
         $qb->leftJoin('t.profile', 'p');
 
         if ($minDate) {
@@ -95,12 +95,17 @@ class TransactionRepository extends \Doctrine\ORM\EntityRepository
         }
 
         $qb->groupBy('p.username');
+        $qb->orderBy('p.name, p.firstName');
         $queryResult = $qb->getQuery()->getArrayResult();
 
         $result = array();
 
         foreach($queryResult as $item) {
-            $result[$item['username']] = $item['amount'];
+            $result[$item['username']] = array(
+                'firstName' => $item['firstName'],
+                'name' => $item['name'],
+                'amount' => $item['amount'],
+            );
         }
 
         return $result;

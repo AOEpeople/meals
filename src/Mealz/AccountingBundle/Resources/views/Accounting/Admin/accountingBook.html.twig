@@ -9,15 +9,15 @@
     {# Set data for table content #}
     {% set tableContent = [] %}
 
-    {% for name, amount in users %}
-        {% set total = total + amount %}
+    {% for user in users %}
+        {% set total = total + user.amount %}
         {% set tableContent = tableContent | merge([{
         'name': {
-        'content': name,
+        'content': user.name ~ ", " ~ user.firstName,
         'class': 'name'
         },
         'amount': {
-        'content': amount | number_format(2) ~ "<i class='glyphicon glyphicon-euro' />",
+        'content': user.amount | number_format(2) ~ "<i class='glyphicon glyphicon-euro' />",
         'class': 'amount'
         },
         }]) %}

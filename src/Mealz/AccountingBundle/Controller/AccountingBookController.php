@@ -3,11 +3,16 @@
 namespace Mealz\AccountingBundle\Controller;
 
 use Mealz\MealBundle\Controller\BaseController;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class AccountingBookController extends BaseController
 {
     public function listAction()
     {
+        if (!$this->isGranted('ROLE_KITCHEN_STAFF')) {
+            throw new AccessDeniedException();
+        }
+
         $minDate = new \DateTime('first day of previous month');
         $minDate->setTime(0, 0, 0);
         $maxDate = new \DateTime('last day of previous month');

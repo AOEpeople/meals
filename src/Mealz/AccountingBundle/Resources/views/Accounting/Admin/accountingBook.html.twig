@@ -1,0 +1,43 @@
+{% extends '::base.html.twig' %}
+
+{% set wrapperClass = 'accounting-book' %}
+
+{% block body %}
+
+    {% set total = 0 %}
+
+    {# Set data for table content #}
+    {% set tableContent = [] %}
+
+    {% for name, amount in users %}
+        {% set total = total + amount %}
+        {% set tableContent = tableContent | merge([{
+        'name': {
+        'content': name,
+        'class': 'name'
+        },
+        'amount': {
+        'content': amount | number_format(2) ~ "<i class='glyphicon glyphicon-euro' />",
+        'class': 'amount'
+        },
+        }]) %}
+    {% endfor %}
+
+    {% set tableContent = tableContent | merge([{
+    'name': {
+    'content': 'Total',
+    'class': 'table-data-total'
+    },
+    'amount': {
+    'content': total | number_format(2) ~ "<i class='glyphicon glyphicon-euro' />",
+    'class': ''
+    },
+    }]) %}
+
+    {# Start template #}
+
+    {{ MealzHeadline.create(1, heading, '', '', [], '') }}
+
+    {{ MealzTable.create('accounting-book-table', 'table-full-width', [], tableContent) }}
+
+{% endblock %}

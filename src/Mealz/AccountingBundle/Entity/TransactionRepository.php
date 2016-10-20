@@ -83,9 +83,10 @@ class TransactionRepository extends \Doctrine\ORM\EntityRepository
      *
      * @param \DateTime $minDate
      * @param \DateTime $maxDate
+     * @param Profile $profile
      * @return array
      */
-    public function findTotalAmountOfTransactionsPerUser(\DateTime $minDate = null, \DateTime $maxDate = null)
+    public function findTotalAmountOfTransactionsPerUser(\DateTime $minDate = null, \DateTime $maxDate = null, $profile = NULL)
     {
         $qb = $this->createQueryBuilder('t');
         $qb->select('p.username, p.firstName, p.name, SUM(t.amount) AS amount');
@@ -99,6 +100,11 @@ class TransactionRepository extends \Doctrine\ORM\EntityRepository
         if ($maxDate) {
             $qb->andWhere('t.date <= :maxDate');
             $qb->setParameter('maxDate', $maxDate);
+        }
+
+        if ($profile instanceof Profile) {
+            $qb->andWhere('p.username = :username');
+            $qb->setParameter('username', $profile->getUsername());
         }
 
         $qb->groupBy('p.username');

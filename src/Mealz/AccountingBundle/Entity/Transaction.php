@@ -29,7 +29,7 @@ class Transaction
      *
      * @Assert\NotBlank()
      * @Assert\Type(type="Mealz\UserBundle\Entity\Profile")
-     * @ORM\ManyToOne(targetEntity="Mealz\UserBundle\Entity\Profile", inversedBy="transactions")
+     * @ORM\ManyToOne(targetEntity="Mealz\UserBundle\Entity\Profile", inversedBy="transactions", cascade="persist")
      * @ORM\JoinColumn(name="profile", referencedColumnName="id", nullable=FALSE)
      */
     private $profile;

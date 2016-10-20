@@ -23,29 +23,35 @@ class LoadWeeks extends AbstractFixture implements OrderedFixtureInterface {
 	 */
 	protected $counter = 0;
 
-	function load(ObjectManager $manager) {
+	function load(ObjectManager $manager)
+	{
 		$this->objectManager = $manager;
 
-		$date = new \DateTime('');
-		$maxDate = new \DateTime('+1 month');
-
-		while($date < $maxDate) {
+		foreach ($this->getData() as $record) {
 			$week = new Week();
-			$week->setYear($date->format('Y'));
-			$week->setCalendarWeek($date->format('W'));
+			$week->setYear($record['year']);
+			$week->setCalendarWeek($record['calendarWeek']);
 			$this->objectManager->persist($week);
-			$this->addReference('week-' . $this->counter++, $week);
-
-			$date->modify('+1 week');
+			$this->addReference('week-' . $record['calendarWeek'], $week);
 		}
 
 		$this->objectManager->flush();
+	}
+
+	public function getData()
+	{
+		return [
+			['year' => '2016', 'calendarWeek' => '41'],
+			['year' => '2016', 'calendarWeek' => '42'],
+			['year' => '2016', 'calendarWeek' => '43'],
+			['year' => '2016', 'calendarWeek' => '44'],
+			['year' => '2016', 'calendarWeek' => '45'],
+			['year' => '2016', 'calendarWeek' => '46']
+		];
 	}
 
 	public function getOrder()
 	{
 		return 1;
 	}
-
-
 }

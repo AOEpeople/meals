@@ -6,15 +6,24 @@ use Doctrine\ORM\EntityRepository;
 
 class WeekRepository extends EntityRepository
 {
+    /**
+     * @param  bool $onlyEnabledDays
+     * @return Week|NULL
+     */
     public function getCurrentWeek($onlyEnabledDays = FALSE)
     {
-        $now = new \DateTime();
-        return $this->findWeekByDate($now, $onlyEnabledDays);
+        return $this->findWeekByDate(new \DateTime(), $onlyEnabledDays);
     }
 
-    public function getNextWeek($onlyEnabledDays = FALSE)
+    /**
+     * @param  \DateTime|NULL $date
+     * @param  bool           $onlyEnabledDays
+     * @return Week|NULL
+     */
+    public function getNextWeek(\DateTime $date = NULL, $onlyEnabledDays = FALSE)
     {
-        $nextWeek = new \DateTime('next monday');
+        $date = is_null($date) ? new \DateTime() : $date;
+        $nextWeek = $date->modify('next monday');
         return $this->findWeekByDate($nextWeek, $onlyEnabledDays);
     }
 
@@ -31,7 +40,7 @@ class WeekRepository extends EntityRepository
 
     /**
      * @param \DateTime $date
-     * @param boolean $onlyEnabledDays
+     * @param  boolean  $onlyEnabledDays
      * @return null|Week
      */
     public function findWeekByDate(\DateTime $date, $onlyEnabledDays = FALSE)

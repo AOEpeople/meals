@@ -2,6 +2,7 @@
 
 namespace Mealz\MealBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -83,6 +84,12 @@ class Dish
 	 * @var string
 	 */
 	protected $currentLocale = 'en';
+
+	/**
+	 * @ORM\OneToMany(targetEntity="DishVariation", mappedBy="dish")
+	 * @var ArrayCollection
+	 */
+	protected $variations;
 
 	/**
 	 * Get id
@@ -273,5 +280,25 @@ class Dish
     public function setCategory(Category $category)
     {
         $this->category = $category;
+    }
+
+	/**
+	 * Gets all the dish variations.
+	 *
+	 * @return ArrayCollection
+	 */
+    public function getDishVariations()
+    {
+    	return $this->variations;
+    }
+
+	/**
+	 * Checks if the dish has variations.
+	 *
+	 * @return bool
+	 */
+    public function hasVariations()
+    {
+    	return (count($this->variations) > 0);
     }
 }

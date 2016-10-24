@@ -39,7 +39,7 @@
     }
 
     .dish-category {
-      width: 34%;
+      width: 16%;
 
       @include breakpoint(small) {
         padding-top: 0;
@@ -49,7 +49,7 @@
     }
 
     .dish-actions {
-      width: 16%;
+      width: 43%;
 
       @include breakpoint(small) {
         padding-bottom: 20px;

@@ -4,6 +4,7 @@ button:
   cancel: Cancel
   edit: Edit
   delete: Delete
+  add_variation: Add variation
 
 dish:
   create: Create dish

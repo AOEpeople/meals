@@ -61,12 +61,12 @@ class Dish
 	 */
 	protected $description_de = NULL;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Category", inversedBy="dishes")
-     * @ORM\JoinColumn(name="category_id", referencedColumnName="id", onDelete="SET NULL")
-     * @var null|Category
-     */
-    protected $category = NULL;
+	/**
+	 * @ORM\ManyToOne(targetEntity="Category", inversedBy="dishes")
+	 * @ORM\JoinColumn(name="category_id", referencedColumnName="id", onDelete="SET NULL")
+	 * @var null|Category
+	 */
+	protected $category = NULL;
 
 	/**
 	 * @ORM\Column(type="decimal", precision=10, scale=4, nullable=TRUE)
@@ -266,48 +266,48 @@ class Dish
 		return $this->getTitle();
 	}
 
-    /**
-     * @return Category
-     */
-    public function getCategory()
-    {
-        return $this->category;
-    }
+	/**
+	 * @return Category
+	 */
+	public function getCategory()
+	{
+		return $this->category;
+	}
 
-    /**
-     * @param Category $category
-     */
-    public function setCategory(Category $category)
-    {
-        $this->category = $category;
-    }
+	/**
+	 * @param Category $category
+	 */
+	public function setCategory(Category $category)
+	{
+		$this->category = $category;
+	}
 
 	/**
 	 * Gets all the dish variations.
 	 *
 	 * @return ArrayCollection
 	 */
-    public function getVariations()
-    {
-    	if (!($this->variations instanceof ArrayCollection)) {
-    		$this->variations = new ArrayCollection();
-	    }
+	public function getVariations()
+	{
+		if (!($this->variations instanceof ArrayCollection)) {
+			$this->variations = new ArrayCollection();
+		}
 
-    	return $this->variations;
-    }
+		return $this->variations;
+	}
 
-    public function setVariations(ArrayCollection $dishVariations)
-    {
-    	$this->variations = $dishVariations;
-    }
+	public function setVariations(ArrayCollection $dishVariations)
+	{
+		$this->variations = $dishVariations;
+	}
 
 	/**
 	 * Checks if the dish has variations.
 	 *
 	 * @return bool
 	 */
-    public function hasVariations()
-    {
-    	return (count($this->variations) > 0);
-    }
+	public function hasVariations()
+	{
+		return (count($this->variations) > 0);
+	}
 }

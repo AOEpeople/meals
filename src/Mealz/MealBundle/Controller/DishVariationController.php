@@ -24,7 +24,8 @@ class DishVariationController extends BaseController
 			$newVariationForm = $this->createForm(new DishVariationForm(), $dishVariation);
 
 			return $this->render('MealzMealBundle:DishVariation:new.html.twig', [
-				'form' => $newVariationForm->createView()
+				'form' => $newVariationForm->createView(),
+				'dish' => $dish
 			]);
 		}
 	}

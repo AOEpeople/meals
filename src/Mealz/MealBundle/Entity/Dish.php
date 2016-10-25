@@ -287,9 +287,18 @@ class Dish
 	 *
 	 * @return ArrayCollection
 	 */
-    public function getDishVariations()
+    public function getVariations()
     {
+    	if (!($this->variations instanceof ArrayCollection)) {
+    		$this->variations = new ArrayCollection();
+	    }
+
     	return $this->variations;
+    }
+
+    public function setVariations(ArrayCollection $dishVariations)
+    {
+    	$this->variations = $dishVariations;
     }
 
 	/**

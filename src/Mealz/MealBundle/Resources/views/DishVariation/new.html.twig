@@ -4,6 +4,18 @@
 
 {% block body %}
 
-    <h1>Lorem Ipsum</h1>
+    {{  form_start(form) }}
+    <fieldset>
+        <legend>Deutsch</legend>
+        {{ form_row(form.description_de) }}
+    </fieldset>
+    <fieldset>
+        <legend>English</legend>
+        {{ form_row(form.description_en) }}
+    </fieldset>
+    {{ form_row(form.save) }}
+    {{  form_end(form) }}
+
+    <a href="{{ path('MealzMealBundle_DishVariation_new', { slug: dish.id }) }}" class="">{{ 'button.add_variation'|trans({}, 'actions') }}</a>
 
 {% endblock %}

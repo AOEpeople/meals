@@ -55,4 +55,60 @@ class DishVariation
 	 * @var string
 	 */
 	protected $currentLocale = 'en';
+
+	/**
+	 * @return Dish
+	 */
+	public function getDish() {
+		return $this->dish;
+	}
+
+	/**
+	 * @param Dish $dish
+	 */
+	public function setDish($dish) {
+		$this->dish = $dish;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getDescriptionDe() {
+		return $this->description_de;
+	}
+
+	/**
+	 * @param string $description_de
+	 */
+	public function setDescriptionDe($description_de) {
+		$this->description_de = $description_de;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getDescriptionEn() {
+		return $this->description_en;
+	}
+
+	/**
+	 * @param string $description_en
+	 */
+	public function setDescriptionEn($description_en) {
+		$this->description_en = $description_en;
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function isEnabled() {
+		return $this->enabled;
+	}
+
+	/**
+	 * @param boolean $enabled
+	 */
+	public function setEnabled($enabled) {
+		$this->enabled = $enabled;
+	}
 }

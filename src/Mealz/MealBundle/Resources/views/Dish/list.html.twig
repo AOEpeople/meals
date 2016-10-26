@@ -33,6 +33,7 @@
         },
         'actions': {
             'content': MealzButton.buttonbar('', 'buttonbar-dish-actions', [
+                            MealzButton.link(path('MealzMealBundle_DishVariation_new', { slug: dish.id }), 'button.add_variation'|trans({}, 'actions'), '', 'button-table load-ajax-form load-edit-form transparent', 'glyphicon-plus'),
                             MealzButton.link(link(dish, 'edit'), 'button.edit'|trans({}, 'actions'), '', 'button-table load-ajax-form load-edit-form transparent', 'glyphicon-pencil'),
                             MealzButton.link(link(dish, 'delete'), 'button.delete'|trans({}, 'actions'), '', 'button-table transparent', 'glyphicon-remove')
                        ]),

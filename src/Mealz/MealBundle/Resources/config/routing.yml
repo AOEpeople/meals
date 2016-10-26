@@ -87,6 +87,33 @@ MealzMealBundle_Participant_delete:
 #    pattern:  /menu/meal/confirmation/{participant}
 #    defaults: { _controller: "MealzMealBundle:ParticipationConfirmation:confirmParticipation" }
 
+MealzMealBundle_DishVariation:
+    pattern:  /dish/{slug}/variation/
+    defaults: { _controller: "mealz_meal.controller.dish_variation:listAction" }
+    requirements:
+      slug: '[1-9][0-9]*'
+
+MealzMealBundle_DishVariation_new:
+    pattern:  /dish/{slug}/variation/new
+    defaults: { _controller: "mealz_meal.controller.dish_variation:newAction" }
+    requirements:
+      slug: '[1-9][0-9]*'
+#    condition: 'request.isXmlHttpRequest()'
+
+MealzMealBundle_DishVariation_edit:
+    pattern:  /dish/variation/{slug}/edit
+    defaults: { _controller: "mealz_meal.controller.dish_variation:editAction" }
+    requirements:
+      slug: '[1-9][0-9]*'
+#    condition: 'request.isXmlHttpRequest()'
+
+MealzMealBundle_DishVariation_delete:
+    pattern:  /dish/variation/{slug}/delete
+    defaults: { _controller: "mealz_meal.controller.dish_variation:deleteAction" }
+    requirements:
+      slug: '[1-9][0-9]*'
+#    condition: 'request.isXmlHttpRequest()'
+
 MealzMealBundle_Dish:
     pattern:  /dish
     defaults: { _controller: "mealz_meal.controller.dish:listAction" }
@@ -142,3 +169,4 @@ MealzMealBundle_Print_costSheet:
 MealzMealBundle_Print_participations:
     pattern: /print/participations/{week}
     defaults: { _controller: "MealzMealBundle:Print:participations" }
+

@@ -11,8 +11,6 @@ use Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
 use Mealz\MealBundle\DataFixtures\ORM\LoadParticipants;
 use Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
 use Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
-use Mealz\MealBundle\EventListener\LocalisationListener;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 
 class TransactionRepositoryTest extends AbstractDatabaseTestCase

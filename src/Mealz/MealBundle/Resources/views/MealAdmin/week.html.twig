@@ -59,9 +59,30 @@
             <div class="meal-rows-wrapper">
                 {# display meals for given day #}
                 {% for meal in day.meals %}
-                <div class="meal-row">
-                    {{ form_row(meal) }}
-                </div>
+                    <div class="meal-row">
+                        <div class="meal-select-box">
+                            {% for dishvars in meal.dish.vars %}
+                                {% for weekdishentries in dishvars %}
+                                    {% for dishentry in weekdishentries %}
+                                        {% if loop.index == 1 %}
+                                            <div class="category">
+                                                Category: {{ dishentry.data.category.slug }}
+                                            </div>
+                                        {% endif %}
+                                         <div class="dishes">
+                                             {{ dishentry.label }}
+                                        {#{{ dump(dishentry.data) }}#}
+                                        {#{% for variation in data.data.variations %}
+                                                {{ dump(variations) }}
+                                            {% endfor %}#}
+                                         </div>
+                                    {% endfor %}
+                                {% endfor %}
+                            {% endfor %}
+
+                        </div>
+                        {{ form_row(meal) }}
+                    </div>
                 {% endfor %}
             </div>
 

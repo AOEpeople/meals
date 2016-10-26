@@ -72,6 +72,7 @@ class MealType extends AbstractType
             if (null !== $meal->getDish()) {
                 $dishPrice = $meal->getDish()->getPrice();
                 $meal->setPrice($dishPrice);
+                $meal->setVariation($meal->getDish()->getVariations());
                 $event->setData($meal);
             }
         });

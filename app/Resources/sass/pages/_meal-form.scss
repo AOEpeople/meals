@@ -30,6 +30,14 @@
       right: -61px;
       margin-top: -16px;
     }
+
+    .meal-row {
+      .meal-select-box {
+        .category {
+          display: block;
+        }
+      }
+    }
   }
 
   .select-wrapper {

@@ -1,9 +1,5 @@
-{% extends '::base.html.twig' %}
-
-{% set wrapperClass = 'dish-list form-ajax' %}
-
-{% block body %}
-
+<tr class="table-row table-row-form edit-form">
+    <td colspan="3">
     {{  form_start(form) }}
     <fieldset>
         <legend>Deutsch</legend>
@@ -15,5 +11,5 @@
     </fieldset>
     {{ form_row(form.save) }}
     {{  form_end(form) }}
-
-{% endblock %}
+    </td>
+</tr>

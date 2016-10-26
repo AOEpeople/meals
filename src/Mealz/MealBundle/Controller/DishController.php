@@ -61,6 +61,7 @@ class DishController extends BaseListController {
     {
         $parameters = array(
             'load_category' => true,
+            'load_variations' => true,
             'orderBy_category' => false
         );
 

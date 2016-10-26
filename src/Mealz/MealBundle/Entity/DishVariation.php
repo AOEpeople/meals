@@ -12,6 +12,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="dish_variation")
  * @ORM\Entity(repositoryClass="DishVariationRepository")
+ *
+ * @author Chetan Thapliyal <chetan.thapliyal@aoe.com>
  */
 class DishVariation
 {
@@ -57,6 +59,20 @@ class DishVariation
 	protected $currentLocale = 'en';
 
 	/**
+	 * @return int
+	 */
+	public function getId() {
+		return $this->id;
+	}
+
+	/**
+	 * @param int $id
+	 */
+	public function setId($id) {
+		$this->id = $id;
+	}
+
+	/**
 	 * @return Dish
 	 */
 	public function getDish() {
@@ -68,6 +84,18 @@ class DishVariation
 	 */
 	public function setDish($dish) {
 		$this->dish = $dish;
+	}
+
+	/**
+	 * @return NULL|string
+	 */
+	public function getDescription()
+	{
+		if($this->currentLocale == 'de' && $this->description_de) {
+			return $this->getDescriptionDe();
+		} else {
+			return $this->getDescriptionEn();
+		}
 	}
 
 	/**
@@ -110,5 +138,19 @@ class DishVariation
 	 */
 	public function setEnabled($enabled) {
 		$this->enabled = $enabled;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getCurrentLocale() {
+		return $this->currentLocale;
+	}
+
+	/**
+	 * @param string $currentLocale
+	 */
+	public function setCurrentLocale($currentLocale) {
+		$this->currentLocale = $currentLocale;
 	}
 }

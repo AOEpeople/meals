@@ -74,4 +74,23 @@
       }
     }
   }
+
+  // Dish Variations
+  .dish-variation {
+    background-color: $color-body;
+    border-color: $color-gray-middle;
+
+    td:first-child { padding-left: 30px; }
+
+    .buttonbar-container { padding-left: 132px; }
+
+  }
+
+  .edit-form {
+    border-bottom: 1px solid $color-gray-middle;
+  }
+}
+
+#dish-table .glyphicon-plus {
+  vertical-align: baseline;
 }

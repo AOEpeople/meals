@@ -6,10 +6,12 @@ namespace Mealz\MealBundle\Controller;
 use Doctrine\ORM\EntityManager;
 use Mealz\MealBundle\Entity\DishVariation;
 use Mealz\MealBundle\Form\DishVariationForm;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Class DishVariationController
+ * Dish variation controller.
+ *
  * @package Mealz\MealBundle\Controller
  * @author Chetan Thapliyal <chetan.thapliyal@aoe.com>
  */
@@ -33,18 +35,26 @@ class DishVariationController extends BaseController
 
 		$dishVariation = new DishVariation();
 		$dishVariation->setDish($dish);
-		$dishVariationForm = $this->createForm(new DishVariationForm(), $dishVariation);
+		$dishVariationForm = $this->createForm(
+			new DishVariationForm(),
+			$dishVariation,
+			['action' => $this->generateUrl('MealzMealBundle_DishVariation_new', ['slug' => $dish->getId()])]
+		);
 		$dishVariationForm->handleRequest($request);
 
 		if ($dishVariationForm->isSubmitted() && $dishVariationForm->isValid()) {
 			$dishVariation = $dishVariationForm->getData();
 			$this->persistEntity($dishVariation);
+
+			return $this->redirectToRoute('MealzMealBundle_Dish');
 		}
 
-		return $this->render('MealzMealBundle:DishVariation:new.html.twig', [
+		$renderedForm = $this->render('MealzMealBundle:DishVariation:new.html.twig', [
 			'form' => $dishVariationForm->createView(),
 			'dishVariation' => $dishVariation
 		]);
+
+		return new JsonResponse($renderedForm->getContent());
 	}
 
 	public function editAction(Request $request, $slug)
@@ -61,22 +71,31 @@ class DishVariationController extends BaseController
 			throw $this->createNotFoundException();
 		}
 
-		$dishVariationForm = $this->createForm(new DishVariationForm(), $dishVariation);
+		$dishVariationForm = $this->createForm(
+			new DishVariationForm(),
+			$dishVariation,
+			['action' => $this->generateUrl('MealzMealBundle_DishVariation_edit', ['slug' => $dishVariation->getId()])]
+		);
 		$dishVariationForm->handleRequest($request);
 
 		if ($dishVariationForm->isSubmitted() && $dishVariationForm->isValid()) {
 			$dishVariation = $dishVariationForm->getData();
 			$this->persistEntity($dishVariation);
+
+			return $this->redirectToRoute('MealzMealBundle_Dish');
 		}
 
-		return $this->render('MealzMealBundle:DishVariation:new.html.twig', [
+		$renderedForm = $this->render('MealzMealBundle:DishVariation:new.html.twig', [
 			'form' => $dishVariationForm->createView(),
 			'dishVariation' => $dishVariation
 		]);
+
+		return new JsonResponse($renderedForm->getContent());
 	}
 
 	/**
-	 * @param integer $slug
+	 * @param  integer $slug
+	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
 	 */
 	public function deleteAction($slug)
 	{
@@ -103,7 +122,7 @@ class DishVariationController extends BaseController
 		);
 		$this->addFlashMessage($message, 'success');
 
-		// TODO: either redirect or return a Response object
+		return $this->redirectToRoute('MealzMealBundle_Dish');
 	}
 
 	private function persistEntity($entity)

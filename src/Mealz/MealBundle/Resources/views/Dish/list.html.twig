@@ -22,6 +22,26 @@
 
 {% set tableContent = [] %}
 {% for dish in entities %}
+    {% for dishVariation in dish.variations %}
+        {% set tableContent = [{
+            'variations': {
+                'content': dishVariation.description,
+                'class': 'dish-variation'
+            },
+            'category': {
+                'content': '',
+                'class': ''
+            },
+            'actions': {
+                'content': MealzButton.buttonbar('', 'buttonbar-dish-actions', [
+                    MealzButton.link(path('MealzMealBundle_DishVariation_edit', { slug: dishVariation.id }), 'button.edit'|trans({}, 'actions'), '', 'button-table load-ajax-form load-edit-form transparent', 'glyphicon-pencil'),
+                    MealzButton.link(path('MealzMealBundle_DishVariation_delete', { slug: dishVariation.id }), 'button.delete'|trans({}, 'actions'), '', 'button-table load-ajax-form load-edit-form transparent', 'glyphicon-remove'),
+                ]),
+                'class': 'dish-actions'
+            }
+        }] | merge(tableContent) %}
+    {% endfor %}
+
     {% set tableContent = [{
         'title': {
             'content': dish.title,
@@ -41,6 +61,7 @@
         }
     }] | merge(tableContent) %}
 {% endfor %}
+
 
 {# Start tempalte #}
 

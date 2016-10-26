@@ -2,7 +2,7 @@
 
 namespace Mealz\MealBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -87,7 +87,7 @@ class Dish
 
 	/**
 	 * @ORM\OneToMany(targetEntity="DishVariation", mappedBy="dish")
-	 * @var ArrayCollection
+	 * @var Collection
 	 */
 	protected $variations;
 
@@ -285,18 +285,17 @@ class Dish
 	/**
 	 * Gets all the dish variations.
 	 *
-	 * @return ArrayCollection
+	 * @return Collection
 	 */
 	public function getVariations()
 	{
-		if (!($this->variations instanceof ArrayCollection)) {
-			$this->variations = new ArrayCollection();
-		}
-
 		return $this->variations;
 	}
 
-	public function setVariations(ArrayCollection $dishVariations)
+	/**
+	 * @param Collection $dishVariations
+	 */
+	public function setVariations(Collection $dishVariations)
 	{
 		$this->variations = $dishVariations;
 	}

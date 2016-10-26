@@ -123,17 +123,17 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
             // fetch what is displayed in the accounting book table....
         $crawler = $this->client->request('GET','/accounting/book');
         $nodesName = $crawler->filterXPath('//table[@id="accounting-book-table"]//td[contains(@class,"name")]');
+        $this->assertTrue($nodesName->count() >= 10,"To few of testing records available.");
 
             // now compare order and displayed syntax of results
         for($i=0;$i<10;$i++){
+            $this->assertTrue($nodesName->getNode($i) instanceof \DOMElement);
             $nameDisplayed = $nodesName->getNode($i)->textContent;
             $userInfo = current($usersAndTheirTotals);
             next($usersAndTheirTotals);
             $regex = "/".preg_quote($userInfo['name'])." *, *".preg_quote($userInfo['firstName'])."/i";
             $this->assertRegExp($regex,$nameDisplayed, "Names are displayed incorrectly. Either sorting is wrong or the names are not displayed like it should be (name, firstname)");
         }
-
-        $this->assertTrue(true);
     }
 
 ###############################################

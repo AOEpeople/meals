@@ -43,20 +43,16 @@ class DishRepository extends LocalizedRepository {
 			$qb->leftJoin('d.category', 'c');
 		}
 		if($options['load_variations']) {
-			$qb->leftJoin('d.variations', 'v');
+			if ($options['load_disabled_variations']) {
+				$qb->leftJoin('d.variations', 'v');
+			} else {
+				$qb->leftJoin('d.variations', 'v', 'WITH', 'v.enabled = 1');
+			}
 		}
 
 		// WHERE
 		if(!$options['load_disabled']) {
 			$qb->where('d.enabled = 1');
-		}
-		if($options['load_variations'] && !$options['load_disabled_variations']) {
-			$qb->andWhere(
-				$qb->expr()->orX(
-					$qb->expr()->eq('v.enabled', 1),
-					$qb->expr()->isNull('v.enabled')
-				)
-			);
 		}
 
 		// ORDER BY

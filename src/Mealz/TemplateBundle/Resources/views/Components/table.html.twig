@@ -25,11 +25,13 @@
             {% if data | length > 0 %}
                 <tbody>
                 {% for row in data %}
-                    <tr class="table-row">
-                        {% for col in row %}
-                            <td class="table-data {{ col.class }}">
-                                {{- col.content | trans | raw -}}
-                            </td>
+                    <tr class="table-row {% if row.settings is defined %}{{ row.settings.class }}{% endif %}">
+                        {% for col, data in row %}
+                            {% if col != 'settings' %}
+                                <td class="table-data {{ data.class }}">
+                                    {{- data.content | trans | raw -}}
+                                </td>
+                            {% endif %}
                         {% endfor %}
                     </tr>
                 {% endfor %}

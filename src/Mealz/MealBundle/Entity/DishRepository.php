@@ -41,7 +41,7 @@ class DishRepository extends LocalizedRepository {
 		if($options['load_category']) {
 			$qb->leftJoin('d.category', 'c');
 		}
-		if($options['load_category']) {
+		if($options['load_variations']) {
 			$qb->leftJoin('d.variations', 'v');
 		}
 

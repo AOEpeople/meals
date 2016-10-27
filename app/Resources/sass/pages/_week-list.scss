@@ -42,3 +42,12 @@
     }
   }
 }
+
+.meal-select-box {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background: $color-white;
+  z-index: 1;
+  width: 96%;
+}

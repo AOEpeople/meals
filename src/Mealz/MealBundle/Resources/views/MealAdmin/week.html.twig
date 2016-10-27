@@ -62,22 +62,24 @@
                     <div class="meal-row">
                         <div class="meal-select-box">
                             {% for dishvars in meal.dish.vars %}
+
                                 {% for weekdishentries in dishvars %}
+                                    {% if isempty() %}
+                                        <ul>
+                                    {% endif %}
                                     {% for dishentry in weekdishentries %}
                                         {% if loop.index == 1 %}
-                                            <div class="category">
+                                            <li class="category">
                                                 Category: {{ dishentry.data.category.slug }}
-                                            </div>
+                                            </li>
                                         {% endif %}
-                                         <div class="dishes">
+                                         <li class="dishes">
                                              {{ dishentry.label }}
-                                        {#{{ dump(dishentry.data) }}#}
-                                        {#{% for variation in data.data.variations %}
-                                                {{ dump(variations) }}
-                                            {% endfor %}#}
-                                         </div>
+                                         </li>
                                     {% endfor %}
+                                    </ul>
                                 {% endfor %}
+
                             {% endfor %}
 
                         </div>

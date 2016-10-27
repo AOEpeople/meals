@@ -28,7 +28,8 @@ class MealType extends AbstractType
         $builder->add('dish', EntityType::class, array(
             'class' => 'MealzMealBundle:Dish',
             'query_builder' => $this->dishRepository->getSortedDishesQueryBuilder(array(
-                'load_disabled' => true
+                'load_disabled' => true,
+                'load_variations' => true
             )),
             'required' => false,
             'group_by' => function(Dish $dish) {
@@ -72,7 +73,7 @@ class MealType extends AbstractType
             if (null !== $meal->getDish()) {
                 $dishPrice = $meal->getDish()->getPrice();
                 $meal->setPrice($dishPrice);
-                $meal->setVariation($meal->getDish()->getVariations());
+                //@FIXME-SIMON $meal->setVariation($meal->getDish()->getVariations());
                 $event->setData($meal);
             }
         });

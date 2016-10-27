@@ -63,33 +63,33 @@
                         <div class="meal-select-box">
                             {% for dishvars in meal.dish.vars %}
                                 {% for weekdishentries in dishvars %}
-                                    {% if weekdishentries|length > 0 %}
+                                    {% if weekdishentries is iterable %}
                                         <ul>
-                                    {% for dishentry in weekdishentries %}
-                                        {% if loop.index == 1 %}
-                                            <li class="category">
-                                                Category: {{ dishentry.data.category.slug }}
-                                            </li>
-                                        {% endif %}
-                                         <li class="dishes">
-                                             {{ dishentry.label }}
-                                            {% if dishentry.data.variations.snapshot|length > 0 %}
-                                                <div class="variation_button"  onclick="$('.variation_choice').show()">
-                                                +
-                                                    <div class="variation_choice" style="display:none;">
-                                                        {% for variation in dishentry.data.variations %}
-                                                            {{ dump(variation.description) }}
-                                                        {% endfor %}
-                                                    </div>
-                                                </div>
-                                            {% endif %}
+                                            {% for dishentry in weekdishentries %}
+                                                {% if loop.index == 1 %}
+                                                    <li class="category">
+                                                        Category: {{ dishentry.data.category.slug }}
+                                                    </li>
+                                                {% endif %}
+                                                 <li class="dishes">
+                                                     {{ dishentry.label }}
+                                                    {% if dishentry.data.variations.snapshot|length > 0 %}
+                                                        <div class="variation_button"  onclick="$('.variation_choice').show()">
+                                                        +
+                                                            <div class="variation_choice" style="display:none;">
+                                                                {% for variation in dishentry.data.variations %}
+                                                                    {{ dump(variation.description) }}
+                                                                {% endfor %}
+                                                            </div>
+                                                        </div>
+                                                    {% endif %}
 
-                                            {#{% for variation in data.data.variations %}
-                                                {{ dump(variations) }}
-                                            {% endfor %}#}
-                                         </li>
-                                    {% endfor %}
-                                    </ul>
+                                                    {#{% for variation in data.data.variations %}
+                                                        {{ dump(variations) }}
+                                                    {% endfor %}#}
+                                                 </li>
+                                            {% endfor %}
+                                        </ul>
                                     {% endif %}
                                 {% endfor %}
                             {% endfor %}

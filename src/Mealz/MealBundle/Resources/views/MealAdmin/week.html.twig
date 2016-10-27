@@ -74,8 +74,8 @@
                                                  <li class="dishes">
                                                      {{ dishentry.label }}
                                                     {% if dishentry.data.variations.snapshot|length > 0 %}
-                                                        <div class="variation_button"  onclick="$('.variation_choice').show()">
-                                                        +
+                                                        <div class="variation-button"  onclick="$('.variation_choice').show()">
+                                                            variations
                                                             <div class="variation_choice" style="display:none;">
                                                                 {% for variation in dishentry.data.variations %}
                                                                     {{ dump(variation.description) }}

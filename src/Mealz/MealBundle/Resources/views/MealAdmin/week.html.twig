@@ -63,13 +63,15 @@
                         <div class="meal-select-box">
                             {% for dishvars in meal.dish.vars %}
                                 {% for weekdishentries in dishvars %}
+                                    {% if weekdishentries|length > 0 %}
+                                        <ul>
                                     {% for dishentry in weekdishentries %}
                                         {% if loop.index == 1 %}
-                                            <div class="category">
+                                            <li class="category">
                                                 Category: {{ dishentry.data.category.slug }}
-                                            </div>
+                                            </li>
                                         {% endif %}
-                                         <div class="dishes">
+                                         <li class="dishes">
                                              {{ dishentry.label }}
                                             {% if dishentry.data.variations.snapshot|length > 0 %}
                                                 <div class="variation_button"  onclick="$('.variation_choice').show()">
@@ -85,11 +87,12 @@
                                             {#{% for variation in data.data.variations %}
                                                 {{ dump(variations) }}
                                             {% endfor %}#}
-                                         </div>
+                                         </li>
                                     {% endfor %}
+                                    </ul>
+                                    {% endif %}
                                 {% endfor %}
                             {% endfor %}
-
                         </div>
                         {{ form_row(meal) }}
                     </div>

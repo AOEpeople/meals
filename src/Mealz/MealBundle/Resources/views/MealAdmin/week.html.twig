@@ -73,7 +73,7 @@
                                         {% endif %}
                                          <li class="dishes">
                                              {{ dishentry.label }}
-                                            {% if dishentry.data.variations.snapshot|length > 0 %}
+                                            {#% if dishentry.data.variations.snapshot|length > 0 %}
                                                 <div class="variation_button"  onclick="$('.variation_choice').show()">
                                                 +
                                                     <div class="variation_choice" style="display:none;">
@@ -82,7 +82,7 @@
                                                         {% endfor %}
                                                     </div>
                                                 </div>
-                                            {% endif %}
+                                            {% endif %#}
 
                                             {#{% for variation in data.data.variations %}
                                                 {{ dump(variations) }}

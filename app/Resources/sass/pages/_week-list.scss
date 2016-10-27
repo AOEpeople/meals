@@ -50,4 +50,24 @@
   background: $color-white;
   z-index: 1;
   width: 96%;
+  text-align: left;
+
+  ul {
+
+  }
+
+  li {
+    padding: 10px 25px;
+
+    &.dishes {
+      border-bottom: 1px solid $color-gray-middle;
+      background: pink;
+    }
+
+    &.category {
+      color: $color-gray-middle;
+    }
+
+  }
+
 }

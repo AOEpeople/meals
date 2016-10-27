@@ -30,6 +30,29 @@ class LoadUsers extends AbstractFixture implements OrderedFixtureInterface,Conta
 	 */
 	protected $counter = 0;
 
+    /**
+     * LoadUsers constructor.
+     * @param ContainerInterface|null $container A ContainerInterface instance or null
+     */
+	public function __construct(ContainerInterface $container = null)
+	{
+        if ($container instanceof ContainerInterface) {
+            $this->container = $container;
+        }
+	}
+
+	/**
+	 * Sets the Container.
+	 *
+	 * @param ContainerInterface|null $container A ContainerInterface instance or null
+	 *
+	 * @api
+	 */
+	public function setContainer(ContainerInterface $container = null)
+	{
+		$this->container = $container;
+	}
+
 	function load(ObjectManager $manager) {
 		$this->objectManager = $manager;
 
@@ -71,26 +94,5 @@ class LoadUsers extends AbstractFixture implements OrderedFixtureInterface,Conta
 	public function getOrder()
 	{
 		return 1;
-	}
-
-	/**
-	 * Sets the Container.
-	 *
-	 * @param ContainerInterface|null $container A ContainerInterface instance or null
-	 *
-	 * @api
-	 */
-	public function setContainer(ContainerInterface $container = null)
-	{
-		$this->container = $container;
-	}
-
-    /**
-     * LoadUsers constructor.
-     * @param ContainerInterface $container
-     */
-	public function __construct(ContainerInterface $container)
-	{
-		$this->container = $container;
 	}
 }

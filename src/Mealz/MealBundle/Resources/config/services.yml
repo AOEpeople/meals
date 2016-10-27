@@ -98,6 +98,12 @@ services:
     arguments:
       - 'MealzMealBundle:Dish'
 
+  mealz_meal.repository.dish_variation:
+    class: Mealz\MealBundle\Entity\DishVariationRepository
+    parent: mealz_meal.repository.abstract.localized
+    arguments:
+      - 'MealzMealBundle:DishVariation'
+
   mealz_meal.form.type.dish_selector_creator:
         class: Mealz\MealBundle\Form\Type\DishSelectorCreatorType
         arguments: []
@@ -134,6 +140,11 @@ services:
     tags:
       - { name: validator.constraint_validator, alias: validator_meal_dish }
 
+  mealz_meal.controller.base:
+    abstract: true
+    calls:
+      - [setContainer, ["@service_container"]]
+
   mealz_meal.controller.baseList:
     abstract: true
     calls:
@@ -152,6 +163,13 @@ services:
     calls:
       - [setRepository, ["@mealz_meal.repository.dish"]]
       - [setEntityName, ["Dish"]]
+
+  mealz_meal.controller.dishVariation:
+    class: Mealz\MealBundle\Controller\DishVariationController
+    parent: mealz_meal.controller.base
+#    calls:
+#      - [setRepository, ["@mealz_meal.repository.dish_variation"]]
+#      - [setEntityName, ["DishVariation"]]
 
   mealz_meal.monolog.processor.psr:
       class: Monolog\Processor\PsrLogMessageProcessor

@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Mealz\MealBundle\Entity\Category;
 use Mealz\MealBundle\Entity\Dish;
+use Mealz\MealBundle\Entity\DishVariation;
 use Mealz\MealBundle\Service\HttpHeaderUtility;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
@@ -34,7 +35,10 @@ class EntityLocalisationListener extends LocalisationListener {
 	public function postLoad(LifecycleEventArgs $args) {
 		$entity = $args->getEntity();
 
-		if($entity instanceof Dish || $entity instanceof Category) {
+		/**
+		 * @TODO: Refactor to use an interface or abstract class, which all the 3 classes below have in common
+		 */
+		if($entity instanceof Dish || $entity instanceof Category || $entity instanceof DishVariation) {
 			$currentLocale = 'en';
 			if($this->requestStack->getCurrentRequest()) {
 				$locale = substr($this->requestStack->getCurrentRequest()->getLocale(), 0, 2);

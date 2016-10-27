@@ -17,3 +17,5 @@ framework:
     session:
         storage_id: session.storage.mock_file
         cookie_lifetime: 3600
+parameters:
+    mealz.host: "http://www.aoemeals.local"

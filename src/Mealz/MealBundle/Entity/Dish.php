@@ -2,6 +2,7 @@
 
 namespace Mealz\MealBundle\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -60,12 +61,12 @@ class Dish
 	 */
 	protected $description_de = NULL;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Category", inversedBy="dishes")
-     * @ORM\JoinColumn(name="category_id", referencedColumnName="id", onDelete="SET NULL")
-     * @var null|Category
-     */
-    protected $category = NULL;
+	/**
+	 * @ORM\ManyToOne(targetEntity="Category", inversedBy="dishes")
+	 * @ORM\JoinColumn(name="category_id", referencedColumnName="id", onDelete="SET NULL")
+	 * @var null|Category
+	 */
+	protected $category = NULL;
 
 	/**
 	 * @ORM\Column(type="decimal", precision=10, scale=4, nullable=TRUE)
@@ -83,6 +84,12 @@ class Dish
 	 * @var string
 	 */
 	protected $currentLocale = 'en';
+
+	/**
+	 * @ORM\OneToMany(targetEntity="DishVariation", mappedBy="dish")
+	 * @var Collection
+	 */
+	protected $variations;
 
 	/**
 	 * Get id
@@ -259,19 +266,47 @@ class Dish
 		return $this->getTitle();
 	}
 
-    /**
-     * @return Category
-     */
-    public function getCategory()
-    {
-        return $this->category;
-    }
+	/**
+	 * @return Category
+	 */
+	public function getCategory()
+	{
+		return $this->category;
+	}
 
-    /**
-     * @param Category $category
-     */
-    public function setCategory(Category $category)
-    {
-        $this->category = $category;
-    }
+	/**
+	 * @param Category $category
+	 */
+	public function setCategory(Category $category)
+	{
+		$this->category = $category;
+	}
+
+	/**
+	 * Gets all the dish variations.
+	 *
+	 * @return Collection
+	 */
+	public function getVariations()
+	{
+		return $this->variations;
+	}
+
+	/**
+	 * @param Collection $dishVariations
+	 */
+	public function setVariations(Collection $dishVariations)
+	{
+		$this->variations = $dishVariations;
+	}
+
+	/**
+	 * Checks if the dish has variations.
+	 *
+	 * @return bool
+	 */
+	public function hasVariations()
+	{
+		return (count($this->variations) > 0);
+	}
 }

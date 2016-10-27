@@ -59,8 +59,8 @@
             <div class="meal-rows-wrapper">
                 {# display meals for given day #}
                 {% for meal in day.meals %}
-                    <div class="meal-row">
-                        <div class="meal-select-box">
+                    <div class="meal-row" onclick="$('.meal-select-box').toggle()">
+                        <div class="meal-select-box" style="display:none;" onclick="$(this).toggle()">
                             {% for dishvars in meal.dish.vars %}
                                 {% for weekdishentries in dishvars %}
                                     {% if weekdishentries is iterable %}
@@ -74,19 +74,15 @@
                                                  <li class="dishes">
                                                      {{ dishentry.label }}
                                                     {% if dishentry.data.variations.snapshot|length > 0 %}
-                                                        <div class="variation_button"  onclick="$('.variation_choice').show()">
+                                                        <div class="variation-button"  onclick="$('.variation-choice').toggle()">
                                                         +
-                                                            <div class="variation_choice" style="display:none;">
+                                                            <div class="variation-choice" style="display:none;">
                                                                 {% for variation in dishentry.data.variations %}
                                                                     {{ dump(variation.description) }}
                                                                 {% endfor %}
                                                             </div>
                                                         </div>
                                                     {% endif %}
-
-                                                    {#{% for variation in data.data.variations %}
-                                                        {{ dump(variations) }}
-                                                    {% endfor %}#}
                                                  </li>
                                             {% endfor %}
                                         </ul>
@@ -94,7 +90,7 @@
                                 {% endfor %}
                             {% endfor %}
                         </div>
-                        {{ form_row(meal) }}
+                        {{ form_row(meal, {'attr' : {'style' : 'display: none;'}}) }}
                     </div>
                 {% endfor %}
             </div>

@@ -1,4 +1,8 @@
 .table {
+  &.table-full-width {
+    width: 100%;
+  }
+
   .table-header {
     color: $color-gray-secondary;
     font-size: 12px;
@@ -24,6 +28,10 @@
   }
 
   .table-data {
+
+    &.table-data-total {
+      font-family: $font-bold;
+    }
 
     padding-top: 20px;
     padding-bottom: 10px;

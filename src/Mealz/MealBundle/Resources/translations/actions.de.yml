@@ -10,3 +10,6 @@ dish:
 
 category:
   create: Kategorie erstellen
+
+costs:
+  cash_register: Kasse

@@ -1,5 +1,69 @@
 # Mealz for Zombies
 
+## Features (User)
+
+### Meal enrollment
+Sign in with LDAP credentials and select your preferred meals on landing page.
+
+## Features (Admin)
+
+### General
+Admin has access to all user features as well.
+
+### Menu (List of weeks)
+**Route:** /menu  
+**Available at:** Choose "Menu" in admin navigation bar.  
+**Actions:** Create new week and edit existing ones.
+
+**Description:**  
+List of current and upcoming weeks. Already created / edited weeks are green.
+Weeks which haven't been created yet, are displayed with a grey background color.
+
+### Menu (Week detail view)
+**Route:** /menu/{YYYY}W{KW}/new oder /menu/{week-id}/edit  
+**Available at:** Choose "Menu" in admin navigation bar and click on one of the listed weeks.  
+**Actions:** Disable whole week or some days.
+
+**Description:**  
+Here you can select the desired dishes for the selected week.
+Additionally you can disable some days or the whole week in case of (public) holiday.
+
+### Dishes
+**Route:** /dish  
+**Available at:** Choose "Dishes" in admin navigation bar.  
+**Actions** Create, edit and delete dishes
+
+**Description:**  
+Lists all existing dishes. You can edit and delete them.
+If you click on "CREATE DISH" you can create a new one.
+
+### (Dish) Categories
+**Route:** /category   
+**Available at:** Choose "Categories" in admin navigation bar.  
+**Actions:** Create, edit and delete categories
+
+**Description:**  
+Lists all existing (dish) categories. You can edit and delete them.
+If you click on "CREATE CATEGORY" you can create a new one.
+
+### Costs
+**Route:** /print/costsheet  
+**Available at:** Choose "Costs" in admin navigation bar.  
+**Actions:** Book transaction for user, "CASH REGISTER" (Accounting book)
+
+**Description:**  
+Lists all users and their outstanding debts. Debts are structured in 6 different columns:
+Total, current month (all debts in this month till current day), one column for each of the last three month,
+all debts before the last three month summed up in one column.
+Additionally you can add a transaction (positive or negative) to a users profile, by clicking on the plus sign. 
+
+### Accounting book
+**Route:** /accounting/book  
+**Available at:** Choose "Costs" in admin navigation bar. Click on button "CASH REGISTER".
+
+**Description:**  
+Lists all transactions booked for users in the last month.
+
 ## Installation
 
     composer install
@@ -39,6 +103,12 @@
 Export your client id and secret as environment variables.
 See http://symfony.com/doc/current/cookbook/configuration/external_parameters.html
 
+### You're done
+
+Point your webbrowser to http://mealz.local
+
+## Developer information
+
 ### Frontend build
 
 ```
@@ -47,18 +117,6 @@ npm install
 ./node_modules/.bin/bower install
 ./node_modules/.bin/gulp
 ```
-
-### You're done
-
-Point your webbrowser to http://mealz.local
-
-## Troubleshooting
-
-### SQLSTATE[42S22]: Column not found: 1054 Unknown column
-
-    php app/console doctrine:schema:update --force --env=dev
-
-## Developer information
 
 ### User roles
 
@@ -72,7 +130,7 @@ The following roles are in use:
 
 To load up some test data, run
 
-    php app/console doctrine:fixtures:load --env=dev
+    php app/console doctrine:fixtures:load
 
 It generates dishes, meals and users.
 
@@ -89,3 +147,9 @@ Before running phpunit make sure the database schema is up-to-date:
 
     php app/console doctrine:schema:update --env=test --force
     bin/phpunit
+
+## Troubleshooting
+
+### SQLSTATE[42S22]: Column not found: 1054 Unknown column
+
+    php app/console doctrine:schema:update --force

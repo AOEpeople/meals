@@ -35,7 +35,7 @@ class DishController extends BaseListController {
             $dish->setEnabled(false);
             $em->persist($dish);
             $em->flush();
-            $message = $this->translator->trans(
+            $message = $this->get('translator')->trans(
                 'dish.hidden',
                 array('%dish%' => $dish->getTitle()),
                 'messages'
@@ -46,7 +46,7 @@ class DishController extends BaseListController {
             $em->remove($dish);
             $em->flush();
 
-            $message = $this->translator->trans(
+            $message = $this->get('translator')->trans(
                 'dish.deleted',
                 array('%dish%' => $dish->getTitle()),
                 'messages'

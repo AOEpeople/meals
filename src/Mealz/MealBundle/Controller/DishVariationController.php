@@ -46,6 +46,13 @@ class DishVariationController extends BaseController
 			$dishVariation = $dishVariationForm->getData();
 			$this->persistEntity($dishVariation);
 
+			$message = $this->get('translator')->trans(
+				'entity.added',
+				array('%entityName%' => $dishVariation->getDescription()),
+				'messages'
+			);
+			$this->addFlashMessage($message, 'success');
+
 			return $this->redirectToRoute('MealzMealBundle_Dish');
 		}
 
@@ -82,6 +89,13 @@ class DishVariationController extends BaseController
 			$dishVariation = $dishVariationForm->getData();
 			$this->persistEntity($dishVariation);
 
+			$message = $this->get('translator')->trans(
+				'entity.modified',
+				array('%entityName%' => $dishVariation->getDescription()),
+				'messages'
+			);
+			$this->addFlashMessage($message, 'success');
+
 			return $this->redirectToRoute('MealzMealBundle_Dish');
 		}
 
@@ -117,7 +131,7 @@ class DishVariationController extends BaseController
 
 		$message = $this->get('translator')->trans(
 			'dish.hidden',
-			array('%dish%' => $dishVariation->getDescriptionDe()),
+			array('%dish%' => $dishVariation->getDescription()),
 			'messages'
 		);
 		$this->addFlashMessage($message, 'success');

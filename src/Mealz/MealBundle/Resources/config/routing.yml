@@ -87,12 +87,6 @@ MealzMealBundle_Participant_delete:
 #    pattern:  /menu/meal/confirmation/{participant}
 #    defaults: { _controller: "MealzMealBundle:ParticipationConfirmation:confirmParticipation" }
 
-MealzMealBundle_DishVariation:
-    pattern:  /dish/{slug}/variation/
-    defaults: { _controller: "mealz_meal.controller.dish_variation:listAction" }
-    requirements:
-      slug: '[1-9][0-9]*'
-
 MealzMealBundle_DishVariation_new:
     pattern:  /dish/{dishId}/variation/new
     defaults: { _controller: "mealz_meal.controller.dish_variation:newAction" }

@@ -18,6 +18,8 @@ use Symfony\Component\HttpFoundation\Request;
 class DishVariationController extends BaseController
 {
 	/**
+	 * Handles request to create a new dish variation.
+	 *
 	 * @param  Request $request
 	 * @param  integer $slug
 	 * @return \Symfony\Component\HttpFoundation\Response
@@ -64,6 +66,13 @@ class DishVariationController extends BaseController
 		return new JsonResponse($renderedForm->getContent());
 	}
 
+	/**
+	 * Handles request to update a dish variation.
+	 *
+	 * @param  Request $request
+	 * @param  $slug
+	 * @return JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse
+	 */
 	public function editAction(Request $request, $slug)
 	{
 		$this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
@@ -108,6 +117,8 @@ class DishVariationController extends BaseController
 	}
 
 	/**
+	 * Handles request to delete a dish variation.
+	 *
 	 * @param  integer $slug
 	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
 	 */
@@ -139,6 +150,11 @@ class DishVariationController extends BaseController
 		return $this->redirectToRoute('MealzMealBundle_Dish');
 	}
 
+	/**
+	 * Persists an entity object in database.
+	 *
+	 * @param object $entity
+	 */
 	private function persistEntity($entity)
 	{
 		/** @var EntityManager $em */

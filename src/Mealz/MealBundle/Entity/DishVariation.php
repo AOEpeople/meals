@@ -31,7 +31,7 @@ class DishVariation
 	 * @ORM\JoinColumn(name="dish_id", referencedColumnName="id", nullable=FALSE, onDelete="CASCADE")
 	 * @var Dish
 	 */
-	protected $dish = NULL;
+	protected $dish;
 
 	/**
 	 * @Assert\Length(max=2048)
@@ -57,6 +57,16 @@ class DishVariation
 	 * @var string
 	 */
 	protected $currentLocale = 'en';
+
+	/**
+	 * Initialises a dish variation instance.
+	 *
+	 * @param Dish $dish
+	 */
+	public function __construct(Dish $dish)
+	{
+		$this->dish = $dish;
+	}
 
 	/**
 	 * @return int

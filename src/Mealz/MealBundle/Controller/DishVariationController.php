@@ -4,8 +4,6 @@ namespace Mealz\MealBundle\Controller;
 
 
 use Doctrine\ORM\EntityManager;
-use Mealz\MealBundle\Entity\DishVariation;
-use Mealz\MealBundle\Form\DishVariationForm;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -35,10 +33,12 @@ class DishVariationController extends BaseController
 			throw $this->createNotFoundException();
 		}
 
-		$dishVariation = new DishVariation();
+		/** @var \Mealz\MealBundle\Entity\DishVariation $dishVariation */
+		$dishVariation = $this->get('mealz_meal.dish_variation');
 		$dishVariation->setDish($dish);
+
 		$dishVariationForm = $this->createForm(
-			new DishVariationForm(),
+			$this->get('mealz_meal.form.dish_variation'),
 			$dishVariation,
 			['action' => $this->generateUrl('MealzMealBundle_DishVariation_new', ['slug' => $dish->getId()])]
 		);
@@ -88,7 +88,7 @@ class DishVariationController extends BaseController
 		}
 
 		$dishVariationForm = $this->createForm(
-			new DishVariationForm(),
+			$this->get('mealz_meal.form.dish_variation'),
 			$dishVariation,
 			['action' => $this->generateUrl('MealzMealBundle_DishVariation_edit', ['slug' => $dishVariation->getId()])]
 		);

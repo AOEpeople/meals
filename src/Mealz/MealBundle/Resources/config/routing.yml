@@ -94,24 +94,24 @@ MealzMealBundle_DishVariation:
       slug: '[1-9][0-9]*'
 
 MealzMealBundle_DishVariation_new:
-    pattern:  /dish/{slug}/variation/new
+    pattern:  /dish/{dishId}/variation/new
     defaults: { _controller: "mealz_meal.controller.dish_variation:newAction" }
     requirements:
-      slug: '[1-9][0-9]*'
+      dishId: '[1-9][0-9]*'
 #    condition: 'request.isXmlHttpRequest()'
 
 MealzMealBundle_DishVariation_edit:
-    pattern:  /dish/variation/{slug}/edit
+    pattern:  /dish/variation/{dishVariationId}/edit
     defaults: { _controller: "mealz_meal.controller.dish_variation:editAction" }
     requirements:
-      slug: '[1-9][0-9]*'
+      dishVariationId: '[1-9][0-9]*'
 #    condition: 'request.isXmlHttpRequest()'
 
 MealzMealBundle_DishVariation_delete:
-    pattern:  /dish/variation/{slug}/delete
+    pattern:  /dish/variation/{dishVariationId}/delete
     defaults: { _controller: "mealz_meal.controller.dish_variation:deleteAction" }
     requirements:
-      slug: '[1-9][0-9]*'
+      dishVariationId: '[1-9][0-9]*'
 #    condition: 'request.isXmlHttpRequest()'
 
 MealzMealBundle_Dish:

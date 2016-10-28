@@ -4,7 +4,9 @@ namespace Mealz\MealBundle\Controller;
 
 
 use Doctrine\ORM\EntityManager;
+
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -19,15 +21,15 @@ class DishVariationController extends BaseController
 	 * Handles request to create a new dish variation.
 	 *
 	 * @param  Request $request
-	 * @param  integer $slug
-	 * @return \Symfony\Component\HttpFoundation\Response
+	 * @param  integer $dishId
+	 * @return Response
 	 */
-	public function newAction(Request $request, $slug)
+	public function newAction(Request $request, $dishId)
 	{
 		$this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
 		/** @var \Mealz\MealBundle\Entity\Dish $dish */
-		$dish = $this->getDishRepository()->find($slug);
+		$dish = $this->getDishRepository()->find($dishId);
 
 		if (!$dish) {
 			throw $this->createNotFoundException();
@@ -40,7 +42,7 @@ class DishVariationController extends BaseController
 		$dishVariationForm = $this->createForm(
 			$this->get('mealz_meal.form.dish_variation'),
 			$dishVariation,
-			['action' => $this->generateUrl('MealzMealBundle_DishVariation_new', ['slug' => $dish->getId()])]
+			['action' => $this->generateUrl('MealzMealBundle_DishVariation_new', ['dishId' => $dish->getId()])]
 		);
 		$dishVariationForm->handleRequest($request);
 
@@ -70,10 +72,10 @@ class DishVariationController extends BaseController
 	 * Handles request to update a dish variation.
 	 *
 	 * @param  Request $request
-	 * @param  $slug
-	 * @return JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse
+	 * @param  $dishVariationId
+	 * @return Response
 	 */
-	public function editAction(Request $request, $slug)
+	public function editAction(Request $request, $dishVariationId)
 	{
 		$this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
@@ -81,7 +83,7 @@ class DishVariationController extends BaseController
 		$dishVariationRepository = $this->getDoctrine()->getRepository('MealzMealBundle:DishVariation');
 
 		/** @var \Mealz\MealBundle\Entity\DishVariation $dish */
-		$dishVariation = $dishVariationRepository->find($slug);
+		$dishVariation = $dishVariationRepository->find($dishVariationId);
 
 		if (!$dishVariation) {
 			throw $this->createNotFoundException();
@@ -90,7 +92,7 @@ class DishVariationController extends BaseController
 		$dishVariationForm = $this->createForm(
 			$this->get('mealz_meal.form.dish_variation'),
 			$dishVariation,
-			['action' => $this->generateUrl('MealzMealBundle_DishVariation_edit', ['slug' => $dishVariation->getId()])]
+			['action' => $this->generateUrl('MealzMealBundle_DishVariation_edit', ['dishVariationId' => $dishVariation->getId()])]
 		);
 		$dishVariationForm->handleRequest($request);
 
@@ -119,10 +121,10 @@ class DishVariationController extends BaseController
 	/**
 	 * Handles request to delete a dish variation.
 	 *
-	 * @param  integer $slug
-	 * @return \Symfony\Component\HttpFoundation\RedirectResponse
+	 * @param  integer $dishVariationId
+	 * @return Response
 	 */
-	public function deleteAction($slug)
+	public function deleteAction($dishVariationId)
 	{
 		$this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
@@ -130,7 +132,7 @@ class DishVariationController extends BaseController
 		$dishVariationRepository = $this->getDoctrine()->getRepository('MealzMealBundle:DishVariation');
 
 		/** @var \Mealz\MealBundle\Entity\DishVariation $dishVariation */
-		$dishVariation = $dishVariationRepository->find($slug);
+		$dishVariation = $dishVariationRepository->find($dishVariationId);
 
 		if (!$dishVariation) {
 			throw $this->createNotFoundException();

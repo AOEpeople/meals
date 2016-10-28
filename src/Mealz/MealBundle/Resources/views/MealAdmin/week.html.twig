@@ -59,7 +59,7 @@
             <div class="meal-rows-wrapper">
                 {# display meals for given day #}
                 {% for meal in day.meals %}
-                    <div class="meal-row" onclick="$('.meal-select-box').toggle()">
+                    <div class="meal-row" onclick="$(this).find('.meal-select-box').toggle()">
                         <div class="meal-select-box" style="display:none;" onclick="$(this).toggle()">
                             {% for dishvars in meal.dish.vars %}
                                 {% for weekdishentries in dishvars %}
@@ -78,7 +78,7 @@
                                                             variations
                                                             <div class="variation_choice" style="display:none;">
                                                                 {% for variation in dishentry.data.variations %}
-                                                                    {{ dump(variation.description) }}
+                                                                    {{ variation.description }}
                                                                 {% endfor %}
                                                             </div>
                                                         </div>

@@ -130,8 +130,8 @@ class DishVariationController extends BaseController
 		$this->persistEntity($dishVariation);
 
 		$message = $this->get('translator')->trans(
-			'dish.hidden',
-			array('%dish%' => $dishVariation->getDescription()),
+			'dish_variation.deleted',
+			['%dishVariation%' => $dishVariation->getDescription()],
 			'messages'
 		);
 		$this->addFlashMessage($message, 'success');

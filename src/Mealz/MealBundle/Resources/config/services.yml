@@ -46,6 +46,13 @@ services:
     calls:
       - [setDayBlacklist, [['01-01', '05-01', '10-31', '12-24', '12-25', '12-26', '12-27', '12-28', '12-29', '12-30', '12-31']]]
 
+  mealz_meal.dish:
+    class: Mealz\MealBundle\Entity\Dish
+
+  mealz_meal.dish_variation:
+    class: Mealz\MealBundle\Entity\DishVariation
+    arguments: ['@mealz_meal.dish']
+
   mealz_meal.event_listener.participant_persistence:
     class: %mealz_meal.event_listener.participant_persistence.class%
     tags:
@@ -98,6 +105,12 @@ services:
     arguments:
       - 'MealzMealBundle:Dish'
 
+  mealz_meal.repository.dish_variation:
+    class: Mealz\MealBundle\Entity\DishVariationRepository
+    parent: mealz_meal.repository.abstract.localized
+    arguments:
+      - 'MealzMealBundle:DishVariation'
+
   mealz_meal.form.type.dish_selector_creator:
         class: Mealz\MealBundle\Form\Type\DishSelectorCreatorType
         arguments: []
@@ -122,6 +135,11 @@ services:
     tags:
       - { name: form.type }
 
+  mealz_meal.form.dish_variation:
+    class: Mealz\MealBundle\Form\DishVariationForm
+    tags:
+      - { name: form.type }
+
   mealz_meal.form.type.day:
     class: Mealz\MealBundle\Form\Type\DayType
     arguments: ['@doctrine.orm.entity_manager']
@@ -133,6 +151,11 @@ services:
     arguments: ['@doctrine.orm.entity_manager']
     tags:
       - { name: validator.constraint_validator, alias: validator_meal_dish }
+
+  mealz_meal.controller.base:
+    abstract: true
+    calls:
+      - [setContainer, ["@service_container"]]
 
   mealz_meal.controller.baseList:
     abstract: true
@@ -152,6 +175,13 @@ services:
     calls:
       - [setRepository, ["@mealz_meal.repository.dish"]]
       - [setEntityName, ["Dish"]]
+
+  mealz_meal.controller.dishVariation:
+    class: Mealz\MealBundle\Controller\DishVariationController
+    parent: mealz_meal.controller.base
+#    calls:
+#      - [setRepository, ["@mealz_meal.repository.dish_variation"]]
+#      - [setEntityName, ["DishVariation"]]
 
   mealz_meal.monolog.processor.psr:
       class: Monolog\Processor\PsrLogMessageProcessor

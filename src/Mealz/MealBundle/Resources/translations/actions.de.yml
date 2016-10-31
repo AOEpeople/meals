@@ -4,9 +4,13 @@ button:
   cancel: Abbrechen
   edit: Editieren
   delete: Löschen
+  add_variation: Variation hinzufügen
 
 dish:
   create: Gericht erstellen
 
 category:
   create: Kategorie erstellen
+
+costs:
+  cash_register: Kasse

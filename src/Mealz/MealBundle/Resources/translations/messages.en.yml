@@ -10,6 +10,8 @@ entity:
 dish:
   hidden: Dish "%dish%" has been hidden.
   deleted: Dish "%dish%" has been deleted.
+dish_variation:
+  deleted: Dish variation "%dishVariation%" has been successfully deleted.
 error:
   meal:
     has_participants: There are already participants for "%dish%" on %day%.

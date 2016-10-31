@@ -4,9 +4,13 @@ button:
   cancel: Cancel
   edit: Edit
   delete: Delete
+  add_variation: Add variation
 
 dish:
   create: Create dish
 
 category:
   create: Create category
+
+costs:
+  cash_register: Cash Register

@@ -10,6 +10,8 @@ entity:
 dish:
   hidden: Gericht "%dish%" wurde verborgen.
   deleted: Gericht "%dish%" wurde gelöscht.
+dish_variation:
+  deleted: Gericht variation "%dishVariation%" wurde gelöscht.
 error:
   meal:
     has_participants: Es gibt bereits Teilnehmer für "%dish%" am %day%.

@@ -22,6 +22,29 @@
 
 {% set tableContent = [] %}
 {% for dish in entities %}
+    {% for dishVariation in dish.variations %}
+        {% set tableContent = [{
+            'settings': {
+                'class': 'dish-variation',
+            },
+            'variations': {
+                'content': dishVariation.description,
+                'class': ''
+            },
+            'category': {
+                'content': '',
+                'class': ''
+            },
+            'actions': {
+                'content': MealzButton.buttonbar('', 'buttonbar-dish-actions', [
+                    MealzButton.link(path('MealzMealBundle_DishVariation_edit', { dishVariationId: dishVariation.id }), 'button.edit'|trans({}, 'actions'), '', 'button-table load-ajax-form load-edit-form transparent', 'glyphicon-pencil'),
+                    MealzButton.link(path('MealzMealBundle_DishVariation_delete', { dishVariationId: dishVariation.id }), 'button.delete'|trans({}, 'actions'), '', 'button-table transparent', 'glyphicon-remove'),
+                ]),
+                'class': 'dish-actions'
+            }
+        }] | merge(tableContent) %}
+    {% endfor %}
+
     {% set tableContent = [{
         'title': {
             'content': dish.title,
@@ -33,6 +56,7 @@
         },
         'actions': {
             'content': MealzButton.buttonbar('', 'buttonbar-dish-actions', [
+                            MealzButton.link(path('MealzMealBundle_DishVariation_new', { dishId: dish.id }), 'button.add_variation'|trans({}, 'actions'), '', 'button-table load-ajax-form load-edit-form transparent', 'glyphicon-plus'),
                             MealzButton.link(link(dish, 'edit'), 'button.edit'|trans({}, 'actions'), '', 'button-table load-ajax-form load-edit-form transparent', 'glyphicon-pencil'),
                             MealzButton.link(link(dish, 'delete'), 'button.delete'|trans({}, 'actions'), '', 'button-table transparent', 'glyphicon-remove')
                        ]),
@@ -40,6 +64,7 @@
         }
     }] | merge(tableContent) %}
 {% endfor %}
+
 
 {# Start tempalte #}
 

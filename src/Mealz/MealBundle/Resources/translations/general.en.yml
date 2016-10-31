@@ -17,6 +17,8 @@ headings:
     list: List of dishes
   categories:
     list: List of categories
+  costs:
+    list: Cost listing
 
 table:
   title: Title

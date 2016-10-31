@@ -1,0 +1,33 @@
+<div class="meal-row" onclick="$(this).find('.meal-select-box').toggle()">
+    <div class="meal-select-box" style="display:none;" onclick="$(this).toggle()">
+        {% for dishvars in meal.dish.vars %}
+            {% for weekdishentries in dishvars %}
+                {% if weekdishentries is iterable %}
+                    <ul>
+                        {% for dishentry in weekdishentries %}
+                            {% if loop.index == 1 %}
+                                <li class="category">
+                                    Category: {{ dishentry.data.category.slug }}
+                                </li>
+                            {% endif %}
+                            <li class="dishes">
+                                {{ dishentry.label }}
+                                {% if dishentry.data.variations.snapshot|length > 0 %}
+                                    <div class="variation-button"  onclick="$('.variation_choice').toggle()">
+                                        variations
+                                        <div class="variation_choice" style="display:none;">
+                                            {% for variation in dishentry.data.variations %}
+                                                {{ variation.description }}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    </div>
+    {{ form_row(meal, {'attr' : {'style' : 'display: none;'}}) }}
+</div>

@@ -29,13 +29,13 @@
 
     {% if week.id is not null %}
         {% set additionalHeaderItems = [
-            MealzButton.link(
-            path('MealzMealBundle_Print_participations', {'week': week.id}),
-            'headings.week.participations'|trans({},'general'),
-            '',
-            'transparent',
-            'glyphicon-th-list'
-            )
+        MealzButton.link(
+        path('MealzMealBundle_Print_participations', {'week': week.id}),
+        'headings.week.participations'|trans({},'general'),
+        '',
+        'transparent',
+        'glyphicon-th-list'
+        )
         ] | merge(additionalHeaderItems) %}
     {% endif %}
 
@@ -48,57 +48,25 @@
         </div>
 
         {% for day in form.days %}
-        <div class="meal">
-            {# display week day and date #}
-            <div class="week-day">
-                <span>
-                    {{ form_widget(day.dateTime) }}
-                </span>
-            </div>
+            <div class="meal">
+                {# display week day and date #}
+                <div class="week-day">
+                    <span>
+                        {{ form_widget(day.dateTime) }}
+                    </span>
+                </div>
 
-            <div class="meal-rows-wrapper">
-                {# display meals for given day #}
-                {% for meal in day.meals %}
-                    <div class="meal-row" onclick="$(this).find('.meal-select-box').toggle()">
-                        <div class="meal-select-box" style="display:none;" onclick="$(this).toggle()">
-                            {% for dishvars in meal.dish.vars %}
-                                {% for weekdishentries in dishvars %}
-                                    {% if weekdishentries is iterable %}
-                                        <ul>
-                                            {% for dishentry in weekdishentries %}
-                                                {% if loop.index == 1 %}
-                                                    <li class="category">
-                                                        Category: {{ dishentry.data.category.slug }}
-                                                    </li>
-                                                {% endif %}
-                                                 <li class="dishes">
-                                                     {{ dishentry.label }}
-                                                    {% if dishentry.data.variations.snapshot|length > 0 %}
-                                                        <div class="variation-button"  onclick="$('.variation_choice').toggle()">
-                                                            variations
-                                                            <div class="variation-choice" style="display:none;">
-                                                                {% for variation in dishentry.data.variations %}
-                                                                    {{ variation.description }}
-                                                                {% endfor %}
-                                                            </div>
-                                                        </div>
-                                                    {% endif %}
-                                                 </li>
-                                            {% endfor %}
-                                        </ul>
-                                    {% endif %}
-                                {% endfor %}
-                            {% endfor %}
-                        </div>
-                        {{ form_row(meal, {'attr' : {'style' : 'display: none;'}}) }}
-                    </div>
-                {% endfor %}
-            </div>
+                <div class="meal-rows-wrapper">
+                    {# display meals for given day #}
+                    {% for meal in day.meals %}
+                        {{ include('MealzMealBundle:MealAdmin:mealSelect.html.twig', {'meal': meal}) }}
+                    {% endfor %}
+                </div>
 
-            <div class="week-day-action">
-                {{ form_widget(day.enabled) }}
+                <div class="week-day-action">
+                    {{ form_widget(day.enabled) }}
+                </div>
             </div>
-        </div>
         {% endfor %}
         {{ form_widget(form.Cancel) }}
         {{ form_widget(form.Save) }}

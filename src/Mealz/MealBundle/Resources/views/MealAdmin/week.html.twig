@@ -76,7 +76,7 @@
                                                     {% if dishentry.data.variations.snapshot|length > 0 %}
                                                         <div class="variation-button"  onclick="$('.variation_choice').toggle()">
                                                             variations
-                                                            <div class="variation_choice" style="display:none;">
+                                                            <div class="variation-choice" style="display:none;">
                                                                 {% for variation in dishentry.data.variations %}
                                                                     {{ variation.description }}
                                                                 {% endfor %}

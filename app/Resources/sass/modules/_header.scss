@@ -190,11 +190,11 @@ header {
     }
 
     .button-login {
+      float: right;
       padding: 0 20px;
       background-color: $header-login-button-background;
       font-size: 12px;
       font-family: $font-medium;
-      float: right;
 
       &:hover {
         background: darken($header-login-button-background, 5%);
@@ -203,8 +203,8 @@ header {
   }
 
   .language-switch {
-    padding-right: 10px;
-    margin: 6px 0;
     float: left;
+    margin: 6px 0;
+    padding-right: 10px;
   }
 }

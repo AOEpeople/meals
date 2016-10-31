@@ -4,3 +4,7 @@ echo "executing post install scripts"
 source ${FINAL_RELEASEFOLDER}/setup/clear_cache.sh
 source ${FINAL_RELEASEFOLDER}/setup/permissions.sh
 echo "finished post install operations!"
+
+echo "restarting apache ... "
+service apache2 restart
+echo -n "done"

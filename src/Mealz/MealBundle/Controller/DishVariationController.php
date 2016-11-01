@@ -36,7 +36,7 @@ class DishVariationController extends BaseController
 		$dishVariation = new DishVariation();
 		$dishVariation->setParent($dish);
 		$dishVariationForm = $this->createForm(
-			new DishVariationForm(),
+			$this->getNewForm(),
 			$dishVariation,
 			['action' => $this->generateUrl('MealzMealBundle_DishVariation_new', ['slug' => $dish->getId()])]
 		);
@@ -79,7 +79,7 @@ class DishVariationController extends BaseController
 		}
 
 		$dishVariationForm = $this->createForm(
-			new DishVariationForm(),
+			$this->getNewForm(),
 			$dishVariation,
 			['action' => $this->generateUrl('MealzMealBundle_DishVariation_edit', ['slug' => $dishVariation->getId()])]
 		);
@@ -146,4 +146,10 @@ class DishVariationController extends BaseController
 		$em->persist($entity);
 		$em->flush();
 	}
+
+    protected function getNewForm()
+    {
+        return $this->get('mealz_meal.form.dishvariation');
+    }
+
 }

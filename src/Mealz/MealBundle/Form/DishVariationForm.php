@@ -2,11 +2,15 @@
 
 namespace Mealz\MealBundle\Form;
 
+use Mealz\MealBundle\Entity\DishVariation;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+
 
 /**
  * Class DishVariationType
@@ -16,6 +20,20 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class DishVariationForm extends AbstractType
 {
+	/**
+	 * @var integer $price
+	 */
+	protected $price;
+
+	/**
+	 * DishVariationForm constructor.
+	 * @param integer $price
+	 */
+	public function __construct($price)
+	{
+		$this->price = $price;
+	}
+
 	public function buildForm(FormBuilderInterface $builder, array $options)
 	{
 		$builder
@@ -34,10 +52,29 @@ class DishVariationForm extends AbstractType
 				'translation_domain' => 'actions',
 				'attr' => ['class' => 'button small']
 			]);
+
+		$builder->addEventListener(FormEvents::POST_SUBMIT, function(FormEvent $event){
+			/** @var DishVariation $dishvariation */
+			$dishvariation = $event->getData();
+			$dishvariation->setPrice($this->price);
+			$event->setData($dishvariation);
+		});
 	}
 
 	public function configureOptions(OptionsResolver $resolver)
 	{
-		$resolver->setDefaults(array('data_class' => 'Mealz\MealBundle\Entity\DishVariation'));
+		$resolver->setDefaults(array(
+            'data_class' => 'Mealz\MealBundle\Entity\DishVariation',
+			'intention' => 'dishvariation_type'
+        ));
+	}
+
+	/**
+	 * Returns the name of this type.
+	 *
+	 * @return string The name of this type
+	 */
+	public function getName() {
+		return 'dishvariation';
 	}
 }

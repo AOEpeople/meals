@@ -47,37 +47,38 @@
   position: absolute;
   top: 15px;
   left: 15px;
-  background: $color-white;
   z-index: 1;
   width: 96%;
+  background: $color-white;
   text-align: left;
+  box-shadow: 0 2px 5px 0 $box-shadow;
 
   li {
     padding: 15px 25px;
 
     &.dishes {
-      border-bottom: 1px solid $color-gray-middle;
       padding-left: 50px;
+      border-bottom: 1px solid $color-gray-middle;
 
       &:last-child { border: none; }
 
     }
 
     &.category {
+      padding: 25px 25px 10px;
       color: $color-gray-middle;
       font-weight: bold;
-      padding: 25px 25px 10px 25px;
     }
 
     .variation-button {
-      font-size: 11px;
-      background: $color-gray-middle;
       display: inline-block;
-      border-radius: 4px;
       padding: 1px 5px;
+      border-radius: 4px;
+      background: $color-gray-middle;
+      font-size: 11px;
     }
 
-    .variation_choice {
+    .variation-choice {
       position: absolute;
       top: 0;
       right: 0;
@@ -86,3 +87,12 @@
   }
 
 }
+
+.meal-select {
+  height: 35px;
+  padding: 11px 15px 0;
+  background-color: $color-white;
+  line-height: 100%;
+  text-align: left;
+}
+

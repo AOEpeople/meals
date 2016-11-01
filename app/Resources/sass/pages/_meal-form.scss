@@ -6,18 +6,19 @@
 }
 
 .week-form {
-
   width: 70%;
   margin: 0 auto;
-
   text-align: center;
 
   .meal {
-
     border-right: 70px solid transparent;
 
-    .meal-row .form-row {
+    .meal-row  .form-row {
       margin-bottom: 0;
+    }
+
+    .meal-select-box .category {
+      display: block;
     }
 
     .meal-rows-wrapper {
@@ -29,14 +30,6 @@
       top: 50%;
       right: -61px;
       margin-top: -16px;
-    }
-
-    .meal-row {
-      .meal-select-box {
-        .category {
-          display: block;
-        }
-      }
     }
   }
 
@@ -52,3 +45,4 @@
     }
   }
 }
+

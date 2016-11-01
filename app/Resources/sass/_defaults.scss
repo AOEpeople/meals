@@ -6,9 +6,11 @@ $color-base: #606b72;
 $color-secondary: #acbdc7;
 $color-body: #f2f5f7;
 
+$meal-border-color: #d6dee2;
+
 $color-gray-primary: $color-base;
 $color-gray-secondary: #9aa9b3;
-$color-gray-middle: #e0eaeb;
+$color-gray-middle: $meal-border-color;
 $color-gray-light: #ecf2f5;
 $color-gray-lighter: #f7f9fb;
 
@@ -16,9 +18,8 @@ $color-green: #7cae5c;
 $color-orange: #f79223;
 $color-red: #f00;
 
-$meal-border-color: #d6dee2;
-
 $notification-background: rgba(0, 0, 0, .6);
+$box-shadow: rgba(0, 0, 0, .1);
 
 //**************************************
 //  Fonts

@@ -63,6 +63,7 @@ class LoadDishVariations extends AbstractFixture implements OrderedFixtureInterf
 		$dishVariation->setDescriptionDe($dish->getTitleDe() . $dummyPrefix);
 		$dishVariation->setDescriptionEn($dish->getTitleEn() . $dummyPrefix);
 		$dishVariation->setParent($dish);
+		$dishVariation->setPrice(3.2);
 
 		$dish->getVariations()->add($dishVariation);
 

@@ -61,15 +61,6 @@ class Meal
 	 */
 	public $participants;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="DishVariation")
-     * @ORM\JoinTable(name="meal_variation",
-     *      joinColumns={@ORM\JoinColumn(name="meal_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="dish_variation_id", referencedColumnName="id", unique=true)}
-     *      )
-     */
-    protected $variations;
-
 	public function __construct() {
 		$this->participants = new ArrayCollection();
 	}
@@ -107,22 +98,6 @@ class Meal
 	{
 		$this->dish = $dish;
 	}
-
-    /**
-     * @param \Mealz\MealBundle\Entity\DishVariation $variation
-     */
-    public function setVariation($variation)
-    {
-        $this->variations = $variation;
-    }
-
-    /**
-     * @return \Mealz\MealBundle\Entity\DishVariation
-     */
-    public function getVariation()
-    {
-        return $this->variations;
-    }
 
 	/**
 	 * @return \Mealz\MealBundle\Entity\Dish

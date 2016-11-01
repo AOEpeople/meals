@@ -81,8 +81,9 @@ class Dish
 	protected $category = NULL;
 
 	/**
-	 * @ORM\Column(type="decimal", precision=10, scale=4, nullable=TRUE)
-	 * @var null|float
+	 * @Assert\NotBlank()
+	 * @ORM\Column(type="decimal", precision=10, scale=4, nullable=FALSE)
+	 * @var float
 	 */
 	protected $price = NULL;
 
@@ -167,7 +168,7 @@ class Dish
 	}
 
 	/**
-	 * @param float|null $price
+	 * @param float $price
 	 */
 	public function setPrice($price)
 	{
@@ -175,7 +176,7 @@ class Dish
 	}
 
 	/**
-	 * @return float|null
+	 * @return float
 	 */
 	public function getPrice()
 	{

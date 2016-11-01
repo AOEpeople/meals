@@ -48,7 +48,7 @@ class DishVariationController extends BaseController
 
 			$message = $this->get('translator')->trans(
 				'entity.added',
-				array('%entityName%' => $dishVariation->getDescription()),
+				array('%entityName%' => $dishVariation->getTitle()),
 				'messages'
 			);
 			$this->addFlashMessage($message, 'success');
@@ -91,7 +91,7 @@ class DishVariationController extends BaseController
 
 			$message = $this->get('translator')->trans(
 				'entity.modified',
-				array('%entityName%' => $dishVariation->getDescription()),
+				array('%entityName%' => $dishVariation->getTitle()),
 				'messages'
 			);
 			$this->addFlashMessage($message, 'success');
@@ -131,7 +131,7 @@ class DishVariationController extends BaseController
 
 		$message = $this->get('translator')->trans(
 			'dish.hidden',
-			array('%dish%' => $dishVariation->getDescription()),
+			array('%dish%' => $dishVariation->getTitle()),
 			'messages'
 		);
 		$this->addFlashMessage($message, 'success');

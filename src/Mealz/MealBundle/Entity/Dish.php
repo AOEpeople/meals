@@ -4,6 +4,7 @@ namespace Mealz\MealBundle\Entity;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -12,6 +13,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *
  * @ORM\Table(name="dish")
  * @ORM\Entity(repositoryClass="DishRepository")
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="type", type="string")
+ * @ORM\DiscriminatorMap({"dish" = "Dish", "dish_variation" = "DishVariation"})
+ *
  */
 class Dish
 {
@@ -24,11 +29,17 @@ class Dish
 	 */
 	private $id;
 
-	/**
-	 * @Gedmo\Slug(fields={"title_en"})
-	 * @ORM\Column(length=128, unique=true)
-	 * @var string
-	 */
+    /**
+    * @Gedmo\Slug(handlers={
+    *   @Gedmo\SlugHandler(class="Gedmo\Sluggable\Handler\InversedRelativeSlugHandler", options={
+    *       @Gedmo\SlugHandlerOption(name="relationClass", value="Mealz\MealBundle\Entity\Dish"),
+    *       @Gedmo\SlugHandlerOption(name="mappedBy", value="parent"),
+    *       @Gedmo\SlugHandlerOption(name="inverseSlugField", value="slug")
+    *      })
+    *   }, fields={"title_en"})
+    * @ORM\Column(length=128, unique=true)
+	* @var string
+    */
 	protected $slug;
 
 	/**
@@ -86,10 +97,35 @@ class Dish
 	protected $currentLocale = 'en';
 
 	/**
-	 * @ORM\OneToMany(targetEntity="DishVariation", mappedBy="dish")
+	 * @ORM\OneToMany(targetEntity="DishVariation", mappedBy="parent")
 	 * @var Collection
 	 */
 	protected $variations;
+
+	/**
+     * Parent property references to the same table dish.
+     * If an dish, which is referenced by an dish_variation, is deleted the related dish_variations are deleted cascadingly.
+     *
+     *
+	 * @ORM\ManyToOne(targetEntity="Dish", inversedBy="variations")
+	 * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=TRUE, onDelete="CASCADE")
+	 * @var Dish
+	 */
+	protected $parent = NULL;
+
+	/**
+	 * @return Dish
+	 */
+	public function getParent() {
+		return $this->parent;
+	}
+
+	/**
+	 * @param Dish $parent
+	 */
+	public function setParent($parent) {
+		$this->parent = $parent;
+	}
 
 	/**
 	 * Get id

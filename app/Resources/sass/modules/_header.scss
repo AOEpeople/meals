@@ -94,7 +94,9 @@ header {
   .header-content {
     float: left;
     width: 70%;
-    width: calc(100% - #{$logo-width});
+    // scss-lint:disable all
+      width: calc(100% - #{$logo-width});
+    // scss-lint:enable all
     transition: all .3s ease;
 
     @include breakpoint(small) {

@@ -13,14 +13,12 @@
   .meal {
     border-right: 70px solid transparent;
 
-    .meal-row {
-      .form-row {
-        margin-bottom: 0;
-      }
+    .meal-row  .form-row {
+      margin-bottom: 0;
+    }
 
-      .meal-select-box .category {
-        display: block;
-      }
+    .meal-select-box .category {
+      display: block;
     }
 
     .meal-rows-wrapper {

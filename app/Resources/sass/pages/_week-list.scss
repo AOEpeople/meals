@@ -51,6 +51,7 @@
   width: 96%;
   background: $color-white;
   text-align: left;
+  box-shadow: 0 2px 5px 0 $box-shadow;
 
   li {
     padding: 15px 25px;
@@ -85,5 +86,13 @@
 
   }
 
+}
+
+.meal-select {
+  height: 35px;
+  padding: 11px 15px 0;
+  background-color: $color-white;
+  line-height: 100%;
+  text-align: left;
 }
 

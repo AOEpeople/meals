@@ -34,7 +34,7 @@ class DishVariationController extends BaseController
 		}
 
 		$dishVariation = new DishVariation();
-		$dishVariation->setDish($dish);
+		$dishVariation->setParent($dish);
 		$dishVariationForm = $this->createForm(
 			new DishVariationForm(),
 			$dishVariation,

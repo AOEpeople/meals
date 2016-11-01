@@ -1,5 +1,5 @@
-<div class="meal-row" onclick="$(this).find('.meal-select-box').toggle()">
-    <div class="meal-select-box" style="display:none;" onclick="$(this).toggle()">
+<div class="meal-row">
+    <div class="meal-select-box">
 
         {% for dishvars in meal.dish.vars %}
             {% for weekdishentries in dishvars %}
@@ -14,17 +14,15 @@
                             <li class="dishes">
                                 {{ dishentry.label }}
                                 {% if dishentry.data.variations.snapshot|length > 0 %}
-                                    <div class="variation-button"  onclick="$('.meal-select-variations').toggle()">
-                                        variations
-                                        <div class="meal-select-variations" style="display:none;">
-                                            {% for variation in dishentry.data.variations %}
-                                                <div class="variation">
-                                                    <div class="checkbox-wrapper"><input type="checkbox" name="variation1"></div>
-                                                    <label for="variation1">{{ variation.description }}</label>
-                                                </div>
-                                            {% endfor %}
-                                            <button type="submit" class="button small">Save</button>
-                                        </div>
+                                    <div class="variation-button">variations</div>
+                                    <div class="meal-select-variations">
+                                        {% for variation in dishentry.data.variations %}
+                                            <div class="variation">
+                                                <div class="variation-checkbox"></div>
+                                                <label for="variation1">{{ variation.description }}</label>
+                                            </div>
+                                        {% endfor %}
+                                        <button type="submit" class="button small">Save</button>
                                     </div>
                                 {% endif %}
                             </li>

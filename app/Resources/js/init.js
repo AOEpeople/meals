@@ -262,6 +262,25 @@ Mealz.prototype.loadAjaxFormPayment = function($element) {
     });
 };
 
+/* hiding select-box if click anywhere else */
+$('.meal-form, .meal-select-box').mouseup(function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    var container = '';
+    if($(e.currentTarget).hasClass('meal-select-box')) {
+        container = $(".meal-select-variations");
+    } else {
+        container = $(".meal-select-box");
+    }
+
+    // if the target of the click isn't the container nor a descendant of the container
+    if (!container.is(e.target) && container.has(e.target).length === 0)
+    {
+        container.hide();
+    }
+});
+
 $(document).ready(function() {
 
     var mealz = new Mealz();
@@ -287,6 +306,24 @@ $(document).ready(function() {
         e.preventDefault();
         e.stopPropagation();
         mealz.loadAjaxFormPayment($(this));
+    });
+
+    $('.meal-select').on('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $(this).prev().toggle();
+    });
+
+    $('.variation-button').on('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $(this).next().toggle();
+    });
+
+    $('.variation-checkbox').on('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $(this).toggleClass('checked');
     });
 
     $('body').on('click', function() {

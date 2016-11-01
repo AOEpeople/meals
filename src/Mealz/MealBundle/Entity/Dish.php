@@ -29,17 +29,18 @@ class Dish
 	 */
 	private $id;
 
-    /**
-    * @Gedmo\Slug(handlers={
-    *   @Gedmo\SlugHandler(class="Gedmo\Sluggable\Handler\InversedRelativeSlugHandler", options={
-    *       @Gedmo\SlugHandlerOption(name="relationClass", value="Mealz\MealBundle\Entity\Dish"),
-    *       @Gedmo\SlugHandlerOption(name="mappedBy", value="parent"),
-    *       @Gedmo\SlugHandlerOption(name="inverseSlugField", value="slug")
-    *      })
-    *   }, fields={"title_en"})
-    * @ORM\Column(length=128, unique=true)
-	* @var string
-    */
+	/**
+	 * @TODO: CHECK IF THIS WORKS. Add 'title_de' to the update field list 'fields={"title_en"}', check with Jonathan
+	 * @Gedmo\Slug(handlers={
+	 *   @Gedmo\SlugHandler(class="Gedmo\Sluggable\Handler\InversedRelativeSlugHandler", options={
+	 *       @Gedmo\SlugHandlerOption(name="relationClass", value="Mealz\MealBundle\Entity\Dish"),
+	 *       @Gedmo\SlugHandlerOption(name="mappedBy", value="parent"),
+	 *       @Gedmo\SlugHandlerOption(name="inverseSlugField", value="slug")
+	 *      })
+	 *   }, fields={"title_en","title_de"})
+	 * @ORM\Column(length=128, unique=true)
+	 * @var string
+	 */
 	protected $slug;
 
 	/**

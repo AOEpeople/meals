@@ -19,14 +19,14 @@ class DishVariationForm extends AbstractType
 	public function buildForm(FormBuilderInterface $builder, array $options)
 	{
 		$builder
-			->add('description_de', TextType::class, [
+			->add('title_de', TextType::class, [
 				'required' => TRUE,
-				'attr' => ['placeholder' => 'form.placeholder.description'],
+				'attr' => ['placeholder' => 'form.placeholder.title'],
 				'translation_domain' => 'general'
 			])
-			->add('description_en', TextType::class, [
+			->add('title_en', TextType::class, [
 				'required' => TRUE,
-				'attr' => ['placeholder' => 'form.placeholder.description'],
+				'attr' => ['placeholder' => 'form.placeholder.title'],
 				'translation_domain' => 'general'
 			])
 			->add('save', SubmitType::class, [

@@ -113,7 +113,7 @@ Mealz.prototype.styleSelects = function() {
 
 Mealz.prototype.toggleParticipation = function ($checkbox) {
     var that = this;
-    var $participantsCount = $checkbox.closest('.meal-row').find('.participants-count');
+    var $participantsCount = $checkbox.closest('.wrapper-meal-actions').find('.participants-count');
     var url = $checkbox.attr('value');
 
     $.ajax({

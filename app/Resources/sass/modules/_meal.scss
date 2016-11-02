@@ -60,8 +60,13 @@
     }
   }
 
+  .variation-row {
+    margin-top: 10px;
+  }
+
   .text,
   .wrapper-vertical-center,
+  .wrapper-variation-vertical-center,
   .participants,
   .action {
     display: inline-block;
@@ -76,12 +81,27 @@
     }
   }
 
+  .text-variation {
+    line-height: 30px;
+  }
+
   .wrapper-vertical-center {
     position: absolute;
     top: 50%;
     width: 20%;
     height: 30px;
     margin-top: -15px;
+
+    @include breakpoint(small) {
+      width: 30%;
+    }
+  }
+
+  .wrapper-variation-vertical-center {
+    position: absolute;
+    width: 20%;
+    height: 30px;
+    vertical-align: bottom;
 
     @include breakpoint(small) {
       width: 30%;

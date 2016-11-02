@@ -99,6 +99,12 @@ class Dish
 	protected $currentLocale = 'en';
 
 	/**
+	 * @ORM\OneToMany(targetEntity="DishVariation", mappedBy="parent")
+	 * @var Collection
+	 */
+	protected $variations;
+
+	/**
      * Parent property references to the same table dish.
      * If an dish, which is referenced by an dish_variation, is deleted the related dish_variations are deleted cascadingly.
      *

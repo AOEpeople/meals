@@ -14,13 +14,12 @@ var config = {
 };
 
 /**
- * Clean css, js, font and image directory before creating new files
+ * Clean css, js and image directory before creating new files
  */
 gulp.task('clean', function() {
     return gulp.src([
             '../../web/mealz.css',
             '../../web/mealz.js',
-            '../../web/fonts',
             '../../web/images'
         ], {
             read: false
@@ -77,14 +76,6 @@ gulp.task('css', function() {
 });
 
 /**
- * Copy fonts to /web/fonts directory
- */
-gulp.task('fonts', ['clean'], function() {
-    gulp.src('./sass/fonts/**/*')
-        .pipe(gulp.dest('../../web/fonts/'))
-});
-
-/**
  * Copy favicon to /web directory
  */
 gulp.task('favicon', function() {
@@ -114,7 +105,7 @@ gulp.task('watch', function() {
 gulp.task('default', ['jshint', 'js', 'css']);
 
 /**
- * Task to build the whole stuff, including fonts and images
+ * Task to build the whole stuff, including images
  * Run "gulp build --production" on production environment
  */
-gulp.task('build', ['clean', 'fonts', 'images','favicon', 'jshint', 'js', 'css']);
+gulp.task('build', ['clean', 'images','favicon', 'jshint', 'js', 'css']);

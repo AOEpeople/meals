@@ -2,6 +2,7 @@
 
 namespace Mealz\UserBundle\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -40,6 +41,12 @@ class Profile {
 	 * @var ArrayCollection
 	 */
 	protected $transactions;
+
+	/**
+	 * @ORM\ManyToMany(targetEntity="Role", inversedBy="profiles")
+	 * @var Collection
+	 */
+	private $roles;
 
 	/**
 	 * @param string $username
@@ -99,5 +106,21 @@ class Profile {
 
 	public function __toString() {
 		return $this->getUsername();
+	}
+
+	/**
+	 * @return Collection
+	 */
+	public function getRoles()
+	{
+		return $this->roles;
+	}
+
+	/**
+	 * @param mixed $roles
+	 */
+	public function setRoles(Collection $roles)
+	{
+		$this->roles = $roles;
 	}
 }

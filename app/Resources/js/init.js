@@ -277,7 +277,7 @@ $('.meal-form, .meal-select-box').mouseup(function (e) {
     // if the target of the click isn't the container nor a descendant of the container
     if (!container.is(e.target) && container.has(e.target).length === 0)
     {
-        container.hide();
+        container.hide('fast');
     }
 });
 
@@ -324,6 +324,29 @@ $(document).ready(function() {
         e.preventDefault();
         e.stopPropagation();
         $(this).toggleClass('checked');
+    });
+
+    $('.meal-select-box > ul > .dishes').on('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var thisDishes = $(this);
+        if(!thisDishes.children().hasClass('variation-button')) {
+            var meal_select_box = thisDishes.parent().parent();
+            thisDishes.toggleClass('selected');
+            $(".meal-select-box").hide('fast');
+            meal_select_box.parent().find('select').val(thisDishes.attr('data-attribute-id'));
+            meal_select_box.next().text(thisDishes.text());
+        }
+    });
+
+    /* setting meal-seelct box text */
+    $('.select-wrapper').find('select').each(function(){
+        var thisSelect = $(this);
+        thisSelect.find('option').each(function(){
+            if($(this).attr('selected')) {
+                thisSelect.closest('.meal-row').find('.meal-select').text($(this).text());
+            }
+        })
     });
 
     $('body').on('click', function() {

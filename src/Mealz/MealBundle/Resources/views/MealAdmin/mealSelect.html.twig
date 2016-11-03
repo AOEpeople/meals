@@ -8,10 +8,10 @@
                         {% for dishentry in weekdishentries %}
                             {% if loop.index == 1 %}
                                 <li class="category">
-                                    Category: {{ dishentry.data.category.slug }}
+                                    Category: {{ dishentry.data.category.title }}
                                 </li>
                             {% endif %}
-                            <li class="dishes">
+                            <li class="dishes" data-attribute-id="{{ dishentry.value }}">
                                 {{ dishentry.label }}
                                 {% if dishentry.data.variations.snapshot|length > 0 %}
                                     <div class="variation-button">variations</div>
@@ -32,6 +32,6 @@
             {% endfor %}
         {% endfor %}
     </div>
-    <div class="meal-select">test essen</div>
+    <div class="meal-select"></div>
     {{ form_row(meal, {'attr' : {'style' : 'display: none;'}}) }}
 </div>

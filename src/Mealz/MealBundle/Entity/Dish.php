@@ -15,6 +15,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class Dish
 {
+	
 	/**
 	 * @var integer
 	 *

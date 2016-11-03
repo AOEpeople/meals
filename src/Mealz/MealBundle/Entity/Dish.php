@@ -85,7 +85,7 @@ class Dish
 	 * @ORM\Column(type="decimal", precision=10, scale=4, nullable=FALSE)
 	 * @var float
 	 */
-	protected $price = NULL;
+	protected $price;
 
 	/**
 	 * @ORM\Column(type="boolean", nullable=FALSE)

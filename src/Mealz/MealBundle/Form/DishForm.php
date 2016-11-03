@@ -80,7 +80,7 @@ class DishForm extends AbstractType {
 			))
 		;
 
-		$builder->addEventListener(FormEvents::POST_SUBMIT, function(FormEvent $event){
+		$builder->addEventListener(FormEvents::SUBMIT, function(FormEvent $event){
 			/** @var Dish $dish */
 			$dish = $event->getData();
 			$dish->setPrice($this->price);

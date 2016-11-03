@@ -37,7 +37,7 @@ class Dish
 	 *       @Gedmo\SlugHandlerOption(name="mappedBy", value="parent"),
 	 *       @Gedmo\SlugHandlerOption(name="inverseSlugField", value="slug")
 	 *      })
-	 *   }, fields={"title_en","title_de"})
+	 *   }, fields={"title_en"})
 	 * @ORM\Column(length=128, unique=true)
 	 * @var string
 	 */

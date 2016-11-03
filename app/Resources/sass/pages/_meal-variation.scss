@@ -58,6 +58,7 @@
   padding: 11px 15px 0;
   background-color: $color-white;
   line-height: 100%;
+  cursor: pointer;
   text-align: left;
 
   &::before {
@@ -134,10 +135,6 @@
     display: block;
     font-size: 14px;
     text-align: left;
-  }
-
-  .button {
-    margin-top: 10px;
   }
 
 }

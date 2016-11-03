@@ -19,10 +19,9 @@
                                         {% for variation in dishentry.data.variations %}
                                             <div class="variation">
                                                 <div class="variation-checkbox"></div>
-                                                <label for="variation1">{{ variation.description }}</label>
+                                                <label for="variation" data-attribute-id="{{ variation.id }}">{{ variation.title }}</label>
                                             </div>
                                         {% endfor %}
-                                        <button type="submit" class="button small">Save</button>
                                     </div>
                                 {% endif %}
                             </li>

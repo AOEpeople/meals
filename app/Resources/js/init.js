@@ -262,25 +262,6 @@ Mealz.prototype.loadAjaxFormPayment = function($element) {
     });
 };
 
-/* hiding select-box if click anywhere else */
-$('.meal-form, .meal-select-box').mouseup(function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-
-    var container = '';
-    if($(e.currentTarget).hasClass('meal-select-box')) {
-        container = $(".meal-select-variations");
-    } else {
-        container = $(".meal-select-box");
-    }
-
-    // if the target of the click isn't the container nor a descendant of the container
-    if (!container.is(e.target) && container.has(e.target).length === 0)
-    {
-        container.hide('fast');
-    }
-});
-
 $(document).ready(function() {
 
     var mealz = new Mealz();
@@ -320,33 +301,61 @@ $(document).ready(function() {
         $(this).next().toggle();
     });
 
-    $('.variation-checkbox').on('click', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        $(this).toggleClass('checked');
-    });
-
+    /* clicked on dish */
     $('.meal-select-box > ul > .dishes').on('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
         var thisDishes = $(this);
+
+        /* which has no variation */
         if(!thisDishes.children().hasClass('variation-button')) {
             var meal_select_box = thisDishes.parent().parent();
             thisDishes.toggleClass('selected');
             $(".meal-select-box").hide('fast');
             meal_select_box.parent().find('select').val(thisDishes.attr('data-attribute-id'));
             meal_select_box.next().text(thisDishes.text());
+        } else {
+            thisDishes.children('.variation-button').click();
         }
     });
 
-    /* setting meal-seelct box text */
+    /* clicked on variation */
+    $('.variation-checkbox').on('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var thisVariation = $(this);
+
+        /* if checkbox is not checked yet */
+        if(!thisVariation.hasClass('checked')) {
+            var formRow = thisVariation.closest('.meal-row').children('.form-row').last();
+            var thisSelect = formRow.next().children().first().attr('id');
+
+
+            if (thisVariation.closest('.meal-select-variations').find('.checked').length == 0) {
+                /* i can use select form from meal - already exists */
+                formRow.find('select').val(thisVariation.next().attr('data-attribute-id'));
+            } else {
+                /* we need to clone and edit cloned to free id*/
+                //formRow.clone().insertAfter(formRow);
+
+            }
+            console.log(formRow.find('select').val());
+        } else {
+
+        }
+
+        $(this).toggleClass('checked');
+    });
+
+    /* setting meal-select box text */
     $('.select-wrapper').find('select').each(function(){
         var thisSelect = $(this);
         thisSelect.find('option').each(function(){
             if($(this).attr('selected')) {
                 thisSelect.closest('.meal-row').find('.meal-select').text($(this).text());
             }
-        })
+        });
     });
 
     $('body').on('click', function() {
@@ -388,4 +397,23 @@ $(document).ready(function() {
         }
     });
     $('.fancybox').unbind('click');
+
+    /* hiding select-box if click anywhere else */
+    $('.meal-form, .meal-select-box').mouseup(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var container = '';
+        if($(e.currentTarget).hasClass('meal-select-box')) {
+            container = $(".meal-select-variations");
+        } else {
+            container = $(".meal-select-box");
+        }
+
+        // if the target of the click isn't the container nor a descendant of the container
+        if (!container.is(e.target) && container.has(e.target).length === 0)
+        {
+            container.hide('fast');
+        }
+    });
 });

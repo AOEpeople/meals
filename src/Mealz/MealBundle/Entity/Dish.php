@@ -37,7 +37,7 @@ class Dish
 	 *       @Gedmo\SlugHandlerOption(name="mappedBy", value="parent"),
 	 *       @Gedmo\SlugHandlerOption(name="inverseSlugField", value="slug")
 	 *      })
-	 *   }, fields={"title_en","title_de"})
+	 *   }, fields={"title_en"})
 	 * @ORM\Column(length=128, unique=true)
 	 * @var string
 	 */
@@ -85,7 +85,7 @@ class Dish
 	 * @ORM\Column(type="decimal", precision=10, scale=4, nullable=FALSE)
 	 * @var float
 	 */
-	protected $price = NULL;
+	protected $price;
 
 	/**
 	 * @ORM\Column(type="boolean", nullable=FALSE)

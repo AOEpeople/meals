@@ -53,7 +53,7 @@ class DishVariationForm extends AbstractType
 				'attr' => ['class' => 'button small']
 			]);
 
-		$builder->addEventListener(FormEvents::POST_SUBMIT, function(FormEvent $event){
+		$builder->addEventListener(FormEvents::SUBMIT, function(FormEvent $event){
 			/** @var DishVariation $dishvariation */
 			$dishvariation = $event->getData();
 			$dishvariation->setPrice($this->price);

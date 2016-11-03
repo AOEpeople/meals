@@ -170,7 +170,7 @@ services:
       - [setRepository, ["@mealz_meal.repository.dish"]]
       - [setEntityName, ["Dish"]]
 
-  mealz_meal.controller.dishVariation:
+  mealz_meal.controller.dish_variation:
     class: Mealz\MealBundle\Controller\DishVariationController
     parent: mealz_meal.controller.base
 #    calls:

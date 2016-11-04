@@ -40,6 +40,7 @@ class DayForm extends AbstractType
                 'allow_delete' => true,
                 'delete_empty' => true,
                 'constraints' => new Valid(),
+                'allow_add' => true,
             ))
             ->add('enabled', CheckboxType::class, array(
                 'required' => false,

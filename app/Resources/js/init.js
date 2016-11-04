@@ -335,13 +335,14 @@ $(document).ready(function() {
                 formRow.find('select').val(thisVariation.next().attr('data-attribute-id'));
             } else {
                 /* we need to clone and edit cloned to free id*/
-                formRow.clone().insertAfter(formRow);
-                formRow = thisVariation.closest('.meal-row').children('.form-row').last();
-                var formRowId = formRow.children().first().attr('id');
-                formRow.children().first().attr('id', formRowId.slice(0, formRowId.length-1) + 3);
-                formRow.find('select').attr('id', formRow.children().first().attr('id') + '_dish');
-                formRow.find('select').attr('name', 'week_form[days][0][meals][3][dish]');
-                formRow.find('select').val('11');
+                var newForm = thisVariation.closest('.meal-rows-wrapper').attr('data-prototype');
+                var newFormId = $(".form-row > [id^=week_form_days_" + $(newForm).first().attr('id')[15]).length;
+                newForm = (newForm.replace("__name__", newFormId).replace("__name__", newFormId).replace("__name__", newFormId));
+                thisVariation.closest('.meal-row').children('.form-row').children().last().after(newForm);
+
+                var newFormEl = thisVariation.closest('.meal-row').children('.form-row').children().last();
+                newFormEl.hide();
+                newFormEl.find('select').val(thisVariation.next().attr('data-attribute-id'));
             }
         } else {
 

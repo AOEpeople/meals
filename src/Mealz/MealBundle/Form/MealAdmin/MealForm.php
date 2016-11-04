@@ -44,6 +44,12 @@ class MealForm extends AbstractType
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use ($builder) {
             /** @var Meal $meal */
             $meal = $event->getData();
+
+            /** just for data-prototype purposes */
+            if ($meal === null) {
+                return;
+            }
+
             /** @var Day $day */
             $day = $meal->getDay();
             /** @var Week $week */
@@ -70,14 +76,11 @@ class MealForm extends AbstractType
         $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) use ($builder) {
             /** @var Meal $meal */
             $meal = $event->getData();
-            var_dump($meal);
             if (null !== $meal->getDish()) {
                 $dishPrice = $meal->getDish()->getPrice();
                 $meal->setPrice($dishPrice);
-                //@FIXME-SIMON $meal->setVariation($meal->getDish()->getVariations());
                 $event->setData($meal);
             }
-            die();
         });
     }
 

@@ -57,6 +57,12 @@ MealzMealBundle_Meal_join:
     pattern:  /menu/{date}/{dish}/join/{profile}
     defaults: { _controller: "MealzMealBundle:Meal:join", profile: null }
 
+MealzMealBundle_Meal_joinAsGuest:
+    pattern:  /meal/join-as-guest/{guestInvitationId}
+    defaults: { _controller: "MealzMealBundle:Meal:joinAsGuest" }
+    requirements:
+        guestInvitationId: '[a-zA-Z0-9]{32}'
+
 #MealzMealBundle_Meal_join_someone:
 #    pattern:  /menu/{date}/{dish}/join-someone
 #    defaults: { _controller: "MealzMealBundle:Meal:joinSomeone" }

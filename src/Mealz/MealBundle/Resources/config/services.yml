@@ -128,13 +128,13 @@ services:
       - { name: form.type }
 
   mealz_meal.form.dish:
-    class: Mealz\MealBundle\Form\DishForm
+    class: Mealz\MealBundle\Form\Dish\DishForm
     arguments: ['%mealz.meal.price%']
     tags:
       - { name: form.type }
 
   mealz_meal.form.dishvariation:
-    class: Mealz\MealBundle\Form\DishVariationForm
+    class: Mealz\MealBundle\Form\Dish\DishVariationForm
     arguments: ['%mealz.meal.price%']
     tags:
       - { name: form.type }

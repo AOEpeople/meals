@@ -1,6 +1,6 @@
 <?php
 
-namespace Mealz\MealBundle\Form;
+namespace Mealz\MealBundle\Form\Dish;
 
 use Mealz\MealBundle\Entity\Category;
 use Mealz\MealBundle\Entity\Dish;

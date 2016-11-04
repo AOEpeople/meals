@@ -44,6 +44,12 @@ class MealType extends AbstractType
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use ($builder) {
             /** @var Meal $meal */
             $meal = $event->getData();
+
+            /** just for data-prototype purposes */
+            if ($meal === null) {
+                return;
+            }
+
             /** @var Day $day */
             $day = $meal->getDay();
             /** @var Week $week */

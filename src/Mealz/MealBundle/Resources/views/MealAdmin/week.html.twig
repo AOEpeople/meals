@@ -56,7 +56,7 @@
                     </span>
                 </div>
 
-                <div class="meal-rows-wrapper">
+                <div class="meal-rows-wrapper" data-prototype="{{ form_widget(day.meals.vars.prototype)|e('html_attr') }}">
                     {# display meals for given day #}
                     {% for meal in day.meals %}
                         {{ include('MealzMealBundle:MealAdmin:mealSelect.html.twig', {'meal': meal}) }}

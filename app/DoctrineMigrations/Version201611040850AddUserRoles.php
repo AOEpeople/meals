@@ -2,7 +2,6 @@
 
 namespace Application\Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
@@ -92,16 +91,5 @@ class Version201611040850AddUserRoles extends AbstractMigration
 	protected function deleteRoles()
 	{
 		$this->addSql('DELETE FROM role WHERE id IN (1, 2, 3, 4)');
-	}
-
-	/**
-	 * Checks if the migrations are executed on the supported database server.
-	 */
-	protected function validateDatabase()
-	{
-		$this->abortIf(
-			$this->connection->getDatabasePlatform()->getName() != 'mysql',
-			'Migration can only be executed safely on \'mysql\'.'
-		);
 	}
 }

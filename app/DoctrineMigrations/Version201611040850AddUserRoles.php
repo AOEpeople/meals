@@ -10,7 +10,7 @@ use Doctrine\DBAL\Schema\Schema;
  *
  * @author Chetan Thapliyal <chetan.thapliyal@aoe.com>
  */
-class VersionAddUserRoles extends AbstractMigration
+class Version201611040850AddUserRoles extends AbstractMigration
 {
 	/**
 	 * @param Schema $schema

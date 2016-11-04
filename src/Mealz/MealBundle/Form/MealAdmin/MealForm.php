@@ -1,6 +1,6 @@
 <?php
 
-namespace Mealz\MealBundle\Form\Type;
+namespace Mealz\MealBundle\Form\MealAdmin;
 
 use Mealz\MealBundle\Entity\Day;
 use Mealz\MealBundle\Entity\Dish;
@@ -14,7 +14,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class MealType extends AbstractType
+class MealForm extends AbstractType
 {
     protected $dishRepository;
 

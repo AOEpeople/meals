@@ -124,7 +124,7 @@ services:
             - { name: form.type, alias: participant }
 
   mealz_meal.form.type.meal:
-    class: Mealz\MealBundle\Form\Type\MealType
+    class: Mealz\MealBundle\Form\MealAdmin\MealForm
     arguments: ['@mealz_meal.repository.dish']
     tags:
       - { name: form.type }
@@ -141,7 +141,7 @@ services:
       - { name: form.type }
 
   mealz_meal.form.type.day:
-    class: Mealz\MealBundle\Form\Type\DayType
+    class: Mealz\MealBundle\Form\MealAdmin\DayForm
     arguments: ['@doctrine.orm.entity_manager']
     tags:
       - { name: form.type }

@@ -34,7 +34,7 @@ abstract class BaseListController extends BaseController
     {
         $this->entityName = $entityName;
         $this->entityClassPath = '\Mealz\MealBundle\Entity\\' . $entityName;
-        $this->entityFormName = '\Mealz\MealBundle\Form\\' . $entityName . 'Form';
+        $this->entityFormName = '\Mealz\MealBundle\Form\\' . $entityName . '\\' . $entityName . 'Form';
     }
 
     public function setRepository(EntityRepository $repository)

@@ -7,7 +7,7 @@ use Mealz\MealBundle\Entity\Day;
 use Mealz\MealBundle\Entity\Meal;
 use Mealz\MealBundle\Entity\Week;
 use Mealz\MealBundle\Entity\WeekRepository;
-use Mealz\MealBundle\Form\WeekForm;
+use Mealz\MealBundle\Form\MealAdmin\WeekForm;
 use Mealz\MealBundle\Validator\Constraints\DishConstraint;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;

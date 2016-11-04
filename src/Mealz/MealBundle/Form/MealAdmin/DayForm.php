@@ -1,6 +1,6 @@
 <?php
 
-namespace Mealz\MealBundle\Form\Type;
+namespace Mealz\MealBundle\Form\MealAdmin;
 
 use Mealz\MealBundle\Entity\Day;
 use Symfony\Component\Form\AbstractType;
@@ -15,10 +15,9 @@ use Mealz\MealBundle\Entity\Meal;
 use Doctrine\ORM\UnitOfWork;
 use Symfony\Component\Validator\Constraints\Valid;
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\Validator\Constraints\Collection;
 
 
-class DayType extends AbstractType
+class DayForm extends AbstractType
 {
     protected $em;
 
@@ -37,7 +36,7 @@ class DayType extends AbstractType
                 'disabled' => true
             ))
             ->add('meals', CollectionType::class, array(
-                'entry_type' => MealType::class,
+                'entry_type' => MealForm::class,
                 'allow_delete' => true,
                 'delete_empty' => true,
                 'constraints' => new Valid(),

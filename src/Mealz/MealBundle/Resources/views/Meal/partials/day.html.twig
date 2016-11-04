@@ -1,6 +1,5 @@
 {% set available = false %}
 
-
 {% if day.enabled %}
     {% for meal in day.meals %}
         {% if meal.dateTime | date_modify(lock_toggle_participation_at) | date('U') > 'now' | date('U') %}
@@ -17,6 +16,13 @@
         <span>
             {{ day.dateTime | date('D') | trans({}, 'date') }}
         </span>
+        {% if available ? 'is-available' : '' %}
+            <button class="guest-menu" data-copytarget="#copy-link-{{ number }}"><span class="glyphicon glyphicon-new-window"></span></button>
+            <div class="guest-menu-link">
+                <input type="text" id="copy-link-{{ number }}" value="http://www.sitepoint.com/" />
+                <span class="message"><span class="glyphicon glyphicon-ok"></span> Copied to clipboard!</span>
+            </div>
+        {% endif %}
     </div>
 
     {% if not day.enabled %}

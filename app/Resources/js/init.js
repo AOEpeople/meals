@@ -262,11 +262,54 @@ Mealz.prototype.loadAjaxFormPayment = function($element) {
     });
 };
 
+// event handler
+function copy(event) {
+
+    // find target element
+    var c = $(event.currentTarget).data("copytarget");
+    var inp = (c ? document.querySelector(c) : null);
+
+    console.log(inp);
+    if (inp && inp.select) {
+
+        // select text
+        inp.select();
+
+        try {
+            // copy text
+            document.execCommand('copy');
+            inp.blur();
+        }
+        catch (err) {
+            alert('please press Ctrl/Cmd+C to copy');
+        }
+
+    }
+
+}
+
+Mealz.prototype.copyToClipboard = function() {
+    'use strict';
+
+    // click events
+    $('.guest-menu').on('click', function () {
+        $(this).next().addClass('open');
+        copy(event);
+        event.stopPropagation();
+    });
+
+    $(document).on('click', function () {
+        $('.guest-menu-link').removeClass('open');
+    });
+
+};
+
 $(document).ready(function() {
 
     var mealz = new Mealz();
     mealz.styleCheckboxes();
     mealz.styleSelects();
+    mealz.copyToClipboard();
 
     $('.hamburger').on('click', function() {
         $(this).toggleClass('is-active');

@@ -6,8 +6,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Mealz\UserBundle\Entity\Profile;
 
 /**
- * GuestInvitation
+ * Guest invitation entity.
  *
+ * @author Chetan Thapliyal <chetan.thapliyal@aoe.com>
  * @ORM\Table(name="guest_invitation")
  * @ORM\Entity(repositoryClass="Mealz\MealBundle\Entity\GuestInvitationRepository")
  */

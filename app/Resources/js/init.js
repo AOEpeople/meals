@@ -329,18 +329,20 @@ $(document).ready(function() {
         /* if checkbox is not checked yet */
         if(!thisVariation.hasClass('checked')) {
             var formRow = thisVariation.closest('.meal-row').children('.form-row').last();
-            var thisSelect = formRow.next().children().first().attr('id');
 
-
-            if (thisVariation.closest('.meal-select-variations').find('.checked').length == 0) {
+            if (thisVariation.closest('.meal-select-variations').find('.checked').length === 0) {
                 /* i can use select form from meal - already exists */
                 formRow.find('select').val(thisVariation.next().attr('data-attribute-id'));
             } else {
                 /* we need to clone and edit cloned to free id*/
-                //formRow.clone().insertAfter(formRow);
-
+                formRow.clone().insertAfter(formRow);
+                formRow = thisVariation.closest('.meal-row').children('.form-row').last();
+                var formRowId = formRow.children().first().attr('id');
+                formRow.children().first().attr('id', formRowId.slice(0, formRowId.length-1) + 3);
+                formRow.find('select').attr('id', formRow.children().first().attr('id') + '_dish');
+                formRow.find('select').attr('name', 'week_form[days][0][meals][3][dish]');
+                formRow.find('select').val('11');
             }
-            console.log(formRow.find('select').val());
         } else {
 
         }

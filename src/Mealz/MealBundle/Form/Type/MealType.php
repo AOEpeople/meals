@@ -70,12 +70,14 @@ class MealType extends AbstractType
         $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) use ($builder) {
             /** @var Meal $meal */
             $meal = $event->getData();
+            var_dump($meal);
             if (null !== $meal->getDish()) {
                 $dishPrice = $meal->getDish()->getPrice();
                 $meal->setPrice($dishPrice);
                 //@FIXME-SIMON $meal->setVariation($meal->getDish()->getVariations());
                 $event->setData($meal);
             }
+            die();
         });
     }
 

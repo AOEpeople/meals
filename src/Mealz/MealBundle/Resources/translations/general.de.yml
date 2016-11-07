@@ -57,3 +57,6 @@ form:
     title: Titel
     description: Beschreibung
     category: Keine Kategorie
+    name: Name
+    first_name: Nachname
+    company: Firma

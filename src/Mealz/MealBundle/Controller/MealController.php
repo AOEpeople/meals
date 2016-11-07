@@ -7,18 +7,15 @@ namespace Mealz\MealBundle\Controller;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query;
 use Mealz\MealBundle\Entity\Meal;
-use Mealz\MealBundle\Entity\MealRepository;
 use Mealz\MealBundle\Entity\Participant;
 use Mealz\MealBundle\Entity\WeekRepository;
 use Mealz\MealBundle\EventListener\ParticipantNotUniqueException;
-use Mealz\MealBundle\Form\MealProfileForm;
+use Mealz\MealBundle\Form\Guest\InvitationWrapper;
 use Mealz\UserBundle\Entity\Profile;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
-use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Mealz\MealBundle\Entity\Week;
+use Mealz\MealBundle\Form\Guest\InvitationForm;
 
 class MealController extends BaseController {
 
@@ -122,5 +119,25 @@ class MealController extends BaseController {
 		$week->setCalendarWeek($dateTime->format('W'));
 		$week->setYear($dateTime->format('Y'));
 		return $week;
+	}
+
+	/**
+	 * Action for inviting the guest
+	 * @param $hash
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
+	public function guestAction($hash)
+	{
+		$guestInvitationRepository = $this->getDoctrine()->getRepository('MealzMealBundle:GuestInvitation');
+		$guestInvitation = $guestInvitationRepository->find($hash);
+
+		$invitationWrapper = new InvitationWrapper();
+		$invitationWrapper->setDay($guestInvitation->getDay());
+		$invitationWrapper->setProfile(new Profile());
+		$form = $this->createForm(InvitationForm::class, $invitationWrapper);
+
+		return $this->render('MealzMealBundle:Meal:guest.html.twig', array(
+				'form' => $form->createView()
+		));
 	}
 }

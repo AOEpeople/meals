@@ -57,11 +57,11 @@ MealzMealBundle_Meal_join:
     pattern:  /menu/{date}/{dish}/join/{profile}
     defaults: { _controller: "MealzMealBundle:Meal:join", profile: null }
 
-MealzMealBundle_Meal_joinAsGuest:
-    pattern:  /meal/join-as-guest/{guestInvitationId}
-    defaults: { _controller: "MealzMealBundle:Meal:joinAsGuest" }
-    requirements:
-        guestInvitationId: '[a-zA-Z0-9]{32}'
+#MealzMealBundle_Meal_joinAsGuest:
+#    pattern:  /meal/join-as-guest/{guestInvitationId}
+#    defaults: { _controller: "MealzMealBundle:Meal:joinAsGuest" }
+#    requirements:
+#        guestInvitationId: '[a-zA-Z0-9]{32}'
 
 #MealzMealBundle_Meal_join_someone:
 #    pattern:  /menu/{date}/{dish}/join-someone
@@ -167,3 +167,6 @@ MealzMealBundle_Print_participations:
     pattern: /print/participations/{week}
     defaults: { _controller: "MealzMealBundle:Print:participations" }
 
+MealzMealBundle_Meal_guest:
+    path:  /menu/guest/{hash}
+    defaults: { _controller: "MealzMealBundle:Meal:guest" }

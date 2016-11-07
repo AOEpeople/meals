@@ -37,6 +37,12 @@ class Profile {
 	protected $firstName;
 
 	/**
+	 * @ORM\Column(type="string", length=255, nullable=TRUE)
+	 * @var string
+	 */
+	protected $company;
+
+	/**
 	 * @ORM\OneToMany(targetEntity="Mealz\AccountingBundle\Entity\Transaction", mappedBy="profile")
 	 * @var ArrayCollection
 	 */
@@ -122,5 +128,21 @@ class Profile {
 	public function setRoles(Collection $roles)
 	{
 		$this->roles = $roles;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getCompany()
+	{
+		return $this->company;
+	}
+
+	/**
+	 * @param string $company
+	 */
+	public function setCompany($company)
+	{
+		$this->company = $company;
 	}
 }

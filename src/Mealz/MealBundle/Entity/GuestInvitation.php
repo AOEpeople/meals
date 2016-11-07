@@ -29,7 +29,7 @@ class GuestInvitation
 
 	/**
 	 * @var Profile
-	 * @ORM\ManyToOne(targetEntity="Mealz\UserBundle\Entity\Profile", inversedBy="invitations")
+	 * @ORM\ManyToOne(targetEntity="Mealz\UserBundle\Entity\Profile")
 	 * @ORM\JoinColumn(name="host_id", referencedColumnName="id", nullable=FALSE, onDelete="NO ACTION")
 	 */
 	private $host;
@@ -39,7 +39,7 @@ class GuestInvitation
 	 * @ORM\ManyToOne(targetEntity="Day")
 	 * @ORM\JoinColumn(name="meal_day_id", referencedColumnName="id", nullable=FALSE, onDelete="NO ACTION")
 	 */
-	private $mealDay;
+	private $day;
 
 
 	/**
@@ -105,9 +105,9 @@ class GuestInvitation
 	 *
 	 * @return GuestInvitation
 	 */
-	public function setMealDay(Day $day)
+	public function setDay(Day $day)
 	{
-		$this->mealDay = $day;
+		$this->day = $day;
 		return $this;
 	}
 
@@ -116,9 +116,9 @@ class GuestInvitation
 	 *
 	 * @return Day
 	 */
-	public function getMealDay()
+	public function getDay()
 	{
-		return $this->mealDay;
+		return $this->day;
 	}
 }
 

@@ -337,10 +337,13 @@ $(document).ready(function() {
                 /* we need to clone and edit cloned to free id*/
                 var newForm = thisVariation.closest('.meal-rows-wrapper').attr('data-prototype');
                 var newFormId = $(".form-row > [id^=week_form_days_" + $(newForm).first().attr('id')[15]).length;
-                newForm = (newForm.replace("__name__", newFormId).replace("__name__", newFormId).replace("__name__", newFormId));
+                newForm = (newForm.replace("__name__", newFormId).replace("__name__", newFormId).replace("__name__", newFormId).replace("__name__", newFormId).replace("__name__", newFormId));
+
                 thisVariation.closest('.meal-row').children('.form-row').children().last().after(newForm);
 
                 var newFormEl = thisVariation.closest('.meal-row').children('.form-row').children().last();
+                var day = newFormEl.parent().find('input').first().val();
+                newFormEl.parent().find('input').last().val(day);
                 newFormEl.hide();
                 newFormEl.find('select').val(thisVariation.next().attr('data-attribute-id'));
             }

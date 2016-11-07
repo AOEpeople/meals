@@ -269,7 +269,6 @@ function copy(event) {
     var c = $(event.currentTarget).data("copytarget");
     var inp = (c ? document.querySelector(c) : null);
 
-    console.log(inp);
     if (inp && inp.select) {
 
         // select text
@@ -298,18 +297,27 @@ Mealz.prototype.copyToClipboard = function() {
         event.stopPropagation();
     });
 
-    $(document).on('click', function () {
-        $('.guest-menu-link').removeClass('open');
+    $(document).on('click', function (e) {
+        if($(e.target).is(".guest-menu-link, .guest-menu-link span, .guest-menu-link input") === false ) {
+            $('.guest-menu-link').removeClass('open');
+        }
     });
 
 };
 
-$(document).ready(function() {
+Mealz.prototype.loadGeneratedLink = function() {
+    $.get('../url.html', function(result) {
+        $('.guest-menu-link input').attr('value', result);
+    });
+};
 
+
+$(document).ready(function() {
     var mealz = new Mealz();
     mealz.styleCheckboxes();
     mealz.styleSelects();
     mealz.copyToClipboard();
+    mealz.loadGeneratedLink();
 
     $('.hamburger').on('click', function() {
         $(this).toggleClass('is-active');

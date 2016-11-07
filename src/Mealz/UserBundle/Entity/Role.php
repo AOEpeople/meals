@@ -19,6 +19,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Role
 {
 	/**
+	 * Constants for default roles
+	 */
+	const ROLE_KITCHEN_STAFF = 'ROLE_KITCHEN_STAFF';
+	const ROLE_USER          = 'ROLE_USER';
+	const ROLE_GUEST         = 'ROLE_GUEST';
+	const ROLE_ADMIN         = 'ROLE_ADMIN';
+
+
+	/**
 	 * Role ID
 	 *
 	 * @ORM\Column(name="id", type="integer")
@@ -35,7 +44,16 @@ class Role
 	 * @Assert\NotBlank
 	 * @var string
 	 */
-	private $name;
+	private $title;
+
+	/**
+	 * Role string identifier
+	 *
+	 * @ORM\Column(type="string")
+	 * @Assert\NotBlank
+	 * @var string
+	 */
+	private $sid;
 
 	/**
 	 * @ORM\ManyToMany(targetEntity="Profile", mappedBy="roles")
@@ -62,18 +80,35 @@ class Role
 	/**
 	 * @return string
 	 */
-	public function getName()
+	public function getTitle()
 	{
-		return $this->name;
+		return $this->title;
 	}
 
 	/**
-	 * @param string $name
+	 * @param string $title
 	 */
-	public function setName($name)
+	public function setTitle($title)
 	{
-		$this->name = $name;
+		$this->title = $title;
 	}
+
+	/**
+	 * @return string
+	 */
+	public function getSid()
+	{
+		return $this->sid;
+	}
+
+	/**
+	 * @param string $sid
+	 */
+	public function setSid($sid)
+	{
+		$this->sid = $sid;
+	}
+
 
 	/**
 	 * @return Collection

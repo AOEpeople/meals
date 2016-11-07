@@ -49,7 +49,7 @@ class Role
 	/**
 	 * Role string identifier
 	 *
-	 * @ORM\Column(type="string")
+	 * @ORM\Column(type="string", unique=true)
 	 * @Assert\NotBlank
 	 * @var string
 	 */

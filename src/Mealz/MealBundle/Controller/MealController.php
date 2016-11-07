@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Mealz\MealBundle\Entity\Week;
 use Mealz\MealBundle\Form\Guest\InvitationForm;
+use Symfony\Component\VarDumper\VarDumper;
 
 class MealController extends BaseController {
 
@@ -126,7 +127,7 @@ class MealController extends BaseController {
 	 * @param $hash
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 */
-	public function guestAction($hash)
+	public function guestAction(Request $request, $hash)
 	{
 		$guestInvitationRepository = $this->getDoctrine()->getRepository('MealzMealBundle:GuestInvitation');
 		$guestInvitation = $guestInvitationRepository->find($hash);
@@ -135,7 +136,24 @@ class MealController extends BaseController {
 		$invitationWrapper->setDay($guestInvitation->getDay());
 		$invitationWrapper->setProfile(new Profile());
 		$form = $this->createForm(InvitationForm::class, $invitationWrapper);
+//VarDumper::dump($form->createView());die();
 
+		// handle form submission
+		if ($request->isMethod('POST')) {
+			$form->handleRequest($request);
+
+			if ($form->isValid()) {
+				$em = $this->getDoctrine()->getManager();
+//				$em->persist($entity);
+				$em->flush();
+
+//				$this->addFlashMessage($successMessage, 'success');
+			} else {
+				return $this->render('MealzMealBundle:Meal:guest.html.twig', array(
+						'form' => $form->createView()
+				));
+			}
+		}
 		return $this->render('MealzMealBundle:Meal:guest.html.twig', array(
 				'form' => $form->createView()
 		));

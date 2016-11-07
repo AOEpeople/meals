@@ -4,6 +4,7 @@ var Mealz = function () {
     this.weekCheckbox = $('.meal-form .week-disable input[type="checkbox"]')[0];
     this.$weekDayCheckboxes = $('.meal-form .week-day-action input[type="checkbox"]');
     this.$participationCheckboxes = $('.meals-list input.checkbox, .meals-list input[type = "checkbox"]');
+    this.$guestParticipationCheckboxes = $('.meal-guests input.checkbox, .meal-guests input[type = "checkbox"]');
     this.$iconCells = $('.icon-cell');
     this.selectWrapperClass = 'select-wrapper';
     this.mealRowsWrapperClassSelector = '.meal-rows-wrapper';
@@ -104,6 +105,11 @@ Mealz.prototype.styleCheckboxes = function() {
     // Handle change event on checkboxes
     this.$participationCheckboxes.on('change', function() {
         that.toggleParticipation($(this));
+    });
+
+    // Handle change event on checkboxes
+    this.$guestParticipationCheckboxes.on('change', function() {
+        that.applyCheckboxClasses($(this))
     });
 };
 

@@ -2,6 +2,8 @@
 
 {% set available = false %}
 
+{% set wrapperClass = 'meal-guests' %}
+
 {% if form.vars.value.day.enabled %}
 	{% for meal in form.vars.value.day.meals %}
 		{% if meal.dateTime | date_modify(lock_toggle_participation_at) | date('U') > 'now' | date('U') %}
@@ -11,6 +13,7 @@
 {% endif %}
 
 {% block body %}
+	{{ form_start(form) }}
 <div class="meal {{ available ? 'is-available' : '' }}">
 
 	<div class="week-day">
@@ -20,15 +23,33 @@
         </span>
 	</div>
 
-
-	 {% for meal in form.vars.value.day.meals %}
-		 {% include 'MealzMealBundle:Meal/partials:mealGuest.html.twig' with %}
-	 {% endfor %}
-
-	{#{{ form(form.profile) }}#}
-
-	{#{{ form_rest(form) }}#}
-	{#{% include 'MealzMealBundle:Meal/partials:profile.html.twig' with {'profile': 'form.vars.value.profile'} %}#}
-
+	{% for child in form.children.day.children.meals.children %}
+		<div class="meal-row">
+			{% spaceless %}
+				<div class="text">
+					<div class="title">
+						{{ form.children.day.children.meals.vars.choices[child.vars.value].data.dish.title }}
+					</div>
+					<div class="description">
+						{% if form.children.day.children.meals.vars.choices[child.vars.value].data.dish.description %}
+							{{ form.children.day.children.meals.vars.choices[child.vars.value].data.dish.description }}
+						{% else %}
+							{{ 'content.participation.dish.no_description'|trans({},'general') }}
+						{% endif %}
+					</div>
+				</div>
+				<div class="wrapper-vertical-center">
+					<div class="action">
+						<div class="checkbox-wrapper">
+							<input type="checkbox" {{ block('widget_attributes') }}{% if child.vars.value is defined %} value="{{ child.vars.value }}"{% endif %}{% if child.vars.checked %} checked="checked"{% endif %} />
+						</div>
+					</div>
+				</div>
+			{% endspaceless %}
+		</div>
+	{% endfor %}
 </div>
+	{{ form_widget(form.profile) }}
+	{{ form_row(form.save) }}
+	{#{{ form_end(form) }}#}
 {% endblock %}

@@ -4,7 +4,8 @@
     "type": "project",
     "description": "",
     "autoload": {
-        "psr-0": { "": "src/" }
+        "psr-0": { "": "src/" },
+        "psr-4": { "Application\\Migrations\\": "app/DoctrineMigrations/" }
     },
     "require": {
         "php": ">=5.3.3",

@@ -9,7 +9,7 @@ use Doctrine\DBAL\Schema\Schema;
  *
  * @author Chetan Thapliyal <chetan.thapliyal@aoe.com>
  */
-class Version201611040850AddUserRoles extends AbstractMigration
+class Version201611040850AddUserRoles extends \Application\Migrations\AbstractMigration
 {
 	/**
 	 * @param Schema $schema
@@ -41,7 +41,9 @@ class Version201611040850AddUserRoles extends AbstractMigration
 		$this->addSql(
 			'CREATE TABLE role (' .
 			'   id INT AUTO_INCREMENT NOT NULL,' .
-			'   name VARCHAR(255) NOT NULL,' .
+			'   title VARCHAR(255) NOT NULL,' .
+			'   sid VARCHAR(255) NOT NULL,' .
+			'   UNIQUE INDEX UNIQ_57698A6A57167AB4 (sid),' .
 			'   PRIMARY KEY(id) ' .
 			') DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB'
 		);
@@ -79,10 +81,10 @@ class Version201611040850AddUserRoles extends AbstractMigration
 	 */
 	protected function addRoles()
 	{
-		$this->addSql('INSERT INTO role VALUES(1, \'Kitchen Staff\')');
-		$this->addSql('INSERT INTO role VALUES(2, \'User\')');
-		$this->addSql('INSERT INTO role VALUES(3, \'Guest\')');
-		$this->addSql('INSERT INTO role VALUES(4, \'Administrator\')');
+		$this->addSql('INSERT INTO role (id, title, sid) VALUES(1, \'Kitchen Staff\', \'ROLE_KITCHEN_STAFF\')');
+		$this->addSql('INSERT INTO role (id, title, sid) VALUES(2, \'User\', \'ROLE_USER\')');
+		$this->addSql('INSERT INTO role (id, title, sid) VALUES(3, \'Guest\', \'ROLE_GUEST\')');
+		$this->addSql('INSERT INTO role (id, title, sid) VALUES(4, \'Administrator\', \'ROLE_ADMIN\')');
 	}
 
 	/**

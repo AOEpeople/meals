@@ -115,6 +115,16 @@ services:
         tags:
             - { name: form.type, alias: dish_selector_creator }
 
+  mealz_meal.form.transformer.hidden_entity:
+        class: Mealz\MealBundle\Form\DataTransformer\DayNameToIdTransformer
+        arguments: ['@doctrine.orm.entity_manager']
+
+  mealz_meal.form.type.hidden_entity:
+        class: Mealz\MealBundle\Form\Type\HiddenDishType
+        arguments: ['@mealz_meal.form.transformer.hidden_entity']
+        tags:
+            - { name: form.type, alias: hidden_entity }
+
   mealz_meal.form.type.meals_participant:
         class: Mealz\MealBundle\Form\MealParticipantForm
         arguments: []

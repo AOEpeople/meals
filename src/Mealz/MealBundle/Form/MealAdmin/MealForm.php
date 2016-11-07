@@ -7,6 +7,7 @@ use Mealz\MealBundle\Entity\Dish;
 use Mealz\MealBundle\Entity\DishRepository;
 use Mealz\MealBundle\Entity\Meal;
 use Mealz\MealBundle\Entity\Week;
+use Mealz\MealBundle\Form\Type\HiddenDishType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -25,21 +26,24 @@ class MealForm extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('dish', EntityType::class, array(
-            'class' => 'MealzMealBundle:Dish',
-            'query_builder' => $this->dishRepository->getSortedDishesQueryBuilder(array(
-                'load_disabled' => true,
-                'load_variations' => true
-            )),
-            'required' => false,
-            'group_by' => function(Dish $dish) {
-                return ($dish->isEnabled() && $category = $dish->getCategory()) ? $category : null;
-            },
-            'choice_attr' => function (Dish $dish, $value, $index) {
-                return ($dish->isEnabled()) ? [] : ['disabled' => 'disabled'];
-            },
-            'choice_translation_domain' => 'general'
-        ));
+        $builder
+            ->add('dish', EntityType::class, array(
+                'class' => 'MealzMealBundle:Dish',
+                'query_builder' => $this->dishRepository->getSortedDishesQueryBuilder(array(
+                    'load_disabled' => true,
+                    'load_variations' => true
+                )),
+                'required' => false,
+                'group_by' => function(Dish $dish) {
+                    return ($dish->isEnabled() && $category = $dish->getCategory()) ? $category : null;
+                },
+                'choice_attr' => function (Dish $dish, $value, $index) {
+                    return ($dish->isEnabled()) ? [] : ['disabled' => 'disabled'];
+                },
+                'choice_translation_domain' => 'general'
+            ))
+            ->add('day', HiddenDishType::class)
+        ;
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use ($builder) {
             /** @var Meal $meal */
@@ -76,6 +80,11 @@ class MealForm extends AbstractType
         $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) use ($builder) {
             /** @var Meal $meal */
             $meal = $event->getData();
+            if (null !== $meal->getDay()) {
+                $day = $meal->getDay();
+                $dateTime = $day->getDateTime();
+                $meal->setDateTime($dateTime);
+            }
             if (null !== $meal->getDish()) {
                 $dishPrice = $meal->getDish()->getPrice();
                 $meal->setPrice($dishPrice);

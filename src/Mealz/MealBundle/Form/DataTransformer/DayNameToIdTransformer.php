@@ -24,20 +24,16 @@ class DayNameToIdTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param mixed $entity
+     * @param mixed $value
      * @return int|string
      */
-    public function transform($entity)
+    public function transform($value)
     {
-        if (method_exists($entity, 'getId')) {
-            return $entity->getId();
-        } else {
-            throw new TransformationFailedException(
-                sprintf(
-                    'That day entity does not have a getId method!'
-                )
-            );
+        if (null === $value) {
+            return "";
         }
+
+        return $value->getId();
     }
 
 

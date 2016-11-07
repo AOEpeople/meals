@@ -23,16 +23,16 @@
         </span>
 	</div>
 
-	{% for child in form.children.day.children.meals.children %}
+    {% for meal in form.day.meals %}
 		<div class="meal-row">
 			{% spaceless %}
 				<div class="text">
 					<div class="title">
-						{{ form.children.day.children.meals.vars.choices[child.vars.value].data.dish.title }}
+						{{ form.children.day.children.meals.vars.choices[meal.vars.value].data.dish.title }}
 					</div>
 					<div class="description">
-						{% if form.children.day.children.meals.vars.choices[child.vars.value].data.dish.description %}
-							{{ form.children.day.children.meals.vars.choices[child.vars.value].data.dish.description }}
+						{% if form.children.day.children.meals.vars.choices[meal.vars.value].data.dish.description %}
+							{{ form.children.day.children.meals.vars.choices[meal.vars.value].data.dish.description }}
 						{% else %}
 							{{ 'content.participation.dish.no_description'|trans({},'general') }}
 						{% endif %}
@@ -41,7 +41,7 @@
 				<div class="wrapper-vertical-center">
 					<div class="action">
 						<div class="checkbox-wrapper">
-							<input type="checkbox" {{ block('widget_attributes') }}{% if child.vars.value is defined %} value="{{ child.vars.value }}"{% endif %}{% if child.vars.checked %} checked="checked"{% endif %} />
+							{{ form_row(meal) }}
 						</div>
 					</div>
 				</div>

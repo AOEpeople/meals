@@ -26,7 +26,9 @@ class DayForm extends AbstractType {
 					->setParameter('day', $options['data']->getId());
 				},
 				'expanded' => true,
-				'multiple' => true
+				'multiple' => true,
+                'mapped' => false,
+                'choice_label' => false
 			))
 		;
 	}

@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Mealz\MealBundle\Entity\Week;
 use Mealz\MealBundle\Form\Guest\InvitationForm;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\VarDumper\VarDumper;
 
 class MealController extends BaseController {
@@ -132,6 +133,10 @@ class MealController extends BaseController {
 		$guestInvitationRepository = $this->getDoctrine()->getRepository('MealzMealBundle:GuestInvitation');
 		$guestInvitation = $guestInvitationRepository->find($hash);
 
+		if (null === $guestInvitation) {
+		    throw new NotFoundHttpException();
+        }
+
 		$invitationWrapper = new InvitationWrapper();
 		$invitationWrapper->setDay($guestInvitation->getDay());
 		$invitationWrapper->setProfile(new Profile());
@@ -143,7 +148,9 @@ class MealController extends BaseController {
 			$form->handleRequest($request);
 
 			if ($form->isValid()) {
-				$em = $this->getDoctrine()->getManager();
+				$profile = $invitationWrapper->getProfile();
+                VarDumper::dump($form->getData());
+			    $em = $this->getDoctrine()->getManager();
 //				$em->persist($entity);
 				$em->flush();
 

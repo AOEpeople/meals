@@ -1,17 +1,17 @@
 <?php
 
-
 namespace Mealz\MealBundle\Controller;
 
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Query;
+use Mealz\MealBundle\Entity\Day;
 use Mealz\MealBundle\Entity\Meal;
 use Mealz\MealBundle\Entity\Participant;
 use Mealz\MealBundle\Entity\WeekRepository;
 use Mealz\MealBundle\EventListener\ParticipantNotUniqueException;
 use Mealz\MealBundle\Form\Guest\InvitationWrapper;
 use Mealz\UserBundle\Entity\Profile;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Mealz\MealBundle\Entity\Week;
@@ -164,5 +164,27 @@ class MealController extends BaseController {
 		return $this->render('MealzMealBundle:Meal:guest.html.twig', array(
 				'form' => $form->createView()
 		));
+	}
+
+	/**
+	 * Gets the guest invitation URL.
+	 *
+	 * @param  Day $mealDay     Meal day for which to generate the invitation.
+	 *
+	 * @ParamConverter("mealDay", options={"mapping": {"dayId": "id"}})
+	 *
+	 * @return JsonResponse
+	 */
+	public function newGuestInvitationAction(Day $mealDay)
+	{
+		$this->denyAccessUnlessGranted('ROLE_USER');
+
+		/** @var \Mealz\MealBundle\Entity\GuestInvitationRepository $guestInvitationRepository */
+		$guestInvitationRepository = $this->getDoctrine()->getRepository('MealzMealBundle:GuestInvitation');
+		$guestInvitation = $guestInvitationRepository->findOrCreateInvitation($this->getUser()->getProfile(), $mealDay);
+
+		return new JsonResponse(
+			$this->generateUrl('MealzMealBundle_Meal_guest', ['hash' => $guestInvitation->getId()]), 200
+		);
 	}
 }

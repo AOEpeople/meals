@@ -150,7 +150,8 @@ class MealController extends BaseController {
 			$translator = $this->get('translator');
 			$form->handleRequest($request);
 
-			if ($form->isValid()) {
+			$formData = $request->request->get('invitation_form');
+			if ($form->isValid() && array_key_exists( 'day', $formData)) {
 				// $em instanceof EntityManager
 				$em = $this->getDoctrine()->getManager();
 				$profile = $invitationWrapper->getProfile();
@@ -158,8 +159,8 @@ class MealController extends BaseController {
 				$profile->addRole($this->getGuestRole());
 
 				$mealRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
-				$formData = $request->request->get('invitation_form');
-				$meals = ($formData['day']['meals'] && is_array($formData['day']['meals'])) ? $formData['day']['meals'] : null;
+				$meals = $formData['day']['meals'];
+
 				$em->getConnection()->beginTransaction(); // suspend auto-commit
 				try {
 					// add participation for every chosen Meal
@@ -180,6 +181,7 @@ class MealController extends BaseController {
 				$message = $translator->trans("participation.successful", [], 'messages');
 
 				$this->addFlashMessage($message, 'success');
+				return $this->redirect($request->getUri());
 			} else {
 				$message = $translator->trans("error.participation.no_meal_selected", [], 'messages');
 				$this->addFlashMessage($message, 'danger');

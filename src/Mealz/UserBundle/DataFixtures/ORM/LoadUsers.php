@@ -52,8 +52,8 @@ class LoadUsers extends AbstractFixture implements OrderedFixtureInterface,Conta
 		$login->setSalt(md5(uniqid(null, true)));
 
 		/** @var EncoderFactory $encoder */
-		$encoder = $this->container->get('security.encoder_factory')->getEncoder($login);
-		$login->setPassword($encoder->encodePassword($name, $login->getSalt()));
+		$encoder = $this->container->get('security.password_encoder');
+		$login->setPassword($encoder->encodePassword($login, $login->getSalt()));
 
 		$profile = new Profile();
 		$profile->setUsername($name);

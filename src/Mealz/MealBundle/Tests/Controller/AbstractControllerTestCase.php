@@ -9,16 +9,27 @@
 namespace Mealz\MealBundle\Tests\Controller;
 
 use Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
+use Mealz\UserBundle\Entity\Login;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage;
 use Symfony\Component\Security\Core\SecurityContext;
+
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\BrowserKit\Cookie;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
 {
     /** @var  Client $client */
     protected $client;
 
+    /**
+     * Create a default client with no frontend user logged in
+     *
+     * @param array $options    Array with symfony parameters to be set (e.g. environment,...)
+     * @param array $server     Array with Server parameters to be set (e.g. HTTP_HOST,...)
+     */
     protected function createDefaultClient($options = array(), $server = array())
     {
         $defaultOptions = array(
@@ -35,31 +46,43 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         $this->client = self::createClient($options, $server);
     }
 
+    /**
+     * Create a client with a frontend user having a role ROLE_KITCHEN_STAFF
+     *
+     * @param array $options    Array with symfony parameters to be set (e.g. environment,...)
+     * @param array $server     Array with Server parameters to be set (e.g. HTTP_HOST,...)
+     */
     protected function createAdminClient($options = array(), $server = array())
     {
         $this->createDefaultClient($options, $server);
 
-        // Mock security.context service: allow all for admin routes
-        $securityContext = $this->getMockBuilder(SecurityContext::class)
-            ->setMethods(
-                array(
-                    'isGranted'
-                )
-            )
-            ->disableOriginalConstructor()
-            ->getMock();
+        /**
+         * If you encounter problems during testing with the session saying "Cannot set session ID after the session has started"
+         * consider to run phpunit with the following property setting:
+         *      processIsolation="true"
+         * @see https://git.aoesupport.com/gitweb/project/concar/calimero/symfony.git/blob/HEAD:/app/phpunitFunctional.xml?js=1
+         */
+        $session = $this->client->getContainer()->get('session');
+        #$session->migrate(true);
+        // the firewall context (defaults to the firewall name)
+        $firewall = 'mealz';
 
-        $securityContext->expects($this->atLeastOnce())
-            ->method('isGranted')
-            ->with(
-                $this->equalTo('ROLE_KITCHEN_STAFF'),
-                $this->isNull()
-            )
-            ->will($this->returnValue(true));
+        $repo = $this->client->getContainer()->get('doctrine')->getRepository('MealzUserBundle:Login');
+        $user = $repo->findOneBy(['username'=>'kochomi']);
+        $user = ($user instanceof UserInterface) ? $user : 'kochomi';
 
-        $this->client->getContainer()->set('security.context', $securityContext);
+        $token = new UsernamePasswordToken($user, null, $firewall, array('ROLE_KITCHEN_STAFF'));
+        if(!$session->getId()) {
+            $session->set('_security_' . $firewall, serialize($token));
+            $session->save();
+        }
+        $cookie = new Cookie($session->getName(), $session->getId());
+        $this->client->getCookieJar()->set($cookie);
     }
 
+    /**
+     * @param array $options
+     */
     protected function mockServices($options = array())
     {
         $defaultOptions = array(
@@ -73,6 +96,9 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         }
     }
 
+    /**
+     *
+     */
     private function mockFlashBag()
     {
         // Mock session.storage for flashbag

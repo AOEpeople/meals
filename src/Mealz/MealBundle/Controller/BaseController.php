@@ -4,6 +4,7 @@
 namespace Mealz\MealBundle\Controller;
 
 
+use Mealz\AccountingBundle\Entity\TransactionRepository;
 use Mealz\MealBundle\Entity\CategoryRepository;
 use Mealz\MealBundle\Entity\DishRepository;
 use Mealz\MealBundle\Entity\MealRepository;
@@ -46,6 +47,14 @@ abstract class BaseController extends Controller {
 	{
 		return $this->getDoctrine()->getRepository('MealzMealBundle:Category');
 	}
+
+    /**
+     * @return TransactionRepository
+     */
+    public function getTransactionRepository()
+    {
+        return $this->getDoctrine()->getRepository('MealzAccountingBundle:Transaction');
+    }
 
 	/**
 	 * @return Doorman

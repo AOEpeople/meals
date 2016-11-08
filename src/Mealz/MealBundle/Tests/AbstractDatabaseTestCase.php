@@ -11,6 +11,7 @@ use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
 use Mealz\MealBundle\Entity\Category;
 use Mealz\MealBundle\Entity\Dish;
+use Mealz\MealBundle\Entity\DishVariation;
 use Mealz\MealBundle\Entity\Meal;
 use Mealz\UserBundle\Entity\Login;
 use Mealz\UserBundle\Entity\Profile;
@@ -32,6 +33,14 @@ abstract class AbstractDatabaseTestCase extends WebTestCase {
 	 * @throws \InvalidArgumentException
 	 */
 	protected function loadFixtures($fixtures) {
+            // TODO: supress output on the commandline during phpunit test run
+            //Create Schema, ensure the database tables are existend before they are truncated!!
+        $application = new \Symfony\Bundle\FrameworkBundle\Console\Application(static::$kernel);
+        $application->setAutoExit(false);
+        $options = array('command' => 'doctrine:schema:update',"--force" => true);
+        $application->run(new \Symfony\Component\Console\Input\ArrayInput($options));
+#***********************************************
+
 		$em = static::$kernel->getContainer()->get('doctrine')->getManager();
 		$loader = new Loader();
 		if(is_array($fixtures) || $fixtures instanceof \Iterator) {
@@ -66,6 +75,8 @@ abstract class AbstractDatabaseTestCase extends WebTestCase {
 	}
 
 	/**
+     * Create a dish with random title
+     *
 	 * @param Category $category
 	 * @return Dish
 	 */
@@ -73,11 +84,31 @@ abstract class AbstractDatabaseTestCase extends WebTestCase {
 		$dish = new Dish();
 		$dish->setTitleEn('Test EN ' . rand());
 		$dish->setTitleDe('Test DE ' . rand());
+		$dish->setPrice(7.45);
 		if ($category) {
 			$dish->setCategory($category);
 		}
 
 		return $dish;
+	}
+
+	/**
+     * Create a dishvariation with random title
+     *
+	 * @param Dish $dish
+	 * @return DishVariation
+	 */
+	protected function createDishVariation(Dish $dish = null) {
+		if (!$dish instanceof \Mealz\MealBundle\Entity\Dish) {
+            $dish = $this->createDish();
+        }
+        $dishVariation = new DishVariation();
+		$dishVariation->setTitleEn('Test Variation EN ' . rand());
+		$dishVariation->setTitleDe('Test Variation DE ' . rand());
+        $dishVariation->setParent($dish);
+		$dishVariation->setPrice(7.15);
+
+		return $dishVariation;
 	}
 
 	/**

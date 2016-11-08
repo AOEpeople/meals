@@ -109,7 +109,7 @@ class Dish
      * If an dish, which is referenced by an dish_variation, is deleted the related dish_variations are deleted cascadingly.
      *
      *
-	 * @ORM\ManyToOne(targetEntity="Dish", inversedBy="variations")
+	 * @ORM\ManyToOne(targetEntity="Dish", inversedBy="variations", cascade={"persist"})
 	 * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=TRUE, onDelete="CASCADE")
 	 * @var Dish
 	 */
@@ -313,9 +313,9 @@ class Dish
 	}
 
 	/**
-	 * @param Category $category
+	 * @param null|Category $category
 	 */
-	public function setCategory(Category $category)
+	public function setCategory($category)
 	{
 		$this->category = $category;
 	}

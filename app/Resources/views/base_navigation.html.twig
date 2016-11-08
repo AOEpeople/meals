@@ -1,0 +1,7 @@
+{% extends '::base.html.twig' %}
+
+{% block headerContent %}
+    {% include 'modules/navigation.html.twig' %}
+    {{ parent() }}
+    {% include 'modules/login.html.twig' %}
+{% endblock %}

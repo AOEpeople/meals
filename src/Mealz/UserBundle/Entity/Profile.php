@@ -55,6 +55,14 @@ class Profile {
 	private $roles;
 
 	/**
+	 * Profile constructor.
+	 */
+	public function __construct()
+	{
+		$this->roles = new ArrayCollection();
+	}
+
+	/**
 	 * @param string $username
 	 */
 	public function setUsername($username)
@@ -112,6 +120,28 @@ class Profile {
 
 	public function __toString() {
 		return $this->getUsername();
+	}
+
+	/**
+	 * Add role
+	 *
+	 * @param Role $role
+	 * @return Profile
+	 */
+	public function addRole(Role $role)
+	{
+		$this->roles->add($role);
+		return $this;
+	}
+
+	/**
+	 * Remove role
+	 *
+	 * @param Role $role
+	 */
+	public function removeRole(Role $role)
+	{
+		$this->roles->removeElement($role);
 	}
 
 	/**

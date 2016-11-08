@@ -13,5 +13,9 @@ dish:
 dish_variation:
   deleted: Gericht variation "%dishVariation%" wurde gelöscht.
 error:
+  participation:
+    no_meal_selected: Es muss mindestens ein Gericht ausgewählt werden
   meal:
     has_participants: Es gibt bereits Teilnehmer für "%dish%" am %day%.
+participation:
+  successful: Essensbuchung erfolgreich!

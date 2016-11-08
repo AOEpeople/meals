@@ -4,14 +4,17 @@
 namespace Mealz\MealBundle\Controller;
 
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query;
+use Exception;
 use Mealz\MealBundle\Entity\Meal;
 use Mealz\MealBundle\Entity\Participant;
 use Mealz\MealBundle\Entity\WeekRepository;
 use Mealz\MealBundle\EventListener\ParticipantNotUniqueException;
 use Mealz\MealBundle\Form\Guest\InvitationWrapper;
 use Mealz\UserBundle\Entity\Profile;
+use Mealz\UserBundle\Entity\Role;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Mealz\MealBundle\Entity\Week;
@@ -141,28 +144,60 @@ class MealController extends BaseController {
 		$invitationWrapper->setDay($guestInvitation->getDay());
 		$invitationWrapper->setProfile(new Profile());
 		$form = $this->createForm(InvitationForm::class, $invitationWrapper);
-//VarDumper::dump($form->createView());die();
 
 		// handle form submission
 		if ($request->isMethod('POST')) {
+			$translator = $this->get('translator');
 			$form->handleRequest($request);
 
 			if ($form->isValid()) {
+				// $em instanceof EntityManager
+				$em = $this->getDoctrine()->getManager();
 				$profile = $invitationWrapper->getProfile();
-                VarDumper::dump($form->getData());
-			    $em = $this->getDoctrine()->getManager();
-//				$em->persist($entity);
-				$em->flush();
+				$profile->setUsername($profile->getName() . time());
+				$profile->addRole($this->getGuestRole());
 
-//				$this->addFlashMessage($successMessage, 'success');
+				$mealRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
+				$formData = $request->request->get('invitation_form');
+				$meals = ($formData['day']['meals'] && is_array($formData['day']['meals'])) ? $formData['day']['meals'] : null;
+				$em->getConnection()->beginTransaction(); // suspend auto-commit
+				try {
+					// add participation for every chosen Meal
+					foreach ($meals as $mealId) { /* @var $meal Meal */
+						$participation = new Participant();
+						$participation->setProfile($profile);
+						$participation->setCostAbsorbed(true);
+						$participation->setMeal($mealRepository->find($mealId));
+						$em->persist($participation);
+					}
+					$em->persist($profile);
+					$em->flush();
+					$em->getConnection()->commit();
+				} catch (Exception $e) {
+					$em->getConnection()->rollBack();
+					throw $e;
+				}
+				$message = $translator->trans("participation.successful", [], 'messages');
+
+				$this->addFlashMessage($message, 'success');
 			} else {
-				return $this->render('MealzMealBundle:Meal:guest.html.twig', array(
-						'form' => $form->createView()
-				));
+				$message = $translator->trans("error.participation.no_meal_selected", [], 'messages');
+				$this->addFlashMessage($message, 'danger');
 			}
 		}
 		return $this->render('MealzMealBundle:Meal:guest.html.twig', array(
 				'form' => $form->createView()
 		));
+	}
+
+	/**
+	 * Method to read Guest role object
+	 * @return Role|null
+	 */
+	public function getGuestRole()
+	{
+		$roleRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Role');
+		$role = $roleRepository->findOneBy(array('sid' => Role::ROLE_GUEST));
+		return $role ? $role : null;
 	}
 }

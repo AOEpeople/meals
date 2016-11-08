@@ -109,7 +109,7 @@ Mealz.prototype.styleCheckboxes = function() {
 
     // Handle change event on checkboxes
     this.$guestParticipationCheckboxes.on('change', function() {
-        that.applyCheckboxClasses($(this))
+        that.applyCheckboxClasses($(this));
     });
 };
 

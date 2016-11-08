@@ -170,3 +170,11 @@ MealzMealBundle_Print_participations:
 MealzMealBundle_Meal_guest:
     path:  /menu/guest/{hash}
     defaults: { _controller: "MealzMealBundle:Meal:guest" }
+
+MealzMealBundle_Meal_newGuestInvitation:
+#    path:  /menu/{mealId}/new-guest-invitation
+    pattern:  /menu/{dayId}/new-guest-invitation
+    defaults: { _controller: "MealzMealBundle:Meal:newGuestInvitation" }
+    requirements:
+      dayId: '[1-9][0-9]*'
+#    condition: 'request.isXmlHttpRequest()'

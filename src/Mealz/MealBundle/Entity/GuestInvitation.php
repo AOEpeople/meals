@@ -8,9 +8,11 @@ use Mealz\UserBundle\Entity\Profile;
 /**
  * Guest invitation entity.
  *
- * @author Chetan Thapliyal <chetan.thapliyal@aoe.com>
  * @ORM\Table(name="guest_invitation")
  * @ORM\Entity(repositoryClass="Mealz\MealBundle\Entity\GuestInvitationRepository")
+ * @ORM\HasLifecycleCallbacks
+ *
+ * @author Chetan Thapliyal <chetan.thapliyal@aoe.com>
  */
 class GuestInvitation
 {
@@ -41,6 +43,30 @@ class GuestInvitation
 	 */
 	private $day;
 
+	/**
+	 * Initializes class instance.
+	 *
+	 * @param Profile $host
+	 * @param Day $day
+	 */
+	public function __construct(Profile $host, Day $day)
+	{
+		$this->host = $host;
+		$this->day = $day;
+	}
+
+	/**
+	 * Set id
+	 *
+	 * @param  string $id
+	 *
+	 * @return GuestInvitation
+	 */
+	public function setId($id)
+	{
+		$this->id = $id;
+		return $this;
+	}
 
 	/**
 	 * Get id
@@ -120,5 +146,13 @@ class GuestInvitation
 	{
 		return $this->day;
 	}
-}
 
+	/**
+	 * @ORM\PrePersist()
+	 */
+	public function beforeCreate()
+	{
+		$this->id = md5($this->host->getUsername() . $this->day->getId());
+		$this->createdOn = new \DateTime();
+	}
+}

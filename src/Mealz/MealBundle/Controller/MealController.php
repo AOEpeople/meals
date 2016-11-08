@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Mealz\MealBundle\Controller;
 
 
@@ -8,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query;
 use Exception;
+use Mealz\MealBundle\Entity\Day;
 use Mealz\MealBundle\Entity\Meal;
 use Mealz\MealBundle\Entity\Participant;
 use Mealz\MealBundle\Entity\WeekRepository;
@@ -15,12 +15,12 @@ use Mealz\MealBundle\EventListener\ParticipantNotUniqueException;
 use Mealz\MealBundle\Form\Guest\InvitationWrapper;
 use Mealz\UserBundle\Entity\Profile;
 use Mealz\UserBundle\Entity\Role;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Mealz\MealBundle\Entity\Week;
 use Mealz\MealBundle\Form\Guest\InvitationForm;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\VarDumper\VarDumper;
 
 class MealController extends BaseController {
 
@@ -198,6 +198,27 @@ class MealController extends BaseController {
 	{
 		$roleRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Role');
 		$role = $roleRepository->findOneBy(array('sid' => Role::ROLE_GUEST));
+
 		return $role ? $role : null;
+	}
+
+	/**
+	 * Gets the guest invitation URL.
+	 *
+	 * @param  Day $mealDay     Meal day for which to generate the invitation.
+	 * @ParamConverter("mealDay", options={"mapping": {"dayId": "id"}})
+	 * @return JsonResponse
+	 */
+	public function newGuestInvitationAction(Day $mealDay)
+	{
+		$this->denyAccessUnlessGranted('ROLE_USER');
+
+		/** @var \Mealz\MealBundle\Entity\GuestInvitationRepository $guestInvitationRepository */
+		$guestInvitationRepository = $this->getDoctrine()->getRepository('MealzMealBundle:GuestInvitation');
+		$guestInvitation = $guestInvitationRepository->findOrCreateInvitation($this->getUser()->getProfile(), $mealDay);
+
+		return new JsonResponse(
+			$this->generateUrl('MealzMealBundle_Meal_guest', ['hash' => $guestInvitation->getId()]), 200
+		);
 	}
 }

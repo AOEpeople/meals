@@ -181,7 +181,7 @@ class MealController extends BaseController {
 				$message = $translator->trans("participation.successful", [], 'messages');
 
 				$this->addFlashMessage($message, 'success');
-				return $this->redirect($request->getUri());
+				return $this->render('::base.html.twig');
 			} else {
 				$message = $translator->trans("error.participation.no_meal_selected", [], 'messages');
 				$this->addFlashMessage($message, 'danger');

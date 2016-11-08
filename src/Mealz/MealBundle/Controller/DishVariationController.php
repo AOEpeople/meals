@@ -125,16 +125,33 @@ class DishVariationController extends BaseController
 			throw $this->createNotFoundException();
 		}
 
-		$dishVariation->setEnabled(FALSE);
+        /** @var EntityManager $em */
+        $em = $this->getDoctrine()->getManager();
 
-		$this->persistEntity($dishVariation);
+#**************************************
+        if ($dishVariationRepository->hasDishAssociatedMeals($dishVariation)) {
+            // if there are meals assigned: just hide this record, but do not delete it
+            $dishVariation->setEnabled(false);
+            $em->persist($dishVariation);
+            $em->flush();
+            $message = $this->get('translator')->trans(
+                'dish_variation.hidden',
+                array('%dishVariation%' => $dishVariation->getTitle()),
+                'messages'
+            );
+            $this->addFlashMessage($message, 'success');
+        } else {
+            // else: no need to keep an unused record
+            $em->remove($dishVariation);
+            $em->flush();
 
-		$message = $this->get('translator')->trans(
-			'dish.hidden',
-			array('%dish%' => $dishVariation->getTitle()),
-			'messages'
-		);
-		$this->addFlashMessage($message, 'success');
+            $message = $this->get('translator')->trans(
+                'dish_variation.deleted',
+                array('%dishVariation%' => $dishVariation->getTitle()),
+                'messages'
+            );
+            $this->addFlashMessage($message, 'success');
+        }
 
 		return $this->redirectToRoute('MealzMealBundle_Dish');
 	}

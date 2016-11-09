@@ -34,6 +34,8 @@
 
     .remove-meal {
       float: right;
+      padding: 10px;
+      margin: -11px -15px -9px -10px;
 
       &:hover, &:focus {
         color: $color-red;

@@ -329,8 +329,6 @@ $(document).ready(function() {
 
         /* if checkbox is not checked yet */
         if(!thisVariation.hasClass('checked')) {
-            console.log("checked");
-            $(this).addClass('checked');
             var formRow = thisVariation.closest('.meal-row').children('.form-row').last();
 
             if (thisVariation.closest('.meal-select-variations').find('.checked').length === 0) {
@@ -351,20 +349,11 @@ $(document).ready(function() {
                 newFormEl.find('select').val(thisVariation.next().attr('data-attribute-id'));
             }
         } else {
-            console.log("removed check");
-            $(this).removeClass('checked');
+
         }
 
-        //$(this).toggleClass('checked');
-        /*
-         $('.remove-meal').on('click', function (e) {
-         $('.meal-select').prev().hide();
-         e.preventDefault();
-         e.stopPropagation();
-         $(this).parent().children(':first-child').remove();
-         });
+        $(this).toggleClass('checked');
 
-         */
     });
 
     /* setting meal-select box text */

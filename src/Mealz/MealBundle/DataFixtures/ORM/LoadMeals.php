@@ -7,6 +7,7 @@ use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Mealz\MealBundle\Entity\Day;
 use Mealz\MealBundle\Entity\Dish;
+use Mealz\MealBundle\Entity\DishVariation;
 use Mealz\MealBundle\Entity\Meal;
 
 
@@ -57,7 +58,7 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface {
 
 	protected function loadDishes() {
 		foreach($this->referenceRepository->getReferences() as $referenceName=>$reference) {
-			if($reference instanceof Dish) {
+			if(($reference instanceof Dish) && !($reference instanceof DishVariation)) {
 				// we can't just use $reference here, because
 				// getReference() does some doctrine magic that getReferences() does not
 				$this->dishes[] = $this->getReference($referenceName);

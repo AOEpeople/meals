@@ -1,0 +1,10 @@
+{#
+# Limit value to two digits to the right of the decimal point and append an euro sign.
+#
+# @param value int
+#}
+{% macro create(value) %}
+    {%- spaceless -%}
+        {{ value | number_format(2) }}<i class='glyphicon glyphicon-euro'></i>
+    {%- endspaceless -%}
+{% endmacro %}

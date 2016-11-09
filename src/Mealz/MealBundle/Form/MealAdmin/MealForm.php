@@ -27,23 +27,23 @@ class MealForm extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('dish', EntityType::class, array(
-                'class' => 'MealzMealBundle:Dish',
-                'query_builder' => $this->dishRepository->getSortedDishesQueryBuilder(array(
-                    'load_disabled' => true,
-                    'load_variations' => true
-                )),
-                'required' => false,
-                'group_by' => function(Dish $dish) {
-                    return ($dish->isEnabled() && $category = $dish->getCategory()) ? $category : null;
-                },
-                'choice_attr' => function (Dish $dish, $value, $index) {
-                    return ($dish->isEnabled()) ? [] : ['disabled' => 'disabled'];
-                },
-                'choice_translation_domain' => 'general'
-            ))
-            ->add('day', HiddenDishType::class)
-        ;
+        ->add('dish', EntityType::class, array(
+            'class' => 'MealzMealBundle:Dish',
+            'query_builder' => $this->dishRepository->getSortedDishesQueryBuilder(array(
+                'load_disabled' => true,
+                'load_variations' => true
+            )),
+            'required' => false,
+            'group_by' => function(Dish $dish) {
+                return ($dish->isEnabled() && $category = $dish->getCategory()) ? $category : null;
+            },
+            'choice_attr' => function (Dish $dish, $value, $index) {
+                return ($dish->isEnabled()) ? [] : ['disabled' => 'disabled'];
+            },
+            'choice_translation_domain' => 'general'
+        ))
+        ->add('day', HiddenDishType::class)
+    ;
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use ($builder) {
             /** @var Meal $meal */

@@ -1,7 +1,7 @@
 <div class="meal-row">
-    <div class="meal-select-box">
 
-        {% for dishvars in meal.dish.vars %}
+    <div class="meal-select-box">
+        {% for dishvars in formView.dish.vars %}
             {% for weekdishentries in dishvars %}
                 {% if weekdishentries is iterable %}
                     <ul>

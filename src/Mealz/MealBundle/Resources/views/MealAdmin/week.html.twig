@@ -57,10 +57,19 @@
                 </div>
 
                 <div class="meal-rows-wrapper" data-prototype="{{ form_widget(day.meals.vars.prototype)|e('html_attr') }}">
-                    {# display meals for given day #}
-                    {% for meal in day.meals %}
-                        {{ include('MealzMealBundle:MealAdmin:mealSelect.html.twig', {'meal': meal}) }}
+
+                    {{ getDump(day.meals.children[0].children["dish"].vars["choices"]) }}
+                    {% for choice in day.meals.children[0].children["dish"].vars["choices"] %}
+
                     {% endfor %}
+
+                    {% set groupMeals = groupMealsToParents(day.meals) %}
+
+                    {% for meal in groupMeals %}
+                        {{ dump(meal) }}
+                        {#{{ include('MealzMealBundle:MealAdmin:mealSelect.html.twig', {'formView': meal}) }}#}
+                    {% endfor %}
+
                 </div>
 
                 <div class="week-day-action">

@@ -293,28 +293,33 @@ function copy(event) {
 
 }
 
+Mealz.prototype.loadGeneratedLink = function(day_id) {
+    var host = location.protocol + '//' + location.host;
+
+    $.get('/app.php/menu/' + day_id + '/new-guest-invitation', function(result) {
+        $('.guest-menu-link input').attr('value', host + result);
+    });
+};
+
 Mealz.prototype.copyToClipboard = function() {
     'use strict';
 
     // click events
-    $('.guest-menu').on('click', function () {
+    $('.guest-menu').on('click', function (event) {
+        var day_id = $(this).attr('data-copytarget').split("-").pop();
+
         $(this).next().addClass('open');
+        Mealz.prototype.loadGeneratedLink(day_id);
         copy(event);
-        event.stopPropagation();
+        return false;
     });
 
-    $(document).on('click', function (e) {
-        if($(e.target).is(".guest-menu-link, .guest-menu-link span, .guest-menu-link input") === false ) {
+    $(document).on('click', function (event) {
+        if (!$(event.target).closest('.guest-menu-link').length) {
             $('.guest-menu-link').removeClass('open');
         }
     });
 
-};
-
-Mealz.prototype.loadGeneratedLink = function() {
-    $.get('../url.html', function(result) {
-        $('.guest-menu-link input').attr('value', result);
-    });
 };
 
 
@@ -323,7 +328,6 @@ $(document).ready(function() {
     mealz.styleCheckboxes();
     mealz.styleSelects();
     mealz.copyToClipboard();
-    mealz.loadGeneratedLink();
 
     $('.hamburger').on('click', function() {
         $(this).toggleClass('is-active');

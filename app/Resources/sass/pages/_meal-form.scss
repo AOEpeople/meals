@@ -31,6 +31,15 @@
       right: -61px;
       margin-top: -16px;
     }
+
+    .remove-meal {
+      float: right;
+
+      &:hover, &:focus {
+        color: $color-red;
+        cursor: pointer;
+      }
+    }
   }
 
   .select-wrapper {

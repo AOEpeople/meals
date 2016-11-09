@@ -262,6 +262,7 @@ Mealz.prototype.loadAjaxFormPayment = function($element) {
     });
 };
 
+
 $(document).ready(function() {
 
     var mealz = new Mealz();
@@ -328,6 +329,8 @@ $(document).ready(function() {
 
         /* if checkbox is not checked yet */
         if(!thisVariation.hasClass('checked')) {
+            console.log("checked");
+            $(this).addClass('checked');
             var formRow = thisVariation.closest('.meal-row').children('.form-row').last();
 
             if (thisVariation.closest('.meal-select-variations').find('.checked').length === 0) {
@@ -348,20 +351,42 @@ $(document).ready(function() {
                 newFormEl.find('select').val(thisVariation.next().attr('data-attribute-id'));
             }
         } else {
-
+            console.log("removed check");
+            $(this).removeClass('checked');
         }
 
-        $(this).toggleClass('checked');
+        //$(this).toggleClass('checked');
+        /*
+         $('.remove-meal').on('click', function (e) {
+         $('.meal-select').prev().hide();
+         e.preventDefault();
+         e.stopPropagation();
+         $(this).parent().children(':first-child').remove();
+         });
+
+         */
     });
 
     /* setting meal-select box text */
     $('.select-wrapper').find('select').each(function(){
         var thisSelect = $(this);
+        var htmlButton = '<a class="remove-meal" href=\"#\"><span class=\"glyphicon glyphicon-remove\"></span></a>';
+
         thisSelect.find('option').each(function(){
             if($(this).attr('selected')) {
-                thisSelect.closest('.meal-row').find('.meal-select').text($(this).text());
+                var mealSelect = thisSelect.closest('.meal-row').find('.meal-label');
+                mealSelect.text($(this).text());
+                mealSelect.after(htmlButton);
             }
         });
+
+    });
+
+    $('.remove-meal').on('click', function (e) {
+        $('.meal-select').prev().hide();
+        e.preventDefault();
+        e.stopPropagation();
+        $(this).parent().children(':first-child').remove();
     });
 
     $('body').on('click', function() {

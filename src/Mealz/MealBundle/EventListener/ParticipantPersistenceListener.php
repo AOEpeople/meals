@@ -55,12 +55,6 @@ class ParticipantPersistenceListener {
 			->join('p.profile','u')
 			->where('m = :meal AND u = :profile')
 		;
-		if($participant->isGuest()) {
-			$qb->andWhere('p.guestName = :guestName');
-			$qb->setParameter('guestName', $participant->getGuestName());
-		} else {
-			$qb->andWhere('p.guestName IS NULL');
-		}
 		if($participant->getId()) {
 			$qb->andWhere('p.id != :id');
 			$qb->setParameter('id', $participant->getId());

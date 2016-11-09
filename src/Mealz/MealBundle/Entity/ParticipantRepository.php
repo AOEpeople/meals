@@ -92,9 +92,7 @@ class ParticipantRepository extends EntityRepository
 
 	protected function compareNameOfParticipants(Participant $participant1, Participant $participant2)
 	{
-		$name1 = $participant1->isGuest() ? $participant1->getGuestName() : $participant1->getProfile()->getName();
-		$name2 = $participant2->isGuest() ? $participant2->getGuestName() : $participant2->getProfile()->getName();
-		$result = strcasecmp($name1, $name2);
+		$result = strcasecmp($participant1->getProfile()->getName(), $participant2->getProfile()->getName());
 
 		if ($result !== 0) {
 			return $result;

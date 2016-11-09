@@ -13,5 +13,9 @@ dish:
 dish_variation:
   deleted: Dish variation "%dishVariation%" has been successfully deleted.
 error:
+  participation:
+    no_meal_selected: Please select at least one Meal from options
   meal:
     has_participants: There are already participants for "%dish%" on %day%.
+participation:
+  successful: Meal participation successful

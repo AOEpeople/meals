@@ -56,12 +56,12 @@ class LoadDishVariations extends AbstractFixture implements OrderedFixtureInterf
 	 */
 	private function getDishVariation(Dish $dish)
 	{
-		$dummyPrefix = '#v' . (count($dish->getVariations()) + 1);
+		$dummyPrefix = ' #v' . (count($dish->getVariations()) + 1);
 		$dishVariation = new DishVariation();
-        $dishVariation->setTitleDe($dish->getTitleDe());
-        $dishVariation->setTitleEn($dish->getTitleEn());
-		$dishVariation->setDescriptionDe($dish->getTitleDe() . $dummyPrefix);
-		$dishVariation->setDescriptionEn($dish->getTitleEn() . $dummyPrefix);
+        $dishVariation->setTitleDe($dish->getTitleDe() . $dummyPrefix);
+        $dishVariation->setTitleEn($dish->getTitleEn() . $dummyPrefix);
+		$dishVariation->setDescriptionDe('');
+		$dishVariation->setDescriptionEn('');
 		$dishVariation->setParent($dish);
 		$dishVariation->setPrice(3.2);
 
@@ -88,6 +88,6 @@ class LoadDishVariations extends AbstractFixture implements OrderedFixtureInterf
 	 */
 	public function getOrder()
 	{
-		return 5;
+		return 6;
 	}
 }

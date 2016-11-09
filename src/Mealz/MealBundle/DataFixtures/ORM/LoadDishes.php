@@ -31,9 +31,9 @@ class LoadDishes extends AbstractFixture implements OrderedFixtureInterface {
 
 		$this->loadCategories();
 
-		$this->addDish('Braaaaaiiinnnzzzzzz with Tomato-Sauce', 'Braaaaaiiinnnzzzzzz with Tomato-Sauce DE');
-		$this->addDish('Tasty Worms', 'Tast Worms DE');
-		$this->addDish('Braaaaaiiinnnzzzzzz with Cheese-Sauce', 'Braaaaaiiinnnzzzzzz with Cheese-Sauce DE');
+		$this->addDish('Braaaaaiiinnnzzzzzz', 'Braaaaaiiinnnzzzzzz DE');
+		$this->addDish('Tasty Worms', 'Tasty Worms DE');
+		$this->addDish('Innards', 'Innards DE');
 		$this->addDish('Fish (so juicy sweat)', 'Fish (so juicy sweat) DE');
 		$this->addDish('Limbs', 'Limbs DE');
 
@@ -64,6 +64,6 @@ class LoadDishes extends AbstractFixture implements OrderedFixtureInterface {
 
 	public function getOrder()
 	{
-		return 4;
+		return 5;
 	}
 }

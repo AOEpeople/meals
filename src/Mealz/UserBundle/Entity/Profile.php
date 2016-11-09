@@ -160,6 +160,14 @@ class Profile {
 		$this->roles = $roles;
 	}
 
+    public function isGuest()
+    {
+        return $this->roles->exists(function ($key, $role) {
+            /** @var Role $role */
+            return ($role->getSid() === 'ROLE_GUEST');
+        });
+	}
+
 	/**
 	 * @return string
 	 */

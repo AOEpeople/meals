@@ -13,9 +13,14 @@ dish:
 dish_variation:
   deleted: Dish variation "%dishVariation%" has been successfully deleted.
 error:
+  unknown: An unknown error occured.
+  profile:
+    already_exists: A profile with this name already exists.
   participation:
     no_meal_selected: Please select at least one Meal from options
+    not_unique: This participation already exists.
   meal:
     has_participants: There are already participants for "%dish%" on %day%.
+    join_not_allowed: It's not possible to join this meal anymore.
 participation:
   successful: Meal participation successful

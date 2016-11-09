@@ -43,7 +43,7 @@ class Doorman {
 			return FALSE;
 		}
 
-		return $this->isUserAllowedToToggleParticipation($meal->getDateTime());
+		return $this->isToggleParticipationAllowed($meal->getDateTime());
 	}
 
 	public function isUserAllowedToLeave(Meal $meal) {
@@ -54,7 +54,7 @@ class Doorman {
 			return FALSE;
 		}
 
-		return $this->isUserAllowedToToggleParticipation($meal->getDateTime());
+		return $this->isToggleParticipationAllowed($meal->getDateTime());
 	}
 
 	public function isKitchenStaff() {
@@ -76,7 +76,7 @@ class Doorman {
 		return $this->isKitchenStaff() || $this->isUserAllowedToAddGuest($meal);
 	}
 
-	private function isUserAllowedToToggleParticipation(\DateTime $mealDateTime)
+	public function isToggleParticipationAllowed(\DateTime $mealDateTime)
 	{
 		$date = clone($mealDateTime);
 		$date->modify($this->lockToggleParticipationAt);

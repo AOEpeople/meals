@@ -3,23 +3,23 @@
 namespace Mealz\MealBundle\Controller;
 
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Query;
 use Exception;
 use Mealz\MealBundle\Entity\Day;
 use Mealz\MealBundle\Entity\Meal;
 use Mealz\MealBundle\Entity\Participant;
+use Mealz\MealBundle\Entity\Week;
 use Mealz\MealBundle\Entity\WeekRepository;
 use Mealz\MealBundle\EventListener\ParticipantNotUniqueException;
+use Mealz\MealBundle\EventListener\ProfileExistsException;
+use Mealz\MealBundle\EventListener\ToggleParticipationNotAllowedException;
+use Mealz\MealBundle\Form\Guest\InvitationForm;
 use Mealz\MealBundle\Form\Guest\InvitationWrapper;
 use Mealz\UserBundle\Entity\Profile;
 use Mealz\UserBundle\Entity\Role;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Mealz\MealBundle\Entity\Week;
-use Mealz\MealBundle\Form\Guest\InvitationForm;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class MealController extends BaseController {
@@ -151,37 +151,67 @@ class MealController extends BaseController {
 			$form->handleRequest($request);
 
 			$formData = $request->request->get('invitation_form');
-			if ($form->isValid() && array_key_exists( 'day', $formData)) {
-				// $em instanceof EntityManager
-				$em = $this->getDoctrine()->getManager();
-				$profile = $invitationWrapper->getProfile();
-				$profile->setUsername($profile->getName() . time());
-				$profile->addRole($this->getGuestRole());
+			if ($form->isValid() && array_key_exists('day', $formData)) {
+                $mealRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
+                $meals = $formData['day']['meals'];
+				$mealDateTime = $mealRepository->find($meals[0])->getDateTime()->format('Y-m-d');
 
-				$mealRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
-				$meals = $formData['day']['meals'];
+                $profile = $invitationWrapper->getProfile();
+                $profileId = $profile->getFirstName().$profile->getName().$mealDateTime;
+                // Try to load already existing profile entity.
+                $loadedProfile = $this->getDoctrine()->getRepository('MealzUserBundle:Profile')->find($profileId);
 
+                $em = $this->getDoctrine()->getManager();
 				$em->getConnection()->beginTransaction(); // suspend auto-commit
 				try {
+				    // If profile already exists: use it. Otherwise create new one.
+                    if($loadedProfile) {
+                        // If profile exists, but has no guest role, throw an error.
+                        if ($loadedProfile->isGuest()) {
+                            $profile = $loadedProfile;
+                        } else {
+                            throw new ProfileExistsException('This profile entity already exists');
+                        }
+                    } else {
+                        $profile->setUsername($profileId);
+                        $profile->addRole($this->getGuestRole());
+                    }
+
 					// add participation for every chosen Meal
-					foreach ($meals as $mealId) { /* @var $meal Meal */
+					foreach ($meals as $mealId) {
+					    $meal = $mealRepository->find($mealId);
+					    // If guest enrolls too late, throw access denied error
+					    if (!$this->getDoorman()->isToggleParticipationAllowed($meal->getDateTime())) {
+                            throw new ToggleParticipationNotAllowedException();
+                        }
 						$participation = new Participant();
 						$participation->setProfile($profile);
 						$participation->setCostAbsorbed(true);
-						$participation->setMeal($mealRepository->find($mealId));
+						$participation->setMeal($meal);
 						$em->persist($participation);
 					}
 					$em->persist($profile);
 					$em->flush();
 					$em->getConnection()->commit();
+                    $message = $translator->trans("participation.successful", [], 'messages');
+                    $this->addFlashMessage($message, 'success');
 				} catch (Exception $e) {
 					$em->getConnection()->rollBack();
-					throw $e;
-				}
-				$message = $translator->trans("participation.successful", [], 'messages');
 
-				$this->addFlashMessage($message, 'success');
-				return $this->render('::base.html.twig');
+					if ($e instanceof ParticipantNotUniqueException) {
+                        $message = $translator->trans("error.participation.not_unique", [], 'messages');
+                    } elseif ($e instanceof ToggleParticipationNotAllowedException) {
+                        $message = $translator->trans("error.meal.join_not_allowed", [], 'messages');
+                    } elseif ($e instanceof ProfileExistsException) {
+					    $message = $translator->trans("error.profile.already_exists", [], 'messages');
+                    } else {
+					    $message = $translator->trans("error.unknown", [], 'messages');
+                    }
+
+                    $this->addFlashMessage($message, 'danger');
+				} finally {
+                    return $this->render('::base.html.twig');
+                }
 			} else {
 				$message = $translator->trans("error.participation.no_meal_selected", [], 'messages');
 				$this->addFlashMessage($message, 'danger');

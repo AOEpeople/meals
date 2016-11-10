@@ -15,7 +15,7 @@ class MealRepository extends EntityRepository
      * @throws \LogicException
      * @throws \InvalidArgumentException
      */
-    public function findOneByDateAndDish($date, $dish, &$userSelections)
+    public function findOneByDateAndDish($date, $dish, $userSelections = array())
     {
         if (!preg_match('/^\d{4}-\d{2}-\d{2}$/ims', $date)) {
             throw new \InvalidArgumentException('$date has to be a string of the format "YYYY-MM-DD".');

@@ -58,17 +58,46 @@
 
                 <div class="meal-rows-wrapper" data-prototype="{{ form_widget(day.meals.vars.prototype)|e('html_attr') }}">
 
-                    {{ getDump(day.meals.children[0].children["dish"].vars["choices"]) }}
-                    {% for choice in day.meals.children[0].children["dish"].vars["choices"] %}
+                    {% for meal in day.meals %}
+                        {% set groupedDishes = getGroupedDishes(meal) %}
+
+                        <div class="meal-row">
+                            <div class="meal-select-box">
+                                <ul>
+                                    {% for groupedDish in groupedDishes %}
+                                        <li class="category">
+                                            Category: {{ groupedDish.label }}
+                                        </li>
+                                        {% set dishes = getDishesFromGroup(groupedDish) %}
+                                        {% for dish in dishes %}
+                                            <li class="dishes" data-attribute-id="">
+                                                {{ dish.label }}
+                                                {% set variations = getVariationsForDish(dish) %}
+
+                                                {% if variations|length > 0 %}
+                                                <div class="variation-button">variations</div>
+                                                <div class="meal-select-variations">
+                                                    {% for variation in variations %}
+                                                        <div class="variation">
+                                                            <div class="variation-checkbox"></div>
+                                                            <label for="variation" data-attribute-id="{{ variation.id }}">{{ variation.title }}</label>
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                                {% endif %}
+                                            </li>
+                                        {% endfor %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div class="meal-select"></div>
+                            {{ form_row(meal, {'attr' : {'style' : 'display: none;'}}) }}
+                        </div>
 
                     {% endfor %}
-
-                    {% set groupMeals = groupMealsToParents(day.meals) %}
-
-                    {% for meal in groupMeals %}
-                        {{ dump(meal) }}
-                        {#{{ include('MealzMealBundle:MealAdmin:mealSelect.html.twig', {'formView': meal}) }}#}
-                    {% endfor %}
+                    {#{% for meal in day.meals %}#}
+                    {#{{ include('MealzMealBundle:MealAdmin:mealSelect.html.twig', {'formView': meal}) }}#}
+                    {#{% endfor %}#}
 
                 </div>
 

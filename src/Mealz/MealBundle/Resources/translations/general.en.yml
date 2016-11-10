@@ -54,4 +54,4 @@ form:
   placeholder:
     title: Title
     description: Description
-    category: No category
+    category: Please choose a category

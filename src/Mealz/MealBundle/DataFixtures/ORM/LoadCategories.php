@@ -14,6 +14,7 @@ class LoadCategories extends AbstractFixture implements OrderedFixtureInterface
     function load(ObjectManager $manager)
     {
         $categories = array(
+            'Others' => 'Sonstiges',
             'Vegetarian' => 'Vegetarisch',
             'Meat' => 'Fleisch',
         );

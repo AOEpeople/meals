@@ -58,23 +58,33 @@ class MealController extends BaseController {
 			return $this->ajaxSessionExpiredRedirect();
 		}
 
-		/** @var Meal $meal */
-		$meal = $this->getMealRepository()->findOneByDateAndDish($date, $dish);
+        if (null === $profile) {
+            $profile = $this->getProfile();
+        } else if ($this->getProfile()->getUsername() === $profile || $this->getDoorman()->isKitchenStaff()) {
+            $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
+            $profile = $profileRepository->find($profile);
+        } else {
+            return new JsonResponse(null, 403);
+        }
+
+        // ugly handling of Logical error made by Kochomi
+        // TODO: should be disabled in BE to select 1 Dish twice on same day
+        $userParticipationForToday = $this->getParticipantRepository()->getParticipationForProfile($profile, $date);
+		$userSelections = array();
+        foreach ($userParticipationForToday as $participation) {
+            if ($participation['meal']['id']) {
+                $userSelections[] = $participation['meal']['id'];
+            }
+        }
+
+        /** @var Meal $meal */
+        $meal = $this->getMealRepository()->findOneByDateAndDish($date, $dish, $userSelections);
 
 		if(!$meal) {
 			return new JsonResponse(null, 404);
 		}
 
 		if(!$this->getDoorman()->isUserAllowedToJoin($meal)) {
-			return new JsonResponse(null, 403);
-		}
-
-		if (null === $profile) {
-			$profile = $this->getProfile();
-		} else if ($this->getProfile()->getUsername() === $profile || $this->getDoorman()->isKitchenStaff()) {
-			$profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
-			$profile = $profileRepository->find($profile);
-		} else {
 			return new JsonResponse(null, 403);
 		}
 

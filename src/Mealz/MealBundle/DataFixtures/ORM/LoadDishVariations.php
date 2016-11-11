@@ -38,12 +38,14 @@ class LoadDishVariations extends AbstractFixture implements OrderedFixtureInterf
 		$this->loadDishes();
 
 		/** @var \Mealz\MealBundle\Entity\Dish $dish */
-		foreach ($this->dishes as $dish) {
-			// Create two variation for each dish
-			for ($i = 0; $i < 2; $i++) {
-				$dishVariation = $this->getDishVariation($dish);
-				$this->objectManager->persist($dishVariation);
-				$this->addReference('dishVariation-' . $this->counter++, $dishVariation);
+		foreach ($this->dishes as $key => $dish) {
+			// Create two variation for each dish EXCEPT THE FIRST ONE
+            if ($key > 0) {
+			    for ($i = 0; $i < 2; $i++) {
+                    $dishVariation = $this->getDishVariation($dish);
+                    $this->objectManager->persist($dishVariation);
+                    $this->addReference('dishVariation-' . $this->counter++, $dishVariation);
+                }
 			}
 		}
 

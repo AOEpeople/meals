@@ -149,13 +149,14 @@ class MealAdminController extends BaseController {
             }
 
             return $this->redirectToRoute('MealzMealBundle_Meal_edit', array(
-                    'week' => $week->getId()
+                'week' => $week->getId()
             ));
         }
 
         return $this->render('MealzMealBundle:MealAdmin:week.html.twig', array(
             'form' => $form->createView(),
-            'week' => $week
+            'week' => $week,
+            'categories' => $this->getCategoryRepository()->findAll(),
         ));
     }
 

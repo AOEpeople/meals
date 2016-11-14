@@ -227,4 +227,31 @@ class ParticipantRepository extends EntityRepository
 
 		return $result;
 	}
+
+    /**
+     * Get current participation for some user on particular day
+     *
+     * @param Profile $profile
+     * @param string $date "YYYY-MM-DD"
+     * @return array
+     */
+	public function getParticipationForProfile($profile, $date)
+    {
+        $options = array(
+            'load_meal' => true,
+            'load_profile' => true,
+        );
+        if ($profile) {
+            $options['load_profile'] = true;
+        }
+        $qb = $this->getQueryBuilderWithOptions($options);
+        $qb->where('u.username = :profile');
+        $qb->setParameter('profile', $profile->getUsername());
+        $qb->andWhere('m.dateTime >= :min_date');
+        $qb->andWhere('m.dateTime <= :max_date');
+        $qb->setParameter('min_date', $date.' 00:00:00');
+        $qb->setParameter('max_date', $date.' 23:59:29');
+
+        return $qb->getQuery()->getArrayResult();
+    }
 }

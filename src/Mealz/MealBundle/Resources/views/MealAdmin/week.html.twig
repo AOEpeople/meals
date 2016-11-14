@@ -59,25 +59,25 @@
                 <div class="meal-rows-wrapper" data-prototype="{{ form_widget(day.meals.vars.prototype)|e('html_attr') }}">
 
                     {% for meal in day.meals %}
-                        {% set groupedDishes = getGroupedDishes(meal) %}
+                        {#{% set groupedDishes = getGroupedDishes(meal) %}#}
 
                         <div class="meal-row">
                             <div class="meal-select-box">
                                 <ul>
-                                    {% for groupedDish in groupedDishes %}
+                                    {% for category in categories %}
                                         <li class="category">
-                                            Category: {{ groupedDish.label }}
+                                            Category: {{ category }}
                                         </li>
-                                        {% set dishes = getDishesFromGroup(groupedDish) %}
-                                        {% for dish in dishes %}
+                                        {#{% set dishes = getDishesFromGroup(groupedDish) %}#}
+                                        {% for dish in category.dishes %}
                                             <li class="dishes" data-attribute-id="">
-                                                {{ dish.label }}
-                                                {% set variations = getVariationsForDish(dish) %}
+                                                {{ dish }}
+                                                {#{% set variations = getVariationsForDish(dish) %}#}
 
-                                                {% if variations|length > 0 %}
+                                                {% if dish.variations|length > 0 %}
                                                 <div class="variation-button">variations</div>
                                                 <div class="meal-select-variations">
-                                                    {% for variation in variations %}
+                                                    {% for variation in dish.variations %}
                                                         <div class="variation">
                                                             <div class="variation-checkbox"></div>
                                                             <label for="variation" data-attribute-id="{{ variation.id }}">{{ variation.title }}</label>
@@ -93,6 +93,7 @@
                             <div class="meal-select"><span class="meal-label"></span></div>
                             {{ form_row(meal, {'attr' : {'style' : 'display: none;'}}) }}
                         </div>
+                    {#{{ form_row(meal) }}#}
 
                     {% endfor %}
                     {#{% for meal in day.meals %}#}

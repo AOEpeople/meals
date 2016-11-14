@@ -58,26 +58,31 @@ class CashController extends BaseController
             $form->handleRequest($request);
 
             if ($form->isValid()) {
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($transaction);
-                $em->flush();
+                if ($transaction->getAmount() > 0) {
+                    $em = $this->getDoctrine()->getManager();
+                    $em->persist($transaction);
+                    $em->flush();
 
-                $message = $this->get('translator')->trans(
-                    'payment.cash.success',
-                    array(
-                        '%amount%' => $transaction->getAmount(),
-                        '%name%' => $transaction->getProfile()->getFullName()
-                    ),
-                    'messages'
-                );
-                $this->addFlashMessage($message, 'success');
+                    $message = $this->get('translator')->trans(
+                        'payment.cash.success',
+                        array(
+                            '%amount%' => $transaction->getAmount(),
+                            '%name%' => $transaction->getProfile()->getFullName()
+                        ),
+                        'messages'
+                    );
+                    $this->addFlashMessage($message, 'success');
 
-                $logger = $this->get('monolog.logger.balance');
-                $logger->addInfo('admin added {amount}€ into wallet of {profile} (Transaction: {transactionId})', array(
-                    "profile" => $transaction->getProfile(),
-                    "amount" => $transaction->getAmount(),
-                    "transactionId" => $transaction->getId()
-                ));
+                    $logger = $this->get('monolog.logger.balance');
+                    $logger->addInfo('admin added {amount}€ into wallet of {profile} (Transaction: {transactionId})', array(
+                        "profile" => $transaction->getProfile(),
+                        "amount" => $transaction->getAmount(),
+                        "transactionId" => $transaction->getId()
+                    ));
+                } else {
+                    $message = $this->get('translator')->trans('payment.cash.failure',array(),'messages');
+                    $this->addFlashMessage($message, 'danger');
+                }
             }
         }
 

@@ -268,6 +268,14 @@ Mealz.prototype.loadAjaxFormPayment = function($element) {
     });
 };
 
+Mealz.prototype.loadGeneratedLink = function(day_id) {
+    var host = location.protocol + '//' + location.host;
+
+    $.when($.get('/app.php/menu/' + day_id + '/new-guest-invitation')).then (function(result) {
+        $('.guest-menu-link input').attr('value', host + result);
+    });
+};
+
 // event handler
 function copy(event) {
 
@@ -276,7 +284,6 @@ function copy(event) {
     var inp = (c ? document.querySelector(c) : null);
 
     if (inp && inp.select) {
-
         // select text
         inp.select();
 
@@ -288,18 +295,8 @@ function copy(event) {
         catch (err) {
             alert('please press Ctrl/Cmd+C to copy');
         }
-
     }
-
 }
-
-Mealz.prototype.loadGeneratedLink = function(day_id) {
-    var host = location.protocol + '//' + location.host;
-
-    $.get('/app.php/menu/' + day_id + '/new-guest-invitation', function(result) {
-        $('.guest-menu-link input').attr('value', host + result);
-    });
-};
 
 Mealz.prototype.copyToClipboard = function() {
     'use strict';
@@ -308,8 +305,9 @@ Mealz.prototype.copyToClipboard = function() {
     $('.guest-menu').on('click', function (event) {
         var day_id = $(this).attr('data-copytarget').split("-").pop();
 
-        $(this).next().addClass('open');
         Mealz.prototype.loadGeneratedLink(day_id);
+        $('.guest-menu-link').removeClass('open');
+        $(this).next().addClass('open');
         copy(event);
         return false;
     });
@@ -319,7 +317,6 @@ Mealz.prototype.copyToClipboard = function() {
             $('.guest-menu-link').removeClass('open');
         }
     });
-
 };
 
 

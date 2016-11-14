@@ -16,6 +16,28 @@ class DishRepository extends LocalizedRepository {
 	);
 
 	/**
+	 * Return a querybuilder that fetches all dish that have NO variations
+	 * and all variations without their dishes
+	 *
+	 * @return QueryBuilder
+	 */
+	public function getDishesAndVariations() {
+		$qb = $this->createQueryBuilder('d');
+		$qb2 = $this->createQueryBuilder('s');
+
+		$qb2->select('IDENTITY(s.parent)');
+		$qb2->where('IDENTITY(s.parent) is not null');
+		$qb2->distinct(true);
+
+		$qb->select('d');
+		$qb->where(
+			$qb->expr()->notIn('d.id', $qb2->getDQL())
+		);
+
+		return $qb;
+	}
+
+	/**
 	 * get a query builder for sorted list of dishes
 	 *
 	 * @param array $options

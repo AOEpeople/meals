@@ -28,13 +28,21 @@ class MealForm extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $groupedDishes = $this->getGroupedDishes();
         $builder
-        ->add('dish', ChoiceType::class, array(
-            'choices' => $this->getGroupedDishes(),
+        ->add('dish', EntityType::class, array(
+            'class' => 'MealzMealBundle:Dish',
+            'query_builder' => $this->dishRepository->getSortedDishesQueryBuilder(array(
+                'load_disabled' => true,
+                'load_variations' => true
+            )),
             'required' => false,
-            'choices_as_values' => true,
-//            'choice_translation_domain' => 'general'
+            'group_by' => function(Dish $dish) {
+                return ($dish->isEnabled() && $category = $dish->getCategory()) ? $category : null;
+            },
+            'choice_attr' => function (Dish $dish, $value, $index) {
+                return ($dish->isEnabled()) ? [] : ['disabled' => 'disabled'];
+            },
+            'choice_translation_domain' => 'general'
         ))
         ->add('day', HiddenDishType::class)
     ;
@@ -96,26 +104,26 @@ class MealForm extends AbstractType
     }
 
 
-    protected function getGroupedDishes()
-    {
-        $groupedDishes = [];
-        $dishes = $this->dishRepository->getSortedDishesQueryBuilder(array(
-            'load_disabled' => true,
-            'load_variations' => true
-        ))->getQuery()->getResult();
-
-        foreach ($dishes as $dish) {
-            if ($dish instanceof DishVariation) {
-                $parentDish = $dish->getParent();
-                $groupedDishes[$parentDish->getTitle()][$dish->getId()] = $dish->getTitle();
-            } else {
-                if (!$dish->hasVariations()) {
-                    $groupedDishes[$dish->getId()] = $dish->getTitle();
-                }
-            }
-        }
-
-        return $groupedDishes;
-    }
+//    protected function getGroupedDishes()
+//    {
+//        $groupedDishes = [];
+//        $dishes = $this->dishRepository->getSortedDishesQueryBuilder(array(
+//            'load_disabled' => true,
+//            'load_variations' => true
+//        ))->getQuery()->getResult();
+//
+//        foreach ($dishes as $dish) {
+//            if ($dish instanceof DishVariation) {
+//                $parentDish = $dish->getParent();
+//                $groupedDishes[$parentDish->getTitle()][$dish->getId()] = $dish->getTitle();
+//            } else {
+//                if (!$dish->hasVariations()) {
+//                    $groupedDishes[$dish->getId()] = $dish->getTitle();
+//                }
+//            }
+//        }
+//
+//        return $groupedDishes;
+//    }
 
 }

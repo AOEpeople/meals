@@ -21,6 +21,7 @@ class Variation extends \Twig_Extension
 			'getGroupedDishes' => new \Twig_Function_Method($this, 'getGroupedDishes'),
 			'getDishesFromGroup' => new \Twig_Function_Method($this, 'getDishesFromGroup'),
 			'getVariationsForDish' => new \Twig_Function_Method($this, 'getVariationsForDish'),
+			'getDishesWithinMeals' => new \Twig_Function_Method($this, 'getDishesWithinMeals'),
 		);
 	}
 
@@ -51,6 +52,28 @@ class Variation extends \Twig_Extension
 			'meals' => $mealsArray,
 			'mealsVariations' => $mealsVariations,
 		);
+	}
+
+	/**
+	 * Input an array of meals for a certain day. This method identifies the dishes attached to the meals.
+	 * When the found dish is a dishvariation the method finds the related dish for the variation and returns
+	 * the dish instead.
+	 *
+	 * @param $meals    Array of meals
+	 * @return array    Array of dishes found. Duplicates removed
+	 */
+	public function getDishesWithinMeals($meals)
+	{
+		$result = array();
+		foreach ($meals as $meal) {
+			if($meal['dish']->vars['data'] instanceof \Mealz\MealBundle\Entity\DishVariation){
+				$result[$meal['dish']->vars['data']->getParent()->getId()]['object'] = $meal['dish']->vars['data']->getParent();
+				$result[$meal['dish']->vars['data']->getParent()->getId()]['selectedVariations'][] = $meal['dish']->vars['data'];
+			} elseif ($meal['dish']->vars['data'] instanceof \Mealz\MealBundle\Entity\DishVariation){
+				$result[$meal['dish']->vars['data']->getId()] = $meal['dish']->vars['data'];
+			}
+		}
+		return $result;
 	}
 
 	public function getGroupedDishes($meal)

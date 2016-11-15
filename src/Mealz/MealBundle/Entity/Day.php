@@ -103,6 +103,12 @@ class Day extends AbstractMessage
         $this->meals = $meals;
     }
 
+    public function addMeal(Meal $meal)
+    {
+        $meal->setDay($this);
+        $this->meals->add($meal);
+    }
+
     public function __toString()
     {
         return $this->dateTime->format('l');

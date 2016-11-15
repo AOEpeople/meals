@@ -296,7 +296,7 @@ Mealz.prototype.selectMeal = function () {
         }
     });
 
-    variationCheckbox.on('click', function () {
+    variationCheckbox.on('click', function (e) {
         var parentId = $(this).closest('.dishes').attr('data-attribute-id');
         var variationId = $(this).next().data('attribute-id');
         var mealRow = $(this).closest('.meal-row');
@@ -314,8 +314,58 @@ Mealz.prototype.selectMeal = function () {
             mealRow.attr('data-attribute-selected-dish', "");
             mealRow.find('.meal-label').empty();
         }
-        mealRow.attr('data-attribute-selected-variations', variations);
+        mealRow.attr('data-attribute-selected-variations', JSON.stringify(variations));
         mealRow.find('.meal-label').append(' ' + variations); // TODO: adapt rendering for titles
+
+        // Fill input fields
+        e.preventDefault();
+        e.stopPropagation();
+
+        var thisVariation = $(this);
+        console.log($(this));
+
+        /* if checkbox is not checked yet */
+        if(!thisVariation.hasClass('checked')) {
+            var $mealRow = thisVariation.closest('.meal-row');
+            var $selectedDish = $mealRow.data('attribute-selected-dish');
+            var $selectedVariations = $mealRow.attr('data-attribute-selected-variations');
+            var $input = $mealRow.children('.meal-selected').first();
+
+            console.log($mealRow);
+            console.log('Selected variations'+ $selectedVariations);
+            if (!$selectedVariations || $selectedVariations == 'null') {
+                console.log('dish (no variations)');
+                $input.find('input').first().val($selectedDish);
+            } else if (JSON.parse($selectedVariations).length === 1) {
+                console.log('one variation selected');
+                $selectedVariations = JSON.parse($selectedVariations);
+                $input.find('input').first().val($selectedVariations[0]);
+            } else {
+                $selectedVariations = JSON.parse($selectedVariations);
+                console.log('multiple variations selected');
+                // Retrieve prototype form from data-prototype attribute
+                var prototypeForm = $mealRow.data('prototype');
+
+                // Get day and meal id for prototype
+                var day = $mealRow.children('.meal-selected').first().find('input').last().val();
+                var dish = $selectedVariations[$selectedVariations.length - 1];
+                console.log(dish);
+                var prototypeFormId = $mealRow.closest('.day').find('.meal-selected').length; // var newFormId = $(".form-row > [id^=week_form_days_" + $(newForm).first().attr('id')[15]).length;
+
+                // Set meal id in prototype form and append form element to other form elements
+                prototypeForm = prototypeForm.replace(/__name__/g, prototypeFormId);
+                var $prototypeFormElement = $(prototypeForm).appendTo($mealRow);
+
+                // Set day and dish for prototype form element
+                // var $prototypeFormElement = $mealRow.children('.meal-selected').last();
+                $prototypeFormElement.find('input').last().val(day);
+                $prototypeFormElement.find('input').first().val(dish);
+            }
+        } else {
+
+        }
+
+        $(this).toggleClass('checked');
     });
 };
 
@@ -376,42 +426,6 @@ $(document).ready(function() {
      thisDishes.children('.variation-button').click();
      }
      });*/
-
-    /* clicked on variation */
-    $('.variation-checkbox').on('click', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        var thisVariation = $(this);
-
-        /* if checkbox is not checked yet */
-        // if(!thisVariation.hasClass('checked')) {
-        //     var formRow = thisVariation.closest('.meal-row').children('.form-row').last();
-        //
-        //     if (thisVariation.closest('.meal-select-variations').find('.checked').length === 0) {
-        //         /* i can use select form from meal - already exists */
-        //         formRow.find('select').val(thisVariation.next().attr('data-attribute-id'));
-        //     } else {
-        //         /* we need to clone and edit cloned to free id*/
-        //         var newForm = thisVariation.closest('.meal-rows-wrapper').attr('data-prototype');
-        //         var newFormId = $(".form-row > [id^=week_form_days_" + $(newForm).first().attr('id')[15]).length;
-        //         newForm = (newForm.replace("__name__", newFormId).replace("__name__", newFormId).replace("__name__", newFormId).replace("__name__", newFormId).replace("__name__", newFormId));
-        //
-        //         thisVariation.closest('.meal-row').children('.form-row').children().last().after(newForm);
-        //
-        //         var newFormEl = thisVariation.closest('.meal-row').children('.form-row').children().last();
-        //         var day = newFormEl.parent().find('input').first().val();
-        //         newFormEl.parent().find('input').last().val(day);
-        //         newFormEl.hide();
-        //         newFormEl.find('select').val(thisVariation.next().attr('data-attribute-id'));
-        //     }
-        // } else {
-        //
-        // }
-
-        $(this).toggleClass('checked');
-
-    });
 
     /* setting meal-select box text */
     $('.select-wrapper').find('select').each(function(){

@@ -21,19 +21,20 @@
                     </li>
                     {% set currentCategory = category.id %}
                 {% endif %}
-
+                {% set variations = dish.variations %}
                 {% if not dish.parent %}
-                    <li class="dishes" data-attribute-id="{{ dish.id }}">
-                        {{ dish.title }}
-                        {% if dish.variations|length > 0 %}
+                    <li class="dishes" data-attribute-id="{{ dish.id }}" data-attribute-parent="{% if variations|length > 0 %}{% spaceless %}true{% endspaceless %}{% endif %}">
+                        <span class="dish-title">{{ dish.title }}</span>
+                        {% if variations|length > 0 %}
                             <div class="variation-button">variations</div>
                             <div class="meal-select-variations">
-                                {% for variation in dish.variations %}
+                                {% for variation in variations %}
                                     <div class="variation">
                                         <div class="variation-checkbox"></div>
                                         <label for="variation" data-attribute-id="{{ variation.id }}">{{ variation.title }}</label>
                                     </div>
                                 {% endfor %}
+                                <a href="#" class="button small">save</a>
                             </div>
                         {% endif %}
                     </li>

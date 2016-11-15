@@ -10,16 +10,13 @@ use Mealz\MealBundle\Entity\WeekRepository;
 use Mealz\MealBundle\Form\MealAdmin\WeekForm;
 use Mealz\MealBundle\Validator\Constraints\DishConstraint;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Validator\ConstraintViolation;
 
 class MealAdminController extends BaseController {
 
     public function listAction()
     {
-        if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
-            throw new AccessDeniedException();
-        }
+        $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
         /** @var WeekRepository $weekRepository */
         $weekRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Week');
@@ -52,9 +49,10 @@ class MealAdminController extends BaseController {
 
     public function newAction(Request $request,\DateTime $date)
     {
-        if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
-            throw new AccessDeniedException();
-        }
+        $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
+
+        $qbDishes = $this->get('mealz_meal.repository.dish');
+        $dishes = $qbDishes->getSortedDishesQueryBuilder()->getQuery()->getResult();
 
         /** @var WeekRepository $weekRepository */
         $weekRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Week');
@@ -97,20 +95,22 @@ class MealAdminController extends BaseController {
         }
 
         return $this->render('MealzMealBundle:MealAdmin:week.html.twig', array(
-            'form' => $form->createView(),
-            'week' => $week
+            'week' => $week,
+            'dishes' => $dishes,
+            'form' => $form->createView()
         ));
     }
 
     public function editAction(Request $request, Week $week)
     {
-        if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
-            throw new AccessDeniedException();
-        }
+        $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
         foreach($week->getDays() as $day) {
             $this->generateEmptyMealsForDay($day);
         }
+
+        $qbDishes = $this->get('mealz_meal.repository.dish');
+        $dishes = $qbDishes->getSortedDishesQueryBuilder()->getQuery()->getResult();
 
         $form = $this->createForm(new WeekForm(), $week);
 
@@ -154,9 +154,9 @@ class MealAdminController extends BaseController {
         }
 
         return $this->render('MealzMealBundle:MealAdmin:week.html.twig', array(
-            'form' => $form->createView(),
+            'dishes' => $dishes,
             'week' => $week,
-            'categories' => $this->getCategoryRepository()->findAll(),
+            'form' => $form->createView()
         ));
     }
 

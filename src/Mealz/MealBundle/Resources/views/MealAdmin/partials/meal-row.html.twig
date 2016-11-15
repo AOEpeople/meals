@@ -1,0 +1,45 @@
+{% set selectedDishJsonEncoded %}{% spaceless %}
+    {% if selectedDish == null or parentDish == selectedDish.0 %}
+        null
+    {% else %}
+        {{ selectedDish | json_encode }}
+    {% endif %}
+{% endspaceless %}{% endset %}
+<div class="meal-row"
+    data-attribute-selected-dish="{{ parentDish|json_encode }}"
+    data-attribute-selected-variations="{{ selectedDishJsonEncoded }}"
+    data-prototype="{{ form_widget(form.children.days.children[loop.parent.loop.index0].children.meals.vars.prototype)|e('html_attr') }}">
+    {{ form_widget(form.children.days.children[loop.parent.loop.index0].children.meals[loop.index0], { 'attr': {'class': 'meal-selected'} }) }}
+    <div class="meal-select-box">
+        <ul>
+            {% set currentCategory = '' %}
+            {% for dish in dishes %}
+                {% set category = dish.category %}
+                {% if category is not null and category.id != currentCategory %}
+                    <li class="category">
+                        Category: {{ category.title }}
+                    </li>
+                    {% set currentCategory = category.id %}
+                {% endif %}
+
+                {% if not dish.parent %}
+                    <li class="dishes" data-attribute-id="{{ dish.id }}">
+                        {{ dish.title }}
+                        {% if dish.variations|length > 0 %}
+                            <div class="variation-button">variations</div>
+                            <div class="meal-select-variations">
+                                {% for variation in dish.variations %}
+                                    <div class="variation">
+                                        <div class="variation-checkbox"></div>
+                                        <label for="variation" data-attribute-id="{{ variation.id }}">{{ variation.title }}</label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="meal-select"><span class="meal-label"></span></div>
+</div>

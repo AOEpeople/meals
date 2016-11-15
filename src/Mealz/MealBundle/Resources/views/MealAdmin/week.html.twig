@@ -2,8 +2,6 @@
 
 {% set wrapperClass = 'meal-form' %}
 
-{% form_theme form _self %}
-
 {% block datetime_widget -%}
     {{ value | trans({}, 'date') }}
 {%- endblock datetime_widget %}
@@ -41,74 +39,50 @@
 
     {{ MealzHeadline.create(1, action ~ weekInfo , '', '', additionalHeaderItems) }}
 
+
+
     <div class="week-form">
         {{ form_start(form) }}
         <div class="week-disable">
             {{ form_widget(form.enabled) }}
         </div>
 
-        {% for day in form.days %}
-            <div class="meal">
+        {% for day in week.days %}
+            <div class="day">
                 {# display week day and date #}
                 <div class="week-day">
                     <span>
-                        {{ form_widget(day.dateTime) }}
+                        {{ day.dateTime | date('D') | trans({}, 'date') }}
                     </span>
                 </div>
 
                 <div class="meal-rows-wrapper" data-prototype="">
+                    {# Render meal row for each meal which already has a dish #}
+                    {% set selectedMeals = groupMealsToArray(day.meals) %}
 
-                    {% for meal in day.meals %}
-                        {% set groupedDishes = getGroupedDishes(meal) %}
-
-                        <div class="meal-row" data-attribute-selected-dish="" data-attribute-selected-variations="">
-                            <div class="meal-select-box">
-                                <ul>
-                                    {% for groupedDish in groupedDishes %}
-                                        <li class="category">
-                                            Category: {{ groupedDish.label }}
-                                        </li>
-                                        {% set dishes = getDishesFromGroup(groupedDish) %}
-                                        {% for dish in dishes %}
-                                            {% set variations = getVariationsForDish(dish) %}
-                                            <li class="dishes" data-attribute-id="{{ dish.value }}" data-attribute-parent="{% if variations|length > 0 %}{% spaceless %}true{% endspaceless %}{% endif %}">
-                                                {{ dish.label }}
-                                                {% if variations|length > 0 %}
-                                                <div class="variation-button">variations</div>
-                                                <div class="meal-select-variations">
-                                                    {% for variation in variations %}
-                                                        <div class="variation">
-                                                            <div class="variation-checkbox"></div>
-                                                            <label for="variation" data-attribute-id="{{ variation.id }}">{{ variation.title }}</label>
-                                                        </div>
-                                                    {% endfor %}
-                                                    <a href="#" class="button small">save</a>
-                                                </div>
-                                                {% endif %}
-                                            </li>
-                                        {% endfor %}
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                            <div class="meal-select"><span class="meal-label"></span></div>
-                            {#{ form_row(meal, {'attr' : {'style' : 'display: none;'}}) }#}
-                        </div>
-                    {#{{ form_row(meal) }}#}
-
+                    {% for parentDish, selectedDish in selectedMeals %}
+                        {% include 'MealzMealBundle:MealAdmin/partials:meal-row.html.twig' %}
                     {% endfor %}
-                    {#{% for meal in day.meals %}#}
-                    {#{{ include('MealzMealBundle:MealAdmin:mealSelect.html.twig', {'formView': meal}) }}#}
-                    {#{% endfor %}#}
 
+                    {# Render a meal row for each meal without a dish #}
+                    {% set emptyMealCount = (selectedMeals|length - 2)|abs %}
+                    {% set parentDish = null %}
+                    {% set selectedDish = null %}
+                    {% if emptyMealCount > 0 %}
+                        {% for selectedMeal in 0..(emptyMealCount-1) %}
+                            {% include 'MealzMealBundle:MealAdmin/partials:meal-row.html.twig' %}
+                        {% endfor %}
+                    {% endif %}
                 </div>
 
                 <div class="week-day-action">
-                    {{ form_widget(day.enabled) }}
+                    {{ form_widget(form.children.days.children[loop.index0].enabled) }}
                 </div>
             </div>
         {% endfor %}
         {{ form_widget(form.Cancel) }}
         {{ form_widget(form.Save) }}
+        {{ form_rest(form) }}
         {{ form_end(form) }}
     </div>
 {% endblock %}

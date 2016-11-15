@@ -29,12 +29,6 @@ class DayForm extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('dateTime', DateTimeType::class, array(
-                'format' => 'E',
-                'html5' => false,
-                'widget' => 'single_text',
-                'disabled' => true
-            ))
             ->add('meals', CollectionType::class, array(
                 'entry_type' => MealForm::class,
                 'allow_delete' => true,

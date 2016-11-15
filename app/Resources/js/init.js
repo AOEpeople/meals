@@ -278,6 +278,8 @@ function unique(list) {
     return result;
 }
 
+
+
 Mealz.prototype.selectMeal = function () {
     var selectedDish = $('.meal-row .dishes');
     var variationCheckbox = $('.variation-checkbox');
@@ -317,7 +319,12 @@ Mealz.prototype.selectMeal = function () {
         mealRow.attr('data-attribute-selected-variations', variations);
         mealRow.find('.meal-label').append(' ' + variations); // TODO: adapt rendering for titles
     });
+
 };
+
+
+
+
 
 
 $(document).ready(function() {
@@ -325,6 +332,37 @@ $(document).ready(function() {
     mealz.styleCheckboxes();
     mealz.styleSelects();
     mealz.selectMeal();
+
+    function hideSelectBox(e) {
+        var container = '';
+        if($(e.currentTarget).hasClass('meal-select-box')) {
+            container = $(".meal-select-variations");
+        } else {
+            container = $(".meal-select-box");
+        }
+
+        // if the target of the click isn't the container nor a descendant of the container
+        if (!container.is(e.target) && container.has(e.target).length === 0 || $(e.currentTarget).hasClass('button') )
+        {
+            container.hide('fast');
+        }
+    }
+
+
+
+    /* hiding select-box if click anywhere else */
+    $('.meal-form, .meal-select-box').mouseup(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        hideSelectBox(e);
+    });
+
+    $('.meal-select-variations .button').on('click', function (e) {
+        console.log("bam");
+        e.preventDefault();
+        e.stopPropagation();
+        hideSelectBox(e);
+    });
 
     $('.hamburger').on('click', function() {
         $(this).toggleClass('is-active');
@@ -475,22 +513,6 @@ $(document).ready(function() {
     });
     $('.fancybox').unbind('click');
 
-    /* hiding select-box if click anywhere else */
-    $('.meal-form, .meal-select-box').mouseup(function (e) {
-        e.preventDefault();
-        e.stopPropagation();
 
-        var container = '';
-        if($(e.currentTarget).hasClass('meal-select-box')) {
-            container = $(".meal-select-variations");
-        } else {
-            container = $(".meal-select-box");
-        }
 
-        // if the target of the click isn't the container nor a descendant of the container
-        if (!container.is(e.target) && container.has(e.target).length === 0)
-        {
-            container.hide('fast');
-        }
-    });
 });

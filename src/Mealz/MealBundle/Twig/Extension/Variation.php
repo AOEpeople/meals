@@ -22,6 +22,7 @@ class Variation extends \Twig_Extension
 			'getDishesFromGroup' => new \Twig_Function_Method($this, 'getDishesFromGroup'),
 			'getVariationsForDish' => new \Twig_Function_Method($this, 'getVariationsForDish'),
 			'getDishesWithinMeals' => new \Twig_Function_Method($this, 'getDishesWithinMeals'),
+			'groupMealsToArray' => new \Twig_Function_Method($this, 'groupMealsToArray'),
 		);
 	}
 
@@ -151,6 +152,23 @@ class Variation extends \Twig_Extension
 		}
 
 		return $sortedMeals;
+	}
+
+    public function groupMealsToArray($meals)
+    {
+        $selectedMeals = array();
+        foreach ($meals as $meal) {
+            /** @var Meal $meal */
+            $dish = $meal->getDish();
+            if (null !== $dish) {
+                $parentDish = $dish->getParent();
+                $dishId = (null === $parentDish) ? $dish->getId() : $parentDish->getId();
+                $selectedMeals[$dishId][] = $dish->getId();
+            }
+        }
+
+//        VarDumper::dump($mealArray);die();
+        return $selectedMeals;
 	}
 
 	/**

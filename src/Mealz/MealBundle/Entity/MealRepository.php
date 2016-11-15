@@ -57,4 +57,25 @@ class MealRepository extends EntityRepository
 
         return $result ? current($result) : null;
     }
+
+
+    /**
+     * Created for Test with Dish variations
+     *
+     * @return mixed
+     */
+    public function getMealsOnADayWithVariationOptions()
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT m.id
+                FROM MealzMealBundle:Meal m
+                WHERE m.day IN
+                  (SELECT IDENTITY (ml.day) FROM MealzMealBundle:Meal ml GROUP BY ml.day HAVING COUNT(ml.day)>2)'
+        );
+
+        return $query->getResult();
+
+
+    }
 }

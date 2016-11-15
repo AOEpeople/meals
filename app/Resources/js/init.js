@@ -278,7 +278,20 @@ function unique(list) {
     return result;
 }
 
+function hideSelectBox(e) {
+    var container = '';
+    if($(e.currentTarget).hasClass('meal-select-box')) {
+        container = $(".meal-select-variations");
+    } else {
+        container = $(".meal-select-box");
+    }
 
+    // if the target of the click isn't the container nor a descendant of the container
+    if (!container.is(e.target) && container.has(e.target).length === 0 || $(e.currentTarget).hasClass('button') || ($(e.currentTarget).attr('data-attribute-parent') != 'true' && $(e.currentTarget).is('[data-attribute-parent]')))
+    {
+        container.hide('fast');
+    }
+}
 
 Mealz.prototype.selectMeal = function () {
     var selectedDish = $('.meal-row .dishes');
@@ -291,10 +304,11 @@ Mealz.prototype.selectMeal = function () {
 
         if($(this).attr('data-attribute-parent') != 'true') {
             mealRow.attr('data-attribute-selected-dish', dishId);
-            mealRow.find('.meal-label').text(dishId);
+            mealRow.find('.meal-label').text($(this).find('.dish-title').html());
             mealRow.attr('data-attribute-selected-variations', "");
             mealRow.find('.variation-checkbox').removeClass("checked");
             variations.length = 0;
+            hideSelectBox(e);
         }
     });
 
@@ -302,6 +316,8 @@ Mealz.prototype.selectMeal = function () {
         var parentId = $(this).closest('.dishes').attr('data-attribute-id');
         var variationId = $(this).next().data('attribute-id');
         var mealRow = $(this).closest('.meal-row');
+        var parentDish = $(this).closest('.dishes');
+        var selectedVariation = $(this).next();
 
         if(parentId !== mealRow.attr('data-attribute-selected-dish') && variations.length > 0) {
             variations.length = 0;
@@ -311,20 +327,19 @@ Mealz.prototype.selectMeal = function () {
         variations = unique(variations);
 
         mealRow.attr('data-attribute-selected-dish', parentId);
-        mealRow.find('.meal-label').text(parentId);
+        mealRow.find('.meal-label').text(parentDish.find('.dish-title').html());
         if($(this).closest('.dishes').attr('data-attribute-parent') == 'true' && variations.length < 1 ) {
             mealRow.attr('data-attribute-selected-dish', "");
             mealRow.find('.meal-label').empty();
         }
         mealRow.attr('data-attribute-selected-variations', JSON.stringify(variations));
-        mealRow.find('.meal-label').append(' ' + variations); // TODO: adapt rendering for titles
+        mealRow.find('.meal-label').append(' ' +  selectedVariation.html());
 
         // Fill input fields
         e.preventDefault();
         e.stopPropagation();
 
         var thisVariation = $(this);
-        console.log($(this));
 
         /* if checkbox is not checked yet */
         if(!thisVariation.hasClass('checked')) {
@@ -333,25 +348,19 @@ Mealz.prototype.selectMeal = function () {
             var $selectedVariations = $mealRow.attr('data-attribute-selected-variations');
             var $input = $mealRow.children('.meal-selected').first();
 
-            console.log($mealRow);
-            console.log('Selected variations'+ $selectedVariations);
             if (!$selectedVariations || $selectedVariations == 'null') {
-                console.log('dish (no variations)');
                 $input.find('input').first().val($selectedDish);
             } else if (JSON.parse($selectedVariations).length === 1) {
-                console.log('one variation selected');
                 $selectedVariations = JSON.parse($selectedVariations);
                 $input.find('input').first().val($selectedVariations[0]);
             } else {
                 $selectedVariations = JSON.parse($selectedVariations);
-                console.log('multiple variations selected');
                 // Retrieve prototype form from data-prototype attribute
                 var prototypeForm = $mealRow.data('prototype');
 
                 // Get day and meal id for prototype
                 var day = $mealRow.children('.meal-selected').first().find('input').last().val();
                 var dish = $selectedVariations[$selectedVariations.length - 1];
-                console.log(dish);
                 var prototypeFormId = $mealRow.closest('.day').find('.meal-selected').length; // var newFormId = $(".form-row > [id^=week_form_days_" + $(newForm).first().attr('id')[15]).length;
 
                 // Set meal id in prototype form and append form element to other form elements
@@ -364,18 +373,14 @@ Mealz.prototype.selectMeal = function () {
                 $prototypeFormElement.find('input').last().val(day);
                 $prototypeFormElement.find('input').first().val(dish);
             }
-        } else {
-
         }
 
         $(this).toggleClass('checked');
     });
 
+
+
 };
-
-
-
-
 
 
 $(document).ready(function() {
@@ -383,23 +388,6 @@ $(document).ready(function() {
     mealz.styleCheckboxes();
     mealz.styleSelects();
     mealz.selectMeal();
-
-    function hideSelectBox(e) {
-        var container = '';
-        if($(e.currentTarget).hasClass('meal-select-box')) {
-            container = $(".meal-select-variations");
-        } else {
-            container = $(".meal-select-box");
-        }
-
-        // if the target of the click isn't the container nor a descendant of the container
-        if (!container.is(e.target) && container.has(e.target).length === 0 || $(e.currentTarget).hasClass('button') )
-        {
-            container.hide('fast');
-        }
-    }
-
-
 
     /* hiding select-box if click anywhere else */
     $('.meal-form, .meal-select-box').mouseup(function (e) {
@@ -409,7 +397,6 @@ $(document).ready(function() {
     });
 
     $('.meal-select-variations .button').on('click', function (e) {
-        console.log("bam");
         e.preventDefault();
         e.stopPropagation();
         hideSelectBox(e);

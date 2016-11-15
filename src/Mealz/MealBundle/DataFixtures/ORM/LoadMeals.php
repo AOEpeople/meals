@@ -85,18 +85,11 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface {
 
     protected function loadDishes() {
 		foreach($this->referenceRepository->getReferences() as $referenceName=>$reference) {
-		    // TODO: this is actually not working as designed, will load both Dish and Variations, please discuss with Dirk
 			if(($reference instanceof Dish) && !($reference instanceof DishVariation)) {
 				// we can't just use $reference here, because
 				// getReference() does some doctrine magic that getReferences() does not
 				$this->dishes[] = $this->getReference($referenceName);
 			}
-			// if there is a parent then this is a Variation
-//			if (method_exists($reference, 'getParent')) {
-//			    if ($reference->getParent()) {
-//                    $this->dishVariations[] = $this->getReference($referenceName);
-//                }
-//            }
 		}
 	}
 

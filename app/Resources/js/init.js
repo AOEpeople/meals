@@ -262,12 +262,69 @@ Mealz.prototype.loadAjaxFormPayment = function($element) {
     });
 };
 
+function toggleArrayItem(a, v) {
+    var i = a.indexOf(v);
+    if (i === -1)
+        a.push(v);
+    else
+        a.splice(i,1);
+}
+
+function unique(list) {
+    var result = [];
+    $.each(list, function(i, e) {
+        if ($.inArray(e, result) == -1) result.push(e);
+    });
+    return result;
+}
+
+Mealz.prototype.selectMeal = function () {
+    var selectedDish = $('.meal-row .dishes');
+    var variationCheckbox = $('.variation-checkbox');
+    var variations = [];
+
+    selectedDish.on('click', function (e) {
+        var mealRow = $(this).closest('.meal-row');
+        var dishId = $(e.currentTarget).data('attribute-id');
+
+        if($(this).attr('data-attribute-parent') != 'true') {
+            mealRow.attr('data-attribute-selected-dish', dishId);
+            mealRow.find('.meal-label').text(dishId);
+            mealRow.attr('data-attribute-selected-variations', "");
+            mealRow.find('.variation-checkbox').removeClass("checked");
+            variations.length = 0;
+        }
+    });
+
+    variationCheckbox.on('click', function () {
+        var parentId = $(this).closest('.dishes').attr('data-attribute-id');
+        var variationId = $(this).next().data('attribute-id');
+        var mealRow = $(this).closest('.meal-row');
+
+        if(parentId !== mealRow.attr('data-attribute-selected-dish') && variations.length > 0) {
+            variations.length = 0;
+        }
+
+        toggleArrayItem(variations, variationId);
+        variations = unique(variations);
+
+        mealRow.attr('data-attribute-selected-dish', parentId);
+        mealRow.find('.meal-label').text(parentId);
+        if($(this).closest('.dishes').attr('data-attribute-parent') == 'true' && variations.length < 1 ) {
+            mealRow.attr('data-attribute-selected-dish', "");
+            mealRow.find('.meal-label').empty();
+        }
+        mealRow.attr('data-attribute-selected-variations', variations);
+        mealRow.find('.meal-label').append(' ' + variations); // TODO: adapt rendering for titles
+    });
+};
+
 
 $(document).ready(function() {
-
     var mealz = new Mealz();
     mealz.styleCheckboxes();
     mealz.styleSelects();
+    mealz.selectMeal();
 
     $('.hamburger').on('click', function() {
         $(this).toggleClass('is-active');
@@ -303,22 +360,22 @@ $(document).ready(function() {
     });
 
     /* clicked on dish */
-    $('.meal-select-box > ul > .dishes').on('click', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        var thisDishes = $(this);
+    /*$('.meal-select-box > ul > .dishes').on('click', function (e) {
+     e.preventDefault();
+     e.stopPropagation();
+     var thisDishes = $(this);
 
-        /* which has no variation */
-        if(!thisDishes.children().hasClass('variation-button')) {
-            var meal_select_box = thisDishes.parent().parent();
-            thisDishes.toggleClass('selected');
-            $(".meal-select-box").hide('fast');
-            meal_select_box.parent().find('select').val(thisDishes.attr('data-attribute-id'));
-            meal_select_box.next().text(thisDishes.text());
-        } else {
-            thisDishes.children('.variation-button').click();
-        }
-    });
+     /!* which has no variation *!/
+     if(!thisDishes.children().hasClass('variation-button')) {
+     var meal_select_box = thisDishes.parent().parent();
+     thisDishes.toggleClass('selected');
+     $(".meal-select-box").hide('fast');
+     meal_select_box.parent().find('select').val(thisDishes.attr('data-attribute-id'));
+     meal_select_box.next().text(thisDishes.text());
+     } else {
+     thisDishes.children('.variation-button').click();
+     }
+     });*/
 
     /* clicked on variation */
     $('.variation-checkbox').on('click', function (e) {
@@ -328,29 +385,29 @@ $(document).ready(function() {
         var thisVariation = $(this);
 
         /* if checkbox is not checked yet */
-        if(!thisVariation.hasClass('checked')) {
-            var formRow = thisVariation.closest('.meal-row').children('.form-row').last();
-
-            if (thisVariation.closest('.meal-select-variations').find('.checked').length === 0) {
-                /* i can use select form from meal - already exists */
-                formRow.find('select').val(thisVariation.next().attr('data-attribute-id'));
-            } else {
-                /* we need to clone and edit cloned to free id*/
-                var newForm = thisVariation.closest('.meal-rows-wrapper').attr('data-prototype');
-                var newFormId = $(".form-row > [id^=week_form_days_" + $(newForm).first().attr('id')[15]).length;
-                newForm = (newForm.replace("__name__", newFormId).replace("__name__", newFormId).replace("__name__", newFormId).replace("__name__", newFormId).replace("__name__", newFormId));
-
-                thisVariation.closest('.meal-row').children('.form-row').children().last().after(newForm);
-
-                var newFormEl = thisVariation.closest('.meal-row').children('.form-row').children().last();
-                var day = newFormEl.parent().find('input').first().val();
-                newFormEl.parent().find('input').last().val(day);
-                newFormEl.hide();
-                newFormEl.find('select').val(thisVariation.next().attr('data-attribute-id'));
-            }
-        } else {
-
-        }
+        // if(!thisVariation.hasClass('checked')) {
+        //     var formRow = thisVariation.closest('.meal-row').children('.form-row').last();
+        //
+        //     if (thisVariation.closest('.meal-select-variations').find('.checked').length === 0) {
+        //         /* i can use select form from meal - already exists */
+        //         formRow.find('select').val(thisVariation.next().attr('data-attribute-id'));
+        //     } else {
+        //         /* we need to clone and edit cloned to free id*/
+        //         var newForm = thisVariation.closest('.meal-rows-wrapper').attr('data-prototype');
+        //         var newFormId = $(".form-row > [id^=week_form_days_" + $(newForm).first().attr('id')[15]).length;
+        //         newForm = (newForm.replace("__name__", newFormId).replace("__name__", newFormId).replace("__name__", newFormId).replace("__name__", newFormId).replace("__name__", newFormId));
+        //
+        //         thisVariation.closest('.meal-row').children('.form-row').children().last().after(newForm);
+        //
+        //         var newFormEl = thisVariation.closest('.meal-row').children('.form-row').children().last();
+        //         var day = newFormEl.parent().find('input').first().val();
+        //         newFormEl.parent().find('input').last().val(day);
+        //         newFormEl.hide();
+        //         newFormEl.find('select').val(thisVariation.next().attr('data-attribute-id'));
+        //     }
+        // } else {
+        //
+        // }
 
         $(this).toggleClass('checked');
 

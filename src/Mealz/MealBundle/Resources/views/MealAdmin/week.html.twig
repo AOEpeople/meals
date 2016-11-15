@@ -56,12 +56,12 @@
                     </span>
                 </div>
 
-                <div class="meal-rows-wrapper" data-prototype="{{ form_widget(day.meals.vars.prototype)|e('html_attr') }}">
+                <div class="meal-rows-wrapper" data-prototype="">
 
                     {% for meal in day.meals %}
                         {% set groupedDishes = getGroupedDishes(meal) %}
 
-                        <div class="meal-row">
+                        <div class="meal-row" data-attribute-selected-dish="" data-attribute-selected-variations="">
                             <div class="meal-select-box">
                                 <ul>
                                     {% for groupedDish in groupedDishes %}
@@ -70,10 +70,9 @@
                                         </li>
                                         {% set dishes = getDishesFromGroup(groupedDish) %}
                                         {% for dish in dishes %}
-                                            <li class="dishes" data-attribute-id="">
+                                            {% set variations = getVariationsForDish(dish) %}
+                                            <li class="dishes" data-attribute-id="{{ dish.value }}" data-attribute-parent="{% if variations|length > 0 %}{% spaceless %}true{% endspaceless %}{% endif %}">
                                                 {{ dish.label }}
-                                                {% set variations = getVariationsForDish(dish) %}
-
                                                 {% if variations|length > 0 %}
                                                 <div class="variation-button">variations</div>
                                                 <div class="meal-select-variations">
@@ -83,6 +82,7 @@
                                                             <label for="variation" data-attribute-id="{{ variation.id }}">{{ variation.title }}</label>
                                                         </div>
                                                     {% endfor %}
+                                                    <a href="#" class="button small">save</a>
                                                 </div>
                                                 {% endif %}
                                             </li>
@@ -91,7 +91,7 @@
                                 </ul>
                             </div>
                             <div class="meal-select"><span class="meal-label"></span></div>
-                            {{ form_row(meal, {'attr' : {'style' : 'display: none;'}}) }}
+                            {#{ form_row(meal, {'attr' : {'style' : 'display: none;'}}) }#}
                         </div>
                     {#{{ form_row(meal) }}#}
 

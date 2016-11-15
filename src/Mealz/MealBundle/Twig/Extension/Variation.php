@@ -3,9 +3,11 @@
 
 namespace Mealz\MealBundle\Twig\Extension;
 
+use Doctrine\ORM\Mapping\Entity;
 use Mealz\MealBundle\Entity\Dish;
 use Mealz\MealBundle\Entity\DishVariation;
 use Mealz\MealBundle\Entity\Meal;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\VarDumper\VarDumper;
 
 class Variation extends \Twig_Extension
@@ -23,6 +25,8 @@ class Variation extends \Twig_Extension
 			'getVariationsForDish' => new \Twig_Function_Method($this, 'getVariationsForDish'),
 			'getDishesWithinMeals' => new \Twig_Function_Method($this, 'getDishesWithinMeals'),
 			'groupMealsToArray' => new \Twig_Function_Method($this, 'groupMealsToArray'),
+			'getFullTitleByDishAndVariation' => new \Twig_Function_Method($this, 'getFullTitleByDishAndVariation'),
+			'getGroupedFormViews' => new \Twig_Function_Method($this, 'getGroupedFormViews'),
 		);
 	}
 
@@ -171,6 +175,40 @@ class Variation extends \Twig_Extension
         return $selectedMeals;
 	}
 
+    public function getFullTitleByDishAndVariation($parentDishId, $variations, $dishes)
+    {
+        $title = '';
+
+        if ($parentDishId) {
+            $title .= $this->getTitleForDish($parentDishId, $dishes);
+        }
+
+        if ($variations) {
+            foreach ($variations as $variationId) {
+                $title .= ' '.$this->getTitleForDish($variationId, $dishes);
+            }
+        }
+
+        return $title;
+	}
+
+    public function getGroupedFormViews($selectedDishes, $formViews)
+    {
+        $resultFormViews = array();
+
+        if (null === $selectedDishes) return $resultFormViews;
+
+        foreach ($formViews as $formView) {
+            /** @var Meal $meal */
+            $meal = $formView->vars['value'];
+            $dish = $meal->getDish();
+            if (null !== $dish && in_array($dish->getId(), $selectedDishes)) {
+                $resultFormViews[] = $formView;
+            }
+        }
+        return $resultFormViews;
+	}
+
 	/**
 	 * Returns the name of the extension.
 	 *
@@ -179,5 +217,16 @@ class Variation extends \Twig_Extension
 	public function getName()
 	{
 		return 'variation';
+	}
+
+    private function getTitleForDish($dishId, $dishList)
+    {
+        foreach ($dishList as $key => $dish) {
+            if ($dish->getId() === $dishId) {
+                return $dishList[$key]->getTitle();
+            }
+        }
+
+        return null;
 	}
 }

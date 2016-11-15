@@ -366,6 +366,7 @@ Mealz.prototype.selectMeal = function () {
                 // Set meal id in prototype form and append form element to other form elements
                 prototypeForm = prototypeForm.replace(/__name__/g, prototypeFormId);
                 var $prototypeFormElement = $(prototypeForm).appendTo($mealRow);
+                $prototypeFormElement.addClass('meal-selected');
 
                 // Set day and dish for prototype form element
                 // var $prototypeFormElement = $mealRow.children('.meal-selected').last();
@@ -453,25 +454,36 @@ $(document).ready(function() {
      });*/
 
     /* setting meal-select box text */
-    $('.select-wrapper').find('select').each(function(){
-        var thisSelect = $(this);
+    $('.meal-select-box').each(function(){
+        var $that = $(this);
+        var $mealRow = $that.closest('.meal-row');
+        var $selectedDish = $mealRow.data('attribute-selected-dish');
         var htmlButton = '<a class="remove-meal" href=\"#\"><span class=\"glyphicon glyphicon-remove\"></span></a>';
 
-        thisSelect.find('option').each(function(){
-            if($(this).attr('selected')) {
-                var mealSelect = thisSelect.closest('.meal-row').find('.meal-label');
-                mealSelect.text($(this).text());
-                mealSelect.after(htmlButton);
-            }
-        });
+        if ($selectedDish) {
+            $(htmlButton).appendTo($mealRow.find('.meal-select').first());
+        }
 
     });
 
     $('.remove-meal').on('click', function (e) {
-        $('.meal-select').prev().hide();
         e.preventDefault();
         e.stopPropagation();
-        $(this).parent().children(':first-child').remove();
+
+        var $that = $(this);
+        var $mealRow = $that.closest('.meal-row');
+
+        // Remove data attribute values from meal-row
+        $mealRow.attr('data-attribute-selected-dish', 'null');
+        $mealRow.attr('data-attribute-selected-variations', 'null');
+
+        // Clear dropdown text
+        $that.prev('.meal-label').empty();
+
+        // Remove value (dish id) from form input fields
+        $mealRow.find('.meal-selected').each(function() {
+            $(this).find('input').first().attr('value', '');
+        });
     });
 
     $('body').on('click', function() {

@@ -32,11 +32,10 @@
 			</a>
 
 			<div class="header-content">
-				<div class="login {{ (is_granted('IS_AUTHENTICATED_REMEMBERED')) ? 'logged-in' : '' }}">
+
                     {% block headerContent %}
                         {% include 'modules/language_switch.html.twig' %}
                     {% endblock %}
-				</div>
 			</div>
 			<div class="header-toggle hamburger">
 				<span>toggle</span>

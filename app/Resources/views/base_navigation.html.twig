@@ -1,7 +1,10 @@
 {% extends '::base.html.twig' %}
 
 {% block headerContent %}
+
     {% include 'modules/navigation.html.twig' %}
-    {{ parent() }}
-    {% include 'modules/login.html.twig' %}
+    <div class="login {{ (is_granted('IS_AUTHENTICATED_REMEMBERED')) ? 'logged-in' : '' }}">
+        {{ parent() }}
+        {% include 'modules/login.html.twig' %}
+    </div>
 {% endblock %}

@@ -293,6 +293,23 @@ function hideSelectBox(e) {
     }
 }
 
+function setMealRowLabel(mealRow, parentId, variations) {
+    var mealRowLabel = mealRow.find('.meal-label');
+    if(variations.length > 0) {
+        var $parentDish = $("li.dishes[data-attribute-id=" + parentId + "]");
+        var parentLabel = $parentDish.find('.dish-title').html();
+        var variationsLabel = '';
+
+        for(var i = 0; i < variations.length; i++) {
+            variationsLabel += (i > 0) ? ', ' : '';
+            variationsLabel += $parentDish.find(".variation label[data-attribute-id=" + variations[i] + "]").html();
+        }
+        mealRowLabel.text(parentLabel + ' - ' + variationsLabel);
+    } else {
+        mealRowLabel.empty();
+    }
+}
+
 Mealz.prototype.selectMeal = function () {
     var selectedDish = $('.meal-row .dishes');
     var variationCheckbox = $('.variation-checkbox');
@@ -327,13 +344,9 @@ Mealz.prototype.selectMeal = function () {
         variations = unique(variations);
 
         mealRow.attr('data-attribute-selected-dish', parentId);
-        mealRow.find('.meal-label').text(parentDish.find('.dish-title').html());
-        if($(this).closest('.dishes').attr('data-attribute-parent') == 'true' && variations.length < 1 ) {
-            mealRow.attr('data-attribute-selected-dish', "");
-            mealRow.find('.meal-label').empty();
-        }
         mealRow.attr('data-attribute-selected-variations', JSON.stringify(variations));
-        mealRow.find('.meal-label').append(' ' +  selectedVariation.html());
+
+        setMealRowLabel(mealRow, parentId, variations);
 
         // Fill input fields
         e.preventDefault();

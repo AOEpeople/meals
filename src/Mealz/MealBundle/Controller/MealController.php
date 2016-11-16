@@ -2,7 +2,6 @@
 
 namespace Mealz\MealBundle\Controller;
 
-
 use Doctrine\ORM\EntityManager;
 use Exception;
 use Mealz\MealBundle\Entity\Day;

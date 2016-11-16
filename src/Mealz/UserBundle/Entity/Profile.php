@@ -2,6 +2,7 @@
 
 namespace Mealz\UserBundle\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -36,10 +37,30 @@ class Profile {
 	protected $firstName;
 
 	/**
+	 * @ORM\Column(type="string", length=255, nullable=TRUE)
+	 * @var string
+	 */
+	protected $company;
+
+	/**
 	 * @ORM\OneToMany(targetEntity="Mealz\AccountingBundle\Entity\Transaction", mappedBy="profile")
 	 * @var ArrayCollection
 	 */
 	protected $transactions;
+
+	/**
+	 * @ORM\ManyToMany(targetEntity="Role", inversedBy="profiles")
+	 * @var Collection
+	 */
+	private $roles;
+
+	/**
+	 * Profile constructor.
+	 */
+	public function __construct()
+	{
+		$this->roles = new ArrayCollection();
+	}
 
 	/**
 	 * @param string $username
@@ -99,5 +120,67 @@ class Profile {
 
 	public function __toString() {
 		return $this->getUsername();
+	}
+
+	/**
+	 * Add role
+	 *
+	 * @param Role $role
+	 * @return Profile
+	 */
+	public function addRole(Role $role)
+	{
+		$this->roles->add($role);
+		return $this;
+	}
+
+	/**
+	 * Remove role
+	 *
+	 * @param Role $role
+	 */
+	public function removeRole(Role $role)
+	{
+		$this->roles->removeElement($role);
+	}
+
+	/**
+	 * @return Collection
+	 */
+	public function getRoles()
+	{
+		return $this->roles;
+	}
+
+	/**
+	 * @param mixed $roles
+	 */
+	public function setRoles(Collection $roles)
+	{
+		$this->roles = $roles;
+	}
+
+    public function isGuest()
+    {
+        return $this->roles->exists(function ($key, $role) {
+            /** @var Role $role */
+            return ($role->getSid() === 'ROLE_GUEST');
+        });
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getCompany()
+	{
+		return $this->company;
+	}
+
+	/**
+	 * @param string $company
+	 */
+	public function setCompany($company)
+	{
+		$this->company = $company;
 	}
 }

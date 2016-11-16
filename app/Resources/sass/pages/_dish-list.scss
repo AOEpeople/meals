@@ -77,8 +77,8 @@
 
   // Dish Variations
   .dish-variation {
-    background-color: $color-body;
     border-color: $color-gray-middle;
+    background-color: $color-body;
 
     td:first-child { padding-left: 30px; }
 
@@ -89,6 +89,8 @@
   }
 }
 
+// scss-lint:disable all
 #dish-table .glyphicon-plus {
   vertical-align: baseline;
 }
+// scss-lint:disable all

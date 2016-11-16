@@ -13,5 +13,14 @@ dish:
 dish_variation:
   deleted: Gericht variation "%dishVariation%" wurde gelöscht.
 error:
+  unknown: Ein unbekannter Fehler ist aufgetreten.
+  profile:
+    already_exists: Es existiert bereits ein Profil mit diesem Namen.
+  participation:
+    no_meal_selected: Es muss mindestens ein Gericht ausgewählt werden
+    not_unique: Eine Essensbuchung mit diesen Eingaben existier bereits.
   meal:
     has_participants: Es gibt bereits Teilnehmer für "%dish%" am %day%.
+    join_not_allowed: Dieser Mahlzeit kann nicht mehr beigetreten werden.
+participation:
+  successful: Essensbuchung erfolgreich!

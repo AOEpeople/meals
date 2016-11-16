@@ -21,7 +21,27 @@
 
 	{% include 'MealzTemplateBundle::partials/balanceNotification.html.twig' %}
 
-	{% include 'header.html.twig'  %}
+    {% set activeRoute = app.request.attributes.get('_route') %}
+
+	<header>
+		<div class="container">
+			<a class="logo" href="{{ path('MealzMealBundle_home') }}">
+				<img src="{{ asset('images/logo.png') }}" alt="AOE" />
+				<span>AOEMEALS</span>
+			</a>
+
+			<div class="header-content">
+				<div class="login {{ (is_granted('IS_AUTHENTICATED_REMEMBERED')) ? 'logged-in' : '' }}">
+                    {% block headerContent %}
+                        {% include 'modules/language_switch.html.twig' %}
+                    {% endblock %}
+				</div>
+			</div>
+			<div class="header-toggle hamburger">
+				<span>toggle</span>
+			</div>
+		</div>
+	</header>
 
 	{% if wrapperClass is not defined %}
 		{% set wrapperClass = '' %}

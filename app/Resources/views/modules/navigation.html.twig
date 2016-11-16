@@ -1,0 +1,28 @@
+{% if is_granted('ROLE_KITCHEN_STAFF') %}
+    <ul class="navbar">
+        <li>
+            <a href="{{ path('MealzMealBundle_Meal') }}"
+               class="{{ activeRoute matches '/MealzMealBundle_Meal.*/' ? 'active' }}">
+                {{ 'header.navigation.menu'|trans({}, 'general') }}
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('MealzMealBundle_Dish') }}"
+               class="{{ activeRoute matches '/MealzMealBundle_Dish.*/' ? 'active' }}">
+                {{ 'header.navigation.dishes'|trans({}, 'general') }}
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('MealzMealBundle_Category') }}"
+               class="{{ activeRoute matches '/MealzMealBundle_Category.*/' ? 'active' }}">
+                {{ 'header.navigation.categories'|trans({}, 'general') }}
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('MealzMealBundle_Print_costSheet') }}"
+               class="{{ activeRoute == 'MealzMealBundle_Print_costSheet' ? 'active' }}">
+                {{ 'header.navigation.costs'|trans({}, 'general') }}
+            </a>
+        </li>
+    </ul>
+{% endif %}

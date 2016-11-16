@@ -4,6 +4,7 @@ var Mealz = function () {
     this.weekCheckbox = $('.meal-form .week-disable input[type="checkbox"]')[0];
     this.$weekDayCheckboxes = $('.meal-form .week-day-action input[type="checkbox"]');
     this.$participationCheckboxes = $('.meals-list input.checkbox, .meals-list input[type = "checkbox"]');
+    this.$guestParticipationCheckboxes = $('.meal-guests input.checkbox, .meal-guests input[type = "checkbox"]');
     this.$iconCells = $('.icon-cell');
     this.selectWrapperClass = 'select-wrapper';
     this.mealRowsWrapperClassSelector = '.meal-rows-wrapper';
@@ -104,6 +105,11 @@ Mealz.prototype.styleCheckboxes = function() {
     // Handle change event on checkboxes
     this.$participationCheckboxes.on('change', function() {
         that.toggleParticipation($(this));
+    });
+
+    // Handle change event on checkboxes
+    this.$guestParticipationCheckboxes.on('change', function() {
+        that.applyCheckboxClasses($(this));
     });
 };
 
@@ -262,11 +268,49 @@ Mealz.prototype.loadAjaxFormPayment = function($element) {
     });
 };
 
-$(document).ready(function() {
+Mealz.prototype.loadGeneratedLink = function(dayId,copyTo) {
+    $.ajax({
+        method: 'GET',
+        url: '/app.php/menu/' + dayId + '/new-guest-invitation',
+        async: false,
+        success: function (data) {
+            copyTo.attr('value', data);
+        }
+    });
+};
 
+Mealz.prototype.copyToClipboard = function() {
+    'use strict';
+
+    // click events
+    $('.guest-menu').on('click', function () {
+        // Close all open overlays
+        $('.guest-menu-link').removeClass('open');
+
+        var dayId = $(this).attr('data-copytarget').split('-').pop();
+        var guestMenuLinkInput = $(this).parent().find('.guest-menu-link input');
+
+        Mealz.prototype.loadGeneratedLink(dayId, guestMenuLinkInput);
+        $(this).next().addClass('open');
+        guestMenuLinkInput.select();
+        document.execCommand('copy');
+        guestMenuLinkInput.blur();
+        return false;
+    });
+
+    $(document).on('click', function (event) {
+        if (!$(event.target).closest('.guest-menu-link').length) {
+            $('.guest-menu-link').removeClass('open');
+        }
+    });
+};
+
+
+$(document).ready(function() {
     var mealz = new Mealz();
     mealz.styleCheckboxes();
     mealz.styleSelects();
+    mealz.copyToClipboard();
 
     $('.hamburger').on('click', function() {
         $(this).toggleClass('is-active');

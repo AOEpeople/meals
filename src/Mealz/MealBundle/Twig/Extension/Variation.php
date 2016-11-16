@@ -187,7 +187,7 @@ class Variation extends \Twig_Extension
             $title .= $this->getTitleForDish($parentDishId, $dishes);
         }
 
-        if ($variations) {
+        if (is_array($variations) && !in_array($parentDishId, $variations)) {
             foreach ($variations as $variationId) {
                 $title .= ' '.$this->getTitleForDish($variationId, $dishes);
             }

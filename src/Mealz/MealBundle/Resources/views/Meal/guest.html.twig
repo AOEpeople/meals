@@ -13,10 +13,10 @@
 {% endif %}
 
 {% block body %}
-	<h1 class="headline">{{ 'headings.guest_enrollment' | trans({}, 'general') }}</h1>
-	<p>{{ 'content.guest_enrollment.message_body' | trans({}, 'general') }}</p>
-	<p>{{ 'content.guest_enrollment.message_ending' | trans({}, 'general') }}</p>
-	<p>{{ 'content.guest_enrollment.message_signature' | trans({}, 'general') }}</p>
+	<div class="headline-container"><h1 class="headline">{{ 'headings.guest_enrollment' | trans({}, 'general') }}</h1></div>
+	<p class="text-block">{{ 'content.guest_enrollment.message_body' | trans({}, 'general') }}</p>
+	<p class="text-block">{{ 'content.guest_enrollment.message_ending' | trans({}, 'general') }}</p>
+	<p class="text-block">{{ 'content.guest_enrollment.message_signature' | trans({}, 'general') }}</p>
 	{{ form_start(form) }}
 <div class="meal {{ available ? 'is-available' : '' }}">
 

@@ -10,15 +10,17 @@
     data-attribute-selected-variations="{{ selectedDishJsonEncoded | json_encode }}"
     data-prototype="{{ form_widget(form.children.days.children[loop.parent.loop.index0].children.meals.vars.prototype)|e('html_attr') }}"
 >
-    {% set formMeals = form.children.days.children[loop.parent.loop.index0].children.meals %}
+    {% set formMeals = reloadFormMeals() %}
 
     {% if selectedDish is not null %}
-        {% set formViews = getGroupedFormViews(selectedDish, formMeals.children) %}
+        {% set formViews = getGroupedFormViews(selectedDish, formMeals) %}
     {% elseif parentDish is not null %}
-        {% set formViews = getGroupedFormViews(parentDish, formMeals.children) %}
+        {% set formViews = getGroupedFormViews(parentDish, formMeals) %}
     {% else %}
-        {% set formViews = form.children.days.children[loop.parent.loop.index0].children.meals[loop.index0] %}
+        {% set formViews = [formMeals|first] %}
     {% endif %}
+
+    {{ removeUsedFormViews(formMeals, formViews) }}
 
     {% for formView in formViews %}
         {{ form_widget(formView, { 'attr': {'class': 'meal-selected'} }) }}

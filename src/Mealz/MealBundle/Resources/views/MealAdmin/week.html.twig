@@ -48,6 +48,7 @@
         </div>
 
         {% for day in week.days %}
+            {% set formMeals = setFormMeals(form.children.days.children[loop.index0].children.meals.children) %}
             <div class="day">
                 {# display week day and date #}
                 <div class="week-day">

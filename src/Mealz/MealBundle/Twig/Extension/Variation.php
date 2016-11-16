@@ -12,6 +12,7 @@ use Symfony\Component\VarDumper\VarDumper;
 
 class Variation extends \Twig_Extension
 {
+    protected $formMeals;
 
 	public function getFunctions()
 	{
@@ -27,6 +28,9 @@ class Variation extends \Twig_Extension
 			'groupMealsToArray' => new \Twig_Function_Method($this, 'groupMealsToArray'),
 			'getFullTitleByDishAndVariation' => new \Twig_Function_Method($this, 'getFullTitleByDishAndVariation'),
 			'getGroupedFormViews' => new \Twig_Function_Method($this, 'getGroupedFormViews'),
+			'removeUsedFormViews' => new \Twig_Function_Method($this, 'removeUsedFormViews'),
+			'setFormMeals' => new \Twig_Function_Method($this, 'setFormMeals'),
+			'reloadFormMeals' => new \Twig_Function_Method($this, 'reloadFormMeals'),
 		);
 	}
 
@@ -208,6 +212,31 @@ class Variation extends \Twig_Extension
         }
         return $resultFormViews;
 	}
+
+    public function removeUsedFormViews($formMeals, $formViews)
+    {
+        $diff = array_udiff(
+            $formMeals,
+            $formViews,
+            function ($a, $b) {
+                $aId = $a->vars['id'];
+                $bId = $b->vars['id'];
+
+                return ($aId === $bId) ? 0 : -1;
+            }
+        );
+        $this->formMeals = $diff;
+    }
+
+    public function setFormMeals($formMeals)
+    {
+        $this->formMeals = $formMeals;
+    }
+
+    public function reloadFormMeals()
+    {
+        return $this->formMeals;
+    }
 
 	/**
 	 * Returns the name of the extension.

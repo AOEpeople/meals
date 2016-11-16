@@ -480,10 +480,13 @@ $(document).ready(function() {
         // Clear dropdown text
         $that.prev('.meal-label').empty();
 
-        // Remove value (dish id) from form input fields
-        $mealRow.find('.meal-selected').each(function() {
-            $(this).find('input').first().attr('value', '');
-        });
+        // Remove value (dish id) from default input field and remove others
+        $mealRow.find('.meal-selected').slice(1).remove();
+        $mealRow.find('.meal-selected').first().find('input').first().attr('value', '');
+
+        //Remove tick from variation checkboxes
+        $checkedCheckboxes = $mealRow.find('.variation-checkbox.checked');
+        $checkedCheckboxes.removeClass('checked');
     });
 
     $('body').on('click', function() {

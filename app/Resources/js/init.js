@@ -268,47 +268,33 @@ Mealz.prototype.loadAjaxFormPayment = function($element) {
     });
 };
 
-Mealz.prototype.loadGeneratedLink = function(day_id) {
-    var host = location.protocol + '//' + location.host;
-
-    $.when($.get('/app.php/menu/' + day_id + '/new-guest-invitation')).then (function(result) {
-        $('.guest-menu-link input').attr('value', host + result);
+Mealz.prototype.loadGeneratedLink = function(dayId,copyTo) {
+    $.ajax({
+        method: 'GET',
+        url: '/app.php/menu/' + dayId + '/new-guest-invitation',
+        async: false,
+        success: function (data) {
+            copyTo.attr('value', data);
+        }
     });
 };
-
-// event handler
-function copy(event) {
-
-    // find target element
-    var c = $(event.currentTarget).data("copytarget");
-    var inp = (c ? document.querySelector(c) : null);
-
-    if (inp && inp.select) {
-        // select text
-        inp.select();
-
-        try {
-            // copy text
-            document.execCommand('copy');
-            inp.blur();
-        }
-        catch (err) {
-            alert('please press Ctrl/Cmd+C to copy');
-        }
-    }
-}
 
 Mealz.prototype.copyToClipboard = function() {
     'use strict';
 
     // click events
-    $('.guest-menu').on('click', function (event) {
-        var day_id = $(this).attr('data-copytarget').split("-").pop();
-
-        Mealz.prototype.loadGeneratedLink(day_id);
+    $('.guest-menu').on('click', function () {
+        // Close all open overlays
         $('.guest-menu-link').removeClass('open');
+
+        var dayId = $(this).attr('data-copytarget').split('-').pop();
+        var guestMenuLinkInput = $(this).parent().find('.guest-menu-link input');
+
+        Mealz.prototype.loadGeneratedLink(dayId, guestMenuLinkInput);
         $(this).next().addClass('open');
-        copy(event);
+        guestMenuLinkInput.select();
+        document.execCommand('copy');
+        guestMenuLinkInput.blur();
         return false;
     });
 

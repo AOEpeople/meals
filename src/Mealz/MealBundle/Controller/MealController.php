@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Meal Controller
@@ -257,6 +258,7 @@ class MealController extends BaseController
      *
      * @param  Day $mealDay Meal day for which to generate the invitation.
      * @ParamConverter("mealDay", options={"mapping": {"dayId": "id"}})
+     *
      * @return JsonResponse
      */
     public function newGuestInvitationAction(Day $mealDay)
@@ -268,7 +270,12 @@ class MealController extends BaseController
         $guestInvitation = $guestInvitationRepository->findOrCreateInvitation($this->getUser()->getProfile(), $mealDay);
 
         return new JsonResponse(
-            $this->generateUrl('MealzMealBundle_Meal_guest', ['hash' => $guestInvitation->getId()]), 200
+            $this->generateUrl(
+                'MealzMealBundle_Meal_guest',
+                ['hash' => $guestInvitation->getId()],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            ),
+            200
         );
     }
 

@@ -14,14 +14,15 @@
     <link rel="stylesheet" href="{{ asset('mealz.css') }}" />
 	{% block head %}{% endblock %}
 </head>
-<body>
+
+{% set activeRoute = app.request.attributes.get('_route') %}
+
+<body class="{{ activeRoute matches '/MealzMealBundle_Meal_guest.*/' ? 'guest-wrapper' }}">
 	{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
 		{% set balance = wallet.getBalance(app.user.profile) %}
 	{% endif %}
 
 	{% include 'MealzTemplateBundle::partials/balanceNotification.html.twig' %}
-
-    {% set activeRoute = app.request.attributes.get('_route') %}
 
 	<header>
 		<div class="container">

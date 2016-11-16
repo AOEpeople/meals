@@ -35,6 +35,10 @@ $a-tags-hover: 'a:active, a:hover';
   }
 }
 
+.guest-wrapper .container {
+  max-width: 650px;
+}
+
 .content-wrapper {
   margin-top: -25px;
   padding-top: 25px;
@@ -44,6 +48,7 @@ $a-tags-hover: 'a:active, a:hover';
 
 .text-block {
   margin: 10px 0 20px;
+  line-height: 21px;
 }
 
 .hidden {

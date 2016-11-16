@@ -23,7 +23,7 @@
     left: -18px;
     z-index: 1;
     display: none;
-    width: 200px;
+    width: 300px;
     padding: 10px 15px;
     color: $color-base;
     background-color: $color-white;
@@ -60,3 +60,8 @@
     }
   }
 }
+
+#invitation_form_profile input[type="text"] {
+  border: 2px solid $color-gray-light;
+}
+

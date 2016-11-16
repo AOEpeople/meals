@@ -19,6 +19,7 @@ headings:
     list: List of categories
   costs:
     list: Cost listing
+  guest_enrollment: Enjoy a homemade meal at AOE
 
 table:
   title: Title
@@ -51,7 +52,10 @@ content:
   print:
     costs:
       no_data: There exist no costs.
-
+  guest_enrollment:
+    message_body: Congratulations! We would like to invite you to a meal cooked especially for you by our very own chef. Hungry? Then just sign up using our “Meals” App.
+    message_ending: Guten Appetit!
+    message_signature: AOE
 form:
   placeholder:
     title: Title

@@ -61,6 +61,10 @@
   }
 }
 
+.guest-wrapper .language-switch {
+  float: right;
+}
+
 #invitation_form_profile input[type="text"] {
   border: 2px solid $color-gray-light;
 }

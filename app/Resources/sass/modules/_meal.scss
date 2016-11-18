@@ -146,6 +146,11 @@
   .wrapper-vertical-center {
     right: 0;
     width: 18%;
+
+    @include breakpoint(small) {
+      width: 30%;
+    }
+
   }
 
   &.is-available {

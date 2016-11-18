@@ -104,21 +104,33 @@
   }
 
   .participants {
+    margin-top: 6px;
+
     span {
-      display: table;
-      width: 28px;
+      position: relative;
       height: 28px;
-      margin: 0 auto;
-      border-radius: 50%;
+      padding: 5px 5px 5px 15px;
+      border-radius: 20px;
       color: $color-white;
       background: $color-gray-secondary;
       font-size: 12px;
       font-family: $font-bold;
-      text-align: center;
+    }
 
-      span {
-        display: table-cell;
-        vertical-align: middle;
+    .participants-count {
+      vertical-align: middle;
+      position: static;
+      background: none;
+
+      &::before {
+        position: absolute;
+        top: 6px;
+        left: 13px;
+        width: 10px;
+        height: 10px;
+        content: '\e008';
+        font-size: 12px;
+        font-family: "Glyphicons Halflings", sans-serif;
       }
     }
   }

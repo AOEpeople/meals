@@ -110,12 +110,24 @@ Mealz.prototype.styleCheckboxes = function() {
     // Handle change event on checkboxes
     this.$guestParticipationCheckboxes.on('change', function() {
         that.applyCheckboxClasses($(this));
+        that.toggleGuestParticipation($(this));
     });
 };
 
 Mealz.prototype.styleSelects = function() {
     this.$selects.wrap('<div class="' + this.selectWrapperClass + '"></div>');
 };
+
+Mealz.prototype.toggleGuestParticipation = function ($checkbox) {
+    var that = this;
+    var $participantsCount = $checkbox.closest('.meal-row').find('.participants-count');
+    var actualCount = parseInt($participantsCount.html());
+    $participantsCount.fadeOut('fast', function () {
+        that.applyCheckboxClasses($checkbox);
+        $participantsCount.text($checkbox.is(':checked') ? actualCount + 1 : actualCount - 1);
+        $participantsCount.fadeIn('fast');
+    });
+}
 
 Mealz.prototype.toggleParticipation = function ($checkbox) {
     var that = this;

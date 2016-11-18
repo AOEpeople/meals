@@ -1,3 +1,4 @@
+%meal,
 .meal {
   $meal-border-width: 25px;
 
@@ -102,62 +103,60 @@
   .action {
     padding-top: 4px;
   }
+}
 
-  .participants {
-    margin-top: 6px;
+.participants {
+  margin-top: 6px;
 
-    span {
-      position: relative;
-      height: 28px;
-      padding: 5px 5px 5px 15px;
-      border-radius: 20px;
-      color: $color-white;
-      background: $color-gray-secondary;
+  span {
+    position: relative;
+    height: 28px;
+    padding: 5px 5px 5px 15px;
+    border-radius: 20px;
+    color: $color-white;
+    background: $color-gray-secondary;
+    font-size: 12px;
+    font-family: $font-bold;
+  }
+
+  .participants-count {
+    vertical-align: middle;
+    position: static;
+    background: none;
+
+    &::before {
+      position: absolute;
+      top: 6px;
+      left: 13px;
+      width: 10px;
+      height: 10px;
+      content: '\e008';
       font-size: 12px;
-      font-family: $font-bold;
-    }
-
-    .participants-count {
-      vertical-align: middle;
-      position: static;
-      background: none;
-
-      &::before {
-        position: absolute;
-        top: 6px;
-        left: 13px;
-        width: 10px;
-        height: 10px;
-        content: '\e008';
-        font-size: 12px;
-        font-family: "Glyphicons Halflings", sans-serif;
-      }
+      font-family: "Glyphicons Halflings", sans-serif;
     }
   }
 }
 
 .meal-guest {
-  @extend .meal;
+  @extend %meal;
 
-  border-left: none;
   border-width: 0;
-    &.is-available {
-      border-color: transparent;
-    }
+  border-left: none;
 
-	.header {
-		padding: 5px 15px;
-		background-color: $color-green;
-		color: white;
-		font-weight: bold;
-	}
+  .wrapper-vertical-center {
+    right: 0;
+    width: 18%;
+  }
 
-  	.text {
-	  width: 90%;
-    }
+  &.is-available {
+    border-color: transparent;
+  }
 
-	.wrapper-vertical-center {
-      width: 15%;
-	}
+  .header {
+    padding: 5px 15px;
+    color: $color-white;
+    background-color: $color-green;
+    font-weight: bold;
+  }
 }
 

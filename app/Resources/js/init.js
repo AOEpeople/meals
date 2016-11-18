@@ -127,7 +127,7 @@ Mealz.prototype.toggleGuestParticipation = function ($checkbox) {
         $participantsCount.text($checkbox.is(':checked') ? actualCount + 1 : actualCount - 1);
         $participantsCount.fadeIn('fast');
     });
-}
+};
 
 Mealz.prototype.toggleParticipation = function ($checkbox) {
     var that = this;

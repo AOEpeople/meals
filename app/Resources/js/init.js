@@ -291,6 +291,15 @@ function hideSelectBox(e) {
     {
         container.hide('fast');
     }
+
+    /* if SelectionBox has no checked Variations - close it */
+    if ($(e.target).hasClass('small')){
+        var thisMealSelectBox = $(e.target).closest('.meal-select-variations');
+        if(thisMealSelectBox.find('.checked').length === 0){
+            thisMealSelectBox.hide();
+       }
+    }
+
 }
 
 function setMealRowLabel(mealRow, parentId, variations) {
@@ -448,24 +457,6 @@ $(document).ready(function() {
         $(this).next().toggle();
     });
 
-    /* clicked on dish */
-    /*$('.meal-select-box > ul > .dishes').on('click', function (e) {
-     e.preventDefault();
-     e.stopPropagation();
-     var thisDishes = $(this);
-
-     /!* which has no variation *!/
-     if(!thisDishes.children().hasClass('variation-button')) {
-     var meal_select_box = thisDishes.parent().parent();
-     thisDishes.toggleClass('selected');
-     $(".meal-select-box").hide('fast');
-     meal_select_box.parent().find('select').val(thisDishes.attr('data-attribute-id'));
-     meal_select_box.next().text(thisDishes.text());
-     } else {
-     thisDishes.children('.variation-button').click();
-     }
-     });*/
-
     /* setting meal-select box text */
     $('.meal-select-box').each(function(){
         var $that = $(this);
@@ -541,7 +532,6 @@ $(document).ready(function() {
         }
     });
     $('.fancybox').unbind('click');
-
 
 
 });

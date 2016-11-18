@@ -7,7 +7,7 @@
 {% endspaceless %}{% endset %}
 <div class="meal-row"
     data-attribute-selected-dish="{{ parentDish }}"
-    data-attribute-selected-variations="{{ selectedDishJsonEncoded | json_encode }}"
+    data-attribute-selected-variations="{{ selectedDishJsonEncoded }}"
     data-prototype="{{ form_widget(form.children.days.children[loop.parent.loop.index0].children.meals.vars.prototype)|e('html_attr') }}"
 >
     {% set formMeals = reloadFormMeals() %}
@@ -23,7 +23,9 @@
     {{ removeUsedFormViews(formMeals, formViews) }}
 
     {% for formView in formViews %}
-        {{ form_widget(formView, { 'attr': {'class': 'meal-selected'} }) }}
+        {% if formView == true %}
+            {{ form_widget(formView, { 'attr': {'class': 'meal-selected'} }) }}
+        {% endif %}
     {% endfor %}
 
     <div class="meal-select-box">

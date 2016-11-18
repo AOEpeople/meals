@@ -22,14 +22,9 @@
         {{ 'content.guest_enrollment.message_signature' | trans({}, 'general') }}
     </p>
     {{ form_start(form) }}
-    <div class="meal {{ available ? 'is-available' : '' }}">
 
-        <div class="week-day">
-            <a name="{{ form.vars.value.day.datetime | date('Y-m-d') }}"></a>
-            <span>
-            {{ form.vars.value.day.datetime | date('D') | trans({}, 'date') }}
-        </span>
-        </div>
+    <div class="meal-guest {{ available ? 'is-available' : '' }}">
+		<div class="header">{{ form.vars.value.day.datetime | date('D, d.m.Y') }}</div>
 
         {% for meal in form.day.meals %}
             <div class="meal-row">

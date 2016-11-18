@@ -1,6 +1,6 @@
 <?php
 
-namespace Mealz\MealBundle\Form\Guest;
+namespace Mealz\MealBundle\Entity;
 
 use Mealz\MealBundle\Entity\Day;
 use Mealz\UserBundle\Entity\Profile;

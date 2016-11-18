@@ -13,7 +13,7 @@ use Mealz\MealBundle\EventListener\ParticipantNotUniqueException;
 use Mealz\MealBundle\EventListener\ProfileExistsException;
 use Mealz\MealBundle\EventListener\ToggleParticipationNotAllowedException;
 use Mealz\MealBundle\Form\Guest\InvitationForm;
-use Mealz\MealBundle\Form\Guest\InvitationWrapper;
+use Mealz\MealBundle\Entity\InvitationWrapper;
 use Mealz\UserBundle\Entity\Profile;
 use Mealz\UserBundle\Entity\Role;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;

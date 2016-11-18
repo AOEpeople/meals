@@ -31,7 +31,7 @@ class InvitationForm extends AbstractType {
 
 	public function setDefaultOptions(OptionsResolverInterface $resolver) {
 		$resolver->setDefaults(array(
-			'data_class' => 'Mealz\MealBundle\Form\Guest\InvitationWrapper',
+			'data_class' => 'Mealz\MealBundle\Entity\InvitationWrapper',
             'csrf_protection' => false
 		));
 	}

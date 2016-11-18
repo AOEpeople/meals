@@ -1,3 +1,4 @@
+%meal,
 .meal {
   $meal-border-width: 25px;
 
@@ -102,24 +103,60 @@
   .action {
     padding-top: 4px;
   }
+}
 
-  .participants {
-    span {
-      display: table;
-      width: 28px;
-      height: 28px;
-      margin: 0 auto;
-      border-radius: 50%;
-      color: $color-white;
-      background: $color-gray-secondary;
+.participants {
+  margin-top: 6px;
+
+  span {
+    position: relative;
+    height: 28px;
+    padding: 5px 5px 5px 15px;
+    border-radius: 20px;
+    color: $color-white;
+    background: $color-gray-secondary;
+    font-size: 12px;
+    font-family: $font-bold;
+  }
+
+  .participants-count {
+    vertical-align: middle;
+    position: static;
+    background: none;
+
+    &::before {
+      position: absolute;
+      top: 6px;
+      left: 13px;
+      width: 10px;
+      height: 10px;
+      content: '\e008';
       font-size: 12px;
-      font-family: $font-bold;
-      text-align: center;
-
-      span {
-        display: table-cell;
-        vertical-align: middle;
-      }
+      font-family: "Glyphicons Halflings", sans-serif;
     }
   }
 }
+
+.meal-guest {
+  @extend %meal;
+
+  border-width: 0;
+  border-left: none;
+
+  .wrapper-vertical-center {
+    right: 0;
+    width: 18%;
+  }
+
+  &.is-available {
+    border-color: transparent;
+  }
+
+  .header {
+    padding: 5px 15px;
+    color: $color-white;
+    background-color: $color-green;
+    font-weight: bold;
+  }
+}
+

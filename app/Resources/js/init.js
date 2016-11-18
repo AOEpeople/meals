@@ -342,14 +342,29 @@ Mealz.prototype.selectMeal = function () {
         var parentId = $(this).closest('.dishes').attr('data-attribute-id');
         var variationId = $(this).next().data('attribute-id');
         var mealRow = $(this).closest('.meal-row');
-        var parentDish = $(this).closest('.dishes');
-        var selectedVariation = $(this).next();
 
         if(parentId !== mealRow.attr('data-attribute-selected-dish') && variations.length > 0) {
             variations.length = 0;
         }
 
-        toggleArrayItem(variations, variationId);
+        if(!$(this).hasClass('checked')) {
+            toggleArrayItem(variations, variationId);
+        }
+        /* if the checkbox was checked and we deselect it */
+        else {
+            var deselectedVariationId = $(this).next().attr('data-attribute-id');
+            var selectedVariations = [];
+            $(this).closest('.meal-row').find('.meal-selected').children().each(function(){
+                if($(this).val() === deselectedVariationId) {
+                    $(this).attr('value', '');
+
+                    selectedVariations = JSON.parse($(this).closest('.meal-row').attr('data-attribute-selected-variations'));
+                    selectedVariations.splice( $.inArray(deselectedVariationId, selectedVariations), 1 );
+                    variations = selectedVariations;
+                }
+            });
+        }
+
         variations = unique(variations);
 
         mealRow.attr('data-attribute-selected-dish', parentId);
@@ -372,30 +387,40 @@ Mealz.prototype.selectMeal = function () {
 
             if (!$selectedVariations || $selectedVariations == 'null') {
                 $input.find('input').first().val($selectedDish);
-            } else if (JSON.parse($selectedVariations).length === 1) {
+            } else if (JSON.parse($selectedVariations).length === 1 ) {
                 $selectedVariations = JSON.parse($selectedVariations);
                 $input.find('input').first().val($selectedVariations[0]);
             } else {
-                $selectedVariations = JSON.parse($selectedVariations);
-                // Retrieve prototype form from data-prototype attribute
-                var prototypeForm = $mealRow.data('prototype');
+                var bool = true;
+                $mealRow.children('.meal-selected').find('input').each(function(){
+                    if ($(this).first().val() == ''){
+                        $(this).first().val(thisVariation.next().attr('data-attribute-id'));
+                        bool = false;
+                    }
+                });
+                if(bool){
+                    $selectedVariations = JSON.parse($selectedVariations);
+                    // Retrieve prototype form from data-prototype attribute
+                    var prototypeForm = $mealRow.data('prototype');
 
-                // Get day and meal id for prototype
-                var day = $mealRow.children('.meal-selected').first().find('input').last().val();
-                var dish = $selectedVariations[$selectedVariations.length - 1];
-                var prototypeFormId = $mealRow.closest('.day').find('.meal-selected').length; // var newFormId = $(".form-row > [id^=week_form_days_" + $(newForm).first().attr('id')[15]).length;
+                    // Get day and meal id for prototype
+                    var day = $mealRow.children('.meal-selected').first().find('input').last().val();
+                    var dish = $selectedVariations[$selectedVariations.length - 1];
+                    var prototypeFormId = $mealRow.closest('.day').find('.meal-selected').length;
 
-                // Set meal id in prototype form and append form element to other form elements
-                prototypeForm = prototypeForm.replace(/__name__/g, prototypeFormId);
-                var $prototypeFormElement = $(prototypeForm).appendTo($mealRow);
-                $prototypeFormElement.addClass('meal-selected');
+                    // Set meal id in prototype form and append form element to other form elements
+                    prototypeForm = prototypeForm.replace(/__name__/g, prototypeFormId);
+                    var $prototypeFormElement = $(prototypeForm).appendTo($mealRow);
+                    $prototypeFormElement.addClass('meal-selected');
 
-                // Set day and dish for prototype form element
-                // var $prototypeFormElement = $mealRow.children('.meal-selected').last();
-                $prototypeFormElement.find('input').last().val(day);
-                $prototypeFormElement.find('input').first().val(dish);
+                    // Set day and dish for prototype form element
+                    // var $prototypeFormElement = $mealRow.children('.meal-selected').last();
+                    $prototypeFormElement.find('input').last().val(day);
+                    $prototypeFormElement.find('input').first().val(dish);
+                }
             }
         }
+
 
         $(this).toggleClass('checked');
     });

@@ -311,7 +311,7 @@ function setMealRowLabel(mealRow, parentId, variations) {
 
         for(var i = 0; i < variations.length; i++) {
             variationsLabel += (i > 0) ? ', ' : '';
-            variationsLabel += $parentDish.find(".variation label[data-attribute-id=" + variations[i] + "]").html();
+            variationsLabel += $parentDish.find(".variation[data-attribute-id=" + variations[i] + "] label").html();
         }
         mealRowLabel.text(parentLabel + ' - ' + variationsLabel);
     } else {
@@ -320,112 +320,95 @@ function setMealRowLabel(mealRow, parentId, variations) {
 }
 
 Mealz.prototype.selectMeal = function () {
-    var selectedDish = $('.meal-row .dishes');
-    var variationCheckbox = $('.variation-checkbox');
-    var variations = [];
+    var that = this;
+    that.prototypeFormId = undefined;
 
-    selectedDish.on('click', function (e) {
-        var mealRow = $(this).closest('.meal-row');
-        var dishId = $(e.currentTarget).data('attribute-id');
+    $('.meal-row .dishes').on('click', function (e) {
+        var $that = $(this);
+        var $mealRow = $that.closest('.meal-row');
+        var dishId = $that.data('attribute-id'); //$(e.currentTarget)
 
         if($(this).attr('data-attribute-parent') != 'true') {
-            mealRow.attr('data-attribute-selected-dish', dishId);
-            mealRow.find('.meal-label').text($(this).find('.dish-title').html());
-            mealRow.attr('data-attribute-selected-variations', "");
-            mealRow.find('.variation-checkbox').removeClass("checked");
-            variations.length = 0;
+            $mealRow.data('attribute-selected-dish', dishId);
+            $mealRow.find('.meal-label').text($(this).find('.dish-title').html());
+            $mealRow.attr('data-attribute-selected-variations', '');
+            $mealRow.find('.variation-checkbox').removeClass("checked");
+            $mealRow.find('.meal-selected').slice(1).remove();
+            $mealRow.find('.meal-selected:first').find('input:first').val(dishId);
             hideSelectBox(e);
         }
     });
 
-    variationCheckbox.on('click', function (e) {
-        var parentId = $(this).closest('.dishes').attr('data-attribute-id');
-        var variationId = $(this).next().data('attribute-id');
-        var mealRow = $(this).closest('.meal-row');
+    $('.variation-checkbox').on('click', function (e) {
+        var $that = $(this);
+        var parentId = $that.closest('.dishes').attr('data-attribute-id');
+        var variationId = $that.parent('.variation').data('attribute-id');
 
-        if(parentId !== mealRow.attr('data-attribute-selected-dish') && variations.length > 0) {
-            variations.length = 0;
+        var $mealRow = $that.closest('.meal-row');
+        var selectedDish = $mealRow.data('attribute-selected-dish');
+        var previousSelectedVariations = $mealRow.attr('data-attribute-selected-variations');
+        var $input = $mealRow.children('.meal-selected').first();
+        var variations = [];
+
+        // If data-attribute selected-variations is defined and not empty
+        if (previousSelectedVariations) {
+            previousSelectedVariations = JSON.parse(previousSelectedVariations);
+            variations = previousSelectedVariations;
         }
 
-        if(!$(this).hasClass('checked')) {
-            toggleArrayItem(variations, variationId);
-        }
-        /* if the checkbox was checked and we deselect it */
-        else {
-            var deselectedVariationId = $(this).next().attr('data-attribute-id');
-            var selectedVariations = [];
-            $(this).closest('.meal-row').find('.meal-selected').children().each(function(){
-                if($(this).val() === deselectedVariationId) {
-                    $(this).attr('value', '');
+        toggleArrayItem(variations, variationId);
 
-                    selectedVariations = JSON.parse($(this).closest('.meal-row').attr('data-attribute-selected-variations'));
-                    selectedVariations.splice( $.inArray(deselectedVariationId, selectedVariations), 1 );
-                    variations = selectedVariations;
-                }
-            });
-        }
+        // Set meal row data attributes and dropdown label
+        $mealRow.attr('data-attribute-selected-dish', parentId);
+        $mealRow.attr('data-attribute-selected-variations', JSON.stringify(variations));
+        setMealRowLabel($mealRow, parentId, variations);
 
-        variations = unique(variations);
-
-        mealRow.attr('data-attribute-selected-dish', parentId);
-        mealRow.attr('data-attribute-selected-variations', JSON.stringify(variations));
-
-        setMealRowLabel(mealRow, parentId, variations);
-
-        // Fill input fields
-        e.preventDefault();
-        e.stopPropagation();
-
-        var thisVariation = $(this);
-
-        /* if checkbox is not checked yet */
-        if(!thisVariation.hasClass('checked')) {
-            var $mealRow = thisVariation.closest('.meal-row');
-            var $selectedDish = $mealRow.data('attribute-selected-dish');
-            var $selectedVariations = $mealRow.attr('data-attribute-selected-variations');
-            var $input = $mealRow.children('.meal-selected').first();
-
-            if (!$selectedVariations || $selectedVariations == 'null') {
-                $input.find('input').first().val($selectedDish);
-            } else if (JSON.parse($selectedVariations).length === 1 ) {
-                $selectedVariations = JSON.parse($selectedVariations);
-                $input.find('input').first().val($selectedVariations[0]);
+        // If checkbox wasn't checked before
+        if(!$that.hasClass('checked')) {
+            if (variations.length === 0) {
+                $input.find('input').first().val(selectedDish);
+            } else if (variations.length === 1) {
+                $input.find('input').first().val(variations[0]);
             } else {
-                var bool = true;
-                $mealRow.children('.meal-selected').find('input').each(function(){
-                    if ($(this).first().val() === ''){
-                        $(this).first().val(thisVariation.next().attr('data-attribute-id'));
-                        bool = false;
-                    }
-                });
-                if(bool){
-                    $selectedVariations = JSON.parse($selectedVariations);
-                    // Retrieve prototype form from data-prototype attribute
-                    var prototypeForm = $('.meal-rows-wrapper').data('prototype');
-
-                    // Get day and meal id for prototype
-                    var day = $mealRow.children('.meal-selected').first().find('input').last().val();
-                    var dish = $selectedVariations[$selectedVariations.length - 1];
-                    var prototypeFormId = $mealRow.closest('.day').find('.meal-selected').length;
-
-                    // Set meal id in prototype form and append form element to other form elements
-                    prototypeForm = prototypeForm.replace(/__name__/g, prototypeFormId);
-                    var $prototypeFormElement = $(prototypeForm).appendTo($mealRow);
-                    $prototypeFormElement.addClass('meal-selected');
-
-                    // Set day and dish for prototype form element
-                    // var $prototypeFormElement = $mealRow.children('.meal-selected').last();
-                    $prototypeFormElement.find('input').last().val(day);
-                    $prototypeFormElement.find('input').first().val(dish);
+                // Get prototype and day id and retrieve prototype form from data-prototype attribute
+                if (that.prototypeFormId === undefined) {
+                    that.prototypeFormId = $mealRow.closest('.day').find('.meal-selected').length;
                 }
+                that.prototypeFormId += 1;
+                var day = $mealRow.children('.meal-selected:first').find('input:last').val();
+                var prototypeForm = $mealRow.parent('.meal-rows-wrapper').data('prototype');
+
+                // Set prototype, day and dish id in prototype form and append form element to related meal row
+                prototypeForm = prototypeForm.replace(/__name__/g, that.prototypeFormId);
+                var $prototypeFormElement = $(prototypeForm).appendTo($mealRow);
+                $prototypeFormElement.addClass('meal-selected');
+                var $prototypeFormElementInputs = $prototypeFormElement.find('input');
+                $prototypeFormElementInputs.last().val(day);
+                $prototypeFormElementInputs.first().val(variationId);
+            }
+        } else {
+            // If there are still variations selected
+            if (variations.length > 0) {
+                if (variations.length === 1) {
+                    $input.find('input').first().val(variations[0]);
+                    $mealRow.find('.meal-selected').slice(1).remove();
+                } else {
+                    // Find and remove input field with the same value like the id of clicked variation
+                    $mealRow.find('.meal-selected').each(function () {
+                        $(this).find('input:first').val() == variationId && $(this).remove();
+                    });
+                }
+            // Else (If no variation, and therefore no dish, is selected anymore)
+            } else {
+                // Remove every other input except first
+                $mealRow.attr('data-attribute-selected-dish', '');
+                $input.find('input:first').attr('value', '');
+                $mealRow.find('.meal-selected').slice(1).remove();
             }
         }
 
         $(this).toggleClass('checked');
     });
-
-
-
 };
 
 
@@ -502,8 +485,8 @@ $(document).ready(function() {
         var $mealRow = $that.closest('.meal-row');
 
         // Remove data attribute values from meal-row
-        $mealRow.attr('data-attribute-selected-dish', 'null');
-        $mealRow.attr('data-attribute-selected-variations', 'null');
+        $mealRow.attr('data-attribute-selected-dish', '');
+        $mealRow.attr('data-attribute-selected-variations', '');
 
         // Clear dropdown text
         $that.prev('.meal-label').empty();
@@ -532,7 +515,8 @@ $(document).ready(function() {
         }]
     });
 
-    $('.fancybox').attr('rel', 'gallery')
+    var $fancybox = $('.fancybox');
+    $fancybox.attr('rel', 'gallery')
         .fancybox({
             padding : 40,
             openEffect : 'fade',
@@ -545,7 +529,7 @@ $(document).ready(function() {
             closeBtn: false,
             maxWidth: 400,
         });
-    $('.fancybox').trigger('click');
+    $fancybox.trigger('click');
     $('.fancybox-overlay').unbind('click');
     $('.fancybox > .button').click(function(){
         F = $.fancybox;
@@ -555,7 +539,5 @@ $(document).ready(function() {
             $(this).close();
         }
     });
-    $('.fancybox').unbind('click');
-
-
+    $fancybox.unbind('click');
 });

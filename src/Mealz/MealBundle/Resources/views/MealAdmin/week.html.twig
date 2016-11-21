@@ -56,7 +56,8 @@
                         {{ day.dateTime | date('D') | trans({}, 'date') }}
                     </span>
                 </div>
-                <div class="meal-rows-wrapper" data-prototype="{{ form_widget(form.children.days.children[0].children.meals.vars.prototype)|e('html_attr') }}">
+
+                <div class="meal-rows-wrapper" data-prototype="{{ form_widget(form.children.days.children[loop.index0].children.meals.vars.prototype)|e('html_attr') }}">
                     {# Render meal row for each meal which already has a dish #}
                     {% set selectedMeals = groupMealsToArray(day.meals) %}
 

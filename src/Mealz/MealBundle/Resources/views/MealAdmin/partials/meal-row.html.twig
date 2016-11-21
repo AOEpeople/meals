@@ -1,13 +1,6 @@
-{% set selectedDishJsonEncoded %}{% spaceless %}
-    {% if selectedDish == null or parentDish == selectedDish.0 %}
-        null
-    {% else %}
-        {{ selectedDish | json_encode}}
-    {% endif %}
-{% endspaceless %}{% endset %}
 <div class="meal-row"
     data-attribute-selected-dish="{{ parentDish }}"
-    data-attribute-selected-variations="{{ selectedDishJsonEncoded }}"
+    data-attribute-selected-variations="{% if selectedDish != null and parentDish != selectedDish.0 %}{{ selectedDish | json_encode}}{% endif %}"
 >
     {% set formMeals = reloadFormMeals() %}
 
@@ -46,9 +39,9 @@
                             <div class="variation-button">variations</div>
                             <div class="meal-select-variations">
                                 {% for variation in variations %}
-                                    <div class="variation">
+                                    <div class="variation" data-attribute-id="{{ variation.id }}">
                                         <div class="variation-checkbox {% if variation.id in selectedDish %}checked{% endif %}"></div>
-                                        <label for="variation" data-attribute-id="{{ variation.id }}">{{ variation.title }}</label>
+                                        <label for="variation">{{ variation.title }}</label>
                                     </div>
                                 {% endfor %}
                                 <a href="#" class="button small">save</a>

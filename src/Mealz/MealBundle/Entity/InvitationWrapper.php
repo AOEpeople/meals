@@ -4,6 +4,7 @@ namespace Mealz\MealBundle\Entity;
 
 use Mealz\MealBundle\Entity\Day;
 use Mealz\UserBundle\Entity\Profile;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class InvitationWrapper
@@ -13,11 +14,13 @@ class InvitationWrapper
 {
 
     /**
+     * @Assert\Valid
      * @var Day
      */
     private $day;
 
     /**
+     * @Assert\Valid
      * @var Profile
      */
     private $profile;
@@ -53,6 +56,7 @@ class InvitationWrapper
     {
         $this->profile = $profile;
     }
+
 
 
 }

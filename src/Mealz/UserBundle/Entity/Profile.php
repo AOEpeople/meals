@@ -5,6 +5,7 @@ namespace Mealz\UserBundle\Entity;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * A profile is some kind of user record in the database that does not know anything about logins.
@@ -25,12 +26,14 @@ class Profile {
 	private $username;
 
 	/**
+	 * @Assert\NotBlank()
 	 * @ORM\Column(type="string", length=255, nullable=TRUE)
 	 * @var string
 	 */
 	protected $name;
 
 	/**
+	 * @Assert\NotBlank()
 	 * @ORM\Column(type="string", length=255, nullable=TRUE)
 	 * @var string
 	 */

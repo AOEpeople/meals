@@ -17,6 +17,7 @@ use Mealz\MealBundle\Entity\InvitationWrapper;
 use Mealz\UserBundle\Entity\Profile;
 use Mealz\UserBundle\Entity\Role;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -163,9 +164,12 @@ class MealController extends BaseController
         if ($request->isMethod('POST')) {
             $translator = $this->get('translator');
             $form->handleRequest($request);
-
             $formData = $request->request->get('invitation_form');
-            if ($form->isValid() && array_key_exists('day', $formData)) {
+
+            if(!isset($formData['day']['meals'])||count($formData['day']['meals'])==0){
+                $message = $translator->trans("error.participation.no_meal_selected", [], 'messages');
+                $this->addFlashMessage($message, 'danger');
+            } elseif ($form->isValid()) {
                 $mealRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
                 $meals = $formData['day']['meals'];
                 $mealDateTime = $mealRepository->find($meals[0])->getDateTime()->format('Y-m-d');
@@ -226,9 +230,6 @@ class MealController extends BaseController
                 } finally {
                     return $this->render('::base.html.twig');
                 }
-            } else {
-                $message = $translator->trans("error.participation.no_meal_selected", [], 'messages');
-                $this->addFlashMessage($message, 'danger');
             }
         }
 

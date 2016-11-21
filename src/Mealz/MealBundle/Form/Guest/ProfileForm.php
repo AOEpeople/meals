@@ -15,18 +15,21 @@ class ProfileForm extends AbstractType
     {
         $builder
                 ->add('name', TextType::class, array(
+                    'required' => false,
                     'attr' => array(
                         'placeholder' => 'form.placeholder.name'
                     ),
                     'translation_domain' => 'general'
                 ))
                 ->add('firstName', TextType::class, array(
+                    'required' => false,
                     'attr' => array(
                         'placeholder' => 'form.placeholder.first_name'
                     ),
                     'translation_domain' => 'general'
                 ))
                 ->add('company', TextType::class, array(
+                    'required' => false,
                     'attr' => array(
                         'placeholder' => 'form.placeholder.company'
                     ),

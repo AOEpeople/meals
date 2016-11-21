@@ -384,4 +384,14 @@ $(document).ready(function() {
         }
     });
     $('.fancybox').unbind('click');
+
+        // prepare checkboxes on guest invitation form
+    mealz.$guestParticipationCheckboxes.each(function(idx, checkbox){
+        var $checkbox = $(checkbox);
+        var $participantsCount = $checkbox.closest('.meal-row').find('.participants-count');
+        var actualCount = parseInt($participantsCount.html());
+        mealz.applyCheckboxClasses($checkbox);
+        $participantsCount.text($checkbox.is(':checked') ? actualCount + 1 : actualCount);
+    });
+
 });

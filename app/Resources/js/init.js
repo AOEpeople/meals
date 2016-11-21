@@ -393,7 +393,7 @@ Mealz.prototype.selectMeal = function () {
             } else {
                 var bool = true;
                 $mealRow.children('.meal-selected').find('input').each(function(){
-                    if ($(this).first().val() == ''){
+                    if ($(this).first().val() === ''){
                         $(this).first().val(thisVariation.next().attr('data-attribute-id'));
                         bool = false;
                     }

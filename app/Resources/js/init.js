@@ -401,7 +401,7 @@ Mealz.prototype.selectMeal = function () {
                 if(bool){
                     $selectedVariations = JSON.parse($selectedVariations);
                     // Retrieve prototype form from data-prototype attribute
-                    var prototypeForm = $mealRow.data('prototype');
+                    var prototypeForm = $('.meal-rows-wrapper').data('prototype');
 
                     // Get day and meal id for prototype
                     var day = $mealRow.children('.meal-selected').first().find('input').last().val();
@@ -420,7 +420,6 @@ Mealz.prototype.selectMeal = function () {
                 }
             }
         }
-
 
         $(this).toggleClass('checked');
     });

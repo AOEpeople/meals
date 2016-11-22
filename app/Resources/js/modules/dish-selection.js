@@ -54,6 +54,10 @@ Mealz.prototype.selectDish = function ($element, e) {
     var $mealRow = $element.closest('.meal-row');
     var dishId = $element.data('attribute-id'); //$(e.currentTarget)
 
+    // add remove icon
+    $mealRow.find('.remove-meal').attr('style', 'display: block;');
+    console.log($mealRow.find('.remove-meal'));
+
     if($element.attr('data-attribute-parent') != 'true') {
         // add remove icon
         $mealRow.find('.remove-meal').attr('style', 'display: block;');
@@ -90,6 +94,9 @@ Mealz.prototype.selectVariation = function ($element) {
     $mealRow.attr('data-attribute-selected-dish', parentId);
     $mealRow.attr('data-attribute-selected-variations', JSON.stringify(variations));
     this.setDropdownLabelForSelectedVariations($mealRow, parentId, variations);
+
+    // add remove icon
+    $mealRow.find('.remove-meal').attr('style', 'display: block;');
 
     // If checkbox wasn't checked before
     if(!$element.hasClass('checked')) {
@@ -136,13 +143,15 @@ Mealz.prototype.selectVariation = function ($element) {
             }
             // Else (If no variation, and therefore no dish, is selected anymore)
         } else {
+            // disable remove icon
+            $mealRow.find('.remove-meal').attr('style', 'display: none;');
+
             // Remove every other input except first
             $mealRow.attr('data-attribute-selected-dish', '');
             $input.find('input:first').attr('value', '');
             $mealRow.find('.meal-selected').slice(1).remove();
         }
     }
-
     $element.toggleClass('checked');
 };
 

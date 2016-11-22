@@ -47,7 +47,8 @@ gulp.task('js', function() {
             'bower_components/fancybox/source/jquery.fancybox.pack.js',
             'bower_components/datatables.net/js/jquery.dataTables.js',
             'bower_components/switchery/dist/switchery.min.js',
-            'js/**/*.js'
+            'js/init.js',
+            'js/modules/*.js'
         ])
         .pipe(concat('mealz.js'))
         .pipe(config.production ? uglify() : util.noop())

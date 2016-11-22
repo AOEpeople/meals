@@ -36,6 +36,8 @@ Mealz.prototype.initDishSelection = function () {
         e.preventDefault();
         e.stopPropagation();
         that.clearDishSelection($(this));
+        // disable remove icon
+        $(this).attr('style', 'display: none;');
     });
 
     $('.meal-select').on('click', function (e) {
@@ -50,6 +52,9 @@ Mealz.prototype.selectDish = function ($element, e) {
     var dishId = $element.data('attribute-id'); //$(e.currentTarget)
 
     if($element.attr('data-attribute-parent') != 'true') {
+        // add remove icon
+        $mealRow.find('.remove-meal').attr('style', 'display: block;');
+
         $mealRow.data('attribute-selected-dish', dishId);
         $mealRow.find('.meal-label').text($element.find('.dish-title').html());
         $mealRow.attr('data-attribute-selected-variations', '');
@@ -88,8 +93,14 @@ Mealz.prototype.selectVariation = function ($element) {
         if (variations.length === 0) {
             $input.find('input').first().val(selectedDish);
         } else if (variations.length === 1) {
+            // add remove icon
+            $mealRow.find('.remove-meal').attr('style', 'display: block;');
+
             $input.find('input').first().val(variations[0]);
         } else {
+            // add remove icon
+            $mealRow.find('.remove-meal').attr('style', 'display: block;');
+
             // Get prototype and day id and retrieve prototype form from data-prototype attribute
             if (this.prototypeFormId === undefined) {
                 this.prototypeFormId = $mealRow.closest('.day').find('.meal-selected').length;

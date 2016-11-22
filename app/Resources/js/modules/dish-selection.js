@@ -65,9 +65,9 @@ Mealz.prototype.selectDish = function ($element, e) {
         $mealRow.data('attribute-selected-dish', dishId);
         $mealRow.find('.meal-label').text($element.find('.dish-title').html());
         $mealRow.attr('data-attribute-selected-variations', '');
-        $mealRow.find('.variation-checkbox').removeClass("checked");
-        $mealRow.find('.meal-selected').slice(1).remove();
-        $mealRow.find('.meal-selected:first').find('input:first').val(dishId);
+        $mealRow.find('.variation-checkbox').removeClass('checked');
+        this.clearAllFormElements($mealRow);
+        this.createMealFormElement($mealRow, dishId);
         this.hideVariationSelectBox(e);
     }
 };
@@ -81,6 +81,7 @@ Mealz.prototype.selectVariation = function ($element) {
     var previousSelectedVariations = $mealRow.attr('data-attribute-selected-variations');
     var $input = $mealRow.children('.meal-selected').first();
     var variations = [];
+    var that = this;
 
     // If data-attribute selected-variations is defined and not empty
     if (previousSelectedVariations) {
@@ -100,56 +101,33 @@ Mealz.prototype.selectVariation = function ($element) {
 
     // If checkbox wasn't checked before
     if(!$element.hasClass('checked')) {
-        if (variations.length === 0) {
-            $input.find('input').first().val(selectedDish);
-        } else if (variations.length === 1) {
-            // add remove icon
-            $mealRow.find('.remove-meal').attr('style', 'display: block;');
-
-            $input.find('input').first().val(variations[0]);
+        // If this is the first selected variation
+        if (variations.length === 1) {
+            that.clearAllFormElements($mealRow);
+            that.createMealFormElement($mealRow, variationId);
+        // Else (If other variations were selected before)
         } else {
             // add remove icon
             $mealRow.find('.remove-meal').attr('style', 'display: block;');
-
-            // Get prototype and day id and retrieve prototype form from data-prototype attribute
-            if (this.prototypeFormId === undefined) {
-                this.prototypeFormId = $mealRow.closest('.day').find('.meal-selected').length;
-            }
-            this.prototypeFormId += 1;
-            var day = $mealRow.children('.meal-selected:first').find('input:last').val();
-            var prototypeForm = $mealRow.parent('.meal-rows-wrapper').data('prototype');
-
-            // Set prototype, day and dish id in prototype form and append form element to related meal row
-            prototypeForm = prototypeForm.replace(/__name__/g, this.prototypeFormId);
-            var $prototypeFormElement = $(prototypeForm).appendTo($mealRow);
-            $prototypeFormElement.addClass('meal-selected');
-            var $prototypeFormElementInputs = $prototypeFormElement.find('input');
-            $prototypeFormElementInputs.last().val(day);
-            $prototypeFormElementInputs.first().val(variationId);
+            that.createMealFormElement($mealRow, variationId);
         }
     } else {
         // If there are still variations selected
         if (variations.length > 0) {
-            if (variations.length === 1) {
-                $input.find('input').first().val(variations[0]);
-                $mealRow.find('.meal-selected').slice(1).remove();
-            } else {
-                // Find and remove input field with the same value like the id of clicked variation
-                $mealRow.find('.meal-selected').each(function () {
-                    if($element.find('input:first').val() === variationId){
-                        $element.remove();
-                    }
-                });
-            }
-            // Else (If no variation, and therefore no dish, is selected anymore)
+            // Find and remove input field with the same value like the id of clicked variation
+            $mealRow.find('.meal-selected').each(function () {
+                if($(this).find('input:first').val() == variationId){
+                    that.deleteSingleSelection($(this));
+                }
+            });
+        // Else (If no variation, and therefore no dish, is selected anymore)
         } else {
             // disable remove icon
             $mealRow.find('.remove-meal').attr('style', 'display: none;');
 
             // Remove every other input except first
             $mealRow.attr('data-attribute-selected-dish', '');
-            $input.find('input:first').attr('value', '');
-            $mealRow.find('.meal-selected').slice(1).remove();
+            that.clearAllFormElements($mealRow);
         }
     }
     $element.toggleClass('checked');
@@ -166,8 +144,7 @@ Mealz.prototype.clearDishSelection = function ($element) {
     $element.prev('.meal-label').empty();
 
     // Remove value (dish id) from default input field and remove others
-    $mealRow.find('.meal-selected').slice(1).remove();
-    $mealRow.find('.meal-selected').first().find('input').first().attr('value', '');
+    this.clearAllFormElements($mealRow);
 
     //Remove tick from variation checkboxes
     $mealRow.find('.variation-checkbox.checked').removeClass('checked');
@@ -211,4 +188,37 @@ Mealz.prototype.hideVariationSelectBox = function (e) {
             thisMealSelectBox.hide();
         }
     }
+};
+
+Mealz.prototype.deleteSingleSelection = function ($element) {
+    if ($element.hasClass('meal-persisted')) {
+        $element.find('input:first').val('');
+    } else {
+        $element.remove();
+    }
+};
+
+Mealz.prototype.clearAllFormElements = function ($mealRow) {
+    var that = this;
+    $mealRow.find('.meal-selected').each(function () {
+        that.deleteSingleSelection($(this));
+    });
+};
+
+Mealz.prototype.createMealFormElement = function ($mealRow, dishId) {
+    // Get prototype and day id and retrieve prototype form from data-prototype attribute
+    if (this.prototypeFormId === undefined) {
+        this.prototypeFormId = $mealRow.closest('.day').find('.meal-selected').length;
+    }
+    this.prototypeFormId += 1;
+    var day = $mealRow.children('.meal-selected:first').find('input:last').val();
+    var prototypeForm = $mealRow.parent('.meal-rows-wrapper').data('prototype');
+
+    // Set prototype, day and dish id in prototype form and append form element to related meal row
+    prototypeForm = prototypeForm.replace(/__name__/g, this.prototypeFormId);
+    var $prototypeFormElement = $(prototypeForm).appendTo($mealRow);
+    $prototypeFormElement.addClass('meal-selected');
+    var $prototypeFormElementInputs = $prototypeFormElement.find('input');
+    $prototypeFormElementInputs.last().val(day);
+    $prototypeFormElementInputs.first().val(dishId);
 };

@@ -8,17 +8,22 @@
         {% set formViews = getGroupedFormViews(selectedDish, formMeals) %}
     {% elseif parentDish is not null %}
         {% set formViews = getGroupedFormViews(parentDish, formMeals) %}
-    {% else %}
-        {% set formViews = [formMeals|first] %}
     {% endif %}
 
+    {% if formViews is defined %}
     {{ removeUsedFormViews(formMeals, formViews) }}
+
 
     {% for formView in formViews %}
         {% if formView is iterable %}
-            {{ form_widget(formView, { 'attr': {'class': 'meal-selected'} }) }}
+            {% set additionalClasses = 'meal-selected' %}
+            {% if formView.vars['value'].dish is not null %}
+                {% set additionalClasses = additionalClasses ~ ' meal-persisted' %}
+            {% endif %}
+            {{ form_widget(formView, { 'attr': {'class': additionalClasses} }) }}
         {% endif %}
     {% endfor %}
+    {% endif %}
 
     <div class="meal-select-box">
         <ul>
@@ -54,6 +59,8 @@
     </div>
     <div class="meal-select">
         <span class="meal-label">{{ getFullTitleByDishAndVariation(parentDish , selectedDish, dishes) }}</span>
-        <a class="remove-meal" href="#" {% if formViews|first.vars.value.dish != null %}style="display: block;"{% endif %}><span class="glyphicon glyphicon-remove"></span></a>
+        <a class="remove-meal" href="#"{% if formViews is defined %}style="display: block;"{% endif %}>
+            <span class="glyphicon glyphicon-remove"></span>
+        </a>
     </div>
 </div>

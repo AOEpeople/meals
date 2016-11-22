@@ -4,7 +4,6 @@ namespace Mealz\MealBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
 use Mealz\MealBundle\Entity\Day;
-use Mealz\MealBundle\Entity\Meal;
 use Mealz\MealBundle\Entity\Week;
 use Mealz\MealBundle\Entity\WeekRepository;
 use Mealz\MealBundle\Form\MealAdmin\WeekForm;
@@ -105,10 +104,6 @@ class MealAdminController extends BaseController {
     {
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
-        foreach($week->getDays() as $day) {
-            $this->generateEmptyMealsForDay($day);
-        }
-
         $qbDishes = $this->get('mealz_meal.repository.dish');
         $dishes = $qbDishes->getSortedDishesQueryBuilder()->getQuery()->getResult();
 
@@ -172,35 +167,10 @@ class MealAdminController extends BaseController {
             $dayDateTime->modify('+' . $i . ' days');
             $day = new Day();
             $day->setDateTime($dayDateTime);
-            $this->generateEmptyMealsForDay($day);
             $day->setWeek($week);
             $days->add($day);
         }
 
         return $week;
-    }
-
-    protected function generateEmptyMealsForDay(Day $day)
-    {
-        $dishList = array();
-
-        foreach ($day->getMeals() as $meal) {
-            $dish = $meal->getDish();
-            $dishParent = $dish->getParent();
-            if (null === $dishParent && !in_array($dish->getId(), $dishList)) {
-                $dishList[] = $dish->getId();
-            } elseif (!in_array($dishParent->getId(), $dishList)) {
-                $dishList[] = $dishParent->getId();
-            }
-        }
-
-        for($i = count($dishList); $i < 2; $i++) {
-            $meal = new Meal();
-            $meal->setDay($day);
-            $mealDateTime = clone($day->getDateTime());
-            $mealDateTime->setTime(12, 00);
-            $meal->setDateTime($mealDateTime);
-            $day->getMeals()->add($meal);
-        }
     }
 }

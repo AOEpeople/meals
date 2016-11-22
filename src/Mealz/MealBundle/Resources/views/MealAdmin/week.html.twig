@@ -39,8 +39,6 @@
 
     {{ MealzHeadline.create(1, action ~ weekInfo , '', '', additionalHeaderItems) }}
 
-
-
     <div class="week-form">
         {{ form_start(form) }}
         <div class="week-disable">
@@ -48,7 +46,6 @@
         </div>
 
         {% for day in week.days %}
-            {% set formMeals = setFormMeals(form.children.days.children[loop.index0].children.meals.children) %}
             <div class="day">
                 {# display week day and date #}
                 <div class="week-day">
@@ -59,7 +56,7 @@
 
                 <div class="meal-rows-wrapper" data-prototype="{{ form_widget(form.children.days.children[loop.index0].children.meals.vars.prototype)|e('html_attr') }}">
                     {# Render meal row for each meal which already has a dish #}
-                    {% set selectedMeals = groupMealsToArray(day.meals) %}
+                    {% set selectedMeals = groupMealsToArray(form.days[loop.index0].meals.children) %}
 
                     {% for parentDish, selectedDish in selectedMeals %}
                         {% include 'MealzMealBundle:MealAdmin/partials:meal-row.html.twig' %}
@@ -67,8 +64,6 @@
 
                     {# Render a meal row for each meal without a dish #}
                     {% set emptyMealCount = (selectedMeals|length - 2)|abs %}
-                    {% set parentDish = null %}
-                    {% set selectedDish = null %}
                     {% if emptyMealCount > 0 %}
                         {% for selectedMeal in 0..(emptyMealCount-1) %}
                             {% include 'MealzMealBundle:MealAdmin/partials:meal-row.html.twig' %}

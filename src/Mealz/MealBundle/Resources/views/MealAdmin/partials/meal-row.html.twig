@@ -1,28 +1,14 @@
 <div class="meal-row"
+    {% if parentDish is defined %}
     data-attribute-selected-dish="{{ parentDish }}"
-    data-attribute-selected-variations="{% if selectedDish != null and parentDish != selectedDish.0 %}{{ selectedDish | json_encode}}{% endif %}"
->
-    {% set formMeals = reloadFormMeals() %}
-
-    {% if selectedDish is not null %}
-        {% set formViews = getGroupedFormViews(selectedDish, formMeals) %}
-    {% elseif parentDish is not null %}
-        {% set formViews = getGroupedFormViews(parentDish, formMeals) %}
+    data-attribute-selected-variations="{% if parentDish != selectedDish.ids.0 %}{{ selectedDish.ids | json_encode}}{% endif %}"
     {% endif %}
+>
 
-    {% if formViews is defined %}
-    {{ removeUsedFormViews(formMeals, formViews) }}
-
-
-    {% for formView in formViews %}
-        {% if formView is iterable %}
-            {% set additionalClasses = 'meal-selected' %}
-            {% if formView.vars['value'].dish is not null %}
-                {% set additionalClasses = additionalClasses ~ ' meal-persisted' %}
-            {% endif %}
-            {{ form_widget(formView, { 'attr': {'class': additionalClasses} }) }}
-        {% endif %}
-    {% endfor %}
+    {% if parentDish is defined %}
+        {% for formView in selectedDish.formViews %}
+            {{ form_widget(formView, { 'attr': {'class':  'meal-selected meal-persisted'} }) }}
+        {% endfor %}
     {% endif %}
 
     <div class="meal-select-box">
@@ -45,7 +31,7 @@
                             <div class="meal-select-variations">
                                 {% for variation in variations %}
                                     <div class="variation" data-attribute-id="{{ variation.id }}">
-                                        <div class="variation-checkbox {% if variation.id in selectedDish %}checked{% endif %}"></div>
+                                        <div class="variation-checkbox {% if selectedDish is defined and variation.id in selectedDish.ids %}checked{% endif %}"></div>
                                         <label for="variation">{{ variation.title }}</label>
                                     </div>
                                 {% endfor %}
@@ -58,8 +44,12 @@
         </ul>
     </div>
     <div class="meal-select">
-        <span class="meal-label">{{ getFullTitleByDishAndVariation(parentDish , selectedDish, dishes) }}</span>
-        <a class="remove-meal" href="#"{% if formViews is defined %}style="display: block;"{% endif %}>
+        <span class="meal-label">{% spaceless %}
+        {% if parentDish is defined %}
+            {{ getFullTitleByDishAndVariation(parentDish , selectedDish.ids, dishes) }}
+        {% endif %}
+        {% endspaceless %}</span>
+        <a class="remove-meal" href="#"{% if parentDish is defined %}style="display: block;"{% endif %}>
             <span class="glyphicon glyphicon-remove"></span>
         </a>
     </div>

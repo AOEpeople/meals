@@ -162,21 +162,23 @@ class Variation extends \Twig_Extension
 		return $sortedMeals;
 	}
 
-    public function groupMealsToArray($meals)
+    public function groupMealsToArray($formViews)
     {
-        $selectedMeals = array();
-        foreach ($meals as $meal) {
+        $dishesGroupedByParent = array();
+
+        foreach ($formViews as $formView) {
             /** @var Meal $meal */
+            $meal = $formView->vars['data'];
             $dish = $meal->getDish();
             if (null !== $dish) {
                 $parentDish = $dish->getParent();
                 $dishId = (null === $parentDish) ? $dish->getId() : $parentDish->getId();
-                $selectedMeals[$dishId][] = $dish->getId();
+                $dishesGroupedByParent[$dishId]['ids'][] = $dish->getId();
+                $dishesGroupedByParent[$dishId]['formViews'][] = $formView;
             }
         }
 
-//        VarDumper::dump($mealArray);die();
-        return $selectedMeals;
+        return $dishesGroupedByParent;
 	}
 
     public function getFullTitleByDishAndVariation($parentDishId, $variations, $dishes)

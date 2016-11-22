@@ -41,8 +41,11 @@ Mealz.prototype.initDishSelection = function () {
     $('.meal-select').on('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
+        $('.variation-checkbox.checked',this.prev).closest('li.dishes').find('.variation-button:first').click();
         $(this).prev().toggle();
     });
+
+
 };
 
 Mealz.prototype.selectDish = function ($element, e) {

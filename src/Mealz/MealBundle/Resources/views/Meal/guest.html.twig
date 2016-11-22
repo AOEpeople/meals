@@ -24,7 +24,7 @@
     {{ form_start(form) }}
 
     <div class="meal-guest {{ available ? 'is-available' : '' }}">
-		<div class="header">{{ form.vars.value.day.datetime | date('D, d.m.Y') }}</div>
+		<div class="header">{{ form.vars.value.day.datetime | date('D') | trans({}, 'date') }}{{ form.vars.value.day.datetime | date(' d.m.Y') }}</div>
 
         {% for meal in form.day.meals %}
             <div class="meal-row">

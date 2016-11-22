@@ -52,5 +52,10 @@
             {% endfor %}
         </ul>
     </div>
-    <div class="meal-select"><span class="meal-label">{{ getFullTitleByDishAndVariation(parentDish , selectedDish, dishes) }}</span></div>
+    <div class="meal-select">
+        <span class="meal-label">{{ getFullTitleByDishAndVariation(parentDish , selectedDish, dishes) }}</span>
+        {% if formViews|first.vars.value.dish != null %}
+            <a class="remove-meal" href="#"><span class="glyphicon glyphicon-remove"></span></a>
+        {% endif %}
+    </div>
 </div>

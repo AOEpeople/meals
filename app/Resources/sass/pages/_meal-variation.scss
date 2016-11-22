@@ -74,9 +74,9 @@
 
   .meal-label {
     display: inline-block;
-    overflow-x: hidden;
+    overflow: hidden;
     text-overflow: ellipsis;
-    width: 590px;
+    width: calc(100% - 40px);
     white-space: nowrap;
   }
 }

@@ -88,7 +88,7 @@ class Day extends AbstractMessage
     }
 
     /**
-     * @return ArrayCollection
+     * @return ArrayCollection|Meal[]
      */
     public function getMeals()
     {

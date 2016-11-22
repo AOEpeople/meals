@@ -182,7 +182,19 @@ class MealAdminController extends BaseController {
 
     protected function generateEmptyMealsForDay(Day $day)
     {
-        while(count($day->getMeals()) < 2) {
+        $dishList = array();
+
+        foreach ($day->getMeals() as $meal) {
+            $dish = $meal->getDish();
+            $dishParent = $dish->getParent();
+            if (null === $dishParent && !in_array($dish->getId(), $dishList)) {
+                $dishList[] = $dish->getId();
+            } elseif (!in_array($dishParent->getId(), $dishList)) {
+                $dishList[] = $dishParent->getId();
+            }
+        }
+
+        for($i = count($dishList); $i < 2; $i++) {
             $meal = new Meal();
             $meal->setDay($day);
             $mealDateTime = clone($day->getDateTime());

@@ -188,8 +188,12 @@ class Variation extends \Twig_Extension
         }
 
         if (is_array($variations) && !in_array($parentDishId, $variations)) {
+            $title .= ' - ';
             foreach ($variations as $variationId) {
-                $title .= ' '.$this->getTitleForDish($variationId, $dishes);
+                if ($variationId !== $variations[0]) {
+                    $title .= ', ';
+                }
+                $title .= $this->getTitleForDish($variationId, $dishes);
             }
         }
 

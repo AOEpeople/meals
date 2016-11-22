@@ -69,10 +69,14 @@ class MealForm extends AbstractType
         $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) use ($builder) {
             /** @var Meal $meal */
             $meal = $event->getData();
-            if (null !== $meal->getDay()) {
-                $day = $meal->getDay();
-                $dateTime = $day->getDateTime();
-                $meal->setDateTime($dateTime);
+            if ($meal->getDateTime() === null) {
+                if (null === $meal->getDay()) {
+                    $day = $event->getForm()->getParent()->getParent()->getData();
+                } else {
+                    $day = $meal->getDay();
+                }
+                $meal->setDay($day);
+                $meal->setDateTime($day->getDateTime());
             }
             if (null !== $meal->getDish()) {
                 $dishPrice = $meal->getDish()->getPrice();

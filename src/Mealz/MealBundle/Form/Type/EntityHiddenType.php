@@ -21,7 +21,7 @@ class EntityHiddenType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $transformer = new EntityToIdTransformer($this->objectManager, $options['class']);
+        $transformer = new $options['transformer_class']($this->objectManager, $options['class']);
         $builder->addModelTransformer($transformer);
     }
 
@@ -32,6 +32,7 @@ class EntityHiddenType extends AbstractType
             ->setDefaults(
                 array(
                     'invalid_message' => 'The entity does not exist.',
+                    'transformer_class' => 'Mealz\MealBundle\Form\DataTransformer\EntityToIdTransformer'
                 )
             );
     }

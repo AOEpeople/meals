@@ -4,13 +4,15 @@
     "type": "project",
     "description": "",
     "autoload": {
-        "psr-0": { "": "src/" }
+        "psr-0": { "": "src/" },
+        "psr-4": { "Application\\Migrations\\": "app/DoctrineMigrations/" }
     },
     "require": {
         "php": ">=5.3.3",
         "symfony/symfony": "~2.4",
         "doctrine/orm": "~2.2,>=2.2.3",
         "doctrine/doctrine-bundle": "~1.2",
+        "doctrine/doctrine-migrations-bundle": "~1.2",
         "twig/extensions": "~1.0",
         "symfony/assetic-bundle": "~2.3",
         "symfony/swiftmailer-bundle": "~2.3",

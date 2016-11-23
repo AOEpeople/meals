@@ -53,6 +53,16 @@ services:
     class: Mealz\MealBundle\Entity\DishVariation
     arguments: ['@mealz_meal.dish']
 
+  mealz_meal.day:
+    class: Mealz\MealBundle\Entity\Day
+
+  mealz_user.profile:
+    class: Mealz\UserBundle\Entity\Profile
+
+  mealz_meal.guest_invitation:
+    class: Mealz\MealBundle\Entity\GuestInvitation
+    arguments: ['@mealz_user.profile', '@mealz_meal.day']
+
   mealz_meal.event_listener.participant_persistence:
     class: %mealz_meal.event_listener.participant_persistence.class%
     tags:
@@ -124,7 +134,7 @@ services:
             - { name: form.type, alias: participant }
 
   mealz_meal.form.type.meal:
-    class: Mealz\MealBundle\Form\Type\MealType
+    class: Mealz\MealBundle\Form\MealAdmin\MealForm
     arguments: ['@mealz_meal.repository.dish']
     tags:
       - { name: form.type }
@@ -141,7 +151,7 @@ services:
       - { name: form.type }
 
   mealz_meal.form.type.day:
-    class: Mealz\MealBundle\Form\Type\DayType
+    class: Mealz\MealBundle\Form\MealAdmin\DayForm
     arguments: ['@doctrine.orm.entity_manager']
     tags:
       - { name: form.type }

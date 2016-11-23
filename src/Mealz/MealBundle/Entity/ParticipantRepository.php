@@ -5,6 +5,7 @@ namespace Mealz\MealBundle\Entity;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Mealz\UserBundle\Entity\Profile;
+use Mealz\UserBundle\Entity\Role;
 
 class ParticipantRepository extends EntityRepository
 {
@@ -91,9 +92,7 @@ class ParticipantRepository extends EntityRepository
 
 	protected function compareNameOfParticipants(Participant $participant1, Participant $participant2)
 	{
-		$name1 = $participant1->isGuest() ? $participant1->getGuestName() : $participant1->getProfile()->getName();
-		$name2 = $participant2->isGuest() ? $participant2->getGuestName() : $participant2->getProfile()->getName();
-		$result = strcasecmp($name1, $name2);
+		$result = strcasecmp($participant1->getProfile()->getName(), $participant2->getProfile()->getName());
 
 		if ($result !== 0) {
 			return $result;
@@ -189,24 +188,38 @@ class ParticipantRepository extends EntityRepository
 
 	}
 
+	/**
+	 * Gets the aggregated monthly cost of all the participants.
+	 *
+	 * Guests are currently excluded from the result.
+	 *
+	 * @return array
+	 */
 	private function findCostsPerMonthPerUser()
 	{
 		$qb = $this->createQueryBuilder('p');
 		$qb->select('u.username, u.name, u.firstName, SUBSTRING(m.dateTime, 1, 7) AS yearMonth, SUM(m.price) AS costs');
 		$qb->leftJoin('p.meal', 'm');
 		$qb->leftJoin('p.profile', 'u');
+		$qb->leftJoin('u.roles', 'r');
 		$qb->leftJoin('m.day', 'd');
 		$qb->leftJoin('d.week', 'w');
 		/**
 		 * @TODO: optimize query. where clause costs a lot of time.
 		 */
-		$qb->where('m.dateTime < :now');
+		$qb->where('p.costAbsorbed = 0');
+		$qb->andWhere($qb->expr()->orX(
+			$qb->expr()->isNull('r.sid'),
+			$qb->expr()->neq('r.sid', ':role_sid'))
+		);
+		$qb->andWhere('m.dateTime < :now');
 		$qb->andWhere('d.enabled = 1');
 		$qb->andWhere('w.enabled = 1');
-		$qb->setParameter('now', date('Y-m-d H:i:s'));
 		$qb->groupBy('u.username');
 		$qb->addGroupBy('yearMonth');
 		$qb->addOrderBy('u.name');
+
+		$qb->setParameters(['now' => date('Y-m-d H:i:s'), 'role_sid' => Role::ROLE_GUEST]);
 
 		return $qb->getQuery()->getArrayResult();
 	}

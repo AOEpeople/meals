@@ -172,7 +172,7 @@ class Participant
 	 * @return bool
 	 */
 	public function isGuest() {
-		return (bool)$this->getGuestName();
+	    return $this->profile->isGuest();
 	}
 
 	/**

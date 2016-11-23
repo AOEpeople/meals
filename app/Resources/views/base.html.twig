@@ -14,14 +14,34 @@
     <link rel="stylesheet" href="{{ asset('mealz.css') }}" />
 	{% block head %}{% endblock %}
 </head>
-<body>
+
+{% set activeRoute = app.request.attributes.get('_route') %}
+
+<body class="{{ activeRoute matches '/MealzMealBundle_Meal_guest.*/' ? 'guest-wrapper' }}">
 	{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
 		{% set balance = wallet.getBalance(app.user.profile) %}
 	{% endif %}
 
 	{% include 'MealzTemplateBundle::partials/balanceNotification.html.twig' %}
 
-	{% include 'header.html.twig'  %}
+	<header>
+		<div class="container">
+			<a class="logo" href="{{ path('MealzMealBundle_home') }}">
+				<img src="{{ asset('images/logo.png') }}" alt="AOE" />
+				<span>AOEMEALS</span>
+			</a>
+
+			<div class="header-content">
+
+                    {% block headerContent %}
+                        {% include 'modules/language_switch.html.twig' %}
+                    {% endblock %}
+			</div>
+			<div class="header-toggle hamburger">
+				<span>toggle</span>
+			</div>
+		</div>
+	</header>
 
 	{% if wrapperClass is not defined %}
 		{% set wrapperClass = '' %}

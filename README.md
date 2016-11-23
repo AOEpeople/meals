@@ -5,6 +5,10 @@
 ### Meal enrollment
 Sign in with LDAP credentials and select your preferred meals on landing page.
 
+### Invite guest for a meal
+You need to be signed in with LDAP credentials and you will see small share icon on each day in a week.
+You can send your guest the link and he will be able to enroll for particular day giving his First/Last name and Company information.
+
 ## Features (Admin)
 
 ### General
@@ -31,11 +35,16 @@ Additionally you can disable some days or the whole week in case of (public) hol
 ### Dishes
 **Route:** /dish  
 **Available at:** Choose "Dishes" in admin navigation bar.  
-**Actions** Create, edit and delete dishes
+**Actions** Add variation, Create, edit and delete dishes
+
+### Dish variations
+**Route:** /dish  
+**Available at:** Choose "Dishes" in admin navigation bar.  
+**Actions** Add variation, edit and delete dishes
 
 **Description:**  
-Lists all existing dishes. You can edit and delete them.
-If you click on "CREATE DISH" you can create a new one.
+Lists all existing variations for particular dishes. You can edit and delete them.
+If you click on "ADD VARIATION" you can add new variation to some Dish.
 
 ### (Dish) Categories
 **Route:** /category   
@@ -124,7 +133,9 @@ The following roles are in use:
 
   * ROLE_USER: basically everyone who is allowed to join the meals
   * ROLE_KITCHEN_STAFF: allowed to create and edit dishes and meals
-  * ROLE_LOGIN_LDAP: for users who are authenticated via LDAP
+  * ROLE_GUEST: for users who is invited for a meal, customers etc.
+  * ROLE_ADMIN: for users who is admin
+  
 
 ### Test data
 

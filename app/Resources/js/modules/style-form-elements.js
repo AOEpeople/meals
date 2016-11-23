@@ -94,16 +94,13 @@ Mealz.prototype.applySwitcheryStates = function () {
 Mealz.prototype.applyDropdownStatesByWeekState = function () {
     var that = this;
 
-    if (this.weekCheckbox.checked) {
-        $.each(this.$weekDayCheckboxes, function (i, e) {
+    $.each(this.$weekDayCheckboxes, function (i, e) {
+        if ($(e).parent().parent().find('.week-day-action .js-switch').prop('checked') === true) {
             that.applyDropdownStates(e);
-        });
-    } else {
-        $('select').prop('disabled', true);
-    }
+        }
+    });
 };
 
 Mealz.prototype.applyDropdownStates = function (e) {
-    var selects = $(e).parent().siblings(this.mealRowsWrapperClassSelector).find('select');
-    selects.prop('disabled', !e.checked);
+    $(e).parent().siblings(this.mealRowsWrapperClassSelector).toggleClass('disabled');
 };

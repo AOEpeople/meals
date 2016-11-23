@@ -13,6 +13,11 @@ use Symfony\Component\Validator\ConstraintViolation;
 
 class MealAdminController extends BaseController {
 
+    /**
+     * List action
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function listAction()
     {
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
@@ -27,10 +32,12 @@ class MealAdminController extends BaseController {
         for ($i = 0; $i < 8; $i++) {
             $modifiedDateTime = clone($dateTime);
             $modifiedDateTime->modify('+' . $i . ' weeks');
-            $week = $weekRepository->findOneBy(array(
-                'year' => $modifiedDateTime->format('Y'),
-                'calendarWeek' => $modifiedDateTime->format('W')
-            ));
+            $week = $weekRepository->findOneBy(
+                array(
+                    'year' => $modifiedDateTime->format('Y'),
+                    'calendarWeek' => $modifiedDateTime->format('W')
+                )
+            );
 
             if (null === $week) {
                 $week = new Week();
@@ -41,11 +48,19 @@ class MealAdminController extends BaseController {
             array_push($weeks, $week);
         }
 
-        return $this->render('MealzMealBundle:MealAdmin:list.html.twig', array(
-            'weeks' => $weeks
-        ));
+        return $this->render(
+            'MealzMealBundle:MealAdmin:list.html.twig', array('weeks' => $weeks)
+        );
     }
 
+    /**
+     * New action
+     *
+     * @param Request   $request request
+     * @param \DateTime $date    on date
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
     public function newAction(Request $request,\DateTime $date)
     {
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
@@ -55,15 +70,17 @@ class MealAdminController extends BaseController {
 
         /** @var WeekRepository $weekRepository */
         $weekRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Week');
-        $week = $weekRepository->findOneBy(array(
-            'year' => $date->format('Y'),
-            'calendarWeek' => $date->format('W')
-        ));
+        $week = $weekRepository->findOneBy(
+            array(
+                'year' => $date->format('Y'),
+                'calendarWeek' => $date->format('W')
+            )
+        );
 
         if (null !== $week) {
-            return $this->redirectToRoute('MealzMealBundle_Meal_edit', array(
-                'week' => $week->getId()
-            ));
+            return $this->redirectToRoute(
+                'MealzMealBundle_Meal_edit', array('week' => $week->getId())
+            );
         }
 
         $week = $this->generateEmptyWeek($date);
@@ -87,19 +104,30 @@ class MealAdminController extends BaseController {
                 $message = $this->get('translator')->trans('week.created', [], 'messages');
                 $this->addFlashMessage($message, 'success');
 
-                return $this->redirect($this->generateUrl('MealzMealBundle_Meal_edit', array(
-                    'week' => $week->getId()
-                )));
+                return $this->redirect(
+                    $this->generateUrl(
+                        'MealzMealBundle_Meal_edit', array('week' => $week->getId())
+                    )
+                );
             }
         }
 
-        return $this->render('MealzMealBundle:MealAdmin:week.html.twig', array(
-            'week' => $week,
-            'dishes' => $dishes,
-            'form' => $form->createView()
-        ));
+        return $this->render(
+            'MealzMealBundle:MealAdmin:week.html.twig', array(
+                'week' => $week,
+                'dishes' => $dishes,
+                'form' => $form->createView())
+        );
     }
 
+    /**
+     * Edit action
+     *
+     * @param Request $request request
+     * @param Week    $week    for the week
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
     public function editAction(Request $request, Week $week)
     {
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
@@ -129,8 +157,8 @@ class MealAdminController extends BaseController {
             } else {
                 $errors = $form->getErrors(true);
                 foreach ($errors as $error) {
-                    if ($error->getCause() instanceof ConstraintViolation &&
-                        $error->getCause()->getConstraint() instanceof DishConstraint
+                    if ($error->getCause() instanceof ConstraintViolation
+                        && $error->getCause()->getConstraint() instanceof DishConstraint
                     ) {
                         $translator = $this->get('translator');
                         $messageTemplate = $error->getMessageTemplate();
@@ -143,18 +171,26 @@ class MealAdminController extends BaseController {
                 }
             }
 
-            return $this->redirectToRoute('MealzMealBundle_Meal_edit', array(
-                'week' => $week->getId()
-            ));
+            return $this->redirectToRoute(
+                'MealzMealBundle_Meal_edit', array('week' => $week->getId())
+            );
         }
 
-        return $this->render('MealzMealBundle:MealAdmin:week.html.twig', array(
-            'dishes' => $dishes,
-            'week' => $week,
-            'form' => $form->createView()
-        ));
+        return $this->render(
+            'MealzMealBundle:MealAdmin:week.html.twig', array(
+                'dishes' => $dishes,
+                'week' => $week,
+                'form' => $form->createView())
+        );
     }
 
+    /**
+     * Generate empty week action
+     *
+     * @param \DateTime $dateTime on date
+     *
+     * @return Week
+     */
     protected function generateEmptyWeek(\DateTime $dateTime)
     {
         $week = new Week();

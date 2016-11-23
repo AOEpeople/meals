@@ -9,6 +9,10 @@
   text-align: left;
   box-shadow: 0 2px 5px 0 $box-shadow;
 
+  .disabled & {
+    z-index: -1;
+  }
+
   .selected {
     background-color: $color-gray-light;
   }
@@ -70,6 +74,22 @@
     content: '\e179';
     font-size: 12px;
     font-family: "Glyphicons Halflings", sans-serif;
+  }
+
+  &::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+    width: 100%;
+    height: 100%;
+    content: '';
+    background-color: rgba($color-gray-light, .5);
+    cursor: auto;
+
+    .disabled & {
+      display: block;
+    }
   }
 
   .meal-label {

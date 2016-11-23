@@ -54,7 +54,7 @@
                     </span>
                 </div>
 
-                <div class="meal-rows-wrapper" data-prototype="{{ form_widget(form.children.days.children[loop.index0].children.meals.vars.prototype)|e('html_attr') }}">
+                <div class="meal-rows-wrapper{% if form.children.days.children[loop.index0].enabled.vars.checked == false or form.enabled.vars.checked == false %} disabled{% endif %}" data-prototype="{{ form_widget(form.children.days.children[loop.index0].children.meals.vars.prototype)|e('html_attr') }}">
                     {# Render meal row for each meal which already has a dish #}
                     {% set selectedMeals = groupMealsToArray(form.days[loop.index0].meals.children) %}
 

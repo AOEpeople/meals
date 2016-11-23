@@ -56,7 +56,6 @@ Mealz.prototype.selectDish = function ($element, e) {
 
     // add remove icon
     $mealRow.find('.remove-meal').attr('style', 'display: block;');
-    console.log($mealRow.find('.remove-meal'));
 
     if($element.attr('data-attribute-parent') != 'true') {
         // add remove icon
@@ -78,10 +77,17 @@ Mealz.prototype.selectVariation = function ($element) {
 
     var $mealRow = $element.closest('.meal-row');
     var selectedDish = $mealRow.data('attribute-selected-dish');
-    var previousSelectedVariations = $mealRow.attr('data-attribute-selected-variations');
     var $input = $mealRow.children('.meal-selected').first();
     var variations = [];
     var that = this;
+
+    // If data-attribute-selected-dish change, delete variations
+    if($mealRow.attr('data-attribute-selected-dish') !== parentId ) {
+        $mealRow.attr('data-attribute-selected-variations', '');
+        $mealRow.find('.variation-checkbox.checked').removeClass('checked');
+    }
+
+    var previousSelectedVariations = $mealRow.attr('data-attribute-selected-variations');
 
     // If data-attribute selected-variations is defined and not empty
     if (previousSelectedVariations) {
@@ -92,9 +98,10 @@ Mealz.prototype.selectVariation = function ($element) {
     toggleArrayItem(variations, variationId);
 
     // Set meal row data attributes and dropdown label
-    $mealRow.attr('data-attribute-selected-dish', parentId);
     $mealRow.attr('data-attribute-selected-variations', JSON.stringify(variations));
     this.setDropdownLabelForSelectedVariations($mealRow, parentId, variations);
+
+    $mealRow.attr('data-attribute-selected-dish', parentId);
 
     // add remove icon
     $mealRow.find('.remove-meal').attr('style', 'display: block;');

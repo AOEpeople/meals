@@ -366,9 +366,9 @@ $icon-font-svg-id: 'glyphicons_halflingsregular';
 .glyphicon-flash { &::before { content: '\e162'; } }
 
 .glyphicon-log-out { 
-    top: 0;
-    
-    &::before { content: '\e163'; }
+  top: 0;
+
+  &::before { content: '\e163'; }
 }
 
 .glyphicon-new-window { &::before { content: '\e164'; } }
@@ -547,7 +547,7 @@ $icon-font-svg-id: 'glyphicons_halflingsregular';
 
 .glyphicon-object-align-bottom { &::before { content: '\e245'; } }
 
-.glyphicon-object-align-horizontal{ &::before { content: '\e246'; } }
+.glyphicon-object-align-horizontal { &::before { content: '\e246'; } }
 
 .glyphicon-object-align-left { &::before { content: '\e247'; } }
 

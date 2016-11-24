@@ -49,4 +49,9 @@
 .headline-left {
   float: left;
   margin-bottom: 40px;
+
+  @include breakpoint(small) {
+    float: none;
+    margin-bottom: 0;
+  }
 }

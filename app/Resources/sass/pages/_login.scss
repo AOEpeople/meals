@@ -12,19 +12,19 @@
   }
 }
 
-header .header-content .login .balance-text a {
+header .header-content .balance-text a {
   cursor: pointer;
+  position: relative;
   color: $color-white;
   font-weight: bold;
-  position: relative;
 
   &.active::after {
     position: absolute;
-    bottom: -34px;
+    bottom: -35px;
     left: 50%;
     margin-left: -10px;
     border: 10px solid transparent;
-    border-bottom-color: #fff;
+    border-bottom-color: $color-white;
     content: ' ';
     pointer-events: none;
   }

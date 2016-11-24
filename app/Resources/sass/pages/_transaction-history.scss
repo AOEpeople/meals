@@ -1,9 +1,9 @@
 .last-account-balance {
   float: right;
+  margin-top: 10px;
   margin-bottom: 30px;
   font-weight: bold;
   font-size: 16px;
-  margin-top: 10px;
 
   span {
     display: inline-block;
@@ -20,6 +20,7 @@
   th {
     &:last-child {
       width: 10%;
+      min-width: 70px;
       font-weight: bold;
       text-align: right;
     }
@@ -29,6 +30,10 @@
     .transaction-description {
       position: relative;
       padding-left: 35px;
+
+      @include breakpoint(small) {
+        padding-left: 0;
+      }
 
       &::before {
         position: absolute;
@@ -40,6 +45,10 @@
         color: $color-gray-secondary;
         font-size: 18px;
         font-family: "Glyphicons Halflings", sans-serif;
+
+        @include breakpoint(small) {
+          content: '';
+        }
       }
     }
   }
@@ -56,6 +65,10 @@
     .transaction-description::before {
       content: '\e225';
       color: $color-green;
+
+      @include breakpoint(small) {
+        content: '';
+      }
     }
   }
 

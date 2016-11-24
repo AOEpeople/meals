@@ -15,34 +15,60 @@ use Symfony\Component\Validator\Constraints\Valid;
  */
 class WeekForm extends AbstractType
 {
+    /**
+     * build the Form
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('days', CollectionType::class, array(
-                'entry_type' => DayForm::class,
-                'constraints' => new Valid()
-            ))
-            ->add('enabled', CheckboxType::class, array(
-                'required' => false,
-                'attr' => array('class' => 'js-switch')
-            ))
-            ->add('Cancel', SubmitType::class, array(
-                'label' => 'button.cancel',
-                'translation_domain' => 'actions',
-                'attr' => array('class' => 'button button-cancel')
-            ))
-            ->add('Save', SubmitType::class, array(
-                'label' => 'button.save',
-                'translation_domain' => 'actions',
-                'attr' => array('class' => 'button')
-            ))
-        ;
+            ->add(
+                'days',
+                CollectionType::class,
+                array(
+                    'entry_type' => DayForm::class,
+                    'constraints' => new Valid(),
+                )
+            )
+            ->add(
+                'enabled',
+                CheckboxType::class,
+                array(
+                    'required' => false,
+                    'attr' => array('class' => 'js-switch'),
+                )
+            )
+            ->add(
+                'Cancel',
+                SubmitType::class,
+                array(
+                    'label' => 'button.cancel',
+                    'translation_domain' => 'actions',
+                    'attr' => array('class' => 'button button-cancel'),
+                )
+            )
+            ->add(
+                'Save',
+                SubmitType::class,
+                array(
+                    'label' => 'button.save',
+                    'translation_domain' => 'actions',
+                    'attr' => array('class' => 'button'),
+                )
+            );
     }
 
+    /**
+     * configure the Options
+     * @param OptionsResolver $resolver
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'Mealz\MealBundle\Entity\Week',
-        ));
+        $resolver->setDefaults(
+            array(
+                'data_class' => 'Mealz\MealBundle\Entity\Week',
+            )
+        );
     }
 }

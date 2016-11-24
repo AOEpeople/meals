@@ -29,27 +29,18 @@ class LoadTransactions extends AbstractFixture implements OrderedFixtureInterfac
     }
 
     /**
-     * @param $user
+     * get the load order for fixtures
+     * @return mixed
      */
-    private function addTransaction($user)
+    public function getOrder()
     {
-        $transaction = new Transaction();
-        $transaction->setAmount(mt_rand(1000, 5000)/100);
-        $transaction->setProfile($user);
-        $this->objectManager->persist($transaction);
+        return OrderedFixtureInterface::FIXURES_LOADORDER_NINTH;
     }
 
-    private function generateRandomString($length = 10)
-    {
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $charactersLength = strlen($characters);
-        $randomString = '';
-        for ($i = 0; $i < $length; $i++) {
-            $randomString .= $characters[rand(0, $charactersLength - 1)];
-        }
-        return $randomString;
-    }
-
+    /**
+     * get random Users
+     * @return array
+     */
     protected function getRandomUsers()
     {
         $profiles = array();
@@ -58,11 +49,37 @@ class LoadTransactions extends AbstractFixture implements OrderedFixtureInterfac
                 $profiles[] = $this->getReference($referenceName);
             }
         }
+
         return $profiles;
     }
 
-    public function getOrder()
+    /**
+     * add Transactions
+     * @param $user
+     */
+    private function addTransaction($user)
     {
-        return 9;
+        $transaction = new Transaction();
+        $transaction->setAmount(mt_rand(1000, 5000) / 100);
+        $transaction->setProfile($user);
+        $this->objectManager->persist($transaction);
     }
+
+    /**
+     * generate some random String
+     * @param int $length
+     * @return string
+     */
+    private function generateRandomString($length = 10)
+    {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+
+        return $randomString;
+    }
+
 }

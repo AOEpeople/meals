@@ -6,6 +6,10 @@ use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\Common\Persistence\ObjectManager;
 
+/**
+ * Class EntityToIdTransformer
+ * @package Mealz\MealBundle\Form\DataTransformer
+ */
 class EntityToIdTransformer implements DataTransformerInterface
 {
     /**
@@ -16,21 +20,40 @@ class EntityToIdTransformer implements DataTransformerInterface
      * @var string
      */
     protected $class;
+
+    /**
+     * EntityToIdTransformer constructor.
+     * @param ObjectManager $objectManager
+     * @param $class
+     */
     public function __construct(ObjectManager $objectManager, $class)
     {
         $this->objectManager = $objectManager;
         $this->class = $class;
     }
+
+    /**
+     * transform Entity to Id
+     * @param mixed $entity
+     * @return string
+     */
     public function transform($entity)
     {
         if (null === $entity) {
             return '';
         }
+
         return $entity->getId();
     }
+
+    /**
+     * transform Id to Entity
+     * @param mixed $id
+     * @return null|object
+     */
     public function reverseTransform($id)
     {
-        if (!$id) {
+        if (isset($id) === false) {
             return null;
         }
         $entity = $this->objectManager
@@ -39,6 +62,7 @@ class EntityToIdTransformer implements DataTransformerInterface
         if (null === $entity) {
             throw new TransformationFailedException();
         }
+
         return $entity;
     }
 }

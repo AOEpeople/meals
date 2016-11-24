@@ -11,7 +11,8 @@ use Mealz\MealBundle\Validator\Constraints\DishConstraint;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\ConstraintViolation;
 
-class MealAdminController extends BaseController {
+class MealAdminController extends BaseController
+{
 
     /**
      * List action
@@ -31,11 +32,11 @@ class MealAdminController extends BaseController {
 
         for ($i = 0; $i < 8; $i++) {
             $modifiedDateTime = clone($dateTime);
-            $modifiedDateTime->modify('+' . $i . ' weeks');
+            $modifiedDateTime->modify('+'.$i.' weeks');
             $week = $weekRepository->findOneBy(
                 array(
                     'year' => $modifiedDateTime->format('Y'),
-                    'calendarWeek' => $modifiedDateTime->format('W')
+                    'calendarWeek' => $modifiedDateTime->format('W'),
                 )
             );
 
@@ -49,19 +50,20 @@ class MealAdminController extends BaseController {
         }
 
         return $this->render(
-            'MealzMealBundle:MealAdmin:list.html.twig', array('weeks' => $weeks)
+            'MealzMealBundle:MealAdmin:list.html.twig',
+            array('weeks' => $weeks)
         );
     }
 
     /**
      * New action
      *
-     * @param Request   $request request
-     * @param \DateTime $date    on date
+     * @param Request $request request
+     * @param \DateTime $date on date
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function newAction(Request $request,\DateTime $date)
+    public function newAction(Request $request, \DateTime $date)
     {
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
@@ -73,13 +75,14 @@ class MealAdminController extends BaseController {
         $week = $weekRepository->findOneBy(
             array(
                 'year' => $date->format('Y'),
-                'calendarWeek' => $date->format('W')
+                'calendarWeek' => $date->format('W'),
             )
         );
 
         if (null !== $week) {
             return $this->redirectToRoute(
-                'MealzMealBundle_Meal_edit', array('week' => $week->getId())
+                'MealzMealBundle_Meal_edit',
+                array('week' => $week->getId())
             );
         }
 
@@ -89,7 +92,6 @@ class MealAdminController extends BaseController {
 
         // handle form submission
         if ($request->isMethod('POST')) {
-
             $form->handleRequest($request);
             if ($form->get('Cancel')->isClicked()) {
                 return $this->redirectToRoute('MealzMealBundle_Meal');
@@ -106,17 +108,20 @@ class MealAdminController extends BaseController {
 
                 return $this->redirect(
                     $this->generateUrl(
-                        'MealzMealBundle_Meal_edit', array('week' => $week->getId())
+                        'MealzMealBundle_Meal_edit',
+                        array('week' => $week->getId())
                     )
                 );
             }
         }
 
         return $this->render(
-            'MealzMealBundle:MealAdmin:week.html.twig', array(
+            'MealzMealBundle:MealAdmin:week.html.twig',
+            array(
                 'week' => $week,
                 'dishes' => $dishes,
-                'form' => $form->createView())
+                'form' => $form->createView(),
+            )
         );
     }
 
@@ -124,7 +129,7 @@ class MealAdminController extends BaseController {
      * Edit action
      *
      * @param Request $request request
-     * @param Week    $week    for the week
+     * @param Week $week for the week
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
@@ -139,7 +144,6 @@ class MealAdminController extends BaseController {
 
         // handle form submission
         if ($request->isMethod('POST')) {
-
             $form->handleRequest($request);
 
             if ($form->get('Cancel')->isClicked()) {
@@ -172,15 +176,18 @@ class MealAdminController extends BaseController {
             }
 
             return $this->redirectToRoute(
-                'MealzMealBundle_Meal_edit', array('week' => $week->getId())
+                'MealzMealBundle_Meal_edit',
+                array('week' => $week->getId())
             );
         }
 
         return $this->render(
-            'MealzMealBundle:MealAdmin:week.html.twig', array(
+            'MealzMealBundle:MealAdmin:week.html.twig',
+            array(
                 'dishes' => $dishes,
                 'week' => $week,
-                'form' => $form->createView())
+                'form' => $form->createView(),
+            )
         );
     }
 
@@ -200,7 +207,7 @@ class MealAdminController extends BaseController {
         $days = $week->getDays();
         for ($i = 0; $i < 5; $i++) {
             $dayDateTime = clone($week->getStartTime());
-            $dayDateTime->modify('+' . $i . ' days');
+            $dayDateTime->modify('+'.$i.' days');
             $day = new Day();
             $day->setDateTime($dayDateTime);
             $day->setWeek($week);

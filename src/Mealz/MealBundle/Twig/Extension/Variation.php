@@ -13,53 +13,67 @@ use Symfony\Component\VarDumper\VarDumper;
  */
 class Variation extends \Twig_Extension
 {
-	public function getFunctions()
-	{
-		return array(
-			'groupMeals' => new \Twig_Function_Method($this, 'groupMeals'),
-			'getDump' => new \Twig_Function_Method($this, 'getDump'),
-			'groupMealsToArray' => new \Twig_Function_Method($this, 'groupMealsToArray'),
-			'getFullTitleByDishAndVariation' => new \Twig_Function_Method($this, 'getFullTitleByDishAndVariation'),
-		);
-	}
+    /**
+     * @return array
+     */
+    public function getFunctions()
+    {
+        return array(
+            'groupMeals' => new \Twig_Function_Method($this, 'groupMeals'),
+            'getDump' => new \Twig_Function_Method($this, 'getDump'),
+            'groupMealsToArray' => new \Twig_Function_Method($this, 'groupMealsToArray'),
+            'getFullTitleByDishAndVariation' => new \Twig_Function_Method($this, 'getFullTitleByDishAndVariation'),
+        );
+    }
 
-	public function groupMeals($meals)
-	{
-		$mealsArray = $mealsVariations = array();
-		$mealsVariationsCount = array();
-		foreach ($meals as $meal) {
-			/** @var Meal $meal */
-			$dish = $meal->getDish();
-			if ($dish->getParent()) {
-				$parentId = $dish->getParent()->getId();
-				$mealsVariations[$parentId][] = $meal;
-				$mealsVariationsCount[$parentId] = count($mealsVariations[$parentId]);
-			} else {
-				$mealsArray[] = $meal;
-			}
-		}
+    /**
+     * Group the meals
+     * @param array $meals
+     * @return array
+     */
+    public function groupMeals($meals)
+    {
+        $mealsArray = $mealsVariations = array();
+        $mealsVariationsCount = array();
+        foreach ($meals as $meal) {
+            /** @var Meal $meal */
+            $dish = $meal->getDish();
+            if ($dish->getParent().is_object() && $dish->getParent()) {
+                $parentId = $dish->getParent()->getId();
+                $mealsVariations[$parentId][] = $meal;
+                $mealsVariationsCount[$parentId] = count($mealsVariations[$parentId]);
+            } else {
+                $mealsArray[] = $meal;
+            }
+        }
 
-		foreach ($mealsVariationsCount as $id => $count) {
-			if ($count === 1) {
-				$mealsArray[] = $mealsVariations[$id][0];
-				unset($mealsVariations[$id]);
-			}
-		}
+        foreach ($mealsVariationsCount as $id => $count) {
+            if ($count === 1) {
+                $mealsArray[] = $mealsVariations[$id][0];
+                unset($mealsVariations[$id]);
+            }
+        }
 
-		return array(
-			'meals' => $mealsArray,
-			'mealsVariations' => $mealsVariations,
-		);
-	}
+        return array(
+            'meals' => $mealsArray,
+            'mealsVariations' => $mealsVariations,
+        );
+    }
 
     /**
      * @TODO: move this function inside the TemplateBundle into some more generic Twig Extension (Base.php or something like that)
-     * @param $dump
+     * @param array $dump
      */
-	public function getDump($dump){
-		VarDumper::dump($dump);
-	}
+    public function getDump($dump)
+    {
+        VarDumper::dump($dump);
+    }
 
+    /**
+     * Group the Meals to an Array
+     * @param FormView $formViews
+     * @return array
+     */
     public function groupMealsToArray($formViews)
     {
         $dishesGroupedByParent = array();
@@ -77,8 +91,14 @@ class Variation extends \Twig_Extension
         }
 
         return $dishesGroupedByParent;
-	}
+    }
 
+    /**
+     * @param integer $parentDishId
+     * @param array $variations
+     * @param array $dishes
+     * @return string
+     */
     public function getFullTitleByDishAndVariation($parentDishId, $variations, $dishes)
     {
         $title = '';
@@ -98,18 +118,23 @@ class Variation extends \Twig_Extension
         }
 
         return $title;
-	}
+    }
 
-	/**
-	 * Returns the name of the extension.
-	 *
-	 * @return string The extension name
-	 */
-	public function getName()
-	{
-		return 'variation';
-	}
+    /**
+     * Returns the name of the extension.
+     *
+     * @return string The extension name
+     */
+    public function getName()
+    {
+        return 'variation';
+    }
 
+    /**
+     * @param $dishId
+     * @param $dishList
+     * @return null
+     */
     private function getTitleForDish($dishId, $dishList)
     {
         foreach ($dishList as $key => $dish) {
@@ -119,5 +144,5 @@ class Variation extends \Twig_Extension
         }
 
         return null;
-	}
+    }
 }

@@ -5,6 +5,11 @@ namespace Mealz\MealBundle\Entity;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 
+/**
+ * the Meal Repository
+ * Class MealRepository
+ * @package Mealz\MealBundle\Entity
+ */
 class MealRepository extends EntityRepository
 {
     /**
@@ -45,14 +50,13 @@ class MealRepository extends EntityRepository
 
         if (count($result) > 1) {
             $results = $result;
+
             // this is actually a logical error, when there are 2 identical Dish for same day, but we try to handle it
-            // @TODO: should be disabled in BE to select 1 Dish twice on same day
             foreach ($results as $key => $meal) {
                 if (in_array($meal->getId(), $userSelections)) {
                     unset($result[$key]);
                 }
             }
-//            throw new \LogicException('Found more then 2 meals matching the given requirements.');
         }
 
         return $result ? current($result) : null;
@@ -75,7 +79,5 @@ class MealRepository extends EntityRepository
         );
 
         return $query->getResult();
-
-
     }
 }

@@ -76,6 +76,15 @@ class LoadUsers extends AbstractFixture implements OrderedFixtureInterface, Cont
     }
 
     /**
+     * Get the Fixtures loadOrder
+     * @return int
+     */
+    public function getOrder()
+    {
+        return OrderedFixtureInterface::FIXURES_LOADORDER_FIRST;
+    }
+
+    /**
      * @param string $name Username
      */
     protected function addUser($name)
@@ -84,9 +93,11 @@ class LoadUsers extends AbstractFixture implements OrderedFixtureInterface, Cont
         $login->setUsername($name);
         $login->setSalt(md5(uniqid(null, true)));
 
-        /** TODO: sercurity.encoder_factory will be deprecated since symfony v3.x */
-        #$encoder = $this->container->get('security.password_encoder');
-        #$login->setPassword($encoder->encodePassword($login, $login->getSalt()));
+        /** TODO: sercurity.encoder_factory will be deprecated since symfony v3.x
+        $encoder = $this->container->get('security.password_encoder');
+        $login->setPassword($encoder->encodePassword($login, $login->getSalt()));
+         *
+         */
 
         $encoder = $this->container->get('security.encoder_factory')->getEncoder($login);
         $login->setPassword($encoder->encodePassword($name, $login->getSalt()));
@@ -104,12 +115,4 @@ class LoadUsers extends AbstractFixture implements OrderedFixtureInterface, Cont
         $this->addReference('login-'.$this->counter, $login);
     }
 
-    /**
-     * Get the Fixtures loadOrder
-     * @return int
-     */
-    public function getOrder()
-    {
-        return OrderedFixtureInterface::FIXURES_LOADORDER_FIRST;
-    }
 }

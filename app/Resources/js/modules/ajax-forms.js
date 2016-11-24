@@ -1,11 +1,11 @@
 Mealz.prototype.initAjaxForms = function () {
     var that = this;
-    $('.load-ajax-form').on('click', function(e) {
+    $('.load-ajax-form').on('click', function (e) {
         e.preventDefault();
         that.loadAjaxForm($(this));
     });
 
-    $('.print-participations .meal-participation a').on('click', function(e) {
+    $('.print-participations .meal-participation a').on('click', function (e) {
         e.preventDefault();
         that.toggleParticipationAdmin($(this));
     });
@@ -33,7 +33,7 @@ Mealz.prototype.loadAjaxForm = function ($element) {
         if ($element.hasClass('load-create-form')) {
             return;
         }
-    } else if ($element.hasClass('load-create-form') && $element.hasClass('loaded')){
+    } else if ($element.hasClass('load-create-form') && $element.hasClass('loaded')) {
         $createForm.slideDown(animationDuration);
         $editFormWrapper.find('form').slideUp(animationDuration, function () {
             $editFormWrapper.hide();
@@ -46,7 +46,7 @@ Mealz.prototype.loadAjaxForm = function ($element) {
 
         var ajaxRowVisible = ($ajaxRow.length > 0 && $ajaxRow.is(':visible')) ? true : false;
 
-        $editFormWrapper.find('form').slideUp(animationDuration, function() {
+        $editFormWrapper.find('form').slideUp(animationDuration, function () {
             $editFormWrapper.hide();
         });
 
@@ -57,7 +57,7 @@ Mealz.prototype.loadAjaxForm = function ($element) {
         } else if (ajaxRowVisible) {
             return;
         }
-    } else if ($element.hasClass('load-edit-form') && $element.hasClass('loaded')){
+    } else if ($element.hasClass('load-edit-form') && $element.hasClass('loaded')) {
         $ajaxRow = $elementParentRow.next('.table-row-form');
         $ajaxRow.show();
         $ajaxRow.find('form').slideDown(animationDuration);
@@ -91,7 +91,7 @@ Mealz.prototype.loadAjaxForm = function ($element) {
     });
 };
 
-Mealz.prototype.loadAjaxFormPayment = function($element) {
+Mealz.prototype.loadAjaxFormPayment = function ($element) {
     var that = this;
     var url = $element.attr('href');
     var $elementParent = $element.parent();
@@ -101,7 +101,7 @@ Mealz.prototype.loadAjaxFormPayment = function($element) {
         that.$iconCells.find('form').addClass(that.hiddenClass);
         $form.toggleClass(this.hiddenClass);
         if (!$form.hasClass(this.hiddenClass)) {
-            $form.find("input[type=text]").focus();
+            $form.find('input[type=text]').focus();
         }
         return;
     }
@@ -113,8 +113,8 @@ Mealz.prototype.loadAjaxFormPayment = function($element) {
         success: function (data) {
             that.$iconCells.find('form').addClass(that.hiddenClass);
             $element.after(data);
-            $elementParent.find('form').find('input[type=text]').focus();
-            $elementParent.children('form').on('click', function(e){
+            $form.find('input[type=text]').focus();
+            $elementParent.children('form').on('click', function (e) {
                 e.stopPropagation();
             });
         },

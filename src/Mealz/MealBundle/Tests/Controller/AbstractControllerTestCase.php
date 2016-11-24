@@ -27,17 +27,17 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
     /**
      * Create a default client with no frontend user logged in
      *
-     * @param array $options    Array with symfony parameters to be set (e.g. environment,...)
-     * @param array $server     Array with Server parameters to be set (e.g. HTTP_HOST,...)
+     * @param array $options Array with symfony parameters to be set (e.g. environment,...)
+     * @param array $server Array with Server parameters to be set (e.g. HTTP_HOST,...)
      */
     protected function createDefaultClient($options = array(), $server = array())
     {
         $defaultOptions = array(
-            'environment' => 'test'
+            'environment' => 'test',
         );
 
         $defaultServer = array(
-            'HTTP_ACCEPT_LANGUAGE' => 'en'
+            'HTTP_ACCEPT_LANGUAGE' => 'en',
         );
 
         $options = array_merge($defaultOptions, $options);
@@ -49,8 +49,8 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
     /**
      * Create a client with a frontend user having a role ROLE_KITCHEN_STAFF
      *
-     * @param array $options    Array with symfony parameters to be set (e.g. environment,...)
-     * @param array $server     Array with Server parameters to be set (e.g. HTTP_HOST,...)
+     * @param array $options Array with symfony parameters to be set (e.g. environment,...)
+     * @param array $server Array with Server parameters to be set (e.g. HTTP_HOST,...)
      */
     protected function createAdminClient($options = array(), $server = array())
     {
@@ -68,12 +68,12 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         $firewall = 'mealz';
 
         $repo = $this->client->getContainer()->get('doctrine')->getRepository('MealzUserBundle:Login');
-        $user = $repo->findOneBy(['username'=>'kochomi']);
+        $user = $repo->findOneBy(['username' => 'kochomi']);
         $user = ($user instanceof UserInterface) ? $user : 'kochomi';
 
         $token = new UsernamePasswordToken($user, null, $firewall, array('ROLE_KITCHEN_STAFF'));
-        if(!$session->getId()) {
-            $session->set('_security_' . $firewall, serialize($token));
+        if (!$session->getId()) {
+            $session->set('_security_'.$firewall, serialize($token));
             $session->save();
         }
         $cookie = new Cookie($session->getName(), $session->getId());
@@ -86,7 +86,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
     protected function mockServices($options = array())
     {
         $defaultOptions = array(
-            'mockFlashBag' => true
+            'mockFlashBag' => true,
         );
 
         $options = array_merge($defaultOptions, $options);
@@ -97,7 +97,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
     }
 
     /**
-     *
+     *mock the Flash Bag
      */
     private function mockFlashBag()
     {

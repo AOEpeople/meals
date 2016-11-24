@@ -43,7 +43,7 @@ Mealz.prototype.initDishSelection = function () {
     $('.meal-select').on('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
-        $('.variation-checkbox.checked',this.prev).closest('li.dishes').find('.variation-button:first').click();
+        $('.variation-checkbox.checked', this.prev).closest('li.dishes').find('.variation-button:first').click();
         $(this).prev().toggle();
     });
 
@@ -52,12 +52,12 @@ Mealz.prototype.initDishSelection = function () {
 
 Mealz.prototype.selectDish = function ($element, e) {
     var $mealRow = $element.closest('.meal-row');
-    var dishId = $element.data('attribute-id'); //$(e.currentTarget)
+    var dishId = $element.data('attribute-id');
 
     // add remove icon
     $mealRow.find('.remove-meal').attr('style', 'display: block;');
 
-    if($element.attr('data-attribute-parent') != 'true') {
+    if ($element.attr('data-attribute-parent') !== 'true') {
         // add remove icon
         $mealRow.find('.remove-meal').attr('style', 'display: block;');
 
@@ -82,7 +82,7 @@ Mealz.prototype.selectVariation = function ($element) {
     var that = this;
 
     // If data-attribute-selected-dish change, delete variations
-    if($mealRow.attr('data-attribute-selected-dish') !== parentId ) {
+    if ($mealRow.attr('data-attribute-selected-dish') !== parentId) {
         $mealRow.attr('data-attribute-selected-variations', '');
         $mealRow.find('.variation-checkbox.checked').removeClass('checked');
     }
@@ -90,7 +90,7 @@ Mealz.prototype.selectVariation = function ($element) {
     var previousSelectedVariations = $mealRow.attr('data-attribute-selected-variations');
 
     // If data-attribute selected-variations is defined and not empty
-    if (previousSelectedVariations) {
+    if (previousSelectedVariations.length > 0) {
         previousSelectedVariations = JSON.parse(previousSelectedVariations);
         variations = previousSelectedVariations;
     }
@@ -107,12 +107,12 @@ Mealz.prototype.selectVariation = function ($element) {
     $mealRow.find('.remove-meal').attr('style', 'display: block;');
 
     // If checkbox wasn't checked before
-    if(!$element.hasClass('checked')) {
+    if ($element.hasClass('checked') === false) {
         // If this is the first selected variation
         if (variations.length === 1) {
             that.clearAllFormElements($mealRow);
             that.createMealFormElement($mealRow, variationId);
-        // Else (If other variations were selected before)
+            // Else (If other variations were selected before)
         } else {
             // add remove icon
             $mealRow.find('.remove-meal').attr('style', 'display: block;');
@@ -123,11 +123,11 @@ Mealz.prototype.selectVariation = function ($element) {
         if (variations.length > 0) {
             // Find and remove input field with the same value like the id of clicked variation
             $mealRow.find('.meal-selected').each(function () {
-                if($(this).find('input:first').val() == variationId){
+                if ($(this).find('input:first').val() === variationId) {
                     that.deleteSingleSelection($(this));
                 }
             });
-        // Else (If no variation, and therefore no dish, is selected anymore)
+            // Else (If no variation, and therefore no dish, is selected anymore)
         } else {
             // disable remove icon
             $mealRow.find('.remove-meal').attr('style', 'display: none;');
@@ -159,14 +159,14 @@ Mealz.prototype.clearDishSelection = function ($element) {
 
 Mealz.prototype.setDropdownLabelForSelectedVariations = function (mealRow, parentId, variations) {
     var mealRowLabel = mealRow.find('.meal-label');
-    if(variations.length > 0) {
-        var $parentDish = $("li.dishes[data-attribute-id=" + parentId + "]");
+    if (variations.length > 0) {
+        var $parentDish = $('li.dishes[data-attribute-id=' + parentId + ']');
         var parentLabel = $parentDish.find('.dish-title').html();
         var variationsLabel = '';
 
-        for(var i = 0; i < variations.length; i++) {
+        for (var i = 0; i < variations.length; i++) {
             variationsLabel += (i > 0) ? ', ' : '';
-            variationsLabel += $parentDish.find(".variation[data-attribute-id=" + variations[i] + "] label").html();
+            variationsLabel += $parentDish.find('.variation[data-attribute-id=' + variations[i] + '] label').html();
         }
         mealRowLabel.text(parentLabel + ' - ' + variationsLabel);
     } else {
@@ -176,29 +176,30 @@ Mealz.prototype.setDropdownLabelForSelectedVariations = function (mealRow, paren
 
 Mealz.prototype.hideVariationSelectBox = function (e) {
     var container = '';
-    if($(e.currentTarget).hasClass('meal-select-box')) {
-        container = $(".meal-select-variations");
+    if ($(e.currentTarget).hasClass('meal-select-box')) {
+        container = $('.meal-select-variations');
     } else {
-        container = $(".meal-select-box");
+        container = $('.meal-select-box');
     }
 
     // if the target of the click isn't the container nor a descendant of the container
-    if (!container.is(e.target) && container.has(e.target).length === 0 || $(e.currentTarget).hasClass('button') || ($(e.currentTarget).attr('data-attribute-parent') != 'true' && $(e.currentTarget).is('[data-attribute-parent]')))
-    {
+    if (!container.is(e.target) && container.has(e.target).length === 0 || $(e.currentTarget).hasClass('button') ||
+        ($(e.currentTarget).attr('data-attribute-parent') != 'true' && $(e.currentTarget).is('[data-attribute-parent]'))) {
+
         container.hide('fast');
     }
 
     /* if SelectionBox has no checked Variations - close it */
-    if ($(e.target).hasClass('small')){
+    if ($(e.target).hasClass('small') === true) {
         var thisMealSelectBox = $(e.target).closest('.meal-select-variations');
-        if(thisMealSelectBox.find('.checked').length === 0){
+        if (thisMealSelectBox.find('.checked').length === 0) {
             thisMealSelectBox.hide();
         }
     }
 };
 
 Mealz.prototype.deleteSingleSelection = function ($element) {
-    if ($element.hasClass('meal-persisted')) {
+    if ($element.hasClass('meal-persisted') === true) {
         $element.find('input:first').val('');
     } else {
         $element.remove();

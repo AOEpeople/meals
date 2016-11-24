@@ -7,11 +7,20 @@ use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Mealz\MealBundle\Entity\Category;
 
+/**
+ * Fixtures Load the Categories
+ * Class LoadCategories
+ * @package Mealz\MealBundle\DataFixtures\ORM
+ */
 class LoadCategories extends AbstractFixture implements OrderedFixtureInterface
 {
     protected $counter = 0;
 
-    function load(ObjectManager $manager)
+    /**
+     * load the Fixture
+     * @param ObjectManager $manager
+     */
+    public function load(ObjectManager $manager)
     {
         $categories = array(
             'Others' => 'Sonstiges',
@@ -20,20 +29,23 @@ class LoadCategories extends AbstractFixture implements OrderedFixtureInterface
         );
 
         foreach ($categories as $categoryEn => $categoryDe) {
-
             $category = new Category();
             $category->setTitleDe($categoryDe);
             $category->setTitleEn($categoryEn);
             $manager->persist($category);
-            $this->addReference('category-' . $this->counter++, $category);
+            $this->addReference('category-'.$this->counter++, $category);
         }
 
         $manager->flush();
     }
 
+    /**
+     * get the Order of Fixtures Loading
+     * @return mixed
+     */
     public function getOrder()
     {
-        return 4;
+        return OrderedFixtureInterface::FIXURES_LOADORDER_FOURTH;
     }
 
 

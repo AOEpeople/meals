@@ -10,63 +10,81 @@ use Mealz\MealBundle\Entity\Dish;
 use Mealz\MealBundle\Entity\Meal;
 use Mealz\MealBundle\Entity\Week;
 
+/**
+ * Fixtures Load the Days
+ * Class LoadDays
+ * @package Mealz\MealBundle\DataFixtures\ORM
+ */
+class LoadDays extends AbstractFixture implements OrderedFixtureInterface
+{
 
-class LoadDays extends AbstractFixture implements OrderedFixtureInterface {
+    /**
+     * @var ObjectManager
+     */
+    protected $objectManager;
 
-	/**
-	 * @var ObjectManager
-	 */
-	protected $objectManager;
+    /**
+     * @var Week[]
+     */
+    protected $weeks = array();
 
-	/**
-	 * @var Week[]
-	 */
-	protected $weeks = array();
+    protected $counter = 0;
 
-	protected $counter = 0;
+    /**
+     * load the Object
+     * @param ObjectManager $manager
+     */
+    public function load(ObjectManager $manager)
+    {
+        $this->objectManager = $manager;
+        $this->loadWeeks();
 
-	function load(ObjectManager $manager) {
-		$this->objectManager = $manager;
-		$this->loadWeeks();
+        foreach ($this->weeks as $week) {
+            $startTime = $week->getStartTime();
 
-		foreach($this->weeks as $week) {
-			$startTime = $week->getStartTime();
+            $day = new Day();
+            $day->setWeek($week);
+            $day->setDateTime($startTime);
+            $this->objectManager->persist($day);
+            $this->addReference('day-'.$this->counter++, $day);
 
-			$day = new Day();
-			$day->setWeek($week);
-			$day->setDateTime($startTime);
-			$this->objectManager->persist($day);
-			$this->addReference('day-' . $this->counter++, $day);
+            for ($i = 1; $i < 5; $i++) {
+                $day = new Day();
+                $day->setWeek($week);
+                $time = clone($startTime);
+                $time->modify('+'.$i.' days');
+                $day->setDateTime($time);
+                $this->objectManager->persist($day);
+                $this->addReference('day-'.$this->counter++, $day);
+            }
+        }
 
-			for ($i = 1; $i < 5; $i++) {
-				$day = new Day();
-				$day->setWeek($week);
-				$time = clone($startTime);
-				$time->modify('+' . $i . ' days');
-				$day->setDateTime($time);
-				$this->objectManager->persist($day);
-				$this->addReference('day-' . $this->counter++, $day);
-			}
-		}
+        $this->objectManager->flush();
+    }
 
-		$this->objectManager->flush();
-	}
 
-	protected function loadWeeks()
-	{
-		foreach ($this->referenceRepository->getReferences() as $referenceName => $reference) {
-			if ($reference instanceof Week) {
-				// we can't just use $reference here, because
-				// getReference() does some doctrine magic that getReferences() does not
-				$this->weeks[] = $this->getReference($referenceName);
-			}
-		}
-	}
+    /**
+     * get the Order of Fixtures Loading
+     * @return mixed
+     */
+    public function getOrder()
+    {
+        return OrderedFixtureInterface::FIXURES_LOADORDER_THIRD;
+    }
 
-	public function getOrder()
-	{
-		return 3;
-	}
+    /**
+     * Load the Weeks
+     */
+    protected function loadWeeks()
+    {
+        foreach ($this->referenceRepository->getReferences() as $referenceName => $reference) {
+            if ($reference instanceof Week) {
+                // we can't just use $reference here, because
+                // getReference() does some doctrine magic that getReferences() does not
+                $this->weeks[] = $this->getReference($referenceName);
+            }
+        }
+    }
 
 
 }

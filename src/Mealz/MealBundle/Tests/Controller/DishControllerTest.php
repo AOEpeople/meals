@@ -22,16 +22,14 @@ class DishAbstractControllerTest extends AbstractControllerTestCase
         $this->createAdminClient();
         //$this->mockServices();
         $this->clearAllTables();
-        $this->loadFixtures([
-            #new LoadWeeks(),
-            #new LoadDays(),
-            new LoadCategories(),
-            new LoadDishes(),
-            new LoadDishVariations(),
-            new LoadUsers($this->client->getContainer()),
-            #new LoadParticipants(),
-            #new LoadTransactions,
-        ]);
+        $this->loadFixtures(
+            [
+                new LoadCategories(),
+                new LoadDishes(),
+                new LoadDishVariations(),
+                new LoadUsers($this->client->getContainer()),
+            ]
+        );
     }
 
     /**
@@ -51,14 +49,12 @@ class DishAbstractControllerTest extends AbstractControllerTestCase
     public function testNewAction()
     {
         // Create form data
-        #$token = $this->client->getContainer()->get('security.csrf.token_manager')->getToken('dish_type');
         $form['dish'] = array(
             'title_de' => 'dish-form-title-de',
             'title_en' => 'dish-form-title-en',
             'description_de' => 'dish-form-desc-de',
             'description_en' => 'dish-form-desc-en',
             'category' => '',
-            #'_token' => $token->getValue()
         );
 
         // Call controller action
@@ -68,12 +64,14 @@ class DishAbstractControllerTest extends AbstractControllerTestCase
         /** @var EntityManager $em */
         $em = $this->client->getContainer()->get('doctrine')->getManager();
         $dishRepository = $em->getRepository('MealzMealBundle:Dish');
-        $dish = $dishRepository->findOneBy(array(
-            'title_de' => 'dish-form-title-de',
-            'title_en' => 'dish-form-title-en',
-            'description_de' => 'dish-form-desc-de',
-            'description_en' => 'dish-form-desc-en',
-        ));
+        $dish = $dishRepository->findOneBy(
+            array(
+                'title_de' => 'dish-form-title-de',
+                'title_en' => 'dish-form-title-en',
+                'description_de' => 'dish-form-desc-de',
+                'description_en' => 'dish-form-desc-en',
+            )
+        );
 
         // Assertions
         $this->assertNotNull($dish);
@@ -96,17 +94,17 @@ class DishAbstractControllerTest extends AbstractControllerTestCase
 
         $dishTitles = $crawler->filter('.table-row .dish-title');
         $dishTitles->rewind();
-        $found = FALSE;
+        $found = false;
 
         if ($dishTitles->count() > 0) {
-            while ($dishTitles->current() && $found == FALSE) {
-                $found = ($dish->getTitle() === trim($dishTitles->current()->nodeValue)) ? TRUE : FALSE;
+            while ($dishTitles->current() && $found == false) {
+                $found = ($dish->getTitle() === trim($dishTitles->current()->nodeValue)) ? true : false;
                 $dishTitles->next();
             }
         }
 
         // Assertions
-        $this->assertTrue($found,'Dish not found');
+        $this->assertTrue($found, 'Dish not found');
         $this->assertEquals('List of dishes', trim($heading));
     }
 
@@ -120,23 +118,23 @@ class DishAbstractControllerTest extends AbstractControllerTestCase
         $dish = $this->createDish();
         $dishAsArray = array(
             'title_de' => $dish->getTitleDe(),
-            'title_en' => $dish->getTitleEn()
+            'title_en' => $dish->getTitleEn(),
         );
         $this->persistAndFlushAll(array($dish));
 
         // Request
-        $this->client->request('GET', '/dish/form/' . $dish->getSlug());
+        $this->client->request('GET', '/dish/form/'.$dish->getSlug());
         $crawler = $this->getRawResponseCrawler();
 
         // Check if form is loaded
-        $node = $crawler->filterXPath('//form[@action="/dish/' . $dish->getSlug() . '/edit"]');
+        $node = $crawler->filterXPath('//form[@action="/dish/'.$dish->getSlug().'/edit"]');
         $this->assertTrue($node->count() === 1);
 
         // Copy form values in array for comparison
         $form = $crawler->selectButton('Save')->form();
         $formDishAsArray = array(
             'title_de' => $form->get('dish[title_de]')->getValue(),
-            'title_en' => $form->get('dish[title_en]')->getValue()
+            'title_en' => $form->get('dish[title_en]')->getValue(),
         );
 
         // Assertions
@@ -151,17 +149,15 @@ class DishAbstractControllerTest extends AbstractControllerTestCase
         $dish = $this->createDish();
         $this->persistAndFlushAll(array($dish));
 
-        #$token = $this->client->getContainer()->get('form.csrf_provider')->generateCsrfToken('dish_type');
         $form['dish'] = array(
             'title_de' => 'dish-form-edited-title-de',
             'title_en' => 'dish-form-edited-title-en',
             'description_de' => 'dish-form-edited-desc-de',
             'description_en' => 'dish-form-edited-desc-en',
             'category' => '',
-        #    '_token' => $token
         );
 
-        $this->client->request('POST', '/dish/' . $dish->getSlug() . '/edit', $form);
+        $this->client->request('POST', '/dish/'.$dish->getSlug().'/edit', $form);
         $dishRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Dish');
         unset($form['dish']['category']);
         unset($form['dish']['_token']);
@@ -189,7 +185,7 @@ class DishAbstractControllerTest extends AbstractControllerTestCase
         $this->persistAndFlushAll(array($dish));
 
         $dishId = $dish->getId();
-        $this->client->request('GET', '/dish/' . $dish->getSlug() . '/delete');
+        $this->client->request('GET', '/dish/'.$dish->getSlug().'/delete');
         $dishRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Dish');
         $queryResult = $dishRepository->find($dishId);
 
@@ -202,13 +198,14 @@ class DishAbstractControllerTest extends AbstractControllerTestCase
     public function testDeleteOfNonExistingDish()
     {
         $this->client->request('GET', '/dish/non-existing-dish/delete');
-        $this->assertEquals(404,$this->client->getResponse()->getStatusCode());
+        $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
     }
 
     protected function getRawResponseCrawler()
     {
         $content = $this->client->getResponse()->getContent();
         $uri = 'http://www.mealz.local';
+
         return new Crawler(json_decode($content), $uri);
     }
 }

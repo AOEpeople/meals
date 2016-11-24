@@ -42,6 +42,10 @@ class Day extends AbstractMessage
      */
     private $meals;
 
+    /**
+     * Constructor
+     * Day constructor.
+     */
     public function __construct()
     {
         $this->meals = new ArrayCollection();
@@ -103,12 +107,20 @@ class Day extends AbstractMessage
         $this->meals = $meals;
     }
 
+    /**
+     * add a Meal
+     * @param Meal $meal
+     */
     public function addMeal(Meal $meal)
     {
         $meal->setDay($this);
         $this->meals->add($meal);
     }
 
+    /**
+     * to String
+     * @return string
+     */
     public function __toString()
     {
         return $this->dateTime->format('l');

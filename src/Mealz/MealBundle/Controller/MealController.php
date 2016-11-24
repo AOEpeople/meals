@@ -20,57 +20,67 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Mealz\MealBundle\Entity\Week;
 
-class MealController extends BaseController {
+class MealController extends BaseController
+{
 
-	public function indexAction() {
-		/** @var WeekRepository $weekRepository */
-		$weekRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Week');
+    /**
+     * the index Action
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function indexAction()
+    {
+        /** @var WeekRepository $weekRepository */
+        $weekRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Week');
 
-		$currentWeek = $weekRepository->getCurrentWeek();
-		if (null === $currentWeek) {
-			$currentWeek = $this->createEmptyNonPersistentWeek(new \DateTime());
-		}
+        $currentWeek = $weekRepository->getCurrentWeek();
+        if (null === $currentWeek) {
+            $currentWeek = $this->createEmptyNonPersistentWeek(new \DateTime());
+        }
 
-		$nextWeek = $weekRepository->getNextWeek();
-		if (null === $nextWeek) {
-			$nextWeek = $this->createEmptyNonPersistentWeek(new \DateTime('next week'));
-		}
+        $nextWeek = $weekRepository->getNextWeek();
+        if (null === $nextWeek) {
+            $nextWeek = $this->createEmptyNonPersistentWeek(new \DateTime('next week'));
+        }
 
-		$weeks = array($currentWeek, $nextWeek);
+        $weeks = array($currentWeek, $nextWeek);
 
-		return $this->render('MealzMealBundle:Meal:index.html.twig', array(
-			'weeks' => $weeks
-		));
-	}
+        return $this->render(
+            'MealzMealBundle:Meal:index.html.twig',
+            array(
+                'weeks' => $weeks,
+            )
+        );
+    }
 
-	/**
-	 * let the currently logged in user join the given meal
-	 *
-	 * @param Request $request
-	 * @param string $date
-	 * @param string $dish
-	 * @param string $profile
-	 * @return \Symfony\Component\HttpFoundation\JsonResponse
-	 */
-	public function joinAction(Request $request, $date, $dish, $profile) {
+    /**
+     * let the currently logged in user join the given meal
+     *
+     * @param Request $request
+     * @param string $date
+     * @param string $dish
+     * @param string $profile
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function joinAction(Request $request, $date, $dish, $profile)
+    {
 
-		if(!$this->getUser()) {
-			return $this->ajaxSessionExpiredRedirect();
-		}
+        if (!$this->getUser()) {
+            return $this->ajaxSessionExpiredRedirect();
+        }
 
         if (null === $profile) {
             $profile = $this->getProfile();
-        } else if ($this->getProfile()->getUsername() === $profile || $this->getDoorman()->isKitchenStaff()) {
-            $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
-            $profile = $profileRepository->find($profile);
         } else {
-            return new JsonResponse(null, 403);
+            if ($this->getProfile()->getUsername() === $profile || $this->getDoorman()->isKitchenStaff() === true) {
+                $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
+                $profile = $profileRepository->find($profile);
+            } else {
+                return new JsonResponse(null, 403);
+            }
         }
 
-        // ugly handling of Logical error made by Kochomi
-        // TODO: should be disabled in BE to select 1 Dish twice on same day
         $userParticipationForToday = $this->getParticipantRepository()->getParticipationForProfile($profile, $date);
-		$userSelections = array();
+        $userSelections = array();
         foreach ($userParticipationForToday as $participation) {
             if ($participation['meal']['id']) {
                 $userSelections[] = $participation['meal']['id'];
@@ -80,57 +90,70 @@ class MealController extends BaseController {
         /** @var Meal $meal */
         $meal = $this->getMealRepository()->findOneByDateAndDish($date, $dish, $userSelections);
 
-		if(!$meal) {
-			return new JsonResponse(null, 404);
-		}
+        if (is_object($meal) === false) {
+            return new JsonResponse(null, 404);
+        }
 
-		if(!$this->getDoorman()->isUserAllowedToJoin($meal)) {
-			return new JsonResponse(null, 403);
-		}
+        if (is_object($this->getDoorman()->isUserAllowedToJoin($meal)) === false) {
+            return new JsonResponse(null, 403);
+        }
 
-		try {
-			$participant = new Participant();
-			$participant->setProfile($profile);
-			$participant->setMeal($meal);
+        try {
+            $participant = new Participant();
+            $participant->setProfile($profile);
+            $participant->setMeal($meal);
 
-			$em = $this->getDoctrine()->getManager();
-			$em->transactional(function (EntityManager $em) use ($participant) {
-				$em->persist($participant);
-				$em->flush();
-			});
-		} catch (ParticipantNotUniqueException $e) {
-			return new JsonResponse(null, 422);
-		}
+            $em = $this->getDoctrine()->getManager();
+            $em->transactional(
+                function (EntityManager $em) use ($participant) {
+                    $em->persist($participant);
+                    $em->flush();
+                }
+            );
+        } catch (ParticipantNotUniqueException $e) {
+            return new JsonResponse(null, 422);
+        }
 
-		if ($this->getDoorman()->isKitchenStaff()) {
-			$logger = $this->get('monolog.logger.balance');
-			$logger->addInfo(
-				'admin added {profile} to {meal} (Participant: {participantId})',
-				array(
-					"participantId" => $participant->getId(),
-					"profile" => $participant->getProfile(),
-					"meal" => $meal
-				)
-			);
-		}
+        if (is_object($this->getDoorman()->isKitchenStaff()) === true) {
+            $logger = $this->get('monolog.logger.balance');
+            $logger->addInfo(
+                'admin added {profile} to {meal} (Participant: {participantId})',
+                array(
+                    "participantId" => $participant->getId(),
+                    "profile" => $participant->getProfile(),
+                    "meal" => $meal,
+                )
+            );
+        }
 
-		$ajaxResponse = new JsonResponse();
-		$ajaxResponse->setData(array(
-			'participantsCount' => $meal->getParticipants()->count(),
-			'url' => $this->generateUrl('MealzMealBundle_Participant_delete', array(
-				'participant' => $participant->getId()
-			)),
-			'actionText' => $this->get('translator')->trans('added', array(), 'action')
-		));
+        $ajaxResponse = new JsonResponse();
+        $ajaxResponse->setData(
+            array(
+                'participantsCount' => $meal->getParticipants()->count(),
+                'url' => $this->generateUrl(
+                    'MealzMealBundle_Participant_delete',
+                    array(
+                        'participant' => $participant->getId(),
+                    )
+                ),
+                'actionText' => $this->get('translator')->trans('added', array(), 'action'),
+            )
+        );
 
-		return $ajaxResponse;
-	}
+        return $ajaxResponse;
+    }
 
-	private function createEmptyNonPersistentWeek(\DateTime $dateTime)
-	{
-		$week = new Week();
-		$week->setCalendarWeek($dateTime->format('W'));
-		$week->setYear($dateTime->format('Y'));
-		return $week;
-	}
+    /**
+     * create an Emtpy Non Persistent Week (for empty Weeks)
+     * @param \DateTime $dateTime
+     * @return Week
+     */
+    private function createEmptyNonPersistentWeek(\DateTime $dateTime)
+    {
+        $week = new Week();
+        $week->setCalendarWeek($dateTime->format('W'));
+        $week->setYear($dateTime->format('Y'));
+
+        return $week;
+    }
 }

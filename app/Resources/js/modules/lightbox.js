@@ -2,10 +2,10 @@ Mealz.prototype.enableLightbox = function () {
     var $fancybox = $('.fancybox');
     $fancybox.attr('rel', 'gallery')
         .fancybox({
-            padding : 40,
-            openEffect : 'fade',
-            helpers : {
-                title : null
+            padding: 40,
+            openEffect: 'fade',
+            helpers: {
+                title: null
             },
             closeClick: false,
             nextClick: false,
@@ -14,14 +14,14 @@ Mealz.prototype.enableLightbox = function () {
             maxWidth: 400,
         });
     $fancybox.trigger('click');
-    $('.fancybox-overlay').unbind('click');
-    $('.fancybox > .button').click(function(){
+    $('.fancybox-overlay').off('click');
+    $('.fancybox > .button').click(function () {
         F = $.fancybox;
-        if (F.isActive) {
+        if (F.isActive === true) {
             F.close();
         } else {
             $(this).close();
         }
     });
-    $fancybox.unbind('click');
+    $fancybox.off('click');
 };

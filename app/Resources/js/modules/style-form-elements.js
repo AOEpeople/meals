@@ -5,12 +5,12 @@ Mealz.prototype.applyCheckboxClasses = function ($checkbox) {
     $checkboxWrapper.toggleClass('disabled', $checkbox.is(':disabled'));
 };
 
-Mealz.prototype.styleCheckboxes = function() {
+Mealz.prototype.styleCheckboxes = function () {
     var that = this;
 
     // @TODO: use separate function for Switchery checkboxes
     // Week detail view
-    if (this.weekCheckbox && this.$weekDayCheckboxes) {
+    if (this.weekCheckbox.length > 0 && this.$weekDayCheckboxes.length > 0) {
         // Enable switchery for week days
         this.weekDaySwitchery = [];
         this.$weekDayCheckboxes.each(function (idx, checkbox) {
@@ -23,10 +23,10 @@ Mealz.prototype.styleCheckboxes = function() {
         weekSwitchery.appendTo('.meal-form .headline-tool .switchery-placeholder');
 
         // Toggle day switcher and dropdown state on changed week state
-        this.weekCheckbox.onchange = function () {
+        this.weekCheckbox.on('change', function () {
             that.applySwitcheryStates();
             that.applyDropdownStatesByWeekState();
-        };
+        });
 
         // Toggle dropdown state on changed day state
         this.$weekDayCheckboxes.on('change', function () {
@@ -46,46 +46,50 @@ Mealz.prototype.styleCheckboxes = function() {
     }
 
     // Check checkbox states
-    this.$participationCheckboxes.each(function(idx, checkbox) {
+    this.$participationCheckboxes.each(function (unUsedId, checkbox) {
         var $checkbox = $(checkbox);
         that.applyCheckboxClasses($checkbox);
     });
 
     // Handle click event on checkbox representer
-    this.$body.on('click', '.' + this.checkboxWrapperClass, function() {
+    this.$body.on('click', '.' + this.checkboxWrapperClass, function () {
         var $checkbox = $(this).find('input');
         $checkbox.trigger('click');
     });
 
     // Handle change event on checkboxes
-    this.$participationCheckboxes.on('change', function() {
+    this.$participationCheckboxes.on('change', function () {
         that.toggleParticipation($(this));
     });
 };
 
-Mealz.prototype.styleSelects = function() {
+Mealz.prototype.styleSelects = function () {
     this.$selects.wrap('<div class="' + this.selectWrapperClass + '"></div>');
 };
 
 Mealz.prototype.applySwitcheryStates = function () {
+
     // disable all day checkboxes in disabled week
     for (var i = 0; i < this.weekDaySwitchery.length; i++) {
+
         // if enable is called on a already enabled switchery element, you can't switch
         // its status anymore by clicking (see https://github.com/abpetkov/switchery/issues/103)
         var weekDayDisabled = this.weekDaySwitchery[i].isDisabled();
 
-        if (weekDayDisabled){
+        if (weekDayDisabled === true) {
             this.weekDaySwitchery[i].enable();
-        } else if(!weekDayDisabled) {
+        } else if (weekDayDisabled === false) {
+            this.weekDaySwitchery[i].disable();
+        } else {
             this.weekDaySwitchery[i].disable();
         }
     }
 };
 
-Mealz.prototype.applyDropdownStatesByWeekState = function() {
+Mealz.prototype.applyDropdownStatesByWeekState = function () {
     var that = this;
 
-    $.each(this.$weekDayCheckboxes, function (i, e) {
+    $.each(this.$weekDayCheckboxes, function (nonUsedId, e) {
         if ($(e).parent().parent().find('.week-day-action .js-switch').prop('checked') === true) {
             that.applyDropdownStates(e);
         }

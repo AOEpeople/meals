@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 echo "Setting file permissions ... "
 chown -R root:root ${FINAL_RELEASEFOLDER}

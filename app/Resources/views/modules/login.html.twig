@@ -1,7 +1,7 @@
 {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
     <div class="login-text">{{ 'header.logged_in_text'|trans({}, 'general') }}: <strong>{{ app.user.username }}</strong></div>
     <div class="balance-text">
-        {{ 'header.balance'|trans({}, 'general') }}: <strong>{{ balance }}€</strong>
+        {{ 'header.balance'|trans({}, 'general') }}: <a class="{{ activeRoute matches '/MealzMealBundle_home.*/' ? 'active' }}" href="#">{{ balance }}€</a>
     </div>
     {{ MealzButton.link(path('MealzUserBundle_logout'), '', '', '', 'glyphicon-log-out') }}
 {% else %}

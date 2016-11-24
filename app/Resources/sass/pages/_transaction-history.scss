@@ -1,0 +1,75 @@
+.last-account-balance {
+  float: right;
+  margin-bottom: 30px;
+  font-weight: bold;
+  font-size: 16px;
+  margin-top: 10px;
+
+  span {
+    display: inline-block;
+    margin-left: 10px;
+  }
+}
+
+.dept {
+  color: $color-red;
+}
+
+.transaction-history {
+  td,
+  th {
+    &:last-child {
+      width: 10%;
+      font-weight: bold;
+      text-align: right;
+    }
+  }
+
+  tbody {
+    .transaction-description {
+      position: relative;
+      padding-left: 35px;
+
+      &::before {
+        position: absolute;
+        top: 17px;
+        left: 0;
+        width: 20px;
+        height: 20px;
+        content: '\e179';
+        color: $color-gray-secondary;
+        font-size: 18px;
+        font-family: "Glyphicons Halflings", sans-serif;
+      }
+    }
+  }
+
+  .transaction-meal td:last-child span {
+    color: $color-red;
+  }
+
+  .transaction-payment {
+    td:last-child span {
+      color: $color-green;
+    }
+
+    .transaction-description::before {
+      content: '\e225';
+      color: $color-green;
+    }
+  }
+
+  tfoot {
+    font-weight: bold;
+
+    td:first-child {
+      text-align: right;
+    }
+
+    td:last-child {
+      color: $color-green;
+    }
+  }
+}
+
+

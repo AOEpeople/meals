@@ -11,3 +11,21 @@
     }
   }
 }
+
+header .header-content .login .balance-text a {
+  cursor: pointer;
+  color: $color-white;
+  font-weight: bold;
+  position: relative;
+
+  &.active::after {
+    position: absolute;
+    bottom: -34px;
+    left: 50%;
+    margin-left: -10px;
+    border: 10px solid transparent;
+    border-bottom-color: #fff;
+    content: ' ';
+    pointer-events: none;
+  }
+}

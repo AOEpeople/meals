@@ -18,8 +18,8 @@ var config = {
  */
 gulp.task('clean', function() {
     return gulp.src([
-            '../../web/mealz.css',
-            '../../web/mealz.js',
+            '../../web/css',
+            '../../web/js',
             '../../web/images'
         ], {
             read: false
@@ -50,9 +50,9 @@ gulp.task('js', function() {
             'js/init.js',
             'js/modules/*.js'
         ])
-        .pipe(concat('mealz.js'))
+        .pipe(concat('/mealz.js'))
         .pipe(config.production ? uglify() : util.noop())
-        .pipe(gulp.dest('../../web/'));
+        .pipe(gulp.dest('../../web/js/'));
 });
 
 /**
@@ -73,7 +73,7 @@ gulp.task('css', function() {
 
     return merge(sassStream, cssStream, cssFancybox)
         .pipe(concat('mealz.css'))
-        .pipe(gulp.dest('../../web/'));
+        .pipe(gulp.dest('../../web/css'));
 });
 
 /**

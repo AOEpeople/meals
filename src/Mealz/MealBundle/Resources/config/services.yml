@@ -36,6 +36,11 @@ services:
     tags:
       - { name: twig.extension }
 
+  mealz_meal.twig_extension.variation:
+    class: Mealz\MealBundle\Twig\Extension\Variation
+    tags:
+      - { name: twig.extension }
+
   mealz_meal.http_header_utility:
     class: %mealz_meal.http_header_utility.class%
     calls:
@@ -127,6 +132,12 @@ services:
         tags:
             - { name: form.type, alias: dish_selector_creator }
 
+  mealz_meal.form.type.hidden_entity:
+        class: Mealz\MealBundle\Form\Type\EntityHiddenType
+        arguments: ['@doctrine.orm.entity_manager']
+        tags:
+           - { name: form.type, alias: entity_hidden }
+
   mealz_meal.form.type.meals_participant:
         class: Mealz\MealBundle\Form\MealParticipantForm
         arguments: []
@@ -140,13 +151,14 @@ services:
       - { name: form.type }
 
   mealz_meal.form.dish:
-    class: Mealz\MealBundle\Form\DishForm
+    class: Mealz\MealBundle\Form\Dish\DishForm
     arguments: ['%mealz.meal.price%']
     tags:
       - { name: form.type }
 
-  mealz_meal.form.dish_variation:
-    class: Mealz\MealBundle\Form\DishVariationForm
+  mealz_meal.form.dishvariation:
+    class: Mealz\MealBundle\Form\Dish\DishVariationForm
+    arguments: ['%mealz.meal.price%']
     tags:
       - { name: form.type }
 
@@ -186,7 +198,7 @@ services:
       - [setRepository, ["@mealz_meal.repository.dish"]]
       - [setEntityName, ["Dish"]]
 
-  mealz_meal.controller.dishVariation:
+  mealz_meal.controller.dish_variation:
     class: Mealz\MealBundle\Controller\DishVariationController
     parent: mealz_meal.controller.base
 #    calls:

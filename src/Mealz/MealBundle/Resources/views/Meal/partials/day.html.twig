@@ -30,10 +30,18 @@
     {% if not day.enabled %}
         <div class="meal-row no-meal">{{ 'content.participation.day.disabled'|trans({},'general') }}</div>
     {% else %}
+
+        {% set groupedMeals = groupMeals(day.meals) %}
+
         {# display meals for given day #}
-        {% for meal in day.meals %}
+        {% for meal in groupedMeals.meals %}
             {% include 'MealzMealBundle:Meal/partials:meal.html.twig' %}
         {% endfor %}
+
+        {% for mealVariationGroup in groupedMeals.mealsVariations %}
+            {% include 'MealzMealBundle:Meal/partials:mealVariation.html.twig' %}
+        {% endfor %}
+
         {% if day.meals | length == 1 %}
             <div class="meal-row one-meal">{{ 'content.participation.meal.no_service'|trans({},'general') }}</div>
         {% elseif day.meals | length == 0 %}

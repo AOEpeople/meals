@@ -60,7 +60,7 @@ form:
   placeholder:
     title: Title
     description: Description
-    category: No category
+    category: Please choose a category
     name: Last name
     first_name: First name
     company: Company

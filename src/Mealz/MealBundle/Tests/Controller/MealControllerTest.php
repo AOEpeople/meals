@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\Criteria;
 use Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
 use Mealz\MealBundle\DataFixtures\ORM\LoadDays;
 use Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
+use Mealz\MealBundle\DataFixtures\ORM\LoadDishVariations;
 use Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
 use Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
 use Mealz\MealBundle\Entity\GuestInvitation;
@@ -30,28 +31,102 @@ class MealControllerTest extends AbstractControllerTestCase
     {
         parent::setUp();
 
-        $this->createDefaultClient();
+        $this->createAdminClient();
         $this->clearAllTables();
-        $this->loadFixtures([
-            new LoadCategories(),
-            new LoadWeeks(),
-            new LoadDays(),
-            new LoadDishes(),
-            new LoadMeals(),
-            new LoadRoles(),
-            new LoadUsers($this->client->getContainer()),
-        ]);
+        $this->loadFixtures(
+            [
+                new LoadWeeks(),
+                new LoadDays(),
+                new LoadCategories(),
+                new LoadDishes(),
+                new LoadDishVariations(),
+                new LoadMeals(),
+                new LoadRoles(),
+                new LoadUsers($this->client->getContainer()),
+            ]
+        );
+    }
+
+    /**
+     * Testing joining Meal with variations.
+     * We have next situation: (1 Dish without variations and 1 Dish with 2 variations)
+     * If we can subscribe to all 3 of these options then you can select Dish with and without variations
+     *
+     * /menu/{date}/{dish}/join/{profile}
+     *
+     * @test
+     *
+     */
+    public function joinAMealWithVariations()
+    {
+        // data provider method
+        $dataProvider = $this->getJoinAMealData();
+        $userProfile = $this->getUserProfile();
+        $username = $this->getUserProfile()->getUsername();
+
+        // load a home page
+        $this->client->request('GET', '/');
+        $this->assertTrue($this->client->getResponse()->isSuccessful());
+
+        // go through provided data and test functionality
+        foreach ($dataProvider as $dataRow) {
+            // Call controller action
+            $slug = $dataRow[1]->getDish()->getSlug();
+            $this->client->request('GET', "/menu/$dataRow[0]/$slug/join/$username");
+
+            // Verify if enrollment is successful
+            $mealParticipants = $this->getMealParticipants($dataRow[1]);
+
+            /** @var Participant $participant */
+            foreach ($mealParticipants as $participant) {
+                $profile = $participant->getProfile();
+
+                if ($userProfile->getFirstName() === $profile->getFirstName()
+                    && ($userProfile->getName() === $profile->getName())
+                    && ($userProfile->getUsername() === $profile->getUsername())
+                ) {
+                    $this->assertTrue(true);
+
+                    break;
+                }
+                $this->assertTrue(false);
+            }
+        }
+    }
+
+    /**
+     * Searching a Day with 3 options. I adapted fixtures so we always have 1 day with 3 options
+     * (1 Dish without variations and 1 Dish with 2 variations)
+     *
+     * @return array
+     */
+    public function getJoinAMealData()
+    {
+        /** @var \Mealz\MealBundle\Entity\MealRepository $mealRepository */
+        $mealRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
+        $meals = $mealRepository->getMealsOnADayWithVariationOptions();
+
+        $mealsArr = array();
+        $dataProvider = array();
+        foreach ($meals as $meal) {
+            /** @var \Mealz\MealBundle\Entity\Meal $meal */
+            $mealsArr[] = $meal = $mealRepository->find($meal['id']);
+            $dataProvider[] = array(date('Y-m-d', $meal->getDay()->getDateTime()->getTimestamp()), $meal);
+        }
+
+        // in format [Date, Meal]
+        return $dataProvider;
     }
 
     /**
      * @test
      * @dataProvider getGuestEnrollmentData
      *
-     * @param string $firstName        Guest first name
-     * @param string $lastName         Guest last name
-     * @param string $company          Guest company name
-     * @param string $selectDish       Flag whether or not to select a dish
-     * @param bool   $enrollmentStatus Flag whether enrollment should be successful or not.
+     * @param string $firstName Guest first name
+     * @param string $lastName Guest last name
+     * @param string $company Guest company name
+     * @param string $selectDish Flag whether or not to select a dish
+     * @param bool $enrollmentStatus Flag whether enrollment should be successful or not.
      */
     public function enrollAsGuest($firstName, $lastName, $company, $selectDish, $enrollmentStatus)
     {
@@ -67,11 +142,14 @@ class MealControllerTest extends AbstractControllerTestCase
         $crawler = $this->client->request('GET', $guestEnrollmentUrl);
         $this->assertTrue($this->client->getResponse()->isSuccessful());
 
-        $form = $crawler->filterXPath('//form[@name="invitation_form"]')->form([
-            'invitation_form[profile][name]' => $lastName,
-            'invitation_form[profile][firstName]' => $firstName,
-            'invitation_form[profile][company]' => $company,
-        ]);
+
+        $form = $crawler->filterXPath('//form[@name="invitation_form"]')->form(
+            [
+                'invitation_form[profile][name]' => $lastName,
+                'invitation_form[profile][firstName]' => $firstName,
+                'invitation_form[profile][company]' => $company,
+            ]
+        );
 
         if ($selectDish) {
             $form['invitation_form[day][meals]'][0]->tick();
@@ -89,7 +167,8 @@ class MealControllerTest extends AbstractControllerTestCase
             if ($firstName === $profile->getFirstName()
                 && ($lastName === $profile->getName())
                 && ($company === $profile->getCompany())
-                && $profile->isGuest()) {
+                && $profile->isGuest()
+            ) {
                 $this->assertTrue($enrollmentStatus);
 
                 return;
@@ -119,7 +198,7 @@ class MealControllerTest extends AbstractControllerTestCase
     /**
      * Gets a user profile.
      *
-     * @param  string $username     Username. Default is 'alice'.
+     * @param  string $username Username. Default is 'alice'.
      * @return Profile
      */
     protected function getUserProfile($username = 'alice')
@@ -150,7 +229,7 @@ class MealControllerTest extends AbstractControllerTestCase
         $criteria = Criteria::create();
         $meals = $mealRepository->matching($criteria->where(Criteria::expr()->gte('dateTime', new \DateTime())));
 
-        if ($meals->count()) {
+        if ($meals->count() > 0) {
             /** @var Doorman $doorman */
             $doorman = $this->client->getContainer()->get('mealz_meal.doorman');
             foreach ($meals as $meal) {
@@ -161,7 +240,7 @@ class MealControllerTest extends AbstractControllerTestCase
             }
         }
 
-        if (!$availableMeal) {
+        if ($availableMeal === null) {
             $this->fail('No test meal found.');
         }
 
@@ -171,7 +250,7 @@ class MealControllerTest extends AbstractControllerTestCase
     /**
      * Gets all the participants for a meal.
      *
-     * @param  Meal $meal       Meal instance
+     * @param  Meal $meal Meal instance
      * @return array
      */
     private function getMealParticipants($meal)

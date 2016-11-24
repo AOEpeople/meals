@@ -14,13 +14,12 @@ var config = {
 };
 
 /**
- * Clean css, js, font and image directory before creating new files
+ * Clean css, js and image directory before creating new files
  */
 gulp.task('clean', function() {
     return gulp.src([
             '../../web/mealz.css',
             '../../web/mealz.js',
-            '../../web/fonts',
             '../../web/images'
         ], {
             read: false
@@ -48,7 +47,8 @@ gulp.task('js', function() {
             'bower_components/fancybox/source/jquery.fancybox.pack.js',
             'bower_components/datatables.net/js/jquery.dataTables.js',
             'bower_components/switchery/dist/switchery.min.js',
-            'js/**/*.js'
+            'js/init.js',
+            'js/modules/*.js'
         ])
         .pipe(concat('mealz.js'))
         .pipe(config.production ? uglify() : util.noop())
@@ -74,14 +74,6 @@ gulp.task('css', function() {
     return merge(sassStream, cssStream, cssFancybox)
         .pipe(concat('mealz.css'))
         .pipe(gulp.dest('../../web/'));
-});
-
-/**
- * Copy fonts to /web/fonts directory
- */
-gulp.task('fonts', ['clean'], function() {
-    gulp.src('./sass/fonts/**/*')
-        .pipe(gulp.dest('../../web/fonts/'))
 });
 
 /**
@@ -114,7 +106,7 @@ gulp.task('watch', function() {
 gulp.task('default', ['jshint', 'js', 'css']);
 
 /**
- * Task to build the whole stuff, including fonts and images
+ * Task to build the whole stuff, including images
  * Run "gulp build --production" on production environment
  */
-gulp.task('build', ['clean', 'fonts', 'images','favicon', 'jshint', 'js', 'css']);
+gulp.task('build', ['clean', 'images','favicon', 'jshint', 'js', 'css']);

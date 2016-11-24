@@ -2,8 +2,6 @@
 
 {% set wrapperClass = 'meal-form' %}
 
-{% form_theme form _self %}
-
 {% block datetime_widget -%}
     {{ value | trans({}, 'date') }}
 {%- endblock datetime_widget %}
@@ -29,13 +27,13 @@
 
     {% if week.id is not null %}
         {% set additionalHeaderItems = [
-            MealzButton.link(
-            path('MealzMealBundle_Print_participations', {'week': week.id}),
-            'headings.week.participations'|trans({},'general'),
-            '',
-            'transparent',
-            'glyphicon-th-list'
-            )
+        MealzButton.link(
+        path('MealzMealBundle_Print_participations', {'week': week.id}),
+        'headings.week.participations'|trans({},'general'),
+        '',
+        'transparent',
+        'glyphicon-th-list'
+        )
         ] | merge(additionalHeaderItems) %}
     {% endif %}
 
@@ -47,31 +45,40 @@
             {{ form_widget(form.enabled) }}
         </div>
 
-        {% for day in form.days %}
-        <div class="meal">
-            {# display week day and date #}
-            <div class="week-day">
-                <span>
-                    {{ form_widget(day.dateTime) }}
-                </span>
-            </div>
-
-            <div class="meal-rows-wrapper">
-                {# display meals for given day #}
-                {% for meal in day.meals %}
-                <div class="meal-row">
-                    {{ form_row(meal) }}
+        {% for day in week.days %}
+            <div class="day">
+                {# display week day and date #}
+                <div class="week-day">
+                    <span>
+                        {{ day.dateTime | date('D') | trans({}, 'date') }}
+                    </span>
                 </div>
-                {% endfor %}
-            </div>
 
-            <div class="week-day-action">
-                {{ form_widget(day.enabled) }}
+                <div class="meal-rows-wrapper{% if form.children.days.children[loop.index0].enabled.vars.checked == false or form.enabled.vars.checked == false %} disabled{% endif %}" data-prototype="{{ form_widget(form.children.days.children[loop.index0].children.meals.vars.prototype)|e('html_attr') }}">
+                    {# Render meal row for each meal which already has a dish #}
+                    {% set selectedMeals = groupMealsToArray(form.days[loop.index0].meals.children) %}
+
+                    {% for parentDish, selectedDish in selectedMeals %}
+                        {% include 'MealzMealBundle:MealAdmin/partials:meal-row.html.twig' %}
+                    {% endfor %}
+
+                    {# Render a meal row for each meal without a dish #}
+                    {% set emptyMealCount = (selectedMeals|length - 2)|abs %}
+                    {% if emptyMealCount > 0 %}
+                        {% for selectedMeal in 0..(emptyMealCount-1) %}
+                            {% include 'MealzMealBundle:MealAdmin/partials:meal-row.html.twig' %}
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <div class="week-day-action">
+                    {{ form_widget(form.children.days.children[loop.index0].enabled) }}
+                </div>
             </div>
-        </div>
         {% endfor %}
         {{ form_widget(form.Cancel) }}
         {{ form_widget(form.Save) }}
+        {{ form_rest(form) }}
         {{ form_end(form) }}
     </div>
 {% endblock %}

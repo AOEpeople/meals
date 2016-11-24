@@ -5,15 +5,36 @@ namespace Mealz\MealBundle\Tests\Controller;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\DomCrawler\Crawler;
 
+use Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
+use Mealz\MealBundle\DataFixtures\ORM\LoadDays;
+use Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
+use Mealz\MealBundle\DataFixtures\ORM\LoadDishVariations;
+use Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
+use Mealz\MealBundle\DataFixtures\ORM\LoadParticipants;
+use Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
+use Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
+use Mealz\AccountingBundle\DataFixtures\ORM\LoadTransactions;
+
 class DishAbstractControllerTest extends AbstractControllerTestCase
 {
     public function setUp()
     {
         $this->createAdminClient();
-        $this->mockServices();
+        //$this->mockServices();
         $this->clearAllTables();
+        $this->loadFixtures(
+            [
+                new LoadCategories(),
+                new LoadDishes(),
+                new LoadDishVariations(),
+                new LoadUsers($this->client->getContainer()),
+            ]
+        );
     }
 
+    /**
+     * Test calling a form for new dish
+     */
     public function testGetEmptyFormAction()
     {
         $this->client->request('GET', '/dish/form');
@@ -22,37 +43,44 @@ class DishAbstractControllerTest extends AbstractControllerTestCase
         $this->assertTrue($node->count() === 1);
     }
 
+    /**
+     * Test creating a new dish
+     */
     public function testNewAction()
     {
         // Create form data
-        $token = $this->client->getContainer()->get('form.csrf_provider')->generateCsrfToken('dish_type');
         $form['dish'] = array(
             'title_de' => 'dish-form-title-de',
             'title_en' => 'dish-form-title-en',
             'description_de' => 'dish-form-desc-de',
             'description_en' => 'dish-form-desc-en',
             'category' => '',
-            '_token' => $token
         );
 
         // Call controller action
-        $this->client->request('POST', '/dish/new', $form);
+        $m = $this->client->request('POST', '/dish/new', $form);
 
         // Get persisted entity
         /** @var EntityManager $em */
         $em = $this->client->getContainer()->get('doctrine')->getManager();
         $dishRepository = $em->getRepository('MealzMealBundle:Dish');
-        $dish = $dishRepository->findOneBy(array(
-            'title_de' => 'dish-form-title-de',
-            'title_en' => 'dish-form-title-en',
-            'description_de' => 'dish-form-desc-de',
-            'description_en' => 'dish-form-desc-en',
-        ));
+        $dish = $dishRepository->findOneBy(
+            array(
+                'title_de' => 'dish-form-title-de',
+                'title_en' => 'dish-form-title-en',
+                'description_de' => 'dish-form-desc-de',
+                'description_en' => 'dish-form-desc-en',
+            )
+        );
 
         // Assertions
+        $this->assertNotNull($dish);
         $this->assertInstanceOf('\Mealz\MealBundle\Entity\Dish', $dish);
     }
 
+    /**
+     * Test adding a new new dish and find it listed in dishes list
+     */
     public function testListAction()
     {
         $dish = $this->createDish();
@@ -63,58 +91,73 @@ class DishAbstractControllerTest extends AbstractControllerTestCase
 
         // Get data for assertions from response
         $heading = $crawler->filter('h1')->first()->text();
-        $dishTitle = $crawler->filter('.table-row .dish-title')->first()->text();
+
+        $dishTitles = $crawler->filter('.table-row .dish-title');
+        $dishTitles->rewind();
+        $found = false;
+
+        if ($dishTitles->count() > 0) {
+            while ($dishTitles->current() && $found == false) {
+                $found = ($dish->getTitle() === trim($dishTitles->current()->nodeValue)) ? true : false;
+                $dishTitles->next();
+            }
+        }
 
         // Assertions
+        $this->assertTrue($found, 'Dish not found');
         $this->assertEquals('List of dishes', trim($heading));
-        $this->assertEquals($dish->getTitle(), trim($dishTitle));
     }
 
+    /**
+     * Test if a dish is selected for editing the form must be prefilled
+     * with the dishes data
+     */
     public function testGetPreFilledFormAction()
     {
         // Create test data
         $dish = $this->createDish();
         $dishAsArray = array(
             'title_de' => $dish->getTitleDe(),
-            'title_en' => $dish->getTitleEn()
+            'title_en' => $dish->getTitleEn(),
         );
         $this->persistAndFlushAll(array($dish));
 
         // Request
-        $this->client->request('GET', '/dish/form/' . $dish->getSlug());
+        $this->client->request('GET', '/dish/form/'.$dish->getSlug());
         $crawler = $this->getRawResponseCrawler();
 
         // Check if form is loaded
-        $node = $crawler->filterXPath('//form[@action="/dish/' . $dish->getSlug() . '/edit"]');
+        $node = $crawler->filterXPath('//form[@action="/dish/'.$dish->getSlug().'/edit"]');
         $this->assertTrue($node->count() === 1);
 
         // Copy form values in array for comparison
         $form = $crawler->selectButton('Save')->form();
         $formDishAsArray = array(
             'title_de' => $form->get('dish[title_de]')->getValue(),
-            'title_en' => $form->get('dish[title_en]')->getValue()
+            'title_en' => $form->get('dish[title_en]')->getValue(),
         );
 
         // Assertions
         $this->assertEquals($dishAsArray, $formDishAsArray);
     }
 
+    /**
+     * Test a previously created dish can be edited in a form
+     */
     public function testEditAction()
     {
         $dish = $this->createDish();
         $this->persistAndFlushAll(array($dish));
 
-        $token = $this->client->getContainer()->get('form.csrf_provider')->generateCsrfToken('dish_type');
         $form['dish'] = array(
             'title_de' => 'dish-form-edited-title-de',
             'title_en' => 'dish-form-edited-title-en',
             'description_de' => 'dish-form-edited-desc-de',
             'description_en' => 'dish-form-edited-desc-en',
             'category' => '',
-            '_token' => $token
         );
 
-        $this->client->request('POST', '/dish/' . $dish->getSlug() . '/edit', $form);
+        $this->client->request('POST', '/dish/'.$dish->getSlug().'/edit', $form);
         $dishRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Dish');
         unset($form['dish']['category']);
         unset($form['dish']['_token']);
@@ -124,35 +167,45 @@ class DishAbstractControllerTest extends AbstractControllerTestCase
         $this->assertEquals($dish->getId(), $editedDish->getId());
     }
 
+    /**
+     * Test calling a non existing dish(ID) to be EDITED leads to a 404 error
+     */
     public function testEditActionOfNonExistingDish()
     {
         $this->client->request('POST', '/dish/non-existing-dish/edit');
         $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
     }
 
+    /**
+     * Test firing a dish DELETION from the admin backend deletes the dish from database
+     */
     public function testDeleteAction()
     {
         $dish = $this->createDish();
         $this->persistAndFlushAll(array($dish));
 
         $dishId = $dish->getId();
-        $this->client->request('GET', '/dish/' . $dish->getSlug() . '/delete');
+        $this->client->request('GET', '/dish/'.$dish->getSlug().'/delete');
         $dishRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Dish');
         $queryResult = $dishRepository->find($dishId);
 
         $this->assertNull($queryResult);
     }
 
+    /**
+     * Test calling a non existing dish(ID) to be DELETED leads to a 404 error
+     */
     public function testDeleteOfNonExistingDish()
     {
         $this->client->request('GET', '/dish/non-existing-dish/delete');
-        $this->assertEquals(404,$this->client->getResponse()->getStatusCode());
+        $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
     }
 
     protected function getRawResponseCrawler()
     {
         $content = $this->client->getResponse()->getContent();
         $uri = 'http://www.mealz.local';
+
         return new Crawler(json_decode($content), $uri);
     }
 }

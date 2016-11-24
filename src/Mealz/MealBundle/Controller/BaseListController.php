@@ -33,8 +33,8 @@ abstract class BaseListController extends BaseController
     public function setEntityName($entityName)
     {
         $this->entityName = $entityName;
-        $this->entityClassPath = '\Mealz\MealBundle\Entity\\' . $entityName;
-        $this->entityFormName = '\Mealz\MealBundle\Form\\' . $entityName . 'Form';
+        $this->entityClassPath = '\Mealz\MealBundle\Entity\\'.$entityName;
+        $this->entityFormName = '\Mealz\MealBundle\Form\\'.$entityName.'\\'.$entityName.'Form';
     }
 
     public function setRepository(EntityRepository $repository)
@@ -66,6 +66,7 @@ abstract class BaseListController extends BaseController
             ),
             'messages'
         );
+
         return $this->entityFormHandling($request, new $this->entityClassPath, $message);
     }
 
@@ -86,6 +87,7 @@ abstract class BaseListController extends BaseController
             ),
             'messages'
         );
+
         return $this->entityFormHandling($request, $entity, $message);
     }
 
@@ -113,7 +115,7 @@ abstract class BaseListController extends BaseController
         );
         $this->addFlashMessage($message, 'success');
 
-        return $this->redirectToRoute('MealzMealBundle_' . $this->entityName);
+        return $this->redirectToRoute('MealzMealBundle_'.$this->entityName);
     }
 
     public function getEmptyFormAction()
@@ -127,7 +129,7 @@ abstract class BaseListController extends BaseController
         }
 
         $entity = new $this->entityClassPath();
-        $action = $this->generateUrl('MealzMealBundle_' . $this->entityName . '_new');
+        $action = $this->generateUrl('MealzMealBundle_'.$this->entityName.'_new');
 
         return new JsonResponse($this->getRenderedEntityForm($entity, $action));
     }
@@ -148,16 +150,20 @@ abstract class BaseListController extends BaseController
             return new JsonResponse(null, 404);
         }
 
-        $action = $this->generateUrl('MealzMealBundle_' . $this->entityName . '_edit', array('slug' => $slug));
+        $action = $this->generateUrl('MealzMealBundle_'.$this->entityName.'_edit', array('slug' => $slug));
 
         return new JsonResponse($this->getRenderedEntityForm($entity, $action, true));
     }
 
     private function getRenderedEntityForm($entity, $action, $wrapInTr = false)
     {
-        $form = $this->createForm($this->getNewForm(), $entity, array(
-            'action' => $action,
-        ));
+        $form = $this->createForm(
+            $this->getNewForm(),
+            $entity,
+            array(
+                'action' => $action,
+            )
+        );
 
         if ($wrapInTr) {
             $template = "MealzMealBundle:$this->entityName/partials:formTable.html.twig";
@@ -185,13 +191,15 @@ abstract class BaseListController extends BaseController
 
                 $this->addFlashMessage($successMessage, 'success');
             } else {
-                return $this->renderEntityList(array(
-                    'form' => $form->createView()
-                ));
+                return $this->renderEntityList(
+                    array(
+                        'form' => $form->createView(),
+                    )
+                );
             }
         }
 
-        return $this->redirectToRoute('MealzMealBundle_' . $this->entityName);
+        return $this->redirectToRoute('MealzMealBundle_'.$this->entityName);
     }
 
     protected function renderEntityList($parameters = array())
@@ -199,15 +207,16 @@ abstract class BaseListController extends BaseController
         $entities = $this->getEntities();
 
         $defaultParameters = array(
-            'entities' => $entities
+            'entities' => $entities,
         );
 
         $mergedParameters = array_merge($defaultParameters, $parameters);
 
-        return $this->render('MealzMealBundle:' . $this->entityName . ':list.html.twig', $mergedParameters);
+        return $this->render('MealzMealBundle:'.$this->entityName.':list.html.twig', $mergedParameters);
     }
 
-    protected function getEntities() {
+    protected function getEntities()
+    {
         return $this->repository->findAll();
     }
 
@@ -224,10 +233,12 @@ abstract class BaseListController extends BaseController
         if (null === $entity) {
             throw $this->createNotFoundException();
         }
+
         return $entity;
     }
 
-    protected function getNewForm() {
+    protected function getNewForm()
+    {
         return new $this->entityFormName();
     }
 }

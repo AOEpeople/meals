@@ -4,6 +4,7 @@ namespace Mealz\MealBundle\Entity;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -12,301 +13,342 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *
  * @ORM\Table(name="dish")
  * @ORM\Entity(repositoryClass="DishRepository")
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="type", type="string")
+ * @ORM\DiscriminatorMap({"dish" = "Dish", "dish_variation" = "DishVariation"})
+ *
  */
 class Dish
 {
-	/**
-	 * @var integer
-	 *
-	 * @ORM\Column(name="id", type="integer")
-	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="AUTO")
-	 */
-	private $id;
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
 
-	/**
-	 * @Gedmo\Slug(fields={"title_en"})
-	 * @ORM\Column(length=128, unique=true)
-	 * @var string
-	 */
-	protected $slug;
+    /**
+     * @TODO: CHECK IF THIS WORKS. Add 'title_de' to the update field list 'fields={"title_en"}', check with Jonathan
+     * @Gedmo\Slug(handlers={
+     *   @Gedmo\SlugHandler(class="Gedmo\Sluggable\Handler\InversedRelativeSlugHandler", options={
+     *       @Gedmo\SlugHandlerOption(name="relationClass", value="Mealz\MealBundle\Entity\Dish"),
+     *       @Gedmo\SlugHandlerOption(name="mappedBy", value="parent"),
+     *       @Gedmo\SlugHandlerOption(name="inverseSlugField", value="slug")
+     *      })
+     *   }, fields={"title_en"})
+     * @ORM\Column(length=128, unique=true)
+     * @var string
+     */
+    protected $slug;
 
-	/**
-	 * @Assert\NotBlank()
-	 * @Assert\Length(max=255)
-	 * @ORM\Column(type="string", length=255, nullable=FALSE)
-	 * @var string
-	 */
-	protected $title_en;
+    /**
+     * @Assert\NotBlank()
+     * @Assert\Length(max=255)
+     * @ORM\Column(type="string", length=255, nullable=FALSE)
+     * @var string
+     */
+    protected $title_en;
 
-	/**
-	 * @Assert\Length(max=4096)
-	 * @ORM\Column(type="text", nullable=TRUE)
-	 * @var null|string
-	 */
-	protected $description_en = NULL;
+    /**
+     * @Assert\Length(max=4096)
+     * @ORM\Column(type="text", nullable=TRUE)
+     * @var null|string
+     */
+    protected $description_en = null;
 
-	/**
-	 * @Assert\NotBlank()
-	 * @Assert\Length(max=255)
-	 * @ORM\Column(type="string", length=255, nullable=FALSE)
-	 * @var string
-	 */
-	protected $title_de;
+    /**
+     * @Assert\NotBlank()
+     * @Assert\Length(max=255)
+     * @ORM\Column(type="string", length=255, nullable=FALSE)
+     * @var string
+     */
+    protected $title_de;
 
-	/**
-	 * @Assert\Length(max=4096)
-	 * @ORM\Column(type="text", nullable=TRUE)
-	 * @var null|string
-	 */
-	protected $description_de = NULL;
+    /**
+     * @Assert\Length(max=4096)
+     * @ORM\Column(type="text", nullable=TRUE)
+     * @var null|string
+     */
+    protected $description_de = null;
 
-	/**
-	 * @ORM\ManyToOne(targetEntity="Category", inversedBy="dishes")
-	 * @ORM\JoinColumn(name="category_id", referencedColumnName="id", onDelete="SET NULL")
-	 * @var null|Category
-	 */
-	protected $category = NULL;
+    /**
+     * @ORM\ManyToOne(targetEntity="Category", inversedBy="dishes")
+     * @ORM\JoinColumn(name="category_id", referencedColumnName="id", onDelete="SET NULL")
+     * @var null|Category
+     */
+    protected $category = null;
 
-	/**
-	 * @ORM\Column(type="decimal", precision=10, scale=4, nullable=TRUE)
-	 * @var null|float
-	 */
-	protected $price = NULL;
+    /**
+     * @Assert\NotBlank()
+     * @ORM\Column(type="decimal", precision=10, scale=4, nullable=FALSE)
+     * @var float
+     */
+    protected $price;
 
-	/**
-	 * @ORM\Column(type="boolean", nullable=FALSE)
-	 * @var bool
-	 */
-	protected $enabled = TRUE;
+    /**
+     * @ORM\Column(type="boolean", nullable=FALSE)
+     * @var bool
+     */
+    protected $enabled = true;
 
-	/**
-	 * @var string
-	 */
-	protected $currentLocale = 'en';
+    /**
+     * @var string
+     */
+    protected $currentLocale = 'en';
 
-	/**
-	 * @ORM\OneToMany(targetEntity="DishVariation", mappedBy="dish")
-	 * @var Collection
-	 */
-	protected $variations;
+    /**
+     * @ORM\OneToMany(targetEntity="DishVariation", mappedBy="parent")
+     * @var Collection
+     */
+    protected $variations;
 
-	/**
-	 * Get id
-	 *
-	 * @return integer
-	 */
-	public function getId()
-	{
-		return $this->id;
-	}
+    /**
+     * Parent property references to the same table dish.
+     * If an dish, which is referenced by an dish_variation, is deleted the related dish_variations are deleted cascadingly.
+     *
+     *
+     * @ORM\ManyToOne(targetEntity="Dish", inversedBy="variations", cascade={"persist"})
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=TRUE, onDelete="CASCADE")
+     * @var Dish
+     */
+    protected $parent = null;
 
-	/**
-	 * @return string
-	 */
-	public function getSlug() {
-		return $this->slug;
-	}
+    /**
+     * @return Dish
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
 
-	/**
-	 * @deprecated use setDescriptionEn() instead
-	 * @param null|string $description
-	 */
-	public function setDescription($description)
-	{
-		$this->setDescriptionEn($description);
-	}
+    /**
+     * @param Dish $parent
+     */
+    public function setParent($parent)
+    {
+        $this->parent = $parent;
+    }
 
-	/**
-	 * @return null|string
-	 */
-	public function getDescription()
-	{
-		if($this->currentLocale == 'de' && $this->description_de) {
-			return $this->getDescriptionDe();
-		} else {
-			return $this->getDescriptionEn();
-		}
-	}
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
-	/**
-	 * @param float|null $price
-	 */
-	public function setPrice($price)
-	{
-		$this->price = $price;
-	}
+    /**
+     * @return string
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
 
-	/**
-	 * @return float|null
-	 */
-	public function getPrice()
-	{
-		return $this->price;
-	}
+    /**
+     * @deprecated use setDescriptionEn() instead
+     * @param null|string $description
+     */
+    public function setDescription($description)
+    {
+        $this->setDescriptionEn($description);
+    }
 
-	/**
-	 * @param string $title
-	 * @deprecated use setTitleEn() or setTitleDe() instead
-	 */
-	public function setTitle($title)
-	{
-		$this->setTitleEn($title);
-	}
+    /**
+     * @return null|string
+     */
+    public function getDescription()
+    {
+        if ($this->currentLocale == 'de' && $this->description_de) {
+            return $this->getDescriptionDe();
+        } else {
+            return $this->getDescriptionEn();
+        }
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getTitle()
-	{
-		if($this->currentLocale == 'de' && $this->title_de) {
-			return $this->getTitleDe();
-		} else {
-			return $this->getTitleEn();
-		}
-	}
+    /**
+     * @param float $price
+     */
+    public function setPrice($price)
+    {
+        $this->price = $price;
+    }
 
-	/**
-	 * @param boolean $enabled
-	 */
-	public function setEnabled($enabled)
-	{
-		$this->enabled = $enabled;
-	}
+    /**
+     * @return float
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
 
-	/**
-	 * @return boolean
-	 */
-	public function isEnabled()
-	{
-		return $this->enabled;
-	}
+    /**
+     * @param string $title
+     * @deprecated use setTitleEn() or setTitleDe() instead
+     */
+    public function setTitle($title)
+    {
+        $this->setTitleEn($title);
+    }
 
-	/**
-	 * @param string $currentLocale
-	 */
-	public function setCurrentLocale($currentLocale)
-	{
-		$this->currentLocale = $currentLocale;
-	}
+    /**
+     * @return string
+     */
+    public function getTitle()
+    {
+        if ($this->currentLocale == 'de' && $this->title_de) {
+            return $this->getTitleDe();
+        } else {
+            return $this->getTitleEn();
+        }
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getCurrentLocale()
-	{
-		return $this->currentLocale;
-	}
+    /**
+     * @param boolean $enabled
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+    }
 
-	/**
-	 * @param null|string $description_de
-	 */
-	public function setDescriptionDe($description_de)
-	{
-		$this->description_de = $description_de;
-	}
+    /**
+     * @return boolean
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
 
-	/**
-	 * @return null|string
-	 */
-	public function getDescriptionDe()
-	{
-		return $this->description_de;
-	}
+    /**
+     * @param string $currentLocale
+     */
+    public function setCurrentLocale($currentLocale)
+    {
+        $this->currentLocale = $currentLocale;
+    }
 
-	/**
-	 * @param null|string $description_en
-	 */
-	public function setDescriptionEn($description_en)
-	{
-		$this->description_en = $description_en;
-	}
+    /**
+     * @return string
+     */
+    public function getCurrentLocale()
+    {
+        return $this->currentLocale;
+    }
 
-	/**
-	 * @return null|string
-	 */
-	public function getDescriptionEn()
-	{
-		return $this->description_en;
-	}
+    /**
+     * @param null|string $description_de
+     */
+    public function setDescriptionDe($description_de)
+    {
+        $this->description_de = $description_de;
+    }
 
-	/**
-	 * @param string $title_de
-	 */
-	public function setTitleDe($title_de)
-	{
-		$this->title_de = $title_de;
-	}
+    /**
+     * @return null|string
+     */
+    public function getDescriptionDe()
+    {
+        return $this->description_de;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getTitleDe()
-	{
-		return $this->title_de;
-	}
+    /**
+     * @param null|string $description_en
+     */
+    public function setDescriptionEn($description_en)
+    {
+        $this->description_en = $description_en;
+    }
 
-	/**
-	 * @param string $title_en
-	 */
-	public function setTitleEn($title_en)
-	{
-		$this->title_en = $title_en;
-	}
+    /**
+     * @return null|string
+     */
+    public function getDescriptionEn()
+    {
+        return $this->description_en;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getTitleEn()
-	{
-		return $this->title_en;
-	}
+    /**
+     * @param string $title_de
+     */
+    public function setTitleDe($title_de)
+    {
+        $this->title_de = $title_de;
+    }
 
-	public function __toString() {
-		return $this->getTitle();
-	}
+    /**
+     * @return string
+     */
+    public function getTitleDe()
+    {
+        return $this->title_de;
+    }
 
-	/**
-	 * @return Category
-	 */
-	public function getCategory()
-	{
-		return $this->category;
-	}
+    /**
+     * @param string $title_en
+     */
+    public function setTitleEn($title_en)
+    {
+        $this->title_en = $title_en;
+    }
 
-	/**
-	 * @param Category $category
-	 */
-	public function setCategory(Category $category)
-	{
-		$this->category = $category;
-	}
+    /**
+     * @return string
+     */
+    public function getTitleEn()
+    {
+        return $this->title_en;
+    }
 
-	/**
-	 * Gets all the dish variations.
-	 *
-	 * @return Collection
-	 */
-	public function getVariations()
-	{
-		return $this->variations;
-	}
+    public function __toString()
+    {
+        return $this->getTitle();
+    }
 
-	/**
-	 * @param Collection $dishVariations
-	 */
-	public function setVariations(Collection $dishVariations)
-	{
-		$this->variations = $dishVariations;
-	}
+    /**
+     * @return Category
+     */
+    public function getCategory()
+    {
+        return $this->category;
+    }
 
-	/**
-	 * Checks if the dish has variations.
-	 *
-	 * @return bool
-	 */
-	public function hasVariations()
-	{
-		return (count($this->variations) > 0);
-	}
+    /**
+     * @param null|Category $category
+     */
+    public function setCategory($category)
+    {
+        $this->category = $category;
+    }
+
+    /**
+     * Gets all the dish variations.
+     *
+     * @return Collection
+     */
+    public function getVariations()
+    {
+        return $this->variations;
+    }
+
+    /**
+     * @param Collection $dishVariations
+     */
+    public function setVariations(Collection $dishVariations)
+    {
+        $this->variations = $dishVariations;
+    }
+
+    /**
+     * Checks if the dish has variations.
+     *
+     * @return bool
+     */
+    public function hasVariations()
+    {
+        return (count($this->variations) > 0);
+    }
 }

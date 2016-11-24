@@ -1,5 +1,6 @@
 # Mealz for Zombies
 
+<<<<<<< HEAD
 ## Features (User)
 
 ### Meal enrollment
@@ -112,12 +113,6 @@ Lists all transactions booked for users in the last month.
 Export your client id and secret as environment variables.
 See http://symfony.com/doc/current/cookbook/configuration/external_parameters.html
 
-### You're done
-
-Point your webbrowser to http://mealz.local
-
-## Developer information
-
 ### Frontend build
 
 ```
@@ -126,6 +121,18 @@ npm install
 ./node_modules/.bin/bower install
 ./node_modules/.bin/gulp
 ```
+
+### You're done
+
+Point your webbrowser to http://mealz.local
+
+## Troubleshooting
+
+### SQLSTATE[42S22]: Column not found: 1054 Unknown column
+
+    php app/console doctrine:schema:update --force --env=dev
+
+## Developer information
 
 ### User roles
 
@@ -141,7 +148,7 @@ The following roles are in use:
 
 To load up some test data, run
 
-    php app/console doctrine:fixtures:load
+    php app/console doctrine:fixtures:load --env=dev
 
 It generates dishes, meals and users.
 
@@ -158,9 +165,3 @@ Before running phpunit make sure the database schema is up-to-date:
 
     php app/console doctrine:schema:update --env=test --force
     bin/phpunit
-
-## Troubleshooting
-
-### SQLSTATE[42S22]: Column not found: 1054 Unknown column
-
-    php app/console doctrine:schema:update --force

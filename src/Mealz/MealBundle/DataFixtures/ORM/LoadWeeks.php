@@ -7,77 +7,87 @@ use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Mealz\MealBundle\Entity\Week;
 
-
+/**
+ * Load the Weeks
+ * Class LoadWeeks
+ * @package Mealz\MealBundle\DataFixtures\ORM
+ */
 class LoadWeeks extends AbstractFixture implements OrderedFixtureInterface
 {
-	/**
-	 * @var int
-	 */
-	protected $counter = 0;
+    /**
+     * @var int
+     */
+    protected $counter = 0;
 
-	/**
-	 * @param ObjectManager $objectManager
-	 */
-	function load(ObjectManager $objectManager)
-	{
-		$weeks = $this->getCurrentTestWeeks();
-		$weeks = array_merge($weeks, $this->getStaticTestWeeks());
+    /**
+     * laod Object
+     * @param ObjectManager $objectManager
+     */
+    public function load(ObjectManager $objectManager)
+    {
+        $weeks = $this->getCurrentTestWeeks();
+        $weeks = array_merge($weeks, $this->getStaticTestWeeks());
 
-		foreach ($weeks as $weekDataSet) {
-			$week = new Week();
-			$week->setYear($weekDataSet['year']);
-			$week->setCalendarWeek($weekDataSet['calendarWeek']);
-			$objectManager->persist($week);
-			$this->addReference('week-' . $this->counter++, $week);
-		}
+        foreach ($weeks as $weekDataSet) {
+            $week = new Week();
+            $week->setYear($weekDataSet['year']);
+            $week->setCalendarWeek($weekDataSet['calendarWeek']);
+            $objectManager->persist($week);
+            $this->addReference('week-'.$this->counter++, $week);
+        }
 
-		$objectManager->flush();
-	}
+        $objectManager->flush();
+    }
 
-	/**
-	 * Gets the current test weeks.
-	 *
-	 * They are meant to be used as dummy data on integration systems.
-	 *
-	 * @return array
-	 */
-	private function getCurrentTestWeeks()
-	{
-		$currentWeeks = [];
-		$date = new \DateTime('');
-		$maxDate = new \DateTime('+1 month');
+    /**
+     * get the Order of fixtures loading
+     * @return mixed
+     */
+    public function getOrder()
+    {
+        return OrderedFixtureInterface::FIXURES_LOADORDER_SECOND;
+    }
 
-		while($date < $maxDate) {
-			$year = $date->format('Y');
-			$week = $date->format('W');
-			$currentWeeks[$year . '-' . $week] = ['year' => $year, 'calendarWeek' => $week];
-			$date->modify('+1 week');
-		}
+    /**
+     * Gets the current test weeks.
+     *
+     * They are meant to be used as dummy data on integration systems.
+     *
+     * @return array
+     */
+    private function getCurrentTestWeeks()
+    {
+        $currentWeeks = [];
+        $date = new \DateTime('');
+        $maxDate = new \DateTime('+1 month');
 
-		return $currentWeeks;
-	}
+        while ($date < $maxDate) {
+            $year = $date->format('Y');
+            $week = $date->format('W');
+            $currentWeeks[$year.'-'.$week] = ['year' => $year, 'calendarWeek' => $week];
+            $date->modify('+1 week');
+        }
 
-	/**
-	 * Gets the static test weeks.
-	 *
-	 * They are meant to be used with unit or functional tests.
-	 *
-	 * @return array
-	 */
-	private function getStaticTestWeeks()
-	{
-		return [
-			'2016-41' => ['year' => '2016', 'calendarWeek' => '41'],
-			'2016-42' => ['year' => '2016', 'calendarWeek' => '42'],
-			'2016-43' => ['year' => '2016', 'calendarWeek' => '43'],
-			'2016-44' => ['year' => '2016', 'calendarWeek' => '44'],
-			'2016-45' => ['year' => '2016', 'calendarWeek' => '45'],
-			'2016-46' => ['year' => '2016', 'calendarWeek' => '46']
-		];
-	}
+        return $currentWeeks;
+    }
 
-	public function getOrder()
-	{
-		return 1;
-	}
+    /**
+     * Gets the static test weeks.
+     *
+     * They are meant to be used with unit or functional tests.
+     *
+     * @return array
+     */
+    private function getStaticTestWeeks()
+    {
+        return [
+            '2016-41' => ['year' => '2016', 'calendarWeek' => '41'],
+            '2016-42' => ['year' => '2016', 'calendarWeek' => '42'],
+            '2016-43' => ['year' => '2016', 'calendarWeek' => '43'],
+            '2016-44' => ['year' => '2016', 'calendarWeek' => '44'],
+            '2016-45' => ['year' => '2016', 'calendarWeek' => '45'],
+            '2016-46' => ['year' => '2016', 'calendarWeek' => '46'],
+        ];
+    }
+
 }

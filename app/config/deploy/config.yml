@@ -1,5 +1,3 @@
 imports:
     - { resource: ../commons/development/config.yml }
     - { resource: parameters.yml}
-parameters:
-    mealz.host: "http://deploy.mealz.itg.de2.dc.aoe.lan"

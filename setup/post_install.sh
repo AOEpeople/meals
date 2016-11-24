@@ -14,3 +14,4 @@ source ${FINAL_RELEASEFOLDER}/app/console doctrine:migrations:migrate
 echo -n "done"
 
 echo "All post install operations executed successfully!"
+echo "finished post install operations!"

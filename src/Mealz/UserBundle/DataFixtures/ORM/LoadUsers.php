@@ -58,6 +58,7 @@ class LoadUsers extends AbstractFixture implements OrderedFixtureInterface, Cont
     }
 
     /**
+     * Load the Fixtures
      * @param ObjectManager $manager
      */
     public function load(ObjectManager $manager)
@@ -78,13 +79,12 @@ class LoadUsers extends AbstractFixture implements OrderedFixtureInterface, Cont
     }
 
     /**
-     * Gets the loading order of fixture.
-     *
+     * Get the Fixtures loadOrder
      * @return int
      */
     public function getOrder()
     {
-        return 2;
+        return OrderedFixtureInterface::FIXURES_LOADORDER_FIRST;
     }
 
     /**
@@ -113,4 +113,6 @@ class LoadUsers extends AbstractFixture implements OrderedFixtureInterface, Cont
         $this->addReference('profile-'.$this->counter++, $profile);
         $this->addReference('login-'.$this->counter, $login);
     }
+
 }
+

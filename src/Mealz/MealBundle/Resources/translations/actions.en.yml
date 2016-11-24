@@ -11,6 +11,3 @@ dish:
 
 category:
   create: Create category
-
-costs:
-  cash_register: Cash Register

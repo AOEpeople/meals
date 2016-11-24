@@ -61,7 +61,8 @@ form:
   placeholder:
     title: Titel
     description: Beschreibung
-    category: Keine Kategorie
+    category: Bitte wählen Sie ein Kategorie
     name: Nachname
     first_name: Vorname
     company: Firma
+

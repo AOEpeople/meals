@@ -6,9 +6,11 @@ $color-base: #606b72;
 $color-secondary: #acbdc7;
 $color-body: #f2f5f7;
 
+$meal-border-color: #d6dee2;
+
 $color-gray-primary: $color-base;
 $color-gray-secondary: #9aa9b3;
-$color-gray-middle: #e0eaeb;
+$color-gray-middle: $meal-border-color;
 $color-gray-light: #ecf2f5;
 $color-gray-lighter: #f7f9fb;
 
@@ -16,20 +18,18 @@ $color-green: #7cae5c;
 $color-orange: #f79223;
 $color-red: #f00;
 
-$meal-border-color: #d6dee2;
-$box-shadow: rgba(0, 0, 0, .15);
-
 $notification-background: rgba(0, 0, 0, .6);
+$box-shadow: rgba(0, 0, 0, .1);
 
 
 //**************************************
 //  Fonts
 //**************************************
-$font-default: "ClanOTRegular", "Helvetica", "Myriad Regular", sans-serif;
-$font-light: "ClanOTNews", "Helvetica-Light", "Myriad Light", sans-serif;
-$font-thin: "ClanOTThin", "Helvetica-Light", "Myriad Light", sans-serif;
-$font-medium: "ClanOTMedium", "Helvetica-Medium", "Myriad Regular", sans-serif;
-$font-bold: "ClanOTBold", "Helvetica-Bold", "Myriad Bold", sans-serif;
+$font-default: "ClanOTRegular", "Helvetica", "Myriad Regular", "Arial", sans-serif;
+$font-light: "ClanOTNews", "Helvetica-Light", "Myriad Light", "Arial", sans-serif;
+$font-thin: "ClanOTThin", "Helvetica-Light", "Myriad Light", "Arial", sans-serif;
+$font-medium: "ClanOTMedium", "Helvetica-Medium", "Myriad Regular", "Arial", sans-serif;
+$font-bold: "ClanOTBold", "Helvetica-Bold", "Myriad Bold", "Arial", sans-serif;
 
 //**************************************
 //  Breakpoints

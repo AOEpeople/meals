@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 echo "Clearing application cache ... "
 php ${FINAL_RELEASEFOLDER}/app/console cache:clear

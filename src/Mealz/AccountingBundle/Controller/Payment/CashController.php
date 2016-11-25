@@ -111,7 +111,7 @@ class CashController extends BaseController
         $profile = $this->getUser()->getProfile();
 
         $dateFrom = new \DateTime();
-        $dateFrom->modify('-3 days');
+        $dateFrom->modify('-4 weeks');
         $dateTo = new \DateTime();
 
         $participantRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Participant');
@@ -121,60 +121,28 @@ class CashController extends BaseController
         $transactions = $transactionRepository->getSuccessfulTransactionsOnDays($dateFrom, $dateTo, $profile);
 
         $transactionsTotal = 0;
+        $transactionHistoryArr = array();
         foreach ($transactions as $transaction) {
             $transactionsTotal += $transaction->getAmount();
+            $transactionHistoryArr[$transaction->getDate()->getTimestamp()] = $transaction;
         }
+
         $participationsTotal = 0;
         /** @var $participation Participant */
         foreach ($participations as $participation) {
             $participationsTotal += $participation->getMeal()->getPrice();
+            $transactionHistoryArr[$participation->getMeal()->getDateTime()->getTimestamp()] = $participation;
         }
+
+        ksort($transactionHistoryArr);
 
         return $this->render(
             'MealzAccountingBundle:Accounting\\User:transaction_history.html.twig',
             array(
-                'participations' => $participations,
-                'transactions' => $transactions,
+                'transaction_history_records' => $transactionHistoryArr,
                 'transactions_total' => $transactionsTotal,
                 'participations_total' => $participationsTotal
             )
         );
-    }
-
-    /**
-     * Sorting array by some key
-     *
-     * @param array  $array  array to sort
-     * @param string $key    sorting by key
-     * @param bool   $string sorting by string?
-     * @param bool   $asc    ascending?
-     *
-     * @return void
-     */
-    protected function sortArrayByKey(&$array, $key, $string = false, $asc = true)
-    {
-        if ($string) {
-            /**
-             * Sorting array by key
-             */
-            usort($array, function ($a, $b) use (&$key, &$asc) {
-                if ($asc) {
-                    return strcmp(strtolower($a[$key]), strtolower($b[$key]));
-                } else {
-                    return strcmp(strtolower($b[$key]), strtolower($a[$key]));
-                }
-            }
-            );
-        } else {
-            usort($array, function ($a, $b) use (&$key, &$asc)
-            {
-                if ($a[$key] == $b[$key]) {
-                    return 0;
-                }
-                if($asc) return ($a[$key] < $b[$key]) ? -1 : 1;
-                else     return ($a[$key] > $b[$key]) ? -1 : 1;
-            }
-            );
-        }
     }
 }

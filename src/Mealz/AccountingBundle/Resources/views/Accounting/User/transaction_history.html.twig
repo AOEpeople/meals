@@ -17,26 +17,28 @@
         </tr>
         </thead>
         <tbody>
-        {% for participation in participations %}
-            <tr class="table-row transaction-meal">
-                <td class="table-data">{{ participation.meal.dateTime|date('M d, Y') }}</td>
-                <td class="table-data transaction-description">{{ participation.meal.dish.title }}</td>
-                <td class="table-data"><span>-</span> {{ participation.meal.price|number_format(2, '.', ',') }}€</td>
-            </tr>
-        {% endfor %}
-        {% for transaction in transactions %}
-            <tr class="table-row transaction-payment">
-                <td class="table-data">{{ transaction.date|date('M d, Y') }}</td>
-                <td class="table-data transaction-description">{{ 'payment.transaction_history.cash_payment'|trans({}, 'messages') }}</td>
-                <td class="table-data"><span>+</span> {{ transaction.amount|number_format(2, '.', ',') }}€</td>
-            </tr>
+
+        {% for transaction_record in transaction_history_records %}
+                {% if transaction_record.meal is defined %}
+                    <tr class="table-row transaction-meal">
+                        <td class="table-data">{{ transaction_record.meal.dateTime|date('M d, Y') }}</td>
+                        <td class="table-data transaction-description">{{ transaction_record.meal.dish.title }}</td>
+                        <td class="table-data"><span>-</span> {{ transaction_record.meal.price|number_format(2, '.', ',') }}€</td>
+                    </tr>
+                {% else %}
+                    <tr class="table-row transaction-payment">
+                        <td class="table-data">{{ transaction_record.date|date('M d, Y') }}</td>
+                        <td class="table-data transaction-description">{{ 'payment.transaction_history.cash_payment'|trans({}, 'messages') }}</td>
+                        <td class="table-data"><span>+</span> {{ transaction_record.amount|number_format(2, '.', ',') }}€</td>
+                    </tr>
+                {% endif %}
         {% endfor %}
         </tbody>
         <tfoot>
-        <tr class="table-row">
-            <td class="table-data transaction-description" colspan="2">{{ 'payment.transaction_history.balance_now'|trans({}, 'messages') }}:</td>
-            <td class="table-data"><span></span> {{ balance }}€</td>
-        </tr>
+            <tr class="table-row">
+                <td class="table-data transaction-description" colspan="2">{{ 'payment.transaction_history.balance_now'|trans({}, 'messages') }}:</td>
+                <td class="table-data"><span></span> {{ balance }}€</td>
+            </tr>
         </tfoot>
     </table>
 

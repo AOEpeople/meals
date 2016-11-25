@@ -1,6 +1,6 @@
 <?php
 
-namespace Mealz\MealBundle\Form;
+namespace Mealz\MealBundle\Form\Dish;
 
 use Mealz\MealBundle\Entity\Category;
 use Mealz\MealBundle\Entity\Dish;
@@ -34,6 +34,11 @@ class DishForm extends AbstractType
         $this->price = $price;
     }
 
+    /**
+     * build the Form
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -106,7 +111,7 @@ class DishForm extends AbstractType
             );
 
         $builder->addEventListener(
-            FormEvents::POST_SUBMIT,
+            FormEvents::SUBMIT,
             function (FormEvent $event) {
                 /** @var Dish $dish */
                 $dish = $event->getData();
@@ -116,6 +121,10 @@ class DishForm extends AbstractType
         );
     }
 
+    /**
+     * set the default Options
+     * @param OptionsResolverInterface $resolver
+     */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(

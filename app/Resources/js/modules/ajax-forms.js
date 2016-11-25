@@ -15,11 +15,6 @@ Mealz.prototype.initAjaxForms = function () {
         e.stopPropagation();
         that.loadAjaxFormPayment($(this));
     });
-
-    $('body').on('click', function() {
-        mealz.$iconCells.find('form').addClass(mealz.hiddenClass);
-    });
-
 };
 
 Mealz.prototype.loadAjaxForm = function ($element) {

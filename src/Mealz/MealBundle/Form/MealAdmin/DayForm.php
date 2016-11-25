@@ -16,36 +16,50 @@ use Doctrine\ORM\UnitOfWork;
 use Symfony\Component\Validator\Constraints\Valid;
 use Doctrine\ORM\EntityManager;
 
-
+/**
+ * Class DayForm
+ * @package Mealz\MealBundle\Form\MealAdmin
+ */
 class DayForm extends AbstractType
 {
     protected $em;
 
+    /**
+     * DayForm constructor.
+     * @param EntityManager $entityManager
+     */
     public function __construct(EntityManager $entityManager)
     {
         $this->em = $entityManager;
     }
 
+    /**
+     * build the Form
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('dateTime', DateTimeType::class, array(
-                'format' => 'E',
-                'html5' => false,
-                'widget' => 'single_text',
-                'disabled' => true
-            ))
-            ->add('meals', CollectionType::class, array(
-                'entry_type' => MealForm::class,
-                'allow_delete' => true,
-                'delete_empty' => true,
-                'constraints' => new Valid(),
-            ))
-            ->add('enabled', CheckboxType::class, array(
-                'required' => false,
-                'attr' => array('class' => 'js-switch')
-            ))
-        ;
+            ->add(
+                'meals',
+                CollectionType::class,
+                array(
+                    'entry_type' => MealForm::class,
+                    'allow_delete' => true,
+                    'delete_empty' => true,
+                    'constraints' => new Valid(),
+                    'allow_add' => true,
+                )
+            )
+            ->add(
+                'enabled',
+                CheckboxType::class,
+                array(
+                    'required' => false,
+                    'attr' => array('class' => 'js-switch'),
+                )
+            );
 
         $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) use ($builder) {
             /** @var Day $day */
@@ -87,6 +101,10 @@ class DayForm extends AbstractType
         });
     }
 
+    /**
+     * configure the options
+     * @param OptionsResolver $resolver
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(

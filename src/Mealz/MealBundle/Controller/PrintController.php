@@ -41,7 +41,7 @@ class PrintController extends BaseController
         foreach ($users as $username => &$user) {
             $userCosts = array_fill_keys(array_keys($columnNames), '0');
             foreach ($user['costs'] as $cost) {
-                $monthCosts = $this->getRemainingCosts($cost['costs'], $transactionsPerUser[$username]['amount']);
+                $monthCosts = $this->getRemainingCosts($cost['costs'], $transactionsPerUser[$username]);
                 if ($cost['timestamp'] < $earlierTimestamp) {
                     $userCosts['earlier'] = bcadd($userCosts['earlier'], $monthCosts, 4);
                 } else {
@@ -49,8 +49,8 @@ class PrintController extends BaseController
                 }
                 $userCosts['total'] = bcadd($userCosts['total'], $monthCosts, 4);
             }
-            if ($transactionsPerUser[$username]['amount'] > 0) {
-                $userCosts['total'] = '+'.$transactionsPerUser[$username]['amount'];
+            if ($transactionsPerUser[$username] > 0) {
+                $userCosts['total'] = '+'.$transactionsPerUser[$username];
             }
             $user['costs'] = $userCosts;
         }

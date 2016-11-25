@@ -5,6 +5,7 @@ namespace Mealz\AccountingBundle\Controller\Payment;
 use Doctrine\ORM\EntityManager;
 use Mealz\MealBundle\Controller\BaseController;
 use Mealz\AccountingBundle\Entity\Transaction;
+use Mealz\MealBundle\Entity\Participant;
 use Mealz\UserBundle\Entity\Profile;
 use Symfony\Component\HttpFoundation\Request;
 use Mealz\AccountingBundle\Form\CashPaymentAdminForm;
@@ -92,5 +93,88 @@ class CashController extends BaseController
         return $this->redirectToRoute('MealzMealBundle_Print_costSheet', array(
             'week' => $week->getId()
         ));
+    }
+
+    /**
+     * Show transactions for logged in user
+     *
+     * @param Request $request request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function showTransactionHistoryAction(Request $request)
+    {
+        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
+            throw new AccessDeniedException();
+        }
+
+        $profile = $this->getUser()->getProfile();
+
+        $dateFrom = new \DateTime();
+        $dateFrom->modify('-3 days');
+        $dateTo = new \DateTime();
+
+        $participantRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Participant');
+        $participations = $participantRepository->getParticipantsOnDays($dateFrom, $dateTo, $profile);
+
+        $transactionRepository = $this->getDoctrine()->getRepository('MealzAccountingBundle:Transaction');
+        $transactions = $transactionRepository->getSuccessfulTransactionsOnDays($dateFrom, $dateTo, $profile);
+
+        $transactionsTotal = 0;
+        foreach ($transactions as $transaction) {
+            $transactionsTotal += $transaction->getAmount();
+        }
+        $participationsTotal = 0;
+        /** @var $participation Participant */
+        foreach ($participations as $participation) {
+            $participationsTotal += $participation->getMeal()->getPrice();
+        }
+
+        return $this->render(
+            'MealzAccountingBundle:Accounting\\User:transaction_history.html.twig',
+            array(
+                'participations' => $participations,
+                'transactions' => $transactions,
+                'transactions_total' => $transactionsTotal,
+                'participations_total' => $participationsTotal
+            )
+        );
+    }
+
+    /**
+     * Sorting array by some key
+     *
+     * @param array  $array  array to sort
+     * @param string $key    sorting by key
+     * @param bool   $string sorting by string?
+     * @param bool   $asc    ascending?
+     *
+     * @return void
+     */
+    protected function sortArrayByKey(&$array, $key, $string = false, $asc = true)
+    {
+        if ($string) {
+            /**
+             * Sorting array by key
+             */
+            usort($array, function ($a, $b) use (&$key, &$asc) {
+                if ($asc) {
+                    return strcmp(strtolower($a[$key]), strtolower($b[$key]));
+                } else {
+                    return strcmp(strtolower($b[$key]), strtolower($a[$key]));
+                }
+            }
+            );
+        } else {
+            usort($array, function ($a, $b) use (&$key, &$asc)
+            {
+                if ($a[$key] == $b[$key]) {
+                    return 0;
+                }
+                if($asc) return ($a[$key] < $b[$key]) ? -1 : 1;
+                else     return ($a[$key] > $b[$key]) ? -1 : 1;
+            }
+            );
+        }
     }
 }

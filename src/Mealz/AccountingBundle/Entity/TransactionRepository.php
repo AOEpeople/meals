@@ -70,8 +70,8 @@ class TransactionRepository extends \Doctrine\ORM\EntityRepository
         $qb->setParameter('minDate', $minDate);
         $qb->setParameter('maxDate', $maxDate);
 
-        $qb->andWhere('t.user = :user');
-        $qb->setParameter('user', $profile);
+        $qb->andWhere('t.profile = :profile');
+        $qb->setParameter('profile', $profile);
 
         $qb->orderBy('t.date', 'DESC');
 

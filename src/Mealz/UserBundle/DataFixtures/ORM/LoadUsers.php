@@ -84,7 +84,10 @@ class LoadUsers extends AbstractFixture implements OrderedFixtureInterface, Cont
      */
     public function getOrder()
     {
-        return OrderedFixtureInterface::FIXURES_LOADORDER_FIRST;
+        /**
+         * load as first
+         */
+        return 1;
     }
 
     /**

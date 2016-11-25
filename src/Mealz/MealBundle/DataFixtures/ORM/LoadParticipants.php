@@ -64,7 +64,10 @@ class LoadParticipants extends AbstractFixture implements OrderedFixtureInterfac
      */
     public function getOrder()
     {
-        return OrderedFixtureInterface::FIXURES_LOADORDER_EIGHTH;
+        /**
+         * load as eigth
+         */
+        return 8;
     }
 
     /**

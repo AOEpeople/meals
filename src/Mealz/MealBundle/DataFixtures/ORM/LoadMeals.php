@@ -95,7 +95,10 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface
      */
     public function getOrder()
     {
-        return OrderedFixtureInterface::FIXURES_LOADORDER_SEVENTH;
+        /**
+         * load as seventh
+         */
+        return 7;
     }
 
     /**

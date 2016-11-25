@@ -75,7 +75,7 @@
     <exec executable="${workspace}/bin/phpmd">
       <arg path="${basedir}/src" />
       <arg value="text" />
-      <arg value="${workspace}/app/phpmd.xml" />
+      <arg value="${workspace}/app/config/commons/development/phpmd.xml" />
     </exec>
   </target>
 
@@ -83,7 +83,7 @@
     <exec executable="${workspace}/bin/phpmd">
       <arg path="${sourcedir}" />
       <arg value="xml" />
-      <arg value="${workspace}/app/phpmd.xml" />
+      <arg value="${workspace}/app/config/commons/development/phpmd.xml" />
       <arg value="--reportfile" />
       <arg value="${builddir}/logs/pmd.xml" />
     </exec>
@@ -122,7 +122,7 @@
   <target name="phpunit" description="Run unit tests with PHPUnit">
     <exec executable="${workspace}/bin/phpunit" failonerror="true">
       <arg value="-c" />
-      <arg path="${basedir}/app/phpunit.xml" />
+      <arg path="${basedir}/app/config/commons/development/phpunit.xml" />
     </exec>
   </target>
 
@@ -142,4 +142,5 @@
         <arg value="update" />
     </exec>
   </target>
+    
 </project>

@@ -10,7 +10,7 @@ service apache2 restart
 echo -n "done"
 
 echo "Executing database migrations ... "
-source ${FINAL_RELEASEFOLDER}/app/console doctrine:migrations:migrate
+php ${FINAL_RELEASEFOLDER}/app/console doctrine:migrations:migrate -n
 echo -n "done"
 
 echo "All post install operations executed successfully!"

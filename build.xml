@@ -55,7 +55,7 @@
   </target>
 
   <target name="phploc" description="Measure project size using PHPLOC">
-    <exec executable="phploc">
+    <exec executable="${workspace}/bin/phploc">
     <arg value="--log-csv" />
     <arg value="${builddir}/logs/phploc.csv" />
     <arg path="${sourcedir}" />
@@ -63,7 +63,7 @@
   </target>
 
   <target name="pdepend" description="Calculate software metrics using PHP_Depend">
-    <exec executable="pdepend">
+    <exec executable="${workspace}/bin/pdepend">
       <arg value="--jdepend-xml=${builddir}/logs/jdepend.xml" />
       <arg value="--jdepend-chart=${builddir}/pdepend/dependencies.svg" />
       <arg value="--overview-pyramid=${builddir}/pdepend/overview-pyramid.svg" />
@@ -72,7 +72,7 @@
   </target>
 
   <target name="phpmd" description="Perform project mess detection using PHPMD and print human readable output. Intended for usage on the command line before committing.">
-    <exec executable="phpmd">
+    <exec executable="${workspace}/bin/phpmd">
       <arg path="${basedir}/src" />
       <arg value="text" />
       <arg value="${workspace}/app/phpmd.xml" />
@@ -80,7 +80,7 @@
   </target>
 
   <target name="phpmd-ci" description="Perform project mess detection using PHPMD creating a log file for the continuous integration server">
-    <exec executable="phpmd">
+    <exec executable="${workspace}/bin/phpmd">
       <arg path="${sourcedir}" />
       <arg value="xml" />
       <arg value="${workspace}/app/phpmd.xml" />
@@ -90,14 +90,14 @@
   </target>
 
   <target name="phpcs" description="Find coding standard violations using PHP_CodeSniffer and print human readable output. Intended for usage on the command line before committing.">
-    <exec executable="phpcs">
+    <exec executable="${workspace}/bin/phpcs">
       <arg value="--standard=Symfony2" />
       <arg path="${sourcedir}" />
     </exec>
   </target>
 
   <target name="phpcs-ci" description="Find coding standard violations using PHP_CodeSniffer creating a log file for the continuous integration server">
-    <exec executable="phpcs" output="/dev/null">
+    <exec executable="${workspace}/bin/phpcs" output="/dev/null">
       <arg value="--report=checkstyle" />
       <arg value="--report-file=${builddir}/logs/checkstyle.xml" />
       <arg value="--standard=Symfony2" />
@@ -106,7 +106,7 @@
   </target>
 
   <target name="phpcpd" description="Find duplicate code using PHPCPD">
-    <exec executable="phpcpd">
+    <exec executable="${workspace}/bin/phpcpd">
       <arg value="--log-pmd" />
       <arg value="${builddir}/logs/pmd-cpd.xml" />
       <arg path="${sourcedir}" />
@@ -114,20 +114,20 @@
   </target>
 
   <target name="phpdoc" description="Generate API documentation using phpDox">
-    <exec executable="phpdoc">
+    <exec executable="${workspace}/bin/phpdoc">
       <arg line="-d '${sourcedir}' -t '${builddir}/docs' --title='Tempo' " />
     </exec>
   </target>
 
   <target name="phpunit" description="Run unit tests with PHPUnit">
-    <exec executable="phpunit" failonerror="true">
+    <exec executable="${workspace}/bin/phpunit" failonerror="true">
       <arg value="-c" />
       <arg path="${basedir}/app/phpunit.xml" />
     </exec>
   </target>
 
   <target name="phpcb" description="Aggregate tool output with PHP_CodeBrowser">
-    <exec executable="phpcb">
+    <exec executable="${workspace}/bin/phpcb">
       <arg value="--log" />
       <arg path="${builddir}/logs" />
       <arg value="--source" />
@@ -138,8 +138,7 @@
   </target>
 
   <target name="vendors" description="Update vendors">
-    <exec executable="php" failonerror="true">
-        <arg value="composer.phar" />
+    <exec executable="composer" failonerror="true">
         <arg value="update" />
     </exec>
   </target>

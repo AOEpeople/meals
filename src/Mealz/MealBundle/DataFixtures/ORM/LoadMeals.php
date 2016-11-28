@@ -2,6 +2,8 @@
 
 namespace Mealz\MealBundle\DataFixtures\ORM;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -15,32 +17,14 @@ use Mealz\MealBundle\Entity\Meal;
  * Class LoadMeals
  * @package Mealz\MealBundle\DataFixtures\ORM
  */
-class LoadMeals extends AbstractFixture implements OrderedFixtureInterface {
+{
 
-	/**
-	 * @var ObjectManager
-	 */
-	protected $objectManager;
+    protected $objectManager;
 
-	/**
-	 * @var array
-	 */
-	protected $dishes = array();
 
-	/**
-	 * @var Day[]
-	 */
-	protected $days = array();
 
-	/**
-	 * @var int
-	 */
-	protected $counter = 0;
 
-	function load(ObjectManager $manager) {
-		$this->objectManager = $manager;
-		$this->loadDishes();
-		$this->loadDays();
+
         foreach ($this->days as $key => $day) {
             $dish = null;
             // that should be next week Wednesday which should be available for selection
@@ -126,16 +110,27 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface {
 
     /**
      * get random Dishes with Variations
-     * @return DishVariation[]
+     * @return Collection
      */
     protected function getRandomDishWithVariations()
     {
-        do {
-            $key = array_rand($this->dishes);
-            $dish = $this->dishes[$key];
-        } while (count($dish->getVariations()) == 0);
+        $dishVariations = new ArrayCollection();
+        $dishesWithVariations = [];
 
-        return $dish->getVariations();
+        /** @var Dish $dish */
+        foreach ($this->dishes as $dish) {
+            if ($dish->hasVariations()) {
+                $dishesWithVariations[] = $dish;
+            }
+        }
+
+        if (count($dishesWithVariations)) {
+            /** @var Dish $randomDishWithVariation */
+            $randomDishKey = array_rand($dishesWithVariations);
+            $dishVariations = $dishesWithVariations[$randomDishKey]->getVariations();
+        }
+
+        return $dishVariations;
     }
 
     /**
@@ -151,5 +146,4 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface {
         } while ($dish === $previousDish);
 
         return $dish;
-    }
-}
+    }}

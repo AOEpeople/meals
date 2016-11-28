@@ -51,6 +51,23 @@ services:
     calls:
       - [setDayBlacklist, [['01-01', '05-01', '10-31', '12-24', '12-25', '12-26', '12-27', '12-28', '12-29', '12-30', '12-31']]]
 
+  mealz_meal.dish:
+    class: Mealz\MealBundle\Entity\Dish
+
+  mealz_meal.dish_variation:
+    class: Mealz\MealBundle\Entity\DishVariation
+    arguments: ['@mealz_meal.dish']
+
+  mealz_meal.day:
+    class: Mealz\MealBundle\Entity\Day
+
+  mealz_user.profile:
+    class: Mealz\UserBundle\Entity\Profile
+
+  mealz_meal.guest_invitation:
+    class: Mealz\MealBundle\Entity\GuestInvitation
+    arguments: ['@mealz_user.profile', '@mealz_meal.day']
+
   mealz_meal.event_listener.participant_persistence:
     class: %mealz_meal.event_listener.participant_persistence.class%
     tags:

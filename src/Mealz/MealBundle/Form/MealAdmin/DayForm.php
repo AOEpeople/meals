@@ -61,50 +61,44 @@ class DayForm extends AbstractType
                 )
             );
 
-        $builder->addEventListener(
-            FormEvents::SUBMIT,
-            function (FormEvent $event) use ($builder) {
-                /** @var Day $day */
-                $day = $event->getData();
+        $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) use ($builder) {
+            /** @var Day $day */
+            $day = $event->getData();
 
-                $meals = $day->getMeals();
+            $meals = $day->getMeals();
 
-                foreach ($meals as $meal) {
-                    /** @var Meal $meal */
-                    if (null === $meal->getDish() &&
-                        $this->em->getUnitOfWork()->getEntityState($meal) === UnitOfWork::STATE_NEW
-                    ) {
-                        $meals->removeElement($meal);
-                    }
-                }
-
-                $event->setData($day);
-            }
-        );
-
-        $builder->addEventListener(
-            FormEvents::PRE_SET_DATA,
-            function (FormEvent $event) use ($builder) {
-                $day = $event->getData();
-
-                if (false === $day->getWeek()->isEnabled()) {
-                    $form = $event->getForm();
-                    $config = $form->get('enabled')->getConfig();
-                    $options = $config->getOptions();
-
-                    $form->add(
-                        'enabled',
-                        $config->getType()->getName(),
-                        array_replace(
-                            $options,
-                            [
-                                'disabled' => true,
-                            ]
-                        )
-                    );
+            foreach ($meals as $meal) {
+                /** @var Meal $meal */
+                if (null === $meal->getDish() &&
+                    $this->em->getUnitOfWork()->getEntityState($meal) == UnitOfWork::STATE_NEW
+                ) {
+                    $meals->removeElement($meal);
                 }
             }
-        );
+
+            $event->setData($day);
+        });
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($builder) {
+            $day = $event->getData();
+
+            if (false === $day->getWeek()->isEnabled()) {
+                $form = $event->getForm();
+                $config = $form->get('enabled')->getConfig();
+                $options = $config->getOptions();
+
+                $form->add(
+                    'enabled',
+                    $config->getType()->getName(),
+                    array_replace(
+                        $options,
+                        [
+                            'disabled' => true
+                        ]
+                    )
+                );
+            }
+        });
     }
 
     /**
@@ -113,10 +107,8 @@ class DayForm extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(
-            array(
-                'data_class' => 'Mealz\MealBundle\Entity\Day',
-            )
-        );
+        $resolver->setDefaults(array(
+            'data_class' => 'Mealz\MealBundle\Entity\Day',
+        ));
     }
 }

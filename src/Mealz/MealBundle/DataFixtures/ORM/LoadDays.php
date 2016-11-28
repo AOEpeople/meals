@@ -69,7 +69,10 @@ class LoadDays extends AbstractFixture implements OrderedFixtureInterface
      */
     public function getOrder()
     {
-        return OrderedFixtureInterface::FIXURES_LOADORDER_THIRD;
+        /**
+         * load as third
+         */
+        return 3;
     }
 
     /**

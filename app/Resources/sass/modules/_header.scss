@@ -93,9 +93,10 @@ header {
 
   .header-content {
     float: left;
+    // scss-lint:disable all
     width: 70%;
     // scss-lint:disable all
-      width: calc(100% - #{$logo-width});
+    width: calc(100% - #{$logo-width});
     // scss-lint:enable all
     transition: all .3s ease;
 

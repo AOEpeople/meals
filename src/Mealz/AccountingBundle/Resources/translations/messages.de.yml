@@ -1,6 +1,7 @@
 payment:
   cash:
     success: Einzahlung für %name% in Höhe von %amount%€ wurde verbucht.
+    failure: Einzahlung wurde nicht verbucht. Bitte nur Positive Werte eintragen.
   acknowledge_debts:
     text: Ich weiß, dass ich einen Kontostand von %amount%€ habe und werde meine Schulden umgehend begleichen.
     button: OK, kapiert!

@@ -1,5 +1,79 @@
 # Mealz for Zombies
 
+<<<<<<< HEAD
+## Features (User)
+
+### Meal enrollment
+Sign in with LDAP credentials and select your preferred meals on landing page.
+
+### Invite guest for a meal
+You need to be signed in with LDAP credentials and you will see small share icon on each day in a week.
+You can send your guest the link and he will be able to enroll for particular day giving his First/Last name and Company information.
+
+## Features (Admin)
+
+### General
+Admin has access to all user features as well.
+
+### Menu (List of weeks)
+**Route:** /menu  
+**Available at:** Choose "Menu" in admin navigation bar.  
+**Actions:** Create new week and edit existing ones.
+
+**Description:**  
+List of current and upcoming weeks. Already created / edited weeks are green.
+Weeks which haven't been created yet, are displayed with a grey background color.
+
+### Menu (Week detail view)
+**Route:** /menu/{YYYY}W{KW}/new oder /menu/{week-id}/edit  
+**Available at:** Choose "Menu" in admin navigation bar and click on one of the listed weeks.  
+**Actions:** Disable whole week or some days.
+
+**Description:**  
+Here you can select the desired dishes for the selected week.
+Additionally you can disable some days or the whole week in case of (public) holiday.
+
+### Dishes
+**Route:** /dish  
+**Available at:** Choose "Dishes" in admin navigation bar.  
+**Actions** Add variation, Create, edit and delete dishes
+
+### Dish variations
+**Route:** /dish  
+**Available at:** Choose "Dishes" in admin navigation bar.  
+**Actions** Add variation, edit and delete dishes
+
+**Description:**  
+Lists all existing variations for particular dishes. You can edit and delete them.
+If you click on "ADD VARIATION" you can add new variation to some Dish.
+
+### (Dish) Categories
+**Route:** /category   
+**Available at:** Choose "Categories" in admin navigation bar.  
+**Actions:** Create, edit and delete categories
+
+**Description:**  
+Lists all existing (dish) categories. You can edit and delete them.
+If you click on "CREATE CATEGORY" you can create a new one.
+
+### Costs
+**Route:** /print/costsheet  
+**Available at:** Choose "Costs" in admin navigation bar.  
+**Actions:** Book transaction for user, "CASH REGISTER" (Accounting book)
+
+**Description:**  
+Lists all users and their outstanding debts. Debts are structured in 6 different columns:
+Total, current month (all debts in this month till current day), one column for each of the last three month,
+all debts before the last three month summed up in one column.
+Additionally you can add a transaction (positive or negative) to a users profile, by clicking on the plus sign. 
+
+### Accounting book
+**Route:** /accounting/book  
+**Available at:** Choose "Costs" in admin navigation bar. Click on button "CASH REGISTER".
+
+**Description:**  
+Lists all transactions booked for users in the last month.
+
 ## Installation
 
     composer install
@@ -66,7 +140,9 @@ The following roles are in use:
 
   * ROLE_USER: basically everyone who is allowed to join the meals
   * ROLE_KITCHEN_STAFF: allowed to create and edit dishes and meals
-  * ROLE_LOGIN_LDAP: for users who are authenticated via LDAP
+  * ROLE_GUEST: for users who is invited for a meal, customers etc.
+  * ROLE_ADMIN: for users who is admin
+  
 
 ### Test data
 

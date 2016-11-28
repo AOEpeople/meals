@@ -10,7 +10,9 @@ use Mealz\MealBundle\Entity\WeekRepository;
 class PrintController extends BaseController
 {
     /**
+     * the cost sheet Action
      * @TODO: use own data model for user costs
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function costSheetAction()
     {
@@ -53,12 +55,20 @@ class PrintController extends BaseController
             $user['costs'] = $userCosts;
         }
 
-        return $this->render('MealzMealBundle:Print:costSheet.html.twig', array(
-            'columnNames' => $columnNames,
-            'users' => $users
-        ));
+        return $this->render(
+            'MealzMealBundle:Print:costSheet.html.twig',
+            array(
+                'columnNames' => $columnNames,
+                'users' => $users,
+            )
+        );
     }
 
+    /**
+     * participate Actions
+     * @param Week $week
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function participationsAction(Week $week)
     {
         if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
@@ -67,7 +77,7 @@ class PrintController extends BaseController
 
         /** @var WeekRepository $weekRepository */
         $weekRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Week');
-        $week = $weekRepository->findWeekByDate($week->getStartTime(), TRUE);
+        $week = $weekRepository->findWeekByDate($week->getStartTime(), true);
 
         $participantRepository = $this->getParticipantRepository();
         $participations = $participantRepository->getParticipantsOnDays(
@@ -80,12 +90,21 @@ class PrintController extends BaseController
          */
         $groupedParticipations = $participantRepository->groupParticipantsByName($participations);
 
-        return $this->render('MealzMealBundle:Print:participations.html.twig', array(
-            'week' => $week,
-            'users' => $groupedParticipations
-        ));
+        return $this->render(
+            'MealzMealBundle:Print:participations.html.twig',
+            array(
+                'week' => $week,
+                'users' => $groupedParticipations,
+            )
+        );
     }
 
+    /**
+     * get the remaining Costs
+     * @param $costs
+     * @param $transactions
+     * @return int|string
+     */
     private function getRemainingCosts($costs, &$transactions)
     {
         $result = bcsub($costs, $transactions, 4);

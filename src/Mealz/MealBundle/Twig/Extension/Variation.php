@@ -38,7 +38,7 @@ class Variation extends \Twig_Extension
         foreach ($meals as $meal) {
             /** @var Meal $meal */
             $dish = $meal->getDish();
-            if ($dish->getParent().is_object() && $dish->getParent()) {
+            if ($dish->getParent()) {
                 $parentId = $dish->getParent()->getId();
                 $mealsVariations[$parentId][] = $meal;
                 $mealsVariationsCount[$parentId] = count($mealsVariations[$parentId]);

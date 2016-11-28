@@ -34,7 +34,10 @@ class LoadTransactions extends AbstractFixture implements OrderedFixtureInterfac
      */
     public function getOrder()
     {
-        return OrderedFixtureInterface::FIXURES_LOADORDER_NINTH;
+        /**
+         * load as ninth
+         */
+        return 9;
     }
 
     /**

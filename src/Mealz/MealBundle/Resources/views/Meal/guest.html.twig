@@ -1,0 +1,65 @@
+{% extends '::base.html.twig' %}
+
+{% set available = false %}
+
+{% set wrapperClass = 'meal-guests' %}
+
+{% if form.vars.value.day.enabled %}
+    {% for meal in form.vars.value.day.meals %}
+        {% if meal.dateTime | date_modify(lock_toggle_participation_at) | date('U') > 'now' | date('U') %}
+            {% set available = true %}
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+{% block body %}
+    <div class="headline-container">
+        <h1 class="headline">{{ 'headings.guest_enrollment' | trans({}, 'general') }}</h1>
+    </div>
+    <p class="text-block">{{ 'content.guest_enrollment.message_body' | trans({}, 'general') }}</p>
+    <p class="text-block">
+        {{ 'content.guest_enrollment.message_ending' | trans({}, 'general') }}<br>
+        {{ 'content.guest_enrollment.message_signature' | trans({}, 'general') }}
+    </p>
+    {{ form_start(form) }}
+
+    <div class="meal-guest {{ available ? 'is-available' : '' }}">
+		<div class="header">{{ form.vars.value.day.datetime | date('D') | trans({}, 'date') }}{{ form.vars.value.day.datetime | date(' d.m.Y') }}</div>
+
+        {% for meal in form.day.meals %}
+            <div class="meal-row">
+                {% spaceless %}
+                    <div class="text">
+                        <div class="title">
+                            {{ form.children.day.children.meals.vars.choices[meal.vars.value].data.dish.title }}
+                        </div>
+                        <div class="description">
+                            {% if form.children.day.children.meals.vars.choices[meal.vars.value].data.dish.description %}
+                                {{ form.children.day.children.meals.vars.choices[meal.vars.value].data.dish.description }}
+                            {% else %}
+                                {{ 'content.participation.dish.no_description'|trans({},'general') }}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="wrapper-vertical-center">
+                        <div class="participants">
+                            <span>
+                                <span class="participants-count">
+                                    {{ form.children.day.children.meals.vars.choices[meal.vars.value].data.participants | length }}
+                                </span>
+                            </span>
+                        </div>
+                        <div class="action">
+                            <div class="checkbox-wrapper">
+                                {{ form_row(meal) }}
+                            </div>
+                        </div>
+                    </div>
+                {% endspaceless %}
+            </div>
+        {% endfor %}
+    </div>
+    {{ form_widget(form.profile) }}
+    {{ form_row(form.save) }}
+    {#{{ form_end(form) }}#}
+{% endblock %}

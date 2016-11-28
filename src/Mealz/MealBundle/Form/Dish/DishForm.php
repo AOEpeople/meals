@@ -89,10 +89,9 @@ class DishForm extends AbstractType
                 EntityType::class,
                 array(
                     'class' => 'MealzMealBundle:Category',
-                    'required' => true,
+                    'required' => false,
                     'choice_label' => function ($category) {
                         /** @var Category $category */
-
                         return $category->getTitle();
                     },
                     'placeholder' => 'form.placeholder.category',

@@ -34,11 +34,6 @@ class DishVariationForm extends AbstractType
         $this->price = $price;
     }
 
-    /**
-     * buid the Form
-     * @param FormBuilderInterface $builder
-     * @param array $options
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -81,10 +76,6 @@ class DishVariationForm extends AbstractType
         );
     }
 
-    /**
-     * configure the Options
-     * @param OptionsResolver $resolver
-     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(

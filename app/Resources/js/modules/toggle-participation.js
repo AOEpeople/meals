@@ -41,3 +41,15 @@ Mealz.prototype.toggleParticipationAdmin = function ($element) {
         }
     });
 };
+
+
+Mealz.prototype.toggleGuestParticipation = function ($checkbox) {
+    var that = this;
+    var $participantsCount = $checkbox.closest('.meal-row').find('.participants-count');
+    var actualCount = parseInt($participantsCount.html());
+    $participantsCount.fadeOut('fast', function () {
+        that.applyCheckboxClasses($checkbox);
+        $participantsCount.text($checkbox.is(':checked') ? actualCount + 1 : actualCount - 1);
+        $participantsCount.fadeIn('fast');
+    });
+};

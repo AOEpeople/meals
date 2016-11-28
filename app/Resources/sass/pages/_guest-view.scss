@@ -1,0 +1,73 @@
+.meal .week-day {
+  .guest-menu {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    padding: 0;
+    border: none;
+    background: none;
+    font-size: 14px;
+    outline: none;
+    cursor: pointer;
+
+    span {
+      color: $color-white;
+      transform: none;
+    }
+
+  }
+
+  .guest-menu-link {
+    position: absolute;
+    bottom: -86px;
+    left: -18px;
+    z-index: 1;
+    display: none;
+    width: 300px;
+    padding: 10px 15px;
+    color: $color-base;
+    background-color: $color-white;
+    box-shadow: 0 2px 5px 0 $box-shadow;
+
+    &::after {
+      position: absolute;
+      bottom: 100%;
+      left: 20px;
+      width: 0;
+      height: 0;
+      border: solid transparent;
+      border-width: 10px;
+      border-bottom-color: $color-white;
+      content: ' ';
+      pointer-events: none;
+    }
+
+    &.open {
+      display: block;
+    }
+
+    span {
+      transform: none;
+    }
+  }
+
+  .message {
+    color: $color-green;
+
+    .glyphicon {
+      float: left;
+      margin: 4px 8px 0 0;
+    }
+  }
+}
+
+.guest-wrapper .language-switch {
+  float: right;
+}
+
+// scss-lint:disable all
+#invitation_form_profile input[type="text"] {
+  border: 2px solid $color-gray-light;
+}
+// scss-lint:disable all
+

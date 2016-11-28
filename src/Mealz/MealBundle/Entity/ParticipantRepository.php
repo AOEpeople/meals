@@ -5,6 +5,7 @@ namespace Mealz\MealBundle\Entity;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Mealz\UserBundle\Entity\Profile;
+use Mealz\UserBundle\Entity\Role;
 
 /**
  * the Participant Repository
@@ -49,14 +50,6 @@ class ParticipantRepository extends EntityRepository
         return $qb;
     }
 
-    /**
-     * get the Participants per Day
-     * @param \DateTime $minDate
-     * @param \DateTime $maxDate
-     * @param Profile|null $profile
-     * @param array $options
-     * @return mixed
-     */
     public function getParticipantsOnDays(
         \DateTime $minDate,
         \DateTime $maxDate,
@@ -109,9 +102,7 @@ class ParticipantRepository extends EntityRepository
 
     protected function compareNameOfParticipants(Participant $participant1, Participant $participant2)
     {
-        $name1 = $participant1->isGuest() ? $participant1->getGuestName() : $participant1->getProfile()->getName();
-        $name2 = $participant2->isGuest() ? $participant2->getGuestName() : $participant2->getProfile()->getName();
-        $result = strcasecmp($name1, $name2);
+        $result = strcasecmp($participant1->getProfile()->getName(), $participant2->getProfile()->getName());
 
         if ($result !== 0) {
             return $result;
@@ -208,10 +199,14 @@ class ParticipantRepository extends EntityRepository
         }
 
         return $result;
+
     }
 
     /**
-     * find the Costs per Month per User
+     * Gets the aggregated monthly cost of all the participants.
+     *
+     * Guests are currently excluded from the result.
+     *
      * @return array
      */
     private function findCostsPerMonthPerUser()
@@ -220,27 +215,31 @@ class ParticipantRepository extends EntityRepository
         $qb->select('u.username, u.name, u.firstName, SUBSTRING(m.dateTime, 1, 7) AS yearMonth, SUM(m.price) AS costs');
         $qb->leftJoin('p.meal', 'm');
         $qb->leftJoin('p.profile', 'u');
+        $qb->leftJoin('u.roles', 'r');
         $qb->leftJoin('m.day', 'd');
         $qb->leftJoin('d.week', 'w');
         /**
          * @TODO: optimize query. where clause costs a lot of time.
          */
-        $qb->where('m.dateTime < :now');
+        $qb->where('p.costAbsorbed = 0');
+        $qb->andWhere(
+            $qb->expr()->orX(
+                $qb->expr()->isNull('r.sid'),
+                $qb->expr()->neq('r.sid', ':role_sid')
+            )
+        );
+        $qb->andWhere('m.dateTime < :now');
         $qb->andWhere('d.enabled = 1');
         $qb->andWhere('w.enabled = 1');
-        $qb->setParameter('now', date('Y-m-d H:i:s'));
         $qb->groupBy('u.username');
         $qb->addGroupBy('yearMonth');
         $qb->addOrderBy('u.name');
 
+        $qb->setParameters(['now' => date('Y-m-d H:i:s'), 'role_sid' => Role::ROLE_GUEST]);
+
         return $qb->getQuery()->getArrayResult();
     }
 
-    /**
-     * Group the Participants by name
-     * @param array $participations
-     * @return array
-     */
     public function groupParticipantsByName($participations)
     {
         $result = array();
@@ -256,32 +255,5 @@ class ParticipantRepository extends EntityRepository
         }
 
         return $result;
-    }
-
-    /**
-     * Get current participation for some user on particular day
-     *
-     * @param Profile $profile
-     * @param string $date "YYYY-MM-DD"
-     * @return array
-     */
-    public function getParticipationForProfile($profile, $date)
-    {
-        $options = array(
-            'load_meal' => true,
-            'load_profile' => true,
-        );
-        if (isset($profile)) {
-            $options['load_profile'] = true;
-        }
-        $qb = $this->getQueryBuilderWithOptions($options);
-        $qb->where('u.username = :profile');
-        $qb->setParameter('profile', $profile->getUsername());
-        $qb->andWhere('m.dateTime >= :min_date');
-        $qb->andWhere('m.dateTime <= :max_date');
-        $qb->setParameter('min_date', $date.' 00:00:00');
-        $qb->setParameter('max_date', $date.' 23:59:29');
-
-        return $qb->getQuery()->getArrayResult();
     }
 }

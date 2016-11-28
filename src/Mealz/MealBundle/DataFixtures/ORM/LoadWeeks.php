@@ -45,7 +45,10 @@ class LoadWeeks extends AbstractFixture implements OrderedFixtureInterface
      */
     public function getOrder()
     {
-        return OrderedFixtureInterface::FIXURES_LOADORDER_SECOND;
+        /**
+         * load as second
+         */
+        return 2;
     }
 
     /**

@@ -142,6 +142,7 @@ class MealControllerTest extends AbstractControllerTestCase
         $crawler = $this->client->request('GET', $guestEnrollmentUrl);
         $this->assertTrue($this->client->getResponse()->isSuccessful());
 
+
         $form = $crawler->filterXPath('//form[@name="invitation_form"]')->form(
             [
                 'invitation_form[profile][name]' => $lastName,

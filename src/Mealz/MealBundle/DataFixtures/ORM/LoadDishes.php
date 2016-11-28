@@ -70,7 +70,10 @@ class LoadDishes extends AbstractFixture implements OrderedFixtureInterface
      */
     public function getOrder()
     {
-        return OrderedFixtureInterface::FIXURES_LOADORDER_FIFTH;
+        /**
+         * load as fifth
+         */
+        return 5;
     }
 
     /**

@@ -1,0 +1,43 @@
+{% extends '::base_navigation.html.twig' %}
+
+{% set wrapperClass = 'accounting-book' %}
+
+{% block body %}
+
+    {# Set data for table content #}
+    {% set total = 0 %}
+    {% set tableContent = [] %}
+
+    {# For each user add: last name, first name | amount #}
+    {% for user in users %}
+        {# Calculate amount of all transactions and save it in variable total #}
+        {% set total = total + user.amount %}
+
+        {% set tableContent = tableContent | merge([{
+        'name': {
+        'content': user.name ~ ", " ~ user.firstName,
+        'class': 'name'
+        },
+        'amount': {
+        'content': MealzEuro.create(user.amount),
+        'class': 'amount'
+        },
+        }]) %}
+    {% endfor %}
+
+    {# Add last line to table: total | amount #}
+    {% set tableContent = tableContent | merge([{
+    'name': {
+    'content': 'Total',
+    'class': 'table-data-total'
+    },
+    'amount': {
+    'content': MealzEuro.create(total),
+    'class': ''
+    },
+    }]) %}
+
+    {# Start template #}
+    {{ MealzHeadline.create(1, heading, '', '', [], '') }}
+    {{ MealzTable.create('accounting-book-table', 'table-full-width', [], tableContent) }}
+{% endblock %}

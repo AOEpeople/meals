@@ -61,7 +61,10 @@ class LoadDishVariations extends AbstractFixture implements OrderedFixtureInterf
      */
     public function getOrder()
     {
-        return OrderedFixtureInterface::FIXURES_LOADORDER_SIXTH;
+        /**
+         * load as sixth
+         */
+        return 6;
     }
 
     

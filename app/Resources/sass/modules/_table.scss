@@ -24,9 +24,12 @@
   }
 
   .table-data {
-
     padding-top: 20px;
     padding-bottom: 10px;
+
+    &.table-data-total {
+      font-family: $font-bold;
+    }
 
     .button.button-table {
       padding: 0;

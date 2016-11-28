@@ -8,9 +8,8 @@ Mealz.prototype.applyCheckboxClasses = function ($checkbox) {
 Mealz.prototype.styleCheckboxes = function () {
     var that = this;
 
-    // @TODO: use separate function for Switchery checkboxes
     // Week detail view
-    if (this.weekCheckbox.length > 0 && this.$weekDayCheckboxes.length > 0) {
+    if (this.weekCheckbox && this.$weekDayCheckboxes) {
         // Enable switchery for week days
         this.weekDaySwitchery = [];
         this.$weekDayCheckboxes.each(function (idx, checkbox) {
@@ -23,10 +22,10 @@ Mealz.prototype.styleCheckboxes = function () {
         weekSwitchery.appendTo('.meal-form .headline-tool .switchery-placeholder');
 
         // Toggle day switcher and dropdown state on changed week state
-        this.weekCheckbox.on('change', function () {
+        this.weekCheckbox.onchange = function () {
             that.applySwitcheryStates();
             that.applyDropdownStatesByWeekState();
-        });
+        };
 
         // Toggle dropdown state on changed day state
         this.$weekDayCheckboxes.on('change', function () {
@@ -46,20 +45,26 @@ Mealz.prototype.styleCheckboxes = function () {
     }
 
     // Check checkbox states
-    this.$participationCheckboxes.each(function (unUsedId, checkbox) {
+    this.$participationCheckboxes.each(function(idx, checkbox) {
         var $checkbox = $(checkbox);
         that.applyCheckboxClasses($checkbox);
     });
 
     // Handle click event on checkbox representer
-    this.$body.on('click', '.' + this.checkboxWrapperClass, function () {
+    this.$body.on('click', '.' + this.checkboxWrapperClass, function() {
         var $checkbox = $(this).find('input');
         $checkbox.trigger('click');
     });
 
     // Handle change event on checkboxes
-    this.$participationCheckboxes.on('change', function () {
+    this.$participationCheckboxes.on('change', function() {
         that.toggleParticipation($(this));
+    });
+
+    // Handle change event on checkboxes
+    this.$guestParticipationCheckboxes.on('change', function() {
+        that.applyCheckboxClasses($(this));
+        that.toggleGuestParticipation($(this));
     });
 };
 
@@ -89,13 +94,16 @@ Mealz.prototype.applySwitcheryStates = function () {
 Mealz.prototype.applyDropdownStatesByWeekState = function () {
     var that = this;
 
-    $.each(this.$weekDayCheckboxes, function (nonUsedId, e) {
-        if ($(e).parent().parent().find('.week-day-action .js-switch').prop('checked') === true) {
+    if (this.weekCheckbox.checked) {
+        $.each(this.$weekDayCheckboxes, function (i, e) {
             that.applyDropdownStates(e);
-        }
-    });
+        });
+    } else {
+        $('select').prop('disabled', true);
+    }
 };
 
 Mealz.prototype.applyDropdownStates = function (e) {
-    $(e).parent().siblings(this.mealRowsWrapperClassSelector).toggleClass('disabled');
+    var selects = $(e).parent().siblings(this.mealRowsWrapperClassSelector).find('select');
+    selects.prop('disabled', !e.checked);
 };

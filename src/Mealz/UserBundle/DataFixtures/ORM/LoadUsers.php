@@ -9,10 +9,12 @@ use Mealz\UserBundle\Entity\Login;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Mealz\UserBundle\Entity\Profile;
+use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 
-
+/**
+ * Loads users.
+ */
 class LoadUsers extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
 
@@ -33,6 +35,7 @@ class LoadUsers extends AbstractFixture implements OrderedFixtureInterface, Cont
 
     /**
      * LoadUsers constructor.
+     *
      * @param ContainerInterface|null $container A ContainerInterface instance or null
      */
     public function __construct(ContainerInterface $container = null)
@@ -58,7 +61,7 @@ class LoadUsers extends AbstractFixture implements OrderedFixtureInterface, Cont
      * Load the Fixtures
      * @param ObjectManager $manager
      */
-    function load(ObjectManager $manager)
+    public function load(ObjectManager $manager)
     {
         $this->objectManager = $manager;
 
@@ -81,7 +84,10 @@ class LoadUsers extends AbstractFixture implements OrderedFixtureInterface, Cont
      */
     public function getOrder()
     {
-        return OrderedFixtureInterface::FIXURES_LOADORDER_FIRST;
+        /**
+         * load as first
+         */
+        return 1;
     }
 
     /**
@@ -93,12 +99,8 @@ class LoadUsers extends AbstractFixture implements OrderedFixtureInterface, Cont
         $login->setUsername($name);
         $login->setSalt(md5(uniqid(null, true)));
 
-        /** TODO: sercurity.encoder_factory will be deprecated since symfony v3.x
-        $encoder = $this->container->get('security.password_encoder');
-        $login->setPassword($encoder->encodePassword($login, $login->getSalt()));
-         *
-         */
-
+        /** TODO: sercurity.encoder_factory will be deprecated since symfony v3.x */
+        /** @var PasswordEncoderInterface $encoder */
         $encoder = $this->container->get('security.encoder_factory')->getEncoder($login);
         $login->setPassword($encoder->encodePassword($name, $login->getSalt()));
 
@@ -116,3 +118,4 @@ class LoadUsers extends AbstractFixture implements OrderedFixtureInterface, Cont
     }
 
 }
+

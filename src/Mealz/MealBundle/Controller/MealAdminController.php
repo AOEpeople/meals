@@ -10,6 +10,7 @@ use Mealz\MealBundle\Form\MealAdmin\WeekForm;
 use Mealz\MealBundle\Validator\Constraints\DishConstraint;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\VarDumper\VarDumper;
 
 class MealAdminController extends BaseController
 {
@@ -181,6 +182,7 @@ class MealAdminController extends BaseController
             );
         }
 
+        //VarDumper::dump($form->createView());die();
         return $this->render(
             'MealzMealBundle:MealAdmin:week.html.twig',
             array(

@@ -45,7 +45,10 @@ class LoadCategories extends AbstractFixture implements OrderedFixtureInterface
      */
     public function getOrder()
     {
-        return OrderedFixtureInterface::FIXURES_LOADORDER_FOURTH;
+        /**
+         * load as fourth
+         */
+        return 4;
     }
 
 

@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\Criteria;
 use Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
 use Mealz\MealBundle\DataFixtures\ORM\LoadDays;
 use Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
+use Mealz\MealBundle\DataFixtures\ORM\LoadDishVariations;
 use Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
 use Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
 use Mealz\MealBundle\Entity\Meal;
@@ -36,6 +37,7 @@ class PrintControllerTest extends AbstractControllerTestCase
             new LoadWeeks(),
             new LoadDays(),
             new LoadDishes(),
+            new LoadDishVariations(),
             new LoadMeals(),
             new LoadRoles(),
             new LoadUsers($this->client->getContainer()),

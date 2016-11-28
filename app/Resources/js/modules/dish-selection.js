@@ -183,7 +183,7 @@ Mealz.prototype.hideVariationSelectBox = function (e) {
     }
 
     // if the target of the click isn't the container nor a descendant of the container
-    if (!container.is(e.target) && container.has(e.target).length === 0 || $(e.currentTarget).hasClass('button') ||
+    if (!container.is(e.target) && container.has(e.target).length === 0 ||
         ($(e.currentTarget).attr('data-attribute-parent') != 'true' && $(e.currentTarget).is('[data-attribute-parent]'))) {
 
         container.hide('fast');
@@ -193,7 +193,11 @@ Mealz.prototype.hideVariationSelectBox = function (e) {
     if ($(e.target).hasClass('small') === true) {
         var thisMealSelectBox = $(e.target).closest('.meal-select-variations');
         if (thisMealSelectBox.find('.checked').length === 0) {
+            thisMealSelectBox.children('.error').show();
+        } else if(thisMealSelectBox.find('.checked').length > 0) {
+            thisMealSelectBox.children('.error').hide();
             thisMealSelectBox.hide();
+            container.hide('fast');
         }
     }
 };

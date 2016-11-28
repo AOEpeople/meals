@@ -35,6 +35,7 @@
                                         <label for="variation">{{ variation.title }}</label>
                                     </div>
                                 {% endfor %}
+                                <div class="error">{{ 'error.meal.variation_required'|trans({},'messages') }}</div>
                                 <a href="#" class="button small">save</a>
                             </div>
                         {% endif %}

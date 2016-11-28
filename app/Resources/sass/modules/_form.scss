@@ -85,6 +85,12 @@ fieldset {
   line-height: 20px;
 }
 
+.error {
+  display: none;
+  margin: 14px 0;
+  color: $color-red;
+}
+
 $fieldset-padding: 13px;
 
 .form-ajax {

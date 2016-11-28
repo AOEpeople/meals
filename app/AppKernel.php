@@ -51,7 +51,7 @@ class AppKernel extends Kernel
             new Mealz\TemplateBundle\MealzTemplateBundle(),
         );
 
-        if (in_array($this->getEnvironment(), array('devbox', 'deploy'))) {
+        if (in_array($this->getEnvironment(), array('devbox', 'deploy', 'test'))) {
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
             $bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();
             $bundles[] = new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle();

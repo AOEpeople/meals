@@ -9,6 +9,9 @@ Sign in with LDAP credentials and select your preferred meals on landing page.
 You need to be signed in with LDAP credentials and you will see small share icon on each day in a week.
 You can send your guest the link and he will be able to enroll for particular day giving his First/Last name and Company information.
 
+### Transaction history
+You need to be signed in with LDAP credentials and click on your balance. Now you get your Balance from the last day of the last month and a overview of all transaction in the current month.
+
 ## Features (Admin)
 
 ### General

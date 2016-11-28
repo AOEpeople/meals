@@ -43,7 +43,10 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface {
 				// 2 meals a day
 				$meal = new Meal();
 				$meal->setDay($day);
-				$meal->setDateTime($day->getDateTime());
+                // make transactions more realistic (random second,NO identical Date)
+				$date = clone $day->getDateTime();
+                $date->modify('+' . mt_rand(1, 1400) . ' second');
+				$meal->setDateTime($date);
 				$dish = $this->getRandomDish($dish);
 				$meal->setDish($dish);
 				$meal->setPrice($dish->getPrice());

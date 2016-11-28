@@ -127,7 +127,8 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface
     }
 
     /**
-     * get random Dishes with Variations
+     * Get random Dishes with Variations
+     *
      * @return Collection
      */
     protected function getRandomDishWithVariations()
@@ -152,8 +153,10 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface
     }
 
     /**
-     * get random Dishes without Variations
-     * @param Dish $previousDish
+     * Get random Dishes without Variations
+     *
+     * @param Dish $previousDish previous dish
+     *
      * @return Dish
      */
     protected function getRandomDish($previousDish)
@@ -164,4 +167,6 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface
         } while ($dish === $previousDish);
 
         return $dish;
-    }}
+
+    }
+}

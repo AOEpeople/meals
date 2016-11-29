@@ -19,7 +19,6 @@ headings:
     list: Liste der Kategorien
   costs:
     list: Liste der Kosten
-  guest_enrollment: Genießen Sie eine hausgemachte Mahlzeit bei AOE
 
 table:
   title: Titel
@@ -52,17 +51,9 @@ content:
   print:
     costs:
       no_data: Keine Kosten vorhanden.
-  guest_enrollment:
-    message_body: Herzlichen Glückwünsch! Gerne laden wir Sie zu einer Mahlzeit ein, die von unserem Chefkoch speziell für Sie zubereitet wird. Haben Sie Hunger? Dann melden Sie sich einfach mit unserer „Meals“ App an.
-    message_ending: Guten Appetit!
-    message_signature: AOE
 
 form:
   placeholder:
     title: Titel
     description: Beschreibung
-    category: Bitte wählen Sie ein Kategorie
-    name: Nachname
-    first_name: Vorname
-    company: Firma
-
+    category: Keine Kategorie

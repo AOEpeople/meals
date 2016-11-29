@@ -78,18 +78,47 @@ class TransactionRepository extends \Doctrine\ORM\EntityRepository
         return $qb->getQuery()->execute();
     }
 
-    public function findTotalAmountOfTransactionsPerUser()
+    /**
+     * Get first name, last name and amount of transactions in the given time per user.
+     *
+     * @param \DateTime $minDate
+     * @param \DateTime $maxDate
+     * @param Profile $profile
+     * @return array
+     */
+    public function findTotalAmountOfTransactionsPerUser(\DateTime $minDate = null, \DateTime $maxDate = null, $profile = NULL)
     {
         $qb = $this->createQueryBuilder('t');
-        $qb->select('p.username, SUM(t.amount) AS amount');
+        $qb->select('p.username, p.firstName, p.name, SUM(t.amount) AS amount');
         $qb->leftJoin('t.profile', 'p');
+
+        if ($minDate) {
+            $qb->andWhere('t.date >= :minDate');
+            $qb->setParameter('minDate', $minDate);
+        }
+
+        if ($maxDate) {
+            $qb->andWhere('t.date <= :maxDate');
+            $qb->setParameter('maxDate', $maxDate);
+        }
+
+        if ($profile instanceof Profile) {
+            $qb->andWhere('p.username = :username');
+            $qb->setParameter('username', $profile->getUsername());
+        }
+
         $qb->groupBy('p.username');
+        $qb->orderBy('p.name, p.firstName');
         $queryResult = $qb->getQuery()->getArrayResult();
 
         $result = array();
 
         foreach($queryResult as $item) {
-            $result[$item['username']] = $item['amount'];
+            $result[$item['username']] = array(
+                'firstName' => $item['firstName'],
+                'name' => $item['name'],
+                'amount' => $item['amount'],
+            );
         }
 
         return $result;

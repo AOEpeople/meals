@@ -166,7 +166,7 @@ Mealz.prototype.setDropdownLabelForSelectedVariations = function (mealRow, paren
 
         for (var i = 0; i < variations.length; i++) {
             variationsLabel += (i > 0) ? ', ' : '';
-            variationsLabel += $parentDish.find('.variation[data-attribute-id=' + variations[i] + '] label').html();
+            variationsLabel += $parentDish.find('.variation[data-attribute-id=' + variations[i] + '] span').html();
         }
         mealRowLabel.text(parentLabel + ' - ' + variationsLabel);
     } else {

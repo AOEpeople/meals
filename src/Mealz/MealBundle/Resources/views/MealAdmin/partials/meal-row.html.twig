@@ -31,8 +31,10 @@
                             <div class="meal-select-variations">
                                 {% for variation in variations %}
                                     <div class="variation" data-attribute-id="{{ variation.id }}">
-                                        <div class="variation-checkbox {% if selectedDish is defined and variation.id in selectedDish.ids %}checked{% endif %}"></div>
-                                        <label for="variation">{{ variation.title }}</label>
+                                        <label class="variation-checkbox" for="variation">
+                                            <div class="checkbox{% if selectedDish is defined and variation.id in selectedDish.ids %} checked"{% endif %}"></div>
+                                            <span>{{ variation.title }}</span>
+                                        </label>
                                     </div>
                                 {% endfor %}
                                 <div class="error">{{ 'error.meal.variation_required'|trans({},'messages') }}</div>

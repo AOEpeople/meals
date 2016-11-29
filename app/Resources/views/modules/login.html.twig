@@ -5,7 +5,7 @@
     </div>
     {{ MealzButton.link(path('MealzUserBundle_logout'), '', '', '', 'glyphicon-log-out') }}
 {% else %}
-    <form class="login-form" action="{{ path('MealzUserBundle_checkLogin') }}" method="post">
+    <form name="login-form" class="login-form" action="{{ path('MealzUserBundle_checkLogin') }}" method="post">
         <input type="text" placeholder="Username" class="form-control" name="_username" autofocus />
         <input type="password" placeholder="Password" class="form-control" name="_password" />
         <button type="submit" class="button button-login">LOGIN</button>

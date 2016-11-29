@@ -1,11 +1,11 @@
 {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
     <div class="login-text">{{ 'header.logged_in_text'|trans({}, 'general') }}: <strong>{{ app.user.username }}</strong></div>
     <div class="balance-text">
-        {{ 'header.balance'|trans({}, 'general') }}: <strong>{{ balance }}€</strong>
+            {{ 'header.balance'|trans({}, 'general') }}:{{ MealzButton.link(path('mealz_accounting_payment_transaction_history'), balance ~ '€', '', 'active', '') }}
     </div>
     {{ MealzButton.link(path('MealzUserBundle_logout'), '', '', '', 'glyphicon-log-out') }}
 {% else %}
-    <form class="login-form" action="{{ path('MealzUserBundle_checkLogin') }}" method="post">
+    <form name="login-form" class="login-form" action="{{ path('MealzUserBundle_checkLogin') }}" method="post">
         <input type="text" placeholder="Username" class="form-control" name="_username" autofocus />
         <input type="password" placeholder="Password" class="form-control" name="_password" />
         <button type="submit" class="button button-login">LOGIN</button>

@@ -117,26 +117,6 @@ class MealControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * Gets a user profile.
-     *
-     * @param  string $username     Username. Default is 'alice'.
-     * @return Profile
-     */
-    protected function getUserProfile($username = 'alice')
-    {
-        /** @var \Mealz\UserBundle\Entity\RoleRepository $profileRepository */
-        $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
-        /** @var \Mealz\UserBundle\Entity\Profile $userProfile */
-        $userProfile = $profileRepository->findOneBy(['username' => $username]);
-
-        if (!($userProfile instanceof Profile)) {
-            $this->fail('User profile for "'.$username.'" not found.');
-        }
-
-        return $userProfile;
-    }
-
-    /**
      * Gets the next available meal.
      *
      * @return Meal

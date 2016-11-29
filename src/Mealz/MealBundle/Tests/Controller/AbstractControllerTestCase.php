@@ -10,6 +10,7 @@ namespace Mealz\MealBundle\Tests\Controller;
 
 use Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use Mealz\UserBundle\Entity\Login;
+use Mealz\UserBundle\Entity\Profile;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage;
@@ -71,6 +72,27 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
 
         $cookie = new Cookie($session->getName(), $session->getId());
         $this->client->getCookieJar()->set($cookie);
+    }
+
+    /**
+     * Gets a user profile.
+     *
+     * @param string $username Username. Default is 'alice'
+     *
+     * @return Profile
+     */
+    protected function getUserProfile($username = 'alice')
+    {
+        /** @var \Mealz\UserBundle\Entity\RoleRepository $profileRepository */
+        $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
+        /** @var \Mealz\UserBundle\Entity\Profile $userProfile */
+        $userProfile = $profileRepository->findOneBy(['username' => $username]);
+
+        if (false === ($userProfile instanceof Profile)) {
+            $this->fail('User profile for "'.$username.'" not found.');
+        }
+
+        return $userProfile;
     }
 
     /**

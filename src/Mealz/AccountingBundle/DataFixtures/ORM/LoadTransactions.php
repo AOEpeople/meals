@@ -46,6 +46,8 @@ class LoadTransactions extends AbstractFixture implements OrderedFixtureInterfac
         if (is_null($date)) {
             $date = new \DateTime();
         }
+        // make transactions more realistic (random minute, NO identical Date)
+        $date->modify('+' . mt_rand(1, 1400) . ' second');
 
         $transaction = new Transaction();
         $transaction->setDate($date);

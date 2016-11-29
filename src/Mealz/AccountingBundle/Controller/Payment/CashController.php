@@ -5,6 +5,7 @@ namespace Mealz\AccountingBundle\Controller\Payment;
 use Doctrine\ORM\EntityManager;
 use Mealz\MealBundle\Controller\BaseController;
 use Mealz\AccountingBundle\Entity\Transaction;
+use Mealz\MealBundle\Entity\Participant;
 use Mealz\UserBundle\Entity\Profile;
 use Symfony\Component\HttpFoundation\Request;
 use Mealz\AccountingBundle\Form\CashPaymentAdminForm;
@@ -92,5 +93,76 @@ class CashController extends BaseController
         return $this->redirectToRoute('MealzMealBundle_Print_costSheet', array(
             'week' => $week->getId()
         ));
+    }
+
+    /**
+     * Show transactions for logged in user
+     *
+     * @param Request $request request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function showTransactionHistoryAction(Request $request)
+    {
+        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
+            throw new AccessDeniedException();
+        }
+
+        $profile = $this->getUser()->getProfile();
+
+        $dateFrom = new \DateTime();
+        $dateFrom->modify('-4 weeks');
+        $dateTo = new \DateTime();
+
+        list($transactionsTotal, $transactionHistoryArr, $participationsTotal) = $this->getFullTransactionHistory(
+            $dateFrom,
+            $dateTo,
+            $profile
+        );
+
+        ksort($transactionHistoryArr);
+
+        return $this->render(
+            'MealzAccountingBundle:Accounting\\User:transaction_history.html.twig',
+            array(
+                'transaction_history_records' => $transactionHistoryArr,
+                'transactions_total' => $transactionsTotal,
+                'participations_total' => $participationsTotal
+            )
+        );
+    }
+
+    /**
+     * Merge participation and transactions into 1 array
+     *
+     * @param \DateTime $dateFrom min date
+     * @param \DateTime $dateTo   max date
+     * @param Profile   $profile  User profile
+     *
+     * @return array
+     */
+    public function getFullTransactionHistory($dateFrom, $dateTo, $profile)
+    {
+        $participantRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Participant');
+        $participations = $participantRepository->getParticipantsOnDays($dateFrom, $dateTo, $profile);
+
+        $transactionRepository = $this->getDoctrine()->getRepository('MealzAccountingBundle:Transaction');
+        $transactions = $transactionRepository->getSuccessfulTransactionsOnDays($dateFrom, $dateTo, $profile);
+
+        $transactionsTotal = 0;
+        $transactionHistoryArr = array();
+        foreach ($transactions as $transaction) {
+            $transactionsTotal += $transaction->getAmount();
+            $transactionHistoryArr[$transaction->getDate()->getTimestamp()] = $transaction;
+        }
+
+        $participationsTotal = 0;
+        /** @var $participation Participant */
+        foreach ($participations as $participation) {
+            $participationsTotal += $participation->getMeal()->getPrice();
+            $transactionHistoryArr[$participation->getMeal()->getDateTime()->getTimestamp()] = $participation;
+        }
+
+        return array($transactionsTotal, $transactionHistoryArr, $participationsTotal);
     }
 }

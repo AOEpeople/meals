@@ -7,237 +7,253 @@ use Doctrine\ORM\Query;
 use Mealz\UserBundle\Entity\Profile;
 use Mealz\UserBundle\Entity\Role;
 
+/**
+ * the Participant Repository
+ * Class ParticipantRepository
+ * @package Mealz\MealBundle\Entity
+ */
 class ParticipantRepository extends EntityRepository
 {
 
-	protected $defaultOptions = array(
-		'load_meal' => false,
-		'load_profile' => true,
-	);
+    protected $defaultOptions = array(
+        'load_meal' => false,
+        'load_profile' => true,
+    );
 
-	/**
-	 * @param $options
-	 * @return \Doctrine\ORM\QueryBuilder
-	 */
-	protected function getQueryBuilderWithOptions($options)
-	{
-		$qb = $this->createQueryBuilder('p');
+    /**
+     * @param $options
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    protected function getQueryBuilderWithOptions($options)
+    {
+        $qb = $this->createQueryBuilder('p');
 
-		// SELECT
-		$select = 'p';
-		if ($options['load_meal']) {
-			$select .= ',m,d';
-		}
-		if ($options['load_profile']) {
-			$select .= ',u';
-		}
-		$qb->select($select);
+        // SELECT
+        $select = 'p';
+        if ($options['load_meal']) {
+            $select .= ',m,d';
+        }
+        if ($options['load_profile']) {
+            $select .= ',u';
+        }
+        $qb->select($select);
 
-		// JOIN
-		if ($options['load_meal']) {
-			$qb->leftJoin('p.meal', 'm');
-			$qb->leftJoin('m.dish', 'd');
-		}
-		if ($options['load_profile']) {
-			$qb->leftJoin('p.profile', 'u');
-		}
-		return $qb;
-	}
+        // JOIN
+        if ($options['load_meal']) {
+            $qb->leftJoin('p.meal', 'm');
+            $qb->leftJoin('m.dish', 'd');
+        }
+        if ($options['load_profile']) {
+            $qb->leftJoin('p.profile', 'u');
+        }
 
-	public function getParticipantsOnDays(
-		\DateTime $minDate,
-		\DateTime $maxDate,
-		Profile $profile = null,
-		$options = array()
-	) {
-		$options = array_merge($options, array(
-			'load_meal' => true,
-			'load_profile' => true,
-		));
-		if ($profile) {
-			$options['load_profile'] = true;
-		}
-		$qb = $this->getQueryBuilderWithOptions($options);
+        return $qb;
+    }
 
-		$minDate = clone $minDate;
-		$minDate->setTime(0, 0, 0);
-		$maxDate = clone $maxDate;
-		$maxDate->setTime(23, 59, 59);
+    public function getParticipantsOnDays(
+        \DateTime $minDate,
+        \DateTime $maxDate,
+        Profile $profile = null,
+        $options = array()
+    ) {
+        $options = array_merge(
+            $options,
+            array(
+                'load_meal' => true,
+                'load_profile' => true,
+            )
+        );
+        if ($profile) {
+            $options['load_profile'] = true;
+        }
+        $qb = $this->getQueryBuilderWithOptions($options);
 
-		$qb->andWhere('m.dateTime >= :minDate');
-		$qb->andWhere('m.dateTime <= :maxDate');
-		$qb->setParameter('minDate', $minDate);
-		$qb->setParameter('maxDate', $maxDate);
+        $minDate = clone $minDate;
+        $minDate->setTime(0, 0, 0);
+        $maxDate = clone $maxDate;
+        $maxDate->setTime(23, 59, 59);
 
-		if ($profile) {
-			$qb->andWhere('u.username = :username');
-			$qb->setParameter('username', $profile->getUsername());
-		}
+        $qb->andWhere('m.dateTime >= :minDate');
+        $qb->andWhere('m.dateTime <= :maxDate');
+        $qb->setParameter('minDate', $minDate);
+        $qb->setParameter('maxDate', $maxDate);
 
-		$qb->orderBy('u.name', 'ASC');
+        if ($profile) {
+            $qb->andWhere('u.username = :username');
+            $qb->setParameter('username', $profile->getUsername());
+        }
 
-		$participants = $qb->getQuery()->execute();
+        $qb->orderBy('u.name', 'ASC');
 
-		return $this->sortParticipantsByName($participants);
-	}
+        $participants = $qb->getQuery()->execute();
 
-	/**
-	 * helper function to sort participants by their name or guest name
-	 */
-	public function sortParticipantsByName($participants)
-	{
-		usort($participants, array($this, 'compareNameOfParticipants'));
-		return $participants;
-	}
+        return $this->sortParticipantsByName($participants);
+    }
 
-	protected function compareNameOfParticipants(Participant $participant1, Participant $participant2)
-	{
-		$result = strcasecmp($participant1->getProfile()->getName(), $participant2->getProfile()->getName());
+    /**
+     * helper function to sort participants by their name or guest name
+     */
+    public function sortParticipantsByName($participants)
+    {
+        usort($participants, array($this, 'compareNameOfParticipants'));
 
-		if ($result !== 0) {
-			return $result;
-		} elseif ($participant1->getMeal()->getDateTime() < $participant2->getMeal()->getDateTime()) {
-			return 1;
-		} elseif ($participant1->getMeal()->getDateTime() > $participant2->getMeal()->getDateTime()) {
-			return -1;
-		}
+        return $participants;
+    }
 
-		return 0;
-	}
+    protected function compareNameOfParticipants(Participant $participant1, Participant $participant2)
+    {
+        $result = strcasecmp($participant1->getProfile()->getName(), $participant2->getProfile()->getName());
 
-	/**
-	 * Get total costs of participations. Prevent unnecessary ORM mapping.
-	 *
-	 * @param string $username
-	 * @return float
-	 * @throws \Doctrine\DBAL\DBALException
-	 */
-	public function getTotalCost($username)
-	{
-		$qb = $this->getQueryBuilderWithOptions([
-			'load_meal' => true,
-			'load_profile' => false,
-		]);
+        if ($result !== 0) {
+            return $result;
+        } elseif ($participant1->getMeal()->getDateTime() < $participant2->getMeal()->getDateTime()) {
+            return 1;
+        } elseif ($participant1->getMeal()->getDateTime() > $participant2->getMeal()->getDateTime()) {
+            return -1;
+        }
 
-		$qb->select('SUM(m.price) as blubber');
-		$qb->leftJoin('m.day', 'day');
-		$qb->leftJoin('day.week', 'w');
-		$qb->andWhere('p.profile = :user');
-		$qb->setParameter('user', $username);
-		$qb->andWhere('p.costAbsorbed = 0');
-		$qb->andWhere('day.enabled = 1');
-		$qb->andWhere('w.enabled = 1');
-		$qb->andWhere('m.dateTime <= :now');
-		$qb->setParameter('now', new \DateTime());
+        return 0;
+    }
 
-		return floatval($qb->getQuery()->getSingleScalarResult());
-	}
+    /**
+     * Get total costs of participations. Prevent unnecessary ORM mapping.
+     *
+     * @param string $username
+     * @return float
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function getTotalCost($username)
+    {
+        $qb = $this->getQueryBuilderWithOptions(
+            [
+                'load_meal' => true,
+                'load_profile' => false,
+            ]
+        );
 
-	/**
-	 * @param Profile $profile
-	 * @param int $limit
-	 * @return Participant[]
-	 */
-	public function getLastAccountableParticipations(Profile $profile, $limit = null)
-	{
-		$qb = $this->getQueryBuilderWithOptions([
-			'load_meal' => true,
-			'load_profile' => false,
-		]);
+        $qb->select('SUM(m.price) as blubber');
+        $qb->leftJoin('m.day', 'day');
+        $qb->leftJoin('day.week', 'w');
+        $qb->andWhere('p.profile = :user');
+        $qb->setParameter('user', $username);
+        $qb->andWhere('p.costAbsorbed = 0');
+        $qb->andWhere('day.enabled = 1');
+        $qb->andWhere('w.enabled = 1');
+        $qb->andWhere('m.dateTime <= :now');
+        $qb->setParameter('now', new \DateTime());
 
-		$qb->andWhere('p.profile = :user');
-		$qb->setParameter('user', $profile);
-		$qb->andWhere('p.costAbsorbed = :costAbsorbed');
-		$qb->setParameter('costAbsorbed', false);
-		$qb->andWhere('m.dateTime <= :now');
-		$qb->setParameter('now', new \DateTime());
+        return floatval($qb->getQuery()->getSingleScalarResult());
+    }
 
-		$qb->orderBy('m.dateTime', 'desc');
-		if ($limit) {
-			$qb->setMaxResults($limit);
-		}
+    /**
+     * @param Profile $profile
+     * @param int $limit
+     * @return Participant[]
+     */
+    public function getLastAccountableParticipations(Profile $profile, $limit = null)
+    {
+        $qb = $this->getQueryBuilderWithOptions(
+            [
+                'load_meal' => true,
+                'load_profile' => false,
+            ]
+        );
 
-		return $qb->getQuery()->execute();
-	}
+        $qb->andWhere('p.profile = :user');
+        $qb->setParameter('user', $profile);
+        $qb->andWhere('p.costAbsorbed = :costAbsorbed');
+        $qb->setParameter('costAbsorbed', false);
+        $qb->andWhere('m.dateTime <= :now');
+        $qb->setParameter('now', new \DateTime());
 
-	public function findCostsGroupedByUserGroupedByMonth()
-	{
-		$costs = $this->findCostsPerMonthPerUser();
+        $qb->orderBy('m.dateTime', 'desc');
+        if ($limit) {
+            $qb->setMaxResults($limit);
+        }
 
-		$result = array();
+        return $qb->getQuery()->execute();
+    }
 
-		foreach ($costs as $cost) {
-			$username = $cost['username'];
-			$timestamp = strtotime($cost['yearMonth']);
-			$costByMonth = array(
-				'timestamp' => $timestamp,
-				'costs' => $cost['costs']
-			);
-			if (isset($result[$username])) {
-				$result[$username]['costs'][] = $costByMonth;
-			} else {
-				$result[$username] = array(
-					'name' => $cost['name'],
-					'firstName' => $cost['firstName'],
-					'costs' => array($costByMonth)
-				);
-			}
-		}
+    public function findCostsGroupedByUserGroupedByMonth()
+    {
+        $costs = $this->findCostsPerMonthPerUser();
 
-		return $result;
+        $result = array();
 
-	}
+        foreach ($costs as $cost) {
+            $username = $cost['username'];
+            $timestamp = strtotime($cost['yearMonth']);
+            $costByMonth = array(
+                'timestamp' => $timestamp,
+                'costs' => $cost['costs'],
+            );
+            if (isset($result[$username])) {
+                $result[$username]['costs'][] = $costByMonth;
+            } else {
+                $result[$username] = array(
+                    'name' => $cost['name'],
+                    'firstName' => $cost['firstName'],
+                    'costs' => array($costByMonth),
+                );
+            }
+        }
 
-	/**
-	 * Gets the aggregated monthly cost of all the participants.
-	 *
-	 * Guests are currently excluded from the result.
-	 *
-	 * @return array
-	 */
-	private function findCostsPerMonthPerUser()
-	{
-		$qb = $this->createQueryBuilder('p');
-		$qb->select('u.username, u.name, u.firstName, SUBSTRING(m.dateTime, 1, 7) AS yearMonth, SUM(m.price) AS costs');
-		$qb->leftJoin('p.meal', 'm');
-		$qb->leftJoin('p.profile', 'u');
-		$qb->leftJoin('u.roles', 'r');
-		$qb->leftJoin('m.day', 'd');
-		$qb->leftJoin('d.week', 'w');
-		/**
-		 * @TODO: optimize query. where clause costs a lot of time.
-		 */
-		$qb->where('p.costAbsorbed = 0');
-		$qb->andWhere($qb->expr()->orX(
-			$qb->expr()->isNull('r.sid'),
-			$qb->expr()->neq('r.sid', ':role_sid'))
-		);
-		$qb->andWhere('m.dateTime < :now');
-		$qb->andWhere('d.enabled = 1');
-		$qb->andWhere('w.enabled = 1');
-		$qb->groupBy('u.username');
-		$qb->addGroupBy('yearMonth');
-		$qb->addOrderBy('u.name');
+        return $result;
 
-		$qb->setParameters(['now' => date('Y-m-d H:i:s'), 'role_sid' => Role::ROLE_GUEST]);
+    }
 
-		return $qb->getQuery()->getArrayResult();
-	}
+    /**
+     * Gets the aggregated monthly cost of all the participants.
+     *
+     * Guests are currently excluded from the result.
+     *
+     * @return array
+     */
+    private function findCostsPerMonthPerUser()
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb->select('u.username, u.name, u.firstName, SUBSTRING(m.dateTime, 1, 7) AS yearMonth, SUM(m.price) AS costs');
+        $qb->leftJoin('p.meal', 'm');
+        $qb->leftJoin('p.profile', 'u');
+        $qb->leftJoin('u.roles', 'r');
+        $qb->leftJoin('m.day', 'd');
+        $qb->leftJoin('d.week', 'w');
+        /**
+         * @TODO: optimize query. where clause costs a lot of time.
+         */
+        $qb->where('p.costAbsorbed = 0');
+        $qb->andWhere(
+            $qb->expr()->orX(
+                $qb->expr()->isNull('r.sid'),
+                $qb->expr()->neq('r.sid', ':role_sid')
+            )
+        );
+        $qb->andWhere('m.dateTime < :now');
+        $qb->andWhere('d.enabled = 1');
+        $qb->andWhere('w.enabled = 1');
+        $qb->groupBy('u.username');
+        $qb->addGroupBy('yearMonth');
+        $qb->addOrderBy('u.name');
 
-	public function groupParticipantsByName($participations)
-	{
-		$result = array();
+        $qb->setParameters(['now' => date('Y-m-d H:i:s'), 'role_sid' => Role::ROLE_GUEST]);
 
-		foreach ($participations as $participation) {
-			/** @var Participant $participation */
-			$name = $participation->getProfile()->getUsername();
-			if (isset($result[$name])) {
-				$result[$name][] = $participation;
-			} else {
-				$result[$name] = array($participation);
-			}
-		}
+        return $qb->getQuery()->getArrayResult();
+    }
 
-		return $result;
-	}
+    public function groupParticipantsByName($participations)
+    {
+        $result = array();
+
+        foreach ($participations as $participation) {
+            /** @var Participant $participation */
+            $name = $participation->getProfile()->getUsername();
+            if (isset($result[$name])) {
+                $result[$name][] = $participation;
+            } else {
+                $result[$name] = array($participation);
+            }
+        }
+
+        return $result;
+    }
 }

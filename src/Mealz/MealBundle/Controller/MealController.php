@@ -29,8 +29,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class MealController extends BaseController
 {
+
     /**
-     * @return Response
+     * the index Action
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction()
     {
@@ -60,14 +62,15 @@ class MealController extends BaseController
     /**
      * let the currently logged in user join the given meal
      *
-     * @param  Request $request
-     * @param  string  $date
-     * @param  string  $dish
-     * @param  string  $profile
-     * @return JsonResponse
+     * @param Request $request
+     * @param string $date
+     * @param string $dish
+     * @param string $profile
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function joinAction(Request $request, $date, $dish, $profile)
     {
+
         if (!$this->getUser()) {
             return $this->ajaxSessionExpiredRedirect();
         }
@@ -86,7 +89,7 @@ class MealController extends BaseController
         if (null === $profile) {
             $profile = $this->getProfile();
         } else {
-            if ($this->getProfile()->getUsername() === $profile || $this->getDoorman()->isKitchenStaff()) {
+            if ($this->getProfile()->getUsername() === $profile || $this->getDoorman()->isKitchenStaff() === true) {
                 $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
                 $profile = $profileRepository->find($profile);
             } else {
@@ -110,7 +113,7 @@ class MealController extends BaseController
             return new JsonResponse(null, 422);
         }
 
-        if ($this->getDoorman()->isKitchenStaff()) {
+        if (is_object($this->getDoorman()->isKitchenStaff()) === true) {
             $logger = $this->get('monolog.logger.balance');
             $logger->addInfo(
                 'admin added {profile} to {meal} (Participant: {participantId})',
@@ -140,11 +143,9 @@ class MealController extends BaseController
     }
 
     /**
-     * Action for inviting the guest
-     *
-     * @param  Request $request
-     * @param  string  $hash
-     * @return Response
+     * create an Emtpy Non Persistent Week (for empty Weeks)
+     * @param \DateTime $dateTime
+     * @return Week
      */
     public function guestAction(Request $request, $hash)
     {
@@ -166,7 +167,7 @@ class MealController extends BaseController
             $form->handleRequest($request);
             $formData = $request->request->get('invitation_form');
 
-            if(!isset($formData['day']['meals'])||count($formData['day']['meals'])==0){
+            if (!isset($formData['day']['meals']) || count($formData['day']['meals']) == 0) {
                 $message = $translator->trans("error.participation.no_meal_selected", [], 'messages');
                 $this->addFlashMessage($message, 'danger');
             } elseif ($form->isValid()) {

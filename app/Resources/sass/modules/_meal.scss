@@ -1,5 +1,6 @@
 %meal,
-.meal {
+.meal,
+.day {
   $meal-border-width: 25px;
 
   position: relative;
@@ -36,7 +37,7 @@
 
   .meal-row {
     position: relative;
-    padding: 15px;
+    padding: 10px 15px;
 
     &:not(:last-child) {
       border-bottom: 2px solid $meal-border-color;
@@ -55,15 +56,19 @@
     }
 
     .title {
-      margin-bottom: 6px;
+      margin-bottom: 5px;
       font-weight: bold;
       font-family: $font-bold;
     }
+  }
 
+  .variation-row {
+    margin-top: -3px;
   }
 
   .text,
   .wrapper-vertical-center,
+  .wrapper-variation-vertical-center,
   .participants,
   .action {
     display: inline-block;
@@ -74,8 +79,12 @@
     padding-right: 10px;
 
     @include breakpoint(small) {
-      width: 70%;
+      width: 69%;
     }
+  }
+
+  .text-variation {
+    line-height: 30px;
   }
 
   .wrapper-vertical-center {
@@ -86,7 +95,18 @@
     margin-top: -15px;
 
     @include breakpoint(small) {
-      width: 30%;
+      width: 31%;
+    }
+  }
+
+  .wrapper-variation-vertical-center {
+    position: absolute;
+    width: 20%;
+    height: 30px;
+    vertical-align: bottom;
+
+    @include breakpoint(small) {
+      width: 31%;
     }
   }
 

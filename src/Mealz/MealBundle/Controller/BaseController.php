@@ -16,37 +16,39 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-abstract class BaseController extends Controller {
-	/**
-	 * @return MealRepository
-	 */
-	public function getMealRepository()
-	{
-		return $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
-	}
+abstract class BaseController extends Controller
+{
+    /**
+     * @return MealRepository
+     */
+    public function getMealRepository()
+    {
+        return $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
+    }
 
-	/**
-	 * @return DishRepository
-	 */
-	public function getDishRepository()
-	{
-		return $this->getDoctrine()->getRepository('MealzMealBundle:Dish');
-	}
+    /**
+     * @return DishRepository
+     */
+    public function getDishRepository()
+    {
+        return $this->getDoctrine()->getRepository('MealzMealBundle:Dish');
+    }
 
-	/**
-	 * @return ParticipantRepository
-	 */
-	public function getParticipantRepository() {
-		return $this->getDoctrine()->getRepository('MealzMealBundle:Participant');
-	}
+    /**
+     * @return ParticipantRepository
+     */
+    public function getParticipantRepository()
+    {
+        return $this->getDoctrine()->getRepository('MealzMealBundle:Participant');
+    }
 
-	/**
-	 * @return CategoryRepository
-	 */
-	public function getCategoryRepository()
-	{
-		return $this->getDoctrine()->getRepository('MealzMealBundle:Category');
-	}
+    /**
+     * @return CategoryRepository
+     */
+    public function getCategoryRepository()
+    {
+        return $this->getDoctrine()->getRepository('MealzMealBundle:Category');
+    }
 
     /**
      * @return TransactionRepository
@@ -56,47 +58,53 @@ abstract class BaseController extends Controller {
         return $this->getDoctrine()->getRepository('MealzAccountingBundle:Transaction');
     }
 
-	/**
-	 * @return Doorman
-	 */
-	protected function getDoorman() {
-		return $this->get('mealz_meal.doorman');
-	}
+    /**
+     * @return Doorman
+     */
+    protected function getDoorman()
+    {
+        return $this->get('mealz_meal.doorman');
+    }
 
-	/**
-	 * @return Profile|null
-	 */
-	protected function getProfile() {
-		return $this->getUser() ? $this->getUser()->getProfile() : NULL;
-	}
+    /**
+     * @return Profile|null
+     */
+    protected function getProfile()
+    {
+        return $this->getUser() ? $this->getUser()->getProfile() : null;
+    }
 
-	/**
-	 * @param $object
-	 * @param null $action
-	 * @param bool $referenceType
-	 * @return string
-	 */
-	public function generateUrlTo($object, $action = NULL, $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH) {
-		/** @var Link $linkService */
-		$linkService = $this->get('mealz_meal.link');
-		return $linkService->link($object, $action, $referenceType);
-	}
+    /**
+     * @param $object
+     * @param null $action
+     * @param bool $referenceType
+     * @return string
+     */
+    public function generateUrlTo($object, $action = null, $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH)
+    {
+        /** @var Link $linkService */
+        $linkService = $this->get('mealz_meal.link');
 
-	/**
-	 * @param $message
-	 * @param $severity  "danger", "warning", "info", "success"
-	 */
-	public function addFlashMessage($message, $severity) {
-		$this->get('session')->getFlashBag()->add($severity, $message);
-	}
+        return $linkService->link($object, $action, $referenceType);
+    }
 
-	protected function ajaxSessionExpiredRedirect()
-	{
-		$message = $this->get('translator')->trans('session.expired', [], 'messages');
-		$this->addFlashMessage($message, 'info');
-		$response = array(
-			'redirect' => $this->generateUrl('MealzUserBundle_login')
-		);
-		return new JsonResponse($response);
-	}
+    /**
+     * @param $message
+     * @param $severity "danger", "warning", "info", "success"
+     */
+    public function addFlashMessage($message, $severity)
+    {
+        $this->get('session')->getFlashBag()->add($severity, $message);
+    }
+
+    protected function ajaxSessionExpiredRedirect()
+    {
+        $message = $this->get('translator')->trans('session.expired', [], 'messages');
+        $this->addFlashMessage($message, 'info');
+        $response = array(
+            'redirect' => $this->generateUrl('MealzUserBundle_login'),
+        );
+
+        return new JsonResponse($response);
+    }
 }

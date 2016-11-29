@@ -10,75 +10,99 @@ use Mealz\MealBundle\Entity\Meal;
 use Mealz\MealBundle\Entity\Participant;
 use Mealz\UserBundle\Entity\Profile;
 
+/**
+ * load the Participants
+ * Class LoadParticipants
+ * @package Mealz\MealBundle\DataFixtures\ORM
+ */
+class LoadParticipants extends AbstractFixture implements OrderedFixtureInterface
+{
 
-class LoadParticipants extends AbstractFixture implements OrderedFixtureInterface {
+    /**
+     * @var ObjectManager
+     */
+    protected $objectManager;
 
-	/**
-	 * @var ObjectManager
-	 */
-	protected $objectManager;
+    /**
+     * @var array
+     */
+    protected $meals = array();
 
-	/**
-	 * @var array
-	 */
-	protected $meals = array();
+    /**
+     * @var array
+     */
+    protected $profiles = array();
 
-	/**
-	 * @var array
-	 */
-	protected $profiles = array();
+    /**
+     * load the Object
+     * @param ObjectManager $manager
+     */
+    public function load(ObjectManager $manager)
+    {
+        $this->objectManager = $manager;
+        $this->loadReferences();
 
-	function load(ObjectManager $manager) {
-		$this->objectManager = $manager;
-		$this->loadReferences();
+        foreach ($this->meals as $meal) {
+            /** @var $meal Meal */
+            $users = $this->getRandomUsers();
+            foreach ($users as $user) {
+                /** @var $user Profile */
+                $participant = new Participant();
+                $participant->setMeal($meal);
+                $participant->setProfile($user);
+                $participant->setCostAbsorbed(false);
 
-		foreach($this->meals as $meal) {
-			/** @var $meal Meal */
-			$users = $this->getRandomUsers();
-			foreach($users as $user) {
-				/** @var $user Profile */
-				$participant = new Participant();
-				$participant->setMeal($meal);
-				$participant->setProfile($user);
-				$participant->setCostAbsorbed(false);
+                $this->objectManager->persist($participant);
+            }
+        }
+        $this->objectManager->flush();
+    }
 
-				$this->objectManager->persist($participant);
-			}
-		}
-		$this->objectManager->flush();
-	}
+    /**
+     * get the Order of Fixtures Loading
+     * @return mixed
+     */
+    public function getOrder()
+    {
+        /**
+         * load as eigth
+         */
+        return 8;
+    }
 
-	protected function loadReferences() {
-		foreach($this->referenceRepository->getReferences() as $referenceName=>$reference) {
-			if($reference instanceof Meal) {
-				// we can't just use $reference here, because
-				// getReference() does some doctrine magic that getReferences() does not
-				$this->meals[] = $this->getReference($referenceName);
-			} elseif($reference instanceof Profile) {
-				$this->profiles[] = $this->getReference($referenceName);
-			}
-		}
-	}
+    /**
+     * load References
+     */
+    protected function loadReferences()
+    {
+        foreach ($this->referenceRepository->getReferences() as $referenceName => $reference) {
+            if ($reference instanceof Meal) {
+                // we can't just use $reference here, because
+                // getReference() does some doctrine magic that getReferences() does not
+                $this->meals[] = $this->getReference($referenceName);
+            } elseif ($reference instanceof Profile) {
+                $this->profiles[] = $this->getReference($referenceName);
+            }
+        }
+    }
 
-	/**
-	 * @return array<Users>
-	 */
-	protected function getRandomUsers() {
-		$number = rand(0,count($this->profiles));
-		$users = array();
+    /**
+     * @return array<Users>
+     */
+    protected function getRandomUsers()
+    {
+        $number = rand(0, count($this->profiles));
+        $users = array();
 
-		if($number > 1) {
-			foreach(array_rand($this->profiles, $number) as $user_key) {
-				$users[] = $this->profiles[$user_key];
-			}
-		} elseif($number == 1) {
-			$users[] = $this->profiles[array_rand($this->profiles)];
-		}
-		return $users;
-	}
+        if ($number > 1) {
+            foreach (array_rand($this->profiles, $number) as $user_key) {
+                $users[] = $this->profiles[$user_key];
+            }
+        } elseif ($number == 1) {
+            $users[] = $this->profiles[array_rand($this->profiles)];
+        }
 
-	public function getOrder()
-	{
-		return 6;
-	}
+        return $users;
+    }
+
 }

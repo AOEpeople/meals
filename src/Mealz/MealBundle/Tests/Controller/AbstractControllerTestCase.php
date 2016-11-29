@@ -88,7 +88,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         /** @var \Mealz\UserBundle\Entity\Profile $userProfile */
         $userProfile = $profileRepository->findOneBy(['username' => $username]);
 
-        if (!($userProfile instanceof Profile)) {
+        if (false === ($userProfile instanceof Profile)) {
             $this->fail('User profile for "'.$username.'" not found.');
         }
 

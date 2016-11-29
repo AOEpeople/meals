@@ -114,6 +114,35 @@ class CashController extends BaseController
         $dateFrom->modify('-4 weeks');
         $dateTo = new \DateTime();
 
+        list($transactionsTotal, $transactionHistoryArr, $participationsTotal) = $this->getFullTransactionHistory(
+            $dateFrom,
+            $dateTo,
+            $profile
+        );
+
+        ksort($transactionHistoryArr);
+
+        return $this->render(
+            'MealzAccountingBundle:Accounting\\User:transaction_history.html.twig',
+            array(
+                'transaction_history_records' => $transactionHistoryArr,
+                'transactions_total' => $transactionsTotal,
+                'participations_total' => $participationsTotal
+            )
+        );
+    }
+
+    /**
+     * Merge participation and transactions into 1 array
+     *
+     * @param \DateTime $dateFrom min date
+     * @param \DateTime $dateTo   max date
+     * @param Profile   $profile  User profile
+     *
+     * @return array
+     */
+    public function getFullTransactionHistory($dateFrom, $dateTo, $profile)
+    {
         $participantRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Participant');
         $participations = $participantRepository->getParticipantsOnDays($dateFrom, $dateTo, $profile);
 
@@ -134,15 +163,6 @@ class CashController extends BaseController
             $transactionHistoryArr[$participation->getMeal()->getDateTime()->getTimestamp()] = $participation;
         }
 
-        ksort($transactionHistoryArr);
-
-        return $this->render(
-            'MealzAccountingBundle:Accounting\\User:transaction_history.html.twig',
-            array(
-                'transaction_history_records' => $transactionHistoryArr,
-                'transactions_total' => $transactionsTotal,
-                'participations_total' => $participationsTotal
-            )
-        );
+        return array($transactionsTotal, $transactionHistoryArr, $participationsTotal);
     }
 }

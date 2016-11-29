@@ -88,6 +88,7 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
         $dish = new Dish();
         $dish->setTitleEn('Test EN '.rand());
         $dish->setTitleDe('Test DE '.rand());
+        $dish->setPrice(3.20);
         if ($category) {
             $dish->setCategory($category);
         }

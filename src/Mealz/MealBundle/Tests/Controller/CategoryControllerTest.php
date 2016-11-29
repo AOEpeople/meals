@@ -5,6 +5,8 @@ namespace Mealz\MealBundle\Tests\Controller;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\DomCrawler\Crawler;
 
+use Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
+
 /**
  * Class CategoryAbstractControllerTest
  * @package Mealz\MealBundle\Tests\Controller
@@ -14,14 +16,18 @@ class CategoryAbstractControllerTest extends AbstractControllerTestCase
     public function setUp()
     {
         $this->createAdminClient();
-        $this->mockServices();
         $this->clearAllTables();
+        $this->loadFixtures(
+            [
+                new LoadUsers($this->client->getContainer()),
+            ]
+        );
     }
 
     public function testGetEmptyFormAction()
     {
         $this->client->request('GET', '/category/form');
-        $crawler = $this->getRawResponseCrawler();
+        $crawler = $this->getJsonResponseCrawler();
         $node = $crawler->filterXPath('//form[@action="/category/new"]');
         $this->assertTrue($node->count() === 1);
     }
@@ -29,11 +35,9 @@ class CategoryAbstractControllerTest extends AbstractControllerTestCase
     public function testNewAction()
     {
         // Create form data
-        $token = $this->client->getContainer()->get('form.csrf_provider')->generateCsrfToken('category_type');
         $form['category'] = array(
             'title_de' => 'category-form-title-de',
             'title_en' => 'category-form-title-en',
-            '_token' => $token,
         );
 
         // Call controller action
@@ -83,7 +87,7 @@ class CategoryAbstractControllerTest extends AbstractControllerTestCase
 
         // Request
         $this->client->request('GET', '/category/form/'.$category->getSlug());
-        $crawler = $this->getRawResponseCrawler();
+        $crawler = $this->getJsonResponseCrawler();
 
         // Check if form is loaded
         $node = $crawler->filterXPath('//form[@action="/category/'.$category->getSlug().'/edit"]');
@@ -105,11 +109,9 @@ class CategoryAbstractControllerTest extends AbstractControllerTestCase
         $category = $this->createCategory();
         $this->persistAndFlushAll(array($category));
 
-        $token = $this->client->getContainer()->get('form.csrf_provider')->generateCsrfToken('category_type');
         $form['category'] = array(
             'title_de' => 'category-form-edited-title-de',
             'title_en' => 'category-form-edited-title-en',
-            '_token' => $token,
         );
 
         $this->client->request('POST', '/category/'.$category->getSlug().'/edit', $form);
@@ -152,6 +154,14 @@ class CategoryAbstractControllerTest extends AbstractControllerTestCase
         $content = $this->client->getResponse()->getContent();
         $uri = 'http://www.mealz.local';
 
-        return new Crawler(json_decode($content), $uri);
+        return new Crawler($content, $uri);
+    }
+    
+    protected function getJsonResponseCrawler()
+    {
+        $content = $this->client->getResponse()->getContent();
+        $uri = 'http://www.mealz.local';
+
+        return new Crawler(json_decode($content, true), $uri);
     }
 }

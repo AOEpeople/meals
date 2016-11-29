@@ -56,13 +56,13 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         );
 
         $crawler = $this->getRawResponseCrawler();
-        $formNode = $crawler->filterXPath('//form[@action="'.$url.'"]');
+        $formNode = $crawler->filterXPath('//form[@action="' . $url . '"]');
         $this->assertTrue($formNode->count() === 1);
 
-        $inputDeDescNode = $crawler->filterXPath('//input[@name="dish_variation_form[description_de]"]');
+        $inputDeDescNode = $crawler->filterXPath('//input[@name="dishvariation[title_de]"]');
         $this->assertTrue($inputDeDescNode->count() === 1);
 
-        $inputEnDescNode = $crawler->filterXPath('//input[@name="dish_variation_form[description_en]"]');
+        $inputEnDescNode = $crawler->filterXPath('//input[@name="dishvariation[title_en]"]');
         $this->assertTrue($inputEnDescNode->count() === 1);
     }
 
@@ -72,23 +72,23 @@ class DishVariationControllerTest extends AbstractControllerTestCase
     public function createDishVariation()
     {
         /** @var \Mealz\MealBundle\Entity\Dish $dish */
-        $dish = $this->getDish();
+        $dish = $this->getDish(NULL, true);
 
         $url = '/dish/' . $dish->getId() . '/variation/new';
         $this->client->request('GET', $url);
 
         $crawler = $this->getRawResponseCrawler();
-        $this->client->submit($crawler->filterXPath('//form[@action="'.$url.'"]')->form([
-            'dish_variation_form[description_de]' => 'new dish variation [de]',
-            'dish_variation_form[description_en]' => 'new dish variation [en]'
+        $this->client->submit($crawler->filterXPath('//form[@action="' . $url . '"]')->form([
+            'dishvariation[title_de]' => 'new dish variation [de]',
+            'dishvariation[title_en]' => 'new dish variation [en]'
         ]));
 
         $this->assertTrue($this->client->getResponse()->isRedirect('/dish'));
 
         /** @var \Mealz\MealBundle\Entity\DishVariation $updatedDishVariation */
-        $updatedDishVariation = $this->getDishVariationBy('description_de', 'new dish variation [de]');
-        $this->assertEquals('new dish variation [de]', $updatedDishVariation->getDescriptionDe());
-        $this->assertEquals('new dish variation [en]', $updatedDishVariation->getDescriptionEn());
+        $updatedDishVariation = $this->getDishVariationBy('title_de', 'new dish variation [de]');
+        $this->assertEquals('new dish variation [de]', $updatedDishVariation->getTitleDe());
+        $this->assertEquals('new dish variation [en]', $updatedDishVariation->getTitleEn());
     }
 
     /**
@@ -97,7 +97,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
     public function editForm()
     {
         /** @var \Mealz\MealBundle\Entity\Dish $dish */
-        $dish = $this->getDish();
+        $dish = $this->getDish(NULL, true);
         $dishVariation = $dish->getVariations()->get(0);
 
         $url = '/dish/variation/' . $dishVariation->getId() . '/edit';
@@ -113,10 +113,10 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         $formNode = $crawler->filterXPath('//form[@action="' . $url . '"]');
         $this->assertTrue($formNode->count() === 1);
 
-        $inputDeDescNode = $crawler->filterXPath('//input[@name="dish_variation_form[description_de]"]');
+        $inputDeDescNode = $crawler->filterXPath('//input[@name="dishvariation[title_de]"]');
         $this->assertTrue($inputDeDescNode->count() === 1);
 
-        $inputEnDescNode = $crawler->filterXPath('//input[@name="dish_variation_form[description_en]"]');
+        $inputEnDescNode = $crawler->filterXPath('//input[@name="dishvariation[title_en]"]');
         $this->assertTrue($inputEnDescNode->count() === 1);
     }
 
@@ -126,24 +126,24 @@ class DishVariationControllerTest extends AbstractControllerTestCase
     public function updateDishVariation()
     {
         /** @var \Mealz\MealBundle\Entity\Dish $dish */
-        $dish = $this->getDish();
+        $dish = $this->getDish(NULL, true);
         $dishVariationId = $dish->getVariations()->get(0)->getId();
 
         $url = '/dish/variation/' . $dishVariationId . '/edit';
         $this->client->request('GET', $url);
 
         $crawler = $this->getRawResponseCrawler();
-        $this->client->submit($crawler->filterXPath('//form[@action="'.$url.'"]')->form([
-            'dish_variation_form[description_de]' => 'dish variation [de]',
-            'dish_variation_form[description_en]' => 'dish variation [en]'
+        $this->client->submit($crawler->filterXPath('//form[@action="' . $url . '"]')->form([
+            'dishvariation[title_de]' => 'dish variation [de]',
+            'dishvariation[title_en]' => 'dish variation [en]'
         ]));
 
         $this->assertTrue($this->client->getResponse()->isRedirect('/dish'));
 
         /** @var \Mealz\MealBundle\Entity\DishVariation $updatedDishVariation */
         $updatedDishVariation = $this->getDishVariationBy('id', $dishVariationId);
-        $this->assertEquals('dish variation [de]', $updatedDishVariation->getDescriptionDe());
-        $this->assertEquals('dish variation [en]', $updatedDishVariation->getDescriptionEn());
+        $this->assertEquals('dish variation [de]', $updatedDishVariation->getTitleDe());
+        $this->assertEquals('dish variation [en]', $updatedDishVariation->getTitleEn());
     }
 
     /**
@@ -152,15 +152,20 @@ class DishVariationControllerTest extends AbstractControllerTestCase
     public function deleteDishVariation()
     {
         /** @var \Mealz\MealBundle\Entity\Dish $dish */
-        $dish = $this->getDish();
+        $dish = $this->getDish(NULL, true);
         $dishVariation = $dish->getVariations()->get(0);
+        $dishVariationId = $dishVariation->getId();
         $this->assertTrue($dishVariation->isEnabled());
 
         $this->client->request('GET', '/dish/variation/' . $dishVariation->getId() . '/delete');
         $this->assertTrue($this->client->getResponse()->isRedirect('/dish'));
 
-        $updatedDishVariation = $this->getDishVariationBy('id', $dishVariation->getId());
-        $this->assertFalse($updatedDishVariation->isEnabled());
+        $updatedDishVariation = $this->getDishVariationBy('id', $dishVariationId, false);
+        if($updatedDishVariation instanceof \Mealz\MealBundle\Entity\DishVariation){
+            $this->assertFalse($updatedDishVariation->isEnabled());
+        } else {
+            $this->assertNull($updatedDishVariation);
+        }
     }
 
     /**
@@ -190,7 +195,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         $dishId = $this->grepDishIdFromUri($link);
 
         // check if there is a form shown for adding a new dish variation
-        $node = $crawler->filter('form[action$="/'.$dishId.'/variation/new"]');
+        $node = $crawler->filter('form[action$="/' . $dishId . '/variation/new"]');
         $this->assertTrue($node->count() === 1);
     }
 
@@ -201,14 +206,14 @@ class DishVariationControllerTest extends AbstractControllerTestCase
     {
         // Create form data
         $form['dishvariation'] = array(
-            'title_de' => 'dishvariation-TITLE-de'.rand(),
-            'title_en' => 'dishvariation-TITLE-en'.rand(),
+            'title_de' => 'dishvariation-TITLE-de' . rand(),
+            'title_en' => 'dishvariation-TITLE-en' . rand(),
         );
 
         $dishId = $this->getHelperObject('dishid');
 
         // Call controller action
-        $m = $this->client->request('POST', '/dish/'.$dishId.'/variation/new', $form);
+        $m = $this->client->request('POST', '/dish/' . $dishId . '/variation/new', $form);
 
         // Get persisted entity
         /** @var EntityManager $em */
@@ -232,8 +237,10 @@ class DishVariationControllerTest extends AbstractControllerTestCase
      */
     public function testListAction()
     {
-        $dishVariation = $this->createDishVariation();
-        $this->persistAndFlushAll(array($dishVariation));
+        #$dishVariation = $this->createDishVariation();
+        #$this->persistAndFlushAll(array($dishVariation));
+        $dish = $this->getDish(NULL, true);
+        $dishVariation = $dish->getVariations()->get(0);
 
         // Request
         $crawler = $this->client->request('GET', '/dish');
@@ -264,21 +271,21 @@ class DishVariationControllerTest extends AbstractControllerTestCase
      */
     public function testEditAction()
     {
-        $dishvariation = $this->createDishVariation();
-        $this->persistAndFlushAll(array($dishvariation));
+        $dish = $this->getDish(NULL, true);
+        $dishVariation = $dish->getVariations()->get(0);
 
         $form['dishvariation'] = array(
-            'title_de' => 'edited-dishvariation-de-'.rand(),
-            'title_en' => 'edited-dishvariation-en-'.rand(),
+            'title_de' => 'edited-dishvariation-de-' . rand(),
+            'title_en' => 'edited-dishvariation-en-' . rand(),
         );
 
-        $this->client->request('POST', '/dish/variation/'.$dishvariation->getId().'/edit', $form);
+        $this->client->request('POST', '/dish/variation/' . $dishVariation->getId() . '/edit', $form);
         $dishRepository = $this->getDoctrine()->getRepository('MealzMealBundle:DishVariation');
         unset($form['dishvariation']['_token']);
         $editedDishVariation = $dishRepository->findOneBy($form['dishvariation']);
 
         $this->assertInstanceOf('\Mealz\MealBundle\Entity\DishVariation', $editedDishVariation);
-        $this->assertEquals($dishvariation->getId(), $editedDishVariation->getId());
+        $this->assertEquals($dishVariation->getId(), $editedDishVariation->getId());
     }
 
     /**
@@ -295,11 +302,13 @@ class DishVariationControllerTest extends AbstractControllerTestCase
      */
     public function testDeleteAction()
     {
-        $dishvariation = $this->createDishVariation();
-        $this->persistAndFlushAll(array($dishvariation));
+        #$dishvariation = $this->createDishVariation();
+        #$this->persistAndFlushAll(array($dishvariation));
+        $dish = $this->getDish(NULL, true);
+        $dishvariation = $dish->getVariations()->get(0);
 
         $dishvariationId = $dishvariation->getId();
-        $this->client->request('GET', '/dish/variation/'.$dishvariation->getId().'/delete');
+        $this->client->request('GET', '/dish/variation/' . $dishvariation->getId() . '/delete');
         $dishvariationRepository = $this->getDoctrine()->getRepository('MealzMealBundle:DishVariation');
         $queryResult = $dishvariationRepository->find($dishvariationId);
 
@@ -369,22 +378,36 @@ class DishVariationControllerTest extends AbstractControllerTestCase
      *
      * If no dish-id is specified then it returns the test dish with lowest id.
      *
-     * @param  integer $id      Dish ID
+     * @param  integer|NULL $id Dish ID
+     * @param  bool $dishvariationRequired If TRUE and no id is given the method returns the first dish
+     *                                              having at least ONE variation.
      * @return Dish
      */
-    private function getDish($id = 0)
+    private function getDish($id = NULL, $dishvariationRequired = false)
     {
         /** @var \Mealz\MealBundle\Entity\DishRepository $dishRepository */
         $dishRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Dish');
+        $dish = NULL;
 
         if ($id > 0) {
             $dish = $dishRepository->find($id);
         } else {
-            $result = $dishRepository->findBy([], ['id' => 'ASC'], 1, 0);
-            $dish = (is_array($result) && count($result)) ? $result[0] : NULL;
+            $result = $dishRepository->findBy([], ['id' => 'ASC']);
+            if (is_array($result) && count($result)) {
+                if ($dishvariationRequired == false) {
+                    $dish = (is_array($result) && count($result)) ? $result[0] : NULL;
+                } else {
+                    foreach ($result as $item) {
+                        if ($item->hasVariations() == true) {
+                            $dish = $item;
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
-        if (!($dish instanceof Dish)) {
+        if (!$dish instanceof \Mealz\MealBundle\Entity\Dish) {
             $this->fail('Failed to fetch test dish.');
         }
 
@@ -393,10 +416,11 @@ class DishVariationControllerTest extends AbstractControllerTestCase
 
     /**
      * @param  string $attribute
-     * @param  mixed  $value
+     * @param  mixed $value
+     * @param  bool $throwError
      * @return DishVariation
      */
-    private function getDishVariationBy($attribute, $value)
+    private function getDishVariationBy($attribute, $value, $throwError = true)
     {
         $dishVariationRepository = $this->getDoctrine()->getRepository('MealzMealBundle:DishVariation');
 
@@ -406,7 +430,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
             $dishVariation = $dishVariationRepository->findOneBy([$attribute => $value]);
         }
 
-        if (!($dishVariation instanceof DishVariation)) {
+        if (!$dishVariation instanceof \Mealz\MealBundle\Entity\DishVariation && $throwError) {
             $this->fail('Failed to fetch test dish variation.');
         }
 
@@ -418,8 +442,12 @@ class DishVariationControllerTest extends AbstractControllerTestCase
      */
     private function getHostUrl()
     {
-        $host = self::$kernel->getContainer()->getParameter('mealz.host');
-        $host = rtrim($host, '/') . '/';
+        $host = 'http://localhost/app.php/';
+        if (self::$kernel->getContainer()->hasParameter('mealz.host')) {
+            $host = self::$kernel->getContainer()->getParameter('mealz.host');
+            $host = rtrim($host, '/') . '/';
+        }
         return $host;
+
     }
 }

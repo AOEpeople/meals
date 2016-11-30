@@ -9,13 +9,8 @@ use Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use Mealz\AccountingBundle\Controller\AccountingBookController;
 use Mealz\AccountingBundle\Entity\TransactionRepository;
 
-use Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
-use Mealz\MealBundle\DataFixtures\ORM\LoadDays;
-use Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
 use Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
-use Mealz\MealBundle\DataFixtures\ORM\LoadParticipants;
 use Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
-use Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
 use Mealz\AccountingBundle\DataFixtures\ORM\LoadTransactions;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -28,13 +23,8 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
 
         $this->clearAllTables();
         $this->loadFixtures([
-            #new LoadWeeks(),
-            #new LoadDays(),
-            #new LoadCategories(),
-            #new LoadDishes(),
             new LoadMeals(),
             new LoadUsers($this->client->getContainer()),
-            #new LoadParticipants(),
             new LoadTransactions,
         ]);
     }

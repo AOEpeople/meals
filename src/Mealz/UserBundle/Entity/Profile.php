@@ -15,175 +15,185 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="profile")
  * @ORM\Entity
  */
-class Profile {
-	/**
-	 * @var string
-	 *
-	 * @ORM\Column(name="id", type="string", length=255, nullable=FALSE)
-	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="NONE")
-	 */
-	private $username;
+class Profile
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="id", type="string", length=255, nullable=FALSE)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     */
+    private $username;
 
-	/**
-	 * @Assert\NotBlank()
-	 * @ORM\Column(type="string", length=255, nullable=TRUE)
-	 * @var string
-	 */
-	protected $name;
+    /**
+     * @Assert\NotBlank()
+     * @ORM\Column(type="string", length=255, nullable=TRUE)
+     * @var string
+     */
+    protected $name;
 
-	/**
-	 * @Assert\NotBlank()
-	 * @ORM\Column(type="string", length=255, nullable=TRUE)
-	 * @var string
-	 */
-	protected $firstName;
+    /**
+     * @Assert\NotBlank()
+     * @ORM\Column(type="string", length=255, nullable=TRUE)
+     * @var string
+     */
+    protected $firstName;
 
-	/**
-	 * @ORM\Column(type="string", length=255, nullable=TRUE)
-	 * @var string
-	 */
-	protected $company;
+    /**
+     * @ORM\Column(type="string", length=255, nullable=TRUE)
+     * @var string
+     */
+    protected $company;
 
-	/**
-	 * @ORM\OneToMany(targetEntity="Mealz\AccountingBundle\Entity\Transaction", mappedBy="profile")
-	 * @var ArrayCollection
-	 */
-	protected $transactions;
+    /**
+     * @ORM\OneToMany(targetEntity="Mealz\AccountingBundle\Entity\Transaction", mappedBy="profile")
+     * @var ArrayCollection
+     */
+    protected $transactions;
 
-	/**
-	 * @ORM\ManyToMany(targetEntity="Role", inversedBy="profiles")
-	 * @var Collection
-	 */
-	private $roles;
+    /**
+     * @ORM\ManyToMany(targetEntity="Role", inversedBy="profiles")
+     * @var Collection
+     */
+    private $roles;
 
-	/**
-	 * Profile constructor.
-	 */
-	public function __construct()
-	{
-		$this->roles = new ArrayCollection();
-	}
+    /**
+     * Profile constructor.
+     */
+    public function __construct()
+    {
+        $this->roles = new ArrayCollection();
+    }
 
-	/**
-	 * @param string $username
-	 */
-	public function setUsername($username)
-	{
-		$this->username = $username;
-	}
+    /**
+     * @param string $username
+     */
+    public function setUsername($username)
+    {
+        $this->username = $username;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getUsername()
-	{
-		return $this->username;
-	}
+    /**
+     * @return string
+     */
+    public function getUsername()
+    {
+        return $this->username;
+    }
 
-	/**
-	 * @param string $name
-	 */
-	public function setName($name)
-	{
-		$this->name = $name;
-	}
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getName()
-	{
-		return $this->name;
-	}
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getFirstName()
-	{
-		return $this->firstName;
-	}
+    /**
+     * @return string
+     */
+    public function getFirstName()
+    {
+        return $this->firstName;
+    }
 
-	/**
-	 * @param string $firstName
-	 */
-	public function setFirstName($firstName)
-	{
-		$this->firstName = $firstName;
-	}
+    /**
+     * @param string $firstName
+     */
+    public function setFirstName($firstName)
+    {
+        $this->firstName = $firstName;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getFullName()
-	{
-		return "$this->name, $this->firstName";
-	}
+    /**
+     * @return string
+     */
+    public function getFullName()
+    {
+        return "$this->name, $this->firstName";
+    }
 
-	public function __toString() {
-		return $this->getUsername();
-	}
+    public function __toString()
+    {
+        return $this->getUsername();
+    }
 
-	/**
-	 * Add role
-	 *
-	 * @param Role $role
-	 * @return Profile
-	 */
-	public function addRole(Role $role)
-	{
-		$this->roles->add($role);
-		return $this;
-	}
+    /**
+     * Add role
+     *
+     * @param Role $role
+     * @return Profile
+     */
+    public function addRole(Role $role)
+    {
+        $this->roles->add($role);
 
-	/**
-	 * Remove role
-	 *
-	 * @param Role $role
-	 */
-	public function removeRole(Role $role)
-	{
-		$this->roles->removeElement($role);
-	}
+        return $this;
+    }
 
-	/**
-	 * @return Collection
-	 */
-	public function getRoles()
-	{
-		return $this->roles;
-	}
+    /**
+     * Remove role
+     *
+     * @param Role $role
+     */
+    public function removeRole(Role $role)
+    {
+        $this->roles->removeElement($role);
+    }
 
-	/**
-	 * @param mixed $roles
-	 */
-	public function setRoles(Collection $roles)
-	{
-		$this->roles = $roles;
-	}
+    /**
+     * @return Collection
+     */
+    public function getRoles()
+    {
+        return $this->roles;
+    }
 
+    /**
+     * @param mixed $roles
+     */
+    public function setRoles(Collection $roles)
+    {
+        $this->roles = $roles;
+    }
+
+    /**
+     * is the User a Guest
+     * @return bool
+     */
     public function isGuest()
     {
-        return $this->roles->exists(function ($key, $role) {
-            /** @var Role $role */
-            return ($role->getSid() === 'ROLE_GUEST');
-        });
-	}
+        return $this->roles->exists(
+            function ($key, $role) {
+                /** @var Role $role */
+                return ($role->getSid() === 'ROLE_GUEST');
+            }
+        );
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getCompany()
-	{
-		return $this->company;
-	}
+    /**
+     * @return string
+     */
+    public function getCompany()
+    {
+        return $this->company;
+    }
 
-	/**
-	 * @param string $company
-	 */
-	public function setCompany($company)
-	{
-		$this->company = $company;
-	}
+    /**
+     * @param string $company
+     */
+    public function setCompany($company)
+    {
+        $this->company = $company;
+    }
+
 }

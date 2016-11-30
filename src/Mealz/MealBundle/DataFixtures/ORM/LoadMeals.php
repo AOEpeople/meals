@@ -17,14 +17,32 @@ use Mealz\MealBundle\Entity\Meal;
  * Class LoadMeals
  * @package Mealz\MealBundle\DataFixtures\ORM
  */
+class LoadMeals extends AbstractFixture implements OrderedFixtureInterface
 {
-
+    /**
+     * @var ObjectManager
+     */
     protected $objectManager;
 
+    /**
+     * @var array
+     */
+    protected $dishes = array();
 
+    /**
+     * @var Day[]
+     */
+    protected $days = array();
 
+    /**
+     * @var int
+     */
+    protected $counter = 0;
 
-
+    function load(ObjectManager $manager) {
+        $this->objectManager = $manager;
+        $this->loadDishes();
+        $this->loadDays();
         foreach ($this->days as $key => $day) {
             $dish = null;
             // that should be next week Wednesday which should be available for selection

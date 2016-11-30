@@ -8,6 +8,11 @@
   span {
     display: inline-block;
     margin-left: 10px;
+    color: $color-green;
+
+    &.dept {
+      color: $color-red;
+    }
   }
 }
 
@@ -63,7 +68,7 @@
     }
 
     .transaction-description::before {
-      content: '\e225';
+      content: '\20ac';
       color: $color-green;
 
       @include breakpoint(small) {

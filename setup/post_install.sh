@@ -19,7 +19,6 @@ echo -n "done"
 
 if [ "${ENVIRONMENT}" == "deploy" -o "${ENVIRONMENT}" == "dev" ]; then
     echo -n "Starting anonymization for Prod Fixtures"
-    php ${FINAL_RELEASEFOLDER}/app/console doctrine:schema:update --force
     php ${FINAL_RELEASEFOLDER}/app/console doctrine:fixtures:load --fixtures=${FINAL_RELEASEFOLDER}/src/Mealz/UserBundle/DataFixtures/ORM/LoadAnomUsers.php --append
     echo -n "done"
 fi

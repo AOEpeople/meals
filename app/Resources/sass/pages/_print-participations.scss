@@ -31,6 +31,7 @@ $text-color: $color-base;
       word-wrap: break-word;
       padding: 5px;
       font-family: $font-default;
+      line-height: 1.2em;
     }
   }
 
@@ -76,6 +77,9 @@ $text-color: $color-base;
   .table-head,
   .table-data {
     border-left: 1px solid $border-color;
+    &.day {
+      background: none;
+    }
 
     &.wide-cell {
       width: 200px;

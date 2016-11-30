@@ -138,8 +138,8 @@
   }
 
   .variation-checkbox {
-    display: block;
     position: relative;
+    display: block;
     cursor: pointer;
 
     &.checked::after {

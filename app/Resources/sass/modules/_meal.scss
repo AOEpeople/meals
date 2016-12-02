@@ -127,33 +127,32 @@
 }
 
 .participants {
-  margin-top: 6px;
+  margin-top: 5px;
 
-  span {
+  .participants-count {
     position: relative;
-    height: 28px;
-    padding: 5px 5px 5px 15px;
+    height: 38px;
+    padding: 5px 10px 7px 15px;
     border-radius: 20px;
     color: $color-white;
     background: $color-gray-secondary;
     font-size: 12px;
     font-family: $font-bold;
-  }
-
-  .participants-count {
-    vertical-align: middle;
-    position: static;
-    background: none;
 
     &::before {
-      position: absolute;
-      top: 6px;
-      left: 13px;
-      width: 10px;
-      height: 10px;
+      display: inline-block;
+      width: 13px;
+      height: 12px;
+      margin-right: 5px;
       content: '\e008';
       font-size: 12px;
       font-family: "Glyphicons Halflings", sans-serif;
+      vertical-align: middle;
+    }
+
+    span {
+      display: inline-block;
+      vertical-align: middle;
     }
   }
 }

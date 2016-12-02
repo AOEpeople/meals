@@ -46,9 +46,9 @@ $(document).ready(function () {
     mealz.$guestParticipationCheckboxes.each(function (idx, checkbox) {
         var $checkbox = $(checkbox);
         var $participantsCount = $checkbox.closest('.meal-row').find('.participants-count');
-        var actualCount = parseInt($participantsCount.html());
+        var actualCount = parseInt($participantsCount.find('span').html());
         mealz.applyCheckboxClasses($checkbox);
-        $participantsCount.text($checkbox.is(':checked') ? actualCount + 1 : actualCount);
+        $participantsCount.find('span').text($checkbox.is(':checked') ? actualCount + 1 : actualCount);
     });
 
     /**

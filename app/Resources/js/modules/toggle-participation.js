@@ -14,7 +14,7 @@ Mealz.prototype.toggleParticipation = function ($checkbox) {
             $checkbox.attr('value', data.url);
             $participantsCount.fadeOut('fast', function () {
                 that.applyCheckboxClasses($checkbox);
-                $participantsCount.text(data.participantsCount);
+                $participantsCount.find('span').text(data.participantsCount);
                 $participantsCount.fadeIn('fast');
             });
         },
@@ -46,10 +46,10 @@ Mealz.prototype.toggleParticipationAdmin = function ($element) {
 Mealz.prototype.toggleGuestParticipation = function ($checkbox) {
     var that = this;
     var $participantsCount = $checkbox.closest('.meal-row').find('.participants-count');
-    var actualCount = parseInt($participantsCount.html());
+    var actualCount = parseInt($participantsCount.find('span').html());
     $participantsCount.fadeOut('fast', function () {
         that.applyCheckboxClasses($checkbox);
-        $participantsCount.text($checkbox.is(':checked') ? actualCount + 1 : actualCount - 1);
+        $participantsCount.find('span').text($checkbox.is(':checked') ? actualCount + 1 : actualCount - 1);
         $participantsCount.fadeIn('fast');
     });
 };

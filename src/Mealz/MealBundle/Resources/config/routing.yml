@@ -172,6 +172,10 @@ MealzMealBundle_Print_participations:
     path: /print/participations
     defaults: { _controller: "MealzMealBundle:Participant:list" }
 
+mealz_meal_edit_participations:
+    path: /participations/{week}/edit
+    defaults: { _controller: "MealzMealBundle:Participant:editParticipation" }
+
 MealzMealBundle_Meal_guest:
     path:  /menu/guest/{hash}
     defaults: { _controller: "MealzMealBundle:Meal:guest" }

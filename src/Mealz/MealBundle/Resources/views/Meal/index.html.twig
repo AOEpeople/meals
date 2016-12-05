@@ -13,6 +13,16 @@
 <ul class="legend">
 	<li>{{ 'content.participation.legend.available' | trans({}, 'general') }}</li>
 	<li>{{ 'content.participation.legend.unavailable' | trans({}, 'general') }}</li>
+    {% if is_granted('ROLE_KITCHEN_STAFF') %}
+		<li class="print">
+			{{ MealzButton.link(
+			path('MealzMealBundle_Print_participations'),
+			'headings.week.participations'|trans({},'general'),
+			'',
+			'transparent',
+			'glyphicon-print') }}
+		</li>
+	{% endif %}
 </ul>
 
 {% endblock %}

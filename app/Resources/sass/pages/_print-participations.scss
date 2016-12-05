@@ -103,3 +103,16 @@ $text-color: $color-base;
     border: 1px solid;
   }
 }
+
+.meals-list .legend li.print {
+  float: right;
+
+  .button {
+    padding: 5px;
+  }
+
+  &::before {
+    width: 0;
+    height: 0;
+  }
+}

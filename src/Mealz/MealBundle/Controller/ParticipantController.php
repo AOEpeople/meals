@@ -111,13 +111,15 @@ class ParticipantController extends BaseController {
             }
         }
 
+        $prototype = $this->renderView('@MealzMeal/Participant/edit_row_prototype.html.twig', array('week' => $week));
         /**
          * @TODO: add select field for adding a new user
          */
         return $this->render('MealzMealBundle:Participant:edit.html.twig', array(
             'week' => $week,
             'users' => $groupedParticipations,
-            'profilesJson' => json_encode($profilesArray)
+            'profilesJson' => json_encode($profilesArray),
+            'prototype' => json_encode($prototype)
         ));
     }
 }

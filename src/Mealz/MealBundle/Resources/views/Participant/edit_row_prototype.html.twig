@@ -1,0 +1,16 @@
+{% spaceless %}
+<tr>
+    <td class="text table-data wide-cell">__name__</td>
+    {% for day in week.days %}
+        {% for meal in day.meals %}
+            <td class="meal-participation table-data">
+                <input type="checkbox" data-attribute-route="{{ path('MealzMealBundle_Meal_join', {
+                    date: meal.dateTime | date('Y-m-d'),
+                    dish: meal.dish.slug,
+                    profile: '__username__'
+                }) }}">
+            </td>
+        {% endfor %}
+    {% endfor %}
+</tr>
+{% endspaceless %}

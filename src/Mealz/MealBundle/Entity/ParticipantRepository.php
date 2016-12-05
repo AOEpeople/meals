@@ -256,4 +256,25 @@ class ParticipantRepository extends EntityRepository
 
         return $result;
     }
+
+    public function getParticipantsOnCurrentDay($options = array())
+    {
+        $options = array_merge(
+            $options,
+            array(
+                'load_meal' => true,
+                'load_profile' => true,
+            )
+        );
+
+        $qb = $this->getQueryBuilderWithOptions($options);
+        $qb->andWhere('m.dateTime LIKE :today');
+        $qb->setParameter(':today', date('Y-m-d%'));
+
+        $qb->orderBy('u.name', 'ASC');
+
+        $participants = $qb->getQuery()->execute();
+
+        return $this->sortParticipantsByName($participants);
+    }
 }

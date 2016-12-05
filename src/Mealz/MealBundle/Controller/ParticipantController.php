@@ -3,6 +3,7 @@
 
 namespace Mealz\MealBundle\Controller;
 
+use Mealz\MealBundle\Entity\DayRepository;
 use Mealz\MealBundle\Entity\Participant;
 use Mealz\MealBundle\Entity\Week;
 use Mealz\MealBundle\Entity\WeekRepository;
@@ -56,19 +57,16 @@ class ParticipantController extends BaseController {
 		return $ajaxResponse;
 	}
 
-    public function listAction(Week $week)
+    public function listAction()
     {
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
-        /** @var WeekRepository $weekRepository */
-        $weekRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Week');
-        $week = $weekRepository->findWeekByDate($week->getStartTime(), TRUE);
+        /** @var DayRepository $dayRepository */
+        $dayRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Day');
+        $day = $dayRepository->getCurrentDay();
 
         $participantRepository = $this->getParticipantRepository();
-        $participations = $participantRepository->getParticipantsOnDays(
-            $week->getStartTime(),
-            $week->getEndTime()
-        );
+        $participations = $participantRepository->getParticipantsOnCurrentDay();
 
         /**
          * @TODO: get participants through week entity
@@ -76,7 +74,7 @@ class ParticipantController extends BaseController {
         $groupedParticipations = $participantRepository->groupParticipantsByName($participations);
 
         return $this->render('MealzMealBundle:Participant:list.html.twig', array(
-            'week' => $week,
+            'day' => $day,
             'users' => $groupedParticipations
         ));
     }

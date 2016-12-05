@@ -7,23 +7,15 @@
         <table class="table">
             <thead class="table-header">
                 <tr>
-                    <th class="table-head wide-cell"></th>
-                    {% for day in week.days %}
-                        <th class="table-head day" colspan="{{ day.meals | length }}">{{ day.dateTime | date('l') }}</th>
-                    {% endfor %}
-                </tr>
-                <tr>
                     <th class="table-head wide-cell week-date">
-                        <span>{{ week.startTime | date('d.m.') }}-{{ week.endTime | date('d.m.') }}</span>
+                        <span>{{ day.dateTime | date('l, d.m.') }}</span>
                     </th>
-                    {% for day in week.days %}
-                        {% for meal in day.meals %}
-                            <th class="table-head meal-title">
-                                <span>
-                                    {% if meal.dish.parent %}<b>{{ meal.dish.parent.title }}</b><br>{% endif %}{{ meal.dish.title }}
-                                </span>
-                            </th>
-                        {% endfor %}
+                    {% for meal in day.meals %}
+                        <th class="table-head meal-title">
+                            <span>
+                                {% if meal.dish.parent %}<b>{{ meal.dish.parent.title }}</b><br>{% endif %}{{ meal.dish.title }}
+                            </span>
+                        </th>
                     {% endfor %}
                 </tr>
             </thead>
@@ -33,20 +25,16 @@
                     {% set profile = participations[0].profile %}
                     <tr class="table-row">
                         <td class="text table-data wide-cell">{{ profile.fullName }} {% if profile.isGuest %}(Gast){% endif %}</td>
-                        {% for day in week.days %}
-                            {% for meal in day.meals %}
-                                {% set participation = isParticipant(participations, meal.participants) %}
-                                <td class="meal-participation table-data {% if participation is not null%}participating{% endif %}"></td>
-                            {% endfor %}
+                        {% for meal in day.meals %}
+                            {% set participation = isParticipant(participations, meal.participants) %}
+                            <td class="meal-participation table-data {% if participation is not null%}participating{% endif %}"></td>
                         {% endfor %}
                     </tr>
                 {% endfor %}
                 <tr>
                     <td class="text table-data wide-cell">Gesamt</td>
-                    {% for day in week.days %}
-                            {% for meal in day.meals %}
-                                <td class="meal-count text text-center table-data"><span>{{ meal.participants | length }}</span></td>
-                            {% endfor %}
+                    {% for meal in day.meals %}
+                        <td class="meal-count text text-center table-data"><span>{{ meal.participants | length }}</span></td>
                     {% endfor %}
                 </tr>
             </tbody>

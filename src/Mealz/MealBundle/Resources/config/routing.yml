@@ -169,7 +169,7 @@ MealzMealBundle_Category_Form_preFilled:
     defaults: { _controller: "mealz_meal.controller.category:getPreFilledFormAction" }
 
 MealzMealBundle_Print_participations:
-    path: /print/participations/{week}
+    path: /print/participations
     defaults: { _controller: "MealzMealBundle:Participant:list" }
 
 MealzMealBundle_Meal_guest:

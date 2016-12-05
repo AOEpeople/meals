@@ -75,7 +75,7 @@ class ParticipantController extends BaseController {
          */
         $groupedParticipations = $participantRepository->groupParticipantsByName($participations);
 
-        return $this->render('MealzMealBundle:Print:participations.html.twig', array(
+        return $this->render('MealzMealBundle:Participant:list.html.twig', array(
             'week' => $week,
             'users' => $groupedParticipations
         ));

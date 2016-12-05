@@ -34,24 +34,10 @@
                     <tr class="table-row">
                         <td class="text table-data wide-cell">{{ profile.fullName }} {% if profile.isGuest %}(Gast){% endif %}</td>
                         {% for day in week.days %}
-                                {% for meal in day.meals %}
-                                    {% set participation = isParticipant(participations, meal.participants) %}
-                                    {% if participation is not null%}
-                                    <td class="meal-participation participating table-data">
-                                        <a href="{{ path('MealzMealBundle_Participant_delete',{
-                                            'participant': participation.id
-                                        }) }}"></a>
-                                    </td>
-                                    {% else %}
-                                    <td class="meal-participation table-data">
-                                        <a href="{{ path('MealzMealBundle_Meal_join', {
-                                            date: meal.dateTime | date('Y-m-d'),
-                                            dish: meal.dish.slug,
-                                            profile: profile.username
-                                        }) }}"></a>
-                                    </td>
-                                    {% endif %}
-                                {% endfor %}
+                            {% for meal in day.meals %}
+                                {% set participation = isParticipant(participations, meal.participants) %}
+                                <td class="meal-participation table-data {% if participation is not null%}participating{% endif %}"></td>
+                            {% endfor %}
                         {% endfor %}
                     </tr>
                 {% endfor %}

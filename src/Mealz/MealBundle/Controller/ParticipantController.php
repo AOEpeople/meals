@@ -7,6 +7,7 @@ use Mealz\MealBundle\Entity\DayRepository;
 use Mealz\MealBundle\Entity\Participant;
 use Mealz\MealBundle\Entity\Week;
 use Mealz\MealBundle\Entity\WeekRepository;
+use Mealz\UserBundle\Entity\Profile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ParticipantController extends BaseController {
@@ -98,12 +99,25 @@ class ParticipantController extends BaseController {
          */
         $groupedParticipations = $participantRepository->groupParticipantsByName($participations);
 
+        /** @var Profile[] $profiles */
+        $profiles = $this->getDoctrine()->getRepository('MealzUserBundle:Profile')->findAll();
+        $profilesArray = array();
+        foreach ($profiles as $profile) {
+            if (FALSE === array_key_exists($profile->getUsername(), $groupedParticipations)) {
+                $profilesArray[] = array(
+                    'label' => $profile->getFullName(),
+                    'value' => $profile->getUsername()
+                );
+            }
+        }
+
         /**
          * @TODO: add select field for adding a new user
          */
         return $this->render('MealzMealBundle:Participant:edit.html.twig', array(
             'week' => $week,
-            'users' => $groupedParticipations
+            'users' => $groupedParticipations,
+            'profilesJson' => json_encode($profilesArray)
         ));
     }
 }

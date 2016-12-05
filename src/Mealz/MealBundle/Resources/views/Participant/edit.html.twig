@@ -28,7 +28,7 @@
                 </tr>
             </thead>
 
-            <tbody class="table-content">
+            <tbody class="table-content" data-prototype="{{ prototype }}">
                 {% for name, participations in users %}
                     {% set profile = participations[0].profile %}
                     <tr class="table-row">

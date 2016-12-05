@@ -53,3 +53,9 @@ Mealz.prototype.toggleGuestParticipation = function ($checkbox) {
         $participantsCount.fadeIn('fast');
     });
 };
+
+Mealz.prototype.selectProfile = function () {
+    var testProfiles = $(".profile-list").data("attribute-profiles");
+    $(".profiles").autocomplete({source: testProfiles});
+
+};

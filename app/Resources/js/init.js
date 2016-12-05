@@ -55,4 +55,9 @@ $(document).ready(function () {
      * Lightbox
      */
     mealz.enableLightbox();
+
+    /**
+     * Profile Selection on Participants View
+     */
+    mealz.selectProfile();
 });

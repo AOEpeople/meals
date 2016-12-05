@@ -65,7 +65,7 @@
                 </tr>
             </tbody>
         </table>
-        <div class="profile-list" data-attribute-profiles="{{ profilesJson }}"></div>
+        {% include 'MealzMealBundle:Participant/partials:profile-list.html.twig' %}
     {% else %}
         {{ 'participant.none' | trans({}, 'general') }}
     {% endif %}

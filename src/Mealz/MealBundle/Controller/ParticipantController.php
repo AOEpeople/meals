@@ -80,4 +80,32 @@ class ParticipantController extends BaseController {
             'users' => $groupedParticipations
         ));
     }
+
+    public function editParticipationAction(Week $week)
+    {
+        $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
+
+        /** @var WeekRepository $weekRepository */
+        $weekRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Week');
+        $week = $weekRepository->findWeekByDate($week->getStartTime(), TRUE);
+
+        $participantRepository = $this->getParticipantRepository();
+        $participations = $participantRepository->getParticipantsOnDays(
+            $week->getStartTime(),
+            $week->getEndTime()
+        );
+
+        /**
+         * @TODO: get participants through week entity
+         */
+        $groupedParticipations = $participantRepository->groupParticipantsByName($participations);
+
+        /**
+         * @TODO: add select field for adding a new user
+         */
+        return $this->render('MealzMealBundle:Participant:edit.html.twig', array(
+            'week' => $week,
+            'users' => $groupedParticipations
+        ));
+    }
 }

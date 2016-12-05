@@ -3,16 +3,9 @@
 
 namespace Mealz\MealBundle\Controller;
 
-
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Query;
 use Mealz\MealBundle\Entity\Participant;
-use Mealz\MealBundle\EventListener\ParticipantNotUniqueException;
-use Mealz\MealBundle\Form\ParticipantForm;
-use Mealz\UserBundle\Entity\Profile;
-use Mealz\MealBundle\Entity\Meal;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Mealz\MealBundle\Entity\Week;
+use Mealz\MealBundle\Entity\WeekRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ParticipantController extends BaseController {
@@ -62,4 +55,29 @@ class ParticipantController extends BaseController {
 
 		return $ajaxResponse;
 	}
+
+    public function listAction(Week $week)
+    {
+        $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
+
+        /** @var WeekRepository $weekRepository */
+        $weekRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Week');
+        $week = $weekRepository->findWeekByDate($week->getStartTime(), TRUE);
+
+        $participantRepository = $this->getParticipantRepository();
+        $participations = $participantRepository->getParticipantsOnDays(
+            $week->getStartTime(),
+            $week->getEndTime()
+        );
+
+        /**
+         * @TODO: get participants through week entity
+         */
+        $groupedParticipations = $participantRepository->groupParticipantsByName($participations);
+
+        return $this->render('MealzMealBundle:Print:participations.html.twig', array(
+            'week' => $week,
+            'users' => $groupedParticipations
+        ));
+    }
 }

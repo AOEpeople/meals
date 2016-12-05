@@ -1,22 +1,17 @@
 <?php
 
-namespace Mealz\MealBundle\Controller;
+namespace Mealz\AccountingBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Mealz\MealBundle\Entity\Week;
-use Mealz\MealBundle\Entity\WeekRepository;
+use Mealz\MealBundle\Controller\BaseController;
 
-class PrintController extends BaseController
+class CostSheetController extends BaseController
 {
     /**
      * @TODO: use own data model for user costs
      */
-    public function costSheetAction()
+    public function listAction()
     {
-        if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
-            throw new AccessDeniedException();
-        }
+        $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
         $participantRepository = $this->getParticipantRepository();
         $transactionRepository = $this->getDoctrine()->getRepository('MealzAccountingBundle:Transaction');
@@ -53,36 +48,9 @@ class PrintController extends BaseController
             $user['costs'] = $userCosts;
         }
 
-        return $this->render('MealzMealBundle:Print:costSheet.html.twig', array(
+        return $this->render('MealzAccountingBundle::costSheet.html.twig', array(
             'columnNames' => $columnNames,
             'users' => $users
-        ));
-    }
-
-    public function participationsAction(Week $week)
-    {
-        if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
-            throw new AccessDeniedException();
-        }
-
-        /** @var WeekRepository $weekRepository */
-        $weekRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Week');
-        $week = $weekRepository->findWeekByDate($week->getStartTime(), TRUE);
-
-        $participantRepository = $this->getParticipantRepository();
-        $participations = $participantRepository->getParticipantsOnDays(
-            $week->getStartTime(),
-            $week->getEndTime()
-        );
-
-        /**
-         * @TODO: get participants through week entity
-         */
-        $groupedParticipations = $participantRepository->groupParticipantsByName($participations);
-
-        return $this->render('MealzMealBundle:Print:participations.html.twig', array(
-            'week' => $week,
-            'users' => $groupedParticipations
         ));
     }
 

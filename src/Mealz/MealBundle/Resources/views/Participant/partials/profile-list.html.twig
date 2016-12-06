@@ -1,5 +1,7 @@
-<select id="select-profiles">
-{% for profile in profiles %}
-    <option value="{{ profile.username }}">{{ profile.fullName }}</option>
-{% endfor %}
-</select>
+{% if profiles %}
+    <select id="select-profiles">
+        {% for profile in profiles %}
+            <option value="{{ profile.username }}">{{ profile.fullName }}</option>
+        {% endfor %}
+    </select>
+{% endif %}

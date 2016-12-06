@@ -42,6 +42,10 @@ class MealRepositoryTest extends AbstractDatabaseTestCase
 
     public function testFindOneByDateAndDishMultipleResults()
     {
+        $this->markTestSkipped(
+            'Currently not required. Makes no sense to choose same meal for one day. Maybbe we need the test again'
+        );
+        
         $dish = $this->createDish();
         $meal = $this->createMeal($dish);
         $meal2 = $this->createMeal($dish);

@@ -7,7 +7,8 @@ use Mealz\MealBundle\Entity\Dish;
 use Mealz\MealBundle\Entity\DishRepository;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-class DishController extends BaseListController {
+class DishController extends BaseListController
+{
     /** @var  DishRepository $repository */
     protected $repository;
 
@@ -62,7 +63,7 @@ class DishController extends BaseListController {
         $parameters = array(
             'load_category' => true,
             'load_variations' => true,
-            'orderBy_category' => false
+            'orderBy_category' => false,
         );
 
         $dishesQueryBuilder = $this->repository->getSortedDishesQueryBuilder($parameters);

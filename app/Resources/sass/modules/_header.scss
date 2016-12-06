@@ -157,6 +157,10 @@ header {
         font-size: 12px;
       }
 
+      .button {
+        padding: 0;
+      }
+
       strong {
         padding-left: 5px;
         color: $color-white;
@@ -191,7 +195,7 @@ header {
       padding: 0 10px;
     }
 
-    .button-login {
+    .button.button-login {
       float: right;
       padding: 0 20px;
       background-color: $header-login-button-background;

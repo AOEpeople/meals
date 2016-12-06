@@ -2,6 +2,7 @@
 #    pattern:  /accounting
 #    defaults: { _controller: "MealzAccountingBundle:AccountingUser:index" }
 #    methods:  [GET]
+
 #MealzAccountingBundle_Accounting_participation:
 #    pattern:  /accounting/participation
 #    defaults: { _controller: "MealzAccountingBundle:AccountingUser:listParticipation" }
@@ -50,6 +51,10 @@ mealz_accounting_payment_cash_form_submit:
 mealz_accounting_payment_cash_form:
     path: /payment/cash/form/{profile}
     defaults: { _controller: "MealzAccountingBundle:Payment\\Cash:getPaymentFormForProfile" }
+
+mealz_accounting_payment_transaction_history:
+    path: /accounting/transactions
+    defaults: { _controller: "MealzAccountingBundle:Payment\\Cash:showTransactionHistory" }
 
 mealz_accounting_accounting_book:
     path: /accounting/book

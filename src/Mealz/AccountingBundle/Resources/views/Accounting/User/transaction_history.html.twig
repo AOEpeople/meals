@@ -1,0 +1,47 @@
+{% extends '::base_navigation.html.twig' %}
+
+{% set wrapperClass = 'transaction-history' %}
+
+{% block body %}
+
+    <div class="headline-container headline-container-h1 headline-left"><h1>{{ 'payment.transaction_history.account'|trans({}, 'messages') }}</h1></div>
+    <div class="last-account-balance">
+        {{ 'payment.transaction_history.balance_past'|trans({}, 'messages') ~ ' ' ~ date("-28days")|date("d.m.Y") }}:<span {% if((balance + participations_total - transactions_total) < 0) %}class="dept"{% endif %}>{{ (balance + participations_total - transactions_total)|number_format(2, '.', ',') }}€</span>
+    </div>
+    <table class="table table-full-width">
+        <thead>
+        <tr class="table-header">
+            <th class="table-head">{{ 'payment.transaction_history.date'|trans({}, 'messages') }}</th>
+            <th class="table-head">{{ 'payment.transaction_history.description'|trans({}, 'messages') }}</th>
+            <th class="table-head">{{ 'payment.transaction_history.amount'|trans({}, 'messages') }}</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for transaction_record in transaction_history_records %}
+                {% if transaction_record.meal is defined %}
+                    <tr class="table-row transaction-meal">
+                        <td class="table-data">{{ transaction_record.meal.dateTime|date('d. M Y') }}</td>
+                        <td class="table-data transaction-description">{{ transaction_record.meal.dish.title }}</td>
+                        <td class="table-data"><span>-</span> {{ transaction_record.meal.price|number_format(2, '.', ',') }}€</td>
+                    </tr>
+                {% else %}
+                    <tr class="table-row transaction-payment">
+                        <td class="table-data">{{ transaction_record.date|date('d. M Y') }}</td>
+                        <td class="table-data transaction-description">{{ 'payment.transaction_history.cash_payment'|trans({}, 'messages') }}</td>
+                        <td class="table-data"><span>+</span> {{ transaction_record.amount|number_format(2, '.', ',') }}€</td>
+                    </tr>
+                {% endif %}
+        {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr class="table-row">
+                <td class="table-data transaction-description" colspan="2">{{ 'payment.transaction_history.balance_now'|trans({}, 'messages') }}:</td>
+                <td class="table-data">
+                    <span {% if(balance < 0) %}class="dept"{% endif %}>{{ balance }}€</span>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+
+{% endblock %}

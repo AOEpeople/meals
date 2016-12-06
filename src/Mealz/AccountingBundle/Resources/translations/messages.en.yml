@@ -5,3 +5,11 @@ payment:
   acknowledge_debts:
     text: I know that my account balance is %amount%€ in the red and I will pay my debt very soon.
     button: Understood!
+  transaction_history:
+    account: Account
+    balance_past: Balance on the
+    balance_now: Current balance
+    date: Date
+    description: Description
+    amount: Amount
+    cash_payment: Cash Payment

@@ -5,16 +5,22 @@ namespace Mealz\MealBundle\Entity;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 
+/**
+ * the Meal Repository
+ * Class MealRepository
+ * @package Mealz\MealBundle\Entity
+ */
 class MealRepository extends EntityRepository
 {
     /**
      * @param string $date "YYYY-MM-DD"
      * @param string $dish slug of the dish
+     * @param array $userSelections already selected meals for that day
      * @return mixed|null
      * @throws \LogicException
      * @throws \InvalidArgumentException
      */
-    public function findOneByDateAndDish($date, $dish)
+    public function findOneByDateAndDish($date, $dish, $userSelections = array())
     {
         if (!preg_match('/^\d{4}-\d{2}-\d{2}$/ims', $date)) {
             throw new \InvalidArgumentException('$date has to be a string of the format "YYYY-MM-DD".');
@@ -43,9 +49,35 @@ class MealRepository extends EntityRepository
         $result = $qb->getQuery()->execute();
 
         if (count($result) > 1) {
-            throw new \LogicException('Found more then one meal matching the given requirements.');
+            $results = $result;
+
+            // this is actually a logical error, when there are 2 identical Dish for same day, but we try to handle it
+            foreach ($results as $key => $meal) {
+                if (in_array($meal->getId(), $userSelections)) {
+                    unset($result[$key]);
+                }
+            }
         }
 
         return $result ? current($result) : null;
+    }
+
+
+    /**
+     * Created for Test with Dish variations
+     *
+     * @return mixed
+     */
+    public function getMealsOnADayWithVariationOptions()
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT m.id
+                FROM MealzMealBundle:Meal m
+                WHERE m.day IN
+                  (SELECT IDENTITY (ml.day) FROM MealzMealBundle:Meal ml GROUP BY ml.day HAVING COUNT(ml.day)>2)'
+        );
+
+        return $query->getResult();
     }
 }

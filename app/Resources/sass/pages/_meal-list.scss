@@ -7,7 +7,7 @@
 
     margin-top: -25px;
     padding: 25px 0 40px;
-    background: url('../images/list-background.png') top center $color-white repeat-y;
+    background: url('../../images/list-background.png') top center $color-white repeat-y;
     box-shadow: inset 0 -40px 35px rgba($color-white, 1);
 
     @include breakpoint(medium) {

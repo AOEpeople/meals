@@ -13,14 +13,14 @@ use Doctrine\DBAL\Migrations\AbstractMigration as DoctrineAbstractMigration;
  */
 abstract class AbstractMigration extends DoctrineAbstractMigration
 {
-	/**
-	 * Checks if the migrations are executed on the supported database server.
-	 */
-	protected function validateDatabase()
-	{
-		$this->abortIf(
-			$this->connection->getDatabasePlatform()->getName() != 'mysql',
-			'Migration can only be executed safely on \'mysql\'.'
-		);
-	}
+    /**
+     * Checks if the migrations are executed on the supported database server.
+     */
+    protected function validateDatabase()
+    {
+        $this->abortIf(
+            $this->connection->getDatabasePlatform()->getName() != 'mysql',
+            'Migration can only be executed safely on \'mysql\'.'
+        );
+    }
 }

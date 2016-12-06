@@ -51,9 +51,12 @@ class TransactionRepository extends \Doctrine\ORM\EntityRepository
 
 
     /**
-     * @param \DateTime $minDate
-     * @param \DateTime $maxDate
-     * @param Profile $profile
+     * Get all successful transactions for period and profile
+     *
+     * @param \DateTime $minDate date from
+     * @param \DateTime $maxDate date to
+     * @param Profile   $profile user profile
+     *
      * @return Transaction[]
      */
     public function getSuccessfulTransactionsOnDays(\DateTime $minDate, \DateTime $maxDate, Profile $profile) {
@@ -70,10 +73,10 @@ class TransactionRepository extends \Doctrine\ORM\EntityRepository
         $qb->setParameter('minDate', $minDate);
         $qb->setParameter('maxDate', $maxDate);
 
-        $qb->andWhere('t.user = :user');
-        $qb->setParameter('user', $profile);
+        $qb->andWhere('t.profile = :profile');
+        $qb->setParameter('profile', $profile);
 
-        $qb->orderBy('t.date', 'DESC');
+        $qb->orderBy('t.date', 'ASC');
 
         return $qb->getQuery()->execute();
     }

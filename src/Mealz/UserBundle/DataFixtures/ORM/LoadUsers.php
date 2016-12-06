@@ -58,6 +58,7 @@ class LoadUsers extends AbstractFixture implements OrderedFixtureInterface, Cont
     }
 
     /**
+     * Load the Fixtures
      * @param ObjectManager $manager
      */
     public function load(ObjectManager $manager)
@@ -70,21 +71,19 @@ class LoadUsers extends AbstractFixture implements OrderedFixtureInterface, Cont
         $this->addUser('jane');
         $this->addUser('kochomi');
 
-        for ($i = 0; $i < 100; $i++) {
-            $this->addUser(uniqid());
-        }
-
         $this->objectManager->flush();
     }
 
     /**
-     * Gets the loading order of fixture.
-     *
+     * Get the Fixtures loadOrder
      * @return int
      */
     public function getOrder()
     {
-        return 2;
+        /**
+         * load as first
+         */
+        return 1;
     }
 
     /**
@@ -113,4 +112,6 @@ class LoadUsers extends AbstractFixture implements OrderedFixtureInterface, Cont
         $this->addReference('profile-'.$this->counter++, $profile);
         $this->addReference('login-'.$this->counter, $login);
     }
+
 }
+

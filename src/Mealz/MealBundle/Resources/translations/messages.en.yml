@@ -22,5 +22,6 @@ error:
   meal:
     has_participants: There are already participants for "%dish%" on %day%.
     join_not_allowed: It's not possible to join this meal anymore.
+    variation_required: Please select a variation!
 participation:
   successful: Meal participation successful

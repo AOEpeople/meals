@@ -1,5 +1,6 @@
 %meal,
-.meal {
+.meal,
+.day {
   $meal-border-width: 25px;
 
   position: relative;
@@ -36,7 +37,7 @@
 
   .meal-row {
     position: relative;
-    padding: 15px;
+    padding: 10px 15px;
 
     &:not(:last-child) {
       border-bottom: 2px solid $meal-border-color;
@@ -55,85 +56,128 @@
     }
 
     .title {
-      margin-bottom: 6px;
+      margin-bottom: 5px;
       font-weight: bold;
       font-family: $font-bold;
     }
+  }
 
+  .variation-row {
+    margin-top: -3px;
   }
 
   .text,
   .wrapper-vertical-center,
+  .wrapper-variation-vertical-center,
   .participants,
   .action {
     display: inline-block;
   }
 
   .text {
-    width: 80%;
+    width: 72%;
     padding-right: 10px;
 
     @include breakpoint(small) {
-      width: 70%;
+      width: 69%;
     }
+
+    @include breakpoint(large) {
+      width: 80%;
+    }
+  }
+
+  .text-variation {
+    line-height: 30px;
   }
 
   .wrapper-vertical-center {
     position: absolute;
     top: 50%;
-    width: 20%;
+    width: 28%;
     height: 30px;
     margin-top: -15px;
 
     @include breakpoint(small) {
-      width: 30%;
+      width: 31%;
+    }
+
+    @include breakpoint(large) {
+      width: 20%;
+    }
+  }
+
+  .wrapper-variation-vertical-center {
+    position: absolute;
+    width: 28%;
+    height: 30px;
+    vertical-align: bottom;
+
+    @include breakpoint(small) {
+      width: 31%;
+    }
+
+    @include breakpoint(large) {
+      width: 20%;
     }
   }
 
   .participants,
   .action {
-    width: 50%;
-    text-align: center;
+    display: inline-block;
+  }
+
+  .participants {
+    width: 75%;
+
+    @include breakpoint(medium) {
+      width: 50%;
+    }
+  }
+
+  .action {
+    width: 25%;
+    padding-top: 4px;
+
+    @include breakpoint(medium) {
+      width: 50%;
+    }
   }
 
   .action,
   .checkbox-wrapper {
     vertical-align: top;
   }
-
-  .action {
-    padding-top: 4px;
-  }
 }
 
 .participants {
-  margin-top: 6px;
+  margin-top: 5px;
 
-  span {
+  .participants-count {
     position: relative;
-    height: 28px;
-    padding: 5px 5px 5px 15px;
+    height: 38px;
+    margin-right: 5px;
+    padding: 5px 10px 7px 15px;
     border-radius: 20px;
     color: $color-white;
     background: $color-gray-secondary;
     font-size: 12px;
     font-family: $font-bold;
-  }
-
-  .participants-count {
-    vertical-align: middle;
-    position: static;
-    background: none;
 
     &::before {
-      position: absolute;
-      top: 6px;
-      left: 13px;
-      width: 10px;
-      height: 10px;
+      display: inline-block;
+      width: 13px;
+      height: 12px;
+      margin-right: 5px;
       content: '\e008';
       font-size: 12px;
       font-family: "Glyphicons Halflings", sans-serif;
+      vertical-align: middle;
+    }
+
+    span {
+      display: inline-block;
+      vertical-align: middle;
     }
   }
 }

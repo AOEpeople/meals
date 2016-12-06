@@ -9,7 +9,7 @@
                 <tr>
                     <th class="table-head wide-cell"></th>
                     {% for day in week.days %}
-                    <th class="table-head day" colspan="2">{{ day.dateTime | date('l') }}</th>
+                        <th class="table-head day" colspan="{{ day.meals | length }}">{{ day.dateTime | date('l') }}</th>
                     {% endfor %}
                 </tr>
                 <tr>
@@ -18,7 +18,11 @@
                     </th>
                     {% for day in week.days %}
                         {% for meal in day.meals %}
-                            <th class="table-head meal-title"><span>{{ meal.dish.title }}</span></th>
+                            <th class="table-head meal-title">
+                                <span>
+                                    {% if meal.dish.parent %}<b>{{ meal.dish.parent.title }}</b><br>{% endif %}{{ meal.dish.title }}
+                                </span>
+                            </th>
                         {% endfor %}
                     {% endfor %}
                 </tr>

@@ -30,18 +30,30 @@ abstract class BaseListController extends BaseController
      */
     private $entityClassPath;
 
+    /**
+     * set the Entity Name
+     * @param $entityName
+     */
     public function setEntityName($entityName)
     {
         $this->entityName = $entityName;
-        $this->entityClassPath = '\Mealz\MealBundle\Entity\\' . $entityName;
-        $this->entityFormName = '\Mealz\MealBundle\Form\\' . $entityName . 'Form';
+        $this->entityClassPath = '\Mealz\MealBundle\Entity\\'.$entityName;
+        $this->entityFormName = '\Mealz\MealBundle\Form\\'.$entityName.'\\'.$entityName.'Form';
     }
 
+    /**
+     * set the repo
+     * @param EntityRepository $repository
+     */
     public function setRepository(EntityRepository $repository)
     {
         $this->repository = $repository;
     }
 
+    /**
+     * list Action
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function listAction()
     {
         if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
@@ -51,6 +63,11 @@ abstract class BaseListController extends BaseController
         return $this->renderEntityList();
     }
 
+    /**
+     * new Action
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
     public function newAction(Request $request)
     {
         if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
@@ -66,9 +83,16 @@ abstract class BaseListController extends BaseController
             ),
             'messages'
         );
+
         return $this->entityFormHandling($request, new $this->entityClassPath, $message);
     }
 
+    /**
+     * edit Action
+     * @param Request $request
+     * @param $slug
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
     public function editAction(Request $request, $slug)
     {
         if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
@@ -86,9 +110,15 @@ abstract class BaseListController extends BaseController
             ),
             'messages'
         );
+
         return $this->entityFormHandling($request, $entity, $message);
     }
 
+    /**
+     * delete Action
+     * @param $slug
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
     public function deleteAction($slug)
     {
         if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
@@ -103,7 +133,7 @@ abstract class BaseListController extends BaseController
 
         $translator = $this->get('translator');
         $translatedEntityName = $translator->trans("entity.$this->entityName", [], 'messages');
-        $message = $this->translator->trans(
+        $message = $translator->trans(
             'entity.deleted',
             array(
                 '%entityName%' => $translatedEntityName,
@@ -113,9 +143,13 @@ abstract class BaseListController extends BaseController
         );
         $this->addFlashMessage($message, 'success');
 
-        return $this->redirectToRoute('MealzMealBundle_' . $this->entityName);
+        return $this->redirectToRoute('MealzMealBundle_'.$this->entityName);
     }
 
+    /**
+     * get Empty Form Action
+     * @return JsonResponse
+     */
     public function getEmptyFormAction()
     {
         if (!$this->getUser()) {
@@ -127,11 +161,16 @@ abstract class BaseListController extends BaseController
         }
 
         $entity = new $this->entityClassPath();
-        $action = $this->generateUrl('MealzMealBundle_' . $this->entityName . '_new');
+        $action = $this->generateUrl('MealzMealBundle_'.$this->entityName.'_new');
 
         return new JsonResponse($this->getRenderedEntityForm($entity, $action));
     }
 
+    /**
+     * get Pre filled Form Action
+     * @param $slug
+     * @return JsonResponse
+     */
     public function getPreFilledFormAction($slug)
     {
         if (!$this->getUser()) {
@@ -148,16 +187,27 @@ abstract class BaseListController extends BaseController
             return new JsonResponse(null, 404);
         }
 
-        $action = $this->generateUrl('MealzMealBundle_' . $this->entityName . '_edit', array('slug' => $slug));
+        $action = $this->generateUrl('MealzMealBundle_'.$this->entityName.'_edit', array('slug' => $slug));
 
         return new JsonResponse($this->getRenderedEntityForm($entity, $action, true));
     }
 
+    /**
+     * Get rendered Entity Form
+     * @param $entity
+     * @param $action
+     * @param bool $wrapInTr
+     * @return string
+     */
     private function getRenderedEntityForm($entity, $action, $wrapInTr = false)
     {
-        $form = $this->createForm($this->getNewForm(), $entity, array(
-            'action' => $action,
-        ));
+        $form = $this->createForm(
+            $this->getNewForm(),
+            $entity,
+            array(
+                'action' => $action,
+            )
+        );
 
         if ($wrapInTr) {
             $template = "MealzMealBundle:$this->entityName/partials:formTable.html.twig";
@@ -170,6 +220,13 @@ abstract class BaseListController extends BaseController
         return $renderedForm->getContent();
     }
 
+    /**
+     * Entity Form Handling
+     * @param Request $request
+     * @param $entity
+     * @param $successMessage
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
     private function entityFormHandling(Request $request, $entity, $successMessage)
     {
         $form = $this->createForm($this->getNewForm(), $entity);
@@ -185,29 +242,41 @@ abstract class BaseListController extends BaseController
 
                 $this->addFlashMessage($successMessage, 'success');
             } else {
-                return $this->renderEntityList(array(
-                    'form' => $form->createView()
-                ));
+                return $this->renderEntityList(
+                    array(
+                        'form' => $form->createView(),
+                    )
+                );
             }
         }
 
-        return $this->redirectToRoute('MealzMealBundle_' . $this->entityName);
+        return $this->redirectToRoute('MealzMealBundle_'.$this->entityName);
     }
 
+    /**
+     * render Entity List
+     * @param array $parameters
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     protected function renderEntityList($parameters = array())
     {
         $entities = $this->getEntities();
 
         $defaultParameters = array(
-            'entities' => $entities
+            'entities' => $entities,
         );
 
         $mergedParameters = array_merge($defaultParameters, $parameters);
 
-        return $this->render('MealzMealBundle:' . $this->entityName . ':list.html.twig', $mergedParameters);
+        return $this->render('MealzMealBundle:'.$this->entityName.':list.html.twig', $mergedParameters);
     }
 
-    protected function getEntities() {
+    /**
+     * get Entities
+     * @return array
+     */
+    protected function getEntities()
+    {
         return $this->repository->findAll();
     }
 
@@ -224,10 +293,16 @@ abstract class BaseListController extends BaseController
         if (null === $entity) {
             throw $this->createNotFoundException();
         }
+
         return $entity;
     }
 
-    protected function getNewForm() {
+    /**
+     * get new Form
+     * @return mixed
+     */
+    protected function getNewForm()
+    {
         return new $this->entityFormName();
     }
 }

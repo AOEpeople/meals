@@ -4,9 +4,9 @@ namespace Mealz\MealBundle\Controller;
 
 
 use Doctrine\ORM\EntityManager;
-
+use Mealz\MealBundle\Entity\DishVariation;
+use Mealz\MealBundle\Form\DishVariationForm;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -17,151 +17,177 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class DishVariationController extends BaseController
 {
-	/**
-	 * Handles request to create a new dish variation.
-	 *
-	 * @param  Request $request
-	 * @param  integer $dishId
-	 * @return Response
-	 */
-	public function newAction(Request $request, $dishId)
-	{
-		$this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
+    /**
+     * @param  Request $request
+     * @param  integer $slug
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function newAction(Request $request, $slug)
+    {
+        $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
-		/** @var \Mealz\MealBundle\Entity\Dish $dish */
-		$dish = $this->getDishRepository()->find($dishId);
+        /** @var \Mealz\MealBundle\Entity\Dish $dish */
+        $dish = $this->getDishRepository()->find($slug);
 
-		if (!$dish) {
-			throw $this->createNotFoundException();
-		}
+        if (!$dish) {
+            throw $this->createNotFoundException();
+        }
 
-		/** @var \Mealz\MealBundle\Entity\DishVariation $dishVariation */
-		$dishVariation = $this->get('mealz_meal.dish_variation');
-		$dishVariation->setDish($dish);
+        $dishVariation = new DishVariation();
+        $dishVariation->setParent($dish);
+        $dishVariationForm = $this->createForm(
+            $this->getNewForm(),
+            $dishVariation,
+            ['action' => $this->generateUrl('MealzMealBundle_DishVariation_new', ['slug' => $dish->getId()])]
+        );
+        $dishVariationForm->handleRequest($request);
 
-		$dishVariationForm = $this->createForm(
-			$this->get('mealz_meal.form.dish_variation'),
-			$dishVariation,
-			['action' => $this->generateUrl('MealzMealBundle_DishVariation_new', ['dishId' => $dish->getId()])]
-		);
-		$dishVariationForm->handleRequest($request);
+        if ($dishVariationForm->isSubmitted() && $dishVariationForm->isValid()) {
+            $dishVariation = $dishVariationForm->getData();
+            $this->persistEntity($dishVariation);
 
-		if ($dishVariationForm->isSubmitted() && $dishVariationForm->isValid()) {
-			$dishVariation = $dishVariationForm->getData();
-			$this->persistEntity($dishVariation);
+            $message = $this->get('translator')->trans(
+                'entity.added',
+                array('%entityName%' => $dishVariation->getTitle()),
+                'messages'
+            );
+            $this->addFlashMessage($message, 'success');
 
-			$message = $this->get('translator')->trans(
-				'entity.added',
-				array('%entityName%' => $dishVariation->getDescription()),
-				'messages'
-			);
-			$this->addFlashMessage($message, 'success');
+            return $this->redirectToRoute('MealzMealBundle_Dish');
+        }
 
-			return $this->redirectToRoute('MealzMealBundle_Dish');
-		}
+        $renderedForm = $this->render(
+            'MealzMealBundle:DishVariation:new.html.twig',
+            [
+                'form' => $dishVariationForm->createView(),
+                'dishVariation' => $dishVariation,
+            ]
+        );
 
-		$renderedForm = $this->render('MealzMealBundle:DishVariation:new.html.twig', [
-			'form' => $dishVariationForm->createView(),
-			'dishVariation' => $dishVariation
-		]);
+        return new JsonResponse($renderedForm->getContent());
+    }
 
-		return new JsonResponse($renderedForm->getContent());
-	}
+    /**
+     * The edit Action
+     * @param Request $request
+     * @param String $slug
+     * @return JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function editAction(Request $request, $slug)
+    {
+        $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
-	/**
-	 * Handles request to update a dish variation.
-	 *
-	 * @param  Request $request
-	 * @param  $dishVariationId
-	 * @return Response
-	 */
-	public function editAction(Request $request, $dishVariationId)
-	{
-		$this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
+        /** @var \Mealz\MealBundle\Entity\DishVariationRepository $dishVariationRepository */
+        $dishVariationRepository = $this->getDoctrine()->getRepository('MealzMealBundle:DishVariation');
 
-		/** @var \Mealz\MealBundle\Entity\DishVariationRepository $dishVariationRepository */
-		$dishVariationRepository = $this->getDoctrine()->getRepository('MealzMealBundle:DishVariation');
+        /** @var \Mealz\MealBundle\Entity\DishVariation $dish */
+        $dishVariation = $dishVariationRepository->find($slug);
 
-		/** @var \Mealz\MealBundle\Entity\DishVariation $dish */
-		$dishVariation = $dishVariationRepository->find($dishVariationId);
+        if (!$dishVariation) {
+            throw $this->createNotFoundException();
+        }
 
-		if (!$dishVariation) {
-			throw $this->createNotFoundException();
-		}
+        $dishVariationForm = $this->createForm(
+            $this->getNewForm(),
+            $dishVariation,
+            ['action' => $this->generateUrl('MealzMealBundle_DishVariation_edit', ['slug' => $dishVariation->getId()])]
+        );
+        $dishVariationForm->handleRequest($request);
 
-		$dishVariationForm = $this->createForm(
-			$this->get('mealz_meal.form.dish_variation'),
-			$dishVariation,
-			['action' => $this->generateUrl('MealzMealBundle_DishVariation_edit', ['dishVariationId' => $dishVariation->getId()])]
-		);
-		$dishVariationForm->handleRequest($request);
+        if ($dishVariationForm->isSubmitted() && $dishVariationForm->isValid()) {
+            $dishVariation = $dishVariationForm->getData();
+            $this->persistEntity($dishVariation);
 
-		if ($dishVariationForm->isSubmitted() && $dishVariationForm->isValid()) {
-			$dishVariation = $dishVariationForm->getData();
-			$this->persistEntity($dishVariation);
+            $message = $this->get('translator')->trans(
+                'entity.modified',
+                array('%entityName%' => $dishVariation->getTitle()),
+                'messages'
+            );
+            $this->addFlashMessage($message, 'success');
 
-			$message = $this->get('translator')->trans(
-				'entity.modified',
-				array('%entityName%' => $dishVariation->getDescription()),
-				'messages'
-			);
-			$this->addFlashMessage($message, 'success');
+            return $this->redirectToRoute('MealzMealBundle_Dish');
+        }
 
-			return $this->redirectToRoute('MealzMealBundle_Dish');
-		}
+        $renderedForm = $this->render(
+            'MealzMealBundle:DishVariation:new.html.twig',
+            [
+                'form' => $dishVariationForm->createView(),
+                'dishVariation' => $dishVariation,
+            ]
+        );
 
-		$renderedForm = $this->render('MealzMealBundle:DishVariation:new.html.twig', [
-			'form' => $dishVariationForm->createView(),
-			'dishVariation' => $dishVariation
-		]);
+        return new JsonResponse($renderedForm->getContent());
+    }
 
-		return new JsonResponse($renderedForm->getContent());
-	}
+    /**
+     * the delete Action
+     * @param  integer $slug
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function deleteAction($slug)
+    {
+        $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
-	/**
-	 * Handles request to delete a dish variation.
-	 *
-	 * @param  integer $dishVariationId
-	 * @return Response
-	 */
-	public function deleteAction($dishVariationId)
-	{
-		$this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
+        /** @var \Mealz\MealBundle\Entity\DishVariationRepository $dishRepository */
+        if (is_object($this->getDoctrine()->getRepository('MealzMealBundle:DishVariation'))) {
+            $dishVariationRepository = $this->getDoctrine()->getRepository('MealzMealBundle:DishVariation');
+        }
 
-		/** @var \Mealz\MealBundle\Entity\DishVariationRepository $dishRepository */
-		$dishVariationRepository = $this->getDoctrine()->getRepository('MealzMealBundle:DishVariation');
+        /** @var \Mealz\MealBundle\Entity\DishVariation $dishVariation */
+        $dishVariation = $dishVariationRepository->find($slug);
 
-		/** @var \Mealz\MealBundle\Entity\DishVariation $dishVariation */
-		$dishVariation = $dishVariationRepository->find($dishVariationId);
+        if (!$dishVariation) {
+            throw $this->createNotFoundException();
+        }
 
-		if (!$dishVariation) {
-			throw $this->createNotFoundException();
-		}
+        /** @var EntityManager $em */
+        $em = $this->getDoctrine()->getManager();
 
-		$dishVariation->setEnabled(FALSE);
+        if ($dishVariationRepository->hasDishAssociatedMeals($dishVariation)) {
+            // if there are meals assigned: just hide this record, but do not delete it
+            $dishVariation->setEnabled(false);
+            $em->persist($dishVariation);
+            $em->flush();
+            $message = $this->get('translator')->trans(
+                'dish_variation.hidden',
+                array('%dishVariation%' => $dishVariation->getTitle()),
+                'messages'
+            );
+            $this->addFlashMessage($message, 'success');
+        } else {
+            // else: no need to keep an unused record
+            $em->remove($dishVariation);
+            $em->flush();
 
-		$this->persistEntity($dishVariation);
+            $message = $this->get('translator')->trans(
+                'dish_variation.deleted',
+                array('%dishVariation%' => $dishVariation->getTitle()),
+                'messages'
+            );
+            $this->addFlashMessage($message, 'success');
+        }
 
-		$message = $this->get('translator')->trans(
-			'dish_variation.deleted',
-			['%dishVariation%' => $dishVariation->getDescription()],
-			'messages'
-		);
-		$this->addFlashMessage($message, 'success');
+        return $this->redirectToRoute('MealzMealBundle_Dish');
+    }
 
-		return $this->redirectToRoute('MealzMealBundle_Dish');
-	}
+    /**
+     * get the new Form
+     * @return object
+     */
+    protected function getNewForm()
+    {
+        return $this->get('mealz_meal.form.dishvariation');
+    }
 
-	/**
-	 * Persists an entity object in database.
-	 *
-	 * @param object $entity
-	 */
-	private function persistEntity($entity)
-	{
-		/** @var EntityManager $em */
-		$em = $this->getDoctrine()->getManager();
-		$em->persist($entity);
-		$em->flush();
-	}
+    /**
+     * persist the Entity
+     * @param $entity
+     */
+    private function persistEntity($entity)
+    {
+        /** @var EntityManager $em */
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($entity);
+        $em->flush();
+    }
 }

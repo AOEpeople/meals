@@ -75,11 +75,15 @@
   }
 
   .text {
-    width: 72%;
+    width: 65%;
     padding-right: 10px;
 
     @include breakpoint(small) {
       width: 64%;
+    }
+
+    @include breakpoint(smaller) {
+      width: 55%;
     }
 
     @include breakpoint(large) {
@@ -198,12 +202,15 @@
 
   .wrapper-vertical-center {
     right: 0;
-    width: 18%;
+    width: 25%;
 
     @include breakpoint(small) {
       width: 30%;
     }
 
+    @include breakpoint(smaller) {
+      width: 35%;
+    }
   }
 
   &.is-available {

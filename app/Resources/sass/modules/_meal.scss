@@ -75,11 +75,15 @@
   }
 
   .text {
-    width: 80%;
+    width: 72%;
     padding-right: 10px;
 
     @include breakpoint(small) {
       width: 69%;
+    }
+
+    @include breakpoint(large) {
+      width: 80%;
     }
   }
 
@@ -90,39 +94,59 @@
   .wrapper-vertical-center {
     position: absolute;
     top: 50%;
-    width: 20%;
+    width: 28%;
     height: 30px;
     margin-top: -15px;
 
     @include breakpoint(small) {
       width: 31%;
     }
+
+    @include breakpoint(large) {
+      width: 20%;
+    }
   }
 
   .wrapper-variation-vertical-center {
     position: absolute;
-    width: 20%;
+    width: 28%;
     height: 30px;
     vertical-align: bottom;
 
     @include breakpoint(small) {
       width: 31%;
     }
+
+    @include breakpoint(large) {
+      width: 20%;
+    }
   }
 
   .participants,
   .action {
-    width: 50%;
-    text-align: center;
+    display: inline-block;
+  }
+
+  .participants {
+    width: 75%;
+
+    @include breakpoint(medium) {
+      width: 50%;
+    }
+  }
+
+  .action {
+    width: 25%;
+    padding-top: 4px;
+
+    @include breakpoint(medium) {
+      width: 50%;
+    }
   }
 
   .action,
   .checkbox-wrapper {
     vertical-align: top;
-  }
-
-  .action {
-    padding-top: 4px;
   }
 }
 
@@ -132,6 +156,7 @@
   .participants-count {
     position: relative;
     height: 38px;
+    margin-right: 5px;
     padding: 5px 10px 7px 15px;
     border-radius: 20px;
     color: $color-white;

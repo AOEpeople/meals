@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * The name "profile" was chosen because in Symfony a "User" is someone who is allowed to log in.
  *
  * @ORM\Table(name="profile")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="ProfileRepository")
  */
 class Profile
 {

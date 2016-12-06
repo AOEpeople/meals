@@ -1,4 +1,5 @@
-<div class="profile-list" data-attribute-profiles="{{ profilesJson }}">
-    <label for="profiles">User: </label>
-    <input class="profiles">
-</div>
+<select id="select-profiles">
+{% for profile in profiles %}
+    <option value="{{ profile.username }}">{{ profile.fullName }}</option>
+{% endfor %}
+</select>

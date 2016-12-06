@@ -57,5 +57,4 @@ Mealz.prototype.toggleGuestParticipation = function ($checkbox) {
 Mealz.prototype.selectProfile = function () {
     var testProfiles = $(".profile-list").data("attribute-profiles");
     $(".profiles").autocomplete({source: testProfiles});
-
 };

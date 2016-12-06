@@ -66,17 +66,14 @@ class ParticipantController extends BaseController {
         $dayRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Day');
         $day = $dayRepository->getCurrentDay();
 
+        // Get user participation to list them as table rows
         $participantRepository = $this->getParticipantRepository();
-        $participations = $participantRepository->getParticipantsOnCurrentDay();
-
-        /**
-         * @TODO: get participants through week entity
-         */
-        $groupedParticipations = $participantRepository->groupParticipantsByName($participations);
+        $participation = $participantRepository->getParticipantsOnCurrentDay();
+        $groupedParticipation = $participantRepository->groupParticipantsByName($participation);
 
         return $this->render('MealzMealBundle:Participant:list.html.twig', array(
             'day' => $day,
-            'users' => $groupedParticipations
+            'users' => $groupedParticipation
         ));
     }
 
@@ -88,37 +85,25 @@ class ParticipantController extends BaseController {
         $weekRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Week');
         $week = $weekRepository->findWeekByDate($week->getStartTime(), TRUE);
 
+        // Get user participation to list them as table rows
         $participantRepository = $this->getParticipantRepository();
-        $participations = $participantRepository->getParticipantsOnDays(
+        $participation = $participantRepository->getParticipantsOnDays(
             $week->getStartTime(),
             $week->getEndTime()
         );
+        $groupedParticipation = $participantRepository->groupParticipantsByName($participation);
 
-        /**
-         * @TODO: get participants through week entity
-         */
-        $groupedParticipations = $participantRepository->groupParticipantsByName($participations);
+        // Get profiles for select field rendering
+        $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
+        $profiles = $profileRepository->findAllExcept(array_keys($groupedParticipation));
 
-        /** @var Profile[] $profiles */
-        $profiles = $this->getDoctrine()->getRepository('MealzUserBundle:Profile')->findAll();
-        $profilesArray = array();
-        foreach ($profiles as $profile) {
-            if (FALSE === array_key_exists($profile->getUsername(), $groupedParticipations)) {
-                $profilesArray[] = array(
-                    'label' => $profile->getFullName(),
-                    'value' => $profile->getUsername()
-                );
-            }
-        }
-
+        // Create user participation row prototype
         $prototype = $this->renderView('@MealzMeal/Participant/edit_row_prototype.html.twig', array('week' => $week));
-        /**
-         * @TODO: add select field for adding a new user
-         */
+
         return $this->render('MealzMealBundle:Participant:edit.html.twig', array(
             'week' => $week,
-            'users' => $groupedParticipations,
-            'profilesJson' => json_encode($profilesArray),
+            'users' => $groupedParticipation,
+            'profiles' => $profiles,
             'prototype' => json_encode($prototype)
         ));
     }

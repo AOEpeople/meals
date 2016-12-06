@@ -18,6 +18,7 @@ class ParticipantRepository extends EntityRepository
     protected $defaultOptions = array(
         'load_meal' => false,
         'load_profile' => true,
+        'load_roles' => false,
     );
 
     /**
@@ -35,6 +36,9 @@ class ParticipantRepository extends EntityRepository
         }
         if ($options['load_profile']) {
             $select .= ',u';
+            if($options['load_roles']) {
+                $select .= ',r';
+            }
         }
         $qb->select($select);
 
@@ -45,6 +49,9 @@ class ParticipantRepository extends EntityRepository
         }
         if ($options['load_profile']) {
             $qb->leftJoin('p.profile', 'u');
+            if($options['load_roles']) {
+                $qb->leftJoin('u.roles', 'r');
+            }
         }
 
         return $qb;
@@ -61,6 +68,7 @@ class ParticipantRepository extends EntityRepository
             array(
                 'load_meal' => true,
                 'load_profile' => true,
+                'load_roles' => true,
             )
         );
         if ($profile) {

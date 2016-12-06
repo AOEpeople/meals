@@ -79,7 +79,7 @@
     padding-right: 10px;
 
     @include breakpoint(small) {
-      width: 69%;
+      width: 64%;
     }
 
     @include breakpoint(large) {
@@ -99,7 +99,7 @@
     margin-top: -15px;
 
     @include breakpoint(small) {
-      width: 31%;
+      width: 36%;
     }
 
     @include breakpoint(large) {
@@ -133,6 +133,10 @@
     @include breakpoint(medium) {
       width: 50%;
     }
+
+    @include breakpoint(small) {
+      width: 75%;
+    }
   }
 
   .action {
@@ -141,6 +145,10 @@
 
     @include breakpoint(medium) {
       width: 50%;
+    }
+
+    @include breakpoint(small) {
+      width: 25%;
     }
   }
 

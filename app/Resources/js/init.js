@@ -11,6 +11,13 @@ var Mealz = function () {
     this.mealRowsWrapperClassSelector = '.meal-rows-wrapper';
     this.$selects = $("select");
     this.$body = $('body');
+<<<<<<< HEAD
+=======
+    this.$editParticipationParticipants = $('.container.edit-participation td.text');
+    this.$editParticipationEventListener = undefined;
+    this.$profileInput = $('.profile-list input[class="profile"]');
+    this.$profileToggle = $('.profile-list a[class="toggle-profiles"]');
+>>>>>>> bfeb569152f4b207040644a9ba6e6eb832d10742
 };
 
 $(document).ready(function () {
@@ -61,4 +68,9 @@ $(document).ready(function () {
      */
     mealz.selectProfile();
     mealz.showProfiles();
+
+    /**
+     * init toggle participation. merge with other file later on
+     */
+    mealz.initToggleParticipation();
 });

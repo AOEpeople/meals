@@ -1,6 +1,6 @@
 {% extends '::base_navigation.html.twig' %}
 
-{% set wrapperClass = 'print-participations' %}
+{% set wrapperClass = 'edit-participation' %}
 
 {% block body %}
     {% if users is not empty %}
@@ -37,19 +37,17 @@
                                 {% for meal in day.meals %}
                                     {% set participation = isParticipant(participations, meal.participants) %}
                                     {% if participation is not null%}
-                                    <td class="meal-participation participating table-data">
-                                        <a href="{{ path('MealzMealBundle_Participant_delete',{
+                                        <td class="meal-participation participating table-data" data-attribute-action="{{ path('MealzMealBundle_Participant_delete',{
                                             'participant': participation.id
-                                        }) }}"></a>
-                                    </td>
+                                        }) }}">
+                                            <i class="glyphicon glyphicon-ok"></i>
+                                        </td>
                                     {% else %}
-                                    <td class="meal-participation table-data">
-                                        <a href="{{ path('MealzMealBundle_Meal_join', {
+                                        <td class="meal-participation table-data" data-attribute-action="{{ path('MealzMealBundle_Meal_join', {
                                             date: meal.dateTime | date('Y-m-d'),
                                             dish: meal.dish.slug,
                                             profile: profile.username
-                                        }) }}"></a>
-                                    </td>
+                                        }) }}"><i class="glyphicon"></i></td>
                                     {% endif %}
                                 {% endfor %}
                         {% endfor %}

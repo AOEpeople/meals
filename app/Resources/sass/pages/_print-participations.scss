@@ -1,7 +1,8 @@
 $border-color: $color-base;
 $text-color: $color-base;
 
-.print-participations {
+.edit-participation,
+.print-participation {
 
   thead.table-header {
     display: table-row-group;
@@ -54,8 +55,7 @@ $text-color: $color-base;
     }
 
     .meal-participation.participating {
-      background-color: $color-green;
-
+      color: $color-green;
       a,
       a:hover {
         color: $color-white;
@@ -92,6 +92,11 @@ $text-color: $color-base;
 
   .table-data {
     border-top: 1px solid $border-color;
+
+    &.meal-participation {
+      font-size: 18px;
+      text-align: center;
+    }
   }
 }
 

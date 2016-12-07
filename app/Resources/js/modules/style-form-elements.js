@@ -107,8 +107,7 @@ Mealz.prototype.applyDropdownStates = function (e) {
 
 Mealz.prototype.styleInputs = function () {
     var that = this;
-    // Handle change event on toggle
-    this.$profileToggle.on('click', function() {
-        that.toggleProfiles($(this));
+    this.$profileAdd.on('click', function() {
+        that.addProfile($(this));
     });
 };

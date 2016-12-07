@@ -13,6 +13,7 @@ var Mealz = function () {
     this.$body = $('body');
     this.$profileInput = $('.profile-list input[class="profile"]');
     this.$profileToggle = $('.profile-list a[class="toggle-profiles"]');
+    this.$profileAdd = $('.profile-list a[class="button small"]');
 };
 
 $(document).ready(function () {
@@ -63,4 +64,5 @@ $(document).ready(function () {
      * Profile Selection on Participants View
      */
     mealz.selectProfile();
+    mealz.toggleProfiles();
 });

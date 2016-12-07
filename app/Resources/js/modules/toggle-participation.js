@@ -55,19 +55,41 @@ Mealz.prototype.toggleGuestParticipation = function ($checkbox) {
 };
 
 Mealz.prototype.selectProfile = function () {
+    var profile = $('.profile');
+    var profilesJson = $('.profile-list').data('attribute-profiles');
     var profiles = {
-        data: $('.profile-list').data('attribute-profiles'),
+        data: profilesJson,
         getValue: 'label',
         list: {
             match: {
                 enabled: true
+            },
+            onSelectItemEvent: function () {
+                var value = profile.getSelectedItemData().value;
+                var selected = $('.easy-autocomplete-container li')[profile.getSelectedItemIndex()];
+                $(selected).attr({'data-attribute-value': value});
             }
         }
     };
 
-    $('.profile').easyAutocomplete(profiles);
+    profile.easyAutocomplete(profiles);
+};
+
+Mealz.prototype.addProfile = function () {
+    // var prototype;
+// onChooseEvent: function () {
+//     prototype = $('.table-content').data('prototype');
+//     var name = $('.easy-autocomplete-container li[class="selected"]')[0].innerText;
+//     console.log(prototype.replace('__name__', name));
+// },
+    console.log("ADD");
 };
 
 Mealz.prototype.toggleProfiles = function () {
-
+    var profileList = $('.profile-list').data('attribute-profiles');
+    var profileListContainer = $('.easy-autocomplete-container ul');
+    var profileListItems = $('.easy-autocomplete-container li');
+    $.each(profileList, function( key ) {
+        profileListContainer.append('<li data-attribute-value=\"' + profileList[key].value + '\"><div class=\"eac-item\">' + profileList[key].label + '</div></li>');
+    });
 };

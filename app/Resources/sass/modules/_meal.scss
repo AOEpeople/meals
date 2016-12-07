@@ -131,18 +131,6 @@
     display: inline-block;
   }
 
-  .participants {
-    width: 75%;
-
-    @include breakpoint(medium) {
-      width: 50%;
-    }
-
-    @include breakpoint(small) {
-      width: 75%;
-    }
-  }
-
   .action {
     width: 25%;
     padding-top: 4px;
@@ -159,6 +147,21 @@
   .action,
   .checkbox-wrapper {
     vertical-align: top;
+  }
+}
+
+.meal,
+.day {
+  .participants {
+    width: 75%;
+
+    @include breakpoint(medium) {
+      width: 50%;
+    }
+
+    @include breakpoint(small) {
+      width: 75%;
+    }
   }
 }
 
@@ -222,6 +225,14 @@
     color: $color-white;
     background-color: $color-green;
     font-weight: bold;
+  }
+
+  .participants {
+    width: 50%;
+
+    @include breakpoint(small) {
+      width: 75%;
+    }
   }
 }
 

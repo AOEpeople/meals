@@ -93,9 +93,17 @@ class ParticipantController extends BaseController {
         );
         $groupedParticipation = $participantRepository->groupParticipantsByName($participation);
 
-        // Get profiles for select field rendering
-        $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
-        $profiles = $profileRepository->findAllExcept(array_keys($groupedParticipation));
+        /** @var Profile[] $profiles */
+        $profiles = $this->getDoctrine()->getRepository('MealzUserBundle:Profile')->findAll();
+        $profilesArray = array();
+        foreach ($profiles as $profile) {
+            if (FALSE === array_key_exists($profile->getUsername(), $groupedParticipation)) {
+                $profilesArray[] = array(
+                    'label' => $profile->getFullName(),
+                    'value' => $profile->getUsername()
+                );
+            }
+        }
 
         // Create user participation row prototype
         $prototype = $this->renderView('@MealzMeal/Participant/edit_row_prototype.html.twig', array('week' => $week));
@@ -103,7 +111,7 @@ class ParticipantController extends BaseController {
         return $this->render('MealzMealBundle:Participant:edit.html.twig', array(
             'week' => $week,
             'users' => $groupedParticipation,
-            'profiles' => $profiles,
+            'profilesJson' => json_encode($profilesArray),
             'prototype' => json_encode($prototype)
         ));
     }

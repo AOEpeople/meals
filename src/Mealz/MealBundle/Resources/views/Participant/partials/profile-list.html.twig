@@ -1,5 +1,6 @@
-<select id="select-profiles">
-{% for profile in profiles %}
-    <option value="{{ profile.username }}">{{ profile.fullName }}</option>
-{% endfor %}
-</select>
+<div class="profile-list" data-attribute-profiles="{{ profilesJson }}">
+    <input class="profile" />
+    <a href class="toggle-profiles">
+        <span class="glyphicon glyphicon-menu-hamburger"></span>
+    </a>
+</div>

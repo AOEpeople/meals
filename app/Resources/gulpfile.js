@@ -47,7 +47,7 @@ gulp.task('js', function() {
             'bower_components/fancybox/source/jquery.fancybox.pack.js',
             'bower_components/datatables.net/js/jquery.dataTables.js',
             'bower_components/switchery/dist/switchery.min.js',
-            'bower_components/jquery-ui/jquery-ui.min.js',
+            'bower_components/EasyAutocomplete/dist/jquery.easy-autocomplete.min.js',
             'js/init.js',
             'js/modules/*.js'
         ])
@@ -71,8 +71,9 @@ gulp.task('css', function() {
 
     var cssStream = gulp.src(['bower_components/switchery/dist/switchery.min.css'])
     var cssFancybox = gulp.src(['bower_components/fancybox/source/jquery.fancybox.css'])
+    var cssEasyAutocomplete = gulp.src(['bower_components/EasyAutocomplete/dist/easy-autocomplete.min.css'])
 
-    return merge(sassStream, cssStream, cssFancybox)
+    return merge(sassStream, cssStream, cssFancybox, cssEasyAutocomplete)
         .pipe(concat('mealz.css'))
         .pipe(gulp.dest('../../web/css'));
 });

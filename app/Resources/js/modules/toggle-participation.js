@@ -55,7 +55,19 @@ Mealz.prototype.toggleGuestParticipation = function ($checkbox) {
 };
 
 Mealz.prototype.selectProfile = function () {
-    var testProfiles = $(".profile-list").data("attribute-profiles");
-    $(".profiles").autocomplete({source: testProfiles});
+    var profiles = {
+        data: $('.profile-list').data('attribute-profiles'),
+        getValue: 'label',
+        list: {
+            match: {
+                enabled: true
+            }
+        }
+    };
+
+    $('.profile').easyAutocomplete(profiles);
+};
+
+Mealz.prototype.toggleProfiles = function () {
 
 };

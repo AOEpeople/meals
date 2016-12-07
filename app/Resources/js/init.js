@@ -11,6 +11,8 @@ var Mealz = function () {
     this.mealRowsWrapperClassSelector = '.meal-rows-wrapper';
     this.$selects = $("select");
     this.$body = $('body');
+    this.$editParticipationParticipants = $('.container.edit-participation td.text');
+    this.$editParticipationEventListener = undefined;
 };
 
 $(document).ready(function () {
@@ -60,4 +62,9 @@ $(document).ready(function () {
      * Profile Selection on Participants View
      */
     mealz.selectProfile();
+
+    /**
+     * init toggle participation. merge with other file later on
+     */
+    mealz.initToggleParticipation();
 });

@@ -48,8 +48,8 @@
   .legend {
     li {
       display: block;
-      margin-right: 20px;
       float: left;
+      margin-right: 20px;
 
       @include breakpoint(medium) {
         margin-bottom: 20px;

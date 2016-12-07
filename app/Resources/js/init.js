@@ -13,12 +13,15 @@ var Mealz = function () {
     this.$body = $('body');
     this.$editParticipationParticipants = $('.container.edit-participation td.text');
     this.$editParticipationEventListener = undefined;
+    this.$profileInput = $('.profile-list input[class="profile"]');
+    this.$profileToggle = $('.profile-list a[class="toggle-profiles"]');
 };
 
 $(document).ready(function () {
     var mealz = new Mealz();
     mealz.styleCheckboxes();
     mealz.styleSelects();
+    mealz.styleInputs();
     mealz.copyToClipboard();
 
     /**

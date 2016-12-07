@@ -18,6 +18,6 @@
     "datatables.net": "1.10.11",
     "switchery": "^0.8.1",
     "fancybox": ">= 2.1.*",
-    "jquery-ui": ">= 1.12.1"
+    "EasyAutocomplete": ">=1.3.5"
   }
 }

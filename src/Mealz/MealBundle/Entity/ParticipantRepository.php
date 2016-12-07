@@ -27,6 +27,8 @@ class ParticipantRepository extends EntityRepository
      */
     protected function getQueryBuilderWithOptions($options)
     {
+        $options = array_merge($this->defaultOptions, $options);
+
         $qb = $this->createQueryBuilder('p');
 
         // SELECT

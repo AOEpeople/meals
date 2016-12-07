@@ -1,6 +1,6 @@
 {% extends '::base_navigation.html.twig' %}
 
-{% set wrapperClass = 'print-participations' %}
+{% set wrapperClass = 'print-participation' %}
 
 {% block body %}
     {% if users is not empty %}
@@ -27,7 +27,9 @@
                         <td class="text table-data wide-cell">{{ profile.fullName }} {% if profile.isGuest %}(Gast){% endif %}</td>
                         {% for meal in day.meals %}
                             {% set participation = isParticipant(participations, meal.participants) %}
-                            <td class="meal-participation table-data {% if participation is not null%}participating{% endif %}"></td>
+                            <td class="meal-participation table-data {% if participation is not null%}participating{% endif %}">
+                                <i class="glyphicon {% if participation is not null%}glyphicon-ok{% endif %}"></i>
+                            </td>
                         {% endfor %}
                     </tr>
                 {% endfor %}

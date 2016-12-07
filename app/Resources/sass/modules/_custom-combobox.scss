@@ -1,3 +1,27 @@
+.profile-list {
+  position: relative;
+
+  li:hover {
+    cursor: pointer;
+    background: #ebebeb;
+  }
+}
+
+.toggle-profiles {
+  position: absolute;
+  top: 0;
+  left: -30px;
+
+  &:hover,
+  &:active {
+    color: #000;
+  }
+}
+
+.easy-autocomplete-container ul {
+  //display: block;
+}
+
 //.easyui-panel {
 //  width: auto !important;
 //  overflow: inherit;

@@ -68,6 +68,32 @@ Mealz.prototype.selectProfile = function () {
     $('.profile').easyAutocomplete(profiles);
 };
 
-Mealz.prototype.toggleProfiles = function () {
+Mealz.prototype.showProfiles = function () {
+    var profileList = $('.profile-list').data('attribute-profiles');
+    var profileListContainer = $('.easy-autocomplete-container ul');
+
+    // show all profiles in list
+    $.each(profileList, function( key ) {
+        profileListContainer.append('<li data-attribute-value=\"' + profileList[key].value + '\"><div class=\"eac-item\">' + profileList[key].label + '</div></li>');
+    });
+
+    // if click on hamburger-menu show profile list
+    $('.toggle-profiles').on('click', function (event) {
+        profileListContainer.toggle();
+        event.preventDefault();
+    });
+
+    // if hover li add class selected
+    $('.easy-autocomplete-container li').on('click', function () {
+        $(this).toggleClass('selected');
+    });
+
+    // if click on profil, add profil into input value
+    $('.easy-autocomplete-container li div').on('click', function () {
+        var selectedItem = $(this)[0].innerHTML;
+        $('.profile').val(selectedItem);
+    });
+
+    // liste immer neu bauen wenn button gedrückt wird
 
 };

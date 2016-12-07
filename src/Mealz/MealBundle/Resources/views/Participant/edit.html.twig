@@ -65,7 +65,9 @@
                 </tr>
             </tbody>
         </table>
-        {% include 'MealzMealBundle:Participant/partials:profile-list.html.twig' %}
+        {% if(profilesJson|length != 0) %}
+            {% include 'MealzMealBundle:Participant/partials:profile-list.html.twig' %}
+        {% endif %}
     {% else %}
         {{ 'participant.none' | trans({}, 'general') }}
     {% endif %}

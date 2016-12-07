@@ -11,15 +11,12 @@ var Mealz = function () {
     this.mealRowsWrapperClassSelector = '.meal-rows-wrapper';
     this.$selects = $("select");
     this.$body = $('body');
-    this.$profileInput = $('.profile-list input[class="profile"]');
-    this.$profileToggle = $('.profile-list a[class="toggle-profiles"]');
 };
 
 $(document).ready(function () {
     var mealz = new Mealz();
     mealz.styleCheckboxes();
     mealz.styleSelects();
-    mealz.styleInputs();
     mealz.copyToClipboard();
 
     /**
@@ -63,4 +60,5 @@ $(document).ready(function () {
      * Profile Selection on Participants View
      */
     mealz.selectProfile();
+    mealz.showProfiles();
 });

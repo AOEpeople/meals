@@ -104,11 +104,3 @@ Mealz.prototype.applyDropdownStatesByWeekState = function () {
 Mealz.prototype.applyDropdownStates = function (e) {
     $(e).parent().siblings(this.mealRowsWrapperClassSelector).toggleClass('disabled');
 };
-
-Mealz.prototype.styleInputs = function () {
-    var that = this;
-    // Handle change event on toggle
-    this.$profileToggle.on('click', function() {
-        that.toggleProfiles($(this));
-    });
-};

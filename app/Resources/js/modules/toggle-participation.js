@@ -82,7 +82,9 @@ Mealz.prototype.addProfile = function () {
     var userName = $(selectedProfile).data('attribute-value');
     prototype = prototype.replace(/__name__/g, name);
     prototype = prototype.replace(/__username__/g, userName);
-    console.log(prototype);
+    // console.log(prototype);
+    $(prototype).prependTo("table > tbody");
+    Mealz.prototype.initToggleParticipation();
 };
 
 Mealz.prototype.showProfiles = function () {

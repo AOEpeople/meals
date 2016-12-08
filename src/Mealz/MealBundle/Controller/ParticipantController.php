@@ -112,7 +112,7 @@ class ParticipantController extends BaseController {
             'week' => $week,
             'users' => $groupedParticipation,
             'profilesJson' => json_encode($profilesArray),
-            'prototype' => json_encode($prototype)
+            'prototype' => $prototype
         ));
     }
 }

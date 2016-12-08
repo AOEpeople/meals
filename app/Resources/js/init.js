@@ -11,8 +11,6 @@ var Mealz = function () {
     this.mealRowsWrapperClassSelector = '.meal-rows-wrapper';
     this.$selects = $("select");
     this.$body = $('body');
-
-    this.$editParticipationParticipants = $('.container.edit-participation td.text');
     this.$editParticipationEventListener = undefined;
     this.$profileAdd = $('.profile-list a[class="button small"]');
 };

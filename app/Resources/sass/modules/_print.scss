@@ -2,4 +2,10 @@
   header {
     display: none;
   }
+
+  body {
+    // scss-lint:disable all
+    background: $color-white !important;
+    // scss-lint:disable all
+  }
 }

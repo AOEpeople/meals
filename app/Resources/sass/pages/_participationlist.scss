@@ -24,8 +24,9 @@ $text-color: $color-base;
 
     &.week-date {
       vertical-align: top;
-      font-size: 24px;
+      font-size: 20px;
       text-align: left;
+
     }
 
     &.meal-title {
@@ -80,13 +81,17 @@ $text-color: $color-base;
     border-left: 1px solid $border-color;
 
     &.day {
+      padding-bottom: 10px;
       background: none;
+      font-weight: bold;
+      font-size: 16px;
     }
 
     &.wide-cell {
       width: 200px;
       word-wrap: break-word;
       padding-right: 5px;
+      padding-left: 15px;
       border-left: none;
     }
   }
@@ -111,5 +116,38 @@ $text-color: $color-base;
   &::before {
     width: 0;
     height: 0;
+  }
+}
+
+.print-participation {
+  .meal-title,
+  td.text {
+    font-weight: bold;
+    font-size: 14px;
+  }
+
+  h1 {
+    position: relative;
+    display: inline-block;
+    padding-left: 33px;
+    color: $color-print;
+
+    &::before {
+      position: absolute;
+      top: 1px;
+      left: 0;
+      width: 20px;
+      height: 20px;
+      content: '\e179';
+      color: $color-print;
+      font-size: 20px;
+      font-family: "Glyphicons Halflings", sans-serif;
+    }
+  }
+
+  .table-content .table-data,
+  .table-head {
+    border-color: $color-print;
+    color: $color-print;
   }
 }

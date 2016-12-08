@@ -3,13 +3,14 @@
 {% set wrapperClass = 'print-participation' %}
 
 {% block body %}
+    <div class="headline-container headline-container-h1 centered">
+        <h1 class="headline">{{ 'headings.week.participationsprint'|trans({},'general') }} {{ day.dateTime | date('l') | trans({}, 'date') }}{{ day.dateTime | date(', d.m.') }}</h1>
+    </div>
     {% if users is not empty %}
         <table class="table">
             <thead class="table-header">
                 <tr>
-                    <th class="table-head wide-cell week-date">
-                        <span>{{ day.dateTime | date('l, d.m.') }}</span>
-                    </th>
+                    <th class="table-head wide-cell week-date"></th>
                     {% for meal in day.meals %}
                         <th class="table-head meal-title">
                             <span>
@@ -33,12 +34,12 @@
                         {% endfor %}
                     </tr>
                 {% endfor %}
-                <tr>
+                {# <tr>
                     <td class="text table-data wide-cell">Gesamt</td>
                     {% for meal in day.meals %}
                         <td class="meal-count text text-center table-data"><span>{{ meal.participants | length }}</span></td>
                     {% endfor %}
-                </tr>
+                </tr> #}
             </tbody>
         </table>
     {% else %}

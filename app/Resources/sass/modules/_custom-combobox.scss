@@ -1,118 +1,57 @@
 .profile-list {
   position: relative;
+  margin: 30px 0;
 
   li:hover {
     cursor: pointer;
-    background: #ebebeb;
+    background: $color-gray-middle;
   }
+
+  .profile {
+    width: 100%;
+    max-width: 400px;
+    height: 40px;
+    padding: 0 15px;
+    border: none;
+    border-radius: 0;
+    border-top: 2px solid $color-gray-secondary;
+    border-bottom: 2px solid $color-gray-secondary;
+    background: $color-white;
+  }
+
+  .button.small,
+  .button:active.small,
+  .button:visited.small {
+    float: left;
+    padding: 13px 20px 12px;
+  }
+
 }
 
 .toggle-profiles {
   position: absolute;
   top: 0;
-  left: -30px;
+  left: 0;
+  width: 40px;
+  height: 40px;
+  border: none;
+  color: $color-white;
+  background: $color-base;
 
   &:hover,
   &:active {
-    color: #000;
+    color: $color-base;
+  }
+
+  .glyphicon-menu-hamburger::before {
+    display: block;
+    padding: 12px 0 0 13px;
+    color: $color-white;
   }
 }
 
-.easy-autocomplete-container ul {
-  //display: block;
+.easy-autocomplete {
+  float: left;
+  min-width: 250px;
+  padding-left: 40px;
 }
-
-//.easyui-panel {
-//  width: auto !important;
-//  overflow: inherit;
-//  border: none;
-//  margin: 40px 0 20px;
-//
-//  .combo {
-//    width: auto !important;
-//    height: auto !important;
-//    border: none;
-//    border-radius: 0;
-//  }
-//
-//  .textbox-text {
-//    width: 100% !important;
-//    max-width: 400px;
-//    height: 40px;
-//    border: 2px solid $color-gray-secondary;
-//    background: $color-white;
-//    border-radius: 0;
-//    padding: 0 15px;
-//  }
-//
-//  .combo-arrow {
-//    width: 40px !important;
-//    height: 40px !important;
-//    color: $color-white;
-//    background: $color-base;
-//    border: none;
-//    opacity: 1;
-//  }
-//
-//  .textbox-addon {
-//    left: 0;
-//  }
-//}
-
-
-
-
-//.profile-list {
-//  margin-top: 15px;
-//}
-//
-//.custom-combobox {
-//  position: relative;
-//  display: inline-block;
-//  background: $color-white;
-//  z-index: 1;
-//
-//  .ui-icon {
-//    text-indent: 0;
-//  }
-//
-//  .ui-button-icon-only {
-//    width: 40px;
-//  }
-//
-//  .ui-button {
-//    color: $color-white;
-//    background: $color-base;
-//    border: none;
-//
-//    &:hover, &:focus {
-//      color: $color-white;
-//      background: $color-green;
-//    }
-//  }
-//}
-//
-//.custom-combobox-toggle {
-//  position: absolute;
-//  top: 0;
-//  bottom: 0;
-//  left: 0;
-//  padding: 0;
-//}
-//
-//.custom-combobox-input, .ui-widget.ui-widget-content {
-//  margin: 0 0 0 40px;
-//  padding: 10px;
-//  width: 100%;
-//  max-width: 400px;
-//  border: 2px solid $color-gray-secondary;
-//  background: $color-white;
-//}
-//
-//.custom-combobox-input.ui-widget.ui-widget-content {
-//  border-left: none;
-//}
-//
-//.ui-menu.ui-widget.ui-widget-content {
-//  top: -2px !important;
-//}

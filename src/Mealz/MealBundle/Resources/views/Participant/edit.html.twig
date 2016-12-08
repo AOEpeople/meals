@@ -3,6 +3,7 @@
 {% set wrapperClass = 'edit-participation' %}
 
 {% block body %}
+    {{ MealzHeadline.create(1, 'headings.week.participations'|trans({},'general'), '', '', []) }}
     {% if users is not empty %}
         <table class="table">
             <thead class="table-header">

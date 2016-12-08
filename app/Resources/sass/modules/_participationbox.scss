@@ -20,12 +20,42 @@
   }
 
   .button.small,
-  .button:active.small,
-  .button:visited.small {
+  .button.small:active,
+  .button.small:visited {
     float: left;
     padding: 13px 20px 12px;
   }
 
+  .button.small {
+    &:hover {
+      background-color: $color-green;
+    }
+  }
+}
+
+.edit-participation .table-row {
+  &:hover,
+  &:focus,
+  &.editing {
+    background-color: $table-highlight;
+    cursor: pointer;
+
+    .wide-cell {
+      font-weight: bold;
+
+      &::after {
+        display: inline-block;
+        width: 13px;
+        height: 12px;
+        margin-left: 5px;
+        content: '\270f';
+        font-size: 14px;
+        font-family: "Glyphicons Halflings", sans-serif;
+        vertical-align: middle;
+        line-height: 13px;
+      }
+    }
+  }
 }
 
 .toggle-profiles {
@@ -41,6 +71,11 @@
   &:hover,
   &:active {
     color: $color-base;
+  }
+
+  &:hover ,
+  &:focus {
+    background-color: $color-green;
   }
 
   .glyphicon-menu-hamburger::before {

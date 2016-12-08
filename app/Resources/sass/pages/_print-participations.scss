@@ -24,7 +24,7 @@ $text-color: $color-base;
 
     &.week-date {
       vertical-align: top;
-      font-size: 24px;
+      font-size: 20px;
       text-align: left;
     }
 
@@ -80,13 +80,17 @@ $text-color: $color-base;
     border-left: 1px solid $border-color;
 
     &.day {
+      padding-bottom: 10px;
       background: none;
+      font-weight: bold;
+      font-size: 16px;
     }
 
     &.wide-cell {
       width: 200px;
       word-wrap: break-word;
       padding-right: 5px;
+      padding-left: 15px;
       border-left: none;
     }
   }

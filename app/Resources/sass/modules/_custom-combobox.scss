@@ -24,6 +24,10 @@
   .button:visited.small {
     float: left;
     padding: 13px 20px 12px;
+
+    .glyphicon {
+      line-height: 0;
+    }
   }
 
 }

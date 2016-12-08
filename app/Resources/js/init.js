@@ -62,7 +62,6 @@ $(document).ready(function () {
     /**
      * Profile Selection on Participants View
      */
-    mealz.selectProfile();
     mealz.showProfiles();
 
     /**

@@ -76,13 +76,13 @@ Mealz.prototype.selectProfile = function () {
 };
 
 Mealz.prototype.addProfile = function () {
-    // var prototype;
-// onChooseEvent: function () {
-//     prototype = $('.table-content').data('prototype');
-//     var name = $('.easy-autocomplete-container li[class="selected"]')[0].innerText;
-//     console.log(prototype.replace('__name__', name));
-// },
-    console.log("ADD");
+    var prototype = $('.table-content').data('prototype');
+    var selectedProfile = $('.easy-autocomplete-container li[class="selected"]');
+    var name = $(selectedProfile)[0].innerText;
+    var userName = $(selectedProfile).data('attribute-value');
+    prototype = prototype.replace(/__name__/g, name);
+    prototype = prototype.replace(/__username__/g, userName);
+    console.log(prototype);
 };
 
 Mealz.prototype.showProfiles = function () {

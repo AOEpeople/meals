@@ -1,3 +1,7 @@
+
+/**
+ * Initialize and configurate plugin easyautocomplete
+ */
 Mealz.prototype.initAutocomplete = function (profilesJson) {
     var profile = $('.profile');
     var profiles = {
@@ -17,10 +21,15 @@ Mealz.prototype.initAutocomplete = function (profilesJson) {
     profile.easyAutocomplete(profiles);
 };
 
+/**
+ * Add new profil into participation list
+ */
 Mealz.prototype.addProfile = function () {
     var profileList = JSON.parse($('.profile-list').attr('data-attribute-profiles'));
     var prototype = $('.table-content').data('prototype');
     var selectedProfile = $('.easy-autocomplete-container li[class="selected"]');
+
+    // if a profil is selected add profil to table
     if(selectedProfile.length > 0) {
         var name = $(selectedProfile)[0].innerText;
         var userName = $(selectedProfile).data('attribute-value');
@@ -30,17 +39,20 @@ Mealz.prototype.addProfile = function () {
         Mealz.prototype.initToggleParticipation();
     }
 
+    // add name and username in prototype variable
     function buildPrototype(name, userName) {
         prototype = prototype.replace(/__name__/g, name);
         prototype = prototype.replace(/__username__/g, userName);
     }
 
+    // remove input value and add new profil into the profil table
     function addToTable(prototype, selectedProfile) {
         $(prototype).prependTo("table > tbody");
         selectedProfile.remove();
         $('.profile').val('');
     }
 
+    // build and show new profil list and intialize autocomplete
     function buildNewProfileList(profileList, userName) {
         var newProfileList = $.grep(profileList, function(e) { return e.value != userName; });
         $('.profile-list').attr('data-attribute-profiles', JSON.stringify(newProfileList));
@@ -49,12 +61,16 @@ Mealz.prototype.addProfile = function () {
     }
 };
 
+/**
+ * Show participation list
+ */
 Mealz.prototype.showProfiles = function () {
     var input = $('.profile');
     var profileListContainer = $('.easy-autocomplete-container ul');
     fillContainer(JSON.parse($('.profile-list').attr('data-attribute-profiles')));
 
-    $(document).on("click", function () {
+    // close profil list select field if click next to list
+    $(document).on('click', function () {
         profileListContainer.hide();
     });
 

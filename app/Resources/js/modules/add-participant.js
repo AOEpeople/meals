@@ -2,10 +2,10 @@
 /**
  * Initialize and configurate plugin easyautocomplete
  */
-Mealz.prototype.initAutocomplete = function (profilesJson) {
+Mealz.prototype.initAutocomplete = function () {
     var profile = $('.profile');
     var profiles = {
-        data: profilesJson,
+        data: JSON.parse($('.profile-list').attr('data-attribute-profiles')),
         getValue: 'label',
         list: {
             match: {
@@ -46,9 +46,11 @@ Mealz.prototype.addProfile = function () {
 
     // remove input value and add new profil into the profil table
     function addToTable(prototype, selectedProfile) {
-        $(prototype).prependTo("table > tbody");
+        $(prototype).prependTo('table > tbody');
         selectedProfile.remove();
         $('.profile').val('');
+        $('.table').removeAttr('style');
+        $('.empty-table').remove();
     }
 
     // build and show new profil list and intialize autocomplete
@@ -60,7 +62,7 @@ Mealz.prototype.addProfile = function () {
 
     // after adding a profile it is necessary to reinitialize to get new context
     function reinitialize() {
-        Mealz.prototype.initAutocomplete(JSON.parse($('.profile-list').attr('data-attribute-profiles')));
+        Mealz.prototype.initAutocomplete();
         Mealz.prototype.showProfiles();
         Mealz.prototype.initToggleParticipation();
     }

@@ -95,8 +95,8 @@ class LoadParticipants extends AbstractFixture implements OrderedFixtureInterfac
         $users = array();
 
         if ($number > 1) {
-            foreach (array_rand($this->profiles, $number) as $user_key) {
-                $users[] = $this->profiles[$user_key];
+            foreach (array_rand($this->profiles, $number) as $userKey) {
+                $users[] = $this->profiles[$userKey];
             }
         } elseif ($number == 1) {
             $users[] = $this->profiles[array_rand($this->profiles)];

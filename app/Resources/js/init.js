@@ -59,14 +59,16 @@ $(document).ready(function () {
      */
     mealz.enableLightbox();
 
-    /**
-     * Profile Selection on Participants View
-     */
-    mealz.initAutocomplete();
-    mealz.showProfiles();
+    if($('.edit-participation').length > 0) {
+        /**
+         * Profile Selection on Participants View
+         */
+        mealz.initAutocomplete();
+        mealz.showProfiles();
 
-    /**
-     * init toggle participation
-     */
-    mealz.initToggleParticipation();
+        /**
+         * init toggle participation
+         */
+        mealz.initToggleParticipation();
+    }
 });

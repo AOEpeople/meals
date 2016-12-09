@@ -63,7 +63,7 @@ Mealz.prototype.loadToggleParticipationCheckbox = function ($tableRow) {
 Mealz.prototype.initToggleParticipation = function () {
     var that = this;
     this.$editParticipationParticipants = $('.container.edit-participation td.text');
-    this.$editParticipationParticipants.on('click', function () {
+    this.$editParticipationParticipants.off().on('click', function () {
         that.loadToggleParticipationCheckbox($(this).parent('.table-row'));
     });
 };

@@ -66,7 +66,7 @@ $(document).ready(function () {
     mealz.showProfiles();
 
     /**
-     * init toggle participation. merge with other file later on
+     * init toggle participation
      */
     mealz.initToggleParticipation();
 });

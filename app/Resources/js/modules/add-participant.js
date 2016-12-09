@@ -27,7 +27,6 @@ Mealz.prototype.addProfile = function () {
         buildPrototype(name, userName);
         addToTable(prototype, selectedProfile);
         buildNewProfileList(profileList, userName);
-        Mealz.prototype.initToggleParticipation();
     }
 
     function buildPrototype(name, userName) {
@@ -44,8 +43,13 @@ Mealz.prototype.addProfile = function () {
     function buildNewProfileList(profileList, userName) {
         var newProfileList = $.grep(profileList, function(e) { return e.value != userName; });
         $('.profile-list').attr('data-attribute-profiles', JSON.stringify(newProfileList));
+        reinitialize();
+    }
+
+    function reinitialize() {
         Mealz.prototype.initAutocomplete(JSON.parse($('.profile-list').attr('data-attribute-profiles')));
         Mealz.prototype.showProfiles();
+        Mealz.prototype.initToggleParticipation();
     }
 };
 

@@ -10,7 +10,7 @@
                 <tr>
                     <th class="table-head wide-cell"></th>
                     {% for day in week.days %}
-                        <th class="table-head day" colspan="{{ day.meals | length }}">{{ day.dateTime | date('l') }}</th>
+                        <th class="table-head day" colspan="{{ day.meals | length }}">{{ day.dateTime | date('l') | trans({},'date') }}</th>
                     {% endfor %}
                 </tr>
                 <tr>

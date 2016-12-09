@@ -62,6 +62,7 @@ $(document).ready(function () {
     /**
      * Profile Selection on Participants View
      */
+    mealz.initAutocomplete(JSON.parse($('.profile-list').attr('data-attribute-profiles')));
     mealz.showProfiles();
 
     /**

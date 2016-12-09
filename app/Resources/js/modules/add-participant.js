@@ -58,6 +58,7 @@ Mealz.prototype.addProfile = function () {
         reinitialize();
     }
 
+    // after adding a profile it is necessary to reinitialize to get new context
     function reinitialize() {
         Mealz.prototype.initAutocomplete(JSON.parse($('.profile-list').attr('data-attribute-profiles')));
         Mealz.prototype.showProfiles();

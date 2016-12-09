@@ -105,8 +105,10 @@ Mealz.prototype.applyDropdownStates = function (e) {
     $(e).parent().siblings(this.mealRowsWrapperClassSelector).toggleClass('disabled');
 };
 
-Mealz.prototype.styleInputs = function () {
+Mealz.prototype.initButtonHandling = function () {
     var that = this;
+
+    // click handling for add button
     this.$profileAdd.on('click', function() {
         that.addProfile($(this));
     });

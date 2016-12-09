@@ -19,7 +19,7 @@ $(document).ready(function () {
     var mealz = new Mealz();
     mealz.styleCheckboxes();
     mealz.styleSelects();
-    mealz.styleInputs();
+    mealz.initButtonHandling();
     mealz.copyToClipboard();
 
     /**

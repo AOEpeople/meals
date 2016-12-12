@@ -54,14 +54,14 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $meal = $this->getRecentMeal();
 
         // Create profile for user
-        $userFirstName = 'Max:'.$time;
-        $userLastName  = 'Mustermann:'.$time;
+        $userFirstName = 'Max';
+        $userLastName  = 'Mustermann'.$time;
         $this->createEmployeeProfileAndParticipation($userFirstName, $userLastName, $meal);
 
         // Create profile for guest
-        $guestFirstName = 'Jon:'.$time;
-        $guestLastName  = 'Doe:'.$time;
-        $guestCompany   = 'Company:'.$time;
+        $guestFirstName = 'Jon';
+        $guestLastName  = 'Doe'.$time;
+        $guestCompany   = 'Company';
         $this->createGuestProfileAndParticipation($guestFirstName, $guestLastName, $guestCompany, $meal);
 
         /** @var WeekRepository $weekRepository */
@@ -71,11 +71,9 @@ class ParticipantControllerTest extends AbstractControllerTestCase
 
         $crawler = $this->client->request('GET', '/participations/'.$currentWeek->getId().'/edit');
         $this->assertTrue($this->client->getResponse()->isSuccessful());
-
         $this->assertEquals(1, $crawler->filter('html:contains("'.$userFirstName.'")')->count());
-
-        $this->assertEquals(0, $crawler->filter('html:contains("'.$guestFirstName.'")')->count());
-        $this->assertEquals(0, $crawler->filter('html:contains("'.$guestLastName.'")')->count());
+        $this->assertEquals(1, $crawler->filter('html:contains("'.$guestFirstName.'")')->count());
+        $this->assertEquals(1, $crawler->filter('html:contains("'.$guestLastName.'")')->count());
     }
 
     /**

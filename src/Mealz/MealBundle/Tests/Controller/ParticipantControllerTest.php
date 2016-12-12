@@ -8,15 +8,13 @@ use Mealz\MealBundle\DataFixtures\ORM\LoadDays;
 use Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
 use Mealz\MealBundle\DataFixtures\ORM\LoadDishVariations;
 use Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
-use Mealz\MealBundle\DataFixtures\ORM\LoadParticipants;
 use Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
-use Mealz\MealBundle\Entity\Meal;
 use Mealz\MealBundle\Entity\Participant;
 use Mealz\MealBundle\Entity\Week;
 use Mealz\MealBundle\Entity\WeekRepository;
 use Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
-use Mealz\UserBundle\Entity\Profile;
+use Mealz\UserBundle\Entity\Role;
 
 /**
  * Participant Controller Test
@@ -53,12 +51,19 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     {
         $time = time();
 
+        $meal = $this->getRecentMeal();
+
         // Create profile for user
         $userFirstName = 'Max:'.$time;
         $userLastName  = 'Mustermann:'.$time;
-        // Enroll users to a meal
-        $meal = $this->getRecentMeal();
-        $this->createProfileAndParticipation($userFirstName, $userLastName, $meal);
+        $this->createEmployeeProfileAndParticipation($userFirstName, $userLastName, $meal);
+
+        // Create profile for guest
+        $guestFirstName = 'Jon:'.$time;
+        $guestLastName  = 'Doe:'.$time;
+        $guestCompany   = 'Company:'.$time;
+        $this->createGuestProfileAndParticipation($guestFirstName, $guestLastName, $guestCompany, $meal);
+
         /** @var WeekRepository $weekRepository */
         $weekRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Week');
         /** @var Week $currentWeek */
@@ -68,26 +73,9 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $this->assertTrue($this->client->getResponse()->isSuccessful());
 
         $this->assertEquals(1, $crawler->filter('html:contains("'.$userFirstName.'")')->count());
-    }
 
-    /**
-     * Creates a new user profile object.
-     *
-     * @param  string $firstName    User first name
-     * @param  string $lastName     User last name
-     * @return Profile
-     */
-    protected function createProfile($firstName = '', $lastName = '')
-    {
-        $firstName = $firstName ? $firstName : 'Test';
-        $lastName = $lastName ? $lastName : 'User'.rand();
-
-        $profile = new Profile();
-        $profile->setUsername($firstName.'.'.$lastName);
-        $profile->setFirstName($firstName);
-        $profile->setName($lastName);
-
-        return $profile;
+        $this->assertEquals(0, $crawler->filter('html:contains("'.$guestFirstName.'")')->count());
+        $this->assertEquals(0, $crawler->filter('html:contains("'.$guestLastName.'")')->count());
     }
 
     /**
@@ -97,7 +85,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
      * @param $meal
      * @return Participant
      */
-    protected function createProfileAndParticipation($userFirstName, $userLastName, $meal)
+    protected function createEmployeeProfileAndParticipation($userFirstName, $userLastName, $meal)
     {
         $user = $this->createProfile($userFirstName, $userLastName);
         $this->persistAndFlushAll([$user]);
@@ -111,21 +99,24 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * Gets the recent meal.
-     *
-     * @return Meal
+     * create profile for guest and add participation
+     * @param $guestFirstName
+     * @param $guestLastName
+     * @param $guestCompany
+     * @param $meal
+     * @return Participant
      */
-    private function getRecentMeal()
+    protected function createGuestProfileAndParticipation($guestFirstName, $guestLastName, $guestCompany, $meal)
     {
-        /** @var \Mealz\MealBundle\Entity\MealRepository $mealRepository */
-        $mealRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
-        $criteria = Criteria::create();
-        $meals = $mealRepository->matching($criteria->where(Criteria::expr()->lte('dateTime', new \DateTime())));
+        $user = $this->createProfile($guestFirstName, $guestLastName, $guestCompany);
+        $user->addRole($this->getRole(Role::ROLE_GUEST));
+        $this->persistAndFlushAll([$user]);
+        $participant = new Participant();
+        $participant->setProfile($user);
+        $participant->setMeal($meal);
 
-        if (1 > $meals->count()) {
-            $this->fail('No test meal found.');
-        }
+        $this->persistAndFlushAll([$participant]);
 
-        return $meals->first();
+        return $participant;
     }
 }

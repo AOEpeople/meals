@@ -102,8 +102,8 @@ class LoadUsers extends AbstractFixture implements OrderedFixtureInterface, Cont
 
         $profile = new Profile();
         $profile->setUsername($name);
-        $profile->setName($name);
-        $profile->setFirstName(strrev($name));
+        $profile->setName(strrev($name));
+        $profile->setFirstName($name);
         $login->setProfile($profile);
 
         $this->objectManager->persist($profile);

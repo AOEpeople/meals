@@ -15,7 +15,7 @@ class CostSheetController extends BaseController
 
         $participantRepository = $this->getParticipantRepository();
         $transactionRepository = $this->getDoctrine()->getRepository('MealzAccountingBundle:Transaction');
-        $transactionsPerUser = $transactionRepository->findTotalAmountOfTransactionsPerUser();
+        $transactionsPerUser = $transactionRepository->findUserDataAndTransactionAmountForGivenPeriod();
 
         $users = $participantRepository->findCostsGroupedByUserGroupedByMonth();
 

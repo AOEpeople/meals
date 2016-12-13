@@ -15,6 +15,7 @@ use Mealz\MealBundle\Entity\WeekRepository;
 use Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use Mealz\UserBundle\Entity\Role;
+use Normalizer;
 
 /**
  * Participant Controller Test
@@ -23,10 +24,12 @@ use Mealz\UserBundle\Entity\Role;
  */
 class ParticipantControllerTest extends AbstractControllerTestCase
 {
+    protected static $participantFirstName;
+    protected static $participantLastName;
+    protected static $guestParticipantFirstName;
+    protected static $guestParticipantLastName;
     protected static $userFirstName;
     protected static $userLastName;
-    protected static $guestFirstName;
-    protected static $guestLastName;
     protected static $meal;
 
     /**
@@ -53,39 +56,50 @@ class ParticipantControllerTest extends AbstractControllerTestCase
 
         self::$meal = $this->getRecentMeal();
 
-        // Create profile for user
-        self::$userFirstName = 'Max';
-        self::$userLastName  = 'Mustermann'.$time;
-        $employee = $this->createEmployeeProfileAndParticipation(self::$userFirstName, self::$userLastName, self::$meal);
+        // Create profile for participant
+        self::$participantFirstName = 'Max';
+        self::$participantLastName  = 'Mustermann'.$time;
+        $participant = $this->createEmployeeProfileAndParticipation(self::$participantFirstName, self::$participantLastName, self::$meal);
 
-        // Create profile for guest
-        self::$guestFirstName = 'Jon';
-        self::$guestLastName  = 'Doe'.$time;
+        // Create profile for guest participant
+        self::$guestParticipantFirstName = 'Jon';
+        self::$guestParticipantLastName  = 'Doe'.$time;
         $guestCompany   = 'Company';
-        $guest = $this->createGuestProfileAndParticipation(self::$guestFirstName, self::$guestLastName, $guestCompany, self::$meal);
+        $guestParticipant = $this->createGuestProfileAndParticipation(self::$guestParticipantFirstName, self::$guestParticipantLastName, $guestCompany, self::$meal);
+
+        // Create profile for user (non participant)
+        self::$userFirstName = 'Karl';
+        self::$userLastName = 'Schmidt'.$time;
+        $user = $this->createProfile(self::$userFirstName, self::$userLastName);
+        $this->persistAndFlushAll([$user]);
 
         // Check that created profiles are persisted
-        if (!$this->getUserProfile($employee->getProfile()->getUsername())) {
-            $this->fail('No test employee found.');
+        if (!$this->getUserProfile($participant->getProfile()->getUsername())) {
+            $this->fail('Test participant not found.');
         }
-        if (!$this->getUserProfile($guest->getProfile()->getUsername())) {
-            $this->fail('No test guest found.');
+        if (!$this->getUserProfile($guestParticipant->getProfile()->getUsername())) {
+            $this->fail('Test guest not found.');
+        }
+        if (!$this->getUserProfile($user->getUsername())) {
+            $this->fail('Test user not found.');
         }
     }
 
     /**
+     * Check that the created participants are displayed in the participation table for the current week
      * @test
      */
     public function checkParticipantInParticipationTable()
     {
         $crawler = $this->getCurrentWeekParticipations();
-        $this->assertEquals(1, $crawler->filter('html:contains("'.self::$userFirstName.'")')->count());
-        $this->assertEquals(1, $crawler->filter('html:contains("'.self::$userLastName.'")')->count());
-        $this->assertEquals(1, $crawler->filter('html:contains("'.self::$guestFirstName.'")')->count());
-        $this->assertEquals(1, $crawler->filter('html:contains("'.self::$guestLastName.'")')->count());
+        $this->assertEquals(1, $crawler->filter('html:contains("'.self::$participantFirstName.'")')->count());
+        $this->assertEquals(1, $crawler->filter('html:contains("'.self::$participantLastName.'")')->count());
+        $this->assertEquals(1, $crawler->filter('html:contains("'.self::$guestParticipantFirstName.'")')->count());
+        $this->assertEquals(1, $crawler->filter('html:contains("'.self::$guestParticipantLastName.'")')->count());
     }
 
     /**
+     * Check that the guest participant is displayed with a (Gast) suffix
      * @test
      */
     public function checkGuestSuffixInParticipationTable()
@@ -93,7 +107,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $crawler = $this->getCurrentWeekParticipations()
             ->filter('.table-row')
             ->reduce(function ($node) {
-                if ($node->text(self::$guestFirstName.', '.self::$guestLastName)) {
+                if ($node->text(self::$guestParticipantFirstName.', '.self::$guestParticipantLastName)) {
                     return true;
                 }
             })
@@ -103,6 +117,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     }
 
     /**
+     * Check that the amount of participations is correct
      * @test
      */
     public function checkParticipationAmount()
@@ -115,6 +130,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     }
 
     /**
+     * Check the weekdate is displayed correct
      * @test
      */
     public function checkWeekDate()
@@ -131,6 +147,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     }
 
     /**
+     * Check that the first day of the week is displayed correct
      * @test
      */
     public function checkFirstWeekDay()
@@ -143,6 +160,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     }
 
     /**
+     * Check that the first dish title is displayed
      * @test
      */
     public function checkFirstDishTitle()
@@ -157,22 +175,53 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $this->assertContains($firstWeekDish->getTitle(), $crawler->text());
     }
 
-//    /**
-//     * @test
-//     */
-//    public function checkParentAndVariationTitle()
-//    {
-//        $currentWeek = $this->getCurrentWeek();
-//        $weekMeals = $currentWeek->getDays()->first()->getMeals();
-//        $firstVariation = $weekMeals[4]->getDish();
-//        $crawler = $this->getCurrentWeekParticipations()
-//            ->filter('.meal-title')
-//            ->first()
-//        ;
-//        $this->assertContains($firstWeekDish->getTitle(), $crawler->text());
-//    }
+    /**
+     * Check that variations and parent-dish titles are displayed
+     * @test
+     */
+    public function checkFirstVariationAndParentTitle()
+    {
+        $currentWeek = $this->getCurrentWeek();
+        $weekMeals = $currentWeek->getDays()->first()->getMeals();
+        $firstVariation = $weekMeals[1]->getDish();
+        $firstVariationParent = $firstVariation->getParent();
+        $crawler = $this->getCurrentWeekParticipations()
+            ->filter('.meal-title')
+            ->eq(1)
+        ;
+        $template = '<span><b>%s</b><br>%s</span>';
+        $html = sprintf($template, $firstVariationParent->getTitle(), $firstVariation->getTitle());
+        // preg_replace() deletes every whitespace after the first
+        $this->assertEquals($html, preg_replace("~\\s{2,}~", "", trim($crawler->html())));
+    }
 
-//file_put_contents('/tmp/debug.log', $html."/n", FILE_APPEND);
+    /**
+     * Check that the table data prototype is present in the dom
+     * @test
+     */
+    public function checkTableDataPrototype()
+    {
+        $crawler = $this->getCurrentWeekParticipations()
+            ->filter('.table-content')
+        ;
+        $tableRow = '<tr class="table-row"><td class="text table-data wide-cell">__name__<\/td>';
+        $tableData = '<td class="meal-participation table-data" data-attribute-action=".*__username__"><i class="glyphicon"><\/i><\/td>';
+        $regex = '/('.$tableRow.')('.$tableData.')+(<\/tr>)/';
+        $this->assertRegExp($regex, preg_replace("~\\s{2,}~", "", trim($crawler->attr("data-prototype"))));
+    }
+
+    /**
+     * Check that the profiles list contains the non participating user
+     * @test
+     */
+    public function checkProfileList()
+    {
+        $crawler = $this->getCurrentWeekParticipations()
+            ->filter('.profile-list')
+        ;
+        $userName = self::$userLastName.', '.self::$userFirstName;
+        $this->assertContains($userName, $crawler->attr("data-attribute-profiles"));
+    }
 
     /**
      * return crawler for the current week participations

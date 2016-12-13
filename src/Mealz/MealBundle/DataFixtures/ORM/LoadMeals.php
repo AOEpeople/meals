@@ -19,7 +19,6 @@ use Mealz\MealBundle\Entity\Meal;
  */
 class LoadMeals extends AbstractFixture implements OrderedFixtureInterface
 {
-
     /**
      * @var ObjectManager
      */
@@ -40,12 +39,7 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface
      */
     protected $counter = 0;
 
-    /**
-     * load the Object
-     * @param ObjectManager $manager
-     */
-    public function load(ObjectManager $manager)
-    {
+    function load(ObjectManager $manager) {
         $this->objectManager = $manager;
         $this->loadDishes();
         $this->loadDays();
@@ -82,7 +76,10 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface
     {
         $meal = new Meal();
         $meal->setDay($day);
-        $meal->setDateTime($day->getDateTime());
+        // make transactions more realistic (random second,NO identical Date)
+        $date = clone $day->getDateTime();
+        $date->modify('+' . mt_rand(1, 1400) . ' second');
+        $meal->setDateTime($date);
         $meal->setDish($dish);
         $meal->setPrice($dish->getPrice());
         $this->objectManager->persist($meal);
@@ -130,7 +127,8 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface
     }
 
     /**
-     * get random Dishes with Variations
+     * Get random Dishes with Variations
+     *
      * @return Collection
      */
     protected function getRandomDishWithVariations()
@@ -155,8 +153,10 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface
     }
 
     /**
-     * get random Dishes without Variations
-     * @param Dish $previousDish
+     * Get random Dishes without Variations
+     *
+     * @param Dish $previousDish previous dish
+     *
      * @return Dish
      */
     protected function getRandomDish($previousDish)
@@ -167,6 +167,6 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface
         } while ($dish === $previousDish);
 
         return $dish;
-    }
 
+    }
 }

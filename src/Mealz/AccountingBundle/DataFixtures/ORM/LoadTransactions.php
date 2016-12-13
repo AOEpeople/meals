@@ -21,58 +21,41 @@ class LoadTransactions extends AbstractFixture implements OrderedFixtureInterfac
         $randomUsers = $this->getRandomUsers();
         for ($i = 0; $i < 6; $i++) {
             foreach ($randomUsers as $user) {
-                $this->addTransaction($user);
+                $this->addTransaction($user, mt_rand(1000, 5000)/100);
+                $this->addLastMonthTransaction($user, mt_rand(1000, 5000)/100);
             }
         }
 
         $this->objectManager->flush();
     }
 
-    /**
-     * get the load order for fixtures
-     * @return mixed
-     */
-    public function getOrder()
+    private function addLastMonthTransaction($user, $amount)
     {
-        /**
-         * load as ninth
-         */
-        return 9;
+        // Generate some random date from last month
+        $lastMonthTimestamp = strtotime('first day of previous month') + (mt_rand(1, 27) * 86400);
+        $this->addTransaction($user, $amount, new \DateTime('@' . $lastMonthTimestamp));
     }
 
     /**
-     * get random Users
-     * @return array
+     * @param Profile   $user
+     * @param float     $amount
+     * @param \DateTime $date
      */
-    protected function getRandomUsers()
+    private function addTransaction($user, $amount, \DateTime $date = NULL)
     {
-        $profiles = array();
-        foreach ($this->referenceRepository->getReferences() as $referenceName => $reference) {
-            if ($reference instanceof Profile) {
-                $profiles[] = $this->getReference($referenceName);
-            }
+        if (is_null($date)) {
+            $date = new \DateTime();
         }
+        // make transactions more realistic (random minute, NO identical Date)
+        $date->modify('+' . mt_rand(1, 1400) . ' second');
 
-        return $profiles;
-    }
-
-    /**
-     * add Transactions
-     * @param $user
-     */
-    private function addTransaction($user)
-    {
         $transaction = new Transaction();
-        $transaction->setAmount(mt_rand(1000, 5000) / 100);
+        $transaction->setDate($date);
+        $transaction->setAmount($amount);
         $transaction->setProfile($user);
         $this->objectManager->persist($transaction);
     }
 
-    /**
-     * generate some random String
-     * @param int $length
-     * @return string
-     */
     private function generateRandomString($length = 10)
     {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -81,8 +64,22 @@ class LoadTransactions extends AbstractFixture implements OrderedFixtureInterfac
         for ($i = 0; $i < $length; $i++) {
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
-
         return $randomString;
     }
 
+    protected function getRandomUsers()
+    {
+        $profiles = array();
+        foreach ($this->referenceRepository->getReferences() as $referenceName => $reference) {
+            if ($reference instanceof Profile) {
+                $profiles[] = $this->getReference($referenceName);
+            }
+        }
+        return $profiles;
+    }
+
+    public function getOrder()
+    {
+        return 4;
+    }
 }

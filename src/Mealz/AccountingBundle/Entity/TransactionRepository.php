@@ -89,7 +89,7 @@ class TransactionRepository extends \Doctrine\ORM\EntityRepository
      * @param Profile $profile
      * @return array
      */
-    public function findTotalAmountOfTransactionsPerUser(\DateTime $minDate = null, \DateTime $maxDate = null, $profile = NULL)
+    public function findUserDataAndTransactionAmountForGivenPeriod(\DateTime $minDate = null, \DateTime $maxDate = null, $profile = NULL)
     {
         $qb = $this->createQueryBuilder('t');
         $qb->select('p.username, p.firstName, p.name, SUM(t.amount) AS amount');

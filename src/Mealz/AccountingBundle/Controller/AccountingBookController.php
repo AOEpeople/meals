@@ -25,7 +25,7 @@ class AccountingBookController extends BaseController
 
         // Get array of users with their amount of transactions in previous month
         $transactionRepository = $this->getTransactionRepository();
-        $users = $transactionRepository->findTotalAmountOfTransactionsPerUser($minDate, $maxDate);
+        $users = $transactionRepository->findUserDataAndTransactionAmountForGivenPeriod($minDate, $maxDate);
 
         return $this->render('MealzAccountingBundle:Accounting\\Admin:accountingBook.html.twig', array(
             'heading' => $heading,

@@ -52,7 +52,7 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface
         foreach ($this->days as $key => $day) {
             $dish = null;
             // that should be next week Wednesday which should be available for selection
-            if ($key == 7) {
+            if ($key == 7 || $key == 0) {
                 // add once 3 Options per Day, 1 Dish without variations and 1 with 2 variations
                 $this->loadNewMeal($day, $this->dishes[0]); // first Dish was loaded without variations
                 $dishVariations = $this->getRandomDishWithVariations();

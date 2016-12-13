@@ -130,7 +130,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
         // fetch infos for previous month from database.
         // These results are already ordered by lastname, firstname!!
         $transactionRepository = $this->getDoctrine()->getRepository('MealzAccountingBundle:Transaction');
-        $usersAndTheirTotals = $transactionRepository->findTotalAmountOfTransactionsPerUser($minDate, $maxDate);
+        $usersAndTheirTotals = $transactionRepository->findUserDataAndTransactionAmountForGivenPeriod($minDate, $maxDate);
 
         // fetch what is displayed in the accounting book table....
         $crawler = $this->client->request('GET', '/accounting/book');

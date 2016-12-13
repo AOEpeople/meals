@@ -2,8 +2,8 @@
 
 namespace Mealz\AccountingBundle\Tests\Repository;
 
-use Mealz\MealzBundle\Entity\Transaction;
-use Mealz\MealzBundle\Entity\TransactionRepository;
+use Mealz\AccountingBundle\Entity\Transaction;
+use Mealz\AccountingBundle\Entity\TransactionRepository;
 use Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
 use Mealz\MealBundle\DataFixtures\ORM\LoadDays;
 use Mealz\MealBundle\DataFixtures\ORM\LoadDishes;

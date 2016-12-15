@@ -94,7 +94,7 @@ Mealz.prototype.showProfiles = function () {
     function fillContainer(profileList) {
         profileListContainer.empty();
         $.each(profileList, function( key ) {
-            profileListContainer.append('<li data-attribute-value=\"' + profileList[key].value + '\"><div class=\"eac-item\">' + profileList[key].label + '</div></li>');
+            profileListContainer.append('<li data-attribute-value="' + profileList[key].value + '"><div class="eac-item">' + profileList[key].label + '</div></li>');
         });
         selectProfile();
     }

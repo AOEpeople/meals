@@ -79,8 +79,7 @@ Mealz.prototype.toggleParticipationAdmin = function ($element) {
             $element.data('attribute-action', data.url);
             $element.toggleClass('participating');
             var $icon = $element.find('i:first');
-            $icon.toggleClass('glyphicon-check');
-            $icon.toggleClass('glyphicon-unchecked');
+            $icon.toggleClass('glyphicon-check glyphicon-unchecked');
         },
         error: function (xhr) {
             console.log(xhr.status + ': ' + xhr.statusText);

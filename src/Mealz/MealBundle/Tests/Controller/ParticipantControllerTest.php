@@ -14,6 +14,7 @@ use Mealz\MealBundle\Entity\Week;
 use Mealz\MealBundle\Entity\WeekRepository;
 use Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
+use Mealz\UserBundle\Entity\Profile;
 use Mealz\UserBundle\Entity\Role;
 use Normalizer;
 
@@ -74,13 +75,13 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $this->persistAndFlushAll([$user]);
 
         // Check that created profiles are persisted
-        if (!$this->getUserProfile($participant->getProfile()->getUsername())) {
+        if (($this->getUserProfile($participant->getProfile()->getUsername()) instanceof Profile) === false) {
             $this->fail('Test participant not found.');
         }
-        if (!$this->getUserProfile($guestParticipant->getProfile()->getUsername())) {
+        if (($this->getUserProfile($guestParticipant->getProfile()->getUsername()) instanceof Profile) === false) {
             $this->fail('Test guest not found.');
         }
-        if (!$this->getUserProfile($user->getUsername())) {
+        if (($this->getUserProfile($user->getUsername()) instanceof Profile) === false) {
             $this->fail('Test user not found.');
         }
     }
@@ -107,12 +108,12 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $crawler = $this->getCurrentWeekParticipations()
             ->filter('.table-row')
             ->reduce(function ($node) {
-                if ($node->text(self::$guestParticipantFirstName.', '.self::$guestParticipantLastName)) {
-                    return true;
+                $participantName = self::$guestParticipantLastName.', '.self::$guestParticipantFirstName;
+                if (stripos($node->text(), $participantName) === false) {
+                    return false;
                 }
             })
-            ->first()
-        ;
+            ->first();
         $this->assertContains('Gast', $crawler->text());
     }
 

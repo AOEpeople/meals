@@ -26,7 +26,7 @@ class WeekRepository extends EntityRepository
      */
     public function getNextWeek(\DateTime $date = null, $onlyEnabledDays = false)
     {
-        $date = is_null($date) ? new \DateTime() : $date;
+        $date = (($date instanceof \DateTime) === false) ? new \DateTime() : $date;
         $nextWeek = $date->modify('next monday');
 
         return $this->findWeekByDate($nextWeek, $onlyEnabledDays);

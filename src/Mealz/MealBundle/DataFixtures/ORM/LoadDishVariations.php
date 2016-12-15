@@ -16,6 +16,11 @@ use Mealz\MealBundle\Entity\DishVariation;
 class LoadDishVariations extends AbstractFixture implements OrderedFixtureInterface
 {
     /**
+     * Constant to declare load order of fixture
+     */
+    const ORDER_NUMBER = 6;
+
+    /**
      * @var ObjectManager
      */
     protected $objectManager;
@@ -64,7 +69,7 @@ class LoadDishVariations extends AbstractFixture implements OrderedFixtureInterf
         /**
          * load as sixth
          */
-        return 6;
+        return self::ORDER_NUMBER;
     }
 
     

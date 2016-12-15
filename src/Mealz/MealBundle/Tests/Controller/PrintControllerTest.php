@@ -41,6 +41,7 @@ class PrintControllerTest extends AbstractControllerTestCase
     }
 
     /**
+     * check that guest participants are not listed in the costsheet
      * @test
      */
     public function guestDoesNotAppearInCostListing()

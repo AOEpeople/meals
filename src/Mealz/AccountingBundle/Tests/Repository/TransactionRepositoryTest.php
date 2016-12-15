@@ -12,14 +12,23 @@ use Mealz\MealBundle\DataFixtures\ORM\LoadParticipants;
 use Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
 use Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 
-
+/**
+ * Class TransactionRepositoryTest
+ * @package Mealz\AccountingBundle\Tests\Repository
+ */
 class TransactionRepositoryTest extends AbstractDatabaseTestCase
 {
     /** @var  TransactionRepository */
     protected $transactionRepository;
 
+    /**
+     * @var String
+     */
     protected $locale;
 
+    /**
+     * prepare test environment
+     */
     public function setUp()
     {
         parent::setUp();
@@ -33,7 +42,7 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
             new LoadCategories(),
             new LoadDishes(),
             new LoadMeals(),
-            new LoadParticipants()
+            new LoadParticipants(),
         ]);
     }
 
@@ -44,6 +53,7 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
      * - create several temporary transactions for a TEST user (spread over this month, last month and the month before last month)
      * - call transactionRepository->findUserDataAndTransactionAmountForGivenPeriod() with parameters for last month and TEST user
      * - compare returned sum of transactions with the sum of the temporary transactions sum which are added to the last month
+     * @test
      */
     public function testTransactionsSummedUpByLastMonth()
     {
@@ -57,7 +67,7 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
         $maxDate->setTime(23, 59, 59);
 
             // make temporary transactions are available
-        $this->assertTrue(count($tempTransactions)>0);
+        $this->assertTrue(count($tempTransactions) > 0);
         $t1 = array_values($tempTransactions)[0];
         $this->assertTrue($t1 instanceof Transaction);
 
@@ -70,7 +80,33 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
         $assumedTotalAmount = $this->getAssumedTotalAmountForTransactionsFromLastMonth($tempTransactions);
 
             // compare both amounts
-        $this->assertEquals($fetchedTransactionsTotalAmount,$assumedTotalAmount);
+        $this->assertEquals($fetchedTransactionsTotalAmount, $assumedTotalAmount);
+    }
+
+    /**
+     * Returns a random DateTime object of this, last or penultimate Month
+     * You can set $month to either 'this', 'last' or 'penultimate'
+     *
+     * @param string $month
+     * @return \DateTime
+     */
+    public function getRandomDateTime($month = 'this')
+    {
+        $dt = new \DateTime();
+        $subDays = ($dt->format("d") > 15) ? 36 : 20;
+
+        switch (strtolower($month)) {
+            case 'last':
+                $dt->sub(new \DateInterval('P'.$subDays.'D'));
+                break;
+            case 'penultimate':
+                $dt->sub(new \DateInterval('P1M'.$subDays.'D'));
+                break;
+            default:
+                break;
+        }
+
+        return $dt;
     }
 
     /**
@@ -82,11 +118,41 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
     protected function getAssumedTotalAmountForTransactionsFromLastMonth($transactionsArray)
     {
         $result = 0;
-        $ra = array_filter($transactionsArray,['self','getTransactionsFromLastMonth']);
-        foreach($ra as $transaction) {
+        $ra = array_filter($transactionsArray, ['self', 'getTransactionsFromLastMonth']);
+        foreach ($ra as $transaction) {
             $result += $transaction->getAmount();
         }
+
         return floatval($result);
+    }
+
+    /**
+     * Create and persist a bunch of transactions and return them in an array
+     *
+     * @return array    Array of transactions
+     */
+    protected function createTemporaryTransactions()
+    {
+            // create a testuser...
+        $tu = $this->createProfile();
+
+            // create 12 transactions for several periods of time and assign it to testuser
+        $transactions = array();
+        for ($i = 1; $i < 12; $i++) {
+            $m = new \DateTime();
+            $tt = new Transaction();
+            $tt->setProfile($tu);
+            $tt->setAmount(mt_rand(10, 120) + 0.13);
+            // $period is to gather 2 transactions for current month, 2 for penultimate one and 8 for last month
+            $period = ($i <= 2) ? 'this' : 'last';
+            $period = ($i > 10) ? 'penultimate' : $period;
+            $tt->setDate($this->getRandomDateTime($period));
+            $transactions[] = $tt;
+        }
+        // persist the transactions
+        $this->persistAndFlushAll($transactions);
+
+        return $transactions;
     }
 
     /**
@@ -103,65 +169,7 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
         if ($item instanceof Transaction) {
             return ($item->getDate()->format('n') == $m);
         }
+
         return false;
     }
-
-    /**
-     * Create and persist a bunch of transactions and return them in an array
-     *
-     * @return array    Array of transactions
-     */
-    protected function createTemporaryTransactions()
-    {
-            // create a testuser...
-        $tu = $this->createProfile();
-
-            // create 12 transactions for several periods of time and assign it to testuser
-        $transactions = array();
-        for ($i=1;$i < 12; $i++)
-        {
-            $m = new \DateTime();
-            $tt = new Transaction();
-            $tt->setProfile($tu);
-            $tt->setAmount(mt_rand(10,120)+ 0.13);
-                // $period is to gather 2 transactions for current month, 2 for penultimate one and 8 for last month
-            $period = ($i<=2) ? 'this' : 'last';
-            $period = ($i>10) ? 'penultimate' : $period;
-            $tt->setDate($this->getRandomDateTime($period));
-            $transactions[] = $tt;
-        }
-
-            // persist the transactions
-        $this->persistAndFlushAll($transactions);
-
-        return $transactions;
-    }
-
-
-    /**
-     * Returns a random DateTime object of this, last or penultimate Month
-     * You can set $month to either 'this', 'last' or 'penultimate'
-     *
-     * @param string $month
-     * @return \DateTime
-     */
-    public function getRandomDateTime($month = 'this')
-    {
-        $dt = new \DateTime();
-        $subDays = ($dt->format("d") > 15) ? 36 : 20;
-
-        switch(strtolower($month)) {
-            case 'last':
-                $dt->sub(new \DateInterval('P'.$subDays.'D'));
-                break;
-            case 'penultimate':
-                $dt->sub(new \DateInterval('P1M'.$subDays.'D'));
-                break;
-            default:
-                break;
-        }
-
-        return $dt;
-    }
-
 }

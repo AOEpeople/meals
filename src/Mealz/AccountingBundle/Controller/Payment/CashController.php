@@ -12,9 +12,16 @@ use Mealz\AccountingBundle\Form\CashPaymentAdminForm;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+ * Class CashController
+ * @package Mealz\AccountingBundle\Controller\Payment
+ */
 class CashController extends BaseController
 {
-
+    /**
+     * @param Profile $profile
+     * @return JsonResponse
+     */
     public function getPaymentFormForProfileAction($profile)
     {
         if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
@@ -43,6 +50,10 @@ class CashController extends BaseController
         return new JsonResponse($renderedForm->getContent());
     }
 
+    /**
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
     public function paymentFormHandlingAction(Request $request)
     {
         if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
@@ -68,7 +79,7 @@ class CashController extends BaseController
                         'payment.cash.success',
                         array(
                             '%amount%' => $transaction->getAmount(),
-                            '%name%' => $transaction->getProfile()->getFullName()
+                            '%name%' => $transaction->getProfile()->getFullName(),
                         ),
                         'messages'
                     );
@@ -78,10 +89,10 @@ class CashController extends BaseController
                     $logger->addInfo('admin added {amount}€ into wallet of {profile} (Transaction: {transactionId})', array(
                         "profile" => $transaction->getProfile(),
                         "amount" => $transaction->getAmount(),
-                        "transactionId" => $transaction->getId()
+                        "transactionId" => $transaction->getId(),
                     ));
                 } else {
-                    $message = $this->get('translator')->trans('payment.cash.failure',array(),'messages');
+                    $message = $this->get('translator')->trans('payment.cash.failure', array(), 'messages');
                     $this->addFlashMessage($message, 'danger');
                 }
             }
@@ -91,7 +102,7 @@ class CashController extends BaseController
         $week = $weekRepository->getCurrentWeek();
 
         return $this->redirectToRoute('mealz_accounting.cost_sheet', array(
-            'week' => $week->getId()
+            'week' => $week->getId(),
         ));
     }
 
@@ -127,7 +138,7 @@ class CashController extends BaseController
             array(
                 'transaction_history_records' => $transactionHistoryArr,
                 'transactions_total' => $transactionsTotal,
-                'participations_total' => $participationsTotal
+                'participations_total' => $participationsTotal,
             )
         );
     }

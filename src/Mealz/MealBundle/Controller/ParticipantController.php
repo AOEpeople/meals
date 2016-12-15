@@ -47,9 +47,9 @@ class ParticipantController extends BaseController
             $logger->addInfo(
                 'admin removed {profile} from {meal} (Meal: {mealId})',
                 array(
-                    "profile" => $participant->getProfile(),
-                    "meal" => $meal,
-                    "mealId" => $meal->getId(),
+                    'profile' => $participant->getProfile(),
+                    'meal' => $meal,
+                    'mealId' => $meal->getId(),
                 )
             );
         }

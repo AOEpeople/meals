@@ -20,6 +20,21 @@ use Mealz\MealBundle\Entity\Meal;
 class LoadMeals extends AbstractFixture implements OrderedFixtureInterface
 {
     /**
+     * Constant to declare load order of fixture
+     */
+    const ORDER_NUMBER = 7;
+
+    /**
+     * index of first weeks monday
+     */
+    const FIRST_MONDAY = 0;
+
+    /**
+     * index of second weeks wednesday
+     */
+    const SECOND_WEDNESDAY = 7;
+
+    /**
      * @var ObjectManager
      */
     protected $objectManager;
@@ -46,7 +61,7 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface
         foreach ($this->days as $key => $day) {
             $dish = null;
             // that should be next week Wednesday which should be available for selection
-            if ($key == 7 || $key == 0) {
+            if ($key == self::SECOND_WEDNESDAY || $key == self::FIRST_MONDAY) {
                 // add once 3 Options per Day, 1 Dish without variations and 1 with 2 variations
                 $this->loadNewMeal($day, $this->dishes[0]); // first Dish was loaded without variations
                 $dishVariations = $this->getRandomDishWithVariations();
@@ -95,7 +110,7 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface
         /**
          * load as seventh
          */
-        return 7;
+        return self::ORDER_NUMBER;
     }
 
     /**

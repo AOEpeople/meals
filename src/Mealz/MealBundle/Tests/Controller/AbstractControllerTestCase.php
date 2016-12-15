@@ -71,7 +71,6 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
          * @see https://git.aoesupport.com/gitweb/project/concar/calimero/symfony.git/blob/HEAD:/app/phpunitFunctional.xml?js=1
          */
         $session = $this->client->getContainer()->get('session');
-        // $session->migrate(true);
         // the firewall context (defaults to the firewall name)
         $firewall = 'mealz';
 
@@ -80,7 +79,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         $user = ($user instanceof UserInterface) ? $user : 'kochomi';
 
         $token = new UsernamePasswordToken($user, null, $firewall, array('ROLE_KITCHEN_STAFF'));
-        if (!$session->getId()) {
+        if (($session->getId()) === false) {
             $session->set('_security_'.$firewall, serialize($token));
             $session->save();
         }
@@ -138,11 +137,9 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         $roleRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Role');
         /** @var \Mealz\UserBundle\Entity\Role $guestRole */
         $role = $roleRepository->findOneBy(['sid' => $roleType]);
-
         if (!($role instanceof Role)) {
             $this->fail('User role not "'.$roleType.'" found.');
         }
-
 
         return $role;
     }
@@ -157,16 +154,16 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
      */
     protected function createProfile($firstName = '', $lastName = '', $company = '')
     {
-        $firstName = $firstName ? $firstName : 'Test';
-        $lastName = $lastName ? $lastName : 'User'.rand();
-        $company = $company ? $company : rand();
+        $firstName = (trim(strval($firstName)) !== '') ? $firstName : 'Test';
+        $lastName = (trim(strval($lastName)) !== '') ? $lastName : 'User'.rand();
+        $company = (trim(strval($company)) !== '') ? $company : rand()."";
 
         $profile = new Profile();
         $profile->setUsername($firstName.'.'.$lastName);
         $profile->setFirstName($firstName);
         $profile->setName($lastName);
 
-        if ($company) {
+        if (trim(strval($company)) !== '') {
             $profile->setCompany($company);
         }
 
@@ -213,11 +210,11 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
 
     /**
      * Helper method to create a user transaction with specific amount and date
-     * @param $user
+     * @param Profile $user
      * @param float $amount
      * @param \DateTime|null $date
      */
-    protected function createTransactions($user, $amount = 5.0, \DateTime $date = null)
+    protected function createTransactions(Profile $user, $amount = 5.0, \DateTime $date = null)
     {
         $transaction = new Transaction();
         $amount = filter_var($amount, FILTER_VALIDATE_FLOAT, array('options' => array('min_range' => 0.1, 'default' => mt_rand(1000, 5000) / 100)));
@@ -228,7 +225,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
     }
 
     /**
-     *mock the Flash Bag
+     * mock the Flash Bag
      */
     private function mockFlashBag()
     {

@@ -2,6 +2,7 @@
 
 namespace Mealz\AccountinglBundle\Tests\Controller;
 
+use Mealz\UserBundle\Entity\Profile;
 use Symfony\Component\DomCrawler\Crawler;
 use Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
 
@@ -42,17 +43,18 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
         $this->persistAndFlushAll([$user1, $user2]);
 
         // Create transactions for users if they're persisted
-        if ($this->getUserProfile($user1FirstName.'.'.$user1LastName)) {
+        if (($this->getUserProfile($user1FirstName.'.'.$user1LastName) instanceof Profile) === true) {
             $this->createTransactions($user1, 10.50, new \DateTime('first day of previous month'));
         }
 
-        if ($this->getUserProfile($user2FirstName.'.'.$user2LastName)) {
+        if (($this->getUserProfile($user2FirstName.'.'.$user2LastName) instanceof Profile) === true) {
             $this->createTransactions($user2, 11.50, new \DateTime('first day of previous month'));
         }
     }
 
     /**
      * Testing access to accounting book site for non-admins and admins
+     * @test
      */
     public function testAccessForAdminsOnly()
     {
@@ -70,13 +72,14 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
 
     /**
      * Test the headline of accounting book showing the range of the last month
+     * @test
      */
     public function testHeadlineShowingDateOfLastMonth()
     {
         // test for admins
         $crawler = $this->client->request('GET', '/accounting/book');
         $node = $crawler->filterXPath('//div[contains(@class,"accounting-book")]//h1[@class="headline"]');
-        $this->assertTrue($node->count() > 0, "There is no h1.headline element)");
+        $this->assertTrue($node->count() > 0, 'There is no h1.headline element)');
 
         $headline = $node->first()->text();
 
@@ -96,6 +99,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
     /**
      * Test if sum of all transactions for the last month is displayed in a seperate row at the end of the
      * listed transactions.
+     * @test
      */
     public function testTotalAmountOfTransactionsDisplayedInSeperateRow()
     {
@@ -112,12 +116,13 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
         }
         $totalCalculated = floatval(array_sum($res));
         $totalShown = $this->getFloatFromNode($nodeTotal->siblings()->getNode(0));
-        $this->assertEquals($totalCalculated, $totalShown, "Total amount of transactions inconsistent");
+        $this->assertEquals($totalCalculated, $totalShown, 'Total amount of transactions inconsistent');
     }
 
     /**
      * Test users are orderd by lastname, firstname and listed this way:
      * lastname, firstname      amount
+     * @test
      */
     public function testDisplayUsersOrderedByLastnameAndFirstname()
     {
@@ -145,7 +150,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
             $userInfo = current($usersAndTheirTotals);
             next($usersAndTheirTotals);
             $regex = "/".preg_quote($userInfo['name'])." *, *".preg_quote($userInfo['firstName'])."/i";
-            $this->assertRegExp($regex, $nameDisplayed, "Names are displayed incorrectly. Either sorting is wrong or the names are not displayed like it should be (name, firstname)");
+            $this->assertRegExp($regex, $nameDisplayed, 'Names are displayed incorrectly. Either sorting is wrong or the names are not displayed like it should be (name, firstname)');
         }
     }
 
@@ -162,6 +167,10 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
         return floatval($res);
     }
 
+    /**
+     * return a new crawler
+     * @return Crawler
+     */
     protected function getRawResponseCrawler()
     {
         $content = $this->client->getResponse()->getContent();

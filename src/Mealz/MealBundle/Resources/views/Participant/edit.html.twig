@@ -11,6 +11,10 @@
         </p>
     {% endif %}
 
+    {% if(profilesJson|length != 0) %}
+        {% include 'MealzMealBundle:Participant/partials:profile-list.html.twig' %}
+    {% endif %}
+
     <table class="table" {% if users is empty %} style="display: none" {% endif %}>
         <thead class="table-header">
         <tr>
@@ -70,7 +74,4 @@
         </tr>
         </tbody>
     </table>
-    {% if(profilesJson|length != 0) %}
-        {% include 'MealzMealBundle:Participant/partials:profile-list.html.twig' %}
-    {% endif %}
 {% endblock %}

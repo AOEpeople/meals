@@ -28,8 +28,8 @@ class CategoryAbstractControllerTest extends AbstractControllerTestCase
     {
         $this->client->request('GET', '/category/form');
         $crawler = $this->getJsonResponseCrawler();
-        $node = $crawler->filterXPath('//form[@action="/category/new"]');
-        $this->assertTrue($node->count() === 1);
+        $node = $crawler->filterXPath('//form[contains(@action,"/category/new")]');
+        $this->assertTrue($node->count() == 1);
     }
 
     public function testNewAction()

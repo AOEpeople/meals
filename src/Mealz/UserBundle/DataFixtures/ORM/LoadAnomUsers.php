@@ -16,6 +16,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class LoadAnomUsers extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
+    /**
+     * Constant to declare load order of fixture
+     */
+    const ORDER_NUMBER = 10;
 
     /**
      * @var ObjectManager
@@ -181,7 +185,7 @@ class LoadAnomUsers extends AbstractFixture implements OrderedFixtureInterface, 
         /**
          * load as tenth
          */
-        return 10;
+        return self::ORDER_NUMBER;
     }
 
     /**

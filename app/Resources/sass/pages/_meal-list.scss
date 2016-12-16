@@ -47,7 +47,8 @@
 
   .legend {
     li {
-      display: inline-block;
+      display: block;
+      float: left;
       margin-right: 20px;
 
       @include breakpoint(medium) {

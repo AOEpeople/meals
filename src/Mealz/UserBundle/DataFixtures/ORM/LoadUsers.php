@@ -17,6 +17,10 @@ use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
  */
 class LoadUsers extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
+    /**
+     * Constant to declare load order of fixture
+     */
+    const ORDER_NUMBER = 1;
 
     /**
      * @var ObjectManager
@@ -83,7 +87,7 @@ class LoadUsers extends AbstractFixture implements OrderedFixtureInterface, Cont
         /**
          * load as first
          */
-        return 1;
+        return self::ORDER_NUMBER;
     }
 
     /**
@@ -102,8 +106,8 @@ class LoadUsers extends AbstractFixture implements OrderedFixtureInterface, Cont
 
         $profile = new Profile();
         $profile->setUsername($name);
-        $profile->setName($name);
-        $profile->setFirstName(strrev($name));
+        $profile->setName(strrev($name));
+        $profile->setFirstName($name);
         $login->setProfile($profile);
 
         $this->objectManager->persist($profile);

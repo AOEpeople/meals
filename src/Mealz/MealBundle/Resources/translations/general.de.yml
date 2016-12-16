@@ -13,6 +13,7 @@ headings:
     create: Erstelle Woche
     edit: Editiere Woche
     participations: Teilnahmen
+    participationsprint: Teilnahmen am
   dishes:
     list: Liste der Gerichte
   categories:
@@ -36,6 +37,7 @@ content:
       no_meals: |
         Gedulde dich - noch haben wir kein Essen
         für dich, aber wir arbeiten daran :)
+      participant.none: Bisher gibt es keine Teilnahmen für diese Woche.
     day:
       disabled: Kein Angebot für diesen Tag!
     meal:

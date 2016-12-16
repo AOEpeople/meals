@@ -104,3 +104,12 @@ Mealz.prototype.applyDropdownStatesByWeekState = function () {
 Mealz.prototype.applyDropdownStates = function (e) {
     $(e).parent().siblings(this.mealRowsWrapperClassSelector).toggleClass('disabled');
 };
+
+Mealz.prototype.initButtonHandling = function () {
+    var that = this;
+
+    // click handling for add button
+    this.$profileAdd.on('click', function() {
+        that.addProfile($(this));
+    });
+};

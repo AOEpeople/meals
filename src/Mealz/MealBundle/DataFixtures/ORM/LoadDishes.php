@@ -15,6 +15,10 @@ use Mealz\MealBundle\Entity\Dish;
  */
 class LoadDishes extends AbstractFixture implements OrderedFixtureInterface
 {
+    /**
+     * Constant to declare load order of fixture
+     */
+    const ORDER_NUMBER = 5;
 
     /**
      * @var ObjectManager
@@ -73,7 +77,7 @@ class LoadDishes extends AbstractFixture implements OrderedFixtureInterface
         /**
          * load as fifth
          */
-        return 5;
+        return self::ORDER_NUMBER;
     }
 
     /**

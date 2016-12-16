@@ -270,7 +270,7 @@ class ParticipantRepository extends EntityRepository
         }
         if (array_key_exists('load_profile', $options) === true) {
             $qb->leftJoin('p.profile', 'u');
-            if ($options['load_roles']) {
+            if (array_key_exists('load_roles', $options) === true) {
                 $qb->leftJoin('u.roles', 'r');
             }
         }

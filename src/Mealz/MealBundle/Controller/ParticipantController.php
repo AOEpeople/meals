@@ -22,10 +22,10 @@ class ParticipantController extends BaseController
      */
     public function deleteAction(Participant $participant)
     {
-        if (!$this->getUser()) {
+        if (is_object($this->getUser()) === false) {
             return $this->ajaxSessionExpiredRedirect();
         }
-        if ($this->getProfile() !== $participant->getProfile() && !$this->getDoorman()->isKitchenStaff()) {
+        if ($this->getProfile() !== $participant->getProfile() && ($this->getDoorman()->isKitchenStaff()) === false) {
             return new JsonResponse(null, 403);
         }
 
@@ -42,7 +42,7 @@ class ParticipantController extends BaseController
         $em->remove($participant);
         $em->flush();
 
-        if ($this->getDoorman()->isKitchenStaff()) {
+        if (($this->getDoorman()->isKitchenStaff()) === true) {
             $logger = $this->get('monolog.logger.balance');
             $logger->addInfo(
                 'admin removed {profile} from {meal} (Meal: {mealId})',

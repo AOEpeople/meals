@@ -13,7 +13,7 @@ headings:
     create: Create week
     edit: Edit week
     participations: Participations
-    participationsprint: Participations at
+    participationsprint: Participations on
   dishes:
     list: List of dishes
   categories:

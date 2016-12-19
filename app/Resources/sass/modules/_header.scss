@@ -174,10 +174,10 @@ header {
         @include breakpoint(small) {
           margin-left: 0;
         }
+      }
 
-        &:hover {
-          color: $color-white;
-        }
+      a:hover {
+        color: $color-white;
       }
     }
   }

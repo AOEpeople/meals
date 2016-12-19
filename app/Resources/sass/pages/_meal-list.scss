@@ -66,10 +66,8 @@
         background: $color-gray-secondary;
       }
 
-      &:first-child {
-        &::before {
-          background: $color-green;
-        }
+      &:first-child::before {
+        background: $color-green;
       }
     }
   }

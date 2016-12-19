@@ -3,6 +3,7 @@
     <div class="balance-text">
             {{ 'header.balance'|trans({}, 'general') }}:{{ MealzButton.link(path('mealz_accounting_payment_transaction_history'), balance ~ '€', '', (activeRoute matches '/mealz_accounting_payment_transaction_history.*/' ? 'active' : '') , '') }}
     </div>
+    {% include 'modules/language_switch.html.twig' %}
     {{ MealzButton.link(path('MealzUserBundle_logout'), '', '', '', 'glyphicon-log-out') }}
 {% else %}
     <form name="login-form" class="login-form" action="{{ path('MealzUserBundle_checkLogin') }}" method="post">
@@ -10,4 +11,5 @@
         <input type="password" placeholder="Password" class="form-control" name="_password" />
         <button type="submit" class="button button-login">LOGIN</button>
     </form>
+    {% include 'modules/language_switch.html.twig' %}
 {% endif %}

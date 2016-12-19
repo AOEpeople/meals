@@ -4,7 +4,6 @@
 
     {% include 'modules/navigation.html.twig' %}
     <div class="login {{ (is_granted('IS_AUTHENTICATED_REMEMBERED')) ? 'logged-in' : '' }}">
-        {{ parent() }}
         {% include 'modules/login.html.twig' %}
     </div>
 {% endblock %}

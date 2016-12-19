@@ -179,6 +179,32 @@ header {
       a:hover {
         color: $color-white;
       }
+
+    }
+
+    a.language-switch {
+      display: block;
+      height: 20px;
+      margin-top: 0;
+      padding-right: 4px;
+      border-radius: 10px;
+      color: $header-background;
+      background: $color-white;
+      font-weight: bolder;
+      font-size: 10px;
+      text-transform: uppercase;
+      transition: all .3s ease;
+
+      &:hover {
+        background: $color-gray-secondary;
+      }
+
+      img {
+        display: inline-block;
+        max-height: 70%;
+        margin: 3px 1px 0 4px;
+        vertical-align: sub;
+      }
     }
   }
 
@@ -208,9 +234,5 @@ header {
     }
   }
 
-  .language-switch {
-    float: left;
-    margin: 6px 0;
-    padding-right: 10px;
-  }
 }
+

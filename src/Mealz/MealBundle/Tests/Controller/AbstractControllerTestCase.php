@@ -58,7 +58,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
      * Create a client with a frontend user having a role ROLE_KITCHEN_STAFF
      *
      * @param array $options Array with symfony parameters to be set (e.g. environment,...)
-     * @param array $server Array with Server parameters to be set (e.g. HTTP_HOST,...)
+     * @param array $server  Array with Server parameters to be set (e.g. HTTP_HOST,...)
      */
     protected function createAdminClient($options = array(), $server = array())
     {
@@ -79,7 +79,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         $user = ($user instanceof UserInterface) ? $user : 'kochomi';
 
         $token = new UsernamePasswordToken($user, null, $firewall, array('ROLE_KITCHEN_STAFF'));
-        if (($session->getId()) === false) {
+        if (($session->getId()) === "") {
             $session->set('_security_'.$firewall, serialize($token));
             $session->save();
         }

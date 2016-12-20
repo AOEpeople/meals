@@ -238,6 +238,14 @@ header {
         left: auto;
       }
     }
+
+    .guest a.language-switch {
+      @include breakpoint(small) {
+        right: 70px;
+        bottom: 62px;
+        left: auto;
+      }
+    }
   }
 
   .login-form {

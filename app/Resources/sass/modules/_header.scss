@@ -184,14 +184,14 @@ header {
 
     a.language-switch {
       display: block;
-      height: 20px;
+      height: 22px;
       margin-top: 0;
       padding-right: 4px;
-      border-radius: 10px;
+      border-radius: 11px;
       color: $header-background;
       background: $color-white;
       font-weight: bolder;
-      font-size: 10px;
+      font-size: 11px;
       text-transform: uppercase;
       transition: all .3s ease;
 
@@ -206,6 +206,7 @@ header {
       }
 
       &:hover {
+        color: $color-white;
         background: $color-gray-secondary;
       }
 
@@ -213,7 +214,7 @@ header {
         display: block;
         float: left;
         max-height: 70%;
-        margin: 3px 1px 0 4px;
+        margin: 8% 1px 0 5px;
 
         @include breakpoint(small) {
           margin: 5px 2px 0 6px;
@@ -223,7 +224,7 @@ header {
       span {
         display: block;
         float: left;
-        margin: 5px 0 0 1px;
+        margin: 6px 2px 0;
 
         @include breakpoint(small) {
           margin: 10px 0 0 3px;

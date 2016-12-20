@@ -239,11 +239,19 @@ header {
       }
     }
 
-    .guest a.language-switch {
+    .guest {
+      padding-top: 9px;
+
       @include breakpoint(small) {
-        right: 70px;
-        bottom: 62px;
-        left: auto;
+        padding-top: 0;
+      }
+
+      a.language-switch {
+        @include breakpoint(small) {
+          right: 70px;
+          bottom: 62px;
+          left: auto;
+        }
       }
     }
   }

@@ -28,17 +28,16 @@ class CategoryControllerTest extends AbstractControllerTestCase
      * Test for empty category form action
      *
      * @return void
+     * @todo   Enable it after figure out what is actually problem
      */
-    public function testGetEmptyFormAction()
-    {
-        $this->markTestSkipped(
-            'Skipping it for now regarding Crawler serialize error!'
-        );
-        $this->client->request('GET', '/category/form');
-        $crawler = $this->getJsonResponseCrawler();
-        $node = $crawler->filterXPath('//form[contains(@action,"/category/new")]');
-        $this->assertTrue($node->count() == 1);
-    }
+
+//    public function testGetEmptyFormAction()
+//    {
+//        $this->client->request('GET', '/category/form');
+//        $crawler = $this->getJsonResponseCrawler();
+//        $node = $crawler->filterXPath('//form[contains(@action,"/category/new")]');
+//        $this->assertTrue($node->count() == 1);
+//    }
 
     public function testNewAction()
     {

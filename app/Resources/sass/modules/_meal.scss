@@ -262,10 +262,18 @@
     }
   }
 
-  .buttonbar-category-actions,
+  .buttonbar-category-actions {
+    display: block;
+    float: left;
+  }
+
   .buttonbar-dish-actions {
     display: block;
     float: left;
+
+    @include breakpoint(small) {
+      float: none;
+    }
   }
 }
 

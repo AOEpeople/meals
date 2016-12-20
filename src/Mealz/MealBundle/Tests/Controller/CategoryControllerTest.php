@@ -24,6 +24,12 @@ class CategoryAbstractControllerTest extends AbstractControllerTestCase
         );
     }
 
+    /**
+     * Test for empty category form action
+     *
+     * @backupGlobals disabled
+     * @return        void
+     */
     public function testGetEmptyFormAction()
     {
         $this->client->request('GET', '/category/form');

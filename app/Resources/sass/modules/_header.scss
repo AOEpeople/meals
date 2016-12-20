@@ -198,6 +198,7 @@ header {
       @include breakpoint(small) {
         position: absolute;
         bottom: 42px;
+        left: 20px;
         height: 35px;
         padding-right: 7px;
         border-radius: 18px;
@@ -234,6 +235,7 @@ header {
       @include breakpoint(small) {
         right: 22px;
         bottom: 23px;
+        left: auto;
       }
     }
   }

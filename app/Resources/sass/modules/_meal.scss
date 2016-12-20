@@ -248,12 +248,24 @@
   }
 }
 
-.table-data.category-title {
-  vertical-align: top;
-}
+.table {
+  .table-data {
+    &.category-title,
+    &.dish-category,
+    &.dish-title {
+      vertical-align: top;
+    }
 
-.buttonbar-category-actions {
-  display: block;
-  float: left;
+    &.dish-actions,
+    &.category-actions {
+      padding-top: 17px;
+    }
+  }
+
+  .buttonbar-category-actions,
+  .buttonbar-dish-actions {
+    display: block;
+    float: left;
+  }
 }
 

@@ -195,15 +195,45 @@ header {
       text-transform: uppercase;
       transition: all .3s ease;
 
+      @include breakpoint(small) {
+        position: absolute;
+        bottom: 42px;
+        height: 35px;
+        padding-right: 7px;
+        border-radius: 18px;
+        font-size: 16px;
+      }
+
       &:hover {
         background: $color-gray-secondary;
       }
 
       img {
-        display: inline-block;
+        display: block;
+        float: left;
         max-height: 70%;
         margin: 3px 1px 0 4px;
-        vertical-align: sub;
+
+        @include breakpoint(small) {
+          margin: 5px 2px 0 6px;
+        }
+      }
+
+      span {
+        display: block;
+        float: left;
+        margin: 5px 0 0 1px;
+
+        @include breakpoint(small) {
+          margin: 10px 0 0 3px;
+        }
+      }
+    }
+
+    .logged-in a.language-switch {
+      @include breakpoint(small) {
+        right: 22px;
+        bottom: 23px;
       }
     }
   }

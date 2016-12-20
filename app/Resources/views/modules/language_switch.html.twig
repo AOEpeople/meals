@@ -1,4 +1,4 @@
 <a class="language-switch" href="{{ path('MealzMealBundle_language_switch') }}">
     <img src="{{ asset('images/flag-' ~ app.request.getLocale ~ '.png') }}" />
-    {{  app.request.getLocale|trans({}, 'general') }}
+    <span>{{  app.request.getLocale|trans({}, 'general') }}</span>
 </a>

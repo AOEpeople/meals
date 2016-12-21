@@ -20,7 +20,7 @@
             {% if available ? 'is-available' : '' %}
                 <button class="guest-menu" data-copytarget="#copy-link-{{ day.id }}"><span class="glyphicon glyphicon-new-window"></span></button>
                 <div class="guest-menu-link">
-                    <input type="text" id="copy-link-{{ day.id }}" value="" >
+                    <textarea type="text" id="copy-link-{{ day.id }}"></textarea>
                     <span class="message"><span class="glyphicon glyphicon-ok"></span> Copied to clipboard!</span>
                 </div>
             {% endif %}

@@ -5,8 +5,15 @@ namespace Mealz\AccountingBundle\Controller;
 use Mealz\MealBundle\Controller\BaseController;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
+/**
+ * Class AccountingBookController
+ * @package Mealz\AccountingBundle\Controller
+ */
 class AccountingBookController extends BaseController
 {
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function listAction()
     {
         // Deny access for unprivileged (non-admin) users
@@ -21,15 +28,15 @@ class AccountingBookController extends BaseController
         $maxDate->setTime(23, 59, 59);
 
         // Create headline for twig template
-        $heading = $minDate->format('d.m.-') . $maxDate->format('d.m.Y');
+        $heading = $minDate->format('d.m.-').$maxDate->format('d.m.Y');
 
         // Get array of users with their amount of transactions in previous month
         $transactionRepository = $this->getTransactionRepository();
-        $users = $transactionRepository->findTotalAmountOfTransactionsPerUser($minDate, $maxDate);
+        $users = $transactionRepository->findUserDataAndTransactionAmountForGivenPeriod($minDate, $maxDate);
 
         return $this->render('MealzAccountingBundle:Accounting\\Admin:accountingBook.html.twig', array(
             'heading' => $heading,
-            'users' => $users
+            'users' => $users,
         ));
     }
 }

@@ -174,9 +174,84 @@ header {
         @include breakpoint(small) {
           margin-left: 0;
         }
+      }
 
-        &:hover {
-          color: $color-white;
+      a:hover {
+        color: $color-white;
+      }
+
+    }
+
+    a.language-switch {
+      display: block;
+      height: 22px;
+      margin-top: 0;
+      padding-right: 4px;
+      border-radius: 11px;
+      color: $header-background;
+      background: $color-white;
+      font-weight: bolder;
+      font-size: 11px;
+      text-transform: uppercase;
+      transition: all .3s ease;
+
+      @include breakpoint(small) {
+        position: absolute;
+        bottom: 42px;
+        left: 20px;
+        height: 35px;
+        padding-right: 7px;
+        border-radius: 18px;
+        font-size: 16px;
+      }
+
+      &:hover {
+        color: $color-white;
+        background: $color-gray-secondary;
+      }
+
+      img {
+        display: block;
+        float: left;
+        max-height: 70%;
+        margin: 8% 1px 0 5px;
+
+        @include breakpoint(small) {
+          margin: 5px 2px 0 6px;
+        }
+      }
+
+      span {
+        display: block;
+        float: left;
+        margin: 6px 2px 0;
+
+        @include breakpoint(small) {
+          margin: 10px 0 0 3px;
+        }
+      }
+    }
+
+    .logged-in a.language-switch {
+      @include breakpoint(small) {
+        right: 22px;
+        bottom: 23px;
+        left: auto;
+      }
+    }
+
+    .guest {
+      padding-top: 9px;
+
+      @include breakpoint(small) {
+        padding-top: 0;
+      }
+
+      a.language-switch {
+        @include breakpoint(small) {
+          right: 70px;
+          bottom: 62px;
+          left: auto;
         }
       }
     }
@@ -208,9 +283,5 @@ header {
     }
   }
 
-  .language-switch {
-    float: left;
-    margin: 6px 0;
-    padding-right: 10px;
-  }
 }
+

@@ -8,20 +8,32 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Mealz\AccountingBundle\Entity\Transaction;
 use Mealz\UserBundle\Entity\Profile;
 
+/**
+ * Class LoadTransactions
+ * @package Mealz\AccountingBundle\DataFixtures\ORM
+ */
 class LoadTransactions extends AbstractFixture implements OrderedFixtureInterface
 {
+    /**
+     * Constant to declare load order of fixture
+     */
+    const ORDER_NUMBER = 4;
     /**
      * @var ObjectManager
      */
     protected $objectManager;
 
+    /**
+     * @param ObjectManager $manager
+     */
     public function load(ObjectManager $manager)
     {
         $this->objectManager = $manager;
         $randomUsers = $this->getRandomUsers();
         for ($i = 0; $i < 6; $i++) {
             foreach ($randomUsers as $user) {
-                $this->addTransaction($user);
+                $this->addTransaction($user, mt_rand(1000, 5000)/100);
+                $this->addLastMonthTransaction($user, mt_rand(1000, 5000)/100);
             }
         }
 
@@ -29,19 +41,14 @@ class LoadTransactions extends AbstractFixture implements OrderedFixtureInterfac
     }
 
     /**
-     * get the load order for fixtures
-     * @return mixed
+     * @return int
      */
     public function getOrder()
     {
-        /**
-         * load as ninth
-         */
-        return 9;
+        return self::ORDER_NUMBER;
     }
 
     /**
-     * get random Users
      * @return array
      */
     protected function getRandomUsers()
@@ -55,21 +62,38 @@ class LoadTransactions extends AbstractFixture implements OrderedFixtureInterfac
 
         return $profiles;
     }
+    /**
+     * @param $user
+     * @param $amount
+     */
+    private function addLastMonthTransaction($user, $amount)
+    {
+        // Generate some random date from last month
+        $lastMonthTimestamp = strtotime('first day of previous month') + (mt_rand(1, 27) * 86400);
+        $this->addTransaction($user, $amount, new \DateTime('@'.$lastMonthTimestamp));
+    }
 
     /**
-     * add Transactions
-     * @param $user
+     * @param Profile   $user
+     * @param float     $amount
+     * @param \DateTime $date
      */
-    private function addTransaction($user)
+    private function addTransaction($user, $amount, \DateTime $date = null)
     {
+        if (is_null($date) === true) {
+            $date = new \DateTime();
+        }
+        // make transactions more realistic (random minute, NO identical Date)
+        $date->modify('+' . mt_rand(1, 1400) . ' second');
+
         $transaction = new Transaction();
-        $transaction->setAmount(mt_rand(1000, 5000) / 100);
+        $transaction->setDate($date);
+        $transaction->setAmount($amount);
         $transaction->setProfile($user);
         $this->objectManager->persist($transaction);
     }
 
     /**
-     * generate some random String
      * @param int $length
      * @return string
      */
@@ -84,5 +108,4 @@ class LoadTransactions extends AbstractFixture implements OrderedFixtureInterfac
 
         return $randomString;
     }
-
 }

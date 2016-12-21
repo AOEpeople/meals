@@ -302,17 +302,16 @@ class DishVariationControllerTest extends AbstractControllerTestCase
      */
     public function testDeleteAction()
     {
-        #$dishvariation = $this->createDishVariation();
-        #$this->persistAndFlushAll(array($dishvariation));
-        $dish = $this->getDish(NULL, true);
-        $dishvariation = $dish->getVariations()->get(0);
+        $dish = $this->getDish(null, true);
+        /* @var $dishVariation DishVariation */
+        $dishVariation = $dish->getVariations()->get(0);
 
-        $dishvariationId = $dishvariation->getId();
-        $this->client->request('GET', '/dish/variation/' . $dishvariation->getId() . '/delete');
-        $dishvariationRepository = $this->getDoctrine()->getRepository('MealzMealBundle:DishVariation');
-        $queryResult = $dishvariationRepository->find($dishvariationId);
+        $dishVariationId = $dishVariation->getId();
+        $this->client->request('GET', "/dish/variation/$dishVariationId/delete");
+        $dishVariationRepository = $this->getDoctrine()->getRepository('MealzMealBundle:DishVariation');
+        $queryResult = $dishVariationRepository->find($dishVariationId);
 
-        $this->assertNull($queryResult);
+        $this->assertEquals(null, $queryResult);
     }
 
     /**

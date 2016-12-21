@@ -168,13 +168,13 @@ MealzMealBundle_Category_Form_preFilled:
     pattern:  /category/form/{slug}
     defaults: { _controller: "mealz_meal.controller.category:getPreFilledFormAction" }
 
-MealzMealBundle_Print_costSheet:
-    pattern: /print/costsheet
-    defaults: { _controller: "MealzMealBundle:Print:costSheet" }
-
 MealzMealBundle_Print_participations:
-    pattern: /print/participations/{week}
-    defaults: { _controller: "MealzMealBundle:Print:participations" }
+    path: /print/participations
+    defaults: { _controller: "MealzMealBundle:Participant:list" }
+
+mealz_meal_edit_participations:
+    path: /participations/{week}/edit
+    defaults: { _controller: "MealzMealBundle:Participant:editParticipation" }
 
 MealzMealBundle_Meal_guest:
     path:  /menu/guest/{hash}

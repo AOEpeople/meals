@@ -17,6 +17,10 @@ use Mealz\MealBundle\Entity\Week;
  */
 class LoadDays extends AbstractFixture implements OrderedFixtureInterface
 {
+    /**
+     * Constant to declare load order of fixture
+     */
+    const ORDER_NUMBER = 3;
 
     /**
      * @var ObjectManager
@@ -72,7 +76,7 @@ class LoadDays extends AbstractFixture implements OrderedFixtureInterface
         /**
          * load as third
          */
-        return 3;
+        return self::ORDER_NUMBER;
     }
 
     /**

@@ -131,6 +131,14 @@
     display: inline-block;
   }
 
+  .action,
+  .checkbox-wrapper {
+    vertical-align: top;
+  }
+}
+
+.meal,
+.day {
   .participants {
     width: 75%;
 
@@ -154,11 +162,6 @@
     @include breakpoint(small) {
       width: 25%;
     }
-  }
-
-  .action,
-  .checkbox-wrapper {
-    vertical-align: top;
   }
 }
 
@@ -222,6 +225,55 @@
     color: $color-white;
     background-color: $color-green;
     font-weight: bold;
+  }
+
+  .participants {
+    width: 50%;
+    margin-left: 25%;
+
+    @include breakpoint(small) {
+      width: 65%;
+      margin-left: 10%;
+    }
+
+    @include breakpoint(smaller) {
+      width: 75%;
+      margin-left: 0;
+    }
+  }
+
+  .action {
+    width: 25%;
+    padding-top: 4px;
+  }
+}
+
+.table {
+  .table-data {
+    &.category-title,
+    &.dish-category,
+    &.dish-title {
+      vertical-align: top;
+    }
+
+    &.dish-actions,
+    &.category-actions {
+      padding-top: 17px;
+    }
+  }
+
+  .buttonbar-category-actions {
+    display: block;
+    float: left;
+  }
+
+  .buttonbar-dish-actions {
+    display: block;
+    float: left;
+
+    @include breakpoint(small) {
+      float: none;
+    }
   }
 }
 

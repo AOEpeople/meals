@@ -11,12 +11,15 @@ var Mealz = function () {
     this.mealRowsWrapperClassSelector = '.meal-rows-wrapper';
     this.$selects = $("select");
     this.$body = $('body');
+    this.$editParticipationEventListener = undefined;
+    this.$profileAdd = $('.profile-list a[class="button small"]');
 };
 
 $(document).ready(function () {
     var mealz = new Mealz();
     mealz.styleCheckboxes();
     mealz.styleSelects();
+    mealz.initButtonHandling();
     mealz.copyToClipboard();
 
     /**
@@ -55,4 +58,17 @@ $(document).ready(function () {
      * Lightbox
      */
     mealz.enableLightbox();
+
+    if($('.edit-participation').length > 0) {
+        /**
+         * Profile Selection on Participants View
+         */
+        mealz.initAutocomplete();
+        mealz.showProfiles();
+
+        /**
+         * init toggle participation
+         */
+        mealz.initToggleParticipation();
+    }
 });

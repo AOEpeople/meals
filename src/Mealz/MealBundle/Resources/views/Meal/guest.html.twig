@@ -12,6 +12,12 @@
     {% endfor %}
 {% endif %}
 
+{% block headerContent %}
+    <div class="guest">
+        {% include 'modules/language_switch.html.twig' %}
+    </div>
+{% endblock %}
+
 {% block body %}
     <div class="headline-container">
         <h1 class="headline">{{ 'headings.guest_enrollment' | trans({}, 'general') }}</h1>

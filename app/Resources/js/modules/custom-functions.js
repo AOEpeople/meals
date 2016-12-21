@@ -9,6 +9,8 @@ function toggleArrayItem(a, v) {
 Mealz.prototype.copyToClipboard = function() {
     'use strict';
 
+    var that = this;
+
     // click events
     $('.guest-menu').on('click', function () {
         // Close all open overlays
@@ -17,11 +19,19 @@ Mealz.prototype.copyToClipboard = function() {
         var dayId = $(this).attr('data-copytarget').split('-').pop();
         var guestMenuLinkInput = $(this).parent().find('.guest-menu-link input');
 
-        Mealz.prototype.loadGeneratedLink(dayId, guestMenuLinkInput);
-        $(this).next().addClass('open');
-        guestMenuLinkInput.select();
-        document.execCommand('copy');
-        guestMenuLinkInput.blur();
+        var result = Mealz.prototype.loadGeneratedLink(dayId);
+        if (that.isUrl(result)) {
+            guestMenuLinkInput.attr("value", result);
+            $(this).next().addClass('open');
+            guestMenuLinkInput.select();
+            document.execCommand('copy');
+            guestMenuLinkInput.blur();
+        } else {
+            var $html = $(result);
+            if ($html.length && $html.find('.login-form').length) {
+                window.location.reload();
+            }
+        }
         return false;
     });
 
@@ -32,13 +42,23 @@ Mealz.prototype.copyToClipboard = function() {
     });
 };
 
-Mealz.prototype.loadGeneratedLink = function(dayId,copyTo) {
+Mealz.prototype.isUrl = function(s) {
+    var regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+    return regexp.test(s);
+};
+
+Mealz.prototype.loadGeneratedLink = function(dayId) {
+    'use strict';
+
+    var result = null;
+
     $.ajax({
         method: 'GET',
         url: '/app.php/menu/' + dayId + '/new-guest-invitation',
         async: false,
         success: function (data) {
-            copyTo.attr('value', data);
+            result = data;
         }
     });
+    return result;
 };

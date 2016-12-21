@@ -14,6 +14,11 @@ use Mealz\UserBundle\Entity\Role;
 class LoadRoles extends AbstractFixture
 {
     /**
+     * Constant to declare load order of fixture
+     */
+    const ORDER_NUMBER = 1;
+
+    /**
      * Loads the roles fixture.
      *
      * @param ObjectManager $objectManager
@@ -39,7 +44,7 @@ class LoadRoles extends AbstractFixture
      */
     public function getOrder()
     {
-        return 1;
+        return self::ORDER_NUMBER;
     }
 
     /**

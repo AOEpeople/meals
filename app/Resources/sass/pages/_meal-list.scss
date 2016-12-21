@@ -47,7 +47,8 @@
 
   .legend {
     li {
-      display: inline-block;
+      display: block;
+      float: left;
       margin-right: 20px;
 
       @include breakpoint(medium) {
@@ -65,10 +66,8 @@
         background: $color-gray-secondary;
       }
 
-      &:first-child {
-        &::before {
-          background: $color-green;
-        }
+      &:first-child::before {
+        background: $color-green;
       }
     }
   }

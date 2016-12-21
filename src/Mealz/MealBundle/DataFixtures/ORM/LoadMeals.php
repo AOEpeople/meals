@@ -19,6 +19,20 @@ use Mealz\MealBundle\Entity\Meal;
  */
 class LoadMeals extends AbstractFixture implements OrderedFixtureInterface
 {
+    /**
+     * Constant to declare load order of fixture
+     */
+    const ORDER_NUMBER = 7;
+
+    /**
+     * index of first weeks monday
+     */
+    const FIRST_MONDAY = 0;
+
+    /**
+     * index of second weeks wednesday
+     */
+    const SECOND_WEDNESDAY = 7;
 
     /**
      * @var ObjectManager
@@ -40,19 +54,14 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface
      */
     protected $counter = 0;
 
-    /**
-     * load the Object
-     * @param ObjectManager $manager
-     */
-    public function load(ObjectManager $manager)
-    {
+    function load(ObjectManager $manager) {
         $this->objectManager = $manager;
         $this->loadDishes();
         $this->loadDays();
         foreach ($this->days as $key => $day) {
             $dish = null;
             // that should be next week Wednesday which should be available for selection
-            if ($key == 7) {
+            if ($key == self::SECOND_WEDNESDAY || $key == self::FIRST_MONDAY) {
                 // add once 3 Options per Day, 1 Dish without variations and 1 with 2 variations
                 $this->loadNewMeal($day, $this->dishes[0]); // first Dish was loaded without variations
                 $dishVariations = $this->getRandomDishWithVariations();
@@ -82,7 +91,10 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface
     {
         $meal = new Meal();
         $meal->setDay($day);
-        $meal->setDateTime($day->getDateTime());
+        // make transactions more realistic (random second,NO identical Date)
+        $date = clone $day->getDateTime();
+        $date->modify('+' . mt_rand(1, 1400) . ' second');
+        $meal->setDateTime($date);
         $meal->setDish($dish);
         $meal->setPrice($dish->getPrice());
         $this->objectManager->persist($meal);
@@ -98,7 +110,7 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface
         /**
          * load as seventh
          */
-        return 7;
+        return self::ORDER_NUMBER;
     }
 
     /**
@@ -130,7 +142,8 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface
     }
 
     /**
-     * get random Dishes with Variations
+     * Get random Dishes with Variations
+     *
      * @return Collection
      */
     protected function getRandomDishWithVariations()
@@ -155,8 +168,10 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface
     }
 
     /**
-     * get random Dishes without Variations
-     * @param Dish $previousDish
+     * Get random Dishes without Variations
+     *
+     * @param Dish $previousDish previous dish
+     *
      * @return Dish
      */
     protected function getRandomDish($previousDish)
@@ -167,6 +182,6 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface
         } while ($dish === $previousDish);
 
         return $dish;
-    }
 
+    }
 }

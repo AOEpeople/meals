@@ -17,6 +17,10 @@ use Mealz\UserBundle\Entity\Profile;
  */
 class LoadParticipants extends AbstractFixture implements OrderedFixtureInterface
 {
+    /**
+     * Constant to declare load order of fixture
+     */
+    const ORDER_NUMBER = 8;
 
     /**
      * @var ObjectManager
@@ -67,7 +71,7 @@ class LoadParticipants extends AbstractFixture implements OrderedFixtureInterfac
         /**
          * load as eigth
          */
-        return 8;
+        return self::ORDER_NUMBER;
     }
 
     /**
@@ -95,10 +99,10 @@ class LoadParticipants extends AbstractFixture implements OrderedFixtureInterfac
         $users = array();
 
         if ($number > 1) {
-            foreach (array_rand($this->profiles, $number) as $user_key) {
-                $users[] = $this->profiles[$user_key];
+            foreach (array_rand($this->profiles, $number) as $userKey) {
+                $users[] = $this->profiles[$userKey];
             }
-        } elseif ($number == 1) {
+        } elseif ($number === 1) {
             $users[] = $this->profiles[array_rand($this->profiles)];
         }
 

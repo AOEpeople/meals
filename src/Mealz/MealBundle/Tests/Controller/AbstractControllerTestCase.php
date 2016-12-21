@@ -8,18 +8,25 @@
 
 namespace Mealz\MealBundle\Tests\Controller;
 
+use Doctrine\Common\Collections\Criteria;
+use Mealz\AccountingBundle\Entity\Transaction;
+use Mealz\MealBundle\Entity\Meal;
+use Mealz\MealBundle\Entity\Participant;
 use Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
-use Mealz\UserBundle\Entity\Login;
 use Mealz\UserBundle\Entity\Profile;
+use Mealz\UserBundle\Entity\Role;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage;
-use Symfony\Component\Security\Core\SecurityContext;
 
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+/**
+ * Class AbstractControllerTestCase
+ * @package Mealz\MealBundle\Tests\Controller
+ */
 abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
 {
     /** @var  Client $client */
@@ -51,7 +58,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
      * Create a client with a frontend user having a role ROLE_KITCHEN_STAFF
      *
      * @param array $options Array with symfony parameters to be set (e.g. environment,...)
-     * @param array $server Array with Server parameters to be set (e.g. HTTP_HOST,...)
+     * @param array $server  Array with Server parameters to be set (e.g. HTTP_HOST,...)
      */
     protected function createAdminClient($options = array(), $server = array())
     {
@@ -64,7 +71,6 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
          * @see https://git.aoesupport.com/gitweb/project/concar/calimero/symfony.git/blob/HEAD:/app/phpunitFunctional.xml?js=1
          */
         $session = $this->client->getContainer()->get('session');
-        #$session->migrate(true);
         // the firewall context (defaults to the firewall name)
         $firewall = 'mealz';
 
@@ -73,7 +79,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         $user = ($user instanceof UserInterface) ? $user : 'kochomi';
 
         $token = new UsernamePasswordToken($user, null, $firewall, array('ROLE_KITCHEN_STAFF'));
-        if (!$session->getId()) {
+        if (($session->getId()) === "") {
             $session->set('_security_'.$firewall, serialize($token));
             $session->save();
         }
@@ -119,7 +125,107 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
     }
 
     /**
-     *mock the Flash Bag
+     * Helper method to get a user role.
+     *
+     * @param  string $roleType     Role string identifier i.e. sid.
+     *
+     * @return Role
+     */
+    protected function getRole($roleType)
+    {
+        /** @var \Mealz\UserBundle\Entity\RoleRepository $roleRepository */
+        $roleRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Role');
+        /** @var \Mealz\UserBundle\Entity\Role $guestRole */
+        $role = $roleRepository->findOneBy(['sid' => $roleType]);
+        if (!($role instanceof Role)) {
+            $this->fail('User role not "'.$roleType.'" found.');
+        }
+
+        return $role;
+    }
+
+    /**
+     * Helper method to create a new user profile object.
+     *
+     * @param  string $firstName    User first name
+     * @param  string $lastName     User last name
+     * @param  string $company      User company
+     * @return Profile
+     */
+    protected function createProfile($firstName = '', $lastName = '', $company = '')
+    {
+        $firstName = (trim(strval($firstName)) !== '') ? $firstName : 'Test';
+        $lastName = (trim(strval($lastName)) !== '') ? $lastName : 'User'.rand();
+        $company = (trim(strval($company)) !== '') ? $company : rand()."";
+
+        $profile = new Profile();
+        $profile->setUsername($firstName.'.'.$lastName);
+        $profile->setFirstName($firstName);
+        $profile->setName($lastName);
+
+        if (trim(strval($company)) !== '') {
+            $profile->setCompany($company);
+        }
+
+        return $profile;
+    }
+
+    /**
+     * Helper method to create a new participant object.
+     *
+     * @param  Profile $profile     User profile
+     * @param  Meal $meal           Meal instance
+     *
+     * @return Participant
+     */
+    protected function createParticipant($profile, $meal)
+    {
+        $participant = new Participant();
+        $participant->setProfile($profile);
+        $participant->setMeal($meal);
+
+        $this->persistAndFlushAll([$participant]);
+
+        return $participant;
+    }
+
+    /**
+     * Helper method to get the recent meal.
+     *
+     * @return Meal
+     */
+    protected function getRecentMeal()
+    {
+        /** @var \Mealz\MealBundle\Entity\MealRepository $mealRepository */
+        $mealRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
+        $criteria = Criteria::create();
+        $meals = $mealRepository->matching($criteria->where(Criteria::expr()->lte('dateTime', new \DateTime())));
+
+        if (1 > $meals->count()) {
+            $this->fail('No test meal found.');
+        }
+
+        return $meals->first();
+    }
+
+    /**
+     * Helper method to create a user transaction with specific amount and date
+     * @param Profile $user
+     * @param float $amount
+     * @param \DateTime|null $date
+     */
+    protected function createTransactions(Profile $user, $amount = 5.0, \DateTime $date = null)
+    {
+        $transaction = new Transaction();
+        $amount = filter_var($amount, FILTER_VALIDATE_FLOAT, array('options' => array('min_range' => 0.1, 'default' => mt_rand(1000, 5000) / 100)));
+        $transaction->setAmount($amount);
+        $transaction->setProfile($user);
+        $transaction->setDate($date);
+        $this->persistAndFlushAll([$transaction]);
+    }
+
+    /**
+     * mock the Flash Bag
      */
     private function mockFlashBag()
     {

@@ -14,6 +14,11 @@ use Mealz\MealBundle\Entity\Category;
  */
 class LoadCategories extends AbstractFixture implements OrderedFixtureInterface
 {
+    /**
+     * Constant to declare load order of fixture
+     */
+    const ORDER_NUMBER = 4;
+
     protected $counter = 0;
 
     /**
@@ -48,7 +53,7 @@ class LoadCategories extends AbstractFixture implements OrderedFixtureInterface
         /**
          * load as fourth
          */
-        return 4;
+        return self::ORDER_NUMBER;
     }
 
 

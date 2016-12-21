@@ -59,3 +59,7 @@ mealz_accounting_payment_transaction_history:
 mealz_accounting_accounting_book:
     path: /accounting/book
     defaults: { _controller: "MealzAccountingBundle:AccountingBook:list" }
+
+mealz_accounting.cost_sheet:
+    path: /print/costsheet
+    defaults: { _controller: "MealzAccountingBundle:CostSheet:list" }

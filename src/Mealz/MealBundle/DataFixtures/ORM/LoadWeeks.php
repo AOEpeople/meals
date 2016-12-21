@@ -15,6 +15,11 @@ use Mealz\MealBundle\Entity\Week;
 class LoadWeeks extends AbstractFixture implements OrderedFixtureInterface
 {
     /**
+     * Constant to declare load order of fixture
+     */
+    const ORDER_NUMBER = 2;
+
+    /**
      * @var int
      */
     protected $counter = 0;
@@ -48,7 +53,7 @@ class LoadWeeks extends AbstractFixture implements OrderedFixtureInterface
         /**
          * load as second
          */
-        return 2;
+        return self::ORDER_NUMBER;
     }
 
     /**

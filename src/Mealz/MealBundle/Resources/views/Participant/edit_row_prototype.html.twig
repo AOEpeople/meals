@@ -1,0 +1,16 @@
+{% spaceless %}
+<tr class="table-row">
+    <td class="text table-data wide-cell">__name__</td>
+    {% for day in week.days %}
+        {% for meal in day.meals %}
+            <td class="meal-participation table-data" data-attribute-action="{{ path('MealzMealBundle_Meal_join', {
+                date: meal.dateTime | date('Y-m-d'),
+                dish: meal.dish.slug,
+                profile: '__username__'
+            }) }}">
+                <i class="glyphicon"></i>
+            </td>
+        {% endfor %}
+    {% endfor %}
+</tr>
+{% endspaceless %}

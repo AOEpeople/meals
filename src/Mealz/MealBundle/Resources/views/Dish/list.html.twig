@@ -22,18 +22,19 @@
 
 {% set tableContent = [] %}
 {% for dish in entities %}
+    {% set rowContent = [] %}
     {% for dishVariation in dish.variations %}
-        {% set tableContent = [{
+        {% set rowContent = [{
             'settings': {
                 'class': 'dish-variation',
             },
             'variations': {
-                'content': dishVariation.title,
+                'content': '<span>' ~ dishVariation.parent.title ~ '</span> ' ~ dishVariation.title,
                 'class': 'dish-variation-title'
             },
             'empty-column': {
-                'content': '',
-                'class': ''
+                'content': dishVariation.parent.category,
+                'class': 'dish-variation-category'
             },
             'actions': {
                 'content': MealzButton.buttonbar('', 'buttonbar-dish-actions', [
@@ -42,8 +43,12 @@
                 ]),
                 'class': 'dish-actions'
             }
-        }] | merge(tableContent) %}
+        }] | merge(rowContent) %}
     {% endfor %}
+
+    {% set rowContent = getSortedVariation(rowContent) %}
+
+    {% set tableContent = rowContent | merge(tableContent) %}
 
 	{% if dish.parent is null %}
 		{% set tableContent = [{
@@ -66,7 +71,6 @@
 		}] | merge(tableContent) %}
 	{% endif %}
 {% endfor %}
-
 
 {# Start tempalte #}
 

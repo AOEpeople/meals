@@ -82,6 +82,13 @@
 
     td:first-child { padding-left: 30px; }
 
+    .dish-variation-category {
+      color: transparent;
+    }
+
+    .dish-variation-title span {
+      display: none;
+    }
   }
 
   .edit-form {

@@ -35,7 +35,7 @@
                     </tr>
                 {% endfor %}
                 <tr>
-                    <td class="text table-data wide-cell">Gesamt</td>
+                    <td class="text table-data wide-cell">{{ 'headings.week.participations'|trans({},'general') }}</td>
                     {% for meal in day.meals %}
                         <td class="meal-count text text-center table-data"><span>{{ meal.participants | length }}</span></td>
                     {% endfor %}

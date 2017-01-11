@@ -155,9 +155,11 @@ class Variation extends \Twig_Extension
     }
 
     private function compareVariation($first, $second) {
-        if ($first['variations']['content'] == $second['variations']['content']) {
+        $firstContent = strtolower($first['variations']['content']);
+        $secondContent = strtolower($second['variations']['content']);
+        if ($firstContent == $secondContent) {
             return 0;
         }
-        return ($first['variations']['content'] < $second['variations']['content']) ? -1 : 1;
+        return ($firstContent < $secondContent) ? -1 : 1;
     }
 }

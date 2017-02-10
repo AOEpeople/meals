@@ -14,14 +14,14 @@ Mealz.prototype.enableLightbox = function () {
             maxWidth: 400,
         });
     $fancybox.trigger('click');
-    $('.fancybox-overlay').off('click');
-    $('.fancybox > .button').click(function () {
+    $('.fancybox-overlay').unbind('click');
+    $('.fancybox > .button').click(function(){
         F = $.fancybox;
-        if (F.isActive === true) {
+        if (F.isActive) {
             F.close();
         } else {
             $(this).close();
         }
     });
-    $fancybox.off('click');
+    $fancybox.unbind('click');
 };

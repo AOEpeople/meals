@@ -44,6 +44,7 @@ gulp.task('jshint', function() {
 gulp.task('js', function() {
     gulp.src([
             'bower_components/jquery/dist/jquery.js',
+            'bower_components/jqueryui-datepicker/datepicker.js',
             'bower_components/fancybox/source/jquery.fancybox.pack.js',
             'bower_components/datatables.net/js/jquery.dataTables.js',
             'bower_components/switchery/dist/switchery.min.js',
@@ -69,11 +70,12 @@ gulp.task('css', function() {
         .pipe(sass(config.production ? {outputStyle: 'compressed'} : util.noop()).on('error', sass.logError))
         .pipe(config.production ? util.noop() : sourcemaps.write());
 
-    var cssStream = gulp.src(['bower_components/switchery/dist/switchery.min.css'])
-    var cssFancybox = gulp.src(['bower_components/fancybox/source/jquery.fancybox.css'])
-    var cssEasyAutocomplete = gulp.src(['bower_components/EasyAutocomplete/dist/easy-autocomplete.min.css'])
+    var cssStream = gulp.src(['bower_components/switchery/dist/switchery.min.css']);
+    var cssFancybox = gulp.src(['bower_components/fancybox/source/jquery.fancybox.css']);
+    var cssdatepicker = gulp.src(['bower_components/jqueryui-datepicker/datepicker.css']);
+    var cssEasyAutocomplete = gulp.src(['bower_components/EasyAutocomplete/dist/easy-autocomplete.min.css']);
 
-    return merge(sassStream, cssStream, cssFancybox, cssEasyAutocomplete)
+    return merge(sassStream, cssStream, cssFancybox, cssdatepicker, cssEasyAutocomplete)
         .pipe(concat('mealz.css'))
         .pipe(gulp.dest('../../web/css'));
 });

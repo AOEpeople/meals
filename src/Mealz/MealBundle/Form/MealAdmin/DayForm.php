@@ -58,8 +58,8 @@ class DayForm extends AbstractType
                 array(
                     'required' => false,
                     'widget' => 'single_text',
-                    'format' => 'Y-m-d H:i:s',
-                    'attr' => array('style' => 'visibility: hidden')
+                    'format' => 'YYYY-MM-dd HH:mm:ss',
+                    'attr' => array('class' => 'hidden-form-field')
                 )
             )
             ->add(

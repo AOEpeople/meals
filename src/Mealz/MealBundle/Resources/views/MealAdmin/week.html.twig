@@ -73,6 +73,7 @@
                 </div>
 
                 <div class="week-day-action">
+                    {{ form_widget(form.children.days.children[loop.index0].lockParticipationDateTime) }}
                     {{ form_widget(form.children.days.children[loop.index0].enabled) }}
                 </div>
             </div>

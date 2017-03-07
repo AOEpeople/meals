@@ -15,6 +15,7 @@
   ],
   "dependencies": {
     "jquery": ">= 1.9.0",
+    "datetimepicker": "2.5.4",
     "datatables.net": "1.10.11",
     "switchery": "^0.8.1",
     "fancybox": ">= 2.1.*",

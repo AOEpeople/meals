@@ -71,4 +71,19 @@ $(document).ready(function () {
          */
         mealz.initToggleParticipation();
     }
+
+    /**
+     * datetimepicker
+     */
+    $('.calendar-icon').each(function(){
+        $(this).datetimepicker({
+            format:'d.m.Y H:i',
+            inline:false,
+            lang:'de',
+            defaultTime:'16:00',
+            onClose:function(dp,$input){
+                console.log($input.val())
+            }
+        });
+    });
 });

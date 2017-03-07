@@ -16,7 +16,7 @@ Mealz.prototype.enableLightbox = function () {
     $fancybox.trigger('click');
     $(document ).ready(function() {
         $('.fancybox').find('.button').click(function(){
-            $.fancybox.close()
+            $.fancybox.close();
         });
     });
 

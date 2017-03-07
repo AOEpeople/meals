@@ -14,9 +14,7 @@ class Version20170304004116AdaptDayEntity extends AbstractMigration
      */
     public function up(Schema $schema)
     {
-        // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
-
+        $this->validateDatabase();
         $this->addSql('ALTER TABLE day ADD lockParticipationDateTime DATETIME DEFAULT NULL');
     }
 
@@ -25,9 +23,7 @@ class Version20170304004116AdaptDayEntity extends AbstractMigration
      */
     public function down(Schema $schema)
     {
-        // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
-
+        $this->validateDatabase();
         $this->addSql('ALTER TABLE day DROP lockParticipationDateTime');
     }
 }

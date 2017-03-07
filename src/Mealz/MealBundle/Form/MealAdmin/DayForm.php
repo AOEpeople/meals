@@ -53,7 +53,7 @@ class DayForm extends AbstractType
                 )
             )
             ->add(
-                'lockParticipationDateTime'
+                'lockParticipationDateTime',
                 DateTimeType::class,
                 array(
                     'required' => false,

@@ -75,13 +75,17 @@ $(document).ready(function () {
     /**
      * datetimepicker
      */
-    $('.calendar-icon').each(function(){
+    $('.calendar-icon').each(function(i){
+        var thisDay = $('#week_form_days_'+i+'_lockParticipationDateTime');
         $(this).datetimepicker({
-            format:'d.m.Y H:i',
+            format:'Y-m-d H:i:s',
             inline:false,
-            defaultTime:'16:00',
+            defaultTime:new Date(thisDay.val()),
+            defaultDate:new Date(thisDay.val()),
             onClose:function(dp,$input){
-                console.log($input.val())
+                if($input.val().length > 0){
+                    thisDay.val($input.val());
+                }
             }
         });
     });

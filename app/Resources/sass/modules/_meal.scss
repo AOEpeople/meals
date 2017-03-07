@@ -17,6 +17,22 @@
     margin-bottom: 0;
   }
 
+  .calendar-icon:before {
+    left: 0;
+    content: '\e109';
+    font-size: 12px;
+    font-family: "Glyphicons Halflings", sans-serif;
+  }
+
+  .calendar-icon {
+    position: absolute;
+    left: -17px;
+    bottom: 5px;
+    color: white;
+    z-index: 2;
+    cursor: pointer;
+  }
+
   .week-day {
     position: absolute;
     top: 0;
@@ -276,4 +292,3 @@
     }
   }
 }
-

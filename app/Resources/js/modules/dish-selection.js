@@ -46,10 +46,6 @@ Mealz.prototype.initDishSelection = function () {
         $('.variation-checkbox.checked', this.prev).closest('li.dishes').find('.variation-button:first').click();
         $(this).prev().toggle();
     });
-
-    $('.week-day').click(function(){
-        $(this).before().datepicker();
-    });
 };
 
 Mealz.prototype.selectDish = function ($element, e) {

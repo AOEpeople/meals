@@ -24,6 +24,14 @@
     font-family: "Glyphicons Halflings", sans-serif;
   }
 
+  .calendar-icon.modified:before {
+    left: 0;
+    content: '\e109';
+    font-size: 12px;
+    font-family: "Glyphicons Halflings", sans-serif;
+    color: #333;
+  }
+
   .calendar-icon {
     position: absolute;
     left: -17px;

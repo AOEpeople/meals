@@ -47,7 +47,13 @@
 
         {% for day in week.days %}
             <div class="day">
-                <span class="calendar-icon"></span>
+                {% set available = false %}
+
+                {% if day.lockParticipationDateTime != day.dateTime|date_modify(lock_toggle_participation_at) %}
+                    {% set available = true %}
+                {% endif %}
+
+                <span class="calendar-icon {{ available ? 'modified' : '' }}"></span>
                 {# display week day and date #}
                 <div class="week-day">
                     <span>

@@ -5,6 +5,11 @@
   font-family: $font-light;
 }
 
+.hidden-form-field {
+  position: absolute;
+  visibility: hidden;
+}
+
 input {
   @extend %base-styling;
   -webkit-font-smoothing: antialiased;

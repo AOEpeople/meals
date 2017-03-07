@@ -79,11 +79,13 @@ $(document).ready(function () {
         $(this).datetimepicker({
             format:'d.m.Y H:i',
             inline:false,
-            lang:'de',
             defaultTime:'16:00',
             onClose:function(dp,$input){
                 console.log($input.val())
             }
         });
     });
+    if($('.language-switch > span').text() == 'de'){
+        $.datetimepicker.setLocale('de');
+    }
 });

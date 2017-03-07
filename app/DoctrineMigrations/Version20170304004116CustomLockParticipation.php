@@ -5,9 +5,10 @@ namespace Application\Migrations;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
- * Auto-generated Migration: Please modify to your needs!
+ * Add a date field which holds the datetime when a
+ * participant has to be registered to meal
  */
-class Version20170304004116AdaptDayEntity extends AbstractMigration
+class Version20170304004116CustomLockParticipation extends AbstractMigration
 {
     /**
      * @param Schema $schema

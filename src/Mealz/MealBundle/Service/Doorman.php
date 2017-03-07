@@ -35,6 +35,10 @@ class Doorman {
 		$this->lockToggleParticipationAt = $lockToggleParticipationAt;
 	}
 
+	/**
+	 * @param Meal $meal
+	 * @return bool
+	 */
 	public function isUserAllowedToJoin(Meal $meal) {
 		if ($this->isKitchenStaff()) {
 			return TRUE;
@@ -43,29 +47,37 @@ class Doorman {
 			return FALSE;
 		}
 
-		return $this->isToggleParticipationAllowed($meal->getDateTime());
+		return $this->isToggleParticipationAllowed($meal->getDay()->getLockParticipationDateTime());
 	}
 
+	/**
+	 * @param Meal $meal
+	 * @return bool
+	 */
 	public function isUserAllowedToLeave(Meal $meal) {
-		if($this->isKitchenStaff()) {
-			return TRUE;
-		}
-		if(!$this->securityContext->getToken()->getUser()->getProfile() instanceof Profile) {
-			return FALSE;
-		}
-
-		return $this->isToggleParticipationAllowed($meal->getDateTime());
+		return $this->isUserAllowedToJoin($meal);
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function isKitchenStaff() {
 		return $this->securityContext->isGranted('ROLE_KITCHEN_STAFF');
 	}
 
+	/**
+	 * @param Meal $meal
+	 * @return bool
+	 */
 	public function isUserAllowedToAddGuest(Meal $meal) {
 		// @TODO: add a separate role for that
 		return $this->isKitchenStaff() || $this->isUserAllowedToJoin($meal);
 	}
 
+	/**
+	 * @param Meal $meal
+	 * @return bool
+	 */
 	public function isUserAllowedToRemoveGuest(Meal $meal) {
 		// @TODO: add a separate role for that
 		return $this->isKitchenStaff() || $this->isUserAllowedToLeave($meal);
@@ -76,16 +88,13 @@ class Doorman {
 		return $this->isKitchenStaff() || $this->isUserAllowedToAddGuest($meal);
 	}
 
-	public function isToggleParticipationAllowed(\DateTime $mealDateTime)
+	/**
+	 * @param \DateTime $lockParticipationDateTime
+	 * @return bool
+	 */
+	public function isToggleParticipationAllowed(\DateTime $lockParticipationDateTime)
 	{
-		$date = clone($mealDateTime);
-		$date->modify($this->lockToggleParticipationAt);
-
-		if ($date->getTimestamp() > $this->now) {
-			// if: meal is in mealDateTime + $lockToggleParticipationAt (for instance meal time -1 day)
-			return TRUE;
-		}
-
-		return FALSE;
+		// is it still allowed to participate in the meal by now?
+		return ($lockParticipationDateTime->getTimestamp() > $this->now) ? TRUE : FALSE;
 	}
 }

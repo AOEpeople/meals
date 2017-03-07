@@ -43,12 +43,21 @@ class Day extends AbstractMessage
     private $meals;
 
     /**
+     * @Assert\Type(type="DateTime")
+     * @ORM\Column(type="datetime", nullable=TRUE)
+     * @var \DateTime $dateTime
+     */
+    private $lockParticipationDateTime;
+
+
+    /**
      * Constructor
      * Day constructor.
      */
     public function __construct()
     {
         $this->meals = new ArrayCollection();
+        $this->ensureLockParticipationDateTimeIsSet();
     }
 
     /**
@@ -124,5 +133,33 @@ class Day extends AbstractMessage
     public function __toString()
     {
         return $this->dateTime->format('l');
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getLockParticipationDateTime()
+    {
+        $this->ensureLockParticipationDateTimeIsSet();
+        return $this->lockParticipationDateTime;
+    }
+
+    /**
+     * @param \DateTime $lockParticipationDateTime
+     */
+    public function setLockParticipationDateTime($lockParticipationDateTime)
+    {
+        $this->lockParticipationDateTime = $lockParticipationDateTime;
+    }
+
+    /**
+     * Initialize lockParticipationDateTime or set it to an decent value if NULL
+     */
+    private function ensureLockParticipationDateTimeIsSet(){
+         if (is_null($this->lockParticipationDateTime) == TRUE) {
+            $_initial = clone $this->dateTime;
+            $_initial->modify($GLOBALS['kernel']->getContainer()->getParameter('mealz.lock_toggle_participation_at'));
+            $this->lockParticipationDateTime = $_initial;
+        }
     }
 }

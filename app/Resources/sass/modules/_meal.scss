@@ -147,7 +147,7 @@
     padding-right: 10px;
 
     @include breakpoint(small) {
-      width: 64%;
+      width: 62%;
     }
 
     @include breakpoint(smaller) {
@@ -155,7 +155,7 @@
     }
 
     @include breakpoint(large) {
-      width: 80%;
+      width: 75%;
     }
   }
 
@@ -186,11 +186,11 @@
     vertical-align: bottom;
 
     @include breakpoint(small) {
-      width: 31%;
+      width: 38%;
     }
 
     @include breakpoint(large) {
-      width: 20%;
+      width: 25%;
     }
   }
 
@@ -208,7 +208,9 @@
 .meal,
 .day {
   .participants {
-    width: 75%;
+    width: 80%;
+    padding-right: 10px;
+    text-align: right;
 
     @include breakpoint(medium) {
       width: 50%;
@@ -220,7 +222,7 @@
   }
 
   .action {
-    width: 25%;
+    width: 20%;
     padding-top: 4px;
 
     @include breakpoint(medium) {
@@ -265,7 +267,7 @@
 
 
     &.participation-limit-reached {
-      background-color: $color-red;
+      background-color: $color-orange;
     }
   }
 }

@@ -18,7 +18,11 @@ Mealz.prototype.initDishSelection = function () {
         e.preventDefault();
         e.stopPropagation();
         that.hideVariationSelectBox(e);
-        $('.limit-box').hide();
+        if (!$('.limit-box').ismouseover()) {
+            $('.limit-box').hide();
+            $('.limit-box').children().remove();
+        }
+
     });
 
     $('.meal-select-variations .button').on('click', function (e) {
@@ -51,11 +55,31 @@ Mealz.prototype.initDishSelection = function () {
     $('.limit-icon').on('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
-        $(this).parent().children('.meal-rows-wrapper').children('.meal-row').each(function(){
-            console.log($(this).attr('data-attribute-selected-variations').length);
+        var selectedDay = $(this).parent();
+        var mealCount = 0;
+        selectedDay.children('.meal-rows-wrapper').children('.meal-row').each(function(){
+            if($(this).attr('data-attribute-selected-variations').length > 0){
+                mealCount+= JSON.parse($(this).attr('data-attribute-selected-variations')).length;
+                //mealCount+= $(this).attr('data-attribute-selected-variations').size();
+            } else {
+                mealCount++;
+            }
         });
 
-        $(this).parent().children('.limit-box').show();
+        selectedDay.children('.limit-box').append('<p>Limit</p>');
+        for(mealCount; mealCount > 0; mealCount--){
+            selectedDay.children('.limit-box').append('<span class="limit-input" contentEditable=true></span>');
+        }
+        selectedDay.children('.limit-box').append('<a href="#" class="limit-box-save button small" onclick="limitBoxSaveClick()">save</a>');
+        selectedDay.children('.limit-box').show();
+    });
+
+};
+
+limitBoxSaveClick = function(){
+    var thisDay = $('.limit-box').filter(":visible").parent();
+    thisDay.find('.limit-input').each(function(i){
+        thisDay.find('.participation-limit').eq(i).val($(this).text());
     });
 };
 

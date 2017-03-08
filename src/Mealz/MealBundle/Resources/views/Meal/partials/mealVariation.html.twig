@@ -17,11 +17,14 @@
 
                 <div class="wrapper-meal-actions wrapper-variation-vertical-center">
                     <div class="participants">
-                        <span class="participants-count">
-                            <span>
-                                {{ meal.participants | length }}
+                            <span class="participants-count" {% if  meal.participants | length >= meal.participationLimit %} style="background: red;" {% endif %}>
+                                <span>
+                                    {{ meal.participants | length }}
+                                    {% if meal.participationLimit is not same as(0) %}
+                                        / {{ meal.participationLimit }}
+                                    {% endif %}
+                                </span>
                             </span>
-                        </span>
                     </div>
                     <div class="action">
                         {% if is_granted('ROLE_USER') %}

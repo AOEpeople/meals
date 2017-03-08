@@ -19,6 +19,9 @@
 			<span class="participants-count">
 				<span>
 					{{ meal.participants | length }}
+					{% if meal.participationLimit is not same as(0) %}
+						/ {{ meal.participationLimit }}
+					{% endif %}
 				</span>
 			</span>
 		</div>

@@ -37,15 +37,15 @@
     position: absolute;
     z-index: 1;
     display: none;
-    padding: 10px 20px;
     background-color: $color-gray-light;
 
     .limit-input {
       -moz-appearance: textfield;
       -webkit-appearance: textfield;
       display: block;
-      width: 150px;
-      margin-top: 5px;
+      float: right;
+      width: 35px;
+      margin-top: 0;
       padding: 2px 3px;
       border: 1px solid $color-gray-secondary;
       background-color: $color-white;
@@ -55,8 +55,33 @@
       box-shadow: 1px 1px 1px 0 $color-gray-light inset;
     }
 
+    p {
+      margin-bottom: 10px;
+      padding: 5px 20px;
+      color: $color-white;
+      background-color: $color-green;
+      font-weight: bold;
+    }
+
+    label {
+      display: block;
+      float: left;
+      margin-right: 5px;
+      padding-top: 3px;
+    }
+
     .limit-box-save {
       margin-top: 10px;
+    }
+
+    .limit-box-meal {
+      overflow: hidden;
+      margin-bottom: 5px;
+      padding: 0 20px;
+    }
+
+    .button {
+      margin-bottom: 10px;
     }
   }
 

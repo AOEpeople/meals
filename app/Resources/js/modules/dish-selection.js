@@ -18,11 +18,16 @@ Mealz.prototype.initDishSelection = function () {
         e.preventDefault();
         e.stopPropagation();
         that.hideVariationSelectBox(e);
-        if (!$('.limit-box').ismouseover()) {
+        var isOnSomeBox = false;
+        $('.limit-box').each(function(){
+            if(!isOnSomeBox){
+                isOnSomeBox = $(this).ismouseover();
+            }
+        });
+        if(!isOnSomeBox){
             $('.limit-box').hide();
             $('.limit-box').children().remove();
         }
-
     });
 
     $('.meal-select-variations .button').on('click', function (e) {
@@ -56,31 +61,48 @@ Mealz.prototype.initDishSelection = function () {
         e.preventDefault();
         e.stopPropagation();
         var selectedDay = $(this).parent();
-        var mealCount = 0;
+
+        // start to build my limit-box
+        selectedDay.children('.limit-box').append('<p>Limit</p>');
+        // for each meal selected a day we need a new input row
         selectedDay.children('.meal-rows-wrapper').children('.meal-row').each(function(){
-            if($(this).attr('data-attribute-selected-variations').length > 0){
-                mealCount+= JSON.parse($(this).attr('data-attribute-selected-variations')).length;
-                //mealCount+= $(this).attr('data-attribute-selected-variations').size();
+            // but we have to distinguish between Meal and Variation
+            var thisMealRow = $(this);
+            if(thisMealRow.attr('data-attribute-selected-variations').length > 0){
+                // if a variation is set, wen need to find out the name for all variations selected
+                $.each(JSON.parse(thisMealRow.attr('data-attribute-selected-variations')), function(key, value){
+                    var mealName = thisMealRow.find('.variation').filter('[data-attribute-id='+parseInt(value)+']').find('span').text();
+                    selectedDay.children('.limit-box').append('<div class="limit-box-meal"><label>'+mealName+'</label><span class="limit-input" contentEditable=true></span></div>');
+                });
             } else {
-                mealCount++;
+                // if it's just a meal, we just need to find the meal Name once
+                var mealName = thisMealRow.find('.dishes').filter('[data-attribute-id='+thisMealRow.attr('data-attribute-selected-dish')+']').children('span').text();
+                selectedDay.children('.limit-box').append('<div class="limit-box-meal"><label>'+mealName+'</label><span class="limit-input" contentEditable=true></span></div>');
             }
         });
-
-        selectedDay.children('.limit-box').append('<p>Limit</p>');
-        for(mealCount; mealCount > 0; mealCount--){
-            selectedDay.children('.limit-box').append('<span class="limit-input" contentEditable=true></span>');
-        }
         selectedDay.children('.limit-box').append('<a href="#" class="limit-box-save button small" onclick="limitBoxSaveClick()">save</a>');
-        selectedDay.children('.limit-box').show();
+        selectedDay.children('.limit-box').show('fast');
     });
 
 };
 
 limitBoxSaveClick = function(){
     var thisDay = $('.limit-box').filter(":visible").parent();
+    var isOkayToClose = true;
     thisDay.find('.limit-input').each(function(i){
-        thisDay.find('.participation-limit').eq(i).val($(this).text());
+        if(Number.isInteger(parseInt($(this).text()))){
+            thisDay.find('.participation-limit').eq(i).val(parseInt($(this).text()));
+        } else if($(this).text() === "") {
+
+        } else {
+            $(this).css('border-color', 'red');
+            isOkayToClose = false;
+        }
     });
+    if (isOkayToClose){
+        $('.limit-box').hide('fast');
+        $('.limit-box').children().remove();
+    }
 };
 
 Mealz.prototype.selectDish = function ($element, e) {

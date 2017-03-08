@@ -40,6 +40,13 @@ class Meal
      */
     protected $price;
 
+	/**
+	 * @Assert\NotBlank()
+	 * @ORM\Column(type="integer", nullable=FALSE)
+	 * @var integer
+	 */
+	protected $limit;
+
     /**
      * @ORM\ManyToOne(targetEntity="Day", inversedBy="meals")
      * @ORM\JoinColumn(name="day", referencedColumnName="id")
@@ -64,6 +71,7 @@ class Meal
     public function __construct()
     {
         $this->participants = new ArrayCollection();
+        $this->limit = 0;
     }
 
     /**
@@ -91,6 +99,22 @@ class Meal
     {
         return $this->price;
     }
+
+	/**
+	 * @param integer $limit
+	 */
+	public function setLimit($limit)
+	{
+		$this->limit = $limit;
+	}
+
+	/**
+	 * @return integer
+	 */
+	public function getLimit()
+	{
+		return $this->limit;
+	}
 
     /**
      * @param \Mealz\MealBundle\Entity\Dish $dish

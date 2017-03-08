@@ -13,11 +13,12 @@ Mealz.prototype.initDishSelection = function () {
         that.selectVariation($(this));
     });
 
-    // Hiding select-box if click anywhere else
+    // Hiding select-box and limit-box if click anywhere else
     $('.meal-form, .meal-select-box').mouseup(function (e) {
         e.preventDefault();
         e.stopPropagation();
         that.hideVariationSelectBox(e);
+        $('.limit-box').hide();
     });
 
     $('.meal-select-variations .button').on('click', function (e) {
@@ -47,7 +48,15 @@ Mealz.prototype.initDishSelection = function () {
         $(this).prev().toggle();
     });
 
+    $('.limit-icon').on('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $(this).parent().children('.meal-rows-wrapper').children('.meal-row').each(function(){
+            console.log($(this).attr('data-attribute-selected-variations').length);
+        });
 
+        $(this).parent().children('.limit-box').show();
+    });
 };
 
 Mealz.prototype.selectDish = function ($element, e) {

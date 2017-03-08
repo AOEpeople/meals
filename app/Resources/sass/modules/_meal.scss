@@ -17,6 +17,30 @@
     margin-bottom: 0;
   }
 
+  .limit-icon:before {
+    left: 0;
+    content: '\e186';
+    font-size: 12px;
+    font-family: "Glyphicons Halflings", sans-serif;
+  }
+
+  .limit-icon {
+    position: absolute;
+    left: -17px;
+    top: 5px;
+    color: white;
+    z-index: 2;
+    cursor: pointer;
+  }
+
+  .limit-box{
+    position: absolute;
+    display: none;
+    width: 300px;
+    height: 100px;
+    background-color: #0e0e0e;
+  }
+
   .week-day {
     position: absolute;
     top: 0;

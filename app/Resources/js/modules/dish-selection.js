@@ -80,6 +80,12 @@ Mealz.prototype.initDishSelection = function () {
                 selectedDay.children('.limit-box').append('<div class="limit-box-meal"><label>'+mealName+'</label><span class="limit-input" contentEditable=true></span></div>');
             }
         });
+        // prefill all LimitValues
+        selectedDay.find('.participation-limit').each(function(i){
+            console.log($(this));
+            $('.limit-input').eq(i).text(parseInt($(this).val()));
+        });
+        // add Save Button
         selectedDay.children('.limit-box').append('<a href="#" class="limit-box-save button small" onclick="limitBoxSaveClick()">save</a>');
         selectedDay.children('.limit-box').show('fast');
     });

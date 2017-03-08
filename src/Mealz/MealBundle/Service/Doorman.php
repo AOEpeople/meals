@@ -39,10 +39,9 @@ class Doorman {
 		if ($this->isKitchenStaff()) {
 			return TRUE;
 		}
-		if(!$this->securityContext->getToken()->getUser()->getProfile() instanceof Profile) {
+		if(!$this->securityContext->getToken()->getUser()->getProfile() instanceof Profile || $meal->isLimitReached()) {
 			return FALSE;
 		}
-
 		return $this->isToggleParticipationAllowed($meal->getDateTime());
 	}
 

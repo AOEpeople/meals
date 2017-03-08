@@ -109,6 +109,7 @@ class MealController extends BaseController
                     $em->flush();
                 }
             );
+            $em->refresh($meal);
         } catch (ParticipantNotUniqueException $e) {
             return new JsonResponse(null, 422);
         }

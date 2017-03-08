@@ -9,6 +9,7 @@ use Mealz\MealBundle\Entity\Meal;
 use Mealz\MealBundle\Entity\Week;
 use Mealz\MealBundle\Form\Type\EntityHiddenType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -51,6 +52,13 @@ class MealForm extends AbstractType
                 EntityHiddenType::class,
                 array(
                     'class' => 'Mealz\MealBundle\Entity\Day',
+                )
+            )
+            ->add(
+                'participationLimit',
+                IntegerType::class,
+                array(
+                    'attr' => array('class' => 'hidden-form-field')
                 )
             );
 

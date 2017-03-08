@@ -20,6 +20,11 @@ input {
   }
 }
 
+.hidden-form-field {
+  visibility: hidden;
+  position: absolute;
+}
+
 select {
   @extend %base-styling;
 

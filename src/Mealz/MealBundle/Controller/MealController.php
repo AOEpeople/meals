@@ -201,7 +201,7 @@ class MealController extends BaseController
                     foreach ($meals as $mealId) {
                         $meal = $mealRepository->find($mealId);
                         // If guest enrolls too late, throw access denied error
-                        if (!$this->getDoorman()->isToggleParticipationAllowed($meal->getDateTime())) {
+                        if ($meal->isParticipationLimitReached() || !$this->getDoorman()->isToggleParticipationAllowed($meal->getDateTime())) {
                             throw new ToggleParticipationNotAllowedException();
                         }
                         $participation = new Participant();

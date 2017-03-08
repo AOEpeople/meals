@@ -237,6 +237,11 @@
       display: inline-block;
       vertical-align: middle;
     }
+
+
+    &.participation-limit-reached {
+      background-color: $color-red;
+    }
   }
 }
 

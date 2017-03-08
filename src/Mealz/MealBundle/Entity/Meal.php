@@ -42,10 +42,10 @@ class Meal
 
 	/**
 	 * @Assert\NotBlank()
-	 * @ORM\Column(type="integer", nullable=FALSE)
+	 * @ORM\Column(type="integer", nullable=FALSE, name="participation_limit")
 	 * @var integer
 	 */
-	protected $limit;
+	protected $participationLimit;
 
     /**
      * @ORM\ManyToOne(targetEntity="Day", inversedBy="meals")
@@ -71,7 +71,7 @@ class Meal
     public function __construct()
     {
         $this->participants = new ArrayCollection();
-        $this->limit = 0;
+        $this->participationLimit = 0;
     }
 
     /**
@@ -101,19 +101,19 @@ class Meal
     }
 
 	/**
-	 * @param integer $limit
+	 * @param integer $participationLimit
 	 */
-	public function setLimit($limit)
+	public function setParticipationLimit($participationLimit)
 	{
-		$this->limit = $limit;
+		$this->participationLimit = $participationLimit;
 	}
 
 	/**
 	 * @return integer
 	 */
-	public function getLimit()
+	public function getParticipationLimit()
 	{
-		return $this->limit;
+		return $this->participationLimit;
 	}
 
     /**
@@ -234,9 +234,9 @@ class Meal
      *
      * @return bool
      */
-    public function isLimitReached()
+    public function isParticipationLimitReached()
     {
-        return ($this->getLimit() != 0 && $this->getParticipants()->count() >= $this->getLimit());
+        return ($this->getParticipationLimit() != 0 && $this->getParticipants()->count() >= $this->getParticipationLimit());
     }
 
     function __toString()

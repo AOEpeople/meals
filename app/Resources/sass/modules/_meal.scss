@@ -38,6 +38,7 @@
     z-index: 1;
     display: none;
     background-color: $color-gray-light;
+    box-shadow: 0 3px 8px 0 $box-shadow;
 
     .limit-input {
       -moz-appearance: textfield;

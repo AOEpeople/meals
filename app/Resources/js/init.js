@@ -71,4 +71,25 @@ $(document).ready(function () {
          */
         mealz.initToggleParticipation();
     }
+
+    /**
+     * datetimepicker
+     */
+    $('.calendar-icon').each(function(i){
+        var thisDay = $('#week_form_days_'+i+'_lockParticipationDateTime');
+        $(this).datetimepicker({
+            format:'Y-m-d H:i:s',
+            inline:false,
+            defaultTime:new Date(thisDay.val()),
+            defaultDate:new Date(thisDay.val()),
+            onClose:function(dp,$input){
+                if($input.val().length > 0){
+                    thisDay.val($input.val());
+                }
+            }
+        });
+    });
+    if($('.language-switch > span').text() == 'de'){
+        $.datetimepicker.setLocale('de');
+    }
 });

@@ -20,6 +20,12 @@ use Symfony\Component\Security\Core\SecurityContext;
 class Doorman {
 
 	/**
+	 * Doorman constants defining access types
+	 * @see $this->hasAccessTo
+	 */
+	const AT_MEAL_PARTICIPATION = 0;
+
+	/**
 	 * @var \DateTime
 	 */
 	protected $now;
@@ -35,37 +41,42 @@ class Doorman {
 		$this->lockToggleParticipationAt = $lockToggleParticipationAt;
 	}
 
+	/**
+	 * @param Meal $meal
+	 * @return bool
+	 */
 	public function isUserAllowedToJoin(Meal $meal) {
-		if ($this->isKitchenStaff()) {
-			return TRUE;
-		}
-		if(!$this->securityContext->getToken()->getUser()->getProfile() instanceof Profile) {
-			return FALSE;
-		}
-
-		return $this->isToggleParticipationAllowed($meal->getDateTime());
+		return $this->hasAccessTo(self::AT_MEAL_PARTICIPATION,['meal'=>$meal]);
 	}
 
+	/**
+	 * @param Meal $meal
+	 * @return bool
+	 */
 	public function isUserAllowedToLeave(Meal $meal) {
-		if($this->isKitchenStaff()) {
-			return TRUE;
-		}
-		if(!$this->securityContext->getToken()->getUser()->getProfile() instanceof Profile) {
-			return FALSE;
-		}
-
-		return $this->isToggleParticipationAllowed($meal->getDateTime());
+		return $this->hasAccessTo(self::AT_MEAL_PARTICIPATION,['meal'=>$meal]);
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function isKitchenStaff() {
 		return $this->securityContext->isGranted('ROLE_KITCHEN_STAFF');
 	}
 
+	/**
+	 * @param Meal $meal
+	 * @return bool
+	 */
 	public function isUserAllowedToAddGuest(Meal $meal) {
 		// @TODO: add a separate role for that
 		return $this->isKitchenStaff() || $this->isUserAllowedToJoin($meal);
 	}
 
+	/**
+	 * @param Meal $meal
+	 * @return bool
+	 */
 	public function isUserAllowedToRemoveGuest(Meal $meal) {
 		// @TODO: add a separate role for that
 		return $this->isKitchenStaff() || $this->isUserAllowedToLeave($meal);
@@ -76,16 +87,44 @@ class Doorman {
 		return $this->isKitchenStaff() || $this->isUserAllowedToAddGuest($meal);
 	}
 
-	public function isToggleParticipationAllowed(\DateTime $mealDateTime)
+	/**
+	 * @param \DateTime $lockParticipationDateTime
+	 * @return bool
+	 */
+	public function isToggleParticipationAllowed(\DateTime $lockParticipationDateTime)
 	{
-		$date = clone($mealDateTime);
-		$date->modify($this->lockToggleParticipationAt);
+		// is it still allowed to participate in the meal by now?
+		return ($lockParticipationDateTime->getTimestamp() > $this->now);
+	}
 
-		if ($date->getTimestamp() > $this->now) {
-			// if: meal is in mealDateTime + $lockToggleParticipationAt (for instance meal time -1 day)
-			return TRUE;
+	/**
+	 * Checking access to a vary of processes inside of meals.
+	 * Accesstype is a constant of class Doorman. Use this to tell the method what to check ;-)
+	 * To be used in future to add more acces checks.
+	 *
+	 * @param integer $accesstype		What access shall be checked
+	 * @param array $params
+	 * @return bool
+	 */
+	private function hasAccessTo($accesstype, $params = []) {
+			// admins always have access!
+		if ($this->isKitchenStaff()) { return TRUE; }
+			// if no user is logged in access is denied at all
+		if(!$this->securityContext->getToken()->getUser()->getProfile() instanceof Profile) { return FALSE; }
+
+			// check access in terms of given accesstype...
+		switch ($accesstype) {
+			case (self::AT_MEAL_PARTICIPATION):
+				/**
+				 * Parameters:
+				 * @var \Mealz\MealBundle\Entity\Meal 	meal
+				 */
+				if (!isset($params['meal']) || !$params['meal'] instanceof \Mealz\MealBundle\Entity\Meal) return FALSE;
+				return $this->isToggleParticipationAllowed($params['meal']->getDay()->getLockParticipationDateTime());
+				break;
+			default:
+					// by default refuse access
+				return FALSE;
 		}
-
-		return FALSE;
 	}
 }

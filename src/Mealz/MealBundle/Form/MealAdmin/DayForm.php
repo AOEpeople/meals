@@ -53,6 +53,16 @@ class DayForm extends AbstractType
                 )
             )
             ->add(
+                'lockParticipationDateTime',
+                DateTimeType::class,
+                array(
+                    'required' => false,
+                    'widget' => 'single_text',
+                    'format' => 'YYYY-MM-dd HH:mm:ss',
+                    'attr' => array('class' => 'hidden-form-field')
+                )
+            )
+            ->add(
                 'enabled',
                 CheckboxType::class,
                 array(

@@ -2,7 +2,7 @@
 	{% if balance < -50 %}
 		<div class="fancybox">
 			<p>{{ "payment.acknowledge_debts.text"|trans({'%amount%': balance}, "messages") }}</p>
-			<a href="#" class="button">{{ "payment.acknowledge_debts.button"|trans({}, "messages") }}</a>
+			<a title="Close" class="button fancybox-item" href="javascript:;">{{ "payment.acknowledge_debts.button"|trans({}, "messages") }}</a>
 		</div>
 	{%  endif %}
 {%  endif %}

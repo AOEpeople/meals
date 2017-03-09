@@ -5,7 +5,7 @@ Mealz.prototype.enableLightbox = function () {
             padding: 40,
             openEffect: 'fade',
             helpers: {
-                title: null
+                overlay: {closeClick: false}
             },
             closeClick: false,
             nextClick: false,
@@ -14,14 +14,10 @@ Mealz.prototype.enableLightbox = function () {
             maxWidth: 400,
         });
     $fancybox.trigger('click');
-    $('.fancybox-overlay').off('click');
-    $('.fancybox > .button').click(function () {
-        F = $.fancybox;
-        if (F.isActive === true) {
-            F.close();
-        } else {
-            $(this).close();
-        }
+    $(document ).ready(function() {
+        $('.fancybox').find('.button').click(function(){
+            $.fancybox.close();
+        });
     });
-    $fancybox.off('click');
+
 };

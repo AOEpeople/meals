@@ -46,7 +46,13 @@ class Doorman {
 	 * @return bool
 	 */
 	public function isUserAllowedToJoin(Meal $meal) {
-		return $this->hasAccessTo(self::AT_MEAL_PARTICIPATION,['meal'=>$meal]);
+		if ($this->isKitchenStaff()) {
+			return TRUE;
+		}
+		if(!$this->securityContext->getToken()->getUser()->getProfile() instanceof Profile || $meal->isParticipationLimitReached()) {
+			return FALSE;
+		}
+		return ($this->isToggleParticipationAllowed($meal->getDateTime())&& $this->hasAccessTo(self::AT_MEAL_PARTICIPATION,['meal'=>$meal]));
 	}
 
 	/**
@@ -82,6 +88,10 @@ class Doorman {
 		return $this->isKitchenStaff() || $this->isUserAllowedToLeave($meal);
 	}
 
+	/**
+	 * @param Meal $meal
+	 * @return bool
+	 */
 	public function isUserAllowedToRequestCostAbsorption(Meal $meal) {
 		// @TODO: add a separate role for that
 		return $this->isKitchenStaff() || $this->isUserAllowedToAddGuest($meal);

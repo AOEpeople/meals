@@ -54,6 +54,8 @@
 
                 <span class="calendar-icon {{ hasBeenModified ? 'modified' : '' }}"></span>
                 {# display week day and date #}
+                <span class="limit-icon"></span>
+                <div class="limit-box"></div>
                 <div class="week-day">
                     <span>
                         {{ day.dateTime | date('D') | trans({}, 'date') }}

@@ -17,14 +17,6 @@
     margin-bottom: 0;
   }
 
-  .calendar-icon.modified::before {
-    left: 0;
-    content: '\e109';
-    color: $color-gray-20;
-    font-size: 12px;
-    font-family: "Glyphicons Halflings", sans-serif;
-  }
-
   .calendar-icon {
     position: absolute;
     bottom: 5px;
@@ -38,6 +30,83 @@
       content: '\e109';
       font-size: 12px;
       font-family: "Glyphicons Halflings", sans-serif;
+    }
+
+    .modified::before {
+      left: 0;
+      content: '\e109';
+      color: $color-gray-20;
+      font-size: 12px;
+      font-family: "Glyphicons Halflings", sans-serif;
+    }
+  }
+
+  .limit-icon::before {
+    left: 0;
+    content: '\e186';
+    font-size: 12px;
+    font-family: "Glyphicons Halflings", sans-serif;
+  }
+
+  .limit-icon {
+    position: absolute;
+    top: 5px;
+    left: -17px;
+    z-index: 2;
+    color: $color-white;
+    cursor: pointer;
+  }
+
+  .limit-box {
+    position: absolute;
+    z-index: 1;
+    display: none;
+    background-color: $color-gray-light;
+    box-shadow: 0 3px 8px 0 $box-shadow;
+
+    .limit-input {
+      -moz-appearance: textfield;
+      -webkit-appearance: textfield;
+      display: block;
+      float: right;
+      width: 35px;
+      margin-top: 0;
+      padding: 2px 3px;
+      border: 1px solid $color-gray-secondary;
+      background-color: $color-white;
+      background-color: -moz-field;
+      font: -moz-field;
+      text-align: left;
+      box-shadow: 1px 1px 1px 0 $color-gray-light inset;
+    }
+
+    p {
+      margin-bottom: 10px;
+      padding: 5px 20px;
+      color: $color-white;
+      background-color: $color-green;
+      font-weight: bold;
+    }
+
+    label {
+      display: block;
+      float: left;
+      margin-right: 5px;
+      padding-top: 3px;
+    }
+
+    .limit-box-save {
+      margin-top: 10px;
+    }
+
+    .limit-box-meal {
+      overflow: hidden;
+      margin-bottom: 5px;
+      padding: 0 20px;
+    }
+
+    .button {
+      margin-bottom: 10px;
     }
   }
 
@@ -103,7 +172,7 @@
     padding-right: 10px;
 
     @include breakpoint(small) {
-      width: 64%;
+      width: 62%;
     }
 
     @include breakpoint(smaller) {
@@ -111,7 +180,7 @@
     }
 
     @include breakpoint(large) {
-      width: 80%;
+      width: 75%;
     }
   }
 
@@ -142,11 +211,11 @@
     vertical-align: bottom;
 
     @include breakpoint(small) {
-      width: 31%;
+      width: 38%;
     }
 
     @include breakpoint(large) {
-      width: 20%;
+      width: 25%;
     }
   }
 
@@ -164,7 +233,9 @@
 .meal,
 .day {
   .participants {
-    width: 75%;
+    width: 80%;
+    padding-right: 10px;
+    text-align: right;
 
     @include breakpoint(medium) {
       width: 50%;
@@ -176,7 +247,7 @@
   }
 
   .action {
-    width: 25%;
+    width: 20%;
     padding-top: 4px;
 
     @include breakpoint(medium) {
@@ -218,6 +289,14 @@
       display: inline-block;
       vertical-align: middle;
     }
+
+    label {
+      vertical-align: middle;
+    }
+
+    &.participation-limit-reached {
+      background-color: $color-orange;
+    }
   }
 }
 
@@ -229,7 +308,7 @@
 
   .wrapper-vertical-center {
     right: 0;
-    width: 25%;
+    width: 30%;
 
     @include breakpoint(small) {
       width: 30%;
@@ -254,6 +333,7 @@
   .participants {
     width: 50%;
     margin-left: 25%;
+    text-align: right;
 
     @include breakpoint(small) {
       width: 65%;
@@ -269,6 +349,7 @@
   .action {
     width: 25%;
     padding-top: 4px;
+    padding-left: 8px;
   }
 }
 

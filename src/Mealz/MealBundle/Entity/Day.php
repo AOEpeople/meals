@@ -156,10 +156,12 @@ class Day extends AbstractMessage
      * Initialize lockParticipationDateTime or set it to an decent value if NULL
      */
     private function ensureLockParticipationDateTimeIsSet(){
-         if (is_null($this->lockParticipationDateTime) == TRUE) {
-            $_initial = clone $this->dateTime;
-            $_initial->modify($GLOBALS['kernel']->getContainer()->getParameter('mealz.lock_toggle_participation_at'));
-            $this->lockParticipationDateTime = $_initial;
+        if(!is_null($this->getId())){
+            if (is_null($this->lockParticipationDateTime) == TRUE) {
+                $_initial = clone $this->dateTime;
+                $_initial->modify($GLOBALS['kernel']->getContainer()->getParameter('mealz.lock_toggle_participation_at'));
+                $this->lockParticipationDateTime = $_initial;
+            }
         }
     }
 }

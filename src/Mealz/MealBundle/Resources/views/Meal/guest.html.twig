@@ -45,14 +45,19 @@
                     </div>
                     <div class="wrapper-vertical-center">
                         <div class="participants">
-                            <span class="participants-count">
+
+                            <span class="participants-count {% if form.children.day.children.meals.vars.choices[meal.vars.value].data.isParticipationLimitReached %}participation-limit-reached{% endif %}">
                                 <span>
                                     {{ form.children.day.children.meals.vars.choices[meal.vars.value].data.participants | length }}
                                 </span>
+                                <label>
+                                    {{ form.children.day.children.meals.vars.choices[meal.vars.value].data.participationLimit ? ' / ' ~ form.children.day.children.meals.vars.choices[meal.vars.value].data.participationLimit }}
+                                </label>
                             </span>
+
                         </div>
                         <div class="action">
-                            <div class="checkbox-wrapper">
+                            <div class="checkbox-wrapper {% if form.children.day.children.meals.vars.choices[meal.vars.value].data.isParticipationLimitReached %}disabled{% endif %}">
                                 {{ form_row(meal) }}
                             </div>
                         </div>

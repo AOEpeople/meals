@@ -19,14 +19,15 @@ Mealz.prototype.initDishSelection = function () {
         e.stopPropagation();
         that.hideVariationSelectBox(e);
         var isOnSomeBox = false;
-        $('.limit-box').each(function(){
+        var limitBox = $('.limit-box');
+        limitBox.each(function(){
             if(!isOnSomeBox){
                 isOnSomeBox = $(this).ismouseover();
             }
         });
         if(!isOnSomeBox){
-            $('.limit-box').hide();
-            $('.limit-box').children().remove();
+            limitBox.hide();
+            limitBox.children().remove();
         }
     });
 
@@ -61,33 +62,45 @@ Mealz.prototype.initDishSelection = function () {
         e.preventDefault();
         e.stopPropagation();
         var selectedDay = $(this).parent();
-
+        var limitBoxSelectedDay= selectedDay.children('.limit-box')
         // start to build my limit-box
-        selectedDay.children('.limit-box').append('<p>Limit</p>');
+        limitBoxSelectedDay.append('<p>Limit</p>');
         // for each meal selected a day we need a new input row
         selectedDay.children('.meal-rows-wrapper').children('.meal-row').each(function(){
             // but we have to distinguish between Meal and Variation
             var thisMealRow = $(this);
-            if(thisMealRow.attr('data-attribute-selected-variations').length > 0){
+            if(thisMealRow.is('[data-attribute-selected-variations]') && thisMealRow.attr('data-attribute-selected-variations').length > 0){
                 // if a variation is set, wen need to find out the name for all variations selected
                 $.each(JSON.parse(thisMealRow.attr('data-attribute-selected-variations')), function(key, value){
                     var mealName = thisMealRow.find('.variation').filter('[data-attribute-id='+parseInt(value)+']').find('span').text();
-                    selectedDay.children('.limit-box').append('<div class="limit-box-meal"><label>'+mealName+'</label><span class="limit-input" contentEditable=true></span></div>');
+                    limitBoxSelectedDay.append('<div class="limit-box-meal"><label>'+mealName+'</label><span class="limit-input" contentEditable=true></span></div>');
                 });
             } else {
                 // if it's just a meal, we just need to find the meal Name once
-                var mealName = thisMealRow.find('.dishes').filter('[data-attribute-id='+thisMealRow.attr('data-attribute-selected-dish')+']').children('span').text();
-                selectedDay.children('.limit-box').append('<div class="limit-box-meal"><label>'+mealName+'</label><span class="limit-input" contentEditable=true></span></div>');
+                var mealName = "";
+                // if the meal is not selected now, we have do catch error cases
+                if(thisMealRow.attr('data-attribute-selected-dish') !== ""){
+                    var mealName = thisMealRow.find('.dishes').filter('[data-attribute-id=' + thisMealRow.attr('data-attribute-selected-dish') + ']').children('span').text();
+                }
+                // if the mealname is not set hard in form (if you select it the first time)
+                // we have to take it from the meal-select span
+                if (mealName.length == 0){
+                    mealName = thisMealRow.children('.meal-select').children('span').text();
+                }
+
+                limitBoxSelectedDay.append('<div class="limit-box-meal"><label>'+mealName+'</label><span class="limit-input" contentEditable=true></span></div>');
             }
         });
         // prefill all LimitValues
         selectedDay.find('.participation-limit').each(function(i){
-            console.log($(this));
-            $('.limit-input').eq(i).text(parseInt($(this).val()));
+            // but only if there is some value
+            if($(this).val() !== ""){
+                $('.limit-input').eq(i).text(parseInt($(this).val()));
+            }
         });
         // add Save Button
-        selectedDay.children('.limit-box').append('<a href="#" class="limit-box-save button small" onclick="limitBoxSaveClick()">save</a>');
-        selectedDay.children('.limit-box').show('fast');
+        limitBoxSelectedDay.append('<a href="#" class="limit-box-save button small" onclick="limitBoxSaveClick()">save</a>');
+        limitBoxSelectedDay.show('fast');
     });
 
 };
@@ -130,6 +143,8 @@ Mealz.prototype.selectDish = function ($element, e) {
         this.createMealFormElement($mealRow, dishId);
         this.hideVariationSelectBox(e);
     }
+    // to init the participation-limit with a number
+    $mealRow.find('.participation-limit').val(0);
 };
 
 Mealz.prototype.selectVariation = function ($element) {
@@ -261,6 +276,8 @@ Mealz.prototype.hideVariationSelectBox = function (e) {
             container.hide('fast');
         }
     }
+    // to init the participation-limit with a number
+    $(container).closest('.meal-row').find('.participation-limit').val(0);
 };
 
 Mealz.prototype.deleteSingleSelection = function ($element) {

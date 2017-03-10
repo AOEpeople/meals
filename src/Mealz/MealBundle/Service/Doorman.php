@@ -46,13 +46,13 @@ class Doorman {
 	 * @return bool
 	 */
 	public function isUserAllowedToJoin(Meal $meal) {
-		if ($this->isKitchenStaff()) {
+		if ($this->isKitchenStaff() || $this->hasAccessTo(self::AT_MEAL_PARTICIPATION,['meal'=>$meal])) {
 			return TRUE;
 		}
 		if(!$this->securityContext->getToken()->getUser()->getProfile() instanceof Profile || $meal->isParticipationLimitReached()) {
 			return FALSE;
 		}
-		return ($this->isToggleParticipationAllowed($meal->getDateTime())&& $this->hasAccessTo(self::AT_MEAL_PARTICIPATION,['meal'=>$meal]));
+		return ($this->isToggleParticipationAllowed($meal->getDateTime()) && $this->hasAccessTo(self::AT_MEAL_PARTICIPATION,['meal'=>$meal]));
 	}
 
 	/**

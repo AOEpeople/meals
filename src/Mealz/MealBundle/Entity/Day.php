@@ -159,7 +159,12 @@ class Day extends AbstractMessage
         if(!is_null($this->getId())){
             if (is_null($this->lockParticipationDateTime) == TRUE) {
                 $_initial = clone $this->dateTime;
-                $_initial->modify($GLOBALS['kernel']->getContainer()->getParameter('mealz.lock_toggle_participation_at'));
+                // check for testing (no $GLOBALS['kernel'] is available)
+                if(is_object($GLOBALS['kernel'])){
+                    $_initial->modify($GLOBALS['kernel']->getContainer()->getParameter('mealz.lock_toggle_participation_at'));
+                } else {
+                    $_initial->modify('-1 day')->setTime(16,0,0);
+                }
                 $this->lockParticipationDateTime = $_initial;
             }
         }

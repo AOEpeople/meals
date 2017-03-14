@@ -2,8 +2,11 @@
     <div class="participants">
         <span class="participants-count {% if meal.isParticipationLimitReached %}participation-limit-reached{% endif %}">
             <span>
-                {{ meal.participants | length }}{{ meal.participationLimit ? ' / ' ~ meal.participationLimit }}
+                {{ meal.participants | length }}
             </span>
+            <label>
+                {{ meal.participationLimit ? ' / ' ~ meal.participationLimit }}
+            </label>
         </span>
     </div>
     <div class="action">

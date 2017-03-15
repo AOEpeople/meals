@@ -17,13 +17,29 @@ Mealz.prototype.copyToClipboard = function() {
         $('.guest-menu-link').removeClass('open');
 
         var dayId = $(this).attr('data-copytarget').split('-').pop();
-        var guestMenuLinkInput = $(this).parent().find('.guest-menu-link input');
+        var guestMenuLinkInput = $(this).parent().find('.guest-menu-link textarea');
 
         var result = Mealz.prototype.loadGeneratedLink(dayId);
         if (that.isUrl(result)) {
-            guestMenuLinkInput.attr("value", result);
+            guestMenuLinkInput.val(result);
             $(this).next().addClass('open');
-            guestMenuLinkInput.select();
+            if (navigator.userAgent.match(/ipad|ipod|iphone/i)) {
+                var el = guestMenuLinkInput.get(0);
+                var editable = el.contentEditable;
+                var readOnly = el.readOnly;
+                el.contentEditable = true;
+                el.readOnly = false;
+                var range = document.createRange();
+                range.selectNodeContents(el);
+                var sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(range);
+                el.setSelectionRange(0, 999999);
+                el.contentEditable = editable;
+                el.readOnly = readOnly;
+            } else {
+                guestMenuLinkInput.select();
+            }
             document.execCommand('copy');
             guestMenuLinkInput.blur();
         } else {

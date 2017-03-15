@@ -1,11 +1,7 @@
 {% set available = false %}
 
-{% if day.enabled %}
-    {% for meal in day.meals %}
-        {% if meal.dateTime | date_modify(lock_toggle_participation_at) | date('U') > 'now' | date('U') %}
-            {% set available = true %}
-        {% endif %}
-    {% endfor %}
+{% if day.enabled and (day.lockParticipationDateTime | date('U') > 'now' | date('U')) %}
+    {% set available = true %}
 {% endif %}
 
 <div class="meal {{ available ? 'is-available' : '' }}">
@@ -20,7 +16,7 @@
             {% if available ? 'is-available' : '' %}
                 <button class="guest-menu" data-copytarget="#copy-link-{{ day.id }}"><span class="glyphicon glyphicon-new-window"></span></button>
                 <div class="guest-menu-link">
-                    <input type="text" id="copy-link-{{ day.id }}" value="" >
+                    <textarea type="text" id="copy-link-{{ day.id }}"></textarea>
                     <span class="message"><span class="glyphicon glyphicon-ok"></span> Copied to clipboard!</span>
                 </div>
             {% endif %}

@@ -71,4 +71,48 @@ $(document).ready(function () {
          */
         mealz.initToggleParticipation();
     }
+
+    /**
+     * datetimepicker
+     */
+    $('.calendar-icon').each(function(i){
+        var thisDay = $('#week_form_days_'+i+'_lockParticipationDateTime');
+        $(this).datetimepicker({
+            format:'Y-m-d H:i:s',
+            inline:false,
+            defaultTime:new Date(thisDay.val()),
+            defaultDate:new Date(thisDay.val()),
+            onClose:function(dp,$input){
+                if($input.val().length > 0){
+                    thisDay.val($input.val());
+                }
+            }
+        });
+    });
+    if($('.language-switch > span').text() == 'de'){
+        $.datetimepicker.setLocale('de');
+    }
+
+    /*
+     * MouseOver hack
+     */
+    (function($){
+        $.mlp = {x:0,y:0}; // Mouse Last Position
+        function documentHandler(){
+            var $current = this === document ? $(this) : $(this).contents();
+            $current.mousemove(function(e){jQuery.mlp = {x:e.pageX,y:e.pageY};});
+            $current.find("iframe").load(documentHandler);
+        }
+        $(documentHandler);
+        $.fn.ismouseover = function(overThis) {
+            var result = false;
+            this.eq(0).each(function() {
+                var $current = $(this).is("iframe") ? $(this).contents().find("body") : $(this);
+                var offset = $current.offset();
+                result =    offset.left<=$.mlp.x && offset.left + $current.outerWidth() > $.mlp.x &&
+                    offset.top<=$.mlp.y && offset.top + $current.outerHeight() > $.mlp.y;
+            });
+            return result;
+        };
+    })(jQuery);
 });

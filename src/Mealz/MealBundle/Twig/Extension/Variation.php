@@ -23,6 +23,7 @@ class Variation extends \Twig_Extension
             'getDump' => new \Twig_Function_Method($this, 'getDump'),
             'groupMealsToArray' => new \Twig_Function_Method($this, 'groupMealsToArray'),
             'getFullTitleByDishAndVariation' => new \Twig_Function_Method($this, 'getFullTitleByDishAndVariation'),
+            'getSortedVariation' => new \Twig_Function_Method($this, 'getSortedVariation'),
         );
     }
 
@@ -119,6 +120,13 @@ class Variation extends \Twig_Extension
 
         return $title;
     }
+    
+    public function getSortedVariation($variations) {
+        if (is_array($variations) && count($variations)) {
+            uasort($variations, array($this, 'compareVariation'));
+        }
+        return $variations;
+    }
 
     /**
      * Returns the name of the extension.
@@ -144,5 +152,14 @@ class Variation extends \Twig_Extension
         }
 
         return null;
+    }
+
+    private function compareVariation($first, $second) {
+        $firstContent = strtolower($first['variations']['content']);
+        $secondContent = strtolower($second['variations']['content']);
+        if ($firstContent == $secondContent) {
+            return 0;
+        }
+        return ($firstContent < $secondContent) ? -1 : 1;
     }
 }

@@ -49,6 +49,17 @@
     span {
       transform: none;
     }
+
+    textarea {
+      min-width: 100%;
+      height: auto;
+      border: none;
+      color: $color-gray-primary;
+      font-size: 12px;
+      font-family: $font-light;
+      outline: none;
+      resize: none;
+    }
   }
 
   .message {

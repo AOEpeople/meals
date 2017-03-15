@@ -1,0 +1,34 @@
+<div class="wrapper-meal-actions wrapper-variation-vertical-center">
+    <div class="participants">
+        <span class="participants-count {% if meal.isParticipationLimitReached %}participation-limit-reached{% endif %}">
+            <span>
+                {{ meal.participants | length }}
+            </span>
+            <label>
+                {{ meal.participationLimit ? ' / ' ~ meal.participationLimit }}
+            </label>
+        </span>
+    </div>
+    <div class="action">
+        {% if is_granted('ROLE_USER') %}
+            {% set participant = meal.getParticipant(app.user.profile) %}
+            {# join / leave using a checkbox #}
+            {% if participant %}
+                {% if is_allowed_to_leave(meal) %}
+                    {{ MealzCheckbox.create(link(participant, 'delete') ,'participation-checkbox', {'checked': 'checked'}) }}
+                {% else %}
+                    {{ MealzCheckbox.create('' ,'participation-checkbox', {'checked': 'checked', 'disabled': 'disabled'}) }}
+                {% endif %}
+            {% else %}
+                {% if is_allowed_to_join(meal) %}
+                    {{ MealzCheckbox.create(link(meal, 'join') ,'participation-checkbox') }}
+                {% else %}
+                    {{ MealzCheckbox.create('' ,'participation-checkbox', {'disabled': 'disabled'}) }}
+                {% endif %}
+            {% endif %}
+
+        {% else %}
+            {{ MealzCheckbox.create('' ,'participation-checkbox', {'disabled': 'disabled'}) }}
+        {% endif %}
+    </div>
+</div>

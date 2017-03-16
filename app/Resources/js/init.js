@@ -72,6 +72,18 @@ $(document).ready(function () {
         mealz.initToggleParticipation();
     }
 
+
+    /**
+     * if meals is limited it should be displayed
+     */
+    $('.participation-limit').each(function(){
+        console.log($(this).val().length);
+        if($(this).val().length > 0 && $(this).val() > 0){
+            console.log($(this).closest('.limit-icon'));
+            $(this).closest('.day').children('.limit-icon').addClass('modified');
+        }
+    });
+
     /**
      * datetimepicker
      */

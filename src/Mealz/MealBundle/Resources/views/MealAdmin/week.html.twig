@@ -47,15 +47,21 @@
 
         {% for day in week.days %}
             <div class="day">
-                {% set hasBeenModified = false %}
+                {# check if time has modified with calender #}
+                {% set timeHasBeenModified = false %}
                 {% if day.lockParticipationDateTime != day.dateTime|date_modify(lock_toggle_participation_at) %}
-                    {% set hasBeenModified = true %}
+                    {% set timeHasBeenModified = true %}
                 {% endif %}
 
-                <span class="calendar-icon {{ hasBeenModified ? 'modified' : '' }}"></span>
-                {# display week day and date #}
-                <span class="limit-icon"></span>
-                <div class="limit-box"></div>
+                {# display week day and date if there is a meal selected#}
+                {% set selectedMeals = groupMealsToArray(form.days[loop.index0].meals.children) %}
+                {% set emptyMealCount = (selectedMeals|length - 2)|abs %}
+
+                {% if emptyMealCount <= 1 %}
+                    <span class="calendar-icon {{ timeHasBeenModified ? 'modified' : '' }}"></span>
+                    <span class="limit-icon"></span>
+                    <div class="limit-box"></div>
+                {% endif %}
                 <div class="week-day">
                     <span>
                         {{ day.dateTime | date('D') | trans({}, 'date') }}

@@ -206,12 +206,18 @@ class MealAdminController extends BaseController
         $week->setYear($dateTime->format('Y'));
         $week->setCalendarWeek($dateTime->format('W'));
 
+        $dateTimeModifier = $this->getParameter('mealz.lock_toggle_participation_at');
+
         $days = $week->getDays();
         for ($i = 0; $i < 5; $i++) {
             $dayDateTime = clone($week->getStartTime());
             $dayDateTime->modify('+'.$i.' days');
+            $lockParticipationDateTime = clone($dayDateTime);
+            $lockParticipationDateTime->modify($dateTimeModifier);
+
             $day = new Day();
             $day->setDateTime($dayDateTime);
+            $day->setLockParticipationDateTime($lockParticipationDateTime);
             $day->setWeek($week);
             $days->add($day);
         }

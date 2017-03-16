@@ -91,13 +91,17 @@ Mealz.prototype.initDishSelection = function () {
                 limitBoxSelectedDay.append('<div class="limit-box-meal"><label>'+mealName+'</label><span class="limit-input" contentEditable=true></span></div>');
             }
         });
+
         // prefill all LimitValues
         selectedDay.find('.participation-limit').each(function(i){
             // but only if there is some value
             if($(this).val() !== ""){
                 $('.limit-input').eq(i).text(parseInt($(this).val()));
+            } else {
+                $(selectedDay).children('.limit-icon').removeClass('modified');
             }
         });
+
         // add Save Button
         limitBoxSelectedDay.append('<a href="#" class="limit-box-save button small" onclick="limitBoxSaveClick()">save</a>');
         limitBoxSelectedDay.show('fast');

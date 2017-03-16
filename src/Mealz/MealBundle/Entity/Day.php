@@ -57,7 +57,6 @@ class Day extends AbstractMessage
     public function __construct()
     {
         $this->meals = new ArrayCollection();
-        $this->ensureLockParticipationDateTimeIsSet();
     }
 
     /**
@@ -140,7 +139,6 @@ class Day extends AbstractMessage
      */
     public function getLockParticipationDateTime()
     {
-        $this->ensureLockParticipationDateTimeIsSet();
         return $this->lockParticipationDateTime;
     }
 
@@ -150,23 +148,5 @@ class Day extends AbstractMessage
     public function setLockParticipationDateTime($lockParticipationDateTime)
     {
         $this->lockParticipationDateTime = $lockParticipationDateTime;
-    }
-
-    /**
-     * Initialize lockParticipationDateTime or set it to an decent value if NULL
-     */
-    private function ensureLockParticipationDateTimeIsSet(){
-        if(!is_null($this->getId())){
-            if (is_null($this->lockParticipationDateTime) == TRUE) {
-                $_initial = clone $this->dateTime;
-                // check for testing (no $GLOBALS['kernel'] is available)
-                if(is_object($GLOBALS['kernel'])){
-                    $_initial->modify($GLOBALS['kernel']->getContainer()->getParameter('mealz.lock_toggle_participation_at'));
-                } else {
-                    $_initial->modify('-1 day')->setTime(16,0,0);
-                }
-                $this->lockParticipationDateTime = $_initial;
-            }
-        }
     }
 }

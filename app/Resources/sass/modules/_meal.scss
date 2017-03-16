@@ -32,20 +32,13 @@
       font-family: "Glyphicons Halflings", sans-serif;
     }
 
-    .modified::before {
+    &.modified::before {
       left: 0;
       content: '\e109';
-      color: $color-gray-20;
+      color: $color-red;
       font-size: 12px;
       font-family: "Glyphicons Halflings", sans-serif;
     }
-  }
-
-  .limit-icon::before {
-    left: 0;
-    content: '\e186';
-    font-size: 12px;
-    font-family: "Glyphicons Halflings", sans-serif;
   }
 
   .limit-icon {
@@ -55,6 +48,21 @@
     z-index: 2;
     color: $color-white;
     cursor: pointer;
+
+    &::before {
+      left: 0;
+      content: '\e186';
+      font-size: 12px;
+      font-family: "Glyphicons Halflings", sans-serif;
+    }
+
+    &.modified::before {
+      left: 0;
+      content: '\e186';
+      color: $color-red;
+      font-size: 12px;
+      font-family: "Glyphicons Halflings", sans-serif;
+    }
   }
 
   .limit-box {
@@ -70,6 +78,7 @@
       display: block;
       float: right;
       width: 35px;
+      min-height: 20px;
       margin-top: 0;
       padding: 2px 3px;
       border: 1px solid $color-gray-secondary;
@@ -267,12 +276,16 @@
     position: relative;
     height: 38px;
     margin-right: 5px;
-    padding: 5px 10px 7px 15px;
+    padding: 5px 10px 7px 12px;
     border-radius: 20px;
     color: $color-white;
     background: $color-gray-secondary;
     font-size: 12px;
     font-family: $font-bold;
+
+    @include breakpoint(small) {
+      padding: 5px 10px 7px 5px;
+    }
 
     &::before {
       display: inline-block;

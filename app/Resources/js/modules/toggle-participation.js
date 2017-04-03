@@ -89,7 +89,7 @@ Mealz.prototype.toggleParticipationAdmin = function ($element) {
 
 Mealz.prototype.toggleGuestParticipation = function ($checkbox) {
     var that = this;
-    var $participantsCount = $checkbox.closest('.meal-row').find('.participants-count');
+    var $participantsCount = $checkbox.parents('.action').parent().find('.participants-count');
     var actualCount = parseInt($participantsCount.find('span').html());
     $participantsCount.fadeOut('fast', function () {
         that.applyCheckboxClasses($checkbox);

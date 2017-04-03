@@ -37,8 +37,14 @@ class Variation extends \Twig_Extension
         $mealsArray = $mealsVariations = array();
         $mealsVariationsCount = array();
         foreach ($meals as $meal) {
+
             /** @var Meal $meal */
-            $dish = $meal->getDish();
+            if( isset($meal->data) && ($meal->data instanceof Meal)) {
+                $dish = $meal->data->getDish();
+            } elseif ($meal instanceof Meal) {
+                $dish = $meal->getDish();
+            }
+
             if ($dish->getParent()) {
                 $parentId = $dish->getParent()->getId();
                 $mealsVariations[$parentId][] = $meal;

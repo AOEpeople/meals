@@ -48,7 +48,7 @@ $(document).ready(function () {
     // prepare checkboxes on guest invitation form
     mealz.$guestParticipationCheckboxes.each(function (idx, checkbox) {
         var $checkbox = $(checkbox);
-        var $participantsCount = $checkbox.closest('.meal-row').find('.participants-count');
+        var $participantsCount = $checkbox.parents('.action').parent().find('.participants-count');
         var actualCount = parseInt($participantsCount.find('span').html());
         mealz.applyCheckboxClasses($checkbox);
         $participantsCount.find('span').text($checkbox.is(':checked') ? actualCount + 1 : actualCount);

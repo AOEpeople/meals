@@ -1,8 +1,9 @@
 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
 	{% if balance < -50 %}
-		<div class="fancybox">
+		<div data-fancybox data-src="#hidden-content"></div>
+		<div class="fancybox" style="display: none;" id="hidden-content">
 			<p>{{ "payment.acknowledge_debts.text"|trans({'%amount%': balance}, "messages") }}</p>
-			<a title="Close" class="button fancybox-item" href="javascript:;">{{ "payment.acknowledge_debts.button"|trans({}, "messages") }}</a>
+			<a data-fancybox-close title="Close" class="button fancybox-item" href="javascript:;">{{ "payment.acknowledge_debts.button"|trans({}, "messages") }}</a>
 		</div>
 	{%  endif %}
 {%  endif %}

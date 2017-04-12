@@ -1,0 +1,8 @@
+version: '2'
+services:
+  mealz:
+    image: docker-team402.aoe.com/mealz
+    ports:
+      - "80:80"
+      - "443:443"
+      - "127.0.0.1:22:22"

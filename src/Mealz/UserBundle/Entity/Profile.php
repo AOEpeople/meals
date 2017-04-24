@@ -41,6 +41,7 @@ class Profile
     protected $firstName;
 
     /**
+     * @Assert\NotBlank()
      * @ORM\Column(type="string", length=255, nullable=TRUE)
      * @var string
      */

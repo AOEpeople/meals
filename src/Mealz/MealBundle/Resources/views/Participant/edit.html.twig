@@ -43,7 +43,14 @@
         {% for name, participations in users %}
             {% set profile = participations[0].profile %}
             <tr class="table-row">
-                <td class="text table-data wide-cell">{{ profile.fullName }} {% if profile.isGuest %}(Gast){% endif %}</td>
+                <td class="text table-data wide-cell">
+                    {{ profile.fullName }}
+                    {% if profile.isGuest and profile.company %}
+                        ({{ profile.company }})
+                    {% elseif profile.isGuest %}
+                        (Guest)
+                    {% endif %}
+                </td>
                 {% for day in week.days %}
                     {% for meal in day.meals %}
                         {% set participation = isParticipant(participations, meal.participants) %}

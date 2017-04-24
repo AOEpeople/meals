@@ -20,7 +20,7 @@ headings:
     list: Liste der Kategorien
   costs:
     list: Liste der Kosten
-  guest_enrollment: Genießen Sie eine hausgemachte Mahlzeit bei AOE
+  guest_enrollment: Mittagessen bei AOE
 
 table:
   title: Titel
@@ -55,8 +55,8 @@ content:
     costs:
       no_data: Keine Kosten vorhanden.
   guest_enrollment:
-    message_body: Herzlichen Glückwünsch! Gerne laden wir Sie zu einer Mahlzeit ein, die von unserem Chefkoch speziell für Sie zubereitet wird. Haben Sie Hunger? Dann melden Sie sich einfach mit unserer „Meals“ App an.
-    message_ending: Guten Appetit!
+    message_body: Als Gast in unserem Haus laden wir Sie gerne zu einem Mittagessen in der AOE Eatery ein. Für Ihre Bestellung tragen Sie sich bitte bis spätestens einen Tag vorher mit Ihren Daten ein und wählen das gewünschte Gericht aus, das dann an unsere Köche weiter geleitet wird.
+    message_ending: Guten Appetit wünscht Ihnen,
     message_signature: AOE
 
 form:

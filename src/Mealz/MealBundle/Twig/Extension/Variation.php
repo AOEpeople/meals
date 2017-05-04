@@ -3,6 +3,7 @@
 
 namespace Mealz\MealBundle\Twig\Extension;
 
+use Mealz\MealBundle\Entity\Dish;
 use Mealz\MealBundle\Entity\Meal;
 use Symfony\Component\VarDumper\VarDumper;
 
@@ -45,7 +46,7 @@ class Variation extends \Twig_Extension
                 $dish = $meal->getDish();
             }
 
-            if ($dish->getParent()) {
+            if (!is_null($dish) && $dish->getParent() instanceof Dish) {
                 $parentId = $dish->getParent()->getId();
                 $mealsVariations[$parentId][] = $meal;
                 $mealsVariationsCount[$parentId] = count($mealsVariations[$parentId]);

@@ -24,7 +24,7 @@
             <tbody class="table-content">
                 {% for name, participations in users %}
                     {% set profile = participations[0].profile %}
-                    
+
                     <tr class="table-row">
                         <td class="text table-data wide-cell">{{ profile.fullName }} {% if profile.isGuest %}({{ profile.company }}){% endif %}</td>
                         {% for meal in day.meals %}

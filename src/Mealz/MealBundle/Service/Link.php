@@ -43,29 +43,31 @@ class Link {
 		}
 	}
 
-	public function linkMeal(Meal $meal, $action = NULL, $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH) {
-		$action = $action ?: 'show';
-		if($action === 'show' || $action === 'join' || $action === 'join_someone') {
-			return $this->router->generate('MealzMealBundle_Meal_' . $action, array(
-				'date' => $meal->getDateTime()->format('Y-m-d'),
-				'dish' => $meal->getDish()->getSlug(),
-			), $referenceType);
-		} elseif($action === 'newParticipant') {
-			return $this->router->generate('MealzMealBundle_Participant_new', array(
-				'date' => $meal->getDateTime()->format('Y-m-d'),
-				'dish' => $meal->getDish()->getSlug(),
-			), $referenceType);
-		} elseif($action === 'edit' || $action === 'delete') {
-			// admin actions
-			return $this->router->generate('MealzMealBundle_Meal_' . $action, array('meal' => $meal->getId()), $referenceType);
-		} else {
-			throw new \InvalidArgumentException(sprintf(
-				'linking to "%s" action on a %s object is not configured.',
-				$action,
-				get_class($meal)
-			));
-		}
-	}
+    public function linkMeal(Meal $meal, $action = NULL, $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH) {
+        $action = $action ?: 'show';
+        if (!is_null($meal->getDish()) && $meal->getDish() instanceof Dish) {
+            if ($action === 'show' || $action === 'join' || $action === 'join_someone') {
+                return $this->router->generate('MealzMealBundle_Meal_' . $action, array(
+                    'date' => $meal->getDateTime()->format('Y-m-d'),
+                    'dish' => $meal->getDish()->getSlug(),
+                ), $referenceType);
+            } elseif ($action === 'newParticipant') {
+                return $this->router->generate('MealzMealBundle_Participant_new', array(
+                    'date' => $meal->getDateTime()->format('Y-m-d'),
+                    'dish' => $meal->getDish()->getSlug(),
+                ), $referenceType);
+            } elseif ($action === 'edit' || $action === 'delete') {
+                // admin actions
+                return $this->router->generate('MealzMealBundle_Meal_' . $action, array('meal' => $meal->getId()), $referenceType);
+            } else {
+                throw new \InvalidArgumentException(sprintf(
+                    'linking to "%s" action on a %s object is not configured.',
+                    $action,
+                    get_class($meal)
+                ));
+            }
+        }
+    }
 
 	public function linkParticipant(Participant $participant, $action = NULL, $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH) {
 		$action = $action ?: 'edit';

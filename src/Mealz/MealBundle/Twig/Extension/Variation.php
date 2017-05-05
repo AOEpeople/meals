@@ -5,7 +5,6 @@ namespace Mealz\MealBundle\Twig\Extension;
 
 use Mealz\MealBundle\Entity\Dish;
 use Mealz\MealBundle\Entity\Meal;
-use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * @TODO: CodeStyle, variable usage optimization (maybe use $dishes as attribute?)
@@ -52,13 +51,6 @@ class Variation extends \Twig_Extension
                 $mealsVariationsCount[$parentId] = count($mealsVariations[$parentId]);
             } else {
                 $mealsArray[] = $meal;
-            }
-        }
-
-        foreach ($mealsVariationsCount as $id => $count) {
-            if ($count === 1) {
-                $mealsArray[] = $mealsVariations[$id][0];
-                unset($mealsVariations[$id]);
             }
         }
 

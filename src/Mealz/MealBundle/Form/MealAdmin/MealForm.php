@@ -78,23 +78,24 @@ class MealForm extends AbstractType
                 /** @var Week $week */
                 $week = $day->getWeek();
 
-            if (false === $day->isEnabled() || false === $week->isEnabled()) {
-                $form = $event->getForm();
-                $config = $form->get('dish')->getConfig();
-                $options = $config->getOptions();
+                if (false === $day->isEnabled() || false === $week->isEnabled()) {
+                    $form = $event->getForm();
+                    $config = $form->get('dish')->getConfig();
+                    $options = $config->getOptions();
 
-                $form->add(
-                    'dish',
-                    $config->getType()->getName(),
-                    array_replace(
-                        $options,
-                        [
-                            'disabled' => true
-                        ]
-                    )
-                );
+                    $form->add(
+                        'dish',
+                        $config->getType()->getName(),
+                        array_replace(
+                            $options,
+                            [
+                                'disabled' => true
+                            ]
+                        )
+                    );
+                }
             }
-        });
+        );
 
         $builder->addEventListener(
             FormEvents::SUBMIT,

@@ -1,7 +1,7 @@
 parameters:
-    database_name:     mealz
-    database_user:     mealz
-    database_password: mealz
+    database_name:     devbox
+    database_user:     devbox
+    database_password: devbox
 
     database_name_testing: mealz_test
     database_user_testing: mealz_test

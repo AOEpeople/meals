@@ -58,6 +58,8 @@ class MealForm extends AbstractType
                 'participationLimit',
                 IntegerType::class,
                 array(
+                    'required' => false,
+                    'empty_data' => '0',
                     'attr' => array('class' => 'hidden-form-field participation-limit')
                 )
             );

@@ -31,8 +31,8 @@
                             <div class="meal-select-variations">
                                 {% for variation in variations %}
                                     <div class="variation" data-attribute-id="{{ variation.id }}">
-                                        <label class="variation-checkbox" for="variation">
-                                            <div class="checkbox{% if selectedDish is defined and variation.id in selectedDish.ids %} checked"{% endif %}"></div>
+                                        <label class="variation-checkbox {% if selectedDish is defined and variation.id in selectedDish.ids %}checked{% endif %}" for="variation">
+                                            <div class="checkbox"></div>
                                             <span>{{ variation.title }}</span>
                                         </label>
                                     </div>

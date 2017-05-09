@@ -204,9 +204,9 @@ class MealController extends BaseController
                         if ($meal->isParticipationLimitReached() || !$this->getDoorman()->isToggleParticipationAllowed($meal->getDateTime())) {
                             throw new ToggleParticipationNotAllowedException();
                         }
-                         if (!$this->getDoorman()->isToggleParticipationAllowed($meal->getDay()->getLockParticipationDateTime())) {
+                        if (!$this->getDoorman()->isToggleParticipationAllowed($meal->getDay()->getLockParticipationDateTime())) {
                             throw new ToggleParticipationNotAllowedException();
-                         }
+                        }
                         $participation = new Participant();
                         $participation->setProfile($profile);
                         $participation->setCostAbsorbed(true);

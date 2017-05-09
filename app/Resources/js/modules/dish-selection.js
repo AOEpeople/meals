@@ -205,7 +205,7 @@ Mealz.prototype.selectVariation = function ($element) {
         if (variations.length > 0) {
             // Find and remove input field with the same value like the id of clicked variation
             $mealRow.find('.meal-selected').each(function () {
-                if ($(this).find('input:first').val() === variationId) {
+                if ($(this).find('input:first').val() == variationId) {
                     that.deleteSingleSelection($(this));
                 }
             });

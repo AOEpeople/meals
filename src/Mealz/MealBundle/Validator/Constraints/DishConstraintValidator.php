@@ -32,7 +32,7 @@ class DishConstraintValidator extends ConstraintValidator
             $entity->getParticipants()->count() == 0
         ) {
             $this->em->remove($entity);
-            $this->em->flush();
+            $this->em->flush($entity);
         } else {
             $this->em->refresh($entity);
             $this->context

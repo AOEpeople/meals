@@ -91,7 +91,9 @@ class MealForm extends AbstractType
                         array_replace(
                             $options,
                             [
-                                'disabled' => true
+                                'attr' => array(
+                                    'readonly' => 'readonly'
+                                )
                             ]
                         )
                     );

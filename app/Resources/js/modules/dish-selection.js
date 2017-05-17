@@ -76,7 +76,17 @@ Mealz.prototype.initDishSelection = function () {
     $('.meal-select-box .dishes .variation-button').on('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
-        $(this).next().toggle();
+
+        var $mealSelectVariations = $(this).next();
+        var $dish = $mealSelectVariations.parent('.dishes');
+
+        if ($mealSelectVariations.is(':visible')) {
+            that.hideVariationSelectBox();
+        } else {
+            that.hideVariationSelectBox();
+            $mealSelectVariations.show();
+            $dish.addClass('active');
+        }
     });
 
     $('.meal-select-box .dishes .meal-select-variations .variation-checkbox').on('click', function (e) {
@@ -89,14 +99,14 @@ Mealz.prototype.initDishSelection = function () {
     $('.meal-select-variations .button').on('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
-        that.hideVariationSelectBox(e);
+        that.hideSelectBox();
     });
 
     // Hiding meal-select-box and limit-box if click anywhere else
-    $('.meal-form, .meal-select-box').mouseup(function (e) {
+    $('.meal-form').click(function (e) {
         e.preventDefault();
         e.stopPropagation();
-        that.hideVariationSelectBox(e);
+        that.hideSelectBox();
         var isOnSomeBox = false;
         var limitBox = $('.limit-box');
         limitBox.each(function(){
@@ -144,7 +154,7 @@ Mealz.prototype.selectDish = function ($element, e) {
         $mealRow.find('.variation-checkbox').removeClass('checked');
         this.clearAllFormElements($mealRow);
         this.createMealFormElement($mealRow, dishId);
-        this.hideVariationSelectBox(e);
+        this.hideSelectBox();
     }
 
     // Initialize the participation limit with 0
@@ -254,35 +264,21 @@ Mealz.prototype.setDropdownLabelForSelectedVariations = function (mealRow, paren
     }
 };
 
-Mealz.prototype.hideVariationSelectBox = function (e) {
-    var container = '';
-    if ($(e.currentTarget).hasClass('meal-select-box')) {
-        container = $('.meal-select-variations');
-    } else {
-        container = $('.meal-select-box');
+Mealz.prototype.hideSelectBox = function () {
+    var $activeSelectBox = $('.meal-select-box:visible');
+    this.hideVariationSelectBox($activeSelectBox);
+    $activeSelectBox.hide();
+};
+
+Mealz.prototype.hideVariationSelectBox = function ($activeSelectBox) {
+    if (typeof $activeSelectBox === 'undefined') {
+        $activeSelectBox = $('.meal-select-box:visible');
     }
 
-    // if the target of the click isn't the container nor a descendant of the container
-    if (!container.is(e.target) && container.has(e.target).length === 0 ||
-        ($(e.currentTarget).attr('data-attribute-parent') != 'true' && $(e.currentTarget).is('[data-attribute-parent]'))) {
-
-        container.hide('fast');
-    }
-
-    /* if SelectionBox has no checked Variations - close it */
-    if ($(e.target).hasClass('small') === true) {
-        var thisMealSelectBox = $(e.target).closest('.meal-select-variations');
-        if (thisMealSelectBox.find('.checked').length === 0) {
-            thisMealSelectBox.children('.error').show();
-        } else if(thisMealSelectBox.find('.checked').length > 0) {
-            thisMealSelectBox.children('.error').hide();
-            thisMealSelectBox.hide();
-            container.hide('fast');
-        }
-    }
-    // to init the participation-limit with a number
-    if($(container).closest('.meal-row').find('.participation-limit').val() === ""){
-        $(container).closest('.meal-row').find('.participation-limit').val(0);
+    var $activeDish = $activeSelectBox.find('.dishes.active');
+    if ($activeDish.length !== 0) {
+        $activeDish.children('.meal-select-variations:visible').hide();
+        $activeDish.removeClass('active');
     }
 };
 

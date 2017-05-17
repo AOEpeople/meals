@@ -104,7 +104,6 @@ Mealz.prototype.initDishSelection = function () {
 
     // Hiding meal-select-box and limit-box if click anywhere else
     $('.meal-form').click(function (e) {
-        e.preventDefault();
         e.stopPropagation();
         that.hideSelectBox();
         var isOnSomeBox = false;
@@ -298,6 +297,9 @@ Mealz.prototype.createMealFormElement = function ($mealRow, dishId) {
     var $prototypeFormElementInputs = $prototypeFormElement.find('input');
     $prototypeFormElementInputs.last().val(day);
     $prototypeFormElementInputs.first().val(dishId);
+    if($mealRow.find('.participation-limit').val() === "") {
+        $mealRow.find('.participation-limit').val(0);
+    }
 };
 
 Mealz.prototype.clearAllFormElements = function ($mealRow) {

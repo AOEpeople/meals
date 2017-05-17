@@ -22,11 +22,14 @@ Mealz.prototype.initDishSelection = function () {
         selectedDay.children('.meal-rows-wrapper').children('.meal-row').each(function(){
             // but we have to distinguish between Meal and Variation
             var thisMealRow = $(this);
-            if(thisMealRow.is('[data-attribute-selected-variations]') && thisMealRow.attr('data-attribute-selected-variations').length > 0){
-                // if a variation is set, wen need to find out the name for all variations selected
+            if(thisMealRow.is('[data-attribute-selected-dish]') && thisMealRow.is('[data-attribute-selected-variations]') &&
+                thisMealRow.attr('data-attribute-selected-variations').length > 0){
+                // if a variation is set, we need to find out the name for all variations selected
+                var mainDishId = parseInt(thisMealRow.attr('data-attribute-selected-dish'));
+                var mainDishTitle = thisMealRow.find('.dishes[data-attribute-id="'+mainDishId+'"] span.dish-title').text();
                 $.each(JSON.parse(thisMealRow.attr('data-attribute-selected-variations')), function(key, value){
                     var mealName = thisMealRow.find('.variation').filter('[data-attribute-id='+parseInt(value)+']').find('span').text();
-                    limitBoxSelectedDay.append('<div class="limit-box-meal"><label>'+mealName+'</label><span class="limit-input" contentEditable=true></span></div>');
+                    limitBoxSelectedDay.append('<div class="limit-box-meal"><label>'+mainDishTitle+' - '+mealName+'</label><span class="limit-input" contentEditable=true></span></div>');
                 });
             } else {
                 // if it's just a meal, we just need to find the meal Name once

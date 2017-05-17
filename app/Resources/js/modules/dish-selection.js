@@ -5,6 +5,15 @@ Mealz.prototype.initDishSelection = function () {
     $('.day .limit-icon').on('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
+        var $this = $(this);
+        if($this.next('.limit-box').is(':visible')) {
+            limitBoxSaveClick();
+            return;
+        } else {
+            $this.parent('.day').siblings().find('.limit-box').each(function () {
+                limitBoxSaveClick();
+            })
+        }
         var selectedDay = $(this).parent();
         var limitBoxSelectedDay= selectedDay.children('.limit-box');
         // start to build my limit-box

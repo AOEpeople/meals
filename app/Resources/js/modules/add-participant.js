@@ -46,7 +46,7 @@ Mealz.prototype.addProfile = function () {
 
     // remove input value and add new profil into the profil table
     function addToTable(prototype, selectedProfile) {
-        $(prototype).prependTo('table > tbody');
+        $(prototype).prependTo('.edit-participation .table > tbody');
         selectedProfile.remove();
         $('.profile').val('');
         $('.table').removeAttr('style');

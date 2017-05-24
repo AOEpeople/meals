@@ -27,18 +27,20 @@ class DishConstraintValidator extends ConstraintValidator
         }
 
         $unitOfWork = $this->em->getUnitOfWork();
+        $day = $entity->getDay();
 
         if ($unitOfWork->getEntityState($entity) !== UnitOfWork::STATE_NEW &&
             $entity->getParticipants()->count() == 0
         ) {
             $this->em->remove($entity);
             $this->em->flush($entity);
+            $day->getMeals()->removeElement($entity);
         } else {
             $this->em->refresh($entity);
             $this->context
                 ->buildViolation($constraint->message)
                 ->setParameter('%dish%', $entity->getDish())
-                ->setParameter('%day%', $entity->getDay())
+                ->setParameter('%day%', $day)
                 ->addViolation();
         }
     }

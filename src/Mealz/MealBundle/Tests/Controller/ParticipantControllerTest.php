@@ -2,7 +2,6 @@
 
 namespace Mealz\MealBundle\Tests\Controller;
 
-use Doctrine\Common\Collections\Criteria;
 use Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
 use Mealz\MealBundle\DataFixtures\ORM\LoadDays;
 use Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
@@ -16,7 +15,6 @@ use Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use Mealz\UserBundle\Entity\Profile;
 use Mealz\UserBundle\Entity\Role;
-use Normalizer;
 
 /**
  * Participant Controller Test
@@ -29,6 +27,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     protected static $participantLastName;
     protected static $guestParticipantFirstName;
     protected static $guestParticipantLastName;
+    protected static $guestCompany;
     protected static $userFirstName;
     protected static $userLastName;
     protected static $meal;
@@ -39,7 +38,6 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     public function setUp()
     {
         parent::setUp();
-
         $this->createAdminClient();
         $this->clearAllTables();
         $this->loadFixtures([
@@ -60,13 +58,22 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         // Create profile for participant
         self::$participantFirstName = 'Max';
         self::$participantLastName  = 'Mustermann'.$time;
-        $participant = $this->createEmployeeProfileAndParticipation(self::$participantFirstName, self::$participantLastName, self::$meal);
+        $participant = $this->createEmployeeProfileAndParticipation(
+            self::$participantFirstName,
+            self::$participantLastName,
+            self::$meal
+        );
 
         // Create profile for guest participant
         self::$guestParticipantFirstName = 'Jon';
         self::$guestParticipantLastName  = 'Doe'.$time;
-        $guestCompany   = 'Company';
-        $guestParticipant = $this->createGuestProfileAndParticipation(self::$guestParticipantFirstName, self::$guestParticipantLastName, $guestCompany, self::$meal);
+        self::$guestCompany = 'Company';
+        $guestParticipant = $this->createGuestProfileAndParticipation(
+            self::$guestParticipantFirstName,
+            self::$guestParticipantLastName,
+            self::$guestCompany,
+            self::$meal
+        );
 
         // Create profile for user (non participant)
         self::$userFirstName = 'Karl';
@@ -100,7 +107,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * Check that the guest participant is displayed with a (Gast) suffix
+     * Check that the guest participant is displayed with a (<company name>) suffix
      * @test
      */
     public function checkGuestSuffixInParticipationTable()
@@ -114,7 +121,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
                 }
             })
             ->first();
-        $this->assertContains('Gast', $crawler->text());
+        $this->assertContains(self::$guestCompany, $crawler->text());
     }
 
     /**

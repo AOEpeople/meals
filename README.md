@@ -165,5 +165,11 @@ as for the dev environment.
 
 Before running phpunit make sure the database schema is up-to-date:
 
+    sudo -i
+    mysql
+    > CREATE USER 'mealz_test'@'localhost' IDENTIFIED BY 'mealz_test';
+    > CREATE DATABASE mealz_test;
+    > GRANT ALL PRIVILEGES ON mealz_test.* TO 'mealz_test'@'localhost';
+
     php app/console doctrine:schema:update --env=test --force
-    bin/phpunit
+    bin/phpunit -c app/config/commons/development/phpunit.xml 

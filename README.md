@@ -173,3 +173,5 @@ Before running phpunit make sure the database schema is up-to-date:
 
     php app/console doctrine:schema:update --env=test --force
     bin/phpunit -c app/config/commons/development/phpunit.xml 
+
+Note: When you disable xdebug the performance will be better

@@ -61,10 +61,16 @@ class Participant
 	 */
 	protected $costAbsorbed = false;
 
-	/**
-	 * @ORM\Column(type="boolean", nullable=false, options={"default": false})
-	 * @var boolean
-	 */
+    /**
+     * @ORM\Column(type="integer", nullable=false)
+     * @var integer
+     */
+    protected $offeredAt = 0;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=false, options={"default8": false})
+     * @var boolean
+     */
 	protected $confirmed = false;
 
 	/**
@@ -183,6 +189,29 @@ class Participant
 		return $this->guestName;
 	}
 
+    /**
+     * @param /DateTime $offeredAt
+     */
+    public function setOfferedAt($offeredAt)
+    {
+        $this->offeredAt = $offeredAt;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getOfferedAt()
+    {
+        return $this->offeredAt;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPending(){
+        return ($this->getOfferedAt() !== 0 || $this->getOfferedAt() != NULL);
+    }
+
 	function __toString()
 	{
 		return $this->getMeal() . ' ' . $this->getProfile();
@@ -191,6 +220,5 @@ class Participant
 	public function __clone() {
 		$this->id = NULL;
 	}
-
 
 }

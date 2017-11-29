@@ -26,10 +26,10 @@ class ParticipantRepository extends EntityRepository
     );
 
     /**
-     * @param \DateTime    $minDate
-     * @param \DateTime    $maxDate
+     * @param \DateTime $minDate
+     * @param \DateTime $maxDate
      * @param Profile|null $profile
-     * @param array        $options
+     * @param array $options
      * @return mixed
      */
     public function getParticipantsOnDays(
@@ -37,7 +37,8 @@ class ParticipantRepository extends EntityRepository
         \DateTime $maxDate,
         Profile $profile = null,
         $options = array()
-    ) {
+    )
+    {
         $options = array_merge(
             $options,
             array(
@@ -117,7 +118,7 @@ class ParticipantRepository extends EntityRepository
 
     /**
      * @param Profile $profile
-     * @param int     $limit
+     * @param int $limit
      * @return Participant[]
      */
     public function getLastAccountableParticipations(Profile $profile, $limit = null)
@@ -315,4 +316,22 @@ class ParticipantRepository extends EntityRepository
 
         return $qb->getQuery()->getArrayResult();
     }
+
+    public function findByOffer($mealId)
+    {
+        $qb = $this->createQueryBuilder('a');
+        $qb->where(
+            $qb->expr()->not(
+                $qb->expr()->eq('a.' . 'offeredAt', '?1')
+            ),
+            $qb->expr()->eq('a.' . 'meal', '?2')
+        );
+        $qb->setParameter(1, 0);
+        $qb->setParameter(2, $mealId);
+        $qb->orderBy('a.offeredAt', 'asc');
+
+        return $qb->getQuery()
+            ->getResult();
+    }
+
 }

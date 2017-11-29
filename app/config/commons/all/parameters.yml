@@ -4,7 +4,7 @@ parameters:
     mealz.meal.price: 3.20
 
     database_driver:   mysqli
-    database_host:     127.0.0.1
+    database_host:     mealz-db-mysql
     database_port:
 
     mailer_transport:  smtp

@@ -25,3 +25,8 @@ error:
     variation_required: Please select a variation!
 participation:
   successful: Meal participation successful
+notification:
+  confirm_swap: Unfortunately it's already too late to cancel your order, but you have the possibility to offer it to someone else.
+tooltip:
+  offered_meal: Someone else can take your meal now.
+  available_meal: There is one offered dish available.

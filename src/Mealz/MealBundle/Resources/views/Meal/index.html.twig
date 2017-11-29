@@ -10,6 +10,8 @@
 	{% endfor %}
 </div>
 
+    {% include 'MealzMealBundle:Participant/partials:confirmSwapbox.html.twig' %}
+
 <ul class="legend">
 	<li>{{ 'content.participation.legend.available' | trans({}, 'general') }}</li>
 	<li>{{ 'content.participation.legend.unavailable' | trans({}, 'general') }}</li>

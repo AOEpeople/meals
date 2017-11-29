@@ -1,28 +1,117 @@
 Mealz.prototype.toggleParticipation = function ($checkbox) {
-    var that = this;
-    var $participantsCount = $checkbox.closest('.wrapper-meal-actions').find('.participants-count');
-    var url = $checkbox.attr('value');
+    that = this;
+    $participantsCount = $checkbox.closest('.wrapper-meal-actions').find('.participants-count');
+    $tooltiptext = $checkbox.closest('.wrapper-meal-actions').find('.tooltiptext');
+    $tooltiptextAvailableMeal = $checkbox.closest('.wrapper-meal-actions').find('.tooltiptext-availableMeal');
+    url = $checkbox.attr('value');
+    d = new Date();
 
+    if ($checkbox.attr('class') === "participation-checkbox swap-action") {
+        confirmSwap($checkbox);
+    } else if ($checkbox.attr('class') === "participation-checkbox unswap-action") {
+        unswap($checkbox);
+    } else if ($checkbox.attr('class') === "participation-checkbox acceptOffer-action") {
+        acceptOffer($checkbox);
+    } else {
+        toggle($checkbox);
+    }
+};
+
+function editCountAndCheckbox(data, $checkbox, $countClass, $checkboxClass) {
+    if (data.redirect) {
+        window.location.replace(data.redirect);
+    }
+
+    $checkbox.attr('value', data.url);
+    $participantsCount.fadeOut('fast', function () {
+        $participantsCount.find('#participantsCount').text(data.participantsCount);
+
+        if ($countClass !== undefined) {
+            $participantsCount.toggleClass($countClass);
+        }
+
+        if ($checkboxClass !== undefined) {
+            $checkbox.attr('class', $checkboxClass);
+        }
+
+        $participantsCount.fadeIn('fast');
+    });
+}
+
+
+function toggle($checkbox) {
     $.ajax({
         method: 'GET',
         url: url,
         dataType: 'json',
         success: function (data) {
-            if (data.redirect) {
-                window.location.replace(data.redirect);
-            }
-            $checkbox.attr('value', data.url);
-            $participantsCount.fadeOut('fast', function () {
-                that.applyCheckboxClasses($checkbox);
-                $participantsCount.find('span').text(data.participantsCount);
-                $participantsCount.fadeIn('fast');
-            });
+            editCountAndCheckbox(data, $checkbox);
+            that.applyCheckboxClasses($checkbox);
         },
         error: function (xhr) {
             console.log(xhr.status + ': ' + xhr.statusText);
         }
     });
-};
+}
+
+function confirmSwap($checkbox) {
+    $checkboxValue = $checkbox.attr('value');
+    $link = $checkbox;
+    Mealz.prototype.enableConfirmSwapbox();
+}
+
+function swap($checkbox) {
+    $.ajax({
+        method: 'GET',
+        url: url,
+        dataType: 'json',
+        success: function (data) {
+            $countClass = 'participation-pending';
+            $checkboxClass = 'participation-checkbox unswap-action';
+            editCountAndCheckbox(data, $checkbox, $countClass, $checkboxClass);
+            $tooltiptext.toggleClass('active');
+        },
+        error: function (xhr) {
+            alert('JavaScript fail!');
+            console.log(xhr.status + ': ' + xhr.statusText);
+        }
+    });
+}
+
+function unswap($checkbox) {
+    $.ajax({
+        method: 'GET',
+        url: url,
+        dataType: 'json',
+        success: function (data) {
+            $countClass = 'participation-pending';
+            $checkboxClass = 'participation-checkbox swap-action';
+            editCountAndCheckbox(data, $checkbox, $countClass, $checkboxClass);
+            $tooltiptext.toggleClass('active');
+        },
+        error: function (xhr) {
+            console.log(xhr.status + ': ' + xhr.statusText);
+        }
+    });
+}
+
+function acceptOffer($checkbox) {
+    $.ajax({
+        method: 'GET',
+        url: url,
+        dataType: 'json',
+        success: function (data) {
+            $countClass = 'offer-available';
+            $checkboxClass = 'participation-checkbox swap-action';
+            editCountAndCheckbox(data, $checkbox, $countClass, $checkboxClass);
+            that.applyCheckboxClasses($checkbox);
+            $tooltiptextAvailableMeal.toggleClass('active');
+        },
+        error: function (xhr) {
+            console.log(xhr.status + ': ' + xhr.statusText);
+        }
+    });
+}
 
 Mealz.prototype.loadToggleParticipationCheckbox = function ($tableRow) {
     var that = this;

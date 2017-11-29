@@ -23,6 +23,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\VarDumper\VarDumper;
+use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\Loader\ArrayLoader;
+
 
 /**
  * Meal Controller
@@ -81,11 +85,12 @@ class MealController extends BaseController
         if (!$meal) {
             return new JsonResponse(null, 404);
         }
-
+        /** Participation forbidden, if user is not allowed to join. */
         if (!$this->getDoorman()->isUserAllowedToJoin($meal)) {
             return new JsonResponse(null, 403);
         }
 
+        /** Get profile of user. If there is no profile available, forbid to join. */
         if (null === $profile) {
             $profile = $this->getProfile();
         } else {
@@ -97,11 +102,13 @@ class MealController extends BaseController
             }
         }
 
+        /** Create new participant using the profile and the chosen meal. */
         try {
             $participant = new Participant();
             $participant->setProfile($profile);
             $participant->setMeal($meal);
 
+            /** Insert the participant into the database. */
             $em = $this->getDoctrine()->getManager();
             $em->transactional(
                 function (EntityManager $em) use ($participant) {
@@ -114,6 +121,7 @@ class MealController extends BaseController
             return new JsonResponse(null, 422);
         }
 
+        /** If the user is a kitchen staff, he can add a profile to a meal. */
         if (is_object($this->getDoorman()->isKitchenStaff()) === true) {
             $logger = $this->get('monolog.logger.balance');
             $logger->addInfo(
@@ -141,6 +149,107 @@ class MealController extends BaseController
         );
 
         return $ajaxResponse;
+    }
+
+    /**
+     * @param $date
+     * @param $dish
+     * @param $profile
+     * @return JsonResponse
+     */
+    public function acceptOfferAction($date, $dish, $profile)
+    {
+        $meal = $this->getMealRepository()->findOneByDateAndDish($date, $dish);
+        $dateTime = $meal->getDateTime();
+        $counter = $this->countMeals($dateTime)-1;
+
+        $translator = new Translator('en_EN');
+        $translator->addLoader('array', new ArrayLoader());
+
+        if (!$this->getDoorman()->isOfferAvailable($meal)) {
+            return new JsonResponse(null, 403);
+        }
+
+        if (!$this->getUser()) {
+            return $this->ajaxSessionExpiredRedirect();
+        }
+
+        if (!$this->getDoorman()->isUserAllowedToSwap($meal)) {
+            return new JsonResponse(null, 403);
+        }
+
+        if (!$meal) {
+            return new JsonResponse(null, 404);
+        }
+
+        if (null === $profile) {
+            $profile = $this->getProfile();
+        } else {
+            if ($this->getProfile()->getUsername() === $profile || $this->getDoorman()->isKitchenStaff() === true) {
+                $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
+                $profile = $profileRepository->find($profile);
+            } else {
+                return new JsonResponse(null, 403);
+            }
+        }
+
+        if ($meal->getDish()->getParent()) {
+            $takenOffer = $meal->getDish()->getParent()->getTitleEn() . " " . $meal->getDish()->getTitleEn();
+        } else {
+            $takenOffer = $meal->getDish()->getTitleEn();
+        }
+
+        $participants = $this->getDoctrine()->getRepository('MealzMealBundle:Participant');
+        $offeredMeal = $participants->findByOffer($meal->getId());
+        $participant = $offeredMeal[0];
+
+        $to = $participant->getProfile()->getUsername() . "@aoe.com";
+        $subject = "Your offered food has been taken";
+        $header = "From: AOE Meals Chef Bot <noreply@aoe-meals.com";
+        $firstname = $participant->getProfile()->getFirstname();
+
+        $message = "Hi, " . $firstname . ", I'd just like to inform you that the " . $takenOffer . " you offered has just been taken by someone.
+        No further action is required on your side. Cheers, Your Chef Bot.";
+        $message = wordwrap($message,70);
+
+        mail($to, $subject, $message, $header);
+
+        $participant->setProfile($profile);
+        $participant->setOfferedAt(0);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->flush();
+
+
+        $translator = new Translator('en_EN');
+        $translator->addLoader('array', new ArrayLoader());
+
+        $chefbotMessage = $translator->transChoice('{0} One "%takenOffer%" has been taken. All offers gone now.|
+        {1} One "%takenOffer%" has been taken. Still %counter% other meal being offered.|
+        [2, Inf[ One "%takenOffer%" has been taken. Still %counter% other meals being offered.',
+            $counter, array(
+                '%counter%' => $counter,
+                '%takenOffer%' => $takenOffer)
+        );
+
+        //$this->slack($chefbotMessage);
+
+        $ajaxResponse = new JsonResponse();
+        $ajaxResponse->setData(
+            array(
+                'participantsCount' => $meal->getParticipants()->count(),
+                'url' => $this->generateUrl(
+                    'MealzMealBundle_Participant_swap',
+                    array(
+                        'participant' => $participant->getId(),
+                    )
+                ),
+                'actionText' => $this->get('translator')->trans('added', array(), 'action'),
+            )
+        );
+
+        return $ajaxResponse;
+
     }
 
     /**
@@ -177,7 +286,7 @@ class MealController extends BaseController
                 $mealDateTime = $mealRepository->find($meals[0])->getDateTime()->format('Y-m-d');
 
                 $profile = $invitationWrapper->getProfile();
-                $profileId = $profile->getFirstName().$profile->getName().$mealDateTime;
+                $profileId = $profile->getFirstName() . $profile->getName() . $mealDateTime;
                 // Try to load already existing profile entity.
                 $loadedProfile = $this->getDoctrine()->getRepository('MealzUserBundle:Profile')->find($profileId);
 

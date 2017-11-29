@@ -71,7 +71,7 @@ class MealControllerTest extends AbstractControllerTestCase
 
         // go through provided data and test functionality
         foreach ($dataProvider as $dataRow) {
-            // Call controller action
+            // Call controller actionxxxx
             $slug = $dataRow[1]->getDish()->getSlug();
             $this->client->request('GET', "/menu/$dataRow[0]/$slug/join/$username");
 
@@ -168,10 +168,10 @@ class MealControllerTest extends AbstractControllerTestCase
                 $this->assertTrue($enrollmentStatus);
 
                 return;
+            } else {
+                $this->assertFalse($enrollmentStatus);
             }
         }
-
-        $this->assertFalse($enrollmentStatus);
     }
 
     /**
@@ -190,7 +190,6 @@ class MealControllerTest extends AbstractControllerTestCase
             ['Max05:'.$time, 'Mustermann05'.$time, 'Test Comapany05'.$time, true, true],
         ];
     }
-
 
     /**     * Gets the next available meal.
      *

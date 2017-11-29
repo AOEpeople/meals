@@ -79,6 +79,18 @@ MealzMealBundle_Participant_delete:
     pattern:  /menu/meal/{participant}/delete
     defaults: { _controller: "MealzMealBundle:Participant:delete" }
 
+MealzMealBundle_Participant_swap:
+    pattern: /menu/meal/{participant}/swap
+    defaults: { _controller: "MealzMealBundle:Participant:swap" }
+
+MealzMealBundle_Participant_unswap:
+    pattern: /menu/meal/{participant}/unswap
+    defaults: { _controller: "MealzMealBundle:Participant:unswap" }
+
+MealzMealBundle_Meal_acceptOffer:
+    pattern: /menu/{date}/{dish}/acceptOffer/{profile}
+    defaults: { _controller: "MealzMealBundle:Meal:acceptOffer", profile: null }
+
 #MealzMealBundle_Participation_confirm_index:
 #    pattern:  /menu/meal/confirmation
 #    defaults: { _controller: "MealzMealBundle:ParticipationConfirmation:index" }

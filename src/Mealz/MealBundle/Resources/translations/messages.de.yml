@@ -25,3 +25,8 @@ error:
     variation_required: Bitte wähle eine Variation aus!
 participation:
   successful: Essensbuchung erfolgreich!
+notification:
+  confirm_swap: Leider ist es schon zu spät, um dein Essen zu stornieren. Du hast aber die Möglichkeit, es mit jemandem zu tauschen.
+tooltip:
+  offered_meal: Jemand anderes kann jetzt dein Essen übernehmen.
+  available_meal: 1 Essen im Angebot.

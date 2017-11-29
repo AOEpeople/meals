@@ -2,6 +2,7 @@
 
 namespace Mealz\MealBundle\Tests\Controller;
 
+use Mealz\MealBundle\Controller\ParticipantController;
 use Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
 use Mealz\MealBundle\DataFixtures\ORM\LoadDays;
 use Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
@@ -9,6 +10,7 @@ use Mealz\MealBundle\DataFixtures\ORM\LoadDishVariations;
 use Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
 use Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
 use Mealz\MealBundle\Entity\Participant;
+use Mealz\MealBundle\Entity\ParticipantRepository;
 use Mealz\MealBundle\Entity\Week;
 use Mealz\MealBundle\Entity\WeekRepository;
 use Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
@@ -91,6 +93,41 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         if (($this->getUserProfile($user->getUsername()) instanceof Profile) === false) {
             $this->fail('Test user not found.');
         }
+    }
+
+    /**
+     * @test
+     */
+    public function swapActionTest()
+    {
+        $this->client->request('GET', '/');
+        $this->assertTrue($this->client->getResponse()->isSuccessful());
+
+        $meals = $this->getDoctrine()->getRepository('MealzMealBundle:Meal')->findAll();
+        foreach ($meals as $meal) {
+            $time = new \DateTime;
+            if ($meal->getDay()->getLockParticipationDateTime() < $time && $meal->getDateTime() > $time) {
+                $participant = new Participant();
+                $participant->setMeal($meal);
+                $participant->setProfile('alice');
+
+                $id = $participant->getId();
+                $this->client->request('GET', "/menu/meal/$id/swap");
+
+                // Verification
+                $participants = $this->getDoctrine()->getRepository('MealzMealBundle:Participant');
+                $pendingParticipant = $participants->find($participant->getId());
+
+                if($pendingParticipant->getOfferedAt() !== null) {
+                    $this->assertTrue(true, 'getOffered was changed');
+                } else {
+                    $this->assertTrue(false, 'getOffered was not changed');
+                }
+            }
+        }
+
+
+
     }
 
     /**

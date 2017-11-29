@@ -46,7 +46,7 @@ class Link {
     public function linkMeal(Meal $meal, $action = NULL, $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH) {
         $action = $action ?: 'show';
         if (!is_null($meal->getDish()) && $meal->getDish() instanceof Dish) {
-            if ($action === 'show' || $action === 'join' || $action === 'join_someone') {
+            if ($action === 'show' || $action === 'join' || $action === 'join_someone' || $action === 'acceptOffer') {
                 return $this->router->generate('MealzMealBundle_Meal_' . $action, array(
                     'date' => $meal->getDateTime()->format('Y-m-d'),
                     'dish' => $meal->getDish()->getSlug(),
@@ -71,7 +71,7 @@ class Link {
 
 	public function linkParticipant(Participant $participant, $action = NULL, $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH) {
 		$action = $action ?: 'edit';
-		if($action === 'edit' || $action === 'delete' || $action === 'confirm' ) {
+		if($action === 'edit' || $action === 'delete' || $action === 'confirm' || $action === 'swap' || $action === 'unswap') {
 			return $this->router->generate('MealzMealBundle_Participant_' . $action, array('participant' => $participant->getId()), $referenceType);
 		} else {
 			throw new \InvalidArgumentException(sprintf(

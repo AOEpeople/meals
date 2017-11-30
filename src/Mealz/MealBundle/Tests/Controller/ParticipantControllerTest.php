@@ -100,13 +100,18 @@ class ParticipantControllerTest extends AbstractControllerTestCase
      * Tests the swap action (offering a meal) in the participant controller.
      * First case is a participant offering a meal, that is allowed to be swapped.
      * Next case is an user trying to offer an outdated meal.
-     * Third case is an user trying to offer a meal without participating.
-     * TODO for Raza: Implement case 2 and 3.
+     * Third case is an user trying to offer a meal without participating. (Does this test make any sense?)
+     * TODO for Raza: Implement case 3 and maybe clean this code up.
      * @test
      */
     public function swapActionTest()
     {
-        $meal = $this->getFirstLockedMeal();
+        $meals = $this->getDoctrine()->getRepository('MealzMealBundle:Meal')->findAll();
+
+        /**
+         * First case
+         */
+        $meal = $this->getFirstLockedMeal($meals);
         $participant = $this->createEmployeeProfileAndParticipation('firstName', 'lastName' . time(), $meal);
         $id = $participant->getId();
 
@@ -116,11 +121,33 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         // Verification by checking the database
         $offeringParticipant = $this->getDoctrine()->getRepository('MealzMealBundle:Participant')->find($id);
         $this->assertTrue($offeringParticipant->getOfferedAt() !== $time);
+
+        /**
+         * Second case
+         */
+        $meal = $this->getFirstOutdatedMeal($meals);
+        $participant = $this->createEmployeeProfileAndParticipation('firstName', 'lastName' . time(), $meal);
+        $id = $participant->getId();
+
+        $this->client->request('GET', '/menu/meal/' . $id . '/swap');
+        $notOfferingParticipant = $this->getDoctrine()->getRepository('MealzMealBundle:Participant')->find($id);
+        $this->assertTrue($notOfferingParticipant->getOfferedAt() === 0);
     }
 
-    public function getFirstLockedMeal()
+    public function getFirstOutdatedMeal(array $meals)
     {
-        $meals = $this->getDoctrine()->getRepository('MealzMealBundle:Meal')->findAll();
+        $dateTime = new \DateTime;
+
+        foreach ($meals as $meal) {
+            if ($meal->getDay()->getDateTime < $dateTime) {
+                return $meal;
+                break;
+            }
+        }
+    }
+
+    public function getFirstLockedMeal(array $meals)
+    {
         $dateTime = new \DateTime;
 
         foreach ($meals as $meal) {

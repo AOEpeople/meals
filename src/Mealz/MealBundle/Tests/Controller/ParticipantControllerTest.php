@@ -98,6 +98,10 @@ class ParticipantControllerTest extends AbstractControllerTestCase
 
     /**
      * Tests the swap action (offering a meal) in the participant controller.
+     * First case is a participant offering a meal, that is allowed to be swapped.
+     * Next case is an user trying to offer an outdated meal.
+     * Third case is an user trying to offer a meal without participating.
+     * TODO for Raza: Implement case 2 and 3.
      * @test
      */
     public function swapActionTest()

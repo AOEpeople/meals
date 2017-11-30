@@ -13,9 +13,7 @@ class ParticipantController extends BaseController {
     public function todayAction() {
         $this->checkUser();
 
-        $profile = $this->getUser()->getProfile();
-
-        $participants = $this->getParticipantRepository()->getParticipantsOnDays(new \DateTime(), new \DateTime(), $profile);
+        $participants = $this->getParticipantRepository()->getParticipantsOnDays(new \DateTime(), new \DateTime());
 
         $data = array();
         foreach ($participants as $participant) {
@@ -39,10 +37,10 @@ class ParticipantController extends BaseController {
                         'title_de' => $dish->getTitleDe(),
                         'price' => $dish->getPrice(),
                         'category' => array(
-                            'id' => $category->getId(),
-                            'slug' => $category->getSlug(),
-                            'title_en' => $category->getTitleEn(),
-                            'title_de' => $category->getTitleDe(),
+                            'id' => $category !== NULL ? $category->getId() : NULL,
+                            'slug' => $category !== NULL ? $category->getSlug() : NULL,
+                            'title_en' => $category !== NULL ? $category->getTitleEn() : NULL,
+                            'title_de' => $category !== NULL ? $category->getTitleDe() : NULL,
                         )
                     )
                 )

@@ -11,7 +11,7 @@ class WeekController extends BaseController {
             'load_participants' => false
         ));
 
-        $next = $this->getWeekRepository()->getNextWeek(array(
+        $next = $this->getWeekRepository()->getNextWeek(null, array(
             'load_participants' => false
         ));
 
@@ -62,10 +62,10 @@ class WeekController extends BaseController {
                         'title_de' => $dish->getTitleDe(),
                         'price' => $dish->getPrice(),
                         'category' => array(
-                            'id' => $category->getId(),
-                            'slug' => $category->getSlug(),
-                            'title_en' => $category->getTitleEn(),
-                            'title_de' => $category->getTitleDe(),
+                            'id' => $category !== NULL ? $category->getId() : NULL,
+                            'slug' => $category !== NULL ? $category->getSlug() : NULL,
+                            'title_en' => $category !== NULL ? $category->getTitleEn() : NULL,
+                            'title_de' => $category !== NULL ? $category->getTitleDe() : NULL,
                         )
                     )
                 ));

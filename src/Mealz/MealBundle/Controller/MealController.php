@@ -232,7 +232,7 @@ class MealController extends BaseController
                 '%takenOffer%' => $takenOffer)
         );
 
-        //$this->slack($chefbotMessage);
+        $this->slack($chefbotMessage);
 
         $ajaxResponse = new JsonResponse();
         $ajaxResponse->setData(

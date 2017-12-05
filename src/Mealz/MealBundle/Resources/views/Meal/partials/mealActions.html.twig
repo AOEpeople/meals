@@ -1,6 +1,6 @@
 {% set available = false %}
 
-{% if day.enabled and (day.lockParticipationDateTime | date('U') > 'now' | date('U')) %}
+{% if day.enabled and (day.lockParticipationDateTime | date('U') > 'now' | date('U')) and meal.isParticipationLimitReached == false %}
     {% set available = true %}
 {% endif %}
 

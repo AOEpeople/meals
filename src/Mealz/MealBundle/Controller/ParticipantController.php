@@ -126,7 +126,7 @@ class ParticipantController extends BaseController
                 '%dish%' => $dish)
         );
 
-        //$this->slack($chefbotMessage);
+        $this->slack($chefbotMessage);
 
         // Return JsonResponse
         $ajaxResponse = new JsonResponse();

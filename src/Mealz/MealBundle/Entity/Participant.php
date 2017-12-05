@@ -62,7 +62,7 @@ class Participant
 	protected $costAbsorbed = false;
 
     /**
-     * @ORM\Column(type="integer", nullable=false, name="offered_at")
+     * @ORM\Column(type="integer", nullable=false, name="offeredAt")
      * @var integer
      */
     protected $offeredAt = 0;

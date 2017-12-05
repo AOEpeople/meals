@@ -17,6 +17,7 @@ class Version20170308114012ParticipationLimit extends AbstractMigration
     {
         $this->validateDatabase();
         $this->addSql('ALTER TABLE meal ADD participation_limit INT NOT NULL');
+        $this->addSql('ALTER TABLE participant ADD offeredAt INT NOT NULL');
     }
 
     /**
@@ -26,5 +27,6 @@ class Version20170308114012ParticipationLimit extends AbstractMigration
     {
         $this->validateDatabase();
         $this->addSql('ALTER TABLE meal DROP participation_limit');
+        $this->addSql('ALTER TABLE participant DROP offeredAt');
     }
 }

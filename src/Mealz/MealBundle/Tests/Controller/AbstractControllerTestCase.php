@@ -87,6 +87,26 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         $this->client->getCookieJar()->set($cookie);
     }
 
+    public function loginAsDefaultClient($userProfile) {
+
+        //test for non-admin users
+        $this->createDefaultClient();
+
+        // Open home page and log in as user
+        $crawler = $this->client->request('GET', '/');
+        $this->assertTrue($this->client->getResponse()->isSuccessful(), 'Requesting homepage failed');
+
+        $loginForm = $crawler->filterXPath('//form[@name="login-form"]')
+            ->form(
+                [
+                    '_username' => $userProfile->getUsername(),
+                    '_password' => $userProfile->getUsername()
+                ]
+            );
+        $this->client->followRedirects();
+        $this->client->submit($loginForm);
+    }
+
     /**
      * Gets a user profile.
      *

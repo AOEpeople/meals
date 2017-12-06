@@ -46,9 +46,9 @@ class LoadDishes extends AbstractFixture implements OrderedFixtureInterface
         $this->loadCategories();
 
         $this->addDish('Braaaaaiiinnnzzzzzz', 'Braaaaaiiinnnzzzzzz DE');
-        $this->addDish('Tasty Worms', 'Tasty Worms DE');
+        $this->addDish('Tasty-Worms', 'Tasty Worms DE');
         $this->addDish('Innards', 'Innards DE');
-        $this->addDish('Fish (so juicy sweat)', 'Fish (so juicy sweat) DE');
+        $this->addDish('Fish-so-juicy-sweat', 'Fish (so juicy sweat) DE');
         $this->addDish('Limbs', 'Limbs DE');
 
         $this->objectManager->flush();

@@ -98,40 +98,48 @@ class ParticipantControllerTest extends AbstractControllerTestCase
 
     /**
      * Tests the swap action (offering a meal) in the participant controller.
-     * First case is a participant offering a meal, that is allowed to be swapped.
-     * Next case is an user trying to offer an outdated meal.
-     * Third case is an user trying to offer a meal without participating. (Does this test make any sense?)
-     * TODO for Raza: Implement case 3 and maybe clean this code up.
+     * First case: A participant offers his meal on time.
+     * Second case: A participant takes his offer back.
+     * Third case: A participant tries to offer his outdated meal.
      * @test
      */
     public function swapActionTest()
     {
+        $userProfile = $this->getUserProfile();
+
+        //find locked meal and make user a participant of that
         $meals = $this->getDoctrine()->getRepository('MealzMealBundle:Meal')->findAll();
+        $lockedMeal = $this->getFirstLockedMeal($meals);
+        $lockedParticipant = $this->createParticipant($userProfile, $lockedMeal);
 
-        /**
-         * First case
-         */
-        $meal = $this->getFirstLockedMeal($meals);
-        $participant = $this->createEmployeeProfileAndParticipation('firstName', 'lastName' . time(), $meal);
-        $id = $participant->getId();
+        //find outdated meal and make user a participant of that
+        $outdatedMeal = $this->getFirstOutdatedMeal($meals);
+        $outdatedParticipant = $this->createParticipant($userProfile, $outdatedMeal);
 
-        $time = time();
+        $this->loginAsDefaultClient($userProfile);
+
+        //first case: user swapping a locked meal
+        $id = $lockedParticipant->getId();
         $this->client->request('GET', '/menu/meal/' . $id . '/swap');
 
-        // Verification by checking the database
+        //verification by checking the database
         $offeringParticipant = $this->getDoctrine()->getRepository('MealzMealBundle:Participant')->find($id);
-        $this->assertTrue($offeringParticipant->getOfferedAt() !== $time);
+        $this->assertTrue($offeringParticipant->getOfferedAt() != 0, 'offeredAt value not changed');
 
-        /**
-         * Second case
-         */
-        $meal = $this->getFirstOutdatedMeal($meals);
-        $participant = $this->createEmployeeProfileAndParticipation('firstName', 'lastName' . time(), $meal);
-        $id = $participant->getId();
+        //second case: user taking his offer back
+        $this->client->request('GET', '/menu/meal/' . $id . '/unswap');
 
+        //verification by checking the database
+        $unswappingParticipant = $this->getDoctrine()->getRepository('MealzMealBundle:Participant')->find($id);
+        $this->assertTrue($unswappingParticipant->getOfferedAt() === 0, 'unswapping not working');
+
+        //third case: user swapping an outdated meal
+        $id = $outdatedParticipant->getId();
         $this->client->request('GET', '/menu/meal/' . $id . '/swap');
+
+        //verification by checking the database
         $notOfferingParticipant = $this->getDoctrine()->getRepository('MealzMealBundle:Participant')->find($id);
-        $this->assertTrue($notOfferingParticipant->getOfferedAt() === 0);
+        $this->assertTrue($notOfferingParticipant->getOfferedAt() === 0, 'user still offered meal');
     }
 
     public function getFirstOutdatedMeal(array $meals)
@@ -146,7 +154,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         }
     }
 
-    public function getFirstLockedMeal(array $meals)
+    function getFirstLockedMeal(array $meals)
     {
         $dateTime = new \DateTime;
 

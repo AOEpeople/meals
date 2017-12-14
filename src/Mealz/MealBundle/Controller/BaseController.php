@@ -117,7 +117,7 @@ abstract class BaseController extends Controller
         $data = "payload=" . json_encode(array(
                 "text" => $message,
                 "username" => 'Chef',
-                "icon_url" => 'https://www2.pic-upload.de/img/33991182/chef_bot.png', //TODO for Raza: adapt url to image's path on live server
+                "icon_url" => 'https://meals.aoe.com/img/chef_bot.png',
             ));
 
         $ch = curl_init("https://messages.aoe.com/hooks/f9nb161oppro8nin15zhtrgqqh");

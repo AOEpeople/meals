@@ -4,7 +4,7 @@
     {% set available = true %}
 {% endif %}
 
-<div class="wrapper-meal-actions wrapper-variation-vertical-center">
+<div class="wrapper-meal-actions wrapper-variation-vertical-center" data-id={{ meal.id }}>
     <div id="participants" class="participants">
         <span id="participants-count" class="participants-count
         {% if available %}

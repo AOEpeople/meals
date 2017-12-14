@@ -72,6 +72,10 @@ $(document).ready(function () {
         mealz.initToggleParticipation();
     }
 
+    if($('.meals-list').length > 0) {
+        mealz.initUpdateSwappableMeals();
+    }
+
 
     /**
      * if meals is limited it should be displayed

@@ -61,6 +61,11 @@ class Doorman
         return ($this->isToggleParticipationAllowed($meal->getDateTime()) && $this->hasAccessTo(self::AT_MEAL_PARTICIPATION, ['meal' => $meal]));
     }
 
+    /**
+     * @param Meal $meal
+     * @param Participant|null $user
+     * @return bool
+     */
     public function isOfferAvailable(Meal $meal, Participant $user = null)
     {
         /*

@@ -91,6 +91,10 @@ MealzMealBundle_Meal_acceptOffer:
     pattern: /menu/{date}/{dish}/acceptOffer/{profile}
     defaults: { _controller: "MealzMealBundle:Meal:acceptOffer", profile: null }
 
+MealzMealBundle_Meal_getSwappableMeals:
+    pattern: /menu/meal/getSwappableMeals
+    defaults: { _controller: "MealzMealBundle:Meal:getSwappableMeals" }
+
 #MealzMealBundle_Participation_confirm_index:
 #    pattern:  /menu/meal/confirmation
 #    defaults: { _controller: "MealzMealBundle:ParticipationConfirmation:index" }

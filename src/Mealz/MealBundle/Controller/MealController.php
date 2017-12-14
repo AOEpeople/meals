@@ -194,7 +194,7 @@ class MealController extends BaseController
         }
 
         if ($meal->getDish()->getParent()) {
-            $takenOffer = $meal->getDish()->getParent()->getTitleEn() . " " . $meal->getDish()->getTitleEn();
+            $takenOffer = $meal->getDish()->getParent()->getTitleEn() . ' ' . $meal->getDish()->getTitleEn();
         } else {
             $takenOffer = $meal->getDish()->getTitleEn();
         }
@@ -203,13 +203,13 @@ class MealController extends BaseController
         $offeredMeal = $participants->findByOffer($meal->getId());
         $participant = $offeredMeal[0];
 
-        $to = $participant->getProfile()->getUsername() . "@aoe.com";
-        $subject = "Your offered food has been taken";
-        $header = "From: AOE Meals Chef Bot <noreply@aoe-meals.com";
+        $to = $participant->getProfile()->getUsername() . '@aoe.com';
+        $subject = 'Your offered food has been taken';
+        $header = 'From: AOE Meals Chef Bot <noreply-meals@aoe.com';
         $firstname = $participant->getProfile()->getFirstname();
 
-        $message = "Hi, " . $firstname . ", I'd just like to inform you that the " . $takenOffer . " you offered has just been taken by someone.
-        No further action is required on your side. Cheers, Your Chef Bot.";
+        $message = 'Hi, ' . $firstname . ', I\'d just like to inform you that the ' . $takenOffer . ' you offered has just been taken by someone.
+        No further action is required on your side. Cheers, Your Chef Bot.';
         $message = wordwrap($message,70);
 
         mail($to, $subject, $message, $header);
@@ -250,6 +250,30 @@ class MealController extends BaseController
 
         return $ajaxResponse;
 
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    public function getSwappableMealsAction() {
+        $mealsArray = array();
+        $dayRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Day');
+        $todayAndTomorrow = $dayRepository->getTodayAndTomorrow();
+
+        foreach ($todayAndTomorrow as $day) {
+            $meals = $this->getMealRepository()->findBy(['day' => $day->getId()]);
+
+            foreach ($meals as $meal) {
+                $mealsArray[$meal->getId()] = array($this->getDoorman()->isOfferAvailable($meal) && $this->getDoorman()->isUserAllowedToSwap($meal),
+                    date_format($meal->getDateTime(), 'Y-m-d'), $meal->getDish()->getSlug());
+            }
+        }
+
+        $ajaxResponse = new JsonResponse();
+        $ajaxResponse->setData(
+            $mealsArray
+        );
+        return $ajaxResponse;
     }
 
     /**

@@ -264,8 +264,10 @@ class MealController extends BaseController
             $meals = $this->getMealRepository()->findBy(['day' => $day->getId()]);
 
             foreach ($meals as $meal) {
-                $mealsArray[$meal->getId()] = array($this->getDoorman()->isOfferAvailable($meal) && $this->getDoorman()->isUserAllowedToSwap($meal),
-                    date_format($meal->getDateTime(), 'Y-m-d'), $meal->getDish()->getSlug());
+                if ($this->getDoorman()->isUserAllowedToSwap($meal)) {
+                    $mealsArray[$meal->getId()] = array($this->getDoorman()->isOfferAvailable($meal),
+                        date_format($meal->getDateTime(), 'Y-m-d'), $meal->getDish()->getSlug());
+                }
             }
         }
 

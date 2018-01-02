@@ -68,6 +68,10 @@ class Doorman
      */
     public function isOfferAvailable(Meal $meal, Participant $user = null)
     {
+        if(!$this->securityContext->getToken()->getUser()->getProfile() instanceof Profile) {
+            return FALSE;
+        }
+
         /*
          * If user's getOffered != 0, return FALSE.
          */
@@ -76,7 +80,7 @@ class Doorman
 
         if ($user != null) {
             if ($user->getOfferedAt() != 0) {
-                $availableMeal = FALSE;
+                return FALSE;
             }
         } else {
             foreach ($participants as $participant) {

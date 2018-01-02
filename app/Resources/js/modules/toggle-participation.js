@@ -70,6 +70,8 @@ function swap($checkbox) {
             $checkboxClass = 'participation-checkbox unswap-action';
             editCountAndCheckbox(data, $checkbox, $countClass, $checkboxClass);
             $tooltiptext.toggleClass('active');
+
+
         },
         error: function (xhr) {
             alert('JavaScript fail!');
@@ -88,6 +90,9 @@ function unswap($checkbox) {
             $checkboxClass = 'participation-checkbox swap-action';
             editCountAndCheckbox(data, $checkbox, $countClass, $checkboxClass);
             $tooltiptext.toggleClass('active');
+
+            //workaround
+            location.reload();
         },
         error: function (xhr) {
             console.log(xhr.status + ': ' + xhr.statusText);
@@ -101,10 +106,10 @@ function acceptOffer($checkbox) {
         url: url,
         dataType: 'json',
         success: function (data) {
+            that.applyCheckboxClasses($checkbox);
             $countClass = 'offer-available';
             $checkboxClass = 'participation-checkbox swap-action';
             editCountAndCheckbox(data, $checkbox, $countClass, $checkboxClass);
-            that.applyCheckboxClasses($checkbox);
             $tooltiptextAvailableMeal.toggleClass('active');
         },
         error: function (xhr) {

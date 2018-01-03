@@ -72,8 +72,9 @@ function swap($checkbox) {
 
             if ($('.language-switch').find('span').text() === 'de') {
                 $tooltiptext.text('Jemand anderes kann jetzt dein Essen übernehmen.');
-            } else
-                $tooltiptext.text('Someone else can take your meal now.')
+            } else {
+                $tooltiptext.text('Someone else can take your meal now.');
+            }
             },
         error: function (xhr) {
             console.log(xhr.status + ': ' + xhr.statusText);
@@ -91,9 +92,6 @@ function unswap($checkbox) {
             $checkboxClass = 'participation-checkbox swap-action';
             editCountAndCheckbox(data, $checkbox, $countClass, $checkboxClass);
             $tooltiptext.toggleClass('active');
-
-            //workaround
-            location.reload();
         },
         error: function (xhr) {
             console.log(xhr.status + ': ' + xhr.statusText);

@@ -9,11 +9,16 @@ function updateSwappableMeals() {
             var mealWrapper = $("[data-id=" + mealId + "]");
             userCheckbox = mealWrapper.find('.checkbox-wrapper');
             participationCheckbox = mealWrapper.find('.participation-checkbox');
+            tooltiptext = mealWrapper.find('.tooltiptext');
 
             //new offer available and not checkbox not checked yet
             if (value[0] === true && userCheckbox.attr('class') !== 'checkbox-wrapper checked') {
-                //activate tooltip
-                mealWrapper.find('.tooltiptext').attr('class', 'tooltiptext active');
+                //activate tooltip and adapt it's text to the chosen language
+                tooltiptext.attr('class', 'tooltiptext active');
+                if ($('.language-switch').find('span').text() === 'de') {
+                    tooltiptext.text('1 Essen im Angebot.');
+                } else
+                    tooltiptext.text('There is one offered dish available.');
                 //enable checkbox wrapper
                 mealWrapper.find('.checkbox-wrapper.disabled').attr('class', 'checkbox-wrapper');
                 //enable checkbox

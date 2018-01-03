@@ -323,54 +323,44 @@
       background: $color-green;
     }
   }
-  .tooltiptext {
-    visibility: hidden;
-    width: 120px;
-    background-color: #555;
-    color: #fff;
-    text-align: center;
-    padding: 5px 0;
-    border-radius: 6px;
 
-    /* Position the tooltip text */
+  .tooltiptext {
     position: absolute;
-    z-index: 1;
     bottom: 125%;
     left: 50%;
+    z-index: 1;
+    visibility: hidden;
+    width: 120px;
     margin-left: -60px;
-
-    /* Fade in tooltip */
+    padding: 5px 0;
+    border-radius: 6px;
+    color: $color-white;
+    background-color: $color-base;
     opacity: 0;
+    text-align: center;
     transition: opacity 1s;
 
   }
 
   .tooltiptext::after {
-    content: "";
     position: absolute;
     top: 100%;
     left: 50%;
     margin-left: -5px;
     border-width: 5px;
     border-style: solid;
-    border-color: #555 transparent transparent transparent;
+    border-color: $color-base transparent transparent;
+    content: '';
   }
 
-  /* Show the tooltip text when you mouse over the tooltip container */
-  .participants-count.offer-available:hover .tooltiptext {
-    &.active {
-      visibility: visible;
-      opacity: 1;
-    }
-  }
-
-  /* Show the tooltip text when you mouse over the tooltip container */
+  .participants-count.offer-available:hover,
   .participants-count.participation-pending:hover .tooltiptext {
     &.active {
       visibility: visible;
       opacity: 1;
     }
   }
+
 }
 
 .meal-guest {

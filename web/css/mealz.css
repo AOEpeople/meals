@@ -2522,7 +2522,7 @@ header {
   .fancybox .button:visited {
     color: #fff; }
 
-.confirmSwapbox {
+.confirm-swapbox {
   display: none;
   max-width: 400px;
   color: #fff;
@@ -2530,13 +2530,13 @@ header {
   font-size: 24px;
   font-family: "Helvetica-Bold", "Myriad Bold", "Arial", sans-serif;
   line-height: 30px; }
-  .confirmSwapbox p {
+  .confirm-swapbox p {
     margin-bottom: 20px; }
-  .confirmSwapbox .button {
+  .confirm-swapbox .button {
     position: relative;
     width: 170px;
     text-align: center; }
-  .confirmSwapbox .button:visited {
+  .confirm-swapbox .button:visited {
     color: #fff; }
 
 .profile-list {

@@ -13,7 +13,7 @@ function updateSwappableMeals() {
             //new offer available and not checkbox not checked yet
             if (value[0] === true && userCheckbox.attr('class') !== 'checkbox-wrapper checked') {
                 //activate tooltip
-                mealWrapper.find('.tooltiptext-availableMeal').attr('class', 'tooltiptext-availableMeal active');
+                mealWrapper.find('.tooltiptext').attr('class', 'tooltiptext active');
                 //enable checkbox wrapper
                 mealWrapper.find('.checkbox-wrapper.disabled').attr('class', 'checkbox-wrapper');
                 //enable checkbox
@@ -31,7 +31,7 @@ function updateSwappableMeals() {
                 //make participants counter grey
                 mealWrapper.find("#participants-count").attr('class', 'participants-count');
                 //deactivate tooltip
-                mealWrapper.find('.tooltiptext-availableMeal active').attr('class', 'tooltiptext-availableMeal');
+                mealWrapper.find('.tooltiptext active').attr('class', 'tooltiptext');
                 //disable the checkbox if it's a unswap-checkbox (this means this user was swapping and the offer was taken)
                 mealWrapper.find('.participation-checkbox.unswap-action').parent().attr('class', 'checkbox-wrapper disabled');
 

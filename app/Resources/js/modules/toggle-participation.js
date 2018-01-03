@@ -2,7 +2,6 @@ Mealz.prototype.toggleParticipation = function ($checkbox) {
     that = this;
     $participantsCount = $checkbox.closest('.wrapper-meal-actions').find('.participants-count');
     $tooltiptext = $checkbox.closest('.wrapper-meal-actions').find('.tooltiptext');
-    $tooltiptextAvailableMeal = $checkbox.closest('.wrapper-meal-actions').find('.tooltiptext-availableMeal');
     url = $checkbox.attr('value');
     d = new Date();
 
@@ -71,10 +70,12 @@ function swap($checkbox) {
             editCountAndCheckbox(data, $checkbox, $countClass, $checkboxClass);
             $tooltiptext.toggleClass('active');
 
-
-        },
+            if ($('.language-switch').find('span').text() === 'de') {
+                $tooltiptext.text('Jemand anderes kann jetzt dein Essen übernehmen.');
+            } else
+                $tooltiptext.text('Someone else can take your meal now.')
+            },
         error: function (xhr) {
-            alert('JavaScript fail!');
             console.log(xhr.status + ': ' + xhr.statusText);
         }
     });
@@ -110,7 +111,7 @@ function acceptOffer($checkbox) {
             $countClass = 'offer-available';
             $checkboxClass = 'participation-checkbox swap-action';
             editCountAndCheckbox(data, $checkbox, $countClass, $checkboxClass);
-            $tooltiptextAvailableMeal.toggleClass('active');
+            $tooltiptext.toggleClass('active');
         },
         error: function (xhr) {
             console.log(xhr.status + ': ' + xhr.statusText);

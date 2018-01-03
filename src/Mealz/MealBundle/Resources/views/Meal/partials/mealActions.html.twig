@@ -11,10 +11,10 @@
             participation-allowed
         {% endif %}
         {% if is_granted('ROLE_USER') %}
-        {% set participant = meal.getParticipant(app.user.profile) %}
-        {% if is_offer_available(meal, participant) and is_allowed_to_swap(meal) %}
-            offer-available
-        {% endif %}
+            {% set participant = meal.getParticipant(app.user.profile) %}
+            {% if is_offer_available(meal, participant) and is_allowed_to_swap(meal) %}
+                offer-available
+            {% endif %}
         {% endif %}
         {% if meal.isParticipationLimitReached %}
             participation-limit-reached
@@ -24,7 +24,7 @@
             {% if participant %}
                     {% if is_participation_pending(participant) and is_allowed_to_swap(meal) %}
                     participation-pending
-                {% endif %}
+                    {% endif %}
             {% endif %}
         {% endif %}">
 
@@ -39,17 +39,18 @@
             {% if is_granted('ROLE_USER') %}
                 {% if participant %}
                     {% if is_participation_pending(participant) %}
-                        active
+                        active"> {{ "tooltip.offered_meal"|trans({}, "messages") }}
+                    {% else %}
+                        ">
                     {% endif %}
+                {% elseif is_offer_available(meal, participant) %}
+                    active"> {{ "tooltip.available_meal"|trans({}, "messages") }}
+                {% else %}
+                    ">
                 {% endif %}
-            {% endif %}">{{ "tooltip.offered_meal"|trans({}, "messages") }}</span>
-
-            <span class="tooltiptext-availableMeal
-            {% if is_granted('ROLE_USER') %}
-                {% if is_offer_available(meal, participant) %}
-                    active
-                {% endif %}
-            {% endif %}">{{ "tooltip.available_meal"|trans({}, "messages") }}</span>
+            {% else %}
+                ">
+            {% endif %}</span>
 
         </span>
 

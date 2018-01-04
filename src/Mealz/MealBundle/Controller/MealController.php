@@ -161,7 +161,7 @@ class MealController extends BaseController
     {
         $meal = $this->getMealRepository()->findOneByDateAndDish($date, $dish);
         $dateTime = $meal->getDateTime();
-        $counter = $this->countMeals($dateTime)-1;
+        $counter = $this->countMeals($dateTime) - 1;
 
         $translator = new Translator('en_EN');
         $translator->addLoader('array', new ArrayLoader());
@@ -210,7 +210,7 @@ class MealController extends BaseController
 
         $message = 'Hi, ' . $firstname . ', I\'d just like to inform you that the ' . $takenOffer . ' you offered has just been taken by someone.
         No further action is required on your side. Cheers, Your Chef Bot.';
-        $message = wordwrap($message,70);
+        $message = wordwrap($message, 70);
 
         mail($to, $subject, $message, $header);
 
@@ -255,7 +255,8 @@ class MealController extends BaseController
     /**
      * @return JsonResponse
      */
-    public function getSwappableMealsAction() {
+    public function getSwappableMealsAction()
+    {
         $mealsArray = array();
         $dayRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Day');
         $todayAndTomorrow = $dayRepository->getTodayAndTomorrow();

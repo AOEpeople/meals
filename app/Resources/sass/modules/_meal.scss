@@ -353,7 +353,7 @@
     content: '';
   }
 
-  .participants-count.offer-available:hover,
+  .participants-count.offer-available:hover .tooltiptext,
   .participants-count.participation-pending:hover .tooltiptext {
     &.active {
       visibility: visible;

@@ -5,9 +5,12 @@ Mealz.prototype.toggleParticipation = function ($checkbox) {
     url = $checkbox.attr('value');
     d = new Date();
 
+
+
     if ($checkbox.attr('class') === "participation-checkbox swap-action") {
         confirmSwap($checkbox);
     } else if ($checkbox.attr('class') === "participation-checkbox unswap-action") {
+        $checkbox.attr('class', 'in progress');
         unswap($checkbox);
     } else if ($checkbox.attr('class') === "participation-checkbox acceptOffer-action") {
         acceptOffer($checkbox);
@@ -25,13 +28,14 @@ function editCountAndCheckbox(data, $checkbox, $countClass, $checkboxClass) {
     $participantsCount.fadeOut('fast', function () {
         $participantsCount.find('#participantsCount').text(data.participantsCount);
 
+        if ($checkboxClass !== undefined) {
+            $checkbox.attr('class', $checkboxClass);
+        }
+
         if ($countClass !== undefined) {
             $participantsCount.toggleClass($countClass);
         }
 
-        if ($checkboxClass !== undefined) {
-            $checkbox.attr('class', $checkboxClass);
-        }
 
         $participantsCount.fadeIn('fast');
     });
@@ -70,12 +74,14 @@ function swap($checkbox) {
             editCountAndCheckbox(data, $checkbox, $countClass, $checkboxClass);
             $tooltiptext.toggleClass('active');
 
+            $checkbox.attr('participantid', data.id);
+
             if ($('.language-switch').find('span').text() === 'de') {
                 $tooltiptext.text('Jemand anderes kann jetzt dein Essen übernehmen.');
             } else {
                 $tooltiptext.text('Someone else can take your meal now.');
             }
-            },
+        },
         error: function (xhr) {
             console.log(xhr.status + ': ' + xhr.statusText);
         }

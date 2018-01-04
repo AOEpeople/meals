@@ -80,7 +80,7 @@ class Doorman
 
         if ($user != null) {
             if ($user->getOfferedAt() != 0) {
-                return FALSE;
+                $availableMeal = FALSE;
             }
         } else {
             foreach ($participants as $participant) {

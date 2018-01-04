@@ -7,6 +7,7 @@ use Mealz\MealBundle\Entity\Participant;
 use Mealz\MealBundle\Entity\Week;
 use Mealz\MealBundle\Entity\WeekRepository;
 use Mealz\MealBundle\Service\Doorman;
+use Mealz\MealBundle\Tests\Controller\ParticipantControllerTest;
 use Mealz\UserBundle\Entity\Profile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -134,9 +135,23 @@ class ParticipantController extends BaseController
             'url' => $this->generateUrl('MealzMealBundle_Participant_unswap', array(
                 'participant' => $participant->getId(),
             )),
-            'actionText' => $this->get('translator')->trans('offered', array(), 'action'),
+            'id' => $participant->getId(),
+            'actionText' => $this->get('translator')->trans('swapped', array(), 'action'),
         ));
 
+        return $ajaxResponse;
+    }
+
+    /**
+     * @param Participant $participant
+     * @return JsonResponse
+     */
+    public function isParticipationPendingAction(Participant $participant)
+    {
+        $ajaxResponse = new JsonResponse();
+        $ajaxResponse->setData(
+            $participant->isPending()
+        );
         return $ajaxResponse;
     }
 

@@ -95,6 +95,11 @@ MealzMealBundle_Meal_getSwappableMeals:
     pattern: /menu/meal/getSwappableMeals
     defaults: { _controller: "MealzMealBundle:Meal:getSwappableMeals" }
 
+MealzMealBundle_Meal_isParticipationPending:
+    pattern: /menu/meal/{participant}/isParticipationPending
+    defaults: { _controller: "MealzMealBundle:Participant:isParticipationPending" }
+
+
 #MealzMealBundle_Participation_confirm_index:
 #    pattern:  /menu/meal/confirmation
 #    defaults: { _controller: "MealzMealBundle:ParticipationConfirmation:index" }

@@ -199,7 +199,9 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         /** @var \Mealz\MealBundle\Entity\MealRepository $mealRepository */
         $mealRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
         $criteria = Criteria::create();
-        $meals = $mealRepository->matching($criteria->where(Criteria::expr()->lte('dateTime', new \DateTime())));
+        $dateTime = new \DateTime();
+        $dateTime->add(new \DateInterval('PT1H'));
+        $meals = $mealRepository->matching($criteria->where(Criteria::expr()->lte('dateTime', $dateTime)));
 
         if (1 > $meals->count()) {
             $this->fail('No test meal found.');

@@ -18,6 +18,7 @@
 </head>
 
 {% set activeRoute = app.request.attributes.get('_route') %}
+{% set userAgent = app.request.headers.get('User-Agent') %}
 
 <body class="{{ activeRoute matches '/MealzMealBundle_Meal_guest.*/' ? 'guest-wrapper' }}">
 	{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
@@ -26,6 +27,7 @@
 
 	{% include 'MealzTemplateBundle::partials/balanceNotification.html.twig' %}
 
+	{% if userAgent matches '/Mobile/' == false %}
 	<header>
 		<div class="container">
 			<a class="logo" href="{{ path('MealzMealBundle_home') }}">
@@ -44,6 +46,7 @@
 			</div>
 		</div>
 	</header>
+	{% endif %}
 
 	{% if wrapperClass is not defined %}
 		{% set wrapperClass = '' %}

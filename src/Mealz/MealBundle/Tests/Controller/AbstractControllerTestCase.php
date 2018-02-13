@@ -192,15 +192,14 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
     /**
      * Helper method to get the recent meal.
      *
+     * @param \DateTime $dateTime
      * @return Meal
      */
-    protected function getRecentMeal()
+    protected function getRecentMeal($dateTime = new \DateTime())
     {
         /** @var \Mealz\MealBundle\Entity\MealRepository $mealRepository */
         $mealRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
         $criteria = Criteria::create();
-        $dateTime = new \DateTime();
-        $dateTime->add(new \DateInterval('PT1H'));
         $meals = $mealRepository->matching($criteria->where(Criteria::expr()->lte('dateTime', $dateTime)));
 
         if (1 > $meals->count()) {

@@ -53,7 +53,9 @@ class ParticipantControllerTest extends AbstractControllerTestCase
 
         $time = time();
 
-        self::$meal = $this->getRecentMeal();
+        $dateTime = new \DateTime();
+        $dateTime->add(new \DateInterval('PT1H'));
+        self::$meal = $this->getRecentMeal($dateTime);
 
         // Create profile for participant
         self::$participantFirstName = 'Max';

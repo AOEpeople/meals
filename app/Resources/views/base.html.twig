@@ -19,15 +19,19 @@
 
 {% set activeRoute = app.request.attributes.get('_route') %}
 {% set userAgent = app.request.headers.get('User-Agent') %}
+{% set isWebview = false %}
+{% if (userAgent matches '/Mobile/' == true) and (userAgent matches '#Chrome/#' == true) %}
+        {% set isWebview = true %}
+{% endif %}
 
-<body class="{{ activeRoute matches '/MealzMealBundle_Meal_guest.*/' ? 'guest-wrapper' }}">
+<body class="{{ activeRoute matches '/MealzMealBundle_Meal_guest.*/' ? 'guest-wrapper' }} {{ isWebview == true ? 'webview' }}">
 	{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
 		{% set balance = wallet.getBalance(app.user.profile) %}
 	{% endif %}
 
 	{% include 'MealzTemplateBundle::partials/balanceNotification.html.twig' %}
 
-	{% if userAgent matches '/Mobile/' == false %}
+	{% if isWebview == false %}
 	<header>
 		<div class="container">
 			<a class="logo" href="{{ path('MealzMealBundle_home') }}">

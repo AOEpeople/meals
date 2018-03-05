@@ -20,7 +20,7 @@
 {% set activeRoute = app.request.attributes.get('_route') %}
 {% set userAgent = app.request.headers.get('User-Agent') %}
 {% set isWebview = false %}
-{% if (userAgent matches '/Mobile/' == true) and (userAgent matches '#Chrome/#' == true) %}
+{% if userAgent matches '/MealsApp Android WebView/' == true %}
         {% set isWebview = true %}
 {% endif %}
 

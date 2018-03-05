@@ -9,6 +9,10 @@ body {
   font-size: 14px;
   font-family: $font-light;
   -webkit-font-smoothing: antialiased;
+
+  &.webview {
+    padding-top: 25px;
+  }
 }
 
 $a-tags: 'a, a:active, a:hover, a:visited';

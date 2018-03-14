@@ -3,7 +3,6 @@
 namespace Mealz\MealBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
 
 /**
  * the Meal Repository
@@ -80,4 +79,45 @@ class MealRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    /**
+     * Returns all meals that are going to take place in the future.
+     * @return array
+     */
+    public function getFutureMeals(){
+        $qb = $this->createQueryBuilder('m');
+        $qb->where('m.dateTime >= :now');
+        $qb->setParameter(':now', new \DateTime('now'));
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Returns all meals that are going to took place in the past.
+     * @return array
+     */
+    public function getOutdatedMeals(){
+        $qb = $this->createQueryBuilder('m');
+        $qb->where('m.dateTime <= :now');
+        $qb->setParameter(':now', new \DateTime('now'));
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Returns all meals that are going to take place in the future but aren't available to join/leave anymore.
+     * @return array
+     */
+    public function getLockedMeals() {
+        $em = $this->getEntityManager();
+        $qb = $em->createQueryBuilder();
+        $qb->select('m')
+            ->from('MealzMealBundle:Meal', 'm')
+            ->innerJoin('m.day','d')
+            ->where('d.lockParticipationDateTime < :now')
+            ->andWhere('m.dateTime > :now')
+            ->orderBy('m.dateTime', 'DESC');
+
+        $qb->setParameter(':now', new \DateTime('now'));
+        return $qb->getQuery()->getResult();
+    }
+
 }

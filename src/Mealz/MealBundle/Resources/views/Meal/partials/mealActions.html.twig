@@ -6,13 +6,13 @@
 
 <div class="wrapper-meal-actions wrapper-variation-vertical-center" data-id={{ meal.id }}>
     <div id="participants" class="participants">
-        <span id="participants-count" class="participants-count
+        <span class="participants-count
         {% if available %}
             participation-allowed
         {% endif %}
         {% if is_granted('ROLE_USER') %}
             {% set participant = meal.getParticipant(app.user.profile) %}
-            {% if is_offer_available(meal, participant) and is_allowed_to_swap(meal) %}
+            {% if is_offer_available(meal, participant) and is_allowed_to_swap(meal) and participant == false %}
                 offer-available
             {% endif %}
         {% endif %}
@@ -28,23 +28,25 @@
             {% endif %}
         {% endif %}">
 
-            <span id="participantsCount">
+            <span>
                 {{ meal.participants | length }}
             </span>
             <label>
                 {{ meal.participationLimit ? ' / ' ~ meal.participationLimit }}
             </label>
 
+
+
             <span class="tooltiptext
             {% if is_granted('ROLE_USER') %}
                 {% if participant %}
                     {% if is_participation_pending(participant) %}
-                        active"> {{ "tooltip.offered_meal"|trans({}, "messages") }}
+                        active" id="tooltip_offered"> {{ "tooltip.offered_meal"|trans({}, "messages") }}
                     {% else %}
                         ">
                     {% endif %}
                 {% elseif is_offer_available(meal, participant) %}
-                    active"> {{ "tooltip.available_meal"|trans({}, "messages") }}
+                    active" id="tooltip_available"> {{ "tooltip.available_meal"|trans({}, "messages") }}
                 {% else %}
                     ">
                 {% endif %}
@@ -74,14 +76,14 @@
                 {% if is_allowed_to_join(meal) %}
                     {{ MealzCheckbox.create(link(meal, 'join') ,'participation-checkbox join-action') }}
                 {% elseif is_offer_available(meal) and is_allowed_to_swap(meal) %}
-                    {{ MealzCheckbox.create(link(meal, 'acceptOffer') , 'participation-checkbox acceptOffer-action') }}
+                    {{ MealzCheckbox.create(link(meal, 'accept_offer') , 'participation-checkbox acceptOffer-action') }}
                 {% else %}
                     {{ MealzCheckbox.create('' ,'participation-checkbox', {'disabled': 'disabled'}) }}
                 {% endif %}
             {% endif %}
 
         {% else %}
-            {{ MealzCheckbox.create('' ,'participation-checkbox', {'disabled': 'disabled'}) }}
+            {{ MealzCheckbox.create('' ,'participation-checkbox no-user', {'disabled': 'disabled'}) }}
         {% endif %}
     </div>
 </div>

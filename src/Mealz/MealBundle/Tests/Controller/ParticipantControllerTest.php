@@ -2,8 +2,6 @@
 
 namespace Mealz\MealBundle\Tests\Controller;
 
-use Doctrine\ORM\EntityManager;
-use Mealz\MealBundle\Controller\ParticipantController;
 use Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
 use Mealz\MealBundle\DataFixtures\ORM\LoadDays;
 use Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
@@ -11,7 +9,6 @@ use Mealz\MealBundle\DataFixtures\ORM\LoadDishVariations;
 use Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
 use Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
 use Mealz\MealBundle\Entity\Participant;
-use Mealz\MealBundle\Entity\ParticipantRepository;
 use Mealz\MealBundle\Entity\Week;
 use Mealz\MealBundle\Entity\WeekRepository;
 use Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
@@ -99,71 +96,71 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     /**
      * Tests the swap action (offering a meal) in the participant controller.
      * First case: A participant offers his meal on time.
-     * Second case: A participant takes his offer back.
-     * Third case: A participant tries to offer his outdated meal.
      * @test
      */
-    public function swapActionTest()
+    public function offeringOneMeal()
     {
         $userProfile = $this->getUserProfile();
 
         //find locked meal and make user a participant of that
-        $meals = $this->getDoctrine()->getRepository('MealzMealBundle:Meal')->findAll();
-        $lockedMeal = $this->getFirstLockedMeal($meals);
+        $lockedMealsArray = $this->getDoctrine()->getRepository('MealzMealBundle:Meal')->getLockedMeals();
+        $lockedMeal = $lockedMealsArray[0];
         $lockedParticipant = $this->createParticipant($userProfile, $lockedMeal);
 
-        //find outdated meal and make user a participant of that
-        $outdatedMeal = $this->getFirstOutdatedMeal($meals);
-        $outdatedParticipant = $this->createParticipant($userProfile, $outdatedMeal);
+        $this->persistAndFlushAll([$lockedParticipant]);
 
         $this->loginAsDefaultClient($userProfile);
-
-        //first case: user swapping a locked meal
         $id = $lockedParticipant->getId();
         $this->client->request('GET', '/menu/meal/' . $id . '/swap');
 
         //verification by checking the database
         $offeringParticipant = $this->getDoctrine()->getRepository('MealzMealBundle:Participant')->find($id);
-        $this->assertTrue($offeringParticipant->getOfferedAt() != 0, 'offeredAt value not changed');
+        $this->assertTrue($offeringParticipant->getOfferedAt() !== 0, 'offeredAt value not changed');
+    }
 
-        //second case: user taking his offer back
+    /**
+     * Second case: A participant takes his offer back.
+     * @test
+     */
+    public function takingOfferBack()
+    {
+        $userProfile = $this->getUserProfile();
+        $lockedMealsArray = $this->getDoctrine()->getRepository('MealzMealBundle:Meal')->getLockedMeals();
+        $lockedMeal = $lockedMealsArray[0];
+        $lockedParticipant = $this->createParticipant($userProfile, $lockedMeal);
+        $lockedParticipant->setOfferedAt(time());
+        $id = $lockedParticipant->getId();
+        $this->persistAndFlushAll([$lockedParticipant]);
+
+        $this->loginAsDefaultClient($userProfile);
         $this->client->request('GET', '/menu/meal/' . $id . '/unswap');
 
         //verification by checking the database
         $unswappingParticipant = $this->getDoctrine()->getRepository('MealzMealBundle:Participant')->find($id);
         $this->assertTrue($unswappingParticipant->getOfferedAt() === 0, 'unswapping not working');
+    }
 
-        //third case: user swapping an outdated meal
+    /**
+     * Third case: A participant tries to offer his outdated meal.
+     * @test
+     */
+    public function offeringOutdatedMeal()
+    {
+        $userProfile = $this->getUserProfile();
+
+        $outdatedMealsArray = $this->getDoctrine()->getRepository('MealzMealBundle:Meal')->getOutdatedMeals();
+        $outdatedMeal = $outdatedMealsArray[0];
+        $outdatedParticipant = $this->createParticipant($userProfile, $outdatedMeal);
         $id = $outdatedParticipant->getId();
+
+        $this->persistAndFlushAll([$outdatedParticipant]);
+
+        $this->loginAsDefaultClient($userProfile);
         $this->client->request('GET', '/menu/meal/' . $id . '/swap');
 
         //verification by checking the database
         $notOfferingParticipant = $this->getDoctrine()->getRepository('MealzMealBundle:Participant')->find($id);
         $this->assertTrue($notOfferingParticipant->getOfferedAt() === 0, 'user still offered meal');
-    }
-
-    public function getFirstOutdatedMeal(array $meals)
-    {
-        $dateTime = new \DateTime;
-
-        foreach ($meals as $meal) {
-            if ($meal->getDay()->getDateTime < $dateTime) {
-                return $meal;
-                break;
-            }
-        }
-    }
-
-    function getFirstLockedMeal(array $meals)
-    {
-        $dateTime = new \DateTime;
-
-        foreach ($meals as $meal) {
-            if ($meal->getDay()->getLockParticipationDateTime() < $dateTime && $meal->getDateTime() > $dateTime) {
-                return $meal;
-                break;
-            }
-        }
     }
 
     /**
@@ -268,7 +265,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $template = '<span><b>%s</b><br>%s</span>';
         $html = sprintf($template, $firstVariationParent->getTitle(), $firstVariation->getTitle());
         // preg_replace() deletes every whitespace after the first
-        $this->assertEquals($html, preg_replace("~\\s{2,}~", "", trim($crawler->html())));
+        $this->assertEquals($html, preg_replace('~\\s{2,}~', '', trim($crawler->html())));
     }
 
     /**

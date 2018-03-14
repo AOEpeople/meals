@@ -106,3 +106,32 @@ monolog:
         #chromephp:
         #    type:   chromephp
         #    level:  info
+
+creatissimo_mattermost:
+    webhook: https://messages.aoe.com/hooks/f9nb161oppro8nin15zhtrgqqh
+    appname: "Meals"
+    username: "Chef"
+    channel:
+    iconUrl:
+    environments:
+        devbox:
+            appname: "Mealz"
+            username: "DevChef"
+            enable: true
+            terminate:
+                enable: false
+                exclude_exitcode: [0]
+            exception:
+                enable: false
+                trace: false
+
+        production:
+            enable: true
+            terminate:
+                enable: false
+                exclude_exitcode: [0]
+            exception:
+                enable: false
+                trace: false
+                exclude_class:
+                    - Symfony\Component\HttpKernel\Exception\NotFoundHttpException

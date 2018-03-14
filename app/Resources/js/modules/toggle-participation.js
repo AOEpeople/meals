@@ -1,48 +1,47 @@
 Mealz.prototype.toggleParticipation = function ($checkbox) {
-    that = this;
+    if ($checkbox === undefined) {
+        console.log('Error: No checkbox found');
+        return;
+    }
+    var that = this;
+    var url = $checkbox.attr('value');
     $participantsCount = $checkbox.closest('.wrapper-meal-actions').find('.participants-count');
-    $tooltiptext = $checkbox.closest('.wrapper-meal-actions').find('.tooltiptext');
-    url = $checkbox.attr('value');
-    d = new Date();
+    $tooltip = $checkbox.closest('.wrapper-meal-actions').find('.tooltiptext');
 
+    var swapCheckbox = 'participation-checkbox swap-action';
+    var unswapCheckbox = 'participation-checkbox unswap-action';
+    var acceptOfferCheckbox = 'participation-checkbox acceptOffer-action';
 
-
-    if ($checkbox.attr('class') === "participation-checkbox swap-action") {
+    if ($checkbox.hasClass(swapCheckbox)) {
         confirmSwap($checkbox);
-    } else if ($checkbox.attr('class') === "participation-checkbox unswap-action") {
-        $checkbox.attr('class', 'in progress');
-        unswap($checkbox);
-    } else if ($checkbox.attr('class') === "participation-checkbox acceptOffer-action") {
-        acceptOffer($checkbox);
+    } else if ($checkbox.hasClass(unswapCheckbox)) {
+        $checkbox.attr('class', 'progressing');
+        unswap($checkbox, url, swapCheckbox);
+    } else if ($checkbox.hasClass(acceptOfferCheckbox)) {
+        acceptOffer($checkbox, url, that, swapCheckbox);
     } else {
-        toggle($checkbox);
+        toggle($checkbox, url, that);
     }
 };
 
-function editCountAndCheckbox(data, $checkbox, $countClass, $checkboxClass) {
-    if (data.redirect) {
-        window.location.replace(data.redirect);
-    }
-
+function editCountAndCheckbox(data, $checkbox, countClass, checkboxClass) {
     $checkbox.attr('value', data.url);
     $participantsCount.fadeOut('fast', function () {
-        $participantsCount.find('#participantsCount').text(data.participantsCount);
+        $participantsCount.find('span').text(data.participantsCount);
 
-        if ($checkboxClass !== undefined) {
-            $checkbox.attr('class', $checkboxClass);
+        if (checkboxClass !== undefined) {
+            $checkbox.attr('class', checkboxClass);
         }
 
-        if ($countClass !== undefined) {
-            $participantsCount.toggleClass($countClass);
+        if (countClass !== undefined) {
+            $participantsCount.toggleClass(countClass);
         }
-
 
         $participantsCount.fadeIn('fast');
     });
 }
 
-
-function toggle($checkbox) {
+function toggle($checkbox, url, that) {
     $.ajax({
         method: 'GET',
         url: url,
@@ -58,29 +57,35 @@ function toggle($checkbox) {
 }
 
 function confirmSwap($checkbox) {
-    $checkboxValue = $checkbox.attr('value');
-    $link = $checkbox;
-    Mealz.prototype.enableConfirmSwapbox();
+    // make checkbox public for reference in twig template
+    swapCheckbox = $checkbox;
+    Mealz.prototype.enableConfirmSwapbox($checkbox.attr('value'));
 }
 
-function swap($checkbox) {
+function swap($checkbox, url) {
     $.ajax({
         method: 'GET',
         url: url,
         dataType: 'json',
         success: function (data) {
-            $countClass = 'participation-pending';
-            $checkboxClass = 'participation-checkbox unswap-action';
-            editCountAndCheckbox(data, $checkbox, $countClass, $checkboxClass);
-            $tooltiptext.toggleClass('active');
+            var countClass = 'participation-pending';
+            var checkboxClass = 'participation-checkbox unswap-action';
+            editCountAndCheckbox(data, $checkbox, countClass, checkboxClass);
+
+            $tooltip.toggleClass('active');
+
+            //get text for tooltip
+            $.getJSON('/labels.json')
+                .done(function (data) {
+                    if ($('.language-switch').find('span').text() === 'de') {
+                        $tooltip.text(data[1]['tooltip_DE'][0]['offered']);
+                    } else {
+                        $tooltip.text(data[0]['tooltip_EN'][0]['offered']);
+                    }
+                });
 
             $checkbox.attr('participantid', data.id);
 
-            if ($('.language-switch').find('span').text() === 'de') {
-                $tooltiptext.text('Jemand anderes kann jetzt dein Essen übernehmen.');
-            } else {
-                $tooltiptext.text('Someone else can take your meal now.');
-            }
         },
         error: function (xhr) {
             console.log(xhr.status + ': ' + xhr.statusText);
@@ -88,16 +93,15 @@ function swap($checkbox) {
     });
 }
 
-function unswap($checkbox) {
+function unswap($checkbox, url, swapCheckbox) {
     $.ajax({
         method: 'GET',
         url: url,
         dataType: 'json',
         success: function (data) {
-            $countClass = 'participation-pending';
-            $checkboxClass = 'participation-checkbox swap-action';
-            editCountAndCheckbox(data, $checkbox, $countClass, $checkboxClass);
-            $tooltiptext.toggleClass('active');
+            var countClass = 'participation-pending';
+            editCountAndCheckbox(data, $checkbox, countClass, swapCheckbox);
+            $tooltip.toggleClass('active');
         },
         error: function (xhr) {
             console.log(xhr.status + ': ' + xhr.statusText);
@@ -105,17 +109,16 @@ function unswap($checkbox) {
     });
 }
 
-function acceptOffer($checkbox) {
+function acceptOffer($checkbox, url, that, swapCheckbox) {
     $.ajax({
         method: 'GET',
         url: url,
         dataType: 'json',
         success: function (data) {
             that.applyCheckboxClasses($checkbox);
-            $countClass = 'offer-available';
-            $checkboxClass = 'participation-checkbox swap-action';
-            editCountAndCheckbox(data, $checkbox, $countClass, $checkboxClass);
-            $tooltiptext.toggleClass('active');
+            var countClass = 'offer-available';
+            editCountAndCheckbox(data, $checkbox, countClass, swapCheckbox);
+            $tooltip.toggleClass('active');
         },
         error: function (xhr) {
             console.log(xhr.status + ': ' + xhr.statusText);

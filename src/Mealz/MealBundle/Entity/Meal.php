@@ -186,6 +186,7 @@ class Meal
                 return $participant;
             }
         }
+
         return null;
     }
 

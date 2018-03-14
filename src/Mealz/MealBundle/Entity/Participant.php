@@ -190,7 +190,7 @@ class Participant
 	}
 
     /**
-     * @param /DateTime $offeredAt
+     * @param $offeredAt
      */
     public function setOfferedAt($offeredAt)
     {
@@ -209,7 +209,7 @@ class Participant
      * @return bool
      */
     public function isPending(){
-        return ($this->getOfferedAt() !== 0 || $this->getOfferedAt() != NULL);
+        return ($this->getOfferedAt() !== 0);
     }
 
 	function __toString()

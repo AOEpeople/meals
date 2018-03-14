@@ -16,10 +16,10 @@
     position: relative;
     width: 170px;
     text-align: center;
-  }
 
-  .button:visited {
-    color: $color-white;
+    &:visited {
+      color: $color-white;
+    }
   }
 
 }

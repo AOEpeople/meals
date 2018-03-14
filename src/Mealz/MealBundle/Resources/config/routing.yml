@@ -85,15 +85,15 @@ MealzMealBundle_Participant_swap:
 
 MealzMealBundle_Participant_unswap:
     pattern: /menu/meal/{participant}/unswap
-    defaults: { _controller: "MealzMealBundle:Participant:unswap" }
+    defaults: { _controller: "MealzMealBundle:Participant:swap" }
 
-MealzMealBundle_Meal_acceptOffer:
-    pattern: /menu/{date}/{dish}/acceptOffer/{profile}
-    defaults: { _controller: "MealzMealBundle:Meal:acceptOffer", profile: null }
+MealzMealBundle_Meal_accept_offer:
+    pattern: /menu/{date}/{dish}/accept-offer/{profile}
+    defaults: { _controller: "MealzMealBundle:Meal:join", profile: null }
 
-MealzMealBundle_Meal_getSwappableMeals:
-    pattern: /menu/meal/getSwappableMeals
-    defaults: { _controller: "MealzMealBundle:Meal:getSwappableMeals" }
+MealzMealBundle_Meal_updateOffers:
+    pattern: /menu/meal/update-offers
+    defaults: { _controller: "MealzMealBundle:Meal:updateOffers" }
 
 MealzMealBundle_Meal_isParticipationPending:
     pattern: /menu/meal/{participant}/isParticipationPending

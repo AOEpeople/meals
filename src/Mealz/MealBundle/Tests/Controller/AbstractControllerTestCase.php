@@ -87,6 +87,9 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         $this->client->getCookieJar()->set($cookie);
     }
 
+    /**
+     * @param $userProfile
+     */
     public function loginAsDefaultClient($userProfile) {
 
         //test for non-admin users

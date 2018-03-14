@@ -4,27 +4,27 @@
 
 {% block body %}
 
-<div class="weeks">
-	{% for week in weeks %}
-		{% include 'MealzMealBundle:Meal/partials:week.html.twig' %}
-	{% endfor %}
-</div>
+    <div class="weeks">
+        {% for week in weeks %}
+            {% include 'MealzMealBundle:Meal/partials:week.html.twig' %}
+        {% endfor %}
+    </div>
 
     {% include 'MealzMealBundle:Participant/partials:confirmSwapbox.html.twig' %}
 
-<ul class="legend">
-	<li>{{ 'content.participation.legend.available' | trans({}, 'general') }}</li>
-	<li>{{ 'content.participation.legend.unavailable' | trans({}, 'general') }}</li>
-    {% if is_granted('ROLE_KITCHEN_STAFF') %}
-		<li class="print">
-			{{ MealzButton.link(
-			path('MealzMealBundle_Print_participations'),
-			'headings.week.participations'|trans({},'general'),
-			'',
-			'transparent',
-			'glyphicon-print') }}
-		</li>
-	{% endif %}
-</ul>
+    <ul class="legend">
+        <li>{{ 'content.participation.legend.available' | trans({}, 'general') }}</li>
+        <li>{{ 'content.participation.legend.unavailable' | trans({}, 'general') }}</li>
+        {% if is_granted('ROLE_KITCHEN_STAFF') %}
+            <li class="print">
+                {{ MealzButton.link(
+                    path('MealzMealBundle_Print_participations'),
+                    'headings.week.participations'|trans({},'general'),
+                    '',
+                    'transparent',
+                    'glyphicon-print') }}
+            </li>
+        {% endif %}
+    </ul>
 
 {% endblock %}

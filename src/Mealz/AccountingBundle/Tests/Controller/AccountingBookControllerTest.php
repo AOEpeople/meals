@@ -2,7 +2,6 @@
 
 namespace Mealz\AccountinglBundle\Tests\Controller;
 
-use Mealz\MealBundle\DataFixtures\ORM\LoadParticipants;
 use Mealz\UserBundle\Entity\Profile;
 use Symfony\Component\DomCrawler\Crawler;
 use Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;

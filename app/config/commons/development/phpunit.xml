@@ -8,7 +8,7 @@
   convertErrorsToExceptions   = "true"
   convertNoticesToExceptions  = "true"
   convertWarningsToExceptions = "true"
-  processIsolation            = "false"
+  processIsolation            = "true"
   stopOnFailure               = "false"
   syntaxCheck                 = "false"
   bootstrap                   = "../../../bootstrap.php.cache" >
@@ -29,7 +29,7 @@
 
     <php>
         <server name="KERNEL_DIR" value="../../../../app/" />
-        <server name="SYMFONY_ENV" value="devbox" />
+        <server name="SYMFONY_ENV" value="test" />
     </php>
 
     <filter>

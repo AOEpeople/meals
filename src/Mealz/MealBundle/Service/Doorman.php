@@ -3,7 +3,6 @@
 
 namespace Mealz\MealBundle\Service;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Mealz\MealBundle\Entity\Meal;
 use Mealz\MealBundle\Entity\Participant;
 use Mealz\UserBundle\Entity\Profile;
@@ -39,6 +38,11 @@ class Doorman
      */
     protected $securityContext;
 
+    /**
+     * Doorman constructor.
+     * @param SecurityContext $securityContext
+     * @param string $lockToggleParticipationAt
+     */
     public function __construct(SecurityContext $securityContext, $lockToggleParticipationAt = '-1 day 12:00')
     {
         $this->securityContext = $securityContext;
@@ -52,10 +56,10 @@ class Doorman
      */
     public function isUserAllowedToJoin(Meal $meal)
     {
-        if (!$this->securityContext->getToken()->getUser()->getProfile() instanceof Profile || $meal->isParticipationLimitReached()) {
+        if ($this->securityContext->getToken()->getUser()->getProfile() instanceof Profile === false || $meal->isParticipationLimitReached() === true) {
             return FALSE;
         }
-        if ($this->isKitchenStaff() || $this->hasAccessTo(self::AT_MEAL_PARTICIPATION, ['meal' => $meal])) {
+        if ($this->isKitchenStaff() === true || $this->hasAccessTo(self::AT_MEAL_PARTICIPATION, ['meal' => $meal]) === true) {
             return TRUE;
         }
         return ($this->isToggleParticipationAllowed($meal->getDateTime()) && $this->hasAccessTo(self::AT_MEAL_PARTICIPATION, ['meal' => $meal]));
@@ -63,33 +67,20 @@ class Doorman
 
     /**
      * @param Meal $meal
-     * @param Participant|null $user
      * @return bool
      */
-    public function isOfferAvailable(Meal $meal, Participant $user = null)
+    public function isOfferAvailable(Meal $meal)
     {
-        if(!$this->securityContext->getToken()->getUser()->getProfile() instanceof Profile) {
-            return FALSE;
+        if ($this->securityContext->getToken()->getUser()->getProfile() instanceof Profile === false) {
+            return false;
         }
 
-        /*
-         * If user's getOffered != 0, return FALSE.
-         */
         $participants = $meal->getParticipants();
-        $availableMeal = FALSE;
-
-        if ($user != null) {
-            if ($user->getOfferedAt() != 0) {
-                $availableMeal = FALSE;
-            }
-        } else {
-            foreach ($participants as $participant) {
-                if ($participant->isPending()) {
-                    $availableMeal = TRUE;
-                }
+        foreach ($participants as $participant) {
+            if ($participant->isPending() === true) {
+                return true;
             }
         }
-        return $availableMeal;
     }
 
     /**
@@ -107,13 +98,18 @@ class Doorman
      */
     public function isUserAllowedToSwap(Meal $meal)
     {
-        if ($meal->getDay()->getLockParticipationDateTime()->getTimestamp() < $this->now && $this->now < $meal->getDateTime()->getTimestamp()) {
+        if ($this->isKitchenStaff() === false && $meal->getDay()->getLockParticipationDateTime()->getTimestamp() < $this->now && $this->now < $meal->getDateTime()->getTimestamp()) {
             return TRUE;
         } else {
             return FALSE;
         }
     }
 
+    /**
+     * @param Meal $meal
+     * @param Participant $participant
+     * @return bool
+     */
     public function isUserAllowedToUnswap(Meal $meal, Participant $participant)
     {
         return ($this->isUserAllowedToSwap($meal) && $this->isParticipationPending($participant));
@@ -123,7 +119,8 @@ class Doorman
      * @param Participant $participant
      * @return bool
      */
-    public function isParticipationPending(Participant $participant)
+    public
+    function isParticipationPending(Participant $participant)
     {
         return $participant->getOfferedAt() !== 0;
     }
@@ -131,7 +128,8 @@ class Doorman
     /**
      * @return bool
      */
-    public function isKitchenStaff()
+    public
+    function isKitchenStaff()
     {
         return $this->securityContext->isGranted('ROLE_KITCHEN_STAFF');
     }
@@ -140,7 +138,8 @@ class Doorman
      * @param Meal $meal
      * @return bool
      */
-    public function isUserAllowedToAddGuest(Meal $meal)
+    public
+    function isUserAllowedToAddGuest(Meal $meal)
     {
         // @TODO: add a separate role for that
         return $this->isKitchenStaff() || $this->isUserAllowedToJoin($meal);
@@ -150,7 +149,8 @@ class Doorman
      * @param Meal $meal
      * @return bool
      */
-    public function isUserAllowedToRemoveGuest(Meal $meal)
+    public
+    function isUserAllowedToRemoveGuest(Meal $meal)
     {
         // @TODO: add a separate role for that
         return $this->isKitchenStaff() || $this->isUserAllowedToLeave($meal);
@@ -160,7 +160,8 @@ class Doorman
      * @param Meal $meal
      * @return bool
      */
-    public function isUserAllowedToRequestCostAbsorption(Meal $meal)
+    public
+    function isUserAllowedToRequestCostAbsorption(Meal $meal)
     {
         // @TODO: add a separate role for that
         return $this->isKitchenStaff() || $this->isUserAllowedToAddGuest($meal);
@@ -170,7 +171,8 @@ class Doorman
      * @param \DateTime $lockParticipationDateTime
      * @return bool
      */
-    public function isToggleParticipationAllowed(\DateTime $lockParticipationDateTime)
+    public
+    function isToggleParticipationAllowed(\DateTime $lockParticipationDateTime)
     {
         // is it still allowed to participate in the meal by now?
         return ($lockParticipationDateTime->getTimestamp() > $this->now);
@@ -185,14 +187,15 @@ class Doorman
      * @param array $params
      * @return bool
      */
-    private function hasAccessTo($accesstype, $params = [])
+    private
+    function hasAccessTo($accesstype, $params = [])
     {
         // admins always have access!
-        if ($this->isKitchenStaff()) {
+        if ($this->isKitchenStaff() === true) {
             return TRUE;
         }
         // if no user is logged in access is denied at all
-        if (!$this->securityContext->getToken()->getUser()->getProfile() instanceof Profile) {
+        if ($this->securityContext->getToken()->getUser()->getProfile() instanceof Profile === FALSE) {
             return FALSE;
         }
 

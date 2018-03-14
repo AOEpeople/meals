@@ -21,11 +21,17 @@
         "sensio/framework-extra-bundle": "~3.0",
         "sensio/generator-bundle": "~2.3",
         "incenteev/composer-parameter-handler": "~2.0",
-        "stof/doctrine-extensions-bundle": "~1.2.2"
+        "stof/doctrine-extensions-bundle": "~1.2.2",
+        "creatissimo/mattermost-bundle": "^1.1"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "~2.2",
-        "phpunit/phpunit": "~3.7"
+        "phpunit/phpunit": "~3.7",
+        "phpmd/phpmd": "~2.2",
+        "sebastian/phpcpd": "~2.0",
+        "phploc/phploc": "~2.0",
+        "squizlabs/php_codesniffer": "2.4.0",
+        "mayflower/php-codebrowser": "1.1.2"
     },
     "scripts": {
         "post-install-cmd": [

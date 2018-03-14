@@ -340,17 +340,16 @@
     text-align: center;
     transition: opacity 1s;
 
-  }
-
-  .tooltiptext::after {
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: $color-base transparent transparent;
-    content: '';
+    &::after {
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: $color-base transparent transparent;
+      content: '';
+    }
   }
 
   .participants-count.offer-available:hover .tooltiptext,

@@ -12,19 +12,20 @@ class Version20171205120312OfferedAt extends AbstractMigration
 {
     /**
      * @param Schema $schema
+     * @throws \Doctrine\DBAL\Schema\SchemaException
      */
     public function up(Schema $schema)
     {
-        $this->validateDatabase();
-        $this->addSql('ALTER TABLE participant ADD offeredAt INT NOT NULL');
+        $table = $schema->getTable('participant');
+        $table->addColumn('offeredAt', 'integer');
     }
 
     /**
      * @param Schema $schema
+     * @throws \Doctrine\DBAL\Schema\SchemaException
      */
     public function down(Schema $schema)
     {
-        $this->validateDatabase();
-        $this->addSql('ALTER TABLE participant DROP offeredAt');
+        $schema->getTable('participant')->dropColumn('offeredAt');
     }
 }

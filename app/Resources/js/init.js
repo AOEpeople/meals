@@ -73,7 +73,7 @@ $(document).ready(function () {
     }
 
     if($('.meals-list').length > 0) {
-        mealz.initUpdateSwappableMeals();
+        mealz.updateOffers();
     }
 
 

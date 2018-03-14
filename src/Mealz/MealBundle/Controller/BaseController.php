@@ -8,18 +8,21 @@ use Mealz\AccountingBundle\Entity\TransactionRepository;
 use Mealz\MealBundle\Entity\CategoryRepository;
 use Mealz\MealBundle\Entity\DishRepository;
 use Mealz\MealBundle\Entity\MealRepository;
+use Mealz\MealBundle\Entity\Participant;
 use Mealz\MealBundle\Entity\ParticipantRepository;
 use Mealz\MealBundle\Service\Doorman;
 use Mealz\MealBundle\Service\Link;
 use Mealz\UserBundle\Entity\Profile;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpKernel\EventListener\ValidateRequestListener;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Validator\Constraints\Date;
-use Symfony\Component\Validator\Constraints\DateTime;
-use Symfony\Component\VarDumper\VarDumper;
+use Symfony\Component\Translation\Translator;
 
+
+/**
+ * Class BaseController
+ * @package Mealz\MealBundle\Controller
+ */
 abstract class BaseController extends Controller
 {
     /**
@@ -112,57 +115,24 @@ abstract class BaseController extends Controller
         return new JsonResponse($response);
     }
 
-    public static function slack($message)
+    /**
+     * @param Participant $participant
+     * @param String $takenOffer
+     */
+    public function sendMail(Participant $participant, $takenOffer)
     {
-        $data = "payload=" . json_encode(array(
-                "text" => $message,
-                "username" => 'Chef',
-                "icon_url" => 'https://meals.aoe.com/img/chef_bot.png',
-            ));
+        $translator = new Translator('en_EN');
 
-        $ch = curl_init("https://messages.aoe.com/hooks/f9nb161oppro8nin15zhtrgqqh");
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $result = curl_exec($ch);
-        curl_close($ch);
-        return $result;
-    }
+        $to = $participant->getProfile()->getUsername() . $translator->trans('mail.domain', array(), 'messages');
+        $subject = $translator->trans('mail.subject', array(), 'messages');
+        $header = $translator->trans('mail.sender', array(), 'messages');
+        $firstname = $participant->getProfile()->getFirstname();
 
-    public function countMeals(\DateTime $dateTime)
-    {
-        $lunchDay = strtotime(date('d-m-Y', date_timestamp_get($dateTime)));
-        $lunchTime = strtotime(date('H:i:s', date_timestamp_get($dateTime)));
+        $message = $translator->trans('mail.message', array(
+            '%firstname%' => $firstname,
+            '%takenOffer%' => $takenOffer),
+            'messages');
 
-        $nowTime = strtotime(date('H:i:s', time()));
-        $nowDay = strtotime(date('d-m-Y', time()));
-
-
-        $todayMin = new \DateTime('today 00:00');
-        $todayMax = new \DateTime('today 23:59');
-        $tomorrowMin = new \DateTime('tomorrow 00:00');
-        $tomorrowMax = new \DateTime('tomorrow 23:59');
-        $i = 0;
-
-        if ($nowTime < $lunchTime and $nowDay === $lunchDay) {
-            $participants = $this->getParticipantRepository()->getParticipantsOnDays($todayMin, $todayMax);
-            foreach ($participants as $participant) {
-                if ($participant->isPending()) {
-                    $i++;
-                }
-            }
-            return $i;
-        } else {
-            $participants = $this->getParticipantRepository()->getParticipantsOnDays($tomorrowMin, $tomorrowMax);
-            foreach ($participants as $participant) {
-                if ($participant->isPending()) {
-                    $i++;
-                }
-            }
-            return $i;
-        }
-
-
-
+        mail($to, $subject, $message, $header);
     }
 }

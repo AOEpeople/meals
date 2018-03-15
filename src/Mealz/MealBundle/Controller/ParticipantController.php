@@ -11,7 +11,6 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Translation\Translator;
-use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * Class ParticipantController

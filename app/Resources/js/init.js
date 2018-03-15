@@ -72,6 +72,9 @@ $(document).ready(function () {
         mealz.initToggleParticipation();
     }
 
+    /**
+     * If there are any meals in the list, run updateOffers to check for available offers.
+     */
     if($('.meals-list').length > 0) {
         mealz.updateOffers();
     }

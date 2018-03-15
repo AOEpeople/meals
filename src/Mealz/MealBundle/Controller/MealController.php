@@ -25,7 +25,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\Translator;
-use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * Meal Controller
@@ -146,7 +145,7 @@ class MealController extends BaseController
         }
 
         // Accepting an available offer
-        if ($this->getDoorman()->isOfferAvailable($meal) && $this->getDoorman()->isUserAllowedToSwap($meal)) {
+        if ($this->getDoorman()->isOfferAvailable($meal) === true && $this->getDoorman()->isUserAllowedToSwap($meal) === true) {
             $translator = new Translator('en_EN');
             $dateTime = $meal->getDateTime();
             $counter = count($this->getParticipantRepository()->getPendingParticipants($dateTime)) - 1;
@@ -161,7 +160,7 @@ class MealController extends BaseController
             $offeredMeal = $participants->findByOffer($meal->getId());
             $participant = $offeredMeal[0];
 
-            //$this->sendMail($participant, $takenOffer);
+            $this->sendMail($participant, $takenOffer);
 
             $participant->setProfile($profile);
             $participant->setOfferedAt(0);
@@ -172,7 +171,8 @@ class MealController extends BaseController
             $chefbotMessage = $translator->transChoice($this->get('translator')->trans('mattermost.offer_taken', array(), 'messages'),
                 $counter, array(
                     '%counter%' => $counter,
-                    '%takenOffer%' => $takenOffer)
+                    '%takenOffer%' => $takenOffer
+                )
             );
 
             $mattermostService = $this->container->get('mattermost.service');

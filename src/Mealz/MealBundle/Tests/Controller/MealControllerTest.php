@@ -15,7 +15,6 @@ use Mealz\MealBundle\Entity\Participant;
 use Mealz\MealBundle\Service\Doorman;
 use Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
-use Symfony\Component\VarDumper\VarDumper;
 
 
 /**

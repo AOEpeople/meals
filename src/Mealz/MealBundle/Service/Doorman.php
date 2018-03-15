@@ -119,8 +119,7 @@ class Doorman
      * @param Participant $participant
      * @return bool
      */
-    public
-    function isParticipationPending(Participant $participant)
+    public function isParticipationPending(Participant $participant)
     {
         return $participant->getOfferedAt() !== 0;
     }
@@ -128,8 +127,7 @@ class Doorman
     /**
      * @return bool
      */
-    public
-    function isKitchenStaff()
+    public function isKitchenStaff()
     {
         return $this->securityContext->isGranted('ROLE_KITCHEN_STAFF');
     }
@@ -187,8 +185,7 @@ class Doorman
      * @param array $params
      * @return bool
      */
-    private
-    function hasAccessTo($accesstype, $params = [])
+    private function hasAccessTo($accesstype, $params = [])
     {
         // admins always have access!
         if ($this->isKitchenStaff() === true) {

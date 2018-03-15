@@ -1,6 +1,7 @@
 Mealz.prototype.updateOffers = function () {
-    if ($('.button-login').text() !== 'LOGIN')
-    window.setInterval(updateOffers, 1000);
+    if ($('.button-login').text() !== 'LOGIN') {
+        window.setInterval(updateOffers, 1000);
+    }
 };
 
 
@@ -52,9 +53,10 @@ function updateOffers() {
                 $.getJSON('/menu/meal/' + participantId + '/isParticipationPending', function (data) {
                     if (data === false) {
                         //disable checkbox
-                        $mealWrapper.find('.participation-checkbox.unswap-action').parent().attr('class', 'checkbox-wrapper disabled');
+                        $mealWrapper.find('.participation-checkbox.unswap-action')
+                            .parent().attr('class', 'checkbox-wrapper disabled')
                         //change checkbox class
-                        $mealWrapper.find('.participation-checkbox.unswap-action').removeClass('unswap-action');
+                            .removeClass('unswap-action');
                         //make participants counter grey
                         $participantsCount.fadeOut('fast')
                             .attr('class', 'participants-count')

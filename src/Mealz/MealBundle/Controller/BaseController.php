@@ -17,6 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Translation\Translator;
+use Symfony\Component\VarDumper\VarDumper;
 
 
 /**
@@ -131,7 +132,8 @@ abstract class BaseController extends Controller
         $message = $translator->trans('mail.message', array(
             '%firstname%' => $firstname,
             '%takenOffer%' => $takenOffer),
-            'messages');
+            'messages'
+        );
 
         mail($to, $subject, $message, $header);
     }

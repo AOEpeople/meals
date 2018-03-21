@@ -52,11 +52,12 @@ function updateOffers() {
                 }
                 $.getJSON('/menu/meal/' + participantId + '/isParticipationPending', function (data) {
                     if (data === false) {
-                        //disable checkbox
+
                         $mealWrapper.find('.participation-checkbox.unswap-action')
-                            .parent().attr('class', 'checkbox-wrapper disabled')
                         //change checkbox class
-                            .removeClass('unswap-action');
+                            .removeClass('unswap-action')
+                            //disable checkbox
+                            .parent().attr('class', 'checkbox-wrapper disabled');
                         //make participants counter grey
                         $participantsCount.fadeOut('fast')
                             .attr('class', 'participants-count')

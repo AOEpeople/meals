@@ -57,7 +57,9 @@ class LoadParticipants extends AbstractFixture implements OrderedFixtureInterfac
                 $participant->setCostAbsorbed(false);
 
                 if ($participant->getMeal()->getDay()->getLockParticipationDateTime() < new \DateTime) {
-                    $participant->setOfferedAt(new \DateTime);
+                    $participant->setOfferedAt(time());
+                } else {
+                    $participant->setOfferedAt(0);
                 }
 
                 $this->objectManager->persist($participant);

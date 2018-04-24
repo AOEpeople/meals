@@ -50,6 +50,7 @@ class LoadDays extends AbstractFixture implements OrderedFixtureInterface
             $day->setWeek($week);
             $day->setDateTime($startTime);
             $lockDateTime = new \DateTime($startTime->format('Y-m-d H:i:s') . ' -1 day');
+            $lockDateTime->modify('16:00');
             $day->setLockParticipationDateTime($lockDateTime);
             $this->objectManager->persist($day);
             $this->addReference('day-' . $this->counter++, $day);
@@ -61,6 +62,7 @@ class LoadDays extends AbstractFixture implements OrderedFixtureInterface
                 $time->modify('+' . $i . ' days');
                 $day->setDateTime($time);
                 $lockDateTime = new \DateTime($day->getDateTime()->format('Y-m-d H:i:s') . ' -1 day');
+                $lockDateTime->modify('16:00');
                 $day->setLockParticipationDateTime($lockDateTime);
                 $this->objectManager->persist($day);
                 $this->addReference('day-' . $this->counter++, $day);

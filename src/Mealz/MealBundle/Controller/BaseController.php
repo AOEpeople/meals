@@ -16,8 +16,6 @@ use Mealz\UserBundle\Entity\Profile;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Translation\Translator;
-use Symfony\Component\VarDumper\VarDumper;
 
 
 /**
@@ -122,7 +120,7 @@ abstract class BaseController extends Controller
      */
     public function sendMail(Participant $participant, $takenOffer)
     {
-        $translator = new Translator('en_EN');
+        $translator = $this->get('translator');
 
         $to = $participant->getProfile()->getUsername() . $translator->trans('mail.domain', array(), 'messages');
         $subject = $translator->trans('mail.subject', array(), 'messages');

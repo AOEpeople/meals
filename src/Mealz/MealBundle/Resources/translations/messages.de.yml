@@ -36,5 +36,5 @@ mattermost:
 mail:
   domain: '@aoe.com'
   subject: 'Your offered food has been taken'
-  sender: 'From: AOE Meals Chef Bot <noreply-meals@aoe.com'
+  sender: 'From: AOE Meals Chef Bot <noreply-meals@aoe.com>'
   message: "Hi, %firstname%, I would just like to inform you that the %takenOffer% you offered has just been taken by someone. No further action is required on your side. Cheers, Your Chef Bot."

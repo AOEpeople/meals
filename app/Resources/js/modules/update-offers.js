@@ -69,8 +69,8 @@ function updateOffers() {
             }
 
             //no offer available (anymore)
-            if (value[0] === false && $participantsCount.hasClass('offer-available') === true ||
-                value[0] === false && $participantsCount.hasClass('participation-allowed') === true) {
+            if (value[0] === null && $participantsCount.hasClass('offer-available') === true ||
+                value[0] === null && $participantsCount.hasClass('participation-allowed') === true) {
 
                 //make participants counter grey
                 $participantsCount.fadeOut('fast')

@@ -29,12 +29,12 @@ notification:
   confirm_swap: Unfortunately it's already too late to cancel your order, but you have the possibility to offer it to someone else.
 tooltip:
   offered_meal: Someone else can take your meal now.
-  available_meal: There is one offered dish available.
+  available_meal: There is food available.
 mattermost:
-  offered: '{0} One meal has just been offered for swapping: "%dish%". Log into your account at https://meals.aoe.com/ to get it!|{1} One meal has just been offered for swapping: "%dish%". %counter% other meal is currently offered. Log into your account at https://meals.aoe.com/ to get it!|[2, Inf[ One meal has just been offered for swapping: "%dish%". %counter% other meals are currently offered. Log into your account at https://meals.aoe.com/ to get it!'
+  offered: '{0} One meal has just been offered for swapping: "%dish%".\nLog into your account at https://meals.aoe.com/ to get it!|{1} One meal has just been offered for swapping: "%dish%". %counter% other meal is currently offered. Log into your account at https://meals.aoe.com/ to get it!|[2, Inf[ One meal has just been offered for swapping: "%dish%". %counter% other meals are currently offered. Log into your account at https://meals.aoe.com/ to get it!'
   offer_taken: '{0} One "%takenOffer%" has been taken. All offers gone now.| {1} One "%takenOffer%" has been taken. Still %counter% other meal being offered.| [2, Inf[ One "%takenOffer%" has been taken. Still %counter% other meals being offered.'
 mail:
   domain: '@aoe.com'
   subject: 'Your offered food has been taken'
   sender: 'From: AOE Meals Chef Bot <noreply-meals@aoe.com>'
-  message: "Hi, %firstname%, I would just like to inform you that the %takenOffer% you offered has just been taken by someone. No further action is required on your side. Cheers, Your Chef Bot."
+  message: 'Hi %firstname%,\nI would like to inform you that the "%takenOffer%" you offered has just been taken by someone.\nNo further action is required on your side.\nCheers, Your Chef Bot.'

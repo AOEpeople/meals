@@ -3,7 +3,7 @@
     "tooltip_EN": [
       {
         "offered": "Someone else can take your meal now.",
-        "available": "There is one offered dish available."
+        "available": "There is food available."
       }
     ]
   },
@@ -11,7 +11,7 @@
     "tooltip_DE": [
       {
         "offered": "Jemand anderes kann jetzt dein Essen übernehmen.",
-        "available": "1 Essen im Angebot."
+        "available": "Es ist Essen verfügbar."
       }
     ]
   }

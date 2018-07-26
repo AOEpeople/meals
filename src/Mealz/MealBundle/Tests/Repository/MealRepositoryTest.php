@@ -39,23 +39,7 @@ class MealRepositoryTest extends AbstractDatabaseTestCase
         $this->mealRepository->findOneByDateAndDish(date('Y-m-'), $dish->getSlug());
 
     }
-
-    public function testFindOneByDateAndDishMultipleResults()
-    {
-        $this->markTestSkipped(
-            'Currently not required. Makes no sense to choose same meal for one day. Maybbe we need the test again'
-        );
-        
-        $dish = $this->createDish();
-        $meal = $this->createMeal($dish);
-        $meal2 = $this->createMeal($dish);
-        $this->persistAndFlushAll([$dish, $meal, $meal2]);
-
-        $this->setExpectedException('\LogicException');
-
-        $this->mealRepository->findOneByDateAndDish(date('Y-m-d'), $dish->getSlug());
-    }
-
+    
     public function testFindOneByDateAndDishNoResults()
     {
         $dish = $this->createDish();

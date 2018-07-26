@@ -308,9 +308,58 @@
     }
 
     &.participation-limit-reached {
-      background-color: $color-orange;
+      background-color: $color-red;
+    }
+
+    &.participation-allowed {
+      background: $color-green;
+    }
+
+    &.participation-pending {
+      background: $color-orange;
+    }
+
+    &.offer-available {
+      background: $color-green;
     }
   }
+
+  .tooltiptext {
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    z-index: 1;
+    visibility: hidden;
+    width: 135px;
+    margin-left: -60px;
+    padding: 5px 0;
+    border-radius: 6px;
+    color: $color-white;
+    background-color: $color-base;
+    opacity: 0;
+    text-align: center;
+    transition: opacity 1s;
+
+    &::after {
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: $color-base transparent transparent;
+      content: '';
+    }
+  }
+
+  .participants-count.offer-available:hover .tooltiptext,
+  .participants-count.participation-pending:hover .tooltiptext {
+    &.active {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+
 }
 
 .meal-guest {

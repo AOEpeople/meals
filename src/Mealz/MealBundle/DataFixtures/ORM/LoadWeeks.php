@@ -66,7 +66,7 @@ class LoadWeeks extends AbstractFixture implements OrderedFixtureInterface
     private function getCurrentTestWeeks()
     {
         $currentWeeks = [];
-        $date = new \DateTime('');
+        $date = new \DateTime('12:00');
         $maxDate = new \DateTime('+1 month');
 
         while ($date < $maxDate) {

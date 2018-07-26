@@ -7,7 +7,10 @@ use Mealz\MealBundle\Entity\Participant;
 use Mealz\MealBundle\Entity\Week;
 use Mealz\MealBundle\Entity\WeekRepository;
 use Mealz\UserBundle\Entity\Profile;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Translation\Translator;
 
 /**
  * Class ParticipantController
@@ -25,12 +28,9 @@ class ParticipantController extends BaseController
         if (is_object($this->getUser()) === false) {
             return $this->ajaxSessionExpiredRedirect();
         }
-        if ($this->getProfile() !== $participant->getProfile() && ($this->getDoorman()->isKitchenStaff()) === false) {
-            return new JsonResponse(null, 403);
-        }
 
         $meal = $participant->getMeal();
-        if (!$this->getDoorman()->isUserAllowedToLeave($meal)) {
+        if ($this->getProfile() !== $participant->getProfile() && ($this->getDoorman()->isKitchenStaff()) === false || !$this->getDoorman()->isUserAllowedToLeave($meal)) {
             return new JsonResponse(null, 403);
         }
 
@@ -65,6 +65,102 @@ class ParticipantController extends BaseController
             'actionText' => $this->get('translator')->trans('deleted', array(), 'action'),
         ));
 
+        return $ajaxResponse;
+    }
+
+    /**
+     * Offers an existing participation by setting the participant's 'offeredAt' value to the timestamp.
+     * Takes an existing offer back by setting the 'offeredAt' value back to 0.
+     * @param Participant $participant
+     * @return JsonResponse
+     */
+    public function swapAction(Participant $participant)
+    {
+        $dateTime = $participant->getMeal()->getDateTime();
+        $counter = count($this->getParticipantRepository()->getPendingParticipants($dateTime));
+
+        if (is_object($this->getUser()) === false) {
+            return $this->ajaxSessionExpiredRedirect();
+        }
+
+        if ($this->getProfile() !== $participant->getProfile() || $this->getDoorman()->isUserAllowedToSwap($participant->getMeal()) === false) {
+            return new JsonResponse(null, 403);
+        }
+
+        if ($participant->getMeal() === null) {
+            return new JsonResponse(null, 404);
+        }
+
+        /*
+         * Set "offeredAt" to the time.
+         */
+        if ($participant->getOfferedAt() === 0) {
+            $participant->setOfferedAt(time());
+        } else {
+            // If user is already offering a meal (it's pending), take the offer back by setting "offeredAt" to 0.
+            if ($participant->isPending() === true) {
+                $participant->setOfferedAt(0);
+            }
+
+            $em = $this->getDoctrine()->getManager();
+            $em->flush();
+
+            $ajaxResponse = new JsonResponse();
+            $ajaxResponse->setData(array(
+                'url' => $this->generateUrl('MealzMealBundle_Participant_swap', array(
+                    'participant' => $participant->getId(),
+                )),
+                'actionText' => $this->get('translator')->trans('unswapped', array(), 'action'),
+            ));
+
+            return $ajaxResponse;
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->flush();
+
+
+        // If the meal has variations, get it's parent and concatenate the title of the parent meal with the title of the variation.
+        $dishTitle = $participant->getMeal()->getDish()->getTitleEn();
+        if ($participant->getMeal()->getDish()->getParent()) {
+            $dishTitle = $participant->getMeal()->getDish()->getParent()->getTitleEn() . ' ' . $dishTitle;
+        }
+
+        // Mattermost integration
+        $translator = new Translator('en_EN');
+        $chefbotMessage = $translator->transChoice($this->get('translator')->trans('mattermost.offered', array(), 'messages'),
+            $counter, array(
+                '%counter%' => $counter,
+                '%dish%' => $dishTitle)
+        );
+
+        $mattermostService = $this->container->get('mattermost.service');
+        $mattermostService->sendMessage($chefbotMessage);
+
+        // Return JsonResponse
+        $ajaxResponse = new JsonResponse();
+        $ajaxResponse->setData(array(
+            'url' => $this->generateUrl('MealzMealBundle_Participant_unswap', array(
+                'participant' => $participant->getId(),
+            )),
+            'id' => $participant->getId(),
+            'actionText' => $this->get('translator')->trans('swapped', array(), 'action'),
+        ));
+
+        return $ajaxResponse;
+    }
+
+    /**
+     * @param Participant $participant
+     * @return JsonResponse
+     * Checks if the participation of the current user is pending (being offered).
+     */
+    public function isParticipationPendingAction(Participant $participant)
+    {
+        $ajaxResponse = new JsonResponse();
+        $ajaxResponse->setData(
+            $participant->isPending()
+        );
         return $ajaxResponse;
     }
 

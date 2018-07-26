@@ -2,7 +2,9 @@
 
 
 namespace Mealz\MealBundle\Service;
+
 use Mealz\MealBundle\Entity\Meal;
+use Mealz\MealBundle\Entity\Participant;
 use Mealz\UserBundle\Entity\Profile;
 use Symfony\Component\Security\Core\SecurityContext;
 
@@ -17,124 +19,196 @@ use Symfony\Component\Security\Core\SecurityContext;
  *
  * This logic should be accessible in controllers, templates and services.
  */
-class Doorman {
+class Doorman
+{
 
-	/**
-	 * Doorman constants defining access types
-	 * @see $this->hasAccessTo
-	 */
-	const AT_MEAL_PARTICIPATION = 0;
+    /**
+     * Doorman constants defining access types
+     * @see $this->hasAccessTo
+     */
+    const AT_MEAL_PARTICIPATION = 0;
 
-	/**
-	 * @var \DateTime
-	 */
-	protected $now;
+    /**
+     * @var \DateTime
+     */
+    protected $now;
 
-	/**
-	 * @var SecurityContext
-	 */
-	protected $securityContext;
+    /**
+     * @var SecurityContext
+     */
+    protected $securityContext;
 
-	public function __construct(SecurityContext $securityContext, $lockToggleParticipationAt = '-1 day 12:00') {
-		$this->securityContext = $securityContext;
-		$this->now = time();
-		$this->lockToggleParticipationAt = $lockToggleParticipationAt;
-	}
+    /**
+     * Doorman constructor.
+     * @param SecurityContext $securityContext
+     * @param string $lockToggleParticipationAt
+     */
+    public function __construct(SecurityContext $securityContext, $lockToggleParticipationAt = '-1 day 12:00')
+    {
+        $this->securityContext = $securityContext;
+        $this->now = time();
+        $this->lockToggleParticipationAt = $lockToggleParticipationAt;
+    }
 
-	/**
-	 * @param Meal $meal
-	 * @return bool
-	 */
-	public function isUserAllowedToJoin(Meal $meal) {
-		if(!$this->securityContext->getToken()->getUser()->getProfile() instanceof Profile || $meal->isParticipationLimitReached()) {
-			return FALSE;
-		}
-		if ($this->isKitchenStaff() || $this->hasAccessTo(self::AT_MEAL_PARTICIPATION,['meal'=>$meal])) {
-			return TRUE;
-		}
-		return ($this->isToggleParticipationAllowed($meal->getDateTime()) && $this->hasAccessTo(self::AT_MEAL_PARTICIPATION,['meal'=>$meal]));
-	}
+    /**
+     * @param Meal $meal
+     * @return bool
+     */
+    public function isUserAllowedToJoin(Meal $meal)
+    {
+        if ($this->securityContext->getToken()->getUser()->getProfile() instanceof Profile === false || $meal->isParticipationLimitReached() === true) {
+            return FALSE;
+        }
+        if ($this->isKitchenStaff() === true || $this->hasAccessTo(self::AT_MEAL_PARTICIPATION, ['meal' => $meal]) === true) {
+            return TRUE;
+        }
+        return ($this->isToggleParticipationAllowed($meal->getDateTime()) && $this->hasAccessTo(self::AT_MEAL_PARTICIPATION, ['meal' => $meal]));
+    }
 
-	/**
-	 * @param Meal $meal
-	 * @return bool
-	 */
-	public function isUserAllowedToLeave(Meal $meal) {
-		return $this->hasAccessTo(self::AT_MEAL_PARTICIPATION,['meal'=>$meal]);
-	}
+    /**
+     * @param Meal $meal
+     * @return bool
+     */
+    public function isOfferAvailable(Meal $meal)
+    {
+        if ($this->securityContext->getToken()->getUser()->getProfile() instanceof Profile === false) {
+            return false;
+        }
 
-	/**
-	 * @return bool
-	 */
-	public function isKitchenStaff() {
-		return $this->securityContext->isGranted('ROLE_KITCHEN_STAFF');
-	}
+        $participants = $meal->getParticipants();
+        foreach ($participants as $participant) {
+            if ($participant->isPending() === true) {
+                return true;
+            }
+        }
+    }
 
-	/**
-	 * @param Meal $meal
-	 * @return bool
-	 */
-	public function isUserAllowedToAddGuest(Meal $meal) {
-		// @TODO: add a separate role for that
-		return $this->isKitchenStaff() || $this->isUserAllowedToJoin($meal);
-	}
+    /**
+     * @param Meal $meal
+     * @return bool
+     */
+    public function isUserAllowedToLeave(Meal $meal)
+    {
+        return $this->hasAccessTo(self::AT_MEAL_PARTICIPATION, ['meal' => $meal]);
+    }
 
-	/**
-	 * @param Meal $meal
-	 * @return bool
-	 */
-	public function isUserAllowedToRemoveGuest(Meal $meal) {
-		// @TODO: add a separate role for that
-		return $this->isKitchenStaff() || $this->isUserAllowedToLeave($meal);
-	}
+    /**
+     * @param Meal $meal
+     * @return bool
+     */
+    public function isUserAllowedToSwap(Meal $meal)
+    {
+        if ($this->isKitchenStaff() === false && $meal->getDay()->getLockParticipationDateTime()->getTimestamp() < $this->now && $this->now < $meal->getDateTime()->getTimestamp()) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
 
-	/**
-	 * @param Meal $meal
-	 * @return bool
-	 */
-	public function isUserAllowedToRequestCostAbsorption(Meal $meal) {
-		// @TODO: add a separate role for that
-		return $this->isKitchenStaff() || $this->isUserAllowedToAddGuest($meal);
-	}
+    /**
+     * @param Meal $meal
+     * @param Participant $participant
+     * @return bool
+     */
+    public function isUserAllowedToUnswap(Meal $meal, Participant $participant)
+    {
+        return ($this->isUserAllowedToSwap($meal) && $this->isParticipationPending($participant));
+    }
 
-	/**
-	 * @param \DateTime $lockParticipationDateTime
-	 * @return bool
-	 */
-	public function isToggleParticipationAllowed(\DateTime $lockParticipationDateTime)
-	{
-		// is it still allowed to participate in the meal by now?
-		return ($lockParticipationDateTime->getTimestamp() > $this->now);
-	}
+    /**
+     * @param Participant $participant
+     * @return bool
+     */
+    public function isParticipationPending(Participant $participant)
+    {
+        return $participant->getOfferedAt() !== 0;
+    }
 
-	/**
-	 * Checking access to a vary of processes inside of meals.
-	 * Accesstype is a constant of class Doorman. Use this to tell the method what to check ;-)
-	 * To be used in future to add more acces checks.
-	 *
-	 * @param integer $accesstype		What access shall be checked
-	 * @param array $params
-	 * @return bool
-	 */
-	private function hasAccessTo($accesstype, $params = []) {
-			// admins always have access!
-		if ($this->isKitchenStaff()) { return TRUE; }
-			// if no user is logged in access is denied at all
-		if(!$this->securityContext->getToken()->getUser()->getProfile() instanceof Profile) { return FALSE; }
+    /**
+     * @return bool
+     */
+    public function isKitchenStaff()
+    {
+        return $this->securityContext->isGranted('ROLE_KITCHEN_STAFF');
+    }
 
-			// check access in terms of given accesstype...
-		switch ($accesstype) {
-			case (self::AT_MEAL_PARTICIPATION):
-				/**
-				 * Parameters:
-				 * @var \Mealz\MealBundle\Entity\Meal 	meal
-				 */
-				if (!isset($params['meal']) || !$params['meal'] instanceof \Mealz\MealBundle\Entity\Meal) return FALSE;
-				return $this->isToggleParticipationAllowed($params['meal']->getDay()->getLockParticipationDateTime());
-				break;
-			default:
-					// by default refuse access
-				return FALSE;
-		}
-	}
+    /**
+     * @param Meal $meal
+     * @return bool
+     */
+    public
+    function isUserAllowedToAddGuest(Meal $meal)
+    {
+        // @TODO: add a separate role for that
+        return $this->isKitchenStaff() || $this->isUserAllowedToJoin($meal);
+    }
+
+    /**
+     * @param Meal $meal
+     * @return bool
+     */
+    public
+    function isUserAllowedToRemoveGuest(Meal $meal)
+    {
+        // @TODO: add a separate role for that
+        return $this->isKitchenStaff() || $this->isUserAllowedToLeave($meal);
+    }
+
+    /**
+     * @param Meal $meal
+     * @return bool
+     */
+    public
+    function isUserAllowedToRequestCostAbsorption(Meal $meal)
+    {
+        // @TODO: add a separate role for that
+        return $this->isKitchenStaff() || $this->isUserAllowedToAddGuest($meal);
+    }
+
+    /**
+     * @param \DateTime $lockParticipationDateTime
+     * @return bool
+     */
+    public
+    function isToggleParticipationAllowed(\DateTime $lockParticipationDateTime)
+    {
+        // is it still allowed to participate in the meal by now?
+        return ($lockParticipationDateTime->getTimestamp() > $this->now);
+    }
+
+    /**
+     * Checking access to a vary of processes inside of meals.
+     * Accesstype is a constant of class Doorman. Use this to tell the method what to check ;-)
+     * To be used in future to add more acces checks.
+     *
+     * @param integer $accesstype What access shall be checked
+     * @param array $params
+     * @return bool
+     */
+    private function hasAccessTo($accesstype, $params = [])
+    {
+        // admins always have access!
+        if ($this->isKitchenStaff() === true) {
+            return TRUE;
+        }
+        // if no user is logged in access is denied at all
+        if ($this->securityContext->getToken()->getUser()->getProfile() instanceof Profile === FALSE) {
+            return FALSE;
+        }
+
+        // check access in terms of given accesstype...
+        switch ($accesstype) {
+            case (self::AT_MEAL_PARTICIPATION):
+                /**
+                 * Parameters:
+                 * @var \Mealz\MealBundle\Entity\Meal    meal
+                 */
+                if (!isset($params['meal']) || !$params['meal'] instanceof \Mealz\MealBundle\Entity\Meal) return FALSE;
+                return $this->isToggleParticipationAllowed($params['meal']->getDay()->getLockParticipationDateTime());
+                break;
+            default:
+                // by default refuse access
+                return FALSE;
+        }
+    }
 }

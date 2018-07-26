@@ -108,15 +108,30 @@ monolog:
         #    level:  info
 
 creatissimo_mattermost:
-    webhook: https://messages.aoe.com/hooks/f9nb161oppro8nin15zhtrgqqh
+    webhook: https://messages.aoe.com/hooks/hh5od44xgp8p5rax9uzmgxffmh
     appname: "Meals"
     username: "Chef"
     channel:
-    iconUrl:
+    iconUrl: "http://meals.aoe.com/images/chef_bot.png"
     environments:
         devbox:
             appname: "Mealz"
             username: "DevChef"
+            webhook: https://messages.aoe.com/hooks/f9nb161oppro8nin15zhtrgqqh
+            iconUrl: "http://deploy.mealz.itg.de2.dc.aoe.lan/images/chef_bot.png"
+            enable: true
+            terminate:
+                enable: false
+                exclude_exitcode: [0]
+            exception:
+                enable: false
+                trace: false
+
+        deploy:
+            appname: "Mealz"
+            username: "DeployChef"
+            webhook: https://messages.aoe.com/hooks/f9nb161oppro8nin15zhtrgqqh
+            iconUrl: "http://deploy.mealz.itg.de2.dc.aoe.lan/images/chef_bot.png"
             enable: true
             terminate:
                 enable: false

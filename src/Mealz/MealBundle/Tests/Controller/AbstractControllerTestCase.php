@@ -88,6 +88,29 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
     }
 
     /**
+     * @param $userProfile
+     */
+    public function loginAsDefaultClient($userProfile) {
+
+        //test for non-admin users
+        $this->createDefaultClient();
+
+        // Open home page and log in as user
+        $crawler = $this->client->request('GET', '/');
+        $this->assertTrue($this->client->getResponse()->isSuccessful(), 'Requesting homepage failed');
+
+        $loginForm = $crawler->filterXPath('//form[@name="login-form"]')
+            ->form(
+                [
+                    '_username' => $userProfile->getUsername(),
+                    '_password' => $userProfile->getUsername()
+                ]
+            );
+        $this->client->followRedirects();
+        $this->client->submit($loginForm);
+    }
+
+    /**
      * Gets a user profile.
      *
      * @param string $username Username. Default is 'alice'
@@ -192,14 +215,20 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
     /**
      * Helper method to get the recent meal.
      *
+     * @param \DateTime $dateTime
+     * 
      * @return Meal
      */
-    protected function getRecentMeal()
+    protected function getRecentMeal(\DateTime $dateTime = null)
     {
+        if ($dateTime === null) {
+            $dateTime = new \DateTime;
+        }
+
         /** @var \Mealz\MealBundle\Entity\MealRepository $mealRepository */
         $mealRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
         $criteria = Criteria::create();
-        $meals = $mealRepository->matching($criteria->where(Criteria::expr()->lte('dateTime', new \DateTime())));
+        $meals = $mealRepository->matching($criteria->where(Criteria::expr()->lte('dateTime', $dateTime)));
 
         if (1 > $meals->count()) {
             $this->fail('No test meal found.');

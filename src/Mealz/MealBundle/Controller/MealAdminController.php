@@ -212,6 +212,7 @@ class MealAdminController extends BaseController
         for ($i = 0; $i < 5; $i++) {
             $dayDateTime = clone($week->getStartTime());
             $dayDateTime->modify('+'.$i.' days');
+            $dayDateTime->setTime(12, 00);
             $lockParticipationDateTime = clone($dayDateTime);
             $lockParticipationDateTime->modify($dateTimeModifier);
 

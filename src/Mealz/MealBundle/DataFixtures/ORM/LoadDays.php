@@ -49,21 +49,23 @@ class LoadDays extends AbstractFixture implements OrderedFixtureInterface
             $day = new Day();
             $day->setWeek($week);
             $day->setDateTime($startTime);
-            $lockDateTime = new \DateTime($startTime->format('Y-m-d H:i:s').' +1 day');
-			$day->setLockParticipationDateTime($lockDateTime);
+            $lockDateTime = new \DateTime($startTime->format('Y-m-d H:i:s') . ' -1 day');
+            $lockDateTime->modify('16:00');
+            $day->setLockParticipationDateTime($lockDateTime);
             $this->objectManager->persist($day);
-            $this->addReference('day-'.$this->counter++, $day);
+            $this->addReference('day-' . $this->counter++, $day);
 
             for ($i = 1; $i < 5; $i++) {
                 $day = new Day();
                 $day->setWeek($week);
                 $time = clone($startTime);
-                $time->modify('+'.$i.' days');
+                $time->modify('+' . $i . ' days');
                 $day->setDateTime($time);
-				$lockDateTime = new \DateTime($day->getDateTime()->format('Y-m-d H:i:s').' +1 day');
-				$day->setLockParticipationDateTime($lockDateTime);
+                $lockDateTime = new \DateTime($day->getDateTime()->format('Y-m-d H:i:s') . ' -1 day');
+                $lockDateTime->modify('16:00');
+                $day->setLockParticipationDateTime($lockDateTime);
                 $this->objectManager->persist($day);
-                $this->addReference('day-'.$this->counter++, $day);
+                $this->addReference('day-' . $this->counter++, $day);
             }
         }
 

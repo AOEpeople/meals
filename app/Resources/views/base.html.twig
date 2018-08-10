@@ -9,28 +9,44 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
-	<title>AOEMeals</title>
+	<title>AOE Meals</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
     {% stylesheets '../web/css/*.css' filter='cssrewrite' %}
 		<link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
 	{% block head %}{% endblock %}
+	<!--
+                All praises to
+  _______                     _  _    ___ ___
+ |__   __|                   | || |  / _ \__ \
+    | | ___  __ _ _ __ ___   | || |_| | | | ) |
+    | |/ _ \/ _` | '_ ` _ \  |__   _| | | |/ /
+    | |  __/ (_| | | | | | |    | | | |_| / /_
+    |_|\___|\__,_|_| |_| |_|    |_|  \___/____|
+
+-->
 </head>
 
 {% set activeRoute = app.request.attributes.get('_route') %}
+{% set userAgent = app.request.headers.get('User-Agent') %}
+{% set isWebview = false %}
+{% if userAgent matches '/MealsApp Android WebView/' == true %}
+        {% set isWebview = true %}
+{% endif %}
 
-<body class="{{ activeRoute matches '/MealzMealBundle_Meal_guest.*/' ? 'guest-wrapper' }}">
+<body class="{{ activeRoute matches '/MealzMealBundle_Meal_guest.*/' ? 'guest-wrapper' }} {{ isWebview == true ? 'webview' }}">
 	{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
 		{% set balance = wallet.getBalance(app.user.profile) %}
 	{% endif %}
 
 	{% include 'MealzTemplateBundle::partials/balanceNotification.html.twig' %}
 
+	{% if isWebview == false %}
 	<header>
 		<div class="container">
 			<a class="logo" href="{{ path('MealzMealBundle_home') }}">
 				<img src="{{ asset('images/logo.png') }}" alt="AOE" />
-				<span>AOEMEALS</span>
+				<span>AOE Meals</span>
 			</a>
 
 			<div class="header-content">
@@ -44,6 +60,7 @@
 			</div>
 		</div>
 	</header>
+	{% endif %}
 
 	{% if wrapperClass is not defined %}
 		{% set wrapperClass = '' %}

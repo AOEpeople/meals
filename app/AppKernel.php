@@ -53,6 +53,7 @@ class AppKernel extends Kernel
             new Mealz\AccountingBundle\MealzAccountingBundle(),
             new Mealz\TemplateBundle\MealzTemplateBundle(),
             new Mealz\RestBundle\MealzRestBundle(),
+            new Creatissimo\MattermostBundle\CreatissimoMattermostBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('devbox', 'dev', 'deploy', 'test'))) {

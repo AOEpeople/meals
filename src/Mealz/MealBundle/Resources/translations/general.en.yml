@@ -36,7 +36,7 @@ content:
       disabled: No service this week!
       no_meals: |
         Be patient - we don't have
-        a menu yet but we're working on it :)
+        a menu yet but we're working on it!
       participant.none: There are no participations for this week so far.
     day:
       disabled: No service this day!

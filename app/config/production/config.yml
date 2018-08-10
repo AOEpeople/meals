@@ -5,6 +5,8 @@ imports:
     - { resource: services.yml }
 
 framework:
+    profiler:
+        enabled: false
     router:
         resource: "%kernel.root_dir%/config/commons/all/routing.yml"
         strict_requirements: true

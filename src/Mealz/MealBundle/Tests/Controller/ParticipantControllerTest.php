@@ -53,11 +53,13 @@ class ParticipantControllerTest extends AbstractControllerTestCase
 
         $time = time();
 
-        self::$meal = $this->getRecentMeal();
+        $dateTime = new \DateTime();
+        $dateTime->add(new \DateInterval('PT1H'));
+        self::$meal = $this->getRecentMeal($dateTime);
 
         // Create profile for participant
         self::$participantFirstName = 'Max';
-        self::$participantLastName  = 'Mustermann'.$time;
+        self::$participantLastName = 'Mustermann' . $time;
         $participant = $this->createEmployeeProfileAndParticipation(
             self::$participantFirstName,
             self::$participantLastName,
@@ -66,7 +68,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
 
         // Create profile for guest participant
         self::$guestParticipantFirstName = 'Jon';
-        self::$guestParticipantLastName  = 'Doe'.$time;
+        self::$guestParticipantLastName = 'Doe' . $time;
         self::$guestCompany = 'Company';
         $guestParticipant = $this->createGuestProfileAndParticipation(
             self::$guestParticipantFirstName,
@@ -77,7 +79,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
 
         // Create profile for user (non participant)
         self::$userFirstName = 'Karl';
-        self::$userLastName = 'Schmidt'.$time;
+        self::$userLastName = 'Schmidt' . $time;
         $user = $this->createProfile(self::$userFirstName, self::$userLastName);
         $this->persistAndFlushAll([$user]);
 
@@ -94,16 +96,86 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     }
 
     /**
+     * Tests the swap action (offering a meal) in the participant controller.
+     * First case: A participant offers his meal on time.
+     * @test
+     */
+    public function offeringOneMeal()
+    {
+        $userProfile = $this->getUserProfile();
+
+        //find locked meal and make user a participant of that
+        $lockedMealsArray = $this->getDoctrine()->getRepository('MealzMealBundle:Meal')->getLockedMeals();
+        $lockedMeal = $lockedMealsArray[0];
+        $lockedParticipant = $this->createParticipant($userProfile, $lockedMeal);
+
+        $this->persistAndFlushAll([$lockedParticipant]);
+
+        $this->loginAsDefaultClient($userProfile);
+        $id = $lockedParticipant->getId();
+        $this->client->request('GET', '/menu/meal/' . $id . '/swap');
+
+        //verification by checking the database
+        $offeringParticipant = $this->getDoctrine()->getRepository('MealzMealBundle:Participant')->find($id);
+        $this->assertTrue($offeringParticipant->getOfferedAt() !== 0, 'offeredAt value not changed');
+    }
+
+    /**
+     * Second case: A participant takes his offer back.
+     * @test
+     */
+    public function takingOfferBack()
+    {
+        $userProfile = $this->getUserProfile();
+        $lockedMealsArray = $this->getDoctrine()->getRepository('MealzMealBundle:Meal')->getLockedMeals();
+        $lockedMeal = $lockedMealsArray[0];
+        $lockedParticipant = $this->createParticipant($userProfile, $lockedMeal);
+        $lockedParticipant->setOfferedAt(time());
+        $id = $lockedParticipant->getId();
+        $this->persistAndFlushAll([$lockedParticipant]);
+
+        $this->loginAsDefaultClient($userProfile);
+        $this->client->request('GET', '/menu/meal/' . $id . '/unswap');
+
+        //verification by checking the database
+        $unswappingParticipant = $this->getDoctrine()->getRepository('MealzMealBundle:Participant')->find($id);
+        $this->assertTrue($unswappingParticipant->getOfferedAt() === 0, 'unswapping not working');
+    }
+
+    /**
+     * Third case: A participant tries to offer his outdated meal.
+     * @test
+     */
+    public function offeringOutdatedMeal()
+    {
+        $userProfile = $this->getUserProfile();
+
+        $outdatedMealsArray = $this->getDoctrine()->getRepository('MealzMealBundle:Meal')->getOutdatedMeals();
+        $outdatedMeal = $outdatedMealsArray[0];
+        $outdatedParticipant = $this->createParticipant($userProfile, $outdatedMeal);
+        $id = $outdatedParticipant->getId();
+
+        $this->persistAndFlushAll([$outdatedParticipant]);
+
+        $this->loginAsDefaultClient($userProfile);
+        $this->client->request('GET', '/menu/meal/' . $id . '/swap');
+
+        //verification by checking the database
+        $notOfferingParticipant = $this->getDoctrine()->getRepository('MealzMealBundle:Participant')->find($id);
+        $this->assertTrue($notOfferingParticipant->getOfferedAt() === 0, 'user still offered meal');
+    }
+
+    /**
      * Check that the created participants are displayed in the participation table for the current week
      * @test
      */
     public function checkParticipantInParticipationTable()
     {
         $crawler = $this->getCurrentWeekParticipations();
-        $this->assertEquals(1, $crawler->filter('html:contains("'.self::$participantFirstName.'")')->count());
-        $this->assertEquals(1, $crawler->filter('html:contains("'.self::$participantLastName.'")')->count());
-        $this->assertEquals(1, $crawler->filter('html:contains("'.self::$guestParticipantFirstName.'")')->count());
-        $this->assertEquals(1, $crawler->filter('html:contains("'.self::$guestParticipantLastName.'")')->count());
+        $this->assertEquals(1, $crawler->filter('html:contains("' . self::$participantFirstName . '")')->count());
+        $this->assertEquals(1, $crawler->filter('html:contains("' . self::$participantLastName . '")')->count());
+        $this->assertEquals(1, $crawler->filter('html:contains("' . self::$guestParticipantFirstName . '")')->count());
+        $this->assertEquals(1, $crawler->filter('html:contains("' . self::$guestParticipantLastName . '")')->count());
     }
 
     /**
@@ -115,7 +187,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $crawler = $this->getCurrentWeekParticipations()
             ->filter('.table-row')
             ->reduce(function ($node) {
-                $participantName = self::$guestParticipantLastName.', '.self::$guestParticipantFirstName;
+                $participantName = self::$guestParticipantLastName . ', ' . self::$guestParticipantFirstName;
                 if (stripos($node->text(), $participantName) === false) {
                     return false;
                 }
@@ -132,8 +204,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     {
         $crawler = $this->getCurrentWeekParticipations()
             ->filter('.meal-count > span')
-            ->first()
-        ;
+            ->first();
         $this->assertContains('2', $crawler->text());
     }
 
@@ -149,9 +220,8 @@ class ParticipantControllerTest extends AbstractControllerTestCase
 
         $crawler = $this->getCurrentWeekParticipations()
             ->filter('.week-date')
-            ->first()
-        ;
-        $this->assertContains($firstWeekDay.'-'.$lastWeekDay, $crawler->text());
+            ->first();
+        $this->assertContains($firstWeekDay . '-' . $lastWeekDay, $crawler->text());
     }
 
     /**
@@ -162,8 +232,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     {
         $crawler = $this->getCurrentWeekParticipations()
             ->filter('.day')
-            ->first()
-        ;
+            ->first();
         $this->assertContains('Monday', $crawler->text());
     }
 
@@ -178,8 +247,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $firstWeekDish = $weekMeals->first()->getDish();
         $crawler = $this->getCurrentWeekParticipations()
             ->filter('.meal-title')
-            ->first()
-        ;
+            ->first();
         $this->assertContains($firstWeekDish->getTitle(), $crawler->text());
     }
 
@@ -195,12 +263,11 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $firstVariationParent = $firstVariation->getParent();
         $crawler = $this->getCurrentWeekParticipations()
             ->filter('.meal-title')
-            ->eq(1)
-        ;
+            ->eq(1);
         $template = '<span><b>%s</b><br>%s</span>';
         $html = sprintf($template, $firstVariationParent->getTitle(), $firstVariation->getTitle());
         // preg_replace() deletes every whitespace after the first
-        $this->assertEquals($html, preg_replace("~\\s{2,}~", "", trim($crawler->html())));
+        $this->assertEquals($html, preg_replace('~\\s{2,}~', '', trim($crawler->html())));
     }
 
     /**
@@ -210,11 +277,10 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     public function checkTableDataPrototype()
     {
         $crawler = $this->getCurrentWeekParticipations()
-            ->filter('.table-content')
-        ;
+            ->filter('.table-content');
         $tableRow = '<tr class="table-row"><td class="text table-data wide-cell">__name__<\/td>';
         $tableData = '<td class="meal-participation table-data" data-attribute-action=".*__username__"><i class="glyphicon"><\/i><\/td>';
-        $regex = '/('.$tableRow.')('.$tableData.')+(<\/tr>)/';
+        $regex = '/(' . $tableRow . ')(' . $tableData . ')+(<\/tr>)/';
         $this->assertRegExp($regex, preg_replace("~\\s{2,}~", "", trim($crawler->attr("data-prototype"))));
     }
 
@@ -225,9 +291,8 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     public function checkProfileList()
     {
         $crawler = $this->getCurrentWeekParticipations()
-            ->filter('.profile-list')
-        ;
-        $userName = self::$userLastName.', '.self::$userFirstName;
+            ->filter('.profile-list');
+        $userName = self::$userLastName . ', ' . self::$userFirstName;
         $this->assertContains($userName, $crawler->attr("data-attribute-profiles"));
     }
 
@@ -238,7 +303,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     protected function getCurrentWeekParticipations()
     {
         $currentWeek = $this->getCurrentWeek();
-        $crawler = $this->client->request('GET', '/participations/'.$currentWeek->getId().'/edit');
+        $crawler = $this->client->request('GET', '/participations/' . $currentWeek->getId() . '/edit');
         $this->assertTrue($this->client->getResponse()->isSuccessful());
 
         return $crawler;

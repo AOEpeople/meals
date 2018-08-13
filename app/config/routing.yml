@@ -1,0 +1,4 @@
+mealz_rest:
+    resource: "@MealzRestBundle/Resources/config/routing.yml"
+    prefix:   /
+

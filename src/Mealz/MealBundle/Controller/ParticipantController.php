@@ -198,7 +198,9 @@ class ParticipantController extends BaseController
 
         /** @var WeekRepository $weekRepository */
         $weekRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Week');
-        $week = $weekRepository->findWeekByDate($week->getStartTime(), true);
+        $week = $weekRepository->findWeekByDate($week->getStartTime(), array(
+            'only_enabled_days' => true
+        ));
 
         // Get user participation to list them as table rows
         $participantRepository = $this->getParticipantRepository();

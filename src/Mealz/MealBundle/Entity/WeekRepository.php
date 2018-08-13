@@ -10,26 +10,31 @@ use Doctrine\ORM\EntityRepository;
  */
 class WeekRepository extends EntityRepository
 {
+    protected $defaultOptions = array(
+        'load_participants' => true,
+        'only_enabled_days' => false
+    );
+
     /**
-     * @param  bool $onlyEnabledDays
+     * @param  array $options
      * @return Week|NULL
      */
-    public function getCurrentWeek($onlyEnabledDays = false)
+    public function getCurrentWeek($options = array())
     {
-        return $this->findWeekByDate(new \DateTime(), $onlyEnabledDays);
+        return $this->findWeekByDate(new \DateTime(), $options);
     }
 
     /**
      * @param  \DateTime|NULL $date
-     * @param  bool           $onlyEnabledDays
+     * @param  array $options
      * @return Week|NULL
      */
-    public function getNextWeek(\DateTime $date = null, $onlyEnabledDays = false)
+    public function getNextWeek(\DateTime $date = null, $options = array())
     {
         $date = (($date instanceof \DateTime) === false) ? new \DateTime() : $date;
         $nextWeek = $date->modify('next monday');
 
-        return $this->findWeekByDate($nextWeek, $onlyEnabledDays);
+        return $this->findWeekByDate($nextWeek, $options);
     }
 
     /**
@@ -50,23 +55,33 @@ class WeekRepository extends EntityRepository
 
     /**
      * @param \DateTime $date
-     * @param  boolean   $onlyEnabledDays
+     * @param  array $options
      * @return null|Week
      */
-    public function findWeekByDate(\DateTime $date, $onlyEnabledDays = false)
+    public function findWeekByDate(\DateTime $date, $options = array())
     {
+        $options = array_merge($this->defaultOptions, $options);
+
         $qb = $this->createQueryBuilder('w');
-        $qb->select('w,da,m,d,p,u');
+
+        $select = 'w,da,m,d';
+        if ($options['load_participants']) {
+            $select .= ',p,u';
+        }
+        $qb->select($select);
 
         $qb->leftJoin('w.days', 'da');
         $qb->leftJoin('da.meals', 'm');
         $qb->leftJoin('m.dish', 'd');
-        $qb->leftJoin('m.participants', 'p');
-        $qb->leftJoin('p.profile', 'u');
+
+        if ($options['load_participants']) {
+            $qb->leftJoin('m.participants', 'p');
+            $qb->leftJoin('p.profile', 'u');
+        }
 
         $qb->andWhere('w.year = :year');
         $qb->andWhere('w.calendarWeek = :calendarWeek');
-        if (true === $onlyEnabledDays) {
+        if (true === $options['only_enabled_days']) {
             $qb->andWhere('da.enabled = 1');
         }
 

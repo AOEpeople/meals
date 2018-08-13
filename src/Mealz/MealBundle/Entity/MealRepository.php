@@ -42,7 +42,11 @@ class MealRepository extends EntityRepository
         $qb->setParameter('min_date', $date.' 00:00:00');
         $qb->setParameter('max_date', $date.' 23:59:29');
 
-        $qb->andWhere('d.slug = :dish');
+        if (is_numeric($dish)) {
+            $qb->andWhere('d.id = :dish');
+        } else {
+            $qb->andWhere('d.slug = :dish');
+        }
         $qb->setParameter('dish', $dish);
 
         $result = $qb->getQuery()->execute();

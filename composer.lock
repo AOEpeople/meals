@@ -51,6 +51,53 @@
             "time": "2017-04-04T11:38:05+00:00"
         },
         {
+            "name": "creatissimo/mattermost-bundle",
+            "version": "v1.1.11",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/creatissimo/CreatissimoMattermostBundle.git",
+                "reference": "df6cdb5e32a483195feff5e01f9ad7476fa0494c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/creatissimo/CreatissimoMattermostBundle/zipball/df6cdb5e32a483195feff5e01f9ad7476fa0494c",
+                "reference": "df6cdb5e32a483195feff5e01f9ad7476fa0494c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2",
+                "symfony/framework-bundle": "~2.7|~3.0"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Creatissimo\\MattermostBundle\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Pascal Rossa",
+                    "email": "rossa@creatissimo.net"
+                }
+            ],
+            "description": "Symfony Bundle for communicating with the Mattermost chat, sending messages on exceptions or when triggered by code",
+            "homepage": "https://github.com/creatissimo/CreatissimoMattermostBundle",
+            "keywords": [
+                "Mattermost",
+                "exception"
+            ],
+            "time": "2018-02-09T18:12:01+00:00"
+        },
+        {
             "name": "doctrine/annotations",
             "version": "v1.2.7",
             "source": {

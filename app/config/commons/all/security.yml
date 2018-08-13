@@ -13,7 +13,6 @@ security:
         mealz:
             pattern: ^/
             anonymous: ~
-            fos_oauth: true
             logout:
                 path:   MealzUserBundle_logout
                 target: /
@@ -21,15 +20,5 @@ security:
             pattern:  ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        oauth_token:
-            pattern:    ^/oauth/v2/token
-            security:   false
-
-        rest:
-            pattern:    ^/rest
-            fos_oauth:  true
-            stateless:  true
-            anonymous:  false
-
     access_control:
-#        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
+        #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }

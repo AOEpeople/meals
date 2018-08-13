@@ -9,11 +9,3 @@ xopn_mealz_for_zombies_mealz:
 xopn_mealz_for_zombies_accounting:
     resource: "@MealzAccountingBundle/Resources/config/routing.yml"
     prefix:   /
-
-xopn_mealz_for_zombies_rest:
-    type : rest
-    resource: "@MealzRestBundle/Resources/config/routing.yml"
-    prefix:   /rest/v1
-
-fos_oauth_server_token:
-    resource: "@FOSOAuthServerBundle/Resources/config/routing/token.xml"

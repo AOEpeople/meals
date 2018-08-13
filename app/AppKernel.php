@@ -44,11 +44,16 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
+            new JMS\SerializerBundle\JMSSerializerBundle(),
+            new FOS\RestBundle\FOSRestBundle(),
+            new FOS\OAuthServerBundle\FOSOAuthServerBundle(),
 
             new Mealz\MealBundle\MealzMealBundle(),
             new Mealz\UserBundle\MealzUserBundle(),
             new Mealz\AccountingBundle\MealzAccountingBundle(),
             new Mealz\TemplateBundle\MealzTemplateBundle(),
+            new Mealz\RestBundle\MealzRestBundle(),
+            new Creatissimo\MattermostBundle\CreatissimoMattermostBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('devbox', 'dev', 'deploy', 'test'))) {

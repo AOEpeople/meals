@@ -25,3 +25,16 @@ error:
     variation_required: Bitte wähle eine Variation aus!
 participation:
   successful: Essensbuchung erfolgreich!
+notification:
+  confirm_swap: Leider ist es schon zu spät, um dein Essen zu stornieren. Du hast aber die Möglichkeit, es jemand anderem zu überlassen.
+tooltip:
+  offered_meal: Jemand anderes kann jetzt dein Essen übernehmen.
+  available_meal: Es ist Essen verfügbar.
+mattermost:
+  offered: '{0} One meal has just been offered for swapping: "%dish%". Log into your account at https://meals.aoe.com/ to get it!|{1} One meal has just been offered for swapping: "%dish%". %counter% other meal is currently offered. Log into your account at https://meals.aoe.com/ to get it!|[2, Inf[ One meal has just been offered for swapping: "%dish%". %counter% other meals are currently offered. Log into your account at https://meals.aoe.com/ to get it!'
+  offer_taken: '{0} One "%takenOffer%" has been taken. All offers are gone now.| {1} One "%takenOffer%" has been taken. Still %counter% other meal is being offered.| [2, Inf[ One "%takenOffer%" has been taken. Still %counter% other meals are being offered.'
+mail:
+  domain: '@aoe.com'
+  subject: 'Your offered food has been taken'
+  sender: 'From: AOE Meals Chef Bot <noreply-meals@aoe.com>'
+  message: "Hi %firstname%,\nI would like to inform you that the \"%takenOffer%\" you offered has just been taken by someone.\nNo further action is required on your side.\n\nCheers, Your Chef Bot."

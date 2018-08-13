@@ -26,6 +26,12 @@ class Link {
 		$this->router = $router;
 	}
 
+    /**
+     * @param $object
+     * @param null $action
+     * @param int $referenceType
+     * @return string
+     */
 	public function link($object, $action = NULL, $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH) {
 		if($object instanceof Meal) {
 			return $this->linkMeal($object, $action, $referenceType);
@@ -43,10 +49,16 @@ class Link {
 		}
 	}
 
+    /**
+     * @param Meal $meal
+     * @param null $action
+     * @param int $referenceType
+     * @return string
+     */
     public function linkMeal(Meal $meal, $action = NULL, $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH) {
         $action = $action ?: 'show';
-        if (!is_null($meal->getDish()) && $meal->getDish() instanceof Dish) {
-            if ($action === 'show' || $action === 'join' || $action === 'join_someone') {
+        if (is_null($meal->getDish()) === false && $meal->getDish() instanceof Dish === true) {
+            if ($action === 'show' || $action === 'join' || $action === 'join_someone' || $action === 'accept_offer') {
                 return $this->router->generate('MealzMealBundle_Meal_' . $action, array(
                     'date' => $meal->getDateTime()->format('Y-m-d'),
                     'dish' => $meal->getDish()->getSlug(),
@@ -69,9 +81,15 @@ class Link {
         }
     }
 
+    /**
+     * @param Participant $participant
+     * @param null $action
+     * @param int $referenceType
+     * @return string
+     */
 	public function linkParticipant(Participant $participant, $action = NULL, $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH) {
 		$action = $action ?: 'edit';
-		if($action === 'edit' || $action === 'delete' || $action === 'confirm' ) {
+		if($action === 'edit' || $action === 'delete' || $action === 'confirm' || $action === 'swap' || $action === 'unswap') {
 			return $this->router->generate('MealzMealBundle_Participant_' . $action, array('participant' => $participant->getId()), $referenceType);
 		} else {
 			throw new \InvalidArgumentException(sprintf(
@@ -82,6 +100,12 @@ class Link {
 		}
 	}
 
+    /**
+     * @param Dish $dish
+     * @param null $action
+     * @param int $referenceType
+     * @return string
+     */
 	public function linkDish(Dish $dish, $action = NULL, $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH) {
 		$action = $action ?: 'edit';
 		if($action === 'delete') {

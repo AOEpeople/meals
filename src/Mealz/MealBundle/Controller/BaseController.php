@@ -8,6 +8,7 @@ use Mealz\AccountingBundle\Entity\TransactionRepository;
 use Mealz\MealBundle\Entity\CategoryRepository;
 use Mealz\MealBundle\Entity\DishRepository;
 use Mealz\MealBundle\Entity\MealRepository;
+use Mealz\MealBundle\Entity\Participant;
 use Mealz\MealBundle\Entity\ParticipantRepository;
 use Mealz\MealBundle\Service\Doorman;
 use Mealz\MealBundle\Service\Link;
@@ -16,6 +17,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+
+/**
+ * Class BaseController
+ * @package Mealz\MealBundle\Controller
+ */
 abstract class BaseController extends Controller
 {
     /**
@@ -106,5 +112,27 @@ abstract class BaseController extends Controller
         );
 
         return new JsonResponse($response);
+    }
+
+    /**
+     * @param Participant $participant
+     * @param String $takenOffer
+     */
+    public function sendMail(Participant $participant, $takenOffer)
+    {
+        $translator = $this->get('translator');
+
+        $to = $participant->getProfile()->getUsername() . $translator->trans('mail.domain', array(), 'messages');
+        $subject = $translator->trans('mail.subject', array(), 'messages');
+        $header = $translator->trans('mail.sender', array(), 'messages');
+        $firstname = $participant->getProfile()->getFirstname();
+
+        $message = $translator->trans('mail.message', array(
+            '%firstname%' => $firstname,
+            '%takenOffer%' => $takenOffer),
+            'messages'
+        );
+
+        mail($to, $subject, $message, $header);
     }
 }

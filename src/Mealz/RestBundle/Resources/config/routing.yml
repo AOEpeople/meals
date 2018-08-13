@@ -1,0 +1,27 @@
+mealz_rest_week_current:
+    type: rest
+    path:     /week/active
+    defaults: { _controller: MealzRestBundle:Week:active }
+
+mealz_rest_participant_delete:
+    type: rest
+    path:     /participant/{participantId}
+    defaults: { _controller: MealzRestBundle:Participant:delete }
+    methods:  [DELETE]
+
+mealz_rest_participant_confirm:
+    type: rest
+    path:     /participant/{participantId}
+    defaults: { _controller: MealzRestBundle:Participant:confirm }
+    methods:  [PUT]
+
+mealz_rest_participant_today:
+    type: rest
+    path:     /participant/today
+    defaults: { _controller: MealzRestBundle:Participant:today }
+
+mealz_rest_participant_add:
+    type: rest
+    path:     /participant/{date}/{dishId}
+    defaults: { _controller: MealzRestBundle:Meal:add }
+    methods:  [POST]

@@ -12,7 +12,7 @@ Mealz.prototype.initDishSelection = function () {
         } else {
             $this.parent('.day').siblings().find('.limit-box').each(function () {
                 limitBoxSaveClick();
-            })
+            });
         }
         var selectedDay = $(this).parent();
         var limitBoxSelectedDay= selectedDay.children('.limit-box');

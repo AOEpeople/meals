@@ -15,7 +15,7 @@ use Mealz\MealBundle\Entity\Participant;
 use Mealz\MealBundle\Service\Doorman;
 use Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
-use Mealz\UserBundle\Entity\Profile;
+
 
 /**
  * Meal controller test.
@@ -49,6 +49,103 @@ class MealControllerTest extends AbstractControllerTestCase
     }
 
     /**
+     * Tests the acceptOffer action (accepting a meal offer) in the meal controller.
+     * First case: An user accepts an available offer.
+     * @test
+     */
+    public function acceptAvailableOffer() {
+        $userProfile = $this->getUserProfile();
+        $this->loginAsDefaultClient($userProfile);
+
+        //create a test profile
+        $profile = $this->createProfile('Max', 'Mustermann' . time());
+        $this->persistAndFlushAll([$profile]);
+
+        //get first locked meal and make it an available offer
+        $lockedMealsArray = $this->getDoctrine()->getRepository('MealzMealBundle:Meal')->getLockedMeals();
+        $firstLockedMeal = $lockedMealsArray[0];
+        $participant = $this->createParticipant($profile, $firstLockedMeal);
+        $participant->setOfferedAt(time());
+        $this->persistAndFlushAll([$participant]);
+
+        //variables for first case
+        $date = date_format($firstLockedMeal->getDateTime(), 'Y-m-d');
+        $dish = $firstLockedMeal->getDish()->getSlug();
+
+        //first case: accept available offer
+        $this->client->request('GET', '/menu/' . $date . '/' . $dish . '/accept-offer');
+        $this->assertTrue($this->client->getResponse()->isSuccessful(), 'accepting offer failed');
+    }
+
+    /**
+     * Second case: There are two offers and the user accepts one and automatically takes the one, that was offered earlier.
+     * @test
+     */
+    public function acceptFirstOffer() {
+        $userProfile = $this->getUserProfile();
+        $this->loginAsDefaultClient($userProfile);
+
+        //create a test profile
+        $profile = $this->createProfile('Max', 'Mustermann' . time());
+
+        //create second test profile
+        $secondProfile = $this->createProfile('Meike', 'Musterfrau' . time());
+        $this->persistAndFlushAll([$profile, $secondProfile]);
+
+        //get first locked meal and make it an available offer
+        $lockedMealsArray = $this->getDoctrine()->getRepository('MealzMealBundle:Meal')->getLockedMeals();
+        $lockedMeal = $lockedMealsArray[0];
+        $participant = $this->createParticipant($profile, $lockedMeal);
+        $participant->setOfferedAt(time());
+
+        //create second participant for same locked meal and make it an available offer (which was offered after the first one)
+        $secondParticipant = $this->createParticipant($secondProfile, $lockedMeal);
+        $secondParticipant->setOfferedAt(time() + 1);
+
+        $this->persistAndFlushAll([$participant, $secondParticipant]);
+
+        //variables for first case
+        $date = date_format($lockedMeal->getDateTime(), 'Y-m-d');
+        $dish = $lockedMeal->getDish()->getSlug();
+
+        //first case: accept available offer
+        $this->client->request('GET', '/menu/' . $date . '/' . $dish . '/accept-offer');
+        $this->assertTrue($this->client->getResponse()->isSuccessful(), 'accepting offer failed');
+
+        //verification by checking the database
+        $newParticipant = $this->getDoctrine()->getRepository('MealzMealBundle:Participant')->find($participant->getId());
+        $this->assertTrue($newParticipant->getOfferedAt() === 0);
+
+        //second case: check if second offer is still available
+        $secondOffer = $this->getDoctrine()->getRepository('MealzMealBundle:Participant')->find($secondParticipant->getId());
+        $this->assertTrue($secondOffer->getOfferedAt() != 0, 'second offer was taken');
+    }
+
+    /**
+     * Third case: An user tries to accept an outdated offer.
+     * @test
+     */
+    public function acceptOutdatedOffer() {
+        $userProfile = $this->getUserProfile();
+        $this->loginAsDefaultClient($userProfile);
+
+        //create a test profile
+        $profile = $this->createProfile('Max', 'Mustermann' . time());
+        $this->persistAndFlushAll([$profile]);
+
+        //variables for third case
+        $outdatedMealsArray = $this->getDoctrine()->getRepository('MealzMealBundle:Meal')->getOutdatedMeals();
+        $outdatedMeal = $outdatedMealsArray[0];
+
+        $date = date_format($outdatedMeal->getDateTime(), 'Y-m-d');
+        $dish = $outdatedMeal->getDish();
+
+        //third case: accepting outdated offer
+        $this->client->request('GET', '/menu/' . $date . '/' . $dish . '/accept-offer');
+        $this->assertTrue($this->client->getResponse()->getStatusCode() === 403, 'user accepted outdated offer');
+    }
+
+    /**
      * Testing joining Meal with variations.
      * We have next situation: (1 Dish without variations and 1 Dish with 2 variations)
      * If we can subscribe to all 3 of these options then you can select Dish with and without variations
@@ -71,9 +168,9 @@ class MealControllerTest extends AbstractControllerTestCase
 
         // go through provided data and test functionality
         foreach ($dataProvider as $dataRow) {
-            // Call controller action
+            // Call controller actionxxxx
             $slug = $dataRow[1]->getDish()->getSlug();
-            $this->client->request('GET', "/menu/$dataRow[0]/$slug/join/$username");
+            $this->client->request('GET', '/menu/$dataRow[0]/$slug/join/$username');
 
             // Verify if enrollment is successful
             $mealParticipants = $this->getMealParticipants($dataRow[1]);
@@ -123,7 +220,7 @@ class MealControllerTest extends AbstractControllerTestCase
      * @test
      * @dataProvider getGuestEnrollmentData
      *
-     * @param bool   $enrollmentStatus Flag whether enrollment should be successful or not.
+     * @param bool $enrollmentStatus Flag whether enrollment should be successful or not.
      */
     public function enrollAsGuest($firstName, $lastName, $company, $selectDish, $enrollmentStatus)
     {
@@ -135,7 +232,7 @@ class MealControllerTest extends AbstractControllerTestCase
         $this->persistAndFlushAll([$guestInvitation]);
 
         // Enroll as guest
-        $guestEnrollmentUrl = '/menu/guest/'.$guestInvitation->getId();
+        $guestEnrollmentUrl = '/menu/guest/' . $guestInvitation->getId();
         $crawler = $this->client->request('GET', $guestEnrollmentUrl);
         $this->assertTrue($this->client->getResponse()->isSuccessful());
 
@@ -168,10 +265,10 @@ class MealControllerTest extends AbstractControllerTestCase
                 $this->assertTrue($enrollmentStatus);
 
                 return;
+            } else {
+                $this->assertFalse($enrollmentStatus);
             }
         }
-
-        $this->assertFalse($enrollmentStatus);
     }
 
     /**
@@ -183,14 +280,13 @@ class MealControllerTest extends AbstractControllerTestCase
 
         return [
             // [FirstName, LastName, Company, Select Dish, Enrollment Status]
-            ['Max01:'.$time, 'Mustermann01'.$time, 'Test Comapany01'.$time, false, false],
-            ['', 'Mustermann02'.$time, 'Test Comapany02'.$time, true, false],
-            ['Max03:'.$time, '', 'Test Comapany03'.$time, true, false],
-            ['Max04:'.$time, 'Mustermann04'.$time, '', true, false],
-            ['Max05:'.$time, 'Mustermann05'.$time, 'Test Comapany05'.$time, true, true],
+            ['Max01:' . $time, 'Mustermann01' . $time, 'Test Comapany01' . $time, false, false],
+            ['', 'Mustermann02' . $time, 'Test Comapany02' . $time, true, false],
+            ['Max03:' . $time, '', 'Test Comapany03' . $time, true, false],
+            ['Max04:' . $time, 'Mustermann04' . $time, '', true, false],
+            ['Max05:' . $time, 'Mustermann05' . $time, 'Test Comapany05' . $time, true, true],
         ];
     }
-
 
     /**     * Gets the next available meal.
      *

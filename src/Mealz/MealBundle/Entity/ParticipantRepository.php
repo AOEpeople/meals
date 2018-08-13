@@ -26,10 +26,10 @@ class ParticipantRepository extends EntityRepository
     );
 
     /**
-     * @param \DateTime    $minDate
-     * @param \DateTime    $maxDate
+     * @param \DateTime $minDate
+     * @param \DateTime $maxDate
      * @param Profile|null $profile
-     * @param array        $options
+     * @param array $options
      * @return mixed
      */
     public function getParticipantsOnDays(
@@ -37,7 +37,8 @@ class ParticipantRepository extends EntityRepository
         \DateTime $maxDate,
         Profile $profile = null,
         $options = array()
-    ) {
+    )
+    {
         $options = array_merge(
             $options,
             array(
@@ -117,7 +118,7 @@ class ParticipantRepository extends EntityRepository
 
     /**
      * @param Profile $profile
-     * @param int     $limit
+     * @param int $limit
      * @return Participant[]
      */
     public function getLastAccountableParticipations(Profile $profile, $limit = null)
@@ -314,5 +315,51 @@ class ParticipantRepository extends EntityRepository
         $qb->setParameters(['now' => date('Y-m-d H:i:s'), 'role_sid' => Role::ROLE_GUEST]);
 
         return $qb->getQuery()->getArrayResult();
+    }
+
+    /**
+     * Returns meals that are being offered, ordered by the time they were offered
+     * @param $mealId
+     * @return array
+     */
+    public function findByOffer($mealId)
+    {
+        $qb = $this->createQueryBuilder('a');
+        $qb->where(
+            $qb->expr()->not(
+                $qb->expr()->eq('a.' . 'offeredAt', '?1')
+            ),
+            $qb->expr()->eq('a.' . 'meal', '?2')
+        );
+        $qb->setParameter(1, 0);
+        $qb->setParameter(2, $mealId);
+        $qb->orderBy('a.offeredAt', 'asc');
+
+        return $qb->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Returns an array with all the pending participants on the given date.
+     * @param \DateTime $dateTime
+     * @return array
+     */
+    public function getPendingParticipants(\DateTime $dateTime)
+    {
+        $minDate = new \DateTime(date('d-m-Y', date_timestamp_get($dateTime)) . '00:00');
+        $maxDate = new \DateTime(date('d-m-Y', date_timestamp_get($dateTime)) . '23:59');
+
+        $options = array('load_meal' => true);
+        $qb = $this->getQueryBuilderWithOptions($options);
+
+        $qb->andWhere('m.dateTime >= :minDate');
+        $qb->andWhere('m.dateTime <= :maxDate');
+        $qb->setParameter('minDate', $minDate);
+        $qb->setParameter('maxDate', $maxDate);
+
+        $qb->andWhere('p.offeredAt != 0');
+
+        return $qb->getQuery()
+            ->getResult();
     }
 }

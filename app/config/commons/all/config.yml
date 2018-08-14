@@ -20,7 +20,7 @@ framework:
         handler_id:  ~
     fragments:       ~
     http_method_override: true
-    profiler: { only_exceptions: false }
+    profiler: { only_exceptions: true }
 
 # Twig Configuration
 twig:

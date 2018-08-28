@@ -31,8 +31,8 @@ tooltip:
   offered_meal: Jemand anderes kann jetzt dein Essen übernehmen.
   available_meal: Es ist Essen verfügbar.
 mattermost:
-  offered: '{0} One meal has just been offered: "%dish%". Log into your account at https://meals.aoe.com/ to get it!|{1} One meal has just been offered: "%dish%". %counter% other meal is currently being offered. Log into your account at https://meals.aoe.com/ to get it!|[2, Inf[ One meal has just been offered: "%dish%". %counter% other meals are currently being offered. Log into your account at https://meals.aoe.com/ to get it!'
-  offer_taken: '{0} One "%takenOffer%" has been taken. All offers are gone now.| {1} One "%takenOffer%" has been taken. Still %counter% other meal is being offered.| [2, Inf[ One "%takenOffer%" has been taken. Still %counter% other meals are being offered.'
+  offered: '{0} :meal: One meal has just been offered: "%dish%". Log into your account at https://meals.aoe.com/ to get it!|{1} :meal: One meal has just been offered: "%dish%". %counter% other meal is currently being offered. Log into your account at https://meals.aoe.com/ to get it!|[2, Inf[ :meal: One meal has just been offered: "%dish%". %counter% other meals are currently being offered. Log into your account at https://meals.aoe.com/ to get it!'
+  offer_taken: '{0} :nomeal: One "%takenOffer%" has been taken. All offers are gone now.| {1} :meal: One "%takenOffer%" has been taken. Still %counter% other meal is being offered.| [2, Inf[ :meal: One "%takenOffer%" has been taken. Still %counter% other meals are being offered.'
 mail:
   domain: '@aoe.com'
   subject: 'Your offered food has been taken'

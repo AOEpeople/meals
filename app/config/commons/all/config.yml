@@ -143,14 +143,25 @@ creatissimo_mattermost:
     webhook: https://messages.aoe.com/hooks/f9nb161oppro8nin15zhtrgqqh
     channel:
     iconUrl: "http://deploy.mealz.itg.de2.dc.aoe.lan/images/chef_bot.png"
-    enable: true
-    terminate:
-        enable: false
-        exclude_exitcode: [0]
-    exception:
-        enable: false
-        trace: false
     environments:
+        devbox:
+            enable: true
+            terminate:
+                enable: false
+                exclude_exitcode: [0]
+            exception:
+                enable: false
+                trace: false
+
+        deploy:
+            enable: true
+            terminate:
+                enable: false
+                exclude_exitcode: [0]
+            exception:
+                enable: false
+                trace: false
+
         production:
             appname: "Meals"
             username: "Chef"

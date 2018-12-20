@@ -75,7 +75,7 @@ class MealAdminController extends BaseController
         $weekRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Week');
         $week = $weekRepository->findOneBy(
             array(
-                'year' => $date->format('Y'),
+                'year' => $date->format('o'),
                 'calendarWeek' => $date->format('W'),
             )
         );

@@ -36,14 +36,14 @@ class MealAdminController extends BaseController
             $modifiedDateTime->modify('+'.$i.' weeks');
             $week = $weekRepository->findOneBy(
                 array(
-                    'year' => $modifiedDateTime->format('Y'),
+                    'year' => $modifiedDateTime->format('o'),
                     'calendarWeek' => $modifiedDateTime->format('W'),
                 )
             );
 
             if (null === $week) {
                 $week = new Week();
-                $week->setYear($modifiedDateTime->format('Y'));
+                $week->setYear($modifiedDateTime->format('o'));
                 $week->setCalendarWeek($modifiedDateTime->format('W'));
             }
 
@@ -203,7 +203,7 @@ class MealAdminController extends BaseController
     protected function generateEmptyWeek(\DateTime $dateTime)
     {
         $week = new Week();
-        $week->setYear($dateTime->format('Y'));
+        $week->setYear($dateTime->format('o'));
         $week->setCalendarWeek($dateTime->format('W'));
 
         $dateTimeModifier = $this->getParameter('mealz.lock_toggle_participation_at');

@@ -10,3 +10,8 @@ framework:
     router:
         resource: "%kernel.root_dir%/config/commons/all/routing.yml"
         strict_requirements: true
+
+monolog:
+    handlers:
+        main:
+            level:  error

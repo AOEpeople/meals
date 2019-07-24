@@ -18,62 +18,62 @@ You need to be signed in with LDAP credentials and click on your balance. Now yo
 Admin has access to all user features as well.
 
 ### Menu (List of weeks)
-**Route:** /menu  
-**Available at:** Choose "Menu" in admin navigation bar.  
+**Route:** /menu
+**Available at:** Choose "Menu" in admin navigation bar.
 **Actions:** Create new week and edit existing ones.
 
-**Description:**  
+**Description:**
 List of current and upcoming weeks. Already created / edited weeks are green.
 Weeks which haven't been created yet, are displayed with a grey background color.
 
 ### Menu (Week detail view)
-**Route:** /menu/{YYYY}W{KW}/new oder /menu/{week-id}/edit  
-**Available at:** Choose "Menu" in admin navigation bar and click on one of the listed weeks.  
+**Route:** /menu/{YYYY}W{KW}/new oder /menu/{week-id}/edit
+**Available at:** Choose "Menu" in admin navigation bar and click on one of the listed weeks.
 **Actions:** Disable whole week or some days.
 
-**Description:**  
+**Description:**
 Here you can select the desired dishes for the selected week.
 Additionally you can disable some days or the whole week in case of (public) holiday.
 
 ### Dishes
-**Route:** /dish  
-**Available at:** Choose "Dishes" in admin navigation bar.  
+**Route:** /dish
+**Available at:** Choose "Dishes" in admin navigation bar.
 **Actions** Add variation, Create, edit and delete dishes
 
 ### Dish variations
-**Route:** /dish  
-**Available at:** Choose "Dishes" in admin navigation bar.  
+**Route:** /dish
+**Available at:** Choose "Dishes" in admin navigation bar.
 **Actions** Add variation, edit and delete dishes
 
-**Description:**  
+**Description:**
 Lists all existing variations for particular dishes. You can edit and delete them.
 If you click on "ADD VARIATION" you can add new variation to some Dish.
 
 ### (Dish) Categories
-**Route:** /category   
-**Available at:** Choose "Categories" in admin navigation bar.  
+**Route:** /category
+**Available at:** Choose "Categories" in admin navigation bar.
 **Actions:** Create, edit and delete categories
 
-**Description:**  
+**Description:**
 Lists all existing (dish) categories. You can edit and delete them.
 If you click on "CREATE CATEGORY" you can create a new one.
 
 ### Costs
-**Route:** /print/costsheet  
-**Available at:** Choose "Costs" in admin navigation bar.  
+**Route:** /print/costsheet
+**Available at:** Choose "Costs" in admin navigation bar.
 **Actions:** Book transaction for user, "CASH REGISTER" (Accounting book)
 
-**Description:**  
+**Description:**
 Lists all users and their outstanding debts. Debts are structured in 6 different columns:
 Total, current month (all debts in this month till current day), one column for each of the last three month,
 all debts before the last three month summed up in one column.
-Additionally you can add a transaction (positive or negative) to a users profile, by clicking on the plus sign. 
+Additionally you can add a transaction (positive or negative) to a users profile, by clicking on the plus sign.
 
 ### Accounting book
-**Route:** /accounting/book  
+**Route:** /accounting/book
 **Available at:** Choose "Costs" in admin navigation bar. Click on button "CASH REGISTER".
 
-**Description:**  
+**Description:**
 Lists all transactions booked for users in the last month.
 
 ## Installation
@@ -118,15 +118,25 @@ See http://symfony.com/doc/current/cookbook/configuration/external_parameters.ht
 ### Frontend build
 
 ```
-cd /var/www/mealz/devbox/app/Resources
-npm install
-./node_modules/.bin/bower install
-./node_modules/.bin/gulp
+cd /var/www/mealz/devbox/current/app/Resources
+sudo npm install
+sudo ./node_modules/.bin/bower install
+sudo ./node_modules/.bin/gulp
+```
+
+To develop and automaticly build gulp try
+```
+sudo ./node_modules/.bin/gulp watch
 ```
 
 ### You're done
 
-Point your webbrowser to http://mealz.local
+Point your webbrowser to http://meals.local
+Don't forget to add to your local hosts file:
+127.0.0.1 www.meals.local meals.local
+
+### SSH Access
+ssh docker@meals.local Password: docker
 
 ## Troubleshooting
 
@@ -144,7 +154,7 @@ The following roles are in use:
   * ROLE_KITCHEN_STAFF: allowed to create and edit dishes and meals
   * ROLE_GUEST: for users who is invited for a meal, customers etc.
   * ROLE_ADMIN: for users who is admin
-  
+
 
 ### Test data
 
@@ -172,6 +182,6 @@ Before running phpunit make sure the database schema is up-to-date:
     > GRANT ALL PRIVILEGES ON mealz_test.* TO 'mealz_test'@'localhost';
 
     php app/console doctrine:schema:update --env=test --force
-    bin/phpunit -c app/config/commons/development/phpunit.xml 
+    bin/phpunit -c app/config/commons/development/phpunit.xml
 
 Note: When you disable xdebug the performance will be better

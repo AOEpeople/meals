@@ -2,7 +2,7 @@ version: '2'
 services:
   mealz:
     tty: true
-    image: docker-team402.aoe.com/mealz
+    image: docker-team402.aoe.com/meals
     ports:
       - "80:80"
       - "443:443"

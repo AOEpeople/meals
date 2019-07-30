@@ -1,6 +1,8 @@
 version: '2'
 services:
   mealz:
+    environment:
+        - ENV=devbox
     tty: true
     image: docker-team402.aoe.com/meals
     ports:

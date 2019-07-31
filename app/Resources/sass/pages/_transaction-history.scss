@@ -166,3 +166,9 @@
 }
 
 
+/* MOBILE STYLING */
+@media only screen and (max-width: 768px) {
+  .add-funds form {
+    width: auto;
+  }
+}

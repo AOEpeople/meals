@@ -4,6 +4,7 @@
   margin-bottom: 30px;
   font-weight: bold;
   font-size: 16px;
+  clear:right;
 
   span {
     display: inline-block;
@@ -13,6 +14,73 @@
     &.dept {
       color: $color-red;
     }
+  }
+}
+
+.add-funds {
+  float: right;
+  margin-top: 10px;
+  margin-bottom: 30px;
+  font-weight: bold;
+  font-size: 16px;
+  color: $color-orange;
+  line-height: 20px;
+
+  .load-payment-form {
+    margin-right: 15px;
+    font-size: 20px;
+    vertical-align: middle;
+
+    .glyphicon {
+      top: 0px;
+    }
+  }
+
+  form {
+    color: $color-gray-primary;
+    position: absolute;
+    right: 28px;
+    z-index: 1;
+    margin-top: 17px;
+    padding: 20px;
+    background-color: $color-gray-light;
+    width: 500px;
+
+    .cash-label {
+      vertical-align: super;
+      margin-right: 15px;
+    }
+
+    button,
+      input {
+      display: inline-block;
+    }
+
+    input[type="text"] {
+      width: 80px;
+      padding: 11px 10px 9px;
+      vertical-align: super;
+    }
+
+    button {
+      vertical-align: bottom;
+      line-height: 14px;
+
+      @-moz-document url-prefix() {
+        line-height: 10px;
+      }
+    }
+
+    &::after {
+      position: absolute;
+      top: -20px;
+      right: 15%;
+      border: 10px solid transparent;
+      border-bottom-color: $color-gray-light;
+      content: ' ';
+      pointer-events: none;
+    }
+
   }
 }
 

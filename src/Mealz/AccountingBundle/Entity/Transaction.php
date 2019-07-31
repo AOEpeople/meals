@@ -51,6 +51,13 @@ class Transaction
     private $amount;
 
     /**
+     * @Assert\Length(min=3, max=2048)
+     * @ORM\Column(type="string", length=2048, nullable=TRUE)
+     * @var string
+     */
+    private $paymethod;
+
+    /**
      * @return string
      */
     public function getId()
@@ -92,6 +99,26 @@ class Transaction
     public function getAmount()
     {
         return $this->amount;
+    }
+
+    /**
+     * @param string $paymethod
+     *
+     * @return Transaction
+     */
+    public function setPaymethod($paymethod)
+    {
+        $this->paymethod = $paymethod;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPaymethod()
+    {
+        return $this->paymethod;
     }
 
     /**

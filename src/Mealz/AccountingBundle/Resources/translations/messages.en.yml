@@ -7,9 +7,13 @@ payment:
     button: Understood!
   transaction_history:
     account: Account
+    add_funds: ADD FUNDS
     balance_past: Balance on the
     balance_now: Current balance
     date: Date
     description: Description
     amount: Amount
     cash_payment: Cash Payment
+    payment_method: Payment Method
+    pay: Pay
+    paypal: PayPal

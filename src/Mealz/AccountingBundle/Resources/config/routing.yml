@@ -48,9 +48,17 @@ mealz_accounting_payment_cash_form_submit:
     path: /payment/cash/form/submit
     defaults: { _controller: "MealzAccountingBundle:Payment\\Cash:paymentFormHandling" }
 
+mealz_accounting_payment_paypal_form_submit:
+    path: /payment/paypal/form/submit
+    defaults: { _controller: "MealzAccountingBundle:Payment\\Paypal:paymentFormHandling" }
+
 mealz_accounting_payment_cash_form:
     path: /payment/cash/form/{profile}
     defaults: { _controller: "MealzAccountingBundle:Payment\\Cash:getPaymentFormForProfile" }
+
+mealz_accounting_payment_paypal_form:
+    path: /payment/paypal/form/{profile}
+    defaults: { _controller: "MealzAccountingBundle:Payment\\Paypal:getPaymentFormForProfile" }
 
 mealz_accounting_payment_transaction_history:
     path: /accounting/transactions

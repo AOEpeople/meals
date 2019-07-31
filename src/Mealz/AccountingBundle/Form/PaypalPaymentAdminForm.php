@@ -9,9 +9,11 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\NumberToLocalizedStrin
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class CashPaymentAdminForm extends AbstractType
+class PaypalPaymentAdminForm extends AbstractType
 {
+
     /**
      * @var EntityManager
      */
@@ -36,14 +38,24 @@ class CashPaymentAdminForm extends AbstractType
                 'attr' => array(
                     'placeholder' => 'EUR'
                 ),
-                'label' => false,
-                'rounding_mode' => NumberToLocalizedStringTransformer::ROUND_DOWN
+                'rounding_mode' => NumberToLocalizedStringTransformer::ROUND_DOWN,
+                'label' => 'payment.transaction_history.amount'
             ))
-            ->add('submit', 'submit', array(
+            ->add('ppsubmit', 'submit', array(
                 'attr' => array(
                     'class' => 'button small'
                 ),
-                'label' => 'OK'
+                'label' => 'payment.transaction_history.pay'
+            ))
+            ->add('paymethod', ChoiceType::class, array(
+                'choices' => [
+                    'payment.transaction_history.paypal'
+                ],
+                'attr' => array(
+                    'class' => 'button small'
+                ),
+                'label' => 'false',
+                'expanded' => 'false'
             ));
 
         $builder->get('profile')->addModelTransformer($profileTransformer);
@@ -64,6 +76,6 @@ class CashPaymentAdminForm extends AbstractType
      */
     public function getName()
     {
-        return 'cash';
+        return 'paypal';
     }
 }

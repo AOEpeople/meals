@@ -7,9 +7,13 @@ payment:
     button: OK, kapiert!
   transaction_history:
     account: Konto
+    add_funds: ZAHLUNG HINZUFÜGEN
     balance_past: Kontostand am
     balance_now: Aktueller Kontostand
     date: Datum
     description: Beschreibung
     amount: Betrag
     cash_payment: Barzahlung
+    payment_method: Zahlungsmethode
+    pay: Zahlen
+    paypal: PayPal

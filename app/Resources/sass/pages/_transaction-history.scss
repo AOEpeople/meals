@@ -21,7 +21,6 @@
   float: right;
   margin-top: 10px;
   margin-bottom: 30px;
-  font-weight: bold;
   font-size: 16px;
   color: $color-orange;
   line-height: 20px;
@@ -29,6 +28,7 @@
   .load-payment-form {
     margin-right: 15px;
     vertical-align: middle;
+    font-weight: bold;
 
     .glyphicon {
       top: 3px !important;
@@ -41,13 +41,20 @@
     right: 28px;
     z-index: 1;
     margin-top: 17px;
-    padding: 20px;
+    padding: 30px;
     background-color: $color-gray-light;
     width: 500px;
 
     .cash-label {
       vertical-align: super;
       margin-right: 15px;
+    }
+
+    .payment-method {
+      display: block;
+      font-size: 20px;
+      margin: 30px 0px 20px;
+      font-weight: bold;
     }
 
     button,
@@ -58,12 +65,13 @@
     input[type="text"] {
       width: 80px;
       padding: 11px 10px 9px;
-      vertical-align: super;
+      vertical-align: middle;
     }
 
     button {
       vertical-align: bottom;
       line-height: 14px;
+      margin-top: 20px;
 
       @-moz-document url-prefix() {
         line-height: 10px;

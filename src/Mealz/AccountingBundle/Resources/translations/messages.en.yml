@@ -12,7 +12,7 @@ payment:
     balance_now: Current balance
     date: Date
     description: Description
-    amount: Amount
+    amount: Amount:
     cash_payment: Cash Payment
     payment_method: Payment Method
     pay: Pay

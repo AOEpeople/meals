@@ -10,6 +10,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class PaypalPaymentAdminForm extends AbstractType
 {
@@ -34,14 +36,11 @@ class PaypalPaymentAdminForm extends AbstractType
                 'data' => $options['profile'],
                 'data_class' => null
             ))
-            ->add('amount', 'number', array(
-                'attr' => array(
-                    'placeholder' => 'EUR'
-                ),
-                'rounding_mode' => NumberToLocalizedStringTransformer::ROUND_DOWN,
+            ->add(
+                'amount', MoneyType::class, array(
                 'label' => 'payment.transaction_history.amount'
             ))
-            ->add('ppsubmit', 'submit', array(
+            ->add('ppsubmit', SubmitType::class, array(
                 'attr' => array(
                     'class' => 'button small'
                 ),

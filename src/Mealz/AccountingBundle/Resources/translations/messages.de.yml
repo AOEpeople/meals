@@ -12,7 +12,7 @@ payment:
     balance_now: Aktueller Kontostand
     date: Datum
     description: Beschreibung
-    amount: Betrag
+    amount: Betrag:
     cash_payment: Barzahlung
     payment_method: Zahlungsmethode
     pay: Zahlen

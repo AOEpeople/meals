@@ -3,6 +3,9 @@
 namespace Mealz\AccountingBundle\Form;
 
 use Doctrine\ORM\EntityManager;
+use Mealz\AccountingBundle\Controller\AccountingAdminController;
+use Mealz\AccountingBundle\Controller\Payment\PaypalController;
+use Mealz\AccountingBundle\Service\Wallet;
 use Mealz\MealBundle\Form\DataTransformer\ProfileToStringTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\DataTransformer\NumberToLocalizedStringTransformer;
@@ -38,7 +41,9 @@ class PaypalPaymentAdminForm extends AbstractType
             ))
             ->add(
                 'amount', MoneyType::class, array(
-                'label' => 'payment.transaction_history.amount'
+                'label' => 'payment.transaction_history.amount',
+                'data' => $options['balance'],
+                'data_class' => null
             ))
             ->add('ppsubmit', SubmitType::class, array(
                 'attr' => array(
@@ -47,9 +52,9 @@ class PaypalPaymentAdminForm extends AbstractType
                 'label' => 'payment.transaction_history.pay'
             ))
             ->add('paymethod', ChoiceType::class, array(
-                'choices' => [
+                'choices' => array(
                     'payment.transaction_history.paypal'
-                ],
+                ),
                 'attr' => array(
                     'class' => 'button small'
                 ),
@@ -64,7 +69,8 @@ class PaypalPaymentAdminForm extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'Mealz\AccountingBundle\Entity\Transaction',
-            'profile' => null
+            'profile' => null,
+            'balance' => null
         ));
     }
 

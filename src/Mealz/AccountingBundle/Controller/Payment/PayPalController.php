@@ -3,6 +3,7 @@
 namespace Mealz\AccountingBundle\Controller\Payment;
 
 use Doctrine\ORM\EntityManager;
+use Mealz\AccountingBundle\Service\Wallet;
 use Mealz\MealBundle\Controller\BaseController;
 use Mealz\AccountingBundle\Entity\Transaction;
 use Mealz\MealBundle\Entity\Participant;
@@ -35,12 +36,19 @@ class PaypalController extends BaseController
         $profile = $profileRepository->find($profile);
         $action = $this->generateUrl('mealz_accounting_payment_paypal_form_submit');
 
+        // Default value for PayPal payment overlay
+        $balance = $this->getWallet()->getBalance($profile) * (-1);
+        if($balance <= 0) {
+            $balance = 0;
+        }
+
         $form = $this->createForm(
             new PaypalPaymentAdminForm($em),
             new Transaction(),
             array(
                 'action' => $action,
                 'profile' => $profile,
+                'balance' => $balance,
             )
         );
 
@@ -141,6 +149,13 @@ class PaypalController extends BaseController
                 'participations_total' => $participationsTotal,
             )
         );
+    }
+
+    /**
+     * @return Wallet
+     */
+    public function getWallet() {
+        return $this->get('mealz_accounting.wallet');
     }
 
     /**

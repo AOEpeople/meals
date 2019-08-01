@@ -25,10 +25,6 @@ class PaypalController extends BaseController
      */
     public function getPaymentFormForProfileAction($profile)
     {
-        if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
-            throw new AccessDeniedException();
-        }
-
         /** @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
         $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
@@ -64,9 +60,6 @@ class PaypalController extends BaseController
      */
     public function paymentFormHandlingAction(Request $request)
     {
-        if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
-            throw new AccessDeniedException();
-        }
 
         /** @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
@@ -123,10 +116,6 @@ class PaypalController extends BaseController
      */
     public function showTransactionHistoryAction(Request $request)
     {
-        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
-            throw new AccessDeniedException();
-        }
-
         $profile = $this->getUser()->getProfile();
 
         $dateFrom = new \DateTime();

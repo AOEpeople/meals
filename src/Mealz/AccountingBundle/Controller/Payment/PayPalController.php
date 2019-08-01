@@ -154,7 +154,7 @@ class PaypalController extends BaseController
     /**
      * @return Wallet
      */
-    public function getWallet() {
+    private function getWallet() {
         return $this->get('mealz_accounting.wallet');
     }
 

@@ -51,7 +51,7 @@ class PaypalController extends BaseController
         $template = "MealzAccountingBundle:Accounting/Payment/Paypal:form_paypal_amount.html.twig";
         $renderedForm = $this->render($template, array('form' => $form->createView()));
 
-        return new JsonResponse($renderedForm->getContent());
+        return new JsonResponse($this->getPaypalScript().$renderedForm->getContent());
     }
 
     /**
@@ -145,6 +145,13 @@ class PaypalController extends BaseController
      */
     private function getWallet() {
         return $this->get('mealz_accounting.wallet');
+    }
+
+    /**
+     * @return PaypalString
+     */
+    private function getPaypalScript() {
+        return '<script src="https://www.paypal.com/sdk/js?client-id='.$this->container->get('twig')->getGlobals()['paypal_id'].'"></script>';
     }
 
     /**

@@ -9,9 +9,7 @@
 <span class="payment-method">{{ 'payment.transaction_history.payment_method'|trans({}, 'messages') }}</span>
 
 {{ form_widget(form.paymethod) }}
-{{ form_widget(form.ppsubmit) }}
-
+<div id="paypal-button-container">
+</div>
 {{ form_rest(form) }}
 {{ form_end(form) }}
-
-

@@ -81,6 +81,13 @@ $(document).ready(function () {
 
 
     /**
+     * paypal
+     */
+    $('.add-funds').on('click', function () {
+        mealz.enablepaypal();
+    });
+
+    /**
      * if meals is limited it should be displayed
      */
     $('.participation-limit').each(function(){

@@ -45,12 +45,6 @@ class PaypalPaymentAdminForm extends AbstractType
                 'data' => $options['balance'],
                 'data_class' => null
             ))
-            ->add('ppsubmit', SubmitType::class, array(
-                'attr' => array(
-                    'class' => 'button small'
-                ),
-                'label' => 'payment.transaction_history.pay'
-            ))
             ->add('paymethod', ChoiceType::class, array(
                 'choices' => array(
                     'payment.transaction_history.paypal'
@@ -70,7 +64,7 @@ class PaypalPaymentAdminForm extends AbstractType
         $resolver->setDefaults(array(
             'data_class' => 'Mealz\AccountingBundle\Entity\Transaction',
             'profile' => null,
-            'balance' => null
+            'balance' => null,
         ));
     }
 

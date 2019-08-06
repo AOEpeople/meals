@@ -8,5 +8,3 @@ parameters:
     database_password_testing: mealz_test
 
     secret:            ThisTokenIsNotSoSecretChangeIt
-
-

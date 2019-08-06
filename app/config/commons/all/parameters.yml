@@ -13,7 +13,3 @@ parameters:
     mailer_password:   ~
 
     locale:            en
-
-    # get credentials for sandboxing here: https://developer.paypal.com/developer/applications/
-    paypal.id: ~
-    paypal.secret: ~

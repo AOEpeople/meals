@@ -2,7 +2,7 @@
     * Paypal JS-Logic
     */
 
-Mealz.prototype.enablepaypal = function () {
+Mealz.prototype.enablePaypal = function () {
     /**
     * As long only PayPal is available - let condition outcommented
 
@@ -12,7 +12,7 @@ Mealz.prototype.enablepaypal = function () {
         }
     });*/
 
-    if ($('#ecash_paymethod').attr("checked", "checked")) {
+    if ($('#ecash_paymethod_0').attr("checked", "checked") && $('.paypal-buttons').length === 0) {
         paypalButtonRender();
     }
 

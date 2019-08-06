@@ -51,7 +51,7 @@ class EcashController extends BaseController
         $template = "MealzAccountingBundle:Accounting/Payment/Ecash:form_ecash_amount.html.twig";
         $renderedForm = $this->render($template, array('form' => $form->createView()));
 
-        return new JsonResponse($this->getPaypalScript().$renderedForm->getContent());
+        return new JsonResponse($renderedForm->getContent());
     }
 
     /**
@@ -145,13 +145,6 @@ class EcashController extends BaseController
      */
     private function getWallet() {
         return $this->get('mealz_accounting.wallet');
-    }
-
-    /**
-     * @return PaypalString
-     */
-    private function getPaypalScript() {
-        return '<script src="https://www.paypal.com/sdk/js?client-id='.$this->container->get('twig')->getGlobals()['paypal_id'].'"></script>';
     }
 
     /**

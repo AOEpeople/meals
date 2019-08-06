@@ -87,15 +87,6 @@ $(document).ready(function () {
         mealz.updateOffers();
     }
 
-
-    /**
-     * enable paypal
-     */
-    $('.add-funds').on('click', function () {
-        console.log("asd");
-        mealz.enablepaypal();
-    });
-
     /**
      * if meals is limited it should be displayed
      */

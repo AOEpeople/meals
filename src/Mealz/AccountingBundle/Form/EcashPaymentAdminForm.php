@@ -33,6 +33,9 @@ class EcashPaymentAdminForm extends AbstractType
     {
         $profileTransformer = new ProfileToStringTransformer($this->em);
 
+        /**
+        * if more Paymentmethodsare available remove 'data' => 0 from paymehtod
+        */
         $builder
             ->add(
                 'profile', HiddenType::class, array(
@@ -53,7 +56,8 @@ class EcashPaymentAdminForm extends AbstractType
                     'class' => 'button small'
                 ),
                 'label' => 'false',
-                'expanded' => 'false'
+                'expanded' => 'false',
+                'data' => 0
             ));
 
         $builder->get('profile')->addModelTransformer($profileTransformer);

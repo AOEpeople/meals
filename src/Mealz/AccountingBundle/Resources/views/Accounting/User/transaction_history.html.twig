@@ -7,7 +7,7 @@
     <div class="headline-container headline-container-h1 headline-left"><h1>{{ 'payment.transaction_history.account'|trans({}, 'messages') }}</h1></div>
     <div class="add-funds">
         {{ MealzButton.link(
-                path('mealz_accounting_payment_paypal_form', {profile: app.user.profile.username}),
+                path('mealz_accounting_payment_ecash_form', {profile: app.user.profile.username}),
                 'payment.transaction_history.add_funds',
                 '',
                 'load-payment-form transparent',

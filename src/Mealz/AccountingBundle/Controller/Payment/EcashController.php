@@ -9,15 +9,15 @@ use Mealz\AccountingBundle\Entity\Transaction;
 use Mealz\MealBundle\Entity\Participant;
 use Mealz\UserBundle\Entity\Profile;
 use Symfony\Component\HttpFoundation\Request;
-use Mealz\AccountingBundle\Form\PaypalPaymentAdminForm;
+use Mealz\AccountingBundle\Form\EcashPaymentAdminForm;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
- * Class PaypalController
+ * Class EcashController
  * @package Mealz\AccountingBundle\Controller\Payment
  */
-class PaypalController extends BaseController
+class EcashController extends BaseController
 {
     /**
      * @param Profile $profile
@@ -30,16 +30,16 @@ class PaypalController extends BaseController
         $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
 
         $profile = $profileRepository->find($profile);
-        $action = $this->generateUrl('mealz_accounting_payment_paypal_form_submit');
+        $action = $this->generateUrl('mealz_accounting_payment_ecash_form_submit');
 
-        // Default value for PayPal payment overlay
+        // Default value for Ecash payment overlay
         $balance = $this->getWallet()->getBalance($profile) * (-1);
         if($balance <= 0) {
             $balance = 0;
         }
 
         $form = $this->createForm(
-            new PaypalPaymentAdminForm($em),
+            new EcashPaymentAdminForm($em),
             new Transaction(),
             array(
                 'action' => $action,
@@ -48,7 +48,7 @@ class PaypalController extends BaseController
             )
         );
 
-        $template = "MealzAccountingBundle:Accounting/Payment/Paypal:form_paypal_amount.html.twig";
+        $template = "MealzAccountingBundle:Accounting/Payment/Ecash:form_ecash_amount.html.twig";
         $renderedForm = $this->render($template, array('form' => $form->createView()));
 
         return new JsonResponse($this->getPaypalScript().$renderedForm->getContent());

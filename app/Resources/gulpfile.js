@@ -100,7 +100,7 @@ gulp.task('images', ['clean'], function() {
  * Default watch task
  */
 gulp.task('watch', function() {
-    gulp.watch(['./sass/**/*', 'js/**/*.js'], ['default']);
+    gulp.watch(['./sass/**/*', 'js/**/*.js', 'js/init.js'], ['default']);
 });
 
 

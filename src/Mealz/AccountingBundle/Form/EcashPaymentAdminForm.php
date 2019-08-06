@@ -4,7 +4,7 @@ namespace Mealz\AccountingBundle\Form;
 
 use Doctrine\ORM\EntityManager;
 use Mealz\AccountingBundle\Controller\AccountingAdminController;
-use Mealz\AccountingBundle\Controller\Payment\PaypalController;
+use Mealz\AccountingBundle\Controller\Payment\EcashController;
 use Mealz\AccountingBundle\Service\Wallet;
 use Mealz\MealBundle\Form\DataTransformer\ProfileToStringTransformer;
 use Symfony\Component\Form\AbstractType;
@@ -16,7 +16,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class PaypalPaymentAdminForm extends AbstractType
+class EcashPaymentAdminForm extends AbstractType
 {
 
     /**
@@ -75,6 +75,6 @@ class PaypalPaymentAdminForm extends AbstractType
      */
     public function getName()
     {
-        return 'paypal';
+        return 'ecash';
     }
 }

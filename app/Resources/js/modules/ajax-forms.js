@@ -15,13 +15,15 @@ Mealz.prototype.initAjaxForms = function () {
         e.stopPropagation();
         that.loadAjaxFormPayment($(this));
 
-        if ($('.load-payment-form').is("#ecash") ) {
-            var checkExist = setInterval(function() {
+        if ($('.load-payment-form').is("#ecash")) {
+
+            var checkExist = setInterval(function () {
                 if ($('#paypal-button-container').length) {
                     that.enablePaypal();
                     clearInterval(checkExist);
                 }
             }, 100);
+
         }
 
     });

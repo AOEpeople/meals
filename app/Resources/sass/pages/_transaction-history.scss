@@ -55,6 +55,13 @@
       margin-right: 15px;
     }
 
+    .invalid-amount {
+      display: none;
+      font-size: 10px;
+      margin-left: 40px;
+      color: $color-red;
+    }
+
     .payment-method {
       display: block;
       font-size: 20px;
@@ -71,6 +78,12 @@
       width: 80px;
       padding: 11px 10px 9px;
       vertical-align: middle;
+      border: 1px solid transparent;
+
+      &:invalid {
+        border: 1px solid $color-red;
+      }
+
     }
 
     button {

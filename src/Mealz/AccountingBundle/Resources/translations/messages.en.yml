@@ -17,3 +17,4 @@ payment:
     payment_method: Payment Method
     pay: Pay
     paypal: PayPal
+    invalid: Please enter a valid amount.

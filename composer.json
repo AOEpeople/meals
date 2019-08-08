@@ -25,7 +25,7 @@
         "friendsofsymfony/rest-bundle": "^1.8",
         "friendsofsymfony/oauth-server-bundle": "^1.5",
         "jms/serializer-bundle": "^1.1",
-        "creatissimo/mattermost-bundle": "^1.1",
+        "creatissimo/mattermost-bundle": "1.1.12",
         "paypal/paypal-checkout-sdk": "^1.0.0"
     },
     "require-dev": {

@@ -59,18 +59,18 @@ Mealz.prototype.enablePaypal = function () {
                 });
             },
 
-            onApprove: function (data, actions) {
-                return actions.order.capture().then(function (details) {
-                    alert('Transaction completed by ' + details.payer.name.given_name);
-                    // Call server to save the transaction
-                    return fetch('/paypal-transaction-complete', {
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(function(details) {
+                    $('#ecash_orderid').val(data.orderID);
+
+                    return fetch('/payment/ecash/form/submit', {
                         method: 'post',
                         headers: {
                             'content-type': 'application/json'
                         },
-                        body: JSON.stringify({
-                            orderID: data.orderID
-                        })
+                        body: JSON.stringify(
+                           $('form[name="ecash"]').serializeArray()
+                        )
                     });
                 });
             }

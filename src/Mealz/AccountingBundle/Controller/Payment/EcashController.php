@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Mealz\AccountingBundle\Form\EcashPaymentAdminForm;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use PayPalCheckoutSdk\Orders\OrdersGetRequest;
 
 /**
  * Class EcashController
@@ -60,51 +61,30 @@ class EcashController extends BaseController
      */
     public function paymentFormHandlingAction(Request $request)
     {
-
-        /** @var EntityManager $em */
-        $em = $this->getDoctrine()->getManager();
-        $transaction = new Transaction();
-        $form = $this->createForm(new CashPaymentAdminForm($em), $transaction);
-
-        // handle form submission
-        if ($request->isMethod('POST')) {
-            $form->handleRequest($request);
-
-            if ($form->isValid()) {
-                if ($transaction->getAmount() > 0) {
-                    $em = $this->getDoctrine()->getManager();
-                    $em->persist($transaction);
-                    $em->flush();
-
-                    $message = $this->get('translator')->trans(
-                        'payment.cash.success',
-                        array(
-                            '%amount%' => $transaction->getAmount(),
-                            '%name%' => $transaction->getProfile()->getFullName(),
-                        ),
-                        'messages'
-                    );
-                    $this->addFlashMessage($message, 'success');
-
-                    $logger = $this->get('monolog.logger.balance');
-                    $logger->addInfo('admin added {amount}€ into wallet of {profile} (Transaction: {transactionId})', array(
-                        "profile" => $transaction->getProfile(),
-                        "amount" => $transaction->getAmount(),
-                        "transactionId" => $transaction->getId(),
-                    ));
-                } else {
-                    $message = $this->get('translator')->trans('payment.cash.failure', array(), 'messages');
-                    $this->addFlashMessage($message, 'danger');
-                }
+        $formArray = [];
+        if ($content = $request->getContent()) {
+            // clean Form Array
+            foreach(json_decode($content, true) as $formValue){
+                $formArray[$formValue['name']] = $formValue['value'];
             }
         }
 
-        $weekRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Week');
-        $week = $weekRepository->getCurrentWeek();
+        // Check if required fields are set and PayMethod is Paypal (paymethod=0)
+        if ($request->isMethod('POST')
+            && !empty($formArray['ecash[orderid]'])
+            && !empty($formArray['ecash[profile]'])
+            && ($formArray['ecash[paymethod]'] === '0')
+            && !empty($formArray['ecash[_token]'])
+        ) {
+            // 3. Call PayPal to get the transaction details
+            $client = PaypalClient::client();
+            exit(var_dump($client));
+            $response = $client->execute(new OrdersGetRequest($orderId));
+        } else {
+            return "Nope";
+        }
 
-        return $this->redirectToRoute('mealz_accounting.cost_sheet', array(
-            'week' => $week->getId(),
-        ));
+        return $this->redirectToRoute('mealz_accounting_payment_transaction_history');
     }
 
     /**

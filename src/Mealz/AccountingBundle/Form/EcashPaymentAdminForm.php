@@ -37,13 +37,14 @@ class EcashPaymentAdminForm extends AbstractType
         * if more Paymentmethodsare available remove 'data' => 0 from paymehtod
         */
         $builder
-            ->add(
-                'profile', HiddenType::class, array(
+            ->add('profile', HiddenType::class, array(
                 'data' => $options['profile'],
                 'data_class' => null
             ))
-            ->add(
-                'amount', MoneyType::class, array(
+            ->add('orderid', HiddenType::class, array(
+                'data_class' => null
+            ))
+            ->add('amount', MoneyType::class, array(
                 'label' => 'payment.transaction_history.amount',
                 'data' => $options['balance'],
                 'pattern' => '\d*([.,]?\d+)',

@@ -14,6 +14,7 @@ payment:
     description: Description
     amount: Amount:
     cash_payment: Cash Payment
+    paypal_payment: PayPal payment
     payment_method: Payment Method
     pay: Pay
     paypal: PayPal

@@ -56,6 +56,10 @@ mealz_accounting_payment_ecash_paypal_form_submit:
     path: /payment/ecash/form/submit
     defaults: { _controller: "MealzAccountingBundle:Payment\\Ecash:paypalPaymentFormHandling" }
 
+mealz_accounting_payment_ecash_paypal_transaction_history:
+    path: /accounting/transactions
+    defaults: { _controller: "MealzAccountingBundle:Payment\\Ecash:showTransactionHistory" }
+
 mealz_accounting_payment_cash_form:
     path: /payment/cash/form/{profile}
     defaults: { _controller: "MealzAccountingBundle:Payment\\Cash:getPaymentFormForProfile" }

@@ -4,7 +4,7 @@
   margin-bottom: 30px;
   font-weight: bold;
   font-size: 16px;
-  clear:right;
+  clear: right;
 
   span {
     display: inline-block;
@@ -70,7 +70,7 @@
     }
 
     button,
-      input {
+    input {
       display: inline-block;
     }
 
@@ -160,7 +160,19 @@
       color: $color-green;
     }
 
-    .transaction-description::before {
+    .transaction-description.paypal::before {
+      content: '';
+    }
+
+    .transaction-description.paypal img {
+      position: absolute;
+      top: 17px;
+      left: 0;
+      height: 20px;
+      width: auto;
+    }
+
+    .transaction-description.cash::before {
       content: '\20ac';
       color: $color-green;
 

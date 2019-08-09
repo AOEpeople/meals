@@ -24,7 +24,7 @@ Mealz.prototype.enablePaypal = function () {
 
             // Form validation
             onInit: function (data, actions) {
-                if (amountField[0].checkValidity()) {
+                if (amountField[0].checkValidity()  && parseFloat(amountField[0].value.replace(/,/g, '.')) > 0.00) {
                     actions.enable();
                 } else {
                     actions.disable();

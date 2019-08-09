@@ -37,7 +37,14 @@
                 {% else %}
                     <tr class="table-row transaction-payment">
                         <td class="table-data">{{ transaction_record.date|date('d. M Y') }}</td>
-                        <td class="table-data transaction-description">{{ 'payment.transaction_history.cash_payment'|trans({}, 'messages') }}</td>
+                        {%  if transaction_record.paymethod == '0' %}
+                            <td class="table-data transaction-description paypal">
+                                <img src="{{ asset('images/paypal.png') }}" alt="PayPal icon" />
+                                {{ 'payment.transaction_history.paypal_payment'|trans({}, 'messages') }}
+                            </td>
+                        {% else %}
+                            <td class="table-data transaction-description cash">{{ 'payment.transaction_history.cash_payment'|trans({}, 'messages') }}</td>
+                        {% endif %}
                         <td class="table-data"><span>+</span> {{ transaction_record.amount|number_format(2, '.', ',') }}€</td>
                     </tr>
                 {% endif %}

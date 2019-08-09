@@ -14,6 +14,7 @@ payment:
     description: Beschreibung
     amount: Betrag:
     cash_payment: Barzahlung
+    paypal_payment: PayPal-Zahlung
     payment_method: Zahlungsmethode
     pay: Zahlen
     paypal: PayPal

@@ -11,6 +11,10 @@ ini_set('display_startup_errors', '1');
 
 class PaypalClient
 {
+
+    private static $clientId = null;
+    private static $clientSecret = null;
+
     /**
      * Returns PayPal HTTP client instance with environment that has access
      * credentials context. Use this instance to invoke PayPal APIs, provided the
@@ -27,8 +31,19 @@ class PaypalClient
      */
     public static function environment()
     {
-        $clientId = getenv("CLIENT_ID") ?: $this->container->get('twig')->getGlobals()['paypal_id'];
-        $clientSecret = getenv("CLIENT_SECRET") ?: $this->container->get('twig')->getGlobals()['paypal_secret'];
+        $clientId = getenv("CLIENT_ID") ?: self::$clientId;
+        $clientSecret = getenv("CLIENT_SECRET") ?: self::$clientSecret;
         return new SandboxEnvironment($clientId, $clientSecret);
+    }
+
+    /**
+     * Set the PayPal client credentials to be used in the environment() function.
+     * @param $id
+     * @param $secret
+     */
+    public static function setCredentials($id, $secret)
+    {
+        self::$clientId = $id;
+        self::$clientSecret = $secret;
     }
 }

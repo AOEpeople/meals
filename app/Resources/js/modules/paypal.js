@@ -9,6 +9,17 @@ Mealz.prototype.enablePaypal = function () {
         amountField.val('');
     });
 
+    amountField.change(function () {
+
+            if ($('.language-switch').find('span').text() === 'de') {
+                amountField.val(parseFloat(amountField[0].value.replace(/,/g, '.')).toFixed(2));
+                amountField.val(amountField[0].value.replace(/\./g, ','));
+            } else {
+                amountField.val(parseFloat(amountField[0].value.replace(/,/g, '.')).toFixed(2));
+            }
+
+    });
+
     // Only render the button, when PayPal is chosen as the payment method
     if ($('#ecash_paymethod_0').attr("checked", "checked") && $('.paypal-buttons').length === 0) {
         paypalButtonRender();
@@ -24,27 +35,32 @@ Mealz.prototype.enablePaypal = function () {
 
             // Form validation
             onInit: function (data, actions) {
-                if (amountField[0].checkValidity()  && parseFloat(amountField[0].value.replace(/,/g, '.')) > 0.00) {
+                if (amountField[0].checkValidity() === true && parseFloat(amountField[0].value.replace(/,/g, '.')) > 0.00) {
                     actions.enable();
                 } else {
                     actions.disable();
+
                 }
 
                 amountField.change(function () {
+                    amountField[0].setCustomValidity("");
+
                     if (amountField[0].checkValidity() && parseFloat(amountField[0].value.replace(/,/g, '.')) > 0.00) {
                         actions.enable();
                         invalidAmountMessage.hide();
                     } else {
                         actions.disable();
                         invalidAmountMessage.show();
+                        amountField[0].setCustomValidity("Invalid field");
                     }
                 });
 
             },
 
             onClick: function () {
-                if (amountField[0].checkValidity() === false) {
+                if (amountField[0].checkValidity() === false || parseFloat(amountField[0].value.replace(/,/g, '.')) <= 0.00) {
                     invalidAmountMessage.show();
+                    amountField[0].setCustomValidity("Invalid field");
                 }
             },
 
@@ -59,8 +75,8 @@ Mealz.prototype.enablePaypal = function () {
                 });
             },
 
-            onApprove: function(data, actions) {
-                return actions.order.capture().then(function(details) {
+            onApprove: function (data, actions) {
+                return actions.order.capture().then(function (details) {
                     $('#ecash_orderid').val(data.orderID);
 
                     return fetch('/payment/ecash/form/submit', {
@@ -69,7 +85,7 @@ Mealz.prototype.enablePaypal = function () {
                             'content-type': 'application/json'
                         },
                         body: JSON.stringify(
-                           $('form[name="ecash"]').serializeArray()
+                            $('form[name="ecash"]').serializeArray()
                         )
                     });
                 });

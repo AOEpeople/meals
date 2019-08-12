@@ -1,10 +1,10 @@
 .last-account-balance {
   float: right;
+  clear: right;
   margin-top: 10px;
   margin-bottom: 30px;
   font-weight: bold;
   font-size: 16px;
-  clear: right;
 
   span {
     display: inline-block;
@@ -18,36 +18,37 @@
 }
 
 .add-funds {
+  position: relative;
   float: right;
   margin-top: 10px;
   margin-bottom: 30px;
-  font-size: 16px;
   color: $color-orange;
+  font-size: 16px;
   line-height: 20px;
-  position: relative;
 
   .load-payment-form {
     margin-right: 15px;
     vertical-align: middle;
     font-weight: bold;
 
-    .glyphicon {
-      top: 3px !important;
-    }
   }
 
-  #paypal-button-container {
+  .paypal-button-container {
     margin-top: 20px;
   }
 
   form {
-    color: $color-gray-primary;
     position: absolute;
     right: 28px;
     z-index: 1;
-    padding: 30px;
-    background-color: $color-gray-middle;
     width: 500px;
+    padding: 30px;
+    color: $color-gray-primary;
+    background-color: $color-gray-middle;
+
+    @include breakpoint(small) {
+      width: auto;
+    }
 
     .cash-label {
       vertical-align: super;
@@ -56,16 +57,16 @@
 
     .invalid-amount {
       display: none;
-      font-size: 10px;
       margin-left: 40px;
       color: $color-red;
+      font-size: 10px;
     }
 
     .payment-method {
       display: block;
-      font-size: 20px;
-      margin: 30px 0px 20px;
+      margin: 30px 0 20px;
       font-weight: bold;
+      font-size: 20px;
     }
 
     button,
@@ -86,9 +87,9 @@
     }
 
     button {
-      vertical-align: bottom;
-      line-height: 14px;
       margin-top: 20px;
+      line-height: 14px;
+      vertical-align: bottom;
 
       @-moz-document url-prefix() {
         line-height: 10px;
@@ -167,8 +168,13 @@
       position: absolute;
       top: 17px;
       left: 0;
-      height: 20px;
       width: auto;
+      height: 20px;
+
+      @include breakpoint(small) {
+        display: none;
+      }
+
     }
 
     .transaction-description.cash::before {
@@ -191,13 +197,5 @@
     td:last-child {
       color: $color-green;
     }
-  }
-}
-
-
-/* MOBILE STYLING */
-@media only screen and (max-width: 768px) {
-  .add-funds form {
-    width: auto;
   }
 }

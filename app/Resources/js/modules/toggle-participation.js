@@ -78,9 +78,9 @@ function swap($checkbox, url) {
             $.getJSON('/labels.json')
                 .done(function (data) {
                     if ($('.language-switch').find('span').text() === 'de') {
-                        $tooltip.text(data[1]['tooltip_DE'][0]['offered']);
+                        $tooltip.text(data[1].tooltip_DE[0].offered);
                     } else {
-                        $tooltip.text(data[0]['tooltip_EN'][0]['offered']);
+                        $tooltip.text(data[0].tooltip_EN[0].offered);
                     }
                 });
 

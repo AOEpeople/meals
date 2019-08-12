@@ -18,7 +18,7 @@ Mealz.prototype.initAjaxForms = function () {
         if ($('.load-payment-form').is("#ecash")) {
 
             var checkExist = setInterval(function () {
-                if ($('#paypal-button-container').length) {
+                if ($('.paypal-button-container').length) {
                     that.enablePaypal();
                     clearInterval(checkExist);
                 }

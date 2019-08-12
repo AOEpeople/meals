@@ -13,6 +13,8 @@ payment:
     date: Datum
     description: Beschreibung
     amount: Betrag:
+    successful_payment: Die Bezahlung war erfolgreich.
+    payment_failed: Die Bezahlung ist fehlgeschlagen.
     cash_payment: Barzahlung
     paypal_payment: PayPal-Zahlung
     payment_method: Zahlungsmethode

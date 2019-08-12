@@ -108,11 +108,15 @@ class EcashController extends BaseController
 
             }
         } else {
-            $this->addFlashMessage("Payment failed!", 'error');
+            $translator = $this->get('translator');
+            $message = $translator->trans("payment.transaction_history.payment_failed", array(), 'messages');
+            $this->addFlashMessage($message, 'error');
             return $this->redirectToRoute('mealz_accounting_payment_ecash_paypal_transaction_history');
         }
 
-        $this->addFlashMessage("Payment successful!", 'success');
+        $translator = $this->get('translator');
+        $message = $translator->trans("payment.transaction_history.successful_payment", array(), 'messages');
+        $this->addFlashMessage($message, 'success');
         return $this->redirectToRoute('mealz_accounting_payment_ecash_paypal_transaction_history');
     }
 

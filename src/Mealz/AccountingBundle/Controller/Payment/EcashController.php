@@ -31,7 +31,6 @@ class EcashController extends BaseController
         $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
 
         $profile = $profileRepository->find($profile);
-        $action = $this->generateUrl('mealz_accounting_payment_ecash_form_submit');
 
         // Default value for Ecash payment overlay
         $balance = $this->getWallet()->getBalance($profile) * (-1);
@@ -43,7 +42,6 @@ class EcashController extends BaseController
             new EcashPaymentAdminForm($em),
             new Transaction(),
             array(
-                'action' => $action,
                 'profile' => $profile,
                 'balance' => $balance,
             )
@@ -109,7 +107,9 @@ class EcashController extends BaseController
 
             }
         } else {
-            $this->addFlashMessage("Payment failed!", 'error');
+            $translator = $this->get('translator');
+            $message = $translator->trans("payment.transaction_history.payment_failed", array(), 'messages');
+            $this->addFlashMessage($message, 'error');
             return new Response(
                 $this->generateUrl('mealz_accounting_payment_ecash_transaction_history'),
                 Response::HTTP_NOT_FOUND,
@@ -117,7 +117,9 @@ class EcashController extends BaseController
             );
         }
 
-        $this->addFlashMessage("Payment successful!", 'success');
+        $translator = $this->get('translator');
+        $message = $translator->trans("payment.transaction_history.successful_payment", array(), 'messages');
+        $this->addFlashMessage($message, 'success');
         return new Response(
             $this->generateUrl('mealz_accounting_payment_ecash_transaction_history'),
             Response::HTTP_OK,

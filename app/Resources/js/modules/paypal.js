@@ -9,14 +9,22 @@ Mealz.prototype.enablePaypal = function () {
         amountField.val('');
     });
 
+    amountField.on('keypress', function (e) {
+        if (e.which === 13) {
+            e.preventDefault();
+            $(this).attr("disabled", "disabled");
+            $(this).removeAttr("disabled");
+        }
+    });
+
     amountField.change(function () {
 
-            if ($('.language-switch').find('span').text() === 'de') {
-                amountField.val(parseFloat(amountField[0].value.replace(/,/g, '.')).toFixed(2));
-                amountField.val(amountField[0].value.replace(/\./g, ','));
-            } else {
-                amountField.val(parseFloat(amountField[0].value.replace(/,/g, '.')).toFixed(2));
-            }
+        if ($('.language-switch').find('span').text() === 'de') {
+            amountField.val(parseFloat(amountField[0].value.replace(/,/g, '.')).toFixed(2));
+            amountField.val(amountField[0].value.replace(/\./g, ','));
+        } else {
+            amountField.val(parseFloat(amountField[0].value.replace(/,/g, '.')).toFixed(2));
+        }
 
     });
 
@@ -91,14 +99,13 @@ Mealz.prototype.enablePaypal = function () {
                         if(redirect.status === 200 && redirect.redirected === false){
                            return(redirect.text());
                         }
-                    }).then(function(redirect){
+                    }).then(function (redirect) {
                         window.location.replace(redirect);
                     });
                 });
             }
         }).render('.paypal-button-container');
     }
-
 
     /*
      * Format amount input field

@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Mealz\AccountingBundle\Form\EcashPaymentAdminForm;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use PayPalCheckoutSdk\Orders\OrdersGetRequest;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class EcashController
@@ -56,7 +57,7 @@ class EcashController extends BaseController
 
     /**
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function paymentFormHandlingAction(Request $request)
@@ -108,16 +109,20 @@ class EcashController extends BaseController
 
             }
         } else {
-            $translator = $this->get('translator');
-            $message = $translator->trans("payment.transaction_history.payment_failed", array(), 'messages');
-            $this->addFlashMessage($message, 'error');
-            return $this->redirectToRoute('mealz_accounting_payment_ecash_paypal_transaction_history');
+            $this->addFlashMessage("Payment failed!", 'error');
+            return new Response(
+                $this->generateUrl('mealz_accounting_payment_ecash_transaction_history'),
+                Response::HTTP_NOT_FOUND,
+                ['content-type' => 'text/html']
+            );
         }
 
-        $translator = $this->get('translator');
-        $message = $translator->trans("payment.transaction_history.successful_payment", array(), 'messages');
-        $this->addFlashMessage($message, 'success');
-        return $this->redirectToRoute('mealz_accounting_payment_ecash_paypal_transaction_history');
+        $this->addFlashMessage("Payment successful!", 'success');
+        return new Response(
+            $this->generateUrl('mealz_accounting_payment_ecash_transaction_history'),
+            Response::HTTP_OK,
+            ['content-type' => 'text/html']
+        );
     }
 
     /**

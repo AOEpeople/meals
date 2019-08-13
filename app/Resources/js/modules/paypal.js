@@ -76,9 +76,9 @@ Mealz.prototype.enablePaypal = function () {
             },
 
             onApprove: function (data, actions) {
+                $('body').prepend('<div class="cover"></div>');
                 return actions.order.capture().then(function (details) {
                     $('#ecash_orderid').val(data.orderID);
-
                     return fetch('/payment/ecash/form/submit', {
                         method: 'post',
                         headers: {
@@ -87,10 +87,15 @@ Mealz.prototype.enablePaypal = function () {
                         body: JSON.stringify(
                             $('form[name="ecash"]').serializeArray()
                         )
+                    }).then(function(redirect){
+                        if(redirect.status === 200 && redirect.redirected === false){
+                           return(redirect.text());
+                        }
+                    }).then(function(redirect){
+                        window.location.replace(redirect);
                     });
                 });
             }
-
         }).render('.paypal-button-container');
     }
 

@@ -72,6 +72,17 @@ Mealz.prototype.enablePaypal = function () {
                 }
             },
 
+            onError: function (err) {
+                return fetch('/payment/ecash/form/submit', {
+                }).then(function (redirect) {
+                    if (redirect.status === 200 && redirect.redirected === false) {
+                        return (redirect.text());
+                    }
+                }).then(function (redirect) {
+                    window.location = redirect;
+                });
+            },
+
             // Set up the transaction
             createOrder: function (data, actions) {
                 return actions.order.create({
@@ -85,6 +96,7 @@ Mealz.prototype.enablePaypal = function () {
 
             onApprove: function (data, actions) {
                 $('body').prepend('<div class="cover"></div>');
+
                 return actions.order.capture().then(function (details) {
                     $('#ecash_orderid').val(data.orderID);
                     return fetch('/payment/ecash/form/submit', {
@@ -95,9 +107,9 @@ Mealz.prototype.enablePaypal = function () {
                         body: JSON.stringify(
                             $('form[name="ecash"]').serializeArray()
                         )
-                    }).then(function(redirect){
-                        if(redirect.status === 200 && redirect.redirected === false){
-                           return(redirect.text());
+                    }).then(function (redirect) {
+                        if (redirect.status === 200 && redirect.redirected === false) {
+                            return (redirect.text());
                         }
                     }).then(function (redirect) {
                         window.location.replace(redirect);
@@ -116,6 +128,6 @@ Mealz.prototype.enablePaypal = function () {
             neg = true;
             total = Math.abs(total);
         }
-        return (neg ? "-" : '') + parseFloat(total, 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString();
+        return (neg ? "-" : '') + parseFloat(total.replace(/,/g, '.')).toFixed(2).toString();
     }
 };

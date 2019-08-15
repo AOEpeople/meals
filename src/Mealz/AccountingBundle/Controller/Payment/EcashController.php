@@ -68,6 +68,8 @@ class EcashController extends BaseController
             }
         }
 
+        $translator = $this->get('translator');
+
         // Check if required fields are set and PayMethod is Paypal (paymethod=0)
         if ($request->isMethod('POST')
             && !empty($formArray['ecash[orderid]'])
@@ -77,22 +79,12 @@ class EcashController extends BaseController
             && !empty($formArray['ecash[_token]'])
         ) {
 
-            $id = $this->container->get('twig')->getGlobals()['paypal_id'];
-            $secret = $this->container->get('twig')->getGlobals()['paypal_secret'];
-            PaypalClient::setCredentials($id, $secret);
-
-            // 3. Call PayPal to get the transaction details
-            $client = PaypalClient::client();
-
-            $response = $client->execute(new OrdersGetRequest($formArray['ecash[orderid]']));
-
-            if ($response->statusCode == 200) {
+            if ((int) $this->validatePaypalTransaction($formArray) === 200) {
 
                 /** @var EntityManager $em */
                 $em = $this->getDoctrine()->getManager();
                 $transaction = new Transaction();
 
-                $em = $this->getDoctrine()->getManager();
                 $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
                 $profile = $profileRepository->find($formArray['ecash[profile]']);
 
@@ -105,31 +97,29 @@ class EcashController extends BaseController
                 $em->persist($transaction);
                 $em->flush();
 
+                $message = $translator->trans("payment.transaction_history.successful_payment", array(), 'messages');
+                $this->addFlashMessage($message, 'success');
+
+            } else {
+                $message = $translator->trans("payment.transaction_history.payment_failed", array(), 'messages');
+                $this->addFlashMessage($message, 'danger');
             }
         } else {
-            $translator = $this->get('translator');
             $message = $translator->trans("payment.transaction_history.payment_failed", array(), 'messages');
-            $this->addFlashMessage($message, 'error');
-            return new Response(
-                $this->generateUrl('mealz_accounting_payment_ecash_transaction_history'),
-                Response::HTTP_NOT_FOUND,
-                ['content-type' => 'text/html']
-            );
+            $this->addFlashMessage($message, 'danger');
+
         }
 
-        $translator = $this->get('translator');
-        $message = $translator->trans("payment.transaction_history.successful_payment", array(), 'messages');
-        $this->addFlashMessage($message, 'success');
         return new Response(
             $this->generateUrl('mealz_accounting_payment_ecash_transaction_history'),
             Response::HTTP_OK,
-            ['content-type' => 'text/html']
+            array('content-type' => 'text/html')
         );
     }
 
     /**
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      * @throws \Exception
      */
     public function showTransactionHistoryAction(Request $request)
@@ -199,4 +189,22 @@ class EcashController extends BaseController
 
         return array($transactionsTotal, $transactionHistoryArr, $participationsTotal);
     }
+
+    /**
+     * @param $formArray
+     * @return int
+     */
+    public function validatePaypalTransaction($formArray) {
+        $id = $this->container->get('twig')->getGlobals()['paypal_id'];
+        $secret = $this->container->get('twig')->getGlobals()['paypal_secret'];
+        PaypalClient::setCredentials($id, $secret);
+
+        // 3. Call PayPal to get the transaction details
+        $client = PaypalClient::client();
+
+        $response = $client->execute(new OrdersGetRequest($formArray['ecash[orderid]']));
+
+        return $response->statusCode;
+    }
+
 }

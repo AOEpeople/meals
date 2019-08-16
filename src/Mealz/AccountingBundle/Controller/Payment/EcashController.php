@@ -74,7 +74,7 @@ class EcashController extends BaseController
         if ($request->isMethod('POST')
             && !empty($formArray['ecash[orderid]'])
             && !empty($formArray['ecash[profile]'])
-            && ((float)$formArray['ecash[amount]'] > 0.00)
+            && (floatval($formArray['ecash[amount]']) > 0.00)
             && ($formArray['ecash[paymethod]'] === '0')
             && !empty($formArray['ecash[_token]'])
         ) {
@@ -90,7 +90,7 @@ class EcashController extends BaseController
 
                 $transaction->setProfile($profile);
                 $transaction->setOrderId($formArray['ecash[orderid]']);
-                $transaction->setAmount($formArray['ecash[amount]']);
+                $transaction->setAmount(floatval(str_replace(',', '.', $formArray['ecash[amount]'])));
                 $transaction->setDate(new \DateTime());
                 $transaction->setPaymethod($formArray['ecash[paymethod]']);
 

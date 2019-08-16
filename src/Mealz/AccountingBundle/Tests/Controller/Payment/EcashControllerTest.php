@@ -122,7 +122,7 @@ class EcashControllerTest extends AbstractControllerTestCase
             array(),
             array(),
             '[{"name":"ecash[profile]","value":"alice"},{"name":"ecash[orderid]","value":"52T16708K70721706"},' .
-            '{"name":"ecash[amount]","value":"5,00"},{"name":"ecash[paymethod]","value":"0"},{"name":"ecash[_token]",' .
+            '{"name":"ecash[amount]","value":"5,23"},{"name":"ecash[paymethod]","value":"0"},{"name":"ecash[_token]",' .
             '"value":"4xEN3hEBs29aFJRFtucTATjBI-iEjdrot4kdT1hRl18"}]'
         );
 
@@ -142,5 +142,6 @@ class EcashControllerTest extends AbstractControllerTestCase
         $entry = $transactionRepository->findBy(array('profile' => 'alice'), array('id' => 'DESC'));
 
         $this->assertEquals('52T16708K70721706', $entry[0]->getOrderId());
+        $this->assertEquals(5.23, $entry[0]->getAmount());
     }
 }

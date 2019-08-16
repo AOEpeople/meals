@@ -7,7 +7,7 @@ payment:
     button: OK, kapiert!
   transaction_history:
     account: Konto
-    add_funds: ZAHLUNG HINZUFÜGEN
+    add_funds: GELD EINZAHLEN
     balance_past: Kontostand am
     balance_now: Aktueller Kontostand
     date: Datum

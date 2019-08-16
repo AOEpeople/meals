@@ -74,7 +74,7 @@ class EcashController extends BaseController
         if ($request->isMethod('POST')
             && !empty($formArray['ecash[orderid]'])
             && !empty($formArray['ecash[profile]'])
-            && (floatval($formArray['ecash[amount]']) > 0.00)
+            && (floatval(str_replace(',', '.', $formArray['ecash[amount]'])) > 0.00)
             && ($formArray['ecash[paymethod]'] === '0')
             && !empty($formArray['ecash[_token]'])
         ) {

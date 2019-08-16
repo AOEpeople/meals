@@ -89,7 +89,7 @@ class EcashController extends BaseController
                 $profile = $profileRepository->find($formArray['ecash[profile]']);
 
                 $transaction->setProfile($profile);
-                $transaction->setOrderid($formArray['ecash[amount]']);
+                $transaction->setOrderId($formArray['ecash[orderid]']);
                 $transaction->setAmount($formArray['ecash[amount]']);
                 $transaction->setDate(new \DateTime());
                 $transaction->setPaymethod($formArray['ecash[paymethod]']);

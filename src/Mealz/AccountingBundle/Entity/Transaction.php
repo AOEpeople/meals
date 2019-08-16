@@ -62,7 +62,7 @@ class Transaction
      * @ORM\Column(type="string", length=2048, nullable=TRUE)
      * @var string
      */
-    private $orderid;
+    private $orderId;
 
     /**
      * @return string
@@ -109,13 +109,13 @@ class Transaction
     }
 
     /**
-     * @param integer $orderid
+     * @param integer $orderId
      *
      * @return Transaction
      */
-    public function setOrderid($orderid)
+    public function setOrderId($orderId)
     {
-        $this->orderid = $orderid;
+        $this->orderId = $orderId;
 
         return $this;
     }
@@ -123,9 +123,9 @@ class Transaction
     /**
      * @return string
      */
-    public function getOrderid()
+    public function getOrderId()
     {
-        return $this->orderid;
+        return $this->orderId;
     }
 
     /**

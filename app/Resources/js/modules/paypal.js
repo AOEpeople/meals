@@ -47,7 +47,6 @@ Mealz.prototype.enablePaypal = function () {
                     actions.enable();
                 } else {
                     actions.disable();
-
                 }
 
                 amountField.change(function () {

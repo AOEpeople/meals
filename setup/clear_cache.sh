@@ -1,9 +1,9 @@
 #!/bin/bash -e
 
-echo "Clearing application cache ... "
+echo -n "Clearing application cache ... "
 php ${FINAL_RELEASEFOLDER}/app/console cache:clear
-echo -n "done"
+echo "done"
 
-echo "Warming up application cache ..."
+echo -n "Warming up application cache ..."
 php ${FINAL_RELEASEFOLDER}/app/console cache:warmup
-echo -n "done"
+echo "done"

@@ -13,3 +13,6 @@ parameters:
     mailer_password:   ~
 
     locale:            en
+
+    paypal_id: "replaced_by_deployment"
+    paypal_secret: "replaced_by_deployment"

@@ -1,0 +1,16 @@
+
+{{ form_start(form) }}
+
+{{ form_widget(form.profile) }}
+{{ form_widget(form.orderid) }}
+
+{{ form_label(form.amount) }}
+{{ form_widget(form.amount) }}
+<span class="invalid-amount">{{ 'payment.transaction_history.invalid'|trans({}, 'messages') }}</span>
+
+<span class="payment-method">{{ 'payment.transaction_history.payment_method'|trans({}, 'messages') }}</span>
+
+{{ form_widget(form.paymethod) }}
+<div class="paypal-button-container"></div>
+{{ form_rest(form) }}
+{{ form_end(form) }}

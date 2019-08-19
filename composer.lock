@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a491c94b53a2d2bed03cd78cc83bf0db",
+    "content-hash": "f47ee058bb43c73520d04564522ce534",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -91,20 +91,22 @@
         },
         {
             "name": "creatissimo/mattermost-bundle",
-            "version": "v1.1.12",
+            "version": "v1.1.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/creatissimo/CreatissimoMattermostBundle.git",
-                "reference": "baaa0ea876d0eaf0fec4c8e1ee826839d4281dd3"
+                "reference": "bef5baa616f80008b9eb26cb3991fce8600591b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/creatissimo/CreatissimoMattermostBundle/zipball/baaa0ea876d0eaf0fec4c8e1ee826839d4281dd3",
-                "reference": "baaa0ea876d0eaf0fec4c8e1ee826839d4281dd3",
+                "url": "https://api.github.com/repos/creatissimo/CreatissimoMattermostBundle/zipball/bef5baa616f80008b9eb26cb3991fce8600591b6",
+                "reference": "bef5baa616f80008b9eb26cb3991fce8600591b6",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.2",
+                "ext-curl": "*",
+                "ext-json": "*",
+                "php": ">=5.4.0",
                 "symfony/framework-bundle": "~2.7|~3.0|~4.0"
             },
             "type": "symfony-bundle",
@@ -134,7 +136,7 @@
                 "Mattermost",
                 "exception"
             ],
-            "time": "2018-07-24T14:35:47+00:00"
+            "time": "2019-05-28T16:08:25+00:00"
         },
         {
             "name": "doctrine/annotations",

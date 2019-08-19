@@ -7,9 +7,17 @@ payment:
     button: Understood!
   transaction_history:
     account: Account
+    add_funds: ADD FUNDS
     balance_past: Balance on the
     balance_now: Current balance
     date: Date
     description: Description
-    amount: Amount
+    amount: Amount:
+    successful_payment: The payment was successful.
+    payment_failed: The payment failed.
     cash_payment: Cash Payment
+    paypal_payment: PayPal payment
+    payment_method: Payment Method
+    pay: Pay
+    paypal: PayPal
+    invalid: Please enter a valid amount.

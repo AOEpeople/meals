@@ -14,7 +14,20 @@ Mealz.prototype.initAjaxForms = function () {
         e.preventDefault();
         e.stopPropagation();
         that.loadAjaxFormPayment($(this));
+
+        if ($('.load-payment-form').is("#ecash")) {
+
+            var checkExist = setInterval(function () {
+                if ($('.paypal-button-container').length) {
+                    that.enablePaypal();
+                    clearInterval(checkExist);
+                }
+            }, 100);
+
+        }
+
     });
+
 };
 
 Mealz.prototype.loadAjaxForm = function ($element) {

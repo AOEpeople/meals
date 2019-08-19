@@ -33,6 +33,8 @@ twig:
         # @TODO: rename lock_toggle_participation_at
         lock_toggle_participation_at: %mealz.lock_toggle_participation_at%
         wallet: "@mealz_accounting.wallet"
+        paypal_id: "%paypal_id%"
+        paypal_secret: "%paypal_secret%"
 
 # Assetic Configuration
 assetic:

@@ -3,8 +3,17 @@
 {% set wrapperClass = 'transaction-history' %}
 
 {% block body %}
-
+    <script src="https://www.paypal.com/sdk/js?client-id={{ paypal_id }}&currency=EUR"></script>
     <div class="headline-container headline-container-h1 headline-left"><h1>{{ 'payment.transaction_history.account'|trans({}, 'messages') }}</h1></div>
+    <div class="add-funds">
+        {{ MealzButton.link(
+                path('mealz_accounting_payment_ecash_form', {profile: app.user.profile.username}),
+                'payment.transaction_history.add_funds',
+                'ecash',
+                'load-payment-form transparent',
+                'glyphicon-plus'
+            )}}
+    </div>
     <div class="last-account-balance">
         {{ 'payment.transaction_history.balance_past'|trans({}, 'messages') ~ ' ' ~ date("-28days")|date("d.m.Y") }}:<span {% if((balance + participations_total - transactions_total) < 0) %}class="dept"{% endif %}>{{ (balance + participations_total - transactions_total)|number_format(2, '.', ',') }}€</span>
     </div>
@@ -28,7 +37,14 @@
                 {% else %}
                     <tr class="table-row transaction-payment">
                         <td class="table-data">{{ transaction_record.date|date('d. M Y') }}</td>
-                        <td class="table-data transaction-description">{{ 'payment.transaction_history.cash_payment'|trans({}, 'messages') }}</td>
+                        {%  if transaction_record.paymethod == '0' %}
+                            <td class="table-data transaction-description paypal">
+                                <img src="{{ asset('images/paypal.png') }}" alt="PayPal icon" />
+                                {{ 'payment.transaction_history.paypal_payment'|trans({}, 'messages') }}
+                            </td>
+                        {% else %}
+                            <td class="table-data transaction-description cash">{{ 'payment.transaction_history.cash_payment'|trans({}, 'messages') }}</td>
+                        {% endif %}
                         <td class="table-data"><span>+</span> {{ transaction_record.amount|number_format(2, '.', ',') }}€</td>
                     </tr>
                 {% endif %}

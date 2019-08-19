@@ -7,9 +7,17 @@ payment:
     button: OK, kapiert!
   transaction_history:
     account: Konto
+    add_funds: GELD EINZAHLEN
     balance_past: Kontostand am
     balance_now: Aktueller Kontostand
     date: Datum
     description: Beschreibung
-    amount: Betrag
+    amount: Betrag:
+    successful_payment: Die Bezahlung war erfolgreich.
+    payment_failed: Die Bezahlung ist fehlgeschlagen.
     cash_payment: Barzahlung
+    paypal_payment: PayPal-Zahlung
+    payment_method: Zahlungsmethode
+    pay: Zahlen
+    paypal: PayPal
+    invalid: Bitte gib einen gültigen Betrag ein.

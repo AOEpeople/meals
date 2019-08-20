@@ -91,22 +91,20 @@
         },
         {
             "name": "creatissimo/mattermost-bundle",
-            "version": "v1.1.14",
+            "version": "v1.1.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/creatissimo/CreatissimoMattermostBundle.git",
-                "reference": "bef5baa616f80008b9eb26cb3991fce8600591b6"
+                "reference": "baaa0ea876d0eaf0fec4c8e1ee826839d4281dd3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/creatissimo/CreatissimoMattermostBundle/zipball/bef5baa616f80008b9eb26cb3991fce8600591b6",
-                "reference": "bef5baa616f80008b9eb26cb3991fce8600591b6",
+                "url": "https://api.github.com/repos/creatissimo/CreatissimoMattermostBundle/zipball/baaa0ea876d0eaf0fec4c8e1ee826839d4281dd3",
+                "reference": "baaa0ea876d0eaf0fec4c8e1ee826839d4281dd3",
                 "shasum": ""
             },
             "require": {
-                "ext-curl": "*",
-                "ext-json": "*",
-                "php": ">=5.4.0",
+                "php": ">=5.3.2",
                 "symfony/framework-bundle": "~2.7|~3.0|~4.0"
             },
             "type": "symfony-bundle",
@@ -136,7 +134,7 @@
                 "Mattermost",
                 "exception"
             ],
-            "time": "2019-05-28T16:08:25+00:00"
+            "time": "2018-07-24T14:35:47+00:00"
         },
         {
             "name": "doctrine/annotations",

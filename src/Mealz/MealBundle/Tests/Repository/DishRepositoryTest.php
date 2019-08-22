@@ -102,7 +102,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
     {
         $dish = $this->createDish();
         $this->persistAndFlushAll([$dish]);
-        $result = $this->dishRepository->countNumberDishWasTaken($dish, '4 weeks ago'));
+        $result = $this->dishRepository->countNumberDishWasTaken($dish, '4 weeks ago');
         $this->assertEmpty($result);
     }
 
@@ -111,7 +111,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
         $dish = $this->createDish();
         $meal = $this->createMeal($dish);
         $this->persistAndFlushAll([$dish, $meal]);
-        $result = $this->dishRepository->countNumberDishWasTaken($dish, '4 weeks ago'));
+        $result = $this->dishRepository->countNumberDishWasTaken($dish, '4 weeks ago');
         $this->assertTrue($result == 1);
     }
 

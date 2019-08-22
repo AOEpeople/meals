@@ -102,7 +102,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
     {
         $dish = $this->createDish();
         $this->persistAndFlushAll([$dish]);
-        $result = $this->dishRepository->countNumberDishWasTaken($dish);
+        $result = $this->dishRepository->countNumberDishWasTaken($dish, '4 weeks ago'));
         $this->assertEmpty($result);
     }
 
@@ -111,7 +111,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
         $dish = $this->createDish();
         $meal = $this->createMeal($dish);
         $this->persistAndFlushAll([$dish, $meal]);
-        $result = $this->dishRepository->countNumberDishWasTaken($dish);
+        $result = $this->dishRepository->countNumberDishWasTaken($dish, '4 weeks ago'));
         $this->assertTrue($result == 1);
     }
 
@@ -119,10 +119,10 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
     {
         $dish = $this->createDish();
         $meal = $this->createMeal($dish);
-        $meal2 = $this->createMeal(new \DateTime('2 weeks ago'));
+        $meal2 = $this->createMeal($dish, new \DateTime('2 weeks ago'));
         $this->persistAndFlushAll([$dish, $meal]);
         $this->persistAndFlushAll([$dish, $meal2]);
-        $result = $this->dishRepository->countNumberDishWasTaken($dish);
+        $result = $this->dishRepository->countNumberDishWasTaken($dish, '4 weeks ago');
         $this->assertTrue($result == 2);
     }
 
@@ -130,10 +130,10 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
     {
         $dish = $this->createDish();
         $meal = $this->createMeal($dish);
-        $meal2 = $this->createMeal(new \DateTime('30 weeks ago'));
+        $meal2 = $this->createMeal($dish, new \DateTime('30 weeks ago'));
         $this->persistAndFlushAll([$dish, $meal]);
         $this->persistAndFlushAll([$dish, $meal2]);
-        $result = $this->dishRepository->countNumberDishWasTaken($dish);
+        $result = $this->dishRepository->countNumberDishWasTaken($dish, '4 weeks ago');
         $this->assertTrue($result == 1);
     }
 

@@ -98,10 +98,14 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
 
     /**
      * @param \Mealz\MealBundle\Entity\Dish $dish
+     * @param $datetime
      * @return Meal
      */
-    protected function createMeal(Dish $dish = null, DateTime $datetime = new \DateTime())
+    protected function createMeal(Dish $dish = null, $datetime = null)
     {
+        if ($datetime === null) {
+            $datetime = new \DateTime();
+        }
         $meal = new Meal();
         $meal->setDish($dish ?: $this->createDish());
         $meal->setDateTime($datetime);

@@ -41,7 +41,9 @@
                                 <a href="#" class="button small">save</a>
                             </div>
                         {% endif %}
-                        <div class="dish-count">{{ getDishCount(dish) }}</div>
+                        {% if getDishCount(dish) > 0 %}
+                            <div class="dish-count">{{ getDishCount(dish) }}</div>
+                        {% endif %}
                     </li>
                 {% endif %}
             {% endfor %}

@@ -89,11 +89,51 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
         $this->assertEmpty($result);
     }
 
-    public function testHasDishAssociatedMealsWithOneAssociation(){
+    public function testHasDishAssociatedMealsWithOneAssociation()
+    {
         $dish = $this->createDish();
         $meal = $this->createMeal($dish);
         $this->persistAndFlushAll([$dish, $meal]);
         $result = $this->dishRepository->hasDishAssociatedMeals($dish);
+        $this->assertTrue($result == 1);
+    }
+
+    public function testCountNumberDishWasTakenWithNoCounts()
+    {
+        $dish = $this->createDish();
+        $this->persistAndFlushAll([$dish]);
+        $result = $this->dishRepository->countNumberDishWasTaken($dish);
+        $this->assertEmpty($result);
+    }
+
+    public function testCountNumberDishWasTakenWithatLeastOneCount()
+    {
+        $dish = $this->createDish();
+        $meal = $this->createMeal($dish);
+        $this->persistAndFlushAll([$dish, $meal]);
+        $result = $this->dishRepository->countNumberDishWasTaken($dish);
+        $this->assertTrue($result == 1);
+    }
+
+    public function testCountNumberDishWasTakenWithatLeastTwoCount()
+    {
+        $dish = $this->createDish();
+        $meal = $this->createMeal($dish);
+        $meal2 = $this->createMeal(new \DateTime('2 weeks ago'));
+        $this->persistAndFlushAll([$dish, $meal]);
+        $this->persistAndFlushAll([$dish, $meal2]);
+        $result = $this->dishRepository->countNumberDishWasTaken($dish);
+        $this->assertTrue($result == 2);
+    }
+
+    public function testCountNumberDishWasTakenWithatLeastOneValidCount()
+    {
+        $dish = $this->createDish();
+        $meal = $this->createMeal($dish);
+        $meal2 = $this->createMeal(new \DateTime('30 weeks ago'));
+        $this->persistAndFlushAll([$dish, $meal]);
+        $this->persistAndFlushAll([$dish, $meal2]);
+        $result = $this->dishRepository->countNumberDishWasTaken($dish);
         $this->assertTrue($result == 1);
     }
 

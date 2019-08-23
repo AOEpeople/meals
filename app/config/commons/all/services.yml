@@ -1,0 +1,12 @@
+# Learn more about services, parameters and containers at
+# https://symfony.com/doc/current/service_container.html
+parameters:
+    #parameter_name: value
+
+services:
+    #
+    # OAuth Service Provider
+    #
+    Mealz\UserBundle\Provider\OAuthUserProvider:
+      class: Mealz\UserBundle\Provider\OAuthUserProvider
+      arguments: ["@doctrine"]

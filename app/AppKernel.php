@@ -54,6 +54,7 @@ class AppKernel extends Kernel
             new Mealz\TemplateBundle\MealzTemplateBundle(),
             new Mealz\RestBundle\MealzRestBundle(),
             new Creatissimo\MattermostBundle\CreatissimoMattermostBundle(),
+            new HWI\Bundle\OAuthBundle\HWIOAuthBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('devbox', 'dev', 'deploy', 'test'))) {
@@ -70,5 +71,4 @@ class AppKernel extends Kernel
     {
         $loader->load(__DIR__ . '/config/' . $this->appEnvironment->getEnvironment() . '/config.yml');
     }
-
 }

@@ -15,5 +15,24 @@ xopn_mealz_for_zombies_rest:
     resource: "@MealzRestBundle/Resources/config/routing.yml"
     prefix:   /rest/v1
 
+#############################
+# FOS_OAUTH
+#############################
 fos_oauth_server_token:
     resource: "@FOSOAuthServerBundle/Resources/config/routing/token.xml"
+
+#############################
+# HWI_OAUTH
+#############################
+
+hwi_oauth_redirect:
+    resource: "@HWIOAuthBundle/Resources/config/routing/redirect.xml"
+    prefix:   /connect
+
+hwi_oauth_connect:
+    resource: "@HWIOAuthBundle/Resources/config/routing/connect.xml"
+    prefix:   /connect
+
+hwi_oauth_login:
+    resource: "@HWIOAuthBundle/Resources/config/routing/login.xml"
+    prefix:   /login

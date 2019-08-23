@@ -9,11 +9,22 @@ security:
     role_hierarchy:
         ROLE_ADMIN:       ROLE_USER
 
+    providers:
+        oauth_user_provider:
+             id: Mealz\UserBundle\Provider\OAuthUserProvider
     firewalls:
         mealz:
             pattern: ^/
             anonymous: ~
-            fos_oauth: true
+            oauth:
+                resource_owners:
+                    mealz: "/login/check-meals"
+                login_path: MealzUserBundle_login
+                use_forward: false
+                failure_path: MealzUserBundle_login
+
+                oauth_user_provider:
+                    service: Mealz\UserBundle\Provider\OAuthUserProvider
             logout:
                 path:   MealzUserBundle_logout
                 target: /

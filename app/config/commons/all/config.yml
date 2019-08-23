@@ -1,6 +1,7 @@
 imports:
     - { resource: security.yml }
     - { resource: parameters.yml }
+    - { resource: services.yml }
 
 framework:
     #esi:             ~
@@ -178,3 +179,24 @@ creatissimo_mattermost:
                 trace: false
                 exclude_class:
                     - Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+
+hwi_oauth:
+    firewall_names: [mealz]
+    resource_owners:
+        mealz:
+            type:                oauth2
+            client_id:           '%keycloak_client_id%'
+            client_secret:       '%keycloak_client_secret%'
+            access_token_url:    '%keycloak_access_token_endpoint%'
+            authorization_url:   '%keycloak_auth_token_endpoint%'
+            infos_url:           '%keycloak_user_token_endpoint%'
+            user_response_class: HWI\Bundle\OAuthBundle\OAuth\Response\PathUserResponse
+            paths:
+                identifier: id
+                nickname:   preferred_username
+                realname:   name
+            options:
+                use_bearer_authorization: true
+    http_client:
+            verify_peer: false
+            ignore_errors: false

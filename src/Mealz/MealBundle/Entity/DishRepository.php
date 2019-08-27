@@ -98,4 +98,25 @@ class DishRepository extends LocalizedRepository
 
         return $qb->getQuery()->getSingleScalarResult();
     }
+
+    /**
+     * Counts the number of Dish was taken in the last X Weeks
+     * @param Dish $dish, String $countPeriod
+     * @return integer
+     */
+    public function countNumberDishWasTaken(Dish $dish, $countPeriod)
+    {
+        // prepare sql statement counting all meals taken
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('COUNT(m.dish)');
+        $qb->from('Mealz\MealBundle\Entity\Meal', 'm');
+        $qb->where('m.dish = :dish');
+        $qb->andWhere($qb->expr()->between('m.dateTime', ':date_from', ':date_to'));
+        $qb->setParameter('dish', $dish);
+        $qb->setParameter('date_from', new \DateTime($countPeriod), \Doctrine\DBAL\Types\Type::DATETIME);
+        $qb->setParameter('date_to', new \DateTime(), \Doctrine\DBAL\Types\Type::DATETIME);
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
 }
+

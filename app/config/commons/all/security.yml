@@ -15,13 +15,12 @@ security:
     firewalls:
         mealz:
             pattern: ^/
-            anonymous: ~
             oauth:
                 resource_owners:
-                    mealz: "/login/check-meals"
-                login_path: MealzUserBundle_login
-                use_forward: false
-                failure_path: MealzUserBundle_login
+                    meals: "/login/check-meals"
+                login_path: /connect/meals
+                use_forward: true
+                failure_path: /connect/meals
 
                 oauth_user_provider:
                     service: Mealz\UserBundle\Provider\OAuthUserProvider

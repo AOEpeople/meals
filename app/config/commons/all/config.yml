@@ -183,7 +183,7 @@ creatissimo_mattermost:
 hwi_oauth:
     firewall_names: [mealz]
     resource_owners:
-        mealz:
+        meals:
             type:                oauth2
             client_id:           '%keycloak_client_id%'
             client_secret:       '%keycloak_client_secret%'

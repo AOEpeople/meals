@@ -68,9 +68,10 @@ class CostSheetController extends BaseController
     }
 
     /**
-     *
+     * Simon hat Mathe bestanden 2.0
      */
     public function sendBalancingRequestAction() {
-
+        $this->addFlashMessage('Simon hat Mathe bestanden', 'danger');
+        return $this->listAction();
     }
 }

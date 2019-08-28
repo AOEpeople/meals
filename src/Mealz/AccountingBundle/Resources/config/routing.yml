@@ -77,5 +77,5 @@ mealz_accounting.cost_sheet:
     defaults: { _controller: "MealzAccountingBundle:CostSheet:list" }
 
 mealz_accounting_cost_sheet_send_balancing_request:
-    path: /print/costsheet
+    path: /print/costsheet/balance/request
     defaults: { _controller: "MealzAccountingBundle:CostSheet:sendBalancingRequest" }

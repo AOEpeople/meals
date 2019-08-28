@@ -59,6 +59,18 @@
         }
       }
 
+      a {
+        display: block;
+        margin-top: 10px;
+        padding: 10px;
+        font-size: 11px;
+        text-align: center;
+
+        &:hover {
+          color: $color-orange;
+        }
+      }
+
       &::after {
         position: absolute;
         top: -20px;

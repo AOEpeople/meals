@@ -21,3 +21,5 @@ payment:
     pay: Pay
     paypal: PayPal
     invalid: Please enter a valid amount.
+  costsheet:
+    balance_account: Balance account

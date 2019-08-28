@@ -66,4 +66,11 @@ class CostSheetController extends BaseController
 
         return ($result < 0) ? 0 : $result * -1;
     }
+
+    /**
+     *
+     */
+    public function sendBalancingRequestAction() {
+
+    }
 }

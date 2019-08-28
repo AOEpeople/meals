@@ -21,3 +21,5 @@ payment:
     pay: Zahlen
     paypal: PayPal
     invalid: Bitte gib einen gültigen Betrag ein.
+  costsheet:
+    balance_account: Konto ausgleichen

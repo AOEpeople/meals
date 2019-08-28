@@ -4,5 +4,7 @@
 {{ form_widget(form.amount) }}
 {{ form_widget(form.submit) }}
 
+<a class="button balance-account" href="#">{{ 'payment.costsheet.balance_account'|trans({}, 'messages') }}</a>
+
 {{ form_rest(form) }}
 {{ form_end(form) }}

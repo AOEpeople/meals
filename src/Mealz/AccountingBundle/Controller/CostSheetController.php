@@ -68,10 +68,12 @@ class CostSheetController extends BaseController
     }
 
     /**
-     * Simon hat Mathe bestanden 2.0
+     * @param $profile
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function sendBalancingRequestAction() {
-        $this->addFlashMessage('Simon hat Mathe bestanden', 'danger');
+    public function sendSettlementRequestAction($profile)
+    {
+        $this->addFlashMessage($profile, 'danger');
         return $this->listAction();
     }
 }

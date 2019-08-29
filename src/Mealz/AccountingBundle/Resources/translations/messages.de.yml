@@ -22,7 +22,7 @@ payment:
     paypal: PayPal
     invalid: Bitte gib einen gültigen Betrag ein.
   costsheet:
-    balance_account: Konto ausgleichen
+    settle_account: Konto ausgleichen
     confirmation:
       message: Der Kontostand dieses Nutzers wird auf 0,00€ gesetzt. Möchtest Du fortfahren?
       continue: Fortfahren

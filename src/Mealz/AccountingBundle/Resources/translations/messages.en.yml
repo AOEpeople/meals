@@ -22,7 +22,7 @@ payment:
     paypal: PayPal
     invalid: Please enter a valid amount.
   costsheet:
-    balance_account: Balance account
+    settle_account: Balance account
     confirmation:
       message: The account balance of this user will be set to €0.00. Do you want to continue?
       continue: Continue

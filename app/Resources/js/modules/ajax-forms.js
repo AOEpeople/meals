@@ -17,7 +17,7 @@ Mealz.prototype.initAjaxForms = function () {
 
         var checkExist = setInterval(function () {
             if ($('form[name="cash"]').length) {
-                balanceAccount();
+                settleAccount();
                 clearInterval(checkExist);
             }
         }, 100);

@@ -1,8 +1,6 @@
-function balanceAccount() {
+function settleAccount() {
     $('.button.balance-account').click(function () {
-        var $container = $('[data-balance-account]');
-
-        //$('#swapLink').attr('href', checkboxValue);
+        var $container = $('[data-account-settlement-confirmation]');
 
         var options = {
             closeClickOutside: false,

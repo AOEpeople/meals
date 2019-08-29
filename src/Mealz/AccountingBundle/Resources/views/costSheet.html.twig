@@ -7,6 +7,9 @@
 {%- endblock cost_widget -%}
 
 {% block body %}
+
+    {% include 'MealzAccountingBundle:Accounting/partials:account_settlement_confirmation.html.twig' %}
+
     {{ MealzHeadline.create(1, 'headings.costs.list'|trans({},'general'), '', '', [
         MealzButton.link(path('mealz_accounting_accounting_book'), 'costs.cash_register'|trans({}, 'actions'), '', 'transparent', 'glyphicon-euro')
     ], '') }}
@@ -55,14 +58,5 @@
     {% else %}
         {{ 'content.print.costs.no_data' | trans({}, 'general') }}
     {% endif %}
-
-    <div data-balance-account data-src="#hidden-content"></div>
-    <div class="balance-account" style="display: none;" id="hidden-content">
-        <p>Es wird ein Antrag zum Kontoausgleich dieses Nutzers an HR geschickt. Möchtest du fortfahren?</p>
-        <a data-balance-account-close title="Continue" class="button balance-account-item"
-           href="{{ path('mealz_accounting_cost_sheet_send_balancing_request') }}">Fortfahren</a>
-        <a data-balance-account-close title="Cancel" class="button balance-account-item"
-           href="javascript:;">Abbrechen</a>
-    </div>
 
 {% endblock %}

@@ -77,5 +77,5 @@ mealz_accounting.cost_sheet:
     defaults: { _controller: "MealzAccountingBundle:CostSheet:list" }
 
 mealz_accounting_cost_sheet_send_settlement_request:
-    path: /print/costsheet/settlement/request/{profile}
+    path: /print/costsheet/settlement/request/{username}
     defaults: { _controller: "MealzAccountingBundle:CostSheet:sendSettlementRequest" }

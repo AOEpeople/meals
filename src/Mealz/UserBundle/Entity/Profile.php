@@ -60,6 +60,12 @@ class Profile
     private $roles;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=TRUE)
+     * @var string
+     */
+    private $settlementHash;
+
+    /**
      * Profile constructor.
      */
     public function __construct()
@@ -196,5 +202,23 @@ class Profile
     {
         $this->company = $company;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getSettlementHash()
+    {
+        return $this->settlementHash;
+    }
+
+    /**
+     * @param mixed $settlementHash
+     */
+    public function setSettlementHash($settlementHash)
+    {
+        $this->settlementHash = $settlementHash;
+    }
+
+
 
 }

@@ -3,6 +3,8 @@
 namespace Mealz\AccountingBundle\Controller;
 
 use Mealz\MealBundle\Controller\BaseController;
+use Symfony\Component\Translation\Translator;
+use Symfony\Component\VarDumper\VarDumper;
 
 class CostSheetController extends BaseController
 {
@@ -43,7 +45,7 @@ class CostSheetController extends BaseController
                 $userCosts['total'] = bcadd($userCosts['total'], $monthCosts, 4);
             }
             if ($transactionsPerUser[$username]['amount'] > 0) {
-                $userCosts['total'] = '+'.$transactionsPerUser[$username]['amount'];
+                $userCosts['total'] = '+' . $transactionsPerUser[$username]['amount'];
             }
             $user['costs'] = $userCosts;
         }
@@ -68,12 +70,54 @@ class CostSheetController extends BaseController
     }
 
     /**
-     * @param $profile
+     * @param $username
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function sendSettlementRequestAction($profile)
+    public function sendSettlementRequestAction($username)
     {
-        $this->addFlashMessage($profile, 'danger');
+        $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
+
+        $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
+        $profile = $profileRepository->find($username);
+
+        VarDumper::dump($profile);
+        // TODO: Write and translate message
+        $message = $this->get('translator')->trans('payment.costsheet.confirmation.error');
+        $severity = "danger";
+
+        if ($profile !== null && $profile->getSettlementHash() === null) {
+            $username = $profile->getUsername();
+            $secret = $this->getParameter('secret');
+            $hashCode = crypt($username, $secret);
+
+            $em = $this->getDoctrine()->getManager();
+            $profile->setSettlementHash($hashCode);
+            $em->persist($profile);
+            $em->flush();
+
+            $urlEncodedHash = urlencode(crypt($username, $secret));
+            VarDumper::dump($urlEncodedHash);
+
+            mail("raza.ahmed@aoe.com", "Test Subject", $urlEncodedHash, "From: AOE Meals Chef Bot <noreply-meals@aoe.com>");
+
+            $message = $this->get('translator')->trans(
+                'payment.costsheet.confirmation.success',
+                array(
+                    '%name%' => $profile->getFullName(),
+                ),
+                'messages'
+            );
+            $severity = "success";
+        }
+
+        $this->addFlashMessage($message, $severity);
         return $this->listAction();
+
     }
+
+    public function confirmSettlementAction($hash)
+    {
+
+    }
+
 }

@@ -27,4 +27,6 @@ payment:
       message: Der Kontostand dieses Nutzers wird auf 0,00€ gesetzt. Möchtest Du fortfahren?
       continue: Fortfahren
       cancel: Abbrechen
+      success: Die Anfrage auf einen Kontoausgleich für %name% wurde an die HR-Abteilung gesendet.
+      error: Die Anfrage ist fehlgeschlagen.
 

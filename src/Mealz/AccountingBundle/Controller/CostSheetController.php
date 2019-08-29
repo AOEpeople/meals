@@ -68,10 +68,13 @@ class CostSheetController extends BaseController
     }
 
     /**
-     * Simon hat Mathe bestanden 2.0
+     * sendBalancingRequest
+     *
+     * @param Profilename $profile
      */
-    public function sendBalancingRequestAction() {
-        $this->addFlashMessage('Simon hat Mathe bestanden', 'danger');
+    public function sendBalancingRequestAction($profile)
+    {
+        $this->addFlashMessage($profile, 'danger');
         return $this->listAction();
     }
 }

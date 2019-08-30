@@ -157,7 +157,7 @@ class CostSheetController extends BaseController
             $transaction = new Transaction();
             $transaction->setProfile($profile);
             $transaction->setDate(new \DateTime());
-            $transaction->setAmount(-1 * abs((int)$this->get('mealz_accounting.wallet')->getBalance($profile)));
+            $transaction->setAmount(-1 * abs(floatval($this->get('mealz_accounting.wallet')->getBalance($profile))));
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($profile);

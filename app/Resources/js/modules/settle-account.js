@@ -1,8 +1,5 @@
-function settleAccount(that) {
-    console.log('test1');
-    console.log($(that));
+function settleAccount() {
     $('.button.settle-account').click(function () {
-        console.log('test2');
         var $container = $('[data-account-settlement-confirmation]');
         var $profile = $(this).parent().children('#cash_profile').val();
         var $continueButton = $('.button.account-settlement-confirmation-continue');

@@ -13,25 +13,15 @@ Mealz.prototype.initAjaxForms = function () {
     $('.load-payment-form').on('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
-        thatForm.remove();
+        $(this).children('form').remove();
         that.loadAjaxFormPayment($(this));
-        var thatForm = $(this).children('form');
 
-        var checkSettleAccountExist = setInterval(function () {
-            if ($('form[name="cash"]').length) {
-                settleAccount($(thatForm));
-                clearInterval(checkSettleAccountExist);
-            }
-        }, 100);
+        if ($('form[name="cash"]').length) {
+            settleAccount();
+        }
 
-        if ($('.load-payment-form').is("#ecash")) {
-            var checkPaymentFormExist = setInterval(function () {
-                if ($('.paypal-button-container').length) {
-                    that.enablePaypal();
-                    clearInterval(checkPaymentFormExist);
-                }
-            }, 100);
-
+        if ($('.load-payment-form').is("#ecash") && $('.paypal-button-container').length) {
+            that.enablePaypal();
         }
 
     });
@@ -131,6 +121,7 @@ Mealz.prototype.loadAjaxFormPayment = function ($element) {
         method: 'GET',
         url: url,
         dataType: 'json',
+        async: false,
         success: function (data) {
             that.$iconCells.find('form').addClass(that.hiddenClass);
             $element.after(data);

@@ -2,6 +2,8 @@
 
 namespace Mealz\AccountingBundle\Controller;
 
+use Mealz\AccountingBundle\Entity\Transaction;
+use Mealz\AccountingBundle\Entity\TransactionRepository;
 use Mealz\MealBundle\Controller\BaseController;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\VarDumper\VarDumper;
@@ -70,7 +72,7 @@ class CostSheetController extends BaseController
     }
 
     /**
-     * @param $username
+     * @param String $username
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function sendSettlementRequestAction($username)
@@ -80,8 +82,6 @@ class CostSheetController extends BaseController
         $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
         $profile = $profileRepository->find($username);
 
-        VarDumper::dump($profile);
-        // TODO: Write and translate message
         $message = $this->get('translator')->trans('payment.costsheet.confirmation.error');
         $severity = "danger";
 
@@ -96,9 +96,23 @@ class CostSheetController extends BaseController
             $em->flush();
 
             $urlEncodedHash = urlencode(crypt($username, $secret));
-            VarDumper::dump($urlEncodedHash);
 
-            mail("raza.ahmed@aoe.com", "Test Subject", $urlEncodedHash, "From: AOE Meals Chef Bot <noreply-meals@aoe.com>");
+            $translator = $this->get('translator');
+
+            $to = $username . $translator->trans('mail.domain', array(), 'messages');
+            $subject = $translator->trans('payment.costsheet.mail.subject', array(), 'messages');
+            $header = $translator->trans('mail.sender', array(), 'messages');
+            $body = $translator->trans('payment.costsheet.mail.body', array(
+                '%admin%' => $this->getProfile()->getFullName(),
+                '%fullname%' => $profile->getFullName(),
+                '%link%' => $_SERVER['SERVER_NAME'] . $this->generateUrl("mealz_accounting_cost_sheet_redirect_to_confirm", array(
+                            "hash" => $urlEncodedHash)
+                    )
+            ), 'messages');
+
+            VarDumper::dump($to . $subject . $header . $body);
+
+            //mail("raza.ahmed@aoe.com", "Test Subject", $urlEncodedHash, "From: AOE Meals Chef Bot <noreply-meals@aoe.com>");
 
             $message = $this->get('translator')->trans(
                 'payment.costsheet.confirmation.success',
@@ -115,9 +129,50 @@ class CostSheetController extends BaseController
 
     }
 
+    /**
+     * @param $username
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function renderConfirmButtonAction($hash)
+    {
+        return $this->render('MealzAccountingBundle::confirmationPage.html.twig', array(
+            'hash' => $hash)
+        );
+    }
+
+    /**
+     * @param $hash
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Exception
+     */
     public function confirmSettlementAction($hash)
     {
+        $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
+        $queryResult = $profileRepository->findBy(array("settlementHash" => urldecode($hash)));
 
+        $message = "The user could not be found or the request has already been confirmed.";
+        $severity = "danger";
+
+        if ($queryResult != false) {
+            $profile = $queryResult[0];
+            $profile->setSettlementHash(null);
+
+            $transaction = new Transaction();
+            $transaction->setProfile($profile);
+            $transaction->setDate(new \DateTime());
+            $transaction->setAmount(abs($this->get('mealz_accounting.wallet')->getBalance($profile)));
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($profile);
+            $em->persist($transaction);
+            $em->flush();
+
+            $message = "The account settlement for " . $profile->getFullName() . " was confirmed.";
+            $severity = "success";
+        }
+
+        $this->addFlashMessage($message, $severity);
+        return $this->render("::base.html.twig");
     }
 
 }

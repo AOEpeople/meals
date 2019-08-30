@@ -27,6 +27,9 @@ payment:
       message: The account balance of this user will be set to €0.00. Do you want to continue?
       continue: Continue
       cancel: Cancel
+      confirm: Confirm
       success: The request for account settlement for %name% has been sent to the HR department.
       error: The request failed.
-
+    mail:
+      subject: Request for account settlement
+      body: Hi HR,\n%admin% requested an account settlement for %fullname%.\nClick on the following link to confirm it:\n%link%

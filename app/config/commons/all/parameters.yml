@@ -17,4 +17,4 @@ parameters:
     paypal_id: "replaced_by_deployment"
     paypal_secret: "replaced_by_deployment"
 
-    hr_email: 'raza.ahmed@aoe.com'
+    hr_email: 'replaced_by_deployment'

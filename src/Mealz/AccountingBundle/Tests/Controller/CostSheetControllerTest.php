@@ -2,12 +2,17 @@
 
 namespace Mealz\AccountingBundle\Tests\Controller;
 
+use Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
+use Mealz\MealBundle\DataFixtures\ORM\LoadDays;
+use Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
+use Mealz\MealBundle\DataFixtures\ORM\LoadDishVariations;
+use Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
+use Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
+use Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use Mealz\AccountingBundle\DataFixtures\ORM\LoadTransactions;
-use Mealz\AccountingBundle\Controller\CostSheetController;
 use Mealz\AccountingBundle\Entity\Transaction;
 use Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
-use Mealz\UserBundle\Entity\Profile;
 
 /**
  * Class CostSheetControllerTest
@@ -22,66 +27,72 @@ class CostSheetControllerTest extends AbstractControllerTestCase
     {
         parent::setUp();
 
-        $this->createDefaultClient();
+        $this->createAdminClient();
         $this->clearAllTables();
         $this->loadFixtures([
-        new LoadUsers($this->client->getContainer()),
-        new LoadTransactions()
+            new LoadWeeks(),
+            new LoadDays(),
+            new LoadCategories(),
+            new LoadDishes(),
+            new LoadDishVariations(),
+            new LoadMeals(),
+            new LoadRoles(),
+            new LoadUsers($this->client->getContainer()),
+            new LoadTransactions()
         ]);
     }
 
     /**
-     * check that hash is written in database
+     * Check if hashCode was written in database
      * @test
      */
-    public function testHashWritteInDatabase()
+    public function testHashWrittenInDatabase()
     {
-        // get Instanzes from class
-        $costSheetController = new CostSheetController();
         $profile = $this->getUserProfile();
+
+        $this->assertNull($profile->getSettlementHash(), 'SettlementHash was set already');
+
+        $this->client->request('GET', '/print/costsheet/settlement/request/alice');
+        $this->assertTrue($this->client->getResponse()->isSuccessful());
+
+        $this->assertNotNull($profile->getSettlementHash(), 'SettlementHash was not set');
+    }
+
+    /**
+     * Check if hashCode was removed from database
+     * @test
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function testHashRemoveFromDatabase()
+    {
+        $profile = $this->getUserProfile();
+        $hash = '12345';
+        $profile->setSettlementHash($hash);
+
         $em = $this->getDoctrine()->getManager();
 
         $transaction = new Transaction();
         $transaction->setProfile($profile);
-        $transaction->setAmount(mt_rand(-10, -120) + 0.13);
-        $transaction->setDate(new \DateTime('yesterday'));
+        $transaction->setAmount(mt_rand(10, 120) + 0.13);
+        $transaction->setDate(new \DateTime());
 
-        $em->transactional(function ($em) use ($transaction) {
-            $em->persist($transaction);
-            $em->flush();
-        });
+        $em->persist($transaction);
+        $em->flush();
 
-        // do pre write Tests
-        $this->assertNull($profile->getSettlementHash('alice'));
+        $transactionRepository = $this->getDoctrine()->getRepository('MealzAccountingBundle:Transaction');
+        $balanceBefore = $transactionRepository->getTotalAmount('alice');
 
-        $costSheetController->sendSettlementRequestAction('alice');
-
-        // do post write Tests
-        $this->assertNotNull($profile->getSettlementHash('alice'));
-    }
-
-    /**
-     * check that hash is removed from database
-     * @test
-    */
-    /*public function testHashRemoveFromDatabase()
-    {
-        // get Instanzes from class
-        $costSheetController = new CostSheetController();
-        $profile = $this->getUserProfile();
-
-        $balanceBefore = $costSheetController->get('mealz_accounting.wallet')->getBalance($profile);
-
-        //do pre remove Tests
+        // Pre-action tests
         $this->assertGreaterThan(0, $balanceBefore);
-        $this->assertNotNull($profile->getSettlementHash('alice'));
+        $this->assertNotNull($profile->getSettlementHash());
 
-        // removeHash and get new Balance
-        $costSheetController->confirmSettlementAction($profile->getSettlementHash('alice'));
-        $balanceAfter = $costSheetController->get('mealz_accounting.wallet')->getBalance($profile);
+        // Trigger action
+        $this->client->request('GET', '/print/costsheet/settlement/confirm/' . $hash);
+        $this->assertTrue($this->client->getResponse()->isSuccessful());
 
-        // conform Settelement and remove Hash
+        // Check new balance
+        $balanceAfter = $transactionRepository->getTotalAmount('alice');
         $this->assertEquals(0, $balanceAfter);
-        $this->assertNull($profile->getSettlementHash('alice'));
-    }*/
+        $this->assertNull($profile->getSettlementHash());
+    }
 }

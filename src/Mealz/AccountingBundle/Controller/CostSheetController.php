@@ -3,11 +3,8 @@
 namespace Mealz\AccountingBundle\Controller;
 
 use Mealz\AccountingBundle\Entity\Transaction;
-use Mealz\AccountingBundle\Entity\TransactionRepository;
 use Mealz\MealBundle\Controller\BaseController;
 use Mealz\UserBundle\Entity\Profile;
-use Symfony\Component\Translation\Translator;
-use Symfony\Component\VarDumper\VarDumper;
 
 class CostSheetController extends BaseController
 {
@@ -27,7 +24,7 @@ class CostSheetController extends BaseController
         // create column names
         $numberOfMonths = 3;
         $columnNames = array('earlier' => 'Prior to that');
-        $dateTime = new \DateTime('first day of -$numberOfMonths month 00:00');
+        $dateTime = new \DateTime("first day of -$numberOfMonths month 00:00");
         $earlierTimestamp = $dateTime->getTimestamp();
         for ($i = 0; $i < $numberOfMonths + 1; $i++) {
             $columnNames[$dateTime->getTimestamp()] = $dateTime->format('F');
@@ -187,7 +184,5 @@ class CostSheetController extends BaseController
         $header = $translator->trans('mail.sender', array(), 'messages');
 
         mail($to, $subject, $body, $header);
-
-        VarDumper::dump($body);
     }
 }

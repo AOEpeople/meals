@@ -106,8 +106,7 @@ class CostSheetController extends BaseController
                 '%admin%' => $this->getProfile()->getFullName(),
                 '%fullname%' => $profile->getFullName(),
                 '%link%' => $_SERVER['SERVER_NAME'] . $this->generateUrl("mealz_accounting_cost_sheet_redirect_to_confirm", array(
-                            "hash" => $urlEncodedHash)
-                    )
+                            "hash" => $urlEncodedHash))
             ), 'messages');
 
             VarDumper::dump($to . $subject . $header . $body);
@@ -126,22 +125,20 @@ class CostSheetController extends BaseController
 
         $this->addFlashMessage($message, $severity);
         return $this->listAction();
-
     }
 
     /**
-     * @param $username
+     * @param String $hash
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function renderConfirmButtonAction($hash)
     {
         return $this->render('MealzAccountingBundle::confirmationPage.html.twig', array(
-            'hash' => $hash)
-        );
+            'hash' => $hash));
     }
 
     /**
-     * @param $hash
+     * @param String $hash
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Exception
      */
@@ -160,7 +157,7 @@ class CostSheetController extends BaseController
             $transaction = new Transaction();
             $transaction->setProfile($profile);
             $transaction->setDate(new \DateTime());
-            $transaction->setAmount(abs($this->get('mealz_accounting.wallet')->getBalance($profile)));
+            $transaction->setAmount(-1 * abs((int)$this->get('mealz_accounting.wallet')->getBalance($profile)));
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($profile);
@@ -174,5 +171,4 @@ class CostSheetController extends BaseController
         $this->addFlashMessage($message, $severity);
         return $this->render("::base.html.twig");
     }
-
 }

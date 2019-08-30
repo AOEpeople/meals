@@ -59,16 +59,16 @@
         }
       }
 
-      a {
+      .settle-account {
         display: block;
         margin-top: 10px;
         padding: 10px;
         font-size: 11px;
         text-align: center;
+      }
 
-        &:hover {
-          color: $color-orange;
-        }
+      .hidden {
+        display: none;
       }
 
       &::after {

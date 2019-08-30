@@ -13,20 +13,22 @@ Mealz.prototype.initAjaxForms = function () {
     $('.load-payment-form').on('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
+        thatForm.remove();
         that.loadAjaxFormPayment($(this));
+        var thatForm = $(this).children('form');
 
-        var checkExist = setInterval(function () {
+        var checkSettleAccountExist = setInterval(function () {
             if ($('form[name="cash"]').length) {
-                settleAccount();
-                clearInterval(checkExist);
+                settleAccount($(thatForm));
+                clearInterval(checkSettleAccountExist);
             }
         }, 100);
 
         if ($('.load-payment-form').is("#ecash")) {
-            var checkExist = setInterval(function () {
+            var checkPaymentFormExist = setInterval(function () {
                 if ($('.paypal-button-container').length) {
                     that.enablePaypal();
-                    clearInterval(checkExist);
+                    clearInterval(checkPaymentFormExist);
                 }
             }, 100);
 

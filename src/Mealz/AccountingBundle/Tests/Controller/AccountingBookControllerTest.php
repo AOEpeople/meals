@@ -1,6 +1,6 @@
 <?php
 
-namespace Mealz\AccountinglBundle\Tests\Controller;
+namespace Mealz\AccountingBundle\Tests\Controller;
 
 use Mealz\UserBundle\Entity\Profile;
 use Symfony\Component\DomCrawler\Crawler;
@@ -11,7 +11,7 @@ use Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 
 /**
  * Class AccountingBookControllerTest
- * @package Mealz\AccountinglBundle\Tests\Controller
+ * @package Mealz\AccountingBundle\Tests\Controller
  */
 class AccountingBookControllerTest extends AbstractControllerTestCase
 {

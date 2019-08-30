@@ -5,6 +5,7 @@ namespace Mealz\AccountingBundle\Controller;
 use Mealz\AccountingBundle\Entity\Transaction;
 use Mealz\AccountingBundle\Entity\TransactionRepository;
 use Mealz\MealBundle\Controller\BaseController;
+use Mealz\UserBundle\Entity\Profile;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\VarDumper\VarDumper;
 
@@ -26,11 +27,11 @@ class CostSheetController extends BaseController
         // create column names
         $numberOfMonths = 3;
         $columnNames = array('earlier' => 'Prior to that');
-        $dateTime = new \DateTime("first day of -$numberOfMonths month 00:00");
+        $dateTime = new \DateTime('first day of -$numberOfMonths month 00:00');
         $earlierTimestamp = $dateTime->getTimestamp();
         for ($i = 0; $i < $numberOfMonths + 1; $i++) {
             $columnNames[$dateTime->getTimestamp()] = $dateTime->format('F');
-            $dateTime->modify("+1 month");
+            $dateTime->modify('+1 month');
         }
         $columnNames['total'] = 'Total';
 
@@ -82,45 +83,30 @@ class CostSheetController extends BaseController
         $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
         $profile = $profileRepository->find($username);
 
-        $message = $this->get('translator')->trans('payment.costsheet.confirmation.error');
-        $severity = "danger";
-
-        if ($profile !== null && $profile->getSettlementHash() === null) {
+        if ($profile !== null && $profile->getSettlementHash() === null && $this->get('mealz_accounting.wallet')->getBalance($profile) > 0.00) {
             $username = $profile->getUsername();
             $secret = $this->getParameter('secret');
             $hashCode = crypt($username, $secret);
+            $urlEncodedHash = urlencode(crypt($username, $secret));
 
             $em = $this->getDoctrine()->getManager();
             $profile->setSettlementHash($hashCode);
             $em->persist($profile);
             $em->flush();
 
-            $urlEncodedHash = urlencode(crypt($username, $secret));
-
-            $translator = $this->get('translator');
-
-            $to = $username . $translator->trans('mail.domain', array(), 'messages');
-            $subject = $translator->trans('payment.costsheet.mail.subject', array(), 'messages');
-            $header = $translator->trans('mail.sender', array(), 'messages');
-            $body = $translator->trans('payment.costsheet.mail.body', array(
-                '%admin%' => $this->getProfile()->getFullName(),
-                '%fullname%' => $profile->getFullName(),
-                '%link%' => $_SERVER['SERVER_NAME'] . $this->generateUrl("mealz_accounting_cost_sheet_redirect_to_confirm", array(
-                            "hash" => $urlEncodedHash))
-            ), 'messages');
-
-            VarDumper::dump($to . $subject . $header . $body);
-
-            //mail("raza.ahmed@aoe.com", "Test Subject", $urlEncodedHash, "From: AOE Meals Chef Bot <noreply-meals@aoe.com>");
+            $this->sendSettlementRequestMail($profile, $urlEncodedHash);
 
             $message = $this->get('translator')->trans(
-                'payment.costsheet.confirmation.success',
+                'payment.costsheet.account_settlement.request.success',
                 array(
                     '%name%' => $profile->getFullName(),
                 ),
                 'messages'
             );
-            $severity = "success";
+            $severity = 'success';
+        } else {
+            $message = $this->get('translator')->trans('payment.costsheet.account_settlement.request.failure');
+            $severity = 'danger';
         }
 
         $this->addFlashMessage($message, $severity);
@@ -133,8 +119,16 @@ class CostSheetController extends BaseController
      */
     public function renderConfirmButtonAction($hash)
     {
+        $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
+        $queryResult = $profileRepository->findBy(array('settlementHash' => urldecode($hash)));
+
+        if (is_array($queryResult) === true && empty($queryResult) === false) {
+            $profile = $queryResult[0];
+        }
+
         return $this->render('MealzAccountingBundle::confirmationPage.html.twig', array(
-            'hash' => $hash));
+            'hash' => $hash,
+            'profile' => $profile));
     }
 
     /**
@@ -145,12 +139,9 @@ class CostSheetController extends BaseController
     public function confirmSettlementAction($hash)
     {
         $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
-        $queryResult = $profileRepository->findBy(array("settlementHash" => urldecode($hash)));
+        $queryResult = $profileRepository->findBy(array('settlementHash' => urldecode($hash)));
 
-        $message = "The user could not be found or the request has already been confirmed.";
-        $severity = "danger";
-
-        if ($queryResult != false) {
+        if (is_array($queryResult) === true && empty($queryResult) === false) {
             $profile = $queryResult[0];
             $profile->setSettlementHash(null);
 
@@ -164,11 +155,39 @@ class CostSheetController extends BaseController
             $em->persist($transaction);
             $em->flush();
 
-            $message = "The account settlement for " . $profile->getFullName() . " was confirmed.";
-            $severity = "success";
+            $message = $this->get('translator')->trans('payment.costsheet.account_settlement.confirmation.success');
+            $severity = 'success';
+        } else {
+            $message = $this->get('translator')->trans('payment.costsheet.account_settlement.confirmation.failure');
+            $severity = 'danger';
         }
 
         $this->addFlashMessage($message, $severity);
-        return $this->render("::base.html.twig");
+        return $this->render('@MealzAccounting/confirmationPage.html.twig', array(
+            'profile' => null
+        ));
+    }
+
+    /**
+     * @param Profile $profile
+     * @param String $urlEncodedHash
+     */
+    private function sendSettlementRequestMail(Profile $profile, $urlEncodedHash)
+    {
+        $translator = $this->get('translator');
+
+        $to = $this->getParameter('hr_email');
+        $subject = $translator->trans('payment.costsheet.mail.subject', array(), 'messages');
+        $body = $translator->trans('payment.costsheet.mail.body', array(
+            '%admin%' => $this->getProfile()->getFullName(),
+            '%fullname%' => $profile->getFullName(),
+            '%link%' => $_SERVER['SERVER_NAME'] . $this->generateUrl('mealz_accounting_cost_sheet_redirect_to_confirm', array(
+                    'hash' => $urlEncodedHash))
+        ), 'messages');
+        $header = $translator->trans('mail.sender', array(), 'messages');
+
+        mail($to, $subject, $body, $header);
+
+        VarDumper::dump($body);
     }
 }

@@ -5,9 +5,9 @@
     {{ form_widget(form.submit) }}
 
     {% if profileBalance > 0 %}
-        <button type="button" class="button settle-account">{{ 'payment.costsheet.settle_account'|trans({}, 'messages') }}</button>
+        <button type="button" class="button settle-account">{{ 'payment.costsheet.account_settlement.button'|trans({}, 'messages') }}</button>
     {% else %}
-        <button type="button" class="button settle-account hidden">{{ 'payment.costsheet.settle_account'|trans({}, 'messages') }}</button>
+        <button type="button" class="button settle-account hidden"></button>
     {% endif %}
 
     {{ form_rest(form) }}

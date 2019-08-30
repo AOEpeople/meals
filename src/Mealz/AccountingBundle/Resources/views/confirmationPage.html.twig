@@ -2,7 +2,9 @@
 
 {% block body %}
 
-    <!-- Use if statement with variable passed from backend to decide whether to render button or confirmation message -->
-    {{ MealzButton.link(path('mealz_accounting_cost_sheet_confirm_settlement_request', { 'hash': hash }), 'payment.costsheet.confirmation.confirm'|trans({}, 'messages'), '', '', '') }}
+    {% if not profile == null %}
+        <p class="text-block">{{ "payment.costsheet.account_settlement.confirmation.message"|trans({'%fullname%': profile.getFullName}, "messages") }}</p>
+        {{ MealzButton.link(path('mealz_accounting_cost_sheet_confirm_settlement_request', { 'hash': hash }), 'payment.costsheet.account_settlement.confirmation.confirm'|trans({}, 'messages'), '', '', '') }}
+    {% endif %}
 
 {% endblock %}

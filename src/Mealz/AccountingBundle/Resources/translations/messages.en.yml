@@ -38,4 +38,4 @@ payment:
         failure: The request could not be confirmed or has already been confirmed.
     mail:
       subject: Request for account settlement
-      body: Hi HR,\n%admin% requested an account settlement for %fullname%.\nClick on the following link to confirm it:\n%link%
+      body: "Hi HR,\n%admin% requested an account settlement for %fullname%.\nClick on the following link to confirm it:\n%link%"

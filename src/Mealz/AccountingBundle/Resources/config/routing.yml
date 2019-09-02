@@ -75,3 +75,15 @@ mealz_accounting_accounting_book:
 mealz_accounting.cost_sheet:
     path: /print/costsheet
     defaults: { _controller: "MealzAccountingBundle:CostSheet:list" }
+
+mealz_accounting_cost_sheet_send_settlement_request:
+    path: /print/costsheet/settlement/request/{username}
+    defaults: { _controller: "MealzAccountingBundle:CostSheet:sendSettlementRequest" }
+
+mealz_accounting_cost_sheet_redirect_to_confirm:
+    path: /print/costsheet/redirect/confirm/{hash}
+    defaults: { _controller: "MealzAccountingBundle:CostSheet:renderConfirmButton" }
+
+mealz_accounting_cost_sheet_confirm_settlement_request:
+    path: /print/costsheet/settlement/confirm/{hash}
+    defaults: { _controller: "MealzAccountingBundle:CostSheet:confirmSettlement" }

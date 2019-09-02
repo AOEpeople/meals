@@ -21,3 +21,21 @@ payment:
     pay: Pay
     paypal: PayPal
     invalid: Please enter a valid amount.
+  costsheet:
+    account_settlement:
+      button: Settle account
+      fancybox:
+        message: The account balance of this user will be set to €0.00 Do you want to continue?
+        continue: Continue
+        cancel: Cancel
+      request:
+        success: The request for account settlement for %name% has been sent to the HR department.
+        failure: The request failed.
+      confirmation:
+        message: The account of %fullname% will be settled.
+        confirm: Confirm
+        success: The request has been confirmed.
+        failure: The request could not be confirmed or has already been confirmed.
+    mail:
+      subject: Request for account settlement
+      body: Hi HR,\n%admin% requested an account settlement for %fullname%.\nClick on the following link to confirm it:\n%link%

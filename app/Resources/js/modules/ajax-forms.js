@@ -13,14 +13,13 @@ Mealz.prototype.initAjaxForms = function () {
     $('.load-payment-form').on('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
-        $(this).children('form').remove();
         that.loadAjaxFormPayment($(this));
 
-        if ($('form[name="cash"]').length) {
+        if ($('form[name="cash"]').length >= 1) {
             settleAccount();
         }
 
-        if ($('.load-payment-form').is("#ecash") && $('.paypal-button-container').length) {
+        if ($('.load-payment-form').is("#ecash") === true && $('.paypal-button-container').length >= 1) {
             that.enablePaypal();
         }
 

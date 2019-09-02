@@ -18,3 +18,5 @@ parameters:
     paypal_secret: "replaced_by_deployment"
 
     hr_email: 'replaced_by_deployment'
+
+    env_url: 'replaced_by_deployment'

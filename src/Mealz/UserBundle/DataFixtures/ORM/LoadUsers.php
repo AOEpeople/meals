@@ -74,6 +74,7 @@ class LoadUsers extends AbstractFixture implements OrderedFixtureInterface, Cont
         $this->addUser('john');
         $this->addUser('jane');
         $this->addUser('kochomi');
+        $this->addUser('finance');
 
         $this->objectManager->flush();
     }

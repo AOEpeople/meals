@@ -26,3 +26,14 @@
         </li>
     </ul>
 {% endif %}
+
+{% if is_granted('ROLE_FINANCE') %}
+<ul class="navbar">
+    <li>
+        <a href="{{ path('mealz_accounting_accounting_book') }}"
+           class="{{ activeRoute == 'mealz_accounting_accounting_book' ? 'active' }}">
+            {{ 'header.navigation.finance'|trans({}, 'general') }}
+        </a>
+    </li>
+</ul>
+{% endif %}

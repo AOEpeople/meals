@@ -110,11 +110,6 @@ Lists all transactions booked for users in the last month.
             </Directory>
     </VirtualHost>
 
-### PayPal API configuration
-
-Export your client id and secret as environment variables.
-See http://symfony.com/doc/current/cookbook/configuration/external_parameters.html
-
 ### Frontend build
 
 ```

@@ -3,7 +3,9 @@
 {% set wrapperClass = 'accounting-book' %}
 
 {% block body %}
-
+{% if is_granted('ROLE_FINANCE') %}
+    <input type="text" name="daterange" value="01/01/2018 - 01/15/2018" />
+{% endif %}
     {# Set data for table content #}
     {% set total = 0 %}
     {% set tableContent = [] %}

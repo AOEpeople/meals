@@ -17,7 +17,7 @@ class AccountingBookController extends BaseController
     public function listAction()
     {
         // Deny access for unprivileged (non-admin) users
-        if (!$this->isGranted('ROLE_KITCHEN_STAFF')) {
+        if (!$this->isGranted('ROLE_KITCHEN_STAFF') && !$this->isGranted('ROLE_FINANCE')) {
             throw new AccessDeniedException();
         }
 

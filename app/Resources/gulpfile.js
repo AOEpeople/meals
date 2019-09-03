@@ -49,6 +49,8 @@ gulp.task('js', function() {
             'bower_components/datatables.net/js/jquery.dataTables.js',
             'bower_components/switchery/dist/switchery.min.js',
             'bower_components/EasyAutocomplete/dist/jquery.easy-autocomplete.min.js',
+            'bower_components/moment/min/moment.min.js',
+            'bower_components/bootstrap-daterangepicker/daterangepicker.js',
             'js/init.js',
             'js/modules/*.js'
         ])
@@ -74,8 +76,9 @@ gulp.task('css', function() {
     var cssDateTime = gulp.src(['bower_components/datetimepicker/jquery.datetimepicker.css']);
     var cssFancybox = gulp.src(['bower_components/fancybox/dist/jquery.fancybox.min.css']);
     var cssEasyAutocomplete = gulp.src(['bower_components/EasyAutocomplete/dist/easy-autocomplete.min.css']);
+    var cssDateRangePicker = gulp.src(['bower_components/bootstrap-daterangepicker/daterangepicker.css']);
 
-    return merge(sassStream, cssStream, cssFancybox, cssDateTime, cssEasyAutocomplete)
+    return merge(sassStream, cssStream, cssFancybox, cssDateTime, cssEasyAutocomplete, cssDateRangePicker)
         .pipe(concat('mealz.css'))
         .pipe(gulp.dest('../../web/css'));
 });

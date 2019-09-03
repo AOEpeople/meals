@@ -142,10 +142,8 @@ fos_oauth_server:
 
 creatissimo_mattermost:
     appname: "Meals"
-    username: "DevChef"
+    username: "Test Chef"
     webhook: https://messages.aoe.com/hooks/f9nb161oppro8nin15zhtrgqqh
-    channel:
-    iconUrl: "http://deploy.mealz.itg.de2.dc.aoe.lan/images/chef_bot.png"
     environments:
         devbox:
             enable: true
@@ -169,7 +167,6 @@ creatissimo_mattermost:
             appname: "Meals"
             username: "Chef"
             webhook: https://messages.aoe.com/hooks/hh5od44xgp8p5rax9uzmgxffmh
-            iconUrl: "http://meals.aoe.com/images/chef_bot.png"
             enable: true
             terminate:
                 enable: false

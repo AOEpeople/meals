@@ -7,24 +7,24 @@
     <input name="page-url" type="hidden" value="{{ path('mealz_accounting_accounting_book_finance') }}">
     <input name="min-date" type="hidden" value='{{ minDate }}'>
     <input name="max-date" type="hidden" value='{{ maxDate }}'>
-    <i class="glyphicon glyphicon-calendar" id="daterangepicker"></i>
+    <i class="glyphicon glyphicon-calendar date-range-picker"></i>
 
     {% set tableContent = [{
         'date': {
-            'content': 'Date',
+            'content': 'payment.transaction_history.finances.date'|trans({}, 'messages'),
             'class': 'date'
         },
         'name': {
-            'content': 'Name',
+            'content': 'payment.transaction_history.finances.name'|trans({}, 'messages'),
             'class': 'name'
         },
         'amount': {
-            'content': 'Betrag',
+            'content': 'payment.transaction_history.finances.amount'|trans({}, 'messages'),
             'class': 'amount'
         },
-        'daily': {
-            'content': 'Tagesabschluss',
-            'class': 'amount'
+        'dailyClosing': {
+            'content': 'payment.transaction_history.finances.daily_closing'|trans({}, 'messages'),
+            'class': 'daily-closing'
         },
     }] %}
 
@@ -47,9 +47,9 @@
                         'content': MealzEuro.create(transaction.amount),
                         'class': 'amount'
                     },
-                    'daily': {
+                    'dailyClosing': {
                         'content': null,
-                        'class': 'amount'
+                        'class': 'daily-closing'
                     },
 
                 }]) %}
@@ -64,15 +64,15 @@
                 },
                 'name': {
                     'content': null,
-                    'class': 'amount'
+                    'class': 'name'
                 },
                 'amount': {
                     'content': null,
                     'class': 'amount'
                 },
-                'daily': {
+                'daily-closing': {
                     'content': MealzEuro.create(dailyClosing),
-                    'class': 'amount'
+                    'class': 'daily-closing'
                 },
             }]) %}
 
@@ -84,6 +84,25 @@
         </br></br></br></br>
 
     {% endif %}
+
+    {% set tableContent = [{
+        'date': {
+            'content': 'payment.transaction_history.finances.date'|trans({}, 'messages'),
+            'class': 'date'
+        },
+        'name': {
+            'content': 'payment.transaction_history.finances.name'|trans({}, 'messages'),
+            'class': 'name'
+        },
+        'amount': {
+            'content': 'payment.transaction_history.finances.amount'|trans({}, 'messages'),
+            'class': 'amount'
+        },
+        'dailyClosing': {
+            'content': 'payment.transaction_history.finances.daily_closing'|trans({}, 'messages'),
+            'class': 'daily-closing'
+        },
+    }] %}
 
     {% for date in transactions %}
         {% set dailyClosing = 0 %}
@@ -103,9 +122,9 @@
                     'content': MealzEuro.create(transaction.amount),
                     'class': 'amount'
                 },
-                'daily': {
+                'dailyClosing': {
                     'content': null,
-                    'class': 'amount'
+                    'class': 'daily-closing'
                 },
 
             }]) %}
@@ -120,15 +139,15 @@
             },
             'name': {
                 'content': null,
-                'class': 'amount'
+                'class': 'name'
             },
             'amount': {
                 'content': null,
                 'class': 'amount'
             },
-            'daily': {
+            'daily-closing': {
                 'content': MealzEuro.create(dailyClosing),
-                'class': 'amount'
+                'class': 'daily-closing'
             },
         }]) %}
 

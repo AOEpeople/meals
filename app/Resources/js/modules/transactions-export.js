@@ -1,7 +1,7 @@
 Mealz.prototype.exportTransactions = function () {
 
     $(function () {
-        $('#daterangepicker').daterangepicker({
+        $('.date-range-picker').daterangepicker({
             startDate: $('input[name="min-date"]').val(),
             endDate: $('input[name="max-date"]').val()
         }, function (start, end, label) {

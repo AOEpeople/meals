@@ -66,7 +66,7 @@ class AccountingBookController extends BaseController
 
         $transactionRepository = $this->getTransactionRepository();
 
-        $headingFirst = $usersFirst = $minDateFirst = $maxDateFirst = null;
+        $headingFirst = $transactionsFirst = $minDateFirst = $maxDateFirst = null;
 
         if ($dateRange == null) {
             // Get first and last day of previous month

@@ -30,8 +30,8 @@
 {% if is_granted('ROLE_FINANCE') %}
 <ul class="navbar">
     <li>
-        <a href="{{ path('mealz_accounting_accounting_book') }}"
-           class="{{ activeRoute == 'mealz_accounting_accounting_book' ? 'active' }}">
+        <a href="{{ path('mealz_accounting_accounting_book_finance') }}"
+           class="{{ activeRoute == 'mealz_accounting_accounting_book_finance' ? 'active' }}">
             {{ 'header.navigation.finance'|trans({}, 'general') }}
         </a>
     </li>

@@ -130,4 +130,78 @@ class TransactionRepository extends EntityRepository
 
         return $result;
     }
+
+    /**
+     * Returns all transactions that were made between the given dates.
+     * @param \DateTime $minDate
+     * @param \DateTime $maxDate
+     * @return array
+     */
+    public function findAllTransactionsInDateRange(\DateTime $minDate, \DateTime $maxDate) {
+        $qb = $this->createQueryBuilder('t');
+        $qb->select('t.date');
+
+        $minDate = clone $minDate;
+        $minDate->setTime(0, 0, 0);
+        $maxDate = clone $maxDate;
+        $maxDate->setTime(23, 59, 59);
+
+        $qb->andWhere('t.date >= :minDate');
+        $qb->andWhere('t.date <= :maxDate');
+        $qb->setParameter('minDate', $minDate);
+        $qb->setParameter('maxDate', $maxDate);
+
+        $qb->orderBy('t.date', 'ASC');
+
+        $queryResult = $qb->getQuery()->getArrayResult();
+
+        $result = array();
+        foreach ($queryResult as $item) {
+            if (array_key_exists($item['date']->format('Y-m-d'), $result) == false) {
+                $result[$item['date']->format('Y-m-d')] = $this->getAllTransactionsOnDay($item['date']);
+            }
+        }
+
+        return $result;
+
+    }
+
+    /**
+     * Helper function for findAllTransactionsInDateRange()
+     * @param \DateTime $day
+     * @return array
+     */
+    private function getAllTransactionsOnDay(\DateTime $day) {
+        // Get all dates where transactions were made
+        $qb = $this->createQueryBuilder('t');
+        $qb->select('t.amount, t.date, p.firstName, p.name');
+        $qb->leftJoin('t.profile', 'p');
+
+        $minDate = clone $day;
+        $minDate->setTime(0, 0, 0);
+        $maxDate = clone $day;
+        $maxDate->setTime(23, 59, 59);
+
+        $qb->andWhere('t.date >= :minDate');
+        $qb->andWhere('t.date <= :maxDate');
+        $qb->setParameter('minDate', $minDate);
+        $qb->setParameter('maxDate', $maxDate);
+
+        $qb->orderBy('t.date', 'ASC');
+
+        $queryResult = $qb->getQuery()->getArrayResult();
+
+        $result = array();
+        foreach ($queryResult as $item) {
+            array_push($result, array(
+                'amount' => $item['amount'],
+                'date' => $item['date']->format('d.m.Y'),
+                'firstName' => $item['firstName'],
+                'name' => $item['name']
+            ));
+        }
+
+        return $result;
+
+    }
 }

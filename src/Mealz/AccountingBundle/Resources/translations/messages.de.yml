@@ -21,6 +21,8 @@ payment:
     pay: Zahlen
     paypal: PayPal
     invalid: Bitte gib einen gültigen Betrag ein.
+    finances:
+      daily_closing: Tagesabschluss
   costsheet:
     account_settlement:
       button: Konto ausgleichen

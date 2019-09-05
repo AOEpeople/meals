@@ -1,0 +1,142 @@
+{% extends '::base_navigation.html.twig' %}
+
+{% set wrapperClass = 'accounting-book' %}
+
+{% block body %}
+
+    <input name="page-url" type="hidden" value="{{ path('mealz_accounting_accounting_book_finance') }}">
+    <input name="min-date" type="hidden" value='{{ minDate }}'>
+    <input name="max-date" type="hidden" value='{{ maxDate }}'>
+    <i class="glyphicon glyphicon-calendar" id="daterangepicker"></i>
+
+    {% set tableContent = [{
+        'date': {
+            'content': 'Date',
+            'class': 'date'
+        },
+        'name': {
+            'content': 'Name',
+            'class': 'name'
+        },
+        'amount': {
+            'content': 'Betrag',
+            'class': 'amount'
+        },
+        'daily': {
+            'content': 'Tagesabschluss',
+            'class': 'amount'
+        },
+    }] %}
+
+    {% if transactionsFirst is not null %}
+        {% for date in transactionsFirst %}
+            {% set dailyClosing = 0 %}
+
+            {% for transaction in date %}
+                {% set dailyClosing = dailyClosing + transaction.amount %}
+                {% set tableContent = tableContent | merge([{
+                    'date': {
+                        'content': transaction.date,
+                        'class': 'date'
+                    },
+                    'name': {
+                        'content': transaction.name ~ ", " ~ transaction.firstName,
+                        'class': 'name'
+                    },
+                    'amount': {
+                        'content': MealzEuro.create(transaction.amount),
+                        'class': 'amount'
+                    },
+                    'daily': {
+                        'content': null,
+                        'class': 'amount'
+                    },
+
+                }]) %}
+
+            {% endfor %}
+
+            {# Add last line to table: total | amount #}
+            {% set tableContent = tableContent | merge([{
+                'date': {
+                    'content': date.0.date,
+                    'class': 'date'
+                },
+                'name': {
+                    'content': null,
+                    'class': 'amount'
+                },
+                'amount': {
+                    'content': null,
+                    'class': 'amount'
+                },
+                'daily': {
+                    'content': MealzEuro.create(dailyClosing),
+                    'class': 'amount'
+                },
+            }]) %}
+
+        {% endfor %}
+
+        {# Start template #}
+        {{ MealzHeadline.create(1, headingFirst, '', '', [], '') }}
+        {{ MealzTable.create('accounting-book-table', 'table-full-width', [], tableContent) }}
+        </br></br></br></br>
+
+    {% endif %}
+
+    {% for date in transactions %}
+        {% set dailyClosing = 0 %}
+
+        {% for transaction in date %}
+            {% set dailyClosing = dailyClosing + transaction.amount %}
+            {% set tableContent = tableContent | merge([{
+                'date': {
+                    'content': transaction.date,
+                    'class': 'date'
+                },
+                'name': {
+                    'content': transaction.name ~ ", " ~ transaction.firstName,
+                    'class': 'name'
+                },
+                'amount': {
+                    'content': MealzEuro.create(transaction.amount),
+                    'class': 'amount'
+                },
+                'daily': {
+                    'content': null,
+                    'class': 'amount'
+                },
+
+            }]) %}
+
+        {% endfor %}
+
+        {# Add last line to table: total | amount #}
+        {% set tableContent = tableContent | merge([{
+            'date': {
+                'content': date.0.date,
+                'class': 'date'
+            },
+            'name': {
+                'content': null,
+                'class': 'amount'
+            },
+            'amount': {
+                'content': null,
+                'class': 'amount'
+            },
+            'daily': {
+                'content': MealzEuro.create(dailyClosing),
+                'class': 'amount'
+            },
+        }]) %}
+
+    {% endfor %}
+
+    {# Start template #}
+    {{ MealzHeadline.create(1, heading, '', '', [], '') }}
+    {{ MealzTable.create('accounting-book-table', 'table-full-width', [], tableContent) }}
+    </br></br></br></br>
+
+{% endblock %}

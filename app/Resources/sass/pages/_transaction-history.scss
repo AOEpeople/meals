@@ -218,3 +218,19 @@
   }
 
 }
+
+.pdf-export {
+  top: -50px;
+  left: -8px;
+  float: right;
+  margin-right: 10px;
+  font-size: 18px;
+
+  &::before {
+    position: absolute;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+}

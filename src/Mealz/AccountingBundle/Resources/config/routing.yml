@@ -61,8 +61,12 @@ mealz_accounting_accounting_book:
     defaults: { _controller: "MealzAccountingBundle:AccountingBook:list" }
 
 mealz_accounting_accounting_book_finance:
-    path: /accounting/book/finance/{dateRange}
+    path: /accounting/book/finance/list/{dateRange}
     defaults: { _controller: "MealzAccountingBundle:AccountingBook:listAllTransactions", dateRange: null }
+
+mealz_accounting_accounting_book_finance_export:
+    path: /accounting/book/finance/export
+    defaults: { _controller: "MealzAccountingBundle:AccountingBook:exportPDF" }
 
 mealz_accounting.cost_sheet:
     path: /print/costsheet

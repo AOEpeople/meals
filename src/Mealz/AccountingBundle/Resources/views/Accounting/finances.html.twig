@@ -5,6 +5,7 @@
 {% block body %}
 
     <input name="page-url" type="hidden" value="{{ path('mealz_accounting_accounting_book_finance') }}">
+    <input name="export-url" type="hidden" value="{{ path('mealz_accounting_accounting_book_finance_export') }}">
     <input name="min-date" type="hidden" value='{{ minDate }}'>
     <input name="max-date" type="hidden" value='{{ maxDate }}'>
     <i class="glyphicon glyphicon-calendar date-range-picker"></i>
@@ -80,6 +81,7 @@
 
         {# Start template #}
         {{ MealzHeadline.create(1, headingFirst, '', '', [], '') }}
+        <i class="glyphicon glyphicon-download-alt pdf-export"></i>
         {{ MealzTable.create('accounting-book-table', 'table-full-width', [], tableContent) }}
         </br></br></br></br>
 
@@ -155,6 +157,9 @@
 
     {# Start template #}
     {{ MealzHeadline.create(1, heading, '', '', [], '') }}
+    {% if transactionsFirst is null %}
+        <i class="glyphicon glyphicon-export pdf-export"></i>
+    {% endif %}
     {{ MealzTable.create('accounting-book-table', 'table-full-width', [], tableContent) }}
     </br></br></br></br>
 

@@ -34,7 +34,7 @@ class TransactionRepository extends EntityRepository
 
     /**
      * @param Profile $profile
-     * @param int     $limit
+     * @param int $limit
      * @return mixed
      */
     public function getLastSuccessfulTransactions(Profile $profile, $limit = null)
@@ -58,7 +58,7 @@ class TransactionRepository extends EntityRepository
      *
      * @param \DateTime $minDate date from
      * @param \DateTime $maxDate date to
-     * @param Profile   $profile user profile
+     * @param Profile $profile user profile
      *
      * @return Transaction[]
      */
@@ -90,7 +90,7 @@ class TransactionRepository extends EntityRepository
      *
      * @param \DateTime $minDate
      * @param \DateTime $maxDate
-     * @param Profile   $profile
+     * @param Profile $profile
      * @return array
      */
     public function findUserDataAndTransactionAmountForGivenPeriod(\DateTime $minDate = null, \DateTime $maxDate = null, $profile = null)
@@ -137,7 +137,8 @@ class TransactionRepository extends EntityRepository
      * @param \DateTime $maxDate
      * @return array
      */
-    public function findAllTransactionsInDateRange(\DateTime $minDate, \DateTime $maxDate) {
+    public function findAllTransactionsInDateRange(\DateTime $minDate, \DateTime $maxDate)
+    {
         $qb = $this->createQueryBuilder('t');
         $qb->select('t.date');
 
@@ -158,7 +159,10 @@ class TransactionRepository extends EntityRepository
         $result = array();
         foreach ($queryResult as $item) {
             if (array_key_exists($item['date']->format('Y-m-d'), $result) == false) {
-                $result[$item['date']->format('Y-m-d')] = $this->getAllTransactionsOnDay($item['date']);
+                $transactions = $this->getAllTransactionsOnDay($item['date']);
+                if (empty($transactions) == false) {
+                    $result[$item['date']->format('Y-m-d')] = $transactions;
+                }
             }
         }
 
@@ -171,7 +175,8 @@ class TransactionRepository extends EntityRepository
      * @param \DateTime $day
      * @return array
      */
-    private function getAllTransactionsOnDay(\DateTime $day) {
+    private function getAllTransactionsOnDay(\DateTime $day)
+    {
         // Get all dates where transactions were made
         $qb = $this->createQueryBuilder('t');
         $qb->select('t.amount, t.date, p.firstName, p.name');
@@ -184,6 +189,7 @@ class TransactionRepository extends EntityRepository
 
         $qb->andWhere('t.date >= :minDate');
         $qb->andWhere('t.date <= :maxDate');
+        $qb->andWhere('t.paymethod IS NULL');
         $qb->setParameter('minDate', $minDate);
         $qb->setParameter('maxDate', $maxDate);
 

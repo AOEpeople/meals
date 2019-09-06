@@ -106,4 +106,7 @@ class AccountingBookController extends BaseController
         ));
 
     }
+    
+    public function exportPDFAction() {
+    }
 }

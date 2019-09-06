@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f47ee058bb43c73520d04564522ce534",
+    "content-hash": "c9a9a0888645808796cdc7a6aab8f5f9",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -3373,6 +3373,69 @@
             "time": "2017-02-06T12:47:48+00:00"
         },
         {
+            "name": "tecnickcom/tcpdf",
+            "version": "6.2.12",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tecnickcom/TCPDF.git",
+                "reference": "2f732eaa91b5665274689b1d40b285a7bacdc37f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tecnickcom/TCPDF/zipball/2f732eaa91b5665274689b1d40b285a7bacdc37f",
+                "reference": "2f732eaa91b5665274689b1d40b285a7bacdc37f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "fonts",
+                    "config",
+                    "include",
+                    "tcpdf.php",
+                    "tcpdf_parser.php",
+                    "tcpdf_import.php",
+                    "tcpdf_barcodes_1d.php",
+                    "tcpdf_barcodes_2d.php",
+                    "include/tcpdf_colors.php",
+                    "include/tcpdf_filters.php",
+                    "include/tcpdf_font_data.php",
+                    "include/tcpdf_fonts.php",
+                    "include/tcpdf_images.php",
+                    "include/tcpdf_static.php",
+                    "include/barcodes/datamatrix.php",
+                    "include/barcodes/pdf417.php",
+                    "include/barcodes/qrcode.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPLv3"
+            ],
+            "authors": [
+                {
+                    "name": "Nicola Asuni",
+                    "email": "info@tecnick.com",
+                    "homepage": "http://nicolaasuni.tecnick.com"
+                }
+            ],
+            "description": "TCPDF is a PHP class for generating PDF documents and barcodes.",
+            "homepage": "http://www.tcpdf.org/",
+            "keywords": [
+                "PDFD32000-2008",
+                "TCPDF",
+                "barcodes",
+                "datamatrix",
+                "pdf",
+                "pdf417",
+                "qrcode"
+            ],
+            "time": "2015-09-12T10:08:34+00:00"
+        },
+        {
             "name": "twig/extensions",
             "version": "v1.5.4",
             "source": {
@@ -3429,26 +3492,26 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.42.2",
+            "version": "v1.42.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "21707d6ebd05476854805e4f91b836531941bcd4"
+                "reference": "201baee843e0ffe8b0b956f336dd42b2a92fae4e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/21707d6ebd05476854805e4f91b836531941bcd4",
-                "reference": "21707d6ebd05476854805e4f91b836531941bcd4",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/201baee843e0ffe8b0b956f336dd42b2a92fae4e",
+                "reference": "201baee843e0ffe8b0b956f336dd42b2a92fae4e",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4.0",
+                "php": ">=5.5.0",
                 "symfony/polyfill-ctype": "^1.8"
             },
             "require-dev": {
                 "psr/container": "^1.0",
-                "symfony/debug": "^2.7",
-                "symfony/phpunit-bridge": "^3.4.19|^4.1.8|^5.0"
+                "symfony/debug": "^3.4|^4.2",
+                "symfony/phpunit-bridge": "^4.4@dev|^5.0"
             },
             "type": "library",
             "extra": {
@@ -3476,14 +3539,14 @@
                     "homepage": "http://fabien.potencier.org"
                 },
                 {
-                    "name": "Armin Ronacher",
-                    "role": "Project Founder",
-                    "email": "armin.ronacher@active-4.com"
-                },
-                {
                     "name": "Twig Team",
                     "role": "Contributors",
                     "homepage": "https://twig.symfony.com/contributors"
+                },
+                {
+                    "name": "Armin Ronacher",
+                    "role": "Project Founder",
+                    "email": "armin.ronacher@active-4.com"
                 }
             ],
             "description": "Twig, the flexible, fast, and secure template language for PHP",
@@ -3491,7 +3554,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2019-06-18T15:35:16+00:00"
+            "time": "2019-08-24T12:51:03+00:00"
         },
         {
             "name": "willdurand/jsonp-callback-validator",

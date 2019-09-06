@@ -82,7 +82,7 @@
         {# Start template #}
         {{ MealzHeadline.create(1, headingFirst, '', '', [], '') }}
         <i class="glyphicon glyphicon-download-alt pdf-export"></i>
-        {{ MealzTable.create('accounting-book-table', 'table-full-width', [], tableContent) }}
+        {{ MealzTable.create('accounting-book-table', 'table-full-width finances', [], tableContent) }}
         </br></br></br></br>
 
     {% endif %}
@@ -160,7 +160,7 @@
     {% if transactionsFirst is null %}
         <i class="glyphicon glyphicon-export pdf-export"></i>
     {% endif %}
-    {{ MealzTable.create('accounting-book-table', 'table-full-width', [], tableContent) }}
+    {{ MealzTable.create('accounting-book-table', 'table-full-width finances', [], tableContent) }}
     </br></br></br></br>
 
 {% endblock %}

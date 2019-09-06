@@ -118,3 +118,36 @@
     }
   }
 }
+
+.date-range-picker {
+  float: left;
+  margin-right: 10px;
+  font-size: 18px;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.pdf-export {
+  top: -50px;
+  left: -8px;
+  float: right;
+  margin-right: 10px;
+  font-size: 18px;
+
+  &::before {
+    position: absolute;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.finances {
+  .amount,
+  .daily-closing {
+    text-align: right;
+  }
+}

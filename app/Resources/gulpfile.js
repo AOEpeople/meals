@@ -64,7 +64,7 @@ gulp.task('js', function() {
  */
 gulp.task('css', function() {
 
-    var sassStream = gulp.src(['./sass/**/*.scss', '!./sass/helpers/_glyphicons.scss'])
+    var sassStream = gulp.src(['./sass/**/*.scss', '!./sass/helpers/_glyphicons.scss', '!./sass/modules/_transaction-export.scss'])
         .pipe(scsslint({
             'config': 'scsslint.yml'
         }))
@@ -78,9 +78,18 @@ gulp.task('css', function() {
     var cssEasyAutocomplete = gulp.src(['bower_components/EasyAutocomplete/dist/easy-autocomplete.min.css']);
     var cssDateRangePicker = gulp.src(['bower_components/bootstrap-daterangepicker/daterangepicker.css']);
 
-    return merge(sassStream, cssStream, cssFancybox, cssDateTime, cssEasyAutocomplete, cssDateRangePicker)
+    merge(sassStream, cssStream, cssFancybox, cssDateTime, cssEasyAutocomplete, cssDateRangePicker)
         .pipe(concat('mealz.css'))
         .pipe(gulp.dest('../../web/css'));
+
+    var printSassStream = gulp.src(['./sass/modules/_transaction-export.scss'])
+        .pipe(scsslint({
+            'config': 'scsslint.yml'
+        }));
+
+    return merge(printSassStream)
+        .pipe(concat('print.css'))
+        .pipe(gulp.dest('../../web/media'));
 });
 
 /**

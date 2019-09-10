@@ -76,7 +76,7 @@ class AccountingBookController extends BaseController
             $maxDateFirst->setTime(23, 59, 59);
 
             // Create headline for twig template
-            $headingFirst = $minDateFirst->format('d.m.-') . $maxDateFirst->format('d.m.Y');
+            $headingFirst = $minDateFirst->format('d.m.')  . " - " .  $maxDateFirst->format('d.m.Y');
 
             // Get first and last day of actual month
             $minDate = new \DateTime('first day of this month');
@@ -92,11 +92,11 @@ class AccountingBookController extends BaseController
             $maxDate = new \DateTime($dateRangeArray[1]);
         }
 
-        $heading = $minDate->format('d.m.-') . $maxDate->format('d.m.Y');
+        $heading = $minDate->format('d.m.') . " - " . $maxDate->format('d.m.Y');
 
         $transactions = $transactionRepository->findAllTransactionsInDateRange($minDate, $maxDate);
 
-        return $this->render('MealzAccountingBundle:Accounting:finances.html.twig', array(
+        return $this->render('MealzAccountingBundle:Accounting/Finance:finances.html.twig', array(
             'headingFirst' => $headingFirst,
             'heading' => $heading,
             'transactionsFirst' => $transactionsFirst,
@@ -107,7 +107,49 @@ class AccountingBookController extends BaseController
 
     }
 
-    public function exportPDFAction() {
+    /**
+     * @param $dateRange
+     * @throws \Exception
+     */
+    public function exportPDFAction($dateRange) {
+        if (!$this->isGranted('ROLE_FINANCE')) {
+            throw new AccessDeniedException();
+        }
 
+        // Get date range set with date range picker by user
+        $dateRange = str_replace('-', '/', $dateRange);
+        $dateRangeArray = explode("&", $dateRange);
+        $minDate = new \DateTime($dateRangeArray[0]);
+        $maxDate = new \DateTime($dateRangeArray[1]);
+
+        $heading = $minDate->format('d.m.') . " - " .$maxDate->format('d.m.Y');
+        $transactionRepository = $this->getTransactionRepository();
+        $transactions = $transactionRepository->findAllTransactionsInDateRange($minDate, $maxDate);
+
+        // Create PDF file
+        $pdf = $this->get("white_october.tcpdf")->create(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        $pdf->setHeaderData('',0,'','',array(0,0,0), array(255,255,255) );
+        $pdf->setPrintHeader(false);
+        $pdf->setPrintFooter(false);
+        $pdf->AddPage();
+
+        $filename = $minDate->format('d.m.Y') . " - " . $maxDate->format('d.m.Y');
+        $pdf->SetTitle($filename);
+
+        $cssFile = file_get_contents($this->getParameter('env_url') . '/media/print.css');
+
+        $includeCSS = '<style>' . $cssFile . '</style>';
+
+        $html = $this->renderView('MealzAccountingBundle:Accounting/Finance:print_finances.html.twig', array(
+            'headingFirst' => null,
+            'heading' => $heading,
+            'transactionsFirst' => null,
+            'transactions' => $transactions,
+            'minDate' => $minDate->format('m/d/Y'),
+            'maxDate' => $maxDate->format('m/d/Y'),
+        ));
+
+        $pdf->writeHTML($includeCSS . $html);
+        $pdf->Output($filename.".pdf",'I');
     }
 }

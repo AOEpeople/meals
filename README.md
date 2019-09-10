@@ -117,7 +117,7 @@ cd /var/www/mealz/devbox/current/app/Resources
 npm config set strict-ssl false
 sudo npm install
 sudo ./node_modules/bower/bin/bower install
-sudo ./node_modules/gulp/bin/gulp
+sudo ./node_modules/gulp/bin/gulp.js build
 ```
 
 To develop and automatically build gulp try

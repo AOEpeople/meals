@@ -116,7 +116,7 @@ Lists all transactions booked for users in the last month.
 cd /var/www/mealz/devbox/current/app/Resources
 npm config set strict-ssl false
 sudo npm install
-sudo ./node_modules/bower/bin/bower install
+sudo ./node_modules/bower/bin/bower install --allow-root
 sudo ./node_modules/gulp/bin/gulp.js build
 ```
 

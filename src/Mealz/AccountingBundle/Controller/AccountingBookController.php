@@ -109,6 +109,7 @@ class AccountingBookController extends BaseController
 
     /**
      * @param $dateRange
+     * @return string
      * @throws \Exception
      */
     public function exportPDFAction($dateRange) {
@@ -150,6 +151,6 @@ class AccountingBookController extends BaseController
         ));
 
         $pdf->writeHTML($includeCSS . $html);
-        $pdf->Output($filename.".pdf",'I');
+        return $pdf->Output($filename.".pdf",'I');
     }
 }

@@ -181,7 +181,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * Tests whether finance staff can access the transaction export page and admins and default users can not
+     * Tests if finance staff can access the transaction export page and admins and default users can not
      * @test
      */
     public function testAccessForFinanceOnly() {
@@ -206,7 +206,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * Tests whether the transactions are displayed correctly
+     * Tests if the transactions are displayed correctly
      * @test
      */
     public function testTransactionsListing() {
@@ -241,7 +241,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * Test whether PayPal payments are shown on the finances page
+     * Test if PayPal payments are shown on the finances page
      * @test
      * @throws \Exception
      */
@@ -272,7 +272,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * Test whether the daily closing amount is calculated correctly
+     * Tests if the daily closing amount is calculated correctly
      * @test
      * @throws \Exception
      */

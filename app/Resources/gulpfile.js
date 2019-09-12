@@ -88,7 +88,7 @@ gulp.task('css', function() {
         }));
 
     return merge(printSassStream)
-        .pipe(concat('print.css'))
+        .pipe(concat('transaction-export.css'))
         .pipe(gulp.dest('../../web/media'));
 });
 

@@ -10,7 +10,7 @@ Mealz.prototype.exportTransactions = function () {
     });
 
     $('.pdf-export').click(function (e) {
-        var url = $('input[name="export-url"]').val() + "/" + $('input[name="min-date"]').val().replace(/\//g, '-') + "&" + $('input[name="max-date"]').val().replace(/\//g, '-');
+        var url = $('input[name="export-url"]').val() + '/' + $('input[name="min-date"]').val().replace(/\//g, '-') + '&' + $('input[name="max-date"]').val().replace(/\//g, '-');
         window.open(url);
     });
 };

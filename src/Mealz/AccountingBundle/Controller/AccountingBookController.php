@@ -76,7 +76,7 @@ class AccountingBookController extends BaseController
             $maxDateFirst->setTime(23, 59, 59);
 
             // Create headline for twig template
-            $headingFirst = $minDateFirst->format('d.m.')  . " - " .  $maxDateFirst->format('d.m.Y');
+            $headingFirst = $minDateFirst->format('d.m.')  . ' - ' .  $maxDateFirst->format('d.m.Y');
 
             // Get first and last day of actual month
             $minDate = new \DateTime('first day of this month');
@@ -87,12 +87,12 @@ class AccountingBookController extends BaseController
             $transactionsFirst = $transactionRepository->findAllTransactionsInDateRange($minDateFirst, $maxDateFirst);
         } else {
             // Get date range set with date range picker by user
-            $dateRangeArray = explode("&", $dateRange);
+            $dateRangeArray = explode('&', $dateRange);
             $minDate = new \DateTime($dateRangeArray[0]);
             $maxDate = new \DateTime($dateRangeArray[1]);
         }
 
-        $heading = $minDate->format('d.m.') . " - " . $maxDate->format('d.m.Y');
+        $heading = $minDate->format('d.m.') . ' - ' . $maxDate->format('d.m.Y');
 
         $transactions = $transactionRepository->findAllTransactionsInDateRange($minDate, $maxDate);
 
@@ -119,22 +119,22 @@ class AccountingBookController extends BaseController
 
         // Get date range set with date range picker by user
         $dateRange = str_replace('-', '/', $dateRange);
-        $dateRangeArray = explode("&", $dateRange);
+        $dateRangeArray = explode('&', $dateRange);
         $minDate = new \DateTime($dateRangeArray[0]);
         $maxDate = new \DateTime($dateRangeArray[1]);
 
-        $heading = $minDate->format('d.m.') . " - " .$maxDate->format('d.m.Y');
+        $heading = $minDate->format('d.m.') . ' - ' .$maxDate->format('d.m.Y');
         $transactionRepository = $this->getTransactionRepository();
         $transactions = $transactionRepository->findAllTransactionsInDateRange($minDate, $maxDate);
 
         // Create PDF file
-        $pdf = $this->get("white_october.tcpdf")->create(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        $pdf = $this->get('white_october.tcpdf')->create(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         $pdf->setHeaderData('',0,'','',array(0,0,0), array(255,255,255) );
         $pdf->setPrintHeader(false);
         $pdf->setPrintFooter(false);
         $pdf->AddPage();
 
-        $filename = $minDate->format('d.m.Y') . " - " . $maxDate->format('d.m.Y');
+        $filename = $minDate->format('d.m.Y') . ' - ' . $maxDate->format('d.m.Y');
         $pdf->SetTitle($filename);
 
         $cssFile = file_get_contents($this->getParameter('env_url') . '/media/print.css');
@@ -151,6 +151,6 @@ class AccountingBookController extends BaseController
         ));
 
         $pdf->writeHTML($includeCSS . $html);
-        return $pdf->Output($filename.".pdf",'I');
+        return $pdf->Output($filename.'.pdf','I');
     }
 }

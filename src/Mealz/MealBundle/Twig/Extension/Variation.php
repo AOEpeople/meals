@@ -5,6 +5,7 @@ namespace Mealz\MealBundle\Twig\Extension;
 
 use Mealz\MealBundle\Entity\Dish;
 use Mealz\MealBundle\Entity\Meal;
+use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * @TODO: CodeStyle, variable usage optimization (maybe use $dishes as attribute?)
@@ -39,7 +40,7 @@ class Variation extends \Twig_Extension
         foreach ($meals as $meal) {
 
             /** @var Meal $meal */
-            if( isset($meal->data) && ($meal->data instanceof Meal)) {
+            if (isset($meal->data) && ($meal->data instanceof Meal)) {
                 $dish = $meal->data->getDish();
             } elseif ($meal instanceof Meal) {
                 $dish = $meal->getDish();
@@ -119,8 +120,9 @@ class Variation extends \Twig_Extension
 
         return $title;
     }
-    
-    public function getSortedVariation($variations) {
+
+    public function getSortedVariation($variations)
+    {
         if (is_array($variations) && count($variations)) {
             uasort($variations, array($this, 'compareVariation'));
         }
@@ -153,7 +155,8 @@ class Variation extends \Twig_Extension
         return null;
     }
 
-    private function compareVariation($first, $second) {
+    private function compareVariation($first, $second)
+    {
         $firstContent = strtolower($first['variations']['content']);
         $secondContent = strtolower($second['variations']['content']);
         if ($firstContent == $secondContent) {

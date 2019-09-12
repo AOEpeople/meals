@@ -1,23 +1,31 @@
 <?php
 
+/*
+ * This file was part of the HWIOAuthBundle package and was edited for meals
+ *
+ * (c) Hardware.Info <opensource@hardware.info>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Mealz\UserBundle\Provider;
 
-use Mealz\UserBundle\Entity\Profile;
-use Mealz\UserBundle\Entity\Profile\ProfileRepository;
-use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
+use \HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
+use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthAwareUserProviderInterface;
+use Mealz\UserBundle\User\OAuthUser;
+use Mealz\UserBundle\Entity\Profile;
 use \Doctrine\Bundle\DoctrineBundle\Registry;
-use Mealz\UserBundle\Service\PostLogin;
-use Symfony\Bridge\Monolog\Logger;
-use Mealz\UserBundle\Provider\LdapUserProvider;
-use \HWI\Bundle\OAuthBundle\Security\Core\User\OAuthUserProvider as HWIOAuthUserProvider;
 
 /**
- * Class OAuthUserProvider
+ * OAuthUserProvider.
+ *
+ * @author Geoffrey Bachelet <geoffrey.bachelet@gmail.com>
  */
-class OAuthUserProvider extends HWIOAuthUserProvider
+class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProviderInterface
 {
     /**
      * @var ProfileRepository
@@ -25,107 +33,96 @@ class OAuthUserProvider extends HWIOAuthUserProvider
     private $profileRepository;
 
     /**
-     * @var PostLogin
+     * @var DoctrineRegistry
      */
-    private $postLogin;
-
-    /**
-     * @var LdapUserProvider
-     */
-    private $ldapUserProvider;
-
+    private $doctrineRegistry;
 
     /**
      * OAuthUserProvider constructor.
      *
-     * @param Registry $doctrineRegistry
-     * @param PostLogin $postLogin
+     * @param      Registry  $doctrineRegistry
      */
-    public function __construct(Registry $doctrineRegistry = null, PostLogin $postLogin = null, LdapUserProvider $ldapUserProvider = null)
+    public function __construct(Registry $doctrineRegistry)
     {
-        $profileRepository = null;
-        $postLogin = null;
-
-        if ($doctrineRegistry === null) {
+        if ($doctrineRegistry !== null) {
             $profileRepository = $doctrineRegistry->getRepository('MealzUserBundle:Profile');
         }
 
-        if ($postLogin === null) {
-            $postLogin = new PostLogin($doctrineRegistry->getEntityManager(), new Logger('PostLogin'));
-        }
-
-        global $kernel;
-        $container = $kernel->getContainer();
-        /*
-                LdapClientInterface $ldap,
-                $baseDn,
-                $searchDn = null,
-                $searchPassword = null,
-                array $defaultRoles = array(),
-                $uidKey = 'sAMAccountName',
-                $filter = '({uid_key}={username})',
-                PostLogin $postLogin
-                */
-        var_dump(get_class_methods($doctrineRegistry));
-        var_dump(get_class_methods($container));
-        var_dump(get_class_methods($this));
-        var_dump(get_class_methods($doctrineRegistry->getEntityManager()->getEventManager()));
-
-        if ($ldapUserProvider === null) {
-            $ldapUserProvider = new LdapUserProvider(
-                $kernel->getContainer()->getDefinition('security.user.provider.ldap'),
-                $container->getDefinition('security.providers.active_directory.ldap.base_dn'),
-                $doctrineRegistry->getDefinition('security.providers.active_directory.ldap.search_dn'),
-                $doctrineRegistry->getDefinition('security.providers.active_directory.ldap.search_password'),
-                $doctrineRegistry->getDefinition('security.providers.active_directory.ldap.default_roles'),
-                'sAMAccountName',
-                '({uid_key}={username})',
-                $postLogin
-            );
-        }
-
         $this->profileRepository = $profileRepository;
-        $this->postLogin = $postLogin;
-        $this->ldapUserProvider = $ldapUserProvider;
+        $this->doctrineRegistry = $doctrineRegistry;
     }
 
     /**
-     * @param string $username
-     * @return Profile
+     * {@inheritdoc}
+     *
+     * @param      <type>     $username  The username
+     *
+     * @return     OAuthUser  ( description_of_the_return_value )
      */
     public function loadUserByUsername($username)
     {
-        var_dump($username);
-        $user = $this->profileRepository->findByUsername($username);
-        if (false === $user instanceof Mealz\UserBundle\Entity\Profile) {
-            throw new UsernameNotFoundException('user with username '.$username.' not found');
-        }
-        return $user;
+        return new OAuthUser($username);
     }
 
     /**
-     * @param $username
-     * @param $id
-     *
-     * @return User
+     * {@inheritdoc}
      */
-    public function loadUserByIdOrCreate($username, $id)
+    public function loadUserByIdOrCreate($userInformation)
     {
-        var_dump($username);
-        var_dump($id);
-        $dbUser = $this->userRepository->findById($id);
-        if ($dbUser === null) {
-            $ldapUser = new LdapUser(
-                $user['samaccountname'][0],
-                $user['displayname'][0],
-                $user['givenname'][0],
-                $user['sn'][0],
-                $roles
+        /**
+         * First Check if array Informations are given
+         */
+        if (gettype($userInformation) === 'object' &&
+            property_exists($userInformation, 'preferred_username') === true &&
+            property_exists($userInformation, 'family_name') === true &&
+            property_exists($userInformation, 'given_name') === true
+        ) {
+            $profile = $this->doctrineRegistry->getManager()->find(
+                'MealzUserBundle:Profile',
+                $userInformation->preferred_username
             );
-            $this->postLogin->assureProfileExists($ldapUser);
-            return $user;
+        } else {
+            return false;
         }
-        return $dbUser;
+
+        /**
+         * if Userprofile is null, create User
+         */
+        if ($profile === null) {
+            $profile = $this->createProfile(
+                $userInformation->preferred_username,
+                $userInformation->family_name,
+                str_replace(' ', '', explode(',', $userInformation->given_name)[1])
+            );
+        }
+
+        $user = new OAuthUser($userInformation->preferred_username);
+        $user->setProfile($profile);
+
+        /**
+         * Map Keycloak Roles to Meals Roles
+         */
+        if (array_search('aoe_employee', $userInformation->realm_access->roles) !== false) {
+            /**
+             * give User the ROLE_OAUTH_USER Role to access meals
+             * Use in Combination of /app/config/commons/all/security.yml
+             */
+            $user->addRole('ROLE_OAUTH_USER');
+        }
+
+        if (array_search('meals.admin', $userInformation->realm_access->roles) !== false) {
+            /**
+             * map Keycloak aoe.admin Role to meals ROLE_KITCHEN_STAFF
+             */
+            $user->addRole('ROLE_KITCHEN_STAFF');
+        }
+
+        if ($user instanceof Login) {
+            $this->doctrineRegistry->getManager()->persist($user);
+            $this->doctrineRegistry->getManager()->flush();
+        }
+
+        return $user;
     }
 
     /**
@@ -133,7 +130,13 @@ class OAuthUserProvider extends HWIOAuthUserProvider
      */
     public function loadUserByOAuthUserResponse(UserResponseInterface $response)
     {
-        return $this->loadUserByIdOrCreate($response->getNickname(), $response->getResponse()['sub']);
+        /**
+         * get OAuth User Token Informations
+         */
+        $accesTokens = explode('.', $response->getAccessToken());
+        $userInformation = json_decode(base64_decode($accesTokens[1]));
+
+        return $this->loadUserByIdOrCreate($userInformation);
     }
 
     /**
@@ -145,6 +148,37 @@ class OAuthUserProvider extends HWIOAuthUserProvider
             throw new UnsupportedUserException(sprintf('Unsupported user class "%s"', get_class($user)));
         }
 
-        return $this->loadUserByIdOrCreate($user->getUsername(), $user->getId());
+        return $this->loadUserByUsername($user->getUsername());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function supportsClass($class)
+    {
+        return $class === 'Mealz\\UserBundle\\User\\OAuthUser';
+    }
+
+    /**
+     * Creates a profile.
+     *
+     * @param      \Symfony\Component\Security\Core\User\UserInterface  $username
+     * @param      String                                               $givenName  The given name
+     * @param      String                                               $surName    The sur name
+     *
+     * @return     Profile
+     */
+    protected function createProfile($username, $givenName, $surName)
+    {
+        $profile = new Profile();
+        $profile->setUsername($username);
+
+        $profile->setName($surName);
+        $profile->setFirstName($givenName);
+
+        $this->doctrineRegistry->getManager()->persist($profile);
+        $this->doctrineRegistry->getManager()->flush();
+
+        return $profile;
     }
 }

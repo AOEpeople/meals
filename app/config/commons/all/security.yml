@@ -13,20 +13,19 @@ security:
         oauth_user_provider:
              id: Mealz\UserBundle\Provider\OAuthUserProvider
     firewalls:
-        mealz:
-            pattern: ^/
+        main:
             oauth:
                 resource_owners:
-                    meals: "/login/check-meals"
+                    meals: meals_login
                 login_path: /connect/meals
                 use_forward: true
-                failure_path: /connect/meals
+                failure_path: MealzUserBundle_logout
 
                 oauth_user_provider:
-                    service: Mealz\UserBundle\Provider\OAuthUserProvider
+                    service: mealz.oauthuserprovider
             logout:
-                path:   MealzUserBundle_logout
-                target: /
+              path: /logout
+              success_handler: Mealz\UserBundle\Provider\LogoutSuccessHandler
         dev:
             pattern:  ^/(_(profiler|wdt)|css|images|js)/
             security: false
@@ -42,4 +41,8 @@ security:
             anonymous:  false
 
     access_control:
-#        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
+        - { path: ^/login, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/connect, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/rest, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/oauth/v2/token, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/, roles: [ROLE_OAUTH_USER] }

@@ -1,7 +1,6 @@
 # Learn more about services, parameters and containers at
 # https://symfony.com/doc/current/service_container.html
 parameters:
-    mealz_provider.class: Mealz\UserBundle\Provider\OAuthUserProvider
     #parameter_name: value
 
 services:
@@ -9,6 +8,15 @@ services:
     # OAuth Service Provider
     #
     Mealz\UserBundle\Provider\OAuthUserProvider:
-      class: "%mealz_provider.class%"
-      arguments:
-        - @doctrine
+      class: Mealz\UserBundle\Provider\OAuthUserProvider
+      arguments: ["@doctrine"]
+
+    #
+    # Logout Success Handler
+    #
+    Mealz\UserBundle\Provider\LogoutSuccessHandler:
+        class: Mealz\UserBundle\Provider\LogoutSuccessHandler
+        autowire: false
+        arguments:
+            $logoutUrl: '%keycloak_logout_endpoint%'
+            $baseUri: '%env_url%'

@@ -54,6 +54,7 @@ class AccountingBookController extends BaseController
     }
 
     /**
+     * List all transactions that were payed by cash on the finances page
      * @param $dateRange
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Exception
@@ -64,11 +65,12 @@ class AccountingBookController extends BaseController
             throw new AccessDeniedException();
         }
 
-        $transactionRepository = $this->getTransactionRepository();
+        $headingFirst = null;
+        $transactionsFirst = null;
+        $minDateFirst = null;
+        $maxDateFirst = null;
 
-        $headingFirst = $transactionsFirst = $minDateFirst = $maxDateFirst = null;
-
-        if ($dateRange == null) {
+        if ($dateRange === null) {
             // Get first and last day of previous month
             $minDateFirst = new \DateTime('first day of previous month');
             $minDateFirst->setTime(0, 0, 0);
@@ -84,7 +86,7 @@ class AccountingBookController extends BaseController
             $minDate->setTime(0, 0, 0);
             $maxDate->setTime(23, 59, 59);
 
-            $transactionsFirst = $transactionRepository->findAllTransactionsInDateRange($minDateFirst, $maxDateFirst);
+            $transactionsFirst = $this->getTransactionRepository()->findAllTransactionsInDateRange($minDateFirst, $maxDateFirst);
         } else {
             // Get date range set with date range picker by user
             $dateRangeArray = explode('&', $dateRange);
@@ -94,20 +96,20 @@ class AccountingBookController extends BaseController
 
         $heading = $minDate->format('d.m.') . ' - ' . $maxDate->format('d.m.Y');
 
-        $transactions = $transactionRepository->findAllTransactionsInDateRange($minDate, $maxDate);
+        $transactions = $this->getTransactionRepository()->findAllTransactionsInDateRange($minDate, $maxDate);
 
         return $this->render('MealzAccountingBundle:Accounting/Finance:finances.html.twig', array(
             'headingFirst' => $headingFirst,
             'heading' => $heading,
             'transactionsFirst' => $transactionsFirst,
             'transactions' => $transactions,
-            'minDate' => ($minDateFirst == null) ? $minDate->format('m/d/Y') : $minDateFirst->format('m/d/Y'),
-            'maxDate' => ($maxDateFirst == null) ? $maxDate->format('m/d/Y') : $maxDateFirst->format('m/d/Y'),
+            'minDate' => ($minDateFirst === null) ? $minDate->format('m/d/Y') : $minDateFirst->format('m/d/Y'),
+            'maxDate' => ($maxDateFirst === null) ? $maxDate->format('m/d/Y') : $maxDateFirst->format('m/d/Y'),
         ));
-
     }
 
     /**
+     * Export transaction table as PDF for finance staff
      * @param $dateRange
      * @return string
      * @throws \Exception

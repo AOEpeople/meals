@@ -22,6 +22,7 @@ payment:
     paypal: PayPal
     invalid: Please enter a valid amount.
     finances:
+      pdf: meals-finance
       date: Date
       name: Name
       amount: Amount

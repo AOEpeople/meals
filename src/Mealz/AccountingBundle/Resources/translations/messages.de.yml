@@ -22,6 +22,7 @@ payment:
     paypal: PayPal
     invalid: Bitte gib einen gültigen Betrag ein.
     finances:
+      export: Export
       pdf: meals-finance
       date: Datum
       name: Name

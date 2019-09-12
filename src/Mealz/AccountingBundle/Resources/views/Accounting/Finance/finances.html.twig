@@ -78,8 +78,9 @@
         {% endfor %}
 
         {# Start template #}
-        {{ MealzHeadline.create(1, headingFirst, '', '', [], '') }}
-        <i class="glyphicon glyphicon-download-alt pdf-export"></i>
+        {{ MealzHeadline.create(1, headingFirst, '', '', [
+            MealzButton.link('', 'payment.transaction_history.finances.export'|trans({}, "messages"), '', 'transparent pdf-export', 'glyphicon-download-alt')
+        ], '') }}
         {{ MealzTable.create('accounting-book-table', 'table-full-width finances', tableHeader, tableContent) }}
         </br></br></br></br>
 
@@ -152,9 +153,12 @@
     {% endfor %}
 
     {# Start template #}
-    {{ MealzHeadline.create(1, heading, '', '', [], '') }}
-    {% if transactionsFirst is null %}
-        <i class="glyphicon glyphicon-download-alt pdf-export"></i>
+    {% if transactionsFirst is not null %}
+        {{ MealzHeadline.create(1, heading, '', '', [], '') }}
+    {% else %}
+        {{ MealzHeadline.create(1, heading, '', '', [
+            MealzButton.link('', 'payment.transaction_history.finances.export'|trans({}, "messages"), '', 'transparent pdf-export', 'glyphicon-download-alt')
+        ], '') }}
     {% endif %}
     {{ MealzTable.create('accounting-book-table', 'table-full-width finances', tableHeader, tableContent) }}
     </br></br></br></br>

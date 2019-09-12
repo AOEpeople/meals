@@ -129,19 +129,9 @@
   }
 }
 
-.pdf-export {
-  top: -50px;
-  right: 8px;
-  float: right;
-  margin-right: 10px;
-  font-size: 18px;
-
-  &::before {
-    position: absolute;
-  }
-
-  &:hover {
-    cursor: pointer;
+.accounting-book {
+  .headline-tool {
+    color: $color-orange;
   }
 }
 

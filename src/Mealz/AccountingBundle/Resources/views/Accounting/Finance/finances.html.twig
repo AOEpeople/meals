@@ -10,24 +10,22 @@
     <input name="max-date" type="hidden" value='{{ maxDate }}'>
     <i class="glyphicon glyphicon-calendar date-range-picker"></i>
 
-    {% set tableContent = [{
-        'date': {
-            'content': 'payment.transaction_history.finances.date'|trans({}, 'messages'),
-            'class': 'date'
-        },
-        'name': {
-            'content': 'payment.transaction_history.finances.name'|trans({}, 'messages'),
-            'class': 'name'
-        },
-        'amount': {
-            'content': 'payment.transaction_history.finances.amount'|trans({}, 'messages'),
-            'class': 'amount'
-        },
-        'dailyClosing': {
-            'content': 'payment.transaction_history.finances.daily_closing'|trans({}, 'messages'),
-            'class': 'daily-closing'
-        },
-    }] %}
+    {% set tableHeader = [{
+        'label': 'payment.transaction_history.finances.date'|trans({}, 'messages'),
+        'class': 'date'
+    }, {
+        'label': 'payment.transaction_history.finances.name'|trans({}, 'messages'),
+        'class': 'name'
+    }, {
+        'label': 'payment.transaction_history.finances.amount'|trans({}, 'messages'),
+        'class': 'amount'
+    },{
+        'label': 'payment.transaction_history.finances.daily_closing'|trans({}, 'messages'),
+        'class': 'daily-closing'
+    }]
+    %}
+
+    {% set tableContent = [] %}
 
     {% if transactionsFirst is not null %}
         {% for date in transactionsFirst %}
@@ -82,29 +80,27 @@
         {# Start template #}
         {{ MealzHeadline.create(1, headingFirst, '', '', [], '') }}
         <i class="glyphicon glyphicon-download-alt pdf-export"></i>
-        {{ MealzTable.create('accounting-book-table', 'table-full-width finances', [], tableContent) }}
+        {{ MealzTable.create('accounting-book-table', 'table-full-width finances', tableHeader, tableContent) }}
         </br></br></br></br>
 
     {% endif %}
 
-    {% set tableContent = [{
-        'date': {
-            'content': 'payment.transaction_history.finances.date'|trans({}, 'messages'),
-            'class': 'date'
-        },
-        'name': {
-            'content': 'payment.transaction_history.finances.name'|trans({}, 'messages'),
-            'class': 'name'
-        },
-        'amount': {
-            'content': 'payment.transaction_history.finances.amount'|trans({}, 'messages'),
-            'class': 'amount'
-        },
-        'dailyClosing': {
-            'content': 'payment.transaction_history.finances.daily_closing'|trans({}, 'messages'),
-            'class': 'daily-closing'
-        },
-    }] %}
+    {% set tableHeader = [{
+        'label': 'payment.transaction_history.finances.date'|trans({}, 'messages'),
+        'class': 'date'
+    }, {
+        'label': 'payment.transaction_history.finances.name'|trans({}, 'messages'),
+        'class': 'name'
+    }, {
+        'label': 'payment.transaction_history.finances.amount'|trans({}, 'messages'),
+        'class': 'amount'
+    },{
+        'label': 'payment.transaction_history.finances.daily_closing'|trans({}, 'messages'),
+        'class': 'daily-closing'
+    }]
+    %}
+
+    {% set tableContent = [] %}
 
     {% for date in transactions %}
         {% set dailyClosing = 0 %}
@@ -160,7 +156,7 @@
     {% if transactionsFirst is null %}
         <i class="glyphicon glyphicon-download-alt pdf-export"></i>
     {% endif %}
-    {{ MealzTable.create('accounting-book-table', 'table-full-width finances', [], tableContent) }}
+    {{ MealzTable.create('accounting-book-table', 'table-full-width finances', tableHeader, tableContent) }}
     </br></br></br></br>
 
 {% endblock %}

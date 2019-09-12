@@ -158,9 +158,9 @@ class TransactionRepository extends EntityRepository
 
         $result = array();
         foreach ($queryResult as $item) {
-            if (array_key_exists($item['date']->format('Y-m-d'), $result) == false) {
+            if (array_key_exists($item['date']->format('Y-m-d'), $result) === false) {
                 $transactions = $this->getAllTransactionsOnDay($item['date']);
-                if (empty($transactions) == false) {
+                if (empty($transactions) === false) {
                     $result[$item['date']->format('Y-m-d')] = $transactions;
                 }
             }

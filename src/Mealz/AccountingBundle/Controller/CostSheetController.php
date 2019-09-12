@@ -83,8 +83,8 @@ class CostSheetController extends BaseController
         if ($profile !== null && $profile->getSettlementHash() === null && $this->get('mealz_accounting.wallet')->getBalance($profile) > 0.00) {
             $username = $profile->getUsername();
             $secret = $this->getParameter('secret');
-            $hashCode = crypt($username, $secret);
-            $urlEncodedHash = urlencode(crypt($username, $secret));
+            $hashCode = str_replace('/', '', crypt($username, $secret));
+            $urlEncodedHash = urlencode($hashCode);
 
             $em = $this->getDoctrine()->getManager();
             $profile->setSettlementHash($hashCode);
@@ -116,6 +116,7 @@ class CostSheetController extends BaseController
      */
     public function renderConfirmButtonAction($hash)
     {
+        $profile = null;
         $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
         $queryResult = $profileRepository->findBy(array('settlementHash' => urldecode($hash)));
 

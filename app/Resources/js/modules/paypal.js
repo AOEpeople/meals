@@ -4,11 +4,6 @@
 Mealz.prototype.enablePaypal = function () {
     var amountField = $('#ecash_amount');
 
-    // Clear the input field, when clicking on it
-    amountField.click(function () {
-        amountField.val('');
-    });
-
     amountField.on('keypress', function (e) {
         if (e.which === 13) {
             e.preventDefault();

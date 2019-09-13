@@ -89,7 +89,7 @@ class Transaction
     }
 
     /**
-     * @param integer $amount
+     * @param float $amount
      *
      * @return Transaction
      */

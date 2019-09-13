@@ -21,6 +21,13 @@ payment:
     pay: Pay
     paypal: PayPal
     invalid: Please enter a valid amount.
+    finances:
+      export: Export
+      pdf: meals-finance
+      date: Date
+      name: Name
+      amount: Amount
+      daily_closing: Daily closing
   costsheet:
     account_settlement:
       button: Settle account

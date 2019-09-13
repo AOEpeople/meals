@@ -118,3 +118,26 @@
     }
   }
 }
+
+.date-range-picker {
+  float: left;
+  margin-right: 10px;
+  font-size: 18px;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.accounting-book {
+  .headline-tool {
+    color: $color-orange;
+  }
+}
+
+.finances {
+  .amount,
+  .daily-closing {
+    text-align: right;
+  }
+}

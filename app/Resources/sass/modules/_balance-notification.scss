@@ -12,4 +12,10 @@
 
   .button:visited { color: $color-white; }
 
+  .button {
+    position: relative;
+    width: 170px;
+    text-align: center;
+  }
+
 }

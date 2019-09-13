@@ -5,6 +5,7 @@ payment:
   acknowledge_debts:
     text: Ich weiß, dass ich einen Kontostand von %amount%€ habe und werde meine Schulden umgehend begleichen.
     button: OK, kapiert!
+    pay_now: Jetzt bezahlen
   transaction_history:
     account: Konto
     add_funds: GELD EINZAHLEN

@@ -11,7 +11,7 @@ security:
 
     providers:
         oauth_user_provider:
-             id: Mealz\UserBundle\Provider\OAuthUserProvider
+             id: mealz.oauthuserprovider
     firewalls:
         mealz:
             oauth:

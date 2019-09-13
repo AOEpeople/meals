@@ -1,4 +1,17 @@
 services:
-    app.ldap:
-      class: Mealz\UserBundle\Service\LdapClient
-      arguments: [%ldap_host%, 636, 3, true]
+    #
+    # OAuth Service Provider
+    #
+    Mealz\UserBundle\Provider\OAuthUserProvider:
+      class: Mealz\UserBundle\Provider\OAuthUserProvider
+      arguments: ["@doctrine"]
+
+    #
+    # Logout Success Handler
+    #
+    Mealz\UserBundle\Provider\LogoutSuccessHandler:
+        class: Mealz\UserBundle\Provider\LogoutSuccessHandler
+        autowire: false
+        arguments:
+            $logoutUrl: '%keycloak_logout_endpoint%'
+            $baseUri: '%env_url%'

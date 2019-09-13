@@ -13,7 +13,7 @@ security:
         oauth_user_provider:
              id: Mealz\UserBundle\Provider\OAuthUserProvider
     firewalls:
-        main:
+        mealz:
             oauth:
                 resource_owners:
                     meals: meals_login

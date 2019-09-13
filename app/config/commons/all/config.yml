@@ -181,7 +181,7 @@ creatissimo_mattermost:
                     - Symfony\Component\HttpKernel\Exception\NotFoundHttpException
 
 hwi_oauth:
-    firewall_names: [main]
+    firewall_names: [mealz]
     resource_owners:
         meals:
             type:                oauth2

@@ -22,5 +22,7 @@ parameters:
     keycloak_logout_endpoint:       'https://login.aoe.com/auth/realms/aoe/protocol/openid-connect/logout'
     keycloak_user_token_endpoint:   'https://login.aoe.com/auth/realms/aoe/protocol/openid-connect/userinfo'
     keycloak_openid_server:         'https://login.aoe.com/auth/realms/aoe'
-    keycloak_client_id:             'aoe-meals'
+    keycloak_client_id:             'replaced_by_deployment'
     keycloak_client_secret:         'xxxxxxxxxxxxxxxx'
+
+    env_url:                        'replaced_by_deployment'

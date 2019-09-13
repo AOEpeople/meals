@@ -22,8 +22,6 @@ use \Doctrine\Bundle\DoctrineBundle\Registry;
 
 /**
  * OAuthUserProvider.
- *
- * @author Geoffrey Bachelet <geoffrey.bachelet@gmail.com>
  */
 class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProviderInterface
 {
@@ -36,6 +34,19 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
      * @var DoctrineRegistry
      */
     private $doctrineRegistry;
+
+    /**
+     * Map Keycloak Roles to Meals ones
+     *
+     * give User the ROLE_OAUTH_USER Role to access meals
+     * Use in Combination of /app/config/commons/all/security.yml
+     *
+     * @var        array
+     */
+    private $roleMapping = [
+        'aoe_employee'  => 'ROLE_OAUTH_USER',
+        'meals.admin'   => 'ROLE_KITCHEN_STAFF'
+    ];
 
     /**
      * OAuthUserProvider constructor.
@@ -102,19 +113,13 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
         /**
          * Map Keycloak Roles to Meals Roles
          */
-        if (array_search('aoe_employee', $userInformation->realm_access->roles) !== false) {
+        foreach ($this->roleMapping as $keycloakRole => $mealsRole) {
             /**
-             * give User the ROLE_OAUTH_USER Role to access meals
-             * Use in Combination of /app/config/commons/all/security.yml
+             * if the Keycloak User has Roles with mapped Roles in meals. Map it.
              */
-            $user->addRole('ROLE_OAUTH_USER');
-        }
-
-        if (array_search('meals.admin', $userInformation->realm_access->roles) !== false) {
-            /**
-             * map Keycloak aoe.admin Role to meals ROLE_KITCHEN_STAFF
-             */
-            $user->addRole('ROLE_KITCHEN_STAFF');
+            if (array_search($keycloakRole, $userInformation->realm_access->roles) !== false) {
+                $user->addRole($mealsRole);
+            }
         }
 
         if ($user instanceof Login) {

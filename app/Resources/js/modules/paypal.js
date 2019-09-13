@@ -26,7 +26,7 @@ Mealz.prototype.enablePaypal = function () {
 
             // Form validation
             onInit: function (data, actions) {
-                if (amountField[0].checkValidity() === true && parseFloat(amountField[0].value.replace(/,/g, '.')) > 0.00) {
+                if (amountField[0].checkValidity() === true && parseFloat(amountField.val().replace(/,/g, '.')) > 0.00) {
                     actions.enable();
                 } else {
                     actions.disable();
@@ -34,7 +34,7 @@ Mealz.prototype.enablePaypal = function () {
 
                 amountField.change(function () {
                     // Replace a comma with a point and parse the input string to a float
-                    var amountFieldValue = parseFloat(amountField[0].value.replace(/,/g, '.'));
+                    var amountFieldValue = parseFloat(amountField.val().replace(/,/g, '.'));
 
                     amountField[0].setCustomValidity("");
 

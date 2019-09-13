@@ -47,7 +47,7 @@ class EcashPaymentAdminForm extends AbstractType
             ->add('amount', MoneyType::class, array(
                 'label' => 'payment.transaction_history.amount',
                 'data' => $options['balance'],
-                'pattern' => '\d*([.,]?\d+)',
+                'pattern' => '\d*([.,]?\d{0,2})',
                 'data_class' => null
             ))
             ->add('paymethod', ChoiceType::class, array(

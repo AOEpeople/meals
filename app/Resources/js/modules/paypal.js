@@ -4,28 +4,11 @@
 Mealz.prototype.enablePaypal = function () {
     var amountField = $('#ecash_amount');
 
-    // Clear the input field, when clicking on it
-    amountField.click(function () {
-        amountField.val('');
-    });
-
+    // Disable usage of "Enter" button in the input field to avoid POST request of form
     amountField.on('keypress', function (e) {
         if (e.which === 13) {
             e.preventDefault();
-            $(this).attr("disabled", "disabled");
-            $(this).removeAttr("disabled");
         }
-    });
-
-    amountField.change(function () {
-
-        if ($('.language-switch').find('span').text() === 'de') {
-            amountField.val(parseFloat(amountField[0].value.replace(/,/g, '.')).toFixed(2));
-            amountField.val(amountField[0].value.replace(/\./g, ','));
-        } else {
-            amountField.val(parseFloat(amountField[0].value.replace(/,/g, '.')).toFixed(2));
-        }
-
     });
 
     // Only render the button, when PayPal is chosen as the payment method
@@ -43,16 +26,35 @@ Mealz.prototype.enablePaypal = function () {
 
             // Form validation
             onInit: function (data, actions) {
-                if (amountField[0].checkValidity() === true && parseFloat(amountField[0].value.replace(/,/g, '.')) > 0.00) {
+                if (amountField[0].checkValidity() === true && parseFloat(amountField.val().replace(/,/g, '.')) > 0.00) {
                     actions.enable();
                 } else {
                     actions.disable();
                 }
 
                 amountField.change(function () {
+                    // Replace a comma with a point and parse the input string to a float
+                    var amountFieldValue = parseFloat(amountField.val().replace(/,/g, '.'));
+
                     amountField[0].setCustomValidity("");
 
-                    if (amountField[0].checkValidity() && parseFloat(amountField[0].value.replace(/,/g, '.')) > 0.00) {
+                    // If the input is valid (matches the HTML pattern: "\d*([.,]?\d{0,2})") and the value is above 0.00..
+                    if (amountField[0].checkValidity() === true && amountFieldValue > 0.00) {
+
+                        // ..and the language is set to German..
+                        if ($('.language-switch').find('span').text() === 'de') {
+
+                            // ..add missing decimal places and render the amount in the comma format.
+                            amountField.val(amountFieldValue.toFixed(2).replace(/\./g, ','));
+
+                            // If the language is set to English..
+                        } else {
+
+                            // ..add missing decimal places and render the amount in the point format.
+                            amountField.val(amountFieldValue.toFixed(2));
+                        }
+
+                        // Enable PayPal buttons and remove the warning message.
                         actions.enable();
                         invalidAmountMessage.hide();
                     } else {
@@ -72,8 +74,7 @@ Mealz.prototype.enablePaypal = function () {
             },
 
             onError: function (err) {
-                return fetch('/payment/ecash/form/submit', {
-                }).then(function (redirect) {
+                return fetch('/payment/ecash/form/submit', {}).then(function (redirect) {
                     if (redirect.status === 200 && redirect.redirected === false) {
                         return (redirect.text());
                     }
@@ -129,4 +130,5 @@ Mealz.prototype.enablePaypal = function () {
         }
         return (neg ? "-" : '') + parseFloat(total.replace(/,/g, '.')).toFixed(2).toString();
     }
+
 };

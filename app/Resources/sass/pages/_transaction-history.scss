@@ -198,6 +198,10 @@
   tfoot {
     font-weight: bold;
 
+    .table-row {
+      border-bottom: none;
+    }
+
     td:first-child {
       text-align: right;
     }

@@ -69,7 +69,7 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
     /**
      * Loads an user by identifier or create it.
      *
-     * @param      <type>             $userInformation  The user information
+     * @param      Object             $userInformation  The user information
      *
      * @return     OAuthUser|boolean  ( description_of_the_return_value )
      */

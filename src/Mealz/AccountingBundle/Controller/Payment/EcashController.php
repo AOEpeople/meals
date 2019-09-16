@@ -54,15 +54,16 @@ class EcashController extends BaseController
     }
 
     /**
+     * Handle the payment form for payments via PayPal
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @return Response
+     * @throws \Exception
      */
     public function paymentFormHandlingAction(Request $request)
     {
         $formArray = [];
         if ($content = $request->getContent()) {
-            // clean Form Array
+            // Decode the JSON object and insert the content into an array
             foreach (json_decode($content, true) as $formValue) {
                 $formArray[$formValue['name']] = $formValue['value'];
             }
@@ -70,81 +71,38 @@ class EcashController extends BaseController
 
         $translator = $this->get('translator');
 
-        // Check if required fields are set and PayMethod is Paypal (paymethod=0)
-        if ($request->isMethod('POST')
-            && !empty($formArray['ecash[orderid]'])
-            && !empty($formArray['ecash[profile]'])
-            && (floatval(str_replace(',', '.', $formArray['ecash[amount]'])) > 0.00)
-            && ($formArray['ecash[paymethod]'] === '0')
-            && !empty($formArray['ecash[_token]'])
-        ) {
+        // Check if required fields are set and the pay method is set to PayPal ('paymethod' == 0)
+        if ($request->isMethod('POST') === true && $this->isFormValid($formArray) === true && $this->validatePaypalTransaction($formArray) === 200) {
 
-            if ((int) $this->validatePaypalTransaction($formArray) === 200) {
+            $em = $this->getDoctrine()->getManager();
+            $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
+            $profile = $profileRepository->find($formArray['ecash[profile]']);
 
-                /** @var EntityManager $em */
-                $em = $this->getDoctrine()->getManager();
-                $transaction = new Transaction();
+            // Create new transaction with data from given form
+            $transaction = new Transaction();
+            $transaction->setProfile($profile);
+            $transaction->setOrderId($formArray['ecash[orderid]']);
+            $transaction->setAmount(floatval(str_replace(',', '.', $formArray['ecash[amount]'])));
+            $transaction->setDate(new \DateTime());
+            $transaction->setPaymethod($formArray['ecash[paymethod]']);
 
-                $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
-                $profile = $profileRepository->find($formArray['ecash[profile]']);
+            $em->persist($transaction);
+            $em->flush();
 
-                $transaction->setProfile($profile);
-                $transaction->setOrderId($formArray['ecash[orderid]']);
-                $transaction->setAmount(floatval(str_replace(',', '.', $formArray['ecash[amount]'])));
-                $transaction->setDate(new \DateTime());
-                $transaction->setPaymethod($formArray['ecash[paymethod]']);
+            $message = $translator->trans("payment.transaction_history.successful_payment", array(), 'messages');
+            $severity = 'success';
 
-                $em->persist($transaction);
-                $em->flush();
-
-                $message = $translator->trans("payment.transaction_history.successful_payment", array(), 'messages');
-                $this->addFlashMessage($message, 'success');
-
-            } else {
-                $message = $translator->trans("payment.transaction_history.payment_failed", array(), 'messages');
-                $this->addFlashMessage($message, 'danger');
-            }
         } else {
             $message = $translator->trans("payment.transaction_history.payment_failed", array(), 'messages');
-            $this->addFlashMessage($message, 'danger');
-
+            $severity = 'danger';
         }
 
+        $this->addFlashMessage($message, $severity);
+
         return new Response(
-            $this->generateUrl('mealz_accounting_payment_ecash_transaction_history'),
+            $this->generateUrl('mealz_accounting_payment_transaction_history'),
             Response::HTTP_OK,
             array('content-type' => 'text/html')
-        );
-    }
-
-    /**
-     * @param Request $request
-     * @return Response
-     * @throws \Exception
-     */
-    public function showTransactionHistoryAction(Request $request)
-    {
-        $profile = $this->getUser()->getProfile();
-
-        $dateFrom = new \DateTime();
-        $dateFrom->modify('-4 weeks');
-        $dateTo = new \DateTime();
-
-        list($transactionsTotal, $transactionHistoryArr, $participationsTotal) = $this->getFullTransactionHistory(
-            $dateFrom,
-            $dateTo,
-            $profile
-        );
-
-        ksort($transactionHistoryArr);
-
-        return $this->render(
-            'MealzAccountingBundle:Accounting\\User:transaction_history.html.twig',
-            array(
-                'transaction_history_records' => $transactionHistoryArr,
-                'transactions_total' => $transactionsTotal,
-                'participations_total' => $participationsTotal,
-            )
         );
     }
 
@@ -157,54 +115,38 @@ class EcashController extends BaseController
     }
 
     /**
-     * Merge participation and transactions into 1 array
-     *
-     * @param \DateTime $dateFrom min date
-     * @param \DateTime $dateTo max date
-     * @param Profile $profile User profile
-     *
-     * @return array
-     */
-    public function getFullTransactionHistory($dateFrom, $dateTo, $profile)
-    {
-        $participantRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Participant');
-        $participations = $participantRepository->getParticipantsOnDays($dateFrom, $dateTo, $profile);
-
-        $transactionRepository = $this->getDoctrine()->getRepository('MealzAccountingBundle:Transaction');
-        $transactions = $transactionRepository->getSuccessfulTransactionsOnDays($dateFrom, $dateTo, $profile);
-
-        $transactionsTotal = 0;
-        $transactionHistoryArr = array();
-        foreach ($transactions as $transaction) {
-            $transactionsTotal += $transaction->getAmount();
-            $transactionHistoryArr[$transaction->getDate()->getTimestamp()] = $transaction;
-        }
-
-        $participationsTotal = 0;
-        /** @var $participation Participant */
-        foreach ($participations as $participation) {
-            $participationsTotal += $participation->getMeal()->getPrice();
-            $transactionHistoryArr[$participation->getMeal()->getDateTime()->getTimestamp()] = $participation;
-        }
-
-        return array($transactionsTotal, $transactionHistoryArr, $participationsTotal);
-    }
-
-    /**
+     * Helper function to validate the PayPal transaction using the PayPal API
+     * Note: This function is public so that it can be mocked in the according PHPUnit test class
      * @param $formArray
      * @return int
      */
-    public function validatePaypalTransaction($formArray) {
+    public function validatePaypalTransaction($formArray)
+    {
         $id = $this->container->get('twig')->getGlobals()['paypal_id'];
         $secret = $this->container->get('twig')->getGlobals()['paypal_secret'];
         PaypalClient::setCredentials($id, $secret);
 
-        // 3. Call PayPal to get the transaction details
-        $client = PaypalClient::client();
-
-        $response = $client->execute(new OrdersGetRequest($formArray['ecash[orderid]']));
+        $response = PaypalClient::client()->execute(new OrdersGetRequest($formArray['ecash[orderid]']));
 
         return $response->statusCode;
+    }
+
+    /**
+     * Helper function to check if given form is valid
+     * @param array $formArray
+     * @return bool
+     */
+    private function isFormValid(array $formArray)
+    {
+        if (!empty($formArray['ecash[orderid]'])
+            && !empty($formArray['ecash[profile]'])
+            && (floatval(str_replace(',', '.', $formArray['ecash[amount]'])) > 0.00)
+            && ($formArray['ecash[paymethod]'] === '0')
+            && !empty($formArray['ecash[_token]'])) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

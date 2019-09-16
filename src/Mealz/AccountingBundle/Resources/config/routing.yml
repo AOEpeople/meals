@@ -27,18 +27,6 @@
 #MealzAccountingBundle_Accounting_Admin_transaction:
 #    pattern:  /accounting/{profile}/transaction
 #    defaults: { _controller: "MealzAccountingBundle:AccountingAdmin:listTransaction" }
-
-#mealz_accounting_payment_paypal_custom:
-#    pattern: /payment/paypal/custom
-#    defaults: { _controller: "MealzAccountingBundle:Payment\\PayPal:createCustomPayment" }
-#
-#mealz_accounting_payment_paypal_balance:
-#    pattern: /payment/paypal/balance
-#    defaults: { _controller: "MealzAccountingBundle:Payment\\PayPal:createBalancePayment" }
-#
-#mealz_accounting_payment_paypal_execute:
-#    pattern: /payment/paypal/success
-#    defaults: { _controller: "MealzAccountingBundle:Payment\\PayPal:executePayment" }
 #
 #mealz_accounting_payment_cash:
 #    pattern: /payment/cash/{profile}
@@ -51,10 +39,6 @@ mealz_accounting_payment_cash_form_submit:
 mealz_accounting_payment_ecash_form_submit:
     path: /payment/ecash/form/submit
     defaults: { _controller: "MealzAccountingBundle:Payment\\Ecash:paymentFormHandling" }
-
-mealz_accounting_payment_ecash_transaction_history:
-    path: /accounting/transactions
-    defaults: { _controller: "MealzAccountingBundle:Payment\\Ecash:showTransactionHistory" }
 
 mealz_accounting_payment_cash_form:
     path: /payment/cash/form/{profile}

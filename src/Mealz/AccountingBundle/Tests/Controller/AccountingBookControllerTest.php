@@ -230,13 +230,13 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
 
         $crawler = $this->client->request('GET', '/accounting/book/finance/list/' . $dateFormatted . "&" . $dateFormatted);
 
-        $date = $crawler->filterXPath('//*[@class="table-data date"]/text()')->getNode(1)->textContent;
+        $date = $crawler->filterXPath('//*[@class="table-data date"]/text()')->getNode(0)->textContent;
         $this->assertEquals($transactionDate->format('d.m.Y'), trim($date), "Date displayed incorrectly");
 
-        $name = $crawler->filterXPath('//*[@class="table-data name"]/text()')->getNode(1)->textContent;
+        $name = $crawler->filterXPath('//*[@class="table-data name"]/text()')->getNode(0)->textContent;
         $this->assertEquals($profile->getFullName(), trim($name), "Name displayed incorrectly");
 
-        $amount = $crawler->filterXPath('//*[@class="table-data amount"]/text()')->getNode(1)->textContent;
+        $amount = $crawler->filterXPath('//*[@class="table-data amount"]/text()')->getNode(0)->textContent;
         $this->assertEquals("42.17", trim($amount), "Amount displayed incorrectly");
     }
 
@@ -268,7 +268,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
         $crawler = $this->client->request('GET', '/accounting/book/finance/list/' . $dateFormatted . "&" . $dateFormatted);
 
         $nodes = $crawler->filterXPath('//*[@class="table-data amount"]/text()');
-        $this->assertEquals(1, $nodes->count(), "PayPal payment listed on finances page");
+        $this->assertEquals(0, $nodes->count(), "PayPal payment listed on finances page");
     }
 
     /**
@@ -304,7 +304,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
 
         $crawler = $this->client->request('GET', '/accounting/book/finance/list/' . $dateFormatted . "&" . $dateFormatted);
 
-        $dailyClosing = $crawler->filterXPath('//*[@class="table-data daily-closing"]/text()')->getNode(1)->textContent;
+        $dailyClosing = $crawler->filterXPath('//*[@class="table-data daily-closing"]/text()')->getNode(0)->textContent;
         $this->assertEquals("100.00", trim($dailyClosing), "Daily closing calculated incorrectly");
     }
 

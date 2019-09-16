@@ -21,7 +21,7 @@ payment:
     payment_method: Payment Method
     pay: Pay
     paypal: PayPal
-    invalid: Please enter a valid amount.
+    invalid: Please check your input.
     finances:
       export: Export
       pdf: meals-finance

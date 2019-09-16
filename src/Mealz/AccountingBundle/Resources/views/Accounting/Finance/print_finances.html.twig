@@ -22,83 +22,6 @@
         },
     }] %}
 
-    {% if transactionsFirst is not null %}
-        {% for date in transactionsFirst %}
-            {% set dailyClosing = 0 %}
-
-            {% for transaction in date %}
-                {% set dailyClosing = dailyClosing + transaction.amount %}
-                {% set tableContent = tableContent | merge([{
-                    'date': {
-                        'content': transaction.date,
-                        'class': 'date'
-                    },
-                    'name': {
-                        'content': transaction.name ~ ", " ~ transaction.firstName,
-                        'class': 'name'
-                    },
-                    'amount': {
-                        'content': transaction.amount | number_format(2) ~ " €",
-                        'class': 'amount'
-                    },
-                    'dailyClosing': {
-                        'content': null,
-                        'class': 'daily-closing'
-                    },
-
-                }]) %}
-
-            {% endfor %}
-
-            {# Add last line to table: total | amount #}
-            {% set tableContent = tableContent | merge([{
-                'date': {
-                    'content': date.0.date,
-                    'class': 'date'
-                },
-                'name': {
-                    'content': null,
-                    'class': 'name'
-                },
-                'amount': {
-                    'content': null,
-                    'class': 'amount'
-                },
-                'daily-closing': {
-                    'content': dailyClosing ~ " €",
-                    'class': 'daily-closing'
-                },
-            }]) %}
-
-        {% endfor %}
-
-        {# Start template #}
-        {{ MealzHeadline.create(1, headingFirst, '', '', [], '') }}
-        <i class="glyphicon glyphicon-download-alt pdf-export"></i>
-        {{ MealzTable.create('accounting-book-table', 'table-full-width finances', [], tableContent) }}
-        </br></br></br></br>
-
-    {% endif %}
-
-    {% set tableContent = [{
-        'date': {
-            'content': 'payment.transaction_history.finances.date'|trans({}, 'messages'),
-            'class': 'date'
-        },
-        'name': {
-            'content': 'payment.transaction_history.finances.name'|trans({}, 'messages'),
-            'class': 'name'
-        },
-        'amount': {
-            'content': 'payment.transaction_history.finances.amount'|trans({}, 'messages'),
-            'class': 'amount'
-        },
-        'dailyClosing': {
-            'content': 'payment.transaction_history.finances.daily_closing'|trans({}, 'messages'),
-            'class': 'daily-closing'
-        },
-    }] %}
-
     {% for date in transactions %}
         {% set dailyClosing = 0 %}
 
@@ -141,7 +64,7 @@
                 'class': 'amount'
             },
             'daily-closing': {
-                'content': dailyClosing ~ " €",
+                'content': dailyClosing | number_format(2) ~ " €",
                 'class': 'daily-closing'
             },
         }]) %}
@@ -150,9 +73,6 @@
 
     {# Start template #}
     {{ MealzHeadline.create(1, heading, '', '', [], '') }}
-    {% if transactionsFirst is null %}
-        <i class="glyphicon glyphicon-download-alt pdf-export"></i>
-    {% endif %}
     {{ MealzTable.create('accounting-book-table', 'table-full-width finances', [], tableContent) }}
     </br></br></br></br>
 

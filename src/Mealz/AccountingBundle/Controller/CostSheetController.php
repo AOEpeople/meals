@@ -122,6 +122,8 @@ class CostSheetController extends BaseController
 
         if (is_array($queryResult) === true && empty($queryResult) === false) {
             $profile = $queryResult[0];
+        } else {
+            $this->addFlashMessage($this->get('translator')->trans('payment.costsheet.account_settlement.confirmation.failure'), 'danger');
         }
 
         return $this->render('MealzAccountingBundle::confirmationPage.html.twig', array(

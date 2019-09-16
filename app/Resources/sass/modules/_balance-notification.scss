@@ -16,6 +16,12 @@
     position: relative;
     width: 170px;
     text-align: center;
+
+    @include breakpoint(small) {
+      margin-top: 10px;
+      width: 100%;
+    }
+
   }
 
 }

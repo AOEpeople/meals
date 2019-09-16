@@ -23,6 +23,6 @@ parameters:
     keycloak_user_token_endpoint:   'https://login.aoe.com/auth/realms/aoe/protocol/openid-connect/userinfo'
     keycloak_openid_server:         'https://login.aoe.com/auth/realms/aoe'
     keycloak_client_id:             'replaced_by_deployment'
-    keycloak_client_secret:         'xxxxxxxxxxxxxxxx'
+    keycloak_client_secret:         'replaced_by_deployment'
 
     env_url:                        'replaced_by_deployment'

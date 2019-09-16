@@ -25,20 +25,4 @@ class ProfileRepository extends EntityRepository
 
         return $qb->getQuery()->getResult();
     }
-
-    /**
-     * find the profile  with the given username
-     * @param string $usernames
-     * @return profile
-     */
-    public function findByUsername($username)
-    {
-        $qb = $this->createQueryBuilder('p');
-        $qb->addSelect('r');
-        $qb->leftJoin('p.roles', 'r');
-        $qb->where($qb->expr()->in('p.username', ':username'));
-        $qb->setParameter(':username', $username);
-
-        return $qb->getQuery()->getResult();
-    }
 }

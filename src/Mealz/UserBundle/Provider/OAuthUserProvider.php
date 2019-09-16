@@ -26,11 +26,6 @@ use \Doctrine\Bundle\DoctrineBundle\Registry;
 class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProviderInterface
 {
     /**
-     * @var ProfileRepository
-     */
-    private $profileRepository;
-
-    /**
      * @var DoctrineRegistry
      */
     private $doctrineRegistry;
@@ -55,11 +50,6 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
      */
     public function __construct(Registry $doctrineRegistry)
     {
-        if ($doctrineRegistry !== null) {
-            $profileRepository = $doctrineRegistry->getRepository('MealzUserBundle:Profile');
-        }
-
-        $this->profileRepository = $profileRepository;
         $this->doctrineRegistry = $doctrineRegistry;
     }
 
@@ -75,8 +65,13 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
         return new OAuthUser($username);
     }
 
+
     /**
-     * {@inheritdoc}
+     * Loads an user by identifier or create it.
+     *
+     * @param      <type>             $userInformation  The user information
+     *
+     * @return     OAuthUser|boolean  ( description_of_the_return_value )
      */
     public function loadUserByIdOrCreate($userInformation)
     {
@@ -138,8 +133,8 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
         /**
          * get OAuth User Token Informations
          */
-        $accesTokens = explode('.', $response->getAccessToken());
-        $userInformation = json_decode(base64_decode($accesTokens[1]));
+        $accessTokens = explode('.', $response->getAccessToken());
+        $userInformation = json_decode(base64_decode($accessTokens[1]));
 
         return $this->loadUserByIdOrCreate($userInformation);
     }

@@ -32,7 +32,8 @@ class OAuthProiderTest extends AbstractControllerTestCase
 
 
     /**
-     * Test oAuth Provider - create new User
+     * Test oAuth Provider - create new User and check if roles are mapped corrrectly
+     * @test
      */
     public function testCreateNewOAuthUser()
     {
@@ -58,16 +59,17 @@ class OAuthProiderTest extends AbstractControllerTestCase
             'MealzUserBundle:Profile',
             $newUserInformation->preferred_username
         );
-        $this->assertInstanceOf(Profile::class, $newCreatedProfile);
+        $this->assertEquals($newCreatedProfile->getUsername(), 'test.user');
 
         /**
          * check if Rolemapping was correct
          */
-        $this->assertEquals($response->getRoles(), [0 => "ROLE_OAUTH_USER", 1 => "ROLE_KITCHEN_STAFF"]);
+        $this->assertEquals($response->getRoles(), [0 => 'ROLE_OAUTH_USER', 1 => 'ROLE_KITCHEN_STAFF']);
     }
 
     /**
-     * Test oAuth Provider - get old User
+     * Test oAuth Provider - get old User and check if roles are mapped corrrectly
+     * @test
      */
     public function testValidNewOAuthUser()
     {
@@ -83,7 +85,6 @@ class OAuthProiderTest extends AbstractControllerTestCase
         /**
          * check if Response is a valid oAuth User
          *
-         * @var        <type>
          */
         $response = $oAuthProvider->loadUserByIdOrCreate($validUserInformation);
         $this->assertInstanceOf(OAuthUser::class, $response);
@@ -95,11 +96,11 @@ class OAuthProiderTest extends AbstractControllerTestCase
             'MealzUserBundle:Profile',
             $validUserInformation->preferred_username
         );
-        $this->assertEquals($newCreatedProfile->getUsername(), "alice");
+        $this->assertEquals($newCreatedProfile->getUsername(), 'alice');
 
         /**
          * check if Rolemapping was correct
          */
-        $this->assertEquals($response->getRoles(), [0 => "ROLE_OAUTH_USER"]);
+        $this->assertEquals($response->getRoles(), [0 => 'ROLE_OAUTH_USER']);
     }
 }

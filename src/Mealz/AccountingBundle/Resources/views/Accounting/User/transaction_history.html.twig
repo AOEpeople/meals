@@ -4,16 +4,18 @@
 
 {% block body %}
     <script src="https://www.paypal.com/sdk/js?client-id={{ paypal_id }}&currency=EUR"></script>
-    <div class="headline-container headline-container-h1 headline-left"><h1>{{ 'payment.transaction_history.account'|trans({}, 'messages') }}</h1></div>
+
     <div class="add-funds">
-        {{ MealzButton.link(
-                path('mealz_accounting_payment_ecash_form', {profile: app.user.profile.username}),
-                'payment.transaction_history.add_funds',
-                'ecash',
-                'load-payment-form transparent',
-                'glyphicon-plus'
-            )}}
+    {{ MealzHeadline.create(1, 'payment.transaction_history.account'|trans({}, 'messages'), '', '', [
+        MealzButton.link(
+            path('mealz_accounting_payment_ecash_form', {profile: app.user.profile.username}),
+            'payment.transaction_history.add_funds',
+            'ecash',
+            'load-payment-form transparent',
+            'glyphicon-plus'
+        )],'') }}
     </div>
+
     <div class="last-account-balance">
         {{ 'payment.transaction_history.balance_past'|trans({}, 'messages') ~ ' ' ~ date("-28days")|date("d.m.Y") }}:<span {% if((balance + participations_total - transactions_total) < 0) %}class="dept"{% endif %}>{{ (balance + participations_total - transactions_total)|number_format(2, '.', ',') }}€</span>
     </div>

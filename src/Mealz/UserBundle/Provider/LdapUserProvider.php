@@ -45,7 +45,7 @@ class LdapUserProvider extends SymfonyLdapUserProvider
         $roles = $this->childDefaultRoles;
 
         if (isset($user['memberof']) && array_search(
-                'CN=MealsAdmins_User,OU=_Permission_Groups,OU=_AOE,DC=aoemedia,DC=lan',
+                'CN=MealsAdmins_User,OU=_Groups,OU=_Accounts,OU=_AOE,DC=aoemedia,DC=lan',
                 $user['memberof']
             ) !== false
         ) {

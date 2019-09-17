@@ -1,0 +1,12 @@
+parameters:
+    database_name:     devbox
+    database_user:     devbox
+    database_password: devbox
+
+    database_name_testing: mealz_test
+    database_user_testing: mealz_test
+    database_password_testing: mealz_test
+
+    secret:            ThisTokenIsNotSoSecretChangeIt
+
+    hr_email: 'raza.ahmed@aoe.com'

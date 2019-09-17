@@ -26,9 +26,13 @@
     margin-top: 20px;
   }
 
+  .form-container {
+    position: relative;
+  }
+
   form {
     position: absolute;
-    right: 28px;
+    right: 0;
     z-index: 1;
     width: 500px;
     margin-top: 10px;

@@ -14,7 +14,7 @@
 
   .button {
     position: relative;
-    width: 170px;
+    width: 160px;
     text-align: center;
 
     @include breakpoint(small) {
@@ -22,6 +22,10 @@
       margin-top: 10px;
     }
 
+  }
+
+  .pay-now {
+    float: right;
   }
 
 }

@@ -15,15 +15,12 @@ Mealz.prototype.initAjaxForms = function () {
         e.stopPropagation();
         that.loadAjaxFormPayment($(this));
 
-        if ($('.load-payment-form').is("#ecash")) {
+        if ($('form[name="cash"]').length >= 1) {
+            settleAccount();
+        }
 
-            var checkExist = setInterval(function () {
-                if ($('.paypal-button-container').length) {
-                    that.enablePaypal();
-                    clearInterval(checkExist);
-                }
-            }, 100);
-
+        if ($('.load-payment-form').is("#ecash") === true && $('.paypal-button-container').length >= 1) {
+            that.enablePaypal();
         }
 
     });
@@ -123,6 +120,7 @@ Mealz.prototype.loadAjaxFormPayment = function ($element) {
         method: 'GET',
         url: url,
         dataType: 'json',
+        async: false,
         success: function (data) {
             that.$iconCells.find('form').addClass(that.hiddenClass);
             $element.after(data);

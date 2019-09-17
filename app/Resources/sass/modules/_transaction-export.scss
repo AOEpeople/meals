@@ -1,0 +1,17 @@
+td {
+  border: 1px solid $color-body;
+}
+
+table {
+  padding: 2px 3px;
+}
+
+.amount,
+.daily-closing {
+  text-align: right;
+}
+
+.date,
+.name {
+  text-align: left;
+}

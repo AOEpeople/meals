@@ -26,7 +26,9 @@
         "friendsofsymfony/oauth-server-bundle": "^1.5",
         "jms/serializer-bundle": "^1.1",
         "creatissimo/mattermost-bundle": "1.1.12",
-        "paypal/paypal-checkout-sdk": "^1.0.0"
+        "paypal/paypal-checkout-sdk": "^1.0.0",
+        "tecnickcom/tcpdf": "6.2.26",
+        "whiteoctober/tcpdf-bundle": "dev-master"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "~2.2",

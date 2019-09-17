@@ -129,10 +129,10 @@
     </exec>
   </target>
 
-  <target name="vendors" description="Update vendors">
+  <target name="vendors" description="Install vendors">
     <exec executable="composer" failonerror="true">
-        <arg value="update" />
+        <arg value="install" />
     </exec>
   </target>
-    
+
 </project>

@@ -4,6 +4,7 @@ header:
     dishes: Dishes
     categories: Categories
     costs: Costs
+    finance: Finance
   logged_in_text: You are logged in as
   balance: Balance
 

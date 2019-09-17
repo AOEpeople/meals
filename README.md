@@ -110,21 +110,17 @@ Lists all transactions booked for users in the last month.
             </Directory>
     </VirtualHost>
 
-### PayPal API configuration
-
-Export your client id and secret as environment variables.
-See http://symfony.com/doc/current/cookbook/configuration/external_parameters.html
-
 ### Frontend build
 
 ```
 cd /var/www/mealz/devbox/current/app/Resources
+npm config set strict-ssl false
 sudo npm install
-sudo ./node_modules/.bin/bower install
-sudo ./node_modules/.bin/gulp
+sudo ./node_modules/bower/bin/bower install --allow-root
+sudo ./node_modules/gulp/bin/gulp.js build
 ```
 
-To develop and automaticly build gulp try
+To develop and automatically build gulp try
 ```
 sudo ./node_modules/.bin/gulp watch
 ```

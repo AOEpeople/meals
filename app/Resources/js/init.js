@@ -80,6 +80,8 @@ $(document).ready(function () {
         mealz.initToggleParticipation();
     }
 
+    mealz.exportTransactions();
+
     /**
      * If there are any meals in the list, run updateOffers to check for available offers.
      */

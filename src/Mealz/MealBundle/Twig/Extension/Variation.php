@@ -3,6 +3,7 @@
 
 namespace Mealz\MealBundle\Twig\Extension;
 
+use Symfony\Bridge\Doctrine\RegistryInterface;
 use Mealz\MealBundle\Entity\Dish;
 use Mealz\MealBundle\Entity\Meal;
 
@@ -13,6 +14,20 @@ use Mealz\MealBundle\Entity\Meal;
  */
 class Variation extends \Twig_Extension
 {
+
+    protected $doctrine;
+
+    protected $twig;
+
+    /**
+     * Constructor
+     */
+    public function __construct(RegistryInterface $doctrine, $twig)
+    {
+        $this->doctrine = $doctrine;
+        $this->twig = $twig;
+    }
+
     /**
      * @return array
      */
@@ -24,6 +39,7 @@ class Variation extends \Twig_Extension
             'groupMealsToArray' => new \Twig_Function_Method($this, 'groupMealsToArray'),
             'getFullTitleByDishAndVariation' => new \Twig_Function_Method($this, 'getFullTitleByDishAndVariation'),
             'getSortedVariation' => new \Twig_Function_Method($this, 'getSortedVariation'),
+            'getDishCount' => new \Twig_Function_Method($this, 'getDishCount'),
         );
     }
 
@@ -119,7 +135,7 @@ class Variation extends \Twig_Extension
 
         return $title;
     }
-    
+
     public function getSortedVariation($variations) {
         if (is_array($variations) && count($variations)) {
             uasort($variations, array($this, 'compareVariation'));
@@ -135,6 +151,18 @@ class Variation extends \Twig_Extension
     public function getName()
     {
         return 'variation';
+    }
+
+    /**
+     * Returns the name of the extension.
+     *
+     * @return string The extension name
+     */
+    public function getDishCount($dish)
+    {
+        $em = $this->doctrine->getManager();
+        $dishRepo = $em->getRepository('MealzMealBundle:Dish');
+        return $dishRepo->countNumberDishWasTaken($dish, $this->twig->getGlobals()['countDishPeriod']);
     }
 
     /**

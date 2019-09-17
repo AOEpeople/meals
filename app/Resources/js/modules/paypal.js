@@ -12,7 +12,7 @@ Mealz.prototype.enablePaypal = function () {
     });
 
     // Only render the button, when PayPal is chosen as the payment method
-    if ($('#ecash_paymethod_0').prop('checked') === true && $('.paypal-buttons').length === 0) {
+    if ($('#ecash_paymethod_0').attr("checked", "checked") && $('.paypal-buttons').length === 0) {
         paypalButtonRender();
     }
 

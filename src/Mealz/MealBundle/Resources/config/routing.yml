@@ -198,7 +198,7 @@ mealz_meal_edit_participations:
     defaults: { _controller: "MealzMealBundle:Participant:editParticipation" }
 
 MealzMealBundle_Meal_guest:
-    path:  /menu/guest/{hash}
+    path: /menu/guest/{hash}
     defaults: { _controller: "MealzMealBundle:Meal:guest" }
 
 MealzMealBundle_Meal_newGuestInvitation:

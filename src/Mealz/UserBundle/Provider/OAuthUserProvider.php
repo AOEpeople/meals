@@ -31,15 +31,19 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
     private $doctrineRegistry;
 
     /**
+    *
+    * give User the ROLE_OAUTH_USER Role to access meals
+    * Use in Combination of /app/config/commons/all/security.yml
+     *
+     * @var        string
+     */
+    private $publicRole = 'ROLE_USER';
+
+    /**
      * Map Keycloak Roles to Meals ones
-     *
-     * give User the ROLE_OAUTH_USER Role to access meals
-     * Use in Combination of /app/config/commons/all/security.yml
-     *
      * @var        array
      */
     private $roleMapping = [
-        'aoe_employee'  => 'ROLE_OAUTH_USER',
         'meals.admin'   => 'ROLE_KITCHEN_STAFF'
     ];
 
@@ -106,6 +110,11 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
         $user->setProfile($profile);
 
         /**
+         * give every LDAP User the ROLE_OAUTH_USER Role
+         */
+        $user->addRole($this->publicRole);
+
+        /**
          * Map Keycloak Roles to Meals Roles
          */
         foreach ($this->roleMapping as $keycloakRole => $mealsRole) {
@@ -113,7 +122,7 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
              * if the Keycloak User has Roles with mapped Roles in meals. Map it.
              */
             if (array_search($keycloakRole, $userInformation->realm_access->roles) !== false) {
-                $user->addRole($mealsRole);
+                //$user->addRole($mealsRole);
             }
         }
 

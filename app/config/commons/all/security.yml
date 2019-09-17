@@ -26,12 +26,19 @@ security:
             logout:
                 path:   MealzUserBundle_logout
                 target: /
+
         dev:
-            pattern:  ^/(_(profiler|wdt)|css|images|js)/
-            security: false
+            pattern:    ^/(_(profiler|wdt)|css|images|js)/
+            anonymous:  true
+            security:   false
 
         oauth_token:
             pattern:    ^/oauth/v2/token
+            security:   false
+
+        guest:
+            pattern:    ^/menu/guest
+            anonymous:  true
             security:   false
 
         rest:

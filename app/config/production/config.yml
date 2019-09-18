@@ -8,7 +8,7 @@ framework:
     profiler:
         enabled: false
     router:
-        resource: "%kernel.root_dir%/config/commons/all/routing.yml"
+        resource: "%kernel.root_dir%/config/production/routing.yml"
         strict_requirements: true
 
 monolog:

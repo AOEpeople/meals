@@ -11,7 +11,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class LdapUserProvider extends SymfonyLdapUserProvider
 {
-
     private $childDefaultRoles;
     private $postLogin;
 
@@ -45,9 +44,9 @@ class LdapUserProvider extends SymfonyLdapUserProvider
         $roles = $this->childDefaultRoles;
 
         if (isset($user['memberof']) && array_search(
-                'CN=MealsAdmins_User,OU=_Permission_Groups,OU=_AOE,DC=aoemedia,DC=lan',
-                $user['memberof']
-            ) !== false
+            'CN=MealsAdmins_User,OU=_Permission_Groups,OU=_AOE,DC=aoemedia,DC=lan',
+            $user['memberof']
+        ) !== false
         ) {
             array_push($roles, 'ROLE_KITCHEN_STAFF');
         }

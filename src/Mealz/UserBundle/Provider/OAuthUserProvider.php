@@ -42,7 +42,8 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
      * @var array
      */
     private $roleMapping = [
-        'meals.admin'   => 'ROLE_KITCHEN_STAFF'
+        'meals.admin'   => 'ROLE_KITCHEN_STAFF',
+        'meals.finance'   => 'ROLE_FINANCE'
     ];
 
     /**

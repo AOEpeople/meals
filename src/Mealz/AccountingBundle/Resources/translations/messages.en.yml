@@ -5,6 +5,7 @@ payment:
   acknowledge_debts:
     text: I know that my account balance is %amount%€ in the red and I will pay my debt very soon.
     button: Understood!
+    pay_now: Pay now
   transaction_history:
     account: Account
     add_funds: ADD FUNDS
@@ -20,7 +21,7 @@ payment:
     payment_method: Payment Method
     pay: Pay
     paypal: PayPal
-    invalid: Please enter a valid amount.
+    invalid: Please check your input.
     finances:
       export: Export
       pdf: meals-finance

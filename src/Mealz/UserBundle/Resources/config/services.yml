@@ -1,5 +1,6 @@
 parameters:
   mealz_user.post_login.class: Mealz\UserBundle\Service\PostLogin
+  mealz_provider.class: Mealz\UserBundle\Provider\OAuthUserProvider
 
 services:
   mealz_user.post_login:
@@ -7,4 +8,7 @@ services:
     arguments: [ @doctrine.orm.default_entity_manager, @logger ]
   mealz_user.provider.login:
     class: Symfony\Bridge\Doctrine\Security\User\EntityUserProvider
-    arguments: [ "@doctrine", "Mealz\\UserBundle\\Entity\\Login", "username" ]
+    arguments: [ @doctrine, "Mealz\\UserBundle\\Entity\\Login", "username" ]
+  mealz.oauthuserprovider:
+    class: %mealz_provider.class%
+    arguments: [ @doctrine]

@@ -73,14 +73,26 @@ Mealz.prototype.enablePaypal = function () {
                 }
             },
 
+            onCancel: function (data, actions) {
+                window.location.reload();
+            },
+
             onError: function (err) {
-                return fetch('/payment/ecash/form/submit', {}).then(function (redirect) {
-                    if (redirect.status === 200 && redirect.redirected === false) {
-                        return (redirect.text());
-                    }
-                }).then(function (redirect) {
-                    window.location = redirect;
-                });
+                // if its the "Window navigated away" Error which always happens caused by redirect - ignore it
+                if(err.text() !== 'Window navigated away') {
+                    return fetch('/payment/ecash/form/submit', {
+                        method: 'post',
+                        headers: {
+                            'content-type': 'application/json'
+                        },
+                    }).then(function (redirect) {
+                        if (redirect.status === 200 && redirect.redirected === false) {
+                            return (redirect.text());
+                        }
+                    }).then(function (redirect) {
+                        actions.redirect(window.location.origin+redirect);
+                    });
+                }
             },
 
             // Set up the transaction
@@ -112,7 +124,7 @@ Mealz.prototype.enablePaypal = function () {
                             return (redirect.text());
                         }
                     }).then(function (redirect) {
-                        window.location.replace(redirect);
+                        return actions.redirect(window.location.origin+redirect);
                     });
                 });
             }

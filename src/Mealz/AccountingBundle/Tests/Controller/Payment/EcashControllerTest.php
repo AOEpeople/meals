@@ -8,15 +8,7 @@ use Symfony\Component\Translation\Translator;
 
 use Mealz\AccountingBundle\Controller\Payment\EcashController;
 use Mealz\AccountingBundle\DataFixtures\ORM\LoadTransactions;
-use Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
-use Mealz\MealBundle\DataFixtures\ORM\LoadDays;
-use Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
-use Mealz\MealBundle\DataFixtures\ORM\LoadDishVariations;
-use Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
-use Mealz\MealBundle\DataFixtures\ORM\LoadParticipants;
-use Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
 use Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
-use Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 
 class EcashControllerTest extends AbstractControllerTestCase
@@ -33,14 +25,6 @@ class EcashControllerTest extends AbstractControllerTestCase
         $this->clearAllTables();
         $this->loadFixtures(
             array(
-                new LoadCategories(),
-                new LoadWeeks(),
-                new LoadDays(),
-                new LoadDishes(),
-                new LoadDishVariations(),
-                new LoadMeals(),
-                new LoadParticipants(),
-                new LoadRoles(),
                 new LoadUsers($this->client->getContainer()),
                 new LoadTransactions()
             )
@@ -103,7 +87,7 @@ class EcashControllerTest extends AbstractControllerTestCase
         $ecashController->expects($this->at(0))
             ->method('get')
             ->with('translator')
-            ->will($this->returnValue($translator = new Translator('de')));
+            ->will($this->returnValue(new Translator('de')));
 
         $ecashController->expects($this->atLeastOnce())
             ->method('getDoctrine')

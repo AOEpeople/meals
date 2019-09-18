@@ -18,30 +18,24 @@
 }
 
 .add-funds {
-  position: relative;
-  float: right;
-  margin-top: 10px;
-  margin-bottom: 30px;
-  color: $color-orange;
-  font-size: 16px;
-  line-height: 20px;
-
-  .load-payment-form {
-    margin-right: 15px;
-    vertical-align: middle;
-    font-weight: bold;
-
+  .headline-tool {
+    color: $color-orange;
   }
 
   .paypal-button-container {
     margin-top: 20px;
   }
 
+  .form-container {
+    position: relative;
+  }
+
   form {
     position: absolute;
-    right: 28px;
+    right: 0;
     z-index: 1;
     width: 500px;
+    margin-top: 10px;
     padding: 30px;
     color: $color-gray-primary;
     background-color: $color-gray-middle;

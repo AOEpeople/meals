@@ -1,3 +1,5 @@
 imports:
+# To locally Test Keycloak: enable production config and disable development config
+#    - { resource: ../production/config.yml }
     - { resource: ../commons/development/config.yml }
     - { resource: parameters.yml }

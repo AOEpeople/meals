@@ -11,18 +11,34 @@ security:
 
     firewalls:
         mealz:
+            oauth:
+                resource_owners:
+                    meals: meals_login
+                login_path: /connect/meals
+                use_forward: true
+                failure_path: MealzUserBundle_logout
+
+                oauth_user_provider:
+                    service: mealz.oauthuserprovider
             pattern: ^/
             anonymous: ~
             fos_oauth: true
             logout:
                 path:   MealzUserBundle_logout
                 target: /
+
         dev:
-            pattern:  ^/(_(profiler|wdt)|css|images|js)/
-            security: false
+            pattern:    ^/(_(profiler|wdt)|css|images|js)/
+            anonymous:  true
+            security:   false
 
         oauth_token:
             pattern:    ^/oauth/v2/token
+            security:   false
+
+        guest:
+            pattern:    ^/menu/guest
+            anonymous:  true
             security:   false
 
         rest:
@@ -30,6 +46,3 @@ security:
             fos_oauth:  true
             stateless:  true
             anonymous:  false
-
-    access_control:
-#        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }

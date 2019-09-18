@@ -47,13 +47,13 @@ class AppKernel extends Kernel
             new JMS\SerializerBundle\JMSSerializerBundle(),
             new FOS\RestBundle\FOSRestBundle(),
             new FOS\OAuthServerBundle\FOSOAuthServerBundle(),
-
             new Mealz\MealBundle\MealzMealBundle(),
             new Mealz\UserBundle\MealzUserBundle(),
             new Mealz\AccountingBundle\MealzAccountingBundle(),
             new Mealz\TemplateBundle\MealzTemplateBundle(),
             new Mealz\RestBundle\MealzRestBundle(),
             new Creatissimo\MattermostBundle\CreatissimoMattermostBundle(),
+            new HWI\Bundle\OAuthBundle\HWIOAuthBundle(),
             new WhiteOctober\TCPDFBundle\WhiteOctoberTCPDFBundle()
         );
 
@@ -71,5 +71,4 @@ class AppKernel extends Kernel
     {
         $loader->load(__DIR__ . '/config/' . $this->appEnvironment->getEnvironment() . '/config.yml');
     }
-
 }

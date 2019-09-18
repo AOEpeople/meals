@@ -16,7 +16,7 @@ class LogoutSuccessHandler implements LogoutSuccessHandlerInterface
     /**
      * @var string
      */
-    private $logoutUrl;
+    private $logoutUrl = '';
 
     /**
      * LogoutSuccessHandler constructor.
@@ -24,7 +24,7 @@ class LogoutSuccessHandler implements LogoutSuccessHandlerInterface
      * @param string $logoutUrl
      * @param string $baseUri
      */
-    public function __construct($logoutUrl = null, $baseUri)
+    public function __construct($logoutUrl, $baseUri)
     {
         $this->logoutUrl = $logoutUrl . '?redirect_uri=' . $baseUri;
     }

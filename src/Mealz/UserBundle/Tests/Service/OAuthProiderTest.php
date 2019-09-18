@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Mealz\UserBundle\Tests\Service;
 
 use Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
@@ -12,7 +11,6 @@ use Mealz\UserBundle\Entity\Profile;
 
 class OAuthProiderTest extends AbstractControllerTestCase
 {
-
     /**
      * Set up the testing environment
      */
@@ -30,7 +28,6 @@ class OAuthProiderTest extends AbstractControllerTestCase
         );
     }
 
-
     /**
      * Test oAuth Provider - create new User and check if roles are mapped corrrectly
      * @test
@@ -46,24 +43,18 @@ class OAuthProiderTest extends AbstractControllerTestCase
             'realm_access' => (object)['roles' =>['meals.admin']]
         ];
 
-        /**
-         * check if valid oAuth User comes in return
-         */
+        // check if valid oAuth User comes in return
         $response = $oAuthProvider->loadUserByIdOrCreate($newUserInformation);
         $this->assertInstanceOf(OAuthUser::class, $response);
 
-        /**
-         * check if new valid Profile is written in Database
-         */
+        // check if new valid Profile is written in Database
         $newCreatedProfile = $this->getDoctrine()->getManager()->find(
             'MealzUserBundle:Profile',
             $newUserInformation->preferred_username
         );
         $this->assertEquals('test.user', $newCreatedProfile->getUsername());
 
-        /**
-         * check if Rolemapping was correct
-         */
+        // check if Rolemapping was correct
         $this->assertEquals([0 => 'ROLE_USER', 1 => 'ROLE_KITCHEN_STAFF'], $response->getRoles());
     }
 
@@ -82,25 +73,18 @@ class OAuthProiderTest extends AbstractControllerTestCase
             'realm_access' => (object)['roles' =>['test_role']]
         ];
 
-        /**
-         * check if Response is a valid oAuth User
-         *
-         */
+        // check if Response is a valid oAuth User
         $response = $oAuthProvider->loadUserByIdOrCreate($validUserInformation);
         $this->assertInstanceOf(OAuthUser::class, $response);
 
-        /**
-         * check if new valid Profile is written in Database
-         */
+        // check if new valid Profile is written in Database
         $newCreatedProfile = $this->getDoctrine()->getManager()->find(
             'MealzUserBundle:Profile',
             $validUserInformation->preferred_username
         );
         $this->assertEquals($newCreatedProfile->getUsername(), 'alice');
 
-        /**
-         * check if Rolemapping was correct
-         */
+        // check if Rolemapping was correct
         $this->assertEquals([0 => 'ROLE_USER'], $response->getRoles());
     }
 }

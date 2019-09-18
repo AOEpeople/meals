@@ -9,8 +9,6 @@ use Mealz\UserBundle\Entity\Profile;
 
 /**
  * OAuthUser.
- *
- * @author     Geoffrey Bachelet <geoffrey.bachelet@gmail.com>
  */
 class OAuthUser implements OAuthUserInterface
 {
@@ -20,17 +18,17 @@ class OAuthUser implements OAuthUserInterface
     protected $profile;
 
     /**
-     * @var        string
+     * @var string
      */
-    protected $username;
+    protected $username = '';
 
     /**
-     * @var        Array
+     * @var Array
      */
     protected $roles = [];
 
     /**
-     * @param      string  $username
+     * @param string $username
      */
     public function __construct($username)
     {
@@ -121,25 +119,28 @@ class OAuthUser implements OAuthUserInterface
         return $user->getUsername() === $this->username;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function serialize()
     {
-        return serialize(array(
-        $this->username,
-        ));
+        return serialize(array($this->username));
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function unserialize($serialized)
     {
-        list(
-        $this->username,
-        ) = unserialize($serialized);
+        list($this->username) = unserialize($serialized);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function isEqualTo(\Symfony\Component\Security\Core\User\UserInterface $user)
     {
-        if (!$user instanceof LdapUserInterface
-        || $user->getUsername() !== $this->username
-        ) {
+        if ($user instanceof LdapUserInterface === false || $user->getUsername() !== $this->username) {
             return false;
         }
 

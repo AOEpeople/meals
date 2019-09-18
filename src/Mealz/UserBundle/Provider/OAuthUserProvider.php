@@ -3,8 +3,6 @@
 /*
  * This file was part of the HWIOAuthBundle package and was edited for meals
  *
- * (c) Hardware.Info <opensource@hardware.info>
- *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -31,17 +29,17 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
     private $doctrineRegistry;
 
     /**
-    *
-    * give User the ROLE_USER Role to access meals
-    * Use in Combination of /app/config/commons/all/security.yml
+     * Give User the ROLE_USER Role to access meals
+     * Use in Combination of /app/config/commons/all/security.yml
      *
-     * @var        string
+     * @var string
      */
     private $publicRole = 'ROLE_USER';
 
     /**
      * Map Keycloak Roles to Meals ones
-     * @var        array
+     *
+     * @var array
      */
     private $roleMapping = [
         'meals.admin'   => 'ROLE_KITCHEN_STAFF'
@@ -50,7 +48,7 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
     /**
      * OAuthUserProvider constructor.
      *
-     * @param      Registry  $doctrineRegistry
+     * @param Registry  $doctrineRegistry
      */
     public function __construct(Registry $doctrineRegistry)
     {
@@ -59,10 +57,6 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
 
     /**
      * {@inheritdoc}
-     *
-     * @param      <type>     $username  The username
-     *
-     * @return     OAuthUser  ( description_of_the_return_value )
      */
     public function loadUserByUsername($username)
     {
@@ -73,15 +67,13 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
     /**
      * Loads an user by identifier or create it.
      *
-     * @param      Object             $userInformation  The user information
+     * @param Object $userInformation The user information
      *
-     * @return     OAuthUser|boolean  ( description_of_the_return_value )
+     * @return OAuthUser|boolean
      */
     public function loadUserByIdOrCreate($userInformation)
     {
-        /**
-         * First Check if array Informations are given
-         */
+        // First Check if array Informations are given
         if (gettype($userInformation) === 'object' &&
             property_exists($userInformation, 'preferred_username') === true &&
             property_exists($userInformation, 'family_name') === true &&
@@ -95,9 +87,7 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
             return false;
         }
 
-        /**
-         * if Userprofile is null, create User
-         */
+        //if Userprofile is null, create User
         if ($profile === null) {
             $profile = $this->createProfile(
                 $userInformation->preferred_username,
@@ -109,18 +99,12 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
         $user = new OAuthUser($userInformation->preferred_username);
         $user->setProfile($profile);
 
-        /**
-         * give every LDAP User the ROLE_USER Role
-         */
+        // give every LDAP User the ROLE_USER Role
         $user->addRole($this->publicRole);
 
-        /**
-         * Map Keycloak Roles to Meals Roles
-         */
+        // Map Keycloak Roles to Meals Roles
         foreach ($this->roleMapping as $keycloakRole => $mealsRole) {
-            /**
-             * if the Keycloak User has Roles with mapped Roles in meals. Map it.
-             */
+            // if the Keycloak User has Roles with mapped Roles in meals. Map it.
             if (array_search($keycloakRole, $userInformation->realm_access->roles) !== false) {
                 $user->addRole($mealsRole);
             }
@@ -139,9 +123,7 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
      */
     public function loadUserByOAuthUserResponse(UserResponseInterface $response)
     {
-        /**
-         * get OAuth User Token Informations
-         */
+        // get OAuth User Token Informations
         $accessTokens = explode('.', $response->getAccessToken());
         $userInformation = json_decode(base64_decode($accessTokens[1]));
 
@@ -153,7 +135,7 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
      */
     public function refreshUser(UserInterface $user)
     {
-        if (!$this->supportsClass(get_class($user))) {
+        if ($this->supportsClass(get_class($user)) === false) {
             throw new UnsupportedUserException(sprintf('Unsupported user class "%s"', get_class($user)));
         }
 
@@ -171,9 +153,9 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
     /**
      * Creates a profile.
      *
-     * @param      \Symfony\Component\Security\Core\User\UserInterface  $username
-     * @param      String                                               $givenName  The given name
-     * @param      String                                               $surName    The sur name
+     * @param \Symfony\Component\Security\Core\User\UserInterface  $username
+     * @param String $givenName  The given name
+     * @param String $surName    The sur name
      *
      * @return     Profile
      */

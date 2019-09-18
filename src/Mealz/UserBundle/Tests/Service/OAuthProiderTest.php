@@ -29,10 +29,10 @@ class OAuthProiderTest extends AbstractControllerTestCase
     }
 
     /**
-     * Test oAuth Provider - create new User and check if roles are mapped corrrectly
+     * Test oAuth Provider - create new User and check if admin
      * @test
      */
-    public function testCreateNewOAuthUser()
+    public function testCreateNewAdminOAuthUser()
     {
         $oAuthProvider = new OAuthUserProvider($this->getDoctrine());
 
@@ -59,7 +59,7 @@ class OAuthProiderTest extends AbstractControllerTestCase
     }
 
     /**
-     * Test oAuth Provider - get old User and check if roles are mapped corrrectly
+     * Test oAuth Provider - get old User and check if roles are mapped corrrectly with false role
      * @test
      */
     public function testValidNewOAuthUser()
@@ -86,5 +86,35 @@ class OAuthProiderTest extends AbstractControllerTestCase
 
         // check if Rolemapping was correct
         $this->assertEquals([0 => 'ROLE_USER'], $response->getRoles());
+    }
+
+    /**
+     * Test oAuth Provider - create new User and check if finance role is mapped correctly
+     * @test
+     */
+    public function testCreateNewFinanceOAuthUser()
+    {
+        $oAuthProvider = new OAuthUserProvider($this->getDoctrine());
+
+        $newUserInformation = (object) [
+            'preferred_username' => 'user.test',
+            'family_name' => 'test',
+            'given_name' => 'user',
+            'realm_access' => (object)['roles' =>['meals.finance']]
+        ];
+
+        // check if valid oAuth User comes in return
+        $response = $oAuthProvider->loadUserByIdOrCreate($newUserInformation);
+        $this->assertInstanceOf(OAuthUser::class, $response);
+
+        // check if new valid Profile is written in Database
+        $newCreatedProfile = $this->getDoctrine()->getManager()->find(
+            'MealzUserBundle:Profile',
+            $newUserInformation->preferred_username
+        );
+        $this->assertEquals('user.test', $newCreatedProfile->getUsername());
+
+        // check if Rolemapping was correct
+        $this->assertEquals([0 => 'ROLE_USER', 1 => 'ROLE_FINANCE'], $response->getRoles());
     }
 }

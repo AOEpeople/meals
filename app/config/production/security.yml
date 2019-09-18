@@ -14,6 +14,7 @@ security:
         - { path: ^/oauth/v2/token, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/menu/guest, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/css, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
-        - { path: ^/css, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/js, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/images, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/, roles: [ROLE_USER] }
 

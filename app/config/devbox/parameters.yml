@@ -8,3 +8,5 @@ parameters:
     database_password_testing: mealz_test
 
     secret:            ThisTokenIsNotSoSecretChangeIt
+
+    hr_email: 'raza.ahmed@aoe.com'

@@ -1,7 +1,8 @@
 <?php
 
-namespace Mealz\AccountinglBundle\Tests\Controller;
+namespace Mealz\AccountingBundle\Tests\Controller;
 
+use Mealz\AccountingBundle\Entity\Transaction;
 use Mealz\UserBundle\Entity\Profile;
 use Symfony\Component\DomCrawler\Crawler;
 use Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
@@ -11,7 +12,7 @@ use Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 
 /**
  * Class AccountingBookControllerTest
- * @package Mealz\AccountinglBundle\Tests\Controller
+ * @package Mealz\AccountingBundle\Tests\Controller
  */
 class AccountingBookControllerTest extends AbstractControllerTestCase
 {
@@ -178,4 +179,133 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
 
         return new Crawler(json_decode($content), $uri);
     }
+
+    /**
+     * Tests if finance staff can access the transaction export page and admins and default users can not
+     * @test
+     */
+    public function testAccessForFinanceOnly() {
+        $user = $this->getUserProfile('finance');
+        $this->loginAsDefaultClient($user);
+
+        $crawler = $this->client->request('GET', '/accounting/book/finance/list');
+        $this->assertTrue($this->client->getResponse()->isSuccessful(), "Finances page not accessible by finance staff");
+
+        $node = $crawler->filterXPath('//table[@id="accounting-book-table"]');
+        $this->assertTrue($node->count() > 0, "Accounting book table could not be rendered on the finances page");
+
+        // Test if default users can access the finances page
+        $this->createDefaultClient();
+        $this->client->request('GET', '/accounting/book/finance/list');
+        $this->assertFalse($this->client->getResponse()->isSuccessful(), "Finances page accessible by default users");
+
+        // Test if admins can access the finances page
+        $this->createAdminClient();
+        $this->client->request('GET', '/accounting/book/finance/list');
+        $this->assertFalse($this->client->getResponse()->isSuccessful(), "Finances page accessible by administrators");
+    }
+
+    /**
+     * Tests if the transactions are displayed correctly
+     * @test
+     */
+    public function testTransactionsListing() {
+        $em = $this->getDoctrine()->getManager();
+        $em->getRepository('MealzAccountingBundle:Transaction')->clear();
+
+        $profile = $this->getUserProfile();
+        $transactionDate = new \DateTime('today');
+        $dateFormatted = $transactionDate->format('Y-m-d');
+
+        $transaction = new Transaction();
+        $transaction->setProfile($profile);
+        $transaction->setDate($transactionDate);
+        $transaction->setAmount(42.17);
+
+        $em->persist($transaction);
+        $em->flush();
+
+        $user = $this->getUserProfile('finance');
+        $this->loginAsDefaultClient($user);
+
+        $crawler = $this->client->request('GET', '/accounting/book/finance/list/' . $dateFormatted . "&" . $dateFormatted);
+
+        $date = $crawler->filterXPath('//*[@class="table-data date"]/text()')->getNode(1)->textContent;
+        $this->assertEquals($transactionDate->format('d.m.Y'), trim($date), "Date displayed incorrectly");
+
+        $name = $crawler->filterXPath('//*[@class="table-data name"]/text()')->getNode(1)->textContent;
+        $this->assertEquals($profile->getFullName(), trim($name), "Name displayed incorrectly");
+
+        $amount = $crawler->filterXPath('//*[@class="table-data amount"]/text()')->getNode(1)->textContent;
+        $this->assertEquals("42.17", trim($amount), "Amount displayed incorrectly");
+    }
+
+    /**
+     * Test if PayPal payments are shown on the finances page
+     * @test
+     * @throws \Exception
+     */
+    public function testOnlyCashPaymentsListed() {
+        $em = $this->getDoctrine()->getManager();
+        $em->getRepository('MealzAccountingBundle:Transaction')->clear();
+
+        $profile = $this->getUserProfile();
+        $transactionDate = new \DateTime('today');
+        $dateFormatted = $transactionDate->format('Y-m-d');
+
+        $transaction = new Transaction();
+        $transaction->setProfile($profile);
+        $transaction->setDate($transactionDate);
+        $transaction->setAmount(42.17);
+        $transaction->setPaymethod(0);
+
+        $em->persist($transaction);
+        $em->flush();
+
+        $user = $this->getUserProfile('finance');
+        $this->loginAsDefaultClient($user);
+
+        $crawler = $this->client->request('GET', '/accounting/book/finance/list/' . $dateFormatted . "&" . $dateFormatted);
+
+        $nodes = $crawler->filterXPath('//*[@class="table-data amount"]/text()');
+        $this->assertEquals(1, $nodes->count(), "PayPal payment listed on finances page");
+    }
+
+    /**
+     * Tests if the daily closing amount is calculated correctly
+     * @test
+     * @throws \Exception
+     */
+    public function testDailyClosingCalculation() {
+        $em = $this->getDoctrine()->getManager();
+        $em->getRepository('MealzAccountingBundle:Transaction')->clear();
+
+        $profile = $this->getUserProfile();
+        $transactionDate = new \DateTime('today');
+        $dateFormatted = $transactionDate->format('Y-m-d');
+
+        $transaction = new Transaction();
+        $transaction->setProfile($profile);
+        $transaction->setDate($transactionDate->setTime(12, 00, 00));
+        $transaction->setAmount(42.17);
+
+        $em->persist($transaction);
+
+        $transaction = new Transaction();
+        $transaction->setProfile($profile);
+        $transaction->setDate($transactionDate->setTime(13, 00, 00));
+        $transaction->setAmount(57.83);
+
+        $em->persist($transaction);
+        $em->flush();
+
+        $user = $this->getUserProfile('finance');
+        $this->loginAsDefaultClient($user);
+
+        $crawler = $this->client->request('GET', '/accounting/book/finance/list/' . $dateFormatted . "&" . $dateFormatted);
+
+        $dailyClosing = $crawler->filterXPath('//*[@class="table-data daily-closing"]/text()')->getNode(1)->textContent;
+        $this->assertEquals("100.00", trim($dailyClosing), "Daily closing calculated incorrectly");
+    }
+
 }

@@ -28,18 +28,6 @@
 #    pattern:  /accounting/{profile}/transaction
 #    defaults: { _controller: "MealzAccountingBundle:AccountingAdmin:listTransaction" }
 
-#mealz_accounting_payment_paypal_custom:
-#    pattern: /payment/paypal/custom
-#    defaults: { _controller: "MealzAccountingBundle:Payment\\PayPal:createCustomPayment" }
-#
-#mealz_accounting_payment_paypal_balance:
-#    pattern: /payment/paypal/balance
-#    defaults: { _controller: "MealzAccountingBundle:Payment\\PayPal:createBalancePayment" }
-#
-#mealz_accounting_payment_paypal_execute:
-#    pattern: /payment/paypal/success
-#    defaults: { _controller: "MealzAccountingBundle:Payment\\PayPal:executePayment" }
-#
 #mealz_accounting_payment_cash:
 #    pattern: /payment/cash/{profile}
 #    defaults: { _controller: "MealzAccountingBundle:Payment\\Cash:createPayment" }
@@ -72,6 +60,26 @@ mealz_accounting_accounting_book:
     path: /accounting/book
     defaults: { _controller: "MealzAccountingBundle:AccountingBook:list" }
 
+mealz_accounting_accounting_book_finance:
+    path: /accounting/book/finance/list/{dateRange}
+    defaults: { _controller: "MealzAccountingBundle:AccountingBook:listAllTransactions", dateRange: null }
+
+mealz_accounting_accounting_book_finance_export:
+    path: /accounting/book/finance/export/{dateRange}
+    defaults: { _controller: "MealzAccountingBundle:AccountingBook:exportPDF", dateRange: null }
+
 mealz_accounting.cost_sheet:
     path: /print/costsheet
     defaults: { _controller: "MealzAccountingBundle:CostSheet:list" }
+
+mealz_accounting_cost_sheet_send_settlement_request:
+    path: /print/costsheet/settlement/request/{username}
+    defaults: { _controller: "MealzAccountingBundle:CostSheet:sendSettlementRequest" }
+
+mealz_accounting_cost_sheet_redirect_to_confirm:
+    path: /print/costsheet/redirect/confirm/{hash}
+    defaults: { _controller: "MealzAccountingBundle:CostSheet:renderConfirmButton" }
+
+mealz_accounting_cost_sheet_confirm_settlement_request:
+    path: /print/costsheet/settlement/confirm/{hash}
+    defaults: { _controller: "MealzAccountingBundle:CostSheet:confirmSettlement" }

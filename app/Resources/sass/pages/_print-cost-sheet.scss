@@ -59,6 +59,18 @@
         }
       }
 
+      .settle-account {
+        display: block;
+        margin-top: 10px;
+        padding: 10px;
+        font-size: 11px;
+        text-align: center;
+      }
+
+      .hidden {
+        display: none;
+      }
+
       &::after {
         position: absolute;
         top: -20px;
@@ -104,5 +116,28 @@
         display: none;
       }
     }
+  }
+}
+
+.date-range-picker {
+  float: left;
+  margin-right: 10px;
+  font-size: 18px;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.accounting-book {
+  .headline-tool {
+    color: $color-orange;
+  }
+}
+
+.finances {
+  .amount,
+  .daily-closing {
+    text-align: right;
   }
 }

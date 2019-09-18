@@ -38,6 +38,10 @@ services:
 
   mealz_meal.twig_extension.variation:
     class: Mealz\MealBundle\Twig\Extension\Variation
+    # Inject doctrine as first parameter
+    arguments:
+        doctrine : '@doctrine'
+        twig : '@twig'
     tags:
       - { name: twig.extension }
 

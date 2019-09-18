@@ -54,6 +54,7 @@ class AppKernel extends Kernel
             new Mealz\RestBundle\MealzRestBundle(),
             new Creatissimo\MattermostBundle\CreatissimoMattermostBundle(),
             new HWI\Bundle\OAuthBundle\HWIOAuthBundle(),
+            new WhiteOctober\TCPDFBundle\WhiteOctoberTCPDFBundle()
         );
 
         if (in_array($this->getEnvironment(), array('devbox', 'dev', 'deploy', 'test'))) {

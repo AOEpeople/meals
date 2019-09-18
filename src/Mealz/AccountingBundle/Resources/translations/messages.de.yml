@@ -5,6 +5,7 @@ payment:
   acknowledge_debts:
     text: Ich weiß, dass ich einen Kontostand von %amount%€ habe und werde meine Schulden umgehend begleichen.
     button: OK, kapiert!
+    pay_now: Jetzt bezahlen
   transaction_history:
     account: Konto
     add_funds: GELD EINZAHLEN
@@ -20,4 +21,29 @@ payment:
     payment_method: Zahlungsmethode
     pay: Zahlen
     paypal: PayPal
-    invalid: Bitte gib einen gültigen Betrag ein.
+    invalid: Bitte prüfe deine Eingabe.
+    finances:
+      export: Export
+      pdf: meals-finance
+      date: Datum
+      name: Name
+      amount: Betrag
+      daily_closing: Tagesabschluss
+  costsheet:
+    account_settlement:
+      button: Konto ausgleichen
+      fancybox:
+        message: Der Kontostand dieses Nutzers wird auf 0,00€ gesetzt. Möchtest Du fortfahren?
+        continue: Fortfahren
+        cancel: Abbrechen
+      request:
+        success: Die Anfrage auf einen Kontoausgleich für %name% wurde an die HR-Abteilung gesendet.
+        failure: Die Anfrage ist fehlgeschlagen.
+      confirmation:
+        message: Das Konto von %fullname% wird ausgeglichen.
+        confirm: Bestätigen
+        success: Die Anfrage wurde bestätigt.
+        failure: Die Anfrage konnte nicht bestätigt werden oder wurde bereits bestätigt.
+    mail:
+      subject: Anfrage auf Kontoausgleich
+      body: "Hallo HR,\n%admin% hat einen Kontoausgleich für %fullname% beantragt.\nKlick auf den folgenden Link, um es zu bestätigen:\n%link%"

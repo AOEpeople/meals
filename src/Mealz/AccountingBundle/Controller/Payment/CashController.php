@@ -34,6 +34,7 @@ class CashController extends BaseController
 
         $profile = $profileRepository->find($profile);
         $action = $this->generateUrl('mealz_accounting_payment_cash_form_submit');
+        $profileBalance = $this->get('mealz_accounting.wallet')->getBalance($profile);
 
         $form = $this->createForm(
             new CashPaymentAdminForm($em),
@@ -45,7 +46,13 @@ class CashController extends BaseController
         );
 
         $template = "MealzAccountingBundle:Accounting/Payment/Cash:form_cash_amount.html.twig";
-        $renderedForm = $this->render($template, array('form' => $form->createView()));
+        $renderedForm = $this->render(
+            $template,
+            array(
+                'form' => $form->createView(),
+                'profileBalance' => $profileBalance
+            )
+        );
 
         return new JsonResponse($renderedForm->getContent());
     }

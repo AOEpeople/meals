@@ -14,6 +14,7 @@ parameters:
 
     locale:            en
 
+    hr_email: 'replaced_by_deployment'
     paypal_id: 'replaced_by_deployment'
     paypal_secret: 'replaced_by_deployment'
 

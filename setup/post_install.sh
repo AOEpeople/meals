@@ -15,7 +15,6 @@ fi
 
 echo -n "Executing database migrations ... "
 php ${FINAL_RELEASEFOLDER}/app/console doctrine:migrations:migrate -n
-php ${FINAL_RELEASEFOLDER}/app/console doctrine:schema:update -f
 echo "done"
 
 if [ "${ENVIRONMENT}" == "deploy" -o "${ENVIRONMENT}" == "dev" ]; then

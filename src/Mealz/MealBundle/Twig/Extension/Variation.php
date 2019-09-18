@@ -3,6 +3,7 @@
 
 namespace Mealz\MealBundle\Twig\Extension;
 
+use Symfony\Bridge\Doctrine\RegistryInterface;
 use Mealz\MealBundle\Entity\Dish;
 use Mealz\MealBundle\Entity\Meal;
 use Symfony\Component\VarDumper\VarDumper;
@@ -14,6 +15,20 @@ use Symfony\Component\VarDumper\VarDumper;
  */
 class Variation extends \Twig_Extension
 {
+
+    protected $doctrine;
+
+    protected $twig;
+
+    /**
+     * Constructor
+     */
+    public function __construct(RegistryInterface $doctrine, $twig)
+    {
+        $this->doctrine = $doctrine;
+        $this->twig = $twig;
+    }
+
     /**
      * @return array
      */
@@ -25,6 +40,7 @@ class Variation extends \Twig_Extension
             'groupMealsToArray' => new \Twig_Function_Method($this, 'groupMealsToArray'),
             'getFullTitleByDishAndVariation' => new \Twig_Function_Method($this, 'getFullTitleByDishAndVariation'),
             'getSortedVariation' => new \Twig_Function_Method($this, 'getSortedVariation'),
+            'getDishCount' => new \Twig_Function_Method($this, 'getDishCount'),
         );
     }
 
@@ -137,6 +153,18 @@ class Variation extends \Twig_Extension
     public function getName()
     {
         return 'variation';
+    }
+
+    /**
+     * Returns the name of the extension.
+     *
+     * @return string The extension name
+     */
+    public function getDishCount($dish)
+    {
+        $em = $this->doctrine->getManager();
+        $dishRepo = $em->getRepository('MealzMealBundle:Dish');
+        return $dishRepo->countNumberDishWasTaken($dish, $this->twig->getGlobals()['countDishPeriod']);
     }
 
     /**

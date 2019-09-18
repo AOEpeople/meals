@@ -87,7 +87,7 @@ class LoadAnomUsers extends AbstractFixture implements OrderedFixtureInterface, 
         /**
          * List of protected Users, which should not be touched
          */
-        $protectedUsers = array('alice', 'bob', 'john', 'jane', 'kochomi');
+        $protectedUsers = array('alice', 'bob', 'john', 'jane', 'kochomi', 'finance');
 
         try {
             /**

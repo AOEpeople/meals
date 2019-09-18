@@ -32,7 +32,7 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
 
     /**
     *
-    * give User the ROLE_OAUTH_USER Role to access meals
+    * give User the ROLE_USER Role to access meals
     * Use in Combination of /app/config/commons/all/security.yml
      *
      * @var        string
@@ -110,7 +110,7 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
         $user->setProfile($profile);
 
         /**
-         * give every LDAP User the ROLE_OAUTH_USER Role
+         * give every LDAP User the ROLE_USER Role
          */
         $user->addRole($this->publicRole);
 
@@ -122,7 +122,7 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
              * if the Keycloak User has Roles with mapped Roles in meals. Map it.
              */
             if (array_search($keycloakRole, $userInformation->realm_access->roles) !== false) {
-                //$user->addRole($mealsRole);
+                $user->addRole($mealsRole);
             }
         }
 

@@ -43,7 +43,7 @@ class OAuthProiderTest extends AbstractControllerTestCase
             'preferred_username' => 'test.user',
             'family_name' => 'user',
             'given_name' => 'test',
-            'realm_access' => (object)['roles' =>['aoe_employee', 'meals.admin']]
+            'realm_access' => (object)['roles' =>['meals.admin']]
         ];
 
         /**
@@ -59,12 +59,12 @@ class OAuthProiderTest extends AbstractControllerTestCase
             'MealzUserBundle:Profile',
             $newUserInformation->preferred_username
         );
-        $this->assertEquals($newCreatedProfile->getUsername(), 'test.user');
+        $this->assertEquals('test.user', $newCreatedProfile->getUsername());
 
         /**
          * check if Rolemapping was correct
          */
-        $this->assertEquals($response->getRoles(), [0 => 'ROLE_OAUTH_USER', 1 => 'ROLE_KITCHEN_STAFF']);
+        $this->assertEquals([0 => 'ROLE_USER', 1 => 'ROLE_KITCHEN_STAFF'], $response->getRoles());
     }
 
     /**
@@ -79,7 +79,7 @@ class OAuthProiderTest extends AbstractControllerTestCase
             'preferred_username' => 'alice',
             'family_name' => 'ecila',
             'given_name' => 'alice',
-            'realm_access' => (object)['roles' =>['aoe_employee']]
+            'realm_access' => (object)['roles' =>['test_role']]
         ];
 
         /**
@@ -101,6 +101,6 @@ class OAuthProiderTest extends AbstractControllerTestCase
         /**
          * check if Rolemapping was correct
          */
-        $this->assertEquals($response->getRoles(), [0 => 'ROLE_OAUTH_USER']);
+        $this->assertEquals([0 => 'ROLE_USER'], $response->getRoles());
     }
 }

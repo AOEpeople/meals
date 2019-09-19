@@ -10,3 +10,15 @@ parameters:
     secret:            ThisTokenIsNotSoSecretChangeIt
 
     hr_email: 'raza.ahmed@aoe.com'
+    paypal_id: 'Acbj_OdOFasvxF6I2mJrrQTMN3vuSE65WbnyRkBBCMF5U32g63sXbCbPflPDA8sMDttBUsbLW7r59OtE'
+    paypal_secret: 'EPdo7UqDZTUjfpeurN0LDrEIptyEs9yYYL6Jb08rPQ7yHcYY0-6vSNyf0OnT3zDDY8JUb4cw52L4zfwZ'
+
+    keycloak_access_token_endpoint: 'https://login.aoe.com/auth/realms/aoe/protocol/openid-connect/token'
+    keycloak_auth_token_endpoint:   'https://login.aoe.com/auth/realms/aoe/protocol/openid-connect/auth'
+    keycloak_logout_endpoint:       'https://login.aoe.com/auth/realms/aoe/protocol/openid-connect/logout'
+    keycloak_user_token_endpoint:   'https://login.aoe.com/auth/realms/aoe/protocol/openid-connect/userinfo'
+    keycloak_openid_server:         'https://login.aoe.com/auth/realms/aoe'
+    keycloak_client_id:             'aoe-meals-staging'
+    keycloak_client_secret:         'd38d66b2-9090-47a8-8ecf-63a607667674'
+
+    env_url:                        'http://www.meals.local'

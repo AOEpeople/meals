@@ -48,6 +48,11 @@ class CostSheetController extends BaseController
                 $userCosts['total'] = '+' . $transactionsPerUser[$username]['amount'];
             }
             $user['costs'] = $userCosts;
+
+            // if total amount is zero, remove user from rendered items
+            if ($userCosts['total'] === '0.0000') {
+                unset($users[$username]);
+            }
         }
 
         return $this->render('MealzAccountingBundle::costSheet.html.twig', array(

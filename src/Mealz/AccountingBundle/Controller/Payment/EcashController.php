@@ -26,8 +26,8 @@ class EcashController extends BaseController
      */
     public function getPaymentFormForProfileAction($profile)
     {
-        /** @var EntityManager $em */
-        $em = $this->getDoctrine()->getManager();
+        /** @var EntityManager $entityManager */
+        $entityManager = $this->getDoctrine()->getManager();
         $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
 
         $profile = $profileRepository->find($profile);
@@ -39,7 +39,7 @@ class EcashController extends BaseController
         }
 
         $form = $this->createForm(
-            new EcashPaymentAdminForm($em),
+            new EcashPaymentAdminForm($entityManager),
             new Transaction(),
             array(
                 'profile' => $profile,
@@ -72,9 +72,11 @@ class EcashController extends BaseController
         $translator = $this->get('translator');
 
         // Check if required fields are set and the pay method is set to PayPal ('paymethod' == 0)
-        if ($request->isMethod('POST') === true && $this->isFormValid($formArray) === true && $this->validatePaypalTransaction($formArray) === 200) {
-
-            $em = $this->getDoctrine()->getManager();
+        if ($request->isMethod('POST') === true
+            && $this->isFormValid($formArray) === true
+            && $this->validatePaypalTransaction($formArray) === 200) {
+            /** @var EntityManager $entityManager */
+            $entityManager = $this->getDoctrine()->getManager();
             $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
             $profile = $profileRepository->find($formArray['ecash[profile]']);
 
@@ -86,12 +88,11 @@ class EcashController extends BaseController
             $transaction->setDate(new \DateTime());
             $transaction->setPaymethod($formArray['ecash[paymethod]']);
 
-            $em->persist($transaction);
-            $em->flush();
+            $entityManager->persist($transaction);
+            $entityManager->flush();
 
             $message = $translator->trans("payment.transaction_history.successful_payment", array(), 'messages');
             $severity = 'success';
-
         } else {
             $message = $translator->trans("payment.transaction_history.payment_failed", array(), 'messages');
             $severity = 'danger';
@@ -122,9 +123,9 @@ class EcashController extends BaseController
      */
     public function validatePaypalTransaction($formArray)
     {
-        $id = $this->container->get('twig')->getGlobals()['paypal_id'];
+        $paypalId = $this->container->get('twig')->getGlobals()['paypal_id'];
         $secret = $this->container->get('twig')->getGlobals()['paypal_secret'];
-        PaypalClient::setCredentials($id, $secret);
+        PaypalClient::setCredentials($paypalId, $secret);
 
         $response = PaypalClient::client()->execute(new OrdersGetRequest($formArray['ecash[orderid]']));
 
@@ -148,5 +149,4 @@ class EcashController extends BaseController
             return false;
         }
     }
-
 }

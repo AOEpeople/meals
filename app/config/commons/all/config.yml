@@ -196,4 +196,4 @@ hwi_oauth:
                 use_bearer_authorization: true
     http_client:
             verify_peer: false
-            ignore_errors: false
+            ignore_errors: true

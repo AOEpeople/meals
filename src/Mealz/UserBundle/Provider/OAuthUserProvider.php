@@ -92,8 +92,8 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
         if ($profile === null) {
             $profile = $this->createProfile(
                 $userInformation->preferred_username,
-                $userInformation->family_name,
-                str_replace(' ', '', explode(',', $userInformation->given_name)[1])
+                str_replace(' ', '', explode(',', $userInformation->given_name)[1]),
+                $userInformation->family_name
             );
         }
 
@@ -165,8 +165,8 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
         $profile = new Profile();
         $profile->setUsername($username);
 
-        $profile->setName($surName);
         $profile->setFirstName($givenName);
+        $profile->setName($surName);
 
         $this->doctrineRegistry->getManager()->persist($profile);
         $this->doctrineRegistry->getManager()->flush();

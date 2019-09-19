@@ -54,7 +54,7 @@
             <tr class="table-row">
                 <td class="table-data transaction-description" colspan="2">{{ 'payment.transaction_history.balance_now'|trans({}, 'messages') }}:</td>
                 <td class="table-data">
-                    <span {% if(balance < 0) %}class="dept"{% endif %}>{{ balance }}€</span>
+                    <span {% if(balance < 0) %}class="dept"{% endif %}>{{ balance|number_format(2, '.', ',') }}€</span>
                 </td>
             </tr>
         </tfoot>

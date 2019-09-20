@@ -69,7 +69,8 @@
         display: none;
       }
 
-      &[name=cash], .settle-account {
+      &[name=cash],
+      .settle-account {
         &::after {
           position: absolute;
           top: -20px;

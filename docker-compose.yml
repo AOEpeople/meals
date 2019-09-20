@@ -9,3 +9,9 @@ services:
       - "9000:9000"
     environment:
       - ENV=devbox
+
+  mailhog:
+      image: mailhog/mailhog
+      ports:
+        - 1025:1025
+        - 8025:8025

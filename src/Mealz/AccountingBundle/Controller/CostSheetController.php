@@ -15,11 +15,11 @@ class CostSheetController extends BaseController
     {
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
-        $participantRepository = $this->getParticipantRepository();
-        $transactionRepository = $this->getDoctrine()->getRepository('MealzAccountingBundle:Transaction');
-        $transactionsPerUser = $transactionRepository->findUserDataAndTransactionAmountForGivenPeriod();
+        $participantRepo = $this->getParticipantRepository();
+        $transactionRepo = $this->getDoctrine()->getRepository('MealzAccountingBundle:Transaction');
+        $transactionsPerUser = $transactionRepo->findUserDataAndTransactionAmountForGivenPeriod();
 
-        $users = $participantRepository->findCostsGroupedByUserGroupedByMonth();
+        $users = $participantRepo->findCostsGroupedByUserGroupedByMonth();
 
         // create column names
         $numberOfMonths = 3;
@@ -86,10 +86,10 @@ class CostSheetController extends BaseController
             $hashCode = str_replace('/', '', crypt($username, $secret));
             $urlEncodedHash = urlencode($hashCode);
 
-            $em = $this->getDoctrine()->getManager();
+            $entityManager = $this->getDoctrine()->getManager();
             $profile->setSettlementHash($hashCode);
-            $em->persist($profile);
-            $em->flush();
+            $entityManager->persist($profile);
+            $entityManager->flush();
 
             $this->sendSettlementRequestMail($profile, $urlEncodedHash);
 
@@ -150,10 +150,25 @@ class CostSheetController extends BaseController
             $transaction->setDate(new \DateTime());
             $transaction->setAmount(-1 * abs(floatval($this->get('mealz_accounting.wallet')->getBalance($profile))));
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($profile);
-            $em->persist($transaction);
-            $em->flush();
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($profile);
+            $entityManager->persist($transaction);
+            $entityManager->flush();
+
+            /**
+             * for devbox situation, if you are not loged in with fake-login
+             * With Keycloak this if condition is not needed anymore
+             */
+            if ($this->getProfile() !== null) {
+                $logger = $this->get('monolog.logger.balance');
+                $logger->addInfo(
+                    '{hr_member} settled {users} Balance.',
+                    [
+                        'hr_member' => $this->getProfile()->getFullName(),
+                        'users' => $profile->getFullName(),
+                    ]
+                );
+            }
 
             $message =
                 $this->get('translator')->trans('payment.costsheet.account_settlement.confirmation.success', array(
@@ -180,7 +195,7 @@ class CostSheetController extends BaseController
     {
         $translator = $this->get('translator');
 
-        $to = $this->getParameter('hr_email');
+        $receiver = $this->getParameter('hr_email');
         $subject = $translator->trans('payment.costsheet.mail.subject', array(), 'messages');
         $body = $translator->trans('payment.costsheet.mail.body', array(
             '%admin%' => $this->getProfile()->getFullName(),
@@ -192,6 +207,6 @@ class CostSheetController extends BaseController
         $headers[] = $translator->trans('mail.sender', array(), 'messages');
         $headers[] = "Content-type: text/plain; charset=utf-8";
 
-        mail($to, $subject, $body, implode("\r\n", $headers));
+        mail($receiver, $subject, $body, implode("\r\n", $headers));
     }
 }

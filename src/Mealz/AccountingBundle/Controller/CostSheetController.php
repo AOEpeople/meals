@@ -170,10 +170,14 @@ class CostSheetController extends BaseController
                 );
             }
 
-            $message = $this->get('translator')->trans('payment.costsheet.account_settlement.confirmation.success');
+            $message =
+                $this->get('translator')->trans('payment.costsheet.account_settlement.confirmation.success', array(
+                    '%fullname%' => $profile->getFullName(),
+                ));
             $severity = 'success';
         } else {
-            $message = $this->get('translator')->trans('payment.costsheet.account_settlement.confirmation.failure');
+            $message =
+                $this->get('translator')->trans('payment.costsheet.account_settlement.confirmation.failure');
             $severity = 'danger';
         }
 

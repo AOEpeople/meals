@@ -3,14 +3,17 @@
 ## Features (User)
 
 ### Meal enrollment
-Sign in with LDAP credentials and select your preferred meals on landing page.
+Sign in with LDAP credentials over Keycloak and select your preferred meals on landing page.
 
 ### Invite guest for a meal
 You need to be signed in with LDAP credentials and you will see small share icon on each day in a week.
 You can send your guest the link and he will be able to enroll for particular day giving his First/Last name and Company information.
 
 ### Transaction history
-You need to be signed in with LDAP credentials and click on your balance. Now you get your Balance from the last day of the last month and a overview of all transaction in the current month.
+Click on your balance. Now you get your Balance from the last day of the last month and a overview of all transaction in the current month.
+
+### PayPal debt payment
+In your transaction history you also can pay your debts with PayPal.
 
 ## Features (Admin)
 
@@ -68,6 +71,7 @@ Lists all users and their outstanding debts. Debts are structured in 6 different
 Total, current month (all debts in this month till current day), one column for each of the last three month,
 all debts before the last three month summed up in one column.
 Additionally you can add a transaction (positive or negative) to a users profile, by clicking on the plus sign.
+Also you can request a account settlement if an employee leaves on the three dots for profiles with a positive amount of money.
 
 ### Accounting book
 **Route:** /accounting/book
@@ -75,6 +79,16 @@ Additionally you can add a transaction (positive or negative) to a users profile
 
 **Description:**
 Lists all transactions booked for users in the last month.
+
+## Features (Finance)
+
+### General
+Finance has access to all user features and the finance tab.
+
+### Dish variations
+**Route:** /accounting/book/finance/list
+**Available at:** Choose "Finace" in finance navigation bar.
+**Actions** Select Date to list all transaction and export as pdf.
 
 ## Installation
 
@@ -127,7 +141,7 @@ sudo ./node_modules/.bin/gulp watch
 
 ### You're done
 
-Point your webbrowser to http://meals.local
+Point your webbrowser to http://www.meals.local
 Don't forget to add to your local hosts file:
 127.0.0.1 www.meals.local meals.local
 
@@ -150,7 +164,7 @@ The following roles are in use:
   * ROLE_KITCHEN_STAFF: allowed to create and edit dishes and meals
   * ROLE_GUEST: for users who is invited for a meal, customers etc.
   * ROLE_ADMIN: for users who is admin
-
+  * ROLE_FINANCE: for users who is finance
 
 ### Test data
 

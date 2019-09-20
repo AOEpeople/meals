@@ -28,7 +28,13 @@
     }
 
     .icon-cell {
-      width: 50px;
+      width: 55px;
+
+      a {
+        display: inline-block;
+        vertical-align: text-top;
+        width: 20px;
+      }
     }
 
     form {
@@ -59,26 +65,42 @@
         }
       }
 
-      .settle-account {
-        display: block;
-        margin-top: 10px;
-        padding: 10px;
-        font-size: 11px;
-        text-align: center;
-      }
-
       .hidden {
         display: none;
       }
 
-      &::after {
-        position: absolute;
-        top: -20px;
-        right: 15%;
-        border: 10px solid transparent;
-        border-bottom-color: $color-gray-light;
-        content: ' ';
-        pointer-events: none;
+      &[name=cash],
+      .settle-account {
+        &::after {
+          position: absolute;
+          top: -20px;
+          right: 22%;
+          border: 10px solid transparent;
+          border-bottom-color: $color-gray-light;
+          content: ' ';
+          pointer-events: none;
+        }
+      }
+
+      &[name=settleform] {
+        padding: 13px 20px;
+      }
+
+      .settle-account {
+        display: block;
+        width: 100%;
+        padding: 7px;
+        font-size: 14px;
+        cursor: pointer;
+
+        &::after {
+          right: 12%;
+        }
+      }
+
+      .settle-account:hover {
+        color: $color-print;
+        text-decoration: underline;
       }
     }
 

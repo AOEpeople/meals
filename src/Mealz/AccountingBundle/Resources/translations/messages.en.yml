@@ -33,17 +33,17 @@ payment:
     account_settlement:
       button: Settle account
       fancybox:
-        message: The account balance of this user will be set to €0.00 Do you want to continue?
+        message: The account balance of this user will be set to € 0.00 Do you want to continue?
         continue: Continue
         cancel: Cancel
       request:
         success: The request for account settlement for %name% has been sent to the HR department.
         failure: The request failed.
       confirmation:
-        message: The account of %fullname% will be settled.
+        message: Are you sure you want to settle account of %fullname%?
         confirm: Confirm
-        success: The request has been confirmed.
+        success: The account settlement of %fullname% was successful.
         failure: The request is invalid or has already been confirmed.
     mail:
       subject: Request for account settlement
-      body: "Hi HR,\n%admin% requested an account settlement for %fullname%.\nClick on the following link to confirm it:\n%link%"
+      body: "Hi HR,\n\n%admin% requested an account settlement for %fullname%.\nClick on the following link to confirm it:\n\n%link%"

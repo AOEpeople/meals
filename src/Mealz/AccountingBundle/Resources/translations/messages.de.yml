@@ -33,17 +33,17 @@ payment:
     account_settlement:
       button: Konto ausgleichen
       fancybox:
-        message: Der Kontostand dieses Nutzers wird auf 0,00€ gesetzt. Möchtest Du fortfahren?
+        message: Der Kontostand dieses Nutzers wird auf 0,00 € gesetzt. Möchtest Du fortfahren?
         continue: Fortfahren
         cancel: Abbrechen
       request:
         success: Die Anfrage auf einen Kontoausgleich für %name% wurde an die HR-Abteilung gesendet.
         failure: Die Anfrage ist fehlgeschlagen.
       confirmation:
-        message: Das Konto von %fullname% wird ausgeglichen.
+        message: Sind Sie sicher, dass Sie das Konto von %fullname% ausgleichen möchten?
         confirm: Bestätigen
-        success: Die Anfrage wurde bestätigt.
+        success: Der Ausgleich des Kontos von %fullname% war erfolgreich.
         failure: Die Anfrage ist ungültig oder wurde bereits bestätigt.
     mail:
       subject: Anfrage auf Kontoausgleich
-      body: "Hallo HR,\n%admin% hat einen Kontoausgleich für %fullname% beantragt.\nKlick auf den folgenden Link, um es zu bestätigen:\n%link%"
+      body: "Hallo HR,\n\n%admin% hat einen Kontoausgleich für %fullname% beantragt.\nKlick auf den folgenden Link, um es zu bestätigen:\n\n%link%"

@@ -44,6 +44,10 @@ mealz_accounting_payment_cash_form:
     path: /payment/cash/form/{profile}
     defaults: { _controller: "MealzAccountingBundle:Payment\\Cash:getPaymentFormForProfile" }
 
+mealz_accounting_payment_settlement_form:
+    path: /payment/settlement/form/{profile}
+    defaults: { _controller: "MealzAccountingBundle:Payment\\Cash:getSettlementFormForProfile" }
+
 mealz_accounting_payment_ecash_form:
     path: /payment/ecash/form/{profile}
     defaults: { _controller: "MealzAccountingBundle:Payment\\Ecash:getPaymentFormForProfile" }

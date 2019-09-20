@@ -13,9 +13,25 @@ Mealz.prototype.initAjaxForms = function () {
     $('.load-payment-form').on('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
+
         that.loadAjaxFormPayment($(this));
 
-        if ($('form[name="cash"]').length >= 1) {
+        var thisParent = $(this).parent();
+        var formsRendered = thisParent.children('form');
+
+        // remove other Payment Forms opened
+        if(formsRendered.length > 0) {
+            $(document).mouseup(function(e){
+                // if the target of the click isn't the container
+                // nor a descendant of the container
+                if (formsRendered.is(e.target) === false &&
+                    formsRendered.has(e.target).length === 0) {
+                        formsRendered.remove();
+                }
+            });
+        }
+
+        if ($('form[name="settleform"]').length >= 1) {
             settleAccount();
         }
 

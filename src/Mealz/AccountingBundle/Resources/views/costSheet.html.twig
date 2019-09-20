@@ -50,6 +50,15 @@
                             'load-payment-form transparent',
                             'glyphicon-plus'
                         ) }}
+                        {% if user.costs.total > 0 %}
+                            {{ MealzButton.link(
+                                path('mealz_accounting_payment_settlement_form', {profile: username}),
+                                '',
+                                '',
+                                'load-payment-form load-settlement-form transparent',
+                                'glyphicon-option-vertical'
+                            ) }}
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}

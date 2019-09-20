@@ -24,12 +24,12 @@ class CashController extends BaseController
      */
     public function getPaymentFormForProfileAction($profile)
     {
-        if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
+        if ($this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF') === false) {
             throw new AccessDeniedException();
         }
 
-        /** @var EntityManager $em */
-        $em = $this->getDoctrine()->getManager();
+        /** @var EntityManager $entityManager */
+        $entityManager = $this->getDoctrine()->getManager();
         $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
 
         $profile = $profileRepository->find($profile);
@@ -37,7 +37,7 @@ class CashController extends BaseController
         $profileBalance = $this->get('mealz_accounting.wallet')->getBalance($profile);
 
         $form = $this->createForm(
-            new CashPaymentAdminForm($em),
+            new CashPaymentAdminForm($entityManager),
             new Transaction(),
             array(
                 'action' => $action,
@@ -58,19 +58,45 @@ class CashController extends BaseController
     }
 
     /**
+     * @param Profile $profile
+     * @return JsonResponse
+     */
+    public function getSettlementFormForProfileAction($profile)
+    {
+        if ($this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF') === false) {
+            throw new AccessDeniedException();
+        }
+
+        $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
+
+        $profile = $profileRepository->find($profile);
+        $profileBalance = $this->get('mealz_accounting.wallet')->getBalance($profile);
+
+        $template = "MealzAccountingBundle:Accounting/Payment/Cash:form_cash_settlement.html.twig";
+        $renderedForm = $this->render(
+            $template,
+            array(
+                'profile' => $profile
+            )
+        );
+
+        return new JsonResponse($renderedForm->getContent());
+    }
+
+    /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function paymentFormHandlingAction(Request $request)
     {
-        if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
+        if ($this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF') === false) {
             throw new AccessDeniedException();
         }
 
-        /** @var EntityManager $em */
-        $em = $this->getDoctrine()->getManager();
+        /** @var EntityManager $entityManager */
+        $entityManager = $this->getDoctrine()->getManager();
         $transaction = new Transaction();
-        $form = $this->createForm(new CashPaymentAdminForm($em), $transaction);
+        $form = $this->createForm(new CashPaymentAdminForm($entityManager), $transaction);
 
         // handle form submission
         if ($request->isMethod('POST')) {
@@ -78,9 +104,9 @@ class CashController extends BaseController
 
             if ($form->isValid()) {
                 if ($transaction->getAmount() > 0) {
-                    $em = $this->getDoctrine()->getManager();
-                    $em->persist($transaction);
-                    $em->flush();
+                    $entityManager = $this->getDoctrine()->getManager();
+                    $entityManager->persist($transaction);
+                    $entityManager->flush();
 
                     $message = $this->get('translator')->trans(
                         'payment.cash.success',

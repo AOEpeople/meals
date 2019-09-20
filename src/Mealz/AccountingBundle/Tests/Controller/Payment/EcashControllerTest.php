@@ -105,9 +105,12 @@ class EcashControllerTest extends AbstractControllerTestCase
             array(),
             array(),
             array(),
-            '[{"name":"ecash[profile]","value":"alice"},{"name":"ecash[orderid]","value":"52T16708K70721706"},' .
-            '{"name":"ecash[amount]","value":"5,23"},{"name":"ecash[paymethod]","value":"0"},{"name":"ecash[_token]",' .
-            '"value":"4xEN3hEBs29aFJRFtucTATjBI-iEjdrot4kdT1hRl18"}]'
+            '[' .
+            '{"name":"ecash[profile]","value":"alice"},' .
+            '{"name":"ecash[orderid]","value":"52T16708K70721706"},' .
+            '{"name":"ecash[amount]","value":"5,23"},' .
+            '{"name":"ecash[paymethod]","value":"0"},' .
+            '{"name":"ecash[_token]","value":"4xEN3hEBs29aFJRFtucTATjBI-iEjdrot4kdT1hRl18"}]'
         );
 
         // Create expected response

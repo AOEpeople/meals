@@ -162,9 +162,9 @@ class CostSheetController extends BaseController
             if ($this->getProfile() !== null) {
                 $logger = $this->get('monolog.logger.balance');
                 $logger->addInfo(
-                    '{finance_member} settled {users} Balance.',
+                    '{hr_member} settled {users} Balance.',
                     [
-                        'finance_member' => $this->getProfile()->getFullName(),
+                        'hr_member' => $this->getProfile()->getFullName(),
                         'users' => $profile->getFullName(),
                     ]
                 );

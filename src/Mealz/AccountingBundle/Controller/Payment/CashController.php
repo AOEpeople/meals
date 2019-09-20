@@ -58,6 +58,7 @@ class CashController extends BaseController
     }
 
     /**
+     * Renders the settlement overlay
      * @param Profile $profile
      * @return JsonResponse
      */

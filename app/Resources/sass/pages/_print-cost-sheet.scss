@@ -69,7 +69,7 @@
         display: none;
       }
 
-      &[name=cash] {
+      &[name=cash], .settle-account {
         &::after {
           position: absolute;
           top: -20px;
@@ -93,13 +93,7 @@
         cursor: pointer;
 
         &::after {
-          position: absolute;
-          top: -20px;
           right: 12%;
-          border: 10px solid transparent;
-          border-bottom-color: $color-gray-light;
-          content: ' ';
-          pointer-events: none;
         }
       }
 

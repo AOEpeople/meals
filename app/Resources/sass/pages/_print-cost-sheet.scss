@@ -28,11 +28,12 @@
     }
 
     .icon-cell {
-      width: 80px;
+      width: 55px;
 
-      .load-settlement-form {
-        position: absolute;
-        margin-left: 10px;
+      a {
+        display: inline-block;
+        vertical-align: text-top;
+        width: 20px;
       }
     }
 
@@ -80,15 +81,21 @@
         }
       }
 
+      &[name=settleform] {
+        padding: 13px 20px;
+      }
+
       .settle-account {
         display: block;
         font-size: 14px;
         cursor: pointer;
+        width: 100%;
+        padding: 7px;
 
         &::after {
           position: absolute;
           top: -20px;
-          right: 13%;
+          right: 12%;
           border: 10px solid transparent;
           border-bottom-color: $color-gray-light;
           content: ' ';

@@ -155,10 +155,14 @@ class CostSheetController extends BaseController
             $em->persist($transaction);
             $em->flush();
 
-            $message = $this->get('translator')->trans('payment.costsheet.account_settlement.confirmation.success');
+            $message =
+                $this->get('translator')->trans('payment.costsheet.account_settlement.confirmation.success', array(
+                    '%fullname%' => $profile->getFullName(),
+                ));
             $severity = 'success';
         } else {
-            $message = $this->get('translator')->trans('payment.costsheet.account_settlement.confirmation.failure');
+            $message =
+                $this->get('translator')->trans('payment.costsheet.account_settlement.confirmation.failure');
             $severity = 'danger';
         }
 
@@ -188,6 +192,6 @@ class CostSheetController extends BaseController
         $headers[] = $translator->trans('mail.sender', array(), 'messages');
         $headers[] = "Content-type: text/plain; charset=utf-8";
 
-        mail($to, $subject, $body, implode("\r\n",$headers));
+        mail($to, $subject, $body, implode("\r\n", $headers));
     }
 }

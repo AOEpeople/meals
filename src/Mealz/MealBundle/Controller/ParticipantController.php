@@ -30,7 +30,8 @@ class ParticipantController extends BaseController
         }
 
         $meal = $participant->getMeal();
-        if ($this->getProfile() !== $participant->getProfile() && ($this->getDoorman()->isKitchenStaff()) === false || !$this->getDoorman()->isUserAllowedToLeave($meal)) {
+        if ($this->getDoorman()->isUserAllowedToLeave($meal) === false &&
+            ($this->getProfile() === $participant->getProfile() || $this->getDoorman()->isKitchenStaff() === false)) {
             return new JsonResponse(null, 403);
         }
 

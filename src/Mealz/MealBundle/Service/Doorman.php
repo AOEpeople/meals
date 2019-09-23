@@ -98,7 +98,7 @@ class Doorman
      */
     public function isUserAllowedToSwap(Meal $meal)
     {
-        if ($meal->getDay()->getLockParticipationDateTime()->getTimestamp() < $this->now && $this->now < $meal->getDateTime()->getTimestamp() === true) {
+        if ($meal->getDay()->getLockParticipationDateTime()->getTimestamp() < $this->now && $this->now < $meal->getDateTime()->getTimestamp()) {
             return TRUE;
         } else {
             return FALSE;

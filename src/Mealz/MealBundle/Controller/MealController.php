@@ -71,7 +71,7 @@ class MealController extends BaseController
      */
     public function joinAction($date, $dish, $profile)
     {
-            $meal = $this->getMealRepository()->findOneByDateAndDish($date, $dish);
+        $meal = $this->getMealRepository()->findOneByDateAndDish($date, $dish);
 
         if ($this->getUser() === null) {
             return $this->ajaxSessionExpiredRedirect();
@@ -81,7 +81,9 @@ class MealController extends BaseController
             return new JsonResponse(null, 404);
         }
 
-        if ($this->getDoorman()->isUserAllowedToJoin($meal) === false && $this->getDoorman()->isUserAllowedToSwap($meal) === false) {
+        if ($this->getDoorman()->isUserAllowedToJoin($meal) === false
+            && $this->getDoorman()->isUserAllowedToSwap($meal) === false
+            && $this->getDoorman()->isKitchenStaff() === false) {
             return new JsonResponse(null, 403);
         }
 
@@ -96,8 +98,9 @@ class MealController extends BaseController
             }
         }
 
-        // Joining the meal by creating a new participant.
-        if ($this->getDoorman()->isUserAllowedToJoin($meal) === true) {
+        // Either the user is allowed to join a meal or the user is an admin, creating a participation for another user
+        if ($this->getDoorman()->isUserAllowedToJoin($meal) === true
+            || ($this->getDoorman()->isKitchenStaff() === true && $this->getProfile()->getUsername() !== $profile->getUsername())) {
             try {
                 $participant = new Participant();
                 $participant->setProfile($profile);
@@ -343,7 +346,7 @@ class MealController extends BaseController
     /**
      * Gets the guest invitation URL.
      *
-     * @param  Day $mealDay Meal day for which to generate the invitation.
+     * @param Day $mealDay Meal day for which to generate the invitation.
      * @ParamConverter("mealDay", options={"mapping": {"dayId": "id"}})
      *
      * @return JsonResponse

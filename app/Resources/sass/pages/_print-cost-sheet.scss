@@ -74,7 +74,7 @@
         &::after {
           position: absolute;
           top: -20px;
-          right: 22%;
+          right: 22.5%;
           border: 10px solid transparent;
           border-bottom-color: $color-gray-light;
           content: ' ';
@@ -94,7 +94,7 @@
         cursor: pointer;
 
         &::after {
-          right: 12%;
+          right: 10.5%;
         }
       }
 

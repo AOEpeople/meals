@@ -11,7 +11,6 @@ ini_set('display_startup_errors', '1');
 
 class PaypalClient
 {
-
     private static $clientId = null;
     private static $clientSecret = null;
 
@@ -38,12 +37,12 @@ class PaypalClient
 
     /**
      * Set the PayPal client credentials to be used in the environment() function.
-     * @param $id
+     * @param $identifier
      * @param $secret
      */
-    public static function setCredentials($id, $secret)
+    public static function setCredentials($identifier, $secret)
     {
-        self::$clientId = $id;
+        self::$clientId = $identifier;
         self::$clientSecret = $secret;
     }
 }

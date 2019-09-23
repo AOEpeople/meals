@@ -125,8 +125,8 @@ class EcashControllerTest extends AbstractControllerTestCase
         $this->assertEquals($expectedResponse, $actualResponse);
 
         // Check database entry
-        $transactionRepository = $this->getDoctrine()->getRepository('MealzAccountingBundle:Transaction');
-        $entry = $transactionRepository->findBy(array('profile' => 'alice'), array('id' => 'DESC'));
+        $transactionRepo = $this->getDoctrine()->getRepository('MealzAccountingBundle:Transaction');
+        $entry = $transactionRepo->findBy(array('profile' => 'alice'), array('id' => 'DESC'));
 
         $this->assertEquals('52T16708K70721706', $entry[0]->getOrderId());
         $this->assertEquals(5.23, $entry[0]->getAmount());

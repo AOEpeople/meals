@@ -88,7 +88,7 @@ class LoadDishes extends AbstractFixture implements OrderedFixtureInterface
     protected function addDish($title, $titleDe)
     {
         $dish = new Dish();
-        $dish->setPrice(3.20);
+        $dish->setPrice(3.40);
         $dish->setTitleEn($title);
         $dish->setTitleDe($titleDe);
         $dish->setDescriptionEn('Description - '.$title);
@@ -98,5 +98,4 @@ class LoadDishes extends AbstractFixture implements OrderedFixtureInterface
         $this->objectManager->persist($dish);
         $this->addReference('dish-'.$this->counter++, $dish);
     }
-
 }

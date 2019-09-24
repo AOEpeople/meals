@@ -2,6 +2,7 @@
 
 namespace Mealz\MealBundle\Entity;
 
+use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -16,6 +17,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({"dish" = "Dish", "dish_variation" = "DishVariation"})
+ * @ORM\HasLifecycleCallbacks()
  *
  */
 class Dish
@@ -114,6 +116,30 @@ class Dish
      * @var Dish
      */
     protected $parent = null;
+
+    /**
+     * The entityManager of the class
+     * @var EntityManager
+     */
+    protected $entityManager;
+
+    /**
+     * Holds isNew FLag without storing in Database. Default true
+     * @var bool
+     */
+    protected $isNew = true;
+
+    /**
+     * Needed to get EntityManager
+     *
+     * @ORM\PostLoad @ORM\PostPersist
+     *
+     * @param \Doctrine\Common\Persistence\Event\LifecycleEventArgs $args The arguments
+     */
+    public function fetchEntityManager(LifecycleEventArgs $args)
+    {
+        $this->entityManager = ($args->getEntityManager());
+    }
 
     /**
      * @return Dish
@@ -350,5 +376,51 @@ class Dish
     public function hasVariations()
     {
         return (count($this->variations) > 0);
+    }
+
+    /**
+     * Checks if the dish has variations.
+     *
+     * @return bool
+     */
+    public function isNew()
+    {
+        // Only way to get Config-Parameters in an entity
+        global $kernel;
+
+        if ('AppCache' == get_class($kernel)) {
+            $kernel = $kernel->getKernel();
+        }
+
+        $dishRepository = $this->entityManager->getRepository('MealzMealBundle:Dish');
+
+        if ($dishRepository === null || $kernel === null) {
+            return;
+        }
+        $newFlagCounter = $kernel->getContainer()->getParameter('mealz.meal.new_flag_counter');
+        $newSearchTimestamp = $kernel->getContainer()->getParameter('mealz.meal.search_timestamp');
+
+        if (is_int($newFlagCounter) === false) {
+            $newFlagCounter = 2;
+        }
+
+        if ($newSearchTimestamp === null) {
+            $newSearchTimestamp = '2000-01-01';
+        }
+
+        if ($dishRepository->countNumberDishWasTaken($this, $newSearchTimestamp) >= $newFlagCounter) {
+            $this->setIsNew(false);
+        }
+        return $this->isNew;
+    }
+
+    /**
+     * Checks if the dish has variations.
+     *
+     * @return bool
+     */
+    public function setIsNew($isNew)
+    {
+        $this->isNew = $isNew;
     }
 }

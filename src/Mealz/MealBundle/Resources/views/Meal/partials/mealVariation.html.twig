@@ -13,7 +13,11 @@
                 </div>
             {% endif %}
             <div class="variation-row">
-                <div class="text text-variation">{{ dish.title }}</div>
+                <div class="text text-variation">{{ dish.title }}
+                    {% if dish.isNew %}
+                        <span class="new-flag">{{ 'content.participation.dish.new'|trans({},'general') }}</span>
+                    {% endif %}
+                </div>
                 {% include 'MealzMealBundle:Meal/partials:mealActions.html.twig' %}
             </div>
         {% endfor %}

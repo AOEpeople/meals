@@ -45,6 +45,7 @@ content:
       no_service: No service!
     dish:
       no_description: No description
+      new: New!
     legend:
       available: Available
       unavailable: Unavailable for order

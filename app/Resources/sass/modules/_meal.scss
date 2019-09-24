@@ -161,6 +161,15 @@
       margin-bottom: 5px;
       font-weight: bold;
       font-family: $font-bold;
+      line-height: 1.5;
+    }
+
+    .text .new-flag {
+      padding: 2px 7px;
+      color: $color-gray-lighter;
+      background-color: $color-red;
+      font-weight: bold;
+      line-height: 1;
     }
   }
 
@@ -308,7 +317,8 @@
     }
 
     &.participation-limit-reached {
-      background-color: $color-red;
+      background-color: $color-gray-secondary;
+      opacity: .3;
     }
 
     &.participation-allowed {

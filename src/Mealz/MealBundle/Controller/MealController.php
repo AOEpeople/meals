@@ -42,6 +42,7 @@ class MealController extends BaseController
         $weekRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Week');
 
         $currentWeek = $weekRepository->getCurrentWeek();
+
         if (null === $currentWeek) {
             $currentWeek = $this->createEmptyNonPersistentWeek(new \DateTime());
         }
@@ -71,7 +72,7 @@ class MealController extends BaseController
      */
     public function joinAction($date, $dish, $profile)
     {
-            $meal = $this->getMealRepository()->findOneByDateAndDish($date, $dish);
+        $meal = $this->getMealRepository()->findOneByDateAndDish($date, $dish);
 
         if ($this->getUser() === null) {
             return $this->ajaxSessionExpiredRedirect();
@@ -119,14 +120,14 @@ class MealController extends BaseController
             $ajaxResponse = new JsonResponse();
             $ajaxResponse->setData(
                 array(
-                    'participantsCount' => $meal->getParticipants()->count(),
-                    'url' => $this->generateUrl(
-                        'MealzMealBundle_Participant_delete',
-                        array(
-                            'participant' => $participant->getId(),
-                        )
-                    ),
-                    'actionText' => $this->get('translator')->trans('added', array(), 'action'),
+                'participantsCount' => $meal->getParticipants()->count(),
+                'url' => $this->generateUrl(
+                    'MealzMealBundle_Participant_delete',
+                    array(
+                        'participant' => $participant->getId(),
+                    )
+                ),
+                'actionText' => $this->get('translator')->trans('added', array(), 'action'),
                 )
             );
             return $ajaxResponse;
@@ -137,9 +138,9 @@ class MealController extends BaseController
             $logger->addInfo(
                 'admin added {profile} to {meal} (Participant: {participantId})',
                 array(
-                    "participantId" => $participant->getId(),
-                    "profile" => $participant->getProfile(),
-                    "meal" => $meal,
+                "participantId" => $participant->getId(),
+                "profile" => $participant->getProfile(),
+                "meal" => $meal,
                 )
             );
         }
@@ -168,10 +169,12 @@ class MealController extends BaseController
             $em = $this->getDoctrine()->getManager();
             $em->flush();
 
-            $chefbotMessage = $translator->transChoice($this->get('translator')->trans('mattermost.offer_taken', array(), 'messages'),
-                $counter, array(
-                    '%counter%' => $counter,
-                    '%takenOffer%' => $takenOffer
+            $chefbotMessage = $translator->transChoice(
+                $this->get('translator')->trans('mattermost.offer_taken', array(), 'messages'),
+                $counter,
+                array(
+                '%counter%' => $counter,
+                '%takenOffer%' => $takenOffer
                 )
             );
 
@@ -181,14 +184,14 @@ class MealController extends BaseController
             $ajaxResponse = new JsonResponse();
             $ajaxResponse->setData(
                 array(
-                    'participantsCount' => $meal->getParticipants()->count(),
-                    'url' => $this->generateUrl(
-                        'MealzMealBundle_Participant_swap',
-                        array(
-                            'participant' => $participant->getId(),
-                        )
-                    ),
-                    'actionText' => $this->get('translator')->trans('added', array(), 'actions'),
+                'participantsCount' => $meal->getParticipants()->count(),
+                'url' => $this->generateUrl(
+                    'MealzMealBundle_Participant_swap',
+                    array(
+                        'participant' => $participant->getId(),
+                    )
+                ),
+                'actionText' => $this->get('translator')->trans('added', array(), 'actions'),
                 )
             );
 
@@ -210,11 +213,11 @@ class MealController extends BaseController
         foreach ($meals as $meal) {
             if ($this->getDoorman()->isUserAllowedToSwap($meal) === true) {
                 $mealsArray[$meal->getId()] =
-                    array(
-                        $this->getDoorman()->isOfferAvailable($meal),
-                        date_format($meal->getDateTime(), 'Y-m-d'),
-                        $meal->getDish()->getSlug()
-                    );
+                array(
+                    $this->getDoorman()->isOfferAvailable($meal),
+                    date_format($meal->getDateTime(), 'Y-m-d'),
+                    $meal->getDish()->getSlug()
+                );
             }
         }
 
@@ -232,8 +235,9 @@ class MealController extends BaseController
      */
     public function guestAction(Request $request, $hash)
     {
-        $guestInvitationRepository = $this->getDoctrine()->getRepository('MealzMealBundle:GuestInvitation');
-        $guestInvitation = $guestInvitationRepository->find($hash);
+        $guestInvitationRepo =
+        $this->getDoctrine()->getRepository('MealzMealBundle:GuestInvitation');
+        $guestInvitation = $guestInvitationRepo->find($hash);
 
         if (null === $guestInvitation) {
             throw new NotFoundHttpException();
@@ -263,8 +267,8 @@ class MealController extends BaseController
                 // Try to load already existing profile entity.
                 $loadedProfile = $this->getDoctrine()->getRepository('MealzUserBundle:Profile')->find($profileId);
 
-                $em = $this->getDoctrine()->getManager();
-                $em->getConnection()->beginTransaction(); // suspend auto-commit
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->getConnection()->beginTransaction(); // suspend auto-commit
                 try {
                     // If profile already exists: use it. Otherwise create new one.
                     if ($loadedProfile) {
@@ -293,15 +297,15 @@ class MealController extends BaseController
                         $participation->setProfile($profile);
                         $participation->setCostAbsorbed(true);
                         $participation->setMeal($meal);
-                        $em->persist($participation);
+                        $entityManager->persist($participation);
                     }
-                    $em->persist($profile);
-                    $em->flush();
-                    $em->getConnection()->commit();
+                    $entityManager->persist($profile);
+                    $entityManager->flush();
+                    $entityManager->getConnection()->commit();
                     $message = $translator->trans("participation.successful", [], 'messages');
                     $this->addFlashMessage($message, 'success');
                 } catch (Exception $e) {
-                    $em->getConnection()->rollBack();
+                    $entityManager->getConnection()->rollBack();
 
                     if ($e instanceof ParticipantNotUniqueException) {
                         $message = $translator->trans("error.participation.not_unique", [], 'messages');
@@ -323,7 +327,7 @@ class MealController extends BaseController
         return $this->render(
             'MealzMealBundle:Meal:guest.html.twig',
             array(
-                'form' => $form->createView(),
+            'form' => $form->createView(),
             )
         );
     }
@@ -352,9 +356,9 @@ class MealController extends BaseController
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
-        /** @var \Mealz\MealBundle\Entity\GuestInvitationRepository $guestInvitationRepository */
-        $guestInvitationRepository = $this->getDoctrine()->getRepository('MealzMealBundle:GuestInvitation');
-        $guestInvitation = $guestInvitationRepository->findOrCreateInvitation($this->getUser()->getProfile(), $mealDay);
+        /** @var \Mealz\MealBundle\Entity\GuestInvitationRepository $guestInvitationRepo */
+        $guestInvitationRepo = $this->getDoctrine()->getRepository('MealzMealBundle:GuestInvitation');
+        $guestInvitation = $guestInvitationRepo->findOrCreateInvitation($this->getUser()->getProfile(), $mealDay);
 
         return new JsonResponse(
             $this->generateUrl(

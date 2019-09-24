@@ -54,7 +54,8 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface
      */
     protected $counter = 0;
 
-    function load(ObjectManager $manager) {
+    public function load(ObjectManager $manager)
+    {
         $this->objectManager = $manager;
         $this->loadDishes();
         $this->loadDays();
@@ -182,6 +183,5 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface
         } while ($dish === $previousDish);
 
         return $dish;
-
     }
 }

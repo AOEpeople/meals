@@ -16,7 +16,6 @@ use Mealz\MealBundle\Service\Doorman;
 use Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 
-
 /**
  * Meal controller test.
  *
@@ -53,7 +52,8 @@ class MealControllerTest extends AbstractControllerTestCase
      * First case: An user accepts an available offer.
      * @test
      */
-    public function acceptAvailableOffer() {
+    public function acceptAvailableOffer()
+    {
         $userProfile = $this->getUserProfile();
         $this->loginAsDefaultClient($userProfile);
 
@@ -81,7 +81,8 @@ class MealControllerTest extends AbstractControllerTestCase
      * Second case: There are two offers and the user accepts one and automatically takes the one, that was offered earlier.
      * @test
      */
-    public function acceptFirstOffer() {
+    public function acceptFirstOffer()
+    {
         $userProfile = $this->getUserProfile();
         $this->loginAsDefaultClient($userProfile);
 
@@ -125,7 +126,8 @@ class MealControllerTest extends AbstractControllerTestCase
      * Third case: An user tries to accept an outdated offer.
      * @test
      */
-    public function acceptOutdatedOffer() {
+    public function acceptOutdatedOffer()
+    {
         $userProfile = $this->getUserProfile();
         $this->loginAsDefaultClient($userProfile);
 
@@ -170,7 +172,7 @@ class MealControllerTest extends AbstractControllerTestCase
         foreach ($dataProvider as $dataRow) {
             // Call controller actionxxxx
             $slug = $dataRow[1]->getDish()->getSlug();
-            $this->client->request('GET', '/menu/$dataRow[0]/$slug/join/$username');
+            $this->client->request('GET', "/menu/$dataRow[0]/$slug/join/$username");
 
             // Verify if enrollment is successful
             $mealParticipants = $this->getMealParticipants($dataRow[1]);
@@ -288,9 +290,10 @@ class MealControllerTest extends AbstractControllerTestCase
         ];
     }
 
-    /**     * Gets the next available meal.
-     *
+    /**
+     * Gets the next available meal.
      * @return Meal
+     * @test
      */
     private function getAvailableMeal()
     {
@@ -320,6 +323,43 @@ class MealControllerTest extends AbstractControllerTestCase
     }
 
     /**
+     * Tests if the new FLag is rendered on old Meal
+     * @test
+     */
+    public function testNoNewFlagFromOldMeal()
+    {
+        $availableMeal = null;
+
+        /** @var \Mealz\MealBundle\Entity\MealRepository $mealRepository */
+        $mealRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
+        $criteria = Criteria::create();
+
+        // get meal newer than today
+        $meals = $mealRepository->matching($criteria->where(Criteria::expr()->gte('dateTime', new \DateTime())));
+
+        if ($meals->count() > 0) {
+            /** @var Doorman $doorman */
+            $doorman = $this->client->getContainer()->get('mealz_meal.doorman');
+            foreach ($meals as $meal) {
+                if ($doorman->isToggleParticipationAllowed($meal->getDateTime())) {
+                    $availableMeal = $meal;
+                    break;
+                }
+            }
+        }
+
+        // Test if No new span is in meals
+        $crawler = $this->client->request('GET', '/');
+        $this->assertTrue($this->client->getResponse()->isSuccessful());
+
+        $flag = $crawler->filterXPath('//span[@class="new-flag"]')->getNode(0);
+
+        if ($flag !== null) {
+            $this->fail('Flag found, but no expected');
+        }
+    }
+
+    /**
      * Gets all the participants for a meal.
      *
      * @param  Meal $meal Meal instance
@@ -327,9 +367,9 @@ class MealControllerTest extends AbstractControllerTestCase
      */
     private function getMealParticipants($meal)
     {
-        /** @var \Mealz\MealBundle\Entity\ParticipantRepository $participantRepository */
-        $participantRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Participant');
-        $participants = $participantRepository->findBy(['meal' => $meal->getId()]);
+        /** @var \Mealz\MealBundle\Entity\ParticipantRepository $participantRepo */
+        $participantRepo = $this->getDoctrine()->getRepository('MealzMealBundle:Participant');
+        $participants = $participantRepo->findBy(['meal' => $meal->getId()]);
 
         return $participants;
     }

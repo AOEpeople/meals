@@ -40,10 +40,10 @@ payment:
         success: Die Anfrage auf einen Kontoausgleich für %name% wurde an die HR-Abteilung gesendet.
         failure: Die Anfrage ist fehlgeschlagen.
       confirmation:
-        message: Sind Sie sicher, dass Sie das Konto von %fullname% ausgleichen möchten?
+        message: Bist du sicher, dass das Konto von %fullname% ausgeglichen werden soll?
         confirm: Bestätigen
         success: Der Ausgleich des Kontos von %fullname% war erfolgreich.
         failure: Die Anfrage ist ungültig oder wurde bereits bestätigt.
     mail:
       subject: Anfrage auf Kontoausgleich
-      body: "Hallo HR,\n\n%admin% hat einen Kontoausgleich für %fullname% beantragt.\nKlick auf den folgenden Link, um es zu bestätigen:\n\n%link%"
+      body: "Hallo HR,\n\n%admin% hat einen Kontoausgleich für %fullname% beantragt.\nKlicke auf den folgenden Link, um die Anfrage zu bestätigen:\n\n%link%"

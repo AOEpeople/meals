@@ -69,17 +69,18 @@
         display: none;
       }
 
-      &[name=cash],
-      .settle-account {
-        &::after {
-          position: absolute;
-          top: -20px;
-          right: 22.5%;
-          border: 10px solid transparent;
-          border-bottom-color: $color-gray-light;
-          content: ' ';
-          pointer-events: none;
-        }
+      &::after {
+        position: absolute;
+        top: -20px;
+        right: 22.5%;
+        border: 10px solid transparent;
+        border-bottom-color: $color-gray-light;
+        content: ' ';
+        pointer-events: none;
+      }
+
+      &[name=settleform]::after {
+        right: 10.5%;
       }
 
       &[name=settleform] {
@@ -92,10 +93,6 @@
         padding: 7px;
         font-size: 14px;
         cursor: pointer;
-
-        &::after {
-          right: 10.5%;
-        }
       }
 
       .settle-account:hover {

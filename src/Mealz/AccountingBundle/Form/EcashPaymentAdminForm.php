@@ -22,16 +22,16 @@ class EcashPaymentAdminForm extends AbstractType
     /**
      * @var EntityManager
      */
-    protected $em;
+    protected $entityManager;
 
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManager $entityManager)
     {
-        $this->em = $em;
+        $this->entityManager = $entityManager;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $profileTransformer = new ProfileToStringTransformer($this->em);
+        $profileTransformer = new ProfileToStringTransformer($this->entityManager);
 
         /**
         * if more Paymentmethodsare available remove 'data' => 0 from paymehtod

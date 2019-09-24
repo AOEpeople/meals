@@ -71,7 +71,8 @@ Lists all users and their outstanding debts. Debts are structured in 6 different
 Total, current month (all debts in this month till current day), one column for each of the last three month,
 all debts before the last three month summed up in one column.
 Additionally you can add a transaction (positive or negative) to a users profile, by clicking on the plus sign.
-Also you can request a account settlement if an employee leaves on the three dots for profiles with a positive amount of money.
+Also you can request an account settlement if an employee leaves. You can find the 3 dots button right beside the add transaction icon. You can only settle accounts with a positive amount of money.
+The log for account settlements is in the app/logs Folder.
 
 ### Accounting book
 **Route:** /accounting/book

@@ -395,7 +395,7 @@ class Dish
         $dishRepository = $this->entityManager->getRepository('MealzMealBundle:Dish');
 
         if ($dishRepository === null || $kernel === null) {
-            return;
+            return $this->isNew;
         }
         $newFlagCounter = $kernel->getContainer()->getParameter('mealz.meal.new_flag_counter');
         $newSearchTimestamp = $kernel->getContainer()->getParameter('mealz.meal.search_timestamp');

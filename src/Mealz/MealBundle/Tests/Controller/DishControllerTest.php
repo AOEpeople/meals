@@ -58,12 +58,12 @@ class DishAbstractControllerTest extends AbstractControllerTestCase
         );
 
         // Call controller action
-        $m = $this->client->request('POST', '/dish/new', $form);
+        $this->client->request('POST', '/dish/new', $form);
 
         // Get persisted entity
-        /** @var EntityManager $em */
-        $em = $this->client->getContainer()->get('doctrine')->getManager();
-        $dishRepository = $em->getRepository('MealzMealBundle:Dish');
+        /** @var EntityManager $entityManager */
+        $entityManager = $this->client->getContainer()->get('doctrine')->getManager();
+        $dishRepository = $entityManager->getRepository('MealzMealBundle:Dish');
         $dish = $dishRepository->findOneBy(
             array(
                 'title_de' => 'dish-form-title-de',
@@ -199,6 +199,42 @@ class DishAbstractControllerTest extends AbstractControllerTestCase
     {
         $this->client->request('GET', '/dish/non-existing-dish/delete');
         $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
+    }
+
+    /**
+     * Test creating a new dish
+     * @test
+     */
+    public function testIfDishIsNew()
+    {
+        // Create form data
+        $form['dish'] = array(
+            'title_de' => 'dish-form-title-de',
+            'title_en' => 'dish-form-title-en',
+            'description_de' => 'dish-form-desc-de',
+            'description_en' => 'dish-form-desc-en',
+            'category' => '',
+        );
+
+        // Call controller action
+        $this->client->request('POST', '/dish/new', $form);
+
+        // Get persisted entity
+        /** @var EntityManager $entityManager */
+        $entityManager = $this->client->getContainer()->get('doctrine')->getManager();
+        $dishRepository = $entityManager->getRepository('MealzMealBundle:Dish');
+        $dish = $dishRepository->findOneBy(
+            array(
+                'title_de' => 'dish-form-title-de',
+                'title_en' => 'dish-form-title-en',
+                'description_de' => 'dish-form-desc-de',
+                'description_en' => 'dish-form-desc-en',
+            )
+        );
+
+        // Assertions
+        $this->assertNotNull($dish);
+        $this->assertTrue($dish->isNew());
     }
 
     protected function getRawResponseCrawler()

@@ -45,6 +45,7 @@ content:
       no_service: Kein Angebot!
     dish:
       no_description: Keine Beschreibung
+      new: Neu!
     legend:
       available: Verfügbar
       unavailable: Nicht bestellbar

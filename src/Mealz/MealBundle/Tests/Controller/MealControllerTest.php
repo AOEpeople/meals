@@ -293,7 +293,6 @@ class MealControllerTest extends AbstractControllerTestCase
     /**
      * Gets the next available meal.
      * @return Meal
-     * @test
      */
     private function getAvailableMeal()
     {

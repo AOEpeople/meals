@@ -317,8 +317,7 @@
     }
 
     &.participation-limit-reached {
-      background-color: $color-gray-secondary;
-      opacity: .3;
+      background-color: $color-gray-grayed-out;
     }
 
     &.participation-allowed {

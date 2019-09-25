@@ -392,25 +392,19 @@ class Dish
             $kernel = $kernel->getKernel();
         }
 
-        $dishRepository = $this->entityManager->getRepository('MealzMealBundle:Dish');
-
-        if ($dishRepository === null || $kernel === null) {
-            return $this->isNew;
-        }
-        $newFlagCounter = $kernel->getContainer()->getParameter('mealz.meal.new_flag_counter');
-        $newSearchTimestamp = $kernel->getContainer()->getParameter('mealz.meal.search_timestamp');
-
-        if (is_int($newFlagCounter) === false) {
+        // if something occurs that the kernel is null - set default values
+        if ($kernel === null) {
             $newFlagCounter = 2;
-        }
-
-        if ($newSearchTimestamp === null) {
             $newSearchTimestamp = '2000-01-01';
+        } else {
+            $newFlagCounter = $kernel->getContainer()->getParameter('mealz.meal.new_flag_counter');
+            $newSearchTimestamp = $kernel->getContainer()->getParameter('mealz.meal.search_timestamp');
         }
 
-        if ($dishRepository->countNumberDishWasTaken($this, $newSearchTimestamp) >= $newFlagCounter) {
+        if ($this->getNumberDishWasTaken($newSearchTimestamp) >= $newFlagCounter) {
             $this->setIsNew(false);
         }
+
         return $this->isNew;
     }
 
@@ -422,5 +416,18 @@ class Dish
     public function setIsNew($isNew)
     {
         $this->isNew = $isNew;
+    }
+
+    /**
+     * Gets the number dish was taken.
+     *
+     * @param String $newSearchTimestamp Timestamp
+     * @return int The number dish was taken.
+     */
+    private function getNumberDishWasTaken($newSearchTimestamp)
+    {
+        $dishRepository = $this->entityManager->getRepository('MealzMealBundle:Dish');
+
+        return (int) $dishRepository->countNumberDishWasTaken($this, $newSearchTimestamp);
     }
 }

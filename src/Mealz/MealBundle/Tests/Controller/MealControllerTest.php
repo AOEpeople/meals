@@ -323,10 +323,10 @@ class MealControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * Tests if the new FLag is rendered on old Meal
+     * Tests if the new FLag is rendered
      * @test
      */
-    public function testNoNewFlagFromOldMeal()
+    public function testNewFlagFromMeal()
     {
         $availableMeal = null;
 
@@ -354,8 +354,8 @@ class MealControllerTest extends AbstractControllerTestCase
 
         $flag = $crawler->filterXPath('//span[@class="new-flag"]')->getNode(0);
 
-        if ($flag !== null) {
-            $this->fail('Flag found, but no expected');
+        if ($flag === null) {
+            $this->fail('Flag not found');
         }
     }
 

@@ -24,9 +24,12 @@ class DishAbstractControllerTest extends AbstractControllerTestCase
         $this->clearAllTables();
         $this->loadFixtures(
             [
+                new LoadWeeks(),
+                new LoadDays(),
                 new LoadCategories(),
                 new LoadDishes(),
                 new LoadDishVariations(),
+                new LoadMeals(),
                 new LoadUsers($this->client->getContainer()),
             ]
         );
@@ -202,10 +205,10 @@ class DishAbstractControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * Test creating a new dish
+     * Test if a newly created dish is marked as new
      * @test
      */
-    public function testIfDishIsNew()
+    public function testIfNewDishIsNew()
     {
         // Create form data
         $form['dish'] = array(
@@ -235,6 +238,27 @@ class DishAbstractControllerTest extends AbstractControllerTestCase
         // Assertions
         $this->assertNotNull($dish);
         $this->assertTrue($dish->isNew());
+    }
+
+    /**
+     * Test if a often offered dish is not marked as new
+     * @test
+     */
+    public function testIfOftenOffereDishIsNotNew()
+    {
+        // Get persisted entity
+        /** @var EntityManager $entityManager */
+        $entityManager = $this->client->getContainer()->get('doctrine')->getManager();
+        $dishRepository = $entityManager->getRepository('MealzMealBundle:Dish');
+        $dish = $dishRepository->findOneBy(
+            array(
+                'slug' => 'braaaaaiiinnnzzzzzz'
+            )
+        );
+
+        // Assertions
+        $this->assertNotNull($dish);
+        $this->assertFalse($dish->isNew());
     }
 
     protected function getRawResponseCrawler()

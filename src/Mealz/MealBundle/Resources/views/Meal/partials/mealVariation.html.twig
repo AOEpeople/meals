@@ -1,10 +1,15 @@
 <div class="meal-row">
 
     {% spaceless %}
-        {% set parentFlag = false %}
-        {% if mealVariationGroup[0].dish.isNew and mealVariationGroup[1].dish.isNew %}
-            {% set parentFlag = true %}
-        {% endif %}
+        {% set parentFlag = null %}
+
+        {% for meal in mealVariationGroup %}
+            {% if meal.dish.isNew and parentFlag is not same as (false) %}
+                {% set parentFlag = true %}
+            {% else %}
+                {% set parentFlag = false %}
+            {% endif %}
+        {% endfor %}
 
         {% for meal in mealVariationGroup %}
             {% set dish = meal.dish %}

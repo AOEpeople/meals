@@ -24,16 +24,13 @@
                 {{ 'header.navigation.costs'|trans({}, 'general') }}
             </a>
         </li>
+        {% if is_granted('ROLE_FINANCE') %}
+            <li>
+                <a href="{{ path('mealz_accounting_accounting_book_finance') }}"
+                class="{{ activeRoute == 'mealz_accounting_accounting_book_finance' ? 'active' }}">
+                    {{ 'header.navigation.finance'|trans({}, 'general') }}
+                </a>
+            </li>
+        {% endif %}
     </ul>
-{% endif %}
-
-{% if is_granted('ROLE_FINANCE') %}
-<ul class="navbar">
-    <li>
-        <a href="{{ path('mealz_accounting_accounting_book_finance') }}"
-           class="{{ activeRoute == 'mealz_accounting_accounting_book_finance' ? 'active' }}">
-            {{ 'header.navigation.finance'|trans({}, 'general') }}
-        </a>
-    </li>
-</ul>
 {% endif %}

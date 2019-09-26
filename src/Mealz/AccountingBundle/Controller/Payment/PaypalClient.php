@@ -3,6 +3,7 @@
 namespace Mealz\AccountingBundle\Controller\Payment;
 
 use PayPalCheckoutSdk\Core\PayPalHttpClient;
+use PayPalCheckoutSdk\Core\ProductionEnvironment;
 use PayPalCheckoutSdk\Core\SandboxEnvironment;
 
 ini_set('error_reporting', E_ALL); // or error_reporting(E_ALL);
@@ -32,6 +33,17 @@ class PaypalClient
     {
         $clientId = getenv("CLIENT_ID") ?: self::$clientId;
         $clientSecret = getenv("CLIENT_SECRET") ?: self::$clientSecret;
+
+        global $kernel;
+
+        if ('AppCache' === get_class($kernel)) {
+            $kernel = $kernel->getKernel();
+        }
+
+        if ($kernel !== null && $kernel->getEnvironment() === 'production') {
+            return new ProductionEnvironment($clientId, $clientSecret);
+        }
+
         return new SandboxEnvironment($clientId, $clientSecret);
     }
 

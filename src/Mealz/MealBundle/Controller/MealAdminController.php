@@ -10,7 +10,6 @@ use Mealz\MealBundle\Form\MealAdmin\WeekForm;
 use Mealz\MealBundle\Validator\Constraints\DishConstraint;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\ConstraintViolation;
-use Symfony\Component\VarDumper\VarDumper;
 
 class MealAdminController extends BaseController
 {
@@ -99,10 +98,10 @@ class MealAdminController extends BaseController
             }
 
             if ($form->isValid()) {
-                /** @var EntityManager $em */
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($week);
-                $em->flush();
+                /** @var EntityManager $entitiyManager */
+                $entitiyManager = $this->getDoctrine()->getManager();
+                $entitiyManager->persist($week);
+                $entitiyManager->flush();
 
                 $message = $this->get('translator')->trans('week.created', [], 'messages');
                 $this->addFlashMessage($message, 'success');
@@ -144,18 +143,18 @@ class MealAdminController extends BaseController
         $form = $this->createForm(new WeekForm(), $week);
 
         // handle form submission
-        if ($request->isMethod('POST')) {
+        if ($request->isMethod('POST') === true) {
             $form->handleRequest($request);
 
             if ($form->get('Cancel')->isClicked()) {
                 return $this->redirectToRoute('MealzMealBundle_Meal');
             }
 
-            if ($form->isValid()) {
-                /** @var EntityManager $em */
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($week);
-                $em->flush();
+            if ($form->isValid() === true) {
+                /** @var EntityManager $entitiyManager */
+                $entitiyManager = $this->getDoctrine()->getManager();
+                $entitiyManager->persist($week);
+                $entitiyManager->flush();
 
                 $message = $this->get('translator')->trans('week.modified', [], 'messages');
                 $this->addFlashMessage($message, 'success');
@@ -182,7 +181,6 @@ class MealAdminController extends BaseController
             );
         }
 
-        //VarDumper::dump($form->createView());die();
         return $this->render(
             'MealzMealBundle:MealAdmin:week.html.twig',
             array(
@@ -213,12 +211,12 @@ class MealAdminController extends BaseController
             $dayDateTime = clone($week->getStartTime());
             $dayDateTime->modify('+'.$i.' days');
             $dayDateTime->setTime(12, 00);
-            $lockParticipationDateTime = clone($dayDateTime);
-            $lockParticipationDateTime->modify($dateTimeModifier);
+            $lockParticipationDT = clone($dayDateTime);
+            $lockParticipationDT->modify($dateTimeModifier);
 
             $day = new Day();
             $day->setDateTime($dayDateTime);
-            $day->setLockParticipationDateTime($lockParticipationDateTime);
+            $day->setLockParticipationDateTime($lockParticipationDT);
             $day->setWeek($week);
             $days->add($day);
         }

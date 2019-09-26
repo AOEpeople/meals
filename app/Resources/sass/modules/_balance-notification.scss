@@ -12,4 +12,20 @@
 
   .button:visited { color: $color-white; }
 
+  .button {
+    position: relative;
+    width: 160px;
+    text-align: center;
+
+    @include breakpoint(small) {
+      width: 100%;
+      margin-top: 10px;
+    }
+
+  }
+
+  .pay-now {
+    float: right;
+  }
+
 }

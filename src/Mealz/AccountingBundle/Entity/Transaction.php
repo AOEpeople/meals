@@ -51,6 +51,20 @@ class Transaction
     private $amount;
 
     /**
+     * @Assert\Length(min=3, max=2048)
+     * @ORM\Column(type="string", length=2048, nullable=TRUE)
+     * @var string
+     */
+    private $paymethod;
+
+    /**
+     * @Assert\Length(min=3, max=2048)
+     * @ORM\Column(type="string", length=2048, nullable=TRUE)
+     * @var string
+     */
+    private $orderId;
+
+    /**
      * @return string
      */
     public function getId()
@@ -75,7 +89,7 @@ class Transaction
     }
 
     /**
-     * @param integer $amount
+     * @param float $amount
      *
      * @return Transaction
      */
@@ -92,6 +106,46 @@ class Transaction
     public function getAmount()
     {
         return $this->amount;
+    }
+
+    /**
+     * @param integer $orderId
+     *
+     * @return Transaction
+     */
+    public function setOrderId($orderId)
+    {
+        $this->orderId = $orderId;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrderId()
+    {
+        return $this->orderId;
+    }
+
+    /**
+     * @param string $paymethod
+     *
+     * @return Transaction
+     */
+    public function setPaymethod($paymethod)
+    {
+        $this->paymethod = $paymethod;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPaymethod()
+    {
+        return $this->paymethod;
     }
 
     /**

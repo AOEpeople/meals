@@ -168,6 +168,9 @@ class Login implements SymfonyUserInterface, \Serializable, MealzUserInterface
     public function getRoles()
     {
         $roles = array('ROLE_USER');
+        if ($this->getUsername() === 'finance') {
+            array_push($roles, 'ROLE_FINANCE');
+        }
         if ($this->getUsername() === 'kochomi') {
             array_push($roles, 'ROLE_KITCHEN_STAFF', 'ROLE_CONFIRMATION');
         }

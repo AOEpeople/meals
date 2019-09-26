@@ -28,7 +28,13 @@
     }
 
     .icon-cell {
-      width: 50px;
+      width: 55px;
+
+      a {
+        display: inline-block;
+        vertical-align: text-top;
+        width: 20px;
+      }
     }
 
     form {
@@ -59,14 +65,39 @@
         }
       }
 
+      .hidden {
+        display: none;
+      }
+
       &::after {
         position: absolute;
         top: -20px;
-        right: 15%;
+        right: 22.5%;
         border: 10px solid transparent;
         border-bottom-color: $color-gray-light;
         content: ' ';
         pointer-events: none;
+      }
+
+      &[name=settleform]::after {
+        right: 10.5%;
+      }
+
+      &[name=settleform] {
+        padding: 13px 20px;
+      }
+
+      .settle-account {
+        display: block;
+        width: 100%;
+        padding: 7px;
+        font-size: 14px;
+        cursor: pointer;
+      }
+
+      .settle-account:hover {
+        color: $color-print;
+        text-decoration: underline;
       }
     }
 
@@ -104,5 +135,28 @@
         display: none;
       }
     }
+  }
+}
+
+.date-range-picker {
+  float: left;
+  margin-right: 10px;
+  font-size: 18px;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.accounting-book {
+  .headline-tool {
+    color: $color-orange;
+  }
+}
+
+.finances {
+  .amount,
+  .daily-closing {
+    text-align: right;
   }
 }

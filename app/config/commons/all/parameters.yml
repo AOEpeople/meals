@@ -2,6 +2,8 @@ parameters:
     # @TODO: rename mealz.lock_toggle_participation_at
     mealz.lock_toggle_participation_at: '-1 day 16:00'
     mealz.meal.price: 3.40
+    mealz.meal.search_timestamp: '2000-01-01'
+    mealz.meal.new_flag_counter: 2
 
     database_driver:   mysqli
     database_host:     127.0.0.1
@@ -14,6 +16,16 @@ parameters:
 
     locale:            en
 
-    # get credentials for sandboxing here: https://developer.paypal.com/developer/applications/
-    paypal.id: ~
-    paypal.secret: ~
+    hr_email: 'replaced_by_deployment'
+    paypal_id: 'replaced_by_deployment'
+    paypal_secret: 'replaced_by_deployment'
+
+    keycloak_access_token_endpoint: 'https://login.aoe.com/auth/realms/aoe/protocol/openid-connect/token'
+    keycloak_auth_token_endpoint:   'https://login.aoe.com/auth/realms/aoe/protocol/openid-connect/auth'
+    keycloak_logout_endpoint:       'https://login.aoe.com/auth/realms/aoe/protocol/openid-connect/logout'
+    keycloak_user_token_endpoint:   'https://login.aoe.com/auth/realms/aoe/protocol/openid-connect/userinfo'
+    keycloak_openid_server:         'https://login.aoe.com/auth/realms/aoe'
+    keycloak_client_id:             'replaced_by_deployment'
+    keycloak_client_secret:         'replaced_by_deployment'
+
+    env_url:                        'replaced_by_deployment'

@@ -23,6 +23,14 @@ $(document).ready(function () {
     mealz.copyToClipboard();
 
     /**
+     * See: https://stackoverflow.com/questions/1537032/how-do-i-stop-jquery-appending-a-unique-id-to-scripts-called-via-ajax
+     * http://api.jquery.com/jQuery.ajaxPrefilter/
+     */
+    $.ajaxPrefilter('script', function(options) {
+        options.cache = true;
+    });
+
+    /**
      * Week creation, dish and variations selection
      */
     mealz.initDishSelection();
@@ -72,13 +80,14 @@ $(document).ready(function () {
         mealz.initToggleParticipation();
     }
 
+    mealz.exportTransactions();
+
     /**
      * If there are any meals in the list, run updateOffers to check for available offers.
      */
     if($('.meals-list').length > 0) {
         mealz.updateOffers();
     }
-
 
     /**
      * if meals is limited it should be displayed

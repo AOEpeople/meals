@@ -4,6 +4,7 @@ header:
     dishes: Dishes
     categories: Categories
     costs: Costs
+    finance: Finance
   logged_in_text: You are logged in as
   balance: Balance
 
@@ -44,6 +45,7 @@ content:
       no_service: No service!
     dish:
       no_description: No description
+      new: New!
     legend:
       available: Available
       unavailable: Unavailable for order

@@ -1,18 +1,20 @@
 security:
     providers:
-        active_directory:
-            ldap:
-              service: app.ldap
-              base_dn: %ldap_base_dn%
-              search_dn: %ldap_search_dn%
-              search_password: %ldap_search_password%
-              filter: %ldap_filter%
-              default_roles: ROLE_USER, ROLE_LOGIN_LDAP
+        oauth_user_provider:
+             id: mealz.oauthuserprovider
     firewalls:
         mealz:
-            provider: active_directory
-            form_login_ldap:
-                login_path:  MealzUserBundle_login
-                check_path:  MealzUserBundle_checkLogin
-                service: app.ldap
-                dn_string: %ldap_dn_string%
+            logout:
+              path: /logout
+              success_handler: Mealz\UserBundle\Provider\LogoutSuccessHandler
+
+    access_control:
+        - { path: ^/connect, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/rest, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/oauth/v2/token, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/menu/guest, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/css, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/js, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/images, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/, roles: [ROLE_USER] }
+

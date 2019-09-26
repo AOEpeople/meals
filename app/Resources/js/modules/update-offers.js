@@ -20,18 +20,18 @@ function updateOffers() {
                 var $participantsCount = $mealWrapper.find('.participants-count');
 
                 //new offer available and checkbox not checked yet
-                if (value[0] === true && $checkboxWrapper.hasClass('checked') === false
-                    && $checkbox.hasClass('acceptOffer-action') === false
-                    && $checkbox.hasClass('join-action') === false) {
+                if (value[0] === true && $checkboxWrapper.hasClass('checked') === false &&
+                    $checkbox.hasClass('acceptOffer-action') === false &&
+                    $checkbox.hasClass('join-action') === false) {
                     //activate tooltip
                     $tooltip.addClass('active');
                     //get text for tooltip
                     $.getJSON('/labels.json')
                         .done(function (data) {
                             if ($('.language-switch').find('span').text() === 'de') {
-                                $tooltip.text(data[1]['tooltip_DE'][0]['available']);
+                                $tooltip.text(data[1].tooltip_DE[0].available);
                             } else {
-                                $tooltip.text(data[0]['tooltip_EN'][0]['available']);
+                                $tooltip.text(data[0].tooltip_EN[0].available);
                             }
                         });
                     //enable checkbox wrapper

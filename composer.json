@@ -23,10 +23,13 @@
         "incenteev/composer-parameter-handler": "~2.0",
         "stof/doctrine-extensions-bundle": "~1.2.2",
         "friendsofsymfony/rest-bundle": "^1.8",
+        "hwi/oauth-bundle": "^0.5.3",
         "friendsofsymfony/oauth-server-bundle": "^1.5",
         "jms/serializer-bundle": "^1.1",
-        "creatissimo/mattermost-bundle": "^1.1",
-        "paypal/paypal-checkout-sdk": "^1.0.0"
+        "creatissimo/mattermost-bundle": "1.1.12",
+        "paypal/paypal-checkout-sdk": "^1.0.0",
+        "tecnickcom/tcpdf": "6.2.26",
+        "whiteoctober/tcpdf-bundle": "dev-master"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "~2.2",

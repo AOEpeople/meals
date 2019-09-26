@@ -15,5 +15,9 @@ xopn_mealz_for_zombies_rest:
     resource: "@MealzRestBundle/Resources/config/routing.yml"
     prefix:   /rest/v1
 
+#############################
+# FOS_OAUTH
+#############################
 fos_oauth_server_token:
     resource: "@FOSOAuthServerBundle/Resources/config/routing/token.xml"
+

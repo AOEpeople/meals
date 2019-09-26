@@ -24,6 +24,7 @@ class Role
     const ROLE_USER          = 'ROLE_USER';
     const ROLE_GUEST         = 'ROLE_GUEST';
     const ROLE_ADMIN         = 'ROLE_ADMIN';
+    const ROLE_FINANCE       = 'ROLE_FINANCE';
 
 
     /**

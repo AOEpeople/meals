@@ -28,14 +28,15 @@ class DishController extends BaseListController
             throw $this->createNotFoundException();
         }
 
-        /** @var EntityManager $em */
-        $em = $this->getDoctrine()->getManager();
+        /** @var EntityManager $entityManager */
+        $entityManager = $this->getDoctrine()->getManager();
 
         if ($dishRepository->hasDishAssociatedMeals($dish)) {
             // if there are meals assigned: just hide this record, but do not delete it
             $dish->setEnabled(false);
-            $em->persist($dish);
-            $em->flush();
+
+            $entityManager->persist($dish);
+            $entityManager->flush();
             $message = $this->get('translator')->trans(
                 'dish.hidden',
                 array('%dish%' => $dish->getTitle()),
@@ -44,8 +45,8 @@ class DishController extends BaseListController
             $this->addFlashMessage($message, 'success');
         } else {
             // else: no need to keep an unused record
-            $em->remove($dish);
-            $em->flush();
+            $entityManager->remove($dish);
+            $entityManager->flush();
 
             $message = $this->get('translator')->trans(
                 'dish.deleted',

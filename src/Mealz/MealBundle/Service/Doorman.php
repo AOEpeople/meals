@@ -59,7 +59,7 @@ class Doorman
         if ($this->securityContext->getToken()->getUser()->getProfile() instanceof Profile === false || $meal->isParticipationLimitReached() === true) {
             return FALSE;
         }
-        if ($this->isKitchenStaff() === true || $this->hasAccessTo(self::AT_MEAL_PARTICIPATION, ['meal' => $meal]) === true) {
+        if ($this->hasAccessTo(self::AT_MEAL_PARTICIPATION, ['meal' => $meal]) === true) {
             return TRUE;
         }
         return ($this->isToggleParticipationAllowed($meal->getDateTime()) && $this->hasAccessTo(self::AT_MEAL_PARTICIPATION, ['meal' => $meal]));
@@ -98,7 +98,7 @@ class Doorman
      */
     public function isUserAllowedToSwap(Meal $meal)
     {
-        if ($this->isKitchenStaff() === false && $meal->getDay()->getLockParticipationDateTime()->getTimestamp() < $this->now && $this->now < $meal->getDateTime()->getTimestamp()) {
+        if ($meal->getDay()->getLockParticipationDateTime()->getTimestamp() < $this->now && $this->now < $meal->getDateTime()->getTimestamp()) {
             return TRUE;
         } else {
             return FALSE;
@@ -187,10 +187,6 @@ class Doorman
      */
     private function hasAccessTo($accesstype, $params = [])
     {
-        // admins always have access!
-        if ($this->isKitchenStaff() === true) {
-            return TRUE;
-        }
         // if no user is logged in access is denied at all
         if ($this->securityContext->getToken()->getUser()->getProfile() instanceof Profile === FALSE) {
             return FALSE;

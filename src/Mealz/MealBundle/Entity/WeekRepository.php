@@ -43,14 +43,14 @@ class WeekRepository extends EntityRepository
      */
     public function getWeeksMealCount(Week $week)
     {
-        $qb = $this->createQueryBuilder('w');
-        $qb->leftJoin('w.days', 'days');
-        $qb->leftJoin('days.meals', 'meals');
-        $qb->select($qb->expr()->count('meals'));
-        $qb->where('w.id = ?1')
+        $query = $this->createQueryBuilder('w');
+        $query->leftJoin('w.days', 'days');
+        $query->leftJoin('days.meals', 'meals');
+        $query->select($query->expr()->count('meals'));
+        $query->where('w.id = ?1')
             ->setParameter(1, $week->getId());
 
-        return $qb->getQuery()->getSingleScalarResult();
+        return $query->getQuery()->getSingleScalarResult();
     }
 
     /**
@@ -62,32 +62,32 @@ class WeekRepository extends EntityRepository
     {
         $options = array_merge($this->defaultOptions, $options);
 
-        $qb = $this->createQueryBuilder('w');
+        $query = $this->createQueryBuilder('w');
 
         $select = 'w,da,m,d';
         if ($options['load_participants']) {
             $select .= ',p,u';
         }
-        $qb->select($select);
+        $query->select($select);
 
-        $qb->leftJoin('w.days', 'da');
-        $qb->leftJoin('da.meals', 'm');
-        $qb->leftJoin('m.dish', 'd');
+        $query->leftJoin('w.days', 'da');
+        $query->leftJoin('da.meals', 'm');
+        $query->leftJoin('m.dish', 'd');
 
         if ($options['load_participants']) {
-            $qb->leftJoin('m.participants', 'p');
-            $qb->leftJoin('p.profile', 'u');
+            $query->leftJoin('m.participants', 'p');
+            $query->leftJoin('p.profile', 'u');
         }
 
-        $qb->andWhere('w.year = :year');
-        $qb->andWhere('w.calendarWeek = :calendarWeek');
+        $query->andWhere('w.year = :year');
+        $query->andWhere('w.calendarWeek = :calendarWeek');
         if (true === $options['only_enabled_days']) {
-            $qb->andWhere('da.enabled = 1');
+            $query->andWhere('da.enabled = 1');
         }
 
-        $qb->setParameter('year', $date->format('Y'));
-        $qb->setParameter('calendarWeek', $date->format('W'));
+        $query->setParameter('year', $date->format('Y'));
+        $query->setParameter('calendarWeek', $date->format('W'));
 
-        return $qb->getQuery()->getOneOrNullResult();
+        return $query->getQuery()->getOneOrNullResult();
     }
 }

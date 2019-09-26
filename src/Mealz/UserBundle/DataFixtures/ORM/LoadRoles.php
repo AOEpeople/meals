@@ -59,6 +59,7 @@ class LoadRoles extends AbstractFixture
             ['title' => 'User', 'sid' => 'ROLE_USER'],
             ['title' => 'Guest', 'sid' => 'ROLE_GUEST'],
             ['title' => 'Administrator', 'sid' => 'ROLE_ADMIN'],
+            ['title' => 'Finance Staff', 'sid' => 'ROLE_FINANCE'],
         ];
     }
 }

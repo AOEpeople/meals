@@ -4,6 +4,7 @@ header:
     dishes: Gerichte
     categories: Kategorien
     costs: Kosten
+    finance: Finanzen
   logged_in_text: Eingeloggt als
   balance: Kontostand
 
@@ -44,6 +45,7 @@ content:
       no_service: Kein Angebot!
     dish:
       no_description: Keine Beschreibung
+      new: Neu!
     legend:
       available: Verfügbar
       unavailable: Nicht bestellbar

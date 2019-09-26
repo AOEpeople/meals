@@ -3,8 +3,10 @@
 
 namespace Mealz\MealBundle\Twig\Extension;
 
+use Symfony\Bridge\Doctrine\RegistryInterface;
 use Mealz\MealBundle\Entity\Dish;
 use Mealz\MealBundle\Entity\Meal;
+use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * @TODO: CodeStyle, variable usage optimization (maybe use $dishes as attribute?)
@@ -13,6 +15,20 @@ use Mealz\MealBundle\Entity\Meal;
  */
 class Variation extends \Twig_Extension
 {
+
+    protected $doctrine;
+
+    protected $twig;
+
+    /**
+     * Constructor
+     */
+    public function __construct(RegistryInterface $doctrine, $twig)
+    {
+        $this->doctrine = $doctrine;
+        $this->twig = $twig;
+    }
+
     /**
      * @return array
      */
@@ -24,6 +40,7 @@ class Variation extends \Twig_Extension
             'groupMealsToArray' => new \Twig_Function_Method($this, 'groupMealsToArray'),
             'getFullTitleByDishAndVariation' => new \Twig_Function_Method($this, 'getFullTitleByDishAndVariation'),
             'getSortedVariation' => new \Twig_Function_Method($this, 'getSortedVariation'),
+            'getDishCount' => new \Twig_Function_Method($this, 'getDishCount'),
         );
     }
 
@@ -39,7 +56,7 @@ class Variation extends \Twig_Extension
         foreach ($meals as $meal) {
 
             /** @var Meal $meal */
-            if( isset($meal->data) && ($meal->data instanceof Meal)) {
+            if (isset($meal->data) && ($meal->data instanceof Meal)) {
                 $dish = $meal->data->getDish();
             } elseif ($meal instanceof Meal) {
                 $dish = $meal->getDish();
@@ -119,8 +136,9 @@ class Variation extends \Twig_Extension
 
         return $title;
     }
-    
-    public function getSortedVariation($variations) {
+
+    public function getSortedVariation($variations)
+    {
         if (is_array($variations) && count($variations)) {
             uasort($variations, array($this, 'compareVariation'));
         }
@@ -135,6 +153,18 @@ class Variation extends \Twig_Extension
     public function getName()
     {
         return 'variation';
+    }
+
+    /**
+     * Returns the name of the extension.
+     *
+     * @return string The extension name
+     */
+    public function getDishCount($dish)
+    {
+        $em = $this->doctrine->getManager();
+        $dishRepo = $em->getRepository('MealzMealBundle:Dish');
+        return $dishRepo->countNumberDishWasTaken($dish, $this->twig->getGlobals()['countDishPeriod']);
     }
 
     /**
@@ -153,7 +183,8 @@ class Variation extends \Twig_Extension
         return null;
     }
 
-    private function compareVariation($first, $second) {
+    private function compareVariation($first, $second)
+    {
         $firstContent = strtolower($first['variations']['content']);
         $secondContent = strtolower($second['variations']['content']);
         if ($firstContent == $secondContent) {

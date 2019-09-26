@@ -33,6 +33,9 @@ twig:
         # @TODO: rename lock_toggle_participation_at
         lock_toggle_participation_at: %mealz.lock_toggle_participation_at%
         wallet: "@mealz_accounting.wallet"
+        paypal_id: "%paypal_id%"
+        paypal_secret: "%paypal_secret%"
+        countDishPeriod: "10 weeks ago"
 
 # Assetic Configuration
 assetic:
@@ -139,10 +142,8 @@ fos_oauth_server:
 
 creatissimo_mattermost:
     appname: "Meals"
-    username: "DevChef"
+    username: "Test Chef"
     webhook: https://messages.aoe.com/hooks/f9nb161oppro8nin15zhtrgqqh
-    channel:
-    iconUrl: "http://deploy.mealz.itg.de2.dc.aoe.lan/images/chef_bot.png"
     environments:
         devbox:
             enable: true
@@ -166,7 +167,6 @@ creatissimo_mattermost:
             appname: "Meals"
             username: "Chef"
             webhook: https://messages.aoe.com/hooks/hh5od44xgp8p5rax9uzmgxffmh
-            iconUrl: "http://meals.aoe.com/images/chef_bot.png"
             enable: true
             terminate:
                 enable: false
@@ -176,3 +176,24 @@ creatissimo_mattermost:
                 trace: false
                 exclude_class:
                     - Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+
+hwi_oauth:
+    firewall_names: [mealz]
+    resource_owners:
+        meals:
+            type:                oauth2
+            client_id:           '%keycloak_client_id%'
+            client_secret:       '%keycloak_client_secret%'
+            access_token_url:    '%keycloak_access_token_endpoint%'
+            authorization_url:   '%keycloak_auth_token_endpoint%'
+            infos_url:           '%keycloak_user_token_endpoint%'
+            user_response_class: HWI\Bundle\OAuthBundle\OAuth\Response\PathUserResponse
+            paths:
+                identifier: id
+                nickname:   preferred_username
+                realname:   name
+            options:
+                use_bearer_authorization: true
+    http_client:
+            verify_peer: false
+            ignore_errors: true

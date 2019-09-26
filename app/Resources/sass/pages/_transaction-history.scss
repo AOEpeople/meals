@@ -1,5 +1,6 @@
 .last-account-balance {
   float: right;
+  clear: right;
   margin-top: 10px;
   margin-bottom: 30px;
   font-weight: bold;
@@ -14,6 +15,100 @@
       color: $color-red;
     }
   }
+}
+
+.add-funds {
+  .headline-tool {
+    color: $color-orange;
+  }
+
+  .paypal-button-container {
+    margin-top: 20px;
+  }
+
+  .form-container {
+    position: relative;
+  }
+
+  form {
+    position: absolute;
+    right: 0;
+    z-index: 1;
+    width: 500px;
+    margin-top: 20px;
+    padding: 30px;
+    color: $color-gray-primary;
+    background-color: $color-gray-middle;
+
+    @include breakpoint(small) {
+      width: auto;
+    }
+
+    .cash-label {
+      vertical-align: super;
+      margin-right: 15px;
+    }
+
+    .invalid-amount {
+      display: none;
+      margin-left: 40px;
+      color: $color-red;
+      font-size: 10px;
+    }
+
+    .payment-method {
+      display: block;
+      margin: 30px 0 20px;
+      font-weight: bold;
+      font-size: 20px;
+    }
+
+    button,
+    input {
+      display: inline-block;
+    }
+
+    input[type="text"] {
+      width: 80px;
+      padding: 11px 10px 9px;
+      vertical-align: middle;
+      border: 1px solid transparent;
+
+      &:invalid {
+        border: 1px solid $color-red;
+      }
+
+    }
+
+    button {
+      margin-top: 20px;
+      line-height: 14px;
+      vertical-align: bottom;
+
+      @-moz-document url-prefix() {
+        line-height: 10px;
+      }
+    }
+
+    &::after {
+      position: absolute;
+      top: -20px;
+      right: 50px;
+      border: 10px solid transparent;
+      border-bottom-color: $color-gray-light;
+      content: ' ';
+      pointer-events: none;
+    }
+
+  }
+}
+
+.cover {
+  position: absolute;
+  z-index: 9;
+  width: 100%;
+  height: 100%;
+  background: url('../../images/wait.svg') no-repeat scroll center center $cover-background;
 }
 
 .dept {
@@ -67,7 +162,24 @@
       color: $color-green;
     }
 
-    .transaction-description::before {
+    .transaction-description.paypal::before {
+      content: '';
+    }
+
+    .transaction-description.paypal img {
+      position: absolute;
+      top: 17px;
+      left: 0;
+      width: auto;
+      height: 20px;
+
+      @include breakpoint(small) {
+        display: none;
+      }
+
+    }
+
+    .transaction-description.cash::before {
       content: '\20ac';
       color: $color-green;
 
@@ -80,6 +192,10 @@
   tfoot {
     font-weight: bold;
 
+    .table-row {
+      border-bottom: none;
+    }
+
     td:first-child {
       text-align: right;
     }
@@ -89,5 +205,4 @@
     }
   }
 }
-
 

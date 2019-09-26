@@ -125,7 +125,8 @@ class EcashController extends BaseController
     {
         $paypalId = $this->container->get('twig')->getGlobals()['paypal_id'];
         $secret = $this->container->get('twig')->getGlobals()['paypal_secret'];
-        PaypalClient::setCredentials($paypalId, $secret);
+        $environment = $this->getParameter('kernel.environment');
+        PaypalClient::setCredentialsAndEnvironment($paypalId, $secret, $environment);
 
         $response = PaypalClient::client()->execute(new OrdersGetRequest($formArray['ecash[orderid]']));
 

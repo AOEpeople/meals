@@ -14,6 +14,7 @@ class PaypalClient
 {
     private static $clientId = null;
     private static $clientSecret = null;
+    private static $environment = null;
 
     /**
      * Returns PayPal HTTP client instance with environment that has access
@@ -34,13 +35,7 @@ class PaypalClient
         $clientId = getenv("CLIENT_ID") ?: self::$clientId;
         $clientSecret = getenv("CLIENT_SECRET") ?: self::$clientSecret;
 
-        global $kernel;
-
-        if ('AppCache' === get_class($kernel)) {
-            $kernel = $kernel->getKernel();
-        }
-
-        if ($kernel !== null && $kernel->getEnvironment() === 'production') {
+        if (self::$environment === 'production') {
             return new ProductionEnvironment($clientId, $clientSecret);
         }
 
@@ -51,10 +46,12 @@ class PaypalClient
      * Set the PayPal client credentials to be used in the environment() function.
      * @param $identifier
      * @param $secret
+     * @param $environment
      */
-    public static function setCredentials($identifier, $secret)
+    public static function setCredentialsAndEnvironment($identifier, $secret, $environment)
     {
         self::$clientId = $identifier;
         self::$clientSecret = $secret;
+        self::$environment = $environment;
     }
 }

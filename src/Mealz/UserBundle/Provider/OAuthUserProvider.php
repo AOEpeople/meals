@@ -29,21 +29,17 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
     private $doctrineRegistry;
 
     /**
+     * Map Keycloak Roles to Meals ones
+     *
      * Give User the ROLE_USER Role to access meals
      * Use in Combination of /app/config/commons/all/security.yml
-     *
-     * @var string
-     */
-    private $publicRole = 'ROLE_USER';
-
-    /**
-     * Map Keycloak Roles to Meals ones
      *
      * @var array
      */
     private $roleMapping = [
+        'meals.user'    => 'ROLE_USER',
         'meals.admin'   => 'ROLE_KITCHEN_STAFF',
-        'meals.finance'   => 'ROLE_FINANCE'
+        'meals.finance' => 'ROLE_FINANCE'
     ];
 
     /**
@@ -69,7 +65,6 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
      * Loads an user by identifier or create it.
      *
      * @param Object $userInformation The user information
-     *
      * @return OAuthUser|boolean
      */
     public function loadUserByIdOrCreate($userInformation)
@@ -99,9 +94,6 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
 
         $user = new OAuthUser($userInformation->preferred_username);
         $user->setProfile($profile);
-
-        // give every LDAP User the ROLE_USER Role
-        $user->addRole($this->publicRole);
 
         // Map Keycloak Roles to Meals Roles
         foreach ($this->roleMapping as $keycloakRole => $mealsRole) {

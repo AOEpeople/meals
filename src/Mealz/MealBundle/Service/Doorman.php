@@ -41,13 +41,13 @@ class Doorman
     /**
      * Doorman constructor.
      * @param SecurityContext $securityContext
-     * @param string $lockToggleParticipationAt
+     * @param string $lockParticipationAt
      */
-    public function __construct(SecurityContext $securityContext, $lockToggleParticipationAt = '-1 day 12:00')
+    public function __construct(SecurityContext $securityContext, $lockParticipationAt = '-1 day 12:00')
     {
         $this->securityContext = $securityContext;
         $this->now = time();
-        $this->lockToggleParticipationAt = $lockToggleParticipationAt;
+        $this->lockParticipationAt = $lockParticipationAt;
     }
 
     /**
@@ -57,12 +57,12 @@ class Doorman
     public function isUserAllowedToJoin(Meal $meal)
     {
         if ($this->securityContext->getToken()->getUser()->getProfile() instanceof Profile === false || $meal->isParticipationLimitReached() === true) {
-            return FALSE;
+            return false;
         }
         if ($this->hasAccessTo(self::AT_MEAL_PARTICIPATION, ['meal' => $meal]) === true) {
-            return TRUE;
+            return true;
         }
-        return ($this->isToggleParticipationAllowed($meal->getDateTime()) && $this->hasAccessTo(self::AT_MEAL_PARTICIPATION, ['meal' => $meal]));
+        return ($this->isTogglePartAllowed($meal->getDateTime()) && $this->hasAccessTo(self::AT_MEAL_PARTICIPATION, ['meal' => $meal]));
     }
 
     /**
@@ -99,9 +99,9 @@ class Doorman
     public function isUserAllowedToSwap(Meal $meal)
     {
         if ($meal->getDay()->getLockParticipationDateTime()->getTimestamp() < $this->now && $this->now < $meal->getDateTime()->getTimestamp()) {
-            return TRUE;
+            return true;
         } else {
-            return FALSE;
+            return false;
         }
     }
 
@@ -136,8 +136,7 @@ class Doorman
      * @param Meal $meal
      * @return bool
      */
-    public
-    function isUserAllowedToAddGuest(Meal $meal)
+    public function isUserAllowedToAddGuest(Meal $meal)
     {
         // @TODO: add a separate role for that
         return $this->isKitchenStaff() || $this->isUserAllowedToJoin($meal);
@@ -147,8 +146,7 @@ class Doorman
      * @param Meal $meal
      * @return bool
      */
-    public
-    function isUserAllowedToRemoveGuest(Meal $meal)
+    public function isUserAllowedToRemoveGuest(Meal $meal)
     {
         // @TODO: add a separate role for that
         return $this->isKitchenStaff() || $this->isUserAllowedToLeave($meal);
@@ -158,22 +156,20 @@ class Doorman
      * @param Meal $meal
      * @return bool
      */
-    public
-    function isUserAllowedToRequestCostAbsorption(Meal $meal)
+    public function isUserAllowedToRequestCostAbsorption(Meal $meal)
     {
         // @TODO: add a separate role for that
         return $this->isKitchenStaff() || $this->isUserAllowedToAddGuest($meal);
     }
 
     /**
-     * @param \DateTime $lockParticipationDateTime
+     * @param \DateTime $lockPartDateTime
      * @return bool
      */
-    public
-    function isToggleParticipationAllowed(\DateTime $lockParticipationDateTime)
+    public function isTogglePartAllowed(\DateTime $lockPartDateTime)
     {
         // is it still allowed to participate in the meal by now?
-        return ($lockParticipationDateTime->getTimestamp() > $this->now);
+        return ($lockPartDateTime->getTimestamp() > $this->now);
     }
 
     /**
@@ -188,8 +184,8 @@ class Doorman
     private function hasAccessTo($accesstype, $params = [])
     {
         // if no user is logged in access is denied at all
-        if ($this->securityContext->getToken()->getUser()->getProfile() instanceof Profile === FALSE) {
-            return FALSE;
+        if ($this->securityContext->getToken()->getUser()->getProfile() instanceof Profile === false) {
+            return false;
         }
 
         // check access in terms of given accesstype...
@@ -199,12 +195,14 @@ class Doorman
                  * Parameters:
                  * @var \Mealz\MealBundle\Entity\Meal    meal
                  */
-                if (!isset($params['meal']) || !$params['meal'] instanceof \Mealz\MealBundle\Entity\Meal) return FALSE;
-                return $this->isToggleParticipationAllowed($params['meal']->getDay()->getLockParticipationDateTime());
+                if (!isset($params['meal']) || !$params['meal'] instanceof \Mealz\MealBundle\Entity\Meal) {
+                    return false;
+                }
+                return $this->isTogglePartAllowed($params['meal']->getDay()->getLockParticipationDateTime());
                 break;
             default:
                 // by default refuse access
-                return FALSE;
+                return false;
         }
     }
 }

@@ -15,7 +15,6 @@ use Symfony\Component\VarDumper\VarDumper;
  */
 class Variation extends \Twig_Extension
 {
-
     protected $doctrine;
 
     protected $twig;

@@ -32,5 +32,4 @@ class ParticipantListFactory
 
         return new ParticipantList($participants);
     }
-
 }

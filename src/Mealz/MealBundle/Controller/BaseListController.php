@@ -70,7 +70,7 @@ abstract class BaseListController extends BaseController
      */
     public function newAction(Request $request)
     {
-        if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
+        if ($this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF') === false) {
             throw new AccessDeniedException();
         }
 
@@ -95,7 +95,7 @@ abstract class BaseListController extends BaseController
      */
     public function editAction(Request $request, $slug)
     {
-        if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
+        if ($this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF') === false) {
             throw new AccessDeniedException();
         }
 
@@ -121,15 +121,15 @@ abstract class BaseListController extends BaseController
      */
     public function deleteAction($slug)
     {
-        if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
+        if ($this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF') === false) {
             throw new AccessDeniedException();
         }
 
         $entity = $this->findBySlugOrThrowException($slug);
 
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($entity);
-        $em->flush();
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($entity);
+        $entityManager->flush();
 
         $translator = $this->get('translator');
         $translatedEntityName = $translator->trans("entity.$this->entityName", [], 'messages');
@@ -152,11 +152,11 @@ abstract class BaseListController extends BaseController
      */
     public function getEmptyFormAction()
     {
-        if (!$this->getUser()) {
+        if ($this->getUser() === false) {
             return $this->ajaxSessionExpiredRedirect();
         }
 
-        if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
+        if ($this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF') === false) {
             throw new AccessDeniedException();
         }
 
@@ -173,17 +173,17 @@ abstract class BaseListController extends BaseController
      */
     public function getPreFilledFormAction($slug)
     {
-        if (!$this->getUser()) {
+        if ($this->getUser() === false) {
             return $this->ajaxSessionExpiredRedirect();
         }
 
-        if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
+        if ($this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF') === false) {
             throw new AccessDeniedException();
         }
 
         $entity = $this->repository->findOneBy(array('slug' => $slug));
 
-        if (!$entity) {
+        if ($entity === null) {
             return new JsonResponse(null, 404);
         }
 
@@ -236,9 +236,9 @@ abstract class BaseListController extends BaseController
             $form->handleRequest($request);
 
             if ($form->isValid()) {
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($entity);
-                $em->flush();
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($entity);
+                $entityManager->flush();
 
                 $this->addFlashMessage($successMessage, 'success');
             } else {

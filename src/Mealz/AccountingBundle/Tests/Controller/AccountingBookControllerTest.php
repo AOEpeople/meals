@@ -111,7 +111,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
         $nodesAmount = $crawler->filterXPath('//table[@id="accounting-book-table"]//td[contains(@class,"amount")]');
         $nodeTotal = $crawler->filterXPath('//table[@id="accounting-book-table"]//td[contains(@class,"table-data-total")]');
 
-        foreach ($nodesAmount as $key => $value) {
+        foreach ($nodesAmount as $value) {
             $tmpCrawler = new Crawler($value);
             $res[] = floatval($tmpCrawler->text());
         }
@@ -135,8 +135,8 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
 
         // fetch infos for previous month from database.
         // These results are already ordered by lastname, firstname!!
-        $transactionRepository = $this->getDoctrine()->getRepository('MealzAccountingBundle:Transaction');
-        $usersAndTheirTotals = $transactionRepository->findUserDataAndTransactionAmountForGivenPeriod($minDate, $maxDate);
+        $transactionRepo = $this->getDoctrine()->getRepository('MealzAccountingBundle:Transaction');
+        $usersAndTheirTotals = $transactionRepo->findUserDataAndTransactionAmountForGivenPeriod($minDate, $maxDate);
 
         // fetch what is displayed in the accounting book table....
         $crawler = $this->client->request('GET', '/accounting/book');
@@ -184,7 +184,8 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
      * Tests if finance staff can access the transaction export page and admins and default users can not
      * @test
      */
-    public function testAccessForFinanceOnly() {
+    public function testAccessForFinanceOnly()
+    {
         $user = $this->getUserProfile('finance');
         $this->loginAsDefaultClient($user);
 
@@ -209,9 +210,10 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
      * Tests if the transactions are displayed correctly
      * @test
      */
-    public function testTransactionsListing() {
-        $em = $this->getDoctrine()->getManager();
-        $em->getRepository('MealzAccountingBundle:Transaction')->clear();
+    public function testTransactionsListing()
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->getRepository('MealzAccountingBundle:Transaction')->clear();
 
         $profile = $this->getUserProfile();
         $transactionDate = new \DateTime('today');
@@ -222,8 +224,8 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
         $transaction->setDate($transactionDate);
         $transaction->setAmount(42.17);
 
-        $em->persist($transaction);
-        $em->flush();
+        $entityManager->persist($transaction);
+        $entityManager->flush();
 
         $user = $this->getUserProfile('finance');
         $this->loginAsDefaultClient($user);
@@ -245,9 +247,10 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
      * @test
      * @throws \Exception
      */
-    public function testOnlyCashPaymentsListed() {
-        $em = $this->getDoctrine()->getManager();
-        $em->getRepository('MealzAccountingBundle:Transaction')->clear();
+    public function testOnlyCashPaymentsListed()
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->getRepository('MealzAccountingBundle:Transaction')->clear();
 
         $profile = $this->getUserProfile();
         $transactionDate = new \DateTime('today');
@@ -259,8 +262,8 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
         $transaction->setAmount(42.17);
         $transaction->setPaymethod(0);
 
-        $em->persist($transaction);
-        $em->flush();
+        $entityManager->persist($transaction);
+        $entityManager->flush();
 
         $user = $this->getUserProfile('finance');
         $this->loginAsDefaultClient($user);
@@ -276,9 +279,10 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
      * @test
      * @throws \Exception
      */
-    public function testDailyClosingCalculation() {
-        $em = $this->getDoctrine()->getManager();
-        $em->getRepository('MealzAccountingBundle:Transaction')->clear();
+    public function testDailyClosingCalculation()
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->getRepository('MealzAccountingBundle:Transaction')->clear();
 
         $profile = $this->getUserProfile();
         $transactionDate = new \DateTime('today');
@@ -289,15 +293,15 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
         $transaction->setDate($transactionDate->setTime(12, 00, 00));
         $transaction->setAmount(42.17);
 
-        $em->persist($transaction);
+        $entityManager->persist($transaction);
 
         $transaction = new Transaction();
         $transaction->setProfile($profile);
         $transaction->setDate($transactionDate->setTime(13, 00, 00));
         $transaction->setAmount(57.83);
 
-        $em->persist($transaction);
-        $em->flush();
+        $entityManager->persist($transaction);
+        $entityManager->flush();
 
         $user = $this->getUserProfile('finance');
         $this->loginAsDefaultClient($user);
@@ -307,5 +311,4 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
         $dailyClosing = $crawler->filterXPath('//*[@class="table-data daily-closing"]/text()')->getNode(0)->textContent;
         $this->assertEquals("100.00", trim($dailyClosing), "Daily closing calculated incorrectly");
     }
-
 }

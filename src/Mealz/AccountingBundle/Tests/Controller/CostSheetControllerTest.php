@@ -69,18 +69,18 @@ class CostSheetControllerTest extends AbstractControllerTestCase
         $hash = '12345';
         $profile->setSettlementHash($hash);
 
-        $em = $this->getDoctrine()->getManager();
+        $enityManager = $this->getDoctrine()->getManager();
 
         $transaction = new Transaction();
         $transaction->setProfile($profile);
         $transaction->setAmount(mt_rand(10, 120) + 0.13);
         $transaction->setDate(new \DateTime());
 
-        $em->persist($transaction);
-        $em->flush();
+        $enityManager->persist($transaction);
+        $enityManager->flush();
 
-        $transactionRepository = $this->getDoctrine()->getRepository('MealzAccountingBundle:Transaction');
-        $balanceBefore = $transactionRepository->getTotalAmount('alice');
+        $transactionRepo = $this->getDoctrine()->getRepository('MealzAccountingBundle:Transaction');
+        $balanceBefore = $transactionRepo->getTotalAmount('alice');
 
         // Pre-action tests
         $this->assertGreaterThan(0, $balanceBefore);
@@ -91,7 +91,7 @@ class CostSheetControllerTest extends AbstractControllerTestCase
         $this->assertTrue($this->client->getResponse()->isSuccessful());
 
         // Check new balance
-        $balanceAfter = $transactionRepository->getTotalAmount('alice');
+        $balanceAfter = $transactionRepo->getTotalAmount('alice');
         $this->assertEquals(0, $balanceAfter);
         $this->assertNull($profile->getSettlementHash());
     }

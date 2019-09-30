@@ -12,26 +12,26 @@ use Mealz\UserBundle\Entity\Profile;
  */
 class GuestInvitationRepository extends EntityRepository
 {
-	/**
-	 * Gets the guest invitation from a particular user on a particular day.
-	 *
-	 * @param  Profile $host
-	 * @param  Day $day
-	 * @return GuestInvitation
-	 */
-	public function findOrCreateInvitation(Profile $host, Day $day)
-	{
-		$invitation = parent::findOneBy(['host' => $host->getUsername(), 'day' => $day->getId()]);
+    /**
+     * Gets the guest invitation from a particular user on a particular day.
+     *
+     * @param  Profile $host
+     * @param  Day $day
+     * @return GuestInvitation
+     */
+    public function findOrCreateInvitation(Profile $host, Day $day)
+    {
+        $invitation = parent::findOneBy(['host' => $host->getUsername(), 'day' => $day->getId()]);
 
-		if (!($invitation instanceof GuestInvitation)) {
-			$invitation = new GuestInvitation($host, $day);
+        if (($invitation instanceof GuestInvitation) === false) {
+            $invitation = new GuestInvitation($host, $day);
 
-			/** @var \Doctrine\ORM\EntityManager $em */
-			$em = $this->getEntityManager();
-			$em->persist($invitation);
-			$em->flush();
-		}
+            /** @var \Doctrine\ORM\EntityManager $entityManager */
+            $entityManager = $this->getEntityManager();
+            $entityManager->persist($invitation);
+            $entityManager->flush();
+        }
 
-		return $invitation;
-	}
+        return $invitation;
+    }
 }

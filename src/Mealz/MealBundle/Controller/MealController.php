@@ -31,7 +31,6 @@ use Symfony\Component\Translation\Translator;
  */
 class MealController extends BaseController
 {
-
     /**
      * the index Action
      * @return \Symfony\Component\HttpFoundation\Response
@@ -40,7 +39,6 @@ class MealController extends BaseController
     {
         /** @var WeekRepository $weekRepository */
         $weekRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Week');
-
         $currentWeek = $weekRepository->getCurrentWeek();
 
         if (null === $currentWeek) {
@@ -74,29 +72,9 @@ class MealController extends BaseController
     {
         $meal = $this->getMealRepository()->findOneByDateAndDish($date, $dish);
 
-        if ($this->getUser() === null) {
-            return $this->ajaxSessionExpiredRedirect();
-        }
-
-        if ($meal === null) {
-            return new JsonResponse(null, 404);
-        }
-
-        if ($this->getDoorman()->isUserAllowedToJoin($meal) === false
-            && $this->getDoorman()->isUserAllowedToSwap($meal) === false
-            && $this->getDoorman()->isKitchenStaff() === false) {
-            return new JsonResponse(null, 403);
-        }
-
-        if ($profile === null) {
-            $profile = $this->getProfile();
-        } else {
-            if ($this->getProfile()->getUsername() === $profile || $this->getDoorman()->isKitchenStaff() === true) {
-                $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
-                $profile = $profileRepository->find($profile);
-            } else {
-                return new JsonResponse(null, 403);
-            }
+        $profile = $this->getProfileOrReturn($meal, $profile);
+        if ($profile instanceof JsonResponse === true) {
+            return $profile;
         }
 
         // Either the user is allowed to join a meal or the user is an admin, creating a participation for another user
@@ -108,32 +86,19 @@ class MealController extends BaseController
                 $participant->setMeal($meal);
 
                 /** Insert the participant into the database. */
-                $em = $this->getDoctrine()->getManager();
-                $em->transactional(
-                    function (EntityManager $em) use ($participant) {
-                        $em->persist($participant);
-                        $em->flush();
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->transactional(
+                    function (EntityManager $entityManager) use ($participant) {
+                        $entityManager->persist($participant);
+                        $entityManager->flush();
                     }
                 );
-                $em->refresh($meal);
+
+                $entityManager->refresh($meal);
             } catch (ParticipantNotUniqueException $e) {
                 return new JsonResponse(null, 422);
             }
-
-            $ajaxResponse = new JsonResponse();
-            $ajaxResponse->setData(
-                array(
-                'participantsCount' => $meal->getParticipants()->count(),
-                'url' => $this->generateUrl(
-                    'MealzMealBundle_Participant_delete',
-                    array(
-                        'participant' => $participant->getId(),
-                    )
-                ),
-                'actionText' => $this->get('translator')->trans('added', array(), 'action'),
-                )
-            );
-            return $ajaxResponse;
+            return $this->generateDeleteJoinActionAjaxRequest($meal, $participant);
         }
 
         if (is_object($this->getDoorman()->isKitchenStaff()) === true) {
@@ -154,53 +119,134 @@ class MealController extends BaseController
             $dateTime = $meal->getDateTime();
             $counter = count($this->getParticipantRepository()->getPendingParticipants($dateTime)) - 1;
 
-            if ($meal->getDish()->getParent() !== null) {
-                $takenOffer = $meal->getDish()->getParent()->getTitleEn() . ' ' . $meal->getDish()->getTitleEn();
-            } else {
-                $takenOffer = $meal->getDish()->getTitleEn();
-            }
+            return $this->generateAcceptJoinActionAjaxRequest($profile, $translator, $counter);
+        }
+    }
 
-            $participants = $this->getDoctrine()->getRepository('MealzMealBundle:Participant');
-            $offeredMeal = $participants->findByOffer($meal->getId());
-            $participant = $offeredMeal[0];
 
-            $this->sendMail($participant, $takenOffer);
 
-            $participant->setProfile($profile);
-            $participant->setOfferedAt(0);
+    /**
+     * Gets the profile or return. (Type of Doorman)
+     *
+     * @param Meal    $meal     The meal
+     * @param Profile $profile The profile
+     *
+     * @return JsonResponse, Profile  The profile or return.
+     */
+    private function getProfileOrReturn($meal, $profile)
+    {
+        if ($this->getUser() === null) {
+            return $this->ajaxSessionExpiredRedirect();
+        }
 
-            $em = $this->getDoctrine()->getManager();
-            $em->flush();
+        if ($meal === null) {
+            return new JsonResponse(null, 404);
+        }
 
-            $chefbotMessage = $translator->transChoice(
-                $this->get('translator')->trans('mattermost.offer_taken', array(), 'messages'),
-                $counter,
-                array(
-                '%counter%' => $counter,
-                '%takenOffer%' => $takenOffer
-                )
-            );
+        if ($this->getDoorman()->isUserAllowedToJoin($meal) === false
+            && $this->getDoorman()->isUserAllowedToSwap($meal) === false
+            && $this->getDoorman()->isKitchenStaff() === false) {
+            return new JsonResponse(null, 403);
+        }
 
-            $mattermostService = $this->container->get('mattermost.service');
-            $mattermostService->sendMessage($chefbotMessage);
+        if ($profile === null) {
+            $profile = $this->getProfile();
+            return $profile;
+        } elseif ($this->getProfile()->getUsername() === $profile || $this->getDoorman()->isKitchenStaff() === true) {
+            $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
+            $profile = $profileRepository->find($profile);
+            return $profile;
+        } else {
+            return new JsonResponse(null, 403);
+        }
 
-            $ajaxResponse = new JsonResponse();
-            $ajaxResponse->setData(
-                array(
+        return null;
+    }
+
+    /**
+     * Generates delete Ajax Request for join Action
+     *
+     * @param Meal        $meal         The meal
+     * @param Participant $participant  The participant
+     *
+     * @return JsonResponse Ajax-Request
+     */
+    private function generateDeleteJoinActionAjaxRequest($meal, $participant)
+    {
+        $ajaxResponse = new JsonResponse();
+        $ajaxResponse->setData(
+            array(
                 'participantsCount' => $meal->getParticipants()->count(),
                 'url' => $this->generateUrl(
-                    'MealzMealBundle_Participant_swap',
+                    'MealzMealBundle_Participant_delete',
                     array(
                         'participant' => $participant->getId(),
                     )
                 ),
-                'actionText' => $this->get('translator')->trans('added', array(), 'actions'),
+                'actionText' => $this->get('translator')->trans('added', array(), 'action'),
                 )
-            );
-
-            return $ajaxResponse;
-        }
+        );
+        return $ajaxResponse;
     }
+
+    /**
+     * Generates accept Ajax Request for join Action
+     *
+     * @param Profile    $profile     The profile
+     * @param Translator $translator  The translator
+     * @param Integer    $counter     The counter
+     *
+     * @return JsonResponse Ajax-Request
+     */
+    private function generateAcceptJoinActionAjaxRequest($profile, $translator, $counter)
+    {
+        if ($meal->getDish()->getParent() !== null) {
+            $takenOffer = $meal->getDish()->getParent()->getTitleEn() . ' ' . $meal->getDish()->getTitleEn();
+        } else {
+            $takenOffer = $meal->getDish()->getTitleEn();
+        }
+
+        $participants = $this->getDoctrine()->getRepository('MealzMealBundle:Participant');
+        $offeredMeal = $participants->findByOffer($meal->getId());
+        $participant = $offeredMeal[0];
+
+        $this->sendMail($participant, $takenOffer);
+
+        $participant->setProfile($profile);
+        $participant->setOfferedAt(0);
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->flush();
+
+        $chefbotMessage = $translator->transChoice(
+            $this->get('translator')->trans('mattermost.offer_taken', array(), 'messages'),
+            $counter,
+            array(
+            '%counter%' => $counter,
+            '%takenOffer%' => $takenOffer
+            )
+        );
+
+        $mattermostService = $this->container->get('mattermost.service');
+        $mattermostService->sendMessage($chefbotMessage);
+
+        $ajaxResponse = new JsonResponse();
+        $ajaxResponse->setData(
+            array(
+            'participantsCount' => $meal->getParticipants()->count(),
+            'url' => $this->generateUrl(
+                'MealzMealBundle_Participant_swap',
+                array(
+                    'participant' => $participant->getId(),
+                )
+            ),
+            'actionText' => $this->get('translator')->trans('added', array(), 'actions'),
+            )
+        );
+
+        return $ajaxResponse;
+    }
+
 
     /**
      * Returns swappable meals in an array.
@@ -252,87 +298,129 @@ class MealController extends BaseController
         $form = $this->createForm(InvitationForm::class, $invitationWrapper);
 
         // handle form submission
-        if ($request->isMethod('POST')) {
-            $translator = $this->get('translator');
-            $form->handleRequest($request);
-            $formData = $request->request->get('invitation_form');
-
-            if (!isset($formData['day']['meals']) || count($formData['day']['meals']) == 0) {
-                $message = $translator->trans("error.participation.no_meal_selected", [], 'messages');
-                $this->addFlashMessage($message, 'danger');
-            } elseif ($form->isValid()) {
-                $mealRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
-                $meals = $formData['day']['meals'];
-                $mealDateTime = $mealRepository->find($meals[0])->getDateTime()->format('Y-m-d');
-
-                $profile = $invitationWrapper->getProfile();
-                $profileId = $profile->getFirstName() . $profile->getName() . $mealDateTime;
-                // Try to load already existing profile entity.
-                $loadedProfile = $this->getDoctrine()->getRepository('MealzUserBundle:Profile')->find($profileId);
-
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->getConnection()->beginTransaction(); // suspend auto-commit
-                try {
-                    // If profile already exists: use it. Otherwise create new one.
-                    if ($loadedProfile) {
-                        // If profile exists, but has no guest role, throw an error.
-                        if ($loadedProfile->isGuest()) {
-                            $profile = $loadedProfile;
-                        } else {
-                            throw new ProfileExistsException('This profile entity already exists');
-                        }
-                    } else {
-                        $profile->setUsername($profileId);
-                        $profile->addRole($this->getGuestRole());
-                    }
-
-                    // add participation for every chosen Meal
-                    foreach ($meals as $mealId) {
-                        $meal = $mealRepository->find($mealId);
-                        // If guest enrolls too late, throw access denied error
-                        if ($meal->isParticipationLimitReached() || !$this->getDoorman()->isToggleParticipationAllowed($meal->getDateTime())) {
-                            throw new ToggleParticipationNotAllowedException();
-                        }
-                        if (!$this->getDoorman()->isToggleParticipationAllowed($meal->getDay()->getLockParticipationDateTime())) {
-                            throw new ToggleParticipationNotAllowedException();
-                        }
-                        $participation = new Participant();
-                        $participation->setProfile($profile);
-                        $participation->setCostAbsorbed(true);
-                        $participation->setMeal($meal);
-                        $entityManager->persist($participation);
-                    }
-                    $entityManager->persist($profile);
-                    $entityManager->flush();
-                    $entityManager->getConnection()->commit();
-                    $message = $translator->trans("participation.successful", [], 'messages');
-                    $this->addFlashMessage($message, 'success');
-                } catch (Exception $e) {
-                    $entityManager->getConnection()->rollBack();
-
-                    if ($e instanceof ParticipantNotUniqueException) {
-                        $message = $translator->trans("error.participation.not_unique", [], 'messages');
-                    } elseif ($e instanceof ToggleParticipationNotAllowedException) {
-                        $message = $translator->trans("error.meal.join_not_allowed", [], 'messages');
-                    } elseif ($e instanceof ProfileExistsException) {
-                        $message = $translator->trans("error.profile.already_exists", [], 'messages');
-                    } else {
-                        $message = $translator->trans("error.unknown", [], 'messages');
-                    }
-
-                    $this->addFlashMessage($message, 'danger');
-                } finally {
-                    return $this->render('::base.html.twig');
-                }
-            }
+        if ($request->isMethod('POST') !== true) {
+            return;
         }
 
-        return $this->render(
-            'MealzMealBundle:Meal:guest.html.twig',
-            array(
-            'form' => $form->createView(),
-            )
-        );
+        $translator = $this->get('translator');
+        $form->handleRequest($request);
+        $formData = $request->request->get('invitation_form');
+
+        if (isset($formData['day']['meals']) === false || count($formData['day']['meals']) == 0) {
+            $message = $translator->trans("error.participation.no_meal_selected", [], 'messages');
+            $this->addFlashMessage($message, 'danger');
+
+            return $this->render(
+                'MealzMealBundle:Meal:guest.html.twig',
+                array(
+                    'form' => $form->createView(),
+                    )
+            );
+        }
+
+        if ($form->isValid() === false) {
+            return $this->render(
+                'MealzMealBundle:Meal:guest.html.twig',
+                [
+                    'form' => $form->createView(),
+                ]
+            );
+        }
+
+        $mealRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
+        $meals = $formData['day']['meals'];
+        $mealDateTime = $mealRepository->find($meals[0])->getDateTime()->format('Y-m-d');
+
+        $profile = $invitationWrapper->getProfile();
+        $profileId = $profile->getFirstName() . $profile->getName() . $mealDateTime;
+        // Try to load already existing profile entity.
+        $loadedProfile = $this->getDoctrine()->getRepository('MealzUserBundle:Profile')->find($profileId);
+
+        $entityManager = $this->getDoctrine()->getManager();
+        // suspend auto-commit
+        $entityManager->getConnection()->beginTransaction();
+
+        try {
+            // If profile already exists: use it. Otherwise create new one.
+            if ($loadedProfile !== null) {
+                // If profile exists, but has no guest role, throw an error.
+                if ($loadedProfile->isGuest() === true) {
+                    $profile = $loadedProfile;
+                } else {
+                    throw new ProfileExistsException('This profile entity already exists');
+                }
+            } else {
+                $profile->setUsername($profileId);
+                $profile->addRole($this->getGuestRole());
+            }
+
+            // add participation for every chosen Meal
+            $this->addParticipationForEveryChosenMeal($meals, $profile, $mealRepository, $translator);
+        } catch (Exception $error) {
+            $entityManager->getConnection()->rollBack();
+
+            $message = $this->getParticipantCountMessage($error, $translator);
+
+            $this->addFlashMessage($message, 'danger');
+        } finally {
+            return $this->render('::base.html.twig');
+        }
+    }
+
+    /**
+     * Gets the participant count message.
+     *
+     * @param Error      $error      The error
+     * @param Translator $translator The translator
+     */
+    private function getParticipantCountMessage($error, $translator)
+    {
+        if ($error instanceof ParticipantNotUniqueException) {
+            $message = $translator->trans("error.participation.not_unique", [], 'messages');
+        } elseif ($error instanceof ToggleParticipationNotAllowedException) {
+            $message = $translator->trans("error.meal.join_not_allowed", [], 'messages');
+        } elseif ($error instanceof ProfileExistsException) {
+            $message = $translator->trans("error.profile.already_exists", [], 'messages');
+        } else {
+            $message = $translator->trans("error.unknown", [], 'messages');
+        }
+        return $message;
+    }
+
+    /**
+     * Adds a participation for every chosen meal.
+     *
+     * @param Meal              $meals           The meals
+     * @param Profile           $profile         The profile
+     * @param MealRepository    $mealRepository  The meal repository
+     * @param translator        $translator      The Translator Object
+     *
+     * @throws \Mealz\MealBundle\EventListener\ToggleParticipationNotAllowedException
+     */
+    private function addParticipationForEveryChosenMeal($meals, $profile, $mealRepository, $translator)
+    {
+        foreach ($meals as $mealId) {
+            $meal = $mealRepository->find($mealId);
+            // If guest enrolls too late, throw access denied error
+            if ($meal->isParticipationLimitReached() === true ||
+                        $this->getDoorman()->isToggleParticipationAllowed($meal->getDateTime()) === false) {
+                throw new ToggleParticipationNotAllowedException();
+            }
+            if ($this->getDoorman()->isToggleParticipationAllowed($meal->getDay()->getLockParticipationDateTime()) === false ||
+                        $this->getDoorman()->isToggleParticipationAllowed($meal->getDay()->getLockParticipationDateTime()) === null) {
+                throw new ToggleParticipationNotAllowedException();
+            }
+            $participation = new Participant();
+            $participation->setProfile($profile);
+            $participation->setCostAbsorbed(true);
+            $participation->setMeal($meal);
+            $entityManager->persist($participation);
+        }
+        $entityManager->persist($profile);
+        $entityManager->flush();
+        $entityManager->getConnection()->commit();
+        $message = $translator->trans("participation.successful", [], 'messages');
+        $this->addFlashMessage($message, 'success');
     }
 
     /**

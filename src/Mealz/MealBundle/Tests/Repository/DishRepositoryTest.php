@@ -154,10 +154,10 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
 
     protected function sortDishByTitle(&$dishes)
     {
-        usort($dishes, function($a, $b) {
-            /** @var Dish $a */
-            /** @var Dish $b */
-            return $a->getTitle() < $b->getTitle() ? 1 : -1;
+        usort($dishes, function ($firstDish, $secondDish) {
+            /** @var Dish $firstDish */
+            /** @var Dish $secondDish */
+            return $firstDish->getTitle() < $secondDish->getTitle() ? 1 : -1;
         });
     }
 
@@ -168,14 +168,14 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
     {
         usort(
             $dishes,
-            function ($a, $b) {
-                /** @var Dish $a */
-                /** @var Dish $b */
-                if ($a->getCategory()->getTitle() === $b->getCategory()->getTitle()) {
-                    return $a->getTitle() < $b->getTitle() ? -1 : 1;
+            function ($firstDish, $secondDish) {
+                /** @var Dish $firstDish */
+                /** @var Dish $secondDish */
+                if ($firstDish->getCategory()->getTitle() === $secondDish->getCategory()->getTitle()) {
+                    return $firstDish->getTitle() < $secondDish->getTitle() ? -1 : 1;
                 }
 
-                return $a->getCategory()->getTitle() < $b->getCategory()->getTitle() ? -1 : 1;
+                return $firstDish->getCategory()->getTitle() < $secondDish->getCategory()->getTitle() ? -1 : 1;
             }
         );
     }
@@ -184,7 +184,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
     {
         $dishes = array();
         $categories = $this->createMultipleCategories($count / 2);
-        for($i = 0; $i < $count; $i++) {
+        for ($i = 0; $i < $count; $i++) {
             $dish = $this->createDish($categories[array_rand($categories)]);
             $dish->setCurrentLocale($this->locale);
             array_push($dishes, $dish);
@@ -206,10 +206,10 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
 
     protected function assertNoQueryResultDiff($dishes, $options)
     {
-        $qb = $this->dishRepository->getSortedDishesQueryBuilder($options);
-        $result = $qb->getQuery()->execute();
+        $query = $this->dishRepository->getSortedDishesQueryBuilder($options);
+        $result = $query->getQuery()->execute();
 
-        foreach($result as $dish) {
+        foreach ($result as $dish) {
             // Simulate doctrine postLoad localization listener
             $dish->setCurrentLocale($this->locale);
             $dish->getCategory()->setCurrentLocale($this->locale);

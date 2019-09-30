@@ -32,7 +32,7 @@ class LdapUserProvider extends SymfonyLdapUserProvider
         array $defaultRoles = array(),
         $uidKey = 'sAMAccountName',
         $filter = '({uid_key}={username})',
-        PostLogin $postLogin
+        PostLogin $postLogin = null
     ) {
         parent::__construct($ldap, $baseDn, $searchDn, $searchPassword, $defaultRoles, $uidKey, $filter);
         $this->childDefaultRoles = $defaultRoles;

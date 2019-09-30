@@ -25,8 +25,8 @@ class ParticipantControllerTest extends AbstractControllerTestCase
 {
     protected static $participantFirstName;
     protected static $participantLastName;
-    protected static $guestParticipantFirstName;
-    protected static $guestParticipantLastName;
+    protected static $guestPartFirstName;
+    protected static $guestPartLastName;
     protected static $guestCompany;
     protected static $userFirstName;
     protected static $userLastName;
@@ -67,12 +67,12 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         );
 
         // Create profile for guest participant
-        self::$guestParticipantFirstName = 'Jon';
-        self::$guestParticipantLastName = 'Doe' . $time;
+        self::$guestPartFirstName = 'Jon';
+        self::$guestPartLastName = 'Doe' . $time;
         self::$guestCompany = 'Company';
         $guestParticipant = $this->createGuestProfileAndParticipation(
-            self::$guestParticipantFirstName,
-            self::$guestParticipantLastName,
+            self::$guestPartFirstName,
+            self::$guestPartLastName,
             self::$guestCompany,
             self::$meal
         );
@@ -112,11 +112,11 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $this->persistAndFlushAll([$lockedParticipant]);
 
         $this->loginAsDefaultClient($userProfile);
-        $id = $lockedParticipant->getId();
-        $this->client->request('GET', '/menu/meal/' . $id . '/swap');
+        $identifier = $lockedParticipant->getId();
+        $this->client->request('GET', '/menu/meal/' . $identifier . '/swap');
 
         //verification by checking the database
-        $offeringParticipant = $this->getDoctrine()->getRepository('MealzMealBundle:Participant')->find($id);
+        $offeringParticipant = $this->getDoctrine()->getRepository('MealzMealBundle:Participant')->find($identifier);
         $this->assertTrue($offeringParticipant->getOfferedAt() !== 0, 'offeredAt value not changed');
     }
 
@@ -131,15 +131,15 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $lockedMeal = $lockedMealsArray[0];
         $lockedParticipant = $this->createParticipant($userProfile, $lockedMeal);
         $lockedParticipant->setOfferedAt(time());
-        $id = $lockedParticipant->getId();
+        $identifier = $lockedParticipant->getId();
         $this->persistAndFlushAll([$lockedParticipant]);
 
         $this->loginAsDefaultClient($userProfile);
-        $this->client->request('GET', '/menu/meal/' . $id . '/unswap');
+        $this->client->request('GET', '/menu/meal/' . $identifier . '/unswap');
 
         //verification by checking the database
-        $unswappingParticipant = $this->getDoctrine()->getRepository('MealzMealBundle:Participant')->find($id);
-        $this->assertTrue($unswappingParticipant->getOfferedAt() === 0, 'unswapping not working');
+        $unswappingPart = $this->getDoctrine()->getRepository('MealzMealBundle:Participant')->find($identifier);
+        $this->assertTrue($unswappingPart->getOfferedAt() === 0, 'unswapping not working');
     }
 
     /**
@@ -153,16 +153,16 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $outdatedMealsArray = $this->getDoctrine()->getRepository('MealzMealBundle:Meal')->getOutdatedMeals();
         $outdatedMeal = $outdatedMealsArray[0];
         $outdatedParticipant = $this->createParticipant($userProfile, $outdatedMeal);
-        $id = $outdatedParticipant->getId();
+        $identifier = $outdatedParticipant->getId();
 
         $this->persistAndFlushAll([$outdatedParticipant]);
 
         $this->loginAsDefaultClient($userProfile);
-        $this->client->request('GET', '/menu/meal/' . $id . '/swap');
+        $this->client->request('GET', '/menu/meal/' . $identifier . '/swap');
 
         //verification by checking the database
-        $notOfferingParticipant = $this->getDoctrine()->getRepository('MealzMealBundle:Participant')->find($id);
-        $this->assertTrue($notOfferingParticipant->getOfferedAt() === 0, 'user still offered meal');
+        $notOfferingPart = $this->getDoctrine()->getRepository('MealzMealBundle:Participant')->find($identifier);
+        $this->assertTrue($notOfferingPart->getOfferedAt() === 0, 'user still offered meal');
     }
 
     /**
@@ -174,8 +174,8 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $crawler = $this->getCurrentWeekParticipations();
         $this->assertEquals(1, $crawler->filter('html:contains("' . self::$participantFirstName . '")')->count());
         $this->assertEquals(1, $crawler->filter('html:contains("' . self::$participantLastName . '")')->count());
-        $this->assertEquals(1, $crawler->filter('html:contains("' . self::$guestParticipantFirstName . '")')->count());
-        $this->assertEquals(1, $crawler->filter('html:contains("' . self::$guestParticipantLastName . '")')->count());
+        $this->assertEquals(1, $crawler->filter('html:contains("' . self::$guestPartFirstName . '")')->count());
+        $this->assertEquals(1, $crawler->filter('html:contains("' . self::$guestPartLastName . '")')->count());
     }
 
     /**
@@ -187,7 +187,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $crawler = $this->getCurrentWeekParticipations()
             ->filter('.table-row')
             ->reduce(function ($node) {
-                $participantName = self::$guestParticipantLastName . ', ' . self::$guestParticipantFirstName;
+                $participantName = self::$guestPartLastName . ', ' . self::$guestPartFirstName;
                 if (stripos($node->text(), $participantName) === false) {
                     return false;
                 }

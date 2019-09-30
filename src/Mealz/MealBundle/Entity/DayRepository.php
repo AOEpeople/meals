@@ -6,14 +6,12 @@ use Doctrine\ORM\EntityRepository;
 
 class DayRepository extends EntityRepository
 {
-
     public function getCurrentDay()
     {
-        $qb = $this->createQueryBuilder('d');
-        $qb->where('d.dateTime LIKE :today');
-        $qb->setParameter(':today', date('Y-m-d%'));
+        $query = $this->createQueryBuilder('d');
+        $query->where('d.dateTime LIKE :today');
+        $query->setParameter(':today', date('Y-m-d%'));
 
-        return $qb->getQuery()->getSingleResult();
+        return $query->getQuery()->getSingleResult();
     }
-
 }

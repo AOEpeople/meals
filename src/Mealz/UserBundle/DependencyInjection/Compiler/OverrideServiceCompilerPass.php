@@ -10,17 +10,17 @@ class OverrideServiceCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        $userProviderDefinition = $container->getDefinition('security.user.provider.ldap');
-        $userProviderDefinition->setClass('Mealz\UserBundle\Provider\LdapUserProvider');
+        $userProviderDef = $container->getDefinition('security.user.provider.ldap');
+        $userProviderDef->setClass('Mealz\UserBundle\Provider\LdapUserProvider');
 
-        $authenticationProvider = $container->getDefinition('security.authentication.provider.ldap_bind');
-        $authenticationProvider->setClass('Mealz\UserBundle\Authentication\LdapBindAuthenticationProviderCustom');
+        $authentProvider = $container->getDefinition('security.authentication.provider.ldap_bind');
+        $authentProvider->setClass('Mealz\UserBundle\Authentication\LdapBindAuthenticationProviderCustom');
 
         /*
          * Can't extend Symfony's ldap factory.
          * Original factory can't be removed from security bundle UserProviderFactory list.
          * @see Symfony\Bundle\SecurityBundle\SecurityBundle
          */
-        $userProviderDefinition->addArgument(new Reference('mealz_user.post_login'));
+        $userProviderDef->addArgument(new Reference('mealz_user.post_login'));
     }
 }

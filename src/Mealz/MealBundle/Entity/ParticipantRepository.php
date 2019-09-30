@@ -37,8 +37,7 @@ class ParticipantRepository extends EntityRepository
         \DateTime $maxDate,
         Profile $profile = null,
         $options = array()
-    )
-    {
+    ) {
         $options = array_merge(
             $options,
             array(
@@ -50,26 +49,26 @@ class ParticipantRepository extends EntityRepository
         if ($profile instanceof Profile) {
             $options['load_profile'] = true;
         }
-        $qb = $this->getQueryBuilderWithOptions($options);
+        $queryBuilder = $this->getQueryBuilderWithOptions($options);
 
         $minDate = clone $minDate;
         $minDate->setTime(0, 0, 0);
         $maxDate = clone $maxDate;
         $maxDate->setTime(23, 59, 59);
 
-        $qb->andWhere('m.dateTime >= :minDate');
-        $qb->andWhere('m.dateTime <= :maxDate');
-        $qb->setParameter('minDate', $minDate);
-        $qb->setParameter('maxDate', $maxDate);
+        $queryBuilder->andWhere('m.dateTime >= :minDate');
+        $queryBuilder->andWhere('m.dateTime <= :maxDate');
+        $queryBuilder->setParameter('minDate', $minDate);
+        $queryBuilder->setParameter('maxDate', $maxDate);
 
         if ($profile instanceof Profile) {
-            $qb->andWhere('u.username = :username');
-            $qb->setParameter('username', $profile->getUsername());
+            $queryBuilder->andWhere('u.username = :username');
+            $queryBuilder->setParameter('username', $profile->getUsername());
         }
 
-        $qb->orderBy('u.name', 'ASC');
+        $queryBuilder->orderBy('u.name', 'ASC');
 
-        $participants = $qb->getQuery()->execute();
+        $participants = $queryBuilder->getQuery()->execute();
 
         return $this->sortParticipantsByName($participants);
     }
@@ -95,25 +94,25 @@ class ParticipantRepository extends EntityRepository
      */
     public function getTotalCost($username)
     {
-        $qb = $this->getQueryBuilderWithOptions(
+        $queryBuilder = $this->getQueryBuilderWithOptions(
             [
                 'load_meal' => true,
                 'load_profile' => false,
             ]
         );
 
-        $qb->select('SUM(m.price) as blubber');
-        $qb->leftJoin('m.day', 'day');
-        $qb->leftJoin('day.week', 'w');
-        $qb->andWhere('p.profile = :user');
-        $qb->setParameter('user', $username);
-        $qb->andWhere('p.costAbsorbed = 0');
-        $qb->andWhere('day.enabled = 1');
-        $qb->andWhere('w.enabled = 1');
-        $qb->andWhere('m.dateTime <= :now');
-        $qb->setParameter('now', new \DateTime());
+        $queryBuilder->select('SUM(m.price) as blubber');
+        $queryBuilder->leftJoin('m.day', 'day');
+        $queryBuilder->leftJoin('day.week', 'w');
+        $queryBuilder->andWhere('p.profile = :user');
+        $queryBuilder->setParameter('user', $username);
+        $queryBuilder->andWhere('p.costAbsorbed = 0');
+        $queryBuilder->andWhere('day.enabled = 1');
+        $queryBuilder->andWhere('w.enabled = 1');
+        $queryBuilder->andWhere('m.dateTime <= :now');
+        $queryBuilder->setParameter('now', new \DateTime());
 
-        return floatval($qb->getQuery()->getSingleScalarResult());
+        return floatval($queryBuilder->getQuery()->getSingleScalarResult());
     }
 
     /**
@@ -123,26 +122,26 @@ class ParticipantRepository extends EntityRepository
      */
     public function getLastAccountableParticipations(Profile $profile, $limit = null)
     {
-        $qb = $this->getQueryBuilderWithOptions(
+        $queryBuilder = $this->getQueryBuilderWithOptions(
             [
                 'load_meal' => true,
                 'load_profile' => false,
             ]
         );
 
-        $qb->andWhere('p.profile = :user');
-        $qb->setParameter('user', $profile);
-        $qb->andWhere('p.costAbsorbed = :costAbsorbed');
-        $qb->setParameter('costAbsorbed', false);
-        $qb->andWhere('m.dateTime <= :now');
-        $qb->setParameter('now', new \DateTime());
+        $queryBuilder->andWhere('p.profile = :user');
+        $queryBuilder->setParameter('user', $profile);
+        $queryBuilder->andWhere('p.costAbsorbed = :costAbsorbed');
+        $queryBuilder->setParameter('costAbsorbed', false);
+        $queryBuilder->andWhere('m.dateTime <= :now');
+        $queryBuilder->setParameter('now', new \DateTime());
 
-        $qb->orderBy('m.dateTime', 'desc');
+        $queryBuilder->orderBy('m.dateTime', 'desc');
         if (is_int($limit) === true) {
-            $qb->setMaxResults($limit);
+            $queryBuilder->setMaxResults($limit);
         }
 
-        return $qb->getQuery()->execute();
+        return $queryBuilder->getQuery()->execute();
     }
 
     /**
@@ -210,13 +209,13 @@ class ParticipantRepository extends EntityRepository
             )
         );
 
-        $qb = $this->getQueryBuilderWithOptions($options);
-        $qb->andWhere('m.dateTime LIKE :today');
-        $qb->setParameter(':today', date('Y-m-d%'));
+        $queryBuilder = $this->getQueryBuilderWithOptions($options);
+        $queryBuilder->andWhere('m.dateTime LIKE :today');
+        $queryBuilder->setParameter(':today', date('Y-m-d%'));
 
-        $qb->orderBy('u.name', 'ASC');
+        $queryBuilder->orderBy('u.name', 'ASC');
 
-        $participants = $qb->getQuery()->execute();
+        $participants = $queryBuilder->getQuery()->execute();
 
         return $this->sortParticipantsByName($participants);
     }
@@ -249,7 +248,7 @@ class ParticipantRepository extends EntityRepository
     {
         $options = array_merge($this->defaultOptions, $options);
 
-        $qb = $this->createQueryBuilder('p');
+        $queryBuilder = $this->createQueryBuilder('p');
 
         // SELECT
         $select = 'p';
@@ -262,21 +261,21 @@ class ParticipantRepository extends EntityRepository
                 $select .= ',r';
             }
         }
-        $qb->select($select);
+        $queryBuilder->select($select);
 
         // JOIN
         if (array_key_exists('load_meal', $options) === true) {
-            $qb->leftJoin('p.meal', 'm');
-            $qb->leftJoin('m.dish', 'd');
+            $queryBuilder->leftJoin('p.meal', 'm');
+            $queryBuilder->leftJoin('m.dish', 'd');
         }
         if (array_key_exists('load_profile', $options) === true) {
-            $qb->leftJoin('p.profile', 'u');
+            $queryBuilder->leftJoin('p.profile', 'u');
             if (array_key_exists('load_roles', $options) === true) {
-                $qb->leftJoin('u.roles', 'r');
+                $queryBuilder->leftJoin('u.roles', 'r');
             }
         }
 
-        return $qb;
+        return $queryBuilder;
     }
 
     /**
@@ -288,33 +287,33 @@ class ParticipantRepository extends EntityRepository
      */
     private function findCostsPerMonthPerUser()
     {
-        $qb = $this->createQueryBuilder('p');
-        $qb->select('u.username, u.name, u.firstName, SUBSTRING(m.dateTime, 1, 7) AS yearMonth, SUM(m.price) AS costs');
-        $qb->leftJoin('p.meal', 'm');
-        $qb->leftJoin('p.profile', 'u');
-        $qb->leftJoin('u.roles', 'r');
-        $qb->leftJoin('m.day', 'd');
-        $qb->leftJoin('d.week', 'w');
+        $queryBuilder = $this->createQueryBuilder('p');
+        $queryBuilder->select('u.username, u.name, u.firstName, SUBSTRING(m.dateTime, 1, 7) AS yearMonth, SUM(m.price) AS costs');
+        $queryBuilder->leftJoin('p.meal', 'm');
+        $queryBuilder->leftJoin('p.profile', 'u');
+        $queryBuilder->leftJoin('u.roles', 'r');
+        $queryBuilder->leftJoin('m.day', 'd');
+        $queryBuilder->leftJoin('d.week', 'w');
         /**
          * @TODO: optimize query. where clause costs a lot of time.
          */
-        $qb->where('p.costAbsorbed = 0');
-        $qb->andWhere(
-            $qb->expr()->orX(
-                $qb->expr()->isNull('r.sid'),
-                $qb->expr()->neq('r.sid', ':role_sid')
+        $queryBuilder->where('p.costAbsorbed = 0');
+        $queryBuilder->andWhere(
+            $queryBuilder->expr()->orX(
+                $queryBuilder->expr()->isNull('r.sid'),
+                $queryBuilder->expr()->neq('r.sid', ':role_sid')
             )
         );
-        $qb->andWhere('m.dateTime < :now');
-        $qb->andWhere('d.enabled = 1');
-        $qb->andWhere('w.enabled = 1');
-        $qb->groupBy('u.username');
-        $qb->addGroupBy('yearMonth');
-        $qb->addOrderBy('u.name');
+        $queryBuilder->andWhere('m.dateTime < :now');
+        $queryBuilder->andWhere('d.enabled = 1');
+        $queryBuilder->andWhere('w.enabled = 1');
+        $queryBuilder->groupBy('u.username');
+        $queryBuilder->addGroupBy('yearMonth');
+        $queryBuilder->addOrderBy('u.name');
 
-        $qb->setParameters(['now' => date('Y-m-d H:i:s'), 'role_sid' => Role::ROLE_GUEST]);
+        $queryBuilder->setParameters(['now' => date('Y-m-d H:i:s'), 'role_sid' => Role::ROLE_GUEST]);
 
-        return $qb->getQuery()->getArrayResult();
+        return $queryBuilder->getQuery()->getArrayResult();
     }
 
     /**
@@ -324,18 +323,18 @@ class ParticipantRepository extends EntityRepository
      */
     public function findByOffer($mealId)
     {
-        $qb = $this->createQueryBuilder('a');
-        $qb->where(
-            $qb->expr()->not(
-                $qb->expr()->eq('a.' . 'offeredAt', '?1')
+        $queryBuilder = $this->createQueryBuilder('a');
+        $queryBuilder->where(
+            $queryBuilder->expr()->not(
+                $queryBuilder->expr()->eq('a.' . 'offeredAt', '?1')
             ),
-            $qb->expr()->eq('a.' . 'meal', '?2')
+            $queryBuilder->expr()->eq('a.' . 'meal', '?2')
         );
-        $qb->setParameter(1, 0);
-        $qb->setParameter(2, $mealId);
-        $qb->orderBy('a.offeredAt', 'asc');
+        $queryBuilder->setParameter(1, 0);
+        $queryBuilder->setParameter(2, $mealId);
+        $queryBuilder->orderBy('a.offeredAt', 'asc');
 
-        return $qb->getQuery()
+        return $queryBuilder->getQuery()
             ->getResult();
     }
 
@@ -350,16 +349,16 @@ class ParticipantRepository extends EntityRepository
         $maxDate = new \DateTime(date('d-m-Y', date_timestamp_get($dateTime)) . '23:59');
 
         $options = array('load_meal' => true);
-        $qb = $this->getQueryBuilderWithOptions($options);
+        $queryBuilder = $this->getQueryBuilderWithOptions($options);
 
-        $qb->andWhere('m.dateTime >= :minDate');
-        $qb->andWhere('m.dateTime <= :maxDate');
-        $qb->setParameter('minDate', $minDate);
-        $qb->setParameter('maxDate', $maxDate);
+        $queryBuilder->andWhere('m.dateTime >= :minDate');
+        $queryBuilder->andWhere('m.dateTime <= :maxDate');
+        $queryBuilder->setParameter('minDate', $minDate);
+        $queryBuilder->setParameter('maxDate', $maxDate);
 
-        $qb->andWhere('p.offeredAt != 0');
+        $queryBuilder->andWhere('p.offeredAt != 0');
 
-        return $qb->getQuery()
+        return $queryBuilder->getQuery()
             ->getResult();
     }
 }

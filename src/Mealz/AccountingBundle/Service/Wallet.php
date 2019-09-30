@@ -9,19 +9,19 @@ use Mealz\UserBundle\Entity\Profile;
 class Wallet
 {
     /**
-     * @var ParticipantRepository
+     * @var participantRepo
      */
-    protected $participantRepository;
+    protected $participantRepo;
 
     /**
-     * @var TransactionRepository
+     * @var transactionRepo
      */
-    protected $transactionRepository;
+    protected $transactionRepo;
 
-    public function __construct(ParticipantRepository $participantRepository, TransactionRepository $transactionRepository)
+    public function __construct(ParticipantRepository $participantRepo, TransactionRepository $transactionRepo)
     {
-        $this->participantRepository = $participantRepository;
-        $this->transactionRepository = $transactionRepository;
+        $this->participantRepo = $participantRepo;
+        $this->transactionRepo = $transactionRepo;
     }
 
     /**
@@ -31,8 +31,8 @@ class Wallet
     public function getBalance(Profile $profile)
     {
         $username = $profile->getUsername();
-        $costs = $this->participantRepository->getTotalCost($username);
-        $transactions = $this->transactionRepository->getTotalAmount($username);
+        $costs = $this->participantRepo->getTotalCost($username);
+        $transactions = $this->transactionRepo->getTotalAmount($username);
 
         return bcsub($transactions, $costs, 2);
     }

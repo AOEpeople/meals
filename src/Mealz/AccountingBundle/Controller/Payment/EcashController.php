@@ -70,11 +70,18 @@ class EcashController extends BaseController
         }
 
         $translator = $this->get('translator');
+        $validatedPaypalTrans = null;
+
+        if ($this->isFormValid($formArray) === true) {
+            $validatedPaypalTrans = $this->validatePaypalTransaction($formArray);
+        }
 
         // Check if required fields are set and the pay method is set to PayPal ('paymethod' == 0)
         if ($request->isMethod('POST') === true
-            && $this->isFormValid($formArray) === true
-            && $this->validatePaypalTransaction($formArray) === 200) {
+            && array_key_exists('statuscode', $validatedPaypalTrans) === true
+            && array_key_exists('amount', $validatedPaypalTrans) === true
+            && $validatedPaypalTrans['statuscode'] === 200) {
+
             /** @var EntityManager $entityManager */
             $entityManager = $this->getDoctrine()->getManager();
             $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
@@ -84,7 +91,7 @@ class EcashController extends BaseController
             $transaction = new Transaction();
             $transaction->setProfile($profile);
             $transaction->setOrderId($formArray['ecash[orderid]']);
-            $transaction->setAmount(floatval(str_replace(',', '.', $formArray['ecash[amount]'])));
+            $transaction->setAmount(floatval(str_replace(',', '.', $validatedPaypalTrans['amount'])));
             $transaction->setDate(new \DateTime());
             $transaction->setPaymethod(0);
 
@@ -117,9 +124,12 @@ class EcashController extends BaseController
 
     /**
      * Helper function to validate the PayPal transaction using the PayPal API
-     * Note: This function is public so that it can be mocked in the according PHPUnit test class
-     * @param $formArray
-     * @return int
+     * Note: This function is public so that it can be mocked in the according
+     * PHPUnit test class
+     *
+     * @param Form  $formArray  The form array
+     *
+     * @return array|null Returns int StatusCode and float Value
      */
     public function validatePaypalTransaction($formArray)
     {
@@ -130,7 +140,15 @@ class EcashController extends BaseController
 
         $response = PaypalClient::client()->execute(new OrdersGetRequest($formArray['ecash[orderid]']));
 
-        return $response->statusCode;
+        if (property_exists($response, 'statusCode') === false
+            || property_exists($response, 'result') === false
+            || property_exists($response->result, 'purchase_units') === false) {
+            return null;
+        }
+        return [
+            'statuscode'    => $response->statusCode,
+            'amount'        => $response->result->purchase_units[0]->amount->value
+        ];
     }
 
     /**

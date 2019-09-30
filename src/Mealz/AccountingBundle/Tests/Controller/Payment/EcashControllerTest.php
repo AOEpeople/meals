@@ -82,7 +82,7 @@ class EcashControllerTest extends AbstractControllerTestCase
 
         $ecashController->expects($this->atLeastOnce())
             ->method('validatePaypalTransaction')
-            ->will($this->returnValue(200));
+            ->will($this->returnValue(['statuscode' => 200, 'amount' => '5.23']));
 
         $ecashController->expects($this->at(0))
             ->method('get')

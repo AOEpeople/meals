@@ -1,3 +1,7 @@
+xopn_mealz_for_zombies_zombies:
+    resource: "@MealzUserBundle/Resources/config/routing.yml"
+    prefix:   /
+
 xopn_mealz_for_zombies_mealz:
     resource: "@MealzMealBundle/Resources/config/routing.yml"
     prefix:   /
@@ -10,22 +14,6 @@ xopn_mealz_for_zombies_rest:
     type : rest
     resource: "@MealzRestBundle/Resources/config/routing.yml"
     prefix:   /rest/v1
-
-# Redirecting to Keycloak login mask
-MealzUserBundle_login:
-    path: /login
-    defaults:
-        _controller: FrameworkBundle:Redirect:urlRedirect
-        path: /connect/meals
-        permanent: true
-
-# Required by Symfony
-MealzUserBundle_checkLogin:
-    path:  /login
-
-# Required by Symfony
-MealzUserBundle_logout:
-    path:  /logout
 
 #############################
 # FOS_OAUTH

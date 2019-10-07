@@ -3,8 +3,7 @@
 
 namespace Mealz\UserBundle\Controller;
 
-
-use Doctrine\ORM\Query;
+use HWI\Bundle\OAuthBundle\Security\Core\Authentication\Token\OAuthToken;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\SecurityContext;
@@ -12,6 +11,13 @@ use Symfony\Component\Security\Core\SecurityContext;
 class SecurityController extends Controller {
 
 	public function loginAction(Request $request) {
+
+	    // If Keycloak is enabled, redirect to the Meals home
+	    $token = $this->get('security.context')->getToken();
+	    if ($token instanceof OAuthToken) {
+            return $this->redirectToRoute('MealzMealBundle_home');
+        }
+
 		$session = $request->getSession();
 
 		// get the login error if there is one

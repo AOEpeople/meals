@@ -68,36 +68,37 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
     /**
      * Loads an user by identifier or create it.
      *
-     * @param Object $userInformation The user information
+     * @param string $username
+     * @param array $userInformation The user information
      *
      * @return OAuthUser|boolean
      */
-    public function loadUserByIdOrCreate($userInformation)
+    public function loadUserByIdOrCreate($username, $userInformation)
     {
-        // First Check if array Informations are given
-        if (gettype($userInformation) === 'object' &&
-            property_exists($userInformation, 'preferred_username') === true &&
-            property_exists($userInformation, 'family_name') === true &&
-            property_exists($userInformation, 'given_name') === true
+        // First Check if all informations are given
+        if (empty($username) === false &&
+            gettype($userInformation) === 'array' &&
+            array_key_exists('family_name', $userInformation) === true &&
+            array_key_exists('given_name', $userInformation) === true
         ) {
             $profile = $this->doctrineRegistry->getManager()->find(
                 'MealzUserBundle:Profile',
-                $userInformation->preferred_username
+                $username
             );
         } else {
             return false;
         }
 
-        //if Userprofile is null, create User
+        // When Userprofile is null, create User
         if ($profile === null) {
             $profile = $this->createProfile(
-                $userInformation->preferred_username,
-                str_replace(' ', '', explode(',', $userInformation->given_name)[1]),
-                $userInformation->family_name
+                $username,
+                str_replace(' ', '', explode(',', $userInformation['given_name'])[1]),
+                $userInformation['family_name']
             );
         }
 
-        $user = new OAuthUser($userInformation->preferred_username);
+        $user = new OAuthUser($username);
         $user->setProfile($profile);
 
         // give every LDAP User the ROLE_USER Role
@@ -124,11 +125,7 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
      */
     public function loadUserByOAuthUserResponse(UserResponseInterface $response)
     {
-        // get OAuth User Token Informations
-        $accessTokens = explode('.', $response->getAccessToken());
-        $userInformation = json_decode(base64_decode($accessTokens[1]));
-
-        return $this->loadUserByIdOrCreate($userInformation);
+        return $this->loadUserByIdOrCreate($response->getNickname(), $response->getResponse());
     }
 
     /**

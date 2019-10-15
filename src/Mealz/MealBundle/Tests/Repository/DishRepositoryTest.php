@@ -206,8 +206,8 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
 
     protected function assertNoQueryResultDiff($dishes, $options)
     {
-        $query = $this->dishRepository->getSortedDishesQueryBuilder($options);
-        $result = $query->getQuery()->execute();
+        $queryBuilder = $this->dishRepository->getSortedDishesQueryBuilder($options);
+        $result = $queryBuilder->getQuery()->execute();
 
         foreach ($result as $dish) {
             // Simulate doctrine postLoad localization listener

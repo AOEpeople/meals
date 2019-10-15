@@ -72,15 +72,18 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
         $this->assertTrue($firstTransaction instanceof Transaction);
 
         // now fetch results from db and get the summed up amount for a certain user...
-        $fetchTransTotalAm = $this->transactionRepo->findUserDataAndTransactionAmountForGivenPeriod($minDate, $maxDate, $firstTransaction->getProfile());
-        $fetchTransTotalAm = $fetchTransTotalAm[$firstTransaction->getProfile()->getUsername()]['amount'];
-        $fetchTransTotalAm = floatval($fetchTransTotalAm);
+        $userData = $this->transactionRepo->findUserDataAndTransactionAmountForGivenPeriod(
+            $minDate, 
+            $maxDate, 
+            $firstTransaction->getProfile()
+        );
+        $usersTotalAmount = floatval($userData[$firstTransaction->getProfile()->getUsername()]['amount']);
 
         // calculate sum of amount for tempTransactions
         $assumedTotalAmount = $this->getAssumedTotalAmountForTransactionsFromLastMonth($tempTransactions);
 
         // compare both amounts
-        $this->assertEquals($fetchTransTotalAm, $assumedTotalAmount);
+        $this->assertEquals($usersTotalAmount, $assumedTotalAmount);
     }
 
     /**
@@ -118,8 +121,8 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
     protected function getAssumedTotalAmountForTransactionsFromLastMonth($transactionsArray)
     {
         $result = 0;
-        $transcations = array_filter($transactionsArray, ['self', 'getTransactionsFromLastMonth']);
-        foreach ($transcations as $transaction) {
+        $transactions = array_filter($transactionsArray, ['self', 'getTransactionsFromLastMonth']);
+        foreach ($transactions as $transaction) {
             $result += $transaction->getAmount();
         }
 

@@ -12,7 +12,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Loads users.
- * @Simon.Rininsland
  */
 class LoadAnomUsers extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
 {
@@ -66,22 +65,20 @@ class LoadAnomUsers extends AbstractFixture implements OrderedFixtureInterface, 
      */
     public function load(ObjectManager $manager)
     {
-        /** a new Object Manager */
         $this->objectManager = $manager;
 
-        /** creating a new Connection  */
         $connection = $this->objectManager->getConnection();
         $connection->connect();
         $connection->beginTransaction();
 
-        /** List of protected Users, which should not be touched */
+        // List of protected Users, which should not be touched
         $protectedUsers = array('alice', 'bob', 'john', 'jane', 'kochomi', 'finance');
 
         try {
-            /** disabling Consisty Check (We need because dependet foreign and primary keys) */
+            // disabling Consisty Check (We need because dependet foreign and primary keys)
             $connection->query('SET FOREIGN_KEY_CHECKS=0;');
 
-            /** Anonymize all participant, guest_invitation, transaction and profile Names */
+            // Anonymize all participant, guest_invitation, transaction and profile Names
             foreach ($this->getAllUsers() as $key => $user) {
                 if (!in_array($user->getUsername(), $protectedUsers)) {
                     $connection->query(
@@ -100,19 +97,17 @@ class LoadAnomUsers extends AbstractFixture implements OrderedFixtureInterface, 
                 }
             }
 
-            /** write in Database and close the connection */
+            // write in Database and close the connection
             $this->objectManager->flush();
             $connection->commit();
 
-            /** create a new Connection */
+            // create a new Connection
             $connection = $this->objectManager->getConnection();
             $connection->connect();
             $connection->beginTransaction();
 
-            /** For each User */
             foreach ($this->getAllUsers() as $key => $user) {
                 if (in_array($user->getUsername(), $protectedUsers) === false) {
-                    /** Generate Users Logins */
                     $login = new Login();
                     $login->setUsername($key.'XXX');
                     $this->objectManager->persist($user);
@@ -135,11 +130,7 @@ class LoadAnomUsers extends AbstractFixture implements OrderedFixtureInterface, 
             $this->objectManager->flush();
             $connection->commit();
         } catch (\Exception $e) {
-
-            /** if an Error occurs do a Rollback */
             $connection->rollback();
-
-            /** and close the open connection */
             $connection->close();
             throw $e;
         }

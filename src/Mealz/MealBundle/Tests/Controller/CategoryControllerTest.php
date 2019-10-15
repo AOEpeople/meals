@@ -152,7 +152,7 @@ class CategoryControllerTest extends AbstractControllerTestCase
     protected function getJsonResponseCrawler()
     {
         $content = $this->client->getResponse()->getContent();
-        $uri = 'http://www.mealz.local';
+        $uri = 'http://www.meals.local';
 
         return new Crawler(json_decode($content, true), $uri);
     }

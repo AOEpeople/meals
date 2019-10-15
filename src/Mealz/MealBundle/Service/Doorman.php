@@ -62,7 +62,7 @@ class Doorman
         if ($this->hasAccessTo(self::AT_MEAL_PARTICIPATION, ['meal' => $meal]) === true) {
             return true;
         }
-        return ($this->isTogglePartAllowed($meal->getDateTime()) && $this->hasAccessTo(self::AT_MEAL_PARTICIPATION, ['meal' => $meal]));
+        return ($this->isToggleParticipationAllowed($meal->getDateTime()) && $this->hasAccessTo(self::AT_MEAL_PARTICIPATION, ['meal' => $meal]));
     }
 
     /**
@@ -166,7 +166,7 @@ class Doorman
      * @param \DateTime $lockPartDateTime
      * @return bool
      */
-    public function isTogglePartAllowed(\DateTime $lockPartDateTime)
+    public function isToggleParticipationAllowed(\DateTime $lockPartDateTime)
     {
         // is it still allowed to participate in the meal by now?
         return ($lockPartDateTime->getTimestamp() > $this->now);
@@ -198,7 +198,7 @@ class Doorman
                 if (!isset($params['meal']) || !$params['meal'] instanceof \Mealz\MealBundle\Entity\Meal) {
                     return false;
                 }
-                return $this->isTogglePartAllowed($params['meal']->getDay()->getLockParticipationDateTime());
+                return $this->isToggleParticipationAllowed($params['meal']->getDay()->getLockParticipationDateTime());
                 break;
             default:
                 // by default refuse access

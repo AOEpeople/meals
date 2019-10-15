@@ -181,4 +181,22 @@ class Variation extends \Twig_Extension
 
         return null;
     }
+
+    /**
+     * @see self::getSortedVariation
+     * 
+     * @param array $first
+     * @param array $second
+     * 
+     * @return int
+     */
+    private function compareVariation($first, $second)
+    {
+        $firstContent = strtolower($first['variations']['content']);
+        $secondContent = strtolower($second['variations']['content']);
+        if ($firstContent == $secondContent) {
+            return 0;
+        }
+        return ($firstContent < $secondContent) ? -1 : 1;
+    }
 }

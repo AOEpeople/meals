@@ -43,11 +43,11 @@ class LdapBindAuthenticationProviderCustom extends UserAuthenticationProvider
      * @param string                $providerKey                The provider key
      * @param LdapClientInterface   $ldap                       An Ldap client
      * @param string                $dnString                   A string used to create the bind DN
-     * @param bool                  $hideNFoundExcepts          Whether to hide user not found exception or not
+     * @param bool                  $isHideDnfExcepts           Whether to hide user not found exception or not
      */
-    public function __construct(UserProviderInterface $userProvider, UserCheckerInterface $userChecker, $providerKey, LdapClientInterface $ldap, $dnString = '{username}', $hideNFoundExcepts = true)
+    public function __construct(UserProviderInterface $userProvider, UserCheckerInterface $userChecker, $providerKey, LdapClientInterface $ldap, $dnString = '{username}', $isHideDnfExcepts = true)
     {
-        parent::__construct($userChecker, $providerKey, $hideNFoundExcepts);
+        parent::__construct($userChecker, $providerKey, $isHideDnfExcepts);
 
         $this->userProvider = $userProvider;
         $this->ldap = $ldap;

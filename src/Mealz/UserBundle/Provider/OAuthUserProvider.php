@@ -107,7 +107,7 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
         // Map Keycloak Roles to Meals Roles
         foreach ($this->roleMapping as $keycloakRole => $mealsRole) {
             // if the Keycloak User has Roles with mapped Roles in meals. Map it.
-            if (array_search($keycloakRole, $userInformation->realm_access->roles) !== false) {
+            if (array_search($keycloakRole, $userInformation['roles']) !== false) {
                 $user->addRole($mealsRole);
             }
         }

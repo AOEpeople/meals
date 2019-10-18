@@ -68,6 +68,10 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
      */
     public function loadUserByIdOrCreate($username, $userInformation)
     {
+        if (array_key_exists('error', $userInformation) && $userInformation['error'] === 'invalid_token') {
+            return false;
+        }
+
         $userRoles = $this->fetchUserRoles($userInformation['roles']);
 
         // When non of the roles fetched - access is denied

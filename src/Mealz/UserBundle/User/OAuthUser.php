@@ -44,6 +44,14 @@ class OAuthUser implements OAuthUserInterface
     }
 
     /**
+     * @param array $roles
+     */
+    public function setRoles($roles)
+    {
+        $this->roles = $roles;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function addRole($role)

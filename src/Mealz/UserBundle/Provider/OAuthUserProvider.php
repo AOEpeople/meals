@@ -68,7 +68,14 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
      */
     public function loadUserByIdOrCreate($username, $userInformation)
     {
-        // First Check if all informations are given
+        $userRoles = $this->fetchUserRoles($userInformation['roles']);
+
+        // When non of the roles fetched - access is denied
+        if (count($userRoles) === 0) {
+            return false;
+        }
+
+        // Check if all informations are given
         if (empty($username) === false &&
             gettype($userInformation) === 'array' &&
             array_key_exists('family_name', $userInformation) === true &&
@@ -86,26 +93,14 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
         if ($profile === null) {
             $profile = $this->createProfile(
                 $username,
-                str_replace(' ', '', explode(',', $userInformation['given_name'])[1]),
+                $this->extractGivenName($userInformation['given_name']),
                 $userInformation['family_name']
             );
         }
 
         $user = new OAuthUser($username);
         $user->setProfile($profile);
-
-        // Map Keycloak Roles to Meals Roles
-        foreach ($this->roleMapping as $keycloakRole => $mealsRole) {
-            // if the Keycloak User has Roles with mapped Roles in meals. Map it.
-            if (array_search($keycloakRole, $userInformation['roles']) !== false) {
-                $user->addRole($mealsRole);
-            }
-        }
-
-        // When non of the roles fetched - access is denied
-        if (count($user->getRoles()) === 0) {
-            return false;
-        }
+        $user->setRoles($userRoles);
 
         if ($user instanceof Login) {
             $this->doctrineRegistry->getManager()->persist($user);
@@ -164,5 +159,35 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
         $this->doctrineRegistry->getManager()->flush();
 
         return $profile;
+    }
+
+    /**
+     * Fetch keyCloak and meals roles
+     * @param array $keycloakUserRoles
+     * 
+     * @return array
+     */
+    protected function fetchUserRoles($keycloakUserRoles) {
+        $fetchedRoles = [];
+
+        // Map Keycloak Roles to Meals Roles
+        foreach ($this->roleMapping as $keycloakRoleName => $mealsRole) {
+            // if the Keycloak User has Roles with mapped Roles in meals. Map it.
+            if (array_search($keycloakRoleName, $keycloakUserRoles) !== false) {
+                array_push($fetchedRoles, $mealsRole);
+            }
+        }
+
+        return $fetchedRoles;
+    }
+
+    /**
+     * Extract given name from full name
+     * @param string $givenName
+     * 
+     * @return string
+     */
+    private function extractGivenName($name) {
+        return str_replace(' ', '', explode(',', $name)[1]);
     }
 }

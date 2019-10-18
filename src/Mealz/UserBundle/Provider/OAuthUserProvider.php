@@ -29,21 +29,14 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
     private $doctrineRegistry;
 
     /**
-     * Give User the ROLE_USER Role to access meals
-     * Use in Combination of /app/config/commons/all/security.yml
-     *
-     * @var string
-     */
-    private $publicRole = 'ROLE_USER';
-
-    /**
      * Map Keycloak Roles to Meals ones
      *
      * @var array
      */
     private $roleMapping = [
         'meals.admin'   => 'ROLE_KITCHEN_STAFF',
-        'meals.finance'   => 'ROLE_FINANCE'
+        'meals.finance' => 'ROLE_FINANCE',
+        'meals.user'    => 'ROLE_USER'
     ];
 
     /**
@@ -68,48 +61,46 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
     /**
      * Loads an user by identifier or create it.
      *
-     * @param Object $userInformation The user information
+     * @param string $username
+     * @param array $userInformation The user information
      *
      * @return OAuthUser|boolean
      */
-    public function loadUserByIdOrCreate($userInformation)
+    public function loadUserByIdOrCreate($username, $userInformation)
     {
-        // First Check if array Informations are given
-        if (gettype($userInformation) === 'object' &&
-            property_exists($userInformation, 'preferred_username') === true &&
-            property_exists($userInformation, 'family_name') === true &&
-            property_exists($userInformation, 'given_name') === true
+        $userRoles = $this->fetchUserRoles($userInformation['roles']);
+
+        // When non of the roles fetched - access is denied
+        if (count($userRoles) === 0) {
+            return false;
+        }
+
+        // Check if all informations are given
+        if (empty($username) === false &&
+            gettype($userInformation) === 'array' &&
+            array_key_exists('family_name', $userInformation) === true &&
+            array_key_exists('given_name', $userInformation) === true
         ) {
             $profile = $this->doctrineRegistry->getManager()->find(
                 'MealzUserBundle:Profile',
-                $userInformation->preferred_username
+                $username
             );
         } else {
             return false;
         }
 
-        //if Userprofile is null, create User
+        // When Userprofile is null, create User
         if ($profile === null) {
             $profile = $this->createProfile(
-                $userInformation->preferred_username,
-                str_replace(' ', '', explode(',', $userInformation->given_name)[1]),
-                $userInformation->family_name
+                $username,
+                $this->extractGivenName($userInformation['given_name']),
+                $userInformation['family_name']
             );
         }
 
-        $user = new OAuthUser($userInformation->preferred_username);
+        $user = new OAuthUser($username);
         $user->setProfile($profile);
-
-        // give every LDAP User the ROLE_USER Role
-        $user->addRole($this->publicRole);
-
-        // Map Keycloak Roles to Meals Roles
-        foreach ($this->roleMapping as $keycloakRole => $mealsRole) {
-            // if the Keycloak User has Roles with mapped Roles in meals. Map it.
-            if (array_search($keycloakRole, $userInformation->realm_access->roles) !== false) {
-                $user->addRole($mealsRole);
-            }
-        }
+        $user->setRoles($userRoles);
 
         if ($user instanceof Login) {
             $this->doctrineRegistry->getManager()->persist($user);
@@ -124,11 +115,7 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
      */
     public function loadUserByOAuthUserResponse(UserResponseInterface $response)
     {
-        // get OAuth User Token Informations
-        $accessTokens = explode('.', $response->getAccessToken());
-        $userInformation = json_decode(base64_decode($accessTokens[1]));
-
-        return $this->loadUserByIdOrCreate($userInformation);
+        return $this->loadUserByIdOrCreate($response->getNickname(), $response->getResponse());
     }
 
     /**
@@ -172,5 +159,35 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
         $this->doctrineRegistry->getManager()->flush();
 
         return $profile;
+    }
+
+    /**
+     * Fetch keyCloak and meals roles
+     * @param array $keycloakUserRoles
+     * 
+     * @return array
+     */
+    protected function fetchUserRoles($keycloakUserRoles) {
+        $fetchedRoles = [];
+
+        // Map Keycloak Roles to Meals Roles
+        foreach ($this->roleMapping as $keycloakRoleName => $mealsRole) {
+            // if the Keycloak User has Roles with mapped Roles in meals. Map it.
+            if (array_search($keycloakRoleName, $keycloakUserRoles) !== false) {
+                array_push($fetchedRoles, $mealsRole);
+            }
+        }
+
+        return $fetchedRoles;
+    }
+
+    /**
+     * Extract given name from full name
+     * @param string $givenName
+     * 
+     * @return string
+     */
+    private function extractGivenName($name) {
+        return str_replace(' ', '', explode(',', $name)[1]);
     }
 }

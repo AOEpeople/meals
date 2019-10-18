@@ -104,7 +104,7 @@ Finance has access to all user features and the finance tab.
 ### Apache configuration
 
     <VirtualHost *:80>
-            ServerName mealz.local
+            ServerName meals.local
             DocumentRoot /var/www/mealz/web
             DirectoryIndex app_dev.php
 

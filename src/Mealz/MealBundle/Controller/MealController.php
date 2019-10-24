@@ -88,38 +88,13 @@ class MealController extends BaseController
         // Either the user is allowed to join a meal or the user is an admin, creating a participation for another user
         if ($this->getDoorman()->isUserAllowedToJoin($meal) === true
             || ($this->getDoorman()->isKitchenStaff() === true && $this->getProfile()->getUsername() !== $profile->getUsername())) {
-            try {
-                $participant = new Participant();
-                $participant->setProfile($profile);
-                $participant->setMeal($meal);
 
-                /** Insert the participant into the database. */
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->transactional(
-                    function (EntityManager $entityManager) use ($participant) {
-                        $entityManager->persist($participant);
-                        $entityManager->flush();
-                    }
-                );
-
-                $entityManager->refresh($meal);
-            } catch (ParticipantNotUniqueException $e) {
-                return new JsonResponse(null, 422);
-            }
+            $participant = $this->createParticipation($meal, $profile);
             return $this->generateDeleteResponse($meal, $participant);
         }
 
-        if (is_object($this->getDoorman()->isKitchenStaff()) === true) {
-            $logger = $this->get('monolog.logger.balance');
-            $logger->addInfo(
-                'admin added {profile} to {meal} (Participant: {participantId})',
-                array(
-                "participantId" => $participant->getId(),
-                "profile" => $participant->getProfile(),
-                "meal" => $meal,
-                )
-            );
-        }
+        
+        $this->logAddAction($meal, $participant);
 
         // Accepting an available offer
         if ($this->getDoorman()->isOfferAvailable($meal) === true && $this->getDoorman()->isUserAllowedToSwap($meal) === true) {
@@ -240,10 +215,9 @@ class MealController extends BaseController
      */
     private function swapMeal($meal, $profile, $translator, $counter)
     {
+        $takenOffer = $meal->getDish()->getTitleEn();
         if ($meal->getDish()->getParent() !== null) {
             $takenOffer = $meal->getDish()->getParent()->getTitleEn() . ' ' . $meal->getDish()->getTitleEn();
-        } else {
-            $takenOffer = $meal->getDish()->getTitleEn();
         }
 
         $participants = $this->getDoctrine()->getRepository('MealzMealBundle:Participant');
@@ -355,11 +329,10 @@ class MealController extends BaseController
             // If profile already exists: use it. Otherwise create new one.
             if ($loadedProfile !== null) {
                 // If profile exists, but has no guest role, throw an error.
-                if ($loadedProfile->isGuest() === true) {
-                    $profile = $loadedProfile;
-                } else {
+                if ($loadedProfile->isGuest() !== true) {
                     throw new ProfileExistsException('This profile entity already exists');
                 }
+                $profile = $loadedProfile;
             } else {
                 $profile->setUsername($profileId);
                 $profile->addRole($this->getGuestRole());
@@ -399,15 +372,16 @@ class MealController extends BaseController
      */
     private function getParticipantCountMessage($error, $translator)
     {
+        $message = $translator->trans("error.unknown", [], 'messages');
+
         if ($error instanceof ParticipantNotUniqueException) {
             $message = $translator->trans("error.participation.not_unique", [], 'messages');
         } elseif ($error instanceof ToggleParticipationNotAllowedException) {
             $message = $translator->trans("error.meal.join_not_allowed", [], 'messages');
         } elseif ($error instanceof ProfileExistsException) {
             $message = $translator->trans("error.profile.already_exists", [], 'messages');
-        } else {
-            $message = $translator->trans("error.unknown", [], 'messages');
         }
+
         return $message;
     }
 
@@ -495,6 +469,37 @@ class MealController extends BaseController
     }
 
     /**
+     * Insert the participant into the database
+     * 
+     * @param Meal $meal
+     * @param string $profile
+     * 
+     * @return Participant
+     */
+    private function createParticipation($meal, $profile)
+    {
+        try {
+            $participant = new Participant();
+            $participant->setProfile($profile);
+            $participant->setMeal($meal);
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->transactional(
+                function (EntityManager $entityManager) use ($participant) {
+                    $entityManager->persist($participant);
+                    $entityManager->flush();
+                }
+            );
+
+            $entityManager->refresh($meal);
+
+            return $participant;
+        } catch (ParticipantNotUniqueException $e) {
+            return new JsonResponse(null, 422);
+        }
+    }
+
+    /**
      * @param DateTime $dateTime
      * @return Week
      */
@@ -505,6 +510,29 @@ class MealController extends BaseController
         $week->setYear($dateTime->format('Y'));
 
         return $week;
+    }
+
+    /**
+     * Log add action of staff member
+     * 
+     * @param Meal $meal
+     * @param Participant $participant
+     */
+    private function logAddAction($meal, $participant)
+    {
+        if (is_object($this->getDoorman()->isKitchenStaff()) === false) {
+            return;
+        }
+
+        $logger = $this->get('monolog.logger.balance');
+        $logger->addInfo(
+            'admin added {profile} to {meal} (Participant: {participantId})',
+            array(
+                'participantId' => $participant->getId(),
+                'profile' => $participant->getProfile(),
+                'meal' => $meal,
+            )
+        );
     }
 
     /**

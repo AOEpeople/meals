@@ -15,9 +15,16 @@ interface LdapUserInterface extends SymfonyUserInterface, EquatableInterface, \S
 	public function setEmail($email);
 
 	public function getDn();
+	/**
+     * @SuppressWarnings(PHPMD.ShortVariable)
+     */
 	public function setDn($dn);
 
 	public function getCn();
+
+	/**
+     * @SuppressWarnings(PHPMD.ShortVariable)
+     */
 	public function setCn($cn);
 
 	public function getAttributes();

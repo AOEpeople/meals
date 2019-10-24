@@ -121,7 +121,7 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
     protected function getAssumedTotalAmountForTransactionsFromLastMonth($transactionsArray)
     {
         $result = 0;
-        $transactions = array_filter($transactionsArray, ['self', 'getTransactionsFromLastMonth']);
+        $transactions = array_filter($transactionsArray, ['self', 'isTransactionFromLastMonth']);
         foreach ($transactions as $transaction) {
             $result += $transaction->getAmount();
         }
@@ -163,13 +163,17 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
      *
      * @param $item     Transaction object
      * @return bool
+     * 
+     * @see getAssumedTotalAmountForTransactionsFromLastMonth()
+     * 
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      */
-    private function getTransactionsFromLastMonth($item)
+    private function isTransactionFromLastMonth($item)
     {
-        $m = new \DateTime('first day of last month');
-        $m = $m->format('n');
+        $firstDayLastMonth = new \DateTime('first day of last month');
+        $month = $firstDayLastMonth->format('n');
         if ($item instanceof Transaction) {
-            return ($item->getDate()->format('n') == $m);
+            return ($item->getDate()->format('n') == $month);
         }
 
         return false;

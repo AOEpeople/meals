@@ -39,6 +39,12 @@ class LdapUserProvider extends SymfonyLdapUserProvider
         $this->postLogin = $postLogin;
     }
 
+    /**
+     * @param string $username
+     * @param array $user
+     * 
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function loadUser($username, $user)
     {
         $roles = $this->childDefaultRoles;

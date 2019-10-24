@@ -41,28 +41,28 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
      */
     protected function loadFixtures($fixtures)
     {
-        $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
         $loader = new Loader();
         if (is_array($fixtures) || $fixtures instanceof \Iterator) {
             foreach ($fixtures as $fixture) {
                 $loader->addFixture($fixture);
             }
+            $this->push($loader);
+            return;
         } elseif ($fixtures instanceof FixtureInterface) {
             $loader->addFixture($fixtures);
+            $this->push($loader);
+            return;
         } elseif ($fixtures === null) {
-            // nothing to do
-        } else {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    '%s expects first parameter to be a FixtureInterface or array. %s given.',
-                    __METHOD__,
-                    get_class($fixtures)
-                )
-            );
+            return;
         }
-        $purger = new ORMPurger($entityManager);
-        $executor = new ORMExecutor($entityManager, $purger);
-        $executor->execute($loader->getFixtures());
+
+        throw new \InvalidArgumentException(
+            sprintf(
+                '%s expects first parameter to be a FixtureInterface or array. %s given.',
+                __METHOD__,
+                get_class($fixtures)
+            )
+        );
     }
 
     protected function clearAllTables()
@@ -174,5 +174,16 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
                 $entityManager->flush();
             }
         );
+    }
+
+    /**
+     * @param Loader $loader
+     */
+    protected function push($loader)
+    {
+        $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
+        $purger = new ORMPurger($entityManager);
+        $executor = new ORMExecutor($entityManager, $purger);
+        $executor->execute($loader->getFixtures());
     }
 }

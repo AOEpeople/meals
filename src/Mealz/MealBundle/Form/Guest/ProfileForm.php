@@ -10,6 +10,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ProfileForm extends AbstractType
 {
+    /**
+     * build the Form
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     * 
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder

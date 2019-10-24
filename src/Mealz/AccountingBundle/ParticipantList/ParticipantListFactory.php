@@ -9,11 +9,15 @@ class ParticipantListFactory
 
     /**
      * @var ParticipantRepository
+     * 
+     * @SuppressWarnings(PHPMD.LongVariable)
      */
     protected $participantRepository;
 
     /**
      * @param ParticipantRepository $participantRepository
+     * 
+     * @SuppressWarnings(PHPMD.LongVariable)
      */
     public function __construct(ParticipantRepository $participantRepository)
     {

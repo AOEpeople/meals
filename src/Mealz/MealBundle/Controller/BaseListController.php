@@ -209,10 +209,9 @@ abstract class BaseListController extends BaseController
             )
         );
 
+        $template = "MealzMealBundle:$this->entityName/partials:form.html.twig";
         if ($wrapInTr) {
             $template = "MealzMealBundle:$this->entityName/partials:formTable.html.twig";
-        } else {
-            $template = "MealzMealBundle:$this->entityName/partials:form.html.twig";
         }
 
         $renderedForm = $this->render($template, array('form' => $form->createView()));

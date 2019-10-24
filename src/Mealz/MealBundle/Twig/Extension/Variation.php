@@ -189,6 +189,8 @@ class Variation extends \Twig_Extension
      * @param array $second
      * 
      * @return int
+     * 
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      */
     private function compareVariation($first, $second)
     {

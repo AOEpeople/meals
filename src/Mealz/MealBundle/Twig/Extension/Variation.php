@@ -15,7 +15,6 @@ use Symfony\Component\VarDumper\VarDumper;
  */
 class Variation extends \Twig_Extension
 {
-
     protected $doctrine;
 
     protected $twig;
@@ -56,13 +55,13 @@ class Variation extends \Twig_Extension
         foreach ($meals as $meal) {
 
             /** @var Meal $meal */
-            if (isset($meal->data) && ($meal->data instanceof Meal)) {
+            if (isset($meal->data) === true && ($meal->data instanceof Meal === true)) {
                 $dish = $meal->data->getDish();
             } elseif ($meal instanceof Meal) {
                 $dish = $meal->getDish();
             }
 
-            if (!is_null($dish) && $dish->getParent() instanceof Dish) {
+            if (is_null($dish) === false && ($dish->getParent() instanceof Dish === true)) {
                 $parentId = $dish->getParent()->getId();
                 $mealsVariations[$parentId][] = $meal;
                 $mealsVariationsCount[$parentId] = count($mealsVariations[$parentId]);
@@ -93,7 +92,7 @@ class Variation extends \Twig_Extension
      */
     public function groupMealsToArray($formViews)
     {
-        $dishesGroupedByParent = array();
+        $dishesGroupByParent = array();
 
         foreach ($formViews as $formView) {
             /** @var Meal $meal */
@@ -102,12 +101,12 @@ class Variation extends \Twig_Extension
             if (null !== $dish) {
                 $parentDish = $dish->getParent();
                 $dishId = (null === $parentDish) ? $dish->getId() : $parentDish->getId();
-                $dishesGroupedByParent[$dishId]['ids'][] = $dish->getId();
-                $dishesGroupedByParent[$dishId]['formViews'][] = $formView;
+                $dishesGroupByParent[$dishId]['ids'][] = $dish->getId();
+                $dishesGroupByParent[$dishId]['formViews'][] = $formView;
             }
         }
 
-        return $dishesGroupedByParent;
+        return $dishesGroupByParent;
     }
 
     /**
@@ -162,8 +161,8 @@ class Variation extends \Twig_Extension
      */
     public function getDishCount($dish)
     {
-        $em = $this->doctrine->getManager();
-        $dishRepo = $em->getRepository('MealzMealBundle:Dish');
+        $entityManager = $this->doctrine->getManager();
+        $dishRepo = $entityManager->getRepository('MealzMealBundle:Dish');
         return $dishRepo->countNumberDishWasTaken($dish, $this->twig->getGlobals()['countDishPeriod']);
     }
 
@@ -183,6 +182,16 @@ class Variation extends \Twig_Extension
         return null;
     }
 
+    /**
+     * @see self::getSortedVariation
+     * 
+     * @param array $first
+     * @param array $second
+     * 
+     * @return int
+     * 
+     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
+     */
     private function compareVariation($first, $second)
     {
         $firstContent = strtolower($first['variations']['content']);

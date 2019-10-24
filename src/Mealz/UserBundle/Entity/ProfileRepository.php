@@ -17,12 +17,12 @@ class ProfileRepository extends EntityRepository
      */
     public function findAllExcept($usernames)
     {
-        $qb = $this->createQueryBuilder('p');
-        $qb->addSelect('r');
-        $qb->leftJoin('p.roles', 'r');
-        $qb->where($qb->expr()->notIn('p.username', ':usernames'));
-        $qb->setParameter(':usernames', $usernames);
+        $queryBuilder = $this->createQueryBuilder('p');
+        $queryBuilder->addSelect('r');
+        $queryBuilder->leftJoin('p.roles', 'r');
+        $queryBuilder->where($queryBuilder->expr()->notIn('p.username', ':usernames'));
+        $queryBuilder->setParameter(':usernames', $usernames);
 
-        return $qb->getQuery()->getResult();
+        return $queryBuilder->getQuery()->getResult();
     }
 }

@@ -22,7 +22,7 @@ use Doctrine\ORM\EntityManager;
  */
 class DayForm extends AbstractType
 {
-    protected $em;
+    protected $entityManager;
 
     /**
      * DayForm constructor.
@@ -30,13 +30,15 @@ class DayForm extends AbstractType
      */
     public function __construct(EntityManager $entityManager)
     {
-        $this->em = $entityManager;
+        $this->entityManager = $entityManager;
     }
 
     /**
      * build the Form
      * @param FormBuilderInterface $builder
      * @param array $options
+     * 
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -80,7 +82,7 @@ class DayForm extends AbstractType
             foreach ($meals as $meal) {
                 /** @var Meal $meal */
                 if (null === $meal->getDish() &&
-                    $this->em->getUnitOfWork()->getEntityState($meal) == UnitOfWork::STATE_NEW
+                    $this->entityManager->getUnitOfWork()->getEntityState($meal) == UnitOfWork::STATE_NEW
                 ) {
                     $meals->removeElement($meal);
                 }

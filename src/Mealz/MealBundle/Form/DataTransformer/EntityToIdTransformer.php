@@ -48,17 +48,17 @@ class EntityToIdTransformer implements DataTransformerInterface
 
     /**
      * transform Id to Entity
-     * @param mixed $id
+     * @param mixed $identifier
      * @return null|object
      */
-    public function reverseTransform($id)
+    public function reverseTransform($identifier)
     {
-        if (isset($id) === false) {
+        if (isset($identifier) === false) {
             return null;
         }
         $entity = $this->objectManager
             ->getRepository($this->class)
-            ->find($id);
+            ->find($identifier);
         if (null === $entity) {
             throw new TransformationFailedException();
         }

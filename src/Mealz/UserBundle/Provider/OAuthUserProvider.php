@@ -80,18 +80,18 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
         }
 
         // Check if all informations are given
-        if (empty($username) === false &&
-            gettype($userInformation) === 'array' &&
-            array_key_exists('family_name', $userInformation) === true &&
-            array_key_exists('given_name', $userInformation) === true
+        if (empty($username) === true ||
+            gettype($userInformation) !== 'array' ||
+            array_key_exists('family_name', $userInformation) === false ||
+            array_key_exists('given_name', $userInformation) === false
         ) {
-            $profile = $this->doctrineRegistry->getManager()->find(
-                'MealzUserBundle:Profile',
-                $username
-            );
-        } else {
             return false;
         }
+
+        $profile = $this->doctrineRegistry->getManager()->find(
+            'MealzUserBundle:Profile',
+            $username
+        );
 
         // When Userprofile is null, create User
         if ($profile === null) {

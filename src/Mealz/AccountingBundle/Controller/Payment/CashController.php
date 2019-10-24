@@ -71,7 +71,6 @@ class CashController extends BaseController
         $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
 
         $profile = $profileRepository->find($profile);
-        $profileBalance = $this->get('mealz_accounting.wallet')->getBalance($profile);
 
         $template = "MealzAccountingBundle:Accounting/Payment/Cash:form_cash_settlement.html.twig";
         $renderedForm = $this->render(
@@ -142,12 +141,12 @@ class CashController extends BaseController
 
     /**
      * Show transactions for logged in user
+     * Used in routing as an Action
      *
      * @param Request $request request
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function showTransactionHistoryAction(Request $request)
+    public function showTransactionHistoryAction()
     {
         if (false === $this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
             throw new AccessDeniedException();
@@ -159,18 +158,18 @@ class CashController extends BaseController
         $dateFrom->modify('-4 weeks');
         $dateTo = new \DateTime();
 
-        list($transactionsTotal, $transactionHistoryArr, $participationsTotal) = $this->getFullTransactionHistory(
+        list($transactionsTotal, $transactionHistory, $participationsTotal) = $this->getFullTransactionHistory(
             $dateFrom,
             $dateTo,
             $profile
         );
 
-        ksort($transactionHistoryArr);
+        ksort($transactionHistory);
 
         return $this->render(
             'MealzAccountingBundle:Accounting\\User:transaction_history.html.twig',
             array(
-                'transaction_history_records' => $transactionHistoryArr,
+                'transaction_history_records' => $transactionHistory,
                 'transactions_total' => $transactionsTotal,
                 'participations_total' => $participationsTotal,
             )
@@ -188,26 +187,26 @@ class CashController extends BaseController
      */
     public function getFullTransactionHistory($dateFrom, $dateTo, $profile)
     {
-        $participantRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Participant');
-        $participations = $participantRepository->getParticipantsOnDays($dateFrom, $dateTo, $profile);
+        $participantRepo = $this->getDoctrine()->getRepository('MealzMealBundle:Participant');
+        $participations = $participantRepo->getParticipantsOnDays($dateFrom, $dateTo, $profile);
 
-        $transactionRepository = $this->getDoctrine()->getRepository('MealzAccountingBundle:Transaction');
-        $transactions = $transactionRepository->getSuccessfulTransactionsOnDays($dateFrom, $dateTo, $profile);
+        $transactionRepo = $this->getDoctrine()->getRepository('MealzAccountingBundle:Transaction');
+        $transactions = $transactionRepo->getSuccessfulTransactionsOnDays($dateFrom, $dateTo, $profile);
 
         $transactionsTotal = 0;
-        $transactionHistoryArr = array();
+        $transactionHistory = array();
         foreach ($transactions as $transaction) {
             $transactionsTotal += $transaction->getAmount();
-            $transactionHistoryArr[$transaction->getDate()->getTimestamp()] = $transaction;
+            $transactionHistory[$transaction->getDate()->getTimestamp()] = $transaction;
         }
 
         $participationsTotal = 0;
         /** @var $participation Participant */
         foreach ($participations as $participation) {
             $participationsTotal += $participation->getMeal()->getPrice();
-            $transactionHistoryArr[$participation->getMeal()->getDateTime()->getTimestamp()] = $participation;
+            $transactionHistory[$participation->getMeal()->getDateTime()->getTimestamp()] = $participation;
         }
 
-        return array($transactionsTotal, $transactionHistoryArr, $participationsTotal);
+        return array($transactionsTotal, $transactionHistory, $participationsTotal);
     }
 }

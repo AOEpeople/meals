@@ -13,7 +13,13 @@ class LdapUser implements LdapUserInterface
     protected $surname;
     protected $displayname;
     protected $email;
+    /**
+     * @SuppressWarnings(PHPMD.ShortVariable)
+     */
     protected $dn;
+    /**
+     * @SuppressWarnings(PHPMD.ShortVariable)
+     */
     protected $cn;
     protected $roles = array();
     protected $attributes = array();
@@ -90,6 +96,9 @@ class LdapUser implements LdapUserInterface
         return $this->dn;
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.ShortVariable)
+     */
     public function setDn($dn)
     {
         $this->dn = $dn;
@@ -102,6 +111,9 @@ class LdapUser implements LdapUserInterface
         return $this->cn;
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.ShortVariable)
+     */
     public function setCn($cn)
     {
         $this->cn = $cn;

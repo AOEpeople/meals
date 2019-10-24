@@ -19,6 +19,8 @@ class Day extends AbstractMessage
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      * @var integer $id
+     * 
+     * @SuppressWarnings(PHPMD.ShortVariable)
      */
     private $id;
 
@@ -69,6 +71,8 @@ class Day extends AbstractMessage
 
     /**
      * @param int $id
+     * 
+     * @SuppressWarnings(PHPMD.ShortVariable)
      */
     public function setId($id)
     {
@@ -151,10 +155,10 @@ class Day extends AbstractMessage
     }
 
     /**
-     * @param \DateTime $lockParticipationDateTime
+     * @param \DateTime $lockDateTime
      */
-    public function setLockParticipationDateTime($lockParticipationDateTime)
+    public function setLockParticipationDateTime($lockDateTime)
     {
-        $this->lockParticipationDateTime = $lockParticipationDateTime;
+        $this->lockParticipationDateTime = $lockDateTime;
     }
 }

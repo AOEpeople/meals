@@ -11,7 +11,6 @@
 
 namespace Mealz\UserBundle\Authentication;
 
-
 use Symfony\Component\Security\Core\Authentication\Provider\UserAuthenticationProvider;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
@@ -44,11 +43,11 @@ class LdapBindAuthenticationProviderCustom extends UserAuthenticationProvider
      * @param string                $providerKey                The provider key
      * @param LdapClientInterface   $ldap                       An Ldap client
      * @param string                $dnString                   A string used to create the bind DN
-     * @param bool                  $hideUserNotFoundExceptions Whether to hide user not found exception or not
+     * @param bool                  $isHideDnfExcepts           Whether to hide user not found exception or not
      */
-    public function __construct(UserProviderInterface $userProvider, UserCheckerInterface $userChecker, $providerKey, LdapClientInterface $ldap, $dnString = '{username}', $hideUserNotFoundExceptions = true)
+    public function __construct(UserProviderInterface $userProvider, UserCheckerInterface $userChecker, $providerKey, LdapClientInterface $ldap, $dnString = '{username}', $isHideDnfExcepts = true)
     {
-        parent::__construct($userChecker, $providerKey, $hideUserNotFoundExceptions);
+        parent::__construct($userChecker, $providerKey, $isHideDnfExcepts);
 
         $this->userProvider = $userProvider;
         $this->ldap = $ldap;
@@ -75,15 +74,15 @@ class LdapBindAuthenticationProviderCustom extends UserAuthenticationProvider
         $username = $token->getUsername();
         $password = $token->getCredentials();
 
-        if (empty($password) === true ) {
+        if (empty($password) === true) {
             throw new BadCredentialsException('The presented password must not be empty.');
         }
 
         try {
             $username = $this->ldap->escape($username, '', LDAP_ESCAPE_DN);
-            $dn = str_replace('{username}', $username, $this->dnString);
+            $directory = str_replace('{username}', $username, $this->dnString);
 
-            $this->ldap->bind($dn, $password);
+            $this->ldap->bind($directory, $password);
         } catch (ConnectionException $e) {
             throw new BadCredentialsException('The presented password is invalid.');
         }

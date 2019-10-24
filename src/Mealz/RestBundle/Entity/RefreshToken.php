@@ -16,6 +16,8 @@ class RefreshToken extends BaseRefreshToken
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * 
+     * @SuppressWarnings(PHPMD.ShortVariable)
      */
     protected $id;
 

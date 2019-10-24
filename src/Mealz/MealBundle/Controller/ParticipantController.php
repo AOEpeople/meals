@@ -39,9 +39,9 @@ class ParticipantController extends BaseController
         $dish = $meal->getDish()->getSlug();
         $profile = $participant->getProfile()->getUsername();
 
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($participant);
-        $em->flush();
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($participant);
+        $entityManager->flush();
 
         if (($this->getDoorman()->isKitchenStaff()) === true) {
             $logger = $this->get('monolog.logger.balance');
@@ -103,8 +103,8 @@ class ParticipantController extends BaseController
                 $participant->setOfferedAt(0);
             }
 
-            $em = $this->getDoctrine()->getManager();
-            $em->flush();
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->flush();
 
             $ajaxResponse = new JsonResponse();
             $ajaxResponse->setData(array(
@@ -117,9 +117,8 @@ class ParticipantController extends BaseController
             return $ajaxResponse;
         }
 
-        $em = $this->getDoctrine()->getManager();
-        $em->flush();
-
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->flush();
 
         // If the meal has variations, get it's parent and concatenate the title of the parent meal with the title of the variation.
         $dishTitle = $participant->getMeal()->getDish()->getTitleEn();
@@ -129,8 +128,10 @@ class ParticipantController extends BaseController
 
         // Mattermost integration
         $translator = new Translator('en_EN');
-        $chefbotMessage = $translator->transChoice($this->get('translator')->trans('mattermost.offered', array(), 'messages'),
-            $counter, array(
+        $chefbotMessage = $translator->transChoice(
+            $this->get('translator')->trans('mattermost.offered', array(), 'messages'),
+            $counter,
+            array(
                 '%counter%' => $counter,
                 '%dish%' => $dishTitle)
         );
@@ -178,9 +179,9 @@ class ParticipantController extends BaseController
         $day = $dayRepository->getCurrentDay();
 
         // Get user participation to list them as table rows
-        $participantRepository = $this->getParticipantRepository();
-        $participation = $participantRepository->getParticipantsOnCurrentDay();
-        $groupedParticipation = $participantRepository->groupParticipantsByName($participation);
+        $participantRepo = $this->getParticipantRepository();
+        $participation = $participantRepo->getParticipantsOnCurrentDay();
+        $groupedParticipation = $participantRepo->groupParticipantsByName($participation);
 
         return $this->render('MealzMealBundle:Participant:list.html.twig', array(
             'day' => $day,
@@ -204,12 +205,12 @@ class ParticipantController extends BaseController
         ));
 
         // Get user participation to list them as table rows
-        $participantRepository = $this->getParticipantRepository();
-        $participation = $participantRepository->getParticipantsOnDays(
+        $participantRepo = $this->getParticipantRepository();
+        $participation = $participantRepo->getParticipantsOnDays(
             $week->getStartTime(),
             $week->getEndTime()
         );
-        $groupedParticipation = $participantRepository->groupParticipantsByName($participation);
+        $groupedParticipation = $participantRepo->groupParticipantsByName($participation);
 
         /** @var Profile[] $profiles */
         $profiles = $this->getDoctrine()->getRepository('MealzUserBundle:Profile')->findAll();

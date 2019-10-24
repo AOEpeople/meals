@@ -174,8 +174,8 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $crawler = $this->getCurrentWeekParticipations();
         $this->assertEquals(1, $crawler->filter('html:contains("' . self::$participantFirstName . '")')->count());
         $this->assertEquals(1, $crawler->filter('html:contains("' . self::$participantLastName . '")')->count());
-        $this->assertEquals(1, $crawler->filter('html:contains("' . self::$guestPartFirstName . '")')->count());
-        $this->assertEquals(1, $crawler->filter('html:contains("' . self::$guestPartLastName . '")')->count());
+        $this->assertEquals(1, $crawler->filter('html:contains("' . self::$guestFirstName . '")')->count());
+        $this->assertEquals(1, $crawler->filter('html:contains("' . self::$guestLastName . '")')->count());
     }
 
     /**
@@ -187,7 +187,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $crawler = $this->getCurrentWeekParticipations()
             ->filter('.table-row')
             ->reduce(function ($node) {
-                $participantName = self::$guestPartLastName . ', ' . self::$guestPartFirstName;
+                $participantName = self::$guestLastName . ', ' . self::$guestFirstName;
                 if (stripos($node->text(), $participantName) === false) {
                     return false;
                 }

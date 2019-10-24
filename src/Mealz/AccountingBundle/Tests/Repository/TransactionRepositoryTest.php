@@ -156,4 +156,22 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
 
         return $transactions;
     }
+
+    /**
+     * HELPERFUNCTION
+     * Filter transactions from an array that date is NOT within the last month
+     *
+     * @param $item     Transaction object
+     * @return bool
+     */
+    private function getTransactionsFromLastMonth($item)
+    {
+        $m = new \DateTime('first day of last month');
+        $m = $m->format('n');
+        if ($item instanceof Transaction) {
+            return ($item->getDate()->format('n') == $m);
+        }
+
+        return false;
+    }
 }

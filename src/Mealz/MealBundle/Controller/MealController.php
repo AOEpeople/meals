@@ -367,7 +367,6 @@ class MealController extends BaseController
 
             $this->addParticipationForEveryChosenMeal($meals, $profile, $mealRepository, $translator);
         } catch (Exception $error) {
-    var_dump($error);exit;
             $message = $this->getParticipantCountMessage($error, $translator);
 
             $this->addFlashMessage($message, 'danger');
@@ -436,8 +435,7 @@ class MealController extends BaseController
                             $this->getDoorman()->isToggleParticipationAllowed($meal->getDateTime()) === false) {
                     throw new ToggleParticipationNotAllowedException();
                 }
-                if ($this->getDoorman()->isToggleParticipationAllowed($meal->getDay()->getLockParticipationDateTime()) === false ||
-                            $this->getDoorman()->isToggleParticipationAllowed($meal->getDay()->getLockParticipationDateTime()) === null) {
+                if ($this->getDoorman()->isToggleParticipationAllowed($meal->getDay()->getLockParticipationDateTime()) === false) {
                     throw new ToggleParticipationNotAllowedException();
                 }
                 $participation = new Participant();

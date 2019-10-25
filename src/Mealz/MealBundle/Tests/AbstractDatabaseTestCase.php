@@ -53,6 +53,7 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
             $this->push($loader);
             return;
         } elseif ($fixtures === null) {
+            $this->push($loader);
             return;
         }
 

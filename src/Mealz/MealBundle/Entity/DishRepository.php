@@ -73,11 +73,11 @@ class DishRepository extends LocalizedRepository
         }
 
         // ORDER BY
+        $query->orderBy('d.title_'.$currentLocale, 'DESC');
+        
         if ($options['load_category'] === true && $options['orderBy_category'] === true) {
             $query->orderBy('c.title_'.$currentLocale);
             $query->addOrderBy('d.title_'.$currentLocale);
-        } else {
-            $query->orderBy('d.title_'.$currentLocale, 'DESC');
         }
 
         return $query;

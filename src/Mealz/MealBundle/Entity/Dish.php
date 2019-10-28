@@ -19,6 +19,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\DiscriminatorMap({"dish" = "Dish", "dish_variation" = "DishVariation"})
  * @ORM\HasLifecycleCallbacks()
  *
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
+ * @SuppressWarnings(PHPMD.CamelCaseVariableName)
+ * @SuppressWarnings(PHPMD.CamelCaseParameterName)
  */
 class Dish
 {
@@ -28,6 +31,8 @@ class Dish
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * 
+     * @SuppressWarnings(PHPMD.ShortVariable)
      */
     private $id;
 
@@ -191,9 +196,9 @@ class Dish
     {
         if ($this->currentLocale == 'de' && $this->description_de) {
             return $this->getDescriptionDe();
-        } else {
-            return $this->getDescriptionEn();
         }
+        
+        return $this->getDescriptionEn();
     }
 
     /**
@@ -228,9 +233,9 @@ class Dish
     {
         if ($this->currentLocale == 'de' && $this->title_de) {
             return $this->getTitleDe();
-        } else {
-            return $this->getTitleEn();
         }
+
+        return $this->getTitleEn();
     }
 
     /**
@@ -266,11 +271,11 @@ class Dish
     }
 
     /**
-     * @param null|string $description_de
+     * @param null|string $descriptionDe
      */
-    public function setDescriptionDe($description_de)
+    public function setDescriptionDe($descriptionDe)
     {
-        $this->description_de = $description_de;
+        $this->description_de = $descriptionDe;
     }
 
     /**
@@ -282,11 +287,11 @@ class Dish
     }
 
     /**
-     * @param null|string $description_en
+     * @param null|string $descriptionEn
      */
-    public function setDescriptionEn($description_en)
+    public function setDescriptionEn($descriptionEn)
     {
-        $this->description_en = $description_en;
+        $this->description_en = $descriptionEn;
     }
 
     /**
@@ -298,11 +303,11 @@ class Dish
     }
 
     /**
-     * @param string $title_de
+     * @param string $titleDe
      */
-    public function setTitleDe($title_de)
+    public function setTitleDe($titleDe)
     {
-        $this->title_de = $title_de;
+        $this->title_de = $titleDe;
     }
 
     /**
@@ -316,9 +321,9 @@ class Dish
     /**
      * @param string $title_en
      */
-    public function setTitleEn($title_en)
+    public function setTitleEn($titleEn)
     {
-        $this->title_en = $title_en;
+        $this->title_en = $titleEn;
     }
 
     /**

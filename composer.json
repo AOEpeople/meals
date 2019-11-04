@@ -9,7 +9,7 @@
     },
     "require": {
         "php": ">=5.3.3",
-        "symfony/symfony": "~2.4",
+        "symfony/symfony": "~2.8",
         "doctrine/orm": "~2.2,>=2.2.3",
         "doctrine/doctrine-bundle": "~1.2",
         "doctrine/doctrine-migrations-bundle": "~1.2",
@@ -33,7 +33,7 @@
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "~2.2",
-        "phpunit/phpunit": "~3.7",
+        "phpunit/phpunit": "~4.8",
         "phpmd/phpmd": "~2.2",
         "sebastian/phpcpd": "~2.0",
         "phploc/phploc": "~2.0",

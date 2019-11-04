@@ -9,6 +9,12 @@ parameters:
     database_host:     127.0.0.1
     database_port:
 
+    pdo.db_options:
+        db_table:    session
+        db_id_col:   session_id
+        db_data_col: session_value
+        db_time_col: session_time
+
     mailer_transport:  smtp
     mailer_host:       127.0.0.1
     mailer_user:       ~

@@ -1,0 +1,13 @@
+services:
+  pdo:
+    class: PDO
+    arguments:
+      - "mysql:host=%database_host%;dbname=%database_name%"
+      - "%database_user%"
+      - "%database_password%"
+    calls:
+      - [setAttribute, [3, 2]] # \PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION
+
+  session.handler.pdo:
+    class:     Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
+    arguments: ["@pdo", "%pdo.db_options%"]

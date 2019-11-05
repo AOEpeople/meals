@@ -2,7 +2,6 @@
 
 namespace Mealz\MealBundle\Controller;
 
-
 use Doctrine\ORM\EntityManager;
 use Mealz\MealBundle\Entity\DishVariation;
 use Mealz\MealBundle\Form\DishVariationForm;
@@ -29,7 +28,7 @@ class DishVariationController extends BaseController
         /** @var \Mealz\MealBundle\Entity\Dish $dish */
         $dish = $this->getDishRepository()->find($slug);
 
-        if (!$dish) {
+        if ($dish === null) {
             throw $this->createNotFoundException();
         }
 
@@ -77,11 +76,11 @@ class DishVariationController extends BaseController
     {
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
-        /** @var \Mealz\MealBundle\Entity\DishVariationRepository $dishVariationRepository */
-        $dishVariationRepository = $this->getDoctrine()->getRepository('MealzMealBundle:DishVariation');
+        /** @var \Mealz\MealBundle\Entity\DishVariationRepository $dishVariationRepo */
+        $dishVariationRepo = $this->getDoctrine()->getRepository('MealzMealBundle:DishVariation');
 
         /** @var \Mealz\MealBundle\Entity\DishVariation $dish */
-        $dishVariation = $dishVariationRepository->find($slug);
+        $dishVariation = $dishVariationRepo->find($slug);
 
         if (!$dishVariation) {
             throw $this->createNotFoundException();
@@ -129,25 +128,25 @@ class DishVariationController extends BaseController
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
         /** @var \Mealz\MealBundle\Entity\DishVariationRepository $dishRepository */
-        if (is_object($this->getDoctrine()->getRepository('MealzMealBundle:DishVariation'))) {
-            $dishVariationRepository = $this->getDoctrine()->getRepository('MealzMealBundle:DishVariation');
+        if (is_object($this->getDoctrine()->getRepository('MealzMealBundle:DishVariation')) === true) {
+            $dishVariationRepo = $this->getDoctrine()->getRepository('MealzMealBundle:DishVariation');
         }
 
         /** @var \Mealz\MealBundle\Entity\DishVariation $dishVariation */
-        $dishVariation = $dishVariationRepository->find($slug);
+        $dishVariation = $dishVariationRepo->find($slug);
 
-        if (!$dishVariation) {
+        if ($dishVariation === null) {
             throw $this->createNotFoundException();
         }
 
-        /** @var EntityManager $em */
-        $em = $this->getDoctrine()->getManager();
+        /** @var EntityManager $entityManager */
+        $entityManager = $this->getDoctrine()->getManager();
 
-        if ($dishVariationRepository->hasDishAssociatedMeals($dishVariation)) {
+        if ($dishVariationRepo->hasDishAssociatedMeals($dishVariation) === true) {
             // if there are meals assigned: just hide this record, but do not delete it
             $dishVariation->setEnabled(false);
-            $em->persist($dishVariation);
-            $em->flush();
+            $entityManager->persist($dishVariation);
+            $entityManager->flush();
             $message = $this->get('translator')->trans(
                 'dish_variation.hidden',
                 array('%dishVariation%' => $dishVariation->getTitle()),
@@ -156,8 +155,8 @@ class DishVariationController extends BaseController
             $this->addFlashMessage($message, 'success');
         } else {
             // else: no need to keep an unused record
-            $em->remove($dishVariation);
-            $em->flush();
+            $entityManager->remove($dishVariation);
+            $entityManager->flush();
 
             $message = $this->get('translator')->trans(
                 'dish_variation.deleted',
@@ -185,9 +184,9 @@ class DishVariationController extends BaseController
      */
     private function persistEntity($entity)
     {
-        /** @var EntityManager $em */
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($entity);
-        $em->flush();
+        /** @var EntityManager $entityManager */
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($entity);
+        $entityManager->flush();
     }
 }

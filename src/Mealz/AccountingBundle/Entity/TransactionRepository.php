@@ -24,12 +24,12 @@ class TransactionRepository extends EntityRepository
      */
     public function getTotalAmount($username)
     {
-        $qb = $this->createQueryBuilder('t');
-        $qb->select('SUM(t.amount) AS amount');
-        $qb->andWhere('t.profile = :user');
-        $qb->setParameter('user', $username);
+        $queryBuilder = $this->createQueryBuilder('t');
+        $queryBuilder->select('SUM(t.amount) AS amount');
+        $queryBuilder->andWhere('t.profile = :user');
+        $queryBuilder->setParameter('user', $username);
 
-        return floatval($qb->getQuery()->getSingleScalarResult());
+        return floatval($queryBuilder->getQuery()->getSingleScalarResult());
     }
 
     /**
@@ -39,17 +39,17 @@ class TransactionRepository extends EntityRepository
      */
     public function getLastSuccessfulTransactions(Profile $profile, $limit = null)
     {
-        $qb = $this->createQueryBuilder('t');
-        $qb->select('t');
-        $qb->andWhere('t.user = :user');
-        $qb->setParameter('user', $profile);
+        $queryBuilder = $this->createQueryBuilder('t');
+        $queryBuilder->select('t');
+        $queryBuilder->andWhere('t.user = :user');
+        $queryBuilder->setParameter('user', $profile);
 
-        $qb->orderBy('t.date', 'desc');
+        $queryBuilder->orderBy('t.date', 'desc');
         if (is_int($limit) === true) {
-            $qb->setMaxResults($limit);
+            $queryBuilder->setMaxResults($limit);
         }
 
-        return $qb->getQuery()->execute();
+        return $queryBuilder->getQuery()->execute();
     }
 
 
@@ -64,25 +64,25 @@ class TransactionRepository extends EntityRepository
      */
     public function getSuccessfulTransactionsOnDays(\DateTime $minDate, \DateTime $maxDate, Profile $profile)
     {
-        $qb = $this->createQueryBuilder('t');
-        $qb->select('t');
+        $queryBuilder = $this->createQueryBuilder('t');
+        $queryBuilder->select('t');
 
         $minDate = clone $minDate;
         $minDate->setTime(0, 0, 0);
         $maxDate = clone $maxDate;
         $maxDate->setTime(23, 59, 59);
 
-        $qb->andWhere('t.date >= :minDate');
-        $qb->andWhere('t.date <= :maxDate');
-        $qb->setParameter('minDate', $minDate);
-        $qb->setParameter('maxDate', $maxDate);
+        $queryBuilder->andWhere('t.date >= :minDate');
+        $queryBuilder->andWhere('t.date <= :maxDate');
+        $queryBuilder->setParameter('minDate', $minDate);
+        $queryBuilder->setParameter('maxDate', $maxDate);
 
-        $qb->andWhere('t.profile = :profile');
-        $qb->setParameter('profile', $profile);
+        $queryBuilder->andWhere('t.profile = :profile');
+        $queryBuilder->setParameter('profile', $profile);
 
-        $qb->orderBy('t.date', 'ASC');
+        $queryBuilder->orderBy('t.date', 'ASC');
 
-        return $qb->getQuery()->execute();
+        return $queryBuilder->getQuery()->execute();
     }
 
     /**
@@ -95,28 +95,28 @@ class TransactionRepository extends EntityRepository
      */
     public function findUserDataAndTransactionAmountForGivenPeriod(\DateTime $minDate = null, \DateTime $maxDate = null, $profile = null)
     {
-        $qb = $this->createQueryBuilder('t');
-        $qb->select('p.username, p.firstName, p.name, SUM(t.amount) AS amount');
-        $qb->leftJoin('t.profile', 'p');
+        $queryBuilder = $this->createQueryBuilder('t');
+        $queryBuilder->select('p.username, p.firstName, p.name, SUM(t.amount) AS amount');
+        $queryBuilder->leftJoin('t.profile', 'p');
 
         if ($minDate instanceof \DateTime) {
-            $qb->andWhere('t.date >= :minDate');
-            $qb->setParameter('minDate', $minDate);
+            $queryBuilder->andWhere('t.date >= :minDate');
+            $queryBuilder->setParameter('minDate', $minDate);
         }
 
         if ($maxDate instanceof \DateTime) {
-            $qb->andWhere('t.date <= :maxDate');
-            $qb->setParameter('maxDate', $maxDate);
+            $queryBuilder->andWhere('t.date <= :maxDate');
+            $queryBuilder->setParameter('maxDate', $maxDate);
         }
 
         if ($profile instanceof Profile) {
-            $qb->andWhere('p.username = :username');
-            $qb->setParameter('username', $profile->getUsername());
+            $queryBuilder->andWhere('p.username = :username');
+            $queryBuilder->setParameter('username', $profile->getUsername());
         }
 
-        $qb->groupBy('p.username');
-        $qb->orderBy('p.name, p.firstName');
-        $queryResult = $qb->getQuery()->getArrayResult();
+        $queryBuilder->groupBy('p.username');
+        $queryBuilder->orderBy('p.name, p.firstName');
+        $queryResult = $queryBuilder->getQuery()->getArrayResult();
 
         $result = array();
 
@@ -139,22 +139,22 @@ class TransactionRepository extends EntityRepository
      */
     public function findAllTransactionsInDateRange(\DateTime $minDate, \DateTime $maxDate)
     {
-        $qb = $this->createQueryBuilder('t');
-        $qb->select('t.date');
+        $queryBuilder = $this->createQueryBuilder('t');
+        $queryBuilder->select('t.date');
 
         $minDate = clone $minDate;
         $minDate->setTime(0, 0, 0);
         $maxDate = clone $maxDate;
         $maxDate->setTime(23, 59, 59);
 
-        $qb->andWhere('t.date >= :minDate');
-        $qb->andWhere('t.date <= :maxDate');
-        $qb->setParameter('minDate', $minDate);
-        $qb->setParameter('maxDate', $maxDate);
+        $queryBuilder->andWhere('t.date >= :minDate');
+        $queryBuilder->andWhere('t.date <= :maxDate');
+        $queryBuilder->setParameter('minDate', $minDate);
+        $queryBuilder->setParameter('maxDate', $maxDate);
 
-        $qb->orderBy('t.date', 'ASC');
+        $queryBuilder->orderBy('t.date', 'ASC');
 
-        $queryResult = $qb->getQuery()->getArrayResult();
+        $queryResult = $queryBuilder->getQuery()->getArrayResult();
 
         $result = array();
         foreach ($queryResult as $item) {
@@ -167,7 +167,6 @@ class TransactionRepository extends EntityRepository
         }
 
         return $result;
-
     }
 
     /**
@@ -178,24 +177,24 @@ class TransactionRepository extends EntityRepository
     private function getAllTransactionsOnDay(\DateTime $day)
     {
         // Get all dates where transactions were made
-        $qb = $this->createQueryBuilder('t');
-        $qb->select('t.amount, t.date, p.firstName, p.name');
-        $qb->leftJoin('t.profile', 'p');
+        $queryBuilder = $this->createQueryBuilder('t');
+        $queryBuilder->select('t.amount, t.date, p.firstName, p.name');
+        $queryBuilder->leftJoin('t.profile', 'p');
 
         $minDate = clone $day;
         $minDate->setTime(0, 0, 0);
         $maxDate = clone $day;
         $maxDate->setTime(23, 59, 59);
 
-        $qb->andWhere('t.date >= :minDate');
-        $qb->andWhere('t.date <= :maxDate');
-        $qb->andWhere('t.paymethod IS NULL');
-        $qb->setParameter('minDate', $minDate);
-        $qb->setParameter('maxDate', $maxDate);
+        $queryBuilder->andWhere('t.date >= :minDate');
+        $queryBuilder->andWhere('t.date <= :maxDate');
+        $queryBuilder->andWhere('t.paymethod IS NULL');
+        $queryBuilder->setParameter('minDate', $minDate);
+        $queryBuilder->setParameter('maxDate', $maxDate);
 
-        $qb->orderBy('t.date', 'ASC');
+        $queryBuilder->orderBy('t.date', 'ASC');
 
-        $queryResult = $qb->getQuery()->getArrayResult();
+        $queryResult = $queryBuilder->getQuery()->getArrayResult();
 
         $result = array();
         foreach ($queryResult as $item) {
@@ -208,6 +207,5 @@ class TransactionRepository extends EntityRepository
         }
 
         return $result;
-
     }
 }

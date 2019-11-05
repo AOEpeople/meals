@@ -13,11 +13,11 @@ use Doctrine\ORM\UnitOfWork;
  */
 class DishConstraintValidator extends ConstraintValidator
 {
-    protected $em;
+    protected $entityManager;
 
     public function __construct(EntityManager $entityManager)
     {
-        $this->em = $entityManager;
+        $this->entityManager = $entityManager;
     }
 
     public function validate($entity, Constraint $constraint)
@@ -26,17 +26,17 @@ class DishConstraintValidator extends ConstraintValidator
             return;
         }
 
-        $unitOfWork = $this->em->getUnitOfWork();
+        $unitOfWork = $this->entityManager->getUnitOfWork();
         $day = $entity->getDay();
 
         if ($unitOfWork->getEntityState($entity) !== UnitOfWork::STATE_NEW &&
             $entity->getParticipants()->count() == 0
         ) {
-            $this->em->remove($entity);
-            $this->em->flush($entity);
+            $this->entityManager->remove($entity);
+            $this->entityManager->flush($entity);
             $day->getMeals()->removeElement($entity);
         } else {
-            $this->em->refresh($entity);
+            $this->entityManager->refresh($entity);
             $this->context
                 ->buildViolation($constraint->message)
                 ->setParameter('%dish%', $entity->getDish())

@@ -17,7 +17,7 @@ class AccountingBookController extends BaseController
     public function listAction()
     {
         // Deny access for unprivileged (non-admin) users
-        if (!$this->isGranted('ROLE_KITCHEN_STAFF')) {
+        if ($this->isGranted('ROLE_KITCHEN_STAFF') === false) {
             throw new AccessDeniedException();
         }
 
@@ -38,11 +38,11 @@ class AccountingBookController extends BaseController
         $heading = $minDate->format('d.m.-') . $maxDate->format('d.m.Y');
 
         // Get array of users with their amount of transactions in previous month
-        $transactionRepository = $this->getTransactionRepository();
-        $usersFirst = $transactionRepository->findUserDataAndTransactionAmountForGivenPeriod($minDateFirst, $maxDateFirst);
+        $transactionRepo = $this->getTransactionRepository();
+        $usersFirst = $transactionRepo->findUserDataAndTransactionAmountForGivenPeriod($minDateFirst, $maxDateFirst);
 
         // Get array of users with their amount of transactions in actual month
-        $users = $transactionRepository->findUserDataAndTransactionAmountForGivenPeriod($minDate, $maxDate);
+        $users = $transactionRepo->findUserDataAndTransactionAmountForGivenPeriod($minDate, $maxDate);
 
         return $this->render('MealzAccountingBundle:Accounting\\Admin:accountingBook.html.twig', array(
             'headingFirst' => $headingFirst,
@@ -61,7 +61,7 @@ class AccountingBookController extends BaseController
      */
     public function listAllTransactionsAction($dateRange)
     {
-        if (!$this->isGranted('ROLE_FINANCE')) {
+        if ($this->isGranted('ROLE_FINANCE') === false) {
             throw new AccessDeniedException();
         }
 
@@ -116,7 +116,7 @@ class AccountingBookController extends BaseController
      */
     public function exportPDFAction($dateRange)
     {
-        if (!$this->isGranted('ROLE_FINANCE')) {
+        if ($this->isGranted('ROLE_FINANCE') === false) {
             throw new AccessDeniedException();
         }
 
@@ -127,8 +127,8 @@ class AccountingBookController extends BaseController
         $maxDate = new \DateTime($dateRangeArray[1]);
 
         $heading = $minDate->format('d.m.') . ' - ' . $maxDate->format('d.m.Y');
-        $transactionRepository = $this->getTransactionRepository();
-        $transactions = $transactionRepository->findAllTransactionsInDateRange($minDate, $maxDate);
+        $transactionRepo = $this->getTransactionRepository();
+        $transactions = $transactionRepo->findAllTransactionsInDateRange($minDate, $maxDate);
 
         // Create PDF file
         $pdf = $this->get('white_october.tcpdf')->create(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);

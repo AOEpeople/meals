@@ -14,6 +14,8 @@ class Configuration implements ConfigurationInterface
 {
     /**
      * {@inheritDoc}
+     * 
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     public function getConfigTreeBuilder()
     {

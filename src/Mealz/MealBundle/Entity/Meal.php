@@ -23,6 +23,8 @@ class Meal
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * 
+     * @SuppressWarnings(PHPMD.ShortVariable)
      */
     private $id;
 
@@ -217,16 +219,16 @@ class Meal
      */
     public function getTotalConfirmedParticipations()
     {
-        $totalConfirmedParticipations = 0;
+        $totalParticipations = 0;
 
         foreach ($this->getParticipants() as $participation) {
             /* @var Participant $participation */
             if ($participation->isConfirmed()) {
-                $totalConfirmedParticipations += 1;
+                $totalParticipations += 1;
             }
         }
 
-        return $totalConfirmedParticipations;
+        return $totalParticipations;
     }
 
     /**

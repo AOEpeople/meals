@@ -12,14 +12,14 @@ class ProfileToStringTransformer implements DataTransformerInterface
     /**
      * @var ObjectManager
      */
-    private $om;
+    private $objectManager;
 
     /**
-     * @param ObjectManager $om
+     * @param ObjectManager $objectManager
      */
-    public function __construct(ObjectManager $om)
+    public function __construct(ObjectManager $objectManager)
     {
-        $this->om = $om;
+        $this->objectManager = $objectManager;
     }
 
     /**
@@ -45,11 +45,11 @@ class ProfileToStringTransformer implements DataTransformerInterface
      */
     public function reverseTransform($username)
     {
-        if (!$username) {
+        if ($username === null) {
             return null;
         }
 
-        $profile = $this->om->getRepository('MealzUserBundle:Profile')->findOneBy(array("username" => $username));
+        $profile = $this->objectManager->getRepository('MealzUserBundle:Profile')->findOneBy(array("username" => $username));
 
         if (null === $profile) {
             throw new TransformationFailedException(

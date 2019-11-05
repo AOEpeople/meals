@@ -19,6 +19,8 @@ class Week extends AbstractMessage
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      * @var integer $id
+     * 
+     * @SuppressWarnings(PHPMD.ShortVariable)
      */
     private $id;
 

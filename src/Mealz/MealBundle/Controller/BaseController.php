@@ -3,7 +3,6 @@
 
 namespace Mealz\MealBundle\Controller;
 
-
 use Mealz\AccountingBundle\Entity\TransactionRepository;
 use Mealz\MealBundle\Entity\CategoryRepository;
 use Mealz\MealBundle\Entity\DishRepository;
@@ -16,7 +15,6 @@ use Mealz\UserBundle\Entity\Profile;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-
 
 /**
  * Class BaseController
@@ -122,17 +120,19 @@ abstract class BaseController extends Controller
     {
         $translator = $this->get('translator');
 
-        $to = $participant->getProfile()->getUsername() . $translator->trans('mail.domain', array(), 'messages');
+        $recipient = $participant->getProfile()->getUsername() . $translator->trans('mail.domain', array(), 'messages');
         $subject = $translator->trans('mail.subject', array(), 'messages');
         $header = $translator->trans('mail.sender', array(), 'messages');
         $firstname = $participant->getProfile()->getFirstname();
 
-        $message = $translator->trans('mail.message', array(
+        $message = $translator->trans(
+            'mail.message',
+            array(
             '%firstname%' => $firstname,
             '%takenOffer%' => $takenOffer),
             'messages'
         );
 
-        mail($to, $subject, $message, $header);
+        mail($recipient, $subject, $message, $header);
     }
 }

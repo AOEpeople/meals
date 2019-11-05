@@ -18,9 +18,7 @@ use Mealz\UserBundle\Entity\Role;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage;
-
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -83,15 +81,15 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
             $session->set('_security_'.$firewall, serialize($token));
             $session->save();
         }
-        $cookie = new Cookie($session->getName(), $session->getId());
+        $cookie = new \Symfony\Component\BrowserKit\Cookie($session->getName(), $session->getId());
         $this->client->getCookieJar()->set($cookie);
     }
 
     /**
      * @param $userProfile
      */
-    public function loginAsDefaultClient($userProfile) {
-
+    public function loginAsDefaultClient($userProfile)
+    {
         //test for non-admin users
         $this->createDefaultClient();
 
@@ -216,7 +214,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
      * Helper method to get the recent meal.
      *
      * @param \DateTime $dateTime
-     * 
+     *
      * @return Meal
      */
     protected function getRecentMeal(\DateTime $dateTime = null)
@@ -227,7 +225,8 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
 
         /** @var \Mealz\MealBundle\Entity\MealRepository $mealRepository */
         $mealRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
-        $criteria = Criteria::create();
+        $criteria = new Criteria();
+        $criteria->create();
         $meals = $mealRepository->matching($criteria->where(Criteria::expr()->lte('dateTime', $dateTime)));
 
         if (1 > $meals->count()) {

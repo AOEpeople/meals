@@ -15,7 +15,6 @@ use Mealz\MealBundle\Entity\Meal;
 use Mealz\UserBundle\Entity\Login;
 use Mealz\UserBundle\Entity\Profile;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 
 /**
  * Class AbstractDatabaseTestCase
@@ -42,28 +41,29 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
      */
     protected function loadFixtures($fixtures)
     {
-        $em = static::$kernel->getContainer()->get('doctrine')->getManager();
         $loader = new Loader();
         if (is_array($fixtures) || $fixtures instanceof \Iterator) {
             foreach ($fixtures as $fixture) {
                 $loader->addFixture($fixture);
             }
+            $this->push($loader);
+            return;
         } elseif ($fixtures instanceof FixtureInterface) {
             $loader->addFixture($fixtures);
+            $this->push($loader);
+            return;
         } elseif ($fixtures === null) {
-            // nothing to do
-        } else {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    '%s expects first parameter to be a FixtureInterface or array. %s given.',
-                    __METHOD__,
-                    get_class($fixtures)
-                )
-            );
+            $this->push($loader);
+            return;
         }
-        $purger = new ORMPurger($em);
-        $executor = new ORMExecutor($em, $purger);
-        $executor->execute($loader->getFixtures());
+
+        throw new \InvalidArgumentException(
+            sprintf(
+                '%s expects first parameter to be a FixtureInterface or array. %s given.',
+                __METHOD__,
+                get_class($fixtures)
+            )
+        );
     }
 
     protected function clearAllTables()
@@ -135,7 +135,7 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
         $login->setUsername($name);
         $login->setSalt(md5(uniqid(null, true)));
 
-        /** @var PasswordEncoderInterface $encoder */
+        /** @var Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface $encoder */
         $encoder = static::$kernel->getContainer()->get('security.encoder_factory')->getEncoder($login);
         $login->setPassword($encoder->encodePassword($name, $login->getSalt()));
 
@@ -163,17 +163,28 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
      */
     public function persistAndFlushAll($entities)
     {
-        $em = $this->getDoctrine()->getManager();
+        $entityManager = $this->getDoctrine()->getManager();
 
-        $em->transactional(
-            function ($em) use ($entities) {
-                /** @var EntityManager $em */
+        $entityManager->transactional(
+            function ($entityManager) use ($entities) {
+                /** @var EntityManager $entityManager */
                 // transaction is need for Participant entities
                 foreach ($entities as $entity) {
-                    $em->persist($entity);
+                    $entityManager->persist($entity);
                 }
-                $em->flush();
+                $entityManager->flush();
             }
         );
+    }
+
+    /**
+     * @param Loader $loader
+     */
+    protected function push($loader)
+    {
+        $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
+        $purger = new ORMPurger($entityManager);
+        $executor = new ORMExecutor($entityManager, $purger);
+        $executor->execute($loader->getFixtures());
     }
 }

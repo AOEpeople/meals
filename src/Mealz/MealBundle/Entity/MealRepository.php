@@ -28,28 +28,28 @@ class MealRepository extends EntityRepository
             $date = $date->format('Y-m-d');
         }
 
-        $qb = $this->createQueryBuilder('m');
+        $queryBuilder = $this->createQueryBuilder('m');
 
         // SELECT
-        $qb->addSelect('d');
+        $queryBuilder->addSelect('d');
 
         // JOIN
-        $qb->leftJoin('m.dish', 'd');
+        $queryBuilder->leftJoin('m.dish', 'd');
 
         // WHERE
-        $qb->andWhere('m.dateTime >= :min_date');
-        $qb->andWhere('m.dateTime <= :max_date');
-        $qb->setParameter('min_date', $date.' 00:00:00');
-        $qb->setParameter('max_date', $date.' 23:59:29');
+        $queryBuilder->andWhere('m.dateTime >= :min_date');
+        $queryBuilder->andWhere('m.dateTime <= :max_date');
+        $queryBuilder->setParameter('min_date', $date.' 00:00:00');
+        $queryBuilder->setParameter('max_date', $date.' 23:59:29');
 
         if (is_numeric($dish)) {
-            $qb->andWhere('d.id = :dish');
+            $queryBuilder->andWhere('d.id = :dish');
         } else {
-            $qb->andWhere('d.slug = :dish');
+            $queryBuilder->andWhere('d.slug = :dish');
         }
-        $qb->setParameter('dish', $dish);
+        $queryBuilder->setParameter('dish', $dish);
 
-        $result = $qb->getQuery()->execute();
+        $result = $queryBuilder->getQuery()->execute();
 
         if (count($result) > 1) {
             $results = $result;
@@ -73,8 +73,8 @@ class MealRepository extends EntityRepository
      */
     public function getMealsOnADayWithVariationOptions()
     {
-        $em = $this->getEntityManager();
-        $query = $em->createQuery(
+        $entityManager = $this->getEntityManager();
+        $query = $entityManager->createQuery(
             'SELECT m.id
                 FROM MealzMealBundle:Meal m
                 WHERE m.day IN
@@ -88,40 +88,42 @@ class MealRepository extends EntityRepository
      * Returns all meals that are going to take place in the future.
      * @return array
      */
-    public function getFutureMeals(){
-        $qb = $this->createQueryBuilder('m');
-        $qb->where('m.dateTime >= :now');
-        $qb->setParameter(':now', new \DateTime('now'));
-        return $qb->getQuery()->getResult();
+    public function getFutureMeals()
+    {
+        $queryBuilder = $this->createQueryBuilder('m');
+        $queryBuilder->where('m.dateTime >= :now');
+        $queryBuilder->setParameter(':now', new \DateTime('now'));
+        return $queryBuilder->getQuery()->getResult();
     }
 
     /**
      * Returns all meals that are going to took place in the past.
      * @return array
      */
-    public function getOutdatedMeals(){
-        $qb = $this->createQueryBuilder('m');
-        $qb->where('m.dateTime <= :now');
-        $qb->setParameter(':now', new \DateTime('now'));
-        return $qb->getQuery()->getResult();
+    public function getOutdatedMeals()
+    {
+        $queryBuilder = $this->createQueryBuilder('m');
+        $queryBuilder->where('m.dateTime <= :now');
+        $queryBuilder->setParameter(':now', new \DateTime('now'));
+        return $queryBuilder->getQuery()->getResult();
     }
 
     /**
      * Returns all meals that are going to take place in the future but aren't available to join/leave anymore.
      * @return array
      */
-    public function getLockedMeals() {
-        $em = $this->getEntityManager();
-        $qb = $em->createQueryBuilder();
-        $qb->select('m')
+    public function getLockedMeals()
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('m')
             ->from('MealzMealBundle:Meal', 'm')
-            ->innerJoin('m.day','d')
+            ->innerJoin('m.day', 'd')
             ->where('d.lockParticipationDateTime < :now')
             ->andWhere('m.dateTime > :now')
             ->orderBy('m.dateTime', 'DESC');
 
-        $qb->setParameter(':now', new \DateTime('now'));
-        return $qb->getQuery()->getResult();
+        $queryBuilder->setParameter(':now', new \DateTime('now'));
+        return $queryBuilder->getQuery()->getResult();
     }
-
 }

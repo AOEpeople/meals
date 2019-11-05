@@ -26,9 +26,9 @@ class PostLogin
      */
     protected $logger;
 
-    public function __construct(EntityManager $em, Logger $logger)
+    public function __construct(EntityManager $entityManager, Logger $logger)
     {
-        $this->entityManager = $em;
+        $this->entityManager = $entityManager;
         $this->logger = $logger;
     }
 
@@ -41,21 +41,21 @@ class PostLogin
      */
     public function assureProfileExists($user)
     {
-        if (!$user instanceof SymfonyUserInterface) {
+        if ($user instanceof SymfonyUserInterface === false) {
             throw new \InvalidArgumentException(sprintf(
                 'The given user of class %s does not implement the Symfony\\Component\\Security\\Core\\User\\UserInterface',
                 get_class($user)
             ));
         }
-        if (!$user instanceof MealzUserInterface) {
+        if ($user instanceof MealzUserInterface === false) {
             throw new \InvalidArgumentException(sprintf(
                 'The given user of class %s does not implement the Mealz\\UserBundle\\User\\UserInterface',
                 get_class($user)
             ));
         }
 
-        if ($user->getProfile()) {
-            if (!$user->getProfile() instanceof Profile) {
+        if ($user->getProfile() !== null) {
+            if ($user->getProfile() instanceof Profile === false) {
                 throw new \RuntimeException(sprintf(
                     'Profile of user %s is not of class %s but %s. I\'m confused.',
                     $user,
@@ -68,12 +68,12 @@ class PostLogin
             $username = $user->getUsername();
 
             $profile = $this->entityManager->find('MealzUserBundle:Profile', $username);
-            if (!$profile) {
+            if ($profile === null) {
                 $profile = $this->createProfile($user);
             }
 
             $user->setProfile($profile);
-            if ($user instanceof Login) {
+            if ($user instanceof Login === true) {
                 // persist relation to profile
                 $this->entityManager->persist($user);
                 $this->entityManager->flush();

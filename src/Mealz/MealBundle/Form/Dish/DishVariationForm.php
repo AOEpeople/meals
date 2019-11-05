@@ -11,7 +11,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 
-
 /**
  * Class DishVariationType
  *
@@ -34,6 +33,13 @@ class DishVariationForm extends AbstractType
         $this->price = $price;
     }
 
+    /**
+     * build the Form
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     * 
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder

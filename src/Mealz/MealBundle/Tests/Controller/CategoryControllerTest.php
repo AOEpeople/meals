@@ -24,21 +24,6 @@ class CategoryControllerTest extends AbstractControllerTestCase
         );
     }
 
-    /**
-     * Test for empty category form action
-     *
-     * @return void
-     * @todo   Enable it after figure out what is actually problem
-     */
-
-//    public function testGetEmptyFormAction()
-//    {
-//        $this->client->request('GET', '/category/form');
-//        $crawler = $this->getJsonResponseCrawler();
-//        $node = $crawler->filterXPath('//form[contains(@action,"/category/new")]');
-//        $this->assertTrue($node->count() == 1);
-//    }
-
     public function testNewAction()
     {
         // Create form data
@@ -51,9 +36,9 @@ class CategoryControllerTest extends AbstractControllerTestCase
         $this->client->request('POST', '/category/new', $form);
 
         // Get persisted entity
-        /** @var EntityManager $em */
-        $em = $this->client->getContainer()->get('doctrine')->getManager();
-        $categoryRepository = $em->getRepository('MealzMealBundle:Category');
+        /** @var EntityManager $entityManager */
+        $entityManager = $this->client->getContainer()->get('doctrine')->getManager();
+        $categoryRepository = $entityManager->getRepository('MealzMealBundle:Category');
         $category = $categoryRepository->findOneBy(
             array(
                 'title_de' => 'category-form-title-de',
@@ -159,15 +144,15 @@ class CategoryControllerTest extends AbstractControllerTestCase
     protected function getRawResponseCrawler()
     {
         $content = $this->client->getResponse()->getContent();
-        $uri = 'http://www.mealz.local';
+        $uri = 'http://www.meals.local';
 
         return new Crawler($content, $uri);
     }
-    
+
     protected function getJsonResponseCrawler()
     {
         $content = $this->client->getResponse()->getContent();
-        $uri = 'http://www.mealz.local';
+        $uri = 'http://www.meals.local';
 
         return new Crawler(json_decode($content, true), $uri);
     }

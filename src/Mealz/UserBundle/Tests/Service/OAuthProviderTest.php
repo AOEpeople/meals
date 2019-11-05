@@ -46,7 +46,7 @@ class OAuthProviderTest extends AbstractControllerTestCase
 
         // check if valid oAuth User comes in return
         $response = $oAuthProvider->loadUserByIdOrCreate($username, $newUserInformation);
-        $this->assertInstanceOf(OAuthUser::class, $response);
+        $this->assertInstanceOf(Profile::class, $response);
 
         // check if new valid Profile is written in Database
         $newCreatedProfile = $this->getDoctrine()->getManager()->find(
@@ -77,7 +77,7 @@ class OAuthProviderTest extends AbstractControllerTestCase
 
         // check if Response is a valid oAuth User
         $response = $oAuthProvider->loadUserByIdOrCreate($username, $validUserInformation);
-        $this->assertInstanceOf(OAuthUser::class, $response);
+        $this->assertInstanceOf(Profile::class, $response);
 
         // check if new valid Profile is written in Database
         $newCreatedProfile = $this->getDoctrine()->getManager()->find(
@@ -111,7 +111,7 @@ class OAuthProviderTest extends AbstractControllerTestCase
 
         // check if valid oAuth User comes in return
         $response = $oAuthProvider->loadUserByIdOrCreate($username, $newUserInformation);
-        $this->assertInstanceOf(OAuthUser::class, $response);
+        $this->assertInstanceOf(Profile::class, $response);
 
         // check if new valid Profile is written in Database
         $newCreatedProfile = $this->getDoctrine()->getManager()->find(

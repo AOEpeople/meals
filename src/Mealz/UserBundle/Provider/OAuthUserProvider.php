@@ -10,18 +10,19 @@
 namespace Mealz\UserBundle\Provider;
 
 use \HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
+use \HWI\Bundle\OAuthBundle\Security\Core\User\OAuthUserProvider as HWIBundleOAuthUserProvider;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthAwareUserProviderInterface;
 use Mealz\UserBundle\User\OAuthUser;
 use Mealz\UserBundle\Entity\Profile;
 use \Doctrine\Bundle\DoctrineBundle\Registry;
+use \Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * OAuthUserProvider.
  */
-class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProviderInterface
+class OAuthUserProvider extends HWIBundleOAuthUserProvider
 {
     /**
      * @var DoctrineRegistry
@@ -54,9 +55,11 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
      */
     public function loadUserByUsername($username)
     {
-        return new OAuthUser($username);
+        return $this->doctrineRegistry->getManager()->find(
+            'MealzUserBundle:Profile',
+            $username
+        );
     }
-
 
     /**
      * Loads an user by identifier or create it.
@@ -75,10 +78,10 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
         $userRoles = $this->fetchUserRoles($userInformation['roles']);
 
         // When non of the roles fetched - access is denied
-        if (count($userRoles) === 0) {
+        if ($userRoles->isEmpty() === true) {
             return false;
         }
-
+        
         // Check if all informations are given
         if (empty($username) === true ||
             gettype($userInformation) !== 'array' ||
@@ -88,22 +91,17 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
             return false;
         }
 
-        $profile = $this->doctrineRegistry->getManager()->find(
-            'MealzUserBundle:Profile',
-            $username
-        );
+        $user = $this->loadUserByUsername($username);
 
         // When Userprofile is null, create User
-        if ($profile === null) {
-            $profile = $this->createProfile(
+        if ($user === null) {
+            $user = $this->createProfile(
                 $username,
                 $this->extractGivenName($userInformation['given_name']),
                 $userInformation['family_name']
             );
         }
 
-        $user = new OAuthUser($username);
-        $user->setProfile($profile);
         $user->setRoles($userRoles);
 
         if ($user instanceof Login) {
@@ -139,7 +137,7 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
      */
     public function supportsClass($class)
     {
-        return $class === 'Mealz\\UserBundle\\User\\OAuthUser';
+        return $class === 'Mealz\\UserBundle\\Entity\\Profile';
     }
 
     /**
@@ -172,13 +170,13 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
      * @return array
      */
     protected function fetchUserRoles($keycloakUserRoles) {
-        $fetchedRoles = [];
+        $fetchedRoles = new ArrayCollection();
 
         // Map Keycloak Roles to Meals Roles
         foreach ($this->roleMapping as $keycloakRoleName => $mealsRole) {
             // if the Keycloak User has Roles with mapped Roles in meals. Map it.
             if (array_search($keycloakRoleName, $keycloakUserRoles) !== false) {
-                array_push($fetchedRoles, $mealsRole);
+                $fetchedRoles->add($mealsRole);
             }
         }
 

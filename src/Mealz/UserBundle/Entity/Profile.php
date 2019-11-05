@@ -2,6 +2,7 @@
 
 namespace Mealz\UserBundle\Entity;
 
+use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthUser;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -15,7 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="profile")
  * @ORM\Entity(repositoryClass="ProfileRepository")
  */
-class Profile
+class Profile extends OAuthUser
 {
     /**
      * @var string
@@ -24,7 +25,7 @@ class Profile
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      */
-    private $username;
+    protected $username;
 
     /**
      * @Assert\NotBlank()
@@ -57,7 +58,7 @@ class Profile
      * @ORM\ManyToMany(targetEntity="Role", inversedBy="profiles")
      * @var Collection
      */
-    private $roles;
+    protected $roles;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=TRUE)
@@ -158,11 +159,11 @@ class Profile
     }
 
     /**
-     * @return Collection
+     * @return array
      */
     public function getRoles()
     {
-        return $this->roles;
+        return $this->roles->toArray();
     }
 
     /**
@@ -219,6 +220,11 @@ class Profile
         $this->settlementHash = $settlementHash;
     }
 
-
+    /**
+     * @return Profile
+     */
+    public function getProfile() {
+        return $this;
+    }
 
 }

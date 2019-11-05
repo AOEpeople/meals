@@ -97,7 +97,7 @@ class OAuthUserProvider extends HWIBundleOAuthUserProvider
         if ($user === null) {
             $user = $this->createProfile(
                 $username,
-                $this->extractGivenName($userInformation['given_name']),
+                $userInformation['given_name'],
                 $userInformation['family_name']
             );
         }
@@ -169,7 +169,8 @@ class OAuthUserProvider extends HWIBundleOAuthUserProvider
      * 
      * @return array
      */
-    protected function fetchUserRoles($keycloakUserRoles) {
+    protected function fetchUserRoles($keycloakUserRoles) 
+    {
         $fetchedRoles = new ArrayCollection();
 
         // Map Keycloak Roles to Meals Roles
@@ -181,15 +182,5 @@ class OAuthUserProvider extends HWIBundleOAuthUserProvider
         }
 
         return $fetchedRoles;
-    }
-
-    /**
-     * Extract given name from full name
-     * @param string $givenName
-     * 
-     * @return string
-     */
-    private function extractGivenName($name) {
-        return str_replace(' ', '', explode(',', $name)[1]);
     }
 }

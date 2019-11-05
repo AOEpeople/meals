@@ -97,7 +97,7 @@ class Workday
             return false;
         }
 
-        $easter = new \DateTime(date('Y-m-d', easter_date($date->format('Y'))));
+        $easter = $this->getEasterDate($date->format('Y'));
         foreach ($this->blacklistRelToEaster as $easterRelative) {
             $blacklistDay = clone $easter;
             $blacklistDay->modify($easterRelative);
@@ -108,5 +108,20 @@ class Workday
         }
 
         return true;
+    }
+
+    /**
+     * @see https://www.php.net/manual/de/function.easter-date.php
+     * 
+     * @param string $year
+     * 
+     * @return DateTime
+     */
+    private function getEasterDate($year)
+    {
+        $base = new \DateTime($year . '-03-21');
+        $days = easter_days($year);
+    
+        return $base->add(new \DateInterval("P{$days}D"));
     }
 }

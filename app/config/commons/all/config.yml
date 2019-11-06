@@ -14,7 +14,7 @@ framework:
         engines: ['twig']
     default_locale:  "%locale%"
     trusted_hosts:   ~
-    trusted_proxies: ["%reverse_proxy%"]
+    trusted_proxies: [%reverse_proxy%]
     session:
         handler_id: session.handler.pdo
         gc_maxlifetime: 3600

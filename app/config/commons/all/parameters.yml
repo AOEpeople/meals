@@ -35,3 +35,4 @@ parameters:
     keycloak_client_secret:         'replaced_by_deployment'
 
     env_url:                        'replaced_by_deployment'
+    reverse_proxy:                  'replaced_by_deployment'

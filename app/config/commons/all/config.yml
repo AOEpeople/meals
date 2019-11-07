@@ -35,7 +35,7 @@ twig:
         wallet: "@mealz_accounting.wallet"
         paypal_id: "%paypal_id%"
         paypal_secret: "%paypal_secret%"
-        countDishPeriod: "10 weeks ago"
+        countDishPeriod: "4 weeks ago"
 
 # Assetic Configuration
 assetic:

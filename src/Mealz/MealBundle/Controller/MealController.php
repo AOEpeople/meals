@@ -90,11 +90,10 @@ class MealController extends BaseController
             || ($this->getDoorman()->isKitchenStaff() === true && $this->getProfile()->getUsername() !== $profile->getUsername())) {
 
             $participant = $this->createParticipation($meal, $profile);
+            $this->logAddAction($meal, $participant);
+            
             return $this->generateDeleteResponse($meal, $participant);
         }
-
-        
-        $this->logAddAction($meal, $participant);
 
         // Accepting an available offer
         if ($this->getDoorman()->isOfferAvailable($meal) === true && $this->getDoorman()->isUserAllowedToSwap($meal) === true) {

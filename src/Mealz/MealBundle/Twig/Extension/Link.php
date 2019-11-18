@@ -6,7 +6,6 @@ namespace Mealz\MealBundle\Twig\Extension;
 use Mealz\MealBundle\Entity\Meal;
 use Mealz\MealBundle\Service\Link as LinkService;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Twig\TwigFunction;
 
 class Link extends \Twig_Extension {
 
@@ -21,7 +20,7 @@ class Link extends \Twig_Extension {
 
 	public function getFunctions() {
 		return array(
-			new TwigFunction('link', [$this, 'link']),
+			'link' => new \Twig_Function_Method($this, 'link'),
 		);
 	}
 

@@ -6,6 +6,7 @@ namespace Mealz\MealBundle\Twig\Extension;
 use Mealz\MealBundle\Entity\Meal;
 use Mealz\MealBundle\Entity\Participant;
 use Mealz\MealBundle\Service\Doorman as DoormanService;
+use Twig\TwigFunction;
 
 /**
  * Class Doorman
@@ -29,19 +30,19 @@ class Doorman extends \Twig_Extension
     }
 
     /**
-     * @return array|\Twig_SimpleFunction[]
+     * @return array|\TwigFunction[]
      */
     public function getFunctions()
     {
         return array(
-            'is_allowed_to_join' => new \Twig_Function_Method($this, 'isUserAllowedToJoin'),
-            'is_allowed_to_leave' => new \Twig_Function_Method($this, 'isUserAllowedToLeave'),
-            'is_allowed_to_swap' => new \Twig_Function_Method($this, 'isUserAllowedToSwap'),
-            'is_allowed_to_unswap' => new \Twig_Function_Method($this, 'isUserAllowedToUnswap'),
-            'is_allowed_to_add_guest' => new \Twig_Function_Method($this, 'isUserAllowedToAddGuest'),
-            'is_allowed_to_remove_guest' => new \Twig_Function_Method($this, 'isUserAllowedToRemoveGuest'),
-            'is_participation_pending' => new \Twig_Function_Method($this, 'isParticipationPending'),
-            'is_offer_available' => new \Twig_Function_Method($this, 'isOfferAvailable'),
+            new TwigFunction('userAllowedToJoin', [$this, 'isUserAllowedToJoin']),
+            new TwigFunction('userAllowedToLeave', [$this, 'isUserAllowedToLeave']),
+            new TwigFunction('userAllowedToSwap', [$this, 'isUserAllowedToSwap']),
+            new TwigFunction('userAllowedToUnswap', [$this, 'isUserAllowedToUnswap']),
+            new TwigFunction('userAllowedToAddGuest', [$this, 'isUserAllowedToAddGuest']),
+            new TwigFunction('userAllowedToRemoveGuest', [$this, 'isUserAllowedToRemoveGuest']),
+            new TwigFunction('participationPending', [$this, 'isParticipationPending']),
+            new TwigFunction('offerAvailable', [$this, 'isOfferAvailable']),
         );
     }
 

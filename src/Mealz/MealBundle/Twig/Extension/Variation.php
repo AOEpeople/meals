@@ -7,7 +7,6 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
 use Mealz\MealBundle\Entity\Dish;
 use Mealz\MealBundle\Entity\Meal;
 use Symfony\Component\VarDumper\VarDumper;
-use Twig\TwigFunction;
 
 /**
  * @TODO: CodeStyle, variable usage optimization (maybe use $dishes as attribute?)

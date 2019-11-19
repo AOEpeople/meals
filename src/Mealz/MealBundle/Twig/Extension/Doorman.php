@@ -6,6 +6,7 @@ namespace Mealz\MealBundle\Twig\Extension;
 use Mealz\MealBundle\Entity\Meal;
 use Mealz\MealBundle\Entity\Participant;
 use Mealz\MealBundle\Service\Doorman as DoormanService;
+use Twig\TwigFunction;
 
 /**
  * Class Doorman

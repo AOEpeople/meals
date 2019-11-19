@@ -30,19 +30,19 @@ class Doorman extends \Twig_Extension
     }
 
     /**
-     * @return array|\TwigFunction[]
+     * @return array
      */
     public function getFunctions()
     {
         return array(
-            new TwigFunction('userAllowedToJoin', [$this, 'isUserAllowedToJoin']),
-            new TwigFunction('userAllowedToLeave', [$this, 'isUserAllowedToLeave']),
-            new TwigFunction('userAllowedToSwap', [$this, 'isUserAllowedToSwap']),
-            new TwigFunction('userAllowedToUnswap', [$this, 'isUserAllowedToUnswap']),
-            new TwigFunction('userAllowedToAddGuest', [$this, 'isUserAllowedToAddGuest']),
-            new TwigFunction('userAllowedToRemoveGuest', [$this, 'isUserAllowedToRemoveGuest']),
-            new TwigFunction('participationPending', [$this, 'isParticipationPending']),
-            new TwigFunction('offerAvailable', [$this, 'isOfferAvailable']),
+            new TwigFunction('is_allowed_to_join', [$this, 'isUserAllowedToJoin']),
+            new TwigFunction('is_allowed_to_leave', [$this, 'isUserAllowedToLeave']),
+            new TwigFunction('is_allowed_to_swap', [$this, 'isUserAllowedToSwap']),
+            new TwigFunction('is_allowed_to_unswap', [$this, 'isUserAllowedToUnswap']),
+            new TwigFunction('is_allowed_to_add_guest', [$this, 'isUserAllowedToAddGuest']),
+            new TwigFunction('is_allowed_to_remove_guest', [$this, 'isUserAllowedToRemoveGuest']),
+            new TwigFunction('is_participation_pending', [$this, 'isParticipationPending']),
+            new TwigFunction('is_offer_available', [$this, 'isOfferAvailable']),
         );
     }
 

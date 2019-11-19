@@ -34,12 +34,12 @@ class Variation extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'groupMeals' => new \Twig_Function_Method($this, 'groupMeals'),
-            'getDump' => new \Twig_Function_Method($this, 'getDump'),
-            'groupMealsToArray' => new \Twig_Function_Method($this, 'groupMealsToArray'),
-            'getFullTitleByDishAndVariation' => new \Twig_Function_Method($this, 'getFullTitleByDishAndVariation'),
-            'getSortedVariation' => new \Twig_Function_Method($this, 'getSortedVariation'),
-            'getDishCount' => new \Twig_Function_Method($this, 'getDishCount'),
+            new TwigFunction('groupMeals', [$this, 'groupMeals']),
+            new TwigFunction('getDump', [$this, 'getDump']),
+            new TwigFunction('groupMealsToArray', [$this, 'groupMealsToArray']),
+            new TwigFunction('getFullTitleByDishAndVariation', [$this, 'getFullTitleByDishAndVariation']),
+            new TwigFunction('getSortedVariation', [$this, 'getSortedVariation']),
+            new TwigFunction('getFishCount', [$this, 'getDishCount']),
         );
     }
 

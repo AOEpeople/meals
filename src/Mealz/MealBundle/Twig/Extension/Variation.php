@@ -40,7 +40,7 @@ class Variation extends \Twig_Extension
             new TwigFunction('groupMealsToArray', [$this, 'groupMealsToArray']),
             new TwigFunction('getFullTitleByDishAndVariation', [$this, 'getFullTitleByDishAndVariation']),
             new TwigFunction('getSortedVariation', [$this, 'getSortedVariation']),
-            new TwigFunction('getFishCount', [$this, 'getDishCount']),
+            new TwigFunction('getDishCount', [$this, 'getDishCount']),
         );
     }
 

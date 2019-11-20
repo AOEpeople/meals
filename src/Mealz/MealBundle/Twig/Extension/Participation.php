@@ -6,13 +6,14 @@ use Doctrine\ORM\PersistentCollection;
 use Mealz\MealBundle\Entity\Meal;
 use Mealz\MealBundle\Entity\Participant;
 use Symfony\Bundle\TwigBundle\DependencyInjection\TwigExtension;
+use Twig\TwigFunction;
 
 class Participation extends \Twig_Extension
 {
     public function getFunctions()
     {
         return array(
-            'isParticipant' => new \Twig_Function_Method($this, 'isParticipant'),
+            new TwigFunction('isParticipant', [$this, 'isParticipant']),
         );
     }
 

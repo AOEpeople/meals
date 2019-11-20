@@ -8,7 +8,7 @@
         "psr-4": { "Application\\Migrations\\": "app/DoctrineMigrations/" }
     },
     "require": {
-        "php": ">=5.3.3",
+        "php": ">=5.3.3,<7.0",
         "symfony/symfony": ">=2.8.51",
         "doctrine/orm": "~2.2,>=2.2.3",
         "doctrine/doctrine-bundle": "~1.2",

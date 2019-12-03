@@ -113,7 +113,7 @@ class DishRepository extends LocalizedRepository
         $query->andWhere($query->expr()->between('m.dateTime', ':date_from', ':date_to'));
         $query->setParameter('dish', $dish);
         $query->setParameter('date_from', new \DateTime($countPeriod), \Doctrine\DBAL\Types\Type::DATETIME);
-        $query->setParameter('date_to', new \DateTime(), \Doctrine\DBAL\Types\Type::DATETIME);
+        $query->setParameter('date_to', new \DateTime('this week +6 days'), \Doctrine\DBAL\Types\Type::DATETIME);
 
         return $query->getQuery()->getSingleScalarResult();
     }

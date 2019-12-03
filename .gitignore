@@ -21,3 +21,4 @@ bower_components/
 app/vendor/
 
 css
+/app/Resources/vendor

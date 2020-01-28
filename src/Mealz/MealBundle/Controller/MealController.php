@@ -506,7 +506,7 @@ class MealController extends BaseController
     {
         $week = new Week();
         $week->setCalendarWeek($dateTime->format('W'));
-        $week->setYear($dateTime->format('Y'));
+        $week->setYear($dateTime->format('o'));
 
         return $week;
     }

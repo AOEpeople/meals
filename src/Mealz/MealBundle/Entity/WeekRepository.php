@@ -85,7 +85,7 @@ class WeekRepository extends EntityRepository
             $query->andWhere('da.enabled = 1');
         }
 
-        $query->setParameter('year', $date->format('Y'));
+        $query->setParameter('year', $date->format('o'));
         $query->setParameter('calendarWeek', $date->format('W'));
 
         return $query->getQuery()->getOneOrNullResult();

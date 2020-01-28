@@ -70,7 +70,7 @@ class LoadWeeks extends AbstractFixture implements OrderedFixtureInterface
         $maxDate = new \DateTime('+1 month');
 
         while ($date < $maxDate) {
-            $year = $date->format('Y');
+            $year = $date->format('o');
             $week = $date->format('W');
             $currentWeeks[$year.'-'.$week] = ['year' => $year, 'calendarWeek' => $week];
             $date->modify('+1 week');

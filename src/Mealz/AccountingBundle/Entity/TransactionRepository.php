@@ -69,9 +69,7 @@ class TransactionRepository extends EntityRepository
 
         $minDate = clone $minDate;
         $minDate->setTime(0, 0, 0);
-        $maxDate = clone $maxDate;
-        $maxDate->setTime(23, 59, 59);
-
+        
         $queryBuilder->andWhere('t.date >= :minDate');
         $queryBuilder->andWhere('t.date <= :maxDate');
         $queryBuilder->setParameter('minDate', $minDate);

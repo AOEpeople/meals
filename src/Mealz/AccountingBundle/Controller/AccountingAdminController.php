@@ -83,6 +83,8 @@ class AccountingAdminController extends BaseController {
 			}
 		}
 
+		$endDay->setTime(23, 59, 59);
+
 		return $this->render('MealzAccountingBundle:Accounting/Admin:list_transaction.html.twig', array(
 			'profile' => $profile,
 			'startDay' => $startDay,

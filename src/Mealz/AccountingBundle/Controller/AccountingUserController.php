@@ -62,6 +62,8 @@ class AccountingUserController extends BaseController {
 			}
 		}
 
+		$endDay->setTime(23, 59, 59);
+
 		return $this->render('MealzAccountingBundle:Accounting/User:list_transaction.html.twig', array(
 			'startDay' => $startDay,
 			'endDay' => $endDay,

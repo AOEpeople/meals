@@ -1,0 +1,24 @@
+.accounting-book table {
+  .payment-type {
+    text-align: center;
+    min-width: 20px;
+
+    &.cash::before {
+      content: '\20ac';
+      color: $color-green;
+      font-weight: 600;
+
+      @include breakpoint(small) {
+        content: '';
+      }
+    }
+  }
+
+  .amount {
+    text-align: right;
+  }
+
+  .table-data-total {
+    font-weight: 600;
+  }
+}

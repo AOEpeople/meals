@@ -11,15 +11,26 @@
     {% for user in usersFirst %}
         {# Calculate amount of all transactions and save it in variable total #}
         {% set total = total + user.amount %}
+        {% set paymethodClass = 'cash' %}
+        {% set paymethodContent = '' %}
+
+        {%  if user.paymethod == '0' %}
+            {% set paymethodClass = 'paypal' %}
+            {% set paymethodContent %} <img src="{{ asset('images/paypal.png') }}" height="15" alt="PayPal icon" /> {% endset %}
+        {% endif %}
 
         {% set tableContent = tableContent | merge([{
         'name': {
-        'content': user.name ~ ", " ~ user.firstName,
-        'class': 'name'
+            'content': user.name ~ ", " ~ user.firstName,
+            'class': 'name'
         },
         'amount': {
-        'content': MealzEuro.create(user.amount),
-        'class': 'amount'
+            'content': MealzEuro.create(user.amount),
+            'class': 'amount'
+        },
+        'payment-type': {
+            'content': paymethodContent,
+            'class': 'payment-type ' ~ paymethodClass
         },
         }]) %}
     {% endfor %}
@@ -27,12 +38,16 @@
     {# Add last line to table: total | amount #}
     {% set tableContent = tableContent | merge([{
     'name': {
-    'content': 'Total',
-    'class': 'table-data-total'
+        'content': 'Total',
+        'class': 'table-data-total'
     },
     'amount': {
-    'content': MealzEuro.create(total),
-    'class': ''
+        'content': MealzEuro.create(total),
+        'class': 'table-data-total amount'
+    },
+    'payment-type': {
+        'content': '',
+        'class': ''
     },
     }]) %}
 
@@ -48,15 +63,26 @@
     {% for user in users %}
         {# Calculate amount of all transactions and save it in variable total #}
         {% set total = total + user.amount %}
+        {% set paymethodClass = 'cash' %}
+        {% set paymethodContent = '' %}
+
+        {%  if user.paymethod == '0' %}
+            {% set paymethodClass = 'paypal' %}
+            {% set paymethodContent %} <img src="{{ asset('images/paypal.png') }}" height="15" alt="PayPal icon" /> {% endset %}
+        {% endif %}
 
         {% set tableContent = tableContent | merge([{
         'name': {
-        'content': user.name ~ ", " ~ user.firstName,
-        'class': 'name'
+            'content': user.name ~ ", " ~ user.firstName,
+            'class': 'name'
         },
         'amount': {
-        'content': MealzEuro.create(user.amount),
-        'class': 'amount'
+            'content': MealzEuro.create(user.amount),
+            'class': 'amount'
+        },
+        'payment-type': {
+            'content': paymethodContent,
+            'class': 'payment-type ' ~ paymethodClass
         },
         }]) %}
     {% endfor %}
@@ -64,12 +90,16 @@
     {# Add last line to table: total | amount #}
     {% set tableContent = tableContent | merge([{
     'name': {
-    'content': 'Total',
-    'class': 'table-data-total'
+        'content': 'Total',
+        'class': 'table-data-total'
     },
     'amount': {
-    'content': MealzEuro.create(total),
-    'class': ''
+        'content': MealzEuro.create(total),
+        'class': 'table-data-total amount'
+    },
+    'payment-type': {
+        'content': '',
+        'class': ''
     },
     }]) %}
 

@@ -96,7 +96,7 @@ class TransactionRepository extends EntityRepository
     public function findUserDataAndTransactionAmountForGivenPeriod(\DateTime $minDate = null, \DateTime $maxDate = null, $profile = null)
     {
         $queryBuilder = $this->createQueryBuilder('t');
-        $queryBuilder->select('p.username, p.firstName, p.name, SUM(t.amount) AS amount');
+        $queryBuilder->select('p.username, p.firstName, p.name, t.paymethod, SUM(t.amount) AS amount');
         $queryBuilder->leftJoin('t.profile', 'p');
 
         if ($minDate instanceof \DateTime) {
@@ -125,6 +125,7 @@ class TransactionRepository extends EntityRepository
                 'firstName' => $item['firstName'],
                 'name' => $item['name'],
                 'amount' => $item['amount'],
+                'paymethod' => $item['paymethod'],
             );
         }
 

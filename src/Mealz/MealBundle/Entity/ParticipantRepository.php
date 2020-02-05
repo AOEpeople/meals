@@ -94,6 +94,9 @@ class ParticipantRepository extends EntityRepository
      */
     public function getTotalCost($username)
     {
+        $maxDate = new \DateTime();
+        $maxDate->setTime(23, 59, 59);
+
         $queryBuilder = $this->getQueryBuilderWithOptions(
             [
                 'load_meal' => true,
@@ -109,8 +112,8 @@ class ParticipantRepository extends EntityRepository
         $queryBuilder->andWhere('p.costAbsorbed = 0');
         $queryBuilder->andWhere('day.enabled = 1');
         $queryBuilder->andWhere('w.enabled = 1');
-        $queryBuilder->andWhere('m.dateTime <= :now');
-        $queryBuilder->setParameter('now', new \DateTime());
+        $queryBuilder->andWhere('m.dateTime <= :maxDate');
+        $queryBuilder->setParameter('maxDate', $maxDate);
 
         return floatval($queryBuilder->getQuery()->getSingleScalarResult());
     }

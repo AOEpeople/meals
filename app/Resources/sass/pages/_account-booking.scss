@@ -1,7 +1,7 @@
 .accounting-book table {
   .payment-type {
-    text-align: center;
     min-width: 20px;
+    text-align: center;
 
     &.cash::before {
       content: '\20ac';

@@ -69,9 +69,7 @@ class TransactionRepository extends EntityRepository
 
         $minDate = clone $minDate;
         $minDate->setTime(0, 0, 0);
-        $maxDate = clone $maxDate;
-        $maxDate->setTime(23, 59, 59);
-
+        
         $queryBuilder->andWhere('t.date >= :minDate');
         $queryBuilder->andWhere('t.date <= :maxDate');
         $queryBuilder->setParameter('minDate', $minDate);
@@ -96,7 +94,7 @@ class TransactionRepository extends EntityRepository
     public function findUserDataAndTransactionAmountForGivenPeriod(\DateTime $minDate = null, \DateTime $maxDate = null, $profile = null)
     {
         $queryBuilder = $this->createQueryBuilder('t');
-        $queryBuilder->select('p.username, p.firstName, p.name, SUM(t.amount) AS amount');
+        $queryBuilder->select('p.username, p.firstName, p.name, t.paymethod, SUM(t.amount) AS amount');
         $queryBuilder->leftJoin('t.profile', 'p');
 
         if ($minDate instanceof \DateTime) {
@@ -114,7 +112,7 @@ class TransactionRepository extends EntityRepository
             $queryBuilder->setParameter('username', $profile->getUsername());
         }
 
-        $queryBuilder->groupBy('p.username');
+        $queryBuilder->groupBy('p.username, t.paymethod');
         $queryBuilder->orderBy('p.name, p.firstName');
         $queryResult = $queryBuilder->getQuery()->getArrayResult();
 
@@ -125,6 +123,7 @@ class TransactionRepository extends EntityRepository
                 'firstName' => $item['firstName'],
                 'name' => $item['name'],
                 'amount' => $item['amount'],
+                'paymethod' => $item['paymethod'],
             );
         }
 

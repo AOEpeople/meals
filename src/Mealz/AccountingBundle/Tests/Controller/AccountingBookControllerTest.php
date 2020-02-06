@@ -108,8 +108,8 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
         $totalCalculated = $totalShown = 0.00;
 
         $crawler = $this->client->request('GET', '/accounting/book');
-        $nodesAmount = $crawler->filterXPath('//table[@id="accounting-book-table"]//td[contains(@class,"amount")]');
-        $nodeTotal = $crawler->filterXPath('//table[@id="accounting-book-table"]//td[contains(@class,"table-data-total")]');
+        $nodesAmount = $crawler->filterXPath('//table[@id="accounting-book-table"]//td[contains(@class,"amount") and not(contains(@class, "table-data-total"))]');
+        $nodeTotal = $crawler->filterXPath('//table[@id="accounting-book-table"]//td[contains(@class,"table-data-total") and not(contains(@class, "amount"))]');
 
         foreach ($nodesAmount as $value) {
             $tmpCrawler = new Crawler($value);

@@ -53,8 +53,6 @@ class ParticipantRepository extends EntityRepository
 
         $minDate = clone $minDate;
         $minDate->setTime(0, 0, 0);
-        $maxDate = clone $maxDate;
-        $maxDate->setTime(23, 59, 59);
 
         $queryBuilder->andWhere('m.dateTime >= :minDate');
         $queryBuilder->andWhere('m.dateTime <= :maxDate');

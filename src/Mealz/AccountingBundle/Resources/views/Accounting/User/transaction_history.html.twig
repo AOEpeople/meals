@@ -29,7 +29,8 @@
         </thead>
         <tbody>
 
-        {% for transaction_record in transaction_history_records %}
+        {% for transaction_day_records in transaction_history_records %}
+            {% for transaction_record in transaction_day_records %}
                 {% if transaction_record.meal is defined %}
                     <tr class="table-row transaction-meal">
                         <td class="table-data">{{ transaction_record.meal.dateTime|date('d. M Y') }}</td>
@@ -50,6 +51,7 @@
                         <td class="table-data"><span>+</span> {{ transaction_record.amount|number_format(2, '.', ',') }}€</td>
                     </tr>
                 {% endif %}
+            {% endfor %}
         {% endfor %}
         </tbody>
         <tfoot>

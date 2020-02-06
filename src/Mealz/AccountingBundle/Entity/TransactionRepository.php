@@ -112,7 +112,7 @@ class TransactionRepository extends EntityRepository
             $queryBuilder->setParameter('username', $profile->getUsername());
         }
 
-        $queryBuilder->groupBy('p.username');
+        $queryBuilder->groupBy('p.username, t.paymethod');
         $queryBuilder->orderBy('p.name, p.firstName');
         $queryResult = $queryBuilder->getQuery()->getArrayResult();
 

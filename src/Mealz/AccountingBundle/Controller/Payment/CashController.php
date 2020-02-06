@@ -155,7 +155,7 @@ class CashController extends BaseController
         $profile = $this->getUser()->getProfile();
 
         $dateFrom = new \DateTime();
-        $dateFrom->modify('-4 weeks');
+        $dateFrom->modify('-28 days');
         $dateTo = new \DateTime();
 
         list($transactionsTotal, $transactionHistory, $participationsTotal) = $this->getFullTransactionHistory(
@@ -204,7 +204,7 @@ class CashController extends BaseController
         /** @var $participation Participant */
         foreach ($participations as $participation) {
             $participationsTotal += $participation->getMeal()->getPrice();
-            $transactionHistory[$participation->getMeal()->getDateTime()->getTimestamp()] = $participation;
+            $transactionHistory[$participation->getMeal()->getDateTime()->getTimestamp()][] = $participation;
         }
 
         return array($transactionsTotal, $transactionHistory, $participationsTotal);

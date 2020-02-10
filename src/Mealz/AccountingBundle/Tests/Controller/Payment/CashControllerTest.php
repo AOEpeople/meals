@@ -72,7 +72,7 @@ class CashControllerTest extends \Mealz\MealBundle\Tests\Controller\AbstractCont
         $this->client->followRedirects();
         $crawler = $this->client->submit($loginForm);
 
-        // read Current balance from haader
+        // read Current balance from header
         $currentBalance = $crawler->filterXPath('//div[@class="balance-text"]/a')->text();
         $currentBalance = floatval(substr($currentBalance, 0, strpos($currentBalance, '€')));
 
@@ -114,6 +114,5 @@ class CashControllerTest extends \Mealz\MealBundle\Tests\Controller\AbstractCont
 
         $this->assertEquals($currentBalance, $previousBalance - $participationAmount + $transactionAmount);
     }
-
 
 }

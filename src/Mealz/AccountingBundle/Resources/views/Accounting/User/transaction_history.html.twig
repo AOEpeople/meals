@@ -33,7 +33,12 @@
                 {% if transaction_record.meal is defined %}
                     <tr class="table-row transaction-meal">
                         <td class="table-data">{{ transaction_record.meal.dateTime|date('d. M Y') }}</td>
-                        <td class="table-data transaction-description">{{ transaction_record.meal.dish.title }}</td>
+                        <td class="table-data transaction-description">
+                            {%  if transaction_record.meal.dish.parent != null %}
+                                {{ transaction_record.meal.dish.parent.title }} - 
+                            {% endif %}
+                            {{ transaction_record.meal.dish.title }}
+                        </td>
                         <td class="table-data"><span>-</span> {{ transaction_record.meal.price|number_format(2, '.', ',') }} €</td>
                     </tr>
                 {% else %}

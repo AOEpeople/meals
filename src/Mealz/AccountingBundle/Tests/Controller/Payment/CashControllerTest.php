@@ -111,14 +111,8 @@ class CashControllerTest extends \Mealz\MealBundle\Tests\Controller\AbstractCont
         foreach ($transactions as $transaction) {
             $transactionAmount += floatval(trim(substr($transaction, 1, strpos($transaction, '€'))));
         }
-var_dump($previousBalance);
 
-var_dump($participationAmount);
-var_dump($transactionAmount);
-
-var_dump($currentBalance);
         $this->assertEquals($currentBalance, $previousBalance - $participationAmount + $transactionAmount);
     }
-
 
 }

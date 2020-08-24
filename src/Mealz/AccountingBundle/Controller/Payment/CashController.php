@@ -130,13 +130,7 @@ class CashController extends BaseController
                 }
             }
         }
-
-        $weekRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Week');
-        $week = $weekRepository->getCurrentWeek();
-
-        return $this->redirectToRoute('mealz_accounting.cost_sheet', array(
-            'week' => $week->getId(),
-        ));
+        return $this->redirectToRoute('mealz_accounting.cost_sheet');
     }
 
     /**

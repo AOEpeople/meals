@@ -93,14 +93,6 @@ gulp.task('css', function() {
 });
 
 /**
- * Copy favicon to /web directory
- */
-gulp.task('favicon', function() {
-    gulp.src(['./favicon/**/*'])
-        .pipe(gulp.dest('../../web/'))
-});
-
-/**
  * Copy images to /web/images directory
  */
 gulp.task('images', ['clean'], function() {
@@ -125,4 +117,4 @@ gulp.task('default', ['jshint', 'js', 'css']);
  * Task to build the whole stuff, including images
  * Run "gulp build --production" on production environment
  */
-gulp.task('build', ['clean', 'images','favicon', 'jshint', 'js', 'css']);
+gulp.task('build', ['clean', 'images', 'jshint', 'js', 'css']);

@@ -119,7 +119,7 @@ Finance has access to all user features and the finance tab.
                             RewriteEngine On
 
                             RewriteCond %{REQUEST_FILENAME} !-f
-                            RewriteRule ^(.*)$ app_dev.php [QSA,L]
+                            RewriteRule ^(.*)$ app.php [QSA,L]
                     </IfModule>
 
             </Directory>

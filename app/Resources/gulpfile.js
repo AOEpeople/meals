@@ -3,7 +3,6 @@ var rimraf      = require('gulp-rimraf');
 var concat      = require('gulp-concat');
 var sass        = require('gulp-sass');
 var sourcemaps  = require('gulp-sourcemaps');
-var scsslint    = require('gulp-scss-lint');
 var jshint      = require('gulp-jshint');
 var util        = require('gulp-util');
 var uglify      = require('gulp-uglify');
@@ -63,11 +62,7 @@ gulp.task('js', function() {
  * Compile SCSS to CSS
  */
 gulp.task('css', function() {
-
     var sassStream = gulp.src(['./sass/**/*.scss', '!./sass/helpers/_glyphicons.scss', '!./sass/modules/_transaction-export.scss'])
-        .pipe(scsslint({
-            'config': 'scsslint.yml'
-        }))
         .pipe(config.production ? util.noop() : sourcemaps.init())
         .pipe(sass(config.production ? {outputStyle: 'compressed'} : util.noop()).on('error', sass.logError))
         .pipe(config.production ? util.noop() : sourcemaps.write());
@@ -83,11 +78,7 @@ gulp.task('css', function() {
         .pipe(gulp.dest('../../web/css'));
 
     var printSassStream = gulp.src(['./sass/modules/_transaction-export.scss'])
-        .pipe(scsslint({
-            'config': 'scsslint.yml'
-        }));
-
-    return merge(printSassStream)
+        .pipe(sass(config.production ? {outputStyle: 'compressed'} : util.noop()).on('error', sass.logError))
         .pipe(concat('transaction-export.css'))
         .pipe(gulp.dest('../../web/media'));
 });

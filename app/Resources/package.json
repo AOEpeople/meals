@@ -18,7 +18,6 @@
     "gulp-jshint": "^2.1.0",
     "gulp-rimraf": "1.0.0",
     "gulp-sass": "4.1.0",
-    "gulp-scss-lint": "^1.0.0",
     "gulp-sourcemaps": "3.0.0",
     "gulp-uglify": "^3.0.2",
     "gulp-util": "^3.0.8",

@@ -8,13 +8,18 @@ router_https_port: "443"
 xdebug_enabled: false
 additional_hostnames: []
 additional_fqdns:
-- meals.test
+  - meals.test
 mariadb_version: ""
 mysql_version: "5.7"
 use_dns_when_possible: true
 composer_version: "1"
-web_environment: []
-
+web_environment:
+  - FINAL_RELEASEFOLDER=/var/www/html
+hooks:
+  post-start:
+    - exec: "cd app/Resources && bundle install && yarn && yarn build"
+    - exec: "app/console assets:install web --symlink --relative"
+    - exec: "setup/clear_cache.sh"
 
 # This config.yaml was created with ddev version v1.17.5
 # webimage: drud/ddev-webserver:v1.17.4

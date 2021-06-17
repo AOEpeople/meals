@@ -104,7 +104,7 @@ Finance has access to all user features and the finance tab.
 ### Apache configuration
 
     <VirtualHost *:80>
-            ServerName meals.local
+            ServerName meals.test
             DocumentRoot /var/www/mealz/web
             DirectoryIndex app_dev.php
 
@@ -142,12 +142,12 @@ sudo ./node_modules/.bin/gulp watch
 
 ### You're done
 
-Point your webbrowser to http://www.meals.local
+Point your webbrowser to http://meals.test
 Don't forget to add to your local hosts file:
-127.0.0.1 www.meals.local meals.local
+127.0.0.1 meals.test
 
 ### SSH Access
-ssh docker@meals.local Password: docker
+ssh docker@meals.test Password: docker
 
 ## Troubleshooting
 

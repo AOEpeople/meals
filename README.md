@@ -91,69 +91,46 @@ Finance has access to all user features and the finance tab.
 **Available at:** Choose "Finace" in finance navigation bar.
 **Actions** Select Date to list all transaction and export as pdf.
 
-## Installation
+---
 
-    composer install
-
-    APACHEUSER=`ps aux | grep -E '[a]pache|[h]ttpd|[_]www|[w]ww-data' | grep -v root | head -1 | cut -d\  -f1`
-    sudo setfacl -R -m u:"$APACHEUSER":rwX -m u:`whoami`:rwX app/cache app/logs web/media
-    sudo setfacl -dR -m u:"$APACHEUSER":rwX -m u:`whoami`:rwX app/cache app/logs web/media
-
-    php app/console doctrine:schema:update --force
-
-### Apache configuration
-
-    <VirtualHost *:80>
-            ServerName meals.local
-            DocumentRoot /var/www/mealz/web
-            DirectoryIndex app_dev.php
-
-            # autostart xdebug on this host
-            # php_value xdebug.remote_enable 1
-
-            <Directory "/var/www/mealz/web">
-                    AllowOverride All
-                    Allow from All
-
-                    <IfModule mod_rewrite.c>
-                            RewriteEngine On
-
-                            RewriteCond %{REQUEST_FILENAME} !-f
-                            RewriteRule ^(.*)$ app.php [QSA,L]
-                    </IfModule>
-
-            </Directory>
-    </VirtualHost>
-
-### Frontend build
-
+## Devbox Installation
+We're using [ddev](https://ddev.readthedocs.io/) for local development. `ddev` is a CLI tool which uses Docker to simplify local development. Please make sure that `ddev`, `mkcert` and `docker` are installed and run the following to get started:
 ```
-cd /var/www/mealz/devbox/current/app/Resources
-npm config set strict-ssl false
-sudo npm install
-sudo ./node_modules/bower/bin/bower install --allow-root
-sudo ./node_modules/gulp/bin/gulp.js build
+ddev start
 ```
+Point your webbrowser to https://meals.test :tada:
+Don't forget to add to your local hosts file if not done automatically via ddev: `127.0.0.1 meals.test`
 
-To develop and automatically build gulp try
+### Rebuild production ready frontend assets
 ```
-sudo ./node_modules/.bin/gulp watch
+# get into the container
+ddev ssh
+
+# change directory
+cd app/Resources
+
+# build production assets
+yarn build
 ```
-
-### You're done
-
-Point your webbrowser to http://www.meals.local
-Don't forget to add to your local hosts file:
-127.0.0.1 www.meals.local meals.local
 
 ### SSH Access
-ssh docker@meals.local Password: docker
+```
+ddev ssh
+```
+
+### Common commands
+```
+php app/console doctrine:schema:update --force
+```
+---
 
 ## Troubleshooting
 
 ### SQLSTATE[42S22]: Column not found: 1054 Unknown column
 
     php app/console doctrine:schema:update --force --env=dev
+
+---
 
 ## Developer information
 

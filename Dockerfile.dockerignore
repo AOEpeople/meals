@@ -1,0 +1,17 @@
+# eclude everything ...
+*
+
+# except the following ...
+!*.md
+!/.ddev/apache
+!/app
+!/docker
+!/setup
+!/src
+!/web
+!composer.json
+!composer.lock
+
+# ... but never include ...
+/app/cache/*
+/app/logs/*

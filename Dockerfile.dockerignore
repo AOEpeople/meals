@@ -1,0 +1,18 @@
+# eclude everything ...
+*
+
+# except the following ...
+!*.md
+!/app
+!/docker
+!/setup
+!/src
+!/web
+!composer.json
+!composer.lock
+
+# ... but never include ...
+/app/cache/*
+/app/logs/*
+/app/Resources/bower_components
+/app/Resources/node_modules

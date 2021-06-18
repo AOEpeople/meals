@@ -1,17 +1,29 @@
-version: '2'
-services:
-  mealz:
-    image: docker-team402.aoe.com/meals
-    ports:
-      - "80:80"
-      - "443:443"
-      - "22:22"
-      - "9000:9000"
-    environment:
-      - ENV=devbox
+version: '3'
 
-  mailhog:
-      image: mailhog/mailhog
-      ports:
-        - 1025:1025
-        - 8025:8025
+services:
+  app:
+    image: "aoepeople/meals:${VERSION_APP:-latest}"
+    build:
+      context: .
+    ports:
+      - "8033:80"
+      - "443:443"
+    environment:
+      - FINAL_RELEASEFOLDER=/var/www/html # required by setup/install.sh
+      - ENVIRONMENT=devbox # required by setup/install.sh – @todo: merge with `SYMFONY_ENV`
+      - SYMFONY_ENV=devbox
+      - SYMFONY__secret=change!override-via-docker-compoer
+      # - ...
+
+  db:
+    image: "aoepeople/meals-test-db:${VERSION_DB:-latest}"
+    build:
+      context: docker/db
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - /var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=db
+      - MYSQL_DATABASE=db
+      - MYSQL_USER=db
+      - MYSQL_PASSWORD=db

@@ -3,7 +3,6 @@
 
 # except the following ...
 !*.md
-!/.ddev/apache
 !/app
 !/docker
 !/setup

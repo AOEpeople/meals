@@ -1,8 +1,8 @@
 version: '3'
 
 services:
-  web:
-    image: "aoepeople/meals:${VERSION:-latest}"
+  app:
+    image: "aoepeople/meals:${VERSION_APP:-latest}"
     build:
       context: .
     ports:
@@ -16,8 +16,12 @@ services:
       # - ...
 
   db:
-    image: mysql:5
+    image: "aoepeople/meals-test-db:${VERSION_DB:-latest}"
+    build:
+      context: docker/db
     command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - /var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=db
       - MYSQL_DATABASE=db

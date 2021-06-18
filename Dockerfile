@@ -9,6 +9,22 @@ RUN apt-get update -y && apt-get install -y git zip unzip \
 COPY composer.json composer.lock ./
 RUN composer install --ignore-platform-reqs --optimize-autoloader --prefer-dist
 
+# build frontend assets
+FROM node:10 as frontend
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y -o Dpkg::Options::="--force-confold" --no-install-recommends --no-install-suggests \
+        build-essential \
+        ruby-full \
+        rubygems \
+        nodejs \
+    && gem install bundler
+WORKDIR var/www/html/app/Resources
+COPY app/Resources/package.json app/Resources/bower.json app/Resources/yarn.lock ./
+RUN yarn install
+COPY app/Resources/ .
+COPY web .
+RUN NODE_ENV=production yarn run build
+
 # build production container
 FROM php:5.6-apache
 RUN apt-get update -y && apt-get install -y \
@@ -31,5 +47,6 @@ RUN apt-get update -y && apt-get install -y \
 COPY --chown=www-data:www-data docker/web/apache.conf /etc/apache2/sites-enabled/meals.conf
 COPY --chown=www-data:www-data --from=composer /var/www/html/vendor/ ./vendor/
 COPY --chown=www-data:www-data --from=composer /var/www/html/bin/ ./bin/
+COPY --chown=www-data:www-data --from=frontend /var/www/html/web/ ./web/
 COPY --chown=www-data:www-data . /var/www/html/
-# RUN app/console cache:clear
+

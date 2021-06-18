@@ -14,4 +14,5 @@
 # ... but never include ...
 /app/cache/*
 /app/logs/*
-/app/Resources
+/app/Resources/bower_components
+/app/Resources/node_modules

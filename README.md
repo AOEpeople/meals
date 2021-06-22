@@ -1,5 +1,7 @@
 # Mealz for Zombies
 
+[![CI](https://github.com/AOEpeople/meals/actions/workflows/main.yml/badge.svg)](https://github.com/AOEpeople/meals/actions/workflows/main.yml)
+
 ## Features (User)
 
 ### Meal enrollment

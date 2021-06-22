@@ -13,10 +13,16 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '10'
-      - uses: actions/cache@v2
+      - name: Cache node_modules
+        uses: actions/cache@v2
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+      - name: Cache bower_components
+        uses: actions/cache@v2
+        with:
+          path: '**/bower_components'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/bower.json') }}
       - name: Install npm packages
         working-directory: ./app/Resources
         run: yarn install

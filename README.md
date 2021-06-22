@@ -1,6 +1,13 @@
-# Mealz for Zombies
+# [AOEpeople/meals](https://github.com/AOEpeople/meals)
 
+### An open source web application to manage lunches in a company canteen.
+
+![Screenshot](app/Resources/images/meals_screenshot.png)
+
+---
 [![CI](https://github.com/AOEpeople/meals/actions/workflows/main.yml/badge.svg)](https://github.com/AOEpeople/meals/actions/workflows/main.yml)
+[![docker hub pulls](https://img.shields.io/docker/pulls/aoepeople/meals.svg)](https://hub.docker.com/repository/docker/aoepeople/meals)
+---
 
 ## Features (User)
 

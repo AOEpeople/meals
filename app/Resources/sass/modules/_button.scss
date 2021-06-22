@@ -5,13 +5,13 @@ a.button:visited {
   position: relative;
   display: inline-block;
   padding: 15px 20px;
-  border: none;
+  border: 0;
   color: $color-white;
   background: $color-base;
   font-size: 13px;
   font-family: $font-bold;
   text-transform: uppercase;
-  transition: all .3s ease;
+  transition: all 0.3s ease;
   cursor: pointer;
   -webkit-font-smoothing: antialiased;
 

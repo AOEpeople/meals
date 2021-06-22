@@ -3,7 +3,6 @@ $text-color: $color-base;
 
 .edit-participation,
 .print-participation {
-
   thead.table-header {
     display: table-row-group;
     color: $text-color;
@@ -15,7 +14,7 @@ $text-color: $color-base;
   }
 
   .table-row {
-    border: none;
+    border: 0;
     font-size: 12px;
   }
 
@@ -92,7 +91,7 @@ $text-color: $color-base;
       word-wrap: break-word;
       padding-right: 5px;
       padding-left: 15px;
-      border-left: none;
+      border-left: 0;
     }
   }
 
@@ -138,7 +137,7 @@ $text-color: $color-base;
       left: 0;
       width: 20px;
       height: 20px;
-      content: '\e179';
+      content: "\e179";
       color: $color-print;
       font-size: 20px;
       font-family: "Glyphicons Halflings", sans-serif;

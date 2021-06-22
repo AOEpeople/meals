@@ -1,5 +1,5 @@
 %base-styling {
-  border: none;
+  border: 0;
   color: $color-gray-primary;
   font-size: 12px;
   font-family: $font-light;
@@ -31,21 +31,21 @@ select {
   position: relative;
   width: 100%;
   padding: 10px;
-  border: none;
+  border: 0;
   border-radius: 0;
   background: $color-white;
   cursor: pointer;
   text-indent: 1px;
-  text-overflow: '';
-  -webkit-appearance: none;
-  -moz-appearance: none;
+  text-overflow: "";
+  appearance: none;
+  appearance: none;
 
   &:focus {
     outline: none;
   }
 
   &:disabled {
-    opacity: .5;
+    opacity: 0.5;
   }
 }
 
@@ -59,7 +59,7 @@ select {
     right: 15px;
     border: 5px solid transparent;
     border-top-color: $color-gray-primary;
-    content: ' ';
+    content: " ";
     pointer-events: none;
   }
 }
@@ -112,10 +112,10 @@ $fieldset-padding: 13px;
       margin-left: -10px;
       border: 10px solid transparent;
       border-bottom-color: $color-gray-light;
-      content: ' ';
+      content: " ";
 
       @include breakpoint(small) {
-        border: none;
+        border: 0;
       }
     }
   }
@@ -132,10 +132,10 @@ $fieldset-padding: 13px;
       margin-left: -10px;
       border: 10px solid transparent;
       border-bottom-color: $color-gray-light;
-      content: ' ';
+      content: " ";
 
       @include breakpoint(small) {
-        border: none;
+        border: 0;
       }
     }
   }

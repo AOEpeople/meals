@@ -4,7 +4,7 @@
     bottom: 5px;
     left: 5px;
     padding: 0;
-    border: none;
+    border: 0;
     background: none;
     font-size: 14px;
     outline: none;
@@ -38,7 +38,7 @@
       border: solid transparent;
       border-width: 10px;
       border-bottom-color: $color-white;
-      content: ' ';
+      content: " ";
       pointer-events: none;
     }
 
@@ -53,7 +53,7 @@
     textarea {
       min-width: 100%;
       height: auto;
-      border: none;
+      border: 0;
       color: $color-gray-primary;
       font-size: 12px;
       font-family: $font-light;
@@ -76,9 +76,9 @@
   float: right;
 }
 
-// scss-lint:disable all
+// stylelint-disable selector-max-id
 #invitation_form_profile input[type="text"] {
   border: 2px solid $color-gray-light;
 }
-// scss-lint:disable all
+// stylelint-enable selector-max-id
 

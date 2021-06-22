@@ -25,7 +25,7 @@
       padding-left: 50px;
       border-bottom: 1px solid $color-gray-middle;
 
-      &:last-child { border: none; }
+      &:last-child { border: 0; }
 
       &:hover {
         background-color: $color-gray-light;
@@ -85,7 +85,7 @@
     width: 100%;
     height: 100%;
     margin-right: 12px;
-    content: '\e179';
+    content: "\e179";
     font-size: 12px;
     font-family: "Glyphicons Halflings", sans-serif;
   }
@@ -97,8 +97,8 @@
     display: none;
     width: 100%;
     height: 100%;
-    content: '';
-    background-color: rgba($color-gray-light, .5);
+    content: "";
+    background-color: rgba($color-gray-light, 0.5);
     cursor: auto;
 
     .disabled & {
@@ -138,7 +138,7 @@
     border: solid transparent;
     border-width: 15px;
     border-right-color: $color-gray-light;
-    content: ' ';
+    content: " ";
   }
 
   .checkbox {
@@ -160,10 +160,10 @@
       position: absolute;
       top: 3px;
       left: 3px;
-      content: '\e013';
+      content: "\e013";
       font-size: 12px;
       font-family: "Glyphicons Halflings", sans-serif;
-      animation: tick .2s ease-in;
+      animation: tick 0.2s ease-in;
     }
 
     span {

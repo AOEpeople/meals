@@ -4,12 +4,12 @@
     text-align: center;
 
     &.cash::before {
-      content: '\20ac';
+      content: "\20ac";
       color: $color-green;
       font-weight: 600;
 
       @include breakpoint(small) {
-        content: '';
+        content: "";
       }
     }
   }

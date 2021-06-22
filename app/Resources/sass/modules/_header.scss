@@ -73,11 +73,11 @@ header {
         margin-left: -10px;
         border: 10px solid transparent;
         border-bottom-color: $color-white;
-        content: ' ';
+        content: " ";
         pointer-events: none;
 
         @include breakpoint(small) {
-          border: none;
+          border: 0;
         }
       }
     }
@@ -93,11 +93,9 @@ header {
 
   .header-content {
     float: left;
-    // scss-lint:disable all
     width: 70%;
     width: calc(100% - #{$logo-width});
-    // scss-lint:enable all
-    transition: all .3s ease;
+    transition: all 0.3s ease;
 
     @include breakpoint(small) {
       position: absolute;
@@ -193,7 +191,7 @@ header {
       font-weight: bolder;
       font-size: 11px;
       text-transform: uppercase;
-      transition: all .3s ease;
+      transition: all 0.3s ease;
 
       @include breakpoint(small) {
         position: absolute;
@@ -261,7 +259,7 @@ header {
     input,
     button {
       height: 35px;
-      border: none;
+      border: 0;
     }
 
     input {

@@ -27,14 +27,14 @@
 
     &::before {
       left: 0;
-      content: '\e109';
+      content: "\e109";
       font-size: 12px;
       font-family: "Glyphicons Halflings", sans-serif;
     }
 
     &.modified::before {
       left: 0;
-      content: '\e109';
+      content: "\e109";
       color: $color-red;
       font-size: 12px;
       font-family: "Glyphicons Halflings", sans-serif;
@@ -51,14 +51,14 @@
 
     &::before {
       left: 0;
-      content: '\e186';
+      content: "\e186";
       font-size: 12px;
       font-family: "Glyphicons Halflings", sans-serif;
     }
 
     &.modified::before {
       left: 0;
-      content: '\e186';
+      content: "\e186";
       color: $color-red;
       font-size: 12px;
       font-family: "Glyphicons Halflings", sans-serif;
@@ -73,8 +73,8 @@
     box-shadow: 0 3px 8px 0 $box-shadow;
 
     .limit-input {
-      -moz-appearance: textfield;
-      -webkit-appearance: textfield;
+      appearance: textfield;
+      appearance: textfield;
       display: block;
       float: right;
       width: 35px;
@@ -301,7 +301,7 @@
       width: 13px;
       height: 12px;
       margin-right: 5px;
-      content: '\e008';
+      content: "\e008";
       font-size: 12px;
       font-family: "Glyphicons Halflings", sans-serif;
       vertical-align: middle;
@@ -357,7 +357,7 @@
       border-width: 5px;
       border-style: solid;
       border-color: $color-base transparent transparent;
-      content: '';
+      content: "";
     }
   }
 
@@ -375,7 +375,7 @@
   @extend %meal;
 
   border-width: 0;
-  border-left: none;
+  border-left: 0;
 
   .wrapper-vertical-center {
     right: 0;

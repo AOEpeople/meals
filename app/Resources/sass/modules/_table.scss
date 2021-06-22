@@ -16,13 +16,13 @@
     .table-head {
       padding-bottom: 5px;
 
-      // scss-lint:disable SelectorFormat
+      // stylelint-disable selector-class-pattern
       &.sorting,
       &.sorting_desc,
       &.sorting_asc {
         cursor: pointer;
       }
-      // scss-lint:enable SelectorFormat
+      // stylelint-enable selector-class-pattern
     }
   }
 

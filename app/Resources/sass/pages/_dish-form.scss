@@ -26,10 +26,10 @@ $fieldset-padding: 13px;
       margin-left: -10px;
       border: 10px solid transparent;
       border-bottom-color: $color-gray-light;
-      content: ' ';
+      content: " ";
 
       @include breakpoint(small) {
-        border: none;
+        border: 0;
       }
     }
   }

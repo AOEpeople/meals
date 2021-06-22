@@ -7,6 +7,8 @@
     "build": "gulp build",
     "gulp": "gulp",
     "postinstall": "bower install",
+    "lint": "yarn run lint-sass",
+    "lint-sass": "stylelint '**/*.s{a,c}ss'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -23,6 +25,8 @@
     "gulp-util": "^3.0.8",
     "jshint": "^2.13.0",
     "jshint-stylish": "^2.2.1",
-    "merge-stream": "^2.0.0"
+    "merge-stream": "^2.0.0",
+    "stylelint": "^13.13.1",
+    "stylelint-config-sass-guidelines": "^8.0.0"
   }
 }

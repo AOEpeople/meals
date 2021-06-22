@@ -2,23 +2,26 @@
 *.cache
 .*
 .DS_Store
+/app/build/
 /app/cache/*
 /app/config/parameters.yml
 /app/logs/*
+/app/vendor/
 /bin/
 /build/
 /composer.phar
 /phpunit.xml
 /web/bundles/
+/web/css
 /web/fonts/
 /web/images/
 /web/js/
 /web/media/*
-app/vendor/
-bower_components/
-css
-node_modules/
+bower_components
+cache.properties
+node_modules
 vendor
 
 # inclusions (alphabetical)
 !.gitkeep
+!.stylelintrc.json

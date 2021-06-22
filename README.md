@@ -113,6 +113,14 @@ cd app/Resources
 yarn build
 ```
 
+### Run code linter
+```bash
+# stylelint for SASS files
+ddev ssh
+cd /var/www/html/app/Resources
+yarn lint-sass
+```
+
 ### SSH Access
 ```
 ddev ssh

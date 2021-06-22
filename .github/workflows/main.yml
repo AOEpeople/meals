@@ -1,19 +1,25 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
 
 # Controls when the action will run. 
 on: [push, pull_request, workflow_dispatch]
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # Ensure code style
   linters:
-    name: stylelint
+    name: linters
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions-hub/stylelint@master
-        env:
-          PATTERN: "*.scss"
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '10'
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+      - name: Install npm packages
+        working-directory: ./app/Resources
+        run: yarn install
+      - name: Run FE linters
+        working-directory: ./app/Resources
+        run: yarn lint

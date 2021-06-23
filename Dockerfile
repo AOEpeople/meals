@@ -10,14 +10,11 @@ COPY composer.json composer.lock ./
 RUN composer install --ignore-platform-reqs --optimize-autoloader --prefer-dist
 
 # build frontend assets
-FROM node:10 as frontend
+FROM node:14 as frontend
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y -o Dpkg::Options::="--force-confold" --no-install-recommends --no-install-suggests \
         build-essential \
-        ruby-full \
-        rubygems \
-        nodejs \
-    && gem install bundler
+        nodejs
 WORKDIR var/www/html/app/Resources
 COPY app/Resources/package.json app/Resources/bower.json app/Resources/yarn.lock ./
 RUN yarn install

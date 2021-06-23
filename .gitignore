@@ -13,7 +13,7 @@
 /phpunit.xml
 /web/bundles/
 /web/css
-/web/fonts/
+/app/Resources/fonts/
 /web/images/
 /web/js/
 /web/media/*

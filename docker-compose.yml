@@ -12,7 +12,7 @@ services:
       - FINAL_RELEASEFOLDER=/var/www/html # required by setup/install.sh
       - ENVIRONMENT=devbox # required by setup/install.sh – @todo: merge with `SYMFONY_ENV`
       - SYMFONY_ENV=devbox
-      - SYMFONY__secret=change!override-via-docker-compoer
+      - SYMFONY__secret=change!override-via-docker-composer
       # - ...
 
   db:

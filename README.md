@@ -1,8 +1,8 @@
-# [AOEpeople/meals](https://github.com/AOEpeople/meals)
+![Meals app screenshot](https://raw.githubusercontent.com/AOEpeople/meals/master/app/Resources/images/meals_screenshot.png)
 
-### An open source web application to manage lunches in a company canteen.
+# 🍽 [AOEpeople/meals](https://github.com/AOEpeople/meals)
 
-![Screenshot](app/Resources/images/meals_screenshot.png)
+### Meals is an open source web application to manage lunches in a company canteen.
 
 ---
 [![CI](https://github.com/AOEpeople/meals/actions/workflows/main.yml/badge.svg)](https://github.com/AOEpeople/meals/actions/workflows/main.yml)

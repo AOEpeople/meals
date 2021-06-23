@@ -21,6 +21,7 @@ hooks:
     - exec: "app/console assets:install web --symlink --relative"
     - exec: "setup/clear_cache.sh"
     - exec-host: "ddev import-db --src=./docker/db/structure.sql"
+    - exec: "app/console doctrine:fixtures:load --env=devbox"
 
 # This config.yaml was created with ddev version v1.17.5
 # webimage: drud/ddev-webserver:v1.17.4

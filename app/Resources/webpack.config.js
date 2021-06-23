@@ -38,7 +38,7 @@ module.exports = function(env) {
             app: './js/init.js',
         },
         output: {
-            path: path.resolve(__dirname, '../../web/assets/'),
+            path: path.resolve(__dirname, '../../web/static/'),
             publicPath: env.WEBPACK_SERVE ? 'https://localhost:1337/' : '/',
             assetModuleFilename: 'assets/[name].[contenthash:4][ext][query]',
             clean: true,
@@ -51,8 +51,9 @@ module.exports = function(env) {
             descriptionFiles: ['package.json', 'bower.json'],
             aliasFields: ['browser', 'main'],
             modules: [
+                path.resolve('./'),
                 'bower_components',
-                'node_modules',
+                'node_modules'
             ],
         },
         module: {

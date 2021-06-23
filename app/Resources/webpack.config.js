@@ -14,7 +14,7 @@ module.exports = function(env) {
             splitChunks: {
                 cacheGroups: {
                     vendor: {
-                        test: /[\\/]node_modules[\\/]/,
+                        test: /[\\/]bower_components[\\/]/,
                         name: 'vendors',
                         chunks: 'all',
                     },
@@ -42,8 +42,8 @@ module.exports = function(env) {
             publicPath: env.WEBPACK_SERVE ? 'https://localhost:1337/' : '/',
             assetModuleFilename: 'assets/[name].[contenthash:4][ext][query]',
             clean: true,
-            filename: env.WEBPACK_SERVE ? '[name].js' : '[name].[contenthash:4].js',
-            chunkFilename: env.WEBPACK_SERVE ? '[id].js' : 'chunks/[id].[contenthash:4].js',
+            filename: '[name].js',
+            chunkFilename: env.WEBPACK_SERVE ? '[id].js' : 'chunks/[id].js',
         },
         resolve: {
             preferRelative: true,

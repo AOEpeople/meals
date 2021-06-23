@@ -13,10 +13,10 @@
 /phpunit.xml
 /web/bundles/
 /web/css
-/app/Resources/fonts/
 /web/images/
 /web/js/
 /web/media/*
+/web/static/
 bower_components
 cache.properties
 node_modules

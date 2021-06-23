@@ -21,8 +21,6 @@ framework:
     fragments:       ~
     http_method_override: true
     profiler: { only_exceptions: true }
-    assets:
-        json_manifest_path: "%kernel.project_dir%/web/static/manifest.json"
 
 # Twig Configuration
 twig:

@@ -37,7 +37,7 @@ RUN apt-get update -y && apt-get install -y \
         --no-install-recommends \
     && a2enmod rewrite \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) gd mcrypt pdo_mysql mysqli \
+    && docker-php-ext-install -j$(nproc) bcmath gd mcrypt pdo_mysql mysqli \
     && docker-php-ext-enable mysqli \
     && rm -rf /var/lib/apt/lists/* \
     && mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" \

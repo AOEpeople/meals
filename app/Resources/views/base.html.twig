@@ -11,9 +11,7 @@
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
 	<title>AOE Meals</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
-    {% stylesheets '../web/css/*.css' filter='cssrewrite' %}
-		<link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
+		<link rel="stylesheet" href="/static/app.css" />
 	{% block head %}{% endblock %}
 </head>
 
@@ -64,8 +62,7 @@
 		{% endblock %}
 	</div>
 
-    {% javascripts '../web/js/*.js' %}
-		<script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+		<script src="/static/vendors.js"></script>
+		<script src="/static/app.js"></script>
 	</body>
 </html>

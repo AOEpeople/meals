@@ -1,3 +1,14 @@
+import '../sass/mealz.scss'
+
+import 'jquery/dist/jquery.js';
+import 'datetimepicker/build/jquery.datetimepicker.full.min.js';
+import 'fancybox/dist/jquery.fancybox.min.js';
+import 'datatables.net/js/jquery.dataTables.js';
+import 'switchery/dist/switchery.min.js';
+import 'EasyAutocomplete/dist/jquery.easy-autocomplete.min.js';
+import 'moment/min/moment.min.js';
+import 'bootstrap-daterangepicker/daterangepicker.js';
+
 var Mealz = function () {
     this.prototypeFormId = undefined;
     this.checkboxWrapperClass = 'checkbox-wrapper';

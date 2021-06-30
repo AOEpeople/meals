@@ -16,7 +16,6 @@
         "doctrine/doctrine-migrations-bundle": "~1.2",
         "twig/twig": "~1.34",
         "twig/extensions": "~1.0",
-        "symfony/assetic-bundle": "~2.3",
         "symfony/swiftmailer-bundle": "~2.3",
         "symfony/monolog-bundle": "~2.4",
         "sensio/distribution-bundle": "~2.3",
@@ -32,7 +31,8 @@
         "paypal/paypal-checkout-sdk": "^1.0.0",
         "tecnickcom/tcpdf": "6.2.26",
         "whiteoctober/tcpdf-bundle": "dev-master",
-        "ocramius/proxy-manager": "~1.0"
+        "ocramius/proxy-manager": "~1.0",
+        "symfony/asset": "^3.4"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "~2.2",

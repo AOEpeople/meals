@@ -9,10 +9,7 @@ services:
       - "8033:80"
       - "443:443"
     environment:
-      - FINAL_RELEASEFOLDER=/var/www/html # required by setup/install.sh
-      - ENVIRONMENT=devbox # required by setup/install.sh – @todo: merge with `SYMFONY_ENV`
-      - SYMFONY_ENV=devbox
-      - SYMFONY__secret=change!override-via-docker-composer
+      - SYMFONY_ENV=staging
       # - ...
 
   db:

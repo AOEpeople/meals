@@ -1,5 +1,5 @@
 parameters:
-    env_url: "https://staging-meals.aoe.com"
+    env_url: "https://meals-staging.aoe.com/"
     hr_email: "team-lemmings@aoe.com"
 
     database_host:     db

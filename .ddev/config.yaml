@@ -17,7 +17,7 @@ web_environment:
   - FINAL_RELEASEFOLDER=/var/www/html
 hooks:
   post-start:
-    - exec: "cd app/Resources && bundle install && yarn && yarn build"
+    - exec: "cd app/Resources && yarn && yarn build"
     - exec: "app/console assets:install web --symlink --relative"
     - exec: "setup/clear_cache.sh"
     - exec-host: "ddev import-db --src=./docker/db/structure.sql"

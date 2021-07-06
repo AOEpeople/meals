@@ -1,0 +1,45 @@
+#!/bin/bash
+
+function main() {
+  local CMD=$1
+
+  case "${CMD}" in
+  'migrate')
+    execMigrateTestDb "$@"
+    ;;
+  'test')
+    execUnittestBackend "$@"
+    execFunctest "$@"
+    ;;
+  'test:unit')
+    execUnittestBackend "$@"
+    ;;
+  'test:unit:backend')
+    execUnittestBackend "$@"
+    ;;
+  *)
+    showUsage
+    ;;
+  esac
+}
+
+function  execMigrateTestDb() {
+  app/console doctrine:schema:update --env=test --force
+}
+
+function execUnittestBackend() {
+  bin/phpunit -c app/config/commons/development/phpunit.xml -- "${@:2}"
+}
+
+function showUsage() {
+  cat <<-'EOM'
+Usage:
+  ddev run [command] options
+
+Commands:
+  test                Run unit and functional test
+  test:unit           Run all unit test (backend and frontend)
+EOM
+}
+
+main "$@"

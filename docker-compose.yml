@@ -5,18 +5,22 @@ services:
     image: "aoepeople/meals:${VERSION_APP:-latest}"
     build:
       context: .
+    depends_on:
+      - db
     ports:
       - "8033:80"
       - "443:443"
     environment:
       - SYMFONY_ENV=staging
       # - ...
+    volumes:
+      - ./app/build:/var/www/html/app/build
 
   db:
     image: "aoepeople/meals-test-db:${VERSION_DB:-latest}"
     build:
       context: docker/db
-    command: --default-authentication-plugin=mysql_native_password
+    command: --sql_mode="STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION" --default-authentication-plugin=mysql_native_password
     volumes:
       - /var/lib/mysql
     environment:

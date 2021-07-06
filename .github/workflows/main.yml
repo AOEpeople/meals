@@ -9,9 +9,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: jonaseberle/github-action-setup-ddev@v1
-      - run: ddev run migrate
-      - run: ddev run test
+      - name: test with docker compose
+        run: |
+          docker compose up -d dev
+          sleep 10
+          docker compose exec dev app/console doctrine:schema:update --env=test --force
+          docker compose exec dev bin/phpunit -c app/config/commons/development/phpunit.xml
+          docker compose down -v
 
   lint:
     name: lint

@@ -1,12 +1,20 @@
 name: CI
 
 # Controls when the action will run. 
-on: [push, pull_request, workflow_dispatch]
+on: [ push, pull_request, workflow_dispatch ]
 
 jobs:
-  # Ensure code style
-  linters:
-    name: linters
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: jonaseberle/github-action-setup-ddev@v1
+      - run: ddev run migrate
+      - run: ddev run test
+
+  lint:
+    name: lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

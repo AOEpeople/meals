@@ -378,3 +378,7 @@ CREATE TABLE `week` (
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2021-06-17  1:00:01
+
+CREATE USER 'mealz_test'@'%' IDENTIFIED BY 'mealz_test';
+CREATE DATABASE mealz_test;
+GRANT ALL PRIVILEGES ON mealz_test.* TO 'mealz_test'@'%';

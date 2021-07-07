@@ -19,6 +19,10 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      - name: Pull docker images for cached builds
+        run: |
+          docker pull aoepeople/meals:latest
+          docker pull aoepeople/meals:dev
       - name: Get Docker meta for production image
         id: meta
         uses: docker/metadata-action@v3
@@ -60,12 +64,10 @@ jobs:
           build-args: |
             BASE_APP_IMAGE=${{ fromJSON(steps.meta.outputs.json).tags[0] }}
       - name: Debug images on runner
-        run: |
-          echo ${{ steps.build_latest.outputs.digest }}
-          docker images | grep aoepeople
+        run: docker images | grep aoepeople
 
   test:
-    name: test
+    name: Run tests
     needs: [build-images]
     runs-on: ubuntu-latest
     steps:
@@ -94,7 +96,7 @@ jobs:
           files: app/build/logs/junit.xml
 
   lint:
-    name: lint
+    name: Lint code
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

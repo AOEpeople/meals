@@ -66,9 +66,9 @@ jobs:
       - name: Debug images on runner
         run: docker images | grep aoepeople
 
-  test:
-    name: Run tests
-    needs: [build-images]
+  test-unit-functional:
+    name: Run unit- and functional-tests
+    needs: [ build-images ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -100,6 +100,28 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           clover-file: app/build/logs/clover.xml
 
+  test-cgl:
+    name: Run phpmd and phpcs
+    needs: [ build-images ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Test with docker compose
+        run: |
+          export COMPOSE_INTERACTIVE_NO_CLI=true
+          docker-compose pull dev
+          docker-compose up -d dev
+          docker-compose exec -T dev bin/phpcs --report=checkstyle --report-file=app/build/logs/checkstyle.xml src
+          docker-compose exec -T dev bin/phpmd src xml app/config/commons/development/phpmd.xml --reportfile app/build/logs/pmd.xml
+          docker-compose exec -T dev bash -c "find app/build -type f -regex '.*\.\(html\|xml\)' | xargs sed -i 's#/var/www/html/##g'"
+          docker-compose down -v --remove-orphans
+      - name: Upload reports
+        uses: actions/upload-artifact@v2.2.4
+        if: always()
+        with:
+          name: reports
+          path: app/build/
+
   lint:
     name: Lint code
     runs-on: ubuntu-latest
@@ -127,7 +149,7 @@ jobs:
 
   snyk:
     name: Scan vulnerabilities
-    needs: [build-images]
+    needs: [ build-images ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

@@ -8,14 +8,18 @@
 
 namespace Mealz\MealBundle\Tests\Controller;
 
+use DateTime;
 use Doctrine\Common\Collections\Criteria;
 use Mealz\AccountingBundle\Entity\Transaction;
 use Mealz\MealBundle\Entity\Meal;
+use Mealz\MealBundle\Entity\MealRepository;
 use Mealz\MealBundle\Entity\Participant;
 use Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use Mealz\UserBundle\Entity\Profile;
 use Mealz\UserBundle\Entity\Role;
+use Mealz\UserBundle\Entity\RoleRepository;
 use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -53,12 +57,21 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
     }
 
     /**
+     * Create a default client with fincance role
+     * @param array $options
+     * @param array $server
+     */
+    protected function createFinanceClient($options = array(), $server = array()) {
+        $this->createAdminClient($options, $server, array('ROLE_FINANCE'));
+    }
+
+    /**
      * Create a client with a frontend user having a role ROLE_KITCHEN_STAFF
      *
      * @param array $options Array with symfony parameters to be set (e.g. environment,...)
      * @param array $server  Array with Server parameters to be set (e.g. HTTP_HOST,...)
      */
-    protected function createAdminClient($options = array(), $server = array())
+    protected function createAdminClient($options = array(), $server = array(), $roles = array('ROLE_KITCHEN_STAFF'))
     {
         $this->createDefaultClient($options, $server);
 
@@ -76,12 +89,12 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         $user = $repo->findOneBy(['username' => 'kochomi']);
         $user = ($user instanceof UserInterface) ? $user : 'kochomi';
 
-        $token = new UsernamePasswordToken($user, null, $firewall, array('ROLE_KITCHEN_STAFF'));
+        $token = new UsernamePasswordToken($user, null, $firewall, $roles);
         if (($session->getId()) === "") {
             $session->set('_security_'.$firewall, serialize($token));
             $session->save();
         }
-        $cookie = new \Symfony\Component\BrowserKit\Cookie($session->getName(), $session->getId());
+        $cookie = new Cookie($session->getName(), $session->getId());
         $this->client->getCookieJar()->set($cookie);
     }
 
@@ -117,9 +130,9 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
      */
     protected function getUserProfile($username = 'alice')
     {
-        /** @var \Mealz\UserBundle\Entity\RoleRepository $profileRepository */
+        /** @var RoleRepository $profileRepository */
         $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
-        /** @var \Mealz\UserBundle\Entity\Profile $userProfile */
+        /** @var Profile $userProfile */
         $userProfile = $profileRepository->findOneBy(['username' => $username]);
 
         if (false === ($userProfile instanceof Profile)) {
@@ -154,9 +167,9 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
      */
     protected function getRole($roleType)
     {
-        /** @var \Mealz\UserBundle\Entity\RoleRepository $roleRepository */
+        /** @var RoleRepository $roleRepository */
         $roleRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Role');
-        /** @var \Mealz\UserBundle\Entity\Role $guestRole */
+        /** @var Role $guestRole */
         $role = $roleRepository->findOneBy(['sid' => $roleType]);
         if (!($role instanceof Role)) {
             $this->fail('User role not "'.$roleType.'" found.');
@@ -213,17 +226,17 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
     /**
      * Helper method to get the recent meal.
      *
-     * @param \DateTime $dateTime
+     * @param DateTime $dateTime
      *
      * @return Meal
      */
-    protected function getRecentMeal(\DateTime $dateTime = null)
+    protected function getRecentMeal(DateTime $dateTime = null)
     {
         if ($dateTime === null) {
-            $dateTime = new \DateTime;
+            $dateTime = new DateTime;
         }
 
-        /** @var \Mealz\MealBundle\Entity\MealRepository $mealRepository */
+        /** @var MealRepository $mealRepository */
         $mealRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
         $criteria = new Criteria();
         $criteria->create();
@@ -240,9 +253,9 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
      * Helper method to create a user transaction with specific amount and date
      * @param Profile $user
      * @param float $amount
-     * @param \DateTime|null $date
+     * @param DateTime|null $date
      */
-    protected function createTransactions(Profile $user, $amount = 5.0, \DateTime $date = null)
+    protected function createTransactions(Profile $user, $amount = 5.0, DateTime $date = null)
     {
         $transaction = new Transaction();
         $amount = filter_var($amount, FILTER_VALIDATE_FLOAT, array('options' => array('min_range' => 0.1, 'default' => mt_rand(1000, 5000) / 100)));

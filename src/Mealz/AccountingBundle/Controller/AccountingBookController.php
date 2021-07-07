@@ -2,7 +2,10 @@
 
 namespace Mealz\AccountingBundle\Controller;
 
+use DateTime;
+use Exception;
 use Mealz\MealBundle\Controller\BaseController;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
@@ -12,25 +15,25 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class AccountingBookController extends BaseController
 {
     /**
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function listAction()
     {
         // Deny access for unprivileged (non-admin) users
-        if ($this->isGranted('ROLE_KITCHEN_STAFF') === false) {
+        if ($this->isGranted('ROLE_FINANCE') === false) {
             throw new AccessDeniedException();
         }
 
         // Get first and last day of previous month
-        $minDateFirst = new \DateTime('first day of previous month');
+        $minDateFirst = new DateTime('first day of previous month');
         $minDateFirst->setTime(0, 0, 0);
-        $maxDateFirst = new \DateTime('last day of previous month');
+        $maxDateFirst = new DateTime('last day of previous month');
         $maxDateFirst->setTime(23, 59, 59);
 
         // Get first and last day of actual month
-        $minDate = new \DateTime('first day of this month');
+        $minDate = new DateTime('first day of this month');
         $minDate->setTime(0, 0, 0);
-        $maxDate = new \DateTime('today');
+        $maxDate = new DateTime('today');
         $maxDate->setTime(23, 59, 59);
 
         // Create headline for twig template
@@ -56,8 +59,8 @@ class AccountingBookController extends BaseController
     /**
      * List all transactions that were payed by cash on the finances page
      * @param $dateRange
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Exception
+     * @return Response
+     * @throws Exception
      */
     public function listAllTransactionsAction($dateRange)
     {
@@ -72,17 +75,17 @@ class AccountingBookController extends BaseController
 
         if ($dateRange === null) {
             // Get first and last day of previous month
-            $minDateFirst = new \DateTime('first day of previous month');
+            $minDateFirst = new DateTime('first day of previous month');
             $minDateFirst->setTime(0, 0, 0);
-            $maxDateFirst = new \DateTime('last day of previous month');
+            $maxDateFirst = new DateTime('last day of previous month');
             $maxDateFirst->setTime(23, 59, 59);
 
             // Create headline for twig template
             $headingFirst = $minDateFirst->format('d.m.') . ' - ' . $maxDateFirst->format('d.m.Y');
 
             // Get first and last day of actual month
-            $minDate = new \DateTime('first day of this month');
-            $maxDate = new \DateTime('today');
+            $minDate = new DateTime('first day of this month');
+            $maxDate = new DateTime('today');
             $minDate->setTime(0, 0, 0);
             $maxDate->setTime(23, 59, 59);
 
@@ -90,8 +93,8 @@ class AccountingBookController extends BaseController
         } else {
             // Get date range set with date range picker by user
             $dateRangeArray = explode('&', $dateRange);
-            $minDate = new \DateTime($dateRangeArray[0]);
-            $maxDate = new \DateTime($dateRangeArray[1]);
+            $minDate = new DateTime($dateRangeArray[0]);
+            $maxDate = new DateTime($dateRangeArray[1]);
         }
 
         $heading = $minDate->format('d.m.') . ' - ' . $maxDate->format('d.m.Y');
@@ -112,7 +115,7 @@ class AccountingBookController extends BaseController
      * Export transaction table as PDF for finance staff
      * @param $dateRange
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public function exportPDFAction($dateRange)
     {
@@ -123,8 +126,8 @@ class AccountingBookController extends BaseController
         // Get date range set with date range picker by user
         $dateRange = str_replace('-', '/', $dateRange);
         $dateRangeArray = explode('&', $dateRange);
-        $minDate = new \DateTime($dateRangeArray[0]);
-        $maxDate = new \DateTime($dateRangeArray[1]);
+        $minDate = new DateTime($dateRangeArray[0]);
+        $maxDate = new DateTime($dateRangeArray[1]);
 
         $heading = $minDate->format('d.m.') . ' - ' . $maxDate->format('d.m.Y');
         $transactionRepo = $this->getTransactionRepository();

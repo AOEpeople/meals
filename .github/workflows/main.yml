@@ -21,6 +21,7 @@ jobs:
         with:
           images: aoepeople/meals
           tags: |
+            type=raw,value=latest
             type=ref,event=branch
             type=ref,event=pr
             type=semver,pattern={{version}}
@@ -32,12 +33,15 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          cache-from: |
+            - aoepeople/meals:latest
       - name: Get Docker meta for development
         id: devmeta
         uses: docker/metadata-action@v3
         with:
           images: aoepeople/meals
           tags: |
+            type=raw,value=dev
             type=ref,event=branch,suffix=-dev
       - name: Build and push development image
         uses: docker/build-push-action@v2
@@ -46,6 +50,8 @@ jobs:
           push: true
           tags: ${{ steps.devmeta.outputs.tags }}
           labels: ${{ steps.devmeta.outputs.labels }}
+          cache-from: |
+            - aoepeople/meals:dev
           build-args: |
             BASE_APP_IMAGE=${{ fromJSON(steps.devmeta.outputs.json).tags[0] }}
       - name: Debug images on runner
@@ -62,7 +68,8 @@ jobs:
           export COMPOSE_INTERACTIVE_NO_CLI=true
           docker-compose pull dev
           docker-compose up -d dev
-          sleep 15
+          sleep 5
+          docker-compose exec -T dev composer install
           docker-compose exec -T dev app/console doctrine:schema:update --env=test --force
           docker-compose exec -T dev bin/phpunit -d memory_limit=-1 -c app/config/commons/development/phpunit.xml
           docker-compose down -v --remove-orphans

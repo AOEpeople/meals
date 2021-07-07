@@ -81,8 +81,8 @@ jobs:
           sleep 15
           docker-compose exec -T dev app/console doctrine:schema:update --env=test --force
           docker-compose exec -T dev bin/phpunit -d memory_limit=-1 -c app/config/commons/development/phpunit.xml
+          docker-compose exec -T dev bash -c "find app/build -type f -regex '.*\.\(html\|xml\)' | xargs sed -i 's#/var/www/html/##g'"
           docker-compose down -v --remove-orphans
-          find app/build -type f -name '*.xml' | xargs sed -i 's#/var/www/html/##g'
       - name: Upload coverage report artifact
         uses: actions/upload-artifact@v2.2.4
         if: always()

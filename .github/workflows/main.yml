@@ -75,12 +75,12 @@ jobs:
       - name: Test with docker compose
         run: |
           export COMPOSE_INTERACTIVE_NO_CLI=true
-          docker-compose pull dev
-          docker-compose up -d dev
-          docker-compose exec -T dev composer install
+          docker-compose pull app
+          docker-compose up -d app
+          docker-compose exec -T app composer install
           sleep 15
-          docker-compose exec -T dev app/console doctrine:schema:update --env=test --force
-          docker-compose exec -T dev bin/phpunit -d memory_limit=-1 -c app/config/commons/development/phpunit.xml
+          docker-compose exec -T app app/console doctrine:schema:update --env=test --force
+          docker-compose exec -T app bin/phpunit -d memory_limit=-1 -c app/config/commons/development/phpunit.xml
           docker-compose down -v --remove-orphans
           find app/build -type f -name '*.xml' | xargs sed -i 's#/var/www/html/##g'
       - name: Upload coverage report artifact

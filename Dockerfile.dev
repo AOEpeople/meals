@@ -10,7 +10,7 @@ RUN apt-get update -y && apt-get install -y \
         --no-install-recommends \
     && a2enmod rewrite \
     && pecl install xdebug-2.5.5 \
-    && docker-php-ext-install -j$(nproc) bcmath calendar mcrypt pdo_mysql mysqli \
+    && docker-php-ext-install -j$(nproc) bcmath calendar mcrypt pdo_mysql mysqli opcache \
     && docker-php-ext-enable mysqli \
     && docker-php-ext-enable xdebug \
     && curl -L -o /usr/sbin/mhsendmail https://github.com/mailhog/mhsendmail/releases/download/v0.2.0/mhsendmail_linux_amd64 \
@@ -22,7 +22,8 @@ RUN echo "Setting up PHP for development..." \
     && sed -i 's/max_execution_time = .*/max_execution_time = 300/' "$PHP_INI_DIR/php.ini" \
     && sed -i 's/;date.timezone =.*/date.timezone= "Europe\/Berlin"/' "$PHP_INI_DIR/php.ini" \
     && sed -i 's/memory_limit = .*/memory_limit = -1/' "$PHP_INI_DIR/php.ini" \
-    && printf "[mail function]\nsendmail_path='/usr/sbin/mhsendmail --smtp-addr=mail:1025'\n" > /usr/local/etc/php/conf.d/sendmail.ini
+    && printf "[mail function]\nsendmail_path='/usr/sbin/mhsendmail --smtp-addr=mail:1025'\n" > /usr/local/etc/php/conf.d/sendmail.ini \
+    && printf "[opcache]\nopcache.enable = 1\opcache.enable_cli = 1\n" >> "$PHP_INI_DIR/php.ini"
 
 COPY --chown=www-data:www-data docker/web/apache.conf /etc/apache2/sites-enabled/meals.conf
 COPY --chown=www-data:www-data --from=baseimage /usr/local/bin/composer /usr/local/bin/composer

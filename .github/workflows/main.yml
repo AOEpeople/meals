@@ -12,11 +12,10 @@ jobs:
       - name: test with docker compose
         run: |
           export COMPOSE_INTERACTIVE_NO_CLI=true
-          docker-compose up --build -d dev
-          docker-compose exec -T dev bin/composer install
+          docker-compose up -d dev
           docker-compose exec -T dev app/console doctrine:schema:update --env=test --force
           docker-compose exec -T dev bin/phpunit -c app/config/commons/development/phpunit.xml
-          docker-compose down -v
+          docker-compose down -v --remove-orphans
 
   lint:
     name: lint

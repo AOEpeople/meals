@@ -13,17 +13,17 @@ jobs:
         run: |
           export COMPOSE_INTERACTIVE_NO_CLI=true
           docker-compose pull
-          docker-compose up -d dev
+          docker-compose up -d app
           sleep 15
-          docker-compose exec -T dev app/console doctrine:schema:update --env=test --force
-          docker-compose exec -T dev bin/phpunit -c app/config/commons/development/phpunit.xml
+          docker-compose exec -T app app/console doctrine:schema:update --env=test --force
+          docker-compose exec -T app bin/phpunit -d memory_limit=-1 -c app/config/commons/development/phpunit.xml
           docker-compose down -v --remove-orphans
       - name: Upload coverage report artifact
         uses: actions/upload-artifact@v2.2.4
+        if: always()
         with:
           name: reports
-          path: app/build
-          if-no-files-found: error
+          path: app/build/
       - name: Publish unit-test results
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: always()

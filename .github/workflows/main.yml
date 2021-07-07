@@ -29,7 +29,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          push: ${{ github.event_name != 'pull_request' }}
+          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
       - name: Get Docker meta for development
@@ -38,7 +38,7 @@ jobs:
         with:
           images: aoepeople/meals
           tags: |
-            type=ref,event=branch,suffix=dev
+            type=ref,event=branch,suffix=-dev
       - name: Build and push development image
         uses: docker/build-push-action@v2
         with:

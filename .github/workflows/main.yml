@@ -53,7 +53,7 @@ jobs:
           cache-from: |
             - aoepeople/meals:dev
           build-args: |
-            BASE_APP_IMAGE=${{ fromJSON(steps.devmeta.outputs.json).tags[0] }}
+            BASE_APP_IMAGE=${{ fromJSON(steps.meta.outputs.json).tags[0] }}
       - name: Debug images on runner
         run: docker images | grep aoepeople
 

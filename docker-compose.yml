@@ -5,13 +5,14 @@ services:
     image: "aoepeople/meals:${VERSION_APP:-latest}"
     build:
       context: .
+      cache_from:
+        - aoepeople/meals:latest
     depends_on:
       - db
     links:
       - db
     ports:
       - "8033:80"
-      - "443:443"
     environment:
       - SYMFONY_ENV=staging
       # - ...
@@ -23,13 +24,13 @@ services:
     build:
       context: .
       dockerfile: docker/dev/Dockerfile
+      cache_from:
+        - aoepeople/meals:dev
     depends_on:
       - db
-    links:
-      - db
+      - mail
     ports:
-      - "8034:80"
-      - "443:443"
+      - "8033:80"
     environment:
       - SYMFONY_ENV=staging
       # - ...
@@ -50,3 +51,11 @@ services:
       - MYSQL_DATABASE=db
       - MYSQL_USER=db
       - MYSQL_PASSWORD=db
+
+  mail:
+    image: mailhog/mailhog
+    logging:
+      driver: 'none'
+    ports:
+      - 1025:1025 # smtp server
+      - 8025:8025 # web ui

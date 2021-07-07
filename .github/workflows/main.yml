@@ -13,11 +13,14 @@ jobs:
         run: |
           export COMPOSE_INTERACTIVE_NO_CLI=true
           docker-compose pull
-          docker-compose up -d app
+          docker-compose build --progress=plain app
+          docker-compose build --progress=plain dev
+          docker-compose up -d dev
           sleep 15
-          docker-compose exec -T app app/console doctrine:schema:update --env=test --force
-          docker-compose exec -T app bin/phpunit -d memory_limit=-1 -c app/config/commons/development/phpunit.xml
+          docker-compose exec -T dev app/console doctrine:schema:update --env=test --force
+          docker-compose exec -T dev bin/phpunit -d memory_limit=-1 -c app/config/commons/development/phpunit.xml
           docker-compose down -v --remove-orphans
+          find app/build -type f -name '*.xml' | xargs sed -i '' 's/\/var\/www\/html\///'
       - name: Upload coverage report artifact
         uses: actions/upload-artifact@v2.2.4
         if: always()

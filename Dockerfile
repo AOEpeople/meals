@@ -39,9 +39,7 @@ RUN apt-get update -y && apt-get install -y \
     && docker-php-ext-enable mysqli \
     && rm -rf /var/lib/apt/lists/* \
     && rm -rf /tmp/* \
-
-RUN
-    mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" \
+    && mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" \
     && sed -i 's/max_execution_time = .*/max_execution_time = 300/' "$PHP_INI_DIR/php.ini" \
     && sed -i 's/;date.timezone =.*/date.timezone= "Europe\/Berlin"/' "$PHP_INI_DIR/php.ini" \
     && printf "[mail function]\nsendmail_path='/usr/sbin/sendmail -t -i'\n" > /usr/local/etc/php/conf.d/sendmail.ini

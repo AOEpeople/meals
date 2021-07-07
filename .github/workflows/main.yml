@@ -4,17 +4,63 @@ name: CI
 on: [ push, pull_request, workflow_dispatch ]
 
 jobs:
+  build-images:
+    name: Build Docker images
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      - name: Get Docker meta for production image
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: aoepeople/meals
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+      - name: Build and push production image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+      - name: Get Docker meta for development
+        id: devmeta
+        uses: docker/metadata-action@v3
+        with:
+          images: aoepeople/meals
+          tags: |
+            type=ref,event=branch,suffix=dev
+      - name: Build and push development image
+        uses: docker/build-push-action@v2
+        with:
+          file: Dockerfile.dev
+          push: true
+          tags: ${{ steps.devmeta.outputs.tags }}
+          labels: ${{ steps.devmeta.outputs.labels }}
+          build-args: |
+            BASE_APP_IMAGE=${{ fromJSON(steps.devmeta.outputs.json).tags[0] }}
+      - name: Debug images on runner
+        run: docker images | grep aoepeople
+
   test:
     name: test
+    needs: [build-images]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Test with docker compose
         run: |
           export COMPOSE_INTERACTIVE_NO_CLI=true
-          docker-compose pull
-          docker-compose build --progress=plain app
-          docker-compose build --progress=plain dev
+          docker-compose pull dev
           docker-compose up -d dev
           sleep 15
           docker-compose exec -T dev app/console doctrine:schema:update --env=test --force

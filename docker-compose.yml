@@ -23,7 +23,7 @@ services:
     image: "aoepeople/meals:${VERSION_APP_DEV:-dev}"
     build:
       context: .
-      dockerfile: docker/dev/Dockerfile
+      dockerfile: Dockerfile.dev
       cache_from:
         - aoepeople/meals:dev
     depends_on:

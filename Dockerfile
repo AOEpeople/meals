@@ -42,6 +42,7 @@ RUN apt-get update -y && apt-get install -y \
     && sed -i 's/;date.timezone =.*/date.timezone= "Europe\/Berlin"/' "$PHP_INI_DIR/php.ini"
 
 COPY --chown=www-data:www-data docker/web/apache.conf /etc/apache2/sites-enabled/meals.conf
+COPY --chown=www-data:www-data --from=composer /usr/local/bin/composer /usr/local/bin/composer
 COPY --chown=www-data:www-data --from=composer /var/www/html/vendor/ ./vendor/
 COPY --chown=www-data:www-data --from=composer /var/www/html/bin/ ./bin/
 COPY --chown=www-data:www-data --from=frontend /var/www/html/web/ ./web/

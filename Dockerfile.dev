@@ -25,4 +25,5 @@ RUN echo "Setting up PHP for development..." \
     && printf "[mail function]\nsendmail_path='/usr/sbin/mhsendmail --smtp-addr=mail:1025'\n" > /usr/local/etc/php/conf.d/sendmail.ini
 
 COPY --chown=www-data:www-data docker/web/apache.conf /etc/apache2/sites-enabled/meals.conf
+COPY --chown=www-data:www-data --from=baseimage /usr/local/bin/composer /usr/local/bin/composer
 COPY --chown=www-data:www-data --from=baseimage /var/www/html/ /var/www/html/

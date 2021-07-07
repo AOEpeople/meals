@@ -146,7 +146,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
         $maxDate->setTime(23, 59, 59);
 
         // fetch infos for previous month from database.
-        // These results are already testTotalAmountOfTransactionsDisplayedInSeperateRowordered by lastname, firstname!!
+        // These results are already ordered by lastname, firstname!!
         $transactionRepo = $this->getDoctrine()->getRepository('MealzAccountingBundle:Transaction');
         $usersAndTheirTotals = $transactionRepo->findUserDataAndTransactionAmountForGivenPeriod($minDate, $maxDate);
 

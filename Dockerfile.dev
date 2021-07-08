@@ -3,8 +3,10 @@ FROM $BASE_APP_IMAGE as baseimage
 
 FROM php:5.6-apache
 RUN apt-get update -y && apt-get install -y \
+        git \
         libmcrypt-dev \
         mysql-client \
+        unzip \
         vim \
         zip \
         --no-install-recommends \
@@ -23,7 +25,8 @@ RUN echo "Setting up PHP for development..." \
     && sed -i 's/;date.timezone =.*/date.timezone= "Europe\/Berlin"/' "$PHP_INI_DIR/php.ini" \
     && sed -i 's/memory_limit = .*/memory_limit = -1/' "$PHP_INI_DIR/php.ini" \
     && printf "[mail function]\nsendmail_path='/usr/sbin/mhsendmail --smtp-addr=mail:1025'\n" > /usr/local/etc/php/conf.d/sendmail.ini \
-    && printf "[opcache]\nopcache.enable = 1\nopcache.enable_cli = 1\n" >> "$PHP_INI_DIR/php.ini"
+    && printf "[opcache]\nopcache.enable = 1\nopcache.enable_cli = 1\n" >> "$PHP_INI_DIR/php.ini" \
+    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer2 \
 
 COPY --chown=www-data:www-data docker/web/apache.conf /etc/apache2/sites-enabled/meals.conf
 COPY --chown=www-data:www-data --from=baseimage /usr/local/bin/composer /usr/local/bin/composer

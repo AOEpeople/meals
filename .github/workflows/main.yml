@@ -97,9 +97,10 @@ jobs:
           files: app/build/logs/junit.xml
 
   test-cgl:
-    name: Run phpmd and phpcs
+    name: PHPCodeSniffer
     needs: [ build-images ]
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v2
       - name: Test with docker compose
@@ -108,15 +109,14 @@ jobs:
           docker-compose pull dev
           docker-compose up -d dev
           docker-compose exec -T dev mkdir -p app/build/logs/
-          docker-compose exec -T dev bin/phpcs --report=checkstyle --report-file=app/build/logs/checkstyle.xml src
+          docker-compose exec -T dev bin/phpcs --extensions=php --standard=vendor/leaphub/phpcs-symfony2-standard/leaphub/phpcs/Symfony2/ -s --report=junit --report-file=app/build/logs/phpcs.xml src
           docker-compose exec -T dev bash -c "find app/build -type f -regex '.*\.\(html\|xml\)' | xargs sed -i 's#/var/www/html/##g'"
           docker-compose down -v --remove-orphans
-      - name: Upload reports
-        uses: actions/upload-artifact@v2.2.4
+      - name: Publish unit-test results
+        uses: EnricoMi/publish-unit-test-result-action@v1
         if: always()
         with:
-          name: reports
-          path: app/build/
+          files: app/build/logs/phpcs.xml
 
   lint:
     name: Lint code

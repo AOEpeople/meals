@@ -98,6 +98,7 @@ jobs:
 
   test-cgl:
     name: PHPCodeSniffer
+    if: "false" # temporarily disable CGL unless fixed
     needs: [ build-images ]
     runs-on: ubuntu-latest
     continue-on-error: true
@@ -116,6 +117,7 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: always()
         with:
+          check_name: "PHPCodeSniffer"
           files: app/build/logs/phpcs.xml
 
   lint:

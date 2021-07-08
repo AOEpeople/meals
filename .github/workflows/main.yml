@@ -16,4 +16,4 @@ jobs:
           coverage: none
           tools: phpmd
       - name: Run PHPMD
-        run: phpmd src github app/config/commons/development/phpmd.xml
+        run: phpmd src github ./app/config/commons/development/phpmd.xml --baseline-file ./app/config/commons/development/phpmd.baseline.xml

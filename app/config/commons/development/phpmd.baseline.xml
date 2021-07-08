@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<phpmd-baseline>
+  <violation rule="PHPMD\Rule\Naming\ShortVariable" file="src/Mealz/AccountingBundle/Entity/Transaction.php"/>
+  <violation rule="PHPMD\Rule\Naming\LongVariable" file="src/Mealz/AccountingBundle/ParticipantList/ParticipantListFactory.php"/>
+  <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Mealz/AccountingBundle/Tests/Controller/Payment/CashControllerTest.php"/>
+  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Controller/MealController.php"/>
+  <violation rule="PHPMD\Rule\Design\WeightedMethodCount" file="src/Mealz/MealBundle/Controller/MealController.php"/>
+  <violation rule="PHPMD\Rule\Naming\ShortVariable" file="src/Mealz/MealBundle/Entity/Category.php"/>
+  <violation rule="PHPMD\Rule\Naming\ShortVariable" file="src/Mealz/MealBundle/Entity/Day.php"/>
+  <violation rule="PHPMD\Rule\Naming\LongVariable" file="src/Mealz/MealBundle/Entity/Day.php"/>
+  <violation rule="PHPMD\Rule\Naming\ShortVariable" file="src/Mealz/MealBundle/Entity/Dish.php"/>
+  <violation rule="PHPMD\Rule\UnusedLocalVariable" file="src/Mealz/MealBundle/Entity/DishRepository.php"/>
+  <violation rule="PHPMD\Rule\Naming\ShortVariable" file="src/Mealz/MealBundle/Entity/GuestInvitation.php"/>
+  <violation rule="PHPMD\Rule\Naming\ShortVariable" file="src/Mealz/MealBundle/Entity/Meal.php"/>
+  <violation rule="PHPMD\Rule\Naming\ShortVariable" file="src/Mealz/MealBundle/Entity/Participant.php"/>
+  <violation rule="PHPMD\Rule\Naming\ShortVariable" file="src/Mealz/MealBundle/Entity/Week.php"/>
+  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Mealz/MealBundle/Service/Link.php" method="linkMeal"/>
+  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Tests/AbstractDatabaseTestCase.php"/>
+  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Tests/Controller/AbstractControllerTestCase.php"/>
+  <violation rule="PHPMD\Rule\Design\TooManyPublicMethods" file="src/Mealz/MealBundle/Tests/Controller/DishVariationControllerTest.php"/>
+  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Mealz/MealBundle/Tests/Controller/DishVariationControllerTest.php" method="getDish"/>
+  <violation rule="PHPMD\Rule\UnusedLocalVariable" file="src/Mealz/MealBundle/Tests/Controller/MealControllerTest.php"/>
+  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Tests/Controller/ParticipantControllerTest.php"/>
+  <violation rule="PHPMD\Rule\Design\TooManyPublicMethods" file="src/Mealz/MealBundle/Tests/Controller/ParticipantControllerTest.php"/>
+  <violation rule="PHPMD\Rule\Naming\ShortVariable" file="src/Mealz/RestBundle/Entity/AccessToken.php"/>
+  <violation rule="PHPMD\Rule\Naming\ShortVariable" file="src/Mealz/RestBundle/Entity/AuthCode.php"/>
+  <violation rule="PHPMD\Rule\Naming\ShortVariable" file="src/Mealz/RestBundle/Entity/Client.php"/>
+  <violation rule="PHPMD\Rule\Naming\ShortVariable" file="src/Mealz/RestBundle/Entity/RefreshToken.php"/>
+  <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Mealz/UserBundle/Entity/Profile.php"/>
+  <violation rule="PHPMD\Rule\Naming\ShortVariable" file="src/Mealz/UserBundle/Entity/Role.php"/>
+  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Mealz/UserBundle/Provider/OAuthUserProvider.php" method="loadUserByIdOrCreate"/>
+  <violation rule="PHPMD\Rule\Naming\ShortVariable" file="src/Mealz/UserBundle/User/LdapUser.php"/>
+</phpmd-baseline>

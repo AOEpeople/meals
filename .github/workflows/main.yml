@@ -109,7 +109,6 @@ jobs:
           docker-compose up -d dev
           docker-compose exec -T dev mkdir -p app/build/logs/
           docker-compose exec -T dev bin/phpcs --report=checkstyle --report-file=app/build/logs/checkstyle.xml src
-          docker-compose exec -T dev bin/phpmd src xml app/config/commons/development/phpmd.xml --reportfile app/build/logs/pmd.xml
           docker-compose exec -T dev bash -c "find app/build -type f -regex '.*\.\(html\|xml\)' | xargs sed -i 's#/var/www/html/##g'"
           docker-compose down -v --remove-orphans
       - name: Upload reports
@@ -143,6 +142,20 @@ jobs:
       - name: Run FE linters
         working-directory: ./app/Resources
         run: yarn lint
+
+  phpmd:
+    name: PHPMD
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup PHP environment
+        uses: shivammathur/setup-php@v2
+        with:
+          coverage: none
+          tools: phpmd
+      - name: Run PHPMD
+        run: phpmd src github ./app/config/commons/development/phpmd.xml --baseline-file ./phpmd.baseline.xml
 
   snyk:
     name: Scan vulnerabilities

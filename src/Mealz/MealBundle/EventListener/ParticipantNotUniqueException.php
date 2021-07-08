@@ -3,5 +3,8 @@
 
 namespace Mealz\MealBundle\EventListener;
 
-class ParticipantNotUniqueException extends \LogicException {
+use LogicException;
+
+class ParticipantNotUniqueException extends LogicException
+{
 }

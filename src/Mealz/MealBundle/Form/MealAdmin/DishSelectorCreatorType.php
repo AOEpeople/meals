@@ -41,5 +41,4 @@ class DishSelectorCreatorType extends AbstractType
     {
         return 'dish_selector_creator';
     }
-
 }

@@ -4,6 +4,7 @@ namespace Mealz\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Mealz\UserBundle\User\UserInterface as MealzUserInterface;
+use Serializable;
 use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
 
 /**
@@ -15,7 +16,7 @@ use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
  * @ORM\Table(name="login")
  * @ORM\Entity
  */
-class Login implements SymfonyUserInterface, \Serializable, MealzUserInterface
+class Login implements SymfonyUserInterface, Serializable, MealzUserInterface
 {
     /**
      * @var string
@@ -62,7 +63,7 @@ class Login implements SymfonyUserInterface, \Serializable, MealzUserInterface
     }
 
     /**
-     * @param \Mealz\UserBundle\Entity\Profile $profile
+     * @param Profile $profile
      */
     public function setProfile(Profile $profile = null)
     {
@@ -70,7 +71,7 @@ class Login implements SymfonyUserInterface, \Serializable, MealzUserInterface
     }
 
     /**
-     * @return \Mealz\UserBundle\Entity\Profile
+     * @return Profile
      */
     public function getProfile()
     {
@@ -142,7 +143,7 @@ class Login implements SymfonyUserInterface, \Serializable, MealzUserInterface
      */
     public function unserialize($serialized)
     {
-        list (
+        list(
             $this->username,
             $this->salt,
             $this->password,

@@ -2,6 +2,7 @@
 
 namespace Mealz\MealBundle\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Mealz\UserBundle\Entity\Profile;
 
@@ -16,147 +17,147 @@ use Mealz\UserBundle\Entity\Profile;
  */
 class GuestInvitation
 {
-	/**
-	 * @var string
-	 * @ORM\Column(name="id", type="string")
-	 * @ORM\Id
-	 * 
-	 * @SuppressWarnings(PHPMD.ShortVariable)
-	 */
-	private $id;
+    /**
+     * @var string
+     * @ORM\Column(name="id", type="string")
+     * @ORM\Id
+     *
+     * @SuppressWarnings(PHPMD.ShortVariable)
+     */
+    private $id;
 
-	/**
-	 * @var \DateTime
-	 * @ORM\Column(name="created_on", type="datetime")
-	 */
-	private $createdOn;
+    /**
+     * @var DateTime
+     * @ORM\Column(name="created_on", type="datetime")
+     */
+    private $createdOn;
 
-	/**
-	 * @var Profile
-	 * @ORM\ManyToOne(targetEntity="Mealz\UserBundle\Entity\Profile")
-	 * @ORM\JoinColumn(name="host_id", referencedColumnName="id", nullable=FALSE, onDelete="NO ACTION")
-	 */
-	private $host;
+    /**
+     * @var Profile
+     * @ORM\ManyToOne(targetEntity="Mealz\UserBundle\Entity\Profile")
+     * @ORM\JoinColumn(name="host_id", referencedColumnName="id", nullable=FALSE, onDelete="NO ACTION")
+     */
+    private $host;
 
-	/**
-	 * @var Day
-	 * @ORM\ManyToOne(targetEntity="Day")
-	 * @ORM\JoinColumn(name="meal_day_id", referencedColumnName="id", nullable=FALSE, onDelete="NO ACTION")
-	 */
-	private $day;
+    /**
+     * @var Day
+     * @ORM\ManyToOne(targetEntity="Day")
+     * @ORM\JoinColumn(name="meal_day_id", referencedColumnName="id", nullable=FALSE, onDelete="NO ACTION")
+     */
+    private $day;
 
-	/**
-	 * Initializes class instance.
-	 *
-	 * @param Profile $host
-	 * @param Day $day
-	 */
-	public function __construct(Profile $host, Day $day)
-	{
-		$this->host = $host;
-		$this->day = $day;
-	}
+    /**
+     * Initializes class instance.
+     *
+     * @param Profile $host
+     * @param Day $day
+     */
+    public function __construct(Profile $host, Day $day)
+    {
+        $this->host = $host;
+        $this->day = $day;
+    }
 
-	/**
-	 * Set id
-	 *
-	 * @param  string $id
-	 *
-	 * @return GuestInvitation
-	 * 
-	 * @SuppressWarnings(PHPMD.ShortVariable)
-	 */
-	public function setId($id)
-	{
-		$this->id = $id;
-		return $this;
-	}
+    /**
+     * Set id
+     *
+     * @param  string $id
+     *
+     * @return GuestInvitation
+     *
+     * @SuppressWarnings(PHPMD.ShortVariable)
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
 
-	/**
-	 * Get id
-	 *
-	 * @return string
-	 */
-	public function getId()
-	{
-		return $this->id;
-	}
+    /**
+     * Get id
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
-	/**
-	 * Set createdOn
-	 *
-	 * @param \DateTime $createdOn
-	 *
-	 * @return GuestInvitation
-	 */
-	public function setCreatedOn(\DateTime $createdOn)
-	{
-		$this->createdOn = $createdOn;
-		return $this;
-	}
+    /**
+     * Set createdOn
+     *
+     * @param DateTime $createdOn
+     *
+     * @return GuestInvitation
+     */
+    public function setCreatedOn(DateTime $createdOn)
+    {
+        $this->createdOn = $createdOn;
+        return $this;
+    }
 
-	/**
-	 * Get createdOn
-	 *
-	 * @return \DateTime
-	 */
-	public function getCreatedOn()
-	{
-		return $this->createdOn;
-	}
+    /**
+     * Get createdOn
+     *
+     * @return DateTime
+     */
+    public function getCreatedOn()
+    {
+        return $this->createdOn;
+    }
 
-	/**
-	 * Set host
-	 *
-	 * @param  Profile $host
-	 *
-	 * @return GuestInvitation
-	 */
-	public function setHost(Profile $host)
-	{
-		$this->host = $host;
-		return $this;
-	}
+    /**
+     * Set host
+     *
+     * @param  Profile $host
+     *
+     * @return GuestInvitation
+     */
+    public function setHost(Profile $host)
+    {
+        $this->host = $host;
+        return $this;
+    }
 
-	/**
-	 * Get host
-	 *
-	 * @return Profile
-	 */
-	public function getHost()
-	{
-		return $this->host;
-	}
+    /**
+     * Get host
+     *
+     * @return Profile
+     */
+    public function getHost()
+    {
+        return $this->host;
+    }
 
-	/**
-	 * Set meal day
-	 *
-	 * @param Day $day
-	 *
-	 * @return GuestInvitation
-	 */
-	public function setDay(Day $day)
-	{
-		$this->day = $day;
-		return $this;
-	}
+    /**
+     * Set meal day
+     *
+     * @param Day $day
+     *
+     * @return GuestInvitation
+     */
+    public function setDay(Day $day)
+    {
+        $this->day = $day;
+        return $this;
+    }
 
-	/**
-	 * Get meal day
-	 *
-	 * @return Day
-	 */
-	public function getDay()
-	{
-		return $this->day;
-	}
+    /**
+     * Get meal day
+     *
+     * @return Day
+     */
+    public function getDay()
+    {
+        return $this->day;
+    }
 
-	/**
-	 * @ORM\PrePersist()
-	 */
-	public function beforeCreate()
-	{
-		$this->id = md5($this->host->getUsername() . $this->day->getId());
-		$this->createdOn = new \DateTime();
-	}
+    /**
+     * @ORM\PrePersist()
+     */
+    public function beforeCreate()
+    {
+        $this->id = md5($this->host->getUsername() . $this->day->getId());
+        $this->createdOn = new DateTime();
+    }
 }

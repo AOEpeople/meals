@@ -12,7 +12,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="Mealz\MealBundle\Entity\CategoryRepository")
- * 
+ *
  * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  * @SuppressWarnings(PHPMD.CamelCaseVariableName)
  * @SuppressWarnings(PHPMD.CamelCaseParameterName)
@@ -25,7 +25,7 @@ class Category
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * 
+     *
      * @SuppressWarnings(PHPMD.ShortVariable)
      */
     private $id;
@@ -49,7 +49,7 @@ class Category
      * @Assert\NotBlank()
      * @Assert\Length(max=255)
      * @ORM\Column(type="string", length=255, nullable=FALSE)
-     * 
+     *
      * @var string
      */
     protected $title_de;
@@ -83,7 +83,7 @@ class Category
 
     /**
      * @param int $id
-     * 
+     *
      * @SuppressWarnings(PHPMD.ShortVariable)
      */
     public function setId($id)
@@ -163,4 +163,3 @@ class Category
         return $this->dishes;
     }
 }
-

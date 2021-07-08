@@ -135,5 +135,4 @@ class MealForm extends AbstractType
             'error_bubbling' => false
         ));
     }
-
 }

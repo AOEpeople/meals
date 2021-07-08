@@ -3,6 +3,8 @@
 namespace Mealz\MealBundle\Tests\Controller;
 
 use Doctrine\ORM\EntityManager;
+use Mealz\MealBundle\Entity\Dish;
+use Mealz\MealBundle\Entity\DishRepository;
 use Mealz\MealBundle\Entity\DishVariation;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -43,7 +45,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
      */
     public function newForm()
     {
-        /** @var \Mealz\MealBundle\Entity\Dish $dish */
+        /** @var Dish $dish */
         $dish = $this->getDish();
 
         $url = '/dish/' . $dish->getId() . '/variation/new';
@@ -71,7 +73,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
      */
     public function createDishVariation()
     {
-        /** @var \Mealz\MealBundle\Entity\Dish $dish */
+        /** @var Dish $dish */
         $dish = $this->getDish(null, true);
 
         $url = '/dish/' . $dish->getId() . '/variation/new';
@@ -85,7 +87,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
 
         $this->assertTrue($this->client->getResponse()->isRedirect('/dish'));
 
-        /** @var \Mealz\MealBundle\Entity\DishVariation $updatedDishVariation */
+        /** @var DishVariation $updatedDishVariation */
         $updatedDishVariation = $this->getDishVariationBy('title_de', 'new dish variation [de]');
         $this->assertEquals('new dish variation [de]', $updatedDishVariation->getTitleDe());
         $this->assertEquals('new dish variation [en]', $updatedDishVariation->getTitleEn());
@@ -96,7 +98,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
      */
     public function editForm()
     {
-        /** @var \Mealz\MealBundle\Entity\Dish $dish */
+        /** @var Dish $dish */
         $dish = $this->getDish(null, true);
         $dishVariation = $dish->getVariations()->get(0);
 
@@ -125,7 +127,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
      */
     public function updateDishVariation()
     {
-        /** @var \Mealz\MealBundle\Entity\Dish $dish */
+        /** @var Dish $dish */
         $dish = $this->getDish(null, true);
         $dishVariationId = $dish->getVariations()->get(0)->getId();
 
@@ -140,7 +142,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
 
         $this->assertTrue($this->client->getResponse()->isRedirect('/dish'));
 
-        /** @var \Mealz\MealBundle\Entity\DishVariation $updatedDishVariation */
+        /** @var DishVariation $updatedDishVariation */
         $updatedDishVariation = $this->getDishVariationBy('id', $dishVariationId);
         $this->assertEquals('dish variation [de]', $updatedDishVariation->getTitleDe());
         $this->assertEquals('dish variation [en]', $updatedDishVariation->getTitleEn());
@@ -151,7 +153,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
      */
     public function deleteDishVariation()
     {
-        /** @var \Mealz\MealBundle\Entity\Dish $dish */
+        /** @var Dish $dish */
         $dish = $this->getDish(null, true);
         $dishVariation = $dish->getVariations()->get(0);
         $dishVariationId = $dishVariation->getId();
@@ -161,7 +163,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         $this->assertTrue($this->client->getResponse()->isRedirect('/dish'));
 
         $updatedDishVariation = $this->getDishVariationBy('id', $dishVariationId, false);
-        if ($updatedDishVariation instanceof \Mealz\MealBundle\Entity\DishVariation) {
+        if ($updatedDishVariation instanceof DishVariation) {
             $this->assertFalse($updatedDishVariation->isEnabled());
         } else {
             $this->assertNull($updatedDishVariation);
@@ -258,7 +260,8 @@ class DishVariationControllerTest extends AbstractControllerTestCase
                     strpos(
                         trim($dishVariationTitles->current()->nodeValue),
                         $dishVariation->getTitle()
-                    ) !== false) ? true : false;
+                    ) !== false
+                ) ? true : false;
                 $dishVariationTitles->next();
             }
         }
@@ -386,13 +389,13 @@ class DishVariationControllerTest extends AbstractControllerTestCase
      */
     private function getDish($identifier = null, $dishVarRequired = false)
     {
-        /** @var \Mealz\MealBundle\Entity\DishRepository $dishRepository */
+        /** @var DishRepository $dishRepository */
         $dishRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Dish');
         $dish = null;
 
         if ($identifier > 0) {
             $dish = $dishRepository->find($identifier);
-            if ($dish instanceof \Mealz\MealBundle\Entity\Dish === true) {
+            if ($dish instanceof Dish === true) {
                 return $dish;
             }
         }
@@ -414,7 +417,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
             }
         }
 
-        if ($dish instanceof \Mealz\MealBundle\Entity\Dish === false) {
+        if ($dish instanceof Dish === false) {
             $this->fail('Failed to fetch test dish.');
         }
 
@@ -437,7 +440,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
             $dishVariation = $dishVariationRepo->findOneBy([$attribute => $value]);
         }
 
-        if ($dishVariation instanceof \Mealz\MealBundle\Entity\DishVariation === false && $throwError === true) {
+        if ($dishVariation instanceof DishVariation === false && $throwError === true) {
             $this->fail('Failed to fetch test dish variation.');
         }
 

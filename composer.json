@@ -1,5 +1,5 @@
 {
-    "name": "czenker/mealz-for-zombies",
+    "name": "aoepeople/meals",
     "license": "MIT",
     "type": "project",
     "description": "",
@@ -32,8 +32,7 @@
         "paypal/paypal-checkout-sdk": "^1.0.0",
         "tecnickcom/tcpdf": "6.2.26",
         "whiteoctober/tcpdf-bundle": "dev-master",
-        "ocramius/proxy-manager": "~1.0",
-        "symfony/asset": "^3.4"
+        "ocramius/proxy-manager": "~1.0"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "~2.2",
@@ -42,7 +41,8 @@
         "sebastian/phpcpd": "~2.0",
         "phploc/phploc": "~2.0",
         "squizlabs/php_codesniffer": "2.4.0",
-        "mayflower/php-codebrowser": "1.1.2"
+        "mayflower/php-codebrowser": "1.1.2",
+        "leaphub/phpcs-symfony2-standard": "~2.0.0"
     },
     "scripts": {
         "post-install-cmd": [

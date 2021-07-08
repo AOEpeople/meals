@@ -2,10 +2,8 @@
 
 namespace Mealz\MealBundle\Entity;
 
-
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-
 
 /**
  * Model representing a Dish variation.
@@ -16,5 +14,4 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class DishVariation extends Dish
 {
-
 }

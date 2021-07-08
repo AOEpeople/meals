@@ -223,8 +223,8 @@ class Profile extends OAuthUser
     /**
      * @return Profile
      */
-    public function getProfile() {
+    public function getProfile()
+    {
         return $this;
     }
-
 }

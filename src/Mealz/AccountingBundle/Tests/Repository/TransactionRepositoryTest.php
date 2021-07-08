@@ -2,6 +2,8 @@
 
 namespace Mealz\AccountingBundle\Tests\Repository;
 
+use DateInterval;
+use DateTime;
 use Mealz\AccountingBundle\Entity\Transaction;
 use Mealz\AccountingBundle\Entity\TransactionRepository;
 use Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
@@ -61,9 +63,9 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
         $tempTransactions = $this->createTemporaryTransactions();
 
         // Get first and last day of previous month
-        $minDate = new \DateTime('first day of previous month');
+        $minDate = new DateTime('first day of previous month');
         $minDate->setTime(0, 0, 0);
-        $maxDate = new \DateTime('last day of previous month');
+        $maxDate = new DateTime('last day of previous month');
         $maxDate->setTime(23, 59, 59);
 
         // make temporary transactions are available
@@ -73,8 +75,8 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
 
         // now fetch results from db and get the summed up amount for a certain user...
         $userData = $this->transactionRepo->findUserDataAndTransactionAmountForGivenPeriod(
-            $minDate, 
-            $maxDate, 
+            $minDate,
+            $maxDate,
             $firstTransaction->getProfile()
         );
         $usersTotalAmount = floatval($userData[$firstTransaction->getProfile()->getUsername()]['amount']);
@@ -91,19 +93,19 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
      * You can set $month to either 'this', 'last' or 'penultimate'
      *
      * @param string $month
-     * @return \DateTime
+     * @return DateTime
      */
     public function getRandomDateTime($month = 'this')
     {
-        $dateTime = new \DateTime();
+        $dateTime = new DateTime();
         $subDays = ($dateTime->format("d") > 15) ? 36 : 20;
 
         switch (strtolower($month)) {
             case 'last':
-                $dateTime->sub(new \DateInterval('P'.$subDays.'D'));
+                $dateTime->sub(new DateInterval('P'.$subDays.'D'));
                 break;
             case 'penultimate':
-                $dateTime->sub(new \DateInterval('P1M'.$subDays.'D'));
+                $dateTime->sub(new DateInterval('P1M'.$subDays.'D'));
                 break;
             default:
                 break;
@@ -163,14 +165,14 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
      *
      * @param $item     Transaction object
      * @return bool
-     * 
+     *
      * @see getAssumedTotalAmountForTransactionsFromLastMonth()
-     * 
+     *
      * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      */
     private function isTransactionFromLastMonth($item)
     {
-        $firstDayLastMonth = new \DateTime('first day of last month');
+        $firstDayLastMonth = new DateTime('first day of last month');
         $month = $firstDayLastMonth->format('n');
         if ($item instanceof Transaction) {
             return ($item->getDate()->format('n') == $month);

@@ -1,12 +1,127 @@
 name: CI
 
 # Controls when the action will run. 
-on: [push, pull_request, workflow_dispatch]
+on: [ pull_request, workflow_dispatch ]
 
 jobs:
-  # Ensure code style
-  linters:
-    name: linters
+  build-images:
+    name: Build Docker images
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      - name: Pull docker images for cached builds
+        run: |
+          docker pull aoepeople/meals:latest
+          docker pull aoepeople/meals:dev
+      - name: Get Docker meta for production image
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: aoepeople/meals
+          tags: |
+            type=raw,value=latest
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+      - name: Build and push production image
+        id: build_latest
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: |
+            - aoepeople/meals:latest
+      - name: Get Docker meta for development
+        id: devmeta
+        uses: docker/metadata-action@v3
+        with:
+          images: aoepeople/meals
+          tags: |
+            type=raw,value=dev
+            type=ref,event=branch,suffix=-dev
+      - name: Build and push development image
+        id: build_dev
+        uses: docker/build-push-action@v2
+        with:
+          file: Dockerfile.dev
+          push: true
+          tags: ${{ steps.devmeta.outputs.tags }}
+          labels: ${{ steps.devmeta.outputs.labels }}
+          cache-from: |
+            - aoepeople/meals:dev
+          build-args: |
+            BASE_APP_IMAGE=${{ fromJSON(steps.meta.outputs.json).tags[0] }}
+      - name: Debug images on runner
+        run: docker images | grep aoepeople
+
+  test-unit-functional:
+    name: Run unit- and functional-tests
+    needs: [ build-images ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Test with docker compose
+        run: |
+          export COMPOSE_INTERACTIVE_NO_CLI=true
+          docker-compose pull dev
+          docker-compose up -d dev
+          docker-compose exec -T dev composer install
+          sleep 15
+          docker-compose exec -T dev app/console doctrine:schema:update --env=test --force
+          docker-compose exec -T dev mkdir -p app/build/logs/
+          docker-compose exec -T dev bin/phpunit -d memory_limit=-1 -c app/config/commons/development/phpunit.xml
+          docker-compose exec -T dev bash -c "find app/build -type f -regex '.*\.\(html\|xml\)' | xargs sed -i 's#/var/www/html/##g'"
+          docker-compose down -v --remove-orphans
+      - name: Upload coverage report artifact
+        uses: actions/upload-artifact@v2.2.4
+        if: always()
+        with:
+          name: reports
+          path: app/build/
+      - name: Publish unit-test results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        if: always()
+        with:
+          files: app/build/logs/junit.xml
+
+  test-cgl:
+    name: PHPCodeSniffer
+    if: "false" # temporarily disable CGL unless fixed
+    needs: [ build-images ]
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v2
+      - name: Test with docker compose
+        run: |
+          export COMPOSE_INTERACTIVE_NO_CLI=true
+          docker-compose pull dev
+          docker-compose up -d dev
+          docker-compose exec -T dev mkdir -p app/build/logs/
+          docker-compose exec -T dev bin/phpcs --extensions=php --standard=vendor/leaphub/phpcs-symfony2-standard/leaphub/phpcs/Symfony2/ -s --report=junit --report-file=app/build/logs/phpcs.xml src
+          docker-compose exec -T dev bash -c "find app/build -type f -regex '.*\.\(html\|xml\)' | xargs sed -i 's#/var/www/html/##g'"
+          docker-compose down -v --remove-orphans
+      - name: Publish unit-test results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        if: always()
+        with:
+          check_name: "PHPCodeSniffer"
+          files: app/build/logs/phpcs.xml
+
+  lint:
+    name: Lint code
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -29,3 +144,42 @@ jobs:
       - name: Run FE linters
         working-directory: ./app/Resources
         run: yarn lint
+
+  phpmd:
+    name: PHPMD
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup PHP environment
+        uses: shivammathur/setup-php@v2
+        with:
+          coverage: none
+          tools: phpmd
+      - name: Run PHPMD
+        run: phpmd src github ./app/config/commons/development/phpmd.xml --baseline-file ./phpmd.baseline.xml
+
+  snyk:
+    name: Scan vulnerabilities
+    needs: [ build-images ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Run Snyk to check Docker image for vulnerabilities
+        # Snyk can be used to break the build when it detects vulnerabilities.
+        # In this case we want to upload the issues to GitHub Code Scanning
+        continue-on-error: true
+        uses: snyk/actions/docker@master
+        env:
+          # In order to use the Snyk Action you will need to have a Snyk API token.
+          # More details in https://github.com/snyk/actions#getting-your-snyk-token
+          # or you can signup for free at https://snyk.io/login
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          image: aoepeople/meals:latest
+          args: --file=Dockerfile
+      - name: Upload result to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: snyk.sarif

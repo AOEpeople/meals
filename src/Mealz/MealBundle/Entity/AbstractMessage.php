@@ -13,7 +13,7 @@ abstract class AbstractMessage
      * @ORM\Column(type="boolean", nullable=FALSE)
      * @var bool
      */
-    private $enabled = TRUE;
+    private $enabled = true;
 
     /**
      * @Assert\Length(min=8, max=255)

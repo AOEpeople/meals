@@ -2,6 +2,7 @@
 
 namespace Mealz\MealBundle\DataFixtures\ORM;
 
+use DateTime;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -56,7 +57,7 @@ class LoadParticipants extends AbstractFixture implements OrderedFixtureInterfac
                 $participant->setProfile($user);
                 $participant->setCostAbsorbed(false);
 
-                if ($participant->getMeal()->getDay()->getLockParticipationDateTime() < new \DateTime) {
+                if ($participant->getMeal()->getDay()->getLockParticipationDateTime() < new DateTime) {
                     $participant->setOfferedAt(time());
                 } else {
                     $participant->setOfferedAt(0);
@@ -114,5 +115,4 @@ class LoadParticipants extends AbstractFixture implements OrderedFixtureInterfac
 
         return $users;
     }
-
 }

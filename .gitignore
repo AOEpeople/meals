@@ -24,5 +24,6 @@ vendor
 
 # inclusions (alphabetical)
 !.ddev/.*
+!.dockerignore
 !.gitkeep
 !.stylelintrc.json

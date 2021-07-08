@@ -2,6 +2,7 @@
 
 namespace Mealz\MealBundle\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -19,7 +20,7 @@ class Week extends AbstractMessage
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      * @var integer $id
-     * 
+     *
      * @SuppressWarnings(PHPMD.ShortVariable)
      */
     private $id;
@@ -118,7 +119,7 @@ class Week extends AbstractMessage
 
     private function getWeekDateTime()
     {
-        $dateTime = new \DateTime();
+        $dateTime = new DateTime();
         $dateTime->setISODate($this->getYear(), $this->getCalendarWeek());
         return $dateTime;
     }

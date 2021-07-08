@@ -8,13 +8,14 @@ use Mealz\MealBundle\Entity\Dish;
 use Mealz\MealBundle\Entity\Meal;
 use Symfony\Component\VarDumper\VarDumper;
 use Twig\TwigFunction;
+use Twig_Extension;
 
 /**
  * @TODO: CodeStyle, variable usage optimization (maybe use $dishes as attribute?)
  * Class Variation
  * @package Mealz\MealBundle\Twig\Extension
  */
-class Variation extends \Twig_Extension
+class Variation extends Twig_Extension
 {
     protected $doctrine;
 
@@ -185,12 +186,12 @@ class Variation extends \Twig_Extension
 
     /**
      * @see self::getSortedVariation
-     * 
+     *
      * @param array $first
      * @param array $second
-     * 
+     *
      * @return int
-     * 
+     *
      * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      */
     private function compareVariation($first, $second)

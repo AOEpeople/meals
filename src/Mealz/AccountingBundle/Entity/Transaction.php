@@ -2,6 +2,7 @@
 
 namespace Mealz\AccountingBundle\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Mealz\UserBundle\Entity\Profile;
@@ -21,7 +22,7 @@ class Transaction
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * 
+     *
      * @SuppressWarnings(PHPMD.ShortVariable)
      */
     private $id;
@@ -37,7 +38,7 @@ class Transaction
     private $profile;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(type="datetime")
      * @Gedmo\Timestampable(on="create")
@@ -75,15 +76,15 @@ class Transaction
     }
 
     /**
-     * @param \DateTime $date
+     * @param DateTime $date
      */
-    public function setDate(\DateTime $date)
+    public function setDate(DateTime $date)
     {
         $this->date = $date;
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDate()
     {
@@ -155,7 +156,7 @@ class Transaction
      *
      * @return Transaction
      */
-    public function setProfile(\Mealz\UserBundle\Entity\Profile $profile)
+    public function setProfile(Profile $profile)
     {
         $this->profile = $profile;
 

@@ -12,20 +12,20 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  */
 class Configuration implements ConfigurationInterface
 {
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @SuppressWarnings(PHPMD.UnusedLocalVariable)
-	 */
-	public function getConfigTreeBuilder()
-	{
-		$treeBuilder = new TreeBuilder();
-		$rootNode = $treeBuilder->root('xopn_mealz_for_zombies_zombies');
+    /**
+     * {@inheritDoc}
+     *
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     */
+    public function getConfigTreeBuilder()
+    {
+        $treeBuilder = new TreeBuilder();
+        $rootNode = $treeBuilder->root('xopn_mealz_for_zombies_zombies');
 
-		// Here you should define the parameters that are allowed to
-		// configure your bundle. See the documentation linked above for
-		// more information on that topic.
+        // Here you should define the parameters that are allowed to
+        // configure your bundle. See the documentation linked above for
+        // more information on that topic.
 
-		return $treeBuilder;
-	}
+        return $treeBuilder;
+    }
 }

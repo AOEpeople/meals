@@ -117,6 +117,4 @@ class LoadUsers extends AbstractFixture implements OrderedFixtureInterface, Cont
         $this->addReference('profile-'.$this->counter++, $profile);
         $this->addReference('login-'.$this->counter, $login);
     }
-
 }
-

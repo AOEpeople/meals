@@ -2,6 +2,7 @@
 
 namespace Mealz\MealBundle\DataFixtures\ORM;
 
+use DateTime;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -49,7 +50,7 @@ class LoadDays extends AbstractFixture implements OrderedFixtureInterface
             $day = new Day();
             $day->setWeek($week);
             $day->setDateTime($startTime);
-            $lockDateTime = new \DateTime($startTime->format('Y-m-d H:i:s') . ' -1 day');
+            $lockDateTime = new DateTime($startTime->format('Y-m-d H:i:s') . ' -1 day');
             $lockDateTime->modify('16:00');
             $day->setLockParticipationDateTime($lockDateTime);
             $this->objectManager->persist($day);
@@ -61,7 +62,7 @@ class LoadDays extends AbstractFixture implements OrderedFixtureInterface
                 $time = clone($startTime);
                 $time->modify('+' . $i . ' days');
                 $day->setDateTime($time);
-                $lockDateTime = new \DateTime($day->getDateTime()->format('Y-m-d H:i:s') . ' -1 day');
+                $lockDateTime = new DateTime($day->getDateTime()->format('Y-m-d H:i:s') . ' -1 day');
                 $lockDateTime->modify('16:00');
                 $day->setLockParticipationDateTime($lockDateTime);
                 $this->objectManager->persist($day);
@@ -98,6 +99,4 @@ class LoadDays extends AbstractFixture implements OrderedFixtureInterface
             }
         }
     }
-
-
 }

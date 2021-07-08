@@ -2,9 +2,11 @@
 
 namespace Mealz\MealBundle\Controller;
 
+use DateTime;
 use Doctrine\ORM\EntityManager;
 use Exception;
 use Mealz\MealBundle\Entity\Day;
+use Mealz\MealBundle\Entity\GuestInvitationRepository;
 use Mealz\MealBundle\Entity\Meal;
 use Mealz\MealBundle\Entity\Participant;
 use Mealz\MealBundle\Entity\Week;
@@ -20,8 +22,10 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Debug\Exception\ContextErrorException;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\Translator;
@@ -33,7 +37,7 @@ class MealController extends BaseController
 {
     /**
      * the index Action
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function indexAction()
     {
@@ -42,12 +46,12 @@ class MealController extends BaseController
         $currentWeek = $weekRepository->getCurrentWeek();
 
         if (null === $currentWeek) {
-            $currentWeek = $this->createEmptyNonPersistentWeek(new \DateTime());
+            $currentWeek = $this->createEmptyNonPersistentWeek(new DateTime());
         }
 
         $nextWeek = $weekRepository->getNextWeek();
         if (null === $nextWeek) {
-            $nextWeek = $this->createEmptyNonPersistentWeek(new \DateTime('next week'));
+            $nextWeek = $this->createEmptyNonPersistentWeek(new DateTime('next week'));
         }
 
         $weeks = array($currentWeek, $nextWeek);
@@ -66,7 +70,7 @@ class MealController extends BaseController
      * @param string $date
      * @param string $dish
      * @param string $profile
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @return JsonResponse
      */
     public function joinAction($date, $dish, $profile)
     {
@@ -88,7 +92,6 @@ class MealController extends BaseController
         // Either the user is allowed to join a meal or the user is an admin, creating a participation for another user
         if ($this->getDoorman()->isUserAllowedToJoin($meal) === true
             || ($this->getDoorman()->isKitchenStaff() === true && $this->getProfile()->getUsername() !== $profile->getUsername())) {
-
             $participant = $this->createParticipation($meal, $profile);
             $this->logAddAction($meal, $participant);
             
@@ -129,12 +132,12 @@ class MealController extends BaseController
 
     /**
      * Returns an error code when meal is not a valid
-     * 
+     *
      * @param mixed $meal
-     * 
+     *
      * @return int
      */
-    private function getMealErrorCode($meal) 
+    private function getMealErrorCode($meal)
     {
         if ($meal === null) {
             return 404;
@@ -203,7 +206,7 @@ class MealController extends BaseController
     }
 
     /**
-     * Swap meal owner and send notification 
+     * Swap meal owner and send notification
      *
      * @param Meal       $meal        The meal
      * @param Profile    $profile     The profile
@@ -278,7 +281,7 @@ class MealController extends BaseController
 
     /**
      * create an Emtpy Non Persistent Week (for empty Weeks)
-     * @param \DateTime $dateTime
+     * @param DateTime $dateTime
      * @return Week
      */
     public function guestAction(Request $request, $hash)
@@ -349,12 +352,13 @@ class MealController extends BaseController
 
     /**
      * Render guest form
-     * 
-     * @param \Symfony\Component\Form\Form $form
-     * 
+     *
+     * @param Form $form
+     *
      * @return string
      */
-    protected function renderGuestForm($form) {
+    protected function renderGuestForm($form)
+    {
         return $this->render(
             'MealzMealBundle:Meal:guest.html.twig',
             array(
@@ -392,7 +396,7 @@ class MealController extends BaseController
      * @param MealRepository    $mealRepository  The meal repository
      * @param translator        $translator      The Translator Object
      *
-     * @throws \Mealz\MealBundle\EventListener\ToggleParticipationNotAllowedException
+     * @throws ToggleParticipationNotAllowedException
      */
     private function addParticipationForEveryChosenMeal($meals, $profile, $mealRepository, $translator)
     {
@@ -453,7 +457,7 @@ class MealController extends BaseController
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
-        /** @var \Mealz\MealBundle\Entity\GuestInvitationRepository $guestInvitationRepo */
+        /** @var GuestInvitationRepository $guestInvitationRepo */
         $guestInvitationRepo = $this->getDoctrine()->getRepository('MealzMealBundle:GuestInvitation');
         $guestInvitation = $guestInvitationRepo->findOrCreateInvitation($this->getUser()->getProfile(), $mealDay);
 
@@ -469,10 +473,10 @@ class MealController extends BaseController
 
     /**
      * Insert the participant into the database
-     * 
+     *
      * @param Meal $meal
      * @param string $profile
-     * 
+     *
      * @return Participant
      */
     private function createParticipation($meal, $profile)
@@ -502,7 +506,7 @@ class MealController extends BaseController
      * @param DateTime $dateTime
      * @return Week
      */
-    private function createEmptyNonPersistentWeek(\DateTime $dateTime)
+    private function createEmptyNonPersistentWeek(DateTime $dateTime)
     {
         $week = new Week();
         $week->setCalendarWeek($dateTime->format('W'));
@@ -513,7 +517,7 @@ class MealController extends BaseController
 
     /**
      * Log add action of staff member
-     * 
+     *
      * @param Meal $meal
      * @param Participant $participant
      */
@@ -536,7 +540,7 @@ class MealController extends BaseController
 
     /**
      * Send mattermost message
-     * 
+     *
      * @param string $message
      */
     private function sendMattermostMessage($message)

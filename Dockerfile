@@ -30,18 +30,22 @@ RUN apt-get update -y && apt-get install -y \
         libpng-dev \
         libmcrypt-dev \
         mysql-client \
+        sendmail \
         zip \
         --no-install-recommends \
     && a2enmod rewrite \
-    && docker-php-ext-install -j$(nproc) bcmath calendar gd mcrypt pdo_mysql mysqli \
+    && docker-php-ext-install -j$(nproc) bcmath calendar gd mcrypt pdo_mysql mysqli opcache \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-enable mysqli \
     && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /tmp/* \
     && mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" \
     && sed -i 's/max_execution_time = .*/max_execution_time = 300/' "$PHP_INI_DIR/php.ini" \
-    && sed -i 's/;date.timezone =.*/date.timezone= "Europe\/Berlin"/' "$PHP_INI_DIR/php.ini"
+    && sed -i 's/;date.timezone =.*/date.timezone= "Europe\/Berlin"/' "$PHP_INI_DIR/php.ini" \
+    && printf "[mail function]\nsendmail_path='/usr/sbin/sendmail -t -i'\n" > /usr/local/etc/php/conf.d/sendmail.ini
 
 COPY --chown=www-data:www-data docker/web/apache.conf /etc/apache2/sites-enabled/meals.conf
+COPY --chown=www-data:www-data --from=composer /usr/local/bin/composer /usr/local/bin/composer
 COPY --chown=www-data:www-data --from=composer /var/www/html/vendor/ ./vendor/
 COPY --chown=www-data:www-data --from=composer /var/www/html/bin/ ./bin/
 COPY --chown=www-data:www-data --from=frontend /var/www/html/web/ ./web/

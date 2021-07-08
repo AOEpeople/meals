@@ -2,5 +2,6 @@
 
 namespace Mealz\MealBundle\Controller;
 
-class CategoryController extends BaseListController {
+class CategoryController extends BaseListController
+{
 }

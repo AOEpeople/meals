@@ -7,8 +7,9 @@ use Mealz\MealBundle\Entity\Meal;
 use Mealz\MealBundle\Entity\Participant;
 use Symfony\Bundle\TwigBundle\DependencyInjection\TwigExtension;
 use Twig\TwigFunction;
+use Twig_Extension;
 
-class Participation extends \Twig_Extension
+class Participation extends Twig_Extension
 {
     public function getFunctions()
     {
@@ -24,7 +25,7 @@ class Participation extends \Twig_Extension
     public function isParticipant($userParticipations, $mealParticipations)
     {
         foreach ($userParticipations as $participation) {
-            if($mealParticipations->contains($participation)) {
+            if ($mealParticipations->contains($participation)) {
                 return $participation;
             }
         }

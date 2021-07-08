@@ -55,6 +55,4 @@ class LoadCategories extends AbstractFixture implements OrderedFixtureInterface
          */
         return self::ORDER_NUMBER;
     }
-
-
 }

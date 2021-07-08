@@ -2,6 +2,7 @@
 
 namespace Mealz\MealBundle\Entity;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Mealz\UserBundle\Entity\Profile;
@@ -23,7 +24,7 @@ class Meal
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * 
+     *
      * @SuppressWarnings(PHPMD.ShortVariable)
      */
     private $id;
@@ -42,12 +43,12 @@ class Meal
      */
     protected $price;
 
-	/**
-	 * @Assert\NotBlank()
-	 * @ORM\Column(type="integer", nullable=FALSE, name="participation_limit")
-	 * @var integer
-	 */
-	protected $participationLimit;
+    /**
+     * @Assert\NotBlank()
+     * @ORM\Column(type="integer", nullable=FALSE, name="participation_limit")
+     * @var integer
+     */
+    protected $participationLimit;
 
     /**
      * @ORM\ManyToOne(targetEntity="Day", inversedBy="meals")
@@ -60,7 +61,7 @@ class Meal
      * @Assert\NotBlank()
      * @Assert\Type(type="DateTime")
      * @ORM\Column(type="datetime", nullable=FALSE)
-     * @var \DateTime
+     * @var DateTime
      */
     protected $dateTime;
 
@@ -102,24 +103,24 @@ class Meal
         return $this->price;
     }
 
-	/**
-	 * @param integer $participationLimit
-	 */
-	public function setParticipationLimit($participationLimit)
-	{
-		$this->participationLimit = $participationLimit;
-	}
-
-	/**
-	 * @return integer
-	 */
-	public function getParticipationLimit()
-	{
-		return $this->participationLimit;
-	}
+    /**
+     * @param integer $participationLimit
+     */
+    public function setParticipationLimit($participationLimit)
+    {
+        $this->participationLimit = $participationLimit;
+    }
 
     /**
-     * @param \Mealz\MealBundle\Entity\Dish $dish
+     * @return integer
+     */
+    public function getParticipationLimit()
+    {
+        return $this->participationLimit;
+    }
+
+    /**
+     * @param Dish $dish
      */
     public function setDish($dish)
     {
@@ -127,7 +128,7 @@ class Meal
     }
 
     /**
-     * @return \Mealz\MealBundle\Entity\Dish
+     * @return Dish
      */
     public function getDish()
     {
@@ -135,7 +136,7 @@ class Meal
     }
 
     /**
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getParticipants()
     {
@@ -159,7 +160,7 @@ class Meal
     }
 
     /**
-     * @param \DateTime $dateTime
+     * @param DateTime $dateTime
      */
     public function setDateTime($dateTime)
     {
@@ -167,7 +168,7 @@ class Meal
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDateTime()
     {
@@ -178,7 +179,7 @@ class Meal
      * get the participant object of the given profile if it is registered
      *
      * @param Profile $profile
-     * @return \Mealz\MealBundle\Entity\Participant|null
+     * @return Participant|null
      */
     public function getParticipant(Profile $profile)
     {
@@ -241,7 +242,7 @@ class Meal
         return ($this->getParticipationLimit() != 0 && $this->getParticipants()->count() >= $this->getParticipationLimit());
     }
 
-    function __toString()
+    public function __toString()
     {
         return $this->getDateTime()->format('Y-m-d H:i:s').' '.$this->getDish();
     }

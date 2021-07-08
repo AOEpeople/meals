@@ -7,16 +7,17 @@ use Mealz\UserBundle\Entity\Profile;
 /**
  * logged in users in this application should be able to have a profile
  */
-interface UserInterface {
+interface UserInterface
+{
 
-	/**
-	 * @return Profile|null
-	 */
-	public function getProfile();
+    /**
+     * @return Profile|null
+     */
+    public function getProfile();
 
 
-	/**
-	 * @param \Mealz\UserBundle\Entity\Profile $profile
-	 */
-	public function setProfile(Profile $profile);
+    /**
+     * @param Profile $profile
+     */
+    public function setProfile(Profile $profile);
 }

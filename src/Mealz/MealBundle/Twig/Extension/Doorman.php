@@ -7,12 +7,13 @@ use Mealz\MealBundle\Entity\Meal;
 use Mealz\MealBundle\Entity\Participant;
 use Mealz\MealBundle\Service\Doorman as DoormanService;
 use Twig\TwigFunction;
+use Twig_Extension;
 
 /**
  * Class Doorman
  * @package Mealz\MealBundle\Twig\Extension
  */
-class Doorman extends \Twig_Extension
+class Doorman extends Twig_Extension
 {
 
     /**

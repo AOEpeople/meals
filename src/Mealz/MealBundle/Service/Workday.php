@@ -3,6 +3,9 @@
 
 namespace Mealz\MealBundle\Service;
 
+use DateInterval;
+use DateTime;
+
 /**
  * logic to determine the next workday
  */
@@ -66,17 +69,17 @@ class Workday
     /**
      * gives the next workday after the given date
      *
-     * @param null|string|\DateTime $date
-     * @return \DateTime
+     * @param null|string|DateTime $date
+     * @return DateTime
      */
     public function getNextWorkday($date = null)
     {
         if ($date === null) {
-            $date = new \DateTime();
-        } elseif ($date instanceof \DateTime === true) {
+            $date = new DateTime();
+        } elseif ($date instanceof DateTime === true) {
             $date = clone $date;
         } else {
-            $date = new \DateTime($date);
+            $date = new DateTime($date);
         }
 
         while (true) {
@@ -87,7 +90,7 @@ class Workday
         }
     }
 
-    protected function dateIsValid(\DateTime $date)
+    protected function dateIsValid(DateTime $date)
     {
         if (in_array($date->format('N'), $this->weekdayWhitelist) === false) {
             return false;
@@ -112,16 +115,16 @@ class Workday
 
     /**
      * @see https://www.php.net/manual/de/function.easter-date.php
-     * 
+     *
      * @param string $year
-     * 
+     *
      * @return DateTime
      */
     private function getEasterDate($year)
     {
-        $base = new \DateTime($year . '-03-21');
+        $base = new DateTime($year . '-03-21');
         $days = easter_days($year);
     
-        return $base->add(new \DateInterval("P{$days}D"));
+        return $base->add(new DateInterval("P{$days}D"));
     }
 }

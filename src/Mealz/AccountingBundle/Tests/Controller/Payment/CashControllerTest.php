@@ -10,6 +10,7 @@ use Mealz\MealBundle\DataFixtures\ORM\LoadDishVariations;
 use Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
 use Mealz\MealBundle\DataFixtures\ORM\LoadParticipants;
 use Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
+use Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
 use Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 
@@ -18,7 +19,7 @@ use Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
  *
  * @author Dragan Tomic <dragan.tomic@aoe.com>
  */
-class CashControllerTest extends \Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase
+class CashControllerTest extends AbstractControllerTestCase
 {
     /**
      * Prepares test environment.
@@ -114,5 +115,4 @@ class CashControllerTest extends \Mealz\MealBundle\Tests\Controller\AbstractCont
 
         $this->assertEquals($currentBalance, $previousBalance - $participationAmount + $transactionAmount);
     }
-
 }

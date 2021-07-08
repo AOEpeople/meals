@@ -9,15 +9,15 @@
 
 namespace Mealz\UserBundle\Provider;
 
-use \HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
-use \HWI\Bundle\OAuthBundle\Security\Core\User\OAuthUserProvider as HWIBundleOAuthUserProvider;
+use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
+use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthUserProvider as HWIBundleOAuthUserProvider;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Mealz\UserBundle\User\OAuthUser;
 use Mealz\UserBundle\Entity\Profile;
-use \Doctrine\Bundle\DoctrineBundle\Registry;
-use \Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * OAuthUserProvider.
@@ -143,7 +143,7 @@ class OAuthUserProvider extends HWIBundleOAuthUserProvider
     /**
      * Creates a profile.
      *
-     * @param \Symfony\Component\Security\Core\User\UserInterface  $username
+     * @param UserInterface $username
      * @param String $givenName  The given name
      * @param String $surName    The sur name
      *
@@ -166,10 +166,10 @@ class OAuthUserProvider extends HWIBundleOAuthUserProvider
     /**
      * Fetch keyCloak and meals roles
      * @param array $keycloakUserRoles
-     * 
+     *
      * @return array
      */
-    protected function fetchUserRoles($keycloakUserRoles) 
+    protected function fetchUserRoles($keycloakUserRoles)
     {
         $fetchedRoles = new ArrayCollection();
 

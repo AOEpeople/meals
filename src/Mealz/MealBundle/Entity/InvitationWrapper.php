@@ -56,7 +56,4 @@ class InvitationWrapper
     {
         $this->profile = $profile;
     }
-
-
-
 }

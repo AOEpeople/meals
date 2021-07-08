@@ -6,7 +6,6 @@ use Mealz\UserBundle\Entity\Profile;
 
 class LdapUser implements LdapUserInterface
 {
-
     protected $profile;
     protected $username;
     protected $givenname;
@@ -135,7 +134,7 @@ class LdapUser implements LdapUserInterface
 
     public function getAttribute($name)
     {
-        return isset( $this->attributes[$name] ) ? $this->attributes[$name] : null;
+        return isset($this->attributes[$name]) ? $this->attributes[$name] : null;
     }
 
     public function setUsername($username)

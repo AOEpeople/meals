@@ -2,6 +2,8 @@
 
 namespace Mealz\MealBundle\EventListener;
 
-class ToggleParticipationNotAllowedException extends \Exception
+use Exception;
+
+class ToggleParticipationNotAllowedException extends Exception
 {
 }

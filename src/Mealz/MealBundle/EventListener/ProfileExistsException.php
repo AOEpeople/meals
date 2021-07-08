@@ -2,6 +2,8 @@
 
 namespace Mealz\MealBundle\EventListener;
 
-class ProfileExistsException extends \Exception
+use Exception;
+
+class ProfileExistsException extends Exception
 {
 }

@@ -2,7 +2,6 @@
 
 namespace Mealz\RestBundle\Entity;
 
-
 use FOS\OAuthServerBundle\Entity\AccessToken as BaseAccessToken;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -16,7 +15,7 @@ class AccessToken extends BaseAccessToken
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * 
+     *
      * @SuppressWarnings(PHPMD.ShortVariable)
      */
     protected $id;

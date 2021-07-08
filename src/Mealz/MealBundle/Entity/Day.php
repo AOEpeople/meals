@@ -2,6 +2,7 @@
 
 namespace Mealz\MealBundle\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -19,7 +20,7 @@ class Day extends AbstractMessage
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      * @var integer $id
-     * 
+     *
      * @SuppressWarnings(PHPMD.ShortVariable)
      */
     private $id;
@@ -27,7 +28,7 @@ class Day extends AbstractMessage
     /**
      * @Assert\Type(type="DateTime")
      * @ORM\Column(type="datetime", nullable=FALSE)
-     * @var \DateTime $dateTime
+     * @var DateTime $dateTime
      */
     private $dateTime;
 
@@ -47,7 +48,7 @@ class Day extends AbstractMessage
     /**
      * @Assert\Type(type="DateTime")
      * @ORM\Column(type="datetime", nullable=TRUE)
-     * @var \DateTime $dateTime
+     * @var DateTime $dateTime
      */
     private $lockParticipationDateTime;
 
@@ -71,7 +72,7 @@ class Day extends AbstractMessage
 
     /**
      * @param int $id
-     * 
+     *
      * @SuppressWarnings(PHPMD.ShortVariable)
      */
     public function setId($id)
@@ -80,7 +81,7 @@ class Day extends AbstractMessage
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDateTime()
     {
@@ -88,7 +89,7 @@ class Day extends AbstractMessage
     }
 
     /**
-     * @param \DateTime $dateTime
+     * @param DateTime $dateTime
      */
     public function setDateTime($dateTime)
     {
@@ -147,7 +148,7 @@ class Day extends AbstractMessage
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getLockParticipationDateTime()
     {
@@ -155,7 +156,7 @@ class Day extends AbstractMessage
     }
 
     /**
-     * @param \DateTime $lockDateTime
+     * @param DateTime $lockDateTime
      */
     public function setLockParticipationDateTime($lockDateTime)
     {

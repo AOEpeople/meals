@@ -61,7 +61,8 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
      * @param array $options
      * @param array $server
      */
-    protected function createFinanceClient($options = array(), $server = array()) {
+    protected function createFinanceClient($options = array(), $server = array())
+    {
         $this->createAdminClient($options, $server, array('ROLE_FINANCE'));
     }
 

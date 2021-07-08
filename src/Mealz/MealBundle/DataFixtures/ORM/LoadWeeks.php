@@ -2,6 +2,7 @@
 
 namespace Mealz\MealBundle\DataFixtures\ORM;
 
+use DateTime;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -66,8 +67,8 @@ class LoadWeeks extends AbstractFixture implements OrderedFixtureInterface
     private function getCurrentTestWeeks()
     {
         $currentWeeks = [];
-        $date = new \DateTime('12:00');
-        $maxDate = new \DateTime('+1 month');
+        $date = new DateTime('12:00');
+        $maxDate = new DateTime('+1 month');
 
         while ($date < $maxDate) {
             $year = $date->format('o');
@@ -97,5 +98,4 @@ class LoadWeeks extends AbstractFixture implements OrderedFixtureInterface
             '2016-46' => ['year' => '2016', 'calendarWeek' => '46'],
         ];
     }
-
 }

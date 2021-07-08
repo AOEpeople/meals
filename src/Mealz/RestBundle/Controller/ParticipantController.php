@@ -2,22 +2,24 @@
 
 namespace Mealz\RestBundle\Controller;
 
+use DateTime;
 use Doctrine\ORM\EntityManager;
 use Mealz\MealBundle\EventListener\ParticipantNotUniqueException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpFoundation\Request;
-use \Mealz\MealBundle\Entity\Participant;
+use Mealz\MealBundle\Entity\Participant;
 
-class ParticipantController extends BaseController {
-
-    public function todayAction() {
+class ParticipantController extends BaseController
+{
+    public function todayAction()
+    {
         $this->checkUser();
 
-        $participants = $this->getParticipantRepository()->getParticipantsOnDays(new \DateTime(), new \DateTime());
+        $participants = $this->getParticipantRepository()->getParticipantsOnDays(new DateTime(), new DateTime());
 
         $data = array();
         foreach ($participants as $participant) {
-            /** @var \Mealz\MealBundle\Entity\Participant $participant */
+            /** @var Participant $participant */
             $meal = $participant->getMeal();
             $dish = $meal->getDish();
             $category = $dish->getCategory();
@@ -37,10 +39,10 @@ class ParticipantController extends BaseController {
                         'title_de' => $dish->getTitleDe(),
                         'price' => $dish->getPrice(),
                         'category' => array(
-                            'id' => $category !== NULL ? $category->getId() : NULL,
-                            'slug' => $category !== NULL ? $category->getSlug() : NULL,
-                            'title_en' => $category !== NULL ? $category->getTitleEn() : NULL,
-                            'title_de' => $category !== NULL ? $category->getTitleDe() : NULL,
+                            'id' => $category !== null ? $category->getId() : null,
+                            'slug' => $category !== null ? $category->getSlug() : null,
+                            'title_en' => $category !== null ? $category->getTitleEn() : null,
+                            'title_de' => $category !== null ? $category->getTitleDe() : null,
                         )
                     )
                 )
@@ -52,10 +54,11 @@ class ParticipantController extends BaseController {
         );
     }
 
-    public function deleteAction($participantId) {
+    public function deleteAction($participantId)
+    {
         $participant = $this->getParticipant($participantId);
         
-        if(!$this->getDoorman()->isUserAllowedToLeave($participant->getMeal())) {
+        if (!$this->getDoorman()->isUserAllowedToLeave($participant->getMeal())) {
             throw new HttpException(403, "It's not allowed for participant to leave.");
         }
         $this->getManager()->remove($participant);
@@ -66,7 +69,8 @@ class ParticipantController extends BaseController {
         );
     }
 
-    public function confirmAction($participantId) {
+    public function confirmAction($participantId)
+    {
         $participant = $this->getParticipant($participantId);
 
         try {
@@ -91,20 +95,21 @@ class ParticipantController extends BaseController {
      * @param number $participantId
      * @return Participant
      */
-    private function getParticipant($participantId) {
+    private function getParticipant($participantId)
+    {
         $this->checkUser();
 
-        if(null == $participantId) {
+        if (null == $participantId) {
             throw new HttpException(400, "Participant's id is missing.");
         }
 
-        /** @var \Mealz\MealBundle\Entity\Participant $participant */
+        /** @var Participant $participant */
         $participant = $this->getParticipantRepository()->find($participantId);
 
-        if(!$participant) {
+        if (!$participant) {
             throw new HttpException(404, "There is no such participant.");
         }
-        if($this->getUser()->getProfile() !== $participant->getProfile() && !$this->getDoorman()->isKitchenStaff()) {
+        if ($this->getUser()->getProfile() !== $participant->getProfile() && !$this->getDoorman()->isKitchenStaff()) {
             throw new HttpException(403, "It's not possible to to request change for other participant.");
         }
         return $participant;

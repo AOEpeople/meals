@@ -42,7 +42,7 @@ class LdapUserProvider extends SymfonyLdapUserProvider
     /**
      * @param string $username
      * @param array $user
-     * 
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function loadUser($username, $user)

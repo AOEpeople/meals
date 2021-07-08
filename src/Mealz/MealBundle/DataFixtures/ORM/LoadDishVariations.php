@@ -44,7 +44,7 @@ class LoadDishVariations extends AbstractFixture implements OrderedFixtureInterf
         $this->objectManager = $manager;
         $this->loadDishes();
 
-        /** @var \Mealz\MealBundle\Entity\Dish $dish */
+        /** @var Dish $dish */
         foreach ($this->dishes as $key => $dish) {
             // Create two variation for each dish EXCEPT THE FIRST ONE
             if ($key > 0) {
@@ -105,5 +105,4 @@ class LoadDishVariations extends AbstractFixture implements OrderedFixtureInterf
 
         return $dishVariation;
     }
-
 }

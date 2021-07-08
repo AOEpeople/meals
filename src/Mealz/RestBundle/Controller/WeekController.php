@@ -2,9 +2,14 @@
 
 namespace Mealz\RestBundle\Controller;
 
-class WeekController extends BaseController {
+use Mealz\MealBundle\Entity\Day;
+use Mealz\MealBundle\Entity\Meal;
+use stdClass;
 
-    public function activeAction() {
+class WeekController extends BaseController
+{
+    public function activeAction()
+    {
         $this->checkUser();
 
         $current = $this->getWeekRepository()->getCurrentWeek(array(
@@ -21,9 +26,10 @@ class WeekController extends BaseController {
         );
     }
 
-    private function formatWeek($week) {
+    private function formatWeek($week)
+    {
         if (!is_object($week)) {
-            return new \stdClass();
+            return new stdClass();
         }
         $data = array(
             'enabled' => $week->isEnabled(),
@@ -34,7 +40,7 @@ class WeekController extends BaseController {
         );
 
         foreach ($week->getDays() as $day) {
-            /** @var \Mealz\MealBundle\Entity\Day $day */
+            /** @var Day $day */
             array_push($data['days'], array(
                 'id' => $day->getId(),
                 'enabled' => $day->isEnabled(),
@@ -43,7 +49,7 @@ class WeekController extends BaseController {
             ));
 
             foreach ($day->getMeals() as $meal) {
-                /** @var \Mealz\MealBundle\Entity\Meal $meal */
+                /** @var Meal $meal */
                 $dish = $meal->getDish();
                 $category = $dish->getCategory();
                 $participation = $meal->getParticipant($this->getUser()->getProfile());
@@ -52,8 +58,8 @@ class WeekController extends BaseController {
                     'price' => $meal->getPrice(),
                     'date_time' => $meal->getDateTime(),
                     'participantsCount' => $meal->getParticipants()->count(),
-                    'participationId' => $participation !== NULL ? $participation->getId() : NULL,
-                    'isParticipate' => $participation !== NULL,
+                    'participationId' => $participation !== null ? $participation->getId() : null,
+                    'isParticipate' => $participation !== null,
                     'dish' => array(
                         'id' => $dish->getId(),
                         'enabled' => $dish->isEnabled(),
@@ -62,10 +68,10 @@ class WeekController extends BaseController {
                         'title_de' => $dish->getTitleDe(),
                         'price' => $dish->getPrice(),
                         'category' => array(
-                            'id' => $category !== NULL ? $category->getId() : NULL,
-                            'slug' => $category !== NULL ? $category->getSlug() : NULL,
-                            'title_en' => $category !== NULL ? $category->getTitleEn() : NULL,
-                            'title_de' => $category !== NULL ? $category->getTitleDe() : NULL,
+                            'id' => $category !== null ? $category->getId() : null,
+                            'slug' => $category !== null ? $category->getSlug() : null,
+                            'title_en' => $category !== null ? $category->getTitleEn() : null,
+                            'title_de' => $category !== null ? $category->getTitleDe() : null,
                         )
                     )
                 ));

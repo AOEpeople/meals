@@ -34,7 +34,7 @@ class Role
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      * @var int
-     * 
+     *
      * @SuppressWarnings(PHPMD.ShortVariable)
      */
     private $id;

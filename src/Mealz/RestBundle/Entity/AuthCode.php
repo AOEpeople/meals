@@ -15,7 +15,7 @@ class AuthCode extends BaseAuthCode
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * 
+     *
      * @SuppressWarnings(PHPMD.ShortVariable)
      */
     protected $id;

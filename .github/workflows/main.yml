@@ -15,5 +15,9 @@ jobs:
         with:
           coverage: none
           tools: phpmd
+      - name: Remap paths in baseline
+        run: sed -i "s#file=\"#file=\"$(pwd)/#g" app/config/commons/development/phpmd.baseline.xml
+      - name: Debug Baseline
+        run: cat app/config/commons/development/phpmd.baseline.xml
       - name: Run PHPMD
-        run: phpmd src github ./app/config/commons/development/phpmd.xml --baseline-file ./app/config/commons/development/phpmd.baseline.xml
+        run: phpmd src text ./app/config/commons/development/phpmd.xml --baseline-file ./app/config/commons/development/phpmd.baseline.xml

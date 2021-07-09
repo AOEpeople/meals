@@ -7,6 +7,7 @@ deploy:staging:
     - if: '$CI_PIPELINE_SOURCE == "trigger"'
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
     - if: '$CI_PIPELINE_SOURCE == "web"'
+  image: aoepeople/meals-deployer
   script:
     # for now we just remove the pods and k8s recreate new ones
     # in the future we might set the tag via:
@@ -14,6 +15,6 @@ deploy:staging:
 
     # usage with compose:
     # docker-compose run deployer kubectl set image deployments/meals app=aoepeople/meals:latest
-    - mkdir kube
-    - echo -n "$KUBE_CONFIG" | base64 -d > kube/config
-    - docker run --rm -v kube:/root/.kube/ aoepeople/meals-deployer kubectl delete pods --selector=app=meals
+    - mkdir ~/.kube
+    - echo -n "$KUBE_CONFIG" | base64 -d > ~/.kube/config
+    - kubectl delete pods --selector=app=meals

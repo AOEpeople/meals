@@ -11,6 +11,7 @@
 !composer.json
 !composer.lock
 !**/*.php.cache
+!.gitlab-ci.yml
 
 # ... but never include ...
 /app/cache/*

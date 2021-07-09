@@ -1,0 +1,19 @@
+stages:
+  - deploy
+
+deploy:staging:
+  stage: deploy
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "trigger"'
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+  script:
+    # for now we just remove the pods and k8s recreate new ones
+    # in the future we might set the tag via:
+    # kubectl set image deployments/meals app=aoepeople/meals:late
+
+    # usage with compose:
+    # docker-compose run deployer kubectl set image deployments/meals app=aoepeople/meals:latest
+    - mkdir kube
+    - echo -n "$KUBE_CONFIG" | base64 -d > kube/config
+    - docker run --rm -v kube:/root/.kube/ aoepeople/meals-deployer kubectl delete pods --selector=app=meals

@@ -47,11 +47,6 @@ jobs:
           cache-from: |
             - aoepeople/meals:edge
           outputs: type=docker,dest=/tmp/app.tar
-      - name: Upload app artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: app
-          path: /tmp/app.tar
       # Development image
       - name: Get Docker meta for development
         id: devmeta
@@ -75,14 +70,17 @@ jobs:
           cache-from: |
             - aoepeople/meals:dev
           outputs: type=docker,dest=/tmp/dev.tar
-      - name: Upload app artifact
+      # Upload artifacts
+      - name: Upload docker images
         uses: actions/upload-artifact@v2
         with:
-          name: dev
-          path: /tmp/dev.tar
+          name: docker-images
+          path: /tmp/*.tar
     outputs: 
       image: ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
+      images: ${{ join(steps.meta.outputs.tags, ' ') }}
       imageDev: ${{ fromJSON(steps.devmeta.outputs.json).tags[0] }}
+      imagesDev: ${{ join(steps.devmeta.outputs.tags, ' ') }}
 
   testUnitFunctional:
     name: Run unit- and functional-tests
@@ -97,23 +95,19 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
       - uses: actions/checkout@v2
-      - name: Download app image
+      - name: Download docker images
         uses: actions/download-artifact@v2
         with:
-          name: app
-          path: /tmp
-      - name: Download dev image
-        uses: actions/download-artifact@v2
-        with:
-          name: dev
+          name: docker-images
           path: /tmp
       - name: Import docker image
         run: |
           docker load --input /tmp/app.tar
           docker load --input /tmp/dev.tar
-          docker image ls -a
+          docker image ls -a | grep aoepeople
       - name: Test with docker compose
         run: |
+          docker-compose pull db
           docker-compose up -d $SERVICE
           docker-compose exec -T $SERVICE composer install
           sleep 15
@@ -231,8 +225,8 @@ jobs:
     needs: [ buildImages, testUnitFunctional, snyk ]
     runs-on: ubuntu-latest
     env:
-      IMAGE_APP: ${{ needs.buildImages.outputs.image }}
-      IMAGE_DEV: ${{ needs.buildImages.outputs.imageDev }}
+      IMAGES_APP: ${{ needs.buildImages.outputs.images }}
+      IMAGES_DEV: ${{ needs.buildImages.outputs.imagesDev }}
     steps:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
@@ -258,8 +252,8 @@ jobs:
           docker image ls -a
       - name: Deploy images
         run: |
-          docker push $IMAGE_APP
-          docker push $IMAGE_DEV
+          for tag in $IMAGES_APP; do docker push $tag; done
+          for tag in $IMAGES_DEV; do docker push $tag; done
 
   deploy:
     name: Deploy and notify

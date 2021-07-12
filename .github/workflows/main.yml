@@ -74,6 +74,7 @@ jobs:
         run: docker images | grep aoepeople
     outputs: 
       image: ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
+      imageDev: ${{ fromJSON(steps.devmeta.outputs.json).tags[0] }}
 
   testUnitFunctional:
     name: Run unit- and functional-tests
@@ -81,6 +82,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SERVICE: app # use `dev` to enable xdebug and code coverage
+      IMAGE_APP: ${{ needs.buildImages.outputs.image }}
+      IMAGE_DEV: ${{ needs.buildImages.outputs.imageDev }}
       COMPOSE_INTERACTIVE_NO_CLI: true
     steps:
       - uses: actions/checkout@v2
@@ -115,6 +118,8 @@ jobs:
     continue-on-error: true
     env:
       SERVICE: app # use `dev` to enable xdebug and code coverage
+      IMAGE_APP: ${{ needs.buildImages.outputs.image }}
+      IMAGE_DEV: ${{ needs.buildImages.outputs.imageDev }}
       COMPOSE_INTERACTIVE_NO_CLI: true
     steps:
       - uses: actions/checkout@v2
@@ -204,13 +209,20 @@ jobs:
     steps:
       - name: Deploy to staging environment
         env:
-          IMAGE_TAG: ${{ needs.buildImages.outputs.image }}
+          IMAGE: ${{ needs.buildImages.outputs.image }}
           GITLAB_TRIGGER_TOKEN: ${{ secrets.GITLAB_TRIGGER_TOKEN }}
         run: |
-          curl -X POST -F "ref=master" -F "variables[IMAGE_TAG]=$IMAGE_TAG" -F "token=$GITLAB_TRIGGER_TOKEN" https://gitlab.aoe.com/api/v4/projects/2718/trigger/pipeline
+          curl -X POST \
+            -F "ref=master" \
+            -F "variables[IMAGE]=$IMAGE" \
+            -F "variables[GITHUB_SHA]=$GITHUB_SHA" \
+            -F "token=$GITLAB_TRIGGER_TOKEN" \
+            https://gitlab.aoe.com/api/v4/projects/2718/trigger/pipeline
       - name: Notify team
         env:
           COMMIT_MSG: ${{ github.event.head_commit.message }}
           MATTERMOST_HOOK_URL: ${{ secrets.MATTERMOST_HOOK_URL }}
         run: |
-          curl -i -X POST -H 'Content-Type: application/json' -d '{"text": "Triggered deployment of meals-staging.aoe.com to `'"$GITHUB_SHA"'`\n '"$COMMIT_MSG"'"}' $MATTERMOST_HOOK_URL
+          curl -i -X POST -H 'Content-Type: application/json' \
+            -d '{"text": "Triggered deployment of meals-staging.aoe.com to `'"$GITHUB_SHA"'`\n '"$COMMIT_MSG"'"}' \
+            $MATTERMOST_HOOK_URL

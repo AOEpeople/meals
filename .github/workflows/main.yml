@@ -191,14 +191,19 @@ jobs:
           sarif_file: snyk.sarif
 
   deploy:
-    name: Deploy
+    name: Deploy and notify
     needs: [ test-unit-functional ]
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to staging environment
+        env:
+          IMAGE_TAG: ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
+          GITLAB_TRIGGER_TOKEN: ${{ secrets.GITLAB_TRIGGER_TOKEN }}
         run: |
-          curl -X POST \
-            -F "ref=master" \
-            -F "variables[IMAGE_TAG]=${{ fromJSON(steps.meta.outputs.json).tags[0] }}" \
-            -F "token=${{ secrets.GITLAB_TRIGGER_TOKEN }}" \
-            https://gitlab.aoe.com/api/v4/projects/2718/trigger/pipeline
+          curl -X POST -F "ref=master" -F "variables[IMAGE_TAG]=$IMAGE_TAG" -F "token=$GITLAB_TRIGGER_TOKEN" https://gitlab.aoe.com/api/v4/projects/2718/trigger/pipeline
+      - name: Notify team
+        env:
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
+          MATTERMOST_HOOK_URL: ${{ secrets.MATTERMOST_HOOK_URL }}
+        run: |
+          curl -i -X POST -H 'Content-Type: application/json' -d '{"text": "Triggered deployment of meals-staging.aoe.com to `'"$GITHUB_SHA"'`\n '"$COMMIT_MSG"'"}' $MATTERMOST_HOOK_URL

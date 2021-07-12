@@ -119,8 +119,10 @@ class EcashControllerTest extends AbstractControllerTestCase
             Response::HTTP_OK,
             array('content-type' => 'text/html')
         );
+        $expectedResponse->headers->remove('date');
 
         $actualResponse = $ecashController->paymentFormHandlingAction($request);
+        $actualResponse->headers->remove('date');
 
         $this->assertEquals($expectedResponse, $actualResponse);
 

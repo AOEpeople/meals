@@ -147,7 +147,7 @@ class MealControllerTest extends AbstractControllerTestCase
 
         //third case: accepting outdated offer
         $this->client->request('GET', '/menu/' . $date . '/' . $dish . '/accept-offer');
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode(), 'user accepted outdated offer');
+        $this->assertEquals(404, $this->client->getResponse()->getStatusCode(), 'user accepted outdated offer');
     }
 
     /**

@@ -79,19 +79,21 @@ jobs:
     name: Run unit- and functional-tests
     needs: [ buildImages ]
     runs-on: ubuntu-latest
+    env:
+      SERVICE: app # use `dev` to enable xdebug and code coverage
+      COMPOSE_INTERACTIVE_NO_CLI: true
     steps:
       - uses: actions/checkout@v2
       - name: Test with docker compose
         run: |
-          export COMPOSE_INTERACTIVE_NO_CLI=true
-          docker-compose pull dev
-          docker-compose up -d dev
-          docker-compose exec -T dev composer install
+          docker-compose pull $SERVICE
+          docker-compose up -d $SERVICE
+          docker-compose exec -T $SERVICE composer install
           sleep 15
-          docker-compose exec -T dev app/console doctrine:schema:update --env=test --force
-          docker-compose exec -T dev mkdir -p app/build/logs/
-          docker-compose exec -T dev bin/phpunit -d memory_limit=-1 -c app/config/commons/development/phpunit.xml
-          docker-compose exec -T dev bash -c "find app/build -type f -regex '.*\.\(html\|xml\)' | xargs sed -i 's#/var/www/html/##g'"
+          docker-compose exec -T $SERVICE app/console doctrine:schema:update --env=test --force
+          docker-compose exec -T $SERVICE mkdir -p app/build/logs/
+          docker-compose exec -T $SERVICE bin/phpunit -d memory_limit=-1 -c app/config/commons/development/phpunit.xml
+          docker-compose exec -T $SERVICE bash -c "find app/build -type f -regex '.*\.\(html\|xml\)' | xargs sed -i 's#/var/www/html/##g'"
           docker-compose down -v --remove-orphans
       - name: Upload coverage report artifact
         uses: actions/upload-artifact@v2.2.4
@@ -111,16 +113,18 @@ jobs:
     needs: [ buildImages ]
     runs-on: ubuntu-latest
     continue-on-error: true
+    env:
+      SERVICE: app # use `dev` to enable xdebug and code coverage
+      COMPOSE_INTERACTIVE_NO_CLI: true
     steps:
       - uses: actions/checkout@v2
       - name: Test with docker compose
         run: |
-          export COMPOSE_INTERACTIVE_NO_CLI=true
-          docker-compose pull dev
-          docker-compose up -d dev
-          docker-compose exec -T dev mkdir -p app/build/logs/
-          docker-compose exec -T dev bin/phpcs --extensions=php --standard=vendor/leaphub/phpcs-symfony2-standard/leaphub/phpcs/Symfony2/ -s --report=junit --report-file=app/build/logs/phpcs.xml src
-          docker-compose exec -T dev bash -c "find app/build -type f -regex '.*\.\(html\|xml\)' | xargs sed -i 's#/var/www/html/##g'"
+          docker-compose pull $SERVICE
+          docker-compose up -d $SERVICE
+          docker-compose exec -T $SERVICE mkdir -p app/build/logs/
+          docker-compose exec -T $SERVICE bin/phpcs --extensions=php --standard=vendor/leaphub/phpcs-symfony2-standard/leaphub/phpcs/Symfony2/ -s --report=junit --report-file=app/build/logs/phpcs.xml src
+          docker-compose exec -T $SERVICE bash -c "find app/build -type f -regex '.*\.\(html\|xml\)' | xargs sed -i 's#/var/www/html/##g'"
           docker-compose down -v --remove-orphans
       - name: Publish unit-test results
         uses: EnricoMi/publish-unit-test-result-action@v1

@@ -259,7 +259,7 @@ jobs:
 
   deploy:
     name: Deploy and notify
-    needs: [ buildImages, testUnitFunctional ]
+    needs: [ publish ]
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to staging environment

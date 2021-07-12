@@ -235,21 +235,16 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-      - name: Download app image
+      - name: Download docker images
         uses: actions/download-artifact@v2
         with:
-          name: app
-          path: /tmp
-      - name: Download dev image
-        uses: actions/download-artifact@v2
-        with:
-          name: dev
+          name: docker-images
           path: /tmp
       - name: Import docker image
         run: |
           docker load --input /tmp/app.tar
           docker load --input /tmp/dev.tar
-          docker image ls -a
+          docker image ls -a | grep aoepeople
       - name: Deploy images
         run: |
           for tag in $IMAGES_APP; do docker push $tag; done

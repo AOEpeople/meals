@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-images:
+  buildImages:
     name: Build Docker images
     runs-on: ubuntu-latest
     steps:
@@ -72,10 +72,12 @@ jobs:
             BASE_APP_IMAGE=${{ fromJSON(steps.meta.outputs.json).tags[0] }}
       - name: Debug images on runner
         run: docker images | grep aoepeople
+    outputs: 
+      image: ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
 
-  test-unit-functional:
+  testUnitFunctional:
     name: Run unit- and functional-tests
-    needs: [ build-images ]
+    needs: [ buildImages ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -106,7 +108,7 @@ jobs:
   test-cgl:
     name: PHPCodeSniffer
     if: "false" # temporarily disable CGL unless fixed
-    needs: [ build-images ]
+    needs: [ buildImages ]
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
@@ -168,7 +170,7 @@ jobs:
 
   snyk:
     name: Scan vulnerabilities
-    needs: [ build-images ]
+    needs: [ buildImages ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -184,7 +186,7 @@ jobs:
           # or you can signup for free at https://snyk.io/login
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          image: ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
+          image: ${{ needs.buildImages.outputs.image }}
           args: --file=Dockerfile
       - name: Upload result to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v1
@@ -193,12 +195,12 @@ jobs:
 
   deploy:
     name: Deploy and notify
-    needs: [ test-unit-functional ]
+    needs: [ buildImages, testUnitFunctional ]
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to staging environment
         env:
-          IMAGE_TAG: ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
+          IMAGE_TAG: ${{ needs.buildImages.outputs.image }}
           GITLAB_TRIGGER_TOKEN: ${{ secrets.GITLAB_TRIGGER_TOKEN }}
         run: |
           curl -X POST -F "ref=master" -F "variables[IMAGE_TAG]=$IMAGE_TAG" -F "token=$GITLAB_TRIGGER_TOKEN" https://gitlab.aoe.com/api/v4/projects/2718/trigger/pipeline

@@ -2,6 +2,7 @@
 
 namespace Mealz\MealBundle\Tests\Controller;
 
+use DateTime;
 use Doctrine\Common\Collections\Criteria;
 use Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
 use Mealz\MealBundle\DataFixtures\ORM\LoadDays;
@@ -11,7 +12,9 @@ use Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
 use Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
 use Mealz\MealBundle\Entity\GuestInvitation;
 use Mealz\MealBundle\Entity\Meal;
+use Mealz\MealBundle\Entity\MealRepository;
 use Mealz\MealBundle\Entity\Participant;
+use Mealz\MealBundle\Entity\ParticipantRepository;
 use Mealz\MealBundle\Service\Doorman;
 use Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
@@ -144,7 +147,7 @@ class MealControllerTest extends AbstractControllerTestCase
 
         //third case: accepting outdated offer
         $this->client->request('GET', '/menu/' . $date . '/' . $dish . '/accept-offer');
-        $this->assertTrue($this->client->getResponse()->getStatusCode() === 403, 'user accepted outdated offer');
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode(), 'user accepted outdated offer');
     }
 
     /**
@@ -202,14 +205,14 @@ class MealControllerTest extends AbstractControllerTestCase
      */
     public function getJoinAMealData()
     {
-        /** @var \Mealz\MealBundle\Entity\MealRepository $mealRepository */
+        /** @var MealRepository $mealRepository */
         $mealRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
         $meals = $mealRepository->getMealsOnADayWithVariationOptions();
 
         $mealsArr = array();
         $dataProvider = array();
         foreach ($meals as $meal) {
-            /** @var \Mealz\MealBundle\Entity\Meal $meal */
+            /** @var Meal $meal */
             $mealsArr[] = $meal = $mealRepository->find($meal['id']);
             $dataProvider[] = array(date('Y-m-d', $meal->getDay()->getDateTime()->getTimestamp()), $meal);
         }
@@ -298,10 +301,10 @@ class MealControllerTest extends AbstractControllerTestCase
     {
         $availableMeal = null;
 
-        /** @var \Mealz\MealBundle\Entity\MealRepository $mealRepository */
+        /** @var MealRepository $mealRepository */
         $mealRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
         $criteria = Criteria::create();
-        $meals = $mealRepository->matching($criteria->where(Criteria::expr()->gte('dateTime', new \DateTime())));
+        $meals = $mealRepository->matching($criteria->where(Criteria::expr()->gte('dateTime', new DateTime())));
 
         if ($meals->count() > 0) {
             /** @var Doorman $doorman */
@@ -329,12 +332,12 @@ class MealControllerTest extends AbstractControllerTestCase
     {
         $availableMeal = null;
 
-        /** @var \Mealz\MealBundle\Entity\MealRepository $mealRepository */
+        /** @var MealRepository $mealRepository */
         $mealRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
         $criteria = Criteria::create();
 
         // get meal newer than today
-        $meals = $mealRepository->matching($criteria->where(Criteria::expr()->gte('dateTime', new \DateTime())));
+        $meals = $mealRepository->matching($criteria->where(Criteria::expr()->gte('dateTime', new DateTime())));
 
         if ($meals->count() > 0) {
             /** @var Doorman $doorman */
@@ -366,7 +369,7 @@ class MealControllerTest extends AbstractControllerTestCase
      */
     private function getMealParticipants($meal)
     {
-        /** @var \Mealz\MealBundle\Entity\ParticipantRepository $participantRepo */
+        /** @var ParticipantRepository $participantRepo */
         $participantRepo = $this->getDoctrine()->getRepository('MealzMealBundle:Participant');
         $participants = $participantRepo->findBy(['meal' => $meal->getId()]);
 

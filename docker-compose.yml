@@ -32,7 +32,7 @@ services:
     ports:
       - "8033:80"
     environment:
-      - SYMFONY_ENV=staging
+      - SYMFONY_ENV=devbox
       # - ...
     volumes:
       - ./app/build:/var/www/html/app/build

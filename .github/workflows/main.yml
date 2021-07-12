@@ -25,6 +25,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      # Production image
       - name: Get Docker meta for production image
         id: meta
         uses: docker/metadata-action@v3
@@ -40,11 +41,18 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          push: true
+          push: false
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: |
-            - aoepeople/meals:latest
+            - aoepeople/meals:edge
+          outputs: type=docker,dest=/tmp/app.tar
+      - name: Upload app artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: app
+          path: /tmp/app.tar
+      # Development image
       - name: Get Docker meta for development
         id: devmeta
         uses: docker/metadata-action@v3
@@ -59,13 +67,19 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           file: Dockerfile.dev
-          push: true
+          push: false
           tags: ${{ steps.devmeta.outputs.tags }}
           labels: ${{ steps.devmeta.outputs.labels }}
-          cache-from: |
-            - aoepeople/meals:dev
           build-args: |
             BASE_APP_IMAGE=${{ fromJSON(steps.meta.outputs.json).tags[0] }}
+          cache-from: |
+            - aoepeople/meals:dev
+          outputs: type=docker,dest=/tmp/dev.tar
+      - name: Upload app artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: dev
+          path: /tmp/dev.tar
     outputs: 
       image: ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
       imageDev: ${{ fromJSON(steps.devmeta.outputs.json).tags[0] }}
@@ -80,10 +94,26 @@ jobs:
       IMAGE_DEV: ${{ needs.buildImages.outputs.imageDev }}
       COMPOSE_INTERACTIVE_NO_CLI: true
     steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
       - uses: actions/checkout@v2
+      - name: Download app image
+        uses: actions/download-artifact@v2
+        with:
+          name: app
+          path: /tmp
+      - name: Download dev image
+        uses: actions/download-artifact@v2
+        with:
+          name: dev
+          path: /tmp
+      - name: Import docker image
+        run: |
+          docker load --input /tmp/app.tar
+          docker load --input /tmp/dev.tar
+          docker image ls -a
       - name: Test with docker compose
         run: |
-          docker-compose pull $SERVICE
           docker-compose up -d $SERVICE
           docker-compose exec -T $SERVICE composer install
           sleep 15
@@ -195,6 +225,37 @@ jobs:
         uses: github/codeql-action/upload-sarif@v1
         with:
           sarif_file: snyk.sarif
+
+  publish:
+    name: Publish
+    needs: [ buildImages, testUnitFunctional ]
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_APP: ${{ needs.buildImages.outputs.image }}
+      IMAGE_DEV: ${{ needs.buildImages.outputs.imageDev }}
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - uses: actions/checkout@v2
+      - name: Download app image
+        uses: actions/download-artifact@v2
+        with:
+          name: app
+          path: /tmp
+      - name: Download dev image
+        uses: actions/download-artifact@v2
+        with:
+          name: dev
+          path: /tmp
+      - name: Import docker image
+        run: |
+          docker load --input /tmp/app.tar
+          docker load --input /tmp/dev.tar
+          docker image ls -a
+      - name: Deploy images
+        run: |
+          docker push $IMAGE_APP
+          docker push $IMAGE_DEV
 
   deploy:
     name: Deploy and notify

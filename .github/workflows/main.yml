@@ -222,6 +222,7 @@ jobs:
 
   publish:
     name: Publish
+    if: ${{ github.ref == 'refs/heads/master' }}
     needs: [ buildImages, testUnitFunctional, snyk ]
     runs-on: ubuntu-latest
     env:
@@ -252,6 +253,7 @@ jobs:
 
   deploy:
     name: Deploy and notify
+    if: ${{ github.ref == 'refs/heads/master' }}
     needs: [ publish ]
     runs-on: ubuntu-latest
     steps:

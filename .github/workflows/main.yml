@@ -217,6 +217,6 @@ jobs:
           COMMIT_MSG: ${{ github.event.head_commit.message }}
           MATTERMOST_HOOK_URL: ${{ secrets.MATTERMOST_HOOK_URL }}
         run: |
-          curl -i -X POST -H 'Content-Type: application/json' \
+          curl --silent -i -X POST -H 'Content-Type: application/json' \
             -d '{"text": "Triggered deployment of <meals-staging.aoe.com>@`'"$GITHUB_SHA"'`\n> '"$COMMIT_MSG"'"}' \
             $MATTERMOST_HOOK_URL

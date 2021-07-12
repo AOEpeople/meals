@@ -8,7 +8,7 @@ COPY composer.json composer.lock ./
 RUN composer install --ignore-platform-reqs --optimize-autoloader --prefer-dist
 
 # build frontend assets
-FROM node:14 as frontend
+FROM node:16 as frontend
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y -o Dpkg::Options::="--force-confold" --no-install-recommends --no-install-suggests \
         build-essential \

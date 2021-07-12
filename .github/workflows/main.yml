@@ -189,3 +189,16 @@ jobs:
         uses: github/codeql-action/upload-sarif@v1
         with:
           sarif_file: snyk.sarif
+
+  deploy:
+    name: Deploy
+    needs: [ test-unit-functional ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to staging environment
+        run: |
+          curl -X POST \
+            -F "ref=master" \
+            -F "variables[IMAGE_TAG]=${{ fromJSON(steps.meta.outputs.json).tags[0] }}" \
+            -F "token=${{ secrets.GITLAB_TRIGGER_TOKEN }}" \
+            https://gitlab.aoe.com/api/v4/projects/2718/trigger/pipeline

@@ -47,7 +47,5 @@ COPY --chown=www-data:www-data --from=composer /usr/local/bin/composer /usr/loca
 COPY --chown=www-data:www-data --from=composer /var/www/html/vendor/ ./vendor/
 COPY --chown=www-data:www-data --from=composer /var/www/html/bin/ ./bin/
 COPY --chown=www-data:www-data --from=frontend /var/www/html/web/ ./web/
-# RUN ln -s web/bundles/framework/ vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/public/
 
 COPY --chown=www-data:www-data . /var/www/html/
-

@@ -1,4 +1,4 @@
-ARG BASE_APP_IMAGE=aoepeople/meals:latest
+ARG BASE_APP_IMAGE=aoepeople/meals:edge
 FROM $BASE_APP_IMAGE as baseimage
 
 FROM php:5.6-apache

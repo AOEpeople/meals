@@ -1,5 +1,3 @@
-# syntax=docker/dockerfile:1.2
-
 # get php dependencies in separate stage
 FROM php:5.6-apache as composer
 RUN apt-get update -y && apt-get install -y git zip unzip \

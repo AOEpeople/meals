@@ -59,6 +59,13 @@ module.exports = function(env) {
         module: {
             rules: [
                 {
+                    test: /jquery\.js$/,
+                    loader: 'expose-loader',
+                    options: {
+                        exposes: ['$', 'jQuery'],
+                    },
+                },
+                {
                     test: /\.(js)$/,
                     exclude: [/node_modules/],
                     use: ['babel-loader'],
@@ -112,6 +119,10 @@ module.exports = function(env) {
             new webpack.IgnorePlugin({
                 resourceRegExp: /^\.\/locale$/,
                 contextRegExp: /moment$/,
+            }),
+            new webpack.ProvidePlugin({
+                $: 'jquery',
+                jQuery: 'jquery',
             }),
         ],
         devServer: {

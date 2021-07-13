@@ -251,18 +251,22 @@ jobs:
       - name: Deploy images
         run: |
           for tag in $IMAGES_APP; do
-            if [[ $tag = sha* ]]; then
+            if [[ $tag = *sha-* ]]; then
               continue;
             fi
             docker push $tag;
           done
 
           for tag in $IMAGES_DEV; do
-            if [[ $tag = sha* ]]; then
+            if [[ $tag = *sha-* ]]; then
               continue;
             fi
             docker push $tag;
           done
+      - name: Delete docker image artifact
+        uses: geekyeggo/delete-artifact@v1
+        with:
+          name: docker-images
 
   deploy:
     name: Deploy and notify

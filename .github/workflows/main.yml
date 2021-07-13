@@ -32,6 +32,7 @@ jobs:
         with:
           images: aoepeople/meals
           tags: |
+            type=sha
             type=ref,event=branch
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
@@ -56,6 +57,7 @@ jobs:
           flavor: |
             suffix=-dev
           tags: |
+            type=sha
             type=ref,event=branch
       - name: Build and push development image
         id: build_dev
@@ -248,8 +250,19 @@ jobs:
           docker image ls -a | grep aoepeople
       - name: Deploy images
         run: |
-          for tag in $IMAGES_APP; do docker push $tag; done
-          for tag in $IMAGES_DEV; do docker push $tag; done
+          IFS=' ' read -r -a tags <<< "$IMAGES_APP"
+          for index in "${!tags[@]}"; do
+            if [[ $index -gt 0 ]]; then
+              echo "$index ${tags[index]}";
+            fi
+          done
+
+          IFS=' ' read -r -a tags <<< "$IMAGES_DEV"
+          for index in "${!tags[@]}"; do
+            if [[ $index -gt 0 ]]; then
+              echo "$index ${tags[index]}";
+            fi
+          done
 
   deploy:
     name: Deploy and notify

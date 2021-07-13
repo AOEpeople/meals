@@ -23,7 +23,8 @@ node_modules
 vendor
 
 # inclusions (alphabetical)
-!.ddev/.*
+!.ddev/
 !.dockerignore
+!.gitlab-ci.yml
 !.gitkeep
 !.stylelintrc.json

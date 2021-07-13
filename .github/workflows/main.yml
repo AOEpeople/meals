@@ -250,18 +250,18 @@ jobs:
           docker image ls -a | grep aoepeople
       - name: Deploy images
         run: |
-          IFS=' ' read -r -a tags <<< "$IMAGES_APP"
-          for index in "${!tags[@]}"; do
-            if [[ $index -gt 0 ]]; then
-              echo "$index ${tags[index]}";
+          for tag in $IMAGES_APP; do
+            if [[ $tag = sha* ]]; then
+              continue;
             fi
+            docker push $tag;
           done
 
-          IFS=' ' read -r -a tags <<< "$IMAGES_DEV"
-          for index in "${!tags[@]}"; do
-            if [[ $index -gt 0 ]]; then
-              echo "$index ${tags[index]}";
+          for tag in $IMAGES_DEV; do
+            if [[ $tag = sha* ]]; then
+              continue;
             fi
+            docker push $tag;
           done
 
   deploy:

@@ -2,14 +2,18 @@ import '../sass/mealz.scss'
 
 import 'jquery/dist/jquery.js';
 import 'datetimepicker/build/jquery.datetimepicker.full.min.js';
-import 'fancybox/dist/jquery.fancybox.min.js';
+import 'fancybox/dist/jquery.fancybox.js';
 import 'datatables.net/js/jquery.dataTables.js';
 import 'switchery/dist/switchery.min.js';
 import 'EasyAutocomplete/dist/jquery.easy-autocomplete.min.js';
 import 'moment/min/moment.min.js';
 import 'bootstrap-daterangepicker/daterangepicker.js';
 
-var Mealz = function () {
+function importAll(r) {
+    r.keys().forEach(r);
+}
+
+window.Mealz = function () {
     this.prototypeFormId = undefined;
     this.checkboxWrapperClass = 'checkbox-wrapper';
     this.hiddenClass = 'hidden';
@@ -25,6 +29,8 @@ var Mealz = function () {
     this.$editParticipationEventListener = undefined;
     this.$profileAdd = $('.profile-list a[class="button small"]');
 };
+
+importAll(require.context('./modules/', true, /\.js$/));
 
 $(document).ready(function () {
     var mealz = new Mealz();

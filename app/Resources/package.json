@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "postinstall": "bower install",
     "build": "webpack --mode production",
     "dev": "webpack serve --progress",
     "lint": "yarn run lint:sass",
@@ -13,12 +12,20 @@
   },
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "jquery": "^1.9.1",
+    "jquery-datetimepicker": "2.5.4",
+    "datatables.net": "1.10.11",
+    "switchery": "^0.0.2",
+    "@fancyapps/fancybox": "fancyapps/fancybox#3.0.47",
+    "easy-autocomplete": "1.3.5",
+    "daterangepicker": "3.0.5"
+  },
   "devDependencies": {
     "@babel/core": "^7.14.6",
     "@babel/preset-env": "^7.14.7",
     "autoprefixer": "^10.3.1",
     "babel-loader": "^8.2.2",
-    "bower": "^1.8.12",
     "core-js": "3",
     "css-loader": "^5.2.7",
     "cssnano": "^5.0.6",

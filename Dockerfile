@@ -14,7 +14,7 @@ RUN apt-get update \
         build-essential \
         nodejs
 WORKDIR var/www/html/app/Resources
-COPY app/Resources/package.json app/Resources/bower.json app/Resources/yarn.lock ./
+COPY app/Resources/package.json app/Resources/yarn.lock ./
 RUN yarn install
 COPY app/Resources/ .
 COPY web .

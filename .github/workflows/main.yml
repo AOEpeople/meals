@@ -173,11 +173,6 @@ jobs:
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
-      - name: Cache bower_components
-        uses: actions/cache@v2
-        with:
-          path: '**/bower_components'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/bower.json') }}
       - name: Install npm packages
         working-directory: ./app/Resources
         run: yarn install
@@ -293,5 +288,5 @@ jobs:
           MATTERMOST_HOOK_URL: ${{ secrets.MATTERMOST_HOOK_URL }}
         run: |
           curl --silent -i -X POST -H 'Content-Type: application/json' \
-            -d '{"text": "Triggered deployment of <meals-staging.aoe.com>@`'"$GITHUB_SHA"'`\n> '"$COMMIT_MSG"'"}' \
+            -d '{"text": "Triggered deployment of `meals-staging.aoe.com@'"$GITHUB_SHA"'`\n> '"$COMMIT_MSG"'"}' \
             $MATTERMOST_HOOK_URL

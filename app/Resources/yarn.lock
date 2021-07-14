@@ -2047,10 +2047,10 @@ csso@^4.2.0:
   dependencies:
     css-tree "^1.1.2"
 
-datatables.net@1.10.11:
-  version "1.10.11"
-  resolved "https://registry.yarnpkg.com/datatables.net/-/datatables.net-1.10.11.tgz#1a574ac73681ecfdf4a0441f6b7892db7d1119ee"
-  integrity sha1-GldKxzaB7P30oEQfa3iS230RGe4=
+datatables.net@1.10.22:
+  version "1.10.22"
+  resolved "https://registry.yarnpkg.com/datatables.net/-/datatables.net-1.10.22.tgz#975d4ffb1eb40dec5fb772eaf93796ec1a948b55"
+  integrity sha512-ujn8GvkQIBYzYH54XY7OrI0Zb35TKRd9ABYfbnXgBfwTGIFT6UsmXrfHU5Yk+MSDoF0sDu2TB+31V6c+zUZ0Pw==
   dependencies:
     jquery ">=1.7"
 

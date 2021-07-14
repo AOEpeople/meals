@@ -1,4 +1,4 @@
-function settleAccount() {
+Mealz.prototype.settleAccount = function () {
     $('a.settle-account').click(function () {
         var $container = $('[data-account-settlement-confirmation]');
         var $profile = $(this).data('profile');

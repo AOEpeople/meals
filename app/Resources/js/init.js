@@ -1,13 +1,14 @@
+// include CSS
+import 'jquery-datetimepicker/build/jquery.datetimepicker.min.css'
+import '@fancyapps/fancybox/dist/jquery.fancybox.css'
 import '../sass/mealz.scss'
 
-import 'jquery/dist/jquery.js';
-import 'datetimepicker/build/jquery.datetimepicker.full.min.js';
-import 'fancybox/dist/jquery.fancybox.js';
-import 'datatables.net/js/jquery.dataTables.js';
-import 'switchery/dist/switchery.min.js';
-import 'EasyAutocomplete/dist/jquery.easy-autocomplete.min.js';
-import 'moment/min/moment.min.js';
-import 'bootstrap-daterangepicker/daterangepicker.js';
+// include vendors
+import 'jquery';
+import 'jquery-datetimepicker/build/jquery.datetimepicker.full';
+import '@fancyapps/fancybox';
+import 'easy-autocomplete';
+import 'daterangepicker';
 
 function importAll(r) {
     r.keys().forEach(r);

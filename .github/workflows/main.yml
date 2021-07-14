@@ -20,8 +20,15 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 10
-      - name: Build changelog
-        run: git log -n 10 --date=short --format=format:"%C(auto)%h %ad @%al %s" >> web/changelog.txt
+      - name: Prepare build
+        run: |
+          mkdir -p /tmp/docker/buildx
+          git log -n 10 --date=short --format=format:"%C(auto)%h %ad @%al %s" >> web/changelog.txt
+      - name: Setup docker build caches
+        uses: actions/cache@v2
+        with:
+          key: ${{ runner.os }}-buildx
+          path: /tmp/docker/buildx
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
@@ -48,8 +55,10 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: |
-            - aoepeople/meals:edge
-          outputs: type=docker,dest=/tmp/app.tar
+            aoepeople/meals:edge
+            type=local,src=/tmp/docker/buildx
+          cache-to: type=local,dest=/tmp/docker/buildx
+          outputs: type=docker,dest=/tmp/docker/app.tar
       # Development image
       - name: Get Docker meta for development
         id: devmeta
@@ -65,21 +74,23 @@ jobs:
         id: build_dev
         uses: docker/build-push-action@v2
         with:
-          file: Dockerfile.dev
+          file: Dockerfile
           push: false
           tags: ${{ steps.devmeta.outputs.tags }}
           labels: ${{ steps.devmeta.outputs.labels }}
           build-args: |
-            BASE_APP_IMAGE=${{ fromJSON(steps.meta.outputs.json).tags[0] }}
+            BUILD_DEV="true"
           cache-from: |
-            - aoepeople/meals:dev
-          outputs: type=docker,dest=/tmp/dev.tar
+            aoepeople/meals:edge-dev
+            type=local,src=/tmp/docker/buildx
+          cache-to: type=local,dest=/tmp/docker/buildx
+          outputs: type=docker,dest=/tmp/docker/dev.tar
       # Upload artifacts
       - name: Upload docker images
         uses: actions/upload-artifact@v2
         with:
           name: docker-images
-          path: /tmp/*.tar
+          path: /tmp/docker/*.tar
     outputs: 
       image: ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
       images: ${{ join(steps.meta.outputs.tags, ' ') }}
@@ -103,11 +114,11 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: docker-images
-          path: /tmp
+          path: /tmp/docker
       - name: Import docker image
         run: |
-          docker load --input /tmp/app.tar
-          docker load --input /tmp/dev.tar
+          docker load --input /tmp/docker/app.tar
+          docker load --input /tmp/docker/dev.tar
           docker image ls -a | grep aoepeople
       - name: Test with docker compose
         run: |
@@ -173,11 +184,6 @@ jobs:
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
-      - name: Cache bower_components
-        uses: actions/cache@v2
-        with:
-          path: '**/bower_components'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/bower.json') }}
       - name: Install npm packages
         working-directory: ./app/Resources
         run: yarn install
@@ -201,6 +207,7 @@ jobs:
 
   snyk:
     name: Scan vulnerabilities
+    if: ${{ github.ref == 'refs/heads/master' }}
     needs: [ buildImages ]
     runs-on: ubuntu-latest
     steps:
@@ -244,11 +251,11 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: docker-images
-          path: /tmp
+          path: /tmp/docker
       - name: Import docker image
         run: |
-          docker load --input /tmp/app.tar
-          docker load --input /tmp/dev.tar
+          docker load --input /tmp/docker/app.tar
+          docker load --input /tmp/docker/dev.tar
           docker image ls -a | grep aoepeople
       - name: Deploy images
         run: |
@@ -265,11 +272,11 @@ jobs:
             fi
             docker push $tag;
           done
+
       - name: Delete docker image artifact
         uses: geekyeggo/delete-artifact@v1
         with:
           name: docker-images
-
   deploy:
     name: Deploy and notify
     if: ${{ github.ref == 'refs/heads/master' }}
@@ -293,5 +300,5 @@ jobs:
           MATTERMOST_HOOK_URL: ${{ secrets.MATTERMOST_HOOK_URL }}
         run: |
           curl --silent -i -X POST -H 'Content-Type: application/json' \
-            -d '{"text": "Triggered deployment of <meals-staging.aoe.com>@`'"$GITHUB_SHA"'`\n> '"$COMMIT_MSG"'"}' \
+            -d '{"text": "Triggered deployment of `meals-staging.aoe.com@'"$GITHUB_SHA"'`\n> '"$COMMIT_MSG"'"}' \
             $MATTERMOST_HOOK_URL

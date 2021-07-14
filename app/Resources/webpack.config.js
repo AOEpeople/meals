@@ -14,7 +14,7 @@ module.exports = function(env) {
             splitChunks: {
                 cacheGroups: {
                     vendor: {
-                        test: /[\\/]bower_components[\\/]/,
+                        test: /[\\/]node_modules[\\/]/,
                         name: 'vendors',
                         chunks: 'all',
                     },
@@ -48,13 +48,15 @@ module.exports = function(env) {
         resolve: {
             preferRelative: true,
             extensions: ['.js', '.json'],
-            descriptionFiles: ['package.json', 'bower.json'],
+            descriptionFiles: ['package.json'],
             aliasFields: ['browser', 'main'],
             modules: [
                 path.resolve('./'),
-                'bower_components',
                 'node_modules'
             ],
+            alias: {
+                jquery: path.resolve('./node_modules/jquery/dist/jquery.js'),
+            }
         },
         module: {
             rules: [
@@ -123,6 +125,9 @@ module.exports = function(env) {
             new webpack.ProvidePlugin({
                 $: 'jquery',
                 jQuery: 'jquery',
+            }),
+            new webpack.DefinePlugin({
+                'process.browser': true,
             }),
         ],
         devServer: {

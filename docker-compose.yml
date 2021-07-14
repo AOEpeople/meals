@@ -6,7 +6,7 @@ services:
     build:
       context: .
       cache_from:
-        - aoepeople/meals:latest
+        - aoepeople/meals:edge
     depends_on:
       - db
     links:
@@ -14,23 +14,24 @@ services:
     ports:
       - "8033:80"
     environment:
-      - SYMFONY_ENV=staging
+      - SYMFONY_ENV=devbox
       # - ...
     volumes:
       - ./app/build:/var/www/html/app/build
 
   dev:
-    image: "${IMAGE_DEV:-aoepeople/meals:edge}"
+    image: "${IMAGE_DEV:-aoepeople/meals:edge-dev}"
     build:
       context: .
-      dockerfile: Dockerfile.dev
+      args:
+        BUILD_DEV: "true"
       cache_from:
-        - aoepeople/meals:dev
+        - aoepeople/meals:edge-dev
     depends_on:
       - db
       - mail
     ports:
-      - "8033:80"
+      - "8034:80"
     environment:
       - SYMFONY_ENV=devbox
       # - ...

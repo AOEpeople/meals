@@ -18,7 +18,8 @@ deploy:staging:
     - mkdir ~/.kube
     - echo -n "$KUBE_CONFIG" | base64 -d > ~/.kube/config
     - kubectl delete pods --selector=app=meals
+    - sleep 20
     - |
       curl --silent -i -X POST -H 'Content-Type: application/json' \
-        -d '{"text": "Deployment of meals-staging.aoe.com done. :white_check_mark:"}' \
+        -d '{"text": "Deployment of [meals-staging.aoe.com](https://meals-staging.aoe.com/changelog.txt) done. :white_check_mark:"}' \
         $MATTERMOST_HOOK_URL

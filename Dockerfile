@@ -23,6 +23,7 @@ RUN NODE_ENV=production yarn run build
 # build production container
 FROM php:5.6-apache
 RUN apt-get update && apt-get upgrade -y && apt-get install -y \
+        libicu-dev \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
         libpng-dev \
@@ -32,8 +33,9 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y \
         zip \
         --no-install-recommends \
     && a2enmod rewrite \
-    && docker-php-ext-install -j$(nproc) bcmath calendar gd mcrypt pdo_mysql mysqli opcache \
+    && docker-php-ext-install -j$(nproc) bcmath calendar gd intl mcrypt pdo_mysql mysqli opcache \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-configure intl \
     && docker-php-ext-enable mysqli \
     && rm -rf /var/lib/apt/lists/* \
     && rm -rf /tmp/* \

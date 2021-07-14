@@ -14,7 +14,7 @@ services:
     ports:
       - "8033:80"
     environment:
-      - SYMFONY_ENV=staging
+      - SYMFONY_ENV=devbox
       # - ...
     volumes:
       - ./app/build:/var/www/html/app/build
@@ -30,7 +30,7 @@ services:
       - db
       - mail
     ports:
-      - "8033:80"
+      - "8034:80"
     environment:
       - SYMFONY_ENV=devbox
       # - ...

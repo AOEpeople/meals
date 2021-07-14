@@ -32,7 +32,7 @@ Mealz.prototype.initAjaxForms = function () {
         }
 
         if ($('form[name="settleform"]').length >= 1) {
-            settleAccount();
+            Mealz.prototype.settleAccount();
         }
 
         if ($('.load-payment-form').is("#ecash") === true && $('.paypal-button-container').length >= 1) {

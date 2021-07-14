@@ -1,5 +1,5 @@
 # get php dependencies in separate stage
-FROM php:5.6-apache as composer
+FROM php:8.0.8-apache as composer
 RUN apt-get update -y && apt-get install -y git zip unzip \
     && mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini" \
     && sed -i 's/memory_limit = .*/memory_limit = -1/' "$PHP_INI_DIR/php.ini" \
@@ -21,7 +21,7 @@ COPY web .
 RUN NODE_ENV=production yarn run build
 
 # build production container
-FROM php:5.6-apache
+FROM php:8.0.8-apache
 RUN apt-get update && apt-get upgrade -y && apt-get install -y \
         libicu-dev \
         libfreetype6-dev \

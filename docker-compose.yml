@@ -6,7 +6,7 @@ services:
     build:
       context: .
       cache_from:
-        - aoepeople/meals:latest
+        - aoepeople/meals:edge
     depends_on:
       - db
     links:
@@ -20,12 +20,13 @@ services:
       - ./app/build:/var/www/html/app/build
 
   dev:
-    image: "${IMAGE_DEV:-aoepeople/meals:edge}"
+    image: "${IMAGE_DEV:-aoepeople/meals:edge-dev}"
     build:
       context: .
-      dockerfile: Dockerfile.dev
+      args:
+        BUILD_DEV: "true"
       cache_from:
-        - aoepeople/meals:dev
+        - aoepeople/meals:edge-dev
     depends_on:
       - db
       - mail

@@ -51,3 +51,24 @@ COPY --chown=www-data:www-data --from=composer /var/www/html/bin/ ./bin/
 COPY --chown=www-data:www-data --from=frontend /var/www/html/web/ ./web/
 
 COPY --chown=www-data:www-data . /var/www/html/
+
+# add packages and configure development image
+ARG BUILD_DEV=false
+RUN  if [ "$BUILD_DEV" = "true" ]; then echo "Installing dev dependencies" \
+    && apt-get update -y && apt-get install -y \
+        git \
+        vim \
+        --no-install-recommends \
+    && curl -L -o /usr/sbin/mhsendmail https://github.com/mailhog/mhsendmail/releases/download/v0.2.0/mhsendmail_linux_amd64 \
+    && chmod +x /usr/sbin/mhsendmail \
+    && rm -rf /var/lib/apt/lists/* /tmp/* \
+    ; fi
+
+RUN  if [ "$BUILD_DEV" = "true" ]; then echo "Setting up PHP for development..." \
+    && sed -i 's/max_execution_time = .*/max_execution_time = 300/' "$PHP_INI_DIR/php.ini" \
+    && sed -i 's/;date.timezone =.*/date.timezone= "Europe\/Berlin"/' "$PHP_INI_DIR/php.ini" \
+    && sed -i 's/memory_limit = .*/memory_limit = -1/' "$PHP_INI_DIR/php.ini" \
+    && printf "[mail function]\nsendmail_path='/usr/sbin/mhsendmail --smtp-addr=mail:1025'\n" > /usr/local/etc/php/conf.d/sendmail.ini \
+    && printf "[opcache]\nopcache.enable = 1\nopcache.enable_cli = 1\n" >> "$PHP_INI_DIR/php.ini" \
+    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer2 \
+    ; fi

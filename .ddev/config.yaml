@@ -15,6 +15,8 @@ use_dns_when_possible: true
 composer_version: "1"
 web_environment:
   - FINAL_RELEASEFOLDER=/var/www/html
+omit_containers:
+  - dba
 hooks:
   post-start:
     - exec: "cd app/Resources && yarn && yarn build"

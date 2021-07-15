@@ -19,7 +19,7 @@
     "switchery": "^0.0.2",
     "@fancyapps/fancybox": "fancyapps/fancybox#3.0.47",
     "easy-autocomplete": "1.3.5",
-    "daterangepicker": "3.0.5"
+    "daterangepicker": "3.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.14.6",

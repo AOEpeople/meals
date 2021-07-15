@@ -21,7 +21,6 @@ RUN apt-get update && apt-get upgrade -y && apt-get install --no-install-recomme
         libjpeg62-turbo-dev \
         libpng-dev \
         libmcrypt-dev \
-        libmcrypt-dev \
         mailutils  \
         msmtp \
         msmtp-mta \

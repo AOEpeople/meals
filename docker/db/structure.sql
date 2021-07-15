@@ -379,6 +379,9 @@ CREATE TABLE `week` (
 
 -- Dump completed on 2021-06-17  1:00:01
 
-CREATE USER 'mealz_test'@'%' IDENTIFIED BY 'mealz_test';
-CREATE DATABASE mealz_test;
-GRANT ALL PRIVILEGES ON mealz_test.* TO 'mealz_test'@'%';
+CREATE DATABASE IF NOT EXISTS mealz_test;
+CREATE USER IF NOT EXISTS 'mealz_test'@'localhost' IDENTIFIED BY 'mealz_test';
+CREATE USER IF NOT EXISTS 'mealz_test'@'%' IDENTIFIED BY 'mealz_test';
+
+GRANT ALL ON mealz_test.* TO 'mealz_test'@'localhost';
+GRANT ALL ON mealz_test.* TO 'mealz_test'@'%';

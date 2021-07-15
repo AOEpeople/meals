@@ -132,7 +132,7 @@ Mealz.prototype.initDishSelection = function () {
     });
 };
 
-limitBoxSaveClick = function(){
+window.limitBoxSaveClick = function(){
     var thisDay = $('.limit-box').filter(":visible").parent();
     var isOkayToClose = true;
     thisDay.find('.limit-input').each(function(i){

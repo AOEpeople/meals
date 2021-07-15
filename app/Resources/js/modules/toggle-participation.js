@@ -62,7 +62,7 @@ function confirmSwap($checkbox) {
     Mealz.prototype.enableConfirmSwapbox($checkbox.attr('value'));
 }
 
-function swap($checkbox, url) {
+window.swap = function ($checkbox, url) {
     $.ajax({
         method: 'GET',
         url: url,

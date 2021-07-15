@@ -13,7 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "jquery": "^1.9.1",
+    "jquery": "^3.5.0",
     "jquery-datetimepicker": "2.5.4",
     "datatables.net": "1.10.22",
     "switchery": "^0.0.2",

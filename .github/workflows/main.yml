@@ -140,10 +140,10 @@ jobs:
           name: reports
           path: app/build/
       - name: Publish unit-test results
-        uses: EnricoMi/publish-unit-test-result-action@v1
+        uses: mikepenz/action-junit-report@v2
         if: always()
         with:
-          files: app/build/logs/junit.xml
+          report_paths: 'app/build/logs/*.xml'
 
   test-cgl:
     name: PHPCodeSniffer

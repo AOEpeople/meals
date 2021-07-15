@@ -873,9 +873,10 @@
   resolved "https://registry.yarnpkg.com/@discoveryjs/json-ext/-/json-ext-0.5.3.tgz#90420f9f9c6d3987f176a19a7d8e764271a2f55d"
   integrity sha512-Fxt+AfXgjMoin2maPIYzFZnQjAXjAL0PHscM5pRTtatFqB+vZxAM9tLp2Optnuw3QOQC40jTNeGYFOMvyf7v9g==
 
-"@fancyapps/fancybox@fancyapps/fancybox#3.0.47":
-  version "3.0.47"
-  resolved "https://codeload.github.com/fancyapps/fancybox/tar.gz/04bd1bd751ac10048c06e7db79197770cff4a1d7"
+"@fancyapps/fancybox@fancyapps/fancybox#v3.5.7":
+  version "3.5.7"
+  uid b507d317a95b70a0b1be7209d528c4dba3ee0dd0
+  resolved "https://codeload.github.com/fancyapps/fancybox/tar.gz/b507d317a95b70a0b1be7209d528c4dba3ee0dd0"
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"

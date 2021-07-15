@@ -17,7 +17,7 @@
     "jquery-datetimepicker": "2.5.4",
     "datatables.net": "1.10.22",
     "switchery": "^0.0.2",
-    "@fancyapps/fancybox": "fancyapps/fancybox#3.0.47",
+    "@fancyapps/fancybox": "fancyapps/fancybox#v3.5.7",
     "easy-autocomplete": "1.3.5",
     "daterangepicker": "3.0.5"
   },

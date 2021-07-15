@@ -13,15 +13,19 @@ RUN NODE_ENV=production yarn run build
 
 # build production container
 FROM php:5.6-apache
-RUN apt-get update && apt-get upgrade -y && apt-get install -y \
+RUN apt-get update && apt-get upgrade -y && apt-get install --no-install-recommends --no-install-suggests -y \
+        ca-certificates \
         git \
         libicu-dev \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
         libpng-dev \
         libmcrypt-dev \
+        libmcrypt-dev \
+        mailutils  \
+        msmtp \
+        msmtp-mta \
         mysql-client \
-        sendmail \
         zip \
         unzip \
         --no-install-recommends \
@@ -33,37 +37,30 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y \
     && rm -rf /var/lib/apt/lists/* \
     && rm -rf /tmp/* \
     && mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" \
-    && sed -i 's/max_execution_time = .*/max_execution_time = 300/' "$PHP_INI_DIR/php.ini" \
-    && sed -i 's/;date.timezone =.*/date.timezone= "Europe\/Berlin"/' "$PHP_INI_DIR/php.ini" \
-    && printf "[mail function]\nsendmail_path='/usr/sbin/sendmail -t -i'\n" > /usr/local/etc/php/conf.d/sendmail.ini \
-    && curl -sS https://getcomposer.org/installer | php -- --1 --install-dir=/usr/local/bin --filename=composer
-
-COPY --chown=www-data:www-data docker/web/apache.conf /etc/apache2/sites-enabled/meals.conf
+    && curl -sS https://getcomposer.org/installer | php -- --1 --install-dir=/usr/local/bin --filename=composer \
+    && curl -L https://github.com/a8m/envsubst/releases/download/v1.2.0/envsubst-Linux-x86_64 -o /usr/local/bin/envsubst \
+    && chmod +x /usr/local/bin/envsubst
 
 # add composer dependencies
 COPY composer.json composer.lock ./
 RUN composer install --ignore-platform-reqs --optimize-autoloader --prefer-dist && composer clearcache
 
+# add service configuration
+COPY --chown=www-data:www-data docker/web/ /container/
+
 # add custom code and compiled frontend assets
 COPY --chown=www-data:www-data . /var/www/html/
-COPY --chown=www-data:www-data --from=frontend /var/www/html/web/ ./web/
+COPY --chown=www-data:www-data --from=frontend /var/www/html/web/static ./web/static
 
 # add packages and configure development image
 ARG BUILD_DEV=false
-RUN  if [ "$BUILD_DEV" = "true" ]; then echo "Installing dev dependencies" \
+RUN  if [ "$BUILD_DEV" = "true" ]; then \
+    echo "Installing dev dependencies" \
     && apt-get update -y && apt-get install -y \
-        git \
         vim \
         --no-install-recommends \
-    && curl -L -o /usr/sbin/mhsendmail https://github.com/mailhog/mhsendmail/releases/download/v0.2.0/mhsendmail_linux_amd64 \
-    && chmod +x /usr/sbin/mhsendmail \
     && rm -rf /var/lib/apt/lists/* /tmp/* \
-    ; fi
+; fi
 
-RUN  if [ "$BUILD_DEV" = "true" ]; then echo "Setting up PHP for development..." \
-    && sed -i 's/max_execution_time = .*/max_execution_time = 300/' "$PHP_INI_DIR/php.ini" \
-    && sed -i 's/;date.timezone =.*/date.timezone= "Europe\/Berlin"/' "$PHP_INI_DIR/php.ini" \
-    && sed -i 's/memory_limit = .*/memory_limit = -1/' "$PHP_INI_DIR/php.ini" \
-    && printf "[mail function]\nsendmail_path='/usr/sbin/mhsendmail --smtp-addr=mail:1025'\n" > /usr/local/etc/php/conf.d/sendmail.ini \
-    && printf "[opcache]\nopcache.enable = 1\nopcache.enable_cli = 1\n" >> "$PHP_INI_DIR/php.ini" \
-    ; fi
+ENTRYPOINT ["/container/entrypoint"]
+CMD ["apache2-foreground"]

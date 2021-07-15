@@ -15,7 +15,6 @@ services:
       - "8033:80"
     environment:
       - SYMFONY_ENV=devbox
-      # - ...
     volumes:
       - ./app/build:/var/www/html/app/build
 
@@ -34,7 +33,9 @@ services:
       - "8034:80"
     environment:
       - SYMFONY_ENV=devbox
-      # - ...
+      - SMTP_HOST=mail
+      - SMTP_PORT=1025
+      - SMTP_AUTH=off
     volumes:
       - ./app/build:/var/www/html/app/build
 

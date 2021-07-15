@@ -57,7 +57,7 @@ content:
     costs:
       no_data: There exist no costs.
   guest_enrollment:
-    message_body: As our guest, we would like to invite you to lunch in the AOE Eatery. To order a meal, register no later than one day before your visit to AOE with your personal information and choose the desired dish. Your order will be redirected to our cooks.
+    message_body: As our guest, we would like to invite you to lunch in the AOE Eatery. To order a meal, register no later than one day before your visit to AOE with your personal information and choose the desired dish. Your order will be forwarded to our cooks.
     message_ending: We hope that you enjoy your lunch
     message_signature: AOE
 form:

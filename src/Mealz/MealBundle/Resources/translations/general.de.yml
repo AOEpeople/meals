@@ -57,7 +57,7 @@ content:
     costs:
       no_data: Keine Kosten vorhanden.
   guest_enrollment:
-    message_body: Als Gast in unserem Haus laden wir Sie gerne zu einem Mittagessen in der AOE Eatery ein. Für Ihre Bestellung tragen Sie sich bitte bis spätestens einen Tag vorher mit Ihren Daten ein und wählen das gewünschte Gericht aus, das dann an unsere Köche weiter geleitet wird.
+    message_body: Als Gast in unserem Haus laden wir Sie gerne zu einem Mittagessen in der AOE Eatery ein. Für Ihre Bestellung tragen Sie sich bitte bis spätestens einen Tag vorher mit Ihren Daten ein und wählen das gewünschte Gericht aus, das dann an unsere Köche weitergeleitet wird.
     message_ending: Guten Appetit wünscht Ihnen,
     message_signature: AOE
 

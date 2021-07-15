@@ -19,6 +19,7 @@ omit_containers:
   - dba
 hooks:
   post-start:
+    - exec: "composer install"
     - exec: "cd app/Resources && yarn && yarn build"
     - exec: "app/console assets:install web --symlink --relative"
     - exec: "setup/clear_cache.sh"

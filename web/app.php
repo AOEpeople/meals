@@ -1,6 +1,5 @@
 <?php
 
-use Symfony\Component\ClassLoader\ApcClassLoader;
 use Symfony\Component\Debug\Debug;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -10,7 +9,8 @@ umask(0002);
 require_once __DIR__ . '/../app/AppEnvironment.php';
 
 $environment = AppEnvironment::fromDefault();
-$debug = $environment->getEnvironment() !== 'production';
+$debug = $environment->getEnvironment() !== 'production'
+            && ('0' !== getenv('SYMFONY_DEBUG'));
 
 if ($debug) {
     $loader = require_once __DIR__ . '/../app/autoload.php';

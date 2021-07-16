@@ -6,7 +6,6 @@ use Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
 use Mealz\UserBundle\Provider\OAuthUserProvider;
-use Mealz\UserBundle\User\OAuthUser;
 use Mealz\UserBundle\Entity\Profile;
 
 class OAuthProviderTest extends AbstractControllerTestCase
@@ -14,7 +13,7 @@ class OAuthProviderTest extends AbstractControllerTestCase
     /**
      * Set up the testing environment
      */
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

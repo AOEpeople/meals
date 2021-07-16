@@ -1,13 +1,12 @@
 <?php
 
-
 namespace Mealz\MealBundle\Tests\Service;
 
 use Mealz\MealBundle\Service\HttpHeaderUtility;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Yaml;
 
-class HttpHeaderUtilitiesTest extends PHPUnit_Framework_TestCase
+class HttpHeaderUtilitiesTest extends TestCase
 {
 
     /**
@@ -15,7 +14,7 @@ class HttpHeaderUtilitiesTest extends PHPUnit_Framework_TestCase
      */
     protected $httpHeaderUtilities;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->httpHeaderUtilities = new HttpHeaderUtility();
     }

@@ -1,14 +1,12 @@
 <?php
 
-
 namespace Mealz\MealBundle\Tests\Service;
 
 use Mealz\MealBundle\Service\Workday;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class WorkdayTest extends PHPUnit_Framework_TestCase
+class WorkdayTest extends TestCase
 {
-
     /**
      * @param $givenDate
      * @param $expectedDate

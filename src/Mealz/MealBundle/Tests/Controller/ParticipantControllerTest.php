@@ -35,7 +35,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     /**
      * prepare test environment
      */
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->createAdminClient();

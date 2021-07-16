@@ -17,7 +17,7 @@ class EcashControllerTest extends AbstractControllerTestCase
     /**
      * Set up the testing environment
      */
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

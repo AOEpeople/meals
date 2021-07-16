@@ -18,7 +18,7 @@ class WeekRepositoryTest extends AbstractDatabaseTestCase
     /** @var WeekRepository */
     protected $weekRepository;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

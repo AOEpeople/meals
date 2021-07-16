@@ -5,7 +5,6 @@ namespace Mealz\AccountingBundle\Tests\Repository;
 use DateInterval;
 use DateTime;
 use Mealz\AccountingBundle\Entity\Transaction;
-use Mealz\AccountingBundle\Entity\TransactionRepository;
 use Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
 use Mealz\MealBundle\DataFixtures\ORM\LoadDays;
 use Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
@@ -31,7 +30,7 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
     /**
      * prepare test environment
      */
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->transactionRepo = $this->getDoctrine()->getRepository('MealzAccountingBundle:Transaction');

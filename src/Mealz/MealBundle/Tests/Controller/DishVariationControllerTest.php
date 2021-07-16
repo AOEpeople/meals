@@ -9,14 +9,9 @@ use Mealz\MealBundle\Entity\DishVariation;
 use Symfony\Component\DomCrawler\Crawler;
 
 use Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
-use Mealz\MealBundle\DataFixtures\ORM\LoadDays;
 use Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
 use Mealz\MealBundle\DataFixtures\ORM\LoadDishVariations;
-use Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
-use Mealz\MealBundle\DataFixtures\ORM\LoadParticipants;
 use Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
-use Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
-use Mealz\AccountingBundle\DataFixtures\ORM\LoadTransactions;
 use Symfony\Component\DomCrawler\Link;
 
 /**
@@ -25,7 +20,7 @@ use Symfony\Component\DomCrawler\Link;
  */
 class DishVariationControllerTest extends AbstractControllerTestCase
 {
-    public function setUp()
+    protected function setUp(): void
     {
         $this->createAdminClient();
         //$this->mockServices();
@@ -190,7 +185,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         $link = $crawler->filterXPath(
             "//a[contains(@href,'/variation/new') and contains(@class,'load-edit-form')]"
         )->first()->link();
-        $crawler = $this->client->click($link);
+        $this->client->click($link);
         $crawler = $this->getRawResponseCrawler();
 
         // get dish id from url
@@ -362,7 +357,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         $link = $crawler->filterXPath(
             "//a[contains(@href,'/variation/new') and contains(@class,'load-edit-form')]"
         )->first()->link();
-        $crawler = $this->client->click($link);
+        $this->client->click($link);
         $crawler = $this->getRawResponseCrawler();
 
         // get dish id from url

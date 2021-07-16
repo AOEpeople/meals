@@ -128,6 +128,7 @@ jobs:
           docker-compose up -d --no-build db
           docker-compose up -d $SERVICE
           sleep 15
+          docker-compose exec -T $SERVICE composer install
           docker-compose exec -T $SERVICE app/console doctrine:schema:update --env=test --force
           docker-compose exec -T $SERVICE mkdir -p app/build/logs/
           docker-compose exec -T $SERVICE bin/phpunit -d memory_limit=-1 -c app/config/commons/development/phpunit.xml

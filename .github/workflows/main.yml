@@ -125,7 +125,7 @@ jobs:
       - name: Test with docker compose
         run: |
           docker-compose pull db
-          docker-compose up --no-build db
+          docker-compose up -d --no-build db
           docker-compose up -d $SERVICE
           sleep 15
           docker-compose exec -T $SERVICE app/console doctrine:schema:update --env=test --force

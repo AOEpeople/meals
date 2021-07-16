@@ -43,7 +43,7 @@ RUN apt-get update && apt-get upgrade -y && apt-get install --no-install-recomme
 
 # add composer dependencies
 COPY composer.json composer.lock ./
-RUN composer install --ignore-platform-reqs --optimize-autoloader --prefer-dist \
+RUN composer install --optimize-autoloader --prefer-dist \
     && composer clearcache \
     && mkdir -p web/bundles/ \
     && ln -s $(pwd)/vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/public/ web/bundles/framework \

@@ -13,7 +13,7 @@ use Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
  */
 class CategoryControllerTest extends AbstractControllerTestCase
 {
-    public function setUp()
+    protected function setUp(): void
     {
         $this->createAdminClient();
         $this->clearAllTables();

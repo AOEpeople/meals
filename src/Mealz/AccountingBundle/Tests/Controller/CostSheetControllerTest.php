@@ -23,7 +23,7 @@ class CostSheetControllerTest extends AbstractControllerTestCase
     /**
      * Prepares test environment.
      */
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

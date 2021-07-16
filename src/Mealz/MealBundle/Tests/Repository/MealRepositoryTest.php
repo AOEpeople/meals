@@ -2,6 +2,7 @@
 
 namespace Mealz\MealBundle\Tests\Repository;
 
+use InvalidArgumentException;
 use Mealz\MealBundle\Entity\MealRepository;
 use Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 
@@ -10,7 +11,7 @@ class MealRepositoryTest extends AbstractDatabaseTestCase
     /** @var  MealRepository */
     protected $mealRepository;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->mealRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
@@ -34,7 +35,7 @@ class MealRepositoryTest extends AbstractDatabaseTestCase
         $meal = $this->createMeal($dish);
         $this->persistAndFlushAll([$dish, $meal]);
 
-        $this->setExpectedException('\InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
 
         $this->mealRepository->findOneByDateAndDish(date('Y-m-'), $dish->getSlug());
     }

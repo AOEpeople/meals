@@ -15,7 +15,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
 
     protected $locale;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->dishRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Dish');

@@ -3,11 +3,12 @@
 namespace Mealz\MealBundle\Tests\EventListener;
 
 use Mealz\MealBundle\Entity\Participant;
+use Mealz\MealBundle\EventListener\ParticipantNotUniqueException;
 use Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 
 class ParticipantPersistenceListenerTest extends AbstractDatabaseTestCase
 {
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -29,7 +30,7 @@ class ParticipantPersistenceListenerTest extends AbstractDatabaseTestCase
 
 
         // persist second participant
-        $this->setExpectedException('Mealz\\MealBundle\\EventListener\\ParticipantNotUniqueException');
+        $this->expectException(ParticipantNotUniqueException::class);
 
         $enityManager->transactional(function ($enityManager) use ($participant2) {
             $enityManager->persist($participant2);
@@ -54,7 +55,7 @@ class ParticipantPersistenceListenerTest extends AbstractDatabaseTestCase
         $this->persistAndFlushAll(array($meal, $meal->getDish(), $meal2, $meal2->getDish(), $profile, $participant, $participant2));
 
         // change first participant
-        $this->setExpectedException('Mealz\\MealBundle\\EventListener\\ParticipantNotUniqueException');
+        $this->expectException(ParticipantNotUniqueException::class);
 
         $participant2->setMeal($meal);
 
@@ -77,8 +78,7 @@ class ParticipantPersistenceListenerTest extends AbstractDatabaseTestCase
         $profile = $this->createProfile();
         $this->persistAndFlushAll(array($meal, $meal->getDish(), $profile));
 
-
-        $this->setExpectedException('RuntimeException');
+        $this->expectException(\RuntimeException::class);
 
         $participant = new Participant();
         $participant->setProfile($profile);

@@ -26,10 +26,10 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
     /**
      * set up
      */
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
-        static::$kernel = static::createKernel();
+        static::$kernel = static::createKernel(['debug' => false]);
         static::$kernel->boot();
     }
 

@@ -12,7 +12,7 @@ COPY web .
 RUN NODE_ENV=production yarn run build
 
 # build production container
-FROM php:5.6-apache
+FROM php:7.4-apache
 RUN apt-get update && apt-get upgrade -y && apt-get install --no-install-recommends --no-install-suggests -y \
         ca-certificates \
         git \
@@ -24,20 +24,20 @@ RUN apt-get update && apt-get upgrade -y && apt-get install --no-install-recomme
         mailutils  \
         msmtp \
         msmtp-mta \
-        mysql-client \
         zip \
         unzip \
         --no-install-recommends \
+    && pecl install mcrypt-1.0.4 \
     && a2enmod rewrite \
-    && docker-php-ext-install -j$(nproc) bcmath calendar gd intl mcrypt pdo_mysql mysqli opcache \
+    && docker-php-ext-install -j$(nproc) bcmath calendar gd intl pdo_mysql mysqli opcache \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-configure intl \
-    && docker-php-ext-enable mysqli \
+    && docker-php-ext-enable mcrypt mysqli \
     && rm -rf /var/lib/apt/lists/* \
     && rm -rf /tmp/* \
     && mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" \
     && echo 'set sendmail="/usr/bin/msmtp -t"' > /etc/mail.rc \
-    && curl -sS https://getcomposer.org/installer | php -- --1 --install-dir=/usr/local/bin --filename=composer \
+    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && curl -L https://github.com/a8m/envsubst/releases/download/v1.2.0/envsubst-Linux-x86_64 -o /usr/local/bin/envsubst \
     && chmod +x /usr/local/bin/envsubst
 

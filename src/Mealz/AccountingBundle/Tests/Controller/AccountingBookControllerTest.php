@@ -23,7 +23,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
     /**
      * prepare test environment
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $this->createAdminClient();
 

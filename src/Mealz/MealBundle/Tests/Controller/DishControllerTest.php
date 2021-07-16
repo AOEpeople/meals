@@ -10,14 +10,12 @@ use Mealz\MealBundle\DataFixtures\ORM\LoadDays;
 use Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
 use Mealz\MealBundle\DataFixtures\ORM\LoadDishVariations;
 use Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
-use Mealz\MealBundle\DataFixtures\ORM\LoadParticipants;
 use Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
-use Mealz\AccountingBundle\DataFixtures\ORM\LoadTransactions;
 
 class DishAbstractControllerTest extends AbstractControllerTestCase
 {
-    public function setUp()
+    protected function setUp(): void
     {
         $this->createAdminClient();
         //$this->mockServices();

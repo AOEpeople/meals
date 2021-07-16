@@ -24,6 +24,7 @@ services:
     ports:
       - "8034:80"
     environment:
+      - SYMFONY_DEBUG=0
       - SYMFONY_ENV=devbox
       - SMTP_HOST=mail
       - SMTP_PORT=1025

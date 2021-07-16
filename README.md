@@ -165,7 +165,7 @@ The following roles are in use:
 
 To load up some test data, run
 
-    php app/console doctrine:fixtures:load --env=dev
+    php app/console doctrine:fixtures:load -n
 
 It generates dishes, meals and users.
 

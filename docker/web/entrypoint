@@ -8,8 +8,9 @@ echo "Setup PHP configuration"
 envsubst < "/container/php.ini" > "/usr/local/etc/php/conf.d/_meals.ini"
 
 echo "Setup msmtp configuration"
-envsubst < "/container/msmtprc" > "/etc/msmtprc"
-chmod 0600 /etc/msmtprc
+envsubst < /container/msmtprc > /etc/msmtprc
+chown www-data:www-data /etc/msmtprc
+chmod 600 /etc/msmtprc
 
 # first arg is `-f` or `--some-option`
 if [ "${1#-}" != "$1" ]; then

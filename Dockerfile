@@ -36,6 +36,7 @@ RUN apt-get update && apt-get upgrade -y && apt-get install --no-install-recomme
     && rm -rf /var/lib/apt/lists/* \
     && rm -rf /tmp/* \
     && mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" \
+    && echo 'set sendmail="/usr/bin/msmtp -t"' > /etc/mail.rc \
     && curl -sS https://getcomposer.org/installer | php -- --1 --install-dir=/usr/local/bin --filename=composer \
     && curl -L https://github.com/a8m/envsubst/releases/download/v1.2.0/envsubst-Linux-x86_64 -o /usr/local/bin/envsubst \
     && chmod +x /usr/local/bin/envsubst

@@ -46,8 +46,8 @@ COPY composer.json composer.lock ./
 RUN composer install --ignore-platform-reqs --optimize-autoloader --prefer-dist \
     && composer clearcache \
     && mkdir -p web/bundles/ \
-    && ln -s vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/public/ web/bundles/framework \
-    && ln -s vendor/sensio/distribution-bundle/Sensio/Bundle/DistributionBundle/Resources/public/ web/bundles/sensiodistribution \
+    && ln -s $(pwd)/vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/public/ web/bundles/framework \
+    && ln -s $(pwd)/vendor/sensio/distribution-bundle/Sensio/Bundle/DistributionBundle/Resources/public/ web/bundles/sensiodistribution \
     && chown -R www-data:www-data web/bundles
 
 # add packages and configure development image

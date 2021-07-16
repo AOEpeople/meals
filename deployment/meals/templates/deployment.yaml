@@ -31,7 +31,15 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: SYMFONY_ENV
-              value: "staging"
+              value: 'staging'
+            - name: SMTP_HOST
+              value: antispam.aoe.lan
+            - name: SMTP_PORT
+              value: '25'
+            - name: SMTP_USER
+              value: noreply-meals
+            - name: SMTP_PASSWORD
+              value: @todo
           ports:
             - name: http
               containerPort: 80

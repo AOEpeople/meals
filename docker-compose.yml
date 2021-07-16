@@ -9,8 +9,6 @@ services:
         - aoepeople/meals:edge
     ports:
       - "8033:80"
-    env_file:
-      - .env
 
   dev:
     image: "${IMAGE_DEV:-aoepeople/meals:edge-dev}"

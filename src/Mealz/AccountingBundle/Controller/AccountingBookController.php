@@ -143,7 +143,7 @@ class AccountingBookController extends BaseController
         $filename = $this->get('translator')->trans('payment.transaction_history.finances.pdf') . '-' . $minDate->format('d.m.Y') . '-' . $maxDate->format('d.m.Y');
         $pdf->SetTitle($filename);
 
-        $cssFile = file_get_contents($this->getParameter('env_url') . '/media/transaction-export.css');
+        $cssFile = file_get_contents(dirname(__FILE__) . '/../Resources/css/transaction-export.css');
 
         $includeCSS = '<style>' . $cssFile . '</style>';
 

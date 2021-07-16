@@ -1,4 +1,5 @@
 // include CSS
+import 'daterangepicker/daterangepicker.css'
 import 'jquery-datetimepicker/build/jquery.datetimepicker.min.css'
 import '@fancyapps/fancybox/dist/jquery.fancybox.css'
 import '../sass/mealz.scss'

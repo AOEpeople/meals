@@ -1,4 +1,4 @@
-function toggleArrayItem(a, v) {
+Mealz.prototype.toggleArrayItem = function (a, v) {
     var i = a.indexOf(v);
     if (i === -1)
         a.push(v);

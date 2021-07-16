@@ -196,7 +196,7 @@ Mealz.prototype.selectVariation = function ($element) {
         variations = previousSelectedVariations;
     }
 
-    toggleArrayItem(variations, variationId);
+    this.toggleArrayItem(variations, variationId);
 
     // Set meal row data attributes and dropdown label
     $mealRow.attr('data-attribute-selected-variations', JSON.stringify(variations));

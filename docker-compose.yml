@@ -7,16 +7,10 @@ services:
       context: .
       cache_from:
         - aoepeople/meals:edge
-    depends_on:
-      - db
-    links:
-      - db
     ports:
       - "8033:80"
-    environment:
-      - SYMFONY_ENV=devbox
-    volumes:
-      - ./app/build:/var/www/html/app/build
+    env_file:
+      - .env
 
   dev:
     image: "${IMAGE_DEV:-aoepeople/meals:edge-dev}"

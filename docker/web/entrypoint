@@ -12,6 +12,10 @@ envsubst < /container/msmtprc > /etc/msmtprc
 chown www-data:www-data /etc/msmtprc
 chmod 600 /etc/msmtprc
 
+echo "Setup folder and permissions"
+mkdir -p app/cache app/logs
+chown -R www-data:www-data app/cache app/logs
+
 # first arg is `-f` or `--some-option`
 if [ "${1#-}" != "$1" ]; then
 	set -- apache2-foreground "$@"

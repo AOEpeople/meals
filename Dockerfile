@@ -43,7 +43,11 @@ RUN apt-get update && apt-get upgrade -y && apt-get install --no-install-recomme
 
 # add composer dependencies
 COPY composer.json composer.lock ./
-RUN composer install --ignore-platform-reqs --optimize-autoloader --prefer-dist && composer clearcache
+RUN composer install --ignore-platform-reqs --optimize-autoloader --prefer-dist \
+    && composer clearcache \
+    && mkdir -p web/bundles/ \
+    && ln -s vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/public/ web/bundles/framework \
+    && ln -s vendor/sensio/distribution-bundle/Sensio/Bundle/DistributionBundle/Resources/public/ web/bundles/sensiodistribution
 
 # add service configuration
 COPY --chown=www-data:www-data docker/web/ /container/

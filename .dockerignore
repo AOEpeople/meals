@@ -16,4 +16,5 @@
 /app/cache/
 /app/logs/
 /app/Resources/node_modules
+/web/bundles/
 /web/static/

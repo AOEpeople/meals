@@ -47,14 +47,8 @@ RUN composer install --ignore-platform-reqs --optimize-autoloader --prefer-dist 
     && composer clearcache \
     && mkdir -p web/bundles/ \
     && ln -s vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/public/ web/bundles/framework \
-    && ln -s vendor/sensio/distribution-bundle/Sensio/Bundle/DistributionBundle/Resources/public/ web/bundles/sensiodistribution
-
-# add service configuration
-COPY --chown=www-data:www-data docker/web/ /container/
-
-# add custom code and compiled frontend assets
-COPY --chown=www-data:www-data . /var/www/html/
-COPY --chown=www-data:www-data --from=frontend /var/www/html/web/static ./web/static
+    && ln -s vendor/sensio/distribution-bundle/Sensio/Bundle/DistributionBundle/Resources/public/ web/bundles/sensiodistribution \
+    && chown -R www-data:www-data web/bundles
 
 # add packages and configure development image
 ARG BUILD_DEV=false
@@ -65,6 +59,13 @@ RUN  if [ "$BUILD_DEV" = "true" ]; then \
         --no-install-recommends \
     && rm -rf /var/lib/apt/lists/* /tmp/* \
 ; fi
+
+# add service configuration
+COPY --chown=www-data:www-data docker/web/ /container/
+
+# add custom code and compiled frontend assets
+COPY --chown=www-data:www-data . /var/www/html/
+COPY --chown=www-data:www-data --from=frontend /var/www/html/web/static ./web/static
 
 ENTRYPOINT ["/container/entrypoint"]
 CMD ["apache2-foreground"]

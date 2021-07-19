@@ -8,9 +8,12 @@ echo "Setup PHP configuration"
 envsubst < "/container/php.ini" > "/usr/local/etc/php/conf.d/_meals.ini"
 
 echo "Setup msmtp configuration"
-envsubst < /container/msmtprc > /etc/msmtprc
+envsubst < "/container/msmtprc" > "/etc/msmtprc"
 chown www-data:www-data /etc/msmtprc
 chmod 600 /etc/msmtprc
+
+echo "Setup Meals parameters"
+envsubst < "/container/parameters.yml" > "app/config/${SYMFONY_ENV}/parameters.yml"
 
 echo "Ensure dependencies"
 composer install

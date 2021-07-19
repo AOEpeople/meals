@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  app:
+    image: "aoepeople/meals:${TAG:-edge}"
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - SYMFONY_DEBUG=0
+      - SYMFONY_ENV=production
+    ports:
+      - "${PORT:-8033}:80"
+    healthcheck:
+      test: "curl -I http://localhost:${PORT:-8033}/favicon.ico"
+      interval: 60s
+      timeout: 5s
+      retries: 5
+

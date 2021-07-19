@@ -127,7 +127,7 @@ yarn build
 # stylelint for SASS files
 ddev ssh
 cd /var/www/html/app/Resources
-yarn lint-sass
+yarn lint:sass
 ```
 
 ### SSH Access

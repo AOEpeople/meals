@@ -1,7 +1,8 @@
 import * as data from "../../fixtures/data.json";
+import { login } from "../../support/commands/login";
 
 describe("reservation.function", () => {
-  const checkComponent = (user: String) => {
+  const checkComponent = (user: string) => {
     let participantsAfterJoinAction: number;
     let participantsAfterDeleteAction: number;
 
@@ -12,9 +13,7 @@ describe("reservation.function", () => {
     cy.intercept("GET", "**/delete").as("getDelete");
 
     // log user in
-    cy.get("header input[name='_username']").type(`${user}`);
-    cy.get("header input[name='_password']").type(`${user}`);
-    cy.get("header button[type='submit']").click();
+    login(user);
 
     // at least one day should be available
     cy.get("[class='meal is-available']").should("have.length.at.least", 1);
@@ -22,8 +21,8 @@ describe("reservation.function", () => {
     // at least one meal should be available
     cy.get("[class='meal is-available']")
       .find("input[class*='join-action']")
-      .as("joinAction")
-      .should("have.length.at.least", 1);
+      .should("have.length.at.least", 1)
+      .as("joinAction");
 
     cy.get("@joinAction").first().click({ force: true });
 
@@ -35,8 +34,8 @@ describe("reservation.function", () => {
         participantsAfterJoinAction = response.body.participantsCount;
         cy.reload();
         cy.get(`input[value='${response.body.url}']`)
-          .as("deleteAction")
-          .should("exist");
+          .should("exist")
+          .as("deleteAction");
       }
 
       cy.get("@deleteAction").click({ force: true });

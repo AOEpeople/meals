@@ -1,0 +1,8 @@
+{
+    "*.{json, adoc, yml}": [
+        "prettier --write",
+    ],
+    "*.{ts}": [
+        "prettier --write"
+    ]
+}

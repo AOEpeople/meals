@@ -1,0 +1,36 @@
+{
+  "config": {
+    "staging": "https://meals-staging.aoe.com/"
+  },
+  "scripts": {
+    "postinstall": "husky install",
+    "preopen": "yarn",
+    "open": "cypress open",
+    "open:staging": "cross-env-shell cypress open --env baseUrl=$npm_package_config_staging",
+    "run": "cypress run",
+    "run:staging": "cross-env-shell cypress run --headless --browser chrome --env baseUrl=$npm_package_config_staging --spec '**/meals.aoe.com/**/*'",
+    "ts:check": "tsc --noEmit",
+    "format": "prettier",
+    "lint-staged": "lint-staged",
+    "reports:clean": "rm -R -f cypress/reports && mkdir cypress/reports && mkdir cypress/reports/mochareports",
+    "reports:combine": "mochawesome-merge cypress/reports/mocha/*.json > cypress/reports/mochareports/report.json",
+    "reports:generate": "marge cypress/reports/mochareports/report.json -f report -o cypress/reports/mochareports --inline"
+  },
+  "devDependencies": {
+    "@types/node": "^16.4.0",
+    "cross-env": "^7.0.3",
+    "cypress": "^8.0.0",
+    "cypress-multi-reporters": "^1.5.0",
+    "cypress-plugin-snapshots": "^1.4.4",
+    "husky": "^7.0.1",
+    "lint-staged": "^11.0.1",
+    "mocha": "^9.0.2",
+    "mochawesome": "^6.2.2",
+    "mochawesome-merge": "^4.2.0",
+    "mochawesome-report-generator": "^5.2.0",
+    "prettier": "^2.3.2",
+    "typescript": "^4.3.5",
+    "webpack": "^5.45.1"
+  },
+  "dependencies": {}
+}

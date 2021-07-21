@@ -1,0 +1,53 @@
+image:
+  name: cypress/included:8.0.0
+  entrypoint: [""]
+
+stages:
+  - staging
+  - reports
+  - publish
+
+cypress:
+  stage: staging
+  only:
+    - web
+    - pipelines
+  script:
+    - yarn install --frozen-lockfile
+    - yarn reports:clean
+    - yarn run:staging
+  artifacts:
+    when: always
+    paths:
+      - cypress/reports
+      - node_modules
+    expire_in: "1h"
+
+reports:
+  stage: reports
+  dependencies:
+    - cypress
+  only:
+    - master
+  when: manual
+  script:
+    - yarn reports:combine
+    - yarn reports:generate
+  artifacts:
+    paths:
+      - cypress/reports/mochareports
+    expire_in: "1h"
+
+pages:
+  stage: publish
+  only:
+    - master
+  when: manual
+  dependencies:
+    - reports
+  script:
+    - mkdir public
+    - mv cypress/reports/mochareports/* public/
+  artifacts:
+    paths:
+      - public

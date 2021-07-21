@@ -1,0 +1,7 @@
+.idea
+node_modules
+*.actual.png
+*.diff.png
+cypress.env.json
+*(failed)*
+cypress/reports/*

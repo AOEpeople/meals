@@ -1,0 +1,24 @@
+# Testing With Cypress
+
+### Scope
+
+We use Cypress for end-to-end frontend testing.
+
+### Prepare Local Test Execution
+
+- Check out the repository 'testing-cypress'.
+- Run 'yarn install' in test directory.
+
+### Execute Tests Locally
+
+- Start Cypress UI with 'yarn open: ...' and execute specs manually or
+- Run whole test suite headless with 'yarn run: ...' ('run' currently excludes snapshot tests)
+
+And add this to the respective command:
+
+[cols="1,2", options="header"]
+|===
+|Script | Description
+|... staging
+|environment 'staging'
+|===

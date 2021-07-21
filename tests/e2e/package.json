@@ -17,7 +17,7 @@
     "reports:generate": "marge cypress/reports/mochareports/report.json -f report -o cypress/reports/mochareports --inline"
   },
   "devDependencies": {
-    "@types/node": "^16.3.3",
+    "@types/node": "^16.4.0",
     "cross-env": "^7.0.3",
     "cypress": "^8.0.0",
     "cypress-multi-reporters": "^1.5.0",

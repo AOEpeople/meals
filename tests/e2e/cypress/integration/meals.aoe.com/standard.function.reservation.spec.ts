@@ -1,7 +1,7 @@
 import * as data from "../../fixtures/data.json";
 import { login } from "../../support/commands/login";
 
-describe("reservation.function", () => {
+describe("standard.function.reservation", () => {
   const checkComponent = (user: string) => {
     let participantsAfterJoinAction: number;
     let participantsAfterDeleteAction: number;

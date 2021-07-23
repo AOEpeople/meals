@@ -1,46 +1,37 @@
 import * as data from "../../fixtures/data.json";
 import { login } from "../../support/commands/login";
 
-describe("admin.function.menu.week.edit", () => {
-  const checkComponent = (user: string) => {
+describe("admin.function.menu.edit", () => {
+  const checkWeekEditingElements = (user: string) => {
     // log user in
     login(user);
 
-    // check visibility of elements
-    cy.get("ul[class='navbar']")
-      .find("a[href='/menu']")
-      .should("be.visible")
-      .and("contain.text", "Menu")
-      .as("menu");
-
     // open menu
-    cy.get("@menu").click();
+    cy.get("ul[class='navbar']").find("a[href='/menu']").click();
+
+    // open first week with meals
+    cy.get("[class='week']").first().click();
     cy.location().should((loc) => {
-      expect(loc.pathname).to.contain("/menu");
+      expect(loc.pathname).to.contain("/menu/1/edit");
     });
 
     // check visibility of elements
     cy.get("h1[class='headline']")
       .should("be.visible")
-      .and("contain.text", "List of weeks");
-
-    // at least one week should have meals
-    cy.get("[class='week']").should("have.length.at.least", 1);
-
-    // at least one week should have no meals
-    cy.get("[class='week week-create']").should("have.length.at.least", 1);
-
-    // open week with meals
-    cy.get("[class='week']").first().click();
-
-    cy.get("h1[class='headline']")
-      .should("be.visible")
       .and("contain.text", "Edit week");
+    cy.get("[href='/participations/1/edit']")
+      .should("be.visible")
+      .and("contain.text", "Participations");
+    cy.get("[id='week_form_enabled']")
+      .should("be.visible")
+      .and("have.attr", "name", "week_form[enabled]");
+
     cy.get("button[id='week_form_Cancel']")
       .should("be.visible")
       .as("cancelAction");
     cy.get("button[id='week_form_Save']").should("be.visible").as("saveAction");
 
+    // check visibility of elements
     cy.get("[class='limit-icon']")
       .first()
       .should("be.visible")
@@ -50,21 +41,34 @@ describe("admin.function.menu.week.edit", () => {
       .should("be.visible")
       .as("calenderAction");
 
-    // edit week - limit
+    cy.get("@cancelAction").click();
+    cy.location().should((loc) => {
+      expect(loc.pathname).to.contain("/menu");
+    });
+  };
+
+  const checkWeekEditingFunctions = () => {
+    // open first week with meals
+    cy.get("[class='week']").first().click();
+
+    // check editing of week - limit
     cy.get("@limitAction").click();
     cy.get("[class='limit-box']").should("be.visible");
+    cy.get("[class='limit-box-save button small']")
+      .should("be.visible")
+      .as("saveLimit");
 
-    cy.get("@limitAction").click();
+    cy.get("@saveLimit").click();
     cy.get("[class='limit-box']").should("not.be.visible");
 
-    // edit week - calender
+    // check editing of week - calender
     cy.get("@calenderAction").click();
     cy.get("[class^='xdsoft_datetimepicker']").should("be.visible");
 
     cy.get("@calenderAction").click();
     cy.get("[class^='xdsoft_datetimepicker']").should("not.be.visible");
 
-    // close week
+    // close week via save
     cy.get("@saveAction").click();
     cy.get("[class='alert alert-success']").should("be.visible");
   };
@@ -72,6 +76,7 @@ describe("admin.function.menu.week.edit", () => {
   it("is working fine in viewport 'desktop'", () => {
     cy.visitMeals();
     cy.viewportXL();
-    checkComponent(data.user.kochomi);
+    checkWeekEditingElements(data.user.kochomi);
+    checkWeekEditingFunctions();
   });
 });

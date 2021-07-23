@@ -29,21 +29,23 @@ describe("admin.function.menu.participations", () => {
       .should("be.visible")
       .and("contain.text", "Participations");
     cy.get("[class='profile-list']").should("be.visible");
-    cy.get("[class='table']").should("be.visible");
 
-    // table has at one date range
+    // check table
+    cy.get("table[class='table']").should("be.visible");
+
+    // the table has one date range
     cy.get("[class='table-head wide-cell week-date']").should("have.length", 1);
 
-    // table has at least one weekday
-    cy.get("[class='table-head day']").should("have.length.at.least", 1);
-
-    // table has at least one meal
-    cy.get("[class='table-head meal-title']").should("have.length.at.least", 1);
-
-    // table has at least one participant
+    // the table has at least one participant
     cy.get("[class='table-row']").should("have.length.at.least", 1);
 
-    // table has at least one participation
+    // the table has at least one weekday
+    cy.get("[class='table-head day']").should("have.length.at.least", 1);
+
+    // the table has at least one meal
+    cy.get("[class='table-head meal-title']").should("have.length.at.least", 1);
+
+    // the table has at least one participation
     cy.get("[class='glyphicon glyphicon-ok']").should(
       "have.length.at.least",
       1

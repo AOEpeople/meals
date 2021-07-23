@@ -2,7 +2,7 @@ import * as data from "../../fixtures/data.json";
 import { login } from "../../support/commands/login";
 
 describe("admin.function.menu.edit", () => {
-  const checkWeekEditingElements = (user: string) => {
+  const checkEditingElements = (user: string) => {
     // log user in
     login(user);
 
@@ -47,7 +47,7 @@ describe("admin.function.menu.edit", () => {
     });
   };
 
-  const checkWeekEditingFunctions = () => {
+  const checkEditingFunctions = () => {
     // open first week with meals
     cy.get("[class='week']").first().click();
 
@@ -76,7 +76,7 @@ describe("admin.function.menu.edit", () => {
   it("is working fine in viewport 'desktop'", () => {
     cy.visitMeals();
     cy.viewportXL();
-    checkWeekEditingElements(data.user.kochomi);
-    checkWeekEditingFunctions();
+    checkEditingElements(data.user.kochomi);
+    checkEditingFunctions();
   });
 });

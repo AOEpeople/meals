@@ -13,7 +13,7 @@ describe("admin.function.categories.overview", () => {
       .and("contain.text", "Categories")
       .as("categories");
 
-    // open categories
+    // open categories overview
     cy.get("@categories").click();
     cy.location().should((loc) => {
       expect(loc.pathname).to.contain("/category");

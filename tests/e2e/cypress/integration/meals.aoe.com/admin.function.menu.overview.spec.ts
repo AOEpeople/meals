@@ -13,7 +13,7 @@ describe("admin.function.menu.overview", () => {
       .and("contain.text", "Menu")
       .as("menu");
 
-    // open menu
+    // open menu overview
     cy.get("@menu").click();
     cy.location().should((loc) => {
       expect(loc.pathname).to.contain("/menu");

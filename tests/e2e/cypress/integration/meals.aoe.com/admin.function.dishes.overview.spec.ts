@@ -13,7 +13,7 @@ describe("admin.function.dishes.overview", () => {
       .and("contain.text", "Dishes")
       .as("dishes");
 
-    // open dishes
+    // open dishes overview
     cy.get("@dishes").click();
     cy.location().should((loc) => {
       expect(loc.pathname).to.contain("/dish");

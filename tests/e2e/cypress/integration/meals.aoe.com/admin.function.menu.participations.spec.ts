@@ -6,7 +6,7 @@ describe("admin.function.menu.participations", () => {
     // log user in
     login(user);
 
-    // open menu
+    // open menu overview
     cy.get("ul[class='navbar']").find("a[href='/menu']").click();
 
     // open first week with meals

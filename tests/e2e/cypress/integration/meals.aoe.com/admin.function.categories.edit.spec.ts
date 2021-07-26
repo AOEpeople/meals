@@ -6,7 +6,7 @@ describe("admin.function.categories.edit", () => {
     // log user in
     login(user);
 
-    // open categories
+    // open categories overview
     cy.get("ul[class='navbar']").find("a[href='/category']").click();
 
     // create new category

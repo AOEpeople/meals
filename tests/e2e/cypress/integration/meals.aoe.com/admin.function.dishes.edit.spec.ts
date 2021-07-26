@@ -6,7 +6,7 @@ describe("admin.function.dishes.edit", () => {
     // log user in
     login(user);
 
-    // open dishes
+    // open dishes overview
     cy.get("ul[class='navbar']").find("a[href='/dish']").click();
 
     // create new dish

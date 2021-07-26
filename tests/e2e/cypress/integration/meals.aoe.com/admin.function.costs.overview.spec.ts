@@ -13,7 +13,7 @@ describe("admin.function.costs.overview", () => {
       .and("contain.text", "Costs")
       .as("costs");
 
-    // open costs
+    // open costs overview
     cy.get("@costs").click();
     cy.location().should((loc) => {
       expect(loc.pathname).to.contain("/print/costsheet");

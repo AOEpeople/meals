@@ -12,14 +12,14 @@ describe("admin.function.menu.edit", () => {
     // open first week with meals
     cy.get("[class='week']").first().click();
     cy.location().should((loc) => {
-      expect(loc.pathname).to.contain("/menu/1/edit");
+      expect(loc.pathname).to.contain("/menu/").and.to.contain("/edit");
     });
 
     // check visibility of elements
     cy.get("h1[class='headline']")
       .should("be.visible")
       .and("contain.text", "Edit week");
-    cy.get("[href='/participations/1/edit']")
+    cy.get("[href^='/participations/'][href$='/edit']")
       .should("be.visible")
       .and("contain.text", "Participations");
     cy.get("[id='week_form_enabled']")

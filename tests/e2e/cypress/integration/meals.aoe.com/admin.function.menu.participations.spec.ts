@@ -13,7 +13,7 @@ describe("admin.function.menu.participations", () => {
     cy.get("[class='week']").first().click();
 
     // check visibility of elements
-    cy.get("[href='/participations/1/edit']")
+    cy.get("[href^='/participations/'][href$='/edit']")
       .should("be.visible")
       .and("contain.text", "Participations")
       .as("participations");
@@ -21,7 +21,9 @@ describe("admin.function.menu.participations", () => {
     // open participations
     cy.get("@participations").click();
     cy.location().should((loc) => {
-      expect(loc.pathname).to.contain("/participations/1/edit");
+      expect(loc.pathname)
+        .to.contain("/participations/")
+        .and.to.contain("/edit");
     });
 
     // check visibility of elements

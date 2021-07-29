@@ -1,7 +1,7 @@
 import * as data from "../../fixtures/data.json";
 import { login } from "../../support/commands/login";
 
-describe("login.function", () => {
+describe("standard.function.login", () => {
   const checkComponent = (user: string) => {
     // check visibility of elements
     cy.get("header").should("be.visible");

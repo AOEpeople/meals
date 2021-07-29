@@ -1,7 +1,7 @@
 import * as data from "../../fixtures/data.json";
 import { login } from "../../support/commands/login";
 
-describe("balance.function", () => {
+describe("standard.function.balance", () => {
   const checkComponent = (user: string) => {
     // log user in
     login(user);
@@ -28,10 +28,38 @@ describe("balance.function", () => {
       .should("be.visible")
       .and("contain.text", "ADD FUNDS")
       .as("payment");
+    cy.get("tfoot [class='table-row']")
+      .should("be.visible")
+      .and("contain.text", "Current balance:")
+      .find("[class='table-data']")
+      .as("balance");
+
+    // check transactions amount and balance amount
+    cy.get("@transactions")
+      .invoke("text")
+      .then((transactionValue) => {
+        cy.get("@balance")
+          .invoke("text")
+          .then((balanceValue) => {
+            expect(balanceValue.replace(/\s/g, "")).eq(transactionValue);
+          });
+      });
 
     // open payment options
     cy.get("@payment").click();
     cy.get("form[name='ecash']").should("be.visible");
+    cy.get("input[id='ecash_amount']").should("be.visible").as("amount");
+
+    // TODO: iframe can not be tested easily (https://www.npmjs.com/package/cypress-iframe)
+    //cy.get("[data-funding-source='paypal']").should("be.visible").as("paypal");
+
+    // TODO: carry out a payment
+    let randomAmount = (Math.floor(Math.random() * 100) + 1) / 100;
+    cy.get("input[id='ecash_amount']").clear().type(String(randomAmount));
+
+    // close payment options
+    cy.get("@payment").click();
+    cy.get("form[name='ecash']").should("not.be.visible");
   };
 
   it("is working fine in viewport 'desktop'", () => {

@@ -30,12 +30,14 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
+            - name: ENV_URL
+              value: https://meals-staging.aoe.com/
             - name: SYMFONY_ENV
-              value: 'staging'
+              value: staging
             - name: SMTP_HOST
               value: antispam.aoe.lan
             - name: SMTP_PORT
-              value: '25'
+              value: "25"
             - name: SMTP_USER
               value: noreply-meals
             - name: SMTP_PASSWORD

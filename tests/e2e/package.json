@@ -1,14 +1,17 @@
 {
   "config": {
-    "staging": "https://meals-staging.aoe.com/"
+    "staging": "https://meals-staging.aoe.com/",
+    "local": "http://meals.test:8033/"
   },
   "scripts": {
     "postinstall": "husky install",
     "preopen": "yarn",
     "open": "cypress open",
     "open:staging": "cross-env-shell cypress open --env baseUrl=$npm_package_config_staging",
+    "open:local": "cross-env-shell cypress open --env baseUrl=$npm_package_config_local",
     "run": "cypress run",
     "run:staging": "cross-env-shell cypress run --headless --browser chrome --env baseUrl=$npm_package_config_staging --spec '**/meals.aoe.com/**/*'",
+    "run:local": "cross-env-shell cypress run --headless --browser chrome --env baseUrl=$npm_package_config_local --spec '**/meals.aoe.com/**/*'",
     "ts:check": "tsc --noEmit",
     "format": "prettier",
     "lint-staged": "lint-staged",

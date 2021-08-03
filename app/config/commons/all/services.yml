@@ -1,13 +1,55 @@
 services:
-  pdo:
-    class: PDO
-    arguments:
-      - "mysql:host=%database_host%;dbname=%database_name%"
-      - "%database_user%"
-      - "%database_password%"
-    calls:
-      - [setAttribute, [3, 2]] # \PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION
+    # default configuration for services in *this* file
+    _defaults:
+        # automatically injects dependencies in your services
+        autowire: true
+        # automatically registers your services as commands, event subscribers, etc.
+        autoconfigure: true
+        # this means you cannot fetch services directly from the container via $container->get()
+        # if you need to do this, you can override this setting on individual services
+        public: true # TODO: [upgrade] Set it to false
 
-  session.handler.pdo:
-    class:     Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
-    arguments: ["@pdo", "%pdo.db_options%"]
+    ##################################################################
+    # Mealz BUNDLE
+    ##################################################################
+
+    # this creates a service per class whose id is the fully-qualified class name
+    Mealz\MealBundle\:
+        resource: '../../../../src/Mealz/MealBundle/*'
+        # you can exclude directories or files
+        # but if a service is unused, it's removed anyway
+        exclude: '../../../../src/Mealz/MealBundle/{Entity,Tests}'
+
+    # controllers are imported separately to make sure they're public
+    # and have a tag that allows actions to type-hint services
+    Mealz\MealBundle\Controller\:
+        resource: '../../../../src/Mealz/MealBundle/Controller'
+        public: true
+        tags: ['controller.service_arguments']
+
+    pdo:
+        class: PDO
+        arguments:
+            - "mysql:host=%database_host%;dbname=%database_name%"
+            - "%database_user%"
+            - "%database_password%"
+        calls:
+            - [setAttribute, [3, 2]] # \PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION
+
+    session.handler.pdo:
+        class:     Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
+        arguments: ["@pdo", "%pdo.db_options%"]
+
+    rest_bundle.exception_normalizer:
+        class: Mealz\RestBundle\Normalizer\ExceptionNormalizer
+        tags:
+            - { name: serializer.normalizer }
+
+
+    Mealz\MealBundle\Form\DataTransformer\EntityToIdTransformer:
+        autoconfigure: false
+        autowire: false
+    Mealz\MealBundle\Form\Dish\DishForm:
+        autowire: false
+    Mealz\MealBundle\Form\Dish\DishVariationForm:
+        autowire: false

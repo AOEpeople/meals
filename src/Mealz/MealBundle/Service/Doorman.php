@@ -1,12 +1,11 @@
 <?php
 
-
 namespace Mealz\MealBundle\Service;
 
 use Mealz\MealBundle\Entity\Meal;
 use Mealz\MealBundle\Entity\Participant;
 use Mealz\UserBundle\Entity\Profile;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * central business logic to determine if the currently logged in user is allowed to do a certain action
@@ -34,18 +33,18 @@ class Doorman
     protected $now;
 
     /**
-     * @var SecurityContext
+     * @var Security
      */
-    protected $securityContext;
+    protected $security;
 
     /**
      * Doorman constructor.
-     * @param SecurityContext $securityContext
-     * @param string $lockParticipationAt
+     * @param Security $security
+     * @param string   $lockParticipationAt
      */
-    public function __construct(SecurityContext $securityContext, $lockParticipationAt = '-1 day 12:00')
+    public function __construct(Security $security, $lockParticipationAt = '-1 day 12:00')
     {
-        $this->securityContext = $securityContext;
+        $this->security = $security;
         $this->now = time();
         $this->lockParticipationAt = $lockParticipationAt;
     }
@@ -56,7 +55,7 @@ class Doorman
      */
     public function isUserAllowedToJoin(Meal $meal)
     {
-        if ($this->securityContext->getToken()->getUser()->getProfile() instanceof Profile === false || $meal->isParticipationLimitReached() === true) {
+        if ($this->security->getUser()->getProfile() instanceof Profile === false || $meal->isParticipationLimitReached() === true) {
             return false;
         }
         if ($this->hasAccessTo(self::AT_MEAL_PARTICIPATION, ['meal' => $meal]) === true) {
@@ -71,7 +70,7 @@ class Doorman
      */
     public function isOfferAvailable(Meal $meal)
     {
-        if ($this->securityContext->getToken()->getUser()->getProfile() instanceof Profile === false) {
+        if ($this->security->getUser()->getProfile() instanceof Profile === false) {
             return false;
         }
 
@@ -129,7 +128,7 @@ class Doorman
      */
     public function isKitchenStaff()
     {
-        return $this->securityContext->isGranted('ROLE_KITCHEN_STAFF');
+        return $this->security->isGranted('ROLE_KITCHEN_STAFF');
     }
 
     /**
@@ -184,7 +183,7 @@ class Doorman
     private function hasAccessTo($accesstype, $params = [])
     {
         // if no user is logged in access is denied at all
-        if ($this->securityContext->getToken()->getUser()->getProfile() instanceof Profile === false) {
+        if ($this->security->getUser()->getProfile() instanceof Profile === false) {
             return false;
         }
 

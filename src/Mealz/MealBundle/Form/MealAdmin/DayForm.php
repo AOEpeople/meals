@@ -2,6 +2,7 @@
 
 namespace Mealz\MealBundle\Form\MealAdmin;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Mealz\MealBundle\Entity\Day;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -28,7 +29,7 @@ class DayForm extends AbstractType
      * DayForm constructor.
      * @param EntityManager $entityManager
      */
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
     }
@@ -101,7 +102,7 @@ class DayForm extends AbstractType
 
                 $form->add(
                     'enabled',
-                    $config->getType()->getName(),
+                    $config->getType()->getBlockPrefix(),
                     array_replace(
                         $options,
                         [

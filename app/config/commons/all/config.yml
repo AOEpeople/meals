@@ -26,9 +26,8 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
-    form:
-        resources:
-            - 'MealzTemplateBundle:Form:fields.html.twig'
+    form_themes:
+        - 'MealzTemplateBundle:Form:fields.html.twig'
     globals:
         # @TODO: rename lock_toggle_participation_at
         lock_toggle_participation_at: %mealz.lock_toggle_participation_at%
@@ -100,7 +99,6 @@ fos_rest:
     format_listener: true
     view:
         view_response_listener: 'force'
-        exception_wrapper_handler: Mealz\RestBundle\Handler\ExceptionWrapperHandler
         formats:
             xml: true
             json : true
@@ -161,6 +159,18 @@ creatissimo_mattermost:
                 exclude_class:
                     - Symfony\Component\HttpKernel\Exception\NotFoundHttpException
 
+# Lightweight library for issuing HTTP requests
+# Used by hwi_auth bundle
+httplug:
+    clients:
+        default:
+            factory: 'httplug.factory.curl'
+        hwi_special:
+            factory: 'httplug.factory.guzzle6'
+            config:
+                verify: false
+                ignore_errors: false
+
 hwi_oauth:
     firewall_names: [mealz]
     resource_owners:
@@ -178,6 +188,5 @@ hwi_oauth:
                 realname:   name
             options:
                 use_bearer_authorization: true
-    http_client:
-            verify_peer: false
-            ignore_errors: true
+    http:
+        client: httplug.client.hwi_special

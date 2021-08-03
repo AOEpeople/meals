@@ -33,7 +33,7 @@ class ReviewController extends Controller
                 'label' => 'TextArea',
                 'required' => false,
             ))
-            ->add('date', 'date', array(
+            ->add('date', \Symfony\Component\Form\Extension\Core\Type\DateType::class, array(
                 'widget' => 'single_text',
                 'label' => 'Date Select',
                 'required' => false,

@@ -3,7 +3,15 @@ parameters:
     mealz_accounting.wallet.class: Mealz\AccountingBundle\Service\Wallet
 
 services:
-
+    # default configuration for services in *this* file
+    _defaults:
+        # automatically injects dependencies in your services
+        autowire: true
+        # automatically registers your services as commands, event subscribers, etc.
+        autoconfigure: true
+        # this means you cannot fetch services directly from the container via $container->get()
+        # if you need to do this, you can override this setting on individual services
+        public: false
     mealz_accounting.participant_list_factory:
         class: %mealz_accounting.participant_list_factory.class%
         arguments:
@@ -11,8 +19,7 @@ services:
 
     mealz_accounting.repository.transaction:
         class: Mealz\AccountingBundle\Entity\TransactionRepository
-        factory_service: doctrine.orm.entity_manager
-        factory_method: getRepository
+        factory: ['@doctrine.orm.default_entity_manager', getRepository]
         arguments:
             - 'MealzAccountingBundle:Transaction'
 

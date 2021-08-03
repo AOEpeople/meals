@@ -1,12 +1,12 @@
 <?php
 
-
 namespace Mealz\MealBundle\Twig\Extension;
 
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Mealz\MealBundle\Entity\Dish;
 use Mealz\MealBundle\Entity\Meal;
 use Symfony\Component\VarDumper\VarDumper;
+use Twig\Environment;
 use Twig\TwigFunction;
 use Twig_Extension;
 
@@ -24,7 +24,7 @@ class Variation extends Twig_Extension
     /**
      * Constructor
      */
-    public function __construct(RegistryInterface $doctrine, $twig)
+    public function __construct(RegistryInterface $doctrine, Environment $twig)
     {
         $this->doctrine = $doctrine;
         $this->twig = $twig;

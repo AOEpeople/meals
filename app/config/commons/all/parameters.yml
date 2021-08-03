@@ -9,6 +9,8 @@ parameters:
     database_host:     127.0.0.1
     database_port:
 
+    secret: ThisTokenIsNotSoSecretChangeIt
+
     pdo.db_options:
         db_table:    session
         db_id_col:   session_id
@@ -35,4 +37,4 @@ parameters:
     keycloak_client_secret:         'replaced_by_deployment'
 
     env_url:                        'replaced_by_deployment'
-    reverse_proxy:                  'replaced_by_deployment'
+    reverse_proxy: ['127.0.0.1']

@@ -4,7 +4,7 @@ namespace Mealz\MealBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
 use Mealz\MealBundle\Entity\DishVariation;
-use Mealz\MealBundle\Form\DishVariationForm;
+use Mealz\MealBundle\Form\Dish\DishVariationForm;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -171,11 +171,10 @@ class DishVariationController extends BaseController
 
     /**
      * get the new Form
-     * @return object
      */
     protected function getNewForm()
     {
-        return $this->get('mealz_meal.form.dishvariation');
+        return DishVariationForm::class;
     }
 
     /**

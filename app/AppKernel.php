@@ -52,6 +52,7 @@ class AppKernel extends Kernel
             new Mealz\TemplateBundle\MealzTemplateBundle(),
             new Mealz\RestBundle\MealzRestBundle(),
             new Creatissimo\MattermostBundle\CreatissimoMattermostBundle(),
+            new Http\HttplugBundle\HttplugBundle(),
             new HWI\Bundle\OAuthBundle\HWIOAuthBundle(),
             new WhiteOctober\TCPDFBundle\WhiteOctoberTCPDFBundle()
         );
@@ -59,7 +60,6 @@ class AppKernel extends Kernel
         if (in_array($this->getEnvironment(), array('devbox', 'dev', 'deploy', 'test'))) {
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
             $bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();
-            $bundles[] = new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle();
             $bundles[] = new \Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle();
         }
 

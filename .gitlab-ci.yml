@@ -1,25 +1,43 @@
 stages:
   - deploy
 
+before_script:
+  - mkdir ~/.kube
+  - echo -n "$KUBE_CONFIG_STAGING" | base64 -d > ~/.kube/config
+
 deploy:staging:
   stage: deploy
   rules:
+    - if: '$RELEASE_TAG'
+      when: never
     - if: '$CI_PIPELINE_SOURCE == "trigger"'
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
     - if: '$CI_PIPELINE_SOURCE == "web"'
   image: aoepeople/meals-deployer:edge
   script:
-    # for now we just remove the pods and k8s recreate new ones
-    # in the future we might set the tag via:
-    # kubectl set image deployments/meals app=aoepeople/meals:late
-
-    # usage with compose:
-    # docker-compose run deployer kubectl set image deployments/meals app=aoepeople/meals:latest
-    - mkdir ~/.kube
-    - echo -n "$KUBE_CONFIG" | base64 -d > ~/.kube/config
     - kubectl delete pods --selector=app=meals
     - sleep 20
     - |
       curl --silent -i -X POST -H 'Content-Type: application/json' \
         -d '{"text": "Deployment of [meals-staging.aoe.com](https://meals-staging.aoe.com/changelog.txt) done. :white_check_mark:"}' \
+        $MATTERMOST_HOOK_URL
+
+deploy:production:
+  stage: deploy
+  image: aoepeople/meals-deployer:edge
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "trigger"'
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+    - if: '$RELEASE_TAG'
+      when: manual
+  before_script:
+    - mkdir ~/.kube
+    - echo -n "$KUBE_CONFIG_PRODUCTION" | base64 -d > ~/.kube/config
+  script:
+    - kubectl set image deployment/meals app=aoepeople/meals:${RELEASE_TAG} -n team-lemmings-production --record
+    - sleep 20
+    - |
+      curl --silent -i -X POST -H 'Content-Type: application/json' \
+        -d '{"text": "Deployment of [meals.aoe.com](https://meals.aoe.com/changelog.txt) done. :white_check_mark:"}' \
         $MATTERMOST_HOOK_URL

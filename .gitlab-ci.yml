@@ -7,12 +7,13 @@ before_script:
 
 deploy:staging:
   stage: deploy
-  rules:
-    - if: '$RELEASE_TAG != ""'
-      when: never
-    - if: '$CI_PIPELINE_SOURCE == "trigger"'
-    - if: '$CI_PIPELINE_SOURCE == "schedule"'
-    - if: '$CI_PIPELINE_SOURCE == "web"'
+  only:
+    - triggers
+    - schedules
+    - web
+  except:
+    variables:
+      - $RELEASE_TAG
   image: aoepeople/meals-deployer:edge
   script:
     - kubectl delete pods --selector=app=meals
@@ -25,8 +26,9 @@ deploy:staging:
 deploy:production:
   stage: deploy
   image: aoepeople/meals-deployer:edge
-  rules:
-    - if: '$RELEASE_TAG != ""'
+  only:
+    variables:
+      - $RELEASE_TAG
   before_script:
     - mkdir ~/.kube
     - echo -n "$KUBE_CONFIG_PRODUCTION" | base64 -d > ~/.kube/config

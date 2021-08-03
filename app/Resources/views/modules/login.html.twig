@@ -1,7 +1,7 @@
 {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
     <div class="login-text">{{ 'header.logged_in_text'|trans({}, 'general') }}: <strong>{{ app.user.username }}</strong></div>
     <div class="balance-text">
-            {{ 'header.balance'|trans({}, 'general') }}:{{ MealzButton.link(path('mealz_accounting_payment_transaction_history'), balance ~ '€', '', (activeRoute matches '/mealz_accounting_payment_transaction_history.*/' ? 'active' : '') , '') }}
+            {{ 'header.balance'|trans({}, 'general') }}:{{ MealzButton.link(path('mealz_accounting_payment_transaction_history'), balance ~ ' €', '', (activeRoute matches '/mealz_accounting_payment_transaction_history.*/' ? 'active' : '') , '') }}
     </div>
     {% include 'modules/language_switch.html.twig' %}
     {{ MealzButton.link(path('MealzUserBundle_logout'), '', '', '', 'glyphicon-log-out') }}

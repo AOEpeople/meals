@@ -2,19 +2,19 @@
 
 namespace Mealz\MealBundle\Service;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Mealz\MealBundle\Entity\LocalizedRepository;
 use Mealz\MealBundle\EventListener\LocalisationListener;
 
 class LocalizedRepositoryFactory
 {
-    /** @var EntityManager $entityManager */
+    /** @var EntityManagerInterface $entityManager */
     protected $entityManager;
 
     /** @var LocalisationListener $localisationListener */
     protected $localisationListener;
 
-    public function __construct(EntityManager $entityManager, LocalisationListener $localisationListener)
+    public function __construct(EntityManagerInterface $entityManager, LocalisationListener $localisationListener)
     {
         $this->entityManager = $entityManager;
         $this->localisationListener = $localisationListener;

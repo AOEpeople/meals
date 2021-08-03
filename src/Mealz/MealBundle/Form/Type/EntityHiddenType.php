@@ -4,7 +4,7 @@ namespace Mealz\MealBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Mealz\MealBundle\Form\DataTransformer\EntityToIdTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\Common\Persistence\ObjectManager;
 
 /**
@@ -40,9 +40,9 @@ class EntityHiddenType extends AbstractType
 
     /**
      * set default Options
-     * @param OptionsResolverInterface $resolver
+     * @param OptionsResolver $resolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
             ->setRequired(array('class'))
@@ -60,15 +60,6 @@ class EntityHiddenType extends AbstractType
      */
     public function getParent()
     {
-        return 'hidden';
-    }
-
-    /**
-     * get the name
-     * @return string
-     */
-    public function getName()
-    {
-        return 'entity_hidden';
+        return \Symfony\Component\Form\Extension\Core\Type\HiddenType::class;
     }
 }

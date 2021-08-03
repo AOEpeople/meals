@@ -15,7 +15,8 @@ use_dns_when_possible: true
 composer_version: "2"
 web_environment:
   - FINAL_RELEASEFOLDER=/var/www/html
-  - SYMFONY_DEBUG=0
+  - SYMFONY_DEBUG=1
+  - SYMFONY_ENV=dev
 omit_containers:
   - dba
 hooks:
@@ -25,7 +26,7 @@ hooks:
     - exec: "app/console assets:install web --symlink --relative"
     - exec: "setup/clear_cache.sh"
     - exec-host: "ddev import-db --src=./docker/db/structure.sql"
-    - exec: "app/console doctrine:fixtures:load --env=devbox -n"
+    - exec: "app/console doctrine:fixtures:load --env=dev -n"
 
 # This config.yaml was created with ddev version v1.17.5
 # webimage: drud/ddev-webserver:v1.17.4

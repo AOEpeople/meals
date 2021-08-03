@@ -34,11 +34,6 @@ class DishSelectorCreatorType extends AbstractType
 
     public function getParent()
     {
-        return 'entity';
-    }
-
-    public function getName()
-    {
-        return 'dish_selector_creator';
+        return \Symfony\Bridge\Doctrine\Form\Type\EntityType::class;
     }
 }

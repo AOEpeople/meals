@@ -39,7 +39,7 @@ class EcashController extends BaseController
         }
 
         $form = $this->createForm(
-            new EcashPaymentAdminForm($entityManager),
+            \Mealz\AccountingBundle\Form\EcashPaymentAdminForm::class,
             new Transaction(),
             array(
                 'profile' => $profile,

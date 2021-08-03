@@ -1,192 +1,192 @@
 MealzMealBundle_language_switch:
-    pattern:  /language-switch
+    path:  /language-switch
     defaults: { _controller: "MealzMealBundle:Language:switch" }
 
 MealzMealBundle_home:
-    pattern:  /
+    path:  /
     defaults: { _controller: "MealzMealBundle:Meal:index" }
 
 MealzMealBundle_Meal:
-    pattern:  /menu
+    path:  /menu
     defaults: { _controller: "MealzMealBundle:MealAdmin:list" }
 
 MealzMealBundle_Meal_new:
-    pattern:  /menu/{date}/new
+    path:  /menu/{date}/new
     defaults: { _controller: "MealzMealBundle:MealAdmin:new" }
     requirements:
         # format "2014W12" 12th week in 2014
         date: 20\d{2}W[0-5]\d
 
 MealzMealBundle_Meal_edit:
-    pattern:  /menu/{week}/edit
+    path:  /menu/{week}/edit
     defaults: { _controller: "MealzMealBundle:MealAdmin:edit" }
 
 #MealzMealBundle_Meal_week:
-#    pattern:  /menu/{week}
+#    path:  /menu/{week}
 #    defaults: { _controller: "MealzMealBundle:Meal:index" }
 #    requirements:
 #        # format "2014W12" 12th week in 2014
 #        week: 20\d{2}W[0-5]\d
 
 #MealzMealBundle_Meal_day:
-#    pattern:  /menu/{day}
+#    path:  /menu/{day}
 #    defaults: { _controller: "MealzMealBundle:Meal:day" }
 #    requirements:
 #        # format "2014-02-17" 17th February, 2014
 #        day: 20\d{2}\-[01]\d\-[0-3]\d
 
 #MealzMealBundle_Meal_new:
-#    pattern:  /menu/new
+#    path:  /menu/new
 #    defaults: { _controller: "MealzMealBundle:MealAdmin:new" }
 #
 #MealzMealBundle_Meal_edit:
-#    pattern:  /menu/{meal}/edit
+#    path:  /menu/{meal}/edit
 #    defaults: { _controller: "MealzMealBundle:MealAdmin:edit" }
 #
 #MealzMealBundle_Meal_delete:
-#    pattern:  /menu/{meal}/delete
+#    path:  /menu/{meal}/delete
 #    defaults: { _controller: "MealzMealBundle:MealAdmin:delete" }
 #
 #MealzMealBundle_Meal_show:
-#    pattern:  /menu/{date}/{dish}
+#    path:  /menu/{date}/{dish}
 #    defaults: { _controller: "MealzMealBundle:Meal:show" }
 #    requirements:
 #      date: 20\d{2}\-[01]\d\-[0-3]\d
 
 MealzMealBundle_Meal_join:
-    pattern:  /menu/{date}/{dish}/join/{profile}
+    path:  /menu/{date}/{dish}/join/{profile}
     defaults: { _controller: "MealzMealBundle:Meal:join", profile: null }
 
 #MealzMealBundle_Meal_joinAsGuest:
-#    pattern:  /meal/join-as-guest/{guestInvitationId}
+#    path:  /meal/join-as-guest/{guestInvitationId}
 #    defaults: { _controller: "MealzMealBundle:Meal:joinAsGuest" }
 #    requirements:
 #        guestInvitationId: '[a-zA-Z0-9]{32}'
 
 #MealzMealBundle_Meal_join_someone:
-#    pattern:  /menu/{date}/{dish}/join-someone
+#    path:  /menu/{date}/{dish}/join-someone
 #    defaults: { _controller: "MealzMealBundle:Meal:joinSomeone" }
 #
 #MealzMealBundle_Participant_new:
-#    pattern:  /menu/{date}/{dish}/add
+#    path:  /menu/{date}/{dish}/add
 #    defaults: { _controller: "MealzMealBundle:Participant:new" }
 #
 #MealzMealBundle_Participant_edit:
-#    pattern:  /menu/meal/{participant}/edit
+#    path:  /menu/meal/{participant}/edit
 #    defaults: { _controller: "MealzMealBundle:Participant:edit" }
 
 MealzMealBundle_Participant_delete:
-    pattern:  /menu/meal/{participant}/delete
+    path:  /menu/meal/{participant}/delete
     defaults: { _controller: "MealzMealBundle:Participant:delete" }
 
 MealzMealBundle_Participant_swap:
-    pattern: /menu/meal/{participant}/swap
+    path: /menu/meal/{participant}/swap
     defaults: { _controller: "MealzMealBundle:Participant:swap" }
 
 MealzMealBundle_Participant_unswap:
-    pattern: /menu/meal/{participant}/unswap
+    path: /menu/meal/{participant}/unswap
     defaults: { _controller: "MealzMealBundle:Participant:swap" }
 
 MealzMealBundle_Meal_accept_offer:
-    pattern: /menu/{date}/{dish}/accept-offer/{profile}
+    path: /menu/{date}/{dish}/accept-offer/{profile}
     defaults: { _controller: "MealzMealBundle:Meal:join", profile: null }
 
 MealzMealBundle_Meal_updateOffers:
-    pattern: /menu/meal/update-offers
+    path: /menu/meal/update-offers
     defaults: { _controller: "MealzMealBundle:Meal:updateOffers" }
 
 MealzMealBundle_Meal_isParticipationPending:
-    pattern: /menu/meal/{participant}/isParticipationPending
+    path: /menu/meal/{participant}/isParticipationPending
     defaults: { _controller: "MealzMealBundle:Participant:isParticipationPending" }
 
 
 #MealzMealBundle_Participation_confirm_index:
-#    pattern:  /menu/meal/confirmation
+#    path:  /menu/meal/confirmation
 #    defaults: { _controller: "MealzMealBundle:ParticipationConfirmation:index" }
 #
 #MealzMealBundle_Participation_confirm_index_letter:
-#    pattern:  /menu/meal/confirmation/{letter}
+#    path:  /menu/meal/confirmation/{letter}
 #    defaults: { _controller: "MealzMealBundle:ParticipationConfirmation:indexByLetter" }
 #    requirements:
 #      letter: \w{1}
 #
 #MealzMealBundle_Participant_confirm:
-#    pattern:  /menu/meal/confirmation/{participant}
+#    path:  /menu/meal/confirmation/{participant}
 #    defaults: { _controller: "MealzMealBundle:ParticipationConfirmation:confirmParticipation" }
 
 MealzMealBundle_DishVariation:
-    pattern:  /dish/{slug}/variation/
+    path:  /dish/{slug}/variation/
     defaults: { _controller: "mealz_meal.controller.dish_variation:listAction" }
     requirements:
       slug: '[1-9][0-9]*'
 
 MealzMealBundle_DishVariation_new:
-    pattern:  /dish/{slug}/variation/new
+    path:  /dish/{slug}/variation/new
     defaults: { _controller: "mealz_meal.controller.dish_variation:newAction" }
     requirements:
       slug: '[1-9][0-9]*'
 #    condition: 'request.isXmlHttpRequest()'
 
 MealzMealBundle_DishVariation_edit:
-    pattern:  /dish/variation/{slug}/edit
+    path:  /dish/variation/{slug}/edit
     defaults: { _controller: "mealz_meal.controller.dish_variation:editAction" }
     requirements:
       slug: '[1-9][0-9]*'
 #    condition: 'request.isXmlHttpRequest()'
 
 MealzMealBundle_DishVariation_delete:
-    pattern:  /dish/variation/{slug}/delete
+    path:  /dish/variation/{slug}/delete
     defaults: { _controller: "mealz_meal.controller.dish_variation:deleteAction" }
     requirements:
       slug: '[1-9][0-9]*'
 #    condition: 'request.isXmlHttpRequest()'
 
 MealzMealBundle_Dish:
-    pattern:  /dish
+    path:  /dish
     defaults: { _controller: "mealz_meal.controller.dish:listAction" }
 
 MealzMealBundle_Dish_Form_empty:
-    pattern:  /dish/form
+    path:  /dish/form
     defaults: { _controller: "mealz_meal.controller.dish:getEmptyFormAction" }
 
 MealzMealBundle_Dish_Form_preFilled:
-    pattern:  /dish/form/{slug}
+    path:  /dish/form/{slug}
     defaults: { _controller: "mealz_meal.controller.dish:getPreFilledFormAction" }
 
 MealzMealBundle_Dish_new:
-    pattern:  /dish/new
+    path:  /dish/new
     defaults: { _controller: "mealz_meal.controller.dish:newAction" }
 
 MealzMealBundle_Dish_edit:
-    pattern:  /dish/{slug}/edit
+    path:  /dish/{slug}/edit
     defaults: { _controller: "mealz_meal.controller.dish:editAction" }
 
 MealzMealBundle_Dish_delete:
-    pattern:  /dish/{slug}/delete
+    path:  /dish/{slug}/delete
     defaults: { _controller: "mealz_meal.controller.dish:deleteAction" }
 
 MealzMealBundle_Category:
-    pattern:  /category
+    path:  /category
     defaults: {_controller: "mealz_meal.controller.category:listAction"}
 
 MealzMealBundle_Category_new:
-    pattern:  /category/new
+    path:  /category/new
     defaults: { _controller: "mealz_meal.controller.category:newAction" }
 
 MealzMealBundle_Category_edit:
-    pattern:  /category/{slug}/edit
+    path:  /category/{slug}/edit
     defaults: {_controller: "mealz_meal.controller.category:editAction"}
 
 MealzMealBundle_Category_delete:
-    pattern:  /category/{slug}/delete
+    path:  /category/{slug}/delete
     defaults: {_controller: "mealz_meal.controller.category:deleteAction"}
 
 MealzMealBundle_Category_Form_empty:
-    pattern:  /category/form
+    path:  /category/form
     defaults: { _controller: "mealz_meal.controller.category:getEmptyFormAction" }
 
 MealzMealBundle_Category_Form_preFilled:
-    pattern:  /category/form/{slug}
+    path:  /category/form/{slug}
     defaults: { _controller: "mealz_meal.controller.category:getPreFilledFormAction" }
 
 MealzMealBundle_Print_participations:
@@ -203,7 +203,7 @@ MealzMealBundle_Meal_guest:
 
 MealzMealBundle_Meal_newGuestInvitation:
 #    path:  /menu/{mealId}/new-guest-invitation
-    pattern:  /menu/{dayId}/new-guest-invitation
+    path:  /menu/{dayId}/new-guest-invitation
     defaults: { _controller: "MealzMealBundle:Meal:newGuestInvitation" }
     requirements:
       dayId: '[1-9][0-9]*'

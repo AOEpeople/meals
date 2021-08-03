@@ -87,7 +87,7 @@ class MealForm extends AbstractType
 
                     $form->add(
                         'dish',
-                        $config->getType()->getName(),
+                        $config->getType()->getBlockPrefix(),
                         array_replace(
                             $options,
                             [

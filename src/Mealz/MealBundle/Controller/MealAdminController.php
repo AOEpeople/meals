@@ -88,7 +88,7 @@ class MealAdminController extends BaseController
 
         $week = $this->generateEmptyWeek($date);
 
-        $form = $this->createForm(new WeekForm(), $week);
+        $form = $this->createForm(\Mealz\MealBundle\Form\MealAdmin\WeekForm::class, $week);
 
         // handle form submission
         if ($request->isMethod('POST')) {
@@ -140,7 +140,7 @@ class MealAdminController extends BaseController
         $qbDishes = $this->get('mealz_meal.repository.dish');
         $dishes = $qbDishes->getSortedDishesQueryBuilder()->getQuery()->getResult();
 
-        $form = $this->createForm(new WeekForm(), $week);
+        $form = $this->createForm(\Mealz\MealBundle\Form\MealAdmin\WeekForm::class, $week);
 
         // handle form submission
         if ($request->isMethod('POST') === true) {

@@ -73,10 +73,10 @@ echo PHP_EOL;
 
 exit($checkPassed ? 0 : 1);
 
-function get_error_message(Requirement $requirement, $lineSize): string
+function get_error_message(Requirement $requirement, $lineSize)
 {
     if ($requirement->isFulfilled()) {
-        return '';
+        return;
     }
 
     $errorMessage = wordwrap($requirement->getTestMessage(), $lineSize - 3, PHP_EOL.'   ').PHP_EOL;
@@ -119,10 +119,14 @@ function echo_block($style, $title, $message)
 
     echo PHP_EOL.PHP_EOL;
 
-    echo_style($style, str_repeat(' ', $width).PHP_EOL);
-    echo_style($style, str_pad(' ['.$title.']', $width, ' ', STR_PAD_RIGHT).PHP_EOL);
-    echo_style($style, str_pad($message, $width, ' ', STR_PAD_RIGHT).PHP_EOL);
-    echo_style($style, str_repeat(' ', $width).PHP_EOL);
+    echo_style($style, str_repeat(' ', $width));
+    echo PHP_EOL;
+    echo_style($style, str_pad(' ['.$title.']', $width, ' ', STR_PAD_RIGHT));
+    echo PHP_EOL;
+    echo_style($style, $message);
+    echo PHP_EOL;
+    echo_style($style, str_repeat(' ', $width));
+    echo PHP_EOL;
 }
 
 function has_color_support()
@@ -130,7 +134,7 @@ function has_color_support()
     static $support;
 
     if (null === $support) {
-        if (DIRECTORY_SEPARATOR === '\\') {
+        if (DIRECTORY_SEPARATOR == '\\') {
             $support = false !== getenv('ANSICON') || 'ON' === getenv('ConEmuANSI');
         } else {
             $support = function_exists('posix_isatty') && @posix_isatty(STDOUT);

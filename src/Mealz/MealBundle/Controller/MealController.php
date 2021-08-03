@@ -210,7 +210,7 @@ class MealController extends BaseController
      *
      * @param Meal       $meal        The meal
      * @param Profile    $profile     The profile
-     * @param Translator $translator  The translator
+     * @param \Symfony\Component\Translation\TranslatorBagInterface $translator The translator
      * @param Integer    $counter     The counter
      *
      * @return Participant $participant
@@ -371,7 +371,7 @@ class MealController extends BaseController
      * Gets the participant count message.
      *
      * @param Error      $error      The error
-     * @param Translator $translator The translator
+     * @param \Symfony\Component\Translation\TranslatorBagInterface $translator The translator
      */
     private function getParticipantCountMessage($error, $translator)
     {

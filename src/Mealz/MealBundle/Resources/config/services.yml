@@ -10,24 +10,34 @@ parameters:
   mealz_meal.event_listener.localisation.class: Mealz\MealBundle\EventListener\LocalisationListener
 
 services:
+  # default configuration for services in *this* file
+  _defaults:
+      # automatically injects dependencies in your services
+      autowire: true
+      # automatically registers your services as commands, event subscribers, etc.
+      autoconfigure: true
+      # this means you cannot fetch services directly from the container via $container->get()
+      # if you need to do this, you can override this setting on individual services
+      public: false
 
   mealz_meal.doorman:
     class: %mealz_meal.doorman.class%
-    arguments: [ @security.context, %mealz.lock_toggle_participation_at%]
+#    arguments:
+#      $lockParticipationAt: %mealz.lock_toggle_participation_at%
 
   mealz_meal.twig_extension.doorman:
     class: %mealz_meal.twig_extension.doorman.class%
-    arguments: [ @mealz_meal.doorman ]
+    arguments: [ '@mealz_meal.doorman' ]
     tags:
       - { name: twig.extension }
 
   mealz_meal.link:
     class: %mealz_meal.link.class%
-    arguments: [ @router ]
+    arguments: [ '@router' ]
 
   mealz_meal.twig_extension.link:
     class: %mealz_meal.twig_extension.link.class%
-    arguments: [ @mealz_meal.link ]
+    arguments: [ '@mealz_meal.link' ]
     tags:
       - { name: twig.extension }
 
@@ -39,9 +49,9 @@ services:
   mealz_meal.twig_extension.variation:
     class: Mealz\MealBundle\Twig\Extension\Variation
     # Inject doctrine as first parameter
-    arguments:
-        doctrine : '@doctrine'
-        twig : '@twig'
+#    arguments:
+#        doctrine : '@doctrine'
+#        twig : '@twig'
     tags:
       - { name: twig.extension }
 
@@ -80,14 +90,14 @@ services:
 
   mealz_meal.event_listener.localisation:
     class: %mealz_meal.event_listener.localisation.class%
-    arguments: [@mealz_meal.http_header_utility]
+    arguments: ['@mealz_meal.http_header_utility']
     tags:
       # set locale in request
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 12 }
 
   mealz_meal.event_listener.localisation.entity:
     class: Mealz\MealBundle\EventListener\EntityLocalisationListener
-    arguments: [@mealz_meal.http_header_utility, @request_stack]
+    arguments: ['@mealz_meal.http_header_utility', '@request_stack']
     tags:
       # set locale in request
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
@@ -96,10 +106,9 @@ services:
 
   mealz_meal.repository.participant:
     class: Mealz\MealBundle\Entity\ParticipantRepository
-    factory_service: doctrine.orm.entity_manager
-    factory_method: getRepository
+    factory: ['@doctrine.orm.default_entity_manager', getRepository]
     arguments:
-        - 'MealzMealBundle:Participant'
+        - MealzMealBundle:Participant
 
   mealz_meal.factory.localized_repository:
     class: Mealz\MealBundle\Service\LocalizedRepositoryFactory
@@ -109,8 +118,7 @@ services:
 
   mealz_meal.repository.category:
     class: Mealz\MealBundle\Entity\CategoryRepository
-    factory_service: doctrine.orm.entity_manager
-    factory_method: getRepository
+    factory: ['@doctrine.orm.default_entity_manager', getRepository]
     arguments:
       - 'MealzMealBundle:Category'
 
@@ -121,12 +129,18 @@ services:
   mealz_meal.repository.dish:
     class: Mealz\MealBundle\Entity\DishRepository
     parent: mealz_meal.repository.abstract.localized
+    autowire: true
+    autoconfigure: false
+    public: false
     arguments:
       - 'MealzMealBundle:Dish'
 
   mealz_meal.repository.dish_variation:
     class: Mealz\MealBundle\Entity\DishVariationRepository
     parent: mealz_meal.repository.abstract.localized
+    autowire: true
+    autoconfigure: false
+    public: false
     arguments:
       - 'MealzMealBundle:DishVariation'
 
@@ -181,33 +195,42 @@ services:
   mealz_meal.controller.base:
     abstract: true
     calls:
-      - [setContainer, ["@service_container"]]
+      - [setContainer, ['@service_container']]
 
   mealz_meal.controller.baseList:
     abstract: true
     calls:
-      - [setContainer, ["@service_container"]]
+      - [setContainer, ['@service_container']]
 
   mealz_meal.controller.category:
     class: Mealz\MealBundle\Controller\CategoryController
     parent: mealz_meal.controller.baseList
+    autowire: true
+    autoconfigure: false
+    public: true
     calls:
-      - [setRepository, ["@mealz_meal.repository.category"]]
-      - [setEntityName, ["Category"]]
+      - [setRepository, ['@mealz_meal.repository.category']]
+      - [setEntityName, ['Category']]
 
   mealz_meal.controller.dish:
     class: Mealz\MealBundle\Controller\DishController
     parent: mealz_meal.controller.baseList
+    autowire: true
+    autoconfigure: false
+    public: true
     calls:
-      - [setRepository, ["@mealz_meal.repository.dish"]]
-      - [setEntityName, ["Dish"]]
+      - [setRepository, ['@mealz_meal.repository.dish']]
+      - [setEntityName, ['Dish']]
 
   mealz_meal.controller.dish_variation:
     class: Mealz\MealBundle\Controller\DishVariationController
     parent: mealz_meal.controller.base
+    autowire: true
+    autoconfigure: false
+    public: true
 #    calls:
-#      - [setRepository, ["@mealz_meal.repository.dish_variation"]]
-#      - [setEntityName, ["DishVariation"]]
+#      - [setRepository, ['@mealz_meal.repository.dish_variation']]
+#      - [setEntityName, ['DishVariation']]
 
   mealz_meal.monolog.processor.psr:
       class: Monolog\Processor\PsrLogMessageProcessor

@@ -24,7 +24,7 @@ class CashController extends BaseController
      */
     public function getPaymentFormForProfileAction($profile)
     {
-        if ($this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF') === false) {
+        if ($this->get('security.helper')->isGranted('ROLE_KITCHEN_STAFF') === false) {
             throw new AccessDeniedException();
         }
 
@@ -37,7 +37,7 @@ class CashController extends BaseController
         $profileBalance = $this->get('mealz_accounting.wallet')->getBalance($profile);
 
         $form = $this->createForm(
-            new CashPaymentAdminForm($entityManager),
+            \Mealz\AccountingBundle\Form\CashPaymentAdminForm::class,
             new Transaction(),
             array(
                 'action' => $action,
@@ -64,7 +64,7 @@ class CashController extends BaseController
      */
     public function getSettlementFormForProfileAction($profile)
     {
-        if ($this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF') === false) {
+        if ($this->get('security.helper')->isGranted('ROLE_KITCHEN_STAFF') === false) {
             throw new AccessDeniedException();
         }
 
@@ -89,14 +89,14 @@ class CashController extends BaseController
      */
     public function paymentFormHandlingAction(Request $request)
     {
-        if ($this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF') === false) {
+        if ($this->get('security.helper')->isGranted('ROLE_KITCHEN_STAFF') === false) {
             throw new AccessDeniedException();
         }
 
         /** @var EntityManager $entityManager */
         $entityManager = $this->getDoctrine()->getManager();
         $transaction = new Transaction();
-        $form = $this->createForm(new CashPaymentAdminForm($entityManager), $transaction);
+        $form = $this->createForm(\Mealz\AccountingBundle\Form\CashPaymentAdminForm::class, $transaction, ['entityManager' => $entityManager]);
 
         // handle form submission
         if ($request->isMethod('POST')) {

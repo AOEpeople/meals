@@ -35,14 +35,14 @@ class CashPaymentAdminForm extends AbstractType
                 'data_class' => null
                 )
             )
-            ->add('amount', 'number', array(
+            ->add('amount', \Symfony\Component\Form\Extension\Core\Type\NumberType::class, array(
                 'attr' => array(
                     'placeholder' => 'EUR'
                 ),
                 'label' => false,
                 'rounding_mode' => NumberToLocalizedStringTransformer::ROUND_DOWN
             ))
-            ->add('submit', 'submit', array(
+            ->add('submit', \Symfony\Component\Form\Extension\Core\Type\SubmitType::class, array(
                 'attr' => array(
                     'class' => 'button small'
                 ),
@@ -65,7 +65,7 @@ class CashPaymentAdminForm extends AbstractType
      *
      * @return string The name of this type
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'cash';
     }

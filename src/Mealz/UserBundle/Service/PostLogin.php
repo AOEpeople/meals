@@ -22,11 +22,11 @@ class PostLogin
     protected $entityManager;
 
     /**
-     * @var Logger
+     * @var \Psr\Log\LoggerInterface
      */
     protected $logger;
 
-    public function __construct(EntityManager $entityManager, Logger $logger)
+    public function __construct(EntityManager $entityManager, \Psr\Log\LoggerInterface $logger)
     {
         $this->entityManager = $entityManager;
         $this->logger = $logger;

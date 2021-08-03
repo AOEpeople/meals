@@ -56,7 +56,7 @@ abstract class BaseListController extends BaseController
      */
     public function listAction()
     {
-        if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
+        if (!$this->get('security.helper')->isGranted('ROLE_KITCHEN_STAFF')) {
             throw new AccessDeniedException();
         }
 
@@ -70,7 +70,7 @@ abstract class BaseListController extends BaseController
      */
     public function newAction(Request $request)
     {
-        if ($this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF') === false) {
+        if ($this->get('security.helper')->isGranted('ROLE_KITCHEN_STAFF') === false) {
             throw new AccessDeniedException();
         }
 
@@ -95,7 +95,7 @@ abstract class BaseListController extends BaseController
      */
     public function editAction(Request $request, $slug)
     {
-        if ($this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF') === false) {
+        if ($this->get('security.helper')->isGranted('ROLE_KITCHEN_STAFF') === false) {
             throw new AccessDeniedException();
         }
 
@@ -121,7 +121,7 @@ abstract class BaseListController extends BaseController
      */
     public function deleteAction($slug)
     {
-        if ($this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF') === false) {
+        if ($this->get('security.helper')->isGranted('ROLE_KITCHEN_STAFF') === false) {
             throw new AccessDeniedException();
         }
 
@@ -156,7 +156,7 @@ abstract class BaseListController extends BaseController
             return $this->ajaxSessionExpiredRedirect();
         }
 
-        if ($this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF') === false) {
+        if ($this->get('security.helper')->isGranted('ROLE_KITCHEN_STAFF') === false) {
             throw new AccessDeniedException();
         }
 
@@ -177,7 +177,7 @@ abstract class BaseListController extends BaseController
             return $this->ajaxSessionExpiredRedirect();
         }
 
-        if ($this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF') === false) {
+        if ($this->get('security.helper')->isGranted('ROLE_KITCHEN_STAFF') === false) {
             throw new AccessDeniedException();
         }
 

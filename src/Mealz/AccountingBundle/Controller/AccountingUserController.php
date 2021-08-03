@@ -85,9 +85,9 @@ class AccountingUserController extends BaseController
     private function generateTimePeriodForm()
     {
         return $this->createFormBuilder()
-            ->add('from', 'date', array('widget' => 'single_text'))
-            ->add('to', 'date', array('widget' => 'single_text'))
-            ->add('send', 'submit')
+            ->add('from', \Symfony\Component\Form\Extension\Core\Type\DateType::class, array('widget' => 'single_text'))
+            ->add('to', \Symfony\Component\Form\Extension\Core\Type\DateType::class, array('widget' => 'single_text'))
+            ->add('send', \Symfony\Component\Form\Extension\Core\Type\SubmitType::class)
             ->getForm();
     }
 

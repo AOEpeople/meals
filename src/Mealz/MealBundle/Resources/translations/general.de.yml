@@ -28,6 +28,7 @@ table:
   actions: Aktionen
   name: Name
   category: Kategorie
+  total: Gesamt
 
 content:
   participation:

@@ -1,4 +1,4 @@
-import Switchery from 'switchery';
+import Switchery from 'switchery.js';
 
 Mealz.prototype.applyCheckboxClasses = function ($checkbox) {
     var $checkboxWrapper = $checkbox.closest('.' + this.checkboxWrapperClass);

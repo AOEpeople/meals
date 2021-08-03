@@ -212,7 +212,7 @@ jobs:
 
   snyk:
     name: Scan vulnerabilities
-    if: ${{ github.ref == 'refs/heads/master' }}
+    if: ${{ github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v') }}
     needs: [ buildImages ]
     runs-on: ubuntu-latest
     steps:
@@ -238,7 +238,7 @@ jobs:
 
   publish:
     name: Publish
-    if: ${{ github.ref == 'refs/heads/master' }}
+    if: ${{ github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v') }}
     needs: [ buildImages, testUnitFunctional, snyk ]
     runs-on: ubuntu-latest
     env:
@@ -284,7 +284,6 @@ jobs:
           name: docker-images
   deploy:
     name: Deploy and notify
-    if: ${{ github.ref == 'refs/heads/master' }}
     needs: [ publish ]
     runs-on: ubuntu-latest
     steps:

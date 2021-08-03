@@ -260,7 +260,7 @@ jobs:
   snyk:
     name: Scan vulnerabilities
     if: ${{ github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v') }}
-    needs: [ publish ]
+    needs: [ publish, buildImages ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -285,7 +285,7 @@ jobs:
 
   deploy:
     name: Deploy and notify
-    needs: [ publish ]
+    needs: [ publish, buildImages ]
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to staging environment

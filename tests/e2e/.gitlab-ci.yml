@@ -1,5 +1,5 @@
 image:
-  name: cypress/included:8.1.0
+  name: cypress/included:8.2.0
   entrypoint: [""]
 
 stages:

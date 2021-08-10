@@ -191,3 +191,8 @@ Before running phpunit make sure the database schema is up-to-date:
 Notes:
 - With --filter CLASSNAME you can test single Test Classes
 - When you disable xdebug the performance will be better
+
+---
+
+# [internal] Deployment to AOEs K8S cluster
+You can find the documentation on how to deploy a new release to AOEs K8S cluster in [docs/deployment.md](docs/deployment.md).

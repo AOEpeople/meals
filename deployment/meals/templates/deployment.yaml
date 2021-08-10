@@ -33,11 +33,33 @@ spec:
             - name: ENV_URL
               value: https://meals-staging.aoe.com/
             - name: SYMFONY_ENV
-              value: staging
+              value: production
+            - name: SYMFONY_DEBUG
+              value: "0"
+            - name: DB_HOST
+              value: localhost
+            - name: DB_NAME
+              value: db
+            - name: DB_USER
+              value: db
+            - name: DB_PASSWORD
+              value: db
+            - name: HR_EMAIL
+              value: @todo
+            - name: KEYCLOAK_CLIENT_ID
+              value: aoe-meals
+            - name: KEYCLOAK_CLIENT_SECRET
+              value: @todo
+            - name: PAYPAL_ID
+              value: @todo
+            - name: PAYPAL_SECRET
+              value: @todo
             - name: SMTP_HOST
               value: antispam.aoe.lan
             - name: SMTP_PORT
               value: "25"
+            - name: SMTP_AUTH
+              value: "off"
             - name: SMTP_USER
               value: noreply-meals
             - name: SMTP_PASSWORD

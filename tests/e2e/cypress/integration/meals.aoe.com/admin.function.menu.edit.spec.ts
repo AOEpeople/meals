@@ -22,9 +22,9 @@ describe("admin.function.menu.edit", () => {
     cy.get("[href^='/participations/'][href$='/edit']")
       .should("be.visible")
       .and("contain.text", "Participations");
-    cy.get("[id='week_form_enabled']")
+    cy.get("[class='switchery switchery-default']")
       .should("be.visible")
-      .and("have.attr", "name", "week_form[enabled]");
+      .and("have.attr", "aria-checked", "true");
 
     cy.get("button[id='week_form_Cancel']")
       .should("be.visible")

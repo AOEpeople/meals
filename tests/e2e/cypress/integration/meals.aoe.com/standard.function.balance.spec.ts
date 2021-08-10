@@ -41,7 +41,7 @@ describe("standard.function.balance", () => {
         cy.get("@balance")
           .invoke("text")
           .then((balanceValue) => {
-            expect(balanceValue.replace(/\s/g, "")).eq(transactionValue);
+            expect(balanceValue.replace(/^\s+|\s+$/g, "")).eq(transactionValue);
           });
       });
 

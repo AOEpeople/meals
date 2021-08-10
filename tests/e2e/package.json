@@ -4,7 +4,6 @@
     "local": "http://meals.test:8033/"
   },
   "scripts": {
-    "postinstall": "husky install",
     "preopen": "yarn",
     "open": "cypress open",
     "open:staging": "cross-env-shell cypress open --env baseUrl=$npm_package_config_staging",
@@ -25,7 +24,6 @@
     "cypress": "^8.2.0",
     "cypress-multi-reporters": "^1.5.0",
     "cypress-plugin-snapshots": "^1.4.4",
-    "husky": "^7.0.1",
     "lint-staged": "^11.1.2",
     "mocha": "^9.0.3",
     "mochawesome": "^6.2.2",

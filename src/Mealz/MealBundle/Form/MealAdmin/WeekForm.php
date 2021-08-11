@@ -1,6 +1,6 @@
 <?php
 
-namespace Mealz\MealBundle\Form\MealAdmin;
+namespace App\Mealz\MealBundle\Form\MealAdmin;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -49,7 +49,7 @@ class WeekForm extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Mealz\MealBundle\Entity\Week',
+            'data_class' => 'App\Mealz\MealBundle\Entity\Week',
         ));
     }
 }

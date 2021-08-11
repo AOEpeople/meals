@@ -1,12 +1,12 @@
 <?php
 
-namespace Mealz\UserBundle\Tests\Service;
+namespace App\Mealz\UserBundle\Tests\Service;
 
-use Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
-use Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
-use Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
-use Mealz\UserBundle\Provider\OAuthUserProvider;
-use Mealz\UserBundle\Entity\Profile;
+use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
+use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
+use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
+use App\Mealz\UserBundle\Provider\OAuthUserProvider;
+use App\Mealz\UserBundle\Entity\Profile;
 
 class OAuthProviderTest extends AbstractControllerTestCase
 {

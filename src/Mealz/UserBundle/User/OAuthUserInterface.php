@@ -1,8 +1,7 @@
 <?php
 
-namespace Mealz\UserBundle\User;
+namespace App\Mealz\UserBundle\User;
 
-use Mealz\UserBundle\Entity\Profile;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
 

@@ -1,8 +1,8 @@
 <?php
-namespace Mealz\AccountingBundle\ParticipantList;
+namespace App\Mealz\AccountingBundle\ParticipantList;
 
-use Mealz\MealBundle\Entity\Participant;
-use Mealz\UserBundle\Entity\Profile;
+use App\Mealz\MealBundle\Entity\Participant;
+use App\Mealz\UserBundle\Entity\Profile;
 
 class ParticipantList
 {

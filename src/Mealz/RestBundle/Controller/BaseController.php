@@ -1,22 +1,16 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: marko.milojevic
- * Date: 26/07/16
- * Time: 18:06
- */
 
-namespace Mealz\RestBundle\Controller;
+namespace App\Mealz\RestBundle\Controller;
 
-use Doctrine\Common\Persistence\ObjectManager;
-use FOS\RestBundle\Controller\FOSRestController;
-use Mealz\MealBundle\Entity\MealRepository;
-use Mealz\MealBundle\Entity\ParticipantRepository;
-use Mealz\MealBundle\Entity\WeekRepository;
-use Mealz\MealBundle\Service\Doorman;
+use Doctrine\Persistence\ObjectManager;
+use FOS\RestBundle\Controller\AbstractFOSRestController;
+use App\Mealz\MealBundle\Entity\MealRepository;
+use App\Mealz\MealBundle\Entity\ParticipantRepository;
+use App\Mealz\MealBundle\Entity\WeekRepository;
+use App\Mealz\MealBundle\Service\Doorman;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class BaseController extends FOSRestController
+class BaseController extends AbstractFOSRestController
 {
     public function getSecurityContext()
     {

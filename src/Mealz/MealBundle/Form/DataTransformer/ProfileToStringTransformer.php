@@ -1,62 +1,49 @@
 <?php
 
-namespace Mealz\MealBundle\Form\DataTransformer;
+namespace App\Mealz\MealBundle\Form\DataTransformer;
 
-use Mealz\UserBundle\Entity\Profile;
+use App\Mealz\UserBundle\Entity\Profile;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
-use Doctrine\Common\Persistence\ObjectManager;
 
 class ProfileToStringTransformer implements DataTransformerInterface
 {
-    /**
-     * @var ObjectManager
-     */
-    private $objectManager;
+    private EntityManagerInterface $objectManager;
 
-    /**
-     * @param ObjectManager $objectManager
-     */
-    public function __construct(ObjectManager $objectManager)
+    public function __construct(EntityManagerInterface $objectManager)
     {
         $this->objectManager = $objectManager;
     }
 
-    /**
-     * @param Profile $profile
-     *
-     * @return string
-     */
-    public function transform($profile)
+    public function transform($value): string
     {
-        if (null === $profile || !$profile instanceof Profile) {
+        if (null === $value || !$value instanceof Profile) {
             return '';
         }
 
-        return $profile->getUsername();
+        return $value->getUsername();
     }
 
     /**
-     * @param string $username
+     * @param string $value Username
      *
      * @throws TransformationFailedException
-     *
-     * @return null | Profile
      */
-    public function reverseTransform($username)
+    public function reverseTransform($value): ?Profile
     {
-        if ($username === null) {
+        if ($value === null || !is_string($value)) {
             return null;
         }
 
-        $profile = $this->objectManager->getRepository('MealzUserBundle:Profile')->findOneBy(array("username" => $username));
+        $profile = $this->objectManager->getRepository('MealzUserBundle:Profile')->findOneBy(["username" => $value]);
 
         if (null === $profile) {
             throw new TransformationFailedException(
                 sprintf(
                     'A %s with username "%s" does not exist!',
                     'profile',
-                    $username
+                    $value
                 )
             );
         }

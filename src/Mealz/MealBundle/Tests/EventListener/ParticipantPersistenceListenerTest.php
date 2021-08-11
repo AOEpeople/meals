@@ -1,10 +1,10 @@
 <?php
 
-namespace Mealz\MealBundle\Tests\EventListener;
+namespace App\Mealz\MealBundle\Tests\EventListener;
 
-use Mealz\MealBundle\Entity\Participant;
-use Mealz\MealBundle\EventListener\ParticipantNotUniqueException;
-use Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
+use App\Mealz\MealBundle\Entity\Participant;
+use App\Mealz\MealBundle\EventListener\ParticipantNotUniqueException;
+use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 
 class ParticipantPersistenceListenerTest extends AbstractDatabaseTestCase
 {

@@ -1,0 +1,14 @@
+twig:
+    default_path: '%kernel.project_dir%/templates'
+    debug: '%kernel.debug%'
+    strict_variables: '%kernel.debug%'
+    exception_controller: null
+    form_themes:
+        - 'MealzTemplateBundle:Form:fields.html.twig'
+    globals:
+        # @TODO: rename lock_toggle_participation_at
+        lock_toggle_participation_at: '%mealz.lock_toggle_participation_at%'
+        wallet: "@mealz_accounting.wallet"
+        paypal_id: "%app.paypal.id%"
+        paypal_secret: "%app.paypal.id%"
+        countDishPeriod: "4 weeks ago"

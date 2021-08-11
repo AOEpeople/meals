@@ -3,9 +3,9 @@
  * OAuthUser to provide Keycloak Login
  */
 
-namespace Mealz\UserBundle\User;
+namespace App\Mealz\UserBundle\User;
 
-use Mealz\UserBundle\Entity\Profile;
+use App\Mealz\UserBundle\Entity\Profile;
 
 /**
  * OAuthUser.

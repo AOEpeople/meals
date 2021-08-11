@@ -1,6 +1,6 @@
 <?php
 
-namespace Mealz\RestBundle\DependencyInjection;
+namespace App\Mealz\RestBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;

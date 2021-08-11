@@ -1,8 +1,8 @@
 <?php
 
-namespace Mealz\MealBundle\Form\Type;
+namespace App\Mealz\MealBundle\Form\Type;
 
-use Mealz\MealBundle\Form\DataTransformer\DishStringToValuesTransformer;
+use App\Mealz\MealBundle\Form\DataTransformer\DishStringToValuesTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 

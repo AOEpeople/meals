@@ -1,15 +1,16 @@
 <?php
 
-namespace Mealz\AccountingBundle\Controller\Payment;
+namespace App\Mealz\AccountingBundle\Controller\Payment;
 
+use App\Mealz\AccountingBundle\Service\Wallet;
 use Doctrine\ORM\EntityManager;
-use Mealz\MealBundle\Controller\BaseController;
-use Mealz\AccountingBundle\Entity\Transaction;
-use Mealz\MealBundle\Entity\Participant;
-use Mealz\UserBundle\Entity\Profile;
+use App\Mealz\MealBundle\Controller\BaseController;
+use App\Mealz\AccountingBundle\Entity\Transaction;
+use App\Mealz\MealBundle\Entity\Participant;
+use App\Mealz\UserBundle\Entity\Profile;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Mealz\AccountingBundle\Form\CashPaymentAdminForm;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use App\Mealz\AccountingBundle\Form\CashPaymentAdminForm;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -20,38 +21,34 @@ class CashController extends BaseController
 {
     /**
      * @param Profile $profile
-     * @return JsonResponse
      */
-    public function getPaymentFormForProfileAction($profile)
+    public function getPaymentFormForProfile($profile, Wallet $wallet): JsonResponse
     {
-        if ($this->get('security.helper')->isGranted('ROLE_KITCHEN_STAFF') === false) {
-            throw new AccessDeniedException();
-        }
+        $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
         /** @var EntityManager $entityManager */
-        $entityManager = $this->getDoctrine()->getManager();
         $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
 
         $profile = $profileRepository->find($profile);
         $action = $this->generateUrl('mealz_accounting_payment_cash_form_submit');
-        $profileBalance = $this->get('mealz_accounting.wallet')->getBalance($profile);
+        $profileBalance = $wallet->getBalance($profile);
 
         $form = $this->createForm(
-            \Mealz\AccountingBundle\Form\CashPaymentAdminForm::class,
+            CashPaymentAdminForm::class,
             new Transaction(),
-            array(
+            [
                 'action' => $action,
                 'profile' => $profile,
-            )
+            ]
         );
 
         $template = "MealzAccountingBundle:Accounting/Payment/Cash:form_cash_amount.html.twig";
         $renderedForm = $this->render(
             $template,
-            array(
+            [
                 'form' => $form->createView(),
                 'profileBalance' => $profileBalance
-            )
+            ]
         );
 
         return new JsonResponse($renderedForm->getContent());
@@ -62,14 +59,11 @@ class CashController extends BaseController
      * @param Profile $profile
      * @return JsonResponse
      */
-    public function getSettlementFormForProfileAction($profile)
+    public function getSettlementFormForProfile($profile)
     {
-        if ($this->get('security.helper')->isGranted('ROLE_KITCHEN_STAFF') === false) {
-            throw new AccessDeniedException();
-        }
+        $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
         $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
-
         $profile = $profileRepository->find($profile);
 
         $template = "MealzAccountingBundle:Accounting/Payment/Cash:form_cash_settlement.html.twig";
@@ -85,18 +79,16 @@ class CashController extends BaseController
 
     /**
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
-    public function paymentFormHandlingAction(Request $request)
+    public function paymentFormHandling(Request $request): RedirectResponse
     {
-        if ($this->get('security.helper')->isGranted('ROLE_KITCHEN_STAFF') === false) {
-            throw new AccessDeniedException();
-        }
+        $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
         /** @var EntityManager $entityManager */
         $entityManager = $this->getDoctrine()->getManager();
         $transaction = new Transaction();
-        $form = $this->createForm(\Mealz\AccountingBundle\Form\CashPaymentAdminForm::class, $transaction, ['entityManager' => $entityManager]);
+        $form = $this->createForm(CashPaymentAdminForm::class, $transaction, ['entityManager' => $entityManager]);
 
         // handle form submission
         if ($request->isMethod('POST')) {
@@ -141,11 +133,9 @@ class CashController extends BaseController
      * @param Request $request request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function showTransactionHistoryAction()
+    public function showTransactionHistory()
     {
-        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
-            throw new AccessDeniedException();
-        }
+        $this->denyAccessUnlessGranted('ROLE_USER');
 
         $profile = $this->getUser()->getProfile();
 

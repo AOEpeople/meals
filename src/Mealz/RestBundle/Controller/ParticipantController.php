@@ -1,13 +1,12 @@
 <?php
 
-namespace Mealz\RestBundle\Controller;
+namespace App\Mealz\RestBundle\Controller;
 
 use DateTime;
 use Doctrine\ORM\EntityManager;
-use Mealz\MealBundle\EventListener\ParticipantNotUniqueException;
+use App\Mealz\MealBundle\EventListener\ParticipantNotUniqueException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpFoundation\Request;
-use Mealz\MealBundle\Entity\Participant;
+use App\Mealz\MealBundle\Entity\Participant;
 
 class ParticipantController extends BaseController
 {

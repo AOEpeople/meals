@@ -1,0 +1,57 @@
+security:
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    providers:
+        database:
+            entity: { class: Mealz\UserBundle\Entity\Login, property: username }
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        main:
+            provider: database
+            # allow anonymous access; required for login and home page
+            anonymous: lazy
+#            guard:
+#                authenticators:
+#                    - App\Mealz\UserBundle\Security\AppCustomAuthenticator
+            logout:
+                path: MealzUserBundle_logout
+                # where to redirect after logout
+                # target: app_any_route
+
+        oauth_token:
+            pattern:    ^/oauth/v2/token
+            security:   false
+
+        guest:
+            pattern:    ^/menu/guest
+            anonymous:  true
+            security:   false
+
+        rest:
+            pattern:    ^/rest
+            fos_oauth:  true
+            stateless:  true
+            anonymous:  false
+
+            # activate different ways to authenticate
+            # https://symfony.com/doc/current/security.html#firewalls-authentication
+
+            # https://symfony.com/doc/current/security/impersonating_user.html
+            # switch_user: true
+
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    access_control:
+        - { path: ^/connect, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/login, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/rest, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/oauth/v2/token, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/menu/guest, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/language-switch, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/css, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/js, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/images, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/.+$, roles: [ROLE_USER] }

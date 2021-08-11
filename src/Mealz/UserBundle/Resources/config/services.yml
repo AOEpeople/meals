@@ -1,14 +1,38 @@
-parameters:
-  mealz_user.post_login.class: Mealz\UserBundle\Service\PostLogin
-  mealz_provider.class: Mealz\UserBundle\Provider\OAuthUserProvider
-
 services:
-  mealz_user.post_login:
-    class: %mealz_user.post_login.class%
-    arguments: ['@doctrine.orm.default_entity_manager', '@logger']
-  mealz_user.provider.login:
-    class: Symfony\Bridge\Doctrine\Security\User\EntityUserProvider
-    arguments: ['@doctrine', "Mealz\\UserBundle\\Entity\\Login", "username"]
-  mealz.oauthuserprovider:
-    class: %mealz_provider.class%
-    arguments: ['@doctrine']
+    # default configuration for services in *this* file
+    _defaults:
+        # automatically injects dependencies in your services
+        autowire: true
+        # automatically registers your services as commands, event subscribers, etc.
+        autoconfigure: true
+        # this means you cannot fetch services directly from the container via $container->get()
+        # if you need to do this, you can override this setting on individual services
+        public: false
+
+    # makes classes in UserBundle available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\Mealz\UserBundle\:
+        resource: '../../'
+        exclude:
+            - '../../DependencyInjection/'
+            - '../../Entity/'
+            - '../../Tests/'
+
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    App\Mealz\UserBundle\Controller\:
+        resource: '../../Controller/'
+        tags: ['controller.service_arguments']
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
+
+#    mealz_user.post_login:
+#        class: 'App\Mealz\UserBundle\Service\PostLogin'
+#        arguments: ['@doctrine.orm.default_entity_manager', '@logger']
+    mealz_user.provider.login:
+        class: Symfony\Bridge\Doctrine\Security\User\EntityUserProvider
+        arguments: ['@doctrine', "App\\Mealz\UserBundle\\Entity\\Login", "username"]
+    mealz.oauthuserprovider:
+        class: App\Mealz\UserBundle\Provider\OAuthUserProvider
+        arguments: ['@doctrine']

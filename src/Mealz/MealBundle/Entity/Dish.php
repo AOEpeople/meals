@@ -1,8 +1,8 @@
 <?php
 
-namespace Mealz\MealBundle\Entity;
+namespace App\Mealz\MealBundle\Entity;
 
-use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -35,7 +35,7 @@ class Dish
      * @TODO: CHECK IF THIS WORKS. Add 'title_de' to the update field list 'fields={"title_en"}', check with Jonathan
      * @Gedmo\Slug(handlers={
      *   @Gedmo\SlugHandler(class="Gedmo\Sluggable\Handler\InversedRelativeSlugHandler", options={
-     *       @Gedmo\SlugHandlerOption(name="relationClass", value="Mealz\MealBundle\Entity\Dish"),
+     *       @Gedmo\SlugHandlerOption(name="relationClass", value="App\Mealz\MealBundle\Entity\Dish"),
      *       @Gedmo\SlugHandlerOption(name="mappedBy", value="parent"),
      *       @Gedmo\SlugHandlerOption(name="inverseSlugField", value="slug")
      *      })

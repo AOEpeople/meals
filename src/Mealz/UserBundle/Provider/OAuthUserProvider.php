@@ -7,15 +7,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Mealz\UserBundle\Provider;
+namespace App\Mealz\UserBundle\Provider;
 
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthUserProvider as HWIBundleOAuthUserProvider;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Mealz\UserBundle\User\OAuthUser;
-use Mealz\UserBundle\Entity\Profile;
+use App\Mealz\UserBundle\User\OAuthUser;
+use App\Mealz\UserBundle\Entity\Profile;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -137,7 +136,7 @@ class OAuthUserProvider extends HWIBundleOAuthUserProvider
      */
     public function supportsClass($class)
     {
-        return $class === 'Mealz\\UserBundle\\Entity\\Profile';
+        return $class === 'App\\Mealz\UserBundle\\Entity\\Profile';
     }
 
     /**

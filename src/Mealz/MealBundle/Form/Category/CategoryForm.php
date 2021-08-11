@@ -1,6 +1,6 @@
 <?php
 
-namespace Mealz\MealBundle\Form\Category;
+namespace App\Mealz\MealBundle\Form\Category;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -65,7 +65,7 @@ class CategoryForm extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Mealz\MealBundle\Entity\Category',
+                'data_class' => 'App\Mealz\MealBundle\Entity\Category',
                 'intention' => 'category_type',
             )
         );

@@ -1,14 +1,14 @@
 <?php
 
 
-namespace Mealz\UserBundle\Controller;
+namespace App\Mealz\UserBundle\Controller;
 
 use HWI\Bundle\OAuthBundle\Security\Core\Authentication\Token\OAuthToken;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
 
-class SecurityController extends Controller
+class SecurityController extends \Symfony\Bundle\FrameworkBundle\Controller\AbstractController
 {
     public function loginAction(Request $request)
     {

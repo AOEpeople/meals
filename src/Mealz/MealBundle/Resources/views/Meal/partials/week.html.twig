@@ -1,3 +1,5 @@
+{% import 'MealzTemplateBundle::Components/headline.html.twig' as MealzHeadline %}
+
 <div class="week">
 	{% set headline %}
 		{% if 'now' | date('U') < week.startTime | date('U') %}

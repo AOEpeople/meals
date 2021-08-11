@@ -1,0 +1,15 @@
+#index:
+#    path: /
+#    controller: App\Controller\DefaultController::index
+
+meal:
+  resource: "@MealzMealBundle/Resources/config/routing.yml"
+  prefix:   /
+
+user:
+  resource: "@MealzUserBundle/Resources/config/routing.yml"
+  prefix:   /
+
+accounting:
+  resource: "@MealzAccountingBundle/Resources/config/routing.yml"
+  prefix:   /

@@ -1,11 +1,10 @@
 <?php
 
+namespace App\Mealz\MealBundle\Twig\Extension;
 
-namespace Mealz\MealBundle\Twig\Extension;
-
-use Mealz\MealBundle\Entity\Meal;
-use Mealz\MealBundle\Entity\Participant;
-use Mealz\MealBundle\Service\Doorman as DoormanService;
+use App\Mealz\MealBundle\Entity\Meal;
+use App\Mealz\MealBundle\Entity\Participant;
+use App\Mealz\MealBundle\Service\Doorman as DoormanService;
 use Twig\TwigFunction;
 use Twig_Extension;
 

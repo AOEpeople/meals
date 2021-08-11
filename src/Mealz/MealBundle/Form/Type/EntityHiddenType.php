@@ -1,11 +1,10 @@
 <?php
-namespace Mealz\MealBundle\Form\Type;
+namespace App\Mealz\MealBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Mealz\MealBundle\Form\DataTransformer\EntityToIdTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
 /**
  * Class EntityHiddenType
@@ -49,7 +48,7 @@ class EntityHiddenType extends AbstractType
             ->setDefaults(
                 array(
                     'invalid_message' => 'The entity does not exist.',
-                    'transformer_class' => 'Mealz\MealBundle\Form\DataTransformer\EntityToIdTransformer',
+                    'transformer_class' => 'App\Mealz\MealBundle\Form\DataTransformer\EntityToIdTransformer',
                 )
             );
     }

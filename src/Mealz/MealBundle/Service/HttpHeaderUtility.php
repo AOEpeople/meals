@@ -1,6 +1,6 @@
 <?php
 
-namespace Mealz\MealBundle\Service;
+namespace App\Mealz\MealBundle\Service;
 
 class HttpHeaderUtility
 {

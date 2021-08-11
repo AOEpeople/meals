@@ -1,9 +1,9 @@
 <?php
 
 
-namespace Mealz\MealBundle\EventListener;
+namespace App\Mealz\MealBundle\EventListener;
 
-use Mealz\MealBundle\Service\HttpHeaderUtility;
+use App\Mealz\MealBundle\Service\HttpHeaderUtility;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
@@ -25,7 +25,7 @@ class LocalisationListener
         $this->httpHeaderUtility = $httpHeaderUtility;
     }
 
-    public function onKernelRequest(GetResponseEvent $getResponseEvent)
+    public function onKernelRequest(\Symfony\Component\HttpKernel\Event\RequestEvent $getResponseEvent)
     {
         $request = $getResponseEvent->getRequest();
         $cookies = $request->cookies;
@@ -38,7 +38,7 @@ class LocalisationListener
         $request->setLocale($this->locale);
     }
 
-    public function onKernelResponse(FilterResponseEvent $filterResponseEvent)
+    public function onKernelResponse(\Symfony\Component\HttpKernel\Event\ResponseEvent $filterResponseEvent)
     {
         $response = $filterResponseEvent->getResponse();
         $response->headers->add('Vary: Accept-Language');

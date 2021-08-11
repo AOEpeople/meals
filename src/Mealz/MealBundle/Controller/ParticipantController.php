@@ -1,12 +1,13 @@
 <?php
 
-namespace Mealz\MealBundle\Controller;
+namespace App\Mealz\MealBundle\Controller;
 
-use Mealz\MealBundle\Entity\DayRepository;
-use Mealz\MealBundle\Entity\Participant;
-use Mealz\MealBundle\Entity\Week;
-use Mealz\MealBundle\Entity\WeekRepository;
-use Mealz\UserBundle\Entity\Profile;
+use App\Mealz\MealBundle\Entity\DayRepository;
+use App\Mealz\MealBundle\Entity\Participant;
+use App\Mealz\MealBundle\Entity\Week;
+use App\Mealz\MealBundle\Entity\WeekRepository;
+use App\Mealz\MealBundle\Service\Notification\NotifierInterface;
+use App\Mealz\UserBundle\Entity\Profile;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -20,7 +21,6 @@ class ParticipantController extends BaseController
 {
     /**
      * delete participation
-     * @param Participant $participant
      * @return JsonResponse
      */
     public function deleteAction(Participant $participant)
@@ -45,25 +45,25 @@ class ParticipantController extends BaseController
 
         if (($this->getDoorman()->isKitchenStaff()) === true) {
             $logger = $this->get('monolog.logger.balance');
-            $logger->addInfo(
+            $logger->info(
                 'admin removed {profile} from {meal} (Meal: {mealId})',
-                array(
+                [
                     'profile' => $participant->getProfile(),
                     'meal' => $meal,
                     'mealId' => $meal->getId(),
-                )
+                ]
             );
         }
 
         $ajaxResponse = new JsonResponse();
         $ajaxResponse->setData(array(
             'participantsCount' => $meal->getParticipants()->count(),
-            'url' => $this->generateUrl('MealzMealBundle_Meal_join', array(
+            'url' => $this->generateUrl('MealzMealBundle_Meal_join', [
                 'date' => $date,
                 'dish' => $dish,
                 'profile' => $profile,
-            )),
-            'actionText' => $this->get('translator')->trans('deleted', array(), 'action'),
+            ]),
+            'actionText' => $this->get('translator')->trans('deleted', [], 'action'),
         ));
 
         return $ajaxResponse;
@@ -75,7 +75,7 @@ class ParticipantController extends BaseController
      * @param Participant $participant
      * @return JsonResponse
      */
-    public function swapAction(Participant $participant)
+    public function swapAction(Participant $participant, NotifierInterface $notifier)
     {
         $dateTime = $participant->getMeal()->getDateTime();
         $counter = count($this->getParticipantRepository()->getPendingParticipants($dateTime));
@@ -136,8 +136,7 @@ class ParticipantController extends BaseController
                 '%dish%' => $dishTitle)
         );
 
-        $mattermostService = $this->container->get('mattermost.service');
-        $mattermostService->sendMessage($chefbotMessage);
+        $notifier->sendAlert($chefbotMessage);
 
         // Return JsonResponse
         $ajaxResponse = new JsonResponse();

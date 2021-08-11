@@ -1,8 +1,8 @@
 <?php
 
-namespace Mealz\UserBundle\User;
+namespace App\Mealz\UserBundle\User;
 
-use Mealz\UserBundle\Entity\Profile;
+use App\Mealz\UserBundle\Entity\Profile;
 
 class LdapUser implements LdapUserInterface
 {

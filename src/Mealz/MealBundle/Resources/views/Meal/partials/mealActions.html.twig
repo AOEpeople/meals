@@ -1,3 +1,5 @@
+{% import 'MealzTemplateBundle::Components/checkbox.html.twig' as MealzCheckbox %}
+
 {% set available = false %}
 
 {% if day.enabled and (day.lockParticipationDateTime | date('U') > 'now' | date('U')) and meal.isParticipationLimitReached == false %}

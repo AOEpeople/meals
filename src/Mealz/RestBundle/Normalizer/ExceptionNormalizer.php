@@ -1,6 +1,6 @@
 <?php
 
-namespace Mealz\RestBundle\Normalizer;
+namespace App\Mealz\RestBundle\Normalizer;
 
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 

@@ -1,17 +1,17 @@
 <?php
 
-namespace Mealz\AccountingBundle\Controller;
+namespace App\Mealz\AccountingBundle\Controller;
 
-use Mealz\AccountingBundle\Entity\Transaction;
-use Mealz\MealBundle\Controller\BaseController;
-use Mealz\UserBundle\Entity\Profile;
+use App\Mealz\AccountingBundle\Entity\Transaction;
+use App\Mealz\MealBundle\Controller\BaseController;
+use App\Mealz\UserBundle\Entity\Profile;
 
 class CostSheetController extends BaseController
 {
     /**
      * @TODO: use own data model for user costs
      */
-    public function listAction()
+    public function list()
     {
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
@@ -78,7 +78,7 @@ class CostSheetController extends BaseController
      * @param String $username
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function sendSettlementRequestAction($username)
+    public function sendSettlementRequest($username)
     {
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
@@ -119,7 +119,7 @@ class CostSheetController extends BaseController
      * @param String $hash
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function renderConfirmButtonAction($hash)
+    public function renderConfirmButton($hash)
     {
         $profile = null;
         $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
@@ -141,7 +141,7 @@ class CostSheetController extends BaseController
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Exception
      */
-    public function confirmSettlementAction($hash)
+    public function confirmSettlement($hash)
     {
         $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
         $queryResult = $profileRepository->findBy(array('settlementHash' => urldecode($hash)));

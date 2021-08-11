@@ -1,9 +1,9 @@
 <?php
 
-namespace Mealz\UserBundle\Entity;
+namespace App\Mealz\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Mealz\UserBundle\User\UserInterface as MealzUserInterface;
+use App\Mealz\UserBundle\User\UserInterface as MealzUserInterface;
 use Serializable;
 use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
 
@@ -34,7 +34,7 @@ class Login implements SymfonyUserInterface, Serializable, MealzUserInterface
     protected $salt;
 
     /**
-     * @ORM\Column(type="string", length=64)
+     * @ORM\Column(type="string", length=128)
      * @var string
      */
     protected $password;

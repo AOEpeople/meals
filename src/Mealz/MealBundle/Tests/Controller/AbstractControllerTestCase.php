@@ -6,18 +6,18 @@
  * Time: 15:45
  */
 
-namespace Mealz\MealBundle\Tests\Controller;
+namespace App\Mealz\MealBundle\Tests\Controller;
 
 use DateTime;
 use Doctrine\Common\Collections\Criteria;
-use Mealz\AccountingBundle\Entity\Transaction;
-use Mealz\MealBundle\Entity\Meal;
-use Mealz\MealBundle\Entity\MealRepository;
-use Mealz\MealBundle\Entity\Participant;
-use Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
-use Mealz\UserBundle\Entity\Profile;
-use Mealz\UserBundle\Entity\Role;
-use Mealz\UserBundle\Entity\RoleRepository;
+use App\Mealz\AccountingBundle\Entity\Transaction;
+use App\Mealz\MealBundle\Entity\Meal;
+use App\Mealz\MealBundle\Entity\MealRepository;
+use App\Mealz\MealBundle\Entity\Participant;
+use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
+use App\Mealz\UserBundle\Entity\Profile;
+use App\Mealz\UserBundle\Entity\Role;
+use App\Mealz\UserBundle\Entity\RoleRepository;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -119,7 +119,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
                 ]
             );
         $this->client->followRedirects();
-        $this->client->submit($loginForm);
+        $this->client->submit($loginForm, []);
     }
 
     /**

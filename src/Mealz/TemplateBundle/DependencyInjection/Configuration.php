@@ -1,6 +1,6 @@
 <?php
 
-namespace Mealz\TemplateBundle\DependencyInjection;
+namespace App\Mealz\TemplateBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -19,8 +19,8 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('mealz_template');
+        $treeBuilder = new TreeBuilder('mealz_template');
+        $rootNode = $treeBuilder->getRootNode();
 
         // Here you should define the parameters that are allowed to
         // configure your bundle. See the documentation linked above for

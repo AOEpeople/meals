@@ -1,6 +1,6 @@
 <?php
 
-namespace Mealz\MealBundle\Form\Guest;
+namespace App\Mealz\MealBundle\Form\Guest;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -33,7 +33,7 @@ class InvitationForm extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Mealz\MealBundle\Entity\InvitationWrapper',
+            'data_class' => 'App\Mealz\MealBundle\Entity\InvitationWrapper',
             'csrf_protection' => false
         ));
     }

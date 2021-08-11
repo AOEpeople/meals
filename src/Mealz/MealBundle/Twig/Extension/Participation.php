@@ -1,28 +1,27 @@
 <?php
 
-namespace Mealz\MealBundle\Twig\Extension;
+namespace App\Mealz\MealBundle\Twig\Extension;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\PersistentCollection;
-use Mealz\MealBundle\Entity\Meal;
-use Mealz\MealBundle\Entity\Participant;
-use Symfony\Bundle\TwigBundle\DependencyInjection\TwigExtension;
+use App\Mealz\MealBundle\Entity\Participant;
+use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
-use Twig_Extension;
 
-class Participation extends Twig_Extension
+class Participation extends AbstractExtension
 {
-    public function getFunctions()
+    public function getFunctions(): array
     {
-        return array(
+        return [
             new TwigFunction('isParticipant', [$this, 'isParticipant']),
-        );
+        ];
     }
 
     /**
      * @param Participant[] $userParticipations
      * @param PersistentCollection $meal
      */
-    public function isParticipant($userParticipations, $mealParticipations)
+    public function isParticipant(array $userParticipations, Collection $mealParticipations)
     {
         foreach ($userParticipations as $participation) {
             if ($mealParticipations->contains($participation)) {
@@ -35,10 +34,8 @@ class Participation extends Twig_Extension
 
     /**
      * Returns the name of the extension.
-     *
-     * @return string The extension name
      */
-    public function getName()
+    public function getName(): string
     {
         return 'participation';
     }

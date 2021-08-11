@@ -1,6 +1,6 @@
 <?php
 
-namespace Mealz\MealBundle\Controller;
+namespace App\Mealz\MealBundle\Controller;
 
 class CategoryController extends BaseListController
 {

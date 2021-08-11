@@ -1,8 +1,7 @@
 <?php
 
-namespace Mealz\MealBundle\Entity;
+namespace App\Mealz\MealBundle\Entity;
 
-use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 
 /**
@@ -91,7 +90,7 @@ class DishRepository extends LocalizedRepository
     {
         $query = $this->_em->createQueryBuilder();
         $query->select('COUNT(m.dish)');
-        $query->from('Mealz\MealBundle\Entity\Meal', 'm');
+        $query->from('App\Mealz\MealBundle\Entity\Meal', 'm');
         $query->where('m.dish = :dish');
         $query->setParameter('dish', $dish);
 
@@ -108,7 +107,7 @@ class DishRepository extends LocalizedRepository
         // prepare sql statement counting all meals taken
         $query = $this->getEntityManager()->createQueryBuilder();
         $query->select('COUNT(m.dish)');
-        $query->from('Mealz\MealBundle\Entity\Meal', 'm');
+        $query->from('App\Mealz\MealBundle\Entity\Meal', 'm');
         $query->where('m.dish = :dish');
         $query->andWhere($query->expr()->between('m.dateTime', ':date_from', ':date_to'));
         $query->setParameter('dish', $dish);

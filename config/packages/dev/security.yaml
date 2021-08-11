@@ -1,0 +1,23 @@
+security:
+    encoders:
+        App\Mealz\UserBundle\Entity\Login: auto
+
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    providers:
+        database:
+            entity: { class: App\Mealz\UserBundle\Entity\Login, property: username }
+
+    firewalls:
+        main:
+            provider: database
+            form_login:
+                login_path: MealzUserBundle_login
+                check_path: MealzUserBundle_login
+#            anonymous: ~
+#            guard:
+#                authenticators:
+#                    - App\Mealz\UserBundle\Security\AppCustomAuthenticator
+#            logout:
+#                path: app_logout
+                # where to redirect after logout
+                # target: app_any_route

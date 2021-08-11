@@ -1,9 +1,9 @@
 <?php
 
-namespace Mealz\MealBundle\Validator\Constraints;
+namespace App\Mealz\MealBundle\Validator\Constraints;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Mealz\MealBundle\Entity\Dish;
+use App\Mealz\MealBundle\Entity\Dish;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Doctrine\ORM\UnitOfWork;

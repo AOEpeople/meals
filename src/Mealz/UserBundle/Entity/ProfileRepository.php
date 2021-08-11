@@ -1,6 +1,6 @@
 <?php
 
-namespace Mealz\UserBundle\Entity;
+namespace App\Mealz\UserBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 

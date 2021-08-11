@@ -1,4 +1,6 @@
 parameters:
+  container.autowiring.strict_mode: true
+
   database_host: db
   database_name: db
   database_user: db

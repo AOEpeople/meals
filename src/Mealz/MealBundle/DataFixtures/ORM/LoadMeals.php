@@ -1,73 +1,73 @@
 <?php
 
-namespace Mealz\MealBundle\DataFixtures\ORM;
+declare(strict_types=1);
 
+namespace App\Mealz\MealBundle\DataFixtures\ORM;
+
+use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
-use Doctrine\Common\Persistence\ObjectManager;
-use Mealz\MealBundle\Entity\Day;
-use Mealz\MealBundle\Entity\Dish;
-use Mealz\MealBundle\Entity\DishVariation;
-use Mealz\MealBundle\Entity\Meal;
+use Doctrine\Persistence\ObjectManager;
+use App\Mealz\MealBundle\Entity\Day;
+use App\Mealz\MealBundle\Entity\Dish;
+use App\Mealz\MealBundle\Entity\DishVariation;
+use App\Mealz\MealBundle\Entity\Meal;
+use Exception;
 
 /**
  * Fixtures load the Meals
- * Class LoadMeals
- * @package Mealz\MealBundle\DataFixtures\ORM
  */
-class LoadMeals extends AbstractFixture implements OrderedFixtureInterface
+class LoadMeals extends Fixture implements OrderedFixtureInterface
 {
     /**
      * Constant to declare load order of fixture
      */
-    const ORDER_NUMBER = 7;
+    private const ORDER_NUMBER = 7;
 
     /**
      * index of first weeks monday
      */
-    const FIRST_MONDAY = 0;
+    private const FIRST_MONDAY = 0;
 
     /**
      * index of second weeks wednesday
      */
-    const SECOND_WEDNESDAY = 7;
+    private const SECOND_WEDNESDAY = 7;
+
+    protected ObjectManager $objectManager;
 
     /**
-     * @var ObjectManager
+     * @var Dish[]
      */
-    protected $objectManager;
-
-    /**
-     * @var array
-     */
-    protected $dishes = array();
+    protected array $dishes = [];
 
     /**
      * @var Day[]
      */
-    protected $days = array();
+    protected array $days = [];
+
+    protected int $counter = 0;
 
     /**
-     * @var int
+     * @inheritDoc
+     * @throws Exception
      */
-    protected $counter = 0;
-
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $this->objectManager = $manager;
         $this->loadDishes();
         $this->loadDays();
+
         foreach ($this->days as $key => $day) {
             $dish = null;
             // that should be next week Wednesday which should be available for selection
-            if ($key == self::SECOND_WEDNESDAY || $key == self::FIRST_MONDAY) {
+            if ($key === self::SECOND_WEDNESDAY || $key === self::FIRST_MONDAY) {
                 // add once 3 Options per Day, 1 Dish without variations and 1 with 2 variations
                 $this->loadNewMeal($day, $this->dishes[0]); // first Dish was loaded without variations
                 $dishVariations = $this->getRandomDishWithVariations();
-                foreach ($dishVariations as $key => $dishVariation) {
-                    if ($key < 2) { // in case there is more then 2 variations
+                foreach ($dishVariations as $k => $dishVariation) {
+                    if ($k < 2) { // in case there is more then 2 variations
                         $this->loadNewMeal($day, $dishVariation);
                     }
                 }
@@ -85,16 +85,16 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface
 
     /**
      * load the new Meals
-     * @param Day $day
-     * @param Dish $dish
+     *
+     * @throws Exception
      */
-    public function loadNewMeal($day, $dish)
+    public function loadNewMeal(Day $day, Dish $dish): void
     {
         $meal = new Meal();
         $meal->setDay($day);
         // make transactions more realistic (random second,NO identical Date)
         $date = clone $day->getDateTime();
-        $date->modify('+' . mt_rand(1, 1400) . ' second');
+        $date->modify('+' . random_int(1, 1400) . ' second');
         $meal->setDateTime($date);
         $meal->setDish($dish);
         $meal->setPrice($dish->getPrice());
@@ -104,20 +104,14 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface
 
     /**
      * get the Fixtures load Order
-     * @return mixed
      */
-    public function getOrder()
+    public function getOrder(): int
     {
-        /**
-         * load as seventh
-         */
+        // load as seventh
         return self::ORDER_NUMBER;
     }
 
-    /**
-     * load the Dishes
-     */
-    protected function loadDishes()
+    protected function loadDishes(): void
     {
         foreach ($this->referenceRepository->getReferences() as $referenceName => $reference) {
             if (($reference instanceof Dish) && !($reference instanceof DishVariation)) {
@@ -128,10 +122,7 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface
         }
     }
 
-    /**
-     * load the Days
-     */
-    protected function loadDays()
+    protected function loadDays(): void
     {
         foreach ($this->referenceRepository->getReferences() as $referenceName => $reference) {
             if ($reference instanceof Day) {
@@ -144,15 +135,12 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface
 
     /**
      * Get random Dishes with Variations
-     *
-     * @return Collection
      */
-    protected function getRandomDishWithVariations()
+    protected function getRandomDishWithVariations():Collection
     {
         $dishVariations = new ArrayCollection();
         $dishesWithVariations = [];
 
-        /** @var Dish $dish */
         foreach ($this->dishes as $dish) {
             if ($dish->hasVariations()) {
                 $dishesWithVariations[] = $dish;
@@ -160,7 +148,6 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface
         }
 
         if (count($dishesWithVariations)) {
-            /** @var Dish $randomDishWithVariation */
             $randomDishKey = array_rand($dishesWithVariations);
             $dishVariations = $dishesWithVariations[$randomDishKey]->getVariations();
         }
@@ -170,12 +157,8 @@ class LoadMeals extends AbstractFixture implements OrderedFixtureInterface
 
     /**
      * Get random Dishes without Variations
-     *
-     * @param Dish $previousDish previous dish
-     *
-     * @return Dish
      */
-    protected function getRandomDish($previousDish)
+    protected function getRandomDish(?Dish $previousDish): Dish
     {
         do {
             $key = array_rand($this->dishes);

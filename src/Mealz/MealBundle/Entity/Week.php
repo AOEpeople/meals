@@ -1,11 +1,10 @@
 <?php
 
-namespace Mealz\MealBundle\Entity;
+namespace App\Mealz\MealBundle\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Week

@@ -1,17 +1,17 @@
 <?php
 
-namespace Mealz\MealBundle\Tests\Controller;
+namespace App\Mealz\MealBundle\Tests\Controller;
 
 use Doctrine\ORM\EntityManager;
-use Mealz\MealBundle\Entity\Dish;
-use Mealz\MealBundle\Entity\DishRepository;
-use Mealz\MealBundle\Entity\DishVariation;
+use App\Mealz\MealBundle\Entity\Dish;
+use App\Mealz\MealBundle\Entity\DishRepository;
+use App\Mealz\MealBundle\Entity\DishVariation;
 use Symfony\Component\DomCrawler\Crawler;
 
-use Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
-use Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
-use Mealz\MealBundle\DataFixtures\ORM\LoadDishVariations;
-use Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishVariations;
+use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use Symfony\Component\DomCrawler\Link;
 
 /**
@@ -78,7 +78,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         $this->client->submit($crawler->filterXPath('//form[@action="' . $url . '"]')->form([
             'dishvariation[title_de]' => 'new dish variation [de]',
             'dishvariation[title_en]' => 'new dish variation [en]'
-        ]));
+        ]), []);
 
         $this->assertTrue($this->client->getResponse()->isRedirect('/dish'));
 
@@ -133,7 +133,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         $this->client->submit($crawler->filterXPath('//form[@action="' . $url . '"]')->form([
             'dishvariation[title_de]' => 'dish variation [de]',
             'dishvariation[title_en]' => 'dish variation [en]'
-        ]));
+        ]), []);
 
         $this->assertTrue($this->client->getResponse()->isRedirect('/dish'));
 

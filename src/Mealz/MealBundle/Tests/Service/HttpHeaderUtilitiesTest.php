@@ -1,8 +1,8 @@
 <?php
 
-namespace Mealz\MealBundle\Tests\Service;
+namespace App\Mealz\MealBundle\Tests\Service;
 
-use Mealz\MealBundle\Service\HttpHeaderUtility;
+use App\Mealz\MealBundle\Service\HttpHeaderUtility;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Yaml;
 

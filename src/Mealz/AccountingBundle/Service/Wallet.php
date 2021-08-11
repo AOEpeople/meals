@@ -1,10 +1,10 @@
 <?php
 
-namespace Mealz\AccountingBundle\Service;
+namespace App\Mealz\AccountingBundle\Service;
 
-use Mealz\AccountingBundle\Entity\TransactionRepository;
-use Mealz\MealBundle\Entity\ParticipantRepository;
-use Mealz\UserBundle\Entity\Profile;
+use App\Mealz\AccountingBundle\Entity\TransactionRepository;
+use App\Mealz\MealBundle\Entity\ParticipantRepository;
+use App\Mealz\UserBundle\Entity\Profile;
 
 class Wallet
 {

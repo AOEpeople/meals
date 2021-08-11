@@ -1,14 +1,14 @@
 <?php
 
-namespace Mealz\TemplateBundle\Controller;
+namespace App\Mealz\TemplateBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class ReviewController extends Controller
+class ReviewController extends AbstractController
 {
     public function indexAction()
     {

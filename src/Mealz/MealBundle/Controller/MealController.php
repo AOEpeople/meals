@@ -1,23 +1,24 @@
 <?php
 
-namespace Mealz\MealBundle\Controller;
+namespace App\Mealz\MealBundle\Controller;
 
+use App\Mealz\MealBundle\Service\Notification\NotifierInterface;
 use DateTime;
 use Doctrine\ORM\EntityManager;
 use Exception;
-use Mealz\MealBundle\Entity\Day;
-use Mealz\MealBundle\Entity\GuestInvitationRepository;
-use Mealz\MealBundle\Entity\Meal;
-use Mealz\MealBundle\Entity\Participant;
-use Mealz\MealBundle\Entity\Week;
-use Mealz\MealBundle\Entity\WeekRepository;
-use Mealz\MealBundle\EventListener\ParticipantNotUniqueException;
-use Mealz\MealBundle\EventListener\ProfileExistsException;
-use Mealz\MealBundle\EventListener\ToggleParticipationNotAllowedException;
-use Mealz\MealBundle\Form\Guest\InvitationForm;
-use Mealz\MealBundle\Entity\InvitationWrapper;
-use Mealz\UserBundle\Entity\Profile;
-use Mealz\UserBundle\Entity\Role;
+use App\Mealz\MealBundle\Entity\Day;
+use App\Mealz\MealBundle\Entity\GuestInvitationRepository;
+use App\Mealz\MealBundle\Entity\Meal;
+use App\Mealz\MealBundle\Entity\Participant;
+use App\Mealz\MealBundle\Entity\Week;
+use App\Mealz\MealBundle\Entity\WeekRepository;
+use App\Mealz\MealBundle\EventListener\ParticipantNotUniqueException;
+use App\Mealz\MealBundle\EventListener\ProfileExistsException;
+use App\Mealz\MealBundle\EventListener\ToggleParticipationNotAllowedException;
+use App\Mealz\MealBundle\Form\Guest\InvitationForm;
+use App\Mealz\MealBundle\Entity\InvitationWrapper;
+use App\Mealz\UserBundle\Entity\Profile;
+use App\Mealz\UserBundle\Entity\Role;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -35,6 +36,13 @@ use Symfony\Component\Translation\Translator;
  */
 class MealController extends BaseController
 {
+    private NotifierInterface $notifier;
+
+    public function __construct(NotifierInterface $notifier)
+    {
+        $this->notifier = $notifier;
+    }
+
     /**
      * the index Action
      * @return Response
@@ -545,7 +553,6 @@ class MealController extends BaseController
      */
     private function sendMattermostMessage($message)
     {
-        $mattermostService = $this->container->get('mattermost.service');
-        $mattermostService->sendMessage($message);
+        $this->notifier->sendAlert($message);
     }
 }

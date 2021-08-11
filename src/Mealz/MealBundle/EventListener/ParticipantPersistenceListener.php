@@ -1,13 +1,12 @@
 <?php
 
-
-namespace Mealz\MealBundle\EventListener;
+namespace App\Mealz\MealBundle\EventListener;
 
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Query;
-use Mealz\MealBundle\Entity\Participant;
+use App\Mealz\MealBundle\Entity\Participant;
 
 /**
  * listener that ensures that there won't be duplicate entries for the same participant in the database

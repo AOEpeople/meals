@@ -1,8 +1,11 @@
 <?php
 
-namespace Mealz\MealBundle\Entity;
+namespace App\Mealz\MealBundle\Entity;
 
+use DateTime;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 
 /**
  * Class WeekRepository
@@ -10,36 +13,28 @@ use Doctrine\ORM\EntityRepository;
  */
 class WeekRepository extends EntityRepository
 {
-    protected $defaultOptions = array(
+    protected array $defaultOptions = [
         'load_participants' => true,
         'only_enabled_days' => false
-    );
+    ];
 
-    /**
-     * @param  array $options
-     * @return Week|NULL
-     */
-    public function getCurrentWeek($options = array())
+    public function getCurrentWeek(array$options = []): ?Week
     {
-        return $this->findWeekByDate(new \DateTime(), $options);
+        return $this->findWeekByDate(new DateTime(), $options);
     }
 
-    /**
-     * @param  \DateTime|NULL $date
-     * @param  array $options
-     * @return Week|NULL
-     */
-    public function getNextWeek(\DateTime $date = null, $options = array())
+    public function getNextWeek(DateTime $date = null, array $options = []): ?Week
     {
-        $date = (($date instanceof \DateTime) === false) ? new \DateTime() : $date;
+        $date = (($date instanceof DateTime) === false) ? new DateTime() : $date;
         $nextWeek = $date->modify('next monday');
 
         return $this->findWeekByDate($nextWeek, $options);
     }
 
     /**
-     * @param Week $week
      * @return mixed
+     * @throws NoResultException
+     * @throws NonUniqueResultException
      */
     public function getWeeksMealCount(Week $week)
     {
@@ -53,12 +48,7 @@ class WeekRepository extends EntityRepository
         return $query->getQuery()->getSingleScalarResult();
     }
 
-    /**
-     * @param \DateTime $date
-     * @param  array $options
-     * @return null|Week
-     */
-    public function findWeekByDate(\DateTime $date, $options = array())
+    public function findWeekByDate(DateTime $date, array $options = []): ?Week
     {
         $options = array_merge($this->defaultOptions, $options);
 

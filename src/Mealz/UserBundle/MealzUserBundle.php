@@ -1,11 +1,11 @@
 <?php
 
-namespace Mealz\UserBundle;
+namespace App\Mealz\UserBundle;
 
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Mealz\UserBundle\DependencyInjection\Compiler\OverrideServiceCompilerPass;
+use App\Mealz\UserBundle\DependencyInjection\Compiler\OverrideServiceCompilerPass;
 
 class MealzUserBundle extends Bundle
 {

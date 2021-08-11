@@ -1,6 +1,6 @@
 <?php
 
-namespace Mealz\MealBundle\Validator\Constraints;
+namespace App\Mealz\MealBundle\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
 

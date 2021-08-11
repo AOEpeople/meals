@@ -1,18 +1,18 @@
 <?php
 
-namespace Mealz\AccountingBundle\Tests\Controller;
+namespace App\Mealz\AccountingBundle\Tests\Controller;
 
 use DateTime;
 use DOMElement;
 use DomNode;
 use Exception;
-use Mealz\AccountingBundle\Entity\Transaction;
-use Mealz\UserBundle\Entity\Profile;
+use App\Mealz\AccountingBundle\Entity\Transaction;
+use App\Mealz\UserBundle\Entity\Profile;
 use Symfony\Component\DomCrawler\Crawler;
-use Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
+use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
 
-use Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
-use Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
+use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 
 /**
  * Class AccountingBookControllerTest

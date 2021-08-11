@@ -1,17 +1,17 @@
 <?php
 
-namespace Mealz\MealBundle\Tests\Repository;
+namespace App\Mealz\MealBundle\Tests\Repository;
 
 use DateTime;
-use Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
-use Mealz\MealBundle\DataFixtures\ORM\LoadDays;
-use Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
-use Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
-use Mealz\MealBundle\DataFixtures\ORM\LoadParticipants;
-use Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadDays;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadParticipants;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
 
-use Mealz\MealBundle\Entity\WeekRepository;
-use Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
+use App\Mealz\MealBundle\Entity\WeekRepository;
+use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 
 class WeekRepositoryTest extends AbstractDatabaseTestCase
 {

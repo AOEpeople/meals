@@ -1,0 +1,15 @@
+# Default configuration for "MealzMealBundle"
+mealz_meal:
+    notifier:
+        mattermost:
+            # Enable/disable sending of meal notifications to mattermost.
+            enabled: false
+
+            # Mattermost webhook URL
+            webhook_url: ~ # Required
+
+            # Friendly username displayed in mattermost notifications.
+            username: Chef
+
+            # Application name displayed in mattermost notifications.
+            app_name: Meals

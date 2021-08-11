@@ -1,12 +1,11 @@
 <?php
 
-namespace Mealz\AccountingBundle\Controller;
+namespace App\Mealz\AccountingBundle\Controller;
 
 use DateTime;
-use Doctrine\ORM\Query;
-use Mealz\AccountingBundle\Entity\TransactionRepository;
-use Mealz\AccountingBundle\Service\Wallet;
-use Mealz\MealBundle\Controller\BaseController;
+use App\Mealz\AccountingBundle\Entity\TransactionRepository;
+use App\Mealz\AccountingBundle\Service\Wallet;
+use App\Mealz\MealBundle\Controller\BaseController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 

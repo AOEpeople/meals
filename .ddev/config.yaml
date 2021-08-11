@@ -1,6 +1,6 @@
 name: meals
 type: php
-docroot: web
+docroot: public
 php_version: "7.4"
 webserver_type: apache-fpm
 router_http_port: "80"
@@ -15,8 +15,14 @@ use_dns_when_possible: true
 composer_version: "2"
 web_environment:
   - FINAL_RELEASEFOLDER=/var/www/html
-  - SYMFONY_DEBUG=1
-  - SYMFONY_ENV=dev
+  - APP_DEBUG=1
+  - APP_ENV=dev
+  - DB_HOST=db
+  - DB_PORT=3306
+  - DB_NAME=db
+  - DB_USER=db
+  - DB_PASS=db
+  - DB_VERS=5.7
 omit_containers:
   - dba
 hooks:

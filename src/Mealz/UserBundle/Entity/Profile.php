@@ -1,6 +1,6 @@
 <?php
 
-namespace Mealz\UserBundle\Entity;
+namespace App\Mealz\UserBundle\Entity;
 
 use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthUser;
 use Doctrine\Common\Collections\Collection;
@@ -49,7 +49,7 @@ class Profile extends OAuthUser
     protected $company;
 
     /**
-     * @ORM\OneToMany(targetEntity="Mealz\AccountingBundle\Entity\Transaction", mappedBy="profile")
+     * @ORM\OneToMany(targetEntity="App\Mealz\AccountingBundle\Entity\Transaction", mappedBy="profile")
      * @var ArrayCollection
      */
     protected $transactions;

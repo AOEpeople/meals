@@ -1,11 +1,11 @@
 <?php
 
-namespace Mealz\AccountingBundle\Entity;
+namespace App\Mealz\AccountingBundle\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Mealz\UserBundle\Entity\Profile;
+use App\Mealz\UserBundle\Entity\Profile;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -31,8 +31,8 @@ class Transaction
      * @var Profile
      *
      * @Assert\NotBlank()
-     * @Assert\Type(type="Mealz\UserBundle\Entity\Profile")
-     * @ORM\ManyToOne(targetEntity="Mealz\UserBundle\Entity\Profile", inversedBy="transactions", cascade="persist")
+     * @Assert\Type(type="App\Mealz\UserBundle\Entity\Profile")
+     * @ORM\ManyToOne(targetEntity="App\Mealz\UserBundle\Entity\Profile", inversedBy="transactions", cascade={"persist"})
      * @ORM\JoinColumn(name="profile", referencedColumnName="id", nullable=FALSE)
      */
     private $profile;

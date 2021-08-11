@@ -1,9 +1,9 @@
 <?php
 
-namespace Mealz\AccountingBundle\Entity;
+namespace App\Mealz\AccountingBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
-use Mealz\UserBundle\Entity\Profile;
+use App\Mealz\UserBundle\Entity\Profile;
 
 /**
  * TransactionRepository

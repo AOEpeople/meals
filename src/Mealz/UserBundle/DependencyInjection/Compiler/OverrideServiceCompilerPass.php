@@ -1,6 +1,6 @@
 <?php
 
-namespace Mealz\UserBundle\DependencyInjection\Compiler;
+namespace App\Mealz\UserBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -11,10 +11,10 @@ class OverrideServiceCompilerPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         $userProviderDef = $container->getDefinition('security.user.provider.ldap');
-        $userProviderDef->setClass('Mealz\UserBundle\Provider\LdapUserProvider');
+        $userProviderDef->setClass('App\Mealz\UserBundle\Provider\LdapUserProvider');
 
         $authProviderDef = $container->getDefinition('security.authentication.provider.ldap_bind');
-        $authProviderDef->setClass('Mealz\UserBundle\Authentication\LdapBindAuthenticationProviderCustom');
+        $authProviderDef->setClass('App\Mealz\UserBundle\Authentication\LdapBindAuthenticationProviderCustom');
 
         /*
          * Can't extend Symfony's ldap factory.

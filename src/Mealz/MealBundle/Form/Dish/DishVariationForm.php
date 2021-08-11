@@ -1,8 +1,8 @@
 <?php
 
-namespace Mealz\MealBundle\Form\Dish;
+namespace App\Mealz\MealBundle\Form\Dish;
 
-use Mealz\MealBundle\Entity\DishVariation;
+use App\Mealz\MealBundle\Entity\DishVariation;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -86,7 +86,7 @@ class DishVariationForm extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Mealz\MealBundle\Entity\DishVariation',
+                'data_class' => 'App\Mealz\MealBundle\Entity\DishVariation',
                 'intention' => 'dishvariation_type',
             )
         );

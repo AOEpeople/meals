@@ -1,15 +1,15 @@
 <?php
 
-namespace Mealz\AccountingBundle\Tests\Controller\Payment;
+namespace App\Mealz\AccountingBundle\Tests\Controller\Payment;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\Translator;
 
-use Mealz\AccountingBundle\Controller\Payment\EcashController;
-use Mealz\AccountingBundle\DataFixtures\ORM\LoadTransactions;
-use Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
-use Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
+use App\Mealz\AccountingBundle\Controller\Payment\EcashController;
+use App\Mealz\AccountingBundle\DataFixtures\ORM\LoadTransactions;
+use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
+use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 
 class EcashControllerTest extends AbstractControllerTestCase
 {
@@ -51,7 +51,7 @@ class EcashControllerTest extends AbstractControllerTestCase
                 )
             );
         $this->client->followRedirects();
-        $crawler = $this->client->submit($loginForm);
+        $crawler = $this->client->submit($loginForm, []);
 
         // Click on the balance link
         $balanceLink = $crawler->filterXPath('//div[@class="balance-text"]/a')->link();

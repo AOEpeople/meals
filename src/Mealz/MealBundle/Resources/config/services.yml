@@ -1,102 +1,67 @@
 parameters:
-  mealz_meal.twig_extension.doorman.class: Mealz\MealBundle\Twig\Extension\Doorman
-  mealz_meal.twig_extension.link.class: Mealz\MealBundle\Twig\Extension\Link
-  mealz_meal.doorman.class: Mealz\MealBundle\Service\Doorman
-  mealz_meal.link.class: Mealz\MealBundle\Service\Link
-  mealz_meal.http_header_utility.class: Mealz\MealBundle\Service\HttpHeaderUtility
-  mealz_meal.workday.class: Mealz\MealBundle\Service\Workday
+  mealz_meal.twig_extension.doorman.class: App\Mealz\MealBundle\Twig\Extension\Doorman
+  mealz_meal.twig_extension.link.class: App\Mealz\MealBundle\Twig\Extension\Link
+  mealz_meal.doorman.class: App\Mealz\MealBundle\Service\Doorman
+  mealz_meal.link.class: App\Mealz\MealBundle\Service\Link
+  mealz_meal.http_header_utility.class: App\Mealz\MealBundle\Service\HttpHeaderUtility
+  mealz_meal.workday.class: App\Mealz\MealBundle\Service\Workday
 
-  mealz_meal.event_listener.participant_persistence.class: Mealz\MealBundle\EventListener\ParticipantPersistenceListener
-  mealz_meal.event_listener.localisation.class: Mealz\MealBundle\EventListener\LocalisationListener
+  mealz_meal.event_listener.participant_persistence.class: App\Mealz\MealBundle\EventListener\ParticipantPersistenceListener
+  mealz_meal.event_listener.localisation.class: App\Mealz\MealBundle\EventListener\LocalisationListener
 
 services:
-  # default configuration for services in *this* file
-  _defaults:
-      # automatically injects dependencies in your services
-      autowire: true
-      # automatically registers your services as commands, event subscribers, etc.
-      autoconfigure: true
-      # this means you cannot fetch services directly from the container via $container->get()
-      # if you need to do this, you can override this setting on individual services
-      public: false
-
   mealz_meal.doorman:
-    class: %mealz_meal.doorman.class%
+    class: '%mealz_meal.doorman.class%'
+    public: true
 #    arguments:
 #      $lockParticipationAt: %mealz.lock_toggle_participation_at%
 
-  mealz_meal.twig_extension.doorman:
-    class: %mealz_meal.twig_extension.doorman.class%
-    arguments: [ '@mealz_meal.doorman' ]
-    tags:
-      - { name: twig.extension }
-
   mealz_meal.link:
-    class: %mealz_meal.link.class%
+    class: '%mealz_meal.link.class%'
     arguments: [ '@router' ]
 
-  mealz_meal.twig_extension.link:
-    class: %mealz_meal.twig_extension.link.class%
-    arguments: [ '@mealz_meal.link' ]
-    tags:
-      - { name: twig.extension }
-
-  mealz_meal.twig_extension.isParticipant:
-    class: Mealz\MealBundle\Twig\Extension\Participation
-    tags:
-      - { name: twig.extension }
-
-  mealz_meal.twig_extension.variation:
-    class: Mealz\MealBundle\Twig\Extension\Variation
-    # Inject doctrine as first parameter
-#    arguments:
-#        doctrine : '@doctrine'
-#        twig : '@twig'
-    tags:
-      - { name: twig.extension }
-
   mealz_meal.http_header_utility:
-    class: %mealz_meal.http_header_utility.class%
+    class: '%mealz_meal.http_header_utility.class%'
     calls:
-      - [setLocales, [[%locale%, en, de]]]
+      - [setLocales, [[en, de]]]
 
   mealz_meal.workday:
-    class: %mealz_meal.workday.class%
+    class: '%mealz_meal.workday.class%'
     calls:
       - [setDayBlacklist, [['01-01', '05-01', '10-31', '12-24', '12-25', '12-26', '12-27', '12-28', '12-29', '12-30', '12-31']]]
 
   mealz_meal.dish:
-    class: Mealz\MealBundle\Entity\Dish
+    class: App\Mealz\MealBundle\Entity\Dish
 
   mealz_meal.dish_variation:
-    class: Mealz\MealBundle\Entity\DishVariation
+    class: App\Mealz\MealBundle\Entity\DishVariation
     arguments: ['@mealz_meal.dish']
 
   mealz_meal.day:
-    class: Mealz\MealBundle\Entity\Day
+    class: App\Mealz\MealBundle\Entity\Day
 
   mealz_user.profile:
-    class: Mealz\UserBundle\Entity\Profile
+    class: App\Mealz\UserBundle\Entity\Profile
 
   mealz_meal.guest_invitation:
-    class: Mealz\MealBundle\Entity\GuestInvitation
+    class: App\Mealz\MealBundle\Entity\GuestInvitation
     arguments: ['@mealz_user.profile', '@mealz_meal.day']
 
   mealz_meal.event_listener.participant_persistence:
-    class: %mealz_meal.event_listener.participant_persistence.class%
+    class: '%mealz_meal.event_listener.participant_persistence.class%'
     tags:
         - { name: doctrine.event_listener, event: prePersist }
         - { name: doctrine.event_listener, event: preUpdate }
 
   mealz_meal.event_listener.localisation:
-    class: %mealz_meal.event_listener.localisation.class%
+    class: '%mealz_meal.event_listener.localisation.class%'
     arguments: ['@mealz_meal.http_header_utility']
     tags:
       # set locale in request
       - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 12 }
 
   mealz_meal.event_listener.localisation.entity:
-    class: Mealz\MealBundle\EventListener\EntityLocalisationListener
+    class: App\Mealz\MealBundle\EventListener\EntityLocalisationListener
     arguments: ['@mealz_meal.http_header_utility', '@request_stack']
     tags:
       # set locale in request
@@ -105,19 +70,22 @@ services:
       - { name: doctrine.event_listener, event: postLoad }
 
   mealz_meal.repository.participant:
-    class: Mealz\MealBundle\Entity\ParticipantRepository
+    class: App\Mealz\MealBundle\Entity\ParticipantRepository
     factory: ['@doctrine.orm.default_entity_manager', getRepository]
     arguments:
-        - MealzMealBundle:Participant
+      - MealzMealBundle:Participant
+    autowire: false
+    autoconfigure: false
+  App\Mealz\MealBundle\Entity\ParticipantRepository: '@mealz_meal.repository.participant'
 
   mealz_meal.factory.localized_repository:
-    class: Mealz\MealBundle\Service\LocalizedRepositoryFactory
+    class: App\Mealz\MealBundle\Service\LocalizedRepositoryFactory
     arguments:
       - '@doctrine.orm.entity_manager'
       - '@mealz_meal.event_listener.localisation'
 
   mealz_meal.repository.category:
-    class: Mealz\MealBundle\Entity\CategoryRepository
+    class: App\Mealz\MealBundle\Entity\CategoryRepository
     factory: ['@doctrine.orm.default_entity_manager', getRepository]
     arguments:
       - 'MealzMealBundle:Category'
@@ -127,16 +95,22 @@ services:
     factory: ['@mealz_meal.factory.localized_repository', createLocalizedRepository]
 
   mealz_meal.repository.dish:
-    class: Mealz\MealBundle\Entity\DishRepository
+    class: App\Mealz\MealBundle\Entity\DishRepository
     parent: mealz_meal.repository.abstract.localized
-    autowire: true
-    autoconfigure: false
-    public: false
+#    autowire: false
+#    autoconfigure: false
+#    public: false
     arguments:
       - 'MealzMealBundle:Dish'
+  App\Mealz\MealBundle\Entity\DishRepository: '@mealz_meal.repository.dish'
+
+  App\Mealz\MealBundle\Entity\WeekRepository:
+    factory: ['@doctrine.orm.default_entity_manager', getRepository]
+    arguments:
+      - 'MealzMealBundle:Week'
 
   mealz_meal.repository.dish_variation:
-    class: Mealz\MealBundle\Entity\DishVariationRepository
+    class: App\Mealz\MealBundle\Entity\DishVariationRepository
     parent: mealz_meal.repository.abstract.localized
     autowire: true
     autoconfigure: false
@@ -145,49 +119,43 @@ services:
       - 'MealzMealBundle:DishVariation'
 
   mealz_meal.form.type.dish_selector_creator:
-        class: Mealz\MealBundle\Form\Type\DishSelectorCreatorType
+        class: App\Mealz\MealBundle\Form\Type\DishSelectorCreatorType
         arguments: []
         tags:
             - { name: form.type, alias: dish_selector_creator }
 
   mealz_meal.form.type.hidden_entity:
-        class: Mealz\MealBundle\Form\Type\EntityHiddenType
+        class: App\Mealz\MealBundle\Form\Type\EntityHiddenType
         arguments: ['@doctrine.orm.entity_manager']
         tags:
            - { name: form.type, alias: entity_hidden }
 
-  mealz_meal.form.type.meals_participant:
-        class: Mealz\MealBundle\Form\MealParticipantForm
-        arguments: []
-        tags:
-            - { name: form.type, alias: participant }
-
   mealz_meal.form.type.meal:
-    class: Mealz\MealBundle\Form\MealAdmin\MealForm
+    class: App\Mealz\MealBundle\Form\MealAdmin\MealForm
     arguments: ['@mealz_meal.repository.dish']
     tags:
       - { name: form.type }
 
   mealz_meal.form.dish:
-    class: Mealz\MealBundle\Form\Dish\DishForm
+    class: App\Mealz\MealBundle\Form\Dish\DishForm
     arguments: ['%mealz.meal.price%']
     tags:
       - { name: form.type }
 
   mealz_meal.form.dishvariation:
-    class: Mealz\MealBundle\Form\Dish\DishVariationForm
+    class: App\Mealz\MealBundle\Form\Dish\DishVariationForm
     arguments: ['%mealz.meal.price%']
     tags:
       - { name: form.type }
 
   mealz_meal.form.type.day:
-    class: Mealz\MealBundle\Form\MealAdmin\DayForm
+    class: App\Mealz\MealBundle\Form\MealAdmin\DayForm
     arguments: ['@doctrine.orm.entity_manager']
     tags:
       - { name: form.type }
 
   validator.meal.dish:
-    class: Mealz\MealBundle\Validator\Constraints\DishConstraintValidator
+    class: App\Mealz\MealBundle\Validator\Constraints\DishConstraintValidator
     arguments: ['@doctrine.orm.entity_manager']
     tags:
       - { name: validator.constraint_validator, alias: validator_meal_dish }
@@ -203,7 +171,7 @@ services:
       - [setContainer, ['@service_container']]
 
   mealz_meal.controller.category:
-    class: Mealz\MealBundle\Controller\CategoryController
+    class: App\Mealz\MealBundle\Controller\CategoryController
     parent: mealz_meal.controller.baseList
     autowire: true
     autoconfigure: false
@@ -213,7 +181,7 @@ services:
       - [setEntityName, ['Category']]
 
   mealz_meal.controller.dish:
-    class: Mealz\MealBundle\Controller\DishController
+    class: App\Mealz\MealBundle\Controller\DishController
     parent: mealz_meal.controller.baseList
     autowire: true
     autoconfigure: false
@@ -223,7 +191,7 @@ services:
       - [setEntityName, ['Dish']]
 
   mealz_meal.controller.dish_variation:
-    class: Mealz\MealBundle\Controller\DishVariationController
+    class: App\Mealz\MealBundle\Controller\DishVariationController
     parent: mealz_meal.controller.base
     autowire: true
     autoconfigure: false
@@ -236,3 +204,16 @@ services:
       class: Monolog\Processor\PsrLogMessageProcessor
       tags:
           - { name: monolog.processor }
+
+  mealz_meal.notifier.mattermost:
+    class: App\Mealz\MealBundle\Service\Notification\MattermostService
+    lazy: true
+    arguments:
+      $httpClient: '@http_client'
+      $logger: '@logger'
+      $enabled: false
+      $webhookURL: ''
+      $username: ''
+      $appName: ''
+
+  App\Mealz\MealBundle\Service\Notification\MattermostService: '@mealz_meal.notifier.mattermost'

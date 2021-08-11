@@ -1,12 +1,13 @@
 <?php
 
-namespace Mealz\AccountingBundle\Form;
+namespace App\Mealz\AccountingBundle\Form;
 
 use Doctrine\ORM\EntityManager;
-use Mealz\AccountingBundle\Controller\AccountingAdminController;
-use Mealz\AccountingBundle\Controller\Payment\EcashController;
-use Mealz\AccountingBundle\Service\Wallet;
-use Mealz\MealBundle\Form\DataTransformer\ProfileToStringTransformer;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Mealz\AccountingBundle\Controller\AccountingAdminController;
+use App\Mealz\AccountingBundle\Controller\Payment\EcashController;
+use App\Mealz\AccountingBundle\Service\Wallet;
+use App\Mealz\MealBundle\Form\DataTransformer\ProfileToStringTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\DataTransformer\NumberToLocalizedStringTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -18,60 +19,54 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class EcashPaymentAdminForm extends AbstractType
 {
+    private ProfileToStringTransformer $profileTransformer;
 
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
-
-    public function __construct(EntityManager $entityManager)
+    public function __construct(
+        ProfileToStringTransformer $profileTransformer)
     {
-        $this->entityManager = $entityManager;
+        $this->profileTransformer = $profileTransformer;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $profileTransformer = new ProfileToStringTransformer($this->entityManager);
-
         /**
         * if more Paymentmethodsare available remove 'data' => 0 from paymehtod
         */
         $builder
-            ->add('profile', HiddenType::class, array(
+            ->add('profile', HiddenType::class, [
                 'data' => $options['profile'],
                 'data_class' => null
-            ))
-            ->add('orderid', HiddenType::class, array(
+            ])
+            ->add('orderid', HiddenType::class, [
                 'data_class' => null
-            ))
-            ->add('amount', MoneyType::class, array(
+            ])
+            ->add('amount', MoneyType::class, [
                 'label' => 'payment.transaction_history.amount',
                 'data' => $options['balance'],
-                'pattern' => '\d*([.,]?\d{0,2})',
                 'data_class' => null
-            ))
-            ->add('paymethod', ChoiceType::class, array(
-                'choices' => array(
+            ])
+            ->add('paymethod', ChoiceType::class, [
+                'choices' => [
                     'payment.transaction_history.paypal'
-                ),
-                'attr' => array(
+                ],
+                'attr' => [
                     'class' => 'button small'
-                ),
+                ],
                 'label' => 'false',
                 'expanded' => 'false',
                 'data' => 0
-            ));
+            ]);
 
-        $builder->get('profile')->addModelTransformer($profileTransformer);
+        $builder->get('profile')->addModelTransformer($this->profileTransformer);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'Mealz\AccountingBundle\Entity\Transaction',
+        $resolver->setDefaults([
+            'data_class' => 'App\Mealz\AccountingBundle\Entity\Transaction',
             'profile' => null,
             'balance' => null,
-        ));
+        ]);
     }
 
     /**
@@ -79,7 +74,7 @@ class EcashPaymentAdminForm extends AbstractType
      *
      * @return string The name of this type
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'ecash';
     }

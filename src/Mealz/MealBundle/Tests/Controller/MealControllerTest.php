@@ -1,23 +1,23 @@
 <?php
 
-namespace Mealz\MealBundle\Tests\Controller;
+namespace App\Mealz\MealBundle\Tests\Controller;
 
 use DateTime;
 use Doctrine\Common\Collections\Criteria;
-use Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
-use Mealz\MealBundle\DataFixtures\ORM\LoadDays;
-use Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
-use Mealz\MealBundle\DataFixtures\ORM\LoadDishVariations;
-use Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
-use Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
-use Mealz\MealBundle\Entity\GuestInvitation;
-use Mealz\MealBundle\Entity\Meal;
-use Mealz\MealBundle\Entity\MealRepository;
-use Mealz\MealBundle\Entity\Participant;
-use Mealz\MealBundle\Entity\ParticipantRepository;
-use Mealz\MealBundle\Service\Doorman;
-use Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
-use Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadDays;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishVariations;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
+use App\Mealz\MealBundle\Entity\GuestInvitation;
+use App\Mealz\MealBundle\Entity\Meal;
+use App\Mealz\MealBundle\Entity\MealRepository;
+use App\Mealz\MealBundle\Entity\Participant;
+use App\Mealz\MealBundle\Entity\ParticipantRepository;
+use App\Mealz\MealBundle\Service\Doorman;
+use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
+use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 
 /**
  * Meal controller test.
@@ -255,7 +255,7 @@ class MealControllerTest extends AbstractControllerTestCase
             $form['invitation_form[day][meals]'][0]->tick();
         }
 
-        $this->client->submit($form);
+        $this->client->submit($form, []);
 
         // Verify enrollment is successful
         $mealParticipants = $this->getMealParticipants($meal);

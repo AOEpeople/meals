@@ -1,43 +1,41 @@
 <?php
 
-namespace Mealz\MealBundle\Controller;
+namespace App\Mealz\MealBundle\Controller;
 
+use DateTime;
 use Doctrine\ORM\EntityManager;
-use Mealz\MealBundle\Entity\Day;
-use Mealz\MealBundle\Entity\Week;
-use Mealz\MealBundle\Entity\WeekRepository;
-use Mealz\MealBundle\Form\MealAdmin\WeekForm;
-use Mealz\MealBundle\Validator\Constraints\DishConstraint;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use App\Mealz\MealBundle\Entity\Day;
+use App\Mealz\MealBundle\Entity\DishRepository;
+use App\Mealz\MealBundle\Entity\Week;
+use App\Mealz\MealBundle\Entity\WeekRepository;
+use App\Mealz\MealBundle\Form\MealAdmin\WeekForm;
+use App\Mealz\MealBundle\Validator\Constraints\DishConstraint;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\ConstraintViolation;
 
 class MealAdminController extends BaseController
 {
-
     /**
-     * List action
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @Security("has_role('ROLE_KITCHEN_STAFF')")
      */
-    public function listAction()
+    public function listAction(WeekRepository $weekRepository): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
-
-        /** @var WeekRepository $weekRepository */
-        $weekRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Week');
-
         $weeks = array();
-
-        $dateTime = new \DateTime();
+        $dateTime = new DateTime();
 
         for ($i = 0; $i < 8; $i++) {
             $modifiedDateTime = clone($dateTime);
             $modifiedDateTime->modify('+'.$i.' weeks');
             $week = $weekRepository->findOneBy(
-                array(
+                [
                     'year' => $modifiedDateTime->format('o'),
                     'calendarWeek' => $modifiedDateTime->format('W'),
-                )
+                ]
             );
 
             if (null === $week) {
@@ -46,49 +44,35 @@ class MealAdminController extends BaseController
                 $week->setCalendarWeek($modifiedDateTime->format('W'));
             }
 
-            array_push($weeks, $week);
+            $weeks[] = $week;
         }
 
-        return $this->render(
-            'MealzMealBundle:MealAdmin:list.html.twig',
-            array('weeks' => $weeks)
-        );
+        return $this->render('MealzMealBundle:MealAdmin:list.html.twig', ['weeks' => $weeks]);
     }
 
     /**
      * New action
      *
-     * @param Request $request request
-     * @param \DateTime $date on date
+     * @return RedirectResponse|Response
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws ORMException
+     * @throws OptimisticLockException
+     *
+     * @Security("has_role('ROLE_KITCHEN_STAFF')")
      */
-    public function newAction(Request $request, \DateTime $date)
+    public function newAction(Request $request, DateTime $date, WeekRepository $weekRepository)
     {
-        $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
-
-        $qbDishes = $this->get('mealz_meal.repository.dish');
-        $dishes = $qbDishes->getSortedDishesQueryBuilder()->getQuery()->getResult();
-
-        /** @var WeekRepository $weekRepository */
-        $weekRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Week');
-        $week = $weekRepository->findOneBy(
-            array(
-                'year' => $date->format('o'),
-                'calendarWeek' => $date->format('W'),
-            )
-        );
+        $week = $weekRepository->findOneBy([
+            'year' => $date->format('o'),
+            'calendarWeek' => $date->format('W'),
+        ]);
 
         if (null !== $week) {
-            return $this->redirectToRoute(
-                'MealzMealBundle_Meal_edit',
-                array('week' => $week->getId())
-            );
+            return $this->redirectToRoute('MealzMealBundle_Meal_edit', ['week' => $week->getId()]);
         }
 
         $week = $this->generateEmptyWeek($date);
-
-        $form = $this->createForm(\Mealz\MealBundle\Form\MealAdmin\WeekForm::class, $week);
+        $form = $this->createForm(WeekForm::class, $week);
 
         // handle form submission
         if ($request->isMethod('POST')) {
@@ -109,38 +93,39 @@ class MealAdminController extends BaseController
                 return $this->redirect(
                     $this->generateUrl(
                         'MealzMealBundle_Meal_edit',
-                        array('week' => $week->getId())
+                        ['week' => $week->getId()]
                     )
                 );
             }
         }
 
+        $dishRepository = $this->getDishRepository();
+        $dishes = $dishRepository->getSortedDishesQueryBuilder()->getQuery()->getResult();
+
         return $this->render(
             'MealzMealBundle:MealAdmin:week.html.twig',
-            array(
+            [
                 'week' => $week,
                 'dishes' => $dishes,
                 'form' => $form->createView(),
-            )
+            ]
         );
     }
 
     /**
      * Edit action
      *
-     * @param Request $request request
-     * @param Week $week for the week
+     * @return RedirectResponse|Response
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws ORMException
+     * @throws OptimisticLockException
+     *
+     * @Security("has_role('ROLE_KITCHEN_STAFF')")
      */
-    public function editAction(Request $request, Week $week)
+    public function editAction(Request $request, Week $week, DishRepository $dishRepository)
     {
-        $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
-
-        $qbDishes = $this->get('mealz_meal.repository.dish');
-        $dishes = $qbDishes->getSortedDishesQueryBuilder()->getQuery()->getResult();
-
-        $form = $this->createForm(\Mealz\MealBundle\Form\MealAdmin\WeekForm::class, $week);
+        $dishes = $dishRepository->getSortedDishesQueryBuilder()->getQuery()->getResult();
+        $form = $this->createForm(WeekForm::class, $week);
 
         // handle form submission
         if ($request->isMethod('POST') === true) {
@@ -177,28 +162,24 @@ class MealAdminController extends BaseController
 
             return $this->redirectToRoute(
                 'MealzMealBundle_Meal_edit',
-                array('week' => $week->getId())
+                ['week' => $week->getId()]
             );
         }
 
         return $this->render(
             'MealzMealBundle:MealAdmin:week.html.twig',
-            array(
+            [
                 'dishes' => $dishes,
                 'week' => $week,
                 'form' => $form->createView(),
-            )
+            ]
         );
     }
 
     /**
      * Generate empty week action
-     *
-     * @param \DateTime $dateTime on date
-     *
-     * @return Week
      */
-    protected function generateEmptyWeek(\DateTime $dateTime)
+    protected function generateEmptyWeek(DateTime $dateTime): Week
     {
         $week = new Week();
         $week->setYear($dateTime->format('o'));

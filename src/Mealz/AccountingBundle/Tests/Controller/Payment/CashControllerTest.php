@@ -1,18 +1,18 @@
 <?php
 
-namespace Mealz\AccountingBundle\Tests\Controller\Payment;
+namespace App\Mealz\AccountingBundle\Tests\Controller\Payment;
 
-use Mealz\AccountingBundle\DataFixtures\ORM\LoadTransactions;
-use Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
-use Mealz\MealBundle\DataFixtures\ORM\LoadDays;
-use Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
-use Mealz\MealBundle\DataFixtures\ORM\LoadDishVariations;
-use Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
-use Mealz\MealBundle\DataFixtures\ORM\LoadParticipants;
-use Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
-use Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
-use Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
-use Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
+use App\Mealz\AccountingBundle\DataFixtures\ORM\LoadTransactions;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadDays;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishVariations;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadParticipants;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
+use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
+use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
+use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 
 /**
  * Cash controller test.
@@ -71,7 +71,7 @@ class CashControllerTest extends AbstractControllerTestCase
                 ]
             );
         $this->client->followRedirects();
-        $crawler = $this->client->submit($loginForm);
+        $crawler = $this->client->submit($loginForm, []);
 
         // read Current balance from header
         $currentBalance = $crawler->filterXPath('//div[@class="balance-text"]/a')->text();

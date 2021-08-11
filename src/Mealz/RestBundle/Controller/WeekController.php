@@ -1,9 +1,9 @@
 <?php
 
-namespace Mealz\RestBundle\Controller;
+namespace App\Mealz\RestBundle\Controller;
 
-use Mealz\MealBundle\Entity\Day;
-use Mealz\MealBundle\Entity\Meal;
+use App\Mealz\MealBundle\Entity\Day;
+use App\Mealz\MealBundle\Entity\Meal;
 use stdClass;
 
 class WeekController extends BaseController

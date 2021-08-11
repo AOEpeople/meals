@@ -1,6 +1,6 @@
 <?php
 
-namespace Mealz\MealBundle\Form\Guest;
+namespace App\Mealz\MealBundle\Form\Guest;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -47,7 +47,7 @@ class ProfileForm extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Mealz\UserBundle\Entity\Profile',
+            'data_class' => 'App\Mealz\UserBundle\Entity\Profile',
         ));
     }
 }

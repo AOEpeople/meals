@@ -1,6 +1,6 @@
 <?php
 
-namespace Mealz\RestBundle\Entity;
+namespace App\Mealz\RestBundle\Entity;
 
 use FOS\OAuthServerBundle\Entity\Client as BaseClient;
 use Doctrine\ORM\Mapping as ORM;

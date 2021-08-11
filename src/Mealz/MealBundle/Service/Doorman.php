@@ -1,10 +1,10 @@
 <?php
 
-namespace Mealz\MealBundle\Service;
+namespace App\Mealz\MealBundle\Service;
 
-use Mealz\MealBundle\Entity\Meal;
-use Mealz\MealBundle\Entity\Participant;
-use Mealz\UserBundle\Entity\Profile;
+use App\Mealz\MealBundle\Entity\Meal;
+use App\Mealz\MealBundle\Entity\Participant;
+use App\Mealz\UserBundle\Entity\Profile;
 use Symfony\Component\Security\Core\Security;
 
 /**

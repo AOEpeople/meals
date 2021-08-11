@@ -1,10 +1,10 @@
 <?php
 
-namespace Mealz\MealBundle\Controller;
+namespace App\Mealz\MealBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
-use Mealz\MealBundle\Entity\DishVariation;
-use Mealz\MealBundle\Form\Dish\DishVariationForm;
+use App\Mealz\MealBundle\Entity\DishVariation;
+use App\Mealz\MealBundle\Form\Dish\DishVariationForm;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 

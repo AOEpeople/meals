@@ -1,9 +1,9 @@
 <?php
 
-namespace Mealz\MealBundle\Form\Dish;
+namespace App\Mealz\MealBundle\Form\Dish;
 
-use Mealz\MealBundle\Entity\Category;
-use Mealz\MealBundle\Entity\Dish;
+use App\Mealz\MealBundle\Entity\Category;
+use App\Mealz\MealBundle\Entity\Dish;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -131,7 +131,7 @@ class DishForm extends AbstractType
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Mealz\MealBundle\Entity\Dish',
+                'data_class' => 'App\Mealz\MealBundle\Entity\Dish',
                 'intention' => 'dish_type',
             )
         );

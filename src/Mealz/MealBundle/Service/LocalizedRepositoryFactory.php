@@ -1,10 +1,10 @@
 <?php
 
-namespace Mealz\MealBundle\Service;
+namespace App\Mealz\MealBundle\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Mealz\MealBundle\Entity\LocalizedRepository;
-use Mealz\MealBundle\EventListener\LocalisationListener;
+use App\Mealz\MealBundle\Entity\LocalizedRepository;
+use App\Mealz\MealBundle\EventListener\LocalisationListener;
 
 class LocalizedRepositoryFactory
 {

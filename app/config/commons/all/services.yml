@@ -10,12 +10,12 @@ services:
         public: true # TODO: [upgrade] Set it to false
 
     ##################################################################
-    # Mealz BUNDLE
+    # Meal BUNDLE
     ##################################################################
 
     # this creates a service per class whose id is the fully-qualified class name
     Mealz\MealBundle\:
-        resource: '../../../../src/Mealz/MealBundle/*'
+        resource: '../../../../src/Mealz/MealBundle/'
         # you can exclude directories or files
         # but if a service is unused, it's removed anyway
         exclude: '../../../../src/Mealz/MealBundle/{Entity,Tests}'
@@ -24,6 +24,24 @@ services:
     # and have a tag that allows actions to type-hint services
     Mealz\MealBundle\Controller\:
         resource: '../../../../src/Mealz/MealBundle/Controller'
+        public: true
+        tags: ['controller.service_arguments']
+
+    ##################################################################
+    # Accounting BUNDLE
+    ##################################################################
+
+    # this creates a service per class whose id is the fully-qualified class name
+    Mealz\AccountingBundle\:
+        resource: '../../../../src/Mealz/AccountingBundle/'
+        # you can exclude directories or files
+        # but if a service is unused, it's removed anyway
+        exclude: '../../../../src/Mealz/AccountingBundle/{Entity,Resources,Tests}'
+
+    # controllers are imported separately to make sure they're public
+    # and have a tag that allows actions to type-hint services
+    Mealz\AccountingBundle\Controller\:
+        resource: '../../../../src/Mealz/AccountingBundle/Controller/'
         public: true
         tags: ['controller.service_arguments']
 
@@ -46,6 +64,9 @@ services:
             - { name: serializer.normalizer }
 
 
+    Mealz\AccountingBundle\ParticipantList\ParticipantList:
+        autowire: false
+
     Mealz\MealBundle\Form\DataTransformer\EntityToIdTransformer:
         autoconfigure: false
         autowire: false
@@ -53,3 +74,4 @@ services:
         autowire: false
     Mealz\MealBundle\Form\Dish\DishVariationForm:
         autowire: false
+

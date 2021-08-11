@@ -1,6 +1,6 @@
 <?php
 
-namespace Mealz\MealBundle;
+namespace App\Mealz\MealBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace Mealz\MealBundle\Form\DataTransformer;
+namespace App\Mealz\MealBundle\Form\DataTransformer;
 
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
 /**
  * Class EntityToIdTransformer

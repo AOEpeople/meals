@@ -1,6 +1,6 @@
 <?php
 
-namespace Mealz\MealBundle\DependencyInjection;
+namespace App\Mealz\MealBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -17,14 +17,39 @@ class Configuration implements ConfigurationInterface
      *
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('mealz_meal');
+        $treeBuilder = new TreeBuilder('mealz_meal');
 
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
+        $treeBuilder->getRootNode()
+            ->children()
+                ->arrayNode('notifier')
+                    ->children()
+                        ->arrayNode('mattermost')
+                            ->children()
+                                ->booleanNode('enabled')
+                                    ->info('Enable/disable sending of meal notifications to mattermost.')
+                                    ->defaultFalse()
+                                ->end()
+                                ->scalarNode('webhook_url')
+                                    ->info('Mattermost webhook URL')
+                                    ->isRequired()
+                                    ->cannotBeEmpty()
+                                ->end()
+                                ->scalarNode('username')
+                                    ->info('Friendly username displayed in mattermost notifications.')
+                                    ->defaultValue('Chef')
+                                ->end()
+                                ->scalarNode('app_name')
+                                    ->info('Application name displayed in mattermost notifications.')
+                                    ->defaultValue('Meals')
+                                ->end()
+                            ->end()
+                        ->end() // mattermost
+                    ->end()
+                ->end() // notification
+            ->end()
+        ;
 
         return $treeBuilder;
     }

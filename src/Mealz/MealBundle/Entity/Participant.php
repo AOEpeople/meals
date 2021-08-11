@@ -1,9 +1,9 @@
 <?php
 
-namespace Mealz\MealBundle\Entity;
+namespace App\Mealz\MealBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Mealz\UserBundle\Entity\Profile;
+use App\Mealz\UserBundle\Entity\Profile;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -27,7 +27,7 @@ class Participant
 
     /**
      * @Assert\NotNull()
-     * @Assert\Type(type="Mealz\MealBundle\Entity\Meal")
+     * @Assert\Type(type="App\Mealz\MealBundle\Entity\Meal")
      * @ORM\ManyToOne(targetEntity="Meal",inversedBy="participants")
      * @ORM\JoinColumn(name="meal_id", referencedColumnName="id")
      * @var Meal
@@ -36,8 +36,8 @@ class Participant
 
     /**
      * @Assert\NotNull()
-     * @Assert\Type(type="Mealz\UserBundle\Entity\Profile")
-     * @ORM\ManyToOne(targetEntity="Mealz\UserBundle\Entity\Profile")
+     * @Assert\Type(type="App\Mealz\UserBundle\Entity\Profile")
+     * @ORM\ManyToOne(targetEntity="App\Mealz\UserBundle\Entity\Profile")
      * @ORM\JoinColumn(name="profile_id", referencedColumnName="id")
      * @var Profile
      */

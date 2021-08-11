@@ -1,0 +1,101 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    app.keycloak.server: 'https://login.aoe.com/auth/realms/aoe'
+
+    app.keycloak.endpoint.access_token: '%app.keycloak.server%/protocol/openid-connect/token'
+    app.keycloak.endpoint.auth_token:   '%app.keycloak.server%/protocol/openid-connect/auth'
+    app.keycloak.endpoint.logout:       '%app.keycloak.server%/protocol/openid-connect/logout'
+    app.keycloak.endpoint.user_token:   '%app.keycloak.server%/protocol/openid-connect/userinfo'
+
+    app.paypal.id:     '%env(PAYPAL_ID)%'
+    app.paypal.secret: '%env(PAYPAL_SECRET)%'
+
+    mealz.lock_toggle_participation_at: '-1 day 16:00'
+    mealz.meal.price: 3.40
+    mealz.meal.search_timestamp: '2000-01-01'
+    mealz.meal.new_flag_counter: 2
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    ##################################################################
+    # Meal BUNDLE
+    ##################################################################
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\Mealz\MealBundle\:
+        resource: '../src/Mealz/MealBundle/'
+        exclude:
+            - '../src/Mealz/MealBundle/DependencyInjection/'
+            - '../src/Mealz/MealBundle/DataFixtures/'
+            - '../src/Mealz/MealBundle/Entity/*Repository.php'
+            - '../src/Mealz/MealBundle/Tests/'
+
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    App\Mealz\MealBundle\Controller\:
+        resource: '../src/Mealz/MealBundle/Controller/'
+        tags: ['controller.service_arguments']
+
+    ##################################################################
+    # Accounting BUNDLE
+    ##################################################################
+    App\Mealz\AccountingBundle\:
+        resource: '../src/Mealz/AccountingBundle/'
+        exclude:
+            - '../src/Mealz/AccountingBundle/DependencyInjection/'
+            - '../src/Mealz/AccountingBundle/DataFixtures/'
+            - '../src/Mealz/AccountingBundle/Entity/'
+            - '../src/Mealz/AccountingBundle/Tests/'
+    App\Mealz\AccountingBundle\Controller\:
+        resource: '../src/Mealz/AccountingBundle/Controller/'
+        tags: ['controller.service_arguments']
+
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
+
+    # interface implementations
+    App\Mealz\MealBundle\Service\Notification\NotifierInterface: '@mealz_meal.notifier.mattermost'
+
+    FOS\OAuthServerBundle\Model\ClientManagerInterface: '@App\Mealz\MealBundle\Service\External\OAuthServer\ClientManager'
+    App\Mealz\MealBundle\Service\External\OAuthServer\ClientManager:
+        arguments:
+            - '@doctrine.orm.default_entity_manager'
+            - '%fos_oauth_server.model.client.class%'
+    fos_oauth_server.client_manager.default:
+        alias: App\Mealz\MealBundle\Service\External\OAuthServer\ClientManager
+
+    FOS\OAuthServerBundle\Model\TokenManagerInterface: '@App\Mealz\MealBundle\Service\External\OAuthServer\TokenManager'
+    App\Mealz\MealBundle\Service\External\OAuthServer\TokenManager:
+        arguments:
+            - '@doctrine.orm.default_entity_manager'
+            - '%fos_oauth_server.model.access_token.class%'
+
+    App\Mealz\MealBundle\Service\External\OAuthServer\AccessTokenManager:
+        arguments:
+            - '@doctrine.orm.default_entity_manager'
+            - '%fos_oauth_server.model.access_token.class%'
+    fos_oauth_server.access_token_manager.default:
+        alias: App\Mealz\MealBundle\Service\External\OAuthServer\AccessTokenManager
+
+    App\Mealz\MealBundle\Service\External\OAuthServer\AuthCodeManager:
+        arguments:
+            - '@doctrine.orm.default_entity_manager'
+            - '%fos_oauth_server.model.auth_code.class%'
+    fos_oauth_server.auth_code_manager.default:
+        alias: App\Mealz\MealBundle\Service\External\OAuthServer\AuthCodeManager
+
+    App\Mealz\MealBundle\Service\External\OAuthServer\RefreshTokenManager:
+        arguments:
+            - '@doctrine.orm.default_entity_manager'
+            - '%fos_oauth_server.model.refresh_token.class%'
+    fos_oauth_server.refresh_token_manager.default:
+        alias: App\Mealz\MealBundle\Service\External\OAuthServer\RefreshTokenManager
+

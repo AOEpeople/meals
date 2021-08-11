@@ -1,6 +1,6 @@
 <?php
 
-namespace Mealz\AccountingBundle\Controller\Payment;
+namespace App\Mealz\AccountingBundle\Controller\Payment;
 
 use PayPalCheckoutSdk\Core\PayPalHttpClient;
 use PayPalCheckoutSdk\Core\ProductionEnvironment;

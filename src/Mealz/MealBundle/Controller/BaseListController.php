@@ -1,6 +1,6 @@
 <?php
 
-namespace Mealz\MealBundle\Controller;
+namespace App\Mealz\MealBundle\Controller;
 
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -15,37 +15,20 @@ abstract class BaseListController extends BaseController
      */
     protected $repository;
 
-    /**
-     * @var string
-     */
-    protected $entityFormName;
+    protected string $entityFormName;
 
-    /**
-     * @var string
-     */
-    private $entityName;
+    private string $entityName;
 
-    /**
-     * @var string
-     */
-    private $entityClassPath;
+    private string $entityClassPath;
 
-    /**
-     * set the Entity Name
-     * @param $entityName
-     */
-    public function setEntityName($entityName)
+    public function setEntityName(string $entityName): void
     {
         $this->entityName = $entityName;
-        $this->entityClassPath = '\Mealz\MealBundle\Entity\\'.$entityName;
-        $this->entityFormName = '\Mealz\MealBundle\Form\\'.$entityName.'\\'.$entityName.'Form';
+        $this->entityClassPath = '\App\Mealz\MealBundle\Entity\\'.$entityName;
+        $this->entityFormName = '\App\Mealz\MealBundle\Form\\'.$entityName.'\\'.$entityName.'Form';
     }
 
-    /**
-     * set the repo
-     * @param EntityRepository $repository
-     */
-    public function setRepository(EntityRepository $repository)
+    public function setRepository(EntityRepository $repository): void
     {
         $this->repository = $repository;
     }
@@ -56,7 +39,7 @@ abstract class BaseListController extends BaseController
      */
     public function listAction()
     {
-        if (!$this->get('security.helper')->isGranted('ROLE_KITCHEN_STAFF')) {
+        if (!$this->isGranted('ROLE_KITCHEN_STAFF')) {
             throw new AccessDeniedException();
         }
 
@@ -70,7 +53,7 @@ abstract class BaseListController extends BaseController
      */
     public function newAction(Request $request)
     {
-        if ($this->get('security.helper')->isGranted('ROLE_KITCHEN_STAFF') === false) {
+        if ($this->isGranted('ROLE_KITCHEN_STAFF') === false) {
             throw new AccessDeniedException();
         }
 
@@ -78,9 +61,7 @@ abstract class BaseListController extends BaseController
         $translatedEntityName = $translator->trans("entity.$this->entityName", [], 'messages');
         $message = $translator->trans(
             'entity.added',
-            array(
-                '%entityName%' => $translatedEntityName,
-            ),
+            ['%entityName%' => $translatedEntityName],
             'messages'
         );
 
@@ -95,7 +76,7 @@ abstract class BaseListController extends BaseController
      */
     public function editAction(Request $request, $slug)
     {
-        if ($this->get('security.helper')->isGranted('ROLE_KITCHEN_STAFF') === false) {
+        if ($this->isGranted('ROLE_KITCHEN_STAFF') === false) {
             throw new AccessDeniedException();
         }
 
@@ -105,9 +86,7 @@ abstract class BaseListController extends BaseController
         $translatedEntityName = $translator->trans("entity.$this->entityName", [], 'messages');
         $message = $translator->trans(
             'entity.modified',
-            array(
-                '%entityName%' => $translatedEntityName,
-            ),
+            ['%entityName%' => $translatedEntityName],
             'messages'
         );
 
@@ -121,7 +100,7 @@ abstract class BaseListController extends BaseController
      */
     public function deleteAction($slug)
     {
-        if ($this->get('security.helper')->isGranted('ROLE_KITCHEN_STAFF') === false) {
+        if ($this->isGranted('ROLE_KITCHEN_STAFF') === false) {
             throw new AccessDeniedException();
         }
 
@@ -135,10 +114,10 @@ abstract class BaseListController extends BaseController
         $translatedEntityName = $translator->trans("entity.$this->entityName", [], 'messages');
         $message = $translator->trans(
             'entity.deleted',
-            array(
+            [
                 '%entityName%' => $translatedEntityName,
                 '%entity%' => $entity->getTitle(),
-            ),
+            ],
             'messages'
         );
         $this->addFlashMessage($message, 'success');
@@ -156,7 +135,7 @@ abstract class BaseListController extends BaseController
             return $this->ajaxSessionExpiredRedirect();
         }
 
-        if ($this->get('security.helper')->isGranted('ROLE_KITCHEN_STAFF') === false) {
+        if ($this->isGranted('ROLE_KITCHEN_STAFF') === false) {
             throw new AccessDeniedException();
         }
 
@@ -177,7 +156,7 @@ abstract class BaseListController extends BaseController
             return $this->ajaxSessionExpiredRedirect();
         }
 
-        if ($this->get('security.helper')->isGranted('ROLE_KITCHEN_STAFF') === false) {
+        if ($this->isGranted('ROLE_KITCHEN_STAFF') === false) {
             throw new AccessDeniedException();
         }
 
@@ -187,7 +166,7 @@ abstract class BaseListController extends BaseController
             return new JsonResponse(null, 404);
         }
 
-        $action = $this->generateUrl('MealzMealBundle_'.$this->entityName.'_edit', array('slug' => $slug));
+        $action = $this->generateUrl('MealzMealBundle_'.$this->entityName.'_edit', ['slug' => $slug]);
 
         return new JsonResponse($this->getRenderedEntityForm($entity, $action, true));
     }
@@ -204,9 +183,7 @@ abstract class BaseListController extends BaseController
         $form = $this->createForm(
             $this->getNewForm(),
             $entity,
-            array(
-                'action' => $action,
-            )
+            ['action' => $action]
         );
 
         $template = "MealzMealBundle:$this->entityName/partials:form.html.twig";
@@ -214,7 +191,7 @@ abstract class BaseListController extends BaseController
             $template = "MealzMealBundle:$this->entityName/partials:formTable.html.twig";
         }
 
-        $renderedForm = $this->render($template, array('form' => $form->createView()));
+        $renderedForm = $this->render($template, ['form' => $form->createView()]);
 
         return $renderedForm->getContent();
     }
@@ -241,11 +218,9 @@ abstract class BaseListController extends BaseController
 
                 $this->addFlashMessage($successMessage, 'success');
             } else {
-                return $this->renderEntityList(
-                    array(
-                        'form' => $form->createView(),
-                    )
-                );
+                return $this->renderEntityList([
+                    'form' => $form->createView(),
+                ]);
             }
         }
 
@@ -261,9 +236,9 @@ abstract class BaseListController extends BaseController
     {
         $entities = $this->getEntities();
 
-        $defaultParameters = array(
+        $defaultParameters = [
             'entities' => $entities,
-        );
+        ];
 
         $mergedParameters = array_merge($defaultParameters, $parameters);
 
@@ -296,12 +271,8 @@ abstract class BaseListController extends BaseController
         return $entity;
     }
 
-    /**
-     * get new Form
-     * @return mixed
-     */
-    protected function getNewForm()
+    protected function getNewForm(): string
     {
-        return new $this->entityFormName();
+        return $this->entityFormName;
     }
 }

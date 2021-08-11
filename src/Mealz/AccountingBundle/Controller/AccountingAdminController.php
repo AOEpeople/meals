@@ -1,14 +1,13 @@
 <?php
 
-namespace Mealz\AccountingBundle\Controller;
+namespace App\Mealz\AccountingBundle\Controller;
 
 use DateTime;
 use Doctrine\ORM\EntityNotFoundException;
-use Doctrine\ORM\Query;
-use Mealz\AccountingBundle\Entity\TransactionRepository;
-use Mealz\AccountingBundle\Service\Wallet;
-use Mealz\MealBundle\Controller\BaseController;
-use Mealz\UserBundle\Entity\Profile;
+use App\Mealz\AccountingBundle\Entity\TransactionRepository;
+use App\Mealz\AccountingBundle\Service\Wallet;
+use App\Mealz\MealBundle\Controller\BaseController;
+use App\Mealz\UserBundle\Entity\Profile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;

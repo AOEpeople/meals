@@ -21,59 +21,9 @@ MealzMealBundle_Meal_edit:
     path:  /menu/{week}/edit
     defaults: { _controller: "MealzMealBundle:MealAdmin:edit" }
 
-#MealzMealBundle_Meal_week:
-#    path:  /menu/{week}
-#    defaults: { _controller: "MealzMealBundle:Meal:index" }
-#    requirements:
-#        # format "2014W12" 12th week in 2014
-#        week: 20\d{2}W[0-5]\d
-
-#MealzMealBundle_Meal_day:
-#    path:  /menu/{day}
-#    defaults: { _controller: "MealzMealBundle:Meal:day" }
-#    requirements:
-#        # format "2014-02-17" 17th February, 2014
-#        day: 20\d{2}\-[01]\d\-[0-3]\d
-
-#MealzMealBundle_Meal_new:
-#    path:  /menu/new
-#    defaults: { _controller: "MealzMealBundle:MealAdmin:new" }
-#
-#MealzMealBundle_Meal_edit:
-#    path:  /menu/{meal}/edit
-#    defaults: { _controller: "MealzMealBundle:MealAdmin:edit" }
-#
-#MealzMealBundle_Meal_delete:
-#    path:  /menu/{meal}/delete
-#    defaults: { _controller: "MealzMealBundle:MealAdmin:delete" }
-#
-#MealzMealBundle_Meal_show:
-#    path:  /menu/{date}/{dish}
-#    defaults: { _controller: "MealzMealBundle:Meal:show" }
-#    requirements:
-#      date: 20\d{2}\-[01]\d\-[0-3]\d
-
 MealzMealBundle_Meal_join:
     path:  /menu/{date}/{dish}/join/{profile}
     defaults: { _controller: "MealzMealBundle:Meal:join", profile: null }
-
-#MealzMealBundle_Meal_joinAsGuest:
-#    path:  /meal/join-as-guest/{guestInvitationId}
-#    defaults: { _controller: "MealzMealBundle:Meal:joinAsGuest" }
-#    requirements:
-#        guestInvitationId: '[a-zA-Z0-9]{32}'
-
-#MealzMealBundle_Meal_join_someone:
-#    path:  /menu/{date}/{dish}/join-someone
-#    defaults: { _controller: "MealzMealBundle:Meal:joinSomeone" }
-#
-#MealzMealBundle_Participant_new:
-#    path:  /menu/{date}/{dish}/add
-#    defaults: { _controller: "MealzMealBundle:Participant:new" }
-#
-#MealzMealBundle_Participant_edit:
-#    path:  /menu/meal/{participant}/edit
-#    defaults: { _controller: "MealzMealBundle:Participant:edit" }
 
 MealzMealBundle_Participant_delete:
     path:  /menu/meal/{participant}/delete
@@ -99,21 +49,6 @@ MealzMealBundle_Meal_isParticipationPending:
     path: /menu/meal/{participant}/isParticipationPending
     defaults: { _controller: "MealzMealBundle:Participant:isParticipationPending" }
 
-
-#MealzMealBundle_Participation_confirm_index:
-#    path:  /menu/meal/confirmation
-#    defaults: { _controller: "MealzMealBundle:ParticipationConfirmation:index" }
-#
-#MealzMealBundle_Participation_confirm_index_letter:
-#    path:  /menu/meal/confirmation/{letter}
-#    defaults: { _controller: "MealzMealBundle:ParticipationConfirmation:indexByLetter" }
-#    requirements:
-#      letter: \w{1}
-#
-#MealzMealBundle_Participant_confirm:
-#    path:  /menu/meal/confirmation/{participant}
-#    defaults: { _controller: "MealzMealBundle:ParticipationConfirmation:confirmParticipation" }
-
 MealzMealBundle_DishVariation:
     path:  /dish/{slug}/variation/
     defaults: { _controller: "mealz_meal.controller.dish_variation:listAction" }
@@ -125,21 +60,18 @@ MealzMealBundle_DishVariation_new:
     defaults: { _controller: "mealz_meal.controller.dish_variation:newAction" }
     requirements:
       slug: '[1-9][0-9]*'
-#    condition: 'request.isXmlHttpRequest()'
 
 MealzMealBundle_DishVariation_edit:
     path:  /dish/variation/{slug}/edit
     defaults: { _controller: "mealz_meal.controller.dish_variation:editAction" }
     requirements:
       slug: '[1-9][0-9]*'
-#    condition: 'request.isXmlHttpRequest()'
 
 MealzMealBundle_DishVariation_delete:
     path:  /dish/variation/{slug}/delete
     defaults: { _controller: "mealz_meal.controller.dish_variation:deleteAction" }
     requirements:
       slug: '[1-9][0-9]*'
-#    condition: 'request.isXmlHttpRequest()'
 
 MealzMealBundle_Dish:
     path:  /dish
@@ -202,9 +134,7 @@ MealzMealBundle_Meal_guest:
     defaults: { _controller: "MealzMealBundle:Meal:guest" }
 
 MealzMealBundle_Meal_newGuestInvitation:
-#    path:  /menu/{mealId}/new-guest-invitation
     path:  /menu/{dayId}/new-guest-invitation
     defaults: { _controller: "MealzMealBundle:Meal:newGuestInvitation" }
     requirements:
       dayId: '[1-9][0-9]*'
-#    condition: 'request.isXmlHttpRequest()'

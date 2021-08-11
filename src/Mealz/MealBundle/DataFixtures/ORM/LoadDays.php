@@ -1,45 +1,41 @@
 <?php
 
-namespace Mealz\MealBundle\DataFixtures\ORM;
+declare(strict_types=1);
+
+namespace App\Mealz\MealBundle\DataFixtures\ORM;
 
 use DateTime;
-use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
-use Doctrine\Common\Persistence\ObjectManager;
-use Mealz\MealBundle\Entity\Day;
-use Mealz\MealBundle\Entity\Dish;
-use Mealz\MealBundle\Entity\Meal;
-use Mealz\MealBundle\Entity\Week;
+use Doctrine\Persistence\ObjectManager;
+use App\Mealz\MealBundle\Entity\Day;
+use App\Mealz\MealBundle\Entity\Week;
+use Exception;
 
 /**
  * Fixtures Load the Days
- * Class LoadDays
- * @package Mealz\MealBundle\DataFixtures\ORM
  */
-class LoadDays extends AbstractFixture implements OrderedFixtureInterface
+class LoadDays extends Fixture implements OrderedFixtureInterface
 {
     /**
      * Constant to declare load order of fixture
      */
-    const ORDER_NUMBER = 3;
+    private const ORDER_NUMBER = 3;
 
-    /**
-     * @var ObjectManager
-     */
-    protected $objectManager;
+    protected ObjectManager $objectManager;
 
     /**
      * @var Week[]
      */
-    protected $weeks = array();
+    protected array $weeks = [];
 
-    protected $counter = 0;
+    protected int $counter = 0;
 
     /**
-     * load the Object
-     * @param ObjectManager $manager
+     * @inheritDoc
+     * @throws Exception
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $this->objectManager = $manager;
         $this->loadWeeks();
@@ -76,20 +72,17 @@ class LoadDays extends AbstractFixture implements OrderedFixtureInterface
 
     /**
      * get the Order of Fixtures Loading
-     * @return mixed
      */
-    public function getOrder()
+    public function getOrder(): int
     {
-        /**
-         * load as third
-         */
+        // load as third
         return self::ORDER_NUMBER;
     }
 
     /**
      * Load the Weeks
      */
-    protected function loadWeeks()
+    protected function loadWeeks(): void
     {
         foreach ($this->referenceRepository->getReferences() as $referenceName => $reference) {
             if ($reference instanceof Week) {

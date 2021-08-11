@@ -1,50 +1,40 @@
 <?php
 
-namespace Mealz\MealBundle\DataFixtures\ORM;
+namespace App\Mealz\MealBundle\DataFixtures\ORM;
 
-use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
-use Doctrine\Common\Persistence\ObjectManager;
-use Mealz\MealBundle\Entity\Dish;
-use Mealz\MealBundle\Entity\DishVariation;
+use Doctrine\Persistence\ObjectManager;
+use App\Mealz\MealBundle\Entity\Dish;
+use App\Mealz\MealBundle\Entity\DishVariation;
 
 /**
  * Load the Dish Variations
- * @package Mealz\MealBundle\DataFixtures\ORM
- * @author Chetan Thapliyal <chetan.thapliyal@aoe.com>
  */
-class LoadDishVariations extends AbstractFixture implements OrderedFixtureInterface
+class LoadDishVariations extends Fixture implements OrderedFixtureInterface
 {
     /**
      * Constant to declare load order of fixture
      */
-    const ORDER_NUMBER = 6;
+    private const ORDER_NUMBER = 6;
+
+    protected ObjectManager $objectManager;
 
     /**
-     * @var ObjectManager
+     * @var Dish[]
      */
-    protected $objectManager;
+    protected array $dishes = [];
+
+    protected int $counter = 0;
 
     /**
-     * @var array
+     * @inheritDoc
      */
-    protected $dishes = array();
-
-    /**
-     * @var int
-     */
-    protected $counter = 0;
-
-    /**
-     * load the Object
-     * @param ObjectManager $manager
-     */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $this->objectManager = $manager;
         $this->loadDishes();
 
-        /** @var Dish $dish */
         foreach ($this->dishes as $key => $dish) {
             // Create two variation for each dish EXCEPT THE FIRST ONE
             if ($key > 0) {
@@ -62,22 +52,18 @@ class LoadDishVariations extends AbstractFixture implements OrderedFixtureInterf
 
     /**
      * get the Fixture Load Order
-     * @return int
      */
-    public function getOrder()
+    public function getOrder(): int
     {
-        /**
-         * load as sixth
-         */
+        // load as sixth
         return self::ORDER_NUMBER;
     }
 
     
     /**
      * load the dishes
-     * @return void
      */
-    protected function loadDishes()
+    protected function loadDishes(): void
     {
         foreach ($this->referenceRepository->getReferences() as $referenceName => $reference) {
             if ($reference instanceof Dish) {
@@ -88,11 +74,7 @@ class LoadDishVariations extends AbstractFixture implements OrderedFixtureInterf
         }
     }
 
-    /**
-     * @param  Dish $dish
-     * @return DishVariation
-     */
-    private function getDishVariation(Dish $dish)
+    private function getDishVariation(Dish $dish): DishVariation
     {
         $dummyPrefix = ' #v'.(count($dish->getVariations()) + 1);
         $dishVariation = new DishVariation();

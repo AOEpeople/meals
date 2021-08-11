@@ -1,57 +1,53 @@
 <?php
 
-namespace Mealz\MealBundle\DataFixtures\ORM;
+declare(strict_types=1);
+
+namespace App\Mealz\MealBundle\DataFixtures\ORM;
 
 use DateTime;
-use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
-use Doctrine\Common\Persistence\ObjectManager;
-use Mealz\MealBundle\Entity\Dish;
-use Mealz\MealBundle\Entity\Meal;
-use Mealz\MealBundle\Entity\Participant;
-use Mealz\UserBundle\Entity\Profile;
+use Doctrine\Persistence\ObjectManager;
+use App\Mealz\MealBundle\Entity\Meal;
+use App\Mealz\MealBundle\Entity\Participant;
+use App\Mealz\UserBundle\Entity\Profile;
+use Exception;
 
 /**
  * load the Participants
- * Class LoadParticipants
- * @package Mealz\MealBundle\DataFixtures\ORM
  */
-class LoadParticipants extends AbstractFixture implements OrderedFixtureInterface
+class LoadParticipants extends Fixture implements OrderedFixtureInterface
 {
     /**
      * Constant to declare load order of fixture
      */
-    const ORDER_NUMBER = 8;
+    private const ORDER_NUMBER = 8;
+
+    protected ObjectManager $objectManager;
 
     /**
-     * @var ObjectManager
+     * @var Meal[]
      */
-    protected $objectManager;
+    protected array $meals = [];
 
     /**
-     * @var array
+     * @var Profile[]
      */
-    protected $meals = array();
+    protected array $profiles = [];
 
     /**
-     * @var array
+     * @inheritDoc
+     * @throws Exception
      */
-    protected $profiles = array();
-
-    /**
-     * load the Object
-     * @param ObjectManager $manager
-     */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $this->objectManager = $manager;
         $this->loadReferences();
 
         foreach ($this->meals as $meal) {
-            /** @var $meal Meal */
             $users = $this->getRandomUsers();
+
             foreach ($users as $user) {
-                /** @var $user Profile */
                 $participant = new Participant();
                 $participant->setMeal($meal);
                 $participant->setProfile($user);
@@ -71,20 +67,17 @@ class LoadParticipants extends AbstractFixture implements OrderedFixtureInterfac
 
     /**
      * get the Order of Fixtures Loading
-     * @return mixed
      */
-    public function getOrder()
+    public function getOrder(): int
     {
-        /**
-         * load as eigth
-         */
+        // load as eight
         return self::ORDER_NUMBER;
     }
 
     /**
      * load References
      */
-    protected function loadReferences()
+    protected function loadReferences(): void
     {
         foreach ($this->referenceRepository->getReferences() as $referenceName => $reference) {
             if ($reference instanceof Meal) {
@@ -98,12 +91,14 @@ class LoadParticipants extends AbstractFixture implements OrderedFixtureInterfac
     }
 
     /**
-     * @return array<Users>
+     * @return Profile[]
+     *
+     * @throws Exception
      */
-    protected function getRandomUsers()
+    protected function getRandomUsers(): array
     {
-        $number = rand(0, count($this->profiles));
-        $users = array();
+        $number = random_int(0, count($this->profiles));
+        $users = [];
 
         if ($number > 1) {
             foreach (array_rand($this->profiles, $number) as $userKey) {

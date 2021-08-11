@@ -1,6 +1,6 @@
 <?php
 
-namespace Mealz\RestBundle\Entity;
+namespace App\Mealz\RestBundle\Entity;
 
 use FOS\OAuthServerBundle\Entity\AccessToken as BaseAccessToken;
 use Doctrine\ORM\Mapping as ORM;
@@ -21,13 +21,13 @@ class AccessToken extends BaseAccessToken
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Mealz\RestBundle\Entity\Client")
+     * @ORM\ManyToOne(targetEntity="App\Mealz\RestBundle\Entity\Client")
      * @ORM\JoinColumn(nullable=false)
      */
     protected $client;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Mealz\UserBundle\Entity\Login")
+     * @ORM\ManyToOne(targetEntity="App\Mealz\UserBundle\Entity\Login")
      */
     protected $user;
 }

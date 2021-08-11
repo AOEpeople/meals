@@ -1,11 +1,11 @@
 <?php
 
-namespace Mealz\MealBundle\Controller;
+namespace App\Mealz\MealBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
-use Mealz\MealBundle\Entity\Dish;
-use Mealz\MealBundle\Entity\DishRepository;
-use Mealz\MealBundle\Form\Dish\DishForm;
+use App\Mealz\MealBundle\Entity\Dish;
+use App\Mealz\MealBundle\Entity\DishRepository;
+use App\Mealz\MealBundle\Form\Dish\DishForm;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class DishController extends BaseListController
@@ -15,7 +15,7 @@ class DishController extends BaseListController
 
     public function deleteAction($slug)
     {
-        if (!$this->get('security.helper')->isGranted('ROLE_KITCHEN_STAFF')) {
+        if (!$this->isGranted('ROLE_KITCHEN_STAFF')) {
             throw new AccessDeniedException();
         }
 
@@ -73,7 +73,7 @@ class DishController extends BaseListController
         return $dishesQueryBuilder->getQuery()->execute();
     }
 
-    protected function getNewForm()
+    protected function getNewForm(): string
     {
         return DishForm::class;
     }

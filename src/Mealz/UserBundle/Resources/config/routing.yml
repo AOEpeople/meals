@@ -1,11 +1,7 @@
 MealzUserBundle_login:
     path:  /login
     defaults: { _controller: "MealzUserBundle:Security:login" }
-    methods:  [GET]
-
-MealzUserBundle_checkLogin:
-    path:  /login
-    # magic method that Symfony intercepts and is therefore never called
+    methods:  [GET, POST]
 
 MealzUserBundle_logout:
     path:  /logout

@@ -1,13 +1,12 @@
 <?php
 
-namespace Mealz\UserBundle\Service;
+namespace App\Mealz\UserBundle\Service;
 
 use Doctrine\ORM\EntityManager;
-use Mealz\UserBundle\Entity\Login;
-use Mealz\UserBundle\Entity\Profile;
-use Mealz\UserBundle\User\LdapUser;
-use Mealz\UserBundle\User\UserInterface as MealzUserInterface;
-use Symfony\Bridge\Monolog\Logger;
+use App\Mealz\UserBundle\Entity\Login;
+use App\Mealz\UserBundle\Entity\Profile;
+use App\Mealz\UserBundle\User\LdapUser;
+use App\Mealz\UserBundle\User\UserInterface as MealzUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
 
 /**

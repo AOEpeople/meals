@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Mealz\UserBundle\Authentication;
+namespace App\Mealz\UserBundle\Authentication;
 
 use Symfony\Component\Security\Core\Authentication\Provider\UserAuthenticationProvider;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;

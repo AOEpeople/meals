@@ -1,6 +1,6 @@
 <?php
 
-namespace Mealz\AccountingBundle\DependencyInjection;
+namespace App\Mealz\AccountingBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;

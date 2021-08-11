@@ -1,6 +1,6 @@
 <?php
 
-namespace Mealz\UserBundle\Provider;
+namespace App\Mealz\UserBundle\Provider;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;

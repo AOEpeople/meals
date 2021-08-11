@@ -1,10 +1,10 @@
 <?php
 
-namespace Mealz\AccountingBundle\Controller;
+namespace App\Mealz\AccountingBundle\Controller;
 
 use DateTime;
 use Exception;
-use Mealz\MealBundle\Controller\BaseController;
+use App\Mealz\MealBundle\Controller\BaseController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -17,7 +17,7 @@ class AccountingBookController extends BaseController
     /**
      * @return Response
      */
-    public function listAction()
+    public function list(): Response
     {
         // Deny access for unprivileged (non-admin) users
         if ($this->isGranted('ROLE_FINANCE') === false) {
@@ -58,11 +58,10 @@ class AccountingBookController extends BaseController
 
     /**
      * List all transactions that were payed by cash on the finances page
-     * @param $dateRange
-     * @return Response
+     *
      * @throws Exception
      */
-    public function listAllTransactionsAction($dateRange)
+    public function listAllTransactions($dateRange): Response
     {
         if ($this->isGranted('ROLE_FINANCE') === false) {
             throw new AccessDeniedException();
@@ -114,10 +113,9 @@ class AccountingBookController extends BaseController
     /**
      * Export transaction table as PDF for finance staff
      * @param $dateRange
-     * @return string
      * @throws Exception
      */
-    public function exportPDFAction($dateRange)
+    public function exportPDF($dateRange): string
     {
         if ($this->isGranted('ROLE_FINANCE') === false) {
             throw new AccessDeniedException();

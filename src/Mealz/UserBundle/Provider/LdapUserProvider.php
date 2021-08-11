@@ -1,9 +1,9 @@
 <?php
 
-namespace Mealz\UserBundle\Provider;
+namespace App\Mealz\UserBundle\Provider;
 
-use Mealz\UserBundle\Service\PostLogin;
-use Mealz\UserBundle\User\LdapUser;
+use App\Mealz\UserBundle\Service\PostLogin;
+use App\Mealz\UserBundle\User\LdapUser;
 use Symfony\Component\Ldap\LdapClientInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\LdapUserProvider as SymfonyLdapUserProvider;
@@ -95,6 +95,6 @@ class LdapUserProvider extends SymfonyLdapUserProvider
      */
     public function supportsClass($class)
     {
-        return $class === 'Mealz\UserBundle\User\LdapUser';
+        return $class === 'App\Mealz\UserBundle\User\LdapUser';
     }
 }

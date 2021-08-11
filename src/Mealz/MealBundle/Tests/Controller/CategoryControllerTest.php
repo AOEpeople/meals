@@ -1,11 +1,11 @@
 <?php
 
-namespace Mealz\MealBundle\Tests\Controller;
+namespace App\Mealz\MealBundle\Tests\Controller;
 
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\DomCrawler\Crawler;
 
-use Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
+use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 
 /**
  * Class CategoryAbstractControllerTest

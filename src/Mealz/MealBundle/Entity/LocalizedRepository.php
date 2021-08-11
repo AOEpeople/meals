@@ -1,19 +1,17 @@
 <?php
 
-namespace Mealz\MealBundle\Entity;
+declare(strict_types=1);
+
+namespace App\Mealz\MealBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
-use Mealz\MealBundle\EventListener\LocalisationListener;
+use App\Mealz\MealBundle\EventListener\LocalisationListener;
 
 abstract class LocalizedRepository extends EntityRepository
 {
-    /** @var  LocalisationListener */
-    protected $localizationListener;
+    protected LocalisationListener $localizationListener;
 
-    /**
-     * @param LocalisationListener $localisationListener
-     */
-    public function setLocalizationListener(LocalisationListener $localisationListener)
+    public function setLocalizationListener(LocalisationListener $localisationListener): void
     {
         $this->localizationListener = $localisationListener;
     }

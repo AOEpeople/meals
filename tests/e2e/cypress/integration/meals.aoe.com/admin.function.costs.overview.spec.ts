@@ -29,21 +29,18 @@ describe("admin.function.costs.overview", () => {
 
     // check table rows
     cy.get("@table")
-      .get("[class='table-row']")
+      .find("[class='table-row']")
       .should("have.length.at.least", 1)
-      .first()
       .should("be.visible");
 
     // check cash payment buttons
     cy.get("a[class*='payment-form'][href^='/payment/cash/form/']")
       .should("have.length.at.least", 1)
-      .first()
       .should("be.visible");
 
     // check settle account buttons
     cy.get("a[class*='settlement-form'][href^='/payment/settlement/form/']")
       .should("have.length.at.least", 1)
-      .first()
       .should("be.visible");
   };
 

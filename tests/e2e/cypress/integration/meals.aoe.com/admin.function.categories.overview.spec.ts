@@ -19,10 +19,12 @@ describe("admin.function.categories.overview", () => {
       expect(loc.pathname).to.contain("/category");
     });
 
-    // check headline and create button
+    // check headline
     cy.get("h1[class='headline']")
       .should("be.visible")
       .and("contain.text", "List of categories");
+
+    // check create button
     cy.get("[href='/category/form']")
       .should("be.visible")
       .and("have.text", "Create category");
@@ -32,21 +34,19 @@ describe("admin.function.categories.overview", () => {
 
     // check table rows
     cy.get("@table")
-      .get("tbody tr")
+      .find("[class*='table-row']")
       .should("have.length.at.least", 1)
-      .first()
       .should("be.visible");
 
     // check edit buttons
     cy.get("a[class*='edit-form'][href*='/category/form/']")
       .should("have.length.at.least", 1)
-      .first()
       .should("be.visible");
 
     // check delete buttons
     cy.get("a[class*='button-table'][href*='/delete']")
+      .as("deleteAction")
       .should("have.length.at.least", 1)
-      .first()
       .should("be.visible");
   };
 

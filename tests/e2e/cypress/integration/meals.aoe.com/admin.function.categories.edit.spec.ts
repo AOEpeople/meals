@@ -44,10 +44,12 @@ describe("admin.function.categories.edit", () => {
       .should("be.visible")
       .and("contain.text", "has been added.");
 
-    // check visibility of edit and delete function buttons
+    // check edit button
     cy.get("a[href='/category/form/titleen")
       .should("be.visible")
       .as("editAction");
+
+    // check delete button
     cy.get("a[href='/category/titleen/delete")
       .should("be.visible")
       .as("deleteAction");

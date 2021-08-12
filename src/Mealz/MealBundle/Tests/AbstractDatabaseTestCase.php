@@ -97,7 +97,7 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
     }
 
     /**
-     * @param \Mealz\MealBundle\Entity\Dish $dish
+     * @param \App\Mealz\MealBundle\Entity\Dish $dish
      * @param $datetime
      * @return Meal
      */

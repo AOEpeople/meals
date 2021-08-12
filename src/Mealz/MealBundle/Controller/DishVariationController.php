@@ -25,7 +25,7 @@ class DishVariationController extends BaseController
     {
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
-        /** @var \Mealz\MealBundle\Entity\Dish $dish */
+        /** @var \App\Mealz\MealBundle\Entity\Dish $dish */
         $dish = $this->getDishRepository()->find($slug);
 
         if ($dish === null) {
@@ -76,10 +76,10 @@ class DishVariationController extends BaseController
     {
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
-        /** @var \Mealz\MealBundle\Entity\DishVariationRepository $dishVariationRepo */
+        /** @var \App\Mealz\MealBundle\Entity\DishVariationRepository $dishVariationRepo */
         $dishVariationRepo = $this->getDoctrine()->getRepository('MealzMealBundle:DishVariation');
 
-        /** @var \Mealz\MealBundle\Entity\DishVariation $dish */
+        /** @var \App\Mealz\MealBundle\Entity\DishVariation $dish */
         $dishVariation = $dishVariationRepo->find($slug);
 
         if (!$dishVariation) {
@@ -127,12 +127,12 @@ class DishVariationController extends BaseController
     {
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
-        /** @var \Mealz\MealBundle\Entity\DishVariationRepository $dishRepository */
+        /** @var \App\Mealz\MealBundle\Entity\DishVariationRepository $dishRepository */
         if (is_object($this->getDoctrine()->getRepository('MealzMealBundle:DishVariation')) === true) {
             $dishVariationRepo = $this->getDoctrine()->getRepository('MealzMealBundle:DishVariation');
         }
 
-        /** @var \Mealz\MealBundle\Entity\DishVariation $dishVariation */
+        /** @var \App\Mealz\MealBundle\Entity\DishVariation $dishVariation */
         $dishVariation = $dishVariationRepo->find($slug);
 
         if ($dishVariation === null) {

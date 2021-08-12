@@ -32,26 +32,32 @@ describe("admin.function.dishes.overview", () => {
     // check dishes table
     cy.get("table[id='dish-table']").should("be.visible").as("table");
 
+    // check table header (3)
+    cy.get("@table")
+      .find("thead tr th")
+      .should("have.length", 3)
+      .and("be.visible");
+
     // check table rows
     cy.get("@table")
       .find("[class*='table-row']")
       .should("have.length.at.least", 1)
-      .should("be.visible");
+      .and("be.visible");
 
     // check add variation buttons
     cy.get("a[class*='edit-form'][href*='/variation/new']")
       .should("have.length.at.least", 1)
-      .should("be.visible");
+      .and("be.visible");
 
     // check edit buttons
     cy.get("a[class*='edit-form'][href^='/dish/form/']")
       .should("have.length.at.least", 1)
-      .should("be.visible");
+      .and("be.visible");
 
     // check delete buttons
     cy.get("a[class*='button-table'][href*='/delete']")
       .should("have.length.at.least", 1)
-      .should("be.visible");
+      .and("be.visible");
   };
 
   it("is working fine in viewport 'desktop'", () => {

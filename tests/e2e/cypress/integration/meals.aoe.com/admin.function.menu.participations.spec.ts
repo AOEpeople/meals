@@ -12,7 +12,7 @@ describe("admin.function.menu.participations", () => {
     // open first week with meals
     cy.get("[class='week']").first().click();
 
-    // check visibility of elements
+    // check participations button
     cy.get("[href^='/participations/'][href$='/edit']")
       .should("be.visible")
       .and("contain.text", "Participations")
@@ -26,33 +26,49 @@ describe("admin.function.menu.participations", () => {
         .and.to.contain("/edit");
     });
 
-    // check visibility of elements
+    // check headline
     cy.get("h1[class='headline']")
       .should("be.visible")
       .and("contain.text", "Participations");
+
+    // check participation editor
     cy.get("[class='profile-list']").should("be.visible");
 
-    // check table
-    cy.get("table[class='table']").should("be.visible");
+    // check participations table
+    cy.get("table[class='table']").should("be.visible").as("table");
 
-    // the table has one date range
-    cy.get("[class='table-head wide-cell week-date']").should("have.length", 1);
+    // check date range
+    cy.get("@table")
+      .find("[class='table-head wide-cell week-date']")
+      .should("have.length", 1)
+      .and("be.visible");
 
-    // the table has at least one participant
-    cy.get("[class='table-row']").should("have.length.at.least", 1);
+    // check participants
+    cy.get("@table")
+      .find("[class='table-row']")
+      .should("have.length.at.least", 1)
+      .and("be.visible");
 
-    // the table has at least one weekday
-    cy.get("[class='table-head day']").should("have.length.at.least", 1);
+    // check weekdays
+    cy.get("@table")
+      .find("[class='table-head day']")
+      .should("have.length.at.least", 1)
+      .and("be.visible");
 
-    // the table has at least one meal
-    cy.get("[class='table-head meal-title']").should("have.length.at.least", 1);
+    // check meals
+    cy.get("@table")
+      .find("[class='table-head meal-title']")
+      .should("have.length.at.least", 1)
+      .and("be.visible");
 
-    // the table has at least one participation
-    cy.get("[class='glyphicon glyphicon-ok']").should(
-      "have.length.at.least",
-      1
-    );
+    // check participation
+    cy.get("@table")
+      .find("[class='glyphicon glyphicon-ok']")
+      .should("have.length.at.least", 1)
+      .and("be.visible");
   };
+
+  // TODO: edit participation
 
   it("is working fine in viewport 'desktop'", () => {
     cy.visitMeals();

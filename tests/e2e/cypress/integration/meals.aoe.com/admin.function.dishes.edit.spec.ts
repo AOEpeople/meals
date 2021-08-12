@@ -2,7 +2,7 @@ import * as data from "../../fixtures/data.json";
 import { login } from "../../support/commands/login";
 
 describe("admin.function.dishes.edit", () => {
-  const checkEditingElements = (user: string) => {
+  const checkEditElements = (user: string) => {
     // log user in
     login(user);
 
@@ -39,7 +39,7 @@ describe("admin.function.dishes.edit", () => {
     cy.get("@createForm").should("not.be.visible");
   };
 
-  const checkEditingFunctions = () => {
+  const checkEditFunctions = () => {
     // open form
     cy.get("@createAction").click();
     cy.get("@createForm").should("be.visible");
@@ -88,7 +88,7 @@ describe("admin.function.dishes.edit", () => {
   it("is working fine in viewport 'desktop'", () => {
     cy.visitMeals();
     cy.viewportXL();
-    checkEditingElements(data.user.kochomi);
-    checkEditingFunctions();
+    checkEditElements(data.user.kochomi);
+    checkEditFunctions();
   });
 });

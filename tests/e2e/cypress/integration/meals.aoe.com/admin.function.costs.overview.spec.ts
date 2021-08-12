@@ -27,21 +27,27 @@ describe("admin.function.costs.overview", () => {
     // check costs table
     cy.get("table[class='table']").should("be.visible").as("table");
 
+    // check table header (8)
+    cy.get("@table")
+      .find("thead tr th")
+      .should("have.length", 8)
+      .and("be.visible");
+
     // check table rows
     cy.get("@table")
       .find("[class='table-row']")
       .should("have.length.at.least", 1)
-      .should("be.visible");
+      .and("be.visible");
 
     // check cash payment buttons
     cy.get("a[class*='payment-form'][href^='/payment/cash/form/']")
       .should("have.length.at.least", 1)
-      .should("be.visible");
+      .and("be.visible");
 
     // check settle account buttons
     cy.get("a[class*='settlement-form'][href^='/payment/settlement/form/']")
       .should("have.length.at.least", 1)
-      .should("be.visible");
+      .and("be.visible");
   };
 
   it("is working fine in viewport 'desktop'", () => {

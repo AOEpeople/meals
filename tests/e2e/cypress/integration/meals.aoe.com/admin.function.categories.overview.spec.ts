@@ -32,22 +32,28 @@ describe("admin.function.categories.overview", () => {
     // check categories table
     cy.get("table[id='category-table']").should("be.visible").as("table");
 
+    // check table header (2)
+    cy.get("@table")
+      .find("thead tr th")
+      .should("have.length", 2)
+      .and("be.visible");
+
     // check table rows
     cy.get("@table")
       .find("[class*='table-row']")
       .should("have.length.at.least", 1)
-      .should("be.visible");
+      .and("be.visible");
 
     // check edit buttons
     cy.get("a[class*='edit-form'][href*='/category/form/']")
       .should("have.length.at.least", 1)
-      .should("be.visible");
+      .and("be.visible");
 
     // check delete buttons
     cy.get("a[class*='button-table'][href*='/delete']")
       .as("deleteAction")
       .should("have.length.at.least", 1)
-      .should("be.visible");
+      .and("be.visible");
   };
 
   it("is working fine in viewport 'desktop'", () => {

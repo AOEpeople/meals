@@ -22,6 +22,27 @@ describe("standard.function.login", () => {
     cy.get("header input[name='_password']").should("not.exist");
     cy.get("header button[type='submit']").should("not.exist");
 
+    // check weeks (2)
+    cy.get("[class='weeks']")
+      .should("be.visible")
+      .find("[class='week']")
+      .should("have.length", 2)
+      .and("be.visible")
+      .first()
+      .as("week");
+
+    // check one week
+    cy.get("@week")
+      .find("h1[class='headline']")
+      .should("be.visible")
+      .and("contain.text", "Current week");
+
+    // check meals of this week (5)
+    cy.get("@week")
+      .find("[class*='meal ']")
+      .should("have.length", 5)
+      .and("be.visible");
+
     // log user out
     cy.get("@logout").click();
 

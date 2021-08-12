@@ -6,7 +6,7 @@ describe("admin.function.menu.overview", () => {
     // log user in
     login(user);
 
-    // check visibility of elements
+    // check navigation for link to 'menu'
     cy.get("ul[class='navbar']")
       .find("a[href='/menu']")
       .should("be.visible")
@@ -19,16 +19,25 @@ describe("admin.function.menu.overview", () => {
       expect(loc.pathname).to.contain("/menu");
     });
 
-    // check visibility of elements
+    // check headline
     cy.get("h1[class='headline']")
       .should("be.visible")
       .and("contain.text", "List of weeks");
 
-    // at least one week should have meals
-    cy.get("[class='week']").should("have.length.at.least", 1);
+    // check weeks list
+    cy.get("[class*='week-list']").should("be.visible").as("list");
 
-    // at least one week should have no meals
-    cy.get("[class='week week-create']").should("have.length.at.least", 1);
+    // check weeks with meals
+    cy.get("@list")
+      .find("[class='week']")
+      .should("have.length.at.least", 1)
+      .and("be.visible");
+
+    // check weeks without meals
+    cy.get("@list")
+      .find("[class='week week-create']")
+      .should("have.length.at.least", 1)
+      .and("be.visible");
   };
 
   it("is working fine in viewport 'desktop'", () => {

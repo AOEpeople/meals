@@ -6,10 +6,12 @@ describe("standard.function.balance", () => {
     // log user in
     login(user);
 
-    // check visibility of elements
+    // check header balance information
     cy.get("header [class='balance-text']")
       .should("be.visible")
       .and("contain.text", "Balance:");
+
+    // check header transactions button
     cy.get("header a[href='/accounting/transactions']")
       .should("be.visible")
       .as("transactions");
@@ -20,14 +22,33 @@ describe("standard.function.balance", () => {
       expect(loc.pathname).to.contain("/accounting/transactions");
     });
 
-    // check visibility of elements
+    // check headline
     cy.get("h1[class='headline']")
       .should("be.visible")
       .and("contain.text", "Account");
+
+    // check add funds button
     cy.get(`a[href='/payment/ecash/form/${user}']`)
       .should("be.visible")
       .and("contain.text", "ADD FUNDS")
       .as("payment");
+
+    // check account table
+    cy.get("table[class*='table']").should("be.visible").as("table");
+
+    // check table header (3)
+    cy.get("@table")
+      .find("thead tr th")
+      .should("have.length", 3)
+      .and("be.visible");
+
+    // check table rows
+    cy.get("@table")
+      .find("[class*='table-row']")
+      .should("have.length.at.least", 1)
+      .and("be.visible");
+
+    // check table balance information
     cy.get("tfoot [class='table-row']")
       .should("be.visible")
       .and("contain.text", "Current balance:")
@@ -50,7 +71,7 @@ describe("standard.function.balance", () => {
     cy.get("form[name='ecash']").should("be.visible");
     cy.get("input[id='ecash_amount']").should("be.visible").as("amount");
 
-    // TODO: iframe can not be tested easily (https://www.npmjs.com/package/cypress-iframe)
+    // TODO: check iframe / iframe can not be tested easily (https://www.npmjs.com/package/cypress-iframe)
     //cy.get("[data-funding-source='paypal']").should("be.visible").as("paypal");
 
     // TODO: carry out a payment

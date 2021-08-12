@@ -33,7 +33,6 @@ services:
         resource: '../src/Mealz/MealBundle/'
         exclude:
             - '../src/Mealz/MealBundle/DependencyInjection/'
-            - '../src/Mealz/MealBundle/DataFixtures/'
             - '../src/Mealz/MealBundle/Entity/*Repository.php'
             - '../src/Mealz/MealBundle/Tests/'
 
@@ -50,7 +49,6 @@ services:
         resource: '../src/Mealz/AccountingBundle/'
         exclude:
             - '../src/Mealz/AccountingBundle/DependencyInjection/'
-            - '../src/Mealz/AccountingBundle/DataFixtures/'
             - '../src/Mealz/AccountingBundle/Entity/'
             - '../src/Mealz/AccountingBundle/Tests/'
     App\Mealz\AccountingBundle\Controller\:

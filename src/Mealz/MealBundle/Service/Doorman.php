@@ -20,29 +20,20 @@ use Symfony\Component\Security\Core\Security;
  */
 class Doorman
 {
-
     /**
      * Doorman constants defining access types
      * @see $this->hasAccessTo
      */
-    const AT_MEAL_PARTICIPATION = 0;
+    private const AT_MEAL_PARTICIPATION = 0;
 
     /**
-     * @var \DateTime
+     * Current timestamp
      */
-    protected $now;
+    protected int $now;
 
-    /**
-     * @var Security
-     */
-    protected $security;
+    protected Security $security;
 
-    /**
-     * Doorman constructor.
-     * @param Security $security
-     * @param string   $lockParticipationAt
-     */
-    public function __construct(Security $security, $lockParticipationAt = '-1 day 12:00')
+    public function __construct(Security $security, string $lockParticipationAt = '-1 day 12:00')
     {
         $this->security = $security;
         $this->now = time();
@@ -104,21 +95,12 @@ class Doorman
         }
     }
 
-    /**
-     * @param Meal $meal
-     * @param Participant $participant
-     * @return bool
-     */
-    public function isUserAllowedToUnswap(Meal $meal, Participant $participant)
+    public function isUserAllowedToUnswap(Meal $meal, Participant $participant): bool
     {
         return ($this->isUserAllowedToSwap($meal) && $this->isParticipationPending($participant));
     }
 
-    /**
-     * @param Participant $participant
-     * @return bool
-     */
-    public function isParticipationPending(Participant $participant)
+    public function isParticipationPending(Participant $participant): bool
     {
         return $participant->getOfferedAt() !== 0;
     }
@@ -190,11 +172,7 @@ class Doorman
         // check access in terms of given accesstype...
         switch ($accesstype) {
             case (self::AT_MEAL_PARTICIPATION):
-                /**
-                 * Parameters:
-                 * @var \Mealz\MealBundle\Entity\Meal    meal
-                 */
-                if (!isset($params['meal']) || !$params['meal'] instanceof \Mealz\MealBundle\Entity\Meal) {
+                if (!isset($params['meal']) || !$params['meal'] instanceof Meal) {
                     return false;
                 }
                 return $this->isToggleParticipationAllowed($params['meal']->getDay()->getLockParticipationDateTime());

@@ -19,7 +19,7 @@
     "reports:generate": "marge cypress/reports/mochareports/report.json -f report -o cypress/reports/mochareports --inline"
   },
   "devDependencies": {
-    "@types/node": "^16.4.13",
+    "@types/node": "^16.6.0",
     "cross-env": "^7.0.3",
     "cypress": "^8.2.0",
     "cypress-multi-reporters": "^1.5.0",
@@ -31,7 +31,7 @@
     "mochawesome-report-generator": "^5.2.0",
     "prettier": "^2.3.2",
     "typescript": "^4.3.5",
-    "webpack": "^5.49.0"
+    "webpack": "^5.50.0"
   },
   "dependencies": {}
 }

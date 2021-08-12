@@ -6,7 +6,7 @@ describe("admin.function.costs.overview", () => {
     // log user in
     login(user);
 
-    // check visibility of elements
+    // check navigation for link to 'costs'
     cy.get("ul[class='navbar']")
       .find("a[href='/print/costsheet']")
       .should("be.visible")
@@ -19,25 +19,32 @@ describe("admin.function.costs.overview", () => {
       expect(loc.pathname).to.contain("/print/costsheet");
     });
 
-    // check visibility of elements
+    // check headline
     cy.get("h1[class='headline']")
       .should("be.visible")
       .and("contain.text", "Cost listing");
 
-    // check table
-    cy.get("table[class='table']").should("be.visible");
+    // check costs table
+    cy.get("table[class='table']").should("be.visible").as("table");
 
-    // the table has at least one name
-    cy.get("[class='table-row']").should("have.length.at.least", 1);
+    // check table rows
+    cy.get("@table")
+      .get("[class='table-row']")
+      .should("have.length.at.least", 1)
+      .first()
+      .should("be.visible");
 
-    // at least one cash payment button should be present
-    cy.get("[href^='/payment/cash/form/']").should("have.length.at.least", 1);
+    // check cash payment buttons
+    cy.get("a[class*='payment-form'][href^='/payment/cash/form/']")
+      .should("have.length.at.least", 1)
+      .first()
+      .should("be.visible");
 
-    // at least one settle account button should be present
-    cy.get("[href^='/payment/settlement/form/']").should(
-      "have.length.at.least",
-      1
-    );
+    // check settle account buttons
+    cy.get("a[class*='settlement-form'][href^='/payment/settlement/form/']")
+      .should("have.length.at.least", 1)
+      .first()
+      .should("be.visible");
   };
 
   it("is working fine in viewport 'desktop'", () => {

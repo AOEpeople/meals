@@ -6,7 +6,7 @@ describe("admin.function.categories.overview", () => {
     // log user in
     login(user);
 
-    // check visibility of elements
+    // check navigation for link to 'categories'
     cy.get("ul[class='navbar']")
       .find("a[href='/category']")
       .should("be.visible")
@@ -19,7 +19,7 @@ describe("admin.function.categories.overview", () => {
       expect(loc.pathname).to.contain("/category");
     });
 
-    // check visibility of elements
+    // check headline and create button
     cy.get("h1[class='headline']")
       .should("be.visible")
       .and("contain.text", "List of categories");
@@ -27,8 +27,27 @@ describe("admin.function.categories.overview", () => {
       .should("be.visible")
       .and("have.text", "Create category");
 
-    // check table
-    cy.get("table[id='category-table']").should("be.visible");
+    // check categories table
+    cy.get("table[id='category-table']").should("be.visible").as("table");
+
+    // check table rows
+    cy.get("@table")
+      .get("tbody tr")
+      .should("have.length.at.least", 1)
+      .first()
+      .should("be.visible");
+
+    // check edit buttons
+    cy.get("a[class*='edit-form'][href*='/category/form/']")
+      .should("have.length.at.least", 1)
+      .first()
+      .should("be.visible");
+
+    // check delete buttons
+    cy.get("a[class*='button-table'][href*='/delete']")
+      .should("have.length.at.least", 1)
+      .first()
+      .should("be.visible");
   };
 
   it("is working fine in viewport 'desktop'", () => {

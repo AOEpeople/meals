@@ -2,47 +2,49 @@ import * as data from "../../fixtures/data.json";
 import { login } from "../../support/commands/login";
 
 describe("admin.function.categories.edit", () => {
-  const checkEditingElements = (user: string) => {
+  const checkEditElements = (user: string) => {
     // log user in
     login(user);
 
     // open categories overview
     cy.get("ul[class='navbar']").find("a[href='/category']").click();
 
-    // create new category
+    // open form to create new category
     cy.get("[href='/category/form']").click().as("createAction");
 
-    // check visibility of elements
+    // check form
     cy.get("[class='create-form top-form']")
       .should("be.visible")
       .as("createForm");
 
+    // check inputs
     cy.get("input[id='category_title_de").should("be.visible").as("titleDE");
     cy.get("input[id='category_title_en").should("be.visible").as("titleEN");
 
+    // check save button
     cy.get("button[id='category_save").should("be.visible").as("saveAction");
 
-    // close and open form
+    // close form
     cy.get("@createAction").click();
     cy.get("@createForm").should("not.be.visible");
   };
 
-  const checkEditingFunctions = () => {
-    // open form
+  const checkEditFunctions = () => {
+    // open form to create new category
     cy.get("@createAction").click();
     cy.get("@createForm").should("be.visible");
 
-    // create category
+    // set inputs
     cy.get("@titleDE").type("titleDE");
     cy.get("@titleEN").type("titleEN");
 
-    // save category
+    // save new category
     cy.get("@saveAction").click();
     cy.get("[class='alert alert-success']")
       .should("be.visible")
       .and("contain.text", "has been added.");
 
-    // check visibility of elements
+    // check visibility of edit and delete function buttons
     cy.get("a[href='/category/form/titleen")
       .should("be.visible")
       .as("editAction");
@@ -50,15 +52,19 @@ describe("admin.function.categories.edit", () => {
       .should("be.visible")
       .as("deleteAction");
 
-    // edit category
+    // edit created category
     cy.get("@editAction").click();
     cy.get("@saveAction").click();
+
+    // check success alert
     cy.get("[class='alert alert-success']")
       .should("be.visible")
       .and("contain.text", "has been modified.");
 
-    // delete category
+    // delete created category
     cy.get("@deleteAction").click();
+
+    // check success alert
     cy.get("[class='alert alert-success']")
       .should("be.visible")
       .and("contain.text", "has been deleted.");
@@ -67,7 +73,7 @@ describe("admin.function.categories.edit", () => {
   it("is working fine in viewport 'desktop'", () => {
     cy.visitMeals();
     cy.viewportXL();
-    checkEditingElements(data.user.kochomi);
-    checkEditingFunctions();
+    checkEditElements(data.user.kochomi);
+    checkEditFunctions();
   });
 });

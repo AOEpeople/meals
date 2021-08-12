@@ -6,6 +6,9 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class ExceptionNormalizer implements NormalizerInterface
 {
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function normalize($object, $format = null, array $context = array())
     {
         return [
@@ -15,6 +18,9 @@ class ExceptionNormalizer implements NormalizerInterface
         ];
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function supportsNormalization($data, $format = null)
     {
         // TODO: [Upgrade] Do we need a new exception class ?

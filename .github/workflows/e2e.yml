@@ -9,7 +9,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Setup hosts
-        run: echo "127.0.0.1 meals.test" >> /etc/hosts
+        run: echo "127.0.0.1 meals.test" | sudo tee -a /etc/hosts
       - name: Test with docker compose
         run: |
           docker-compose pull app db

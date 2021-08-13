@@ -9,13 +9,13 @@ describe("admin.function.costs.manage", () => {
     // open costs overview
     cy.get("ul[class='navbar']").find("a[href='/print/costsheet']").click();
 
-    // check first cash payment button
+    // check topmost cash payment button
     cy.get("[href^='/payment/cash/form/']")
       .first()
       .should("be.visible")
       .as("cashAction");
 
-    // check first settle account button
+    // check topmost settle account button
     cy.get("[href^='/payment/settlement/form/']")
       .first()
       .should("be.visible")
@@ -26,14 +26,14 @@ describe("admin.function.costs.manage", () => {
     cy.get("form[name='cash']").should("be.visible");
 
     // check inputs
-    cy.get("input[id='cash_amount']").should("be.visible");
-    cy.get("button[id='cash_submit']").should("be.visible");
+    cy.get("input[id='cash_amount']").should("be.visible").as("inputAmount");
+    cy.get("button[id='cash_submit']").should("be.visible").as("submitAmount");
 
     // open settle account option
     cy.get("@settleAction").click();
     cy.get("form[name='settleform']").should("be.visible");
 
-    // check settle account option for correct user profile
+    // check correct user profile on settle account option
     cy.get("a[class='settle-account']")
       .invoke("attr", "data-profile")
       .then((profile) => {
@@ -44,19 +44,50 @@ describe("admin.function.costs.manage", () => {
           .first()
           .invoke("text")
           .then((text) => {
+            // compare settle account link to text in column 'name'
             expect(text).contain(profile);
           });
       });
 
-    // TODO: make cash payment with random amount and check total value after transaction
+    // make cash payment with random amount and check amount after transaction
     cy.get("@settleRow")
       .children("[class='table-data']")
       .last()
       .invoke("text")
-      .then((text) => {
+      .then((text: string) => {
+        let initialAmount: string;
+        let finalAmount: string;
         const regex = /[+-]?\d+(\.\d+)?/g;
-        let text2 = text.match(regex)[0];
-        cy.log("TOTAL " + (parseFloat(text2) + 1));
+        const cashAmount = (Math.floor(Math.random() * 100) + 1) / 100;
+
+        // determine initial amount
+        initialAmount = text.match(regex)[0];
+
+        // open cash payment option and submit payment
+        cy.get("@cashAction").click();
+        cy.get("@inputAmount").clear().type(String(cashAmount));
+        cy.get("@submitAmount").click();
+
+        // check success alert
+        cy.get("[class='alert alert-success']")
+          .should("be.visible")
+          .and("contain.text", "Booked cash payment of ")
+          .and("contain.text", cashAmount);
+
+        // check total amount after cash payment
+        cy.get("@settleRow")
+          .children("[class='table-data']")
+          .last()
+          .invoke("text")
+          .then((text: string) => {
+            // determine final amount
+            finalAmount = text.match(regex)[0];
+
+            // compare final amount to sum of initial amount and cash amount
+            expect(parseFloat(finalAmount)).eq(
+              parseFloat(initialAmount) + cashAmount
+            );
+          });
       });
   };
 

@@ -26,3 +26,9 @@ jobs:
           working-directory: tests/e2e
           env: baseUrl=http://meals.test:8033/
           spec: '**/meals.aoe.com/**/*'
+      - name: Upload coverage report artifact
+        uses: actions/upload-artifact@v2.2.4
+        if: always()
+        with:
+          name: e2e-report
+          path: tests/e2e/cypress/reports

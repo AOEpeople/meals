@@ -10,14 +10,15 @@ jobs:
         uses: actions/checkout@v2
       - name: Setup hosts
         run: echo "127.0.0.1 meals.test" | sudo tee -a /etc/hosts
-      - name: Test with docker compose
+      - name: Boot test environment
         run: |
           docker-compose pull app db
           docker-compose up -d --no-build app
-          sleep 30
+          sleep 15
           docker-compose exec -T app app/console doctrine:fixtures:load -n
-          docker-compose logs --tail 10
           curl -i http://meals.test:8033/
+          docker-compose logs --tail 10
+          docker-compose exec -T app cat app/logs/*.log
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:

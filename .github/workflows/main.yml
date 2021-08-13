@@ -4,6 +4,7 @@ on:
   push:
     branches-ignore:
       - 'dependabot/**'
+      - 'feature/e2e-tests-in-pipeline'
     tags:
       - 'v*'
   pull_request:

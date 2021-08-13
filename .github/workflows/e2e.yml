@@ -13,7 +13,7 @@ jobs:
           docker-compose pull app db
           docker-compose up -d --no-build app
           sleep 15
-          docker-compose exec app app/console doctrine:fixtures:load -n
+          docker-compose exec -T app app/console doctrine:fixtures:load -n
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:

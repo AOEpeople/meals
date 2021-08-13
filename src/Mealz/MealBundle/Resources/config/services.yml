@@ -13,6 +13,7 @@ services:
   mealz_meal.doorman:
     class: '%mealz_meal.doorman.class%'
     public: true
+    # TODO: Check if $lockParticipationAt is used anywhere in service. If yes, then add the argument, otherwise remove it
 #    arguments:
 #      $lockParticipationAt: %mealz.lock_toggle_participation_at%
 

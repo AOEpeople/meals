@@ -16,6 +16,7 @@ jobs:
           docker-compose up -d --no-build app
           sleep 15
           docker-compose exec -T app app/console doctrine:fixtures:load -n
+          docker-compose exec -T app chmod -R 777 app/cache app/logs
           curl -i http://meals.test:8033/
           docker-compose logs --tail 10
           docker-compose exec -T app cat app/logs/*.log

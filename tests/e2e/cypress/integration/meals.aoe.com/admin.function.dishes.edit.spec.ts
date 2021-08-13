@@ -53,6 +53,8 @@ describe("admin.function.dishes.edit", () => {
 
     // save new dish
     cy.get("@saveAction").click();
+
+    // check success alert
     cy.get("[class='alert alert-success']")
       .should("be.visible")
       .and("contain.text", "has been added.");
@@ -65,8 +67,6 @@ describe("admin.function.dishes.edit", () => {
       .should("be.visible")
       .as("deleteAction");
 
-    // TODO: add variation to created dish
-
     // edit created dish
     cy.get("@editAction").click();
     cy.get("@saveAction").click();
@@ -75,6 +75,32 @@ describe("admin.function.dishes.edit", () => {
     cy.get("[class='alert alert-success']")
       .should("be.visible")
       .and("contain.text", "has been modified.");
+
+    // check add variation action
+    cy.contains("titleEN")
+      .siblings()
+      .find("a[href*='/variation/new']")
+      .should("be.visible")
+      .as("addVariationAction");
+
+    // open add variation form
+    cy.get("@addVariationAction").click();
+
+    // set inputs
+    cy.get("input[id='dishvariation_title_de")
+      .should("be.visible")
+      .type("titleVariationDE");
+    cy.get("input[id='dishvariation_title_en")
+      .should("be.visible")
+      .type("titleVariationEN");
+
+    // save new variation
+    cy.get("button[id='dishvariation_save").should("be.visible").click();
+
+    // check success alert
+    cy.get("[class='alert alert-success']")
+      .should("be.visible")
+      .and("contain.text", "has been added.");
 
     // delete created dish
     cy.get("@deleteAction").click();

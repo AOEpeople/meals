@@ -28,7 +28,7 @@ class DishAbstractControllerTest extends AbstractControllerTestCase
                 new LoadDishes(),
                 new LoadDishVariations(),
                 new LoadMeals(),
-                new LoadUsers($this->client->getContainer()),
+                new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
             ]
         );
     }

@@ -19,12 +19,10 @@ class OAuthProviderTest extends AbstractControllerTestCase
 
         $this->createDefaultClient();
         $this->clearAllTables();
-        $this->loadFixtures(
-            array(
-                new LoadRoles(),
-                new LoadUsers($this->client->getContainer())
-            )
-        );
+        $this->loadFixtures([
+            new LoadRoles(),
+            new LoadUsers(self::$container->get('security.user_password_encoder.generic'))
+        ]);
     }
 
     /**

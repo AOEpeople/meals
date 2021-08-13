@@ -2,33 +2,34 @@
 
 <!-- https://phpunit.readthedocs.io/en/latest/configuration.html -->
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="../vendor/phpunit/phpunit/phpunit.xsd"
          backupGlobals="false"
          colors="true"
-         bootstrap="tests/bootstrap.php"
+         bootstrap="bootstrap.php"
 >
     <php>
         <ini name="display_errors" value="1" />
         <ini name="error_reporting" value="-1" />
+        <server name="APP_DEBUG" value="1" force="true" />
         <server name="APP_ENV" value="test" force="true" />
         <server name="SHELL_VERBOSITY" value="-1" />
     </php>
 
     <testsuites>
         <testsuite name="Project Test Suite">
-            <directory>tests</directory>
+            <directory>../src/Mealz/*Bundle/Tests</directory>
         </testsuite>
     </testsuites>
 
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">src</directory>
-        </whitelist>
-    </filter>
+<!--    <filter>-->
+<!--        <whitelist processUncoveredFilesFromWhitelist="true">-->
+<!--            <directory suffix=".php">src</directory>-->
+<!--        </whitelist>-->
+<!--    </filter>-->
 
-    <listeners>
-        <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
-    </listeners>
+<!--    <listeners>-->
+<!--        <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />-->
+<!--    </listeners>-->
 
     <!-- Run `composer require symfony/panther` before enabling this extension -->
     <!--

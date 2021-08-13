@@ -17,9 +17,6 @@
     "composer/xdebug-handler": {
         "version": "2.0.2"
     },
-    "creatissimo/mattermost-bundle": {
-        "version": "v1.1.12"
-    },
     "dnoegel/php-xdg-base-dir": {
         "version": "v0.1.1"
     },
@@ -303,9 +300,6 @@
     "phpspec/prophecy": {
         "version": "1.13.0"
     },
-    "phpstan/phpstan": {
-        "version": "0.12.94"
-    },
     "phpunit/php-code-coverage": {
         "version": "6.1.4"
     },
@@ -355,9 +349,6 @@
     },
     "psr/log": {
         "version": "1.1.4"
-    },
-    "rector/rector": {
-        "version": "0.11.43"
     },
     "sebastian/cli-parser": {
         "version": "1.0.1"
@@ -455,6 +446,9 @@
     "symfony/asset": {
         "version": "v5.3.4"
     },
+    "symfony/browser-kit": {
+        "version": "v4.4.27"
+    },
     "symfony/cache": {
         "version": "v5.3.4"
     },
@@ -477,6 +471,9 @@
     "symfony/contracts": {
         "version": "v1.1.10"
     },
+    "symfony/css-selector": {
+        "version": "v4.4.27"
+    },
     "symfony/debug": {
         "version": "v4.4.27"
     },
@@ -488,6 +485,9 @@
     },
     "symfony/doctrine-bridge": {
         "version": "v4.4.27"
+    },
+    "symfony/dom-crawler": {
+        "version": "v5.3.4"
     },
     "symfony/dotenv": {
         "version": "v5.3.6"

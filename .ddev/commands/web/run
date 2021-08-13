@@ -7,15 +7,8 @@ function main() {
   'migrate')
     execMigrateTestDb "$@"
     ;;
-  'test')
-    execUnittestBackend "$@"
-    execFunctest "$@"
-    ;;
-  'test:unit')
-    execUnittestBackend "$@"
-    ;;
-  'test:unit:backend')
-    execUnittestBackend "$@"
+  'tests')
+    execTests "$@"
     ;;
   *)
     showUsage
@@ -23,12 +16,12 @@ function main() {
   esac
 }
 
-function  execMigrateTestDb() {
-  app/console doctrine:schema:update --env=test --force
+function execTests() {
+  vendor/bin/phpunit -c tests/phpunit.xml.dist -- "${@:2}"
 }
 
-function execUnittestBackend() {
-  bin/phpunit -c app/config/commons/development/phpunit.xml -- "${@:2}"
+function  execMigrateTestDb() {
+  app/console doctrine:schema:update --env=test --force
 }
 
 function showUsage() {
@@ -37,8 +30,7 @@ Usage:
   ddev run [command] options
 
 Commands:
-  test                Run unit and functional test
-  test:unit           Run all unit test (backend and frontend)
+  tests               Run unit and functional test
 EOM
 }
 

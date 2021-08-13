@@ -15,7 +15,6 @@ return [
     JMS\SerializerBundle\JMSSerializerBundle::class => ['all' => true],
     FOS\RestBundle\FOSRestBundle::class => ['all' => true],
     FOS\OAuthServerBundle\FOSOAuthServerBundle::class => ['all' => true],
-    Creatissimo\MattermostBundle\CreatissimoMattermostBundle::class => ['all' => true],
     Http\HttplugBundle\HttplugBundle::class => ['all' => true],
     HWI\Bundle\OAuthBundle\HWIOAuthBundle::class => ['prod' => true],
     WhiteOctober\TCPDFBundle\WhiteOctoberTCPDFBundle::class => ['all' => true],

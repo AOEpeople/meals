@@ -1,0 +1,61 @@
+.meal-form {
+  .headline-container .headline-tool {
+    float: left;
+    margin-left: 30px;
+  }
+}
+
+.week-form {
+  width: 70%;
+  margin: 0 auto;
+  text-align: center;
+
+  .day {
+    border-right: 70px solid transparent;
+
+    .meal-row  .form-row {
+      margin-bottom: 0;
+    }
+
+    .meal-select-box .category {
+      display: block;
+    }
+
+    .meal-rows-wrapper {
+      border-right: 1px solid $meal-border-color;
+    }
+
+    .week-day-action {
+      position: absolute;
+      top: 50%;
+      right: -61px;
+      margin-top: -16px;
+    }
+
+    .remove-meal {
+      display: none;
+      float: right;
+      margin: -11px -15px -9px -10px;
+      padding: 10px;
+
+      &:hover,
+      &:focus {
+        color: $color-red;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .select-wrapper {
+    display: block;
+
+    select option[disabled="disabled"] {
+      display: none;
+
+      &[selected="selected"] {
+        display: block;
+      }
+    }
+  }
+}
+

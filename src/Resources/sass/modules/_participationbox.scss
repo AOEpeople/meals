@@ -1,0 +1,97 @@
+.profile-list {
+  position: relative;
+  margin: 30px 0;
+  padding-bottom: 30px;
+
+  li:hover {
+    cursor: pointer;
+    background: $color-gray-middle;
+  }
+
+  .profile {
+    width: 100%;
+    max-width: 400px;
+    height: 40px;
+    padding: 0 15px;
+    border: 0;
+    border-radius: 0;
+    border-top: 2px solid $color-gray-secondary;
+    border-bottom: 2px solid $color-gray-secondary;
+    background: $color-white;
+  }
+
+  .button.small,
+  .button.small:active,
+  .button.small:visited {
+    float: left;
+    padding: 13px 20px 12px;
+
+    .glyphicon {
+      line-height: 0;
+    }
+  }
+
+  .button.small {
+    &:hover {
+      background-color: $color-green;
+    }
+  }
+}
+
+.edit-participation .table-row {
+  &:hover,
+  &:focus,
+  &.editing {
+    background-color: $table-highlight;
+    cursor: pointer;
+
+    .wide-cell {
+      font-weight: bold;
+
+      &::after {
+        display: inline-block;
+        width: 13px;
+        height: 12px;
+        margin-left: 5px;
+        content: "\270f";
+        font-size: 14px;
+        font-family: "Glyphicons Halflings", sans-serif;
+        vertical-align: middle;
+        line-height: 13px;
+      }
+    }
+  }
+}
+
+.toggle-profiles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  color: $color-white;
+  background: $color-base;
+
+  &:hover,
+  &:active {
+    color: $color-base;
+  }
+
+  &:hover ,
+  &:focus {
+    background-color: $color-green;
+  }
+
+  .glyphicon-menu-hamburger::before {
+    display: block;
+    padding: 12px 0 0 13px;
+    color: $color-white;
+  }
+}
+
+.easy-autocomplete {
+  float: left;
+  min-width: 250px;
+  padding-left: 40px;
+}

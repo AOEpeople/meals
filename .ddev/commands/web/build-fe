@@ -1,0 +1,4 @@
+#!/bin/bash
+
+pushd src/Resources && yarn && yarn build
+popd && bin/console assets:install web --symlink --relative

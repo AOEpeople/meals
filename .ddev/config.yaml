@@ -25,14 +25,6 @@ web_environment:
   - DB_VERS=5.7
 omit_containers:
   - dba
-hooks:
-  post-start:
-    - exec: "composer install"
-    - exec: "cd app/Resources && yarn && yarn build"
-    - exec: "app/console assets:install web --symlink --relative"
-    - exec: "setup/clear_cache.sh"
-    - exec-host: "ddev import-db --src=./docker/db/structure.sql"
-    - exec: "app/console doctrine:fixtures:load --env=dev -n"
 
 # This config.yaml was created with ddev version v1.17.5
 # webimage: drud/ddev-webserver:v1.17.4

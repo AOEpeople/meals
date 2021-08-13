@@ -25,7 +25,7 @@ class EcashControllerTest extends AbstractControllerTestCase
         $this->clearAllTables();
         $this->loadFixtures(
             array(
-                new LoadUsers($this->client->getContainer()),
+                new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
                 new LoadTransactions()
             )
         );

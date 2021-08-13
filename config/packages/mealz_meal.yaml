@@ -6,7 +6,7 @@ mealz_meal:
             enabled: false
 
             # Mattermost webhook URL
-            webhook_url: ~ # Required
+            webhook_url: 'https://dummy-url'
 
             # Friendly username displayed in mattermost notifications.
             username: Chef

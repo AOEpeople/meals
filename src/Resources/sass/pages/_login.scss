@@ -1,0 +1,31 @@
+.login-page {
+  form {
+    padding: 20px;
+    background-color: $color-gray-light;
+    text-align: center;
+
+    input {
+      display: block;
+      max-width: 300px;
+      margin: 20px auto;
+    }
+  }
+}
+
+header .header-content .balance-text a {
+  cursor: pointer;
+  position: relative;
+  color: $color-white;
+  font-weight: bold;
+
+  &.active::after {
+    position: absolute;
+    bottom: -39px;
+    left: 50%;
+    margin-left: -10px;
+    border: 10px solid transparent;
+    border-bottom-color: $color-white;
+    content: " ";
+    pointer-events: none;
+  }
+}

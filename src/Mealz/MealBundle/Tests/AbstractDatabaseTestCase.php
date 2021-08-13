@@ -22,9 +22,8 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 abstract class AbstractDatabaseTestCase extends WebTestCase
 {
-
     /**
-     * set up
+     * @inheritDoc
      */
     protected function setUp(): void
     {

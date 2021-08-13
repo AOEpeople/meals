@@ -1,0 +1,176 @@
+%base-styling {
+  border: 0;
+  color: $color-gray-primary;
+  font-size: 12px;
+  font-family: $font-light;
+}
+
+.hidden-form-field {
+  position: absolute;
+  visibility: hidden;
+}
+
+input {
+  @extend %base-styling;
+  -webkit-font-smoothing: antialiased;
+
+  &[type="text"],
+  &[type="password"] {
+    width: 100%;
+    padding: 10px;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+select {
+  @extend %base-styling;
+
+  position: relative;
+  width: 100%;
+  padding: 10px;
+  border: 0;
+  border-radius: 0;
+  background: $color-white;
+  cursor: pointer;
+  text-indent: 1px;
+  text-overflow: "";
+  appearance: none;
+  appearance: none;
+
+  &:focus {
+    outline: none;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+  }
+}
+
+.select-wrapper {
+  position: relative;
+  display: inline-block;
+
+  &::after {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    border: 5px solid transparent;
+    border-top-color: $color-gray-primary;
+    content: " ";
+    pointer-events: none;
+  }
+}
+
+fieldset {
+  width: 100%;
+
+  legend {
+    font-size: 12px;
+    font-family: $font-bold;
+  }
+}
+
+.form-row {
+  width: 100%;
+  margin-bottom: 20px;
+
+  input.form-field-invalid {
+    padding: 9px;
+    border: 1px solid $color-red;
+  }
+}
+
+.form-field-errors {
+  position: absolute;
+  color: $color-red;
+  font-size: 11px;
+  line-height: 20px;
+}
+
+.error {
+  display: none;
+  margin: 14px 0;
+  color: $color-red;
+}
+
+$fieldset-padding: 13px;
+
+.form-ajax {
+  .top-form {
+    margin-top: -10px;
+    margin-bottom: 40px;
+  }
+
+  .create-form {
+    form::after {
+      position: absolute;
+      top: -20px;
+      right: 50px;
+      margin-left: -10px;
+      border: 10px solid transparent;
+      border-bottom-color: $color-gray-light;
+      content: " ";
+
+      @include breakpoint(small) {
+        border: 0;
+      }
+    }
+  }
+
+  .edit-form {
+    form {
+      display: none;
+    }
+
+    form::after {
+      position: absolute;
+      top: -20px;
+      left: 50px;
+      margin-left: -10px;
+      border: 10px solid transparent;
+      border-bottom-color: $color-gray-light;
+      content: " ";
+
+      @include breakpoint(small) {
+        border: 0;
+      }
+    }
+  }
+
+  form {
+    position: relative;
+
+    padding: 40px;
+    background-color: $color-gray-light;
+    text-align: center;
+
+    @include breakpoint(small) {
+      padding: 20px;
+    }
+  }
+
+  fieldset {
+    float: left;
+    width: 50%;
+    padding: $fieldset-padding $fieldset-padding 0;
+    text-align: left;
+
+    @include breakpoint(small) {
+      float: none;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+  }
+
+  .select-wrapper {
+    width: 50%;
+    margin: 0 auto 10px;
+
+    @include breakpoint(small) {
+      width: calc(100% - (#{$fieldset-padding} * 2));
+    }
+  }
+}

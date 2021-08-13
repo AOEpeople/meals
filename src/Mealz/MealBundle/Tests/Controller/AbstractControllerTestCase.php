@@ -18,7 +18,7 @@ use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\Role;
 use App\Mealz\UserBundle\Entity\RoleRepository;
-use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage;
@@ -31,8 +31,39 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
 {
-    /** @var  Client $client */
-    protected $client;
+    protected KernelBrowser $client;
+
+    /**
+     * @inheritDoc
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->client = static::createClient();
+    }
+
+    protected function loginAs(string $username): void
+    {
+        $session = $this->client->getContainer()->get('session');
+        // the firewall context (defaults to the firewall name)
+        $firewall = 'main';
+
+        $repo = $this->client->getContainer()->get('doctrine')->getRepository('MealzUserBundle:Login');
+        $user = $repo->findOneBy(['username' => $username]);
+
+        if (!($user instanceof UserInterface)) {
+            throw new \RuntimeException('user not found: '.$username);
+        }
+
+        $token = new UsernamePasswordToken($user, null, $firewall, $user->getRoles());
+        if (($session->getId()) === '') {
+            $session->set('_security_'.$firewall, serialize($token));
+            $session->save();
+        }
+        $cookie = new Cookie($session->getName(), $session->getId());
+        $this->client->getCookieJar()->set($cookie);
+    }
 
     /**
      * Create a default client with no frontend user logged in
@@ -84,7 +115,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
          */
         $session = $this->client->getContainer()->get('session');
         // the firewall context (defaults to the firewall name)
-        $firewall = 'mealz';
+        $firewall = 'main';
 
         $repo = $this->client->getContainer()->get('doctrine')->getRepository('MealzUserBundle:Login');
         $user = $repo->findOneBy(['username' => 'kochomi']);

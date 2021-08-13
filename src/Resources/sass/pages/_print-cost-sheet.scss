@@ -1,0 +1,162 @@
+.print-costsheet {
+  position: relative;
+
+  .headline-container {
+    .button {
+      color: $color-orange;
+
+      &::before {
+        padding-right: 6px;
+      }
+    }
+  }
+
+  .table {
+    table-layout: fixed;
+    width: 100%;
+
+    .table-head {
+      text-align: center;
+    }
+
+    .table-data {
+      vertical-align: middle;
+      padding: 15px 5px;
+      word-wrap: break-word;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .icon-cell {
+      width: 55px;
+
+      a {
+        display: inline-block;
+        vertical-align: text-top;
+        width: 20px;
+      }
+    }
+
+    form {
+      position: absolute;
+      right: 28px;
+      z-index: 1;
+      margin-top: 17px;
+      padding: 20px;
+      background-color: $color-gray-light;
+
+      button,
+      input {
+        display: inline-block;
+      }
+
+      input[type="text"] {
+        width: 80px;
+        padding: 11px 10px 9px;
+        vertical-align: super;
+      }
+
+      button {
+        vertical-align: bottom;
+        line-height: 14px;
+
+        @-moz-document url-prefix() {
+          line-height: 10px;
+        }
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      &::after {
+        position: absolute;
+        top: -20px;
+        right: 22.5%;
+        border: 10px solid transparent;
+        border-bottom-color: $color-gray-light;
+        content: " ";
+        pointer-events: none;
+      }
+
+      &[name=settleform]::after {
+        right: 10.5%;
+      }
+
+      &[name=settleform] {
+        padding: 13px 20px;
+      }
+
+      .settle-account {
+        display: block;
+        width: 100%;
+        padding: 7px;
+        font-size: 14px;
+        cursor: pointer;
+      }
+
+      .settle-account:hover {
+        color: $color-print;
+        text-decoration: underline;
+      }
+    }
+
+    // Highlight last month
+    th:nth-child(5),
+    td:nth-child(5) {
+      padding: 15px;
+      border-right: 1px solid $color-orange;
+      border-left: 1px solid $color-orange;
+    }
+
+    th:nth-child(5) {
+      border-top: 1px solid $color-orange;
+    }
+
+    th:nth-child(6),
+    td:nth-child(6) {
+      padding-left: 10px;
+    }
+
+    tr:last-child {
+      td:nth-child(5) {
+        border-bottom: 1px solid $color-orange;
+      }
+    }
+  }
+
+  @media print {
+    table {
+      .table-row {
+        font-size: 12px;
+      }
+
+      .icon-cell {
+        display: none;
+      }
+    }
+  }
+}
+
+.date-range-picker {
+  float: left;
+  margin-right: 10px;
+  font-size: 18px;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.accounting-book {
+  .headline-tool {
+    color: $color-orange;
+  }
+}
+
+.finances {
+  .amount,
+  .daily-closing {
+    text-align: right;
+  }
+}

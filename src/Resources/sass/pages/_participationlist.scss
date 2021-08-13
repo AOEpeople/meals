@@ -1,0 +1,152 @@
+$border-color: $color-base;
+$text-color: $color-base;
+
+.edit-participation,
+.print-participation {
+  thead.table-header {
+    display: table-row-group;
+    color: $text-color;
+  }
+
+  .table {
+    table-layout: fixed;
+    width: 100%;
+  }
+
+  .table-row {
+    border: 0;
+    font-size: 12px;
+  }
+
+  .table-head {
+    text-align: center;
+
+    &.week-date {
+      vertical-align: top;
+      font-size: 20px;
+      text-align: left;
+
+    }
+
+    &.meal-title {
+      word-wrap: break-word;
+      padding: 5px;
+      font-family: $font-default;
+      line-height: 1.2em;
+    }
+  }
+
+  .table-content {
+    .table-data {
+      height: 40px;
+      padding: 0;
+      vertical-align: middle;
+      color: $text-color;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .meal-participation a[href] {
+      @media print {
+        display: none;
+      }
+    }
+
+    .meal-participation.participating {
+      color: $color-green;
+
+      a,
+      a:hover {
+        color: $color-white;
+      }
+    }
+
+    a {
+      display: block;
+      height: 39px;
+      line-height: 40px;
+      text-align: center;
+
+      &:hover {
+        color: $text-color;
+      }
+    }
+  }
+
+  .table-head,
+  .table-data {
+    border-left: 1px solid $border-color;
+
+    &.day {
+      padding-bottom: 10px;
+      background: none;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    &.wide-cell {
+      width: 200px;
+      word-wrap: break-word;
+      padding-right: 5px;
+      padding-left: 15px;
+      border-left: 0;
+    }
+  }
+
+  .table-data {
+    border-top: 1px solid $border-color;
+
+    &.meal-participation {
+      font-size: 18px;
+      text-align: center;
+    }
+  }
+}
+
+.meals-list .legend li.print {
+  float: right;
+
+  .button {
+    padding: 5px;
+  }
+
+  &::before {
+    width: 0;
+    height: 0;
+  }
+}
+
+.print-participation {
+  .meal-title,
+  td.text {
+    font-weight: bold;
+    font-size: 14px;
+  }
+
+  h1 {
+    position: relative;
+    display: inline-block;
+    padding-left: 33px;
+    color: $color-print;
+
+    &::before {
+      position: absolute;
+      top: 1px;
+      left: 0;
+      width: 20px;
+      height: 20px;
+      content: "\e179";
+      color: $color-print;
+      font-size: 20px;
+      font-family: "Glyphicons Halflings", sans-serif;
+    }
+  }
+
+  .table-content .table-data,
+  .table-head {
+    border-color: $color-print;
+    color: $color-print;
+  }
+}

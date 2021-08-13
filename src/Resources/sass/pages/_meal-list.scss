@@ -1,0 +1,92 @@
+.meals-list {
+  @include clearfix();
+  padding-bottom: 40px;
+
+  .weeks {
+    @include clearfix();
+
+    margin-top: -25px;
+    padding: 25px 0 40px;
+    background: url("./images/list-background.png") top center $color-white repeat-y;
+    box-shadow: inset 0 -40px 35px rgba($color-white, 1);
+
+    @include breakpoint(medium) {
+      background-image: none;
+      box-shadow: none;
+    }
+  }
+
+  .week {
+    float: left;
+    width: 46%;
+
+    @include breakpoint(medium) {
+      float: none;
+      width: 100%;
+
+      &:last-child {
+        margin-top: 40px;
+      }
+    }
+
+    &:last-child {
+      float: right;
+    }
+  }
+
+  .save {
+    padding-top: 20px;
+    text-align: center;
+
+    .btn-save {
+      padding: 15px 20px;
+      font-size: 14px;
+      text-transform: uppercase;
+    }
+  }
+
+  .legend {
+    li {
+      display: block;
+      float: left;
+      margin-right: 20px;
+
+      @include breakpoint(medium) {
+        margin-bottom: 20px;
+      }
+
+      &::before {
+        position: relative;
+        top: 6px;
+        display: inline-block;
+        width: 25px;
+        height: 25px;
+        margin-right: 10px;
+        content: "";
+        background: $color-gray-secondary;
+      }
+
+      &:first-child::before {
+        background: $color-green;
+      }
+    }
+  }
+
+  .no-meals {
+    width: 350px;
+    margin: 200px auto 0;
+    padding-top: 150px;
+    color: $color-secondary;
+    background: url("./images/meal.png") top left 130px no-repeat;
+    font-size: 18px;
+    font-family: $font-bold;
+    line-height: 1.5;
+    text-align: center;
+
+    @include breakpoint(medium) {
+      width: 100%;
+      margin-top: 40px;
+      background-position: top left 60%;
+    }
+  }
+}

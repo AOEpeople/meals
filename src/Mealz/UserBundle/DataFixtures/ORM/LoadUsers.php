@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Mealz\UserBundle\DataFixtures\ORM;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use App\Mealz\UserBundle\Entity\Login;
@@ -38,10 +39,17 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
     public function load(ObjectManager $manager): void
     {
         $this->objectManager = $manager;
-        $users = ['alice', 'bob', 'finance', 'jane', 'john', 'kochomi'];
+        $users = [
+            'alice'   => ['roles' => ['ROLE_USER']],
+            'bob'     => ['roles' => ['ROLE_USER']],
+            'finance' => ['roles' => ['ROLE_USER']],
+            'jane'    => ['roles' => ['ROLE_USER']],
+            'john'    => ['roles' => ['ROLE_USER']],
+            'kochomi' => ['roles' => ['ROLE_KITCHEN_STAFF']],
+        ];
 
-        foreach ($users as $user) {
-            $this->addUser($user);
+        foreach ($users as $username => $attrs) {
+            $this->addUser($username, $attrs['roles']);
         }
 
         $this->objectManager->flush();
@@ -56,7 +64,10 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
         return self::ORDER_NUMBER;
     }
 
-    protected function addUser(string $username): void
+    /**
+     * @param string[] $roles List of role identifiers
+     */
+    protected function addUser(string $username, array $roles): void
     {
         $login = new Login();
         $login->setUsername($username);
@@ -69,6 +80,14 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
         $profile->setUsername($username);
         $profile->setName(strrev($username));
         $profile->setFirstName($username);
+
+        // set roles
+        $roleObjs = [];
+        foreach ($roles as $role) {
+            $roleObjs[] = $this->getReference($role);
+        }
+
+        $profile->setRoles(new ArrayCollection($roleObjs));
         $login->setProfile($profile);
 
         $this->objectManager->persist($profile);

@@ -23,6 +23,12 @@ use App\Mealz\UserBundle\Entity\Role;
  */
 class ParticipantControllerTest extends AbstractControllerTestCase
 {
+    /**
+     * Users with specific roles
+     */
+    private const USER_STANDARD      = 'alice';
+    private const USER_KITCHEN_STAFF = 'kochomi';
+
     protected static $participantFirstName;
     protected static $participantLastName;
     protected static $guestFirstName;
@@ -38,7 +44,6 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->createAdminClient();
         $this->clearAllTables();
         $this->loadFixtures([
             new LoadCategories(),
@@ -48,8 +53,11 @@ class ParticipantControllerTest extends AbstractControllerTestCase
             new LoadDishVariations(),
             new LoadMeals(),
             new LoadRoles(),
-            new LoadUsers($this->client->getContainer()),
+            // self::$container is a special container that allow access to private services
+            // see: https://symfony.com/blog/new-in-symfony-4-1-simpler-service-testing
+            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
         ]);
+        $this->loginAs(self::USER_KITCHEN_STAFF);
 
         $time = time();
 
@@ -240,15 +248,14 @@ class ParticipantControllerTest extends AbstractControllerTestCase
      * Check that the first dish title is displayed
      * @test
      */
-    public function checkFirstDishTitle()
+    public function checkFirstDishTitle(): void
     {
         $currentWeek = $this->getCurrentWeek();
         $weekMeals = $currentWeek->getDays()->first()->getMeals();
         $firstWeekDish = $weekMeals->first()->getDish();
-        $crawler = $this->getCurrentWeekParticipations()
-            ->filter('.meal-title')
-            ->first();
-        $this->assertContains($firstWeekDish->getTitle(), $crawler->text());
+        $crawler = $this->getCurrentWeekParticipations()->filter('.meal-title')->first();
+
+        $this->assertEquals($firstWeekDish->getTitle(), $crawler->text());
     }
 
     /**
@@ -276,12 +283,13 @@ class ParticipantControllerTest extends AbstractControllerTestCase
      */
     public function checkTableDataPrototype()
     {
-        $crawler = $this->getCurrentWeekParticipations()
-            ->filter('.table-content');
+        $crawler = $this->getCurrentWeekParticipations()->filter('.table-content');
         $tableRow = '<tr class="table-row"><td class="text table-data wide-cell">__name__<\/td>';
         $tableData = '<td class="meal-participation table-data" data-attribute-action=".*__username__"><i class="glyphicon"><\/i><\/td>';
+
         $regex = '/(' . $tableRow . ')(' . $tableData . ')+(<\/tr>)/';
-        $this->assertRegExp($regex, preg_replace("~\\s{2,}~", "", trim($crawler->attr("data-prototype"))));
+
+        $this->assertMatchesRegularExpression($regex, preg_replace("~\\s{2,}~", "", trim($crawler->attr("data-prototype"))));
     }
 
     /**

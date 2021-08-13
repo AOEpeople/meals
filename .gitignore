@@ -23,6 +23,7 @@ vendor
 
 # inclusions (alphabetical)
 !.ddev/
+!.github/
 !.dockerignore
 !.gitlab-ci.yml
 !.gitkeep

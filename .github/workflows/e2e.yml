@@ -1,0 +1,22 @@
+name: E2E Cypress Tests
+
+on: [push]
+
+jobs:
+  tests-e2e:
+    runs-on: ubuntu-latest
+    container: cypress/browsers:node14.17.0-chrome88-ff89
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Test with docker compose
+        run: |
+          docker-compose pull app
+          docker-compose up -d --no-build app
+          sleep 15
+          docker-compose exec app app/console doctrine:fixtures:load -n
+      - name: Cypress run
+        uses: cypress-io/github-action@v2
+        with:
+          browser: chrome
+          working-directory: tests/e2e

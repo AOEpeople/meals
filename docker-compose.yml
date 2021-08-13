@@ -9,6 +9,8 @@ services:
       context: .
       cache_from:
         - aoepeople/meals:edge
+    depends_on:
+      - db
     ports:
       - "8033:80"
 

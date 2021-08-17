@@ -2,10 +2,6 @@
 
 namespace App\Mealz\MealBundle\Controller;
 
-use App\Mealz\MealBundle\Service\Notification\NotifierInterface;
-use DateTime;
-use Doctrine\ORM\EntityManager;
-use Exception;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\GuestInvitationRepository;
 use App\Mealz\MealBundle\Entity\Meal;
@@ -17,12 +13,14 @@ use App\Mealz\MealBundle\EventListener\ProfileExistsException;
 use App\Mealz\MealBundle\EventListener\ToggleParticipationNotAllowedException;
 use App\Mealz\MealBundle\Form\Guest\InvitationForm;
 use App\Mealz\MealBundle\Entity\InvitationWrapper;
+use App\Mealz\MealBundle\Service\DishService;
+use App\Mealz\MealBundle\Service\Notification\NotifierInterface;
 use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\Role;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
+use DateTime;
+use Doctrine\ORM\EntityManager;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Component\Debug\Exception\ContextErrorException;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,16 +41,9 @@ class MealController extends BaseController
         $this->notifier = $notifier;
     }
 
-    /**
-     * the index Action
-     * @return Response
-     */
-    public function indexAction()
+    public function indexAction(WeekRepository $weekRepository, DishService $dishService): Response
     {
-        /** @var WeekRepository $weekRepository */
-        $weekRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Week');
         $currentWeek = $weekRepository->getCurrentWeek();
-
         if (null === $currentWeek) {
             $currentWeek = $this->createEmptyNonPersistentWeek(new DateTime());
         }
@@ -62,14 +53,10 @@ class MealController extends BaseController
             $nextWeek = $this->createEmptyNonPersistentWeek(new DateTime('next week'));
         }
 
-        $weeks = array($currentWeek, $nextWeek);
-
-        return $this->render(
-            'MealzMealBundle:Meal:index.html.twig',
-            array(
-                'weeks' => $weeks,
-            )
-        );
+        return $this->render('MealzMealBundle:Meal:index.html.twig', [
+            'weeks' => [$currentWeek, $nextWeek],
+            'dishService' => $dishService
+        ]);
     }
 
     /**

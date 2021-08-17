@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\DishRepository;
 use App\Mealz\MealBundle\Form\Dish\DishForm;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class DishController extends BaseListController
@@ -13,7 +14,7 @@ class DishController extends BaseListController
     /** @var  DishRepository $repository */
     protected $repository;
 
-    public function deleteAction($slug)
+    public function deleteAction($slug): RedirectResponse
     {
         if (!$this->isGranted('ROLE_KITCHEN_STAFF')) {
             throw new AccessDeniedException();

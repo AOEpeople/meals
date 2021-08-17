@@ -11,6 +11,7 @@
     },
     "require": {
         "php": ">=7.4",
+        "ext-bcmath": "*",
         "ext-calendar": "*",
         "ext-json": "*",
         "doctrine/annotations": "^1.13",

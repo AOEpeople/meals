@@ -8,11 +8,12 @@ router_https_port: "443"
 xdebug_enabled: false
 additional_hostnames: []
 additional_fqdns:
-  - meals.test
+  - www.meals.local
 mariadb_version: ""
 mysql_version: "5.7"
 use_dns_when_possible: true
 composer_version: "2"
+webimage_extra_packages: [ssh]
 web_environment:
   - FINAL_RELEASEFOLDER=/var/www/html
   - APP_DEBUG=1
@@ -25,6 +26,13 @@ web_environment:
   - DB_VERS=5.7
 omit_containers:
   - dba
+
+hooks:
+  post-start:
+    # The PHP_IDE_CONFIG env var is atm. not overridable via custom docker-compose.*.yaml
+    - exec: "echo 'export PHP_IDE_CONFIG='serverName=www.meals.local'' >> ~/.bashrc"
+    - exec: "sudo service ssh start"
+timezone: "Europe/Berlin"
 
 # This config.yaml was created with ddev version v1.17.5
 # webimage: drud/ddev-webserver:v1.17.4

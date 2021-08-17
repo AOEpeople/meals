@@ -2,42 +2,32 @@
 
 namespace App\Mealz\MealBundle\Controller;
 
+use App\Mealz\MealBundle\Entity\Dish;
 use Doctrine\ORM\EntityManager;
 use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Form\Dish\DishVariationForm;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Dish variation controller.
- *
- * @package Mealz\MealBundle\Controller
- * @author Chetan Thapliyal <chetan.thapliyal@aoe.com>
  */
 class DishVariationController extends BaseController
 {
     /**
-     * @param  Request $request
-     * @param  integer $slug
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @Security("has_role('ROLE_KITCHEN_STAFF')")
      */
-    public function newAction(Request $request, $slug)
+    public function new(Request $request, Dish $dish): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
-
-        /** @var \App\Mealz\MealBundle\Entity\Dish $dish */
-        $dish = $this->getDishRepository()->find($slug);
-
-        if ($dish === null) {
-            throw $this->createNotFoundException();
-        }
-
         $dishVariation = new DishVariation();
         $dishVariation->setParent($dish);
         $dishVariationForm = $this->createForm(
             $this->getNewForm(),
             $dishVariation,
-            ['action' => $this->generateUrl('MealzMealBundle_DishVariation_new', ['slug' => $dish->getId()])]
+            ['action' => $this->generateUrl('MealzMealBundle_DishVariation_new', ['id' => $dish->getId()])]
         );
         $dishVariationForm->handleRequest($request);
 
@@ -47,7 +37,7 @@ class DishVariationController extends BaseController
 
             $message = $this->get('translator')->trans(
                 'entity.added',
-                array('%entityName%' => $dishVariation->getTitle()),
+                ['%entityName%' => $dishVariation->getTitle()],
                 'messages'
             );
             $this->addFlashMessage($message, 'success');
@@ -55,13 +45,10 @@ class DishVariationController extends BaseController
             return $this->redirectToRoute('MealzMealBundle_Dish');
         }
 
-        $renderedForm = $this->render(
-            'MealzMealBundle:DishVariation:new.html.twig',
-            [
-                'form' => $dishVariationForm->createView(),
-                'dishVariation' => $dishVariation,
-            ]
-        );
+        $renderedForm = $this->render('MealzMealBundle:DishVariation:new.html.twig', [
+            'form' => $dishVariationForm->createView(),
+            'dishVariation' => $dishVariation,
+        ]);
 
         return new JsonResponse($renderedForm->getContent());
     }
@@ -70,9 +57,9 @@ class DishVariationController extends BaseController
      * The edit Action
      * @param Request $request
      * @param String $slug
-     * @return JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse
+     * @return JsonResponse|RedirectResponse
      */
-    public function editAction(Request $request, $slug)
+    public function edit(Request $request, $slug)
     {
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
@@ -121,9 +108,8 @@ class DishVariationController extends BaseController
     /**
      * the delete Action
      * @param  integer $slug
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function deleteAction($slug)
+    public function delete($slug): RedirectResponse
     {
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 

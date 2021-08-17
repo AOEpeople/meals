@@ -5,7 +5,7 @@
 	<div class="text">
 		<div class="title">
 			{{ dish.title }}
-			{% if dish.isNew %}
+			{% if dishService.isNew(dish) %}
 				<span class="new-flag">{{ 'content.participation.dish.new'|trans({},'general') }}</span>
 			{% endif %}
 		</div>

@@ -4,7 +4,7 @@
         {% set parentFlag = null %}
 
         {% for meal in mealVariationGroup %}
-            {% if meal.dish.isNew and parentFlag is not same as (false) %}
+            {% if dishService.isNew(meal.dish) and parentFlag is not same as (false) %}
                 {% set parentFlag = true %}
             {% else %}
                 {% set parentFlag = false %}
@@ -26,7 +26,7 @@
             {% endif %}
             <div class="variation-row">
                 <div class="text text-variation">{{ dish.title }}
-                    {% if dish.isNew and not parentFlag %}
+                    {% if dishService.isNew(dish) and not parentFlag %}
                         <span class="new-flag">{{ 'content.participation.dish.new'|trans({},'general') }}</span>
                     {% endif %}
                 </div>

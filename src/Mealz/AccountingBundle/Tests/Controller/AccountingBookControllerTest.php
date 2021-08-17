@@ -2,6 +2,7 @@
 
 namespace App\Mealz\AccountingBundle\Tests\Controller;
 
+use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use DateTime;
 use DOMElement;
 use DomNode;
@@ -10,7 +11,6 @@ use App\Mealz\AccountingBundle\Entity\Transaction;
 use App\Mealz\UserBundle\Entity\Profile;
 use Symfony\Component\DomCrawler\Crawler;
 use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
-
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 
@@ -25,13 +25,18 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
      */
     protected function setUp(): void
     {
-        $this->createAdminClient();
+        parent::setUp();
 
         $this->clearAllTables();
         $this->loadFixtures([
             new LoadMeals(),
+            new LoadRoles(),
+            // self::$container is a special container that allow access to private services
+            // see: https://symfony.com/blog/new-in-symfony-4-1-simpler-service-testing
             new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
         ]);
+
+        $this->loginAs(self::USER_KITCHEN_STAFF);
 
         $time = time();
 
@@ -59,9 +64,8 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
 
     /**
      * Testing access to accounting book site for non-admins and admins
-     * @test
      */
-    public function testAccessForAdminsOnly()
+    public function testAccessForAdminsOnly(): void
     {
         // test for admins
         $crawler = $this->client->request('GET', '/accounting/book');
@@ -69,13 +73,13 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
         $this->assertFalse($node->count() > 0, "Accounting book NOT accessable by Admins(ROLE_KITCHEN_STAFF)");
 
         // test for no or non-admin user
-        $this->createDefaultClient();
+        $this->loginAs(self::USER_STANDARD);
         $crawler = $this->client->request('GET', '/accounting/book');
         $node = $crawler->filterXPath('//table[@id="accounting-book-table"]');
         $this->assertFalse($node->count() > 0, "Accounting book accessable by Non-Admins");
 
         // test for fincance admins
-        $this->createFinanceClient();
+        $this->loginAs(self::USER_FINANCE);
         $crawler = $this->client->request('GET', '/accounting/book');
         $node = $crawler->filterXPath('//table[@id="accounting-book-table"]');
         $this->assertTrue($node->count() > 0, "Accounting book NOT accessable by Admins(ROLE_KITCHEN_STAFF)");
@@ -83,12 +87,12 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
 
     /**
      * Test the headline of accounting book showing the range of the last month
-     * @test
      */
-    public function testHeadlineShowingDateOfLastMonth()
+    public function testHeadlineShowingDateOfLastMonth(): void
     {
         // test for admins
-        $this->createFinanceClient();
+        $this->loginAs(self::USER_FINANCE);
+
         $crawler = $this->client->request('GET', '/accounting/book');
         $node = $crawler->filterXPath('//div[contains(@class,"accounting-book")]//h1[@class="headline"]');
         $this->assertTrue($node->count() > 0, 'There is no h1.headline element)');
@@ -105,39 +109,38 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
         $year = $minDate->format('Y');
 
         $regex = "/".preg_quote($firstDay)."\.".preg_quote($monthNumber)."\.(".preg_quote($year).")? *[-|bis|to] *".preg_quote($lastDay)."\.".preg_quote($monthNumber)."\.(".preg_quote($year).")?/i";
-        $this->assertRegExp($regex, $headline, "The headline is not set properly");
+        $this->assertMatchesRegularExpression($regex, $headline, "The headline is not set properly");
     }
 
     /**
      * Test if sum of all transactions for the last month is displayed in a seperate row at the end of the
      * listed transactions.
-     * @test
      */
-    public function testTotalAmountOfTransactionsDisplayedInSeperateRow()
+    public function testTotalAmountOfTransactionsDisplayedInSeperateRow(): void
     {
-        $res = array();
-        $totalCalculated = $totalShown = 0.00;
+        $this->loginAs(self::USER_FINANCE);
 
-        $this->createFinanceClient();
         $crawler = $this->client->request('GET', '/accounting/book');
         $nodesAmount = $crawler->filterXPath('//table[@id="accounting-book-table"]//td[contains(@class,"amount") and not(contains(@class, "table-data-total"))]');
         $nodeTotal = $crawler->filterXPath('//table[@id="accounting-book-table"]//td[contains(@class,"table-data-total") and not(contains(@class, "amount"))]');
 
+        $res = [];
         foreach ($nodesAmount as $value) {
             $tmpCrawler = new Crawler($value);
-            $res[] = floatval($tmpCrawler->text());
+            $res[] = (float) $tmpCrawler->text();
         }
-        $totalCalculated = floatval(array_sum($res));
+
+        $totalCalculated = (float) array_sum($res);
         $totalShown = $this->getFloatFromNode($nodeTotal->siblings()->getNode(0));
+
         $this->assertEquals($totalCalculated, $totalShown, 'Total amount of transactions inconsistent');
     }
 
     /**
      * Test users are orderd by lastname, firstname and listed this way:
      * lastname, firstname      amount
-     * @test
      */
-    public function testDisplayUsersOrderedByLastnameAndFirstname()
+    public function testDisplayUsersOrderedByLastnameAndFirstname(): void
     {
         // Get first and last day of previous month
         $minDate = new DateTime('first day of previous month');
@@ -151,7 +154,8 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
         $usersAndTheirTotals = $transactionRepo->findUserDataAndTransactionAmountForGivenPeriod($minDate, $maxDate);
 
         // fetch what is displayed in the accounting book table....
-        $this->createFinanceClient();
+        $this->loginAs(self::USER_FINANCE);
+
         $crawler = $this->client->request('GET', '/accounting/book');
         $this->assertTrue($this->client->getResponse()->isSuccessful());
 
@@ -159,12 +163,12 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
 
         // now compare order and displayed syntax of results
         for ($i = 0; $i < $nodesName->count(); $i++) {
-            $this->assertTrue($nodesName->getNode($i) instanceof DOMElement);
+            $this->assertInstanceOf(DOMElement::class, $nodesName->getNode($i));
             $nameDisplayed = $nodesName->getNode($i)->textContent;
             $userInfo = current($usersAndTheirTotals);
             next($usersAndTheirTotals);
             $regex = "/".preg_quote($userInfo['name'])." *, *".preg_quote($userInfo['firstName'])."/i";
-            $this->assertRegExp($regex, $nameDisplayed, 'Names are displayed incorrectly. Either sorting is wrong or the names are not displayed like it should be (name, firstname)');
+            $this->assertMatchesRegularExpression($regex, $nameDisplayed, 'Names are displayed incorrectly. Either sorting is wrong or the names are not displayed like it should be (name, firstname)');
         }
     }
 
@@ -221,9 +225,8 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
 
     /**
      * Tests if the transactions are displayed correctly
-     * @test
      */
-    public function testTransactionsListing()
+    public function testTransactionsListing(): void
     {
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->getRepository('MealzAccountingBundle:Transaction')->clear();
@@ -240,8 +243,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
         $entityManager->persist($transaction);
         $entityManager->flush();
 
-        $user = $this->getUserProfile('finance');
-        $this->loginAsDefaultClient($user);
+        $this->loginAs(self::USER_FINANCE);
 
         $crawler = $this->client->request('GET', '/accounting/book/finance/list/' . $dateFormatted . "&" . $dateFormatted);
 

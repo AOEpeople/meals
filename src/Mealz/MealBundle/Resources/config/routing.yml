@@ -49,27 +49,21 @@ MealzMealBundle_Meal_isParticipationPending:
     path: /menu/meal/{participant}/isParticipationPending
     defaults: { _controller: "MealzMealBundle:Participant:isParticipationPending" }
 
-MealzMealBundle_DishVariation:
-    path:  /dish/{slug}/variation/
-    defaults: { _controller: "mealz_meal.controller.dish_variation:listAction" }
-    requirements:
-      slug: '[1-9][0-9]*'
-
 MealzMealBundle_DishVariation_new:
-    path:  /dish/{slug}/variation/new
-    defaults: { _controller: "mealz_meal.controller.dish_variation:newAction" }
+    path:  /dish/{id}/variation/new
+    defaults: { _controller: App\Mealz\MealBundle\Controller\DishVariationController::new }
     requirements:
       slug: '[1-9][0-9]*'
 
 MealzMealBundle_DishVariation_edit:
     path:  /dish/variation/{slug}/edit
-    defaults: { _controller: "mealz_meal.controller.dish_variation:editAction" }
+    defaults: { _controller: App\Mealz\MealBundle\Controller\DishVariationController::edit }
     requirements:
       slug: '[1-9][0-9]*'
 
 MealzMealBundle_DishVariation_delete:
     path:  /dish/variation/{slug}/delete
-    defaults: { _controller: "mealz_meal.controller.dish_variation:deleteAction" }
+    defaults: { _controller: App\Mealz\MealBundle\Controller\DishVariationController::delete }
     requirements:
       slug: '[1-9][0-9]*'
 

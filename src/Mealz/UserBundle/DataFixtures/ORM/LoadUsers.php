@@ -42,7 +42,7 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
         $users = [
             'alice'   => ['roles' => ['ROLE_USER']],
             'bob'     => ['roles' => ['ROLE_USER']],
-            'finance' => ['roles' => ['ROLE_USER']],
+            'finance' => ['roles' => ['ROLE_FINANCE']],
             'jane'    => ['roles' => ['ROLE_USER']],
             'john'    => ['roles' => ['ROLE_USER']],
             'kochomi' => ['roles' => ['ROLE_KITCHEN_STAFF']],

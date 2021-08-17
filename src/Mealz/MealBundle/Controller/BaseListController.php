@@ -4,7 +4,9 @@ namespace App\Mealz\MealBundle\Controller;
 
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -35,7 +37,7 @@ abstract class BaseListController extends BaseController
 
     /**
      * list Action
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function listAction()
     {
@@ -47,9 +49,7 @@ abstract class BaseListController extends BaseController
     }
 
     /**
-     * new Action
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function newAction(Request $request)
     {
@@ -72,7 +72,7 @@ abstract class BaseListController extends BaseController
      * edit Action
      * @param Request $request
      * @param $slug
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     public function editAction(Request $request, $slug)
     {
@@ -96,7 +96,7 @@ abstract class BaseListController extends BaseController
     /**
      * delete Action
      * @param $slug
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function deleteAction($slug)
     {
@@ -201,7 +201,7 @@ abstract class BaseListController extends BaseController
      * @param Request $request
      * @param $entity
      * @param $successMessage
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     private function entityFormHandling(Request $request, $entity, $successMessage)
     {
@@ -230,7 +230,7 @@ abstract class BaseListController extends BaseController
     /**
      * render Entity List
      * @param array $parameters
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     protected function renderEntityList($parameters = array())
     {

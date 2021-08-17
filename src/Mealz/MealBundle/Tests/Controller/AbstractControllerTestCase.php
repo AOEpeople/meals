@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: jonathan.klauck
- * Date: 29.06.2016
- * Time: 15:45
- */
 
 namespace App\Mealz\MealBundle\Tests\Controller;
 
@@ -18,19 +12,24 @@ use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\Role;
 use App\Mealz\UserBundle\Entity\RoleRepository;
+use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\BrowserKit\Cookie;
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-/**
- * Class AbstractControllerTestCase
- * @package Mealz\MealBundle\Tests\Controller
- */
 abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
 {
+    /**
+     * Role based test users
+     */
+    protected const USER_STANDARD      = 'alice';
+    protected const USER_FINANCE       = 'finance';
+    protected const USER_KITCHEN_STAFF = 'kochomi';
+
     protected KernelBrowser $client;
 
     /**
@@ -53,16 +52,30 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         $user = $repo->findOneBy(['username' => $username]);
 
         if (!($user instanceof UserInterface)) {
-            throw new \RuntimeException('user not found: '.$username);
+            throw new RuntimeException('user not found: '.$username);
         }
 
         $token = new UsernamePasswordToken($user, null, $firewall, $user->getRoles());
-        if (($session->getId()) === '') {
-            $session->set('_security_'.$firewall, serialize($token));
-            $session->save();
-        }
+        $session->set('_security_'.$firewall, serialize($token));
+        $session->save();
+
         $cookie = new Cookie($session->getName(), $session->getId());
         $this->client->getCookieJar()->set($cookie);
+    }
+
+    protected function getFormCSRFToken(string $uri, string $tokenFieldSelector): string
+    {
+        $this->client->xmlHttpRequest('GET', $uri);
+        $jsonEncodedForm = $this->client->getResponse()->getContent();
+        $htmlForm = json_decode($jsonEncodedForm, false, 512, JSON_THROW_ON_ERROR);
+        $crawler = new Crawler($htmlForm);
+        $token = $crawler->filter($tokenFieldSelector)->attr('value');
+
+        if ($token === '') {
+            throw new RuntimeException('token fetch error: path: '.$uri.' : fieldSelector'.$tokenFieldSelector);
+        }
+
+        return $token;
     }
 
     /**

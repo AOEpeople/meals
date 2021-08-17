@@ -4,6 +4,9 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    app.base_url: '%env(APP_BASE_URL)%'
+    app.hr_email: 'team-lemmings@aoe.com'
+
     app.keycloak.server: 'https://login.aoe.com/auth/realms/aoe'
 
     app.keycloak.endpoint.access_token: '%app.keycloak.server%/protocol/openid-connect/token'
@@ -14,10 +17,13 @@ parameters:
     app.paypal.id:     '%env(PAYPAL_ID)%'
     app.paypal.secret: '%env(PAYPAL_SECRET)%'
 
+    app.secret: '%env(APP_SECRET)%'
+
     mealz.lock_toggle_participation_at: '-1 day 16:00'
     mealz.meal.price: 3.40
     mealz.meal.search_timestamp: '2000-01-01'
     mealz.meal.new_flag_counter: 2
+
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -42,6 +48,17 @@ services:
         resource: '../src/Mealz/MealBundle/Controller/'
         tags: ['controller.service_arguments']
 
+    mealz_meal.service.dish_service:
+        class: App\Mealz\MealBundle\Service\DishService
+        arguments:
+            $newFlagThreshold: '%mealz.meal.new_flag_counter%'
+            $dishRepository: '@mealz_meal.repository.dish'
+
+    App\Mealz\MealBundle\Service\DishService: '@mealz_meal.service.dish_service'
+
+    # interface implementations
+    App\Mealz\MealBundle\Service\Notification\NotifierInterface: '@mealz_meal.notifier.mattermost'
+
     ##################################################################
     # Accounting BUNDLE
     ##################################################################
@@ -49,8 +66,9 @@ services:
         resource: '../src/Mealz/AccountingBundle/'
         exclude:
             - '../src/Mealz/AccountingBundle/DependencyInjection/'
-            - '../src/Mealz/AccountingBundle/Entity/'
+            - '../src/Mealz/AccountingBundle/Entity/*Repository.php'
             - '../src/Mealz/AccountingBundle/Tests/'
+
     App\Mealz\AccountingBundle\Controller\:
         resource: '../src/Mealz/AccountingBundle/Controller/'
         tags: ['controller.service_arguments']
@@ -58,9 +76,6 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
-
-    # interface implementations
-    App\Mealz\MealBundle\Service\Notification\NotifierInterface: '@mealz_meal.notifier.mattermost'
 
     FOS\OAuthServerBundle\Model\ClientManagerInterface: '@App\Mealz\MealBundle\Service\External\OAuthServer\ClientManager'
     App\Mealz\MealBundle\Service\External\OAuthServer\ClientManager:

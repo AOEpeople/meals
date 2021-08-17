@@ -17,10 +17,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * Class BaseController
- * @package Mealz\MealBundle\Controller
- */
 abstract class BaseController extends AbstractController
 {
     public static function getSubscribedServices(): array

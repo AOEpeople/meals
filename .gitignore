@@ -22,6 +22,8 @@ vendor
 # inclusions (alphabetical)
 !.ddev/
 !.dockerignore
+!.env
+!.env.test
 !.gitlab-ci.yml
 !.gitkeep
 !.stylelintrc.json

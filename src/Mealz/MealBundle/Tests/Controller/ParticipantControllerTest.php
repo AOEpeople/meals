@@ -15,6 +15,7 @@ use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\Role;
+use Symfony\Component\DomCrawler\Crawler;
 
 /**
  * Participant Controller Test
@@ -23,12 +24,6 @@ use App\Mealz\UserBundle\Entity\Role;
  */
 class ParticipantControllerTest extends AbstractControllerTestCase
 {
-    /**
-     * Users with specific roles
-     */
-    private const USER_STANDARD      = 'alice';
-    private const USER_KITCHEN_STAFF = 'kochomi';
-
     protected static $participantFirstName;
     protected static $participantLastName;
     protected static $guestFirstName;
@@ -108,9 +103,9 @@ class ParticipantControllerTest extends AbstractControllerTestCase
      * First case: A participant offers his meal on time.
      * @test
      */
-    public function offeringOneMeal()
+    public function offeringOneMeal(): void
     {
-        $userProfile = $this->getUserProfile();
+        $userProfile = $this->getUserProfile(self::USER_STANDARD);
 
         //find locked meal and make user a participant of that
         $lockedMealsArray = $this->getDoctrine()->getRepository('MealzMealBundle:Meal')->getLockedMeals();
@@ -119,22 +114,22 @@ class ParticipantControllerTest extends AbstractControllerTestCase
 
         $this->persistAndFlushAll([$lockedParticipant]);
 
-        $this->loginAsDefaultClient($userProfile);
+        $this->loginAs(self::USER_STANDARD);
         $participantId = $lockedParticipant->getId();
         $this->client->request('GET', '/menu/meal/' . $participantId . '/swap');
 
         //verification by checking the database
         $offeringParticipant = $this->getDoctrine()->getRepository('MealzMealBundle:Participant')->find($participantId);
-        $this->assertTrue($offeringParticipant->getOfferedAt() !== 0, 'offeredAt value not changed');
+        $this->assertNotSame($offeringParticipant->getOfferedAt(), 0, 'offeredAt value not changed');
     }
 
     /**
      * Second case: A participant takes his offer back.
      * @test
      */
-    public function takingOfferBack()
+    public function takingOfferBack(): void
     {
-        $userProfile = $this->getUserProfile();
+        $userProfile = $this->getUserProfile(self::USER_STANDARD);
         $lockedMealsArray = $this->getDoctrine()->getRepository('MealzMealBundle:Meal')->getLockedMeals();
         $lockedMeal = $lockedMealsArray[0];
         $lockedParticipant = $this->createParticipant($userProfile, $lockedMeal);
@@ -142,21 +137,21 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $participantId = $lockedParticipant->getId();
         $this->persistAndFlushAll([$lockedParticipant]);
 
-        $this->loginAsDefaultClient($userProfile);
+        $this->loginAs(self::USER_STANDARD);
         $this->client->request('GET', '/menu/meal/' . $participantId . '/unswap');
 
         //verification by checking the database
         $participant = $this->getDoctrine()->getRepository('MealzMealBundle:Participant')->find($participantId);
-        $this->assertTrue($participant->getOfferedAt() === 0, 'unswapping not working');
+        $this->assertSame($participant->getOfferedAt(), 0, 'failed to retain swapped meal');
     }
 
     /**
      * Third case: A participant tries to offer his outdated meal.
      * @test
      */
-    public function offeringOutdatedMeal()
+    public function offeringOutdatedMeal(): void
     {
-        $userProfile = $this->getUserProfile();
+        $userProfile = $this->getUserProfile(self::USER_STANDARD);
 
         $outdatedMealsArray = $this->getDoctrine()->getRepository('MealzMealBundle:Meal')->getOutdatedMeals();
         $outdatedMeal = $outdatedMealsArray[0];
@@ -165,12 +160,12 @@ class ParticipantControllerTest extends AbstractControllerTestCase
 
         $this->persistAndFlushAll([$outdatedParticipant]);
 
-        $this->loginAsDefaultClient($userProfile);
+        $this->loginAs(self::USER_STANDARD);
         $this->client->request('GET', '/menu/meal/' . $participantId . '/swap');
 
         //verification by checking the database
         $notOfferingPart = $this->getDoctrine()->getRepository('MealzMealBundle:Participant')->find($participantId);
-        $this->assertTrue($notOfferingPart->getOfferedAt() === 0, 'user still offered meal');
+        $this->assertSame($notOfferingPart->getOfferedAt(), 0, 'user still offered meal');
     }
 
     /**
@@ -194,33 +189,33 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     {
         $crawler = $this->getCurrentWeekParticipations()
             ->filter('.table-row')
-            ->reduce(function ($node) {
+            ->reduce(static function ($node) {
                 $participantName = self::$guestLastName . ', ' . self::$guestFirstName;
                 if (stripos($node->text(), $participantName) === false) {
                     return false;
                 }
             })
             ->first();
-        $this->assertContains(self::$guestCompany, $crawler->text());
+        $this->assertStringContainsString(self::$guestCompany, $crawler->text());
     }
 
     /**
      * Check that the amount of participations is correct
      * @test
      */
-    public function checkParticipationAmount()
+    public function checkParticipationAmount(): void
     {
         $crawler = $this->getCurrentWeekParticipations()
             ->filter('.meal-count > span')
             ->first();
-        $this->assertContains('2', $crawler->text());
+        $this->assertStringContainsString('2', $crawler->text());
     }
 
     /**
      * Check the weekdate is displayed correct
      * @test
      */
-    public function checkWeekDate()
+    public function checkWeekDate(): void
     {
         $currentWeek = $this->getCurrentWeek();
         $firstWeekDay = date_format($currentWeek->getDays()->first()->getDateTime(), 'd.m.');
@@ -229,19 +224,19 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $crawler = $this->getCurrentWeekParticipations()
             ->filter('.week-date')
             ->first();
-        $this->assertContains($firstWeekDay . '-' . $lastWeekDay, $crawler->text());
+        $this->assertStringContainsString($firstWeekDay . '-' . $lastWeekDay, $crawler->text());
     }
 
     /**
      * Check that the first day of the week is displayed correct
      * @test
      */
-    public function checkFirstWeekDay()
+    public function checkFirstWeekDay(): void
     {
         $crawler = $this->getCurrentWeekParticipations()
             ->filter('.day')
             ->first();
-        $this->assertContains('Monday', $crawler->text());
+        $this->assertStringContainsString('Monday', $crawler->text());
     }
 
     /**
@@ -281,7 +276,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
      * Check that the table data prototype is present in the dom
      * @test
      */
-    public function checkTableDataPrototype()
+    public function checkTableDataPrototype(): void
     {
         $crawler = $this->getCurrentWeekParticipations()->filter('.table-content');
         $tableRow = '<tr class="table-row"><td class="text table-data wide-cell">__name__<\/td>';
@@ -296,19 +291,17 @@ class ParticipantControllerTest extends AbstractControllerTestCase
      * Check that the profiles list contains the non participating user
      * @test
      */
-    public function checkProfileList()
+    public function checkProfileList(): void
     {
-        $crawler = $this->getCurrentWeekParticipations()
-            ->filter('.profile-list');
+        $crawler = $this->getCurrentWeekParticipations()->filter('.profile-list');
         $userName = self::$userLastName . ', ' . self::$userFirstName;
-        $this->assertContains($userName, $crawler->attr("data-attribute-profiles"));
+        $this->assertStringContainsString($userName, $crawler->attr("data-attribute-profiles"));
     }
 
     /**
      * return crawler for the current week participations
-     * @return \Symfony\Component\DomCrawler\Crawler
      */
-    protected function getCurrentWeekParticipations()
+    protected function getCurrentWeekParticipations(): Crawler
     {
         $currentWeek = $this->getCurrentWeek();
         $crawler = $this->client->request('GET', '/participations/' . $currentWeek->getId() . '/edit');
@@ -319,9 +312,8 @@ class ParticipantControllerTest extends AbstractControllerTestCase
 
     /**
      * return current week object
-     * @return Week
      */
-    protected function getCurrentWeek()
+    protected function getCurrentWeek(): Week
     {
         /** @var WeekRepository $weekRepository */
         $weekRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Week');

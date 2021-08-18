@@ -7,8 +7,8 @@ httplug:
         client: 'auto'
 
     clients:
-        app:
-            http_methods_client: true
-            plugins:
-                - 'httplug.plugin.content_length'
-                - 'httplug.plugin.redirect'
+        hwi_special:
+            factory: 'httplug.factory.guzzle7'
+            config:
+                verify: false
+                ignore_errors: false

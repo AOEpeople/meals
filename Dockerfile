@@ -45,6 +45,7 @@ RUN apt-get update && apt-get upgrade -y && apt-get install --no-install-recomme
 COPY composer.json composer.lock ./
 RUN composer install \
         --no-plugins \
+        --no-scripts \
         --optimize-autoloader \
         --prefer-dist \
     && composer clearcache \
@@ -67,6 +68,8 @@ COPY --chown=www-data:www-data docker/web/ /container/
 # add custom code and compiled frontend assets
 COPY --chown=www-data:www-data . /var/www/html/
 COPY --chown=www-data:www-data --from=frontend /var/www/html/public/static ./public/static
+
+RUN composer run-script --no-cache post-install-cmd
 
 ENTRYPOINT ["/container/entrypoint"]
 CMD ["apache2-foreground"]

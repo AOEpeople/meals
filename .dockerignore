@@ -18,6 +18,4 @@
 !**/*.php.cache
 
 # ... but never include ...
-/app/
 /public/static/
-/web/

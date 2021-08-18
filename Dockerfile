@@ -4,11 +4,11 @@ RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y -o Dpkg::Options::="--force-confold" --no-install-recommends --no-install-suggests \
         build-essential \
         nodejs
-WORKDIR var/www/html/app/Resources
-COPY app/Resources/package.json app/Resources/yarn.lock ./
+WORKDIR var/www/html/src/Resources
+COPY src/Resources/package.json src/Resources/yarn.lock ./
 RUN yarn install
-COPY app/Resources/ .
-COPY web .
+COPY src/Resources/ .
+#COPY web .
 RUN NODE_ENV=production yarn run build
 
 # build production container
@@ -65,7 +65,7 @@ COPY --chown=www-data:www-data docker/web/ /container/
 
 # add custom code and compiled frontend assets
 COPY --chown=www-data:www-data . /var/www/html/
-COPY --chown=www-data:www-data --from=frontend /var/www/html/web/static ./web/static
+COPY --chown=www-data:www-data --from=frontend /var/www/html/public/static ./public/static
 
 ENTRYPOINT ["/container/entrypoint"]
 CMD ["apache2-foreground"]

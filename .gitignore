@@ -12,9 +12,9 @@
 /web/bundles/
 /web/css
 /public/images/
+/public/static/
 /web/js/
 /web/media/*
-/public/static/
 cache.properties
 node_modules
 vendor
@@ -27,6 +27,8 @@ vendor
 !.gitlab-ci.yml
 !.gitkeep
 !.stylelintrc.json
+!/migrations
+!/public/.htaccess
 
 ###> symfony/framework-bundle ###
 /.env.local

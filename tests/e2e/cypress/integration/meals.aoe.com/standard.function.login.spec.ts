@@ -3,7 +3,7 @@ import { login } from "../../support/commands/login";
 
 describe("standard.function.login", () => {
   const checkComponent = (user: string) => {
-    // check visibility of elements
+    // check header
     cy.get("header").should("be.visible");
     cy.get("header a[class='logo']").should("be.visible");
 

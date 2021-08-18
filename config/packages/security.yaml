@@ -21,10 +21,6 @@ security:
                 # where to redirect after logout
                 # target: app_any_route
 
-        oauth_token:
-            pattern:    ^/oauth/v2/token
-            security:   false
-
         guest:
             pattern:    ^/menu/guest
             anonymous:  true

@@ -33,21 +33,22 @@ class MealControllerTest extends AbstractControllerTestCase
     {
         parent::setUp();
 
-        $this->createAdminClient();
         $this->clearAllTables();
 
-        $this->loadFixtures(
-            [
-                new LoadWeeks(),
-                new LoadDays(),
-                new LoadCategories(),
-                new LoadDishes(),
-                new LoadDishVariations(),
-                new LoadMeals(),
-                new LoadRoles(),
-                new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
-            ]
-        );
+        $this->loadFixtures([
+            new LoadWeeks(),
+            new LoadDays(),
+            new LoadCategories(),
+            new LoadDishes(),
+            new LoadDishVariations(),
+            new LoadMeals(),
+            new LoadRoles(),
+            // self::$container is a special container that allow access to private services
+            // see: https://symfony.com/blog/new-in-symfony-4-1-simpler-service-testing
+            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
+        ]);
+
+        $this->loginAs(self::USER_KITCHEN_STAFF);
     }
 
     /**
@@ -310,7 +311,7 @@ class MealControllerTest extends AbstractControllerTestCase
 
         if ($meals->count() > 0) {
             /** @var Doorman $doorman */
-            $doorman = $this->client->getContainer()->get('mealz_meal.doorman');
+            $doorman = self::$container->get('mealz_meal.doorman');
             foreach ($meals as $meal) {
                 if ($doorman->isToggleParticipationAllowed($meal->getDateTime())) {
                     $availableMeal = $meal;
@@ -343,7 +344,7 @@ class MealControllerTest extends AbstractControllerTestCase
 
         if ($meals->count() > 0) {
             /** @var Doorman $doorman */
-            $doorman = $this->client->getContainer()->get('mealz_meal.doorman');
+            $doorman = self::$container->get('mealz_meal.doorman');
             foreach ($meals as $meal) {
                 if ($doorman->isToggleParticipationAllowed($meal->getDateTime())) {
                     $availableMeal = $meal;

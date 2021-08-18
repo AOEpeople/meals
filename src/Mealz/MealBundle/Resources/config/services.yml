@@ -1,7 +1,6 @@
 parameters:
   mealz_meal.twig_extension.doorman.class: App\Mealz\MealBundle\Twig\Extension\Doorman
   mealz_meal.twig_extension.link.class: App\Mealz\MealBundle\Twig\Extension\Link
-  mealz_meal.doorman.class: App\Mealz\MealBundle\Service\Doorman
   mealz_meal.link.class: App\Mealz\MealBundle\Service\Link
   mealz_meal.http_header_utility.class: App\Mealz\MealBundle\Service\HttpHeaderUtility
   mealz_meal.workday.class: App\Mealz\MealBundle\Service\Workday
@@ -10,12 +9,7 @@ parameters:
   mealz_meal.event_listener.localisation.class: App\Mealz\MealBundle\EventListener\LocalisationListener
 
 services:
-  mealz_meal.doorman:
-    class: '%mealz_meal.doorman.class%'
-    public: true
-    # TODO: Check if $lockParticipationAt is used anywhere in service. If yes, then add the argument, otherwise remove it
-#    arguments:
-#      $lockParticipationAt: %mealz.lock_toggle_participation_at%
+  mealz_meal.doorman: '@App\Mealz\MealBundle\Service\Doorman'
 
   mealz_meal.link:
     class: '%mealz_meal.link.class%'

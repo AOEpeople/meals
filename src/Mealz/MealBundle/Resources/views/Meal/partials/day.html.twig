@@ -27,7 +27,7 @@
         <div class="meal-row no-meal">{{ 'content.participation.day.disabled'|trans({},'general') }}</div>
     {% else %}
 
-        {% set groupedMeals = groupMeals(day.meals) %}
+        {% set groupedMeals = groupMeals(day.meals.toArray) %}
 
         {# display meals for given day #}
         {% for meal in groupedMeals.meals %}

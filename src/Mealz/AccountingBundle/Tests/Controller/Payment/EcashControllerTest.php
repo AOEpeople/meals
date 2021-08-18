@@ -2,6 +2,7 @@
 
 namespace App\Mealz\AccountingBundle\Tests\Controller\Payment;
 
+use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\Translator;
@@ -13,7 +14,6 @@ use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 
 class EcashControllerTest extends AbstractControllerTestCase
 {
-
     /**
      * Set up the testing environment
      */
@@ -23,18 +23,19 @@ class EcashControllerTest extends AbstractControllerTestCase
 
         $this->createDefaultClient();
         $this->clearAllTables();
-        $this->loadFixtures(
-            array(
-                new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
-                new LoadTransactions()
-            )
-        );
+        $this->loadFixtures([
+            new LoadRoles(),
+            // self::$container is a special container that allow access to private services
+            // see: https://symfony.com/blog/new-in-symfony-4-1-simpler-service-testing
+            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
+            new LoadTransactions()
+        ]);
     }
 
     /**
      * Check if form and PayPal button is rendered correctly
      */
-    public function testFormRendering()
+    public function testFormRendering(): void
     {
         $userProfile = $this->getUserProfile();
 
@@ -43,13 +44,10 @@ class EcashControllerTest extends AbstractControllerTestCase
         $this->assertTrue($this->client->getResponse()->isSuccessful());
 
         // Login
-        $loginForm = $crawler->filterXPath('//form[@name="login-form"]')
-            ->form(
-                array(
-                    '_username' => $userProfile->getUsername(),
-                    '_password' => $userProfile->getUsername()
-                )
-            );
+        $loginForm = $crawler->filterXPath('//form[@name="login-form"]')->form([
+            '_username' => $userProfile->getUsername(),
+            '_password' => $userProfile->getUsername()
+        ]);
         $this->client->followRedirects();
         $crawler = $this->client->submit($loginForm, []);
 
@@ -58,7 +56,11 @@ class EcashControllerTest extends AbstractControllerTestCase
         $crawler = $this->client->click($balanceLink);
 
         // Client should be on transaction history page
-        $this->assertGreaterThan(0, $crawler->filterXPath('//div[contains(@class,"transaction-history")]')->count(), 'Transaction history page not found');
+        $this->assertGreaterThan(
+            0,
+            $crawler->filterXPath('//div[contains(@class,"transaction-history")]')->count(),
+            'Transaction history page not found'
+        );
 
         // Check if "add funds" button exists
         $this->assertGreaterThan(0, $crawler->filterXPath('//*[@id="ecash"]')->count(), 'Add funds button not found');
@@ -67,7 +69,7 @@ class EcashControllerTest extends AbstractControllerTestCase
     /**
      * Test payment form handling and database persistence
      */
-    public function testPaymentFormHandlingAction()
+    public function testPaymentFormHandlingAction(): void
     {
         // Mock EcashController class
         $ecashController = $this->getMockBuilder(EcashController::class)
@@ -84,7 +86,7 @@ class EcashControllerTest extends AbstractControllerTestCase
             ->method('validatePaypalTransaction')
             ->will($this->returnValue(['statuscode' => 200, 'amount' => '5.23']));
 
-        $ecashController->expects($this->at(0))
+        $ecashController->expects($this->atLeastOnce())
             ->method('get')
             ->with('translator')
             ->will($this->returnValue(new Translator('de')));
@@ -121,7 +123,7 @@ class EcashControllerTest extends AbstractControllerTestCase
         );
         $expectedResponse->headers->remove('date');
 
-        $actualResponse = $ecashController->paymentFormHandlingAction($request);
+        $actualResponse = $ecashController->paymentFormHandling($request);
         $actualResponse->headers->remove('date');
 
         $this->assertEquals($expectedResponse, $actualResponse);

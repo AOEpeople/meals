@@ -14,19 +14,16 @@ use App\Mealz\UserBundle\Entity\Role;
 
 /**
  * Print controller test.
- *
- * @author Chetan Thapliyal <chetan.thapliyal@aoe.com>
  */
 class PrintControllerTest extends AbstractControllerTestCase
 {
     /**
-     * Prepares test environment.
+     * @inheritDoc
      */
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->createAdminClient();
         $this->clearAllTables();
         $this->loadFixtures([
             new LoadCategories(),
@@ -36,15 +33,19 @@ class PrintControllerTest extends AbstractControllerTestCase
             new LoadDishVariations(),
             new LoadMeals(),
             new LoadRoles(),
+            // self::$container is a special container that allow access to private services
+            // see: https://symfony.com/blog/new-in-symfony-4-1-simpler-service-testing
             new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
         ]);
+
+        $this->loginAs(self::USER_KITCHEN_STAFF);
     }
 
     /**
-     * check that guest participants are not listed in the costsheet
+     * Check that guest participants are not listed in the cost sheet.
      * @test
      */
-    public function guestDoesNotAppearInCostListing()
+    public function guestDoesNotAppearInCostListing(): void
     {
         $time = time();
 

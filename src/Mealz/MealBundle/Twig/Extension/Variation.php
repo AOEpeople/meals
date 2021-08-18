@@ -43,7 +43,7 @@ class Variation extends AbstractExtension
         );
     }
 
-    public function groupMeals(Collection $meals): array
+    public function groupMeals(array $meals): array
     {
         $mealsArray = $mealsVariations = [];
 

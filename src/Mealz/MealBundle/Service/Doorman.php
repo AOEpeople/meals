@@ -33,11 +33,10 @@ class Doorman
 
     protected Security $security;
 
-    public function __construct(Security $security, string $lockParticipationAt = '-1 day 12:00')
+    public function __construct(Security $security)
     {
         $this->security = $security;
         $this->now = time();
-        $this->lockParticipationAt = $lockParticipationAt;
     }
 
     /**

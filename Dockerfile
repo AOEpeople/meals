@@ -8,7 +8,7 @@ WORKDIR var/www/html/src/Resources
 COPY src/Resources/package.json src/Resources/yarn.lock ./
 RUN yarn install
 COPY src/Resources/ .
-#COPY web .
+COPY public .
 RUN NODE_ENV=production yarn run build
 
 # build production container

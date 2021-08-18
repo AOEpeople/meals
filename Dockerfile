@@ -50,7 +50,7 @@ RUN composer install \
         --prefer-dist \
     && composer clearcache \
     && mkdir -p public/bundles/ \
-    && chown -R www-data:www-data web/bundles
+    && chown -R www-data:www-data public/bundles
 
 # add packages and configure development image
 ARG BUILD_DEV=false

@@ -38,7 +38,7 @@ module.exports = function(env) {
             app: './js/init.js',
         },
         output: {
-            path: path.resolve(__dirname, '../../web/static/'),
+            path: path.resolve(__dirname, '../../public/static/'),
             publicPath: env.WEBPACK_SERVE ? 'https://localhost:1337/static/' : '/static/',
             assetModuleFilename: 'assets/[name].[contenthash:4][ext][query]',
             clean: true,

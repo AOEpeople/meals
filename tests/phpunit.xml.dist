@@ -16,7 +16,7 @@
     </php>
 
     <testsuites>
-        <testsuite name="Project Test Suite">
+        <testsuite name="Meals Test Suite">
             <directory>../src/Mealz/*Bundle/Tests</directory>
         </testsuite>
     </testsuites>

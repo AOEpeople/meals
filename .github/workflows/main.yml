@@ -137,7 +137,7 @@ jobs:
           docker-compose exec -T $SERVICE composer install
           docker-compose exec -T $SERVICE bin/console doctrine:schema:update --env=test --force
           docker-compose exec -T $SERVICE mkdir -p app/build/logs/
-          docker-compose exec -T $SERVICE bin/phpunit -d memory_limit=-1 -c tests/phpunit.xml
+          docker-compose exec -T $SERVICE vendor/bin/phpunit -d memory_limit=-1 -c tests/phpunit.xml.dist
           docker-compose down -v --remove-orphans
 
   test-cgl:

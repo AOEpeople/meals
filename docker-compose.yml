@@ -26,8 +26,14 @@ services:
     ports:
       - "8034:80"
     environment:
-      - SYMFONY_DEBUG=0
-      - SYMFONY_ENV=devbox
+      - APP_DEBUG=1
+      - APP_ENV=dev
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_NAME=db
+      - DB_USER=db
+      - DB_PASS=db
+      - DB_VERS=5.7
       - SMTP_HOST=mail
       - SMTP_PORT=1025
       - SMTP_AUTH=off

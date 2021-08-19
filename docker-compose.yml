@@ -4,7 +4,13 @@ services:
   app:
     image: "${IMAGE_APP:-aoepeople/meals:edge}"
     environment:
-      - SYMFONY_DEBUG=0
+      - APP_DEBUG=0
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_NAME=db
+      - DB_USER=db
+      - DB_PASS=db
+      - DB_VERS=5.7
     build:
       context: .
       cache_from:

@@ -21,7 +21,7 @@ function execTests() {
 }
 
 function  execMigrateTestDb() {
-  app/console doctrine:schema:update --env=test --force
+  bin/console doctrine:schema:update --env=test --force
 }
 
 function showUsage() {

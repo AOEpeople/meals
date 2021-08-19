@@ -21,20 +21,33 @@
         </testsuite>
     </testsuites>
 
-<!--    <filter>-->
-<!--        <whitelist processUncoveredFilesFromWhitelist="true">-->
-<!--            <directory suffix=".php">src</directory>-->
-<!--        </whitelist>-->
-<!--    </filter>-->
+    <logging>
+        <junit outputFile="../build/artifacts/qa/junit.xml" />
+    </logging>
 
-<!--    <listeners>-->
-<!--        <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />-->
-<!--    </listeners>-->
+    <coverage cacheDirectory="./.cache"
+              includeUncoveredFiles="true"
+              processUncoveredFiles="true"
+              pathCoverage="false"
+              ignoreDeprecatedCodeUnits="true"
+              disableCodeCoverageIgnore="true">
 
-    <!-- Run `composer require symfony/panther` before enabling this extension -->
-    <!--
-    <extensions>
-        <extension class="Symfony\Component\Panther\ServerExtension" />
-    </extensions>
-    -->
+        <include>
+            <directory suffix=".php">../src</directory>
+        </include>
+
+        <exclude>
+            <directory>../src/Mealz/*Bundle/DataFixtures</directory>
+            <directory>../src/Mealz/*Bundle/DependencyInjection</directory>
+            <directory>../src/Mealz/*Bundle/Resources</directory>
+            <directory>../src/Mealz/*Bundle/Tests</directory>
+            <file>../src/*Bundle/*Bundle.php</file>
+            <file>../src/Kernel.php</file>
+        </exclude>
+
+        <report>
+            <php outputFile="../../build/artifacts/qa/code-coverage.cov" />
+        </report>
+    </coverage>
+
 </phpunit>

@@ -138,13 +138,14 @@ jobs:
           docker-compose exec -T $SERVICE bin/console doctrine:schema:update --env=test --force
           docker-compose exec -T $SERVICE mkdir -p build/artifacts/qa/
           docker-compose exec -T $SERVICE vendor/bin/phpunit -d memory_limit=-1 -c tests/phpunit.xml.dist
+          docker-compose exec -T $SERVICE ls -l build/artifacts/qa/
           docker-compose down -v --remove-orphans
       - name: Upload coverage report artifact
         uses: actions/upload-artifact@v2.2.4
         if: always()
         with:
           name: reports
-          path: build/
+          path: build/artifacts/qa/
       - name: Publish unit-test results
         uses: mikepenz/action-junit-report@v2
         if: always()

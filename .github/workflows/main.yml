@@ -136,10 +136,20 @@ jobs:
           sleep 15
           docker-compose exec -T $SERVICE composer install
           docker-compose exec -T $SERVICE bin/console doctrine:schema:update --env=test --force
-          docker-compose exec -T $SERVICE mkdir -p app/build/logs/
+          docker-compose exec -T $SERVICE mkdir -p build/artifacts/qa/
           docker-compose exec -T $SERVICE vendor/bin/phpunit -d memory_limit=-1 -c tests/phpunit.xml.dist
           docker-compose down -v --remove-orphans
-
+      - name: Upload coverage report artifact
+        uses: actions/upload-artifact@v2.2.4
+        if: always()
+        with:
+          name: reports
+          path: build/
+      - name: Publish unit-test results
+        uses: mikepenz/action-junit-report@v2
+        if: always()
+        with:
+          report_paths: 'build/artifacts/qa/*.xml'
   test-cgl:
     name: PHPCodeSniffer
     if: "false" # temporarily disable CGL unless fixed

@@ -138,19 +138,7 @@ jobs:
           docker-compose exec -T $SERVICE bin/console doctrine:schema:update --env=test --force
           docker-compose exec -T $SERVICE mkdir -p app/build/logs/
           docker-compose exec -T $SERVICE bin/phpunit -d memory_limit=-1 -c tests/phpunit.xml
-#          docker-compose exec -T $SERVICE bash -c "find app/build -type f -regex '.*\.\(html\|xml\)' | xargs sed -i 's#/var/www/html/##g'"
           docker-compose down -v --remove-orphans
-#      - name: Upload coverage report artifact
-#        uses: actions/upload-artifact@v2.2.4
-#        if: always()
-#        with:
-#          name: reports
-#          path: app/build/
-#      - name: Publish unit-test results
-#        uses: mikepenz/action-junit-report@v2
-#        if: always()
-#        with:
-#          report_paths: 'app/build/logs/*.xml'
 
   test-cgl:
     name: PHPCodeSniffer

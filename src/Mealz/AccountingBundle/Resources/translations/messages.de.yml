@@ -46,4 +46,4 @@ payment:
         failure: Die Anfrage ist ungültig oder wurde bereits bestätigt.
     mail:
       subject: Anfrage auf Kontoausgleich
-      body: "Hallo HR,\n\n%admin% hat einen Kontoausgleich für %fullname% beantragt.\nKlicke auf den folgenden Link, um die Anfrage zu bestätigen:\n\n%link%"
+      body: '<html><head></head><body>Hallo HR,<br><br>%admin% hat einen Kontoausgleich für %fullname% beantragt.<br>Klicke auf den folgenden Link, um die Anfrage zu bestätigen:<br><br><a href="%link%">%link%</a></body></html>'

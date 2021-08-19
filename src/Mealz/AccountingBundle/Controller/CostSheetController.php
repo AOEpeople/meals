@@ -205,12 +205,12 @@ class CostSheetController extends BaseController
         $body = $translator->trans('payment.costsheet.mail.body', array(
             '%admin%' => $this->getProfile()->getFullName(),
             '%fullname%' => $profile->getFullName(),
-            '%link%' => $this->getParameter('env_url') . $this->generateUrl('mealz_accounting_cost_sheet_redirect_to_confirm', array(
+            '%link%' => rtrim($this->getParameter('env_url'), '/') . $this->generateUrl('mealz_accounting_cost_sheet_redirect_to_confirm', array(
                     'hash' => $urlEncodedHash))
         ), 'messages');
         $headers = array();
         $headers[] = $translator->trans('mail.sender', array(), 'messages');
-        $headers[] = "Content-type: text/plain; charset=utf-8";
+        $headers[] = "Content-type: text/html; charset=utf-8";
 
         mail($receiver, $subject, $body, implode("\r\n", $headers));
     }

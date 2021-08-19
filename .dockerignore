@@ -3,6 +3,7 @@
 
 # except the following ...
 !.env
+!.env.test
 !/bin/
 !/config/
 !/docker/
@@ -15,7 +16,8 @@
 !composer.json
 !composer.lock
 !symfony.lock
-!**/*.php.cache
+!tests/bootstrap.php
+!tests/phpunit.xml.dist
 
 # ... but never include ...
 /public/static/

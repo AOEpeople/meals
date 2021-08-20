@@ -19,8 +19,9 @@ echo_header "Configuring database..."
 
 APP_DB=db
 
-# generate app DB schema
-ddev exec bin/console doctrine:schema:update --force --no-interaction
+# Drop (if exists) and create application DB schema
+ddev exec bin/console doctrine:schema:drop --force --no-interaction
+ddev exec bin/console doctrine:migrations:migrate --no-interaction
 
 # import test data fixtures
 ddev exec bin/console doctrine:fixtures:load --no-interaction

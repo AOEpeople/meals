@@ -24,11 +24,25 @@ parameters:
     mealz.meal.search_timestamp: '2000-01-01'
     mealz.meal.new_flag_counter: 2
 
+    # PDO Session Handler options
+    # Define table and column names to store session data
+    app.session.handler.pdo.options:
+        db_table:        session
+        db_id_col:       sess_id
+        db_data_col:     sess_data
+        db_lifetime_col: sess_lifetime
+        db_time_col:     sess_time
+
 services:
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    # define handler service to store and manage sessions in database
+    session.handler.pdo:
+        class:     Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
+        arguments: ['%env(DB_URL)%', '%app.session.handler.pdo.options%']
 
     ##################################################################
     # Meal BUNDLE

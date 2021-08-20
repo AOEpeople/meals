@@ -26,12 +26,6 @@ security:
             anonymous:  true
             security:   false
 
-#        rest:
-#            pattern:    ^/rest
-#            fos_oauth:  true
-#            stateless:  true
-#            anonymous:  false
-
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
 

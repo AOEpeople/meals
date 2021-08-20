@@ -31,7 +31,7 @@ jobs:
       - name: Prepare build
         run: |
           mkdir -p /tmp/docker/buildx
-          git log -n 10 --date=short --format=format:"%C(auto)%h %ad @%al %s" >> web/changelog.txt
+          git log -n 10 --date=short --format=format:"%C(auto)%h %ad @%al %s" >> public/changelog.txt
       - name: Setup docker build caches
         uses: actions/cache@v2
         with:

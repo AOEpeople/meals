@@ -5,7 +5,7 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     app.base_url: '%env(APP_BASE_URL)%'
-    app.hr_email: 'team-lemmings@aoe.com'
+    app.hr_email: '%env(HR_EMAIL)%'
 
     app.keycloak.server: 'https://login.aoe.com/auth/realms/aoe'
 
@@ -40,6 +40,7 @@ services:
         exclude:
             - '../src/Mealz/MealBundle/DependencyInjection/'
             - '../src/Mealz/MealBundle/Entity/*Repository.php'
+            - '../src/Mealz/UserBundle/Resources/'
             - '../src/Mealz/MealBundle/Tests/'
 
     # controllers are imported separately to make sure services can be injected
@@ -67,6 +68,7 @@ services:
         exclude:
             - '../src/Mealz/AccountingBundle/DependencyInjection/'
             - '../src/Mealz/AccountingBundle/Entity/*Repository.php'
+            - '../src/Mealz/UserBundle/Resources/'
             - '../src/Mealz/AccountingBundle/Tests/'
 
     App\Mealz\AccountingBundle\Controller\:

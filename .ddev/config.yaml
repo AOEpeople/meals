@@ -9,7 +9,6 @@ xdebug_enabled: false
 additional_hostnames: []
 additional_fqdns:
   - meals.test
-  - www.meals.local
 mariadb_version: ""
 mysql_version: "5.7"
 use_dns_when_possible: true
@@ -31,7 +30,7 @@ omit_containers:
 hooks:
   post-start:
     # The PHP_IDE_CONFIG env var is atm. not overridable via custom docker-compose.*.yaml
-    - exec: "echo 'export PHP_IDE_CONFIG='serverName=www.meals.local'' >> ~/.bashrc"
+    - exec: "echo 'export PHP_IDE_CONFIG='serverName=meals.test'' >> ~/.bashrc"
     - exec: "sudo service ssh start"
 timezone: "Europe/Berlin"
 

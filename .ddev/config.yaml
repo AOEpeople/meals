@@ -8,6 +8,7 @@ router_https_port: "443"
 xdebug_enabled: false
 additional_hostnames: []
 additional_fqdns:
+  - meals.test
   - www.meals.local
 mariadb_version: ""
 mysql_version: "5.7"

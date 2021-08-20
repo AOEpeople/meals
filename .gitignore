@@ -3,12 +3,9 @@
 .*
 .DS_Store
 /build/
-/composer.phar
 /public/images/
 /public/static/
-cache.properties
 node_modules
-vendor
 
 # inclusions (alphabetical)
 !.ddev/

@@ -74,6 +74,18 @@ services:
         tags: ['controller.service_arguments']
 
 
+    ##################################################################
+    # User BUNDLE
+    ##################################################################
+    App\Mealz\UserBundle\:
+        resource: '../src/Mealz/UserBundle/'
+        exclude:
+            - '../src/Mealz/UserBundle/DependencyInjection/'
+            - '../src/Mealz/UserBundle/Entity/*Repository.php'
+            - '../src/Mealz/UserBundle/Resources/'
+            - '../src/Mealz/UserBundle/Tests/'
+
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 

@@ -175,9 +175,6 @@
             "config/routes/hwi_oauth_routing.yaml"
         ]
     },
-    "incenteev/composer-parameter-handler": {
-        "version": "v2.1.4"
-    },
     "jms/metadata": {
         "version": "1.7.0"
     },

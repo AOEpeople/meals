@@ -17,6 +17,8 @@ services:
         - aoepeople/meals:edge
     ports:
       - "8033:80"
+    volumes:
+      - ./build:/var/www/html/build
 
   dev:
     image: "${IMAGE_DEV:-aoepeople/meals:edge-dev}"
@@ -44,7 +46,7 @@ services:
       - SMTP_PORT=1025
       - SMTP_AUTH=off
     volumes:
-      - ./app/build:/var/www/html/app/build
+      - ./build:/var/www/html/build
 
   db:
     image: "${IMAGE_DB:-aoepeople/meals-test-db:latest}"

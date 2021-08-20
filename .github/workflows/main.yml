@@ -130,6 +130,7 @@ jobs:
           docker image ls -a | grep aoepeople
       - name: Test with docker compose
         run: |
+          mkdir build
           docker-compose pull db
           docker-compose up -d --no-build db
           docker-compose up -d $SERVICE

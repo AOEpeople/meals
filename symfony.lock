@@ -549,6 +549,12 @@
     "symfony/http-kernel": {
         "version": "v4.4.29"
     },
+    "symfony/inflector": {
+        "version": "v4.4.27"
+    },
+    "symfony/intl": {
+        "version": "v4.4.27"
+    },
     "symfony/monolog-bridge": {
         "version": "v5.2.12"
     },

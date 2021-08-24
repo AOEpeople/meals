@@ -13,8 +13,6 @@ return [
     Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle::class => ['dev' => true, 'test' => true],
     Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle::class => ['all' => true],
     JMS\SerializerBundle\JMSSerializerBundle::class => ['all' => true],
-    FOS\RestBundle\FOSRestBundle::class => ['all' => true],
-    FOS\OAuthServerBundle\FOSOAuthServerBundle::class => ['all' => true],
     Http\HttplugBundle\HttplugBundle::class => ['all' => true],
     HWI\Bundle\OAuthBundle\HWIOAuthBundle::class => ['all' => true],
     WhiteOctober\TCPDFBundle\WhiteOctoberTCPDFBundle::class => ['all' => true],
@@ -22,5 +20,4 @@ return [
     App\Mealz\UserBundle\MealzUserBundle::class => ['all' => true],
     App\Mealz\AccountingBundle\MealzAccountingBundle::class => ['all' => true],
     App\Mealz\TemplateBundle\MealzTemplateBundle::class => ['all' => true],
-    App\Mealz\RestBundle\MealzRestBundle::class => ['all' => true],
 ];

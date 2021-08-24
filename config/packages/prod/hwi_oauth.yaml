@@ -6,16 +6,18 @@ hwi_oauth:
     resource_owners:
         meals:
             type:                oauth2
-            client_id:           '%env(KEYCLOAK_CLIENT_ID)%'
-            client_secret:       '%env(KEYCLOAK_CLIENT_SECRET)%'
-            access_token_url:    '%app.keycloak.endpoint.access_token%'
-            authorization_url:   '%app.keycloak.endpoint.auth_token%'
-            infos_url:           '%app.keycloak.endpoint.user_token%'
+            client_id:           '%env(IDP_CLIENT_ID)%'
+            client_secret:       '%env(IDP_CLIENT_SECRET)%'
+            access_token_url:    '%app.idp.endpoint.access_token%'
+            authorization_url:   '%app.idp.endpoint.auth_token%'
+            infos_url:           '%app.idp.endpoint.user_token%'
             user_response_class: HWI\Bundle\OAuthBundle\OAuth\Response\PathUserResponse
             paths:
                 identifier: id
                 nickname:   preferred_username
                 realname:   name
+                firstname:  given_name
+                lastname:   family_name
             options:
                 use_bearer_authorization: true
     http:

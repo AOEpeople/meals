@@ -1,8 +1,8 @@
 security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
-        database:
-            entity: { class: Mealz\UserBundle\Entity\Login, property: username }
+        oauth_user_provider:
+            id: mealz.oauthuserprovider
 
     firewalls:
         dev:
@@ -10,21 +10,19 @@ security:
             security: false
 
         main:
-            provider: database
-            # allow anonymous access; required for login and home page
-            anonymous: lazy
-#            guard:
-#                authenticators:
-#                    - App\Mealz\UserBundle\Security\AppCustomAuthenticator
-            logout:
-                path: MealzUserBundle_logout
-                # where to redirect after logout
-                # target: app_any_route
+            provider: oauth_user_provider
+#            oauth:
+#                resource_owners:
+#                    meals: meals_login
+#                login_path: /connect/meals
+#                use_forward: true
+#                failure_path: MealzUserBundle_logout
+#
+#                oauth_user_provider:
+#                    service: mealz.oauthuserprovider
 
-        guest:
-            pattern:    ^/menu/guest
-            anonymous:  true
-            security:   false
+            # allow anonymous access; required for login and home page
+#            anonymous: lazy
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication

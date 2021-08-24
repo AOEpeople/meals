@@ -1,0 +1,3 @@
+imports:
+    - { resource: ../prod/hwi_oauth.yaml }
+

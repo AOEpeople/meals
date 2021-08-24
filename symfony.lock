@@ -162,6 +162,15 @@
     "gedmo/doctrine-extensions": {
         "version": "v3.1.0"
     },
+    "guzzlehttp/guzzle": {
+        "version": "7.3.0"
+    },
+    "guzzlehttp/promises": {
+        "version": "1.4.1"
+    },
+    "guzzlehttp/psr7": {
+        "version": "2.0.0"
+    },
     "hwi/oauth-bundle": {
         "version": "0.6",
         "recipe": {
@@ -243,6 +252,9 @@
     "php-http/discovery": {
         "version": "1.14.0"
     },
+    "php-http/guzzle7-adapter": {
+        "version": "1.0.0"
+    },
     "php-http/httplug": {
         "version": "2.2.0"
     },
@@ -297,6 +309,9 @@
     "phpspec/prophecy": {
         "version": "1.13.0"
     },
+    "phpspec/prophecy-phpunit": {
+        "version": "v2.0.1"
+    },
     "phpunit/php-code-coverage": {
         "version": "6.1.4"
     },
@@ -346,6 +361,9 @@
     },
     "psr/log": {
         "version": "1.1.4"
+    },
+    "ralouphie/getallheaders": {
+        "version": "3.0.3"
     },
     "sebastian/cli-parser": {
         "version": "1.0.1"

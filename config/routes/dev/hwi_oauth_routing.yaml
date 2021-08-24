@@ -1,0 +1,2 @@
+imports:
+    - { resource: ../prod/hwi_oauth_routing.yaml }

@@ -1,15 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\UserBundle\Tests\Service;
 
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
-use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
 use App\Mealz\UserBundle\Provider\OAuthUserProvider;
 use App\Mealz\UserBundle\Entity\Profile;
+use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Psr\Log\NullLogger;
 
 class OAuthProviderTest extends AbstractControllerTestCase
 {
+    use ProphecyTrait;
+
+    private OAuthUserProvider $sut;
+
     /**
      * Set up the testing environment
      */
@@ -17,146 +25,97 @@ class OAuthProviderTest extends AbstractControllerTestCase
     {
         parent::setUp();
 
-        $this->createDefaultClient();
         $this->clearAllTables();
-        $this->loadFixtures([
-            new LoadRoles(),
-            new LoadUsers(self::$container->get('security.user_password_encoder.generic'))
-        ]);
+        $this->loadFixtures([new LoadRoles()]);
+
+        $this->sut = new OAuthUserProvider($this->getDoctrine()->getManager(), new NullLogger());
     }
 
     /**
      * Test oAuth Provider - create new User and check if admin
-     * @test
+     *
+     * @dataProvider idpUserDataProvider
      */
-    public function testCreateNewAdminOAuthUser()
+    public function testCreateNewUser(array $idpUserData, array $mealsRoles): void
     {
-        $oAuthProvider = new OAuthUserProvider($this->getDoctrine());
+        $firstName = $idpUserData['given_name'];
+        $lastName  = $idpUserData['family_name'];
+        $username  = $idpUserData['username'];
+        $idpRoles  = $idpUserData['roles'];
 
-        $username = 'test.user';
-        $newUserInformation = [
-            'preferred_username' => $username,
-            'family_name' => 'user',
-            'given_name' => 'test',
-            'roles' => ['meals.admin']
-        ];
+        $userResponseMock = $this->getMockedUserResponse($username, $firstName, $lastName, $idpRoles);
 
         // check if valid oAuth User comes in return
-        $response = $oAuthProvider->loadUserByIdOrCreate($username, $newUserInformation);
-        $this->assertInstanceOf(Profile::class, $response);
+        $user = $this->sut->loadUserByOAuthUserResponse($userResponseMock);
+        $this->assertInstanceOf(Profile::class, $user);
 
         // check if new valid Profile is written in Database
-        $newCreatedProfile = $this->getDoctrine()->getManager()->find(
-            'MealzUserBundle:Profile',
-            $username
-        );
-        $this->assertEquals('test.user', $newCreatedProfile->getUsername());
+        $newCreatedProfile = $this->getDoctrine()->getManager()->find(Profile::class, $username);
+        $this->assertEquals($username, $newCreatedProfile->getUsername());
 
-        // check if Rolemapping was correct
-        $this->assertEquals([0 => 'ROLE_KITCHEN_STAFF'], $response->getRoles());
+        // check role mapping
+        $this->assertSame($mealsRoles, $user->getRoles());
     }
 
-    /**
-     * Test oAuth Provider - get old User and check if roles are mapped corrrectly with false role
-     * @test
-     */
-    public function testValidNewOAuthUser()
+    public function idpUserDataProvider(): array
     {
-        $oAuthProvider = new OAuthUserProvider($this->getDoctrine());
-
-        $username = 'alice';
-        $validUserInformation = [
-            'preferred_username' => 'alice',
-            'family_name' => 'ecila',
-            'given_name' => 'alice',
-            'roles' => ['meals.user']
+        return [
+            'admin user' => [
+                'idpUserData' => [
+                    'username' => 'kochomi',
+                    'given_name' => 'kochomi',
+                    'family_name' => 'imohcok',
+                    'roles' => ['meals.admin']
+                ],
+                'mealsRoles' => ['ROLE_KITCHEN_STAFF']
+            ],
+            'standard user' => [
+                'idpUserData' => [
+                    'username' => 'alice',
+                    'given_name' => 'alice',
+                    'family_name' => 'ecila',
+                    'roles' => ['meals.user']
+                ],
+                'mealsRoles' => ['ROLE_USER']
+            ],
+            'finance user' => [
+                'idpUserData' => [
+                    'username' => 'finance',
+                    'given_name' => 'finance',
+                    'family_name' => 'ecnanif',
+                    'roles' => ['meals.user', 'meals.finance']
+                ],
+                'mealsRoles' => ['ROLE_USER', 'ROLE_FINANCE']
+            ],
+            'user with invalid role' => [
+                'idpUserData' => [
+                    'username' => 'invalid.role',
+                    'given_name' => 'invalid',
+                    'family_name' => 'role',
+                    'roles' => ['invalid.role']
+                ],
+                'mealsRoles' => []
+            ],
         ];
-
-        // check if Response is a valid oAuth User
-        $response = $oAuthProvider->loadUserByIdOrCreate($username, $validUserInformation);
-        $this->assertInstanceOf(Profile::class, $response);
-
-        // check if new valid Profile is written in Database
-        $newCreatedProfile = $this->getDoctrine()->getManager()->find(
-            'MealzUserBundle:Profile',
-            $username
-        );
-        $this->assertEquals($newCreatedProfile->getUsername(), 'alice');
-
-        // check if Rolemapping was correct
-        $this->assertEquals([0 => 'ROLE_USER'], $response->getRoles());
     }
 
     /**
-     * Test oAuth Provider - create new User and check if finance role is mapped correctly
-     * @test
+     * Returns the mocked response from identity provider.
      */
-    public function testCreateNewFinanceOAuthUser()
+    private function getMockedUserResponse(string $username, string $firstName, string $lastName, array $roles)
     {
-        $oAuthProvider = new OAuthUserProvider($this->getDoctrine());
-
-        $username = 'user.test';
-        $newUserInformation = [
+        $userData = [
             'preferred_username' => $username,
-            'family_name' => 'test',
-            'given_name' => 'user',
-            'roles' => [
-                'meals.user',
-                'meals.finance'
-            ]
+            'family_name' => $lastName,
+            'given_name' => $firstName,
+            'roles' => $roles
         ];
+        $responseProphet = $this->prophesize(UserResponseInterface::class);
+        $responseProphet->getData()->shouldBeCalledOnce()->willReturn($userData);
+        $responseProphet->getFirstName()->shouldBeCalledOnce()->willReturn($firstName);
+        $responseProphet->getLastName()->shouldBeCalledOnce()->willReturn($lastName);
+        $responseProphet->getNickname()->shouldBeCalledOnce()->willReturn($username);
 
-        // check if valid oAuth User comes in return
-        $response = $oAuthProvider->loadUserByIdOrCreate($username, $newUserInformation);
-        $this->assertInstanceOf(Profile::class, $response);
-
-        // check if new valid Profile is written in Database
-        $newCreatedProfile = $this->getDoctrine()->getManager()->find(
-            'MealzUserBundle:Profile',
-            $username
-        );
-        $this->assertEquals('user.test', $newCreatedProfile->getUsername());
-
-        // check if Rolemapping was correct
-        $this->assertEquals([0 => 'ROLE_FINANCE', 1 => 'ROLE_USER'], $response->getRoles());
-    }
-
-    /**
-     * Test oAuth Provider - detect user with false role
-     * @test
-     */
-    public function testOAuthUserWithInvalidRoles()
-    {
-        $oAuthProvider = new OAuthUserProvider($this->getDoctrine());
-
-        $username = 'alice';
-        $validUserInformation = [
-            'preferred_username' => 'alice',
-            'family_name' => 'ecila',
-            'given_name' => 'alice',
-            'roles' => ['system.user']
-        ];
-
-        // check if Response is a valid oAuth User
-        $response = $oAuthProvider->loadUserByIdOrCreate($username, $validUserInformation);
-        $this->assertEquals(false, $response);
-    }
-
-    /**
-     * Test oAuth Provider - detect invalid token
-     * @test
-     */
-    public function testOAuthUserWithInvalidToken()
-    {
-        $oAuthProvider = new OAuthUserProvider($this->getDoctrine());
-
-        $username = 'alice';
-        $validUserInformation = [
-            'error' => 'invalid_token'
-        ];
-
-        // check if Response is a valid oAuth User
-        $response = $oAuthProvider->loadUserByIdOrCreate($username, $validUserInformation);
-        $this->assertEquals(false, $response);
+        return $responseProphet->reveal();
     }
 }

@@ -7,12 +7,12 @@ parameters:
     app.base_url: '%env(APP_BASE_URL)%'
     app.hr_email: '%env(HR_EMAIL)%'
 
-    app.keycloak.server: 'https://login.aoe.com/auth/realms/aoe'
+    app.idp.server: '%env(IDP_SERVER)%'
 
-    app.keycloak.endpoint.access_token: '%app.keycloak.server%/protocol/openid-connect/token'
-    app.keycloak.endpoint.auth_token:   '%app.keycloak.server%/protocol/openid-connect/auth'
-    app.keycloak.endpoint.logout:       '%app.keycloak.server%/protocol/openid-connect/logout'
-    app.keycloak.endpoint.user_token:   '%app.keycloak.server%/protocol/openid-connect/userinfo'
+    app.idp.endpoint.access_token: '%app.idp.server%/protocol/openid-connect/token'
+    app.idp.endpoint.auth_token:   '%app.idp.server%/protocol/openid-connect/auth'
+    app.idp.endpoint.logout:       '%app.idp.server%/protocol/openid-connect/logout'
+    app.idp.endpoint.user_token:   '%app.idp.server%/protocol/openid-connect/userinfo'
 
     app.paypal.id:     '%env(PAYPAL_ID)%'
     app.paypal.secret: '%env(PAYPAL_SECRET)%'

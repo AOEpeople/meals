@@ -6,8 +6,8 @@ services:
         class: Symfony\Bridge\Doctrine\Security\User\EntityUserProvider
         arguments: ['@doctrine', "App\\Mealz\UserBundle\\Entity\\Login", "username"]
     mealz.oauthuserprovider:
-        class: App\Mealz\UserBundle\Provider\OAuthUserProvider
-        arguments: ['@doctrine']
+        alias: App\Mealz\UserBundle\Provider\OAuthUserProvider
+#        arguments: ['@doctrine']
 
     mealz_user.repository.profile:
         class: App\Mealz\UserBundle\Entity\ProfileRepository

@@ -2,10 +2,10 @@
 
 namespace App\Mealz\UserBundle\Entity;
 
-use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthUser;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -16,116 +16,75 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="profile")
  * @ORM\Entity(repositoryClass="ProfileRepository")
  */
-class Profile extends OAuthUser
+class Profile implements UserInterface
 {
     /**
-     * @var string
-     *
      * @ORM\Column(name="id", type="string", length=255, nullable=FALSE)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      */
-    protected $username;
+    private string $username = '';
 
     /**
      * @Assert\NotBlank()
      * @ORM\Column(type="string", length=255, nullable=TRUE)
-     * @var string
      */
-    protected $name;
+    private string $name = '';
 
     /**
      * @Assert\NotBlank()
      * @ORM\Column(type="string", length=255, nullable=TRUE)
-     * @var string
      */
-    protected $firstName;
+    private string $firstName = '';
 
     /**
      * @Assert\NotBlank()
      * @ORM\Column(type="string", length=255, nullable=TRUE)
-     * @var string
      */
-    protected $company;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Mealz\AccountingBundle\Entity\Transaction", mappedBy="profile")
-     * @var ArrayCollection
-     */
-    protected $transactions;
+    private string $company = '';
 
     /**
      * @ORM\ManyToMany(targetEntity="Role", inversedBy="profiles")
-     * @var Collection
+     * @var Collection<int, Role>|null
      */
-    protected $roles;
+    private ?Collection $roles = null;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=TRUE)
-     * @var string
      */
-    private $settlementHash;
+    private ?string $settlementHash = null;
 
-    /**
-     * Profile constructor.
-     */
-    public function __construct()
-    {
-        $this->roles = new ArrayCollection();
-    }
-
-    /**
-     * @param string $username
-     */
-    public function setUsername($username)
+    public function setUsername(string $username): void
     {
         $this->username = $username;
     }
 
-    /**
-     * @return string
-     */
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->username;
     }
 
-    /**
-     * @param string $name
-     */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return string
-     */
-    public function getFirstName()
+    public function getFirstName(): string
     {
         return $this->firstName;
     }
 
-    /**
-     * @param string $firstName
-     */
-    public function setFirstName($firstName)
+    public function setFirstName(string $firstName): void
     {
         $this->firstName = $firstName;
     }
 
-    /**
-     * @return string
-     */
-    public function getFullName()
+    public function getFullName(): string
     {
         return "$this->name, $this->firstName";
     }
@@ -135,50 +94,54 @@ class Profile extends OAuthUser
         return $this->getUsername();
     }
 
-    /**
-     * Add role
-     *
-     * @param Role $role
-     * @return Profile
-     */
-    public function addRole(Role $role)
+    public function addRole(Role $role): self
     {
+        if (null === $this->roles) {
+            $this->roles = new ArrayCollection([$role]);
+        }
+
         $this->roles->add($role);
 
         return $this;
     }
 
-    /**
-     * Remove role
-     *
-     * @param Role $role
-     */
-    public function removeRole(Role $role)
+    public function removeRole(Role $role): void
     {
-        $this->roles->removeElement($role);
+        if (null !== $this->roles) {
+            $this->roles->removeElement($role);
+        }
     }
 
     /**
-     * @return array
+     * @return string[]
      */
-    public function getRoles()
+    public function getRoles(): array
     {
-        return $this->roles->toArray();
+        if ($this->roles === null) {
+            return [];
+        }
+
+        $roles = [];
+
+        foreach ($this->roles as $role) {
+            $roles[] = $role->getSid();
+        }
+
+        return $roles;
     }
 
     /**
-     * @param mixed $roles
+     * @param Collection<int, Role> $roles
      */
-    public function setRoles(Collection $roles)
+    public function setRoles(Collection $roles): void
     {
         $this->roles = $roles;
     }
 
     /**
      * is the User a Guest
-     * @return bool
      */
-    public function isGuest()
+    public function isGuest(): bool
     {
         return $this->roles->exists(
             function ($key, $role) {
@@ -188,43 +151,42 @@ class Profile extends OAuthUser
         );
     }
 
-    /**
-     * @return string
-     */
-    public function getCompany()
+    public function getCompany(): string
     {
         return $this->company;
     }
 
-    /**
-     * @param string $company
-     */
-    public function setCompany($company)
+    public function setCompany(string $company): void
     {
         $this->company = $company;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getSettlementHash()
+    public function getSettlementHash(): ?string
     {
         return $this->settlementHash;
     }
 
-    /**
-     * @param mixed $settlementHash
-     */
-    public function setSettlementHash($settlementHash)
+    public function setSettlementHash(string $settlementHash): void
     {
         $this->settlementHash = $settlementHash;
     }
 
-    /**
-     * @return Profile
-     */
-    public function getProfile()
+    public function getProfile(): self
     {
         return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return null;
+    }
+
+    public function getSalt(): ?string
+    {
+        return null;
+    }
+
+    public function eraseCredentials(): void
+    {
     }
 }

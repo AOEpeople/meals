@@ -56,8 +56,6 @@ security:
     access_control:
         - { path: ^/connect, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/login, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
-        - { path: ^/rest, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
-        - { path: ^/oauth/v2/token, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/menu/guest, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/language-switch, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/css, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }

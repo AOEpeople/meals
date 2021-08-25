@@ -9,6 +9,10 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
+        guest:
+            pattern: ^/menu/guest
+            anonymous: lazy
+
         main:
             oauth:
                 resource_owners:

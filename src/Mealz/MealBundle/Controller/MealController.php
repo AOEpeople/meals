@@ -341,7 +341,7 @@ class MealController extends BaseController
 
             $this->addFlashMessage($message, 'danger');
         } finally {
-            return $this->render('::base.html.twig');
+            return $this->render('base.html.twig');
         }
     }
 

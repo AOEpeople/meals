@@ -10,19 +10,20 @@ security:
             security: false
 
         main:
-            provider: oauth_user_provider
-#            oauth:
-#                resource_owners:
-#                    meals: meals_login
-#                login_path: /connect/meals
-#                use_forward: true
-#                failure_path: MealzUserBundle_logout
-#
-#                oauth_user_provider:
-#                    service: mealz.oauthuserprovider
+            oauth:
+                resource_owners:
+                    meals: meals_login
+                login_path: /connect/meals
+                use_forward: true
+                failure_path: /connect/meals
 
-            # allow anonymous access; required for login and home page
-#            anonymous: lazy
+                oauth_user_provider:
+                    service: mealz.oauthuserprovider
+            logout:
+                path: MealzUserBundle_logout
+                # where to redirect after logout
+                target: /
+                success_handler: App\Mealz\UserBundle\Provider\LogoutSuccessHandler
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication

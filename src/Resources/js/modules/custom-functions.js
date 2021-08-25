@@ -70,7 +70,7 @@ Mealz.prototype.loadGeneratedLink = function(dayId) {
 
     $.ajax({
         method: 'GET',
-        url: '/app.php/menu/' + dayId + '/new-guest-invitation',
+        url: '/menu/' + dayId + '/new-guest-invitation',
         async: false,
         success: function (data) {
             result = data;

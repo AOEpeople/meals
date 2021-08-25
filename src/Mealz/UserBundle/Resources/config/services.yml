@@ -7,7 +7,6 @@ services:
         arguments: ['@doctrine', "App\\Mealz\UserBundle\\Entity\\Login", "username"]
     mealz.oauthuserprovider:
         alias: App\Mealz\UserBundle\Provider\OAuthUserProvider
-#        arguments: ['@doctrine']
 
     mealz_user.repository.profile:
         class: App\Mealz\UserBundle\Entity\ProfileRepository

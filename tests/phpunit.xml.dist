@@ -3,13 +3,15 @@
 <!-- https://phpunit.readthedocs.io/en/latest/configuration.html -->
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="../vendor/phpunit/phpunit/phpunit.xsd"
-         backupGlobals="false"
          colors="true"
          bootstrap="bootstrap.php"
 >
     <php>
         <ini name="display_errors" value="1" />
         <ini name="error_reporting" value="-1" />
+
+        <env name="DB_NAME" value="db_test" force="true" />
+
         <server name="APP_DEBUG" value="1" force="true" />
         <server name="APP_ENV" value="test" force="true" />
         <server name="SHELL_VERBOSITY" value="-1" />
@@ -26,9 +28,7 @@
     </logging>
 
     <coverage cacheDirectory="./.cache"
-              includeUncoveredFiles="true"
               processUncoveredFiles="true"
-              pathCoverage="false"
               ignoreDeprecatedCodeUnits="true"
               disableCodeCoverageIgnore="true">
 

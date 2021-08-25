@@ -16,7 +16,7 @@ return [
     FOS\RestBundle\FOSRestBundle::class => ['all' => true],
     FOS\OAuthServerBundle\FOSOAuthServerBundle::class => ['all' => true],
     Http\HttplugBundle\HttplugBundle::class => ['all' => true],
-    HWI\Bundle\OAuthBundle\HWIOAuthBundle::class => ['dev' => true, 'prod' => true],
+    HWI\Bundle\OAuthBundle\HWIOAuthBundle::class => ['all' => true],
     WhiteOctober\TCPDFBundle\WhiteOctoberTCPDFBundle::class => ['all' => true],
     App\Mealz\MealBundle\MealzMealBundle::class => ['all' => true],
     App\Mealz\UserBundle\MealzUserBundle::class => ['all' => true],

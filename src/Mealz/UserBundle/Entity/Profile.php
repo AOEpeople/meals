@@ -97,7 +97,7 @@ class Profile implements UserInterface
     public function addRole(Role $role): self
     {
         if (null === $this->roles) {
-            $this->roles = new ArrayCollection([$role]);
+            $this->roles = new ArrayCollection();
         }
 
         $this->roles->add($role);
@@ -166,7 +166,7 @@ class Profile implements UserInterface
         return $this->settlementHash;
     }
 
-    public function setSettlementHash(string $settlementHash): void
+    public function setSettlementHash(?string $settlementHash): void
     {
         $this->settlementHash = $settlementHash;
     }

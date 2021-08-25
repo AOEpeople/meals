@@ -31,6 +31,11 @@ security:
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
 
+    # Define role compositions, e.g. role ROLE_KITCHEN_STAFF includes ROLE_USER role
+    role_hierarchy:
+        ROLE_KITCHEN_STAFF: ROLE_USER
+        ROLE_FINANCE: ROLE_USER
+
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:

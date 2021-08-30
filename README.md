@@ -97,7 +97,7 @@ Finance has access to all user features and the finance tab.
 
 ### Dish variations
 **Route:** /accounting/book/finance/list
-**Available at:** Choose "Finace" in finance navigation bar.
+**Available at:** Choose "Finance" in finance navigation bar.
 **Actions** Select Date to list all transaction and export as pdf.
 
 ---
@@ -105,7 +105,7 @@ Finance has access to all user features and the finance tab.
 ## Devbox Installation
 We're using [ddev](https://ddev.readthedocs.io/) for local development. `ddev` is a CLI tool which uses Docker to simplify local development. Please make sure that `ddev`, `mkcert` and `docker` are installed and run the following to get started:
 ```
-ddev start
+ddev start && ddev install
 ```
 Point your webbrowser to https://meals.test :tada:
 Don't forget to add to your local hosts file if not done automatically via ddev: `127.0.0.1 meals.test`
@@ -116,7 +116,7 @@ Don't forget to add to your local hosts file if not done automatically via ddev:
 ddev ssh
 
 # change directory
-cd app/Resources
+cd src/Resources
 
 # build production assets
 yarn build
@@ -126,7 +126,7 @@ yarn build
 ```bash
 # stylelint for SASS files
 ddev ssh
-cd /var/www/html/app/Resources
+cd /var/www/html/src/Resources
 yarn lint:sass
 ```
 
@@ -137,7 +137,7 @@ ddev ssh
 
 ### Common commands
 ```
-php app/console doctrine:schema:update --force
+php bin/console doctrine:schema:update --force
 ```
 ---
 
@@ -145,7 +145,7 @@ php app/console doctrine:schema:update --force
 
 ### SQLSTATE[42S22]: Column not found: 1054 Unknown column
 
-    php app/console doctrine:schema:update --force --env=dev
+    php bin/console doctrine:schema:update --force --env=dev
 
 ---
 
@@ -165,32 +165,39 @@ The following roles are in use:
 
 To load up some test data, run
 
-    php app/console doctrine:fixtures:load -n
+    php bin/console doctrine:fixtures:load -n
 
 It generates dishes, meals and users.
 
-You can use "john", "jane, "alice" and "bob" to login. Their password is just their username.
-The User "kochomi" is allowed to modify dishes and edit meals.
+You can use the following users to login.
+
+- alice.meals
+- bob.meals
+- finance.meals
+- jane.meals
+- john.meals
+- kochomi.meals
+
+Their passwords can be found [here](src/Mealz/UserBundle/DataFixtures/ORM/LoadUsers.php).
+The User "kochomi.meals" is allowed to modify dishes and edit meals.
+
+### Login
+By default, user authentication takes place using oauth with custom identity provider. To use it you must define the following env vars with correct values in `env.local.php`.
+
+```shell
+IDP_SERVER=https://login.some-domain.com/
+IDP_CLIENT_ID=cleint-id
+IDP_CLIENT_SECRET=client-secret
+```
+
+Alternatively, you can uncomment the content of `config/packages/dev/security.yaml` file to disable oauth and authenticate users against the users stored in database.
 
 ### Running tests
+Use the following command from project root directory in host system.
 
-Some tests require a working database. The database dedicated for running tests can be configured by setting
-the database name in `app/config/parameters.yml` as `database_name_testing`. Credentials should be the same
-as for the dev environment.
-
-Before running phpunit make sure the database schema is up-to-date:
-
-    sudo -i
-    mysql
-    > CREATE USER 'mealz_test'@'localhost' IDENTIFIED BY 'mealz_test';
-    > CREATE DATABASE mealz_test;
-    > GRANT ALL PRIVILEGES ON mealz_test.* TO 'mealz_test'@'localhost';
-
-    php app/console doctrine:schema:update --env=test --force
-    bin/phpunit -c app/config/commons/development/phpunit.xml
-Notes:
-- With --filter CLASSNAME you can test single Test Classes
-- When you disable xdebug the performance will be better
+```shell
+ddev run tests
+```
 
 ---
 

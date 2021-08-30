@@ -40,16 +40,16 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
     {
         $this->objectManager = $manager;
         $users = [
-            'alice'   => ['roles' => ['ROLE_USER']],
-            'bob'     => ['roles' => ['ROLE_USER']],
-            'finance' => ['roles' => ['ROLE_FINANCE']],
-            'jane'    => ['roles' => ['ROLE_USER']],
-            'john'    => ['roles' => ['ROLE_USER']],
-            'kochomi' => ['roles' => ['ROLE_KITCHEN_STAFF']],
+            ['username' => 'alice.meals', 'password' => 'Chee7ieRahqu', 'roles' => ['ROLE_USER']],
+            ['username' => 'bob.meals', 'password' => 'ON2za5OoJohn', 'roles' => ['ROLE_USER']],
+            ['username' => 'finance.meals', 'password' => 'IUn4d9NKMt', 'roles' => ['ROLE_FINANCE']],
+            ['username' => 'jane.meals', 'password' => 'heabahW6ooki', 'roles' => ['ROLE_USER']],
+            ['username' => 'john.meals', 'password' => 'aef9xoo2hieY', 'roles' => ['ROLE_USER']],
+            ['username' => 'kochomi.meals', 'password' => 'f8400YzaOd', 'roles' => ['ROLE_KITCHEN_STAFF']],
         ];
 
-        foreach ($users as $username => $attrs) {
-            $this->addUser($username, $attrs['roles']);
+        foreach ($users as $user) {
+            $this->addUser($user['username'], $user['password'], $user['roles']);
         }
 
         $this->objectManager->flush();
@@ -67,13 +67,13 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
     /**
      * @param string[] $roles List of role identifiers
      */
-    protected function addUser(string $username, array $roles): void
+    protected function addUser(string $username, string $password, array $roles): void
     {
         $login = new Login();
         $login->setUsername($username);
         $login->setSalt(md5(uniqid('', true)));
 
-        $hashedPassword = $this->passwordEncoder->encodePassword($login, $username);
+        $hashedPassword = $this->passwordEncoder->encodePassword($login, $password);
         $login->setPassword($hashedPassword);
 
         $profile = new Profile();

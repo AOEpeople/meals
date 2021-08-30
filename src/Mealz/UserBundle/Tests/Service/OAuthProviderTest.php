@@ -62,7 +62,7 @@ class OAuthProviderTest extends AbstractControllerTestCase
         return [
             'admin user' => [
                 'idpUserData' => [
-                    'username' => 'kochomi',
+                    'username' => 'kochomi.meals',
                     'given_name' => 'kochomi',
                     'family_name' => 'imohcok',
                     'roles' => ['meals.admin']
@@ -71,7 +71,7 @@ class OAuthProviderTest extends AbstractControllerTestCase
             ],
             'standard user' => [
                 'idpUserData' => [
-                    'username' => 'alice',
+                    'username' => 'alice.meals',
                     'given_name' => 'alice',
                     'family_name' => 'ecila',
                     'roles' => ['meals.user']
@@ -80,7 +80,7 @@ class OAuthProviderTest extends AbstractControllerTestCase
             ],
             'finance user' => [
                 'idpUserData' => [
-                    'username' => 'finance',
+                    'username' => 'finance.meals',
                     'given_name' => 'finance',
                     'family_name' => 'ecnanif',
                     'roles' => ['meals.user', 'meals.finance']

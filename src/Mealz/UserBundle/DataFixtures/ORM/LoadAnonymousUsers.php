@@ -46,7 +46,7 @@ class LoadAnonymousUsers extends Fixture implements OrderedFixtureInterface
         $connection->beginTransaction();
 
         // List of protected Users, which should not be touched
-        $protectedUsers = ['alice', 'bob', 'john', 'jane', 'kochomi', 'finance'];
+        $protectedUsers = ['alice.meals', 'bob.meals', 'finance.meals', 'jane.meals', 'john.meals', 'kochomi.meals'];
 
         try {
             // disable consistency check (We need because dependet foreign and primary keys)

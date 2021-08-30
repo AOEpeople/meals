@@ -19,53 +19,39 @@ use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
 class Login implements SymfonyUserInterface, Serializable, MealzUserInterface
 {
     /**
-     * @var string
-     *
      * @ORM\Column(name="id", type="string", length=255, nullable=FALSE)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      */
-    private $username;
+    private string $username = '';
 
     /**
      * @ORM\Column(type="string", length=32)
-     * @var string
      */
-    protected $salt;
+    protected string $salt = '';
 
     /**
      * @ORM\Column(type="string", length=128)
-     * @var string
      */
-    protected $password;
+    protected string $password = '';
 
     /**
      * @ORM\OneToOne(targetEntity="Profile")
      * @ORM\JoinColumn(name="profile_id", referencedColumnName="id")
-     * @var Profile
      */
-    protected $profile;
+    protected ?Profile $profile = null;
 
-    /**
-     * @param string $username
-     */
-    public function setUsername($username)
+    public function setUsername(string $username): void
     {
         $this->username = $username;
     }
 
-    /**
-     * @return string
-     */
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->username;
     }
 
-    /**
-     * @param Profile $profile
-     */
-    public function setProfile(Profile $profile = null)
+    public function setProfile(Profile $profile = null): void
     {
         $this->profile = $profile;
     }
@@ -73,39 +59,27 @@ class Login implements SymfonyUserInterface, Serializable, MealzUserInterface
     /**
      * @return Profile
      */
-    public function getProfile()
+    public function getProfile(): ?Profile
     {
         return $this->profile;
     }
 
-    /**
-     * @param string $password
-     */
-    public function setPassword($password)
+    public function setPassword(string $password): void
     {
         $this->password = $password;
     }
 
-    /**
-     * @return string
-     */
-    public function getPassword()
+    public function getPassword(): string
     {
         return $this->password;
     }
 
-    /**
-     * @param string $salt
-     */
-    public function setSalt($salt)
+    public function setSalt(string $salt): void
     {
         $this->salt = $salt;
     }
 
-    /**
-     * @return string
-     */
-    public function getSalt()
+    public function getSalt(): string
     {
         return $this->salt;
     }
@@ -121,7 +95,7 @@ class Login implements SymfonyUserInterface, Serializable, MealzUserInterface
      * @link http://php.net/manual/en/serializable.serialize.php
      * @return string the string representation of the object or null
      */
-    public function serialize()
+    public function serialize(): string
     {
         return serialize(
             array(
@@ -141,7 +115,7 @@ class Login implements SymfonyUserInterface, Serializable, MealzUserInterface
      * </p>
      * @return void
      */
-    public function unserialize($serialized)
+    public function unserialize($serialized): void
     {
         list(
             $this->username,
@@ -151,32 +125,11 @@ class Login implements SymfonyUserInterface, Serializable, MealzUserInterface
     }
 
     /**
-     * Returns the roles granted to the user.
-     *
-     * <code>
-     * public function getRoles()
-     * {
-     *     return array('ROLE_USER');
-     * }
-     * </code>
-     *
-     * Alternatively, the roles might be stored on a ``roles`` property,
-     * and populated in any number of different ways when the user object
-     * is created.
-     *
-     * @return Role[] The user roles
+     * @inheritDoc
      */
-    public function getRoles()
+    public function getRoles(): array
     {
-        $roles = array('ROLE_USER');
-        if ($this->getUsername() === 'finance') {
-            array_push($roles, 'ROLE_FINANCE');
-        }
-        if ($this->getUsername() === 'kochomi') {
-            array_push($roles, 'ROLE_KITCHEN_STAFF', 'ROLE_CONFIRMATION');
-        }
-
-        return $roles;
+        return $this->profile->getRoles();
     }
 
     /**
@@ -185,7 +138,7 @@ class Login implements SymfonyUserInterface, Serializable, MealzUserInterface
      * This is important if, at any given point, sensitive information like
      * the plain-text password is stored on this object.
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         // nothing to do here
     }

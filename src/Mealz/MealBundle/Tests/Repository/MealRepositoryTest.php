@@ -14,6 +14,7 @@ class MealRepositoryTest extends AbstractDatabaseTestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->mealRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
         $this->clearAllTables();
     }

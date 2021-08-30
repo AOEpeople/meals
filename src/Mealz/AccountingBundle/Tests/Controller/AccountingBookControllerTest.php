@@ -203,8 +203,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
      */
     public function testAccessForFinanceOnly()
     {
-        $user = $this->getUserProfile('finance');
-        $this->loginAsDefaultClient($user);
+        $this->loginAs(self::USER_FINANCE);
 
         $crawler = $this->client->request('GET', '/accounting/book/finance/list');
         $this->assertTrue($this->client->getResponse()->isSuccessful(), "Finances page not accessible by finance staff");
@@ -213,12 +212,12 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
         $this->assertTrue($node->count() > 0, "Accounting book table could not be rendered on the finances page");
 
         // Test if default users can access the finances page
-        $this->createDefaultClient();
+        $this->loginAs(self::USER_STANDARD);
         $this->client->request('GET', '/accounting/book/finance/list');
         $this->assertFalse($this->client->getResponse()->isSuccessful(), "Finances page accessible by default users");
 
         // Test if admins can access the finances page
-        $this->createAdminClient();
+        $this->loginAs(self::USER_KITCHEN_STAFF);
         $this->client->request('GET', '/accounting/book/finance/list');
         $this->assertFalse($this->client->getResponse()->isSuccessful(), "Finances page accessible by administrators");
     }
@@ -231,7 +230,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->getRepository('MealzAccountingBundle:Transaction')->clear();
 
-        $profile = $this->getUserProfile();
+        $profile = $this->getUserProfile(self::USER_STANDARD);
         $transactionDate = new DateTime('today');
         $dateFormatted = $transactionDate->format('Y-m-d');
 
@@ -267,7 +266,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->getRepository('MealzAccountingBundle:Transaction')->clear();
 
-        $profile = $this->getUserProfile();
+        $profile = $this->getUserProfile(self::USER_STANDARD);
         $transactionDate = new DateTime('today');
         $dateFormatted = $transactionDate->format('Y-m-d');
 
@@ -280,8 +279,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
         $entityManager->persist($transaction);
         $entityManager->flush();
 
-        $user = $this->getUserProfile('finance');
-        $this->loginAsDefaultClient($user);
+        $this->loginAs(self::USER_FINANCE);
 
         $crawler = $this->client->request('GET', '/accounting/book/finance/list/' . $dateFormatted . "&" . $dateFormatted);
 
@@ -299,7 +297,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->getRepository('MealzAccountingBundle:Transaction')->clear();
 
-        $profile = $this->getUserProfile();
+        $profile = $this->getUserProfile(self::USER_STANDARD);
         $transactionDate = new DateTime('today');
         $dateFormatted = $transactionDate->format('Y-m-d');
 
@@ -318,8 +316,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
         $entityManager->persist($transaction);
         $entityManager->flush();
 
-        $user = $this->getUserProfile('finance');
-        $this->loginAsDefaultClient($user);
+        $this->loginAs(self::USER_FINANCE);
 
         $crawler = $this->client->request('GET', '/accounting/book/finance/list/' . $dateFormatted . "&" . $dateFormatted);
 

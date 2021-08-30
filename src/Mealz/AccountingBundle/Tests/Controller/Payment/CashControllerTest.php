@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\AccountingBundle\Tests\Controller\Payment;
 
 use App\Mealz\AccountingBundle\DataFixtures\ORM\LoadTransactions;
@@ -23,59 +25,47 @@ class CashControllerTest extends AbstractControllerTestCase
 {
     /**
      * Prepares test environment.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->createDefaultClient();
         $this->clearAllTables();
-        $this->loadFixtures(
-            [
-                new LoadCategories(),
-                new LoadWeeks(),
-                new LoadDays(),
-                new LoadDishes(),
-                new LoadDishVariations(),
-                new LoadMeals(),
-                new LoadParticipants(),
-                new LoadRoles(),
-                new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
-                new LoadTransactions()
-            ]
-        );
+        $this->loadFixtures([
+            new LoadCategories(),
+            new LoadWeeks(),
+            new LoadDays(),
+            new LoadDishes(),
+            new LoadDishVariations(),
+            new LoadMeals(),
+            new LoadParticipants(),
+            new LoadRoles(),
+            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
+            new LoadTransactions()
+        ]);
     }
 
     /**
      * Checking if transaction history is correct for some user
      *
      * @test
-     *
-     * @return void
      */
-    public function checkTransactionHistory()
+    public function checkTransactionHistory(): void
     {
-        $userProfile = $this->getUserProfile();
-
         // Open home page
         $crawler = $this->client->request('GET', '/');
         $this->assertTrue($this->client->getResponse()->isSuccessful());
 
-        $loginForm = $crawler->filterXPath('//form[@name="login-form"]')
-            ->form(
-                [
-                    '_username' => $userProfile->getUsername(),
-                    '_password' => $userProfile->getUsername()
-                ]
-            );
+        $loginForm = $crawler->filterXPath('//form[@name="login-form"]')->form([
+            '_username' => 'alice.meals',
+            '_password' => 'Chee7ieRahqu'
+        ]);
         $this->client->followRedirects();
         $crawler = $this->client->submit($loginForm, []);
 
         // read Current balance from header
         $currentBalance = $crawler->filterXPath('//div[@class="balance-text"]/a')->text();
-        $currentBalance = floatval(substr($currentBalance, 0, strpos($currentBalance, '€')));
+        $currentBalance = (float)substr($currentBalance, 0, strpos($currentBalance, '€'));
 
         // click on the Balance link
         $balanceLink = $crawler->filterXPath('//div[@class="balance-text"]/a')->link();
@@ -86,7 +76,7 @@ class CashControllerTest extends AbstractControllerTestCase
 
         // read balance 4 weeks ago
         $previousBalance = $crawler->filterXPath('//div[@class="last-account-balance"]/span')->text();
-        $previousBalance = floatval(substr($previousBalance, 0, strpos($previousBalance, '€')));
+        $previousBalance = (float)substr($previousBalance, 0, strpos($previousBalance, '€'));
 
         // read all participations
         $participations = $crawler->filterXPath('//tr[contains(@class, "table-row") and contains(@class, "transaction-meal")]/td[3]')
@@ -98,7 +88,7 @@ class CashControllerTest extends AbstractControllerTestCase
 
         $participationAmount = 0;
         foreach ($participations as $participation) {
-            $participationAmount += floatval(trim(substr($participation, 1, strpos($participation, '€'))));
+            $participationAmount += (float)trim(substr($participation, 1, strpos($participation, '€')));
         }
 
         $transactions = $crawler->filterXPath('//tr[contains(@class, "table-row") and contains(@class, "transaction-payment")]/td[3]')
@@ -110,7 +100,7 @@ class CashControllerTest extends AbstractControllerTestCase
 
         $transactionAmount = 0;
         foreach ($transactions as $transaction) {
-            $transactionAmount += floatval(trim(substr($transaction, 1, strpos($transaction, '€'))));
+            $transactionAmount += (float)trim(substr($transaction, 1, strpos($transaction, '€')));
         }
 
         $this->assertEquals($currentBalance, $previousBalance - $participationAmount + $transactionAmount);

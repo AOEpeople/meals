@@ -4,10 +4,10 @@ services:
   app:
     image: "${IMAGE_APP:-aoepeople/meals:edge}"
     environment:
-      - APP_DEBUG=0
+      - APP_DEBUG=1
       - DB_HOST=db
       - DB_PORT=3306
-      - DB_NAME=db
+      - DB_NAME=db_test
       - DB_USER=db
       - DB_PASS=db
       - DB_VERS=5.7
@@ -35,10 +35,10 @@ services:
       - "8034:80"
     environment:
       - APP_DEBUG=1
-      - APP_ENV=dev
+      - APP_ENV=test
       - DB_HOST=db
       - DB_PORT=3306
-      - DB_NAME=db
+      - DB_NAME=db_test
       - DB_USER=db
       - DB_PASS=db
       - DB_VERS=5.7
@@ -58,7 +58,7 @@ services:
       test: out=$$(mysqladmin ping -h localhost -P 3306 -u db --password=db 2>&1); echo $$out | grep 'mysqld is alive' || { echo $$out; exit 1; }
     environment:
       - MYSQL_ROOT_PASSWORD=db
-      - MYSQL_DATABASE=db
+      - MYSQL_DATABASE=db_test
       - MYSQL_USER=db
       - MYSQL_PASSWORD=db
 

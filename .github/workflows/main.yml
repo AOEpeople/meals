@@ -131,16 +131,16 @@ jobs:
       - name: Test with docker compose
         run: |
           mkdir build
-          docker-compose pull db
-          docker-compose up -d --no-build db
-          docker-compose up -d $SERVICE
+          docker-compose -f docker-compose-test.yaml pull db
+          docker-compose -f docker-compose-test.yaml up -d --no-build db
+          docker-compose -f docker-compose-test.yaml up -d $SERVICE
           sleep 15
-          docker-compose exec -T $SERVICE composer install
-          docker-compose exec -T $SERVICE bin/console doctrine:schema:update --env=test --force
-          docker-compose exec -T $SERVICE mkdir -p build/artifacts/qa/
-          docker-compose exec -T $SERVICE vendor/bin/phpunit -d memory_limit=-1 -c tests/phpunit.xml.dist
-          docker-compose exec -T $SERVICE ls -l build/artifacts/qa/
-          docker-compose down -v --remove-orphans
+          docker-compose -f docker-compose-test.yaml exec -T $SERVICE composer install
+          docker-compose -f docker-compose-test.yaml exec -T $SERVICE bin/console doctrine:schema:update --env=test --force
+          docker-compose -f docker-compose-test.yaml exec -T $SERVICE mkdir -p build/artifacts/qa/
+          docker-compose -f docker-compose-test.yaml exec -T $SERVICE vendor/bin/phpunit -d memory_limit=-1 -c tests/phpunit.xml.dist
+          docker-compose -f docker-compose-test.yaml exec -T $SERVICE ls -l build/artifacts/qa/
+          docker-compose -f docker-compose-test.yaml down -v --remove-orphans
       - name: Upload coverage report artifact
         uses: actions/upload-artifact@v2.2.4
         if: always()
@@ -168,12 +168,12 @@ jobs:
       - name: Test with docker compose
         run: |
           mkdir -p build
-          docker-compose pull $SERVICE
-          docker-compose up -d $SERVICE
-          docker-compose exec -T $SERVICE mkdir -p build/logs/
-          docker-compose exec -T $SERVICE bin/phpcs --extensions=php --standard=vendor/leaphub/phpcs-symfony2-standard/leaphub/phpcs/Symfony2/ -s --report=junit --report-file=build/logs/phpcs.xml src
-          docker-compose exec -T $SERVICE bash -c "find build -type f -regex '.*\.\(html\|xml\)' | xargs sed -i 's#/var/www/html/##g'"
-          docker-compose down -v --remove-orphans
+          docker-compose -f docker-compose-test.yaml pull $SERVICE
+          docker-compose -f docker-compose-test.yaml up -d $SERVICE
+          docker-compose -f docker-compose-test.yaml exec -T $SERVICE mkdir -p build/logs/
+          docker-compose -f docker-compose-test.yaml exec -T $SERVICE bin/phpcs --extensions=php --standard=vendor/leaphub/phpcs-symfony2-standard/leaphub/phpcs/Symfony2/ -s --report=junit --report-file=build/logs/phpcs.xml src
+          docker-compose -f docker-compose-test.yaml exec -T $SERVICE bash -c "find build -type f -regex '.*\.\(html\|xml\)' | xargs sed -i 's#/var/www/html/##g'"
+          docker-compose -f docker-compose-test.yaml down -v --remove-orphans
       - name: Publish unit-test results
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: always()

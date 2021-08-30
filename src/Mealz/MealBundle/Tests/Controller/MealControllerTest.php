@@ -34,7 +34,6 @@ class MealControllerTest extends AbstractControllerTestCase
         parent::setUp();
 
         $this->clearAllTables();
-
         $this->loadFixtures([
             new LoadWeeks(),
             new LoadDays(),
@@ -58,8 +57,7 @@ class MealControllerTest extends AbstractControllerTestCase
      */
     public function acceptAvailableOffer()
     {
-        $userProfile = $this->getUserProfile();
-        $this->loginAsDefaultClient($userProfile);
+        $this->loginAs(self::USER_STANDARD);
 
         //create a test profile
         $profile = $this->createProfile('Max', 'Mustermann' . time());
@@ -87,8 +85,7 @@ class MealControllerTest extends AbstractControllerTestCase
      */
     public function acceptFirstOffer()
     {
-        $userProfile = $this->getUserProfile();
-        $this->loginAsDefaultClient($userProfile);
+        $this->loginAs(self::USER_STANDARD);
 
         //create a test profile
         $profile = $this->createProfile('Max', 'Mustermann' . time());
@@ -132,8 +129,7 @@ class MealControllerTest extends AbstractControllerTestCase
      */
     public function acceptOutdatedOffer()
     {
-        $userProfile = $this->getUserProfile();
-        $this->loginAsDefaultClient($userProfile);
+        $this->loginAs(self::USER_STANDARD);
 
         //create a test profile
         $profile = $this->createProfile('Max', 'Mustermann' . time());
@@ -167,8 +163,8 @@ class MealControllerTest extends AbstractControllerTestCase
     {
         // data provider method
         $dataProvider = $this->getJoinAMealData();
-        $userProfile = $this->getUserProfile();
-        $username = $this->getUserProfile()->getUsername();
+        $userProfile = $this->getUserProfile(self::USER_STANDARD);
+        $username = $this->getUserProfile(self::USER_STANDARD)->getUsername();
 
         // load a home page
         $this->client->request('GET', '/');
@@ -232,7 +228,7 @@ class MealControllerTest extends AbstractControllerTestCase
      */
     public function enrollAsGuest($firstName, $lastName, $company, $selectDish, $enrollmentStatus)
     {
-        $userProfile = $this->getUserProfile();
+        $userProfile = $this->getUserProfile(self::USER_STANDARD);
         $meal = $this->getAvailableMeal();
 
         // Create guest invitation link

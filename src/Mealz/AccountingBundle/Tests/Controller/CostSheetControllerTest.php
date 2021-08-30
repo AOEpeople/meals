@@ -54,7 +54,7 @@ class CostSheetControllerTest extends AbstractControllerTestCase
 
         $this->assertNull($profile->getSettlementHash(), 'SettlementHash was set already');
 
-        $this->client->request('GET', '/print/costsheet/settlement/request/alice');
+        $this->client->request('GET', '/print/costsheet/settlement/request/alice.meals');
         $this->assertTrue($this->client->getResponse()->isSuccessful());
 
         $this->assertNotNull($profile->getSettlementHash(), 'SettlementHash was not set');

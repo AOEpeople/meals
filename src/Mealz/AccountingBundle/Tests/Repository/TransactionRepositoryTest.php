@@ -33,6 +33,7 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->transactionRepo = $this->getDoctrine()->getRepository('MealzAccountingBundle:Transaction');
         $this->locale = 'en';
 
@@ -54,9 +55,8 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
      * - create several temporary transactions for a TEST user (spread over this month, last month and the month before last month)
      * - call transactionRepository->findUserDataAndTransactionAmountForGivenPeriod() with parameters for last month and TEST user
      * - compare returned sum of transactions with the sum of the temporary transactions sum which are added to the last month
-     * @test
      */
-    public function testTransactionsSummedUpByLastMonth()
+    public function testTransactionsSummedUpByLastMonth(): void
     {
         // create several temporary transactions for a testuser
         $tempTransactions = $this->createTemporaryTransactions();
@@ -174,7 +174,7 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
         $firstDayLastMonth = new DateTime('first day of last month');
         $month = $firstDayLastMonth->format('n');
         if ($item instanceof Transaction) {
-            return ($item->getDate()->format('n') == $month);
+            return ($item->getDate()->format('n') === $month);
         }
 
         return false;

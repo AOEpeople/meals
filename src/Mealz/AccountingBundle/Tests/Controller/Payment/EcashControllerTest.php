@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\AccountingBundle\Tests\Controller\Payment;
 
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\Translator;
-
 use App\Mealz\AccountingBundle\Controller\Payment\EcashController;
 use App\Mealz\AccountingBundle\DataFixtures\ORM\LoadTransactions;
 use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
@@ -21,7 +22,6 @@ class EcashControllerTest extends AbstractControllerTestCase
     {
         parent::setUp();
 
-        $this->createDefaultClient();
         $this->clearAllTables();
         $this->loadFixtures([
             new LoadRoles(),
@@ -37,16 +37,14 @@ class EcashControllerTest extends AbstractControllerTestCase
      */
     public function testFormRendering(): void
     {
-        $userProfile = $this->getUserProfile();
-
         // Open home page
         $crawler = $this->client->request('GET', '/');
         $this->assertTrue($this->client->getResponse()->isSuccessful());
 
         // Login
         $loginForm = $crawler->filterXPath('//form[@name="login-form"]')->form([
-            '_username' => $userProfile->getUsername(),
-            '_password' => $userProfile->getUsername()
+            '_username' => 'alice.meals',
+            '_password' => 'Chee7ieRahqu'
         ]);
         $this->client->followRedirects();
         $crawler = $this->client->submit($loginForm, []);
@@ -71,6 +69,8 @@ class EcashControllerTest extends AbstractControllerTestCase
      */
     public function testPaymentFormHandlingAction(): void
     {
+        $this->loginAs('alice.meals');
+
         // Mock EcashController class
         $ecashController = $this->getMockBuilder(EcashController::class)
             ->setMethods(array(
@@ -108,7 +108,7 @@ class EcashControllerTest extends AbstractControllerTestCase
             array(),
             array(),
             '[' .
-            '{"name":"ecash[profile]","value":"alice"},' .
+            '{"name":"ecash[profile]","value":"alice.meals"},' .
             '{"name":"ecash[orderid]","value":"52T16708K70721706"},' .
             '{"name":"ecash[amount]","value":"5,23"},' .
             '{"name":"ecash[paymethod]","value":"0"},' .
@@ -130,7 +130,7 @@ class EcashControllerTest extends AbstractControllerTestCase
 
         // Check database entry
         $transactionRepo = $this->getDoctrine()->getRepository('MealzAccountingBundle:Transaction');
-        $entry = $transactionRepo->findBy(array('profile' => 'alice'), array('id' => 'DESC'));
+        $entry = $transactionRepo->findBy(['profile' => 'alice.meals'], ['id' => 'DESC']);
 
         $this->assertEquals('52T16708K70721706', $entry[0]->getOrderId());
         $this->assertEquals(5.23, $entry[0]->getAmount());

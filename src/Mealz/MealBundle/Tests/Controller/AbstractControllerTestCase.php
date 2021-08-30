@@ -26,9 +26,9 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
     /**
      * Role based test users
      */
-    protected const USER_STANDARD      = 'alice';
-    protected const USER_FINANCE       = 'finance';
-    protected const USER_KITCHEN_STAFF = 'kochomi';
+    protected const USER_STANDARD      = 'alice.meals';
+    protected const USER_FINANCE       = 'finance.meals';
+    protected const USER_KITCHEN_STAFF = 'kochomi.meals';
 
     protected KernelBrowser $client;
 
@@ -71,7 +71,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         $crawler = new Crawler($htmlForm);
         $token = $crawler->filter($tokenFieldSelector)->attr('value');
 
-        if ($token === '') {
+        if ($token === '' || $token === null) {
             throw new RuntimeException('token fetch error: path: '.$uri.' : fieldSelector'.$tokenFieldSelector);
         }
 
@@ -79,101 +79,9 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
     }
 
     /**
-     * Create a default client with no frontend user logged in
-     *
-     * @param array $options Array with symfony parameters to be set (e.g. environment,...)
-     * @param array $server Array with Server parameters to be set (e.g. HTTP_HOST,...)
-     */
-    protected function createDefaultClient($options = array(), $server = array())
-    {
-        $defaultOptions = array(
-            'environment' => 'test',
-        );
-
-        $defaultServer = array(
-            'HTTP_ACCEPT_LANGUAGE' => 'en',
-        );
-
-        $options = array_merge($defaultOptions, $options);
-        $server = array_merge($defaultServer, $server);
-
-        $this->client = self::createClient($options, $server);
-    }
-
-    /**
-     * Create a default client with fincance role
-     * @param array $options
-     * @param array $server
-     */
-    protected function createFinanceClient($options = array(), $server = array())
-    {
-        $this->createAdminClient($options, $server, array('ROLE_FINANCE'));
-    }
-
-    /**
-     * Create a client with a frontend user having a role ROLE_KITCHEN_STAFF
-     *
-     * @param array $options Array with symfony parameters to be set (e.g. environment,...)
-     * @param array $server  Array with Server parameters to be set (e.g. HTTP_HOST,...)
-     */
-    protected function createAdminClient($options = array(), $server = array(), $roles = array('ROLE_KITCHEN_STAFF'))
-    {
-        $this->createDefaultClient($options, $server);
-
-        /**
-         * If you encounter problems during testing with the session saying "Cannot set session ID after the session has started"
-         * consider to run phpunit with the following property setting:
-         *      processIsolation="true"
-         * @see https://git.aoesupport.com/gitweb/project/concar/calimero/symfony.git/blob/HEAD:/app/phpunitFunctional.xml?js=1
-         */
-        $session = $this->client->getContainer()->get('session');
-        // the firewall context (defaults to the firewall name)
-        $firewall = 'main';
-
-        $repo = $this->client->getContainer()->get('doctrine')->getRepository('MealzUserBundle:Login');
-        $user = $repo->findOneBy(['username' => 'kochomi']);
-        $user = ($user instanceof UserInterface) ? $user : 'kochomi';
-
-        $token = new UsernamePasswordToken($user, null, $firewall, $roles);
-        if (($session->getId()) === "") {
-            $session->set('_security_'.$firewall, serialize($token));
-            $session->save();
-        }
-        $cookie = new Cookie($session->getName(), $session->getId());
-        $this->client->getCookieJar()->set($cookie);
-    }
-
-    /**
-     * @param $userProfile
-     */
-    public function loginAsDefaultClient($userProfile)
-    {
-        //test for non-admin users
-        $this->createDefaultClient();
-
-        // Open home page and log in as user
-        $crawler = $this->client->request('GET', '/');
-        $this->assertTrue($this->client->getResponse()->isSuccessful(), 'Requesting homepage failed');
-
-        $loginForm = $crawler->filterXPath('//form[@name="login-form"]')
-            ->form(
-                [
-                    '_username' => $userProfile->getUsername(),
-                    '_password' => $userProfile->getUsername()
-                ]
-            );
-        $this->client->followRedirects();
-        $this->client->submit($loginForm, []);
-    }
-
-    /**
      * Gets a user profile.
-     *
-     * @param string $username Username. Default is 'alice'
-     *
-     * @return Profile
      */
-    protected function getUserProfile($username = 'alice')
+    protected function getUserProfile(string $username): Profile
     {
         /** @var RoleRepository $profileRepository */
         $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');

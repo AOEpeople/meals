@@ -47,6 +47,7 @@ security:
             # switch_user: true
 
     # Define role compositions, e.g. role ROLE_KITCHEN_STAFF includes ROLE_USER role
+    # https://symfony.com/doc/4.4/security.html#hierarchical-roles
     role_hierarchy:
         ROLE_KITCHEN_STAFF: ROLE_USER
         ROLE_FINANCE: ROLE_USER

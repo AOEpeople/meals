@@ -2,8 +2,10 @@ security:
     firewalls:
         main:
             provider: database
+
             # allow anonymous access; required for login and home page
             anonymous: lazy
+
             form_login:
                 login_path: MealzUserBundle_login
                 check_path: MealzUserBundle_login

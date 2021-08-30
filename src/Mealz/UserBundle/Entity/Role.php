@@ -2,6 +2,7 @@
 
 namespace App\Mealz\UserBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -12,20 +13,16 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  * @ORM\Table(name="role")
  * @ORM\Entity(repositoryClass="RoleRepository")
- *
- * @author Chetan Thapliyal <chetan.thapliyal@aoe.com>
  */
 class Role
 {
     /**
      * Constants for default roles
      */
-    const ROLE_KITCHEN_STAFF = 'ROLE_KITCHEN_STAFF';
-    const ROLE_USER          = 'ROLE_USER';
-    const ROLE_GUEST         = 'ROLE_GUEST';
-    const ROLE_ADMIN         = 'ROLE_ADMIN';
-    const ROLE_FINANCE       = 'ROLE_FINANCE';
-
+    public const ROLE_KITCHEN_STAFF = 'ROLE_KITCHEN_STAFF';
+    public const ROLE_USER          = 'ROLE_USER';
+    public const ROLE_GUEST         = 'ROLE_GUEST';
+    public const ROLE_FINANCE       = 'ROLE_FINANCE';
 
     /**
      * Role ID
@@ -33,111 +30,75 @@ class Role
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @var int
      *
      * @SuppressWarnings(PHPMD.ShortVariable)
      */
-    private $id;
+    private int $id = 0;
 
     /**
      * Role name
      *
      * @ORM\Column(type="string")
      * @Assert\NotBlank
-     * @var string
      */
-    private $title;
+    private string $title = '';
 
     /**
      * Role string identifier
      *
      * @ORM\Column(type="string", unique=true)
      * @Assert\NotBlank
-     * @var string
      */
-    private $sid;
+    private string $sid = '';
 
     /**
      * @ORM\ManyToMany(targetEntity="Profile", mappedBy="roles")
-     * @var Collection
+     * @var Collection<int, Profile>|null
      */
-    private $profiles;
+    private ?Collection $profiles = null;
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     *
-     * @return $this
-     */
-    public function setId($id)
+    public function setId(int $id): self
     {
         $this->id = $id;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
 
-    /**
-     * @param string $title
-     *
-     * @return $this
-     */
-    public function setTitle($title)
+    public function setTitle(string $title): self
     {
         $this->title = $title;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getSid()
+    public function getSid(): string
     {
         return $this->sid;
     }
 
-    /**
-     * @param string $sid
-     *
-     * @return $this
-     */
-    public function setSid($sid)
+    public function setSid(string $sid): self
     {
         $this->sid = $sid;
 
         return $this;
     }
 
-
-    /**
-     * @return Collection
-     */
-    public function getProfiles()
+    public function getProfiles(): Collection
     {
-        return $this->profiles;
+        return $this->profiles ?? new ArrayCollection();
     }
 
-    /**
-     * @param Collection $profiles
-     *
-     * @return $this
-     */
-    public function setProfiles(Collection $profiles)
+    public function setProfiles(Collection $profiles): self
     {
         $this->profiles = $profiles;
 

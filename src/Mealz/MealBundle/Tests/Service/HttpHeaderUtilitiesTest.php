@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\MealBundle\Tests\Service;
 
 use App\Mealz\MealBundle\Service\HttpHeaderUtility;
@@ -8,30 +10,16 @@ use Symfony\Component\Yaml\Yaml;
 
 class HttpHeaderUtilitiesTest extends TestCase
 {
-
-    /**
-     * @var HttpHeaderUtility
-     */
-    protected $httpHeaderUtilities;
-
-    protected function setUp(): void
-    {
-        $this->httpHeaderUtilities = new HttpHeaderUtility();
-    }
-
     /**
      * @dataProvider provideDataForTestGetLocale
-     * @param $acceptedLocales
-     * @param $headerString
-     * @param $expectedLocale
      */
-    public function testGetLocale($acceptedLocales, $headerString, $expectedLocale)
+    public function testGetLocale(array $acceptedLocales, ?string $headerString, string $expectedLocale): void
     {
-        $this->httpHeaderUtilities->setLocales($acceptedLocales);
+        $httpHeaderUtility = new HttpHeaderUtility($acceptedLocales);
 
         $this->assertSame(
             $expectedLocale,
-            $this->httpHeaderUtilities->getLocaleFromAcceptLanguageHeader($headerString)
+            $httpHeaderUtility->getLocaleFromAcceptLanguageHeader($headerString)
         );
     }
 

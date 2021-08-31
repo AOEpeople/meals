@@ -8,22 +8,16 @@ use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Entity\WeekRepository;
 use App\Mealz\MealBundle\Service\Notification\NotifierInterface;
 use App\Mealz\UserBundle\Entity\Profile;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Translation\Translator;
 
-/**
- * Class ParticipantController
- * @package Mealz\MealBundle\Controller
- */
 class ParticipantController extends BaseController
 {
     /**
      * delete participation
      * @return JsonResponse
      */
-    public function deleteAction(Participant $participant)
+    public function delete(Participant $participant)
     {
         if (is_object($this->getUser()) === false) {
             return $this->ajaxSessionExpiredRedirect();
@@ -75,7 +69,7 @@ class ParticipantController extends BaseController
      * @param Participant $participant
      * @return JsonResponse
      */
-    public function swapAction(Participant $participant, NotifierInterface $notifier)
+    public function swap(Participant $participant, NotifierInterface $notifier)
     {
         $dateTime = $participant->getMeal()->getDateTime();
         $counter = count($this->getParticipantRepository()->getPendingParticipants($dateTime));
@@ -156,7 +150,7 @@ class ParticipantController extends BaseController
      * @return JsonResponse
      * Checks if the participation of the current user is pending (being offered).
      */
-    public function isParticipationPendingAction(Participant $participant)
+    public function isParticipationPending(Participant $participant)
     {
         $ajaxResponse = new JsonResponse();
         $ajaxResponse->setData(
@@ -169,7 +163,7 @@ class ParticipantController extends BaseController
      * list participation
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function listAction()
+    public function list()
     {
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
@@ -193,7 +187,7 @@ class ParticipantController extends BaseController
      * @param Week $week
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function editParticipationAction(Week $week)
+    public function editParticipation(Week $week)
     {
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 

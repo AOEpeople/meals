@@ -1,9 +1,0 @@
-# Default configuration for "MealzMealBundle"
-mealz_meal:
-    notifier:
-        mattermost:
-            # Enable/disable sending of meal notifications to mattermost.
-            enabled: true
-
-            # Mattermost webhook URL
-            webhook_url: https://messages.aoe.com/hooks/hh5od44xgp8p5rax9uzmgxffmh

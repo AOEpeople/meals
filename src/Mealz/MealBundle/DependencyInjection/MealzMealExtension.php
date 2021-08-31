@@ -30,12 +30,5 @@ class MealzMealExtension extends ConfigurableExtension
             'current_week',
             date('Y\\WW', strtotime('this sunday'))
         );
-
-        $container->getDefinition('mealz_meal.notifier.mattermost')
-            ->setArgument('$enabled', $mergedConfig['notifier']['mattermost']['enabled'])
-            ->setArgument('$webhookURL', $mergedConfig['notifier']['mattermost']['webhook_url'])
-            ->setArgument('$username', $mergedConfig['notifier']['mattermost']['username'])
-            ->setArgument('$appName', $mergedConfig['notifier']['mattermost']['app_name'])
-        ;
     }
 }

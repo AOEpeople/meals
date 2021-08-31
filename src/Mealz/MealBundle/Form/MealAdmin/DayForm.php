@@ -15,63 +15,52 @@ use Symfony\Component\Form\FormEvents;
 use App\Mealz\MealBundle\Entity\Meal;
 use Doctrine\ORM\UnitOfWork;
 use Symfony\Component\Validator\Constraints\Valid;
-use Doctrine\ORM\EntityManager;
 
-/**
- * Class DayForm
- * @package Mealz\MealBundle\Form\MealAdmin
- */
 class DayForm extends AbstractType
 {
-    protected $entityManager;
+    protected EntityManagerInterface $entityManager;
 
-    /**
-     * DayForm constructor.
-     * @param EntityManager $entityManager
-     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
     }
 
     /**
-     * build the Form
-     * @param FormBuilderInterface $builder
-     * @param array $options
+     * @inheritDoc
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add(
                 'meals',
                 CollectionType::class,
-                array(
+                [
                     'entry_type' => MealForm::class,
                     'allow_delete' => true,
                     'delete_empty' => true,
                     'constraints' => new Valid(),
                     'allow_add' => true,
-                )
+                ]
             )
             ->add(
                 'lockParticipationDateTime',
                 DateTimeType::class,
-                array(
+                [
                     'required' => false,
                     'widget' => 'single_text',
                     'format' => 'YYYY-MM-dd HH:mm:ss',
-                    'attr' => array('class' => 'hidden-form-field')
-                )
+                    'attr' => ['class' => 'hidden-form-field']
+                ]
             )
             ->add(
                 'enabled',
                 CheckboxType::class,
-                array(
+                [
                     'required' => false,
-                    'attr' => array('class' => 'js-switch'),
-                )
+                    'attr' => ['class' => 'js-switch'],
+                ]
             );
 
         $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) use ($builder) {
@@ -115,13 +104,12 @@ class DayForm extends AbstractType
     }
 
     /**
-     * configure the options
-     * @param OptionsResolver $resolver
+     * @inheritDoc
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'App\Mealz\MealBundle\Entity\Day',
-        ));
+        $resolver->setDefaults([
+            'data_class' => Day::class,
+        ]);
     }
 }

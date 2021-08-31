@@ -29,9 +29,6 @@ class MattermostService implements NotifierInterface
      */
     private string $username;
 
-    /**
-     * TODO: Where is it displayed?? Remove if not needed.
-     */
     private string $appName;
 
     public function __construct(

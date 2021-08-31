@@ -4,9 +4,12 @@ namespace App\Mealz\MealBundle\Service;
 
 class HttpHeaderUtility
 {
-    protected $locales = array();
+    /**
+     * @var string[]
+     */
+    protected array $locales = [];
 
-    public function setLocales(array $locales)
+    public function __construct(array $locales)
     {
         $this->locales = $locales;
     }

@@ -41,7 +41,7 @@ class MealController extends BaseController
         $this->notifier = $notifier;
     }
 
-    public function indexAction(WeekRepository $weekRepository, DishService $dishService): Response
+    public function index(WeekRepository $weekRepository, DishService $dishService): Response
     {
         $currentWeek = $weekRepository->getCurrentWeek();
         if (null === $currentWeek) {
@@ -67,7 +67,7 @@ class MealController extends BaseController
      * @param string $profile
      * @return JsonResponse
      */
-    public function joinAction($date, $dish, $profile)
+    public function join($date, $dish, $profile)
     {
         if ($this->getUser() === null) {
             return $this->ajaxSessionExpiredRedirect();
@@ -88,7 +88,7 @@ class MealController extends BaseController
         if ($this->getDoorman()->isUserAllowedToJoin($meal) === true
             || ($this->getDoorman()->isKitchenStaff() === true && $this->getProfile()->getUsername() !== $profile->getUsername())) {
             $participant = $this->createParticipation($meal, $profile);
-            $this->logAddAction($meal, $participant);
+            $this->logAdd($meal, $participant);
             
             return $this->generateDeleteResponse($meal, $participant);
         }
@@ -250,7 +250,7 @@ class MealController extends BaseController
      * Marks meals that are being offered.
      * @return JsonResponse
      */
-    public function updateOffersAction()
+    public function updateOffers()
     {
         $mealsArray = array();
         $meals = $this->getDoctrine()->getRepository('MealzMealBundle:Meal')->getFutureMeals();
@@ -279,7 +279,7 @@ class MealController extends BaseController
      * @param DateTime $dateTime
      * @return Week
      */
-    public function guestAction(Request $request, $hash)
+    public function guest(Request $request, $hash)
     {
         $guestInvitationRepo = $this->getDoctrine()->getRepository('MealzMealBundle:GuestInvitation');
         $guestInvitation = $guestInvitationRepo->find($hash);
@@ -448,7 +448,7 @@ class MealController extends BaseController
      *
      * @return JsonResponse
      */
-    public function newGuestInvitationAction(Day $mealDay)
+    public function newGuestInvitation(Day $mealDay)
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
@@ -516,7 +516,7 @@ class MealController extends BaseController
      * @param Meal $meal
      * @param Participant $participant
      */
-    private function logAddAction($meal, $participant)
+    private function logAdd($meal, $participant)
     {
         if (is_object($this->getDoorman()->isKitchenStaff()) === false) {
             return;

@@ -11,7 +11,7 @@ class LanguageController extends BaseController
     /**
      * Action to switch between languages
      */
-    public function switchAction(Request $request): RedirectResponse
+    public function switch(Request $request): RedirectResponse
     {
         $referrer = $request->headers->get('referer');
         $response = new RedirectResponse($referrer);

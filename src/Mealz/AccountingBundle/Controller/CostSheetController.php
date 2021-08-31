@@ -192,7 +192,7 @@ class CostSheetController extends BaseController
     {
         $translator = $this->get('translator');
 
-        $receiver = $this->getParameter('app.hr_email');
+        $receiver = $this->getParameter('app.email.settlement_request.receiver');
         $subject = $translator->trans('payment.costsheet.mail.subject', [], 'messages');
         $body = $translator->trans(
             'payment.costsheet.mail.body',

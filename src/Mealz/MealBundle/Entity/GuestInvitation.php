@@ -12,8 +12,6 @@ use App\Mealz\UserBundle\Entity\Profile;
  * @ORM\Table(name="guest_invitation")
  * @ORM\Entity(repositoryClass="App\Mealz\MealBundle\Entity\GuestInvitationRepository")
  * @ORM\HasLifecycleCallbacks
- *
- * @author Chetan Thapliyal <chetan.thapliyal@aoe.com>
  */
 class GuestInvitation
 {

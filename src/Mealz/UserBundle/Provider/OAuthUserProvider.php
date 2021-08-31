@@ -16,7 +16,6 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProviderInterface
 {
-
     /**
      * Map Keycloak Roles to Meals ones
      *

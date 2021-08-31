@@ -39,7 +39,7 @@ abstract class BaseListController extends BaseController
      * list Action
      * @return Response
      */
-    public function listAction()
+    public function list()
     {
         if (!$this->isGranted('ROLE_KITCHEN_STAFF')) {
             throw new AccessDeniedException();
@@ -51,7 +51,7 @@ abstract class BaseListController extends BaseController
     /**
      * @return RedirectResponse|Response
      */
-    public function newAction(Request $request)
+    public function new(Request $request)
     {
         if ($this->isGranted('ROLE_KITCHEN_STAFF') === false) {
             throw new AccessDeniedException();
@@ -74,7 +74,7 @@ abstract class BaseListController extends BaseController
      * @param $slug
      * @return RedirectResponse|Response
      */
-    public function editAction(Request $request, $slug)
+    public function edit(Request $request, $slug)
     {
         if ($this->isGranted('ROLE_KITCHEN_STAFF') === false) {
             throw new AccessDeniedException();
@@ -98,7 +98,7 @@ abstract class BaseListController extends BaseController
      * @param $slug
      * @return RedirectResponse
      */
-    public function deleteAction($slug)
+    public function delete($slug)
     {
         if ($this->isGranted('ROLE_KITCHEN_STAFF') === false) {
             throw new AccessDeniedException();
@@ -129,7 +129,7 @@ abstract class BaseListController extends BaseController
      * get Empty Form Action
      * @return JsonResponse
      */
-    public function getEmptyFormAction()
+    public function getEmptyForm()
     {
         if ($this->getUser() === false) {
             return $this->ajaxSessionExpiredRedirect();
@@ -150,7 +150,7 @@ abstract class BaseListController extends BaseController
      * @param $slug
      * @return JsonResponse
      */
-    public function getPreFilledFormAction($slug)
+    public function getPreFilledForm($slug)
     {
         if ($this->getUser() === false) {
             return $this->ajaxSessionExpiredRedirect();

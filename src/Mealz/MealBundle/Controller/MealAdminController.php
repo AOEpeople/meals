@@ -23,7 +23,7 @@ class MealAdminController extends BaseController
     /**
      * @Security("has_role('ROLE_KITCHEN_STAFF')")
      */
-    public function listAction(WeekRepository $weekRepository): Response
+    public function list(WeekRepository $weekRepository): Response
     {
         $weeks = [];
         $dateTime = new DateTime();
@@ -60,7 +60,7 @@ class MealAdminController extends BaseController
      *
      * @Security("has_role('ROLE_KITCHEN_STAFF')")
      */
-    public function newAction(Request $request, DateTime $date, WeekRepository $weekRepository)
+    public function new(Request $request, DateTime $date, WeekRepository $weekRepository)
     {
         $week = $weekRepository->findOneBy([
             'year' => $date->format('o'),
@@ -122,7 +122,7 @@ class MealAdminController extends BaseController
      *
      * @Security("has_role('ROLE_KITCHEN_STAFF')")
      */
-    public function editAction(Request $request, Week $week, DishRepository $dishRepository)
+    public function edit(Request $request, Week $week, DishRepository $dishRepository)
     {
         $dishes = $dishRepository->getSortedDishesQueryBuilder()->getQuery()->getResult();
         $form = $this->createForm(WeekForm::class, $week);

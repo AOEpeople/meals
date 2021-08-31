@@ -5,7 +5,7 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     app.base_url: '%env(APP_BASE_URL)%'
-    app.hr_email: '%env(HR_EMAIL)%'
+    app.email.settlement_request.receiver: '%env(SETTLEMENT_REQ_EMAIL_RECEIVER)%'
 
     app.idp.server: '%env(IDP_SERVER)%'
 
@@ -13,6 +13,8 @@ parameters:
     app.idp.endpoint.auth_token:   '%app.idp.server%/protocol/openid-connect/auth'
     app.idp.endpoint.logout:       '%app.idp.server%/protocol/openid-connect/logout'
     app.idp.endpoint.user_token:   '%app.idp.server%/protocol/openid-connect/userinfo'
+
+    app.locales: [en, de]
 
     app.paypal.id:     '%env(PAYPAL_ID)%'
     app.paypal.secret: '%env(PAYPAL_SECRET)%'
@@ -63,16 +65,110 @@ services:
         resource: '../src/Mealz/MealBundle/Controller/'
         tags: ['controller.service_arguments']
 
-    mealz_meal.service.dish_service:
-        class: App\Mealz\MealBundle\Service\DishService
+    App\Mealz\MealBundle\Controller\CategoryController:
+        calls:
+            - [setRepository, ['@mealz_meal.repository.category']]
+            - [setEntityName, ['Category']]
+
+    App\Mealz\MealBundle\Controller\DishController:
+        calls:
+            - [setRepository, ['@mealz_meal.repository.dish']]
+            - [setEntityName, ['Dish']]
+
+    # Interface Implementations
+    App\Mealz\MealBundle\Service\Notification\NotifierInterface: '@mealz_meal.notifier.mattermost'
+
+    # Event Listeners
+    App\Mealz\MealBundle\EventListener\ParticipantPersistenceListener:
+        tags:
+            - { name: doctrine.event_listener, event: prePersist }
+            - { name: doctrine.event_listener, event: preUpdate }
+
+    App\Mealz\MealBundle\EventListener\EntityLocalisationListener:
+        tags:
+            # set locale in dish entities
+            - { name: doctrine.event_listener, event: postLoad }
+
+    # Repositories
+    mealz_meal.repository.abstract.localized:
+        abstract: true
+        factory: ['@mealz_meal.factory.localized_repository', createLocalizedRepository]
+
+    mealz_meal.repository.category:
+        class: App\Mealz\MealBundle\Entity\CategoryRepository
+        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+        arguments:
+            - 'MealzMealBundle:Category'
+    App\Mealz\MealBundle\Entity\CategoryRepository: '@mealz_meal.repository.category'
+
+    mealz_meal.repository.dish:
+        class: App\Mealz\MealBundle\Entity\DishRepository
+        parent: mealz_meal.repository.abstract.localized
+        arguments:
+            - 'MealzMealBundle:Dish'
+    App\Mealz\MealBundle\Entity\DishRepository: '@mealz_meal.repository.dish'
+
+    mealz_meal.repository.dish_variation:
+        class: App\Mealz\MealBundle\Entity\DishVariationRepository
+        parent: mealz_meal.repository.abstract.localized
+        arguments:
+            - 'MealzMealBundle:DishVariation'
+    App\Mealz\MealBundle\Entity\DishVariationRepository: '@mealz_meal.repository.dish_variation'
+
+    mealz_meal.repository.participant:
+        class: App\Mealz\MealBundle\Entity\ParticipantRepository
+        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+        arguments:
+            - MealzMealBundle:Participant
+    App\Mealz\MealBundle\Entity\ParticipantRepository: '@mealz_meal.repository.participant'
+
+    mealz_meal.repository.week:
+        class: App\Mealz\MealBundle\Entity\WeekRepository
+        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+        arguments:
+            - 'MealzMealBundle:Week'
+    App\Mealz\MealBundle\Entity\WeekRepository: '@mealz_meal.repository.week'
+
+    # Forms
+    mealz_meal.form.dish:
+        class: App\Mealz\MealBundle\Form\Dish\DishForm
+        arguments: ['%mealz.meal.price%']
+
+    mealz_meal.form.dishvariation:
+        class: App\Mealz\MealBundle\Form\Dish\DishVariationForm
+        arguments: ['%mealz.meal.price%']
+
+    # Services
+    App\Mealz\MealBundle\Service\DishService:
         arguments:
             $newFlagThreshold: '%mealz.meal.new_flag_counter%'
             $dishRepository: '@mealz_meal.repository.dish'
 
-    App\Mealz\MealBundle\Service\DishService: '@mealz_meal.service.dish_service'
+    App\Mealz\MealBundle\Service\HttpHeaderUtility:
+        arguments:
+            $locales: '%app.locales%'
 
-    # interface implementations
-    App\Mealz\MealBundle\Service\Notification\NotifierInterface: '@mealz_meal.notifier.mattermost'
+    App\Mealz\MealBundle\Service\Notification\MattermostService:
+        lazy: true
+        arguments:
+            $httpClient: '@http_client'
+            $logger: '@logger'
+            $enabled: '%env(bool:MATTERMOST_NOTIFICATIONS)%'
+            $webhookURL: '%env(MATTERMOST_WEBHOOK_URL)%'
+            $username: 'Chef'
+            $appName: 'Meals'
+
+    App\Mealz\MealBundle\Service\Workday:
+        calls:
+            - [setDayBlacklist, [['01-01', '05-01', '10-31', '12-24', '12-25', '12-26', '12-27', '12-28', '12-29', '12-30', '12-31']]]
+
+    # Service Aliases
+    mealz_meal.service.dish_service: '@App\Mealz\MealBundle\Service\DishService'
+    mealz_meal.doorman: '@App\Mealz\MealBundle\Service\Doorman'
+    mealz_meal.factory.localized_repository: '@App\Mealz\MealBundle\Service\LocalizedRepositoryFactory'
+    mealz_meal.http_header_utility: '@App\Mealz\MealBundle\Service\HttpHeaderUtility'
+    mealz_meal.notifier.mattermost: '@App\Mealz\MealBundle\Service\Notification\MattermostService'
+
 
     ##################################################################
     # Accounting BUNDLE

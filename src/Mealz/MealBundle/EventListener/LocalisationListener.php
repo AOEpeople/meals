@@ -1,31 +1,27 @@
 <?php
 
+declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\EventListener;
 
 use App\Mealz\MealBundle\Service\HttpHeaderUtility;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 
-class LocalisationListener
+class LocalisationListener implements EventSubscriberInterface
 {
+    protected HttpHeaderUtility $httpHeaderUtility;
 
-    /**
-     * @var HttpHeaderUtility
-     */
-    protected $httpHeaderUtility;
-
-    /**
-     * @var string
-     */
-    protected $locale = 'en';
+    protected string $locale = 'en';
 
     public function __construct(HttpHeaderUtility $httpHeaderUtility)
     {
         $this->httpHeaderUtility = $httpHeaderUtility;
     }
 
-    public function onKernelRequest(\Symfony\Component\HttpKernel\Event\RequestEvent $getResponseEvent)
+    public function onKernelRequest(RequestEvent $getResponseEvent): void
     {
         $request = $getResponseEvent->getRequest();
         $cookies = $request->cookies;
@@ -38,14 +34,25 @@ class LocalisationListener
         $request->setLocale($this->locale);
     }
 
-    public function onKernelResponse(\Symfony\Component\HttpKernel\Event\ResponseEvent $filterResponseEvent)
+    public function onKernelResponse(ResponseEvent $filterResponseEvent): void
     {
         $response = $filterResponseEvent->getResponse();
-        $response->headers->add('Vary: Accept-Language');
+        $response->headers->set('Vary', 'Accept-Language');
     }
 
-    public function getLocale()
+    public function getLocale(): string
     {
         return $this->locale;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            // must be registered before (i.e. with a higher priority than) the default Locale listener
+            KernelEvents::REQUEST => [['onKernelRequest', 20]],
+        ];
     }
 }

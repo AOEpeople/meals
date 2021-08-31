@@ -8,11 +8,9 @@ use App\Mealz\MealBundle\EventListener\LocalisationListener;
 
 class LocalizedRepositoryFactory
 {
-    /** @var EntityManagerInterface $entityManager */
-    protected $entityManager;
+    protected EntityManagerInterface $entityManager;
 
-    /** @var LocalisationListener $localisationListener */
-    protected $localisationListener;
+    protected LocalisationListener $localisationListener;
 
     public function __construct(EntityManagerInterface $entityManager, LocalisationListener $localisationListener)
     {
@@ -20,11 +18,12 @@ class LocalizedRepositoryFactory
         $this->localisationListener = $localisationListener;
     }
 
-    public function createLocalizedRepository($repositoryName)
+    public function createLocalizedRepository($repositoryName): LocalizedRepository
     {
         /** @var LocalizedRepository $repository */
         $repository = $this->entityManager->getRepository($repositoryName);
         $repository->setLocalizationListener($this->localisationListener);
+
         return $repository;
     }
 }

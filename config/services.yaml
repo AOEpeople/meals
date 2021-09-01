@@ -101,6 +101,13 @@ services:
             - 'MealzMealBundle:Category'
     App\Mealz\MealBundle\Entity\CategoryRepository: '@mealz_meal.repository.category'
 
+    mealz_meal.repository.day:
+        class: App\Mealz\MealBundle\Entity\DayRepository
+        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+        arguments:
+            - 'MealzMealBundle:Day'
+    App\Mealz\MealBundle\Entity\DayRepository: '@mealz_meal.repository.day'
+
     mealz_meal.repository.dish:
         class: App\Mealz\MealBundle\Entity\DishRepository
         parent: mealz_meal.repository.abstract.localized
@@ -119,7 +126,7 @@ services:
         class: App\Mealz\MealBundle\Entity\ParticipantRepository
         factory: ['@doctrine.orm.default_entity_manager', getRepository]
         arguments:
-            - MealzMealBundle:Participant
+            - 'MealzMealBundle:Participant'
     App\Mealz\MealBundle\Entity\ParticipantRepository: '@mealz_meal.repository.participant'
 
     mealz_meal.repository.week:
@@ -168,6 +175,8 @@ services:
     mealz_meal.factory.localized_repository: '@App\Mealz\MealBundle\Service\LocalizedRepositoryFactory'
     mealz_meal.http_header_utility: '@App\Mealz\MealBundle\Service\HttpHeaderUtility'
     mealz_meal.notifier.mattermost: '@App\Mealz\MealBundle\Service\Notification\MattermostService'
+
+    Qipsius\TCPDFBundle\Controller\TCPDFController: '@qipsius.tcpdf'
 
 
     ##################################################################

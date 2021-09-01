@@ -2,13 +2,17 @@
 
 namespace App\Mealz\MealBundle\Controller;
 
+use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\DayRepository;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Entity\WeekRepository;
 use App\Mealz\MealBundle\Service\Notification\NotifierInterface;
 use App\Mealz\UserBundle\Entity\Profile;
+use DateTime;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\Translator;
 
 class ParticipantController extends BaseController
@@ -161,31 +165,34 @@ class ParticipantController extends BaseController
 
     /**
      * list participation
-     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @Security("has_role('ROLE_KITCHEN_STAFF')")
      */
-    public function list()
+    public function list(DayRepository $dayRepo): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
+        $participants = [];
+        $day = $dayRepo->getCurrentDay();
 
-        /** @var DayRepository $dayRepository */
-        $dayRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Day');
-        $day = $dayRepository->getCurrentDay();
+        if (null === $day) {
+            $day = new Day();
+            $day->setDateTime(new DateTime());
+        } else {
+            // Get user participation to list them as table rows
+            $participantRepo = $this->getParticipantRepository();
+            $participants = $participantRepo->getParticipantsOnCurrentDay();
+            $participants = $participantRepo->groupParticipantsByName($participants);
+        }
 
-        // Get user participation to list them as table rows
-        $participantRepo = $this->getParticipantRepository();
-        $participation = $participantRepo->getParticipantsOnCurrentDay();
-        $groupedParticipation = $participantRepo->groupParticipantsByName($participation);
-
-        return $this->render('MealzMealBundle:Participant:list.html.twig', array(
+        return $this->render('MealzMealBundle:Participant:list.html.twig', [
             'day' => $day,
-            'users' => $groupedParticipation,
-        ));
+            'users' => $participants,
+        ]);
     }
 
     /**
      * edit participation
      * @param Week $week
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function editParticipation(Week $week)
     {

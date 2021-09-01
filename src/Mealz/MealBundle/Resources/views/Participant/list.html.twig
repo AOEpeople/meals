@@ -6,7 +6,7 @@
     <div class="headline-container headline-container-h1 centered">
         <h1 class="headline">{{ 'headings.week.participationsprint'|trans({},'general') }} {{ day.dateTime | date('l') | trans({}, 'date') }}{{ day.dateTime | date(', d.m.') }}</h1>
     </div>
-    {% if users is not empty %}
+    {% if users is not empty and (day.meals | length > 0) %}
         <table class="table">
             <thead class="table-header">
                 <tr>

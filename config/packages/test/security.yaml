@@ -10,6 +10,5 @@ security:
                 login_path: MealzUserBundle_login
                 check_path: MealzUserBundle_login
             logout:
-                path: MealzUserBundle_logout
-                # where to redirect after logout
-                target: /
+                # Unset logout success handler to redirect to oauth login page
+                success_handler: ~

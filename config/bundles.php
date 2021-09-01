@@ -15,9 +15,9 @@ return [
     JMS\SerializerBundle\JMSSerializerBundle::class => ['all' => true],
     Http\HttplugBundle\HttplugBundle::class => ['all' => true],
     HWI\Bundle\OAuthBundle\HWIOAuthBundle::class => ['all' => true],
-    WhiteOctober\TCPDFBundle\WhiteOctoberTCPDFBundle::class => ['all' => true],
     App\Mealz\MealBundle\MealzMealBundle::class => ['all' => true],
     App\Mealz\UserBundle\MealzUserBundle::class => ['all' => true],
     App\Mealz\AccountingBundle\MealzAccountingBundle::class => ['all' => true],
     App\Mealz\TemplateBundle\MealzTemplateBundle::class => ['all' => true],
+    Qipsius\TCPDFBundle\QipsiusTCPDFBundle::class => ['all' => true],
 ];

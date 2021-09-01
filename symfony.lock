@@ -362,6 +362,9 @@
     "psr/log": {
         "version": "1.1.4"
     },
+    "qipsius/tcpdf-bundle": {
+        "version": "2.0.2"
+    },
     "ralouphie/getallheaders": {
         "version": "3.0.3"
     },
@@ -795,9 +798,6 @@
     },
     "webmozart/path-util": {
         "version": "2.3.0"
-    },
-    "whiteoctober/tcpdf-bundle": {
-        "version": "dev-master"
     },
     "willdurand/jsonp-callback-validator": {
         "version": "v1.1.0"

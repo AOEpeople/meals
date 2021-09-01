@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "821e26c97c8e4b0d0d1422c0afefe647",
+    "content-hash": "1dc9ec89140286bff2fec73e2bdec5a8",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -3886,6 +3886,52 @@
                 "source": "https://github.com/php-fig/log/tree/1.1.4"
             },
             "time": "2021-05-03T11:20:27+00:00"
+        },
+        {
+            "name": "qipsius/tcpdf-bundle",
+            "version": "2.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Qipsius/QipsiusTCPDFBundle.git",
+                "reference": "270667cb258b2d2a6b2b906f436765e51570e661"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Qipsius/QipsiusTCPDFBundle/zipball/270667cb258b2d2a6b2b906f436765e51570e661",
+                "reference": "270667cb258b2d2a6b2b906f436765e51570e661",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1",
+                "symfony/framework-bundle": ">=3.4",
+                "tecnickcom/tcpdf": "*"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "Qipsius\\TCPDFBundle\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Rich Sage",
+                    "email": "rich.sage@gmail.com"
+                }
+            ],
+            "description": "A bundle to easily integrate TCPDF into Symfony",
+            "homepage": "https://github.com/qipsius/QipsiusTCPDFBundle",
+            "keywords": [
+                "TCPDF",
+                "pdf"
+            ],
+            "support": {
+                "source": "https://github.com/Qipsius/QipsiusTCPDFBundle/tree/2.0.2"
+            },
+            "time": "2020-09-22T19:00:11+00:00"
         },
         {
             "name": "ralouphie/getallheaders",
@@ -8745,16 +8791,16 @@
         },
         {
             "name": "tecnickcom/tcpdf",
-            "version": "6.2.26",
+            "version": "6.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tecnickcom/TCPDF.git",
-                "reference": "367241059ca166e3a76490f4448c284e0a161f15"
+                "reference": "172540dcbfdf8dc983bc2fe78feff48ff7ec1c76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tecnickcom/TCPDF/zipball/367241059ca166e3a76490f4448c284e0a161f15",
-                "reference": "367241059ca166e3a76490f4448c284e0a161f15",
+                "url": "https://api.github.com/repos/tecnickcom/TCPDF/zipball/172540dcbfdf8dc983bc2fe78feff48ff7ec1c76",
+                "reference": "172540dcbfdf8dc983bc2fe78feff48ff7ec1c76",
                 "shasum": ""
             },
             "require": {
@@ -8783,7 +8829,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "LGPL-3.0"
+                "LGPL-3.0-only"
             ],
             "authors": [
                 {
@@ -8804,9 +8850,16 @@
                 "qrcode"
             ],
             "support": {
-                "source": "https://github.com/tecnickcom/TCPDF/tree/master"
+                "issues": "https://github.com/tecnickcom/TCPDF/issues",
+                "source": "https://github.com/tecnickcom/TCPDF/tree/6.4.2"
             },
-            "time": "2018-10-16T17:24:05+00:00"
+            "funding": [
+                {
+                    "url": "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&currency_code=GBP&business=paypal@tecnick.com&item_name=donation%20for%20tcpdf%20project",
+                    "type": "custom"
+                }
+            ],
+            "time": "2021-07-20T14:43:20+00:00"
         },
         {
             "name": "twig/extensions",
@@ -8946,55 +8999,6 @@
                 }
             ],
             "time": "2021-05-16T12:12:47+00:00"
-        },
-        {
-            "name": "whiteoctober/tcpdf-bundle",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sampart/WhiteOctoberTCPDFBundle.git",
-                "reference": "7cb0efb09119b9e279344ccedbcad160cc53bf65"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sampart/WhiteOctoberTCPDFBundle/zipball/7cb0efb09119b9e279344ccedbcad160cc53bf65",
-                "reference": "7cb0efb09119b9e279344ccedbcad160cc53bf65",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.2",
-                "symfony/framework-bundle": ">=2.0",
-                "tecnickcom/tcpdf": "*"
-            },
-            "default-branch": true,
-            "type": "symfony-bundle",
-            "autoload": {
-                "psr-4": {
-                    "WhiteOctober\\TCPDFBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Rich Sage",
-                    "email": "rich.sage@gmail.com"
-                }
-            ],
-            "description": "A bundle to easily integrate TCPDF into Symfony2",
-            "homepage": "https://github.com/whiteoctober/WhiteOctoberTCPDFBundle",
-            "keywords": [
-                "TCPDF",
-                "pdf"
-            ],
-            "support": {
-                "issues": "https://github.com/sampart/WhiteOctoberTCPDFBundle/issues",
-                "source": "https://github.com/sampart/WhiteOctoberTCPDFBundle/tree/master"
-            },
-            "abandoned": "qipsius/tcpdf-bundle",
-            "time": "2020-11-15T19:30:06+00:00"
         }
     ],
     "packages-dev": [
@@ -12582,9 +12586,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "whiteoctober/tcpdf-bundle": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

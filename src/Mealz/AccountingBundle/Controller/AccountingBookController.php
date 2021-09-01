@@ -5,6 +5,9 @@ namespace App\Mealz\AccountingBundle\Controller;
 use DateTime;
 use Exception;
 use App\Mealz\MealBundle\Controller\BaseController;
+use Qipsius\TCPDFBundle\Controller\TCPDFController;
+use ReflectionException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -112,15 +115,14 @@ class AccountingBookController extends BaseController
 
     /**
      * Export transaction table as PDF for finance staff
-     * @param $dateRange
+     *
+     * @throws ReflectionException
      * @throws Exception
+     *
+     * @Security("has_role('ROLE_FINANCE')")
      */
-    public function exportPDF($dateRange): string
+    public function exportPDF(?string $dateRange, TCPDFController $pdfGen): string
     {
-        if ($this->isGranted('ROLE_FINANCE') === false) {
-            throw new AccessDeniedException();
-        }
-
         // Get date range set with date range picker by user
         $dateRange = str_replace('-', '/', $dateRange);
         $dateRangeArray = explode('&', $dateRange);
@@ -132,8 +134,8 @@ class AccountingBookController extends BaseController
         $transactions = $transactionRepo->findAllTransactionsInDateRange($minDate, $maxDate);
 
         // Create PDF file
-        $pdf = $this->get('white_october.tcpdf')->create(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-        $pdf->setHeaderData('', 0, '', '', array(0, 0, 0), array(255, 255, 255));
+        $pdf = $pdfGen->create(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        $pdf->setHeaderData('', 0, '', '', [0, 0, 0], [255, 255, 255]);
         $pdf->setPrintHeader(false);
         $pdf->setPrintFooter(false);
         $pdf->AddPage();
@@ -141,20 +143,21 @@ class AccountingBookController extends BaseController
         $filename = $this->get('translator')->trans('payment.transaction_history.finances.pdf') . '-' . $minDate->format('d.m.Y') . '-' . $maxDate->format('d.m.Y');
         $pdf->SetTitle($filename);
 
-        $cssFile = file_get_contents(dirname(__FILE__) . '/../Resources/css/transaction-export.css');
+        $cssFile = file_get_contents(__DIR__. '/../Resources/css/transaction-export.css');
 
         $includeCSS = '<style>' . $cssFile . '</style>';
 
-        $html = $this->renderView('MealzAccountingBundle:Accounting/Finance:print_finances.html.twig', array(
+        $html = $this->renderView('MealzAccountingBundle:Accounting/Finance:print_finances.html.twig', [
             'headingFirst' => null,
             'heading' => $heading,
             'transactionsFirst' => null,
             'transactions' => $transactions,
             'minDate' => $minDate->format('m/d/Y'),
             'maxDate' => $maxDate->format('m/d/Y'),
-        ));
+        ]);
 
         $pdf->writeHTML($includeCSS . $html);
+
         return $pdf->Output($filename . '.pdf', 'I');
     }
 }

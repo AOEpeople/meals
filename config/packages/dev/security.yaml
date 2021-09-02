@@ -1,4 +1,2 @@
-# Uncomment the following to authenticate users against user data stored in database
-#imports:
-#    - { resource: '../test/security.yaml' }
-
+imports:
+    - { resource: '../test/security.yaml' }

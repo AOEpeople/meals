@@ -8,6 +8,8 @@ parameters:
     app.email.settlement_request.receiver: '%env(SETTLEMENT_REQ_EMAIL_RECEIVER)%'
 
     app.idp.server: '%env(IDP_SERVER)%'
+    app.idp.client_id: '%env(IDP_CLIENT_ID)%'
+    app.idp.client_secret: '%env(IDP_CLIENT_SECRET)%'
 
     app.idp.endpoint.access_token: '%app.idp.server%/protocol/openid-connect/token'
     app.idp.endpoint.auth_token:   '%app.idp.server%/protocol/openid-connect/auth'

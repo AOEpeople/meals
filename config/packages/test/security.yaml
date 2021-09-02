@@ -1,14 +1,13 @@
 security:
-    firewalls:
-        main:
-            provider: database
+    # required to hash user passwords
+    encoders:
+        App\Mealz\UserBundle\Entity\Login:
+            algorithm: auto
+            cost: 4
+            time_cost: 3
+            memory_cost: 10
 
-            # allow anonymous access; required for login and home page
-            anonymous: lazy
+    providers:
+        database:
+            entity: { class: App\Mealz\UserBundle\Entity\Login, property: username }
 
-            form_login:
-                login_path: MealzUserBundle_login
-                check_path: MealzUserBundle_login
-            logout:
-                # Unset logout success handler to redirect to oauth login page
-                success_handler: ~

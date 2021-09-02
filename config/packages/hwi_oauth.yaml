@@ -6,8 +6,8 @@ hwi_oauth:
     resource_owners:
         meals:
             type:                oauth2
-            client_id:           '%env(IDP_CLIENT_ID)%'
-            client_secret:       '%env(IDP_CLIENT_SECRET)%'
+            client_id:           '%app.idp.client_id%'
+            client_secret:       '%app.idp.client_secret%'
             access_token_url:    '%app.idp.endpoint.access_token%'
             authorization_url:   '%app.idp.endpoint.auth_token%'
             infos_url:           '%app.idp.endpoint.user_token%'

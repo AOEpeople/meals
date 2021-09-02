@@ -20,10 +20,10 @@
     {% endset %}
 
     {% set weekInfo %}
-        {% spaceless %}
+        {% apply spaceless %}
             #{{ week.startTime | date('W')}}
             ({{ week.startTime | date('d.m.') }}-{{ week.endTime | date('d.m.')}})
-        {% endspaceless %}
+        {% endapply %}
     {% endset %}
 
     {% set additionalHeaderItems = ["<div class='switchery-placeholder'></div>"] %}

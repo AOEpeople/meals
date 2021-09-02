@@ -1,6 +1,6 @@
 <div class="meal-row">
 
-    {% spaceless %}
+    {% apply spaceless %}
         {% set parentFlag = null %}
 
         {% for meal in mealVariationGroup %}
@@ -34,5 +34,5 @@
             </div>
         {% endfor %}
 
-    {% endspaceless %}
+    {% endapply %}
 </div>

@@ -11,7 +11,7 @@
 #}
 {% macro link(href, label, id, class, icon, iconPosition, additionalAttributes) %}
     {%- import 'MealzTemplateBundle::Components/_common.html.twig' as commonlib -%}
-    {%- spaceless -%}
+    {%- apply spaceless -%}
 
         {#- support for glyphicon -#}
         {% if icon|slice(0, 10) == 'glyphicon-' %}
@@ -58,7 +58,7 @@
                 {{- icon -}}
             {% endif -%}
         </a>
-    {%- endspaceless -%}
+    {%- endapply -%}
 {% endmacro %}
 
 {###

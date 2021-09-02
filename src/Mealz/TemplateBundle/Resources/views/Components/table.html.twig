@@ -8,7 +8,7 @@
 #}
 {% macro create(id, class, header, data)  %}
     {%- import 'MealzTemplateBundle::Components/_common.html.twig' as commonlib -%}
-    {%- spaceless -%}
+    {%- apply spaceless -%}
         <table {% if id %}id="{{ id }}"{% endif %} class="table {{ class }}">
             {% if header | length > 0 %}
             <thead>
@@ -38,5 +38,5 @@
                 </tbody>
             {% endif %}
         </table>
-    {%- endspaceless -%}
+    {%- endapply -%}
 {% endmacro %}

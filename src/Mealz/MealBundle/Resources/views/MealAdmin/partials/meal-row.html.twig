@@ -24,7 +24,7 @@
                 {% endif %}
                 {% set variations = dish.variations %}
                 {% if not dish.parent %}
-                    <li class="dishes" data-attribute-id="{{ dish.id }}" data-attribute-parent="{% if variations|length > 0 %}{% spaceless %}true{% endspaceless %}{% endif %}">
+                    <li class="dishes" data-attribute-id="{{ dish.id }}" data-attribute-parent="{% if variations|length > 0 %}{% apply spaceless %}true{% endapply %}{% endif %}">
                         <span class="dish-title">{{ dish.title }}</span>
                         {% if variations|length > 0 %}
                             <div class="variation-button">variations</div>
@@ -50,11 +50,11 @@
         </ul>
     </div>
     <div class="meal-select">
-        <span class="meal-label">{% spaceless %}
+        <span class="meal-label">{% apply spaceless %}
         {% if parentDish is defined %}
             {{ getFullTitleByDishAndVariation(parentDish , selectedDish.ids, dishes) }}
         {% endif %}
-        {% endspaceless %}</span>
+        {% endapply %}</span>
         <a class="remove-meal" href="#"{% if parentDish is defined %}style="display: block;"{% endif %}>
             <span class="glyphicon glyphicon-remove"></span>
         </a>

@@ -72,7 +72,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         $token = $crawler->filter($tokenFieldSelector)->attr('value');
 
         if ($token === '' || $token === null) {
-            throw new RuntimeException('token fetch error: path: '.$uri.' : fieldSelector'.$tokenFieldSelector);
+            throw new RuntimeException('token fetch error, path: '.$uri.', fieldSelector: '.$tokenFieldSelector);
         }
 
         return $token;

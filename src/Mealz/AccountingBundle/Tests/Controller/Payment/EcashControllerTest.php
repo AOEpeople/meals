@@ -37,17 +37,11 @@ class EcashControllerTest extends AbstractControllerTestCase
      */
     public function testFormRendering(): void
     {
+        $this->loginAs(self::USER_STANDARD);
+
         // Open home page
         $crawler = $this->client->request('GET', '/');
-        $this->assertTrue($this->client->getResponse()->isSuccessful());
-
-        // Login
-        $loginForm = $crawler->filterXPath('//form[@name="login-form"]')->form([
-            '_username' => 'alice.meals',
-            '_password' => 'Chee7ieRahqu'
-        ]);
-        $this->client->followRedirects();
-        $crawler = $this->client->submit($loginForm, []);
+        self::assertResponseIsSuccessful();
 
         // Click on the balance link
         $balanceLink = $crawler->filterXPath('//div[@class="balance-text"]/a')->link();

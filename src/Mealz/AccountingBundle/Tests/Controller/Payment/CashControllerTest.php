@@ -16,11 +16,6 @@ use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 
-/**
- * Cash controller test.
- *
- * @author Dragan Tomic <dragan.tomic@aoe.com>
- */
 class CashControllerTest extends AbstractControllerTestCase
 {
     /**
@@ -52,16 +47,11 @@ class CashControllerTest extends AbstractControllerTestCase
      */
     public function checkTransactionHistory(): void
     {
+        $this->loginAs(self::USER_STANDARD);
+
         // Open home page
         $crawler = $this->client->request('GET', '/');
-        $this->assertTrue($this->client->getResponse()->isSuccessful());
-
-        $loginForm = $crawler->filterXPath('//form[@name="login-form"]')->form([
-            '_username' => 'alice.meals',
-            '_password' => 'Chee7ieRahqu'
-        ]);
-        $this->client->followRedirects();
-        $crawler = $this->client->submit($loginForm, []);
+        self::assertResponseIsSuccessful();
 
         // read Current balance from header
         $currentBalance = $crawler->filterXPath('//div[@class="balance-text"]/a')->text();

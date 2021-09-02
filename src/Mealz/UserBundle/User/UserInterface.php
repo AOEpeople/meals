@@ -1,23 +1,17 @@
 <?php
 
-namespace Mealz\UserBundle\User;
+declare(strict_types=1);
 
-use Mealz\UserBundle\Entity\Profile;
+namespace App\Mealz\UserBundle\User;
+
+use App\Mealz\UserBundle\Entity\Profile;
 
 /**
  * logged in users in this application should be able to have a profile
  */
 interface UserInterface
 {
+    public function getProfile(): ?Profile;
 
-    /**
-     * @return Profile|null
-     */
-    public function getProfile();
-
-
-    /**
-     * @param Profile $profile
-     */
     public function setProfile(Profile $profile);
 }

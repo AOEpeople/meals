@@ -1,19 +1,17 @@
 <?php
 
-namespace Mealz\MealBundle\Entity;
+namespace App\Mealz\MealBundle\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use Mealz\UserBundle\Entity\Profile;
+use App\Mealz\UserBundle\Entity\Profile;
 
 /**
  * Guest invitation entity.
  *
  * @ORM\Table(name="guest_invitation")
- * @ORM\Entity(repositoryClass="Mealz\MealBundle\Entity\GuestInvitationRepository")
+ * @ORM\Entity(repositoryClass="App\Mealz\MealBundle\Entity\GuestInvitationRepository")
  * @ORM\HasLifecycleCallbacks
- *
- * @author Chetan Thapliyal <chetan.thapliyal@aoe.com>
  */
 class GuestInvitation
 {
@@ -34,7 +32,7 @@ class GuestInvitation
 
     /**
      * @var Profile
-     * @ORM\ManyToOne(targetEntity="Mealz\UserBundle\Entity\Profile")
+     * @ORM\ManyToOne(targetEntity="App\Mealz\UserBundle\Entity\Profile")
      * @ORM\JoinColumn(name="host_id", referencedColumnName="id", nullable=FALSE, onDelete="NO ACTION")
      */
     private $host;

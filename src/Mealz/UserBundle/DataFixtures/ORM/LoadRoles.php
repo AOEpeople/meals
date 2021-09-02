@@ -1,48 +1,44 @@
 <?php
 
-namespace Mealz\UserBundle\DataFixtures\ORM;
+declare(strict_types=1);
 
-use Doctrine\Common\DataFixtures\AbstractFixture;
-use Doctrine\Common\Persistence\ObjectManager;
-use Mealz\UserBundle\Entity\Role;
+namespace App\Mealz\UserBundle\DataFixtures\ORM;
+
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Persistence\ObjectManager;
+use App\Mealz\UserBundle\Entity\Role;
 
 /**
  * Loads user roles.
- *
- * @author Chetan Thapliyal <chetan.thapliyal@aoe.com>
  */
-class LoadRoles extends AbstractFixture
+class LoadRoles extends Fixture
 {
     /**
      * Constant to declare load order of fixture
      */
-    const ORDER_NUMBER = 1;
+    private const ORDER_NUMBER = 1;
 
     /**
-     * Loads the roles fixture.
-     *
-     * @param ObjectManager $objectManager
+     * @inheritDoc
      */
-    public function load(ObjectManager $objectManager)
+    public function load(ObjectManager $manager): void
     {
         foreach ($this->getRoles() as $role) {
             $roleObj = new Role();
             $roleObj->setTitle($role['title'])
                     ->setSid($role['sid']);
-            $objectManager->persist($roleObj);
+            $manager->persist($roleObj);
 
             $this->addReference($role['sid'], $roleObj);
         }
 
-        $objectManager->flush();
+        $manager->flush();
     }
 
     /**
      * Gets the loading order of fixture.
-     *
-     * @return int
      */
-    public function getOrder()
+    public function getOrder(): int
     {
         return self::ORDER_NUMBER;
     }
@@ -50,9 +46,9 @@ class LoadRoles extends AbstractFixture
     /**
      * Gets the test user roles to create.
      *
-     * @return array
+     * @return array<string,string>
      */
-    protected function getRoles()
+    protected function getRoles(): array
     {
         return [
             ['title' => 'Kitchen Staff', 'sid' => 'ROLE_KITCHEN_STAFF'],

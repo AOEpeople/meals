@@ -1,11 +1,11 @@
 <?php
 
-namespace Mealz\MealBundle\Tests\Repository;
+namespace App\Mealz\MealBundle\Tests\Repository;
 
-use Mealz\MealBundle\Entity\Dish;
-use Mealz\MealBundle\Entity\DishRepository;
-use Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
-use Mealz\MealBundle\EventListener\LocalisationListener;
+use App\Mealz\MealBundle\Entity\Dish;
+use App\Mealz\MealBundle\Entity\DishRepository;
+use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
+use App\Mealz\MealBundle\EventListener\LocalisationListener;
 
 // @TODO: check if load_category=false option is working
 class DishRepositoryTest extends AbstractDatabaseTestCase
@@ -18,6 +18,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->dishRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Dish');
         $this->locale = 'en';
         $this->clearAllTables();

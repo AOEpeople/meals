@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# path where include scripts are located, i.e. .ddev/commands/include
+INCLUDE_PATH=$(dirname "$(dirname "${BASH_SOURCE[0]}")")/include
+
+source "${INCLUDE_PATH}"/func.sh
+
+
+#########################
+# Application Setup
+#########################
+echo_header "Installing application dependencies..."
+ddev composer install --no-interaction
+
+#########################
+# Database Setup
+#########################
+echo_header "Configuring database..."
+
+APP_DB=db
+
+# Drop (if exists) and create application DB schema
+ddev exec bin/console doctrine:schema:drop --force --no-interaction
+ddev exec bin/console doctrine:migrations:migrate --no-interaction
+
+# import test data fixtures
+ddev exec bin/console doctrine:fixtures:load --no-interaction
+
+# setup functional tests database
+# database name: <app-db-name>_test
+# database user & password: <app-db-name>
+ddev mysql -uroot -proot <<-EOQ
+  CREATE DATABASE IF NOT EXISTS ${APP_DB}_test; \
+  GRANT ALL ON ${APP_DB}_test.* TO "${APP_DB}"@'%' IDENTIFIED BY "${APP_DB}";
+EOQ
+
+# generate DB schema
+ddev exec bin/console doctrine:schema:update --env=test --force --no-interaction
+
+#########################
+# Frontend Setup
+#########################
+echo_header "Generating frontend assets..."
+ddev build-fe

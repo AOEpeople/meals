@@ -1,10 +1,12 @@
 <?php
 
-namespace Mealz\MealBundle\Controller;
+namespace App\Mealz\MealBundle\Controller;
 
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -15,48 +17,31 @@ abstract class BaseListController extends BaseController
      */
     protected $repository;
 
-    /**
-     * @var string
-     */
-    protected $entityFormName;
+    protected string $entityFormName;
 
-    /**
-     * @var string
-     */
-    private $entityName;
+    private string $entityName;
 
-    /**
-     * @var string
-     */
-    private $entityClassPath;
+    private string $entityClassPath;
 
-    /**
-     * set the Entity Name
-     * @param $entityName
-     */
-    public function setEntityName($entityName)
+    public function setEntityName(string $entityName): void
     {
         $this->entityName = $entityName;
-        $this->entityClassPath = '\Mealz\MealBundle\Entity\\'.$entityName;
-        $this->entityFormName = '\Mealz\MealBundle\Form\\'.$entityName.'\\'.$entityName.'Form';
+        $this->entityClassPath = '\App\Mealz\MealBundle\Entity\\'.$entityName;
+        $this->entityFormName = '\App\Mealz\MealBundle\Form\\'.$entityName.'\\'.$entityName.'Form';
     }
 
-    /**
-     * set the repo
-     * @param EntityRepository $repository
-     */
-    public function setRepository(EntityRepository $repository)
+    public function setRepository(EntityRepository $repository): void
     {
         $this->repository = $repository;
     }
 
     /**
      * list Action
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
-    public function listAction()
+    public function list()
     {
-        if (!$this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF')) {
+        if (!$this->isGranted('ROLE_KITCHEN_STAFF')) {
             throw new AccessDeniedException();
         }
 
@@ -64,13 +49,11 @@ abstract class BaseListController extends BaseController
     }
 
     /**
-     * new Action
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
-    public function newAction(Request $request)
+    public function new(Request $request)
     {
-        if ($this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF') === false) {
+        if ($this->isGranted('ROLE_KITCHEN_STAFF') === false) {
             throw new AccessDeniedException();
         }
 
@@ -78,9 +61,7 @@ abstract class BaseListController extends BaseController
         $translatedEntityName = $translator->trans("entity.$this->entityName", [], 'messages');
         $message = $translator->trans(
             'entity.added',
-            array(
-                '%entityName%' => $translatedEntityName,
-            ),
+            ['%entityName%' => $translatedEntityName],
             'messages'
         );
 
@@ -91,11 +72,11 @@ abstract class BaseListController extends BaseController
      * edit Action
      * @param Request $request
      * @param $slug
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
-    public function editAction(Request $request, $slug)
+    public function edit(Request $request, $slug)
     {
-        if ($this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF') === false) {
+        if ($this->isGranted('ROLE_KITCHEN_STAFF') === false) {
             throw new AccessDeniedException();
         }
 
@@ -105,9 +86,7 @@ abstract class BaseListController extends BaseController
         $translatedEntityName = $translator->trans("entity.$this->entityName", [], 'messages');
         $message = $translator->trans(
             'entity.modified',
-            array(
-                '%entityName%' => $translatedEntityName,
-            ),
+            ['%entityName%' => $translatedEntityName],
             'messages'
         );
 
@@ -117,11 +96,11 @@ abstract class BaseListController extends BaseController
     /**
      * delete Action
      * @param $slug
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
-    public function deleteAction($slug)
+    public function delete($slug)
     {
-        if ($this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF') === false) {
+        if ($this->isGranted('ROLE_KITCHEN_STAFF') === false) {
             throw new AccessDeniedException();
         }
 
@@ -135,10 +114,10 @@ abstract class BaseListController extends BaseController
         $translatedEntityName = $translator->trans("entity.$this->entityName", [], 'messages');
         $message = $translator->trans(
             'entity.deleted',
-            array(
+            [
                 '%entityName%' => $translatedEntityName,
                 '%entity%' => $entity->getTitle(),
-            ),
+            ],
             'messages'
         );
         $this->addFlashMessage($message, 'success');
@@ -150,13 +129,13 @@ abstract class BaseListController extends BaseController
      * get Empty Form Action
      * @return JsonResponse
      */
-    public function getEmptyFormAction()
+    public function getEmptyForm()
     {
         if ($this->getUser() === false) {
             return $this->ajaxSessionExpiredRedirect();
         }
 
-        if ($this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF') === false) {
+        if ($this->isGranted('ROLE_KITCHEN_STAFF') === false) {
             throw new AccessDeniedException();
         }
 
@@ -171,13 +150,13 @@ abstract class BaseListController extends BaseController
      * @param $slug
      * @return JsonResponse
      */
-    public function getPreFilledFormAction($slug)
+    public function getPreFilledForm($slug)
     {
         if ($this->getUser() === false) {
             return $this->ajaxSessionExpiredRedirect();
         }
 
-        if ($this->get('security.context')->isGranted('ROLE_KITCHEN_STAFF') === false) {
+        if ($this->isGranted('ROLE_KITCHEN_STAFF') === false) {
             throw new AccessDeniedException();
         }
 
@@ -187,7 +166,7 @@ abstract class BaseListController extends BaseController
             return new JsonResponse(null, 404);
         }
 
-        $action = $this->generateUrl('MealzMealBundle_'.$this->entityName.'_edit', array('slug' => $slug));
+        $action = $this->generateUrl('MealzMealBundle_'.$this->entityName.'_edit', ['slug' => $slug]);
 
         return new JsonResponse($this->getRenderedEntityForm($entity, $action, true));
     }
@@ -204,9 +183,7 @@ abstract class BaseListController extends BaseController
         $form = $this->createForm(
             $this->getNewForm(),
             $entity,
-            array(
-                'action' => $action,
-            )
+            ['action' => $action]
         );
 
         $template = "MealzMealBundle:$this->entityName/partials:form.html.twig";
@@ -214,7 +191,7 @@ abstract class BaseListController extends BaseController
             $template = "MealzMealBundle:$this->entityName/partials:formTable.html.twig";
         }
 
-        $renderedForm = $this->render($template, array('form' => $form->createView()));
+        $renderedForm = $this->render($template, ['form' => $form->createView()]);
 
         return $renderedForm->getContent();
     }
@@ -224,7 +201,7 @@ abstract class BaseListController extends BaseController
      * @param Request $request
      * @param $entity
      * @param $successMessage
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
      */
     private function entityFormHandling(Request $request, $entity, $successMessage)
     {
@@ -241,11 +218,9 @@ abstract class BaseListController extends BaseController
 
                 $this->addFlashMessage($successMessage, 'success');
             } else {
-                return $this->renderEntityList(
-                    array(
-                        'form' => $form->createView(),
-                    )
-                );
+                return $this->renderEntityList([
+                    'form' => $form->createView(),
+                ]);
             }
         }
 
@@ -255,15 +230,15 @@ abstract class BaseListController extends BaseController
     /**
      * render Entity List
      * @param array $parameters
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     protected function renderEntityList($parameters = array())
     {
         $entities = $this->getEntities();
 
-        $defaultParameters = array(
+        $defaultParameters = [
             'entities' => $entities,
-        );
+        ];
 
         $mergedParameters = array_merge($defaultParameters, $parameters);
 
@@ -296,12 +271,8 @@ abstract class BaseListController extends BaseController
         return $entity;
     }
 
-    /**
-     * get new Form
-     * @return mixed
-     */
-    protected function getNewForm()
+    protected function getNewForm(): string
     {
-        return new $this->entityFormName();
+        return $this->entityFormName;
     }
 }

@@ -1,30 +1,29 @@
 <?php
 
-namespace Mealz\MealBundle\Service;
+namespace App\Mealz\MealBundle\Service;
 
-use Doctrine\ORM\EntityManager;
-use Mealz\MealBundle\Entity\LocalizedRepository;
-use Mealz\MealBundle\EventListener\LocalisationListener;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Mealz\MealBundle\Entity\LocalizedRepository;
+use App\Mealz\MealBundle\EventListener\LocalisationListener;
 
 class LocalizedRepositoryFactory
 {
-    /** @var EntityManager $entityManager */
-    protected $entityManager;
+    protected EntityManagerInterface $entityManager;
 
-    /** @var LocalisationListener $localisationListener */
-    protected $localisationListener;
+    protected LocalisationListener $localisationListener;
 
-    public function __construct(EntityManager $entityManager, LocalisationListener $localisationListener)
+    public function __construct(EntityManagerInterface $entityManager, LocalisationListener $localisationListener)
     {
         $this->entityManager = $entityManager;
         $this->localisationListener = $localisationListener;
     }
 
-    public function createLocalizedRepository($repositoryName)
+    public function createLocalizedRepository($repositoryName): LocalizedRepository
     {
         /** @var LocalizedRepository $repository */
         $repository = $this->entityManager->getRepository($repositoryName);
         $repository->setLocalizationListener($this->localisationListener);
+
         return $repository;
     }
 }

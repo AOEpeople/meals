@@ -1,34 +1,29 @@
 parameters:
-    mealz_accounting.participant_list_factory.class: Mealz\AccountingBundle\ParticipantList\ParticipantListFactory
-    mealz_accounting.wallet.class: Mealz\AccountingBundle\Service\Wallet
+    mealz_accounting.participant_list_factory.class: App\Mealz\AccountingBundle\ParticipantList\ParticipantListFactory
+    mealz_accounting.wallet.class: App\Mealz\AccountingBundle\Service\Wallet
 
 services:
-
     mealz_accounting.participant_list_factory:
-        class: %mealz_accounting.participant_list_factory.class%
+        class: '%mealz_accounting.participant_list_factory.class%'
         arguments:
             - '@mealz_meal.repository.participant'
 
     mealz_accounting.repository.transaction:
-        class: Mealz\AccountingBundle\Entity\TransactionRepository
-        factory_service: doctrine.orm.entity_manager
-        factory_method: getRepository
+        alias: App\Mealz\AccountingBundle\Entity\TransactionRepository
+    App\Mealz\AccountingBundle\Entity\TransactionRepository:
+        factory: ['@doctrine.orm.default_entity_manager', getRepository]
         arguments:
             - 'MealzAccountingBundle:Transaction'
 
     mealz_accounting.wallet:
-        class: %mealz_accounting.wallet.class%
+        class: '%mealz_accounting.wallet.class%'
+        public: true
         arguments:
             - '@mealz_meal.repository.participant'
             - '@mealz_accounting.repository.transaction'
+        lazy: true
 
     twig.extension.intl:
         class: Twig_Extensions_Extension_Intl
         tags:
             - { name: twig.extension }
-
-    mealz_accounting.form.payment.cash:
-      class: Mealz\AccountingBundle\Form\CashPaymentAdminForm
-      arguments: ['@doctrine.orm.entity_manager']
-      tags:
-        - { name: form.type }

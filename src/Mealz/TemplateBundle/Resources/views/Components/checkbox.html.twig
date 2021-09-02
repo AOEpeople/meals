@@ -7,12 +7,12 @@
 #}
 {% macro create(value, classes, additionalAttributes) %}
 	{%- import 'MealzTemplateBundle::Components/_common.html.twig' as commonlib -%}
-	{%- spaceless -%}
+	{%- apply spaceless -%}
 		<div class="checkbox-wrapper">
 			<input type="checkbox" {# -#}
 					{{- commonlib.optionalAttribute('class', classes) -}}
 					{{- commonlib.additionalAttributes(additionalAttributes) -}}{# -#}
 				   value="{{- value -}}"/>
 		</div>
-	{%- endspaceless -%}
+	{%- endapply -%}
 {% endmacro %}

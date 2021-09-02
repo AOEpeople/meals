@@ -1,53 +1,41 @@
 <?php
 
-/*
- * This file was part of the HWIOAuthBundle package and was edited for meals
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace App\Mealz\UserBundle\Provider;
 
-namespace Mealz\UserBundle\Provider;
-
+use App\Mealz\UserBundle\Entity\Role;
+use Doctrine\ORM\EntityManagerInterface;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
-use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthUserProvider as HWIBundleOAuthUserProvider;
+use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthAwareUserProviderInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Mealz\UserBundle\User\OAuthUser;
-use Mealz\UserBundle\Entity\Profile;
-use Doctrine\Bundle\DoctrineBundle\Registry;
+use App\Mealz\UserBundle\Entity\Profile;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-/**
- * OAuthUserProvider.
- */
-class OAuthUserProvider extends HWIBundleOAuthUserProvider
+class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProviderInterface
 {
-    /**
-     * @var DoctrineRegistry
-     */
-    private $doctrineRegistry;
-
     /**
      * Map Keycloak Roles to Meals ones
      *
-     * @var array
+     * @var array<string, string>
      */
-    private $roleMapping = [
+    private array $roleMapping = [
         'meals.admin'   => 'ROLE_KITCHEN_STAFF',
         'meals.finance' => 'ROLE_FINANCE',
         'meals.user'    => 'ROLE_USER'
     ];
 
-    /**
-     * OAuthUserProvider constructor.
-     *
-     * @param Registry  $doctrineRegistry
-     */
-    public function __construct(Registry $doctrineRegistry)
-    {
-        $this->doctrineRegistry = $doctrineRegistry;
+    private EntityManagerInterface $entityManager;
+    private LoggerInterface $logger;
+
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        LoggerInterface $logger
+    ) {
+        $this->entityManager = $entityManager;
+        $this->logger = $logger;
     }
 
     /**
@@ -55,61 +43,14 @@ class OAuthUserProvider extends HWIBundleOAuthUserProvider
      */
     public function loadUserByUsername($username)
     {
-        return $this->doctrineRegistry->getManager()->find(
-            'MealzUserBundle:Profile',
-            $username
-        );
-    }
-
-    /**
-     * Loads an user by identifier or create it.
-     *
-     * @param string $username
-     * @param array $userInformation The user information
-     *
-     * @return OAuthUser|boolean
-     */
-    public function loadUserByIdOrCreate($username, $userInformation)
-    {
-        if (array_key_exists('error', $userInformation) && $userInformation['error'] === 'invalid_token') {
-            return false;
+        $user = $this->entityManager->find(Profile::class, $username);
+        if ($user instanceof UserInterface) {
+            return $user;
         }
 
-        $userRoles = $this->fetchUserRoles($userInformation['roles']);
-
-        // When non of the roles fetched - access is denied
-        if ($userRoles->isEmpty() === true) {
-            return false;
-        }
-        
-        // Check if all informations are given
-        if (empty($username) === true ||
-            gettype($userInformation) !== 'array' ||
-            array_key_exists('family_name', $userInformation) === false ||
-            array_key_exists('given_name', $userInformation) === false
-        ) {
-            return false;
-        }
-
-        $user = $this->loadUserByUsername($username);
-
-        // When Userprofile is null, create User
-        if ($user === null) {
-            $user = $this->createProfile(
-                $username,
-                $userInformation['given_name'],
-                $userInformation['family_name']
-            );
-        }
-
-        $user->setRoles($userRoles);
-
-        if ($user instanceof Login) {
-            $this->doctrineRegistry->getManager()->persist($user);
-            $this->doctrineRegistry->getManager()->flush();
-        }
-
-        return $user;
+        $exception = new UsernameNotFoundException($username.': user not found', 1629778235);
+        $exception->setUsername($username);
+        throw $exception;
     }
 
     /**
@@ -117,7 +58,21 @@ class OAuthUserProvider extends HWIBundleOAuthUserProvider
      */
     public function loadUserByOAuthUserResponse(UserResponseInterface $response)
     {
-        return $this->loadUserByIdOrCreate($response->getNickname(), $response->getResponse());
+        $username = $response->getNickname();
+
+        try {
+            return $this->loadUserByUsername($username);
+        } catch (UsernameNotFoundException $exception) {
+            $idpUserRoles = $response->getData()['roles'] ?? [];
+            $mealsUserRoles = $this->toMealsRoles($idpUserRoles);
+
+            return $this->createProfile(
+                $username,
+                $response->getFirstName(),
+                $response->getLastName(),
+                $mealsUserRoles
+            );
+        }
     }
 
     /**
@@ -135,52 +90,48 @@ class OAuthUserProvider extends HWIBundleOAuthUserProvider
     /**
      * {@inheritdoc}
      */
-    public function supportsClass($class)
+    public function supportsClass($class): bool
     {
-        return $class === 'Mealz\\UserBundle\\Entity\\Profile';
+        return $class === Profile::class;
     }
 
-    /**
-     * Creates a profile.
-     *
-     * @param UserInterface $username
-     * @param String $givenName  The given name
-     * @param String $surName    The sur name
-     *
-     * @return     Profile
-     */
-    protected function createProfile($username, $givenName, $surName)
-    {
+    protected function createProfile(
+        string $username,
+        string $firstName,
+        string $lastName,
+        array $roles
+    ): Profile {
         $profile = new Profile();
         $profile->setUsername($username);
+        $profile->setFirstName($firstName);
+        $profile->setName($lastName);
+        $profile->setRoles(new ArrayCollection($roles));
 
-        $profile->setFirstName($givenName);
-        $profile->setName($surName);
-
-        $this->doctrineRegistry->getManager()->persist($profile);
-        $this->doctrineRegistry->getManager()->flush();
+        $this->entityManager->persist($profile);
+        $this->entityManager->flush();
 
         return $profile;
     }
 
     /**
-     * Fetch keyCloak and meals roles
-     * @param array $keycloakUserRoles
-     *
-     * @return array
+     * @return list<Role>
      */
-    protected function fetchUserRoles($keycloakUserRoles)
+    private function toMealsRoles(array $idpRoles): array
     {
-        $fetchedRoles = new ArrayCollection();
+        $roles = [];
 
-        // Map Keycloak Roles to Meals Roles
-        foreach ($this->roleMapping as $keycloakRoleName => $mealsRole) {
-            // if the Keycloak User has Roles with mapped Roles in meals. Map it.
-            if (array_search($keycloakRoleName, $keycloakUserRoles) !== false) {
-                $fetchedRoles->add($mealsRole);
+        foreach ($idpRoles as $idpRole) {
+            if (isset($this->roleMapping[$idpRole])) {
+                $roleRepository = $this->entityManager->getRepository(Role::class);
+                $role = $roleRepository->findOneBy(['sid' => $this->roleMapping[$idpRole]]);
+                if (!($role instanceof Role)) {
+                    $this->logger->error('role not found', ['sid' => $this->roleMapping[$idpRole]]);
+                }
+
+                $roles[] = $role;
             }
         }
 
-        return $fetchedRoles;
+        return $roles;
     }
 }

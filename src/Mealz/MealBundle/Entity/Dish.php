@@ -1,110 +1,92 @@
 <?php
 
-namespace Mealz\MealBundle\Entity;
+namespace App\Mealz\MealBundle\Entity;
 
-use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-
-use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Dish
- *
  * @ORM\Table(name="dish")
  * @ORM\Entity(repositoryClass="DishRepository")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({"dish" = "Dish", "dish_variation" = "DishVariation"})
  * @ORM\HasLifecycleCallbacks()
- *
  */
 class Dish
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    private int $id;
 
     /**
      * @TODO: CHECK IF THIS WORKS. Add 'title_de' to the update field list 'fields={"title_en"}', check with Jonathan
      * @Gedmo\Slug(handlers={
      *   @Gedmo\SlugHandler(class="Gedmo\Sluggable\Handler\InversedRelativeSlugHandler", options={
-     *       @Gedmo\SlugHandlerOption(name="relationClass", value="Mealz\MealBundle\Entity\Dish"),
+     *       @Gedmo\SlugHandlerOption(name="relationClass", value="App\Mealz\MealBundle\Entity\Dish"),
      *       @Gedmo\SlugHandlerOption(name="mappedBy", value="parent"),
      *       @Gedmo\SlugHandlerOption(name="inverseSlugField", value="slug")
      *      })
      *   }, fields={"title_en"})
      * @ORM\Column(length=128, unique=true)
-     * @var string
      */
-    protected $slug;
+    protected string $slug;
 
     /**
      * @Assert\NotBlank()
      * @Assert\Length(max=255)
      * @ORM\Column(type="string", length=255, nullable=FALSE)
-     * @var string
      */
-    protected $title_en;
+    protected string $title_en;
 
     /**
      * @Assert\Length(max=4096)
      * @ORM\Column(type="text", nullable=TRUE)
-     * @var null|string
      */
-    protected $description_en = null;
+    protected ?string $description_en = null;
 
     /**
      * @Assert\NotBlank()
      * @Assert\Length(max=255)
      * @ORM\Column(type="string", length=255, nullable=FALSE)
-     * @var string
      */
-    protected $title_de;
+    protected ?string $title_de;
 
     /**
      * @Assert\Length(max=4096)
      * @ORM\Column(type="text", nullable=TRUE)
-     * @var null|string
      */
-    protected $description_de = null;
+    protected ?string $description_de = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="Category", inversedBy="dishes")
      * @ORM\JoinColumn(name="category_id", referencedColumnName="id", onDelete="SET NULL")
-     * @var null|Category
      */
-    protected $category = null;
+    protected ?Category $category = null;
 
     /**
      * @Assert\NotBlank()
      * @ORM\Column(type="decimal", precision=10, scale=4, nullable=FALSE)
-     * @var float
      */
-    protected $price;
+    protected float $price = 0.0;
 
     /**
      * @ORM\Column(type="boolean", nullable=FALSE)
-     * @var bool
      */
-    protected $enabled = true;
+    protected bool $enabled = true;
 
-    /**
-     * @var string
-     */
-    protected $currentLocale = 'en';
+    protected string $currentLocale = 'en';
 
     /**
      * @ORM\OneToMany(targetEntity="DishVariation", mappedBy="parent")
-     * @var Collection
      */
-    protected $variations;
+    protected ?Collection $variations = null;
 
     /**
      * Parent property references to the same table dish.
@@ -113,46 +95,15 @@ class Dish
      *
      * @ORM\ManyToOne(targetEntity="Dish", inversedBy="variations", cascade={"persist"})
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=TRUE, onDelete="CASCADE")
-     * @var Dish
      */
-    protected $parent = null;
+    protected ?Dish $parent = null;
 
-    /**
-     * The entityManager of the class
-     * @var EntityManager
-     */
-    protected $entityManager;
-
-    /**
-     * Holds isNew FLag without storing in Database. Default true
-     * @var bool
-     */
-    protected $isNew = true;
-
-    /**
-     * Needed to get EntityManager
-     *
-     * @ORM\PostLoad @ORM\PostPersist
-     *
-     * @param \Doctrine\Common\Persistence\Event\LifecycleEventArgs $args The arguments
-     */
-    public function fetchEntityManager(LifecycleEventArgs $args)
-    {
-        $this->entityManager = ($args->getEntityManager());
-    }
-
-    /**
-     * @return Dish
-     */
-    public function getParent()
+    public function getParent(): ?Dish
     {
         return $this->parent;
     }
 
-    /**
-     * @param Dish $parent
-     */
-    public function setParent($parent)
+    public function setParent(?Dish $parent): void
     {
         $this->parent = $parent;
     }
@@ -170,161 +121,95 @@ class Dish
     /**
      * @return string
      */
-    public function getSlug()
+    public function getSlug(): string
     {
         return $this->slug;
     }
 
-    /**
-     * @deprecated use setDescriptionEn() instead
-     * @param null|string $description
-     */
-    public function setDescription($description)
+    public function getDescription(): ?string
     {
-        $this->setDescriptionEn($description);
-    }
-
-    /**
-     * @return null|string
-     */
-    public function getDescription()
-    {
-        if ($this->currentLocale == 'de' && $this->description_de) {
+        if ($this->currentLocale === 'de' && $this->description_de) {
             return $this->getDescriptionDe();
-        } else {
-            return $this->getDescriptionEn();
         }
+
+        return $this->getDescriptionEn();
     }
 
-    /**
-     * @param float $price
-     */
-    public function setPrice($price)
+    public function setPrice(float $price): void
     {
         $this->price = $price;
     }
 
-    /**
-     * @return float
-     */
-    public function getPrice()
+    public function getPrice(): float
     {
         return $this->price;
     }
 
-    /**
-     * @param string $title
-     * @deprecated use setTitleEn() or setTitleDe() instead
-     */
-    public function setTitle($title)
+    public function getTitle(): string
     {
-        $this->setTitleEn($title);
-    }
-
-    /**
-     * @return string
-     */
-    public function getTitle()
-    {
-        if ($this->currentLocale == 'de' && $this->title_de) {
+        if ($this->currentLocale === 'de' && $this->title_de) {
             return $this->getTitleDe();
-        } else {
-            return $this->getTitleEn();
         }
+
+        return $this->getTitleEn();
     }
 
-    /**
-     * @param boolean $enabled
-     */
-    public function setEnabled($enabled)
+    public function setEnabled(bool $enabled): void
     {
         $this->enabled = $enabled;
     }
 
-    /**
-     * @return boolean
-     */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return $this->enabled;
     }
 
-    /**
-     * @param string $currentLocale
-     */
-    public function setCurrentLocale($currentLocale)
+    public function setCurrentLocale(string $currentLocale): void
     {
         $this->currentLocale = $currentLocale;
     }
 
-    /**
-     * @return string
-     */
-    public function getCurrentLocale()
+    public function getCurrentLocale(): string
     {
         return $this->currentLocale;
     }
 
-    /**
-     * @param null|string $description_de
-     */
-    public function setDescriptionDe($description_de)
+    public function setDescriptionDe(?string $description_de): void
     {
         $this->description_de = $description_de;
     }
 
-    /**
-     * @return null|string
-     */
-    public function getDescriptionDe()
+    public function getDescriptionDe(): ?string
     {
         return $this->description_de;
     }
 
-    /**
-     * @param null|string $description_en
-     */
-    public function setDescriptionEn($description_en)
+    public function setDescriptionEn(?string $description_en): void
     {
         $this->description_en = $description_en;
     }
 
-    /**
-     * @return null|string
-     */
-    public function getDescriptionEn()
+    public function getDescriptionEn(): ?string
     {
         return $this->description_en;
     }
 
-    /**
-     * @param string $title_de
-     */
-    public function setTitleDe($title_de)
+    public function setTitleDe(string $title_de): void
     {
         $this->title_de = $title_de;
     }
 
-    /**
-     * @return string
-     */
-    public function getTitleDe()
+    public function getTitleDe(): string
     {
         return $this->title_de;
     }
 
-    /**
-     * @param string $title_en
-     */
-    public function setTitleEn($title_en)
+    public function setTitleEn(string $title_en): void
     {
         $this->title_en = $title_en;
     }
 
-    /**
-     * @return string
-     */
-    public function getTitleEn()
+    public function getTitleEn(): string
     {
         return $this->title_en;
     }
@@ -334,100 +219,38 @@ class Dish
         return $this->getTitle();
     }
 
-    /**
-     * @return Category
-     */
-    public function getCategory()
+    public function getCategory(): ?Category
     {
         return $this->category;
     }
 
-    /**
-     * @param null|Category $category
-     */
-    public function setCategory($category)
+    public function setCategory(?Category $category): void
     {
         $this->category = $category;
     }
 
     /**
      * Gets all the dish variations.
-     *
-     * @return Collection
      */
-    public function getVariations()
+    public function getVariations(): Collection
     {
+        if (null === $this->variations) {
+            $this->variations = new ArrayCollection();
+        }
+
         return $this->variations;
     }
 
-    /**
-     * @param Collection $dishVariations
-     */
-    public function setVariations(Collection $dishVariations)
+    public function setVariations(Collection $dishVariations): void
     {
         $this->variations = $dishVariations;
     }
 
     /**
      * Checks if the dish has variations.
-     *
-     * @return bool
      */
-    public function hasVariations()
+    public function hasVariations(): bool
     {
         return (count($this->variations) > 0);
-    }
-
-    /**
-     * Checks if the dish has variations.
-     *
-     * @return bool
-     */
-    public function isNew()
-    {
-        // Only way to get Config-Parameters in an entity
-        global $kernel;
-
-        if ('AppCache' == get_class($kernel)) {
-            $kernel = $kernel->getKernel();
-        }
-
-        // if something occurs that the kernel is null - set default values
-        if ($kernel === null) {
-            $newFlagCounter = 2;
-            $newSearchTimestamp = '2000-01-01';
-        } else {
-            $newFlagCounter = $kernel->getContainer()->getParameter('mealz.meal.new_flag_counter');
-            $newSearchTimestamp = $kernel->getContainer()->getParameter('mealz.meal.search_timestamp');
-        }
-
-        if ($this->getNumberDishWasTaken($newSearchTimestamp) >= $newFlagCounter) {
-            $this->setIsNew(false);
-        }
-
-        return $this->isNew;
-    }
-
-    /**
-     * Checks if the dish has variations.
-     *
-     * @return bool
-     */
-    public function setIsNew($isNew)
-    {
-        $this->isNew = $isNew;
-    }
-
-    /**
-     * Gets the number dish was taken.
-     *
-     * @param String $newSearchTimestamp Timestamp
-     * @return int The number dish was taken.
-     */
-    private function getNumberDishWasTaken($newSearchTimestamp)
-    {
-        $dishRepository = $this->entityManager->getRepository('MealzMealBundle:Dish');
-
-        return (int) $dishRepository->countNumberDishWasTaken($this, $newSearchTimestamp);
     }
 }

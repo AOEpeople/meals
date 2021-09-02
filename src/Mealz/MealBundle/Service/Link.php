@@ -1,13 +1,13 @@
 <?php
 
-namespace Mealz\MealBundle\Service;
+namespace App\Mealz\MealBundle\Service;
 
-use Mealz\MealBundle\Entity\Category;
-use Mealz\MealBundle\Entity\Dish;
-use Mealz\MealBundle\Entity\Meal;
-use Mealz\MealBundle\Entity\Participant;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use App\Mealz\MealBundle\Entity\Category;
+use App\Mealz\MealBundle\Entity\Dish;
+use App\Mealz\MealBundle\Entity\Meal;
+use App\Mealz\MealBundle\Entity\Participant;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Central service to link to actions
@@ -17,13 +17,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class Link
 {
+    protected RouterInterface $router;
 
-    /**
-     * @var Router
-     */
-    protected $router;
-
-    public function __construct(Router $router)
+    public function __construct(RouterInterface $router)
     {
         $this->router = $router;
     }

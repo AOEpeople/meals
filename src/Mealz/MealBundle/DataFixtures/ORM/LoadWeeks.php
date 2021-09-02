@@ -1,35 +1,31 @@
 <?php
 
-namespace Mealz\MealBundle\DataFixtures\ORM;
+declare(strict_types=1);
+
+namespace App\Mealz\MealBundle\DataFixtures\ORM;
 
 use DateTime;
-use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
-use Doctrine\Common\Persistence\ObjectManager;
-use Mealz\MealBundle\Entity\Week;
+use Doctrine\Persistence\ObjectManager;
+use App\Mealz\MealBundle\Entity\Week;
 
 /**
  * Load the Weeks
- * Class LoadWeeks
- * @package Mealz\MealBundle\DataFixtures\ORM
  */
-class LoadWeeks extends AbstractFixture implements OrderedFixtureInterface
+class LoadWeeks extends Fixture implements OrderedFixtureInterface
 {
     /**
      * Constant to declare load order of fixture
      */
-    const ORDER_NUMBER = 2;
+    private const ORDER_NUMBER = 2;
+
+    protected int $counter = 0;
 
     /**
-     * @var int
+     * @inheritDoc
      */
-    protected $counter = 0;
-
-    /**
-     * laod Object
-     * @param ObjectManager $objectManager
-     */
-    public function load(ObjectManager $objectManager)
+    public function load(ObjectManager $manager): void
     {
         $weeks = $this->getCurrentTestWeeks();
         $weeks = array_merge($weeks, $this->getStaticTestWeeks());
@@ -38,22 +34,19 @@ class LoadWeeks extends AbstractFixture implements OrderedFixtureInterface
             $week = new Week();
             $week->setYear($weekDataSet['year']);
             $week->setCalendarWeek($weekDataSet['calendarWeek']);
-            $objectManager->persist($week);
+            $manager->persist($week);
             $this->addReference('week-'.$this->counter++, $week);
         }
 
-        $objectManager->flush();
+        $manager->flush();
     }
 
     /**
      * get the Order of fixtures loading
-     * @return mixed
      */
-    public function getOrder()
+    public function getOrder(): int
     {
-        /**
-         * load as second
-         */
+        // load as second
         return self::ORDER_NUMBER;
     }
 
@@ -61,10 +54,8 @@ class LoadWeeks extends AbstractFixture implements OrderedFixtureInterface
      * Gets the current test weeks.
      *
      * They are meant to be used as dummy data on integration systems.
-     *
-     * @return array
      */
-    private function getCurrentTestWeeks()
+    private function getCurrentTestWeeks(): array
     {
         $currentWeeks = [];
         $date = new DateTime('12:00');
@@ -84,10 +75,8 @@ class LoadWeeks extends AbstractFixture implements OrderedFixtureInterface
      * Gets the static test weeks.
      *
      * They are meant to be used with unit or functional tests.
-     *
-     * @return array
      */
-    private function getStaticTestWeeks()
+    private function getStaticTestWeeks(): array
     {
         return [
             '2016-41' => ['year' => '2016', 'calendarWeek' => '41'],

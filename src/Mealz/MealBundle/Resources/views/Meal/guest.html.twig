@@ -1,4 +1,4 @@
-{% extends '::base.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% set available = false %}
 
@@ -32,7 +32,7 @@
         {% set groupedMeals = groupMeals(form.children.day.children.meals.vars.choices) %}
         {% for meal in groupedMeals.meals%}
             <div class="meal-row">
-                {% spaceless %}
+                {% apply spaceless %}
                     <div class="text">
                         <div class="title">
                             {{ meal.data.dish.title }}
@@ -62,7 +62,7 @@
                             </div>
                         </div>
                     </div>
-                {% endspaceless %}
+                {% endapply %}
             </div>
         {% endfor %}
         {% for mealsVariations in groupedMeals.mealsVariations %}
@@ -73,7 +73,7 @@
                     </div>
                 </div>
                 {% for meal in mealsVariations %}
-                    {% spaceless %}
+                    {% apply spaceless %}
                         <div class="variation-row">
                             <div class="text text-variation">
                                 {{ meal.data.dish.title }}
@@ -96,7 +96,7 @@
                                 </div>
                             </div>
                         </div>
-                    {% endspaceless %}
+                    {% endapply %}
                 {% endfor %}
             </div>
         {% endfor %}

@@ -1,9 +1,8 @@
 <?php
 
-namespace Mealz\AccountingBundle\Form;
+namespace App\Mealz\AccountingBundle\Form;
 
-use Doctrine\ORM\EntityManager;
-use Mealz\MealBundle\Form\DataTransformer\ProfileToStringTransformer;
+use App\Mealz\MealBundle\Form\DataTransformer\ProfileToStringTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\DataTransformer\NumberToLocalizedStringTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -12,52 +11,47 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 class CashPaymentAdminForm extends AbstractType
 {
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
+    private ProfileToStringTransformer $profileTransformer;
 
-    public function __construct(EntityManager $entityManager)
+    public function __construct(ProfileToStringTransformer $profileTransformer)
     {
-        $this->entityManager = $entityManager;
+        $this->profileTransformer = $profileTransformer;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $profileTransformer = new ProfileToStringTransformer($this->entityManager);
-
         $builder
             ->add(
                 'profile',
                 HiddenType::class,
-                array(
-                'data' => $options['profile'],
-                'data_class' => null
-                )
+                [
+                    'data' => $options['profile'],
+                    'data_class' => null
+                ]
             )
-            ->add('amount', 'number', array(
-                'attr' => array(
+            ->add('amount', \Symfony\Component\Form\Extension\Core\Type\NumberType::class, [
+                'attr' => [
                     'placeholder' => 'EUR'
-                ),
+                ],
                 'label' => false,
                 'rounding_mode' => NumberToLocalizedStringTransformer::ROUND_DOWN
-            ))
-            ->add('submit', 'submit', array(
-                'attr' => array(
+            ])
+            ->add('submit', \Symfony\Component\Form\Extension\Core\Type\SubmitType::class, [
+                'attr' => [
                     'class' => 'button small'
-                ),
+                ],
                 'label' => 'OK'
-            ));
+            ]);
 
-        $builder->get('profile')->addModelTransformer($profileTransformer);
+        $builder->get('profile')->addModelTransformer($this->profileTransformer);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'Mealz\AccountingBundle\Entity\Transaction',
+        $resolver->setDefaults([
+            'data_class' => 'App\Mealz\AccountingBundle\Entity\Transaction',
             'profile' => null
-        ));
+        ]);
     }
 
     /**
@@ -65,7 +59,7 @@ class CashPaymentAdminForm extends AbstractType
      *
      * @return string The name of this type
      */
-    public function getName()
+    public function getBlockPrefix(): string
     {
         return 'cash';
     }

@@ -1,23 +1,23 @@
 <?php
 
-namespace Mealz\MealBundle\Tests\Controller;
+namespace App\Mealz\MealBundle\Tests\Controller;
 
 use DateTime;
 use Doctrine\Common\Collections\Criteria;
-use Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
-use Mealz\MealBundle\DataFixtures\ORM\LoadDays;
-use Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
-use Mealz\MealBundle\DataFixtures\ORM\LoadDishVariations;
-use Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
-use Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
-use Mealz\MealBundle\Entity\GuestInvitation;
-use Mealz\MealBundle\Entity\Meal;
-use Mealz\MealBundle\Entity\MealRepository;
-use Mealz\MealBundle\Entity\Participant;
-use Mealz\MealBundle\Entity\ParticipantRepository;
-use Mealz\MealBundle\Service\Doorman;
-use Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
-use Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadDays;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishVariations;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
+use App\Mealz\MealBundle\Entity\GuestInvitation;
+use App\Mealz\MealBundle\Entity\Meal;
+use App\Mealz\MealBundle\Entity\MealRepository;
+use App\Mealz\MealBundle\Entity\Participant;
+use App\Mealz\MealBundle\Entity\ParticipantRepository;
+use App\Mealz\MealBundle\Service\Doorman;
+use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
+use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 
 /**
  * Meal controller test.
@@ -33,21 +33,21 @@ class MealControllerTest extends AbstractControllerTestCase
     {
         parent::setUp();
 
-        $this->createAdminClient();
         $this->clearAllTables();
+        $this->loadFixtures([
+            new LoadWeeks(),
+            new LoadDays(),
+            new LoadCategories(),
+            new LoadDishes(),
+            new LoadDishVariations(),
+            new LoadMeals(),
+            new LoadRoles(),
+            // self::$container is a special container that allow access to private services
+            // see: https://symfony.com/blog/new-in-symfony-4-1-simpler-service-testing
+            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
+        ]);
 
-        $this->loadFixtures(
-            [
-                new LoadWeeks(),
-                new LoadDays(),
-                new LoadCategories(),
-                new LoadDishes(),
-                new LoadDishVariations(),
-                new LoadMeals(),
-                new LoadRoles(),
-                new LoadUsers($this->client->getContainer()),
-            ]
-        );
+        $this->loginAs(self::USER_KITCHEN_STAFF);
     }
 
     /**
@@ -57,8 +57,7 @@ class MealControllerTest extends AbstractControllerTestCase
      */
     public function acceptAvailableOffer()
     {
-        $userProfile = $this->getUserProfile();
-        $this->loginAsDefaultClient($userProfile);
+        $this->loginAs(self::USER_STANDARD);
 
         //create a test profile
         $profile = $this->createProfile('Max', 'Mustermann' . time());
@@ -86,8 +85,7 @@ class MealControllerTest extends AbstractControllerTestCase
      */
     public function acceptFirstOffer()
     {
-        $userProfile = $this->getUserProfile();
-        $this->loginAsDefaultClient($userProfile);
+        $this->loginAs(self::USER_STANDARD);
 
         //create a test profile
         $profile = $this->createProfile('Max', 'Mustermann' . time());
@@ -131,8 +129,7 @@ class MealControllerTest extends AbstractControllerTestCase
      */
     public function acceptOutdatedOffer()
     {
-        $userProfile = $this->getUserProfile();
-        $this->loginAsDefaultClient($userProfile);
+        $this->loginAs(self::USER_STANDARD);
 
         //create a test profile
         $profile = $this->createProfile('Max', 'Mustermann' . time());
@@ -166,8 +163,8 @@ class MealControllerTest extends AbstractControllerTestCase
     {
         // data provider method
         $dataProvider = $this->getJoinAMealData();
-        $userProfile = $this->getUserProfile();
-        $username = $this->getUserProfile()->getUsername();
+        $userProfile = $this->getUserProfile(self::USER_STANDARD);
+        $username = $this->getUserProfile(self::USER_STANDARD)->getUsername();
 
         // load a home page
         $this->client->request('GET', '/');
@@ -231,7 +228,7 @@ class MealControllerTest extends AbstractControllerTestCase
      */
     public function enrollAsGuest($firstName, $lastName, $company, $selectDish, $enrollmentStatus)
     {
-        $userProfile = $this->getUserProfile();
+        $userProfile = $this->getUserProfile(self::USER_STANDARD);
         $meal = $this->getAvailableMeal();
 
         // Create guest invitation link
@@ -255,7 +252,7 @@ class MealControllerTest extends AbstractControllerTestCase
             $form['invitation_form[day][meals]'][0]->tick();
         }
 
-        $this->client->submit($form);
+        $this->client->submit($form, []);
 
         // Verify enrollment is successful
         $mealParticipants = $this->getMealParticipants($meal);
@@ -310,7 +307,7 @@ class MealControllerTest extends AbstractControllerTestCase
 
         if ($meals->count() > 0) {
             /** @var Doorman $doorman */
-            $doorman = $this->client->getContainer()->get('mealz_meal.doorman');
+            $doorman = self::$container->get('mealz_meal.doorman');
             foreach ($meals as $meal) {
                 if ($doorman->isToggleParticipationAllowed($meal->getDateTime())) {
                     $availableMeal = $meal;
@@ -343,7 +340,7 @@ class MealControllerTest extends AbstractControllerTestCase
 
         if ($meals->count() > 0) {
             /** @var Doorman $doorman */
-            $doorman = $this->client->getContainer()->get('mealz_meal.doorman');
+            $doorman = self::$container->get('mealz_meal.doorman');
             foreach ($meals as $meal) {
                 if ($doorman->isToggleParticipationAllowed($meal->getDateTime())) {
                     $availableMeal = $meal;

@@ -1,9 +1,9 @@
 <?php
 
-namespace Mealz\MealBundle\Form\Dish;
+namespace App\Mealz\MealBundle\Form\Dish;
 
-use Mealz\MealBundle\Entity\Category;
-use Mealz\MealBundle\Entity\Dish;
+use App\Mealz\MealBundle\Entity\Category;
+use App\Mealz\MealBundle\Entity\Dish;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -12,7 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * form to add or edit a dish
@@ -125,13 +125,13 @@ class DishForm extends AbstractType
 
     /**
      * set the default Options
-     * @param OptionsResolverInterface $resolver
+     * @param OptionsResolver $resolver
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(
-                'data_class' => 'Mealz\MealBundle\Entity\Dish',
+                'data_class' => 'App\Mealz\MealBundle\Entity\Dish',
                 'intention' => 'dish_type',
             )
         );
@@ -142,7 +142,7 @@ class DishForm extends AbstractType
      *
      * @return string The name of this type
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'dish';
     }

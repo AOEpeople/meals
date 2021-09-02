@@ -1,6 +1,6 @@
 <?php
 
-namespace Mealz\UserBundle\DependencyInjection;
+namespace App\Mealz\UserBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -14,18 +14,13 @@ class Configuration implements ConfigurationInterface
 {
     /**
      * {@inheritDoc}
-     *
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('xopn_mealz_for_zombies_zombies');
-
         // Here you should define the parameters that are allowed to
         // configure your bundle. See the documentation linked above for
         // more information on that topic.
 
-        return $treeBuilder;
+        return new TreeBuilder('xopn_mealz_for_zombies_zombies');
     }
 }

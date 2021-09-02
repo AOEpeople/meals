@@ -1,27 +1,34 @@
 <?php
 
+namespace App\Mealz\MealBundle\Controller;
 
-namespace Mealz\MealBundle\Controller;
-
-use Mealz\AccountingBundle\Entity\TransactionRepository;
-use Mealz\MealBundle\Entity\CategoryRepository;
-use Mealz\MealBundle\Entity\DishRepository;
-use Mealz\MealBundle\Entity\MealRepository;
-use Mealz\MealBundle\Entity\Participant;
-use Mealz\MealBundle\Entity\ParticipantRepository;
-use Mealz\MealBundle\Service\Doorman;
-use Mealz\MealBundle\Service\Link;
-use Mealz\UserBundle\Entity\Profile;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use App\Mealz\AccountingBundle\Entity\TransactionRepository;
+use App\Mealz\MealBundle\Entity\CategoryRepository;
+use App\Mealz\MealBundle\Entity\DishRepository;
+use App\Mealz\MealBundle\Entity\MealRepository;
+use App\Mealz\MealBundle\Entity\Participant;
+use App\Mealz\MealBundle\Entity\ParticipantRepository;
+use App\Mealz\MealBundle\Service\Doorman;
+use App\Mealz\MealBundle\Service\Link;
+use App\Mealz\UserBundle\Entity\Profile;
+use Psr\Log\LoggerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * Class BaseController
- * @package Mealz\MealBundle\Controller
- */
-abstract class BaseController extends Controller
+abstract class BaseController extends AbstractController
 {
+    public static function getSubscribedServices(): array
+    {
+        $services = parent::getSubscribedServices();
+        $services['mealz_meal.doorman'] = '?'.Doorman::class;
+        $services['monolog.logger.balance'] = '?'.LoggerInterface::class;
+        $services['translator'] = '?'.TranslatorInterface::class;
+
+        return $services;
+    }
+
     /**
      * @return MealRepository
      */
@@ -70,10 +77,7 @@ abstract class BaseController extends Controller
         return $this->get('mealz_meal.doorman');
     }
 
-    /**
-     * @return Profile|null
-     */
-    protected function getProfile()
+    protected function getProfile(): ?Profile
     {
         return $this->getUser() ? $this->getUser()->getProfile() : null;
     }
@@ -93,43 +97,40 @@ abstract class BaseController extends Controller
     }
 
     /**
-     * @param $message
-     * @param $severity "danger", "warning", "info", "success"
+     * @param mixed  $message
+     * @param string $severity "danger", "warning", "info", "success"
      */
-    public function addFlashMessage($message, $severity)
+    public function addFlashMessage($message, string $severity): void
     {
         $this->get('session')->getFlashBag()->add($severity, $message);
     }
 
-    protected function ajaxSessionExpiredRedirect()
+    protected function ajaxSessionExpiredRedirect(): JsonResponse
     {
         $message = $this->get('translator')->trans('session.expired', [], 'messages');
         $this->addFlashMessage($message, 'info');
-        $response = array(
+        $response = [
             'redirect' => $this->generateUrl('MealzUserBundle_login'),
-        );
+        ];
 
         return new JsonResponse($response);
     }
 
-    /**
-     * @param Participant $participant
-     * @param String $takenOffer
-     */
-    public function sendMail(Participant $participant, $takenOffer)
+    public function sendMail(Participant $participant, string $takenOffer): void
     {
         $translator = $this->get('translator');
 
         $recipient = $participant->getProfile()->getUsername() . $translator->trans('mail.domain', array(), 'messages');
-        $subject = $translator->trans('mail.subject', array(), 'messages');
-        $header = $translator->trans('mail.sender', array(), 'messages');
+        $subject = $translator->trans('mail.subject', [], 'messages');
+        $header = $translator->trans('mail.sender', [], 'messages');
         $firstname = $participant->getProfile()->getFirstname();
 
         $message = $translator->trans(
             'mail.message',
-            array(
-            '%firstname%' => $firstname,
-            '%takenOffer%' => $takenOffer),
+            [
+                '%firstname%' => $firstname,
+                '%takenOffer%' => $takenOffer
+            ],
             'messages'
         );
 

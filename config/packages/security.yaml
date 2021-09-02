@@ -1,0 +1,58 @@
+security:
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    providers:
+        oauth_user_provider:
+            id: mealz.oauthuserprovider
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        guest:
+            pattern: ^/menu/guest
+            anonymous: lazy
+
+        main:
+            provider: oauth_user_provider
+            oauth:
+                resource_owners:
+                    meals: meals_login
+                login_path: /connect/meals
+                use_forward: true
+                failure_path: /connect/meals
+
+                oauth_user_provider:
+                    service: mealz.oauthuserprovider
+            logout:
+                path: MealzUserBundle_logout
+                # where to redirect after logout
+                target: /
+                success_handler: App\Mealz\UserBundle\Provider\LogoutSuccessHandler
+
+            # activate different ways to authenticate
+            # https://symfony.com/doc/current/security.html#firewalls-authentication
+
+            # https://symfony.com/doc/current/security/impersonating_user.html
+            # switch_user: true
+
+    # Define role compositions, e.g. role ROLE_KITCHEN_STAFF includes ROLE_USER role
+    # https://symfony.com/doc/4.4/security.html#hierarchical-roles
+    role_hierarchy:
+        ROLE_KITCHEN_STAFF: ROLE_USER
+        ROLE_FINANCE: ROLE_USER
+
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    #
+    # Anonymous access will only work if enabled in authentication listener
+    # config, e.g. anonymous: ~, anonymous: lazy
+    access_control:
+        - { path: ^/connect, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/login, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/menu/guest, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/language-switch, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/css, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/js, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/images, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/.+$, roles: [ROLE_USER] }

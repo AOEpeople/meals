@@ -1,6 +1,8 @@
 <?php
 
-namespace Mealz\UserBundle\Provider;
+declare(strict_types=1);
+
+namespace App\Mealz\UserBundle\Provider;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -12,25 +14,14 @@ use Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface;
  */
 class LogoutSuccessHandler implements LogoutSuccessHandlerInterface
 {
+    private string $logoutUrl;
 
-    /**
-     * @var string
-     */
-    private $logoutUrl = '';
-
-    /**
-     * LogoutSuccessHandler constructor.
-     *
-     * @param string $logoutUrl
-     * @param string $baseUri
-     */
-    public function __construct($logoutUrl, $baseUri)
+    public function __construct(string $logoutUrl, string $baseUri)
     {
         $this->logoutUrl = $logoutUrl . '?redirect_uri=' . $baseUri;
     }
 
     /**
-     * @param Request $request
      * @return JsonResponse|RedirectResponse
      */
     public function onLogoutSuccess(Request $request)
@@ -42,8 +33,10 @@ class LogoutSuccessHandler implements LogoutSuccessHandlerInterface
                 'redirect' => $this->logoutUrl
             ]);
             $response->setStatusCode(302);
+
             return $response;
         }
+
         return new RedirectResponse($this->logoutUrl);
     }
 }

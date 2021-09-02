@@ -1,6 +1,6 @@
 <?php
 
-namespace Mealz\MealBundle\Entity;
+namespace App\Mealz\MealBundle\Entity;
 
 class DishVariationRepository extends LocalizedRepository
 {

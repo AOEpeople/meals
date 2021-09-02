@@ -1,10 +1,10 @@
 <?php
 
-namespace Mealz\MealBundle\Form\DataTransformer;
+namespace App\Mealz\MealBundle\Form\DataTransformer;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
-use Doctrine\Common\Persistence\ObjectManager;
 
 /**
  * Class EntityToIdTransformer
@@ -12,21 +12,11 @@ use Doctrine\Common\Persistence\ObjectManager;
  */
 class EntityToIdTransformer implements DataTransformerInterface
 {
-    /**
-     * @var ObjectManager
-     */
-    protected $objectManager;
-    /**
-     * @var string
-     */
-    protected $class;
+    protected EntityManagerInterface $objectManager;
 
-    /**
-     * EntityToIdTransformer constructor.
-     * @param ObjectManager $objectManager
-     * @param $class
-     */
-    public function __construct(ObjectManager $objectManager, $class)
+    protected string $class;
+
+    public function __construct(EntityManagerInterface $objectManager, string $class)
     {
         $this->objectManager = $objectManager;
         $this->class = $class;

@@ -1,74 +1,52 @@
 <?php
-namespace Mealz\MealBundle\Form\Type;
 
+declare(strict_types=1);
+
+namespace App\Mealz\MealBundle\Form\Type;
+
+use App\Mealz\MealBundle\Form\DataTransformer\EntityToIdTransformer;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
-use Mealz\MealBundle\Form\DataTransformer\EntityToIdTransformer;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-/**
- * Class EntityHiddenType
- * @package Mealz\MealBundle\Form\Type
- */
 class EntityHiddenType extends AbstractType
 {
-    /**
-     * @var ObjectManager
-     */
-    protected $objectManager;
+    protected EntityManagerInterface $objectManager;
 
-    /**
-     * EntityHiddenType constructor.
-     * @param ObjectManager $objectManager
-     */
-    public function __construct(ObjectManager $objectManager)
+    public function __construct(EntityManagerInterface $objectManager)
     {
         $this->objectManager = $objectManager;
     }
 
     /**
-     * build the Form
-     * @param FormBuilderInterface $builder
-     * @param array $options
+     * @inheritDoc
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $transformer = new $options['transformer_class']($this->objectManager, $options['class']);
         $builder->addModelTransformer($transformer);
     }
 
     /**
-     * set default Options
-     * @param OptionsResolverInterface $resolver
+     * @inheritDoc
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
-            ->setRequired(array('class'))
-            ->setDefaults(
-                array(
-                    'invalid_message' => 'The entity does not exist.',
-                    'transformer_class' => 'Mealz\MealBundle\Form\DataTransformer\EntityToIdTransformer',
-                )
-            );
+            ->setRequired(['class'])
+            ->setDefaults([
+                'invalid_message' => 'The entity does not exist.',
+                'transformer_class' => EntityToIdTransformer::class,
+            ]);
     }
 
     /**
-     * get the Parent
-     * @return string
+     * @inheritDoc
      */
-    public function getParent()
+    public function getParent(): string
     {
-        return 'hidden';
-    }
-
-    /**
-     * get the name
-     * @return string
-     */
-    public function getName()
-    {
-        return 'entity_hidden';
+        return HiddenType::class;
     }
 }

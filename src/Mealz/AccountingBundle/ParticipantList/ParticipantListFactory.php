@@ -1,9 +1,9 @@
 <?php
-namespace Mealz\AccountingBundle\ParticipantList;
+namespace App\Mealz\AccountingBundle\ParticipantList;
 
 use DateTime;
-use Mealz\MealBundle\Entity\ParticipantRepository;
-use Mealz\UserBundle\Entity\Profile;
+use App\Mealz\MealBundle\Entity\ParticipantRepository;
+use App\Mealz\UserBundle\Entity\Profile;
 
 class ParticipantListFactory
 {

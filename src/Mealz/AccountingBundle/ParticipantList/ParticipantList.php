@@ -1,8 +1,8 @@
 <?php
-namespace Mealz\AccountingBundle\ParticipantList;
+namespace App\Mealz\AccountingBundle\ParticipantList;
 
-use Mealz\MealBundle\Entity\Participant;
-use Mealz\UserBundle\Entity\Profile;
+use App\Mealz\MealBundle\Entity\Participant;
+use App\Mealz\UserBundle\Entity\Profile;
 
 class ParticipantList
 {
@@ -18,7 +18,7 @@ class ParticipantList
     protected $profiles = null;
 
     /**
-     * @param \Mealz\MealBundle\Entity\Participant[] $participations
+     * @param \App\Mealz\MealBundle\Entity\Participant[] $participations
      */
     public function __construct(array $participations)
     {

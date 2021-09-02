@@ -1,4 +1,8 @@
-{% extends '::base_navigation.html.twig' %}
+{% extends 'base_navigation.html.twig' %}
+
+{% import 'MealzTemplateBundle::Components/button.html.twig' as MealzButton %}
+{% import 'MealzTemplateBundle::Components/headline.html.twig' as MealzHeadline %}
+{% import 'MealzTemplateBundle::Components/table.html.twig' as MealzTable %}
 
 {% set wrapperClass = 'dish-list form-ajax' %}
 
@@ -62,7 +66,7 @@
 			},
 			'actions': {
 				'content': MealzButton.buttonbar('', 'buttonbar-dish-actions', [
-								MealzButton.link(path('MealzMealBundle_DishVariation_new', { slug: dish.id }), 'button.add_variation'|trans({}, 'actions'), '', 'button-table load-ajax-form load-edit-form transparent', 'glyphicon-plus'),
+								MealzButton.link(path('MealzMealBundle_DishVariation_new', { id: dish.id }), 'button.add_variation'|trans({}, 'actions'), '', 'button-table load-ajax-form load-edit-form transparent', 'glyphicon-plus'),
 								MealzButton.link(link(dish, 'edit'), 'button.edit'|trans({}, 'actions'), '', 'button-table load-ajax-form load-edit-form transparent', 'glyphicon-pencil'),
 								MealzButton.link(link(dish, 'delete'), 'button.delete'|trans({}, 'actions'), '', 'button-table transparent', 'glyphicon-remove')
 						   ]),

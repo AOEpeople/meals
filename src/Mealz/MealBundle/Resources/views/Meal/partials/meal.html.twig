@@ -1,11 +1,11 @@
 {% set dish = meal.dish %}
 
 <div class="meal-row">
-	{% spaceless %}
+	{% apply spaceless %}
 	<div class="text">
 		<div class="title">
 			{{ dish.title }}
-			{% if dish.isNew %}
+			{% if dishService.isNew(dish) %}
 				<span class="new-flag">{{ 'content.participation.dish.new'|trans({},'general') }}</span>
 			{% endif %}
 		</div>
@@ -18,5 +18,5 @@
 		</div>
 	</div>
 	{% include 'MealzMealBundle:Meal/partials:mealActions.html.twig' %}
-	{% endspaceless %}
+	{% endapply %}
 </div>

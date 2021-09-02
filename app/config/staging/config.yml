@@ -1,3 +1,0 @@
-imports:
-    - { resource: ../production/config.yml }
-    - { resource: parameters.yml }

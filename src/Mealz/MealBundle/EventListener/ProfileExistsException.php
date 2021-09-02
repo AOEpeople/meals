@@ -1,6 +1,6 @@
 <?php
 
-namespace Mealz\MealBundle\EventListener;
+namespace App\Mealz\MealBundle\EventListener;
 
 use Exception;
 

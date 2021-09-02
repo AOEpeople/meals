@@ -1,8 +1,8 @@
 <?php
 
-namespace Mealz\MealBundle\Tests\Service;
+namespace App\Mealz\MealBundle\Tests\Service;
 
-use Mealz\MealBundle\Service\Workday;
+use App\Mealz\MealBundle\Service\Workday;
 use PHPUnit\Framework\TestCase;
 
 class WorkdayTest extends TestCase

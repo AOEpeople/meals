@@ -1,3 +1,5 @@
+{% import 'MealzTemplateBundle::Components/headline.html.twig' as MealzHeadline %}
+
 <div class="week">
 	{% set headline %}
 		{% if 'now' | date('U') < week.startTime | date('U') %}
@@ -8,13 +10,13 @@
 	{% endset %}
 
 	{% set headlineSub %}
-		{% spaceless %}
+		{% apply spaceless %}
 		{{ week.startTime | date('D') | trans({}, 'date') }}
 		{{ week.startTime | date('d.m.') }}
 		-
 		{{ week.endTime | date('D') | trans({}, 'date') }}
 		{{ week.endTime | date('d.m.') }}
-		{% endspaceless %}
+		{% endapply %}
 	{% endset %}
 
 	{{ MealzHeadline.create(1, headline, '', 'centered', [], headlineSub) }}

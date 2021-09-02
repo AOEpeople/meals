@@ -2,19 +2,21 @@
 *
 
 # except the following ...
-!*.md
-!/app/
+!.env
+!.env.test
+!/bin/
+!/config/
 !/docker/
-!/setup/
+!/migrations/
+!/public/
 !/src/
-!/web/
+!/templates/
+!/translations/
 !composer.json
 !composer.lock
-!**/*.php.cache
+!symfony.lock
+!tests/bootstrap.php
+!tests/phpunit.xml.dist
 
 # ... but never include ...
-/app/cache/
-/app/logs/
-/app/Resources/node_modules
-/web/bundles/
-/web/static/
+/public/static/

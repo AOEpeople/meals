@@ -1,26 +1,17 @@
 <?php
 
+namespace App\Mealz\MealBundle\EventListener;
 
-namespace Mealz\MealBundle\EventListener;
-
-use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Event\LifecycleEventArgs;
-use Mealz\MealBundle\Entity\Category;
-use Mealz\MealBundle\Entity\Dish;
-use Mealz\MealBundle\Entity\DishVariation;
-use Mealz\MealBundle\Service\HttpHeaderUtility;
+use App\Mealz\MealBundle\Entity\Category;
+use App\Mealz\MealBundle\Entity\Dish;
+use App\Mealz\MealBundle\Entity\DishVariation;
+use App\Mealz\MealBundle\Service\HttpHeaderUtility;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 class EntityLocalisationListener extends LocalisationListener
 {
-
-    /**
-     * @var RequestStack
-     */
-    protected $requestStack;
+    protected RequestStack $requestStack;
 
     public function __construct(HttpHeaderUtility $httpHeaderUtility, RequestStack $requestStack)
     {
@@ -30,10 +21,8 @@ class EntityLocalisationListener extends LocalisationListener
 
     /**
      * set localisation for dish and category objects
-     *
-     * @param LifecycleEventArgs $args
      */
-    public function postLoad(LifecycleEventArgs $args)
+    public function postLoad(LifecycleEventArgs $args): void
     {
         $entity = $args->getEntity();
 

@@ -4,7 +4,7 @@
 # @param value int
 #}
 {% macro create(value) %}
-    {%- spaceless -%}
+    {%- apply spaceless -%}
         {{ value | number_format(2) }} <i class='glyphicon glyphicon-euro'></i>
-    {%- endspaceless -%}
+    {%- endapply -%}
 {% endmacro %}

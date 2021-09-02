@@ -1,37 +1,36 @@
 <?php
 
-namespace Mealz\MealBundle\DataFixtures\ORM;
+declare(strict_types=1);
 
-use Doctrine\Common\DataFixtures\AbstractFixture;
+namespace App\Mealz\MealBundle\DataFixtures\ORM;
+
+use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
-use Doctrine\Common\Persistence\ObjectManager;
-use Mealz\MealBundle\Entity\Category;
+use Doctrine\Persistence\ObjectManager;
+use App\Mealz\MealBundle\Entity\Category;
 
 /**
  * Fixtures Load the Categories
- * Class LoadCategories
- * @package Mealz\MealBundle\DataFixtures\ORM
  */
-class LoadCategories extends AbstractFixture implements OrderedFixtureInterface
+class LoadCategories extends Fixture implements OrderedFixtureInterface
 {
     /**
      * Constant to declare load order of fixture
      */
-    const ORDER_NUMBER = 4;
+    private const ORDER_NUMBER = 4;
 
-    protected $counter = 0;
+    protected int $counter = 0;
 
     /**
-     * load the Fixture
-     * @param ObjectManager $manager
+     * @inheritDoc
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
-        $categories = array(
+        $categories = [
             'Others' => 'Sonstiges',
             'Vegetarian' => 'Vegetarisch',
             'Meat' => 'Fleisch',
-        );
+        ];
 
         foreach ($categories as $categoryEn => $categoryDe) {
             $category = new Category();
@@ -46,13 +45,10 @@ class LoadCategories extends AbstractFixture implements OrderedFixtureInterface
 
     /**
      * get the Order of Fixtures Loading
-     * @return mixed
      */
-    public function getOrder()
+    public function getOrder(): int
     {
-        /**
-         * load as fourth
-         */
+        // load as fourth
         return self::ORDER_NUMBER;
     }
 }

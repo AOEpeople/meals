@@ -1,114 +1,93 @@
 <?php
 
-namespace Mealz\UserBundle\DataFixtures\ORM;
+declare(strict_types=1);
 
-use Doctrine\Common\DataFixtures\AbstractFixture;
+namespace App\Mealz\UserBundle\DataFixtures\ORM;
+
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
-use Doctrine\Common\Persistence\ObjectManager;
-use Mealz\UserBundle\Entity\Login;
-use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Mealz\UserBundle\Entity\Profile;
-use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
+use Doctrine\Persistence\ObjectManager;
+use App\Mealz\UserBundle\Entity\Login;
+use App\Mealz\UserBundle\Entity\Profile;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * Loads users.
  */
-class LoadUsers extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
+class LoadUsers extends Fixture implements OrderedFixtureInterface
 {
     /**
      * Constant to declare load order of fixture
      */
-    const ORDER_NUMBER = 1;
+    private const ORDER_NUMBER = 1;
 
-    /**
-     * @var ObjectManager
-     */
-    protected $objectManager;
+    protected ObjectManager $objectManager;
 
-    /**
-     * @var Container
-     */
-    protected $container;
+    protected UserPasswordEncoderInterface $passwordEncoder;
 
-    /**
-     * @var int
-     */
-    protected $counter = 0;
+    protected int $counter = 0;
 
-    /**
-     * LoadUsers constructor.
-     *
-     * @param ContainerInterface|null $container A ContainerInterface instance or null
-     */
-    public function __construct(ContainerInterface $container = null)
+    public function __construct(UserPasswordEncoderInterface $encoder)
     {
-        if ($container instanceof ContainerInterface) {
-            $this->container = $container;
-        }
+        $this->passwordEncoder = $encoder;
     }
 
     /**
-     * Sets the Container.
-     *
-     * @param ContainerInterface|null $container A ContainerInterface instance or null
-     *
-     * @api
+     * @inheritDoc
      */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-    }
-
-    /**
-     * Load the Fixtures
-     * @param ObjectManager $manager
-     */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $this->objectManager = $manager;
+        $users = [
+            ['username' => 'alice.meals', 'password' => 'Chee7ieRahqu', 'roles' => ['ROLE_USER']],
+            ['username' => 'bob.meals', 'password' => 'ON2za5OoJohn', 'roles' => ['ROLE_USER']],
+            ['username' => 'finance.meals', 'password' => 'IUn4d9NKMt', 'roles' => ['ROLE_FINANCE']],
+            ['username' => 'jane.meals', 'password' => 'heabahW6ooki', 'roles' => ['ROLE_USER']],
+            ['username' => 'john.meals', 'password' => 'aef9xoo2hieY', 'roles' => ['ROLE_USER']],
+            ['username' => 'kochomi.meals', 'password' => 'f8400YzaOd', 'roles' => ['ROLE_KITCHEN_STAFF']],
+        ];
 
-        $this->addUser('alice');
-        $this->addUser('bob');
-        $this->addUser('john');
-        $this->addUser('jane');
-        $this->addUser('kochomi');
-        $this->addUser('finance');
+        foreach ($users as $user) {
+            $this->addUser($user['username'], $user['password'], $user['roles']);
+        }
 
         $this->objectManager->flush();
     }
 
     /**
      * Get the Fixtures loadOrder
-     * @return int
      */
-    public function getOrder()
+    public function getOrder(): int
     {
-        /**
-         * load as first
-         */
+        // load as first
         return self::ORDER_NUMBER;
     }
 
     /**
-     * @param string $name Username
+     * @param string[] $roles List of role identifiers
      */
-    protected function addUser($name)
+    protected function addUser(string $username, string $password, array $roles): void
     {
         $login = new Login();
-        $login->setUsername($name);
-        $login->setSalt(md5(uniqid(null, true)));
+        $login->setUsername($username);
+        $login->setSalt(md5(uniqid('', true)));
 
-        /** TODO: sercurity.encoder_factory will be deprecated since symfony v3.x */
-        /** @var PasswordEncoderInterface $encoder */
-        $encoder = $this->container->get('security.encoder_factory')->getEncoder($login);
-        $login->setPassword($encoder->encodePassword($name, $login->getSalt()));
+        $hashedPassword = $this->passwordEncoder->encodePassword($login, $password);
+        $login->setPassword($hashedPassword);
 
         $profile = new Profile();
-        $profile->setUsername($name);
-        $profile->setName(strrev($name));
-        $profile->setFirstName($name);
+        $profile->setUsername($username);
+        $profile->setName(strrev($username));
+        $profile->setFirstName($username);
+
+        // set roles
+        $roleObjs = [];
+        foreach ($roles as $role) {
+            $roleObjs[] = $this->getReference($role);
+        }
+
+        $profile->setRoles(new ArrayCollection($roleObjs));
         $login->setProfile($profile);
 
         $this->objectManager->persist($profile);

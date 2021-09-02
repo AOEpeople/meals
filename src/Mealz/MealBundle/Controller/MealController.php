@@ -1,27 +1,26 @@
 <?php
 
-namespace Mealz\MealBundle\Controller;
+namespace App\Mealz\MealBundle\Controller;
 
+use App\Mealz\MealBundle\Entity\Day;
+use App\Mealz\MealBundle\Entity\GuestInvitationRepository;
+use App\Mealz\MealBundle\Entity\Meal;
+use App\Mealz\MealBundle\Entity\Participant;
+use App\Mealz\MealBundle\Entity\Week;
+use App\Mealz\MealBundle\Entity\WeekRepository;
+use App\Mealz\MealBundle\EventListener\ParticipantNotUniqueException;
+use App\Mealz\MealBundle\EventListener\ProfileExistsException;
+use App\Mealz\MealBundle\EventListener\ToggleParticipationNotAllowedException;
+use App\Mealz\MealBundle\Form\Guest\InvitationForm;
+use App\Mealz\MealBundle\Entity\InvitationWrapper;
+use App\Mealz\MealBundle\Service\DishService;
+use App\Mealz\MealBundle\Service\Notification\NotifierInterface;
+use App\Mealz\UserBundle\Entity\Profile;
+use App\Mealz\UserBundle\Entity\Role;
 use DateTime;
 use Doctrine\ORM\EntityManager;
 use Exception;
-use Mealz\MealBundle\Entity\Day;
-use Mealz\MealBundle\Entity\GuestInvitationRepository;
-use Mealz\MealBundle\Entity\Meal;
-use Mealz\MealBundle\Entity\Participant;
-use Mealz\MealBundle\Entity\Week;
-use Mealz\MealBundle\Entity\WeekRepository;
-use Mealz\MealBundle\EventListener\ParticipantNotUniqueException;
-use Mealz\MealBundle\EventListener\ProfileExistsException;
-use Mealz\MealBundle\EventListener\ToggleParticipationNotAllowedException;
-use Mealz\MealBundle\Form\Guest\InvitationForm;
-use Mealz\MealBundle\Entity\InvitationWrapper;
-use Mealz\UserBundle\Entity\Profile;
-use Mealz\UserBundle\Entity\Role;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Component\Debug\Exception\ContextErrorException;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,16 +34,16 @@ use Symfony\Component\Translation\Translator;
  */
 class MealController extends BaseController
 {
-    /**
-     * the index Action
-     * @return Response
-     */
-    public function indexAction()
-    {
-        /** @var WeekRepository $weekRepository */
-        $weekRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Week');
-        $currentWeek = $weekRepository->getCurrentWeek();
+    private NotifierInterface $notifier;
 
+    public function __construct(NotifierInterface $notifier)
+    {
+        $this->notifier = $notifier;
+    }
+
+    public function index(WeekRepository $weekRepository, DishService $dishService): Response
+    {
+        $currentWeek = $weekRepository->getCurrentWeek();
         if (null === $currentWeek) {
             $currentWeek = $this->createEmptyNonPersistentWeek(new DateTime());
         }
@@ -54,14 +53,10 @@ class MealController extends BaseController
             $nextWeek = $this->createEmptyNonPersistentWeek(new DateTime('next week'));
         }
 
-        $weeks = array($currentWeek, $nextWeek);
-
-        return $this->render(
-            'MealzMealBundle:Meal:index.html.twig',
-            array(
-                'weeks' => $weeks,
-            )
-        );
+        return $this->render('MealzMealBundle:Meal:index.html.twig', [
+            'weeks' => [$currentWeek, $nextWeek],
+            'dishService' => $dishService
+        ]);
     }
 
     /**
@@ -72,7 +67,7 @@ class MealController extends BaseController
      * @param string $profile
      * @return JsonResponse
      */
-    public function joinAction($date, $dish, $profile)
+    public function join($date, $dish, $profile)
     {
         if ($this->getUser() === null) {
             return $this->ajaxSessionExpiredRedirect();
@@ -93,7 +88,7 @@ class MealController extends BaseController
         if ($this->getDoorman()->isUserAllowedToJoin($meal) === true
             || ($this->getDoorman()->isKitchenStaff() === true && $this->getProfile()->getUsername() !== $profile->getUsername())) {
             $participant = $this->createParticipation($meal, $profile);
-            $this->logAddAction($meal, $participant);
+            $this->logAdd($meal, $participant);
             
             return $this->generateDeleteResponse($meal, $participant);
         }
@@ -210,7 +205,7 @@ class MealController extends BaseController
      *
      * @param Meal       $meal        The meal
      * @param Profile    $profile     The profile
-     * @param Translator $translator  The translator
+     * @param \Symfony\Component\Translation\TranslatorBagInterface $translator The translator
      * @param Integer    $counter     The counter
      *
      * @return Participant $participant
@@ -255,7 +250,7 @@ class MealController extends BaseController
      * Marks meals that are being offered.
      * @return JsonResponse
      */
-    public function updateOffersAction()
+    public function updateOffers()
     {
         $mealsArray = array();
         $meals = $this->getDoctrine()->getRepository('MealzMealBundle:Meal')->getFutureMeals();
@@ -284,7 +279,7 @@ class MealController extends BaseController
      * @param DateTime $dateTime
      * @return Week
      */
-    public function guestAction(Request $request, $hash)
+    public function guest(Request $request, $hash)
     {
         $guestInvitationRepo = $this->getDoctrine()->getRepository('MealzMealBundle:GuestInvitation');
         $guestInvitation = $guestInvitationRepo->find($hash);
@@ -346,7 +341,7 @@ class MealController extends BaseController
 
             $this->addFlashMessage($message, 'danger');
         } finally {
-            return $this->render('::base.html.twig');
+            return $this->render('base.html.twig');
         }
     }
 
@@ -371,7 +366,7 @@ class MealController extends BaseController
      * Gets the participant count message.
      *
      * @param Error      $error      The error
-     * @param Translator $translator The translator
+     * @param \Symfony\Component\Translation\TranslatorBagInterface $translator The translator
      */
     private function getParticipantCountMessage($error, $translator)
     {
@@ -453,7 +448,7 @@ class MealController extends BaseController
      *
      * @return JsonResponse
      */
-    public function newGuestInvitationAction(Day $mealDay)
+    public function newGuestInvitation(Day $mealDay)
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
@@ -521,7 +516,7 @@ class MealController extends BaseController
      * @param Meal $meal
      * @param Participant $participant
      */
-    private function logAddAction($meal, $participant)
+    private function logAdd($meal, $participant)
     {
         if (is_object($this->getDoorman()->isKitchenStaff()) === false) {
             return;
@@ -545,7 +540,6 @@ class MealController extends BaseController
      */
     private function sendMattermostMessage($message)
     {
-        $mattermostService = $this->container->get('mattermost.service');
-        $mattermostService->sendMessage($message);
+        $this->notifier->sendAlert($message);
     }
 }

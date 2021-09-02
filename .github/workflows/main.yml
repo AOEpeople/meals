@@ -31,7 +31,7 @@ jobs:
       - name: Prepare build
         run: |
           mkdir -p /tmp/docker/buildx
-          git log -n 10 --date=short --format=format:"%C(auto)%h %ad @%al %s" >> web/changelog.txt
+          git log -n 10 --date=short --format=format:"%C(auto)%h %ad @%al %s" >> public/changelog.txt
       - name: Setup docker build caches
         uses: actions/cache@v2
         with:
@@ -130,28 +130,28 @@ jobs:
           docker image ls -a | grep aoepeople
       - name: Test with docker compose
         run: |
-          docker-compose pull db
-          docker-compose up -d --no-build db
-          docker-compose up -d $SERVICE
+          mkdir build
+          docker-compose -f docker-compose-test.yaml pull db
+          docker-compose -f docker-compose-test.yaml up -d --no-build db
+          docker-compose -f docker-compose-test.yaml up -d $SERVICE
           sleep 15
-          docker-compose exec -T $SERVICE composer install
-          docker-compose exec -T $SERVICE app/console doctrine:schema:update --env=test --force
-          docker-compose exec -T $SERVICE mkdir -p app/build/logs/
-          docker-compose exec -T $SERVICE bin/phpunit -d memory_limit=-1 -c app/config/commons/development/phpunit.xml
-          docker-compose exec -T $SERVICE bash -c "find app/build -type f -regex '.*\.\(html\|xml\)' | xargs sed -i 's#/var/www/html/##g'"
-          docker-compose down -v --remove-orphans
+          docker-compose -f docker-compose-test.yaml exec -T $SERVICE composer install
+          docker-compose -f docker-compose-test.yaml exec -T $SERVICE bin/console doctrine:schema:update --env=test --force
+          docker-compose -f docker-compose-test.yaml exec -T $SERVICE mkdir -p build/artifacts/qa/
+          docker-compose -f docker-compose-test.yaml exec -T $SERVICE vendor/bin/phpunit -d memory_limit=-1 -c tests/phpunit.xml.dist
+          docker-compose -f docker-compose-test.yaml exec -T $SERVICE ls -l build/artifacts/qa/
+          docker-compose -f docker-compose-test.yaml down -v --remove-orphans
       - name: Upload coverage report artifact
         uses: actions/upload-artifact@v2.2.4
         if: always()
         with:
           name: reports
-          path: app/build/
+          path: build/artifacts/qa/
       - name: Publish unit-test results
         uses: mikepenz/action-junit-report@v2
         if: always()
         with:
-          report_paths: 'app/build/logs/*.xml'
-
+          report_paths: 'build/artifacts/qa/*.xml'
   test-cgl:
     name: PHPCodeSniffer
     if: "false" # temporarily disable CGL unless fixed
@@ -167,18 +167,19 @@ jobs:
       - uses: actions/checkout@v2
       - name: Test with docker compose
         run: |
-          docker-compose pull $SERVICE
-          docker-compose up -d $SERVICE
-          docker-compose exec -T $SERVICE mkdir -p app/build/logs/
-          docker-compose exec -T $SERVICE bin/phpcs --extensions=php --standard=vendor/leaphub/phpcs-symfony2-standard/leaphub/phpcs/Symfony2/ -s --report=junit --report-file=app/build/logs/phpcs.xml src
-          docker-compose exec -T $SERVICE bash -c "find app/build -type f -regex '.*\.\(html\|xml\)' | xargs sed -i 's#/var/www/html/##g'"
-          docker-compose down -v --remove-orphans
+          mkdir -p build
+          docker-compose -f docker-compose-test.yaml pull $SERVICE
+          docker-compose -f docker-compose-test.yaml up -d $SERVICE
+          docker-compose -f docker-compose-test.yaml exec -T $SERVICE mkdir -p build/logs/
+          docker-compose -f docker-compose-test.yaml exec -T $SERVICE bin/phpcs --extensions=php --standard=vendor/leaphub/phpcs-symfony2-standard/leaphub/phpcs/Symfony2/ -s --report=junit --report-file=build/logs/phpcs.xml src
+          docker-compose -f docker-compose-test.yaml exec -T $SERVICE bash -c "find build -type f -regex '.*\.\(html\|xml\)' | xargs sed -i 's#/var/www/html/##g'"
+          docker-compose -f docker-compose-test.yaml down -v --remove-orphans
       - name: Publish unit-test results
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: always()
         with:
           check_name: "PHPCodeSniffer"
-          files: app/build/logs/phpcs.xml
+          files: build/logs/phpcs.xml
 
   lint:
     name: Lint code
@@ -194,10 +195,10 @@ jobs:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
       - name: Install npm packages
-        working-directory: ./app/Resources
+        working-directory: ./src/Resources
         run: yarn install
       - name: Run FE linters
-        working-directory: ./app/Resources
+        working-directory: ./src/Resources
         run: yarn lint
 
   phpmd:
@@ -212,7 +213,7 @@ jobs:
           coverage: none
           tools: phpmd
       - name: Run PHPMD
-        run: phpmd src github ./app/config/commons/development/phpmd.xml --baseline-file ./phpmd.baseline.xml
+        run: phpmd src github ./phpmd.xml --baseline-file ./phpmd.baseline.xml
 
   publish:
     name: Publish

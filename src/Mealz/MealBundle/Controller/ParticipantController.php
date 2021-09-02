@@ -1,29 +1,27 @@
 <?php
 
-namespace Mealz\MealBundle\Controller;
+namespace App\Mealz\MealBundle\Controller;
 
-use Mealz\MealBundle\Entity\DayRepository;
-use Mealz\MealBundle\Entity\Participant;
-use Mealz\MealBundle\Entity\Week;
-use Mealz\MealBundle\Entity\WeekRepository;
-use Mealz\UserBundle\Entity\Profile;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
+use App\Mealz\MealBundle\Entity\Day;
+use App\Mealz\MealBundle\Entity\DayRepository;
+use App\Mealz\MealBundle\Entity\Participant;
+use App\Mealz\MealBundle\Entity\Week;
+use App\Mealz\MealBundle\Entity\WeekRepository;
+use App\Mealz\MealBundle\Service\Notification\NotifierInterface;
+use App\Mealz\UserBundle\Entity\Profile;
+use DateTime;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\Translator;
 
-/**
- * Class ParticipantController
- * @package Mealz\MealBundle\Controller
- */
 class ParticipantController extends BaseController
 {
     /**
      * delete participation
-     * @param Participant $participant
      * @return JsonResponse
      */
-    public function deleteAction(Participant $participant)
+    public function delete(Participant $participant)
     {
         if (is_object($this->getUser()) === false) {
             return $this->ajaxSessionExpiredRedirect();
@@ -45,25 +43,25 @@ class ParticipantController extends BaseController
 
         if (($this->getDoorman()->isKitchenStaff()) === true) {
             $logger = $this->get('monolog.logger.balance');
-            $logger->addInfo(
+            $logger->info(
                 'admin removed {profile} from {meal} (Meal: {mealId})',
-                array(
+                [
                     'profile' => $participant->getProfile(),
                     'meal' => $meal,
                     'mealId' => $meal->getId(),
-                )
+                ]
             );
         }
 
         $ajaxResponse = new JsonResponse();
         $ajaxResponse->setData(array(
             'participantsCount' => $meal->getParticipants()->count(),
-            'url' => $this->generateUrl('MealzMealBundle_Meal_join', array(
+            'url' => $this->generateUrl('MealzMealBundle_Meal_join', [
                 'date' => $date,
                 'dish' => $dish,
                 'profile' => $profile,
-            )),
-            'actionText' => $this->get('translator')->trans('deleted', array(), 'action'),
+            ]),
+            'actionText' => $this->get('translator')->trans('deleted', [], 'action'),
         ));
 
         return $ajaxResponse;
@@ -75,7 +73,7 @@ class ParticipantController extends BaseController
      * @param Participant $participant
      * @return JsonResponse
      */
-    public function swapAction(Participant $participant)
+    public function swap(Participant $participant, NotifierInterface $notifier)
     {
         $dateTime = $participant->getMeal()->getDateTime();
         $counter = count($this->getParticipantRepository()->getPendingParticipants($dateTime));
@@ -136,8 +134,7 @@ class ParticipantController extends BaseController
                 '%dish%' => $dishTitle)
         );
 
-        $mattermostService = $this->container->get('mattermost.service');
-        $mattermostService->sendMessage($chefbotMessage);
+        $notifier->sendAlert($chefbotMessage);
 
         // Return JsonResponse
         $ajaxResponse = new JsonResponse();
@@ -157,7 +154,7 @@ class ParticipantController extends BaseController
      * @return JsonResponse
      * Checks if the participation of the current user is pending (being offered).
      */
-    public function isParticipationPendingAction(Participant $participant)
+    public function isParticipationPending(Participant $participant)
     {
         $ajaxResponse = new JsonResponse();
         $ajaxResponse->setData(
@@ -168,33 +165,36 @@ class ParticipantController extends BaseController
 
     /**
      * list participation
-     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @Security("has_role('ROLE_KITCHEN_STAFF')")
      */
-    public function listAction()
+    public function list(DayRepository $dayRepo): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
+        $participants = [];
+        $day = $dayRepo->getCurrentDay();
 
-        /** @var DayRepository $dayRepository */
-        $dayRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Day');
-        $day = $dayRepository->getCurrentDay();
+        if (null === $day) {
+            $day = new Day();
+            $day->setDateTime(new DateTime());
+        } else {
+            // Get user participation to list them as table rows
+            $participantRepo = $this->getParticipantRepository();
+            $participants = $participantRepo->getParticipantsOnCurrentDay();
+            $participants = $participantRepo->groupParticipantsByName($participants);
+        }
 
-        // Get user participation to list them as table rows
-        $participantRepo = $this->getParticipantRepository();
-        $participation = $participantRepo->getParticipantsOnCurrentDay();
-        $groupedParticipation = $participantRepo->groupParticipantsByName($participation);
-
-        return $this->render('MealzMealBundle:Participant:list.html.twig', array(
+        return $this->render('MealzMealBundle:Participant:list.html.twig', [
             'day' => $day,
-            'users' => $groupedParticipation,
-        ));
+            'users' => $participants,
+        ]);
     }
 
     /**
      * edit participation
      * @param Week $week
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
-    public function editParticipationAction(Week $week)
+    public function editParticipation(Week $week)
     {
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 

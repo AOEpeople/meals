@@ -1,13 +1,13 @@
 <?php
 
-namespace Mealz\MealBundle\Form\MealAdmin;
+namespace App\Mealz\MealBundle\Form\MealAdmin;
 
-use Mealz\MealBundle\Entity\Day;
-use Mealz\MealBundle\Entity\Dish;
-use Mealz\MealBundle\Entity\DishRepository;
-use Mealz\MealBundle\Entity\Meal;
-use Mealz\MealBundle\Entity\Week;
-use Mealz\MealBundle\Form\Type\EntityHiddenType;
+use App\Mealz\MealBundle\Entity\Day;
+use App\Mealz\MealBundle\Entity\Dish;
+use App\Mealz\MealBundle\Entity\DishRepository;
+use App\Mealz\MealBundle\Entity\Meal;
+use App\Mealz\MealBundle\Entity\Week;
+use App\Mealz\MealBundle\Form\Type\EntityHiddenType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -44,14 +44,14 @@ class MealForm extends AbstractType
                 'dish',
                 EntityHiddenType::class,
                 array(
-                    'class' => 'Mealz\MealBundle\Entity\Dish',
+                    'class' => 'App\Mealz\MealBundle\Entity\Dish',
                 )
             )
             ->add(
                 'day',
                 EntityHiddenType::class,
                 array(
-                    'class' => 'Mealz\MealBundle\Entity\Day',
+                    'class' => 'App\Mealz\MealBundle\Entity\Day',
                 )
             )
             ->add(
@@ -87,7 +87,7 @@ class MealForm extends AbstractType
 
                     $form->add(
                         'dish',
-                        $config->getType()->getName(),
+                        $config->getType()->getBlockPrefix(),
                         array_replace(
                             $options,
                             [
@@ -131,7 +131,7 @@ class MealForm extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Mealz\MealBundle\Entity\Meal',
+            'data_class' => 'App\Mealz\MealBundle\Entity\Meal',
             'error_bubbling' => false
         ));
     }

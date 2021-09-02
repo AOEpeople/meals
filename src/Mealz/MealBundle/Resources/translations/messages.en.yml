@@ -2,9 +2,9 @@ week:
   created: Week has been created.
   modified: Week has been modified.
 entity:
-  added: %entityName% has been added.
-  modified: %entityName% has been modified.
-  deleted: %entityName% "%entity%" has been deleted.
+  added: '%entityName% has been added.'
+  modified: '%entityName% has been modified.'
+  deleted: '%entityName% "%entity%" has been deleted.'
   Dish: Dish
   Category: Category
 dish:

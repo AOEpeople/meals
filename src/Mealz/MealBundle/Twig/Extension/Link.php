@@ -1,45 +1,37 @@
 <?php
 
+namespace App\Mealz\MealBundle\Twig\Extension;
 
-namespace Mealz\MealBundle\Twig\Extension;
-
-use Mealz\MealBundle\Entity\Meal;
-use Mealz\MealBundle\Service\Link as LinkService;
+use App\Mealz\MealBundle\Service\Link as LinkService;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
-use Twig_Extension;
 
-class Link extends Twig_Extension
+class Link extends AbstractExtension
 {
-
-    /**
-     * @var LinkService
-     */
-    protected $linkService;
+    protected LinkService $linkService;
 
     public function __construct(LinkService $linkService)
     {
         $this->linkService = $linkService;
     }
 
-    public function getFunctions()
+    public function getFunctions(): array
     {
-        return array(
+        return [
             new TwigFunction('link', [$this, 'link']),
-        );
+        ];
     }
 
-    public function link($object, $action = null, $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH)
+    public function link($object, $action = null, $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH): string
     {
         return $this->linkService->link($object, $action, $referenceType);
     }
 
     /**
      * Returns the name of the extension.
-     *
-     * @return string The extension name
      */
-    public function getName()
+    public function getName(): string
     {
         return 'link';
     }

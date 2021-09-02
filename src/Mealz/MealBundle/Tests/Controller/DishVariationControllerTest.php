@@ -1,38 +1,40 @@
 <?php
 
-namespace Mealz\MealBundle\Tests\Controller;
+namespace App\Mealz\MealBundle\Tests\Controller;
 
+use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
+use App\Mealz\MealBundle\Entity\Dish;
+use App\Mealz\MealBundle\Entity\DishRepository;
+use App\Mealz\MealBundle\Entity\DishVariation;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishVariations;
+use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use Doctrine\ORM\EntityManager;
-use Mealz\MealBundle\Entity\Dish;
-use Mealz\MealBundle\Entity\DishRepository;
-use Mealz\MealBundle\Entity\DishVariation;
 use Symfony\Component\DomCrawler\Crawler;
-
-use Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
-use Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
-use Mealz\MealBundle\DataFixtures\ORM\LoadDishVariations;
-use Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use Symfony\Component\DomCrawler\Link;
 
 /**
- * @package Mealz\MealBundle\Tests\Controller
  * @author Dirk Rauscher <dirk.rauscher@aoe.com>
  */
 class DishVariationControllerTest extends AbstractControllerTestCase
 {
     protected function setUp(): void
     {
-        $this->createAdminClient();
-        //$this->mockServices();
+        parent::setUp();
+
         $this->clearAllTables();
-        $this->loadFixtures(
-            [
-                new LoadCategories(),
-                new LoadDishes(),
-                new LoadDishVariations(),
-                new LoadUsers($this->client->getContainer()),
-            ]
-        );
+        $this->loadFixtures([
+            new LoadCategories(),
+            new LoadDishes(),
+            new LoadDishVariations(),
+            new LoadRoles(),
+            // self::$container is a special container that allow access to private services
+            // see: https://symfony.com/blog/new-in-symfony-4-1-simpler-service-testing
+            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
+        ]);
+
+        $this->loginAs(self::USER_KITCHEN_STAFF);
     }
 
     /**
@@ -78,7 +80,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         $this->client->submit($crawler->filterXPath('//form[@action="' . $url . '"]')->form([
             'dishvariation[title_de]' => 'new dish variation [de]',
             'dishvariation[title_en]' => 'new dish variation [en]'
-        ]));
+        ]), []);
 
         $this->assertTrue($this->client->getResponse()->isRedirect('/dish'));
 
@@ -133,7 +135,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         $this->client->submit($crawler->filterXPath('//form[@action="' . $url . '"]')->form([
             'dishvariation[title_de]' => 'dish variation [de]',
             'dishvariation[title_en]' => 'dish variation [en]'
-        ]));
+        ]), []);
 
         $this->assertTrue($this->client->getResponse()->isRedirect('/dish'));
 
@@ -199,43 +201,41 @@ class DishVariationControllerTest extends AbstractControllerTestCase
     /**
      * Test creating a new dish variation
      */
-    public function testNewVariationAction()
+    public function testNewVariationAction(): void
     {
-        // Create form data
-        $form['dishvariation'] = array(
-            'title_de' => 'dishvariation-TITLE-de' . rand(),
-            'title_en' => 'dishvariation-TITLE-en' . rand(),
-        );
-
         $dishId = $this->getHelperObject('dishid');
+        $formURI = '/dish/'.$dishId.'/variation/new';
+
+        // Create form data
+        $form['dishvariation'] = [
+            'title_de' => 'dishvariation-TITLE-de' . mt_rand(),
+            'title_en' => 'dishvariation-TITLE-en' . mt_rand(),
+            '_token' => $this->getFormCSRFToken($formURI, '#dishvariation__token')
+        ];
+
 
         // Call controller action
-        $this->client->request('POST', '/dish/' . $dishId . '/variation/new', $form);
+        $this->client->request('POST', $formURI, $form);
 
         // Get persisted entity
         /** @var EntityManager $entityManager */
         $entityManager = $this->client->getContainer()->get('doctrine')->getManager();
         $dishVariationRepo = $entityManager->getRepository('MealzMealBundle:DishVariation');
-        $dishVariation = $dishVariationRepo->findOneBy(
-            array(
-                'title_de' => $form['dishvariation']['title_de'],
-                'title_en' => $form['dishvariation']['title_en'],
-            )
-        );
+        $dishVariation = $dishVariationRepo->findOneBy([
+            'title_de' => $form['dishvariation']['title_de'],
+            'title_en' => $form['dishvariation']['title_en'],
+        ]);
 
-        // Assertions
         $this->assertNotNull($dishVariation);
-        $this->assertInstanceOf('\Mealz\MealBundle\Entity\DishVariation', $dishVariation);
+        $this->assertInstanceOf(DishVariation::class, $dishVariation);
     }
 
 
     /**
      * Test adding a new new dishvariation and find it listed in dishes list
      */
-    public function testListAction()
+    public function testListAction(): void
     {
-        #$dishVariation = $this->createDishVariation();
-        #$this->persistAndFlushAll(array($dishVariation));
         $dish = $this->getDish(null, true);
         $dishVariation = $dish->getVariations()->get(0);
 
@@ -246,22 +246,15 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         $heading = $crawler->filter('h1')->first()->text();
 
         $dishVariationTitles = $crawler->filter('.table-row .dish-variation-title');
-        $dishVariationTitles->rewind();
         $found = false;
 
-        if ($dishVariationTitles->count() > 0) {
-            while ($dishVariationTitles->current() && $found == false) {
-                $found = (
-                    strpos(
-                        trim($dishVariationTitles->current()->nodeValue),
-                        $dishVariation->getTitle()
-                    ) !== false
-                ) ? true : false;
-                $dishVariationTitles->next();
+        foreach ($dishVariationTitles as $dishVariationTitle) {
+            if (false !== strpos(trim($dishVariationTitle->nodeValue), $dishVariation->getTitle())) {
+                $found = true;
+                break;
             }
         }
 
-        // Assertions
         $this->assertTrue($found, 'Dish variation not found');
         $this->assertEquals('List of dishes', trim($heading));
     }
@@ -269,22 +262,24 @@ class DishVariationControllerTest extends AbstractControllerTestCase
     /**
      * Test a previously created dishvariation can be edited in a form
      */
-    public function testEditAction()
+    public function testEditAction(): void
     {
         $dish = $this->getDish(null, true);
         $dishVariation = $dish->getVariations()->get(0);
+        $formURI = '/dish/variation/' . $dishVariation->getId() . '/edit';
 
-        $form['dishvariation'] = array(
-            'title_de' => 'edited-dishvariation-de-' . rand(),
-            'title_en' => 'edited-dishvariation-en-' . rand(),
-        );
+        $form['dishvariation'] = [
+            'title_de' => 'edited-dishvariation-de-' . mt_rand(),
+            'title_en' => 'edited-dishvariation-en-' . mt_rand(),
+            '_token' => $this->getFormCSRFToken($formURI, '#dishvariation__token')
+        ];
 
-        $this->client->request('POST', '/dish/variation/' . $dishVariation->getId() . '/edit', $form);
+        $this->client->request('POST', $formURI, $form);
         $dishRepository = $this->getDoctrine()->getRepository('MealzMealBundle:DishVariation');
         unset($form['dishvariation']['_token']);
         $editedDishVariation = $dishRepository->findOneBy($form['dishvariation']);
 
-        $this->assertInstanceOf('\Mealz\MealBundle\Entity\DishVariation', $editedDishVariation);
+        $this->assertInstanceOf(DishVariation::class, $editedDishVariation);
         $this->assertEquals($dishVariation->getId(), $editedDishVariation->getId());
     }
 

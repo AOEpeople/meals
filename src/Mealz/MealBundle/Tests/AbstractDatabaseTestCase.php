@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Mealz\MealBundle\Tests;
+namespace App\Mealz\MealBundle\Tests;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
@@ -9,11 +9,11 @@ use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
-use Mealz\MealBundle\Entity\Category;
-use Mealz\MealBundle\Entity\Dish;
-use Mealz\MealBundle\Entity\Meal;
-use Mealz\UserBundle\Entity\Login;
-use Mealz\UserBundle\Entity\Profile;
+use App\Mealz\MealBundle\Entity\Category;
+use App\Mealz\MealBundle\Entity\Dish;
+use App\Mealz\MealBundle\Entity\Meal;
+use App\Mealz\UserBundle\Entity\Login;
+use App\Mealz\UserBundle\Entity\Profile;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
@@ -22,9 +22,8 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 abstract class AbstractDatabaseTestCase extends WebTestCase
 {
-
     /**
-     * set up
+     * @inheritDoc
      */
     protected function setUp(): void
     {
@@ -97,7 +96,7 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
     }
 
     /**
-     * @param \Mealz\MealBundle\Entity\Dish $dish
+     * @param \App\Mealz\MealBundle\Entity\Dish $dish
      * @param $datetime
      * @return Meal
      */

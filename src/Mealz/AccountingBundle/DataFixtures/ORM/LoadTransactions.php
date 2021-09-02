@@ -1,12 +1,12 @@
 <?php
 
-namespace Mealz\AccountingBundle\DataFixtures\ORM;
+namespace App\Mealz\AccountingBundle\DataFixtures\ORM;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
-use Doctrine\Common\Persistence\ObjectManager;
-use Mealz\AccountingBundle\Entity\Transaction;
-use Mealz\UserBundle\Entity\Profile;
+use Doctrine\Persistence\ObjectManager;
+use App\Mealz\AccountingBundle\Entity\Transaction;
+use App\Mealz\UserBundle\Entity\Profile;
 
 /**
  * Class LoadTransactions

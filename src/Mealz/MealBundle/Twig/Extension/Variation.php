@@ -1,39 +1,37 @@
 <?php
 
+namespace App\Mealz\MealBundle\Twig\Extension;
 
-namespace Mealz\MealBundle\Twig\Extension;
-
-use Symfony\Bridge\Doctrine\RegistryInterface;
-use Mealz\MealBundle\Entity\Dish;
-use Mealz\MealBundle\Entity\Meal;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Persistence\ManagerRegistry;
+use App\Mealz\MealBundle\Entity\Dish;
+use App\Mealz\MealBundle\Entity\Meal;
 use Symfony\Component\VarDumper\VarDumper;
+use Twig\Environment as TwigEnvironment;
+use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
-use Twig_Extension;
 
 /**
  * @TODO: CodeStyle, variable usage optimization (maybe use $dishes as attribute?)
  * Class Variation
  * @package Mealz\MealBundle\Twig\Extension
  */
-class Variation extends Twig_Extension
+class Variation extends AbstractExtension
 {
-    protected $doctrine;
+    protected ManagerRegistry $doctrine;
 
-    protected $twig;
+    protected TwigEnvironment $twig;
 
-    /**
-     * Constructor
-     */
-    public function __construct(RegistryInterface $doctrine, $twig)
+    public function __construct(ManagerRegistry $doctrine, TwigEnvironment $twig)
     {
         $this->doctrine = $doctrine;
         $this->twig = $twig;
     }
 
     /**
-     * @return array
+     * @return TwigFunction[]
      */
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return array(
             new TwigFunction('groupMeals', [$this, 'groupMeals']),
@@ -45,17 +43,11 @@ class Variation extends Twig_Extension
         );
     }
 
-    /**
-     * Group the meals
-     * @param array $meals
-     * @return array
-     */
-    public function groupMeals($meals)
+    public function groupMeals(array $meals): array
     {
-        $mealsArray = $mealsVariations = array();
-        $mealsVariationsCount = array();
-        foreach ($meals as $meal) {
+        $mealsArray = $mealsVariations = [];
 
+        foreach ($meals as $meal) {
             /** @var Meal $meal */
             if (isset($meal->data) === true && ($meal->data instanceof Meal === true)) {
                 $dish = $meal->data->getDish();
@@ -66,16 +58,15 @@ class Variation extends Twig_Extension
             if (is_null($dish) === false && ($dish->getParent() instanceof Dish === true)) {
                 $parentId = $dish->getParent()->getId();
                 $mealsVariations[$parentId][] = $meal;
-                $mealsVariationsCount[$parentId] = count($mealsVariations[$parentId]);
             } else {
                 $mealsArray[] = $meal;
             }
         }
 
-        return array(
+        return [
             'meals' => $mealsArray,
             'mealsVariations' => $mealsVariations,
-        );
+        ];
     }
 
     /**
@@ -94,7 +85,7 @@ class Variation extends Twig_Extension
      */
     public function groupMealsToArray($formViews)
     {
-        $dishesGroupByParent = array();
+        $dishesGroupByParent = [];
 
         foreach ($formViews as $formView) {
             /** @var Meal $meal */

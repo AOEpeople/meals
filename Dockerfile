@@ -4,11 +4,11 @@ RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y -o Dpkg::Options::="--force-confold" --no-install-recommends --no-install-suggests \
         build-essential \
         nodejs
-WORKDIR var/www/html/app/Resources
-COPY app/Resources/package.json app/Resources/yarn.lock ./
+WORKDIR var/www/html/src/Resources
+COPY src/Resources/package.json src/Resources/yarn.lock ./
 RUN yarn install
-COPY app/Resources/ .
-COPY web .
+COPY src/Resources/ .
+COPY public .
 RUN NODE_ENV=production yarn run build
 
 # build production container
@@ -43,12 +43,14 @@ RUN apt-get update && apt-get upgrade -y && apt-get install --no-install-recomme
 
 # add composer dependencies
 COPY composer.json composer.lock ./
-RUN composer install --optimize-autoloader --prefer-dist \
+RUN composer install \
+        --no-plugins \
+        --no-scripts \
+        --optimize-autoloader \
+        --prefer-dist \
     && composer clearcache \
-    && mkdir -p web/bundles/ \
-    && ln -s $(pwd)/vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/public/ web/bundles/framework \
-    && ln -s $(pwd)/vendor/sensio/distribution-bundle/Sensio/Bundle/DistributionBundle/Resources/public/ web/bundles/sensiodistribution \
-    && chown -R www-data:www-data web/bundles
+    && mkdir -p public/bundles/ \
+    && chown -R www-data:www-data public/bundles
 
 # add packages and configure development image
 ARG BUILD_DEV=false
@@ -65,7 +67,9 @@ COPY --chown=www-data:www-data docker/web/ /container/
 
 # add custom code and compiled frontend assets
 COPY --chown=www-data:www-data . /var/www/html/
-COPY --chown=www-data:www-data --from=frontend /var/www/html/web/static ./web/static
+COPY --chown=www-data:www-data --from=frontend /var/www/html/public/static ./public/static
+
+RUN composer run-script --no-cache post-install-cmd
 
 ENTRYPOINT ["/container/entrypoint"]
 CMD ["apache2-foreground"]

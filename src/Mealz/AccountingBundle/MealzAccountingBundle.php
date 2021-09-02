@@ -1,6 +1,6 @@
 <?php
 
-namespace Mealz\AccountingBundle;
+namespace App\Mealz\AccountingBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 

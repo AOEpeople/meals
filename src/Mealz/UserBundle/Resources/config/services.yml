@@ -1,14 +1,16 @@
-parameters:
-  mealz_user.post_login.class: Mealz\UserBundle\Service\PostLogin
-  mealz_provider.class: Mealz\UserBundle\Provider\OAuthUserProvider
-
 services:
-  mealz_user.post_login:
-    class: %mealz_user.post_login.class%
-    arguments: [ @doctrine.orm.default_entity_manager, @logger ]
-  mealz_user.provider.login:
-    class: Symfony\Bridge\Doctrine\Security\User\EntityUserProvider
-    arguments: [ @doctrine, "Mealz\\UserBundle\\Entity\\Login", "username" ]
-  mealz.oauthuserprovider:
-    class: %mealz_provider.class%
-    arguments: [ @doctrine]
+    mealz_user.post_login:
+        class: 'App\Mealz\UserBundle\Service\PostLogin'
+        arguments: ['@doctrine.orm.default_entity_manager', '@logger']
+    mealz_user.provider.login:
+        class: Symfony\Bridge\Doctrine\Security\User\EntityUserProvider
+        arguments: ['@doctrine', "App\\Mealz\UserBundle\\Entity\\Login", "username"]
+    mealz.oauthuserprovider:
+        alias: App\Mealz\UserBundle\Provider\OAuthUserProvider
+
+    mealz_user.repository.profile:
+        class: App\Mealz\UserBundle\Entity\ProfileRepository
+        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+        arguments:
+            - 'MealzUserBundle:Profile'
+    App\Mealz\UserBundle\Entity\ProfileRepository: '@mealz_user.repository.profile'

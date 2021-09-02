@@ -1,12 +1,8 @@
 MealzUserBundle_login:
-    pattern:  /login
+    path:  /login
     defaults: { _controller: "MealzUserBundle:Security:login" }
-    methods:  [GET]
-
-MealzUserBundle_checkLogin:
-    pattern:  /login
-    # magic method that Symfony intercepts and is therefore never called
+    methods:  [GET, POST]
 
 MealzUserBundle_logout:
-    pattern:  /logout
+    path:  /logout
     # magic method that Symfony intercepts and is therefore never called

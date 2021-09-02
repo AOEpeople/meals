@@ -1,19 +1,20 @@
 <?php
 
-namespace Mealz\AccountingBundle\Tests\Controller\Payment;
+declare(strict_types=1);
 
+namespace App\Mealz\AccountingBundle\Tests\Controller\Payment;
+
+use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\Translator;
-
-use Mealz\AccountingBundle\Controller\Payment\EcashController;
-use Mealz\AccountingBundle\DataFixtures\ORM\LoadTransactions;
-use Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
-use Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
+use App\Mealz\AccountingBundle\Controller\Payment\EcashController;
+use App\Mealz\AccountingBundle\DataFixtures\ORM\LoadTransactions;
+use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
+use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 
 class EcashControllerTest extends AbstractControllerTestCase
 {
-
     /**
      * Set up the testing environment
      */
@@ -21,44 +22,37 @@ class EcashControllerTest extends AbstractControllerTestCase
     {
         parent::setUp();
 
-        $this->createDefaultClient();
         $this->clearAllTables();
-        $this->loadFixtures(
-            array(
-                new LoadUsers($this->client->getContainer()),
-                new LoadTransactions()
-            )
-        );
+        $this->loadFixtures([
+            new LoadRoles(),
+            // self::$container is a special container that allow access to private services
+            // see: https://symfony.com/blog/new-in-symfony-4-1-simpler-service-testing
+            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
+            new LoadTransactions()
+        ]);
     }
 
     /**
      * Check if form and PayPal button is rendered correctly
      */
-    public function testFormRendering()
+    public function testFormRendering(): void
     {
-        $userProfile = $this->getUserProfile();
+        $this->loginAs(self::USER_STANDARD);
 
         // Open home page
         $crawler = $this->client->request('GET', '/');
-        $this->assertTrue($this->client->getResponse()->isSuccessful());
-
-        // Login
-        $loginForm = $crawler->filterXPath('//form[@name="login-form"]')
-            ->form(
-                array(
-                    '_username' => $userProfile->getUsername(),
-                    '_password' => $userProfile->getUsername()
-                )
-            );
-        $this->client->followRedirects();
-        $crawler = $this->client->submit($loginForm);
+        self::assertResponseIsSuccessful();
 
         // Click on the balance link
         $balanceLink = $crawler->filterXPath('//div[@class="balance-text"]/a')->link();
         $crawler = $this->client->click($balanceLink);
 
         // Client should be on transaction history page
-        $this->assertGreaterThan(0, $crawler->filterXPath('//div[contains(@class,"transaction-history")]')->count(), 'Transaction history page not found');
+        $this->assertGreaterThan(
+            0,
+            $crawler->filterXPath('//div[contains(@class,"transaction-history")]')->count(),
+            'Transaction history page not found'
+        );
 
         // Check if "add funds" button exists
         $this->assertGreaterThan(0, $crawler->filterXPath('//*[@id="ecash"]')->count(), 'Add funds button not found');
@@ -67,8 +61,10 @@ class EcashControllerTest extends AbstractControllerTestCase
     /**
      * Test payment form handling and database persistence
      */
-    public function testPaymentFormHandlingAction()
+    public function testPaymentFormHandlingAction(): void
     {
+        $this->loginAs('alice.meals');
+
         // Mock EcashController class
         $ecashController = $this->getMockBuilder(EcashController::class)
             ->setMethods(array(
@@ -84,7 +80,7 @@ class EcashControllerTest extends AbstractControllerTestCase
             ->method('validatePaypalTransaction')
             ->will($this->returnValue(['statuscode' => 200, 'amount' => '5.23']));
 
-        $ecashController->expects($this->at(0))
+        $ecashController->expects($this->atLeastOnce())
             ->method('get')
             ->with('translator')
             ->will($this->returnValue(new Translator('de')));
@@ -106,7 +102,7 @@ class EcashControllerTest extends AbstractControllerTestCase
             array(),
             array(),
             '[' .
-            '{"name":"ecash[profile]","value":"alice"},' .
+            '{"name":"ecash[profile]","value":"alice.meals"},' .
             '{"name":"ecash[orderid]","value":"52T16708K70721706"},' .
             '{"name":"ecash[amount]","value":"5,23"},' .
             '{"name":"ecash[paymethod]","value":"0"},' .
@@ -121,14 +117,14 @@ class EcashControllerTest extends AbstractControllerTestCase
         );
         $expectedResponse->headers->remove('date');
 
-        $actualResponse = $ecashController->paymentFormHandlingAction($request);
+        $actualResponse = $ecashController->paymentFormHandling($request);
         $actualResponse->headers->remove('date');
 
         $this->assertEquals($expectedResponse, $actualResponse);
 
         // Check database entry
         $transactionRepo = $this->getDoctrine()->getRepository('MealzAccountingBundle:Transaction');
-        $entry = $transactionRepo->findBy(array('profile' => 'alice'), array('id' => 'DESC'));
+        $entry = $transactionRepo->findBy(['profile' => 'alice.meals'], ['id' => 'DESC']);
 
         $this->assertEquals('52T16708K70721706', $entry[0]->getOrderId());
         $this->assertEquals(5.23, $entry[0]->getAmount());

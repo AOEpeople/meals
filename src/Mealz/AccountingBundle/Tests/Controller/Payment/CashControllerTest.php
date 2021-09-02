@@ -1,81 +1,61 @@
 <?php
 
-namespace Mealz\AccountingBundle\Tests\Controller\Payment;
+declare(strict_types=1);
 
-use Mealz\AccountingBundle\DataFixtures\ORM\LoadTransactions;
-use Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
-use Mealz\MealBundle\DataFixtures\ORM\LoadDays;
-use Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
-use Mealz\MealBundle\DataFixtures\ORM\LoadDishVariations;
-use Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
-use Mealz\MealBundle\DataFixtures\ORM\LoadParticipants;
-use Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
-use Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
-use Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
-use Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
+namespace App\Mealz\AccountingBundle\Tests\Controller\Payment;
 
-/**
- * Cash controller test.
- *
- * @author Dragan Tomic <dragan.tomic@aoe.com>
- */
+use App\Mealz\AccountingBundle\DataFixtures\ORM\LoadTransactions;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadDays;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishVariations;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadParticipants;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
+use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
+use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
+use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
+
 class CashControllerTest extends AbstractControllerTestCase
 {
     /**
      * Prepares test environment.
-     *
-     * @return void
      */
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->createDefaultClient();
         $this->clearAllTables();
-        $this->loadFixtures(
-            [
-                new LoadCategories(),
-                new LoadWeeks(),
-                new LoadDays(),
-                new LoadDishes(),
-                new LoadDishVariations(),
-                new LoadMeals(),
-                new LoadParticipants(),
-                new LoadRoles(),
-                new LoadUsers($this->client->getContainer()),
-                new LoadTransactions()
-            ]
-        );
+        $this->loadFixtures([
+            new LoadCategories(),
+            new LoadWeeks(),
+            new LoadDays(),
+            new LoadDishes(),
+            new LoadDishVariations(),
+            new LoadMeals(),
+            new LoadParticipants(),
+            new LoadRoles(),
+            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
+            new LoadTransactions()
+        ]);
     }
 
     /**
      * Checking if transaction history is correct for some user
      *
      * @test
-     *
-     * @return void
      */
-    public function checkTransactionHistory()
+    public function checkTransactionHistory(): void
     {
-        $userProfile = $this->getUserProfile();
+        $this->loginAs(self::USER_STANDARD);
 
         // Open home page
         $crawler = $this->client->request('GET', '/');
-        $this->assertTrue($this->client->getResponse()->isSuccessful());
-
-        $loginForm = $crawler->filterXPath('//form[@name="login-form"]')
-            ->form(
-                [
-                    '_username' => $userProfile->getUsername(),
-                    '_password' => $userProfile->getUsername()
-                ]
-            );
-        $this->client->followRedirects();
-        $crawler = $this->client->submit($loginForm);
+        self::assertResponseIsSuccessful();
 
         // read Current balance from header
         $currentBalance = $crawler->filterXPath('//div[@class="balance-text"]/a')->text();
-        $currentBalance = floatval(substr($currentBalance, 0, strpos($currentBalance, '€')));
+        $currentBalance = (float)substr($currentBalance, 0, strpos($currentBalance, '€'));
 
         // click on the Balance link
         $balanceLink = $crawler->filterXPath('//div[@class="balance-text"]/a')->link();
@@ -86,7 +66,7 @@ class CashControllerTest extends AbstractControllerTestCase
 
         // read balance 4 weeks ago
         $previousBalance = $crawler->filterXPath('//div[@class="last-account-balance"]/span')->text();
-        $previousBalance = floatval(substr($previousBalance, 0, strpos($previousBalance, '€')));
+        $previousBalance = (float)substr($previousBalance, 0, strpos($previousBalance, '€'));
 
         // read all participations
         $participations = $crawler->filterXPath('//tr[contains(@class, "table-row") and contains(@class, "transaction-meal")]/td[3]')
@@ -98,7 +78,7 @@ class CashControllerTest extends AbstractControllerTestCase
 
         $participationAmount = 0;
         foreach ($participations as $participation) {
-            $participationAmount += floatval(trim(substr($participation, 1, strpos($participation, '€'))));
+            $participationAmount += (float)trim(substr($participation, 1, strpos($participation, '€')));
         }
 
         $transactions = $crawler->filterXPath('//tr[contains(@class, "table-row") and contains(@class, "transaction-payment")]/td[3]')
@@ -110,7 +90,7 @@ class CashControllerTest extends AbstractControllerTestCase
 
         $transactionAmount = 0;
         foreach ($transactions as $transaction) {
-            $transactionAmount += floatval(trim(substr($transaction, 1, strpos($transaction, '€'))));
+            $transactionAmount += (float)trim(substr($transaction, 1, strpos($transaction, '€')));
         }
 
         $this->assertEquals($currentBalance, $previousBalance - $participationAmount + $transactionAmount);

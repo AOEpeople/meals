@@ -1,11 +1,13 @@
 <?php
 
-namespace Mealz\MealBundle\Tests\Controller;
+namespace App\Mealz\MealBundle\Tests\Controller;
 
+use App\Mealz\MealBundle\Entity\Category;
+use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\DomCrawler\Crawler;
 
-use Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
+use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 
 /**
  * Class CategoryAbstractControllerTest
@@ -15,22 +17,27 @@ class CategoryControllerTest extends AbstractControllerTestCase
 {
     protected function setUp(): void
     {
-        $this->createAdminClient();
+        parent::setUp();
+
         $this->clearAllTables();
-        $this->loadFixtures(
-            [
-                new LoadUsers($this->client->getContainer()),
-            ]
-        );
+        $this->loadFixtures([
+            new LoadRoles(),
+            // self::$container is a special container that allow access to private services
+            // see: https://symfony.com/blog/new-in-symfony-4-1-simpler-service-testing
+            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
+        ]);
+
+        $this->loginAs(self::USER_KITCHEN_STAFF);
     }
 
-    public function testNewAction()
+    public function testNewAction(): void
     {
         // Create form data
-        $form['category'] = array(
+        $form['category'] = [
             'title_de' => 'category-form-title-de',
             'title_en' => 'category-form-title-en',
-        );
+            '_token'   => $this->getFormCSRFToken('/category/form', 'form #category__token')
+        ];
 
         // Call controller action
         $this->client->request('POST', '/category/new', $form);
@@ -39,18 +46,15 @@ class CategoryControllerTest extends AbstractControllerTestCase
         /** @var EntityManager $entityManager */
         $entityManager = $this->client->getContainer()->get('doctrine')->getManager();
         $categoryRepository = $entityManager->getRepository('MealzMealBundle:Category');
-        $category = $categoryRepository->findOneBy(
-            array(
-                'title_de' => 'category-form-title-de',
-                'title_en' => 'category-form-title-en',
-            )
-        );
+        $category = $categoryRepository->findOneBy([
+            'title_de' => 'category-form-title-de',
+            'title_en' => 'category-form-title-en',
+        ]);
 
-        // Assertions
-        $this->assertInstanceOf('\Mealz\MealBundle\Entity\Category', $category);
+        $this->assertInstanceOf(Category::class, $category);
     }
 
-    public function testListAction()
+    public function testListAction(): void
     {
         $category = $this->createCategory();
         $this->persistAndFlushAll(array($category));
@@ -67,15 +71,15 @@ class CategoryControllerTest extends AbstractControllerTestCase
         $this->assertEquals($category->getTitle(), trim($categoryTitle));
     }
 
-    public function testGetPreFilledFormAction()
+    public function testGetPreFilledFormAction(): void
     {
         // Create test data
         $category = $this->createCategory();
-        $categoryAsArray = array(
+        $categoryAsArray = [
             'title_de' => $category->getTitleDe(),
             'title_en' => $category->getTitleEn(),
-        );
-        $this->persistAndFlushAll(array($category));
+        ];
+        $this->persistAndFlushAll([$category]);
 
         // Request
         $this->client->request('GET', '/category/form/'.$category->getSlug());
@@ -83,28 +87,29 @@ class CategoryControllerTest extends AbstractControllerTestCase
 
         // Check if form is loaded
         $node = $crawler->filterXPath('//form[@action="/category/'.$category->getSlug().'/edit"]');
-        $this->assertTrue($node->count() === 1);
+        $this->assertSame($node->count(), 1);
 
         // Copy form values in array for comparison
         $form = $crawler->selectButton('Save')->form();
-        $formCategoryAsArray = array(
+        $formCategoryAsArray = [
             'title_de' => $form->get('category[title_de]')->getValue(),
             'title_en' => $form->get('category[title_en]')->getValue(),
-        );
+        ];
 
         // Assertions
         $this->assertEquals($categoryAsArray, $formCategoryAsArray);
     }
 
-    public function testEditAction()
+    public function testEditAction(): void
     {
         $category = $this->createCategory();
-        $this->persistAndFlushAll(array($category));
+        $this->persistAndFlushAll([$category]);
 
-        $form['category'] = array(
+        $form['category'] = [
             'title_de' => 'category-form-edited-title-de',
             'title_en' => 'category-form-edited-title-en',
-        );
+            '_token'   => $this->getFormCSRFToken('/category/form/'.$category->getSlug(), 'form #category__token')
+        ];
 
         $this->client->request('POST', '/category/'.$category->getSlug().'/edit', $form);
         $categoryRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Category');
@@ -112,7 +117,7 @@ class CategoryControllerTest extends AbstractControllerTestCase
         unset($form['category']['_token']);
         $editedCategory = $categoryRepository->findOneBy($form['category']);
 
-        $this->assertInstanceOf('\Mealz\MealBundle\Entity\Category', $editedCategory);
+        $this->assertInstanceOf(Category::class, $editedCategory);
         $this->assertEquals($category->getId(), $editedCategory->getId());
     }
 

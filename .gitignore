@@ -2,28 +2,33 @@
 *.cache
 .*
 .DS_Store
-/app/build/
-/app/cache/*
-/app/config/parameters.yml
-/app/logs/*
-/app/vendor/
-/bin/
 /build/
-/composer.phar
-/phpunit.xml
-/web/bundles/
-/web/css
-/web/images/
-/web/js/
-/web/media/*
-/web/static/
-cache.properties
+/public/images/
+/public/static/
 node_modules
-vendor
 
 # inclusions (alphabetical)
 !.ddev/
 !.dockerignore
+!.env
+!.env.test
 !.gitlab-ci.yml
 !.gitkeep
 !.stylelintrc.json
+!/migrations
+!/public/.htaccess
+
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###

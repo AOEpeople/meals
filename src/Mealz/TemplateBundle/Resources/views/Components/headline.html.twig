@@ -10,7 +10,7 @@
 #}
 {% macro create(order, label, id, class, tools, sub)  %}
 	{%- import 'MealzTemplateBundle::Components/_common.html.twig' as commonlib -%}
-	{%- spaceless -%}
+	{%- apply spaceless -%}
 		<div class="headline-container headline-container-h{{ order }} {% if tools|length > 0 %}headline-container-with-tools{% endif %} {{ class }}"  {{- commonlib.optionalAttribute('id', id) -}}>
 			<h{{ order }} class="headline">
 				{{ label }}
@@ -30,5 +30,5 @@
 				</div>
 			{% endif %}
 		</div>
-	{%- endspaceless -%}
+	{%- endapply -%}
 {% endmacro %}

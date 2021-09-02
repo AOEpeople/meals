@@ -1,17 +1,27 @@
 <?php
 
-namespace Mealz\MealBundle\Entity;
+declare(strict_types=1);
+
+namespace App\Mealz\MealBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 
+/**
+ * @extends EntityRepository<Day>
+ */
 class DayRepository extends EntityRepository
 {
-    public function getCurrentDay()
+    public function getCurrentDay(): ?Day
     {
-        $query = $this->createQueryBuilder('d');
-        $query->where('d.dateTime LIKE :today');
-        $query->setParameter(':today', date('Y-m-d%'));
+        $queryBuilder = $this->createQueryBuilder('d');
+        $queryBuilder->where('d.dateTime LIKE :today');
+        $queryBuilder->setParameter(':today', date('Y-m-d%'));
 
-        return $query->getQuery()->getSingleResult();
+        $result = $queryBuilder->getQuery()->getResult();
+        if ($result && is_array($result) && count($result) >= 1) {
+            return array_shift($result);
+        }
+
+        return null;
     }
 }

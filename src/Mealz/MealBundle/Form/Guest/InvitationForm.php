@@ -1,11 +1,11 @@
 <?php
 
-namespace Mealz\MealBundle\Form\Guest;
+namespace App\Mealz\MealBundle\Form\Guest;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * form to show invitation for guest
@@ -30,21 +30,11 @@ class InvitationForm extends AbstractType
         ;
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'Mealz\MealBundle\Entity\InvitationWrapper',
+            'data_class' => 'App\Mealz\MealBundle\Entity\InvitationWrapper',
             'csrf_protection' => false
         ));
-    }
-
-    /**
-     * Returns the name of this type.
-     *
-     * @return string The name of this type
-     */
-    public function getName()
-    {
-        return 'invitation_form';
     }
 }

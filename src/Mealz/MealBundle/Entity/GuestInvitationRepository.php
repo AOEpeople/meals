@@ -1,9 +1,9 @@
 <?php
 
-namespace Mealz\MealBundle\Entity;
+namespace App\Mealz\MealBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
-use Mealz\UserBundle\Entity\Profile;
+use App\Mealz\UserBundle\Entity\Profile;
 
 /**
  * Guest invitation repository

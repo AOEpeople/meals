@@ -1,32 +1,29 @@
 <?php
 
-namespace Mealz\MealBundle\Tests\Controller;
+namespace App\Mealz\MealBundle\Tests\Controller;
 
-use Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
-use Mealz\MealBundle\DataFixtures\ORM\LoadDays;
-use Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
-use Mealz\MealBundle\DataFixtures\ORM\LoadDishVariations;
-use Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
-use Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
-use Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
-use Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
-use Mealz\UserBundle\Entity\Role;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadDays;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishVariations;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
+use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
+use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
+use App\Mealz\UserBundle\Entity\Role;
 
 /**
  * Print controller test.
- *
- * @author Chetan Thapliyal <chetan.thapliyal@aoe.com>
  */
 class PrintControllerTest extends AbstractControllerTestCase
 {
     /**
-     * Prepares test environment.
+     * @inheritDoc
      */
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->createAdminClient();
         $this->clearAllTables();
         $this->loadFixtures([
             new LoadCategories(),
@@ -36,15 +33,19 @@ class PrintControllerTest extends AbstractControllerTestCase
             new LoadDishVariations(),
             new LoadMeals(),
             new LoadRoles(),
-            new LoadUsers($this->client->getContainer()),
+            // self::$container is a special container that allow access to private services
+            // see: https://symfony.com/blog/new-in-symfony-4-1-simpler-service-testing
+            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
         ]);
+
+        $this->loginAs(self::USER_KITCHEN_STAFF);
     }
 
     /**
-     * check that guest participants are not listed in the costsheet
+     * Check that guest participants are not listed in the cost sheet.
      * @test
      */
-    public function guestDoesNotAppearInCostListing()
+    public function guestDoesNotAppearInCostListing(): void
     {
         $time = time();
 

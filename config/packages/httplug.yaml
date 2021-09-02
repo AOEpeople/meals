@@ -1,0 +1,14 @@
+httplug:
+    plugins:
+        retry:
+            retry: 1
+
+    discovery:
+        client: 'auto'
+
+    clients:
+        hwi_special:
+            factory: 'httplug.factory.guzzle7'
+            config:
+                verify: false
+                ignore_errors: false

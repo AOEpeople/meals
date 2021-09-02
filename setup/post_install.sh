@@ -14,13 +14,13 @@ if [ "${ENVIRONMENT}" == "deploy" -o  "${ENVIRONMENT}" == "dev" ]; then
 fi
 
 echo -n "Executing database migrations ... "
-php ${FINAL_RELEASEFOLDER}/app/console doctrine:migrations:migrate -n
+php ${FINAL_RELEASEFOLDER}/bin/console doctrine:migrations:migrate -n
 echo "done"
 
 if [ "${ENVIRONMENT}" == "deploy" -o "${ENVIRONMENT}" == "dev" ]; then
     echo -n "Starting anonymization for Prod Fixtures"
-    php ${FINAL_RELEASEFOLDER}/app/console doctrine:fixtures:load --fixtures=${FINAL_RELEASEFOLDER}/src/Mealz/UserBundle/DataFixtures/ORM/LoadAnomUsers.php --append
-    php ${FINAL_RELEASEFOLDER}/app/console doctrine:fixtures:load --fixtures=${FINAL_RELEASEFOLDER}/src/Mealz/UserBundle/DataFixtures/ORM/LoadUsers.php --append
+    php ${FINAL_RELEASEFOLDER}/bin/console doctrine:fixtures:load --fixtures=${FINAL_RELEASEFOLDER}/src/Mealz/UserBundle/DataFixtures/ORM/LoadAnomUsers.php --append
+    php ${FINAL_RELEASEFOLDER}/bin/console doctrine:fixtures:load --fixtures=${FINAL_RELEASEFOLDER}/src/Mealz/UserBundle/DataFixtures/ORM/LoadUsers.php --append
     echo "done"
 fi
 

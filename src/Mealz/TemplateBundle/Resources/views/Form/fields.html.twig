@@ -1,5 +1,5 @@
 {% block dish_selector_creator_widget %}
-	{% spaceless %}
+	{% apply spaceless %}
 		{% set attr={list:'dish_selector', autocomplete:'off'} %}
 		{{ block('form_widget') }}
 		{% set options = choices %}
@@ -8,11 +8,11 @@
 				<option value="{{ choice.label }}"{% if choice is selectedchoice(label) %} selected="selected"{% endif %}></option>
 			{% endfor %}
 		</datalist>
-	{% endspaceless %}
+	{% endapply %}
 {% endblock %}
 
 {% block form_row %}
-    {% spaceless %}
+    {% apply spaceless %}
         <div class="form-row">
 			{% if errors | length > 0 %}
 				{{ form_widget(form, {'attr': {'class': 'form-field-invalid'}}) }}
@@ -21,7 +21,7 @@
 				{{ form_widget(form) }}
 			{% endif %}
         </div>
-    {% endspaceless %}
+    {% endapply %}
 {% endblock form_row %}
 
 {%- block form_errors -%}

@@ -1,0 +1,25 @@
+.account-settlement-confirmation {
+  display: none;
+  max-width: 500px;
+  color: $color-white;
+  background-color: $color-gray-secondary;
+  font-size: 24px;
+  font-family: $font-bold;
+  line-height: 30px;
+
+  p {
+    width: auto;
+    margin-bottom: 20px;
+  }
+
+  .button {
+    position: relative;
+    width: 170px;
+    text-align: center;
+
+    &:visited {
+      color: $color-white;
+    }
+  }
+
+}

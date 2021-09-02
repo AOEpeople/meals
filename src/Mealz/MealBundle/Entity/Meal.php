@@ -1,13 +1,13 @@
 <?php
 
-namespace Mealz\MealBundle\Entity;
+namespace App\Mealz\MealBundle\Entity;
 
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Mealz\UserBundle\Entity\Profile;
+use App\Mealz\UserBundle\Entity\Profile;
 use Symfony\Component\Validator\Constraints as Assert;
-use Mealz\MealBundle\Validator\Constraints as MealBundleAssert;
+use App\Mealz\MealBundle\Validator\Constraints as MealBundleAssert;
 
 /**
  * Meal

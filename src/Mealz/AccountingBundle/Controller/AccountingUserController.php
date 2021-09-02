@@ -1,12 +1,11 @@
 <?php
 
-namespace Mealz\AccountingBundle\Controller;
+namespace App\Mealz\AccountingBundle\Controller;
 
 use DateTime;
-use Doctrine\ORM\Query;
-use Mealz\AccountingBundle\Entity\TransactionRepository;
-use Mealz\AccountingBundle\Service\Wallet;
-use Mealz\MealBundle\Controller\BaseController;
+use App\Mealz\AccountingBundle\Entity\TransactionRepository;
+use App\Mealz\AccountingBundle\Service\Wallet;
+use App\Mealz\MealBundle\Controller\BaseController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 
@@ -85,9 +84,9 @@ class AccountingUserController extends BaseController
     private function generateTimePeriodForm()
     {
         return $this->createFormBuilder()
-            ->add('from', 'date', array('widget' => 'single_text'))
-            ->add('to', 'date', array('widget' => 'single_text'))
-            ->add('send', 'submit')
+            ->add('from', \Symfony\Component\Form\Extension\Core\Type\DateType::class, array('widget' => 'single_text'))
+            ->add('to', \Symfony\Component\Form\Extension\Core\Type\DateType::class, array('widget' => 'single_text'))
+            ->add('send', \Symfony\Component\Form\Extension\Core\Type\SubmitType::class)
             ->getForm();
     }
 

@@ -1,135 +1,87 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: jonathan.klauck
- * Date: 29.06.2016
- * Time: 15:45
- */
 
-namespace Mealz\MealBundle\Tests\Controller;
+namespace App\Mealz\MealBundle\Tests\Controller;
 
 use DateTime;
 use Doctrine\Common\Collections\Criteria;
-use Mealz\AccountingBundle\Entity\Transaction;
-use Mealz\MealBundle\Entity\Meal;
-use Mealz\MealBundle\Entity\MealRepository;
-use Mealz\MealBundle\Entity\Participant;
-use Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
-use Mealz\UserBundle\Entity\Profile;
-use Mealz\UserBundle\Entity\Role;
-use Mealz\UserBundle\Entity\RoleRepository;
-use Symfony\Bundle\FrameworkBundle\Client;
+use App\Mealz\AccountingBundle\Entity\Transaction;
+use App\Mealz\MealBundle\Entity\Meal;
+use App\Mealz\MealBundle\Entity\MealRepository;
+use App\Mealz\MealBundle\Entity\Participant;
+use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
+use App\Mealz\UserBundle\Entity\Profile;
+use App\Mealz\UserBundle\Entity\Role;
+use App\Mealz\UserBundle\Entity\RoleRepository;
+use RuntimeException;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\BrowserKit\Cookie;
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-/**
- * Class AbstractControllerTestCase
- * @package Mealz\MealBundle\Tests\Controller
- */
 abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
 {
-    /** @var  Client $client */
-    protected $client;
+    /**
+     * Role based test users
+     */
+    protected const USER_STANDARD      = 'alice.meals';
+    protected const USER_FINANCE       = 'finance.meals';
+    protected const USER_KITCHEN_STAFF = 'kochomi.meals';
+
+    protected KernelBrowser $client;
 
     /**
-     * Create a default client with no frontend user logged in
-     *
-     * @param array $options Array with symfony parameters to be set (e.g. environment,...)
-     * @param array $server Array with Server parameters to be set (e.g. HTTP_HOST,...)
+     * @inheritDoc
      */
-    protected function createDefaultClient($options = array(), $server = array())
+    protected function setUp(): void
     {
-        $defaultOptions = array(
-            'environment' => 'test',
-        );
+        parent::setUp();
 
-        $defaultServer = array(
-            'HTTP_ACCEPT_LANGUAGE' => 'en',
-        );
-
-        $options = array_merge($defaultOptions, $options);
-        $server = array_merge($defaultServer, $server);
-
-        $this->client = self::createClient($options, $server);
+        $this->client = static::createClient();
     }
 
-    /**
-     * Create a default client with fincance role
-     * @param array $options
-     * @param array $server
-     */
-    protected function createFinanceClient($options = array(), $server = array())
+    protected function loginAs(string $username): void
     {
-        $this->createAdminClient($options, $server, array('ROLE_FINANCE'));
-    }
-
-    /**
-     * Create a client with a frontend user having a role ROLE_KITCHEN_STAFF
-     *
-     * @param array $options Array with symfony parameters to be set (e.g. environment,...)
-     * @param array $server  Array with Server parameters to be set (e.g. HTTP_HOST,...)
-     */
-    protected function createAdminClient($options = array(), $server = array(), $roles = array('ROLE_KITCHEN_STAFF'))
-    {
-        $this->createDefaultClient($options, $server);
-
-        /**
-         * If you encounter problems during testing with the session saying "Cannot set session ID after the session has started"
-         * consider to run phpunit with the following property setting:
-         *      processIsolation="true"
-         * @see https://git.aoesupport.com/gitweb/project/concar/calimero/symfony.git/blob/HEAD:/app/phpunitFunctional.xml?js=1
-         */
         $session = $this->client->getContainer()->get('session');
         // the firewall context (defaults to the firewall name)
-        $firewall = 'mealz';
+        $firewall = 'main';
 
         $repo = $this->client->getContainer()->get('doctrine')->getRepository('MealzUserBundle:Login');
-        $user = $repo->findOneBy(['username' => 'kochomi']);
-        $user = ($user instanceof UserInterface) ? $user : 'kochomi';
+        $user = $repo->findOneBy(['username' => $username]);
 
-        $token = new UsernamePasswordToken($user, null, $firewall, $roles);
-        if (($session->getId()) === "") {
-            $session->set('_security_'.$firewall, serialize($token));
-            $session->save();
+        if (!($user instanceof UserInterface)) {
+            throw new RuntimeException('user not found: '.$username);
         }
+
+        $token = new UsernamePasswordToken($user, null, $firewall, $user->getRoles());
+        $session->set('_security_'.$firewall, serialize($token));
+        $session->save();
+
         $cookie = new Cookie($session->getName(), $session->getId());
         $this->client->getCookieJar()->set($cookie);
     }
 
-    /**
-     * @param $userProfile
-     */
-    public function loginAsDefaultClient($userProfile)
+    protected function getFormCSRFToken(string $uri, string $tokenFieldSelector): string
     {
-        //test for non-admin users
-        $this->createDefaultClient();
+        $this->client->xmlHttpRequest('GET', $uri);
+        $jsonEncodedForm = $this->client->getResponse()->getContent();
+        $htmlForm = json_decode($jsonEncodedForm, false, 512, JSON_THROW_ON_ERROR);
+        $crawler = new Crawler($htmlForm);
+        $token = $crawler->filter($tokenFieldSelector)->attr('value');
 
-        // Open home page and log in as user
-        $crawler = $this->client->request('GET', '/');
-        $this->assertTrue($this->client->getResponse()->isSuccessful(), 'Requesting homepage failed');
+        if ($token === '' || $token === null) {
+            throw new RuntimeException('token fetch error, path: '.$uri.', fieldSelector: '.$tokenFieldSelector);
+        }
 
-        $loginForm = $crawler->filterXPath('//form[@name="login-form"]')
-            ->form(
-                [
-                    '_username' => $userProfile->getUsername(),
-                    '_password' => $userProfile->getUsername()
-                ]
-            );
-        $this->client->followRedirects();
-        $this->client->submit($loginForm);
+        return $token;
     }
 
     /**
      * Gets a user profile.
-     *
-     * @param string $username Username. Default is 'alice'
-     *
-     * @return Profile
      */
-    protected function getUserProfile($username = 'alice')
+    protected function getUserProfile(string $username): Profile
     {
         /** @var RoleRepository $profileRepository */
         $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');

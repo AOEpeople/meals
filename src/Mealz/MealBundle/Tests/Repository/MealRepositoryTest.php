@@ -1,10 +1,10 @@
 <?php
 
-namespace Mealz\MealBundle\Tests\Repository;
+namespace App\Mealz\MealBundle\Tests\Repository;
 
 use InvalidArgumentException;
-use Mealz\MealBundle\Entity\MealRepository;
-use Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
+use App\Mealz\MealBundle\Entity\MealRepository;
+use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 
 class MealRepositoryTest extends AbstractDatabaseTestCase
 {
@@ -14,6 +14,7 @@ class MealRepositoryTest extends AbstractDatabaseTestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->mealRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
         $this->clearAllTables();
     }

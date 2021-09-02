@@ -1,10 +1,13 @@
 <?php
 
-namespace Mealz\MealBundle\DependencyInjection;
+declare(strict_types=1);
 
+namespace App\Mealz\MealBundle\DependencyInjection;
+
+use Exception;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 use Symfony\Component\DependencyInjection\Loader;
 
 /**
@@ -12,16 +15,14 @@ use Symfony\Component\DependencyInjection\Loader;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class MealzMealExtension extends Extension
+class MealzMealExtension extends ConfigurableExtension
 {
     /**
-     * {@inheritDoc}
+     * @inheritDoc
+     * @throws Exception
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function loadInternal(array $mergedConfig, ContainerBuilder $container): void
     {
-        $configuration = new Configuration();
-        $this->processConfiguration($configuration, $configs);
-
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
 

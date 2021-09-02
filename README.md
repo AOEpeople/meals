@@ -12,10 +12,10 @@
 ## Features (User)
 
 ### Meal enrollment
-Sign in with LDAP credentials over Keycloak and select your preferred meals on landing page.
+Sign in with your login credentials and select your preferred meals on landing page.
 
 ### Invite guest for a meal
-You need to be signed in with LDAP credentials and you will see small share icon on each day in a week.
+As a logged-in user, you will see small share icon on each day in a week.
 You can send your guest the link and he will be able to enroll for particular day giving his First/Last name and Company information.
 
 ### Transaction history
@@ -182,15 +182,13 @@ Their passwords can be found [here](src/Mealz/UserBundle/DataFixtures/ORM/LoadUs
 The User "kochomi.meals" is allowed to modify dishes and edit meals.
 
 ### Login
-By default, user authentication takes place using oauth with custom identity provider. To use it you must define the following env vars with correct values in `env.local.php`.
+User authentication takes place using oauth with custom identity provider. To use it you must define the following env vars with correct values in `env.local.php`.
 
 ```shell
 IDP_SERVER=https://login.some-domain.com/
 IDP_CLIENT_ID=cleint-id
 IDP_CLIENT_SECRET=client-secret
 ```
-
-Alternatively, you can uncomment the content of `config/packages/dev/security.yaml` file to disable oauth and authenticate users against the users stored in database.
 
 ### Running tests
 Use the following command from project root directory in host system.

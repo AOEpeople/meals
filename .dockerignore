@@ -7,7 +7,6 @@
 !/bin/
 !/config/
 !/docker/
-!/docker/
 !/migrations/
 !/public/
 !/src/

@@ -75,7 +75,7 @@
             "ref": "e5b542d4ef47d8a003c91beb35650c76907f7e53"
         },
         "files": [
-            "src/Aoe/Ptct/Application/PlanningBundle/DataFixtures/AppFixtures.php"
+            "src/Mealz/MealBundle/DataFixtures/AppFixtures.php"
         ]
     },
     "doctrine/doctrine-migrations-bundle": {

@@ -73,6 +73,5 @@ COPY --chown=www-data:www-data --from=frontend /var/www/html/public/static ./pub
 RUN composer run-script --no-cache post-install-cmd \
     && chown -R www-data:www-data /var/www/html
 
-USER www-data:www-data
 ENTRYPOINT ["/container/entrypoint"]
 CMD ["apache2-foreground"]

@@ -3,6 +3,11 @@
   margin: 30px 0;
   padding-bottom: 30px;
 
+  li {
+    padding: 15px 25px;
+    border-bottom: 1px solid $color-gray-middle;
+  }
+
   li:hover {
     cursor: pointer;
     background: $color-gray-middle;
@@ -98,4 +103,11 @@
   float: left;
   min-width: 250px;
   padding-left: 40px;
+  position: relative;
+
+  .easy-autocomplete-container {
+    background: $color-white;
+    box-shadow: 0 2px 5px 0 $box-shadow;
+    position: absolute;
+  }
 }

@@ -21,6 +21,7 @@ use DateTime;
 use Doctrine\ORM\EntityManager;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -430,14 +431,11 @@ class MealController extends BaseController
 
     /**
      * Method to read Guest role object
-     * @return Role|null
      */
-    public function getGuestRole()
+    public function getGuestRole(): ?Role
     {
         $roleRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Role');
-        $role = $roleRepository->findOneBy(array('sid' => Role::ROLE_GUEST));
-
-        return $role ? $role : null;
+        return $roleRepository->findOneBy(['sid' => Role::ROLE_GUEST]);
     }
 
     /**
@@ -446,12 +444,10 @@ class MealController extends BaseController
      * @param Day $mealDay Meal day for which to generate the invitation.
      * @ParamConverter("mealDay", options={"mapping": {"dayId": "id"}})
      *
-     * @return JsonResponse
+     * @Security("has_role('ROLE_USER')")
      */
-    public function newGuestInvitation(Day $mealDay)
+    public function newGuestInvitation(Day $mealDay): JsonResponse
     {
-        $this->denyAccessUnlessGranted('ROLE_USER');
-
         /** @var GuestInvitationRepository $guestInvitationRepo */
         $guestInvitationRepo = $this->getDoctrine()->getRepository('MealzMealBundle:GuestInvitation');
         $guestInvitation = $guestInvitationRepo->findOrCreateInvitation($this->getUser()->getProfile(), $mealDay);
@@ -497,11 +493,7 @@ class MealController extends BaseController
         }
     }
 
-    /**
-     * @param DateTime $dateTime
-     * @return Week
-     */
-    private function createEmptyNonPersistentWeek(DateTime $dateTime)
+    private function createEmptyNonPersistentWeek(DateTime $dateTime): Week
     {
         $week = new Week();
         $week->setCalendarWeek($dateTime->format('W'));
@@ -516,29 +508,27 @@ class MealController extends BaseController
      * @param Meal $meal
      * @param Participant $participant
      */
-    private function logAdd($meal, $participant)
+    private function logAdd($meal, $participant): void
     {
         if (is_object($this->getDoorman()->isKitchenStaff()) === false) {
             return;
         }
 
         $logger = $this->get('monolog.logger.balance');
-        $logger->addInfo(
+        $logger->info(
             'admin added {profile} to {meal} (Participant: {participantId})',
-            array(
+            [
                 'participantId' => $participant->getId(),
                 'profile' => $participant->getProfile(),
                 'meal' => $meal,
-            )
+            ]
         );
     }
 
     /**
      * Send mattermost message
-     *
-     * @param string $message
      */
-    private function sendMattermostMessage($message)
+    private function sendMattermostMessage(string $message): void
     {
         $this->notifier->sendAlert($message);
     }

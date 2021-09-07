@@ -3,11 +3,13 @@
 namespace App\Mealz\AccountingBundle\Controller\Payment;
 
 use App\Mealz\AccountingBundle\Service\Wallet;
+use DateTime;
 use Doctrine\ORM\EntityManager;
 use App\Mealz\MealBundle\Controller\BaseController;
 use App\Mealz\AccountingBundle\Entity\Transaction;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\UserBundle\Entity\Profile;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use App\Mealz\AccountingBundle\Form\CashPaymentAdminForm;
@@ -78,17 +80,12 @@ class CashController extends BaseController
     }
 
     /**
-     * @param Request $request
-     * @return RedirectResponse
+     * @Security("has_role('ROLE_KITCHEN_STAFF')")
      */
     public function paymentFormHandling(Request $request): RedirectResponse
     {
-        $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
-
-        /** @var EntityManager $entityManager */
-        $entityManager = $this->getDoctrine()->getManager();
         $transaction = new Transaction();
-        $form = $this->createForm(CashPaymentAdminForm::class, $transaction, ['entityManager' => $entityManager]);
+        $form = $this->createForm(CashPaymentAdminForm::class, $transaction);
 
         // handle form submission
         if ($request->isMethod('POST')) {
@@ -102,16 +99,16 @@ class CashController extends BaseController
 
                     $message = $this->get('translator')->trans(
                         'payment.cash.success',
-                        array(
+                        [
                             '%amount%' => $transaction->getAmount(),
                             '%name%' => $transaction->getProfile()->getFullName(),
-                        ),
+                        ],
                         'messages'
                     );
                     $this->addFlashMessage($message, 'success');
 
                     $logger = $this->get('monolog.logger.balance');
-                    $logger->addInfo('admin added {amount}€ into wallet of {profile} (Transaction: {transactionId})', array(
+                    $logger->info('admin added {amount}€ into wallet of {profile} (Transaction: {transactionId})', array(
                         "profile" => $transaction->getProfile(),
                         "amount" => $transaction->getAmount(),
                         "transactionId" => $transaction->getId(),
@@ -139,9 +136,9 @@ class CashController extends BaseController
 
         $profile = $this->getUser()->getProfile();
 
-        $dateFrom = new \DateTime();
+        $dateFrom = new DateTime();
         $dateFrom->modify('-28 days');
-        $dateTo = new \DateTime();
+        $dateTo = new DateTime();
 
         list($transactionsTotal, $transactionHistory, $participationsTotal) = $this->getFullTransactionHistory(
             $dateFrom,
@@ -164,8 +161,8 @@ class CashController extends BaseController
     /**
      * Merge participation and transactions into 1 array
      *
-     * @param \DateTime $dateFrom min date
-     * @param \DateTime $dateTo   max date
+     * @param DateTime $dateFrom min date
+     * @param DateTime $dateTo   max date
      * @param Profile   $profile  User profile
      *
      * @return array

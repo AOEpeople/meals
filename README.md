@@ -1,4 +1,4 @@
-![Meals app screenshot](https://raw.githubusercontent.com/AOEpeople/meals/master/app/Resources/images/meals_screenshot.png)
+![Meals app screenshot](https://raw.githubusercontent.com/AOEpeople/meals/master/src/Resources/images/meals_screenshot.png)
 
 # 🍽 [AOEpeople/meals](https://github.com/AOEpeople/meals)
 

@@ -9,12 +9,9 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        guest:
-            pattern: ^/menu/guest
-            anonymous: lazy
-
         main:
             provider: oauth_user_provider
+            anonymous: lazy
             oauth:
                 resource_owners:
                     meals: meals_login
@@ -49,10 +46,9 @@ security:
     # config, e.g. anonymous: ~, anonymous: lazy
     access_control:
         - { path: ^/connect, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
-        - { path: ^/login, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/menu/guest, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/language-switch, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/css, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/js, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/images, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
-        - { path: ^/.+$, roles: [ROLE_USER] }
+        - { path: ^/, roles: [ROLE_USER] }

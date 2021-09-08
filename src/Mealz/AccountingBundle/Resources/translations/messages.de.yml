@@ -37,6 +37,7 @@ payment:
         continue: Fortfahren
         cancel: Abbrechen
       request:
+        already_sent: Eine Anfrage zum Ausgleich des Kontos von %name% wurde bereits gesendet.
         success: Die Anfrage auf einen Kontoausgleich für %name% wurde an die HR-Abteilung gesendet.
         failure: Die Anfrage ist fehlgeschlagen.
       confirmation:

@@ -104,12 +104,20 @@ class CostSheetController extends BaseController
                 'messages'
             );
             $severity = 'success';
+        } elseif (null !== $userProfile->getSettlementHash() && $wallet->getBalance($userProfile) > 0.00) {
+            $message = $this->get('translator')->trans(
+                'payment.costsheet.account_settlement.request.already_sent',
+                ['%name%' => $userProfile->getFullName()],
+                'messages'
+            );
+            $severity = 'danger';
         } else {
             $message = $this->get('translator')->trans('payment.costsheet.account_settlement.request.failure');
             $severity = 'danger';
         }
 
         $this->addFlashMessage($message, $severity);
+
         return $this->list();
     }
 

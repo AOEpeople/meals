@@ -100,14 +100,14 @@
 }
 
 .easy-autocomplete {
+  position: relative;
   float: left;
   min-width: 250px;
-  position: relative;
   padding-left: 40px;
 
   .easy-autocomplete-container {
-    background: $color-white;
     position: absolute;
+    background: $color-white;
     box-shadow: 0 2px 5px 0 $box-shadow;
   }
 }

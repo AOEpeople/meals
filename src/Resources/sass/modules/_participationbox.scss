@@ -102,12 +102,12 @@
 .easy-autocomplete {
   float: left;
   min-width: 250px;
-  padding-left: 40px;
   position: relative;
+  padding-left: 40px;
 
   .easy-autocomplete-container {
     background: $color-white;
-    box-shadow: 0 2px 5px 0 $box-shadow;
     position: absolute;
+    box-shadow: 0 2px 5px 0 $box-shadow;
   }
 }

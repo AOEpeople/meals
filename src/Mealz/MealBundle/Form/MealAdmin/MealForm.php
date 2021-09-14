@@ -6,7 +6,6 @@ use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\DishRepository;
 use App\Mealz\MealBundle\Entity\Meal;
-use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Form\Type\EntityHiddenType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -15,124 +14,79 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-/**
- * Class MealForm
- * @package Mealz\MealBundle\Form\MealAdmin
- */
 class MealForm extends AbstractType
 {
-    protected $dishRepository;
+    protected DishRepository $dishRepository;
 
-    /**
-     * MealForm constructor.
-     * @param DishRepository $dishRepository
-     */
     public function __construct(DishRepository $dishRepository)
     {
         $this->dishRepository = $dishRepository;
     }
 
     /**
-     * build the Form
-     * @param FormBuilderInterface $builder
-     * @param array $options
+     * @inheritDoc
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add(
-                'dish',
-                EntityHiddenType::class,
-                array(
-                    'class' => 'App\Mealz\MealBundle\Entity\Dish',
-                )
-            )
-            ->add(
-                'day',
-                EntityHiddenType::class,
-                array(
-                    'class' => 'App\Mealz\MealBundle\Entity\Day',
-                )
-            )
-            ->add(
-                'participationLimit',
-                IntegerType::class,
-                array(
-                    'required' => false,
-                    'empty_data' => '0',
-                    'attr' => array('class' => 'hidden-form-field participation-limit')
-                )
-            );
+            ->add('dish', EntityHiddenType::class, [
+                'class' => Dish::class,
+            ])
+            ->add('day', EntityHiddenType::class, [
+                'class' => Day::class,
+            ])
+            ->add('participationLimit', IntegerType::class, [
+                'required' => false,
+                'empty_data' => '0',
+                'attr' => ['class' => 'hidden-form-field participation-limit']
+            ]);
 
-        $builder->addEventListener(
-            FormEvents::PRE_SET_DATA,
-            function (FormEvent $event) use ($builder) {
-                /** @var Meal $meal */
-                $meal = $event->getData();
-
-                /** just for data-prototype purposes */
-                if ($meal === null) {
-                    return;
-                }
-
-                /** @var Day $day */
-                $day = $meal->getDay();
-                /** @var Week $week */
-                $week = $day->getWeek();
-
-                if (false === $day->isEnabled() || false === $week->isEnabled()) {
-                    $form = $event->getForm();
-                    $config = $form->get('dish')->getConfig();
-                    $options = $config->getOptions();
-
-                    $form->add(
-                        'dish',
-                        $config->getType()->getBlockPrefix(),
-                        array_replace(
-                            $options,
-                            [
-                                'attr' => array(
-                                    'readonly' => 'readonly'
-                                )
-                            ]
-                        )
-                    );
-                }
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, static function (FormEvent $event) {
+            /** @var Meal|null $meal */
+            $meal = $event->getData();
+            if ($meal === null) {
+                return;
             }
-        );
 
-        $builder->addEventListener(
-            FormEvents::SUBMIT,
-            function (FormEvent $event) use ($builder) {
-                /** @var Meal $meal */
-                $meal = $event->getData();
-                if ($meal->getDateTime() === null) {
-                    if (null === $meal->getDay()) {
-                        $day = $event->getForm()->getParent()->getParent()->getData();
-                    } else {
-                        $day = $meal->getDay();
-                    }
-                    $meal->setDay($day);
-                    $meal->setDateTime($day->getDateTime());
-                }
-                if (null !== $meal->getDish()) {
-                    $dishPrice = $meal->getDish()->getPrice();
-                    $meal->setPrice($dishPrice);
-                    $event->setData($meal);
-                }
+            $day = $meal->getDay();
+            $week = $day->getWeek();
+
+            if (false === $day->isEnabled() || false === $week->isEnabled()) {
+                $form = $event->getForm();
+                $config = $form->get('dish')->getConfig();
+                $opts = $config->getOptions();
+                $opts['attr'] = ['readonly' => 'readonly'];
+
+                $form->add('dish', EntityHiddenType::class, $opts);
             }
-        );
+        });
+
+        $builder->addEventListener(FormEvents::SUBMIT, static function (FormEvent $event) {
+            /** @var Meal $meal */
+            $meal = $event->getData();
+            if ($meal->getDateTime() === null) {
+                $day = $meal->getDay() ?? $event->getForm()->getParent()->getParent()->getData();
+                $meal->setDay($day);
+                $meal->setDateTime($day->getDateTime());
+            }
+            if (null !== $meal->getDish()) {
+                $dishPrice = $meal->getDish()->getPrice();
+                $meal->setPrice($dishPrice);
+                $event->setData($meal);
+            }
+        });
     }
 
     /**
-     * configure the Options
-     * @param OptionsResolver $resolver
+     * @inheritDoc
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'App\Mealz\MealBundle\Entity\Meal',
+        $resolver->setDefaults([
+            'data_class' => Meal::class,
             'error_bubbling' => false
-        ));
+        ]);
     }
 }

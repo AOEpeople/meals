@@ -33,46 +33,33 @@ class DayForm extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add(
-                'meals',
-                CollectionType::class,
-                [
-                    'entry_type' => MealForm::class,
-                    'allow_delete' => true,
-                    'delete_empty' => true,
-                    'constraints' => new Valid(),
-                    'allow_add' => true,
-                ]
-            )
-            ->add(
-                'lockParticipationDateTime',
-                DateTimeType::class,
-                [
-                    'required' => false,
-                    'widget' => 'single_text',
-                    'format' => 'YYYY-MM-dd HH:mm:ss',
-                    'attr' => ['class' => 'hidden-form-field']
-                ]
-            )
-            ->add(
-                'enabled',
-                CheckboxType::class,
-                [
-                    'required' => false,
-                    'attr' => ['class' => 'js-switch'],
-                ]
-            );
+            ->add('meals', CollectionType::class, [
+                'entry_type' => MealForm::class,
+                'allow_delete' => true,
+                'delete_empty' => true,
+                'constraints' => new Valid(),
+                'allow_add' => true,
+            ])
+            ->add('lockParticipationDateTime', DateTimeType::class, [
+                'required' => false,
+                'widget' => 'single_text',
+                'format' => 'YYYY-MM-dd HH:mm:ss',
+                'attr' => ['class' => 'hidden-form-field']
+            ])
+            ->add('enabled', CheckboxType::class, [
+                'required' => false,
+                'attr' => ['class' => 'js-switch'],
+            ]);
 
-        $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) use ($builder) {
+        $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) {
             /** @var Day $day */
             $day = $event->getData();
-
             $meals = $day->getMeals();
 
             foreach ($meals as $meal) {
                 /** @var Meal $meal */
                 if (null === $meal->getDish() &&
-                    $this->entityManager->getUnitOfWork()->getEntityState($meal) == UnitOfWork::STATE_NEW
+                    $this->entityManager->getUnitOfWork()->getEntityState($meal) === UnitOfWork::STATE_NEW
                 ) {
                     $meals->removeElement($meal);
                 }
@@ -81,25 +68,19 @@ class DayForm extends AbstractType
             $event->setData($day);
         });
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($builder) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, static function (FormEvent $event) {
             $day = $event->getData();
 
-            if (false === $day->getWeek()->isEnabled()) {
-                $form = $event->getForm();
-                $config = $form->get('enabled')->getConfig();
-                $options = $config->getOptions();
-
-                $form->add(
-                    'enabled',
-                    $config->getType()->getBlockPrefix(),
-                    array_replace(
-                        $options,
-                        [
-                            'disabled' => true
-                        ]
-                    )
-                );
+            if (true === $day->getWeek()->isEnabled()) {
+                return;
             }
+
+            // disable day meals and meal enable/disable option if meal week is disabled
+            $form = $event->getForm();
+            $opts = $form->get('enabled')->getConfig()->getOptions();
+            $opts['disabled'] = true;
+
+            $form->add('enabled', CheckboxType::class, $opts);
         });
     }
 

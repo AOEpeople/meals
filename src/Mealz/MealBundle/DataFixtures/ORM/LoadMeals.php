@@ -92,10 +92,8 @@ class LoadMeals extends Fixture implements OrderedFixtureInterface
     {
         $meal = new Meal();
         $meal->setDay($day);
-        // make transactions more realistic (random second,NO identical Date)
-        $date = clone $day->getDateTime();
-        $date->modify('+' . random_int(1, 1400) . ' second');
-        $meal->setDateTime($date);
+
+        $meal->setDateTime(clone $day->getDateTime());
         $meal->setDish($dish);
         $meal->setPrice($dish->getPrice());
         $this->objectManager->persist($meal);

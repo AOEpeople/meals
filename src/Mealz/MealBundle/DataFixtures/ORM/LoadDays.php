@@ -42,6 +42,7 @@ class LoadDays extends Fixture implements OrderedFixtureInterface
 
         foreach ($this->weeks as $week) {
             $startTime = $week->getStartTime();
+            $startTime->modify('12:00');
 
             $day = new Day();
             $day->setWeek($week);

@@ -12,6 +12,14 @@ envsubst < "/container/msmtprc" > "/etc/msmtprc"
 chown www-data:www-data /etc/msmtprc
 chmod 600 /etc/msmtprc
 
+echo "Fix file permissions"
+chown -R www-data:www-data /var/www/html/var
+
+if [ "${APP_ENV}" = "staging" ]; then
+  echo "Load data fixtures"
+  /var/www/html/bin/console doctrine:fixtures:load -n
+fi
+
 # first arg is `-f` or `--some-option`
 if [ "${1#-}" != "$1" ]; then
 	set -- apache2-foreground "$@"

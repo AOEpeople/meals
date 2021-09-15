@@ -64,8 +64,8 @@ class MealControllerTest extends AbstractControllerTestCase
         $this->persistAndFlushAll([$profile]);
 
         //get first locked meal and make it an available offer
-        $lockedMealsArray = $this->getDoctrine()->getRepository('MealzMealBundle:Meal')->getLockedMeals();
-        $firstLockedMeal = $lockedMealsArray[0];
+        $lockedMeals = $this->getLockedMeals();
+        $firstLockedMeal = $lockedMeals[0];
         $participant = $this->createParticipant($profile, $firstLockedMeal);
         $participant->setOfferedAt(time());
         $this->persistAndFlushAll([$participant]);
@@ -95,7 +95,7 @@ class MealControllerTest extends AbstractControllerTestCase
         $this->persistAndFlushAll([$profile, $secondProfile]);
 
         //get first locked meal and make it an available offer
-        $lockedMealsArray = $this->getDoctrine()->getRepository('MealzMealBundle:Meal')->getLockedMeals();
+        $lockedMealsArray = $this->getLockedMeals();
         $lockedMeal = $lockedMealsArray[0];
         $participant = $this->createParticipant($profile, $lockedMeal);
         $participant->setOfferedAt(time());

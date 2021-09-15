@@ -110,7 +110,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $userProfile = $this->getUserProfile(self::USER_STANDARD);
 
         //find locked meal and make user a participant of that
-        $lockedMealsArray = $this->getDoctrine()->getRepository('MealzMealBundle:Meal')->getLockedMeals();
+        $lockedMealsArray = $this->getLockedMeals();
         $lockedMeal = $lockedMealsArray[0];
         $lockedParticipant = $this->createParticipant($userProfile, $lockedMeal);
 
@@ -132,7 +132,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     public function takingOfferBack(): void
     {
         $userProfile = $this->getUserProfile(self::USER_STANDARD);
-        $lockedMealsArray = $this->getDoctrine()->getRepository('MealzMealBundle:Meal')->getLockedMeals();
+        $lockedMealsArray = $this->getLockedMeals();
         $lockedMeal = $lockedMealsArray[0];
         $lockedParticipant = $this->createParticipant($userProfile, $lockedMeal);
         $lockedParticipant->setOfferedAt(time());

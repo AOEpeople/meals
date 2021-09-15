@@ -33,6 +33,7 @@ class LoadDays extends Fixture implements OrderedFixtureInterface
 
     /**
      * @inheritDoc
+     *
      * @throws Exception
      */
     public function load(ObjectManager $manager): void
@@ -41,33 +42,29 @@ class LoadDays extends Fixture implements OrderedFixtureInterface
         $this->loadWeeks();
 
         foreach ($this->weeks as $week) {
-            $startTime = $week->getStartTime();
-            $startTime->modify('12:00');
+            $startTime = clone $week->getStartTime();
+            $startTime->setTime(12, 0);
 
-            $day = new Day();
-            $day->setWeek($week);
-            $day->setDateTime($startTime);
-            $lockDateTime = new DateTime($startTime->format('Y-m-d H:i:s') . ' -1 day');
-            $lockDateTime->modify('16:00');
-            $day->setLockParticipationDateTime($lockDateTime);
-            $this->objectManager->persist($day);
-            $this->addReference('day-' . $this->counter++, $day);
+            for ($i = 0; $i < 5; $i++) {
+                $dateTime = (clone $startTime)->modify('+' . $i . ' days');
+                $lockDateTime = (clone $dateTime)->modify('-1 day 16:00');
 
-            for ($i = 1; $i < 5; $i++) {
-                $day = new Day();
-                $day->setWeek($week);
-                $time = clone($startTime);
-                $time->modify('+' . $i . ' days');
-                $day->setDateTime($time);
-                $lockDateTime = new DateTime($day->getDateTime()->format('Y-m-d H:i:s') . ' -1 day');
-                $lockDateTime->modify('16:00');
-                $day->setLockParticipationDateTime($lockDateTime);
-                $this->objectManager->persist($day);
-                $this->addReference('day-' . $this->counter++, $day);
+                $this->addDay($week, $dateTime, $lockDateTime);
             }
         }
 
         $this->objectManager->flush();
+    }
+
+    private function addDay(Week $week, DateTime $dateTime, DateTime $lockDateTime): void
+    {
+        $day = new Day();
+        $day->setWeek($week);
+        $day->setDateTime($dateTime);
+        $day->setLockParticipationDateTime($lockDateTime);
+
+        $this->objectManager->persist($day);
+        $this->addReference('day-' . $this->counter++, $day);
     }
 
 

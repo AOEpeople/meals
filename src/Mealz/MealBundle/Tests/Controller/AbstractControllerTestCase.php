@@ -12,6 +12,7 @@ use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\Role;
 use App\Mealz\UserBundle\Entity\RoleRepository;
+use Exception;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\BrowserKit\Cookie;
@@ -203,6 +204,36 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
     }
 
     /**
+     * @return Meal[]
+     *
+     * @throws Exception
+     */
+    protected function getLockedMeals(): array
+    {
+        $mealsRepo = $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
+
+        /** @var Meal[] $meals */
+        $meals = $mealsRepo->getLockedMeals();
+        if (0 < count($meals)) {
+            return $meals;
+        }
+
+        // got no locked meals, modify existing meals to make few available
+        $criteria = new Criteria(Criteria::expr()->gt('dateTime', new DateTime()), ['dateTime' => Criteria::ASC]);
+        $meals = $mealsRepo->matching($criteria);
+
+        if (1 > count($meals)) {
+            throw new Exception('could not fake locked meal');
+        }
+
+        $mealsDay = $meals->first()->getDay();
+        $mealsDay->setLockParticipationDateTime(new DateTime('- 30 minutes'));
+        $this->persistAndFlushAll([$mealsDay]);
+
+        return $meals->toArray();
+    }
+
+    /**
      * Helper method to create a user transaction with specific amount and date
      * @param Profile $user
      * @param float $amount
@@ -227,4 +258,5 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         $session = new Session(new MockFileSessionStorage());
         $this->client->getContainer()->set('session', $session);
     }
+
 }

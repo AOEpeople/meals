@@ -41,7 +41,7 @@ class Profile implements UserInterface
      * @Assert\NotBlank()
      * @ORM\Column(type="string", length=255, nullable=TRUE)
      */
-    private string $company = '';
+    private ?string $company = '';
 
     /**
      * @ORM\ManyToMany(targetEntity="Role", inversedBy="profiles")
@@ -153,7 +153,7 @@ class Profile implements UserInterface
 
     public function getCompany(): string
     {
-        return $this->company;
+        return $this->company ?? '';
     }
 
     public function setCompany(string $company): void

@@ -576,6 +576,9 @@
     "symfony/intl": {
         "version": "v4.4.27"
     },
+    "symfony/mime": {
+        "version": "v4.4.27"
+    },
     "symfony/monolog-bridge": {
         "version": "v5.2.12"
     },

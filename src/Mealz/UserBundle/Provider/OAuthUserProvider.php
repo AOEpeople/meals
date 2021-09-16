@@ -24,7 +24,8 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
     private array $roleMapping = [
         'meals.admin'   => 'ROLE_KITCHEN_STAFF',
         'meals.finance' => 'ROLE_FINANCE',
-        'meals.user'    => 'ROLE_USER'
+        'meals.user'    => 'ROLE_USER',
+        'aoe_employee'  => 'ROLE_USER'
     ];
 
     private EntityManagerInterface $entityManager;
@@ -59,20 +60,22 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
     public function loadUserByOAuthUserResponse(UserResponseInterface $response)
     {
         $username = $response->getNickname();
+        $firstName = $response->getFirstName();
+        $lastName = $response->getLastName();
+
+        $idpUserRoles = $response->getData()['roles'] ?? [];
+        $roles = $this->toMealsRoles($idpUserRoles);
+        if (0 === count($roles)) {
+            $this->logger->debug('user has no meals roles assigned');
+        }
 
         try {
-            return $this->loadUserByUsername($username);
+            $user = $this->loadUserByUsername($username);
         } catch (UsernameNotFoundException $exception) {
-            $idpUserRoles = $response->getData()['roles'] ?? [];
-            $mealsUserRoles = $this->toMealsRoles($idpUserRoles);
-
-            return $this->createProfile(
-                $username,
-                $response->getFirstName(),
-                $response->getLastName(),
-                $mealsUserRoles
-            );
+            return $this->createProfile($username, $firstName, $lastName, $roles);
         }
+
+        return $this->updateProfile($user, $firstName, $lastName, $roles);
     }
 
     /**
@@ -95,7 +98,10 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
         return $class === Profile::class;
     }
 
-    protected function createProfile(
+    /**
+     * @param Role[]   $roles
+     */
+    private function createProfile(
         string $username,
         string $firstName,
         string $lastName,
@@ -103,6 +109,19 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
     ): Profile {
         $profile = new Profile();
         $profile->setUsername($username);
+
+        return $this->updateProfile($profile, $firstName, $lastName, $roles);
+    }
+
+    /**
+     * @param Role[]   $roles
+     */
+    private function updateProfile(
+        Profile $profile,
+        string $firstName,
+        string $lastName,
+        array $roles
+    ): Profile {
         $profile->setFirstName($firstName);
         $profile->setName($lastName);
         $profile->setRoles(new ArrayCollection($roles));
@@ -118,20 +137,15 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
      */
     private function toMealsRoles(array $idpRoles): array
     {
-        $roles = [];
-
-        foreach ($idpRoles as $idpRole) {
-            if (isset($this->roleMapping[$idpRole])) {
-                $roleRepository = $this->entityManager->getRepository(Role::class);
-                $role = $roleRepository->findOneBy(['sid' => $this->roleMapping[$idpRole]]);
-                if (!($role instanceof Role)) {
-                    $this->logger->error('role not found', ['sid' => $this->roleMapping[$idpRole]]);
-                }
-
-                $roles[] = $role;
-            }
+        $mappedRoles = array_intersect_key($this->roleMapping, array_flip($idpRoles));
+        if (0 === count($mappedRoles)) {
+            return [];
         }
 
-        return $roles;
+        $mappedRoles = array_unique(array_values($mappedRoles));
+
+        $roleRepository = $this->entityManager->getRepository(Role::class);
+
+        return $roleRepository->findBySID($mappedRoles);
     }
 }

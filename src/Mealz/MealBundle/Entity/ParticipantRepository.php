@@ -2,9 +2,11 @@
 
 namespace App\Mealz\MealBundle\Entity;
 
+use DateTime;
 use Doctrine\ORM\EntityRepository;
 use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\Role;
+use PDO;
 
 /**
  * the Participant Repository
@@ -13,7 +15,6 @@ use App\Mealz\UserBundle\Entity\Role;
  */
 class ParticipantRepository extends EntityRepository
 {
-
     /**
      * default options for database queries
      * @var array
@@ -25,15 +26,15 @@ class ParticipantRepository extends EntityRepository
     );
 
     /**
-     * @param \DateTime $minDate
-     * @param \DateTime $maxDate
+     * @param DateTime $minDate
+     * @param DateTime $maxDate
      * @param Profile|null $profile
      * @param array $options
      * @return mixed
      */
     public function getParticipantsOnDays(
-        \DateTime $minDate,
-        \DateTime $maxDate,
+        DateTime $minDate,
+        DateTime $maxDate,
         Profile $profile = null,
         $options = array()
     ) {
@@ -82,34 +83,29 @@ class ParticipantRepository extends EntityRepository
         return $participants;
     }
 
-    /**
-     * Get total costs of participations. Prevent unnecessary ORM mapping.
-     *
-     * @param string $username
-     * @return float
-     * @throws \Doctrine\DBAL\DBALException
-     */
-    public function getTotalCost($username)
+    public function getTotalCost(string $username): float
     {
-        $queryBuilder = $this->getQueryBuilderWithOptions(
-            [
-                'load_meal' => true,
-                'load_profile' => false,
-            ]
-        );
+        $queryBuilder = $this->createQueryBuilder('p');
+        $queryBuilder
+            ->select('SUM(m.price) as total_cost')
+            ->leftJoin('p.meal', 'm')
+            ->leftJoin('p.profile', 'up')
+            ->leftJoin('m.day', 'd')
+            ->leftJoin('d.week', 'w')
+            ->where('p.profile = :user')
+            ->andWhere('m.dateTime <= :now')
+            ->andWhere('p.costAbsorbed = 0')
+            ->andWhere('d.enabled = 1')
+            ->andWhere('w.enabled = 1');
+        $queryBuilder->setParameter('user', $username, PDO::PARAM_STR);
+        $queryBuilder->setParameter('now', new DateTime());
 
-        $queryBuilder->select('SUM(m.price) as blubber');
-        $queryBuilder->leftJoin('m.day', 'day');
-        $queryBuilder->leftJoin('day.week', 'w');
-        $queryBuilder->andWhere('p.profile = :user');
-        $queryBuilder->setParameter('user', $username);
-        $queryBuilder->andWhere('p.costAbsorbed = 0');
-        $queryBuilder->andWhere('day.enabled = 1');
-        $queryBuilder->andWhere('w.enabled = 1');
-        $queryBuilder->andWhere('m.dateTime <= :now');
-        $queryBuilder->setParameter('now', new \DateTime());
+        $result = $queryBuilder->getQuery()->getResult();
+        if ($result && is_array($result) && count($result) >= 1) {
+            return (float) ($result[0]['total_cost'] ?? 0.0);
+        }
 
-        return floatval($queryBuilder->getQuery()->getSingleScalarResult());
+        return 0.0;
     }
 
     /**
@@ -131,7 +127,7 @@ class ParticipantRepository extends EntityRepository
         $queryBuilder->andWhere('p.costAbsorbed = :costAbsorbed');
         $queryBuilder->setParameter('costAbsorbed', false);
         $queryBuilder->andWhere('m.dateTime <= :now');
-        $queryBuilder->setParameter('now', new \DateTime());
+        $queryBuilder->setParameter('now', new DateTime());
 
         $queryBuilder->orderBy('m.dateTime', 'desc');
         if (is_int($limit) === true) {
@@ -337,13 +333,13 @@ class ParticipantRepository extends EntityRepository
 
     /**
      * Returns an array with all the pending participants on the given date.
-     * @param \DateTime $dateTime
+     * @param DateTime $dateTime
      * @return array
      */
-    public function getPendingParticipants(\DateTime $dateTime)
+    public function getPendingParticipants(DateTime $dateTime)
     {
-        $minDate = new \DateTime(date('d-m-Y', date_timestamp_get($dateTime)) . '00:00');
-        $maxDate = new \DateTime(date('d-m-Y', date_timestamp_get($dateTime)) . '23:59');
+        $minDate = new DateTime(date('d-m-Y', date_timestamp_get($dateTime)) . '00:00');
+        $maxDate = new DateTime(date('d-m-Y', date_timestamp_get($dateTime)) . '23:59');
 
         $options = array('load_meal' => true);
         $queryBuilder = $this->getQueryBuilderWithOptions($options);

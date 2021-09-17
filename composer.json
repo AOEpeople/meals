@@ -13,6 +13,7 @@
         "ext-bcmath": "*",
         "ext-calendar": "*",
         "ext-json": "*",
+        "ext-pdo": "*",
         "doctrine/annotations": "^1.13",
         "doctrine/doctrine-bundle": "^2.4",
         "doctrine/doctrine-fixtures-bundle": "^3.4",

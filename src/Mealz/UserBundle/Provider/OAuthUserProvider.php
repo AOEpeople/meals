@@ -6,7 +6,6 @@ use App\Mealz\UserBundle\Entity\Role;
 use Doctrine\ORM\EntityManagerInterface;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthAwareUserProviderInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -16,27 +15,27 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProviderInterface
 {
+    private const ROLE_KITCHEN_STAFF = 'ROLE_KITCHEN_STAFF';
+    private const ROLE_FINANCE       = 'ROLE_FINANCE';
+    private const ROLE_USER          = 'ROLE_USER';
+
     /**
      * Map Keycloak Roles to Meals ones
      *
      * @var array<string, string>
      */
     private array $roleMapping = [
-        'meals.admin'   => 'ROLE_KITCHEN_STAFF',
-        'meals.finance' => 'ROLE_FINANCE',
-        'meals.user'    => 'ROLE_USER',
-        'aoe_employee'  => 'ROLE_USER'
+        'meals.admin'   => self::ROLE_KITCHEN_STAFF,
+        'meals.finance' => self::ROLE_FINANCE,
+        'meals.user'    => self::ROLE_USER,
+        'aoe_employee'  => self::ROLE_USER
     ];
 
     private EntityManagerInterface $entityManager;
-    private LoggerInterface $logger;
 
-    public function __construct(
-        EntityManagerInterface $entityManager,
-        LoggerInterface $logger
-    ) {
+    public function __construct(EntityManagerInterface $entityManager)
+    {
         $this->entityManager = $entityManager;
-        $this->logger = $logger;
     }
 
     /**
@@ -59,15 +58,13 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
      */
     public function loadUserByOAuthUserResponse(UserResponseInterface $response)
     {
-        $username = $response->getNickname();
+        $username  = $response->getNickname();
         $firstName = $response->getFirstName();
-        $lastName = $response->getLastName();
+        $lastName  = $response->getLastName();
 
         $idpUserRoles = $response->getData()['roles'] ?? [];
-        $roles = $this->toMealsRoles($idpUserRoles);
-        if (0 === count($roles)) {
-            $this->logger->debug('user has no meals roles assigned');
-        }
+        $role = $this->toMealsRole($idpUserRoles);
+        $roles = (null === $role) ? [] : [$role];
 
         try {
             $user = $this->loadUserByUsername($username);
@@ -132,20 +129,32 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
         return $profile;
     }
 
-    /**
-     * @return list<Role>
-     */
-    private function toMealsRoles(array $idpRoles): array
+    private function toMealsRole(array $idpRoles): ?Role
     {
         $mappedRoles = array_intersect_key($this->roleMapping, array_flip($idpRoles));
         if (0 === count($mappedRoles)) {
-            return [];
+            return null;
         }
 
         $mappedRoles = array_unique(array_values($mappedRoles));
+        $maxPrivilegedRole = $this->getMaxPrivilegedRole($mappedRoles);
 
         $roleRepository = $this->entityManager->getRepository(Role::class);
+        $roles = $roleRepository->findBySID([$maxPrivilegedRole]);
 
-        return $roleRepository->findBySID($mappedRoles);
+        return (0 < count($roles)) ? array_shift($roles) : null;
+    }
+
+    private function getMaxPrivilegedRole(array $roles): string
+    {
+        if (in_array(self::ROLE_KITCHEN_STAFF, $roles, true)) {
+            return self::ROLE_KITCHEN_STAFF;
+        }
+
+        if (in_array(self::ROLE_FINANCE, $roles, true)) {
+            return self::ROLE_FINANCE;
+        }
+
+        return self::ROLE_USER;
     }
 }

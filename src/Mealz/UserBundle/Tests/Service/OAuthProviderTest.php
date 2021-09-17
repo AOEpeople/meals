@@ -10,7 +10,6 @@ use App\Mealz\UserBundle\Provider\OAuthUserProvider;
 use App\Mealz\UserBundle\Entity\Profile;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Psr\Log\NullLogger;
 
 class OAuthProviderTest extends AbstractControllerTestCase
 {
@@ -28,7 +27,7 @@ class OAuthProviderTest extends AbstractControllerTestCase
         $this->clearAllTables();
         $this->loadFixtures([new LoadRoles()]);
 
-        $this->sut = new OAuthUserProvider($this->getDoctrine()->getManager(), new NullLogger());
+        $this->sut = new OAuthUserProvider($this->getDoctrine()->getManager());
     }
 
     /**
@@ -85,7 +84,7 @@ class OAuthProviderTest extends AbstractControllerTestCase
                     'family_name' => 'ecnanif',
                     'roles' => ['meals.user', 'meals.finance']
                 ],
-                'mealsRoles' => ['ROLE_USER', 'ROLE_FINANCE']
+                'mealsRoles' => ['ROLE_FINANCE']
             ],
             'user with invalid role' => [
                 'idpUserData' => [

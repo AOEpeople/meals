@@ -8,6 +8,8 @@ use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishVariations;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
+use App\Mealz\MealBundle\Entity\Day;
+use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Entity\WeekRepository;
@@ -202,15 +204,15 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * Check that the amount of participations is correct
      * @test
      */
-    public function checkParticipationAmount(): void
+    public function checkParticipationCount(): void
     {
-        $crawler = $this->getCurrentWeekParticipations()
-            ->filter('.meal-count > span')
-            ->first();
-        $this->assertStringContainsString('2', $crawler->text());
+        $crawler = $this->getCurrentWeekParticipations();
+        $dailyParticipationCount = $crawler->filter('.meal-count > span')->each(static function ($node, $i): string {
+            return $node->text();
+        });
+        $this->assertContains('2', $dailyParticipationCount);
     }
 
     /**
@@ -259,17 +261,33 @@ class ParticipantControllerTest extends AbstractControllerTestCase
      * Check that variations and parent-dish titles are displayed
      * @test
      */
-    public function checkFirstVariationAndParentTitle()
+    public function checkFirstVariationAndParentTitle(): void
     {
-        $currentWeek = $this->getCurrentWeek();
-        $weekMeals = $currentWeek->getDays()->first()->getMeals();
-        $firstVariation = $weekMeals[1]->getDish();
-        $firstVariationParent = $firstVariation->getParent();
+        $firstDishVariation = null;
+
+        foreach ($this->getCurrentWeek()->getDays() as $day) {
+            /** @var Day $day */
+            foreach ($day->getMeals() as $meal) {
+                $dish = $meal->getDish();
+                if ($dish instanceof DishVariation) {
+                    $firstDishVariation = $dish;
+                    break 2;
+                }
+            }
+        }
+
+        $this->assertNotNull($firstDishVariation);
+
+        $variationParentDish = $firstDishVariation->getParent();
+        $this->assertNotNull($variationParentDish);
+
         $crawler = $this->getCurrentWeekParticipations()
-            ->filter('.meal-title')
-            ->eq(1);
+            ->filter('.meal-title > span > b')
+            ->eq(0)
+            ->closest('th');
+
         $template = '<span><b>%s</b><br>%s</span>';
-        $html = sprintf($template, $firstVariationParent->getTitle(), $firstVariation->getTitle());
+        $html = sprintf($template, $variationParentDish->getTitle(), $firstDishVariation->getTitle());
         // preg_replace() deletes every whitespace after the first
         $this->assertEquals($html, preg_replace('~\\s{2,}~', '', trim($crawler->html())));
     }

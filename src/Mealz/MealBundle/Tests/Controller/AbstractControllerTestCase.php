@@ -179,12 +179,8 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
 
     /**
      * Helper method to get the recent meal.
-     *
-     * @param DateTime $dateTime
-     *
-     * @return Meal
      */
-    protected function getRecentMeal(DateTime $dateTime = null)
+    protected function getRecentMeal(DateTime $dateTime = null): Meal
     {
         if ($dateTime === null) {
             $dateTime = new DateTime;
@@ -192,9 +188,11 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
 
         /** @var MealRepository $mealRepository */
         $mealRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
-        $criteria = new Criteria();
-        $criteria->create();
-        $meals = $mealRepository->matching($criteria->where(Criteria::expr()->lte('dateTime', $dateTime)));
+        $criteria = Criteria::create();
+        $criteria
+            ->where(Criteria::expr()->lte('dateTime', $dateTime))
+            ->orderBy(['dateTime' => Criteria::DESC]);
+        $meals = $mealRepository->matching($criteria);
 
         if (1 > $meals->count()) {
             $this->fail('No test meal found.');

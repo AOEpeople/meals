@@ -205,14 +205,17 @@ class ParticipantControllerTest extends AbstractControllerTestCase
 
     /**
      * @test
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function checkParticipationCount(): void
     {
         $crawler = $this->getCurrentWeekParticipations();
-        $dailyParticipationCount = $crawler->filter('.meal-count > span')->each(static function ($node, $i): string {
+        $participationCount = $crawler->filter('.meal-count > span')->each(static function ($node, $i): string {
             return $node->text();
         });
-        $this->assertContains('2', $dailyParticipationCount);
+
+        $this->assertContains('2', $participationCount);
     }
 
     /**

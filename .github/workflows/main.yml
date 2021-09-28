@@ -303,7 +303,7 @@ jobs:
             -F "variables[IMAGE]=$IMAGE" \
             -F "variables[GITHUB_SHA]=$GITHUB_SHA" \
             -F "token=$GITLAB_TRIGGER_TOKEN" \
-            https://gitlab.aoe.com/api/v4/projects/2718/trigger/pipeline
+            https://gitlab.aoe.com/api/v4/projects/1504/trigger/pipeline
       - name: Notify team
         env:
           COMMIT_MSG: ${{ github.event.head_commit.message }}

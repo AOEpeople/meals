@@ -61,6 +61,8 @@ class CostSheetController extends BaseController
             }
         }
 
+        ksort($users, SORT_STRING);
+
         return $this->render('MealzAccountingBundle::costSheet.html.twig', array(
             'columnNames' => $columnNames,
             'users' => $users

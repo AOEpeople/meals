@@ -1,5 +1,5 @@
 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-	{% if balance < -50 and path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) != path('mealz_accounting_payment_transaction_history') %}
+	{% if balance < payment_notification_debt and path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')) != path('mealz_accounting_payment_transaction_history') %}
 		<div data-fancybox data-src="#hidden-content"></div>
 		<div class="fancybox" style="display: none;" id="hidden-content">
 			<p>{{ "payment.acknowledge_debts.text"|trans({'%amount%': balance}, "messages") }}</p>

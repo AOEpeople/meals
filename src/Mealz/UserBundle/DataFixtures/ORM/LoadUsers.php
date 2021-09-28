@@ -40,16 +40,16 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
     {
         $this->objectManager = $manager;
         $users = [
-            ['username' => 'alice.meals', 'password' => 'Chee7ieRahqu', 'roles' => ['ROLE_USER']],
-            ['username' => 'bob.meals', 'password' => 'ON2za5OoJohn', 'roles' => ['ROLE_USER']],
-            ['username' => 'finance.meals', 'password' => 'IUn4d9NKMt', 'roles' => ['ROLE_FINANCE']],
-            ['username' => 'jane.meals', 'password' => 'heabahW6ooki', 'roles' => ['ROLE_USER']],
-            ['username' => 'john.meals', 'password' => 'aef9xoo2hieY', 'roles' => ['ROLE_USER']],
-            ['username' => 'kochomi.meals', 'password' => 'f8400YzaOd', 'roles' => ['ROLE_KITCHEN_STAFF']],
+            ['username' => 'alice.meals', 'password' => 'Chee7ieRahqu', 'firstName' => 'Alice', 'lastName' => 'Meals', 'roles' => ['ROLE_USER']],
+            ['username' => 'bob.meals', 'password' => 'ON2za5OoJohn', 'firstName' => 'Bob', 'lastName' => 'Meals', 'roles' => ['ROLE_USER']],
+            ['username' => 'finance.meals', 'password' => 'IUn4d9NKMt', 'firstName' => 'Finance', 'lastName' => 'Meals', 'roles' => ['ROLE_FINANCE']],
+            ['username' => 'jane.meals', 'password' => 'heabahW6ooki', 'firstName' => 'Jane', 'lastName' => 'Meals', 'roles' => ['ROLE_USER']],
+            ['username' => 'john.meals', 'password' => 'aef9xoo2hieY', 'firstName' => 'John', 'lastName' => 'Meals', 'roles' => ['ROLE_USER']],
+            ['username' => 'kochomi.meals', 'password' => 'f8400YzaOd', 'firstName' => 'kochomi', 'lastName' => 'Meals', 'roles' => ['ROLE_KITCHEN_STAFF']],
         ];
 
         foreach ($users as $user) {
-            $this->addUser($user['username'], $user['password'], $user['roles']);
+            $this->addUser($user['username'], $user['password'], $user['firstName'], $user['lastName'], $user['roles']);
         }
 
         $this->objectManager->flush();
@@ -67,8 +67,13 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
     /**
      * @param string[] $roles List of role identifiers
      */
-    protected function addUser(string $username, string $password, array $roles): void
-    {
+    protected function addUser(
+        string $username,
+        string $password,
+        string $firstName,
+        string $lastName,
+        array $roles
+    ): void {
         $login = new Login();
         $login->setUsername($username);
         $login->setSalt(md5(uniqid('', true)));
@@ -78,8 +83,8 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
 
         $profile = new Profile();
         $profile->setUsername($username);
-        $profile->setName(strrev($username));
-        $profile->setFirstName($username);
+        $profile->setName($lastName);
+        $profile->setFirstName($firstName);
 
         // set roles
         $roleObjs = [];

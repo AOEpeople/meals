@@ -28,7 +28,6 @@ class LoadWeeks extends Fixture implements OrderedFixtureInterface
     public function load(ObjectManager $manager): void
     {
         $weeks = $this->getCurrentTestWeeks();
-        $weeks = array_merge($weeks, $this->getStaticTestWeeks());
 
         foreach ($weeks as $weekDataSet) {
             $week = new Week();
@@ -58,7 +57,7 @@ class LoadWeeks extends Fixture implements OrderedFixtureInterface
     private function getCurrentTestWeeks(): array
     {
         $currentWeeks = [];
-        $date = new DateTime('12:00');
+        $date = new DateTime('monday last week');
         $maxDate = new DateTime('+1 month');
 
         while ($date < $maxDate) {
@@ -69,22 +68,5 @@ class LoadWeeks extends Fixture implements OrderedFixtureInterface
         }
 
         return $currentWeeks;
-    }
-
-    /**
-     * Gets the static test weeks.
-     *
-     * They are meant to be used with unit or functional tests.
-     */
-    private function getStaticTestWeeks(): array
-    {
-        return [
-            '2016-41' => ['year' => '2016', 'calendarWeek' => '41'],
-            '2016-42' => ['year' => '2016', 'calendarWeek' => '42'],
-            '2016-43' => ['year' => '2016', 'calendarWeek' => '43'],
-            '2016-44' => ['year' => '2016', 'calendarWeek' => '44'],
-            '2016-45' => ['year' => '2016', 'calendarWeek' => '45'],
-            '2016-46' => ['year' => '2016', 'calendarWeek' => '46'],
-        ];
     }
 }

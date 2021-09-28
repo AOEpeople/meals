@@ -1,17 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\MealBundle\Tests\Repository;
 
-use DateTime;
-use App\Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
-use App\Mealz\MealBundle\DataFixtures\ORM\LoadDays;
-use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
-use App\Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
-use App\Mealz\MealBundle\DataFixtures\ORM\LoadParticipants;
+use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
-
 use App\Mealz\MealBundle\Entity\WeekRepository;
 use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
+use DateTime;
+use DateTimeImmutable;
 
 class WeekRepositoryTest extends AbstractDatabaseTestCase
 {
@@ -23,14 +21,7 @@ class WeekRepositoryTest extends AbstractDatabaseTestCase
         parent::setUp();
 
         $this->clearAllTables();
-        $this->loadFixtures([
-                new LoadWeeks(),
-                new LoadDays(),
-                new LoadCategories(),
-                new LoadDishes(),
-                new LoadMeals(),
-                new LoadParticipants()
-        ]);
+        $this->loadFixtures([new LoadWeeks()]);
 
         $this->weekRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Week');
     }
@@ -38,34 +29,33 @@ class WeekRepositoryTest extends AbstractDatabaseTestCase
     /**
      * @test
      */
-    public function getCurrentWeek()
+    public function getCurrentWeek(): void
     {
-        $currentDate = new DateTime();
-        $week = $this->weekRepository->getCurrentWeek();
-        $this->assertEquals($week->getCalendarWeek(), $currentDate->format('W'));
+        $now = new DateTime();
+        $currentWeek = $this->weekRepository->getCurrentWeek();
+        $this->assertSame((int) $now->format('W'), $currentWeek->getCalendarWeek());
     }
 
     /**
-     * @dataProvider getTestDates
      * @test
-     *
-     * @param  string $date     Test date
      */
-    public function getNextWeek($date)
+    public function getNextWeek(): void
     {
-        $dateTime = new DateTime($date);
-        $dateWeek = $dateTime->format('W');
-        $week = $this->weekRepository->getNextWeek($dateTime);
-        $this->assertEquals($week->getCalendarWeek(), $dateWeek + 1);
-    }
+        $now = new DateTimeImmutable();
+        $currCalWeek = (int) $now->format('W');
 
-    public function getTestDates()
-    {
-        return [
-            ['2016-10-16'],
-            ['2016-10-19'],
-            ['2016-10-22'],
-            ['2016-10-23']
-        ];
+        $lastCalWeek = (int) $now->modify('last day of December')->format('W');
+        $this->assertContains($lastCalWeek, [52, 53]);
+
+        $nextWeek = $this->weekRepository->getNextWeek(DateTime::createFromImmutable($now));
+        $this->assertInstanceOf(Week::class, $nextWeek);
+
+        $nextCalWeek = $nextWeek->getCalendarWeek();
+
+        if ($currCalWeek === $lastCalWeek) {
+            $this->assertSame(1, $nextCalWeek);
+        } else {
+            $this->assertSame($currCalWeek + 1, $nextCalWeek);
+        }
     }
 }

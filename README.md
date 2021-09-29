@@ -167,9 +167,7 @@ To load up some test data, run
 
     php bin/console doctrine:fixtures:load -n
 
-It generates dishes, meals and users.
-
-You can use the following users to login.
+It generates dishes, meals and the following users.
 
 - alice.meals
 - bob.meals

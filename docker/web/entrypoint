@@ -7,11 +7,6 @@ envsubst < "/container/apache.conf" > "/etc/apache2/sites-enabled/meals.conf"
 echo "Setup PHP configuration"
 envsubst < "/container/php.ini" > "/usr/local/etc/php/conf.d/_meals.ini"
 
-echo "Setup msmtp configuration"
-envsubst < "/container/msmtprc" > "/etc/msmtprc"
-chown www-data:www-data /etc/msmtprc
-chmod 600 /etc/msmtprc
-
 if [ "${APP_ENV}" = "staging" ]; then
   echo "Load data fixtures"
   /var/www/html/bin/console doctrine:fixtures:load -n

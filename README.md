@@ -196,8 +196,3 @@ Use the following command from project root directory in host system.
 ```shell
 ddev run tests
 ```
-
----
-
-# [internal] Deployment to AOEs K8S cluster
-You can find the documentation on how to deploy a new release to AOEs K8S cluster in [docs/deployment.md](docs/deployment.md).

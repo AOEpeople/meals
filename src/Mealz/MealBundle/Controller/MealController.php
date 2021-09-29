@@ -14,6 +14,7 @@ use App\Mealz\MealBundle\EventListener\ToggleParticipationNotAllowedException;
 use App\Mealz\MealBundle\Form\Guest\InvitationForm;
 use App\Mealz\MealBundle\Entity\InvitationWrapper;
 use App\Mealz\MealBundle\Service\DishService;
+use App\Mealz\MealBundle\Service\Mailer;
 use App\Mealz\MealBundle\Service\Notification\NotifierInterface;
 use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\Role;
@@ -35,10 +36,14 @@ use Symfony\Component\Translation\Translator;
  */
 class MealController extends BaseController
 {
+    private Mailer $mailer;
     private NotifierInterface $notifier;
 
-    public function __construct(NotifierInterface $notifier)
-    {
+    public function __construct(
+        Mailer $mailer,
+        NotifierInterface $notifier
+    ) {
+        $this->mailer = $mailer;
         $this->notifier = $notifier;
     }
 
@@ -222,8 +227,7 @@ class MealController extends BaseController
         $offeredMeal = $participants->findByOffer($meal->getId());
         $participant = $offeredMeal[0];
 
-        // send message to meal giver
-        $this->sendMail($participant, $takenOffer);
+        $this->sendMealTakenEmail($participant, $takenOffer);
 
         $participant->setProfile($profile);
         $participant->setOfferedAt(0);
@@ -244,6 +248,29 @@ class MealController extends BaseController
         );
 
         return $participant;
+    }
+
+    /**
+     * Sends an email to meal giver that his offered meal as been taken by someone.
+     */
+    private function sendMealTakenEmail(Participant $participant, string $dishName): void
+    {
+        $translator = $this->get('translator');
+
+        $recipient = $participant->getProfile()->getUsername() . $translator->trans('mail.domain', [], 'messages');
+        $subject = $translator->trans('mail.subject', [], 'messages');
+        $firstname = $participant->getProfile()->getFirstname();
+
+        $message = $translator->trans(
+            'mail.message',
+            [
+                '%firstname%' => $firstname,
+                '%takenOffer%' => $dishName
+            ],
+            'messages'
+        );
+
+        $this->mailer->sendMail($recipient, $subject, $message);
     }
 
     /**

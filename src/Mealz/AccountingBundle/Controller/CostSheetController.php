@@ -5,6 +5,7 @@ namespace App\Mealz\AccountingBundle\Controller;
 use App\Mealz\AccountingBundle\Entity\Transaction;
 use App\Mealz\AccountingBundle\Service\Wallet;
 use App\Mealz\MealBundle\Controller\BaseController;
+use App\Mealz\MealBundle\Service\Mailer;
 use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\ProfileRepository;
 use DateTime;
@@ -14,6 +15,13 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CostSheetController extends BaseController
 {
+    private Mailer $mailer;
+
+    public function __construct(Mailer $mailer)
+    {
+        $this->mailer = $mailer;
+    }
+
     /**
      * @TODO: use own data model for user costs
      */
@@ -217,10 +225,6 @@ class CostSheetController extends BaseController
             'messages'
         );
 
-        $headers = [];
-        $headers[] = $translator->trans('mail.sender', [], 'messages');
-        $headers[] = "Content-type: text/html; charset=utf-8";
-
-        mail($receiver, $subject, $body, implode("\r\n", $headers));
+        $this->mailer->sendMail($receiver, $subject, $body, true);
     }
 }

@@ -5,6 +5,7 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     app.base_url: '%env(APP_BASE_URL)%'
+    app.email.sender: '%env(EMAIL_SENDER)%'
     app.email.settlement_request.receiver: '%env(SETTLEMENT_REQ_EMAIL_RECEIVER)%'
 
     app.idp.server: '%env(IDP_SERVER)%'
@@ -160,6 +161,10 @@ services:
     App\Mealz\MealBundle\Service\HttpHeaderUtility:
         arguments:
             $locales: '%app.locales%'
+
+    App\Mealz\MealBundle\Service\Mailer:
+        arguments:
+            $senderEmail: '%app.email.sender%'
 
     App\Mealz\MealBundle\Service\Notification\MattermostService:
         lazy: true

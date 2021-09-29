@@ -6,7 +6,6 @@ use App\Mealz\AccountingBundle\Entity\TransactionRepository;
 use App\Mealz\MealBundle\Entity\CategoryRepository;
 use App\Mealz\MealBundle\Entity\DishRepository;
 use App\Mealz\MealBundle\Entity\MealRepository;
-use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\ParticipantRepository;
 use App\Mealz\MealBundle\Service\Doorman;
 use App\Mealz\MealBundle\Service\Link;
@@ -114,26 +113,5 @@ abstract class BaseController extends AbstractController
         ];
 
         return new JsonResponse($response);
-    }
-
-    public function sendMail(Participant $participant, string $takenOffer): void
-    {
-        $translator = $this->get('translator');
-
-        $recipient = $participant->getProfile()->getUsername() . $translator->trans('mail.domain', array(), 'messages');
-        $subject = $translator->trans('mail.subject', [], 'messages');
-        $header = $translator->trans('mail.sender', [], 'messages');
-        $firstname = $participant->getProfile()->getFirstname();
-
-        $message = $translator->trans(
-            'mail.message',
-            [
-                '%firstname%' => $firstname,
-                '%takenOffer%' => $takenOffer
-            ],
-            'messages'
-        );
-
-        mail($recipient, $subject, $message, $header);
     }
 }

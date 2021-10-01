@@ -127,12 +127,15 @@ Mealz.prototype.enablePaypal = function () {
                             body: JSON.stringify(
                                 $('form[name="ecash"]').serializeArray()
                             )
-                        }).then(function (redirect) {
-                            if (redirect.status === 200 && redirect.redirected === false) {
-                                return (redirect.text());
+                        }).then(function (response) {
+                            if (response.status !== 200) {
+                                return '/payment/ecash/transaction/failure';
                             }
-                        }).then(function (redirect) {
-                            return actions.redirect(window.location.origin + redirect);
+                            if (response.status === 200 && response.redirected === false) {
+                                return (response.text());
+                            }
+                        }).then(function (redirectPath) {
+                            return actions.redirect(window.location.origin + redirectPath);
                         });
                     });
                 }

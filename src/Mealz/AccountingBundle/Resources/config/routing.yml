@@ -1,10 +1,19 @@
-mealz_accounting_payment_cash_form_submit:
-    path: /payment/cash/form/submit
-    defaults: { _controller: App\Mealz\AccountingBundle\Controller\Payment\CashController::paymentFormHandling }
-
 mealz_accounting_payment_ecash_form_submit:
     path: /payment/ecash/form/submit
     defaults: { _controller: App\Mealz\AccountingBundle\Controller\Payment\EcashController::paymentFormHandling }
+    methods: [POST]
+
+mealz_accounting_payment_ecash_form:
+    path: /payment/ecash/form/{profile}
+    defaults: { _controller: App\Mealz\AccountingBundle\Controller\Payment\EcashController::getPaymentFormForProfile }
+
+mealz_accounting_payment_ecash_transaction_failure:
+    path: /payment/ecash/transaction/failure
+    defaults: { _controller: App\Mealz\AccountingBundle\Controller\Payment\EcashController::transactionFailure }
+
+mealz_accounting_payment_cash_form_submit:
+    path: /payment/cash/form/submit
+    defaults: { _controller: App\Mealz\AccountingBundle\Controller\Payment\CashController::paymentFormHandling }
 
 mealz_accounting_payment_cash_form:
     path: /payment/cash/form/{profile}
@@ -13,10 +22,6 @@ mealz_accounting_payment_cash_form:
 mealz_accounting_payment_settlement_form:
     path: /payment/settlement/form/{profile}
     defaults: { _controller: App\Mealz\AccountingBundle\Controller\Payment\CashController::getSettlementFormForProfile }
-
-mealz_accounting_payment_ecash_form:
-    path: /payment/ecash/form/{profile}
-    defaults: { _controller: App\Mealz\AccountingBundle\Controller\Payment\EcashController::getPaymentFormForProfile }
 
 mealz_accounting_payment_transaction_history:
     path: /accounting/transactions

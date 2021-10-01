@@ -2,21 +2,24 @@
 
 namespace App\Mealz\AccountingBundle\Controller\Payment;
 
-use Doctrine\ORM\EntityManager;
+use App\Mealz\AccountingBundle\Service\TransactionService;
 use App\Mealz\AccountingBundle\Service\Wallet;
 use App\Mealz\MealBundle\Controller\BaseController;
 use App\Mealz\AccountingBundle\Entity\Transaction;
 use App\Mealz\UserBundle\Entity\Profile;
 use Exception;
+use JsonException;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
 use App\Mealz\AccountingBundle\Form\EcashPaymentAdminForm;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use PayPalCheckoutSdk\Orders\OrdersGetRequest;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class EcashController extends BaseController
 {
-    public function getPaymentFormForProfile(Profile $profile, Wallet $wallet): JsonResponse {
+    public function getPaymentFormForProfile(Profile $profile, Wallet $wallet): JsonResponse
+    {
         $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
         $profile = $profileRepository->find($profile);
 
@@ -43,56 +46,38 @@ class EcashController extends BaseController
 
     /**
      * Handle the payment form for payments via PayPal
-     *
-     * @throws Exception
      */
-    public function paymentFormHandling(Request $request): Response
-    {
-        $formArray = [];
-        if ($content = $request->getContent()) {
-            // Decode the JSON object and insert the content into an array
-            foreach (json_decode($content, true) as $formValue) {
-                $formArray[$formValue['name']] = $formValue['value'];
-            }
+    public function paymentFormHandling(
+        Request $request,
+        TransactionService $transactionService,
+        TranslatorInterface $translator
+    ): Response {
+        if (false === $request->isMethod('POST')) {
+            return new Response('', Response::HTTP_BAD_REQUEST);
         }
 
-        $translator = $this->get('translator');
-        $validatedPaypalTrans = null;
+        try {
+            $transaction = $this->getTransactionData($request);
+        } catch (Exception $e) {
+            $this->logException($e, 'bad request', ['request_data' => $request->getContent()]);
 
-        if ($this->isFormValid($formArray) === true) {
-            $validatedPaypalTrans = $this->validatePaypalTransaction($formArray);
+            return new Response('', Response::HTTP_BAD_REQUEST);
         }
 
-        // Check if required fields are set and the pay method is set to PayPal ('paymethod' == 0)
-        if ($request->isMethod('POST') === true
-            && array_key_exists('statuscode', $validatedPaypalTrans) === true
-            && array_key_exists('amount', $validatedPaypalTrans) === true
-            && $validatedPaypalTrans['statuscode'] === 200) {
+        try {
+            $transactionService->process($transaction['orderID'], $transaction['profileID'], $transaction['amount']);
+        } catch(Exception $e) {
+            $this->logException($e, 'transaction processing error', [
+                'orderID' => $transaction['orderID'],
+                'profile' => $transaction['profileID'],
+                'amount'  => $transaction['amount']
+            ]);
 
-            /** @var EntityManager $entityManager */
-            $entityManager = $this->getDoctrine()->getManager();
-            $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
-            $profile = $profileRepository->find($formArray['ecash[profile]']);
-
-            // Create new transaction with data from given form
-            $transaction = new Transaction();
-            $transaction->setProfile($profile);
-            $transaction->setOrderId($formArray['ecash[orderid]']);
-            $transaction->setAmount((float)str_replace(',', '.', $validatedPaypalTrans['amount']));
-            $transaction->setDate(new \DateTime());
-            $transaction->setPaymethod(0);
-
-            $entityManager->persist($transaction);
-            $entityManager->flush();
-
-            $message = $translator->trans("payment.transaction_history.successful_payment", [], 'messages');
-            $severity = 'success';
-        } else {
-            $message = $translator->trans("payment.transaction_history.payment_failed", [], 'messages');
-            $severity = 'danger';
+            return new Response('', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        $this->addFlashMessage($message, $severity);
+        $message = $translator->trans("payment.transaction_history.successful_payment", [], 'messages');
+        $this->addFlashMessage($message, 'success');
 
         return new Response(
             $this->generateUrl('mealz_accounting_payment_transaction_history'),
@@ -101,45 +86,58 @@ class EcashController extends BaseController
         );
     }
 
-    /**
-     * Helper function to validate the PayPal transaction using the PayPal API
-     * Note: This function is public so that it can be mocked in the according
-     * PHPUnit test class
-     *
-     * @param Form  $formArray  The form array
-     *
-     * @return array|null Returns int StatusCode and float Value
-     */
-    public function validatePaypalTransaction($formArray): ?array
+    public function transactionFailure(TranslatorInterface $translator): Response
     {
-        $paypalId = $this->container->get('twig')->getGlobals()['paypal_id'];
-        $secret = $this->container->get('twig')->getGlobals()['paypal_secret'];
-        $environment = $this->getParameter('kernel.environment');
-        PaypalClient::setCredentialsAndEnvironment($paypalId, $secret, $environment);
+        $message = $translator->trans("payment.transaction_history.payment_failed", [], 'messages');
+        $severity = 'danger';
 
-        $response = PaypalClient::client()->execute(new OrdersGetRequest($formArray['ecash[orderid]']));
+        $this->addFlashMessage($message, $severity);
 
-        if (property_exists($response, 'statusCode') === false
-            || property_exists($response, 'result') === false
-            || property_exists($response->result, 'purchase_units') === false) {
-            return null;
+        return $this->redirect($this->generateUrl('mealz_accounting_payment_transaction_history'));
+    }
+
+    /**
+     * @return array<string, mixed>
+     *
+     * @throws JsonException
+     */
+    private function getTransactionData(Request $request): array
+    {
+        $data = [];
+        $payload = $this->decodeJSONPayLoad($request);
+        foreach ($payload as $item) {
+            $data[$item['name']] = $item['value'];
+        }
+
+        if (!isset($data['ecash[orderid]']) || ('' === $data['ecash[orderid]'])) {
+            throw new RuntimeException('missing or invalid order-id', 1633095392);
+        }
+        if (!isset($data['ecash[profile]']) || ('' === $data['ecash[profile]'])) {
+            throw new RuntimeException('missing or invalid profile-id', 1633095400);
+        }
+        if (!isset($data['ecash[amount]']) || (0.0 >= (float) $data['ecash[amount]'])) {
+            throw new RuntimeException('invalid amount', 1633095450);
         }
 
         return [
-            'statuscode' => $response->statusCode,
-            'amount'     => $response->result->purchase_units[0]->amount->value
+            'orderID'   => $data['ecash[orderid]'],
+            'profileID' => $data['ecash[profile]'],
+            'amount'    => (float) $data['ecash[amount]'],
         ];
     }
 
     /**
-     * Helper function to check if given form is valid
+     * @return array<string, mixed>
+     *
+     * @throws JsonException
      */
-    private function isFormValid(array $formArray): bool
+    private function decodeJSONPayLoad(Request $request): array
     {
-        return (
-            !empty($formArray['ecash[orderid]'])
-            && !empty($formArray['ecash[profile]'])
-            && ((float)(str_replace(',', '.', $formArray['ecash[amount]'])) > 0.00)
-        );
+        $content = $request->getContent();
+        if (!is_string($content) || '' === $content) {
+            return [];
+        }
+
+        return json_decode($content, true, 512, JSON_THROW_ON_ERROR);
     }
 }

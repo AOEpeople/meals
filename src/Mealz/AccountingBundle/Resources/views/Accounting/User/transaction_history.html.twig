@@ -6,7 +6,7 @@
 {% set wrapperClass = 'transaction-history' %}
 
 {% block body %}
-    <script src="https://www.paypal.com/sdk/js?client-id={{ paypal_id }}&currency=EUR"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id={{ paypal_client_id }}&currency=EUR"></script>
 
     <div class="add-funds">
     {{ MealzHeadline.create(1, 'payment.transaction_history.account'|trans({}, 'messages'), '', '', [

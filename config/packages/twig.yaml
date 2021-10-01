@@ -10,6 +10,5 @@ twig:
         lock_toggle_participation_at: '%mealz.lock_toggle_participation_at%'
         payment_notification_debt: '%app.payment_notification_debt%'
         wallet: "@mealz_accounting.wallet"
-        paypal_id: "%app.paypal.id%"
-        paypal_secret: "%app.paypal.secret%"
+        paypal_client_id: "%app.paypal.client_id%"
         countDishPeriod: "4 weeks ago"

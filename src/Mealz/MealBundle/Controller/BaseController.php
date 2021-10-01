@@ -10,6 +10,7 @@ use App\Mealz\MealBundle\Entity\ParticipantRepository;
 use App\Mealz\MealBundle\Service\Doorman;
 use App\Mealz\MealBundle\Service\Link;
 use App\Mealz\UserBundle\Entity\Profile;
+use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -18,6 +19,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class BaseController extends AbstractController
 {
+    protected LoggerInterface $logger;
+
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
     public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();
@@ -113,5 +121,25 @@ abstract class BaseController extends AbstractController
         ];
 
         return new JsonResponse($response);
+    }
+
+    /**
+     * @param Exception $exc     Exception to log
+     * @param string    $message Additional message
+     * @param array     $context Name-value data describing the execution state when exception occurred
+     */
+    protected function logException(Exception $exc, string $message = '', array $context = []): void
+    {
+        $errMsg = '' === $message ? 'exception' : $message;
+        $excChain = [];
+        $prev = $exc;
+
+        while ($prev) {
+            $excChain[] = sprintf('message: %s, trace: %s', $prev->getMessage(), $prev->getTraceAsString());
+            $prev = $prev->getPrevious();
+        }
+
+        $context['exceptionChain'] = $excChain;
+        $this->logger->error($errMsg, $context);
     }
 }

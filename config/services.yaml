@@ -23,8 +23,9 @@ parameters:
 
     app.locales: [en, de]
 
-    app.paypal.id:     '%env(PAYPAL_ID)%'
-    app.paypal.secret: '%env(PAYPAL_SECRET)%'
+    app.paypal.client_id:     '%env(PAYPAL_ID)%'
+    app.paypal.client_secret: '%env(PAYPAL_SECRET)%'
+    app.paypal.sdk_env:       '%env(PAYPAL_SDK_ENV)%'
 
     app.secret: '%env(APP_SECRET)%'
 
@@ -205,6 +206,12 @@ services:
         resource: '../src/Mealz/AccountingBundle/Controller/'
         tags: ['controller.service_arguments']
 
+
+    App\Mealz\AccountingBundle\Service\PayPal\Client:
+        arguments:
+            $clientID: '%app.paypal.client_id%'
+            $clientSecret: '%app.paypal.client_secret%'
+            $sdkEnv: '%app.paypal.sdk_env%'
 
     ##################################################################
     # User BUNDLE

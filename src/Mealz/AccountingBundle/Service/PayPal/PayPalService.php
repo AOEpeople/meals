@@ -76,7 +76,7 @@ class PayPalService
         return new PayPalOrder($orderResp->id, $grossAmount, $orderDateTime);
     }
 
-    private function toOrderAmount(array $purchaseUnits): float
+    private function toOrderAmount($purchaseUnits): float
     {
         if (!is_array($purchaseUnits) || !isset($purchaseUnits[0])) {
             throw new RuntimeException('invalid order response; purchase units not found');

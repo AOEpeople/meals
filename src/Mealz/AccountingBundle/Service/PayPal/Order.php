@@ -9,8 +9,16 @@ use DateTimeImmutable;
 
 class Order
 {
+    /**
+     * PayPal transaction code
+     */
     private string $id;
+
+    /**
+     * Transaction gross amount
+     */
     private float $amount;
+
     private DateTimeImmutable $dateTime;
 
     public function __construct(string $id, float $amount, DateTime $dateTime)

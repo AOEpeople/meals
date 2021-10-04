@@ -51,26 +51,15 @@ class PayPalService
         if (!property_exists($orderResp, 'id')) {
             throw new RuntimeException('invalid order response; order-id not found');
         }
-        if (!property_exists($orderResp, 'purchase_units')
-            || !is_array($orderResp->purchase_units)
-            || !isset($orderResp->purchase_units[0])) {
+        if (!property_exists($orderResp, 'purchase_units')) {
             throw new RuntimeException('invalid order response; purchase units not found');
         }
-        if (!is_object($orderResp->purchase_units[0]->amount)) {
-            throw new RuntimeException(
-                'invalid order response; invalid amount type; expected object, got '
-                . gettype($orderResp->purchase_units[0]->amount)
-            );
-        }
-        if (!property_exists($orderResp->purchase_units[0]->amount, 'value')) {
-            throw new RuntimeException('invalid order response; order amount not found');
-        }
 
-        $grossAmount = (float) $orderResp->purchase_units[0]->amount->value;
+        $grossAmount = $this->toOrderAmount($orderResp->purchase_units);
 
         // Get order date and time
         // Order response contains two date-time values, i.e. create and update.
-        // Since we don't any specific requirements regarding which date-time value to use,
+        // Since we don't have any specific requirements regarding which date-time value to use,
         // we are simply using order update date-time.
         if (!property_exists($orderResp, 'update_time')) {
             throw new RuntimeException('invalid order response; order date-time not found');
@@ -85,5 +74,23 @@ class PayPalService
         }
 
         return new PayPalOrder($orderResp->id, $grossAmount, $orderDateTime);
+    }
+
+    private function toOrderAmount(array $purchaseUnits): float
+    {
+        if (!is_array($purchaseUnits) || !isset($purchaseUnits[0])) {
+            throw new RuntimeException('invalid order response; purchase units not found');
+        }
+        if (!is_object($purchaseUnits[0]->amount)) {
+            throw new RuntimeException(
+                'invalid order response; invalid amount type; expected object, got '
+                . gettype($purchaseUnits[0]->amount)
+            );
+        }
+        if (!property_exists($purchaseUnits[0]->amount, 'value')) {
+            throw new RuntimeException('invalid order response; order amount not found');
+        }
+
+        return (float) $purchaseUnits[0]->amount->value;
     }
 }

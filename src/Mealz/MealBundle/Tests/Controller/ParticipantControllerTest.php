@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\MealBundle\Tests\Controller;
 
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
@@ -17,6 +19,7 @@ use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\Role;
+use DateTime;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
@@ -60,8 +63,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
 
         $time = time();
 
-        $dateTime = new \DateTime();
-        $dateTime->add(new \DateInterval('PT1H'));
+        $dateTime = new DateTime('today 23:59:59');
         self::$meal = $this->getRecentMeal($dateTime);
 
         // Create profile for participant
@@ -189,17 +191,9 @@ class ParticipantControllerTest extends AbstractControllerTestCase
      * Check that the guest participant is displayed with a (<company name>) suffix
      * @test
      */
-    public function checkGuestSuffixInParticipationTable()
+    public function checkGuestSuffixInParticipationTable(): void
     {
-        $crawler = $this->getCurrentWeekParticipations()
-            ->filter('.table-row')
-            ->reduce(static function ($node) {
-                $participantName = self::$guestLastName . ', ' . self::$guestFirstName;
-                if (stripos($node->text(), $participantName) === false) {
-                    return false;
-                }
-            })
-            ->first();
+        $crawler = $this->getCurrentWeekParticipations();
         $this->assertStringContainsString(self::$guestCompany, $crawler->text());
     }
 

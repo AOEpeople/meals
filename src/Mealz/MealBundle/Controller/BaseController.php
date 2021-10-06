@@ -16,6 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Throwable;
 
 abstract class BaseController extends AbstractController
 {
@@ -128,18 +129,29 @@ abstract class BaseController extends AbstractController
      * @param string    $message Additional message
      * @param array     $context Name-value data describing the execution state when exception occurred
      */
-    protected function logException(Exception $exc, string $message = '', array $context = []): void
+    protected function logException(Throwable $exc, string $message = '', array $context = []): void
     {
-        $errMsg = '' === $message ? 'exception' : $message;
-        $excChain = [];
-        $prev = $exc;
+        $excChain = ['message' => ('' === $message ? 'exception' : $message)];
 
-        while ($prev) {
-            $excChain[] = sprintf('message: %s, trace: %s', $prev->getMessage(), $prev->getTraceAsString());
-            $prev = $prev->getPrevious();
+        for ($i = 0; $exc; $i++) {
+            $excLog = ['type' => get_class($exc)];
+
+            if (0 < $exc->getCode()) {
+                $excLog['code'] = $exc->getCode();
+            }
+
+            $excLog['message'] = $exc->getMessage();
+            $excLog['file'] = $exc->getFile().':'.$exc->getLine();
+
+            $prev = $exc->getPrevious();
+            if (null === $prev) {
+                $excLog['trace'] = $exc->getTraceAsString();
+            }
+
+            $exc = $prev;
+            $excChain['#'.$i] = $excLog;
         }
 
-        $context['exceptionChain'] = $excChain;
-        $this->logger->error($errMsg, $context);
+        $this->logger->error(json_encode($excChain), $context);
     }
 }

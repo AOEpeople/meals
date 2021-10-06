@@ -16,7 +16,7 @@ class OrderTest extends TestCase
     public function instantiate(): void
     {
         $now = new DateTime();
-        $order = new Order('#1', 10.35, $now);
+        $order = new Order('#1', 10.35, $now, '');
 
         $this->assertSame('#1', $order->getId());
         $this->assertSame(10.35, $order->getAmount());
@@ -26,5 +26,17 @@ class OrderTest extends TestCase
         $origDateTime = clone $now;
         $now->modify('tomorrow');
         $this->assertEquals($origDateTime, $order->getDateTime());
+    }
+
+    /**
+     * @test
+     */
+    public function isCompleted(): void
+    {
+        $order = new Order('#1', 10.35, new DateTime(), '');
+        $this->assertFalse($order->isCompleted());
+
+        $order = new Order('#1', 10.35, new DateTime(), 'COMPLETED');
+        $this->assertTrue($order->isCompleted());
     }
 }

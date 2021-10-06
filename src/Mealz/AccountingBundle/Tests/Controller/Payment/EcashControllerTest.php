@@ -4,33 +4,18 @@ declare(strict_types=1);
 
 namespace App\Mealz\AccountingBundle\Tests\Controller\Payment;
 
-use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
+use App\Mealz\AccountingBundle\Service\TransactionService;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Psr\Log\NullLogger;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Translation\Translator;
 use App\Mealz\AccountingBundle\Controller\Payment\EcashController;
-use App\Mealz\AccountingBundle\DataFixtures\ORM\LoadTransactions;
 use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
-use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class EcashControllerTest extends AbstractControllerTestCase
 {
-    /**
-     * Set up the testing environment
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->clearAllTables();
-        $this->loadFixtures([
-            new LoadRoles(),
-            // self::$container is a special container that allow access to private services
-            // see: https://symfony.com/blog/new-in-symfony-4-1-simpler-service-testing
-            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
-            new LoadTransactions()
-        ]);
-    }
+    use ProphecyTrait;
 
     /**
      * Check if form and PayPal button is rendered correctly
@@ -59,76 +44,116 @@ class EcashControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * Test payment form handling and database persistence
+     * @test
+     *
+     * @testdox Calling postPayment action with anything but POST method returns 405 HTTP response.
      */
-    public function testPaymentFormHandlingAction(): void
+    public function postPaymentFailureInvalidMethod(): void
     {
-        $this->markTestSkipped('outdated, needs to be updated');
-        $this->loginAs('alice.meals');
+        $invalidRequestMethod = ['DELETE', 'GET', 'HEAD', 'PUT'];
+        $transactionService = $this->prophesize(TransactionService::class)->reveal();
+        $translator = $this->prophesize(TranslatorInterface::class)->reveal();
 
-        // Mock EcashController class
-        $ecashController = $this->getMockBuilder(EcashController::class)
-            ->setMethods(array(
-                'validatePaypalTransaction',
-                'get',
-                'getDoctrine',
-                'generateUrl',
-                'addFlashMessage'
-            ))
-            ->getMock();
+        foreach ($invalidRequestMethod as $method) {
+            $request = Request::create('', $method);
+            $controller = new EcashController(new NullLogger());
 
-        $ecashController->expects($this->atLeastOnce())
-            ->method('validatePaypalTransaction')
-            ->will($this->returnValue(['statuscode' => 200, 'amount' => '5.23']));
+            $response = $controller->postPayment($request, $transactionService, $translator);
+            $this->assertSame(405, $response->getStatusCode());
+        }
+    }
 
-        $ecashController->expects($this->atLeastOnce())
-            ->method('get')
-            ->with('translator')
-            ->will($this->returnValue(new Translator('de')));
+    /**
+     * @test
+     *
+     * @testdox Calling postPayment action with $_dataName results in 400 HTTP response.
+     *
+     * @dataProvider postPaymentInvalidData
+     */
+    public function postPaymentFailureBadData($data): void
+    {
+        $transactionService = $this->prophesize(TransactionService::class)->reveal();
+        $translator = $this->prophesize(TranslatorInterface::class)->reveal();
 
-        $ecashController->expects($this->atLeastOnce())
-            ->method('getDoctrine')
-            ->will($this->returnValue($this->getDoctrine()));
+        $request = Request::create('', 'POST', [], [], [], [], $data);
+        $controller = new EcashController(new NullLogger());
 
-        $ecashController->expects($this->atLeastOnce())
-            ->method('generateUrl')
-            ->will($this->returnValue('/accounting/transactions'));
+        $response = $controller->postPayment($request, $transactionService, $translator);
+        $this->assertSame(400, $response->getStatusCode());
+    }
 
-        // Simulate submit request
-        $request = Request::create(
-            '',
-            'POST',
-            array(),
-            array(),
-            array(),
-            array(),
-            '[' .
-            '{"name":"ecash[profile]","value":"alice.meals"},' .
-            '{"name":"ecash[orderid]","value":"52T16708K70721706"},' .
-            '{"name":"ecash[amount]","value":"5,23"},' .
-            '{"name":"ecash[paymethod]","value":"0"},' .
-            '{"name":"ecash[_token]","value":"4xEN3hEBs29aFJRFtucTATjBI-iEjdrot4kdT1hRl18"}]'
+    public function postPaymentInvalidData(): array
+    {
+        return [
+            'no json payload' => [''],
+            'no order-id' => [$this->postPaymentRequestPayLoad('', '', '')],
+            'no profile-id' => [$this->postPaymentRequestPayLoad('123', '', '')],
+            'no amount' => [$this->postPaymentRequestPayLoad('123', 'jon', '')],
+            'invalid amount' => [$this->postPaymentRequestPayLoad('123', 'jon', '0.0')],
+        ];
+    }
+
+    /**
+     * @test
+     *
+     * @testdox Failure to create a transaction in postPayment action results in 500 HTTP response.
+     */
+    public function postPaymentFailureTransactionCreateError(): void
+    {
+        $orderID = '1234';
+        $orderAmount = 12.75;
+        $profileID = 'alice.meals';
+
+        $transactionServiceProphet = $this->prophesize(TransactionService::class);
+        $transactionServiceProphet->create($orderID, $profileID, $orderAmount)->willThrow(RuntimeException::class);
+        $transactionServiceMock = $transactionServiceProphet->reveal();
+        $translator = $this->prophesize(TranslatorInterface::class)->reveal();
+
+        $jsonPayLoad = $this->postPaymentRequestPayLoad($orderID, $profileID, (string) $orderAmount);
+        $request = Request::create('', 'POST', [], [], [], [], $jsonPayLoad);
+        $controller = new EcashController(new NullLogger());
+
+        $response = $controller->postPayment($request, $transactionServiceMock, $translator);
+        $this->assertSame(500, $response->getStatusCode());
+    }
+
+    /**
+     * @test
+     *
+     * @testdox Successful execution of postPayment action returns 200 HTTP response with transaction history page URL as content.
+     */
+    public function postPaymentSuccess(): void
+    {
+        $orderID = '1234';
+        $orderAmount = 12.75;
+        $profileID = 'alice.meals';
+
+        $transactionServiceProphet = $this->prophesize(TransactionService::class);
+        $transactionServiceProphet->create($orderID, $profileID, $orderAmount)->shouldBeCalledOnce();
+        $transactionServiceMock = $transactionServiceProphet->reveal();
+        $translator = $this->prophesize(TranslatorInterface::class)->reveal();
+
+        $jsonPayLoad = $this->postPaymentRequestPayLoad($orderID, $profileID, (string) $orderAmount);
+        $request = Request::create('', 'POST', [], [], [], [], $jsonPayLoad);
+        $controller = self::$container->get(EcashController::class);
+
+        $response = $controller->postPayment($request, $transactionServiceMock, $translator);
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('/accounting/transactions', $response->getContent());
+    }
+
+    /**
+     * Generates JSON payload for postPayment action.
+     */
+    private function postPaymentRequestPayLoad(string $orderID, string $profileID, string $orderAmount): string
+    {
+        return sprintf(
+            '['
+            . '{"name": "ecash[orderid]", "value": "%s"}, '
+            . '{"name": "ecash[profile]", "value": "%s"}, '
+            . '{"name": "ecash[amount]",  "value": "%s"}'
+            .']',
+            $orderID, $profileID, $orderAmount
         );
-
-        // Create expected response
-        $expectedResponse = new Response(
-            '/accounting/transactions',
-            Response::HTTP_OK,
-            array('content-type' => 'text/html')
-        );
-
-        $actualResponse = $ecashController->paymentFormHandling($request);
-
-        $actualResponse->headers->remove('date');
-        $expectedResponse->headers->remove('date');
-
-        $this->assertEquals($expectedResponse, $actualResponse);
-
-        // Check database entry
-        $transactionRepo = $this->getDoctrine()->getRepository('MealzAccountingBundle:Transaction');
-        $entry = $transactionRepo->findBy(['profile' => 'alice.meals'], ['id' => 'DESC']);
-
-        $this->assertEquals('52T16708K70721706', $entry[0]->getOrderId());
-        $this->assertEquals(5.23, $entry[0]->getAmount());
     }
 }

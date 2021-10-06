@@ -8,12 +8,13 @@ use App\Mealz\MealBundle\Controller\BaseController;
 use App\Mealz\AccountingBundle\Entity\Transaction;
 use App\Mealz\UserBundle\Entity\Profile;
 use Exception;
-use JsonException;
-use RuntimeException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use App\Mealz\AccountingBundle\Form\EcashPaymentAdminForm;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class EcashController extends BaseController
@@ -45,33 +46,36 @@ class EcashController extends BaseController
     }
 
     /**
-     * Handle the payment form for payments via PayPal
+     * Triggers actions after a PayPal transaction (payment) is successfully completed.
+     *
+     * @Security("has_role('ROLE_USER')")
      */
-    public function paymentFormHandling(
+    public function postPayment(
         Request $request,
         TransactionService $transactionService,
         TranslatorInterface $translator
     ): Response {
         if (false === $request->isMethod('POST')) {
-            return new Response('', Response::HTTP_BAD_REQUEST);
+            return new Response('', Response::HTTP_METHOD_NOT_ALLOWED);
+        }
+
+        $user = $this->getUser();
+        if (!($user instanceof Profile)) {
+            return new Response('', Response::HTTP_FORBIDDEN);
         }
 
         try {
-            $transaction = $this->getTransactionData($request);
-        } catch (Exception $e) {
-            $this->logException($e, 'bad request', ['request_data' => $request->getContent()]);
+            $transactionService->createFromRequest($request, $user);
+        } catch(BadRequestHttpException $bre) {
+            $this->logException($bre, 'bad request');
 
             return new Response('', Response::HTTP_BAD_REQUEST);
-        }
+        } catch (UnprocessableEntityHttpException $uehe) {
+            $this->logException($uehe, 'unprocessable entity');
 
-        try {
-            $transactionService->process($transaction['orderID'], $transaction['profileID'], $transaction['amount']);
+            return new Response('', Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch(Exception $e) {
-            $this->logException($e, 'transaction processing error', [
-                'orderID' => $transaction['orderID'],
-                'profile' => $transaction['profileID'],
-                'amount'  => $transaction['amount']
-            ]);
+            $this->logException($e, 'transaction create error');
 
             return new Response('', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -94,50 +98,5 @@ class EcashController extends BaseController
         $this->addFlashMessage($message, $severity);
 
         return $this->redirect($this->generateUrl('mealz_accounting_payment_transaction_history'));
-    }
-
-    /**
-     * @return array<string, mixed>
-     *
-     * @throws JsonException
-     */
-    private function getTransactionData(Request $request): array
-    {
-        $data = [];
-        $payload = $this->decodeJSONPayLoad($request);
-        foreach ($payload as $item) {
-            $data[$item['name']] = $item['value'];
-        }
-
-        if (!isset($data['ecash[orderid]']) || ('' === $data['ecash[orderid]'])) {
-            throw new RuntimeException('missing or invalid order-id', 1633095392);
-        }
-        if (!isset($data['ecash[profile]']) || ('' === $data['ecash[profile]'])) {
-            throw new RuntimeException('missing or invalid profile-id', 1633095400);
-        }
-        if (!isset($data['ecash[amount]']) || (0.0 >= (float) $data['ecash[amount]'])) {
-            throw new RuntimeException('invalid amount', 1633095450);
-        }
-
-        return [
-            'orderID'   => $data['ecash[orderid]'],
-            'profileID' => $data['ecash[profile]'],
-            'amount'    => (float) $data['ecash[amount]'],
-        ];
-    }
-
-    /**
-     * @return array<string, mixed>
-     *
-     * @throws JsonException
-     */
-    private function decodeJSONPayLoad(Request $request): array
-    {
-        $content = $request->getContent();
-        if (!is_string($content) || '' === $content) {
-            return [];
-        }
-
-        return json_decode($content, true, 512, JSON_THROW_ON_ERROR);
     }
 }

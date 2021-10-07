@@ -23,9 +23,9 @@ parameters:
 
     app.locales: [en, de]
 
-    app.paypal.client_id:     '%env(PAYPAL_ID)%'
+    app.paypal.client_id: '%env(PAYPAL_ID)%'
     app.paypal.client_secret: '%env(PAYPAL_SECRET)%'
-    app.paypal.sdk_env:       '%env(PAYPAL_SDK_ENV)%'
+    app.paypal.environment.class: PayPalCheckoutSdk\Core\SandboxEnvironment
 
     app.secret: '%env(APP_SECRET)%'
 
@@ -206,12 +206,17 @@ services:
         resource: '../src/Mealz/AccountingBundle/Controller/'
         tags: ['controller.service_arguments']
 
-
-    App\Mealz\AccountingBundle\Service\PayPal\Client:
+    # PayPal SDK environment
+    paypal.sdk.env:
+        class: '%app.paypal.environment.class%'
         arguments:
-            $clientID: '%app.paypal.client_id%'
-            $clientSecret: '%app.paypal.client_secret%'
-            $sdkEnv: '%app.paypal.sdk_env%'
+            - '%app.paypal.client_id%'
+            - '%app.paypal.client_secret%'
+
+    PayPalCheckoutSdk\Core\PayPalHttpClient:
+        arguments:
+            - '@paypal.sdk.env'
+
 
     ##################################################################
     # User BUNDLE

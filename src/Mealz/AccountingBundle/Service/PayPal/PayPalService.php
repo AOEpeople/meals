@@ -4,43 +4,62 @@ declare(strict_types=1);
 
 namespace App\Mealz\AccountingBundle\Service\PayPal;
 
-use App\Mealz\AccountingBundle\Service\PayPal\Client as PayPalClient;
 use App\Mealz\AccountingBundle\Service\PayPal\Order as PayPalOrder;
 use DateTime;
 use DateTimeInterface;
+use Exception;
+use PayPalCheckoutSdk\Core\PayPalHttpClient;
 use PayPalCheckoutSdk\Orders\OrdersGetRequest;
-use PayPalHttp\HttpException;
-use PayPalHttp\IOException;
+use PayPalHttp\HttpRequest;
+use PayPalHttp\HttpResponse;
 use RuntimeException;
 
 class PayPalService
 {
-    private PayPalClient $client;
+    private PayPalHttpClient $client;
 
-    public function __construct(PayPalClient $client)
+    public function __construct(PayPalHttpClient $client)
     {
         $this->client = $client;
     }
 
     /**
-     * @throws HttpException
-     * @throws IOException
+     * @throw RuntimeException
      */
-    public function getOrder(string $orderID): PayPalOrder
+    public function getOrder(string $orderID): ?PayPalOrder
     {
         $request = new OrdersGetRequest($orderID);
-        $response = $this->client->execute($request);
+        $response = $this->sendRequest($request);
 
-        if (200 !== $response->statusCode) {
-            throw new RuntimeException(sprintf(
-                'api request failure; response status: %d, path; %s, method: %s',
-                $response->statusCode,
-                $request->path,
-                $request->verb
-            ));
+        switch ($response->statusCode) {
+            case 200:
+                return $this->toPayPalOrder($response->result);
+            case 404:
+                return null;
+            default:
+                throw new RuntimeException(
+                    sprintf(
+                        'unexpected api response, status: %d, path: %s, method: %s',
+                        $response->statusCode, $request->path, $request->verb
+                    ),
+                    1633425374
+                );
         }
+    }
 
-        return $this->toPayPalOrder($response->result);
+    /**
+     * @throws RuntimeException
+     */
+    private function sendRequest(HttpRequest $request): HttpResponse
+    {
+        try {
+            return $this->client->execute($request);
+        } catch (Exception $e) {
+            throw new RuntimeException(
+                sprintf('api request error; path: %s, method: %s', $request->path, $request->verb),
+                1633507746, $e
+            );
+        }
     }
 
     private function toPayPalOrder($orderResp): PayPalOrder
@@ -50,6 +69,9 @@ class PayPalService
         }
         if (!property_exists($orderResp, 'id')) {
             throw new RuntimeException('invalid order response; order-id not found');
+        }
+        if (!property_exists($orderResp, 'status')) {
+            throw new RuntimeException('invalid order response; order status not found');
         }
         if (!property_exists($orderResp, 'purchase_units')) {
             throw new RuntimeException('invalid order response; purchase units not found');
@@ -73,10 +95,10 @@ class PayPalService
             );
         }
 
-        return new PayPalOrder($orderResp->id, $grossAmount, $orderDateTime);
+        return new PayPalOrder($orderResp->id, $grossAmount, $orderDateTime, $orderResp->status);
     }
 
-    private function toOrderAmount(array $purchaseUnits): float
+    private function toOrderAmount($purchaseUnits): float
     {
         if (!is_array($purchaseUnits) || !isset($purchaseUnits[0])) {
             throw new RuntimeException('invalid order response; purchase units not found');

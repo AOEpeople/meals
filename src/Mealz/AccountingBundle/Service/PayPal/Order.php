@@ -9,15 +9,26 @@ use DateTimeImmutable;
 
 class Order
 {
+    /**
+     * PayPal transaction code
+     */
     private string $id;
+
+    /**
+     * Transaction gross amount
+     */
     private float $amount;
+
     private DateTimeImmutable $dateTime;
 
-    public function __construct(string $id, float $amount, DateTime $dateTime)
+    private string $status;
+
+    public function __construct(string $id, float $amount, DateTime $dateTime, string $status)
     {
         $this->id = $id;
         $this->amount = $amount;
         $this->dateTime = DateTimeImmutable::createFromMutable($dateTime);
+        $this->status = $status;
     }
 
     public function getId(): string
@@ -33,5 +44,10 @@ class Order
     public function getDateTime(): DateTime
     {
         return DateTime::createFromImmutable($this->dateTime);
+    }
+
+    public function isCompleted(): bool
+    {
+        return $this->status === 'COMPLETED';
     }
 }

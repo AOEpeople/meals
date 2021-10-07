@@ -61,11 +61,9 @@ class Transaction
     private $paymethod;
 
     /**
-     * @Assert\Length(min=3, max=2048)
-     * @ORM\Column(type="string", length=2048, nullable=TRUE)
-     * @var string
+     * @ORM\Column(type="string", length=24, unique=TRUE, nullable=TRUE)
      */
-    private $orderId;
+    private ?string $orderId = null;
 
     /**
      * @return string
@@ -111,22 +109,14 @@ class Transaction
         return $this->amount;
     }
 
-    /**
-     * @param integer $orderId
-     *
-     * @return Transaction
-     */
-    public function setOrderId($orderId)
+    public function setOrderId(string $orderId): self
     {
         $this->orderId = $orderId;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getOrderId()
+    public function getOrderId(): ?string
     {
         return $this->orderId;
     }

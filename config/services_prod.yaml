@@ -1,0 +1,2 @@
+parameters:
+    app.paypal.environment.class: 'PayPalCheckoutSdk\Core\ProductionEnvironment'

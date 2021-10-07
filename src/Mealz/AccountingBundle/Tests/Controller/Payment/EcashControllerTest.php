@@ -5,12 +5,17 @@ declare(strict_types=1);
 namespace App\Mealz\AccountingBundle\Tests\Controller\Payment;
 
 use App\Mealz\AccountingBundle\Service\TransactionService;
+use Exception;
+use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\NullLogger;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
 use App\Mealz\AccountingBundle\Controller\Payment\EcashController;
 use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class EcashControllerTest extends AbstractControllerTestCase
@@ -46,75 +51,48 @@ class EcashControllerTest extends AbstractControllerTestCase
     /**
      * @test
      *
-     * @testdox Calling postPayment action with anything but POST method returns 405 HTTP response.
+     * @testWith ["DELETE"]
+     *           ["GET"]
+     *           ["HEAD"]
+     *           ["PUT"]
+     *
+     * @testdox Calling postPayment action with $httpMethod returns 404 HTTP response.
      */
-    public function postPaymentFailureInvalidMethod(): void
+    public function postPaymentFailureInvalidMethod(string $httpMethod): void
     {
-        $invalidRequestMethod = ['DELETE', 'GET', 'HEAD', 'PUT'];
-        $transactionService = $this->prophesize(TransactionService::class)->reveal();
-        $translator = $this->prophesize(TranslatorInterface::class)->reveal();
-
-        foreach ($invalidRequestMethod as $method) {
-            $request = Request::create('', $method);
-            $controller = new EcashController(new NullLogger());
-
-            $response = $controller->postPayment($request, $transactionService, $translator);
-            $this->assertSame(405, $response->getStatusCode());
-        }
+        $this->client->request('/payment/ecash/form/submit', $httpMethod);
+        self::assertResponseStatusCodeSame(404);
     }
 
     /**
      * @test
      *
-     * @testdox Calling postPayment action with $_dataName results in 400 HTTP response.
+     * @dataProvider createTxExceptionProvider
      *
-     * @dataProvider postPaymentInvalidData
+     * @testdox Failure to create a transaction due to $_dataName results in $expRespStatusCode HTTP response.
      */
-    public function postPaymentFailureBadData($data): void
+    public function postPaymentFailureTransactionCreateError(string $exception, int $expRespStatusCode): void
     {
-        $transactionService = $this->prophesize(TransactionService::class)->reveal();
-        $translator = $this->prophesize(TranslatorInterface::class)->reveal();
+        $txServiceProphet = $this->prophesize(TransactionService::class);
+        $txServiceProphet->createFromRequest(Argument::type(Request::class))->willThrow($exception);
+        $txServiceMock = $txServiceProphet->reveal();
+        $translatorMock = $this->prophesize(TranslatorInterface::class)->reveal();
 
-        $request = Request::create('', 'POST', [], [], [], [], $data);
+        $request = Request::create('', 'POST');
         $controller = new EcashController(new NullLogger());
 
-        $response = $controller->postPayment($request, $transactionService, $translator);
-        $this->assertSame(400, $response->getStatusCode());
+        $response = $controller->postPayment($request, $txServiceMock, $translatorMock);
+        $this->assertSame($expRespStatusCode, $response->getStatusCode());
     }
 
-    public function postPaymentInvalidData(): array
+    public function createTxExceptionProvider(): array
     {
         return [
-            'no json payload' => [''],
-            'no order-id' => [$this->postPaymentRequestPayLoad('', '', '')],
-            'no profile-id' => [$this->postPaymentRequestPayLoad('123', '', '')],
-            'no amount' => [$this->postPaymentRequestPayLoad('123', 'jon', '')],
-            'invalid amount' => [$this->postPaymentRequestPayLoad('123', 'jon', '0.0')],
+            'unauthorized access' => [AccessDeniedHttpException::class, 403],
+            'invalid data' => [BadRequestHttpException::class, 400],
+            'unprocessable data' => [UnprocessableEntityHttpException::class, 422],
+            'any unexpected exception' => [Exception::class, 500],
         ];
-    }
-
-    /**
-     * @test
-     *
-     * @testdox Failure to create a transaction in postPayment action results in 500 HTTP response.
-     */
-    public function postPaymentFailureTransactionCreateError(): void
-    {
-        $orderID = '1234';
-        $orderAmount = 12.75;
-        $profileID = 'alice.meals';
-
-        $transactionServiceProphet = $this->prophesize(TransactionService::class);
-        $transactionServiceProphet->create($orderID, $profileID, $orderAmount)->willThrow(RuntimeException::class);
-        $transactionServiceMock = $transactionServiceProphet->reveal();
-        $translator = $this->prophesize(TranslatorInterface::class)->reveal();
-
-        $jsonPayLoad = $this->postPaymentRequestPayLoad($orderID, $profileID, (string) $orderAmount);
-        $request = Request::create('', 'POST', [], [], [], [], $jsonPayLoad);
-        $controller = new EcashController(new NullLogger());
-
-        $response = $controller->postPayment($request, $transactionServiceMock, $translator);
-        $this->assertSame(500, $response->getStatusCode());
     }
 
     /**
@@ -124,36 +102,17 @@ class EcashControllerTest extends AbstractControllerTestCase
      */
     public function postPaymentSuccess(): void
     {
-        $orderID = '1234';
-        $orderAmount = 12.75;
-        $profileID = 'alice.meals';
+        $request = Request::create('', 'POST');
+        $txServiceProphet = $this->prophesize(TransactionService::class);
+        $txServiceProphet->createFromRequest(Argument::type(Request::class))->shouldBeCalledOnce();
+        $txServiceMock = $txServiceProphet->reveal();
+        $translatorMock = $this->prophesize(TranslatorInterface::class)->reveal();
 
-        $transactionServiceProphet = $this->prophesize(TransactionService::class);
-        $transactionServiceProphet->create($orderID, $profileID, $orderAmount)->shouldBeCalledOnce();
-        $transactionServiceMock = $transactionServiceProphet->reveal();
-        $translator = $this->prophesize(TranslatorInterface::class)->reveal();
-
-        $jsonPayLoad = $this->postPaymentRequestPayLoad($orderID, $profileID, (string) $orderAmount);
-        $request = Request::create('', 'POST', [], [], [], [], $jsonPayLoad);
         $controller = self::$container->get(EcashController::class);
 
-        $response = $controller->postPayment($request, $transactionServiceMock, $translator);
+        $response = $controller->postPayment($request, $txServiceMock, $translatorMock);
+
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame('/accounting/transactions', $response->getContent());
-    }
-
-    /**
-     * Generates JSON payload for postPayment action.
-     */
-    private function postPaymentRequestPayLoad(string $orderID, string $profileID, string $orderAmount): string
-    {
-        return sprintf(
-            '['
-            . '{"name": "ecash[orderid]", "value": "%s"}, '
-            . '{"name": "ecash[profile]", "value": "%s"}, '
-            . '{"name": "ecash[amount]",  "value": "%s"}'
-            .']',
-            $orderID, $profileID, $orderAmount
-        );
     }
 }

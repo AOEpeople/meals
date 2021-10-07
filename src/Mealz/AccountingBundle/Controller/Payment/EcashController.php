@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Mealz\AccountingBundle\Form\EcashPaymentAdminForm;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -55,17 +56,10 @@ class EcashController extends BaseController
         TransactionService $transactionService,
         TranslatorInterface $translator
     ): Response {
-        if (false === $request->isMethod('POST')) {
-            return new Response('', Response::HTTP_METHOD_NOT_ALLOWED);
-        }
-
-        $user = $this->getUser();
-        if (!($user instanceof Profile)) {
-            return new Response('', Response::HTTP_FORBIDDEN);
-        }
-
         try {
-            $transactionService->createFromRequest($request, $user);
+            $transactionService->createFromRequest($request);
+        } catch(AccessDeniedHttpException $ade) {
+            return new Response('', Response::HTTP_FORBIDDEN);
         } catch(BadRequestHttpException $bre) {
             $this->logException($bre, 'bad request');
 

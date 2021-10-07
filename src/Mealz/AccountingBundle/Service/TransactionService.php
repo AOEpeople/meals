@@ -15,8 +15,10 @@ use Exception;
 use JsonException;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
+use Symfony\Component\Security\Core\Security;
 
 class TransactionService
 {
@@ -27,17 +29,25 @@ class TransactionService
 
     private PayPalService $paypalService;
     private EntityManagerInterface $entityManager;
+    private Security $security;
 
     public function __construct(
         PayPalService $paypalService,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        Security $security
     ) {
         $this->paypalService = $paypalService;
         $this->entityManager = $entityManager;
+        $this->security = $security;
     }
 
-    public function createFromRequest(Request $request, Profile $profile): void
+    public function createFromRequest(Request $request): void
     {
+        $profile = $this->security->getUser();
+        if (!($profile instanceof Profile)) {
+            throw new AccessDeniedHttpException('login required');
+        }
+
         try {
             $transaction = $this->getTransactionData($request->getContent());
         } catch (BadDataException $e) {
@@ -132,8 +142,8 @@ class TransactionService
         }
 
         return [
-            'orderID'   => $data['ecash[orderid]'],
-            'amount'    => (float) $data['ecash[amount]'],
+            'orderID' => $data['ecash[orderid]'],
+            'amount' => (float) $data['ecash[amount]'],
         ];
     }
 

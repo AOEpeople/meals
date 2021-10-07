@@ -15,10 +15,13 @@ use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\ProfileRepository;
 use DateTime;
 use DateTimeZone;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Prophecy\PhpUnit\ProphecyTrait;
-use RuntimeException;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
+use Symfony\Component\Security\Core\Security;
 
 class TransactionServiceTest extends AbstractDatabaseTestCase
 {
@@ -40,36 +43,37 @@ class TransactionServiceTest extends AbstractDatabaseTestCase
 
     /**
      * @test
+     *
+     * @testdox createFromRequest() on success creates a new record in transaction table.
      */
-    public function processSuccess(): void
+    public function createFromRequestSuccess(): void
     {
         // test data
-        $profileID = 'alice.meals';
-        $orderID = '12345';
+        $orderID = '2DD03984N872668774X';
         $orderAmount = 25.00;
         $orderDateTime = new DateTime('now', new DateTimeZone('UTC'));
 
-        // prepare service dependencies
-        $order = new Order($orderID, $orderAmount, $orderDateTime);
-        $paypalServiceProphet = $this->prophesize(PayPalService::class);
-        $paypalServiceProphet->getOrder($orderID)->shouldBeCalledOnce()->willReturn($order);
-        $paypalServiceMock = $paypalServiceProphet->reveal();
+        // service dependencies
+        $order = new Order($orderID, $orderAmount, $orderDateTime, 'COMPLETED');
+        $paypalServiceMock = $this->getPayPayServiceMock($orderID, $order);
+        $securityServiceMock = $this->getSecurityMock('alice.meals');
 
-        /** @var ProfileRepository $profileRepository */
-        $profileRepository = $this->getDoctrine()->getRepository(Profile::class);
-        /** @var EntityManager $entityManager */
+        /** @var EntityManagerInterface $entityManager */
         $entityManager = $this->getDoctrine()->getManager();
 
-        // instantiate service and call test method
-        $transactionService = new TransactionService($paypalServiceMock, $profileRepository, $entityManager);
-        $transactionService->create($orderID, $profileID, $orderAmount);
+        // instantiate service
+        $transactionService = new TransactionService($paypalServiceMock, $entityManager, $securityServiceMock);
+
+        // call test method
+        $request = Request::create('', 'POST', [], [], [], [], $this->createTxReqPayLoad($orderID, (string) $orderAmount));
+        $transactionService->createFromRequest($request);
 
         // verify transaction
-        $transactionRepository = $this->getDoctrine()->getRepository(Transaction::class);
-        $transaction = $transactionRepository->findOneBy(['orderId' => $orderID]);
+        $transactionRepo = $this->getDoctrine()->getRepository(Transaction::class);
+        $transaction = $transactionRepo->findOneBy(['orderId' => $orderID]);
 
         $this->assertInstanceOf(Transaction::class, $transaction);
-        $this->assertSame($profileID, $transaction->getProfile()->getUsername());
+        $this->assertSame('alice.meals', $transaction->getProfile()->getUsername());
         $this->assertSame($orderAmount, $transaction->getAmount());
         $this->assertEquals($orderDateTime, $transaction->getDate());
         $this->assertEquals('0', $transaction->getPaymethod());
@@ -77,88 +81,189 @@ class TransactionServiceTest extends AbstractDatabaseTestCase
 
     /**
      * @test
+     *
+     * @testdox Calling createFromRequest() without login session throws AccessDeniedHttpException.
      */
-    public function processFailureProfileNotFound(): void
+    public function createFromRequestFailureNoLoginSession(): void
     {
-        // test data
-        $profileID = 'unhappy.meal';
-
         // prepare service dependencies
         $paypalServiceMock = $this->prophesize(PayPalService::class)->reveal();
-        /** @var ProfileRepository $profileRepositoryMock */
-        $profileRepository = $this->getDoctrine()->getRepository(Profile::class);
-        /** @var EntityManager $entityManagerMock */
         $entityManagerMock = $this->prophesize(EntityManagerInterface::class)->reveal();
+        $securityServiceMock = $this->getSecurityMock(null);
 
-        // instantiate service and call test method
-        $transactionService = new TransactionService($paypalServiceMock, $profileRepository, $entityManagerMock);
+        // instantiate service
+        $transactionService = new TransactionService($paypalServiceMock, $entityManagerMock, $securityServiceMock);
 
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionCode(1633093870);
-        $this->expectExceptionMessage('profile not found, profile-id: '.$profileID);
+        $this->expectException(AccessDeniedHttpException::class);
+        $this->expectExceptionMessage('login required');
 
-        $transactionService->create('12345', $profileID, 10.00);
+        // call test method
+        $request = Request::create('', 'POST');
+        $transactionService->createFromRequest($request);
     }
 
     /**
      * @test
+     *
+     * @testdox Calling createFromRequest() with $request argument containing $_dataName throws BadRequestHttpException.
+     *
+     * @dataProvider createFromRequestInvalidData
      */
-    public function processFailureOrderNotFound(): void
+    public function createFromRequestFailureBadData($data): void
+    {
+        // prepare service dependencies
+        $paypalServiceMock = $this->prophesize(PayPalService::class)->reveal();
+        $entityManagerMock = $this->prophesize(EntityManagerInterface::class)->reveal();
+        $securityServiceMock = $this->getSecurityMock('alice.meals');
+
+        // instantiate service
+        $transactionService = new TransactionService($paypalServiceMock, $entityManagerMock, $securityServiceMock);
+
+        $this->expectException(BadRequestHttpException::class);
+
+        // call test method
+        $request = Request::create('', 'POST', [], [], [], [], $data);
+        $transactionService->createFromRequest($request);
+    }
+
+    public function createFromRequestInvalidData(): array
+    {
+        return [
+            'no json payload' => [''],
+            'wrong data' => ['["lorem", "ipsum"]'],
+            'no order-id' => [$this->createTxReqPayLoad('', '')],
+            'no amount' => [$this->createTxReqPayLoad('123', '')],
+            'invalid amount' => [$this->createTxReqPayLoad('123', '0.0')],
+        ];
+    }
+
+    /**
+     * @test
+     *
+     * @testdox Calling createFromRequest() with $request argument containing invalid order-id throws UnprocessableEntityHttpException.
+     */
+    public function createFromRequestFailureOrderNotFound(): void
     {
         // test data
-        $profileID = 'alice.meals';
-        $orderID = '12345';
-        $orderAmount = 25.00;
+        $orderID = '2DD03984N872668774X';
 
         // prepare service dependencies
-        $paypalServiceProphet = $this->prophesize(PayPalService::class);
-        $paypalServiceProphet->getOrder($orderID)->shouldBeCalledOnce()->willThrow(RuntimeException::class);
-        $paypalServiceMock = $paypalServiceProphet->reveal();
+        $paypalServiceMock = $this->getPayPayServiceMock($orderID, null);
+        $entityManagerMock = $this->prophesize(EntityManagerInterface::class)->reveal();
+        $securityServiceMock = $this->getSecurityMock('alice.meals');
 
-        /** @var ProfileRepository $profileRepository */
-        $profileRepository = $this->getDoctrine()->getRepository(Profile::class);
-        /** @var EntityManager $entityManager */
-        $entityManager = $this->prophesize(EntityManagerInterface::class)->reveal();
+        // instantiate service
+        $transactionService = new TransactionService($paypalServiceMock, $entityManagerMock, $securityServiceMock);
 
-        // instantiate service and call test method
-        $transactionService = new TransactionService($paypalServiceMock, $profileRepository, $entityManager);
+        $this->expectException(UnprocessableEntityHttpException::class);
+        $this->expectExceptionCode(1633509057);
 
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionCode(1633425633);
-        $this->expectExceptionMessage('order not found, order-id: '.$orderID);
-
-        $transactionService->create($orderID, $profileID, $orderAmount);
+        // call test method
+        $request = Request::create('', 'POST', [], [], [], [], $this->createTxReqPayLoad($orderID, '12.00'));
+        $transactionService->createFromRequest($request);
     }
 
     /**
      * @test
+     *
+     * @testdox Calling createFromRequest() with $request argument referring incomplete order throws UnprocessableEntityHttpException.
      */
-    public function processFailureInvalidOrderAmount(): void
+    public function createFromRequestFailureIncompleteOrder(): void
     {
         // test data
-        $profileID = 'alice.meals';
+        $orderID = '2DD03984N872668774X';
+        $orderAmount = 25.00;
+        $orderDateTime = new DateTime('now', new DateTimeZone('UTC'));
+
+        // prepare service dependencies
+        $order = new Order($orderID, $orderAmount, $orderDateTime, 'VOIDED');
+        $paypalServiceMock = $this->getPayPayServiceMock($orderID, $order);
+        $entityManagerMock = $this->prophesize(EntityManagerInterface::class)->reveal();
+        $securityServiceMock = $this->getSecurityMock('alice.meals');
+
+        // instantiate service
+        $transactionService = new TransactionService($paypalServiceMock, $entityManagerMock, $securityServiceMock);
+
+        $this->expectException(UnprocessableEntityHttpException::class);
+        $this->expectExceptionCode(1633513408);
+
+        // call test method
+        $request = Request::create('', 'POST', [], [], [], [], $this->createTxReqPayLoad($orderID, (string) $orderAmount));
+        $transactionService->createFromRequest($request);
+    }
+
+    /**
+     * @test
+     *
+     * @testdox Calling createFromRequest() with $request argument containing order amount that conflicts with the PayPal order amount throws UnprocessableEntityHttpException.
+     */
+    public function createFromRequestFailureInvalidOrderAmount(): void
+    {
+        // test data
         $orderID = '12345';
         $orderAmount = 15.00;
         $orderDateTime = new DateTime('now', new DateTimeZone('UTC'));
 
         // prepare service dependencies
-        $order = new Order($orderID, $orderAmount, $orderDateTime);
+        $order = new Order($orderID, $orderAmount, $orderDateTime, 'COMPLETED');
+        $paypalServiceMock = $this->getPayPayServiceMock($orderID, $order);
+        $entityManagerMock = $this->prophesize(EntityManagerInterface::class)->reveal();
+        $securityServiceMock = $this->getSecurityMock('alice.meals');
+
+        // instantiate service
+        $transactionService = new TransactionService($paypalServiceMock, $entityManagerMock, $securityServiceMock);
+
+        $this->expectException(UnprocessableEntityHttpException::class);
+        $this->expectExceptionCode(1633513408);
+
+        // call test method
+        $request = Request::create('', 'POST', [], [], [], [], $this->createTxReqPayLoad($orderID, (string) ($orderAmount + 1)));
+        $transactionService->createFromRequest($request);
+    }
+
+    private function getProfile(string $username): Profile
+    {
+        /** @var ProfileRepository $profileRepo */
+        $profileRepo = $this->getDoctrine()->getRepository(Profile::class);
+
+        return $profileRepo->find($username);
+    }
+
+    /**
+     * Returns mocked PayPal service that returns $order for $orderID.
+     *
+     * @param Order|null $order Order to be returned by mocked service.
+     */
+    private function getPayPayServiceMock(string $orderID, ?Order $order): PayPalService
+    {
         $paypalServiceProphet = $this->prophesize(PayPalService::class);
         $paypalServiceProphet->getOrder($orderID)->shouldBeCalledOnce()->willReturn($order);
-        $paypalServiceMock = $paypalServiceProphet->reveal();
 
-        /** @var ProfileRepository $profileRepository */
-        $profileRepository = $this->getDoctrine()->getRepository(Profile::class);
-        /** @var EntityManager $entityManager */
-        $entityManager = $this->prophesize(EntityManagerInterface::class)->reveal();
+        return $paypalServiceProphet->reveal();
+    }
 
-        // instantiate service and call test method
-        $transactionService = new TransactionService($paypalServiceMock, $profileRepository, $entityManager);
+    /**
+     * Returns mocked Security (symfony) service that returns the user identified by $username.
+     *
+     * @param string|null $username Username of logged-in user. NULL for no logged-in user.
+     */
+    private function getSecurityMock(?string $username): Security
+    {
+        $profile = $username ? $this->getProfile($username) : null;
+        $secServiceProphet = $this->prophesize(Security::class);
+        $secServiceProphet->getUser()->willReturn($profile);
 
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionCode(1633094204);
-        $this->expectExceptionMessage('order amount mismatch');
+        return $secServiceProphet->reveal();
+    }
 
-        $transactionService->create($orderID, $profileID, $orderAmount + 1);
+    private function createTxReqPayLoad(string $orderID, string $orderAmount): string
+    {
+        return sprintf(
+            '['
+            . '{"name": "ecash[orderid]", "value": "%s"}, '
+            . '{"name": "ecash[amount]",  "value": "%s"}'
+            .']',
+            $orderID, $orderAmount
+        );
     }
 }

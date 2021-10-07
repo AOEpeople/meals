@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Mealz\AccountingBundle\Tests\Service\PayPal;
 
 use App\Mealz\AccountingBundle\Service\PayPal\PayPalService;
-use Exception;
 use PayPalCheckoutSdk\Core\PayPalHttpClient;
 use PayPalCheckoutSdk\Orders\OrdersGetRequest;
 use PayPalHttp\HttpResponse;

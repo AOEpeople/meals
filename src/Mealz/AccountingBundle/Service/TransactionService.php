@@ -24,7 +24,6 @@ class TransactionService
 {
     private const PAYMENT_METHOD_PAYPAL = '0';
 
-    private const EXCEPTION_INVALID_ORDER_AMOUNT = 1633094204;
     private const EXCEPTION_ORDER_NOT_COMPLETED  = 1633519677;
 
     private PayPalService $paypalService;
@@ -49,19 +48,17 @@ class TransactionService
         }
 
         try {
-            $transaction = $this->getTransactionData($request->getContent());
+            $orderID = $this->getOrderID($request->getContent());
         } catch (BadDataException $e) {
             throw new BadRequestHttpException('', $e);
         }
 
         try {
-            $this->create($transaction['orderID'], $transaction['amount'], $profile);
+            $this->create($orderID, $profile);
         } catch (ResourceNotFoundException $rnf) {
             throw new UnprocessableEntityHttpException('', $rnf, 1633509057);
         } catch (RuntimeException $rte) {
-            $errCode = $rte->getCode();
-            if (self::EXCEPTION_ORDER_NOT_COMPLETED === $errCode
-                || self::EXCEPTION_INVALID_ORDER_AMOUNT === $errCode) {
+            if (self::EXCEPTION_ORDER_NOT_COMPLETED === $rte->getCode()) {
                 throw new UnprocessableEntityHttpException('', $rte, 1633513408);
             }
 
@@ -72,7 +69,7 @@ class TransactionService
     /**
      * @throws ResourceNotFoundException
      */
-    public function create(string $orderID, float $amount, Profile $profile): void
+    public function create(string $orderID, Profile $profile): void
     {
         try {
             $order = $this->paypalService->getOrder($orderID);
@@ -84,8 +81,18 @@ class TransactionService
             throw new ResourceNotFoundException('order-id: '.$orderID);
         }
 
-        $this->validateOrder($order, $amount);
+        if (!$order->isCompleted()) {
+            throw new RuntimeException(
+                'order not completed, order-id: '.$order->getId(),
+                self::EXCEPTION_ORDER_NOT_COMPLETED
+            );
+        }
 
+        $this->createTransaction($order, $profile);
+    }
+
+    private function createTransaction(Order $order, Profile $profile): void
+    {
         $transaction = new Transaction();
         $transaction->setProfile($profile);
         $transaction->setOrderId($order->getId());
@@ -97,32 +104,10 @@ class TransactionService
         $this->entityManager->flush();
     }
 
-    private function validateOrder(Order $order, float $amount): void
-    {
-        if (!$order->isCompleted()) {
-            throw new RuntimeException(
-                'order not completed, order-id: '.$order->getId(),
-                self::EXCEPTION_ORDER_NOT_COMPLETED
-            );
-        }
-
-        if ($amount !== $order->getAmount()) {
-            throw new RuntimeException(
-                sprintf(
-                    'order amount mismatch, expected: %f, got: %f, order-id: %s',
-                    $order->getAmount(), $amount, $order->getId()
-                ),
-                self::EXCEPTION_INVALID_ORDER_AMOUNT
-            );
-        }
-    }
-
     /**
-     * @return array<string, mixed>
-     *
      * @throws BadDataException
      */
-    private function getTransactionData($jsonPayload): array
+    private function getOrderID($jsonPayload): string
     {
         $data = [];
         $payload = $this->jsonDecode($jsonPayload);
@@ -137,14 +122,8 @@ class TransactionService
         if (!isset($data['ecash[orderid]']) || ('' === $data['ecash[orderid]'])) {
             throw new BadDataException('missing or invalid order-id', 1633095392);
         }
-        if (!isset($data['ecash[amount]']) || (0.0 >= (float) $data['ecash[amount]'])) {
-            throw new BadDataException('invalid amount', 1633095450);
-        }
 
-        return [
-            'orderID' => $data['ecash[orderid]'],
-            'amount' => (float) $data['ecash[amount]'],
-        ];
+        return $data['ecash[orderid]'];
     }
 
     /**

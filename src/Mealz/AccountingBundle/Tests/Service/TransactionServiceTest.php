@@ -65,7 +65,7 @@ class TransactionServiceTest extends AbstractDatabaseTestCase
         $transactionService = new TransactionService($paypalServiceMock, $entityManager, $securityServiceMock);
 
         // call test method
-        $request = Request::create('', 'POST', [], [], [], [], $this->createTxReqPayLoad($orderID, (string) $orderAmount));
+        $request = Request::create('', 'POST', [], [], [], [], $this->createTxReqPayLoad($orderID));
         $transactionService->createFromRequest($request);
 
         // verify transaction
@@ -131,9 +131,7 @@ class TransactionServiceTest extends AbstractDatabaseTestCase
         return [
             'no json payload' => [''],
             'wrong data' => ['["lorem", "ipsum"]'],
-            'no order-id' => [$this->createTxReqPayLoad('', '')],
-            'no amount' => [$this->createTxReqPayLoad('123', '')],
-            'invalid amount' => [$this->createTxReqPayLoad('123', '0.0')],
+            'no order-id' => [$this->createTxReqPayLoad('')],
         ];
     }
 
@@ -159,7 +157,7 @@ class TransactionServiceTest extends AbstractDatabaseTestCase
         $this->expectExceptionCode(1633509057);
 
         // call test method
-        $request = Request::create('', 'POST', [], [], [], [], $this->createTxReqPayLoad($orderID, '12.00'));
+        $request = Request::create('', 'POST', [], [], [], [], $this->createTxReqPayLoad($orderID));
         $transactionService->createFromRequest($request);
     }
 
@@ -188,36 +186,7 @@ class TransactionServiceTest extends AbstractDatabaseTestCase
         $this->expectExceptionCode(1633513408);
 
         // call test method
-        $request = Request::create('', 'POST', [], [], [], [], $this->createTxReqPayLoad($orderID, (string) $orderAmount));
-        $transactionService->createFromRequest($request);
-    }
-
-    /**
-     * @test
-     *
-     * @testdox Calling createFromRequest() with $request argument containing order amount that conflicts with the PayPal order amount throws UnprocessableEntityHttpException.
-     */
-    public function createFromRequestFailureInvalidOrderAmount(): void
-    {
-        // test data
-        $orderID = '12345';
-        $orderAmount = 15.00;
-        $orderDateTime = new DateTime('now', new DateTimeZone('UTC'));
-
-        // prepare service dependencies
-        $order = new Order($orderID, $orderAmount, $orderDateTime, 'COMPLETED');
-        $paypalServiceMock = $this->getPayPayServiceMock($orderID, $order);
-        $entityManagerMock = $this->prophesize(EntityManagerInterface::class)->reveal();
-        $securityServiceMock = $this->getSecurityMock('alice.meals');
-
-        // instantiate service
-        $transactionService = new TransactionService($paypalServiceMock, $entityManagerMock, $securityServiceMock);
-
-        $this->expectException(UnprocessableEntityHttpException::class);
-        $this->expectExceptionCode(1633513408);
-
-        // call test method
-        $request = Request::create('', 'POST', [], [], [], [], $this->createTxReqPayLoad($orderID, (string) ($orderAmount + 1)));
+        $request = Request::create('', 'POST', [], [], [], [], $this->createTxReqPayLoad($orderID));
         $transactionService->createFromRequest($request);
     }
 
@@ -256,14 +225,8 @@ class TransactionServiceTest extends AbstractDatabaseTestCase
         return $secServiceProphet->reveal();
     }
 
-    private function createTxReqPayLoad(string $orderID, string $orderAmount): string
+    private function createTxReqPayLoad(string $orderID): string
     {
-        return sprintf(
-            '['
-            . '{"name": "ecash[orderid]", "value": "%s"}, '
-            . '{"name": "ecash[amount]",  "value": "%s"}'
-            .']',
-            $orderID, $orderAmount
-        );
+        return sprintf('[{"name": "ecash[orderid]", "value": "%s"}]', $orderID);
     }
 }

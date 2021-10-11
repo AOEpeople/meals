@@ -16,11 +16,12 @@ class OrderTest extends TestCase
     public function instantiate(): void
     {
         $now = new DateTime();
-        $order = new Order('#1', 10.35, $now, '');
+        $order = new Order('#1', 10.35, $now, 'APPROVED');
 
         $this->assertSame('#1', $order->getId());
         $this->assertSame(10.35, $order->getAmount());
         $this->assertEquals($now, $order->getDateTime());
+        $this->assertSame('APPROVED', $order->getStatus());
 
         // changing used date-time reference shouldn't change the order date-time
         $origDateTime = clone $now;

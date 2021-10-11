@@ -10,7 +10,7 @@ use DateTimeImmutable;
 class Order
 {
     /**
-     * PayPal transaction code
+     * PayPal Order-ID
      */
     private string $id;
 
@@ -44,6 +44,11 @@ class Order
     public function getDateTime(): DateTime
     {
         return DateTime::createFromImmutable($this->dateTime);
+    }
+
+    public function getStatus(): string
+    {
+        return $this->status;
     }
 
     public function isCompleted(): bool

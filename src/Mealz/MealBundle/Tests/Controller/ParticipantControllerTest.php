@@ -54,9 +54,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
             new LoadDishVariations(),
             new LoadMeals(),
             new LoadRoles(),
-            // self::$container is a special container that allow access to private services
-            // see: https://symfony.com/blog/new-in-symfony-4-1-simpler-service-testing
-            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
+            new LoadUsers(),
         ]);
 
         $this->loginAs(self::USER_KITCHEN_STAFF);

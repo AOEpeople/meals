@@ -104,22 +104,27 @@ class Week extends AbstractMessage
         $this->calendarWeek = $calendarWeek;
     }
 
-    public function getStartTime()
+    public function getStartTime(): DateTime
     {
-        return $this->getWeekDateTime();
+        $datetime = $this->getWeekDateTime();
+        $datetime->setTime(0, 0);
+
+        return $datetime;
     }
 
-    public function getEndTime()
+    public function getEndTime(): DateTime
     {
         $endTime = $this->getWeekDateTime();
-        $endTime->modify('+4 days');
+        $endTime->modify('+4 days 23:59:59');
+
         return $endTime;
     }
 
-    private function getWeekDateTime()
+    private function getWeekDateTime(): DateTime
     {
         $dateTime = new DateTime();
         $dateTime->setISODate($this->getYear(), $this->getCalendarWeek());
+
         return $dateTime;
     }
 }

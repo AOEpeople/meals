@@ -49,8 +49,8 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         // the firewall context (defaults to the firewall name)
         $firewall = 'main';
 
-        $repo = $this->client->getContainer()->get('doctrine')->getRepository('MealzUserBundle:Login');
-        $user = $repo->findOneBy(['username' => $username]);
+        $repo = $this->client->getContainer()->get('doctrine')->getRepository('MealzUserBundle:Profile');
+        $user = $repo->find($username);
 
         if (!($user instanceof UserInterface)) {
             throw new RuntimeException('user not found: '.$username);

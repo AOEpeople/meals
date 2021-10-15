@@ -1,15 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\MealBundle\Tests\Controller;
 
-use DateTime;
-use Doctrine\Common\Collections\Criteria;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadDays;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishVariations;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
+use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\GuestInvitation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\MealRepository;
@@ -18,12 +19,9 @@ use App\Mealz\MealBundle\Entity\ParticipantRepository;
 use App\Mealz\MealBundle\Service\Doorman;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
+use DateTime;
+use Doctrine\Common\Collections\Criteria;
 
-/**
- * Meal controller test.
- *
- * @author Chetan Thapliyal <chetan.thapliyal@aoe.com>
- */
 class MealControllerTest extends AbstractControllerTestCase
 {
     /**
@@ -42,9 +40,7 @@ class MealControllerTest extends AbstractControllerTestCase
             new LoadDishVariations(),
             new LoadMeals(),
             new LoadRoles(),
-            // self::$container is a special container that allow access to private services
-            // see: https://symfony.com/blog/new-in-symfony-4-1-simpler-service-testing
-            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
+            new LoadUsers(),
         ]);
 
         $this->loginAs(self::USER_KITCHEN_STAFF);
@@ -324,32 +320,22 @@ class MealControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * Tests if the new FLag is rendered
      * @test
+     *
+     * @testdox A New dish is rendered with a "New meal" tag on home page.
      */
-    public function testNewFlagFromMeal()
+    public function newMealFlag(): void
     {
-        $availableMeal = null;
+        $dish = new Dish();
+        $dish->setTitleEn('Very Yummy Dish');
+        $dish->setTitleDe('Sehr leckeres Gericht');
 
-        /** @var MealRepository $mealRepository */
-        $mealRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
-        $criteria = Criteria::create();
+        $meal = $this->getAvailableMeal();
+        $this->assertInstanceOf(Meal::class, $meal);
 
-        // get meal newer than today
-        $meals = $mealRepository->matching($criteria->where(Criteria::expr()->gte('dateTime', new DateTime())));
+        $meal->setDish($dish);
+        $this->persistAndFlushAll([$dish, $meal]);
 
-        if ($meals->count() > 0) {
-            /** @var Doorman $doorman */
-            $doorman = self::$container->get('mealz_meal.doorman');
-            foreach ($meals as $meal) {
-                if ($doorman->isToggleParticipationAllowed($meal->getDateTime())) {
-                    $availableMeal = $meal;
-                    break;
-                }
-            }
-        }
-
-        // Test if No new span is in meals
         $crawler = $this->client->request('GET', '/');
         $this->assertTrue($this->client->getResponse()->isSuccessful());
 

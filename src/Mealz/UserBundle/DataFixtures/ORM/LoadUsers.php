@@ -8,7 +8,6 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use App\Mealz\UserBundle\Entity\Login;
 use App\Mealz\UserBundle\Entity\Profile;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -28,11 +27,6 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
 
     protected int $counter = 0;
 
-    public function __construct(UserPasswordEncoderInterface $encoder)
-    {
-        $this->passwordEncoder = $encoder;
-    }
-
     /**
      * @inheritDoc
      */
@@ -40,16 +34,16 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
     {
         $this->objectManager = $manager;
         $users = [
-            ['username' => 'alice.meals', 'password' => 'Chee7ieRahqu', 'firstName' => 'Alice', 'lastName' => 'Meals', 'roles' => ['ROLE_USER']],
-            ['username' => 'bob.meals', 'password' => 'ON2za5OoJohn', 'firstName' => 'Bob', 'lastName' => 'Meals', 'roles' => ['ROLE_USER']],
-            ['username' => 'finance.meals', 'password' => 'IUn4d9NKMt', 'firstName' => 'Finance', 'lastName' => 'Meals', 'roles' => ['ROLE_FINANCE']],
-            ['username' => 'jane.meals', 'password' => 'heabahW6ooki', 'firstName' => 'Jane', 'lastName' => 'Meals', 'roles' => ['ROLE_USER']],
-            ['username' => 'john.meals', 'password' => 'aef9xoo2hieY', 'firstName' => 'John', 'lastName' => 'Meals', 'roles' => ['ROLE_USER']],
-            ['username' => 'kochomi.meals', 'password' => 'f8400YzaOd', 'firstName' => 'kochomi', 'lastName' => 'Meals', 'roles' => ['ROLE_KITCHEN_STAFF']],
+            ['username' => 'alice.meals', 'firstName' => 'Alice', 'lastName' => 'Meals', 'roles' => ['ROLE_USER']],
+            ['username' => 'bob.meals', 'firstName' => 'Bob', 'lastName' => 'Meals', 'roles' => ['ROLE_USER']],
+            ['username' => 'finance.meals', 'firstName' => 'Finance', 'lastName' => 'Meals', 'roles' => ['ROLE_FINANCE']],
+            ['username' => 'jane.meals', 'firstName' => 'Jane', 'lastName' => 'Meals', 'roles' => ['ROLE_USER']],
+            ['username' => 'john.meals', 'firstName' => 'John', 'lastName' => 'Meals', 'roles' => ['ROLE_USER']],
+            ['username' => 'kochomi.meals', 'firstName' => 'kochomi', 'lastName' => 'Meals', 'roles' => ['ROLE_KITCHEN_STAFF']],
         ];
 
         foreach ($users as $user) {
-            $this->addUser($user['username'], $user['password'], $user['firstName'], $user['lastName'], $user['roles']);
+            $this->addUser($user['username'], $user['firstName'], $user['lastName'], $user['roles']);
         }
 
         $this->objectManager->flush();
@@ -69,18 +63,10 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
      */
     protected function addUser(
         string $username,
-        string $password,
         string $firstName,
         string $lastName,
         array $roles
     ): void {
-        $login = new Login();
-        $login->setUsername($username);
-        $login->setSalt(md5(uniqid('', true)));
-
-        $hashedPassword = $this->passwordEncoder->encodePassword($login, $password);
-        $login->setPassword($hashedPassword);
-
         $profile = new Profile();
         $profile->setUsername($username);
         $profile->setName($lastName);
@@ -93,12 +79,8 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
         }
 
         $profile->setRoles(new ArrayCollection($roleObjs));
-        $login->setProfile($profile);
-
         $this->objectManager->persist($profile);
-        $this->objectManager->persist($login);
 
         $this->addReference('profile-'.$this->counter++, $profile);
-        $this->addReference('login-'.$this->counter, $login);
     }
 }

@@ -9,7 +9,6 @@ use Exception;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\NullLogger;
-use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
 use App\Mealz\AccountingBundle\Controller\Payment\EcashController;
 use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;

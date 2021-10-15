@@ -59,12 +59,21 @@ class OAuthProviderTest extends AbstractControllerTestCase
     public function idpUserDataProvider(): array
     {
         return [
-            'admin user' => [
+            'admin' => [
                 'idpUserData' => [
                     'username' => 'kochomi.meals',
                     'given_name' => 'kochomi',
                     'family_name' => 'imohcok',
                     'roles' => ['meals.admin']
+                ],
+                'mealsRoles' => ['ROLE_ADMIN']
+            ],
+            'kitchen staff' => [
+                'idpUserData' => [
+                    'username' => 'kochomi.meals',
+                    'given_name' => 'kochomi',
+                    'family_name' => 'imohcok',
+                    'roles' => ['meals.kitchen_staff']
                 ],
                 'mealsRoles' => ['ROLE_KITCHEN_STAFF']
             ],
@@ -77,7 +86,7 @@ class OAuthProviderTest extends AbstractControllerTestCase
                 ],
                 'mealsRoles' => ['ROLE_USER']
             ],
-            'finance user' => [
+            'finance' => [
                 'idpUserData' => [
                     'username' => 'finance.meals',
                     'given_name' => 'finance',

@@ -7,8 +7,6 @@ use App\Mealz\UserBundle\Entity\Profile;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Dish
- *
  * @ORM\Table(name="participant")
  * @ORM\Entity(repositoryClass="ParticipantRepository")
  */
@@ -33,6 +31,13 @@ class Participant
      * @var Meal
      */
     protected $meal;
+
+    /**
+     * @Assert\NotNull()
+     * @ORM\ManyToOne(targetEntity="App\Mealz\MealBundle\Entity\Slot")
+     * @ORM\JoinColumn(name="slot_id", referencedColumnName="id", nullable=true)
+     */
+    private ?Slot $slot = null;
 
     /**
      * @Assert\NotNull()
@@ -74,6 +79,14 @@ class Participant
      * @var boolean
      */
     protected $confirmed = false;
+
+
+    public function __construct(Profile $profile, Meal $meal, Slot $slot)
+    {
+        $this->profile = $profile;
+        $this->meal = $meal;
+        $this->slot = $slot;
+    }
 
     /**
      * @return boolean
@@ -137,6 +150,16 @@ class Participant
     public function getMeal()
     {
         return $this->meal;
+    }
+
+    public function getSlot(): ?Slot
+    {
+        return $this->slot;
+    }
+
+    public function setSlot(Slot $slot): void
+    {
+        $this->slot = $slot;
     }
 
     /**

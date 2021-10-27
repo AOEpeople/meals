@@ -8,9 +8,13 @@ use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Service\SlotService;
 use Exception;
 use InvalidArgumentException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @Security("is_granted('ROLE_ADMIN')")
+ */
 class SlotController extends BaseListController
 {
     public function update(Request $request, SlotService $slotService, Slot $slot): JsonResponse

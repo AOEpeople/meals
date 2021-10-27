@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -29,7 +30,9 @@ class Slot
     private string $title = '';
 
     /**
-     * @ORM\Column(type="integer", options={"unsigned": true, "default": 0})
+     * Maximum number of people allowed to have their meal in given slot. Zero means no limit.
+     *
+     * @ORM\Column(name="`limit`", type="integer", options={"unsigned": true, "default": 0})
      */
     private int $limit = 0;
 
@@ -38,6 +41,24 @@ class Slot
      */
     private bool $disabled = false;
 
+    /**
+     * Sort order
+     *
+     * @ORM\Column(name="`order`", type="integer", options={"default": 0})
+     */
+    private int $order = 0;
+
+    /**
+     * @Gedmo\Slug(fields={"title"})
+     * @ORM\Column(length=128, unique=true)
+     */
+    private ?string $slug = null;
+
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
 
     public function getTitle(): string
     {
@@ -59,6 +80,16 @@ class Slot
         $this->limit = $limit;
     }
 
+    public function getOrder(): int
+    {
+        return $this->order;
+    }
+
+    public function setOrder(int $order): void
+    {
+        $this->order = $order;
+    }
+
     public function isDisabled(): bool
     {
         return $this->disabled;
@@ -72,5 +103,10 @@ class Slot
     public function setDisabled(bool $disabled): void
     {
         $this->disabled = $disabled;
+    }
+
+    public function getSlug(): string
+    {
+        return $this->slug ?? '';
     }
 }

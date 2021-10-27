@@ -1,0 +1,21 @@
+.slot-list {
+  .table {
+    .slot-title {
+      width: 84%;
+    }
+
+    .slot-actions {
+      width: 16%;
+    }
+  }
+
+  form {
+    fieldset:first-child {
+      width: 60%;
+    }
+
+    fieldset {
+      width: 20%;
+    }
+  }
+}

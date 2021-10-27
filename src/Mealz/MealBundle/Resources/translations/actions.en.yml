@@ -7,10 +7,13 @@ button:
   add_variation: Add variation
 
 dish:
-  create: Create dish
+  create: Create Dish
 
 category:
-  create: Create category
+  create: Create Category
+
+slot:
+  create: Create Slot
 
 costs:
   cash_register: Cash Register

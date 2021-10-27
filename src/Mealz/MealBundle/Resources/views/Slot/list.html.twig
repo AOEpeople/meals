@@ -27,7 +27,7 @@
 
 {% set tableContent = [] %}
 {% for slot in entities %}
-    {% set tableContent = [{
+    {% set tableContent = tableContent | merge([{
         'title': {
             'content': slot.title,
             'class': 'slot-title'
@@ -38,12 +38,12 @@
         },
         'actions': {
             'content': MealzButton.buttonbar('', 'buttonbar-slot-actions', [
-                            MealzButton.link(path('MealzMealBundle_Slot_edit', {'slug': slot.slug}), 'button.edit'|trans({}, 'actions'), '', 'button-table load-ajax-form load-edit-form transparent', 'glyphicon-pencil'),
-                            '<input type="checkbox" id="slot'~slot.id~'" class="js-switch" name="" style="display: block;" value="1" '~ (slot.enabled ? 'checked' : '') ~' data-id="'~slot.slug~'" />',
-                       ]),
+                MealzButton.link(path('MealzMealBundle_Slot_edit', {'slug': slot.slug}), 'button.edit'|trans({}, 'actions'), '', 'button-table load-ajax-form load-edit-form transparent', 'glyphicon-pencil'),
+                '<input type="checkbox" id="slot'~slot.id~'" class="js-switch" name="" style="display: block;" value="1" '~ (slot.enabled ? 'checked' : '') ~' data-id="'~slot.slug~'" />',
+            ]),
             'class': 'slot-actions'
         }
-    }] | merge(tableContent) %}
+    }]) %}
 {% endfor %}
 
 {# Start tempalte #}

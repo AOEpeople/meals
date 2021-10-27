@@ -24,7 +24,7 @@ class SlotRepository implements ObjectRepository
      */
     public function findAll(): array
     {
-        return $this->objectRepository->findAll();
+        return $this->objectRepository->findBy([], ['order' => 'ASC']);
     }
 
     public function find($id): ?Slot

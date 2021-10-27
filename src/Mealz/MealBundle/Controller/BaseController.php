@@ -20,16 +20,10 @@ use Throwable;
 
 abstract class BaseController extends AbstractController
 {
-    protected LoggerInterface $logger;
-
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
-
     public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();
+        $services['logger'] = '?'.LoggerInterface::class;
         $services['mealz_meal.doorman'] = '?'.Doorman::class;
         $services['monolog.logger.balance'] = '?'.LoggerInterface::class;
         $services['translator'] = '?'.TranslatorInterface::class;
@@ -152,6 +146,6 @@ abstract class BaseController extends AbstractController
             $excChain['#'.$i] = $excLog;
         }
 
-        $this->logger->error(json_encode($excChain), $context);
+        $this->get('logger')->error(json_encode($excChain), $context);
     }
 }

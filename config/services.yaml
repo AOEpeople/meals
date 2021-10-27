@@ -78,11 +78,6 @@ services:
             - [setRepository, ['@mealz_meal.repository.category']]
             - [setEntityName, ['Category']]
 
-    App\Mealz\MealBundle\Controller\DishController:
-        calls:
-            - [setRepository, ['@mealz_meal.repository.dish']]
-            - [setEntityName, ['Dish']]
-
     App\Mealz\MealBundle\Controller\SlotController:
         calls:
             - [setRepository, ['@mealz_meal.repository.slot']]

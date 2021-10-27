@@ -1,7 +1,16 @@
 .slot-list {
   .table {
+    .table-data {
+      padding-top: 10px;
+      vertical-align: bottom;
+    }
+
     .slot-title {
-      width: 84%;
+      width: 69%;
+    }
+
+    .slot-limit {
+      width: 15%;
     }
 
     .slot-actions {

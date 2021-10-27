@@ -15,6 +15,9 @@
         'label': 'table.title'|trans({}, 'general'),
         'class': 'slot-title'
     }, {
+        'label': 'Limit',
+        'class': 'slot-limit'
+    }, {
         'label': 'table.actions'|trans({}, 'general'),
         'class': 'slot-actions no-sort'
     }]
@@ -28,6 +31,10 @@
         'title': {
             'content': slot.title,
             'class': 'slot-title'
+        },
+        'limit': {
+            'content': slot.limit > 0 ? slot.limit : '',
+            'class': 'slot-limit'
         },
         'actions': {
             'content': MealzButton.buttonbar('', 'buttonbar-slot-actions', [

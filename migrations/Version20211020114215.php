@@ -21,7 +21,18 @@ final class Version20211020114215 extends AbstractMigration
     {
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('CREATE TABLE slot (id INT AUTO_INCREMENT NOT NULL, title VARCHAR(255) NOT NULL, `limit` INT UNSIGNED DEFAULT 0 NOT NULL, disabled TINYINT(1) DEFAULT \'0\' NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql(
+            'CREATE TABLE slot (' .
+                '`id` INT AUTO_INCREMENT NOT NULL, ' .
+                '`title` VARCHAR(255) NOT NULL, ' .
+                '`limit` INT UNSIGNED DEFAULT 0 NOT NULL, ' .
+                '`order` INT DEFAULT 0 NOT NULL, ' .
+                '`disabled` TINYINT(1) DEFAULT \'0\' NOT NULL, ' .
+                '`slug` VARCHAR(128) NOT NULL, ' .
+                'PRIMARY KEY(id),' .
+                'UNIQUE INDEX UNIQ_AC0E2067989D9B62 (slug)' .
+            ') DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB'
+        );
         $this->addSql('ALTER TABLE participant ADD slot_id INT DEFAULT NULL AFTER meal_id');
         $this->addSql('ALTER TABLE participant ADD CONSTRAINT FK_D79F6B1159E5119C FOREIGN KEY (slot_id) REFERENCES slot (id)');
         $this->addSql('CREATE INDEX IDX_D79F6B1159E5119C ON participant (slot_id)');

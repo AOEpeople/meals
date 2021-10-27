@@ -7,6 +7,7 @@ entity:
   deleted: '%entityName% "%entity%" has been deleted.'
   Dish: Dish
   Category: Category
+  Slot: Slot
 dish:
   hidden: Dish "%dish%" has been hidden.
   deleted: Dish "%dish%" has been deleted.

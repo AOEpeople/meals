@@ -4,6 +4,7 @@ namespace App\Mealz\MealBundle\Entity;
 
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Mealz\UserBundle\Entity\Profile;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -66,10 +67,10 @@ class Meal
     protected $dateTime;
 
     /**
-     * @var ArrayCollection
      * @ORM\OneToMany(targetEntity="Participant", mappedBy="meal")
+     * @psalm-var Collection<int, Participant>
      */
-    public $participants;
+    public ?Collection $participants = null;
 
     public function __construct()
     {
@@ -135,11 +136,12 @@ class Meal
         return $this->dish;
     }
 
-    /**
-     * @return ArrayCollection
-     */
-    public function getParticipants()
+    public function getParticipants(): Collection
     {
+        if (null === $this->participants) {
+            $this->participants = new ArrayCollection();
+        }
+
         return $this->participants;
     }
 

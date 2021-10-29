@@ -16,10 +16,10 @@ use App\Mealz\MealBundle\Entity\InvitationWrapper;
 use App\Mealz\MealBundle\Service\DishService;
 use App\Mealz\MealBundle\Service\Mailer;
 use App\Mealz\MealBundle\Service\Notification\NotifierInterface;
+use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\Role;
 use DateTime;
-use Doctrine\ORM\EntityManager;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -66,15 +66,14 @@ class MealController extends BaseController
     }
 
     /**
-     * let the currently logged in user join the given meal or accept an available offer
-     *
-     * @param string $date
-     * @param string $dish
-     * @param string $profile
-     * @return JsonResponse
+     * Lets the currently logged-in user either join a meal, or accept an already booked meal offered by a participant.
      */
-    public function join($date, $dish, $profile)
-    {
+    public function join(
+        string $date,
+        string $dish,
+        ?string $profile,
+        ParticipationService $participationSrv
+    ): JsonResponse {
         if ($this->getUser() === null) {
             return $this->ajaxSessionExpiredRedirect();
         }
@@ -85,50 +84,52 @@ class MealController extends BaseController
             return new JsonResponse(null, $errorCode);
         }
 
-        $profile = $this->checkProfile($profile);
-        if ($profile === null) {
+        $userProfile = $this->checkProfile($profile);
+        if ($userProfile === null) {
             return new JsonResponse(null, 403);
         }
 
-        // Either the user is allowed to join a meal or the user is an admin, creating a participation for another user
-        if ($this->getDoorman()->isUserAllowedToJoin($meal) === true
-            || ($this->getDoorman()->isKitchenStaff() === true && $this->getProfile()->getUsername() !== $profile->getUsername())) {
-            $participant = $this->createParticipation($meal, $profile);
-            $this->logAdd($meal, $participant);
-            
-            return $this->generateDeleteResponse($meal, $participant);
+        try {
+            $out = $participationSrv->join($userProfile, $meal);
+        } catch (Exception $e) {
+            $this->logException($e);
+
+            return new JsonResponse(null, 500);
         }
 
-        // Accepting an available offer
-        if ($this->getDoorman()->isOfferAvailable($meal) === true && $this->getDoorman()->isUserAllowedToSwap($meal) === true) {
-            $translator = new Translator('en_EN');
-            $dateTime = $meal->getDateTime();
-            $counter = count($this->getParticipantRepository()->getPendingParticipants($dateTime)) - 1;
-
-            $newParticipant = $this->swapMeal($meal, $profile, $translator, $counter);
-            return $this->generateAcceptResponse($meal, $newParticipant);
+        if (null === $out) {
+            return new JsonResponse(null, 422);
         }
+
+        if (null !== $out['offerer']) {
+            $remainingOfferCount = $participationSrv->getOfferCount($meal->getDateTime());
+            $this->sendMealTakenNotifications($out['offerer'], $meal, $remainingOfferCount);
+
+            return $this->generateAcceptResponse($meal, $out['participant']);
+        }
+
+        $this->logAdd($meal, $out['participant']);
+
+        return $this->generateDeleteResponse($meal, $out['participant']);
     }
 
     /**
      * Checks and gets the profile when required
-     *
-     * @param Profile|null $profile The profile
-     *
-     * @return Profile|null The profile or return.
      */
-    private function checkProfile($profile)
+    private function checkProfile(?string $profileId): ?Profile
     {
-        if ($profile === null) {
-            $profile = $this->getProfile();
-            return $profile;
-        } elseif ($this->getProfile()->getUsername() === $profile || $this->getDoorman()->isKitchenStaff() === true) {
-            $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
-            $profile = $profileRepository->find($profile);
-            return $profile;
+        if (null === $profileId) {
+            return $this->getProfile();
         }
 
-        return null;
+        if (!$this->getDoorman()->isKitchenStaff()) {
+            return null;
+        }
+
+        $profileRepository = $this->getDoctrine()->getRepository(Profile::class);
+
+        return $profileRepository->find($profileId);
+
     }
 
     /**
@@ -206,71 +207,56 @@ class MealController extends BaseController
         return $ajaxResponse;
     }
 
-    /**
-     * Swap meal owner and send notification
-     *
-     * @param Meal       $meal        The meal
-     * @param Profile    $profile     The profile
-     * @param \Symfony\Component\Translation\TranslatorBagInterface $translator The translator
-     * @param Integer    $counter     The counter
-     *
-     * @return Participant $participant
-     */
-    private function swapMeal($meal, $profile, $translator, $counter)
+    private function sendMealTakenNotifications(Profile $offerer, Meal $meal, int $remainingOfferCount): void
     {
-        $takenOffer = $meal->getDish()->getTitleEn();
-        if ($meal->getDish()->getParent() !== null) {
-            $takenOffer = $meal->getDish()->getParent()->getTitleEn() . ' ' . $meal->getDish()->getTitleEn();
+        $dish = $meal->getDish();
+        $dishTitle = $dish->getTitleEn();
+        $parentDish = $dish->getParent();
+
+        if (null !== $parentDish) {
+            $dishTitle = $parentDish->getTitleEn() . ' ' . $dishTitle;
         }
 
-        $participants = $this->getDoctrine()->getRepository('MealzMealBundle:Participant');
-        $offeredMeal = $participants->findByOffer($meal->getId());
-        $participant = $offeredMeal[0];
+        $this->sendMealTakenEmail($offerer, $dishTitle);
 
-        $this->sendMealTakenEmail($participant, $takenOffer);
-
-        $participant->setProfile($profile);
-        $participant->setOfferedAt(0);
-
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->flush();
-
-        // send mattermost message
-        $this->sendMattermostMessage(
-            $translator->transChoice(
-                $this->get('translator')->trans('mattermost.offer_taken', array(), 'messages'),
-                $counter,
-                array(
-                    '%counter%' => $counter,
-                    '%takenOffer%' => $takenOffer
-                )
-            )
-        );
-
-        return $participant;
+        $this->sendMealTakenMattermostMsg($dishTitle, $remainingOfferCount);
     }
 
     /**
      * Sends an email to meal giver that his offered meal as been taken by someone.
      */
-    private function sendMealTakenEmail(Participant $participant, string $dishName): void
+    private function sendMealTakenEmail(Profile $profile, string $dishTitle): void
     {
         $translator = $this->get('translator');
 
-        $recipient = $participant->getProfile()->getUsername() . $translator->trans('mail.domain', [], 'messages');
+        $recipient = $profile->getUsername() . $translator->trans('mail.domain', [], 'messages');
         $subject = $translator->trans('mail.subject', [], 'messages');
-        $firstname = $participant->getProfile()->getFirstname();
 
         $message = $translator->trans(
             'mail.message',
             [
-                '%firstname%' => $firstname,
-                '%takenOffer%' => $dishName
+                '%firstname%' => $profile->getFirstname(),
+                '%takenOffer%' => $dishTitle
             ],
             'messages'
         );
 
         $this->mailer->sendMail($recipient, $subject, $message);
+    }
+
+    private function sendMealTakenMattermostMsg(string $dishTitle, int $remainingOfferCount): void
+    {
+        $this->notifier->sendAlert(
+            $this->get('translator')->trans(
+                'mattermost.offer_taken',
+                [
+                    '%count%' => $remainingOfferCount,
+                    '%counter%' => $remainingOfferCount,
+                    '%takenOffer%' => $dishTitle
+                ],
+                'messages'
+            )
+        );
     }
 
     /**
@@ -489,37 +475,6 @@ class MealController extends BaseController
         );
     }
 
-    /**
-     * Insert the participant into the database
-     *
-     * @param Meal $meal
-     * @param string $profile
-     *
-     * @return Participant
-     */
-    private function createParticipation($meal, $profile)
-    {
-        try {
-            $participant = new Participant();
-            $participant->setProfile($profile);
-            $participant->setMeal($meal);
-
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->transactional(
-                function (EntityManager $entityManager) use ($participant) {
-                    $entityManager->persist($participant);
-                    $entityManager->flush();
-                }
-            );
-
-            $entityManager->refresh($meal);
-
-            return $participant;
-        } catch (ParticipantNotUniqueException $e) {
-            return new JsonResponse(null, 422);
-        }
-    }
-
     private function createEmptyNonPersistentWeek(DateTime $dateTime): Week
     {
         $week = new Week();
@@ -550,13 +505,5 @@ class MealController extends BaseController
                 'meal' => $meal,
             ]
         );
-    }
-
-    /**
-     * Send mattermost message
-     */
-    private function sendMattermostMessage(string $message): void
-    {
-        $this->notifier->sendAlert($message);
     }
 }

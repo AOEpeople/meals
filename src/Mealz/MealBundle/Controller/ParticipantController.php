@@ -76,7 +76,7 @@ class ParticipantController extends BaseController
     public function swap(Participant $participant, NotifierInterface $notifier)
     {
         $dateTime = $participant->getMeal()->getDateTime();
-        $counter = count($this->getParticipantRepository()->getPendingParticipants($dateTime));
+        $counter = $this->getParticipantRepository()->getOfferCount($dateTime);
 
         if (is_object($this->getUser()) === false) {
             return $this->ajaxSessionExpiredRedirect();

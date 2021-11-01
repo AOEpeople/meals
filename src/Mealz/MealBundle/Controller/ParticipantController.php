@@ -166,7 +166,7 @@ class ParticipantController extends BaseController
     /**
      * list participation
      *
-     * @Security("has_role('ROLE_KITCHEN_STAFF')")
+     * @Security("is_granted('ROLE_KITCHEN_STAFF')")
      */
     public function list(DayRepository $dayRepo): Response
     {
@@ -177,10 +177,8 @@ class ParticipantController extends BaseController
             $day = new Day();
             $day->setDateTime(new DateTime());
         } else {
-            // Get user participation to list them as table rows
             $participantRepo = $this->getParticipantRepository();
-            $participants = $participantRepo->getParticipantsOnCurrentDay();
-            $participants = $participantRepo->groupParticipantsByName($participants);
+            $participants = $participantRepo->findAllGroupedBySlotAndProfileID($day->getDateTime());
         }
 
         return $this->render('MealzMealBundle:Participant:list.html.twig', [

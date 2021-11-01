@@ -185,6 +185,55 @@ class ParticipantRepository extends EntityRepository
     }
 
     /**
+     * @psalm-return array<string, array<string, list<Participant>>>
+     */
+    public function findAllGroupedBySlotAndProfileID(DateTime $date): array
+    {
+        $queryBuilder = $this->createQueryBuilder('p');
+        $queryBuilder
+            ->select(['p', 'm', 's', 'up'])
+            ->addSelect('COALESCE(IDENTITY(p.slot), 0) AS HIDDEN null_sort_col') // Pseudo col. to mark participants w/o slot
+            ->leftJoin('p.slot', 's')
+            ->join('p.profile', 'up')
+            ->join('p.meal', 'm', Join::WITH, 'm.dateTime >= :startTime AND m.dateTime <= :endTime')
+            ->orderBy('null_sort_col', 'DESC')
+            ->addOrderBy('s.order', 'ASC')
+            ->setParameters([
+                'startTime' => (clone $date)->setTime(0, 0),
+                'endTime' =>  (clone $date)->setTime(23, 59),
+            ]);
+
+        $result = $queryBuilder->getQuery()->getResult();
+        if (!is_array($result) || empty($result)) {
+            return [];
+        }
+
+        return $this->groupBySlotAndProfileID($result);
+    }
+
+    /**
+     * @param Participant[] $participants
+     *
+     * @psalm-return array<string, array<string, list<Participant>>>
+     */
+    private function groupBySlotAndProfileID(array $participants): array
+    {
+        $groupedParticipants = [];
+
+        foreach ($participants as $participant) {
+            $slot = $participant->getSlot();
+            if (null === $slot || $slot->isDisabled()) {
+                $groupedParticipants[''][$participant->getProfile()->getUsername()][] = $participant;
+                continue;
+            }
+
+            $groupedParticipants[$slot->getTitle()][$participant->getProfile()->getUsername()][] = $participant;
+        }
+
+        return $groupedParticipants;
+    }
+
+    /**
      * @param array $options
      * @return mixed
      */
@@ -339,7 +388,7 @@ class ParticipantRepository extends EntityRepository
             ->where('p.offeredAt != 0')
             ->setParameters([
                 'startTime' => (clone $date)->setTime(0, 0),
-                'endTime' => (clone $date)->setTime(23, 59)
+                'endTime' => (clone $date)->setTime(23, 59),
             ]);
 
         $result = $queryBuilder->getQuery()->getArrayResult();
@@ -359,7 +408,7 @@ class ParticipantRepository extends EntityRepository
             ->groupBy('p.slot')
             ->setParameters([
                 'startTime' => (clone $date)->setTime(0, 0),
-                'endTime' => (clone $date)->setTime(23, 59)
+                'endTime' => (clone $date)->setTime(23, 59),
             ]);
 
         $result = [];

@@ -11,6 +11,10 @@ $text-color: $color-base;
   .table {
     table-layout: fixed;
     width: 100%;
+    margin-top: 20px;
+  }
+  .table:first-child {
+    margin-top: 0;
   }
 
   .table-row {

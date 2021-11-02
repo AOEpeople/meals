@@ -173,21 +173,4 @@ class Doorman
                 return false;
         }
     }
-
-    /**
-     * Checks if $profile and currently logged-in kitchen-staff user are same.
-     */
-    public function loggedInKitchenStaff(Profile $profile): bool
-    {
-        if (false === $this->isKitchenStaff()) {
-            return false;
-        }
-
-        $loggedInUser = $this->security->getUser();
-        if (null === $loggedInUser) {
-            return false;
-        }
-
-        return ($profile->getUsername() === $loggedInUser->getUsername());
-    }
 }

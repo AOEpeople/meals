@@ -1,10 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\MealBundle\Tests\EventListener;
 
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\EventListener\ParticipantNotUniqueException;
 use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
+use Doctrine\ORM\EntityManager;
+use RuntimeException;
 
 class ParticipantPersistenceListenerTest extends AbstractDatabaseTestCase
 {
@@ -15,53 +19,46 @@ class ParticipantPersistenceListenerTest extends AbstractDatabaseTestCase
         $this->clearAllTables();
     }
 
-    public function testTriggersOnInsert()
+    public function testTriggersOnInsert(): void
     {
-        $enityManager = $this->getDoctrine()->getManager();
-
         // load test data
         $meal = $this->createMeal();
         $profile = $this->createProfile();
-        $participant = new Participant();
-        $participant->setProfile($profile);
-        $participant->setMeal($meal);
-        $participant2 = clone $participant;
-        $this->persistAndFlushAll(array($meal, $meal->getDish(), $profile, $participant));
-
+        $participant1 = new Participant($profile, $meal);
+        $participant2 = clone $participant1;
+        $this->persistAndFlushAll([$meal, $meal->getDish(), $profile, $participant1]);
 
         // persist second participant
         $this->expectException(ParticipantNotUniqueException::class);
 
-        $enityManager->transactional(function ($enityManager) use ($participant2) {
-            $enityManager->persist($participant2);
-            $enityManager->flush();
+        /** @var EntityManager $entityManager */
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->transactional(static function ($entityManager) use ($participant2) {
+            $entityManager->persist($participant2);
+            $entityManager->flush();
         });
     }
 
-    public function testTriggersOnUpdate()
+    public function testTriggersOnUpdate(): void
     {
-        $enityManager = $this->getDoctrine()->getManager();
-
         // load test data
-        $meal = $this->createMeal();
+        $meal1 = $this->createMeal();
         $meal2 = $this->createMeal();
         $profile = $this->createProfile();
-        $participant = new Participant();
-        $participant->setProfile($profile);
-        $participant->setMeal($meal);
-        $participant2 = new Participant();
-        $participant2->setProfile($profile);
-        $participant2->setMeal($meal2);
-        $this->persistAndFlushAll(array($meal, $meal->getDish(), $meal2, $meal2->getDish(), $profile, $participant, $participant2));
+        $participant1 = new Participant($profile, $meal1);
+        $participant2 = new Participant($profile, $meal2);
+        $this->persistAndFlushAll([$meal1, $meal1->getDish(), $meal2, $meal2->getDish(), $profile, $participant1, $participant2]);
 
         // change first participant
         $this->expectException(ParticipantNotUniqueException::class);
 
-        $participant2->setMeal($meal);
+        $participant2->setMeal($meal1);
 
-        $enityManager->transactional(function ($enityManager) use ($participant2) {
-            $enityManager->persist($participant2);
-            $enityManager->flush();
+        /** @var EntityManager $entityManager */
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->transactional(static function ($entityManager) use ($participant2) {
+            $entityManager->persist($participant2);
+            $entityManager->flush();
         });
     }
 
@@ -69,22 +66,19 @@ class ParticipantPersistenceListenerTest extends AbstractDatabaseTestCase
      * the transaction is needed because a SELECT query is used in order to find
      * an already existing participant
      */
-    public function testThrowsExceptionWhenNotUsedInATransaction()
+    public function testThrowsExceptionWhenNotUsedInATransaction(): void
     {
-        $enityManager = $this->getDoctrine()->getManager();
-
         // load test data
         $meal = $this->createMeal();
         $profile = $this->createProfile();
-        $this->persistAndFlushAll(array($meal, $meal->getDish(), $profile));
+        $this->persistAndFlushAll([$meal, $meal->getDish(), $profile]);
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
 
-        $participant = new Participant();
-        $participant->setProfile($profile);
-        $participant->setMeal($meal);
+        $participant = new Participant($profile, $meal);
 
-        $enityManager->persist($participant);
-        $enityManager->flush();
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($participant);
+        $entityManager->flush();
     }
 }

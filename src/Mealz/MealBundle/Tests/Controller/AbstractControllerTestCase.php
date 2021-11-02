@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\MealBundle\Tests\Controller;
 
 use DateTime;
@@ -160,18 +162,10 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
 
     /**
      * Helper method to create a new participant object.
-     *
-     * @param  Profile $profile     User profile
-     * @param  Meal $meal           Meal instance
-     *
-     * @return Participant
      */
-    protected function createParticipant($profile, $meal)
+    protected function createParticipant(Profile $profile, Meal $meal): Participant
     {
-        $participant = new Participant();
-        $participant->setProfile($profile);
-        $participant->setMeal($meal);
-
+        $participant = new Participant($profile, $meal);
         $this->persistAndFlushAll([$participant]);
 
         return $participant;

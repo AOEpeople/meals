@@ -12,6 +12,7 @@ use App\Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\DishVariation;
+use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Entity\WeekRepository;
@@ -328,30 +329,24 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     /**
      * return current week object
      */
-    protected function getCurrentWeek(): Week
+    protected function getCurrentWeek(): ?Week
     {
         /** @var WeekRepository $weekRepository */
         $weekRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Week');
-        /** @var Week $currentWeek */
-        $currentWeek = $weekRepository->getCurrentWeek();
-
-        return $currentWeek;
+        return $weekRepository->getCurrentWeek();
     }
 
     /**
      * create profile for user and add participation
-     * @param $userFirstName
-     * @param $userLastName
-     * @param $meal
-     * @return Participant
      */
-    protected function createEmployeeProfileAndParticipation($userFirstName, $userLastName, $meal)
-    {
+    protected function createEmployeeProfileAndParticipation(
+        string $userFirstName,
+        string $userLastName,
+        Meal $meal
+    ): Participant {
         $user = $this->createProfile($userFirstName, $userLastName);
         $this->persistAndFlushAll([$user]);
-        $participant = new Participant();
-        $participant->setProfile($user);
-        $participant->setMeal($meal);
+        $participant = new Participant($user, $meal);
 
         $this->persistAndFlushAll([$participant]);
 
@@ -360,20 +355,17 @@ class ParticipantControllerTest extends AbstractControllerTestCase
 
     /**
      * create profile for guest and add participation
-     * @param $guestFirstName
-     * @param $guestLastName
-     * @param $guestCompany
-     * @param $meal
-     * @return Participant
      */
-    protected function createGuestProfileAndParticipation($guestFirstName, $guestLastName, $guestCompany, $meal)
-    {
+    protected function createGuestProfileAndParticipation(
+        string $guestFirstName,
+        string $guestLastName,
+        string $guestCompany,
+        Meal $meal
+    ): Participant {
         $user = $this->createProfile($guestFirstName, $guestLastName, $guestCompany);
         $user->addRole($this->getRole(Role::ROLE_GUEST));
         $this->persistAndFlushAll([$user]);
-        $participant = new Participant();
-        $participant->setProfile($user);
-        $participant->setMeal($meal);
+        $participant = new Participant($user, $meal);
 
         $this->persistAndFlushAll([$participant]);
 

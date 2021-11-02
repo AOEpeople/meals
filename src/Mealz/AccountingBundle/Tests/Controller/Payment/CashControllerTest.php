@@ -35,7 +35,7 @@ class CashControllerTest extends AbstractControllerTestCase
             new LoadMeals(),
             new LoadParticipants(),
             new LoadRoles(),
-            new LoadUsers(),
+            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
             new LoadTransactions()
         ]);
     }

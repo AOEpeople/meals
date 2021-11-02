@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\MealBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -51,9 +53,8 @@ class Participant
     /**
      * @Assert\Length(min=3, max=2048)
      * @ORM\Column(type="string", length=2048, nullable=TRUE)
-     * @var string
      */
-    protected $comment;
+    protected string $comment = '';
 
     /**
      * @Assert\Length(min=3, max=255)
@@ -64,66 +65,47 @@ class Participant
 
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default": false})
-     * @var boolean
      */
-    protected $costAbsorbed = false;
+    protected bool $costAbsorbed = false;
 
     /**
      * @ORM\Column(type="integer", nullable=false, name="offeredAt")
-     * @var integer
      */
-    protected $offeredAt = 0;
+    protected int $offeredAt = 0;
 
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default8": false})
-     * @var boolean
      */
-    protected $confirmed = false;
+    protected bool $confirmed = false;
 
 
-    public function __construct(Profile $profile, Meal $meal, Slot $slot)
+    public function __construct(Profile $profile, Meal $meal)
     {
         $this->profile = $profile;
         $this->meal = $meal;
-        $this->slot = $slot;
     }
 
-    /**
-     * @return boolean
-     */
-    public function isConfirmed()
+    public function isConfirmed(): bool
     {
         return $this->confirmed;
     }
 
-    /**
-     * @param boolean $isConfirmed
-     */
-    public function setConfirmed($confirmed)
+    public function setConfirmed(bool $confirmed): void
     {
         $this->confirmed = $confirmed;
     }
 
-    /**
-     * @return boolean
-     */
-    public function isCostAbsorbed()
+    public function isCostAbsorbed(): bool
     {
         return $this->costAbsorbed;
     }
 
-    /**
-     * @param boolean $costAbsorbed
-     */
-    public function setCostAbsorbed($costAbsorbed)
+    public function setCostAbsorbed(bool $costAbsorbed): void
     {
         $this->costAbsorbed = $costAbsorbed;
     }
 
-    /**
-     * @return bool
-     */
-    public function isAccountable()
+    public function isAccountable(): bool
     {
         return !$this->isCostAbsorbed();
     }
@@ -136,10 +118,7 @@ class Participant
         return $this->id;
     }
 
-    /**
-     * @param Meal $meal
-     */
-    public function setMeal($meal)
+    public function setMeal(Meal $meal): void
     {
         $this->meal = $meal;
     }
@@ -162,10 +141,7 @@ class Participant
         $this->slot = $slot;
     }
 
-    /**
-     * @param Profile $profile
-     */
-    public function setProfile($profile)
+    public function setProfile(Profile $profile): void
     {
         $this->profile = $profile;
     }
@@ -178,10 +154,7 @@ class Participant
         return $this->profile;
     }
 
-    /**
-     * @param string $comment
-     */
-    public function setComment($comment)
+    public function setComment(string $comment): void
     {
         $this->comment = $comment;
     }
@@ -189,7 +162,7 @@ class Participant
     /**
      * @return string
      */
-    public function getComment()
+    public function getComment(): string
     {
         return $this->comment;
     }
@@ -218,26 +191,17 @@ class Participant
         return $this->guestName;
     }
 
-    /**
-     * @param $offeredAt
-     */
-    public function setOfferedAt($offeredAt)
+    public function setOfferedAt(int $offeredAt): void
     {
         $this->offeredAt = $offeredAt;
     }
 
-    /**
-     * @return integer
-     */
-    public function getOfferedAt()
+    public function getOfferedAt(): int
     {
         return $this->offeredAt;
     }
 
-    /**
-     * @return bool
-     */
-    public function isPending()
+    public function isPending(): bool
     {
         return ($this->getOfferedAt() !== 0);
     }

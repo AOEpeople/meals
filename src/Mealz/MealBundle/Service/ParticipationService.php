@@ -34,12 +34,11 @@ class ParticipationService
         $this->slotRepo = $slotRepo;
     }
 
+    /**
+     * @psalm-return array{participant: Participant, offerer: Profile|null}|null
+     */
     public function join(Profile $profile, Meal $meal, $slot = null): ?array
     {
-        if ($this->doorman->loggedInKitchenStaff($profile)) {
-            return null; // $profile - a kitchen staff - adding itself to $meal; return null
-        }
-
         // self joining by user, or adding by a kitchen staff
         if ($this->doorman->isUserAllowedToJoin($meal) || $this->doorman->isKitchenStaff()) {
             $slot = $slot ?? $this->getNextFreeSlot($meal);
@@ -59,7 +58,7 @@ class ParticipationService
     /**
      * Reassigns $meal - offered by a participant - to $profile.
      *
-     * @return array{participant: Participant, offerer: Profile}
+     * @psalm-return array{participant: Participant, offerer: Profile}|null
      */
     private function reassignOfferedMeal(Meal $meal, Profile $profile): ?array
     {
@@ -85,7 +84,10 @@ class ParticipationService
     private function create(Profile $profile, Meal $meal, ?Slot $slot): ?Participant
     {
         $this->em->beginTransaction();
-        $participant = new Participant($profile, $meal, $slot);
+        $participant = new Participant($profile, $meal);
+        if (null !== $slot) {
+            $participant->setSlot($slot);
+        }
 
         try {
             $this->em->persist($participant);
@@ -142,7 +144,7 @@ class ParticipationService
         return null;
     }
 
-    public function getNextFreeSlot(Meal $meal): ?Slot
+    private function getNextFreeSlot(Meal $meal): ?Slot
     {
         $slots = $this->slotRepo->findBy(['disabled' => 0], ['order' => 'ASC']);
         if (1 > count($slots)) {

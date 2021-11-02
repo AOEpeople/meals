@@ -55,7 +55,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
             new LoadDishVariations(),
             new LoadMeals(),
             new LoadRoles(),
-            new LoadUsers(),
+            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
         ]);
 
         $this->loginAs(self::USER_KITCHEN_STAFF);

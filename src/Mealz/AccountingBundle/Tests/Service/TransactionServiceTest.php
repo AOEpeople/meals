@@ -37,7 +37,7 @@ class TransactionServiceTest extends AbstractDatabaseTestCase
         $this->clearAllTables();
         $this->loadFixtures([
             new LoadRoles(),
-            new LoadUsers(),
+            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
         ]);
     }
 

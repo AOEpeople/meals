@@ -36,7 +36,7 @@ class CostSheetControllerTest extends AbstractControllerTestCase
             new LoadDishVariations(),
             new LoadMeals(),
             new LoadRoles(),
-            new LoadUsers(),
+            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
             new LoadTransactions()
         ]);
 

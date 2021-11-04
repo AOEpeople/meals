@@ -457,7 +457,7 @@ class MealController extends BaseController
      * @param Day $mealDay Meal day for which to generate the invitation.
      * @ParamConverter("mealDay", options={"mapping": {"dayId": "id"}})
      *
-     * @Security("has_role('ROLE_USER')")
+     * @Security("is_granted('ROLE_USER')")
      */
     public function newGuestInvitation(Day $mealDay): JsonResponse
     {

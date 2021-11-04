@@ -80,7 +80,7 @@ class CashController extends BaseController
     }
 
     /**
-     * @Security("has_role('ROLE_KITCHEN_STAFF')")
+     * @Security("is_granted('ROLE_KITCHEN_STAFF')")
      */
     public function paymentFormHandling(Request $request): RedirectResponse
     {

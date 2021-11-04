@@ -21,7 +21,7 @@ class Participant
      *
      * @SuppressWarnings(PHPMD.ShortVariable)
      */
-    private int $id = 0;
+    private ?int $id = null;
 
     /**
      * @Assert\NotNull()
@@ -105,7 +105,7 @@ class Participant
         return !$this->isCostAbsorbed();
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -187,6 +187,6 @@ class Participant
 
     public function __clone()
     {
-        $this->id = 0;
+        $this->id = null;
     }
 }

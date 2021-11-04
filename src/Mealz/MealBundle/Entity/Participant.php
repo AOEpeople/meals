@@ -184,6 +184,6 @@ class Participant
 
     public function __clone()
     {
-        $this->id = null;
+        $this->id = 0;
     }
 }

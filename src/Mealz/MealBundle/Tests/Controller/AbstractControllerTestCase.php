@@ -51,7 +51,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         // the firewall context (defaults to the firewall name)
         $firewall = 'main';
 
-        $repo = $this->client->getContainer()->get('doctrine')->getRepository('MealzUserBundle:Profile');
+        $repo = $this->client->getContainer()->get('doctrine')->getRepository(Profile::class);
         $user = $repo->find($username);
 
         if (!($user instanceof UserInterface)) {
@@ -87,26 +87,19 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
     protected function getUserProfile(string $username): Profile
     {
         /** @var RoleRepository $profileRepository */
-        $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
-        /** @var Profile $userProfile */
+        $profileRepository = $this->getDoctrine()->getRepository(Profile::class);
         $userProfile = $profileRepository->findOneBy(['username' => $username]);
 
-        if (false === ($userProfile instanceof Profile)) {
-            $this->fail('User profile for "'.$username.'" not found.');
+        if (!($userProfile instanceof Profile)) {
+            $this->fail('user profile not found: '.$username);
         }
 
         return $userProfile;
     }
 
-    /**
-     * @param array $options
-     */
-    protected function mockServices($options = array())
+    protected function mockServices(array $options = []): void
     {
-        $defaultOptions = array(
-            'mockFlashBag' => true,
-        );
-
+        $defaultOptions = ['mockFlashBag' => true];
         $options = array_merge($defaultOptions, $options);
 
         if ($options['mockFlashBag']) {
@@ -117,18 +110,17 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
     /**
      * Helper method to get a user role.
      *
-     * @param  string $roleType     Role string identifier i.e. sid.
+     * @param  string $roleType Role string identifier i.e. sid.
      *
      * @return Role
      */
-    protected function getRole($roleType)
+    protected function getRole(string $roleType): Role
     {
         /** @var RoleRepository $roleRepository */
-        $roleRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Role');
-        /** @var Role $guestRole */
+        $roleRepository = $this->getDoctrine()->getRepository(Role::class);
         $role = $roleRepository->findOneBy(['sid' => $roleType]);
         if (!($role instanceof Role)) {
-            $this->fail('User role not "'.$roleType.'" found.');
+            $this->fail('user role not found:  "'.$roleType);
         }
 
         return $role;
@@ -137,23 +129,21 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
     /**
      * Helper method to create a new user profile object.
      *
-     * @param  string $firstName    User first name
-     * @param  string $lastName     User last name
-     * @param  string $company      User company
-     * @return Profile
+     * @param  string $firstName User first name
+     * @param  string $lastName  User last name
+     * @param  string $company   User company
      */
-    protected function createProfile($firstName = '', $lastName = '', $company = '')
+    protected function createProfile(string $firstName = '', string $lastName = '', string $company = ''): Profile
     {
-        $firstName = (trim(strval($firstName)) !== '') ? $firstName : 'Test';
-        $lastName = (trim(strval($lastName)) !== '') ? $lastName : 'User'.rand();
-        $company = (trim(strval($company)) !== '') ? $company : rand()."";
+        $firstName = ($firstName !== '') ? $firstName : 'Test';
+        $lastName = ($lastName !== '') ? $lastName : 'User'.mt_rand();
 
         $profile = new Profile();
         $profile->setUsername($firstName.'.'.$lastName);
         $profile->setFirstName($firstName);
         $profile->setName($lastName);
 
-        if (trim(strval($company)) !== '') {
+        if ($company !== '') {
             $profile->setCompany($company);
         }
 
@@ -181,7 +171,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         }
 
         /** @var MealRepository $mealRepository */
-        $mealRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
+        $mealRepository = $this->getDoctrine()->getRepository(Meal::class);
         $criteria = Criteria::create();
         $criteria
             ->where(Criteria::expr()->lte('dateTime', $dateTime))
@@ -202,7 +192,8 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
      */
     protected function getLockedMeals(): array
     {
-        $mealsRepo = $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
+        /** @var MealRepository $mealsRepo */
+        $mealsRepo = $this->getDoctrine()->getRepository(Meal::class);
 
         /** @var Meal[] $meals */
         $meals = $mealsRepo->getLockedMeals();
@@ -227,28 +218,31 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
 
     /**
      * Helper method to create a user transaction with specific amount and date
-     * @param Profile $user
-     * @param float $amount
-     * @param DateTime|null $date
      */
-    protected function createTransactions(Profile $user, $amount = 5.0, DateTime $date = null)
+    protected function createTransactions(Profile $user, float $amount = 5.0, ?DateTime $date = null): void
     {
+        $amount = filter_var(
+            $amount,
+            FILTER_VALIDATE_FLOAT,
+            ['options' => ['min_range' => 0.1, 'default' => random_int(1000, 5000) / 100]]
+        );
+        $date = $date ?? new DateTime();
+
         $transaction = new Transaction();
-        $amount = filter_var($amount, FILTER_VALIDATE_FLOAT, array('options' => array('min_range' => 0.1, 'default' => mt_rand(1000, 5000) / 100)));
         $transaction->setAmount($amount);
         $transaction->setProfile($user);
         $transaction->setDate($date);
+
         $this->persistAndFlushAll([$transaction]);
     }
 
     /**
      * mock the Flash Bag
      */
-    private function mockFlashBag()
+    private function mockFlashBag(): void
     {
-        // Mock session.storage for flashbag
+        // Mock session.storage for flash-bag
         $session = new Session(new MockFileSessionStorage());
         $this->client->getContainer()->set('session', $session);
     }
-
 }

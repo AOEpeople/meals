@@ -39,19 +39,18 @@ class Doorman
         $this->now = time();
     }
 
-    /**
-     * @param Meal $meal
-     * @return bool
-     */
-    public function isUserAllowedToJoin(Meal $meal)
+    public function isUserAllowedToJoin(Meal $meal): bool
     {
         if ($this->security->getUser()->getProfile() instanceof Profile === false || $meal->isParticipationLimitReached() === true) {
             return false;
         }
+
         if ($this->hasAccessTo(self::AT_MEAL_PARTICIPATION, ['meal' => $meal]) === true) {
             return true;
         }
-        return ($this->isToggleParticipationAllowed($meal->getDateTime()) && $this->hasAccessTo(self::AT_MEAL_PARTICIPATION, ['meal' => $meal]));
+
+        return $this->isToggleParticipationAllowed($meal->getDateTime())
+                && $this->hasAccessTo(self::AT_MEAL_PARTICIPATION, ['meal' => $meal]);
     }
 
     /**
@@ -163,11 +162,6 @@ class Doorman
      */
     private function hasAccessTo($accesstype, $params = [])
     {
-        // if no user is logged in access is denied at all
-        if ($this->security->getUser()->getProfile() instanceof Profile === false) {
-            return false;
-        }
-
         // check access in terms of given accesstype...
         switch ($accesstype) {
             case (self::AT_MEAL_PARTICIPATION):

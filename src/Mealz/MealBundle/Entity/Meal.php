@@ -142,7 +142,7 @@ class Meal
             $this->participants = new ArrayCollection();
         }
 
-        return $this->participants;
+        return new ArrayCollection($this->participants->toArray());
     }
 
     /**
@@ -236,12 +236,12 @@ class Meal
 
     /**
      * Check if there are more or equal participation for this meal as its participation limit.
-     *
-     * @return bool
      */
-    public function isParticipationLimitReached()
+    public function isParticipationLimitReached(): bool
     {
-        return ($this->getParticipationLimit() != 0 && $this->getParticipants()->count() >= $this->getParticipationLimit());
+        $participationLimit = $this->getParticipationLimit();
+
+        return ($participationLimit !== 0 && $this->getParticipants()->count() >= $participationLimit);
     }
 
     public function __toString()

@@ -50,13 +50,13 @@ class Participant
      * @Assert\Length(min=3, max=2048)
      * @ORM\Column(type="string", length=2048, nullable=TRUE)
      */
-    private string $comment = '';
+    private ?string $comment = null;
 
     /**
      * @Assert\Length(min=3, max=255)
      * @ORM\Column(type="string", length=255, nullable=TRUE)
      */
-    private string $guestName = '';
+    private ?string $guestName = null;
 
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default": false})
@@ -147,22 +147,22 @@ class Participant
 
     public function getComment(): string
     {
-        return $this->comment;
+        return $this->comment ?? '';
     }
 
     public function setGuestName(string $guestName): void
     {
-        $this->guestName = $guestName ?: null;
+        $this->guestName = $guestName;
+    }
+
+    public function getGuestName(): string
+    {
+        return $this->guestName ?? '';
     }
 
     public function isGuest(): bool
     {
         return $this->profile->isGuest();
-    }
-
-    public function getGuestName(): string
-    {
-        return $this->guestName;
     }
 
     public function setOfferedAt(int $offeredAt): void

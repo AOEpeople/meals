@@ -99,6 +99,77 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
     }
 
     /**
+     * @test
+     *
+     * @testdox Joining a meal without specifying a slot automatically assigns a slot.
+     */
+    public function joinSuccessAutoSelectSlot(): void
+    {
+        // mock to lock participation (no more joining) and fake logged-in kitchen staff
+        $doorman = $this->getDoormanMock(false, true);
+
+        $this->createSlots([['title' => '12:00-12:30 Canteen']]);
+
+        $profile = $this->getProfile('alice.meals');
+        $meal = $this->getMeal();
+
+        $sut = new ParticipationService($this->entityManager, $doorman, $this->participantRepo, $this->slotRepo);
+        $out = $sut->join($profile, $meal);
+
+        $this->assertArrayHasKey('participant', $out);
+        $participant = $out['participant'];
+        $this->assertInstanceOf(Participant::class, $participant);
+        $this->assertSame($profile->getUsername(), $participant->getProfile()->getUsername());
+        $this->assertSame($meal->getId(), $participant->getMeal()->getId());
+
+        $slot = $participant->getSlot();
+        $this->assertInstanceOf(Slot::class, $slot);
+        $this->assertSame('12:00-12:30 Canteen', $slot->getTitle());
+
+        $this->assertArrayHasKey('offerer', $out);
+        $this->assertNull($out['offerer']);
+    }
+
+    /**
+     * @test
+     *
+     * @testdox Joining a meal without specifying a slot automatically assigns the next available free slot.
+     */
+    public function joinSuccessAutoSelectFreeSlot(): void
+    {
+        // mock to lock participation (no more joining) and fake logged-in kitchen staff
+        $doorman = $this->getDoormanMock(false, true);
+
+        $this->createSlots([
+            'priority one slot'           => ['title' => '12:00-12:30 Canteen', 'limit' => 1, 'order' => 1],
+            'priority two slot; disabled' => ['title' => '12:30-13:00', 'order' => 2, 'disabled' => true],
+            'priority three slot'         => ['title' => '12:00-13:00 Take away', 'order' => 3],
+        ]);
+
+        $user1 = $this->getProfile('alice.meals');
+        $user2 = $this->getProfile('bob.meals');
+        $meal = $this->getMeal();
+
+        $sut = new ParticipationService($this->entityManager, $doorman, $this->participantRepo, $this->slotRepo);
+
+        // occupy first slot
+        $sut->join($user1, $meal);
+        // join again to get the next slot
+        $out = $sut->join($user2, $meal);
+
+        $this->assertNotNull($out);
+        $this->assertArrayHasKey('participant', $out);
+        $participant = $out['participant'];
+        $this->assertInstanceOf(Participant::class, $participant);
+        $this->assertSame($user2->getUsername(), $participant->getProfile()->getUsername());
+        $this->assertSame($meal->getId(), $participant->getMeal()->getId());
+
+        $slot = $participant->getSlot();
+        $this->assertInstanceOf(Slot::class, $slot);
+        $this->assertSame('12:00-13:00 Take away', $slot->getTitle());
+    }
+
+    /**
      * @testdox Joining a meal without specifying a slot automatically assigns a slot.
      */
     public function testJoinSuccessAutoSelectSlot(): void

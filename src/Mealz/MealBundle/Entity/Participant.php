@@ -15,24 +15,21 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Participant
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      *
      * @SuppressWarnings(PHPMD.ShortVariable)
      */
-    private $id;
+    private int $id = 0;
 
     /**
      * @Assert\NotNull()
      * @Assert\Type(type="App\Mealz\MealBundle\Entity\Meal")
      * @ORM\ManyToOne(targetEntity="Meal",inversedBy="participants")
      * @ORM\JoinColumn(name="meal_id", referencedColumnName="id")
-     * @var Meal
      */
-    protected $meal;
+    private Meal $meal;
 
     /**
      * @Assert\NotNull()
@@ -46,37 +43,35 @@ class Participant
      * @Assert\Type(type="App\Mealz\UserBundle\Entity\Profile")
      * @ORM\ManyToOne(targetEntity="App\Mealz\UserBundle\Entity\Profile")
      * @ORM\JoinColumn(name="profile_id", referencedColumnName="id")
-     * @var Profile
      */
-    protected $profile;
+    private Profile $profile;
 
     /**
      * @Assert\Length(min=3, max=2048)
      * @ORM\Column(type="string", length=2048, nullable=TRUE)
      */
-    protected string $comment = '';
+    private string $comment = '';
 
     /**
      * @Assert\Length(min=3, max=255)
      * @ORM\Column(type="string", length=255, nullable=TRUE)
-     * @var string
      */
-    protected $guestName;
+    private string $guestName = '';
 
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default": false})
      */
-    protected bool $costAbsorbed = false;
+    private bool $costAbsorbed = false;
 
     /**
      * @ORM\Column(type="integer", nullable=false, name="offeredAt")
      */
-    protected int $offeredAt = 0;
+    private int $offeredAt = 0;
 
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default8": false})
      */
-    protected bool $confirmed = false;
+    private bool $confirmed = false;
 
 
     public function __construct(Profile $profile, Meal $meal)
@@ -110,10 +105,7 @@ class Participant
         return !$this->isCostAbsorbed();
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -123,10 +115,7 @@ class Participant
         $this->meal = $meal;
     }
 
-    /**
-     * @return Meal
-     */
-    public function getMeal()
+    public function getMeal(): Meal
     {
         return $this->meal;
     }
@@ -146,10 +135,7 @@ class Participant
         $this->profile = $profile;
     }
 
-    /**
-     * @return Profile
-     */
-    public function getProfile()
+    public function getProfile(): Profile
     {
         return $this->profile;
     }
@@ -159,34 +145,22 @@ class Participant
         $this->comment = $comment;
     }
 
-    /**
-     * @return string
-     */
     public function getComment(): string
     {
         return $this->comment;
     }
 
-    /**
-     * @param string $guestName
-     */
-    public function setGuestName($guestName)
+    public function setGuestName(string $guestName): void
     {
         $this->guestName = $guestName ?: null;
     }
 
-    /**
-     * @return bool
-     */
-    public function isGuest()
+    public function isGuest(): bool
     {
         return $this->profile->isGuest();
     }
 
-    /**
-     * @return string
-     */
-    public function getGuestName()
+    public function getGuestName(): string
     {
         return $this->guestName;
     }
@@ -213,6 +187,6 @@ class Participant
 
     public function __clone()
     {
-        $this->id = null;
+        $this->id = 0;
     }
 }

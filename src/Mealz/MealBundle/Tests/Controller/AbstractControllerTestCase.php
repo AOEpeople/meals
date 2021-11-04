@@ -88,7 +88,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         $userProfile = $profileRepository->findOneBy(['username' => $username]);
 
         if (!($userProfile instanceof Profile)) {
-            $this->fail('user profile not found: ' . $username);
+            $this->fail('user profile not found: '.$username);
         }
 
         return $userProfile;
@@ -115,7 +115,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         $roleRepository = $this->getDoctrine()->getRepository(Role::class);
         $role = $roleRepository->findOneBy(['sid' => $roleType]);
         if (!($role instanceof Role)) {
-            $this->fail('user role not found:  "' . $roleType);
+            $this->fail('user role not found:  "' .$roleType);
         }
 
         return $role;

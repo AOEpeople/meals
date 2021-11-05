@@ -312,7 +312,8 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
         $entities = [];
 
         foreach ($data as $item) {
-            $slot = new Slot($item['title']);
+            $slot = new Slot();
+            $slot->setTitle($item['title']);
 
             if (isset($item['limit'])) {
                 $slot->setLimit($item['limit']);

@@ -98,7 +98,7 @@ class MealController extends BaseController
         }
 
         if (null === $out) {
-            return new JsonResponse(null, 422);
+            return new JsonResponse(null, 404);
         }
 
         if (null !== $out['offerer']) {

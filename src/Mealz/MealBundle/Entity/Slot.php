@@ -54,11 +54,6 @@ class Slot
      */
     private ?string $slug = null;
 
-    public function __construct(string $title)
-    {
-        $this->title = $title;
-    }
-
     public function getId(): int
     {
         return $this->id;

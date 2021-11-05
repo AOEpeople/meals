@@ -65,9 +65,9 @@ MealzMealBundle_Slot_edit:
     defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::edit }
     methods: [POST]
 
-MealzMealBundle_Slot_update:
-    path:  /meal/slot/{slug}
-    defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::update }
+MealzMealBundle_Slot_updateState:
+    path:  /meal/slot/{slug}/update-state
+    defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::updateState }
     methods: [POST]
 
 MealzMealBundle_Participant_delete:

@@ -17,16 +17,12 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class SlotController extends BaseListController
 {
-    public function update(Request $request, SlotService $slotService, Slot $slot): JsonResponse
+    public function updateState(Request $request, SlotService $slotService, Slot $slot): JsonResponse
     {
-        if ('POST' !== $request->getMethod()) {
-            return new JsonResponse(null, 405);
-        }
-
-        $data = $request->request->all();
+        $state = (string) $request->request->get('disabled');
 
         try {
-            $slotService->update($slot, $data);
+            $slotService->updateState($slot, $state);
         } catch (InvalidArgumentException $e) {
             return new JsonResponse(null, 422);
         } catch (Exception $e) {

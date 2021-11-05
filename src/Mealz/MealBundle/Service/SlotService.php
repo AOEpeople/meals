@@ -17,28 +17,15 @@ class SlotService
         $this->em = $em;
     }
 
-    /**
-     * Update state (enabled/disabled) of a given slot.
-     */
-    public function update(Slot $slot, array $data): void
-    {
-        $this->updateSlot($slot, $data);
-        $this->em->persist($slot);
-        $this->em->flush();
-    }
-
-    private function updateSlot(Slot $slot, array $data): void
-    {
-        if (isset($data['disabled'])) {
-            $this->setDisabled($slot, $data['disabled']);
-        }
-    }
-
-    private function setDisabled(Slot $slot, $state): void
+    public function updateState(Slot $slot, string $state): void
     {
         if (!in_array($state, ['0', '1'], true)) {
             throw new InvalidArgumentException('invalid slot state');
         }
-        $slot->setDisabled(('1' === $state));
+
+        $slot->setDisabled('1' === $state);
+
+        $this->em->persist($slot);
+        $this->em->flush();
     }
 }

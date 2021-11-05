@@ -21,7 +21,7 @@ SlotIndexView.prototype.initSlotStateToggler = function () {
 };
 
 SlotIndexView.prototype.slotStateChangeHandler = function (id, state) {
-    const url = '/meal/slot/' + id;
+    const url = '/meal/slot/' + id + '/update-state';
     $.post(url, {'disabled': (false === state ? '1' : '0')})
         .fail(function () {
             $('.alert').show();

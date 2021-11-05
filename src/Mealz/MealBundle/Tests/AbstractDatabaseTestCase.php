@@ -125,10 +125,10 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
 
     protected function createCategory(): Category
     {
-        $uniqSuffix = mt_rand();
+        $uniqueSuffix = mt_rand();
         $category = new Category();
-        $category->setTitleDe('Title DE '.$uniqSuffix);
-        $category->setTitleEn('Title EN '.$uniqSuffix);
+        $category->setTitleDe('Title DE '.$uniqueSuffix);
+        $category->setTitleEn('Title EN '.$uniqueSuffix);
 
         return $category;
     }

@@ -11,6 +11,16 @@
     }
   }
 
+  .costsheet-buttonbar {
+    float: right;
+  }
+
+  .costsheet-buttonbar .buttonbar-element {
+    margin-left: 5px;
+    margin-right: 5px;
+    width: 14px;
+  }
+
   .table {
     table-layout: fixed;
     width: 100%;
@@ -87,7 +97,7 @@
         padding: 13px 20px;
       }
 
-      .settle-account {
+      .form-button {
         display: block;
         width: 100%;
         padding: 7px;
@@ -95,7 +105,7 @@
         cursor: pointer;
       }
 
-      .settle-account:hover {
+      .form-button:hover {
         color: $color-print;
         text-decoration: underline;
       }

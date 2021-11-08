@@ -16,10 +16,10 @@ Sign in with your login credentials and select your preferred meals on landing p
 
 ### Invite guest for a meal
 As a logged-in user, you will see small share icon on each day in a week.
-You can send your guest the link and he will be able to enroll for particular day giving his First/Last name and Company information.
+You can send your guest the link, and he will be able to enroll for particular day giving his First/Last name and Company information.
 
 ### Transaction history
-Click on your balance. Now you get your Balance from the last day of the last month and a overview of all transaction in the current month.
+Click on your balance. Now you get your Balance from the last day of the last month and an overview of all transaction in the current month.
 
 ### PayPal debt payment
 In your transaction history you also can pay your debts with PayPal.
@@ -45,7 +45,7 @@ Weeks which haven't been created yet, are displayed with a grey background color
 
 **Description:**
 Here you can select the desired dishes for the selected week.
-Additionally you can disable some days or the whole week in case of (public) holiday.
+Additionally, you can disable some days or the whole week in case of (public) holiday.
 
 ### Dishes
 **Route:** /dish
@@ -79,8 +79,8 @@ If you click on "CREATE CATEGORY" you can create a new one.
 Lists all users and their outstanding debts. Debts are structured in 6 different columns:
 Total, current month (all debts in this month till current day), one column for each of the last three month,
 all debts before the last three month summed up in one column.
-Additionally you can add a transaction (positive or negative) to a users profile, by clicking on the plus sign.
-Also you can request an account settlement if an employee leaves. You can find the 3 dots button right beside the add transaction icon. You can only settle accounts with a positive amount of money.
+Additionally, you can add a transaction (positive or negative) to a users profile, by clicking on the plus sign.
+Also, you can request an account settlement if an employee leaves. You can find the 3 dots button right beside the add transaction icon. You can only settle accounts with a positive amount of money.
 The log for account settlements is in the app/logs Folder.
 
 ### Accounting book
@@ -107,7 +107,7 @@ We're using [ddev](https://ddev.readthedocs.io/) for local development. `ddev` i
 ```
 ddev start && ddev install
 ```
-Point your webbrowser to https://meals.test :tada:
+Point your web browser to https://meals.test :tada:
 Don't forget to add to your local hosts file if not done automatically via ddev: `127.0.0.1 meals.test`
 
 ### Rebuild production ready frontend assets
@@ -157,9 +157,9 @@ The following roles are in use:
 
   * ROLE_USER: basically everyone who is allowed to join the meals
   * ROLE_KITCHEN_STAFF: allowed to create and edit dishes and meals
-  * ROLE_GUEST: for users who is invited for a meal, customers etc.
-  * ROLE_ADMIN: for users who is admin
-  * ROLE_FINANCE: for users who is finance
+  * ROLE_GUEST: for users who are invited for a meal, customers etc.
+  * ROLE_ADMIN: for users who are admin
+  * ROLE_FINANCE: for users who are finance
 
 ### Test data
 
@@ -184,7 +184,7 @@ User authentication takes place using oauth with custom identity provider. To us
 
 ```shell
 IDP_SERVER=https://login.some-domain.com/
-IDP_CLIENT_ID=cleint-id
+IDP_CLIENT_ID=client-id
 IDP_CLIENT_SECRET=client-secret
 ```
 

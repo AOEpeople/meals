@@ -17,7 +17,7 @@ use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
 class InteractiveLoginListenerTest extends AbstractControllerTestCase
 {
-    private InteractiveLoginListener $interactiveLoginListener;
+    private InteractiveLoginListener $iaLoginListener;
 
     /**
      * Set up the testing environment
@@ -38,7 +38,7 @@ class InteractiveLoginListenerTest extends AbstractControllerTestCase
         /** @var ProfileRepository $profileRepo */
         $profileRepo = $this->getDoctrine()->getRepository(Profile::class);
 
-        $this->interactiveLoginListener = new InteractiveLoginListener($entityManager, $profileRepo);
+        $this->iaLoginListener = new InteractiveLoginListener($entityManager, $profileRepo);
     }
 
     protected function tearDown(): void
@@ -51,7 +51,7 @@ class InteractiveLoginListenerTest extends AbstractControllerTestCase
         $profile = $this->getUserProfile(parent::USER_STANDARD);
         $this->assertFalse($profile->isHidden());
 
-        $this->interactiveLoginListener->onSecurityInteractiveLogin($this->getMockedInteractiveLoginEvent());
+        $this->iaLoginListener->onSecurityInteractiveLogin($this->getMockedInteractiveLoginEvent());
 
         $profile = $this->getUserProfile(parent::USER_STANDARD);
         $this->assertFalse($profile->isHidden());
@@ -69,7 +69,7 @@ class InteractiveLoginListenerTest extends AbstractControllerTestCase
         $profile = $this->getUserProfile(parent::USER_STANDARD);
         $this->assertTrue($profile->isHidden());
 
-        $this->interactiveLoginListener->onSecurityInteractiveLogin($this->getMockedInteractiveLoginEvent());
+        $this->iaLoginListener->onSecurityInteractiveLogin($this->getMockedInteractiveLoginEvent());
 
         $profile = $this->getUserProfile(parent::USER_STANDARD);
         $this->assertFalse($profile->isHidden());
@@ -96,13 +96,13 @@ class InteractiveLoginListenerTest extends AbstractControllerTestCase
             ->method('getUser')
             ->willReturn($userInterfaceMock);
 
-        $interactiveLoginEventMock = $this->getMockBuilder(InteractiveLoginEvent::class)
+        $iaLoginEventMock = $this->getMockBuilder(InteractiveLoginEvent::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $interactiveLoginEventMock
+        $iaLoginEventMock
             ->expects($this->once())
             ->method('getAuthenticationToken')
             ->willReturn($tokenInterfaceMock);
-        return $interactiveLoginEventMock;
+        return $iaLoginEventMock;
     }
 }

@@ -39,6 +39,12 @@ class Profile implements UserInterface
 
     /**
      * @Assert\NotBlank()
+     * @ORM\Column(type="boolean", nullable=false, options={"default8": false})
+     */
+    private bool $hidden = false;
+
+    /**
+     * @Assert\NotBlank()
      * @ORM\Column(type="string", length=255, nullable=TRUE)
      */
     private ?string $company = '';
@@ -82,6 +88,16 @@ class Profile implements UserInterface
     public function setFirstName(string $firstName): void
     {
         $this->firstName = $firstName;
+    }
+
+    public function isHidden(): bool
+    {
+        return $this->hidden;
+    }
+
+    public function setHidden(bool $hidden): void
+    {
+        $this->hidden = $hidden;
     }
 
     public function getFullName(): string

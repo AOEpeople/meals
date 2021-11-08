@@ -159,6 +159,7 @@ class ParticipantRepository extends EntityRepository
                 $result[$username] = array(
                     'name' => $cost['name'],
                     'firstName' => $cost['firstName'],
+                    'hidden' => $cost['hidden'],
                     'costs' => array($costByMonth),
                 );
             }
@@ -281,7 +282,7 @@ class ParticipantRepository extends EntityRepository
     private function findCostsPerMonthPerUser()
     {
         $queryBuilder = $this->createQueryBuilder('p');
-        $queryBuilder->select('u.username, u.name, u.firstName, SUBSTRING(m.dateTime, 1, 7) AS yearMonth, SUM(m.price) AS costs');
+        $queryBuilder->select('u.username, u.name, u.firstName, u.hidden, SUBSTRING(m.dateTime, 1, 7) AS yearMonth, SUM(m.price) AS costs');
         $queryBuilder->leftJoin('p.meal', 'm');
         $queryBuilder->leftJoin('p.profile', 'u');
         $queryBuilder->leftJoin('u.roles', 'r');

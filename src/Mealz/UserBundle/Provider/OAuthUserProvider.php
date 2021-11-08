@@ -123,6 +123,7 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
     ): Profile {
         $profile->setFirstName($firstName);
         $profile->setName($lastName);
+        $profile->setHidden(false);
         $profile->setRoles(new ArrayCollection($roles));
 
         $this->entityManager->persist($profile);

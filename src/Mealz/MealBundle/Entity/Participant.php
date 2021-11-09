@@ -70,7 +70,7 @@ class Participant
     protected $offeredAt = 0;
 
     /**
-     * @ORM\Column(type="boolean", nullable=false, options={"default8": false})
+     * @ORM\Column(type="boolean", nullable=false, options={"default": false})
      * @var boolean
      */
     protected $confirmed = false;

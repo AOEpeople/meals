@@ -39,7 +39,7 @@ class Profile implements UserInterface
 
     /**
      * @Assert\NotBlank()
-     * @ORM\Column(type="boolean", nullable=false, options={"default8": false})
+     * @ORM\Column(type="boolean", nullable=false, options={"default": false})
      */
     private bool $hidden = false;
 

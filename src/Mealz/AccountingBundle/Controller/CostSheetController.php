@@ -91,7 +91,7 @@ class CostSheetController extends BaseController
     }
 
     /**
-     * @Security("has_role('ROLE_KITCHEN_STAFF')")
+     * @Security("is_granted('ROLE_KITCHEN_STAFF')")
      */
     public function sendSettlementRequest(Profile $userProfile, Wallet $wallet): Response
     {

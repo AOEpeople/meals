@@ -48,9 +48,7 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
             $users = $this->getRandomUsers();
 
             foreach ($users as $user) {
-                $participant = new Participant();
-                $participant->setMeal($meal);
-                $participant->setProfile($user);
+                $participant = new Participant($user, $meal);
                 $participant->setCostAbsorbed(false);
 
                 if ($participant->getMeal()->getDay()->getLockParticipationDateTime() < new DateTime) {

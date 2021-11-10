@@ -1,25 +1,23 @@
 <?php
 
+declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Tests;
 
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Doctrine\ORM\EntityManager;
 use App\Mealz\MealBundle\Entity\Category;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
-use App\Mealz\UserBundle\Entity\Login;
 use App\Mealz\UserBundle\Entity\Profile;
+use Doctrine\ORM\EntityManagerInterface;
+use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-/**
- * Class AbstractDatabaseTestCase
- * @package Mealz\MealBundle\Tests
- */
 abstract class AbstractDatabaseTestCase extends WebTestCase
 {
     /**
@@ -28,35 +26,43 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        static::$kernel = static::createKernel(['debug' => false]);
-        static::$kernel->boot();
+
+        self::bootKernel();
     }
 
     /**
      * empty the test database and load fixtures from a class
      *
      * @param FixtureInterface|array|null $fixtures
-     * @throws \InvalidArgumentException
+     *
+     * @throws InvalidArgumentException
      */
-    protected function loadFixtures($fixtures)
+    protected function loadFixtures($fixtures): void
     {
         $loader = new Loader();
+
         if (is_array($fixtures) || $fixtures instanceof \Iterator) {
             foreach ($fixtures as $fixture) {
                 $loader->addFixture($fixture);
             }
             $this->push($loader);
+
             return;
-        } elseif ($fixtures instanceof FixtureInterface) {
+        }
+
+        if ($fixtures instanceof FixtureInterface) {
             $loader->addFixture($fixtures);
             $this->push($loader);
+
             return;
-        } elseif ($fixtures === null) {
+        }
+
+        if ($fixtures === null) {
             $this->push($loader);
             return;
         }
 
-        throw new \InvalidArgumentException(
+        throw new InvalidArgumentException(
             sprintf(
                 '%s expects first parameter to be a FixtureInterface or array. %s given.',
                 __METHOD__,
@@ -65,7 +71,7 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
         );
     }
 
-    protected function clearAllTables()
+    protected function clearAllTables(): void
     {
         $this->loadFixtures(null);
     }
@@ -78,15 +84,11 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
         return static::$kernel->getContainer()->get('doctrine');
     }
 
-    /**
-     * @param Category $category
-     * @return Dish
-     */
-    protected function createDish(Category $category = null)
+    protected function createDish(Category $category = null): Dish
     {
         $dish = new Dish();
-        $dish->setTitleEn('Test EN '.rand());
-        $dish->setTitleDe('Test DE '.rand());
+        $dish->setTitleEn('Test EN '.mt_rand());
+        $dish->setTitleDe('Test DE '.mt_rand());
         $dish->setPrice(3.20);
         if ($category) {
             $dish->setCategory($category);
@@ -95,16 +97,13 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
         return $dish;
     }
 
-    /**
-     * @param \App\Mealz\MealBundle\Entity\Dish $dish
-     * @param $datetime
-     * @return Meal
-     */
-    protected function createMeal(Dish $dish = null, $datetime = null)
+    protected function createMeal(Dish $dish = null, DateTime $datetime = null): Meal
     {
         if ($datetime === null) {
-            $datetime = new \DateTime();
+            $datetime = new DateTime();
+            $datetime->setTime(12, 0);
         }
+
         $meal = new Meal();
         $meal->setDish($dish ?: $this->createDish());
         $meal->setDateTime($datetime);
@@ -113,12 +112,9 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
         return $meal;
     }
 
-    /**
-     * @return Profile
-     */
-    protected function createProfile()
+    protected function createProfile(): Profile
     {
-        $rand = rand();
+        $rand = mt_rand();
         $profile = new Profile();
         $profile->setUsername('TestUsername'.$rand);
         $profile->setName('TestName'.$rand);
@@ -127,61 +123,38 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
         return $profile;
     }
 
-    protected function createLogin(Profile $profile = null)
+    protected function createCategory(): Category
     {
-        $name = $profile ? $profile->getName() : rand();
-        $login = new Login();
-        $login->setUsername($name);
-        $login->setSalt(md5(uniqid(null, true)));
-
-        /** @var Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface $encoder */
-        $encoder = static::$kernel->getContainer()->get('security.encoder_factory')->getEncoder($login);
-        $login->setPassword($encoder->encodePassword($name, $login->getSalt()));
-
-        if ($profile) {
-            $login->setProfile($profile);
-        }
-
-        return $login;
-    }
-
-    /**
-     * @return Category
-     */
-    protected function createCategory()
-    {
+        $uniqueSuffix = mt_rand();
         $category = new Category();
-        $category->setTitleDe('Title DE '.rand());
-        $category->setTitleEn('Title EN '.rand());
+        $category->setTitleDe('Title DE '.$uniqueSuffix);
+        $category->setTitleEn('Title EN '.$uniqueSuffix);
 
         return $category;
     }
 
-    /**
-     * @param array $entities
-     */
-    public function persistAndFlushAll($entities)
+    public function persistAndFlushAll(array $entities): void
     {
+        /** @var EntityManagerInterface $entityManager */
         $entityManager = $this->getDoctrine()->getManager();
 
         $entityManager->transactional(
-            function ($entityManager) use ($entities) {
-                /** @var EntityManager $entityManager */
+            static function (EntityManagerInterface $entityManager) use ($entities) {
                 // transaction is need for Participant entities
                 foreach ($entities as $entity) {
                     $entityManager->persist($entity);
                 }
+
                 $entityManager->flush();
             }
         );
     }
 
-    /**
-     * @param Loader $loader
-     */
-    protected function push($loader)
+    protected function push(Loader $loader): void
     {
-        $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = $this->getDoctrine()->getManager();
+
         $purger = new ORMPurger($entityManager);
         $executor = new ORMExecutor($entityManager, $purger);
         $executor->execute($loader->getFixtures());

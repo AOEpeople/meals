@@ -213,7 +213,7 @@ jobs:
           coverage: none
           tools: phpmd
       - name: Run PHPMD
-        run: phpmd src github ./phpmd.xml --baseline-file ./phpmd.baseline.xml
+        run: phpmd src github ./phpmd.xml --baseline-file ./phpmd.baseline.xml --exclude */Tests/*
 
   publish:
     name: Publish

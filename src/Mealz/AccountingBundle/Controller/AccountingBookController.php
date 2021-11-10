@@ -119,7 +119,7 @@ class AccountingBookController extends BaseController
      * @throws ReflectionException
      * @throws Exception
      *
-     * @Security("has_role('ROLE_FINANCE')")
+     * @Security("is_granted('ROLE_FINANCE')")
      */
     public function exportPDF(?string $dateRange, TCPDFController $pdfGen): string
     {

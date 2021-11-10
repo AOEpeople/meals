@@ -16,3 +16,28 @@
 		</div>
 	{%- endapply -%}
 {% endmacro %}
+
+{###
+# Creates a simple (browser native) checkbox.
+#
+# @param value     string  Checkbox value
+# @param checked   bool    Checkbox state, i,e. un/checked
+# @param classes   string  Additional CSS Classes
+# @param attrs     array   name/value pair of checkbox attributes
+#}
+{% macro createSimple(value, checked, label, classes, attrs) %}
+	{% if attrs.checked is defined %}
+		{% set attrs = attrs|filter((v, k) => k != 'checked') %}
+	{% endif %}
+	{%- import 'MealzTemplateBundle::Components/_common.html.twig' as commonlib -%}
+	<div class="simple-checkbox-wrapper">
+		{% if label -%}
+			<label{% if attrs.id is defined %} for="{{ attrs.id|e }}"{% endif %}>{{ label }}</label>
+		{%- endif %}
+		<input type="checkbox"
+				{{- commonlib.optionalAttribute('class', classes) -}}
+				{{- commonlib.additionalAttributes(attrs) -}}
+				{{- checked is same as(true) ? 'checked="checked" ' : '' -}}
+			   value="{{- value -}}"/>
+	</div>
+{% endmacro %}

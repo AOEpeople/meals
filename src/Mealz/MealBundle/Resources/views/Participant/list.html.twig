@@ -6,23 +6,23 @@
     <div class="headline-container headline-container-h1 centered">
         <h1 class="headline">{{ 'headings.week.participationsprint'|trans({},'general') }} {{ day.dateTime | date('l') | trans({}, 'date') }}{{ day.dateTime | date(', d.m.') }}</h1>
     </div>
-    {% if users is not empty and (day.meals | length > 0) %}
-        <table class="table">
-            <thead class="table-header">
-                <tr>
-                    <th class="table-head wide-cell week-date"></th>
-                    {% for meal in day.meals %}
-                        <th class="table-head meal-title">
-                            <span>
-                                {% if meal.dish.parent %}<b>{{ meal.dish.parent.title }}</b><br>{% endif %}{{ meal.dish.title }}
-                            </span>
-                        </th>
-                    {% endfor %}
-                </tr>
-            </thead>
-
-            <tbody class="table-content">
-                {% for name, participations in users %}
+    {% if users is not empty and day.enabled and (day.meals | length > 0) %}
+        {% for slot, participants in users %}
+            <table class="table">
+                <thead class="table-header">
+                    <tr>
+                        <th class="table-head wide-cell week-date">{{ slot }}</th>
+                        {% for meal in day.meals %}
+                            <th class="table-head meal-title">
+                                <span>
+                                    {% if meal.dish.parent %}<b>{{ meal.dish.parent.title }}</b><br>{% endif %}{{ meal.dish.title }}
+                                </span>
+                            </th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody class="table-content">
+                {% for name, participations in participants %}
                     {% set profile = participations[0].profile %}
 
                     <tr class="table-row">
@@ -35,6 +35,11 @@
                         {% endfor %}
                     </tr>
                 {% endfor %}
+                </tbody>
+            </table>
+        {% endfor %}
+        <table class="table">
+            <tbody class="table-content">
                 <tr>
                     <td class="text table-data wide-cell">{{ 'headings.week.participations'|trans({},'general') }}</td>
                     {% for meal in day.meals %}

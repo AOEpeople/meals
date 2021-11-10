@@ -13,7 +13,7 @@ class RoleHierarchyTest extends KernelTestCase
      */
     protected function setUp(): void
     {
-        self::bootKernel();
+        static::bootKernel();
     }
 
     /**

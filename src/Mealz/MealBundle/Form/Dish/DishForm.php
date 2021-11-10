@@ -19,17 +19,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class DishForm extends AbstractType
 {
+    protected float $price;
 
-    /**
-     * @var integer $price
-     */
-    protected $price;
-
-    /**
-     * DishForm constructor.
-     * @param integer $price
-     */
-    public function __construct($price)
+    public function __construct(float $price)
     {
         $this->price = $price;
     }

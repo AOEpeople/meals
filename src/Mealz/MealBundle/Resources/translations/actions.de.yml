@@ -12,5 +12,8 @@ dish:
 category:
   create: Kategorie erstellen
 
+slot:
+  create: Slot erstellen
+
 costs:
   cash_register: Kasse

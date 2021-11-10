@@ -10,6 +10,7 @@ import 'jquery-datetimepicker/build/jquery.datetimepicker.full';
 import '@fancyapps/fancybox';
 import 'easy-autocomplete';
 import 'daterangepicker';
+import {Controller} from "./controller";
 
 function importAll(r) {
     r.keys().forEach(r);
@@ -35,11 +36,15 @@ window.Mealz = function () {
 importAll(require.context('./modules/', true, /\.js$/));
 
 $(document).ready(function () {
+    const view = $('body').data('view');
+    new Controller(view);
+
     var mealz = new Mealz();
     mealz.styleCheckboxes();
     mealz.styleSelects();
     mealz.initButtonHandling();
     mealz.copyToClipboard();
+
 
     /**
      * See: https://stackoverflow.com/questions/1537032/how-do-i-stop-jquery-appending-a-unique-id-to-scripts-called-via-ajax

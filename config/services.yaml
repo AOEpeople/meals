@@ -78,10 +78,10 @@ services:
             - [setRepository, ['@mealz_meal.repository.category']]
             - [setEntityName, ['Category']]
 
-    App\Mealz\MealBundle\Controller\DishController:
+    App\Mealz\MealBundle\Controller\SlotController:
         calls:
-            - [setRepository, ['@mealz_meal.repository.dish']]
-            - [setEntityName, ['Dish']]
+            - [setRepository, ['@mealz_meal.repository.slot']]
+            - [setEntityName, ['Slot']]
 
     # Interface Implementations
     App\Mealz\MealBundle\Service\Notification\NotifierInterface: '@mealz_meal.notifier.mattermost'
@@ -136,6 +136,12 @@ services:
         arguments:
             - 'MealzMealBundle:Participant'
     App\Mealz\MealBundle\Entity\ParticipantRepository: '@mealz_meal.repository.participant'
+
+    mealz_meal.repository.slot:
+        class: App\Mealz\MealBundle\Entity\SlotRepository
+        arguments:
+            - '@doctrine.orm.default_entity_manager'
+    App\Mealz\MealBundle\Entity\SlotRepository: '@mealz_meal.repository.slot'
 
     mealz_meal.repository.week:
         class: App\Mealz\MealBundle\Entity\WeekRepository

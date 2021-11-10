@@ -53,7 +53,7 @@ payment:
         cancel: Abbrechen
       request:
         success: Der Benutzer %name% wurde ausgeblendet.
-        info: Der Benutzer %name% wurde bereits ausgeblendet.
+        info: Der Benutzer %name% ist bereits ausgeblendet.
     mail:
       subject: Anfrage auf Kontoausgleich
       body: '<html><head></head><body>Hallo HR,<br><br>%admin% hat einen Kontoausgleich für %fullname% beantragt.<br>Klicke auf den folgenden Link, um die Anfrage zu bestätigen:<br><br><a href="%link%">%link%</a></body></html>'

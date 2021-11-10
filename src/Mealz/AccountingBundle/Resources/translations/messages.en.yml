@@ -53,7 +53,7 @@ payment:
         cancel: Cancel
       request:
         success: The user %name% has been hidden.
-        info: The user %name% has already been hidden.
+        info: The user %name% is already hidden.
     mail:
       subject: Request for account settlement
       body: '<html><head></head><body>Hi HR,<br><br>%admin% requested an account settlement for %fullname%.<br>Click on the following link to confirm it:<br><br><a href="%link%">%link%</a></body></html>'

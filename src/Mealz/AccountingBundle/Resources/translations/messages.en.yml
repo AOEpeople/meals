@@ -41,7 +41,7 @@ payment:
         success: The request for account settlement for %name% has been sent to the HR department.
         failure: The request failed.
       confirmation:
-        message: Are you sure you want to settle account of %fullname%?
+        message: Are you sure you want to settle account of %fullname% and cancel all future meals?
         confirm: Confirm
         success: The account settlement of %fullname% was successful.
         failure: The request is invalid or has already been confirmed.

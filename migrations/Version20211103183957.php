@@ -7,25 +7,22 @@ namespace DoctrineMigrations;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
-/**
- * Auto-generated Migration: Please modify to your needs!
- */
 final class Version20211103183957 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return '';
+        return 'Add a hidden flag to the user profile.';
     }
 
     public function up(Schema $schema): void
     {
-        // this up() migration is auto-generated, please modify it to your needs
+        // Add the hidden flag from user profile
         $this->addSql('ALTER TABLE profile ADD hidden TINYINT(1) NOT NULL DEFAULT \'0\'');
     }
 
     public function down(Schema $schema): void
     {
-        // this down() migration is auto-generated, please modify it to your needs
+        // Drop the hidden flag from user profile
         $this->addSql('ALTER TABLE profile DROP hidden');
     }
 }

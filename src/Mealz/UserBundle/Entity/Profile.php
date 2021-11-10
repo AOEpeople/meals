@@ -38,7 +38,6 @@ class Profile implements UserInterface
     private string $firstName = '';
 
     /**
-     * @Assert\NotBlank()
      * @ORM\Column(type="boolean", nullable=false, options={"default": false})
      */
     private bool $hidden = false;

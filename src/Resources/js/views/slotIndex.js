@@ -3,7 +3,6 @@ import Switchery from "switchery.js";
 
 let SlotIndexView = function () {
     this.checkboxSelector = '#slot-table .table-data.slot-actions input[type="checkbox"]';
-    this.switcheryElem = [];
     this.initSlotStateToggler();
 };
 

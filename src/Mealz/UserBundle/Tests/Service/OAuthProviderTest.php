@@ -73,7 +73,7 @@ class OAuthProviderTest extends AbstractControllerTestCase
                     'username' => 'kochomi.meals',
                     'given_name' => 'kochomi',
                     'family_name' => 'imohcok',
-                    'roles' => ['meals.kitchen_staff']
+                    'roles' => ['meals.kitchen']
                 ],
                 'mealsRoles' => ['ROLE_KITCHEN_STAFF']
             ],

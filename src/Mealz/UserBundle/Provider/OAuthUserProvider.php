@@ -26,11 +26,11 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
      * @var array<string, string>
      */
     private array $roleMapping = [
-        'meals.admin'         => self::ROLE_ADMIN,
-        'meals.kitchen_staff' => self::ROLE_KITCHEN_STAFF,
-        'meals.finance'       => self::ROLE_FINANCE,
-        'meals.user'          => self::ROLE_USER,
-        'aoe_employee'        => self::ROLE_USER
+        'meals.admin'   => self::ROLE_ADMIN,
+        'meals.kitchen' => self::ROLE_KITCHEN_STAFF,
+        'meals.finance' => self::ROLE_FINANCE,
+        'meals.user'    => self::ROLE_USER,
+        'aoe_employee'  => self::ROLE_USER
     ];
 
     private EntityManagerInterface $entityManager;

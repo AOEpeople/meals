@@ -81,7 +81,7 @@ Total, current month (all debts in this month till current day), one column for 
 all debts before the last three month summed up in one column.
 Additionally you can add a transaction (positive or negative) to a users profile, by clicking on the plus sign.
 Also you can request an account settlement if an employee leaves. You can find the 3 dots button right beside the add transaction icon. You can only settle accounts with a positive amount of money.
-The log for account settlements is in the app/logs Folder.
+The log for account settlements is in the **app/logs** Folder. If the account settlement is successful all future meal bookings that are associated with this account, will be canceled.
 
 ### Accounting book
 **Route:** /accounting/book

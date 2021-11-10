@@ -41,7 +41,7 @@ payment:
         success: Die Anfrage auf einen Kontoausgleich für %name% wurde an die HR-Abteilung gesendet.
         failure: Die Anfrage ist fehlgeschlagen.
       confirmation:
-        message: Bist du sicher, dass das Konto von %fullname% ausgeglichen werden soll?
+        message: Bist du sicher, dass das Konto von %fullname% ausgeglichen werden soll und alle zukünftigen Essen storniert werden?
         confirm: Bestätigen
         success: Der Ausgleich des Kontos von %fullname% war erfolgreich.
         failure: Die Anfrage ist ungültig oder wurde bereits bestätigt.

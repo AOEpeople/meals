@@ -1,4 +1,3 @@
-import 'jquery';
 import Switchery from "switchery.js";
 
 let SlotIndexView = function () {

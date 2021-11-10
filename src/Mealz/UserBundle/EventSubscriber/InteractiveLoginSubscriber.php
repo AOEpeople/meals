@@ -1,12 +1,16 @@
 <?php
 
-namespace App\Mealz\UserBundle\EventListener;
+declare(strict_types=1);
+
+namespace App\Mealz\UserBundle\EventSubscriber;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use App\Mealz\UserBundle\Entity\ProfileRepository;
+use Symfony\Component\Security\Http\SecurityEvents;
 
-class InteractiveLoginListener
+class InteractiveLoginSubscriber implements EventSubscriberInterface
 {
     private EntityManagerInterface $entityManager;
 
@@ -18,16 +22,23 @@ class InteractiveLoginListener
         $this->profileRepository = $profileRepository;
     }
 
-    public function onSecurityInteractiveLogin(InteractiveLoginEvent $event)
+    public function onInteractiveLogin(InteractiveLoginEvent $event)
     {
         $user = $event->getAuthenticationToken()->getUser();
 
-        $profile = $this->profileRepository->findOneBy(array('username' => $user->getUsername()));
+        $profile = $this->profileRepository->find($user->getUsername());
         if ($profile !== null) {
             $profile->setHidden(false);
 
             $this->entityManager->persist($profile);
             $this->entityManager->flush();
         }
+    }
+
+    public static function getSubscribedEvents()
+    {
+        return [
+            SecurityEvents::INTERACTIVE_LOGIN => ['onInteractiveLogin']
+        ];
     }
 }

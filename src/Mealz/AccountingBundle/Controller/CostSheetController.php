@@ -195,7 +195,7 @@ class CostSheetController extends BaseController
             $transaction = new Transaction();
             $transaction->setProfile($profile);
             $transaction->setDate(new DateTime());
-            $transaction->setAmount(-1 * abs($wallet->getBalance($profile)));
+            $transaction->setAmount(-1 * abs((float)$wallet->getBalance($profile)));
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($profile);

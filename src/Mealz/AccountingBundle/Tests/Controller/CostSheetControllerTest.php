@@ -97,7 +97,6 @@ class CostSheetControllerTest extends AbstractControllerTestCase
     public function testHideUserRequestWithNonHiddenUser(): void {
         // Pre-action tests
         $profile = $this->getUserProfile(parent::USER_STANDARD);
-        $this->assertNotNull($profile);
         $this->assertFalse($profile->isHidden());
 
         // Trigger action
@@ -112,13 +111,11 @@ class CostSheetControllerTest extends AbstractControllerTestCase
     public function testHideUserRequestWithHiddenUser(): void {
         // Pre-action tests
         $profile = $this->getUserProfile(parent::USER_STANDARD);
-        $this->assertNotNull($profile);
 
         $profile->setHidden(true);
         $this->persistAndFlushAll([$profile]);
 
         $profile = $this->getUserProfile(parent::USER_STANDARD);
-        $this->assertNotNull($profile);
         $this->assertTrue($profile->isHidden());
 
         // Trigger action

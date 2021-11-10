@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace App\Mealz\UserBundle\Tests\Listener;
+namespace App\Mealz\UserBundle\Tests\EventSubscriber;
 
 use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\ProfileRepository;
-use App\Mealz\UserBundle\EventListener\InteractiveLoginListener;
+use App\Mealz\UserBundle\EventSubscriber\InteractiveLoginSubscriber;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
-class InteractiveLoginListenerTest extends AbstractControllerTestCase
+class InteractiveLoginSubscriberTest extends AbstractControllerTestCase
 {
-    private InteractiveLoginListener $iaLoginListener;
+    private InteractiveLoginSubscriber $iaLoginSubscriber;
 
     /**
      * Set up the testing environment
@@ -38,7 +38,7 @@ class InteractiveLoginListenerTest extends AbstractControllerTestCase
         /** @var ProfileRepository $profileRepo */
         $profileRepo = $this->getDoctrine()->getRepository(Profile::class);
 
-        $this->iaLoginListener = new InteractiveLoginListener($entityManager, $profileRepo);
+        $this->iaLoginSubscriber = new InteractiveLoginSubscriber($entityManager, $profileRepo);
     }
 
     protected function tearDown(): void
@@ -51,7 +51,7 @@ class InteractiveLoginListenerTest extends AbstractControllerTestCase
         $profile = $this->getUserProfile(parent::USER_STANDARD);
         $this->assertFalse($profile->isHidden());
 
-        $this->iaLoginListener->onSecurityInteractiveLogin($this->getMockedInteractiveLoginEvent());
+        $this->iaLoginSubscriber->onInteractiveLogin($this->getMockedInteractiveLoginEvent());
 
         $profile = $this->getUserProfile(parent::USER_STANDARD);
         $this->assertFalse($profile->isHidden());
@@ -60,8 +60,6 @@ class InteractiveLoginListenerTest extends AbstractControllerTestCase
     public function testOnSecurityInteractiveLoginWithHiddenUser()
     {
         $profile = $this->getUserProfile(parent::USER_STANDARD);
-        $this->assertNotNull($profile);
-
         $profile->setHidden(true);
 
         $this->persistAndFlushAll([$profile]);
@@ -69,7 +67,7 @@ class InteractiveLoginListenerTest extends AbstractControllerTestCase
         $profile = $this->getUserProfile(parent::USER_STANDARD);
         $this->assertTrue($profile->isHidden());
 
-        $this->iaLoginListener->onSecurityInteractiveLogin($this->getMockedInteractiveLoginEvent());
+        $this->iaLoginSubscriber->onInteractiveLogin($this->getMockedInteractiveLoginEvent());
 
         $profile = $this->getUserProfile(parent::USER_STANDARD);
         $this->assertFalse($profile->isHidden());

@@ -15,6 +15,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProviderInterface
 {
+    private const ROLE_ADMIN         = 'ROLE_ADMIN';
     private const ROLE_KITCHEN_STAFF = 'ROLE_KITCHEN_STAFF';
     private const ROLE_FINANCE       = 'ROLE_FINANCE';
     private const ROLE_USER          = 'ROLE_USER';
@@ -25,7 +26,8 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
      * @var array<string, string>
      */
     private array $roleMapping = [
-        'meals.admin'   => self::ROLE_KITCHEN_STAFF,
+        'meals.admin'   => self::ROLE_ADMIN,
+        'meals.kitchen' => self::ROLE_KITCHEN_STAFF,
         'meals.finance' => self::ROLE_FINANCE,
         'meals.user'    => self::ROLE_USER,
         'aoe_employee'  => self::ROLE_USER
@@ -147,6 +149,10 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
 
     private function getMaxPrivilegedRole(array $roles): string
     {
+        if (in_array(self::ROLE_ADMIN, $roles, true)) {
+            return self::ROLE_ADMIN;
+        }
+
         if (in_array(self::ROLE_KITCHEN_STAFF, $roles, true)) {
             return self::ROLE_KITCHEN_STAFF;
         }

@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Mealz\AccountingBundle\Tests\Controller\Payment;
 
 use App\Mealz\AccountingBundle\Service\TransactionService;
+use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
+use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use Exception;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Psr\Log\NullLogger;
-use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
 use App\Mealz\AccountingBundle\Controller\Payment\EcashController;
 use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
@@ -21,6 +21,20 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class EcashControllerTest extends AbstractControllerTestCase
 {
     use ProphecyTrait;
+
+    /**
+     * @inheritDoc
+     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->clearAllTables();
+        $this->loadFixtures([
+            new LoadRoles(),
+            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
+        ]);
+    }
 
     /**
      * Check if form and PayPal button is rendered correctly
@@ -79,7 +93,7 @@ class EcashControllerTest extends AbstractControllerTestCase
         $translatorMock = $this->prophesize(TranslatorInterface::class)->reveal();
 
         $request = Request::create('', 'POST');
-        $controller = new EcashController(new NullLogger());
+        $controller = self::$container->get(EcashController::class);
 
         $response = $controller->postPayment($request, $txServiceMock, $translatorMock);
         $this->assertSame($expRespStatusCode, $response->getStatusCode());

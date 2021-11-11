@@ -5,14 +5,19 @@ namespace App\Mealz\MealBundle\Controller;
 use Doctrine\ORM\EntityManager;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\DishRepository;
-use App\Mealz\MealBundle\Form\Dish\DishForm;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class DishController extends BaseListController
 {
-    /** @var  DishRepository $repository */
-    protected $repository;
+    private DishRepository $dishRepository;
+
+    public function __construct(DishRepository $repository)
+    {
+        $this->dishRepository = $repository;
+        $this->setRepository($repository);
+        $this->setEntityName('Dish');
+    }
 
     public function deleteAction($slug): RedirectResponse
     {
@@ -20,11 +25,8 @@ class DishController extends BaseListController
             throw new AccessDeniedException();
         }
 
-        /** @var DishRepository $dishRepository */
-        $dishRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Dish');
-
         /** @var Dish $dish */
-        $dish = $dishRepository->findOneBy(array('slug' => $slug));
+        $dish = $this->dishRepository->findOneBy(array('slug' => $slug));
 
         if (!$dish) {
             throw $this->createNotFoundException();
@@ -33,7 +35,7 @@ class DishController extends BaseListController
         /** @var EntityManager $entityManager */
         $entityManager = $this->getDoctrine()->getManager();
 
-        if ($dishRepository->hasDishAssociatedMeals($dish)) {
+        if ($this->dishRepository->hasDishAssociatedMeals($dish)) {
             // if there are meals assigned: just hide this record, but do not delete it
             $dish->setEnabled(false);
 
@@ -61,7 +63,7 @@ class DishController extends BaseListController
         return $this->redirectToRoute('MealzMealBundle_Dish');
     }
 
-    protected function getEntities()
+    protected function getEntities(): array
     {
         $parameters = array(
             'load_category' => true,
@@ -69,13 +71,8 @@ class DishController extends BaseListController
             'orderBy_category' => false,
         );
 
-        $dishesQueryBuilder = $this->repository->getSortedDishesQueryBuilder($parameters);
+        $dishesQueryBuilder = $this->dishRepository->getSortedDishesQueryBuilder($parameters);
 
         return $dishesQueryBuilder->getQuery()->execute();
-    }
-
-    protected function getNewForm(): string
-    {
-        return DishForm::class;
     }
 }

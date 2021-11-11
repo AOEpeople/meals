@@ -19,6 +19,8 @@ headings:
     list: Liste der Gerichte
   categories:
     list: Liste der Kategorien
+  slots:
+    list: Liste der Slots
   costs:
     list: Liste der Kosten
   guest_enrollment: Mittagessen bei AOE
@@ -70,3 +72,8 @@ form:
     name: Nachname
     first_name: Vorname
     company: Firma
+
+  create-slot:
+    title: Titel
+    limit: Limit
+    order: Sortierung

@@ -22,8 +22,6 @@ class CategoryControllerTest extends AbstractControllerTestCase
         $this->clearAllTables();
         $this->loadFixtures([
             new LoadRoles(),
-            // self::$container is a special container that allow access to private services
-            // see: https://symfony.com/blog/new-in-symfony-4-1-simpler-service-testing
             new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
         ]);
 

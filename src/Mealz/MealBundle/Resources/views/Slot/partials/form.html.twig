@@ -1,0 +1,19 @@
+{{ form_start(form) }}
+
+<fieldset>
+    <legend>{{ 'form.create-slot.title'|trans({}, 'general') }}</legend>
+    {{ form_row(form.title) }}
+</fieldset>
+
+<fieldset>
+    <legend>{{ 'form.create-slot.limit'|trans({}, 'general') }}</legend>
+    {{ form_row(form.limit) }}
+</fieldset>
+
+<fieldset>
+    <legend>{{ 'form.create-slot.order'|trans({}, 'general') }}</legend>
+    {{ form_row(form.order) }}
+</fieldset>
+
+{{ form_rest(form) }}
+{{ form_end(form) }}

@@ -21,7 +21,7 @@ use Symfony\Component\Validator\ConstraintViolation;
 class MealAdminController extends BaseController
 {
     /**
-     * @Security("has_role('ROLE_KITCHEN_STAFF')")
+     * @Security("is_granted('ROLE_KITCHEN_STAFF')")
      */
     public function list(WeekRepository $weekRepository): Response
     {
@@ -58,7 +58,7 @@ class MealAdminController extends BaseController
      * @throws ORMException
      * @throws OptimisticLockException
      *
-     * @Security("has_role('ROLE_KITCHEN_STAFF')")
+     * @Security("is_granted('ROLE_KITCHEN_STAFF')")
      */
     public function new(Request $request, DateTime $date, WeekRepository $weekRepository)
     {
@@ -120,7 +120,7 @@ class MealAdminController extends BaseController
      * @throws ORMException
      * @throws OptimisticLockException
      *
-     * @Security("has_role('ROLE_KITCHEN_STAFF')")
+     * @Security("is_granted('ROLE_KITCHEN_STAFF')")
      */
     public function edit(Request $request, Week $week, DishRepository $dishRepository)
     {

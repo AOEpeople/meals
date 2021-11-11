@@ -46,7 +46,7 @@ class LoadRoles extends Fixture
     /**
      * Gets the test user roles to create.
      *
-     * @return array<string,string>
+     * @return list<array<string,string>>
      */
     protected function getRoles(): array
     {

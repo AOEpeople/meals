@@ -10,6 +10,8 @@
 	{% block head %}{% endblock %}
 </head>
 
+{% set pageView = block('pageView') is defined ? block('pageView') : '' %}
+
 {% set activeRoute = app.request.attributes.get('_route') %}
 {% set userAgent = app.request.headers.get('User-Agent') %}
 {% set isWebview = false %}
@@ -17,7 +19,10 @@
         {% set isWebview = true %}
 {% endif %}
 
-<body class="{{ activeRoute matches '/MealzMealBundle_Meal_guest.*/' ? 'guest-wrapper' }} {{ isWebview == true ? 'webview' }}">
+<body
+		class="{{ activeRoute matches '/MealzMealBundle_Meal_guest.*/' ? 'guest-wrapper' }} {{ isWebview == true ? 'webview' }}"
+		{% if pageView %}data-view="{{ pageView }}"{% endif %}
+>
 	{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
 		{% set balance = wallet.getBalance(app.user.profile) %}
 	{% endif %}

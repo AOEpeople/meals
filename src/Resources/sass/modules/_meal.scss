@@ -74,7 +74,6 @@
 
     .limit-input {
       appearance: textfield;
-      appearance: textfield;
       display: block;
       float: right;
       width: 35px;
@@ -428,6 +427,7 @@
   .table-data {
     &.category-title,
     &.dish-category,
+    &.slot-title,
     &.dish-title {
       vertical-align: top;
     }

@@ -20,6 +20,10 @@ input {
     padding: 10px;
   }
 
+  &[type="number"] {
+    padding: 10px;
+  }
+
   &:focus {
     outline: none;
   }
@@ -37,7 +41,6 @@ select {
   cursor: pointer;
   text-indent: 1px;
   text-overflow: "";
-  appearance: none;
   appearance: none;
 
   &:focus {

@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace App\Mealz\AccountingBundle\Event\Subscriber;
 
 use App\Mealz\AccountingBundle\Event\ProfileSettlementEvent;

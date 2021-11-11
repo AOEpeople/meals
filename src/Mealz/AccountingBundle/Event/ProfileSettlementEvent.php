@@ -7,11 +7,8 @@ use App\Mealz\UserBundle\Entity\Profile;
 
 class ProfileSettlementEvent extends Event
 {
-    public const NAME = 'profile.settlement.confirm';
+    public const NAME = 'meals.account.settled';
 
-    /**
-     * @var Profile
-     */
     protected Profile $profile;
 
     public function __construct(Profile $profile)
@@ -19,9 +16,6 @@ class ProfileSettlementEvent extends Event
         $this->profile = $profile;
     }
 
-    /**
-     * @return Profile
-     */
     public function getProfile(): Profile
     {
         return $this->profile;

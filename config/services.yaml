@@ -30,7 +30,7 @@ parameters:
     app.secret: '%env(APP_SECRET)%'
 
     mealz.lock_toggle_participation_at: '-1 day 16:00'
-    mealz.meal.price: 3.40
+    mealz.meal.price: 3.60
     mealz.meal.search_timestamp: '2000-01-01'
     mealz.meal.new_flag_counter: 2
 

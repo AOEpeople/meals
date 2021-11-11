@@ -50,6 +50,7 @@
         "symfony/polyfill-ctype": "~1.8",
         "symfony/polyfill-intl-icu": "~1.0",
         "symfony/polyfill-intl-idn": "^1.10",
+        "symfony/polyfill-intl-grapheme": "^1.23",
         "symfony/polyfill-mbstring": "~1.0",
         "symfony/polyfill-php72": "~1.5",
         "symfony/polyfill-php73": "^1.11",
@@ -65,7 +66,6 @@
         "symfony/twig-bundle": "^4.4",
         "symfony/validator": "^4.4",
         "symfony/yaml": "^4.4",
-        "twig/extensions": "^1.0",
         "twig/twig": "^2.12"
     },
     "require-dev": {

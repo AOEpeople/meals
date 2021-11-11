@@ -698,9 +698,6 @@
     "symfony/stopwatch": {
         "version": "v5.3.4"
     },
-    "symfony/string": {
-        "version": "v5.3.3"
-    },
     "symfony/swiftmailer-bundle": {
         "version": "2.5",
         "recipe": {
@@ -789,18 +786,6 @@
     },
     "theseer/tokenizer": {
         "version": "1.2.1"
-    },
-    "twig/extensions": {
-        "version": "1.0",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "1.0",
-            "ref": "a86723ee8d8b2f9437c8ce60a5546a1c267da5ed"
-        },
-        "files": [
-            "config/packages/twig_extensions.yaml"
-        ]
     },
     "twig/twig": {
         "version": "v1.44.4"

@@ -422,11 +422,9 @@ class ParticipantRepository extends EntityRepository
 
     /**
      * Removes all future ordered meals for a given profile
-     *
-     * @param Profile $profile
      */
-    public function removeFutureMealsByProfile(Profile $profile) {
-
+    public function removeFutureMealsByProfile(Profile $profile)
+    {
         // Get tomorrow's date
         $tomorrow = new DateTime('tomorrow');
 
@@ -441,11 +439,13 @@ class ParticipantRepository extends EntityRepository
         $meals = $queryBuilder->getQuery()->getArrayResult();
 
         // Remove the ID's form the participants table
-        $this->createQueryBuilder('participant')
-            ->where('participant.id in (:ids)')
-            ->setParameter('ids', $meals)
-            ->delete()
-            ->getQuery()
-            ->execute();
+        if(count($meals)) {
+            $this->createQueryBuilder('participant')
+                ->where('participant.id in (:ids)')
+                ->setParameter('ids', $meals)
+                ->delete()
+                ->getQuery()
+                ->execute();
+        }
     }
 }

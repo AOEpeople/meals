@@ -2,17 +2,16 @@
 
 namespace App\Mealz\AccountingBundle\Controller;
 
-use App\Mealz\AccountingBundle\Entity\Transaction;
 use DateTime;
-use App\Mealz\AccountingBundle\Entity\TransactionRepository;
 use App\Mealz\AccountingBundle\Service\Wallet;
 use App\Mealz\MealBundle\Controller\BaseController;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 
 class AccountingUserController extends BaseController
 {
-    public function indexAction()
+    public function indexAction(): Response
     {
         return $this->render('MealzAccountingBundle:Accounting/User:index.html.twig', array(
             'participations' => $this->getParticipantRepository()->getLastAccountableParticipations($this->getProfile(), 5),
@@ -22,7 +21,7 @@ class AccountingUserController extends BaseController
         ));
     }
 
-    public function listParticipationAction(Request $request)
+    public function listParticipationAction(Request $request): Response
     {
         $form = $this->generateTimePeriodForm();
         $formView = $form->createView();
@@ -48,7 +47,7 @@ class AccountingUserController extends BaseController
         ));
     }
 
-    public function listTransactionAction(Request $request)
+    public function listTransactionAction(Request $request): Response
     {
         $form = $this->generateTimePeriodForm();
         $formView = $form->createView();

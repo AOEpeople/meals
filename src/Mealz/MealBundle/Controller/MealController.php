@@ -409,7 +409,7 @@ class MealController extends BaseController
      *
      * @throws ToggleParticipationNotAllowedException
      */
-    private function addParticipationForEveryChosenMeal($meals, $profile, $mealRepository, $translator)
+    private function addParticipationForEveryChosenMeal($meals, $profile, $mealRepository, $translator): void
     {
         $entityManager = $this->getDoctrine()->getManager();
         // suspend auto-commit

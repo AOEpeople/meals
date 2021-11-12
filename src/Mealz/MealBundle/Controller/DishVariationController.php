@@ -165,9 +165,10 @@ class DishVariationController extends BaseController
 
     /**
      * persist the Entity
+     *
      * @param $entity
      */
-    private function persistEntity($entity)
+    private function persistEntity($entity): void
     {
         /** @var EntityManager $entityManager */
         $entityManager = $this->getDoctrine()->getManager();

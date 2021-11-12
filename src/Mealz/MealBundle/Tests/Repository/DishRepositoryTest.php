@@ -24,7 +24,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
         $this->clearAllTables();
     }
 
-    public function testGetSortedDishesQueryBuilderOrderByTitle()
+    public function testGetSortedDishesQueryBuilderOrderByTitle(): void
     {
         $dishes = $this->createMultipleDishes(10);
         $this->sortDishByTitle($dishes);
@@ -38,7 +38,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
         $this->assertNoQueryResultDiff($dishes, $options);
     }
 
-    public function testGetSortedDishesQueryBuilderOrderByCategory()
+    public function testGetSortedDishesQueryBuilderOrderByCategory(): void
     {
         $dishes = $this->createMultipleDishes(10);
         $this->sortDishByCategoryAndTitle($dishes);
@@ -52,7 +52,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
         $this->assertNoQueryResultDiff($dishes, $options);
     }
 
-    public function testGetSortedDishesQueryBuilderLocalizedOrderByTitle()
+    public function testGetSortedDishesQueryBuilderLocalizedOrderByTitle(): void
     {
         $this->locale = 'de';
         $dishes = $this->createMultipleDishes(10);
@@ -67,7 +67,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
         $this->assertNoQueryResultDiff($dishes, $options);
     }
 
-    public function testGetSortedDishesQueryBuilderLocalizedOrderByCategory()
+    public function testGetSortedDishesQueryBuilderLocalizedOrderByCategory(): void
     {
         $this->locale = 'de';
         $dishes = $this->createMultipleDishes(10);
@@ -82,7 +82,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
         $this->assertNoQueryResultDiff($dishes, $options);
     }
 
-    public function testHasDishAssociatedMealsWithNoAssociations()
+    public function testHasDishAssociatedMealsWithNoAssociations(): void
     {
         $dish = $this->createDish();
         $this->persistAndFlushAll([$dish]);
@@ -90,7 +90,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
         $this->assertEmpty($result);
     }
 
-    public function testHasDishAssociatedMealsWithOneAssociation()
+    public function testHasDishAssociatedMealsWithOneAssociation(): void
     {
         $dish = $this->createDish();
         $meal = $this->createMeal($dish);
@@ -99,7 +99,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
         $this->assertTrue($result == 1);
     }
 
-    public function testCountNumberDishWasTakenWithNoCounts()
+    public function testCountNumberDishWasTakenWithNoCounts(): void
     {
         $dish = $this->createDish();
         $this->persistAndFlushAll([$dish]);
@@ -107,7 +107,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
         $this->assertEmpty($result);
     }
 
-    public function testCountNumberDishWasTakenWithAtLeastOneCount()
+    public function testCountNumberDishWasTakenWithAtLeastOneCount(): void
     {
         $dish = $this->createDish();
         $meal = $this->createMeal($dish);
@@ -116,7 +116,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
         $this->assertTrue($result == 1);
     }
 
-    public function testCountNumberDishWasTakenWithAtLeastTwoCount()
+    public function testCountNumberDishWasTakenWithAtLeastTwoCount(): void
     {
         $dish = $this->createDish();
         $meal = $this->createMeal($dish);
@@ -127,7 +127,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
         $this->assertTrue($result == 2);
     }
 
-    public function testCountNumberDishWasTakenWithAtLeastOneValidCount()
+    public function testCountNumberDishWasTakenWithAtLeastOneValidCount(): void
     {
         $dish = $this->createDish();
         $meal = $this->createMeal($dish);
@@ -138,7 +138,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
         $this->assertTrue($result == 1);
     }
 
-    protected function setRepositoryLocalization()
+    protected function setRepositoryLocalization(): void
     {
         $localizationListener = $this->getMockBuilder(LocalisationListener::class)
             ->setMethods(array(
@@ -153,7 +153,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
         $this->dishRepository->setLocalizationListener($localizationListener);
     }
 
-    protected function sortDishByTitle(&$dishes)
+    protected function sortDishByTitle(&$dishes): void
     {
         usort($dishes, function ($firstDish, $secondDish) {
             /** @var Dish $firstDish */
@@ -165,7 +165,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
     /**
      * @param Dish[] $dishes
      */
-    protected function sortDishByCategoryAndTitle(&$dishes)
+    protected function sortDishByCategoryAndTitle(&$dishes): void
     {
         usort(
             $dishes,
@@ -205,7 +205,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
         return $categories;
     }
 
-    protected function assertNoQueryResultDiff($dishes, $options)
+    protected function assertNoQueryResultDiff($dishes, $options): void
     {
         $queryBuilder = $this->dishRepository->getSortedDishesQueryBuilder($options);
         $result = $queryBuilder->getQuery()->execute();

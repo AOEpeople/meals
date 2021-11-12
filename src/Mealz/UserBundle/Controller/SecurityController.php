@@ -4,13 +4,14 @@
 namespace App\Mealz\UserBundle\Controller;
 
 use HWI\Bundle\OAuthBundle\Security\Core\Authentication\Token\OAuthToken;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Security;
 
-class SecurityController extends \Symfony\Bundle\FrameworkBundle\Controller\AbstractController
+class SecurityController extends AbstractController
 {
-    public function loginAction(Request $request)
+    public function loginAction(Request $request): Response
     {
 
         // If Keycloak is enabled, redirect to the Meals home

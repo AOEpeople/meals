@@ -71,9 +71,10 @@ class Variation extends AbstractExtension
 
     /**
      * @TODO: move this function inside the TemplateBundle into some more generic Twig Extension (Base.php or something like that)
+     *
      * @param array $dump
      */
-    public function getDump($dump)
+    public function getDump($dump): void
     {
         VarDumper::dump($dump);
     }

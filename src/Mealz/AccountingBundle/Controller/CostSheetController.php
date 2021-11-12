@@ -25,7 +25,7 @@ class CostSheetController extends BaseController
     /**
      * @TODO: use own data model for user costs
      */
-    public function list()
+    public function list(): Response
     {
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 

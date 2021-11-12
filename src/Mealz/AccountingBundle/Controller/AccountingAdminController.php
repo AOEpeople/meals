@@ -2,10 +2,8 @@
 
 namespace App\Mealz\AccountingBundle\Controller;
 
-use App\Mealz\AccountingBundle\Entity\Transaction;
 use DateTime;
 use Doctrine\ORM\EntityNotFoundException;
-use App\Mealz\AccountingBundle\Entity\TransactionRepository;
 use App\Mealz\AccountingBundle\Service\Wallet;
 use App\Mealz\MealBundle\Controller\BaseController;
 use App\Mealz\UserBundle\Entity\Profile;
@@ -13,10 +11,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class AccountingAdminController extends BaseController
 {
-    public function goAction(Request $request)
+    public function goAction(Request $request): RedirectResponse
     {
         $this->assureKitchenStaff();
 
@@ -25,7 +25,7 @@ class AccountingAdminController extends BaseController
         return $this->redirect($this->generateUrl('MealzAccountingBundle_Accounting_Admin', ['profile' => $profileId]));
     }
 
-    public function indexAction($profile)
+    public function indexAction($profile): Response
     {
         $this->assureKitchenStaff();
         $profile = $this->getProfileById($profile);
@@ -38,7 +38,7 @@ class AccountingAdminController extends BaseController
         ));
     }
 
-    public function listParticipationAction($profile, Request $request)
+    public function listParticipationAction($profile, Request $request): Response
     {
         $this->assureKitchenStaff();
         $profile = $this->getProfileById($profile);
@@ -67,7 +67,7 @@ class AccountingAdminController extends BaseController
         ));
     }
 
-    public function listTransactionAction($profile, Request $request)
+    public function listTransactionAction($profile, Request $request): Response
     {
         $this->assureKitchenStaff();
         $profile = $this->getProfileById($profile);
@@ -138,7 +138,7 @@ class AccountingAdminController extends BaseController
         }
     }
 
-    private function assureKitchenStaff()
+    private function assureKitchenStaff(): void
     {
         if (!$this->getDoorman()->isKitchenStaff()) {
             throw new AccessDeniedException();

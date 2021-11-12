@@ -148,7 +148,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
 
         // fetch infos for previous month from database.
         // These results are already ordered by lastname, firstname!!
-        $transactionRepo = $this->getDoctrine()->getRepository('MealzAccountingBundle:Transaction');
+        $transactionRepo = $this->getDoctrine()->getRepository(Transaction::class);
         $usersAndTheirTotals = $transactionRepo->findUserDataAndTransactionAmountForGivenPeriod($minDate, $maxDate);
 
         // fetch what is displayed in the accounting book table....
@@ -226,7 +226,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
     public function testTransactionsListing(): void
     {
         $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->getRepository('MealzAccountingBundle:Transaction')->clear();
+        $entityManager->getRepository(Transaction::class)->clear();
 
         $profile = $this->getUserProfile(self::USER_STANDARD);
         $transactionDate = new DateTime('today');
@@ -262,7 +262,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
     public function testOnlyCashPaymentsListed()
     {
         $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->getRepository('MealzAccountingBundle:Transaction')->clear();
+        $entityManager->getRepository(Transaction::class)->clear();
 
         $profile = $this->getUserProfile(self::USER_STANDARD);
         $transactionDate = new DateTime('today');
@@ -293,7 +293,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
     public function testDailyClosingCalculation()
     {
         $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->getRepository('MealzAccountingBundle:Transaction')->clear();
+        $entityManager->getRepository(Transaction::class)->clear();
 
         $profile = $this->getUserProfile(self::USER_STANDARD);
         $transactionDate = new DateTime('today');

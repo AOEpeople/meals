@@ -23,7 +23,7 @@ class WeekRepositoryTest extends AbstractDatabaseTestCase
         $this->clearAllTables();
         $this->loadFixtures([new LoadWeeks()]);
 
-        $this->weekRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Week');
+        $this->weekRepository = $this->getDoctrine()->getRepository(Week::class);
     }
 
     /**

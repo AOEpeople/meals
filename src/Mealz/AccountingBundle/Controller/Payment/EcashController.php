@@ -22,7 +22,7 @@ class EcashController extends BaseController
 {
     public function getPaymentFormForProfile(Profile $profile, Wallet $wallet): JsonResponse
     {
-        $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
+        $profileRepository = $this->getDoctrine()->getRepository(Profile::class);
         $profile = $profileRepository->find($profile);
 
         // Default value for Ecash payment overlay

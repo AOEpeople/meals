@@ -124,7 +124,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $this->client->request('GET', '/menu/meal/' . $participantId . '/swap');
 
         //verification by checking the database
-        $offeringParticipant = $this->getDoctrine()->getRepository('MealzMealBundle:Participant')->find($participantId);
+        $offeringParticipant = $this->getDoctrine()->getRepository(Participant::class)->find($participantId);
         $this->assertNotSame($offeringParticipant->getOfferedAt(), 0, 'offeredAt value not changed');
     }
 
@@ -146,7 +146,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $this->client->request('GET', '/menu/meal/' . $participantId . '/unswap');
 
         //verification by checking the database
-        $participant = $this->getDoctrine()->getRepository('MealzMealBundle:Participant')->find($participantId);
+        $participant = $this->getDoctrine()->getRepository(Participant::class)->find($participantId);
         $this->assertSame($participant->getOfferedAt(), 0, 'failed to retain swapped meal');
     }
 
@@ -158,7 +158,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     {
         $userProfile = $this->getUserProfile(self::USER_STANDARD);
 
-        $outdatedMealsArray = $this->getDoctrine()->getRepository('MealzMealBundle:Meal')->getOutdatedMeals();
+        $outdatedMealsArray = $this->getDoctrine()->getRepository(Meal::class)->getOutdatedMeals();
         $outdatedMeal = $outdatedMealsArray[0];
         $outdatedParticipant = $this->createParticipant($userProfile, $outdatedMeal);
         $participantId = $outdatedParticipant->getId();
@@ -169,7 +169,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $this->client->request('GET', '/menu/meal/' . $participantId . '/swap');
 
         //verification by checking the database
-        $notOfferingPart = $this->getDoctrine()->getRepository('MealzMealBundle:Participant')->find($participantId);
+        $notOfferingPart = $this->getDoctrine()->getRepository(Participant::class)->find($participantId);
         $this->assertSame($notOfferingPart->getOfferedAt(), 0, 'user still offered meal');
     }
 
@@ -332,7 +332,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     protected function getCurrentWeek(): ?Week
     {
         /** @var WeekRepository $weekRepository */
-        $weekRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Week');
+        $weekRepository = $this->getDoctrine()->getRepository(Week::class);
         return $weekRepository->getCurrentWeek();
     }
 

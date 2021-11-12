@@ -2,6 +2,7 @@
 
 namespace App\Mealz\MealBundle\Tests\Repository;
 
+use App\Mealz\MealBundle\Entity\Meal;
 use InvalidArgumentException;
 use App\Mealz\MealBundle\Entity\MealRepository;
 use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
@@ -15,7 +16,7 @@ class MealRepositoryTest extends AbstractDatabaseTestCase
     {
         parent::setUp();
 
-        $this->mealRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
+        $this->mealRepository = $this->getDoctrine()->getRepository(Meal::class);
         $this->clearAllTables();
     }
 

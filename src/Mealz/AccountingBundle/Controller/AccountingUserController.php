@@ -2,6 +2,7 @@
 
 namespace App\Mealz\AccountingBundle\Controller;
 
+use App\Mealz\AccountingBundle\Entity\Transaction;
 use DateTime;
 use App\Mealz\AccountingBundle\Entity\TransactionRepository;
 use App\Mealz\AccountingBundle\Service\Wallet;
@@ -120,6 +121,6 @@ class AccountingUserController extends BaseController
      */
     public function getTransactionRepository()
     {
-        return $this->getDoctrine()->getRepository('MealzAccountingBundle:Transaction');
+        return $this->getDoctrine()->getRepository(Transaction::class);
     }
 }

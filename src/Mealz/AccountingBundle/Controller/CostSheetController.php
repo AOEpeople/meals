@@ -30,7 +30,7 @@ class CostSheetController extends BaseController
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
         $participantRepo = $this->getParticipantRepository();
-        $transactionRepo = $this->getDoctrine()->getRepository('MealzAccountingBundle:Transaction');
+        $transactionRepo = $this->getDoctrine()->getRepository(Transaction::class);
         $transactionsPerUser = $transactionRepo->findUserDataAndTransactionAmountForGivenPeriod();
 
         $users = $participantRepo->findCostsGroupedByUserGroupedByMonth();
@@ -138,7 +138,7 @@ class CostSheetController extends BaseController
     public function renderConfirmButton($hash)
     {
         $profile = null;
-        $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
+        $profileRepository = $this->getDoctrine()->getRepository(Profile::class);
         $queryResult = $profileRepository->findBy(array('settlementHash' => urldecode($hash)));
 
         if (is_array($queryResult) === true && empty($queryResult) === false) {

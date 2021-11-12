@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mealz\UserBundle\DataFixtures\ORM;
 
+use App\Mealz\UserBundle\Entity\Profile;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -49,6 +50,7 @@ class LoadAnonymousUsers extends Fixture implements OrderedFixtureInterface
         $protectedUsers = ['alice.meals', 'bob.meals', 'finance.meals', 'jane.meals', 'john.meals', 'kochomi.meals'];
 
         try {
+            // disable consistency check (We need because dependet foreign and primary keys)
             // disable consistency check (We need because dependet foreign and primary keys)
             $connection->query('SET FOREIGN_KEY_CHECKS=0;');
 
@@ -124,6 +126,6 @@ class LoadAnonymousUsers extends Fixture implements OrderedFixtureInterface
 
     protected function getAllUsers(): array
     {
-        return $this->objectManager->getRepository('MealzUserBundle:Profile')->findAll();
+        return $this->objectManager->getRepository(Profile::class)->findAll();
     }
 }

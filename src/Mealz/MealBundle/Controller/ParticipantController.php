@@ -197,7 +197,7 @@ class ParticipantController extends BaseController
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
         /** @var WeekRepository $weekRepository */
-        $weekRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Week');
+        $weekRepository = $this->getDoctrine()->getRepository(Week::class);
         $week = $weekRepository->findWeekByDate($week->getStartTime(), array(
             'only_enabled_days' => true
         ));
@@ -211,7 +211,7 @@ class ParticipantController extends BaseController
         $groupedParticipation = $participantRepo->groupParticipantsByName($participation);
 
         /** @var Profile[] $profiles */
-        $profiles = $this->getDoctrine()->getRepository('MealzUserBundle:Profile')->findAll();
+        $profiles = $this->getDoctrine()->getRepository(Profile::class)->findAll();
         $profilesArray = array();
         foreach ($profiles as $profile) {
             if (false === array_key_exists($profile->getUsername(), $groupedParticipation)) {

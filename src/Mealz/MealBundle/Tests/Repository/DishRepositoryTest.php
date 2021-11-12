@@ -19,7 +19,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
     {
         parent::setUp();
 
-        $this->dishRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Dish');
+        $this->dishRepository = $this->getDoctrine()->getRepository(Dish::class);
         $this->locale = 'en';
         $this->clearAllTables();
     }
@@ -107,7 +107,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
         $this->assertEmpty($result);
     }
 
-    public function testCountNumberDishWasTakenWithatLeastOneCount()
+    public function testCountNumberDishWasTakenWithAtLeastOneCount()
     {
         $dish = $this->createDish();
         $meal = $this->createMeal($dish);
@@ -116,7 +116,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
         $this->assertTrue($result == 1);
     }
 
-    public function testCountNumberDishWasTakenWithatLeastTwoCount()
+    public function testCountNumberDishWasTakenWithAtLeastTwoCount()
     {
         $dish = $this->createDish();
         $meal = $this->createMeal($dish);
@@ -127,7 +127,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
         $this->assertTrue($result == 2);
     }
 
-    public function testCountNumberDishWasTakenWithatLeastOneValidCount()
+    public function testCountNumberDishWasTakenWithAtLeastOneValidCount()
     {
         $dish = $this->createDish();
         $meal = $this->createMeal($dish);

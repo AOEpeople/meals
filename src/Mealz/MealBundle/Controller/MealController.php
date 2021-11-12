@@ -3,6 +3,7 @@
 namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Day;
+use App\Mealz\MealBundle\Entity\GuestInvitation;
 use App\Mealz\MealBundle\Entity\GuestInvitationRepository;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
@@ -267,7 +268,7 @@ class MealController extends BaseController
     public function updateOffers()
     {
         $mealsArray = array();
-        $meals = $this->getDoctrine()->getRepository('MealzMealBundle:Meal')->getFutureMeals();
+        $meals = $this->getDoctrine()->getRepository(Meal::class)->getFutureMeals();
 
         // Adds meals that can be swapped into $mealsArray. Marks a meal as "true", if there's an available offer for it.
         foreach ($meals as $meal) {
@@ -295,7 +296,7 @@ class MealController extends BaseController
      */
     public function guest(Request $request, $hash)
     {
-        $guestInvitationRepo = $this->getDoctrine()->getRepository('MealzMealBundle:GuestInvitation');
+        $guestInvitationRepo = $this->getDoctrine()->getRepository(GuestInvitation::class);
         $guestInvitation = $guestInvitationRepo->find($hash);
 
         if (null === $guestInvitation) {
@@ -327,14 +328,14 @@ class MealController extends BaseController
             return $this->renderGuestForm($form);
         }
 
-        $mealRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
+        $mealRepository = $this->getDoctrine()->getRepository(Meal::class);
         $meals = $formData['day']['meals'];
         $mealDateTime = $mealRepository->find($meals[0])->getDateTime()->format('Y-m-d');
 
         $profile = $invitationWrapper->getProfile();
         $profileId = $profile->getFirstName() . $profile->getName() . $mealDateTime;
         // Try to load already existing profile entity.
-        $loadedProfile = $this->getDoctrine()->getRepository('MealzUserBundle:Profile')->find($profileId);
+        $loadedProfile = $this->getDoctrine()->getRepository(Profile::class)->find($profileId);
 
         try {
             // If profile already exists: use it. Otherwise create new one.
@@ -447,7 +448,7 @@ class MealController extends BaseController
      */
     public function getGuestRole(): ?Role
     {
-        $roleRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Role');
+        $roleRepository = $this->getDoctrine()->getRepository(Role::class);
         return $roleRepository->findOneBy(['sid' => Role::ROLE_GUEST]);
     }
 
@@ -462,7 +463,7 @@ class MealController extends BaseController
     public function newGuestInvitation(Day $mealDay): JsonResponse
     {
         /** @var GuestInvitationRepository $guestInvitationRepo */
-        $guestInvitationRepo = $this->getDoctrine()->getRepository('MealzMealBundle:GuestInvitation');
+        $guestInvitationRepo = $this->getDoctrine()->getRepository(GuestInvitation::class);
         $guestInvitation = $guestInvitationRepo->findOrCreateInvitation($this->getUser()->getProfile(), $mealDay);
 
         return new JsonResponse(

@@ -111,11 +111,11 @@ class MealControllerTest extends AbstractControllerTestCase
         $this->assertTrue($this->client->getResponse()->isSuccessful(), 'accepting offer failed');
 
         //verification by checking the database
-        $newParticipant = $this->getDoctrine()->getRepository('MealzMealBundle:Participant')->find($participant->getId());
+        $newParticipant = $this->getDoctrine()->getRepository(Participant::class)->find($participant->getId());
         $this->assertTrue($newParticipant->getOfferedAt() === 0);
 
         //second case: check if second offer is still available
-        $secondOffer = $this->getDoctrine()->getRepository('MealzMealBundle:Participant')->find($secondParticipant->getId());
+        $secondOffer = $this->getDoctrine()->getRepository(Participant::class)->find($secondParticipant->getId());
         $this->assertTrue($secondOffer->getOfferedAt() != 0, 'second offer was taken');
     }
 
@@ -132,7 +132,7 @@ class MealControllerTest extends AbstractControllerTestCase
         $this->persistAndFlushAll([$profile]);
 
         //variables for third case
-        $outdatedMealsArray = $this->getDoctrine()->getRepository('MealzMealBundle:Meal')->getOutdatedMeals();
+        $outdatedMealsArray = $this->getDoctrine()->getRepository(Meal::class)->getOutdatedMeals();
         $outdatedMeal = $outdatedMealsArray[0];
 
         $date = date_format($outdatedMeal->getDateTime(), 'Y-m-d');
@@ -201,7 +201,7 @@ class MealControllerTest extends AbstractControllerTestCase
     public function getJoinAMealData()
     {
         /** @var MealRepository $mealRepository */
-        $mealRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
+        $mealRepository = $this->getDoctrine()->getRepository(Meal::class);
         $meals = $mealRepository->getMealsOnADayWithVariationOptions();
 
         $mealsArr = array();
@@ -297,7 +297,7 @@ class MealControllerTest extends AbstractControllerTestCase
         $availableMeal = null;
 
         /** @var MealRepository $mealRepository */
-        $mealRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
+        $mealRepository = $this->getDoctrine()->getRepository(Meal::class);
         $criteria = Criteria::create();
         $meals = $mealRepository->matching($criteria->where(Criteria::expr()->gte('dateTime', new DateTime())));
 
@@ -355,7 +355,7 @@ class MealControllerTest extends AbstractControllerTestCase
     private function getMealParticipants($meal)
     {
         /** @var ParticipantRepository $participantRepo */
-        $participantRepo = $this->getDoctrine()->getRepository('MealzMealBundle:Participant');
+        $participantRepo = $this->getDoctrine()->getRepository(Participant::class);
         $participants = $participantRepo->findBy(['meal' => $meal->getId()]);
 
         return $participants;

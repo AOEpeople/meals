@@ -2,7 +2,6 @@
 
 namespace App\Mealz\MealBundle\Twig\Extension;
 
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
@@ -155,7 +154,7 @@ class Variation extends AbstractExtension
     public function getDishCount($dish)
     {
         $entityManager = $this->doctrine->getManager();
-        $dishRepo = $entityManager->getRepository('MealzMealBundle:Dish');
+        $dishRepo = $entityManager->getRepository(Dish::class);
         return $dishRepo->countNumberDishWasTaken($dish, $this->twig->getGlobals()['countDishPeriod']);
     }
 

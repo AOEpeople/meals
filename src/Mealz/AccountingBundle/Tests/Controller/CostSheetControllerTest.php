@@ -77,7 +77,7 @@ class CostSheetControllerTest extends AbstractControllerTestCase
         $enityManager->persist($transaction);
         $enityManager->flush();
 
-        $transactionRepo = $this->getDoctrine()->getRepository('MealzAccountingBundle:Transaction');
+        $transactionRepo = $this->getDoctrine()->getRepository(Transaction::class);
         $balanceBefore = $transactionRepo->getTotalAmount(self::USER_STANDARD);
 
         // Pre-action tests

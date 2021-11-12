@@ -2,6 +2,7 @@
 
 namespace App\Mealz\AccountingBundle\Tests\Repository;
 
+use App\Mealz\AccountingBundle\Entity\TransactionRepository;
 use DateInterval;
 use DateTime;
 use App\Mealz\AccountingBundle\Entity\Transaction;
@@ -19,8 +20,7 @@ use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
  */
 class TransactionRepositoryTest extends AbstractDatabaseTestCase
 {
-    /** @var  transactionRepo */
-    protected $transactionRepo;
+    protected TransactionRepository $transactionRepo;
 
     /**
      * @var String
@@ -34,7 +34,7 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
     {
         parent::setUp();
 
-        $this->transactionRepo = $this->getDoctrine()->getRepository('MealzAccountingBundle:Transaction');
+        $this->transactionRepo = $this->getDoctrine()->getRepository(Transaction::class);
         $this->locale = 'en';
 
         $this->clearAllTables();

@@ -218,7 +218,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         // Get persisted entity
         /** @var EntityManager $entityManager */
         $entityManager = $this->client->getContainer()->get('doctrine')->getManager();
-        $dishVariationRepo = $entityManager->getRepository('MealzMealBundle:DishVariation');
+        $dishVariationRepo = $entityManager->getRepository(DishVariation::class);
         $dishVariation = $dishVariationRepo->findOneBy([
             'title_de' => $form['dishvariation']['title_de'],
             'title_en' => $form['dishvariation']['title_en'],
@@ -273,7 +273,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         ];
 
         $this->client->request('POST', $formURI, $form);
-        $dishRepository = $this->getDoctrine()->getRepository('MealzMealBundle:DishVariation');
+        $dishRepository = $this->getDoctrine()->getRepository(DishVariation::class);
         unset($form['dishvariation']['_token']);
         $editedDishVariation = $dishRepository->findOneBy($form['dishvariation']);
 
@@ -301,7 +301,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
 
         $dishVariationId = $dishVariation->getId();
         $this->client->request('GET', "/dish/variation/$dishVariationId/delete");
-        $dishVariationRepo = $this->getDoctrine()->getRepository('MealzMealBundle:DishVariation');
+        $dishVariationRepo = $this->getDoctrine()->getRepository(DishVariation::class);
         $queryResult = $dishVariationRepo->find($dishVariationId);
 
         $this->assertEquals(null, $queryResult);
@@ -378,7 +378,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
     private function getDish($identifier = null, $dishVarRequired = false)
     {
         /** @var DishRepository $dishRepository */
-        $dishRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Dish');
+        $dishRepository = $this->getDoctrine()->getRepository(Dish::class);
         $dish = null;
 
         if ($identifier > 0) {
@@ -420,7 +420,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
      */
     private function getDishVariationBy($attribute, $value, $throwError = true)
     {
-        $dishVariationRepo = $this->getDoctrine()->getRepository('MealzMealBundle:DishVariation');
+        $dishVariationRepo = $this->getDoctrine()->getRepository(DishVariation::class);
 
         if ($attribute === 'id') {
             $dishVariation = $dishVariationRepo->find($value);

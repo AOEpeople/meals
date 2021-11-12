@@ -2,6 +2,7 @@
 
 namespace App\Mealz\AccountingBundle\Controller;
 
+use App\Mealz\AccountingBundle\Entity\Transaction;
 use DateTime;
 use Doctrine\ORM\EntityNotFoundException;
 use App\Mealz\AccountingBundle\Entity\TransactionRepository;
@@ -126,7 +127,7 @@ class AccountingAdminController extends BaseController
      */
     public function getTransactionRepository()
     {
-        return $this->getDoctrine()->getRepository('MealzAccountingBundle:Transaction');
+        return $this->getDoctrine()->getRepository(Transaction::class);
     }
 
     /**

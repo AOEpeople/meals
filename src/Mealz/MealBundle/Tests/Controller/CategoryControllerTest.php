@@ -43,7 +43,7 @@ class CategoryControllerTest extends AbstractControllerTestCase
         // Get persisted entity
         /** @var EntityManager $entityManager */
         $entityManager = $this->client->getContainer()->get('doctrine')->getManager();
-        $categoryRepository = $entityManager->getRepository('MealzMealBundle:Category');
+        $categoryRepository = $entityManager->getRepository(Category::class);
         $category = $categoryRepository->findOneBy([
             'title_de' => 'category-form-title-de',
             'title_en' => 'category-form-title-en',
@@ -110,7 +110,7 @@ class CategoryControllerTest extends AbstractControllerTestCase
         ];
 
         $this->client->request('POST', '/category/'.$category->getSlug().'/edit', $form);
-        $categoryRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Category');
+        $categoryRepository = $this->getDoctrine()->getRepository(Category::class);
         unset($form['category']['category']);
         unset($form['category']['_token']);
         $editedCategory = $categoryRepository->findOneBy($form['category']);
@@ -132,7 +132,7 @@ class CategoryControllerTest extends AbstractControllerTestCase
 
         $categoryId = $category->getId();
         $this->client->request('GET', '/category/'.$category->getSlug().'/delete');
-        $categoryRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Category');
+        $categoryRepository = $this->getDoctrine()->getRepository(Category::class);
         $queryResult = $categoryRepository->find($categoryId);
 
         $this->assertNull($queryResult);

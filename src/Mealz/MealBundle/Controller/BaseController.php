@@ -2,9 +2,13 @@
 
 namespace App\Mealz\MealBundle\Controller;
 
+use App\Mealz\AccountingBundle\Entity\Transaction;
 use App\Mealz\AccountingBundle\Entity\TransactionRepository;
+use App\Mealz\MealBundle\Entity\Category;
 use App\Mealz\MealBundle\Entity\CategoryRepository;
+use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\MealRepository;
+use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\ParticipantRepository;
 use App\Mealz\MealBundle\Service\Doorman;
 use App\Mealz\MealBundle\Service\Link;
@@ -17,6 +21,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 abstract class BaseController extends AbstractController
 {
     public static function getSubscribedServices(): array
@@ -35,7 +42,7 @@ abstract class BaseController extends AbstractController
      */
     public function getMealRepository()
     {
-        return $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
+        return $this->getDoctrine()->getRepository(Meal::class);
     }
 
     /**
@@ -43,7 +50,7 @@ abstract class BaseController extends AbstractController
      */
     public function getParticipantRepository()
     {
-        return $this->getDoctrine()->getRepository('MealzMealBundle:Participant');
+        return $this->getDoctrine()->getRepository(Participant::class);
     }
 
     /**
@@ -51,7 +58,7 @@ abstract class BaseController extends AbstractController
      */
     public function getCategoryRepository()
     {
-        return $this->getDoctrine()->getRepository('MealzMealBundle:Category');
+        return $this->getDoctrine()->getRepository(Category::class);
     }
 
     /**
@@ -59,7 +66,7 @@ abstract class BaseController extends AbstractController
      */
     public function getTransactionRepository()
     {
-        return $this->getDoctrine()->getRepository('MealzAccountingBundle:Transaction');
+        return $this->getDoctrine()->getRepository(Transaction::class);
     }
 
     /**

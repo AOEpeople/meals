@@ -16,10 +16,10 @@ Sign in with your login credentials and select your preferred meals on landing p
 
 ### Invite guest for a meal
 As a logged-in user, you will see small share icon on each day in a week.
-You can send your guest the link and he will be able to enroll for particular day giving his First/Last name and Company information.
+You can send your guest the link, and he will be able to enroll for a particular day giving his First/Last name and Company information.
 
 ### Transaction history
-Click on your balance. Now you get your Balance from the last day of the last month and a overview of all transaction in the current month.
+Click on your balance. Now you get your Balance from the last day of the last month and an overview of all transaction in the current month.
 
 ### PayPal debt payment
 In your transaction history you also can pay your debts with PayPal.
@@ -45,7 +45,7 @@ Weeks which haven't been created yet, are displayed with a grey background color
 
 **Description:**
 Here you can select the desired dishes for the selected week.
-Additionally you can disable some days or the whole week in case of (public) holiday.
+Additionally, you can disable some days or the whole week in case of (public) holiday.
 
 ### Dishes
 **Route:** /dish
@@ -79,8 +79,8 @@ If you click on "CREATE CATEGORY" you can create a new one.
 Lists all users and their outstanding debts. Debts are structured in 6 different columns:
 Total, current month (all debts in this month till current day), one column for each of the last three month,
 all debts before the last three month summed up in one column.
-Additionally you can add a transaction (positive or negative) to a users profile, by clicking on the plus sign.
-Also you can request an account settlement if an employee leaves. You can find the 3 dots button right beside the add transaction icon. You can only settle accounts with a positive amount of money.
+Additionally, you can add a transaction (positive or negative) to a users profile, by clicking on the plus sign.
+Also, you can request an account settlement if an employee leaves. You can find the 3 dots button right beside the add transaction icon. You can only settle accounts with a positive amount of money.
 The log for account settlements is in the app/logs Folder.
 
 ### Accounting book
@@ -103,49 +103,30 @@ Finance has access to all user features and the finance tab.
 ---
 
 ## Devbox Installation
-We're using [ddev](https://ddev.readthedocs.io/) for local development. `ddev` is a CLI tool which uses Docker to simplify local development. Please make sure that `ddev`, `mkcert` and `docker` are installed and run the following to get started:
+We're using [ddev](https://ddev.readthedocs.io/) for local development. `ddev` is a CLI tool which uses Docker to simplify local development. Please make sure that `ddev`, `mkcert` and `docker` are installed. Before starting the Devbox run:
 ```
-ddev start && ddev install
-```
-Point your webbrowser to https://meals.test :tada:
-Don't forget to add to your local hosts file if not done automatically via ddev: `127.0.0.1 meals.test`
-
-### Rebuild production ready frontend assets
-```
-# get into the container
-ddev ssh
-
-# change directory
-cd src/Resources
-
-# build production assets
-yarn build
+mkcert -install 
 ```
 
-### Run code linter
-```bash
-# stylelint for SASS files
-ddev ssh
-cd /var/www/html/src/Resources
-yarn lint:sass
+To simplify things, we have put common commands into a **Makefile**. To see all available options, run the following command:
+```
+make
 ```
 
-### SSH Access
+Run the following to start the Devbox:
 ```
-ddev ssh
+make run-devbox
 ```
 
-### Common commands
-```
-php bin/console doctrine:schema:update --force
-```
----
+Point your web browser to https://meals.test :tada:
+
+:memo: Don't forget to add `127.0.0.1 meals.test` to your local hosts file if not done automatically via ddev.
 
 ## Troubleshooting
 
 ### SQLSTATE[42S22]: Column not found: 1054 Unknown column
 
-    php bin/console doctrine:schema:update --force --env=dev
+    ddev exec php bin/console doctrine:schema:update --force --env=dev
 
 ---
 
@@ -157,40 +138,15 @@ The following roles are in use:
 
   * ROLE_USER: basically everyone who is allowed to join the meals
   * ROLE_KITCHEN_STAFF: allowed to create and edit dishes and meals
-  * ROLE_GUEST: for users who is invited for a meal, customers etc.
-  * ROLE_ADMIN: for users who is admin
-  * ROLE_FINANCE: for users who is finance
-
-### Test data
-
-To load up some test data, run
-
-    php bin/console doctrine:fixtures:load -n
-
-It generates dishes, meals and the following users.
-
-- alice.meals
-- bob.meals
-- finance.meals
-- jane.meals
-- john.meals
-- kochomi.meals
-
-Their passwords can be found [here](src/Mealz/UserBundle/DataFixtures/ORM/LoadUsers.php).
-The User "kochomi.meals" is allowed to modify dishes and edit meals.
+  * ROLE_GUEST: for users who are invited for a meal, e.g. customers etc.
+  * ROLE_ADMIN: for users who are admins
+  * ROLE_FINANCE: for users who are from finance
 
 ### Login
-User authentication takes place using oauth with custom identity provider. To use it you must define the following env vars with correct values in `env.local.php`.
+User authentication takes place using oauth with custom identity provider. To use it you must define the following env vars with correct values in `.env.local`:
 
 ```shell
 IDP_SERVER=https://login.some-domain.com/
-IDP_CLIENT_ID=cleint-id
+IDP_CLIENT_ID=client-id
 IDP_CLIENT_SECRET=client-secret
-```
-
-### Running tests
-Use the following command from project root directory in host system.
-
-```shell
-ddev run tests
 ```

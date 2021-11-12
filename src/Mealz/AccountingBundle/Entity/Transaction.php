@@ -76,7 +76,7 @@ class Transaction
     /**
      * @param DateTime $date
      */
-    public function setDate(DateTime $date)
+    public function setDate(DateTime $date): void
     {
         $this->date = $date;
     }

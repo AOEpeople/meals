@@ -33,7 +33,7 @@ abstract class AbstractMessage
     /**
      * @param boolean $disabled
      */
-    public function setEnabled($disabled)
+    public function setEnabled($disabled): void
     {
         $this->enabled = $disabled;
     }
@@ -49,7 +49,7 @@ abstract class AbstractMessage
     /**
      * @param string $message
      */
-    public function setMessage($message)
+    public function setMessage($message): void
     {
         $this->message = $message;
     }

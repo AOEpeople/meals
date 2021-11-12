@@ -151,9 +151,9 @@ class GuestInvitation
     }
 
     /**
-     * @ORM\PrePersist()
+     * @ORM\PrePersist ()
      */
-    public function beforeCreate()
+    public function beforeCreate(): void
     {
         $this->id = md5($this->host->getUsername() . $this->day->getId());
         $this->createdOn = new DateTime();

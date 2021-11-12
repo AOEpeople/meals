@@ -197,9 +197,10 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
 
     /**
      * Tests if finance staff can access the transaction export page and admins and default users can not
+     *
      * @test
      */
-    public function testAccessForFinanceOnly()
+    public function testAccessForFinanceOnly(): void
     {
         $this->loginAs(self::USER_FINANCE);
 
@@ -256,10 +257,12 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
 
     /**
      * Test if PayPal payments are shown on the finances page
+     *
      * @test
+     *
      * @throws Exception
      */
-    public function testOnlyCashPaymentsListed()
+    public function testOnlyCashPaymentsListed(): void
     {
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->getRepository(Transaction::class)->clear();
@@ -287,10 +290,12 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
 
     /**
      * Tests if the daily closing amount is calculated correctly
+     *
      * @test
+     *
      * @throws Exception
      */
-    public function testDailyClosingCalculation()
+    public function testDailyClosingCalculation(): void
     {
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->getRepository(Transaction::class)->clear();

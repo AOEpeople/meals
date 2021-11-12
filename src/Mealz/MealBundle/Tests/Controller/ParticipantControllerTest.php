@@ -175,9 +175,10 @@ class ParticipantControllerTest extends AbstractControllerTestCase
 
     /**
      * Check that the created participants are displayed in the participation table for the current week
+     *
      * @test
      */
-    public function checkParticipantInParticipationTable()
+    public function checkParticipantInParticipationTable(): void
     {
         $crawler = $this->getCurrentWeekParticipations();
         $this->assertEquals(1, $crawler->filter('html:contains("' . self::$participantFirstName . '")')->count());

@@ -119,13 +119,13 @@ class CategoryControllerTest extends AbstractControllerTestCase
         $this->assertEquals($category->getId(), $editedCategory->getId());
     }
 
-    public function testEditActionOfNonExistingCategory()
+    public function testEditActionOfNonExistingCategory(): void
     {
         $this->client->request('POST', '/category/non-existing-category/edit');
         $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testDeleteAction()
+    public function testDeleteAction(): void
     {
         $category = $this->createCategory();
         $this->persistAndFlushAll(array($category));
@@ -138,13 +138,13 @@ class CategoryControllerTest extends AbstractControllerTestCase
         $this->assertNull($queryResult);
     }
 
-    public function testDeleteOfNonExistingCategory()
+    public function testDeleteOfNonExistingCategory(): void
     {
         $this->client->request('GET', '/category/non-existing-category/delete');
         $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
     }
 
-    protected function getRawResponseCrawler()
+    protected function getRawResponseCrawler(): Crawler
     {
         $content = $this->client->getResponse()->getContent();
         $uri = 'http://meals.test';
@@ -152,7 +152,7 @@ class CategoryControllerTest extends AbstractControllerTestCase
         return new Crawler($content, $uri);
     }
 
-    protected function getJsonResponseCrawler()
+    protected function getJsonResponseCrawler(): Crawler
     {
         $content = $this->client->getResponse()->getContent();
         $uri = 'http://meals.test';

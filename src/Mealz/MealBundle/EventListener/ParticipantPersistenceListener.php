@@ -13,7 +13,7 @@ use App\Mealz\MealBundle\Entity\Participant;
  */
 class ParticipantPersistenceListener
 {
-    public function prePersist(LifecycleEventArgs $args)
+    public function prePersist(LifecycleEventArgs $args): void
     {
         $entity = $args->getEntity();
         $entityManager = $args->getEntityManager();
@@ -23,7 +23,7 @@ class ParticipantPersistenceListener
         }
     }
 
-    public function preUpdate(LifecycleEventArgs $args)
+    public function preUpdate(LifecycleEventArgs $args): void
     {
         $entity = $args->getEntity();
         $entityManager = $args->getEntityManager();
@@ -33,7 +33,7 @@ class ParticipantPersistenceListener
         }
     }
 
-    protected function checkUniqueParticipant(Participant $participant, EntityManager $entityManager)
+    protected function checkUniqueParticipant(Participant $participant, EntityManager $entityManager): void
     {
         if ($entityManager->getConnection()->getTransactionNestingLevel() < 1) {
             throw new \RuntimeException(sprintf(
@@ -47,7 +47,7 @@ class ParticipantPersistenceListener
         }
     }
 
-    protected function participantExists(Participant $participant, EntityManager $entityManager)
+    protected function participantExists(Participant $participant, EntityManager $entityManager): bool
     {
         $queryBuilder = $entityManager->createQueryBuilder();
 

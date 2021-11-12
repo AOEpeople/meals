@@ -49,9 +49,10 @@ class MealControllerTest extends AbstractControllerTestCase
     /**
      * Tests the acceptOffer action (accepting a meal offer) in the meal controller.
      * First case: An user accepts an available offer.
+     *
      * @test
      */
-    public function acceptAvailableOffer()
+    public function acceptAvailableOffer(): void
     {
         $this->loginAs(self::USER_STANDARD);
 
@@ -77,9 +78,10 @@ class MealControllerTest extends AbstractControllerTestCase
 
     /**
      * Second case: There are two offers and the user accepts one and automatically takes the one, that was offered earlier.
+     *
      * @test
      */
-    public function acceptFirstOffer()
+    public function acceptFirstOffer(): void
     {
         $this->loginAs(self::USER_STANDARD);
 
@@ -121,9 +123,10 @@ class MealControllerTest extends AbstractControllerTestCase
 
     /**
      * Third case: An user tries to accept an outdated offer.
+     *
      * @test
      */
-    public function acceptOutdatedOffer()
+    public function acceptOutdatedOffer(): void
     {
         $this->loginAs(self::USER_STANDARD);
 
@@ -153,9 +156,8 @@ class MealControllerTest extends AbstractControllerTestCase
      * /menu/{date}/{dish}/join/{profile}
      *
      * @test
-     *
      */
-    public function joinAMealWithVariations()
+    public function joinAMealWithVariations(): void
     {
         // data provider method
         $dataProvider = $this->getJoinAMealData();
@@ -218,9 +220,12 @@ class MealControllerTest extends AbstractControllerTestCase
 
     /**
      * @test
+     *
      * @dataProvider getGuestEnrollmentData
      *
      * @param bool $enrollmentStatus Flag whether enrollment should be successful or not.
+     *
+     * @return void
      */
     public function enrollAsGuest($firstName, $lastName, $company, $selectDish, $enrollmentStatus)
     {

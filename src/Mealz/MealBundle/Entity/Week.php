@@ -67,7 +67,7 @@ class Week extends AbstractMessage
     /**
      * @param ArrayCollection $days
      */
-    public function setDays($days)
+    public function setDays($days): void
     {
         $this->days = $days;
     }
@@ -83,7 +83,7 @@ class Week extends AbstractMessage
     /**
      * @param integer $year
      */
-    public function setYear($year)
+    public function setYear($year): void
     {
         $this->year = $year;
     }
@@ -99,7 +99,7 @@ class Week extends AbstractMessage
     /**
      * @param integer $calendarWeek
      */
-    public function setCalendarWeek($calendarWeek)
+    public function setCalendarWeek($calendarWeek): void
     {
         $this->calendarWeek = $calendarWeek;
     }

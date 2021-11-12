@@ -51,7 +51,6 @@ class LoadAnonymousUsers extends Fixture implements OrderedFixtureInterface
 
         try {
             // disable consistency check (We need because dependet foreign and primary keys)
-            // disable consistency check (We need because dependet foreign and primary keys)
             $connection->query('SET FOREIGN_KEY_CHECKS=0;');
 
             // Anonymize all participant, guest_invitation, transaction and profile Names

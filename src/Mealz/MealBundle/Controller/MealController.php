@@ -6,6 +6,7 @@ use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\GuestInvitation;
 use App\Mealz\MealBundle\Entity\GuestInvitationRepository;
 use App\Mealz\MealBundle\Entity\Meal;
+use App\Mealz\MealBundle\Entity\MealRepository;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Entity\WeekRepository;
@@ -268,7 +269,7 @@ class MealController extends BaseController
     public function updateOffers()
     {
         $mealsArray = array();
-        $meals = $this->getDoctrine()->getRepository(Meal::class)->getFutureMeals();
+        $meals = $this->getMealRepository()->getFutureMeals();
 
         // Adds meals that can be swapped into $mealsArray. Marks a meal as "true", if there's an available offer for it.
         foreach ($meals as $meal) {
@@ -328,7 +329,7 @@ class MealController extends BaseController
             return $this->renderGuestForm($form);
         }
 
-        $mealRepository = $this->getDoctrine()->getRepository(Meal::class);
+        $mealRepository = $this->getMealRepository();
         $meals = $formData['day']['meals'];
         $mealDateTime = $mealRepository->find($meals[0])->getDateTime()->format('Y-m-d');
 
@@ -380,7 +381,7 @@ class MealController extends BaseController
     /**
      * Gets the participant count message.
      *
-     * @param Error      $error      The error
+     * @param \Error      $error      The error
      * @param \Symfony\Component\Translation\TranslatorBagInterface $translator The translator
      */
     private function getParticipantCountMessage($error, $translator)

@@ -30,7 +30,7 @@ class CostSheetController extends BaseController
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
         $participantRepo = $this->getParticipantRepository();
-        $transactionRepo = $this->getDoctrine()->getRepository(Transaction::class);
+        $transactionRepo = $this->getTransactionRepository();
         $transactionsPerUser = $transactionRepo->findUserDataAndTransactionAmountForGivenPeriod();
 
         $users = $participantRepo->findCostsGroupedByUserGroupedByMonth();

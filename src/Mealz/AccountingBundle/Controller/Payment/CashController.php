@@ -169,10 +169,10 @@ class CashController extends BaseController
      */
     public function getFullTransactionHistory($dateFrom, $dateTo, $profile)
     {
-        $participantRepo = $this->getDoctrine()->getRepository(Participant::class);
+        $participantRepo = $this->getParticipantRepository();
         $participations = $participantRepo->getParticipantsOnDays($dateFrom, $dateTo, $profile);
 
-        $transactionRepo = $this->getDoctrine()->getRepository(Transaction::class);
+        $transactionRepo = $this->getTransactionRepository();
         $transactions = $transactionRepo->getSuccessfulTransactionsOnDays($dateFrom, $dateTo, $profile);
 
         $transactionsTotal = 0;

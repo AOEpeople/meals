@@ -115,12 +115,4 @@ class AccountingUserController extends BaseController
     {
         return $this->get('mealz_accounting.wallet');
     }
-
-    /**
-     * @return TransactionRepository
-     */
-    public function getTransactionRepository()
-    {
-        return $this->getDoctrine()->getRepository(Transaction::class);
-    }
 }

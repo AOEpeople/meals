@@ -123,14 +123,6 @@ class AccountingAdminController extends BaseController
     }
 
     /**
-     * @return TransactionRepository
-     */
-    public function getTransactionRepository()
-    {
-        return $this->getDoctrine()->getRepository(Transaction::class);
-    }
-
-    /**
      * @param Profile $profileId
      * @return Profile
      */

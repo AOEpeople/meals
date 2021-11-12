@@ -91,7 +91,7 @@ class Meal
     /**
      * @param float $price
      */
-    public function setPrice($price)
+    public function setPrice($price): void
     {
         $this->price = $price;
     }
@@ -107,7 +107,7 @@ class Meal
     /**
      * @param integer $participationLimit
      */
-    public function setParticipationLimit($participationLimit)
+    public function setParticipationLimit($participationLimit): void
     {
         $this->participationLimit = $participationLimit;
     }
@@ -123,7 +123,7 @@ class Meal
     /**
      * @param Dish $dish
      */
-    public function setDish($dish)
+    public function setDish($dish): void
     {
         $this->dish = $dish;
     }
@@ -156,7 +156,7 @@ class Meal
     /**
      * @param Day $day
      */
-    public function setDay($day)
+    public function setDay($day): void
     {
         $this->day = $day;
     }
@@ -164,7 +164,7 @@ class Meal
     /**
      * @param DateTime $dateTime
      */
-    public function setDateTime($dateTime)
+    public function setDateTime($dateTime): void
     {
         $this->dateTime = $dateTime;
     }

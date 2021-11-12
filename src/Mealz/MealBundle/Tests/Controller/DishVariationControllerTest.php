@@ -38,7 +38,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
     /**
      * @test
      */
-    public function newForm()
+    public function newForm(): void
     {
         /** @var Dish $dish */
         $dish = $this->getDish();
@@ -66,7 +66,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
     /**
      * @test
      */
-    public function createDishVariation()
+    public function createDishVariation(): void
     {
         /** @var Dish $dish */
         $dish = $this->getDish(null, true);
@@ -91,7 +91,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
     /**
      * @test
      */
-    public function editForm()
+    public function editForm(): void
     {
         /** @var Dish $dish */
         $dish = $this->getDish(null, true);
@@ -120,7 +120,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
     /**
      * @test
      */
-    public function updateDishVariation()
+    public function updateDishVariation(): void
     {
         /** @var Dish $dish */
         $dish = $this->getDish(null, true);
@@ -146,7 +146,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
     /**
      * @test
      */
-    public function deleteDishVariation()
+    public function deleteDishVariation(): void
     {
         /** @var Dish $dish */
         $dish = $this->getDish(null, true);
@@ -168,7 +168,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
     /**
      * @test
      */
-    public function deleteNonExistingDishVariation()
+    public function deleteNonExistingDishVariation(): void
     {
         $this->client->request('GET', '/dish/variation/1234097354/delete');
         $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
@@ -178,7 +178,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
     /**
      * Test calling a form for new dish variation
      */
-    public function testGetEmptyFormAction()
+    public function testGetEmptyFormAction(): void
     {
         // click add new variation button
         $crawler = $this->client->request('GET', '/dish');
@@ -284,7 +284,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
     /**
      * Test calling a non existing dishvariation(ID) to be EDITED leads to a 404 error
      */
-    public function testEditActionOfNonExistingDishVariation()
+    public function testEditActionOfNonExistingDishVariation(): void
     {
         $this->client->request('POST', '/dish/variation/xxxnon-existing-dishvariation/edit');
         $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
@@ -293,7 +293,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
     /**
      * Test firing a dish DELETION from the admin backend deletes the dishvariation from database
      */
-    public function testDeleteAction()
+    public function testDeleteAction(): void
     {
         $dish = $this->getDish(null, true);
         /* @var $dishVariation DishVariation */
@@ -310,7 +310,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
     /**
      * Test calling a non existing dish(ID) to be DELETED leads to a 404 error
      */
-    public function testDeleteOfNonExistingDishVariation()
+    public function testDeleteOfNonExistingDishVariation(): void
     {
         $this->client->request('GET', '/dish/variation/xxxnon-existing-dishvariation/delete');
         $this->assertEquals(404, $this->client->getResponse()->getStatusCode());

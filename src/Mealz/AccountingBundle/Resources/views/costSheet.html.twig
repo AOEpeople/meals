@@ -1,6 +1,7 @@
 {% extends 'base_navigation.html.twig' %}
 
 {% import 'MealzTemplateBundle::Components/button.html.twig' as MealzButton %}
+{% import 'MealzTemplateBundle::Components/switchery_checkbox.html.twig' as MealzSwitcheryCheckbox %}
 {% import 'MealzTemplateBundle::Components/headline.html.twig' as MealzHeadline %}
 
 {% set wrapperClass = 'print-costsheet' %}
@@ -12,13 +13,16 @@
 {% block body %}
 
     {% include 'MealzAccountingBundle:Accounting/partials:account_settlement_confirmation.html.twig' %}
+    {% include 'MealzAccountingBundle:Accounting/partials:hide_user_confirmation.html.twig' %}
 
     {% if is_granted('ROLE_FINANCE') %}
         {{ MealzHeadline.create(1, 'headings.costs.list'|trans({},'general'), '', '', [
             MealzButton.link(path('mealz_accounting_accounting_book'), 'costs.cash_register'|trans({}, 'actions'), '', 'transparent', 'glyphicon-euro')
         ], '') }}
     {% else %}
-        {{ MealzHeadline.create(1, 'headings.costs.list'|trans({},'general'), '', '', [], '') }}
+        {{ MealzHeadline.create(1, 'headings.costs.list'|trans({},'general'), '', '', [
+            MealzSwitcheryCheckbox.create('toggle-hidden-users', 'costs.show_hidden_users'|trans({}, 'actions'))
+        ], '') }}
     {% endif %}
 
     {% if users is not empty %}
@@ -33,12 +37,12 @@
                         <th class="table-head">{{ columnName }}</th>
                     {% endif %}
                 {% endfor %}
-                <th class="table-head icon-cell"></th>
+                <th class="table-head"></th>
             </tr>
             </thead>
             <tbody>
             {% for username, user in users %}
-                <tr class="table-row">
+                <tr class="table-row{{ user.hidden ? ' user-hidden' : '' }}">
                     <td class="table-data">{{ user.name }}, {{ user.firstName }}</td>
                     {% for cost in user.costs %}
                         <td class="table-data">
@@ -49,25 +53,39 @@
                             {% endif %}
                         </td>
                     {% endfor %}
-                    <td class="table-data icon-cell">
-                        {{ MealzButton.link(
-                            path('mealz_accounting_payment_cash_form', {profile: username}),
+                    <td class="table-data">
+                        {{ MealzButton.buttonbar(
                             '',
-                            '',
-                            'load-payment-form transparent',
-                            'glyphicon-plus'
-                        ) }}
-                        {% if user.costs.total > 0 %}
-                            {{ MealzButton.link(
-                                path('mealz_accounting_payment_settlement_form', {profile: username}),
+                            'costsheet-buttonbar',
+                            [not user.hidden ? MealzButton.link(
                                 '',
                                 '',
-                                'load-payment-form load-settlement-form transparent',
-                                'glyphicon-option-vertical'
-                            ) }}
-                        {% else %}
-                            <a></a>
-                        {% endif %}
+                                '',
+                                'hide-user-action transparent',
+                                'glyphicon-eye-close',
+                                'left',
+                                {
+                                    'title': 'payment.costsheet.hide_user.button'|trans({}, 'messages'),
+                                    'data-profile': username
+                                }
+                            ) : '<a></a>',
+                            MealzButton.link(
+                                path('mealz_accounting_payment_cash_form', {profile: username}),
+                                '',
+                                '',
+                                'load-payment-form transparent',
+                                'glyphicon-plus'
+                            ),
+                            user.costs.total > 0 ?
+                                MealzButton.link(
+                                    path('mealz_accounting_payment_settlement_form', {profile: username}),
+                                    '',
+                                    '',
+                                    'load-payment-form load-settlement-form transparent',
+                                    'glyphicon-option-vertical'
+                                ) : '<a></a>'
+                            ])
+                        }}
                     </td>
                 </tr>
             {% endfor %}

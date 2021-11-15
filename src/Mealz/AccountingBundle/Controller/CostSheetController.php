@@ -25,14 +25,14 @@ class CostSheetController extends BaseController
     /**
      * @TODO: use own data model for user costs
      */
-    public function list()
+    public function list(): Response
     {
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
-        $participantRepo = $this->getParticipantRepository();
-        $transactionRepo = $this->getDoctrine()->getRepository('MealzAccountingBundle:Transaction');
+        $transactionRepo = $this->getTransactionRepository();
         $transactionsPerUser = $transactionRepo->findUserDataAndTransactionAmountForGivenPeriod();
 
+        $participantRepo = $this->getParticipantRepository();
         $users = $participantRepo->findCostsGroupedByUserGroupedByMonth();
 
         // create column names
@@ -75,6 +75,36 @@ class CostSheetController extends BaseController
             'columnNames' => $columnNames,
             'users' => $users
         ));
+    }
+
+    public function hideUserRequest(Profile $profile) : Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
+
+        if (!$profile->isHidden()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $profile->setHidden(true);
+            $entityManager->persist($profile);
+            $entityManager->flush();
+
+            $message = $this->get('translator')->trans(
+                'payment.costsheet.hide_user.request.success',
+                ['%name%' => $profile->getFullName()],
+                'messages'
+            );
+            $severity = 'success';
+        } else {
+            $message = $this->get('translator')->trans(
+                'payment.costsheet.hide_user.request.info',
+                ['%name%' => $profile->getFullName()],
+                'messages'
+            );
+            $severity = 'info';
+        }
+
+        $this->addFlashMessage($message, $severity);
+
+        return $this->list();
     }
 
     private function getRemainingCosts($costs, &$transactions)
@@ -131,11 +161,7 @@ class CostSheetController extends BaseController
         return $this->list();
     }
 
-    /**
-     * @param String $hash
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function renderConfirmButton($hash)
+    public function renderConfirmButton(string $hash) : Response
     {
         $profile = null;
         $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
@@ -169,7 +195,7 @@ class CostSheetController extends BaseController
             $transaction = new Transaction();
             $transaction->setProfile($profile);
             $transaction->setDate(new DateTime());
-            $transaction->setAmount(-1 * abs((float) $wallet->getBalance($profile)));
+            $transaction->setAmount(-1 * abs((float)$wallet->getBalance($profile)));
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($profile);
@@ -177,7 +203,7 @@ class CostSheetController extends BaseController
             $entityManager->flush();
 
             /**
-             * for devbox situation, if you are not loged in with fake-login
+             * for devbox situation, if you are not logged in with fake-login
              * With Keycloak this if condition is not needed anymore
              */
             if ($this->getProfile() !== null) {

@@ -13,7 +13,7 @@ payment:
     balance_now: Current balance
     date: Date
     description: Description
-    amount: Amount:
+    amount: "Amount:"
     successful_payment: The payment was successful.
     payment_failed: The payment failed.
     cash_payment: Cash Payment
@@ -45,6 +45,15 @@ payment:
         confirm: Confirm
         success: The account settlement of %fullname% was successful.
         failure: The request is invalid or has already been confirmed.
+    hide_user:
+      button: Hide user
+      fancybox:
+        message: This user will be hidden. Do you want to continue?
+        continue: Continue
+        cancel: Cancel
+      request:
+        success: The user %name% has been hidden.
+        info: The user %name% is already hidden.
     mail:
       subject: Request for account settlement
       body: '<html><head></head><body>Hi HR,<br><br>%admin% requested an account settlement for %fullname%.<br>Click on the following link to confirm it:<br><br><a href="%link%">%link%</a></body></html>'

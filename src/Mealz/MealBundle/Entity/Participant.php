@@ -69,7 +69,8 @@ class Participant
     private int $offeredAt = 0;
 
     /**
-     * @ORM\Column(type="boolean", nullable=false, options={"default8": false})
+     * @ORM\Column(type="boolean", nullable=false, options={"default": false})
+     * @var boolean
      */
     private bool $confirmed = false;
 

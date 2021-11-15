@@ -1,6 +1,6 @@
-<div data-account-settlement-confirmation data-src="#hidden-content"></div>
-<div class="account-settlement-confirmation" style="display: none;" id="hidden-content">
+<div data-account-settlement-confirmation data-src="#account-settlement-hidden-content"></div>
+<div class="confirm-action" style="display: none;" id="account-settlement-hidden-content">
     <p>{{ 'payment.costsheet.account_settlement.fancybox.message'|trans({}, 'messages') }}</p>
-    <a data-fancybox-continue class="button account-settlement-confirmation-continue" href="{{ path('mealz_accounting_cost_sheet_send_settlement_request', {'username': "_"}) }}">{{ 'payment.costsheet.account_settlement.fancybox.continue'|trans({}, 'messages') }}</a>
-    <a data-fancybox-close class="button account-settlement-confirmation-cancel">{{ 'payment.costsheet.account_settlement.fancybox.cancel'|trans({}, 'messages') }}</a>
+    <a data-fancybox-continue class="button" id="account-settlement-confirmation-continue" href="{{ path('mealz_accounting_cost_sheet_send_settlement_request', {'username': "_"}) }}">{{ 'payment.costsheet.account_settlement.fancybox.continue'|trans({}, 'messages') }}</a>
+    <a data-fancybox-close class="button" id="account-settlement-confirmation-cancel">{{ 'payment.costsheet.account_settlement.fancybox.cancel'|trans({}, 'messages') }}</a>
 </div>

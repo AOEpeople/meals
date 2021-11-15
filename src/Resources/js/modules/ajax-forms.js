@@ -32,7 +32,11 @@ Mealz.prototype.initAjaxForms = function () {
         }
 
         if ($('form[name="settleform"]').length >= 1) {
-            Mealz.prototype.settleAccount();
+            Mealz.prototype.confirmAction(
+                'a#settle-account',
+                'data-account-settlement-confirmation',
+                '#account-settlement-confirmation-continue'
+            );
         }
 
         if ($('.load-payment-form').is("#ecash") === true && $('.paypal-button-container').length >= 1) {
@@ -40,7 +44,6 @@ Mealz.prototype.initAjaxForms = function () {
         }
 
     });
-
 };
 
 Mealz.prototype.loadAjaxForm = function ($element) {
@@ -70,7 +73,7 @@ Mealz.prototype.loadAjaxForm = function ($element) {
     if ($editFormWrapper.length > 0) {
         $ajaxRow = $elementParentRow.next('.table-row-form');
 
-        var ajaxRowVisible = ($ajaxRow.length > 0 && $ajaxRow.is(':visible')) ? true : false;
+        var ajaxRowVisible = $ajaxRow.length > 0 && $ajaxRow.is(':visible');
 
         $editFormWrapper.find('form').slideUp(animationDuration, function () {
             $editFormWrapper.hide();

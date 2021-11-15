@@ -6,9 +6,11 @@ use App\Mealz\AccountingBundle\Event\ProfileSettlementEvent;
 use App\Mealz\MealBundle\Entity\ParticipantRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+
 class SettlementSubscriber implements EventSubscriberInterface
 {
     private ParticipantRepository $participantRepo;
+
 
     public function __construct(ParticipantRepository $participantRepo)
     {

@@ -169,14 +169,9 @@ class CostSheetController extends BaseController
             $profile = $queryResult[0];
             $profile->setSettlementHash(null);
 
-            // Dispatch profile.settlement.confirm event
+            // Dispatch event
             $dispatcher = new EventDispatcher();
-
-            $subscriber = new SettlementSubscriber($this->getDoctrine()->getRepository('MealzMealBundle:Participant'));
-            $dispatcher->addSubscriber($subscriber);
-
-            // Dispatch the actual event
-            $dispatcher->dispatch(ProfileSettlementEvent::NAME, new ProfileSettlementEvent($profile));
+            $dispatcher->dispatch(new ProfileSettlementEvent($profile));
 
             $transaction = new Transaction();
             $transaction->setProfile($profile);

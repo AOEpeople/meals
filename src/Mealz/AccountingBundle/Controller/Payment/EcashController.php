@@ -49,7 +49,7 @@ class EcashController extends BaseController
     /**
      * Triggers actions after a PayPal transaction (payment) is successfully completed.
      *
-     * @Security("has_role('ROLE_USER')")
+     * @Security("is_granted('ROLE_USER')")
      */
     public function postPayment(
         Request $request,

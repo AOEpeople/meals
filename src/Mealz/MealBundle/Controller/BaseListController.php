@@ -2,7 +2,7 @@
 
 namespace App\Mealz\MealBundle\Controller;
 
-use Doctrine\ORM\EntityRepository;
+use Doctrine\Persistence\ObjectRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,10 +12,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 abstract class BaseListController extends BaseController
 {
-    /**
-     * @var EntityRepository
-     */
-    protected $repository;
+    protected ObjectRepository $repository;
 
     protected string $entityFormName;
 
@@ -26,11 +23,11 @@ abstract class BaseListController extends BaseController
     public function setEntityName(string $entityName): void
     {
         $this->entityName = $entityName;
-        $this->entityClassPath = '\App\Mealz\MealBundle\Entity\\'.$entityName;
-        $this->entityFormName = '\App\Mealz\MealBundle\Form\\'.$entityName.'\\'.$entityName.'Form';
+        $this->entityClassPath = 'App\Mealz\MealBundle\Entity\\'.$entityName;
+        $this->entityFormName = 'App\Mealz\MealBundle\Form\\'.$entityName.'\\'.$entityName.'Form';
     }
 
-    public function setRepository(EntityRepository $repository): void
+    public function setRepository(ObjectRepository $repository): void
     {
         $this->repository = $repository;
     }

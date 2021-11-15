@@ -70,7 +70,7 @@ class LoadDishes extends Fixture implements OrderedFixtureInterface
     protected function addDish($titleEN, $titleDE): void
     {
         $dish = new Dish();
-        $dish->setPrice(3.40);
+        $dish->setPrice(3.60);
         $dish->setTitleEn($titleEN);
         $dish->setTitleDe($titleDE);
         $dish->setDescriptionEn('Description - '.$titleEN);

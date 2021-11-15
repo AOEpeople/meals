@@ -6,13 +6,9 @@ use DateTime;
 use Doctrine\ORM\EntityRepository;
 use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\Role;
+use Doctrine\ORM\Query\Expr\Join;
 use PDO;
 
-/**
- * the Participant Repository
- * Class ParticipantRepository
- * @package Mealz\MealBundle\Entity
- */
 class ParticipantRepository extends EntityRepository
 {
     /**
@@ -190,6 +186,55 @@ class ParticipantRepository extends EntityRepository
     }
 
     /**
+     * @psalm-return array<string, array<string, list<Participant>>>
+     */
+    public function findAllGroupedBySlotAndProfileID(DateTime $date): array
+    {
+        $queryBuilder = $this->createQueryBuilder('p');
+        $queryBuilder
+            ->select(['p', 'm', 's', 'up'])
+            ->addSelect('COALESCE(IDENTITY(p.slot), 0) AS HIDDEN null_sort_col') // Pseudo col. to mark participants w/o slot
+            ->leftJoin('p.slot', 's')
+            ->join('p.profile', 'up')
+            ->join('p.meal', 'm', Join::WITH, 'm.dateTime >= :startTime AND m.dateTime <= :endTime')
+            ->orderBy('null_sort_col', 'DESC')
+            ->addOrderBy('s.order', 'ASC')
+            ->setParameters([
+                'startTime' => (clone $date)->setTime(0, 0),
+                'endTime' =>  (clone $date)->setTime(23, 59),
+            ]);
+
+        $result = $queryBuilder->getQuery()->getResult();
+        if (!is_array($result) || empty($result)) {
+            return [];
+        }
+
+        return $this->groupBySlotAndProfileID($result);
+    }
+
+    /**
+     * @param Participant[] $participants
+     *
+     * @psalm-return array<string, array<string, list<Participant>>>
+     */
+    private function groupBySlotAndProfileID(array $participants): array
+    {
+        $groupedParticipants = [];
+
+        foreach ($participants as $participant) {
+            $slot = $participant->getSlot();
+            if (null === $slot || $slot->isDisabled()) {
+                $groupedParticipants[''][$participant->getProfile()->getUsername()][] = $participant;
+                continue;
+            }
+
+            $groupedParticipants[$slot->getTitle()][$participant->getProfile()->getUsername()][] = $participant;
+        }
+
+        return $groupedParticipants;
+    }
+
+    /**
      * @param array $options
      * @return mixed
      */
@@ -333,26 +378,45 @@ class ParticipantRepository extends EntityRepository
     }
 
     /**
-     * Returns an array with all the pending participants on the given date.
-     * @param DateTime $dateTime
-     * @return array
+     * Returns count of booked meals available to be taken by others on a given $date.
      */
-    public function getPendingParticipants(DateTime $dateTime)
+    public function getOfferCount(DateTime $date): int
     {
-        $minDate = new DateTime(date('d-m-Y', date_timestamp_get($dateTime)) . '00:00');
-        $maxDate = new DateTime(date('d-m-Y', date_timestamp_get($dateTime)) . '23:59');
+        $queryBuilder = $this->createQueryBuilder('p');
+        $queryBuilder
+            ->join('p.meal', 'm', Join::WITH, 'm.dateTime >= :startTime AND m.dateTime <= :endTime')
+            ->select('count(p.id) AS count')
+            ->where('p.offeredAt != 0')
+            ->setParameters([
+                'startTime' => (clone $date)->setTime(0, 0),
+                'endTime' => (clone $date)->setTime(23, 59),
+            ]);
 
-        $options = array('load_meal' => true);
-        $queryBuilder = $this->getQueryBuilderWithOptions($options);
+        $result = $queryBuilder->getQuery()->getArrayResult();
 
-        $queryBuilder->andWhere('m.dateTime >= :minDate');
-        $queryBuilder->andWhere('m.dateTime <= :maxDate');
-        $queryBuilder->setParameter('minDate', $minDate);
-        $queryBuilder->setParameter('maxDate', $maxDate);
+        return $result[0]['count'] ?? 0;
+    }
 
-        $queryBuilder->andWhere('p.offeredAt != 0');
+    /**
+     * Gets number of participants (booked meals) per slot on a given $date.
+     */
+    public function getCountBySlots(DateTime $date): array
+    {
+        $queryBuilder = $this->createQueryBuilder('p');
+        $queryBuilder
+            ->select(['IDENTITY(p.slot) AS slot_id', 'count(p.id) AS count'])
+            ->join('p.meal', 'm', Join::WITH, 'm.dateTime >= :startTime AND m.dateTime <= :endTime')
+            ->groupBy('p.slot')
+            ->setParameters([
+                'startTime' => (clone $date)->setTime(0, 0),
+                'endTime' => (clone $date)->setTime(23, 59),
+            ]);
 
-        return $queryBuilder->getQuery()
-            ->getResult();
+        $result = [];
+        foreach ($queryBuilder->getQuery()->getArrayResult() as $item) {
+            $result[$item['slot_id']] = $item['count'];
+        }
+
+        return $result;
     }
 }

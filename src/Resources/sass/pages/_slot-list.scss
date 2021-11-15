@@ -1,0 +1,30 @@
+.slot-list {
+  .table {
+    .table-data {
+      padding-top: 10px;
+      vertical-align: bottom;
+    }
+
+    .slot-title {
+      width: 69%;
+    }
+
+    .slot-limit {
+      width: 15%;
+    }
+
+    .slot-actions {
+      width: 16%;
+    }
+  }
+
+  form {
+    fieldset:first-child {
+      width: 60%;
+    }
+
+    fieldset {
+      width: 20%;
+    }
+  }
+}

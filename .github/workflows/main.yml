@@ -134,6 +134,7 @@ jobs:
           docker-compose -f docker-compose-test.yaml pull db
           docker-compose -f docker-compose-test.yaml up -d --no-build db
           docker-compose -f docker-compose-test.yaml up $SERVICE
+          sleep 15
           docker-compose -f docker-compose-test.yaml exec -T $SERVICE composer install
           docker-compose -f docker-compose-test.yaml exec -T $SERVICE bin/console doctrine:schema:update --env=test --force
           docker-compose -f docker-compose-test.yaml exec -T $SERVICE mkdir -p build/artifacts/qa/

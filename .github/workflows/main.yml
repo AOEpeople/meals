@@ -118,6 +118,11 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
       - uses: actions/checkout@v2
+      - name: Dump docker logs on failure using different shell
+        if: failure()
+        uses: jwalton/gh-docker-logs@v1
+        with:
+          shell: '/bin/sh'
       - name: Download docker images
         uses: actions/download-artifact@v2
         with:

@@ -448,4 +448,33 @@ class ParticipantRepository extends EntityRepository
                 ->execute();
         }
     }
+
+    /**
+     * Removes all future ordered meals for a given profile
+     */
+    public function removeFutureMealsByProfile(Profile $profile)
+    {
+        // Get tomorrow's date
+        $tomorrow = new DateTime('tomorrow');
+
+        // Get all participants ID's through a join onto meals table
+        $queryBuilder = $this->createQueryBuilder('p');
+        $queryBuilder->leftJoin('p.meal', 'm');
+        $queryBuilder->andWhere('p.profile = :profile');
+        $queryBuilder->setParameter('profile' , $profile->getUsername());
+        $queryBuilder->andWhere('m.dateTime >= :tomorrow');
+        $queryBuilder->setParameter('tomorrow', $tomorrow->format('Y-m-d H:i:s'));
+        $queryBuilder->select('p.id');
+        $meals = $queryBuilder->getQuery()->getArrayResult();
+
+        // Remove the ID's form the participants table
+        if(count($meals)) {
+            $this->createQueryBuilder('participant')
+                ->where('participant.id in (:ids)')
+                ->setParameter('ids', $meals)
+                ->delete()
+                ->getQuery()
+                ->execute();
+        }
+    }
 }

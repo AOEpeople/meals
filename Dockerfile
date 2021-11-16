@@ -43,6 +43,7 @@ COPY docker/web/scripts/wait-for /usr/local/bin/
 # add composer dependencies
 COPY composer.json composer.lock ./
 RUN composer install \
+        --no-dev \
         --no-plugins \
         --no-scripts \
         --optimize-autoloader \

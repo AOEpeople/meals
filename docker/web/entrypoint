@@ -8,7 +8,7 @@ echo "Setup PHP configuration"
 envsubst < "/container/php.ini" > "/usr/local/etc/php/conf.d/_meals.ini"
 
 echo "Wait for MySQL and execute migrations"
-/usr/local/bin/wait-for db:3306 -t 60 -- echo "Database available"
+/usr/local/bin/wait-for db:3306 -t 60 -- /var/www/html/bin/console doctrine:migrations:migrate --no-interaction
 
 if [ "${APP_ENV}" = "staging" ]; then
   echo "Load data fixtures"

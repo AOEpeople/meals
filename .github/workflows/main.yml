@@ -131,14 +131,10 @@ jobs:
       - name: Test with docker compose
         run: |
           mkdir build
-          docker-compose -f docker-compose-test.yaml pull db
-          docker-compose -f docker-compose-test.yaml up -d db
-          docker-compose -f docker-compose-test.yaml up -d $SERVICE
+          docker-compose -f docker-compose-test.yaml up -d
           docker-compose -f docker-compose-test.yaml exec -T $SERVICE composer install
-          docker-compose -f docker-compose-test.yaml exec -T $SERVICE bin/console doctrine:schema:update --env=test --force
           docker-compose -f docker-compose-test.yaml exec -T $SERVICE mkdir -p build/artifacts/qa/
           docker-compose -f docker-compose-test.yaml exec -T $SERVICE vendor/bin/phpunit -d memory_limit=-1 -c tests/phpunit.xml.dist
-          docker-compose -f docker-compose-test.yaml exec -T $SERVICE ls -l build/artifacts/qa/
           docker-compose -f docker-compose-test.yaml down -v --remove-orphans
       - name: Upload coverage report artifact
         uses: actions/upload-artifact@v2.2.4

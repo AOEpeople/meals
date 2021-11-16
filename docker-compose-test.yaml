@@ -5,6 +5,7 @@ services:
     image: "${IMAGE_APP:-aoepeople/meals:edge}"
     environment:
       - APP_DEBUG=1
+      - APP_ENV=test
       - DB_HOST=db
       - DB_PORT=3306
       - DB_NAME=db_test

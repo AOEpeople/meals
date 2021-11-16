@@ -26,7 +26,6 @@ Mealz.prototype.initHiddenUsersToggler = function () {
     self.toggleHiddenUsers(state)
 
     new Switchery(checkbox, {
-        size: 'small',
         onChange: function (state) {
             self.toggleHiddenUsersChangeHandler(state);
         }

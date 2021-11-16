@@ -23,6 +23,7 @@ RUN apt-get update && apt-get upgrade -y && apt-get install --no-install-recomme
         libmcrypt-dev \
         zip \
         unzip \
+        netcat \
         --no-install-recommends \
     && pecl install mcrypt-1.0.4 \
     && a2enmod rewrite \
@@ -36,6 +37,8 @@ RUN apt-get update && apt-get upgrade -y && apt-get install --no-install-recomme
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && curl -L https://github.com/a8m/envsubst/releases/download/v1.2.0/envsubst-Linux-x86_64 -o /usr/local/bin/envsubst \
     && chmod +x /usr/local/bin/envsubst
+
+COPY docker/web/scripts/wait-for /usr/local/bin/
 
 # add composer dependencies
 COPY composer.json composer.lock ./

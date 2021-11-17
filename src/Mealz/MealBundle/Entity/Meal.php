@@ -20,8 +20,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Meal
 {
     /**
-     * @var int
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -47,8 +45,6 @@ class Meal
     /**
      * @Assert\NotBlank()
      * @ORM\Column(type="integer", nullable=FALSE, name="participation_limit")
-     *
-     * @var int
      */
     private int $participationLimit = 0;
 

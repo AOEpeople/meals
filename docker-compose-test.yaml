@@ -21,6 +21,8 @@ services:
       - mail
     ports:
       - "8033:80"
+    volumes:
+      - ./build:/var/www/html/build
 
   db:
     image: "mysql:5.7"

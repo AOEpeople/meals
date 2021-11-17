@@ -216,16 +216,13 @@ jobs:
         run: phpmd src github ./phpmd.xml --baseline-file ./phpmd.baseline.xml
 
   psalm:
-    name: Psalm
+    name: Psalm Static analysis
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Setup PHP environment
-        uses: shivammathur/setup-php@v2
-        with:
-          coverage: none
-          tools: psalm
+      - name: Psalm
+        uses: docker://vimeo/psalm-github-actions
       - name: Run Psalm
         run: psalm src github ./psalm.xml --use-baseline=./psalm.baseline.xml
 

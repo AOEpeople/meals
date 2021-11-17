@@ -34,7 +34,7 @@ class CategoryControllerTest extends AbstractControllerTestCase
         $form['category'] = [
             'title_de' => 'category-form-title-de',
             'title_en' => 'category-form-title-en',
-            '_token'   => $this->getFormCSRFToken('/category/form', 'form #category__token')
+            '_token' => $this->getFormCSRFToken('/category/form', 'form #category__token')
         ];
 
         // Call controller action
@@ -80,11 +80,11 @@ class CategoryControllerTest extends AbstractControllerTestCase
         $this->persistAndFlushAll([$category]);
 
         // Request
-        $this->client->request('GET', '/category/form/'.$category->getSlug());
+        $this->client->request('GET', '/category/form/' . $category->getSlug());
         $crawler = $this->getJsonResponseCrawler();
 
         // Check if form is loaded
-        $node = $crawler->filterXPath('//form[@action="/category/'.$category->getSlug().'/edit"]');
+        $node = $crawler->filterXPath('//form[@action="/category/' . $category->getSlug() . '/edit"]');
         $this->assertSame($node->count(), 1);
 
         // Copy form values in array for comparison
@@ -106,10 +106,10 @@ class CategoryControllerTest extends AbstractControllerTestCase
         $form['category'] = [
             'title_de' => 'category-form-edited-title-de',
             'title_en' => 'category-form-edited-title-en',
-            '_token'   => $this->getFormCSRFToken('/category/form/'.$category->getSlug(), 'form #category__token')
+            '_token' => $this->getFormCSRFToken('/category/form/' . $category->getSlug(), 'form #category__token')
         ];
 
-        $this->client->request('POST', '/category/'.$category->getSlug().'/edit', $form);
+        $this->client->request('POST', '/category/' . $category->getSlug() . '/edit', $form);
         $categoryRepository = $this->getDoctrine()->getRepository(Category::class);
         unset($form['category']['category']);
         unset($form['category']['_token']);
@@ -131,7 +131,7 @@ class CategoryControllerTest extends AbstractControllerTestCase
         $this->persistAndFlushAll(array($category));
 
         $categoryId = $category->getId();
-        $this->client->request('GET', '/category/'.$category->getSlug().'/delete');
+        $this->client->request('GET', '/category/' . $category->getSlug() . '/delete');
         $categoryRepository = $this->getDoctrine()->getRepository(Category::class);
         $queryResult = $categoryRepository->find($categoryId);
 

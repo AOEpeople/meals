@@ -182,7 +182,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
     public function testNewVariationAction(): void
     {
         $dishId = $this->getHelperObject('dishid');
-        $formURI = '/dish/'.$dishId.'/variation/new';
+        $formURI = '/dish/' . $dishId . '/variation/new';
 
         // Create form data
         $form['dishvariation'] = [
@@ -347,8 +347,8 @@ class DishVariationControllerTest extends AbstractControllerTestCase
      *
      * If no dish-identifier is specified then it returns the test dish with lowest identifier.
      *
-     * @param  integer|NULL $identifier Dish ID
-     * @param  bool $dishVarRequired If TRUE and no identifier is given the method returns the first dish
+     * @param integer|NULL $identifier Dish ID
+     * @param bool $dishVarRequired If TRUE and no identifier is given the method returns the first dish
      *                                              having at least ONE variation.
      * @return Dish
      */
@@ -390,9 +390,9 @@ class DishVariationControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * @param  string $attribute
-     * @param  mixed $value
-     * @param  bool $throwError
+     * @param string $attribute
+     * @param mixed $value
+     * @param bool $throwError
      * @return DishVariation
      */
     private function getDishVariationBy($attribute, $value, $throwError = true)

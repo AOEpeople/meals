@@ -58,7 +58,7 @@ class PayPalServiceTest extends TestCase
                 $this->fail('expected RuntimeException'); // should never reach here
             } catch (RuntimeException $rte) {
                 $this->assertSame(1633425374, $rte->getCode());
-                $this->assertStringContainsString('unexpected api response, status: '.$httpStatusCode, $rte->getMessage());
+                $this->assertStringContainsString('unexpected api response, status: ' . $httpStatusCode, $rte->getMessage());
             }
         }
     }
@@ -72,13 +72,13 @@ class PayPalServiceTest extends TestCase
         $orderAmount = 10.35;
         $orderDateTime = gmdate('Y-m-d\TH:i:s\Z');
 
-        $responseBody = (object) [
+        $responseBody = (object)[
             'id' => $orderID,
             'status' => 'COMPLETED',
             'update_time' => $orderDateTime,
             'purchase_units' => [
-                0 => (object) [
-                    'amount' => (object) [
+                0 => (object)[
+                    'amount' => (object)[
                         'value' => $orderAmount
                     ]
                 ]

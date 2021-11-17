@@ -339,7 +339,7 @@ class MealControllerTest extends AbstractControllerTestCase
     /**
      * Gets all the participants for a meal.
      *
-     * @param  Meal $meal Meal instance
+     * @param Meal $meal Meal instance
      * @return array
      */
     private function getMealParticipants($meal)

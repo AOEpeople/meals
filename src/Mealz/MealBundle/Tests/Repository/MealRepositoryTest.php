@@ -41,7 +41,7 @@ class MealRepositoryTest extends AbstractDatabaseTestCase
 
         $this->mealRepository->findOneByDateAndDish(date('Y-m-'), $dish->getSlug());
     }
-    
+
     public function testFindOneByDateAndDishNoResults(): void
     {
         $dish = $this->createDish();

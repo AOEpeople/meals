@@ -281,7 +281,7 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
         $profileRepo = $this->entityManager->getRepository(Profile::class);
         $profile = $profileRepo->find($username);
         if (null === $profile) {
-            throw new RuntimeException('profile not found: '.$username);
+            throw new RuntimeException('profile not found: ' . $username);
         }
 
         return $profile;
@@ -289,7 +289,7 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
 
     private function createSlots(array $data): void
     {
-        if (0 === count ($data)) {
+        if (0 === count($data)) {
             return;
         }
 

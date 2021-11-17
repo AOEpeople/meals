@@ -40,22 +40,22 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
 
         // Create profile for user1
         $user1FirstName = 'Max';
-        $user1LastName  = 'Mustermann'.$time;
+        $user1LastName = 'Mustermann' . $time;
         $user1 = $this->createProfile($user1FirstName, $user1LastName);
 
         // Create profile for user2
         $user2FirstName = 'John';
-        $user2LastName  = 'Doe'.$time;
+        $user2LastName = 'Doe' . $time;
         $user2 = $this->createProfile($user2FirstName, $user2LastName);
 
         $this->persistAndFlushAll([$user1, $user2]);
 
         // Create transactions for users if they're persisted
-        if (($this->getUserProfile($user1FirstName.'.'.$user1LastName) instanceof Profile) === true) {
+        if (($this->getUserProfile($user1FirstName . '.' . $user1LastName) instanceof Profile) === true) {
             $this->createTransactions($user1, 10.50, new DateTime('first day of previous month'));
         }
 
-        if (($this->getUserProfile($user2FirstName.'.'.$user2LastName) instanceof Profile) === true) {
+        if (($this->getUserProfile($user2FirstName . '.' . $user2LastName) instanceof Profile) === true) {
             $this->createTransactions($user2, 11.50, new DateTime('first day of previous month'));
         }
     }
@@ -106,7 +106,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
         $monthNumber = $minDate->format('m');
         $year = $minDate->format('Y');
 
-        $regex = "/".preg_quote($firstDay)."\.".preg_quote($monthNumber)."\.(".preg_quote($year).")? *[-|bis|to] *".preg_quote($lastDay)."\.".preg_quote($monthNumber)."\.(".preg_quote($year).")?/i";
+        $regex = "/" . preg_quote($firstDay) . "\." . preg_quote($monthNumber) . "\.(" . preg_quote($year) . ")? *[-|bis|to] *" . preg_quote($lastDay) . "\." . preg_quote($monthNumber) . "\.(" . preg_quote($year) . ")?/i";
         $this->assertMatchesRegularExpression($regex, $headline, "The headline is not set properly");
     }
 
@@ -125,10 +125,10 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
         $res = [];
         foreach ($nodesAmount as $value) {
             $tmpCrawler = new Crawler($value);
-            $res[] = (float) $tmpCrawler->text();
+            $res[] = (float)$tmpCrawler->text();
         }
 
-        $totalCalculated = (float) array_sum($res);
+        $totalCalculated = (float)array_sum($res);
         $totalShown = $this->getFloatFromNode($nodeTotal->siblings()->getNode(0));
 
         $this->assertEquals($totalCalculated, $totalShown, 'Total amount of transactions inconsistent');
@@ -165,7 +165,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
             $nameDisplayed = $nodesName->getNode($i)->textContent;
             $userInfo = current($usersAndTheirTotals);
             next($usersAndTheirTotals);
-            $regex = "/".preg_quote($userInfo['name'])." *, *".preg_quote($userInfo['firstName'])."/i";
+            $regex = "/" . preg_quote($userInfo['name']) . " *, *" . preg_quote($userInfo['firstName']) . "/i";
             $this->assertMatchesRegularExpression($regex, $nameDisplayed, 'Names are displayed incorrectly. Either sorting is wrong or the names are not displayed like it should be (name, firstname)');
         }
     }

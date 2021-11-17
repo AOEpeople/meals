@@ -16,8 +16,8 @@ class WeekTest extends TestCase
     public function testGetStartTime(): void
     {
         $now = new DateTime();
-        $calWeek = (int) $now->format('W');
-        $calYear = (int) $now->format('Y');
+        $calWeek = (int)$now->format('W');
+        $calYear = (int)$now->format('Y');
 
         $week = new Week();
         $week->setCalendarWeek($calWeek);
@@ -36,8 +36,8 @@ class WeekTest extends TestCase
     public function testGetEndTime(): void
     {
         $now = new DateTime();
-        $calWeek = (int) $now->format('W');
-        $calYear = (int) $now->format('Y');
+        $calWeek = (int)$now->format('W');
+        $calYear = (int)$now->format('Y');
 
         $week = new Week();
         $week->setCalendarWeek($calWeek);

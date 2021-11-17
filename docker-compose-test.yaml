@@ -3,7 +3,7 @@ version: '3'
 services:
   app:
     image: "${IMAGE_APP:-aoepeople/meals:edge}"
-    command: mkdir -p build/artifacts/qa/ && vendor/bin/phpunit -d memory_limit=-1 -c tests/phpunit.xml.dist
+    command: composer run tests
     environment:
       - APP_DEBUG=1
       - APP_ENV=test
@@ -23,7 +23,7 @@ services:
       - "8033:80"
 
   db:
-    image: "${IMAGE_DB:-aoepeople/meals-test-db:latest}"
+    image: "mysql:5.7"
     build:
       context: docker/db
     healthcheck:

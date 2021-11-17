@@ -2,7 +2,16 @@
 set -e
 
 echo "Setup Apache configuration"
-envsubst < "/container/apache.conf" > "/etc/apache2/sites-enabled/meals.conf"
+envsubst < "/container/apache/meals-vhost.conf" > "/etc/apache2/sites-enabled/meals.conf"
+
+cp "/container/apache/dump_io.conf" "/etc/apache2/conf-available/dump_io.conf"
+cp "/container/apache/certs/apache.crt" "/etc/ssl/certs/apache.crt"
+cp "/container/apache/certs/apache.key" "/etc/ssl/private/apache.key"
+
+a2enmod ssl
+a2enmod dump_io
+
+a2enconf dump_io
 
 echo "Setup PHP configuration"
 envsubst < "/container/php.ini" > "/usr/local/etc/php/conf.d/_meals.ini"

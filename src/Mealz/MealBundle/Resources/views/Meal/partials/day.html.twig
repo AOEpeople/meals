@@ -4,8 +4,8 @@
     {% set available = true %}
 {% endif %}
 
-<div class="meal {{ available ? 'is-available' : '' }}">
-
+<div class="meal {{ available ? 'is-available' : '' }}" data-date="{{ day.dateTime.format('Y-m-d') }}">
+    {% include 'MealzMealBundle:Meal/partials:mealSlots.html.twig' %}
     {# display week day and date #}
     <div class="week-day">
         <a name="{{ day.dateTime | date('Y-m-d') }}"></a>
@@ -26,11 +26,23 @@
     {% if not day.enabled %}
         <div class="meal-row no-meal">{{ 'content.participation.day.disabled'|trans({},'general') }}</div>
     {% else %}
-
         {% set groupedMeals = groupMeals(day.meals.toArray) %}
 
         {# display meals for given day #}
         {% for meal in groupedMeals.meals %}
+{#            {% set participant = meal.getParticipant(app.user.profile) %}#}
+{#            {% set slotsStatus = participationSrv.slotsStatus(day.dateTime) %}#}
+{#            {% if slotsStatus is not empty %}#}
+{#                <select style="min-width: 150px; margin: 10px 15px;">#}
+{#                    {% for id, slot in slotsStatus %}#}
+{#                        {% set title = slot.title %}#}
+{#                        {% if slot.limit > 0 %}#}
+{#                            {% set title = title ~ '  [' ~ slot.reserved ~ ' / ' ~ slot.limit ~ ']' %}#}
+{#                        {% endif %}#}
+{#                        <option value="{{ id }}"{{ slot.limit > 0 and slot.limit == slot.reserved ? ' disabled' : '' }}>{{ title }}</option>#}
+{#                    {% endfor %}#}
+{#                </select>#}
+{#            {% endif %}#}
             {% include 'MealzMealBundle:Meal/partials:meal.html.twig' %}
         {% endfor %}
 

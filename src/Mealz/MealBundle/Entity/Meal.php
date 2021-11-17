@@ -26,7 +26,7 @@ class Meal
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    private ?int $id = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="Dish", cascade={"refresh"}, fetch="EAGER")
@@ -50,7 +50,7 @@ class Meal
      *
      * @var int
      */
-    protected $participationLimit;
+    private int $participationLimit = 0;
 
     /**
      * @ORM\ManyToOne(targetEntity="Day", inversedBy="meals")
@@ -78,7 +78,6 @@ class Meal
     public function __construct()
     {
         $this->participants = new ArrayCollection();
-        $this->participationLimit = 0;
     }
 
     /**
@@ -162,20 +161,19 @@ class Meal
         $this->day = $day;
     }
 
-    /**
-     * @param DateTime $dateTime
-     */
-    public function setDateTime($dateTime): void
+    public function setDateTime(DateTime $dateTime): void
     {
         $this->dateTime = $dateTime;
     }
 
-    /**
-     * @return DateTime
-     */
-    public function getDateTime()
+    public function getDateTime(): DateTime
     {
         return $this->dateTime;
+    }
+
+    public function getLockDateTime(): DateTime
+    {
+        return $this->day->getLockParticipationDateTime();
     }
 
     /**

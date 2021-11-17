@@ -1,0 +1,13 @@
+{%- if day.meals.containsOpenMeal and slots is not empty %}
+    <div class="slot-container">
+        <select id="day-{{ day.dateTime.format('Ymd') }}-slots" class="slot-selector" {{ day.meals.containsBookableMeal ? '' : 'disabled' }}>
+            <option value="">{{ 'content.participation.meal.select_slot' | trans({}, 'general') }}</option>
+            {% for slot in slots %}
+                <option value="{{ slot.slug }}" data-title="{{ slot.title }}" data-limit="{{ slot.limit }}">{{ slot.title }}</option>
+            {% endfor %}
+        </select>
+    </div>
+{% else %}
+    {% set slot = participationService.getSlotFor(app.user.profile, day.dateTime) %}
+    {% if slot %}<div class="slot-container">{{ slot.title }}</div>{% endif %}
+{% endif -%}

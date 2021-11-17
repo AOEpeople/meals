@@ -86,11 +86,6 @@ services:
             - [setRepository, ['@mealz_meal.repository.slot']]
             - [setEntityName, ['Slot']]
 
-    App\Mealz\MealBundle\Controller\SlotController:
-        calls:
-            - [setRepository, ['@mealz_meal.repository.slot']]
-            - [setEntityName, ['Slot']]
-
     # Interface Implementations
     App\Mealz\MealBundle\Service\Notification\NotifierInterface: '@mealz_meal.notifier.mattermost'
 

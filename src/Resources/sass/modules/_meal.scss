@@ -400,6 +400,19 @@
     font-weight: bold;
   }
 
+  > .form-row {
+    margin: 0;
+  }
+
+  .select-wrapper {
+    width: 50%;
+    padding: 10px 15px;
+
+    .slot-selector {
+      padding: 10px;
+    }
+  }
+
   .participants {
     width: 50%;
     margin-left: 25%;
@@ -420,6 +433,16 @@
     width: 25%;
     padding-top: 4px;
     padding-left: 8px;
+  }
+}
+
+.meal {
+  .slot-container {
+    padding: 10px 15px;
+
+    .select-wrapper {
+      width: 50%;
+    }
   }
 }
 

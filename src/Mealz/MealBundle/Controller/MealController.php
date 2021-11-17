@@ -9,6 +9,8 @@ use App\Mealz\MealBundle\Entity\InvitationWrapper;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\MealRepository;
 use App\Mealz\MealBundle\Entity\Participant;
+use App\Mealz\MealBundle\Entity\Slot;
+use App\Mealz\MealBundle\Entity\SlotRepository;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Entity\WeekRepository;
 use App\Mealz\MealBundle\EventListener\ParticipantNotUniqueException;
@@ -17,6 +19,7 @@ use App\Mealz\MealBundle\EventListener\ToggleParticipationNotAllowedException;
 use App\Mealz\MealBundle\Form\Guest\InvitationForm;
 use App\Mealz\MealBundle\Service\DishService;
 use App\Mealz\MealBundle\Service\Mailer;
+use App\Mealz\MealBundle\Service\MealService;
 use App\Mealz\MealBundle\Service\Notification\NotifierInterface;
 use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\UserBundle\Entity\Profile;
@@ -24,6 +27,7 @@ use App\Mealz\UserBundle\Entity\Role;
 use DateTime;
 use Doctrine\ORM\EntityManager;
 use Exception;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Form\FormInterface;
@@ -46,7 +50,13 @@ class MealController extends BaseController
         $this->notifier = $notifier;
     }
 
-    public function index(WeekRepository $weekRepository, DishService $dishService): Response
+    public function index(
+        DishService $dishService,
+        MealService $mealService,
+        ParticipationService $participationService,
+        SlotRepository $slotRepo,
+        WeekRepository $weekRepository
+    ): Response
     {
         $currentWeek = $weekRepository->getCurrentWeek();
         if (null === $currentWeek) {
@@ -59,37 +69,40 @@ class MealController extends BaseController
         }
 
         return $this->render('MealzMealBundle:Meal:index.html.twig', [
-            'weeks' => [$currentWeek, $nextWeek],
             'dishService' => $dishService,
+            'mealService' => $mealService,
+            'participationService' => $participationService,
+            'weeks' => [$currentWeek, $nextWeek],
+            'slots' => $slotRepo->findBy(['disabled' => 0, 'deleted' => 0])
         ]);
     }
 
     /**
      * Lets the currently logged-in user either join a meal, or accept an already booked meal offered by a participant.
+     *
+     * @Security("is_granted('ROLE_USER')")
+     * @Entity("meal", expr="repository.findOneByDateAndDish(date, dish)")
      */
     public function join(
-        string $date,
-        string $dish,
+        Request $request,
+        Meal $meal,
         ?string $profile,
-        ParticipationService $participationSrv
+        ParticipationService $participationSrv,
+        SlotRepository $slotRepo
     ): JsonResponse {
-        if (null === $this->getUser()) {
-            return $this->ajaxSessionExpiredRedirect();
-        }
-
-        $meal = $this->getMealRepository()->findOneByDateAndDish($date, $dish);
-        $errorCode = $this->getMealErrorCode($meal);
-        if (200 !== $errorCode) {
-            return new JsonResponse(null, $errorCode);
-        }
-
         $userProfile = $this->checkProfile($profile);
         if (null === $userProfile) {
             return new JsonResponse(null, 403);
         }
 
+        $slot = null;
+        $slotSlug = $request->request->get('slot', null);
+        if (null !== $slotSlug) {
+            $slot = $slotRepo->findOneBy(['slug' => $slotSlug]);
+        }
+
         try {
-            $out = $participationSrv->join($userProfile, $meal);
+            $out = $participationSrv->join($userProfile, $meal, $slot);
         } catch (Exception $e) {
             $this->logException($e);
 
@@ -271,13 +284,16 @@ class MealController extends BaseController
         }
 
         $mealRepository = $this->getMealRepository();
-        $meals = $formData['day']['meals'];
-        $mealDateTime = $mealRepository->find($meals[0])->getDateTime()->format('Y-m-d');
+        $mealIDs = $formData['day']['meals'];
+        $meals = $mealRepository->findBy(['id' => $mealIDs]);
+        $mealDateTime = $meals[0]->getDateTime()->format('Y-m-d');
 
         $profile = $invitationWrapper->getProfile();
         $profileId = $profile->getFirstName() . '.' . $profile->getName() . '_' . $mealDateTime;
         // Try to load already existing profile entity.
         $loadedProfile = $this->getDoctrine()->getRepository(Profile::class)->find($profileId);
+
+        $slot = $invitationWrapper->getSlot();
 
         try {
             // If profile already exists: use it. Otherwise create new one.
@@ -292,7 +308,10 @@ class MealController extends BaseController
                 $profile->addRole($this->getGuestRole());
             }
 
-            $this->addParticipationForEveryChosenMeal($meals, $profile, $mealRepository);
+            $this->addParticipationForEveryChosenMeal($meals, $profile, $slot);
+
+            $message = $translator->trans("participation.successful", [], 'messages');
+            $this->addFlashMessage($message, 'success');
         } catch (Exception $error) {
             $message = $this->getParticipantCountMessage($error);
 
@@ -323,10 +342,14 @@ class MealController extends BaseController
     }
 
     /**
+     * Adds a participation for every chosen meal.
+     *
+     * @param Meal[] $meals
+     *
      * @throws ToggleParticipationNotAllowedException
      * @throws \Doctrine\DBAL\Exception
      */
-    private function addParticipationForEveryChosenMeal(array $meals, Profile $profile, MealRepository $mealRepository): void
+    private function addParticipationForEveryChosenMeal(array $meals, Profile $profile, ?Slot $slot): void
     {
         /** @var EntityManager $entityManager */
         $entityManager = $this->getDoctrine()->getManager();
@@ -334,8 +357,7 @@ class MealController extends BaseController
         $entityManager->getConnection()->beginTransaction();
 
         try {
-            foreach ($meals as $mealId) {
-                $meal = $mealRepository->find($mealId);
+            foreach ($meals as $meal) {
                 // If guest enrolls too late, throw access denied error
                 if (true === $meal->isParticipationLimitReached() ||
                     false === $this->getDoorman()->isToggleParticipationAllowed($meal->getDateTime())) {
@@ -344,18 +366,20 @@ class MealController extends BaseController
                 if (false === $this->getDoorman()->isToggleParticipationAllowed($meal->getDay()->getLockParticipationDateTime())) {
                     throw new ToggleParticipationNotAllowedException();
                 }
-                $participant = new Participant($profile, $meal);
-                $participant->setCostAbsorbed(true);
-                $entityManager->persist($participant);
+
+                $participation = new Participant($profile, $meal);
+                $participation->setCostAbsorbed(true);
+                if (null !== $slot) {
+                    $participation->setSlot($slot);
+                }
+
+                $entityManager->persist($participation);
             }
             $entityManager->persist($profile);
             $entityManager->flush();
             $entityManager->getConnection()->commit();
-            $message = $this->get('translator')->trans('participation.successful', [], 'messages');
-            $this->addFlashMessage($message, 'success');
         } catch (Exception $error) {
             $entityManager->getConnection()->rollBack();
-
             throw new ToggleParticipationNotAllowedException($error->getMessage());
         }
     }

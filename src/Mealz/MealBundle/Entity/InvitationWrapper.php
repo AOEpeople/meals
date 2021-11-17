@@ -1,13 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\MealBundle\Entity;
 
 use App\Mealz\UserBundle\Entity\Profile;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * Class InvitationWrapper.
- */
 class InvitationWrapper
 {
     /**
@@ -16,6 +15,8 @@ class InvitationWrapper
      * @var Day
      */
     private $day;
+
+    private ?Slot $slot = null;
 
     /**
      * @Assert\Valid
@@ -38,6 +39,16 @@ class InvitationWrapper
     public function setDay($day): void
     {
         $this->day = $day;
+    }
+
+    public function getSlot(): ?Slot
+    {
+        return $this->slot;
+    }
+
+    public function setSlot(Slot $slot): void
+    {
+        $this->slot = $slot;
     }
 
     /**

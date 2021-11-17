@@ -64,10 +64,7 @@ class LoadDishes extends Fixture implements OrderedFixtureInterface
         return self::ORDER_NUMBER;
     }
 
-    /**
-     * add the dishes
-     */
-    protected function addDish($titleEN,$titleDE): void
+    protected function addDish(string $titleEN, string $titleDE): void
     {
         $dish = new Dish();
         $dish->setPrice(3.60);

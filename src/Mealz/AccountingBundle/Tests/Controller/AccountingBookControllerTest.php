@@ -68,19 +68,19 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
         // test for admins
         $crawler = $this->client->request('GET', '/accounting/book');
         $node = $crawler->filterXPath('//table[@id="accounting-book-table"]');
-        $this->assertFalse($node->count() > 0, "Accounting book NOT accessable by Admins(ROLE_KITCHEN_STAFF)");
+        $this->assertFalse($node->count() > 0, "Accounting book NOT accessible by Admins(ROLE_KITCHEN_STAFF)");
 
         // test for no or non-admin user
         $this->loginAs(self::USER_STANDARD);
         $crawler = $this->client->request('GET', '/accounting/book');
         $node = $crawler->filterXPath('//table[@id="accounting-book-table"]');
-        $this->assertFalse($node->count() > 0, "Accounting book accessable by Non-Admins");
+        $this->assertFalse($node->count() > 0, "Accounting book accessible by Non-Admins");
 
-        // test for fincance admins
+        // test for finance admins
         $this->loginAs(self::USER_FINANCE);
         $crawler = $this->client->request('GET', '/accounting/book');
         $node = $crawler->filterXPath('//table[@id="accounting-book-table"]');
-        $this->assertTrue($node->count() > 0, "Accounting book NOT accessable by Admins(ROLE_KITCHEN_STAFF)");
+        $this->assertTrue($node->count() > 0, "Accounting book NOT accessible by Admins(ROLE_KITCHEN_STAFF)");
     }
 
     /**
@@ -111,10 +111,10 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * Test if sum of all transactions for the last month is displayed in a seperate row at the end of the
+     * Test if sum of all transactions for the last month is displayed in a separate row at the end of the
      * listed transactions.
      */
-    public function testTotalAmountOfTransactionsDisplayedInSeperateRow(): void
+    public function testTotalAmountOfTransactionsDisplayedInSeparateRow(): void
     {
         $this->loginAs(self::USER_FINANCE);
 
@@ -135,7 +135,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * Test users are orderd by lastname, firstname and listed this way:
+     * Test users are ordered by lastname, firstname and listed this way:
      * lastname, firstname      amount
      */
     public function testDisplayUsersOrderedByLastnameAndFirstname(): void
@@ -197,8 +197,6 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
 
     /**
      * Tests if finance staff can access the transaction export page and admins and default users can not
-     *
-     * @test
      */
     public function testAccessForFinanceOnly(): void
     {
@@ -258,8 +256,6 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
     /**
      * Test if PayPal payments are shown on the finances page
      *
-     * @test
-     *
      * @throws Exception
      */
     public function testOnlyCashPaymentsListed(): void
@@ -290,8 +286,6 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
 
     /**
      * Tests if the daily closing amount is calculated correctly
-     *
-     * @test
      *
      * @throws Exception
      */

@@ -25,10 +25,10 @@ class AccountingAdminController extends BaseController
         return $this->redirect($this->generateUrl('MealzAccountingBundle_Accounting_Admin', ['profile' => $profileId]));
     }
 
-    public function indexAction($profile): Response
+    public function indexAction($profileId): Response
     {
         $this->assureKitchenStaff();
-        $profile = $this->getProfileById($profile);
+        $profile = $this->getProfileById($profileId);
 
         return $this->render('MealzAccountingBundle:Accounting/Admin:index.html.twig', array(
             'profile' => $profile,
@@ -38,10 +38,10 @@ class AccountingAdminController extends BaseController
         ));
     }
 
-    public function listParticipationAction($profile, Request $request): Response
+    public function listParticipationAction($profileId, Request $request): Response
     {
         $this->assureKitchenStaff();
-        $profile = $this->getProfileById($profile);
+        $profile = $this->getProfileById($profileId);
         $form = $this->generateTimePeriodForm();
         $formView = $form->createView();
 
@@ -67,10 +67,10 @@ class AccountingAdminController extends BaseController
         ));
     }
 
-    public function listTransactionAction($profile, Request $request): Response
+    public function listTransactionAction($profileId, Request $request): Response
     {
         $this->assureKitchenStaff();
-        $profile = $this->getProfileById($profile);
+        $profile = $this->getProfileById($profileId);
 
         $form = $this->generateTimePeriodForm();
         $formView = $form->createView();
@@ -122,11 +122,7 @@ class AccountingAdminController extends BaseController
         return $this->get('mealz_accounting.wallet');
     }
 
-    /**
-     * @param Profile $profileId
-     * @return Profile
-     */
-    private function getProfileById($profileId)
+    private function getProfileById(string $profileId): Profile
     {
         try {
             return $this->getDoctrine()->getManager()->find(Profile::class, $profileId);

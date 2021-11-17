@@ -41,9 +41,8 @@ class PrintControllerTest extends AbstractControllerTestCase
 
     /**
      * Check that guest participants are not listed in the cost sheet.
-     * @test
      */
-    public function guestDoesNotAppearInCostListing(): void
+    public function testGuestDoesNotAppearInCostListing(): void
     {
         $time = time();
 

@@ -131,11 +131,7 @@ class CostSheetController extends BaseController
         return $this->list();
     }
 
-    /**
-     * @param String $hash
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function renderConfirmButton($hash)
+    public function renderConfirmButton(string $hash): Response
     {
         $profile = null;
         $profileRepository = $this->getDoctrine()->getRepository(Profile::class);
@@ -177,7 +173,7 @@ class CostSheetController extends BaseController
             $entityManager->flush();
 
             /**
-             * for devbox situation, if you are not loged in with fake-login
+             * for devbox situation, if you are not logged in with fake-login
              * With Keycloak this if condition is not needed anymore
              */
             if ($this->getProfile() !== null) {

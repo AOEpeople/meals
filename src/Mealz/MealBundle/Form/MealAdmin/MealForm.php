@@ -4,7 +4,6 @@ namespace App\Mealz\MealBundle\Form\MealAdmin;
 
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
-use App\Mealz\MealBundle\Entity\DishRepository;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Form\Type\EntityHiddenType;
 use Symfony\Component\Form\AbstractType;
@@ -16,17 +15,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MealForm extends AbstractType
 {
-    protected DishRepository $dishRepository;
-
-    public function __construct(DishRepository $dishRepository)
-    {
-        $this->dishRepository = $dishRepository;
-    }
-
     /**
      * @inheritDoc
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {

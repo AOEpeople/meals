@@ -19,7 +19,7 @@ class DishRepository extends LocalizedRepository
     );
 
     /**
-     * Return a querybuilder that fetches all dish that have NO variations
+     * Return a query builder that fetches all dish that have NO variations
      * and all variations without their dishes
      *
      * @return QueryBuilder
@@ -54,12 +54,6 @@ class DishRepository extends LocalizedRepository
         $options = array_merge($this->defaultOptions, $options);
 
         $query = $this->createQueryBuilder('d');
-
-        // SELECT
-        $select = 'd';
-        if ($options['load_category'] === true) {
-            $select .= ',c';
-        }
 
         // JOIN
         if ($options['load_category'] === true) {

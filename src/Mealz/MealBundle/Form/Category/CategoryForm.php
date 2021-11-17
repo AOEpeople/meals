@@ -21,7 +21,7 @@ class CategoryForm extends AbstractType
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add(
@@ -76,7 +76,7 @@ class CategoryForm extends AbstractType
      *
      * @return string The name of this type
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'category';
     }

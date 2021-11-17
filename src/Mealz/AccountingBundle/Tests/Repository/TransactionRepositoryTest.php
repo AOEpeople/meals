@@ -13,6 +13,7 @@ use App\Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadParticipants;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
 use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
+use Exception;
 
 /**
  * Class TransactionRepositoryTest
@@ -20,12 +21,9 @@ use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
  */
 class TransactionRepositoryTest extends AbstractDatabaseTestCase
 {
-    protected TransactionRepository $transactionRepo;
+    private TransactionRepository $transactionRepo;
 
-    /**
-     * @var String
-     */
-    protected $locale;
+    protected string $locale;
 
     /**
      * prepare test environment
@@ -58,7 +56,7 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
      */
     public function testTransactionsSummedUpByLastMonth(): void
     {
-        // create several temporary transactions for a testuser
+        // create several temporary transactions for a test user
         $tempTransactions = $this->createTemporaryTransactions();
 
         // Get first and last day of previous month
@@ -68,7 +66,7 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
         $maxDate->setTime(23, 59, 59);
 
         // make temporary transactions are available
-        $this->assertTrue(count($tempTransactions) > 0);
+        $this->assertNotEmpty($tempTransactions);
         $firstTransaction = array_values($tempTransactions)[0];
         $this->assertTrue($firstTransaction instanceof Transaction);
 
@@ -93,8 +91,9 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
      *
      * @param string $month
      * @return DateTime
+     * @throws Exception
      */
-    public function getRandomDateTime($month = 'this')
+    private function getRandomDateTime($month = 'this'): DateTime
     {
         $dateTime = new DateTime();
         $subDays = ($dateTime->format("d") > 15) ? 36 : 20;
@@ -116,10 +115,10 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
     /**
      * Sum up the amounts of transactions with a date laying in the last month
      *
-     * @param $transactionsArray    An array holding Transaction objects
+     * @param $transactionsArray array holding Transaction objects
      * @return float
      */
-    protected function getAssumedTotalAmountForTransactionsFromLastMonth($transactionsArray)
+    private function getAssumedTotalAmountForTransactionsFromLastMonth($transactionsArray): float
     {
         $result = 0;
         $transactions = array_filter($transactionsArray, ['self', 'isTransactionFromLastMonth']);
@@ -133,14 +132,15 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
     /**
      * Create and persist a bunch of transactions and return them in an array
      *
-     * @return array    Array of transactions
+     * @return array of transactions
+     * @throws Exception
      */
-    protected function createTemporaryTransactions()
+    private function createTemporaryTransactions(): array
     {
-        // create a testuser...
+        // create a test user...
         $testUser = $this->createProfile();
 
-        // create 12 transactions for several periods of time and assign it to testuser
+        // create 12 transactions for several periods of time and assign it to test user
         $transactions = array();
         for ($i = 1; $i < 12; $i++) {
             $transaction = new Transaction();
@@ -159,7 +159,6 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
     }
 
     /**
-     * HELPERFUNCTION
      * Filter transactions from an array that date is NOT within the last month
      *
      * @param $item     Transaction object
@@ -169,7 +168,7 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
      *
      * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      */
-    private function isTransactionFromLastMonth($item)
+    private function isTransactionFromLastMonth($item): bool
     {
         $firstDayLastMonth = new DateTime('first day of last month');
         $month = $firstDayLastMonth->format('n');

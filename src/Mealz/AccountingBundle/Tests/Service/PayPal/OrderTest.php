@@ -10,10 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class OrderTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function instantiate(): void
+    public function testInstantiate(): void
     {
         $now = new DateTime();
         $order = new Order('#1', 10.35, $now, 'APPROVED');
@@ -29,10 +26,7 @@ class OrderTest extends TestCase
         $this->assertEquals($origDateTime, $order->getDateTime());
     }
 
-    /**
-     * @test
-     */
-    public function isCompleted(): void
+    public function testIsCompleted(): void
     {
         $order = new Order('#1', 10.35, new DateTime(), '');
         $this->assertFalse($order->isCompleted());

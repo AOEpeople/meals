@@ -35,10 +35,10 @@ run-lint-sass:
 	ddev exec yarn --cwd src/Resources lint:sass
 
 run-phpmd:
-	ddev exec vendor/bin/phpmd src/Mealz text ./phpmd.xml --baseline-file ./phpmd.baseline.xml --exclude */Tests/*
+	ddev exec vendor/bin/phpmd src/Mealz text ./phpmd.xml --baseline-file ./phpmd.baseline.xml
 
 run-psalm:
-	ddev exec vendor/bin/psalm
+	ddev exec vendor/bin/psalm --use-baseline=./psalm.baseline.xml
 
 update-schema:
 	ddev exec php bin/console doctrine:schema:update --force

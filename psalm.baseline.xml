@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="4.12.0@e42bc4a23f67acba28a23bb09c348e2ff38a1d87">
+  <file src="src/Mealz/AccountingBundle/Controller/AccountingAdminController.php">
+    <InvalidNullableReturnType occurrences="1">
+      <code>Profile</code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement occurrences="1">
+      <code>$this-&gt;getDoctrine()-&gt;getManager()-&gt;find(Profile::class, $profileId)</code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Mealz/AccountingBundle/Controller/AccountingBookController.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>0</code>
+    </InvalidScalarArgument>
+    <TooManyArguments occurrences="1">
+      <code>create</code>
+    </TooManyArguments>
+    <UndefinedConstant occurrences="3">
+      <code>PDF_PAGE_FORMAT</code>
+      <code>PDF_PAGE_ORIENTATION</code>
+      <code>PDF_UNIT</code>
+    </UndefinedConstant>
+  </file>
+  <file src="src/Mealz/AccountingBundle/Controller/CostSheetController.php">
+    <InvalidArgument occurrences="3">
+      <code>$receiver</code>
+      <code>$secret</code>
+      <code>$this-&gt;getParameter('app.base_url')</code>
+    </InvalidArgument>
+  </file>
+  <file src="src/Mealz/AccountingBundle/Controller/Payment/CashController.php">
+    <InvalidDocblock occurrences="1"/>
+    <InvalidOperand occurrences="1">
+      <code>$transaction-&gt;getAmount()</code>
+    </InvalidOperand>
+    <MissingDocblockType occurrences="1">
+      <code>$participation</code>
+    </MissingDocblockType>
+  </file>
+  <file src="src/Mealz/AccountingBundle/Entity/Transaction.php">
+    <InvalidReturnStatement occurrences="2">
+      <code>$this-&gt;amount</code>
+      <code>$this-&gt;id</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="2">
+      <code>string</code>
+      <code>string</code>
+    </InvalidReturnType>
+  </file>
+  <file src="src/Mealz/AccountingBundle/Entity/TransactionRepository.php">
+    <UndefinedDocblockClass occurrences="1">
+      <code>\Doctrine\DBAL\DBALException</code>
+    </UndefinedDocblockClass>
+  </file>
+  <file src="src/Mealz/AccountingBundle/ParticipantList/ParticipantList.php">
+    <InvalidReturnStatement occurrences="1">
+      <code>$price</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="1">
+      <code>int</code>
+    </InvalidReturnType>
+  </file>
+  <file src="src/Mealz/AccountingBundle/Service/Wallet.php">
+    <InvalidReturnStatement occurrences="1">
+      <code>bcsub($transactions, $costs, 2)</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="1">
+      <code>float</code>
+    </InvalidReturnType>
+    <InvalidScalarArgument occurrences="2">
+      <code>$costs</code>
+      <code>$transactions</code>
+    </InvalidScalarArgument>
+  </file>
+  <file src="src/Mealz/AccountingBundle/Tests/Controller/AccountingBookControllerTest.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>0</code>
+    </InvalidScalarArgument>
+    <UndefinedInterfaceMethod occurrences="4">
+      <code>clear</code>
+      <code>clear</code>
+      <code>clear</code>
+      <code>findUserDataAndTransactionAmountForGivenPeriod</code>
+    </UndefinedInterfaceMethod>
+  </file>
+  <file src="src/Mealz/AccountingBundle/Tests/Controller/CostSheetControllerTest.php">
+    <UndefinedInterfaceMethod occurrences="2">
+      <code>getTotalAmount</code>
+      <code>getTotalAmount</code>
+    </UndefinedInterfaceMethod>
+  </file>
+  <file src="src/Mealz/AccountingBundle/Tests/Service/PayPal/PayPalServiceTest.php">
+    <TooManyArguments occurrences="3">
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+    </TooManyArguments>
+  </file>
+  <file src="src/Mealz/AccountingBundle/Tests/Service/TransactionServiceTest.php">
+    <TooManyArguments occurrences="2">
+      <code>willReturn</code>
+      <code>willReturn</code>
+    </TooManyArguments>
+  </file>
+  <file src="src/Mealz/MealBundle/Controller/BaseController.php">
+    <InvalidParamDefault occurrences="1">
+      <code>bool</code>
+    </InvalidParamDefault>
+    <InvalidScalarArgument occurrences="1">
+      <code>$referenceType</code>
+    </InvalidScalarArgument>
+  </file>
+  <file src="src/Mealz/MealBundle/Controller/BaseListController.php">
+    <FalsableReturnStatement occurrences="1">
+      <code>$renderedForm-&gt;getContent()</code>
+    </FalsableReturnStatement>
+  </file>
+  <file src="src/Mealz/MealBundle/Controller/MealAdminController.php">
+    <InvalidArgument occurrences="1">
+      <code>$dateTimeModifier</code>
+    </InvalidArgument>
+    <InvalidScalarArgument occurrences="4">
+      <code>$dateTime-&gt;format('W')</code>
+      <code>$dateTime-&gt;format('o')</code>
+      <code>$modifiedDateTime-&gt;format('W')</code>
+      <code>$modifiedDateTime-&gt;format('o')</code>
+    </InvalidScalarArgument>
+    <UndefinedInterfaceMethod occurrences="3">
+      <code>getSortedDishesQueryBuilder</code>
+      <code>isClicked</code>
+      <code>isClicked</code>
+    </UndefinedInterfaceMethod>
+  </file>
+  <file src="src/Mealz/MealBundle/Controller/MealController.php">
+    <ImplicitToStringCast occurrences="2">
+      <code>$error</code>
+      <code>string</code>
+    </ImplicitToStringCast>
+    <InvalidArgument occurrences="1">
+      <code>$error</code>
+    </InvalidArgument>
+    <InvalidReturnStatement occurrences="4">
+      <code>$this-&gt;render('base.html.twig')</code>
+      <code>$this-&gt;renderGuestForm($form)</code>
+      <code>$this-&gt;renderGuestForm($form)</code>
+      <code>$this-&gt;renderGuestForm($form)</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="1">
+      <code>Week</code>
+    </InvalidReturnType>
+    <InvalidScalarArgument occurrences="2">
+      <code>$dateTime-&gt;format('W')</code>
+      <code>$dateTime-&gt;format('o')</code>
+    </InvalidScalarArgument>
+    <TooFewArguments occurrences="1">
+      <code>new Participant()</code>
+    </TooFewArguments>
+    <UndefinedInterfaceMethod occurrences="7">
+      <code>getConnection</code>
+      <code>getConnection</code>
+      <code>getConnection</code>
+      <code>trans</code>
+      <code>trans</code>
+      <code>trans</code>
+      <code>trans</code>
+    </UndefinedInterfaceMethod>
+  </file>
+  <file src="src/Mealz/MealBundle/Controller/ParticipantController.php">
+    <TypeDoesNotContainNull occurrences="1">
+      <code>$participant-&gt;getMeal() === null</code>
+    </TypeDoesNotContainNull>
+  </file>
+  <file src="src/Mealz/MealBundle/Entity/Dish.php">
+    <InvalidNullableReturnType occurrences="1">
+      <code>string</code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement occurrences="1">
+      <code>$this-&gt;title_de</code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Mealz/MealBundle/Entity/Meal.php">
+    <InvalidReturnStatement occurrences="1">
+      <code>$participants</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="1">
+      <code>Participant|null</code>
+    </InvalidReturnType>
+  </file>
+  <file src="src/Mealz/MealBundle/Entity/ParticipantRepository.php">
+    <TooManyArguments occurrences="2">
+      <code>orX</code>
+      <code>where</code>
+    </TooManyArguments>
+  </file>
+  <file src="src/Mealz/MealBundle/Form/DataTransformer/EntityToIdTransformer.php">
+    <ParamNameMismatch occurrences="2">
+      <code>$entity</code>
+      <code>$identifier</code>
+    </ParamNameMismatch>
+  </file>
+  <file src="src/Mealz/MealBundle/Form/DataTransformer/ProfileToStringTransformer.php">
+    <MoreSpecificImplementedParamType occurrences="1">
+      <code>$value</code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="src/Mealz/MealBundle/Form/Type/DishSelectorCreatorType.php">
+    <UndefinedClass occurrences="1">
+      <code>DishStringToValuesTransformer</code>
+    </UndefinedClass>
+  </file>
+  <file src="src/Mealz/MealBundle/Service/Doorman.php">
+    <UndefinedInterfaceMethod occurrences="2">
+      <code>getProfile</code>
+      <code>getProfile</code>
+    </UndefinedInterfaceMethod>
+  </file>
+  <file src="src/Mealz/MealBundle/Service/Link.php">
+    <InvalidNullableReturnType occurrences="1">
+      <code>string</code>
+    </InvalidNullableReturnType>
+    <NullArgument occurrences="1">
+      <code>$action</code>
+    </NullArgument>
+    <RedundantCondition occurrences="3">
+      <code>$action === 'edit'</code>
+      <code>$action === 'edit'</code>
+      <code>$action === 'show'</code>
+    </RedundantCondition>
+    <TypeDoesNotContainType occurrences="11">
+      <code>$action === 'accept_offer'</code>
+      <code>$action === 'confirm'</code>
+      <code>$action === 'delete'</code>
+      <code>$action === 'delete'</code>
+      <code>$action === 'delete'</code>
+      <code>$action === 'delete'</code>
+      <code>$action === 'join'</code>
+      <code>$action === 'join_someone'</code>
+      <code>$action === 'newParticipant'</code>
+      <code>$action === 'swap'</code>
+      <code>$action === 'unswap'</code>
+    </TypeDoesNotContainType>
+  </file>
+  <file src="src/Mealz/MealBundle/Service/Workday.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$year</code>
+    </InvalidScalarArgument>
+  </file>
+  <file src="src/Mealz/MealBundle/Tests/AbstractDatabaseTestCase.php">
+    <InvalidNullableReturnType occurrences="1">
+      <code>Registry</code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement occurrences="1">
+      <code>static::$kernel-&gt;getContainer()-&gt;get('doctrine')</code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Mealz/MealBundle/Tests/Controller/AbstractControllerTestCase.php">
+    <ImplicitToStringCast occurrences="1">
+      <code>$user-&gt;getRoles()</code>
+    </ImplicitToStringCast>
+  </file>
+  <file src="src/Mealz/MealBundle/Tests/Controller/CategoryControllerTest.php">
+    <InvalidArrayOffset occurrences="1">
+      <code>$form['category']['category']</code>
+    </InvalidArrayOffset>
+  </file>
+  <file src="src/Mealz/MealBundle/Tests/Controller/DishVariationControllerTest.php">
+    <InvalidArgument occurrences="1">
+      <code>$host</code>
+    </InvalidArgument>
+    <InvalidNullableReturnType occurrences="1">
+      <code>DishVariation</code>
+    </InvalidNullableReturnType>
+    <InvalidOperand occurrences="1">
+      <code>$dishId</code>
+    </InvalidOperand>
+    <InvalidReturnStatement occurrences="2">
+      <code>$dishId</code>
+      <code>$dishId</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="2">
+      <code>Crawler</code>
+      <code>bool | integer</code>
+    </InvalidReturnType>
+    <NullableReturnStatement occurrences="1">
+      <code>$dishVariation</code>
+    </NullableReturnStatement>
+    <RedundantCondition occurrences="3">
+      <code>count($result)</code>
+      <code>is_array($result)</code>
+      <code>is_array($result) &amp;&amp; count($result)</code>
+    </RedundantCondition>
+    <TypeDoesNotContainType occurrences="1">
+      <code>count($result) === false</code>
+    </TypeDoesNotContainType>
+  </file>
+  <file src="src/Mealz/MealBundle/Tests/Controller/MealControllerTest.php">
+    <UndefinedInterfaceMethod occurrences="1">
+      <code>getOutdatedMeals</code>
+    </UndefinedInterfaceMethod>
+    <UndefinedMethod occurrences="2">
+      <code>$form['invitation_form[day][meals]']</code>
+      <code>$meal</code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Mealz/MealBundle/Tests/Controller/ParticipantControllerTest.php">
+    <UndefinedInterfaceMethod occurrences="1">
+      <code>getOutdatedMeals</code>
+    </UndefinedInterfaceMethod>
+  </file>
+  <file src="src/Mealz/MealBundle/Tests/Service/ParticipationServiceTest.php">
+    <TooManyArguments occurrences="2">
+      <code>willReturn</code>
+      <code>willReturn</code>
+    </TooManyArguments>
+  </file>
+  <file src="src/Mealz/MealBundle/Twig/Extension/Doorman.php">
+    <LessSpecificImplementedReturnType occurrences="1">
+      <code>array</code>
+    </LessSpecificImplementedReturnType>
+    <TooManyArguments occurrences="1">
+      <code>isOfferAvailable</code>
+    </TooManyArguments>
+  </file>
+  <file src="src/Mealz/MealBundle/Twig/Extension/Variation.php">
+    <InternalMethod occurrences="1">
+      <code>getGlobals</code>
+    </InternalMethod>
+    <UndefinedInterfaceMethod occurrences="1">
+      <code>countNumberDishWasTaken</code>
+    </UndefinedInterfaceMethod>
+  </file>
+  <file src="src/Mealz/MealBundle/Validator/Constraints/DishConstraintValidator.php">
+    <ParamNameMismatch occurrences="1">
+      <code>$entity</code>
+    </ParamNameMismatch>
+    <TooManyArguments occurrences="1">
+      <code>flush</code>
+    </TooManyArguments>
+    <UndefinedMagicPropertyFetch occurrences="1">
+      <code>$constraint-&gt;message</code>
+    </UndefinedMagicPropertyFetch>
+  </file>
+  <file src="src/Mealz/UserBundle/DataFixtures/ORM/LoadAnonymousUsers.php">
+    <UndefinedInterfaceMethod occurrences="2">
+      <code>getConnection</code>
+      <code>getConnection</code>
+    </UndefinedInterfaceMethod>
+  </file>
+  <file src="src/Mealz/UserBundle/Tests/Service/OAuthProviderTest.php">
+    <TooManyArguments occurrences="4">
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+      <code>willReturn</code>
+    </TooManyArguments>
+  </file>
+  <file src="src/Resources/node_modules/flatted/php/flatted.php">
+    <InvalidArgument occurrences="2">
+      <code>$value</code>
+      <code>$value</code>
+    </InvalidArgument>
+    <UndefinedPropertyFetch occurrences="2">
+      <code>$value-&gt;value</code>
+      <code>$value-&gt;value</code>
+    </UndefinedPropertyFetch>
+    <UndefinedThisPropertyAssignment occurrences="1">
+      <code>$this-&gt;value</code>
+    </UndefinedThisPropertyAssignment>
+  </file>
+</files>

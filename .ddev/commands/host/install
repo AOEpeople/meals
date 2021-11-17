@@ -34,8 +34,9 @@ ddev mysql -uroot -proot <<-EOQ
   GRANT ALL ON ${APP_DB}_test.* TO "${APP_DB}"@'%' IDENTIFIED BY "${APP_DB}";
 EOQ
 
-# generate DB schema for test environment
-ddev exec bin/console doctrine:schema:update --env=test --force --no-interaction
+# fully drop (if exists) and create application DB schema for test environment
+ddev exec bin/console doctrine:schema:drop --env=test --full-database --force --no-interaction
+ddev exec bin/console doctrine:migrations:migrate --env=test --no-interaction
 
 #########################
 # Frontend Setup

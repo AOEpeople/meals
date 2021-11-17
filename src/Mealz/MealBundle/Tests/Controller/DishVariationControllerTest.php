@@ -35,10 +35,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         $this->loginAs(self::USER_KITCHEN_STAFF);
     }
 
-    /**
-     * @test
-     */
-    public function newForm(): void
+    public function testNewForm(): void
     {
         /** @var Dish $dish */
         $dish = $this->getDish();
@@ -63,10 +60,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         $this->assertTrue($inputEnDescNode->count() === 1);
     }
 
-    /**
-     * @test
-     */
-    public function createDishVariation(): void
+    public function testCreateDishVariation(): void
     {
         /** @var Dish $dish */
         $dish = $this->getDish(null, true);
@@ -82,16 +76,12 @@ class DishVariationControllerTest extends AbstractControllerTestCase
 
         $this->assertTrue($this->client->getResponse()->isRedirect('/dish'));
 
-        /** @var DishVariation $updatedDishVariation */
         $updatedDishVariation = $this->getDishVariationBy('title_de', 'new dish variation [de]');
         $this->assertEquals('new dish variation [de]', $updatedDishVariation->getTitleDe());
         $this->assertEquals('new dish variation [en]', $updatedDishVariation->getTitleEn());
     }
 
-    /**
-     * @test
-     */
-    public function editForm(): void
+    public function testEditForm(): void
     {
         /** @var Dish $dish */
         $dish = $this->getDish(null, true);
@@ -117,10 +107,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         $this->assertTrue($inputEnDescNode->count() === 1);
     }
 
-    /**
-     * @test
-     */
-    public function updateDishVariation(): void
+    public function testUpdateDishVariation(): void
     {
         /** @var Dish $dish */
         $dish = $this->getDish(null, true);
@@ -137,16 +124,12 @@ class DishVariationControllerTest extends AbstractControllerTestCase
 
         $this->assertTrue($this->client->getResponse()->isRedirect('/dish'));
 
-        /** @var DishVariation $updatedDishVariation */
         $updatedDishVariation = $this->getDishVariationBy('id', $dishVariationId);
         $this->assertEquals('dish variation [de]', $updatedDishVariation->getTitleDe());
         $this->assertEquals('dish variation [en]', $updatedDishVariation->getTitleEn());
     }
 
-    /**
-     * @test
-     */
-    public function deleteDishVariation(): void
+    public function testDeleteDishVariation(): void
     {
         /** @var Dish $dish */
         $dish = $this->getDish(null, true);
@@ -165,10 +148,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         }
     }
 
-    /**
-     * @test
-     */
-    public function deleteNonExistingDishVariation(): void
+    public function testDeleteNonExistingDishVariation(): void
     {
         $this->client->request('GET', '/dish/variation/1234097354/delete');
         $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
@@ -316,10 +296,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
     }
 
-    /**
-     * @return Crawler
-     */
-    protected function getRawResponseCrawler()
+    protected function getRawResponseCrawler(): Crawler
     {
         $content = $this->client->getResponse()->getContent();
         $hostUrl = $this->getHostUrl();
@@ -331,7 +308,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
      * @param $link Link
      * @return bool | integer $dishId
      */
-    protected function grepDishIdFromUri($link)
+    private function grepDishIdFromUri(Link $link)
     {
         preg_match("|(?<=/)(\d+)(?=/)|", $link->getUri(), $match);
         $dishId = (count($match)) ? $match[0] : false;
@@ -343,7 +320,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
      * @param string $type This function either returns a Crawler('crawler') object or an Id('id'). Default is crawler of a add variation form.
      * @return Crawler
      */
-    protected function getHelperObject($type = 'crawler')
+    private function getHelperObject($type = 'crawler')
     {
         // click add new variation button
         $crawler = $this->client->request('GET', '/dish');
@@ -435,10 +412,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         return $dishVariation;
     }
 
-    /**
-     * @return string
-     */
-    private function getHostUrl()
+    private function getHostUrl(): string
     {
         $host = 'http://localhost/app.php/';
         if (self::$kernel->getContainer()->hasParameter('mealz.host')) {

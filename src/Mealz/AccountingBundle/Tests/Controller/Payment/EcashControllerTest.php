@@ -63,8 +63,6 @@ class EcashControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * @test
-     *
      * @testWith ["DELETE"]
      *           ["GET"]
      *           ["HEAD"]
@@ -72,20 +70,18 @@ class EcashControllerTest extends AbstractControllerTestCase
      *
      * @testdox Calling postPayment action with $httpMethod returns 404 HTTP response.
      */
-    public function postPaymentFailureInvalidMethod(string $httpMethod): void
+    public function testPostPaymentFailureInvalidMethod(string $httpMethod): void
     {
         $this->client->request('/payment/ecash/form/submit', $httpMethod);
         self::assertResponseStatusCodeSame(404);
     }
 
     /**
-     * @test
-     *
      * @dataProvider createTxExceptionProvider
      *
      * @testdox Failure to create a transaction due to $_dataName results in $expRespStatusCode HTTP response.
      */
-    public function postPaymentFailureTransactionCreateError(string $exception, int $expRespStatusCode): void
+    public function testPostPaymentFailureTransactionCreateError(string $exception, int $expRespStatusCode): void
     {
         $txServiceProphet = $this->prophesize(TransactionService::class);
         $txServiceProphet->createFromRequest(Argument::type(Request::class))->willThrow($exception);
@@ -110,11 +106,9 @@ class EcashControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * @test
-     *
      * @testdox Successful execution of postPayment action returns 200 HTTP response with transaction history page URL as content.
      */
-    public function postPaymentSuccess(): void
+    public function testPostPaymentSuccess(): void
     {
         $request = Request::create('', 'POST');
         $txServiceProphet = $this->prophesize(TransactionService::class);

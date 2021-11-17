@@ -213,7 +213,21 @@ jobs:
           coverage: none
           tools: phpmd
       - name: Run PHPMD
-        run: phpmd src github ./phpmd.xml --baseline-file ./phpmd.baseline.xml --exclude */Tests/*
+        run: phpmd src github ./phpmd.xml --baseline-file ./phpmd.baseline.xml
+
+  psalm:
+    name: Psalm
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup PHP environment
+        uses: shivammathur/setup-php@v2
+        with:
+          coverage: none
+          tools: psalm
+      - name: Run Psalm
+        run: psalm src github ./psalm.xml --use-baseline=./psalm.baseline.xml
 
   publish:
     name: Publish

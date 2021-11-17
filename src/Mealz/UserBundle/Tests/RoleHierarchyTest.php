@@ -17,11 +17,9 @@ class RoleHierarchyTest extends KernelTestCase
     }
 
     /**
-     * @test
-     *
      * @testdox Admin role contains kitchen-staff, finance and user roles.
      */
-    public function adminRole(): void
+    public function testAdminRole(): void
     {
         $roleHierarchyService = self::$container->get('security.role_hierarchy');
         $roleHierarchy = $roleHierarchyService->getReachableRoleNames(['ROLE_ADMIN']);
@@ -34,11 +32,9 @@ class RoleHierarchyTest extends KernelTestCase
     }
 
     /**
-     * @test
-     *
      * @testdox Kitchen-staff role contains user role.
      */
-    public function kitchenStaffRole(): void
+    public function testKitchenStaffRole(): void
     {
         $roleHierarchyService = self::$container->get('security.role_hierarchy');
         $roleHierarchy = $roleHierarchyService->getReachableRoleNames(['ROLE_KITCHEN_STAFF']);
@@ -49,11 +45,9 @@ class RoleHierarchyTest extends KernelTestCase
     }
 
     /**
-     * @test
-     *
      * @testdox Finance role contains user role.
      */
-    public function financeRole(): void
+    public function testFinanceRole(): void
     {
         $roleHierarchyService = self::$container->get('security.role_hierarchy');
         $roleHierarchy = $roleHierarchyService->getReachableRoleNames(['ROLE_FINANCE']);

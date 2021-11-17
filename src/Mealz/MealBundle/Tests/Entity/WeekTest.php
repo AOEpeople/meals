@@ -11,11 +11,9 @@ use PHPUnit\Framework\TestCase;
 class WeekTest extends TestCase
 {
     /**
-     * @test
-     *
      * @testdox Week starts on Monday at 00:00:00.
      */
-    public function getStartTime(): void
+    public function testGetStartTime(): void
     {
         $now = new DateTime();
         $calWeek = (int) $now->format('W');
@@ -33,11 +31,9 @@ class WeekTest extends TestCase
     }
 
     /**
-     * @test
-     *
      * @testdox Week ends on Friday at 23:59:59.
      */
-    public function getEndTime(): void
+    public function testGetEndTime(): void
     {
         $now = new DateTime();
         $calWeek = (int) $now->format('W');

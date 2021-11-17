@@ -18,11 +18,9 @@ class PayPalServiceTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @test
-     *
      * @testdox PayPalService::getOrder() returns NULL if no order with given order-id exists.
      */
-    public function getOrderFailureOrderNotFound(): void
+    public function testGetOrderFailureOrderNotFound(): void
     {
         $response = new HttpResponse(404, [], []);
 
@@ -37,11 +35,9 @@ class PayPalServiceTest extends TestCase
     }
 
     /**
-     * @test
-     *
      * @testdox PayPalService::getOrder() throws RuntimeException if PayPal api replies with status code other than 200 or 404.
      */
-    public function getOrderFailureAPIResponseNotOkay(): void
+    public function testGetOrderFailureAPIResponseNotOkay(): void
     {
         $httpStatusCodes = array_merge(
             range(100, 103), range(201, 208), [226], range(300, 308),
@@ -68,11 +64,9 @@ class PayPalServiceTest extends TestCase
     }
 
     /**
-     * @test
-     *
      * @testdox PayPalService::getOrder() returns Order object on success.
      */
-    public function getOrderSuccess(): void
+    public function testGetOrderSuccess(): void
     {
         $orderID = '123';
         $orderAmount = 10.35;

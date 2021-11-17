@@ -19,8 +19,6 @@ class GuestInvitation
      * @var string
      * @ORM\Column(name="id", type="string")
      * @ORM\Id
-     *
-     * @SuppressWarnings(PHPMD.ShortVariable)
      */
     private $id;
 
@@ -62,8 +60,6 @@ class GuestInvitation
      * @param  string $id
      *
      * @return GuestInvitation
-     *
-     * @SuppressWarnings(PHPMD.ShortVariable)
      */
     public function setId($id)
     {

@@ -49,10 +49,8 @@ class MealControllerTest extends AbstractControllerTestCase
     /**
      * Tests the acceptOffer action (accepting a meal offer) in the meal controller.
      * First case: An user accepts an available offer.
-     *
-     * @test
      */
-    public function acceptAvailableOffer(): void
+    public function testAcceptAvailableOffer(): void
     {
         $this->loginAs(self::USER_STANDARD);
 
@@ -78,10 +76,8 @@ class MealControllerTest extends AbstractControllerTestCase
 
     /**
      * Second case: There are two offers and the user accepts one and automatically takes the one, that was offered earlier.
-     *
-     * @test
      */
-    public function acceptFirstOffer(): void
+    public function testAcceptFirstOffer(): void
     {
         $this->loginAs(self::USER_STANDARD);
 
@@ -123,10 +119,8 @@ class MealControllerTest extends AbstractControllerTestCase
 
     /**
      * Third case: An user tries to accept an outdated offer.
-     *
-     * @test
      */
-    public function acceptOutdatedOffer(): void
+    public function testAcceptOutdatedOffer(): void
     {
         $this->loginAs(self::USER_STANDARD);
 
@@ -154,10 +148,8 @@ class MealControllerTest extends AbstractControllerTestCase
      * If we can subscribe to all 3 of these options then you can select Dish with and without variations
      *
      * /menu/{date}/{dish}/join/{profile}
-     *
-     * @test
      */
-    public function joinAMealWithVariations(): void
+    public function testJoinAMealWithVariations(): void
     {
         // data provider method
         $dataProvider = $this->getJoinAMealData();
@@ -189,7 +181,7 @@ class MealControllerTest extends AbstractControllerTestCase
 
                     break;
                 }
-                $this->assertTrue(false);
+                $this->fail();
             }
         }
     }
@@ -200,7 +192,7 @@ class MealControllerTest extends AbstractControllerTestCase
      *
      * @return array
      */
-    public function getJoinAMealData()
+    private function getJoinAMealData(): array
     {
         /** @var MealRepository $mealRepository */
         $mealRepository = $this->getDoctrine()->getRepository(Meal::class);
@@ -219,15 +211,13 @@ class MealControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * @test
-     *
      * @dataProvider getGuestEnrollmentData
      *
      * @param bool $enrollmentStatus Flag whether enrollment should be successful or not.
      *
      * @return void
      */
-    public function enrollAsGuest($firstName, $lastName, $company, $selectDish, $enrollmentStatus)
+    public function testEnrollAsGuest($firstName, $lastName, $company, $selectDish, $enrollmentStatus)
     {
         $userProfile = $this->getUserProfile(self::USER_STANDARD);
         $meal = $this->getAvailableMeal();
@@ -276,10 +266,7 @@ class MealControllerTest extends AbstractControllerTestCase
         }
     }
 
-    /**
-     * @return array
-     */
-    public function getGuestEnrollmentData()
+    public function getGuestEnrollmentData(): array
     {
         $time = time();
 
@@ -325,11 +312,9 @@ class MealControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * @test
-     *
      * @testdox A New dish is rendered with a "New meal" tag on home page.
      */
-    public function newMealFlag(): void
+    public function testNewMealFlag(): void
     {
         $dish = new Dish();
         $dish->setTitleEn('Very Yummy Dish');

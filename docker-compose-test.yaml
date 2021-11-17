@@ -43,10 +43,3 @@ services:
     ports:
       - 1025:1025 # smtp server
       - 8025:8025 # web ui
-
-  deployer:
-    image: "${IMAGE_DEPLOYER:-aoepeople/meals-deployer:edge}"
-    build:
-      context: docker/deployer
-    volumes:
-      - ~/.kube:/root/.kube

@@ -29,8 +29,10 @@ jobs:
           extensions: bcmath, calendar
       - name: Show modules
         run: php -m
-      - name: Run composer install
-        run: composer install -n --no-plugins --no-scripts --optimize-autoloader --prefer-dist
+      - name: Show content
+        run: ls -la
+      - name: Run composer update
+        run: composer update
       - name: Show modules
         run: php -m
       - name: Run Psalm

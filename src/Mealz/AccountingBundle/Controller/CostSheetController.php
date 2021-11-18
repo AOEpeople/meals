@@ -3,6 +3,8 @@
 namespace App\Mealz\AccountingBundle\Controller;
 
 use App\Mealz\AccountingBundle\Entity\Transaction;
+use App\Mealz\AccountingBundle\Event\ProfileSettlementEvent;
+use App\Mealz\AccountingBundle\Event\Subscriber\SettlementSubscriber;
 use App\Mealz\AccountingBundle\Service\Wallet;
 use App\Mealz\MealBundle\Controller\BaseController;
 use App\Mealz\MealBundle\Service\Mailer;
@@ -12,6 +14,7 @@ use DateTime;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class CostSheetController extends BaseController
 {
@@ -29,10 +32,10 @@ class CostSheetController extends BaseController
     {
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
-        $participantRepo = $this->getParticipantRepository();
         $transactionRepo = $this->getTransactionRepository();
         $transactionsPerUser = $transactionRepo->findUserDataAndTransactionAmountForGivenPeriod();
 
+        $participantRepo = $this->getParticipantRepository();
         $users = $participantRepo->findCostsGroupedByUserGroupedByMonth();
 
         // create column names
@@ -75,6 +78,36 @@ class CostSheetController extends BaseController
             'columnNames' => $columnNames,
             'users' => $users
         ));
+    }
+
+    public function hideUserRequest(Profile $profile) : Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
+
+        if (!$profile->isHidden()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $profile->setHidden(true);
+            $entityManager->persist($profile);
+            $entityManager->flush();
+
+            $message = $this->get('translator')->trans(
+                'payment.costsheet.hide_user.request.success',
+                ['%name%' => $profile->getFullName()],
+                'messages'
+            );
+            $severity = 'success';
+        } else {
+            $message = $this->get('translator')->trans(
+                'payment.costsheet.hide_user.request.info',
+                ['%name%' => $profile->getFullName()],
+                'messages'
+            );
+            $severity = 'info';
+        }
+
+        $this->addFlashMessage($message, $severity);
+
+        return $this->list();
     }
 
     private function getRemainingCosts($costs, &$transactions)
@@ -162,10 +195,14 @@ class CostSheetController extends BaseController
             $profile = $queryResult[0];
             $profile->setSettlementHash(null);
 
+            // Dispatch event
+            $dispatcher = new EventDispatcher();
+            $dispatcher->dispatch(new ProfileSettlementEvent($profile));
+
             $transaction = new Transaction();
             $transaction->setProfile($profile);
             $transaction->setDate(new DateTime());
-            $transaction->setAmount(-1 * abs((float) $wallet->getBalance($profile)));
+            $transaction->setAmount(-1 * abs((float)$wallet->getBalance($profile)));
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($profile);

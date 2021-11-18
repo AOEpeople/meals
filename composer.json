@@ -97,7 +97,11 @@
         ],
         "auto-scripts": {
             "cache:clear": "symfony-cmd"
-        }
+        },
+        "tests": [
+            "mkdir -p build/artifacts/qa/",
+            "vendor/bin/phpunit -d memory_limit=-1 -c tests/phpunit.xml.dist"
+        ]
     },
     "config": {
         "sort-packages": true

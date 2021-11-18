@@ -155,6 +155,7 @@ class ParticipantRepository extends EntityRepository
                 $result[$username] = array(
                     'name' => $cost['name'],
                     'firstName' => $cost['firstName'],
+                    'hidden' => $cost['hidden'],
                     'costs' => array($costByMonth),
                 );
             }
@@ -326,7 +327,7 @@ class ParticipantRepository extends EntityRepository
     private function findCostsPerMonthPerUser()
     {
         $queryBuilder = $this->createQueryBuilder('p');
-        $queryBuilder->select('u.username, u.name, u.firstName, SUBSTRING(m.dateTime, 1, 7) AS yearMonth, SUM(m.price) AS costs');
+        $queryBuilder->select('u.username, u.name, u.firstName, u.hidden, SUBSTRING(m.dateTime, 1, 7) AS yearMonth, SUM(m.price) AS costs');
         $queryBuilder->leftJoin('p.meal', 'm');
         $queryBuilder->leftJoin('p.profile', 'u');
         $queryBuilder->leftJoin('u.roles', 'r');
@@ -417,5 +418,34 @@ class ParticipantRepository extends EntityRepository
         }
 
         return $result;
+    }
+
+    /**
+     * Removes all future ordered meals for a given profile
+     */
+    public function removeFutureMealsByProfile(Profile $profile)
+    {
+        // Get tomorrow's date
+        $tomorrow = new DateTime('tomorrow');
+
+        // Get all participants ID's through a join onto meals table
+        $queryBuilder = $this->createQueryBuilder('p');
+        $queryBuilder->leftJoin('p.meal', 'm');
+        $queryBuilder->andWhere('p.profile = :profile');
+        $queryBuilder->setParameter('profile' , $profile->getUsername());
+        $queryBuilder->andWhere('m.dateTime >= :tomorrow');
+        $queryBuilder->setParameter('tomorrow', $tomorrow->format('Y-m-d H:i:s'));
+        $queryBuilder->select('p.id');
+        $meals = $queryBuilder->getQuery()->getArrayResult();
+
+        // Remove the ID's form the participants table
+        if(count($meals)) {
+            $this->createQueryBuilder('participant')
+                ->where('participant.id in (:ids)')
+                ->setParameter('ids', $meals)
+                ->delete()
+                ->getQuery()
+                ->execute();
+        }
     }
 }

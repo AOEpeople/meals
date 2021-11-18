@@ -45,6 +45,12 @@ $(document).ready(function () {
     mealz.initButtonHandling();
     mealz.copyToClipboard();
 
+    mealz.confirmAction(
+        '.hide-user-action',
+        'data-hide-user-confirmation',
+        '#hide-user-confirmation-continue'
+    );
+    mealz.initHiddenUsersToggler();
 
     /**
      * See: https://stackoverflow.com/questions/1537032/how-do-i-stop-jquery-appending-a-unique-id-to-scripts-called-via-ajax

@@ -3,36 +3,7 @@ version: '3'
 services:
   app:
     image: "${IMAGE_APP:-aoepeople/meals:edge}"
-    environment:
-      - APP_DEBUG=1
-      - DB_HOST=db
-      - DB_PORT=3306
-      - DB_NAME=db_test
-      - DB_USER=db
-      - DB_PASS=db
-      - DB_VERS=5.7
-    build:
-      context: .
-      cache_from:
-        - aoepeople/meals:edge
-    ports:
-      - "8033:80"
-    volumes:
-      - ./build:/var/www/html/build
-
-  dev:
-    image: "${IMAGE_DEV:-aoepeople/meals:edge-dev}"
-    build:
-      context: .
-      args:
-        BUILD_DEV: "true"
-      cache_from:
-        - aoepeople/meals:edge-dev
-    depends_on:
-      - db
-      - mail
-    ports:
-      - "8034:80"
+    command: composer run tests
     environment:
       - APP_DEBUG=1
       - APP_ENV=test
@@ -45,15 +16,17 @@ services:
       - SMTP_HOST=mail
       - SMTP_PORT=1025
       - SMTP_AUTH=off
+    depends_on:
+      - db
+    ports:
+      - "8033:80"
     volumes:
       - ./build:/var/www/html/build
 
   db:
-    image: "${IMAGE_DB:-aoepeople/meals-test-db:latest}"
+    image: "mysql:5.7"
     build:
       context: docker/db
-    volumes:
-      - /var/lib/mysql
     healthcheck:
       test: out=$$(mysqladmin ping -h localhost -P 3306 -u db --password=db 2>&1); echo $$out | grep 'mysqld is alive' || { echo $$out; exit 1; }
     environment:
@@ -61,18 +34,3 @@ services:
       - MYSQL_DATABASE=db_test
       - MYSQL_USER=db
       - MYSQL_PASSWORD=db
-
-  mail:
-    image: mailhog/mailhog
-    logging:
-      driver: 'none'
-    ports:
-      - 1025:1025 # smtp server
-      - 8025:8025 # web ui
-
-  deployer:
-    image: "${IMAGE_DEPLOYER:-aoepeople/meals-deployer:edge}"
-    build:
-      context: docker/deployer
-    volumes:
-      - ~/.kube:/root/.kube

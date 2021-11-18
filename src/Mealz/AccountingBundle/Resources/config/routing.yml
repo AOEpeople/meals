@@ -43,6 +43,10 @@ mealz_accounting.cost_sheet:
     path: /print/costsheet
     defaults: { _controller: App\Mealz\AccountingBundle\Controller\CostSheetController::list }
 
+mealz_accounting_cost_sheet_hide_user_request:
+    path: /print/costsheet/hideuser/request/{profile}
+    defaults: { _controller: App\Mealz\AccountingBundle\Controller\CostSheetController::hideUserRequest }
+
 mealz_accounting_cost_sheet_send_settlement_request:
     path: /print/costsheet/settlement/request/{username}
     defaults: { _controller: App\Mealz\AccountingBundle\Controller\CostSheetController::sendSettlementRequest }

@@ -54,6 +54,9 @@ class OAuthProviderTest extends AbstractControllerTestCase
 
         // check role mapping
         $this->assertSame($mealsRoles, $user->getRoles());
+
+        // check that user is not hidden after loading
+        $this->assertFalse($user->isHidden());
     }
 
     public function idpUserDataProvider(): array

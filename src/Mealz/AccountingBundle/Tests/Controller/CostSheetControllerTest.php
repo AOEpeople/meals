@@ -67,15 +67,15 @@ class CostSheetControllerTest extends AbstractControllerTestCase
         $hash = '12345';
         $profile->setSettlementHash($hash);
 
-        $enityManager = $this->getDoctrine()->getManager();
+        $entityManager = $this->getDoctrine()->getManager();
 
         $transaction = new Transaction();
         $transaction->setProfile($profile);
         $transaction->setAmount(random_int(10, 120) + 0.13);
         $transaction->setDate(new \DateTime());
 
-        $enityManager->persist($transaction);
-        $enityManager->flush();
+        $entityManager->persist($transaction);
+        $entityManager->flush();
 
         $transactionRepo = $this->getDoctrine()->getRepository(Transaction::class);
         $balanceBefore = $transactionRepo->getTotalAmount(self::USER_STANDARD);
@@ -92,5 +92,38 @@ class CostSheetControllerTest extends AbstractControllerTestCase
         $balanceAfter = $transactionRepo->getTotalAmount(self::USER_STANDARD);
         $this->assertEquals(0, $balanceAfter);
         $this->assertNull($profile->getSettlementHash());
+    }
+
+    public function testHideUserRequestWithNonHiddenUser(): void {
+        // Pre-action tests
+        $profile = $this->getUserProfile(parent::USER_STANDARD);
+        $this->assertFalse($profile->isHidden());
+
+        // Trigger action
+        $this->client->request('GET', '/print/costsheet/hideuser/request/' . $profile->getUsername());
+        $this->assertTrue($this->client->getResponse()->isSuccessful());
+
+        // Check after action
+        $profile = $this->getUserProfile(parent::USER_STANDARD);
+        $this->assertTrue($profile->isHidden());
+    }
+
+    public function testHideUserRequestWithHiddenUser(): void {
+        // Pre-action tests
+        $profile = $this->getUserProfile(parent::USER_STANDARD);
+
+        $profile->setHidden(true);
+        $this->persistAndFlushAll([$profile]);
+
+        $profile = $this->getUserProfile(parent::USER_STANDARD);
+        $this->assertTrue($profile->isHidden());
+
+        // Trigger action
+        $this->client->request('GET', '/print/costsheet/hideuser/request/' . $profile->getUsername());
+        $this->assertTrue($this->client->getResponse()->isSuccessful());
+
+        // Check after action
+        $profile = $this->getUserProfile(parent::USER_STANDARD);
+        $this->assertTrue($profile->isHidden());
     }
 }

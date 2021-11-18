@@ -221,10 +221,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Setup PHP environment
+        uses: shivammathur/setup-php@v2
       - name: Psalm
         uses: docker://vimeo/psalm-github-actions
-        with:
-          composer_require_dev: true
       - name: Run Psalm
         run: psalm src github ./psalm.xml --use-baseline=./psalm.baseline.xml
 

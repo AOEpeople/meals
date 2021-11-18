@@ -108,9 +108,6 @@ We're using [ddev](https://ddev.readthedocs.io/) for local development. `ddev` i
 mkcert -install 
 ```
 
-Point your web browser to https://meals.test :tada:
-Don't forget to add to your local hosts file if not done automatically via ddev: `127.0.0.1 meals.test`
-
 To simplify things, we have put common commands into a **Makefile**. To see all available options, run the following command:
 ```
 make
@@ -121,9 +118,9 @@ Run the following to start the Devbox:
 make run-devbox
 ```
 
-Point your web browser to https://meals.test :tada:
+Point your web browser to https://meals.test  :tada:
 
-:memo: Don't forget to add `127.0.0.1 meals.test` to your local hosts file if not done automatically via ddev.
+:memo:  Don't forget to add `127.0.0.1 meals.test` to your local hosts file if not done automatically via ddev.
 
 ## Troubleshooting
 

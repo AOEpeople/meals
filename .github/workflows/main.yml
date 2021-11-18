@@ -26,7 +26,7 @@ jobs:
       - name: Setup PHP environment
         uses: shivammathur/setup-php@v2
         with:
-          extensions: bcmath, calendar
+          php-version: '7.4'
       - name: Show modules
         run: php -m
       - name: Show content

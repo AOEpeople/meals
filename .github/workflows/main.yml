@@ -29,4 +29,4 @@ jobs:
           php-version: '7.4'
           tools: vimeo/psalm
       - name: Run Psalm
-        run: psalm src ./psalm.xml
+        run: psalm ./psalm.xml --output-format=github

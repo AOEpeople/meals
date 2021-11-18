@@ -27,7 +27,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '7.4'
-          tools: vimeo/psalm
+          tools: composer, vimeo/psalm
       - name: Where am I?
         run: ls -la
       - name: Run Psalm

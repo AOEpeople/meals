@@ -31,4 +31,4 @@ jobs:
       - name: Run composer install
         run: composer install -n --prefer-dist
       - name: Run Psalm
-        run: psalm --root=. ./psalm.xml --output-format=github
+        run: psalm ./psalm.xml

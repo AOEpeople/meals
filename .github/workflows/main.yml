@@ -31,4 +31,4 @@ jobs:
       - name: Run composer install
         run: composer install -n --prefer-dist
       - name: Run Psalm
-        run: psalm ./psalm.xml
+        run: psalm

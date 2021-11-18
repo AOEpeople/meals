@@ -2,20 +2,13 @@
 
 namespace App\Mealz\AccountingBundle\Form;
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Mealz\AccountingBundle\Controller\AccountingAdminController;
-use App\Mealz\AccountingBundle\Controller\Payment\EcashController;
-use App\Mealz\AccountingBundle\Service\Wallet;
 use App\Mealz\MealBundle\Form\DataTransformer\ProfileToStringTransformer;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\DataTransformer\NumberToLocalizedStringTransformer;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class EcashPaymentAdminForm extends AbstractType
 {
@@ -27,11 +20,11 @@ class EcashPaymentAdminForm extends AbstractType
         $this->profileTransformer = $profileTransformer;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         /**
-        * if more Paymentmethodsare available remove 'data' => 0 from paymehtod
-        */
+         * if more payment methods are available remove 'data' => 0 from pay method
+         */
         $builder
             ->add('profile', HiddenType::class, [
                 'data' => $options['profile'],

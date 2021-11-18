@@ -25,8 +25,6 @@ class Category
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     *
-     * @SuppressWarnings(PHPMD.ShortVariable)
      */
     private $id;
 
@@ -84,9 +82,9 @@ class Category
     /**
      * @param int $id
      *
-     * @SuppressWarnings(PHPMD.ShortVariable)
+     * @SuppressWarnings (PHPMD.ShortVariable)
      */
-    public function setId($id)
+    public function setId($id): void
     {
         $this->id = $id;
     }
@@ -102,7 +100,7 @@ class Category
     /**
      * @param string $title_en
      */
-    public function setTitleEn($title_en)
+    public function setTitleEn($title_en): void
     {
         $this->title_en = $title_en;
     }
@@ -118,7 +116,7 @@ class Category
     /**
      * @param string $title_de
      */
-    public function setTitleDe($title_de)
+    public function setTitleDe($title_de): void
     {
         $this->title_de = $title_de;
     }
@@ -142,7 +140,7 @@ class Category
     /**
      * @param string $currentLocale
      */
-    public function setCurrentLocale($currentLocale)
+    public function setCurrentLocale($currentLocale): void
     {
         $this->currentLocale = $currentLocale;
     }

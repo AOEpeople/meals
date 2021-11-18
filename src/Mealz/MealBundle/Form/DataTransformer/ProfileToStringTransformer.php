@@ -36,7 +36,7 @@ class ProfileToStringTransformer implements DataTransformerInterface
             return null;
         }
 
-        $profile = $this->objectManager->getRepository('MealzUserBundle:Profile')->findOneBy(["username" => $value]);
+        $profile = $this->objectManager->getRepository(Profile::class)->findOneBy(["username" => $value]);
 
         if (null === $profile) {
             throw new TransformationFailedException(

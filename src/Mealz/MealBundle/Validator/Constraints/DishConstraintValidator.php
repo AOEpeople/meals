@@ -2,25 +2,25 @@
 
 namespace App\Mealz\MealBundle\Validator\Constraints;
 
-use Doctrine\ORM\EntityManagerInterface;
 use App\Mealz\MealBundle\Entity\Dish;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\UnitOfWork;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
-use Doctrine\ORM\UnitOfWork;
 
 /**
  * @Annotation
  */
 class DishConstraintValidator extends ConstraintValidator
 {
-    protected $entityManager;
+    private EntityManagerInterface $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
     }
 
-    public function validate($entity, Constraint $constraint)
+    public function validate($entity, Constraint $constraint): void
     {
         if ($entity->getDish() instanceof Dish) {
             return;

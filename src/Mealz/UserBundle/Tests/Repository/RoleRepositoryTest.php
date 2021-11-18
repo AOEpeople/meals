@@ -11,7 +11,7 @@ use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 
 class RoleRepositoryTest extends AbstractDatabaseTestCase
 {
-    protected RoleRepository $roleRepository;
+    private RoleRepository $roleRepository;
 
     protected function setUp(): void
     {
@@ -26,11 +26,9 @@ class RoleRepositoryTest extends AbstractDatabaseTestCase
     }
 
     /**
-     * @test
-     *
      * @dataProvider roleSIDProvider
      */
-    public function findBySID(array $sids, array $expected): void
+    public function testFindBySID(array $sids, array $expected): void
     {
         $roles = $this->roleRepository->findBySID($sids);
 

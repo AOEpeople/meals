@@ -10,9 +10,10 @@ class WorkdayTest extends TestCase
     /**
      * @param $givenDate
      * @param $expectedDate
+     *
      * @dataProvider getDataForTestBasic
      */
-    public function testBasic($givenDate, $expectedDate)
+    public function testBasic($givenDate, $expectedDate): void
     {
         $workdayService = new Workday();
 

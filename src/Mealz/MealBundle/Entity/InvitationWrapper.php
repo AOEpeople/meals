@@ -35,7 +35,7 @@ class InvitationWrapper
     /**
      * @param Day $day
      */
-    public function setDay($day)
+    public function setDay($day): void
     {
         $this->day = $day;
     }
@@ -51,7 +51,7 @@ class InvitationWrapper
     /**
      * @param Profile $profile
      */
-    public function setProfile($profile)
+    public function setProfile($profile): void
     {
         $this->profile = $profile;
     }

@@ -42,10 +42,8 @@ class CashControllerTest extends AbstractControllerTestCase
 
     /**
      * Checking if transaction history is correct for some user
-     *
-     * @test
      */
-    public function checkTransactionHistory(): void
+    public function testTransactionHistory(): void
     {
         $this->loginAs(self::USER_STANDARD);
 

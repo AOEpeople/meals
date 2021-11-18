@@ -45,7 +45,7 @@ class Workday
         '+50 days'
     );
 
-    public function setWeekdayWhitelist($whitelist)
+    public function setWeekdayWhitelist($whitelist): void
     {
         $this->weekdayWhitelist = $whitelist;
     }
@@ -53,7 +53,7 @@ class Workday
     /**
      * @param array $dayBlacklist
      */
-    public function setDayBlacklist($dayBlacklist)
+    public function setDayBlacklist($dayBlacklist): void
     {
         $this->dayBlacklist = $dayBlacklist;
     }
@@ -61,7 +61,7 @@ class Workday
     /**
      * @param array $blacklistRelToEaster
      */
-    public function setBlacklistRelToEaster($blacklistRelToEaster)
+    public function setBlacklistRelToEaster($blacklistRelToEaster): void
     {
         $this->blacklistRelToEaster = $blacklistRelToEaster;
     }
@@ -90,7 +90,7 @@ class Workday
         }
     }
 
-    protected function dateIsValid(DateTime $date)
+    protected function dateIsValid(DateTime $date): bool
     {
         if (in_array($date->format('N'), $this->weekdayWhitelist) === false) {
             return false;

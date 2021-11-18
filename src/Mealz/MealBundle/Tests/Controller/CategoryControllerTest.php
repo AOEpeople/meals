@@ -34,7 +34,7 @@ class CategoryControllerTest extends AbstractControllerTestCase
         $form['category'] = [
             'title_de' => 'category-form-title-de',
             'title_en' => 'category-form-title-en',
-            '_token'   => $this->getFormCSRFToken('/category/form', 'form #category__token')
+            '_token' => $this->getFormCSRFToken('/category/form', 'form #category__token')
         ];
 
         // Call controller action
@@ -43,7 +43,7 @@ class CategoryControllerTest extends AbstractControllerTestCase
         // Get persisted entity
         /** @var EntityManager $entityManager */
         $entityManager = $this->client->getContainer()->get('doctrine')->getManager();
-        $categoryRepository = $entityManager->getRepository('MealzMealBundle:Category');
+        $categoryRepository = $entityManager->getRepository(Category::class);
         $category = $categoryRepository->findOneBy([
             'title_de' => 'category-form-title-de',
             'title_en' => 'category-form-title-en',
@@ -80,11 +80,11 @@ class CategoryControllerTest extends AbstractControllerTestCase
         $this->persistAndFlushAll([$category]);
 
         // Request
-        $this->client->request('GET', '/category/form/'.$category->getSlug());
+        $this->client->request('GET', '/category/form/' . $category->getSlug());
         $crawler = $this->getJsonResponseCrawler();
 
         // Check if form is loaded
-        $node = $crawler->filterXPath('//form[@action="/category/'.$category->getSlug().'/edit"]');
+        $node = $crawler->filterXPath('//form[@action="/category/' . $category->getSlug() . '/edit"]');
         $this->assertSame($node->count(), 1);
 
         // Copy form values in array for comparison
@@ -106,11 +106,11 @@ class CategoryControllerTest extends AbstractControllerTestCase
         $form['category'] = [
             'title_de' => 'category-form-edited-title-de',
             'title_en' => 'category-form-edited-title-en',
-            '_token'   => $this->getFormCSRFToken('/category/form/'.$category->getSlug(), 'form #category__token')
+            '_token' => $this->getFormCSRFToken('/category/form/' . $category->getSlug(), 'form #category__token')
         ];
 
-        $this->client->request('POST', '/category/'.$category->getSlug().'/edit', $form);
-        $categoryRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Category');
+        $this->client->request('POST', '/category/' . $category->getSlug() . '/edit', $form);
+        $categoryRepository = $this->getDoctrine()->getRepository(Category::class);
         unset($form['category']['category']);
         unset($form['category']['_token']);
         $editedCategory = $categoryRepository->findOneBy($form['category']);
@@ -119,32 +119,32 @@ class CategoryControllerTest extends AbstractControllerTestCase
         $this->assertEquals($category->getId(), $editedCategory->getId());
     }
 
-    public function testEditActionOfNonExistingCategory()
+    public function testEditActionOfNonExistingCategory(): void
     {
         $this->client->request('POST', '/category/non-existing-category/edit');
         $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testDeleteAction()
+    public function testDeleteAction(): void
     {
         $category = $this->createCategory();
         $this->persistAndFlushAll(array($category));
 
         $categoryId = $category->getId();
-        $this->client->request('GET', '/category/'.$category->getSlug().'/delete');
-        $categoryRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Category');
+        $this->client->request('GET', '/category/' . $category->getSlug() . '/delete');
+        $categoryRepository = $this->getDoctrine()->getRepository(Category::class);
         $queryResult = $categoryRepository->find($categoryId);
 
         $this->assertNull($queryResult);
     }
 
-    public function testDeleteOfNonExistingCategory()
+    public function testDeleteOfNonExistingCategory(): void
     {
         $this->client->request('GET', '/category/non-existing-category/delete');
         $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
     }
 
-    protected function getRawResponseCrawler()
+    protected function getRawResponseCrawler(): Crawler
     {
         $content = $this->client->getResponse()->getContent();
         $uri = 'http://meals.test';
@@ -152,7 +152,7 @@ class CategoryControllerTest extends AbstractControllerTestCase
         return new Crawler($content, $uri);
     }
 
-    protected function getJsonResponseCrawler()
+    protected function getJsonResponseCrawler(): Crawler
     {
         $content = $this->client->getResponse()->getContent();
         $uri = 'http://meals.test';

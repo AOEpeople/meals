@@ -70,7 +70,7 @@ class DishControllerTest extends AbstractControllerTestCase
         // Get persisted entity
         /** @var EntityManager $entityManager */
         $entityManager = $this->client->getContainer()->get('doctrine')->getManager();
-        $dishRepository = $entityManager->getRepository('MealzMealBundle:Dish');
+        $dishRepository = $entityManager->getRepository(Dish::class);
         $dish = $dishRepository->findOneBy([
             'title_de' => 'dish-form-title-de',
             'title_en' => 'dish-form-title-en',
@@ -125,11 +125,11 @@ class DishControllerTest extends AbstractControllerTestCase
         $this->persistAndFlushAll([$dish]);
 
         // Request
-        $this->client->request('GET', '/dish/form/'.$dish->getSlug());
+        $this->client->request('GET', '/dish/form/' . $dish->getSlug());
         $crawler = $this->getRawResponseCrawler();
 
         // Check if form is loaded
-        $node = $crawler->filterXPath('//form[@action="/dish/'.$dish->getSlug().'/edit"]');
+        $node = $crawler->filterXPath('//form[@action="/dish/' . $dish->getSlug() . '/edit"]');
         $this->assertSame($node->count(), 1);
 
         // Copy form values in array for comparison
@@ -156,11 +156,11 @@ class DishControllerTest extends AbstractControllerTestCase
             'description_de' => 'dish-form-edited-desc-de',
             'description_en' => 'dish-form-edited-desc-en',
             'category' => '',
-            '_token' => $this->getFormCSRFToken('/dish/form/'.$dish->getSlug(), 'form #dish__token')
+            '_token' => $this->getFormCSRFToken('/dish/form/' . $dish->getSlug(), 'form #dish__token')
         ];
 
-        $this->client->request('POST', '/dish/'.$dish->getSlug().'/edit', $form);
-        $dishRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Dish');
+        $this->client->request('POST', '/dish/' . $dish->getSlug() . '/edit', $form);
+        $dishRepository = $this->getDoctrine()->getRepository(Dish::class);
         unset($form['dish']['category'], $form['dish']['_token']);
         $editedDish = $dishRepository->findOneBy($form['dish']);
 
@@ -186,8 +186,8 @@ class DishControllerTest extends AbstractControllerTestCase
         $this->persistAndFlushAll([$dish]);
 
         $dishId = $dish->getId();
-        $this->client->request('GET', '/dish/'.$dish->getSlug().'/delete');
-        $dishRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Dish');
+        $this->client->request('GET', '/dish/' . $dish->getSlug() . '/delete');
+        $dishRepository = $this->getDoctrine()->getRepository(Dish::class);
         $queryResult = $dishRepository->find($dishId);
 
         $this->assertNull($queryResult);
@@ -223,7 +223,7 @@ class DishControllerTest extends AbstractControllerTestCase
         // Get persisted entity
         /** @var EntityManager $entityManager */
         $entityManager = $this->client->getContainer()->get('doctrine')->getManager();
-        $dishRepository = $entityManager->getRepository('MealzMealBundle:Dish');
+        $dishRepository = $entityManager->getRepository(Dish::class);
         $dish = $dishRepository->findOneBy([
             'title_de' => 'dish-form-title-de',
             'title_en' => 'dish-form-title-en',
@@ -239,12 +239,12 @@ class DishControllerTest extends AbstractControllerTestCase
     /**
      * Test if a often offered dish is not marked as new
      */
-    public function testIfOftenOffereDishIsNotNew(): void
+    public function testIfOftenOfferedDishIsNotNew(): void
     {
         // Get persisted entity
         /** @var EntityManager $entityManager */
         $entityManager = $this->client->getContainer()->get('doctrine')->getManager();
-        $dishRepository = $entityManager->getRepository('MealzMealBundle:Dish');
+        $dishRepository = $entityManager->getRepository(Dish::class);
         $dish = $dishRepository->findOneBy([
             'slug' => 'braaaaaiiinnnzzzzzz'
         ]);

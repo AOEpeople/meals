@@ -41,9 +41,8 @@ class PrintControllerTest extends AbstractControllerTestCase
 
     /**
      * Check that guest participants are not listed in the cost sheet.
-     * @test
      */
-    public function guestDoesNotAppearInCostListing(): void
+    public function testGuestDoesNotAppearInCostListing(): void
     {
         $time = time();
 
@@ -71,12 +70,12 @@ class PrintControllerTest extends AbstractControllerTestCase
         $this->assertTrue($this->client->getResponse()->isSuccessful());
 
         // Ensure that guest does not appear in the listing
-        $this->assertEquals(0, $crawler->filter('html:contains("'.$guestFirstName.'")')->count());
-        $this->assertEquals(0, $crawler->filter('html:contains("'.$guestLastName.'")')->count());
-        $this->assertEquals(0, $crawler->filter('html:contains("'.$guestCompany.'")')->count());
+        $this->assertEquals(0, $crawler->filter('html:contains("' . $guestFirstName . '")')->count());
+        $this->assertEquals(0, $crawler->filter('html:contains("' . $guestLastName . '")')->count());
+        $this->assertEquals(0, $crawler->filter('html:contains("' . $guestCompany . '")')->count());
 
         // Ensure that rendering is correct and non guest users do appear in the listing
-        $this->assertEquals(1, $crawler->filter('html:contains("'.$userFirstName.'")')->count());
-        $this->assertEquals(1, $crawler->filter('html:contains("'.$userLastName.'")')->count());
+        $this->assertEquals(1, $crawler->filter('html:contains("' . $userFirstName . '")')->count());
+        $this->assertEquals(1, $crawler->filter('html:contains("' . $userLastName . '")')->count());
     }
 }

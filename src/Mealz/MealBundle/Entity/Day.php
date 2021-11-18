@@ -20,8 +20,6 @@ class Day extends AbstractMessage
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      * @var integer $id
-     *
-     * @SuppressWarnings(PHPMD.ShortVariable)
      */
     private $id;
 
@@ -73,9 +71,9 @@ class Day extends AbstractMessage
     /**
      * @param int $id
      *
-     * @SuppressWarnings(PHPMD.ShortVariable)
+     * @SuppressWarnings (PHPMD.ShortVariable)
      */
-    public function setId($id)
+    public function setId($id): void
     {
         $this->id = $id;
     }
@@ -91,7 +89,7 @@ class Day extends AbstractMessage
     /**
      * @param DateTime $dateTime
      */
-    public function setDateTime($dateTime)
+    public function setDateTime($dateTime): void
     {
         $this->dateTime = $dateTime;
     }
@@ -107,7 +105,7 @@ class Day extends AbstractMessage
     /**
      * @param Week $week
      */
-    public function setWeek($week)
+    public function setWeek($week): void
     {
         $this->week = $week;
     }
@@ -123,16 +121,17 @@ class Day extends AbstractMessage
     /**
      * @param ArrayCollection $meals
      */
-    public function setMeals($meals)
+    public function setMeals($meals): void
     {
         $this->meals = $meals;
     }
 
     /**
      * add a Meal
+     *
      * @param Meal $meal
      */
-    public function addMeal(Meal $meal)
+    public function addMeal(Meal $meal): void
     {
         $meal->setDay($this);
         $this->meals->add($meal);
@@ -158,7 +157,7 @@ class Day extends AbstractMessage
     /**
      * @param DateTime $lockDateTime
      */
-    public function setLockParticipationDateTime($lockDateTime)
+    public function setLockParticipationDateTime($lockDateTime): void
     {
         $this->lockParticipationDateTime = $lockDateTime;
     }

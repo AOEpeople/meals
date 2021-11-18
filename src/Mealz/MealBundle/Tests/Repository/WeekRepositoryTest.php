@@ -23,28 +23,22 @@ class WeekRepositoryTest extends AbstractDatabaseTestCase
         $this->clearAllTables();
         $this->loadFixtures([new LoadWeeks()]);
 
-        $this->weekRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Week');
+        $this->weekRepository = $this->getDoctrine()->getRepository(Week::class);
     }
 
-    /**
-     * @test
-     */
-    public function getCurrentWeek(): void
+    public function testGetGetCurrentWeek(): void
     {
         $now = new DateTime();
         $currentWeek = $this->weekRepository->getCurrentWeek();
-        $this->assertSame((int) $now->format('W'), $currentWeek->getCalendarWeek());
+        $this->assertSame((int)$now->format('W'), $currentWeek->getCalendarWeek());
     }
 
-    /**
-     * @test
-     */
-    public function getNextWeek(): void
+    public function testGetNextWeek(): void
     {
         $now = new DateTimeImmutable();
-        $currCalWeek = (int) $now->format('W');
+        $currCalWeek = (int)$now->format('W');
 
-        $lastCalWeek = (int) $now->modify('last day of December')->format('W');
+        $lastCalWeek = (int)$now->modify('last day of December')->format('W');
         $this->assertContains($lastCalWeek, [52, 53]);
 
         $nextWeek = $this->weekRepository->getNextWeek(DateTime::createFromImmutable($now));

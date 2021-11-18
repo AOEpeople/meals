@@ -99,7 +99,7 @@ jobs:
         with:
           name: docker-images
           path: /tmp/docker/*.tar
-    outputs: 
+    outputs:
       image: ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
       images: ${{ join(steps.meta.outputs.tags, ' ') }}
       imageDev: ${{ fromJSON(steps.devmeta.outputs.json).tags[0] }}
@@ -206,6 +206,22 @@ jobs:
           tools: phpmd
       - name: Run PHPMD
         run: phpmd src github ./phpmd.xml --baseline-file ./phpmd.baseline.xml --exclude */Tests/*
+
+  psalm:
+    name: Psalm Static analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup PHP environment
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          tools: composer
+      - name: Run composer install
+        run: composer install -n --prefer-dist
+      - name: Run Psalm
+        run: ./vendor/bin/psalm
 
   publish:
     name: Publish

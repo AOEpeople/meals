@@ -2,6 +2,7 @@
 
 namespace App\Mealz\MealBundle\Tests\Repository;
 
+use App\Mealz\MealBundle\Entity\Meal;
 use InvalidArgumentException;
 use App\Mealz\MealBundle\Entity\MealRepository;
 use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
@@ -15,11 +16,11 @@ class MealRepositoryTest extends AbstractDatabaseTestCase
     {
         parent::setUp();
 
-        $this->mealRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
+        $this->mealRepository = $this->getDoctrine()->getRepository(Meal::class);
         $this->clearAllTables();
     }
 
-    public function testFindOneByDateAndDish()
+    public function testFindOneByDateAndDish(): void
     {
         $dish = $this->createDish();
         $meal = $this->createMeal($dish);
@@ -30,7 +31,7 @@ class MealRepositoryTest extends AbstractDatabaseTestCase
         $this->assertEquals($meal, $result);
     }
 
-    public function testFindOneByDateAndDishInvalidDate()
+    public function testFindOneByDateAndDishInvalidDate(): void
     {
         $dish = $this->createDish();
         $meal = $this->createMeal($dish);
@@ -40,8 +41,8 @@ class MealRepositoryTest extends AbstractDatabaseTestCase
 
         $this->mealRepository->findOneByDateAndDish(date('Y-m-'), $dish->getSlug());
     }
-    
-    public function testFindOneByDateAndDishNoResults()
+
+    public function testFindOneByDateAndDishNoResults(): void
     {
         $dish = $this->createDish();
         $this->persistAndFlushAll([$dish]);

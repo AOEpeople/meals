@@ -42,11 +42,9 @@ class TransactionServiceTest extends AbstractDatabaseTestCase
     }
 
     /**
-     * @test
-     *
      * @testdox createFromRequest() on success creates a new record in transaction table.
      */
-    public function createFromRequestSuccess(): void
+    public function testCreateFromRequestSuccess(): void
     {
         // test data
         $orderID = '2DD03984N872668774X';
@@ -80,11 +78,9 @@ class TransactionServiceTest extends AbstractDatabaseTestCase
     }
 
     /**
-     * @test
-     *
      * @testdox Calling createFromRequest() without login session throws AccessDeniedHttpException.
      */
-    public function createFromRequestFailureNoLoginSession(): void
+    public function testCreateFromRequestFailureNoLoginSession(): void
     {
         // prepare service dependencies
         $paypalServiceMock = $this->prophesize(PayPalService::class)->reveal();
@@ -103,13 +99,11 @@ class TransactionServiceTest extends AbstractDatabaseTestCase
     }
 
     /**
-     * @test
-     *
      * @testdox Calling createFromRequest() with $request argument containing $_dataName throws BadRequestHttpException.
      *
      * @dataProvider createFromRequestInvalidData
      */
-    public function createFromRequestFailureBadData($data): void
+    public function testCreateFromRequestFailureBadData($data): void
     {
         // prepare service dependencies
         $paypalServiceMock = $this->prophesize(PayPalService::class)->reveal();
@@ -136,11 +130,9 @@ class TransactionServiceTest extends AbstractDatabaseTestCase
     }
 
     /**
-     * @test
-     *
      * @testdox Calling createFromRequest() with $request argument containing invalid order-id throws UnprocessableEntityHttpException.
      */
-    public function createFromRequestFailureOrderNotFound(): void
+    public function testCreateFromRequestFailureOrderNotFound(): void
     {
         // test data
         $orderID = '2DD03984N872668774X';
@@ -162,11 +154,9 @@ class TransactionServiceTest extends AbstractDatabaseTestCase
     }
 
     /**
-     * @test
-     *
      * @testdox Calling createFromRequest() with $request argument referring incomplete order throws UnprocessableEntityHttpException.
      */
-    public function createFromRequestFailureIncompleteOrder(): void
+    public function testCreateFromRequestFailureIncompleteOrder(): void
     {
         // test data
         $orderID = '2DD03984N872668774X';

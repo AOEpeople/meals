@@ -5,14 +5,14 @@ namespace App\Mealz\MealBundle\Twig\Extension;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Service\Doorman as DoormanService;
+use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
-use Twig_Extension;
 
 /**
  * Class Doorman
  * @package Mealz\MealBundle\Twig\Extension
  */
-class Doorman extends Twig_Extension
+class Doorman extends AbstractExtension
 {
 
     /**

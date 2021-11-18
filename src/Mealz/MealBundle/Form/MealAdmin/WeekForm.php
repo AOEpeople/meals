@@ -3,11 +3,11 @@
 namespace App\Mealz\MealBundle\Form\MealAdmin;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Validator\Constraints\Valid;
 
 /**
@@ -22,7 +22,7 @@ class WeekForm extends AbstractType
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('days', CollectionType::class, array(
@@ -42,11 +42,10 @@ class WeekForm extends AbstractType
                 'label' => 'button.save',
                 'translation_domain' => 'actions',
                 'attr' => array('class' => 'button')
-            ))
-        ;
+            ));
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(array(
             'data_class' => 'App\Mealz\MealBundle\Entity\Week',

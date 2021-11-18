@@ -19,8 +19,6 @@ class GuestInvitation
      * @var string
      * @ORM\Column(name="id", type="string")
      * @ORM\Id
-     *
-     * @SuppressWarnings(PHPMD.ShortVariable)
      */
     private $id;
 
@@ -62,8 +60,6 @@ class GuestInvitation
      * @param  string $id
      *
      * @return GuestInvitation
-     *
-     * @SuppressWarnings(PHPMD.ShortVariable)
      */
     public function setId($id)
     {
@@ -151,9 +147,9 @@ class GuestInvitation
     }
 
     /**
-     * @ORM\PrePersist()
+     * @ORM\PrePersist ()
      */
-    public function beforeCreate()
+    public function beforeCreate(): void
     {
         $this->id = md5($this->host->getUsername() . $this->day->getId());
         $this->createdOn = new DateTime();

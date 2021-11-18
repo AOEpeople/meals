@@ -7,10 +7,11 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Response;
 
 class ReviewController extends AbstractController
 {
-    public function indexAction()
+    public function indexAction(): Response
     {
         return $this->render('MealzTemplateBundle:Review:index.html.twig', array(
             'form1' => $this->createForm1()->createView()
@@ -24,7 +25,6 @@ class ReviewController extends AbstractController
     private function createForm1()
     {
         $form = $this->createFormBuilder(null)
-
             ->add('textName', TextType::class, array(
                 'label' => 'Input',
                 'required' => false,

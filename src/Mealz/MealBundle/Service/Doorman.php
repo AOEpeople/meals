@@ -69,6 +69,8 @@ class Doorman
                 return true;
             }
         }
+
+        return false;
     }
 
     /**

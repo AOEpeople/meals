@@ -2,11 +2,10 @@
 
 namespace App\Mealz\MealBundle\Twig\Extension;
 
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
-use Symfony\Component\VarDumper\VarDumper;
+use Symfony\Component\Form\FormView;
 use Twig\Environment as TwigEnvironment;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -35,7 +34,6 @@ class Variation extends AbstractExtension
     {
         return array(
             new TwigFunction('groupMeals', [$this, 'groupMeals']),
-            new TwigFunction('getDump', [$this, 'getDump']),
             new TwigFunction('groupMealsToArray', [$this, 'groupMealsToArray']),
             new TwigFunction('getFullTitleByDishAndVariation', [$this, 'getFullTitleByDishAndVariation']),
             new TwigFunction('getSortedVariation', [$this, 'getSortedVariation']),
@@ -67,15 +65,6 @@ class Variation extends AbstractExtension
             'meals' => $mealsArray,
             'mealsVariations' => $mealsVariations,
         ];
-    }
-
-    /**
-     * @TODO: move this function inside the TemplateBundle into some more generic Twig Extension (Base.php or something like that)
-     * @param array $dump
-     */
-    public function getDump($dump)
-    {
-        VarDumper::dump($dump);
     }
 
     /**
@@ -155,7 +144,7 @@ class Variation extends AbstractExtension
     public function getDishCount($dish)
     {
         $entityManager = $this->doctrine->getManager();
-        $dishRepo = $entityManager->getRepository('MealzMealBundle:Dish');
+        $dishRepo = $entityManager->getRepository(Dish::class);
         return $dishRepo->countNumberDishWasTaken($dish, $this->twig->getGlobals()['countDishPeriod']);
     }
 
@@ -185,7 +174,7 @@ class Variation extends AbstractExtension
      *
      * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      */
-    private function compareVariation($first, $second)
+    private function compareVariation($first, $second): int
     {
         $firstContent = strtolower($first['variations']['content']);
         $secondContent = strtolower($second['variations']['content']);

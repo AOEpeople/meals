@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
+
 namespace App\Mealz\AccountingBundle\Event\Subscriber;
 
 use App\Mealz\AccountingBundle\Event\ProfileSettlementEvent;
 use App\Mealz\MealBundle\Entity\ParticipantRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-
 
 class SettlementSubscriber implements EventSubscriberInterface
 {
@@ -17,9 +17,6 @@ class SettlementSubscriber implements EventSubscriberInterface
         $this->participantRepo = $participantRepo;
     }
 
-    /**
-     * @return string[]
-     */
     public static function getSubscribedEvents(): array
     {
         return [
@@ -27,10 +24,8 @@ class SettlementSubscriber implements EventSubscriberInterface
         ];
     }
 
-    /**
-     * @param ProfileSettlementEvent $event
-     */
-    public function onProfileSettlement(ProfileSettlementEvent $event) {
+    public function onProfileSettlement(ProfileSettlementEvent $event): void
+    {
         $this->participantRepo->removeFutureMealsByProfile($event->getProfile());
     }
 }

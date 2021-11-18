@@ -40,22 +40,22 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
 
         // Create profile for user1
         $user1FirstName = 'Max';
-        $user1LastName  = 'Mustermann'.$time;
+        $user1LastName = 'Mustermann' . $time;
         $user1 = $this->createProfile($user1FirstName, $user1LastName);
 
         // Create profile for user2
         $user2FirstName = 'John';
-        $user2LastName  = 'Doe'.$time;
+        $user2LastName = 'Doe' . $time;
         $user2 = $this->createProfile($user2FirstName, $user2LastName);
 
         $this->persistAndFlushAll([$user1, $user2]);
 
         // Create transactions for users if they're persisted
-        if (($this->getUserProfile($user1FirstName.'.'.$user1LastName) instanceof Profile) === true) {
+        if (($this->getUserProfile($user1FirstName . '.' . $user1LastName) instanceof Profile) === true) {
             $this->createTransactions($user1, 10.50, new DateTime('first day of previous month'));
         }
 
-        if (($this->getUserProfile($user2FirstName.'.'.$user2LastName) instanceof Profile) === true) {
+        if (($this->getUserProfile($user2FirstName . '.' . $user2LastName) instanceof Profile) === true) {
             $this->createTransactions($user2, 11.50, new DateTime('first day of previous month'));
         }
     }
@@ -68,19 +68,19 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
         // test for admins
         $crawler = $this->client->request('GET', '/accounting/book');
         $node = $crawler->filterXPath('//table[@id="accounting-book-table"]');
-        $this->assertFalse($node->count() > 0, "Accounting book NOT accessable by Admins(ROLE_KITCHEN_STAFF)");
+        $this->assertFalse($node->count() > 0, "Accounting book NOT accessible by Admins(ROLE_KITCHEN_STAFF)");
 
         // test for no or non-admin user
         $this->loginAs(self::USER_STANDARD);
         $crawler = $this->client->request('GET', '/accounting/book');
         $node = $crawler->filterXPath('//table[@id="accounting-book-table"]');
-        $this->assertFalse($node->count() > 0, "Accounting book accessable by Non-Admins");
+        $this->assertFalse($node->count() > 0, "Accounting book accessible by Non-Admins");
 
-        // test for fincance admins
+        // test for finance admins
         $this->loginAs(self::USER_FINANCE);
         $crawler = $this->client->request('GET', '/accounting/book');
         $node = $crawler->filterXPath('//table[@id="accounting-book-table"]');
-        $this->assertTrue($node->count() > 0, "Accounting book NOT accessable by Admins(ROLE_KITCHEN_STAFF)");
+        $this->assertTrue($node->count() > 0, "Accounting book NOT accessible by Admins(ROLE_KITCHEN_STAFF)");
     }
 
     /**
@@ -106,15 +106,15 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
         $monthNumber = $minDate->format('m');
         $year = $minDate->format('Y');
 
-        $regex = "/".preg_quote($firstDay)."\.".preg_quote($monthNumber)."\.(".preg_quote($year).")? *[-|bis|to] *".preg_quote($lastDay)."\.".preg_quote($monthNumber)."\.(".preg_quote($year).")?/i";
+        $regex = "/" . preg_quote($firstDay) . "\." . preg_quote($monthNumber) . "\.(" . preg_quote($year) . ")? *[-|bis|to] *" . preg_quote($lastDay) . "\." . preg_quote($monthNumber) . "\.(" . preg_quote($year) . ")?/i";
         $this->assertMatchesRegularExpression($regex, $headline, "The headline is not set properly");
     }
 
     /**
-     * Test if sum of all transactions for the last month is displayed in a seperate row at the end of the
+     * Test if sum of all transactions for the last month is displayed in a separate row at the end of the
      * listed transactions.
      */
-    public function testTotalAmountOfTransactionsDisplayedInSeperateRow(): void
+    public function testTotalAmountOfTransactionsDisplayedInSeparateRow(): void
     {
         $this->loginAs(self::USER_FINANCE);
 
@@ -125,17 +125,17 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
         $res = [];
         foreach ($nodesAmount as $value) {
             $tmpCrawler = new Crawler($value);
-            $res[] = (float) $tmpCrawler->text();
+            $res[] = (float)$tmpCrawler->text();
         }
 
-        $totalCalculated = (float) array_sum($res);
+        $totalCalculated = (float)array_sum($res);
         $totalShown = $this->getFloatFromNode($nodeTotal->siblings()->getNode(0));
 
         $this->assertEquals($totalCalculated, $totalShown, 'Total amount of transactions inconsistent');
     }
 
     /**
-     * Test users are orderd by lastname, firstname and listed this way:
+     * Test users are ordered by lastname, firstname and listed this way:
      * lastname, firstname      amount
      */
     public function testDisplayUsersOrderedByLastnameAndFirstname(): void
@@ -148,7 +148,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
 
         // fetch infos for previous month from database.
         // These results are already ordered by lastname, firstname!!
-        $transactionRepo = $this->getDoctrine()->getRepository('MealzAccountingBundle:Transaction');
+        $transactionRepo = $this->getDoctrine()->getRepository(Transaction::class);
         $usersAndTheirTotals = $transactionRepo->findUserDataAndTransactionAmountForGivenPeriod($minDate, $maxDate);
 
         // fetch what is displayed in the accounting book table....
@@ -165,7 +165,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
             $nameDisplayed = $nodesName->getNode($i)->textContent;
             $userInfo = current($usersAndTheirTotals);
             next($usersAndTheirTotals);
-            $regex = "/".preg_quote($userInfo['name'])." *, *".preg_quote($userInfo['firstName'])."/i";
+            $regex = "/" . preg_quote($userInfo['name']) . " *, *" . preg_quote($userInfo['firstName']) . "/i";
             $this->assertMatchesRegularExpression($regex, $nameDisplayed, 'Names are displayed incorrectly. Either sorting is wrong or the names are not displayed like it should be (name, firstname)');
         }
     }
@@ -197,9 +197,8 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
 
     /**
      * Tests if finance staff can access the transaction export page and admins and default users can not
-     * @test
      */
-    public function testAccessForFinanceOnly()
+    public function testAccessForFinanceOnly(): void
     {
         $this->loginAs(self::USER_FINANCE);
 
@@ -226,7 +225,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
     public function testTransactionsListing(): void
     {
         $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->getRepository('MealzAccountingBundle:Transaction')->clear();
+        $entityManager->getRepository(Transaction::class)->clear();
 
         $profile = $this->getUserProfile(self::USER_STANDARD);
         $transactionDate = new DateTime('today');
@@ -256,13 +255,13 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
 
     /**
      * Test if PayPal payments are shown on the finances page
-     * @test
+     *
      * @throws Exception
      */
-    public function testOnlyCashPaymentsListed()
+    public function testOnlyCashPaymentsListed(): void
     {
         $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->getRepository('MealzAccountingBundle:Transaction')->clear();
+        $entityManager->getRepository(Transaction::class)->clear();
 
         $profile = $this->getUserProfile(self::USER_STANDARD);
         $transactionDate = new DateTime('today');
@@ -287,13 +286,13 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
 
     /**
      * Tests if the daily closing amount is calculated correctly
-     * @test
+     *
      * @throws Exception
      */
-    public function testDailyClosingCalculation()
+    public function testDailyClosingCalculation(): void
     {
         $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->getRepository('MealzAccountingBundle:Transaction')->clear();
+        $entityManager->getRepository(Transaction::class)->clear();
 
         $profile = $this->getUserProfile(self::USER_STANDARD);
         $transactionDate = new DateTime('today');

@@ -4,7 +4,6 @@ namespace App\Mealz\AccountingBundle\Controller;
 
 use DateTime;
 use Doctrine\ORM\EntityNotFoundException;
-use App\Mealz\AccountingBundle\Entity\TransactionRepository;
 use App\Mealz\AccountingBundle\Service\Wallet;
 use App\Mealz\MealBundle\Controller\BaseController;
 use App\Mealz\UserBundle\Entity\Profile;
@@ -12,10 +11,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class AccountingAdminController extends BaseController
 {
-    public function goAction(Request $request)
+    public function goAction(Request $request): RedirectResponse
     {
         $this->assureKitchenStaff();
 
@@ -24,10 +25,10 @@ class AccountingAdminController extends BaseController
         return $this->redirect($this->generateUrl('MealzAccountingBundle_Accounting_Admin', ['profile' => $profileId]));
     }
 
-    public function indexAction($profile)
+    public function indexAction($profileId): Response
     {
         $this->assureKitchenStaff();
-        $profile = $this->getProfileById($profile);
+        $profile = $this->getProfileById($profileId);
 
         return $this->render('MealzAccountingBundle:Accounting/Admin:index.html.twig', array(
             'profile' => $profile,
@@ -37,10 +38,10 @@ class AccountingAdminController extends BaseController
         ));
     }
 
-    public function listParticipationAction($profile, Request $request)
+    public function listParticipationAction($profileId, Request $request): Response
     {
         $this->assureKitchenStaff();
-        $profile = $this->getProfileById($profile);
+        $profile = $this->getProfileById($profileId);
         $form = $this->generateTimePeriodForm();
         $formView = $form->createView();
 
@@ -66,10 +67,10 @@ class AccountingAdminController extends BaseController
         ));
     }
 
-    public function listTransactionAction($profile, Request $request)
+    public function listTransactionAction($profileId, Request $request): Response
     {
         $this->assureKitchenStaff();
-        $profile = $this->getProfileById($profile);
+        $profile = $this->getProfileById($profileId);
 
         $form = $this->generateTimePeriodForm();
         $formView = $form->createView();
@@ -121,19 +122,7 @@ class AccountingAdminController extends BaseController
         return $this->get('mealz_accounting.wallet');
     }
 
-    /**
-     * @return TransactionRepository
-     */
-    public function getTransactionRepository()
-    {
-        return $this->getDoctrine()->getRepository('MealzAccountingBundle:Transaction');
-    }
-
-    /**
-     * @param Profile $profileId
-     * @return Profile
-     */
-    private function getProfileById($profileId)
+    private function getProfileById(string $profileId): Profile
     {
         try {
             return $this->getDoctrine()->getManager()->find(Profile::class, $profileId);
@@ -145,7 +134,7 @@ class AccountingAdminController extends BaseController
         }
     }
 
-    private function assureKitchenStaff()
+    private function assureKitchenStaff(): void
     {
         if (!$this->getDoorman()->isKitchenStaff()) {
             throw new AccessDeniedException();

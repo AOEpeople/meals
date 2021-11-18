@@ -12,12 +12,12 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class InvitationForm extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         // passing by Day value to the DayForm in order to render only particular day
         $builder
             ->add('day', DayForm::class, array(
-                    'data' => $options['data']->getDay()
+                'data' => $options['data']->getDay()
             ))
             ->add('profile', ProfileForm::class)
             ->add('save', SubmitType::class, array(
@@ -26,11 +26,10 @@ class InvitationForm extends AbstractType
                 'attr' => [
                     'class' => 'button small'
                 ]
-            ))
-        ;
+            ));
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(array(
             'data_class' => 'App\Mealz\MealBundle\Entity\InvitationWrapper',

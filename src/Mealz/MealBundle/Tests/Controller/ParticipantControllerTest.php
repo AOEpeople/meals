@@ -106,9 +106,8 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     /**
      * Tests the swap action (offering a meal) in the participant controller.
      * First case: A participant offers his meal on time.
-     * @test
      */
-    public function offeringOneMeal(): void
+    public function testOfferingOneMeal(): void
     {
         $userProfile = $this->getUserProfile(self::USER_STANDARD);
 
@@ -124,15 +123,14 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $this->client->request('GET', '/menu/meal/' . $participantId . '/swap');
 
         //verification by checking the database
-        $offeringParticipant = $this->getDoctrine()->getRepository('MealzMealBundle:Participant')->find($participantId);
+        $offeringParticipant = $this->getDoctrine()->getRepository(Participant::class)->find($participantId);
         $this->assertNotSame($offeringParticipant->getOfferedAt(), 0, 'offeredAt value not changed');
     }
 
     /**
      * Second case: A participant takes his offer back.
-     * @test
      */
-    public function takingOfferBack(): void
+    public function testTakingOfferBack(): void
     {
         $userProfile = $this->getUserProfile(self::USER_STANDARD);
         $lockedMealsArray = $this->getLockedMeals();
@@ -146,19 +144,18 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $this->client->request('GET', '/menu/meal/' . $participantId . '/unswap');
 
         //verification by checking the database
-        $participant = $this->getDoctrine()->getRepository('MealzMealBundle:Participant')->find($participantId);
+        $participant = $this->getDoctrine()->getRepository(Participant::class)->find($participantId);
         $this->assertSame($participant->getOfferedAt(), 0, 'failed to retain swapped meal');
     }
 
     /**
      * Third case: A participant tries to offer his outdated meal.
-     * @test
      */
-    public function offeringOutdatedMeal(): void
+    public function testOfferingOutdatedMeal(): void
     {
         $userProfile = $this->getUserProfile(self::USER_STANDARD);
 
-        $outdatedMealsArray = $this->getDoctrine()->getRepository('MealzMealBundle:Meal')->getOutdatedMeals();
+        $outdatedMealsArray = $this->getDoctrine()->getRepository(Meal::class)->getOutdatedMeals();
         $outdatedMeal = $outdatedMealsArray[0];
         $outdatedParticipant = $this->createParticipant($userProfile, $outdatedMeal);
         $participantId = $outdatedParticipant->getId();
@@ -169,15 +166,14 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $this->client->request('GET', '/menu/meal/' . $participantId . '/swap');
 
         //verification by checking the database
-        $notOfferingPart = $this->getDoctrine()->getRepository('MealzMealBundle:Participant')->find($participantId);
+        $notOfferingPart = $this->getDoctrine()->getRepository(Participant::class)->find($participantId);
         $this->assertSame($notOfferingPart->getOfferedAt(), 0, 'user still offered meal');
     }
 
     /**
      * Check that the created participants are displayed in the participation table for the current week
-     * @test
      */
-    public function checkParticipantInParticipationTable()
+    public function testCheckParticipantInParticipationTable(): void
     {
         $crawler = $this->getCurrentWeekParticipations();
         $this->assertEquals(1, $crawler->filter('html:contains("' . self::$participantFirstName . '")')->count());
@@ -188,20 +184,17 @@ class ParticipantControllerTest extends AbstractControllerTestCase
 
     /**
      * Check that the guest participant is displayed with a (<company name>) suffix
-     * @test
      */
-    public function checkGuestSuffixInParticipationTable(): void
+    public function testCheckGuestSuffixInParticipationTable(): void
     {
         $crawler = $this->getCurrentWeekParticipations();
         $this->assertStringContainsString(self::$guestCompany, $crawler->text());
     }
 
     /**
-     * @test
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function checkParticipationCount(): void
+    public function testCheckParticipationCount(): void
     {
         $crawler = $this->getCurrentWeekParticipations();
         $participationCount = $crawler->filter('.meal-count > span')->each(static function ($node, $i): string {
@@ -213,9 +206,8 @@ class ParticipantControllerTest extends AbstractControllerTestCase
 
     /**
      * Check the weekdate is displayed correct
-     * @test
      */
-    public function checkWeekDate(): void
+    public function testCheckWeekDate(): void
     {
         $currentWeek = $this->getCurrentWeek();
         $firstWeekDay = date_format($currentWeek->getDays()->first()->getDateTime(), 'd.m.');
@@ -229,9 +221,8 @@ class ParticipantControllerTest extends AbstractControllerTestCase
 
     /**
      * Check that the first day of the week is displayed correct
-     * @test
      */
-    public function checkFirstWeekDay(): void
+    public function testCheckFirstWeekDay(): void
     {
         $crawler = $this->getCurrentWeekParticipations()
             ->filter('.day')
@@ -241,9 +232,8 @@ class ParticipantControllerTest extends AbstractControllerTestCase
 
     /**
      * Check that the first dish title is displayed
-     * @test
      */
-    public function checkFirstDishTitle(): void
+    public function testCheckFirstDishTitle(): void
     {
         $currentWeek = $this->getCurrentWeek();
         $weekMeals = $currentWeek->getDays()->first()->getMeals();
@@ -255,9 +245,8 @@ class ParticipantControllerTest extends AbstractControllerTestCase
 
     /**
      * Check that variations and parent-dish titles are displayed
-     * @test
      */
-    public function checkFirstVariationAndParentTitle(): void
+    public function testCheckFirstVariationAndParentTitle(): void
     {
         $firstDishVariation = null;
 
@@ -290,9 +279,8 @@ class ParticipantControllerTest extends AbstractControllerTestCase
 
     /**
      * Check that the table data prototype is present in the dom
-     * @test
      */
-    public function checkTableDataPrototype(): void
+    public function testCheckTableDataPrototype(): void
     {
         $crawler = $this->getCurrentWeekParticipations()->filter('.table-content');
         $tableRow = '<tr class="table-row"><td class="text table-data wide-cell">__name__<\/td>';
@@ -305,9 +293,8 @@ class ParticipantControllerTest extends AbstractControllerTestCase
 
     /**
      * Check that the profiles list contains the non participating user
-     * @test
      */
-    public function checkProfileList(): void
+    public function testCheckProfileList(): void
     {
         $crawler = $this->getCurrentWeekParticipations()->filter('.profile-list');
         $userName = self::$userLastName . ', ' . self::$userFirstName;
@@ -332,7 +319,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     protected function getCurrentWeek(): ?Week
     {
         /** @var WeekRepository $weekRepository */
-        $weekRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Week');
+        $weekRepository = $this->getDoctrine()->getRepository(Week::class);
         return $weekRepository->getCurrentWeek();
     }
 

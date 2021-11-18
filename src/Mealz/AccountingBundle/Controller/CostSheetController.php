@@ -164,10 +164,10 @@ class CostSheetController extends BaseController
         return $this->list();
     }
 
-    public function renderConfirmButton(string $hash) : Response
+    public function renderConfirmButton(string $hash): Response
     {
         $profile = null;
-        $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
+        $profileRepository = $this->getDoctrine()->getRepository(Profile::class);
         $queryResult = $profileRepository->findBy(array('settlementHash' => urldecode($hash)));
 
         if (is_array($queryResult) === true && empty($queryResult) === false) {

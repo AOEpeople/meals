@@ -16,7 +16,7 @@ Sign in with your login credentials and select your preferred meals on landing p
 
 ### Invite guest for a meal
 As a logged-in user, you will see small share icon on each day in a week.
-You can send your guest the link, and he will be able to enroll for particular day giving his First/Last name and Company information.
+You can send your guest the link, and he will be able to enroll for a particular day giving his First/Last name and Company information.
 
 ### Transaction history
 Click on your balance. Now you get your Balance from the last day of the last month and an overview of all transaction in the current month.
@@ -103,49 +103,33 @@ Finance has access to all user features and the finance tab.
 ---
 
 ## Devbox Installation
-We're using [ddev](https://ddev.readthedocs.io/) for local development. `ddev` is a CLI tool which uses Docker to simplify local development. Please make sure that `ddev`, `mkcert` and `docker` are installed and run the following to get started:
+We're using [ddev](https://ddev.readthedocs.io/) for local development. `ddev` is a CLI tool which uses Docker to simplify local development. Please make sure that `ddev`, `mkcert` and `docker` are installed. Before starting the Devbox run:
 ```
-ddev start && ddev install
+mkcert -install 
 ```
+
 Point your web browser to https://meals.test :tada:
 Don't forget to add to your local hosts file if not done automatically via ddev: `127.0.0.1 meals.test`
 
-### Rebuild production ready frontend assets
+To simplify things, we have put common commands into a **Makefile**. To see all available options, run the following command:
 ```
-# get into the container
-ddev ssh
-
-# change directory
-cd src/Resources
-
-# build production assets
-yarn build
+make
 ```
 
-### Run code linter
-```bash
-# stylelint for SASS files
-ddev ssh
-cd /var/www/html/src/Resources
-yarn lint:sass
+Run the following to start the Devbox:
+```
+make run-devbox
 ```
 
-### SSH Access
-```
-ddev ssh
-```
+Point your web browser to https://meals.test :tada:
 
-### Common commands
-```
-php bin/console doctrine:schema:update --force
-```
----
+:memo: Don't forget to add `127.0.0.1 meals.test` to your local hosts file if not done automatically via ddev.
 
 ## Troubleshooting
 
 ### SQLSTATE[42S22]: Column not found: 1054 Unknown column
 
-    php bin/console doctrine:schema:update --force --env=dev
+    ddev exec php bin/console doctrine:schema:update --force --env=dev
 
 ---
 
@@ -157,40 +141,15 @@ The following roles are in use:
 
   * ROLE_USER: basically everyone who is allowed to join the meals
   * ROLE_KITCHEN_STAFF: allowed to create and edit dishes and meals
-  * ROLE_GUEST: for users who are invited for a meal, customers etc.
-  * ROLE_ADMIN: for users who are admin
-  * ROLE_FINANCE: for users who are finance
-
-### Test data
-
-To load up some test data, run
-
-    php bin/console doctrine:fixtures:load -n
-
-It generates dishes, meals and the following users.
-
-- alice.meals
-- bob.meals
-- finance.meals
-- jane.meals
-- john.meals
-- kochomi.meals
-
-Their passwords can be found [here](src/Mealz/UserBundle/DataFixtures/ORM/LoadUsers.php).
-The User "kochomi.meals" is allowed to modify dishes and edit meals.
+  * ROLE_GUEST: for users who are invited for a meal, e.g. customers etc.
+  * ROLE_ADMIN: for users who are admins
+  * ROLE_FINANCE: for users who are from finance
 
 ### Login
-User authentication takes place using oauth with custom identity provider. To use it you must define the following env vars with correct values in `env.local.php`.
+User authentication takes place using oauth with custom identity provider. To use it you must define the following env vars with correct values in `.env.local`:
 
 ```shell
 IDP_SERVER=https://login.some-domain.com/
 IDP_CLIENT_ID=client-id
 IDP_CLIENT_SECRET=client-secret
-```
-
-### Running tests
-Use the following command from project root directory in host system.
-
-```shell
-ddev run tests
 ```

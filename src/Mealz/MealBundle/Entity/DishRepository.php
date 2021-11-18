@@ -19,7 +19,7 @@ class DishRepository extends LocalizedRepository
     );
 
     /**
-     * Return a querybuilder that fetches all dish that have NO variations
+     * Return a query builder that fetches all dish that have NO variations
      * and all variations without their dishes
      *
      * @return QueryBuilder
@@ -54,12 +54,6 @@ class DishRepository extends LocalizedRepository
         $options = array_merge($this->defaultOptions, $options);
 
         $query = $this->createQueryBuilder('d');
-
-        // SELECT
-        $select = 'd';
-        if ($options['load_category'] === true) {
-            $select .= ',c';
-        }
 
         // JOIN
         if ($options['load_category'] === true) {
@@ -111,8 +105,8 @@ class DishRepository extends LocalizedRepository
         $query->where('m.dish = :dish');
         $query->andWhere($query->expr()->between('m.dateTime', ':date_from', ':date_to'));
         $query->setParameter('dish', $dish);
-        $query->setParameter('date_from', new \DateTime($countPeriod), \Doctrine\DBAL\Types\Type::DATETIME);
-        $query->setParameter('date_to', new \DateTime('this week +6 days'), \Doctrine\DBAL\Types\Type::DATETIME);
+        $query->setParameter('date_from', new \DateTime($countPeriod));
+        $query->setParameter('date_to', new \DateTime('this week +6 days'));
 
         return $query->getQuery()->getSingleScalarResult();
     }

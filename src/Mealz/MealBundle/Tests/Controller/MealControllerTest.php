@@ -49,9 +49,8 @@ class MealControllerTest extends AbstractControllerTestCase
     /**
      * Tests the acceptOffer action (accepting a meal offer) in the meal controller.
      * First case: An user accepts an available offer.
-     * @test
      */
-    public function acceptAvailableOffer()
+    public function testAcceptAvailableOffer(): void
     {
         $this->loginAs(self::USER_STANDARD);
 
@@ -77,9 +76,8 @@ class MealControllerTest extends AbstractControllerTestCase
 
     /**
      * Second case: There are two offers and the user accepts one and automatically takes the one, that was offered earlier.
-     * @test
      */
-    public function acceptFirstOffer()
+    public function testAcceptFirstOffer(): void
     {
         $this->loginAs(self::USER_STANDARD);
 
@@ -111,19 +109,18 @@ class MealControllerTest extends AbstractControllerTestCase
         $this->assertTrue($this->client->getResponse()->isSuccessful(), 'accepting offer failed');
 
         //verification by checking the database
-        $newParticipant = $this->getDoctrine()->getRepository('MealzMealBundle:Participant')->find($participant->getId());
+        $newParticipant = $this->getDoctrine()->getRepository(Participant::class)->find($participant->getId());
         $this->assertTrue($newParticipant->getOfferedAt() === 0);
 
         //second case: check if second offer is still available
-        $secondOffer = $this->getDoctrine()->getRepository('MealzMealBundle:Participant')->find($secondParticipant->getId());
+        $secondOffer = $this->getDoctrine()->getRepository(Participant::class)->find($secondParticipant->getId());
         $this->assertTrue($secondOffer->getOfferedAt() != 0, 'second offer was taken');
     }
 
     /**
      * Third case: An user tries to accept an outdated offer.
-     * @test
      */
-    public function acceptOutdatedOffer()
+    public function testAcceptOutdatedOffer(): void
     {
         $this->loginAs(self::USER_STANDARD);
 
@@ -132,7 +129,7 @@ class MealControllerTest extends AbstractControllerTestCase
         $this->persistAndFlushAll([$profile]);
 
         //variables for third case
-        $outdatedMealsArray = $this->getDoctrine()->getRepository('MealzMealBundle:Meal')->getOutdatedMeals();
+        $outdatedMealsArray = $this->getDoctrine()->getRepository(Meal::class)->getOutdatedMeals();
         $outdatedMeal = $outdatedMealsArray[0];
 
         $date = date_format($outdatedMeal->getDateTime(), 'Y-m-d');
@@ -151,11 +148,8 @@ class MealControllerTest extends AbstractControllerTestCase
      * If we can subscribe to all 3 of these options then you can select Dish with and without variations
      *
      * /menu/{date}/{dish}/join/{profile}
-     *
-     * @test
-     *
      */
-    public function joinAMealWithVariations()
+    public function testJoinAMealWithVariations(): void
     {
         // data provider method
         $dataProvider = $this->getJoinAMealData();
@@ -187,7 +181,7 @@ class MealControllerTest extends AbstractControllerTestCase
 
                     break;
                 }
-                $this->assertTrue(false);
+                $this->fail();
             }
         }
     }
@@ -198,17 +192,16 @@ class MealControllerTest extends AbstractControllerTestCase
      *
      * @return array
      */
-    public function getJoinAMealData()
+    private function getJoinAMealData(): array
     {
         /** @var MealRepository $mealRepository */
-        $mealRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
+        $mealRepository = $this->getDoctrine()->getRepository(Meal::class);
         $meals = $mealRepository->getMealsOnADayWithVariationOptions();
 
-        $mealsArr = array();
         $dataProvider = array();
         foreach ($meals as $meal) {
             /** @var Meal $meal */
-            $mealsArr[] = $meal = $mealRepository->find($meal['id']);
+            $meal = $mealRepository->find($meal['id']);
             $dataProvider[] = array(date('Y-m-d', $meal->getDay()->getDateTime()->getTimestamp()), $meal);
         }
 
@@ -217,12 +210,17 @@ class MealControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * @test
      * @dataProvider getGuestEnrollmentData
      *
+     * @param $firstName
+     * @param $lastName
+     * @param $company
+     * @param $selectDish
      * @param bool $enrollmentStatus Flag whether enrollment should be successful or not.
+     *
+     * @return void
      */
-    public function enrollAsGuest($firstName, $lastName, $company, $selectDish, $enrollmentStatus)
+    public function testEnrollAsGuest($firstName, $lastName, $company, $selectDish, $enrollmentStatus): void
     {
         $userProfile = $this->getUserProfile(self::USER_STANDARD);
         $meal = $this->getAvailableMeal();
@@ -271,10 +269,7 @@ class MealControllerTest extends AbstractControllerTestCase
         }
     }
 
-    /**
-     * @return array
-     */
-    public function getGuestEnrollmentData()
+    public function getGuestEnrollmentData(): array
     {
         $time = time();
 
@@ -297,7 +292,7 @@ class MealControllerTest extends AbstractControllerTestCase
         $availableMeal = null;
 
         /** @var MealRepository $mealRepository */
-        $mealRepository = $this->getDoctrine()->getRepository('MealzMealBundle:Meal');
+        $mealRepository = $this->getDoctrine()->getRepository(Meal::class);
         $criteria = Criteria::create();
         $meals = $mealRepository->matching($criteria->where(Criteria::expr()->gte('dateTime', new DateTime())));
 
@@ -320,11 +315,9 @@ class MealControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * @test
-     *
      * @testdox A New dish is rendered with a "New meal" tag on home page.
      */
-    public function newMealFlag(): void
+    public function testNewMealFlag(): void
     {
         $dish = new Dish();
         $dish->setTitleEn('Very Yummy Dish');
@@ -349,15 +342,13 @@ class MealControllerTest extends AbstractControllerTestCase
     /**
      * Gets all the participants for a meal.
      *
-     * @param  Meal $meal Meal instance
+     * @param Meal $meal Meal instance
      * @return array
      */
     private function getMealParticipants($meal)
     {
         /** @var ParticipantRepository $participantRepo */
-        $participantRepo = $this->getDoctrine()->getRepository('MealzMealBundle:Participant');
-        $participants = $participantRepo->findBy(['meal' => $meal->getId()]);
-
-        return $participants;
+        $participantRepo = $this->getDoctrine()->getRepository(Participant::class);
+        return $participantRepo->findBy(['meal' => $meal->getId()]);
     }
 }

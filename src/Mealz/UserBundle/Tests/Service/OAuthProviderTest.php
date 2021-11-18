@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Mealz\UserBundle\Tests\Service;
 
-use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
-use App\Mealz\UserBundle\Provider\OAuthUserProvider;
+use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\Entity\Profile;
+use App\Mealz\UserBundle\Provider\OAuthUserProvider;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use Prophecy\PhpUnit\ProphecyTrait;
 
@@ -113,7 +113,7 @@ class OAuthProviderTest extends AbstractControllerTestCase
     /**
      * Returns the mocked response from identity provider.
      */
-    private function getMockedUserResponse(string $username, string $firstName, string $lastName, array $roles)
+    private function getMockedUserResponse(string $username, string $firstName, string $lastName, array $roles): object
     {
         $userData = [
             'preferred_username' => $username,

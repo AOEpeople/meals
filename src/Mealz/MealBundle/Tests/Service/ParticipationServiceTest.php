@@ -49,11 +49,9 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
     }
 
     /**
-     * @test
-     *
      * @testdox User can join a bookable, i.e. not locked, expired or fully booked meal.
      */
-    public function joinSuccessSelfJoining(): void
+    public function testJoinSuccessSelfJoining(): void
     {
         // mock to fake a bookable meal and normal logged-in user
         $doorman = $this->getDoormanMock(true, false);
@@ -76,11 +74,9 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
     }
 
     /**
-     * @test
-     *
      * @testdox A kitchen staff can add a user to a locked meal.
      */
-    public function joinSuccessAssignedByKitchenStaff(): void
+    public function testJoinSuccessAssignedByKitchenStaff(): void
     {
         // mock to lock participation (no more joining) and fake logged-in kitchen staff
         $doorman = $this->getDoormanMock(false, true);
@@ -103,11 +99,9 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
     }
 
     /**
-     * @test
-     *
      * @testdox Joining a meal without specifying a slot automatically assigns a slot.
      */
-    public function joinSuccessAutoSelectSlot(): void
+    public function testJoinSuccessAutoSelectSlot(): void
     {
         // mock to lock participation (no more joining) and fake logged-in kitchen staff
         $doorman = $this->getDoormanMock(false, true);
@@ -135,11 +129,9 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
     }
 
     /**
-     * @test
-     *
      * @testdox Joining a meal without specifying a slot automatically assigns the next available free slot.
      */
-    public function joinSuccessAutoSelectFreeSlot(): void
+    public function testJoinSuccessAutoSelectFreeSlot(): void
     {
         // mock to lock participation (no more joining) and fake logged-in kitchen staff
         $doorman = $this->getDoormanMock(false, true);
@@ -174,11 +166,9 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
     }
 
     /**
-     * @test
-     *
      * @testdox User must not be able to join a non-bookable (locked, expired, or fully booked) meal.
      */
-    public function joinFailure(): void
+    public function testJoinFailure(): void
     {
         // mock to lock participation (no more joining) and fake normal logged-in user
         $doorman = $this->getDoormanMock(false, false);
@@ -193,11 +183,9 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
     }
 
     /**
-     * @test
-     *
      * @testdox User should be able to accept a locked, but not expired, meal offered by any participant.
      */
-    public function acceptMealSuccess(): void
+    public function testAcceptMealSuccess(): void
     {
         // mock to lock participation (no more joining) and fake normal user login, i.e. no admin or kitchen staff
         $doormanMock = $this->getDoormanMock(false, false);
@@ -220,11 +208,9 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
     }
 
     /**
-     * @test
-     *
      * @testdox User must not be able to accept an expired meal.
      */
-    public function acceptMealFailureMealExpired(): void
+    public function testAcceptMealFailureMealExpired(): void
     {
         // mock to lock participation (no more joining) and fake normal user login, i.e. no admin or kitchen staff
         $doormanMock = $this->getDoormanMock(false, false);
@@ -240,11 +226,9 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
     }
 
     /**
-     * @test
-     *
      * @testdox User must not be able to accept a non-offered meal.
      */
-    public function acceptMealFailureMealNotOffered(): void
+    public function testAcceptMealFailureMealNotOffered(): void
     {
         // mock to lock participation (no more joining) and fake normal user login, i.e. no admin or kitchen staff
         $doormanMock = $this->getDoormanMock(false, false);
@@ -297,7 +281,7 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
         $profileRepo = $this->entityManager->getRepository(Profile::class);
         $profile = $profileRepo->find($username);
         if (null === $profile) {
-            throw new RuntimeException('profile not found: '.$username);
+            throw new RuntimeException('profile not found: ' . $username);
         }
 
         return $profile;
@@ -305,7 +289,7 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
 
     private function createSlots(array $data): void
     {
-        if (0 === count ($data)) {
+        if (0 === count($data)) {
             return;
         }
 

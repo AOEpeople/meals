@@ -8,15 +8,9 @@ use App\Mealz\UserBundle\Entity\Profile;
 
 class Wallet
 {
-    /**
-     * @var participantRepo
-     */
-    protected $participantRepo;
+    private ParticipantRepository $participantRepo;
 
-    /**
-     * @var transactionRepo
-     */
-    protected $transactionRepo;
+    private TransactionRepository $transactionRepo;
 
     public function __construct(ParticipantRepository $participantRepo, TransactionRepository $transactionRepo)
     {

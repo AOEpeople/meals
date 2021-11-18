@@ -29,7 +29,7 @@ class CashController extends BaseController
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
         /** @var EntityManager $entityManager */
-        $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
+        $profileRepository = $this->getDoctrine()->getRepository(Profile::class);
 
         $profile = $profileRepository->find($profile);
         $action = $this->generateUrl('mealz_accounting_payment_cash_form_submit');
@@ -65,7 +65,7 @@ class CashController extends BaseController
     {
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
-        $profileRepository = $this->getDoctrine()->getRepository('MealzUserBundle:Profile');
+        $profileRepository = $this->getDoctrine()->getRepository(Profile::class);
         $profile = $profileRepository->find($profile);
 
         $template = "MealzAccountingBundle:Accounting/Payment/Cash:form_cash_settlement.html.twig";
@@ -169,10 +169,10 @@ class CashController extends BaseController
      */
     public function getFullTransactionHistory($dateFrom, $dateTo, $profile)
     {
-        $participantRepo = $this->getDoctrine()->getRepository('MealzMealBundle:Participant');
+        $participantRepo = $this->getParticipantRepository();
         $participations = $participantRepo->getParticipantsOnDays($dateFrom, $dateTo, $profile);
 
-        $transactionRepo = $this->getDoctrine()->getRepository('MealzAccountingBundle:Transaction');
+        $transactionRepo = $this->getTransactionRepository();
         $transactions = $transactionRepo->getSuccessfulTransactionsOnDays($dateFrom, $dateTo, $profile);
 
         $transactionsTotal = 0;

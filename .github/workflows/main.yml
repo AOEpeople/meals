@@ -26,7 +26,6 @@ jobs:
       - name: Install dependencies
         uses: php-actions/composer@v6
         with:
-          php_extensions: bcmath, calendar
           php_version: '7.4'
       - name: Check if psalm exists
         run: ls -la  && ls -la ./vendor/bin/

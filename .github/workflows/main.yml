@@ -23,11 +23,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Install dependencies
-        uses: php-actions/composer@v6
+      - name: Setup PHP environment
+        uses: shivammathur/setup-php@v2
         with:
-          php_version: '7.4'
-      - name: Check if psalm exists
-        run: ls -la  && ls -la ./vendor/bin/
+          php-version: '7.4'
+          tools: vimeo/psalm
       - name: Run Psalm
         run: ./vendor/bin/psalm src ./psalm.xml

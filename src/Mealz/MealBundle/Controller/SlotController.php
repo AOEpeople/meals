@@ -44,7 +44,7 @@ class SlotController extends BaseListController
         return new JsonResponse(['status' => 'success']);
     }
 
-    public function deleteSlot(Slot $slot, SlotService $slotService, TranslatorInterface $translator): JsonResponse
+    public function deleteSlot(Slot $slot, SlotService $slotService): JsonResponse
     {
         try {
             $slotService->delete($slot);

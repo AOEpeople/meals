@@ -27,8 +27,8 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '7.4'
-          tools: composer, vimeo/psalm
+          tools: composer
       - name: Run composer install
         run: composer install -n --prefer-dist
       - name: Run Psalm
-        run: psalm
+        run: ./vendor/bin/psalm

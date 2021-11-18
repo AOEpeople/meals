@@ -27,5 +27,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '7.4'
+      - name: Check if psalm exists
+        uses: ls -la ./vendor/bin/
       - name: Run Psalm
         run: ./vendor/bin/psalm src ./psalm.xml

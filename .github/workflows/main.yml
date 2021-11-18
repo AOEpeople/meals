@@ -28,7 +28,7 @@ jobs:
         with:
           php-version: '7.4'
           tools: composer, vimeo/psalm
-      - name: Where am I?
-        run: ls -la
+      - name: Run composer install
+        run: composer install -n --prefer-dist
       - name: Run Psalm
         run: psalm --root=. ./psalm.xml --output-format=github

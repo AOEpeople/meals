@@ -28,6 +28,6 @@ jobs:
         with:
           php-version: '7.4'
       - name: Check if psalm exists
-        uses: ls -la ./vendor/bin/
+        run: ls -la ./vendor/bin/
       - name: Run Psalm
         run: ./vendor/bin/psalm src ./psalm.xml

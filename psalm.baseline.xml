@@ -30,22 +30,9 @@
   </file>
   <file src="src/Mealz/AccountingBundle/Controller/Payment/CashController.php">
     <InvalidDocblock occurrences="1"/>
-    <InvalidOperand occurrences="1">
-      <code>$transaction-&gt;getAmount()</code>
-    </InvalidOperand>
     <MissingDocblockType occurrences="1">
       <code>$participation</code>
     </MissingDocblockType>
-  </file>
-  <file src="src/Mealz/AccountingBundle/Entity/Transaction.php">
-    <InvalidReturnStatement occurrences="2">
-      <code>$this-&gt;amount</code>
-      <code>$this-&gt;id</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="2">
-      <code>string</code>
-      <code>string</code>
-    </InvalidReturnType>
   </file>
   <file src="src/Mealz/AccountingBundle/Entity/TransactionRepository.php">
     <UndefinedDocblockClass occurrences="1">
@@ -297,9 +284,8 @@
     <UndefinedInterfaceMethod occurrences="1">
       <code>getOutdatedMeals</code>
     </UndefinedInterfaceMethod>
-    <UndefinedMethod occurrences="2">
+    <UndefinedMethod occurrences="1">
       <code>$form['invitation_form[day][meals]']</code>
-      <code>$meal</code>
     </UndefinedMethod>
   </file>
   <file src="src/Mealz/MealBundle/Tests/Controller/ParticipantControllerTest.php">

@@ -28,5 +28,7 @@ jobs:
         with:
           php-version: '7.4'
           tools: vimeo/psalm
+      - name: Where am I?
+        run: ls -la
       - name: Run Psalm
-        run: psalm ./psalm.xml --output-format=github
+        run: psalm --root=. ./psalm.xml --output-format=github

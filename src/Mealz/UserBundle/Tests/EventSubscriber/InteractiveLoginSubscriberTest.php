@@ -76,16 +76,15 @@ class InteractiveLoginSubscriberTest extends AbstractControllerTestCase
     /**
      * Helper to get a mocked InteractiveLoginEvent
      *
-     * @param string $username
      * @return InteractiveLoginEvent
      */
-    private function getMockedInteractiveLoginEvent(string $username = parent::USER_STANDARD): InteractiveLoginEvent
+    private function getMockedInteractiveLoginEvent(): InteractiveLoginEvent
     {
         $userInterfaceMock = $this->getMockBuilder(UserInterface::class)
             ->getMock();
         $userInterfaceMock->expects($this->once())
             ->method('getUsername')
-            ->willReturn($username);
+            ->willReturn(parent::USER_STANDARD);
 
         $tokenInterfaceMock = $this->getMockBuilder(TokenInterface::class)
             ->getMock();

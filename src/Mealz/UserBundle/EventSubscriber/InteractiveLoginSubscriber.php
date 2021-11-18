@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Mealz\UserBundle\EventSubscriber;
 
+use App\Mealz\UserBundle\Entity\ProfileRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
-use App\Mealz\UserBundle\Entity\ProfileRepository;
 use Symfony\Component\Security\Http\SecurityEvents;
 
 class InteractiveLoginSubscriber implements EventSubscriberInterface
@@ -22,7 +22,14 @@ class InteractiveLoginSubscriber implements EventSubscriberInterface
         $this->profileRepository = $profileRepository;
     }
 
-    public function onInteractiveLogin(InteractiveLoginEvent $event)
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            SecurityEvents::INTERACTIVE_LOGIN => ['onInteractiveLogin']
+        ];
+    }
+
+    public function onInteractiveLogin(InteractiveLoginEvent $event): void
     {
         $user = $event->getAuthenticationToken()->getUser();
 
@@ -33,12 +40,5 @@ class InteractiveLoginSubscriber implements EventSubscriberInterface
             $this->entityManager->persist($profile);
             $this->entityManager->flush();
         }
-    }
-
-    public static function getSubscribedEvents()
-    {
-        return [
-            SecurityEvents::INTERACTIVE_LOGIN => ['onInteractiveLogin']
-        ];
     }
 }

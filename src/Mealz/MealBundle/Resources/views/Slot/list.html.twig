@@ -9,8 +9,8 @@
 {% set wrapperClass = 'slot-list form-ajax' %}
 
 {% block body %}
-{# Set data for table header #}
 
+{# Set data for table header #}
 {% set tableHeader = [{
         'label': 'table.title'|trans({}, 'general'),
         'class': 'slot-title'
@@ -26,7 +26,7 @@
 {# Set data for table content #}
 
 {% set tableContent = [] %}
-{% for slot in entities %}
+{% for slot in slots %}
     {% set tableContent = tableContent | merge([{
         'title': {
             'content': slot.title,
@@ -39,6 +39,7 @@
         'actions': {
             'content': MealzButton.buttonbar('', 'buttonbar-slot-actions', [
                 MealzButton.link(path('MealzMealBundle_Slot_edit', {'slug': slot.slug}), 'button.edit'|trans({}, 'actions'), '', 'button-table load-ajax-form load-edit-form transparent', 'glyphicon-pencil'),
+                MealzButton.link('', 'button.delete'|trans({}, 'actions'), '', 'button-table transparent delete', 'glyphicon-remove', '', {'data-id': slot.slug}),
                 MealzCheckbox.createSimple('', slot.enabled, '', '', {'data-id': slot.slug})
             ]),
             'class': 'slot-actions'
@@ -52,7 +53,9 @@
     MealzButton.link(path('MealzMealBundle_Slot_Form_empty'), 'slot.create'|trans({},'actions'), '', 'load-ajax-form load-create-form transparent', 'svg-dish')
 ], '') }}
 
-    <div class="alert alert-danger hidden">{{ 'error.unknown'|trans({},'messages') }}</div>
+    <div id="flash-msg" class="hidden alert"
+         data-del-success-msg="{{ 'entity.deleted'|trans({'%entityName%': 'Slot', '%entity%': '_'}, 'messages') }}"
+         data-err-msg="{{ 'error.unknown'|trans({}, 'messages') }}"></div>
 
     {% if form is defined %}
         <div class="error-form top-form">

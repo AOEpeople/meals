@@ -42,6 +42,11 @@ class Slot
     private bool $disabled = false;
 
     /**
+     * @ORM\Column(type="boolean", options={"default": false})
+     */
+    private bool $deleted = false;
+
+    /**
      * Sort order
      *
      * @ORM\Column(name="`order`", type="integer", options={"default": 0})
@@ -89,6 +94,16 @@ class Slot
         $this->order = $order;
     }
 
+    public function isDeleted(): bool
+    {
+        return $this->deleted;
+    }
+
+    public function setDeleted(bool $deleted): bool
+    {
+        return $this->deleted = $deleted;
+    }
+
     public function isDisabled(): bool
     {
         return $this->disabled;
@@ -107,5 +122,10 @@ class Slot
     public function getSlug(): string
     {
         return $this->slug ?? '';
+    }
+
+    public function setSlug(string $slug): string
+    {
+        return $this->slug = $slug;
     }
 }

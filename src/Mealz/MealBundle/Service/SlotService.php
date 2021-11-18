@@ -28,4 +28,12 @@ class SlotService
         $this->em->persist($slot);
         $this->em->flush();
     }
+
+    public function delete(Slot $slot): void
+    {
+        $slot->setDeleted(true);
+
+        $this->em->persist($slot);
+        $this->em->flush();
+    }
 }

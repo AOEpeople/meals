@@ -225,6 +225,8 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           extensions: bcmath, calendar
+      - name: Psalm
+        uses: docker://vimeo/psalm-github-actions
       - name: Run Psalm
         run: psalm src github ./psalm.xml --use-baseline=./psalm.baseline.xml
 

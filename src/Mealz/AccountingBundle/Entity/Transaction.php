@@ -2,10 +2,10 @@
 
 namespace App\Mealz\AccountingBundle\Entity;
 
+use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use App\Mealz\UserBundle\Entity\Profile;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -63,10 +63,7 @@ class Transaction
      */
     private ?string $orderId = null;
 
-    /**
-     * @return string
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -99,10 +96,7 @@ class Transaction
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getAmount()
+    public function getAmount(): float
     {
         return $this->amount;
     }

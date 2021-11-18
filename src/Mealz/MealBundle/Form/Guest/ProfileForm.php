@@ -19,31 +19,30 @@ class ProfileForm extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-                ->add('name', TextType::class, array(
-                    'required' => false,
-                    'attr' => array(
-                        'placeholder' => 'form.placeholder.name'
-                    ),
-                    'translation_domain' => 'general'
-                ))
-                ->add('firstName', TextType::class, array(
-                    'required' => false,
-                    'attr' => array(
-                        'placeholder' => 'form.placeholder.first_name'
-                    ),
-                    'translation_domain' => 'general'
-                ))
-                ->add('company', TextType::class, array(
-                    'required' => false,
-                    'attr' => array(
-                        'placeholder' => 'form.placeholder.company'
-                    ),
-                    'translation_domain' => 'general'
-                ))
-            ;
+            ->add('name', TextType::class, array(
+                'required' => false,
+                'attr' => array(
+                    'placeholder' => 'form.placeholder.name'
+                ),
+                'translation_domain' => 'general'
+            ))
+            ->add('firstName', TextType::class, array(
+                'required' => false,
+                'attr' => array(
+                    'placeholder' => 'form.placeholder.first_name'
+                ),
+                'translation_domain' => 'general'
+            ))
+            ->add('company', TextType::class, array(
+                'required' => false,
+                'attr' => array(
+                    'placeholder' => 'form.placeholder.company'
+                ),
+                'translation_domain' => 'general'
+            ));
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(array(
             'data_class' => 'App\Mealz\UserBundle\Entity\Profile',

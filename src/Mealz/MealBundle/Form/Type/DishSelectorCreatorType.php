@@ -3,6 +3,7 @@
 namespace App\Mealz\MealBundle\Form\Type;
 
 use App\Mealz\MealBundle\Form\DataTransformer\DishStringToValuesTransformer;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -14,12 +15,7 @@ use Symfony\Component\Form\FormBuilderInterface;
  */
 class DishSelectorCreatorType extends AbstractType
 {
-    /**
-     * build the form
-     * @param FormBuilderInterface $builder
-     * @param array $options
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->resetViewTransformers();
         $builder->addViewTransformer(
@@ -34,6 +30,6 @@ class DishSelectorCreatorType extends AbstractType
 
     public function getParent()
     {
-        return \Symfony\Bridge\Doctrine\Form\Type\EntityType::class;
+        return EntityType::class;
     }
 }

@@ -198,11 +198,10 @@ class MealControllerTest extends AbstractControllerTestCase
         $mealRepository = $this->getDoctrine()->getRepository(Meal::class);
         $meals = $mealRepository->getMealsOnADayWithVariationOptions();
 
-        $mealsArr = array();
         $dataProvider = array();
         foreach ($meals as $meal) {
             /** @var Meal $meal */
-            $mealsArr[] = $meal = $mealRepository->find($meal['id']);
+            $meal = $mealRepository->find($meal['id']);
             $dataProvider[] = array(date('Y-m-d', $meal->getDay()->getDateTime()->getTimestamp()), $meal);
         }
 
@@ -213,11 +212,15 @@ class MealControllerTest extends AbstractControllerTestCase
     /**
      * @dataProvider getGuestEnrollmentData
      *
+     * @param $firstName
+     * @param $lastName
+     * @param $company
+     * @param $selectDish
      * @param bool $enrollmentStatus Flag whether enrollment should be successful or not.
      *
      * @return void
      */
-    public function testEnrollAsGuest($firstName, $lastName, $company, $selectDish, $enrollmentStatus)
+    public function testEnrollAsGuest($firstName, $lastName, $company, $selectDish, $enrollmentStatus): void
     {
         $userProfile = $this->getUserProfile(self::USER_STANDARD);
         $meal = $this->getAvailableMeal();
@@ -346,8 +349,6 @@ class MealControllerTest extends AbstractControllerTestCase
     {
         /** @var ParticipantRepository $participantRepo */
         $participantRepo = $this->getDoctrine()->getRepository(Participant::class);
-        $participants = $participantRepo->findBy(['meal' => $meal->getId()]);
-
-        return $participants;
+        return $participantRepo->findBy(['meal' => $meal->getId()]);
     }
 }

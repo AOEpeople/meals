@@ -27,13 +27,5 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '7.4'
-      - name: Show modules
-        run: php -m
-      - name: Show content
-        run: ls -la
-      - name: Run composer update
-        run: composer update
-      - name: Show modules
-        run: php -m
       - name: Run Psalm
-        run: ./vendor/bin/psalm src github ./psalm.xml --use-baseline=./psalm.baseline.xml
+        run: ./vendor/bin/psalm src ./psalm.xml

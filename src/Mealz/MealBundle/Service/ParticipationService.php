@@ -146,7 +146,7 @@ class ParticipationService
 
     private function getNextFreeSlot(Meal $meal): ?Slot
     {
-        $slots = $this->slotRepo->findBy(['disabled' => 0], ['order' => 'ASC']);
+        $slots = $this->slotRepo->findBy(['disabled' => 0, 'deleted' => 0], ['order' => 'ASC']);
         if (1 > count($slots)) {
             return null; // no active slots are available; return null
         }

@@ -193,12 +193,10 @@ class ParticipantRepository extends EntityRepository
         $queryBuilder = $this->createQueryBuilder('p');
         $queryBuilder
             ->select(['p', 'm', 's', 'up'])
-            ->addSelect('COALESCE(IDENTITY(p.slot), 0) AS HIDDEN null_sort_col') // Pseudo col. to mark participants w/o slot
             ->leftJoin('p.slot', 's')
             ->join('p.profile', 'up')
             ->join('p.meal', 'm', Join::WITH, 'm.dateTime >= :startTime AND m.dateTime <= :endTime')
-            ->orderBy('null_sort_col', 'DESC')
-            ->addOrderBy('s.order', 'ASC')
+            ->orderBy('s.order', 'ASC')
             ->setParameters([
                 'startTime' => (clone $date)->setTime(0, 0),
                 'endTime' =>  (clone $date)->setTime(23, 59),
@@ -220,15 +218,20 @@ class ParticipantRepository extends EntityRepository
     private function groupBySlotAndProfileID(array $participants): array
     {
         $groupedParticipants = [];
+        $noSlotParticipants = [];
 
         foreach ($participants as $participant) {
             $slot = $participant->getSlot();
-            if (null === $slot || $slot->isDisabled()) {
-                $groupedParticipants[''][$participant->getProfile()->getUsername()][] = $participant;
+            if (null === $slot || $slot->isDisabled() || $slot->isDeleted()) {
+                $noSlotParticipants[$participant->getProfile()->getUsername()][] = $participant;
                 continue;
             }
 
             $groupedParticipants[$slot->getTitle()][$participant->getProfile()->getUsername()][] = $participant;
+        }
+
+        if (0 < count($noSlotParticipants)) {
+            $groupedParticipants[''] = $noSlotParticipants;
         }
 
         return $groupedParticipants;

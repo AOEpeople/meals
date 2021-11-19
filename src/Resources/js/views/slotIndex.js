@@ -64,5 +64,3 @@ SlotIndexView.prototype.showFlashMsg = function (msg, type) {
         $flashContainer.slideToggle('slow', () => $flashContainer.text('').removeClass(msgClass));
     }, 3000);
 }
-
-export { SlotIndexView as default };

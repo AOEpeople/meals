@@ -3,6 +3,7 @@ header:
     menu: Mahlzeiten
     dishes: Gerichte
     categories: Kategorien
+    slots: Zeitslot
     costs: Kosten
     finance: Finanzen
   logged_in_text: Eingeloggt als

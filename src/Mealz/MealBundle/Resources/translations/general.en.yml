@@ -3,7 +3,7 @@ header:
     menu: Menu
     dishes: Dishes
     categories: Categories
-    slots: Slots
+    slots: Time Slots
     costs: Costs
     finance: Finance
   logged_in_text: You are logged in as

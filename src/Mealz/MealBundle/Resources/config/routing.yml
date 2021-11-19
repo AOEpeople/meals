@@ -45,7 +45,7 @@ MealzMealBundle_Meal_newGuestInvitation:
 
 MealzMealBundle_Slot:
     path:  /meal/slots
-    defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::list }
+    defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::listSlots }
 
 MealzMealBundle_Slot_Form_empty:
     path:  /meal/slot/new
@@ -69,6 +69,11 @@ MealzMealBundle_Slot_updateState:
     path:  /meal/slot/{slug}/update-state
     defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::updateState }
     methods: [POST]
+
+MealzMealBundle_Slot_delete:
+    path:  /meal/slot/{slug}/delete
+    defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::deleteSlot }
+    methods: [DELETE]
 
 MealzMealBundle_Participant_delete:
     path:  /menu/meal/{participant}/delete

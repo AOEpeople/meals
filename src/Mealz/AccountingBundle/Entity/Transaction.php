@@ -96,7 +96,7 @@ class Transaction
         return $this;
     }
 
-    public function getAmount(): float
+    public function getAmount()
     {
         return $this->amount;
     }

@@ -4,7 +4,6 @@ namespace App\Mealz\AccountingBundle\Controller;
 
 use App\Mealz\AccountingBundle\Entity\Transaction;
 use App\Mealz\AccountingBundle\Event\ProfileSettlementEvent;
-use App\Mealz\AccountingBundle\Event\Subscriber\SettlementSubscriber;
 use App\Mealz\AccountingBundle\Service\Wallet;
 use App\Mealz\MealBundle\Controller\BaseController;
 use App\Mealz\MealBundle\Service\Mailer;
@@ -14,15 +13,17 @@ use DateTime;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class CostSheetController extends BaseController
 {
     private Mailer $mailer;
+    private EventDispatcherInterface $eventDispatcher;
 
-    public function __construct(Mailer $mailer)
+    public function __construct(Mailer $mailer, EventDispatcherInterface $eventDispatcher)
     {
         $this->mailer = $mailer;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -195,9 +196,8 @@ class CostSheetController extends BaseController
             $profile = $queryResult[0];
             $profile->setSettlementHash(null);
 
-            // Dispatch event
-            $dispatcher = new EventDispatcher();
-            $dispatcher->dispatch(new ProfileSettlementEvent($profile));
+            // Dispatch the event
+            $this->eventDispatcher->dispatch(new ProfileSettlementEvent($profile));
 
             $transaction = new Transaction();
             $transaction->setProfile($profile);

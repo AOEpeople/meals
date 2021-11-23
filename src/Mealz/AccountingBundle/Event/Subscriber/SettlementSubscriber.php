@@ -6,7 +6,6 @@ use App\Mealz\AccountingBundle\Event\ProfileSettlementEvent;
 use App\Mealz\MealBundle\Entity\ParticipantRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-
 class SettlementSubscriber implements EventSubscriberInterface
 {
     private ParticipantRepository $participantRepo;
@@ -23,7 +22,7 @@ class SettlementSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            ProfileSettlementEvent::NAME => 'onProfileSettlement'
+            ProfileSettlementEvent::class => 'onProfileSettlement'
         ];
     }
 

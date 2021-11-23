@@ -20,7 +20,7 @@ class SettlementSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            ProfileSettlementEvent::NAME => 'onProfileSettlement'
+            ProfileSettlementEvent::class => 'onProfileSettlement'
         ];
     }
 

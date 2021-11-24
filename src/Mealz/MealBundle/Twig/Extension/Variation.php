@@ -2,29 +2,29 @@
 
 namespace App\Mealz\MealBundle\Twig\Extension;
 
-use Doctrine\Persistence\ManagerRegistry;
+use App\Mealz\MealBundle\Entity\DishRepository;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
+use Exception;
 use Symfony\Component\Form\FormView;
-use Twig\Environment as TwigEnvironment;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 /**
  * @TODO: CodeStyle, variable usage optimization (maybe use $dishes as attribute?)
- * Class Variation
- * @package Mealz\MealBundle\Twig\Extension
  */
 class Variation extends AbstractExtension
 {
-    protected ManagerRegistry $doctrine;
+    /**
+     * Dish consumption count period specified as date format used by PHP date() function.
+     */
+    private string $dishConsCountPeriod;
+    private DishRepository $dishRepository;
 
-    protected TwigEnvironment $twig;
-
-    public function __construct(ManagerRegistry $doctrine, TwigEnvironment $twig)
+    public function __construct(DishRepository $dishRepository, string $dishConsCountPeriod)
     {
-        $this->doctrine = $doctrine;
-        $this->twig = $twig;
+        $this->dishRepository = $dishRepository;
+        $this->dishConsCountPeriod = $dishConsCountPeriod;
     }
 
     /**
@@ -128,24 +128,18 @@ class Variation extends AbstractExtension
 
     /**
      * Returns the name of the extension.
-     *
-     * @return string The extension name
      */
-    public function getName()
+    public function getName(): string
     {
         return 'variation';
     }
 
     /**
-     * Returns the name of the extension.
-     *
-     * @return string The extension name
+     * @throws Exception
      */
-    public function getDishCount($dish)
+    public function getDishCount(Dish $dish): int
     {
-        $entityManager = $this->doctrine->getManager();
-        $dishRepo = $entityManager->getRepository(Dish::class);
-        return $dishRepo->countNumberDishWasTaken($dish, $this->twig->getGlobals()['countDishPeriod']);
+        return $this->dishRepository->countNumberDishWasTaken($dish, $this->dishConsCountPeriod);
     }
 
     /**

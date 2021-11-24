@@ -6,6 +6,7 @@ namespace App\Mealz\MealBundle\Service;
 
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\DishRepository;
+use Exception;
 
 class DishService
 {
@@ -24,8 +25,11 @@ class DishService
         $this->dishRepository = $dishRepository;
     }
 
+    /**
+     * @throws Exception
+     */
     public function isNew(Dish $dish): bool
     {
-        return (int) $this->dishRepository->countNumberDishWasTaken($dish, '0000-01-01') < $this->newFlagThreshold;
+        return $this->dishRepository->countNumberDishWasTaken($dish, '0000-01-01') < $this->newFlagThreshold;
     }
 }

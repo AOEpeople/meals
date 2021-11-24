@@ -2,7 +2,9 @@
 
 namespace App\Mealz\MealBundle\Entity;
 
+use DateTime;
 use Doctrine\ORM\QueryBuilder;
+use Exception;
 
 /**
  * the Dish Repository
@@ -93,10 +95,9 @@ class DishRepository extends LocalizedRepository
 
     /**
      * Counts the number of Dish was taken in the last X Weeks
-     * @param Dish $dish, String $countPeriod
-     * @return integer
+     * @throws Exception
      */
-    public function countNumberDishWasTaken(Dish $dish, $countPeriod)
+    public function countNumberDishWasTaken(Dish $dish, string $countPeriod): int
     {
         // prepare sql statement counting all meals taken
         $query = $this->getEntityManager()->createQueryBuilder();
@@ -105,9 +106,9 @@ class DishRepository extends LocalizedRepository
         $query->where('m.dish = :dish');
         $query->andWhere($query->expr()->between('m.dateTime', ':date_from', ':date_to'));
         $query->setParameter('dish', $dish);
-        $query->setParameter('date_from', new \DateTime($countPeriod));
-        $query->setParameter('date_to', new \DateTime('this week +6 days'));
+        $query->setParameter('date_from', new DateTime($countPeriod));
+        $query->setParameter('date_to', new DateTime('this week +6 days'));
 
-        return $query->getQuery()->getSingleScalarResult();
+        return (int) $query->getQuery()->getSingleScalarResult();
     }
 }

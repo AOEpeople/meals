@@ -8,6 +8,9 @@ parameters:
     app.email.sender: '%env(EMAIL_SENDER)%'
     app.email.settlement_request.receiver: '%env(SETTLEMENT_REQ_EMAIL_RECEIVER)%'
 
+    # default period for counting a dish consumption; specified as format used by PHP date() function
+    app.dish_consumption_count_period: '4 weeks ago'
+
     app.idp.server: '%env(IDP_SERVER)%'
     app.idp.client_id: '%env(IDP_CLIENT_ID)%'
     app.idp.client_secret: '%env(IDP_CLIENT_SECRET)%'
@@ -186,6 +189,10 @@ services:
     App\Mealz\MealBundle\Service\Workday:
         calls:
             - [setDayBlacklist, [['01-01', '05-01', '10-31', '12-24', '12-25', '12-26', '12-27', '12-28', '12-29', '12-30', '12-31']]]
+
+    App\Mealz\MealBundle\Twig\Extension\Variation:
+        arguments:
+            $dishConsCountPeriod: '%app.dish_consumption_count_period%'
 
     # Service Aliases
     mealz_meal.service.dish_service: '@App\Mealz\MealBundle\Service\DishService'

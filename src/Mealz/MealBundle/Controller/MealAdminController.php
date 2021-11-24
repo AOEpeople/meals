@@ -2,7 +2,6 @@
 
 namespace App\Mealz\MealBundle\Controller;
 
-use App\Mealz\MealBundle\Entity\Dish;
 use DateTime;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException;
@@ -61,7 +60,7 @@ class MealAdminController extends BaseController
      *
      * @Security("is_granted('ROLE_KITCHEN_STAFF')")
      */
-    public function new(Request $request, DateTime $date, WeekRepository $weekRepository)
+    public function new(Request $request, DateTime $date, WeekRepository $weekRepository, DishRepository $dishRepository)
     {
         $week = $weekRepository->findOneBy([
             'year' => $date->format('o'),
@@ -100,7 +99,6 @@ class MealAdminController extends BaseController
             }
         }
 
-        $dishRepository = $this->getDoctrine()->getRepository(Dish::class);
         $dishes = $dishRepository->getSortedDishesQueryBuilder()->getQuery()->getResult();
 
         return $this->render(

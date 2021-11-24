@@ -39,17 +39,17 @@ class ParticipationService
      */
     public function join(Profile $profile, Meal $meal, $slot = null): ?array
     {
+        // user is attempting to take over an already booked meal by some participant
+        if ($this->mealIsOffered($meal) && $this->allowedToAccept($meal)) {
+            return $this->reassignOfferedMeal($meal, $profile);
+        }
+
         // self joining by user, or adding by a kitchen staff
         if ($this->doorman->isUserAllowedToJoin($meal) || $this->doorman->isKitchenStaff()) {
             $slot = $slot ?? $this->getNextFreeSlot($meal);
             $participant = $this->create($profile, $meal, $slot);
 
             return ['participant' => $participant, 'offerer' => null];
-        }
-
-        // user is attempting to take over an already booked meal by some participant
-        if ($this->mealIsOffered($meal) && $this->allowedToAccept($meal)) {
-            return $this->reassignOfferedMeal($meal, $profile);
         }
 
         return null;

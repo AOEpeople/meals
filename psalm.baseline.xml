@@ -118,17 +118,6 @@
       <code>isClicked</code>
     </UndefinedInterfaceMethod>
   </file>
-  <file src="src/Mealz/MealBundle/Controller/MealController.php">
-    <InvalidScalarArgument occurrences="2">
-      <code>$dateTime-&gt;format('W')</code>
-      <code>$dateTime-&gt;format('o')</code>
-    </InvalidScalarArgument>
-    <UndefinedInterfaceMethod occurrences="7">
-      <code>getConnection</code>
-      <code>getConnection</code>
-      <code>getConnection</code>
-    </UndefinedInterfaceMethod>
-  </file>
   <file src="src/Mealz/MealBundle/Controller/ParticipantController.php">
     <TypeDoesNotContainNull occurrences="1">
       <code>$participant-&gt;getMeal() === null</code>

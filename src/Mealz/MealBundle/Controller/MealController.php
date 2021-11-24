@@ -22,6 +22,7 @@ use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\Role;
 use DateTime;
+use Doctrine\ORM\EntityManager;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -31,11 +32,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Translation\IdentityTranslator;
 
-/**
- * Meal Controller
- */
 class MealController extends BaseController
 {
     private Mailer $mailer;
@@ -77,7 +74,7 @@ class MealController extends BaseController
         ParticipationService $participationSrv
     ): JsonResponse
     {
-        if ($this->getUser() === null) {
+        if (null === $this->getUser()) {
             return $this->ajaxSessionExpiredRedirect();
         }
 
@@ -88,7 +85,7 @@ class MealController extends BaseController
         }
 
         $userProfile = $this->checkProfile($profile);
-        if ($userProfile === null) {
+        if (null === $userProfile) {
             return new JsonResponse(null, 403);
         }
 
@@ -144,7 +141,7 @@ class MealController extends BaseController
      */
     private function getMealErrorCode($meal): int
     {
-        if ($meal === null) {
+        if (null === $meal) {
             return 404;
         }
 
@@ -157,18 +154,10 @@ class MealController extends BaseController
         return 200;
     }
 
-    /**
-     * Generates delete Ajax Request for join Action
-     *
-     * @param Meal $meal The meal
-     * @param Participant $participant The participant
-     *
-     * @return JsonResponse Ajax-Request
-     */
     private function generateDeleteResponse(Meal $meal, Participant $participant): JsonResponse
     {
-        $ajaxResponse = new JsonResponse();
-        $ajaxResponse->setData(
+        $response = new JsonResponse();
+        $response->setData(
             array(
                 'participantsCount' => $meal->getParticipants()->count(),
                 'url' => $this->generateUrl(
@@ -177,24 +166,16 @@ class MealController extends BaseController
                         'participant' => $participant->getId(),
                     )
                 ),
-                'actionText' => $this->get('translator')->trans('added', array(), 'action'),
+                'actionText' => 'deleted',
             )
         );
-        return $ajaxResponse;
+        return $response;
     }
 
-    /**
-     * Generates accept Ajax Request for join Action
-     *
-     * @param Meal $meal
-     * @param Participant $participant
-     *
-     * @return JsonResponse Ajax-Request
-     */
     private function generateAcceptResponse(Meal $meal, Participant $participant): JsonResponse
     {
-        $ajaxResponse = new JsonResponse();
-        $ajaxResponse->setData(
+        $response = new JsonResponse();
+        $response->setData(
             array(
                 'participantsCount' => $meal->getParticipants()->count(),
                 'url' => $this->generateUrl(
@@ -203,11 +184,11 @@ class MealController extends BaseController
                         'participant' => $participant->getId(),
                     )
                 ),
-                'actionText' => $this->get('translator')->trans('added', array(), 'actions'),
+                'actionText' => 'added',
             )
         );
 
-        return $ajaxResponse;
+        return $response;
     }
 
     private function sendMealTakenNotifications(Profile $offerer, Meal $meal, int $remainingOfferCount): void
@@ -225,9 +206,6 @@ class MealController extends BaseController
         $this->sendMealTakenMattermostMsg($dishTitle, $remainingOfferCount);
     }
 
-    /**
-     * Sends an email to meal giver that his offered meal as been taken by someone.
-     */
     private function sendMealTakenEmail(Profile $profile, string $dishTitle): void
     {
         $translator = $this->get('translator');
@@ -291,13 +269,7 @@ class MealController extends BaseController
         return $ajaxResponse;
     }
 
-    /**
-     * Create an empty non persistent week (for empty weeks)
-     * @param Request $request
-     * @param $hash
-     * @return Response
-     */
-    public function guest(Request $request, $hash): Response
+    public function guest(Request $request, string $hash): Response
     {
         $guestInvitationRepo = $this->getDoctrine()->getRepository(GuestInvitation::class);
         $guestInvitation = $guestInvitationRepo->find($hash);
@@ -316,12 +288,11 @@ class MealController extends BaseController
             return $this->renderGuestForm($form);
         }
 
-        $translator = $this->get('translator');
         $form->handleRequest($request);
         $formData = $request->request->get('invitation_form');
 
         if (isset($formData['day']['meals']) === false || count($formData['day']['meals']) == 0) {
-            $message = $translator->trans("error.participation.no_meal_selected", [], 'messages');
+            $message = $this->get('translator')->trans("error.participation.no_meal_selected", [], 'messages');
             $this->addFlashMessage($message, 'danger');
 
             return $this->renderGuestForm($form);
@@ -336,13 +307,13 @@ class MealController extends BaseController
         $mealDateTime = $mealRepository->find($meals[0])->getDateTime()->format('Y-m-d');
 
         $profile = $invitationWrapper->getProfile();
-        $profileId = $profile->getFirstName() . $profile->getName() . $mealDateTime;
+        $profileId = $profile->getFirstName() . "." . $profile->getName() . "_" . $mealDateTime;
         // Try to load already existing profile entity.
         $loadedProfile = $this->getDoctrine()->getRepository(Profile::class)->find($profileId);
 
         try {
             // If profile already exists: use it. Otherwise create new one.
-            if ($loadedProfile !== null) {
+            if (null !== $loadedProfile) {
                 // If profile exists, but has no guest role, throw an error.
                 if ($loadedProfile->isGuest() !== true) {
                     throw new ProfileExistsException('This profile entity already exists');
@@ -353,9 +324,9 @@ class MealController extends BaseController
                 $profile->addRole($this->getGuestRole());
             }
 
-            $this->addParticipationForEveryChosenMeal($meals, $profile, $mealRepository, $translator);
+            $this->addParticipationForEveryChosenMeal($meals, $profile, $mealRepository);
         } catch (Exception $error) {
-            $message = $this->getParticipantCountMessage($error, $translator);
+            $message = $this->getParticipantCountMessage($error);
 
             $this->addFlashMessage($message, 'danger');
         } finally {
@@ -363,13 +334,6 @@ class MealController extends BaseController
         }
     }
 
-    /**
-     * Render guest form
-     *
-     * @param FormInterface $form
-     *
-     * @return Response
-     */
     private function renderGuestForm(FormInterface $form): Response
     {
         return $this->render(
@@ -380,40 +344,31 @@ class MealController extends BaseController
         );
     }
 
-    /**
-     * Gets the participant count message.
-     *
-     * @param Exception $error The error
-     * @param IdentityTranslator $translator The translator
-     *
-     */
-    private function getParticipantCountMessage(Exception $error, IdentityTranslator $translator): string
+    private function getParticipantCountMessage(Exception $error): string
     {
-        $message = $translator->trans("error.unknown", [], 'messages');
+        $message = $this->get('translator')->trans("error.unknown", [], 'messages');
 
         if ($error instanceof ParticipantNotUniqueException) {
-            $message = $translator->trans("error.participation.not_unique", [], 'messages');
+            $message = $this->get('translator')->trans("error.participation.not_unique", [], 'messages');
         } elseif ($error instanceof ToggleParticipationNotAllowedException) {
-            $message = $translator->trans("error.meal.join_not_allowed", [], 'messages');
+            $message = $this->get('translator')->trans("error.meal.join_not_allowed", [], 'messages');
         } elseif ($error instanceof ProfileExistsException) {
-            $message = $translator->trans("error.profile.already_exists", [], 'messages');
+            $message = $this->get('translator')->trans("error.profile.already_exists", [], 'messages');
         }
 
         return $message;
     }
 
     /**
-     * Adds a participation for every chosen meal.
-     *
-     * @param Meal $meals The meals
-     * @param Profile $profile The profile
-     * @param MealRepository $mealRepository The meal repository
-     * @param IdentityTranslator $translator The Translator Object
-     *
+     * @param array $meals
+     * @param Profile $profile
+     * @param MealRepository $mealRepository
      * @throws ToggleParticipationNotAllowedException
+     * @throws \Doctrine\DBAL\Exception
      */
-    private function addParticipationForEveryChosenMeal(Meal $meals, Profile $profile, MealRepository $mealRepository, IdentityTranslator $translator): void
+    private function addParticipationForEveryChosenMeal(array $meals, Profile $profile, MealRepository $mealRepository): void
     {
+        /** @var EntityManager $entityManager */
         $entityManager = $this->getDoctrine()->getManager();
         // suspend auto-commit
         $entityManager->getConnection()->beginTransaction();
@@ -436,7 +391,7 @@ class MealController extends BaseController
             $entityManager->persist($profile);
             $entityManager->flush();
             $entityManager->getConnection()->commit();
-            $message = $translator->trans("participation.successful", [], 'messages');
+            $message = $this->get('translator')->trans("participation.successful", [], 'messages');
             $this->addFlashMessage($message, 'success');
         } catch (Exception $error) {
             $entityManager->getConnection()->rollBack();
@@ -445,18 +400,13 @@ class MealController extends BaseController
         }
     }
 
-    /**
-     * Method to read Guest role object
-     */
-    public function getGuestRole(): ?Role
+    private function getGuestRole(): ?Role
     {
         $roleRepository = $this->getDoctrine()->getRepository(Role::class);
         return $roleRepository->findOneBy(['sid' => Role::ROLE_GUEST]);
     }
 
     /**
-     * Gets the guest invitation URL.
-     *
      * @param Day $mealDay Meal day for which to generate the invitation.
      * @ParamConverter("mealDay", options={"mapping": {"dayId": "id"}})
      *
@@ -481,8 +431,8 @@ class MealController extends BaseController
     private function createEmptyNonPersistentWeek(DateTime $dateTime): Week
     {
         $week = new Week();
-        $week->setCalendarWeek($dateTime->format('W'));
-        $week->setYear($dateTime->format('o'));
+        $week->setCalendarWeek((int)$dateTime->format("W"));
+        $week->setYear((int)$dateTime->format("o"));
 
         return $week;
     }

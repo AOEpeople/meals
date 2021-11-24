@@ -2,9 +2,9 @@
 
 namespace App\Mealz\UserBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -43,7 +43,6 @@ class Profile implements UserInterface
     private bool $hidden = false;
 
     /**
-     * @Assert\NotBlank()
      * @ORM\Column(type="string", length=255, nullable=TRUE)
      */
     private ?string $company = '';
@@ -153,9 +152,6 @@ class Profile implements UserInterface
         $this->roles = $roles;
     }
 
-    /**
-     * is the User a Guest
-     */
     public function isGuest(): bool
     {
         return $this->roles->exists(

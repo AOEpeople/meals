@@ -17,11 +17,7 @@ use Symfony\Component\Translation\Translator;
 
 class ParticipantController extends BaseController
 {
-    /**
-     * delete participation
-     * @return JsonResponse
-     */
-    public function delete(Participant $participant)
+    public function delete(Participant $participant): JsonResponse
     {
         if (is_object($this->getUser()) === false) {
             return $this->ajaxSessionExpiredRedirect();
@@ -61,7 +57,7 @@ class ParticipantController extends BaseController
                 'dish' => $dish,
                 'profile' => $profile,
             ]),
-            'actionText' => $this->get('translator')->trans('deleted', [], 'action'),
+            'actionText' => 'deleted',
         ));
 
         return $ajaxResponse;
@@ -71,9 +67,10 @@ class ParticipantController extends BaseController
      * Offers an existing participation by setting the participant's 'offeredAt' value to the timestamp.
      * Takes an existing offer back by setting the 'offeredAt' value back to 0.
      * @param Participant $participant
+     * @param NotifierInterface $notifier
      * @return JsonResponse
      */
-    public function swap(Participant $participant, NotifierInterface $notifier)
+    public function swap(Participant $participant, NotifierInterface $notifier): JsonResponse
     {
         $dateTime = $participant->getMeal()->getDateTime();
         $counter = $this->getParticipantRepository()->getOfferCount($dateTime);
@@ -109,7 +106,7 @@ class ParticipantController extends BaseController
                 'url' => $this->generateUrl('MealzMealBundle_Participant_swap', array(
                     'participant' => $participant->getId(),
                 )),
-                'actionText' => $this->get('translator')->trans('unswapped', array(), 'action'),
+                'actionText' => 'unswapped',
             ));
 
             return $ajaxResponse;
@@ -143,7 +140,7 @@ class ParticipantController extends BaseController
                 'participant' => $participant->getId(),
             )),
             'id' => $participant->getId(),
-            'actionText' => $this->get('translator')->trans('swapped', array(), 'action'),
+            'actionText' => 'swapped',
         ));
 
         return $ajaxResponse;
@@ -154,7 +151,7 @@ class ParticipantController extends BaseController
      * @return JsonResponse
      * Checks if the participation of the current user is pending (being offered).
      */
-    public function isParticipationPending(Participant $participant)
+    public function isParticipationPending(Participant $participant): JsonResponse
     {
         $ajaxResponse = new JsonResponse();
         $ajaxResponse->setData(
@@ -164,8 +161,6 @@ class ParticipantController extends BaseController
     }
 
     /**
-     * list participation
-     *
      * @Security("is_granted('ROLE_KITCHEN_STAFF')")
      */
     public function list(DayRepository $dayRepo): Response
@@ -188,11 +183,10 @@ class ParticipantController extends BaseController
     }
 
     /**
-     * edit participation
      * @param Week $week
      * @return Response
      */
-    public function editParticipation(Week $week)
+    public function editParticipation(Week $week): Response
     {
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 

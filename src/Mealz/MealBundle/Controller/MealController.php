@@ -105,12 +105,12 @@ class MealController extends BaseController
             $remainingOfferCount = $participationSrv->getOfferCount($meal->getDateTime());
             $this->sendMealTakenNotifications($out['offerer'], $meal, $remainingOfferCount);
 
-            return $this->generateAcceptResponse($meal, $out['participant']);
+            return $this->generateResponse('MealzMealBundle_Participant_swap', 'added', $meal, $out['participant']);
         }
 
         $this->logAdd($meal, $out['participant']);
 
-        return $this->generateDeleteResponse($meal, $out['participant']);
+        return $this->generateResponse('MealzMealBundle_Participant_delete', 'deleted', $meal, $out['participant']);
     }
 
     /**
@@ -154,40 +154,21 @@ class MealController extends BaseController
         return 200;
     }
 
-    private function generateDeleteResponse(Meal $meal, Participant $participant): JsonResponse
+    private function generateResponse(string $route, string $action, Meal $meal, Participant $participant): JsonResponse
     {
         $response = new JsonResponse();
         $response->setData(
             array(
                 'participantsCount' => $meal->getParticipants()->count(),
                 'url' => $this->generateUrl(
-                    'MealzMealBundle_Participant_delete',
+                    $route,
                     array(
                         'participant' => $participant->getId(),
                     )
                 ),
-                'actionText' => 'deleted',
+                'actionText' => $action,
             )
         );
-        return $response;
-    }
-
-    private function generateAcceptResponse(Meal $meal, Participant $participant): JsonResponse
-    {
-        $response = new JsonResponse();
-        $response->setData(
-            array(
-                'participantsCount' => $meal->getParticipants()->count(),
-                'url' => $this->generateUrl(
-                    'MealzMealBundle_Participant_swap',
-                    array(
-                        'participant' => $participant->getId(),
-                    )
-                ),
-                'actionText' => 'added',
-            )
-        );
-
         return $response;
     }
 

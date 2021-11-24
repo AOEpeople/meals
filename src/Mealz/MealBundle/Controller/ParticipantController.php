@@ -101,15 +101,7 @@ class ParticipantController extends BaseController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();
 
-            $ajaxResponse = new JsonResponse();
-            $ajaxResponse->setData(array(
-                'url' => $this->generateUrl('MealzMealBundle_Participant_swap', array(
-                    'participant' => $participant->getId(),
-                )),
-                'actionText' => 'unswapped',
-            ));
-
-            return $ajaxResponse;
+            return $this->generateResponse('MealzMealBundle_Participant_swap', 'unswapped', $participant);
         }
 
         $entityManager = $this->getDoctrine()->getManager();
@@ -133,17 +125,7 @@ class ParticipantController extends BaseController
 
         $notifier->sendAlert($chefbotMessage);
 
-        // Return JsonResponse
-        $ajaxResponse = new JsonResponse();
-        $ajaxResponse->setData(array(
-            'url' => $this->generateUrl('MealzMealBundle_Participant_unswap', array(
-                'participant' => $participant->getId(),
-            )),
-            'id' => $participant->getId(),
-            'actionText' => 'swapped',
-        ));
-
-        return $ajaxResponse;
+        return $this->generateResponse('MealzMealBundle_Participant_unswap', 'swapped', $participant);
     }
 
     /**
@@ -225,5 +207,20 @@ class ParticipantController extends BaseController
             'profilesJson' => json_encode($profilesArray),
             'prototype' => $prototype,
         ));
+    }
+
+    private function generateResponse(string $route, string $action, Participant $participant): JsonResponse
+    {
+        $response = new JsonResponse();
+        $response->setData(
+            array(
+                'url' => $this->generateUrl($route, array(
+                    'participant' => $participant->getId(),
+                )),
+                'id' => $participant->getId(),
+                'actionText' => $action,
+            )
+        );
+        return $response;
     }
 }

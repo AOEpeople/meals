@@ -153,11 +153,12 @@ jobs:
       PHP_CS_FIXER_FUTURE_MODE: 1
     steps:
       - uses: actions/checkout@v2
-      - name: Check code formatting with PHP-CS-Fixer
+      - name: Setup PHP environment
         uses: shivammathur/setup-php@v2
         with:
           php-version: '7.4'
           tools: composer:v2
+      - name: Check code formatting with PHP-CS-Fixer
         run: |
           rm composer.json composer.lock
           composer require friendsofphp/php-cs-fixer

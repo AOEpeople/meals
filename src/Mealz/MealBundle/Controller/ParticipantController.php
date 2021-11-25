@@ -17,11 +17,7 @@ use Symfony\Component\Translation\Translator;
 
 class ParticipantController extends BaseController
 {
-    /**
-     * delete participation
-     * @return JsonResponse
-     */
-    public function delete(Participant $participant)
+    public function delete(Participant $participant): JsonResponse
     {
         if (is_object($this->getUser()) === false) {
             return $this->ajaxSessionExpiredRedirect();
@@ -53,27 +49,22 @@ class ParticipantController extends BaseController
             );
         }
 
-        $ajaxResponse = new JsonResponse();
-        $ajaxResponse->setData(array(
+        return new JsonResponse([
             'participantsCount' => $meal->getParticipants()->count(),
             'url' => $this->generateUrl('MealzMealBundle_Meal_join', [
                 'date' => $date,
                 'dish' => $dish,
                 'profile' => $profile,
             ]),
-            'actionText' => $this->get('translator')->trans('deleted', [], 'action'),
-        ));
-
-        return $ajaxResponse;
+            'actionText' => 'deleted',
+        ]);
     }
 
     /**
      * Offers an existing participation by setting the participant's 'offeredAt' value to the timestamp.
      * Takes an existing offer back by setting the 'offeredAt' value back to 0.
-     * @param Participant $participant
-     * @return JsonResponse
      */
-    public function swap(Participant $participant, NotifierInterface $notifier)
+    public function swap(Participant $participant, NotifierInterface $notifier): JsonResponse
     {
         $dateTime = $participant->getMeal()->getDateTime();
         $counter = $this->getParticipantRepository()->getOfferCount($dateTime);
@@ -104,15 +95,7 @@ class ParticipantController extends BaseController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();
 
-            $ajaxResponse = new JsonResponse();
-            $ajaxResponse->setData(array(
-                'url' => $this->generateUrl('MealzMealBundle_Participant_swap', array(
-                    'participant' => $participant->getId(),
-                )),
-                'actionText' => $this->get('translator')->trans('unswapped', array(), 'action'),
-            ));
-
-            return $ajaxResponse;
+            return $this->generateResponse('MealzMealBundle_Participant_swap', 'unswapped', $participant);
         }
 
         $entityManager = $this->getDoctrine()->getManager();
@@ -127,45 +110,30 @@ class ParticipantController extends BaseController
         // Mattermost integration
         $translator = new Translator('en_EN');
         $chefbotMessage = $translator->transChoice(
-            $this->get('translator')->trans('mattermost.offered', array(), 'messages'),
+            $this->get('translator')->trans('mattermost.offered', [], 'messages'),
             $counter,
-            array(
+            [
                 '%counter%' => $counter,
-                '%dish%' => $dishTitle)
+                '%dish%' => $dishTitle
+            ]
         );
 
         $notifier->sendAlert($chefbotMessage);
 
-        // Return JsonResponse
-        $ajaxResponse = new JsonResponse();
-        $ajaxResponse->setData(array(
-            'url' => $this->generateUrl('MealzMealBundle_Participant_unswap', array(
-                'participant' => $participant->getId(),
-            )),
-            'id' => $participant->getId(),
-            'actionText' => $this->get('translator')->trans('swapped', array(), 'action'),
-        ));
-
-        return $ajaxResponse;
+        return $this->generateResponse('MealzMealBundle_Participant_unswap', 'swapped', $participant);
     }
 
     /**
-     * @param Participant $participant
-     * @return JsonResponse
      * Checks if the participation of the current user is pending (being offered).
      */
-    public function isParticipationPending(Participant $participant)
+    public function isParticipationPending(Participant $participant): JsonResponse
     {
-        $ajaxResponse = new JsonResponse();
-        $ajaxResponse->setData(
+        return new JsonResponse([
             $participant->isPending()
-        );
-        return $ajaxResponse;
+        ]);
     }
 
     /**
-     * list participation
-     *
      * @Security("is_granted('ROLE_KITCHEN_STAFF')")
      */
     public function list(DayRepository $dayRepo): Response
@@ -187,20 +155,13 @@ class ParticipantController extends BaseController
         ]);
     }
 
-    /**
-     * edit participation
-     * @param Week $week
-     * @return Response
-     */
-    public function editParticipation(Week $week)
+    public function editParticipation(Week $week): Response
     {
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
         /** @var WeekRepository $weekRepository */
         $weekRepository = $this->getDoctrine()->getRepository(Week::class);
-        $week = $weekRepository->findWeekByDate($week->getStartTime(), array(
-            'only_enabled_days' => true
-        ));
+        $week = $weekRepository->findWeekByDate($week->getStartTime(), ['only_enabled_days' => true]);
 
         // Get user participation to list them as table rows
         $participantRepo = $this->getParticipantRepository();
@@ -212,24 +173,33 @@ class ParticipantController extends BaseController
 
         /** @var Profile[] $profiles */
         $profiles = $this->getDoctrine()->getRepository(Profile::class)->findAll();
-        $profilesArray = array();
+        $profilesArray = [];
         foreach ($profiles as $profile) {
             if (false === array_key_exists($profile->getUsername(), $groupedParticipation)) {
-                $profilesArray[] = array(
+                $profilesArray[] = [
                     'label' => $profile->getFullName(),
-                    'value' => $profile->getUsername(),
-                );
+                    'value' => $profile->getUsername()
+                ];
             }
         }
 
         // Create user participation row prototype
-        $prototype = $this->renderView('@MealzMeal/Participant/edit_row_prototype.html.twig', array('week' => $week));
+        $prototype = $this->renderView('@MealzMeal/Participant/edit_row_prototype.html.twig', ['week' => $week]);
 
-        return $this->render('MealzMealBundle:Participant:edit.html.twig', array(
+        return $this->render('MealzMealBundle:Participant:edit.html.twig', [
             'week' => $week,
             'users' => $groupedParticipation,
             'profilesJson' => json_encode($profilesArray),
-            'prototype' => $prototype,
-        ));
+            'prototype' => $prototype
+        ]);
+    }
+
+    private function generateResponse(string $route, string $action, Participant $participant): JsonResponse
+    {
+        return new JsonResponse([
+            'url' => $this->generateUrl($route, ['participant' => $participant->getId()]),
+            'id' => $participant->getId(),
+            'actionText' => $action
+        ]);
     }
 }

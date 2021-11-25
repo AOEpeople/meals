@@ -46,7 +46,7 @@ class InteractiveLoginSubscriberTest extends AbstractControllerTestCase
         $this->clearAllTables();
     }
 
-    public function testOnSecurityInteractiveLoginWithNonHiddenUser()
+    public function testOnSecurityInteractiveLoginWithNonHiddenUser(): void
     {
         $profile = $this->getUserProfile(parent::USER_STANDARD);
         $this->assertFalse($profile->isHidden());
@@ -57,7 +57,7 @@ class InteractiveLoginSubscriberTest extends AbstractControllerTestCase
         $this->assertFalse($profile->isHidden());
     }
 
-    public function testOnSecurityInteractiveLoginWithHiddenUser()
+    public function testOnSecurityInteractiveLoginWithHiddenUser(): void
     {
         $profile = $this->getUserProfile(parent::USER_STANDARD);
         $profile->setHidden(true);

@@ -118,40 +118,6 @@
       <code>isClicked</code>
     </UndefinedInterfaceMethod>
   </file>
-  <file src="src/Mealz/MealBundle/Controller/MealController.php">
-    <ImplicitToStringCast occurrences="2">
-      <code>$error</code>
-      <code>string</code>
-    </ImplicitToStringCast>
-    <InvalidArgument occurrences="1">
-      <code>$error</code>
-    </InvalidArgument>
-    <InvalidReturnStatement occurrences="4">
-      <code>$this-&gt;render('base.html.twig')</code>
-      <code>$this-&gt;renderGuestForm($form)</code>
-      <code>$this-&gt;renderGuestForm($form)</code>
-      <code>$this-&gt;renderGuestForm($form)</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>Week</code>
-    </InvalidReturnType>
-    <InvalidScalarArgument occurrences="2">
-      <code>$dateTime-&gt;format('W')</code>
-      <code>$dateTime-&gt;format('o')</code>
-    </InvalidScalarArgument>
-    <TooFewArguments occurrences="1">
-      <code>new Participant()</code>
-    </TooFewArguments>
-    <UndefinedInterfaceMethod occurrences="7">
-      <code>getConnection</code>
-      <code>getConnection</code>
-      <code>getConnection</code>
-      <code>trans</code>
-      <code>trans</code>
-      <code>trans</code>
-      <code>trans</code>
-    </UndefinedInterfaceMethod>
-  </file>
   <file src="src/Mealz/MealBundle/Controller/ParticipantController.php">
     <TypeDoesNotContainNull occurrences="1">
       <code>$participant-&gt;getMeal() === null</code>

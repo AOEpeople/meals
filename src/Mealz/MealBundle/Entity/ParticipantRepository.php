@@ -426,7 +426,7 @@ class ParticipantRepository extends EntityRepository
     /**
      * Removes all future ordered meals for a given profile
      */
-    public function removeFutureMealsByProfile(Profile $profile)
+    public function removeFutureMealsByProfile(Profile $profile): void
     {
         // Get tomorrow's date
         $tomorrow = new DateTime('tomorrow');

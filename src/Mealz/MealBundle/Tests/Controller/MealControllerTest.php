@@ -212,15 +212,13 @@ class MealControllerTest extends AbstractControllerTestCase
     /**
      * @dataProvider getGuestEnrollmentData
      *
-     * @param $firstName
-     * @param $lastName
-     * @param $company
-     * @param $selectDish
+     * @param string $firstName
+     * @param string $lastName
+     * @param string $company
+     * @param bool $selectDish
      * @param bool $enrollmentStatus Flag whether enrollment should be successful or not.
-     *
-     * @return void
      */
-    public function testEnrollAsGuest($firstName, $lastName, $company, $selectDish, $enrollmentStatus): void
+    public function testEnrollAsGuest(string $firstName, string $lastName, string $company, bool $selectDish, bool $enrollmentStatus): void
     {
         $userProfile = $this->getUserProfile(self::USER_STANDARD);
         $meal = $this->getAvailableMeal();
@@ -261,8 +259,6 @@ class MealControllerTest extends AbstractControllerTestCase
                 && $profile->isGuest()
             ) {
                 $this->assertTrue($enrollmentStatus);
-
-                return;
             } else {
                 $this->assertFalse($enrollmentStatus);
             }
@@ -278,16 +274,15 @@ class MealControllerTest extends AbstractControllerTestCase
             ['Max01:' . $time, 'Mustermann01' . $time, 'Test Comapany01' . $time, false, false],
             ['', 'Mustermann02' . $time, 'Test Comapany02' . $time, true, false],
             ['Max03:' . $time, '', 'Test Comapany03' . $time, true, false],
-            ['Max04:' . $time, 'Mustermann04' . $time, '', true, false],
+            ['Max04:' . $time, 'Mustermann04' . $time, '', true, true], // allow empty company
             ['Max05:' . $time, 'Mustermann05' . $time, 'Test Comapany05' . $time, true, true],
         ];
     }
 
     /**
      * Gets the next available meal.
-     * @return Meal
      */
-    private function getAvailableMeal()
+    private function getAvailableMeal(): Meal
     {
         $availableMeal = null;
 
@@ -340,12 +335,9 @@ class MealControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * Gets all the participants for a meal.
-     *
-     * @param Meal $meal Meal instance
-     * @return array
+     * @return Participant[]
      */
-    private function getMealParticipants($meal)
+    private function getMealParticipants(Meal $meal): array
     {
         /** @var ParticipantRepository $participantRepo */
         $participantRepo = $this->getDoctrine()->getRepository(Participant::class);

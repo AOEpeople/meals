@@ -217,8 +217,6 @@ class MealControllerTest extends AbstractControllerTestCase
      * @param string $company
      * @param bool $selectDish
      * @param bool $enrollmentStatus Flag whether enrollment should be successful or not.
-     *
-     * @return void
      */
     public function testEnrollAsGuest(string $firstName, string $lastName, string $company, bool $selectDish, bool $enrollmentStatus): void
     {
@@ -283,7 +281,6 @@ class MealControllerTest extends AbstractControllerTestCase
 
     /**
      * Gets the next available meal.
-     * @return Meal
      */
     private function getAvailableMeal(): Meal
     {
@@ -337,6 +334,9 @@ class MealControllerTest extends AbstractControllerTestCase
         }
     }
 
+    /**
+     * @return Participant[]
+     */
     private function getMealParticipants(Meal $meal): array
     {
         /** @var ParticipantRepository $participantRepo */

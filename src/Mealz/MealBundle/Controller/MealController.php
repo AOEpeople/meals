@@ -136,8 +136,6 @@ class MealController extends BaseController
      * Returns an error code when meal is not a valid
      *
      * @param mixed $meal
-     *
-     * @return int
      */
     private function getMealErrorCode($meal): int
     {
@@ -156,20 +154,16 @@ class MealController extends BaseController
 
     private function generateResponse(string $route, string $action, Meal $meal, Participant $participant): JsonResponse
     {
-        $response = new JsonResponse();
-        $response->setData(
-            array(
-                'participantsCount' => $meal->getParticipants()->count(),
-                'url' => $this->generateUrl(
-                    $route,
-                    array(
-                        'participant' => $participant->getId(),
-                    )
-                ),
-                'actionText' => $action,
-            )
-        );
-        return $response;
+        return new JsonResponse([
+            'participantsCount' => $meal->getParticipants()->count(),
+            'url' => $this->generateUrl(
+                $route,
+                [
+                    'participant' => $participant->getId()
+                ]
+            ),
+            'actionText' => $action
+        ]);
     }
 
     private function sendMealTakenNotifications(Profile $offerer, Meal $meal, int $remainingOfferCount): void
@@ -224,30 +218,25 @@ class MealController extends BaseController
     /**
      * Returns swappable meals in an array.
      * Marks meals that are being offered.
-     * @return JsonResponse
      */
     public function updateOffers(): JsonResponse
     {
-        $mealsArray = array();
+        $mealsArray = [];
         $meals = $this->getMealRepository()->getFutureMeals();
 
         // Adds meals that can be swapped into $mealsArray. Marks a meal as "true", if there's an available offer for it.
         foreach ($meals as $meal) {
             if ($this->getDoorman()->isUserAllowedToSwap($meal) === true) {
                 $mealsArray[$meal->getId()] =
-                    array(
+                    [
                         $this->getDoorman()->isOfferAvailable($meal),
                         date_format($meal->getDateTime(), 'Y-m-d'),
                         $meal->getDish()->getSlug()
-                    );
+                    ];
             }
         }
 
-        $ajaxResponse = new JsonResponse();
-        $ajaxResponse->setData(
-            $mealsArray
-        );
-        return $ajaxResponse;
+        return new JsonResponse($mealsArray);
     }
 
     public function guest(Request $request, string $hash): Response
@@ -317,12 +306,7 @@ class MealController extends BaseController
 
     private function renderGuestForm(FormInterface $form): Response
     {
-        return $this->render(
-            'MealzMealBundle:Meal:guest.html.twig',
-            array(
-                'form' => $form->createView(),
-            )
-        );
+        return $this->render('MealzMealBundle:Meal:guest.html.twig', ['form' => $form->createView()]);
     }
 
     private function getParticipantCountMessage(Exception $error): string
@@ -341,9 +325,6 @@ class MealController extends BaseController
     }
 
     /**
-     * @param array $meals
-     * @param Profile $profile
-     * @param MealRepository $mealRepository
      * @throws ToggleParticipationNotAllowedException
      * @throws \Doctrine\DBAL\Exception
      */
@@ -420,9 +401,6 @@ class MealController extends BaseController
 
     /**
      * Log add action of staff member
-     *
-     * @param Meal $meal
-     * @param Participant $participant
      */
     private function logAdd(Meal $meal, Participant $participant): void
     {

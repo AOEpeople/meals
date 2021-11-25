@@ -1,0 +1,20 @@
+<?php
+
+// Only check for files in $lookupDir
+$lookupDir = [__DIR__ . '/src', __DIR__ . '/tests'];
+
+$finder = PhpCsFixer\Finder::create()->in($lookupDir);
+
+$config = new PhpCsFixer\Config();
+return $config
+    ->setRules([
+        '@Symfony' => true,
+        'ordered_imports' => [
+            'imports_order' => [
+                'class', 'function', 'const',
+            ],
+            'sort_algorithm' => 'alpha',
+        ]
+    ])
+    ->setUsingCache(false)
+    ->setFinder($finder);

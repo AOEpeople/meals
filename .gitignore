@@ -15,6 +15,7 @@ node_modules
 !.gitlab-ci.yml
 !.gitkeep
 !.stylelintrc.json
+!.php-cs-fixer.dist
 !/migrations
 !/public/.htaccess
 

@@ -144,34 +144,24 @@ jobs:
         if: always()
         with:
           report_paths: 'build/artifacts/qa/*.xml'
+
   test-cgl:
-    name: PHPCodeSniffer
-    if: "false" # temporarily disable CGL unless fixed
-    needs: [ buildImages ]
+    name: Check Coding Guidelines
     runs-on: ubuntu-latest
-    continue-on-error: true
+    continue-on-error: false
     env:
-      SERVICE: app # use `dev` to enable xdebug and code coverage
-      IMAGE_APP: ${{ needs.buildImages.outputs.image }}
-      IMAGE_DEV: ${{ needs.buildImages.outputs.imageDev }}
-      COMPOSE_INTERACTIVE_NO_CLI: true
+      PHP_CS_FIXER_FUTURE_MODE: 1
     steps:
       - uses: actions/checkout@v2
-      - name: Test with docker compose
-        run: |
-          mkdir -p build
-          docker-compose -f docker-compose-test.yaml pull $SERVICE
-          docker-compose -f docker-compose-test.yaml up -d $SERVICE
-          docker-compose -f docker-compose-test.yaml exec -T $SERVICE mkdir -p build/logs/
-          docker-compose -f docker-compose-test.yaml exec -T $SERVICE bin/phpcs --extensions=php --standard=vendor/leaphub/phpcs-symfony2-standard/leaphub/phpcs/Symfony2/ -s --report=junit --report-file=build/logs/phpcs.xml src
-          docker-compose -f docker-compose-test.yaml exec -T $SERVICE bash -c "find build -type f -regex '.*\.\(html\|xml\)' | xargs sed -i 's#/var/www/html/##g'"
-          docker-compose -f docker-compose-test.yaml down -v --remove-orphans
-      - name: Publish unit-test results
-        uses: EnricoMi/publish-unit-test-result-action@v1
-        if: always()
+      - name: Check code formatting with PHP-CS-Fixer
+        uses: shivammathur/setup-php@v2
         with:
-          check_name: "PHPCodeSniffer"
-          files: build/logs/phpcs.xml
+          php-version: '7.4'
+          tools: composer:v2
+        run: |
+          rm composer.json composer.lock
+          composer require friendsofphp/php-cs-fixer
+          vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist --diff --dry-run -v
 
   lint:
     name: Lint code

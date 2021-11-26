@@ -2,17 +2,19 @@
 
 namespace App\Mealz\MealBundle\Controller;
 
-use DateTime;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\DishRepository;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Entity\WeekRepository;
+use App\Mealz\MealBundle\Event\WeekChangedEvent;
 use App\Mealz\MealBundle\Form\MealAdmin\WeekForm;
 use App\Mealz\MealBundle\Validator\Constraints\DishConstraint;
+use DateTime;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,6 +22,13 @@ use Symfony\Component\Validator\ConstraintViolation;
 
 class MealAdminController extends BaseController
 {
+    private EventDispatcherInterface $eventDispatcher;
+
+    public function __construct(EventDispatcherInterface $eventDispatcher)
+    {
+        $this->eventDispatcher = $eventDispatcher;
+    }
+
     /**
      * @Security("is_granted('ROLE_KITCHEN_STAFF')")
      */
@@ -30,7 +39,7 @@ class MealAdminController extends BaseController
 
         for ($i = 0; $i < 8; $i++) {
             $modifiedDateTime = clone($dateTime);
-            $modifiedDateTime->modify('+'.$i.' weeks');
+            $modifiedDateTime->modify('+' . $i . ' weeks');
             $week = $weekRepository->findOneBy(
                 [
                     'year' => $modifiedDateTime->format('o'),
@@ -82,10 +91,12 @@ class MealAdminController extends BaseController
             }
 
             if ($form->isValid()) {
-                /** @var EntityManager $entitiyManager */
-                $entitiyManager = $this->getDoctrine()->getManager();
-                $entitiyManager->persist($week);
-                $entitiyManager->flush();
+                /** @var EntityManager $entityManager */
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($week);
+                $entityManager->flush();
+
+                $this->eventDispatcher->dispatch(new WeekChangedEvent($week));
 
                 $message = $this->get('translator')->trans('week.created', [], 'messages');
                 $this->addFlashMessage($message, 'success');
@@ -135,10 +146,12 @@ class MealAdminController extends BaseController
             }
 
             if ($form->isValid() === true) {
-                /** @var EntityManager $entitiyManager */
-                $entitiyManager = $this->getDoctrine()->getManager();
-                $entitiyManager->persist($week);
-                $entitiyManager->flush();
+                /** @var EntityManager $entityManager */
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($week);
+                $entityManager->flush();
+
+                $this->eventDispatcher->dispatch(new WeekChangedEvent($week));
 
                 $message = $this->get('translator')->trans('week.modified', [], 'messages');
                 $this->addFlashMessage($message, 'success');
@@ -189,7 +202,7 @@ class MealAdminController extends BaseController
         $days = $week->getDays();
         for ($i = 0; $i < 5; $i++) {
             $dayDateTime = clone($week->getStartTime());
-            $dayDateTime->modify('+'.$i.' days');
+            $dayDateTime->modify('+' . $i . ' days');
             $dayDateTime->setTime(12, 00);
             $lockParticipationDT = clone($dayDateTime);
             $lockParticipationDT->modify($dateTimeModifier);

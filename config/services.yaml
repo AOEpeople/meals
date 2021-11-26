@@ -36,6 +36,7 @@ parameters:
     mealz.meal.price: 3.60
     mealz.meal.search_timestamp: '2000-01-01'
     mealz.meal.new_flag_counter: 2
+    mealz.meal.combined.price: 5.60
 
     # PDO Session Handler options
     # Define table and column names to store session data
@@ -51,6 +52,8 @@ services:
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        bind:
+            $combinedPrice: '%mealz.meal.combined.price%'
 
     # define handler service to store and manage sessions in database
     session.handler.pdo:
@@ -203,6 +206,13 @@ services:
 
     Qipsius\TCPDFBundle\Controller\TCPDFController: '@qipsius.tcpdf'
 
+# TODO: check why it doesn't work, only bind $combinedPrice works.
+#    mealz_meal.service.combined_meal_service:
+#        class: App\Mealz\MealBundle\Service\CombinedMealService
+#        arguments:
+#            - '%mealz.meal.combined.price%'
+#            - '@logger'
+#            - '@doctrine.orm.default_entity_manager'
 
     ##################################################################
     # Accounting BUNDLE

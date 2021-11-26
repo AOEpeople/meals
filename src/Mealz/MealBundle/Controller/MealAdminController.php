@@ -6,6 +6,7 @@ use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\DishRepository;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Entity\WeekRepository;
+use App\Mealz\MealBundle\Event\WeekChangedEvent;
 use App\Mealz\MealBundle\Form\MealAdmin\WeekForm;
 use App\Mealz\MealBundle\Validator\Constraints\DishConstraint;
 use DateTime;
@@ -13,6 +14,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,6 +22,13 @@ use Symfony\Component\Validator\ConstraintViolation;
 
 class MealAdminController extends BaseController
 {
+    private EventDispatcherInterface $eventDispatcher;
+
+    public function __construct(EventDispatcherInterface $eventDispatcher)
+    {
+        $this->eventDispatcher = $eventDispatcher;
+    }
+
     /**
      * @Security("is_granted('ROLE_KITCHEN_STAFF')")
      */
@@ -80,10 +89,12 @@ class MealAdminController extends BaseController
             }
 
             if ($form->isValid()) {
-                /** @var EntityManager $entitiyManager */
-                $entitiyManager = $this->getDoctrine()->getManager();
-                $entitiyManager->persist($week);
-                $entitiyManager->flush();
+                /** @var EntityManager $entityManager */
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($week);
+                $entityManager->flush();
+
+                $this->eventDispatcher->dispatch(new WeekChangedEvent($week));
 
                 $message = $this->get('translator')->trans('week.created', [], 'messages');
                 $this->addFlashMessage($message, 'success');
@@ -131,10 +142,12 @@ class MealAdminController extends BaseController
             }
 
             if (true === $form->isValid()) {
-                /** @var EntityManager $entitiyManager */
-                $entitiyManager = $this->getDoctrine()->getManager();
-                $entitiyManager->persist($week);
-                $entitiyManager->flush();
+                /** @var EntityManager $entityManager */
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($week);
+                $entityManager->flush();
+
+                $this->eventDispatcher->dispatch(new WeekChangedEvent($week));
 
                 $message = $this->get('translator')->trans('week.modified', [], 'messages');
                 $this->addFlashMessage($message, 'success');

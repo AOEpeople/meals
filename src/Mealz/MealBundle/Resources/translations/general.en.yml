@@ -47,7 +47,7 @@ content:
       disabled: No service this day!
     meal:
       no_service: No service!
-      select_slot: Select a Time Slot
+      select_slot: Autoselect next free slot
     dish:
       no_description: No description
       new: New!

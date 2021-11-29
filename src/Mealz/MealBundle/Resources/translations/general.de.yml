@@ -47,7 +47,7 @@ content:
       disabled: Kein Angebot für diesen Tag!
     meal:
       no_service: Kein Angebot!
-      select_slot: Zeitslot auswählen
+      select_slot: Autoselektion nächster freier Slot
     dish:
       no_description: Keine Beschreibung
       new: Neu!

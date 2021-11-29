@@ -31,7 +31,10 @@ class InvitationForm extends AbstractType
                 'choice_label' => 'title',
                 'choice_value' => 'slug',
                 'choice_attr' => static function (Slot $slot, string $slug, string $title) {
-                    return ['data-limit' => $slot->getLimit()];
+                    return [
+                        'data-limit' => $slot->getLimit(),
+                        'data-title' => $slot->getTitle()
+                    ];
                 },
                 'placeholder' => $this->translator->trans('content.participation.meal.select_slot', [], 'general'),
                 'attr' => ['class' => 'slot-selector']

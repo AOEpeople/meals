@@ -12,7 +12,7 @@ MealGuestView.prototype.updateSlots = function () {
     const date = $slotSelector.closest('.meal-guest').data('date');
 
     $.ajax({
-        'url': '/participations/slots-status/' + date,
+        'url': '/participation/slots-status/' + date,
         dataType: 'json',
         'success': function (data) {
             $.each(data, function (k, v) {

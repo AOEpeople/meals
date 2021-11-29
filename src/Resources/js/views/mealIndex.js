@@ -50,7 +50,7 @@ MealIndexView.prototype.handleParticipationUpdate = function (event) {
 
 MealIndexView.prototype.updateSlots = function () {
     $.ajax({
-        'url': '/participations/slots-status',
+        'url': '/participation/slots-status',
         dataType: 'json',
         'success': function (data) {
             $.each(data, function (k, v) {

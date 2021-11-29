@@ -172,9 +172,9 @@ mealz_meal_edit_participations:
     defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::editParticipation }
 
 MealzMealBundle_Slots_status_on:
-    path: /participations/slots-status/{date}
+    path: /participation/slots-status/{date}
     defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::getSlotStatusOn }
 
 MealzMealBundle_Slots_status:
-    path: /participations/slots-status
+    path: /participation/slots-status
     defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::getSlotStatus }

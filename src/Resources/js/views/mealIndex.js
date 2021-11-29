@@ -8,6 +8,7 @@ export default function MealIndexView() {
 MealIndexView.prototype.initEvents = function () {
     // set handler for slot change event
     $('.meals-list .meal .slot-selector').change(this.handleChangeSlot);
+    $('.meals-list .meal .participation-checkbox').change(this.handleParticipationUpdate);
 }
 
 MealIndexView.prototype.handleChangeSlot = function (event) {
@@ -27,6 +28,23 @@ MealIndexView.prototype.handleChangeSlot = function (event) {
                 alert('An unknown error occurred');
             }
         });
+    }
+}
+
+MealIndexView.prototype.handleParticipationUpdate = function (event) {
+    const $dishCheckbox = $(event.target);
+    const $mealContainer = $dishCheckbox.closest('.meal');
+    const bookedMealCount = $mealContainer.find('checkbox.participation-checkbox').length
+
+    // do nothing if user ia joining a meal
+    if ($dishCheckbox.is(':checked')) {
+        return;
+    }
+
+    // reset slot selector if user cancelled all booked meals
+    if (1 > bookedMealCount) {
+        let $slotSelector = $mealContainer.find('.slot-selector');
+        $slotSelector.val('');
     }
 }
 

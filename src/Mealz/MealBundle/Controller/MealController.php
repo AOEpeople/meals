@@ -310,11 +310,10 @@ class MealController extends BaseController
 
             $this->addParticipationForEveryChosenMeal($meals, $profile, $slot);
 
-            $message = $translator->trans("participation.successful", [], 'messages');
+            $message = $this->get('translator')->trans("participation.successful", [], 'messages');
             $this->addFlashMessage($message, 'success');
         } catch (Exception $error) {
             $message = $this->getParticipantCountMessage($error);
-
             $this->addFlashMessage($message, 'danger');
         } finally {
             return $this->render('base.html.twig');

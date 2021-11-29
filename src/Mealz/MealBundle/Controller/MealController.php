@@ -7,7 +7,6 @@ use App\Mealz\MealBundle\Entity\GuestInvitation;
 use App\Mealz\MealBundle\Entity\GuestInvitationRepository;
 use App\Mealz\MealBundle\Entity\InvitationWrapper;
 use App\Mealz\MealBundle\Entity\Meal;
-use App\Mealz\MealBundle\Entity\MealRepository;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Entity\SlotRepository;

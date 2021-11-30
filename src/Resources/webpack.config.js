@@ -4,7 +4,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const TerserPlugin = require('terser-webpack-plugin');
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin')
 
-module.exports = function(env) {
+module.exports = function(env, argv) {
     return {
         target: 'web',
         mode: 'development',
@@ -128,6 +128,7 @@ module.exports = function(env) {
             }),
             new webpack.DefinePlugin({
                 'process.browser': true,
+                'process.env.MODE': JSON.stringify(argv.mode),
             }),
         ],
         devServer: {

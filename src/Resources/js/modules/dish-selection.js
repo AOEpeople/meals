@@ -33,9 +33,9 @@ Mealz.prototype.initDishSelection = function () {
                 });
             } else {
                 // if it's just a meal, we just need to find the meal Name once
-                var mealName = "";
+                var mealName = '';
                 // if the meal is not selected now, we have do catch error cases
-                if(thisMealRow.attr('data-attribute-selected-dish') !== ""){
+                if(thisMealRow.attr('data-attribute-selected-dish') !== ''){
                     mealName = thisMealRow.find('.dishes').filter('[data-attribute-id=' + thisMealRow.attr('data-attribute-selected-dish') + ']').children('span').text();
                 }
                 // if the mealname is not set hard in form (if you select it the first time)
@@ -51,7 +51,7 @@ Mealz.prototype.initDishSelection = function () {
         // prefill all LimitValues
         selectedDay.find('.participation-limit').each(function(i){
             // but only if there is some value
-            if($(this).val() !== ""){
+            if($(this).val() !== ''){
                 $('.limit-input').eq(i).text(parseInt($(this).val()));
             } else {
                 $(selectedDay).children('.limit-icon').removeClass('modified');
@@ -115,7 +115,7 @@ Mealz.prototype.initDishSelection = function () {
     });
 
     // Hiding meal-select-box and limit-box if click anywhere else
-    $('.meal-form').click(function (e) {
+    $('.meal-form').on('click', function (e) {
         e.stopPropagation();
         that.hideSelectBox();
         var isOnSomeBox = false;
@@ -133,7 +133,7 @@ Mealz.prototype.initDishSelection = function () {
 };
 
 window.limitBoxSaveClick = function(){
-    var thisDay = $('.limit-box').filter(":visible").parent();
+    var thisDay = $('.limit-box').filter(':visible').parent();
     var isOkayToClose = true;
     thisDay.find('.limit-input').each(function(i){
         if(Number.isInteger(parseInt($(this).text()))){
@@ -309,7 +309,7 @@ Mealz.prototype.createMealFormElement = function ($mealRow, dishId) {
     var $prototypeFormElementInputs = $prototypeFormElement.find('input');
     $prototypeFormElementInputs.last().val(day);
     $prototypeFormElementInputs.first().val(dishId);
-    if($mealRow.find('.participation-limit').val() === "") {
+    if($mealRow.find('.participation-limit').val() === '') {
         $mealRow.find('.participation-limit').val(0);
     }
 };

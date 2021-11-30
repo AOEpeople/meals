@@ -1,5 +1,5 @@
 Mealz.prototype.confirmAction = function (linkSelector, hiddenContainer, continueButtonSelector) {
-    $(linkSelector).click(function (e) {
+    $(linkSelector).on('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
 

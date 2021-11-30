@@ -6,7 +6,7 @@ Mealz.prototype.enablePaypal = function () {
 
     // Disable usage of "Enter" button in the input field to avoid POST request of form
     amountField.on('keypress', function (e) {
-        if (e.which === 13) {
+        if (e.key === 'Enter') {
             e.preventDefault();
         }
     });
@@ -44,7 +44,7 @@ Mealz.prototype.enablePaypal = function () {
                         // Replace a comma with a point and parse the input string to a float
                         var amountFieldValue = parseFloat(amountField.val().replace(/,/g, '.'));
 
-                        amountField[0].setCustomValidity("");
+                        amountField[0].setCustomValidity('');
 
                         // If the input is valid (matches the HTML pattern: "\d*([.,]?\d{0,2})") and the value is above 0.00..
                         if (amountField[0].checkValidity() === true && amountFieldValue > 0.00) {
@@ -68,7 +68,7 @@ Mealz.prototype.enablePaypal = function () {
                         } else {
                             actions.disable();
                             invalidAmountMessage.show();
-                            amountField[0].setCustomValidity("Invalid field");
+                            amountField[0].setCustomValidity('Invalid field');
                         }
                     });
 
@@ -77,7 +77,7 @@ Mealz.prototype.enablePaypal = function () {
                 onClick: function () {
                     if (amountField[0].checkValidity() === false || parseFloat(amountField[0].value.replace(/,/g, '.')) <= 0.00) {
                         invalidAmountMessage.show();
-                        amountField[0].setCustomValidity("Invalid field");
+                        amountField[0].setCustomValidity('Invalid field');
                     }
                 },
 
@@ -152,7 +152,7 @@ Mealz.prototype.enablePaypal = function () {
             neg = true;
             total = Math.abs(total);
         }
-        return (neg ? "-" : '') + parseFloat(total.replace(/,/g, '.')).toFixed(2).toString();
+        return (neg ? '-' : '') + parseFloat(total.replace(/,/g, '.')).toFixed(2).toString();
     }
 
 };

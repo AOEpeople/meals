@@ -64,6 +64,10 @@ Mealz.prototype.styleCheckboxes = function () {
         $checkbox.trigger('click');
     });
 
+    $('.' + this.checkboxWrapperClass + ' input').on('click', function(e) {
+        e.stopPropagation();
+    });
+
     // Handle change event on checkboxes
     this.$participationCheckboxes.on('change', function() {
         that.toggleParticipation($(this));

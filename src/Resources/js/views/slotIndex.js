@@ -6,7 +6,7 @@ export default function SlotIndexView() {
 
 SlotIndexView.prototype.init = function () {
     this.initSlotStateToggler();
-    $('#slot-table .table-data.slot-actions a.delete').click(this.handleDeleteSlot.bind(this));
+    $('#slot-table .table-data.slot-actions a.delete').on('click', this.handleDeleteSlot.bind(this));
 }
 
 SlotIndexView.prototype.initSlotStateToggler = function () {
@@ -59,7 +59,7 @@ SlotIndexView.prototype.showFlashMsg = function (msg, type) {
     const msgClass = ('error' === type) ? 'alert-danger' : 'alert-success';
     let $flashContainer = $('#flash-msg');
 
-    $flashContainer.addClass(msgClass).text(msg).slideToggle("slow");
+    $flashContainer.addClass(msgClass).text(msg).slideToggle('slow');
     setTimeout( function () {
         $flashContainer.slideToggle('slow', () => $flashContainer.text('').removeClass(msgClass));
     }, 3000);

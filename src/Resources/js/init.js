@@ -6,11 +6,16 @@ import '../sass/mealz.scss'
 
 // include vendors
 import 'jquery';
+import 'jquery-migrate';
 import 'jquery-datetimepicker/build/jquery.datetimepicker.full';
 import '@fancyapps/fancybox';
 import 'easy-autocomplete';
 import 'daterangepicker';
 import {Controller} from "./controller";
+
+if (process.env.MODE === 'production') {
+    jQuery.migrateMute = true;
+}
 
 function importAll(r) {
     r.keys().forEach(r);
@@ -27,7 +32,7 @@ window.Mealz = function () {
     this.$iconCells = $('.icon-cell');
     this.selectWrapperClass = 'select-wrapper';
     this.mealRowsWrapperClassSelector = '.meal-rows-wrapper';
-    this.$selects = $("select");
+    this.$selects = $('select');
     this.$body = $('body');
     this.$editParticipationEventListener = undefined;
     this.$profileAdd = $('.profile-list a[class="button small"]');
@@ -35,7 +40,7 @@ window.Mealz = function () {
 
 importAll(require.context('./modules/', true, /\.js$/));
 
-$(document).ready(function () {
+$(function () {
     const view = $('body').data('view');
     new Controller(view);
 
@@ -156,17 +161,17 @@ $(document).ready(function () {
         $.mlp = {x:0,y:0}; // Mouse Last Position
         function documentHandler(){
             var $current = this === document ? $(this) : $(this).contents();
-            $current.mousemove(function(e){jQuery.mlp = {x:e.pageX,y:e.pageY};});
-            $current.find("iframe").load(documentHandler);
+            $current.on('mousemove', function(e){jQuery.mlp = {x:e.pageX,y:e.pageY};});
+            $current.find('iframe').on('load', documentHandler);
         }
         $(documentHandler);
         $.fn.ismouseover = function(overThis) {
             var result = false;
             this.eq(0).each(function() {
-                var $current = $(this).is("iframe") ? $(this).contents().find("body") : $(this);
+                var $current = $(this).is('iframe') ? $(this).contents().find('body') : $(this);
                 var offset = $current.offset();
-                result =    offset.left<=$.mlp.x && offset.left + $current.outerWidth() > $.mlp.x &&
-                    offset.top<=$.mlp.y && offset.top + $current.outerHeight() > $.mlp.y;
+                result = offset.left<=$.mlp.x && offset.left + $current.outerWidth() > $.mlp.x &&
+                         offset.top<=$.mlp.y && offset.top + $current.outerHeight() > $.mlp.y;
             });
             return result;
         };

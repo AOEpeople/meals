@@ -97,7 +97,7 @@ function updateOffers() {
             });
         },
         error: function() {
-            window.location.replace("/");
+            window.location.replace('/');
     }
     });
 }

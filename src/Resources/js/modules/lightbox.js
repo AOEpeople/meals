@@ -1,5 +1,5 @@
 Mealz.prototype.enableLightbox = function () {
-    var $container = $("[data-fancybox]");
+    var $container = $('[data-fancybox]');
 
     var $options = {
         closeClickOutside: false,

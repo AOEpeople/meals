@@ -38,10 +38,10 @@ Mealz.prototype.copyToClipboard = function() {
                 el.contentEditable = editable;
                 el.readOnly = readOnly;
             } else {
-                guestMenuLinkInput.select();
+                guestMenuLinkInput.trigger('select');
             }
-            document.execCommand('copy');
-            guestMenuLinkInput.blur();
+            navigator.clipboard.writeText(result);
+            guestMenuLinkInput.trigger('blur');
         } else {
             var $html = $(result);
             if ($html.length && $html.find('.login-form').length) {

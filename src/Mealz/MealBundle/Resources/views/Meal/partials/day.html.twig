@@ -30,19 +30,6 @@
 
         {# display meals for given day #}
         {% for meal in groupedMeals.meals %}
-{#            {% set participant = meal.getParticipant(app.user.profile) %}#}
-{#            {% set slotsStatus = participationSrv.slotsStatus(day.dateTime) %}#}
-{#            {% if slotsStatus is not empty %}#}
-{#                <select style="min-width: 150px; margin: 10px 15px;">#}
-{#                    {% for id, slot in slotsStatus %}#}
-{#                        {% set title = slot.title %}#}
-{#                        {% if slot.limit > 0 %}#}
-{#                            {% set title = title ~ '  [' ~ slot.reserved ~ ' / ' ~ slot.limit ~ ']' %}#}
-{#                        {% endif %}#}
-{#                        <option value="{{ id }}"{{ slot.limit > 0 and slot.limit == slot.reserved ? ' disabled' : '' }}>{{ title }}</option>#}
-{#                    {% endfor %}#}
-{#                </select>#}
-{#            {% endif %}#}
             {% include 'MealzMealBundle:Meal/partials:meal.html.twig' %}
         {% endfor %}
 

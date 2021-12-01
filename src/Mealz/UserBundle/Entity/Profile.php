@@ -49,6 +49,7 @@ class Profile implements UserInterface
 
     /**
      * @ORM\ManyToMany(targetEntity="Role", inversedBy="profiles")
+     *
      * @var Collection<int, Role>|null
      */
     private ?Collection $roles = null;
@@ -131,7 +132,7 @@ class Profile implements UserInterface
      */
     public function getRoles(): array
     {
-        if ($this->roles === null) {
+        if (null === $this->roles) {
             return [];
         }
 
@@ -156,8 +157,8 @@ class Profile implements UserInterface
     {
         return $this->roles->exists(
             function ($key, $role) {
-                /** @var Role $role */
-                return ($role->getSid() === 'ROLE_GUEST');
+                /* @var Role $role */
+                return 'ROLE_GUEST' === $role->getSid();
             }
         );
     }

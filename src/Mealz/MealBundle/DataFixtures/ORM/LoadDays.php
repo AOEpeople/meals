@@ -4,21 +4,18 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\DataFixtures\ORM;
 
+use App\Mealz\MealBundle\Entity\Day;
+use App\Mealz\MealBundle\Entity\Week;
 use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use App\Mealz\MealBundle\Entity\Day;
-use App\Mealz\MealBundle\Entity\Week;
 use Exception;
 
-/**
- * Fixtures Load the Days
- */
 class LoadDays extends Fixture implements OrderedFixtureInterface
 {
     /**
-     * Constant to declare load order of fixture
+     * Constant to declare load order of fixture.
      */
     private const ORDER_NUMBER = 3;
 
@@ -32,7 +29,7 @@ class LoadDays extends Fixture implements OrderedFixtureInterface
     protected int $counter = 0;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      *
      * @throws Exception
      */
@@ -45,7 +42,7 @@ class LoadDays extends Fixture implements OrderedFixtureInterface
             $startTime = clone $week->getStartTime();
             $startTime->setTime(12, 0);
 
-            for ($i = 0; $i < 5; $i++) {
+            for ($i = 0; $i < 5; ++$i) {
                 $dateTime = (clone $startTime)->modify('+' . $i . ' days');
                 $lockDateTime = (clone $dateTime)->modify('-1 day 16:00');
 
@@ -67,19 +64,12 @@ class LoadDays extends Fixture implements OrderedFixtureInterface
         $this->addReference('day-' . $this->counter++, $day);
     }
 
-
-    /**
-     * get the Order of Fixtures Loading
-     */
     public function getOrder(): int
     {
         // load as third
         return self::ORDER_NUMBER;
     }
 
-    /**
-     * Load the Weeks
-     */
     protected function loadWeeks(): void
     {
         foreach ($this->referenceRepository->getReferences() as $referenceName => $reference) {

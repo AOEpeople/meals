@@ -10,12 +10,12 @@ use DateTimeImmutable;
 class Order
 {
     /**
-     * PayPal Order-ID
+     * PayPal Order-ID.
      */
     private string $id;
 
     /**
-     * Transaction gross amount
+     * Transaction gross amount.
      */
     private float $amount;
 
@@ -53,6 +53,6 @@ class Order
 
     public function isCompleted(): bool
     {
-        return $this->status === 'COMPLETED';
+        return 'COMPLETED' === $this->status;
     }
 }

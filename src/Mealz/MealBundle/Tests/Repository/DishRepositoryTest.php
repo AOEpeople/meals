@@ -4,13 +4,13 @@ namespace App\Mealz\MealBundle\Tests\Repository;
 
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\DishRepository;
-use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use App\Mealz\MealBundle\EventListener\LocalisationListener;
+use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 
 // @TODO: check if load_category=false option is working
 class DishRepositoryTest extends AbstractDatabaseTestCase
 {
-    /** @var  DishRepository */
+    /** @var DishRepository */
     protected $dishRepository;
 
     protected $locale;
@@ -29,10 +29,10 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
         $dishes = $this->createMultipleDishes(10);
         $this->sortDishByTitle($dishes);
 
-        $options = array(
+        $options = [
             'load_category' => true,
-            'orderBy_category' => false
-        );
+            'orderBy_category' => false,
+        ];
 
         $this->setRepositoryLocalization();
         $this->assertNoQueryResultDiff($dishes, $options);
@@ -43,10 +43,10 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
         $dishes = $this->createMultipleDishes(10);
         $this->sortDishByCategoryAndTitle($dishes);
 
-        $options = array(
+        $options = [
             'load_category' => true,
-            'orderBy_category' => true
-        );
+            'orderBy_category' => true,
+        ];
 
         $this->setRepositoryLocalization();
         $this->assertNoQueryResultDiff($dishes, $options);
@@ -58,10 +58,10 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
         $dishes = $this->createMultipleDishes(10);
         $this->sortDishByTitle($dishes);
 
-        $options = array(
+        $options = [
             'load_category' => true,
-            'orderBy_category' => false
-        );
+            'orderBy_category' => false,
+        ];
 
         $this->setRepositoryLocalization();
         $this->assertNoQueryResultDiff($dishes, $options);
@@ -73,10 +73,10 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
         $dishes = $this->createMultipleDishes(10);
         $this->sortDishByCategoryAndTitle($dishes);
 
-        $options = array(
+        $options = [
             'load_category' => true,
-            'orderBy_category' => true
-        );
+            'orderBy_category' => true,
+        ];
 
         $this->setRepositoryLocalization();
         $this->assertNoQueryResultDiff($dishes, $options);
@@ -96,7 +96,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
         $meal = $this->createMeal($dish);
         $this->persistAndFlushAll([$dish, $meal]);
         $result = $this->dishRepository->hasDishAssociatedMeals($dish);
-        $this->assertTrue($result == 1);
+        $this->assertTrue(1 == $result);
     }
 
     public function testCountNumberDishWasTakenWithNoCounts(): void
@@ -113,7 +113,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
         $meal = $this->createMeal($dish);
         $this->persistAndFlushAll([$dish, $meal]);
         $result = $this->dishRepository->countNumberDishWasTaken($dish, '4 weeks ago');
-        $this->assertTrue($result == 1);
+        $this->assertTrue(1 == $result);
     }
 
     public function testCountNumberDishWasTakenWithAtLeastTwoCount(): void
@@ -124,7 +124,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
         $this->persistAndFlushAll([$dish, $meal]);
         $this->persistAndFlushAll([$dish, $meal2]);
         $result = $this->dishRepository->countNumberDishWasTaken($dish, '4 weeks ago');
-        $this->assertTrue($result == 2);
+        $this->assertTrue(2 == $result);
     }
 
     public function testCountNumberDishWasTakenWithAtLeastOneValidCount(): void
@@ -135,15 +135,15 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
         $this->persistAndFlushAll([$dish, $meal]);
         $this->persistAndFlushAll([$dish, $meal2]);
         $result = $this->dishRepository->countNumberDishWasTaken($dish, '4 weeks ago');
-        $this->assertTrue($result == 1);
+        $this->assertTrue(1 == $result);
     }
 
     protected function setRepositoryLocalization(): void
     {
         $localizationListener = $this->getMockBuilder(LocalisationListener::class)
-            ->setMethods(array(
-                'getLocale'
-            ))
+            ->setMethods([
+                'getLocale',
+            ])
             ->disableOriginalConstructor()
             ->getMock();
         $localizationListener->expects($this->atLeastOnce())
@@ -156,8 +156,8 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
     protected function sortDishByTitle(&$dishes): void
     {
         usort($dishes, function ($firstDish, $secondDish) {
-            /** @var Dish $firstDish */
-            /** @var Dish $secondDish */
+            /* @var Dish $firstDish */
+            /* @var Dish $secondDish */
             return $firstDish->getTitle() < $secondDish->getTitle() ? 1 : -1;
         });
     }
@@ -183,25 +183,27 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
 
     protected function createMultipleDishes($count)
     {
-        $dishes = array();
+        $dishes = [];
         $categories = $this->createMultipleCategories($count / 2);
-        for ($i = 0; $i < $count; $i++) {
+        for ($i = 0; $i < $count; ++$i) {
             $dish = $this->createDish($categories[array_rand($categories)]);
             $dish->setCurrentLocale($this->locale);
             array_push($dishes, $dish);
         }
         $this->persistAndFlushAll(array_merge($dishes, $categories));
+
         return $dishes;
     }
 
     protected function createMultipleCategories($count)
     {
-        $categories = array();
-        for ($i = 0; $i < $count; $i++) {
+        $categories = [];
+        for ($i = 0; $i < $count; ++$i) {
             $category = $this->createCategory();
             $category->setCurrentLocale($this->locale);
             array_push($categories, $category);
         }
+
         return $categories;
     }
 

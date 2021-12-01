@@ -3,12 +3,10 @@
 namespace App\Mealz\MealBundle\Entity;
 
 use DateTime;
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Week
- *
  * @ORM\Table(name="week")
  * @ORM\Entity(repositoryClass="WeekRepository")
  */
@@ -18,26 +16,30 @@ class Week extends AbstractMessage
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @var integer $id
+     *
+     * @var int
      */
     private $id;
 
     /**
      * @ORM\Column(type="smallint", nullable=FALSE)
-     * @var integer $year
+     *
+     * @var int
      */
     private $year;
 
     /**
      * @ORM\Column(type="smallint", nullable=FALSE)
-     * @var integer $calendarWeek
+     *
+     * @var int
      */
     private $calendarWeek;
 
     /**
      * @ORM\OneToMany(targetEntity="Day", mappedBy="week", cascade={"all"})
      * @ORM\OrderBy({"dateTime" = "ASC"})
-     * @var ArrayCollection $days
+     *
+     * @var ArrayCollection
      */
     private $days;
 
@@ -47,7 +49,7 @@ class Week extends AbstractMessage
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -71,7 +73,7 @@ class Week extends AbstractMessage
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getYear()
     {
@@ -79,7 +81,7 @@ class Week extends AbstractMessage
     }
 
     /**
-     * @param integer $year
+     * @param int $year
      */
     public function setYear($year): void
     {
@@ -87,7 +89,7 @@ class Week extends AbstractMessage
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getCalendarWeek()
     {
@@ -95,7 +97,7 @@ class Week extends AbstractMessage
     }
 
     /**
-     * @param integer $calendarWeek
+     * @param int $calendarWeek
      */
     public function setCalendarWeek($calendarWeek): void
     {

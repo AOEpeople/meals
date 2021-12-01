@@ -2,9 +2,9 @@
 
 namespace App\Mealz\MealBundle\Controller;
 
-use Doctrine\ORM\EntityManager;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\DishRepository;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -26,7 +26,7 @@ class DishController extends BaseListController
         }
 
         /** @var Dish $dish */
-        $dish = $this->dishRepository->findOneBy(array('slug' => $slug));
+        $dish = $this->dishRepository->findOneBy(['slug' => $slug]);
 
         if (!$dish) {
             throw $this->createNotFoundException();
@@ -43,7 +43,7 @@ class DishController extends BaseListController
             $entityManager->flush();
             $message = $this->get('translator')->trans(
                 'dish.hidden',
-                array('%dish%' => $dish->getTitle()),
+                ['%dish%' => $dish->getTitle()],
                 'messages'
             );
             $this->addFlashMessage($message, 'success');
@@ -54,7 +54,7 @@ class DishController extends BaseListController
 
             $message = $this->get('translator')->trans(
                 'dish.deleted',
-                array('%dish%' => $dish->getTitle()),
+                ['%dish%' => $dish->getTitle()],
                 'messages'
             );
             $this->addFlashMessage($message, 'success');
@@ -65,11 +65,11 @@ class DishController extends BaseListController
 
     protected function getEntities(): array
     {
-        $parameters = array(
+        $parameters = [
             'load_category' => true,
             'load_variations' => true,
             'orderBy_category' => false,
-        );
+        ];
 
         $dishesQueryBuilder = $this->dishRepository->getSortedDishesQueryBuilder($parameters);
 

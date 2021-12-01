@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use App\Mealz\UserBundle\Entity\Profile;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -68,10 +68,8 @@ class Participant
 
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default": false})
-     * @var boolean
      */
     private bool $confirmed = false;
-
 
     public function __construct(Profile $profile, Meal $meal)
     {
@@ -176,7 +174,7 @@ class Participant
 
     public function isPending(): bool
     {
-        return ($this->getOfferedAt() !== 0);
+        return 0 !== $this->getOfferedAt();
     }
 
     public function __toString()

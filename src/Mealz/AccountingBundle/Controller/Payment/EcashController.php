@@ -2,16 +2,16 @@
 
 namespace App\Mealz\AccountingBundle\Controller\Payment;
 
+use App\Mealz\AccountingBundle\Entity\Transaction;
+use App\Mealz\AccountingBundle\Form\EcashPaymentAdminForm;
 use App\Mealz\AccountingBundle\Service\TransactionService;
 use App\Mealz\AccountingBundle\Service\Wallet;
 use App\Mealz\MealBundle\Controller\BaseController;
-use App\Mealz\AccountingBundle\Entity\Transaction;
 use App\Mealz\UserBundle\Entity\Profile;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\HttpFoundation\Request;
-use App\Mealz\AccountingBundle\Form\EcashPaymentAdminForm;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -40,7 +40,7 @@ class EcashController extends BaseController
             ]
         );
 
-        $template = "MealzAccountingBundle:Accounting/Payment/Ecash:form_ecash_amount.html.twig";
+        $template = 'MealzAccountingBundle:Accounting/Payment/Ecash:form_ecash_amount.html.twig';
         $renderedForm = $this->render($template, ['form' => $form->createView()]);
 
         return new JsonResponse($renderedForm->getContent());
@@ -58,9 +58,9 @@ class EcashController extends BaseController
     ): Response {
         try {
             $transactionService->createFromRequest($request);
-        } catch(AccessDeniedHttpException $ade) {
+        } catch (AccessDeniedHttpException $ade) {
             return new Response('', Response::HTTP_FORBIDDEN);
-        } catch(BadRequestHttpException $bre) {
+        } catch (BadRequestHttpException $bre) {
             $this->logException($bre, 'bad request');
 
             return new Response('', Response::HTTP_BAD_REQUEST);
@@ -68,13 +68,13 @@ class EcashController extends BaseController
             $this->logException($uehe, 'unprocessable entity');
 
             return new Response('', Response::HTTP_UNPROCESSABLE_ENTITY);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $this->logException($e, 'transaction create error');
 
             return new Response('', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        $message = $translator->trans("payment.transaction_history.successful_payment", [], 'messages');
+        $message = $translator->trans('payment.transaction_history.successful_payment', [], 'messages');
         $this->addFlashMessage($message, 'success');
 
         return new Response(
@@ -86,7 +86,7 @@ class EcashController extends BaseController
 
     public function transactionFailure(TranslatorInterface $translator): Response
     {
-        $message = $translator->trans("payment.transaction_history.payment_failed", [], 'messages');
+        $message = $translator->trans('payment.transaction_history.payment_failed', [], 'messages');
         $severity = 'danger';
 
         $this->addFlashMessage($message, $severity);

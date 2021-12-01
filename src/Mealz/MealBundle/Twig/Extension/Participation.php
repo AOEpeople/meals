@@ -2,9 +2,9 @@
 
 namespace App\Mealz\MealBundle\Twig\Extension;
 
+use App\Mealz\MealBundle\Entity\Participant;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\PersistentCollection;
-use App\Mealz\MealBundle\Entity\Participant;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -18,7 +18,7 @@ class Participation extends AbstractExtension
     }
 
     /**
-     * @param Participant[] $userParticipations
+     * @param Participant[]        $userParticipations
      * @param PersistentCollection $meal
      */
     public function isParticipant(array $userParticipations, Collection $mealParticipations)

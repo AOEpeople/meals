@@ -16,7 +16,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class MealForm extends AbstractType
 {
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -30,13 +30,13 @@ class MealForm extends AbstractType
             ->add('participationLimit', IntegerType::class, [
                 'required' => false,
                 'empty_data' => '0',
-                'attr' => ['class' => 'hidden-form-field participation-limit']
+                'attr' => ['class' => 'hidden-form-field participation-limit'],
             ]);
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, static function (FormEvent $event) {
             /** @var Meal|null $meal */
             $meal = $event->getData();
-            if ($meal === null) {
+            if (null === $meal) {
                 return;
             }
 
@@ -56,7 +56,7 @@ class MealForm extends AbstractType
         $builder->addEventListener(FormEvents::SUBMIT, static function (FormEvent $event) {
             /** @var Meal $meal */
             $meal = $event->getData();
-            if ($meal->getDateTime() === null) {
+            if (null === $meal->getDateTime()) {
                 $day = $meal->getDay() ?? $event->getForm()->getParent()->getParent()->getData();
                 $meal->setDay($day);
                 $meal->setDateTime($day->getDateTime());
@@ -70,13 +70,13 @@ class MealForm extends AbstractType
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Meal::class,
-            'error_bubbling' => false
+            'error_bubbling' => false,
         ]);
     }
 }

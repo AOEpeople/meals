@@ -7,22 +7,20 @@ use Doctrine\ORM\QueryBuilder;
 use Exception;
 
 /**
- * the Dish Repository
- * Class DishRepository
- * @package Mealz\MealBundle\Entity
+ * Class DishRepository.
  */
 class DishRepository extends LocalizedRepository
 {
-    protected $defaultOptions = array(
+    protected $defaultOptions = [
         'load_category' => true,
         'orderBy_category' => true,
         'load_disabled' => false,
         'load_disabled_variations' => false,
-    );
+    ];
 
     /**
      * Return a query builder that fetches all dish that have NO variations
-     * and all variations without their dishes
+     * and all variations without their dishes.
      *
      * @return QueryBuilder
      */
@@ -44,12 +42,11 @@ class DishRepository extends LocalizedRepository
     }
 
     /**
-     * get a query builder for sorted list of dishes
-     *
      * @param array $options
+     *
      * @return QueryBuilder
      */
-    public function getSortedDishesQueryBuilder($options = array())
+    public function getSortedDishesQueryBuilder($options = [])
     {
         $currentLocale = $this->localizationListener->getLocale();
 
@@ -58,29 +55,28 @@ class DishRepository extends LocalizedRepository
         $query = $this->createQueryBuilder('d');
 
         // JOIN
-        if ($options['load_category'] === true) {
+        if (true === $options['load_category']) {
             $query->leftJoin('d.category', 'c');
         }
 
         // WHERE
-        if ($options['load_disabled'] === false) {
+        if (false === $options['load_disabled']) {
             $query->where('d.enabled = 1');
         }
 
         // ORDER BY
-        if ($options['load_category'] === true && $options['orderBy_category'] === true) {
-            $query->orderBy('c.title_'.$currentLocale);
-            $query->addOrderBy('d.title_'.$currentLocale);
+        if (true === $options['load_category'] && true === $options['orderBy_category']) {
+            $query->orderBy('c.title_' . $currentLocale);
+            $query->addOrderBy('d.title_' . $currentLocale);
         } else {
-            $query->orderBy('d.title_'.$currentLocale, 'DESC');
+            $query->orderBy('d.title_' . $currentLocale, 'DESC');
         }
 
         return $query;
     }
 
     /**
-     * @param Dish $dish
-     * @return integer
+     * @return int
      */
     public function hasDishAssociatedMeals(Dish $dish)
     {
@@ -94,7 +90,8 @@ class DishRepository extends LocalizedRepository
     }
 
     /**
-     * Counts the number of Dish was taken in the last X Weeks
+     * Counts the number of Dish was taken in the last X Weeks.
+     *
      * @throws Exception
      */
     public function countNumberDishWasTaken(Dish $dish, string $countPeriod): int

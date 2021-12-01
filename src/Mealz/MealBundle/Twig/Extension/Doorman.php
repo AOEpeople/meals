@@ -9,12 +9,10 @@ use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 /**
- * Class Doorman
- * @package Mealz\MealBundle\Twig\Extension
+ * Class Doorman.
  */
 class Doorman extends AbstractExtension
 {
-
     /**
      * @var DoormanService
      */
@@ -22,7 +20,6 @@ class Doorman extends AbstractExtension
 
     /**
      * Doorman constructor.
-     * @param DoormanService $doormanService
      */
     public function __construct(DoormanService $doormanService)
     {
@@ -34,7 +31,7 @@ class Doorman extends AbstractExtension
      */
     public function getFunctions()
     {
-        return array(
+        return [
             new TwigFunction('is_allowed_to_join', [$this, 'isUserAllowedToJoin']),
             new TwigFunction('is_allowed_to_leave', [$this, 'isUserAllowedToLeave']),
             new TwigFunction('is_allowed_to_swap', [$this, 'isUserAllowedToSwap']),
@@ -43,11 +40,10 @@ class Doorman extends AbstractExtension
             new TwigFunction('is_allowed_to_remove_guest', [$this, 'isUserAllowedToRemoveGuest']),
             new TwigFunction('is_participation_pending', [$this, 'isParticipationPending']),
             new TwigFunction('is_offer_available', [$this, 'isOfferAvailable']),
-        );
+        ];
     }
 
     /**
-     * @param Meal $meal
      * @return bool
      */
     public function isUserAllowedToJoin(Meal $meal)
@@ -57,7 +53,6 @@ class Doorman extends AbstractExtension
     }
 
     /**
-     * @param Meal $meal
      * @return bool
      */
     public function isUserAllowedToLeave(Meal $meal)
@@ -67,7 +62,6 @@ class Doorman extends AbstractExtension
     }
 
     /**
-     * @param Meal $meal
      * @return bool
      */
     public function isUserAllowedToSwap(Meal $meal)
@@ -77,7 +71,6 @@ class Doorman extends AbstractExtension
     }
 
     /**
-     * @param Meal $meal
      * @return bool
      */
     public function isUserAllowedToAddGuest(Meal $meal)
@@ -87,7 +80,6 @@ class Doorman extends AbstractExtension
     }
 
     /**
-     * @param Meal $meal
      * @return bool
      */
     public function isUserAllowedToRemoveGuest(Meal $meal)
@@ -97,8 +89,6 @@ class Doorman extends AbstractExtension
     }
 
     /**
-     * @param Meal $meal
-     * @param Participant $participant
      * @return bool
      */
     public function isUserAllowedToUnswap(Meal $meal, Participant $participant)
@@ -108,7 +98,6 @@ class Doorman extends AbstractExtension
     }
 
     /**
-     * @param Participant $participant
      * @return bool
      */
     public function isParticipationPending(Participant $participant)
@@ -118,8 +107,8 @@ class Doorman extends AbstractExtension
     }
 
     /**
-     * @param Meal $meal
      * @param Participant $participant
+     *
      * @return bool
      */
     public function isOfferAvailable(Meal $meal, Participant $participant = null)

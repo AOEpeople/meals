@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Mealz\AccountingBundle\ParticipantList;
 
 use App\Mealz\MealBundle\Entity\Participant;
@@ -6,7 +7,6 @@ use App\Mealz\UserBundle\Entity\Profile;
 
 class ParticipantList
 {
-
     /**
      * @var Participant[]
      */
@@ -30,7 +30,7 @@ class ParticipantList
      */
     public function getProfiles()
     {
-        if ($this->profiles === null) {
+        if (null === $this->profiles) {
             $this->profiles = array_unique(array_map(function (Participant $participant) {
                 return $participant->getProfile();
             }, $this->participations));
@@ -40,7 +40,6 @@ class ParticipantList
     }
 
     /**
-     * @param Profile $profile
      * @return Participant[]
      */
     public function getParticipations(Profile $profile)
@@ -55,7 +54,6 @@ class ParticipantList
     }
 
     /**
-     * @param Profile $profile
      * @return int
      */
     public function countParticipations(Profile $profile)
@@ -64,7 +62,6 @@ class ParticipantList
     }
 
     /**
-     * @param Profile $profile
      * @return Participant[]
      */
     public function getAccountableParticipations(Profile $profile)
@@ -79,7 +76,6 @@ class ParticipantList
     }
 
     /**
-     * @param Profile $profile
      * @return int
      */
     public function countAccountableParticipations(Profile $profile)
@@ -89,6 +85,7 @@ class ParticipantList
         foreach ($participations as $participation) {
             $price += $participation->getMeal()->getPrice();
         }
+
         return $price;
     }
 }

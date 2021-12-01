@@ -4,25 +4,22 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\DataFixtures\ORM;
 
+use App\Mealz\MealBundle\Entity\Category;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use App\Mealz\MealBundle\Entity\Category;
 
-/**
- * Fixtures Load the Categories
- */
 class LoadCategories extends Fixture implements OrderedFixtureInterface
 {
     /**
-     * Constant to declare load order of fixture
+     * Constant to declare load order of fixture.
      */
     private const ORDER_NUMBER = 4;
 
     protected int $counter = 0;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function load(ObjectManager $manager): void
     {
@@ -37,15 +34,12 @@ class LoadCategories extends Fixture implements OrderedFixtureInterface
             $category->setTitleDe($categoryDe);
             $category->setTitleEn($categoryEn);
             $manager->persist($category);
-            $this->addReference('category-'.$this->counter++, $category);
+            $this->addReference('category-' . $this->counter++, $category);
         }
 
         $manager->flush();
     }
 
-    /**
-     * get the Order of Fixtures Loading
-     */
     public function getOrder(): int
     {
         // load as fourth

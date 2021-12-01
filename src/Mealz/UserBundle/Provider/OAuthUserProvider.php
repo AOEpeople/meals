@@ -2,35 +2,35 @@
 
 namespace App\Mealz\UserBundle\Provider;
 
+use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\Role;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthAwareUserProviderInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
-use App\Mealz\UserBundle\Entity\Profile;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProviderInterface
 {
-    private const ROLE_ADMIN         = 'ROLE_ADMIN';
+    private const ROLE_ADMIN = 'ROLE_ADMIN';
     private const ROLE_KITCHEN_STAFF = 'ROLE_KITCHEN_STAFF';
-    private const ROLE_FINANCE       = 'ROLE_FINANCE';
-    private const ROLE_USER          = 'ROLE_USER';
+    private const ROLE_FINANCE = 'ROLE_FINANCE';
+    private const ROLE_USER = 'ROLE_USER';
 
     /**
-     * Map Keycloak Roles to Meals ones
+     * Map Keycloak Roles to Meals ones.
      *
      * @var array<string, string>
      */
     private array $roleMapping = [
-        'meals.admin'   => self::ROLE_ADMIN,
+        'meals.admin' => self::ROLE_ADMIN,
         'meals.kitchen' => self::ROLE_KITCHEN_STAFF,
         'meals.finance' => self::ROLE_FINANCE,
-        'meals.user'    => self::ROLE_USER,
-        'aoe_employee'  => self::ROLE_USER
+        'meals.user' => self::ROLE_USER,
+        'aoe_employee' => self::ROLE_USER,
     ];
 
     private EntityManagerInterface $entityManager;
@@ -50,7 +50,7 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
             return $user;
         }
 
-        $exception = new UsernameNotFoundException($username.': user not found', 1629778235);
+        $exception = new UsernameNotFoundException($username . ': user not found', 1629778235);
         $exception->setUsername($username);
         throw $exception;
     }
@@ -60,9 +60,9 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
      */
     public function loadUserByOAuthUserResponse(UserResponseInterface $response)
     {
-        $username  = $response->getNickname();
+        $username = $response->getNickname();
         $firstName = $response->getFirstName();
-        $lastName  = $response->getLastName();
+        $lastName = $response->getLastName();
 
         $idpUserRoles = $response->getData()['roles'] ?? [];
         $role = $this->toMealsRole($idpUserRoles);
@@ -82,7 +82,7 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
      */
     public function refreshUser(UserInterface $user)
     {
-        if ($this->supportsClass(get_class($user)) === false) {
+        if (false === $this->supportsClass(get_class($user))) {
             throw new UnsupportedUserException(sprintf('Unsupported user class "%s"', get_class($user)));
         }
 
@@ -94,11 +94,11 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
      */
     public function supportsClass($class): bool
     {
-        return $class === Profile::class;
+        return Profile::class === $class;
     }
 
     /**
-     * @param Role[]   $roles
+     * @param Role[] $roles
      */
     private function createProfile(
         string $username,
@@ -113,7 +113,7 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
     }
 
     /**
-     * @param Role[]   $roles
+     * @param Role[] $roles
      */
     private function updateProfile(
         Profile $profile,

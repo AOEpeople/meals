@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="4.12.0@e42bc4a23f67acba28a23bb09c348e2ff38a1d87">
+<files psalm-version="4.13.1@5cf660f63b548ccd4a56f62d916ee4d6028e01a3">
   <file src="src/Mealz/AccountingBundle/Controller/AccountingAdminController.php">
     <InvalidNullableReturnType occurrences="1">
       <code>Profile</code>
@@ -112,15 +112,14 @@
       <code>$modifiedDateTime-&gt;format('W')</code>
       <code>$modifiedDateTime-&gt;format('o')</code>
     </InvalidScalarArgument>
-    <UndefinedInterfaceMethod occurrences="3">
-      <code>getSortedDishesQueryBuilder</code>
+    <UndefinedInterfaceMethod occurrences="2">
       <code>isClicked</code>
       <code>isClicked</code>
     </UndefinedInterfaceMethod>
   </file>
   <file src="src/Mealz/MealBundle/Controller/ParticipantController.php">
     <TypeDoesNotContainNull occurrences="1">
-      <code>$participant-&gt;getMeal() === null</code>
+      <code>null === $participant-&gt;getMeal()</code>
     </TypeDoesNotContainNull>
   </file>
   <file src="src/Mealz/MealBundle/Entity/Dish.php">
@@ -175,22 +174,18 @@
       <code>$action</code>
     </NullArgument>
     <RedundantCondition occurrences="3">
-      <code>$action === 'edit'</code>
-      <code>$action === 'edit'</code>
-      <code>$action === 'show'</code>
+      <code>'edit' === $action</code>
+      <code>'show' === $action</code>
     </RedundantCondition>
     <TypeDoesNotContainType occurrences="11">
-      <code>$action === 'accept_offer'</code>
-      <code>$action === 'confirm'</code>
-      <code>$action === 'delete'</code>
-      <code>$action === 'delete'</code>
-      <code>$action === 'delete'</code>
-      <code>$action === 'delete'</code>
-      <code>$action === 'join'</code>
-      <code>$action === 'join_someone'</code>
-      <code>$action === 'newParticipant'</code>
-      <code>$action === 'swap'</code>
-      <code>$action === 'unswap'</code>
+      <code>'accept_offer' === $action</code>
+      <code>'confirm' === $action</code>
+      <code>'delete' === $action</code>
+      <code>'join' === $action</code>
+      <code>'join_someone' === $action</code>
+      <code>'newParticipant' === $action</code>
+      <code>'swap' === $action</code>
+      <code>'unswap' === $action</code>
     </TypeDoesNotContainType>
   </file>
   <file src="src/Mealz/MealBundle/Service/Workday.php">
@@ -226,25 +221,15 @@
     <InvalidOperand occurrences="1">
       <code>$dishId</code>
     </InvalidOperand>
-    <InvalidReturnStatement occurrences="2">
-      <code>$dishId</code>
+    <InvalidReturnStatement occurrences="1">
       <code>$dishId</code>
     </InvalidReturnStatement>
-    <InvalidReturnType occurrences="2">
+    <InvalidReturnType occurrences="1">
       <code>Crawler</code>
-      <code>bool | integer</code>
     </InvalidReturnType>
     <NullableReturnStatement occurrences="1">
       <code>$dishVariation</code>
     </NullableReturnStatement>
-    <RedundantCondition occurrences="3">
-      <code>count($result)</code>
-      <code>is_array($result)</code>
-      <code>is_array($result) &amp;&amp; count($result)</code>
-    </RedundantCondition>
-    <TypeDoesNotContainType occurrences="1">
-      <code>count($result) === false</code>
-    </TypeDoesNotContainType>
   </file>
   <file src="src/Mealz/MealBundle/Tests/Controller/MealControllerTest.php">
     <UndefinedInterfaceMethod occurrences="1">
@@ -273,14 +258,6 @@
       <code>isOfferAvailable</code>
     </TooManyArguments>
   </file>
-  <file src="src/Mealz/MealBundle/Twig/Extension/Variation.php">
-    <InternalMethod occurrences="1">
-      <code>getGlobals</code>
-    </InternalMethod>
-    <UndefinedInterfaceMethod occurrences="1">
-      <code>countNumberDishWasTaken</code>
-    </UndefinedInterfaceMethod>
-  </file>
   <file src="src/Mealz/MealBundle/Validator/Constraints/DishConstraintValidator.php">
     <ParamNameMismatch occurrences="1">
       <code>$entity</code>
@@ -288,9 +265,6 @@
     <TooManyArguments occurrences="1">
       <code>flush</code>
     </TooManyArguments>
-    <UndefinedMagicPropertyFetch occurrences="1">
-      <code>$constraint-&gt;message</code>
-    </UndefinedMagicPropertyFetch>
   </file>
   <file src="src/Mealz/UserBundle/DataFixtures/ORM/LoadAnonymousUsers.php">
     <UndefinedInterfaceMethod occurrences="2">
@@ -307,10 +281,6 @@
     </TooManyArguments>
   </file>
   <file src="src/Resources/node_modules/flatted/php/flatted.php">
-    <InvalidArgument occurrences="2">
-      <code>$value</code>
-      <code>$value</code>
-    </InvalidArgument>
     <UndefinedPropertyFetch occurrences="2">
       <code>$value-&gt;value</code>
       <code>$value-&gt;value</code>

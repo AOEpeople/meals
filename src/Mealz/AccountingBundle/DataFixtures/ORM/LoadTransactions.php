@@ -15,26 +15,24 @@ use Exception;
 class LoadTransactions extends Fixture implements OrderedFixtureInterface
 {
     /**
-     * Constant to declare load order of fixture
+     * Constant to declare load order of fixture.
      */
     private const ORDER_NUMBER = 4;
 
     protected ObjectManager $objectManager;
 
     /**
-     * @param ObjectManager $manager
-     *
      * @throws Exception
      */
     public function load(ObjectManager $manager): void
     {
         $this->objectManager = $manager;
 
-        for ($i = 0; $i < 3; $i++) {
+        for ($i = 0; $i < 3; ++$i) {
             $randomUsers = $this->getRandomUsers();
             foreach ($randomUsers as $user) {
-                $this->addTransaction($user, random_int(500, 1200)/100);
-                $this->addLastMonthTransaction($user, random_int(500, 1000)/100);
+                $this->addTransaction($user, random_int(500, 1200) / 100);
+                $this->addLastMonthTransaction($user, random_int(500, 1000) / 100);
             }
         }
 
@@ -67,7 +65,7 @@ class LoadTransactions extends Fixture implements OrderedFixtureInterface
             foreach (array_rand($profiles, $number) as $userKey) {
                 $users[] = $profiles[$userKey];
             }
-        } elseif ($number === 1) {
+        } elseif (1 === $number) {
             $users[] = $profiles[array_rand($profiles)];
         }
 
@@ -81,7 +79,7 @@ class LoadTransactions extends Fixture implements OrderedFixtureInterface
     {
         // Generate some random date from last month
         $lastMonthTimestamp = strtotime('first day of previous month') + (random_int(1, 27) * 86400);
-        $this->addTransaction($user, $amount, new DateTime('@'.$lastMonthTimestamp));
+        $this->addTransaction($user, $amount, new DateTime('@' . $lastMonthTimestamp));
     }
 
     /**
@@ -89,7 +87,7 @@ class LoadTransactions extends Fixture implements OrderedFixtureInterface
      */
     private function addTransaction(Profile $user, float $amount, DateTime $date = null): void
     {
-        if (is_null($date) === true) {
+        if (true === is_null($date)) {
             $date = new DateTime();
         }
 

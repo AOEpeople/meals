@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Mealz\UserBundle\Provider;
 
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface;
 
 /**
- * Class LogoutSuccessHandler
+ * Class LogoutSuccessHandler.
  */
 class LogoutSuccessHandler implements LogoutSuccessHandlerInterface
 {
@@ -30,7 +30,7 @@ class LogoutSuccessHandler implements LogoutSuccessHandlerInterface
             $response = new JsonResponse([
                 'payload' => null,
                 'error' => [],
-                'redirect' => $this->logoutUrl
+                'redirect' => $this->logoutUrl,
             ]);
             $response->setStatusCode(302);
 

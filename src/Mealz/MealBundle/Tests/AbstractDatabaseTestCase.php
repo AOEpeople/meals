@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Tests;
 
+use App\Mealz\MealBundle\Entity\Category;
+use App\Mealz\MealBundle\Entity\Dish;
+use App\Mealz\MealBundle\Entity\Meal;
+use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use App\Mealz\MealBundle\Entity\Category;
-use App\Mealz\MealBundle\Entity\Dish;
-use App\Mealz\MealBundle\Entity\Meal;
-use App\Mealz\UserBundle\Entity\Profile;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -21,7 +21,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 abstract class AbstractDatabaseTestCase extends WebTestCase
 {
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function setUp(): void
     {
@@ -31,7 +31,7 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
     }
 
     /**
-     * empty the test database and load fixtures from a class
+     * empty the test database and load fixtures from a class.
      *
      * @param FixtureInterface|array|null $fixtures
      *
@@ -57,18 +57,13 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
             return;
         }
 
-        if ($fixtures === null) {
+        if (null === $fixtures) {
             $this->push($loader);
+
             return;
         }
 
-        throw new InvalidArgumentException(
-            sprintf(
-                '%s expects first parameter to be a FixtureInterface or array. %s given.',
-                __METHOD__,
-                get_class($fixtures)
-            )
-        );
+        throw new InvalidArgumentException(sprintf('%s expects first parameter to be a FixtureInterface or array. %s given.', __METHOD__, get_class($fixtures)));
     }
 
     protected function clearAllTables(): void
@@ -99,7 +94,7 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
 
     protected function createMeal(Dish $dish = null, DateTime $datetime = null): Meal
     {
-        if ($datetime === null) {
+        if (null === $datetime) {
             $datetime = new DateTime();
             $datetime->setTime(12, 0);
         }

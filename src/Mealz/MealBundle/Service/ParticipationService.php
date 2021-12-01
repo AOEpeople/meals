@@ -26,8 +26,7 @@ class ParticipationService
         Doorman $doorman,
         ParticipantRepository $participantRepo,
         SlotRepository $slotRepo
-    )
-    {
+    ) {
         $this->em = $em;
         $this->doorman = $doorman;
         $this->participantRepo = $participantRepo;
@@ -127,7 +126,7 @@ class ParticipationService
         $now = new DateTime();
         $mealDay = $meal->getDay();
 
-        return (($mealDay->getLockParticipationDateTime() < $now) && ($mealDay->getDateTime() > $now));
+        return ($mealDay->getLockParticipationDateTime() < $now) && ($mealDay->getDateTime() > $now);
     }
 
     private function getNextOfferingParticipant(Meal $meal): ?Participant

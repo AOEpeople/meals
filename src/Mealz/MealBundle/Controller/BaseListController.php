@@ -23,8 +23,8 @@ abstract class BaseListController extends BaseController
     public function setEntityName(string $entityName): void
     {
         $this->entityName = $entityName;
-        $this->entityClassPath = 'App\Mealz\MealBundle\Entity\\'.$entityName;
-        $this->entityFormName = 'App\Mealz\MealBundle\Form\\'.$entityName.'\\'.$entityName.'Form';
+        $this->entityClassPath = 'App\Mealz\MealBundle\Entity\\' . $entityName;
+        $this->entityFormName = 'App\Mealz\MealBundle\Form\\' . $entityName . '\\' . $entityName . 'Form';
     }
 
     public function setRepository(ObjectRepository $repository): void
@@ -33,7 +33,6 @@ abstract class BaseListController extends BaseController
     }
 
     /**
-     * list Action
      * @return Response
      */
     public function list()
@@ -50,7 +49,7 @@ abstract class BaseListController extends BaseController
      */
     public function new(Request $request)
     {
-        if ($this->isGranted('ROLE_KITCHEN_STAFF') === false) {
+        if (false === $this->isGranted('ROLE_KITCHEN_STAFF')) {
             throw new AccessDeniedException();
         }
 
@@ -62,18 +61,17 @@ abstract class BaseListController extends BaseController
             'messages'
         );
 
-        return $this->entityFormHandling($request, new $this->entityClassPath, $message);
+        return $this->entityFormHandling($request, new $this->entityClassPath(), $message);
     }
 
     /**
-     * edit Action
-     * @param Request $request
      * @param $slug
+     *
      * @return RedirectResponse|Response
      */
     public function edit(Request $request, $slug)
     {
-        if ($this->isGranted('ROLE_KITCHEN_STAFF') === false) {
+        if (false === $this->isGranted('ROLE_KITCHEN_STAFF')) {
             throw new AccessDeniedException();
         }
 
@@ -91,13 +89,13 @@ abstract class BaseListController extends BaseController
     }
 
     /**
-     * delete Action
      * @param $slug
+     *
      * @return RedirectResponse
      */
     public function delete($slug)
     {
-        if ($this->isGranted('ROLE_KITCHEN_STAFF') === false) {
+        if (false === $this->isGranted('ROLE_KITCHEN_STAFF')) {
             throw new AccessDeniedException();
         }
 
@@ -119,60 +117,59 @@ abstract class BaseListController extends BaseController
         );
         $this->addFlashMessage($message, 'success');
 
-        return $this->redirectToRoute('MealzMealBundle_'.$this->entityName);
+        return $this->redirectToRoute('MealzMealBundle_' . $this->entityName);
     }
 
     /**
-     * get Empty Form Action
      * @return JsonResponse
      */
     public function getEmptyForm()
     {
-        if ($this->getUser() === false) {
+        if (false === $this->getUser()) {
             return $this->ajaxSessionExpiredRedirect();
         }
 
-        if ($this->isGranted('ROLE_KITCHEN_STAFF') === false) {
+        if (false === $this->isGranted('ROLE_KITCHEN_STAFF')) {
             throw new AccessDeniedException();
         }
 
         $entity = new $this->entityClassPath();
-        $action = $this->generateUrl('MealzMealBundle_'.$this->entityName.'_new');
+        $action = $this->generateUrl('MealzMealBundle_' . $this->entityName . '_new');
 
         return new JsonResponse($this->getRenderedEntityForm($entity, $action));
     }
 
     /**
-     * get Pre filled Form Action
      * @param $slug
+     *
      * @return JsonResponse
      */
     public function getPreFilledForm($slug)
     {
-        if ($this->getUser() === false) {
+        if (false === $this->getUser()) {
             return $this->ajaxSessionExpiredRedirect();
         }
 
-        if ($this->isGranted('ROLE_KITCHEN_STAFF') === false) {
+        if (false === $this->isGranted('ROLE_KITCHEN_STAFF')) {
             throw new AccessDeniedException();
         }
 
-        $entity = $this->repository->findOneBy(array('slug' => $slug));
+        $entity = $this->repository->findOneBy(['slug' => $slug]);
 
-        if ($entity === null) {
+        if (null === $entity) {
             return new JsonResponse(null, 404);
         }
 
-        $action = $this->generateUrl('MealzMealBundle_'.$this->entityName.'_edit', ['slug' => $slug]);
+        $action = $this->generateUrl('MealzMealBundle_' . $this->entityName . '_edit', ['slug' => $slug]);
 
         return new JsonResponse($this->getRenderedEntityForm($entity, $action, true));
     }
 
     /**
-     * Get rendered Entity Form
      * @param $entity
      * @param $action
      * @param bool $wrapInTr
+     *
      * @return string
      */
     private function getRenderedEntityForm($entity, $action, $wrapInTr = false)
@@ -194,10 +191,9 @@ abstract class BaseListController extends BaseController
     }
 
     /**
-     * Entity Form Handling
-     * @param Request $request
      * @param $entity
      * @param $successMessage
+     *
      * @return RedirectResponse|Response
      */
     private function entityFormHandling(Request $request, $entity, $successMessage)
@@ -221,15 +217,15 @@ abstract class BaseListController extends BaseController
             }
         }
 
-        return $this->redirectToRoute('MealzMealBundle_'.$this->entityName);
+        return $this->redirectToRoute('MealzMealBundle_' . $this->entityName);
     }
 
     /**
-     * render Entity List
      * @param array $parameters
+     *
      * @return Response
      */
-    protected function renderEntityList($parameters = array())
+    protected function renderEntityList($parameters = [])
     {
         $entities = $this->getEntities();
 
@@ -239,11 +235,10 @@ abstract class BaseListController extends BaseController
 
         $mergedParameters = array_merge($defaultParameters, $parameters);
 
-        return $this->render('MealzMealBundle:'.$this->entityName.':list.html.twig', $mergedParameters);
+        return $this->render('MealzMealBundle:' . $this->entityName . ':list.html.twig', $mergedParameters);
     }
 
     /**
-     * get Entities
      * @return array
      */
     protected function getEntities()
@@ -260,7 +255,7 @@ abstract class BaseListController extends BaseController
      */
     protected function findBySlugOrThrowException($slug)
     {
-        $entity = $this->repository->findOneBy(array('slug' => $slug));
+        $entity = $this->repository->findOneBy(['slug' => $slug]);
         if (null === $entity) {
             throw $this->createNotFoundException();
         }

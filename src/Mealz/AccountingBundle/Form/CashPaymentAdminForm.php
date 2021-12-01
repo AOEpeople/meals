@@ -6,11 +6,11 @@ use App\Mealz\AccountingBundle\Entity\Transaction;
 use App\Mealz\MealBundle\Form\DataTransformer\ProfileToStringTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\DataTransformer\NumberToLocalizedStringTransformer;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 class CashPaymentAdminForm extends AbstractType
 {
@@ -26,20 +26,20 @@ class CashPaymentAdminForm extends AbstractType
         $builder
             ->add('profile', HiddenType::class, [
                 'data' => $options['profile'],
-                'data_class' => null
+                'data_class' => null,
             ])
             ->add('amount', NumberType::class, [
                 'attr' => [
-                    'placeholder' => 'EUR'
+                    'placeholder' => 'EUR',
                 ],
                 'label' => false,
-                'rounding_mode' => NumberToLocalizedStringTransformer::ROUND_DOWN
+                'rounding_mode' => NumberToLocalizedStringTransformer::ROUND_DOWN,
             ])
             ->add('submit', SubmitType::class, [
                 'attr' => [
-                    'class' => 'button small'
+                    'class' => 'button small',
                 ],
-                'label' => 'OK'
+                'label' => 'OK',
             ]);
 
         $builder->get('profile')->addModelTransformer($this->profileTransformer);
@@ -49,7 +49,7 @@ class CashPaymentAdminForm extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Transaction::class,
-            'profile' => null
+            'profile' => null,
         ]);
     }
 

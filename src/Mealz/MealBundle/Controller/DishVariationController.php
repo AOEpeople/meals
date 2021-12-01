@@ -3,18 +3,15 @@
 namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Dish;
-use Doctrine\ORM\EntityManager;
 use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Form\Dish\DishVariationForm;
+use Doctrine\ORM\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * Dish variation controller.
- */
 class DishVariationController extends BaseController
 {
     /**
@@ -54,9 +51,8 @@ class DishVariationController extends BaseController
     }
 
     /**
-     * The edit Action
-     * @param Request $request
-     * @param String $slug
+     * @param string $slug
+     *
      * @return JsonResponse|RedirectResponse
      */
     public function edit(Request $request, $slug)
@@ -86,7 +82,7 @@ class DishVariationController extends BaseController
 
             $message = $this->get('translator')->trans(
                 'entity.modified',
-                array('%entityName%' => $dishVariation->getTitle()),
+                ['%entityName%' => $dishVariation->getTitle()],
                 'messages'
             );
             $this->addFlashMessage($message, 'success');
@@ -106,36 +102,35 @@ class DishVariationController extends BaseController
     }
 
     /**
-     * the delete Action
-     * @param  integer $slug
+     * @param int $slug
      */
     public function delete($slug): RedirectResponse
     {
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
-        /** @var \App\Mealz\MealBundle\Entity\DishVariationRepository $dishRepository */
-        if (is_object($this->getDoctrine()->getRepository(DishVariation::class)) === true) {
+        /* @var \App\Mealz\MealBundle\Entity\DishVariationRepository $dishRepository */
+        if (true === is_object($this->getDoctrine()->getRepository(DishVariation::class))) {
             $dishVariationRepo = $this->getDoctrine()->getRepository(DishVariation::class);
         }
 
         /** @var \App\Mealz\MealBundle\Entity\DishVariation $dishVariation */
         $dishVariation = $dishVariationRepo->find($slug);
 
-        if ($dishVariation === null) {
+        if (null === $dishVariation) {
             throw $this->createNotFoundException();
         }
 
         /** @var EntityManager $entityManager */
         $entityManager = $this->getDoctrine()->getManager();
 
-        if ($dishVariationRepo->hasDishAssociatedMeals($dishVariation) === true) {
+        if (true === $dishVariationRepo->hasDishAssociatedMeals($dishVariation)) {
             // if there are meals assigned: just hide this record, but do not delete it
             $dishVariation->setEnabled(false);
             $entityManager->persist($dishVariation);
             $entityManager->flush();
             $message = $this->get('translator')->trans(
                 'dish_variation.hidden',
-                array('%dishVariation%' => $dishVariation->getTitle()),
+                ['%dishVariation%' => $dishVariation->getTitle()],
                 'messages'
             );
             $this->addFlashMessage($message, 'success');
@@ -146,7 +141,7 @@ class DishVariationController extends BaseController
 
             $message = $this->get('translator')->trans(
                 'dish_variation.deleted',
-                array('%dishVariation%' => $dishVariation->getTitle()),
+                ['%dishVariation%' => $dishVariation->getTitle()],
                 'messages'
             );
             $this->addFlashMessage($message, 'success');
@@ -155,17 +150,12 @@ class DishVariationController extends BaseController
         return $this->redirectToRoute('MealzMealBundle_Dish');
     }
 
-    /**
-     * get the new Form
-     */
     protected function getNewForm()
     {
         return DishVariationForm::class;
     }
 
     /**
-     * persist the Entity
-     *
      * @param $entity
      */
     private function persistEntity($entity): void

@@ -11,44 +11,42 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Valid;
 
 /**
- * form to add or edit a participant
+ * form to add or edit a participant.
  */
 class WeekForm extends AbstractType
 {
     /**
-     * build the Form
-     * @param FormBuilderInterface $builder
-     * @param array $options
+     * build the Form.
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('days', CollectionType::class, array(
+            ->add('days', CollectionType::class, [
                 'entry_type' => DayForm::class,
-                'constraints' => new Valid()
-            ))
-            ->add('enabled', CheckboxType::class, array(
+                'constraints' => new Valid(),
+            ])
+            ->add('enabled', CheckboxType::class, [
                 'required' => false,
-                'attr' => array('class' => 'js-switch')
-            ))
-            ->add('Cancel', SubmitType::class, array(
+                'attr' => ['class' => 'js-switch'],
+            ])
+            ->add('Cancel', SubmitType::class, [
                 'label' => 'button.cancel',
                 'translation_domain' => 'actions',
-                'attr' => array('class' => 'button button-cancel')
-            ))
-            ->add('Save', SubmitType::class, array(
+                'attr' => ['class' => 'button button-cancel'],
+            ])
+            ->add('Save', SubmitType::class, [
                 'label' => 'button.save',
                 'translation_domain' => 'actions',
-                'attr' => array('class' => 'button')
-            ));
+                'attr' => ['class' => 'button'],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'data_class' => 'App\Mealz\MealBundle\Entity\Week',
-        ));
+        ]);
     }
 }

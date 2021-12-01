@@ -64,7 +64,7 @@ class ParticipantPersistenceListenerTest extends AbstractDatabaseTestCase
 
     /**
      * the transaction is needed because a SELECT query is used in order to find
-     * an already existing participant
+     * an already existing participant.
      */
     public function testThrowsExceptionWhenNotUsedInATransaction(): void
     {

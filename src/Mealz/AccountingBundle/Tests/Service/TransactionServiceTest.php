@@ -28,7 +28,7 @@ class TransactionServiceTest extends AbstractDatabaseTestCase
     use ProphecyTrait;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function setUp(): void
     {
@@ -191,7 +191,7 @@ class TransactionServiceTest extends AbstractDatabaseTestCase
     /**
      * Returns mocked PayPal service that returns $order for $orderID.
      *
-     * @param Order|null $order Order to be returned by mocked service.
+     * @param Order|null $order order to be returned by mocked service
      */
     private function getPayPayServiceMock(string $orderID, ?Order $order): PayPalService
     {

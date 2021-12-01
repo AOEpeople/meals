@@ -13,9 +13,6 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-/**
- * form to add or edit a dish
- */
 class DishForm extends AbstractType
 {
     protected float $price;
@@ -26,9 +23,7 @@ class DishForm extends AbstractType
     }
 
     /**
-     * build the Form
-     * @param FormBuilderInterface $builder
-     * @param array $options
+     * build the Form.
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -38,69 +33,69 @@ class DishForm extends AbstractType
             ->add(
                 'title_en',
                 TextType::class,
-                array(
-                    'attr' => array(
+                [
+                    'attr' => [
                         'placeholder' => 'form.placeholder.title',
-                    ),
+                    ],
                     'translation_domain' => 'general',
-                )
+                ]
             )
             ->add(
                 'title_de',
                 TextType::class,
-                array(
-                    'attr' => array(
+                [
+                    'attr' => [
                         'placeholder' => 'form.placeholder.title',
-                    ),
+                    ],
                     'translation_domain' => 'general',
-                )
+                ]
             )
             ->add(
                 'description_en',
                 TextType::class,
-                array(
+                [
                     'required' => false,
-                    'attr' => array(
+                    'attr' => [
                         'placeholder' => 'form.placeholder.description',
-                    ),
+                    ],
                     'translation_domain' => 'general',
-                )
+                ]
             )
             ->add(
                 'description_de',
                 TextType::class,
-                array(
+                [
                     'required' => false,
-                    'attr' => array(
+                    'attr' => [
                         'placeholder' => 'form.placeholder.description',
-                    ),
+                    ],
                     'translation_domain' => 'general',
-                )
+                ]
             )
             ->add(
                 'category',
                 EntityType::class,
-                array(
+                [
                     'class' => 'MealzMealBundle:Category',
                     'required' => false,
                     'choice_label' => function ($category) {
-                        /** @var Category $category */
+                        /* @var Category $category */
                         return $category->getTitle();
                     },
                     'placeholder' => 'form.placeholder.category',
                     'translation_domain' => 'general',
-                )
+                ]
             )
             ->add(
                 'save',
                 SubmitType::class,
-                array(
+                [
                     'label' => 'button.save',
                     'translation_domain' => 'actions',
                     'attr' => [
                         'class' => 'button small',
                     ],
-                )
+                ]
             );
 
         $builder->addEventListener(
@@ -117,10 +112,10 @@ class DishForm extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(
-            array(
+            [
                 'data_class' => 'App\Mealz\MealBundle\Entity\Dish',
                 'intention' => 'dish_type',
-            )
+            ]
         );
     }
 

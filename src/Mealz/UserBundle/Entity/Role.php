@@ -17,15 +17,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Role
 {
     /**
-     * Constants for default roles
+     * Constants for default roles.
      */
     public const ROLE_KITCHEN_STAFF = 'ROLE_KITCHEN_STAFF';
-    public const ROLE_USER          = 'ROLE_USER';
-    public const ROLE_GUEST         = 'ROLE_GUEST';
-    public const ROLE_FINANCE       = 'ROLE_FINANCE';
+    public const ROLE_USER = 'ROLE_USER';
+    public const ROLE_GUEST = 'ROLE_GUEST';
+    public const ROLE_FINANCE = 'ROLE_FINANCE';
 
     /**
-     * Role ID
+     * Role ID.
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -34,7 +34,7 @@ class Role
     private int $id = 0;
 
     /**
-     * Role name
+     * Role name.
      *
      * @ORM\Column(type="string")
      * @Assert\NotBlank
@@ -42,7 +42,7 @@ class Role
     private string $title = '';
 
     /**
-     * Role string identifier
+     * Role string identifier.
      *
      * @ORM\Column(type="string", unique=true)
      * @Assert\NotBlank
@@ -51,6 +51,7 @@ class Role
 
     /**
      * @ORM\ManyToMany(targetEntity="Profile", mappedBy="roles")
+     *
      * @var Collection<int, Profile>|null
      */
     private ?Collection $profiles = null;

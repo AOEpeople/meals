@@ -47,7 +47,7 @@ class Slot
     private bool $deleted = false;
 
     /**
-     * Sort order
+     * Sort order.
      *
      * @ORM\Column(name="`order`", type="integer", options={"default": 0})
      */
@@ -111,7 +111,7 @@ class Slot
 
     public function isEnabled(): bool
     {
-        return (false === $this->disabled);
+        return false === $this->disabled;
     }
 
     public function setDisabled(bool $disabled): void

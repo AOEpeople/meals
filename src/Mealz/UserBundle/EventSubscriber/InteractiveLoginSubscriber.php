@@ -25,7 +25,7 @@ class InteractiveLoginSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            SecurityEvents::INTERACTIVE_LOGIN => ['onInteractiveLogin']
+            SecurityEvents::INTERACTIVE_LOGIN => ['onInteractiveLogin'],
         ];
     }
 
@@ -34,7 +34,7 @@ class InteractiveLoginSubscriber implements EventSubscriberInterface
         $user = $event->getAuthenticationToken()->getUser();
 
         $profile = $this->profileRepository->find($user->getUsername());
-        if ($profile !== null) {
+        if (null !== $profile) {
             $profile->setHidden(false);
 
             $this->entityManager->persist($profile);

@@ -18,7 +18,8 @@ class PayPalAddTransCommand extends Command
     private ProfileRepository $profileRepo;
     private TransactionService $transService;
 
-    public function __construct(ProfileRepository $profileRepo, TransactionService $transService) {
+    public function __construct(ProfileRepository $profileRepo, TransactionService $transService)
+    {
         parent::__construct();
 
         $this->profileRepo = $profileRepo;
@@ -26,7 +27,7 @@ class PayPalAddTransCommand extends Command
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function configure(): void
     {
@@ -38,13 +39,13 @@ class PayPalAddTransCommand extends Command
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $profileID = $input->getOption('user-id');
         if (null === $profileID) {
-            throw new RuntimeException('Missing required parameter: user-id' );
+            throw new RuntimeException('Missing required parameter: user-id');
         }
 
         $profile = $this->profileRepo->find($profileID);
@@ -56,13 +57,13 @@ class PayPalAddTransCommand extends Command
 
         $orderID = $input->getOption('order-id');
         if (null === $orderID) {
-            throw new RuntimeException('Missing required parameter: order-id' );
+            throw new RuntimeException('Missing required parameter: order-id');
         }
 
         try {
             $this->transService->create($orderID, $profile);
         } catch (Exception $e) {
-            $output->writeln('transaction create error: '.$e->getMessage());
+            $output->writeln('transaction create error: ' . $e->getMessage());
 
             return 1;
         }

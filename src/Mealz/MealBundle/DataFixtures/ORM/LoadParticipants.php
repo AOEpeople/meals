@@ -4,22 +4,19 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\DataFixtures\ORM;
 
+use App\Mealz\MealBundle\Entity\Meal;
+use App\Mealz\MealBundle\Entity\Participant;
+use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use App\Mealz\MealBundle\Entity\Meal;
-use App\Mealz\MealBundle\Entity\Participant;
-use App\Mealz\UserBundle\Entity\Profile;
 use Exception;
 
-/**
- * load the Participants
- */
 class LoadParticipants extends Fixture implements OrderedFixtureInterface
 {
     /**
-     * Constant to declare load order of fixture
+     * Constant to declare load order of fixture.
      */
     private const ORDER_NUMBER = 8;
 
@@ -36,7 +33,8 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
     protected array $profiles = [];
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
+     *
      * @throws Exception
      */
     public function load(ObjectManager $manager): void
@@ -51,7 +49,7 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
                 $participant = new Participant($user, $meal);
                 $participant->setCostAbsorbed(false);
 
-                if ($participant->getMeal()->getDay()->getLockParticipationDateTime() < new DateTime) {
+                if ($participant->getMeal()->getDay()->getLockParticipationDateTime() < new DateTime()) {
                     $participant->setOfferedAt(time());
                 } else {
                     $participant->setOfferedAt(0);
@@ -63,18 +61,12 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
         $this->objectManager->flush();
     }
 
-    /**
-     * get the Order of Fixtures Loading
-     */
     public function getOrder(): int
     {
         // load as eight
         return self::ORDER_NUMBER;
     }
 
-    /**
-     * load References
-     */
     protected function loadReferences(): void
     {
         foreach ($this->referenceRepository->getReferences() as $referenceName => $reference) {
@@ -102,7 +94,7 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
             foreach (array_rand($this->profiles, $number) as $userKey) {
                 $users[] = $this->profiles[$userKey];
             }
-        } elseif ($number === 1) {
+        } elseif (1 === $number) {
             $users[] = $this->profiles[array_rand($this->profiles)];
         }
 

@@ -12,21 +12,21 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class DishVariationType
+ * Class DishVariationForm.
  *
- * @package Mealz\MealBundle\Form\Type
  * @author  Chetan Thapliyal <chetan.thapliyal@aoe.com>
  */
 class DishVariationForm extends AbstractType
 {
     /**
-     * @var integer $price
+     * @var int
      */
     protected $price;
 
     /**
      * DishVariationForm constructor.
-     * @param integer $price
+     *
+     * @param int $price
      */
     public function __construct($price)
     {
@@ -34,9 +34,7 @@ class DishVariationForm extends AbstractType
     }
 
     /**
-     * build the Form
-     * @param FormBuilderInterface $builder
-     * @param array $options
+     * build the Form.
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
@@ -85,10 +83,10 @@ class DishVariationForm extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(
-            array(
+            [
                 'data_class' => 'App\Mealz\MealBundle\Entity\DishVariation',
                 'intention' => 'dishvariation_type',
-            )
+            ]
         );
     }
 

@@ -16,14 +16,15 @@ class PayPalCheckOrderCommand extends Command
 {
     private PayPalService $paypalService;
 
-    public function __construct(PayPalService $paypalService) {
+    public function __construct(PayPalService $paypalService)
+    {
         parent::__construct();
 
         $this->paypalService = $paypalService;
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function configure(): void
     {
@@ -34,7 +35,7 @@ class PayPalCheckOrderCommand extends Command
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -46,7 +47,7 @@ class PayPalCheckOrderCommand extends Command
         try {
             $order = $this->paypalService->getOrder($orderID);
         } catch (Exception $e) {
-            $output->writeln('Error getting transaction details: '.$e->getMessage());
+            $output->writeln('Error getting transaction details: ' . $e->getMessage());
 
             return 1;
         }
@@ -59,11 +60,11 @@ class PayPalCheckOrderCommand extends Command
 
         $output->writeln([
             '',
-            'Order-ID:'.$order->getId(),
-            'Amount: '.number_format($order->getAmount(), 2).' EUR',
-            'Date: '.$order->getDateTime()->format('Y-m-d H:i:s'),
-            'Status: '.$order->getStatus(),
-            ''
+            'Order-ID:' . $order->getId(),
+            'Amount: ' . number_format($order->getAmount(), 2) . ' EUR',
+            'Date: ' . $order->getDateTime()->format('Y-m-d H:i:s'),
+            'Status: ' . $order->getStatus(),
+            '',
         ]);
 
         return 0;

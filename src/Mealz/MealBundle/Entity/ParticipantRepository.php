@@ -2,45 +2,44 @@
 
 namespace App\Mealz\MealBundle\Entity;
 
-use DateTime;
-use Doctrine\ORM\EntityRepository;
 use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\Role;
+use DateTime;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use PDO;
 
 class ParticipantRepository extends EntityRepository
 {
     /**
-     * default options for database queries
+     * default options for database queries.
+     *
      * @var array
      */
-    protected $defaultOptions = array(
+    protected $defaultOptions = [
         'load_meal' => false,
         'load_profile' => true,
         'load_roles' => false,
-    );
+    ];
 
     /**
-     * @param DateTime $minDate
-     * @param DateTime $maxDate
-     * @param Profile|null $profile
      * @param array $options
+     *
      * @return mixed
      */
     public function getParticipantsOnDays(
         DateTime $minDate,
         DateTime $maxDate,
         Profile $profile = null,
-        $options = array()
+        $options = []
     ) {
         $options = array_merge(
             $options,
-            array(
+            [
                 'load_meal' => true,
                 'load_profile' => true,
                 'load_roles' => true,
-            )
+            ]
         );
         if ($profile instanceof Profile) {
             $options['load_profile'] = true;
@@ -68,13 +67,15 @@ class ParticipantRepository extends EntityRepository
     }
 
     /**
-     * helper function to sort participants by their name or guest name
+     * helper function to sort participants by their name or guest name.
+     *
      * @param mixed $participants
+     *
      * @return mixed
      */
     public function sortParticipantsByName($participants)
     {
-        usort($participants, array($this, 'compareNameOfParticipants'));
+        usort($participants, [$this, 'compareNameOfParticipants']);
 
         return $participants;
     }
@@ -105,8 +106,8 @@ class ParticipantRepository extends EntityRepository
     }
 
     /**
-     * @param Profile $profile
      * @param int $limit
+     *
      * @return Participant[]
      */
     public function getLastAccountableParticipations(Profile $profile, $limit = null)
@@ -126,7 +127,7 @@ class ParticipantRepository extends EntityRepository
         $queryBuilder->setParameter('now', new DateTime());
 
         $queryBuilder->orderBy('m.dateTime', 'desc');
-        if (is_int($limit) === true) {
+        if (true === is_int($limit)) {
             $queryBuilder->setMaxResults($limit);
         }
 
@@ -140,24 +141,24 @@ class ParticipantRepository extends EntityRepository
     {
         $costs = $this->findCostsPerMonthPerUser();
 
-        $result = array();
+        $result = [];
 
         foreach ($costs as $cost) {
             $username = $cost['username'];
             $timestamp = strtotime($cost['yearMonth']);
-            $costByMonth = array(
+            $costByMonth = [
                 'timestamp' => $timestamp,
                 'costs' => $cost['costs'],
-            );
-            if (array_key_exists($username, $result) === true) {
+            ];
+            if (true === array_key_exists($username, $result)) {
                 $result[$username]['costs'][] = $costByMonth;
             } else {
-                $result[$username] = array(
+                $result[$username] = [
                     'name' => $cost['name'],
                     'firstName' => $cost['firstName'],
                     'hidden' => $cost['hidden'],
-                    'costs' => array($costByMonth),
-                );
+                    'costs' => [$costByMonth],
+                ];
             }
         }
 
@@ -166,19 +167,20 @@ class ParticipantRepository extends EntityRepository
 
     /**
      * @param mixed $participations
+     *
      * @return array
      */
     public function groupParticipantsByName($participations)
     {
-        $result = array();
+        $result = [];
 
         foreach ($participations as $participation) {
             /** @var Participant $participation */
             $name = $participation->getProfile()->getUsername();
-            if (array_key_exists($name, $result) === true) {
+            if (true === array_key_exists($name, $result)) {
                 $result[$name][] = $participation;
             } else {
-                $result[$name] = array($participation);
+                $result[$name] = [$participation];
             }
         }
 
@@ -199,7 +201,7 @@ class ParticipantRepository extends EntityRepository
             ->orderBy('s.order', 'ASC')
             ->setParameters([
                 'startTime' => (clone $date)->setTime(0, 0),
-                'endTime' =>  (clone $date)->setTime(23, 59),
+                'endTime' => (clone $date)->setTime(23, 59),
             ]);
 
         $result = $queryBuilder->getQuery()->getResult();
@@ -239,16 +241,17 @@ class ParticipantRepository extends EntityRepository
 
     /**
      * @param array $options
+     *
      * @return mixed
      */
-    public function getParticipantsOnCurrentDay($options = array())
+    public function getParticipantsOnCurrentDay($options = [])
     {
         $options = array_merge(
             $options,
-            array(
+            [
                 'load_meal' => true,
                 'load_profile' => true,
-            )
+            ]
         );
 
         $queryBuilder = $this->getQueryBuilderWithOptions($options);
@@ -263,15 +266,13 @@ class ParticipantRepository extends EntityRepository
     }
 
     /**
-     * @param Participant $participant1
-     * @param Participant $participant2
      * @return int
      */
     protected function compareNameOfParticipants(Participant $participant1, Participant $participant2)
     {
         $result = strcasecmp($participant1->getProfile()->getName(), $participant2->getProfile()->getName());
 
-        if ($result !== 0) {
+        if (0 !== $result) {
             return $result;
         } elseif ($participant1->getMeal()->getDateTime() < $participant2->getMeal()->getDateTime()) {
             return 1;
@@ -284,6 +285,7 @@ class ParticipantRepository extends EntityRepository
 
     /**
      * @param $options
+     *
      * @return \Doctrine\ORM\QueryBuilder
      */
     protected function getQueryBuilderWithOptions($options)
@@ -294,25 +296,25 @@ class ParticipantRepository extends EntityRepository
 
         // SELECT
         $select = 'p';
-        if (array_key_exists('load_meal', $options) === true) {
+        if (true === array_key_exists('load_meal', $options)) {
             $select .= ',m,d';
         }
-        if (array_key_exists('load_profile', $options) === true) {
+        if (true === array_key_exists('load_profile', $options)) {
             $select .= ',u';
-            if (array_key_exists('load_roles', $options) === true) {
+            if (true === array_key_exists('load_roles', $options)) {
                 $select .= ',r';
             }
         }
         $queryBuilder->select($select);
 
         // JOIN
-        if (array_key_exists('load_meal', $options) === true) {
+        if (true === array_key_exists('load_meal', $options)) {
             $queryBuilder->leftJoin('p.meal', 'm');
             $queryBuilder->leftJoin('m.dish', 'd');
         }
-        if (array_key_exists('load_profile', $options) === true) {
+        if (true === array_key_exists('load_profile', $options)) {
             $queryBuilder->leftJoin('p.profile', 'u');
-            if (array_key_exists('load_roles', $options) === true) {
+            if (true === array_key_exists('load_roles', $options)) {
                 $queryBuilder->leftJoin('u.roles', 'r');
             }
         }
@@ -336,7 +338,7 @@ class ParticipantRepository extends EntityRepository
         $queryBuilder->leftJoin('u.roles', 'r');
         $queryBuilder->leftJoin('m.day', 'd');
         $queryBuilder->leftJoin('d.week', 'w');
-        /**
+        /*
          * @TODO: optimize query. where clause costs a lot of time.
          */
         $queryBuilder->where('p.costAbsorbed = 0');
@@ -359,8 +361,10 @@ class ParticipantRepository extends EntityRepository
     }
 
     /**
-     * Returns meals that are being offered, ordered by the time they were offered
+     * Returns meals that are being offered, ordered by the time they were offered.
+     *
      * @param $mealId
+     *
      * @return array
      */
     public function findByOffer($mealId)
@@ -424,7 +428,7 @@ class ParticipantRepository extends EntityRepository
     }
 
     /**
-     * Removes all future ordered meals for a given profile
+     * Removes all future ordered meals for a given profile.
      */
     public function removeFutureMealsByProfile(Profile $profile): void
     {
@@ -435,14 +439,14 @@ class ParticipantRepository extends EntityRepository
         $queryBuilder = $this->createQueryBuilder('p');
         $queryBuilder->leftJoin('p.meal', 'm');
         $queryBuilder->andWhere('p.profile = :profile');
-        $queryBuilder->setParameter('profile' , $profile->getUsername());
+        $queryBuilder->setParameter('profile', $profile->getUsername());
         $queryBuilder->andWhere('m.dateTime >= :tomorrow');
         $queryBuilder->setParameter('tomorrow', $tomorrow->format('Y-m-d H:i:s'));
         $queryBuilder->select('p.id');
         $meals = $queryBuilder->getQuery()->getArrayResult();
 
         // Remove the ID's form the participants table
-        if(count($meals)) {
+        if (count($meals)) {
             $this->createQueryBuilder('participant')
                 ->where('participant.id in (:ids)')
                 ->setParameter('ids', $meals)

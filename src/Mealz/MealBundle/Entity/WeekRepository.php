@@ -8,17 +8,16 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 
 /**
- * Class WeekRepository
- * @package Mealz\MealBundle\Entity
+ * Class WeekRepository.
  */
 class WeekRepository extends EntityRepository
 {
     protected array $defaultOptions = [
         'load_participants' => true,
-        'only_enabled_days' => false
+        'only_enabled_days' => false,
     ];
 
-    public function getCurrentWeek(array$options = []): ?Week
+    public function getCurrentWeek(array $options = []): ?Week
     {
         return $this->findWeekByDate(new DateTime(), $options);
     }
@@ -33,6 +32,7 @@ class WeekRepository extends EntityRepository
 
     /**
      * @return mixed
+     *
      * @throws NoResultException
      * @throws NonUniqueResultException
      */

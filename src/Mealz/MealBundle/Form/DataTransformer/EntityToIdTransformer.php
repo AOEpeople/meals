@@ -7,8 +7,7 @@ use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 
 /**
- * Class EntityToIdTransformer
- * @package Mealz\MealBundle\Form\DataTransformer
+ * Class EntityToIdTransformer.
  */
 class EntityToIdTransformer implements DataTransformerInterface
 {
@@ -23,8 +22,10 @@ class EntityToIdTransformer implements DataTransformerInterface
     }
 
     /**
-     * transform Entity to Id
+     * transform Entity to Id.
+     *
      * @param mixed $entity
+     *
      * @return string
      */
     public function transform($entity)
@@ -37,13 +38,15 @@ class EntityToIdTransformer implements DataTransformerInterface
     }
 
     /**
-     * transform Id to Entity
+     * transform Id to Entity.
+     *
      * @param mixed $identifier
-     * @return null|object
+     *
+     * @return object|null
      */
     public function reverseTransform($identifier)
     {
-        if (isset($identifier) === false) {
+        if (false === isset($identifier)) {
             return null;
         }
         $entity = $this->objectManager

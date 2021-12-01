@@ -2,12 +2,10 @@
 
 namespace App\Mealz\MealBundle\Entity;
 
-use Doctrine\ORM\EntityRepository;
 use App\Mealz\UserBundle\Entity\Profile;
+use Doctrine\ORM\EntityRepository;
 
 /**
- * Guest invitation repository
- *
  * @author Chetan Thapliyal <chetan.thapliyal@aoe.com>
  */
 class GuestInvitationRepository extends EntityRepository
@@ -15,8 +13,6 @@ class GuestInvitationRepository extends EntityRepository
     /**
      * Gets the guest invitation from a particular user on a particular day.
      *
-     * @param  Profile $host
-     * @param  Day $day
      * @return GuestInvitation
      */
     public function findOrCreateInvitation(Profile $host, Day $day)

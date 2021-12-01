@@ -2,16 +2,16 @@
 
 namespace App\Mealz\MealBundle\Controller;
 
-use DateTime;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\DishRepository;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Entity\WeekRepository;
 use App\Mealz\MealBundle\Form\MealAdmin\WeekForm;
 use App\Mealz\MealBundle\Validator\Constraints\DishConstraint;
+use DateTime;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,9 +28,9 @@ class MealAdminController extends BaseController
         $weeks = [];
         $dateTime = new DateTime();
 
-        for ($i = 0; $i < 8; $i++) {
-            $modifiedDateTime = clone($dateTime);
-            $modifiedDateTime->modify('+'.$i.' weeks');
+        for ($i = 0; $i < 8; ++$i) {
+            $modifiedDateTime = clone $dateTime;
+            $modifiedDateTime->modify('+' . $i . ' weeks');
             $week = $weekRepository->findOneBy(
                 [
                     'year' => $modifiedDateTime->format('o'),
@@ -51,8 +51,6 @@ class MealAdminController extends BaseController
     }
 
     /**
-     * New action
-     *
      * @return RedirectResponse|Response
      *
      * @throws ORMException
@@ -112,8 +110,6 @@ class MealAdminController extends BaseController
     }
 
     /**
-     * Edit action
-     *
      * @return RedirectResponse|Response
      *
      * @throws ORMException
@@ -127,14 +123,14 @@ class MealAdminController extends BaseController
         $form = $this->createForm(WeekForm::class, $week);
 
         // handle form submission
-        if ($request->isMethod('POST') === true) {
+        if (true === $request->isMethod('POST')) {
             $form->handleRequest($request);
 
             if ($form->get('Cancel')->isClicked()) {
                 return $this->redirectToRoute('MealzMealBundle_Meal');
             }
 
-            if ($form->isValid() === true) {
+            if (true === $form->isValid()) {
                 /** @var EntityManager $entitiyManager */
                 $entitiyManager = $this->getDoctrine()->getManager();
                 $entitiyManager->persist($week);
@@ -175,9 +171,6 @@ class MealAdminController extends BaseController
         );
     }
 
-    /**
-     * Generate empty week action
-     */
     protected function generateEmptyWeek(DateTime $dateTime): Week
     {
         $week = new Week();
@@ -187,11 +180,11 @@ class MealAdminController extends BaseController
         $dateTimeModifier = $this->getParameter('mealz.lock_toggle_participation_at');
 
         $days = $week->getDays();
-        for ($i = 0; $i < 5; $i++) {
-            $dayDateTime = clone($week->getStartTime());
-            $dayDateTime->modify('+'.$i.' days');
+        for ($i = 0; $i < 5; ++$i) {
+            $dayDateTime = clone $week->getStartTime();
+            $dayDateTime->modify('+' . $i . ' days');
             $dayDateTime->setTime(12, 00);
-            $lockParticipationDT = clone($dayDateTime);
+            $lockParticipationDT = clone $dayDateTime;
             $lockParticipationDT->modify($dateTimeModifier);
 
             $day = new Day();

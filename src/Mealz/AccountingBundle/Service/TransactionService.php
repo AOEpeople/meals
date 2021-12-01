@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Mealz\AccountingBundle\Service;
 
 use App\Mealz\AccountingBundle\Entity\Transaction;
-use App\Mealz\AccountingBundle\Service\PayPal\Order;
-use App\Mealz\AccountingBundle\Service\PayPal\PayPalService;
 use App\Mealz\AccountingBundle\Service\Exception\BadDataException;
 use App\Mealz\AccountingBundle\Service\Exception\ResourceNotFoundException;
+use App\Mealz\AccountingBundle\Service\PayPal\Order;
+use App\Mealz\AccountingBundle\Service\PayPal\PayPalService;
 use App\Mealz\UserBundle\Entity\Profile;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -24,7 +24,7 @@ class TransactionService
 {
     private const PAYMENT_METHOD_PAYPAL = '0';
 
-    private const EXCEPTION_ORDER_NOT_COMPLETED  = 1633519677;
+    private const EXCEPTION_ORDER_NOT_COMPLETED = 1633519677;
 
     private PayPalService $paypalService;
     private EntityManagerInterface $entityManager;
@@ -74,18 +74,15 @@ class TransactionService
         try {
             $order = $this->paypalService->getOrder($orderID);
         } catch (Exception $e) {
-            throw new RuntimeException('get order error, order-id: '.$orderID, 1633425633, $e);
+            throw new RuntimeException('get order error, order-id: ' . $orderID, 1633425633, $e);
         }
 
         if (null === $order) {
-            throw new ResourceNotFoundException('order-id: '.$orderID);
+            throw new ResourceNotFoundException('order-id: ' . $orderID);
         }
 
         if (!$order->isCompleted()) {
-            throw new RuntimeException(
-                'order not completed, order-id: '.$order->getId(),
-                self::EXCEPTION_ORDER_NOT_COMPLETED
-            );
+            throw new RuntimeException('order not completed, order-id: ' . $order->getId(), self::EXCEPTION_ORDER_NOT_COMPLETED);
         }
 
         $this->createTransaction($order, $profile);
@@ -114,7 +111,7 @@ class TransactionService
 
         foreach ($payload as $item) {
             if (!is_array($item) || !isset($item['name'], $item['value'])) {
-                throw new BadDataException('expected array with name, value keys, got '.print_r($item, true), 1633436079);
+                throw new BadDataException('expected array with name, value keys, got ' . print_r($item, true), 1633436079);
             }
             $data[$item['name']] = $item['value'];
         }

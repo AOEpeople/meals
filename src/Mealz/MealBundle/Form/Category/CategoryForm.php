@@ -8,17 +8,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-/**
- * form to add or edit a dish
- */
 class CategoryForm extends AbstractType
 {
-
     /**
-     * build the Form
-     * @param FormBuilderInterface $builder
-     * @param array $options
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -27,43 +19,43 @@ class CategoryForm extends AbstractType
             ->add(
                 'title_en',
                 TextType::class,
-                array(
-                    'attr' => array(
+                [
+                    'attr' => [
                         'placeholder' => 'form.placeholder.title',
-                    ),
+                    ],
                     'translation_domain' => 'general',
-                )
+                ]
             )
             ->add(
                 'title_de',
                 TextType::class,
-                array(
-                    'attr' => array(
+                [
+                    'attr' => [
                         'placeholder' => 'form.placeholder.title',
-                    ),
+                    ],
                     'translation_domain' => 'general',
-                )
+                ]
             )
             ->add(
                 'save',
                 SubmitType::class,
-                array(
+                [
                     'label' => 'button.save',
                     'translation_domain' => 'actions',
                     'attr' => [
                         'class' => 'button small',
                     ],
-                )
+                ]
             );
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(
-            array(
+            [
                 'data_class' => 'App\Mealz\MealBundle\Entity\Category',
                 'intention' => 'category_type',
-            )
+            ]
         );
     }
 

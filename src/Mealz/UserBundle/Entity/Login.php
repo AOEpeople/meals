@@ -2,13 +2,13 @@
 
 namespace App\Mealz\UserBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use App\Mealz\UserBundle\User\UserInterface as MealzUserInterface;
+use Doctrine\ORM\Mapping as ORM;
 use Serializable;
 use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
 
 /**
- * a set of credentials that allow logging in without LDAP
+ * a set of credentials that allow logging in without LDAP.
  *
  * This can be used for development (easier to set up then LDAP) and special roles
  * like login for a special app in the kitchen where you can check people as participated.
@@ -91,41 +91,43 @@ class Login implements SymfonyUserInterface, Serializable, MealzUserInterface
 
     /**
      * (PHP 5 &gt;= 5.1.0)<br/>
-     * String representation of object
-     * @link http://php.net/manual/en/serializable.serialize.php
+     * String representation of object.
+     *
+     * @see http://php.net/manual/en/serializable.serialize.php
+     *
      * @return string the string representation of the object or null
      */
     public function serialize(): string
     {
         return serialize(
-            array(
+            [
                 $this->username,
                 $this->salt,
                 $this->password,
-            )
+            ]
         );
     }
 
     /**
      * (PHP 5 &gt;= 5.1.0)<br/>
-     * Constructs the object
-     * @link http://php.net/manual/en/serializable.unserialize.php
+     * Constructs the object.
+     *
+     * @see http://php.net/manual/en/serializable.unserialize.php
+     *
      * @param string $serialized <p>
-     * The string representation of the object.
-     * </p>
-     * @return void
+     *                           The string representation of the object.
+     *                           </p>
      */
     public function unserialize($serialized): void
     {
         list(
             $this->username,
             $this->salt,
-            $this->password,
-            ) = unserialize($serialized);
+            $this->password) = unserialize($serialized);
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getRoles(): array
     {

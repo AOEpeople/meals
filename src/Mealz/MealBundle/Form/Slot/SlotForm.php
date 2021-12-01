@@ -7,10 +7,10 @@ namespace App\Mealz\MealBundle\Form\Slot;
 use App\Mealz\MealBundle\Entity\Slot;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 /**
  * Form to create and edit meal slots.
@@ -18,8 +18,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 class SlotForm extends AbstractType
 {
     /**
-     * @inheritDoc
-     *
+     * {@inheritDoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -46,7 +45,7 @@ class SlotForm extends AbstractType
             ->add('Save', SubmitType::class, [
                 'label' => 'button.save',
                 'translation_domain' => 'actions',
-                'attr' => ['class' => 'button']
+                'attr' => ['class' => 'button'],
             ])
         ;
     }

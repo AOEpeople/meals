@@ -4,21 +4,18 @@ declare(strict_types=1);
 
 namespace App\Mealz\UserBundle\DataFixtures\ORM;
 
+use App\Mealz\UserBundle\Entity\Login;
+use App\Mealz\UserBundle\Entity\Profile;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use App\Mealz\UserBundle\Entity\Login;
-use App\Mealz\UserBundle\Entity\Profile;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-/**
- * Loads users.
- */
 class LoadUsers extends Fixture implements OrderedFixtureInterface
 {
     /**
-     * Constant to declare load order of fixture
+     * Constant to declare load order of fixture.
      */
     private const ORDER_NUMBER = 1;
 
@@ -34,7 +31,7 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function load(ObjectManager $manager): void
     {
@@ -55,9 +52,6 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
         $this->objectManager->flush();
     }
 
-    /**
-     * Get the Fixtures loadOrder
-     */
     public function getOrder(): int
     {
         // load as first
@@ -98,7 +92,7 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
         $this->objectManager->persist($profile);
         $this->objectManager->persist($login);
 
-        $this->addReference('profile-'.$this->counter++, $profile);
-        $this->addReference('login-'.$this->counter, $login);
+        $this->addReference('profile-' . $this->counter++, $profile);
+        $this->addReference('login-' . $this->counter, $login);
     }
 }

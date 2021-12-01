@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Tests\Controller;
 
-use DateTime;
-use Doctrine\Common\Collections\Criteria;
 use App\Mealz\AccountingBundle\Entity\Transaction;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\MealRepository;
@@ -14,6 +12,8 @@ use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\Role;
 use App\Mealz\UserBundle\Entity\RoleRepository;
+use DateTime;
+use Doctrine\Common\Collections\Criteria;
 use Exception;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -27,16 +27,16 @@ use Symfony\Component\Security\Core\User\UserInterface;
 abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
 {
     /**
-     * Role based test users
+     * Role based test users.
      */
-    protected const USER_STANDARD      = 'alice.meals';
-    protected const USER_FINANCE       = 'finance.meals';
+    protected const USER_STANDARD = 'alice.meals';
+    protected const USER_FINANCE = 'finance.meals';
     protected const USER_KITCHEN_STAFF = 'kochomi.meals';
 
     protected KernelBrowser $client;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function setUp(): void
     {
@@ -74,16 +74,13 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         $crawler = new Crawler($htmlForm);
         $token = $crawler->filter($tokenFieldSelector)->attr('value');
 
-        if ($token === '' || $token === null) {
+        if ('' === $token || null === $token) {
             throw new RuntimeException('token fetch error, path: ' . $uri . ', fieldSelector: ' . $tokenFieldSelector);
         }
 
         return $token;
     }
 
-    /**
-     * Gets a user profile.
-     */
     protected function getUserProfile(string $username): Profile
     {
         /** @var RoleRepository $profileRepository */
@@ -111,8 +108,6 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
      * Helper method to get a user role.
      *
      * @param string $roleType Role string identifier i.e. sid.
-     *
-     * @return Role
      */
     protected function getRole(string $roleType): Role
     {
@@ -129,21 +124,21 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
     /**
      * Helper method to create a new user profile object.
      *
-     * @param  string $firstName User first name
-     * @param  string $lastName  User last name
-     * @param  string $company   User company
+     * @param string $firstName User first name
+     * @param string $lastName  User last name
+     * @param string $company   User company
      */
     protected function createProfile(string $firstName = '', string $lastName = '', string $company = ''): Profile
     {
-        $firstName = ($firstName !== '') ? $firstName : 'Test';
-        $lastName = ($lastName !== '') ? $lastName : 'User' . mt_rand();
+        $firstName = ('' !== $firstName) ? $firstName : 'Test';
+        $lastName = ('' !== $lastName) ? $lastName : 'User' . mt_rand();
 
         $profile = new Profile();
         $profile->setUsername($firstName . '.' . $lastName);
         $profile->setFirstName($firstName);
         $profile->setName($lastName);
 
-        if ($company !== '') {
+        if ('' !== $company) {
             $profile->setCompany($company);
         }
 
@@ -166,8 +161,8 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
      */
     protected function getRecentMeal(DateTime $dateTime = null): Meal
     {
-        if ($dateTime === null) {
-            $dateTime = new DateTime;
+        if (null === $dateTime) {
+            $dateTime = new DateTime();
         }
 
         /** @var MealRepository $mealRepository */
@@ -217,7 +212,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
     }
 
     /**
-     * Helper method to create a user transaction with specific amount and date
+     * Helper method to create a user transaction with specific amount and date.
      */
     protected function createTransactions(Profile $user, float $amount = 5.0, ?DateTime $date = null): void
     {
@@ -237,7 +232,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
     }
 
     /**
-     * mock the Flash Bag
+     * mock the Flash Bag.
      */
     private function mockFlashBag(): void
     {

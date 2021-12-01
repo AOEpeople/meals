@@ -3,13 +3,11 @@
 namespace App\Mealz\MealBundle\Entity;
 
 use DateTime;
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Day
- *
  * @ORM\Table(name="day")
  * @ORM\Entity(repositoryClass="DayRepository")
  */
@@ -19,37 +17,41 @@ class Day extends AbstractMessage
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @var integer $id
+     *
+     * @var int
      */
     private $id;
 
     /**
      * @Assert\Type(type="DateTime")
      * @ORM\Column(type="datetime", nullable=FALSE)
-     * @var DateTime $dateTime
+     *
+     * @var DateTime
      */
     private $dateTime;
 
     /**
      * @ORM\ManyToOne(targetEntity="Week", inversedBy="days")
      * @ORM\JoinColumn(name="week_id", referencedColumnName="id")
-     * @var Week $week
+     *
+     * @var Week
      */
     private $week;
 
     /**
      * @ORM\OneToMany(targetEntity="Meal", mappedBy="day", cascade={"all"})
-     * @var ArrayCollection $meals
+     *
+     * @var ArrayCollection
      */
     private $meals;
 
     /**
      * @Assert\Type(type="DateTime")
      * @ORM\Column(type="datetime", nullable=TRUE)
-     * @var DateTime $dateTime
+     *
+     * @var DateTime
      */
     private $lockParticipationDateTime;
-
 
     /**
      * Constructor
@@ -126,11 +128,6 @@ class Day extends AbstractMessage
         $this->meals = $meals;
     }
 
-    /**
-     * add a Meal
-     *
-     * @param Meal $meal
-     */
     public function addMeal(Meal $meal): void
     {
         $meal->setDay($this);
@@ -138,7 +135,6 @@ class Day extends AbstractMessage
     }
 
     /**
-     * to String
      * @return string
      */
     public function __toString()

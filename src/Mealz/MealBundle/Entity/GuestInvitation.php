@@ -2,13 +2,11 @@
 
 namespace App\Mealz\MealBundle\Entity;
 
+use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use App\Mealz\UserBundle\Entity\Profile;
 
 /**
- * Guest invitation entity.
- *
  * @ORM\Table(name="guest_invitation")
  * @ORM\Entity(repositoryClass="App\Mealz\MealBundle\Entity\GuestInvitationRepository")
  * @ORM\HasLifecycleCallbacks
@@ -44,9 +42,6 @@ class GuestInvitation
 
     /**
      * Initializes class instance.
-     *
-     * @param Profile $host
-     * @param Day $day
      */
     public function __construct(Profile $host, Day $day)
     {
@@ -55,21 +50,18 @@ class GuestInvitation
     }
 
     /**
-     * Set id
-     *
-     * @param  string $id
+     * @param string $id
      *
      * @return GuestInvitation
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
     /**
-     * Get id
-     *
      * @return string
      */
     public function getId()
@@ -78,21 +70,16 @@ class GuestInvitation
     }
 
     /**
-     * Set createdOn
-     *
-     * @param DateTime $createdOn
-     *
      * @return GuestInvitation
      */
     public function setCreatedOn(DateTime $createdOn)
     {
         $this->createdOn = $createdOn;
+
         return $this;
     }
 
     /**
-     * Get createdOn
-     *
      * @return DateTime
      */
     public function getCreatedOn()
@@ -101,21 +88,16 @@ class GuestInvitation
     }
 
     /**
-     * Set host
-     *
-     * @param  Profile $host
-     *
      * @return GuestInvitation
      */
     public function setHost(Profile $host)
     {
         $this->host = $host;
+
         return $this;
     }
 
     /**
-     * Get host
-     *
      * @return Profile
      */
     public function getHost()
@@ -124,21 +106,16 @@ class GuestInvitation
     }
 
     /**
-     * Set meal day
-     *
-     * @param Day $day
-     *
      * @return GuestInvitation
      */
     public function setDay(Day $day)
     {
         $this->day = $day;
+
         return $this;
     }
 
     /**
-     * Get meal day
-     *
      * @return Day
      */
     public function getDay()

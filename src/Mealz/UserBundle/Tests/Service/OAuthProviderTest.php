@@ -17,9 +17,6 @@ class OAuthProviderTest extends AbstractControllerTestCase
 
     private OAuthUserProvider $sut;
 
-    /**
-     * Set up the testing environment
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -31,16 +28,16 @@ class OAuthProviderTest extends AbstractControllerTestCase
     }
 
     /**
-     * Test oAuth Provider - create new User and check if admin
+     * Test oAuth Provider - create new User and check if admin.
      *
      * @dataProvider idpUserDataProvider
      */
     public function testCreateNewUser(array $idpUserData, array $mealsRoles): void
     {
         $firstName = $idpUserData['given_name'];
-        $lastName  = $idpUserData['family_name'];
-        $username  = $idpUserData['username'];
-        $idpRoles  = $idpUserData['roles'];
+        $lastName = $idpUserData['family_name'];
+        $username = $idpUserData['username'];
+        $idpRoles = $idpUserData['roles'];
 
         $userResponseMock = $this->getMockedUserResponse($username, $firstName, $lastName, $idpRoles);
 
@@ -67,45 +64,45 @@ class OAuthProviderTest extends AbstractControllerTestCase
                     'username' => 'kochomi.meals',
                     'given_name' => 'kochomi',
                     'family_name' => 'imohcok',
-                    'roles' => ['meals.admin']
+                    'roles' => ['meals.admin'],
                 ],
-                'mealsRoles' => ['ROLE_ADMIN']
+                'mealsRoles' => ['ROLE_ADMIN'],
             ],
             'kitchen staff' => [
                 'idpUserData' => [
                     'username' => 'kochomi.meals',
                     'given_name' => 'kochomi',
                     'family_name' => 'imohcok',
-                    'roles' => ['meals.kitchen']
+                    'roles' => ['meals.kitchen'],
                 ],
-                'mealsRoles' => ['ROLE_KITCHEN_STAFF']
+                'mealsRoles' => ['ROLE_KITCHEN_STAFF'],
             ],
             'standard user' => [
                 'idpUserData' => [
                     'username' => 'alice.meals',
                     'given_name' => 'alice',
                     'family_name' => 'ecila',
-                    'roles' => ['meals.user']
+                    'roles' => ['meals.user'],
                 ],
-                'mealsRoles' => ['ROLE_USER']
+                'mealsRoles' => ['ROLE_USER'],
             ],
             'finance' => [
                 'idpUserData' => [
                     'username' => 'finance.meals',
                     'given_name' => 'finance',
                     'family_name' => 'ecnanif',
-                    'roles' => ['meals.user', 'meals.finance']
+                    'roles' => ['meals.user', 'meals.finance'],
                 ],
-                'mealsRoles' => ['ROLE_FINANCE']
+                'mealsRoles' => ['ROLE_FINANCE'],
             ],
             'user with invalid role' => [
                 'idpUserData' => [
                     'username' => 'invalid.role',
                     'given_name' => 'invalid',
                     'family_name' => 'role',
-                    'roles' => ['invalid.role']
+                    'roles' => ['invalid.role'],
                 ],
-                'mealsRoles' => []
+                'mealsRoles' => [],
             ],
         ];
     }
@@ -119,7 +116,7 @@ class OAuthProviderTest extends AbstractControllerTestCase
             'preferred_username' => $username,
             'family_name' => $lastName,
             'given_name' => $firstName,
-            'roles' => $roles
+            'roles' => $roles,
         ];
         $responseProphet = $this->prophesize(UserResponseInterface::class);
         $responseProphet->getData()->shouldBeCalledOnce()->willReturn($userData);

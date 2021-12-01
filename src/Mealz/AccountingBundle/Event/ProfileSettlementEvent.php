@@ -1,9 +1,11 @@
 <?php
+
 declare(strict_types=1);
+
 namespace App\Mealz\AccountingBundle\Event;
 
-use Symfony\Contracts\EventDispatcher\Event;
 use App\Mealz\UserBundle\Entity\Profile;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class ProfileSettlementEvent extends Event
 {

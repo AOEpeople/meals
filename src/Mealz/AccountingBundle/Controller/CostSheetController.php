@@ -12,8 +12,8 @@ use App\Mealz\UserBundle\Entity\ProfileRepository;
 use DateTime;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 class CostSheetController extends BaseController
 {
@@ -41,10 +41,10 @@ class CostSheetController extends BaseController
 
         // create column names
         $numberOfMonths = 3;
-        $columnNames = array('earlier' => 'Prior to that');
+        $columnNames = ['earlier' => 'Prior to that'];
         $dateTime = new DateTime("first day of -$numberOfMonths month 00:00");
         $earlierTimestamp = $dateTime->getTimestamp();
-        for ($i = 0; $i < $numberOfMonths + 1; $i++) {
+        for ($i = 0; $i < $numberOfMonths + 1; ++$i) {
             $columnNames[$dateTime->getTimestamp()] = $dateTime->format('F');
             $dateTime->modify('+1 month');
         }
@@ -68,20 +68,20 @@ class CostSheetController extends BaseController
             $user['costs'] = $userCosts;
 
             // if total amount is zero, remove user from rendered items
-            if ($userCosts['total'] === '0.0000') {
+            if ('0.0000' === $userCosts['total']) {
                 unset($users[$username]);
             }
         }
 
         ksort($users, SORT_STRING);
 
-        return $this->render('MealzAccountingBundle::costSheet.html.twig', array(
+        return $this->render('MealzAccountingBundle::costSheet.html.twig', [
             'columnNames' => $columnNames,
-            'users' => $users
-        ));
+            'users' => $users,
+        ]);
     }
 
-    public function hideUserRequest(Profile $profile) : Response
+    public function hideUserRequest(Profile $profile): Response
     {
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
@@ -169,17 +169,17 @@ class CostSheetController extends BaseController
     {
         $profile = null;
         $profileRepository = $this->getDoctrine()->getRepository(Profile::class);
-        $queryResult = $profileRepository->findBy(array('settlementHash' => urldecode($hash)));
+        $queryResult = $profileRepository->findBy(['settlementHash' => urldecode($hash)]);
 
-        if (is_array($queryResult) === true && empty($queryResult) === false) {
+        if (true === is_array($queryResult) && false === empty($queryResult)) {
             $profile = $queryResult[0];
         } else {
             $this->addFlashMessage($this->get('translator')->trans('payment.costsheet.account_settlement.confirmation.failure'), 'danger');
         }
 
-        return $this->render('MealzAccountingBundle::confirmationPage.html.twig', array(
+        return $this->render('MealzAccountingBundle::confirmationPage.html.twig', [
             'hash' => $hash,
-            'profile' => $profile));
+            'profile' => $profile, ]);
     }
 
     /**
@@ -192,7 +192,7 @@ class CostSheetController extends BaseController
     ): Response {
         $queryResult = $profileRepository->findBy(['settlementHash' => urldecode($hash)]);
 
-        if (is_array($queryResult) === true && empty($queryResult) === false) {
+        if (true === is_array($queryResult) && false === empty($queryResult)) {
             $profile = $queryResult[0];
             $profile->setSettlementHash(null);
 
@@ -202,18 +202,18 @@ class CostSheetController extends BaseController
             $transaction = new Transaction();
             $transaction->setProfile($profile);
             $transaction->setDate(new DateTime());
-            $transaction->setAmount(-1 * abs((float)$wallet->getBalance($profile)));
+            $transaction->setAmount(-1 * abs((float) $wallet->getBalance($profile)));
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($profile);
             $entityManager->persist($transaction);
             $entityManager->flush();
 
-            /**
+            /*
              * for devbox situation, if you are not logged in with fake-login
              * With Keycloak this if condition is not needed anymore
              */
-            if ($this->getProfile() !== null) {
+            if (null !== $this->getProfile()) {
                 $logger = $this->get('monolog.logger.balance');
                 $logger->info(
                     '{hr_member} settled {users} Balance.',
@@ -250,10 +250,10 @@ class CostSheetController extends BaseController
             [
                 '%admin%' => $this->getProfile()->getFullName(),
                 '%fullname%' => $profile->getFullName(),
-                '%link%' => rtrim($this->getParameter('app.base_url'), '/').$this->generateUrl(
+                '%link%' => rtrim($this->getParameter('app.base_url'), '/') . $this->generateUrl(
                     'mealz_accounting_cost_sheet_redirect_to_confirm',
                     ['hash' => $urlEncodedHash]
-                )
+                ),
             ],
             'messages'
         );

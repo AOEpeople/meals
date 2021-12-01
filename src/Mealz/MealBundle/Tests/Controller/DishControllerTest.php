@@ -2,18 +2,17 @@
 
 namespace App\Mealz\MealBundle\Tests\Controller;
 
-use App\Mealz\MealBundle\Entity\Dish;
-use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
-use Doctrine\ORM\EntityManager;
-use Symfony\Component\DomCrawler\Crawler;
-
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadDays;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishVariations;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
-use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
+use App\Mealz\MealBundle\Entity\Dish;
+use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
+use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
+use Doctrine\ORM\EntityManager;
+use Symfony\Component\DomCrawler\Crawler;
 
 class DishControllerTest extends AbstractControllerTestCase
 {
@@ -37,7 +36,7 @@ class DishControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * Test calling a form for new dish
+     * Test calling a form for new dish.
      */
     public function testGetEmptyFormAction(): void
     {
@@ -48,7 +47,7 @@ class DishControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * Test creating a new dish
+     * Test creating a new dish.
      */
     public function testNewAction(): void
     {
@@ -60,8 +59,8 @@ class DishControllerTest extends AbstractControllerTestCase
                 'description_de' => 'dish-form-desc-de',
                 'description_en' => 'dish-form-desc-en',
                 'category' => '',
-                '_token' => $this->getFormCSRFToken('/dish/form', 'form #dish__token')
-            ]
+                '_token' => $this->getFormCSRFToken('/dish/form', 'form #dish__token'),
+            ],
         ];
 
         // Call controller action
@@ -83,7 +82,7 @@ class DishControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * Test adding a new new dish and find it listed in dishes list
+     * Test adding a new new dish and find it listed in dishes list.
      */
     public function testListAction(): void
     {
@@ -112,7 +111,7 @@ class DishControllerTest extends AbstractControllerTestCase
 
     /**
      * Test if a dish is selected for editing the form must be prefilled
-     * with the dishes data
+     * with the dishes data.
      */
     public function testGetPreFilledFormAction(): void
     {
@@ -143,7 +142,7 @@ class DishControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * Test a previously created dish can be edited in a form
+     * Test a previously created dish can be edited in a form.
      */
     public function testEditAction(): void
     {
@@ -156,7 +155,7 @@ class DishControllerTest extends AbstractControllerTestCase
             'description_de' => 'dish-form-edited-desc-de',
             'description_en' => 'dish-form-edited-desc-en',
             'category' => '',
-            '_token' => $this->getFormCSRFToken('/dish/form/' . $dish->getSlug(), 'form #dish__token')
+            '_token' => $this->getFormCSRFToken('/dish/form/' . $dish->getSlug(), 'form #dish__token'),
         ];
 
         $this->client->request('POST', '/dish/' . $dish->getSlug() . '/edit', $form);
@@ -169,7 +168,7 @@ class DishControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * Test calling a non existing dish(ID) to be EDITED leads to a 404 error
+     * Test calling a non existing dish(ID) to be EDITED leads to a 404 error.
      */
     public function testEditActionOfNonExistingDish(): void
     {
@@ -178,7 +177,7 @@ class DishControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * Test firing a dish DELETION from the admin backend deletes the dish from database
+     * Test firing a dish DELETION from the admin backend deletes the dish from database.
      */
     public function testDeleteAction(): void
     {
@@ -194,7 +193,7 @@ class DishControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * Test calling a non existing dish(ID) to be DELETED leads to a 404 error
+     * Test calling a non existing dish(ID) to be DELETED leads to a 404 error.
      */
     public function testDeleteOfNonExistingDish(): void
     {
@@ -203,7 +202,7 @@ class DishControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * Test if a newly created dish is marked as new
+     * Test if a newly created dish is marked as new.
      */
     public function testIfNewDishIsNew(): void
     {
@@ -214,7 +213,7 @@ class DishControllerTest extends AbstractControllerTestCase
             'description_de' => 'dish-form-desc-de',
             'description_en' => 'dish-form-desc-en',
             'category' => '',
-            '_token' => $this->getFormCSRFToken('/dish/form', 'form #dish__token')
+            '_token' => $this->getFormCSRFToken('/dish/form', 'form #dish__token'),
         ];
 
         // Call controller action
@@ -237,7 +236,7 @@ class DishControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * Test if a often offered dish is not marked as new
+     * Test if a often offered dish is not marked as new.
      */
     public function testIfOftenOfferedDishIsNotNew(): void
     {
@@ -246,7 +245,7 @@ class DishControllerTest extends AbstractControllerTestCase
         $entityManager = $this->client->getContainer()->get('doctrine')->getManager();
         $dishRepository = $entityManager->getRepository(Dish::class);
         $dish = $dishRepository->findOneBy([
-            'slug' => 'braaaaaiiinnnzzzzzz'
+            'slug' => 'braaaaaiiinnnzzzzzz',
         ]);
 
         $this->assertNotNull($dish);

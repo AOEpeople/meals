@@ -19,13 +19,13 @@ class ParticipantController extends BaseController
 {
     public function delete(Participant $participant): JsonResponse
     {
-        if (is_object($this->getUser()) === false) {
+        if (false === is_object($this->getUser())) {
             return $this->ajaxSessionExpiredRedirect();
         }
 
         $meal = $participant->getMeal();
-        if ($this->getDoorman()->isUserAllowedToLeave($meal) === false &&
-            ($this->getProfile() === $participant->getProfile() || $this->getDoorman()->isKitchenStaff() === false)) {
+        if (false === $this->getDoorman()->isUserAllowedToLeave($meal) &&
+            ($this->getProfile() === $participant->getProfile() || false === $this->getDoorman()->isKitchenStaff())) {
             return new JsonResponse(null, 403);
         }
 
@@ -69,26 +69,26 @@ class ParticipantController extends BaseController
         $dateTime = $participant->getMeal()->getDateTime();
         $counter = $this->getParticipantRepository()->getOfferCount($dateTime);
 
-        if (is_object($this->getUser()) === false) {
+        if (false === is_object($this->getUser())) {
             return $this->ajaxSessionExpiredRedirect();
         }
 
-        if ($this->getProfile() !== $participant->getProfile() || $this->getDoorman()->isUserAllowedToSwap($participant->getMeal()) === false) {
+        if ($this->getProfile() !== $participant->getProfile() || false === $this->getDoorman()->isUserAllowedToSwap($participant->getMeal())) {
             return new JsonResponse(null, 403);
         }
 
-        if ($participant->getMeal() === null) {
+        if (null === $participant->getMeal()) {
             return new JsonResponse(null, 404);
         }
 
         /*
          * Set "offeredAt" to the time.
          */
-        if ($participant->getOfferedAt() === 0) {
+        if (0 === $participant->getOfferedAt()) {
             $participant->setOfferedAt(time());
         } else {
             // If user is already offering a meal (it's pending), take the offer back by setting "offeredAt" to 0.
-            if ($participant->isPending() === true) {
+            if (true === $participant->isPending()) {
                 $participant->setOfferedAt(0);
             }
 
@@ -114,7 +114,7 @@ class ParticipantController extends BaseController
             $counter,
             [
                 '%counter%' => $counter,
-                '%dish%' => $dishTitle
+                '%dish%' => $dishTitle,
             ]
         );
 
@@ -129,7 +129,7 @@ class ParticipantController extends BaseController
     public function isParticipationPending(Participant $participant): JsonResponse
     {
         return new JsonResponse([
-            $participant->isPending()
+            $participant->isPending(),
         ]);
     }
 
@@ -178,7 +178,7 @@ class ParticipantController extends BaseController
             if (false === array_key_exists($profile->getUsername(), $groupedParticipation)) {
                 $profilesArray[] = [
                     'label' => $profile->getFullName(),
-                    'value' => $profile->getUsername()
+                    'value' => $profile->getUsername(),
                 ];
             }
         }
@@ -190,7 +190,7 @@ class ParticipantController extends BaseController
             'week' => $week,
             'users' => $groupedParticipation,
             'profilesJson' => json_encode($profilesArray),
-            'prototype' => $prototype
+            'prototype' => $prototype,
         ]);
     }
 
@@ -199,7 +199,7 @@ class ParticipantController extends BaseController
         return new JsonResponse([
             'url' => $this->generateUrl($route, ['participant' => $participant->getId()]),
             'id' => $participant->getId(),
-            'actionText' => $action
+            'actionText' => $action,
         ]);
     }
 }

@@ -2,27 +2,23 @@
 
 namespace App\Mealz\AccountingBundle\Tests\Controller;
 
+use App\Mealz\AccountingBundle\DataFixtures\ORM\LoadTransactions;
+use App\Mealz\AccountingBundle\Entity\Transaction;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadDays;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishVariations;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
+use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
-use App\Mealz\AccountingBundle\DataFixtures\ORM\LoadTransactions;
-use App\Mealz\AccountingBundle\Entity\Transaction;
-use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
 
 /**
- * Class CostSheetControllerTest
- * @package Mealz\MealBundle\Tests\Controller
+ * Class CostSheetControllerTest.
  */
 class CostSheetControllerTest extends AbstractControllerTestCase
 {
-    /**
-     * Prepares test environment.
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -37,14 +33,14 @@ class CostSheetControllerTest extends AbstractControllerTestCase
             new LoadMeals(),
             new LoadRoles(),
             new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
-            new LoadTransactions()
+            new LoadTransactions(),
         ]);
 
         $this->loginAs(self::USER_KITCHEN_STAFF);
     }
 
     /**
-     * Check if hashCode was written in database
+     * Check if hashCode was written in database.
      */
     public function testHashWrittenInDatabase(): void
     {
@@ -59,7 +55,7 @@ class CostSheetControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * Check if hashCode was removed from database
+     * Check if hashCode was removed from database.
      */
     public function testHashRemoveFromDatabase(): void
     {
@@ -94,7 +90,8 @@ class CostSheetControllerTest extends AbstractControllerTestCase
         $this->assertNull($profile->getSettlementHash());
     }
 
-    public function testHideUserRequestWithNonHiddenUser(): void {
+    public function testHideUserRequestWithNonHiddenUser(): void
+    {
         // Pre-action tests
         $profile = $this->getUserProfile(parent::USER_STANDARD);
         $this->assertFalse($profile->isHidden());
@@ -108,7 +105,8 @@ class CostSheetControllerTest extends AbstractControllerTestCase
         $this->assertTrue($profile->isHidden());
     }
 
-    public function testHideUserRequestWithHiddenUser(): void {
+    public function testHideUserRequestWithHiddenUser(): void
+    {
         // Pre-action tests
         $profile = $this->getUserProfile(parent::USER_STANDARD);
 

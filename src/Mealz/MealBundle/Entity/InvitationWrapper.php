@@ -6,20 +6,20 @@ use App\Mealz\UserBundle\Entity\Profile;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Class InvitationWrapper
- * @package Mealz\MealBundle\Form\Guest
+ * Class InvitationWrapper.
  */
 class InvitationWrapper
 {
-
     /**
      * @Assert\Valid
+     *
      * @var Day
      */
     private $day;
 
     /**
      * @Assert\Valid
+     *
      * @var Profile
      */
     private $profile;

@@ -2,27 +2,23 @@
 
 namespace App\Mealz\AccountingBundle\Tests\Controller;
 
+use App\Mealz\AccountingBundle\Entity\Transaction;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
+use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
+use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
+use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use DOMElement;
 use DomNode;
 use Exception;
-use App\Mealz\AccountingBundle\Entity\Transaction;
-use App\Mealz\UserBundle\Entity\Profile;
 use Symfony\Component\DomCrawler\Crawler;
-use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
-use App\Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
-use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 
 /**
- * Class AccountingBookControllerTest
- * @package Mealz\AccountingBundle\Tests\Controller
+ * Class AccountingBookControllerTest.
  */
 class AccountingBookControllerTest extends AbstractControllerTestCase
 {
-    /**
-     * prepare test environment
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -61,30 +57,30 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * Testing access to accounting book site for non-admins and admins
+     * Testing access to accounting book site for non-admins and admins.
      */
     public function testAccessForAdminsOnly(): void
     {
         // test for admins
         $crawler = $this->client->request('GET', '/accounting/book');
         $node = $crawler->filterXPath('//table[@id="accounting-book-table"]');
-        $this->assertFalse($node->count() > 0, "Accounting book NOT accessible by Admins(ROLE_KITCHEN_STAFF)");
+        $this->assertFalse($node->count() > 0, 'Accounting book NOT accessible by Admins(ROLE_KITCHEN_STAFF)');
 
         // test for no or non-admin user
         $this->loginAs(self::USER_STANDARD);
         $crawler = $this->client->request('GET', '/accounting/book');
         $node = $crawler->filterXPath('//table[@id="accounting-book-table"]');
-        $this->assertFalse($node->count() > 0, "Accounting book accessible by Non-Admins");
+        $this->assertFalse($node->count() > 0, 'Accounting book accessible by Non-Admins');
 
         // test for finance admins
         $this->loginAs(self::USER_FINANCE);
         $crawler = $this->client->request('GET', '/accounting/book');
         $node = $crawler->filterXPath('//table[@id="accounting-book-table"]');
-        $this->assertTrue($node->count() > 0, "Accounting book NOT accessible by Admins(ROLE_KITCHEN_STAFF)");
+        $this->assertTrue($node->count() > 0, 'Accounting book NOT accessible by Admins(ROLE_KITCHEN_STAFF)');
     }
 
     /**
-     * Test the headline of accounting book showing the range of the last month
+     * Test the headline of accounting book showing the range of the last month.
      */
     public function testHeadlineShowingDateOfLastMonth(): void
     {
@@ -106,8 +102,8 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
         $monthNumber = $minDate->format('m');
         $year = $minDate->format('Y');
 
-        $regex = "/" . preg_quote($firstDay) . "\." . preg_quote($monthNumber) . "\.(" . preg_quote($year) . ")? *[-|bis|to] *" . preg_quote($lastDay) . "\." . preg_quote($monthNumber) . "\.(" . preg_quote($year) . ")?/i";
-        $this->assertMatchesRegularExpression($regex, $headline, "The headline is not set properly");
+        $regex = '/' . preg_quote($firstDay) . "\." . preg_quote($monthNumber) . "\.(" . preg_quote($year) . ')? *[-|bis|to] *' . preg_quote($lastDay) . "\." . preg_quote($monthNumber) . "\.(" . preg_quote($year) . ')?/i';
+        $this->assertMatchesRegularExpression($regex, $headline, 'The headline is not set properly');
     }
 
     /**
@@ -125,10 +121,10 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
         $res = [];
         foreach ($nodesAmount as $value) {
             $tmpCrawler = new Crawler($value);
-            $res[] = (float)$tmpCrawler->text();
+            $res[] = (float) $tmpCrawler->text();
         }
 
-        $totalCalculated = (float)array_sum($res);
+        $totalCalculated = (float) array_sum($res);
         $totalShown = $this->getFloatFromNode($nodeTotal->siblings()->getNode(0));
 
         $this->assertEquals($totalCalculated, $totalShown, 'Total amount of transactions inconsistent');
@@ -136,7 +132,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
 
     /**
      * Test users are ordered by lastname, firstname and listed this way:
-     * lastname, firstname      amount
+     * lastname, firstname      amount.
      */
     public function testDisplayUsersOrderedByLastnameAndFirstname(): void
     {
@@ -160,19 +156,19 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
         $nodesName = $crawler->filterXPath('//table[@id="accounting-book-table"]//td[contains(@class,"name")]');
 
         // now compare order and displayed syntax of results
-        for ($i = 0; $i < $nodesName->count(); $i++) {
+        for ($i = 0; $i < $nodesName->count(); ++$i) {
             $this->assertInstanceOf(DOMElement::class, $nodesName->getNode($i));
             $nameDisplayed = $nodesName->getNode($i)->textContent;
             $userInfo = current($usersAndTheirTotals);
             next($usersAndTheirTotals);
-            $regex = "/" . preg_quote($userInfo['name']) . " *, *" . preg_quote($userInfo['firstName']) . "/i";
+            $regex = '/' . preg_quote($userInfo['name']) . ' *, *' . preg_quote($userInfo['firstName']) . '/i';
             $this->assertMatchesRegularExpression($regex, $nameDisplayed, 'Names are displayed incorrectly. Either sorting is wrong or the names are not displayed like it should be (name, firstname)');
         }
     }
 
     /**
-     * Return a floatval from a node's textContent
-     * @param DomNode $node
+     * Return a floatval from a node's textContent.
+     *
      * @return float
      */
     protected function getFloatFromNode(DomNode $node)
@@ -184,7 +180,8 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * return a new crawler
+     * return a new crawler.
+     *
      * @return Crawler
      */
     protected function getRawResponseCrawler()
@@ -196,31 +193,31 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * Tests if finance staff can access the transaction export page and admins and default users can not
+     * Tests if finance staff can access the transaction export page and admins and default users can not.
      */
     public function testAccessForFinanceOnly(): void
     {
         $this->loginAs(self::USER_FINANCE);
 
         $crawler = $this->client->request('GET', '/accounting/book/finance/list');
-        $this->assertTrue($this->client->getResponse()->isSuccessful(), "Finances page not accessible by finance staff");
+        $this->assertTrue($this->client->getResponse()->isSuccessful(), 'Finances page not accessible by finance staff');
 
         $node = $crawler->filterXPath('//table[@id="accounting-book-table"]');
-        $this->assertTrue($node->count() > 0, "Accounting book table could not be rendered on the finances page");
+        $this->assertTrue($node->count() > 0, 'Accounting book table could not be rendered on the finances page');
 
         // Test if default users can access the finances page
         $this->loginAs(self::USER_STANDARD);
         $this->client->request('GET', '/accounting/book/finance/list');
-        $this->assertFalse($this->client->getResponse()->isSuccessful(), "Finances page accessible by default users");
+        $this->assertFalse($this->client->getResponse()->isSuccessful(), 'Finances page accessible by default users');
 
         // Test if admins can access the finances page
         $this->loginAs(self::USER_KITCHEN_STAFF);
         $this->client->request('GET', '/accounting/book/finance/list');
-        $this->assertFalse($this->client->getResponse()->isSuccessful(), "Finances page accessible by administrators");
+        $this->assertFalse($this->client->getResponse()->isSuccessful(), 'Finances page accessible by administrators');
     }
 
     /**
-     * Tests if the transactions are displayed correctly
+     * Tests if the transactions are displayed correctly.
      */
     public function testTransactionsListing(): void
     {
@@ -241,20 +238,20 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
 
         $this->loginAs(self::USER_FINANCE);
 
-        $crawler = $this->client->request('GET', '/accounting/book/finance/list/' . $dateFormatted . "&" . $dateFormatted);
+        $crawler = $this->client->request('GET', '/accounting/book/finance/list/' . $dateFormatted . '&' . $dateFormatted);
 
         $date = $crawler->filterXPath('//*[@class="table-data date"]/text()')->getNode(0)->textContent;
-        $this->assertEquals($transactionDate->format('d.m.Y'), trim($date), "Date displayed incorrectly");
+        $this->assertEquals($transactionDate->format('d.m.Y'), trim($date), 'Date displayed incorrectly');
 
         $name = $crawler->filterXPath('//*[@class="table-data name"]/text()')->getNode(0)->textContent;
-        $this->assertEquals($profile->getFullName(), trim($name), "Name displayed incorrectly");
+        $this->assertEquals($profile->getFullName(), trim($name), 'Name displayed incorrectly');
 
         $amount = $crawler->filterXPath('//*[@class="table-data amount"]/text()')->getNode(0)->textContent;
-        $this->assertEquals("42.17", trim($amount), "Amount displayed incorrectly");
+        $this->assertEquals('42.17', trim($amount), 'Amount displayed incorrectly');
     }
 
     /**
-     * Test if PayPal payments are shown on the finances page
+     * Test if PayPal payments are shown on the finances page.
      *
      * @throws Exception
      */
@@ -278,14 +275,14 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
 
         $this->loginAs(self::USER_FINANCE);
 
-        $crawler = $this->client->request('GET', '/accounting/book/finance/list/' . $dateFormatted . "&" . $dateFormatted);
+        $crawler = $this->client->request('GET', '/accounting/book/finance/list/' . $dateFormatted . '&' . $dateFormatted);
 
         $nodes = $crawler->filterXPath('//*[@class="table-data amount"]/text()');
-        $this->assertEquals(0, $nodes->count(), "PayPal payment listed on finances page");
+        $this->assertEquals(0, $nodes->count(), 'PayPal payment listed on finances page');
     }
 
     /**
-     * Tests if the daily closing amount is calculated correctly
+     * Tests if the daily closing amount is calculated correctly.
      *
      * @throws Exception
      */
@@ -315,9 +312,9 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
 
         $this->loginAs(self::USER_FINANCE);
 
-        $crawler = $this->client->request('GET', '/accounting/book/finance/list/' . $dateFormatted . "&" . $dateFormatted);
+        $crawler = $this->client->request('GET', '/accounting/book/finance/list/' . $dateFormatted . '&' . $dateFormatted);
 
         $dailyClosing = $crawler->filterXPath('//*[@class="table-data daily-closing"]/text()')->getNode(0)->textContent;
-        $this->assertEquals("100.00", trim($dailyClosing), "Daily closing calculated incorrectly");
+        $this->assertEquals('100.00', trim($dailyClosing), 'Daily closing calculated incorrectly');
     }
 }

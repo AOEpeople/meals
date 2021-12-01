@@ -2,18 +2,18 @@
 
 namespace App\Mealz\MealBundle\Form\MealAdmin;
 
-use Doctrine\ORM\EntityManagerInterface;
 use App\Mealz\MealBundle\Entity\Day;
+use App\Mealz\MealBundle\Entity\Meal;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\UnitOfWork;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use App\Mealz\MealBundle\Entity\Meal;
-use Doctrine\ORM\UnitOfWork;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Valid;
 
 class DayForm extends AbstractType
@@ -26,7 +26,7 @@ class DayForm extends AbstractType
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -42,7 +42,7 @@ class DayForm extends AbstractType
                 'required' => false,
                 'widget' => 'single_text',
                 'format' => 'YYYY-MM-dd HH:mm:ss',
-                'attr' => ['class' => 'hidden-form-field']
+                'attr' => ['class' => 'hidden-form-field'],
             ])
             ->add('enabled', CheckboxType::class, [
                 'required' => false,
@@ -57,7 +57,7 @@ class DayForm extends AbstractType
             foreach ($meals as $meal) {
                 /** @var Meal $meal */
                 if (null === $meal->getDish() &&
-                    $this->entityManager->getUnitOfWork()->getEntityState($meal) === UnitOfWork::STATE_NEW
+                    UnitOfWork::STATE_NEW === $this->entityManager->getUnitOfWork()->getEntityState($meal)
                 ) {
                     $meals->removeElement($meal);
                 }
@@ -83,7 +83,7 @@ class DayForm extends AbstractType
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function configureOptions(OptionsResolver $resolver): void
     {

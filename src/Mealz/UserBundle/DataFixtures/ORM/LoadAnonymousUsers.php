@@ -4,21 +4,18 @@ declare(strict_types=1);
 
 namespace App\Mealz\UserBundle\DataFixtures\ORM;
 
+use App\Mealz\UserBundle\Entity\Login;
 use App\Mealz\UserBundle\Entity\Profile;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use App\Mealz\UserBundle\Entity\Login;
 use Exception;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-/**
- * Loads users.
- */
 class LoadAnonymousUsers extends Fixture implements OrderedFixtureInterface
 {
     /**
-     * Constant to declare load order of fixture
+     * Constant to declare load order of fixture.
      */
     private const ORDER_NUMBER = 10;
 
@@ -34,7 +31,7 @@ class LoadAnonymousUsers extends Fixture implements OrderedFixtureInterface
     }
 
     /**
-     * Load the Fixtures for Prod DB data
+     * Load the Fixtures for Prod DB data.
      *
      * @throws Exception
      */
@@ -60,17 +57,17 @@ class LoadAnonymousUsers extends Fixture implements OrderedFixtureInterface
                 }
 
                 $connection->query(
-                    "UPDATE participant SET profile_id='".$key."XXX' WHERE profile_id='".$user->getUsername()."';"
+                    "UPDATE participant SET profile_id='" . $key . "XXX' WHERE profile_id='" . $user->getUsername() . "';"
                 );
                 $connection->query(
-                    "UPDATE guest_invitation SET host_id='".$key."XXX' WHERE host_id='".$user->getUsername()."';"
+                    "UPDATE guest_invitation SET host_id='" . $key . "XXX' WHERE host_id='" . $user->getUsername() . "';"
                 );
                 $connection->query(
-                    "UPDATE transaction SET profile='".$key."XXX' WHERE profile='".$user->getUsername()."';"
+                    "UPDATE transaction SET profile='" . $key . "XXX' WHERE profile='" . $user->getUsername() . "';"
                 );
                 $connection->query(
-                    "UPDATE profile SET id='".$key."XXX', name='".$key."Surname', firstname='".$key."Firstname' " .
-                    "WHERE id='".$user->getUsername()."';"
+                    "UPDATE profile SET id='" . $key . "XXX', name='" . $key . "Surname', firstname='" . $key . "Firstname' " .
+                    "WHERE id='" . $user->getUsername() . "';"
                 );
             }
 
@@ -88,7 +85,7 @@ class LoadAnonymousUsers extends Fixture implements OrderedFixtureInterface
                     continue;
                 }
 
-                $anonymousUsername = $key.'XXX';
+                $anonymousUsername = $key . 'XXX';
                 $login = new Login();
                 $login->setUsername($anonymousUsername);
                 $this->objectManager->persist($user);
@@ -101,10 +98,10 @@ class LoadAnonymousUsers extends Fixture implements OrderedFixtureInterface
                 $this->objectManager->persist($login);
             }
 
-            /** enable consistency checks */
+            /* enable consistency checks */
             $connection->query('SET FOREIGN_KEY_CHECKS=1;');
 
-            /** commit DB changes and close Connection */
+            /* commit DB changes and close Connection */
             $this->objectManager->flush();
             $connection->commit();
         } catch (Exception $e) {
@@ -114,9 +111,6 @@ class LoadAnonymousUsers extends Fixture implements OrderedFixtureInterface
         }
     }
 
-    /**
-     * Get the Fixtures loadOrder
-     */
     public function getOrder(): int
     {
         // load as tenth

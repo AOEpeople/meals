@@ -19,8 +19,6 @@ class SlotCollection extends ArrayCollection
     }
 
     /**
-     * @param array $elements
-     *
      * @return list<Slot>
      */
     private function getValidSlots(array $elements): array

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Mealz\AccountingBundle\Event\Subscriber;
@@ -11,7 +12,6 @@ class SettlementSubscriber implements EventSubscriberInterface
 {
     private ParticipantRepository $participantRepo;
 
-
     public function __construct(ParticipantRepository $participantRepo)
     {
         $this->participantRepo = $participantRepo;
@@ -20,7 +20,7 @@ class SettlementSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            ProfileSettlementEvent::class => 'onProfileSettlement'
+            ProfileSettlementEvent::class => 'onProfileSettlement',
         ];
     }
 

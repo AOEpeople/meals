@@ -18,7 +18,7 @@ use App\Mealz\UserBundle\Entity\Role;
 class PrintControllerTest extends AbstractControllerTestCase
 {
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function setUp(): void
     {
@@ -47,16 +47,16 @@ class PrintControllerTest extends AbstractControllerTestCase
         $time = time();
 
         // Create guest profile
-        $guestFirstName = 'Jon:'.$time;
-        $guestLastName  = 'Doe:'.$time;
-        $guestCompany   = 'Test Company:'.$time;
+        $guestFirstName = 'Jon:' . $time;
+        $guestLastName = 'Doe:' . $time;
+        $guestCompany = 'Test Company:' . $time;
 
         $guest = $this->createProfile($guestFirstName, $guestLastName, $guestCompany);
         $guest->addRole($this->getRole(Role::ROLE_GUEST));
 
         // Create profile for normal user
-        $userFirstName = 'Max:'.$time;
-        $userLastName  = 'Mustermann:'.$time;
+        $userFirstName = 'Max:' . $time;
+        $userLastName = 'Mustermann:' . $time;
         $user = $this->createProfile($userFirstName, $userLastName);
 
         $this->persistAndFlushAll([$guest, $user]);

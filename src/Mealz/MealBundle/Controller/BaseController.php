@@ -16,8 +16,8 @@ use App\Mealz\UserBundle\Entity\Profile;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
 
@@ -29,10 +29,10 @@ abstract class BaseController extends AbstractController
     public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();
-        $services['logger'] = '?'.LoggerInterface::class;
-        $services['mealz_meal.doorman'] = '?'.Doorman::class;
-        $services['monolog.logger.balance'] = '?'.LoggerInterface::class;
-        $services['translator'] = '?'.TranslatorInterface::class;
+        $services['logger'] = '?' . LoggerInterface::class;
+        $services['mealz_meal.doorman'] = '?' . Doorman::class;
+        $services['monolog.logger.balance'] = '?' . LoggerInterface::class;
+        $services['translator'] = '?' . TranslatorInterface::class;
 
         return $services;
     }
@@ -86,6 +86,7 @@ abstract class BaseController extends AbstractController
      * @param $object
      * @param null $action
      * @param bool $referenceType
+     *
      * @return string
      */
     public function generateUrlTo($object, $action = null, $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH)
@@ -125,7 +126,7 @@ abstract class BaseController extends AbstractController
     {
         $excChain = ['message' => ('' === $message ? 'exception' : $message)];
 
-        for ($i = 0; $exc; $i++) {
+        for ($i = 0; $exc; ++$i) {
             $excLog = ['type' => get_class($exc)];
 
             if (0 < $exc->getCode()) {
@@ -133,7 +134,7 @@ abstract class BaseController extends AbstractController
             }
 
             $excLog['message'] = $exc->getMessage();
-            $excLog['file'] = $exc->getFile().':'.$exc->getLine();
+            $excLog['file'] = $exc->getFile() . ':' . $exc->getLine();
 
             $prev = $exc->getPrevious();
             if (null === $prev) {
@@ -141,7 +142,7 @@ abstract class BaseController extends AbstractController
             }
 
             $exc = $prev;
-            $excChain['#'.$i] = $excLog;
+            $excChain['#' . $i] = $excLog;
         }
 
         $this->get('logger')->error(json_encode($excChain), $context);

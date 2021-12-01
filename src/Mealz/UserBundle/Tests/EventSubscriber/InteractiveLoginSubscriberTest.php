@@ -19,9 +19,6 @@ class InteractiveLoginSubscriberTest extends AbstractControllerTestCase
 {
     private InteractiveLoginSubscriber $iaLoginSubscriber;
 
-    /**
-     * Set up the testing environment
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -74,9 +71,7 @@ class InteractiveLoginSubscriberTest extends AbstractControllerTestCase
     }
 
     /**
-     * Helper to get a mocked InteractiveLoginEvent
-     *
-     * @return InteractiveLoginEvent
+     * Helper to get a mocked InteractiveLoginEvent.
      */
     private function getMockedInteractiveLoginEvent(): InteractiveLoginEvent
     {
@@ -100,6 +95,7 @@ class InteractiveLoginSubscriberTest extends AbstractControllerTestCase
             ->expects($this->once())
             ->method('getAuthenticationToken')
             ->willReturn($tokenInterfaceMock);
+
         return $iaLoginEventMock;
     }
 }

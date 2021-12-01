@@ -19,7 +19,6 @@ class Wallet
     }
 
     /**
-     * @param Profile $profile
      * @return float
      */
     public function getBalance(Profile $profile)

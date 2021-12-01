@@ -7,7 +7,7 @@ namespace App\Mealz\UserBundle\User;
 use App\Mealz\UserBundle\Entity\Profile;
 
 /**
- * logged in users in this application should be able to have a profile
+ * logged in users in this application should be able to have a profile.
  */
 interface UserInterface
 {

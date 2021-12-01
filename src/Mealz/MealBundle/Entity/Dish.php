@@ -92,7 +92,6 @@ class Dish
      * Parent property references to the same table dish.
      * If an dish, which is referenced by an dish_variation, is deleted the related dish_variations are deleted cascadingly.
      *
-     *
      * @ORM\ManyToOne(targetEntity="Dish", inversedBy="variations", cascade={"persist"})
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", nullable=TRUE, onDelete="CASCADE")
      */
@@ -109,18 +108,13 @@ class Dish
     }
 
     /**
-     * Get id
-     *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getSlug(): string
     {
         return $this->slug;
@@ -128,7 +122,7 @@ class Dish
 
     public function getDescription(): ?string
     {
-        if ($this->currentLocale === 'de' && $this->description_de) {
+        if ('de' === $this->currentLocale && $this->description_de) {
             return $this->getDescriptionDe();
         }
 
@@ -147,7 +141,7 @@ class Dish
 
     public function getTitle(): string
     {
-        if ($this->currentLocale === 'de' && $this->title_de) {
+        if ('de' === $this->currentLocale && $this->title_de) {
             return $this->getTitleDe();
         }
 
@@ -229,9 +223,6 @@ class Dish
         $this->category = $category;
     }
 
-    /**
-     * Gets all the dish variations.
-     */
     public function getVariations(): Collection
     {
         if (null === $this->variations) {
@@ -246,11 +237,8 @@ class Dish
         $this->variations = $dishVariations;
     }
 
-    /**
-     * Checks if the dish has variations.
-     */
     public function hasVariations(): bool
     {
-        return (count($this->variations) > 0);
+        return count($this->variations) > 0;
     }
 }

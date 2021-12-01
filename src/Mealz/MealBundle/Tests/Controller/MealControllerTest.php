@@ -24,9 +24,6 @@ use Doctrine\Common\Collections\Criteria;
 
 class MealControllerTest extends AbstractControllerTestCase
 {
-    /**
-     * Prepares test environment.
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -110,11 +107,11 @@ class MealControllerTest extends AbstractControllerTestCase
 
         //verification by checking the database
         $newParticipant = $this->getDoctrine()->getRepository(Participant::class)->find($participant->getId());
-        $this->assertTrue($newParticipant->getOfferedAt() === 0);
+        $this->assertTrue(0 === $newParticipant->getOfferedAt());
 
         //second case: check if second offer is still available
         $secondOffer = $this->getDoctrine()->getRepository(Participant::class)->find($secondParticipant->getId());
-        $this->assertTrue($secondOffer->getOfferedAt() != 0, 'second offer was taken');
+        $this->assertTrue(0 != $secondOffer->getOfferedAt(), 'second offer was taken');
     }
 
     /**
@@ -145,7 +142,7 @@ class MealControllerTest extends AbstractControllerTestCase
     /**
      * Testing joining Meal with variations.
      * We have next situation: (1 Dish without variations and 1 Dish with 2 variations)
-     * If we can subscribe to all 3 of these options then you can select Dish with and without variations
+     * If we can subscribe to all 3 of these options then you can select Dish with and without variations.
      *
      * /menu/{date}/{dish}/join/{profile}
      */
@@ -188,9 +185,7 @@ class MealControllerTest extends AbstractControllerTestCase
 
     /**
      * Searching a Day with 3 options. I adapted fixtures so we always have 1 day with 3 options
-     * (1 Dish without variations and 1 Dish with 2 variations)
-     *
-     * @return array
+     * (1 Dish without variations and 1 Dish with 2 variations).
      */
     private function getJoinAMealData(): array
     {
@@ -198,11 +193,11 @@ class MealControllerTest extends AbstractControllerTestCase
         $mealRepository = $this->getDoctrine()->getRepository(Meal::class);
         $meals = $mealRepository->getMealsOnADayWithVariationOptions();
 
-        $dataProvider = array();
+        $dataProvider = [];
         foreach ($meals as $meal) {
             /** @var Meal $meal */
             $meal = $mealRepository->find($meal['id']);
-            $dataProvider[] = array(date('Y-m-d', $meal->getDay()->getDateTime()->getTimestamp()), $meal);
+            $dataProvider[] = [date('Y-m-d', $meal->getDay()->getDateTime()->getTimestamp()), $meal];
         }
 
         // in format [Date, Meal]
@@ -212,11 +207,7 @@ class MealControllerTest extends AbstractControllerTestCase
     /**
      * @dataProvider getGuestEnrollmentData
      *
-     * @param string $firstName
-     * @param string $lastName
-     * @param string $company
-     * @param bool $selectDish
-     * @param bool $enrollmentStatus Flag whether enrollment should be successful or not.
+     * @param bool $enrollmentStatus flag whether enrollment should be successful or not
      */
     public function testEnrollAsGuest(string $firstName, string $lastName, string $company, bool $selectDish, bool $enrollmentStatus): void
     {
@@ -279,9 +270,6 @@ class MealControllerTest extends AbstractControllerTestCase
         ];
     }
 
-    /**
-     * Gets the next available meal.
-     */
     private function getAvailableMeal(): Meal
     {
         $availableMeal = null;
@@ -302,7 +290,7 @@ class MealControllerTest extends AbstractControllerTestCase
             }
         }
 
-        if ($availableMeal === null) {
+        if (null === $availableMeal) {
             $this->fail('No test meal found.');
         }
 
@@ -329,7 +317,7 @@ class MealControllerTest extends AbstractControllerTestCase
 
         $flag = $crawler->filterXPath('//span[@class="new-flag"]')->getNode(0);
 
-        if ($flag === null) {
+        if (null === $flag) {
             $this->fail('Flag not found');
         }
     }
@@ -341,6 +329,7 @@ class MealControllerTest extends AbstractControllerTestCase
     {
         /** @var ParticipantRepository $participantRepo */
         $participantRepo = $this->getDoctrine()->getRepository(Participant::class);
+
         return $participantRepo->findBy(['meal' => $meal->getId()]);
     }
 }

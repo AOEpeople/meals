@@ -45,7 +45,7 @@ class Mailer
         } catch (TransportExceptionInterface $e) {
             $this->logger->error('email send error', [
                 'exception' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
         }
     }

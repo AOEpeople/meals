@@ -4,12 +4,10 @@ namespace App\Mealz\MealBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Category
- *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="App\Mealz\MealBundle\Entity\CategoryRepository")
  *
@@ -20,7 +18,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class Category
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -31,6 +29,7 @@ class Category
     /**
      * @Gedmo\Slug(fields={"title_en"})
      * @ORM\Column(length=128, unique=true)
+     *
      * @var string
      */
     protected $slug;
@@ -39,6 +38,7 @@ class Category
      * @Assert\NotBlank()
      * @Assert\Length(max=255)
      * @ORM\Column(type="string", length=255, nullable=FALSE)
+     *
      * @var string
      */
     protected $title_en;
@@ -53,13 +53,14 @@ class Category
     protected $title_de;
 
     /**
-     * @var string $currentLocale
+     * @var string
      */
     protected $currentLocale = 'en';
 
     /**
      * @ORM\OneToMany(targetEntity="Dish", mappedBy="category")
-     * @var ArrayCollection $dishes
+     *
+     * @var ArrayCollection
      */
     protected $dishes;
 
@@ -126,9 +127,10 @@ class Category
      */
     public function getTitle()
     {
-        if ($this->currentLocale == 'de' && $this->title_de) {
+        if ('de' == $this->currentLocale && $this->title_de) {
             return $this->getTitleDe();
         }
+
         return $this->getTitleEn();
     }
 

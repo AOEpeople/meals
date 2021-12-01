@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Entity;
 
-use Doctrine\ORM\EntityRepository;
 use App\Mealz\MealBundle\EventListener\LocalisationListener;
+use Doctrine\ORM\EntityRepository;
 
 abstract class LocalizedRepository extends EntityRepository
 {

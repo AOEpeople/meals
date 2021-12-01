@@ -46,7 +46,7 @@ class SlotRepository implements ObjectRepository
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getClassName(): string
     {

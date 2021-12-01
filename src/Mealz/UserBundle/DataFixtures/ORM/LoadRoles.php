@@ -4,22 +4,19 @@ declare(strict_types=1);
 
 namespace App\Mealz\UserBundle\DataFixtures\ORM;
 
+use App\Mealz\UserBundle\Entity\Role;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use App\Mealz\UserBundle\Entity\Role;
 
-/**
- * Loads user roles.
- */
 class LoadRoles extends Fixture
 {
     /**
-     * Constant to declare load order of fixture
+     * Constant to declare load order of fixture.
      */
     private const ORDER_NUMBER = 1;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function load(ObjectManager $manager): void
     {
@@ -35,9 +32,6 @@ class LoadRoles extends Fixture
         $manager->flush();
     }
 
-    /**
-     * Gets the loading order of fixture.
-     */
     public function getOrder(): int
     {
         return self::ORDER_NUMBER;

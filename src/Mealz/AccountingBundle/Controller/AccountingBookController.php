@@ -2,9 +2,9 @@
 
 namespace App\Mealz\AccountingBundle\Controller;
 
+use App\Mealz\MealBundle\Controller\BaseController;
 use DateTime;
 use Exception;
-use App\Mealz\MealBundle\Controller\BaseController;
 use Qipsius\TCPDFBundle\Controller\TCPDFController;
 use ReflectionException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -12,18 +12,14 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * Class AccountingBookController
- * @package Mealz\AccountingBundle\Controller
+ * Class AccountingBookController.
  */
 class AccountingBookController extends BaseController
 {
-    /**
-     * @return Response
-     */
     public function list(): Response
     {
         // Deny access for unprivileged (non-admin) users
-        if ($this->isGranted('ROLE_FINANCE') === false) {
+        if (false === $this->isGranted('ROLE_FINANCE')) {
             throw new AccessDeniedException();
         }
 
@@ -50,23 +46,22 @@ class AccountingBookController extends BaseController
         // Get array of users with their amount of transactions in actual month
         $users = $transactionRepo->findUserDataAndTransactionAmountForGivenPeriod($minDate, $maxDate);
 
-        return $this->render('MealzAccountingBundle:Accounting\\Admin:accountingBook.html.twig', array(
+        return $this->render('MealzAccountingBundle:Accounting\\Admin:accountingBook.html.twig', [
             'headingFirst' => $headingFirst,
             'heading' => $heading,
             'usersFirst' => $usersFirst,
             'users' => $users,
-
-        ));
+        ]);
     }
 
     /**
-     * List all transactions that were payed by cash on the finances page
+     * List all transactions that were payed by cash on the finances page.
      *
      * @throws Exception
      */
     public function listAllTransactions($dateRange): Response
     {
-        if ($this->isGranted('ROLE_FINANCE') === false) {
+        if (false === $this->isGranted('ROLE_FINANCE')) {
             throw new AccessDeniedException();
         }
 
@@ -75,7 +70,7 @@ class AccountingBookController extends BaseController
         $minDateFirst = null;
         $maxDateFirst = null;
 
-        if ($dateRange === null) {
+        if (null === $dateRange) {
             // Get first and last day of previous month
             $minDateFirst = new DateTime('first day of previous month');
             $minDateFirst->setTime(0, 0, 0);
@@ -103,18 +98,18 @@ class AccountingBookController extends BaseController
 
         $transactions = $this->getTransactionRepository()->findAllTransactionsInDateRange($minDate, $maxDate);
 
-        return $this->render('MealzAccountingBundle:Accounting/Finance:finances.html.twig', array(
+        return $this->render('MealzAccountingBundle:Accounting/Finance:finances.html.twig', [
             'headingFirst' => $headingFirst,
             'heading' => $heading,
             'transactionsFirst' => $transactionsFirst,
             'transactions' => $transactions,
-            'minDate' => ($minDateFirst === null) ? $minDate->format('m/d/Y') : $minDateFirst->format('m/d/Y'),
-            'maxDate' => ($maxDateFirst === null) ? $maxDate->format('m/d/Y') : $maxDateFirst->format('m/d/Y'),
-        ));
+            'minDate' => (null === $minDateFirst) ? $minDate->format('m/d/Y') : $minDateFirst->format('m/d/Y'),
+            'maxDate' => (null === $maxDateFirst) ? $maxDate->format('m/d/Y') : $maxDateFirst->format('m/d/Y'),
+        ]);
     }
 
     /**
-     * Export transaction table as PDF for finance staff
+     * Export transaction table as PDF for finance staff.
      *
      * @throws ReflectionException
      * @throws Exception
@@ -143,7 +138,7 @@ class AccountingBookController extends BaseController
         $filename = $this->get('translator')->trans('payment.transaction_history.finances.pdf') . '-' . $minDate->format('d.m.Y') . '-' . $maxDate->format('d.m.Y');
         $pdf->SetTitle($filename);
 
-        $cssFile = file_get_contents(__DIR__. '/../Resources/css/transaction-export.css');
+        $cssFile = file_get_contents(__DIR__ . '/../Resources/css/transaction-export.css');
 
         $includeCSS = '<style>' . $cssFile . '</style>';
 

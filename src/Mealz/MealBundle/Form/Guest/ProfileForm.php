@@ -11,42 +11,39 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ProfileForm extends AbstractType
 {
     /**
-     * @param FormBuilderInterface $builder
-     * @param array $options
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name', TextType::class, array(
+            ->add('name', TextType::class, [
                 'required' => true,
-                'attr' => array(
-                    'placeholder' => 'form.placeholder.name'
-                ),
-                'translation_domain' => 'general'
-            ))
-            ->add('firstName', TextType::class, array(
+                'attr' => [
+                    'placeholder' => 'form.placeholder.name',
+                ],
+                'translation_domain' => 'general',
+            ])
+            ->add('firstName', TextType::class, [
                 'required' => true,
-                'attr' => array(
-                    'placeholder' => 'form.placeholder.first_name'
-                ),
-                'translation_domain' => 'general'
-            ))
-            ->add('company', TextType::class, array(
+                'attr' => [
+                    'placeholder' => 'form.placeholder.first_name',
+                ],
+                'translation_domain' => 'general',
+            ])
+            ->add('company', TextType::class, [
                 'required' => false,
                 'empty_data' => '',
-                'attr' => array(
-                    'placeholder' => 'form.placeholder.company'
-                ),
-                'translation_domain' => 'general'
-            ));
+                'attr' => [
+                    'placeholder' => 'form.placeholder.company',
+                ],
+                'translation_domain' => 'general',
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(array(
-            'data_class' => Profile::class
-        ));
+        $resolver->setDefaults([
+            'data_class' => Profile::class,
+        ]);
     }
 }

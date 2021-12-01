@@ -3,13 +3,13 @@
 namespace App\Mealz\MealBundle\Tests\Repository;
 
 use App\Mealz\MealBundle\Entity\Meal;
-use InvalidArgumentException;
 use App\Mealz\MealBundle\Entity\MealRepository;
 use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
+use InvalidArgumentException;
 
 class MealRepositoryTest extends AbstractDatabaseTestCase
 {
-    /** @var  MealRepository */
+    /** @var MealRepository */
     protected $mealRepository;
 
     protected function setUp(): void

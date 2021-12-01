@@ -24,7 +24,7 @@ use DateTime;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
- * Participant Controller Test
+ * Participant Controller Test.
  *
  * @author Henry Vogt <henry.vogt@aoe.com>
  */
@@ -39,9 +39,6 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     protected static $userLastName;
     protected static $meal;
 
-    /**
-     * prepare test environment
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -171,7 +168,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * Check that the created participants are displayed in the participation table for the current week
+     * Check that the created participants are displayed in the participation table for the current week.
      */
     public function testCheckParticipantInParticipationTable(): void
     {
@@ -183,7 +180,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * Check that the guest participant is displayed with a (<company name>) suffix
+     * Check that the guest participant is displayed with a (<company name>) suffix.
      */
     public function testCheckGuestSuffixInParticipationTable(): void
     {
@@ -205,7 +202,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * Check the weekdate is displayed correct
+     * Check the week date is displayed correct.
      */
     public function testCheckWeekDate(): void
     {
@@ -220,7 +217,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * Check that the first day of the week is displayed correct
+     * Check that the first day of the week is displayed correct.
      */
     public function testCheckFirstWeekDay(): void
     {
@@ -231,7 +228,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * Check that the first dish title is displayed
+     * Check that the first dish title is displayed.
      */
     public function testCheckFirstDishTitle(): void
     {
@@ -244,7 +241,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * Check that variations and parent-dish titles are displayed
+     * Check that variations and parent-dish titles are displayed.
      */
     public function testCheckFirstVariationAndParentTitle(): void
     {
@@ -278,7 +275,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * Check that the table data prototype is present in the dom
+     * Check that the table data prototype is present in the dom.
      */
     public function testCheckTableDataPrototype(): void
     {
@@ -288,21 +285,21 @@ class ParticipantControllerTest extends AbstractControllerTestCase
 
         $regex = '/(' . $tableRow . ')(' . $tableData . ')+(<\/tr>)/';
 
-        $this->assertMatchesRegularExpression($regex, preg_replace("~\\s{2,}~", "", trim($crawler->attr("data-prototype"))));
+        $this->assertMatchesRegularExpression($regex, preg_replace('~\\s{2,}~', '', trim($crawler->attr('data-prototype'))));
     }
 
     /**
-     * Check that the profiles list contains the non participating user
+     * Check that the profiles list contains the non participating user.
      */
     public function testCheckProfileList(): void
     {
         $crawler = $this->getCurrentWeekParticipations()->filter('.profile-list');
         $userName = self::$userLastName . ', ' . self::$userFirstName;
-        $this->assertStringContainsString($userName, $crawler->attr("data-attribute-profiles"));
+        $this->assertStringContainsString($userName, $crawler->attr('data-attribute-profiles'));
     }
 
     /**
-     * return crawler for the current week participations
+     * return crawler for the current week participations.
      */
     protected function getCurrentWeekParticipations(): Crawler
     {
@@ -314,17 +311,18 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * return current week object
+     * return current week object.
      */
     protected function getCurrentWeek(): ?Week
     {
         /** @var WeekRepository $weekRepository */
         $weekRepository = $this->getDoctrine()->getRepository(Week::class);
+
         return $weekRepository->getCurrentWeek();
     }
 
     /**
-     * create profile for user and add participation
+     * create profile for user and add participation.
      */
     protected function createEmployeeProfileAndParticipation(
         string $userFirstName,
@@ -341,7 +339,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * create profile for guest and add participation
+     * create profile for guest and add participation.
      */
     protected function createGuestProfileAndParticipation(
         string $guestFirstName,

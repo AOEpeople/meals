@@ -2,10 +2,8 @@
 
 namespace App\Mealz\AccountingBundle\Tests\Repository;
 
-use App\Mealz\AccountingBundle\Entity\TransactionRepository;
-use DateInterval;
-use DateTime;
 use App\Mealz\AccountingBundle\Entity\Transaction;
+use App\Mealz\AccountingBundle\Entity\TransactionRepository;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadDays;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
@@ -13,11 +11,12 @@ use App\Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadParticipants;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
 use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
+use DateInterval;
+use DateTime;
 use Exception;
 
 /**
- * Class TransactionRepositoryTest
- * @package Mealz\AccountingBundle\Tests\Repository
+ * Class TransactionRepositoryTest.
  */
 class TransactionRepositoryTest extends AbstractDatabaseTestCase
 {
@@ -25,9 +24,6 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
 
     protected string $locale;
 
-    /**
-     * prepare test environment
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -48,7 +44,7 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
 
     /**
      * Test if method findUserDataAndTransactionAmountForGivenPeriod() returns the right summed up amounts for transactions of the LAST month
-     * Check if transactions of the last month are cumulated correctly
+     * Check if transactions of the last month are cumulated correctly.
      *
      * - create several temporary transactions for a TEST user (spread over this month, last month and the month before last month)
      * - call transactionRepository->findUserDataAndTransactionAmountForGivenPeriod() with parameters for last month and TEST user
@@ -87,16 +83,16 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
 
     /**
      * Returns a random DateTime object of this, last or penultimate Month
-     * You can set $month to either 'this', 'last' or 'penultimate'
+     * You can set $month to either 'this', 'last' or 'penultimate'.
      *
      * @param string $month
-     * @return DateTime
+     *
      * @throws Exception
      */
     private function getRandomDateTime($month = 'this'): DateTime
     {
         $dateTime = new DateTime();
-        $subDays = ($dateTime->format("d") > 15) ? 36 : 20;
+        $subDays = ($dateTime->format('d') > 15) ? 36 : 20;
 
         switch (strtolower($month)) {
             case 'last':
@@ -113,10 +109,9 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
     }
 
     /**
-     * Sum up the amounts of transactions with a date laying in the last month
+     * Sum up the amounts of transactions with a date laying in the last month.
      *
      * @param $transactionsArray array holding Transaction objects
-     * @return float
      */
     private function getAssumedTotalAmountForTransactionsFromLastMonth($transactionsArray): float
     {
@@ -130,9 +125,10 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
     }
 
     /**
-     * Create and persist a bunch of transactions and return them in an array
+     * Create and persist a bunch of transactions and return them in an array.
      *
      * @return array of transactions
+     *
      * @throws Exception
      */
     private function createTemporaryTransactions(): array
@@ -141,8 +137,8 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
         $testUser = $this->createProfile();
 
         // create 12 transactions for several periods of time and assign it to test user
-        $transactions = array();
-        for ($i = 1; $i < 12; $i++) {
+        $transactions = [];
+        for ($i = 1; $i < 12; ++$i) {
             $transaction = new Transaction();
             $transaction->setProfile($testUser);
             $transaction->setAmount(mt_rand(10, 120) + 0.13);
@@ -159,10 +155,9 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
     }
 
     /**
-     * Filter transactions from an array that date is NOT within the last month
+     * Filter transactions from an array that date is NOT within the last month.
      *
      * @param $item     Transaction object
-     * @return bool
      *
      * @see getAssumedTotalAmountForTransactionsFromLastMonth()
      *
@@ -173,7 +168,7 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
         $firstDayLastMonth = new DateTime('first day of last month');
         $month = $firstDayLastMonth->format('n');
         if ($item instanceof Transaction) {
-            return ($item->getDate()->format('n') === $month);
+            return $item->getDate()->format('n') === $month;
         }
 
         return false;

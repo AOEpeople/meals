@@ -8,7 +8,7 @@ use App\Mealz\UserBundle\Entity\Profile;
 use Symfony\Component\Security\Core\Security;
 
 /**
- * central business logic to determine if the currently logged in user is allowed to do a certain action
+ * central business logic to determine if the currently logged in user is allowed to do a certain action.
  *
  * For instance a user should not be allowed to register for a meal, that
  * starts in 10 minutes, but maybe a user with a special role ("cook") should be able
@@ -21,13 +21,14 @@ use Symfony\Component\Security\Core\Security;
 class Doorman
 {
     /**
-     * Doorman constants defining access types
+     * Doorman constants defining access types.
+     *
      * @see $this->hasAccessTo
      */
     private const AT_MEAL_PARTICIPATION = 0;
 
     /**
-     * Current timestamp
+     * Current timestamp.
      */
     protected int $now;
 
@@ -41,11 +42,11 @@ class Doorman
 
     public function isUserAllowedToJoin(Meal $meal): bool
     {
-        if ($this->security->getUser()->getProfile() instanceof Profile === false || $meal->isParticipationLimitReached() === true) {
+        if (false === $this->security->getUser()->getProfile() instanceof Profile || true === $meal->isParticipationLimitReached()) {
             return false;
         }
 
-        if ($this->hasAccessTo(self::AT_MEAL_PARTICIPATION, ['meal' => $meal]) === true) {
+        if (true === $this->hasAccessTo(self::AT_MEAL_PARTICIPATION, ['meal' => $meal])) {
             return true;
         }
 
@@ -54,18 +55,17 @@ class Doorman
     }
 
     /**
-     * @param Meal $meal
      * @return bool
      */
     public function isOfferAvailable(Meal $meal)
     {
-        if ($this->security->getUser()->getProfile() instanceof Profile === false) {
+        if (false === $this->security->getUser()->getProfile() instanceof Profile) {
             return false;
         }
 
         $participants = $meal->getParticipants();
         foreach ($participants as $participant) {
-            if ($participant->isPending() === true) {
+            if (true === $participant->isPending()) {
                 return true;
             }
         }
@@ -74,7 +74,6 @@ class Doorman
     }
 
     /**
-     * @param Meal $meal
      * @return bool
      */
     public function isUserAllowedToLeave(Meal $meal)
@@ -83,7 +82,6 @@ class Doorman
     }
 
     /**
-     * @param Meal $meal
      * @return bool
      */
     public function isUserAllowedToSwap(Meal $meal)
@@ -97,12 +95,12 @@ class Doorman
 
     public function isUserAllowedToUnswap(Meal $meal, Participant $participant): bool
     {
-        return ($this->isUserAllowedToSwap($meal) && $this->isParticipationPending($participant));
+        return $this->isUserAllowedToSwap($meal) && $this->isParticipationPending($participant);
     }
 
     public function isParticipationPending(Participant $participant): bool
     {
-        return $participant->getOfferedAt() !== 0;
+        return 0 !== $participant->getOfferedAt();
     }
 
     /**
@@ -114,7 +112,6 @@ class Doorman
     }
 
     /**
-     * @param Meal $meal
      * @return bool
      */
     public function isUserAllowedToAddGuest(Meal $meal)
@@ -124,7 +121,6 @@ class Doorman
     }
 
     /**
-     * @param Meal $meal
      * @return bool
      */
     public function isUserAllowedToRemoveGuest(Meal $meal)
@@ -134,7 +130,6 @@ class Doorman
     }
 
     /**
-     * @param Meal $meal
      * @return bool
      */
     public function isUserAllowedToRequestCostAbsorption(Meal $meal)
@@ -144,13 +139,12 @@ class Doorman
     }
 
     /**
-     * @param \DateTime $lockPartDateTime
      * @return bool
      */
     public function isToggleParticipationAllowed(\DateTime $lockPartDateTime)
     {
         // is it still allowed to participate in the meal by now?
-        return ($lockPartDateTime->getTimestamp() > $this->now);
+        return $lockPartDateTime->getTimestamp() > $this->now;
     }
 
     /**
@@ -158,18 +152,20 @@ class Doorman
      * Accesstype is a constant of class Doorman. Use this to tell the method what to check ;-)
      * To be used in future to add more acces checks.
      *
-     * @param integer $accesstype What access shall be checked
+     * @param int   $accesstype What access shall be checked
      * @param array $params
+     *
      * @return bool
      */
     private function hasAccessTo($accesstype, $params = [])
     {
         // check access in terms of given accesstype...
         switch ($accesstype) {
-            case (self::AT_MEAL_PARTICIPATION):
+            case self::AT_MEAL_PARTICIPATION:
                 if (!isset($params['meal']) || !$params['meal'] instanceof Meal) {
                     return false;
                 }
+
                 return $this->isToggleParticipationAllowed($params['meal']->getDay()->getLockParticipationDateTime());
                 break;
             default:

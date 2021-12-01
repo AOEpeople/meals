@@ -9,18 +9,15 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-/**
- * Fixtures Load the Categories
- */
 class LoadSlots extends Fixture implements OrderedFixtureInterface
 {
     /**
-     * Constant to declare load order of fixture
+     * Constant to declare load order of fixture.
      */
     private const ORDER_NUMBER = 4;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function load(ObjectManager $manager): void
     {
@@ -30,28 +27,28 @@ class LoadSlots extends Fixture implements OrderedFixtureInterface
                 'limit' => 0,
                 'deleted' => false,
                 'disabled' => false,
-                'slug' => 'active-wo-limit'
+                'slug' => 'active-wo-limit',
             ],
             [
                 'title' => 'Active w/ limit',
                 'limit' => 10,
                 'deleted' => false,
                 'disabled' => false,
-                'slug' => 'active-w-limit'
+                'slug' => 'active-w-limit',
             ],
             [
                 'title' => 'Inactive',
                 'limit' => 0,
                 'deleted' => false,
                 'disabled' => true,
-                'slug' => 'inactive'
+                'slug' => 'inactive',
             ],
             [
                 'title' => 'Deleted',
                 'limit' => 0,
                 'deleted' => true,
                 'disabled' => false,
-                'slug' => 'deleted'
+                'slug' => 'deleted',
             ],
         ];
 
@@ -70,7 +67,7 @@ class LoadSlots extends Fixture implements OrderedFixtureInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getOrder(): int
     {

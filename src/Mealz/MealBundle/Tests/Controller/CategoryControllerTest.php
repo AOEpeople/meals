@@ -4,14 +4,12 @@ namespace App\Mealz\MealBundle\Tests\Controller;
 
 use App\Mealz\MealBundle\Entity\Category;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
+use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\DomCrawler\Crawler;
 
-use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
-
 /**
- * Class CategoryAbstractControllerTest
- * @package Mealz\MealBundle\Tests\Controller
+ * Class CategoryAbstractControllerTest.
  */
 class CategoryControllerTest extends AbstractControllerTestCase
 {
@@ -34,7 +32,7 @@ class CategoryControllerTest extends AbstractControllerTestCase
         $form['category'] = [
             'title_de' => 'category-form-title-de',
             'title_en' => 'category-form-title-en',
-            '_token' => $this->getFormCSRFToken('/category/form', 'form #category__token')
+            '_token' => $this->getFormCSRFToken('/category/form', 'form #category__token'),
         ];
 
         // Call controller action
@@ -55,7 +53,7 @@ class CategoryControllerTest extends AbstractControllerTestCase
     public function testListAction(): void
     {
         $category = $this->createCategory();
-        $this->persistAndFlushAll(array($category));
+        $this->persistAndFlushAll([$category]);
 
         // Request
         $crawler = $this->client->request('GET', '/category');
@@ -106,7 +104,7 @@ class CategoryControllerTest extends AbstractControllerTestCase
         $form['category'] = [
             'title_de' => 'category-form-edited-title-de',
             'title_en' => 'category-form-edited-title-en',
-            '_token' => $this->getFormCSRFToken('/category/form/' . $category->getSlug(), 'form #category__token')
+            '_token' => $this->getFormCSRFToken('/category/form/' . $category->getSlug(), 'form #category__token'),
         ];
 
         $this->client->request('POST', '/category/' . $category->getSlug() . '/edit', $form);
@@ -128,7 +126,7 @@ class CategoryControllerTest extends AbstractControllerTestCase
     public function testDeleteAction(): void
     {
         $category = $this->createCategory();
-        $this->persistAndFlushAll(array($category));
+        $this->persistAndFlushAll([$category]);
 
         $categoryId = $category->getId();
         $this->client->request('GET', '/category/' . $category->getSlug() . '/delete');

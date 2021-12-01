@@ -72,17 +72,17 @@ class PayPalServiceTest extends TestCase
         $orderAmount = 10.35;
         $orderDateTime = gmdate('Y-m-d\TH:i:s\Z');
 
-        $responseBody = (object)[
+        $responseBody = (object) [
             'id' => $orderID,
             'status' => 'COMPLETED',
             'update_time' => $orderDateTime,
             'purchase_units' => [
-                0 => (object)[
-                    'amount' => (object)[
-                        'value' => $orderAmount
-                    ]
-                ]
-            ]
+                0 => (object) [
+                    'amount' => (object) [
+                        'value' => $orderAmount,
+                    ],
+                ],
+            ],
         ];
 
         $response = new HttpResponse(200, $responseBody, []);

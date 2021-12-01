@@ -4,34 +4,31 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\DataFixtures\ORM;
 
+use App\Mealz\MealBundle\Entity\Day;
+use App\Mealz\MealBundle\Entity\Dish;
+use App\Mealz\MealBundle\Entity\DishVariation;
+use App\Mealz\MealBundle\Entity\Meal;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use App\Mealz\MealBundle\Entity\Day;
-use App\Mealz\MealBundle\Entity\Dish;
-use App\Mealz\MealBundle\Entity\DishVariation;
-use App\Mealz\MealBundle\Entity\Meal;
 use Exception;
 
-/**
- * Fixtures load the Meals
- */
 class LoadMeals extends Fixture implements OrderedFixtureInterface
 {
     /**
-     * Constant to declare load order of fixture
+     * Constant to declare load order of fixture.
      */
     private const ORDER_NUMBER = 7;
 
     /**
-     * index of first weeks monday
+     * index of first weeks monday.
      */
     private const FIRST_MONDAY = 0;
 
     /**
-     * index of second weeks wednesday
+     * index of second weeks wednesday.
      */
     private const SECOND_WEDNESDAY = 7;
 
@@ -50,7 +47,8 @@ class LoadMeals extends Fixture implements OrderedFixtureInterface
     protected int $counter = 0;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
+     *
      * @throws Exception
      */
     public function load(ObjectManager $manager): void
@@ -62,7 +60,7 @@ class LoadMeals extends Fixture implements OrderedFixtureInterface
         foreach ($this->days as $key => $day) {
             $dish = null;
             // that should be next week Wednesday which should be available for selection
-            if ($key === self::SECOND_WEDNESDAY || $key === self::FIRST_MONDAY) {
+            if (self::SECOND_WEDNESDAY === $key || self::FIRST_MONDAY === $key) {
                 // add once 3 Options per Day, 1 Dish without variations and 1 with 2 variations
                 $this->loadNewMeal($day, $this->dishes[0]); // first Dish was loaded without variations
                 $dishVariations = $this->getRandomDishWithVariations();
@@ -72,7 +70,7 @@ class LoadMeals extends Fixture implements OrderedFixtureInterface
                     }
                 }
             } else {
-                for ($i = 0; $i <= 1; $i++) {
+                for ($i = 0; $i <= 1; ++$i) {
                     // 2 meals a day
                     $dish = $this->getRandomDish($dish);
                     $this->loadNewMeal($day, $dish);
@@ -84,8 +82,6 @@ class LoadMeals extends Fixture implements OrderedFixtureInterface
     }
 
     /**
-     * load the new Meals
-     *
      * @throws Exception
      */
     public function loadNewMeal(Day $day, Dish $dish): void
@@ -97,12 +93,9 @@ class LoadMeals extends Fixture implements OrderedFixtureInterface
         $meal->setDish($dish);
         $meal->setPrice($dish->getPrice());
         $this->objectManager->persist($meal);
-        $this->addReference('meal-'.$this->counter++, $meal);
+        $this->addReference('meal-' . $this->counter++, $meal);
     }
 
-    /**
-     * get the Fixtures load Order
-     */
     public function getOrder(): int
     {
         // load as seventh
@@ -131,10 +124,7 @@ class LoadMeals extends Fixture implements OrderedFixtureInterface
         }
     }
 
-    /**
-     * Get random Dishes with Variations
-     */
-    protected function getRandomDishWithVariations():Collection
+    protected function getRandomDishWithVariations(): Collection
     {
         $dishVariations = new ArrayCollection();
         $dishesWithVariations = [];
@@ -153,9 +143,6 @@ class LoadMeals extends Fixture implements OrderedFixtureInterface
         return $dishVariations;
     }
 
-    /**
-     * Get random Dishes without Variations
-     */
     protected function getRandomDish(?Dish $previousDish): Dish
     {
         do {

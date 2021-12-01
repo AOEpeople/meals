@@ -9,15 +9,13 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Transaction
- *
  * @ORM\Table(name="transaction")
  * @ORM\Entity(repositoryClass="TransactionRepository")
  */
 class Transaction
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -54,6 +52,7 @@ class Transaction
     /**
      * @Assert\Length(min=3, max=2048)
      * @ORM\Column(type="string", length=2048, nullable=TRUE)
+     *
      * @var string
      */
     private $paymethod;
@@ -68,9 +67,6 @@ class Transaction
         return $this->id;
     }
 
-    /**
-     * @param DateTime $date
-     */
     public function setDate(DateTime $date): void
     {
         $this->date = $date;
@@ -134,8 +130,6 @@ class Transaction
     }
 
     /**
-     * @param Profile $profile
-     *
      * @return Transaction
      */
     public function setProfile(Profile $profile)

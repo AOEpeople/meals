@@ -2,19 +2,16 @@
 
 namespace App\Mealz\MealBundle\DataFixtures\ORM;
 
+use App\Mealz\MealBundle\Entity\Dish;
+use App\Mealz\MealBundle\Entity\DishVariation;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use App\Mealz\MealBundle\Entity\Dish;
-use App\Mealz\MealBundle\Entity\DishVariation;
 
-/**
- * Load the Dish Variations
- */
 class LoadDishVariations extends Fixture implements OrderedFixtureInterface
 {
     /**
-     * Constant to declare load order of fixture
+     * Constant to declare load order of fixture.
      */
     private const ORDER_NUMBER = 6;
 
@@ -28,7 +25,7 @@ class LoadDishVariations extends Fixture implements OrderedFixtureInterface
     protected int $counter = 0;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function load(ObjectManager $manager): void
     {
@@ -38,10 +35,10 @@ class LoadDishVariations extends Fixture implements OrderedFixtureInterface
         foreach ($this->dishes as $key => $dish) {
             // Create two variation for each dish EXCEPT THE FIRST ONE
             if ($key > 0) {
-                for ($i = 0; $i < 2; $i++) {
+                for ($i = 0; $i < 2; ++$i) {
                     $dishVariation = $this->getDishVariation($dish);
                     $this->objectManager->persist($dishVariation);
-                    $this->addReference('dishVariation-'.$this->counter++, $dishVariation);
+                    $this->addReference('dishVariation-' . $this->counter++, $dishVariation);
                 }
             }
         }
@@ -49,20 +46,12 @@ class LoadDishVariations extends Fixture implements OrderedFixtureInterface
         $this->objectManager->flush();
     }
 
-
-    /**
-     * get the Fixture Load Order
-     */
     public function getOrder(): int
     {
         // load as sixth
         return self::ORDER_NUMBER;
     }
 
-    
-    /**
-     * load the dishes
-     */
     protected function loadDishes(): void
     {
         foreach ($this->referenceRepository->getReferences() as $referenceName => $reference) {
@@ -76,10 +65,10 @@ class LoadDishVariations extends Fixture implements OrderedFixtureInterface
 
     private function getDishVariation(Dish $dish): DishVariation
     {
-        $dummyPrefix = ' #v'.(count($dish->getVariations()) + 1);
+        $dummyPrefix = ' #v' . (count($dish->getVariations()) + 1);
         $dishVariation = new DishVariation();
-        $dishVariation->setTitleDe($dish->getTitleDe().$dummyPrefix);
-        $dishVariation->setTitleEn($dish->getTitleEn().$dummyPrefix);
+        $dishVariation->setTitleDe($dish->getTitleDe() . $dummyPrefix);
+        $dishVariation->setTitleEn($dish->getTitleEn() . $dummyPrefix);
         $dishVariation->setParent($dish);
         $dishVariation->setPrice(3.2);
 

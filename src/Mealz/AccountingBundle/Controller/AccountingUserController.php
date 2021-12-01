@@ -2,23 +2,23 @@
 
 namespace App\Mealz\AccountingBundle\Controller;
 
-use DateTime;
 use App\Mealz\AccountingBundle\Service\Wallet;
 use App\Mealz\MealBundle\Controller\BaseController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
+use DateTime;
 use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class AccountingUserController extends BaseController
 {
     public function indexAction(): Response
     {
-        return $this->render('MealzAccountingBundle:Accounting/User:index.html.twig', array(
+        return $this->render('MealzAccountingBundle:Accounting/User:index.html.twig', [
             'participations' => $this->getParticipantRepository()->getLastAccountableParticipations($this->getProfile(), 5),
             'transactions' => $this->getTransactionRepository()->getLastSuccessfulTransactions($this->getProfile(), 3),
             'walletBalance' => $this->getWallet()->getBalance($this->getProfile()),
             'goForm' => $this->getDoorman()->isKitchenStaff() ? $this->generateGoActionForm()->createView() : null,
-        ));
+        ]);
     }
 
     public function listParticipationAction(Request $request): Response
@@ -39,12 +39,12 @@ class AccountingUserController extends BaseController
             }
         }
 
-        return $this->render('MealzAccountingBundle:Accounting/User:list_participation.html.twig', array(
+        return $this->render('MealzAccountingBundle:Accounting/User:list_participation.html.twig', [
             'startDay' => $startDay,
             'endDay' => $endDay,
             'participations' => $this->getParticipantRepository()->getParticipantsOnDays($startDay, $endDay, $this->getProfile()),
             'timePeriodForm' => $formView,
-        ));
+        ]);
     }
 
     public function listTransactionAction(Request $request): Response
@@ -67,25 +67,25 @@ class AccountingUserController extends BaseController
 
         $endDay->setTime(23, 59, 59);
 
-        return $this->render('MealzAccountingBundle:Accounting/User:list_transaction.html.twig', array(
+        return $this->render('MealzAccountingBundle:Accounting/User:list_transaction.html.twig', [
             'startDay' => $startDay,
             'endDay' => $endDay,
             'transactions' => $this->getTransactionRepository()->getSuccessfulTransactionsOnDays($startDay, $endDay, $this->getProfile()),
             'timePeriodForm' => $formView,
-        ));
+        ]);
     }
 
     /**
      * Generate a form where you can select a time period
-     * for the participation list
+     * for the participation list.
      *
      * @return Form
      */
     private function generateTimePeriodForm()
     {
         return $this->createFormBuilder()
-            ->add('from', \Symfony\Component\Form\Extension\Core\Type\DateType::class, array('widget' => 'single_text'))
-            ->add('to', \Symfony\Component\Form\Extension\Core\Type\DateType::class, array('widget' => 'single_text'))
+            ->add('from', \Symfony\Component\Form\Extension\Core\Type\DateType::class, ['widget' => 'single_text'])
+            ->add('to', \Symfony\Component\Form\Extension\Core\Type\DateType::class, ['widget' => 'single_text'])
             ->add('send', \Symfony\Component\Form\Extension\Core\Type\SubmitType::class)
             ->getForm();
     }
@@ -100,9 +100,9 @@ class AccountingUserController extends BaseController
             'action' => $this->generateUrl('MealzAccountingBundle_Accounting_Admin_go'),
             'csrf_protection' => false,
         ])
-            ->add('profile', 'entity', array(
+            ->add('profile', 'entity', [
                 'class' => 'MealzUserBundle:Profile',
-                'label' => false))
+                'label' => false, ])
             ->add('details', 'submit')
             ->getForm();
     }

@@ -9,6 +9,7 @@ $config = new PhpCsFixer\Config();
 return $config
     ->setRules([
         '@Symfony' => true,
+        'concat_space' => ['spacing' => 'one'],
         'ordered_imports' => [
             'imports_order' => [
                 'class', 'function', 'const',

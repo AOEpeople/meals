@@ -2,8 +2,8 @@
 
 namespace App\Mealz\MealBundle\Twig\Extension;
 
-use App\Mealz\MealBundle\Entity\DishRepository;
 use App\Mealz\MealBundle\Entity\Dish;
+use App\Mealz\MealBundle\Entity\DishRepository;
 use App\Mealz\MealBundle\Entity\Meal;
 use Exception;
 use Symfony\Component\Form\FormView;
@@ -32,13 +32,13 @@ class Variation extends AbstractExtension
      */
     public function getFunctions(): array
     {
-        return array(
+        return [
             new TwigFunction('groupMeals', [$this, 'groupMeals']),
             new TwigFunction('groupMealsToArray', [$this, 'groupMealsToArray']),
             new TwigFunction('getFullTitleByDishAndVariation', [$this, 'getFullTitleByDishAndVariation']),
             new TwigFunction('getSortedVariation', [$this, 'getSortedVariation']),
             new TwigFunction('getDishCount', [$this, 'getDishCount']),
-        );
+        ];
     }
 
     public function groupMeals(array $meals): array
@@ -47,13 +47,13 @@ class Variation extends AbstractExtension
 
         foreach ($meals as $meal) {
             /** @var Meal $meal */
-            if (isset($meal->data) === true && ($meal->data instanceof Meal === true)) {
+            if (true === isset($meal->data) && (true === $meal->data instanceof Meal)) {
                 $dish = $meal->data->getDish();
             } elseif ($meal instanceof Meal) {
                 $dish = $meal->getDish();
             }
 
-            if (is_null($dish) === false && ($dish->getParent() instanceof Dish === true)) {
+            if (false === is_null($dish) && (true === $dish->getParent() instanceof Dish)) {
                 $parentId = $dish->getParent()->getId();
                 $mealsVariations[$parentId][] = $meal;
             } else {
@@ -68,8 +68,8 @@ class Variation extends AbstractExtension
     }
 
     /**
-     * Group the Meals to an Array
      * @param FormView $formViews
+     *
      * @return array
      */
     public function groupMealsToArray($formViews)
@@ -92,9 +92,10 @@ class Variation extends AbstractExtension
     }
 
     /**
-     * @param integer $parentDishId
+     * @param int   $parentDishId
      * @param array $variations
      * @param array $dishes
+     *
      * @return string
      */
     public function getFullTitleByDishAndVariation($parentDishId, $variations, $dishes)
@@ -121,8 +122,9 @@ class Variation extends AbstractExtension
     public function getSortedVariation($variations)
     {
         if (is_array($variations) && count($variations)) {
-            uasort($variations, array($this, 'compareVariation'));
+            uasort($variations, [$this, 'compareVariation']);
         }
+
         return $variations;
     }
 
@@ -145,6 +147,7 @@ class Variation extends AbstractExtension
     /**
      * @param $dishId
      * @param $dishList
+     *
      * @return null
      */
     private function getTitleForDish($dishId, $dishList)
@@ -164,8 +167,6 @@ class Variation extends AbstractExtension
      * @param array $first
      * @param array $second
      *
-     * @return int
-     *
      * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      */
     private function compareVariation($first, $second): int
@@ -175,6 +176,7 @@ class Variation extends AbstractExtension
         if ($firstContent == $secondContent) {
             return 0;
         }
+
         return ($firstContent < $secondContent) ? -1 : 1;
     }
 }

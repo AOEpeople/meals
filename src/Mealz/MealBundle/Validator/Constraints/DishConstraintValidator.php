@@ -29,8 +29,8 @@ class DishConstraintValidator extends ConstraintValidator
         $unitOfWork = $this->entityManager->getUnitOfWork();
         $day = $entity->getDay();
 
-        if ($unitOfWork->getEntityState($entity) !== UnitOfWork::STATE_NEW &&
-            $entity->getParticipants()->count() == 0
+        if (UnitOfWork::STATE_NEW !== $unitOfWork->getEntityState($entity) &&
+            0 == $entity->getParticipants()->count()
         ) {
             $this->entityManager->remove($entity);
             $this->entityManager->flush($entity);

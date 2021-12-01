@@ -4,19 +4,16 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\DataFixtures\ORM;
 
+use App\Mealz\MealBundle\Entity\Category;
+use App\Mealz\MealBundle\Entity\Dish;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use App\Mealz\MealBundle\Entity\Category;
-use App\Mealz\MealBundle\Entity\Dish;
 
-/**
- * Fixtures Load the Dishes
- */
 class LoadDishes extends Fixture implements OrderedFixtureInterface
 {
     /**
-     * Constant to declare load order of fixture
+     * Constant to declare load order of fixture.
      */
     private const ORDER_NUMBER = 5;
 
@@ -27,7 +24,7 @@ class LoadDishes extends Fixture implements OrderedFixtureInterface
     protected int $counter = 0;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function load(ObjectManager $manager): void
     {
@@ -55,9 +52,6 @@ class LoadDishes extends Fixture implements OrderedFixtureInterface
         }
     }
 
-    /**
-     * get the Order of Fixtures loading
-     */
     public function getOrder(): int
     {
         // load as fifth
@@ -70,11 +64,11 @@ class LoadDishes extends Fixture implements OrderedFixtureInterface
         $dish->setPrice(3.60);
         $dish->setTitleEn($titleEN);
         $dish->setTitleDe($titleDE);
-        $dish->setDescriptionEn('Description - '.$titleEN);
-        $dish->setDescriptionDe('Beschreibung - '.$titleDE);
-        $randomCategory = (count($this->categories) === 0) ? null : $this->categories[array_rand($this->categories, 1)];
+        $dish->setDescriptionEn('Description - ' . $titleEN);
+        $dish->setDescriptionDe('Beschreibung - ' . $titleDE);
+        $randomCategory = (0 === count($this->categories)) ? null : $this->categories[array_rand($this->categories, 1)];
         $dish->setCategory($randomCategory);
         $this->objectManager->persist($dish);
-        $this->addReference('dish-'.$this->counter++, $dish);
+        $this->addReference('dish-' . $this->counter++, $dish);
     }
 }

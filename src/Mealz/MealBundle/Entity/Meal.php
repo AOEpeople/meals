@@ -2,16 +2,16 @@
 
 namespace App\Mealz\MealBundle\Entity;
 
+use App\Mealz\MealBundle\Validator\Constraints as MealBundleAssert;
+use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use App\Mealz\UserBundle\Entity\Profile;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Mealz\MealBundle\Validator\Constraints as MealBundleAssert;
 
 /**
- * Meal
+ * Meal.
  *
  * @MealBundleAssert\DishConstraint()
  * @ORM\Table(name="meal")
@@ -20,7 +20,7 @@ use App\Mealz\MealBundle\Validator\Constraints as MealBundleAssert;
 class Meal
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -31,6 +31,7 @@ class Meal
     /**
      * @ORM\ManyToOne(targetEntity="Dish", cascade={"refresh"}, fetch="EAGER")
      * @ORM\JoinColumn(name="dish_id", referencedColumnName="id")
+     *
      * @var Dish
      */
     protected $dish;
@@ -38,6 +39,7 @@ class Meal
     /**
      * @Assert\NotBlank()
      * @ORM\Column(type="decimal", precision=10, scale=4, nullable=FALSE)
+     *
      * @var float
      */
     protected $price;
@@ -45,13 +47,15 @@ class Meal
     /**
      * @Assert\NotBlank()
      * @ORM\Column(type="integer", nullable=FALSE, name="participation_limit")
-     * @var integer
+     *
+     * @var int
      */
     protected $participationLimit;
 
     /**
      * @ORM\ManyToOne(targetEntity="Day", inversedBy="meals")
      * @ORM\JoinColumn(name="day", referencedColumnName="id")
+     *
      * @var Day
      */
     protected $day;
@@ -60,6 +64,7 @@ class Meal
      * @Assert\NotBlank()
      * @Assert\Type(type="DateTime")
      * @ORM\Column(type="datetime", nullable=FALSE)
+     *
      * @var DateTime
      */
     protected $dateTime;
@@ -77,9 +82,7 @@ class Meal
     }
 
     /**
-     * Get id
-     *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -103,7 +106,7 @@ class Meal
     }
 
     /**
-     * @param integer $participationLimit
+     * @param int $participationLimit
      */
     public function setParticipationLimit($participationLimit): void
     {
@@ -111,7 +114,7 @@ class Meal
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getParticipationLimit()
     {
@@ -176,9 +179,8 @@ class Meal
     }
 
     /**
-     * get the participant object of the given profile if it is registered
+     * get the participant object of the given profile if it is registered.
      *
-     * @param Profile $profile
      * @return Participant|null
      */
     public function getParticipant(Profile $profile)
@@ -194,14 +196,13 @@ class Meal
     }
 
     /**
-     * get all guests that the given profile has invited
+     * get all guests that the given profile has invited.
      *
-     * @param Profile $profile
      * @return Participant|null
      */
     public function getGuestParticipants(Profile $profile)
     {
-        $participants = array();
+        $participants = [];
         foreach ($this->participants as $participant) {
             /** @var Participant $participant */
             if ($participant->isGuest() && $participant->getProfile() === $profile) {
@@ -214,6 +215,7 @@ class Meal
 
     /**
      * Return the number of total confirmed participations.
+     *
      * @TODO don't load every participant object (raw sql query in repo?)
      *
      * @return int
@@ -225,7 +227,7 @@ class Meal
         foreach ($this->getParticipants() as $participation) {
             /* @var Participant $participation */
             if ($participation->isConfirmed()) {
-                $totalParticipations += 1;
+                ++$totalParticipations;
             }
         }
 
@@ -239,11 +241,11 @@ class Meal
     {
         $participationLimit = $this->getParticipationLimit();
 
-        return ($participationLimit !== 0 && $this->getParticipants()->count() >= $participationLimit);
+        return 0 !== $participationLimit && $this->getParticipants()->count() >= $participationLimit;
     }
 
     public function __toString()
     {
-        return $this->getDateTime()->format('Y-m-d H:i:s').' '.$this->getDish();
+        return $this->getDateTime()->format('Y-m-d H:i:s') . ' ' . $this->getDish();
     }
 }

@@ -32,20 +32,14 @@ class ProfileToStringTransformer implements DataTransformerInterface
      */
     public function reverseTransform($value): ?Profile
     {
-        if ($value === null || !is_string($value)) {
+        if (null === $value || !is_string($value)) {
             return null;
         }
 
-        $profile = $this->objectManager->getRepository(Profile::class)->findOneBy(["username" => $value]);
+        $profile = $this->objectManager->getRepository(Profile::class)->findOneBy(['username' => $value]);
 
         if (null === $profile) {
-            throw new TransformationFailedException(
-                sprintf(
-                    'A %s with username "%s" does not exist!',
-                    'profile',
-                    $value
-                )
-            );
+            throw new TransformationFailedException(sprintf('A %s with username "%s" does not exist!', 'profile', $value));
         }
 
         return $profile;

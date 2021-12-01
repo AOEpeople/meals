@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace App\Mealz\AccountingBundle\Tests\Controller\Payment;
 
+use App\Mealz\AccountingBundle\Controller\Payment\EcashController;
 use App\Mealz\AccountingBundle\Service\TransactionService;
+use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use Exception;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Component\HttpFoundation\Request;
-use App\Mealz\AccountingBundle\Controller\Payment\EcashController;
-use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
@@ -23,7 +23,7 @@ class EcashControllerTest extends AbstractControllerTestCase
     use ProphecyTrait;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function setUp(): void
     {
@@ -37,7 +37,7 @@ class EcashControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * Check if form and PayPal button is rendered correctly
+     * Check if form and PayPal button is rendered correctly.
      */
     public function testFormRendering(): void
     {

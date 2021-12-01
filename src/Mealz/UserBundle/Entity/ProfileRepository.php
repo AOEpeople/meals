@@ -5,14 +5,15 @@ namespace App\Mealz\UserBundle\Entity;
 use Doctrine\ORM\EntityRepository;
 
 /**
- * Class ProfileRepository
- * @package Mealz\UserBundle\Entity
+ * Class ProfileRepository.
  */
 class ProfileRepository extends EntityRepository
 {
     /**
-     * find all profiles except the one with the given username
+     * find all profiles except the one with the given username.
+     *
      * @param array $usernames
+     *
      * @return array
      */
     public function findAllExcept($usernames)

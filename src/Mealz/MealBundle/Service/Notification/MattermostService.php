@@ -38,7 +38,6 @@ class MattermostService implements NotifierInterface
         string $webhookURL,
         string $username,
         string $appName
-
     ) {
         $this->httpClient = $httpClient;
         $this->logger = $logger;
@@ -51,7 +50,6 @@ class MattermostService implements NotifierInterface
 
     /**
      * Sends a message to configured Mattermost channel.
-     *
      */
     public function sendAlert(string $message): ?ResponseInterface
     {

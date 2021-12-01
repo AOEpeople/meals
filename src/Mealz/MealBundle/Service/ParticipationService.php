@@ -251,7 +251,7 @@ class ParticipationService
         return $this->participantRepo->getOfferCount($date);
     }
 
-    public function getSlotFor(Profile $profile, DateTime $date): ?Slot
+    public function getSlot(Profile $profile, DateTime $date): ?Slot
     {
         $startDate = (clone $date)->setTime(0, 0);
         $endDate = (clone $date)->setTime(23, 59, 59);

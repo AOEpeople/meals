@@ -69,11 +69,7 @@ MealIndexView.prototype.updateSlots = function () {
                     const slotText = slotTitle + ' (' + v.booked+'/'+slotLimit + ')';
                     $slotOption.text(slotText);
                     // disable slot-option if no. of booked slots reach the slot limit
-                    if (slotLimit <= v.booked) {
-                        $slotOption.prop('disabled', true);
-                    } else {
-                        $slotOption.prop('disabled', false);
-                    }
+                    $slotOption.prop('disabled', slotLimit <= v.booked);
                 }
 
                 if (v.booked_by_user) {

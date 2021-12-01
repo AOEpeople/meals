@@ -24,7 +24,7 @@ MealzMealBundle_Meal_edit:
 MealzMealBundle_Meal_join:
     path:  /menu/{date}/{dish}/join/{profile}
     defaults: { _controller: App\Mealz\MealBundle\Controller\MealController::join, profile: null }
-#    methods: [POST]
+    methods: [POST]
 
 MealzMealBundle_Meal_accept_offer:
     path: /menu/{date}/{dish}/accept-offer/{profile}

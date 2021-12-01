@@ -44,7 +44,8 @@ class Meal
 
     /**
      * @Assert\NotBlank()
-     * @ORM\Column(type="integer", nullable=FALSE, name="participation_limit")
+     * @ORM\Column(type="decimal", nullable=FALSE, name="participation_limit", precision=2, scale=1)
+     * @var float
      */
     private int $participationLimit = 0;
 

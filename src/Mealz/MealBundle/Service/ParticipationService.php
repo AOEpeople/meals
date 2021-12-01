@@ -10,13 +10,14 @@ use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\ParticipantRepository;
 use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Entity\SlotRepository;
-use App\Mealz\MealBundle\EventListener\ParticipantNotUniqueException;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ParticipationService
 {
+    use ParticipationServiceTrait;
+
     private EntityManagerInterface $em;
     private Doorman $doorman;
     private ParticipantRepository $participantRepo;
@@ -98,40 +99,17 @@ class ParticipationService
      */
     private function create(Profile $profile, Meal $meal, ?Slot $slot): ?Participant
     {
-        $this->em->beginTransaction();
         $participant = new Participant($profile, $meal);
         if (null !== $slot) {
             $participant->setSlot($slot);
         }
 
-        try {
-            $this->em->persist($participant);
-            $this->em->flush();
-            $this->em->getConnection()->commit();
-        } catch (ParticipantNotUniqueException $e) {
-            $this->em->getConnection()->rollBack();
-
-            return null;
-        }
+        $this->em->persist($participant);
+        $this->em->flush();
 
         $this->em->refresh($meal);
 
         return $participant;
-    }
-
-    /**
-     * Checks if any participant is offering its meal.
-     */
-    private function mealIsOffered(Meal $meal): bool
-    {
-        /** @var Participant $participant */
-        foreach ($meal->getParticipants() as $participant) {
-            if (true === $participant->isPending()) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**
@@ -153,45 +131,6 @@ class ParticipationService
         foreach ($meal->getParticipants() as $participant) {
             if (true === $participant->isPending()) {
                 return $participant;
-            }
-        }
-
-        return null;
-    }
-
-    private function slotIsAvailable(Slot $slot, DateTime $date): bool
-    {
-        $slotLimit = $slot->getLimit();
-        if (0 === $slotLimit) {
-            return true;
-        }
-
-        $slotPartCount = $this->participantRepo->getCountBySlot($slot, $date);
-
-        return ($slotPartCount < $slotLimit);
-    }
-
-    private function getNextFreeSlot(DateTime $mealDate): ?Slot
-    {
-        $slots = $this->slotRepo->findBy(['disabled' => 0, 'deleted' => 0], ['order' => 'ASC']);
-        if (1 > count($slots)) {
-            return null; // no active slots are available; return null
-        }
-
-        $countBySlots = $this->participantRepo->getCountBySlots($mealDate, $mealDate);
-        if (0 === count($countBySlots)) {
-            return $slots[0]; // no participants yet; return first slot
-        }
-
-        foreach ($slots as $slot) {
-            $slotID = $slot->getId();
-            if (!isset($countBySlots[$slotID])) {
-                return $slot; // $slot is not at all booked; return it
-            }
-
-            $slotLimit = $slot->getLimit();
-            if (0 === $slotLimit || $slotLimit > $countBySlots[$slotID]) {
-                return $slot; // $slot has either no limit (zero), or has bookings less than its limit; return it
             }
         }
 

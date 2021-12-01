@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\MealBundle\Form\Guest;
 
+use App\Mealz\MealBundle\Entity\InvitationWrapper;
 use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Entity\SlotRepository;
 use Symfony\Component\Form\AbstractType;
@@ -37,7 +40,8 @@ class InvitationForm extends AbstractType
                     ];
                 },
                 'placeholder' => $this->translator->trans('content.participation.meal.select_slot', [], 'general'),
-                'attr' => ['class' => 'slot-selector']
+                'attr' => ['class' => 'slot-selector'],
+                'required' => false
             ])
             ->add('day', DayForm::class, [
                 'data' => $options['data']->getDay(),
@@ -55,7 +59,7 @@ class InvitationForm extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => 'App\Mealz\MealBundle\Entity\InvitationWrapper',
+            'data_class' => InvitationWrapper::class,
             'csrf_protection' => false,
         ]);
     }

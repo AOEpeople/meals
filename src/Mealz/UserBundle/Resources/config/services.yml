@@ -14,3 +14,10 @@ services:
         arguments:
             - 'MealzUserBundle:Profile'
     App\Mealz\UserBundle\Entity\ProfileRepository: '@mealz_user.repository.profile'
+
+    mealz_user.repository.role:
+        class: App\Mealz\UserBundle\Entity\RoleRepository
+        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+        arguments:
+            - 'MealzUserBundle:Role'
+    App\Mealz\UserBundle\Entity\RoleRepository: '@mealz_user.repository.role'

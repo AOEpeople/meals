@@ -420,6 +420,18 @@ class ParticipantRepository extends EntityRepository
         return $result[0]['count'] ?? 0;
     }
 
+    public function getBookedMealCount(Meal $meal): int
+    {
+        $queryBuilder = $this->createQueryBuilder('p');
+        $queryBuilder
+            ->select('COUNT(*) AS count')
+            ->where($queryBuilder->expr()->eq('p.meal', $meal));
+
+        $result = $queryBuilder->getQuery()->getArrayResult();
+
+        return $result[0]['count'] ?? 0;
+    }
+
     /**
      * Gets number of participants (booked meals) per slot on a given $date.
      *

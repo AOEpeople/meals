@@ -23,8 +23,6 @@ class DishForm extends AbstractType
     }
 
     /**
-     * build the Form.
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void

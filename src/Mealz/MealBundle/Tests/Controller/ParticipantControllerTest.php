@@ -24,8 +24,6 @@ use DateTime;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
- * Participant Controller Test.
- *
  * @author Henry Vogt <henry.vogt@aoe.com>
  */
 class ParticipantControllerTest extends AbstractControllerTestCase

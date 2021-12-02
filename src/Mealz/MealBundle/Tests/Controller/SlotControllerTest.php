@@ -11,7 +11,7 @@ use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 class SlotControllerTest extends AbstractControllerTestCase
 {
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function setUp(): void
     {

@@ -34,6 +34,7 @@ class ParticipantRepository extends EntityRepository
     ): array {
         $queryBuilder = $this->createQueryBuilder('p');
         $queryBuilder
+            ->select(['p', 'm', 'up'])
             ->join('p.meal', 'm')
             ->join('p.profile', 'up')
             ->where('m.dateTime >= :startDate')

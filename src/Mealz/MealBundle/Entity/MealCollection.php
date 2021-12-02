@@ -40,21 +40,4 @@ class MealCollection extends ArrayCollection
 
         return false;
     }
-
-    /**
-     * Checks if collection contains a bookable meal.
-     */
-    public function containsBookableMeal(): bool
-    {
-        $now = new DateTime();
-
-        /** @var Meal $meal */
-        foreach ($this->getValues() as $meal) {
-            if ($meal->getLockDateTime() > $now) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 }

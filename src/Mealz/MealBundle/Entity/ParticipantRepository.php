@@ -48,38 +48,7 @@ class ParticipantRepository extends EntityRepository
                 ->setParameter('profile_id', $profile->getUsername());
         }
 
-//        $options = array_merge(
-//            $options,
-//            array(
-//                'load_meal' => true,
-//                'load_profile' => true,
-//                'load_roles' => true,
-//            )
-//        );
-//        if ($profile instanceof Profile) {
-//            $options['load_profile'] = true;
-//        }
-//        $queryBuilder = $this->getQueryBuilderWithOptions($options);
-//
-//        $startDate = clone $startDate;
-//        $startDate->setTime(0, 0, 0);
-//
-//        $queryBuilder->andWhere('m.dateTime >= :minDate');
-//        $queryBuilder->andWhere('m.dateTime <= :maxDate');
-//        $queryBuilder->setParameter('minDate', $startDate);
-//        $queryBuilder->setParameter('maxDate', $endDate);
-//
-//        if ($profile instanceof Profile) {
-//            $queryBuilder->andWhere('u.username = :username');
-//            $queryBuilder->setParameter('username', $profile->getUsername());
-//        }
-//
-//        $queryBuilder->orderBy('u.name', 'ASC');
-
         return $queryBuilder->getQuery()->execute();
-//        $participants = $queryBuilder->getQuery()->execute();
-//
-//        return $this->sortParticipantsByName($participants);
     }
 
     /**

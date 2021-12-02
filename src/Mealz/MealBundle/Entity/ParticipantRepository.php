@@ -37,7 +37,10 @@ class ParticipantRepository extends EntityRepository
             ->andWhere('m.dateTime <= :endDate')
             ->orderBy('up.name', 'ASC')
             ->addOrderBy('m.dateTime', 'ASC')
-            ->setParameters(['startDate' => $startDate, 'endDate' => $endDate]);
+            ->setParameters([
+                'startDate' => (clone $startDate)->setTime(0, 0),
+                'endDate' => (clone $endDate)->setTime(23, 59, 59)
+            ]);
 
         if (null !== $profile) {
             $queryBuilder

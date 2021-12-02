@@ -35,9 +35,6 @@ class ParticipantPersistenceListener
 
     private function checkUniqueParticipant(Participant $participant, EntityManager $entityManager): void
     {
-        if ($entityManager->getConnection()->getTransactionNestingLevel() < 1) {
-            throw new RuntimeException(sprintf('Participants can only be updated inside a transaction to ensure consistency. See http://docs.doctrine-project.org/en/latest/reference/transactions-and-concurrency.html#approach-2-explicitly'));
-        }
         if ($this->participantExists($participant, $entityManager)) {
             throw new ParticipantNotUniqueException('This participant has already joined: ' . $participant);
         }

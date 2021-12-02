@@ -102,7 +102,8 @@ class GuestParticipationService
             if (!$this->mealIsBookable($meal)) {
                 throw new ParticipationException(
                     'meal not bookable',
-                    ParticipationException::ERR_MEAL_NOT_BOOKABLE, null,
+                    ParticipationException::ERR_MEAL_NOT_BOOKABLE,
+                    null,
                     ['meal' => $meal]
                 );
             }

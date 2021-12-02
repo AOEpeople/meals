@@ -290,7 +290,14 @@ class MealController extends BaseController
                 case ParticipationException::ERR_GUEST_REG_MEAL_NOT_FOUND:
                     return $translator->trans('error.participation.no_meal_selected', [], 'messages');
                 case ParticipationException::ERR_MEAL_NOT_BOOKABLE:
-                    return $translator->trans('error.meal.join_not_allowed', [], 'messages');
+                    /** @var Meal $unbookableMeal */
+                    $unbookableMeal = $exception->getContext()['meal'];
+
+                    return $translator->trans(
+                        'error.meal.join_not_allowed',
+                        ['%dish%' => $unbookableMeal->getDish()->getTitle()],
+                        'messages'
+                    );
             }
         }
 

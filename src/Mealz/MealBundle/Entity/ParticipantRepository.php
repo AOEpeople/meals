@@ -5,20 +5,16 @@ namespace App\Mealz\MealBundle\Entity;
 use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\Role;
 use DateTime;
-use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use PDO;
-use function Doctrine\ORM\QueryBuilder;
 
 class ParticipantRepository extends EntityRepository
 {
     /**
-     * default options for database queries.
-     *
-     * @var array
+     * default options for database queries
      */
-    protected $defaultOptions = [
+    protected array $defaultOptions = [
         'load_meal' => false,
         'load_profile' => true,
         'load_roles' => false,

@@ -38,6 +38,7 @@ jobs:
   lint:
     name: Lint code
     runs-on: ubuntu-latest
+    continue-on-error: false
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -72,6 +73,7 @@ jobs:
   psalm:
     name: Psalm Static analysis
     runs-on: ubuntu-latest
+    continue-on-error: false
     steps:
       - name: Checkout
         uses: actions/checkout@v2

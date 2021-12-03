@@ -56,6 +56,7 @@ class MealForm extends AbstractType
         $builder->addEventListener(FormEvents::SUBMIT, static function (FormEvent $event) {
             /** @var Meal $meal */
             $meal = $event->getData();
+            /** @psalm-suppress TypeDoesNotContainNull TODO: adapt Meal entity for dateTime property */
             if (null === $meal->getDateTime()) {
                 $day = $meal->getDay() ?? $event->getForm()->getParent()->getParent()->getData();
                 $meal->setDay($day);

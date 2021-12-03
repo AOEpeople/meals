@@ -110,10 +110,6 @@ class ParticipantController extends BaseController
             return new JsonResponse(null, 403);
         }
 
-        if (null === $participant->getMeal()) {
-            return new JsonResponse(null, 404);
-        }
-
         /*
          * Set "offeredAt" to the time.
          */

@@ -76,10 +76,7 @@ class Meal
         $this->participants = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -174,10 +171,8 @@ class Meal
 
     /**
      * get the participant object of the given profile if it is registered.
-     *
-     * @return Participant|null
      */
-    public function getParticipant(Profile $profile)
+    public function getParticipant(Profile $profile): ?Participant
     {
         foreach ($this->participants as $participant) {
             /** @var Participant $participant */
@@ -192,9 +187,9 @@ class Meal
     /**
      * get all guests that the given profile has invited.
      *
-     * @return Participant|null
+     * @return Participant[]
      */
-    public function getGuestParticipants(Profile $profile)
+    public function getGuestParticipants(Profile $profile): array
     {
         $participants = [];
         foreach ($this->participants as $participant) {
@@ -211,10 +206,8 @@ class Meal
      * Return the number of total confirmed participations.
      *
      * @TODO don't load every participant object (raw sql query in repo?)
-     *
-     * @return int
      */
-    public function getTotalConfirmedParticipations()
+    public function getTotalConfirmedParticipations(): int
     {
         $totalParticipations = 0;
 
@@ -240,6 +233,6 @@ class Meal
 
     public function __toString()
     {
-        return $this->getDateTime()->format('Y-m-d H:i:s') . ' ' . $this->getDish();
+        return $this->getDateTime()->format('Y-m-d H:i:s').' '.$this->getDish();
     }
 }

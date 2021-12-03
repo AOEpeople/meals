@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Tests\Service;
 
 use App\Mealz\MealBundle\Entity\Day;
+use App\Mealz\MealBundle\Entity\DayRepository;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\ParticipantRepository;
@@ -29,6 +30,7 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
     private EntityManagerInterface $entityManager;
     private ParticipantRepository $participantRepo;
     private SlotRepository $slotRepo;
+    private DayRepository $dayRepo;
 
     protected function setUp(): void
     {
@@ -44,6 +46,7 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
         $this->entityManager = $this->getDoctrine()->getManager();
 
         /* @var ParticipantRepository $participantRepo */
+        $this->dayRepo = $this->entityManager->getRepository(Day::class);
         $this->participantRepo = $this->entityManager->getRepository(Participant::class);
         $this->slotRepo = self::$container->get(SlotRepository::class);
     }
@@ -59,7 +62,7 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
         $profile = $this->getProfile('alice.meals');
         $meal = $this->getMeal();
 
-        $sut = new ParticipationService($this->entityManager, $doorman, $this->participantRepo, $this->slotRepo);
+        $sut = new ParticipationService($this->entityManager, $doorman, $this->participantRepo, $this->slotRepo, $this->dayRepo);
         $out = $sut->join($profile, $meal);
 
         $this->assertArrayHasKey('participant', $out);
@@ -84,7 +87,7 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
         $profile = $this->getProfile('alice.meals');
         $meal = $this->getMeal();
 
-        $sut = new ParticipationService($this->entityManager, $doorman, $this->participantRepo, $this->slotRepo);
+        $sut = new ParticipationService($this->entityManager, $doorman, $this->participantRepo, $this->slotRepo, $this->dayRepo);
         $out = $sut->join($profile, $meal);
 
         $this->assertArrayHasKey('participant', $out);
@@ -113,7 +116,7 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
         $profile = $this->getProfile('alice.meals');
         $meal = $this->getMeal();
 
-        $sut = new ParticipationService($this->entityManager, $doorman, $this->participantRepo, $this->slotRepo);
+        $sut = new ParticipationService($this->entityManager, $doorman, $this->participantRepo, $this->slotRepo, $this->dayRepo);
         $out = $sut->join($profile, $meal);
 
         $this->assertArrayHasKey('participant', $out);
@@ -150,7 +153,7 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
         $user2 = $this->getProfile('bob.meals');
         $meal = $this->getMeal();
 
-        $sut = new ParticipationService($this->entityManager, $doorman, $this->participantRepo, $this->slotRepo);
+        $sut = new ParticipationService($this->entityManager, $doorman, $this->participantRepo, $this->slotRepo, $this->dayRepo);
 
         // occupy first slot
         $sut->join($user1, $meal);
@@ -182,7 +185,7 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
         $profile = $this->getProfile('alice.meals');
         $meal = $this->getMeal();
 
-        $sut = new ParticipationService($this->entityManager, $doorman, $this->participantRepo, $this->slotRepo);
+        $sut = new ParticipationService($this->entityManager, $doorman, $this->participantRepo, $this->slotRepo, $this->dayRepo);
         $out = $sut->join($profile, $meal);
 
         $this->assertArrayHasKey('participant', $out);
@@ -217,7 +220,7 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
         $user2 = $this->getProfile('bob.meals');
         $meal = $this->getMeal();
 
-        $sut = new ParticipationService($this->entityManager, $doorman, $this->participantRepo, $this->slotRepo);
+        $sut = new ParticipationService($this->entityManager, $doorman, $this->participantRepo, $this->slotRepo, $this->dayRepo);
 
         // occupy first slot
         $sut->join($user1, $meal);
@@ -247,7 +250,7 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
         $profile = $this->getProfile('alice.meals');
         $meal = $this->getMeal();
 
-        $sut = new ParticipationService($this->entityManager, $doorman, $this->participantRepo, $this->slotRepo);
+        $sut = new ParticipationService($this->entityManager, $doorman, $this->participantRepo, $this->slotRepo, $this->dayRepo);
         $out = $sut->join($profile, $meal);
 
         $this->assertNull($out);
@@ -265,7 +268,7 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
         $offerer = $this->getProfile('bob.meals');
         $meal = $this->getMeal(true, false, $offerer);
 
-        $sut = new ParticipationService($this->entityManager, $doormanMock, $this->participantRepo, $this->slotRepo);
+        $sut = new ParticipationService($this->entityManager, $doormanMock, $this->participantRepo, $this->slotRepo, $this->dayRepo);
         $out = $sut->join($user, $meal);
 
         $this->assertIsArray($out);
@@ -290,7 +293,7 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
         $offerer = $this->getProfile('bob.meals');
         $meal = $this->getMeal(true, true, $offerer);
 
-        $sut = new ParticipationService($this->entityManager, $doormanMock, $this->participantRepo, $this->slotRepo);
+        $sut = new ParticipationService($this->entityManager, $doormanMock, $this->participantRepo, $this->slotRepo, $this->dayRepo);
         $out = $sut->join($user, $meal);
 
         $this->assertNull($out);
@@ -307,7 +310,7 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
         $user = $this->getProfile('alice.meals');
         $meal = $this->getMeal(true);
 
-        $sut = new ParticipationService($this->entityManager, $doormanMock, $this->participantRepo, $this->slotRepo);
+        $sut = new ParticipationService($this->entityManager, $doormanMock, $this->participantRepo, $this->slotRepo, $this->dayRepo);
         $out = $sut->join($user, $meal);
 
         $this->assertNull($out);

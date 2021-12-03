@@ -90,6 +90,25 @@ class SlotControllerTest extends AbstractControllerTestCase
         self::assertResponseStatusCodeSame($expHttpStatus);
     }
 
+    /**
+     * @test
+     *
+     * @testdox A slot can be deleted.
+     */
+    public function deleteSlot(): void
+    {
+        $this->loginAs(self::USER_KITCHEN_STAFF);
+
+        $slot = $this->createSlot();
+        self::assertFalse($slot->isDeleted());
+
+        $this->client->request('DELETE', '/meal/slot/'.$slot->getSlug().'/delete');
+        self::assertResponseIsSuccessful();
+
+        $this->getDoctrine()->getManager()->refresh($slot);
+        self::assertTrue($slot->isDeleted());
+    }
+
     private function createSlot(bool $disabled = false): Slot
     {
         $slot = new Slot();

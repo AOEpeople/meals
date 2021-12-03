@@ -61,24 +61,4 @@ class ParticipantPersistenceListenerTest extends AbstractDatabaseTestCase
             $entityManager->flush();
         });
     }
-
-    /**
-     * the transaction is needed because a SELECT query is used in order to find
-     * an already existing participant.
-     */
-    public function testThrowsExceptionWhenNotUsedInATransaction(): void
-    {
-        // load test data
-        $meal = $this->createMeal();
-        $profile = $this->createProfile();
-        $this->persistAndFlushAll([$meal, $meal->getDish(), $profile]);
-
-        $this->expectException(RuntimeException::class);
-
-        $participant = new Participant($profile, $meal);
-
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($participant);
-        $entityManager->flush();
-    }
 }

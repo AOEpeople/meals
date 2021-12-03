@@ -24,19 +24,25 @@ trait ParticipationServiceTrait
             return null; // no active slots are available; return null
         }
 
-        $countBySlots = $this->participantRepo->getCountBySlots($mealDate, $mealDate);
-        if (0 === count($countBySlots)) {
+        $slotsPart = $this->participantRepo->getCountBySlots($mealDate, $mealDate);
+        if (0 === count($slotsPart)) {
             return $slots[0]; // no participants yet; return first slot
+        }
+
+        // index slot count items by slot-ID
+        $indexedSlotsPart = [];
+        foreach ($slotsPart as $sp) {
+            $indexedSlotsPart[$sp['slot']] = $sp;
         }
 
         foreach ($slots as $slot) {
             $slotID = $slot->getId();
-            if (!isset($countBySlots[$slotID])) {
+            if (!isset($indexedSlotsPart[$slotID])) {
                 return $slot; // $slot is not at all booked; return it
             }
 
             $slotLimit = $slot->getLimit();
-            if (0 === $slotLimit || $slotLimit > $countBySlots[$slotID]) {
+            if (0 === $slotLimit || $slotLimit > $indexedSlotsPart[$slotID]['count']) {
                 return $slot; // $slot has either no limit (zero), or has bookings less than its limit; return it
             }
         }

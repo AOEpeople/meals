@@ -36,7 +36,7 @@ class SlotControllerTest extends AbstractControllerTestCase
         $slot = $this->createSlot();
         self::assertFalse($slot->isDisabled());
 
-        $this->client->request('POST', '/meal/slot/'.$slot->getSlug(), ['disabled' => 1]);
+        $this->client->request('POST', '/meal/slot/'.$slot->getSlug().'/update-state', ['disabled' => 1]);
         self::assertResponseIsSuccessful();
 
         $this->getDoctrine()->getManager()->refresh($slot);
@@ -55,7 +55,7 @@ class SlotControllerTest extends AbstractControllerTestCase
         $slot = $this->createSlot(true);
         self::assertTrue($slot->isDisabled());
 
-        $this->client->request('POST', '/meal/slot/'.$slot->getSlug(), ['disabled' => 0]);
+        $this->client->request('POST', '/meal/slot/'.$slot->getSlug().'/update-state', ['disabled' => 0]);
         self::assertResponseIsSuccessful();
 
         $this->getDoctrine()->getManager()->refresh($slot);
@@ -65,11 +65,11 @@ class SlotControllerTest extends AbstractControllerTestCase
     /**
      * @test
      *
-     * @testdox Invoking SlotController::update without login redirects user to login page.
+     * @testdox Invoking SlotController::updateState without login redirects user to login page.
      */
-    public function updateFailureNotLoggedIn(): void
+    public function updateStateFailureNotLoggedIn(): void
     {
-        $this->client->request('POST', '/meal/slot/test');
+        $this->client->request('POST', '/meal/slot/test/update-state');
         self::assertResponseStatusCodeSame(302);
     }
 
@@ -80,13 +80,13 @@ class SlotControllerTest extends AbstractControllerTestCase
      *           ["GET",    405]
      *           ["PUT",    405]
      *
-     * @testdox Invoking SlotController::update with HTTP method $method returns HTTP status $expHttpStatus.
+     * @testdox Invoking SlotController::updateState with HTTP method $method returns HTTP status $expHttpStatus.
      */
-    public function updateFailureWrongHTTPMethod(string $method, int $expHttpStatus): void
+    public function updateStateFailureWrongHTTPMethod(string $method, int $expHttpStatus): void
     {
         $this->loginAs(self::USER_KITCHEN_STAFF);
 
-        $this->client->request($method, '/meal/slot/test');
+        $this->client->request($method, '/meal/slot/test/update-state');
         self::assertResponseStatusCodeSame($expHttpStatus);
     }
 

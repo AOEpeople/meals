@@ -37,10 +37,10 @@ class DayRepository extends EntityRepository
         $queryBuilder = $this->createQueryBuilder('d');
         $queryBuilder
             ->join('d.week', 'w', Join::WITH, 'w.enabled = 1')
-            ->where('d.dateTime > :startDate AND d.dateTime <= :endDate AND d.enabled = 1')
+            ->where('d.dateTime >= :startDate AND d.dateTime <= :endDate AND d.enabled = 1')
             ->setParameters([
-                'startDate' => (clone $startDate)->setTime(0, 0),
-                'endDate' => (clone $endDate)->setTime(12, 0, 0),
+                'startDate' => $startDate,
+                'endDate' => $endDate,
             ]);
 
         return $queryBuilder->getQuery()->getResult();

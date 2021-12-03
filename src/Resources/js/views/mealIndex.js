@@ -51,9 +51,9 @@ MealIndexView.prototype.handleParticipationUpdate = function (event) {
 
 MealIndexView.prototype.updateSlots = function () {
     $.ajax({
-        'url': '/participation/slots-status',
+        url: '/participation/slots-status',
         dataType: 'json',
-        'success': function (data) {
+        success: function (data) {
             $.each(data, function (k, v) {
                 const slotSelectorId = 'day-'+v.date.replaceAll('-', '')+'-slots';
 

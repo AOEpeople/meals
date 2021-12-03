@@ -106,6 +106,8 @@ class GuestInvitation
     }
 
     /**
+     * Set meal day.
+     *
      * @return GuestInvitation
      */
     public function setDay(Day $day)
@@ -116,6 +118,8 @@ class GuestInvitation
     }
 
     /**
+     * Get meal day.
+     *
      * @return Day
      */
     public function getDay()

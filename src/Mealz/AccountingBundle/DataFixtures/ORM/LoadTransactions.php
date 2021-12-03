@@ -92,7 +92,7 @@ class LoadTransactions extends Fixture implements OrderedFixtureInterface
         }
 
         // make transactions more realistic (random minute, NO identical Date)
-        $date->modify('+' . random_int(1, 1400) . ' second');
+        $date->modify('+'.random_int(1, 1400).' second');
 
         $transaction = new Transaction();
         $transaction->setDate($date);

@@ -96,10 +96,10 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
 
         switch (strtolower($month)) {
             case 'last':
-                $dateTime->sub(new DateInterval('P' . $subDays . 'D'));
+                $dateTime->sub(new DateInterval('P'.$subDays.'D'));
                 break;
             case 'penultimate':
-                $dateTime->sub(new DateInterval('P1M' . $subDays . 'D'));
+                $dateTime->sub(new DateInterval('P1M'.$subDays.'D'));
                 break;
             default:
                 break;

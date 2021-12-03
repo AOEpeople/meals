@@ -154,7 +154,7 @@ class ParticipationService
                 'date' => $item['date']->format('Y-m-d'),
                 'slot' => $item['slot']->getSlug(),
                 'booked' => $bookedSlotCountProvider($item['date'], $item['slot']),
-                'booked_by_user' => false
+                'booked_by_user' => false,
             ];
         }
 
@@ -186,7 +186,7 @@ class ParticipationService
                 'date' => $item['date']->format('Y-m-d'),
                 'slot' => $item['slot']->getSlug(),
                 'booked' => $bookedSlotCountProvider($item['date'], $item['slot']),
-                'booked_by_user' => false
+                'booked_by_user' => false,
             ];
         }
 

@@ -40,7 +40,7 @@ class DayRepository extends EntityRepository
             ->where('d.dateTime > :startDate AND d.dateTime <= :endDate AND d.enabled = 1')
             ->setParameters([
                 'startDate' => (clone $startDate)->setTime(0, 0),
-                'endDate' => (clone $endDate)->setTime(12, 0, 0)
+                'endDate' => (clone $endDate)->setTime(12, 0, 0),
             ]);
 
         return $queryBuilder->getQuery()->getResult();

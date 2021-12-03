@@ -13,7 +13,7 @@ use DateTime;
 
 /**
  * @property ParticipantRepository $participantRepo
- * @property SlotRepository $slotRepo
+ * @property SlotRepository        $slotRepo
  */
 trait ParticipationServiceTrait
 {
@@ -104,6 +104,6 @@ trait ParticipationServiceTrait
 
         $slotPartCount = $this->participantRepo->getCountBySlot($slot, $date);
 
-        return ($slotPartCount < $slotLimit);
+        return $slotPartCount < $slotLimit;
     }
 }

@@ -5,10 +5,6 @@ namespace App\Mealz\MealBundle\Entity;
 use DateTime;
 use Doctrine\ORM\EntityRepository;
 
-/**
- * the Meal Repository
- * Class MealRepository.
- */
 class MealRepository extends EntityRepository
 {
     /**
@@ -112,6 +108,7 @@ class MealRepository extends EntityRepository
         $queryBuilder = $this->createQueryBuilder('m');
         $queryBuilder->where('m.dateTime >= :now');
         $queryBuilder->setParameter(':now', new DateTime('now'));
+
         return $queryBuilder->getQuery()->getResult();
     }
 
@@ -125,6 +122,7 @@ class MealRepository extends EntityRepository
         $queryBuilder = $this->createQueryBuilder('m');
         $queryBuilder->where('m.dateTime <= :now');
         $queryBuilder->setParameter(':now', new DateTime('now'));
+
         return $queryBuilder->getQuery()->getResult();
     }
 
@@ -145,6 +143,7 @@ class MealRepository extends EntityRepository
             ->orderBy('m.dateTime', 'DESC');
 
         $queryBuilder->setParameter(':now', new DateTime('now'));
+
         return $queryBuilder->getQuery()->getResult();
     }
 }

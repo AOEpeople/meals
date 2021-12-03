@@ -100,12 +100,7 @@ class GuestParticipationService
     {
         foreach ($meals as $meal) {
             if (!$this->mealIsBookable($meal)) {
-                throw new ParticipationException(
-                    'meal not bookable',
-                    ParticipationException::ERR_MEAL_NOT_BOOKABLE,
-                    null,
-                    ['meal' => $meal]
-                );
+                throw new ParticipationException('meal not bookable', ParticipationException::ERR_MEAL_NOT_BOOKABLE, null, ['meal' => $meal]);
             }
         }
     }
@@ -154,7 +149,7 @@ class GuestParticipationService
     {
         $guestRole = $this->roleRepo->findOneBy(['sid' => Role::ROLE_GUEST]);
         if (null === $guestRole) {
-            throw new RuntimeException('role not found: ' . Role::ROLE_GUEST);
+            throw new RuntimeException('role not found: '.Role::ROLE_GUEST);
         }
 
         return $guestRole;

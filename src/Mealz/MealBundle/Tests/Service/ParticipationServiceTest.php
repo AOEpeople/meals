@@ -141,9 +141,9 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
         $doorman = $this->getDoormanMock(false, true);
 
         $this->createSlots([
-            'priority one slot'           => ['title' => '12:00-12:30 Canteen', 'limit' => 1, 'order' => 1],
+            'priority one slot' => ['title' => '12:00-12:30 Canteen', 'limit' => 1, 'order' => 1],
             'priority two slot; disabled' => ['title' => '12:30-13:00', 'order' => 2, 'disabled' => true],
-            'priority three slot'         => ['title' => '12:00-13:00 Take away', 'order' => 3],
+            'priority three slot' => ['title' => '12:00-13:00 Take away', 'order' => 3],
         ]);
 
         $user1 = $this->getProfile('alice.meals');
@@ -352,7 +352,7 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
         $profileRepo = $this->entityManager->getRepository(Profile::class);
         $profile = $profileRepo->find($username);
         if (null === $profile) {
-            throw new RuntimeException('profile not found: ' . $username);
+            throw new RuntimeException('profile not found: '.$username);
         }
 
         return $profile;

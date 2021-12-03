@@ -4,6 +4,7 @@ namespace App\Mealz\MealBundle\Entity;
 
 use App\Mealz\MealBundle\Entity\MealCollection;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -42,7 +43,7 @@ class Day extends AbstractMessage
     /**
      * @ORM\OneToMany(targetEntity="Meal", mappedBy="day", cascade={"all"})
      *
-     * @var Collection<int, Meal> $meals
+     * @var Collection<int, Meal>
      */
     private Collection $meals;
 

@@ -6,7 +6,6 @@ use App\Mealz\MealBundle\Entity\Participant;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LifecycleEventArgs;
-use RuntimeException;
 
 /**
  * listener that ensures that there won't be duplicate entries for the same participant in the database.
@@ -36,7 +35,7 @@ class ParticipantPersistenceListener
     private function checkUniqueParticipant(Participant $participant, EntityManager $entityManager): void
     {
         if ($this->participantExists($participant, $entityManager)) {
-            throw new ParticipantNotUniqueException('This participant has already joined: ' . $participant);
+            throw new ParticipantNotUniqueException('This participant has already joined: ' .$participant);
         }
     }
 

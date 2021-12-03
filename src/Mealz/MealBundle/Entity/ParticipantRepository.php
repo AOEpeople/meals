@@ -12,7 +12,7 @@ use PDO;
 class ParticipantRepository extends EntityRepository
 {
     /**
-     * default options for database queries
+     * default options for database queries.
      */
     protected array $defaultOptions = [
         'load_meal' => false,
@@ -39,7 +39,7 @@ class ParticipantRepository extends EntityRepository
             ->addOrderBy('m.dateTime', 'ASC')
             ->setParameters([
                 'startDate' => (clone $startDate)->setTime(0, 0),
-                'endDate' => (clone $endDate)->setTime(23, 59, 59)
+                'endDate' => (clone $endDate)->setTime(23, 59, 59),
             ]);
 
         if (null !== $profile) {
@@ -357,9 +357,9 @@ class ParticipantRepository extends EntityRepository
         $queryBuilder = $this->createQueryBuilder('a');
         $queryBuilder->where(
             $queryBuilder->expr()->not(
-                $queryBuilder->expr()->eq('a.' . 'offeredAt', '?1')
+                $queryBuilder->expr()->eq('a.'.'offeredAt', '?1')
             ),
-            $queryBuilder->expr()->eq('a.' . 'meal', '?2')
+            $queryBuilder->expr()->eq('a.'.'meal', '?2')
         );
         $queryBuilder->setParameter(1, 0);
         $queryBuilder->setParameter(2, $mealId);
@@ -429,12 +429,12 @@ class ParticipantRepository extends EntityRepository
             $k = $item['date']->format('Ymd').$item['slot_id'];
 
             if (isset($result[$k])) {
-                $result[$k]['count'] += 1;
+                ++$result[$k]['count'];
             } else {
                 $result[$k] = [
                     'date' => $item['date'],
                     'slot' => (int) $item['slot_id'],
-                    'count' => 1
+                    'count' => 1,
                 ];
             }
         }

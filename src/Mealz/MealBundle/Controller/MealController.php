@@ -52,8 +52,7 @@ class MealController extends BaseController
         ParticipationService $participationService,
         SlotRepository $slotRepo,
         WeekRepository $weekRepository
-    ): Response
-    {
+    ): Response {
         $currentWeek = $weekRepository->getCurrentWeek();
         if (null === $currentWeek) {
             $currentWeek = $this->createEmptyNonPersistentWeek(new DateTime());
@@ -69,7 +68,7 @@ class MealController extends BaseController
             'mealService' => $mealService,
             'participationService' => $participationService,
             'weeks' => [$currentWeek, $nextWeek],
-            'slots' => $slotRepo->findBy(['disabled' => 0, 'deleted' => 0])
+            'slots' => $slotRepo->findBy(['disabled' => 0, 'deleted' => 0]),
         ]);
     }
 
@@ -160,7 +159,7 @@ class MealController extends BaseController
         $parentDish = $dish->getParent();
 
         if (null !== $parentDish) {
-            $dishTitle = $parentDish->getTitleEn() . ' ' . $dishTitle;
+            $dishTitle = $parentDish->getTitleEn().' '.$dishTitle;
         }
 
         $this->sendMealTakenEmail($offerer, $dishTitle);
@@ -172,7 +171,7 @@ class MealController extends BaseController
     {
         $translator = $this->get('translator');
 
-        $recipient = $profile->getUsername() . $translator->trans('mail.domain', [], 'messages');
+        $recipient = $profile->getUsername().$translator->trans('mail.domain', [], 'messages');
         $subject = $translator->trans('mail.subject', [], 'messages');
 
         $message = $translator->trans(
@@ -239,7 +238,7 @@ class MealController extends BaseController
                 ['profile' => $profile, 'meals' => $meals, 'slot' => $slot] = $this->validateGetGuestInvitationData($form);
                 $gps->join($profile, $meals, $slot);
 
-                $message = $this->get('translator')->trans("participation.successful", [], 'messages');
+                $message = $this->get('translator')->trans('participation.successful', [], 'messages');
                 $this->addFlashMessage($message, 'success');
 
                 return $this->render('base.html.twig');
@@ -271,7 +270,7 @@ class MealController extends BaseController
         $data = [
             'profile' => $form->get('profile')->getData(),
             'meals' => $form->get('day')->get('meals')->getData(),
-            'slot' => $form->get('slot')->getData()
+            'slot' => $form->get('slot')->getData(),
         ];
 
         if ((null === $data['meals']) || (0 === count($data['meals']))) {

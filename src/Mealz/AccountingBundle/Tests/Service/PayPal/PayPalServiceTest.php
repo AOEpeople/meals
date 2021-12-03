@@ -58,7 +58,7 @@ class PayPalServiceTest extends TestCase
                 $this->fail('expected RuntimeException'); // should never reach here
             } catch (RuntimeException $rte) {
                 $this->assertSame(1633425374, $rte->getCode());
-                $this->assertStringContainsString('unexpected api response, status: ' . $httpStatusCode, $rte->getMessage());
+                $this->assertStringContainsString('unexpected api response, status: '.$httpStatusCode, $rte->getMessage());
             }
         }
     }

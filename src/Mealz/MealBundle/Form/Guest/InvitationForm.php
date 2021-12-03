@@ -36,12 +36,12 @@ class InvitationForm extends AbstractType
                 'choice_attr' => static function (Slot $slot, string $slug, string $title) {
                     return [
                         'data-limit' => $slot->getLimit(),
-                        'data-title' => $slot->getTitle()
+                        'data-title' => $slot->getTitle(),
                     ];
                 },
                 'placeholder' => $this->translator->trans('content.participation.meal.select_slot', [], 'general'),
                 'attr' => ['class' => 'slot-selector'],
-                'required' => false
+                'required' => false,
             ])
             ->add('day', DayForm::class, [
                 'data' => $options['data']->getDay(),

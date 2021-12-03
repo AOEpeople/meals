@@ -179,7 +179,7 @@ class Participant
 
     public function __toString()
     {
-        return $this->getMeal() . ' ' . $this->getProfile();
+        return $this->getMeal().' '.$this->getProfile();
     }
 
     public function __clone()

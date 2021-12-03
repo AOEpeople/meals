@@ -149,6 +149,6 @@ class Transaction
 
     public function __toString()
     {
-        return $this->profile . ' ' . $this->amount;
+        return $this->profile.' '.$this->amount;
     }
 }

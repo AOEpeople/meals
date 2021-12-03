@@ -40,7 +40,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         /** @var Dish $dish */
         $dish = $this->getDish();
 
-        $url = '/dish/' . $dish->getId() . '/variation/new';
+        $url = '/dish/'.$dish->getId().'/variation/new';
         $this->client->request('GET', $url);
 
         // Assert that we get JSON response
@@ -50,7 +50,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         );
 
         $crawler = $this->getRawResponseCrawler();
-        $formNode = $crawler->filterXPath('//form[@action="' . $url . '"]');
+        $formNode = $crawler->filterXPath('//form[@action="'.$url.'"]');
         $this->assertTrue(1 === $formNode->count());
 
         $inputDeDescNode = $crawler->filterXPath('//input[@name="dishvariation[title_de]"]');
@@ -65,11 +65,11 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         /** @var Dish $dish */
         $dish = $this->getDish(null, true);
 
-        $url = '/dish/' . $dish->getId() . '/variation/new';
+        $url = '/dish/'.$dish->getId().'/variation/new';
         $this->client->request('GET', $url);
 
         $crawler = $this->getRawResponseCrawler();
-        $this->client->submit($crawler->filterXPath('//form[@action="' . $url . '"]')->form([
+        $this->client->submit($crawler->filterXPath('//form[@action="'.$url.'"]')->form([
             'dishvariation[title_de]' => 'new dish variation [de]',
             'dishvariation[title_en]' => 'new dish variation [en]',
         ]), []);
@@ -87,7 +87,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         $dish = $this->getDish(null, true);
         $dishVariation = $dish->getVariations()->get(0);
 
-        $url = '/dish/variation/' . $dishVariation->getId() . '/edit';
+        $url = '/dish/variation/'.$dishVariation->getId().'/edit';
         $this->client->request('GET', $url);
 
         // Assert that we get JSON response
@@ -97,7 +97,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         );
 
         $crawler = $this->getRawResponseCrawler();
-        $formNode = $crawler->filterXPath('//form[@action="' . $url . '"]');
+        $formNode = $crawler->filterXPath('//form[@action="'.$url.'"]');
         $this->assertTrue(1 === $formNode->count());
 
         $inputDeDescNode = $crawler->filterXPath('//input[@name="dishvariation[title_de]"]');
@@ -113,11 +113,11 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         $dish = $this->getDish(null, true);
         $dishVariationId = $dish->getVariations()->get(0)->getId();
 
-        $url = '/dish/variation/' . $dishVariationId . '/edit';
+        $url = '/dish/variation/'.$dishVariationId.'/edit';
         $this->client->request('GET', $url);
 
         $crawler = $this->getRawResponseCrawler();
-        $this->client->submit($crawler->filterXPath('//form[@action="' . $url . '"]')->form([
+        $this->client->submit($crawler->filterXPath('//form[@action="'.$url.'"]')->form([
             'dishvariation[title_de]' => 'dish variation [de]',
             'dishvariation[title_en]' => 'dish variation [en]',
         ]), []);
@@ -137,7 +137,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         $dishVariationId = $dishVariation->getId();
         $this->assertTrue($dishVariation->isEnabled());
 
-        $this->client->request('GET', '/dish/variation/' . $dishVariation->getId() . '/delete');
+        $this->client->request('GET', '/dish/variation/'.$dishVariation->getId().'/delete');
         $this->assertTrue($this->client->getResponse()->isRedirect('/dish'));
 
         $updatedDishVariation = $this->getDishVariationBy('id', $dishVariationId, false);
@@ -171,7 +171,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         $dishId = $this->grepDishIdFromUri($link);
 
         // check if there is a form shown for adding a new dish variation
-        $node = $crawler->filter('form[action$="/' . $dishId . '/variation/new"]');
+        $node = $crawler->filter('form[action$="/'.$dishId.'/variation/new"]');
         $this->assertTrue(1 === $node->count());
     }
 
@@ -181,12 +181,12 @@ class DishVariationControllerTest extends AbstractControllerTestCase
     public function testNewVariationAction(): void
     {
         $dishId = $this->getHelperObject('dishid');
-        $formURI = '/dish/' . $dishId . '/variation/new';
+        $formURI = '/dish/'.$dishId.'/variation/new';
 
         // Create form data
         $form['dishvariation'] = [
-            'title_de' => 'dishvariation-TITLE-de' . mt_rand(),
-            'title_en' => 'dishvariation-TITLE-en' . mt_rand(),
+            'title_de' => 'dishvariation-TITLE-de'.mt_rand(),
+            'title_en' => 'dishvariation-TITLE-en'.mt_rand(),
             '_token' => $this->getFormCSRFToken($formURI, '#dishvariation__token'),
         ];
 
@@ -241,11 +241,11 @@ class DishVariationControllerTest extends AbstractControllerTestCase
     {
         $dish = $this->getDish(null, true);
         $dishVariation = $dish->getVariations()->get(0);
-        $formURI = '/dish/variation/' . $dishVariation->getId() . '/edit';
+        $formURI = '/dish/variation/'.$dishVariation->getId().'/edit';
 
         $form['dishvariation'] = [
-            'title_de' => 'edited-dishvariation-de-' . mt_rand(),
-            'title_en' => 'edited-dishvariation-en-' . mt_rand(),
+            'title_de' => 'edited-dishvariation-de-'.mt_rand(),
+            'title_en' => 'edited-dishvariation-en-'.mt_rand(),
             '_token' => $this->getFormCSRFToken($formURI, '#dishvariation__token'),
         ];
 
@@ -306,7 +306,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
      *
      * @param $link Link
      *
-     * @return bool|string $dishId
+     * @return bool|int $dishId
      */
     private function grepDishIdFromUri(Link $link)
     {
@@ -369,7 +369,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
 
         $result = $dishRepository->findBy([], ['id' => 'ASC']);
 
-        if (false === is_array($result)) {
+        if (false === is_array($result) || false === count($result)) {
             $this->fail('Failed to fetch test dish.');
         }
 
@@ -420,7 +420,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         $host = 'http://localhost/app.php/';
         if (self::$kernel->getContainer()->hasParameter('mealz.host')) {
             $host = self::$kernel->getContainer()->getParameter('mealz.host');
-            $host = rtrim($host, '/') . '/';
+            $host = rtrim($host, '/').'/';
         }
 
         return $host;

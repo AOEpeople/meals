@@ -11,11 +11,6 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-/**
- * Class DishVariationForm.
- *
- * @author  Chetan Thapliyal <chetan.thapliyal@aoe.com>
- */
 class DishVariationForm extends AbstractType
 {
     /**

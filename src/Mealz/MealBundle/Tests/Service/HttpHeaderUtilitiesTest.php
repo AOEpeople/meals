@@ -25,6 +25,6 @@ class HttpHeaderUtilitiesTest extends TestCase
 
     public function provideDataForTestGetLocale()
     {
-        return Yaml::parse(file_get_contents(__DIR__ . '/getLocaleFromAcceptLanguageTestData.yml'));
+        return Yaml::parse(file_get_contents(__DIR__.'/getLocaleFromAcceptLanguageTestData.yml'));
     }
 }

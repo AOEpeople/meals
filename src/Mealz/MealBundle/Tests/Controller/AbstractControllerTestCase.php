@@ -55,11 +55,11 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         $user = $repo->find($username);
 
         if (!($user instanceof UserInterface)) {
-            throw new RuntimeException('user not found: ' . $username);
+            throw new RuntimeException('user not found: '.$username);
         }
 
         $token = new UsernamePasswordToken($user, null, $firewall, $user->getRoles());
-        $session->set('_security_' . $firewall, serialize($token));
+        $session->set('_security_'.$firewall, serialize($token));
         $session->save();
 
         $cookie = new Cookie($session->getName(), $session->getId());
@@ -75,7 +75,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         $token = $crawler->filter($tokenFieldSelector)->attr('value');
 
         if ('' === $token || null === $token) {
-            throw new RuntimeException('token fetch error, path: ' . $uri . ', fieldSelector: ' . $tokenFieldSelector);
+            throw new RuntimeException('token fetch error, path: '.$uri.', fieldSelector: '.$tokenFieldSelector);
         }
 
         return $token;
@@ -115,7 +115,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         $roleRepository = $this->getDoctrine()->getRepository(Role::class);
         $role = $roleRepository->findOneBy(['sid' => $roleType]);
         if (!($role instanceof Role)) {
-            $this->fail('user role not found:  "' .$roleType);
+            $this->fail('user role not found:  "'.$roleType);
         }
 
         return $role;
@@ -131,10 +131,10 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
     protected function createProfile(string $firstName = '', string $lastName = '', string $company = ''): Profile
     {
         $firstName = ('' !== $firstName) ? $firstName : 'Test';
-        $lastName = ('' !== $lastName) ? $lastName : 'User' . mt_rand();
+        $lastName = ('' !== $lastName) ? $lastName : 'User'.mt_rand();
 
         $profile = new Profile();
-        $profile->setUsername($firstName . '.' . $lastName);
+        $profile->setUsername($firstName.'.'.$lastName);
         $profile->setFirstName($firstName);
         $profile->setName($lastName);
 

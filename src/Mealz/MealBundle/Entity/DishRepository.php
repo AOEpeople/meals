@@ -42,6 +42,8 @@ class DishRepository extends LocalizedRepository
     }
 
     /**
+     * get a query builder for sorted list of dishes.
+     *
      * @param array $options
      *
      * @return QueryBuilder

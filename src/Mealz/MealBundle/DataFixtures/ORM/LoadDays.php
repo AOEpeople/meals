@@ -43,7 +43,7 @@ class LoadDays extends Fixture implements OrderedFixtureInterface
             $startTime->setTime(12, 0);
 
             for ($i = 0; $i < 5; ++$i) {
-                $dateTime = (clone $startTime)->modify('+' . $i . ' days');
+                $dateTime = (clone $startTime)->modify('+'.$i.' days');
                 $lockDateTime = (clone $dateTime)->modify('-1 day 16:00');
 
                 $this->addDay($week, $dateTime, $lockDateTime);
@@ -61,7 +61,7 @@ class LoadDays extends Fixture implements OrderedFixtureInterface
         $day->setLockParticipationDateTime($lockDateTime);
 
         $this->objectManager->persist($day);
-        $this->addReference('day-' . $this->counter++, $day);
+        $this->addReference('day-'.$this->counter++, $day);
     }
 
     public function getOrder(): int

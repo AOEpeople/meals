@@ -63,7 +63,7 @@ class CostSheetController extends BaseController
                 $userCosts['total'] = bcadd($userCosts['total'], $monthCosts, 4);
             }
             if ($transactionsPerUser[$username]['amount'] > 0) {
-                $userCosts['total'] = '+'.$transactionsPerUser[$username]['amount'];
+                $userCosts['total'] = '+' . $transactionsPerUser[$username]['amount'];
             }
             $user['costs'] = $userCosts;
 

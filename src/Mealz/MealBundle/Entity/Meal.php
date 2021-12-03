@@ -233,6 +233,6 @@ class Meal
 
     public function __toString()
     {
-        return $this->getDateTime()->format('Y-m-d H:i:s').' '.$this->getDish();
+        return $this->getDateTime()->format('Y-m-d H:i:s') . ' ' . $this->getDish();
     }
 }

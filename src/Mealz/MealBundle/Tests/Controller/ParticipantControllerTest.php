@@ -59,7 +59,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
 
         // Create profile for participant
         self::$participantFirstName = 'Max';
-        self::$participantLastName = 'Mustermann'.$time;
+        self::$participantLastName = 'Mustermann' . $time;
         $participant = $this->createEmployeeProfileAndParticipation(
             self::$participantFirstName,
             self::$participantLastName,
@@ -68,7 +68,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
 
         // Create profile for guest participant
         self::$guestFirstName = 'Jon';
-        self::$guestLastName = 'Doe'.$time;
+        self::$guestLastName = 'Doe' . $time;
         self::$guestCompany = 'Company';
         $guestParticipant = $this->createGuestProfileAndParticipation(
             self::$guestFirstName,
@@ -79,7 +79,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
 
         // Create profile for user (non participant)
         self::$userFirstName = 'Karl';
-        self::$userLastName = 'Schmidt'.$time;
+        self::$userLastName = 'Schmidt' . $time;
         $user = $this->createProfile(self::$userFirstName, self::$userLastName);
         $this->persistAndFlushAll([$user]);
 
@@ -112,7 +112,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
 
         $this->loginAs(self::USER_STANDARD);
         $participantId = $lockedParticipant->getId();
-        $this->client->request('GET', '/menu/meal/'.$participantId.'/swap');
+        $this->client->request('GET', '/menu/meal/' . $participantId . '/swap');
 
         //verification by checking the database
         $offeringParticipant = $this->getDoctrine()->getRepository(Participant::class)->find($participantId);
@@ -133,7 +133,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $this->persistAndFlushAll([$lockedParticipant]);
 
         $this->loginAs(self::USER_STANDARD);
-        $this->client->request('GET', '/menu/meal/'.$participantId.'/unswap');
+        $this->client->request('GET', '/menu/meal/' . $participantId . '/unswap');
 
         //verification by checking the database
         $participant = $this->getDoctrine()->getRepository(Participant::class)->find($participantId);
@@ -155,7 +155,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $this->persistAndFlushAll([$outdatedParticipant]);
 
         $this->loginAs(self::USER_STANDARD);
-        $this->client->request('GET', '/menu/meal/'.$participantId.'/swap');
+        $this->client->request('GET', '/menu/meal/' . $participantId . '/swap');
 
         //verification by checking the database
         $notOfferingPart = $this->getDoctrine()->getRepository(Participant::class)->find($participantId);
@@ -168,10 +168,10 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     public function testCheckParticipantInParticipationTable(): void
     {
         $crawler = $this->getCurrentWeekParticipations();
-        $this->assertEquals(1, $crawler->filter('html:contains("'.self::$participantFirstName.'")')->count());
-        $this->assertEquals(1, $crawler->filter('html:contains("'.self::$participantLastName.'")')->count());
-        $this->assertEquals(1, $crawler->filter('html:contains("'.self::$guestFirstName.'")')->count());
-        $this->assertEquals(1, $crawler->filter('html:contains("'.self::$guestLastName.'")')->count());
+        $this->assertEquals(1, $crawler->filter('html:contains("' . self::$participantFirstName . '")')->count());
+        $this->assertEquals(1, $crawler->filter('html:contains("' . self::$participantLastName . '")')->count());
+        $this->assertEquals(1, $crawler->filter('html:contains("' . self::$guestFirstName . '")')->count());
+        $this->assertEquals(1, $crawler->filter('html:contains("' . self::$guestLastName . '")')->count());
     }
 
     /**
@@ -208,7 +208,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $crawler = $this->getCurrentWeekParticipations()
             ->filter('.week-date')
             ->first();
-        $this->assertStringContainsString($firstWeekDay.'-'.$lastWeekDay, $crawler->text());
+        $this->assertStringContainsString($firstWeekDay . '-' . $lastWeekDay, $crawler->text());
     }
 
     /**
@@ -278,7 +278,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $tableRow = '<tr class="table-row"><td class="text table-data wide-cell">__name__<\/td>';
         $tableData = '<td class="meal-participation table-data" data-attribute-action=".*__username__"><i class="glyphicon"><\/i><\/td>';
 
-        $regex = '/('.$tableRow.')('.$tableData.')+(<\/tr>)/';
+        $regex = '/(' . $tableRow . ')(' . $tableData . ')+(<\/tr>)/';
 
         $this->assertMatchesRegularExpression($regex, preg_replace('~\\s{2,}~', '', trim($crawler->attr('data-prototype'))));
     }
@@ -289,7 +289,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     public function testCheckProfileList(): void
     {
         $crawler = $this->getCurrentWeekParticipations()->filter('.profile-list');
-        $userName = self::$userLastName.', '.self::$userFirstName;
+        $userName = self::$userLastName . ', ' . self::$userFirstName;
         $this->assertStringContainsString($userName, $crawler->attr('data-attribute-profiles'));
     }
 
@@ -299,7 +299,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     protected function getCurrentWeekParticipations(): Crawler
     {
         $currentWeek = $this->getCurrentWeek();
-        $crawler = $this->client->request('GET', '/participations/'.$currentWeek->getId().'/edit');
+        $crawler = $this->client->request('GET', '/participations/' . $currentWeek->getId() . '/edit');
         $this->assertTrue($this->client->getResponse()->isSuccessful());
 
         return $crawler;

@@ -165,7 +165,7 @@ class ParticipationService
                 continue;
             }
 
-            $k = $participation->getMeal()->getDateTime()->format('Y-m-d-').$slot->getId();
+            $k = $participation->getMeal()->getDateTime()->format('Y-m-d-') . $slot->getId();
             $slotsStatus[$k]['booked_by_user'] = isset($slotsStatus[$k]);
         }
 
@@ -210,7 +210,7 @@ class ParticipationService
         foreach ($mealDays as $day) {
             foreach ($mealSlots as $slot) {
                 $date = $day->getDateTime();
-                $k = $date->format('Y-m-d').'-'.$slot->getId();
+                $k = $date->format('Y-m-d') . '-' . $slot->getId();
                 $daysWithSlots[$k] = [
                     'date' => $date,
                     'slot' => $slot,
@@ -232,12 +232,12 @@ class ParticipationService
         $bookedSlotsStatus = $this->participantRepo->getCountBySlots($startDate, $endDate);
 
         foreach ($bookedSlotsStatus as $bss) {
-            $k = $bss['date']->format('Y-m-d-').$bss['slot'];
+            $k = $bss['date']->format('Y-m-d-') . $bss['slot'];
             $slotBookingStatus[$k] = $bss['count'];
         }
 
         return static function (DateTime $date, Slot $slot) use ($slotBookingStatus): int {
-            $k = $date->format('Y-m-d-').$slot->getId();
+            $k = $date->format('Y-m-d-') . $slot->getId();
 
             return $slotBookingStatus[$k] ?? 0;
         };

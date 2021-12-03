@@ -357,9 +357,9 @@ class ParticipantRepository extends EntityRepository
         $queryBuilder = $this->createQueryBuilder('a');
         $queryBuilder->where(
             $queryBuilder->expr()->not(
-                $queryBuilder->expr()->eq('a.'.'offeredAt', '?1')
+                $queryBuilder->expr()->eq('a.' . 'offeredAt', '?1')
             ),
-            $queryBuilder->expr()->eq('a.'.'meal', '?2')
+            $queryBuilder->expr()->eq('a.' . 'meal', '?2')
         );
         $queryBuilder->setParameter(1, 0);
         $queryBuilder->setParameter(2, $mealId);
@@ -426,7 +426,7 @@ class ParticipantRepository extends EntityRepository
         // count number of participants per day per slot
         /** @var array{date: DateTime, slot_id: int} $item */
         foreach ($queryBuilder->getQuery()->getArrayResult() as $item) {
-            $k = $item['date']->format('Ymd').$item['slot_id'];
+            $k = $item['date']->format('Ymd') . $item['slot_id'];
 
             if (isset($result[$k])) {
                 ++$result[$k]['count'];

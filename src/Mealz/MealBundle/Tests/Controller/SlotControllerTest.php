@@ -36,7 +36,7 @@ class SlotControllerTest extends AbstractControllerTestCase
         $slot = $this->createSlot();
         self::assertFalse($slot->isDisabled());
 
-        $this->client->request('POST', '/meal/slot/'.$slot->getSlug().'/update-state', ['disabled' => 1]);
+        $this->client->request('POST', '/meal/slot/' . $slot->getSlug() . '/update-state', ['disabled' => 1]);
         self::assertResponseIsSuccessful();
 
         $this->getDoctrine()->getManager()->refresh($slot);
@@ -55,7 +55,7 @@ class SlotControllerTest extends AbstractControllerTestCase
         $slot = $this->createSlot(true);
         self::assertTrue($slot->isDisabled());
 
-        $this->client->request('POST', '/meal/slot/'.$slot->getSlug().'/update-state', ['disabled' => 0]);
+        $this->client->request('POST', '/meal/slot/' . $slot->getSlug() . '/update-state', ['disabled' => 0]);
         self::assertResponseIsSuccessful();
 
         $this->getDoctrine()->getManager()->refresh($slot);
@@ -102,7 +102,7 @@ class SlotControllerTest extends AbstractControllerTestCase
         $slot = $this->createSlot();
         self::assertFalse($slot->isDeleted());
 
-        $this->client->request('DELETE', '/meal/slot/'.$slot->getSlug().'/delete');
+        $this->client->request('DELETE', '/meal/slot/' . $slot->getSlug() . '/delete');
         self::assertResponseIsSuccessful();
 
         $this->getDoctrine()->getManager()->refresh($slot);

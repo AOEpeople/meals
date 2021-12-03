@@ -132,7 +132,7 @@ class GuestInvitation
      */
     public function beforeCreate(): void
     {
-        $this->id = md5($this->host->getUsername().$this->day->getId());
+        $this->id = md5($this->host->getUsername() . $this->day->getId());
         $this->createdOn = new DateTime();
     }
 }

@@ -81,7 +81,7 @@ class CostSheetControllerTest extends AbstractControllerTestCase
         $this->assertNotNull($profile->getSettlementHash());
 
         // Trigger action
-        $this->client->request('GET', '/print/costsheet/settlement/confirm/'.$hash);
+        $this->client->request('GET', '/print/costsheet/settlement/confirm/' . $hash);
         $this->assertTrue($this->client->getResponse()->isSuccessful());
 
         // Check new balance
@@ -97,7 +97,7 @@ class CostSheetControllerTest extends AbstractControllerTestCase
         $this->assertFalse($profile->isHidden());
 
         // Trigger action
-        $this->client->request('GET', '/print/costsheet/hideuser/request/'.$profile->getUsername());
+        $this->client->request('GET', '/print/costsheet/hideuser/request/' . $profile->getUsername());
         $this->assertTrue($this->client->getResponse()->isSuccessful());
 
         // Check after action
@@ -117,7 +117,7 @@ class CostSheetControllerTest extends AbstractControllerTestCase
         $this->assertTrue($profile->isHidden());
 
         // Trigger action
-        $this->client->request('GET', '/print/costsheet/hideuser/request/'.$profile->getUsername());
+        $this->client->request('GET', '/print/costsheet/hideuser/request/' . $profile->getUsername());
         $this->assertTrue($this->client->getResponse()->isSuccessful());
 
         // Check after action

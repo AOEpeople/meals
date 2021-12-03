@@ -35,7 +35,7 @@ class ParticipantPersistenceListener
     private function checkUniqueParticipant(Participant $participant, EntityManager $entityManager): void
     {
         if ($this->participantExists($participant, $entityManager)) {
-            throw new ParticipantNotUniqueException('This participant has already joined: ' .$participant);
+            throw new ParticipantNotUniqueException('This participant has already joined: ' . $participant);
         }
     }
 

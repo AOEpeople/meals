@@ -66,7 +66,7 @@ class LoadAnonymousUsers extends Fixture implements OrderedFixtureInterface
                     "UPDATE transaction SET profile='" . $key . "XXX' WHERE profile='" . $user->getUsername() . "';"
                 );
                 $connection->query(
-                    "UPDATE profile SET id='" . $key . "XXX', name='" . $key . "Surname', firstname='" . $key . "Firstname' ".
+                    "UPDATE profile SET id='" . $key . "XXX', name='" . $key . "Surname', firstname='" . $key . "Firstname' " .
                     "WHERE id='" . $user->getUsername() . "';"
                 );
             }

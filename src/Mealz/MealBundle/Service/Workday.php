@@ -121,7 +121,7 @@ class Workday
      */
     private function getEasterDate($year)
     {
-        $base = new DateTime($year.'-03-21');
+        $base = new DateTime($year . '-03-21');
         $days = easter_days($year);
 
         return $base->add(new DateInterval("P{$days}D"));

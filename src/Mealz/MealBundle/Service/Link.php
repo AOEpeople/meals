@@ -59,7 +59,7 @@ class Link
         $action = $action ?: 'show';
 
         if ('show' === $action || 'join' === $action || 'join_someone' === $action || 'accept_offer' === $action) {
-            return $this->router->generate('MealzMealBundle_Meal_'.$action, [
+            return $this->router->generate('MealzMealBundle_Meal_' . $action, [
                 'date' => $meal->getDateTime()->format('Y-m-d'),
                 'dish' => $meal->getDish()->getSlug(),
             ], $referenceType);
@@ -74,7 +74,7 @@ class Link
 
         if ('edit' === $action || 'delete' === $action) {
             // admin actions
-            return $this->router->generate('MealzMealBundle_Meal_'.$action, ['meal' => $meal->getId()], $referenceType);
+            return $this->router->generate('MealzMealBundle_Meal_' . $action, ['meal' => $meal->getId()], $referenceType);
         }
 
         throw new \InvalidArgumentException(sprintf('linking to "%s" action on a %s object is not configured.', $action, get_class($meal)));
@@ -88,7 +88,7 @@ class Link
         $action = $action ?? 'edit';
 
         if ('edit' === $action || 'delete' === $action || 'confirm' === $action || 'swap' === $action || 'unswap' === $action) {
-            return $this->router->generate('MealzMealBundle_Participant_'.$action, ['participant' => $participant->getId()], $referenceType);
+            return $this->router->generate('MealzMealBundle_Participant_' . $action, ['participant' => $participant->getId()], $referenceType);
         }
 
         throw new \InvalidArgumentException(sprintf('linking to "%s" action on a %s object is not configured.', $action, get_class($participant)));
@@ -103,7 +103,7 @@ class Link
 
         if ('delete' === $action) {
             // admin actions
-            return $this->router->generate('MealzMealBundle_Dish_'.$action, ['slug' => $dish->getSlug()], $referenceType);
+            return $this->router->generate('MealzMealBundle_Dish_' . $action, ['slug' => $dish->getSlug()], $referenceType);
         }
 
         if ('edit' === $action) {
@@ -129,7 +129,7 @@ class Link
 
         if (null !== $action) {
             return $this->router->generate(
-                'MealzMealBundle_Category_'.$action,
+                'MealzMealBundle_Category_' . $action,
                 $parameters,
                 $referenceType
             );

@@ -188,7 +188,7 @@ class CashController extends BaseController
         /** @var $participation Participant */
         foreach ($participations as $participation) {
             $participationsTotal += $participation->getMeal()->getPrice();
-            $transactionHistory[$participation->getMeal()->getDateTime()->getTimestamp(). '-' .$participation->getMeal()->getId()] = $participation;
+            $transactionHistory[$participation->getMeal()->getDateTime()->getTimestamp() . '-' . $participation->getMeal()->getId()] = $participation;
         }
 
         return [$transactionsTotal, $transactionHistory, $participationsTotal];

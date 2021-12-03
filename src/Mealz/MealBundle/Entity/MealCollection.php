@@ -17,7 +17,7 @@ class MealCollection extends ArrayCollection
     {
         foreach ($items as $item) {
             if (!($item instanceof Meal)) {
-                throw new RuntimeException('invalid argument; expected "Meal", got "'.gettype($item).'"');
+                throw new RuntimeException('invalid argument; expected "Meal", got "' . gettype($item) . '"');
             }
         }
 

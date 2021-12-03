@@ -313,7 +313,7 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
         $profileRepo = $this->entityManager->getRepository(Profile::class);
         $profile = $profileRepo->find($username);
         if (null === $profile) {
-            throw new RuntimeException('profile not found: '.$username);
+            throw new RuntimeException('profile not found: ' . $username);
         }
 
         return $profile;

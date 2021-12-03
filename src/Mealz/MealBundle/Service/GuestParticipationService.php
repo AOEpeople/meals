@@ -149,7 +149,7 @@ class GuestParticipationService
     {
         $guestRole = $this->roleRepo->findOneBy(['sid' => Role::ROLE_GUEST]);
         if (null === $guestRole) {
-            throw new RuntimeException('role not found: '.Role::ROLE_GUEST);
+            throw new RuntimeException('role not found: ' . Role::ROLE_GUEST);
         }
 
         return $guestRole;

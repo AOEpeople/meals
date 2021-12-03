@@ -159,7 +159,7 @@ class MealController extends BaseController
         $parentDish = $dish->getParent();
 
         if (null !== $parentDish) {
-            $dishTitle = $parentDish->getTitleEn().' '.$dishTitle;
+            $dishTitle = $parentDish->getTitleEn() . ' ' . $dishTitle;
         }
 
         $this->sendMealTakenEmail($offerer, $dishTitle);
@@ -171,7 +171,7 @@ class MealController extends BaseController
     {
         $translator = $this->get('translator');
 
-        $recipient = $profile->getUsername().$translator->trans('mail.domain', [], 'messages');
+        $recipient = $profile->getUsername() . $translator->trans('mail.domain', [], 'messages');
         $subject = $translator->trans('mail.subject', [], 'messages');
 
         $message = $translator->trans(

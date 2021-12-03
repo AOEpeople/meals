@@ -82,8 +82,8 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
     protected function createDish(Category $category = null): Dish
     {
         $dish = new Dish();
-        $dish->setTitleEn('Test EN '.mt_rand());
-        $dish->setTitleDe('Test DE '.mt_rand());
+        $dish->setTitleEn('Test EN ' . mt_rand());
+        $dish->setTitleDe('Test DE ' . mt_rand());
         $dish->setPrice(3.20);
         if ($category) {
             $dish->setCategory($category);
@@ -111,9 +111,9 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
     {
         $rand = mt_rand();
         $profile = new Profile();
-        $profile->setUsername('TestUsername'.$rand);
-        $profile->setName('TestName'.$rand);
-        $profile->setFirstName('TestFirstName'.$rand);
+        $profile->setUsername('TestUsername' . $rand);
+        $profile->setName('TestName' . $rand);
+        $profile->setFirstName('TestFirstName' . $rand);
 
         return $profile;
     }
@@ -122,8 +122,8 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
     {
         $uniqueSuffix = mt_rand();
         $category = new Category();
-        $category->setTitleDe('Title DE '.$uniqueSuffix);
-        $category->setTitleEn('Title EN '.$uniqueSuffix);
+        $category->setTitleDe('Title DE ' . $uniqueSuffix);
+        $category->setTitleEn('Title EN ' . $uniqueSuffix);
 
         return $category;
     }

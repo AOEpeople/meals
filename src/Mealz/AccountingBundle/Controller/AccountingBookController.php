@@ -36,8 +36,8 @@ class AccountingBookController extends BaseController
         $maxDate->setTime(23, 59, 59);
 
         // Create headline for twig template
-        $headingFirst = $minDateFirst->format('d.m.-').$maxDateFirst->format('d.m.Y');
-        $heading = $minDate->format('d.m.-').$maxDate->format('d.m.Y');
+        $headingFirst = $minDateFirst->format('d.m.-') . $maxDateFirst->format('d.m.Y');
+        $heading = $minDate->format('d.m.-') . $maxDate->format('d.m.Y');
 
         // Get array of users with their amount of transactions in previous month
         $transactionRepo = $this->getTransactionRepository();
@@ -78,7 +78,7 @@ class AccountingBookController extends BaseController
             $maxDateFirst->setTime(23, 59, 59);
 
             // Create headline for twig template
-            $headingFirst = $minDateFirst->format('d.m.').' - '.$maxDateFirst->format('d.m.Y');
+            $headingFirst = $minDateFirst->format('d.m.') . ' - ' . $maxDateFirst->format('d.m.Y');
 
             // Get first and last day of actual month
             $minDate = new DateTime('first day of this month');
@@ -94,7 +94,7 @@ class AccountingBookController extends BaseController
             $maxDate = new DateTime($dateRangeArray[1]);
         }
 
-        $heading = $minDate->format('d.m.').' - '.$maxDate->format('d.m.Y');
+        $heading = $minDate->format('d.m.') . ' - ' . $maxDate->format('d.m.Y');
 
         $transactions = $this->getTransactionRepository()->findAllTransactionsInDateRange($minDate, $maxDate);
 
@@ -124,7 +124,7 @@ class AccountingBookController extends BaseController
         $minDate = new DateTime($dateRangeArray[0]);
         $maxDate = new DateTime($dateRangeArray[1]);
 
-        $heading = $minDate->format('d.m.').' - '.$maxDate->format('d.m.Y');
+        $heading = $minDate->format('d.m.') . ' - ' . $maxDate->format('d.m.Y');
         $transactionRepo = $this->getTransactionRepository();
         $transactions = $transactionRepo->findAllTransactionsInDateRange($minDate, $maxDate);
 
@@ -135,12 +135,12 @@ class AccountingBookController extends BaseController
         $pdf->setPrintFooter(false);
         $pdf->AddPage();
 
-        $filename = $this->get('translator')->trans('payment.transaction_history.finances.pdf').'-'.$minDate->format('d.m.Y').'-'.$maxDate->format('d.m.Y');
+        $filename = $this->get('translator')->trans('payment.transaction_history.finances.pdf') . '-' . $minDate->format('d.m.Y') . '-' . $maxDate->format('d.m.Y');
         $pdf->SetTitle($filename);
 
-        $cssFile = file_get_contents(__DIR__ .'/../Resources/css/transaction-export.css');
+        $cssFile = file_get_contents(__DIR__ . '/../Resources/css/transaction-export.css');
 
-        $includeCSS = '<style>'.$cssFile.'</style>';
+        $includeCSS = '<style>' . $cssFile . '</style>';
 
         $html = $this->renderView('MealzAccountingBundle:Accounting/Finance:print_finances.html.twig', [
             'headingFirst' => null,
@@ -151,8 +151,8 @@ class AccountingBookController extends BaseController
             'maxDate' => $maxDate->format('m/d/Y'),
         ]);
 
-        $pdf->writeHTML($includeCSS.$html);
+        $pdf->writeHTML($includeCSS . $html);
 
-        return $pdf->Output($filename.'.pdf', 'I');
+        return $pdf->Output($filename . '.pdf', 'I');
     }
 }

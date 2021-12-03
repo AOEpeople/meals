@@ -311,6 +311,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
     private function grepDishIdFromUri(Link $link)
     {
         preg_match("|(?<=/)(\d+)(?=/)|", $link->getUri(), $match);
+
         return (count($match)) ? (int) $match[0] : false;
     }
 

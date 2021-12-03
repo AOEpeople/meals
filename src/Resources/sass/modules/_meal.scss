@@ -173,12 +173,12 @@
   }
 
   .select-wrapper {
-    border-bottom: 2px solid $meal-border-color;
     padding: 10px 15px;
+    border-bottom: 2px solid $meal-border-color;
 
     select {
-      border: 1px solid $meal-border-color;
       width: 50%;
+      border: 1px solid $meal-border-color;
     }
   }
 

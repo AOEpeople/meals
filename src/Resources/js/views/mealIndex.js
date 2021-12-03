@@ -32,14 +32,15 @@ MealIndexView.prototype.handleChangeSlot = function (event) {
 }
 
 MealIndexView.prototype.handleParticipationUpdate = function (event) {
-    const $dishCheckbox = $(event.target);
-    const $mealContainer = $dishCheckbox.closest('.meal');
-    const bookedMealCount = $mealContainer.find('checkbox.participation-checkbox').length
+    const $updatedDishCheckbox = $(event.target);
 
-    // do nothing if user ia joining a meal
-    if ($dishCheckbox.is(':checked')) {
+    // do nothing if user is joining a meal
+    if ($updatedDishCheckbox.is(':checked')) {
         return;
     }
+
+    const $mealContainer = $updatedDishCheckbox.closest('.meal');
+    const bookedMealCount = $mealContainer.find('input.participation-checkbox:checked').length
 
     // reset slot selector if user cancelled all booked meals
     if (1 > bookedMealCount) {

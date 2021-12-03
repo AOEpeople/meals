@@ -25,6 +25,9 @@ class InvitationForm extends AbstractType
         $this->slotRepo = $slotRepo;
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         // passing by Day value to the DayForm in order to render only particular day
@@ -33,6 +36,7 @@ class InvitationForm extends AbstractType
                 'choices' => $this->slotRepo->findBy(['disabled' => 0, 'deleted' => 0]),
                 'choice_label' => 'title',
                 'choice_value' => 'slug',
+                /* @SuppressWarnings(PHPMD.UnusedFormalParameter) */
                 'choice_attr' => static function (Slot $slot, string $slug, string $title) {
                     return [
                         'data-limit' => $slot->getLimit(),

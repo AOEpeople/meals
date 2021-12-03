@@ -13,21 +13,18 @@ use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Entity\SlotRepository;
 use App\Mealz\MealBundle\Service\Doorman;
 use App\Mealz\MealBundle\Service\ParticipationService;
-use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
-use Doctrine\ORM\EntityManagerInterface;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use RuntimeException;
 
-class ParticipationServiceTest extends AbstractDatabaseTestCase
+class ParticipationServiceTest extends AbstractParticipationServiceTest
 {
     use ProphecyTrait;
 
-    private EntityManagerInterface $entityManager;
     private ParticipantRepository $participantRepo;
     private SlotRepository $slotRepo;
     private DayRepository $dayRepo;
@@ -42,10 +39,6 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
             new LoadUsers(static::$container->get('security.user_password_encoder.generic')),
         ]);
 
-        /* @var EntityManagerInterface $entityManager */
-        $this->entityManager = $this->getDoctrine()->getManager();
-
-        /* @var ParticipantRepository $participantRepo */
         $this->dayRepo = $this->entityManager->getRepository(Day::class);
         $this->participantRepo = $this->entityManager->getRepository(Participant::class);
         $this->slotRepo = self::$container->get(SlotRepository::class);
@@ -314,40 +307,6 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
         $out = $sut->join($user, $meal);
 
         $this->assertNull($out);
-    }
-
-    private function getMeal(bool $locked = false, bool $expired = false, ?Profile $offerer = null): Meal
-    {
-        if ($expired) {
-            $mealDate = new DateTime('-1 hour');
-            $mealLockDate = new DateTime('-12 hours');
-        } elseif ($locked) {
-            $mealDate = new DateTime('+4 hour');
-            $mealLockDate = new DateTime('-8 hours');
-        } else {
-            $mealDate = new DateTime('+16 hour');
-            $mealLockDate = new DateTime('+4 hours');
-        }
-
-        $day = new Day();
-        $day->setLockParticipationDateTime($mealLockDate);
-        $day->setDateTime($mealDate);
-
-        $meal = $this->createMeal(null, $mealDate);
-        $meal->setDay($day);
-
-        $entities = [$meal->getDish(), $day, $meal];
-
-        if ($offerer) {
-            $participant = new Participant($offerer, $meal);
-            $participant->setOfferedAt(time());
-            $entities[] = $participant;
-        }
-
-        $this->persistAndFlushAll($entities);
-        $this->entityManager->refresh($meal);
-
-        return $meal;
     }
 
     private function getProfile(string $username): Profile

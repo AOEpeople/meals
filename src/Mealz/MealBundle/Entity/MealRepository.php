@@ -2,12 +2,9 @@
 
 namespace App\Mealz\MealBundle\Entity;
 
+use DateTime;
 use Doctrine\ORM\EntityRepository;
 
-/**
- * the Meal Repository
- * Class MealRepository.
- */
 class MealRepository extends EntityRepository
 {
     /**
@@ -25,7 +22,7 @@ class MealRepository extends EntityRepository
         if (!preg_match('/^\d{4}-\d{2}-\d{2}$/ims', $date)) {
             throw new \InvalidArgumentException('$date has to be a string of the format "YYYY-MM-DD".');
         }
-        if ($date instanceof \DateTime) {
+        if ($date instanceof DateTime) {
             $date = $date->format('Y-m-d');
         }
 
@@ -67,6 +64,23 @@ class MealRepository extends EntityRepository
     }
 
     /**
+     * @return Meal[]
+     */
+    public function findAllOn(DateTime $date): array
+    {
+        $queryBuilder = $this->createQueryBuilder('m');
+        $queryBuilder
+            ->where('m.dateTime >= :startTime')
+            ->andWhere('m.dateTime <= :endTime')
+            ->setParameters([
+                'startTime' => (clone $date)->setTime(0, 0),
+                'endTime' => (clone $date)->setTime(23, 59),
+            ]);
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    /**
      * Created for Test with Dish variations.
      *
      * @return mixed
@@ -93,7 +107,7 @@ class MealRepository extends EntityRepository
     {
         $queryBuilder = $this->createQueryBuilder('m');
         $queryBuilder->where('m.dateTime >= :now');
-        $queryBuilder->setParameter(':now', new \DateTime('now'));
+        $queryBuilder->setParameter(':now', new DateTime('now'));
 
         return $queryBuilder->getQuery()->getResult();
     }
@@ -107,7 +121,7 @@ class MealRepository extends EntityRepository
     {
         $queryBuilder = $this->createQueryBuilder('m');
         $queryBuilder->where('m.dateTime <= :now');
-        $queryBuilder->setParameter(':now', new \DateTime('now'));
+        $queryBuilder->setParameter(':now', new DateTime('now'));
 
         return $queryBuilder->getQuery()->getResult();
     }
@@ -128,7 +142,7 @@ class MealRepository extends EntityRepository
             ->andWhere('m.dateTime > :now')
             ->orderBy('m.dateTime', 'DESC');
 
-        $queryBuilder->setParameter(':now', new \DateTime('now'));
+        $queryBuilder->setParameter(':now', new DateTime('now'));
 
         return $queryBuilder->getQuery()->getResult();
     }

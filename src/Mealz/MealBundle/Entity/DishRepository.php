@@ -11,7 +11,7 @@ use Exception;
  */
 class DishRepository extends LocalizedRepository
 {
-    protected $defaultOptions = [
+    protected array $defaultOptions = [
         'load_category' => true,
         'orderBy_category' => true,
         'load_disabled' => false,
@@ -21,10 +21,8 @@ class DishRepository extends LocalizedRepository
     /**
      * Return a query builder that fetches all dish that have NO variations
      * and all variations without their dishes.
-     *
-     * @return QueryBuilder
      */
-    public function getDishesAndVariations()
+    public function getDishesAndVariations(): QueryBuilder
     {
         $query = $this->createQueryBuilder('d');
         $qb2 = $this->createQueryBuilder('s');
@@ -41,12 +39,7 @@ class DishRepository extends LocalizedRepository
         return $query;
     }
 
-    /**
-     * @param array $options
-     *
-     * @return QueryBuilder
-     */
-    public function getSortedDishesQueryBuilder($options = [])
+    public function getSortedDishesQueryBuilder(array $options = []): QueryBuilder
     {
         $currentLocale = $this->localizationListener->getLocale();
 

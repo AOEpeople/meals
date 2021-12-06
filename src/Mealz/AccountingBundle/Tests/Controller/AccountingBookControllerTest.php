@@ -19,6 +19,9 @@ use Symfony\Component\DomCrawler\Crawler;
  */
 class AccountingBookControllerTest extends AbstractControllerTestCase
 {
+    /**
+     * {@inheritDoc}
+     */
     protected function setUp(): void
     {
         parent::setUp();

@@ -143,6 +143,9 @@ class LoadMeals extends Fixture implements OrderedFixtureInterface
         return $dishVariations;
     }
 
+    /**
+     * Get random Dishes without Variations.
+     */
     protected function getRandomDish(?Dish $previousDish): Dish
     {
         do {

@@ -1,0 +1,86 @@
+export default function MealIndexView() {
+    this.updateSlots();
+    setInterval(this.updateSlots, 5000);
+
+    this.initEvents();
+};
+
+MealIndexView.prototype.initEvents = function () {
+    // set handler for slot change event
+    $('.meals-list .meal .slot-selector').change(this.handleChangeSlot);
+    $('.meals-list .meal .participation-checkbox').change(this.handleParticipationUpdate);
+}
+
+MealIndexView.prototype.handleChangeSlot = function (event) {
+    const $slotSelector = $(event.target);
+    const $mealContainer = $slotSelector.closest('.meal');
+    const mealIsBooked = $mealContainer.find('input[type="checkbox"]').is(':checked');
+
+    if (mealIsBooked) {
+        const $mealDate = $mealContainer.data('date');
+        const slot = $slotSelector.val();
+        $.ajax({
+            method: 'POST',
+            url: '/menu/meal/'+$mealDate+'/update-slot',
+            data: { 'slot': slot },
+            dataType: 'json',
+            error: function () {
+                alert('An unknown error occurred');
+            }
+        });
+    }
+}
+
+MealIndexView.prototype.handleParticipationUpdate = function (event) {
+    const $updatedDishCheckbox = $(event.target);
+
+    // do nothing if user is joining a meal
+    if ($updatedDishCheckbox.is(':checked')) {
+        return;
+    }
+
+    const $mealContainer = $updatedDishCheckbox.closest('.meal');
+    const bookedMealCount = $mealContainer.find('input.participation-checkbox:checked').length
+
+    // reset slot selector if user cancelled all booked meals
+    if (1 > bookedMealCount) {
+        let $slotSelector = $mealContainer.find('.slot-selector');
+        $slotSelector.val('');
+    }
+}
+
+MealIndexView.prototype.updateSlots = function () {
+    $.ajax({
+        url: '/participation/slots-status',
+        dataType: 'json',
+        success: function (data) {
+            $.each(data, function (k, v) {
+                const slotSelectorId = 'day-'+v.date.replaceAll('-', '')+'-slots';
+
+                let $slotSelector = $('#'+slotSelectorId);
+                if ($slotSelector.length < 1) {
+                    return;
+                }
+
+                let $slotOption = $slotSelector.find('option[value="'+v.slot+'"]');
+
+                const slotLimit = $slotOption.data('limit');
+                if (slotLimit > 0) {
+                    const slotTitle = $slotOption.data('title');
+                    const slotText = slotTitle + ' (' + v.booked+'/'+slotLimit + ')';
+                    $slotOption.text(slotText);
+                    // disable slot-option if no. of booked slots reach the slot limit
+                    $slotOption.prop('disabled', slotLimit <= v.booked);
+                }
+
+                if (v.booked_by_user) {
+                    // do not overwrite user selected value
+                    if ('' === $slotSelector.val()) {
+                        $slotOption.prop('selected', true);
+                    }
+                    $slotSelector.prop('disabled', false);
+                }
+            });
+        }
+    });
+}

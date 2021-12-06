@@ -16,9 +16,82 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  test-cgl:
+    name: Check Coding Guidelines
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    env:
+      PHP_CS_FIXER_FUTURE_MODE: 1
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup PHP environment
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          tools: composer:v2
+      - name: Check code formatting with PHP-CS-Fixer
+        run: |
+          rm composer.json composer.lock
+          composer require friendsofphp/php-cs-fixer
+          vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist --diff --dry-run -v
+
+  lint:
+    name: Lint code
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+      - name: Install npm packages
+        working-directory: ./src/Resources
+        run: yarn install
+      - name: Run FE linters
+        working-directory: ./src/Resources
+        run: yarn lint
+
+  phpmd:
+    name: PHPMD
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup PHP environment
+        uses: shivammathur/setup-php@v2
+        with:
+          coverage: none
+          tools: phpmd
+      - name: Run PHPMD
+        run: phpmd src github ./phpmd.xml --baseline-file ./phpmd.baseline.xml --exclude */Tests/*
+
+  psalm:
+    name: Psalm Static analysis
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup PHP environment
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          tools: composer
+      - name: Run composer install
+        run: composer install -n --prefer-dist
+      - name: Run Psalm
+        run: ./vendor/bin/psalm
+
   buildImages:
     name: Build Docker images
     runs-on: ubuntu-latest
+    needs: [test-cgl, lint, psalm]
     steps:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -144,75 +217,6 @@ jobs:
         if: always()
         with:
           report_paths: 'build/artifacts/qa/*.xml'
-
-  test-cgl:
-    name: Check Coding Guidelines
-    runs-on: ubuntu-latest
-    continue-on-error: false
-    env:
-      PHP_CS_FIXER_FUTURE_MODE: 1
-    steps:
-      - uses: actions/checkout@v2
-      - name: Setup PHP environment
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '7.4'
-          tools: composer:v2
-      - name: Check code formatting with PHP-CS-Fixer
-        run: |
-          rm composer.json composer.lock
-          composer require friendsofphp/php-cs-fixer
-          vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist --diff --dry-run -v
-
-  lint:
-    name: Lint code
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-      - name: Cache node_modules
-        uses: actions/cache@v2
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
-      - name: Install npm packages
-        working-directory: ./src/Resources
-        run: yarn install
-      - name: Run FE linters
-        working-directory: ./src/Resources
-        run: yarn lint
-
-  phpmd:
-    name: PHPMD
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup PHP environment
-        uses: shivammathur/setup-php@v2
-        with:
-          coverage: none
-          tools: phpmd
-      - name: Run PHPMD
-        run: phpmd src github ./phpmd.xml --baseline-file ./phpmd.baseline.xml --exclude */Tests/*
-
-  psalm:
-    name: Psalm Static analysis
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup PHP environment
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '7.4'
-          tools: composer
-      - name: Run composer install
-        run: composer install -n --prefer-dist
-      - name: Run Psalm
-        run: ./vendor/bin/psalm
 
   publish:
     name: Publish

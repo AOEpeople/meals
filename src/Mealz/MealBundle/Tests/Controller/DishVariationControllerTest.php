@@ -306,14 +306,13 @@ class DishVariationControllerTest extends AbstractControllerTestCase
      *
      * @param $link Link
      *
-     * @return bool|string $dishId
+     * @return bool|int
      */
     private function grepDishIdFromUri(Link $link)
     {
         preg_match("|(?<=/)(\d+)(?=/)|", $link->getUri(), $match);
-        $dishId = (count($match)) ? $match[0] : false;
 
-        return $dishId;
+        return (count($match)) ? (int) $match[0] : false;
     }
 
     /**
@@ -369,7 +368,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
 
         $result = $dishRepository->findBy([], ['id' => 'ASC']);
 
-        if (false === is_array($result)) {
+        if (false === is_array($result) || 0 === count($result)) {
             $this->fail('Failed to fetch test dish.');
         }
 

@@ -127,18 +127,23 @@ class Profile implements UserInterface
         }
     }
 
+    private function roles(): Collection
+    {
+        if (null === $this->roles) {
+            $this->roles = new ArrayCollection();
+        }
+
+        return $this->roles;
+    }
+
     /**
      * @return string[]
      */
     public function getRoles(): array
     {
-        if (null === $this->roles) {
-            return [];
-        }
-
         $roles = [];
 
-        foreach ($this->roles as $role) {
+        foreach ($this->roles() as $role) {
             $roles[] = $role->getSid();
         }
 
@@ -155,7 +160,7 @@ class Profile implements UserInterface
 
     public function isGuest(): bool
     {
-        return $this->roles->exists(
+        return $this->roles()->exists(
             function ($key, $role) {
                 /* @var Role $role */
                 return 'ROLE_GUEST' === $role->getSid();

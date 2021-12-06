@@ -51,10 +51,8 @@ class GuestInvitation
 
     /**
      * @param string $id
-     *
-     * @return GuestInvitation
      */
-    public function setId($id)
+    public function setId($id): GuestInvitation
     {
         $this->id = $id;
 
@@ -69,10 +67,7 @@ class GuestInvitation
         return $this->id;
     }
 
-    /**
-     * @return GuestInvitation
-     */
-    public function setCreatedOn(DateTime $createdOn)
+    public function setCreatedOn(DateTime $createdOn): GuestInvitation
     {
         $this->createdOn = $createdOn;
 
@@ -105,10 +100,7 @@ class GuestInvitation
         return $this->host;
     }
 
-    /**
-     * @return GuestInvitation
-     */
-    public function setDay(Day $day)
+    public function setDay(Day $day): GuestInvitation
     {
         $this->day = $day;
 
@@ -116,6 +108,8 @@ class GuestInvitation
     }
 
     /**
+     * Get meal day.
+     *
      * @return Day
      */
     public function getDay()

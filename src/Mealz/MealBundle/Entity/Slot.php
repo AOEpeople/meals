@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -58,6 +60,11 @@ class Slot
      * @ORM\Column(length=128, unique=true)
      */
     private ?string $slug = null;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Mealz\MealBundle\Entity\Participant", mappedBy="slot")
+     */
+    private ?Collection $participants = null;
 
     public function getId(): int
     {
@@ -127,5 +134,14 @@ class Slot
     public function setSlug(string $slug): string
     {
         return $this->slug = $slug;
+    }
+
+    public function getParticipants(): ArrayCollection
+    {
+        if (null === $this->participants) {
+            $this->participants = new ArrayCollection();
+        }
+
+        return new ArrayCollection($this->participants->toArray());
     }
 }

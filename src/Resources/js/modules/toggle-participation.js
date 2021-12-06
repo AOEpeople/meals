@@ -42,9 +42,13 @@ function editCountAndCheckbox(data, $checkbox, countClass, checkboxClass) {
 }
 
 function toggle($checkbox, url, that) {
+    const slot = $checkbox.closest('.meal').find('.slot-selector').val();
     $.ajax({
-        method: 'GET',
+        method: 'POST',
         url: url,
+        data: {
+            'slot': slot
+        },
         dataType: 'json',
         success: function (data) {
             editCountAndCheckbox(data, $checkbox);

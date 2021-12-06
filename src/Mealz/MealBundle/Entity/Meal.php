@@ -20,13 +20,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Meal
 {
     /**
-     * @var int
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    private ?int $id = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="Dish", cascade={"refresh"}, fetch="EAGER")
@@ -47,10 +45,8 @@ class Meal
     /**
      * @Assert\NotBlank()
      * @ORM\Column(type="integer", nullable=FALSE, name="participation_limit")
-     *
-     * @var int
      */
-    protected $participationLimit;
+    private int $participationLimit = 0;
 
     /**
      * @ORM\ManyToOne(targetEntity="Day", inversedBy="meals")
@@ -78,13 +74,9 @@ class Meal
     public function __construct()
     {
         $this->participants = new ArrayCollection();
-        $this->participationLimit = 0;
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -162,28 +154,25 @@ class Meal
         $this->day = $day;
     }
 
-    /**
-     * @param DateTime $dateTime
-     */
-    public function setDateTime($dateTime): void
+    public function setDateTime(DateTime $dateTime): void
     {
         $this->dateTime = $dateTime;
     }
 
-    /**
-     * @return DateTime
-     */
-    public function getDateTime()
+    public function getDateTime(): DateTime
     {
         return $this->dateTime;
     }
 
+    public function getLockDateTime(): DateTime
+    {
+        return $this->day->getLockParticipationDateTime();
+    }
+
     /**
      * get the participant object of the given profile if it is registered.
-     *
-     * @return Participant|null
      */
-    public function getParticipant(Profile $profile)
+    public function getParticipant(Profile $profile): ?Participant
     {
         foreach ($this->participants as $participant) {
             /** @var Participant $participant */
@@ -198,9 +187,9 @@ class Meal
     /**
      * get all guests that the given profile has invited.
      *
-     * @return Participant|null
+     * @return Participant[]
      */
-    public function getGuestParticipants(Profile $profile)
+    public function getGuestParticipants(Profile $profile): array
     {
         $participants = [];
         foreach ($this->participants as $participant) {
@@ -214,24 +203,20 @@ class Meal
     }
 
     /**
-     * Return the number of total confirmed participations.
-     *
      * @TODO don't load every participant object (raw sql query in repo?)
-     *
-     * @return int
      */
-    public function getTotalConfirmedParticipations()
+    public function getTotalConfirmedParticipations(): int
     {
-        $totalParticipations = 0;
+        $totalParticipation = 0;
 
         foreach ($this->getParticipants() as $participation) {
             /* @var Participant $participation */
             if ($participation->isConfirmed()) {
-                ++$totalParticipations;
+                ++$totalParticipation;
             }
         }
 
-        return $totalParticipations;
+        return $totalParticipation;
     }
 
     /**

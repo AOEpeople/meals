@@ -117,11 +117,6 @@
       <code>isClicked</code>
     </UndefinedInterfaceMethod>
   </file>
-  <file src="src/Mealz/MealBundle/Controller/ParticipantController.php">
-    <TypeDoesNotContainNull occurrences="1">
-      <code>null === $participant-&gt;getMeal()</code>
-    </TypeDoesNotContainNull>
-  </file>
   <file src="src/Mealz/MealBundle/Entity/Dish.php">
     <InvalidNullableReturnType occurrences="1">
       <code>string</code>
@@ -129,14 +124,6 @@
     <NullableReturnStatement occurrences="1">
       <code>$this-&gt;title_de</code>
     </NullableReturnStatement>
-  </file>
-  <file src="src/Mealz/MealBundle/Entity/Meal.php">
-    <InvalidReturnStatement occurrences="1">
-      <code>$participants</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>Participant|null</code>
-    </InvalidReturnType>
   </file>
   <file src="src/Mealz/MealBundle/Entity/ParticipantRepository.php">
     <TooManyArguments occurrences="2">
@@ -155,6 +142,11 @@
       <code>$value</code>
     </MoreSpecificImplementedParamType>
   </file>
+  <file src="src/Mealz/MealBundle/Form/MealAdmin/MealForm.php">
+    <TypeDoesNotContainNull occurrences="1">
+      <code>null === $meal-&gt;getDateTime()</code>
+    </TypeDoesNotContainNull>
+  </file>
   <file src="src/Mealz/MealBundle/Form/Type/DishSelectorCreatorType.php">
     <UndefinedClass occurrences="1">
       <code>DishStringToValuesTransformer</code>
@@ -167,26 +159,9 @@
     </UndefinedInterfaceMethod>
   </file>
   <file src="src/Mealz/MealBundle/Service/Link.php">
-    <InvalidNullableReturnType occurrences="1">
-      <code>string</code>
-    </InvalidNullableReturnType>
     <NullArgument occurrences="1">
       <code>$action</code>
     </NullArgument>
-    <RedundantCondition occurrences="3">
-      <code>'edit' === $action</code>
-      <code>'show' === $action</code>
-    </RedundantCondition>
-    <TypeDoesNotContainType occurrences="11">
-      <code>'accept_offer' === $action</code>
-      <code>'confirm' === $action</code>
-      <code>'delete' === $action</code>
-      <code>'join' === $action</code>
-      <code>'join_someone' === $action</code>
-      <code>'newParticipant' === $action</code>
-      <code>'swap' === $action</code>
-      <code>'unswap' === $action</code>
-    </TypeDoesNotContainType>
   </file>
   <file src="src/Mealz/MealBundle/Service/Workday.php">
     <InvalidScalarArgument occurrences="1">
@@ -230,6 +205,11 @@
     <NullableReturnStatement occurrences="1">
       <code>$dishVariation</code>
     </NullableReturnStatement>
+    <RedundantCondition occurrences="3">
+      <code>count($result)</code>
+      <code>is_array($result)</code>
+      <code>is_array($result) &amp;&amp; count($result)</code>
+    </RedundantCondition>
   </file>
   <file src="src/Mealz/MealBundle/Tests/Controller/MealControllerTest.php">
     <UndefinedInterfaceMethod occurrences="1">

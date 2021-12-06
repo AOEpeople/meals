@@ -8,7 +8,6 @@ use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\EventListener\ParticipantNotUniqueException;
 use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use Doctrine\ORM\EntityManager;
-use RuntimeException;
 
 class ParticipantPersistenceListenerTest extends AbstractDatabaseTestCase
 {
@@ -60,25 +59,5 @@ class ParticipantPersistenceListenerTest extends AbstractDatabaseTestCase
             $entityManager->persist($participant2);
             $entityManager->flush();
         });
-    }
-
-    /**
-     * the transaction is needed because a SELECT query is used in order to find
-     * an already existing participant.
-     */
-    public function testThrowsExceptionWhenNotUsedInATransaction(): void
-    {
-        // load test data
-        $meal = $this->createMeal();
-        $profile = $this->createProfile();
-        $this->persistAndFlushAll([$meal, $meal->getDish(), $profile]);
-
-        $this->expectException(RuntimeException::class);
-
-        $participant = new Participant($profile, $meal);
-
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($participant);
-        $entityManager->flush();
     }
 }

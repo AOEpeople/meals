@@ -4,8 +4,8 @@
     {% set available = true %}
 {% endif %}
 
-<div class="meal {{ available ? 'is-available' : '' }}">
-
+<div class="meal {{ available ? 'is-available' : '' }}" data-date="{{ day.dateTime.format('Y-m-d') }}">
+    {% include 'MealzMealBundle:Meal/partials:mealSlots.html.twig' %}
     {# display week day and date #}
     <div class="week-day">
         <a name="{{ day.dateTime | date('Y-m-d') }}"></a>
@@ -26,7 +26,6 @@
     {% if not day.enabled %}
         <div class="meal-row no-meal">{{ 'content.participation.day.disabled'|trans({},'general') }}</div>
     {% else %}
-
         {% set groupedMeals = groupMeals(day.meals.toArray) %}
 
         {# display meals for given day #}

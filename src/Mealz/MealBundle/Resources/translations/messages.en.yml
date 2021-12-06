@@ -22,7 +22,7 @@ error:
     not_unique: This participation already exists.
   meal:
     has_participants: There are already participants for "%dish%" on %day%.
-    join_not_allowed: It's not possible to join this meal anymore.
+    join_not_allowed: Sorry, it's not possible to book "%dish%" anymore.
     variation_required: Please select a variation!
 participation:
   successful: Meal participation successful

@@ -23,9 +23,6 @@ use App\Mealz\UserBundle\Entity\Role;
 use DateTime;
 use Symfony\Component\DomCrawler\Crawler;
 
-/**
- * @author Henry Vogt <henry.vogt@aoe.com>
- */
 class ParticipantControllerTest extends AbstractControllerTestCase
 {
     protected static $participantFirstName;

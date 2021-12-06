@@ -3,7 +3,7 @@
 namespace App\Mealz\MealBundle\Entity;
 
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -41,9 +41,9 @@ class Day extends AbstractMessage
     /**
      * @ORM\OneToMany(targetEntity="Meal", mappedBy="day", cascade={"all"})
      *
-     * @var ArrayCollection
+     * @var Collection<int, Meal>
      */
-    private $meals;
+    private Collection $meals;
 
     /**
      * @Assert\Type(type="DateTime")
@@ -59,7 +59,7 @@ class Day extends AbstractMessage
      */
     public function __construct()
     {
-        $this->meals = new ArrayCollection();
+        $this->meals = new MealCollection();
     }
 
     /**
@@ -112,16 +112,17 @@ class Day extends AbstractMessage
         $this->week = $week;
     }
 
-    /**
-     * @return ArrayCollection|Meal[]
-     */
-    public function getMeals()
+    public function getMeals(): MealCollection
     {
-        return $this->meals;
+        if (!($this->meals instanceof Collection)) {
+            $this->meals = new MealCollection();
+        }
+
+        return new MealCollection($this->meals->toArray());
     }
 
     /**
-     * @param ArrayCollection $meals
+     * @param MealCollection $meals
      */
     public function setMeals($meals): void
     {

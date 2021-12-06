@@ -26,7 +26,7 @@ module.exports = function(env, argv) {
                     terserOptions: {
                         ecma: 5,
                         compress: {
-                            drop_console: true,
+                            drop_console: false,
                         },
                         mangle: true,
                         module: false,

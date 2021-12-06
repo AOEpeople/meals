@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Tests\Service;
 
 use App\Mealz\MealBundle\Entity\Day;
+use App\Mealz\MealBundle\Entity\DayRepository;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\ParticipantRepository;
@@ -12,23 +13,20 @@ use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Entity\SlotRepository;
 use App\Mealz\MealBundle\Service\Doorman;
 use App\Mealz\MealBundle\Service\ParticipationService;
-use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use App\Mealz\UserBundle\Entity\Profile;
-use DateTime;
-use Doctrine\ORM\EntityManagerInterface;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use RuntimeException;
 
-class ParticipationServiceTest extends AbstractDatabaseTestCase
+class ParticipationServiceTest extends AbstractParticipationServiceTest
 {
     use ProphecyTrait;
 
-    private EntityManagerInterface $entityManager;
     private ParticipantRepository $participantRepo;
     private SlotRepository $slotRepo;
+    private DayRepository $dayRepo;
 
     protected function setUp(): void
     {
@@ -40,10 +38,7 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
             new LoadUsers(static::$container->get('security.user_password_encoder.generic')),
         ]);
 
-        /* @var EntityManagerInterface $entityManager */
-        $this->entityManager = $this->getDoctrine()->getManager();
-
-        /* @var ParticipantRepository $participantRepo */
+        $this->dayRepo = $this->entityManager->getRepository(Day::class);
         $this->participantRepo = $this->entityManager->getRepository(Participant::class);
         $this->slotRepo = self::$container->get(SlotRepository::class);
     }
@@ -59,7 +54,7 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
         $profile = $this->getProfile('alice.meals');
         $meal = $this->getMeal();
 
-        $sut = new ParticipationService($this->entityManager, $doorman, $this->participantRepo, $this->slotRepo);
+        $sut = new ParticipationService($this->entityManager, $doorman, $this->participantRepo, $this->slotRepo, $this->dayRepo);
         $out = $sut->join($profile, $meal);
 
         $this->assertArrayHasKey('participant', $out);
@@ -84,7 +79,7 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
         $profile = $this->getProfile('alice.meals');
         $meal = $this->getMeal();
 
-        $sut = new ParticipationService($this->entityManager, $doorman, $this->participantRepo, $this->slotRepo);
+        $sut = new ParticipationService($this->entityManager, $doorman, $this->participantRepo, $this->slotRepo, $this->dayRepo);
         $out = $sut->join($profile, $meal);
 
         $this->assertArrayHasKey('participant', $out);
@@ -96,6 +91,77 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
 
         $this->assertArrayHasKey('offerer', $out);
         $this->assertNull($out['offerer']);
+    }
+
+    /**
+     * @test
+     *
+     * @testdox Joining a meal without specifying a slot automatically assigns a slot.
+     */
+    public function joinSuccessAutoSelectSlot(): void
+    {
+        // mock to lock participation (no more joining) and fake logged-in kitchen staff
+        $doorman = $this->getDoormanMock(false, true);
+
+        $this->createSlots([['title' => '12:00-12:30 Canteen']]);
+
+        $profile = $this->getProfile('alice.meals');
+        $meal = $this->getMeal();
+
+        $sut = new ParticipationService($this->entityManager, $doorman, $this->participantRepo, $this->slotRepo, $this->dayRepo);
+        $out = $sut->join($profile, $meal);
+
+        $this->assertArrayHasKey('participant', $out);
+        $participant = $out['participant'];
+        $this->assertInstanceOf(Participant::class, $participant);
+        $this->assertSame($profile->getUsername(), $participant->getProfile()->getUsername());
+        $this->assertSame($meal->getId(), $participant->getMeal()->getId());
+
+        $slot = $participant->getSlot();
+        $this->assertInstanceOf(Slot::class, $slot);
+        $this->assertSame('12:00-12:30 Canteen', $slot->getTitle());
+
+        $this->assertArrayHasKey('offerer', $out);
+        $this->assertNull($out['offerer']);
+    }
+
+    /**
+     * @test
+     *
+     * @testdox Joining a meal without specifying a slot automatically assigns the next available free slot.
+     */
+    public function joinSuccessAutoSelectFreeSlot(): void
+    {
+        // mock to lock participation (no more joining) and fake logged-in kitchen staff
+        $doorman = $this->getDoormanMock(false, true);
+
+        $this->createSlots([
+            'priority one slot' => ['title' => '12:00-12:30 Canteen', 'limit' => 1, 'order' => 1],
+            'priority two slot; disabled' => ['title' => '12:30-13:00', 'order' => 2, 'disabled' => true],
+            'priority three slot' => ['title' => '12:00-13:00 Take away', 'order' => 3],
+        ]);
+
+        $user1 = $this->getProfile('alice.meals');
+        $user2 = $this->getProfile('bob.meals');
+        $meal = $this->getMeal();
+
+        $sut = new ParticipationService($this->entityManager, $doorman, $this->participantRepo, $this->slotRepo, $this->dayRepo);
+
+        // occupy first slot
+        $sut->join($user1, $meal);
+        // join again to get the next slot
+        $out = $sut->join($user2, $meal);
+
+        $this->assertNotNull($out);
+        $this->assertArrayHasKey('participant', $out);
+        $participant = $out['participant'];
+        $this->assertInstanceOf(Participant::class, $participant);
+        $this->assertSame($user2->getUsername(), $participant->getProfile()->getUsername());
+        $this->assertSame($meal->getId(), $participant->getMeal()->getId());
+
+        $slot = $participant->getSlot();
+        $this->assertInstanceOf(Slot::class, $slot);
+        $this->assertSame('12:00-13:00 Take away', $slot->getTitle());
     }
 
     /**
@@ -111,7 +177,7 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
         $profile = $this->getProfile('alice.meals');
         $meal = $this->getMeal();
 
-        $sut = new ParticipationService($this->entityManager, $doorman, $this->participantRepo, $this->slotRepo);
+        $sut = new ParticipationService($this->entityManager, $doorman, $this->participantRepo, $this->slotRepo, $this->dayRepo);
         $out = $sut->join($profile, $meal);
 
         $this->assertArrayHasKey('participant', $out);
@@ -146,7 +212,7 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
         $user2 = $this->getProfile('bob.meals');
         $meal = $this->getMeal();
 
-        $sut = new ParticipationService($this->entityManager, $doorman, $this->participantRepo, $this->slotRepo);
+        $sut = new ParticipationService($this->entityManager, $doorman, $this->participantRepo, $this->slotRepo, $this->dayRepo);
 
         // occupy first slot
         $sut->join($user1, $meal);
@@ -176,7 +242,7 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
         $profile = $this->getProfile('alice.meals');
         $meal = $this->getMeal();
 
-        $sut = new ParticipationService($this->entityManager, $doorman, $this->participantRepo, $this->slotRepo);
+        $sut = new ParticipationService($this->entityManager, $doorman, $this->participantRepo, $this->slotRepo, $this->dayRepo);
         $out = $sut->join($profile, $meal);
 
         $this->assertNull($out);
@@ -194,7 +260,7 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
         $offerer = $this->getProfile('bob.meals');
         $meal = $this->getMeal(true, false, $offerer);
 
-        $sut = new ParticipationService($this->entityManager, $doormanMock, $this->participantRepo, $this->slotRepo);
+        $sut = new ParticipationService($this->entityManager, $doormanMock, $this->participantRepo, $this->slotRepo, $this->dayRepo);
         $out = $sut->join($user, $meal);
 
         $this->assertIsArray($out);
@@ -219,7 +285,7 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
         $offerer = $this->getProfile('bob.meals');
         $meal = $this->getMeal(true, true, $offerer);
 
-        $sut = new ParticipationService($this->entityManager, $doormanMock, $this->participantRepo, $this->slotRepo);
+        $sut = new ParticipationService($this->entityManager, $doormanMock, $this->participantRepo, $this->slotRepo, $this->dayRepo);
         $out = $sut->join($user, $meal);
 
         $this->assertNull($out);
@@ -236,44 +302,10 @@ class ParticipationServiceTest extends AbstractDatabaseTestCase
         $user = $this->getProfile('alice.meals');
         $meal = $this->getMeal(true);
 
-        $sut = new ParticipationService($this->entityManager, $doormanMock, $this->participantRepo, $this->slotRepo);
+        $sut = new ParticipationService($this->entityManager, $doormanMock, $this->participantRepo, $this->slotRepo, $this->dayRepo);
         $out = $sut->join($user, $meal);
 
         $this->assertNull($out);
-    }
-
-    private function getMeal(bool $locked = false, bool $expired = false, ?Profile $offerer = null): Meal
-    {
-        if ($expired) {
-            $mealDate = new DateTime('-1 hour');
-            $mealLockDate = new DateTime('-12 hours');
-        } elseif ($locked) {
-            $mealDate = new DateTime('+4 hour');
-            $mealLockDate = new DateTime('-8 hours');
-        } else {
-            $mealDate = new DateTime('+16 hour');
-            $mealLockDate = new DateTime('+4 hours');
-        }
-
-        $day = new Day();
-        $day->setLockParticipationDateTime($mealLockDate);
-        $day->setDateTime($mealDate);
-
-        $meal = $this->createMeal(null, $mealDate);
-        $meal->setDay($day);
-
-        $entities = [$meal->getDish(), $day, $meal];
-
-        if ($offerer) {
-            $participant = new Participant($offerer, $meal);
-            $participant->setOfferedAt(time());
-            $entities[] = $participant;
-        }
-
-        $this->persistAndFlushAll($entities);
-        $this->entityManager->refresh($meal);
-
-        return $meal;
     }
 
     private function getProfile(string $username): Profile

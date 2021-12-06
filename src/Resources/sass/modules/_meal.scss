@@ -172,6 +172,16 @@
     }
   }
 
+  .select-wrapper {
+    padding: 10px 15px;
+    border-bottom: 2px solid $meal-border-color;
+
+    select {
+      width: 50%;
+      border: 1px solid $meal-border-color;
+    }
+  }
+
   .variation-row {
     margin-top: -3px;
   }
@@ -398,6 +408,19 @@
     color: $color-white;
     background-color: $color-green;
     font-weight: bold;
+  }
+
+  > .form-row {
+    margin: 0;
+  }
+
+  .select-wrapper {
+    width: 50%;
+    padding: 10px 15px;
+
+    .slot-selector {
+      padding: 10px;
+    }
   }
 
   .participants {

@@ -9,7 +9,7 @@ use Doctrine\ORM\EntityRepository;
 
 abstract class LocalizedRepository extends EntityRepository
 {
-    protected LocalisationListener $localizationListener;
+    protected ?LocalisationListener $localizationListener = null;
 
     public function setLocalizationListener(LocalisationListener $localisationListener): void
     {

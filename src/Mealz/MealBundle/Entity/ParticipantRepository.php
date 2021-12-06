@@ -13,57 +13,42 @@ class ParticipantRepository extends EntityRepository
 {
     /**
      * default options for database queries.
-     *
-     * @var array
      */
-    protected $defaultOptions = [
+    protected array $defaultOptions = [
         'load_meal' => false,
         'load_profile' => true,
         'load_roles' => false,
     ];
 
     /**
-     * @param array $options
-     *
-     * @return mixed
+     * @return Participant[]
      */
     public function getParticipantsOnDays(
-        DateTime $minDate,
-        DateTime $maxDate,
-        Profile $profile = null,
-        $options = []
-    ) {
-        $options = array_merge(
-            $options,
-            [
-                'load_meal' => true,
-                'load_profile' => true,
-                'load_roles' => true,
-            ]
-        );
-        if ($profile instanceof Profile) {
-            $options['load_profile'] = true;
-        }
-        $queryBuilder = $this->getQueryBuilderWithOptions($options);
+        DateTime $startDate,
+        DateTime $endDate,
+        Profile $profile = null
+    ): array {
+        $queryBuilder = $this->createQueryBuilder('p');
+        $queryBuilder
+            ->select(['p', 'm', 'up'])
+            ->join('p.meal', 'm')
+            ->join('p.profile', 'up')
+            ->where('m.dateTime >= :startDate')
+            ->andWhere('m.dateTime <= :endDate')
+            ->orderBy('up.name', 'ASC')
+            ->addOrderBy('m.dateTime', 'ASC')
+            ->setParameters([
+                'startDate' => (clone $startDate)->setTime(0, 0),
+                'endDate' => (clone $endDate)->setTime(23, 59, 59),
+            ]);
 
-        $minDate = clone $minDate;
-        $minDate->setTime(0, 0, 0);
-
-        $queryBuilder->andWhere('m.dateTime >= :minDate');
-        $queryBuilder->andWhere('m.dateTime <= :maxDate');
-        $queryBuilder->setParameter('minDate', $minDate);
-        $queryBuilder->setParameter('maxDate', $maxDate);
-
-        if ($profile instanceof Profile) {
-            $queryBuilder->andWhere('u.username = :username');
-            $queryBuilder->setParameter('username', $profile->getUsername());
+        if (null !== $profile) {
+            $queryBuilder
+                ->andWhere('p.profile = :profile_id')
+                ->setParameter('profile_id', $profile->getUsername());
         }
 
-        $queryBuilder->orderBy('u.name', 'ASC');
-
-        $participants = $queryBuilder->getQuery()->execute();
-
-        return $this->sortParticipantsByName($participants);
+        return $queryBuilder->getQuery()->execute();
     }
 
     /**
@@ -404,27 +389,106 @@ class ParticipantRepository extends EntityRepository
         return $result[0]['count'] ?? 0;
     }
 
-    /**
-     * Gets number of participants (booked meals) per slot on a given $date.
-     */
-    public function getCountBySlots(DateTime $date): array
+    public function getBookedMealCount(Meal $meal): int
     {
         $queryBuilder = $this->createQueryBuilder('p');
         $queryBuilder
-            ->select(['IDENTITY(p.slot) AS slot_id', 'count(p.id) AS count'])
-            ->join('p.meal', 'm', Join::WITH, 'm.dateTime >= :startTime AND m.dateTime <= :endTime')
-            ->groupBy('p.slot')
+            ->select('COUNT(*) AS count')
+            ->where($queryBuilder->expr()->eq('p.meal', $meal));
+
+        $result = $queryBuilder->getQuery()->getArrayResult();
+
+        return $result[0]['count'] ?? 0;
+    }
+
+    /**
+     * Gets number of participants (booked meals) per slot on a given $date.
+     *
+     * @psalm-return list<array{date: DateTime, slot: int, count: int}>
+     */
+    public function getCountBySlots(DateTime $startDate, DateTime $endDate): array
+    {
+        $queryBuilder = $this->createQueryBuilder('p');
+        $queryBuilder
+            ->select(['m.dateTime AS date', 'IDENTITY(p.slot) as slot_id'])
+            ->join('p.meal', 'm', Join::WITH, 'm.dateTime >= :startDate AND m.dateTime <= :endDate')
+            ->where($queryBuilder->expr()->isNotNull('p.slot'))
+            ->groupBy('m.dateTime')
+            ->addGroupBy('p.profile')
+            ->addGroupBy('p.slot')
             ->setParameters([
-                'startTime' => (clone $date)->setTime(0, 0),
-                'endTime' => (clone $date)->setTime(23, 59),
+                'startDate' => (clone $startDate)->setTime(0, 0),
+                'endDate' => (clone $endDate)->setTime(23, 59, 59),
             ]);
 
         $result = [];
+
+        // count number of participants per day per slot
+        /** @var array{date: DateTime, slot_id: int} $item */
         foreach ($queryBuilder->getQuery()->getArrayResult() as $item) {
-            $result[$item['slot_id']] = $item['count'];
+            $k = $item['date']->format('Ymd') . $item['slot_id'];
+
+            if (isset($result[$k])) {
+                ++$result[$k]['count'];
+            } else {
+                $result[$k] = [
+                    'date' => $item['date'],
+                    'slot' => (int) $item['slot_id'],
+                    'count' => 1,
+                ];
+            }
         }
 
-        return $result;
+        return array_values($result);
+    }
+
+    /**
+     * Gets number of participants booked for a slot on a given day.
+     */
+    public function getCountBySlot(Slot $slot, DateTime $date): int
+    {
+        $queryBuilder = $this->createQueryBuilder('p');
+        $queryBuilder
+            ->select(['p.id'])
+            ->join('p.meal', 'm', Join::WITH, 'm.dateTime >= :startDate AND m.dateTime <= :endDate')
+            ->where($queryBuilder->expr()->eq('p.slot', $slot->getId()))
+            ->groupBy('m.dateTime')
+            ->addGroupBy('p.profile')
+            ->addGroupBy('p.slot')
+            ->setParameters([
+                'startDate' => (clone $date)->setTime(0, 0),
+                'endDate' => (clone $date)->setTime(23, 59, 59),
+            ]);
+
+        return count($queryBuilder->getQuery()->getArrayResult());
+    }
+
+    public function updateSlot(Profile $profile, DateTime $date, Slot $slot): void
+    {
+        // get all participant IDs with profile $profile that enrolled for a meal on $date
+        $queryBuilder = $this->createQueryBuilder('p');
+        $queryBuilder
+            ->select('p.id')
+            ->join('p.meal', 'm', Join::WITH, 'm.dateTime >= :startTime AND m.dateTime <= :endTime')
+            ->where('p.profile = :profileID')
+            ->setParameters([
+                'startTime' => (clone $date)->setTime(0, 0),
+                'endTime' => (clone $date)->setTime(23, 59),
+                'profileID' => $profile->getUsername(),
+            ]);
+
+        $partIDs = $queryBuilder->getQuery()->getSingleColumnResult();
+        if (1 > count($partIDs)) {
+            return;
+        }
+
+        // update slot for selected participant IDs
+        $queryBuilder = $this->createQueryBuilder('p');
+        $queryBuilder
+            ->update()
+            ->set('p.slot', $slot->getId())
+            ->where($queryBuilder->expr()->in('p.id', $partIDs));
+        $queryBuilder->getQuery()->execute();
     }
 
     /**

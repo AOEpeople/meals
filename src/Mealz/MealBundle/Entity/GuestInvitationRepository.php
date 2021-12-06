@@ -5,9 +5,6 @@ namespace App\Mealz\MealBundle\Entity;
 use App\Mealz\UserBundle\Entity\Profile;
 use Doctrine\ORM\EntityRepository;
 
-/**
- * @author Chetan Thapliyal <chetan.thapliyal@aoe.com>
- */
 class GuestInvitationRepository extends EntityRepository
 {
     /**

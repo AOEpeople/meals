@@ -203,22 +203,20 @@ class Meal
     }
 
     /**
-     * Return the number of total confirmed participations.
-     *
      * @TODO don't load every participant object (raw sql query in repo?)
      */
     public function getTotalConfirmedParticipations(): int
     {
-        $totalParticipations = 0;
+        $totalParticipation = 0;
 
         foreach ($this->getParticipants() as $participation) {
             /* @var Participant $participation */
             if ($participation->isConfirmed()) {
-                ++$totalParticipations;
+                ++$totalParticipation;
             }
         }
 
-        return $totalParticipations;
+        return $totalParticipation;
     }
 
     /**

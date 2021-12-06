@@ -20,7 +20,7 @@ class InteractiveLoginSubscriberTest extends AbstractControllerTestCase
     private InteractiveLoginSubscriber $iaLoginSubscriber;
 
     /**
-     * Set up the testing environment.
+     * {@inheritDoc}
      */
     protected function setUp(): void
     {

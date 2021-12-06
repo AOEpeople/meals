@@ -20,13 +20,13 @@ trait ParticipationServiceTrait
     private function getNextFreeSlot(DateTime $mealDate): ?Slot
     {
         $slots = $this->slotRepo->findBy(['disabled' => 0, 'deleted' => 0], ['order' => 'ASC']);
-        if (1 > count($slots)) {
-            return null; // no active slots are available; return null
+        if (1 > count($slots)) {    // no active slots are available
+            return null;
         }
 
         $slotsPart = $this->participantRepo->getCountBySlots($mealDate, $mealDate);
-        if (0 === count($slotsPart)) {
-            return $slots[0]; // no participants yet; return first slot
+        if (0 === count($slotsPart)) {  // no participants yet
+            return $slots[0];
         }
 
         // index slot count items by slot-ID
@@ -51,7 +51,7 @@ trait ParticipationServiceTrait
     }
 
     /**
-     * Checks if the given meal is bookable.
+     * Checks if the given meal is bookable, i.e. not expired, locked or not fully booked.
      */
     private function mealIsBookable(Meal $meal): bool
     {

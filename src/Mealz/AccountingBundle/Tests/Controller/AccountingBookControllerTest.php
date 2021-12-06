@@ -20,7 +20,7 @@ use Symfony\Component\DomCrawler\Crawler;
 class AccountingBookControllerTest extends AbstractControllerTestCase
 {
     /**
-     * prepare test environment.
+     * {@inheritDoc}
      */
     protected function setUp(): void
     {

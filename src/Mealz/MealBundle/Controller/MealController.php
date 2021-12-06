@@ -235,7 +235,7 @@ class MealController extends BaseController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                ['profile' => $profile, 'meals' => $meals, 'slot' => $slot] = $this->validateGetGuestInvitationData($form);
+                ['profile' => $profile, 'meals' => $meals, 'slot' => $slot] = $this->getGuestInvitationData($form);
                 $gps->join($profile, $meals, $slot);
 
                 $message = $this->get('translator')->trans('participation.successful', [], 'messages');
@@ -265,7 +265,7 @@ class MealController extends BaseController
     /**
      * @throws ParticipationException
      */
-    private function validateGetGuestInvitationData(FormInterface $form): array
+    private function getGuestInvitationData(FormInterface $form): array
     {
         $data = [
             'profile' => $form->get('profile')->getData(),

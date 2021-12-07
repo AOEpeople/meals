@@ -69,8 +69,6 @@ class Variation extends AbstractExtension
 
     /**
      * @param FormView $formViews
-     *
-     * @return array
      */
     public function groupMealsToArray($formViews): array
     {
@@ -95,8 +93,6 @@ class Variation extends AbstractExtension
      * @param int   $parentDishId
      * @param array $variations
      * @param array $dishes
-     *
-     * @return string
      */
     public function getFullTitleByDishAndVariation($parentDishId, $variations, $dishes): string
     {
@@ -166,8 +162,8 @@ class Variation extends AbstractExtension
      * @param array $second
      *
      * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
-     * @see self::getSortedVariation
      *
+     * @see self::getSortedVariation
      */
     private function compareVariation($first, $second): int
     {

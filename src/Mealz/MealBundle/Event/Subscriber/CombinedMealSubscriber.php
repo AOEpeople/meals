@@ -20,7 +20,7 @@ class CombinedMealSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            WeekChangedEvent::class => 'onWeekChanged'
+            WeekChangedEvent::class => 'onWeekChanged',
         ];
     }
 

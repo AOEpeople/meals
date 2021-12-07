@@ -159,12 +159,18 @@ class Meal
         $this->dateTime = $dateTime;
     }
 
-    public function getDateTime(): DateTime
+    /**
+     * @return DateTime
+     */
+    public function getDateTime()
     {
         return $this->dateTime;
     }
 
-    public function getLockDateTime(): DateTime
+    /**
+     * @return DateTime
+     */
+    public function getLockDateTime()
     {
         return $this->day->getLockParticipationDateTime();
     }

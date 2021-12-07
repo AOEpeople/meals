@@ -135,6 +135,11 @@ class Day extends AbstractMessage
         $this->meals->add($meal);
     }
 
+    public function removeMeal(Meal $meal): void
+    {
+        $this->meals->removeElement($meal);
+    }
+
     /**
      * @return string
      */

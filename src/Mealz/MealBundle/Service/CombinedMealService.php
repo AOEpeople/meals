@@ -5,52 +5,98 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Service;
 
 use App\Mealz\MealBundle\Entity\Day;
+use App\Mealz\MealBundle\Entity\Dish;
+use App\Mealz\MealBundle\Entity\DishRepository;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Week;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
 
 class CombinedMealService
 {
-    private float $defaultPrice;
+    private const COMBINED_DISH_TITLE_EN = 'Combined Dish'; // NOTE: important for slug generation, do not change
 
-    private LoggerInterface $logger;
+    private const COMBINED_DISH_SLUG = 'combined-dish';
+
+    private float $defaultPrice;
 
     private EntityManagerInterface $entityManager;
 
-    public function __construct(float $combinedPrice, LoggerInterface $logger, EntityManagerInterface $entityManager/*, DishCombinationRepository $dishCombinationRepo*/)
+    private Dish $combinedDish;
+
+    public function __construct(float $combinedPrice, EntityManagerInterface $entityManager, DishRepository $dishRepo)
     {
         $this->defaultPrice = $combinedPrice;
-        $this->logger = $logger;
         $this->entityManager = $entityManager;
+        $this->combinedDish = $this->createCombinedDish($dishRepo);
     }
 
-    public function update(Week $week)
+    public function update(Week $week): void
     {
+        $update = false;
         /** @var Day $day */
         foreach ($week->getDays() as $day) {
-            /** @var Meal $combinedMeal */
-            $combinedMeals = $day->getMeals()->filter(function (Meal $m) {
-                return null === $m->getDish(); // for now it's null but there should be one "generic" dish representing a dish combination
-            });
-
-            if ($combinedMeals->isEmpty()) {
-                $this->logger->info("Create new one combined meal");
-
-                $combinedMeal = new Meal();
-                $combinedMeal->setDay($day);
-                $combinedMeal->setDateTime(clone $day->getDateTime());
-                $combinedMeal->setDish(null); // for now it's null but there should be one "generic" dish representing a dish combination
-                $combinedMeal->setPrice($this->defaultPrice);
-
-                $this->entityManager->persist($combinedMeal);
-                $this->entityManager->flush();
-            } else {
-                $this->logger->info("Combined meal already exists.");
+            $combinedMeal = null;
+            $baseMeals = []; // NOTE: in case of variations, we only need the parent
+            /** @var Meal $meal */
+            foreach ($day->getMeals() as $meal) {
+                if (null === $combinedMeal && $this->combinedDish->getSlug() === $meal->getDish()->getSlug()) {
+                    $combinedMeal = $meal;
+                } elseif (null === $meal->getDish()->getParent()) {
+                    $baseMeals[$meal->getId()] = $meal;
+                } elseif (null !== $meal->getDish()->getParent()) {
+                    $baseMeals[$meal->getDish()->getParent()->getId()] = $meal->getDish()->getParent();
+                }
             }
 
-            $numberOfMeals = count($day->getMeals());
-            $this->logger->info("Meals for that day", ["day" => $day->getDateTime(), "count" => $numberOfMeals]);
+            if (null === $combinedMeal && 1 < count($baseMeals)) {
+                $this->createCombinedMeal($day);
+                $update = true;
+            } elseif (null !== $combinedMeal && 1 >= count($baseMeals)) {
+                $this->removeCombinedMeal($day, $combinedMeal);
+                $update = true;
+            }
         }
+
+        if ($update) {
+            $this->entityManager->persist($week);
+            $this->entityManager->flush();
+        }
+    }
+
+    private function createCombinedDish(DishRepository $dishRepo): Dish
+    {
+        $combinedDishes = $dishRepo->findBy(['slug' => self::COMBINED_DISH_SLUG]);
+        if (1 === count($combinedDishes)) {
+            return $combinedDishes[0];
+        }
+
+        $combinedDish = new Dish();
+        $combinedDish->setEnabled(false);
+        $combinedDish->setPrice($this->defaultPrice);
+        $combinedDish->setTitleEn(self::COMBINED_DISH_TITLE_EN);
+        $combinedDish->setTitleDe('Kombi-Gericht');
+        $combinedDish->setDescriptionEn('Description - ' . $combinedDish->getTitleEn());
+        $combinedDish->setDescriptionDe('Beschreibung - ' . $combinedDish->getTitleDe());
+
+        $this->entityManager->persist($combinedDish);
+        $this->entityManager->flush();
+        return $combinedDish;
+    }
+
+    private function createCombinedMeal(Day $day): void
+    {
+        $combinedMeal = new Meal();
+        $combinedMeal->setDay($day);
+        $combinedMeal->setDateTime(clone $day->getDateTime());
+        $combinedMeal->setDish($this->combinedDish);
+        $combinedMeal->setPrice($this->combinedDish->getPrice());
+
+        $day->addMeal($combinedMeal);
+    }
+
+    private function removeCombinedMeal(Day $day, Meal $combinedMeal): void
+    {
+        $day->removeMeal($combinedMeal);
+        $this->entityManager->remove($combinedMeal);
     }
 }

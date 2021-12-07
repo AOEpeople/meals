@@ -72,7 +72,7 @@ class Variation extends AbstractExtension
      *
      * @return array
      */
-    public function groupMealsToArray($formViews)
+    public function groupMealsToArray($formViews): array
     {
         $dishesGroupByParent = [];
 
@@ -80,7 +80,7 @@ class Variation extends AbstractExtension
             /** @var Meal $meal */
             $meal = $formView->vars['data'];
             $dish = $meal->getDish();
-            if (null !== $dish) {
+            if (null !== $dish && $dish->isEnabled()) {
                 $parentDish = $dish->getParent();
                 $dishId = (null === $parentDish) ? $dish->getId() : $parentDish->getId();
                 $dishesGroupByParent[$dishId]['ids'][] = $dish->getId();
@@ -98,7 +98,7 @@ class Variation extends AbstractExtension
      *
      * @return string
      */
-    public function getFullTitleByDishAndVariation($parentDishId, $variations, $dishes)
+    public function getFullTitleByDishAndVariation($parentDishId, $variations, $dishes): string
     {
         $title = '';
 
@@ -152,9 +152,9 @@ class Variation extends AbstractExtension
      */
     private function getTitleForDish($dishId, $dishList)
     {
-        foreach ($dishList as $key => $dish) {
+        foreach ($dishList as $dish) {
             if ($dish->getId() === $dishId) {
-                return $dishList[$key]->getTitle();
+                return $dish->getTitle();
             }
         }
 
@@ -162,12 +162,12 @@ class Variation extends AbstractExtension
     }
 
     /**
-     * @see self::getSortedVariation
-     *
      * @param array $first
      * @param array $second
      *
      * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
+     * @see self::getSortedVariation
+     *
      */
     private function compareVariation($first, $second): int
     {

@@ -1,6 +1,6 @@
 export DOCKER_BUILDKIT=1
 
-.PHONY: build build-yarn create-migrations get-users load-testdata poweroff run-devbox run-lint-sass run-phpmd run-psalm run-tests ssh update-schema
+.PHONY: build build-yarn create-migrations get-users load-testdata poweroff run-devbox run-lint-sass run-cs-fixer run-phpmd run-psalm run-tests ssh update-schema
 
 help:
 	@echo ""
@@ -15,6 +15,7 @@ help:
 	@echo "	poweroff           - Stop all related containers and projects"
 	@echo "	run-devbox         - Run devbox"
 	@echo "	run-lint-sass      - Run code linter for sass"
+	@echo "	run-cs-fixer       - Run Coding Standards Fixer"
 	@echo "	run-phpmd          - Run PHP Mess Detector"
 	@echo "	run-psalm          - Run static code analysis"
 	@echo "	run-tests          - Run tests"

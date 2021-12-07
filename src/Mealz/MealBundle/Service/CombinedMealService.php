@@ -13,9 +13,9 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class CombinedMealService
 {
+    public const COMBINED_DISH_SLUG = 'combined-dish';
+    
     private const COMBINED_DISH_TITLE_EN = 'Combined Dish'; // NOTE: important for slug generation, do not change
-
-    private const COMBINED_DISH_SLUG = 'combined-dish';
 
     private float $defaultPrice;
 

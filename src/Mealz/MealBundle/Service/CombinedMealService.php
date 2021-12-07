@@ -80,6 +80,7 @@ class CombinedMealService
 
         $this->entityManager->persist($combinedDish);
         $this->entityManager->flush();
+
         return $combinedDish;
     }
 

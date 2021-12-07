@@ -4,6 +4,7 @@ namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\DishRepository;
+use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Entity\WeekRepository;
 use App\Mealz\MealBundle\Event\WeekChangedEvent;
@@ -62,8 +63,7 @@ class MealAdminController extends BaseController
     /**
      * @return RedirectResponse|Response
      *
-     * @throws ORMException
-     * @throws OptimisticLockException
+     * @throws OptimisticLockException|ORMException
      *
      * @Security("is_granted('ROLE_KITCHEN_STAFF')")
      */
@@ -89,12 +89,7 @@ class MealAdminController extends BaseController
             }
 
             if ($form->isValid()) {
-                /** @var EntityManager $entityManager */
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($week);
-                $entityManager->flush();
-
-                $this->eventDispatcher->dispatch(new WeekChangedEvent($week));
+                $this->updateWeek($week);
 
                 $message = $this->get('translator')->trans('week.created', [], 'messages');
                 $this->addFlashMessage($message, 'success');
@@ -123,8 +118,7 @@ class MealAdminController extends BaseController
     /**
      * @return RedirectResponse|Response
      *
-     * @throws ORMException
-     * @throws OptimisticLockException
+     * @throws OptimisticLockException|ORMException
      *
      * @Security("is_granted('ROLE_KITCHEN_STAFF')")
      */
@@ -142,12 +136,7 @@ class MealAdminController extends BaseController
             }
 
             if (true === $form->isValid()) {
-                /** @var EntityManager $entityManager */
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($week);
-                $entityManager->flush();
-
-                $this->eventDispatcher->dispatch(new WeekChangedEvent($week));
+                $this->updateWeek($week);
 
                 $message = $this->get('translator')->trans('week.modified', [], 'messages');
                 $this->addFlashMessage($message, 'success');
@@ -208,5 +197,27 @@ class MealAdminController extends BaseController
         }
 
         return $week;
+    }
+
+    /**
+     * @throws OptimisticLockException|ORMException
+     */
+    private function updateWeek(Week $week): void
+    {
+        /** @var Day $day */
+        foreach ($week->getDays() as $day) {
+            /** @var Meal $meal */
+            foreach ($day->getMeals() as $meal) {
+                if (null === $meal->getDish()) {
+                    $day->removeMeal($meal);
+                }
+            }
+        }
+        /** @var EntityManager $entityManager */
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($week);
+        $entityManager->flush();
+
+        $this->eventDispatcher->dispatch(new WeekChangedEvent($week));
     }
 }

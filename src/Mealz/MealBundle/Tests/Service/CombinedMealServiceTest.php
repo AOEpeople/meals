@@ -41,7 +41,7 @@ class CombinedMealServiceTest extends AbstractDatabaseTestCase
 
         /* @var EntityManagerInterface $entityManager */
         $entityManager = $this->getDoctrine()->getManager();
-        $price = self::$kernel->getContainer()->getParameter('mealz.meal.combined.price');
+        $price = (float) self::$kernel->getContainer()->getParameter('mealz.meal.combined.price');
         $dishRepo = static::$container->get(DishRepository::class);
         $this->cms = new CombinedMealService($price, $entityManager, $dishRepo);
 

@@ -24,6 +24,10 @@ MealIndexView.prototype.handleChangeSlot = function (event) {
             url: '/menu/meal/'+$mealDate+'/update-slot',
             data: { 'slot': slot },
             dataType: 'json',
+            success: function () {
+                // hide default option to auto-select slot [TP##250006]
+                $slotSelector.find('option[value=""]').hide()
+            },
             error: function () {
                 alert('An unknown error occurred');
             }
@@ -33,18 +37,20 @@ MealIndexView.prototype.handleChangeSlot = function (event) {
 
 MealIndexView.prototype.handleParticipationUpdate = function (event) {
     const $updatedDishCheckbox = $(event.target);
+    const $mealContainer = $updatedDishCheckbox.closest('.meal');
+    let $slotSelector = $mealContainer.find('.slot-selector');
 
     // do nothing if user is joining a meal
     if ($updatedDishCheckbox.is(':checked')) {
+        $slotSelector.find('option[value=""]').hide();
         return;
     }
 
-    const $mealContainer = $updatedDishCheckbox.closest('.meal');
     const bookedMealCount = $mealContainer.find('input.participation-checkbox:checked').length
 
     // reset slot selector if user cancelled all booked meals
     if (1 > bookedMealCount) {
-        let $slotSelector = $mealContainer.find('.slot-selector');
+        $slotSelector.find('option[value=""]').show();
         $slotSelector.val('');
     }
 }
@@ -78,6 +84,7 @@ MealIndexView.prototype.updateSlots = function () {
                     if ('' === $slotSelector.val()) {
                         $slotOption.prop('selected', true);
                     }
+                    $slotSelector.find('option[value=""]').hide();
                     $slotSelector.prop('disabled', false);
                 }
             });

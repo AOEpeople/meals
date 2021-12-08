@@ -51,6 +51,8 @@ class ParticipantController extends BaseController
                     'mealId' => $meal->getId(),
                 ]
             );
+        } else {
+            $profile = null;    // we don't need to send any identity info for already logged-in user
         }
 
         return new JsonResponse([

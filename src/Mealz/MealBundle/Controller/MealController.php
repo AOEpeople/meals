@@ -68,7 +68,7 @@ class MealController extends BaseController
             'mealService' => $mealService,
             'participationService' => $participationService,
             'weeks' => [$currentWeek, $nextWeek],
-            'slots' => $slotRepo->findBy(['disabled' => 0, 'deleted' => 0]),
+            'slots' => $slotRepo->findBy(['disabled' => 0, 'deleted' => 0], ['order' => 'ASC']),
         ]);
     }
 

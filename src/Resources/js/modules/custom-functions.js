@@ -40,7 +40,10 @@ Mealz.prototype.copyToClipboard = function() {
             } else {
                 guestMenuLinkInput.trigger('select');
             }
-            navigator.clipboard.writeText(result);
+            // Clipboard copy only works in secure context, redirect http -> https
+            if(window.isSecureContext) {
+                navigator.clipboard.writeText(result);
+            }
             guestMenuLinkInput.trigger('blur');
         } else {
             var $html = $(result);

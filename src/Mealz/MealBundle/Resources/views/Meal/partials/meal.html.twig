@@ -1,6 +1,6 @@
 {% set dish = meal.dish %}
 
-<div class="meal-row">
+<div class="meal-row" {% if dish.title == 'Combined Dish' %}data-combi="1"{% endif %}>
 	{% apply spaceless %}
 	<div class="text">
 		<div class="title">

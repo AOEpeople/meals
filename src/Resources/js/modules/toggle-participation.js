@@ -70,20 +70,22 @@ Mealz.prototype.showMealSelectionOverlay = function ($dishCheckbox) {
         let $dish = $('<div class="dish"></div>');
 
         if (0 === dish.variations.length) {
+            $dish.addClass('no-variation')
             $dish.append('<label for="">' + dish.title + '</label><input type="radio">');
             $dishWrapper.append($dish);
             $mealWrapper.append($dishWrapper);
             return;
         }
 
-        $dish.text(dish.title);
+        $dish.append('<div class="title">' + dish.title + '</div>');
 
         dish.variations.forEach((dishVariation) => {
             let $dishVariation = $('<div class="variation"></div>');
             $dishVariation.append('<label for="">' + dishVariation.title + '</label><input type="radio">');
-            $dishWrapper.append($dishVariation);
+            $dish.append($dishVariation);
         });
 
+        $dishWrapper.append($dish);
         $mealWrapper.append($dishWrapper);
     });
 

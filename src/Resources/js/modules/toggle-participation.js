@@ -1,3 +1,5 @@
+const ModalDialog = require("./modal-dialog").default;
+
 Mealz.prototype.toggleParticipation = function ($checkbox) {
     if ($checkbox === undefined) {
         console.log('Error: No checkbox found');
@@ -91,8 +93,11 @@ Mealz.prototype.showMealSelectionOverlay = function ($dishCheckbox) {
 
     let $container = $('#combi-meal-selector');
     $container.empty().append($mealWrapper);
-    let options = {};
-    $.fancybox.open($container, options);
+    // let options = {};
+    // $.fancybox.open($container, options);
+    const options = { title: combiMealTitle };
+    let combiMealSelector = new ModalDialog($container, options);
+    combiMealSelector.open();
 }
 
 function editCountAndCheckbox(data, $checkbox, countClass, checkboxClass) {

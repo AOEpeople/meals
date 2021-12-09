@@ -1,0 +1,52 @@
+#combi-meal-selector {
+  background-color: $color-gray-secondary;
+  color: $color-white;
+
+  .meal-wrapper {
+    .title {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .dish-wrapper {
+      margin: 25px 0;
+
+      .dish {
+        .title {
+          font-size: 20px;
+        }
+
+        .variation {
+          margin: 20px 0;
+        }
+
+        &.no-variation {
+          font-size: 18px;
+        }
+
+        &.no-variation, .variation {
+          overflow: auto;
+          width: 100%;
+
+          label {
+            float: left;
+          }
+          input {
+            float: right;
+          }
+        }
+      }
+    }
+  }
+
+  .actions {
+    text-align: center;
+
+    .button {
+      background-color: $color-gray-primary;
+      min-width: 100px;
+      margin: 0 5px;
+    }
+  }
+}

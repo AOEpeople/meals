@@ -205,7 +205,7 @@ class ParticipationService
     {
         $daysWithSlots = [];
         $mealDays = $this->dayRepo->findAllActive($stateDate, $endDate);
-        $mealSlots = $this->slotRepo->findBy(['disabled' => 0, 'deleted' => 0]);
+        $mealSlots = $this->slotRepo->findBy(['disabled' => 0, 'deleted' => 0], ['order' => 'ASC']);
 
         foreach ($mealDays as $day) {
             foreach ($mealSlots as $slot) {

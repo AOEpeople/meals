@@ -178,8 +178,11 @@ Mealz.prototype.toggleParticipationAdmin = function ($element) {
     var url = $element.data('attribute-action');
 
     $.ajax({
-        method: 'GET',
+        method: 'POST',
         url: url,
+        data: {
+            'slot': ''
+        },
         dataType: 'json',
         success: function (data) {
             $element.data('attribute-action', data.url);

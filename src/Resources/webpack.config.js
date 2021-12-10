@@ -132,24 +132,26 @@ module.exports = function(env, argv) {
             }),
         ],
         devServer: {
-            contentBase: path.resolve(__dirname, 'public'),
+            allowedHosts: [ 'meals.test' ],
             host: '0.0.0.0',
             port: 1337,
-            sockHost: 'localhost',
+            // sockHost: 'localhost',
             hot: true,
-            overlay: true,
-            disableHostCheck: true,
-            https: true,
+            client: {
+                overlay: true,
+                webSocketURL: {
+                    hostname: '0.0.0.0'
+                }
+            },
+            server: 'https',
             headers: {
                 'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
                 'Access-Control-Allow-Headers': 'X-Requested-With, content-type, Authorization',
                 'Access-Control-Allow-Origin': '*',
             },
+            static: {
+                directory: path.resolve(__dirname, '../../public')
+            }
         },
     }
 }
-
-// console.log('config:', module.exports({}).devServer)
-// process.exit(0)
-// console.log(module.exports)
-// console.log('/config')

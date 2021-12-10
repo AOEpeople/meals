@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack --mode production",
-    "devx": "webpack --mode development",
-    "dev": "webpack serve --progress",
+    "dev": "DEBUG='express:*' webpack serve --progress",
     "lint": "yarn run lint:sass",
     "lint:sass": "stylelint '**/*.scss'",
     "test": "echo \"Error: no test specified\" && exit 1"

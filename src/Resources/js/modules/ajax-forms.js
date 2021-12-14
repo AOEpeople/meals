@@ -110,7 +110,9 @@ Mealz.prototype.loadAjaxForm = function ($element) {
             }
 
             // Style selects
-            $wrapperForm.find('select').wrap('<div class="' + that.selectWrapperClass + '"></div>');
+            $wrapperForm.find('select')
+                .wrap('<div class="' + that.selectWrapperClass + '"></div>')
+                .parent().append('<span class="loader"></span>');
 
             $element.addClass('loaded');
         },

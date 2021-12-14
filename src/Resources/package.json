@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack --mode production",
+    "build-dev": "webpack --mode development",
     "dev": "webpack serve --progress",
     "lint": "yarn run lint:sass",
     "lint:sass": "stylelint '**/*.scss'",

@@ -42,17 +42,19 @@ function editCountAndCheckbox(data, $checkbox, countClass, checkboxClass) {
 }
 
 function toggle($checkbox, url, that) {
-    const slot = $checkbox.closest('.meal').find('.slot-selector').val();
+    const slotBox = $checkbox.closest('.meal').find('.slot-selector');
     $.ajax({
         method: 'POST',
         url: url,
         data: {
-            'slot': slot
+            'slot': slotBox.val()
         },
         dataType: 'json',
         success: function (data) {
             editCountAndCheckbox(data, $checkbox);
             that.applyCheckboxClasses($checkbox);
+            slotBox.addClass('tmp-disabled').prop('disabled', true)
+                .parent().children('.loader').css('visibility', 'visible');
         },
         error: function (xhr) {
             console.log(xhr.status + ': ' + xhr.statusText);

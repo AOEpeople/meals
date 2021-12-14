@@ -179,6 +179,21 @@
     select {
       width: 50%;
       border: 1px solid $meal-border-color;
+      margin-right: 10px;
+    }
+
+    .loader {
+      background: url("./images/wait-grey.svg") no-repeat scroll center center transparent;
+      background-size: cover;
+      display: inline-block;
+      height: 25px;
+      width: 25px;
+      vertical-align: middle;
+      visibility: hidden;
+
+      path {
+        fill: $color-base;
+      }
     }
   }
 

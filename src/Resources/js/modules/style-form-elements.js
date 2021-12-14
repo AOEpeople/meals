@@ -81,7 +81,9 @@ Mealz.prototype.styleCheckboxes = function () {
 };
 
 Mealz.prototype.styleSelects = function () {
-    this.$selects.wrap('<div class="' + this.selectWrapperClass + '"></div>');
+    this.$selects
+        .wrap('<div class="' + this.selectWrapperClass + '"></div>')
+        .parent().append('<span class="loader"></span>');
 };
 
 Mealz.prototype.applySwitcheryStates = function () {

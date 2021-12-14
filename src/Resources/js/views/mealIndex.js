@@ -87,6 +87,11 @@ MealIndexView.prototype.updateSlots = function () {
                     $slotSelector.find('option[value=""]').hide();
                     $slotSelector.prop('disabled', false);
                 }
+
+                if ($slotSelector.hasClass('tmp-disabled') === true) {
+                    $slotSelector.removeClass('tmp-disabled').prop('disabled', false)
+                        .parent().children('.loader').css('visibility', 'hidden');
+                }
             });
         }
     });

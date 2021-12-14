@@ -8,6 +8,7 @@ help:
 	@echo ""
 	@echo "	build              - Build an image from the Dockerfile"
 	@echo "	build-yarn         - (Re-)build production ready frontend assets i.e. CSS, JS"
+	@echo "	build-yarn-dev     - (Re-)build development ready frontend assets i.e. CSS, JS"
 	@echo "	create-migration   - Create Doctrine migration from code"
 	@echo "	get-users          - Get test users and their passwords"
 	@echo "	load-testdata      - Load test data i.e. dishes, meals and users"
@@ -30,6 +31,9 @@ build:
 
 build-yarn:
 	ddev exec yarn --cwd=src/Resources build
+
+build-yarn-dev:
+	ddev exec yarn --cwd=src/Resources build-dev
 
 run-lint-sass:
 	ddev exec yarn --cwd src/Resources lint:sass

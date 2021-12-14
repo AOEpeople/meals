@@ -7,8 +7,8 @@ export default function MealIndexView() {
 
 MealIndexView.prototype.initEvents = function () {
     // set handler for slot change event
-    $('.meals-list .meal .slot-selector').change(this.handleChangeSlot);
-    $('.meals-list .meal .participation-checkbox').change(this.handleParticipationUpdate);
+    $('.meals-list .meal .slot-selector').on('change', this.handleChangeSlot);
+    $('.meals-list .meal .participation-checkbox').on('change', this.handleParticipationUpdate);
 }
 
 MealIndexView.prototype.handleChangeSlot = function (event) {

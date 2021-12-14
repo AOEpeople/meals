@@ -183,12 +183,12 @@
     }
 
     .loader {
-      background: url("./images/wait-grey.svg") no-repeat scroll center center transparent;
       display: inline-block;
-      background-size: cover;
       visibility: hidden;
       width: 25px;
       height: 25px;
+      background: url("./images/wait-grey.svg") no-repeat scroll center center transparent;
+      background-size: cover;
       vertical-align: middle;
 
       path {

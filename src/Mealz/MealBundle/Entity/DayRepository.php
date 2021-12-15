@@ -30,6 +30,8 @@ class DayRepository extends EntityRepository
     /**
      * Get all active meal days between $startDate and $endDate.
      *
+     * An active meal day is the day that is not disabled, and has an open meal, i.e. meal that is open for participation.
+     *
      * @return Day[]
      */
     public function findAllActive(DateTime $startDate, DateTime $endDate): array
@@ -37,8 +39,9 @@ class DayRepository extends EntityRepository
         $queryBuilder = $this->createQueryBuilder('d');
         $queryBuilder
             ->join('d.week', 'w', Join::WITH, 'w.enabled = 1')
-            ->where('d.dateTime >= :startDate AND d.dateTime <= :endDate AND d.enabled = 1')
+            ->where('d.enabled = 1 AND d.dateTime > :now AND d.dateTime >= :startDate AND d.dateTime <= :endDate')
             ->setParameters([
+                'now' => new DateTime(),
                 'startDate' => $startDate,
                 'endDate' => $endDate,
             ]);

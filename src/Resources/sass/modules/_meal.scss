@@ -416,12 +416,16 @@
 
   &.is-available {
     border-color: transparent;
+
+    .header {
+      background-color: $color-green;
+    }
   }
 
   .header {
     padding: 5px 15px;
     color: $color-white;
-    background-color: $color-green;
+    background-color: $color-gray-secondary;
     font-weight: bold;
   }
 

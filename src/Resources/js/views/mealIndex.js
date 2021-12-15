@@ -1,6 +1,6 @@
 export default function MealIndexView() {
     this.updateSlots();
-    setInterval(this.updateSlots, 5000);
+    setInterval(this.updateSlots, 3000);
 
     this.initEvents();
 };

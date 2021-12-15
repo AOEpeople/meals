@@ -143,11 +143,11 @@ class ParticipationService
     public function getSlotsStatusFor(Profile $profile): array
     {
         $fromDate = new DateTime('now');
-        $toDate = new DateTime('friday next week');
-
-        $slotsStatus = [];
+        $toDate = new DateTime('friday next week 23:59:59');
         $openMealDaysSlots = $this->getOpenMealDaysWithSlots($fromDate, $toDate);
         $slotCountProvider = $this->getBookedSlotCountProvider($fromDate, $toDate);
+
+        $slotsStatus = [];
 
         foreach ($openMealDaysSlots as $idx => $item) {
             $slotsStatus[$idx] = [
@@ -159,6 +159,7 @@ class ParticipationService
         }
 
         $userParticipation = $this->participantRepo->getParticipantsOnDays($fromDate, $toDate, $profile);
+
         foreach ($userParticipation as $participation) {
             $slot = $participation->getSlot();
             if (null === $slot || $slot->isDisabled() || $slot->isDeleted()) {
@@ -177,9 +178,12 @@ class ParticipationService
      */
     public function getSlotsStatusOn(DateTime $date): array
     {
+        $startDate = (clone $date)->setTime(0, 0);
+        $endDate = (clone $date)->setTime(23, 59, 59);
+        $openMealDaysSlots = $this->getOpenMealDaysWithSlots($startDate, $endDate);
+        $slotCountProvider = $this->getBookedSlotCountProvider($startDate, $endDate);
+
         $slotsStatus = [];
-        $openMealDaysSlots = $this->getOpenMealDaysWithSlots($date, $date);
-        $slotCountProvider = $this->getBookedSlotCountProvider($date, $date);
 
         foreach ($openMealDaysSlots as $idx => $item) {
             $slotsStatus[$idx] = [

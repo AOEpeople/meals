@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Form\Guest;
 
+use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\InvitationWrapper;
 use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Entity\SlotRepository;
@@ -30,14 +31,16 @@ class InvitationForm extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        // passing by Day value to the DayForm in order to render only particular day
+        /** @var Day $day */
+        $day = $options['data']->getDay();
+
         $builder
             ->add('slot', ChoiceType::class, [
-                'choices' => $this->slotRepo->findBy(['disabled' => 0, 'deleted' => 0]),
+                'choices' => $this->slotRepo->findBy(['disabled' => 0, 'deleted' => 0], ['order' => 'ASC']),
                 'choice_label' => 'title',
                 'choice_value' => 'slug',
                 /* @SuppressWarnings(PHPMD.UnusedFormalParameter) */
-                'choice_attr' => static function (Slot $slot, string $slug, string $title) {
+                'choice_attr' => static function (Slot $slot, string $key, string $slug) {
                     return [
                         'data-limit' => $slot->getLimit(),
                         'data-title' => $slot->getTitle(),
@@ -46,9 +49,10 @@ class InvitationForm extends AbstractType
                 'placeholder' => $this->translator->trans('content.participation.meal.select_slot', [], 'general'),
                 'attr' => ['class' => 'slot-selector'],
                 'required' => false,
+                'disabled' => !$day->getMeals()->containsBookableMeal(),
             ])
             ->add('day', DayForm::class, [
-                'data' => $options['data']->getDay(),
+                'data' => $day,
             ])
             ->add('profile', ProfileForm::class)
             ->add('save', SubmitType::class, [

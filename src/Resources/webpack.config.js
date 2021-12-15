@@ -47,7 +47,7 @@ module.exports = function(env, argv) {
         },
         resolve: {
             preferRelative: true,
-            extensions: ['.js', '.json'],
+            extensions: ['.js', '.ts', '.json'],
             descriptionFiles: ['package.json'],
             aliasFields: ['browser', 'main'],
             modules: [
@@ -71,6 +71,11 @@ module.exports = function(env, argv) {
                     test: /\.(js)$/,
                     exclude: [/node_modules/],
                     use: ['babel-loader'],
+                },
+                {
+                    test: /\.tsx?$/,
+                    use: 'ts-loader',
+                    exclude: /node_modules/,
                 },
                 {
                     test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/i,

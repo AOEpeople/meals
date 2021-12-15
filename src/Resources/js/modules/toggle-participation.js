@@ -1,4 +1,5 @@
-const ModalDialog = require("./modal-dialog").default;
+const ModalDialog = require("./modal-dialog");
+const {CombiMealDialog} = require("./combi-meal-dialog");
 
 Mealz.prototype.toggleParticipation = function ($checkbox) {
     if ($checkbox === undefined) {
@@ -6,7 +7,7 @@ Mealz.prototype.toggleParticipation = function ($checkbox) {
         return;
     }
 
-    if (this.combiMealCheckbox($checkbox)) {
+    if (this.combiMealCheckbox($checkbox) && this.mealHasVariations($checkbox)) {
         this.showMealSelectionOverlay($checkbox);
     }
 
@@ -36,7 +37,7 @@ Mealz.prototype.combiMealCheckbox = function ($dishCheckbox) {
 }
 
 Mealz.prototype.mealHasVariations = function ($dishCheckbox) {
-    return 0 < $dishCheckbox.closest('.meal-row').find('.variation-row .text-variation').length;
+    return 0 < $dishCheckbox.closest('.meal').find('.variation-row .text-variation').length;
 }
 
 Mealz.prototype.getCombiMealDishes = function ($dishCheckbox) {
@@ -61,43 +62,66 @@ Mealz.prototype.getCombiMealDishes = function ($dishCheckbox) {
     return dishes;
 }
 
-Mealz.prototype.showMealSelectionOverlay = function ($dishCheckbox) {
-    const dishes = this.getCombiMealDishes($dishCheckbox);
-    const combiMealTitle = dishes[0].title + ' & ' + dishes[1].title;
-    let $mealWrapper = $('<div class="meal-wrapper"></div>');
-    $mealWrapper.append('<div class="title">' + combiMealTitle + '</div>');
-
-    dishes.forEach((dish) => {
-        let $dishWrapper = $('<div class="dish-wrapper"></div>');
-        let $dish = $('<div class="dish"></div>');
-
-        if (0 === dish.variations.length) {
-            $dish.addClass('no-variation')
-            $dish.append('<label for="">' + dish.title + '</label><input type="radio">');
-            $dishWrapper.append($dish);
-            $mealWrapper.append($dishWrapper);
+Mealz.prototype._getCombiMealDishes = function ($dishCheckbox) {
+    let dishes = [];
+    $dishCheckbox.closest('.meal').find('.meal-row').each(function () {
+        const $mealRow = $(this);
+        if ('1' === $mealRow.attr('data-combi')) {
             return;
         }
 
-        $dish.append('<div class="title">' + dish.title + '</div>');
-
-        dish.variations.forEach((dishVariation) => {
-            let $dishVariation = $('<div class="variation"></div>');
-            $dishVariation.append('<label for="">' + dishVariation.title + '</label><input type="radio">');
-            $dish.append($dishVariation);
+        let dish = {
+            title: $mealRow.find('.text .title').text().trim(),
+            variations: []
+        };
+        $mealRow.find('.variation-row .text-variation').each(function () {
+            let dishVariation = { title: $(this).text().trim() };
+            dish.variations.push(dishVariation);
         });
-
-        $dishWrapper.append($dish);
-        $mealWrapper.append($dishWrapper);
+        dishes.push(dish);
     });
 
-    let $container = $('#combi-meal-selector');
-    $container.empty().append($mealWrapper);
-    // let options = {};
-    // $.fancybox.open($container, options);
-    const options = { title: combiMealTitle };
-    let combiMealSelector = new ModalDialog($container, options);
-    combiMealSelector.open();
+    return dishes;
+}
+
+Mealz.prototype.showMealSelectionOverlay = function ($dishCheckbox) {
+    const dishes = this.getCombiMealDishes($dishCheckbox);
+    let cmd = new CombiMealDialog(dishes);
+    cmd.open();
+    // let $mealWrapper = $('<div class="meal-wrapper"></div>');
+    //
+    // dishes.forEach((dish) => {
+    //     let $dishWrapper = $('<div class="dish-wrapper"></div>');
+    //     let $dish = $('<div class="dish"></div>');
+    //
+    //     if (0 === dish.variations.length) {
+    //         $dish.addClass('no-variation')
+    //         $dish.append('<label for="">' + dish.title + '</label><input type="radio">');
+    //         $dishWrapper.append($dish);
+    //         $mealWrapper.append($dishWrapper);
+    //         return;
+    //     }
+    //
+    //     $dish.append('<div class="title">' + dish.title + '</div>');
+    //
+    //     dish.variations.forEach((dishVariation) => {
+    //         let $dishVariation = $('<div class="variation"></div>');
+    //         $dishVariation.append('<label for="">' + dishVariation.title + '</label><input type="radio">');
+    //         $dish.append($dishVariation);
+    //     });
+    //
+    //     $dishWrapper.append($dish);
+    //     $mealWrapper.append($dishWrapper);
+    // });
+    //
+    // let $container = $('#combi-meal-selector');
+    // $container.empty().append($mealWrapper);
+    //
+    // const combiMealTitle = dishes[0].title + ' & ' + dishes[1].title;
+    // const options = { title: combiMealTitle };
+    // let combiMealSelector = new ModalDialog($container, options);
+    // combiMealSelector.getOkButton().prop('disabled', true);
+    // combiMealSelector.open();
 }
 
 function editCountAndCheckbox(data, $checkbox, countClass, checkboxClass) {

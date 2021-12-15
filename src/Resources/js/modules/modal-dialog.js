@@ -1,26 +1,48 @@
-export default function ModalDialog($container, opts) {
-    this.$container = $container;
+function ModalDialog($content, opts) {
+    let self = this;
+    this.$content = $content;
     this.options = Object.assign({
             title: '',
             okButton: 'OK',
             cancelButton: 'Cancel',
-            callback: () => {}
+            callback: () => {},
         }, opts || {}
     );
 
-    if (0 < this.options.title.length) {
-        this.$container.prepend('<h3 class="headline">' + this.options.title + '</h3>');
+    this.$dialog = build();
+
+    function build () {
+        let $dialogWrapper = $('<div class="modal-dialog-wrapper"></div>');
+
+        if (0 < self.options.title.length) {
+            $dialogWrapper.append('<h1 class="header">' + self.options.title + '</h1>');
+        }
+
+        $dialogWrapper.append($content, getButtonBar());
+
+        return $dialogWrapper;
     }
 
-    let okButton = $('<button data-fancybox-close title="OK" class="button ok">' + this.options.okButton + '</button>');
-    let cancelButton = $('<button data-fancybox-close title="Cancel" class="button cancel">' + this.options.cancelButton + '</button>');
+    function getButtonBar () {
+        const okButton = $('<button data-fancybox-close class="button ok">' + self.options.okButton + '</button>');
+        const cancelButton = $('<button data-fancybox-close class="button cancel">' + self.options.cancelButton + '</button>');
 
-    let buttonsContainer = $('<div class="actions"></div>');
-    buttonsContainer.append(cancelButton, okButton);
+        let buttonsContainer = $('<div class="actions"></div>');
+        buttonsContainer.append(cancelButton, okButton);
 
-    this.$container.append(buttonsContainer);
+        return buttonsContainer;
+    }
 }
 
 ModalDialog.prototype.open = function () {
-    $.fancybox.open(this.$container, this.options);
+    $.fancybox.open(this.$dialog, {
+        buttons: false,
+        modal: true
+    });
 }
+
+ModalDialog.prototype.getOkButton = function () {
+    return this.$dialog.find('.button.ok');
+}
+
+module.exports = ModalDialog;

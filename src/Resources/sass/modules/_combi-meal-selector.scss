@@ -1,14 +1,5 @@
 #combi-meal-selector {
-  background-color: $color-gray-secondary;
-  color: $color-white;
-
   .meal-wrapper {
-    .title {
-      font-size: 22px;
-      font-weight: bold;
-      margin-bottom: 20px;
-    }
-
     .dish-wrapper {
       margin: 25px 0;
 
@@ -22,7 +13,7 @@
         }
 
         &.no-variation {
-          font-size: 18px;
+          font-size: 20px;
         }
 
         &.no-variation, .variation {
@@ -37,16 +28,6 @@
           }
         }
       }
-    }
-  }
-
-  .actions {
-    text-align: center;
-
-    .button {
-      background-color: $color-gray-primary;
-      min-width: 100px;
-      margin: 0 5px;
     }
   }
 }

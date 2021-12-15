@@ -39,7 +39,7 @@ module.exports = function(env, argv) {
         },
         output: {
             path: path.resolve(__dirname, '../../public/static/'),
-            publicPath: env.WEBPACK_SERVE ? 'https://localhost:1337/static/' : '/static/',
+            publicPath: env.WEBPACK_SERVE ? 'https://meals.test:1338/static/' : '/static/',
             assetModuleFilename: 'assets/[name].[contenthash:4][ext][query]',
             clean: true,
             filename: '[name].js',
@@ -134,20 +134,20 @@ module.exports = function(env, argv) {
             new webpack.DefinePlugin({
                 'process.browser': true,
                 'process.env.MODE': JSON.stringify(argv.mode),
-            }),
+            })
         ],
         devServer: {
+            open: true,
             allowedHosts: [ 'meals.test' ],
-            host: '0.0.0.0',
-            port: 1337,
-            // sockHost: 'localhost',
-            hot: true,
-            client: {
-                overlay: true,
-                webSocketURL: {
-                    hostname: '0.0.0.0'
+            host: 'meals.test',
+            port: 1338,
+            proxy: {
+                '/': {
+                    target: 'http://meals.test',
+                    secure: false,
                 }
             },
+            hot: true,
             server: 'https',
             headers: {
                 'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
@@ -155,8 +155,11 @@ module.exports = function(env, argv) {
                 'Access-Control-Allow-Origin': '*',
             },
             static: {
-                directory: path.resolve(__dirname, '../../public')
+                directory: path.resolve(__dirname, '../../public'),
             }
         },
+        watchOptions: {
+            poll: true
+        }
     }
 }

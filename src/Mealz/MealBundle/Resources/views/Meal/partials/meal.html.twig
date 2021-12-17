@@ -1,6 +1,6 @@
 {% set dish = meal.dish %}
 
-<div class="meal-row" {% if dish.title == 'Combined Dish' %}data-combi="1"{% endif %}>
+<div class="meal-row" {% if dish.title == 'Combined Dish' %}data-combi="1"{% else %} data-id="{{ dish.slug }}"{% endif %}>
 	{% apply spaceless %}
 	<div class="text">
 		<div class="title">

@@ -1,33 +1,26 @@
 #combi-meal-selector {
-  .meal-wrapper {
-    .dish-wrapper {
-      margin: 25px 0;
+  .dish, .dish-variation {
+    overflow: auto;
+    width: 100%;
+  }
 
-      .dish {
-        .title {
-          font-size: 20px;
-        }
+  .dish {
+    margin-top: 25px;
 
-        .variation {
-          margin: 20px 0;
-        }
+    .title, & > label {
+      font-size: 22px;
+    }
 
-        &.no-variation {
-          font-size: 20px;
-        }
+    label {
+      float: left;
+    }
 
-        &.no-variation, .variation {
-          overflow: auto;
-          width: 100%;
+    input {
+      float: right;
+    }
 
-          label {
-            float: left;
-          }
-          input {
-            float: right;
-          }
-        }
-      }
+    .dish-variation {
+      margin-top: 20px;
     }
   }
 }

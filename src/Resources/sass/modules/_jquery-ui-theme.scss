@@ -4,17 +4,49 @@
   @include opacity(0.9);
 }
 
+.ui-widget {
+  &.ui-widget-content {
+    border: none;
+  }
+}
+
+.ui-widget-header {
+  border: none;
+}
+
+.ui-widget-content {
+  background-color: $color-gray-secondary;
+  color: $color-white;
+  border: none;
+}
+
 // dialog
 .ui-dialog {
+  padding: 2em;
+
   .ui-dialog-titlebar {
-    display: none;
+    background-color: $color-gray-secondary;
   }
+
+  .ui-dialog-title {
+    background-color: $color-gray-secondary;
+    color: $color-white;
+    font-size: 22px;
+  }
+
   .ui-dialog-buttonpane {
     border: none;
     text-align: center;
 
     .ui-dialog-buttonset {
       float: none;
+    }
+
+    .ui-button {
+      padding: 1em 3em;
+      background-color: $color-gray-primary;
+      color: $color-white;
+      border: none;
     }
   }
 }

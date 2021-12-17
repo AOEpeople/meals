@@ -24,7 +24,7 @@
                     </div>
                 </div>
             {% endif %}
-            <div class="variation-row">
+            <div class="variation-row" data-id="{{ dish.slug }}">
                 <div class="text text-variation">{{ dish.title }}
                     {% if dishService.isNew(dish) and not parentFlag %}
                         <span class="new-flag">{{ 'content.participation.dish.new'|trans({},'general') }}</span>

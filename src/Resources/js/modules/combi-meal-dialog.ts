@@ -1,35 +1,39 @@
 import 'jquery-ui/ui/widgets/dialog';
 import DialogUIParams = JQueryUI.DialogUIParams;
 
-export class CombiMealDialog  {
+export class CombiMealDialog {
+    readonly containerID: string = '#combi-meal-selector';
     title: string;
+    opts: CombiMealDialogOptions;
+
     $form: JQuery;
     $dialog: JQuery;
 
-    constructor(private dishes: Dish[]) {
-        this.title = dishes.reduce(function(title: string, dish: Dish) {
-            if ('' === title) {
-                return dish.title;
-            }
-
-            return `${title} & ${dish.title}`;
-        }, '');
+    constructor(private dishes: Dish[], opts: CombiMealDialogOptions) {
+        this.title = this.getTitle(dishes);
         this.$form = this.buildForm(dishes);
+        this.opts = opts;
     }
 
     open() {
-        this.$dialog = $('#combi-meal-selector').empty().append(this.$form).dialog({
+        this.$dialog = $(this.containerID).empty().append(this.$form).dialog({
             modal: true,
             width: 400,
             maxWidth: 500,
             title: this.title,
             draggable: false,
             buttons: {
-                'OK': this.handleOk,
-                'Cancel': this.handleCancel
+                'OK': this.handleOk.bind(this),
+                'Cancel': this.handleCancel.bind(this)
             },
             create: this.handleCreate
         });
+    }
+
+    getTitle(dishes: Dish[]): string {
+        return dishes.reduce(function(title: string, dish: Dish) {
+            return ('' === title) ? dish.title : `${title} & ${dish.title}`;
+        }, '');
     }
 
     buildForm(dishes: Dish[]): JQuery {
@@ -43,56 +47,59 @@ export class CombiMealDialog  {
     getFormFields(dishes: Dish[]): JQuery {
         let $dishes = $('<div class="dishes"></div>');
 
-        dishes.forEach((dish) => {
-            let $dishField = this.getDishField(dish);
+        dishes.forEach((dish, index) => {
+            let $dishField = this.getDishField(dish, index);
             $dishes.append($dishField);
         });
 
         return $dishes;
     }
 
-    getDishField(dish: Dish): JQuery {
-        let $dish = $('<div class="dish"></div>');
+    getDishField(d: Dish, index: number): JQuery {
+        const fieldName = `dishes[${index}]`;
 
-        if (0 === dish.variations.length) {
-            $dish.append(`<label for="">${dish.title}</label><input type="radio" name="${dish.slug}" value="1" checked>`);
-            return $dish;
+        if (0 === d.variations.length) {
+            return this.getRadioButton(fieldName, d.slug, true, d.title, {wrapperClass: 'dish'});
         }
 
-        $dish.append(`<div class="title">${dish.title}</div>`);
-        dish.variations.forEach((dishVariation, index) => {
-            let $dishVariation = this.getDishVariationField(dishVariation, 0 === index);
+        let $dish = $(`<div class="dish"><div class="title">${d.title}</div></div>`);
+        d.variations.forEach((dv, index) => {
+            let $dishVariation = this.getRadioButton(fieldName, dv.slug, 0 === index, dv.title, {wrapperClass: 'dish-variation'});
             $dish.append($dishVariation);
         });
 
         return $dish;
     }
 
-    getDishVariationField(dv: DishVariation, checked: boolean = false): JQuery {
+    getRadioButton(name: string, value: string, selected: boolean, label: string, attrs?: ElementAttributes): JQuery {
+        let attributes = Object.assign({
+            wrapperClass: 'wrapper'
+        }, attrs || {});
+
         return $(`
-            <div class="dish-variation">
-                <label for="">${dv.title}</label>
-                <input type="radio" name="${dv.slug}" value="1" ${checked ? ' checked' : ''}>
+            <div class="${attributes.wrapperClass}">
+                <label for="">${label}</label>
+                <input type="radio" name="${name}" value="${value}" ${selected ? ' checked' : ''}>
             </div>
         `);
     }
 
     handleOk(): void {
-        const $dialog = $(this);
-        const $form = $dialog.find('form:first');
+        let self = this;
+        const $form = this.$dialog.find('form:first');
         $.ajax({
             type: 'POST',
             url: '/meal/join',
             data: $form.serialize(),
             success: function (data) {
-                //
+                self.opts.ok();
             }
         });
-        $dialog.dialog('close');
+        self.$dialog.dialog('close');
     }
 
     handleCancel(): void {
-        $(this).dialog('close');
+        this.$dialog.dialog('close');
     }
 
     handleCreate(event: JQueryEventObject, ui: DialogUIParams): void {
@@ -110,4 +117,12 @@ interface Dish extends DishVariation {
 interface DishVariation {
     title: string
     slug: string
+}
+
+interface CombiMealDialogOptions {
+    ok: () => void
+}
+
+interface ElementAttributes {
+    wrapperClass: string
 }

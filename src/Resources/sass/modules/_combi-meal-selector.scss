@@ -1,5 +1,6 @@
-#combi-meal-selector {
-  .dish, .dish-variation {
+.combi-meal-selector {
+  .dish,
+  .dish-variation {
     overflow: auto;
     width: 100%;
   }
@@ -7,7 +8,8 @@
   .dish {
     margin-top: 25px;
 
-    .title, & > label {
+    .title,
+    > label {
       font-size: 22px;
     }
 

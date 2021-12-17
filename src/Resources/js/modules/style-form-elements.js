@@ -59,9 +59,19 @@ Mealz.prototype.styleCheckboxes = function () {
     });
 
     // Handle click event on checkbox representer
-    this.$body.on('click', '.' + this.checkboxWrapperClass, function() {
-        var $checkbox = $(this).find('input');
-        $checkbox.trigger('click');
+    this.$body.on('click', '.' + this.checkboxWrapperClass, function(e) {
+        let $checkboxWrapper = $(this);
+        let $checkbox = $checkboxWrapper.find('input');
+
+        // Disable click event for combi-meal checkbox.
+        // It is un/set depending on the user dish selection.
+        if (1 === $checkboxWrapper.closest('.meal-row').data('combi')) {
+            e.preventDefault();
+            e.stopPropagation();
+            that.toggleParticipation($checkbox);
+        } else {
+            $checkbox.trigger('click');
+        }
     });
 
     $('.' + this.checkboxWrapperClass + ' input').on('click', function(e) {

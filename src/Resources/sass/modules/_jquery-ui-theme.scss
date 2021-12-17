@@ -1,23 +1,23 @@
 // core
 .ui-widget-overlay {
-  background-color: #1e1e1e;
   @include opacity(0.9);
+  background-color: #1e1e1e;
 }
 
 .ui-widget {
   &.ui-widget-content {
-    border: none;
+    border: 0;
   }
 }
 
 .ui-widget-header {
-  border: none;
+  border: 0;
 }
 
 .ui-widget-content {
-  background-color: $color-gray-secondary;
+  border: 0;
   color: $color-white;
-  border: none;
+  background-color: $color-gray-secondary;
 }
 
 // dialog
@@ -29,13 +29,13 @@
   }
 
   .ui-dialog-title {
-    background-color: $color-gray-secondary;
     color: $color-white;
+    background-color: $color-gray-secondary;
     font-size: 22px;
   }
 
   .ui-dialog-buttonpane {
-    border: none;
+    border: 0;
     text-align: center;
 
     .ui-dialog-buttonset {
@@ -44,9 +44,9 @@
 
     .ui-button {
       padding: 1em 3em;
-      background-color: $color-gray-primary;
+      border: 0;
       color: $color-white;
-      border: none;
+      background-color: $color-gray-primary;
     }
   }
 }

@@ -17,7 +17,9 @@ import {Controller} from "./controller";
 if (process.env.MODE === 'production') {
     jQuery.migrateMute = true;
 } else {
-    module.hot.accept();
+    if (import.meta.webpackHot) {
+        import.meta.webpackHot.accept();
+    }
 }
 
 function importAll(r) {

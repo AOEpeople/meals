@@ -8,6 +8,7 @@ Mealz.prototype.toggleParticipation = function ($checkbox) {
 
     if (this.combiMealCheckbox($checkbox) && this.mealHasVariations($checkbox)) {
         this.showMealSelectionOverlay($checkbox);
+        return;
     }
 
     var that = this;
@@ -66,31 +67,15 @@ Mealz.prototype.getCombiMealDishes = function ($dishCheckbox) {
     return dishes;
 }
 
-Mealz.prototype._getCombiMealDishes = function ($dishCheckbox) {
-    let dishes = [];
-    $dishCheckbox.closest('.meal').find('.meal-row').each(function () {
-        const $mealRow = $(this);
-        if ('1' === $mealRow.attr('data-combi')) {
-            return;
-        }
-
-        let dish = {
-            title: $mealRow.find('.text .title').text().trim(),
-            variations: []
-        };
-        $mealRow.find('.variation-row .text-variation').each(function () {
-            let dishVariation = { title: $(this).text().trim() };
-            dish.variations.push(dishVariation);
-        });
-        dishes.push(dish);
-    });
-
-    return dishes;
-}
-
 Mealz.prototype.showMealSelectionOverlay = function ($dishCheckbox) {
+    let self = this;
     const dishes = this.getCombiMealDishes($dishCheckbox);
-    let cmd = new CombiMealDialog(dishes);
+    let cmd = new CombiMealDialog(dishes, {
+        ok: function () {
+            $dishCheckbox.prop('checked', !$dishCheckbox.is(':checked'));
+            self.applyCheckboxClasses($dishCheckbox);
+        }
+    });
     cmd.open();
 }
 

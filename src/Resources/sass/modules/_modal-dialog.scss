@@ -1,24 +1,24 @@
 .modal-dialog-wrapper {
-  background-color: $color-gray-secondary;
   color: $color-white;
+  background-color: $color-gray-secondary;
 
   .header {
-    font-size: 22px;
     font-weight: bold;
+    font-size: 22px;
   }
 
   .actions {
     text-align: center;
 
     .button {
-      background-color: $color-gray-primary;
       min-width: 100px;
       margin: 0 5px;
+      background-color: $color-gray-primary;
     }
 
     button:disabled {
-      background-color: $color-gray-secondary;
       border: solid 1px $color-gray-primary;
+      background-color: $color-gray-secondary;
       cursor: default;
     }
   }

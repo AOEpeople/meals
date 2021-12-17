@@ -63,8 +63,8 @@ Mealz.prototype.styleCheckboxes = function () {
         let $checkboxWrapper = $(this);
         let $checkbox = $checkboxWrapper.find('input');
 
-        // Disable click event for combi-meal checkbox.
-        // It is un/set depending on the user dish selection.
+        // Disable click event for combi meal checkbox.
+        // It is un/set depending on the user dish selection and server response.
         if (1 === $checkboxWrapper.closest('.meal-row').data('combi')) {
             e.preventDefault();
             e.stopPropagation();

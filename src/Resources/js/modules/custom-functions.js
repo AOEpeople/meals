@@ -40,7 +40,12 @@ Mealz.prototype.copyToClipboard = function() {
             } else {
                 guestMenuLinkInput.trigger('select');
             }
-            navigator.clipboard.writeText(result);
+            // Clipboard copy only works in secure context, redirect http -> https
+            if (window.location.protocol === 'https:') {
+                navigator.clipboard.writeText(result);
+            } else {
+                console.warn('Clipboard access from insecure (HTTP) context is prohibited. Reload page with HTTPS and try again.');
+            }
             guestMenuLinkInput.trigger('blur');
         } else {
             var $html = $(result);

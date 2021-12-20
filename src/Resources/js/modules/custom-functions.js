@@ -41,7 +41,7 @@ Mealz.prototype.copyToClipboard = function() {
                 guestMenuLinkInput.trigger('select');
             }
             // Clipboard copy only works in secure context, redirect http -> https
-            if(window.isSecureContext) {
+            if (window.location.protocol === 'https:') {
                 navigator.clipboard.writeText(result);
             } else {
                 console.warn('Clipboard access from insecure (HTTP) context is prohibited. Reload page with HTTPS and try again.');

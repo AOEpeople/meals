@@ -1,16 +1,17 @@
 import 'jquery-ui/ui/widgets/dialog';
-import DialogUIParams = JQueryUI.DialogUIParams;
 
-export class CombiMealDialog {
-    readonly containerID: string = '#combi-meal-selector';
+export class CombinedMealDialog {
+    readonly containerID: string = '#combined-meal-selector';
     title: string;
-    opts: CombiMealDialogOptions;
+    path: string;
+    opts: CombinedMealDialogOptions;
 
     $form: JQuery;
     $dialog: JQuery;
 
-    constructor(private dishes: Dish[], opts: CombiMealDialogOptions) {
+    constructor(private dishes: Dish[], path: string, opts: CombinedMealDialogOptions) {
         this.title = this.getTitle(dishes);
+        this.path = path;
         this.$form = this.buildForm(dishes);
         this.opts = opts;
     }
@@ -89,10 +90,10 @@ export class CombiMealDialog {
         const $form = this.$dialog.find('form:first');
         $.ajax({
             type: 'POST',
-            url: '/meal/join',
+            url: this.path,
             data: $form.serialize(),
             success: function (data) {
-                self.opts.ok();
+                self.opts.ok(data);
             }
         });
         self.$dialog.dialog('close');
@@ -102,7 +103,7 @@ export class CombiMealDialog {
         this.$dialog.dialog('close');
     }
 
-    handleCreate(event: JQueryEventObject, ui: DialogUIParams): void {
+    handleCreate(): void {
         let $widget = $(this).dialog('widget');
         $widget.removeClass('ui-corner-all');
         $widget.find('.ui-dialog-titlebar-close').remove();
@@ -119,8 +120,8 @@ interface DishVariation {
     slug: string
 }
 
-interface CombiMealDialogOptions {
-    ok: () => void
+interface CombinedMealDialogOptions {
+    ok: (data: []) => void
 }
 
 interface ElementAttributes {

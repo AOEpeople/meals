@@ -62,13 +62,19 @@ Mealz.prototype.styleCheckboxes = function () {
     this.$body.on('click', '.' + this.checkboxWrapperClass, function(e) {
         let $checkboxWrapper = $(this);
         let $checkbox = $checkboxWrapper.find('input');
+        if ($checkbox === undefined) {
+            console.log('Error: No checkbox found');
+            return;
+        }
 
-        // Disable click event for combi meal checkbox.
+        // Disable click event for combined meal checkbox.
         // It is un/set depending on the user dish selection and server response.
-        if (1 === $checkboxWrapper.closest('.meal-row').data('combi')) {
+        if (1 === $checkboxWrapper.closest('.meal-row').data('combined')
+            && !$checkbox.is(':checked')
+            && that.mealHasVariations($checkbox)) {
             e.preventDefault();
             e.stopPropagation();
-            that.toggleParticipation($checkbox);
+            that.showMealSelectionOverlay($checkbox);
         } else {
             $checkbox.trigger('click');
         }

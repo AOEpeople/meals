@@ -1,13 +1,8 @@
-const {CombiMealDialog} = require("./combi-meal-dialog");
+const {CombinedMealDialog} = require("./combined-meal-dialog");
 
 Mealz.prototype.toggleParticipation = function ($checkbox) {
     if ($checkbox === undefined) {
         console.log('Error: No checkbox found');
-        return;
-    }
-
-    if (this.combiMealCheckbox($checkbox) && this.mealHasVariations($checkbox)) {
-        this.showMealSelectionOverlay($checkbox);
         return;
     }
 
@@ -32,19 +27,15 @@ Mealz.prototype.toggleParticipation = function ($checkbox) {
     }
 };
 
-Mealz.prototype.combiMealCheckbox = function ($dishCheckbox) {
-    return '1' === $dishCheckbox.closest('.meal-row').attr('data-combi');
-}
-
 Mealz.prototype.mealHasVariations = function ($dishCheckbox) {
     return 0 < $dishCheckbox.closest('.meal').find('.variation-row .text-variation').length;
 }
 
-Mealz.prototype.getCombiMealDishes = function ($dishCheckbox) {
+Mealz.prototype.getCombinedMealDishes = function ($dishCheckbox) {
     let dishes = [];
     $dishCheckbox.closest('.meal').find('.meal-row').each(function () {
         const $mealRow = $(this);
-        if (1 === $mealRow.data('combi')) {
+        if (1 === $mealRow.data('combined')) {
             return;
         }
 
@@ -69,10 +60,14 @@ Mealz.prototype.getCombiMealDishes = function ($dishCheckbox) {
 
 Mealz.prototype.showMealSelectionOverlay = function ($dishCheckbox) {
     let self = this;
-    const dishes = this.getCombiMealDishes($dishCheckbox);
-    let cmd = new CombiMealDialog(dishes, {
-        ok: function () {
+    let path = $dishCheckbox.attr('value');
+    const dishes = this.getCombinedMealDishes($dishCheckbox);
+    let cmd = new CombinedMealDialog(dishes,
+        path,
+        {
+        ok: function (data) {
             $dishCheckbox.prop('checked', !$dishCheckbox.is(':checked'));
+            editCountAndCheckbox(data, $dishCheckbox)
             self.applyCheckboxClasses($dishCheckbox);
         }
     });

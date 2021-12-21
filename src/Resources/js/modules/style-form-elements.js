@@ -59,9 +59,25 @@ Mealz.prototype.styleCheckboxes = function () {
     });
 
     // Handle click event on checkbox representer
-    this.$body.on('click', '.' + this.checkboxWrapperClass, function() {
-        var $checkbox = $(this).find('input');
-        $checkbox.trigger('click');
+    this.$body.on('click', '.' + this.checkboxWrapperClass, function(e) {
+        let $checkboxWrapper = $(this);
+        let $checkbox = $checkboxWrapper.find('input');
+        if ($checkbox === undefined) {
+            console.log('Error: No checkbox found');
+            return;
+        }
+
+        // Disable click event for combined meal checkbox.
+        // It is un/set depending on the user dish selection and server response.
+        if (1 === $checkboxWrapper.closest('.meal-row').data('combined')
+            && !$checkbox.is(':checked')
+            && that.mealHasVariations($checkbox)) {
+            e.preventDefault();
+            e.stopPropagation();
+            that.showMealSelectionOverlay($checkbox);
+        } else {
+            $checkbox.trigger('click');
+        }
     });
 
     $('.' + this.checkboxWrapperClass + ' input').on('click', function(e) {

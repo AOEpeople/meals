@@ -3,16 +3,18 @@ import 'jquery-ui/ui/widgets/dialog';
 export class CombinedMealDialog {
     readonly containerID: string = '#combined-meal-selector';
     title: string;
+    slotSlug: string;
     path: string;
     opts: CombinedMealDialogOptions;
 
     $form: JQuery;
     $dialog: JQuery;
 
-    constructor(private dishes: Dish[], path: string, opts: CombinedMealDialogOptions) {
+    constructor(private dishes: Dish[], slotSlug: string, path: string, opts: CombinedMealDialogOptions) {
         this.title = this.getTitle(dishes);
         this.path = path;
-        this.$form = this.buildForm(dishes);
+        this.slotSlug = slotSlug;
+        this.$form = this.buildForm(dishes, this.slotSlug);
         this.opts = opts;
     }
 
@@ -37,10 +39,12 @@ export class CombinedMealDialog {
         }, '');
     }
 
-    buildForm(dishes: Dish[]): JQuery {
+    buildForm(dishes: Dish[], slotSlug: string): JQuery {
         let $form = $('<form method="post"></form>');
         let $formFields = this.getFormFields(dishes);
         $form.prepend($formFields);
+        let $slotSlugField = '<input type="hidden" name="slug" value="' + slotSlug + '">';
+        $form.prepend($slotSlugField);
 
         return $form;
     }

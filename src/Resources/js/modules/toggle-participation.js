@@ -61,8 +61,11 @@ Mealz.prototype.getCombinedMealDishes = function ($dishCheckbox) {
 Mealz.prototype.showMealSelectionOverlay = function ($dishCheckbox) {
     let self = this;
     let path = $dishCheckbox.attr('value');
+    const slotBox = $dishCheckbox.closest('.meal').find('.slot-selector');
     const dishes = this.getCombinedMealDishes($dishCheckbox);
-    let cmd = new CombinedMealDialog(dishes,
+    let cmd = new CombinedMealDialog(
+        dishes,
+        slotBox.val(),
         path,
         {
         ok: function (data) {

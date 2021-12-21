@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Service;
 
 use App\Mealz\MealBundle\Entity\Meal;
-use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\ParticipantRepository;
 use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Entity\SlotRepository;
@@ -110,14 +109,11 @@ class GuestParticipationService
      *
      * @param Collection<int, Meal> $meals
      */
-    private function create(Profile $profile, Collection $meals, ?Slot $slot): void
+    private function create(Profile $profile, Collection $meals, ?Slot $slot = null, array $dishSlugs = []): void
     {
         foreach ($meals as $meal) {
-            $participation = new Participant($profile, $meal);
+            $participation = $this->createParticipation($profile, $meal, $slot, $dishSlugs);
             $participation->setCostAbsorbed(true);
-            if (null !== $slot) {
-                $participation->setSlot($slot);
-            }
 
             $this->entityManager->persist($participation);
         }

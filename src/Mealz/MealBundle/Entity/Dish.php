@@ -18,6 +18,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Dish
 {
+    public const COMBINED_DISH_SLUG = 'combined-dish';
+
     /**
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -240,5 +242,10 @@ class Dish
     public function hasVariations(): bool
     {
         return count($this->variations) > 0;
+    }
+
+    public function isCombinedDish(): bool
+    {
+        return self::COMBINED_DISH_SLUG === $this->slug;
     }
 }

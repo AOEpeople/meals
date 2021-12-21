@@ -44,9 +44,9 @@ class Meal
 
     /**
      * @Assert\NotBlank()
-     * @ORM\Column(type="decimal", nullable=FALSE, name="participation_limit", precision=2, scale=1)
+     * @ORM\Column(type="integer", nullable=FALSE, name="participation_limit", precision=2, scale=1)
      *
-     * @var float
+     * @var int
      */
     private int $participationLimit = 0;
 
@@ -100,7 +100,7 @@ class Meal
     }
 
     /**
-     * @param float $participationLimit
+     * @param int $participationLimit
      */
     public function setParticipationLimit($participationLimit): void
     {
@@ -108,7 +108,7 @@ class Meal
     }
 
     /**
-     * @return float
+     * @return int
      */
     public function getParticipationLimit()
     {

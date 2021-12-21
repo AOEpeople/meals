@@ -45,7 +45,7 @@ class CombinedMealServiceTest extends AbstractDatabaseTestCase
         $dishRepo = static::$container->get(DishRepository::class);
         $this->cms = new CombinedMealService($price, $entityManager, $dishRepo);
 
-        $combinedDishes = $dishRepo->findBy(['slug' => CombinedMealService::COMBINED_DISH_SLUG]);
+        $combinedDishes = $dishRepo->findBy(['slug' => Dish::COMBINED_DISH_SLUG]);
         if (1 === count($combinedDishes)) {
             $this->combinedDish = $combinedDishes[0];
         }

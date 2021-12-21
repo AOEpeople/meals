@@ -9,6 +9,7 @@ use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\ParticipantRepository;
 use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Entity\SlotRepository;
+use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 
 /**
@@ -111,5 +112,28 @@ trait ParticipationServiceTrait
         $slotPartCount = $this->participantRepo->getCountBySlot($slot, $date);
 
         return $slotPartCount < $slotLimit;
+    }
+
+    private function createParticipation(Profile $profile, Meal $meal, ?Slot $slot = null, array $dishSlugs = []): Participant
+    {
+        $participation = new Participant($profile, $meal);
+        if (null !== $slot) {
+            $participation->setSlot($slot);
+        }
+
+        if ($meal->getDish()->isCombinedDish()) {
+            /** @var Meal $m */
+            foreach ($meal->getDay()->getMeals() as $m) {
+                if ($m->getDish()->isCombinedDish()) {
+                    continue;
+                }
+
+                if (empty($dishSlugs) || in_array($m->getDish()->getSlug(), $dishSlugs)) {
+                    $participation->getCombinedDishes()->add($m->getDish());
+                }
+            }
+        }
+
+        return $participation;
     }
 }

@@ -16,12 +16,10 @@
   <violation rule="PHPMD\Rule\Design\TooManyPublicMethods" file="src/Mealz/MealBundle/Tests/Controller/DishVariationControllerTest.php"/>
   <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Mealz/MealBundle/Tests/Controller/DishVariationControllerTest.php" method="getDish"/>
   <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Mealz/MealBundle/Service/CombinedMealService.php" method="update"/>
+  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Mealz/MealBundle/Tests/Service/CombinedMealServiceTest.php" method="updateWeek"/>
   <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Tests/Controller/MealControllerTest.php"/>
   <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Controller/ParticipantController.php"/>
-  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Service/GuestParticipationService.php"/>
   <violation rule="PHPMD\Rule\Design\TooManyPublicMethods" file="src/Mealz/MealBundle/Tests/Controller/ParticipantControllerTest.php"/>
-  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Service/GuestParticipationService.php"/>
-  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Controller/ParticipantController.php"/>
   <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Tests/Controller/ParticipantControllerTest.php"/>
   <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Tests/Service/ParticipationServiceTest.php"/>
   <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Controller/BaseController.php"/>

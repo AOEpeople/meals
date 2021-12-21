@@ -39,7 +39,7 @@ module.exports = function(env, argv) {
         },
         output: {
             path: path.resolve(__dirname, '../../public/static/'),
-            publicPath: env.WEBPACK_SERVE ? 'https://localhost:1337/static/' : '/static/',
+            publicPath: env.WEBPACK_SERVE ? 'https://meals.test:1338/static/' : '/static/',
             assetModuleFilename: 'assets/[name].[contenthash:4][ext][query]',
             clean: true,
             filename: '[name].js',
@@ -47,7 +47,7 @@ module.exports = function(env, argv) {
         },
         resolve: {
             preferRelative: true,
-            extensions: ['.js', '.json'],
+            extensions: ['.js', '.ts', '.json'],
             descriptionFiles: ['package.json'],
             aliasFields: ['browser', 'main'],
             modules: [
@@ -71,6 +71,11 @@ module.exports = function(env, argv) {
                     test: /\.(js)$/,
                     exclude: [/node_modules/],
                     use: ['babel-loader'],
+                },
+                {
+                    test: /\.tsx?$/,
+                    use: 'ts-loader',
+                    exclude: /node_modules/,
                 },
                 {
                     test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/i,
@@ -129,27 +134,32 @@ module.exports = function(env, argv) {
             new webpack.DefinePlugin({
                 'process.browser': true,
                 'process.env.MODE': JSON.stringify(argv.mode),
-            }),
+            })
         ],
         devServer: {
-            contentBase: path.resolve(__dirname, 'public'),
-            host: '0.0.0.0',
-            port: 1337,
-            sockHost: 'localhost',
+            open: true,
+            allowedHosts: [ 'meals.test' ],
+            host: 'meals.test',
+            port: 1338,
+            proxy: {
+                '/': {
+                    target: 'http://meals.test',
+                    secure: false,
+                }
+            },
             hot: true,
-            overlay: true,
-            disableHostCheck: true,
-            https: true,
+            server: 'https',
             headers: {
                 'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
                 'Access-Control-Allow-Headers': 'X-Requested-With, content-type, Authorization',
                 'Access-Control-Allow-Origin': '*',
             },
+            static: {
+                directory: path.resolve(__dirname, '../../public'),
+            }
         },
+        watchOptions: {
+            poll: true
+        }
     }
 }
-
-// console.log('config:', module.exports({}).devServer)
-// process.exit(0)
-// console.log(module.exports)
-// console.log('/config')

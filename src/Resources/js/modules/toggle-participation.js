@@ -1,8 +1,11 @@
+const {CombinedMealDialog} = require("./combined-meal-dialog");
+
 Mealz.prototype.toggleParticipation = function ($checkbox) {
     if ($checkbox === undefined) {
         console.log('Error: No checkbox found');
         return;
     }
+
     var that = this;
     var url = $checkbox.attr('value');
     $participantsCount = $checkbox.closest('.wrapper-meal-actions').find('.participants-count');
@@ -23,6 +26,53 @@ Mealz.prototype.toggleParticipation = function ($checkbox) {
         toggle($checkbox, url, that);
     }
 };
+
+Mealz.prototype.mealHasVariations = function ($dishCheckbox) {
+    return 0 < $dishCheckbox.closest('.meal').find('.variation-row .text-variation').length;
+}
+
+Mealz.prototype.getCombinedMealDishes = function ($dishCheckbox) {
+    let dishes = [];
+    $dishCheckbox.closest('.meal').find('.meal-row').each(function () {
+        const $mealRow = $(this);
+        if (1 === $mealRow.data('combined')) {
+            return;
+        }
+
+        let dish = {
+            title: $mealRow.find('.text .title').contents().get(0).nodeValue.trim(),
+            slug: $mealRow.data('id'),
+            variations: []
+        };
+        $mealRow.find('.variation-row').each(function () {
+            const $dishVarRow = $(this);
+            let dishVariation = {
+                title: $dishVarRow.find('.text-variation').text().trim(),
+                slug: $dishVarRow.data('id')
+            };
+            dish.variations.push(dishVariation);
+        });
+        dishes.push(dish);
+    });
+
+    return dishes;
+}
+
+Mealz.prototype.showMealSelectionOverlay = function ($dishCheckbox) {
+    let self = this;
+    let path = $dishCheckbox.attr('value');
+    const dishes = this.getCombinedMealDishes($dishCheckbox);
+    let cmd = new CombinedMealDialog(dishes,
+        path,
+        {
+        ok: function (data) {
+            $dishCheckbox.prop('checked', !$dishCheckbox.is(':checked'));
+            editCountAndCheckbox(data, $dishCheckbox)
+            self.applyCheckboxClasses($dishCheckbox);
+        }
+    });
+    cmd.open();
+}
 
 function editCountAndCheckbox(data, $checkbox, countClass, checkboxClass) {
     $checkbox.attr('value', data.url);

@@ -13,8 +13,6 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class CombinedMealService
 {
-    public const COMBINED_DISH_SLUG = 'combined-dish';
-
     private const COMBINED_DISH_TITLE_EN = 'Combined Dish'; // NOTE: important for slug generation, do not change
 
     private float $defaultPrice;
@@ -65,7 +63,7 @@ class CombinedMealService
 
     private function createCombinedDish(DishRepository $dishRepo): Dish
     {
-        $combinedDishes = $dishRepo->findBy(['slug' => self::COMBINED_DISH_SLUG]);
+        $combinedDishes = $dishRepo->findBy(['slug' => Dish::COMBINED_DISH_SLUG]);
         if (1 === count($combinedDishes)) {
             return $combinedDishes[0];
         }

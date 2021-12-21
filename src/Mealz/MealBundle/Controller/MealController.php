@@ -96,8 +96,10 @@ class MealController extends BaseController
             $slot = $slotRepo->findOneBy(['slug' => $slotSlug]);
         }
 
+        $dishSlugs = $request->request->get('dishes', []);
+
         try {
-            $out = $participationSrv->join($userProfile, $meal, $slot);
+            $out = $participationSrv->join($userProfile, $meal, $slot, $dishSlugs);
         } catch (Exception $e) {
             $this->logException($e);
 

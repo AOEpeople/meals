@@ -36,6 +36,7 @@ class ParticipantController extends BaseController
         $date = $meal->getDateTime()->format('Y-m-d');
         $dish = $meal->getDish()->getSlug();
         $profile = $participant->getProfile()->getUsername();
+        $participant->getCombinedDishes()->clear();
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->remove($participant);

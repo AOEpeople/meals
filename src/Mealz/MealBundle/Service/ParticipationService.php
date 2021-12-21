@@ -41,7 +41,7 @@ class ParticipationService
     /**
      * @psalm-return array{participant: Participant, offerer: Profile|null}|null
      */
-    public function join(Profile $profile, Meal $meal, $slot = null): ?array
+    public function join(Profile $profile, Meal $meal, ?Slot $slot = null, array $dishSlugs = []): ?array
     {
         // user is attempting to take over an already booked meal by some participant
         if ($this->mealIsOffered($meal) && $this->allowedToAccept($meal)) {
@@ -54,7 +54,7 @@ class ParticipationService
                 $slot = $this->getNextFreeSlot($meal->getDateTime());
             }
 
-            $participant = $this->create($profile, $meal, $slot);
+            $participant = $this->create($profile, $meal, $slot, $dishSlugs);
 
             return ['participant' => $participant, 'offerer' => null];
         }
@@ -97,12 +97,9 @@ class ParticipationService
     /**
      * Creates a new participation for user $profile in meal $meal in slot $slot.
      */
-    private function create(Profile $profile, Meal $meal, ?Slot $slot): ?Participant
+    private function create(Profile $profile, Meal $meal, ?Slot $slot = null,  array $dishSlugs = []): ?Participant
     {
-        $participant = new Participant($profile, $meal);
-        if (null !== $slot) {
-            $participant->setSlot($slot);
-        }
+        $participant = $this->createParticipation($profile, $meal, $slot, $dishSlugs);
 
         $this->em->persist($participant);
         $this->em->flush();

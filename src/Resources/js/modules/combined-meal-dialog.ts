@@ -63,7 +63,7 @@ export class CombinedMealDialog {
             return this.getRadioButton(fieldName, d.slug, true, d.title, {wrapperClass: 'dish'});
         }
 
-        let $dish = $(`<div class="dish"><div class="title">${d.title}</div></div>`);
+        let $dish = $('<div class="dish"><div class="title">' + d.title + '</div></div>');
         d.variations.forEach((dv, index) => {
             let $dishVariation = this.getRadioButton(fieldName, dv.slug, 0 === index, dv.title, {wrapperClass: 'dish-variation'});
             $dish.append($dishVariation);

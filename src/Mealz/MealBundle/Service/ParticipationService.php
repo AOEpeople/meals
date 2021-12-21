@@ -97,7 +97,7 @@ class ParticipationService
     /**
      * Creates a new participation for user $profile in meal $meal in slot $slot.
      */
-    private function create(Profile $profile, Meal $meal, ?Slot $slot = null,  array $dishSlugs = []): ?Participant
+    private function create(Profile $profile, Meal $meal, ?Slot $slot = null, array $dishSlugs = []): ?Participant
     {
         $participant = $this->createParticipation($profile, $meal, $slot, $dishSlugs);
 

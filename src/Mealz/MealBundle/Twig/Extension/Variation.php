@@ -57,9 +57,9 @@ class Variation extends AbstractExtension
             if (false === is_null($dish) && (true === $dish->getParent() instanceof Dish)) {
                 $parentId = $dish->getParent()->getId();
                 $mealsVariations[$parentId][] = $meal;
-            } else if ($dish->isCombinedDish())
+            } elseif ($dish->isCombinedDish()) {
                 $combinedMeal = $meal;
-            else {
+            } else {
                 $mealsArray[] = $meal;
             }
         }
@@ -67,7 +67,7 @@ class Variation extends AbstractExtension
         return [
             'meals' => $mealsArray,
             'mealsVariations' => $mealsVariations,
-            'combinedMeal' => $combinedMeal
+            'combinedMeal' => $combinedMeal,
         ];
     }
 

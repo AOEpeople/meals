@@ -63,18 +63,42 @@ Mealz.prototype.showMealSelectionOverlay = function ($dishCheckbox) {
     let path = $dishCheckbox.attr('value');
     const slotBox = $dishCheckbox.closest('.meal').find('.slot-selector');
     const dishes = this.getCombinedMealDishes($dishCheckbox);
+    const isGuestParticipation = $('body').hasClass('guest-wrapper');
     let cmd = new CombinedMealDialog(
         dishes,
         slotBox.val(),
         path,
         {
-        ok: function (data) {
-            $dishCheckbox.prop('checked', !$dishCheckbox.is(':checked'));
-            editCountAndCheckbox(data, $dishCheckbox)
-            self.applyCheckboxClasses($dishCheckbox);
+            ajax: !isGuestParticipation,
+            ok: function (data) {
+                $dishCheckbox.prop('checked', !$dishCheckbox.is(':checked'));
+                self.applyCheckboxClasses($dishCheckbox);
+                if (isGuestParticipation) {
+                    updateDishSelection($dishCheckbox, data);
+                    self.toggleGuestParticipation($dishCheckbox);
+                } else {
+                    editCountAndCheckbox(data, $dishCheckbox);
+                }
+            }
         }
-    });
+    );
     cmd.open();
+}
+
+function updateDishSelection($dishCheckbox, data) {
+    let $mealRow = $dishCheckbox.parents('.meal-row');
+    let $dishSelectionWrapper = $mealRow.find("#dish-selection-wrapper");
+    if (0 === $dishSelectionWrapper.length) {
+        $dishSelectionWrapper = $('<div id="dish-selection-wrapper"></div>');
+        $mealRow.prepend($dishSelectionWrapper);
+    } else {
+        $dishSelectionWrapper.empty();
+    }
+
+    data.filter(entry => entry.name.startsWith('dishes')).forEach(entry => {
+        let $dishSelectionField = '<input type="hidden" name="' + entry.name + '" value="' + entry.value + '">';
+        $dishSelectionWrapper.prepend($dishSelectionField);
+    });
 }
 
 function editCountAndCheckbox(data, $checkbox, countClass, checkboxClass) {
@@ -127,9 +151,9 @@ window.swap = function ($checkbox, url) {
         url: url,
         dataType: 'json',
         success: function (data) {
-            var countClass = 'participation-pending';
-            var checkboxClass = 'participation-checkbox unswap-action';
-            editCountAndCheckbox(data, $checkbox, countClass, checkboxClass);
+            let countClass = 'participation-pending';
+            let unswapCheckbox = 'participation-checkbox unswap-action';
+            editCountAndCheckbox(data, $checkbox, countClass, unswapCheckbox);
 
             $tooltip.toggleClass('active');
 
@@ -158,7 +182,7 @@ function unswap($checkbox, url, swapCheckbox) {
         url: url,
         dataType: 'json',
         success: function (data) {
-            var countClass = 'participation-pending';
+            let countClass = 'participation-pending';
             editCountAndCheckbox(data, $checkbox, countClass, swapCheckbox);
             $tooltip.toggleClass('active');
         },
@@ -175,7 +199,7 @@ function acceptOffer($checkbox, url, that, swapCheckbox) {
         dataType: 'json',
         success: function (data) {
             that.applyCheckboxClasses($checkbox);
-            var countClass = 'offer-available';
+            let countClass = 'offer-available';
             editCountAndCheckbox(data, $checkbox, countClass, swapCheckbox);
             $tooltip.toggleClass('active');
         },
@@ -187,9 +211,9 @@ function acceptOffer($checkbox, url, that, swapCheckbox) {
 
 Mealz.prototype.loadToggleParticipationCheckbox = function ($tableRow) {
     var that = this;
-    var $tds = $tableRow.find('.table-data.meal-participation');
-    var hasEditing = $tableRow.hasClass('editing');
-    var $editableRows = $('.container.edit-participation .table-row.editing');
+    let $tds = $tableRow.find('.table-data.meal-participation');
+    let hasEditing = $tableRow.hasClass('editing');
+    let $editableRows = $('.container.edit-participation .table-row.editing');
 
     if (this.$editParticipationEventListener !== undefined) {
         this.$editParticipationEventListener.off();
@@ -197,9 +221,9 @@ Mealz.prototype.loadToggleParticipationCheckbox = function ($tableRow) {
 
     $editableRows.removeClass('editing');
     $editableRows.find('.table-data').each(function (idx, td) {
-        var $td = $(td);
-        var $icon = $td.find('i:first');
-        var iconClass = 'glyphicon';
+        let $td = $(td);
+        let $icon = $td.find('i:first');
+        let iconClass = 'glyphicon';
         if ($td.hasClass('participating')) {
             iconClass += ' glyphicon-ok';
         }
@@ -209,8 +233,8 @@ Mealz.prototype.loadToggleParticipationCheckbox = function ($tableRow) {
     if (!hasEditing) {
         $tableRow.addClass('editing');
         $tds.each(function (idx, td) {
-            var $td = $(td);
-            var iconClass = $td.hasClass('participating') ? 'glyphicon-check' : 'glyphicon-unchecked';
+            let $td = $(td);
+            let iconClass = $td.hasClass('participating') ? 'glyphicon-check' : 'glyphicon-unchecked';
 
             $td.find('i:first').addClass(iconClass);
         });
@@ -242,7 +266,7 @@ Mealz.prototype.toggleParticipationAdmin = function ($element) {
         success: function (data) {
             $element.data('attribute-action', data.url);
             $element.toggleClass('participating');
-            var $icon = $element.find('i:first');
+            let $icon = $element.find('i:first');
             $icon.toggleClass('glyphicon-check glyphicon-unchecked');
         },
         error: function (xhr) {
@@ -253,11 +277,14 @@ Mealz.prototype.toggleParticipationAdmin = function ($element) {
 
 Mealz.prototype.toggleGuestParticipation = function ($checkbox) {
     var that = this;
-    var $participantsCount = $checkbox.parents('.action').parent().find('.participants-count');
-    var actualCount = parseInt($participantsCount.find('span').html());
+    let $participantsCount = $checkbox.parents('.action').parent().find('.participants-count');
+    let actualCount = parseInt($participantsCount.find('span').html());
     $participantsCount.fadeOut('fast', function () {
         that.applyCheckboxClasses($checkbox);
         $participantsCount.find('span').text($checkbox.is(':checked') ? actualCount + 1 : actualCount - 1);
         $participantsCount.fadeIn('fast');
     });
+    if (1 === $checkbox.parents('.meal-row').data('combined') && !$checkbox.is(':checked')) {
+        updateDishSelection($checkbox, []);
+    }
 };

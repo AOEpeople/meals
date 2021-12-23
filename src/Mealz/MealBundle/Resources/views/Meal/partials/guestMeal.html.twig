@@ -1,13 +1,10 @@
-{% set dish = meal.dish %}
+{% set dish = meal.data.dish %}
 
 <div class="meal-row" {% if dish.isCombinedDish %}data-combined="1"{% else %} data-id="{{ dish.slug }}"{% endif %}>
     {% apply spaceless %}
         <div class="text">
             <div class="title">
                 {{ dish.title }}
-                {% if dishService.isNew(dish) %}
-                    <span class="new-flag">{{ 'content.participation.dish.new'|trans({},'general') }}</span>
-                {% endif %}
             </div>
             <div class="description">
                 {% if dish.description %}
@@ -17,6 +14,6 @@
                 {% endif %}
             </div>
         </div>
-        {% include 'MealzMealBundle:Meal/partials:mealActions.html.twig' %}
+        {% include 'MealzMealBundle:Meal/partials:guestMealActions.html.twig' %}
     {% endapply %}
 </div>

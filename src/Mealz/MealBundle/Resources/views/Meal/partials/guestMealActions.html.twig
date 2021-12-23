@@ -1,0 +1,17 @@
+<div class="wrapper-meal-actions wrapper-variation-vertical-center">
+    <div class="participants">
+        <span class="participants-count{% if meal.data.isParticipationLimitReached %} participation-limit-reached{% endif %}">
+            <span>
+                {{ meal.data.participants | length }}
+            </span>
+            <label>
+                {{ meal.data.participationLimit ? ' / ' ~ meal.data.participationLimit }}
+            </label>
+        </span>
+    </div>
+    <div class="action">
+        <div class="checkbox-wrapper {% if meal.data.isParticipationLimitReached %}disabled{% endif %}">
+            {{ form_row(form.children.day.children.meals.children[meal.value]) }}
+        </div>
+    </div>
+</div>

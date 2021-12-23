@@ -44,6 +44,7 @@ class Variation extends AbstractExtension
     public function groupMeals(array $meals): array
     {
         $mealsArray = $mealsVariations = [];
+        $combinedMeal = null;
 
         foreach ($meals as $meal) {
             /** @var Meal $meal */
@@ -56,7 +57,9 @@ class Variation extends AbstractExtension
             if (false === is_null($dish) && (true === $dish->getParent() instanceof Dish)) {
                 $parentId = $dish->getParent()->getId();
                 $mealsVariations[$parentId][] = $meal;
-            } else {
+            } else if ($dish->isCombinedDish())
+                $combinedMeal = $meal;
+            else {
                 $mealsArray[] = $meal;
             }
         }
@@ -64,6 +67,7 @@ class Variation extends AbstractExtension
         return [
             'meals' => $mealsArray,
             'mealsVariations' => $mealsVariations,
+            'combinedMeal' => $combinedMeal
         ];
     }
 

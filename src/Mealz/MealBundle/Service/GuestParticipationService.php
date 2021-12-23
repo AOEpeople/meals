@@ -46,7 +46,7 @@ class GuestParticipationService
     /**
      * @throws ParticipationException
      */
-    public function join(Profile $profile, Collection $meals, ?Slot $slot): void
+    public function join(Profile $profile, Collection $meals, ?Slot $slot = null, array $dishSlugs = []): void
     {
         $mealDate = $meals->first()->getDateTime();
 
@@ -61,7 +61,7 @@ class GuestParticipationService
             $slot = $this->getNextFreeSlot($mealDate);
         }
 
-        $this->register($guestProfile, $meals, $slot);
+        $this->register($guestProfile, $meals, $slot, $dishSlugs);
     }
 
     /**
@@ -72,7 +72,7 @@ class GuestParticipationService
      * @throws ParticipationException
      * @throws Exception
      */
-    private function register(Profile $profile, Collection $meals, ?Slot $slot): void
+    private function register(Profile $profile, Collection $meals, ?Slot $slot = null, array $dishSLugs = []): void
     {
         $this->validateBookableMeals($meals);
 
@@ -80,7 +80,7 @@ class GuestParticipationService
 
         try {
             $this->entityManager->persist($profile);
-            $this->create($profile, $meals, $slot);
+            $this->create($profile, $meals, $slot, $dishSLugs);
 
             $this->entityManager->flush();
             $this->entityManager->commit();

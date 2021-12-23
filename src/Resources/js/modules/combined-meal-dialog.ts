@@ -1,14 +1,14 @@
 import 'jquery-ui/ui/widgets/dialog';
 
 export class CombinedMealDialog {
-    readonly containerID: string = '#combined-meal-selector';
-    title: string;
-    slotSlug: string;
-    path: string;
-    opts: CombinedMealDialogOptions;
+    private readonly containerID: string = '#combined-meal-selector';
+    private readonly title: string;
+    private readonly slotSlug: string;
+    private readonly path: string;
+    private opts: CombinedMealDialogOptions;
 
-    $form: JQuery;
-    $dialog: JQuery;
+    private $form: JQuery;
+    private $dialog: JQuery;
 
     constructor(private dishes: Dish[], slotSlug: string, path: string, opts: CombinedMealDialogOptions) {
         this.title = this.getTitle(dishes);
@@ -33,13 +33,13 @@ export class CombinedMealDialog {
         });
     }
 
-    getTitle(dishes: Dish[]): string {
+    private getTitle(dishes: Dish[]): string {
         return dishes.reduce(function(title: string, dish: Dish) {
             return ('' === title) ? dish.title : `${title} & ${dish.title}`;
         }, '');
     }
 
-    buildForm(dishes: Dish[], slotSlug: string): JQuery {
+    private buildForm(dishes: Dish[], slotSlug: string): JQuery {
         let $form = $('<form method="post"></form>');
         let $formFields = this.getFormFields(dishes);
         $form.prepend($formFields);
@@ -49,7 +49,7 @@ export class CombinedMealDialog {
         return $form;
     }
 
-    getFormFields(dishes: Dish[]): JQuery {
+    private getFormFields(dishes: Dish[]): JQuery {
         let $dishes = $('<div class="dishes"></div>');
 
         dishes.forEach((dish, index) => {
@@ -60,7 +60,7 @@ export class CombinedMealDialog {
         return $dishes;
     }
 
-    getDishField(d: Dish, index: number): JQuery {
+    private getDishField(d: Dish, index: number): JQuery {
         const fieldName = `dishes[${index}]`;
 
         if (0 === d.variations.length) {
@@ -76,7 +76,7 @@ export class CombinedMealDialog {
         return $dish;
     }
 
-    getRadioButton(name: string, value: string, selected: boolean, label: string, attrs?: ElementAttributes): JQuery {
+    private getRadioButton(name: string, value: string, selected: boolean, label: string, attrs?: ElementAttributes): JQuery {
         let attributes = Object.assign({
             wrapperClass: 'wrapper'
         }, attrs || {});
@@ -89,25 +89,31 @@ export class CombinedMealDialog {
         `);
     }
 
-    handleOk(): void {
+    private handleOk(): void {
         let self = this;
         const $form = this.$dialog.find('form:first');
-        $.ajax({
-            type: 'POST',
-            url: this.path,
-            data: $form.serialize(),
-            success: function (data) {
-                self.opts.ok(data);
-            }
-        });
+        if (self.opts.ajax) {
+            $.ajax({
+                type: 'POST',
+                url: this.path,
+                data: $form.serialize(),
+                success: function (data) {
+                    console.log(data);
+                    self.opts.ok(data);
+                }
+            });
+        } else {
+            let formArray: any = $form.serializeArray();
+            self.opts.ok(formArray);
+        }
         self.$dialog.dialog('close');
     }
 
-    handleCancel(): void {
+    private handleCancel(): void {
         this.$dialog.dialog('close');
     }
 
-    handleCreate(): void {
+    private handleCreate(): void {
         let $widget = $(this).dialog('widget');
         $widget.removeClass('ui-corner-all');
         $widget.find('.ui-dialog-titlebar-close').remove();
@@ -125,6 +131,7 @@ interface DishVariation {
 }
 
 interface CombinedMealDialogOptions {
+    ajax: boolean
     ok: (data: []) => void
 }
 

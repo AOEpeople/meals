@@ -14,7 +14,9 @@
         </span>
         {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
             {% if available ? 'is-available' : '' %}
-                <button class="guest-menu" data-copytarget="#copy-link-{{ day.id }}"><span class="glyphicon glyphicon-new-window"></span></button>
+                <button class="guest-menu" data-copytarget="#copy-link-{{ day.id }}">
+                    <span class="glyphicon glyphicon-new-window"></span>
+                </button>
                 <div class="guest-menu-link">
                     <textarea type="text" id="copy-link-{{ day.id }}"></textarea>
                     <span class="message"><span class="glyphicon glyphicon-ok"></span> Copied to clipboard!</span>
@@ -28,7 +30,6 @@
     {% else %}
         {% set groupedMeals = groupMeals(day.meals.toArray) %}
 
-        {# display meals for given day #}
         {% for meal in groupedMeals.meals %}
             {% include 'MealzMealBundle:Meal/partials:meal.html.twig' %}
         {% endfor %}
@@ -36,6 +37,11 @@
         {% for mealVariationGroup in groupedMeals.mealsVariations %}
             {% include 'MealzMealBundle:Meal/partials:mealVariation.html.twig' %}
         {% endfor %}
+
+        {% if groupedMeals.combinedMeal != null %}
+            {% set meal = groupedMeals.combinedMeal %}
+            {% include 'MealzMealBundle:Meal/partials:meal.html.twig' %}
+        {% endif %}
 
         {% if day.meals | length == 1 %}
             <div class="meal-row one-meal">{{ 'content.participation.meal.no_service'|trans({},'general') }}</div>

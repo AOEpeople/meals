@@ -1,0 +1,20 @@
+<div class="meal-row">
+    {% apply spaceless %}
+        {% for meal in mealsVariations %}
+            {% set dish = meal.data.dish %}
+            {% if loop.first %}
+                <div class="text">
+                    <div class="title">
+                        {{ dish.parent.title }}
+                    </div>
+                </div>
+            {% endif %}
+            <div class="variation-row" data-id="{{ dish.slug }}">
+                <div class="text text-variation">
+                    {{ dish.title }}
+                </div>
+                {% include 'MealzMealBundle:Meal/partials:guestMealActions.html.twig' %}
+            </div>
+        {% endfor %}
+    {% endapply %}
+</div>

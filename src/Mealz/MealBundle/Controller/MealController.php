@@ -238,7 +238,10 @@ class MealController extends BaseController
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 ['profile' => $profile, 'meals' => $meals, 'slot' => $slot] = $this->getGuestInvitationData($form);
-                $gps->join($profile, $meals, $slot);
+
+                $dishSlugs = $request->request->get('dishes', []);
+
+                $gps->join($profile, $meals, $slot, $dishSlugs);
 
                 $message = $this->get('translator')->trans('participation.successful', [], 'messages');
                 $this->addFlashMessage($message, 'success');

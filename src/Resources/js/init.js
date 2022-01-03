@@ -13,6 +13,7 @@ import '@fancyapps/fancybox';
 import 'easy-autocomplete';
 import 'daterangepicker';
 import {Controller} from "./controller";
+import {ParticipantCounter} from "./modules/participant-counter";
 
 if (process.env.MODE === 'production') {
     jQuery.migrateMute = true;
@@ -91,13 +92,22 @@ $(function () {
      */
     mealz.enableSortableTables();
 
+    mealz.$participationCheckboxes.each(function(idx, checkbox) {
+        let $checkbox = $(checkbox);
+        $checkbox.data('participantCounter', new ParticipantCounter($checkbox));
+        mealz.applyCheckboxClasses($checkbox);
+    });
+
     // prepare checkboxes on guest invitation form
     mealz.$guestParticipationCheckboxes.each(function (idx, checkbox) {
-        var $checkbox = $(checkbox);
-        var $participantsCount = $checkbox.parents('.action').parent().find('.participants-count');
-        var actualCount = parseInt($participantsCount.find('span').html());
+        let $checkbox = $(checkbox);
+        $checkbox.data('participantCounter', new ParticipantCounter($checkbox));
+        let participantCounter = $checkbox.data('participantCounter');
         mealz.applyCheckboxClasses($checkbox);
-        $participantsCount.find('span').text($checkbox.is(':checked') ? actualCount + 1 : actualCount);
+        if ($checkbox.is(':checked')) {
+            participantCounter.setCounter(participantCounter.getCounter() + 1);
+            participantCounter.updateUI();
+        }
     });
 
     /**

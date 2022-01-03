@@ -1,4 +1,5 @@
 const {CombinedMealDialog} = require("./combined-meal-dialog");
+const {ParticipationState} = require("./participant-counter");
 
 Mealz.prototype.toggleParticipation = function ($checkbox) {
     if ($checkbox === undefined) {
@@ -77,7 +78,10 @@ Mealz.prototype.showMealSelectionOverlay = function ($dishCheckbox) {
                     updateDishSelection($dishCheckbox, data);
                     self.toggleGuestParticipation($dishCheckbox);
                 } else {
-                    editCountAndCheckbox(data, $dishCheckbox);
+                    let participantCounter = $dishCheckbox.data('participantCounter');
+                    participantCounter.setCounter(data.participantsCount);
+                    participantCounter.updateUI();
+                    updateCheckbox($dishCheckbox, data.url);
                 }
             }
         }
@@ -101,21 +105,11 @@ function updateDishSelection($dishCheckbox, data) {
     });
 }
 
-function editCountAndCheckbox(data, $checkbox, countClass, checkboxClass) {
-    $checkbox.attr('value', data.url);
-    $participantsCount.fadeOut('fast', function () {
-        $participantsCount.find('span').text(data.participantsCount);
-
-        if (checkboxClass !== undefined) {
-            $checkbox.attr('class', checkboxClass);
-        }
-
-        if (countClass !== undefined) {
-            $participantsCount.toggleClass(countClass);
-        }
-
-        $participantsCount.fadeIn('fast');
-    });
+function updateCheckbox($checkbox, url, checkboxClass) {
+    $checkbox.attr('value', url);
+    if (undefined !== checkboxClass) {
+        $checkbox.attr('class', checkboxClass);
+    }
 }
 
 function toggle($checkbox, url, that) {
@@ -128,7 +122,10 @@ function toggle($checkbox, url, that) {
         },
         dataType: 'json',
         success: function (data) {
-            editCountAndCheckbox(data, $checkbox);
+            let participantCounter = $checkbox.data('participantCounter');
+            participantCounter.setCounter(data.participantsCount);
+            participantCounter.updateUI();
+            updateCheckbox($checkbox, data.url);
             that.applyCheckboxClasses($checkbox);
             slotBox.addClass('tmp-disabled').prop('disabled', true)
                 .parent().children('.loader').css('visibility', 'visible');
@@ -151,9 +148,13 @@ window.swap = function ($checkbox, url) {
         url: url,
         dataType: 'json',
         success: function (data) {
-            let countClass = 'participation-pending';
             let unswapCheckbox = 'participation-checkbox unswap-action';
-            editCountAndCheckbox(data, $checkbox, countClass, unswapCheckbox);
+
+            let participantCounter = $checkbox.data('participantCounter');
+            participantCounter.setCounter(data.participantsCount);
+            participantCounter.setParticipationState(ParticipationState.PENDING);
+            participantCounter.updateUI();
+            updateCheckbox($checkbox, data.url, unswapCheckbox);
 
             $tooltip.toggleClass('active');
 
@@ -182,8 +183,11 @@ function unswap($checkbox, url, swapCheckbox) {
         url: url,
         dataType: 'json',
         success: function (data) {
-            let countClass = 'participation-pending';
-            editCountAndCheckbox(data, $checkbox, countClass, swapCheckbox);
+            let participantCounter = $checkbox.data('participantCounter');
+            participantCounter.setCounter(data.participantsCount);
+            participantCounter.setParticipationState(ParticipationState.PENDING);
+            participantCounter.updateUI();
+            updateCheckbox($checkbox, data.url, swapCheckbox);
             $tooltip.toggleClass('active');
         },
         error: function (xhr) {
@@ -199,8 +203,11 @@ function acceptOffer($checkbox, url, that, swapCheckbox) {
         dataType: 'json',
         success: function (data) {
             that.applyCheckboxClasses($checkbox);
-            let countClass = 'offer-available';
-            editCountAndCheckbox(data, $checkbox, countClass, swapCheckbox);
+            let participantCounter = $checkbox.data('participantCounter');
+            participantCounter.setCounter(data.participantsCount);
+            participantCounter.setParticipationState(ParticipationState.OFFER_AVAILABLE);
+            participantCounter.updateUI();
+            updateCheckbox($checkbox, data.url, swapCheckbox)
             $tooltip.toggleClass('active');
         },
         error: function (xhr) {
@@ -276,14 +283,10 @@ Mealz.prototype.toggleParticipationAdmin = function ($element) {
 };
 
 Mealz.prototype.toggleGuestParticipation = function ($checkbox) {
-    var that = this;
-    let $participantsCount = $checkbox.parents('.action').parent().find('.participants-count');
-    let actualCount = parseInt($participantsCount.find('span').html());
-    $participantsCount.fadeOut('fast', function () {
-        that.applyCheckboxClasses($checkbox);
-        $participantsCount.find('span').text($checkbox.is(':checked') ? actualCount + 1 : actualCount - 1);
-        $participantsCount.fadeIn('fast');
-    });
+    let participantCounter = $checkbox.data('participantCounter');
+    participantCounter.setCounter($checkbox.is(':checked') ? participantCounter.getCounter() + 1 : participantCounter.getCounter() - 1);
+    participantCounter.updateUI();
+
     if (1 === $checkbox.parents('.meal-row').data('combined') && !$checkbox.is(':checked')) {
         updateDishSelection($checkbox, []);
     }

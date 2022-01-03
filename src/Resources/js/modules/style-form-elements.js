@@ -52,12 +52,6 @@ Mealz.prototype.styleCheckboxes = function () {
         });
     }
 
-    // Check checkbox states
-    this.$participationCheckboxes.each(function(idx, checkbox) {
-        var $checkbox = $(checkbox);
-        that.applyCheckboxClasses($checkbox);
-    });
-
     // Handle click event on checkbox representer
     this.$body.on('click', '.' + this.checkboxWrapperClass, function(e) {
         let $checkboxWrapper = $(this);

@@ -149,8 +149,8 @@ class Doorman
 
     /**
      * Checking access to a vary of processes inside of meals.
-     * Accesstype is a constant of class Doorman. Use this to tell the method what to check ;-)
-     * To be used in future to add more acces checks.
+     * $accesstype is a constant of class Doorman. Use this to tell the method what to check ;-)
+     * To be used in future to add more access checks.
      *
      * @param int   $accesstype What access shall be checked
      * @param array $params
@@ -167,7 +167,6 @@ class Doorman
                 }
 
                 return $this->isToggleParticipationAllowed($params['meal']->getDay()->getLockParticipationDateTime());
-                break;
             default:
                 // by default refuse access
                 return false;

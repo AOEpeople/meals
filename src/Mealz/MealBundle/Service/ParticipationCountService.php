@@ -68,6 +68,7 @@ class ParticipationCountService
         }
 
         self::calculateLimits($day, $totalCountByDish, $countByMeal);
+
         return $countByMeal;
     }
 

@@ -33,10 +33,10 @@ class ParticipationCountService
         /** @var Meal $meal */
         foreach ($day->getMeals() as $meal) {
             if ($meal->getDish()->isCombinedDish()) {
-                /** @var Participant $participant */
                 if (0 < $meal->getParticipants()->count()) {
                     $countByMeal[$meal->getId()] = [];
                 }
+                /** @var Participant $participant */
                 foreach ($meal->getParticipants() as $participant) {
                     /** @var Dish $dish */
                     foreach ($participant->getCombinedDishes() as $dish) {
@@ -51,7 +51,7 @@ class ParticipationCountService
                             $countByMeal[$meal->getId()][$dish->getSlug()]['limit'] = 0.0;
                         }
 
-                        $countByMeal[$meal->getId()][$dish->getSlug()]['count'] += 1;
+                        ++$countByMeal[$meal->getId()][$dish->getSlug()]['count'];
                     }
                 }
             } else {

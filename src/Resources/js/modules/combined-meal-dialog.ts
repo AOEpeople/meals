@@ -98,7 +98,6 @@ export class CombinedMealDialog {
                 url: this.path,
                 data: $form.serialize(),
                 success: function (data) {
-                    console.log(data);
                     self.opts.ok(data);
                 }
             });

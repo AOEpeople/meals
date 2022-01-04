@@ -1,36 +1,36 @@
 {% import 'MealzTemplateBundle::Components/headline.html.twig' as MealzHeadline %}
 
 <div class="week">
-	{% set headline %}
-		{% if 'now' | date('U') < week.startTime | date('U') %}
-			{{ 'content.participation.week.next'|trans({},'general') }}
-		{% else %}
-			{{ 'content.participation.week.current'|trans({},'general') }}
-		{% endif %}
-	{% endset %}
+    {% set headline %}
+        {% if 'now' | date('U') < week.startTime | date('U') %}
+            {{ 'content.participation.week.next'|trans({},'general') }}
+        {% else %}
+            {{ 'content.participation.week.current'|trans({},'general') }}
+        {% endif %}
+    {% endset %}
 
-	{% set headlineSub %}
-		{% apply spaceless %}
-		{{ week.startTime | date('D') | trans({}, 'date') }}
-		{{ week.startTime | date('d.m.') }}
-		-
-		{{ week.endTime | date('D') | trans({}, 'date') }}
-		{{ week.endTime | date('d.m.') }}
-		{% endapply %}
-	{% endset %}
+    {% set headlineSub %}
+        {% apply spaceless %}
+            {{ week.startTime | date('D') | trans({}, 'date') }}
+            {{ week.startTime | date('d.m.') }}
+            -
+            {{ week.endTime | date('D') | trans({}, 'date') }}
+            {{ week.endTime | date('d.m.') }}
+        {% endapply %}
+    {% endset %}
 
-	{{ MealzHeadline.create(1, headline, '', 'centered', [], headlineSub) }}
+    {{ MealzHeadline.create(1, headline, '', 'centered', [], headlineSub) }}
 
-	{% set number = 0 %}
+    {% set number = 0 %}
 
-	{% if not week.enabled %}
-		{% include 'MealzMealBundle:Meal/partials:noMeals.html.twig' %}
-	{% elseif week.days | length > 0 %}
-		{% for day in week.days %}
-			{% set number = number + 1 %}
-			{% include 'MealzMealBundle:Meal/partials:day.html.twig' %}
-		{% endfor %}
-	{% else %}
-		{% include 'MealzMealBundle:Meal/partials:noMeals.html.twig' %}
-	{% endif %}
+    {% if not week.enabled %}
+        {% include 'MealzMealBundle:Meal/partials:noMeals.html.twig' %}
+    {% elseif week.days | length > 0 %}
+        {% for day in week.days %}
+            {% set number = number + 1 %}
+            {% include 'MealzMealBundle:Meal/partials:day.html.twig' %}
+        {% endfor %}
+    {% else %}
+        {% include 'MealzMealBundle:Meal/partials:noMeals.html.twig' %}
+    {% endif %}
 </div>

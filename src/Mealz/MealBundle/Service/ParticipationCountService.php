@@ -10,7 +10,7 @@ use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Week;
 
-class ParticipationLimitService
+class ParticipationCountService
 {
     public static function getParticipationByDays(Week $week): array
     {

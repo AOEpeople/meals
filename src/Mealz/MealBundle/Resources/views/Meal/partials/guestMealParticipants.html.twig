@@ -1,0 +1,10 @@
+<div class="participants">
+    <span class="participants-count{% if meal.data.isParticipationLimitReached %} participation-limit-reached{% endif %}">
+        <span>
+            {{ meal.data.participants | length }}
+        </span>
+        <label>
+            {{ meal.data.participationLimit ? ' / ' ~ meal.data.participationLimit }}
+        </label>
+    </span>
+</div>

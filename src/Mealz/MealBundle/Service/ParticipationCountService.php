@@ -57,7 +57,7 @@ class ParticipationCountService
     {
         $participation = [
             self::PARTICIPATION_COUNT_KEY => [],
-            self::PARTICIPATION_TOTAL_COUNT_KEY => []
+            self::PARTICIPATION_TOTAL_COUNT_KEY => [],
         ];
 
         /** @var Meal $meal */

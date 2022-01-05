@@ -1,4 +1,20 @@
+{% set participations = participations[meal.data.id][meal.data.dish.slug] %}
+{% set isParticipationLimitReached = 0 < participations['limit'] and participations['count'] >= participations['limit'] %}
+
 <div class="wrapper-meal-actions wrapper-variation-vertical-center">
-    {% include 'MealzMealBundle:Meal/partials:guestMealParticipants.html.twig' %}
-    {% include 'MealzMealBundle:Meal/partials:guestMealActions.html.twig' %}
+    <div class="participants">
+    <span class="participants-count{% if isParticipationLimitReached %} participation-limit-reached{% endif %}">
+        <span>
+            {{ participations["count"] }}
+        </span>
+        <label>
+            {{ 0 < participations['limit'] ? ' / ' ~ participations['limit'] }}
+        </label>
+    </span>
+    </div>
+    <div class="action">
+        <div class="checkbox-wrapper{% if isParticipationLimitReached %} disabled{% endif %}">
+            {{ form_row(form.children.day.children.meals.children[meal.value]) }}
+        </div>
+    </div>
 </div>

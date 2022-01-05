@@ -49,7 +49,7 @@ class ParticipationService
         }
 
         // self joining by user, or adding by a kitchen staff
-        if ($this->doorman->isUserAllowedToJoin($meal) || $this->doorman->isKitchenStaff()) {
+        if ($this->doorman->isUserAllowedToJoin($meal, $dishSlugs) || $this->doorman->isKitchenStaff()) {
             if ((null === $slot) || !$this->slotIsAvailable($slot, $meal->getDateTime())) {
                 $slot = $this->getNextFreeSlot($meal->getDateTime());
             }

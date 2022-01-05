@@ -350,7 +350,7 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
     private function getDoormanMock(bool $userAllowedToJoin, bool $kitchenStaffLoggedIn): Doorman
     {
         $prophet = $this->prophesize(Doorman::class);
-        $prophet->isUserAllowedToJoin(Argument::type(Meal::class))->willReturn($userAllowedToJoin);
+        $prophet->isUserAllowedToJoin(Argument::type(Meal::class), [])->willReturn($userAllowedToJoin);
         $prophet->isKitchenStaff()->willReturn($kitchenStaffLoggedIn);
 
         return $prophet->reveal();

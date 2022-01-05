@@ -225,16 +225,6 @@ class Meal
         return $totalParticipation;
     }
 
-    /**
-     * Check if there are more or equal participation for this meal as its participation limit.
-     */
-    public function isParticipationLimitReached(): bool
-    {
-        $participationLimit = $this->getParticipationLimit();
-
-        return 0 !== $participationLimit && $this->getParticipants()->count() >= $participationLimit;
-    }
-
     public function __toString()
     {
         return $this->getDateTime()->format('Y-m-d H:i:s') . ' ' . $this->getDish();

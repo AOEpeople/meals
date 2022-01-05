@@ -52,7 +52,7 @@ trait ParticipationServiceTrait
     }
 
     /**
-     * Checks if the given meal is bookable, i.e. not expired, locked or not fully booked.
+     * Checks if the given meal is bookable, i.e. not expired or locked but offered. Doesn't check if limit is reached!
      */
     private function mealIsBookable(Meal $meal): bool
     {
@@ -68,23 +68,7 @@ trait ParticipationServiceTrait
             return false;
         }
 
-        // meal is open and count of booked meals is below the meal limit; bookable
-        return !$this->mealLimitReached($meal);
-    }
-
-    /**
-     * Checks if the number of bookings reached the meal limit.
-     */
-    private function mealLimitReached(Meal $meal): bool
-    {
-        $mealLimit = $meal->getParticipationLimit();
-        if (1 > $mealLimit) {
-            return false;
-        }
-
-        $bookedMealCount = $this->participantRepo->getBookedMealCount($meal);
-
-        return $bookedMealCount < $mealLimit;
+        return true;
     }
 
     /**

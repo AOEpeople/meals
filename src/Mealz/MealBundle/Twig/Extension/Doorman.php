@@ -36,8 +36,6 @@ class Doorman extends AbstractExtension
             new TwigFunction('is_allowed_to_leave', [$this, 'isUserAllowedToLeave']),
             new TwigFunction('is_allowed_to_swap', [$this, 'isUserAllowedToSwap']),
             new TwigFunction('is_allowed_to_unswap', [$this, 'isUserAllowedToUnswap']),
-            new TwigFunction('is_allowed_to_add_guest', [$this, 'isUserAllowedToAddGuest']),
-            new TwigFunction('is_allowed_to_remove_guest', [$this, 'isUserAllowedToRemoveGuest']),
             new TwigFunction('is_participation_pending', [$this, 'isParticipationPending']),
             new TwigFunction('is_offer_available', [$this, 'isOfferAvailable']),
         ];
@@ -68,24 +66,6 @@ class Doorman extends AbstractExtension
     {
         //proxy method
         return $this->doormanService->isUserAllowedToSwap($meal);
-    }
-
-    /**
-     * @return bool
-     */
-    public function isUserAllowedToAddGuest(Meal $meal)
-    {
-        // proxy method
-        return $this->doormanService->isUserAllowedToAddGuest($meal);
-    }
-
-    /**
-     * @return bool
-     */
-    public function isUserAllowedToRemoveGuest(Meal $meal)
-    {
-        // proxy method
-        return $this->doormanService->isUserAllowedToRemoveGuest($meal);
     }
 
     /**

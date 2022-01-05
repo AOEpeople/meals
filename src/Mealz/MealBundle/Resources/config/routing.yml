@@ -36,12 +36,12 @@ MealzMealBundle_Meal_updateOffers:
 
 MealzMealBundle_Meal_guest:
     path: /menu/guest/{hash}
-    defaults: { _controller: App\Mealz\MealBundle\Controller\MealController::joinAsGuest }
+    defaults: { _controller: App\Mealz\MealBundle\Controller\MealGuestController::joinAsGuest }
     methods: [GET, POST]
 
 MealzMealBundle_Meal_newGuestInvitation:
     path:  /menu/{dayId}/new-guest-invitation
-    defaults: { _controller: App\Mealz\MealBundle\Controller\MealController::newGuestInvitation }
+    defaults: { _controller: App\Mealz\MealBundle\Controller\MealGuestController::newGuestInvitation }
     requirements:
         dayId: '[1-9][0-9]*'
 

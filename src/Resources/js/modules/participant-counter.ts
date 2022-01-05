@@ -27,7 +27,7 @@ export class ParticipantCounter {
         this.counter = parseInt(this.$counter.text().trim()) || 0;
 
         this.$limit = this.$participantsCountWrapper.find(this.limitSelector);
-        this.limit = parseInt(this.$limit.text().replace(this.delimiter, '').trim()) || 0;
+        this.limit = parseFloat(this.$limit.text().replace(this.delimiter, '').trim()) || 0;
 
         this.initState();
     }

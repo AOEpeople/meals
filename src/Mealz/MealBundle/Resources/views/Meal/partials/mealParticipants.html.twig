@@ -1,6 +1,8 @@
+{% set participations = participations[day.dateTime.format('Y-m-d')]['countByMealIds'][meal.id][meal.dish.slug] %}
+{% set isParticipationLimitReached = 0 < participations['limit'] and participations['count'] >= participations['limit'] %}
 {% set available = false %}
 
-{% if day.enabled and (day.lockParticipationDateTime | date('U') > 'now' | date('U')) and meal.isParticipationLimitReached == false %}
+{% if day.enabled and (day.lockParticipationDateTime | date('U') > 'now' | date('U')) and isParticipationLimitReached == false %}
     {% set available = true %}
 {% endif %}
 
@@ -10,48 +12,41 @@
         participation-allowed
     {% endif %}
 
-    {% if is_granted('ROLE_USER') %}
-        {% set participant = meal.getParticipant(app.user.profile) %}
-        {% if is_offer_available(meal, participant) and is_allowed_to_swap(meal) and participant == false %}
-            offer-available
-        {% endif %}
-    {% endif %}
-
-    {% if meal.isParticipationLimitReached %}
+    {% if isParticipationLimitReached %}
         participation-limit-reached
     {% endif %}
 
     {% if is_granted('ROLE_USER') %}
         {% set participant = meal.getParticipant(app.user.profile) %}
-        {% if participant %}
-            {% if is_participation_pending(participant) and is_allowed_to_swap(meal) %}
-                participation-pending
-            {% endif %}
+        {% if is_offer_available(meal, participant) and is_allowed_to_swap(meal) and participant == false %}
+            offer-available
+        {% endif %}
+        {% if participant and is_participation_pending(participant) and is_allowed_to_swap(meal) %}
+            participation-pending
         {% endif %}
     {% endif %}">
         <span>
-            {{ meal.participants | length }}
+            {{ participations['count'] }}
         </span>
         <label>
-            {{ meal.participationLimit ? ' / ' ~ meal.participationLimit }}
+            {{ 0 < participations['limit'] ? ' / ' ~ participations['limit'] }}
         </label>
         <span class="tooltiptext
         {% if is_granted('ROLE_USER') %}
             {% if participant %}
                 {% if is_participation_pending(participant) %}
                     active" id="tooltip_offered"> {{ "tooltip.offered_meal"|trans({}, "messages") }}
-            {% else %}
-                ">
-            {% endif %}
+                {% else %}
+                    ">
+                {% endif %}
             {% elseif is_offer_available(meal, participant) %}
                 active" id="tooltip_available"> {{ "tooltip.available_meal"|trans({}, "messages") }}
             {% else %}
                 ">
             {% endif %}
-
-            {% else %}
-                ">
-            {% endif %}
+        {% else %}
+            ">
+        {% endif %}
         </span>
     </span>
 </div>

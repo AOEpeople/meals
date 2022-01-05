@@ -122,8 +122,6 @@ class Doorman
      *
      * @param int   $accesstype What access shall be checked
      * @param array $params
-     *
-     * @return bool
      */
     private function hasAccessTo($accesstype, $params = []): bool
     {

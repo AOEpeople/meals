@@ -1,5 +1,4 @@
 {% import 'MealzTemplateBundle::Components/checkbox.html.twig' as MealzCheckbox %}
-
 <div class="action">
     {% if is_granted('ROLE_USER') %}
         {% set participant = meal.getParticipant(app.user.profile) %}
@@ -7,7 +6,7 @@
             {% if is_allowed_to_leave(meal) %}
                 {{ MealzCheckbox.create(link(participant, 'delete') ,'participation-checkbox delete-action', {'checked': 'checked'}) }}
             {% elseif is_allowed_to_unswap(meal, participant) %}
-                {{ MealzCheckbox.create(link(participant, 'unswap') ,'participation-checkbox unswap-action', {'checked': 'checked', 'participantId': participant.getId}) }}
+                {{ MealzCheckbox.create(link(participant, 'unswap') ,'participation-checkbox unswap-action', {'checked': 'checked', 'data-participant-id': participant.getId}) }}
             {% elseif is_allowed_to_swap(meal) %}
                 {{ MealzCheckbox.create(link(participant, 'swap') ,'participation-checkbox swap-action', {'checked': 'checked'}) }}
             {% else %}

@@ -9,17 +9,20 @@
     {% set participantsCountClasses = participantsCountClasses|merge(['participation-limit-reached']) %}
     {% set checkboxWrapperClasses = checkboxWrapperClasses|merge(['disabled']) %}
 {% endif %}
-
-<div class="wrapper-meal-actions wrapper-variation-vertical-center">
+<div class="wrapper-meal-actions wrapper-variation-vertical-center" data-id="{{ meal.data.id }}">
     <div class="participants">
-    <span class="{{ participantsCountClasses|join(' ') }}">
-        <span>{{ participations["count"] }}</span>
-        <label>{{ hasLimit ? ' / ' ~ participations['limit'] }}</label>
-    </span>
+        <span class="{{ participantsCountClasses|join(' ') }}">
+            <span>
+                {{- participations["count"] -}}
+            </span>
+            <label>
+                {{- hasLimit ? ' / ' ~ participations['limit'] -}}
+            </label>
+        </span>
     </div>
     <div class="action">
         <div class="{{ checkboxWrapperClasses|join(' ') }}">
-            {{ form_row(form.children.day.children.meals.children[meal.value]) }}
+        {{ form_row(form.children.day.children.meals.children[meal.value]) }}
         </div>
     </div>
 </div>

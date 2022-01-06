@@ -19,10 +19,10 @@
         {% endif %}
             <div class="week-info">
                 <div class="week-number">
-                    {{ 'content.menu.week'|trans({},'general') }} #{{ week.startTime | date('W') }}
+                    {{- 'content.menu.week'|trans({},'general') }} #{{ week.startTime | date('W') -}}
                 </div>
                 <div class="week-range">
-                    {{ week.startTime | date('d.m.') }}-{{ week.EndTime | date('d.m.') }}
+                    {{- week.startTime | date('d.m.') }}-{{ week.EndTime | date('d.m.') -}}
                 </div>
                 {% if not week.enabled %}
                 <div class="week-disabled">

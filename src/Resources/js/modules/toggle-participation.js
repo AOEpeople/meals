@@ -42,14 +42,14 @@ Mealz.prototype.getCombinedMealDishes = function ($dishCheckbox) {
 
         let dish = {
             title: $mealRow.find('.text .title').contents().get(0).nodeValue.trim(),
-            slug: $mealRow.data('id'),
+            slug: $mealRow.data('slug'),
             variations: []
         };
         $mealRow.find('.variation-row').each(function () {
             const $dishVarRow = $(this);
             let dishVariation = {
                 title: $dishVarRow.find('.text-variation').text().trim(),
-                slug: $dishVarRow.data('id')
+                slug: $dishVarRow.data('slug')
             };
             dish.variations.push(dishVariation);
         });
@@ -168,7 +168,7 @@ window.swap = function ($checkbox, url) {
                     }
                 });
 
-            $checkbox.attr('participantid', data.id);
+            $checkbox.data('participant-id', data.id);
 
         },
         error: function (xhr) {

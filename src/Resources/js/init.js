@@ -14,6 +14,9 @@ import 'easy-autocomplete';
 import 'daterangepicker';
 import {Controller} from "./controller";
 import {ParticipantCounter} from "./modules/participant-counter";
+import {
+    ParticipationCountUpdateHandler, ParticipationGuestCountUpdateHandler
+} from "./modules/participation-count-update-handler";
 
 if (process.env.MODE === 'production') {
     jQuery.migrateMute = true;
@@ -40,6 +43,7 @@ window.Mealz = function () {
     this.$body = $('body');
     this.$editParticipationEventListener = undefined;
     this.$profileAdd = $('.profile-list a[class="button small"]');
+    this.participationCountUpdateHandler = undefined;
 };
 
 importAll(require.context('./modules/', true, /\.js$/));
@@ -109,6 +113,12 @@ $(function () {
             participantCounter.updateUI();
         }
     });
+
+    if (mealz.$participationCheckboxes.length > 0) {
+        this.participationCountUpdateHandler = new ParticipationCountUpdateHandler(mealz.$participationCheckboxes);
+    } else if (mealz.$guestParticipationCheckboxes.length > 0) {
+        this.participationCountUpdateHandler = new ParticipationGuestCountUpdateHandler(mealz.$guestParticipationCheckboxes);
+    }
 
     /**
      * Lightbox

@@ -1,21 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\DayRepository;
 use App\Mealz\MealBundle\Entity\Participant;
-use App\Mealz\MealBundle\Entity\SlotRepository;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Entity\WeekRepository;
 use App\Mealz\MealBundle\Service\Notification\NotifierInterface;
-use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\Translator;
 
@@ -65,35 +63,6 @@ class ParticipantController extends BaseController
             ]),
             'actionText' => 'deleted',
         ]);
-    }
-
-    /**
-     * @ParamConverter("date", options={"format": "!Y-m-d"})
-     */
-    public function updateSlot(
-        Request $request,
-        DateTime $date,
-        SlotRepository $slotRepo,
-        ParticipationService $participationSrv
-    ): JsonResponse {
-        $profile = $this->getProfile();
-        if (null === $profile) {
-            return new JsonResponse(null, 403);
-        }
-
-        $slotSlug = $request->request->get('slot', null);
-        if (null === $slotSlug) {
-            return new JsonResponse(null, 400);
-        }
-
-        $slot = $slotRepo->findOneBy(['slug' => $slotSlug, 'disabled' => 0, 'deleted' => 0]);
-        if (null === $slot) {
-            return new JsonResponse(null, 422);
-        }
-
-        $participationSrv->updateSlot($profile, $date, $slot);
-
-        return new JsonResponse(null, 200);
     }
 
     /**
@@ -233,24 +202,5 @@ class ParticipantController extends BaseController
             'id' => $participant->getId(),
             'actionText' => $action,
         ]);
-    }
-
-    public function getSlotStatus(ParticipationService $participationSrv): JsonResponse
-    {
-        $profile = $this->getProfile();
-        if (null === $profile) {
-            return new JsonResponse(null, 403);
-        }
-
-        $data = $participationSrv->getSlotsStatusFor($profile);
-
-        return new JsonResponse($data);
-    }
-
-    public function getSlotStatusOn(DateTime $date, ParticipationService $participationSrv): JsonResponse
-    {
-        $data = $participationSrv->getSlotsStatusOn($date);
-
-        return new JsonResponse($data);
     }
 }

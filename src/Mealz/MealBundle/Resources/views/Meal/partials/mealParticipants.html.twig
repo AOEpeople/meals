@@ -1,3 +1,4 @@
+{% apply spaceless %}
 {% set participations = participations[day.dateTime.format('Y-m-d')]['countByMealIds'][meal.id][meal.dish.slug] %}
 {% set hasLimit = 0 < participations['limit'] %}
 {% set isParticipationLimitReached = hasLimit and participations['count'] >= participations['limit'] %}
@@ -32,7 +33,7 @@
         {% set tooltipText = "tooltip.available_meal" %}
     {% endif %}
 {% endif %}
-
+{% endapply %}
 <div class="participants">
     <span class="{{ participantsCountClasses|join(' ') }}">
         <span>{{ participations['count'] }}</span>

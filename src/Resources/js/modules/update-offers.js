@@ -50,7 +50,7 @@ function updateOffers() {
 
                 //if a user's offer is gone and the participation-badge is still showing 'pending', disable the checkbox, tooltip and change badge
                 if ($checkbox.hasClass('participation-checkbox unswap-action') === true) {
-                    participantId = parseInt($checkbox.attr('participantId'));
+                    participantId = parseInt($checkbox.data('participant-id'));
                     if (isNaN(participantId)) {
                         console.log('Error: No participant ID found');
                         return;

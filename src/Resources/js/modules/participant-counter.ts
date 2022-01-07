@@ -63,7 +63,6 @@ export class ParticipantCounter {
 
     setNextCount(count: number) {
         this.nextCount = count - this.offset;
-        ;
     }
 
     getLimit(): number {

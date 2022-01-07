@@ -11,8 +11,8 @@ export abstract class AbstractParticipationCountUpdateHandler {
 
     static updateCountStatus(participantCounter: ParticipantCounter, count: number, limit: number): void {
         if (participantCounter.getCount() !== count || participantCounter.getLimit() !== limit) {
-            participantCounter.setCount(count);
-            participantCounter.setLimit(limit);
+            participantCounter.setNextCount(count);
+            participantCounter.setNextLimit(limit);
             participantCounter.updateUI();
         }
     }
@@ -32,7 +32,7 @@ export class ParticipationCountUpdateHandler extends AbstractParticipationCountU
             success: function (data) {
                 $checkboxes.each(function (idx, checkbox) {
                     let $checkbox = $(checkbox);
-                    let participantCounter = $checkbox.data('participantCounter');
+                    let participantCounter = $checkbox.data(ParticipantCounter.NAME);
                     let countStatus = data[participantCounter.getDate()]['countByMealIds'][participantCounter.getMealId()][participantCounter.getDishSlug()];
                     if (undefined !== countStatus) {
                         AbstractParticipationCountUpdateHandler.updateCountStatus(participantCounter, countStatus['count'], countStatus['limit']);
@@ -58,7 +58,7 @@ export class ParticipationGuestCountUpdateHandler extends AbstractParticipationC
             'success': function (data) {
                 $checkboxes.each(function (idx, checkbox) {
                     let $checkbox = $(checkbox);
-                    let participantCounter = $checkbox.data('participantCounter');
+                    let participantCounter = $checkbox.data(ParticipantCounter.NAME);
                     let countStatus = data[participantCounter.getMealId()][participantCounter.getDishSlug()];
                     if (undefined !== countStatus) {
                         // Guests can temporarily reserve a meal via checkbox, but the meal will only be booked after submitting the form

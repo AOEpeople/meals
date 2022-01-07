@@ -69,7 +69,7 @@ $(function () {
      * See: https://stackoverflow.com/questions/1537032/how-do-i-stop-jquery-appending-a-unique-id-to-scripts-called-via-ajax
      * http://api.jquery.com/jQuery.ajaxPrefilter/
      */
-    $.ajaxPrefilter('script', function(options) {
+    $.ajaxPrefilter('script', function (options) {
         options.cache = true;
     });
 
@@ -96,10 +96,10 @@ $(function () {
      */
     mealz.enableSortableTables();
 
-    mealz.$participationCheckboxes.each(function(idx, checkbox) {
+    mealz.$participationCheckboxes.each(function (idx, checkbox) {
         let $checkbox = $(checkbox);
         let $participantsActionsWrapper = $checkbox.closest(ParticipantCounter.PARENT_WRAPPER_CLASS);
-        $checkbox.data('participantCounter', new ParticipantCounter($participantsActionsWrapper));
+        $checkbox.data(ParticipantCounter.NAME, new ParticipantCounter($participantsActionsWrapper));
         mealz.applyCheckboxClasses($checkbox);
     });
 
@@ -107,11 +107,12 @@ $(function () {
     mealz.$guestParticipationCheckboxes.each(function (idx, checkbox) {
         let $checkbox = $(checkbox);
         let $participantsActionsWrapper = $checkbox.closest(ParticipantCounter.PARENT_WRAPPER_CLASS);
-        $checkbox.data('participantCounter', new ParticipantCounter($participantsActionsWrapper));
-        let participantCounter = $checkbox.data('participantCounter');
+        $checkbox.data(ParticipantCounter.NAME, new ParticipantCounter($participantsActionsWrapper));
         mealz.applyCheckboxClasses($checkbox);
-        if ($checkbox.is(':checked')) {
-            participantCounter.setCount(participantCounter.getCount() + 1);
+        let participantCounter = $checkbox.data(ParticipantCounter.NAME);
+        if ((!participantCounter.hasOffset() && $checkbox.is(':checked')) ||
+            (participantCounter.hasOffset() && !$checkbox.is(':checked'))) {
+            participantCounter.toggleOffset();
             participantCounter.updateUI();
         }
     });
@@ -127,7 +128,7 @@ $(function () {
      */
     mealz.enableLightbox();
 
-    if($('.edit-participation').length > 0) {
+    if ($('.edit-participation').length > 0) {
         /**
          * Profile Selection on Participants View
          */
@@ -145,15 +146,15 @@ $(function () {
     /**
      * If there are any meals in the list, run updateOffers to check for available offers.
      */
-    if($('.meals-list').length > 0) {
+    if ($('.meals-list').length > 0) {
         mealz.updateOffers();
     }
 
     /**
      * if meals is limited it should be displayed
      */
-    $('.participation-limit').each(function(){
-        if($(this).val().length > 0 && $(this).val() > 0){
+    $('.participation-limit').each(function () {
+        if ($(this).val().length > 0 && $(this).val() > 0) {
             $(this).closest('.day').children('.limit-icon').addClass('modified');
         }
     });
@@ -161,42 +162,45 @@ $(function () {
     /**
      * datetimepicker
      */
-    $('.calendar-icon').each(function(i){
-        var thisDay = $('#week_form_days_'+i+'_lockParticipationDateTime');
+    $('.calendar-icon').each(function (i) {
+        var thisDay = $('#week_form_days_' + i + '_lockParticipationDateTime');
         $(this).datetimepicker({
-            format:'Y-m-d H:i:s',
-            inline:false,
-            defaultTime:new Date(thisDay.val()),
-            defaultDate:new Date(thisDay.val()),
-            onClose:function(dp,$input){
-                if($input.val().length > 0){
+            format: 'Y-m-d H:i:s',
+            inline: false,
+            defaultTime: new Date(thisDay.val()),
+            defaultDate: new Date(thisDay.val()),
+            onClose: function (dp, $input) {
+                if ($input.val().length > 0) {
                     thisDay.val($input.val());
                 }
             }
         });
     });
-    if($('.language-switch > span').text() == 'de'){
+    if ($('.language-switch > span').text() == 'de') {
         $.datetimepicker.setLocale('de');
     }
 
     /*
      * MouseOver hack
      */
-    (function($){
-        $.mlp = {x:0,y:0}; // Mouse Last Position
-        function documentHandler(){
+    (function ($) {
+        $.mlp = {x: 0, y: 0}; // Mouse Last Position
+        function documentHandler() {
             var $current = this === document ? $(this) : $(this).contents();
-            $current.on('mousemove', function(e){jQuery.mlp = {x:e.pageX,y:e.pageY};});
+            $current.on('mousemove', function (e) {
+                jQuery.mlp = {x: e.pageX, y: e.pageY};
+            });
             $current.find('iframe').on('load', documentHandler);
         }
+
         $(documentHandler);
-        $.fn.ismouseover = function(overThis) {
+        $.fn.ismouseover = function (overThis) {
             var result = false;
-            this.eq(0).each(function() {
+            this.eq(0).each(function () {
                 var $current = $(this).is('iframe') ? $(this).contents().find('body') : $(this);
                 var offset = $current.offset();
-                result = offset.left<=$.mlp.x && offset.left + $current.outerWidth() > $.mlp.x &&
-                         offset.top<=$.mlp.y && offset.top + $current.outerHeight() > $.mlp.y;
+                result = offset.left <= $.mlp.x && offset.left + $current.outerWidth() > $.mlp.x &&
+                    offset.top <= $.mlp.y && offset.top + $current.outerHeight() > $.mlp.y;
             });
             return result;
         };

@@ -1,6 +1,11 @@
 const {CombinedMealDialog} = require("./combined-meal-dialog");
-const {ParticipationRequestHandler, ParticipationRequest, JoinParticipationRequest} = require("./participation-request-handler");
+const {
+    ParticipationRequestHandler,
+    ParticipationRequest,
+    JoinParticipationRequest
+} = require("./participation-request-handler");
 const {ParticipationResponseHandler, ParticipationAction} = require("./participation-response-handler");
+const {ParticipantCounter} = require("./participant-counter");
 
 Mealz.prototype.toggleParticipation = function ($checkbox) {
     if (undefined === $checkbox) {
@@ -83,9 +88,11 @@ Mealz.prototype.showMealSelectionOverlay = function ($dishCheckbox) {
                     updateDishSelection($dishCheckbox, data);
                     self.toggleGuestParticipation($dishCheckbox);
                 } else {
-                    let participantCounter = $dishCheckbox.data('participantCounter');
-                    participantCounter.setCount(data.participantsCount);
-                    participantCounter.updateUI();
+                    let participantCounter = $dishCheckbox.data(ParticipantCounter.NAME);
+                    if (participantCounter.getCount() !== data.participantsCount) {
+                        participantCounter.setNextCount(data.participantsCount);
+                        participantCounter.updateUI();
+                    }
                     updateCheckbox($dishCheckbox, data.url);
                 }
             }
@@ -196,9 +203,12 @@ Mealz.prototype.toggleParticipationAdmin = function ($element) {
 };
 
 Mealz.prototype.toggleGuestParticipation = function ($checkbox) {
-    let participantCounter = $checkbox.data('participantCounter');
-    participantCounter.setCount($checkbox.is(':checked') ? participantCounter.getCount() + 1 : participantCounter.getCount() - 1);
-    participantCounter.updateUI();
+    let participantCounter = $checkbox.data(ParticipantCounter.NAME);
+    if ((!participantCounter.hasOffset() && $checkbox.is(':checked')) ||
+        (participantCounter.hasOffset() && !$checkbox.is(':checked'))) {
+        participantCounter.toggleOffset();
+        participantCounter.updateUI();
+    }
 
     if (1 === $checkbox.parents('.meal-row').data('combined') && !$checkbox.is(':checked')) {
         updateDishSelection($checkbox, []);

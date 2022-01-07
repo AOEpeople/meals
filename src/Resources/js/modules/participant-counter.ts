@@ -5,6 +5,7 @@ export enum ParticipationState {
 }
 
 export class ParticipantCounter {
+    public static readonly NAME = 'participant-counter';
     public static readonly PARENT_WRAPPER_CLASS = '.wrapper-meal-actions';
     private readonly wrapperClass = '.participants-count';
     private readonly counterSelector = 'span:first-child';
@@ -14,12 +15,12 @@ export class ParticipantCounter {
     private readonly mealId: number;
     private readonly dishSlug: string;
     private readonly date: string;
+    private readonly allowed: boolean = false;
 
-    private oldState: ParticipationState;
-    private currState: ParticipationState;
-
-    private count: number;
-    private limit: number;
+    private offset: number = 0;
+    private nextCount: number;
+    private nextLimit: number;
+    private nextState: ParticipationState;
 
     private $count: JQuery;
     private $limit: JQuery;
@@ -36,12 +37,12 @@ export class ParticipantCounter {
         this.date = this.$participantsCountWrapper.closest('.meal').data('date');
 
         this.$count = this.$participantsCountWrapper.find(this.counterSelector);
-        this.count = parseInt(this.$count.text().trim()) || 0;
-
         this.$limit = this.$participantsCountWrapper.find(this.limitSelector);
-        this.limit = parseFloat(this.$limit.text().replace(this.delimiter, '').trim()) || 0;
 
-        this.initState();
+        this.nextCount = this.getCount();
+        this.nextLimit = this.getLimit();
+        this.nextState = this.getParticipationState();
+        this.allowed = this.$participantsCountWrapper.hasClass('participation-allowed');
     }
 
     getMealId(): number {
@@ -57,64 +58,80 @@ export class ParticipantCounter {
     }
 
     getCount(): number {
-        return this.count;
+        return (parseInt(this.$count.text().trim()) || 0) - this.offset;
     }
 
-    setCount(count: number) {
-        this.count = count;
+    setNextCount(count: number) {
+        this.nextCount = count - this.offset;
+        ;
     }
 
     getLimit(): number {
-        return this.limit;
+        return parseFloat(this.$limit.text().replace(this.delimiter, '').trim()) || 0;
     }
 
-    setLimit(limit: number) {
-        this.limit = limit;
+    setNextLimit(limit: number) {
+        this.nextLimit = limit;
     }
 
-    hasLimit() {
-        return 0 < this.limit;
+    hasLimit(): boolean {
+        return 0 < this.getLimit();
     }
 
-    setParticipationState(participationState: ParticipationState) {
-        this.oldState = this.currState;
-        this.currState = participationState;
+    isLimitReached(): boolean {
+        return this.getLimit() <= this.getCount();
+    }
+
+    isParticipationAllowed(): boolean {
+        return this.allowed && !this.isLimitReached();
+    }
+
+    hasOffset(): boolean {
+        return 1 === this.offset;
+    }
+
+    toggleOffset() {
+        this.offset = this.hasOffset() ? 0 : 1;
+    }
+
+    getParticipationState(): ParticipationState {
+        let classList = this.$participantsCountWrapper.attr('class').split(/\s+/);
+        for (let key in classList) {
+            if (classList[key] === ParticipationState.PENDING) {
+                return ParticipationState.PENDING;
+            } else if (classList[key] === ParticipationState.OFFER_AVAILABLE) {
+                return ParticipationState.OFFER_AVAILABLE;
+            }
+        }
+
+        return ParticipationState.DEFAULT;
+    }
+
+    setNextParticipationState(state: ParticipationState) {
+        this.nextState = state;
     }
 
     updateUI() {
         let self = this;
         this.$participantsCountWrapper.fadeOut('fast', function () {
-            self.$count.text(self.count);
-
-            if (self.oldState !== self.currState) {
-                if (ParticipationState.DEFAULT !== self.oldState)
-                    self.$participantsCountWrapper.removeClass(self.oldState);
-                if (ParticipationState.DEFAULT !== self.currState)
-                    self.$participantsCountWrapper.addClass(self.currState);
-                self.oldState = self.currState;
-            }
+            self.$count.text(self.nextCount + self.offset);
 
             if (self.hasLimit()) {
-                self.$limit.text(self.delimiter + self.limit);
-                self.$participantsCountWrapper.toggleClass('participation-limit-reached', self.limit <= self.count);
+                self.$limit.text(self.delimiter + self.nextLimit);
+                let limitIsReached = self.isLimitReached();
+                self.$participantsCountWrapper.toggleClass('participation-limit-reached', limitIsReached);
+                self.$participantsCountWrapper.toggleClass('participation-allowed', self.allowed && !limitIsReached);
+            }
+
+            let oldState = self.getParticipationState();
+            if (oldState !== self.nextState) {
+                if (ParticipationState.DEFAULT !== oldState)
+                    self.$participantsCountWrapper.removeClass(oldState);
+                if (ParticipationState.DEFAULT !== self.nextState)
+                    self.$participantsCountWrapper.addClass(self.nextState);
             }
 
             self.$participantsCountWrapper.fadeIn('fast');
         });
-    }
-
-    private initState() {
-        let classList = this.$participantsCountWrapper.attr('class').split(/\s+/);
-        this.oldState = ParticipationState.DEFAULT;
-        this.currState = ParticipationState.DEFAULT;
-        for (let key in classList) {
-            if (classList[key] === ParticipationState.PENDING) {
-                this.currState = ParticipationState.PENDING;
-                break;
-            } else if (classList[key] === ParticipationState.OFFER_AVAILABLE) {
-                this.currState = ParticipationState.OFFER_AVAILABLE;
-                break;
-            }
-        }
     }
 }

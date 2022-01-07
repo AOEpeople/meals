@@ -23,7 +23,7 @@ class SwapResponse extends ActionResponse {
 
 export class ParticipationResponseHandler {
     static onSuccessfulToggle($checkbox: JQuery, response: ToggleResponse) {
-        let participantCounter = $checkbox.data('participantCounter');
+        let participantCounter = $checkbox.data(ParticipantCounter.NAME);
         ParticipationResponseHandler.updateParticipantCounter(participantCounter, ParticipationState.DEFAULT, response.participantsCount)
         let action = $checkbox.is(':checked') ? ParticipationAction.DELETE_ACTION : ParticipationAction.JOIN_ACTION;
         ParticipationResponseHandler.updateCheckbox($checkbox, action, response.url);
@@ -35,7 +35,7 @@ export class ParticipationResponseHandler {
     }
 
     static onSuccessfulAcceptOffer($checkbox: JQuery, response: ToggleResponse) {
-        let participantCounter = $checkbox.data('participantCounter');
+        let participantCounter = $checkbox.data(ParticipantCounter.NAME);
         ParticipationResponseHandler.updateParticipantCounter(participantCounter, ParticipationState.DEFAULT, response.participantsCount);
         ParticipationResponseHandler.updateCheckbox($checkbox, ParticipationAction.SWAP, response.url, undefined)
         ParticipationResponseHandler.toggleCheckboxWrapperClasses($checkbox);
@@ -43,7 +43,7 @@ export class ParticipationResponseHandler {
     }
 
     static onSuccessfulSwap($checkbox: JQuery, response: SwapResponse) {
-        let participantCounter = $checkbox.data('participantCounter');
+        let participantCounter = $checkbox.data(ParticipantCounter.NAME);
         ParticipationResponseHandler.updateParticipantCounter(participantCounter, ParticipationState.PENDING);
         ParticipationResponseHandler.updateCheckbox($checkbox, ParticipationAction.UNSWAP, response.url, response.id);
 
@@ -62,7 +62,7 @@ export class ParticipationResponseHandler {
     }
 
     static onSuccessfulUnswap($checkbox: JQuery, response: SwapResponse) {
-        let participantCounter = $checkbox.data('participantCounter');
+        let participantCounter = $checkbox.data(ParticipantCounter.NAME);
         ParticipationResponseHandler.updateParticipantCounter(participantCounter, ParticipationState.DEFAULT)
         ParticipationResponseHandler.updateCheckbox($checkbox, ParticipationAction.SWAP, response.url, undefined);
         ParticipationResponseHandler.toggleTooltip($checkbox);
@@ -72,9 +72,9 @@ export class ParticipationResponseHandler {
         if ((undefined !== state) ||
             (undefined !== count && count !== participantCounter.getCount()) ||
             (undefined !== limit && limit !== participantCounter.getLimit())) {
-            if (undefined !== count) participantCounter.setCount(count);
-            if (undefined !== limit) participantCounter.setLimit(limit);
-            if (undefined !== state) participantCounter.setParticipationState(state);
+            if (undefined !== count) participantCounter.setNextCount(count);
+            if (undefined !== limit) participantCounter.setNextLimit(limit);
+            if (undefined !== state) participantCounter.setNextParticipationState(state);
             participantCounter.updateUI();
         }
     }

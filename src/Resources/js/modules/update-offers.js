@@ -1,9 +1,10 @@
+import {ParticipantCounter, ParticipationState} from "./participant-counter";
+
 Mealz.prototype.updateOffers = function () {
     if ($('.button-login').text() !== 'LOGIN') {
         window.setInterval(updateOffers, 5000);
     }
 };
-
 
 function updateOffers() {
     $.ajax({
@@ -17,7 +18,7 @@ function updateOffers() {
                 var $checkboxWrapper = $mealWrapper.find('.checkbox-wrapper');
                 var $checkbox = $mealWrapper.find('.participation-checkbox');
                 var $tooltip = $mealWrapper.find('.tooltiptext');
-                var $participantsCount = $mealWrapper.find('.participants-count');
+                let participantCounter = $checkbox.data(ParticipantCounter.NAME);
 
                 //new offer available and checkbox not checked yet
                 if (value[0] === true && $checkboxWrapper.hasClass('checked') === false &&
@@ -38,19 +39,20 @@ function updateOffers() {
                     $checkboxWrapper.removeClass('disabled');
                     //enable checkbox
                     $checkbox.removeAttr('disabled')
-                    //adapt checkbox class
+                        //adapt checkbox class
                         .attr('class', 'participation-checkbox acceptOffer-action')
                         //change checkbox value
                         .val('/menu/' + value[1] + '/' + value[2] + '/accept-offer');
                     //make participants counter green
-                    $participantsCount.fadeOut('fast')
-                        .addClass('offer-available')
-                        .fadeIn('fast');
+                    if (ParticipationState.OFFER_AVAILABLE !== participantCounter.getParticipationState()) {
+                        participantCounter.setNextParticipationState(ParticipationState.OFFER_AVAILABLE);
+                        participantCounter.updateUI();
+                    }
                 }
 
                 //if a user's offer is gone and the participation-badge is still showing 'pending', disable the checkbox, tooltip and change badge
                 if ($checkbox.hasClass('participation-checkbox unswap-action') === true) {
-                    participantId = parseInt($checkbox.data('participant-id'));
+                    let participantId = parseInt($checkbox.data('participant-id'));
                     if (isNaN(participantId)) {
                         console.log('Error: No participant ID found');
                         return;
@@ -59,14 +61,15 @@ function updateOffers() {
                         if (data === false) {
 
                             $mealWrapper.find('.participation-checkbox.unswap-action')
-                            //change checkbox class
+                                //change checkbox class
                                 .removeClass('unswap-action')
                                 //disable checkbox
                                 .parent().attr('class', 'checkbox-wrapper disabled');
                             //make participants counter grey
-                            $participantsCount.fadeOut('fast')
-                                .attr('class', 'participants-count')
-                                .fadeIn('fast');
+                            if (ParticipationState.DEFAULT !== participantCounter.getParticipationState()) {
+                                participantCounter.setNextParticipationState(ParticipationState.DEFAULT);
+                                participantCounter.updateUI();
+                            }
                             //deactivate tooltip
                             $tooltip.removeClass('active');
                         }
@@ -74,13 +77,14 @@ function updateOffers() {
                 }
 
                 //no offer available (anymore)
-                if (value[0] === null && $participantsCount.hasClass('offer-available') === true ||
-                    value[0] === null && $participantsCount.hasClass('participation-allowed') === true) {
+                if (value[0] === null && ParticipationState.OFFER_AVAILABLE === participantCounter.getParticipationState() ||
+                    value[0] === null && true === participantCounter.isParticipationAllowed()) {
 
                     //make participants counter grey
-                    $participantsCount.fadeOut('fast')
-                        .attr('class', 'participants-count')
-                        .fadeIn('fast');
+                    if (ParticipationState.DEFAULT !== participantCounter.getParticipationState()) {
+                        participantCounter.setNextParticipationState(ParticipationState.DEFAULT);
+                        participantCounter.updateUI();
+                    }
                     //deactivate tooltip
                     $tooltip.removeClass('active');
                     //remove class from checkbox
@@ -96,8 +100,8 @@ function updateOffers() {
                 }
             });
         },
-        error: function() {
+        error: function () {
             window.location.replace('/');
-    }
+        }
     });
 }

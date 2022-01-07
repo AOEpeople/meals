@@ -1,30 +1,35 @@
 const {CombinedMealDialog} = require("./combined-meal-dialog");
-const {ParticipationState} = require("./participant-counter");
+const {ParticipationRequestHandler, ParticipationRequest, JoinParticipationRequest} = require("./participation-request-handler");
+const {ParticipationResponseHandler, ParticipationAction} = require("./participation-response-handler");
 
 Mealz.prototype.toggleParticipation = function ($checkbox) {
-    if ($checkbox === undefined) {
+    if (undefined === $checkbox) {
         console.log('Error: No checkbox found');
         return;
     }
 
-    var that = this;
-    var url = $checkbox.attr('value');
-    $participantsCount = $checkbox.closest('.wrapper-meal-actions').find('.participants-count');
-    $tooltip = $checkbox.closest('.wrapper-meal-actions').find('.tooltiptext');
-
-    var swapCheckbox = 'participation-checkbox swap-action';
-    var unswapCheckbox = 'participation-checkbox unswap-action';
-    var acceptOfferCheckbox = 'participation-checkbox acceptOffer-action';
-
-    if ($checkbox.hasClass(swapCheckbox)) {
+    if ($checkbox.hasClass('swap-action')) {
         confirmSwap($checkbox);
-    } else if ($checkbox.hasClass(unswapCheckbox)) {
-        $checkbox.attr('class', 'progressing');
-        unswap($checkbox, url, swapCheckbox);
-    } else if ($checkbox.hasClass(acceptOfferCheckbox)) {
-        acceptOffer($checkbox, url, that, swapCheckbox);
     } else {
-        toggle($checkbox, url, that);
+        let participationRequest;
+        if ($checkbox.hasClass(ParticipationAction.JOIN_ACTION)) {
+            participationRequest = new JoinParticipationRequest($checkbox);
+        } else {
+            participationRequest = new ParticipationRequest($checkbox);
+        }
+
+        let handlerMethod;
+        if ($checkbox.hasClass(ParticipationAction.SWAP)) {
+            handlerMethod = ParticipationResponseHandler.onSuccessfulSwap;
+        } else if ($checkbox.hasClass(ParticipationAction.UNSWAP)) {
+            handlerMethod = ParticipationResponseHandler.onSuccessfulUnswap;
+        } else if ($checkbox.hasClass(ParticipationAction.ACCEPT_OFFER)) {
+            handlerMethod = ParticipationResponseHandler.onSuccessfulAcceptOffer;
+        } else { // JOIN or DELETE
+            handlerMethod = ParticipationResponseHandler.onSuccessfulToggle;
+        }
+
+        ParticipationRequestHandler.sendRequest(participationRequest, $checkbox, handlerMethod);
     }
 };
 
@@ -79,7 +84,7 @@ Mealz.prototype.showMealSelectionOverlay = function ($dishCheckbox) {
                     self.toggleGuestParticipation($dishCheckbox);
                 } else {
                     let participantCounter = $dishCheckbox.data('participantCounter');
-                    participantCounter.setCounter(data.participantsCount);
+                    participantCounter.setCount(data.participantsCount);
                     participantCounter.updateUI();
                     updateCheckbox($dishCheckbox, data.url);
                 }
@@ -112,108 +117,16 @@ function updateCheckbox($checkbox, url, checkboxClass) {
     }
 }
 
-function toggle($checkbox, url, that) {
-    const slotBox = $checkbox.closest('.meal').find('.slot-selector');
-    $.ajax({
-        method: 'POST',
-        url: url,
-        data: {
-            'slot': slotBox.val()
-        },
-        dataType: 'json',
-        success: function (data) {
-            let participantCounter = $checkbox.data('participantCounter');
-            participantCounter.setCounter(data.participantsCount);
-            participantCounter.updateUI();
-            updateCheckbox($checkbox, data.url);
-            that.applyCheckboxClasses($checkbox);
-            slotBox.addClass('tmp-disabled').prop('disabled', true)
-                .parent().children('.loader').css('visibility', 'visible');
-        },
-        error: function (xhr) {
-            console.log(xhr.status + ': ' + xhr.statusText);
-        }
-    });
-}
-
 function confirmSwap($checkbox) {
     // make checkbox public for reference in twig template
     swapCheckbox = $checkbox;
     Mealz.prototype.enableConfirmSwapbox($checkbox.attr('value'));
 }
 
-window.swap = function ($checkbox, url) {
-    $.ajax({
-        method: 'GET',
-        url: url,
-        dataType: 'json',
-        success: function (data) {
-            let unswapCheckbox = 'participation-checkbox unswap-action';
-
-            let participantCounter = $checkbox.data('participantCounter');
-            participantCounter.setCounter(data.participantsCount);
-            participantCounter.setParticipationState(ParticipationState.PENDING);
-            participantCounter.updateUI();
-            updateCheckbox($checkbox, data.url, unswapCheckbox);
-
-            $tooltip.toggleClass('active');
-
-            //get text for tooltip
-            $.getJSON('/labels.json')
-                .done(function (data) {
-                    if ($('.language-switch').find('span').text() === 'de') {
-                        $tooltip.text(data[1].tooltip_DE[0].offered);
-                    } else {
-                        $tooltip.text(data[0].tooltip_EN[0].offered);
-                    }
-                });
-
-            $checkbox.data('participant-id', data.id);
-
-        },
-        error: function (xhr) {
-            console.log(xhr.status + ': ' + xhr.statusText);
-        }
-    });
-}
-
-function unswap($checkbox, url, swapCheckbox) {
-    $.ajax({
-        method: 'GET',
-        url: url,
-        dataType: 'json',
-        success: function (data) {
-            let participantCounter = $checkbox.data('participantCounter');
-            participantCounter.setCounter(data.participantsCount);
-            participantCounter.setParticipationState(ParticipationState.PENDING);
-            participantCounter.updateUI();
-            updateCheckbox($checkbox, data.url, swapCheckbox);
-            $tooltip.toggleClass('active');
-        },
-        error: function (xhr) {
-            console.log(xhr.status + ': ' + xhr.statusText);
-        }
-    });
-}
-
-function acceptOffer($checkbox, url, that, swapCheckbox) {
-    $.ajax({
-        method: 'GET',
-        url: url,
-        dataType: 'json',
-        success: function (data) {
-            that.applyCheckboxClasses($checkbox);
-            let participantCounter = $checkbox.data('participantCounter');
-            participantCounter.setCounter(data.participantsCount);
-            participantCounter.setParticipationState(ParticipationState.OFFER_AVAILABLE);
-            participantCounter.updateUI();
-            updateCheckbox($checkbox, data.url, swapCheckbox)
-            $tooltip.toggleClass('active');
-        },
-        error: function (xhr) {
-            console.log(xhr.status + ': ' + xhr.statusText);
-        }
-    });
+window.swap = function ($checkbox) {
+    let participationRequest = new ParticipationRequest($checkbox);
+    let handlerMethod = ParticipationResponseHandler.onSuccessfulSwap;
+    ParticipationRequestHandler.sendRequest(participationRequest, $checkbox, handlerMethod);
 }
 
 Mealz.prototype.loadToggleParticipationCheckbox = function ($tableRow) {
@@ -284,7 +197,7 @@ Mealz.prototype.toggleParticipationAdmin = function ($element) {
 
 Mealz.prototype.toggleGuestParticipation = function ($checkbox) {
     let participantCounter = $checkbox.data('participantCounter');
-    participantCounter.setCounter($checkbox.is(':checked') ? participantCounter.getCounter() + 1 : participantCounter.getCounter() - 1);
+    participantCounter.setCount($checkbox.is(':checked') ? participantCounter.getCount() + 1 : participantCounter.getCount() - 1);
     participantCounter.updateUI();
 
     if (1 === $checkbox.parents('.meal-row').data('combined') && !$checkbox.is(':checked')) {

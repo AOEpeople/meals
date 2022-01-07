@@ -5,7 +5,7 @@ export enum ParticipationState {
 }
 
 export class ParticipantCounter {
-    private readonly parentWrapperClass = '.wrapper-meal-actions';
+    public static readonly PARENT_WRAPPER_CLASS = '.wrapper-meal-actions';
     private readonly wrapperClass = '.participants-count';
     private readonly counterSelector = 'span:first-child';
     private readonly limitSelector = 'label';
@@ -15,7 +15,8 @@ export class ParticipantCounter {
     private readonly dishSlug: string;
     private readonly date: string;
 
-    private state: ParticipationState;
+    private oldState: ParticipationState;
+    private currState: ParticipationState;
 
     private count: number;
     private limit: number;
@@ -24,8 +25,7 @@ export class ParticipantCounter {
     private $limit: JQuery;
     private $participantsCountWrapper: JQuery;
 
-    constructor($checkbox: JQuery) {
-        let $participantsActionsWrapper = $checkbox.closest(this.parentWrapperClass);
+    constructor($participantsActionsWrapper: JQuery) {
         this.$participantsCountWrapper = $participantsActionsWrapper.find(this.wrapperClass);
 
         this.mealId = $participantsActionsWrapper.data('id');
@@ -56,12 +56,12 @@ export class ParticipantCounter {
         return this.date;
     }
 
-    getCounter(): number {
+    getCount(): number {
         return this.count;
     }
 
-    setCounter(counter: number) {
-        this.count = counter;
+    setCount(count: number) {
+        this.count = count;
     }
 
     getLimit(): number {
@@ -77,7 +77,8 @@ export class ParticipantCounter {
     }
 
     setParticipationState(participationState: ParticipationState) {
-        this.state = participationState;
+        this.oldState = this.currState;
+        this.currState = participationState;
     }
 
     updateUI() {
@@ -85,17 +86,17 @@ export class ParticipantCounter {
         this.$participantsCountWrapper.fadeOut('fast', function () {
             self.$count.text(self.count);
 
-            if (ParticipationState.DEFAULT !== self.state) {
-                self.$participantsCountWrapper.toggleClass(self.state);
+            if (self.oldState !== self.currState) {
+                if (ParticipationState.DEFAULT !== self.oldState)
+                    self.$participantsCountWrapper.removeClass(self.oldState);
+                if (ParticipationState.DEFAULT !== self.currState)
+                    self.$participantsCountWrapper.addClass(self.currState);
+                self.oldState = self.currState;
             }
 
             if (self.hasLimit()) {
                 self.$limit.text(self.delimiter + self.limit);
-                if (self.limit <= self.count) {
-                    self.$participantsCountWrapper.addClass('participation-limit-reached');
-                } else {
-                    self.$participantsCountWrapper.removeClass('participation-limit-reached');
-                }
+                self.$participantsCountWrapper.toggleClass('participation-limit-reached', self.limit <= self.count);
             }
 
             self.$participantsCountWrapper.fadeIn('fast');
@@ -104,13 +105,14 @@ export class ParticipantCounter {
 
     private initState() {
         let classList = this.$participantsCountWrapper.attr('class').split(/\s+/);
-        this.state = ParticipationState.DEFAULT;
-        for (let className in classList) {
-            if (className === ParticipationState.PENDING) {
-                this.state = ParticipationState.PENDING;
+        this.oldState = ParticipationState.DEFAULT;
+        this.currState = ParticipationState.DEFAULT;
+        for (let key in classList) {
+            if (classList[key] === ParticipationState.PENDING) {
+                this.currState = ParticipationState.PENDING;
                 break;
-            } else if (className === ParticipationState.OFFER_AVAILABLE) {
-                this.state = ParticipationState.OFFER_AVAILABLE;
+            } else if (classList[key] === ParticipationState.OFFER_AVAILABLE) {
+                this.currState = ParticipationState.OFFER_AVAILABLE;
                 break;
             }
         }

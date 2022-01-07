@@ -12,7 +12,9 @@ use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Entity\SlotRepository;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Common\Collections\Collection;
 
 class ParticipationService
 {
@@ -270,5 +272,15 @@ class ParticipationService
         }
 
         return null;
+    }
+
+    public function getBookedDishCombination(Profile $profile, Meal $meal): Collection
+    {
+        $participant = $meal->getParticipant($profile);
+        if (null === $participant) {
+            return new ArrayCollection();
+        }
+
+        return $participant->getCombinedDishes();
     }
 }

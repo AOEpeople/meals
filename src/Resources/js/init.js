@@ -98,18 +98,20 @@ $(function () {
 
     mealz.$participationCheckboxes.each(function(idx, checkbox) {
         let $checkbox = $(checkbox);
-        $checkbox.data('participantCounter', new ParticipantCounter($checkbox));
+        let $participantsActionsWrapper = $checkbox.closest(ParticipantCounter.PARENT_WRAPPER_CLASS);
+        $checkbox.data('participantCounter', new ParticipantCounter($participantsActionsWrapper));
         mealz.applyCheckboxClasses($checkbox);
     });
 
     // prepare checkboxes on guest invitation form
     mealz.$guestParticipationCheckboxes.each(function (idx, checkbox) {
         let $checkbox = $(checkbox);
-        $checkbox.data('participantCounter', new ParticipantCounter($checkbox));
+        let $participantsActionsWrapper = $checkbox.closest(ParticipantCounter.PARENT_WRAPPER_CLASS);
+        $checkbox.data('participantCounter', new ParticipantCounter($participantsActionsWrapper));
         let participantCounter = $checkbox.data('participantCounter');
         mealz.applyCheckboxClasses($checkbox);
         if ($checkbox.is(':checked')) {
-            participantCounter.setCounter(participantCounter.getCounter() + 1);
+            participantCounter.setCount(participantCounter.getCount() + 1);
             participantCounter.updateUI();
         }
     });

@@ -8,11 +8,28 @@
                 {% endif -%}
             </div>
             <div class="description">
-                {%- if dish.description -%}
-                    {{- dish.description -}}
-                {%- else -%}
-                    {{- 'content.participation.dish.no_description'|trans({},'general') -}}
-                {%- endif -%}
+                {% if dish.isCombinedDish %}
+                    {%  set bookedDishCombinaton = participationService.getBookedDishCombination(app.user.profile, meal) %}
+                    {% if bookedDishCombinaton|length == 0 %}
+                        {{- dish.description -}}
+                    {% else %}
+                        <div class="text text-variation">
+                            {%- for bookedDish in bookedDishCombinaton -%}
+                                {{- bookedDish.title -}}
+                                {%- if not loop.last -%}
+                                    {{- ', ' -}}
+                                {%- endif -%}
+                            {%- endfor -%}
+                        </div>
+                    {% endif %}
+                    <div class="text text-variation">({{ 'header.navigation.costs'|trans({},'general')}} {{ meal.price|number_format(2, '.', ',') }} €)</div>
+                {% else %}
+                    {%- if dish.description -%}
+                        {{- dish.description -}}
+                    {%- else -%}
+                        {{- 'content.participation.dish.no_description'|trans({},'general') -}}
+                    {%- endif -%}
+                {% endif %}
             </div>
         </div>
     {% include 'MealzMealBundle:Meal/partials:mealActionsWrapper.html.twig' %}

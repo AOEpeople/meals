@@ -24,7 +24,7 @@
         {% set tooltipClasses = tooltipClasses|merge(['active']) %}
         {% set tooltipId = 'tooltip_offered' %}
         {% set tooltipText = "tooltip.offered_meal" %}
-    {% elseif is_offer_available(meal, participant) %}
+    {% elseif false == participant and is_offer_available(meal, participant) %}
         {% if is_allowed_to_swap(meal) %}
             {% set participantsCountClasses = participantsCountClasses|merge(['offer-available']) %}
         {% endif %}

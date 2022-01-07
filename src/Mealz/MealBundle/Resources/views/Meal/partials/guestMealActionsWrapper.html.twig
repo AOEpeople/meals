@@ -8,6 +8,8 @@
 {% if isParticipationLimitReached %}
     {% set participantsCountClasses = participantsCountClasses|merge(['participation-limit-reached']) %}
     {% set checkboxWrapperClasses = checkboxWrapperClasses|merge(['disabled']) %}
+{% elseif available %}
+    {% set participantsCountClasses = participantsCountClasses|merge(['participation-allowed']) %}
 {% endif %}
 <div class="wrapper-meal-actions wrapper-variation-vertical-center" data-id="{{ meal.data.id }}">
     <div class="participants">

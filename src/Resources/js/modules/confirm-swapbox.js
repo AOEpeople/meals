@@ -11,5 +11,4 @@ Mealz.prototype.enableConfirmSwapbox = function (checkboxValue) {
     };
 
     $.fancybox.open($container, options);
-
 };

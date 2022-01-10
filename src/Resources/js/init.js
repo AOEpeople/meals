@@ -13,10 +13,10 @@ import '@fancyapps/fancybox';
 import 'easy-autocomplete';
 import 'daterangepicker';
 import {Controller} from "./controller";
-import {ParticipantCounter} from "./modules/participant-counter";
 import {
     ParticipationCountUpdateHandler, ParticipationGuestCountUpdateHandler
 } from "./modules/participation-count-update-handler";
+import {ParticipationGuestToggleHandler, ParticipationToggleHandler} from "./modules/participation-toggle-handler";
 
 if (process.env.MODE === 'production') {
     jQuery.migrateMute = true;
@@ -34,6 +34,7 @@ window.Mealz = function () {
     this.hiddenClass = 'hidden';
     this.weekCheckbox = $('.meal-form .week-disable input[type="checkbox"]')[0];
     this.$weekDayCheckboxes = $('.meal-form .week-day-action input[type="checkbox"]');
+    this.participationToggleHandler = undefined;
     this.$participationCheckboxes = $('.meals-list input.checkbox, .meals-list input[type = "checkbox"]');
     this.$guestParticipationCheckboxes = $('.meal-guests input.checkbox, .meal-guests input[type = "checkbox"]');
     this.$iconCells = $('.icon-cell');
@@ -96,31 +97,14 @@ $(function () {
      */
     mealz.enableSortableTables();
 
-    mealz.$participationCheckboxes.each(function (idx, checkbox) {
-        let $checkbox = $(checkbox);
-        let $participantsActionsWrapper = $checkbox.closest(ParticipantCounter.PARENT_WRAPPER_CLASS);
-        $checkbox.data(ParticipantCounter.NAME, new ParticipantCounter($participantsActionsWrapper));
-        mealz.applyCheckboxClasses($checkbox);
-    });
-
-    // prepare checkboxes on guest invitation form
-    mealz.$guestParticipationCheckboxes.each(function (idx, checkbox) {
-        let $checkbox = $(checkbox);
-        let $participantsActionsWrapper = $checkbox.closest(ParticipantCounter.PARENT_WRAPPER_CLASS);
-        $checkbox.data(ParticipantCounter.NAME, new ParticipantCounter($participantsActionsWrapper));
-        mealz.applyCheckboxClasses($checkbox);
-        let participantCounter = $checkbox.data(ParticipantCounter.NAME);
-        if ((!participantCounter.hasOffset() && $checkbox.is(':checked')) ||
-            (participantCounter.hasOffset() && !$checkbox.is(':checked'))) {
-            participantCounter.toggleOffset();
-            participantCounter.updateUI();
+    if (undefined === mealz.participationToggleHandler) {
+        if (mealz.$participationCheckboxes.length > 0) {
+            mealz.participationToggleHandler = new ParticipationToggleHandler(mealz.$participationCheckboxes);
+            mealz.participationCountUpdateHandler = new ParticipationCountUpdateHandler(mealz.$participationCheckboxes);
+        } else if (mealz.$guestParticipationCheckboxes.length > 0) {
+            mealz.participationToggleHandler = new ParticipationGuestToggleHandler(mealz.$guestParticipationCheckboxes);
+            mealz.participationCountUpdateHandler = new ParticipationGuestCountUpdateHandler(mealz.$guestParticipationCheckboxes);
         }
-    });
-
-    if (mealz.$participationCheckboxes.length > 0) {
-        this.participationCountUpdateHandler = new ParticipationCountUpdateHandler(mealz.$participationCheckboxes);
-    } else if (mealz.$guestParticipationCheckboxes.length > 0) {
-        this.participationCountUpdateHandler = new ParticipationGuestCountUpdateHandler(mealz.$guestParticipationCheckboxes);
     }
 
     /**

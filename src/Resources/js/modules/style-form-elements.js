@@ -1,18 +1,5 @@
 import Switchery from 'switchery.js';
 
-Mealz.prototype.applyCheckboxClasses = function ($checkbox) {
-    var $checkboxWrapper = $checkbox.closest('.' + this.checkboxWrapperClass);
-
-    // if I'm in Guest Invitation
-    if($('.meal-guest').length && $checkboxWrapper.hasClass('disabled')){
-        $checkbox.closest('input').attr('disabled', 'disabled');
-    } else {
-        $checkboxWrapper.toggleClass('checked', $checkbox.is(':checked'));
-        $checkboxWrapper.toggleClass('disabled', $checkbox.is(':disabled'));
-    }
-
-};
-
 Mealz.prototype.styleCheckboxes = function () {
     var that = this;
 
@@ -72,21 +59,6 @@ Mealz.prototype.styleCheckboxes = function () {
         } else {
             $checkbox.trigger('click');
         }
-    });
-
-    $('.' + this.checkboxWrapperClass + ' input').on('click', function(e) {
-        e.stopPropagation();
-    });
-
-    // Handle change event on checkboxes
-    this.$participationCheckboxes.on('change', function() {
-        that.toggleParticipation($(this));
-    });
-
-    // Handle change event on checkboxes
-    this.$guestParticipationCheckboxes.on('change', function() {
-        that.applyCheckboxClasses($(this));
-        that.toggleGuestParticipation($(this));
     });
 };
 

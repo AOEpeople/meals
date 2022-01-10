@@ -6,6 +6,7 @@ const {
 } = require("./participation-request-handler");
 const {ParticipationResponseHandler, ParticipationAction} = require("./participation-response-handler");
 const {ParticipantCounter} = require("./participant-counter");
+const {ConfirmSwapDialog} = require("./confirm-swap-dialog");
 
 Mealz.prototype.toggleParticipation = function ($checkbox) {
     if (undefined === $checkbox) {
@@ -13,20 +14,27 @@ Mealz.prototype.toggleParticipation = function ($checkbox) {
         return;
     }
 
-    if ($checkbox.hasClass('swap-action')) {
-        confirmSwap($checkbox);
+    let participationRequest;
+    if ($checkbox.hasClass(ParticipationAction.JOIN_ACTION)) {
+        participationRequest = new JoinParticipationRequest($checkbox);
     } else {
-        let participationRequest;
-        if ($checkbox.hasClass(ParticipationAction.JOIN_ACTION)) {
-            participationRequest = new JoinParticipationRequest($checkbox);
-        } else {
-            participationRequest = new ParticipationRequest($checkbox);
-        }
+        participationRequest = new ParticipationRequest($checkbox);
+    }
 
-        let handlerMethod;
-        if ($checkbox.hasClass(ParticipationAction.SWAP)) {
-            handlerMethod = ParticipationResponseHandler.onSuccessfulSwap;
-        } else if ($checkbox.hasClass(ParticipationAction.UNSWAP)) {
+    let handlerMethod;
+    if ($checkbox.hasClass(ParticipationAction.SWAP)) {
+        handlerMethod = ParticipationResponseHandler.onSuccessfulSwap;
+        let csd = new ConfirmSwapDialog(
+            {
+                participationRequest,
+                $checkbox,
+                handlerMethod
+            }
+        );
+
+        csd.open();
+    } else {
+        if ($checkbox.hasClass(ParticipationAction.UNSWAP)) {
             handlerMethod = ParticipationResponseHandler.onSuccessfulUnswap;
         } else if ($checkbox.hasClass(ParticipationAction.ACCEPT_OFFER)) {
             handlerMethod = ParticipationResponseHandler.onSuccessfulAcceptOffer;
@@ -73,9 +81,11 @@ Mealz.prototype.showMealSelectionOverlay = function ($dishCheckbox) {
     let self = this;
     let path = $dishCheckbox.attr('value');
     const slotBox = $dishCheckbox.closest('.meal').find('.slot-selector');
+    const title = $dishCheckbox.closest('.meal-row').find('.title').text();
     const dishes = this.getCombinedMealDishes($dishCheckbox);
     const isGuestParticipation = $('body').hasClass('guest-wrapper');
     let cmd = new CombinedMealDialog(
+        title,
         dishes,
         slotBox.val(),
         path,
@@ -122,18 +132,6 @@ function updateCheckbox($checkbox, url, checkboxClass) {
     if (undefined !== checkboxClass) {
         $checkbox.attr('class', checkboxClass);
     }
-}
-
-function confirmSwap($checkbox) {
-    // make checkbox public for reference in twig template
-    swapCheckbox = $checkbox;
-    Mealz.prototype.enableConfirmSwapbox($checkbox.attr('value'));
-}
-
-window.swap = function ($checkbox) {
-    let participationRequest = new ParticipationRequest($checkbox);
-    let handlerMethod = ParticipationResponseHandler.onSuccessfulSwap;
-    ParticipationRequestHandler.sendRequest(participationRequest, $checkbox, handlerMethod);
 }
 
 Mealz.prototype.loadToggleParticipationCheckbox = function ($tableRow) {

@@ -1,6 +1,7 @@
 import 'jquery-ui/ui/widgets/dialog';
+import {BaseDialog} from "./base-dialog";
 
-export class CombinedMealDialog {
+export class CombinedMealDialog extends BaseDialog {
     private readonly containerID: string = '#combined-meal-selector';
     private readonly title: string;
     private readonly slotSlug: string;
@@ -8,17 +9,17 @@ export class CombinedMealDialog {
     private opts: CombinedMealDialogOptions;
 
     private $form: JQuery;
-    private $dialog: JQuery;
 
-    constructor(private dishes: Dish[], slotSlug: string, path: string, opts: CombinedMealDialogOptions) {
-        this.title = this.getTitle(dishes);
+    constructor(title: string, private dishes: Dish[], slotSlug: string, path: string, opts: CombinedMealDialogOptions) {
+        super();
+        this.title = title;
         this.path = path;
         this.slotSlug = slotSlug;
         this.$form = this.buildForm(dishes, this.slotSlug);
         this.opts = opts;
     }
 
-    open() {
+    public open(): void {
         this.$dialog = $(this.containerID).empty().append(this.$form).dialog({
             modal: true,
             width: 400,
@@ -106,17 +107,6 @@ export class CombinedMealDialog {
             self.opts.ok(formArray);
         }
         self.$dialog.dialog('close');
-    }
-
-    private handleCancel(): void {
-        this.$dialog.dialog('close');
-    }
-
-    private handleCreate(): void {
-        let $widget = $(this).dialog('widget');
-        $widget.removeClass('ui-corner-all');
-        $widget.find('.ui-dialog-titlebar-close').remove();
-        $widget.find('.ui-button').removeClass('ui-corner-all');
     }
 }
 

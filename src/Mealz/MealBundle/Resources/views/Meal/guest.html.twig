@@ -27,7 +27,7 @@
     </p>
     {{ form_start(form) }}
 
-    <div class="meal meal-guest {{ available ? 'is-available' }}" data-date="{{ form.vars.value.day.datetime | date('Y-m-d') }}">
+    <div class="meal meal-guest {{ available ? 'is-available' }}" data-date="{{ form.vars.value.day.datetime | date('Y-m-d') }}" data-day-enabled="{{ form.vars.value.day.enabled }}" data-lock-date-time="{{ form.vars.value.day.lockParticipationDateTime | date('Y-m-d\\TH:i:sP') }}">
         <div class="header">
             {{- form.vars.value.day.datetime | date('D') | trans({}, 'date') -}}
             {{- form.vars.value.day.datetime | date(' d.m.Y') -}}

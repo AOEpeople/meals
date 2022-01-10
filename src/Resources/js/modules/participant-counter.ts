@@ -14,8 +14,9 @@ export class ParticipantCounter {
 
     private readonly mealId: number;
     private readonly dishSlug: string;
-    private readonly date: string;
-    private readonly allowed: boolean = false;
+    private readonly day: string;
+    private readonly dayEnabled: boolean;
+    private readonly lockDateTime: Date;
 
     private offset: number = 0;
     private nextCount: number;
@@ -34,7 +35,11 @@ export class ParticipantCounter {
         if (undefined === this.dishSlug) {
             this.dishSlug = $participantsActionsWrapper.closest('.variation-row').data('slug');
         }
-        this.date = this.$participantsCountWrapper.closest('.meal').data('date');
+
+        let $meal = this.$participantsCountWrapper.closest('.meal');
+        this.day = $meal.data('date');
+        this.lockDateTime = new Date(Date.parse($meal.data('lock-date-time')));
+        this.dayEnabled = $meal.data('day-enabled') === 1;
 
         this.$count = this.$participantsCountWrapper.find(this.counterSelector);
         this.$limit = this.$participantsCountWrapper.find(this.limitSelector);
@@ -42,7 +47,6 @@ export class ParticipantCounter {
         this.nextCount = this.getCount();
         this.nextLimit = this.getLimit();
         this.nextState = this.getParticipationState();
-        this.allowed = this.$participantsCountWrapper.hasClass('participation-allowed');
     }
 
     getMealId(): number {
@@ -53,8 +57,8 @@ export class ParticipantCounter {
         return this.dishSlug;
     }
 
-    getDate(): string {
-        return this.date;
+    getDay(): string {
+        return this.day;
     }
 
     getCount(): number {
@@ -81,8 +85,8 @@ export class ParticipantCounter {
         return this.getLimit() <= this.getCount();
     }
 
-    isParticipationAllowed(): boolean {
-        return this.allowed && !this.isLimitReached();
+    isAvailable(): boolean {
+        return this.dayEnabled && this.lockDateTime.getTime() > Date.now();
     }
 
     hasOffset(): boolean {
@@ -115,11 +119,14 @@ export class ParticipantCounter {
         this.$participantsCountWrapper.fadeOut('fast', function () {
             self.$count.text(self.nextCount + self.offset);
 
+            let isAvailable = self.isAvailable()
+            self.$participantsCountWrapper.toggleClass('participation-allowed', isAvailable)
+
             if (self.hasLimit()) {
                 self.$limit.text(self.delimiter + self.nextLimit);
                 let limitIsReached = self.isLimitReached();
                 self.$participantsCountWrapper.toggleClass('participation-limit-reached', limitIsReached);
-                self.$participantsCountWrapper.toggleClass('participation-allowed', self.allowed && !limitIsReached);
+                self.$participantsCountWrapper.toggleClass('participation-allowed', isAvailable && !limitIsReached);
             }
 
             let oldState = self.getParticipationState();

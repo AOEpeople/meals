@@ -5,7 +5,7 @@
     {% set available = true %}
 {% endif %}
 {% endapply %}
-<div class="meal{{ available ? ' is-available' }}" data-date="{{ day.dateTime.format('Y-m-d') }}">
+<div class="meal{{ available ? ' is-available' }}" data-date="{{ day.dateTime.format('Y-m-d') }}" data-day-enabled="{{ day.enabled }}" data-lock-date-time="{{ day.lockParticipationDateTime | date('Y-m-d\\TH:i:sP') }}">
     {% include 'MealzMealBundle:Meal/partials:mealSlots.html.twig' %}
     {# display week day and date #}
     <div class="week-day">

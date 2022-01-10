@@ -33,11 +33,11 @@ export class ParticipationCountUpdateHandler extends AbstractParticipationCountU
                 $checkboxes.each(function (idx, checkbox) {
                     let $checkbox = $(checkbox);
                     let participantCounter = $checkbox.data(ParticipantCounter.NAME);
-                    let countStatus = data[participantCounter.getDate()]['countByMealIds'][participantCounter.getMealId()][participantCounter.getDishSlug()];
+                    let countStatus = data[participantCounter.getDay()]['countByMealIds'][participantCounter.getMealId()][participantCounter.getDishSlug()];
                     if (undefined !== countStatus) {
                         AbstractParticipationCountUpdateHandler.updateCountStatus(participantCounter, countStatus['count'], countStatus['limit']);
                     } else {
-                        console.log("Values for count status update undefined. " + participantCounter.getDate() + " " + participantCounter.getMealId() + " " + participantCounter.getDishSlug());
+                        console.log("Values for count status update undefined. " + participantCounter.getDay() + " " + participantCounter.getMealId() + " " + participantCounter.getDishSlug());
                     }
                 });
             }

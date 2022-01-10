@@ -112,19 +112,34 @@ Mealz.prototype.showMealSelectionOverlay = function ($dishCheckbox) {
 }
 
 function updateDishSelection($dishCheckbox, data) {
-    let $mealRow = $dishCheckbox.parents('.meal-row');
-    let $dishSelectionWrapper = $mealRow.find("#dish-selection-wrapper");
+    let dishSelectionWrapperSelector = 'dish-selection-wrapper';
+    let $meal = $dishCheckbox.closest('.meal');
+    let $textWrapper = $dishCheckbox.closest('.meal-row').find('.text');
+    let $dishSelectionWrapper = $textWrapper.find('#' + dishSelectionWrapperSelector);
     if (0 === $dishSelectionWrapper.length) {
-        $dishSelectionWrapper = $('<div id="dish-selection-wrapper"></div>');
-        $mealRow.prepend($dishSelectionWrapper);
+        $dishSelectionWrapper = $('<div id="' + dishSelectionWrapperSelector + '"></div>');
+        $textWrapper.append($dishSelectionWrapper);
     } else {
         $dishSelectionWrapper.empty();
     }
 
+    let selectedDishes = [];
+
     data.filter(entry => entry.name.startsWith('dishes')).forEach(entry => {
         let $dishSelectionField = '<input type="hidden" name="' + entry.name + '" value="' + entry.value + '">';
-        $dishSelectionWrapper.prepend($dishSelectionField);
+        $dishSelectionWrapper.append($dishSelectionField);
+
+        let $mealWrapper = $meal.find('[data-slug="' + entry.value + '"]');
+        let $dishTitle = '';
+        if ($mealWrapper.hasClass('meal-row')) {
+            $dishTitle = $mealWrapper.find('.title');
+        } else if ($mealWrapper.hasClass('variation-row')) {
+            $dishTitle = $mealWrapper.find('.text-variation');
+        }
+        selectedDishes.push($dishTitle.text());
     });
+
+    $dishSelectionWrapper.append(selectedDishes.join(', '))
 }
 
 function updateCheckbox($checkbox, url, checkboxClass) {

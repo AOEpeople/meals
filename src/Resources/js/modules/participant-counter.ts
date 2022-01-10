@@ -89,6 +89,10 @@ export class ParticipantCounter {
         return this.dayEnabled && this.lockDateTime.getTime() > Date.now();
     }
 
+    getOffset(): number {
+        return this.offset;
+    }
+
     hasOffset(): boolean {
         return 1 === this.offset;
     }

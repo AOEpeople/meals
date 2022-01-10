@@ -78,7 +78,7 @@ function updateOffers() {
 
                 //no offer available (anymore)
                 if (value[0] === null && ParticipationState.OFFER_AVAILABLE === participantCounter.getParticipationState() ||
-                    value[0] === null && true === participantCounter.isParticipationAllowed()) {
+                    value[0] === null && true === participantCounter.isAvailable()) {
 
                     //make participants counter grey
                     if (ParticipationState.DEFAULT !== participantCounter.getParticipationState()) {

@@ -11,7 +11,7 @@ export abstract class AbstractParticipationCountUpdateHandler {
 
     static updateCountStatus(participantCounter: ParticipantCounter, count: number, limit: number): void {
         if (participantCounter.getCount() !== count || participantCounter.getLimit() !== limit) {
-            participantCounter.setNextCount(count);
+            participantCounter.setNextCount(count + participantCounter.getOffset());
             participantCounter.setNextLimit(limit);
             participantCounter.updateUI();
         }
@@ -37,7 +37,7 @@ export class ParticipationCountUpdateHandler extends AbstractParticipationCountU
                     if (undefined !== countStatus) {
                         AbstractParticipationCountUpdateHandler.updateCountStatus(participantCounter, countStatus['count'], countStatus['limit']);
                     } else {
-                        console.log("Values for count status update undefined. " + participantCounter.getDay() + " " + participantCounter.getMealId() + " " + participantCounter.getDishSlug());
+                        console.log("Values for count status update undefined. No values on " + participantCounter.getDay() + " for meal " + participantCounter.getMealId() + " and dish " + participantCounter.getDishSlug());
                     }
                 });
             }
@@ -61,11 +61,9 @@ export class ParticipationGuestCountUpdateHandler extends AbstractParticipationC
                     let participantCounter = $checkbox.data(ParticipantCounter.NAME);
                     let countStatus = data[participantCounter.getMealId()][participantCounter.getDishSlug()];
                     if (undefined !== countStatus) {
-                        // Guests can temporarily reserve a meal via checkbox, but the meal will only be booked after submitting the form
-                        let count = countStatus['count'] + ($checkbox.is(':checked') ? 1 : 0);
-                        AbstractParticipationCountUpdateHandler.updateCountStatus(participantCounter, count, countStatus['limit']);
+                        AbstractParticipationCountUpdateHandler.updateCountStatus(participantCounter, countStatus['count'], countStatus['limit']);
                     } else {
-                        console.log("Values for count status update undefined.");
+                        console.log("Values for count status update undefined. No values for meal " + participantCounter.getMealId() + " and dish " + participantCounter.getDishSlug());
                     }
                 });
             }

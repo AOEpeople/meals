@@ -1,50 +1,5 @@
 const {CombinedMealDialog} = require("./combined-meal-dialog");
-const {
-    ParticipationRequestHandler,
-    ParticipationRequest,
-    JoinParticipationRequest
-} = require("./participation-request-handler");
-const {ParticipationResponseHandler, ParticipationAction} = require("./participation-response-handler");
 const {ParticipantCounter} = require("./participant-counter");
-const {ConfirmSwapDialog} = require("./confirm-swap-dialog");
-
-Mealz.prototype.toggleParticipation = function ($checkbox) {
-    if (undefined === $checkbox) {
-        console.log('Error: No checkbox found');
-        return;
-    }
-
-    let participationRequest;
-    if ($checkbox.hasClass(ParticipationAction.JOIN_ACTION)) {
-        participationRequest = new JoinParticipationRequest($checkbox);
-    } else {
-        participationRequest = new ParticipationRequest($checkbox);
-    }
-
-    let handlerMethod;
-    if ($checkbox.hasClass(ParticipationAction.SWAP)) {
-        handlerMethod = ParticipationResponseHandler.onSuccessfulSwap;
-        let csd = new ConfirmSwapDialog(
-            {
-                participationRequest,
-                $checkbox,
-                handlerMethod
-            }
-        );
-
-        csd.open();
-    } else {
-        if ($checkbox.hasClass(ParticipationAction.UNSWAP)) {
-            handlerMethod = ParticipationResponseHandler.onSuccessfulUnswap;
-        } else if ($checkbox.hasClass(ParticipationAction.ACCEPT_OFFER)) {
-            handlerMethod = ParticipationResponseHandler.onSuccessfulAcceptOffer;
-        } else { // JOIN or DELETE
-            handlerMethod = ParticipationResponseHandler.onSuccessfulToggle;
-        }
-
-        ParticipationRequestHandler.sendRequest(participationRequest, $checkbox, handlerMethod);
-    }
-};
 
 Mealz.prototype.mealHasVariations = function ($dishCheckbox) {
     return 0 < $dishCheckbox.closest('.meal').find('.variation-row .text-variation').length;
@@ -93,10 +48,10 @@ Mealz.prototype.showMealSelectionOverlay = function ($dishCheckbox) {
             ajax: !isGuestParticipation,
             ok: function (data) {
                 $dishCheckbox.prop('checked', !$dishCheckbox.is(':checked'));
-                self.applyCheckboxClasses($dishCheckbox);
+                self.participationToggleHandler.toggleCheckboxWrapperClasses($dishCheckbox);
                 if (isGuestParticipation) {
-                    updateDishSelection($dishCheckbox, data);
-                    self.toggleGuestParticipation($dishCheckbox);
+                    self.participationToggleHandler.updateDishSelection($dishCheckbox, data);
+                    self.participationToggleHandler.toggleGuest($dishCheckbox);
                 } else {
                     let participantCounter = $dishCheckbox.data(ParticipantCounter.NAME);
                     if (participantCounter.getCount() !== data.participantsCount) {
@@ -109,37 +64,6 @@ Mealz.prototype.showMealSelectionOverlay = function ($dishCheckbox) {
         }
     );
     cmd.open();
-}
-
-function updateDishSelection($dishCheckbox, data) {
-    let dishSelectionWrapperSelector = 'dish-selection-wrapper';
-    let $meal = $dishCheckbox.closest('.meal');
-    let $textWrapper = $dishCheckbox.closest('.meal-row').find('.text');
-    let $dishSelectionWrapper = $textWrapper.find('#' + dishSelectionWrapperSelector);
-    if (0 === $dishSelectionWrapper.length) {
-        $dishSelectionWrapper = $('<div id="' + dishSelectionWrapperSelector + '"></div>');
-        $textWrapper.append($dishSelectionWrapper);
-    } else {
-        $dishSelectionWrapper.empty();
-    }
-
-    let selectedDishes = [];
-
-    data.filter(entry => entry.name.startsWith('dishes')).forEach(entry => {
-        let $dishSelectionField = '<input type="hidden" name="' + entry.name + '" value="' + entry.value + '">';
-        $dishSelectionWrapper.append($dishSelectionField);
-
-        let $mealWrapper = $meal.find('[data-slug="' + entry.value + '"]');
-        let $dishTitle = '';
-        if ($mealWrapper.hasClass('meal-row')) {
-            $dishTitle = $mealWrapper.find('.title');
-        } else if ($mealWrapper.hasClass('variation-row')) {
-            $dishTitle = $mealWrapper.find('.text-variation');
-        }
-        selectedDishes.push($dishTitle.text());
-    });
-
-    $dishSelectionWrapper.append(selectedDishes.join(', '))
 }
 
 function updateCheckbox($checkbox, url, checkboxClass) {
@@ -213,17 +137,4 @@ Mealz.prototype.toggleParticipationAdmin = function ($element) {
             console.log(xhr.status + ': ' + xhr.statusText);
         }
     });
-};
-
-Mealz.prototype.toggleGuestParticipation = function ($checkbox) {
-    let participantCounter = $checkbox.data(ParticipantCounter.NAME);
-    if ((!participantCounter.hasOffset() && $checkbox.is(':checked')) ||
-        (participantCounter.hasOffset() && !$checkbox.is(':checked'))) {
-        participantCounter.toggleOffset();
-        participantCounter.updateUI();
-    }
-
-    if (1 === $checkbox.parents('.meal-row').data('combined') && !$checkbox.is(':checked')) {
-        updateDishSelection($checkbox, []);
-    }
 };

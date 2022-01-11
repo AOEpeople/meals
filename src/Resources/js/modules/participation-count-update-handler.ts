@@ -9,7 +9,7 @@ export abstract class AbstractParticipationCountUpdateHandler {
 
     protected abstract initCallback($checkboxes: JQuery): void;
 
-    static updateCountStatus(participantCounter: ParticipantCounter, count: number, limit: number): void {
+    public static updateCountStatus(participantCounter: ParticipantCounter, count: number, limit: number): void {
         if (participantCounter.getCount() !== count || participantCounter.getLimit() !== limit) {
             participantCounter.setNextCount(count + participantCounter.getOffset());
             participantCounter.setNextLimit(limit);

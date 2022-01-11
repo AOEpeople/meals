@@ -116,7 +116,7 @@ export class ParticipationGuestToggleHandler extends AbstractParticipationToggle
         }
     }
 
-    private updateDishSelection($checkbox: JQuery, data: Array<Entry>) {
+    private updateDishSelection($checkbox: JQuery, data?: Array<Entry>) {
         let dishSelectionWrapperSelector = 'dish-selection-wrapper';
         let $meal = $checkbox.closest('.meal');
         let $textWrapper = $checkbox.closest('.meal-row').find('.text');
@@ -128,8 +128,11 @@ export class ParticipationGuestToggleHandler extends AbstractParticipationToggle
             $dishSelectionWrapper.empty();
         }
 
-        let selectedDishes: Array<string> = new Array<string>();
+        if (undefined === data) {
+            return;
+        }
 
+        let selectedDishes: Array<string> = new Array<string>();
         data.filter(entry => entry.name.startsWith('dishes')).forEach(entry => {
             let $dishSelectionField = '<input type="hidden" name="' + entry.name + '" value="' + entry.value + '">';
             $dishSelectionWrapper.append($dishSelectionField);

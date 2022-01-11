@@ -5,15 +5,13 @@ export class CombinedMealDialog extends BaseDialog {
     private readonly containerID: string = '#combined-meal-selector';
     private readonly title: string;
     private readonly slotSlug: string;
-    private readonly path: string;
     private opts: CombinedMealDialogOptions;
 
     private $form: JQuery;
 
-    constructor(title: string, private dishes: Dish[], slotSlug: string, path: string, opts: CombinedMealDialogOptions) {
+    constructor(title: string, private dishes: Dish[], slotSlug: string, opts: CombinedMealDialogOptions) {
         super();
         this.title = title;
-        this.path = path;
         this.slotSlug = slotSlug;
         this.$form = this.buildForm(dishes, this.slotSlug);
         this.opts = opts;
@@ -35,7 +33,7 @@ export class CombinedMealDialog extends BaseDialog {
     }
 
     private getTitle(dishes: Dish[]): string {
-        return dishes.reduce(function(title: string, dish: Dish) {
+        return dishes.reduce(function (title: string, dish: Dish) {
             return ('' === title) ? dish.title : `${title} & ${dish.title}`;
         }, '');
     }
@@ -93,35 +91,22 @@ export class CombinedMealDialog extends BaseDialog {
     private handleOk(): void {
         let self = this;
         const $form = this.$dialog.find('form:first');
-        if (self.opts.ajax) {
-            $.ajax({
-                type: 'POST',
-                url: this.path,
-                data: $form.serialize(),
-                success: function (data) {
-                    self.opts.ok(data);
-                }
-            });
-        } else {
-            let formArray: any = $form.serializeArray();
-            self.opts.ok(formArray);
-        }
+        self.opts.ok($form.serializeArray());
         self.$dialog.dialog('close');
     }
 }
 
-interface Dish extends DishVariation {
+export interface Dish extends DishVariation {
     variations: DishVariation[]
 }
 
-interface DishVariation {
+export interface DishVariation {
     title: string
     slug: string
 }
 
 interface CombinedMealDialogOptions {
-    ajax: boolean
-    ok: (data: []) => void
+    ok: (data: any) => void
 }
 
 interface ElementAttributes {

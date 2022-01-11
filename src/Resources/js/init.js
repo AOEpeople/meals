@@ -17,6 +17,7 @@ import {
     ParticipationCountUpdateHandler, ParticipationGuestCountUpdateHandler
 } from "./modules/participation-count-update-handler";
 import {ParticipationGuestToggleHandler, ParticipationToggleHandler} from "./modules/participation-toggle-handler";
+import {ParticipationPreToggleHandler} from "./modules/participation-pre-toggle-handler";
 
 if (process.env.MODE === 'production') {
     jQuery.migrateMute = true;
@@ -35,6 +36,7 @@ window.Mealz = function () {
     this.weekCheckbox = $('.meal-form .week-disable input[type="checkbox"]')[0];
     this.$weekDayCheckboxes = $('.meal-form .week-day-action input[type="checkbox"]');
     this.participationToggleHandler = undefined;
+    this.participationPreToggleHandler = undefined;
     this.$participationCheckboxes = $('.meals-list input.checkbox, .meals-list input[type = "checkbox"]');
     this.$guestParticipationCheckboxes = $('.meal-guests input.checkbox, .meal-guests input[type = "checkbox"]');
     this.$iconCells = $('.icon-cell');
@@ -105,6 +107,8 @@ $(function () {
             mealz.participationToggleHandler = new ParticipationGuestToggleHandler(mealz.$guestParticipationCheckboxes);
             mealz.participationCountUpdateHandler = new ParticipationGuestCountUpdateHandler(mealz.$guestParticipationCheckboxes);
         }
+
+        this.participationPreToggleHandler = new ParticipationPreToggleHandler(mealz.participationToggleHandler);
     }
 
     /**

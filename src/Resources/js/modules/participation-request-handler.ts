@@ -1,24 +1,17 @@
 import {ActionResponse} from "./participation-response-handler";
 
 export class ParticipationRequest {
-    url: string;
-    method: string;
-    data: object;
+    readonly url: string;
+    readonly data: {};
+    readonly method: string;
 
-    constructor($checkbox: JQuery) {
+    constructor($checkbox: JQuery, data?: {}) {
         this.url = $checkbox.attr('value');
         this.method = 'GET';
-    }
-}
-
-export class JoinParticipationRequest extends ParticipationRequest {
-    constructor($checkbox: JQuery) {
-        super($checkbox);
-        let $slotBox = $checkbox.closest('.meal').find('.slot-selector');
-        this.method = 'POST';
-        this.data = {
-            'slot': $slotBox.val()
-        };
+        if (data) {
+            this.data = data
+            this.method = 'POST'
+        }
     }
 }
 

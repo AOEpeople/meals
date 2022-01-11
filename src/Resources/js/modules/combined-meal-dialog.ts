@@ -89,10 +89,9 @@ export class CombinedMealDialog extends BaseDialog {
     }
 
     private handleOk(): void {
-        let self = this;
         const $form = this.$dialog.find('form:first');
-        self.opts.ok($form.serializeArray());
-        self.$dialog.dialog('close');
+        this.opts.ok($form.serializeArray());
+        this.$dialog.dialog('close');
     }
 }
 

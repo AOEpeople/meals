@@ -3,7 +3,7 @@ import 'jquery-ui/ui/widgets/dialog';
 export abstract class BaseDialog {
     protected $dialog: JQuery;
 
-    abstract open(): void;
+    public abstract open(): void;
 
     protected handleCancel(): void {
         this.$dialog.dialog('close');

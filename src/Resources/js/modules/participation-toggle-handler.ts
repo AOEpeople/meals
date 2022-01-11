@@ -1,7 +1,6 @@
 import {ParticipantCounter} from "./participant-counter";
 import {ParticipationAction, ParticipationResponseHandler} from "./participation-response-handler";
 import {
-    JoinParticipationRequest,
     ParticipationRequest,
     ParticipationRequestHandler
 } from "./participation-request-handler";
@@ -15,6 +14,20 @@ export abstract class AbstractParticipationToggleHandler {
         this.initEvents($checkboxes);
     }
 
+    public toggle($checkbox: JQuery, data?: {}) {
+        if (undefined === $checkbox) {
+            console.log('Error: No checkbox found');
+            return;
+        }
+
+        $checkbox.prop('checked', !$checkbox.is(':checked'));
+        this.toggleOnChange($checkbox, data);
+    }
+
+    protected abstract toggleOnChange($checkbox: JQuery, data?: {}): void;
+
+    protected abstract toggleCheckboxWrapperClasses($checkbox: JQuery): void;
+
     private prepare($checkboxes: JQuery): void {
         let self = this;
         $checkboxes.each(function (idx, checkbox) {
@@ -26,32 +39,31 @@ export abstract class AbstractParticipationToggleHandler {
     }
 
     private initEvents($checkboxes: JQuery): void {
-        $('.' + this.checkboxWrapperClass + ' input').on('click', function (e) {
+        $checkboxes.on('click', function (e) {
+            e.preventDefault();
             e.stopPropagation();
         });
 
         let self = this;
         $checkboxes.on('change', function () {
-            self.toggle($(this));
+            self.toggleOnChange($(this));
         });
     }
-
-    protected abstract toggle($checkbox: JQuery): void;
-
-    // TODO make it protected after better integration of CombinedMealDialog
-    public abstract toggleCheckboxWrapperClasses($checkbox: JQuery): void;
 }
 
 export class ParticipationToggleHandler extends AbstractParticipationToggleHandler {
-    protected toggle($checkbox: JQuery) {
-        if (undefined === $checkbox) {
-            console.log('Error: No checkbox found');
-            return;
-        }
-
+    protected toggleOnChange($checkbox: JQuery, data?: {}) {
         let participationRequest;
         if ($checkbox.hasClass(ParticipationAction.JOIN_ACTION)) {
-            participationRequest = new JoinParticipationRequest($checkbox);
+            let postData = data;
+            if (undefined === postData) {
+                let slotSlug: string = $checkbox.closest('.meal').find('.slot-selector').val().toString();
+                postData = {
+                    'slot': slotSlug
+                }
+            }
+
+            participationRequest = new ParticipationRequest($checkbox, postData);
         } else {
             participationRequest = new ParticipationRequest($checkbox);
         }
@@ -81,7 +93,7 @@ export class ParticipationToggleHandler extends AbstractParticipationToggleHandl
         }
     }
 
-    public toggleCheckboxWrapperClasses($checkbox: JQuery) {
+    protected toggleCheckboxWrapperClasses($checkbox: JQuery) {
         let $checkboxWrapper = $checkbox.closest('.' + this.checkboxWrapperClass);
         $checkboxWrapper.toggleClass('checked', $checkbox.is(':checked'));
         $checkboxWrapper.toggleClass('disabled', $checkbox.is(':disabled'));
@@ -89,12 +101,11 @@ export class ParticipationToggleHandler extends AbstractParticipationToggleHandl
 }
 
 export class ParticipationGuestToggleHandler extends AbstractParticipationToggleHandler {
-    // TODO remove this after better integration of CombinedMealDialog
-    public toggleGuest($checkbox: JQuery) {
-        this.toggle($checkbox);
-    }
+    protected toggleOnChange($checkbox: JQuery, data?: any) {
+        if (1 === $checkbox.closest('.meal-row').data('combined')) {
+            this.updateDishSelection($checkbox, data);
+        }
 
-    protected toggle($checkbox: JQuery) {
         this.toggleCheckboxWrapperClasses($checkbox);
         let participantCounter = $checkbox.data(ParticipantCounter.NAME);
         if ((!participantCounter.hasOffset() && $checkbox.is(':checked')) ||
@@ -102,14 +113,9 @@ export class ParticipationGuestToggleHandler extends AbstractParticipationToggle
             participantCounter.toggleOffset();
             participantCounter.updateUI();
         }
-
-        if (1 === $checkbox.parents('.meal-row').data('combined') && !$checkbox.is(':checked')) {
-            this.updateDishSelection($checkbox, []);
-        }
     }
 
-    // TODO make it private after better integration of CombinedMealDialog
-    public updateDishSelection($checkbox: JQuery, data: Array<Entry>) {
+    private updateDishSelection($checkbox: JQuery, data: Array<Entry>) {
         let dishSelectionWrapperSelector = 'dish-selection-wrapper';
         let $meal = $checkbox.closest('.meal');
         let $textWrapper = $checkbox.closest('.meal-row').find('.text');
@@ -140,7 +146,7 @@ export class ParticipationGuestToggleHandler extends AbstractParticipationToggle
         $dishSelectionWrapper.append(selectedDishes.join(', '))
     }
 
-    public toggleCheckboxWrapperClasses($checkbox: JQuery) {
+    protected toggleCheckboxWrapperClasses($checkbox: JQuery) {
         let $checkboxWrapper = $checkbox.closest('.' + this.checkboxWrapperClass);
         $checkboxWrapper.toggleClass('checked', $checkbox.is(':checked'));
         if ($checkboxWrapper.hasClass('disabled')) {

@@ -8,6 +8,7 @@ import {ConfirmSwapDialog} from "./confirm-swap-dialog";
 
 export abstract class AbstractParticipationToggleHandler {
     protected readonly checkboxWrapperClass = 'checkbox-wrapper';
+    private readonly mealActionsWrapper = '.wrapper-meal-actions';
 
     constructor($checkboxes: JQuery) {
         this.prepare($checkboxes);
@@ -32,7 +33,7 @@ export abstract class AbstractParticipationToggleHandler {
         let self = this;
         $checkboxes.each(function (idx, checkbox) {
             let $checkbox = $(checkbox);
-            let $actionsWrapper = $checkbox.closest(ParticipantCounter.PARENT_WRAPPER_CLASS);
+            let $actionsWrapper = $checkbox.closest(self.mealActionsWrapper);
             $checkbox.data(ParticipantCounter.NAME, new ParticipantCounter($actionsWrapper));
             self.toggleCheckboxWrapperClasses($checkbox);
         });

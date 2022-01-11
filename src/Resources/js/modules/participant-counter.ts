@@ -6,10 +6,6 @@ export enum ParticipationState {
 
 export class ParticipantCounter {
     public static readonly NAME = 'participant-counter';
-    public static readonly PARENT_WRAPPER_CLASS = '.wrapper-meal-actions';
-    private readonly wrapperClass = '.participants-count';
-    private readonly counterSelector = 'span:first-child';
-    private readonly limitSelector = 'label';
     private readonly delimiter = ' / ';
 
     private readonly mealId: number;
@@ -28,7 +24,7 @@ export class ParticipantCounter {
     private $participantsCountWrapper: JQuery;
 
     constructor($participantsActionsWrapper: JQuery) {
-        this.$participantsCountWrapper = $participantsActionsWrapper.find(this.wrapperClass);
+        this.$participantsCountWrapper = $participantsActionsWrapper.find('.participants-count');
 
         this.mealId = $participantsActionsWrapper.data('id');
         this.dishSlug = $participantsActionsWrapper.closest('.meal-row').data('slug');
@@ -41,8 +37,8 @@ export class ParticipantCounter {
         this.lockDateTime = new Date(Date.parse($meal.data('lock-date-time')));
         this.dayEnabled = $meal.data('day-enabled') === 1;
 
-        this.$count = this.$participantsCountWrapper.find(this.counterSelector);
-        this.$limit = this.$participantsCountWrapper.find(this.limitSelector);
+        this.$count = this.$participantsCountWrapper.find('span:first-child');
+        this.$limit = this.$participantsCountWrapper.find('label');
 
         this.nextCount = this.getCount();
         this.nextLimit = this.getLimit();

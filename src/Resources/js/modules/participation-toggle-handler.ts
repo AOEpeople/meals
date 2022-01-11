@@ -5,11 +5,9 @@ import {
     ParticipationRequestHandler
 } from "./participation-request-handler";
 import {ConfirmSwapDialog} from "./confirm-swap-dialog";
+import {ParticipationUpdateHandler} from "./participation-update-handler";
 
 export abstract class AbstractParticipationToggleHandler {
-    protected readonly checkboxWrapperClass = 'checkbox-wrapper';
-    private readonly mealActionsWrapper = '.wrapper-meal-actions';
-
     constructor($checkboxes: JQuery) {
         this.prepare($checkboxes);
         this.initEvents($checkboxes);
@@ -27,13 +25,15 @@ export abstract class AbstractParticipationToggleHandler {
 
     protected abstract toggleOnChange($checkbox: JQuery, data?: {}): void;
 
-    protected abstract toggleCheckboxWrapperClasses($checkbox: JQuery): void;
+    protected toggleCheckboxWrapperClasses($checkbox: JQuery): void {
+        ParticipationUpdateHandler.toggleCheckboxWrapperClasses($checkbox);
+    }
 
     private prepare($checkboxes: JQuery): void {
         let self = this;
         $checkboxes.each(function (idx, checkbox) {
             let $checkbox = $(checkbox);
-            let $actionsWrapper = $checkbox.closest(self.mealActionsWrapper);
+            let $actionsWrapper = $checkbox.closest('.wrapper-meal-actions');
             $checkbox.data(ParticipantCounter.NAME, new ParticipantCounter($actionsWrapper));
             self.toggleCheckboxWrapperClasses($checkbox);
         });
@@ -93,12 +93,6 @@ export class ParticipationToggleHandler extends AbstractParticipationToggleHandl
             ParticipationRequestHandler.sendRequest(participationRequest, $checkbox, handlerMethod);
         }
     }
-
-    protected toggleCheckboxWrapperClasses($checkbox: JQuery) {
-        let $checkboxWrapper = $checkbox.closest('.' + this.checkboxWrapperClass);
-        $checkboxWrapper.toggleClass('checked', $checkbox.is(':checked'));
-        $checkboxWrapper.toggleClass('disabled', $checkbox.is(':disabled'));
-    }
 }
 
 export class ParticipationGuestToggleHandler extends AbstractParticipationToggleHandler {
@@ -151,7 +145,7 @@ export class ParticipationGuestToggleHandler extends AbstractParticipationToggle
     }
 
     protected toggleCheckboxWrapperClasses($checkbox: JQuery) {
-        let $checkboxWrapper = $checkbox.closest('.' + this.checkboxWrapperClass);
+        let $checkboxWrapper = $checkbox.closest('.checkbox-wrapper');
         $checkboxWrapper.toggleClass('checked', $checkbox.is(':checked'));
         if ($checkboxWrapper.hasClass('disabled')) {
             $checkbox.closest('input').attr('disabled', 'disabled');

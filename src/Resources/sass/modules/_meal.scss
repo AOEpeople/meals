@@ -170,6 +170,22 @@
       font-weight: bold;
       line-height: 1;
     }
+
+    .description {
+      .dish-combination {
+        &.edit::after {
+          display: inline-block;
+          width: 13px;
+          height: 12px;
+          margin-left: 5px;
+          content: "\270f";
+          font-size: 14px;
+          font-family: "Glyphicons Halflings", sans-serif;
+          vertical-align: middle;
+          line-height: 13px;
+        }
+      }
+    }
   }
 
   .select-wrapper {

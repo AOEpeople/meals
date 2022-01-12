@@ -10,19 +10,19 @@
             <div class="description">
                 {% if dish.isCombinedDish %}
                     {%  set bookedDishCombinaton = participationService.getBookedDishCombination(app.user.profile, meal) %}
+                    <div class="text dish-combination{{ bookedDishCombinaton|length ? ' edit' }}">
                     {% if bookedDishCombinaton|length == 0 %}
                         {{- dish.description -}}
                     {% else %}
-                        <div class="text text-variation">
                             {%- for bookedDish in bookedDishCombinaton -%}
                                 {{- bookedDish.title -}}
                                 {%- if not loop.last -%}
                                     {{- ', ' -}}
                                 {%- endif -%}
                             {%- endfor -%}
-                        </div>
                     {% endif %}
-                    <div class="text text-variation">({{ 'header.navigation.costs'|trans({},'general')}} {{ meal.price|number_format(2, '.', ',') }} €)</div>
+                    </div>
+                    <div class="text price">({{ 'header.navigation.costs'|trans({},'general')}} {{ meal.price|number_format(2, '.', ',') }} €)</div>
                 {% else %}
                     {%- if dish.description -%}
                         {{- dish.description -}}

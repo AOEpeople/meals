@@ -93,6 +93,19 @@ export class CombinedMealDialog extends BaseDialog {
         this.opts.ok($form.serializeArray());
         this.$dialog.dialog('close');
     }
+
+    private getFormData($form: JQuery) {
+        let data: CombinedMealFormData = {slot: '', 'dishes': []};
+        $form.serializeArray().forEach(function (nvp) {
+            if (nvp.name.startsWith('dishes[')) {
+                data['dishes'].push(nvp.value);
+            } else if (nvp.name === 'slot') {
+                data['slot'] = nvp.value;
+            }
+        });
+
+        return data;
+    }
 }
 
 export interface Dish extends DishVariation {
@@ -102,6 +115,11 @@ export interface Dish extends DishVariation {
 export interface DishVariation {
     title: string
     slug: string
+}
+
+interface CombinedMealFormData {
+    slot: string
+    dishes: string[]
 }
 
 interface CombinedMealDialogOptions {

@@ -167,6 +167,10 @@ class ParticipationService
             }
 
             $k = $participation->getMeal()->getDateTime()->format('Y-m-d-') . $slot->getId();
+            if (!isset($slotsStatus[$k])) {
+                continue;   // skip, not an open participation
+            }
+
             $slotsStatus[$k]['booked_by_user'] = isset($slotsStatus[$k]);
         }
 

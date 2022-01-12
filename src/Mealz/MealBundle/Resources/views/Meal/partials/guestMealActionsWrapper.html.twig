@@ -10,6 +10,8 @@
     {% set checkboxWrapperClasses = checkboxWrapperClasses|merge(['disabled']) %}
 {% elseif available %}
     {% set participantsCountClasses = participantsCountClasses|merge(['participation-allowed']) %}
+{% else %}
+    {% set checkboxWrapperClasses = checkboxWrapperClasses|merge(['disabled']) %}
 {% endif %}
 <div class="wrapper-meal-actions wrapper-variation-vertical-center" data-id="{{ meal.data.id }}">
     <div class="participants">

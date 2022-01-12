@@ -5,7 +5,6 @@ import {
     ParticipationRequestHandler
 } from "./participation-request-handler";
 import {ConfirmSwapDialog} from "./confirm-swap-dialog";
-import {ParticipationUpdateHandler} from "./participation-update-handler";
 
 export abstract class AbstractParticipationToggleHandler {
     constructor($checkboxes: JQuery) {
@@ -25,8 +24,9 @@ export abstract class AbstractParticipationToggleHandler {
 
     protected abstract toggleOnChange($checkbox: JQuery, data?: {}): void;
 
-    protected toggleCheckboxWrapperClasses($checkbox: JQuery): void {
-        ParticipationUpdateHandler.toggleCheckboxWrapperClasses($checkbox);
+    protected initCheckboxState($checkbox: JQuery): void {
+        let $checkboxWrapper = $checkbox.closest('.checkbox-wrapper');
+        $checkboxWrapper.toggleClass('checked', $checkbox.is(':checked'));
     }
 
     private prepare($checkboxes: JQuery): void {
@@ -35,7 +35,7 @@ export abstract class AbstractParticipationToggleHandler {
             let $checkbox = $(checkbox);
             let $actionsWrapper = $checkbox.closest('.wrapper-meal-actions');
             $checkbox.data(ParticipantCounter.NAME, new ParticipantCounter($actionsWrapper));
-            self.toggleCheckboxWrapperClasses($checkbox);
+            self.initCheckboxState($checkbox);
         });
     }
 
@@ -93,6 +93,12 @@ export class ParticipationToggleHandler extends AbstractParticipationToggleHandl
             ParticipationRequestHandler.sendRequest(participationRequest, $checkbox, handlerMethod);
         }
     }
+
+    protected initCheckboxState($checkbox: JQuery): void {
+        let $checkboxWrapper = $checkbox.closest('.checkbox-wrapper');
+        $checkboxWrapper.toggleClass('checked', $checkbox.is(':checked'));
+        $checkboxWrapper.toggleClass('disabled', $checkbox.is(':disabled'));
+    }
 }
 
 export class ParticipationGuestToggleHandler extends AbstractParticipationToggleHandler {
@@ -101,7 +107,9 @@ export class ParticipationGuestToggleHandler extends AbstractParticipationToggle
             this.updateDishSelection($checkbox, data);
         }
 
-        this.toggleCheckboxWrapperClasses($checkbox);
+        let $checkboxWrapper = $checkbox.closest('.checkbox-wrapper');
+        $checkboxWrapper.toggleClass('checked', $checkbox.is(':checked'));
+
         let participantCounter = $checkbox.data(ParticipantCounter.NAME);
         if ((!participantCounter.hasOffset() && $checkbox.is(':checked')) ||
             (participantCounter.hasOffset() && !$checkbox.is(':checked'))) {
@@ -142,14 +150,6 @@ export class ParticipationGuestToggleHandler extends AbstractParticipationToggle
         });
 
         $dishSelectionWrapper.append(selectedDishes.join(', '))
-    }
-
-    protected toggleCheckboxWrapperClasses($checkbox: JQuery) {
-        let $checkboxWrapper = $checkbox.closest('.checkbox-wrapper');
-        $checkboxWrapper.toggleClass('checked', $checkbox.is(':checked'));
-        if ($checkboxWrapper.hasClass('disabled')) {
-            $checkbox.closest('input').attr('disabled', 'disabled');
-        }
     }
 }
 

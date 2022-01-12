@@ -18,6 +18,7 @@ import {
 } from "./modules/participation-count-update-handler";
 import {ParticipationGuestToggleHandler, ParticipationToggleHandler} from "./modules/participation-toggle-handler";
 import {ParticipationPreToggleHandler} from "./modules/participation-pre-toggle-handler";
+import {UpdateOffersHandler} from "./modules/update-offers-handler";
 
 if (process.env.MODE === 'production') {
     jQuery.migrateMute = true;
@@ -37,6 +38,8 @@ window.Mealz = function () {
     this.$weekDayCheckboxes = $('.meal-form .week-day-action input[type="checkbox"]');
     this.participationToggleHandler = undefined;
     this.participationPreToggleHandler = undefined;
+    this.updateOffersHandler = undefined;
+    this.participationCountUpdateHandler = undefined;
     this.$participationCheckboxes = $('.meals-list input.checkbox, .meals-list input[type = "checkbox"]');
     this.$guestParticipationCheckboxes = $('.meal-guests input.checkbox, .meal-guests input[type = "checkbox"]');
     this.$iconCells = $('.icon-cell');
@@ -46,7 +49,6 @@ window.Mealz = function () {
     this.$body = $('body');
     this.$editParticipationEventListener = undefined;
     this.$profileAdd = $('.profile-list a[class="button small"]');
-    this.participationCountUpdateHandler = undefined;
 };
 
 importAll(require.context('./modules/', true, /\.js$/));
@@ -103,6 +105,7 @@ $(function () {
         if (mealz.$participationCheckboxes.length > 0) {
             mealz.participationToggleHandler = new ParticipationToggleHandler(mealz.$participationCheckboxes);
             mealz.participationCountUpdateHandler = new ParticipationCountUpdateHandler(mealz.$participationCheckboxes);
+            mealz.updateOffersHandler = new UpdateOffersHandler();
         } else if (mealz.$guestParticipationCheckboxes.length > 0) {
             mealz.participationToggleHandler = new ParticipationGuestToggleHandler(mealz.$guestParticipationCheckboxes);
             mealz.participationCountUpdateHandler = new ParticipationGuestCountUpdateHandler(mealz.$guestParticipationCheckboxes);
@@ -130,13 +133,6 @@ $(function () {
     }
 
     mealz.exportTransactions();
-
-    /**
-     * If there are any meals in the list, run updateOffers to check for available offers.
-     */
-    if ($('.meals-list').length > 0) {
-        mealz.updateOffers();
-    }
 
     /**
      * if meals is limited it should be displayed

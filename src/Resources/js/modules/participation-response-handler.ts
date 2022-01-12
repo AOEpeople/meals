@@ -1,4 +1,3 @@
-import {ParticipantCounter, ParticipationState} from "./participant-counter";
 import {ParticipationUpdateHandler} from "./participation-update-handler";
 
 export enum ParticipationAction {
@@ -24,36 +23,19 @@ interface SwapResponse extends ActionResponse {
 
 export class ParticipationResponseHandler {
     public static onSuccessfulToggle($checkbox: JQuery, response: ToggleResponse) {
-        let participantCounter = $checkbox.data(ParticipantCounter.NAME);
-        ParticipationUpdateHandler.updateParticipationCounter(participantCounter, ParticipationState.DEFAULT, response.participantsCount)
-        let action = $checkbox.is(':checked') ? ParticipationAction.DELETE_ACTION : ParticipationAction.JOIN_ACTION;
-        ParticipationUpdateHandler.updateCheckbox($checkbox, action, response.url);
-        ParticipationUpdateHandler.toggleCheckboxWrapperClasses($checkbox);
-
-        let $slotBox = $checkbox.closest('.meal').find('.slot-selector');
-        $slotBox.addClass('tmp-disabled').prop('disabled', true)
-            .parent().children('.loader').css('visibility', 'visible');
+        let nextAction = ('deleted' === response.actionText) ? ParticipationAction.JOIN_ACTION : ParticipationAction.DELETE_ACTION;
+        ParticipationUpdateHandler.changeToNextAction($checkbox, nextAction, response.url, response.participantsCount);
     }
 
     public static onSuccessfulAcceptOffer($checkbox: JQuery, response: ToggleResponse) {
-        let participantCounter = $checkbox.data(ParticipantCounter.NAME);
-        ParticipationUpdateHandler.updateParticipationCounter(participantCounter, ParticipationState.DEFAULT, response.participantsCount);
-        ParticipationUpdateHandler.updateCheckbox($checkbox, ParticipationAction.SWAP, response.url)
-        ParticipationUpdateHandler.toggleCheckboxWrapperClasses($checkbox);
-        ParticipationUpdateHandler.toggleTooltip($checkbox);
+        ParticipationUpdateHandler.changeToSwapState($checkbox, response.url, response.participantsCount);
     }
 
     public static onSuccessfulSwap($checkbox: JQuery, response: SwapResponse) {
-        let participantCounter = $checkbox.data(ParticipantCounter.NAME);
-        ParticipationUpdateHandler.updateParticipationCounter(participantCounter, ParticipationState.PENDING);
-        ParticipationUpdateHandler.updateCheckbox($checkbox, ParticipationAction.UNSWAP, response.url, response.id);
-        ParticipationUpdateHandler.toggleTooltip($checkbox, 'offered');
+        ParticipationUpdateHandler.changeToUnswapState($checkbox, response.url, response.id);
     }
 
     public static onSuccessfulUnswap($checkbox: JQuery, response: SwapResponse) {
-        let participantCounter = $checkbox.data(ParticipantCounter.NAME);
-        ParticipationUpdateHandler.updateParticipationCounter(participantCounter, ParticipationState.DEFAULT)
-        ParticipationUpdateHandler.updateCheckbox($checkbox, ParticipationAction.SWAP, response.url);
-        ParticipationUpdateHandler.toggleTooltip($checkbox);
+        ParticipationUpdateHandler.changeToSwapState($checkbox, response.url);
     }
 }

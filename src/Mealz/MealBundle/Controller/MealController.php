@@ -111,7 +111,7 @@ class MealController extends BaseController
 
         $this->logAdd($meal, $out['participant']);
 
-        return $this->generateResponse('MealzMealBundle_Participant_delete', 'deleted', $meal, $out['participant']);
+        return $this->generateResponse('MealzMealBundle_Participant_delete', 'added', $meal, $out['participant']);
     }
 
     /**

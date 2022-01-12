@@ -38,7 +38,7 @@ export class ParticipationUpdateHandler {
         $checkboxWrapper.toggleClass('disabled', $checkbox.is(':disabled'));
     }
 
-    public static updateCheckboxEnabled($checkbox: JQuery) {
+    private static updateCheckboxEnabled($checkbox: JQuery) {
         let participantCounter = $checkbox.data(ParticipantCounter.NAME);
 
         let checkboxEnabled = false;
@@ -61,7 +61,7 @@ export class ParticipationUpdateHandler {
         $checkboxWrapper.toggleClass('disabled', $checkbox.is(':disabled'));
     }
 
-    public static updateParticipationCounter($checkbox: JQuery, state?: ParticipationState, count?: number, limit?: number): void {
+    private static updateParticipationCounter($checkbox: JQuery, state?: ParticipationState, count?: number, limit?: number): void {
         let participantCounter = $checkbox.data(ParticipantCounter.NAME);
         if ((undefined !== state) ||
             (undefined !== count && count !== participantCounter.getCount()) ||
@@ -71,6 +71,11 @@ export class ParticipationUpdateHandler {
             if (undefined !== state) participantCounter.setNextParticipationState(state);
             participantCounter.updateUI();
         }
+    }
+
+    public static updateParticipation($checkbox: JQuery, count: number, limit: number) {
+        this.updateParticipationCounter($checkbox, undefined, count, limit);
+        this.updateCheckboxEnabled($checkbox);
     }
 
     public static changeToNextAction($checkbox: JQuery, nextAction: ParticipationAction, url: string, participantsCount: number) {

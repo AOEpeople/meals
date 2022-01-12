@@ -20,19 +20,24 @@ export class ParticipationCountUpdateHandler extends AbstractParticipationCountU
 
     private participationCountStatus($checkboxes: JQuery) {
         $.ajax({
-            url: '/participation/count-status',
             dataType: 'json',
+            method: 'GET',
+            url: '/participation/count-status',
             success: function (data) {
                 $checkboxes.each(function (idx, checkbox) {
                     let $checkbox = $(checkbox);
                     let participantCounter = $checkbox.data(ParticipantCounter.NAME);
                     let countStatus = data[participantCounter.getDay()]['countByMealIds'][participantCounter.getMealId()][participantCounter.getDishSlug()];
                     if (undefined !== countStatus) {
-                        ParticipationUpdateHandler.updateParticipationCounter(participantCounter, undefined, countStatus['count'], countStatus['limit'])
+                        ParticipationUpdateHandler.updateParticipationCounter($checkbox, undefined, countStatus['count'], countStatus['limit']);
+                        ParticipationUpdateHandler.updateCheckboxEnabled($checkbox);
                     } else {
                         console.log("Values for count status update undefined. No values on " + participantCounter.getDay() + " for meal " + participantCounter.getMealId() + " and dish " + participantCounter.getDishSlug());
                     }
                 });
+            },
+            error: function (xhr) {
+                console.log(xhr.status + ': ' + xhr.statusText);
             }
         });
     }
@@ -46,19 +51,24 @@ export class ParticipationGuestCountUpdateHandler extends AbstractParticipationC
 
     private participationCountStatusByDate($checkboxes: JQuery, date: string): void {
         $.ajax({
-            'url': '/participation/count-status/' + date,
             dataType: 'json',
-            'success': function (data) {
+            method: 'GET',
+            url: '/participation/count-status/' + date,
+            success: function (data) {
                 $checkboxes.each(function (idx, checkbox) {
                     let $checkbox = $(checkbox);
                     let participantCounter = $checkbox.data(ParticipantCounter.NAME);
                     let countStatus = data[participantCounter.getMealId()][participantCounter.getDishSlug()];
                     if (undefined !== countStatus) {
-                        ParticipationUpdateHandler.updateParticipationCounter(participantCounter, undefined, countStatus['count'], countStatus['limit'])
+                        ParticipationUpdateHandler.updateParticipationCounter($checkbox, undefined, countStatus['count'], countStatus['limit']);
+                        ParticipationUpdateHandler.updateCheckboxEnabled($checkbox);
                     } else {
                         console.log("Values for count status update undefined. No values for meal " + participantCounter.getMealId() + " and dish " + participantCounter.getDishSlug());
                     }
                 });
+            },
+            error: function (xhr) {
+                console.log(xhr.status + ': ' + xhr.statusText);
             }
         });
     }

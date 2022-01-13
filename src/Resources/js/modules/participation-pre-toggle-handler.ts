@@ -2,6 +2,7 @@ import {CombinedMealDialog, Dish, DishVariation} from "./combined-meal-dialog";
 import Event = JQuery.Event;
 import {AbstractParticipationToggleHandler} from "./participation-toggle-handler";
 import {ParticipantCounter} from "./participant-counter";
+import {ParticipationAction} from "./participation-update-handler";
 
 export class ParticipationPreToggleHandler {
     private participationToggleHandler: AbstractParticipationToggleHandler;
@@ -34,7 +35,7 @@ export class ParticipationPreToggleHandler {
     private needUserInteractionBeforeToggle($checkboxWrapper: JQuery, $checkbox: JQuery): boolean {
         let participantCounter: ParticipantCounter = $checkbox.data(ParticipantCounter.NAME);
         return 1 === $checkboxWrapper.closest('.meal-row').data('combined') // is combined meal
-            && !$checkbox.is(':checked')
+            && $checkbox.hasClass(ParticipationAction.JOIN)
             && participantCounter.isAvailable()
             && 0 < $checkbox.closest('.meal').find('.variation-row .text-variation').length; // has variations
     }

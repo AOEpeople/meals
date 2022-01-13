@@ -1,5 +1,12 @@
 import {ParticipantCounter, ParticipationState} from "./participant-counter";
-import {ParticipationAction} from "./participation-response-handler";
+
+export enum ParticipationAction {
+    ACCEPT_OFFER = 'acceptOffer-action',
+    DELETE = 'delete-action',
+    JOIN = 'join-action',
+    SWAP = 'swap-action',
+    UNSWAP = 'unswap-action',
+}
 
 enum Tooltip {
     OFFERED = "offered",
@@ -78,7 +85,8 @@ export class ParticipationUpdateHandler {
         this.updateCheckboxEnabled($checkbox);
     }
 
-    public static changeToNextAction($checkbox: JQuery, nextAction: ParticipationAction, url: string, participantsCount: number) {
+    public static toggleAction($checkbox: JQuery, actionText: string, url: string, participantsCount: number) {
+        let nextAction = ('deleted' === actionText) ? ParticipationAction.JOIN : ParticipationAction.DELETE;
         this.updateParticipationCounter($checkbox, ParticipationState.DEFAULT, participantsCount);
         this.updateCheckboxAttributes($checkbox, nextAction, url);
 

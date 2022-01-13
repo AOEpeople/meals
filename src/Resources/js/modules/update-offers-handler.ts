@@ -1,5 +1,4 @@
-import {ParticipationUpdateHandler} from "./participation-update-handler";
-import {ParticipationAction} from "./participation-response-handler";
+import {ParticipationAction, ParticipationUpdateHandler} from "./participation-update-handler";
 
 export class UpdateOffersHandler {
     private readonly updateInterval: number = 5000;
@@ -30,7 +29,7 @@ export class UpdateOffersHandler {
                         $checkbox.is(':checked') === false &&
                         $checkbox.hasClass(ParticipationAction.UNSWAP) === false &&
                         $checkbox.hasClass(ParticipationAction.ACCEPT_OFFER) === false &&
-                        $checkbox.hasClass(ParticipationAction.JOIN_ACTION) === false) {
+                        $checkbox.hasClass(ParticipationAction.JOIN) === false) {
                         let date = offerStatus[1];
                         let dishSlug = offerStatus[2];
                         ParticipationUpdateHandler.changeToOfferIsAvailable(

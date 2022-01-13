@@ -1,10 +1,11 @@
 import {ParticipantCounter} from "./participant-counter";
-import {ParticipationAction, ParticipationResponseHandler} from "./participation-response-handler";
+import {ParticipationResponseHandler} from "./participation-response-handler";
 import {
     ParticipationRequest,
     ParticipationRequestHandler
 } from "./participation-request-handler";
 import {ConfirmSwapDialog} from "./confirm-swap-dialog";
+import {ParticipationAction} from "./participation-update-handler";
 
 export abstract class AbstractParticipationToggleHandler {
     constructor($checkboxes: JQuery) {
@@ -55,7 +56,7 @@ export abstract class AbstractParticipationToggleHandler {
 export class ParticipationToggleHandler extends AbstractParticipationToggleHandler {
     protected toggleOnChange($checkbox: JQuery, data?: {}) {
         let participationRequest;
-        if ($checkbox.hasClass(ParticipationAction.JOIN_ACTION)) {
+        if ($checkbox.hasClass(ParticipationAction.JOIN)) {
             let postData = data;
             if (undefined === postData) {
                 let slotSlug: string = $checkbox.closest('.meal').find('.slot-selector').val().toString();

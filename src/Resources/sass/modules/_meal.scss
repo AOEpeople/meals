@@ -173,6 +173,10 @@
 
     .description {
       .dish-combination {
+        &.edit:hover {
+          cursor: pointer;
+        }
+
         &.edit::after {
           display: inline-block;
           width: 13px;

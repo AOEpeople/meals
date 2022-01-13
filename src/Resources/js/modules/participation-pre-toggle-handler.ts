@@ -41,18 +41,22 @@ export class ParticipationPreToggleHandler {
             && 0 < $checkbox.closest('.meal').find('.variation-row .text-variation').length; // has variations
     }
 
-    private executeBeforeToggle($checkbox: JQuery): void {
+    public executeBeforeToggle($dishContainer: JQuery): void {
         let self = this;
-        const slotSlug: string = $checkbox.closest('.meal').find('.slot-selector').val().toString();
-        const title = $checkbox.closest('.meal-row').find('.title').text();
-        const dishes = this.getCombinedMealDishes($checkbox.closest('.meal'));
+        let $mealContainer = $dishContainer.closest('.meal');
+        const slotSlug: string = $mealContainer.find('.slot-selector').val().toString();
+        const title = $dishContainer.find('.title').text();
+        const dishes = this.getCombinedMealDishes($mealContainer);
+        const $bookedDishIDs = $dishContainer.data('bookedDishes').split(',').map((id: string) => id.trim());
         let cmd = new CombinedMealDialog(
             title,
             dishes,
+            $bookedDishIDs,
             slotSlug,
             {
                 ok: function (data) {
-                    self.participationToggleHandler.toggle($checkbox, data);
+                    let $participationCheckbox = $dishContainer.find('input[type=checkbox]');
+                    self.participationToggleHandler.toggle($participationCheckbox, data);
                 }
             }
         );

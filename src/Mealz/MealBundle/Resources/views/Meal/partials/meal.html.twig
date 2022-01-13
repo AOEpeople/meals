@@ -1,5 +1,18 @@
 {% set dish = meal.dish %}
-<div class="meal-row" {{ dish.isCombinedDish ? 'data-combined="1"' }} data-slug="{{ dish.slug }}">
+{% set combinedDish = '0' %}
+{% set combinedDishIDs = '' %}
+{% set combinedDishTitle = '' %}
+
+{% if dish.isCombinedDish %}
+    {% set combinedDish = '1' %}
+    {% set bookedDishCombination = participationService.getBookedDishCombination(app.user.profile, meal) %}
+    {% if bookedDishCombination|length > 0 %}
+        {% set combinedDishTitle = bookedDishCombination.toArray|map(d => d.title)|join(', ') %}
+        {% set combinedDishIDs = bookedDishCombination.toArray|map(d => d.slug)|join(', ') %}
+    {% endif %}
+{% endif %}
+
+<div class="meal-row" data-combined="{{ combinedDish }}" data-slug="{{ dish.slug }}" data-booked-dishes="{{ combinedDishIDs }}">
         <div class="text">
             <div class="title">
                 {{- dish.title -}}
@@ -8,28 +21,10 @@
                 {% endif -%}
             </div>
             <div class="description">
-                {% if dish.isCombinedDish %}
-                    {%  set bookedDishCombinaton = participationService.getBookedDishCombination(app.user.profile, meal) %}
-                    <div class="text dish-combination{{ bookedDishCombinaton|length ? ' edit' }}">
-                    {% if bookedDishCombinaton|length == 0 %}
-                        {{- dish.description -}}
-                    {% else %}
-                            {%- for bookedDish in bookedDishCombinaton -%}
-                                {{- bookedDish.title -}}
-                                {%- if not loop.last -%}
-                                    {{- ', ' -}}
-                                {%- endif -%}
-                            {%- endfor -%}
-                    {% endif %}
-                    </div>
-                    <div class="text price">({{ 'header.navigation.costs'|trans({},'general')}} {{ meal.price|number_format(2, '.', ',') }} €)</div>
-                {% else %}
-                    {%- if dish.description -%}
-                        {{- dish.description -}}
-                    {%- else -%}
-                        {{- 'content.participation.dish.no_description'|trans({},'general') -}}
-                    {%- endif -%}
-                {% endif %}
+                <div class="text dish-combination{{ combinedDishIDs ? ' edit' }}">
+                    {{ combinedDishTitle|default(dish.description)|default('content.participation.dish.no_description'|trans({},'general')) }}
+                </div>
+                <div class="text price">({{ 'header.navigation.costs'|trans({},'general')}} {{ meal.price|number_format(2, '.', ',') }} €)</div>
             </div>
         </div>
     {% include 'MealzMealBundle:Meal/partials:mealActionsWrapper.html.twig' %}

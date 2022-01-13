@@ -29,7 +29,29 @@ export class ParticipationUpdateHandler {
         $tooltip.toggleClass('active');
     }
 
-    private static updateCheckboxAttributes($checkbox: JQuery, checkboxClass: ParticipationAction, url: string, participantId?: number) {
+    private static updateCheckBoxWrapper($checkbox: JQuery) {
+        let $checkboxWrapper = $checkbox.closest('.checkbox-wrapper');
+        $checkboxWrapper.toggleClass('checked', $checkbox.is(':checked'));
+        $checkboxWrapper.toggleClass('disabled', $checkbox.is(':disabled'));
+    }
+
+    private static updateCheckboxEnabled($checkbox: JQuery) {
+        let checkboxEnabled = false;
+        let participantCounter = $checkbox.data(ParticipantCounter.NAME);
+        if (participantCounter.isAvailable()) {
+            checkboxEnabled = !participantCounter.hasLimit()
+                || (participantCounter.hasLimit() && ((participantCounter.isLimitReached() && $checkbox.is(':checked')) || !participantCounter.isLimitReached()));
+        } else {
+            checkboxEnabled =
+                $checkbox.hasClass(ParticipationAction.SWAP)
+                || $checkbox.hasClass(ParticipationAction.UNSWAP)
+                || $checkbox.hasClass(ParticipationAction.ACCEPT_OFFER);
+        }
+
+        $checkbox.prop('disabled', !checkboxEnabled);
+    }
+
+    private static changeCheckboxAttributes($checkbox: JQuery, checkboxClass: ParticipationAction, url: string, participantId?: number) {
         $checkbox.attr('value', url);
         $checkbox.attr('class', 'participation-checkbox ' + checkboxClass);
         if (undefined === participantId) {
@@ -39,36 +61,7 @@ export class ParticipationUpdateHandler {
         }
     }
 
-    private static updateCheckBoxWrapper($checkbox: JQuery) {
-        let $checkboxWrapper = $checkbox.closest('.checkbox-wrapper');
-        $checkboxWrapper.toggleClass('checked', $checkbox.is(':checked'));
-        $checkboxWrapper.toggleClass('disabled', $checkbox.is(':disabled'));
-    }
-
-    private static updateCheckboxEnabled($checkbox: JQuery) {
-        let participantCounter = $checkbox.data(ParticipantCounter.NAME);
-
-        let checkboxEnabled = false;
-        if (participantCounter.isAvailable()) {
-            checkboxEnabled = !participantCounter.hasLimit() || (participantCounter.hasLimit() && (!participantCounter.isLimitReached() || $checkbox.is(':checked')));
-        } else {
-            checkboxEnabled =
-                $checkbox.hasClass(ParticipationAction.SWAP)
-                || $checkbox.hasClass(ParticipationAction.UNSWAP)
-                || $checkbox.hasClass(ParticipationAction.ACCEPT_OFFER);
-        }
-
-        if (checkboxEnabled) {
-            $checkbox.removeAttr('disabled');
-        } else {
-            $checkbox.attr('disabled', 'disabled');
-        }
-
-        let $checkboxWrapper = $checkbox.closest('.checkbox-wrapper');
-        $checkboxWrapper.toggleClass('disabled', $checkbox.is(':disabled'));
-    }
-
-    private static updateParticipationCounter($checkbox: JQuery, state?: ParticipationState, count?: number, limit?: number): void {
+    private static changeParticipationCounter($checkbox: JQuery, state?: ParticipationState, count?: number, limit?: number): void {
         let participantCounter = $checkbox.data(ParticipantCounter.NAME);
         if ((undefined !== state) ||
             (undefined !== count && count !== participantCounter.getCount()) ||
@@ -81,18 +74,24 @@ export class ParticipationUpdateHandler {
     }
 
     public static updateParticipation($checkbox: JQuery, count: number, limit: number) {
-        this.updateParticipationCounter($checkbox, undefined, count, limit);
+        // change
+        this.changeParticipationCounter($checkbox, undefined, count, limit);
+
+        // update
         this.updateCheckboxEnabled($checkbox);
+        this.updateCheckBoxWrapper($checkbox);
     }
 
     public static toggleAction($checkbox: JQuery, actionText: string, url: string, participantsCount: number) {
+        // change
+        $checkbox.prop('checked', !$checkbox.is(':checked'));
         let nextAction = ('deleted' === actionText) ? ParticipationAction.JOIN : ParticipationAction.DELETE;
-        this.updateParticipationCounter($checkbox, ParticipationState.DEFAULT, participantsCount);
-        this.updateCheckboxAttributes($checkbox, nextAction, url);
+        this.changeCheckboxAttributes($checkbox, nextAction, url);
+        this.changeParticipationCounter($checkbox, ParticipationState.DEFAULT, participantsCount);
 
-        let $checkboxWrapper = $checkbox.closest('.checkbox-wrapper');
-        $checkboxWrapper.toggleClass('checked', $checkbox.is(':checked'));
+        // update
         this.updateCheckboxEnabled($checkbox);
+        this.updateCheckBoxWrapper($checkbox);
 
         let $slotBox = $checkbox.closest('.meal').find('.slot-selector');
         $slotBox.addClass('tmp-disabled').prop('disabled', true)
@@ -101,51 +100,66 @@ export class ParticipationUpdateHandler {
 
     public static changeToOfferIsTaken($checkbox: JQuery) {
         if ($checkbox.hasClass(ParticipationAction.UNSWAP)) {
+            // change
             $checkbox.removeClass(ParticipationAction.UNSWAP);
-            $checkbox.removeAttr('checked');
-            $checkbox.attr('disabled', 'disabled');
+            $checkbox.prop('checked', false);
+            this.changeParticipationCounter($checkbox, ParticipationState.DEFAULT);
+
+            // update
+            this.updateCheckboxEnabled($checkbox);
             this.updateCheckBoxWrapper($checkbox);
             this.toggleTooltip($checkbox);
-            this.updateParticipationCounter($checkbox, ParticipationState.DEFAULT);
         }
     }
 
     public static changeToOfferIsGone($checkbox: JQuery) {
         if ($checkbox.hasClass(ParticipationAction.ACCEPT_OFFER)) {
+            // change
             $checkbox.removeClass(ParticipationAction.ACCEPT_OFFER);
-            $checkbox.attr('disabled', 'disabled');
+            this.changeParticipationCounter($checkbox, ParticipationState.DEFAULT);
+
+            // update
+            this.updateCheckboxEnabled($checkbox);
             this.updateCheckBoxWrapper($checkbox);
             this.toggleTooltip($checkbox);
-            this.updateParticipationCounter($checkbox, ParticipationState.DEFAULT);
         }
     }
 
     public static changeToOfferIsAvailable($checkbox: JQuery, url: string) {
-        $checkbox.removeAttr('disabled');
-        this.updateCheckBoxWrapper($checkbox);
-
-        this.updateCheckboxAttributes($checkbox, ParticipationAction.ACCEPT_OFFER, url);
-
+        // change
+        this.changeCheckboxAttributes($checkbox, ParticipationAction.ACCEPT_OFFER, url);
         let participantCounter = $checkbox.data(ParticipantCounter.NAME);
         if (ParticipationState.OFFER_AVAILABLE !== participantCounter.getParticipationState()) {
-            this.updateParticipationCounter($checkbox, ParticipationState.OFFER_AVAILABLE);
+            this.changeParticipationCounter($checkbox, ParticipationState.OFFER_AVAILABLE);
         }
 
+        // update
+        this.updateCheckboxEnabled($checkbox);
+        this.updateCheckBoxWrapper($checkbox);
         this.toggleTooltip($checkbox, Tooltip.AVAILABLE);
     }
 
     public static changeToSwapState($checkbox: JQuery, url: string, participantsCount?: number) {
-        if ($checkbox.hasClass(ParticipationAction.ACCEPT_OFFER)) {
-            this.updateCheckBoxWrapper($checkbox);
-        }
-        this.updateParticipationCounter($checkbox, ParticipationState.DEFAULT, participantsCount);
-        this.updateCheckboxAttributes($checkbox, ParticipationAction.SWAP, url);
+        // change
+        $checkbox.prop('checked', true);
+        this.changeCheckboxAttributes($checkbox, ParticipationAction.SWAP, url);
+        this.changeParticipationCounter($checkbox, ParticipationState.DEFAULT, participantsCount);
+
+        // update
+        this.updateCheckboxEnabled($checkbox);
+        this.updateCheckBoxWrapper($checkbox);
         this.toggleTooltip($checkbox);
     }
 
     public static changeToUnswapState($checkbox: JQuery, url: string, participantId: number) {
-        this.updateParticipationCounter($checkbox, ParticipationState.PENDING);
-        this.updateCheckboxAttributes($checkbox, ParticipationAction.UNSWAP, url, participantId);
+        // change
+        $checkbox.prop('checked', true);
+        this.changeCheckboxAttributes($checkbox, ParticipationAction.UNSWAP, url, participantId);
+        this.changeParticipationCounter($checkbox, ParticipationState.PENDING);
+
+        // update
+        this.updateCheckboxEnabled($checkbox);
+        this.updateCheckBoxWrapper($checkbox);
         this.toggleTooltip($checkbox, Tooltip.OFFERED);
     }
 }

@@ -15,8 +15,8 @@ export class ParticipantCounter {
     private readonly lockDateTime: Date;
 
     private offset: number = 0;
+    private limit: number;
     private nextCount: number;
-    private nextLimit: number;
     private nextState: ParticipationState;
 
     private $count: JQuery;
@@ -40,8 +40,16 @@ export class ParticipantCounter {
         this.$count = this.$participantsCountWrapper.find('span:first-child');
         this.$limit = this.$participantsCountWrapper.find('label');
 
+        this.limit = parseFloat(this.$limit.text().replace(this.delimiter, '').trim()) || 0;
+        /*
+         * We round float from backend, because we use limits only for usual meals no combined meals and
+         * we check if the limit is reached for usual meals.
+         */
+        if (this.hasLimit()) {
+            this.$limit.text(this.delimiter + Math.floor(this.limit));
+        }
+
         this.nextCount = this.getCount();
-        this.nextLimit = this.getLimit();
         this.nextState = this.getParticipationState();
     }
 
@@ -66,11 +74,11 @@ export class ParticipantCounter {
     }
 
     getLimit(): number {
-        return parseFloat(this.$limit.text().replace(this.delimiter, '').trim()) || 0;
+        return this.limit;
     }
 
     setNextLimit(limit: number) {
-        this.nextLimit = limit;
+        this.limit = limit;
     }
 
     hasLimit(): boolean {
@@ -78,7 +86,7 @@ export class ParticipantCounter {
     }
 
     isLimitReached(): boolean {
-        return this.getLimit() <= this.getCount();
+        return Math.floor(this.limit) <= this.nextCount;
     }
 
     isAvailable(): boolean {
@@ -123,7 +131,7 @@ export class ParticipantCounter {
             self.$participantsCountWrapper.toggleClass('participation-allowed', isAvailable)
 
             if (self.hasLimit()) {
-                self.$limit.text(self.delimiter + self.nextLimit);
+                self.$limit.text(self.delimiter + Math.floor(self.limit));
                 let limitIsReached = self.isLimitReached();
                 self.$participantsCountWrapper.toggleClass('participation-limit-reached', limitIsReached);
                 self.$participantsCountWrapper.toggleClass('participation-allowed', isAvailable && !limitIsReached);

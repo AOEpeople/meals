@@ -13,17 +13,7 @@ export abstract class AbstractParticipationToggleHandler {
         this.initEvents($checkboxes);
     }
 
-    public toggle($checkbox: JQuery, data?: {}) {
-        if (undefined === $checkbox) {
-            console.log('Error: No checkbox found');
-            return;
-        }
-
-        $checkbox.prop('checked', !$checkbox.is(':checked'));
-        this.toggleOnChange($checkbox, data);
-    }
-
-    protected abstract toggleOnChange($checkbox: JQuery, data?: {}): void;
+    public abstract toggle($checkbox: JQuery, data?: {}): void;
 
     protected initCheckboxState($checkbox: JQuery): void {
         let $checkboxWrapper = $checkbox.closest('.checkbox-wrapper');
@@ -45,16 +35,11 @@ export abstract class AbstractParticipationToggleHandler {
             e.preventDefault();
             e.stopPropagation();
         });
-
-        let self = this;
-        $checkboxes.on('change', function () {
-            self.toggleOnChange($(this));
-        });
     }
 }
 
 export class ParticipationToggleHandler extends AbstractParticipationToggleHandler {
-    protected toggleOnChange($checkbox: JQuery, data?: {}) {
+    public toggle($checkbox: JQuery, data?: {}) {
         let participationRequest;
         if ($checkbox.hasClass(ParticipationAction.JOIN)) {
             let postData = data;
@@ -103,11 +88,12 @@ export class ParticipationToggleHandler extends AbstractParticipationToggleHandl
 }
 
 export class ParticipationGuestToggleHandler extends AbstractParticipationToggleHandler {
-    protected toggleOnChange($checkbox: JQuery, data?: any) {
+    public toggle($checkbox: JQuery, data?: any) {
         if (1 === $checkbox.closest('.meal-row').data('combined')) {
             this.updateDishSelection($checkbox, data);
         }
 
+        $checkbox.prop('checked', !$checkbox.is(':checked'));
         let $checkboxWrapper = $checkbox.closest('.checkbox-wrapper');
         $checkboxWrapper.toggleClass('checked', $checkbox.is(':checked'));
 

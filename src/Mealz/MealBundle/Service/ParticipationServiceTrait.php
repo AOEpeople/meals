@@ -112,7 +112,7 @@ trait ParticipationServiceTrait
                     continue;
                 }
 
-                if (empty($dishSlugs) || in_array($m->getDish()->getSlug(), $dishSlugs)) {
+                if (empty($dishSlugs) || in_array($m->getDish()->getSlug(), $dishSlugs, true)) {
                     $participation->getCombinedDishes()->add($m->getDish());
                 }
             }

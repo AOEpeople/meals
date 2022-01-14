@@ -126,6 +126,7 @@ export default class MealIndexView {
     public showMealConfigurator($dishContainer: JQuery): void {
         let self = this;
         let $mealContainer = $dishContainer.closest('.meal');
+        const url = $dishContainer.data('joinUrl');
         const slotSlug: string = $mealContainer.find('.slot-selector').val().toString();
         const title = $dishContainer.find('.title').text();
         const dishes = this.getCombinedMealDishes($mealContainer);
@@ -139,7 +140,7 @@ export default class MealIndexView {
                 ok: function (data: unknown) {
                     console.log(data);
                     let $participationCheckbox = $dishContainer.find('input[type=checkbox]');
-                    let req = new ParticipationRequest($participationCheckbox, data);
+                    let req = new ParticipationRequest(url, data);
                     ParticipationRequestHandler.sendRequest(req, $participationCheckbox, function(participationCheckbox, data: JoinResponse) {
                         const bookedDishIDs = data.bookedDishes.split(',').map(dishID => dishID.trim());
                         if (0 < bookedDishIDs.length) {

@@ -12,7 +12,11 @@
     {% endif %}
 {% endif %}
 
-<div class="meal-row" data-combined="{{ combinedDish }}" data-slug="{{ dish.slug }}" data-booked-dishes="{{ combinedDishIDs }}">
+<div class="meal-row"
+     data-combined="{{ combinedDish }}"
+     data-slug="{{ dish.slug }}"
+     data-booked-dishes="{{ combinedDishIDs }}"
+     data-join-url="{{ link(meal, 'join') }}">
         <div class="text">
             <div class="title">
                 {{- dish.title -}}

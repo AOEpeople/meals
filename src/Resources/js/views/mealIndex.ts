@@ -1,7 +1,7 @@
 import {ParticipationPreToggleHandler} from "../modules/participation-pre-toggle-handler";
 import {ParticipationToggleHandler} from "../modules/participation-toggle-handler";
 import {ParticipationCountUpdateHandler} from "../modules/participation-count-update-handler";
-import {CombinedMealDialog, CombinedMealFormData, Dish, DishVariation} from "../modules/combined-meal-dialog";
+import {CombinedMealDialog, Dish, DishVariation} from "../modules/combined-meal-dialog";
 import {ParticipationRequest, ParticipationRequestHandler} from "../modules/participation-request-handler";
 
 export default class MealIndexView {
@@ -30,6 +30,7 @@ export default class MealIndexView {
         $('.meals-list .meal .slot-selector').on('change', this.handleChangeSlot);
         $('.meals-list .meal .participation-checkbox').on('change', MealIndexView.handleParticipationUpdate);
         $('.meals-list .meal .dish-combination.edit').on('click', this.handleCombinedMealEdit.bind(this));
+        // $('.meals-list .meal .description .edit').on('click', this.handleCombinedMealEdit.bind(this));
     }
 
     private handleChangeSlot(event: JQuery.TriggeredEvent) {

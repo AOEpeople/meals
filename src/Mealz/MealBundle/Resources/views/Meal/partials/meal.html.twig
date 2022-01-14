@@ -2,6 +2,7 @@
 {% set combinedDish = '0' %}
 {% set combinedDishIDs = '' %}
 {% set combinedDishTitle = '' %}
+{% set dishDescription = dish.description|default('content.participation.dish.no_description'|trans({},'general')) %}
 
 {% if dish.isCombinedDish %}
     {% set combinedDish = '1' %}
@@ -16,7 +17,8 @@
      data-combined="{{ combinedDish }}"
      data-slug="{{ dish.slug }}"
      data-booked-dishes="{{ combinedDishIDs }}"
-     data-join-url="{{ link(meal, 'join') }}">
+     data-join-url="{{ link(meal, 'join') }}"
+     data-description="{{ dishDescription }}">
         <div class="text">
             <div class="title">
                 {{- dish.title -}}
@@ -26,7 +28,7 @@
             </div>
             <div class="description">
                 <div class="text dish-combination{{ combinedDishIDs ? ' edit' }}">
-                    {{ combinedDishTitle|default(dish.description)|default('content.participation.dish.no_description'|trans({},'general')) }}
+                    {{ combinedDishTitle|default(dishDescription) }}
                 </div>
                 <div class="text price">({{ 'header.navigation.costs'|trans({},'general')}} {{ meal.price|number_format(2, '.', ',') }} €)</div>
             </div>

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Controller;
 
+use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\SlotRepository;
@@ -29,7 +30,7 @@ class MealController extends BaseController
     private NotifierInterface $notifier;
 
     public function __construct(
-        Mailer $mailer,
+        Mailer            $mailer,
         NotifierInterface $notifier)
     {
         $this->mailer = $mailer;
@@ -37,11 +38,13 @@ class MealController extends BaseController
     }
 
     public function index(
-        DishService $dishService,
+        DishService          $dishService,
+
         ParticipationService $participationService,
-        SlotRepository $slotRepo,
-        WeekRepository $weekRepository
-    ): Response {
+        SlotRepository       $slotRepo,
+        WeekRepository       $weekRepository
+    ): Response
+    {
         $currentWeek = $weekRepository->getCurrentWeek();
         if (null === $currentWeek) {
             $currentWeek = $this->createEmptyNonPersistentWeek(new DateTime());
@@ -71,12 +74,13 @@ class MealController extends BaseController
      * @Entity("meal", expr="repository.findOneByDateAndDish(date, dish)")
      */
     public function join(
-        Request $request,
-        Meal $meal,
-        ?string $profile,
+        Request              $request,
+        Meal                 $meal,
+        ?string              $profile,
         ParticipationService $participationSrv,
-        SlotRepository $slotRepo
-    ): JsonResponse {
+        SlotRepository       $slotRepo
+    ): JsonResponse
+    {
         $userProfile = $this->checkProfile($profile);
         if (null === $userProfile) {
             return new JsonResponse(null, 403);
@@ -193,6 +197,56 @@ class MealController extends BaseController
                 'messages'
             )
         );
+    }
+
+    /**
+     * @Security("is_granted('ROLE_USER')")
+     * @Entity("meal", expr="repository.findOneByDateAndDish(date, dish)")
+     */
+    public function getOffers(Meal $meal): JsonResponse
+    {
+        $offers = [];
+        /** @var Participant $participant */
+        foreach ($meal->getParticipants() as $participant) {
+            if (!$participant->isPending()) {
+                continue;
+            }
+
+            $dishes = [];
+            $combinedDishes = $participant->getCombinedDishes();
+            /** @var Dish $dish */
+            foreach ($combinedDishes as $dish) {
+                $dishes[$dish->getSlug()] = [
+                    "slug" => $dish->getSlug(),
+                    "title" => $dish->getTitle(),
+                ];
+            }
+
+            $dishSlugs = array_keys($dishes);
+            sort($dishSlugs, SORT_NATURAL);
+            $combinationID = implode(',', $dishSlugs);
+            if (isset($offers[$combinationID])) {
+                ++$offers[$combinationID]['count'];
+            } else {
+                $offers[$combinationID] = [
+                    'id' => $combinationID,
+                    'count' => 1,
+                    'dishes' => array_values($dishes),
+                ];
+            }
+        }
+
+        if (empty($offers)) {
+            return new JsonResponse(null, 404);
+        }
+
+        $translator = $this->get('translator');
+        $title = $translator->trans('offer_dialog.title', [], 'messages');
+
+        return new JsonResponse([
+            'title' => $title,
+            'offers' => array_values($offers)
+        ]);
     }
 
     /**

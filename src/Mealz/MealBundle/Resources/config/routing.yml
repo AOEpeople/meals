@@ -29,6 +29,11 @@ MealzMealBundle_Meal_join:
 MealzMealBundle_Meal_accept_offer:
     path: /menu/{date}/{dish}/accept-offer/{profile}
     defaults: { _controller: App\Mealz\MealBundle\Controller\MealController::join, profile: null }
+    methods: [GET,POST]
+
+MealzMealBundle_Meal_offers:
+    path: /menu/{date}/{dish}/offers
+    defaults: { _controller: App\Mealz\MealBundle\Controller\MealController::getOffers }
 
 MealzMealBundle_Meal_updateOffers:
     path: /menu/meal/update-offers

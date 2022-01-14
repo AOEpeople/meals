@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Service;
 
 use App\Mealz\MealBundle\Entity\DayRepository;
+use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\ParticipantRepository;
@@ -47,7 +48,7 @@ class ParticipationService
     {
         // user is attempting to take over an already booked meal by some participant
         if ($this->mealIsOffered($meal) && $this->allowedToAccept($meal)) {
-            return $this->reassignOfferedMeal($meal, $profile);
+            return $this->reassignOfferedMeal($meal, $profile, $dishSlugs);
         }
 
         // self joining by user, or adding by a kitchen staff
@@ -78,9 +79,9 @@ class ParticipationService
      *
      * @psalm-return array{participant: Participant, offerer: Profile}|null
      */
-    private function reassignOfferedMeal(Meal $meal, Profile $profile): ?array
+    private function reassignOfferedMeal(Meal $meal, Profile $profile, array $dishSlugs = []): ?array
     {
-        $participant = $this->getNextOfferingParticipant($meal);
+        $participant = $this->getNextOfferingParticipant($meal, $dishSlugs);
         if (null === $participant) {
             return null;
         }
@@ -122,14 +123,35 @@ class ParticipationService
         return ($mealDay->getLockParticipationDateTime() < $now) && ($mealDay->getDateTime() > $now);
     }
 
-    private function getNextOfferingParticipant(Meal $meal): ?Participant
+    private function getNextOfferingParticipant(Meal $meal, array $dishSlugs = []): ?Participant
     {
         $this->em->refresh($meal);
+        $flippedDishSlugs = array_flip($dishSlugs);
 
         /** @var Participant $participant */
         foreach ($meal->getParticipants() as $participant) {
             if (true === $participant->isPending()) {
-                return $participant;
+                if (empty($flippedDishSlugs)) {
+                    return $participant;
+                }
+
+                $combinedDishes = $participant->getCombinedDishes();
+                if (count($combinedDishes) !== count($flippedDishSlugs)) {
+                    continue;
+                }
+
+                $combinationFound = true;
+                /** @var Dish $dish */
+                foreach($combinedDishes as $dish) {
+                    if (!isset($flippedDishSlugs[$dish->getSlug()])) {
+                        $combinationFound = false;
+                        break;
+                    }
+                }
+
+                if ($combinationFound) {
+                    return $participant;
+                }
             }
         }
 

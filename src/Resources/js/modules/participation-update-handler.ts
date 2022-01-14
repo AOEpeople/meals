@@ -1,4 +1,5 @@
 import {ParticipantCounter, ParticipationState} from "./participant-counter";
+import {Labels, TooltipLabel} from "./labels";
 
 export enum ParticipationAction {
     ACCEPT_OFFER = 'acceptOffer-action',
@@ -8,25 +9,22 @@ export enum ParticipationAction {
     UNSWAP = 'unswap-action',
 }
 
-enum Tooltip {
-    OFFERED = "offered",
-    AVAILABLE = "available"
-}
-
 export class ParticipationUpdateHandler {
-    private static toggleTooltip($checkbox: JQuery, key?: Tooltip) {
+    private static toggleTooltip($checkbox: JQuery, label?: TooltipLabel) {
         let $tooltip = $checkbox.closest('.wrapper-meal-actions').find('.tooltiptext');
-        if (undefined !== key) {
+        if (undefined !== label) {
             $.getJSON('/labels.json')
-                .done(function (data) {
-                    if ($('.language-switch').find('span').text() === 'de') {
-                        $tooltip.text(data[1].tooltip_DE[0][key]);
+                .done(function (labels: Labels) {
+                    if ('de' === $('.language-switch').find('span').text()) {
+                        $tooltip.text(labels.de.tooltip[label]);
                     } else {
-                        $tooltip.text(data[0].tooltip_EN[0][key]);
+                        $tooltip.text(labels.en.tooltip[label]);
                     }
+                    $tooltip.toggleClass('active');
                 });
+        } else {
+            $tooltip.toggleClass('active');
         }
-        $tooltip.toggleClass('active');
     }
 
     private static updateCheckBoxWrapper($checkbox: JQuery) {
@@ -136,7 +134,7 @@ export class ParticipationUpdateHandler {
         // update
         this.updateCheckboxEnabled($checkbox);
         this.updateCheckBoxWrapper($checkbox);
-        this.toggleTooltip($checkbox, Tooltip.AVAILABLE);
+        this.toggleTooltip($checkbox, TooltipLabel.AVAILABLE_MEAL);
     }
 
     public static changeToSwapState($checkbox: JQuery, url: string, participantsCount?: number) {
@@ -160,6 +158,6 @@ export class ParticipationUpdateHandler {
         // update
         this.updateCheckboxEnabled($checkbox);
         this.updateCheckBoxWrapper($checkbox);
-        this.toggleTooltip($checkbox, Tooltip.OFFERED);
+        this.toggleTooltip($checkbox, TooltipLabel.OFFERED_MEAL);
     }
 }

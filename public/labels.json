@@ -1,18 +1,14 @@
-[
-  {
-    "tooltip_EN": [
-      {
-        "offered": "Someone else can take your meal now.",
-        "available": "There is food available."
-      }
-    ]
+{
+  "en": {
+    "tooltip": {
+      "offeredMeal": "Someone else can take your meal now.",
+      "availableMeal": "There is food available."
+    }
   },
-  {
-    "tooltip_DE": [
-      {
-        "offered": "Jemand anderes kann jetzt dein Essen übernehmen.",
-        "available": "Es ist Essen verfügbar."
-      }
-    ]
+  "de": {
+    "tooltip": {
+      "offeredMeal": "Jemand anderes kann jetzt dein Essen übernehmen.",
+      "availableMeal": "Es ist Essen verfügbar."
+    }
   }
-]
+}

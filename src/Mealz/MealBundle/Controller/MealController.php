@@ -30,7 +30,7 @@ class MealController extends BaseController
     private NotifierInterface $notifier;
 
     public function __construct(
-        Mailer            $mailer,
+        Mailer $mailer,
         NotifierInterface $notifier)
     {
         $this->mailer = $mailer;
@@ -38,13 +38,12 @@ class MealController extends BaseController
     }
 
     public function index(
-        DishService          $dishService,
+        DishService $dishService,
 
         ParticipationService $participationService,
-        SlotRepository       $slotRepo,
-        WeekRepository       $weekRepository
-    ): Response
-    {
+        SlotRepository $slotRepo,
+        WeekRepository $weekRepository
+    ): Response {
         $currentWeek = $weekRepository->getCurrentWeek();
         if (null === $currentWeek) {
             $currentWeek = $this->createEmptyNonPersistentWeek(new DateTime());
@@ -74,13 +73,12 @@ class MealController extends BaseController
      * @Entity("meal", expr="repository.findOneByDateAndDish(date, dish)")
      */
     public function join(
-        Request              $request,
-        Meal                 $meal,
-        ?string              $profile,
+        Request $request,
+        Meal $meal,
+        ?string $profile,
         ParticipationService $participationSrv,
-        SlotRepository       $slotRepo
-    ): JsonResponse
-    {
+        SlotRepository $slotRepo
+    ): JsonResponse {
         $userProfile = $this->checkProfile($profile);
         if (null === $userProfile) {
             return new JsonResponse(null, 403);
@@ -217,8 +215,8 @@ class MealController extends BaseController
             /** @var Dish $dish */
             foreach ($combinedDishes as $dish) {
                 $dishes[$dish->getSlug()] = [
-                    "slug" => $dish->getSlug(),
-                    "title" => $dish->getTitle(),
+                    'slug' => $dish->getSlug(),
+                    'title' => $dish->getTitle(),
                 ];
             }
 
@@ -245,7 +243,7 @@ class MealController extends BaseController
 
         return new JsonResponse([
             'title' => $title,
-            'offers' => array_values($offers)
+            'offers' => array_values($offers),
         ]);
     }
 

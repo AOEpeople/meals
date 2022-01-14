@@ -31,6 +31,8 @@ notification:
 tooltip:
   offered_meal: Someone else can take your meal now.
   available_meal: There is food available.
+offer_dialog:
+  title: Combinations offered for exchange
 mattermost:
   offered: '{0} :meal: One meal has just been offered: "%dish%". Log into your account at https://meals.aoe.com/ to get it!|{1} :meal: One meal has just been offered: "%dish%". %counter% other meal is currently being offered. Log into your account at https://meals.aoe.com/ to get it!|[2, Inf[ :meal: One meal has just been offered: "%dish%". %counter% other meals are currently being offered. Log into your account at https://meals.aoe.com/ to get it!'
   offer_taken: '{0} :nomeal: One "%takenOffer%" has been taken. All offers are gone now.| {1} :meal: One "%takenOffer%" has been taken. Still %counter% other meal is being offered.| [2, Inf[ :meal: One "%takenOffer%" has been taken. Still %counter% other meals are being offered.'

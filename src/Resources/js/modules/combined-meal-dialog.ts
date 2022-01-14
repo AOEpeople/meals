@@ -111,11 +111,6 @@ export interface DishVariation {
     slug: string
 }
 
-export interface CombinedMealFormData {
-    slot: string
-    dishes: string[]
-}
-
 interface CombinedMealDialogOptions {
     ok: (data: any) => void
 }

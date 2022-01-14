@@ -141,7 +141,7 @@ class MealController extends BaseController
         $bookedDishes = [];
         $partCombinedDishes = $participant->getCombinedDishes();
         if (0 < $partCombinedDishes->count()) {
-            $bookedDishes = $partCombinedDishes->map(fn(Dish $dish) => $dish->getSlug())->toArray();
+            $bookedDishes = $partCombinedDishes->map(fn (Dish $dish) => $dish->getSlug())->toArray();
         }
 
         return new JsonResponse([
@@ -153,7 +153,7 @@ class MealController extends BaseController
                 ]
             ),
             'actionText' => $action,
-            'bookedDishes' => $bookedDishes
+            'bookedDishes' => $bookedDishes,
         ]);
     }
 

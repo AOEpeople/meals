@@ -139,7 +139,6 @@ export default class MealIndexView {
             slotSlug,
             {
                 ok: function (data: unknown) {
-                    console.log(data);
                     let $participationCheckbox = $dishContainer.find('input[type=checkbox]');
                     let req = new ParticipationRequest(url, data);
                     ParticipationRequestHandler.sendRequest(req, $participationCheckbox, function(participationCheckbox, data: JoinResponse) {

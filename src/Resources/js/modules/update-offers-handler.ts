@@ -42,7 +42,7 @@ export class UpdateOffersHandler {
                     if ($checkbox.hasClass(ParticipationAction.UNSWAP) === true) {
                         let participantId = parseInt($checkbox.data('participant-id'));
                         if (isNaN(participantId)) {
-                            console.log('Error: No participant ID found');
+                            console.log('Error: Participant ID is not a number');
                             return;
                         }
                         $.getJSON('/menu/meal/' + participantId + '/isParticipationPending', function (isParticipationPendingResponse) {

@@ -31,7 +31,7 @@ export class ParticipationCountUpdateHandler extends AbstractParticipationCountU
                     if (undefined !== countStatus) {
                         ParticipationUpdateHandler.updateParticipation($checkbox, countStatus['count'], countStatus['limit']);
                     } else {
-                        console.log("Values for count status update undefined. No values on " + participantCounter.getDay() + " for meal " + participantCounter.getMealId() + " and dish " + participantCounter.getDishSlug());
+                        console.log("Warning: Values for count status update undefined. No values on " + participantCounter.getDay() + " for meal " + participantCounter.getMealId() + " and dish " + participantCounter.getDishSlug());
                     }
                 });
             },
@@ -61,7 +61,7 @@ export class ParticipationGuestCountUpdateHandler extends AbstractParticipationC
                     if (undefined !== countStatus) {
                         ParticipationUpdateHandler.updateParticipation($checkbox, countStatus['count'], countStatus['limit']);
                     } else {
-                        console.log("Values for count status update undefined. No values for meal " + participantCounter.getMealId() + " and dish " + participantCounter.getDishSlug());
+                        console.log("Warning: Values for count status update undefined. No values for meal " + participantCounter.getMealId() + " and dish " + participantCounter.getDishSlug());
                     }
                 });
             },

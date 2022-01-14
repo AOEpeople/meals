@@ -42,7 +42,7 @@ export class CombinedMealDialog extends BaseDialog {
         let $form = $('<form method="post"></form>');
         let $formFields = this.getFormFields(dishes);
         $form.prepend($formFields);
-        let $slotSlugField = '<input type="hidden" name="slug" value="' + slotSlug + '">';
+        let $slotSlugField = '<input type="hidden" name="slot" value="' + slotSlug + '">';
         $form.prepend($slotSlugField);
 
         return $form;

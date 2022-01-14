@@ -142,7 +142,7 @@ class ParticipationService
 
                 $combinationFound = true;
                 /** @var Dish $dish */
-                foreach($combinedDishes as $dish) {
+                foreach ($combinedDishes as $dish) {
                     if (!isset($flippedDishSlugs[$dish->getSlug()])) {
                         $combinationFound = false;
                         break;

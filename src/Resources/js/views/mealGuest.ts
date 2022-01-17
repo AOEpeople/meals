@@ -1,7 +1,21 @@
+import {ParticipationGuestToggleHandler} from "../modules/participation-toggle-handler";
+import {ParticipationPreToggleHandler} from "../modules/participation-pre-toggle-handler";
+import {ParticipationGuestCountUpdateHandler} from "../modules/participation-count-update-handler";
+
 export default class MealGuestView {
+    $participationCheckboxes: JQuery;
+
     constructor() {
         this.updateSlots();
         setInterval(this.updateSlots, 3000);
+
+        this.$participationCheckboxes = $('.meal-guest input[type="checkbox"]');
+
+        if (this.$participationCheckboxes.length > 0) {
+            let participationToggleHandler = new ParticipationGuestToggleHandler(this.$participationCheckboxes);
+            new ParticipationPreToggleHandler(participationToggleHandler);
+            new ParticipationGuestCountUpdateHandler(this.$participationCheckboxes);
+        }
     }
 
     private updateSlots() {

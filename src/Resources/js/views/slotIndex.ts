@@ -23,8 +23,8 @@ export default class SlotIndexView {
         });
     };
 
-    private handleToggleSlotState(id: string, state: boolean) {
-        const url = '/meal/slot/' + id + '/update-state';
+    private handleToggleSlotState(slotSlug: string, state: boolean) {
+        const url = '/meal/slot/' + slotSlug + '/update-state';
         $.post(url, {'disabled': (false === state ? '1' : '0')})
             .fail(function () {
                 $('.alert').show();
@@ -35,8 +35,8 @@ export default class SlotIndexView {
         let self = this; // SlotIndexView
 
         const $delLink = $(event.target);
-        const slotId = $delLink.data('id');
-        const url = '/meal/slot/' + slotId + '/delete';
+        const slotSlug = $delLink.data('id');
+        const url = '/meal/slot/' + slotSlug + '/delete';
 
         let $flashContainer = $('#flash-msg');
         let msg = '';

@@ -38,12 +38,6 @@ export class CombinedMealDialog extends BaseDialog {
         });
     }
 
-    // private getTitle(dishes: Dish[]): string {
-    //     return dishes.reduce(function (title: string, dish: Dish) {
-    //         return ('' === title) ? dish.title : `${title} & ${dish.title}`;
-    //     }, '');
-    // }
-
     private buildForm(dishes: Dish[], selectedDishIDs: string[], slotSlug: string): JQuery {
         let $form = $('<form method="post"></form>');
         let $formFields = this.getFormFields(dishes, selectedDishIDs);

@@ -97,7 +97,7 @@ export class ParticipationUpdateHandler {
         $slotBox.addClass('tmp-disabled').prop('disabled', true)
             .parent().children('.loader').css('visibility', 'visible');
 
-        ParticipationUpdateHandler.updateCombinedDishDesc($checkbox, bookedDishIDs);
+        ParticipationUpdateHandler.updateCombinedDish($checkbox, bookedDishIDs);
     }
 
     public static changeToOfferIsTaken($checkbox: JQuery) {
@@ -192,18 +192,25 @@ export class ParticipationUpdateHandler {
         return dishes;
     }
 
-    private static updateCombinedDishDesc($dishCheckbox: JQuery, selectedDishIDs: string[]) {
-        let $dishContainer = $dishCheckbox.closest('.meal-row');
+    /**
+     * @param $checkbox     Combined Dish Checkbox
+     * @param bookedDishIDs Dish IDs in booked combined meal
+     */
+    private static updateCombinedDish($checkbox: JQuery, bookedDishIDs: string[]) {
+        let $dishContainer = $checkbox.closest('.meal-row');
 
-        if (Array.isArray(selectedDishIDs) && (0 < selectedDishIDs.length)) {
+        if (Array.isArray(bookedDishIDs) && (0 < bookedDishIDs.length)) {
             let $mealContainer = $dishContainer.closest('.meal');
             const dishes = ParticipationUpdateHandler.getCombinedMealDishes($mealContainer);
-            let dt = ParticipationUpdateHandler.getSelectedDishTitles(selectedDishIDs, dishes);
+            let dt = ParticipationUpdateHandler.getBookedDishTitles(bookedDishIDs, dishes);
             if (0 < dt.length) {
+                // update dish description with titles of booked dishes
                 $dishContainer
                     .find('.description .dish-combination')
                     .text(dt.join(', '))
                     .addClass('edit');
+                // update booked dish IDs in data attribute
+                $dishContainer.attr('data-booked-dishes', bookedDishIDs.join(','));
             }
 
             return;
@@ -211,9 +218,10 @@ export class ParticipationUpdateHandler {
 
         let desc = $dishContainer.data('description');
         $dishContainer.find('.description .dish-combination').text(desc).removeClass('edit');
+        $dishContainer.attr('data-booked-dishes', '');
     }
 
-    private static getSelectedDishTitles(dishIDs: string[], dishes: Dish[]|DishVariation[]) {
+    private static getBookedDishTitles(dishIDs: string[], dishes: Dish[]|DishVariation[]) {
         let dishTitles: string[] = [];
         dishes.forEach(function(dish){
             let idx = dishIDs.indexOf(dish.slug);
@@ -221,7 +229,7 @@ export class ParticipationUpdateHandler {
                 dishTitles.push(dish.title);
                 dishIDs.slice(idx, 1);
             } else if (Array.isArray(dish.variations) && 0 < dish.variations.length) {
-                let dvt = ParticipationUpdateHandler.getSelectedDishTitles(dishIDs, dish.variations);
+                let dvt = ParticipationUpdateHandler.getBookedDishTitles(dishIDs, dish.variations);
                 dishTitles.push(...dvt);
             }
         });

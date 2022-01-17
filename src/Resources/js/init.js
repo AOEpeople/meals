@@ -36,10 +36,6 @@ window.Mealz = function () {
     this.hiddenClass = 'hidden';
     this.weekCheckbox = $('.meal-form .week-disable input[type="checkbox"]')[0];
     this.$weekDayCheckboxes = $('.meal-form .week-day-action input[type="checkbox"]');
-    this.participationToggleHandler = undefined;
-    this.participationPreToggleHandler = undefined;
-    this.updateOffersHandler = undefined;
-    this.participationCountUpdateHandler = undefined;
     this.$participationCheckboxes = $('.meals-list input.checkbox, .meals-list input[type = "checkbox"]');
     this.$guestParticipationCheckboxes = $('.meal-guests input.checkbox, .meal-guests input[type = "checkbox"]');
     this.$iconCells = $('.icon-cell');
@@ -100,19 +96,6 @@ $(function () {
      * Enable table sorting
      */
     mealz.enableSortableTables();
-
-    if (undefined === mealz.participationToggleHandler) {
-        if (mealz.$participationCheckboxes.length > 0) {
-            mealz.participationToggleHandler = new ParticipationToggleHandler(mealz.$participationCheckboxes);
-            mealz.participationCountUpdateHandler = new ParticipationCountUpdateHandler(mealz.$participationCheckboxes);
-            mealz.updateOffersHandler = new UpdateOffersHandler();
-        } else if (mealz.$guestParticipationCheckboxes.length > 0) {
-            mealz.participationToggleHandler = new ParticipationGuestToggleHandler(mealz.$guestParticipationCheckboxes);
-            mealz.participationCountUpdateHandler = new ParticipationGuestCountUpdateHandler(mealz.$guestParticipationCheckboxes);
-        }
-
-        this.participationPreToggleHandler = new ParticipationPreToggleHandler(mealz.participationToggleHandler);
-    }
 
     /**
      * Lightbox

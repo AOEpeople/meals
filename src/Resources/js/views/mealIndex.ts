@@ -3,34 +3,33 @@ import {ParticipationToggleHandler} from "../modules/participation-toggle-handle
 import {ParticipationCountUpdateHandler} from "../modules/participation-count-update-handler";
 import {CombinedMealDialog, Dish, DishVariation} from "../modules/combined-meal-dialog";
 import {ParticipationRequest, ParticipationRequestHandler} from "../modules/participation-request-handler";
+import {UpdateOffersHandler} from "../modules/update-offers-handler";
 
 export default class MealIndexView {
     participationPreToggleHandler: ParticipationPreToggleHandler;
-    readonly participationCheckboxSelector: string = '.meals-list .meal .participation-checkbox';
+    $participationCheckboxes: JQuery;
 
     constructor() {
         this.updateSlots();
         setInterval(this.updateSlots, 3000);
 
+        this.$participationCheckboxes = $('.meals-list .meal .participation-checkbox');
         this.initEvents();
 
-        if ($(this.participationCheckboxSelector).length > 0) {
-            console.log($(this.participationCheckboxSelector).length);
-            let $participationCheckboxes = $(this.participationCheckboxSelector);
-            let participationToggleHandler = new ParticipationToggleHandler($participationCheckboxes);
-            let participationCountUpdateHandler = new ParticipationCountUpdateHandler($participationCheckboxes);
+        if (this.$participationCheckboxes.length > 0) {
+            let participationToggleHandler = new ParticipationToggleHandler(this.$participationCheckboxes);
             this.participationPreToggleHandler = new ParticipationPreToggleHandler(participationToggleHandler);
-        } else {
-            console.log($(this.participationCheckboxSelector).length);
+
+            new ParticipationCountUpdateHandler(this.$participationCheckboxes);
+            new UpdateOffersHandler();
         }
     }
 
     private initEvents(): void {
         // set handler for slot change event
         $('.meals-list .meal .slot-selector').on('change', this.handleChangeSlot);
-        $('.meals-list .meal .participation-checkbox').on('change', MealIndexView.handleParticipationUpdate);
+        this.$participationCheckboxes.on('change', MealIndexView.handleParticipationUpdate);
         $('.meals-list .meal .dish-combination.edit').on('click', this.handleCombinedMealEdit.bind(this));
-        // $('.meals-list .meal .description .edit').on('click', this.handleCombinedMealEdit.bind(this));
     }
 
     private handleChangeSlot(event: JQuery.TriggeredEvent) {
@@ -131,7 +130,7 @@ export default class MealIndexView {
         const slotSlug: string = $mealContainer.find('.slot-selector').val().toString();
         const title = $dishContainer.find('.title').text();
         const dishes = this.getCombinedMealDishes($mealContainer);
-        const $bookedDishIDs = $dishContainer.data('bookedDishes').split(',').map((id: string) => id.trim());
+        const $bookedDishIDs = $dishContainer.attr('data-booked-dishes').split(',').map((id: string) => id.trim());
         let cmd = new CombinedMealDialog(
             title,
             dishes,
@@ -144,7 +143,7 @@ export default class MealIndexView {
                     ParticipationRequestHandler.sendRequest(req, $participationCheckbox, function(participationCheckbox, data: JoinResponse) {
                         const bookedDishIDs = data.bookedDishes.split(',').map(dishID => dishID.trim());
                         if (0 < bookedDishIDs.length) {
-                            self.updateCombinedDishDesc(participationCheckbox, dishes, bookedDishIDs);
+                            self.updateCombinedDish(participationCheckbox, dishes, bookedDishIDs);
                         }
                     });
                 }.bind(self)
@@ -180,23 +179,32 @@ export default class MealIndexView {
         return dishes;
     }
 
-    private updateCombinedDishDesc($dishCheckbox: JQuery, $dishes: Dish[], $selectedDishIDs: string []) {
-        let sdt = this.getSelectedDishTitles($selectedDishIDs, $dishes);
+    /**
+     * @param $checkbox     Combined Dish Checkbox
+     * @param $dishes       Available meal dishes on a given day
+     * @param bookedDishIDs Dish IDs in booked combined meal
+     */
+    private updateCombinedDish($checkbox: JQuery, $dishes: Dish[], bookedDishIDs: string []) {
+        let $dishContainer = $checkbox.closest('.meal-row');
+        let sdt = this.getBookedDishTitles(bookedDishIDs, $dishes);
         if (0 < sdt.length) {
-            $dishCheckbox.closest('.meal-row').find('.description .dish-combination').text(sdt.join(', '));
+            // update dish description with titles of booked dishes
+            $dishContainer.find('.description .dish-combination').text(sdt.join(', '));
+            // update booked dish IDs in data attribute
+            $dishContainer.attr('data-booked-dishes', bookedDishIDs.join(','));
         }
     }
 
-    private getSelectedDishTitles($selectedDishIDs: string[], dishes: Dish[]|DishVariation[]) {
+    private getBookedDishTitles(bookedDishIDs: string[], dishes: Dish[]|DishVariation[]) {
         let self = this;
         let dishTitles: string[] = [];
         dishes.forEach(function(dish){
-            let idx = $selectedDishIDs.indexOf(dish.slug);
+            let idx = bookedDishIDs.indexOf(dish.slug);
             if (-1 < idx) {
                 dishTitles.push(dish.title);
-                $selectedDishIDs.slice(idx, 1);
+                bookedDishIDs.slice(idx, 1);
             } else if (Array.isArray(dish.variations) && 0 < dish.variations.length) {
-                let dvt = self.getSelectedDishTitles($selectedDishIDs, dish.variations);
+                let dvt = self.getBookedDishTitles(bookedDishIDs, dish.variations);
                 dishTitles.push(...dvt);
             }
         });

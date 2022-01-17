@@ -8,7 +8,7 @@
     {% set combinedDish = '1' %}
     {% set bookedDishCombination = participationService.getBookedDishCombination(app.user.profile, meal) %}
     {% if bookedDishCombination|length > 0 %}
-        {% set combinedDishTitle = bookedDishCombination.toArray|map(d => d.title)|join(',') %}
+        {% set combinedDishTitle = bookedDishCombination.toArray|map(d => d.title)|join(', ') %}
         {% set combinedDishIDs = bookedDishCombination.toArray|map(d => d.slug)|join(',') %}
     {% endif %}
 {% endif %}

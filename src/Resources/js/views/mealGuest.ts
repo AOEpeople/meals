@@ -4,12 +4,18 @@ import {ParticipationGuestCountUpdateHandler} from "../modules/participation-cou
 
 export default class MealGuestView {
     $participationCheckboxes: JQuery;
+    $slotDropDown: JQuery;
+    mealDate: string;
 
     constructor() {
-        this.updateSlots();
-        setInterval(this.updateSlots, 3000);
-
         this.$participationCheckboxes = $('.meal-guest input[type="checkbox"]');
+        this.$slotDropDown = $('#invitation_form_slot');
+        this.mealDate = this.$slotDropDown.closest('.meal-guest').data('date');
+
+        if (this.$slotDropDown.length < 1) {
+            this.updateSlots();
+            setInterval(this.updateSlots, 3000);
+        }
 
         if (this.$participationCheckboxes.length > 0) {
             let participationToggleHandler = new ParticipationGuestToggleHandler(this.$participationCheckboxes);
@@ -19,19 +25,14 @@ export default class MealGuestView {
     }
 
     private updateSlots() {
-        let $slotSelector = $('#invitation_form_slot');
-        if ($slotSelector.length < 1) {
-            return;
-        }
-
-        const date = $slotSelector.closest('.meal-guest').data('date');
+        let self = this;
 
         $.ajax({
-            'url': '/participation/slots-status/' + date,
+            'url': '/participation/slots-status/' + self.mealDate,
             dataType: 'json',
             'success': function (data) {
                 $.each(data, function (k, v) {
-                    let $slotOption = $slotSelector.find('option[value="'+v.slot+'"]');
+                    let $slotOption = self.$slotDropDown.find('option[value="'+v.slot+'"]');
 
                     const slotLimit = $slotOption.data('limit');
                     if (slotLimit > 0) {
@@ -46,10 +47,10 @@ export default class MealGuestView {
 
                     if (v.booked_by_user) {
                         // do not overwrite user selected value
-                        if ('' === $slotSelector.val()) {
+                        if ('' === self.$slotDropDown.val()) {
                             $slotOption.prop('selected', true);
                         }
-                        $slotSelector.prop('disabled', false);
+                        self.$slotDropDown.prop('disabled', false);
                     }
                 });
             }

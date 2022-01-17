@@ -41,9 +41,11 @@ export class ParticipationPreToggleHandler {
             && 0 < $checkbox.closest('.meal').find('.variation-row .text-variation').length; // has variations
     }
 
-    public executeBeforeToggle($dishContainer: JQuery): void {
+    public executeBeforeToggle($checkbox: JQuery): void {
         let self = this;
+        let $dishContainer = $checkbox.closest('.meal-row');
         let $mealContainer = $dishContainer.closest('.meal');
+
         const slotSlug: string = $mealContainer.find('.slot-selector').val().toString();
         const title = $dishContainer.find('.title').text();
         const dishes = this.getCombinedMealDishes($mealContainer);
@@ -55,8 +57,7 @@ export class ParticipationPreToggleHandler {
             slotSlug,
             {
                 ok: function (data) {
-                    let $participationCheckbox = $dishContainer.find('input[type=checkbox]');
-                    self.participationToggleHandler.toggle($participationCheckbox, data);
+                    self.participationToggleHandler.toggle($checkbox, data);
                 }
             }
         );

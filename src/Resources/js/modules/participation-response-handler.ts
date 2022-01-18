@@ -7,6 +7,7 @@ export interface ActionResponse {
 
 interface ToggleResponse extends ActionResponse {
     participantsCount: number;
+    bookedDishes: string[]
 }
 
 interface SwapResponse extends ActionResponse {
@@ -15,7 +16,7 @@ interface SwapResponse extends ActionResponse {
 
 export class ParticipationResponseHandler {
     public static onSuccessfulToggle($checkbox: JQuery, response: ToggleResponse) {
-        ParticipationUpdateHandler.toggleAction($checkbox, response.actionText, response.url, response.participantsCount);
+        ParticipationUpdateHandler.toggleAction($checkbox, response.actionText, response.url, response.participantsCount, response.bookedDishes);
     }
 
     public static onSuccessfulAcceptOffer($checkbox: JQuery, response: ToggleResponse) {

@@ -9,11 +9,17 @@ export class CombinedMealDialog extends BaseDialog {
 
     private $form: JQuery;
 
-    constructor(title: string, private dishes: Dish[], slotSlug: string, opts: CombinedMealDialogOptions) {
+    constructor(
+        title: string,
+        dishes: Dish[],
+        selectedDishIDs: string[],
+        slotSlug: string,
+        opts: CombinedMealDialogOptions
+    ) {
         super();
         this.title = title;
         this.slotSlug = slotSlug;
-        this.$form = this.buildForm(dishes, this.slotSlug);
+        this.$form = this.buildForm(dishes, selectedDishIDs, this.slotSlug);
         this.opts = opts;
     }
 
@@ -32,15 +38,9 @@ export class CombinedMealDialog extends BaseDialog {
         });
     }
 
-    private getTitle(dishes: Dish[]): string {
-        return dishes.reduce(function (title: string, dish: Dish) {
-            return ('' === title) ? dish.title : `${title} & ${dish.title}`;
-        }, '');
-    }
-
-    private buildForm(dishes: Dish[], slotSlug: string): JQuery {
+    private buildForm(dishes: Dish[], selectedDishIDs: string[], slotSlug: string): JQuery {
         let $form = $('<form method="post"></form>');
-        let $formFields = this.getFormFields(dishes);
+        let $formFields = this.getFormFields(dishes, selectedDishIDs);
         $form.prepend($formFields);
         let $slotSlugField = '<input type="hidden" name="slot" value="' + slotSlug + '">';
         $form.prepend($slotSlugField);
@@ -48,18 +48,18 @@ export class CombinedMealDialog extends BaseDialog {
         return $form;
     }
 
-    private getFormFields(dishes: Dish[]): JQuery {
+    private getFormFields(dishes: Dish[], selectedDishIDs: string[]): JQuery {
         let $dishes = $('<div class="dishes"></div>');
 
         dishes.forEach((dish, index) => {
-            let $dishField = this.getDishField(dish, index);
+            let $dishField = this.getDishField(dish, index, selectedDishIDs);
             $dishes.append($dishField);
         });
 
         return $dishes;
     }
 
-    private getDishField(d: Dish, index: number): JQuery {
+    private getDishField(d: Dish, index: number, selectedDishIDs: string[]): JQuery {
         const fieldName = `dishes[${index}]`;
 
         if (0 === d.variations.length) {
@@ -68,7 +68,8 @@ export class CombinedMealDialog extends BaseDialog {
 
         let $dish = $('<div class="dish"><div class="title">' + d.title + '</div></div>');
         d.variations.forEach((dv, index) => {
-            let $dishVariation = this.getRadioButton(fieldName, dv.slug, 0 === index, dv.title, {wrapperClass: 'dish-variation'});
+            const selected = selectedDishIDs.includes(dv.slug) || (0 === index);
+            let $dishVariation = this.getRadioButton(fieldName, dv.slug, selected, dv.title, {wrapperClass: 'dish-variation'});
             $dish.append($dishVariation);
         });
 

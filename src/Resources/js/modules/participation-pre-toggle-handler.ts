@@ -41,14 +41,19 @@ export class ParticipationPreToggleHandler {
             && 0 < $checkbox.closest('.meal').find('.variation-row .text-variation').length; // has variations
     }
 
-    private executeBeforeToggle($checkbox: JQuery): void {
+    public executeBeforeToggle($checkbox: JQuery): void {
         let self = this;
-        const slotSlug: string = $checkbox.closest('.meal').find('.slot-selector').val().toString();
-        const title = $checkbox.closest('.meal-row').find('.title').text();
-        const dishes = this.getCombinedMealDishes($checkbox.closest('.meal'));
+        let $dishContainer = $checkbox.closest('.meal-row');
+        let $mealContainer = $dishContainer.closest('.meal');
+
+        const slotSlug: string = $mealContainer.find('.slot-selector').val().toString();
+        const title = $dishContainer.find('.title').text();
+        const dishes = this.getCombinedMealDishes($mealContainer);
+        const $bookedDishIDs = $dishContainer.data('bookedDishes').split(',').map((id: string) => id.trim());
         let cmd = new CombinedMealDialog(
             title,
             dishes,
+            $bookedDishIDs,
             slotSlug,
             {
                 ok: function (data) {
@@ -68,7 +73,7 @@ export class ParticipationPreToggleHandler {
             }
 
             let dish: Dish = {
-                title: $mealRow.find('.text .title').contents().get(0).nodeValue.trim(),
+                title: $mealRow.find('.title').contents().get(0).nodeValue.trim(),
                 slug: $mealRow.data('slug'),
                 variations: []
             };

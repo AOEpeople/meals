@@ -1,36 +1,39 @@
 {% set dish = meal.dish %}
-<div class="meal-row" {{ dish.isCombinedDish ? 'data-combined="1"' }} data-slug="{{ dish.slug }}">
-        <div class="text">
-            <div class="title">
-                {{- dish.title -}}
-                {%- if dishService.isNew(dish) %}
-                    <span class="new-flag">{{ 'content.participation.dish.new'|trans({},'general') }}</span>
-                {% endif -%}
-            </div>
-            <div class="description">
-                {% if dish.isCombinedDish %}
-                    {%  set bookedDishCombinaton = participationService.getBookedDishCombination(app.user.profile, meal) %}
-                    {% if bookedDishCombinaton|length == 0 %}
-                        {{- dish.description -}}
-                    {% else %}
-                        <div class="text text-variation">
-                            {%- for bookedDish in bookedDishCombinaton -%}
-                                {{- bookedDish.title -}}
-                                {%- if not loop.last -%}
-                                    {{- ', ' -}}
-                                {%- endif -%}
-                            {%- endfor -%}
-                        </div>
-                    {% endif %}
-                    <div class="text text-variation">({{ 'header.navigation.costs'|trans({},'general')}} {{ meal.price|number_format(2, '.', ',') }} €)</div>
-                {% else %}
-                    {%- if dish.description -%}
-                        {{- dish.description -}}
-                    {%- else -%}
-                        {{- 'content.participation.dish.no_description'|trans({},'general') -}}
-                    {%- endif -%}
-                {% endif %}
-            </div>
+{% set combinedDish = '0' %}
+{% set combinedDishIDs = '' %}
+{% set bookedDishTitles = [] %}
+{% set dishDescription = dish.description|default('content.participation.dish.no_description'|trans({},'general')) %}
+
+{% if dish.isCombinedDish %}
+    {% set combinedDish = '1' %}
+    {% set bookedDishCombination = participationService.getBookedDishCombination(app.user.profile, meal) %}
+    {% if bookedDishCombination|length > 0 %}
+        {% set bookedDishTitles = bookedDishCombination.toArray|map(d => d.title) %}
+        {% set combinedDishIDs = bookedDishCombination.toArray|map(d => d.slug)|join(',') %}
+    {% endif %}
+{% endif %}
+
+<div class="meal-row"
+     data-combined="{{ combinedDish }}"
+     data-slug="{{ dish.slug }}"
+     data-booked-dishes="{{ combinedDishIDs }}"
+     data-join-url="{{ link(meal, 'join') }}"
+     data-description="{{ dishDescription }}">
+    <div class="title{{ bookedDishTitles|length ? ' edit' }}">
+        {{- dish.title -}}
+        {%- if dishService.isNew(dish) %}
+            <span class="new-flag">{{ 'content.participation.dish.new'|trans({},'general') }}</span>
+        {% endif -%}
+    </div>
+    <div class="description">
+        <div class="text dish-combination">
+            {% for dishTitle in bookedDishTitles %}
+                <div class="dish">{{ dishTitle }}</div>
+            {% else %}
+                {{ dishDescription }}
+            {% endfor %}
         </div>
+        <div class="text price">{{ meal.price|number_format(2, '.', ',') }} €</div>
+    </div>
     {% include 'MealzMealBundle:Meal/partials:mealActionsWrapper.html.twig' %}
 </div>

@@ -5,8 +5,8 @@ let Controller = function (view) {
 };
 
 Controller.prototype.getView = function (viewName) {
-    const viewFile = './'+viewName+'.js';
-    const context = require.context('./views', false, /.*\.js$/);
+    const viewFile = './'+viewName+'.ts';
+    const context = require.context('./views', false, /.*\.ts$/);
     const viewObj = context(viewFile);
     new viewObj.default();
 };

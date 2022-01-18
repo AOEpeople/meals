@@ -13,13 +13,16 @@
     {% endif %}
 {% endif %}
 
-<div class="meal-row"
-     data-combined="{{ combinedDish }}"
-     data-slug="{{ dish.slug }}"
-     data-booked-dishes="{{ combinedDishIDs }}"
-     data-join-url="{{ link(meal, 'join') }}"
-     data-description="{{ dishDescription }}">
-    <div class="title{{ bookedDishTitles|length ? ' edit' }}">
+<div class="meal-row combined-meal"
+    {%- if available -%}
+        data-combined="{{ combinedDish }}"
+        data-slug="{{ dish.slug }}"
+        data-booked-dishes="{{ combinedDishIDs }}"
+        data-join-url="{{ link(meal, 'join') }}"
+        data-description="{{ dishDescription }}"
+    {%- endif -%}
+    >
+    <div class="title{{ available and bookedDishTitles|length ? ' edit' }}">
         {{- dish.title -}}
         {%- if dishService.isNew(dish) %}
             <span class="new-flag">{{ 'content.participation.dish.new'|trans({},'general') }}</span>

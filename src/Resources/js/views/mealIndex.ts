@@ -161,7 +161,7 @@ export default class MealIndexView {
             }
 
             let dish: Dish = {
-                title: $mealRow.find('.text .title').contents().get(0).nodeValue.trim(),
+                title: $mealRow.find('.title').contents().get(0).nodeValue.trim(),
                 slug: $mealRow.data('slug'),
                 variations: []
             };

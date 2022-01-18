@@ -138,8 +138,8 @@
 
   .meal-row {
     position: relative;
-    padding: 10px 15px;
     overflow: auto;
+    padding: 10px 15px;
 
     &:not(:last-child) {
       border-bottom: 2px solid $meal-border-color;
@@ -202,17 +202,17 @@
       }
 
       .price {
-        padding: 0;
         float: right;
         width: 10%;
+        padding: 0;
         font-size: 12px;
       }
     }
 
     .wrapper-meal-actions {
+      position: relative;
       float: right;
       margin-top: -10px;
-      position: relative;
     }
   }
 

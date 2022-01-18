@@ -5,8 +5,8 @@ export class ParticipationRequest {
     readonly data: {};
     readonly method: string;
 
-    constructor($checkbox: JQuery, data?: {}) {
-        this.url = $checkbox.attr('value');
+    constructor(url: string, data?: {}) {
+        this.url = url;
         this.method = 'GET';
         if (data) {
             this.data = data

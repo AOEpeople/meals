@@ -10,21 +10,22 @@
     {% for meal in mealVariationGroup %}
         {% set dish = meal.dish %}
         {% if loop.first %}
-            <div class="text">
-                <div class="title">
-                    {{- dish.parent.title -}}
-                    {%- if parentFlag %}
-                        <span class="new-flag">{{ 'content.participation.dish.new'|trans({},'general') }}</span>
-                    {% endif -%}
-                </div>
+            <div class="title">
+                {{- dish.parent.title -}}
+                {%- if parentFlag %}
+                    <span class="new-flag">{{ 'content.participation.dish.new'|trans({},'general') }}</span>
+                {% endif -%}
             </div>
         {% endif %}
         <div class="variation-row" data-slug="{{ dish.slug }}">
-            <div class="text text-variation">
-                {{- dish.title -}}
-                {%- if dishService.isNew(dish) and not parentFlag %}
-                    <span class="new-flag">{{ 'content.participation.dish.new'|trans({},'general') }}</span>
-                {% endif -%}
+            <div class="description">
+                <div class="text text-variation">
+                    {{- dish.title -}}
+                    {%- if dishService.isNew(dish) and not parentFlag %}
+                        <span class="new-flag">{{ 'content.participation.dish.new'|trans({},'general') }}</span>
+                    {% endif -%}
+                </div>
+                <div class="text price">{{ meal.price|number_format(2, '.', ',') }} €</div>
             </div>
             {% include 'MealzMealBundle:Meal/partials:mealActionsWrapper.html.twig' %}
         </div>

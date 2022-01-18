@@ -1,5 +1,6 @@
 import {ParticipantCounter, ParticipationState} from "./participant-counter";
 import {Labels, TooltipLabel} from "./labels";
+import {Dish, DishVariation} from "./combined-meal-dialog";
 
 export enum ParticipationAction {
     ACCEPT_OFFER = 'acceptOffer-action',
@@ -80,7 +81,7 @@ export class ParticipationUpdateHandler {
         this.updateCheckBoxWrapper($checkbox);
     }
 
-    public static toggleAction($checkbox: JQuery, actionText: string, url: string, participantsCount: number) {
+    public static toggleAction($checkbox: JQuery, actionText: string, url: string, participantsCount: number, bookedDishIDs: string[]) {
         // change
         $checkbox.prop('checked', !$checkbox.is(':checked'));
         let nextAction = ('deleted' === actionText) ? ParticipationAction.JOIN : ParticipationAction.DELETE;
@@ -91,9 +92,12 @@ export class ParticipationUpdateHandler {
         this.updateCheckboxEnabled($checkbox);
         this.updateCheckBoxWrapper($checkbox);
 
-        let $slotBox = $checkbox.closest('.meal').find('.slot-selector');
+        let $mealContainer = $checkbox.closest('.meal');
+        let $slotBox = $mealContainer.find('.slot-selector');
         $slotBox.addClass('tmp-disabled').prop('disabled', true)
             .parent().children('.loader').css('visibility', 'visible');
+
+        ParticipationUpdateHandler.updateCombinedDish($checkbox, bookedDishIDs);
     }
 
     public static changeToOfferIsTaken($checkbox: JQuery) {
@@ -159,5 +163,77 @@ export class ParticipationUpdateHandler {
         this.updateCheckboxEnabled($checkbox);
         this.updateCheckBoxWrapper($checkbox);
         this.toggleTooltip($checkbox, TooltipLabel.OFFERED_MEAL);
+    }
+
+    private static getCombinedMealDishes($meal: JQuery): Dish[] {
+        let dishes: Dish[] = [];
+        $meal.find('.meal-row').each(function () {
+            const $mealRow = $(this);
+            if (1 === $mealRow.data('combined')) {
+                return;
+            }
+
+            let dish: Dish = {
+                title: $mealRow.find('.title').contents().get(0).nodeValue.trim(),
+                slug: $mealRow.data('slug'),
+                variations: []
+            };
+            $mealRow.find('.variation-row').each(function () {
+                const $dishVarRow = $(this);
+                let dishVariation: DishVariation = {
+                    title: $dishVarRow.find('.text-variation').text().trim(),
+                    slug: $dishVarRow.data('slug')
+                };
+                dish.variations.push(dishVariation);
+            });
+            dishes.push(dish);
+        });
+
+        return dishes;
+    }
+
+    /**
+     * @param $checkbox     Combined Dish Checkbox
+     * @param bookedDishIDs Dish IDs in booked combined meal
+     */
+    private static updateCombinedDish($checkbox: JQuery, bookedDishIDs: string[]) {
+        let $dishContainer = $checkbox.closest('.meal-row');
+
+        if (Array.isArray(bookedDishIDs) && (0 < bookedDishIDs.length)) {
+            let $mealContainer = $dishContainer.closest('.meal');
+            const dishes = ParticipationUpdateHandler.getCombinedMealDishes($mealContainer);
+            let dt = ParticipationUpdateHandler.getBookedDishTitles(bookedDishIDs, dishes);
+            if (0 < dt.length) {
+                // update dish description with titles of booked dishes
+                const bookedDishTitles = dt.map(dishTitle => $(`<div class="dish">${dishTitle}</div>`));
+                $dishContainer.find('.description .dish-combination').empty().append(...bookedDishTitles);
+                $dishContainer.find('.title').addClass('edit');
+                // update booked dish IDs in data attribute
+                $dishContainer.attr('data-booked-dishes', bookedDishIDs.join(','));
+            }
+
+            return;
+        }
+
+        let desc = $dishContainer.data('description');
+        $dishContainer.find('.description .dish-combination').empty().text(desc);
+        $dishContainer.find('.title').removeClass('edit');
+        $dishContainer.attr('data-booked-dishes', '');
+    }
+
+    private static getBookedDishTitles(dishIDs: string[], dishes: Dish[]|DishVariation[]) {
+        let dishTitles: string[] = [];
+        dishes.forEach(function(dish){
+            let idx = dishIDs.indexOf(dish.slug);
+            if (-1 < idx) {
+                dishTitles.push(dish.title);
+                dishIDs.slice(idx, 1);
+            } else if (Array.isArray(dish.variations) && 0 < dish.variations.length) {
+                let dvt = ParticipationUpdateHandler.getBookedDishTitles(dishIDs, dish.variations);
+                dishTitles.push(...dvt);
+            }
+        });
+
+        return dishTitles;
     }
 }

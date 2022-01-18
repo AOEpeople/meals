@@ -42,6 +42,8 @@ export class ParticipationToggleHandler extends AbstractParticipationToggleHandl
     public toggle($checkbox: JQuery, data?: {}) {
         let participationRequest;
         let requestData = data;
+        const url = $checkbox.attr('value');
+
         if ($checkbox.hasClass(ParticipationAction.JOIN) && undefined === requestData) {
             let slotSlug: string = $checkbox.closest('.meal').find('.slot-selector').val().toString();
             requestData = {
@@ -49,7 +51,7 @@ export class ParticipationToggleHandler extends AbstractParticipationToggleHandl
             }
         }
 
-        participationRequest = new ParticipationRequest($checkbox, requestData);
+        participationRequest = new ParticipationRequest(url, requestData);
 
         let handlerMethod;
         if ($checkbox.hasClass(ParticipationAction.SWAP)) {

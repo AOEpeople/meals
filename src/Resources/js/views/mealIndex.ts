@@ -29,7 +29,7 @@ export default class MealIndexView {
         // set handler for slot change event
         $('.meals-list .meal .slot-selector').on('change', this.handleChangeSlot);
         this.$participationCheckboxes.on('change', MealIndexView.handleParticipationUpdate);
-        $('.meals-list .meal .dish-combination.edit').on('click', this.handleCombinedMealEdit.bind(this));
+        $('.meals-list .meal .meal-row').on('click', ' .title.edit', this.handleCombinedMealEdit.bind(this));
     }
 
     private handleChangeSlot(event: JQuery.TriggeredEvent) {
@@ -77,7 +77,7 @@ export default class MealIndexView {
     }
 
     private handleCombinedMealEdit(event: JQuery.TriggeredEvent): void {
-        const $dishContainer = $(event.target).closest('.meal-row');
+        const $dishContainer = $(event.target).closest('.meal').find('.meal-row[data-combined="1"]');
         this.showMealConfigurator($dishContainer);
     }
 
@@ -186,10 +186,11 @@ export default class MealIndexView {
      */
     private updateCombinedDish($checkbox: JQuery, $dishes: Dish[], bookedDishIDs: string []) {
         let $dishContainer = $checkbox.closest('.meal-row');
-        let sdt = this.getBookedDishTitles(bookedDishIDs, $dishes);
-        if (0 < sdt.length) {
+        let bdt = this.getBookedDishTitles(bookedDishIDs, $dishes);
+        if (0 < bdt.length) {
             // update dish description with titles of booked dishes
-            $dishContainer.find('.description .dish-combination').text(sdt.join(', '));
+            const bookedDishTitles = bdt.map(dishTitle => $(`<div class="dish">${dishTitle}</div>`));
+            $dishContainer.find('.description .dish-combination').empty().append(...bookedDishTitles);
             // update booked dish IDs in data attribute
             $dishContainer.attr('data-booked-dishes', bookedDishIDs.join(','));
         }

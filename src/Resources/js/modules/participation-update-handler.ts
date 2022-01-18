@@ -205,10 +205,9 @@ export class ParticipationUpdateHandler {
             let dt = ParticipationUpdateHandler.getBookedDishTitles(bookedDishIDs, dishes);
             if (0 < dt.length) {
                 // update dish description with titles of booked dishes
-                $dishContainer
-                    .find('.description .dish-combination')
-                    .text(dt.join(', '))
-                    .addClass('edit');
+                const bookedDishTitles = dt.map(dishTitle => $(`<div class="dish">${dishTitle}</div>`));
+                $dishContainer.find('.description .dish-combination').empty().append(...bookedDishTitles);
+                $dishContainer.find('.title').addClass('edit');
                 // update booked dish IDs in data attribute
                 $dishContainer.attr('data-booked-dishes', bookedDishIDs.join(','));
             }
@@ -217,7 +216,8 @@ export class ParticipationUpdateHandler {
         }
 
         let desc = $dishContainer.data('description');
-        $dishContainer.find('.description .dish-combination').text(desc).removeClass('edit');
+        $dishContainer.find('.description .dish-combination').empty().text(desc);
+        $dishContainer.find('.title').removeClass('edit');
         $dishContainer.attr('data-booked-dishes', '');
     }
 

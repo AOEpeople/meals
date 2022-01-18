@@ -1,14 +1,14 @@
 {% set dish = meal.dish %}
 {% set combinedDish = '0' %}
 {% set combinedDishIDs = '' %}
-{% set combinedDishTitle = '' %}
+{% set bookedDishTitles = [] %}
 {% set dishDescription = dish.description|default('content.participation.dish.no_description'|trans({},'general')) %}
 
 {% if dish.isCombinedDish %}
     {% set combinedDish = '1' %}
     {% set bookedDishCombination = participationService.getBookedDishCombination(app.user.profile, meal) %}
     {% if bookedDishCombination|length > 0 %}
-        {% set combinedDishTitle = bookedDishCombination.toArray|map(d => d.title)|join(', ') %}
+        {% set bookedDishTitles = bookedDishCombination.toArray|map(d => d.title) %}
         {% set combinedDishIDs = bookedDishCombination.toArray|map(d => d.slug)|join(',') %}
     {% endif %}
 {% endif %}
@@ -19,19 +19,21 @@
      data-booked-dishes="{{ combinedDishIDs }}"
      data-join-url="{{ link(meal, 'join') }}"
      data-description="{{ dishDescription }}">
-        <div class="text">
-            <div class="title">
-                {{- dish.title -}}
-                {%- if dishService.isNew(dish) %}
-                    <span class="new-flag">{{ 'content.participation.dish.new'|trans({},'general') }}</span>
-                {% endif -%}
-            </div>
-            <div class="description">
-                <div class="text dish-combination{{ combinedDishIDs ? ' edit' }}">
-                    {{ combinedDishTitle|default(dishDescription) }}
-                </div>
-                <div class="text price">({{ 'header.navigation.costs'|trans({},'general')}} {{ meal.price|number_format(2, '.', ',') }} €)</div>
-            </div>
+    <div class="title{{ bookedDishTitles|length ? ' edit' }}">
+        {{- dish.title -}}
+        {%- if dishService.isNew(dish) %}
+            <span class="new-flag">{{ 'content.participation.dish.new'|trans({},'general') }}</span>
+        {% endif -%}
+    </div>
+    <div class="description">
+        <div class="text dish-combination">
+            {% for dishTitle in bookedDishTitles %}
+                <div class="dish">{{ dishTitle }}</div>
+            {% else %}
+                {{ dishDescription }}
+            {% endfor %}
         </div>
+        <div class="text price">{{ meal.price|number_format(2, '.', ',') }} €</div>
+    </div>
     {% include 'MealzMealBundle:Meal/partials:mealActionsWrapper.html.twig' %}
 </div>

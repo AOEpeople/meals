@@ -139,6 +139,7 @@
   .meal-row {
     position: relative;
     padding: 10px 15px;
+    overflow: auto;
 
     &:not(:last-child) {
       border-bottom: 2px solid $meal-border-color;
@@ -161,6 +162,22 @@
       font-weight: bold;
       font-family: $font-bold;
       line-height: 1.5;
+
+      &.edit:hover {
+        cursor: pointer;
+      }
+
+      &.edit::after {
+        display: inline-block;
+        width: 13px;
+        height: 12px;
+        margin-left: 5px;
+        content: "\270f";
+        font-size: 14px;
+        font-family: "Glyphicons Halflings", sans-serif;
+        vertical-align: middle;
+        line-height: 13px;
+      }
     }
 
     .text .new-flag {
@@ -172,23 +189,30 @@
     }
 
     .description {
-      .dish-combination {
-        &.edit:hover {
-          cursor: pointer;
-        }
+      float: left;
+      width: 75%;
 
-        &.edit::after {
-          display: inline-block;
-          width: 13px;
-          height: 12px;
-          margin-left: 5px;
-          content: "\270f";
-          font-size: 14px;
-          font-family: "Glyphicons Halflings", sans-serif;
-          vertical-align: middle;
-          line-height: 13px;
+      .dish-combination {
+        float: left;
+        width: 90%;
+
+        .dish {
+          margin-bottom: 5px;
         }
       }
+
+      .price {
+        padding: 0;
+        float: right;
+        width: 10%;
+        font-size: 12px;
+      }
+    }
+
+    .wrapper-meal-actions {
+      float: right;
+      margin-top: -10px;
+      position: relative;
     }
   }
 

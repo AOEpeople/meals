@@ -77,7 +77,19 @@ export default class MealIndexView {
     }
 
     private handleCombinedMealEdit(event: JQuery.TriggeredEvent): void {
-        const $dishContainer = $(event.target).closest('.meal').find('.meal-row[data-combined="1"]');
+        let mealTitle = $(event.target);
+        let mealContainer = mealTitle.closest('.meal');
+        const mealLockDateTime = Date.parse(mealContainer.data('lockDateTime'));
+        if (mealLockDateTime <= Date.now()) {
+            const errMsg = mealContainer.closest('.weeks').data('errUpdateNotPossible');
+            if (errMsg.length > 0) {
+                alert(errMsg);
+            }
+            mealTitle.removeClass('edit');
+            return;
+        }
+
+        const $dishContainer = mealContainer.find('.meal-row[data-combined="1"]');
         this.showMealConfigurator($dishContainer);
     }
 

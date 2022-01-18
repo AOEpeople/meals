@@ -23,6 +23,7 @@ error:
   meal:
     has_participants: There are already participants for "%dish%" on %day%.
     join_not_allowed: Sorry, it's not possible to book "%dish%" anymore.
+    update_not_allowed: Sorry, making changes to this meal in no longer possible.
     variation_required: Please select a variation!
 participation:
   successful: Meal participation successful

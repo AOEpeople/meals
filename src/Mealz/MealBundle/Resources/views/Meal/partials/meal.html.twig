@@ -14,7 +14,7 @@
     {% endif %}
 {% endif %}
 
-<div class="meal-row {{ dish.isCombinedDish ? 'combined-meal' }} "
+<div class="meal-row{{ dish.isCombinedDish ? ' combined-meal' }} "
     {%- if available -%}
         data-id="{{ participant ? participant.id }}"
         data-combined="{{ combinedDish }}"

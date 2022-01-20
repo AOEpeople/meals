@@ -139,12 +139,13 @@ class MealController extends BaseController
     private function generateResponse(string $route, string $action, Meal $meal, Participant $participant): JsonResponse
     {
         $bookedDishes = [];
-        $partCombinedDishes = $participant->getCombinedDishes();
-        if (0 < $partCombinedDishes->count()) {
-            $bookedDishes = $partCombinedDishes->map(fn (Dish $dish) => $dish->getSlug())->toArray();
+        $dishes = $participant->getCombinedDishes();
+        if (0 < $dishes->count()) {
+            $bookedDishes = array_map(fn (Dish $dish) => $dish->getSlug(), $dishes->toArray());
         }
 
         return new JsonResponse([
+            'id' => $participant->getId(),
             'participantsCount' => $meal->getParticipants()->count(),
             'url' => $this->generateUrl(
                 $route,

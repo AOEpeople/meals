@@ -82,6 +82,10 @@ MealzMealBundle_Slot_delete:
     defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::deleteSlot }
     methods: [DELETE]
 
+MealzMealBundle_Participant_update:
+    path:  /meal/participation/{participant}/update
+    defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::update }
+
 MealzMealBundle_Participant_delete:
     path:  /menu/meal/{participant}/delete
     defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::delete }

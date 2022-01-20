@@ -11,6 +11,9 @@ class ParticipationException extends Exception
 {
     public const ERR_MEAL_NOT_BOOKABLE = 1;
     public const ERR_GUEST_REG_MEAL_NOT_FOUND = 2;
+    public const ERR_COMBI_MEAL_INVALID_DISH_COUNT = 3;
+    public const ERR_MEAL_UPDATE_NOT_ALLOWED = 4;
+    public const ERR_INVALID_OPERATION = 5;
 
     private array $context;
 
@@ -24,5 +27,10 @@ class ParticipationException extends Exception
     public function getContext(): array
     {
         return $this->context;
+    }
+
+    public function addContext(array $context): void
+    {
+        $this->context = array_merge($this->context, $context);
     }
 }

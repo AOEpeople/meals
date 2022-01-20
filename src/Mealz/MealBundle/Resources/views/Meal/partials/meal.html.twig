@@ -2,6 +2,7 @@
 {% set combinedDish = '0' %}
 {% set combinedDishIDs = '' %}
 {% set bookedDishTitles = [] %}
+{% set participant = meal.getParticipant(app.user.profile) %}
 {% set dishDescription = dish.description|default('content.participation.dish.no_description'|trans({},'general')) %}
 
 {% if dish.isCombinedDish %}
@@ -13,8 +14,9 @@
     {% endif %}
 {% endif %}
 
-<div class="meal-row combined-meal"
+<div class="meal-row{{ combinedDish === '1' ? 'combined-meal' }} "
     {%- if available -%}
+        data-id="{{ participant ? participant.id }}"
         data-combined="{{ combinedDish }}"
         data-slug="{{ dish.slug }}"
         data-booked-dishes="{{ combinedDishIDs }}"

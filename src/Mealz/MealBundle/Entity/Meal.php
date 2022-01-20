@@ -225,6 +225,11 @@ class Meal
         return $totalParticipation;
     }
 
+    public function isCombinedMeal(): bool
+    {
+        return $this->dish && $this->dish->isCombinedDish();
+    }
+
     public function __toString()
     {
         return $this->getDateTime()->format('Y-m-d H:i:s') . ' ' . $this->getDish();

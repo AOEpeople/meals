@@ -1,3 +1,4 @@
+import {ToggleResponse} from "./participation-response-handler";
 import {ParticipantCounter, ParticipationState} from "./participant-counter";
 import {Labels, TooltipLabel} from "./labels";
 import {Dish, DishVariation} from "./combined-meal-dialog";
@@ -81,12 +82,13 @@ export class ParticipationUpdateHandler {
         this.updateCheckBoxWrapper($checkbox);
     }
 
-    public static toggleAction($checkbox: JQuery, actionText: string, url: string, participantsCount: number, bookedDishIDs: string[]) {
+    // public static toggleAction($checkbox: JQuery, actionText: string, url: string, participantsCount: number, bookedDishIDs: string[]) {
+    public static toggleAction($checkbox: JQuery, res: ToggleResponse) {
         // change
         $checkbox.prop('checked', !$checkbox.is(':checked'));
-        let nextAction = ('deleted' === actionText) ? ParticipationAction.JOIN : ParticipationAction.DELETE;
-        this.changeCheckboxAttributes($checkbox, nextAction, url);
-        this.changeParticipationCounter($checkbox, ParticipationState.DEFAULT, participantsCount);
+        let nextAction = ('deleted' === res.actionText) ? ParticipationAction.JOIN : ParticipationAction.DELETE;
+        this.changeCheckboxAttributes($checkbox, nextAction, res.url);
+        this.changeParticipationCounter($checkbox, ParticipationState.DEFAULT, res.participantsCount);
 
         // update
         this.updateCheckboxEnabled($checkbox);
@@ -97,7 +99,7 @@ export class ParticipationUpdateHandler {
         $slotBox.addClass('tmp-disabled').prop('disabled', true)
             .parent().children('.loader').css('visibility', 'visible');
 
-        ParticipationUpdateHandler.updateCombinedDish($checkbox, bookedDishIDs);
+        ParticipationUpdateHandler.updateCombinedDish($checkbox, res.id, res.bookedDishes);
     }
 
     public static changeToOfferIsTaken($checkbox: JQuery) {
@@ -194,9 +196,10 @@ export class ParticipationUpdateHandler {
 
     /**
      * @param $checkbox     Combined Dish Checkbox
+     * @param participantID Participation ID for booked combined meal
      * @param bookedDishIDs Dish IDs in booked combined meal
      */
-    private static updateCombinedDish($checkbox: JQuery, bookedDishIDs: string[]) {
+    private static updateCombinedDish($checkbox: JQuery, participantID: number, bookedDishIDs: string[]) {
         let $dishContainer = $checkbox.closest('.meal-row');
 
         if (Array.isArray(bookedDishIDs) && (0 < bookedDishIDs.length)) {
@@ -209,6 +212,7 @@ export class ParticipationUpdateHandler {
                 $dishContainer.find('.description .dish-combination').empty().append(...bookedDishTitles);
                 $dishContainer.find('.title').addClass('edit');
                 // update booked dish IDs in data attribute
+                $dishContainer.attr('data-id', participantID);
                 $dishContainer.attr('data-booked-dishes', bookedDishIDs.join(','));
             }
 
@@ -218,6 +222,7 @@ export class ParticipationUpdateHandler {
         let desc = $dishContainer.data('description');
         $dishContainer.find('.description .dish-combination').empty().text(desc);
         $dishContainer.find('.title').removeClass('edit');
+        $dishContainer.attr('data-id', '');
         $dishContainer.attr('data-booked-dishes', '');
     }
 

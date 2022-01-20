@@ -11,6 +11,7 @@ use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\ParticipantRepository;
 use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Entity\SlotRepository;
+use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -43,6 +44,8 @@ class ParticipationService
 
     /**
      * @psalm-return array{participant: Participant, offerer: Profile|null}|null
+     *
+     * @throws ParticipationException
      */
     public function join(Profile $profile, Meal $meal, ?Slot $slot = null, array $dishSlugs = []): ?array
     {
@@ -63,6 +66,21 @@ class ParticipationService
         }
 
         return null;
+    }
+
+    /**
+     * Update combined meal dishes for a participant.
+     *
+     * @param string[] $dishSlugs
+     *
+     * @throws ParticipationException
+     */
+    public function update(Participant $participant, array $dishSlugs): void
+    {
+        $this->updateParticipation($participant, $dishSlugs);
+
+        $this->em->persist($participant);
+        $this->em->flush();
     }
 
     public function updateSlot(Profile $profile, DateTime $date, Slot $slot): void
@@ -99,6 +117,8 @@ class ParticipationService
 
     /**
      * Creates a new participation for user $profile in meal $meal in slot $slot.
+     *
+     * @throws ParticipationException
      */
     private function create(Profile $profile, Meal $meal, ?Slot $slot = null, array $dishSlugs = []): ?Participant
     {

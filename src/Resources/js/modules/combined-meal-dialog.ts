@@ -109,6 +109,11 @@ interface CombinedMealDialogOptions {
     ok: (data: any) => void
 }
 
+export interface SerializedFormData {
+    name: string;
+    value: string;
+}
+
 interface ElementAttributes {
     wrapperClass: string
 }

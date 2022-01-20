@@ -192,6 +192,11 @@ class Participant
         return $this->combinedDishes;
     }
 
+    public function setCombinedDishes(DishCollection $collection): void
+    {
+        $this->combinedDishes = $collection;
+    }
+
     public function __toString()
     {
         return $this->getMeal() . ' ' . $this->getProfile();

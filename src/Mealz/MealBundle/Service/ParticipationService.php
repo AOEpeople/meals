@@ -75,7 +75,7 @@ class ParticipationService
      *
      * @throws ParticipationException
      */
-    public function update(Participant $participant, array $dishSlugs): void
+    public function updateCombinedMeal(Participant $participant, array $dishSlugs): void
     {
         $this->updateParticipation($participant, $dishSlugs);
 

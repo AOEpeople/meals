@@ -27,12 +27,12 @@ use Symfony\Component\Translation\Translator;
  */
 class ParticipantController extends BaseController
 {
-    public function update(Request $request, Participant $participant, ParticipationService $participationSrv): JsonResponse
+    public function updateCombinedMeal(Request $request, Participant $participant, ParticipationService $participationSrv): JsonResponse
     {
         $dishSlugs = $request->request->get('dishes', []);
 
         try {
-            $participationSrv->update($participant, $dishSlugs);
+            $participationSrv->updateCombinedMeal($participant, $dishSlugs);
         } catch (ParticipationException $pex) {
             return new JsonResponse(['error' => $pex->getMessage()], 422);
         } catch (Exception $exc) {

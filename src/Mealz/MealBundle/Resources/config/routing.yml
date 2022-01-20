@@ -85,6 +85,7 @@ MealzMealBundle_Slot_delete:
 MealzMealBundle_Participant_update:
     path:  /meal/participation/{participant}/update
     defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::updateCombinedMeal }
+    methods: [POST]
 
 MealzMealBundle_Participant_delete:
     path:  /menu/meal/{participant}/delete

@@ -204,7 +204,7 @@
       .price {
         float: right;
         width: 10%;
-        padding: 0;
+        padding: 1px 0;
         font-size: 12px;
       }
     }
@@ -212,7 +212,7 @@
     .wrapper-meal-actions {
       position: relative;
       float: right;
-      margin-top: -10px;
+      margin-top: -2px;
     }
   }
 
@@ -241,8 +241,17 @@
     }
   }
 
-  .variation-row {
+  .meal-row .variation-row {
     margin-top: -3px;
+
+    .description .price {
+      padding: 9px 0;
+    }
+
+    .participants,
+    .action {
+      padding-top: 8px;
+    }
   }
 
   .text,
@@ -333,8 +342,9 @@
   }
 
   .action {
+    padding-top: 0;
+    margin-top: -1px;
     width: 20%;
-    padding-top: 4px;
 
     @include breakpoint(medium) {
       width: 50%;
@@ -347,7 +357,7 @@
 }
 
 .participants {
-  margin-top: 5px;
+  margin-top: 0;
 
   .participants-count {
     position: relative;
@@ -494,7 +504,6 @@
   }
 
   .action {
-    padding-top: 4px;
     padding-left: 8px;
   }
 }

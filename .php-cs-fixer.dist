@@ -15,7 +15,8 @@ return $config
                 'class', 'function', 'const',
             ],
             'sort_algorithm' => 'alpha',
-        ]
+        ],
+        'single_line_throw' => false,
     ])
     ->setUsingCache(false)
     ->setFinder($finder);

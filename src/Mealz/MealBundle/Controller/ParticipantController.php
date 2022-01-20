@@ -47,7 +47,7 @@ class ParticipantController extends BaseController
                 'bookedDishes' => array_map(
                     static fn (Dish $dish) => $dish->getSlug(),
                     $participant->getCombinedDishes()->toArray()
-                )
+                ),
             ],
             200
         );

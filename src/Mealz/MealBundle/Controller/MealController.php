@@ -14,6 +14,7 @@ use App\Mealz\MealBundle\Service\DishService;
 use App\Mealz\MealBundle\Service\Mailer;
 use App\Mealz\MealBundle\Service\MealService;
 use App\Mealz\MealBundle\Service\Notification\NotifierInterface;
+use App\Mealz\MealBundle\Service\OfferService;
 use App\Mealz\MealBundle\Service\ParticipationCountService;
 use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\UserBundle\Entity\Profile;
@@ -212,36 +213,7 @@ class MealController extends BaseController
      */
     public function getOffers(Meal $meal): JsonResponse
     {
-        $offers = [];
-        /** @var Participant $participant */
-        foreach ($meal->getParticipants() as $participant) {
-            if (!$participant->isPending()) {
-                continue;
-            }
-
-            $dishes = [];
-            $combinedDishes = $participant->getCombinedDishes();
-            /** @var Dish $dish */
-            foreach ($combinedDishes as $dish) {
-                $dishes[$dish->getSlug()] = [
-                    'slug' => $dish->getSlug(),
-                    'title' => $dish->getTitle(),
-                ];
-            }
-
-            $dishSlugs = array_keys($dishes);
-            sort($dishSlugs, SORT_NATURAL);
-            $combinationID = implode(',', $dishSlugs);
-            if (isset($offers[$combinationID])) {
-                ++$offers[$combinationID]['count'];
-            } else {
-                $offers[$combinationID] = [
-                    'id' => $combinationID,
-                    'count' => 1,
-                    'dishes' => array_values($dishes),
-                ];
-            }
-        }
+        $offers = OfferService::getOffers($meal);
 
         if (empty($offers)) {
             return new JsonResponse(null, 404);

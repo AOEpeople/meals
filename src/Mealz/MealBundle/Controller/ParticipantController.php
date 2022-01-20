@@ -44,7 +44,7 @@ class ParticipantController extends BaseController
         return new JsonResponse(
             [
                 'actionText' => 'updated',
-                'bookedDishes' => array_map(
+                'bookedDishSlugs' => array_map(
                     static fn (Dish $dish) => $dish->getSlug(),
                     $participant->getCombinedDishes()->toArray()
                 ),

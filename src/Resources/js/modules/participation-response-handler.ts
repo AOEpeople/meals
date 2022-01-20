@@ -1,10 +1,10 @@
 import {ParticipationUpdateHandler} from "./participation-update-handler";
 
 export interface ParticipationResponse {
+    actionText: string;
 }
 
 export interface ActionResponse extends ParticipationResponse {
-    actionText: string;
     url: string;
 }
 

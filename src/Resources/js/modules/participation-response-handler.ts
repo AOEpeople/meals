@@ -14,13 +14,20 @@ interface SwapResponse extends ActionResponse {
 
 export interface ToggleResponse extends SwapResponse {
     participantsCount: number;
-    bookedDishes: string[];
+    bookedDishSlugs: string[];
 }
 
 
 export class ParticipationResponseHandler {
     public static onSuccessfulToggle($checkbox: JQuery, response: ToggleResponse) {
-        ParticipationUpdateHandler.toggleAction($checkbox, response);
+        const toggleData = {
+            participantID: response.id,
+            actionText: response.actionText,
+            url: response.url,
+            participantsCount: response.participantsCount,
+            bookedDishSlugs: response.bookedDishSlugs,
+        };
+        ParticipationUpdateHandler.toggleAction($checkbox, toggleData);
     }
 
     public static onSuccessfulAcceptOffer($checkbox: JQuery, response: ToggleResponse) {

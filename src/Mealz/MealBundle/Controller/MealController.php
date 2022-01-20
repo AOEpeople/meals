@@ -138,10 +138,10 @@ class MealController extends BaseController
 
     private function generateResponse(string $route, string $action, Meal $meal, Participant $participant): JsonResponse
     {
-        $bookedDishes = [];
+        $bookedDishSlugs = [];
         $dishes = $participant->getCombinedDishes();
         if (0 < $dishes->count()) {
-            $bookedDishes = array_map(fn (Dish $dish) => $dish->getSlug(), $dishes->toArray());
+            $bookedDishSlugs = array_map(fn (Dish $dish) => $dish->getSlug(), $dishes->toArray());
         }
 
         return new JsonResponse([
@@ -154,7 +154,7 @@ class MealController extends BaseController
                 ]
             ),
             'actionText' => $action,
-            'bookedDishes' => $bookedDishes,
+            'bookedDishSlugs' => $bookedDishSlugs,
         ]);
     }
 

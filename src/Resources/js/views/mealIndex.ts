@@ -228,6 +228,6 @@ export default class MealIndexView {
     }
 }
 
-interface UpdateResponse extends ParticipationResponse{
+interface UpdateResponse extends ParticipationResponse {
     bookedDishes: string[]    // slugs of selected dishes in combined meal
 }

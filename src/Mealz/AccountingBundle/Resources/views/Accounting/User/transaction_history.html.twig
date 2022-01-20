@@ -40,7 +40,14 @@
                             {%  if transaction_record.meal.dish.parent != null %}
                                 {{ transaction_record.meal.dish.parent.title }} - 
                             {% endif %}
-                            {{ transaction_record.meal.dish.title }}
+                            {% if transaction_record.meal.dish.isCombinedDish %}
+                                {{ transaction_record.meal.dish.title }}:
+                                {% for dish in transaction_record.combinedDishes %}
+                                    {{ dish.title}}{{ not loop.last ? ', ' }}
+                                {% endfor %}
+                            {% else %}
+                                {{ transaction_record.meal.dish.title }}
+                            {% endif %}
                         </td>
                         <td class="table-data"><span>-</span> {{ transaction_record.meal.price|number_format(2, '.', ',') }} €</td>
                     </tr>

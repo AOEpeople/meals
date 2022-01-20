@@ -25,13 +25,13 @@ class AccountingBookController extends BaseController
 
         // Get first and last day of previous month
         $minDateFirst = new DateTime('first day of previous month');
-        $minDateFirst->setTime(0, 0, 0);
+        $minDateFirst->setTime(0, 0);
         $maxDateFirst = new DateTime('last day of previous month');
         $maxDateFirst->setTime(23, 59, 59);
 
         // Get first and last day of actual month
         $minDate = new DateTime('first day of this month');
-        $minDate->setTime(0, 0, 0);
+        $minDate->setTime(0, 0);
         $maxDate = new DateTime('today');
         $maxDate->setTime(23, 59, 59);
 
@@ -46,7 +46,7 @@ class AccountingBookController extends BaseController
         // Get array of users with their amount of transactions in actual month
         $users = $transactionRepo->findUserDataAndTransactionAmountForGivenPeriod($minDate, $maxDate);
 
-        return $this->render('MealzAccountingBundle:Accounting\\Admin:accountingBook.html.twig', [
+        return $this->render('MealzAccountingBundle:Accounting/Admin:accountingBook.html.twig', [
             'headingFirst' => $headingFirst,
             'heading' => $heading,
             'usersFirst' => $usersFirst,
@@ -73,7 +73,7 @@ class AccountingBookController extends BaseController
         if (null === $dateRange) {
             // Get first and last day of previous month
             $minDateFirst = new DateTime('first day of previous month');
-            $minDateFirst->setTime(0, 0, 0);
+            $minDateFirst->setTime(0, 0);
             $maxDateFirst = new DateTime('last day of previous month');
             $maxDateFirst->setTime(23, 59, 59);
 
@@ -83,7 +83,7 @@ class AccountingBookController extends BaseController
             // Get first and last day of actual month
             $minDate = new DateTime('first day of this month');
             $maxDate = new DateTime('today');
-            $minDate->setTime(0, 0, 0);
+            $minDate->setTime(0, 0);
             $maxDate->setTime(23, 59, 59);
 
             $transactionsFirst = $this->getTransactionRepository()->findAllTransactionsInDateRange($minDateFirst, $maxDateFirst);

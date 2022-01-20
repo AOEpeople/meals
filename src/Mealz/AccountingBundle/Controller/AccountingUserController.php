@@ -4,9 +4,7 @@ namespace App\Mealz\AccountingBundle\Controller;
 
 use App\Mealz\AccountingBundle\Service\Wallet;
 use App\Mealz\MealBundle\Controller\BaseController;
-use DateTime;
 use Symfony\Component\Form\Form;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class AccountingUserController extends BaseController
@@ -19,75 +17,6 @@ class AccountingUserController extends BaseController
             'walletBalance' => $this->getWallet()->getBalance($this->getProfile()),
             'goForm' => $this->getDoorman()->isKitchenStaff() ? $this->generateGoActionForm()->createView() : null,
         ]);
-    }
-
-    public function listParticipationAction(Request $request): Response
-    {
-        $form = $this->generateTimePeriodForm();
-        $formView = $form->createView();
-
-        $startDay = new DateTime('-1 month 00:00:00');
-        $endDay = new DateTime('now');
-
-        // handle form submission
-        if ($request->isMethod('POST')) {
-            $form->handleRequest($request);
-
-            if ($form->isValid()) {
-                $startDay = $form->get('from')->getData();
-                $endDay = $form->get('to')->getData();
-            }
-        }
-
-        return $this->render('MealzAccountingBundle:Accounting/User:list_participation.html.twig', [
-            'startDay' => $startDay,
-            'endDay' => $endDay,
-            'participations' => $this->getParticipantRepository()->getParticipantsOnDays($startDay, $endDay, $this->getProfile()),
-            'timePeriodForm' => $formView,
-        ]);
-    }
-
-    public function listTransactionAction(Request $request): Response
-    {
-        $form = $this->generateTimePeriodForm();
-        $formView = $form->createView();
-
-        $startDay = new DateTime('-6 months 00:00:00');
-        $endDay = new DateTime('+1 month');
-
-        // handle form submission
-        if ($request->isMethod('POST')) {
-            $form->handleRequest($request);
-
-            if ($form->isValid()) {
-                $startDay = $form->get('from')->getData();
-                $endDay = $form->get('to')->getData();
-            }
-        }
-
-        $endDay->setTime(23, 59, 59);
-
-        return $this->render('MealzAccountingBundle:Accounting/User:list_transaction.html.twig', [
-            'startDay' => $startDay,
-            'endDay' => $endDay,
-            'transactions' => $this->getTransactionRepository()->getSuccessfulTransactionsOnDays($startDay, $endDay, $this->getProfile()),
-            'timePeriodForm' => $formView,
-        ]);
-    }
-
-    /**
-     * Generate a form where you can select a time period
-     * for the participation list.
-     *
-     * @return Form
-     */
-    private function generateTimePeriodForm()
-    {
-        return $this->createFormBuilder()
-            ->add('from', \Symfony\Component\Form\Extension\Core\Type\DateType::class, ['widget' => 'single_text'])
-            ->add('to', \Symfony\Component\Form\Extension\Core\Type\DateType::class, ['widget' => 'single_text'])
-            ->add('send', \Symfony\Component\Form\Extension\Core\Type\SubmitType::class)
-            ->getForm();
     }
 
     /**

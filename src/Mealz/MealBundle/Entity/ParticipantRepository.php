@@ -7,6 +7,7 @@ use App\Mealz\UserBundle\Entity\Role;
 use DateTime;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
+use Doctrine\ORM\QueryBuilder;
 use PDO;
 
 class ParticipantRepository extends EntityRepository
@@ -38,8 +39,8 @@ class ParticipantRepository extends EntityRepository
             ->orderBy('up.name', 'ASC')
             ->addOrderBy('m.dateTime', 'ASC')
             ->setParameters([
-                'startDate' => (clone $startDate)->setTime(0, 0),
-                'endDate' => (clone $endDate)->setTime(23, 59, 59),
+                'startDate' => $startDate,
+                'endDate' => $endDate,
             ]);
 
         if (null !== $profile) {
@@ -91,11 +92,9 @@ class ParticipantRepository extends EntityRepository
     }
 
     /**
-     * @param int $limit
-     *
      * @return Participant[]
      */
-    public function getLastAccountableParticipations(Profile $profile, $limit = null)
+    public function getLastAccountableParticipations(Profile $profile, ?int $limit = null): array
     {
         $queryBuilder = $this->getQueryBuilderWithOptions(
             [
@@ -119,10 +118,7 @@ class ParticipantRepository extends EntityRepository
         return $queryBuilder->getQuery()->execute();
     }
 
-    /**
-     * @return array
-     */
-    public function findCostsGroupedByUserGroupedByMonth()
+    public function findCostsGroupedByUserGroupedByMonth(): array
     {
         $costs = $this->findCostsPerMonthPerUser();
 
@@ -150,12 +146,7 @@ class ParticipantRepository extends EntityRepository
         return $result;
     }
 
-    /**
-     * @param mixed $participations
-     *
-     * @return array
-     */
-    public function groupParticipantsByName($participations)
+    public function groupParticipantsByName(array $participations): array
     {
         $result = [];
 
@@ -225,11 +216,9 @@ class ParticipantRepository extends EntityRepository
     }
 
     /**
-     * @param array $options
-     *
      * @return mixed
      */
-    public function getParticipantsOnCurrentDay($options = [])
+    public function getParticipantsOnCurrentDay(array $options = [])
     {
         $options = array_merge(
             $options,
@@ -250,10 +239,7 @@ class ParticipantRepository extends EntityRepository
         return $this->sortParticipantsByName($participants);
     }
 
-    /**
-     * @return int
-     */
-    protected function compareNameOfParticipants(Participant $participant1, Participant $participant2)
+    protected function compareNameOfParticipants(Participant $participant1, Participant $participant2): int
     {
         $result = strcasecmp($participant1->getProfile()->getName(), $participant2->getProfile()->getName());
 
@@ -270,10 +256,8 @@ class ParticipantRepository extends EntityRepository
 
     /**
      * @param $options
-     *
-     * @return \Doctrine\ORM\QueryBuilder
      */
-    protected function getQueryBuilderWithOptions($options)
+    protected function getQueryBuilderWithOptions($options): QueryBuilder
     {
         $options = array_merge($this->defaultOptions, $options);
 
@@ -311,10 +295,8 @@ class ParticipantRepository extends EntityRepository
      * Gets the aggregated monthly cost of all the participants.
      *
      * Guests are currently excluded from the result.
-     *
-     * @return array
      */
-    private function findCostsPerMonthPerUser()
+    private function findCostsPerMonthPerUser(): array
     {
         $queryBuilder = $this->createQueryBuilder('p');
         $queryBuilder->select('u.username, u.name, u.firstName, u.hidden, SUBSTRING(m.dateTime, 1, 7) AS yearMonth, SUM(m.price) AS costs');
@@ -343,30 +325,6 @@ class ParticipantRepository extends EntityRepository
         $queryBuilder->setParameters(['now' => date('Y-m-d H:i:s'), 'role_sid' => Role::ROLE_GUEST]);
 
         return $queryBuilder->getQuery()->getArrayResult();
-    }
-
-    /**
-     * Returns meals that are being offered, ordered by the time they were offered.
-     *
-     * @param $mealId
-     *
-     * @return array
-     */
-    public function findByOffer($mealId)
-    {
-        $queryBuilder = $this->createQueryBuilder('a');
-        $queryBuilder->where(
-            $queryBuilder->expr()->not(
-                $queryBuilder->expr()->eq('a.' . 'offeredAt', '?1')
-            ),
-            $queryBuilder->expr()->eq('a.' . 'meal', '?2')
-        );
-        $queryBuilder->setParameter(1, 0);
-        $queryBuilder->setParameter(2, $mealId);
-        $queryBuilder->orderBy('a.offeredAt', 'asc');
-
-        return $queryBuilder->getQuery()
-            ->getResult();
     }
 
     /**

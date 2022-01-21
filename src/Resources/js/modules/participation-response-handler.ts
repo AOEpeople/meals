@@ -1,4 +1,4 @@
-import {ParticipationUpdateHandler} from "./participation-update-handler";
+import {ParticipationUpdateHandler, ToggleData} from "./participation-update-handler";
 
 export interface ParticipationResponse {
     actionText: string;
@@ -20,7 +20,7 @@ export interface ToggleResponse extends SwapResponse {
 
 export class ParticipationResponseHandler {
     public static onSuccessfulToggle($checkbox: JQuery, response: ToggleResponse) {
-        const toggleData = {
+        const toggleData: ToggleData = {
             participantID: response.id,
             actionText: response.actionText,
             url: response.url,

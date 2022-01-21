@@ -14,6 +14,9 @@ use Exception;
 
 class LoadTransactions extends Fixture implements OrderedFixtureInterface
 {
+    private const USER_WITH_TRANSACTION = 'alice.meals';
+    private const USER_WITHOUT_TRANSACTION = 'john.meals';
+
     /**
      * Constant to declare load order of fixture.
      */
@@ -31,8 +34,17 @@ class LoadTransactions extends Fixture implements OrderedFixtureInterface
         for ($i = 0; $i < 3; ++$i) {
             $randomUsers = $this->getRandomUsers();
             foreach ($randomUsers as $user) {
-                $this->addTransaction($user, random_int(500, 1200) / 100);
-                $this->addLastMonthTransaction($user, random_int(500, 1000) / 100);
+                if (self::USER_WITHOUT_TRANSACTION !== $user->getUsername()) {
+                    $this->addTransaction($user, random_int(500, 1200) / 100);
+                    $this->addLastMonthTransaction($user, random_int(500, 1000) / 100);
+                }
+            }
+        }
+
+        foreach ($this->referenceRepository->getReferences() as $reference) {
+            if ($reference instanceof Profile && self::USER_WITH_TRANSACTION === $reference->getUsername()) {
+                $this->addTransaction($reference, random_int(500, 1200) / 100);
+                $this->addLastMonthTransaction($reference, random_int(500, 1000) / 100);
             }
         }
 

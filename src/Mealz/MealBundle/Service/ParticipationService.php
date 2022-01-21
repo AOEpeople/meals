@@ -77,7 +77,20 @@ class ParticipationService
      */
     public function updateCombinedMeal(Participant $participant, array $dishSlugs): void
     {
-        $this->updateParticipation($participant, $dishSlugs);
+        if (!$participant->getMeal()->isOpen()) {
+            throw new ParticipationException(
+                'expired participation; meal update not allowed',
+                ParticipationException::ERR_PARTICIPATION_EXPIRED
+            );
+        }
+        if ($this->isParticipationLocked($participant)) {
+            throw new ParticipationException(
+                'locked participation; meal update not allowed',
+                ParticipationException::ERR_UPDATE_LOCKED_PARTICIPATION
+            );
+        }
+
+        $this->updateCombinedMealDishes($participant, $dishSlugs);
 
         $this->em->persist($participant);
         $this->em->flush();
@@ -324,5 +337,12 @@ class ParticipationService
         }
 
         return $participant->getCombinedDishes();
+    }
+
+    private function isParticipationLocked(Participant $participant): bool
+    {
+        $now = new DateTime('now');
+
+        return $now > $participant->getMeal()->getLockDateTime();
     }
 }

@@ -225,6 +225,13 @@ class Meal
         return $totalParticipation;
     }
 
+    public function isOpen(): bool
+    {
+        $now = new DateTime();
+
+        return $now > $this->getDateTime();
+    }
+
     public function isCombinedMeal(): bool
     {
         return $this->dish && $this->dish->isCombinedDish();

@@ -111,7 +111,7 @@ trait ParticipationServiceTrait
         }
 
         if ($meal->isCombinedMeal()) {
-            $this->updateParticipation($participant, $dishSlugs);
+            $this->updateCombinedMealDishes($participant, $dishSlugs);
         }
 
         return $participant;
@@ -120,7 +120,7 @@ trait ParticipationServiceTrait
     /**
      * @throws ParticipationException
      */
-    private function updateParticipation(Participant $participant, array $dishSlugs): void
+    private function updateCombinedMealDishes(Participant $participant, array $dishSlugs): void
     {
         $meal = $participant->getMeal();
 

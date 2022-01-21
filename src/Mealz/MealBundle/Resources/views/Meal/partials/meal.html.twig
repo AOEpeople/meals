@@ -14,13 +14,12 @@
     {% endif %}
 {% endif %}
 
-<div class="meal-row{{ dish.isCombinedDish ? ' combined-meal' }} "
-    {%- if available -%}
+<div class="meal-row{{ dish.isCombinedDish ? ' combined-meal' }}"
+    {%- if meal.open -%}
         data-id="{{ participant ? participant.id }}"
         data-combined="{{ combinedDish }}"
         data-slug="{{ dish.slug }}"
         data-booked-dishes="{{ combinedDishIDs }}"
-        data-join-url="{{ link(meal, 'join') }}"
         data-description="{{ dishDescription }}"
     {%- endif -%}
     >

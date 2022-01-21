@@ -229,7 +229,7 @@ class Meal
     {
         $now = new DateTime();
 
-        return $now > $this->getDateTime();
+        return $this->getDateTime() > $now;
     }
 
     public function isCombinedMeal(): bool

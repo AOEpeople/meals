@@ -33,6 +33,10 @@ class CombinedMealService
         $update = false;
         /** @var Day $day */
         foreach ($week->getDays() as $day) {
+            if (empty($day->getMeals())) {
+                continue;
+            }
+
             $combinedMeal = null;
             $baseMeals = []; // NOTE: in case of variations, we only need the parent
             /** @var Meal $meal */

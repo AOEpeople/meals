@@ -19,6 +19,11 @@ class OfferService
                 continue;
             }
 
+            if (!$meal->getDish()->isCombinedDish()) {
+                self::updateOfferCount($offers, $meal->getDish()->getSlug());
+                continue;
+            }
+
             $dishes = [];
             $combinedDishes = $participant->getCombinedDishes();
             /** @var Dish $dish */
@@ -32,17 +37,22 @@ class OfferService
             $dishSlugs = array_keys($dishes);
             sort($dishSlugs, SORT_NATURAL);
             $combinationID = implode(',', $dishSlugs);
-            if (isset($offers[$combinationID])) {
-                ++$offers[$combinationID]['count'];
-            } else {
-                $offers[$combinationID] = [
-                    'id' => $combinationID,
-                    'count' => 1,
-                    'dishes' => array_values($dishes),
-                ];
-            }
+            self::updateOfferCount($offers, $combinationID, array_values($dishes));
         }
 
         return $offers;
+    }
+
+    public static function updateOfferCount(array &$offers, string $key, array $dishes = [])
+    {
+        if (isset($offers[$key])) {
+            ++$offers[$key]['count'];
+        } else {
+            $offers[$key] = [
+                'id' => $key,
+                'count' => 1,
+                'dishes' => (!empty($dishes) ? array_values($dishes) : $dishes),
+            ];
+        }
     }
 }

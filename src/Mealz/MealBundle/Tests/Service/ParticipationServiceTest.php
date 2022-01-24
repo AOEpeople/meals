@@ -15,10 +15,8 @@ use App\Mealz\MealBundle\Service\Doorman;
 use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
-use App\Mealz\UserBundle\Entity\Profile;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
-use RuntimeException;
 
 class ParticipationServiceTest extends AbstractParticipationServiceTest
 {
@@ -258,7 +256,7 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
 
         $user = $this->getProfile('alice.meals');
         $offerer = $this->getProfile('bob.meals');
-        $meal = $this->getMeal(true, false, $offerer);
+        $meal = $this->getMeal(true, false, [$offerer]);
 
         $sut = new ParticipationService($this->entityManager, $doormanMock, $this->participantRepo, $this->slotRepo, $this->dayRepo);
         $out = $sut->join($user, $meal);
@@ -283,7 +281,7 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
 
         $user = $this->getProfile('alice.meals');
         $offerer = $this->getProfile('bob.meals');
-        $meal = $this->getMeal(true, true, $offerer);
+        $meal = $this->getMeal(true, true, [$offerer]);
 
         $sut = new ParticipationService($this->entityManager, $doormanMock, $this->participantRepo, $this->slotRepo, $this->dayRepo);
         $out = $sut->join($user, $meal);
@@ -306,17 +304,6 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
         $out = $sut->join($user, $meal);
 
         $this->assertNull($out);
-    }
-
-    private function getProfile(string $username): Profile
-    {
-        $profileRepo = $this->entityManager->getRepository(Profile::class);
-        $profile = $profileRepo->find($username);
-        if (null === $profile) {
-            throw new RuntimeException('profile not found: ' . $username);
-        }
-
-        return $profile;
     }
 
     private function createSlots(array $data): void

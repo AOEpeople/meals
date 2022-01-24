@@ -17,8 +17,8 @@ use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Iterator;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 abstract class AbstractDatabaseTestCase extends WebTestCase
 {

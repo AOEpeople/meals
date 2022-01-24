@@ -6,6 +6,7 @@ namespace App\Mealz\MealBundle\Tests;
 
 use App\Mealz\MealBundle\Entity\Category;
 use App\Mealz\MealBundle\Entity\Dish;
+use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
@@ -17,6 +18,7 @@ use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Iterator;
 
 abstract class AbstractDatabaseTestCase extends WebTestCase
 {
@@ -41,7 +43,7 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
     {
         $loader = new Loader();
 
-        if (is_array($fixtures) || $fixtures instanceof \Iterator) {
+        if (is_array($fixtures) || $fixtures instanceof Iterator) {
             foreach ($fixtures as $fixture) {
                 $loader->addFixture($fixture);
             }
@@ -71,12 +73,24 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
         $this->loadFixtures(null);
     }
 
-    /**
-     * @return Registry
-     */
-    protected function getDoctrine()
+    protected function getDoctrine(): Registry
     {
         return static::$kernel->getContainer()->get('doctrine');
+    }
+
+    protected function createDishVariation(Dish $parent = null, Category $category = null): DishVariation
+    {
+        $dishVariation = new DishVariation();
+        $dishVariation->setParent($parent ?? $this->createDish());
+
+        $dishVariation->setTitleEn('Test EN ' . mt_rand());
+        $dishVariation->setTitleDe('Test DE ' . mt_rand());
+        $dishVariation->setPrice(3.20);
+        if ($category) {
+            $dishVariation->setCategory($category);
+        }
+
+        return $dishVariation;
     }
 
     protected function createDish(Category $category = null): Dish

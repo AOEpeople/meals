@@ -254,10 +254,7 @@ class ParticipantRepository extends EntityRepository
         return 0;
     }
 
-    /**
-     * @param $options
-     */
-    protected function getQueryBuilderWithOptions($options): QueryBuilder
+    protected function getQueryBuilderWithOptions(array $options): QueryBuilder
     {
         $options = array_merge($this->defaultOptions, $options);
 

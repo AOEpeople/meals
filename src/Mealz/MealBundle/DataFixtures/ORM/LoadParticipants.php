@@ -18,7 +18,7 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
     /**
      * Constant to declare load order of fixture.
      */
-    private const ORDER_NUMBER = 8;
+    private const ORDER_NUMBER = 9;
 
     protected ObjectManager $objectManager;
 

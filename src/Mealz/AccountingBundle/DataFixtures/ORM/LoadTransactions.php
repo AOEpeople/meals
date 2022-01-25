@@ -70,18 +70,18 @@ class LoadTransactions extends Fixture implements OrderedFixtureInterface
             }
         }
 
-        $number = random_int(0, count($profiles));
-        $users = [];
+        $number = random_int(1, count($profiles));
+        $profilesToReturn = [];
 
-        if ($number > 1) {
+        if ($number === 1) {
+            $profilesToReturn[] = $profiles[array_rand($profiles)];
+        } else if ($number > 1) {
             foreach (array_rand($profiles, $number) as $userKey) {
-                $users[] = $profiles[$userKey];
+                $profilesToReturn[] = $profiles[$userKey];
             }
-        } elseif (1 === $number) {
-            $users[] = $profiles[array_rand($profiles)];
         }
 
-        return $users;
+        return $profilesToReturn;
     }
 
     /**

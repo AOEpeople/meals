@@ -243,18 +243,18 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
         $this->assertNotEmpty($profiles);
 
         $mealWithLimitA = $this->getMeal($locked, $expired, [$profiles[3], $profiles[1]]);
-        $mealWithLimitA->setParticipationLimit(10);
+        $mealWithLimitA->setParticipationLimit($mealWithLimitA->getParticipants()->count() + 3);
         $mealWithLimitB = $this->getMeal($locked, $expired, [$profiles[2]]);
-        $mealWithLimitB->setParticipationLimit(4);
+        $mealWithLimitB->setParticipationLimit($mealWithLimitB->getParticipants()->count() + 4);
         $mealWithLimitC = $this->getMeal($locked, $expired, [$profiles[3], $profiles[0], $profiles[2]]);
-        $mealWithLimitC->setParticipationLimit(3);
+        $mealWithLimitC->setParticipationLimit($mealWithLimitC->getParticipants()->count() + 1);
 
         $mealLimitReachedA = $this->getMeal($locked, $expired, [$profiles[2], $profiles[1], $profiles[3]]);
-        $mealLimitReachedA->setParticipationLimit(2);
+        $mealLimitReachedA->setParticipationLimit($mealWithLimitA->getParticipants()->count());
         $mealLimitReachedB = $this->getMeal($locked, $expired, [$profiles[0]]);
-        $mealLimitReachedB->setParticipationLimit(1);
+        $mealLimitReachedB->setParticipationLimit($mealWithLimitB->getParticipants()->count());
         $mealLimitReachedC = $this->getMeal($locked, $expired, [$profiles[1], $profiles[count($profiles) - 1]]);
-        $mealLimitReachedC->setParticipationLimit(2);
+        $mealLimitReachedC->setParticipationLimit($mealWithLimitC->getParticipants()->count());
 
         return new MealCollection([
             $this->getMeal(),

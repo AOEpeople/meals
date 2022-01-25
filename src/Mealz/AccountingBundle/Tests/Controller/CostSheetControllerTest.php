@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\AccountingBundle\Tests\Controller;
 
 use App\Mealz\AccountingBundle\DataFixtures\ORM\LoadTransactions;
@@ -37,7 +39,8 @@ class CostSheetControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * Check if hashCode was written in database.
+     * @testdox Check that settlement request is successful for a user with positive balance and
+     * the settlement hash is written in database accordingly.
      */
     public function testHashWrittenInDatabaseWithBalance(): void
     {
@@ -48,12 +51,16 @@ class CostSheetControllerTest extends AbstractControllerTestCase
         $this->assertGreaterThan(0.00, $balance);
 
         $this->client->request('GET', '/print/costsheet/settlement/request/' . $profile->getUsername());
-        $this->assertTrue($this->client->getResponse()->isSuccessful());
+        $this->assertResponseIsSuccessful();
 
         $this->assertNotNull($profile->getSettlementHash(), 'SettlementHash was not set');
     }
 
-    public function testHashWrittenInDatabaseWithoutBalance(): void
+    /**
+     * @testdox Check that settlement request is successful for a user with zero balance but
+     * the settlement hash hasn't changed because the the account doesn't need to be settled.
+     */
+    public function testHashNotWrittenInDatabaseWithZeroBalance(): void
     {
         $profile = $this->getUserProfile('john.meals');
         $this->assertNull($profile->getSettlementHash(), 'SettlementHash was set already');
@@ -62,13 +69,13 @@ class CostSheetControllerTest extends AbstractControllerTestCase
         $this->assertEquals(0.00, $balance);
 
         $this->client->request('GET', '/print/costsheet/settlement/request/' . $profile->getUsername());
-        $this->assertTrue($this->client->getResponse()->isSuccessful());
+        $this->assertResponseIsSuccessful();
 
         $this->assertNull($profile->getSettlementHash(), 'Settlement was set');
     }
 
     /**
-     * Check if hashCode was removed from database.
+     * @testdox Check if hashCode was removed from database after settlement confirmation.
      */
     public function testHashRemoveFromDatabase(): void
     {
@@ -95,7 +102,7 @@ class CostSheetControllerTest extends AbstractControllerTestCase
 
         // Trigger action
         $this->client->request('GET', '/print/costsheet/settlement/confirm/' . $hash);
-        $this->assertTrue($this->client->getResponse()->isSuccessful());
+        $this->assertResponseIsSuccessful();
 
         // Check new balance
         $balanceAfter = $transactionRepo->getTotalAmount($profile->getUsername());
@@ -103,6 +110,9 @@ class CostSheetControllerTest extends AbstractControllerTestCase
         $this->assertNull($profile->getSettlementHash());
     }
 
+    /**
+     * @testdox Check if non-hidden user is hidden after hideuser request is successful.
+     */
     public function testHideUserRequestWithNonHiddenUser(): void
     {
         // Pre-action tests
@@ -111,13 +121,16 @@ class CostSheetControllerTest extends AbstractControllerTestCase
 
         // Trigger action
         $this->client->request('GET', '/print/costsheet/hideuser/request/' . $profile->getUsername());
-        $this->assertTrue($this->client->getResponse()->isSuccessful());
+        $this->assertResponseIsSuccessful();
 
         // Check after action
         $profile = $this->getUserProfile(parent::USER_STANDARD);
         $this->assertTrue($profile->isHidden());
     }
 
+    /**
+     * @testdox Check that hidden user is still hidden after hideuser request is successful.
+     */
     public function testHideUserRequestWithHiddenUser(): void
     {
         // Pre-action tests
@@ -131,7 +144,7 @@ class CostSheetControllerTest extends AbstractControllerTestCase
 
         // Trigger action
         $this->client->request('GET', '/print/costsheet/hideuser/request/' . $profile->getUsername());
-        $this->assertTrue($this->client->getResponse()->isSuccessful());
+        $this->assertResponseIsSuccessful();
 
         // Check after action
         $profile = $this->getUserProfile(parent::USER_STANDARD);

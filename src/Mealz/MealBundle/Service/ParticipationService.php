@@ -6,6 +6,7 @@ namespace App\Mealz\MealBundle\Service;
 
 use App\Mealz\MealBundle\Entity\DayRepository;
 use App\Mealz\MealBundle\Entity\Dish;
+use App\Mealz\MealBundle\Entity\DishCollection;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\ParticipantRepository;
@@ -14,8 +15,6 @@ use App\Mealz\MealBundle\Entity\SlotRepository;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ParticipationService
@@ -329,11 +328,11 @@ class ParticipationService
         return null;
     }
 
-    public function getBookedDishCombination(Profile $profile, Meal $meal): Collection
+    public function getBookedDishCombination(Profile $profile, Meal $meal): DishCollection
     {
         $participant = $meal->getParticipant($profile);
         if (null === $participant) {
-            return new ArrayCollection();
+            return new DishCollection();
         }
 
         return $participant->getCombinedDishes();

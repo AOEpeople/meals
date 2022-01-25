@@ -22,4 +22,15 @@ class DishCollection extends ArrayCollection
 
         parent::__construct($items);
     }
+
+    public function containsDishVariation(): bool
+    {
+        foreach ($this as $item) {
+            if ($item instanceof DishVariation) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

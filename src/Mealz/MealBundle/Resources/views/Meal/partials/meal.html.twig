@@ -1,5 +1,6 @@
 {% set dish = meal.dish %}
 {% set combinedDish = '0' %}
+{% set canEditCombinedDish = false %}
 {% set combinedDishIDs = '' %}
 {% set bookedDishTitles = [] %}
 {% set participant = meal.getParticipant(app.user.profile) %}
@@ -11,6 +12,7 @@
     {% if bookedDishCombination|length > 0 %}
         {% set bookedDishTitles = bookedDishCombination.toArray|map(d => d.title) %}
         {% set combinedDishIDs = bookedDishCombination.toArray|map(d => d.slug)|join(',') %}
+        {% set canEditCombinedDish = available and bookedDishCombination.containsDishVariation %}
     {% endif %}
 {% endif %}
 
@@ -23,7 +25,7 @@
         data-description="{{ dishDescription }}"
     {%- endif -%}
     >
-    <div class="title{{ available and bookedDishTitles|length ? ' edit' }}">
+    <div class="title{{ canEditCombinedDish ? ' edit' }}">
         {{- dish.title -}}
         {%- if dishService.isNew(dish) %}
             <span class="new-flag">{{ 'content.participation.dish.new'|trans({},'general') }}</span>

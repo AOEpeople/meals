@@ -51,7 +51,7 @@ export class ParticipationPreToggleHandler {
     }
 
     private needUserInteractionBeforeToggle($checkbox: JQuery): boolean {
-        return 1 === $checkbox.closest('.meal-row').data('combined') // is combined meal
+        return this.isCombinedMealParticipation($checkbox)
             && !$checkbox.is(':checked')
             && 0 < $checkbox.closest('.meal').find('.variation-row .text-variation').length; // has variations
     }

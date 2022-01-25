@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Entity;
 
 use App\Mealz\UserBundle\Entity\Profile;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -39,11 +38,11 @@ class Participant
     private ?Slot $slot = null;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Dish", inversedBy="participants")
+     * @ORM\ManyToMany(targetEntity="Dish")
      *
-     * @var Collection<int, Dish>
+     * @var Collection<int, Dish>|null
      */
-    private Collection $combinedDishes;
+    private ?Collection $combinedDishes;
 
     /**
      * @Assert\NotNull()
@@ -84,7 +83,7 @@ class Participant
     {
         $this->profile = $profile;
         $this->meal = $meal;
-        $this->combinedDishes = new ArrayCollection();
+        $this->combinedDishes = new DishCollection();
     }
 
     public function isConfirmed(): bool
@@ -187,14 +186,24 @@ class Participant
         return 0 !== $this->getOfferedAt();
     }
 
-    public function getCombinedDishes(): Collection
+    public function getCombinedDishes(): DishCollection
     {
-        return $this->combinedDishes;
+        if (null === $this->combinedDishes) {
+            return new DishCollection();
+        }
+
+        return new DishCollection($this->combinedDishes->toArray());
     }
 
-    public function setCombinedDishes(DishCollection $collection): void
+    public function setCombinedDishes(?DishCollection $collection): void
     {
-        $this->combinedDishes = $collection;
+        $this->combinedDishes->clear();
+
+        if (null === $collection) {
+            return;
+        }
+
+        $this->combinedDishes = new DishCollection($collection->toArray());
     }
 
     public function __toString()

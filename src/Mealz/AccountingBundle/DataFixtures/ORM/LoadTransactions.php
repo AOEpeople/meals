@@ -73,9 +73,9 @@ class LoadTransactions extends Fixture implements OrderedFixtureInterface
         $number = random_int(1, count($profiles));
         $profilesToReturn = [];
 
-        if ($number === 1) {
+        if (1 === $number) {
             $profilesToReturn[] = $profiles[array_rand($profiles)];
-        } else if ($number > 1) {
+        } elseif ($number > 1) {
             foreach (array_rand($profiles, $number) as $userKey) {
                 $profilesToReturn[] = $profiles[$userKey];
             }

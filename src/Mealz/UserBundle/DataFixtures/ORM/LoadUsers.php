@@ -42,8 +42,8 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
             ['username' => 'finance.meals', 'password' => 'IUn4d9NKMt', 'firstName' => 'Finance', 'lastName' => 'Meals', 'roles' => ['ROLE_FINANCE']],
             ['username' => 'jane.meals', 'password' => 'heabahW6ooki', 'firstName' => 'Jane', 'lastName' => 'Meals', 'roles' => ['ROLE_USER']],
             ['username' => 'john.meals', 'password' => 'aef9xoo2hieY', 'firstName' => 'John', 'lastName' => 'Meals', 'roles' => ['ROLE_USER']],
-            ['username' => 'kochomi.meals', 'password' => 'f8400YzaOd', 'firstName' => 'kochomi', 'lastName' => 'Meals', 'roles' => ['ROLE_KITCHEN_STAFF']],
-            ['username' => 'admin.meals', 'password' => 'f8400YzaOd', 'firstName' => 'kochomi', 'lastName' => 'Meals', 'roles' => ['ROLE_ADMIN']],
+            ['username' => 'kochomi.meals', 'password' => 'f8400YzaOd', 'firstName' => 'Kochomi', 'lastName' => 'Meals', 'roles' => ['ROLE_KITCHEN_STAFF']],
+            ['username' => 'admin.meals', 'password' => 'x3pAsFoq8d', 'firstName' => 'Admin', 'lastName' => 'Meals', 'roles' => ['ROLE_ADMIN']],
         ];
 
         foreach ($users as $user) {

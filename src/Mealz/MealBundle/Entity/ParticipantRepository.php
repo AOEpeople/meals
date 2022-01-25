@@ -39,8 +39,8 @@ class ParticipantRepository extends EntityRepository
             ->orderBy('up.name', 'ASC')
             ->addOrderBy('m.dateTime', 'ASC')
             ->setParameters([
-                'startDate' => $startDate,
-                'endDate' => $endDate,
+                'startDate' => (clone $startDate),
+                'endDate' => (clone $endDate),
             ]);
 
         if (null !== $profile) {

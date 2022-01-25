@@ -10,7 +10,6 @@ use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\MealCollection;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Week;
-use App\Mealz\MealBundle\Service\WeekService;
 use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
@@ -85,14 +84,27 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
         // Note: We need one datetime of a meal (or we take the current timestamp) to generate a week
         $dateTime = count($meals) > 0 ? $meals[0]->getDateTime() : new DateTime();
 
-        $dateTimeModifier = (string) self::$kernel->getContainer()->getParameter('mealz.lock_toggle_participation_at');
-        $week = WeekService::generateEmptyWeek($dateTime, $dateTimeModifier);
+        $week = new Week();
+        $week->setYear(intval($dateTime->format('o')));
+        $week->setCalendarWeek(intval($dateTime->format('W')));
+        $days = $week->getDays();
 
         /** @var Meal $meal */
         foreach ($meals as $meal) {
-            /** @var Day $weekDay */
-            $weekDay = $week->getDays()->filter(fn (Day $day) => $day->getDateTime()->format('Y-m-d') === $meal->getDateTime()->format('Y-m-d'))->first();
-            $weekDay->addMeal($meal);
+            $date = $meal->getDateTime()->format('Y-m-d');
+            if (!isset($mealsByDay[$date])) {
+                $day = new Day();
+                $day->setDateTime(clone $meal->getDateTime());
+                $day->setLockParticipationDateTime(clone $meal->getLockDateTime());
+                $day->setWeek($week);
+
+                $day->addMeal($meal);
+                $days->add($day);
+                $mealsByDay[$date] = $day;
+            } else {
+                $day = $mealsByDay[$date];
+                $day->addMeal($meal);
+            }
         }
 
         $this->entityManager->persist($week);

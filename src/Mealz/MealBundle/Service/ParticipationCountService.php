@@ -22,9 +22,21 @@ class ParticipationCountService
         array $dishSlugs,
         float $participationCount): bool
     {
+        if (empty($participations)) {
+            return false;
+        }
+
+        // TODO uncomment after #249690 is merged
+//        if (empty($dishSlugs)) {
+//            return false;
+//        }
+
         foreach ($dishSlugs as $dishSlug) {
-            if (array_key_exists($dishSlug, $participations)
-                && !self::isParticipationPossible($participations[$dishSlug], $participationCount)) {
+            if (!array_key_exists($dishSlug, $participations)) {
+                return false;
+            }
+
+            if (!self::isParticipationPossible($participations[$dishSlug], $participationCount)) {
                 return false;
             }
         }
@@ -55,10 +67,7 @@ class ParticipationCountService
 
     public static function getParticipationByDay(Day $day): array
     {
-        $participation = [
-            self::PARTICIPATION_COUNT_KEY => [],
-            self::PARTICIPATION_TOTAL_COUNT_KEY => [],
-        ];
+        $participation = [];
 
         /** @var Meal $meal */
         foreach ($day->getMeals() as $meal) {
@@ -83,6 +92,9 @@ class ParticipationCountService
                     }
                 }
             } else {
+                if (!array_key_exists(self::PARTICIPATION_TOTAL_COUNT_KEY, $participation)) {
+                    $participation[self::PARTICIPATION_TOTAL_COUNT_KEY] = [];
+                }
                 if (!array_key_exists($meal->getDish()->getSlug(), $participation[self::PARTICIPATION_TOTAL_COUNT_KEY])) {
                     $participation[self::PARTICIPATION_TOTAL_COUNT_KEY][$meal->getDish()->getSlug()][self::COUNT_KEY] = 0.0;
                 }

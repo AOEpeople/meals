@@ -51,6 +51,7 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
 
         $meal = $this->createMeal($dish, $mealDate);
         $meal->setDay($day);
+        $meal->getDay()->addMeal($meal);
 
         $entities = [$meal->getDish(), $day, $meal];
 
@@ -81,7 +82,8 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
 
     protected function createWeek(MealCollection $meals): Week
     {
-        $dateTime = $meals[0]->getDateTime(); // We need one datetime of a meal to generate a suitable week
+        // Note: We need one datetime of a meal (or we take the current timestamp) to generate a week
+        $dateTime = count($meals) > 0 ? $meals[0]->getDateTime() : new DateTime();
 
         $dateTimeModifier = (string) self::$kernel->getContainer()->getParameter('mealz.lock_toggle_participation_at');
         $week = WeekService::generateEmptyWeek($dateTime, $dateTimeModifier);

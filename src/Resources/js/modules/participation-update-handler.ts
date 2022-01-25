@@ -214,7 +214,10 @@ export class ParticipationUpdateHandler {
                 // update dish description with titles of booked dishes
                 const bookedDishTitles = dt.map(dishTitle => $(`<div class="dish">${dishTitle}</div>`));
                 $dishContainer.find('.description .dish-combination').empty().append(...bookedDishTitles);
-                $dishContainer.find('.title').addClass('edit');
+                if (ParticipationUpdateHandler.mealHasDishVariations($mealContainer)) {
+                    $dishContainer.find('.title').addClass('edit');
+                }
+
                 // update booked dish IDs in data attribute
                 $dishContainer.attr('data-id', participantID);
                 $dishContainer.attr('data-booked-dishes', bookedDishIDs.join(','));
@@ -228,6 +231,10 @@ export class ParticipationUpdateHandler {
         $dishContainer.find('.title').removeClass('edit');
         $dishContainer.attr('data-id', '');
         $dishContainer.attr('data-booked-dishes', '');
+    }
+
+    private static mealHasDishVariations($mealContainer: JQuery): boolean {
+        return 0 < $mealContainer.find('.meal-row .variation-row').length;
     }
 
     private static getBookedDishTitles(dishIDs: string[], dishes: Dish[]|DishVariation[]) {

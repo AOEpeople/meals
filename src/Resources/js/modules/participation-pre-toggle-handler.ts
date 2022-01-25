@@ -1,4 +1,4 @@
-import {CombinedMealDialog, Dish, DishVariation} from "./combined-meal-dialog";
+import {CombinedMealDialog, Dish, DishVariation, SerializedFormData} from "./combined-meal-dialog";
 import Event = JQuery.Event;
 import {AbstractParticipationToggleHandler} from "./participation-toggle-handler";
 import {ParticipantCounter} from "./participant-counter";
@@ -29,6 +29,21 @@ export class ParticipationPreToggleHandler {
                 } else {
                     CombinedMealOffersService.execute($checkbox, self.participationToggleHandler);
                 }
+            } else if (self.isCombinedMealParticipation($checkbox)) {
+                let $mealContainer = $checkbox.closest('.meal');
+                let simpleDishSlugs = self.getSimpleDishSlugs($mealContainer);
+                if (0 === simpleDishSlugs.length) {
+                    console.log('combined-meal dishes not found');
+                    return;
+                }
+                let data: SerializedFormData[] = [];
+                simpleDishSlugs.forEach(function (slug, i) {
+                    data.push({
+                        'name': `dishes[${i}]`,
+                        'value': slug
+                    });
+                });
+                self.participationToggleHandler.toggle($checkbox, data);
             } else {
                 self.participationToggleHandler.toggle($checkbox);
             }
@@ -39,6 +54,22 @@ export class ParticipationPreToggleHandler {
         return 1 === $checkbox.closest('.meal-row').data('combined') // is combined meal
             && !$checkbox.is(':checked')
             && 0 < $checkbox.closest('.meal').find('.variation-row .text-variation').length; // has variations
+    }
+
+    private isCombinedMealParticipation($checkbox: JQuery): boolean {
+        return 0 < $checkbox.closest('.meal-row.combined-meal').length;
+    }
+
+    private getSimpleDishSlugs($mealContainer: JQuery): string[]
+    {
+        let dishes: string[] = [];
+        $mealContainer
+            .find('.meal-row:not(.combined-meal)')
+            .each(function() {
+                dishes.push($(this).data('slug'));
+            });
+
+        return dishes;
     }
 
     public executeBeforeToggle($checkbox: JQuery): void {

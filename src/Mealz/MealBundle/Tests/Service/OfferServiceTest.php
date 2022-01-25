@@ -14,7 +14,6 @@ use App\Mealz\MealBundle\Entity\MealRepository;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Service\CombinedMealService;
 use App\Mealz\MealBundle\Service\OfferService;
-use App\Mealz\MealBundle\Service\WeekService;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use App\Mealz\UserBundle\Entity\Profile;
@@ -23,10 +22,6 @@ use Doctrine\Common\Collections\Collection;
 class OfferServiceTest extends AbstractParticipationServiceTest
 {
     private CombinedMealService $cms;
-
-    protected const USER_STANDARD = 'alice.meals';
-    protected const USER_FINANCE = 'finance.meals';
-    protected const USER_KITCHEN_STAFF = 'kochomi.meals';
 
     protected function setUp(): void
     {
@@ -130,8 +125,10 @@ class OfferServiceTest extends AbstractParticipationServiceTest
      */
     public function offersFromOfferers(): void
     {
-        $offerers[] = $this->getProfile('bob.meals');
-        $offerers[] = $this->getProfile('john.meals');
+        $offerers = [
+            $this->getProfile('bob.meals'),
+            $this->getProfile('john.meals'),
+        ];
         $meal = $this->getMeal(true, false, $offerers);
 
         $offers = OfferService::getOffers($meal);
@@ -155,7 +152,7 @@ class OfferServiceTest extends AbstractParticipationServiceTest
     public function noOffersForCombinedMealOffers(): void
     {
         $meals = $this->createAndCheckMealCollection();
-        $combinedMeal = $this->createCombinedMeal($meals);
+        $combinedMeal = $this->getCombinedMeal($meals);
 
         $offers = OfferService::getOffers($combinedMeal);
         $this->assertEmpty($offers);
@@ -169,7 +166,7 @@ class OfferServiceTest extends AbstractParticipationServiceTest
     public function combinedMealOffersFromOfferer(): void
     {
         $meals = $this->createAndCheckMealCollection();
-        $combinedMeal = $this->createCombinedMeal($meals);
+        $combinedMeal = $this->getCombinedMeal($meals);
 
         $profiles[] = $this->getProfile('bob.meals');
         $bookedDishes = [];
@@ -207,7 +204,7 @@ class OfferServiceTest extends AbstractParticipationServiceTest
     public function combinedMealOffersFromOfferers(): void
     {
         $meals = $this->createAndCheckMealCollection();
-        $combinedMeal = $this->createCombinedMeal($meals);
+        $combinedMeal = $this->getCombinedMeal($meals);
 
         $profiles[] = $this->getProfile('bob.meals');
         $profiles[] = $this->getProfile('john.meals');
@@ -247,8 +244,9 @@ class OfferServiceTest extends AbstractParticipationServiceTest
      */
     public function combinedMealOffersWithVariationsFromOfferers(): void
     {
-        $meals = new MealCollection();
-        $meals->add($this->getMeal(true));
+        $meals = new MealCollection([
+            $this->getMeal(true),
+        ]);
 
         $dishVariations = $this->createDishWithVariations();
         /** @var DishVariation $dishVariation */
@@ -259,7 +257,7 @@ class OfferServiceTest extends AbstractParticipationServiceTest
         $this->assertEquals($meals[0]->getDateTime(), $meals[1]->getDateTime());
         $this->assertEquals($meals[0]->getDateTime(), $meals[2]->getDateTime());
 
-        $combinedMeal = $this->createCombinedMeal($meals);
+        $combinedMeal = $this->getCombinedMeal($meals);
 
         $profiles[] = $this->getProfile('alice.meals');
         $profiles[] = $this->getProfile('jane.meals');
@@ -307,9 +305,10 @@ class OfferServiceTest extends AbstractParticipationServiceTest
 
     private function createAndCheckMealCollection(): MealCollection
     {
-        $meals = new MealCollection();
-        $meals->add($this->getMeal(true));
-        $meals->add($this->getMeal(true));
+        $meals = new MealCollection([
+            $this->getMeal(true),
+            $this->getMeal(true),
+        ]);
         $this->assertEquals($meals[0]->getDateTime(), $meals[1]->getDateTime());
 
         return $meals;
@@ -349,34 +348,31 @@ class OfferServiceTest extends AbstractParticipationServiceTest
         return $participants;
     }
 
-    private function createCombinedMeal(MealCollection $meals): ?Meal
+    private function getCombinedMeal(MealCollection $meals): Meal
     {
-        $dateTime = $meals[0]->getDateTime();
+        $week = $this->createWeek($meals);
+        $this->assertNotEmpty($week->getDays());
 
-        $dateTimeModifier = (string) self::$kernel->getContainer()->getParameter('mealz.lock_toggle_participation_at');
-        $week = WeekService::generateEmptyWeek($dateTime, $dateTimeModifier);
-        $mealDay = null;
-        /** @var Day $day */
-        foreach ($week->getDays() as $day) {
-            if ($day->getDateTime()->format('Y-m-d') === $dateTime->format('Y-m-d')) {
-                $mealDay = $day;
-                break;
+        return $this->createOrGetCombinedMeal($meals[0]->getDay());
+    }
+
+    private function createOrGetCombinedMeal(Day $day): Meal
+    {
+        /** @var Meal $meal */
+        foreach ($day->getMeals() as $meal) {
+            if ($meal->getDish()->isCombinedDish()) {
+                return $meal;
             }
         }
 
-        foreach ($meals as $meal) {
-            $mealDay->addMeal($meal);
-        }
-
-        $this->entityManager->persist($week);
-        $this->entityManager->flush();
-
         // Creates combined meal(s)
-        $this->cms->update($week);
+        $this->cms->update($day->getWeek());
 
         /** @var MealRepository $mealRepo */
         $mealRepo = $this->getDoctrine()->getRepository(Meal::class);
+        $combinedMeal = $mealRepo->findOneByDateAndDish($day->getDateTime()->format('Y-m-d'), Dish::COMBINED_DISH_SLUG);
+        $this->assertNotNull($combinedMeal);
 
-        return $mealRepo->findOneByDateAndDish($mealDay->getDateTime()->format('Y-m-d'), Dish::COMBINED_DISH_SLUG);
+        return $combinedMeal;
     }
 }

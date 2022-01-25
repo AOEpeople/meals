@@ -47,7 +47,6 @@ class LoadCombinations extends Fixture implements OrderedFixtureInterface
         $this->objectManager->flush();
     }
 
-
     public function getOrder(): int
     {
         return self::ORDER_NUMBER;

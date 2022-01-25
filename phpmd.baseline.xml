@@ -10,7 +10,6 @@
   <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Controller/MealGuestController.php"/>
   <violation rule="PHPMD\Rule\Naming\LongVariable" file="src/Mealz/MealBundle/Entity/Day.php"/>
   <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Service/GuestParticipationService.php"/>
-  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Mealz/MealBundle/Service/GuestParticipationService.php"  method="validateBookableMeals"/>
   <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Mealz/MealBundle/Service/Link.php" method="linkMeal"/>
   <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Tests/AbstractDatabaseTestCase.php"/>
   <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Tests/Controller/AbstractControllerTestCase.php"/>
@@ -21,7 +20,8 @@
   <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Tests/Controller/MealControllerTest.php"/>
   <violation rule="PHPMD\Rule\Design\TooManyPublicMethods" file="src/Mealz/MealBundle/Tests/Controller/ParticipantControllerTest.php"/>
   <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Tests/Controller/ParticipantControllerTest.php"/>
-  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Tests/Service/ParticipationServiceTest.php"/>
+  <violation rule="PHPMD\Rule\Design\NpathComplexity" file="src/Mealz/MealBundle/Controller/ParticipantController.php" method="swap"/>
+  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Mealz/MealBundle/Controller/ParticipantController.php" method="swap"/>
   <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Controller/BaseController.php"/>
   <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Mealz/UserBundle/Entity/Profile.php"/>
 </phpmd-baseline>

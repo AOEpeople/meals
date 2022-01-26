@@ -197,9 +197,9 @@ class Participant
 
     public function setCombinedDishes(?DishCollection $collection): void
     {
-        $this->combinedDishes->clear();
-
         if (null === $collection) {
+            $this->combinedDishes->clear();
+
             return;
         }
 

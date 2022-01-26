@@ -13,6 +13,9 @@ use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 
+/**
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ */
 class ParticipationCountServiceTest extends AbstractParticipationServiceTest
 {
     protected function setUp(): void
@@ -46,18 +49,30 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
      */
     public function participationCountForNotLockedNotExpiredMeal(): void
     {
-        $meals = $this->getMixedMealsOnSameDay(); // TODO check other cases locked and expired
-        $participations = $this->getAndCheckParticipationDay($meals);
+        $meals = $this->getMixedMealsOnSameDay();
+        $this->getAndCheckParticipationDay($meals);
+    }
 
-        foreach ($meals as $meal) {
-            $participation = $participations[ParticipationCountService::PARTICIPATION_COUNT_KEY][$meal->getId()];
-            $this->assertEquals($meal->getParticipants()->count(), $participation[$meal->getDish()->getSlug()]['count']);
-            $this->assertEquals($meal->getParticipationLimit(), $participation[$meal->getDish()->getSlug()]['limit']);
+    /**
+     * @test
+     *
+     * @testdox Participation count for locked but not expired meal is as expected
+     */
+    public function participationCountForLockedNotExpiredMeal(): void
+    {
+        $meals = $this->getMixedMealsOnSameDay(true);
+        $this->getAndCheckParticipationDay($meals);
+    }
 
-            $totalParticipation = $participations[ParticipationCountService::PARTICIPATION_TOTAL_COUNT_KEY];
-            $this->assertEquals($meal->getParticipants()->count(), $totalParticipation[$meal->getDish()->getSlug()]['count']);
-            $this->assertEquals($meal->getParticipationLimit(), $totalParticipation[$meal->getDish()->getSlug()]['limit']);
-        }
+    /**
+     * @test
+     *
+     * @testdox Participation count for locked but not expired meal is as expected
+     */
+    public function participationCountForLockedAndExpiredMeal(): void
+    {
+        $meals = $this->getMixedMealsOnSameDay(true, true);
+        $this->getAndCheckParticipationDay($meals);
     }
 
     /**
@@ -80,20 +95,7 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
     public function participationCountForWeek(): void
     {
         $meals = $this->getMixedMeals();
-        $participations = $this->getAndCheckParticipationByDays($meals);
-
-        foreach ($meals as $meal) {
-            $date = $meal->getDay()->getDateTime()->format('Y-m-d');
-            $mealDishSlug = $meal->getDish()->getSlug();
-
-            $participation = $participations[$date][ParticipationCountService::PARTICIPATION_COUNT_KEY][$meal->getId()];
-            $this->assertEquals($meal->getParticipants()->count(), $participation[$mealDishSlug]['count']);
-            $this->assertEquals($meal->getParticipationLimit(), $participation[$mealDishSlug]['limit']);
-
-            $totalParticipation = $participations[$date][ParticipationCountService::PARTICIPATION_TOTAL_COUNT_KEY];
-            $this->assertEquals($meal->getParticipants()->count(), $totalParticipation[$mealDishSlug]['count']);
-            $this->assertEquals($meal->getParticipationLimit(), $totalParticipation[$mealDishSlug]['limit']);
-        }
+        $this->getAndCheckParticipationByDays($meals);
     }
 
     /**
@@ -257,7 +259,7 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
         $mealLimitReachedC->setParticipationLimit($mealWithLimitC->getParticipants()->count());
 
         return new MealCollection([
-            $this->getMeal(),
+            $this->getMeal($locked, $expired),
             $this->getMeal($locked, $expired),
             $this->getMeal($locked, $expired),
             $this->getMeal($locked, $expired, [$profiles[0], $profiles[1]]),
@@ -323,7 +325,10 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
     private function getAndCheckParticipationByDays(MealCollection $meals): array
     {
         $week = $this->createWeek($meals);
+        $this->assertGreaterThan(0, count($week->getDays()));
+
         $participations = ParticipationCountService::getParticipationByDays($week);
+        $this->assertNotEmpty($participations);
 
         /** @var Day $day */
         foreach ($week->getDays() as $day) {
@@ -341,16 +346,26 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
         foreach ($meals as $meal) {
             $date = $meal->getDay()->getDateTime()->format('Y-m-d');
             $mealDishSlug = $meal->getDish()->getSlug();
+            $this->assertArrayHasKey($date, $participations);
 
+            $this->assertArrayHasKey(ParticipationCountService::PARTICIPATION_COUNT_KEY, $participations[$date]);
             $this->assertArrayHasKey($meal->getId(), $participations[$date][ParticipationCountService::PARTICIPATION_COUNT_KEY]);
-            $this->assertArrayHasKey($mealDishSlug, $participations[$date][ParticipationCountService::PARTICIPATION_COUNT_KEY][$meal->getId()]);
-            $this->assertArrayHasKey($mealDishSlug, $participations[$date][ParticipationCountService::PARTICIPATION_TOTAL_COUNT_KEY]);
+            $participation = $participations[$date][ParticipationCountService::PARTICIPATION_COUNT_KEY][$meal->getId()];
+            $this->assertArrayHasKey($mealDishSlug, $participation);
+            $this->assertEquals($meal->getParticipants()->count(), $participation[$mealDishSlug]['count']);
+            $this->assertEquals($meal->getParticipationLimit(), $participation[$mealDishSlug]['limit']);
+
+            $this->assertArrayHasKey(ParticipationCountService::PARTICIPATION_TOTAL_COUNT_KEY, $participations[$date]);
+            $totalParticipation = $participations[$date][ParticipationCountService::PARTICIPATION_TOTAL_COUNT_KEY];
+            $this->assertArrayHasKey($mealDishSlug, $totalParticipation);
+            $this->assertEquals($meal->getParticipants()->count(), $totalParticipation[$mealDishSlug]['count']);
+            $this->assertEquals($meal->getParticipationLimit(), $totalParticipation[$mealDishSlug]['limit']);
         }
 
         return $participations;
     }
 
-    private function getAndCheckParticipationDay(MealCollection $meals): array
+    private function getAndCheckParticipationDay(MealCollection $meals): void
     {
         $date = null;
         /** @var Meal $meal */
@@ -377,15 +392,20 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
 
         /** @var Meal $meal */
         foreach ($meals as $meal) {
-            $countByMeal = $participations[ParticipationCountService::PARTICIPATION_COUNT_KEY];
-            $this->assertArrayHasKey($meal->getId(), $countByMeal);
-            $count = $countByMeal[$meal->getId()];
-            $this->assertArrayHasKey($meal->getDish()->getSlug(), $count);
+            $mealDishSlug = $meal->getDish()->getSlug();
 
-            $totalCount = $participations[ParticipationCountService::PARTICIPATION_TOTAL_COUNT_KEY];
-            $this->assertArrayHasKey($meal->getDish()->getSlug(), $totalCount);
+            $this->assertArrayHasKey(ParticipationCountService::PARTICIPATION_COUNT_KEY, $participations);
+            $this->assertArrayHasKey($meal->getId(), $participations[ParticipationCountService::PARTICIPATION_COUNT_KEY]);
+            $participation = $participations[ParticipationCountService::PARTICIPATION_COUNT_KEY][$meal->getId()];
+            $this->assertArrayHasKey($mealDishSlug, $participation);
+            $this->assertEquals($meal->getParticipants()->count(), $participation[$mealDishSlug]['count']);
+            $this->assertEquals($meal->getParticipationLimit(), $participation[$mealDishSlug]['limit']);
+
+            $this->assertArrayHasKey(ParticipationCountService::PARTICIPATION_TOTAL_COUNT_KEY, $participations);
+            $totalParticipation = $participations[ParticipationCountService::PARTICIPATION_TOTAL_COUNT_KEY];
+            $this->assertArrayHasKey($mealDishSlug, $totalParticipation);
+            $this->assertEquals($meal->getParticipants()->count(), $totalParticipation[$mealDishSlug]['count']);
+            $this->assertEquals($meal->getParticipationLimit(), $totalParticipation[$mealDishSlug]['limit']);
         }
-
-        return $participations;
     }
 }

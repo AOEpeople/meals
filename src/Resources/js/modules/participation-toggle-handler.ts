@@ -106,12 +106,13 @@ export class ParticipationGuestToggleHandler extends AbstractParticipationToggle
     private updateDishSelection($checkbox: JQuery, data?: Array<Entry>) {
         let dishSelectionWrapperSelector = 'dish-selection-wrapper';
         let $meal = $checkbox.closest('.meal');
-        let $textWrapper = $checkbox.closest('.meal-row').find('.text');
-        let $dishSelectionWrapper = $textWrapper.find('#' + dishSelectionWrapperSelector);
+        let $dishContainer = $checkbox.closest('.meal-row');
+        let $dishSelectionWrapper = $dishContainer.find('#' + dishSelectionWrapperSelector);
         if (0 === $dishSelectionWrapper.length) {
             $dishSelectionWrapper = $('<div id="' + dishSelectionWrapperSelector + '"></div>');
-            $textWrapper.append($dishSelectionWrapper);
+            $dishContainer.append($dishSelectionWrapper);
         } else {
+            this.updateCombinedDishDesc($dishContainer, []);
             $dishSelectionWrapper.empty();
         }
 
@@ -134,7 +135,21 @@ export class ParticipationGuestToggleHandler extends AbstractParticipationToggle
             selectedDishes.push($dishTitle.text());
         });
 
-        $dishSelectionWrapper.append(selectedDishes.join(', '))
+        this.updateCombinedDishDesc($dishContainer, selectedDishes);
+    }
+
+    private updateCombinedDishDesc($dishContainer: JQuery, dishSlugs: string[]): void {
+        let $dishDesc = $dishContainer.find('.description').empty();
+        if (0 === dishSlugs.length) {
+            $dishDesc.text($dishContainer.data('description'));
+            return;
+        }
+
+        let $dishList = $('<div class="text dish-combination"></div>');
+        dishSlugs.forEach(function (dishSlug: string) {
+            $dishList.append(`<div class="dish">${dishSlug}</div>`)
+        });
+        $dishDesc.append($dishList);
     }
 }
 

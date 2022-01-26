@@ -29,7 +29,7 @@ export class ParticipationPreToggleHandler {
                 } else {
                     CombinedMealOffersService.execute($checkbox, self.participationToggleHandler);
                 }
-            } else if (self.isCombinedMealParticipation($checkbox)) {
+            } else if (self.isUnbookedCombinedDish($checkbox)) {
                 let $mealContainer = $checkbox.closest('.meal');
                 let simpleDishSlugs = self.getSimpleDishSlugs($mealContainer);
                 if (0 === simpleDishSlugs.length) {
@@ -51,13 +51,23 @@ export class ParticipationPreToggleHandler {
     }
 
     private needUserInteractionBeforeToggle($checkbox: JQuery): boolean {
-        return this.isCombinedMealParticipation($checkbox)
-            && !$checkbox.is(':checked')
-            && 0 < $checkbox.closest('.meal').find('.variation-row .text-variation').length; // has variations
+        return this.isUnbookedCombinedDish($checkbox) && this.isCombinedDishWithVariations($checkbox);
     }
 
-    private isCombinedMealParticipation($checkbox: JQuery): boolean {
+    private isBookedDish($checkbox: JQuery): boolean {
+        return $checkbox.is(':checked');
+    }
+
+    private isCombinedDish($checkbox: JQuery): boolean {
         return 0 < $checkbox.closest('.meal-row.combined-meal').length;
+    }
+
+    private isCombinedDishWithVariations($checkbox: JQuery): boolean {
+        return 0 < $checkbox.closest('.meal').find('.variation-row .text-variation').length;
+    }
+
+    private isUnbookedCombinedDish($checkbox: JQuery): boolean {
+        return this.isCombinedDish($checkbox) && !this.isBookedDish($checkbox);
     }
 
     private getSimpleDishSlugs($mealContainer: JQuery): string[]
@@ -72,7 +82,7 @@ export class ParticipationPreToggleHandler {
         return dishes;
     }
 
-    public executeBeforeToggle($checkbox: JQuery): void {
+    private executeBeforeToggle($checkbox: JQuery): void {
         let self = this;
         let $dishContainer = $checkbox.closest('.meal-row');
         let $mealContainer = $dishContainer.closest('.meal');
@@ -80,7 +90,7 @@ export class ParticipationPreToggleHandler {
         const slotSlug: string = $mealContainer.find('.slot-selector').val().toString();
         const title = $dishContainer.find('.title').text();
         const dishes = this.getCombinedMealDishes($mealContainer);
-        const $bookedDishIDs = $dishContainer.data('bookedDishes').split(',').map((id: string) => id.trim());
+        const $bookedDishIDs = this.getBookedDishSlugs($dishContainer);
         let cmd = new CombinedMealDialog(
             title,
             dishes,
@@ -93,6 +103,16 @@ export class ParticipationPreToggleHandler {
             }
         );
         cmd.open();
+    }
+
+    private getBookedDishSlugs($dishContainer: JQuery): string[]
+    {
+        let bookedDishSlugs = $dishContainer.data('bookedDishes') || '';
+        if (bookedDishSlugs === '') {
+            return [];
+        }
+
+        return bookedDishSlugs.split(',').map((id: string) => id.trim());
     }
 
     private getCombinedMealDishes($meal: JQuery): Dish[] {

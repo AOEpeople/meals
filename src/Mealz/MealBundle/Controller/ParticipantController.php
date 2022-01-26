@@ -115,15 +115,7 @@ class ParticipantController extends BaseController
 
         // If the meal has variations, get its parent and concatenate the title of the parent meal with the title of the variation.
         if ($participant->getMeal()->getDish()->getParent()) {
-            if ($participant->getMeal()->getDish()->getParent()->isCombinedDish()) {
-                $combinedDishes = $participant->getCombinedDishes();
-                /** @var Dish $dish */
-                foreach ($combinedDishes as $dish) {
-                    $dishTitle = $dishTitle . ' - ' . $dish->getTitleEn();
-                }
-            } else {
-                $dishTitle = $participant->getMeal()->getDish()->getParent()->getTitleEn() . ' ' . $dishTitle;
-            }
+            $dishTitle = $participant->getMeal()->getDish()->getParent()->getTitleEn() . ' ' . $dishTitle;
         }
 
         // Mattermost integration

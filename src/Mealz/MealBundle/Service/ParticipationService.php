@@ -347,7 +347,7 @@ class ParticipationService
     /**
      * Check if the given meal is still open, i.e. not expired.
      */
-    private function isOpenMeal(Meal $meal): bool
+    public function isOpenMeal(Meal $meal): bool
     {
         $now = new DateTime('now');
 

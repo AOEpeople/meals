@@ -17,7 +17,7 @@
 {% endif %}
 
 <div class="meal-row{{ dish.isCombinedDish ? ' combined-meal' }}"
-    {%- if meal.open -%}
+    {%- if participationService.openMeal(meal) -%}
         data-id="{{ participant ? participant.id }}"
         data-combined="{{ combinedDish }}"
         data-slug="{{ dish.slug }}"

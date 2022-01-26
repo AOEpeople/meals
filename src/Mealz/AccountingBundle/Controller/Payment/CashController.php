@@ -131,9 +131,7 @@ class CashController extends BaseController
 
         $profile = $this->getUser()->getProfile();
 
-        $dateFrom = new DateTime();
-        $dateFrom->modify('-28 days');
-        $dateFrom->setTime(0, 0);
+        $dateFrom = new DateTime("-28 days 00:00:00");
         $dateTo = new DateTime();
 
         list($transactionsTotal, $transactionHistory, $participationsTotal) = $this->getFullTransactionHistory(

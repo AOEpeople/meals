@@ -198,12 +198,12 @@ class Participant
     public function setCombinedDishes(?DishCollection $collection): void
     {
         if (null === $collection) {
-            $this->combinedDishes->clear();
-
-            return;
+            if (null !== $this->combinedDishes) {
+                $this->combinedDishes->clear();
+            }
+        } else {
+            $this->combinedDishes = new DishCollection($collection->toArray());
         }
-
-        $this->combinedDishes = new DishCollection($collection->toArray());
     }
 
     public function __toString()

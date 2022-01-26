@@ -10,6 +10,7 @@ use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\MealCollection;
 use App\Mealz\MealBundle\Entity\Participant;
+use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Service\CombinedMealService;
 use App\Mealz\MealBundle\Service\OfferService;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
@@ -349,5 +350,10 @@ class OfferServiceTest extends AbstractParticipationServiceTest
         $this->entityManager->refresh($combinedMeal);
 
         return $participants;
+    }
+
+    protected function validateParticipant(Participant $participant, Profile $profile, Meal $meal, ?Slot $slot = null)
+    {
+        echo 'not implemented.';
     }
 }

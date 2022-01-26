@@ -7,6 +7,8 @@ namespace App\Mealz\MealBundle\Tests\Service;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\MealCollection;
+use App\Mealz\MealBundle\Entity\Participant;
+use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Service\ParticipationCountService;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
@@ -407,5 +409,10 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
             $this->assertEquals($meal->getParticipants()->count(), $totalParticipation[$mealDishSlug]['count']);
             $this->assertEquals($meal->getParticipationLimit(), $totalParticipation[$mealDishSlug]['limit']);
         }
+    }
+
+    protected function validateParticipant(Participant $participant, Profile $profile, Meal $meal, ?Slot $slot = null)
+    {
+        echo 'not implemented.';
     }
 }

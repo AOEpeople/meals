@@ -10,8 +10,14 @@ use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\MealCollection;
 use App\Mealz\MealBundle\Entity\MealRepository;
 use App\Mealz\MealBundle\Entity\Participant;
+use App\Mealz\MealBundle\Entity\ParticipantRepository;
+use App\Mealz\MealBundle\Entity\Slot;
+use App\Mealz\MealBundle\Entity\SlotRepository;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Service\CombinedMealService;
+use App\Mealz\MealBundle\Service\Exception\ParticipationException;
+use App\Mealz\MealBundle\Service\GuestParticipationService;
+use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
@@ -22,6 +28,10 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
 {
     protected EntityManagerInterface $entityManager;
     protected CombinedMealService $cms;
+    /** @var ParticipationService|GuestParticipationService */
+    private $sut;
+    protected ParticipantRepository $participantRepo;
+    protected SlotRepository $slotRepo;
 
     /**
      * {@inheritDoc}
@@ -32,6 +42,107 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
 
         /* @var EntityManagerInterface $entityManager */
         $this->entityManager = $this->getDoctrine()->getManager();
+    }
+
+    protected function checkJoinMealWithDishSlugsSuccess(Profile $profile)
+    {
+        $meals = new MealCollection([
+            $this->getMeal(),
+            $this->getMeal(),
+        ]);
+        $slot = null;
+        $dishSlugs = null;
+        /** @var Meal $meal */
+        foreach ($meals as $meal) {
+            $dishSlugs[] = $meal->getDish()->getSlug();
+        }
+
+        $this->sut->join($profile, $profile->isGuest() ? new MealCollection([$meals[0]]) : $meals[0], $slot, $dishSlugs);
+
+        $participants = $this->participantRepo->findBy(['meal' => $meals[0]]);
+        $this->assertCount(1, $participants);
+
+        $participant = $participants[0];
+        $this->validateParticipant($participant, $profile, $meals[0], $slot);
+        $this->assertEmpty($participant->getCombinedDishes());
+    }
+
+    protected function checkJoinCombinedMealSuccess(Profile $profile)
+    {
+        $meals = new MealCollection([
+            $this->getMeal(),
+            $this->getMeal(),
+        ]);
+
+        $combinedMeal = $this->getCombinedMeal($meals);
+
+        $slot = null;
+        $dishSlugs = null;
+        /** @var Meal $meal */
+        foreach ($meals as $meal) {
+            $dishSlugs[] = $meal->getDish()->getSlug();
+        }
+
+        $this->sut->join($profile, $profile->isGuest() ? new MealCollection([$combinedMeal]) : $combinedMeal, $slot, $dishSlugs);
+
+        $participants = $this->participantRepo->findBy(['meal' => $combinedMeal]);
+        $this->assertCount(1, $participants);
+
+        $participant = $participants[0];
+        $this->validateParticipant($participant, $profile, $combinedMeal, $slot);
+    }
+
+    protected function checkJoinCombinedMealWithThreeMealsSuccess(Profile $profile)
+    {
+        $meals = new MealCollection([
+            $this->getMeal(),
+            $this->getMeal(),
+            $this->getMeal(),
+        ]);
+
+        $combinedMeal = $this->getCombinedMeal($meals);
+
+        $slot = null;
+        $dishSlugs = null;
+        /** @var Meal $meal */
+        foreach ($meals as $meal) {
+            $dishSlugs[] = $meal->getDish()->getSlug();
+        }
+
+        $this->expectException(ParticipationException::class);
+        $this->sut->join($profile, $profile->isGuest() ? new MealCollection([$combinedMeal]) : $combinedMeal, $slot, $dishSlugs);
+    }
+
+    protected function checkJoinCombinedMealWithWrongSlugFail(Profile $profile)
+    {
+        $meals = new MealCollection([
+            $this->getMeal(),
+            $this->getMeal(),
+        ]);
+
+        $combinedMeal = $this->getCombinedMeal($meals);
+
+        $slot = null;
+        $dishSlugs = [$meals[0]->getDish()->getSlug(), 'wrong-slug'];
+
+        $this->expectException(ParticipationException::class);
+        $this->sut->join($profile, $profile->isGuest() ? new MealCollection([$combinedMeal]) : $combinedMeal, $slot, $dishSlugs);
+    }
+
+    protected function checkJoinCombinedMealWithEmptySlugFail(Profile $profile)
+    {
+        $meals = new MealCollection([
+            $this->getMeal(),
+            $this->getMeal(),
+        ]);
+
+        $combinedMeal = $this->getCombinedMeal($meals);
+
+        $slot = null;
+        $dishSlugs = [];
+
+        $this->expectException(ParticipationException::class);
+        $this->sut->join($profile, $profile->isGuest() ? new MealCollection([$combinedMeal]) : $combinedMeal, $slot, $dishSlugs);
     }
 
     protected function getMeal(bool $locked = false, bool $expired = false, array $profiles = [], bool $offering = true, ?Dish $dish = null): Meal
@@ -143,4 +254,19 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
 
         return $combinedMeal;
     }
+
+    protected function getParticipationService()
+    {
+        return $this->sut;
+    }
+
+    /**
+     * @param ParticipationService|GuestParticipationService $service
+     */
+    protected function setParticipationService($service)
+    {
+        $this->sut = $service;
+    }
+
+    abstract protected function validateParticipant(Participant $participant, Profile $profile, Meal $meal, ?Slot $slot = null);
 }

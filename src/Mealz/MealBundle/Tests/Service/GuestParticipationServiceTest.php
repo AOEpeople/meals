@@ -9,22 +9,18 @@ use App\Mealz\MealBundle\Entity\DishRepository;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\MealCollection;
 use App\Mealz\MealBundle\Entity\Participant;
-use App\Mealz\MealBundle\Entity\ParticipantRepository;
 use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Entity\SlotRepository;
 use App\Mealz\MealBundle\Service\CombinedMealService;
-use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\MealBundle\Service\GuestParticipationService;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\Role;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class GuestParticipationServiceTest extends AbstractParticipationServiceTest
 {
-    private ParticipantRepository $participantRepo;
-    private SlotRepository $slotRepo;
-
-    private GuestParticipationService $sut;
+    private Profile $profile;
 
     protected function setUp(): void
     {
@@ -41,17 +37,26 @@ class GuestParticipationServiceTest extends AbstractParticipationServiceTest
         $roleRepo = $this->entityManager->getRepository(Role::class);
         $this->slotRepo = self::$container->get(SlotRepository::class);
 
-        $this->sut = new GuestParticipationService(
+        $this->setParticipationService(new GuestParticipationService(
             $this->entityManager,
             $this->participantRepo,
             $profileRepo,
             $roleRepo,
             $this->slotRepo
-        );
+        ));
 
         $price = (float) self::$kernel->getContainer()->getParameter('mealz.meal.combined.price');
         $dishRepo = static::$container->get(DishRepository::class);
         $this->cms = new CombinedMealService($price, $this->entityManager, $dishRepo);
+
+        /** @var Role $role */
+        $role = $roleRepo->findOneBy(['sid' => Role::ROLE_GUEST]);
+
+        $this->profile = new Profile();
+        $this->profile->setRoles(new ArrayCollection([$role]));
+        $this->profile->setFirstName('Max');
+        $this->profile->setName('Mustermann');
+        $this->profile->setCompany('Test Company');
     }
 
     /**
@@ -69,7 +74,7 @@ class GuestParticipationServiceTest extends AbstractParticipationServiceTest
         $meal = $this->getMeal();
         $meals = new MealCollection([$meal]);
 
-        $this->sut->join($profile, $meals, null);
+        $this->getParticipationService()->join($profile, $meals);
 
         $participants = $this->participantRepo->findBy(['meal' => $meal]);
         $this->assertCount(1, $participants);
@@ -99,7 +104,7 @@ class GuestParticipationServiceTest extends AbstractParticipationServiceTest
         $slot = $this->slotRepo->findOneBy(['slug' => 'active-w-limit']);
         $this->assertInstanceOf(Slot::class, $slot);
 
-        $this->sut->join($profile, $meals, $slot);
+        $this->getParticipationService()->join($profile, $meals, $slot);
 
         $participants = $this->participantRepo->findBy(['meal' => $meal]);
         $this->assertCount(1, $participants);
@@ -111,69 +116,11 @@ class GuestParticipationServiceTest extends AbstractParticipationServiceTest
     /**
      * @test
      *
-     * @testdox An anonymous user (Profile) can join a meal and dish slugs are ignored.
-     */
-    public function joinMealWithDishSlugsSuccess()
-    {
-        $profile = new Profile();
-        $profile->setFirstName('Max');
-        $profile->setName('Mustermann');
-        $profile->setCompany('Test Company');
-
-        $meals = new MealCollection([
-            $this->getMeal(),
-            $this->getMeal(),
-        ]);
-        $slot = null;
-        $dishSlugs = null;
-        /** @var Meal $meal */
-        foreach ($meals as $meal) {
-            $dishSlugs[] = $meal->getDish()->getSlug();
-        }
-
-        $this->sut->join($profile, new MealCollection([$meals[0]]), $slot, $dishSlugs);
-
-        $participants = $this->participantRepo->findBy(['meal' => $meals[0]]);
-        $this->assertCount(1, $participants);
-
-        $participant = $participants[0];
-        $this->validateParticipant($participant, $profile, $meals[0], $slot);
-        $this->assertEmpty($participant->getCombinedDishes());
-    }
-
-    /**
-     * @test
-     *
      * @testdox An anonymous user (Profile) can join a combined meal.
      */
     public function joinCombinedMealSuccess()
     {
-        $profile = new Profile();
-        $profile->setFirstName('Max');
-        $profile->setName('Mustermann');
-        $profile->setCompany('Test Company');
-
-        $meals = new MealCollection([
-            $this->getMeal(),
-            $this->getMeal(),
-        ]);
-
-        $combinedMeal = $this->getCombinedMeal($meals);
-
-        $slot = null;
-        $dishSlugs = null;
-        /** @var Meal $meal */
-        foreach ($meals as $meal) {
-            $dishSlugs[] = $meal->getDish()->getSlug();
-        }
-
-        $this->sut->join($profile, new MealCollection([$combinedMeal]), $slot, $dishSlugs);
-
-        $participants = $this->participantRepo->findBy(['meal' => $combinedMeal]);
-        $this->assertCount(1, $participants);
-
-        $participant = $participants[0];
-        $this->validateParticipant($participant, $profile, $combinedMeal, $slot);
+        $this->checkJoinCombinedMealSuccess($this->profile);
     }
 
     /**
@@ -183,28 +130,7 @@ class GuestParticipationServiceTest extends AbstractParticipationServiceTest
      */
     public function joinCombinedMealWithThreeMealsSuccess()
     {
-        $profile = new Profile();
-        $profile->setFirstName('Max');
-        $profile->setName('Mustermann');
-        $profile->setCompany('Test Company');
-
-        $meals = new MealCollection([
-            $this->getMeal(),
-            $this->getMeal(),
-            $this->getMeal(),
-        ]);
-
-        $combinedMeal = $this->getCombinedMeal($meals);
-
-        $slot = null;
-        $dishSlugs = null;
-        /** @var Meal $meal */
-        foreach ($meals as $meal) {
-            $dishSlugs[] = $meal->getDish()->getSlug();
-        }
-
-        $this->expectException(ParticipationException::class);
-        $this->sut->join($profile, new MealCollection([$combinedMeal]), $slot, $dishSlugs);
+        $this->checkJoinCombinedMealWithThreeMealsSuccess($this->profile);
     }
 
     /**
@@ -214,23 +140,7 @@ class GuestParticipationServiceTest extends AbstractParticipationServiceTest
      */
     public function joinCombinedMealWithWrongSlugFail()
     {
-        $profile = new Profile();
-        $profile->setFirstName('Max');
-        $profile->setName('Mustermann');
-        $profile->setCompany('Test Company');
-
-        $meals = new MealCollection([
-            $this->getMeal(),
-            $this->getMeal(),
-        ]);
-
-        $combinedMeal = $this->getCombinedMeal($meals);
-
-        $slot = null;
-        $dishSlugs = [$meals[0]->getDish()->getSlug(), 'wrong-slug'];
-
-        $this->expectException(ParticipationException::class);
-        $this->sut->join($profile, new MealCollection([$combinedMeal]), $slot, $dishSlugs);
+        $this->checkJoinCombinedMealWithWrongSlugFail($this->profile);
     }
 
     /**
@@ -240,26 +150,10 @@ class GuestParticipationServiceTest extends AbstractParticipationServiceTest
      */
     public function joinCombinedMealWithEmptySlugFail()
     {
-        $profile = new Profile();
-        $profile->setFirstName('Max');
-        $profile->setName('Mustermann');
-        $profile->setCompany('Test Company');
-
-        $meals = new MealCollection([
-            $this->getMeal(),
-            $this->getMeal(),
-        ]);
-
-        $combinedMeal = $this->getCombinedMeal($meals);
-
-        $slot = null;
-        $dishSlugs = [];
-
-        $this->expectException(ParticipationException::class);
-        $this->sut->join($profile, new MealCollection([$combinedMeal]), $slot, $dishSlugs);
+        $this->checkJoinCombinedMealWithEmptySlugFail($this->profile);
     }
 
-    private function validateParticipant(Participant $participant, Profile $profile, Meal $meal, ?Slot $slot = null): void
+    protected function validateParticipant(Participant $participant, Profile $profile, Meal $meal, ?Slot $slot = null): void
     {
         $this->assertTrue($participant->isCostAbsorbed());
         $this->assertSame($meal->getId(), $participant->getMeal()->getId());
@@ -279,5 +173,14 @@ class GuestParticipationServiceTest extends AbstractParticipationServiceTest
             $this->assertNotEmpty($participant->getCombinedDishes());
             $this->assertCount(2, $participant->getCombinedDishes());
         }
+    }
+
+    protected function getParticipationService(): ?GuestParticipationService
+    {
+        if (parent::getParticipationService() instanceof GuestParticipationService) {
+            return parent::getParticipationService();
+        }
+
+        return null;
     }
 }

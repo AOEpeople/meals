@@ -6,15 +6,17 @@ namespace App\Mealz\MealBundle\Tests\Service;
 
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\DayRepository;
+use App\Mealz\MealBundle\Entity\DishRepository;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
-use App\Mealz\MealBundle\Entity\ParticipantRepository;
 use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Entity\SlotRepository;
+use App\Mealz\MealBundle\Service\CombinedMealService;
 use App\Mealz\MealBundle\Service\Doorman;
 use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
+use App\Mealz\UserBundle\Entity\Profile;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 
@@ -22,8 +24,6 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
 {
     use ProphecyTrait;
 
-    private ParticipantRepository $participantRepo;
-    private SlotRepository $slotRepo;
     private DayRepository $dayRepo;
 
     protected function setUp(): void
@@ -39,6 +39,20 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
         $this->dayRepo = $this->entityManager->getRepository(Day::class);
         $this->participantRepo = $this->entityManager->getRepository(Participant::class);
         $this->slotRepo = self::$container->get(SlotRepository::class);
+
+        $doorman = $this->getDoormanMock(true, false);
+
+        $this->setParticipationService(new ParticipationService(
+            $this->entityManager,
+            $doorman,
+            $this->participantRepo,
+            $this->slotRepo,
+            $this->dayRepo
+        ));
+
+        $price = (float) self::$kernel->getContainer()->getParameter('mealz.meal.combined.price');
+        $dishRepo = static::$container->get(DishRepository::class);
+        $this->cms = new CombinedMealService($price, $this->entityManager, $dishRepo);
     }
 
     /**
@@ -306,6 +320,72 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
         $this->assertNull($out);
     }
 
+    /**
+     * @test
+     *
+     * @testdox An anonymous user (Profile) can join a combined meal.
+     */
+    public function joinCombinedMealSuccess()
+    {
+        $profile = $this->getProfile('alice.meals');
+        $this->checkJoinCombinedMealSuccess($profile);
+    }
+
+    /**
+     * @test
+     *
+     * @testdox An anonymous user (Profile) can't join a combined meal with more than 2 slugs.
+     */
+    public function joinCombinedMealWithThreeMealsSuccess()
+    {
+        $profile = $this->getProfile('alice.meals');
+        $this->checkJoinCombinedMealWithThreeMealsSuccess($profile);
+    }
+
+    /**
+     * @test
+     *
+     * @testdox An anonymous user (Profile) can't join a combined meal with wrong slugs.
+     */
+    public function joinCombinedMealWithWrongSlugFail()
+    {
+        $profile = $this->getProfile('alice.meals');
+        $this->checkJoinCombinedMealWithWrongSlugFail($profile);
+    }
+
+    /**
+     * @test
+     *
+     * @testdox An anonymous user (Profile) can't join a combined meal with empty slugs.
+     */
+    public function joinCombinedMealWithEmptySlugFail()
+    {
+        $profile = $this->getProfile('alice.meals');
+        $this->checkJoinCombinedMealWithEmptySlugFail($profile);
+    }
+
+    protected function validateParticipant(Participant $participant, Profile $profile, Meal $meal, ?Slot $slot = null): void
+    {
+        $this->assertSame($meal->getId(), $participant->getMeal()->getId());
+
+        $partMealSlot = $participant->getSlot();
+        if (null !== $slot) {
+            $this->assertNotNull($partMealSlot);
+            $this->assertSame($slot->getSlug(), $partMealSlot->getSlug());
+        } else {
+            $this->assertNull($partMealSlot);
+        }
+
+        $partProfile = $participant->getProfile();
+        $this->assertSame($profile->getFullName(), $partProfile->getFullName());
+        $this->assertSame($profile->getCompany(), $partProfile->getCompany());
+
+        if ($meal->isCombinedMeal()) {
+            $this->assertNotEmpty($participant->getCombinedDishes());
+            $this->assertCount(2, $participant->getCombinedDishes());
+        }
+    }
+
     private function createSlots(array $data): void
     {
         if (0 === count($data)) {
@@ -337,7 +417,7 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
     private function getDoormanMock(bool $userAllowedToJoin, bool $kitchenStaffLoggedIn): Doorman
     {
         $prophet = $this->prophesize(Doorman::class);
-        $prophet->isUserAllowedToJoin(Argument::type(Meal::class), [])->willReturn($userAllowedToJoin);
+        $prophet->isUserAllowedToJoin(Argument::type(Meal::class), Argument::type('array'))->willReturn($userAllowedToJoin);
         $prophet->isKitchenStaff()->willReturn($kitchenStaffLoggedIn);
 
         return $prophet->reveal();

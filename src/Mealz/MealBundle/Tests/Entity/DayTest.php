@@ -21,10 +21,8 @@ class DayTest extends TestCase
 
     /**
      * @test
-     *
-     * @testdox
      */
-    public function hasMeal(): void
+    public function mealsEmpty(): void
     {
         $this->assertEmpty($this->day->getMeals());
     }

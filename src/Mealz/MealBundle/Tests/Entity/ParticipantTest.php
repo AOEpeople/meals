@@ -81,5 +81,4 @@ class ParticipantTest extends AbstractDatabaseTestCase
         $this->participant->getCombinedDishes()->remove(2);
         $this->assertCount(3, $this->participant->getCombinedDishes());
     }
-
 }

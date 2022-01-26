@@ -92,7 +92,7 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
         $this->validateParticipant($participant, $profile, $combinedMeal, $slot);
     }
 
-    protected function checkJoinCombinedMealWithThreeMealsSuccess(Profile $profile)
+    protected function checkJoinCombinedMealWithThreeMealsFail(Profile $profile)
     {
         $meals = new MealCollection([
             $this->getMeal(),

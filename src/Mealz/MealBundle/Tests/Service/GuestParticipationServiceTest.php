@@ -130,7 +130,7 @@ class GuestParticipationServiceTest extends AbstractParticipationServiceTest
      */
     public function joinCombinedMealWithThreeMealsSuccess()
     {
-        $this->checkJoinCombinedMealWithThreeMealsSuccess($this->profile);
+        $this->checkJoinCombinedMealWithThreeMealsFail($this->profile);
     }
 
     /**

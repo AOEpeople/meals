@@ -6,8 +6,10 @@ namespace App\Mealz\MealBundle\Tests\Service;
 
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\DayRepository;
+use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\DishRepository;
 use App\Mealz\MealBundle\Entity\Meal;
+use App\Mealz\MealBundle\Entity\MealCollection;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Entity\SlotRepository;
@@ -339,7 +341,7 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
     public function joinCombinedMealWithThreeMealsSuccess()
     {
         $profile = $this->getProfile('alice.meals');
-        $this->checkJoinCombinedMealWithThreeMealsSuccess($profile);
+        $this->checkJoinCombinedMealWithThreeMealsFail($profile);
     }
 
     /**
@@ -362,6 +364,40 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
     {
         $profile = $this->getProfile('alice.meals');
         $this->checkJoinCombinedMealWithEmptySlugFail($profile);
+    }
+
+    /**
+     * @test
+     *
+     * @testdox
+     */
+    public function getBookedDishCombination()
+    {
+        $profile = $this->getProfile('alice.meals');
+
+        $meals = new MealCollection([
+            $this->getMeal(),
+            $this->getMeal(),
+        ]);
+
+        $combinedMeal = $this->getCombinedMeal($meals);
+
+        $slot = null;
+        $dishSlugs = null;
+        /** @var Meal $meal */
+        foreach ($meals as $meal) {
+            $dishSlugs[] = $meal->getDish()->getSlug();
+        }
+
+        $this->getParticipationService()->join($profile, $combinedMeal, $slot, $dishSlugs);
+
+        $dishCombination = $this->getParticipationService()->getBookedDishCombination($profile, $combinedMeal);
+        $this->assertNotEmpty($dishCombination);
+        $this->assertSameSize($dishSlugs, $dishCombination);
+        /** @var Dish $dish */
+        foreach ($dishCombination as $dish) {
+            $this->assertContains($dish->getSlug(), $dishSlugs);
+        }
     }
 
     protected function validateParticipant(Participant $participant, Profile $profile, Meal $meal, ?Slot $slot = null): void

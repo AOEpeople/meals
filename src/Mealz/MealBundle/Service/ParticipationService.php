@@ -76,15 +76,17 @@ class ParticipationService
      */
     public function updateCombinedMeal(Participant $participant, array $dishSlugs): void
     {
-        if (!$participant->getMeal()->isOpen()) {
+        $meal = $participant->getMeal();
+
+        if (!$this->isOpenMeal($meal)) {
             throw new ParticipationException(
-                'expired participation; meal update not allowed',
+                'invalid operation; meal expired',
                 ParticipationException::ERR_PARTICIPATION_EXPIRED
             );
         }
-        if ($this->isParticipationLocked($participant)) {
+        if ($this->isParticipationLocked($meal)) {
             throw new ParticipationException(
-                'locked participation; meal update not allowed',
+                'invalid operation; participation is locked',
                 ParticipationException::ERR_UPDATE_LOCKED_PARTICIPATION
             );
         }
@@ -149,10 +151,7 @@ class ParticipationService
      */
     private function allowedToAccept(Meal $meal): bool
     {
-        $now = new DateTime();
-        $mealDay = $meal->getDay();
-
-        return ($mealDay->getLockParticipationDateTime() < $now) && ($mealDay->getDateTime() > $now);
+        return $this->isParticipationLocked($meal) && $this->isOpenMeal($meal);
     }
 
     private function getNextOfferingParticipant(Meal $meal, array $dishSlugs = []): ?Participant
@@ -338,10 +337,20 @@ class ParticipationService
         return $participant->getCombinedDishes();
     }
 
-    private function isParticipationLocked(Participant $participant): bool
+    private function isParticipationLocked(Meal $meal): bool
     {
         $now = new DateTime('now');
 
-        return $now > $participant->getMeal()->getLockDateTime();
+        return $meal->getLockDateTime() < $now;
+    }
+
+    /**
+     * Check if the given meal is still open, i.e. not expired.
+     */
+    private function isOpenMeal(Meal $meal): bool
+    {
+        $now = new DateTime('now');
+
+        return $meal->getDateTime() > $now;
     }
 }

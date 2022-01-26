@@ -6,7 +6,6 @@ use App\Mealz\AccountingBundle\Entity\Transaction;
 use App\Mealz\AccountingBundle\Form\CashPaymentAdminForm;
 use App\Mealz\AccountingBundle\Service\Wallet;
 use App\Mealz\MealBundle\Controller\BaseController;
-use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Doctrine\ORM\EntityManager;
@@ -14,6 +13,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class CashController.
@@ -59,10 +59,8 @@ class CashController extends BaseController
      * Renders the settlement overlay.
      *
      * @param Profile $profile
-     *
-     * @return JsonResponse
      */
-    public function getSettlementFormForProfile($profile)
+    public function getSettlementFormForProfile($profile): JsonResponse
     {
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
@@ -125,21 +123,15 @@ class CashController extends BaseController
     }
 
     /**
-     * Show transactions for logged in user
-     * Used in routing as an Action.
-     *
-     * @param Request $request request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * Show transactions for logged in user.
      */
-    public function showTransactionHistory()
+    public function showTransactionHistory(): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
         $profile = $this->getUser()->getProfile();
 
-        $dateFrom = new DateTime();
-        $dateFrom->modify('-28 days');
+        $dateFrom = new DateTime('-28 days 00:00:00');
         $dateTo = new DateTime();
 
         list($transactionsTotal, $transactionHistory, $participationsTotal) = $this->getFullTransactionHistory(
@@ -151,7 +143,7 @@ class CashController extends BaseController
         ksort($transactionHistory);
 
         return $this->render(
-            'MealzAccountingBundle:Accounting\\User:transaction_history.html.twig',
+            'MealzAccountingBundle:Accounting/User:transaction_history.html.twig',
             [
                 'transaction_history_records' => $transactionHistory,
                 'transactions_total' => $transactionsTotal,
@@ -162,14 +154,8 @@ class CashController extends BaseController
 
     /**
      * Merge participation and transactions into 1 array.
-     *
-     * @param DateTime $dateFrom min date
-     * @param DateTime $dateTo   max date
-     * @param Profile  $profile  User profile
-     *
-     * @return array
      */
-    public function getFullTransactionHistory($dateFrom, $dateTo, $profile)
+    private function getFullTransactionHistory(DateTime $dateFrom, DateTime $dateTo, Profile $profile): array
     {
         $participantRepo = $this->getParticipantRepository();
         $participations = $participantRepo->getParticipantsOnDays($dateFrom, $dateTo, $profile);
@@ -185,7 +171,6 @@ class CashController extends BaseController
         }
 
         $participationsTotal = 0;
-        /** @var $participation Participant */
         foreach ($participations as $participation) {
             $participationsTotal += $participation->getMeal()->getPrice();
             $transactionHistory[$participation->getMeal()->getDateTime()->getTimestamp() . '-' . $participation->getMeal()->getId()] = $participation;

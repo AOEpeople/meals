@@ -257,8 +257,17 @@ class OfferServiceTest extends AbstractParticipationServiceTest
             $meals->add($this->getMeal(true, false, [], true, $dishVariation));
         }
 
-        $this->assertEquals($meals[0]->getDateTime(), $meals[1]->getDateTime());
-        $this->assertEquals($meals[0]->getDateTime(), $meals[2]->getDateTime());
+        $date = null;
+        /** @var Meal $meal */
+        foreach ($meals as $meal) {
+            if (null === $date) {
+                $date = $meal->getDateTime()->format('Y-m-d');
+                continue;
+            }
+
+            // Check if meals are on the same day
+            $this->assertEquals($date, $meal->getDateTime()->format('Y-m-d'));
+        }
 
         $combinedMeal = $this->getCombinedMeal($meals);
 

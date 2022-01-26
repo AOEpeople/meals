@@ -1,4 +1,4 @@
-import {ActionResponse} from "./participation-response-handler";
+import {ParticipationResponse} from "./participation-response-handler";
 
 export class ParticipationRequest {
     readonly url: string;
@@ -15,7 +15,7 @@ export class ParticipationRequest {
     }
 }
 
-type ParticipationResponseHandlerMethod = ($checkbox: JQuery, response: ActionResponse) => void;
+type ParticipationResponseHandlerMethod = ($checkbox: JQuery, response: ParticipationResponse) => void;
 
 export class ParticipationRequestHandler {
     static sendRequest(participationRequest: ParticipationRequest, $checkbox: JQuery, handle: ParticipationResponseHandlerMethod) {

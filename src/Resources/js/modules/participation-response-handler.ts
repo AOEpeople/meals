@@ -1,22 +1,33 @@
-import {ParticipationUpdateHandler} from "./participation-update-handler";
+import {ParticipationUpdateHandler, ToggleData} from "./participation-update-handler";
 
-export interface ActionResponse {
+export interface ParticipationResponse {
     actionText: string;
+}
+
+export interface ActionResponse extends ParticipationResponse {
     url: string;
 }
 
-interface ToggleResponse extends ActionResponse {
-    participantsCount: number;
-    bookedDishes: string[]
+interface SwapResponse extends ActionResponse {
+    id: number; // Participant ID
 }
 
-interface SwapResponse extends ActionResponse {
-    id: number; // ID of participant
+export interface ToggleResponse extends SwapResponse {
+    participantsCount: number;
+    bookedDishSlugs: string[];
 }
+
 
 export class ParticipationResponseHandler {
     public static onSuccessfulToggle($checkbox: JQuery, response: ToggleResponse) {
-        ParticipationUpdateHandler.toggleAction($checkbox, response.actionText, response.url, response.participantsCount, response.bookedDishes);
+        const toggleData: ToggleData = {
+            participantID: response.id,
+            actionText: response.actionText,
+            url: response.url,
+            participantsCount: response.participantsCount,
+            bookedDishSlugs: response.bookedDishSlugs,
+        };
+        ParticipationUpdateHandler.toggleAction($checkbox, toggleData);
     }
 
     public static onSuccessfulAcceptOffer($checkbox: JQuery, response: ToggleResponse) {

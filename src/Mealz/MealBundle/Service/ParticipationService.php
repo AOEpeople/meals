@@ -6,15 +6,15 @@ namespace App\Mealz\MealBundle\Service;
 
 use App\Mealz\MealBundle\Entity\DayRepository;
 use App\Mealz\MealBundle\Entity\Dish;
+use App\Mealz\MealBundle\Entity\DishCollection;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\ParticipantRepository;
 use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Entity\SlotRepository;
+use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ParticipationService
@@ -43,6 +43,8 @@ class ParticipationService
 
     /**
      * @psalm-return array{participant: Participant, offerer: Profile|null}|null
+     *
+     * @throws ParticipationException
      */
     public function join(Profile $profile, Meal $meal, ?Slot $slot = null, array $dishSlugs = []): ?array
     {
@@ -63,6 +65,36 @@ class ParticipationService
         }
 
         return null;
+    }
+
+    /**
+     * Update combined meal dishes for a participant.
+     *
+     * @param string[] $dishSlugs
+     *
+     * @throws ParticipationException
+     */
+    public function updateCombinedMeal(Participant $participant, array $dishSlugs): void
+    {
+        $meal = $participant->getMeal();
+
+        if (!$this->isOpenMeal($meal)) {
+            throw new ParticipationException(
+                'invalid operation; meal expired',
+                ParticipationException::ERR_PARTICIPATION_EXPIRED
+            );
+        }
+        if ($this->isParticipationLocked($meal)) {
+            throw new ParticipationException(
+                'invalid operation; participation is locked',
+                ParticipationException::ERR_UPDATE_LOCKED_PARTICIPATION
+            );
+        }
+
+        $this->updateCombinedMealDishes($participant, $dishSlugs);
+
+        $this->em->persist($participant);
+        $this->em->flush();
     }
 
     public function updateSlot(Profile $profile, DateTime $date, Slot $slot): void
@@ -99,6 +131,8 @@ class ParticipationService
 
     /**
      * Creates a new participation for user $profile in meal $meal in slot $slot.
+     *
+     * @throws ParticipationException
      */
     private function create(Profile $profile, Meal $meal, ?Slot $slot = null, array $dishSlugs = []): ?Participant
     {
@@ -117,10 +151,7 @@ class ParticipationService
      */
     private function allowedToAccept(Meal $meal): bool
     {
-        $now = new DateTime();
-        $mealDay = $meal->getDay();
-
-        return ($mealDay->getLockParticipationDateTime() < $now) && ($mealDay->getDateTime() > $now);
+        return $this->isParticipationLocked($meal) && $this->isOpenMeal($meal);
     }
 
     private function getNextOfferingParticipant(Meal $meal, array $dishSlugs = []): ?Participant
@@ -296,13 +327,30 @@ class ParticipationService
         return null;
     }
 
-    public function getBookedDishCombination(Profile $profile, Meal $meal): Collection
+    public function getBookedDishCombination(Profile $profile, Meal $meal): DishCollection
     {
         $participant = $meal->getParticipant($profile);
         if (null === $participant) {
-            return new ArrayCollection();
+            return new DishCollection();
         }
 
         return $participant->getCombinedDishes();
+    }
+
+    private function isParticipationLocked(Meal $meal): bool
+    {
+        $now = new DateTime('now');
+
+        return $meal->getLockDateTime() < $now;
+    }
+
+    /**
+     * Check if the given meal is still open, i.e. not expired.
+     */
+    public function isOpenMeal(Meal $meal): bool
+    {
+        $now = new DateTime('now');
+
+        return $meal->getDateTime() > $now;
     }
 }

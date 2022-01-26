@@ -133,11 +133,19 @@ class GuestParticipationService
      * Create guest participation.
      *
      * @param Collection<int, Meal> $meals
+     *
+     * @throws ParticipationException
      */
     private function create(Profile $profile, Collection $meals, ?Slot $slot = null, array $dishSlugs = []): void
     {
         foreach ($meals as $meal) {
-            $participation = $this->createParticipation($profile, $meal, $slot, $dishSlugs);
+            try {
+                $participation = $this->createParticipation($profile, $meal, $slot, $dishSlugs);
+            } catch (ParticipationException $pex) {
+                $pex->addContext(['operation' => 'guest participation create']);
+                throw $pex;
+            }
+
             $participation->setCostAbsorbed(true);
 
             $this->entityManager->persist($participation);

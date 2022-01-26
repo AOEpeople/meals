@@ -6,6 +6,7 @@ namespace App\Mealz\MealBundle\Tests\Service;
 
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
+use App\Mealz\MealBundle\Entity\DishCollection;
 use App\Mealz\MealBundle\Entity\DishRepository;
 use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Entity\Meal;
@@ -180,7 +181,10 @@ class OfferServiceTest extends AbstractParticipationServiceTest
         $offers = OfferService::getOffers($combinedMeal);
 
         $participant = $offerers[0];
-        $combinedDishSlugs = $participant->getCombinedDishes()->map(fn (Dish $dish) => $dish->getSlug())->toArray();
+        $combinedDishSlugs = null;
+        foreach ($participant->getCombinedDishes() as $dish) {
+            $combinedDishSlugs[] = $dish->getSlug();
+        }
         sort($combinedDishSlugs, SORT_NATURAL);
         $combinationID = implode(',', $combinedDishSlugs);
         $this->assertArrayHasKey($combinationID, $offers);
@@ -220,7 +224,10 @@ class OfferServiceTest extends AbstractParticipationServiceTest
         $combinationID = null;
         /** @var Participant $offerer */
         foreach ($offerers as $offerer) {
-            $combinedDishSlugs = $offerer->getCombinedDishes()->map(fn (Dish $dish) => $dish->getSlug())->toArray();
+            $combinedDishSlugs = null;
+            foreach ($offerer->getCombinedDishes() as $dish) {
+                $combinedDishSlugs[] = $dish->getSlug();
+            }
             sort($combinedDishSlugs, SORT_NATURAL);
             $combinationID = implode(',', $combinedDishSlugs);
             $this->assertArrayHasKey($combinationID, $offers);
@@ -283,7 +290,10 @@ class OfferServiceTest extends AbstractParticipationServiceTest
 
         /** @var Participant $offerer */
         foreach ($offerers as $idx => $offerer) {
-            $combinedDishSlugs = $offerer->getCombinedDishes()->map(fn (Dish $dish) => $dish->getSlug())->toArray();
+            $combinedDishSlugs = [];
+            foreach ($offerer->getCombinedDishes() as $dish) {
+                $combinedDishSlugs[] = $dish->getSlug();
+            }
             sort($combinedDishSlugs, SORT_NATURAL);
             $combinationID = implode(',', $combinedDishSlugs);
             $this->assertArrayHasKey($combinationID, $offers);
@@ -335,9 +345,7 @@ class OfferServiceTest extends AbstractParticipationServiceTest
         foreach ($profiles as $profile) {
             $participant = new Participant($profile, $combinedMeal);
             $participant->setOfferedAt(time());
-            foreach ($bookedDishes as $dish) {
-                $participant->getCombinedDishes()->add($dish);
-            }
+            $participant->setCombinedDishes(new DishCollection($bookedDishes));
 
             $participants[] = $participant;
         }

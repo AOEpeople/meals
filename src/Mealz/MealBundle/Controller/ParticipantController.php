@@ -10,16 +10,49 @@ use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Entity\WeekRepository;
+use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\MealBundle\Service\Notification\NotifierInterface;
+use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\Translator;
 
+/**
+ * @Security("is_granted('ROLE_USER')")
+ */
 class ParticipantController extends BaseController
 {
+    public function updateCombinedMeal(Request $request, Participant $participant, ParticipationService $participationSrv): JsonResponse
+    {
+        $dishSlugs = $request->request->get('dishes', []);
+
+        try {
+            $participationSrv->updateCombinedMeal($participant, $dishSlugs);
+        } catch (ParticipationException $pex) {
+            return new JsonResponse(['error' => $pex->getMessage()], 422);
+        } catch (Exception $exc) {
+            $this->logException($exc);
+
+            return new JsonResponse(['error' => 'unexpected error'], 500);
+        }
+
+        return new JsonResponse(
+            [
+                'actionText' => 'updated',
+                'bookedDishSlugs' => array_map(
+                    static fn (Dish $dish) => $dish->getSlug(),
+                    $participant->getCombinedDishes()->toArray()
+                ),
+            ],
+            200
+        );
+    }
+
     public function delete(Participant $participant): JsonResponse
     {
         if (false === is_object($this->getUser())) {
@@ -35,7 +68,7 @@ class ParticipantController extends BaseController
         $date = $meal->getDateTime()->format('Y-m-d');
         $dish = $meal->getDish()->getSlug();
         $profile = $participant->getProfile()->getUsername();
-        $participant->getCombinedDishes()->clear();
+        $participant->setCombinedDishes(null);
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->remove($participant);

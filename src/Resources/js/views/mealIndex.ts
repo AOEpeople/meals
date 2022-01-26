@@ -1,9 +1,10 @@
 import {ParticipationPreToggleHandler} from "../modules/participation-pre-toggle-handler";
 import {ParticipationToggleHandler} from "../modules/participation-toggle-handler";
 import {ParticipationCountUpdateHandler} from "../modules/participation-count-update-handler";
-import {CombinedMealDialog, Dish, DishVariation} from "../modules/combined-meal-dialog";
+import {CombinedMealDialog, Dish, DishVariation, SerializedFormData} from "../modules/combined-meal-dialog";
 import {ParticipationRequest, ParticipationRequestHandler} from "../modules/participation-request-handler";
 import {UpdateOffersHandler} from "../modules/update-offers-handler";
+import {ParticipationResponse} from "../modules/participation-response-handler";
 
 export default class MealIndexView {
     participationPreToggleHandler: ParticipationPreToggleHandler;
@@ -138,7 +139,6 @@ export default class MealIndexView {
     public showMealConfigurator($dishContainer: JQuery): void {
         let self = this;
         let $mealContainer = $dishContainer.closest('.meal');
-        const url = $dishContainer.data('joinUrl');
         const slotSlug: string = $mealContainer.find('.slot-selector').val().toString();
         const title = $dishContainer.find('.title').text();
         const dishes = this.getCombinedMealDishes($mealContainer);
@@ -149,13 +149,14 @@ export default class MealIndexView {
             $bookedDishIDs,
             slotSlug,
             {
-                ok: function (data: unknown) {
+                ok: function (reqPayload: SerializedFormData) {
                     let $participationCheckbox = $dishContainer.find('input[type=checkbox]');
-                    let req = new ParticipationRequest(url, data);
-                    ParticipationRequestHandler.sendRequest(req, $participationCheckbox, function(participationCheckbox, data: JoinResponse) {
-                        const bookedDishIDs = data.bookedDishes.split(',').map(dishID => dishID.trim());
-                        if (0 < bookedDishIDs.length) {
-                            self.updateCombinedDish(participationCheckbox, dishes, bookedDishIDs);
+                    const participationID = $dishContainer.attr('data-id');
+                    const url = '/meal/participation/-/update'.replace('-', participationID);
+                    let req = new ParticipationRequest(url, reqPayload);
+                    ParticipationRequestHandler.sendRequest(req, $participationCheckbox, function($checkbox, data: UpdateResponse) {
+                        if (0 < data.bookedDishSlugs.length) {
+                            self.updateCombinedDish($checkbox, dishes, data.bookedDishSlugs);
                         }
                     });
                 }.bind(self)
@@ -192,32 +193,32 @@ export default class MealIndexView {
     }
 
     /**
-     * @param $checkbox     Combined Dish Checkbox
-     * @param $dishes       Available meal dishes on a given day
-     * @param bookedDishIDs Dish IDs in booked combined meal
+     * @param $checkbox       Combined Dish Checkbox
+     * @param $dishes         Available meal dishes on a given day
+     * @param bookedDishSlugs Dish Slugs in booked combined meal
      */
-    private updateCombinedDish($checkbox: JQuery, $dishes: Dish[], bookedDishIDs: string []) {
+    private updateCombinedDish($checkbox: JQuery, $dishes: Dish[], bookedDishSlugs: string []) {
         let $dishContainer = $checkbox.closest('.meal-row');
-        let bdt = this.getBookedDishTitles(bookedDishIDs, $dishes);
+        let bdt = this.getBookedDishTitles(bookedDishSlugs, $dishes);
         if (0 < bdt.length) {
             // update dish description with titles of booked dishes
             const bookedDishTitles = bdt.map(dishTitle => $(`<div class="dish">${dishTitle}</div>`));
             $dishContainer.find('.description .dish-combination').empty().append(...bookedDishTitles);
             // update booked dish IDs in data attribute
-            $dishContainer.attr('data-booked-dishes', bookedDishIDs.join(','));
+            $dishContainer.attr('data-booked-dishes', bookedDishSlugs.join(','));
         }
     }
 
-    private getBookedDishTitles(bookedDishIDs: string[], dishes: Dish[]|DishVariation[]) {
+    private getBookedDishTitles(bookedDishSlugs: string[], dishes: Dish[]|DishVariation[]) {
         let self = this;
         let dishTitles: string[] = [];
         dishes.forEach(function(dish){
-            let idx = bookedDishIDs.indexOf(dish.slug);
+            let idx = bookedDishSlugs.indexOf(dish.slug);
             if (-1 < idx) {
                 dishTitles.push(dish.title);
-                bookedDishIDs.slice(idx, 1);
+                bookedDishSlugs.slice(idx, 1);
             } else if (Array.isArray(dish.variations) && 0 < dish.variations.length) {
-                let dvt = self.getBookedDishTitles(bookedDishIDs, dish.variations);
+                let dvt = self.getBookedDishTitles(bookedDishSlugs, dish.variations);
                 dishTitles.push(...dvt);
             }
         });
@@ -226,9 +227,6 @@ export default class MealIndexView {
     }
 }
 
-interface JoinResponse {
-    participantsCount: number
-    url: string
-    actionText: string
-    bookedDishes: string    // comma separated slugs of selected dishes in combined meal
+interface UpdateResponse extends ParticipationResponse {
+    bookedDishSlugs: string[];
 }

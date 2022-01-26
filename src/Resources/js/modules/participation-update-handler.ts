@@ -10,6 +10,14 @@ export enum ParticipationAction {
     UNSWAP = 'unswap-action',
 }
 
+export interface ToggleData {
+    participantID: number
+    actionText: string;
+    url: string;
+    participantsCount: number;
+    bookedDishSlugs: string[];
+}
+
 export class ParticipationUpdateHandler {
     private static toggleTooltip($checkbox: JQuery, label?: TooltipLabel) {
         let $tooltip = $checkbox.closest('.wrapper-meal-actions').find('.tooltiptext');
@@ -81,23 +89,21 @@ export class ParticipationUpdateHandler {
         this.updateCheckBoxWrapper($checkbox);
     }
 
-    public static toggleAction($checkbox: JQuery, actionText: string, url: string, participantsCount: number, bookedDishIDs: string[]) {
+    public static toggleAction($checkbox: JQuery, data: ToggleData) {
         // change
         $checkbox.prop('checked', !$checkbox.is(':checked'));
-        let nextAction = ('deleted' === actionText) ? ParticipationAction.JOIN : ParticipationAction.DELETE;
-        this.changeCheckboxAttributes($checkbox, nextAction, url);
-        this.changeParticipationCounter($checkbox, ParticipationState.DEFAULT, participantsCount);
+        const nextAction = ('deleted' === data.actionText) ? ParticipationAction.JOIN : ParticipationAction.DELETE;
+        ParticipationUpdateHandler.changeCheckboxAttributes($checkbox, nextAction, data.url);
+        ParticipationUpdateHandler.changeParticipationCounter($checkbox, ParticipationState.DEFAULT, data.participantsCount);
 
         // update
-        this.updateCheckboxEnabled($checkbox);
-        this.updateCheckBoxWrapper($checkbox);
+        ParticipationUpdateHandler.updateCheckboxEnabled($checkbox);
+        ParticipationUpdateHandler.updateCheckBoxWrapper($checkbox);
+        ParticipationUpdateHandler.updateCombinedDish($checkbox, data.participantID, data.bookedDishSlugs);
 
-        let $mealContainer = $checkbox.closest('.meal');
-        let $slotBox = $mealContainer.find('.slot-selector');
-        $slotBox.addClass('tmp-disabled').prop('disabled', true)
-            .parent().children('.loader').css('visibility', 'visible');
-
-        ParticipationUpdateHandler.updateCombinedDish($checkbox, bookedDishIDs);
+        let $slotBox = $checkbox.closest('.meal').find('.slot-selector');
+        $slotBox.addClass('tmp-disabled').prop('disabled', true);
+        $slotBox.parent().children('.loader').css('visibility', 'visible');
     }
 
     public static changeToOfferIsTaken($checkbox: JQuery) {
@@ -194,9 +200,10 @@ export class ParticipationUpdateHandler {
 
     /**
      * @param $checkbox     Combined Dish Checkbox
+     * @param participantID Participation ID for booked combined meal
      * @param bookedDishIDs Dish IDs in booked combined meal
      */
-    private static updateCombinedDish($checkbox: JQuery, bookedDishIDs: string[]) {
+    private static updateCombinedDish($checkbox: JQuery, participantID: number, bookedDishIDs: string[]) {
         let $dishContainer = $checkbox.closest('.meal-row');
 
         if (Array.isArray(bookedDishIDs) && (0 < bookedDishIDs.length)) {
@@ -207,8 +214,12 @@ export class ParticipationUpdateHandler {
                 // update dish description with titles of booked dishes
                 const bookedDishTitles = dt.map(dishTitle => $(`<div class="dish">${dishTitle}</div>`));
                 $dishContainer.find('.description .dish-combination').empty().append(...bookedDishTitles);
-                $dishContainer.find('.title').addClass('edit');
+                if (ParticipationUpdateHandler.mealHasDishVariations($mealContainer)) {
+                    $dishContainer.find('.title').addClass('edit');
+                }
+
                 // update booked dish IDs in data attribute
+                $dishContainer.attr('data-id', participantID);
                 $dishContainer.attr('data-booked-dishes', bookedDishIDs.join(','));
             }
 
@@ -218,7 +229,12 @@ export class ParticipationUpdateHandler {
         let desc = $dishContainer.data('description');
         $dishContainer.find('.description .dish-combination').empty().text(desc);
         $dishContainer.find('.title').removeClass('edit');
+        $dishContainer.attr('data-id', '');
         $dishContainer.attr('data-booked-dishes', '');
+    }
+
+    private static mealHasDishVariations($mealContainer: JQuery): boolean {
+        return 0 < $mealContainer.find('.meal-row .variation-row').length;
     }
 
     private static getBookedDishTitles(dishIDs: string[], dishes: Dish[]|DishVariation[]) {

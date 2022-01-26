@@ -12,7 +12,6 @@ use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Entity\WeekRepository;
 use App\Mealz\MealBundle\Service\DishService;
 use App\Mealz\MealBundle\Service\Mailer;
-use App\Mealz\MealBundle\Service\MealService;
 use App\Mealz\MealBundle\Service\Notification\NotifierInterface;
 use App\Mealz\MealBundle\Service\OfferService;
 use App\Mealz\MealBundle\Service\ParticipationCountService;
@@ -41,7 +40,7 @@ class MealController extends BaseController
 
     public function index(
         DishService $dishService,
-        MealService $mealService,
+
         ParticipationService $participationService,
         SlotRepository $slotRepo,
         WeekRepository $weekRepository
@@ -58,7 +57,6 @@ class MealController extends BaseController
 
         return $this->render('MealzMealBundle:Meal:index.html.twig', [
             'dishService' => $dishService,
-            'mealService' => $mealService,
             'participationService' => $participationService,
             'weeks' => [$currentWeek, $nextWeek],
             'participations' => array_merge(

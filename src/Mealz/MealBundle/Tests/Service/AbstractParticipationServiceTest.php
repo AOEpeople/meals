@@ -8,8 +8,10 @@ use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\MealCollection;
+use App\Mealz\MealBundle\Entity\MealRepository;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Week;
+use App\Mealz\MealBundle\Service\CombinedMealService;
 use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
@@ -19,6 +21,7 @@ use RuntimeException;
 abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
 {
     protected EntityManagerInterface $entityManager;
+    protected CombinedMealService $cms;
 
     /**
      * {@inheritDoc}
@@ -111,5 +114,33 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
         $this->entityManager->flush();
 
         return $week;
+    }
+
+    protected function getCombinedMeal(MealCollection $meals): Meal
+    {
+        $week = $this->createWeek($meals);
+        $this->assertNotEmpty($week->getDays());
+
+        return $this->createOrGetCombinedMeal($meals[0]->getDay());
+    }
+
+    protected function createOrGetCombinedMeal(Day $day): Meal
+    {
+        /** @var Meal $meal */
+        foreach ($day->getMeals() as $meal) {
+            if ($meal->getDish()->isCombinedDish()) {
+                return $meal;
+            }
+        }
+
+        // Creates combined meal(s)
+        $this->cms->update($day->getWeek());
+
+        /** @var MealRepository $mealRepo */
+        $mealRepo = $this->getDoctrine()->getRepository(Meal::class);
+        $combinedMeal = $mealRepo->findOneByDateAndDish($day->getDateTime()->format('Y-m-d'), Dish::COMBINED_DISH_SLUG);
+        $this->assertNotNull($combinedMeal);
+
+        return $combinedMeal;
     }
 }

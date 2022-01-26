@@ -14,7 +14,7 @@ class ParticipationException extends Exception
     public const ERR_COMBI_MEAL_INVALID_DISH_COUNT = 3;
     public const ERR_INVALID_OPERATION = 5;
     public const ERR_PARTICIPATION_EXPIRED = 6;
-    public const ERR_UPDATE_LOCKED_PARTICIPATION = 6;
+    public const ERR_UPDATE_LOCKED_PARTICIPATION = 7;
 
     private array $context;
 

@@ -28,8 +28,8 @@ class DishTest extends AbstractDatabaseTestCase
     public function isNotCombinedDish(): void
     {
         $dish = new Dish();
-        $dish->setTitleEn("Some tasty Dish");
-        $dish->setTitleDe("Ein schmackhaftes Gericht");
+        $dish->setTitleEn('Some tasty Dish');
+        $dish->setTitleDe('Ein schmackhaftes Gericht');
 
         $this->entityManager->persist($dish);
         $this->entityManager->flush();
@@ -45,8 +45,8 @@ class DishTest extends AbstractDatabaseTestCase
     public function isCombinedDish(): void
     {
         $dish = new Dish();
-        $dish->setTitleEn("Combined Dish");
-        $dish->setTitleDe("Kombi Gericht");
+        $dish->setTitleEn('Combined Dish');
+        $dish->setTitleDe('Kombi Gericht');
 
         $this->entityManager->persist($dish);
         $this->entityManager->flush();

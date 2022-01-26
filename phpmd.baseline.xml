@@ -20,6 +20,7 @@
   <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Tests/Controller/MealControllerTest.php"/>
   <violation rule="PHPMD\Rule\Design\TooManyPublicMethods" file="src/Mealz/MealBundle/Tests/Controller/ParticipantControllerTest.php"/>
   <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Tests/Controller/ParticipantControllerTest.php"/>
+  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Controller/ParticipantController.php"/>
   <violation rule="PHPMD\Rule\Design\NpathComplexity" file="src/Mealz/MealBundle/Controller/ParticipantController.php" method="swap"/>
   <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Mealz/MealBundle/Controller/ParticipantController.php" method="swap"/>
   <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Controller/BaseController.php"/>

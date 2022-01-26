@@ -17,10 +17,10 @@
 {% endif %}
 
 <div class="meal-row{{ dish.isCombinedDish ? ' combined-meal' }}"
+     data-slug="{{ dish.slug }}"
     {%- if participationService.openMeal(meal) -%}
         data-id="{{ participant ? participant.id }}"
         data-combined="{{ combinedDish }}"
-        data-slug="{{ dish.slug }}"
         data-booked-dishes="{{ combinedDishIDs }}"
         data-description="{{ dishDescription }}"
     {%- endif -%}

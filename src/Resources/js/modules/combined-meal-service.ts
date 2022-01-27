@@ -1,7 +1,7 @@
 export class CombinedMealService {
-    public static getCombinedMealDishes($meal: JQuery): Dish[] {
+    public static getCombinedMealDishes($mealContainer: JQuery): Dish[] {
         let dishes: Dish[] = [];
-        $meal.find('.meal-row').each(function () {
+        $mealContainer.find('.meal-row').each(function () {
             const $mealRow = $(this);
             if (1 === $mealRow.data('combined')) {
                 return;
@@ -29,15 +29,15 @@ export class CombinedMealService {
     /**
      * @param $checkbox     Combined Dish Checkbox
      * @param participantID Participation ID for booked combined meal
-     * @param bookedDishIDs Dish IDs in booked combined meal
+     * @param bookedDishSlugs Dish IDs in booked combined meal
      */
-    public static updateCombinedDish($checkbox: JQuery, participantID: number, bookedDishIDs: string[]) {
+    public static updateCombinedDish($checkbox: JQuery, participantID: number, bookedDishSlugs: string[]) {
         let $dishContainer = $checkbox.closest('.meal-row');
 
-        if (Array.isArray(bookedDishIDs) && (0 < bookedDishIDs.length)) {
+        if (Array.isArray(bookedDishSlugs) && (0 < bookedDishSlugs.length)) {
             let $mealContainer = $dishContainer.closest('.meal');
             const dishes = CombinedMealService.getCombinedMealDishes($mealContainer);
-            let dt = CombinedMealService.getBookedDishTitles(bookedDishIDs, dishes);
+            let dt = CombinedMealService.getBookedDishTitles(bookedDishSlugs, dishes);
             if (0 < dt.length) {
                 // update dish description with titles of booked dishes
                 const bookedDishTitles = dt.map(dishTitle => $(`<div class="dish">${dishTitle}</div>`));
@@ -48,7 +48,7 @@ export class CombinedMealService {
 
                 // update booked dish IDs in data attribute
                 $dishContainer.attr('data-id', participantID);
-                $dishContainer.attr('data-booked-dishes', bookedDishIDs.join(','));
+                $dishContainer.attr('data-booked-dishes', bookedDishSlugs.join(','));
             }
 
             return;

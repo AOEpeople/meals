@@ -12,20 +12,14 @@ use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\MealCollection;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
-use App\Mealz\MealBundle\Entity\SlotRepository;
 use App\Mealz\MealBundle\Service\CombinedMealService;
-use App\Mealz\MealBundle\Service\Doorman;
 use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use App\Mealz\UserBundle\Entity\Profile;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
 
 class ParticipationServiceTest extends AbstractParticipationServiceTest
 {
-    use ProphecyTrait;
-
     private DayRepository $dayRepo;
 
     protected function setUp(): void
@@ -38,11 +32,8 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
             new LoadUsers(static::$container->get('security.user_password_encoder.generic')),
         ]);
 
-        $this->dayRepo = $this->entityManager->getRepository(Day::class);
-        $this->participantRepo = $this->entityManager->getRepository(Participant::class);
-        $this->slotRepo = self::$container->get(SlotRepository::class);
-
         $doorman = $this->getDoormanMock(true, false);
+        $this->dayRepo = $this->entityManager->getRepository(Day::class);
 
         $this->setParticipationService(new ParticipationService(
             $this->entityManager,
@@ -448,14 +439,5 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
         }
 
         $this->persistAndFlushAll($entities);
-    }
-
-    private function getDoormanMock(bool $userAllowedToJoin, bool $kitchenStaffLoggedIn): Doorman
-    {
-        $prophet = $this->prophesize(Doorman::class);
-        $prophet->isUserAllowedToJoin(Argument::type(Meal::class), Argument::type('array'))->willReturn($userAllowedToJoin);
-        $prophet->isKitchenStaff()->willReturn($kitchenStaffLoggedIn);
-
-        return $prophet->reveal();
     }
 }

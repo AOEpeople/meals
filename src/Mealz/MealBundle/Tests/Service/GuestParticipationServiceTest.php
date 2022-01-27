@@ -10,7 +10,6 @@ use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\MealCollection;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
-use App\Mealz\MealBundle\Entity\SlotRepository;
 use App\Mealz\MealBundle\Service\CombinedMealService;
 use App\Mealz\MealBundle\Service\GuestParticipationService;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
@@ -32,10 +31,8 @@ class GuestParticipationServiceTest extends AbstractParticipationServiceTest
             new LoadSlots(),
         ]);
 
-        $this->participantRepo = $this->entityManager->getRepository(Participant::class);
         $profileRepo = $this->entityManager->getRepository(Profile::class);
         $roleRepo = $this->entityManager->getRepository(Role::class);
-        $this->slotRepo = self::$container->get(SlotRepository::class);
 
         $this->setParticipationService(new GuestParticipationService(
             $this->entityManager,

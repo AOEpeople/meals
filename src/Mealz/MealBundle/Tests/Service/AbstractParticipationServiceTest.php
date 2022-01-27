@@ -6,6 +6,7 @@ namespace App\Mealz\MealBundle\Tests\Service;
 
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
+use App\Mealz\MealBundle\Entity\DishCollection;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\MealCollection;
 use App\Mealz\MealBundle\Entity\MealRepository;
@@ -15,6 +16,7 @@ use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Entity\SlotRepository;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Service\CombinedMealService;
+use App\Mealz\MealBundle\Service\Doorman;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\MealBundle\Service\GuestParticipationService;
 use App\Mealz\MealBundle\Service\ParticipationService;
@@ -22,16 +24,20 @@ use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use RuntimeException;
 
 abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
 {
+    use ProphecyTrait;
+
     protected EntityManagerInterface $entityManager;
     protected CombinedMealService $cms;
-    /** @var ParticipationService|GuestParticipationService */
-    private $sut;
     protected ParticipantRepository $participantRepo;
     protected SlotRepository $slotRepo;
+    /** @var ParticipationService|GuestParticipationService */
+    private $sut;
 
     /**
      * {@inheritDoc}
@@ -42,6 +48,9 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
 
         /* @var EntityManagerInterface $entityManager */
         $this->entityManager = $this->getDoctrine()->getManager();
+
+        $this->participantRepo = $this->entityManager->getRepository(Participant::class);
+        $this->slotRepo = self::$container->get(SlotRepository::class);
     }
 
     protected function checkJoinMealWithDishSlugsSuccess(Profile $profile)
@@ -227,21 +236,41 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
         return $week;
     }
 
-    protected function getCombinedMeal(MealCollection $meals): Meal
+    protected function getCombinedMeal(MealCollection $meals, array $profiles = [], array $dishSlugs = []): Meal
     {
+        $date = null;
+        /** @var Meal $meal */
+        foreach ($meals as $meal) {
+            if (null === $date) {
+                $date = $meal->getDateTime()->format('Y-m-d');
+                continue;
+            }
+
+            // Check if meals are on the same day
+            $this->assertEquals($date, $meal->getDateTime()->format('Y-m-d'));
+        }
+
         $week = $this->createWeek($meals);
         $this->assertNotEmpty($week->getDays());
 
-        return $this->createOrGetCombinedMeal($meals[0]->getDay());
+        return $this->createCombinedMeal($meals[0]->getDay(), $profiles, $dishSlugs);
     }
 
-    protected function createOrGetCombinedMeal(Day $day): Meal
+    private function createCombinedMeal(Day $day, array $profiles = [], array $dishSlugs = []): Meal
     {
-        /** @var Meal $meal */
-        foreach ($day->getMeals() as $meal) {
-            if ($meal->getDish()->isCombinedDish()) {
-                return $meal;
+        $dishes = [];
+        if (!empty($profiles)) {
+            $this->assertNotEmpty($dishSlugs);
+
+            $flippedDishSlugs = array_flip($dishSlugs);
+            /** @var Meal $meal */
+            foreach ($day->getMeals() as $meal) {
+                if (isset($flippedDishSlugs[$meal->getDish()->getSlug()])) {
+                    $dishes[] = $meal->getDish();
+                }
             }
+
+            $this->assertSameSize($flippedDishSlugs, $dishes);
         }
 
         // Creates combined meal(s)
@@ -251,6 +280,22 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
         $mealRepo = $this->getDoctrine()->getRepository(Meal::class);
         $combinedMeal = $mealRepo->findOneByDateAndDish($day->getDateTime()->format('Y-m-d'), Dish::COMBINED_DISH_SLUG);
         $this->assertNotNull($combinedMeal);
+
+        $participants = [];
+        foreach ($profiles as $profile) {
+            $participant = new Participant($profile, $combinedMeal);
+            $participant->setCombinedDishes(new DishCollection($dishes));
+            $this->assertGreaterThan(0, $participant->getCombinedDishes()->count());
+            $participants[] = $participant;
+        }
+
+        if (!empty($participants)) {
+            $this->persistAndFlushAll($participants);
+            $this->entityManager->refresh($combinedMeal);
+            $this->assertGreaterThan(0, $combinedMeal->getParticipants()->count());
+        }
+
+        $this->assertSameSize($profiles, $combinedMeal->getParticipants());
 
         return $combinedMeal;
     }
@@ -266,6 +311,15 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
     protected function setParticipationService($service)
     {
         $this->sut = $service;
+    }
+
+    protected function getDoormanMock(bool $userAllowedToJoin, bool $kitchenStaffLoggedIn): Doorman
+    {
+        $prophet = $this->prophesize(Doorman::class);
+        $prophet->isUserAllowedToJoin(Argument::type(Meal::class), Argument::type('array'))->willReturn($userAllowedToJoin);
+        $prophet->isKitchenStaff()->willReturn($kitchenStaffLoggedIn);
+
+        return $prophet->reveal();
     }
 
     abstract protected function validateParticipant(Participant $participant, Profile $profile, Meal $meal, ?Slot $slot = null);

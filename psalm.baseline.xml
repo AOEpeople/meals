@@ -224,7 +224,7 @@
       <code>getOutdatedMeals</code>
     </UndefinedInterfaceMethod>
   </file>
-  <file src="src/Mealz/MealBundle/Tests/Service/ParticipationServiceTest.php">
+  <file src="src/Mealz/MealBundle/Tests/Service/AbstractParticipationServiceTest.php">
     <TooManyArguments occurrences="2">
       <code>willReturn</code>
       <code>willReturn</code>

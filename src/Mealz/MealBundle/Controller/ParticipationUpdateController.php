@@ -71,7 +71,7 @@ class ParticipationUpdateController extends BaseController
         /** @var Week $currentWeek */
         $currentWeek = $weekRepository->getCurrentWeek();
         if (null !== $currentWeek) {
-            $participationByDays = ParticipationCountService::getParticipationByDays($currentWeek);
+            $participationByDays = ParticipationCountService::getParticipationByDays($currentWeek, true);
             if (!empty($participationByDays)) {
                 $participations = $participationByDays;
             }
@@ -79,7 +79,7 @@ class ParticipationUpdateController extends BaseController
 
         $nextWeek = $weekRepository->getNextWeek();
         if (null !== $nextWeek) {
-            $participationByDays = ParticipationCountService::getParticipationByDays($nextWeek);
+            $participationByDays = ParticipationCountService::getParticipationByDays($nextWeek, true);
             if (!empty($participationByDays)) {
                 $participations = array_merge($participations, $participationByDays);
             }

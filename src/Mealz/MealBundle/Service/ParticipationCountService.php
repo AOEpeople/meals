@@ -9,6 +9,7 @@ use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Week;
+use DateTime;
 
 class ParticipationCountService
 {
@@ -55,11 +56,19 @@ class ParticipationCountService
                 && $participation[self::LIMIT_KEY] >= ($participation[self::COUNT_KEY] + $participationCount));
     }
 
-    public static function getParticipationByDays(Week $week): array
+    public static function getParticipationByDays(Week $week, bool $onlyFutureMeals = false): array
     {
+        $now = new DateTime();
         $participationByDays = [];
         /** @var Day $day */
         foreach ($week->getDays() as $day) {
+            if ($onlyFutureMeals) {
+                // skip past meals, provide updates just for future meals (locked included)
+                if ($now >= $day->getDateTime()) {
+                    continue;
+                }
+            }
+
             $participationByDay = self::getParticipationByDay($day);
             if (!empty($participationByDay)) {
                 $participationByDays[$day->getDateTime()->format('Y-m-d')] = $participationByDay;

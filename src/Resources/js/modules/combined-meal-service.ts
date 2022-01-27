@@ -3,22 +3,22 @@ export class CombinedMealService {
     /**
      * No. of dish items in a combined dish.
      */
-    private static readonly COMBINED_DISH_ITEM_COUNT = 2;
+    private static readonly DISH_COUNT = 2;
 
-    public static getCombinedMealDishes($mealContainer: JQuery): Dish[] {
+    public static getDishes($mealContainer: JQuery): Dish[] {
         let dishes: Dish[] = [];
         $mealContainer.find('.meal-row').each(function () {
-            const $mealRow = $(this);
-            if (1 === $mealRow.data('combined')) {
+            const $dishContainer = $(this);
+            if (CombinedMealService.isCombinedDish($dishContainer)) {
                 return;
             }
 
             let dish: Dish = {
-                title: $mealRow.find('.title').contents().get(0).nodeValue.trim(),
-                slug: $mealRow.data('slug'),
+                title: $dishContainer.find('.title').contents().get(0).nodeValue.trim(),
+                slug: $dishContainer.data('slug'),
                 variations: []
             };
-            $mealRow.find('.variation-row').each(function () {
+            $dishContainer.find('.variation-row').each(function () {
                 const $dishVarRow = $(this);
                 let dishVariation: DishVariation = {
                     title: $dishVarRow.find('.text-variation').text().trim(),
@@ -37,15 +37,15 @@ export class CombinedMealService {
      * @param participantID   Participation ID for booked combined meal
      * @param bookedDishSlugs Dish IDs in booked combined meal
      */
-    public static updateCombinedDish($checkbox: JQuery, participantID: number, bookedDishSlugs: string[]) {
+    public static updateDish($checkbox: JQuery, participantID: number, bookedDishSlugs: string[]) {
         let $dishContainer = $checkbox.closest('.meal-row');
         if (typeof participantID === 'undefined' || !Array.isArray(bookedDishSlugs) || 0 === bookedDishSlugs.length) {
-            CombinedMealService.resetCombinedDish($dishContainer);
+            CombinedMealService.resetDish($dishContainer);
             return;
         }
 
         let $mealContainer = $dishContainer.closest('.meal');
-        const dishes = CombinedMealService.getCombinedMealDishes($mealContainer);
+        const dishes = CombinedMealService.getDishes($mealContainer);
         const success = CombinedMealService.updateBookedDishes($checkbox, dishes, bookedDishSlugs);
 
         if (success) {
@@ -69,7 +69,7 @@ export class CombinedMealService {
         let $dishContainer = $checkbox.closest('.meal-row');
         let bdt = CombinedMealService.getBookedDishTitles(bookedDishSlugs, $dishes);
 
-        if (CombinedMealService.COMBINED_DISH_ITEM_COUNT === bdt.length) {
+        if (CombinedMealService.DISH_COUNT === bdt.length) {
             // update dish description with titles of booked dishes
             const bookedDishTitles = bdt.map(dishTitle => $(`<div class="dish">${dishTitle}</div>`));
             $dishContainer.find('.description .dish-combination').empty().append(...bookedDishTitles);
@@ -98,12 +98,16 @@ export class CombinedMealService {
         return dishTitles;
     }
 
-    private static resetCombinedDish($dishContainer: JQuery): void {
+    private static resetDish($dishContainer: JQuery): void {
         let desc = $dishContainer.data('description');
         $dishContainer.find('.description .dish-combination').empty().text(desc);
         $dishContainer.find('.title').removeClass('edit');
         $dishContainer.attr('data-id', '');
         $dishContainer.attr('data-booked-dishes', '');
+    }
+
+    public static isCombinedDish($dishContainer: JQuery): boolean {
+        return $dishContainer.hasClass('combined-meal');
     }
 
     private static mealHasDishVariations($mealContainer: JQuery): boolean {

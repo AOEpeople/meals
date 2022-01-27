@@ -105,7 +105,7 @@ export class ParticipationUpdateHandler {
         // update
         ParticipationUpdateHandler.updateCheckboxEnabled($checkbox);
         ParticipationUpdateHandler.updateCheckBoxWrapper($checkbox);
-        CombinedMealService.updateCombinedDish($checkbox, data.participantID, data.bookedDishSlugs);
+        CombinedMealService.updateDish($checkbox, data.participantID, data.bookedDishSlugs);
 
         let $slotBox = $checkbox.closest('.meal').find('.slot-selector');
         $slotBox.addClass('tmp-disabled').prop('disabled', true);

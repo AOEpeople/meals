@@ -90,7 +90,7 @@ export class ParticipationPreToggleHandler {
 
         const slotSlug: string = $mealContainer.find('.slot-selector').val().toString();
         const title = $dishContainer.find('.title').text();
-        const dishes = CombinedMealService.getCombinedMealDishes($mealContainer);
+        const dishes = CombinedMealService.getDishes($mealContainer);
         const $bookedDishIDs = this.getBookedDishSlugs($dishContainer);
         let cmd = new CombinedMealDialog(
             title,

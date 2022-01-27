@@ -124,7 +124,7 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
     /**
      * @test
      *
-     * @testdox Participation count for a day with combined meal without participants is as expected
+     * @testdox Participation count for a day with combined meal with participants is as expected
      */
     public function participationCountForCombinedMealWithParticipants(): void
     {
@@ -132,9 +132,12 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
         $profiles = $profileRepo->findAll();
         $this->assertNotEmpty($profiles);
 
+        $locked = false;
+        $expired = false;
+
         $meals = new MealCollection([
-            $this->getMeal(),
-            $this->getMeal(),
+            $this->getMeal($locked, $expired),
+            $this->getMeal($locked, $expired, [$profiles[2], $profiles[1]]),
         ]);
 
         $bookedDishSlugs = [];
@@ -148,6 +151,115 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
 
         $participations = ParticipationCountService::getParticipationByDay($combinedMeal->getDay());
         $this->checkParticipationByDay($participations, $meals);
+    }
+
+    /**
+     * @test
+     *
+     * @testdox Check if participation is possible (or not) for meals with limits (including combined meal)
+     */
+    public function checkParticipationIsPossibleForMealsWithLimits(): void
+    {
+        $profileRepo = $this->entityManager->getRepository(Profile::class);
+        $profiles = $profileRepo->findAll();
+        $this->assertNotEmpty($profiles);
+
+        $locked = false;
+        $expired = false;
+
+        $mealA = $this->getMeal($locked, $expired);
+        $mealA->setParticipationLimit(2);
+        $mealB = $this->getMeal($locked, $expired, [$profiles[2], $profiles[1]]);
+        $mealB->setParticipationLimit(5);
+
+        $meals = new MealCollection([$mealA, $mealB]);
+
+        $bookedDishSlugs = [];
+        /** @var Meal $meal */
+        foreach ($meals as $meal) {
+            $bookedDishSlugs[] = $meal->getDish()->getSlug();
+        }
+
+        $combinedMeal = $this->getCombinedMeal($meals, [$profiles[0]], $bookedDishSlugs);
+        $meals->add($combinedMeal);
+
+        $participations = ParticipationCountService::getParticipationByDay($combinedMeal->getDay());
+
+        $participation = $participations[ParticipationCountService::PARTICIPATION_TOTAL_COUNT_KEY];
+
+        /*
+         * Note:
+         * We're interested in the total counts (connected dishes) not the single counts.
+         * We have 0 participants for mealA and 2 participants for mealB plus 1 participant of the combined meal
+         * That means we have 0.5 participations for dishA from mealA and 2.5 participations for dishB from mealB.
+         * Or in a nutshell with limits: dishA: 0.5 of 2; dishB: 2.5 of 5;
+         * The question is: Is it possible to join meal XXX with YYY more participant(s)?
+         * Now, some test cases:
+         */
+
+        // Yes, dishA: 1.5 of 2
+        $this->assertTrue(ParticipationCountService::isParticipationPossibleForDishes(
+            $participation,
+            [$mealA->getDish()->getSlug()],
+            1
+        ));
+
+        // No, dishA: 2.5 of 2
+        $participation = $participations[ParticipationCountService::PARTICIPATION_TOTAL_COUNT_KEY];
+        $this->assertFalse(ParticipationCountService::isParticipationPossibleForDishes(
+            $participation,
+            [$mealA->getDish()->getSlug()],
+            2
+        ));
+
+        // Yes, dishB: 3.5 of 5
+        $this->assertTrue(ParticipationCountService::isParticipationPossibleForDishes(
+            $participation,
+            [$mealB->getDish()->getSlug()],
+            1
+        ));
+
+        // Yes, dishB: 4.5 of 5
+        $this->assertTrue(ParticipationCountService::isParticipationPossibleForDishes(
+            $participation,
+            [$mealB->getDish()->getSlug()],
+            2
+        ));
+
+        // No, dishB: 5.5 of 5
+        $this->assertFalse(ParticipationCountService::isParticipationPossibleForDishes(
+            $participation,
+            [$mealB->getDish()->getSlug()],
+            3
+        ));
+
+        // Yes, for combined dishes: dishA: 1 of 2; dishB: 3 of 5
+        $this->assertTrue(ParticipationCountService::isParticipationPossibleForDishes(
+            $participation,
+            $bookedDishSlugs,
+            0.5
+        ));
+
+        // Yes, for two combined dishes: dishA: 1.5 of 2; dishB: 3.5 of 5
+        $this->assertTrue(ParticipationCountService::isParticipationPossibleForDishes(
+            $participation,
+            $bookedDishSlugs,
+            1.0
+        ));
+
+        // Yes, for three combined dishes (or 1 full dish and one combined dish): dishA: 2 of 2; dishB: 4 of 5
+        $this->assertTrue(ParticipationCountService::isParticipationPossibleForDishes(
+            $participation,
+            $bookedDishSlugs,
+            1.5
+        ));
+
+        // No, for four combined dishes (or 2 full dish or another combination): dishA: 2.5 of 2; dishB: 4.5 of 5
+        $this->assertFalse(ParticipationCountService::isParticipationPossibleForDishes(
+            $participation,
+            $bookedDishSlugs,
+            2.0
+        ));
     }
 
     /**
@@ -196,7 +308,7 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
     }
 
     /**
-     * TODO will be a test after #249690 is merged.
+     * @test
      *
      * @testdox Participation is not possible if dish slugs array is empty
      */

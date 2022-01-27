@@ -117,7 +117,7 @@ class GuestParticipationService
                 $dishSlugArray = $dishSlugs;
                 $participationCount = 0.5;
             } else {
-                // Note: there is an edge case, when a guest books a meal with limitation and a combined meal at once
+                // Note: There is an edge case, when a guest books a meal with limitation and a combined meal at once
                 if (isset($flippedDishSlugs[$meal->getDish()->getSlug()])) {
                     $participationCount = 1.5;
                 }

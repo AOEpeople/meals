@@ -17,6 +17,11 @@ class ParticipationCountService
     public const COUNT_KEY = 'count';
     public const LIMIT_KEY = 'limit';
 
+    /**
+     * @param array $participations     participations count array – Always use total counts array where combined dishes are considered
+     * @param array $dishSlugs          array of dishslugs to check (for normal meals length is 1; for combined meals it is the booked combination)
+     * @param float $participationCount Number of full or half participations that are expected, e.g., 1.5 for a dish that is part of combined meal and a normal meal.
+     */
     public static function isParticipationPossibleForDishes(
         array $participations,
         array $dishSlugs,
@@ -26,10 +31,9 @@ class ParticipationCountService
             return false;
         }
 
-        // TODO uncomment after #249690 is merged
-//        if (empty($dishSlugs)) {
-//            return false;
-//        }
+        if (empty($dishSlugs)) {
+            return false;
+        }
 
         foreach ($dishSlugs as $dishSlug) {
             if (!array_key_exists($dishSlug, $participations)) {

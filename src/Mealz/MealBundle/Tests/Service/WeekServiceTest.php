@@ -38,7 +38,7 @@ class WeekServiceTest extends TestCase
     /**
      * @test
      *
-     * TODO this behavior is unexpected, needs to be fixed. When you a generate week on a weekend and should be the upcoming week not the week in the past!
+     * TODO this behavior is unexpected, needs to be fixed. When you a generate week on a weekend and should be the upcoming not the past week!
      */
     public function generateEmptyWeekOnSaturdayBefore()
     {
@@ -53,7 +53,7 @@ class WeekServiceTest extends TestCase
     /**
      * @test
      *
-     * TODO this behavior is unexpected, needs to be fixed. When you a generate week on a weekend and should be the upcoming week not the week in the past!
+     * TODO this behavior is unexpected, needs to be fixed. When you a generate week on a weekend and should be the upcoming not the past week!
      */
     public function generateEmptyWeekOnSundayBefore()
     {
@@ -68,7 +68,7 @@ class WeekServiceTest extends TestCase
     /**
      * @test
      *
-     * TODO this behavior is unexpected, needs to be fixed. When you a generate week on a weekend and should be the upcoming week not the week in the past!
+     * TODO this behavior is unexpected, needs to be fixed. When you a generate week on a weekend and should be the upcoming not the past week!
      */
     public function generateEmptyWeekOnSaturdayAfter()
     {
@@ -83,7 +83,7 @@ class WeekServiceTest extends TestCase
     /**
      * @test
      *
-     * TODO this behavior is unexpected, needs to be fixed. When you a generate week on a weekend and should be the upcoming week not the week in the past!
+     * TODO this behavior is unexpected, needs to be fixed. When you a generate week on a weekend and should be the upcoming not the past week!
      */
     public function generateEmptyWeekOnSundayAfter()
     {

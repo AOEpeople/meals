@@ -92,7 +92,7 @@ class CombinedMealService
         $combinedMeal->setDay($day);
         $combinedMeal->setDateTime(clone $day->getDateTime());
         $combinedMeal->setDish($this->combinedDish);
-        $combinedMeal->setPrice($this->combinedDish->getPrice());
+        $combinedMeal->setPrice($this->defaultPrice);
 
         $day->addMeal($combinedMeal);
     }

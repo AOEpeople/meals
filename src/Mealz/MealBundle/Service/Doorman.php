@@ -2,6 +2,7 @@
 
 namespace App\Mealz\MealBundle\Service;
 
+use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\UserBundle\Entity\Profile;
@@ -42,14 +43,30 @@ class Doorman
 
     public function isUserAllowedToJoin(Meal $meal, array $dishSlugs = []): bool
     {
+        $participations = ParticipationCountService::getParticipationByDay($meal->getDay());
+
         $dishSlugArray = [$meal->getDish()->getSlug()];
         $participationCount = 1.0;
         if ($meal->getDish()->isCombinedDish()) {
-            $dishSlugArray = $dishSlugs;
-            $participationCount = 0.5;
+            if (empty($dishSlugs)) {
+                // Note: This is a special case, if $dishSlugs is empty, we don't know which combination the user would like to book.
+                // This could (and should) only happen on initial load, instead of checking if participation is possible,
+                // we check if the limit is reached by setting $participationCount to zero!
+                $participationCount = 0.0;
+                /** @var Meal $meal */
+                $dishSlugArray = [];
+                foreach ($meal->getDay()->getMeals() as $meal) {
+                    if (Dish::COMBINED_DISH_SLUG !== $meal->getDish()->getSlug()) {
+                        // Note: We don't know the combination, so in the end, there could be more than two dishes inside of $dishSlugArray, e.g. when we have variants.
+                        $dishSlugArray[] = $meal->getDish()->getSlug();
+                    }
+                }
+            } else {
+                $dishSlugArray = $dishSlugs;
+                $participationCount = 0.5;
+            }
         }
 
-        $participations = ParticipationCountService::getParticipationByDay($meal->getDay());
         $isPossibleToJoin = ParticipationCountService::isParticipationPossibleForDishes($participations[ParticipationCountService::PARTICIPATION_TOTAL_COUNT_KEY], $dishSlugArray, $participationCount);
 
         if (false === $this->security->getUser()->getProfile() instanceof Profile || false === $isPossibleToJoin) {

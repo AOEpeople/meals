@@ -260,6 +260,8 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
         $mealLimitReachedC = $this->getMeal($locked, $expired, [$profiles[1], $profiles[count($profiles) - 1]]);
         $mealLimitReachedC->setParticipationLimit($mealWithLimitC->getParticipants()->count());
 
+        // Note: In production, we don't have more than 2 main dishes (or 2 variants per main dish), which means maximum 4 dishes to choose.
+        // This should demonstrate that the participation count also works for a lot of meals on the same day.
         return new MealCollection([
             $this->getMeal($locked, $expired),
             $this->getMeal($locked, $expired),

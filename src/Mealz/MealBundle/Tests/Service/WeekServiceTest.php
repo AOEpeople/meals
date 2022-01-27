@@ -4,8 +4,8 @@ namespace App\Mealz\MealBundle\Tests\Service;
 
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Service\WeekService;
-use PHPUnit\Framework\TestCase;
 use DateTime;
+use PHPUnit\Framework\TestCase;
 
 class WeekServiceTest extends TestCase
 {
@@ -109,7 +109,7 @@ class WeekServiceTest extends TestCase
             $lunchDateTime->modify('+' . $i . 'days');
             $lunchDateTime->setTime(12, 0);
             $this->assertEquals($lunchDateTime->format('Y-m-d H:i:s'), $day->getDateTime()->format('Y-m-d H:i:s'));
-            $i++;
+            ++$i;
         }
     }
 }

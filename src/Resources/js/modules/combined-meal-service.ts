@@ -1,4 +1,10 @@
 export class CombinedMealService {
+
+    /**
+     * No. of dish items in a combined dish.
+     */
+    private static readonly COMBINED_DISH_ITEM_COUNT = 2;
+
     public static getCombinedMealDishes($mealContainer: JQuery): Dish[] {
         let dishes: Dish[] = [];
         $mealContainer.find('.meal-row').each(function () {
@@ -27,38 +33,27 @@ export class CombinedMealService {
     }
 
     /**
-     * @param $checkbox     Combined Dish Checkbox
-     * @param participantID Participation ID for booked combined meal
+     * @param $checkbox       Combined Dish Checkbox
+     * @param participantID   Participation ID for booked combined meal
      * @param bookedDishSlugs Dish IDs in booked combined meal
      */
     public static updateCombinedDish($checkbox: JQuery, participantID: number, bookedDishSlugs: string[]) {
         let $dishContainer = $checkbox.closest('.meal-row');
-
-        if (Array.isArray(bookedDishSlugs) && (0 < bookedDishSlugs.length)) {
-            let $mealContainer = $dishContainer.closest('.meal');
-            const dishes = CombinedMealService.getCombinedMealDishes($mealContainer);
-            let dt = CombinedMealService.getBookedDishTitles(bookedDishSlugs, dishes);
-            if (0 < dt.length) {
-                // update dish description with titles of booked dishes
-                const bookedDishTitles = dt.map(dishTitle => $(`<div class="dish">${dishTitle}</div>`));
-                $dishContainer.find('.description .dish-combination').empty().append(...bookedDishTitles);
-                if (CombinedMealService.mealHasDishVariations($mealContainer)) {
-                    $dishContainer.find('.title').addClass('edit');
-                }
-
-                // update booked dish IDs in data attribute
-                $dishContainer.attr('data-id', participantID);
-                $dishContainer.attr('data-booked-dishes', bookedDishSlugs.join(','));
-            }
-
+        if (typeof participantID === 'undefined' || !Array.isArray(bookedDishSlugs) || 0 === bookedDishSlugs.length) {
+            CombinedMealService.resetCombinedDish($dishContainer);
             return;
         }
 
-        let desc = $dishContainer.data('description');
-        $dishContainer.find('.description .dish-combination').empty().text(desc);
-        $dishContainer.find('.title').removeClass('edit');
-        $dishContainer.attr('data-id', '');
-        $dishContainer.attr('data-booked-dishes', '');
+        let $mealContainer = $dishContainer.closest('.meal');
+        const dishes = CombinedMealService.getCombinedMealDishes($mealContainer);
+        const success = CombinedMealService.updateBookedDishes($checkbox, dishes, bookedDishSlugs);
+
+        if (success) {
+            $dishContainer.attr('data-id', participantID);
+            if (CombinedMealService.mealHasDishVariations($mealContainer)) {
+                $dishContainer.find('.title').addClass('edit');
+            }
+        }
     }
 
     /**
@@ -66,16 +61,25 @@ export class CombinedMealService {
      * @param $dishes         Available meal dishes on a given day
      * @param bookedDishSlugs Dish Slugs in booked combined meal
      */
-    public static updateBookedDishes($checkbox: JQuery, $dishes: Dish[], bookedDishSlugs: string[]) {
+    public static updateBookedDishes($checkbox: JQuery, $dishes: Dish[], bookedDishSlugs: string[]): boolean {
+        if (!Array.isArray(bookedDishSlugs) || 0 === bookedDishSlugs.length) {
+            return false;
+        }
+
         let $dishContainer = $checkbox.closest('.meal-row');
         let bdt = CombinedMealService.getBookedDishTitles(bookedDishSlugs, $dishes);
-        if (0 < bdt.length) {
+
+        if (CombinedMealService.COMBINED_DISH_ITEM_COUNT === bdt.length) {
             // update dish description with titles of booked dishes
             const bookedDishTitles = bdt.map(dishTitle => $(`<div class="dish">${dishTitle}</div>`));
             $dishContainer.find('.description .dish-combination').empty().append(...bookedDishTitles);
             // update booked dish IDs in data attribute
             $dishContainer.attr('data-booked-dishes', bookedDishSlugs.join(','));
+
+            return true;
         }
+
+        return false;
     }
 
     private static getBookedDishTitles(dishIDs: string[], dishes: Dish[] | DishVariation[]) {
@@ -92,6 +96,18 @@ export class CombinedMealService {
         });
 
         return dishTitles;
+    }
+
+    private static resetCombinedDish($dishContainer: JQuery): void {
+        let desc = $dishContainer.data('description');
+        $dishContainer.find('.description .dish-combination').empty().text(desc);
+        $dishContainer.find('.title').removeClass('edit');
+        $dishContainer.attr('data-id', '');
+        $dishContainer.attr('data-booked-dishes', '');
+    }
+
+    private static existBookedDishes($dishContainer: JQuery): boolean {
+        return CombinedMealService.COMBINED_DISH_ITEM_COUNT === $dishContainer.find('.description .dish-combination .dish').length;
     }
 
     private static mealHasDishVariations($mealContainer: JQuery): boolean {

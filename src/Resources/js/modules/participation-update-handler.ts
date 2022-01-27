@@ -58,6 +58,12 @@ export class ParticipationUpdateHandler {
         $checkbox.prop('disabled', !checkboxEnabled);
     }
 
+    private static changeCheckboxState($checkbox: JQuery): void {
+        $checkbox
+            .prop('checked', !$checkbox.is(':checked'))
+            .trigger('change'); // changing checkbox state manually doesn't trigger "change" event
+    }
+
     private static changeCheckboxAttributes($checkbox: JQuery, checkboxClass: ParticipationAction, url: string, participantId?: number) {
         $checkbox.attr('value', url);
         $checkbox.attr('class', 'participation-checkbox ' + checkboxClass);
@@ -91,7 +97,7 @@ export class ParticipationUpdateHandler {
 
     public static toggleAction($checkbox: JQuery, data: ToggleData) {
         // change
-        $checkbox.prop('checked', !$checkbox.is(':checked'));
+        ParticipationUpdateHandler.changeCheckboxState($checkbox);
         const nextAction = ('deleted' === data.actionText) ? ParticipationAction.JOIN : ParticipationAction.DELETE;
         ParticipationUpdateHandler.changeCheckboxAttributes($checkbox, nextAction, data.url);
         ParticipationUpdateHandler.changeParticipationCounter($checkbox, ParticipationState.DEFAULT, data.participantsCount);

@@ -106,10 +106,6 @@ export class CombinedMealService {
         $dishContainer.attr('data-booked-dishes', '');
     }
 
-    private static existBookedDishes($dishContainer: JQuery): boolean {
-        return CombinedMealService.COMBINED_DISH_ITEM_COUNT === $dishContainer.find('.description .dish-combination .dish').length;
-    }
-
     private static mealHasDishVariations($mealContainer: JQuery): boolean {
         return 0 < $mealContainer.find('.meal-row .variation-row').length;
     }

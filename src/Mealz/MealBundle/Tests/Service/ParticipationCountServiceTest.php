@@ -52,7 +52,7 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
     public function participationCountForNotLockedNotExpiredMeal(): void
     {
         $meals = $this->getMixedMealsOnSameDay();
-        $this->getAndCheckParticipationDay($meals);
+        $this->getAndCheckParticipationOnDay($meals);
     }
 
     /**
@@ -63,7 +63,7 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
     public function participationCountForLockedNotExpiredMeal(): void
     {
         $meals = $this->getMixedMealsOnSameDay(true);
-        $this->getAndCheckParticipationDay($meals);
+        $this->getAndCheckParticipationOnDay($meals);
     }
 
     /**
@@ -74,7 +74,7 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
     public function participationCountForLockedAndExpiredMeal(): void
     {
         $meals = $this->getMixedMealsOnSameDay(true, true);
-        $this->getAndCheckParticipationDay($meals);
+        $this->getAndCheckParticipationOnDay($meals);
     }
 
     /**
@@ -97,7 +97,7 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
     public function participationCountForWeek(): void
     {
         $meals = $this->getMixedMeals();
-        $this->getAndCheckParticipationByDays($meals);
+        $this->getAndCheckParticipationOnDays($meals);
     }
 
     /**
@@ -130,7 +130,7 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
     public function participationIsNotPossibleForEmptyDishSlugs(): void
     {
         $meals = $this->getMixedMeals();
-        $participations = $this->getAndCheckParticipationByDays($meals);
+        $participations = $this->getAndCheckParticipationOnDays($meals);
 
         foreach ($meals as $meal) {
             $date = $meal->getDay()->getDateTime()->format('Y-m-d');
@@ -159,7 +159,7 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
     public function participationIsNotPossibleForWrongDishSlugs(): void
     {
         $meals = $this->getMixedMeals();
-        $participations = $this->getAndCheckParticipationByDays($meals);
+        $participations = $this->getAndCheckParticipationOnDays($meals);
 
         foreach ($meals as $meal) {
             $date = $meal->getDay()->getDateTime()->format('Y-m-d');
@@ -188,7 +188,7 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
     public function participationIsPossibleForWeekWithLimitsWhereLimitIsNotReached(): void
     {
         $meals = $this->getMixedMeals(false);
-        $participations = $this->getAndCheckParticipationByDays($meals);
+        $participations = $this->getAndCheckParticipationOnDays($meals);
 
         foreach ($meals as $meal) {
             $date = $meal->getDay()->getDateTime()->format('Y-m-d');
@@ -218,7 +218,7 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
     public function participationIsNotPossibleForWeekWhereLimitIsReached(): void
     {
         $meals = new MealCollection($this->getMixedMealsWithLimitReached());
-        $participations = $this->getAndCheckParticipationByDays($meals);
+        $participations = $this->getAndCheckParticipationOnDays($meals);
 
         foreach ($meals as $meal) {
             $date = $meal->getDay()->getDateTime()->format('Y-m-d');
@@ -326,7 +326,7 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
         return [$mealLimitReachedA, $mealLimitReachedB, $mealLimitReachedC];
     }
 
-    private function getAndCheckParticipationByDays(MealCollection $meals): array
+    private function getAndCheckParticipationOnDays(MealCollection $meals): array
     {
         $week = $this->createWeek($meals);
         $this->assertGreaterThan(0, count($week->getDays()));
@@ -369,7 +369,7 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
         return $participations;
     }
 
-    private function getAndCheckParticipationDay(MealCollection $meals): void
+    private function getAndCheckParticipationOnDay(MealCollection $meals): void
     {
         $date = null;
         /** @var Meal $meal */

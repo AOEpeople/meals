@@ -91,7 +91,7 @@ export default class MealIndexView {
             return;
         }
 
-        const $dishContainer = mealContainer.find('.meal-row[data-combined="1"]');
+        const $dishContainer = mealContainer.find('.meal-row.combined-meal');
         this.showMealConfigurator($dishContainer);
     }
 

@@ -1,5 +1,4 @@
 {% set dish = meal.dish %}
-{% set combinedDish = '0' %}
 {% set canEditCombinedDish = false %}
 {% set combinedDishIDs = '' %}
 {% set bookedDishTitles = [] %}
@@ -7,7 +6,6 @@
 {% set dishDescription = dish.description|default('content.participation.dish.no_description'|trans({},'general')) %}
 
 {% if dish.isCombinedDish %}
-    {% set combinedDish = '1' %}
     {% set bookedDishCombination = participationService.getBookedDishCombination(app.user.profile, meal) %}
     {% if bookedDishCombination|length > 0 %}
         {% set bookedDishTitles = bookedDishCombination.toArray|map(d => d.title) %}
@@ -20,7 +18,6 @@
      data-slug="{{ dish.slug }}"
     {%- if participationService.openMeal(meal) -%}
         data-id="{{ participant ? participant.id }}"
-        data-combined="{{ combinedDish }}"
         data-booked-dishes="{{ combinedDishIDs }}"
         data-description="{{ dishDescription }}"
     {%- endif -%}

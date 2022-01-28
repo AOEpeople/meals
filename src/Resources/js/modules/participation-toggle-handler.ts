@@ -6,6 +6,7 @@ import {
 } from "./participation-request-handler";
 import {ConfirmSwapDialog} from "./confirm-swap-dialog";
 import {ParticipationAction} from "./participation-update-handler";
+import {CombinedMealService} from "./combined-meal-service";
 
 export abstract class AbstractParticipationToggleHandler {
     constructor($checkboxes: JQuery) {
@@ -87,7 +88,8 @@ export class ParticipationToggleHandler extends AbstractParticipationToggleHandl
 
 export class ParticipationGuestToggleHandler extends AbstractParticipationToggleHandler {
     public toggle($checkbox: JQuery, data?: any) {
-        if (1 === $checkbox.closest('.meal-row').data('combined')) {
+        let $dishContainer = $checkbox.closest('.meal-row');
+        if (CombinedMealService.isCombinedDish($dishContainer)) {
             this.updateDishSelection($checkbox, data);
         }
 

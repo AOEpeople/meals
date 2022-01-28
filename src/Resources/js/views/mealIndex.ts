@@ -1,10 +1,11 @@
 import {ParticipationPreToggleHandler} from "../modules/participation-pre-toggle-handler";
 import {ParticipationToggleHandler} from "../modules/participation-toggle-handler";
 import {ParticipationCountUpdateHandler} from "../modules/participation-count-update-handler";
-import {CombinedMealDialog, Dish, DishVariation, SerializedFormData} from "../modules/combined-meal-dialog";
+import {CombinedMealDialog, SerializedFormData} from "../modules/combined-meal-dialog";
 import {ParticipationRequest, ParticipationRequestHandler} from "../modules/participation-request-handler";
 import {UpdateOffersHandler} from "../modules/update-offers-handler";
 import {ParticipationResponse} from "../modules/participation-response-handler";
+import {CombinedMealService} from "../modules/combined-meal-service";
 
 export default class MealIndexView {
     participationPreToggleHandler: ParticipationPreToggleHandler;
@@ -141,7 +142,7 @@ export default class MealIndexView {
         let $mealContainer = $dishContainer.closest('.meal');
         const slotSlug: string = $mealContainer.find('.slot-selector').val().toString();
         const title = $dishContainer.find('.title').text();
-        const dishes = this.getCombinedMealDishes($mealContainer);
+        const dishes = CombinedMealService.getDishes($mealContainer);
         const $bookedDishIDs = $dishContainer.attr('data-booked-dishes').split(',').map((id: string) => id.trim());
         let cmd = new CombinedMealDialog(
             title,
@@ -156,74 +157,13 @@ export default class MealIndexView {
                     let req = new ParticipationRequest(url, reqPayload);
                     ParticipationRequestHandler.sendRequest(req, $participationCheckbox, function($checkbox, data: UpdateResponse) {
                         if (0 < data.bookedDishSlugs.length) {
-                            self.updateCombinedDish($checkbox, dishes, data.bookedDishSlugs);
+                            CombinedMealService.updateBookedDishes($checkbox, dishes, data.bookedDishSlugs);
                         }
                     });
                 }.bind(self)
             }
         );
         cmd.open();
-    }
-
-    private getCombinedMealDishes($meal: JQuery): Dish[] {
-        let dishes: Dish[] = [];
-        $meal.find('.meal-row').each(function () {
-            const $mealRow = $(this);
-            if (1 === $mealRow.data('combined')) {
-                return;
-            }
-
-            let dish: Dish = {
-                title: $mealRow.find('.title').contents().get(0).nodeValue.trim(),
-                slug: $mealRow.data('slug'),
-                variations: []
-            };
-            $mealRow.find('.variation-row').each(function () {
-                const $dishVarRow = $(this);
-                let dishVariation: DishVariation = {
-                    title: $dishVarRow.find('.text-variation').text().trim(),
-                    slug: $dishVarRow.data('slug')
-                };
-                dish.variations.push(dishVariation);
-            });
-            dishes.push(dish);
-        });
-
-        return dishes;
-    }
-
-    /**
-     * @param $checkbox       Combined Dish Checkbox
-     * @param $dishes         Available meal dishes on a given day
-     * @param bookedDishSlugs Dish Slugs in booked combined meal
-     */
-    private updateCombinedDish($checkbox: JQuery, $dishes: Dish[], bookedDishSlugs: string []) {
-        let $dishContainer = $checkbox.closest('.meal-row');
-        let bdt = this.getBookedDishTitles(bookedDishSlugs, $dishes);
-        if (0 < bdt.length) {
-            // update dish description with titles of booked dishes
-            const bookedDishTitles = bdt.map(dishTitle => $(`<div class="dish">${dishTitle}</div>`));
-            $dishContainer.find('.description .dish-combination').empty().append(...bookedDishTitles);
-            // update booked dish IDs in data attribute
-            $dishContainer.attr('data-booked-dishes', bookedDishSlugs.join(','));
-        }
-    }
-
-    private getBookedDishTitles(bookedDishSlugs: string[], dishes: Dish[]|DishVariation[]) {
-        let self = this;
-        let dishTitles: string[] = [];
-        dishes.forEach(function(dish){
-            let idx = bookedDishSlugs.indexOf(dish.slug);
-            if (-1 < idx) {
-                dishTitles.push(dish.title);
-                bookedDishSlugs.slice(idx, 1);
-            } else if (Array.isArray(dish.variations) && 0 < dish.variations.length) {
-                let dvt = self.getBookedDishTitles(bookedDishSlugs, dish.variations);
-                dishTitles.push(...dvt);
-            }
-        });
-
-        return dishTitles;
     }
 }
 

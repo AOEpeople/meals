@@ -1,5 +1,6 @@
 import 'jquery-ui/ui/widgets/dialog';
 import {BaseDialog} from "./base-dialog";
+import {Dish} from "./combined-meal-service";
 
 export class CombinedMealDialog extends BaseDialog {
     private readonly containerID: string = '#combined-meal-selector';
@@ -94,15 +95,6 @@ export class CombinedMealDialog extends BaseDialog {
         this.opts.ok($form.serializeArray());
         this.$dialog.dialog('close');
     }
-}
-
-export interface Dish extends DishVariation {
-    variations: DishVariation[]
-}
-
-export interface DishVariation {
-    title: string
-    slug: string
 }
 
 interface CombinedMealDialogOptions {

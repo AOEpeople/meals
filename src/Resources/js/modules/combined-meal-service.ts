@@ -50,7 +50,8 @@ export class CombinedMealService {
 
         if (success) {
             $dishContainer.attr('data-id', participantID);
-            if (CombinedMealService.mealHasDishVariations($mealContainer)) {
+            if (CombinedMealService.mealHasDishVariations($mealContainer)
+                && !CombinedMealService.isLockedMeal($mealContainer)) {
                 $dishContainer.find('.title').addClass('edit');
             }
         }
@@ -108,6 +109,13 @@ export class CombinedMealService {
 
     public static isCombinedDish($dishContainer: JQuery): boolean {
         return $dishContainer.hasClass('combined-meal');
+    }
+
+    public static isLockedMeal($mealContainer: JQuery): boolean {
+        let lockDateTime = $mealContainer.data('lockDateTime');
+        const mealLockDateTime = Date.parse(lockDateTime);
+
+        return mealLockDateTime <= Date.now();
     }
 
     private static mealHasDishVariations($mealContainer: JQuery): boolean {

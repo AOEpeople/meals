@@ -24,6 +24,11 @@ export class ParticipationRequestHandler {
             return;
         }
 
+        if (undefined === participationRequest.url || '' === participationRequest.url) {
+            console.log('Error: URL is missing');
+            return;
+        }
+
         $.ajax({
             method: participationRequest.method,
             url: participationRequest.url,

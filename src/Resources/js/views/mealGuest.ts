@@ -9,12 +9,12 @@ export default class MealGuestView {
 
     constructor() {
         this.$participationCheckboxes = $('.meal-guest input[type="checkbox"]');
+        this.mealDate = $('.meal-guest').data('date');
         this.$slotDropDown = $('#invitation_form_slot');
-        this.mealDate = this.$slotDropDown.closest('.meal-guest').data('date');
 
-        if (this.$slotDropDown.length < 1) {
+        if (0 < this.$slotDropDown.length) {
             this.updateSlots();
-            setInterval(this.updateSlots, 3000);
+            setInterval(this.updateSlots.bind(this), 3000);
         }
 
         if (this.$participationCheckboxes.length > 0) {

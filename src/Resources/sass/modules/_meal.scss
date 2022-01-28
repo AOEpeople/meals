@@ -138,7 +138,6 @@
 
   .meal-row {
     position: relative;
-    overflow: auto;
     padding: 10px 15px;
 
     &:not(:last-child) {
@@ -447,65 +446,6 @@
     }
   }
 
-}
-
-.meal-guest {
-  @extend %meal;
-
-  border-width: 0;
-  border-left: 0;
-
-  .wrapper-vertical-center {
-    right: 0;
-    width: 30%;
-
-    @include breakpoint(small) {
-      width: 30%;
-    }
-
-    @include breakpoint(smaller) {
-      width: 35%;
-    }
-  }
-
-  &.is-available {
-    border-color: transparent;
-
-    .header {
-      background-color: $color-green;
-    }
-  }
-
-  .header {
-    padding: 5px 15px;
-    color: $color-white;
-    background-color: $color-gray-secondary;
-    font-weight: bold;
-  }
-
-  > .form-row {
-    margin: 0;
-  }
-
-  .participants {
-    width: 65%;
-    margin-left: 10%;
-    text-align: right;
-
-    @include breakpoint(small) {
-      width: 65%;
-      margin-left: 10%;
-    }
-
-    @include breakpoint(smaller) {
-      width: 75%;
-      margin-left: 0;
-    }
-  }
-
-  .action {
-    padding-left: 8px;
-  }
 }
 
 .table {

@@ -1,0 +1,14 @@
+{% set dish = meal.data.dish %}
+<div class="meal-row{{ dish.isCombinedDish ? ' combined-meal' }}"
+     data-slug="{{ dish.slug }}"
+     data-description="{{ dish.description|default('content.participation.dish.no_description'|trans({},'general')) }}">
+    <div class="title">{{ dish.title }}</div>
+    <div class="description">
+        {%- if dish.description -%}
+            {{- dish.description -}}
+        {%- else -%}
+            {{- 'content.participation.dish.no_description'|trans({},'general') -}}
+        {%- endif -%}
+    </div>
+    {% include 'MealzMealBundle:Meal/partials:guestMealActionsWrapper.html.twig' %}
+</div>

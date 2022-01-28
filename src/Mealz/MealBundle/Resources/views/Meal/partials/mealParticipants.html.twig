@@ -1,0 +1,43 @@
+{% apply spaceless %}
+{% set participations = participations[day.dateTime.format('Y-m-d')]['countByMealIds'][meal.id][meal.dish.slug] %}
+{% set hasLimit = 0 < participations['limit'] %}
+{% set isParticipationLimitReached = hasLimit and participations['count'] >= participations['limit'] %}
+
+{% set participantsCountClasses = ['participants-count'] %}
+
+{% if isParticipationLimitReached %}
+    {% set participantsCountClasses = participantsCountClasses|merge(['participation-limit-reached']) %}
+{% elseif day.enabled and (day.lockParticipationDateTime | date('U') > 'now' | date('U')) %}
+    {% set participantsCountClasses = participantsCountClasses|merge(['participation-allowed']) %}
+{% endif %}
+
+{% set tooltipClasses = ['tooltiptext'] %}
+{% set tooltipId = '' %}
+{% set tooltipText = '' %}
+
+{% if is_granted('ROLE_USER') %}
+    {% set participant = meal.getParticipant(app.user.profile) %}
+    {% if participant and is_participation_pending(participant) %}
+        {% if is_allowed_to_swap(meal) %}
+            {% set participantsCountClasses = participantsCountClasses|merge(['participation-pending']) %}
+        {% endif %}
+        {% set tooltipClasses = tooltipClasses|merge(['active']) %}
+        {% set tooltipId = 'tooltip_offered' %}
+        {% set tooltipText = "tooltip.offered_meal" %}
+    {% elseif false == participant and is_offer_available(meal, participant) %}
+        {% if is_allowed_to_swap(meal) %}
+            {% set participantsCountClasses = participantsCountClasses|merge(['offer-available']) %}
+        {% endif %}
+        {% set tooltipClasses = tooltipClasses|merge(['active']) %}
+        {% set tooltipId = 'tooltip_available' %}
+        {% set tooltipText = "tooltip.available_meal" %}
+    {% endif %}
+{% endif %}
+{% endapply %}
+<div class="participants">
+    <span class="{{ participantsCountClasses|join(' ') }}">
+        <span>{{ participations['count'] }}</span>
+        <label>{{ hasLimit ? ' / ' ~ participations['limit'] }}</label>
+        <span class="{{ tooltipClasses|join(' ') }}">{{ tooltipText|trans({}, "messages") }}</span>
+    </span>
+</div>

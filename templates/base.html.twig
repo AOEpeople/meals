@@ -5,8 +5,8 @@
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
 	<title>AOE Meals</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
-	<link rel="stylesheet" href="/static/vendors.css" />
-	<link rel="stylesheet" href="/static/app.css" />
+	<link rel="stylesheet" href="{{ assets_server }}/static/vendors.css" />
+	<link rel="stylesheet" href="{{ assets_server }}/static/app.css" />
 	{% block head %}{% endblock %}
 </head>
 
@@ -61,8 +61,7 @@
 		{% block body %}
 		{% endblock %}
 	</div>
-
-		<script src="/static/vendors.js"></script>
-		<script src="/static/app.js"></script>
+		<script src="{{ assets_server }}/static/vendors.js"></script>
+		<script src="{{ assets_server }}/static/app.js"></script>
 	</body>
 </html>

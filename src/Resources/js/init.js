@@ -1,6 +1,7 @@
 // include CSS
 import 'daterangepicker/daterangepicker.css'
 import 'jquery-datetimepicker/build/jquery.datetimepicker.min.css'
+import 'jquery-ui/themes/base/all.css'
 import '@fancyapps/fancybox/dist/jquery.fancybox.css'
 import '../sass/mealz.scss'
 
@@ -12,9 +13,17 @@ import '@fancyapps/fancybox';
 import 'easy-autocomplete';
 import 'daterangepicker';
 import {Controller} from "./controller";
+import {
+    ParticipationCountUpdateHandler, ParticipationGuestCountUpdateHandler
+} from "./modules/participation-count-update-handler";
+import {ParticipationGuestToggleHandler, ParticipationToggleHandler} from "./modules/participation-toggle-handler";
+import {ParticipationPreToggleHandler} from "./modules/participation-pre-toggle-handler";
+import {UpdateOffersHandler} from "./modules/update-offers-handler";
 
 if (process.env.MODE === 'production') {
     jQuery.migrateMute = true;
+} else if (import.meta.webpackHot) {
+    import.meta.webpackHot.accept();
 }
 
 function importAll(r) {
@@ -61,7 +70,7 @@ $(function () {
      * See: https://stackoverflow.com/questions/1537032/how-do-i-stop-jquery-appending-a-unique-id-to-scripts-called-via-ajax
      * http://api.jquery.com/jQuery.ajaxPrefilter/
      */
-    $.ajaxPrefilter('script', function(options) {
+    $.ajaxPrefilter('script', function (options) {
         options.cache = true;
     });
 
@@ -88,21 +97,12 @@ $(function () {
      */
     mealz.enableSortableTables();
 
-    // prepare checkboxes on guest invitation form
-    mealz.$guestParticipationCheckboxes.each(function (idx, checkbox) {
-        var $checkbox = $(checkbox);
-        var $participantsCount = $checkbox.parents('.action').parent().find('.participants-count');
-        var actualCount = parseInt($participantsCount.find('span').html());
-        mealz.applyCheckboxClasses($checkbox);
-        $participantsCount.find('span').text($checkbox.is(':checked') ? actualCount + 1 : actualCount);
-    });
-
     /**
      * Lightbox
      */
     mealz.enableLightbox();
 
-    if($('.edit-participation').length > 0) {
+    if ($('.edit-participation').length > 0) {
         /**
          * Profile Selection on Participants View
          */
@@ -118,17 +118,10 @@ $(function () {
     mealz.exportTransactions();
 
     /**
-     * If there are any meals in the list, run updateOffers to check for available offers.
-     */
-    if($('.meals-list').length > 0) {
-        mealz.updateOffers();
-    }
-
-    /**
      * if meals is limited it should be displayed
      */
-    $('.participation-limit').each(function(){
-        if($(this).val().length > 0 && $(this).val() > 0){
+    $('.participation-limit').each(function () {
+        if ($(this).val().length > 0 && $(this).val() > 0) {
             $(this).closest('.day').children('.limit-icon').addClass('modified');
         }
     });
@@ -136,42 +129,45 @@ $(function () {
     /**
      * datetimepicker
      */
-    $('.calendar-icon').each(function(i){
-        var thisDay = $('#week_form_days_'+i+'_lockParticipationDateTime');
+    $('.calendar-icon').each(function (i) {
+        var thisDay = $('#week_form_days_' + i + '_lockParticipationDateTime');
         $(this).datetimepicker({
-            format:'Y-m-d H:i:s',
-            inline:false,
-            defaultTime:new Date(thisDay.val()),
-            defaultDate:new Date(thisDay.val()),
-            onClose:function(dp,$input){
-                if($input.val().length > 0){
+            format: 'Y-m-d H:i:s',
+            inline: false,
+            defaultTime: new Date(thisDay.val()),
+            defaultDate: new Date(thisDay.val()),
+            onClose: function (dp, $input) {
+                if ($input.val().length > 0) {
                     thisDay.val($input.val());
                 }
             }
         });
     });
-    if($('.language-switch > span').text() == 'de'){
+    if ($('.language-switch > span').text() == 'de') {
         $.datetimepicker.setLocale('de');
     }
 
     /*
      * MouseOver hack
      */
-    (function($){
-        $.mlp = {x:0,y:0}; // Mouse Last Position
-        function documentHandler(){
+    (function ($) {
+        $.mlp = {x: 0, y: 0}; // Mouse Last Position
+        function documentHandler() {
             var $current = this === document ? $(this) : $(this).contents();
-            $current.on('mousemove', function(e){jQuery.mlp = {x:e.pageX,y:e.pageY};});
+            $current.on('mousemove', function (e) {
+                jQuery.mlp = {x: e.pageX, y: e.pageY};
+            });
             $current.find('iframe').on('load', documentHandler);
         }
+
         $(documentHandler);
-        $.fn.ismouseover = function(overThis) {
+        $.fn.ismouseover = function (overThis) {
             var result = false;
-            this.eq(0).each(function() {
+            this.eq(0).each(function () {
                 var $current = $(this).is('iframe') ? $(this).contents().find('body') : $(this);
                 var offset = $current.offset();
-                result = offset.left<=$.mlp.x && offset.left + $current.outerWidth() > $.mlp.x &&
-                         offset.top<=$.mlp.y && offset.top + $current.outerHeight() > $.mlp.y;
+                result = offset.left <= $.mlp.x && offset.left + $current.outerWidth() > $.mlp.x &&
+                    offset.top <= $.mlp.y && offset.top + $current.outerHeight() > $.mlp.y;
             });
             return result;
         };

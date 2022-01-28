@@ -1,38 +1,33 @@
 <div class="meal-row">
-
-    {% apply spaceless %}
-        {% set parentFlag = null %}
-
-        {% for meal in mealVariationGroup %}
-            {% if dishService.isNew(meal.dish) and parentFlag is not same as (false) %}
-                {% set parentFlag = true %}
-            {% else %}
-                {% set parentFlag = false %}
-            {% endif %}
-        {% endfor %}
-
-        {% for meal in mealVariationGroup %}
-            {% set dish = meal.dish %}
-
-            {% if loop.first %}
-                <div class="text">
-                    <div class="title">
-                        {{ dish.parent.title }}
-                        {% if parentFlag %}
-                            <span class="new-flag">{{ 'content.participation.dish.new'|trans({},'general') }}</span>
-                        {% endif %}
-                    </div>
-                </div>
-            {% endif %}
-            <div class="variation-row">
-                <div class="text text-variation">{{ dish.title }}
-                    {% if dishService.isNew(dish) and not parentFlag %}
-                        <span class="new-flag">{{ 'content.participation.dish.new'|trans({},'general') }}</span>
-                    {% endif %}
-                </div>
-                {% include 'MealzMealBundle:Meal/partials:mealActions.html.twig' %}
+    {% set parentFlag = null %}
+    {% for meal in mealVariationGroup %}
+        {% if dishService.isNew(meal.dish) and parentFlag is not same as (false) %}
+            {% set parentFlag = true %}
+        {% else %}
+            {% set parentFlag = false %}
+        {% endif %}
+    {% endfor %}
+    {% for meal in mealVariationGroup %}
+        {% set dish = meal.dish %}
+        {% if loop.first %}
+            <div class="title">
+                {{- dish.parent.title -}}
+                {%- if parentFlag %}
+                    <span class="new-flag">{{ 'content.participation.dish.new'|trans({},'general') }}</span>
+                {% endif -%}
             </div>
-        {% endfor %}
-
-    {% endapply %}
+        {% endif %}
+        <div class="variation-row" data-slug="{{ dish.slug }}">
+            <div class="description">
+                <div class="text text-variation">
+                    {{- dish.title -}}
+                    {%- if dishService.isNew(dish) and not parentFlag %}
+                        <span class="new-flag">{{ 'content.participation.dish.new'|trans({},'general') }}</span>
+                    {% endif -%}
+                </div>
+                <div class="text price">{{ meal.price|number_format(2, '.', ',') }} €</div>
+            </div>
+            {% include 'MealzMealBundle:Meal/partials:mealActionsWrapper.html.twig' %}
+        </div>
+    {% endfor %}
 </div>

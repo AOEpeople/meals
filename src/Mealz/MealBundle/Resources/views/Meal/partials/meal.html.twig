@@ -1,22 +1,42 @@
 {% set dish = meal.dish %}
+{% set canEditCombinedDish = false %}
+{% set combinedDishIDs = '' %}
+{% set bookedDishTitles = [] %}
+{% set participant = meal.getParticipant(app.user.profile) %}
+{% set dishDescription = dish.description|default('content.participation.dish.no_description'|trans({},'general')) %}
 
-<div class="meal-row">
-	{% apply spaceless %}
-	<div class="text">
-		<div class="title">
-			{{ dish.title }}
-			{% if dishService.isNew(dish) %}
-				<span class="new-flag">{{ 'content.participation.dish.new'|trans({},'general') }}</span>
-			{% endif %}
-		</div>
-		<div class="description">
-			{% if dish.description %}
-				{{ dish.description }}
-			{% else %}
-				{{ 'content.participation.dish.no_description'|trans({},'general') }}
-			{% endif %}
-		</div>
-	</div>
-	{% include 'MealzMealBundle:Meal/partials:mealActions.html.twig' %}
-	{% endapply %}
+{% if dish.isCombinedDish %}
+    {% set bookedDishCombination = participationService.getBookedDishCombination(app.user.profile, meal) %}
+    {% if bookedDishCombination|length > 0 %}
+        {% set bookedDishTitles = bookedDishCombination.toArray|map(d => d.title) %}
+        {% set combinedDishIDs = bookedDishCombination.toArray|map(d => d.slug)|join(',') %}
+        {% set canEditCombinedDish = available and bookedDishCombination.containsDishVariation %}
+    {% endif %}
+{% endif %}
+
+<div class="meal-row{{ dish.isCombinedDish ? ' combined-meal' }}"
+     data-slug="{{ dish.slug }}"
+    {%- if participationService.openMeal(meal) -%}
+        data-id="{{ participant ? participant.id }}"
+        data-booked-dishes="{{ combinedDishIDs }}"
+        data-description="{{ dishDescription }}"
+    {%- endif -%}
+    >
+    <div class="title{{ canEditCombinedDish ? ' edit' }}">
+        {{- dish.title -}}
+        {%- if dishService.isNew(dish) %}
+            <span class="new-flag">{{ 'content.participation.dish.new'|trans({},'general') }}</span>
+        {% endif -%}
+    </div>
+    <div class="description">
+        <div class="text dish-combination">
+            {% for dishTitle in bookedDishTitles %}
+                <div class="dish">{{ dishTitle }}</div>
+            {% else %}
+                {{ dishDescription }}
+            {% endfor %}
+        </div>
+        <div class="text price">{{ meal.price|number_format(2, '.', ',') }} €</div>
+    </div>
+    {% include 'MealzMealBundle:Meal/partials:mealActionsWrapper.html.twig' %}
 </div>

@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "outDir": "../../public/static",
+    "noImplicitAny": true,
+    "module": "es6",
+    "target": "es5",
+    "allowJs": true,
+    "moduleResolution": "node",
+    "typeRoots": [
+      "./node_modules/@types",
+      "./js/types"
+    ]
+  }
+}

@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Service;
 
+use App\Mealz\MealBundle\Entity\DishCollection;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\ParticipantRepository;
 use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Entity\SlotRepository;
+use App\Mealz\MealBundle\Service\Exception\ParticipationException;
+use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 
 /**
@@ -51,7 +54,7 @@ trait ParticipationServiceTrait
     }
 
     /**
-     * Checks if the given meal is bookable, i.e. not expired, locked or not fully booked.
+     * Checks if the given meal is bookable, i.e. not expired or locked but offered. Doesn't check if limit is reached!
      */
     private function mealIsBookable(Meal $meal): bool
     {
@@ -67,23 +70,7 @@ trait ParticipationServiceTrait
             return false;
         }
 
-        // meal is open and count of booked meals is below the meal limit; bookable
-        return !$this->mealLimitReached($meal);
-    }
-
-    /**
-     * Checks if the number of bookings reached the meal limit.
-     */
-    private function mealLimitReached(Meal $meal): bool
-    {
-        $mealLimit = $meal->getParticipationLimit();
-        if (1 > $mealLimit) {
-            return false;
-        }
-
-        $bookedMealCount = $this->participantRepo->getBookedMealCount($meal);
-
-        return $bookedMealCount < $mealLimit;
+        return true;
     }
 
     /**
@@ -111,5 +98,70 @@ trait ParticipationServiceTrait
         $slotPartCount = $this->participantRepo->getCountBySlot($slot, $date);
 
         return $slotPartCount < $slotLimit;
+    }
+
+    /**
+     * @throws ParticipationException
+     */
+    private function createParticipation(Profile $profile, Meal $meal, ?Slot $slot = null, array $dishSlugs = []): Participant
+    {
+        $participant = new Participant($profile, $meal);
+        if (null !== $slot) {
+            $participant->setSlot($slot);
+        }
+
+        if ($meal->isCombinedMeal()) {
+            $this->updateCombinedMealDishes($participant, $dishSlugs);
+        }
+
+        return $participant;
+    }
+
+    /**
+     * @throws ParticipationException
+     */
+    private function updateCombinedMealDishes(Participant $participant, array $dishSlugs): void
+    {
+        $meal = $participant->getMeal();
+
+        if (!$meal->isCombinedMeal()) {
+            throw new ParticipationException(
+                'invalid operation; normal meal participation cannot be updated',
+                ParticipationException::ERR_INVALID_OPERATION
+            );
+        }
+        if ((2 !== count($dishSlugs))) {
+            throw new ParticipationException(
+                'invalid dish count; combined meal expects 2 dishes, got ' . count($dishSlugs),
+                ParticipationException::ERR_COMBI_MEAL_INVALID_DISH_COUNT
+            );
+        }
+
+        $dishes = $this->getCombinedMealDishes($meal, $dishSlugs);
+
+        if (2 !== count($dishes)) {
+            throw new ParticipationException(
+                'invalid dish count; combined meal expects 2 dishes, got ' . count($dishes),
+                ParticipationException::ERR_COMBI_MEAL_INVALID_DISH_COUNT
+            );
+        }
+
+        $participant->setCombinedDishes(new DishCollection($dishes));
+    }
+
+    private function getCombinedMealDishes(Meal $meal, array $dishSlugs): array
+    {
+        $dishes = [];
+
+        foreach ($meal->getDay()->getMeals() as $m) {
+            $dish = $m->getDish();
+            if ($dish->isCombinedDish() || !in_array($dish->getSlug(), $dishSlugs, true)) {
+                continue;
+            }
+
+            $dishes[] = $dish;
+        }
+
+        return $dishes;
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Entity;
 
 use App\Mealz\UserBundle\Entity\Profile;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -35,6 +36,13 @@ class Participant
      * @ORM\JoinColumn(name="slot_id", referencedColumnName="id", nullable=true)
      */
     private ?Slot $slot = null;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Dish")
+     *
+     * @var Collection<int, Dish>|null
+     */
+    private ?Collection $combinedDishes;
 
     /**
      * @Assert\NotNull()
@@ -75,6 +83,7 @@ class Participant
     {
         $this->profile = $profile;
         $this->meal = $meal;
+        $this->combinedDishes = new DishCollection();
     }
 
     public function isConfirmed(): bool
@@ -175,6 +184,26 @@ class Participant
     public function isPending(): bool
     {
         return 0 !== $this->getOfferedAt();
+    }
+
+    public function getCombinedDishes(): DishCollection
+    {
+        if (null === $this->combinedDishes) {
+            return new DishCollection();
+        }
+
+        return new DishCollection($this->combinedDishes->toArray());
+    }
+
+    public function setCombinedDishes(?DishCollection $collection): void
+    {
+        if (null === $collection) {
+            if (null !== $this->combinedDishes) {
+                $this->combinedDishes->clear();
+            }
+        } else {
+            $this->combinedDishes = new DishCollection($collection->toArray());
+        }
     }
 
     public function __toString()

@@ -29,6 +29,11 @@ MealzMealBundle_Meal_join:
 MealzMealBundle_Meal_accept_offer:
     path: /menu/{date}/{dish}/accept-offer/{profile}
     defaults: { _controller: App\Mealz\MealBundle\Controller\MealController::join, profile: null }
+    methods: [GET,POST]
+
+MealzMealBundle_Meal_offers:
+    path: /menu/{date}/{dish}/offers
+    defaults: { _controller: App\Mealz\MealBundle\Controller\MealController::getOffers }
 
 MealzMealBundle_Meal_updateOffers:
     path: /menu/meal/update-offers
@@ -36,12 +41,12 @@ MealzMealBundle_Meal_updateOffers:
 
 MealzMealBundle_Meal_guest:
     path: /menu/guest/{hash}
-    defaults: { _controller: App\Mealz\MealBundle\Controller\MealController::joinAsGuest }
+    defaults: { _controller: App\Mealz\MealBundle\Controller\MealGuestController::joinAsGuest }
     methods: [GET, POST]
 
 MealzMealBundle_Meal_newGuestInvitation:
     path:  /menu/{dayId}/new-guest-invitation
-    defaults: { _controller: App\Mealz\MealBundle\Controller\MealController::newGuestInvitation }
+    defaults: { _controller: App\Mealz\MealBundle\Controller\MealGuestController::newGuestInvitation }
     requirements:
         dayId: '[1-9][0-9]*'
 
@@ -77,6 +82,11 @@ MealzMealBundle_Slot_delete:
     defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::deleteSlot }
     methods: [DELETE]
 
+MealzMealBundle_Participant_update:
+    path:  /meal/participation/{participant}/update
+    defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::updateCombinedMeal }
+    methods: [POST]
+
 MealzMealBundle_Participant_delete:
     path:  /menu/meal/{participant}/delete
     defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::delete }
@@ -91,7 +101,7 @@ MealzMealBundle_Participant_unswap:
 
 MealzMealBundle_Participant_updateSlot:
     path: /menu/meal/{date}/update-slot
-    defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::updateSlot }
+    defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipationUpdateController::updateSlot }
     methods: [POST]
 
 MealzMealBundle_Meal_isParticipationPending:
@@ -174,8 +184,16 @@ mealz_meal_edit_participations:
 
 MealzMealBundle_Slots_status_on:
     path: /participation/slots-status/{date}
-    defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::getSlotStatusOn }
+    defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipationUpdateController::getSlotStatusOn }
 
 MealzMealBundle_Slots_status:
     path: /participation/slots-status
-    defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::getSlotStatus }
+    defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipationUpdateController::getSlotStatus }
+
+MealzMealBundle_Participation_count_status:
+    path: /participation/count-status
+    defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipationUpdateController::getParticipationCountStatus }
+
+MealzMealBundle_Participation_count_status_on:
+    path: /participation/count-status/{date}
+    defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipationUpdateController::getParticipationCountStatusOn }

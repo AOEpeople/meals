@@ -7,11 +7,13 @@
 
 {% block body %}
 
-    <div class="weeks">
+    <div class="weeks" data-err-update-not-possible="{{ 'error.meal.update_not_allowed' | trans({}, 'messages') }}">
         {% for week in weeks %}
             {% include 'MealzMealBundle:Meal/partials:week.html.twig' %}
         {% endfor %}
     </div>
+
+    <div id="combined-meal-selector" class="combined-meal-selector"></div>
 
     {% include 'MealzMealBundle:Participant/partials:confirmSwapbox.html.twig' %}
 

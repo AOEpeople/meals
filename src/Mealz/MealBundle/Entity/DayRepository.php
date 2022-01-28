@@ -15,9 +15,19 @@ class DayRepository extends EntityRepository
 {
     public function getCurrentDay(): ?Day
     {
+        return $this->getDay(date('Y-m-d'));
+    }
+
+    public function getDayByDate(DateTime $dateTime): ?Day
+    {
+        return $this->getDay($dateTime->format('Y-m-d'));
+    }
+
+    private function getDay(string $date): ?Day
+    {
         $queryBuilder = $this->createQueryBuilder('d');
-        $queryBuilder->where('d.dateTime LIKE :today');
-        $queryBuilder->setParameter(':today', date('Y-m-d%'));
+        $queryBuilder->where('d.dateTime LIKE :date');
+        $queryBuilder->setParameter(':date', $date . '%');
 
         $result = $queryBuilder->getQuery()->getResult();
         if ($result && is_array($result) && count($result) >= 1) {

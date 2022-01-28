@@ -27,83 +27,27 @@
     </p>
     {{ form_start(form) }}
 
-    <div class="meal-guest {{ available ? 'is-available' : '' }}" data-date="{{ form.vars.value.day.datetime | date('Y-m-d') }}">
+    <div class="meal meal-guest{{ available ? ' is-available' }}" data-date="{{ form.vars.value.day.datetime | date('Y-m-d') }}" data-day-enabled="{{ form.vars.value.day.enabled }}" data-lock-date-time="{{ form.vars.value.day.lockParticipationDateTime | date('Y-m-d\\TH:i:sP') }}">
         <div class="header">
-            {{ form.vars.value.day.datetime | date('D') | trans({}, 'date') }}{{ form.vars.value.day.datetime | date(' d.m.Y') }}
+            {{- form.vars.value.day.datetime | date('D') | trans({}, 'date') -}}
+            {{- form.vars.value.day.datetime | date(' d.m.Y') -}}
         </div>
         {{ form_row(form.slot) }}
         {% set groupedMeals = groupMeals(form.children.day.children.meals.vars.choices) %}
-        {% for meal in groupedMeals.meals%}
-            <div class="meal-row">
-                {% apply spaceless %}
-                    <div class="text">
-                        <div class="title">
-                            {{ meal.data.dish.title }}
-                        </div>
-                        <div class="description">
-                            {% if meal.data.dish.description %}
-                                {{ meal.data.dish.description }}
-                            {% else %}
-                                {{ 'content.participation.dish.no_description'|trans({},'general') }}
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="wrapper-vertical-center">
-                        <div class="participants">
-                            <span class="participants-count {% if meal.data.isParticipationLimitReached %}participation-limit-reached{% endif %}">
-                                <span>
-                                    {{ meal.data.participants | length }}
-                                </span>
-                                <label>
-                                    {{ meal.data.participationLimit ? ' / ' ~ meal.data.participationLimit }}
-                                </label>
-                            </span>
-                        </div>
-                        <div class="action">
-                            <div class="checkbox-wrapper {% if meal.data.isParticipationLimitReached %}disabled{% endif %}">
-                                {{ form_row(form.children.day.children.meals.children[meal.value]) }}
-                            </div>
-                        </div>
-                    </div>
-                {% endapply %}
-            </div>
+        {% for meal in groupedMeals.meals %}
+            {% include 'MealzMealBundle:Meal/partials:guestMeal.html.twig' %}
         {% endfor %}
         {% for mealsVariations in groupedMeals.mealsVariations %}
-            <div class="meal-row">
-                <div class="text">
-                    <div class="title">
-                        {{ mealsVariations.0.data.dish.parent.title }}
-                    </div>
-                </div>
-                {% for meal in mealsVariations %}
-                    {% apply spaceless %}
-                        <div class="variation-row">
-                            <div class="text text-variation">
-                                {{ meal.data.dish.title }}
-                            </div>
-                            <div class="wrapper-meal-actions wrapper-variation-vertical-center">
-                                <div class="participants">
-                                    <span class="participants-count {% if form.children.day.children.meals.vars.choices[meal.value].data.isParticipationLimitReached %}participation-limit-reached{% endif %}">
-                                        <span>
-                                            {{ form.children.day.children.meals.vars.choices[meal.value].data.participants | length }}
-                                        </span>
-                                        <label>
-                                            {{ form.children.day.children.meals.vars.choices[meal.value].data.participationLimit ? ' / ' ~ meal.data.participationLimit }}
-                                        </label>
-                                    </span>
-                                </div>
-                                <div class="action">
-                                    <div class="checkbox-wrapper {% if form.children.day.children.meals.vars.choices[meal.value].data.isParticipationLimitReached %}disabled{% endif %}">
-                                        {{ form_row(form.children.day.children.meals.children[meal.value]) }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    {% endapply %}
-                {% endfor %}
-            </div>
+            {% include 'MealzMealBundle:Meal/partials:guestMealVariation.html.twig' %}
         {% endfor %}
+        {% if groupedMeals.combinedMeal != null %}
+            {% set meal = groupedMeals.combinedMeal %}
+            {% set dish = meal.data.dish %}
+            {% include 'MealzMealBundle:Meal/partials:guestMeal.html.twig' %}
+        {% endif %}
     </div>
+
+    <div id="combined-meal-selector" class="combined-meal-selector"></div>
 
     {{ form_widget(form.profile) }}
     {{ form_row(form.save) }}

@@ -225,14 +225,9 @@ class Meal
         return $totalParticipation;
     }
 
-    /**
-     * Check if there are more or equal participation for this meal as its participation limit.
-     */
-    public function isParticipationLimitReached(): bool
+    public function isCombinedMeal(): bool
     {
-        $participationLimit = $this->getParticipationLimit();
-
-        return 0 !== $participationLimit && $this->getParticipants()->count() >= $participationLimit;
+        return $this->dish && $this->dish->isCombinedDish();
     }
 
     public function __toString()

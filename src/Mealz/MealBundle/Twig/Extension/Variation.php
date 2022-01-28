@@ -44,6 +44,7 @@ class Variation extends AbstractExtension
     public function groupMeals(array $meals): array
     {
         $mealsArray = $mealsVariations = [];
+        $combinedMeal = null;
 
         foreach ($meals as $meal) {
             /** @var Meal $meal */
@@ -56,6 +57,8 @@ class Variation extends AbstractExtension
             if (false === is_null($dish) && (true === $dish->getParent() instanceof Dish)) {
                 $parentId = $dish->getParent()->getId();
                 $mealsVariations[$parentId][] = $meal;
+            } elseif ($dish->isCombinedDish()) {
+                $combinedMeal = $meal;
             } else {
                 $mealsArray[] = $meal;
             }
@@ -64,15 +67,14 @@ class Variation extends AbstractExtension
         return [
             'meals' => $mealsArray,
             'mealsVariations' => $mealsVariations,
+            'combinedMeal' => $combinedMeal,
         ];
     }
 
     /**
      * @param FormView $formViews
-     *
-     * @return array
      */
-    public function groupMealsToArray($formViews)
+    public function groupMealsToArray($formViews): array
     {
         $dishesGroupByParent = [];
 
@@ -80,7 +82,7 @@ class Variation extends AbstractExtension
             /** @var Meal $meal */
             $meal = $formView->vars['data'];
             $dish = $meal->getDish();
-            if (null !== $dish) {
+            if (null !== $dish && $dish->isEnabled()) {
                 $parentDish = $dish->getParent();
                 $dishId = (null === $parentDish) ? $dish->getId() : $parentDish->getId();
                 $dishesGroupByParent[$dishId]['ids'][] = $dish->getId();
@@ -95,10 +97,8 @@ class Variation extends AbstractExtension
      * @param int   $parentDishId
      * @param array $variations
      * @param array $dishes
-     *
-     * @return string
      */
-    public function getFullTitleByDishAndVariation($parentDishId, $variations, $dishes)
+    public function getFullTitleByDishAndVariation($parentDishId, $variations, $dishes): string
     {
         $title = '';
 
@@ -152,9 +152,9 @@ class Variation extends AbstractExtension
      */
     private function getTitleForDish($dishId, $dishList)
     {
-        foreach ($dishList as $key => $dish) {
+        foreach ($dishList as $dish) {
             if ($dish->getId() === $dishId) {
-                return $dishList[$key]->getTitle();
+                return $dish->getTitle();
             }
         }
 
@@ -162,12 +162,12 @@ class Variation extends AbstractExtension
     }
 
     /**
-     * @see self::getSortedVariation
-     *
      * @param array $first
      * @param array $second
      *
      * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
+     *
+     * @see self::getSortedVariation
      */
     private function compareVariation($first, $second): int
     {

@@ -2,6 +2,7 @@
 
 namespace App\Mealz\MealBundle\Service;
 
+use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\UserBundle\Entity\Profile;
@@ -40,9 +41,35 @@ class Doorman
         $this->now = time();
     }
 
-    public function isUserAllowedToJoin(Meal $meal): bool
+    public function isUserAllowedToJoin(Meal $meal, array $dishSlugs = []): bool
     {
-        if (false === $this->security->getUser()->getProfile() instanceof Profile || true === $meal->isParticipationLimitReached()) {
+        $participations = ParticipationCountService::getParticipationByDay($meal->getDay());
+
+        $dishSlugArray = [$meal->getDish()->getSlug()];
+        $participationCount = 1.0;
+        if ($meal->getDish()->isCombinedDish()) {
+            if (empty($dishSlugs)) {
+                // Note: This is a special case, if $dishSlugs is empty, we don't know which combination the user would like to book.
+                // This could (and should) only happen on initial load, instead of checking if participation is possible,
+                // we check if the limit is reached by setting $participationCount to zero!
+                $participationCount = 0.0;
+                /** @var Meal $meal */
+                $dishSlugArray = [];
+                foreach ($meal->getDay()->getMeals() as $meal) {
+                    if (Dish::COMBINED_DISH_SLUG !== $meal->getDish()->getSlug()) {
+                        // Note: We don't know the combination, so in the end, there could be more than two dishes inside of $dishSlugArray, e.g. when we have variants.
+                        $dishSlugArray[] = $meal->getDish()->getSlug();
+                    }
+                }
+            } else {
+                $dishSlugArray = $dishSlugs;
+                $participationCount = 0.5;
+            }
+        }
+
+        $isPossibleToJoin = ParticipationCountService::isParticipationPossibleForDishes($participations[ParticipationCountService::PARTICIPATION_TOTAL_COUNT_KEY], $dishSlugArray, $participationCount);
+
+        if (false === $this->security->getUser()->getProfile() instanceof Profile || false === $isPossibleToJoin) {
             return false;
         }
 
@@ -54,10 +81,7 @@ class Doorman
                 && $this->hasAccessTo(self::AT_MEAL_PARTICIPATION, ['meal' => $meal]);
     }
 
-    /**
-     * @return bool
-     */
-    public function isOfferAvailable(Meal $meal)
+    public function isOfferAvailable(Meal $meal): bool
     {
         if (false === $this->security->getUser()->getProfile() instanceof Profile) {
             return false;
@@ -73,18 +97,12 @@ class Doorman
         return false;
     }
 
-    /**
-     * @return bool
-     */
-    public function isUserAllowedToLeave(Meal $meal)
+    public function isUserAllowedToLeave(Meal $meal): bool
     {
         return $this->hasAccessTo(self::AT_MEAL_PARTICIPATION, ['meal' => $meal]);
     }
 
-    /**
-     * @return bool
-     */
-    public function isUserAllowedToSwap(Meal $meal)
+    public function isUserAllowedToSwap(Meal $meal): bool
     {
         if ($meal->getDay()->getLockParticipationDateTime()->getTimestamp() < $this->now && $this->now < $meal->getDateTime()->getTimestamp()) {
             return true;
@@ -103,45 +121,12 @@ class Doorman
         return 0 !== $participant->getOfferedAt();
     }
 
-    /**
-     * @return bool
-     */
-    public function isKitchenStaff()
+    public function isKitchenStaff(): bool
     {
         return $this->security->isGranted('ROLE_KITCHEN_STAFF');
     }
 
-    /**
-     * @return bool
-     */
-    public function isUserAllowedToAddGuest(Meal $meal)
-    {
-        // @TODO: add a separate role for that
-        return $this->isKitchenStaff() || $this->isUserAllowedToJoin($meal);
-    }
-
-    /**
-     * @return bool
-     */
-    public function isUserAllowedToRemoveGuest(Meal $meal)
-    {
-        // @TODO: add a separate role for that
-        return $this->isKitchenStaff() || $this->isUserAllowedToLeave($meal);
-    }
-
-    /**
-     * @return bool
-     */
-    public function isUserAllowedToRequestCostAbsorption(Meal $meal)
-    {
-        // @TODO: add a separate role for that
-        return $this->isKitchenStaff() || $this->isUserAllowedToAddGuest($meal);
-    }
-
-    /**
-     * @return bool
-     */
-    public function isToggleParticipationAllowed(\DateTime $lockPartDateTime)
+    public function isToggleParticipationAllowed(\DateTime $lockPartDateTime): bool
     {
         // is it still allowed to participate in the meal by now?
         return $lockPartDateTime->getTimestamp() > $this->now;
@@ -149,17 +134,15 @@ class Doorman
 
     /**
      * Checking access to a vary of processes inside of meals.
-     * Accesstype is a constant of class Doorman. Use this to tell the method what to check ;-)
-     * To be used in future to add more acces checks.
+     * $accesstype is a constant of class Doorman. Use this to tell the method what to check ;-)
+     * To be used in future to add more access checks.
      *
      * @param int   $accesstype What access shall be checked
      * @param array $params
-     *
-     * @return bool
      */
-    private function hasAccessTo($accesstype, $params = [])
+    private function hasAccessTo($accesstype, $params = []): bool
     {
-        // check access in terms of given accesstype...
+        // check access in terms of given $accesstype...
         switch ($accesstype) {
             case self::AT_MEAL_PARTICIPATION:
                 if (!isset($params['meal']) || !$params['meal'] instanceof Meal) {
@@ -167,7 +150,6 @@ class Doorman
                 }
 
                 return $this->isToggleParticipationAllowed($params['meal']->getDay()->getLockParticipationDateTime());
-                break;
             default:
                 // by default refuse access
                 return false;

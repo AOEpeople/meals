@@ -123,6 +123,7 @@ export class ParticipationUpdateHandler {
             // update
             this.updateCheckboxEnabled($checkbox);
             this.updateCheckBoxWrapper($checkbox);
+            CombinedMealService.updateDish($checkbox, undefined, []);
             this.toggleTooltip($checkbox);
         }
     }

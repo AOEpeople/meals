@@ -17,6 +17,10 @@ export class ParticipationPreToggleHandler {
         let self = this
         $('.checkbox-wrapper').on('click', function (e: Event) {
             let $checkboxWrapper = $(this);
+            if ($checkboxWrapper.hasClass('disabled')) {
+                return;
+            }
+
             let $checkbox = $checkboxWrapper.find('input');
             if (undefined === $checkbox) {
                 console.log('Error: No checkbox found');

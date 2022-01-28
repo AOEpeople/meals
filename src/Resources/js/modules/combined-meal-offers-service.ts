@@ -25,7 +25,6 @@ export class CombinedMealOffersService {
             offers,
             {
                 ok: function (data) {
-                    console.log(data);
                     participationToggleHandler.toggle($checkbox, data);
                 }
             }

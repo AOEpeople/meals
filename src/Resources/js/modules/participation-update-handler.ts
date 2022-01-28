@@ -117,6 +117,7 @@ export class ParticipationUpdateHandler {
             // change
             $checkbox.removeClass(ParticipationAction.UNSWAP);
             $checkbox.prop('checked', false);
+            $checkbox.attr('value', '');
             this.changeParticipationCounter($checkbox, ParticipationState.DEFAULT);
 
             // update

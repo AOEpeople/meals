@@ -111,7 +111,7 @@ export class CombinedMealService {
         return $dishContainer.hasClass('combined-meal');
     }
 
-    public static isLockedMeal($mealContainer: JQuery): boolean {
+    private static isLockedMeal($mealContainer: JQuery): boolean {
         let lockDateTime = $mealContainer.data('lockDateTime');
         const mealLockDateTime = Date.parse(lockDateTime);
 

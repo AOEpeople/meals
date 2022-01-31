@@ -27,7 +27,7 @@ export class ParticipationResponseHandler {
             participantsCount: response.participantsCount,
             bookedDishSlugs: response.bookedDishSlugs,
         };
-        ParticipationUpdateHandler.toggleAction($checkbox, data);
+        ParticipationUpdateHandler.toggle($checkbox, data);
     }
 
     public static onSuccessfulAcceptOffer($checkbox: JQuery, response: ToggleResponse) {
@@ -37,7 +37,7 @@ export class ParticipationResponseHandler {
             participantsCount: response.participantsCount,
             bookedDishSlugs: response.bookedDishSlugs,
         };
-        ParticipationUpdateHandler.acceptOfferAction($checkbox, data);
+        ParticipationUpdateHandler.acceptOffer($checkbox, data);
     }
 
     public static onSuccessfulSwap($checkbox: JQuery, response: SwapResponse) {

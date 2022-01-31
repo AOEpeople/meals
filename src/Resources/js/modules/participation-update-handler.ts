@@ -23,7 +23,7 @@ export interface ToggleData extends AcceptOfferData {
 
 export class ParticipationUpdateHandler {
 
-    public static toggleAction($checkbox: JQuery, data: ToggleData) {
+    public static toggle($checkbox: JQuery, data: ToggleData) {
         // change
         ParticipationUpdateHandler.changeCheckboxState($checkbox);
         const nextAction = ('deleted' === data.actionText) ? ParticipationAction.JOIN : ParticipationAction.DELETE;
@@ -40,7 +40,7 @@ export class ParticipationUpdateHandler {
         $slotBox.parent().children('.loader').css('visibility', 'visible');
     }
 
-    public static acceptOfferAction($checkbox: JQuery, data: AcceptOfferData): void {
+    public static acceptOffer($checkbox: JQuery, data: AcceptOfferData): void {
         this.changeToSwapState($checkbox, data.url, data.participantsCount);
 
         let $dishContainer = $checkbox.closest('.meal-row');

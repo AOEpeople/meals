@@ -57,7 +57,11 @@
   }
 
   .meal-row {
-    overflow: auto;
+    @include clearfix();
+
+    .text-variation {
+      float: left;
+    }
   }
 }
 

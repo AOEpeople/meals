@@ -10,15 +10,45 @@ export enum ParticipationAction {
     UNSWAP = 'unswap-action',
 }
 
-export interface ToggleData {
+export interface AcceptOfferData {
     participantID: number
-    actionText: string;
     url: string;
     participantsCount: number;
     bookedDishSlugs: string[];
 }
 
+export interface ToggleData extends AcceptOfferData {
+    actionText: string;
+}
+
 export class ParticipationUpdateHandler {
+
+    public static toggle($checkbox: JQuery, data: ToggleData) {
+        // change
+        ParticipationUpdateHandler.changeCheckboxState($checkbox);
+        const nextAction = ('deleted' === data.actionText) ? ParticipationAction.JOIN : ParticipationAction.DELETE;
+        ParticipationUpdateHandler.changeCheckboxAttributes($checkbox, nextAction, data.url);
+        ParticipationUpdateHandler.changeParticipationCounter($checkbox, ParticipationState.DEFAULT, data.participantsCount);
+
+        // update
+        ParticipationUpdateHandler.updateCheckboxEnabled($checkbox);
+        ParticipationUpdateHandler.updateCheckBoxWrapper($checkbox);
+        CombinedMealService.updateDish($checkbox, data.participantID, data.bookedDishSlugs);
+
+        let $slotBox = $checkbox.closest('.meal').find('.slot-selector');
+        $slotBox.addClass('tmp-disabled').prop('disabled', true);
+        $slotBox.parent().children('.loader').css('visibility', 'visible');
+    }
+
+    public static acceptOffer($checkbox: JQuery, data: AcceptOfferData): void {
+        this.changeToSwapState($checkbox, data.url, data.participantsCount);
+
+        let $dishContainer = $checkbox.closest('.meal-row');
+        if (CombinedMealService.isCombinedDish($dishContainer)) {
+            CombinedMealService.updateDish($checkbox, data.participantID, data.bookedDishSlugs);
+        }
+    }
+
     private static toggleTooltip($checkbox: JQuery, label?: TooltipLabel) {
         let $tooltip = $checkbox.closest('.wrapper-meal-actions').find('.tooltiptext');
         if (undefined !== label) {
@@ -95,28 +125,11 @@ export class ParticipationUpdateHandler {
         this.updateCheckBoxWrapper($checkbox);
     }
 
-    public static toggleAction($checkbox: JQuery, data: ToggleData) {
-        // change
-        ParticipationUpdateHandler.changeCheckboxState($checkbox);
-        const nextAction = ('deleted' === data.actionText) ? ParticipationAction.JOIN : ParticipationAction.DELETE;
-        ParticipationUpdateHandler.changeCheckboxAttributes($checkbox, nextAction, data.url);
-        ParticipationUpdateHandler.changeParticipationCounter($checkbox, ParticipationState.DEFAULT, data.participantsCount);
-
-        // update
-        ParticipationUpdateHandler.updateCheckboxEnabled($checkbox);
-        ParticipationUpdateHandler.updateCheckBoxWrapper($checkbox);
-        CombinedMealService.updateDish($checkbox, data.participantID, data.bookedDishSlugs);
-
-        let $slotBox = $checkbox.closest('.meal').find('.slot-selector');
-        $slotBox.addClass('tmp-disabled').prop('disabled', true);
-        $slotBox.parent().children('.loader').css('visibility', 'visible');
-    }
-
     public static changeToOfferIsTaken($checkbox: JQuery) {
         if ($checkbox.hasClass(ParticipationAction.UNSWAP)) {
             // change
             $checkbox.removeClass(ParticipationAction.UNSWAP);
-            $checkbox.prop('checked', false);
+            $checkbox.prop('checked', false).trigger('change');
             $checkbox.attr('value', '');
             this.changeParticipationCounter($checkbox, ParticipationState.DEFAULT);
 

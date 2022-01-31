@@ -1,4 +1,4 @@
-import {ParticipationUpdateHandler, ToggleData} from "./participation-update-handler";
+import {AcceptOfferData, ParticipationUpdateHandler, ToggleData} from "./participation-update-handler";
 
 export interface ParticipationResponse {
     actionText: string;
@@ -20,18 +20,24 @@ export interface ToggleResponse extends SwapResponse {
 
 export class ParticipationResponseHandler {
     public static onSuccessfulToggle($checkbox: JQuery, response: ToggleResponse) {
-        const toggleData: ToggleData = {
+        const data: ToggleData = {
             participantID: response.id,
             actionText: response.actionText,
             url: response.url,
             participantsCount: response.participantsCount,
             bookedDishSlugs: response.bookedDishSlugs,
         };
-        ParticipationUpdateHandler.toggleAction($checkbox, toggleData);
+        ParticipationUpdateHandler.toggle($checkbox, data);
     }
 
     public static onSuccessfulAcceptOffer($checkbox: JQuery, response: ToggleResponse) {
-        ParticipationUpdateHandler.changeToSwapState($checkbox, response.url, response.participantsCount);
+        const data: AcceptOfferData = {
+            participantID: response.id,
+            url: response.url,
+            participantsCount: response.participantsCount,
+            bookedDishSlugs: response.bookedDishSlugs,
+        };
+        ParticipationUpdateHandler.acceptOffer($checkbox, data);
     }
 
     public static onSuccessfulSwap($checkbox: JQuery, response: SwapResponse) {

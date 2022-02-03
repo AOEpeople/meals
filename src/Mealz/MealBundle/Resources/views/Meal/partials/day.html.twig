@@ -1,20 +1,26 @@
-{% apply spaceless %}
-{% set available = false %}
+{% if not day.enabled %}
+    <div class="meal">
+        <div class="meal-row no-meal">{{ 'content.participation.day.disabled'|trans({}, 'general') }}</div>
+        <div class="week-day"><span>{{- day.dateTime.format('D') | trans({}, 'date') -}}</span></div>
+    </div>
+{% else %}
 
-{% if day.enabled and (day.lockParticipationDateTime | date('U') > 'now' | date('U')) %}
-    {% set available = true %}
-{% endif %}
-{% endapply %}
-<div class="meal{{ available ? ' is-available' }}" data-date="{{ day.dateTime.format('Y-m-d') }}" data-day-enabled="{{ day.enabled }}" data-lock-date-time="{{ day.lockParticipationDateTime | date('Y-m-d\\TH:i:sP') }}">
-    {% include 'MealzMealBundle:Meal/partials:mealSlots.html.twig' %}
-    {# display week day and date #}
-    <div class="week-day">
-        <a name="{{ day.dateTime | date('Y-m-d') }}"></a>
-        <span>
-            {{- day.dateTime | date('D') | trans({}, 'date') -}}
-        </span>
-        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-            {% if available %}
+    {% set groupedMeals = groupMeals(day.meals.toArray) %}
+    {% set available = day.enabled and (date(day.lockParticipationDateTime, 'U') > date('now', 'U')) %}
+    {% set hasVariations = groupedMeals.mealsVariations|length > 0 %}
+
+    <div class="meal{{ available ? ' is-available' }}"
+         data-date="{{ day.dateTime.format('Y-m-d') }}"
+         data-day-enabled="{{ day.enabled }}"
+         data-lock-date-time="{{ day.lockParticipationDateTime.format('Y-m-d\\TH:i:sP') }}"
+         data-has-variations="{{ hasVariations ? 1 : 0 }}">
+
+        {%- include 'MealzMealBundle:Meal/partials:mealSlots.html.twig' -%}
+
+        {# display week day and date #}
+        <div class="week-day">
+            <span>{{- day.dateTime | date('D') | trans({}, 'date') -}}</span>
+            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') and available %}
                 <button class="guest-menu" data-copytarget="#copy-link-{{ day.id }}">
                     <span class="glyphicon glyphicon-new-window"></span>
                 </button>
@@ -23,12 +29,7 @@
                     <span class="message"><span class="glyphicon glyphicon-ok"></span> Copied to clipboard!</span>
                 </div>
             {% endif %}
-        {% endif %}
-    </div>
-    {% if not day.enabled %}
-        <div class="meal-row no-meal">{{ 'content.participation.day.disabled'|trans({},'general') }}</div>
-    {% else %}
-        {% set groupedMeals = groupMeals(day.meals.toArray) %}
+        </div>
 
         {% for meal in groupedMeals.meals %}
             {% include 'MealzMealBundle:Meal/partials:meal.html.twig' %}
@@ -48,5 +49,6 @@
         {% elseif day.meals | length == 0 %}
             <div class="meal-row no-meal">{{ 'content.participation.meal.no_service'|trans({},'general') }}</div>
         {% endif %}
-    {% endif %}
-</div>
+    </div>
+{% endif %}
+

@@ -18,6 +18,21 @@
 {% if userAgent matches '/MealsApp Android WebView/' == true %}
         {% set isWebview = true %}
 {% endif %}
+{% block javascripts %}
+
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			let url = new URL('https://meals.test:2443/test');
+
+			const eventSource = new EventSource(url);
+
+			eventSource.onmessage = (e) => {
+				console.log(e);
+			}
+		});
+	</script>
+	
+{% endblock %}
 
 <body
 		class="{{ activeRoute matches '/MealzMealBundle_Meal_guest.*/' ? 'guest-wrapper' }} {{ isWebview == true ? 'webview' }}"
@@ -64,4 +79,6 @@
 		<script src="{{ assets_server }}/static/vendors.js"></script>
 		<script src="{{ assets_server }}/static/app.js"></script>
 	</body>
+	
 </html>
+

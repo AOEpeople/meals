@@ -12,8 +12,8 @@ export default class MealIndexView {
     $participationCheckboxes: JQuery;
 
     constructor() {
-        this.updateSlots();
-        setInterval(this.updateSlots, 3000);
+/*         this.updateSlots();
+        setInterval(this.updateSlots, 3000); */
 
         this.$participationCheckboxes = $('.meals-list .meal .participation-checkbox');
         this.initEvents();
@@ -95,7 +95,7 @@ export default class MealIndexView {
         this.showMealConfigurator($dishContainer);
     }
 
-    private updateSlots() {
+/*     private updateSlots() {
         $.ajax({
             url: '/participation/slots-status',
             dataType: 'json',
@@ -135,7 +135,7 @@ export default class MealIndexView {
                 });
             }
         });
-    }
+    } */
 
     public showMealConfigurator($dishContainer: JQuery): void {
         let self = this;

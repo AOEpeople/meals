@@ -17,7 +17,8 @@ class PublishController extends AbstractController
     {
         $update = new Update(
             '/test',
-            json_encode(['message' => 'test'])
+            json_encode(['message' => 'test']),
+            false
         );
 
         $hub->publish($update);

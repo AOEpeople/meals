@@ -22,7 +22,7 @@
 
 	<script>
 		document.addEventListener('DOMContentLoaded', () => {
-			let url = new URL('https://meals.test:2443/test');
+			let url = new URL('https://meals.test:2443/.well-known/mercure?topic=/test');
 
 			const eventSource = new EventSource(url);
 
@@ -31,7 +31,7 @@
 			}
 		});
 	</script>
-	
+
 {% endblock %}
 
 <body

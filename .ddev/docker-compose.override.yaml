@@ -5,3 +5,18 @@ services:
     ports:
       - "1337:1337"
       - "2122:22"
+  mercure:
+    image: dunglas/mercure
+    restart: unless-stopped
+    environment:
+      # Uncomment the following line to disable HTTPS
+      #SERVER_NAME: ':80'
+      MERCURE_PUBLISHER_JWT_ALG: HS256
+      MERCURE_PUBLISHER_JWT_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtZXJjdXJlIjp7InB1Ymxpc2giOlsiKiJdfX0.0EPPuJh6ftotew5CbpMYVY0iMuLWZOcKiZ1M_gb01LA'
+      MERCURE_SUBSCRIBER_JWT_ALG: HS256
+      MERCURE_SUBSCRIBER_JWT_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtZXJjdXJlIjp7InB1Ymxpc2giOlsiKiJdfX0.6k5OEbrbZglKeK00C7el5P7q0bU9ZcXna1xt9Jt47Gk'
+    # Uncomment the following line to enable the development mode
+    command: /usr/bin/caddy run -config /etc/caddy/Caddyfile.dev
+    ports:
+      - "2080:80"
+      - "2443:443"

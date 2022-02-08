@@ -1,7 +1,7 @@
 import {ParticipationAction, ParticipationUpdateHandler} from "./participation-update-handler";
 
 export class UpdateOffersHandler {
-    private readonly updateInterval: number = 5000;
+    //private readonly updateInterval: number = 5000;
 
     constructor() {
         this.initCallback();
@@ -9,7 +9,7 @@ export class UpdateOffersHandler {
 
     private initCallback(): void {
         if ($('.button-login').text() !== 'LOGIN') {
-            window.setInterval(this.updateOffers, this.updateInterval);
+           // window.setInterval(this.updateOffers, this.updateInterval);
         }
     }
 

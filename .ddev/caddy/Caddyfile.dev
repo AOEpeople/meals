@@ -1,0 +1,36 @@
+# Learn how to configure the Mercure.rocks Hub on https://mercure.rocks/docs/hub/config
+{
+	{$GLOBAL_OPTIONS}
+}
+
+{$SERVER_NAME:localhost}
+
+log
+
+tls /etc/ssl/private/meals.test.pem /etc/ssl/private/meals.test-key.pem
+
+route {
+	redir / /.well-known/mercure/ui/
+	encode zstd gzip
+
+	mercure {
+		# Transport to use (default to Bolt)
+		transport_url {$MERCURE_TRANSPORT_URL:bolt://mercure.db}
+		# Publisher JWT key
+		publisher_jwt {env.MERCURE_PUBLISHER_JWT_KEY} {env.MERCURE_PUBLISHER_JWT_ALG}
+		# Subscriber JWT key
+		subscriber_jwt {env.MERCURE_SUBSCRIBER_JWT_KEY} {env.MERCURE_SUBSCRIBER_JWT_ALG}
+		# Permissive configuration for the development environment
+		cors_origins *
+		publish_origins *
+		demo
+		anonymous
+		subscriptions
+		# Extra directives
+		{$MERCURE_EXTRA_DIRECTIVES}
+	}
+
+	respond /healthz 200
+
+	respond "Not Found" 404
+}

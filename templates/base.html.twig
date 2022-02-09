@@ -21,15 +21,14 @@
 {% block javascripts %}
 
 	<script>
-		document.addEventListener('DOMContentLoaded', () => {
-			let url = new URL('https://meals.test:2443/.well-known/mercure?topic=/test');
+		const eventSource = new EventSource("{{ mercure([
+			'/test'
+			])|escape('js') }}");
 
-			const eventSource = new EventSource(url);
-
-			eventSource.onmessage = (e) => {
-				console.log(e);
-			}
-		});
+			eventSource.onmessage = event => {
+			// Will be called every time an update is published by the server
+			alert(JSON.parse(event.data));
+		}
 	</script>
 
 {% endblock %}

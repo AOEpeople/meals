@@ -1,6 +1,7 @@
 # Learn how to configure the Mercure.rocks Hub on https://mercure.rocks/docs/hub/config
 {
 	{$GLOBAL_OPTIONS}
+	
 }
 
 {$SERVER_NAME:localhost}

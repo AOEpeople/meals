@@ -7,11 +7,11 @@ services:
     restart: unless-stopped
     command: /usr/bin/caddy run -config /etc/caddy/Caddyfile.dev
     environment:
-      SERVER_NAME: 'meals.test'
+      SERVER_NAME: 'meals.test, mercure'
       MERCURE_PUBLISHER_JWT_ALG: HS256
-      MERCURE_PUBLISHER_JWT_KEY: 'testing'
+      MERCURE_PUBLISHER_JWT_KEY: testing
       MERCURE_SUBSCRIBER_JWT_ALG: HS256
-      MERCURE_SUBSCRIBER_JWT_KEY: 'testing'
+      MERCURE_SUBSCRIBER_JWT_KEY: testing
     labels:
       com.ddev.site-name: ${DDEV_SITENAME}
       com.ddev.approot: $DDEV_APPROOT

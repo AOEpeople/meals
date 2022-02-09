@@ -1,0 +1,37 @@
+version: '3.6'
+
+services:
+  mercure:
+    image: dunglas/mercure
+    container_name: ddev-${DDEV_SITENAME}-mercure
+    restart: unless-stopped
+    command: /usr/bin/caddy run -config /etc/caddy/Caddyfile.dev
+    environment:
+      SERVER_NAME: 'meals.test'
+      MERCURE_PUBLISHER_JWT_ALG: HS256
+      MERCURE_PUBLISHER_JWT_KEY: 'testing'
+      MERCURE_SUBSCRIBER_JWT_ALG: HS256
+      MERCURE_SUBSCRIBER_JWT_KEY: 'testing'
+    labels:
+      com.ddev.site-name: ${DDEV_SITENAME}
+      com.ddev.approot: $DDEV_APPROOT
+    ports:
+      - mode: ingress
+        target: 80
+        published: 2080
+        protocol: tcp
+      - mode: ingress
+        target: 443
+        published: 2443
+        protocol: tcp
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+      - ./caddy/Caddyfile.dev:/etc/caddy/Caddyfile.dev
+      - ./caddy/cert/meals.test.pem:/etc/ssl/private/meals.test.pem
+      - ./caddy/cert/meals.test-key.pem:/etc/ssl/private/meals.test-key.pem
+
+volumes:
+  caddy_data:
+  caddy_config:
+

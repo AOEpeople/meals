@@ -18,11 +18,26 @@ class PublishController extends AbstractController
         $update = new Update(
             '/test',
             json_encode(['message' => 'test']),
-            false
+            false,
+            null,
+            null,
+            null
+            
         );
+        $result = $hub->publish($update);
 
-        $hub->publish($update);
-
-        return new Response('testing');
+        echo $result;
+        return new Response(nl2br ("
+            HUB: \n
+            internal URL:   {$hub->getUrl()} \n
+            public URL:     {$hub->getPublicURL()}\n\n
+            Update:\n
+            topic:          {$update->getTopics()[0]} \n
+            payload:        {$update->getData()} \n
+            private?:       {$update->isPrivate()} \n
+            ID:             {$update->getId()} \n
+            Type:           {$update->getType()} \n
+            retry?:         {$update->getRetry()} \n\n
+            publish result: {$result}"));
     }
 }

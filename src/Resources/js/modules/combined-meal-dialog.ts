@@ -31,10 +31,18 @@ export class CombinedMealDialog extends BaseDialog {
             maxWidth: 500,
             title: this.title,
             draggable: false,
-            buttons: {
-                'OK': this.handleOk.bind(this),
-                'Cancel': this.handleCancel.bind(this)
-            },
+            buttons: [
+                {
+                    'text': 'OK',
+                    'data-qa': 'ok',
+                    'click': this.handleOk.bind(this)
+                },
+                {
+                    'text': 'Cancel',
+                    'data-qa': 'cancel',
+                    'click': this.handleCancel.bind(this)
+                }
+            ],
             create: this.handleCreate
         });
     }
@@ -64,28 +72,36 @@ export class CombinedMealDialog extends BaseDialog {
         const fieldName = `dishes[${index}]`;
 
         if (0 === d.variations.length) {
-            return this.getRadioButton(fieldName, d.slug, true, d.title, {wrapperClass: 'dish'});
+            return this.getRadioButton(fieldName, d.slug, true, d.title, {wrapper: {'class': 'dish', 'data-qa': 'dish'}});
         }
 
-        let $dish = $('<div class="dish"><div class="title">' + d.title + '</div></div>');
+        let $dish = $('<div class="dish" data-qa="dish"><div class="title">' + d.title + '</div></div>');
         d.variations.forEach((dv, index) => {
             const selected = selectedDishIDs.includes(dv.slug) || (0 === index);
-            let $dishVariation = this.getRadioButton(fieldName, dv.slug, selected, dv.title, {wrapperClass: 'dish-variation'});
+            let $dishVariation = this.getRadioButton(fieldName, dv.slug, selected, dv.title, {
+                wrapper: {
+                    'class': 'dish-variation',
+                    'data-qa': 'dish-variation'
+                }
+            });
             $dish.append($dishVariation);
         });
 
         return $dish;
     }
 
-    private getRadioButton(name: string, value: string, selected: boolean, label: string, attrs?: ElementAttributes): JQuery {
-        let attributes = Object.assign({
-            wrapperClass: 'wrapper'
-        }, attrs || {});
+    private getRadioButton(name: string, value: string, selected: boolean, label: string, opts?: RadioElementOptions): JQuery {
+        let wrapperExtraAttrs = '';
+        if (typeof opts !== 'undefined' && typeof opts.wrapper !== 'undefined') {
+            for (const [k, v] of Object.entries(opts.wrapper)) {
+                wrapperExtraAttrs += ` ${k}="${v}"`;
+            }
+        }
 
         return $(`
-            <div class="${attributes.wrapperClass}">
-                <label for="">${label}</label>
-                <input type="radio" name="${name}" value="${value}" ${selected ? ' checked' : ''}>
+            <div${wrapperExtraAttrs}>
+                <label>${label}</label>
+                <input type="radio" name="${name}" value="${value}"${selected ? ' checked' : ''}>
             </div>
         `);
     }
@@ -106,6 +122,10 @@ export interface SerializedFormData {
     value: string;
 }
 
+interface RadioElementOptions {
+    wrapper?: ElementAttributes;
+}
+
 interface ElementAttributes {
-    wrapperClass: string
+    [index: string]: string;
 }

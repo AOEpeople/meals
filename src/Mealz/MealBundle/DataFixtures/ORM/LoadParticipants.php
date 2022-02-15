@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\DataFixtures\ORM;
 
+use App\Mealz\MealBundle\Entity\Day;
+use App\Mealz\MealBundle\Entity\Dish;
+use App\Mealz\MealBundle\Entity\DishCollection;
+use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\UserBundle\Entity\Profile;
@@ -12,6 +16,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Exception;
+use RuntimeException;
 
 class LoadParticipants extends Fixture implements OrderedFixtureInterface
 {
@@ -42,6 +47,17 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
         $this->objectManager = $manager;
         $this->loadReferences();
 
+        $this->loadSimpleMealParticipants();
+        $this->loadCombinedMealParticipants();
+
+        $this->objectManager->flush();
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function loadSimpleMealParticipants(): void
+    {
         foreach ($this->meals as $meal) {
             $users = $this->getRandomUsers();
 
@@ -49,7 +65,7 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
                 $participant = new Participant($user, $meal);
                 $participant->setCostAbsorbed(false);
 
-                if ($participant->getMeal()->getDay()->getLockParticipationDateTime() < new DateTime()) {
+                if ($meal->getLockDateTime() < new DateTime()) {
                     $participant->setOfferedAt(time());
                 } else {
                     $participant->setOfferedAt(0);
@@ -58,7 +74,94 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
                 $this->objectManager->persist($participant);
             }
         }
-        $this->objectManager->flush();
+    }
+
+    private function loadCombinedMealParticipants(): void
+    {
+        $username = 'bob.meals';
+        $days = $this->getDaysWithDishVariations();
+
+        foreach ($days as $day) {
+            $combinedMeal = $this->getCombinedMeal($day);
+            $combinedMealDishes = $this->getRandomCombinedMealDishes($day);
+            $profile = $this->getProfile($username);
+
+            $participant = new Participant($profile, $combinedMeal);
+            $participant->setCombinedDishes(new DishCollection($combinedMealDishes));
+
+            $this->objectManager->persist($participant);
+        }
+    }
+
+    /**
+     * Get days when meals with dish variations are offered.
+     *
+     * @return Day[]
+     */
+    private function getDaysWithDishVariations(): array
+    {
+        $days = [];
+
+        foreach ($this->meals as $meal) {
+            if ($meal->getDish() instanceof DishVariation) {
+                $mealDay = $meal->getDay();
+                $days[$mealDay->getId()] = $mealDay;
+            }
+        }
+
+        return array_values($days);
+    }
+
+    private function getCombinedMeal(Day $day): Meal
+    {
+        foreach ($day->getMeals() as $meal) {
+            if ($meal->isCombinedMeal()) {
+                return $meal;
+            }
+        }
+
+        throw new RuntimeException('no combined meal found on ' . $day->getDateTime()->format('Y-m-d'));
+    }
+
+    /**
+     * @return Dish[]
+     */
+    private function getRandomCombinedMealDishes(Day $day): array
+    {
+        $dishes = [];
+        $opts = [];
+
+        foreach ($day->getMeals() as $meal) {
+            if ($meal->isCombinedMeal()) {
+                continue;
+            }
+
+            $dish = $meal->getDish();
+            if ($dish instanceof DishVariation) {
+                $opts[$dish->getParent()->getId()][] = $dish;
+            } else {
+                $opts[$dish->getId()][] = $dish;
+            }
+        }
+
+        if (2 > count($opts)) {
+            throw new RuntimeException(sprintf(
+                'insufficient dishes on %s; required: 2, got: %d',
+                $day->getDateTime()->format('Y-m-d'),
+                count($opts)
+            ));
+        }
+
+        foreach (array_slice($opts, 0, 2) as $opt) {
+            if (1 < count($opt)) {
+                $randKey = array_rand($opt);
+                $dishes[] = $opt[$randKey];
+            } else {
+                $dishes[] = $opt[0];
+            }
+        }
+
+        return $dishes;
     }
 
     public function getOrder(): int
@@ -99,5 +202,16 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
         }
 
         return $users;
+    }
+
+    private function getProfile(string $username): Profile
+    {
+        foreach ($this->profiles as $profile) {
+            if ($username === $profile->getUsername()) {
+                return $profile;
+            }
+        }
+
+        throw new RuntimeException($username . ': profile not found');
     }
 }

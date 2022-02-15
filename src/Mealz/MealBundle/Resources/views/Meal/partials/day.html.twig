@@ -14,7 +14,9 @@
          data-day-enabled="{{ day.enabled }}"
          data-lock-date-time="{{ day.lockParticipationDateTime.format('Y-m-d\\TH:i:sP') }}"
          data-is-available="{{ available ? 1 : 0 }}"
-         data-has-variations="{{ hasVariations ? 1 : 0 }}">
+         data-qa="meal"
+         data-qa-has-variations="{{ hasVariations ? 1 : 0 }}"
+         data-qa-is-available="{{ available ? 1 : 0 }}">
 
         {%- include 'MealzMealBundle:Meal/partials:mealSlots.html.twig' -%}
 

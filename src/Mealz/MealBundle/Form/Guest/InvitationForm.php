@@ -60,6 +60,7 @@ class InvitationForm extends AbstractType
                 'translation_domain' => 'actions',
                 'attr' => [
                     'class' => 'button small',
+                    'data-qa' => 'submit',
                 ],
             ]);
     }

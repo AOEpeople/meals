@@ -14,7 +14,7 @@
             {% endif %}
         {% else %}
             {% if is_allowed_to_join(meal) %}
-                {{ MealzCheckbox.create(link(meal, 'join') ,'participation-checkbox join-action') }}
+                {{ MealzCheckbox.create(link(meal, 'join') ,'participation-checkbox join-action', {'data-action': 'join'}) }}
             {% elseif is_offer_available(meal) and is_allowed_to_swap(meal) %}
                 {{ MealzCheckbox.create(link(meal, 'accept_offer') , 'participation-checkbox acceptOffer-action') }}
             {% else %}

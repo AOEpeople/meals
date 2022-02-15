@@ -9,11 +9,10 @@ use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Entity\Meal;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Exception;
+use RuntimeException;
 
 class LoadMeals extends Fixture implements OrderedFixtureInterface
 {
@@ -23,14 +22,10 @@ class LoadMeals extends Fixture implements OrderedFixtureInterface
     private const ORDER_NUMBER = 7;
 
     /**
-     * index of first weeks monday.
+     * Index of alternative Monday and Wednesday.
      */
-    private const FIRST_MONDAY = 0;
-
-    /**
-     * index of second weeks wednesday.
-     */
-    private const SECOND_WEDNESDAY = 7;
+    private const IDX_ALT_MONDAY = 0;
+    private const IDX_ALT_WEDNESDAY = 7;
 
     protected ObjectManager $objectManager;
 
@@ -40,7 +35,7 @@ class LoadMeals extends Fixture implements OrderedFixtureInterface
     protected array $dishes = [];
 
     /**
-     * @var Day[]
+     * @var array<int, Day>
      */
     protected array $days = [];
 
@@ -56,25 +51,26 @@ class LoadMeals extends Fixture implements OrderedFixtureInterface
         $this->objectManager = $manager;
         $this->loadDishes();
         $this->loadDays();
+        $dish = null;
 
         foreach ($this->days as $key => $day) {
-            $dish = null;
-            // that should be next week Wednesday which should be available for selection
-            if (self::SECOND_WEDNESDAY === $key || self::FIRST_MONDAY === $key) {
-                // add once 3 Options per Day, 1 Dish without variations and 1 with 2 variations
-                $this->loadNewMeal($day, $this->dishes[0]); // first Dish was loaded without variations
-                $dishVariations = $this->getRandomDishWithVariations();
-                foreach ($dishVariations as $k => $dishVariation) {
-                    if ($k < 2) { // in case there is more then 2 variations
-                        $this->loadNewMeal($day, $dishVariation);
-                    }
+            $normDayIndex = ($key + 10) % 10;
+
+            // every alt. Mon. and Wed. get one meal with simple dish and two meals with dish variations
+            if (self::IDX_ALT_MONDAY === $normDayIndex || self::IDX_ALT_WEDNESDAY === $normDayIndex) {
+                $this->loadNewMeal($day, $this->dishes[0]);
+                $dish = $this->getRandomDishWithVariations();
+                foreach ($dish->getVariations()->slice(0, 2) as $dishVariation) {
+                    $this->loadNewMeal($day, $dishVariation);
                 }
-            } else {
-                for ($i = 0; $i <= 1; ++$i) {
-                    // 2 meals a day
-                    $dish = $this->getRandomDish($dish);
-                    $this->loadNewMeal($day, $dish);
-                }
+
+                continue;
+            }
+
+            // add 2 meals with simple dishes (no variations)
+            for ($i = 0; $i < 2; ++$i) {
+                $dish = $this->getRandomDish($dish);
+                $this->loadNewMeal($day, $dish);
             }
         }
 
@@ -124,9 +120,8 @@ class LoadMeals extends Fixture implements OrderedFixtureInterface
         }
     }
 
-    protected function getRandomDishWithVariations(): Collection
+    private function getRandomDishWithVariations(): Dish
     {
-        $dishVariations = new ArrayCollection();
         $dishesWithVariations = [];
 
         foreach ($this->dishes as $dish) {
@@ -135,12 +130,13 @@ class LoadMeals extends Fixture implements OrderedFixtureInterface
             }
         }
 
-        if (count($dishesWithVariations)) {
-            $randomDishKey = array_rand($dishesWithVariations);
-            $dishVariations = $dishesWithVariations[$randomDishKey]->getVariations();
+        if (0 === count($dishesWithVariations)) {
+            throw new RuntimeException('dish with variations not found');
         }
 
-        return $dishVariations;
+        $randomDishKey = array_rand($dishesWithVariations);
+
+        return $dishesWithVariations[$randomDishKey];
     }
 
     /**

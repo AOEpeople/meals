@@ -2,6 +2,7 @@
 <div class="meal-row{{ dish.isCombinedDish ? ' combined-meal' }}"
      data-slug="{{ dish.slug }}"
      data-description="{{ dish.description }}"
+     data-qa-combined="{{ dish.isCombinedDish ? 1 : 0 }}"
      data-qa-combined="{{ dish.isCombinedDish ? 1 : 0 }}">
     <div class="title{{ not dish.description ? ' no-description'}}">{{ dish.title }}</div>
     <div class="description">

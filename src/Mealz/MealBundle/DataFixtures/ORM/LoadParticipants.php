@@ -65,7 +65,7 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
                 $participant = new Participant($user, $meal);
                 $participant->setCostAbsorbed(false);
 
-                if ($participant->getMeal()->getDay()->getLockParticipationDateTime() < new DateTime()) {
+                if ($meal->getLockDateTime() < new DateTime()) {
                     $participant->setOfferedAt(time());
                 } else {
                     $participant->setOfferedAt(0);

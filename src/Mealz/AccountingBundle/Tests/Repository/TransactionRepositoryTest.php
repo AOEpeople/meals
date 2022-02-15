@@ -5,15 +5,20 @@ namespace App\Mealz\AccountingBundle\Tests\Repository;
 use App\Mealz\AccountingBundle\Entity\Transaction;
 use App\Mealz\AccountingBundle\Entity\TransactionRepository;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadCombinations;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadDays;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishVariations;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadParticipants;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
 use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
+use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
+use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use DateInterval;
 use DateTime;
 use Exception;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class TransactionRepositoryTest.
@@ -33,11 +38,15 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
 
         $this->clearAllTables();
         $this->loadFixtures([
+            new LoadRoles(),
+            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
             new LoadWeeks(),
             new LoadDays(),
             new LoadCategories(),
             new LoadDishes(),
+            new LoadDishVariations(),
             new LoadMeals(),
+            new LoadCombinations(self::$container->get(EventDispatcherInterface::class)),
             new LoadParticipants(),
         ]);
     }

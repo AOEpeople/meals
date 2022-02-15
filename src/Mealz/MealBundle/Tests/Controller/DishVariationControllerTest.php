@@ -25,11 +25,11 @@ class DishVariationControllerTest extends AbstractControllerTestCase
 
         $this->clearAllTables();
         $this->loadFixtures([
+            new LoadRoles(),
+            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
             new LoadCategories(),
             new LoadDishes(),
             new LoadDishVariations(),
-            new LoadRoles(),
-            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
         ]);
 
         $this->loginAs(self::USER_KITCHEN_STAFF);

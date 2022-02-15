@@ -6,6 +6,7 @@ namespace App\Mealz\AccountingBundle\Tests\Controller\Payment;
 
 use App\Mealz\AccountingBundle\DataFixtures\ORM\LoadTransactions;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadCombinations;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadDays;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishVariations;
@@ -15,6 +16,7 @@ use App\Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
 use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class CashControllerTest extends AbstractControllerTestCase
 {
@@ -24,15 +26,16 @@ class CashControllerTest extends AbstractControllerTestCase
 
         $this->clearAllTables();
         $this->loadFixtures([
+            new LoadRoles(),
+            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
             new LoadCategories(),
             new LoadWeeks(),
             new LoadDays(),
             new LoadDishes(),
             new LoadDishVariations(),
             new LoadMeals(),
+            new LoadCombinations(self::$container->get(EventDispatcherInterface::class)),
             new LoadParticipants(),
-            new LoadRoles(),
-            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
             new LoadTransactions(),
         ]);
     }

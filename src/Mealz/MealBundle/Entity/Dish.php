@@ -24,8 +24,10 @@ class Dish
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @var int
      */
-    private int $id;
+    private $id;
 
     /**
      * @TODO: CHECK IF THIS WORKS. Add 'title_de' to the update field list 'fields={"title_en"}', check with Jonathan
@@ -37,15 +39,17 @@ class Dish
      *      })
      *   }, fields={"title_en"})
      * @ORM\Column(length=128, unique=true)
+     *
+     * @var string
      */
-    protected string $slug;
+    protected $slug;
 
     /**
      * @Assert\NotBlank()
      * @Assert\Length(max=255)
      * @ORM\Column(type="string", length=255, nullable=FALSE)
      */
-    protected string $title_en;
+    protected string $title_en = 'New Dish';
 
     /**
      * @Assert\Length(max=4096)
@@ -58,7 +62,7 @@ class Dish
      * @Assert\Length(max=255)
      * @ORM\Column(type="string", length=255, nullable=FALSE)
      */
-    protected ?string $title_de;
+    protected string $title_de = 'Neues Gericht';
 
     /**
      * @Assert\Length(max=4096)
@@ -117,7 +121,10 @@ class Dish
         return $this->id;
     }
 
-    public function getSlug(): string
+    /**
+     * @return string
+     */
+    public function getSlug()
     {
         return $this->slug;
     }

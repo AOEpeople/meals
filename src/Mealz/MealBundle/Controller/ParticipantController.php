@@ -13,10 +13,12 @@ use App\Mealz\MealBundle\Entity\WeekRepository;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\MealBundle\Service\Notification\NotifierInterface;
 use App\Mealz\MealBundle\Service\ParticipationService;
+use App\Mealz\MealBundle\Event\UpdateCountEvent;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,6 +29,17 @@ use Symfony\Component\Translation\Translator;
  */
 class ParticipantController extends BaseController
 {
+    private EventDispatcherInterface $eventDispatcher;
+
+    /**
+     * @param EventDispatcherInterface $eventDispatcher
+     */
+    public function __construct(EventDispatcherInterface $eventDispatcher)
+    {
+        $this->eventDispatcher = $eventDispatcher;
+    }
+
+
     public function updateCombinedMeal(Request $request, Participant $participant, ParticipationService $participationSrv): JsonResponse
     {
         $dishSlugs = $request->request->get('dishes', []);
@@ -40,6 +53,8 @@ class ParticipantController extends BaseController
 
             return new JsonResponse(['error' => 'unexpected error'], 500);
         }
+
+
 
         return new JsonResponse(
             [
@@ -73,6 +88,8 @@ class ParticipantController extends BaseController
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->remove($participant);
         $entityManager->flush();
+
+        $this->eventDispatcher->dispatch(new UpdateCountEvent($meal, $participant->getProfile()));
 
         if (($this->getDoorman()->isKitchenStaff()) === true) {
             $logger = $this->get('monolog.logger.balance');

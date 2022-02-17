@@ -1,11 +1,12 @@
 import {ParticipationGuestToggleHandler} from "../modules/participation-toggle-handler";
 import {ParticipationPreToggleHandler} from "../modules/participation-pre-toggle-handler";
-import {ParticipationGuestCountUpdateHandler} from "../modules/participation-count-update-handler";
+import {MercureSubscribeHandler} from "../modules/mercure-subscribe-handler";
 
 export default class MealGuestView {
     $participationCheckboxes: JQuery;
     $slotDropDown: JQuery;
     mealDate: string;
+    mercureSubscribeHandler: MercureSubscribeHandler;
 
     constructor() {
         this.$participationCheckboxes = $('.meal-guest input[type="checkbox"]');
@@ -14,14 +15,22 @@ export default class MealGuestView {
 
         if (0 < this.$slotDropDown.length) {
             this.updateSlots();
-            setInterval(this.updateSlots.bind(this), 3000);
         }
 
         if (this.$participationCheckboxes.length > 0) {
             let participationToggleHandler = new ParticipationGuestToggleHandler(this.$participationCheckboxes);
             new ParticipationPreToggleHandler(participationToggleHandler);
-            new ParticipationGuestCountUpdateHandler(this.$participationCheckboxes);
         }
+
+        this.mercureSubscribeHandler = new MercureSubscribeHandler(['/join', '/delete'], this.handleParticipationUpdate)
+    }
+
+    private handleParticipationUpdate(data: UpdateParticipationCount) {
+        $(`div[data-id=${data.id}]`)[0]
+            .firstElementChild
+            .firstElementChild
+            .firstElementChild
+            .innerHTML = data.count.toString();
     }
 
     private updateSlots() {

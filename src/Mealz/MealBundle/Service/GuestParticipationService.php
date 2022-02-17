@@ -8,6 +8,7 @@ use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\ParticipantRepository;
 use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Entity\SlotRepository;
+use App\Mealz\MealBundle\Event\UpdateCountEvent;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\ProfileRepository;
@@ -18,6 +19,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use RuntimeException;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class GuestParticipationService
 {
@@ -28,19 +30,22 @@ class GuestParticipationService
     private ProfileRepository $profileRepo;
     private RoleRepository $roleRepo;
     private SlotRepository $slotRepo;
+    private EventDispatcherInterface $eventDispatcher;
 
     public function __construct(
         EntityManagerInterface $entityManager,
         ParticipantRepository $participantRepo,
         ProfileRepository $profileRepo,
         RoleRepository $roleRepo,
-        SlotRepository $slotRepo
+        SlotRepository $slotRepo,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->entityManager = $entityManager;
         $this->participantRepo = $participantRepo;
         $this->profileRepo = $profileRepo;
         $this->roleRepo = $roleRepo;
         $this->slotRepo = $slotRepo;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -62,6 +67,11 @@ class GuestParticipationService
         }
 
         $this->register($guestProfile, $meals, $slot, $dishSlugs);
+
+        /* @var $meal Meal */
+        foreach ($meals as $meal){
+            $this->eventDispatcher->dispatch(new UpdateCountEvent($meal, $guestProfile));
+        }
     }
 
     /**
@@ -100,6 +110,7 @@ class GuestParticipationService
         $flippedDishSlugs = array_flip($dishSlugs);
 
         $participations = [];
+
         /** @var Meal $meal */
         foreach ($meals as $meal) {
             if (empty($participations)) {

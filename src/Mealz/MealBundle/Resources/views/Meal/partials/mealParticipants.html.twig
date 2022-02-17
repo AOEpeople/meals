@@ -47,7 +47,7 @@
 {% endapply %}
 <div class="participants">
     <span class="{{ participantsCountClasses|join(' ') }}">
-        <span>{{ count }}</span>
+        <span class="count">{{ count }}</span>
         <label>{{ 0 < limit ? ' / ' ~ limit }}</label>
         <span class="{{ tooltipClasses|join(' ') }}">{{ tooltipText|trans({}, "messages") }}</span>
     </span>

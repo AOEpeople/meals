@@ -18,20 +18,6 @@
 {% if userAgent matches '/MealsApp Android WebView/' == true %}
         {% set isWebview = true %}
 {% endif %}
-{% block javascripts %}
-
-	<script>
-		const eventSource = new EventSource("{{ mercure([
-			'/test'
-			])|escape('js') }}");
-
-			eventSource.onmessage = event => {
-			// Will be called every time an update is published by the server
-			alert(JSON.parse(event.data));
-		}
-	</script>
-
-{% endblock %}
 
 <body
 		class="{{ activeRoute matches '/MealzMealBundle_Meal_guest.*/' ? 'guest-wrapper' }} {{ isWebview == true ? 'webview' }}"

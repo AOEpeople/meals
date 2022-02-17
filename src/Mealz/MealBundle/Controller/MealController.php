@@ -10,6 +10,7 @@ use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\SlotRepository;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Entity\WeekRepository;
+use App\Mealz\MealBundle\Event\UpdateCountEvent;
 use App\Mealz\MealBundle\Service\DishService;
 use App\Mealz\MealBundle\Service\Mailer;
 use App\Mealz\MealBundle\Service\MealAvailabilityService;
@@ -22,6 +23,7 @@ use DateTime;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,13 +32,16 @@ class MealController extends BaseController
 {
     private Mailer $mailer;
     private NotifierInterface $notifier;
+    private EventDispatcherInterface $eventDispatcher;
 
     public function __construct(
         Mailer $mailer,
-        NotifierInterface $notifier
-    ) {
+        NotifierInterface $notifier,
+        EventDispatcherInterface $eventDispatcher)
+    {
         $this->mailer = $mailer;
         $this->notifier = $notifier;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function index(
@@ -106,6 +111,8 @@ class MealController extends BaseController
         if (null === $out) {
             return new JsonResponse(null, 404);
         }
+
+        $this->eventDispatcher->dispatch(new UpdateCountEvent($meal, $userProfile));
 
         if (null !== $out['offerer']) {
             $remainingOfferCount = $participationSrv->getOfferCount($meal->getDateTime());

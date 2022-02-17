@@ -1,6 +1,6 @@
 import {ParticipationPreToggleHandler} from "../modules/participation-pre-toggle-handler";
 import {ParticipationToggleHandler} from "../modules/participation-toggle-handler";
-import {ParticipationCountUpdateHandler} from "../modules/participation-count-update-handler";
+import {MercureSubscribeHandler} from "../modules/mercure-subscribe-handler";
 import {CombinedMealDialog, SerializedFormData} from "../modules/combined-meal-dialog";
 import {ParticipationRequest, ParticipationRequestHandler} from "../modules/participation-request-handler";
 import {UpdateOffersHandler} from "../modules/update-offers-handler";
@@ -10,10 +10,10 @@ import {CombinedMealService} from "../modules/combined-meal-service";
 export default class MealIndexView {
     participationPreToggleHandler: ParticipationPreToggleHandler;
     $participationCheckboxes: JQuery;
+    mercureSubscribeHandler: MercureSubscribeHandler;
 
     constructor() {
-/*         this.updateSlots();
-        setInterval(this.updateSlots, 3000); */
+        this.updateSlots();
 
         this.$participationCheckboxes = $('.meals-list .meal .participation-checkbox');
         this.initEvents();
@@ -22,9 +22,10 @@ export default class MealIndexView {
             let participationToggleHandler = new ParticipationToggleHandler(this.$participationCheckboxes);
             this.participationPreToggleHandler = new ParticipationPreToggleHandler(participationToggleHandler);
 
-            new ParticipationCountUpdateHandler(this.$participationCheckboxes);
             new UpdateOffersHandler();
         }
+
+        this.mercureSubscribeHandler = new MercureSubscribeHandler(['/join', '/delete'], this.handleParticipationUpdate)
     }
 
     private initEvents(): void {
@@ -32,6 +33,10 @@ export default class MealIndexView {
         $('.meals-list .meal .slot-selector').on('change', this.handleChangeSlot);
         this.$participationCheckboxes.on('change', MealIndexView.handleParticipationUpdate);
         $('.meals-list .meal .meal-row').on('click', ' .title.edit', this.handleCombinedMealEdit.bind(this));
+    }
+
+    private handleParticipationUpdate(data: UpdateParticipationCount) {
+        $(`div[data-id=${data.id}] .count`).text(data.count);
     }
 
     private handleChangeSlot(event: JQuery.TriggeredEvent) {
@@ -95,7 +100,7 @@ export default class MealIndexView {
         this.showMealConfigurator($dishContainer);
     }
 
-/*     private updateSlots() {
+    private updateSlots() {
         $.ajax({
             url: '/participation/slots-status',
             dataType: 'json',
@@ -135,7 +140,7 @@ export default class MealIndexView {
                 });
             }
         });
-    } */
+    } 
 
     public showMealConfigurator($dishContainer: JQuery): void {
         let self = this;

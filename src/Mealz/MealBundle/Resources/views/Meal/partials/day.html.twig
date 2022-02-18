@@ -16,7 +16,8 @@
          data-is-available="{{ available ? 1 : 0 }}"
          data-qa="meal"
          data-qa-has-variations="{{ hasVariations ? 1 : 0 }}"
-         data-qa-is-available="{{ available ? 1 : 0 }}">
+         data-qa-is-available="{{ available ? 1 : 0 }}"
+         data-qa-day="{{ day.id }}">
 
         {%- include 'MealzMealBundle:Meal/partials:mealSlots.html.twig' -%}
 

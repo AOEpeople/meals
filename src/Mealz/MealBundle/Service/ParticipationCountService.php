@@ -90,6 +90,9 @@ class ParticipationCountService
                 foreach ($meal->getParticipants() as $participant) {
                     /** @var Dish $dish */
                     foreach ($participant->getCombinedDishes() as $dish) {
+                        if (!array_key_exists(self::PARTICIPATION_TOTAL_COUNT_KEY, $participation)) {
+                            $participation[self::PARTICIPATION_TOTAL_COUNT_KEY] = [];
+                        }
                         if (!array_key_exists($dish->getSlug(), $participation[self::PARTICIPATION_TOTAL_COUNT_KEY])) {
                             $participation[self::PARTICIPATION_TOTAL_COUNT_KEY][$dish->getSlug()][self::COUNT_KEY] = 0.0;
                         }

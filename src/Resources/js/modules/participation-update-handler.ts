@@ -35,9 +35,9 @@ export class ParticipationUpdateHandler {
         ParticipationUpdateHandler.updateCheckBoxWrapper($checkbox);
         CombinedMealService.updateDish($checkbox, data.participantID, data.bookedDishSlugs);
 
-        let $slotBox = $checkbox.closest('.meal').find('.slot-selector');
-        $slotBox.addClass('tmp-disabled').prop('disabled', true);
-        $slotBox.parent().children('.loader').css('visibility', 'visible');
+        //let $slotBox = $checkbox.closest('.meal').find('.slot-selector');
+        //$slotBox.addClass('tmp-disabled').prop('disabled', true);
+        //$slotBox.parent().children('.loader').css('visibility', 'visible');
     }
 
     public static acceptOffer($checkbox: JQuery, data: AcceptOfferData): void {

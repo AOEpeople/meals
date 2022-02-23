@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Service\Publisher;
 
+use JsonException;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
 
@@ -17,22 +18,15 @@ class MercurePublisher implements PublisherInterface
     }
 
     /**
-     *  publish a payload to an array of topics
-     *
-     *  @param  string|string[]  $topics     //  array of strings or string to publish to
-     *  @param  string           $payload    //  Json encoded Payload of the message
-     *  @return bool                         //  on success returns true
+     *  publish data to a topic
+     * @return bool                         //  on success returns true
+     * @throws JsonException
      */
-    public function publish($topics, string $payload) : bool
+    public function publish(string $topic, array $data) : bool
     {
-        $update = new Update(
-            $topics,                    // Array of topics to publish to
-            $payload,                   // Payload of the message
-            false,                      // If true check for JWT
-            null,                       // Transaction ID
-            null,                       // Type of message
-            null                        // Number of retries
-        );
-        return ($this->hub->publish($update) != '');
+        $payload = json_encode($data, JSON_THROW_ON_ERROR);
+        $update = new Update($topic, $payload, false, null, null, null);
+
+        return ($this->hub->publish($update) !== '');
     }
 }

@@ -13,7 +13,7 @@ use App\Mealz\MealBundle\Entity\WeekRepository;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\MealBundle\Service\Notification\NotifierInterface;
 use App\Mealz\MealBundle\Service\ParticipationService;
-use App\Mealz\MealBundle\Event\UpdateCountEvent;
+use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Exception;
@@ -89,7 +89,7 @@ class ParticipantController extends BaseController
         $entityManager->remove($participant);
         $entityManager->flush();
 
-        $this->eventDispatcher->dispatch(new UpdateCountEvent($meal, $participant->getProfile()));
+        $this->eventDispatcher->dispatch(new ParticipationUpdateEvent($participant));
 
         if (($this->getDoorman()->isKitchenStaff()) === true) {
             $logger = $this->get('monolog.logger.balance');
@@ -147,11 +147,15 @@ class ParticipantController extends BaseController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();
 
+            $this->eventDispatcher->dispatch(new ParticipationUpdateEvent($participant));
+
             return $this->generateResponse('MealzMealBundle_Participant_swap', 'unswapped', $participant);
         }
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->flush();
+
+        $this->eventDispatcher->dispatch(new ParticipationUpdateEvent($participant));
 
         $dishTitle = $participant->getMeal()->getDish()->getTitleEn();
 

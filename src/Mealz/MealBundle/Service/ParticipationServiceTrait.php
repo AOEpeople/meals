@@ -76,7 +76,7 @@ trait ParticipationServiceTrait
     /**
      * Checks if any participant is offering its meal.
      */
-    private function mealIsOffered(Meal $meal): bool
+    public function mealIsOffered(Meal $meal): bool
     {
         /** @var Participant $participant */
         foreach ($meal->getParticipants() as $participant) {

@@ -12,15 +12,4 @@ export class MercureSubscribeHandler{
         this.eventSource  = new EventSource(url);
         this.eventSource.onmessage = ({data}) => onRecieve(JSON.parse(data));
     }
-
-    close() {
-        if(this.eventSource.readyState !== this.eventSource.CLOSED){
-            this.eventSource.close();
-        }
-    }
-
-    getEventSource() {
-        return this.eventSource;
-    }
-
 }

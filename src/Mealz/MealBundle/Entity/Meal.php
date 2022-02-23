@@ -32,7 +32,7 @@ class Meal
      *
      * @var Dish
      */
-    protected $dish;
+    protected Dish $dish;
 
     /**
      * @Assert\NotBlank()
@@ -40,7 +40,7 @@ class Meal
      *
      * @var float
      */
-    protected $price;
+    protected float $price;
 
     /**
      * @Assert\NotBlank()
@@ -54,7 +54,7 @@ class Meal
      *
      * @var Day
      */
-    protected $day;
+    protected Day $day;
 
     /**
      * @Assert\NotBlank()
@@ -63,7 +63,7 @@ class Meal
      *
      * @var DateTime
      */
-    protected $dateTime;
+    protected DateTime $dateTime;
 
     /**
      * @ORM\OneToMany(targetEntity="Participant", mappedBy="meal")
@@ -84,7 +84,7 @@ class Meal
     /**
      * @param float $price
      */
-    public function setPrice($price): void
+    public function setPrice(float $price): void
     {
         $this->price = $price;
     }
@@ -92,7 +92,7 @@ class Meal
     /**
      * @return float
      */
-    public function getPrice()
+    public function getPrice(): float
     {
         return $this->price;
     }
@@ -100,7 +100,7 @@ class Meal
     /**
      * @param int $participationLimit
      */
-    public function setParticipationLimit($participationLimit): void
+    public function setParticipationLimit(int $participationLimit): void
     {
         $this->participationLimit = $participationLimit;
     }
@@ -108,7 +108,7 @@ class Meal
     /**
      * @return int
      */
-    public function getParticipationLimit()
+    public function getParticipationLimit(): int
     {
         return $this->participationLimit;
     }
@@ -116,7 +116,7 @@ class Meal
     /**
      * @param Dish $dish
      */
-    public function setDish($dish): void
+    public function setDish(Dish $dish): void
     {
         $this->dish = $dish;
     }
@@ -124,7 +124,7 @@ class Meal
     /**
      * @return Dish
      */
-    public function getDish()
+    public function getDish(): Dish
     {
         return $this->dish;
     }
@@ -141,7 +141,7 @@ class Meal
     /**
      * @return Day
      */
-    public function getDay()
+    public function getDay(): Day
     {
         return $this->day;
     }
@@ -149,7 +149,7 @@ class Meal
     /**
      * @param Day $day
      */
-    public function setDay($day): void
+    public function setDay(Day $day): void
     {
         $this->day = $day;
     }
@@ -162,7 +162,7 @@ class Meal
     /**
      * @return DateTime
      */
-    public function getDateTime()
+    public function getDateTime(): DateTime
     {
         return $this->dateTime;
     }
@@ -170,9 +170,18 @@ class Meal
     /**
      * @return DateTime
      */
-    public function getLockDateTime()
+    public function getLockDateTime(): DateTime
     {
         return $this->day->getLockParticipationDateTime();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isLimitReached(): bool
+    {
+        return ($this->getParticipationLimit() &&
+            $this->getParticipationLimit() <= $this->getParticipants()->count());
     }
 
     /**

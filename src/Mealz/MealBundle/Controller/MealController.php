@@ -10,7 +10,7 @@ use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\SlotRepository;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Entity\WeekRepository;
-use App\Mealz\MealBundle\Event\UpdateCountEvent;
+use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
 use App\Mealz\MealBundle\Service\DishService;
 use App\Mealz\MealBundle\Service\Mailer;
 use App\Mealz\MealBundle\Service\Notification\NotifierInterface;
@@ -110,7 +110,7 @@ class MealController extends BaseController
             return new JsonResponse(null, 404);
         }
 
-        $this->eventDispatcher->dispatch(new UpdateCountEvent($meal, $userProfile));
+        $this->eventDispatcher->dispatch(new ParticipationUpdateEvent($out['participant']));
 
         if (null !== $out['offerer']) {
             $remainingOfferCount = $participationSrv->getOfferCount($meal->getDateTime());

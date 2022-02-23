@@ -1,7 +1,0 @@
-version: '3.6'
-
-services:
-  web:
-    ports:
-      - "1337:1337"
-      - "2122:22"

@@ -22,15 +22,20 @@ export default class MealGuestView {
             new ParticipationPreToggleHandler(participationToggleHandler);
         }
 
-        this.mercureSubscribeHandler = new MercureSubscribeHandler(['/join', '/delete'], this.handleParticipationUpdate)
+        this.mercureSubscribeHandler = new MercureSubscribeHandler(['/participation-update'], this.handleParticipationUpdate)
     }
 
-    private handleParticipationUpdate(data: UpdateParticipationCount) {
-        $(`div[data-id=${data.id}]`)[0]
-            .firstElementChild
-            .firstElementChild
-            .firstElementChild
-            .innerHTML = data.count.toString();
+    private handleParticipationUpdate(data: ParticipationCountData) {
+        $(`div[data-id=${data.mealId}] .count`).text(data.count);
+        if(data.isLocked) {
+            $(`div[data-id=${data.mealId}] .participants-count`)
+            .removeClass('participation-allowed')
+            .addClass('participation-limit-reached');
+        } else {
+            $(`div[data-id=${data.mealId}] .participants-count`)
+            .removeClass('participation-limit-reached')
+            .addClass('participation-allowed');
+        }
     }
 
     private updateSlots() {

@@ -10,7 +10,6 @@ import {CombinedMealService} from "../modules/combined-meal-service";
 export default class MealIndexView {
     participationPreToggleHandler: ParticipationPreToggleHandler;
     $participationCheckboxes: JQuery;
-    mercureSubscribeHandler: MercureSubscribeHandler;
 
     constructor() {
         this.updateSlots();
@@ -25,7 +24,8 @@ export default class MealIndexView {
             new UpdateOffersHandler();
         }
 
-        this.mercureSubscribeHandler = new MercureSubscribeHandler(['/join', '/delete'], this.handleParticipationUpdate)
+        new MercureSubscribeHandler(['/participation-update'], this.handleParticipationUpdate);
+        new MercureSubscribeHandler(['/offer-update'], this.handleOfferUpdate);
     }
 
     private initEvents(): void {
@@ -35,8 +35,21 @@ export default class MealIndexView {
         $('.meals-list .meal .meal-row').on('click', ' .title.edit', this.handleCombinedMealEdit.bind(this));
     }
 
-    private handleParticipationUpdate(data: UpdateParticipationCount) {
-        $(`div[data-id=${data.id}] .count`).text(data.count);
+    private handleParticipationUpdate(data: ParticipationCountData) {
+        $(`div[data-id=${data.mealId}] .count`).text(data.count);
+        if(data.isLocked) {
+            $(`div[data-id=${data.mealId}] .participants-count`)
+            .removeClass('participation-allowed')
+            .addClass('participation-limit-reached');
+        } else {
+            $(`div[data-id=${data.mealId}] .participants-count`)
+            .removeClass('participation-limit-reached')
+            .addClass('participation-allowed');
+        }
+    }
+    
+    private handleOfferUpdate(data: OfferData) {
+        
     }
 
     private handleChangeSlot(event: JQuery.TriggeredEvent) {
@@ -135,7 +148,7 @@ export default class MealIndexView {
 
                     if ($slotSelector.hasClass('tmp-disabled') === true) {
                         $slotSelector.removeClass('tmp-disabled').prop('disabled', false)
-                            .parent().children('.loader').css('visibility', 'hidden');
+                           .parent().children('.loader').css('visibility', 'hidden');
                     }
                 });
             }

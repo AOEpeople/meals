@@ -92,6 +92,7 @@ services:
 
     # Interface Implementations
     App\Mealz\MealBundle\Service\Notification\NotifierInterface: '@mealz_meal.notifier.mattermost'
+    App\Mealz\MealBundle\Service\Publisher\PublisherInterface: '@App\Mealz\MealBundle\Service\Publisher\MercurePublisher'
 
     # Event Listeners
     App\Mealz\MealBundle\EventListener\ParticipantPersistenceListener:
@@ -260,5 +261,3 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
-
-

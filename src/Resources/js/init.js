@@ -7,7 +7,6 @@ import '../sass/mealz.scss'
 
 // include vendors
 import 'jquery';
-import 'jquery-migrate';
 import 'jquery-datetimepicker/build/jquery.datetimepicker.full';
 import '@fancyapps/fancybox';
 import 'easy-autocomplete';
@@ -20,9 +19,8 @@ import {ParticipationGuestToggleHandler, ParticipationToggleHandler} from "./mod
 import {ParticipationPreToggleHandler} from "./modules/participation-pre-toggle-handler";
 import {UpdateOffersHandler} from "./modules/update-offers-handler";
 
-if (process.env.MODE === 'production') {
-    jQuery.migrateMute = true;
-} else if (import.meta.webpackHot) {
+
+if (process.env.MODE !== 'production' && import.meta.webpackHot) {
     import.meta.webpackHot.accept();
 }
 

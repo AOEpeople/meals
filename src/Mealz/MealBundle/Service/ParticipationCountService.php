@@ -137,7 +137,8 @@ class ParticipationCountService
                 foreach ($meal->getParticipants() as $participant) {
                     /** @var Dish $dish */
                     foreach ($participant->getCombinedDishes() as $dish) {
-                        if (0 < $participation[self::PARTICIPATION_TOTAL_COUNT_KEY][$dish->getSlug()][self::LIMIT_KEY]) {
+                        if (isset($participation[self::PARTICIPATION_TOTAL_COUNT_KEY][$dish->getSlug()][self::LIMIT_KEY])
+                            && 0 < $participation[self::PARTICIPATION_TOTAL_COUNT_KEY][$dish->getSlug()][self::LIMIT_KEY]) {
                             $participation[self::PARTICIPATION_COUNT_KEY][$meal->getId()][$dish->getSlug()][self::LIMIT_KEY] =
                                 // limit and count are doubled, because calculate the limit with half portions (two half portions are one full portion)
                                 self::calculateLimit(

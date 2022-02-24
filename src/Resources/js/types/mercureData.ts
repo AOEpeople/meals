@@ -5,6 +5,8 @@ type ParticipationCountData = {
 };
 
 type OfferData = {
-    mealId:     number,
-    offeredAt:  number
+    mealId:         number,
+    isAvailable:    boolean,
+    date:           Date,
+    dishSlug:       string
 };

@@ -176,12 +176,37 @@ class Meal
     }
 
     /**
+     *  checks if a meal has reached his booking limit
      * @return bool
      */
     public function isLimitReached(): bool
     {
         return ($this->getParticipationLimit() &&
             $this->getParticipationLimit() <= $this->getParticipants()->count());
+    }
+
+    /**
+     * checks if a meal can be booked or has at least one available offer.
+     * @return bool
+     * @throws \Exception
+     */
+    public function isAvailable(): bool
+    {
+        if($this->isLimitReached()) {
+
+            return false;
+        }
+        /**
+         * @var Participant $participant
+         */
+        foreach($this->getParticipants()->getIterator() as $index => $participant) {
+            if($participant->getOfferedAt() > 0) {
+
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

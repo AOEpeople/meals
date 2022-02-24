@@ -3,7 +3,7 @@ import {ParticipationToggleHandler} from "../modules/participation-toggle-handle
 import {MercureSubscribeHandler} from "../modules/mercure-subscribe-handler";
 import {CombinedMealDialog, SerializedFormData} from "../modules/combined-meal-dialog";
 import {ParticipationRequest, ParticipationRequestHandler} from "../modules/participation-request-handler";
-import {UpdateOffersHandler} from "../modules/update-offers-handler";
+import {ParticipationAction, ParticipationUpdateHandler} from "../modules/participation-update-handler";
 import {ParticipationResponse} from "../modules/participation-response-handler";
 import {CombinedMealService} from "../modules/combined-meal-service";
 
@@ -21,11 +21,9 @@ export default class MealIndexView {
             let participationToggleHandler = new ParticipationToggleHandler(this.$participationCheckboxes);
             this.participationPreToggleHandler = new ParticipationPreToggleHandler(participationToggleHandler);
 
-            new UpdateOffersHandler();
         }
-
-        new MercureSubscribeHandler(['/participation-update'], this.handleParticipationUpdate);
-        new MercureSubscribeHandler(['/offer-update'], this.handleOfferUpdate);
+        new MercureSubscribeHandler(['/participant-update'], this.handleUpdateParticipation);
+        new MercureSubscribeHandler(['/offer-update'], this.handleUpdateOffers);
     }
 
     private initEvents(): void {
@@ -35,7 +33,7 @@ export default class MealIndexView {
         $('.meals-list .meal .meal-row').on('click', ' .title.edit', this.handleCombinedMealEdit.bind(this));
     }
 
-    private handleParticipationUpdate(data: ParticipationCountData) {
+    private handleUpdateParticipation(data: ParticipationCountData) {
         $(`div[data-id=${data.mealId}] .count`).text(data.count);
         if(data.isLocked) {
             $(`div[data-id=${data.mealId}] .participants-count`)
@@ -47,9 +45,43 @@ export default class MealIndexView {
             .addClass('participation-allowed');
         }
     }
-    
-    private handleOfferUpdate(data: OfferData) {
-        
+    public handleUpdateOffers(data: OfferData) {
+        let available = data.isAvailable;
+        let $mealWrapper = $('[data-id=' + data.mealId + ']');
+        let $checkbox = $mealWrapper.find('.participation-checkbox');
+
+        // new offer available and checkbox not checked yet
+        if (available === true &&
+            $checkbox.is(':checked') === false &&
+            $checkbox.hasClass(ParticipationAction.UNSWAP) === false &&
+            $checkbox.hasClass(ParticipationAction.ACCEPT_OFFER) === false &&
+            $checkbox.hasClass(ParticipationAction.JOIN) === false) {
+            let date = data.date;
+            let dishSlug = data.dishSlug;
+            ParticipationUpdateHandler.changeToOfferIsAvailable(
+                $checkbox,
+                '/menu/' + date + '/' + dishSlug + '/accept-offer'
+            );
+        }
+
+        // if a user's offer is gone and the participation-badge is still showing 'pending', disable the checkbox, tooltip and change badge
+        if ($checkbox.hasClass(ParticipationAction.UNSWAP) === true) {
+            let participantId = parseInt($checkbox.data('participant-id'));
+            if (isNaN(participantId)) {
+                console.log('Error: Participant ID is not a number');
+                return;
+            }
+            $.getJSON('/menu/meal/' + participantId + '/isParticipationPending', function (isParticipationPendingResponse) {
+                if (isParticipationPendingResponse[0] === false) {
+                    ParticipationUpdateHandler.changeToOfferIsTaken($checkbox);
+                }
+            });
+        }
+
+        // no offer available (anymore)
+        if (available === false && $checkbox.hasClass(ParticipationAction.ACCEPT_OFFER) === true) {
+            ParticipationUpdateHandler.changeToOfferIsGone($checkbox);
+        }
     }
 
     private handleChangeSlot(event: JQuery.TriggeredEvent) {

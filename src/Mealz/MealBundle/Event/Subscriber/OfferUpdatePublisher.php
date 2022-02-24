@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Event\Subscriber;
 
-use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
-use App\Mealz\MealBundle\Service\ParticipationService;
+use App\Mealz\MealBundle\Event\OfferUpdateEvent;
+use App\Mealz\MealBundle\Service\OfferService;
+use App\Mealz\MealBundle\Service\Publisher\Publisher;
 use App\Mealz\MealBundle\Service\Publisher\PublisherInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -14,35 +15,33 @@ class OfferUpdatePublisher implements EventSubscriberInterface
 {
     private PublisherInterface $publisher;
     private LoggerInterface $logger;
-    private ParticipationService $participationService;
 
     public function __construct(
         PublisherInterface $publisher,
-        LoggerInterface $logger,
-        ParticipationService $participationService)
+        LoggerInterface $logger)
     {
         $this->publisher            = $publisher;
         $this->logger               = $logger;
-        $this->participationService = $participationService;
     }
-
 
     public static function getSubscribedEvents() : array
     {
         return [
-            ParticipationUpdateEvent::class => 'onOfferUpdate',
+            OfferUpdateEvent::class => 'onOfferUpdate',
         ];
     }
 
-    public function onOfferUpdate(ParticipationUpdateEvent $event): void
+    public function onOfferUpdate(OfferUpdateEvent $event): void
     {
-        $success = $this->publisher->publish('/offer-update', 
+        $success = $this->publisher->publish(Publisher::TOPIC_UPDATE_OFFER,
             [
                 'mealId'          => $event->getParticipant()->getMeal()->getId(),
-                'isAvailable'     => $this->participationService->isOpenMeal($event->getParticipant()->getMeal())
+                'isAvailable'     => !empty(OfferService::getOffers($event->getParticipant()->getMeal())),
+                'date'            => $event->getParticipant()->getMeal()->getDateTime()->format('Y-m-d'),
+                'dishSlug'        => $event->getParticipant()->getMeal()->getDish()->getSlug()
             ]);
         if(!$success) {
-            $this->logger->error('publisher: publishing to topic /offer-update failed');
+            $this->logger->error('topic publish error', ['topic' => Publisher::TOPIC_UPDATE_OFFER]);
         }
     }
 }

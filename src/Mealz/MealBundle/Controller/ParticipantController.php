@@ -10,6 +10,7 @@ use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Entity\WeekRepository;
+use App\Mealz\MealBundle\Event\OfferUpdateEvent;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\MealBundle\Service\Notification\NotifierInterface;
 use App\Mealz\MealBundle\Service\ParticipationService;
@@ -147,7 +148,7 @@ class ParticipantController extends BaseController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();
 
-            $this->eventDispatcher->dispatch(new ParticipationUpdateEvent($participant));
+            $this->eventDispatcher->dispatch(new OfferUpdateEvent($participant));
 
             return $this->generateResponse('MealzMealBundle_Participant_swap', 'unswapped', $participant);
         }
@@ -155,7 +156,7 @@ class ParticipantController extends BaseController
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->flush();
 
-        $this->eventDispatcher->dispatch(new ParticipationUpdateEvent($participant));
+        $this->eventDispatcher->dispatch(new OfferUpdateEvent($participant));
 
         $dishTitle = $participant->getMeal()->getDish()->getTitleEn();
 

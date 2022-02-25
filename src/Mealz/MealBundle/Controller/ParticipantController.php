@@ -11,7 +11,6 @@ use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Entity\WeekRepository;
 use App\Mealz\MealBundle\Event\OfferUpdateEvent;
-use App\Mealz\MealBundle\Event\SlotUpdateEvent;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\MealBundle\Service\Notification\NotifierInterface;
 use App\Mealz\MealBundle\Service\ParticipationService;
@@ -41,6 +40,7 @@ class ParticipantController extends BaseController
         $this->eventDispatcher = $eventDispatcher;
     }
 
+
     public function updateCombinedMeal(Request $request, Participant $participant, ParticipationService $participationSrv): JsonResponse
     {
         $dishSlugs = $request->request->get('dishes', []);
@@ -54,6 +54,8 @@ class ParticipantController extends BaseController
 
             return new JsonResponse(['error' => 'unexpected error'], 500);
         }
+
+
 
         return new JsonResponse(
             [
@@ -84,16 +86,17 @@ class ParticipantController extends BaseController
         $profile = $participant->getProfile()->getUsername();
         $participant->setCombinedDishes(null);
 
-
-
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->remove($participant);
         $entityManager->flush();
 
         $this->eventDispatcher->dispatch(new ParticipationUpdateEvent($participant));
-        if(!$this->getParticipantRepository()->hasParticipantBookedAMeal($meal->getDateTime(), $participant->getProfile())) {
+        if($participant->getSlot()->getLimit() &&
+            !$this->getParticipantRepository()->hasParticipantBookedAMeal($meal->getDateTime(), $participant->getProfile())) {
             $this->eventDispatcher->dispatch(new SlotUpdateEvent($participant));
         }
+
+
         if (($this->getDoorman()->isKitchenStaff()) === true) {
             $logger = $this->get('monolog.logger.balance');
             $logger->info(

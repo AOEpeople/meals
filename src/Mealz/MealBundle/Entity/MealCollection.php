@@ -57,4 +57,28 @@ class MealCollection extends ArrayCollection
 
         return false;
     }
+
+    /**
+     * Group meals by meal type, i.e. simple or combined.
+     *
+     * @param bool $combinedFirst Weather or not to put combined meals before simple meals in result.
+     */
+    public function groupByType(bool $combinedFirst = true): MealCollection
+    {
+        $simple = [];
+        $combined = [];
+
+        /** @var Meal $meal */
+        foreach ($this->getValues() as $meal) {
+            if ($meal->isCombinedMeal()) {
+                $combined[] = $meal;
+            } else {
+                $simple[] = $meal;
+            }
+        }
+
+        $result = $combinedFirst ? array_merge($combined, $simple) : array_merge($simple, $combined);
+
+        return new MealCollection($result);
+    }
 }

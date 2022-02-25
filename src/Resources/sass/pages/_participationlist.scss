@@ -1,35 +1,10 @@
 $border-color: $color-base;
 $text-color: $color-base;
 
-.edit-participation {
-  .table-wrapper {
-    overflow: auto;
-  }
-
-  .table-head:first-child,
-  .table-data:first-child {
-    position: sticky;
-    left: 0;
-    background-color: #fff;
-    z-index: 9999;
-  }
-
-  .table {
-    width: 200%;
-  }
-}
-
-.edit-participation {
-  .table {
-    width: 100%;
-  }
-}
-
 .edit-participation,
 .print-participation {
   thead.table-header {
     display: table-row-group;
-    color: $text-color;
   }
 
   .table {
@@ -69,22 +44,19 @@ $text-color: $color-base;
       height: 40px;
       padding: 0;
       vertical-align: middle;
-      color: $text-color;
-
-      &.meal-participation {
-        color: $color-green;
-
-        .participating {
-          a,
-          a:hover {
-            color: $color-white;
-          }
-        }
-      }
     }
 
     .text-center {
       text-align: center;
+    }
+
+    .meal-participation {
+      &.participating {
+        a,
+        a:hover {
+          color: $color-white;
+        }
+      }
     }
 
     .meal-participation a[href] {
@@ -148,6 +120,35 @@ $text-color: $color-base;
   }
 }
 
+.edit-participation {
+  .table-wrapper {
+    overflow: auto;
+  }
+
+  .table-head:first-child,
+  .table-data:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 9999;
+    background-color: #fff;
+  }
+
+  .table {
+    width: 200%;
+
+    thead.table-header,
+    tbody.table-data {
+      color: $text-color;
+    }
+
+    .table-data {
+      &.meal-participation {
+        color: $color-green;
+      }
+    }
+  }
+}
+
 .print-participation {
   .meal-title,
   td.text {
@@ -174,9 +175,19 @@ $text-color: $color-base;
     }
   }
 
+  .table {
+    width: 100%;
+  }
+
   .table-content .table-data,
   .table-head {
     border-color: $color-print;
     color: $color-print;
+  }
+
+  .table-data {
+    &.meal-participation {
+      color: $color-green;
+    }
   }
 }

@@ -1,6 +1,30 @@
 $border-color: $color-base;
 $text-color: $color-base;
 
+.edit-participation {
+  .table-wrapper {
+    overflow: auto;
+  }
+
+  .table-head:first-child,
+  .table-data:first-child {
+    position: sticky;
+    left: 0;
+    background-color: #fff;
+    z-index: 9999;
+  }
+
+  .table {
+    width: 200%;
+  }
+}
+
+.edit-participation {
+  .table {
+    width: 100%;
+  }
+}
+
 .edit-participation,
 .print-participation {
   thead.table-header {
@@ -10,7 +34,6 @@ $text-color: $color-base;
 
   .table {
     table-layout: fixed;
-    width: 100%;
     margin-top: 20px;
   }
 

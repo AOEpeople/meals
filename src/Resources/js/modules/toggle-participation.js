@@ -43,7 +43,7 @@ Mealz.prototype.initToggleParticipation = function () {
 };
 
 Mealz.prototype.toggleParticipationAdmin = function ($element) {
-    var url = $element.data('attribute-action');
+    var url = $element.attr('data-action');
 
     $.ajax({
         method: 'POST',
@@ -53,7 +53,7 @@ Mealz.prototype.toggleParticipationAdmin = function ($element) {
         },
         dataType: 'json',
         success: function (data) {
-            $element.data('attribute-action', data.url);
+            $element.attr('data-action', data.url);
             $element.toggleClass('participating');
             let $icon = $element.find('i:first');
             $icon.toggleClass('glyphicon-check glyphicon-unchecked');

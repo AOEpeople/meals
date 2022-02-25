@@ -24,6 +24,7 @@ export default class MealIndexView {
         }
         new MercureSubscribeHandler(['/participant-update'], this.handleUpdateParticipation);
         new MercureSubscribeHandler(['/offer-update'], this.handleUpdateOffers);
+        new MercureSubscribeHandler(['/slot-update'], this.handleUpdateSlots);
     }
 
     private initEvents(): void {
@@ -82,6 +83,14 @@ export default class MealIndexView {
         if (available === false && $checkbox.hasClass(ParticipationAction.ACCEPT_OFFER) === true) {
             ParticipationUpdateHandler.changeToOfferIsGone($checkbox);
         }
+    }
+
+    private handleUpdateSlots(data: SlotData)
+    {
+        const slotOption = $(`#day-${data.date}-slots option[value=${data.slotSlug}]`);
+
+        slotOption.text(`${slotOption.data('title')} (${data.slotCount}/${slotOption.data('limit')})`);
+        slotOption.prop('disabled', slotOption.data('limit') <= data.slotCount);
     }
 
     private handleChangeSlot(event: JQuery.TriggeredEvent) {

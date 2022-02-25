@@ -22,6 +22,9 @@ export class ParticipationPreToggleHandler {
             }
 
             let $checkbox = $checkboxWrapper.find('input');
+            let $mealContainer = $checkbox.closest('.meal');
+            const slotSlug: string = $mealContainer.find('.slot-selector').val().toString();
+
             if (undefined === $checkbox) {
                 console.log('Error: No checkbox found');
                 return;
@@ -35,19 +38,24 @@ export class ParticipationPreToggleHandler {
                     CombinedMealOffersService.execute($checkbox, self.participationToggleHandler);
                 }
             } else if (self.isUnbookedCombinedDish($checkbox)) {
-                let $mealContainer = $checkbox.closest('.meal');
+
                 let simpleDishSlugs = self.getSimpleDishSlugs($mealContainer);
+
                 if (0 === simpleDishSlugs.length) {
                     console.log('combined-meal dishes not found');
                     return;
                 }
-                let data: SerializedFormData[] = [];
+                let data: SerializedFormData[] = [{
+                    name: 'slot',
+                    value: slotSlug
+                }];
                 simpleDishSlugs.forEach(function (slug, i) {
                     data.push({
                         'name': `dishes[${i}]`,
                         'value': slug
                     });
                 });
+
                 self.participationToggleHandler.toggle($checkbox, data);
             } else {
                 self.participationToggleHandler.toggle($checkbox);

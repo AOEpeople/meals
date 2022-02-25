@@ -7,11 +7,13 @@ namespace App\Mealz\MealBundle\Controller;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
+use App\Mealz\MealBundle\Entity\ParticipantRepository;
 use App\Mealz\MealBundle\Entity\SlotRepository;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Entity\WeekRepository;
 use App\Mealz\MealBundle\Event\OfferUpdateEvent;
 use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
+use App\Mealz\MealBundle\Event\SlotUpdateEvent;
 use App\Mealz\MealBundle\Service\DishService;
 use App\Mealz\MealBundle\Service\Mailer;
 use App\Mealz\MealBundle\Service\MealAvailabilityService;
@@ -116,11 +118,8 @@ class MealController extends BaseController
         if (null !== $out['offerer']) {
             $remainingOfferCount = $participationSrv->getOfferCount($meal->getDateTime());
             $this->sendMealTakenNotifications($out['offerer'], $meal, $remainingOfferCount);
-            $this->eventDispatcher->dispatch(new OfferUpdateEvent($out['participant']));
 
             return $this->generateResponse('MealzMealBundle_Participant_swap', 'added', $meal, $out['participant']);
-        } else {
-            $this->eventDispatcher->dispatch(new ParticipationUpdateEvent($out['participant']));
         }
 
         $this->logAdd($meal, $out['participant']);
@@ -154,6 +153,13 @@ class MealController extends BaseController
             $bookedDishSlugs = array_map(fn (Dish $dish) => $dish->getSlug(), $dishes->toArray());
         }
 
+        $this->eventDispatcher->dispatch(new ParticipationUpdateEvent($participant));
+        if($participant->getSlot()->getLimit() &&
+            $this->getParticipantRepository()->hasParticipantBookedAMeal($meal->getDateTime(), $participant->getProfile()) === 1) {
+                $this->eventDispatcher->dispatch(new SlotUpdateEvent($participant));
+        }
+
+
         return new JsonResponse([
             'id' => $participant->getId(),
             'participantsCount' => $meal->getParticipants()->count(),
@@ -165,6 +171,7 @@ class MealController extends BaseController
             ),
             'actionText' => $action,
             'bookedDishSlugs' => $bookedDishSlugs,
+            'slot' => $participant->getSlot()->getSlug()
         ]);
     }
 

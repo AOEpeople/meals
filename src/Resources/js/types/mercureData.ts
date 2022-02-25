@@ -10,3 +10,9 @@ type OfferData = {
     date:           Date,
     dishSlug:       string
 };
+
+type SlotData = {
+    date:       Date,
+    slotSlug:   string,
+    slotCount:  number
+};

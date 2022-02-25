@@ -42,7 +42,7 @@ export class ParticipationUpdateHandler {
         ParticipationUpdateHandler.updateCheckboxEnabled($checkbox);
         ParticipationUpdateHandler.updateCheckBoxWrapper($checkbox);
         CombinedMealService.updateDish($checkbox, data.participantID, data.bookedDishSlugs);
-
+        console.log(data);
         //let $slotBox = $checkbox.closest('.meal').find('.slot-selector');
         //$slotBox.addClass('tmp-disabled').prop('disabled', true);
         //$slotBox.parent().children('.loader').css('visibility', 'visible');

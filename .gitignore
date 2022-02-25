@@ -1,7 +1,6 @@
 # exclusions (alphabetical)
 *.cache
 .*
-/.ddev/caddy/cert/*
 .DS_Store
 /build/
 /public/images/

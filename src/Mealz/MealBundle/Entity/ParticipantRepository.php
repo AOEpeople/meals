@@ -119,6 +119,27 @@ class ParticipantRepository extends EntityRepository
         return $queryBuilder->getQuery()->execute();
     }
 
+    public function hasParticipantBookedAMeal(DateTime $date, Profile $profile): int
+    {
+        $queryBuilder = $this->createQueryBuilder('p');
+        $queryBuilder
+            ->select(['p', 'm', 'up', 'count(p.id) AS count'])
+            ->join('p.meal', 'm')
+            ->join('p.profile', 'up')
+            ->where('m.dateTime >= :startDate')
+            ->andWhere('m.dateTime <= :endDate')
+            ->andWhere('up.username = :userName')
+            ->setParameters([
+                'startDate' => (clone $date),
+                'endDate' => (clone $date),
+                'userName' => $profile->getUsername()
+            ]);
+
+        $result = $queryBuilder->getQuery()->getArrayResult();
+
+        return $result[0]['count'] ?? 0;
+    }
+
     public function findCostsGroupedByUserGroupedByMonth(): array
     {
         $costs = $this->findCostsPerMonthPerUser();

@@ -28,8 +28,8 @@ services:
       - caddy_data:/data
       - caddy_config:/config
       - ./caddy/Caddyfile.dev:/etc/caddy/Caddyfile.dev
-      - ./caddy/cert/meals.test.pem:/etc/ssl/private/meals.test.pem
-      - ./caddy/cert/meals.test-key.pem:/etc/ssl/private/meals.test-key.pem
+      - ./caddy/cert/:/etc/ssl/private/
+
 
 volumes:
   caddy_data:

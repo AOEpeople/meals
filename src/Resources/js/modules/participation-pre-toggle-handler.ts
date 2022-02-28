@@ -22,9 +22,6 @@ export class ParticipationPreToggleHandler {
             }
 
             let $checkbox = $checkboxWrapper.find('input');
-            let $mealContainer = $checkbox.closest('.meal');
-            const slotSlug: string = $mealContainer.find('.slot-selector').val().toString();
-
             if (undefined === $checkbox) {
                 console.log('Error: No checkbox found');
                 return;

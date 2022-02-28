@@ -6,7 +6,7 @@ import {CombinedMealOffersService} from "./combined-meal-offers-service";
 import {CombinedMealService} from "./combined-meal-service";
 
 export class ParticipationPreToggleHandler {
-    private participationToggleHandler: AbstractParticipationToggleHandler;
+    private readonly participationToggleHandler: AbstractParticipationToggleHandler;
 
     constructor(participationToggleHandler: AbstractParticipationToggleHandler) {
         this.participationToggleHandler = participationToggleHandler;
@@ -22,49 +22,62 @@ export class ParticipationPreToggleHandler {
             }
 
             let $checkbox = $checkboxWrapper.find('input');
-            let $mealContainer = $checkbox.closest('.meal');
-            const slotSlug: string = $mealContainer.find('.slot-selector').val().toString();
-
             if (undefined === $checkbox) {
                 console.log('Error: No checkbox found');
                 return;
             }
 
-            if (self.needUserInteractionBeforeToggle($checkbox)) {
-                let participantCounter: ParticipantCounter = $checkbox.data(ParticipantCounter.NAME);
-                if (participantCounter.isAvailable()) {
-                    self.executeBeforeToggle($checkbox);
-                } else {
-                    CombinedMealOffersService.execute($checkbox, self.participationToggleHandler);
-                }
-            } else if (self.isUnbookedCombinedDish($checkbox)) {
-
-                let simpleDishSlugs = self.getSimpleDishSlugs($mealContainer);
-
-                if (0 === simpleDishSlugs.length) {
-                    console.log('combined-meal dishes not found');
-                    return;
-                }
-                let data: SerializedFormData[] = [{
-                    name: 'slot',
-                    value: slotSlug
-                }];
-                simpleDishSlugs.forEach(function (slug, i) {
-                    data.push({
-                        'name': `dishes[${i}]`,
-                        'value': slug
-                    });
-                });
-
-                self.participationToggleHandler.toggle($checkbox, data);
+            if (self.isUnbookedCombinedDish($checkbox)) {
+                self.processCombinedMealJoin($checkbox);
             } else {
                 self.participationToggleHandler.toggle($checkbox);
             }
         });
     }
 
-    private needUserInteractionBeforeToggle($checkbox: JQuery): boolean {
-        return this.isUnbookedCombinedDish($checkbox) && this.isCombinedDishWithVariations($checkbox);
+    private processCombinedMealJoin($checkbox: JQuery): void {
+        if (this.existDishVariations($checkbox)) {
+            this.joinCombinedMealWithVariations($checkbox);
+        } else {
+            this.joinCombinedMealWithoutVariations($checkbox);
+        }
+    }
+
+    private joinCombinedMealWithVariations($checkbox: JQuery) {
+        let participantCounter: ParticipantCounter = $checkbox.data(ParticipantCounter.NAME);
+        if (participantCounter.isAvailable()) {
+            this.executeBeforeToggle($checkbox);
+        } else {
+            CombinedMealOffersService.execute($checkbox, this.participationToggleHandler);
+        }
+    }
+
+    private joinCombinedMealWithoutVariations($checkbox: JQuery) {
+        let $mealContainer = $checkbox.closest('.meal');
+        let simpleDishSlugs = this.getSimpleDishSlugs($mealContainer);
+
+        if (0 === simpleDishSlugs.length) {
+            console.log('combined-meal dishes not found');
+            return;
+        }
+
+        const slotSlug: string = $mealContainer.find('.slot-selector').val().toString();
+        let data: SerializedFormData[] = [{
+            'name': 'slot',
+            'value': slotSlug
+        }];
+        simpleDishSlugs.forEach(function (slug, i) {
+            data.push({
+                'name': `dishes[${i}]`,
+                'value': slug
+            });
+        });
+
+        this.participationToggleHandler.toggle($checkbox, data);
+    }
+
+    private existDishVariations($checkbox: JQuery): boolean {
+        return 0 < $checkbox.closest('.meal').find('.variation-row .text-variation').length;
     }
 
     private isBookedDish($checkbox: JQuery): boolean {
@@ -73,10 +86,6 @@ export class ParticipationPreToggleHandler {
 
     private isCombinedDish($checkbox: JQuery): boolean {
         return 0 < $checkbox.closest('.meal-row.combined-meal').length;
-    }
-
-    private isCombinedDishWithVariations($checkbox: JQuery): boolean {
-        return 0 < $checkbox.closest('.meal').find('.variation-row .text-variation').length;
     }
 
     private isUnbookedCombinedDish($checkbox: JQuery): boolean {

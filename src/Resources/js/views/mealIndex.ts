@@ -22,9 +22,9 @@ export default class MealIndexView {
             this.participationPreToggleHandler = new ParticipationPreToggleHandler(participationToggleHandler);
 
         }
-        new MercureSubscribeHandler(['/participant-update'], this.handleUpdateParticipation);
-        new MercureSubscribeHandler(['/offer-update'], this.handleUpdateOffers);
-        new MercureSubscribeHandler(['/slot-update'], this.handleUpdateSlots);
+        new MercureSubscribeHandler(['/participant-update'], MealIndexView.handleUpdateParticipation);
+        new MercureSubscribeHandler(['/offer-update'], MealIndexView.handleUpdateOffers);
+        new MercureSubscribeHandler(['/slot-update'], MealIndexView.handleUpdateSlots);
     }
 
     private initEvents(): void {
@@ -34,7 +34,7 @@ export default class MealIndexView {
         $('.meals-list .meal .meal-row').on('click', ' .title.edit', this.handleCombinedMealEdit.bind(this));
     }
 
-    private handleUpdateParticipation(data: ParticipationCountData) {
+    private static handleUpdateParticipation(data: ParticipationCountData) {
         $(`div[data-id=${data.mealId}] .count`).text(data.count);
         if(data.isLocked) {
             $(`div[data-id=${data.mealId}] .participants-count`)
@@ -46,7 +46,7 @@ export default class MealIndexView {
             .addClass('participation-allowed');
         }
     }
-    private handleUpdateOffers(data: OfferData) {
+    private static handleUpdateOffers(data: OfferData) {
         let available = data.isAvailable;
         let $mealWrapper = $('[data-id=' + data.mealId + ']');
         let $checkbox = $mealWrapper.find('.participation-checkbox');
@@ -84,8 +84,8 @@ export default class MealIndexView {
             ParticipationUpdateHandler.changeToOfferIsGone($checkbox);
         }
     }
-    
-    private handleUpdateSlots(data: SlotData)
+
+    private static handleUpdateSlots(data: SlotData)
     {
         const slotOption = $(`#day-${data.date}-slots option[value=${data.slotSlug}]`);
         slotOption.text(`${slotOption.data('title')} (${data.slotCount}/${slotOption.data('limit')})`);

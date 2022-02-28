@@ -19,6 +19,7 @@ export interface AcceptOfferData {
 
 export interface ToggleData extends AcceptOfferData {
     actionText: string;
+    slot: string;
 }
 
 export interface ParticipationUpdateData {
@@ -37,15 +38,12 @@ export class ParticipationUpdateHandler {
         const nextAction = ('deleted' === data.actionText) ? ParticipationAction.JOIN : ParticipationAction.DELETE;
         ParticipationUpdateHandler.changeCheckboxAttributes($checkbox, nextAction, data.url);
         ParticipationUpdateHandler.changeParticipationCounter($checkbox, ParticipationState.DEFAULT, data.participantsCount);
+        if ('added' === data.actionText) ParticipationUpdateHandler.changeToAssignedSlot($checkbox, data.slot);
 
         // update
         ParticipationUpdateHandler.updateCheckboxEnabled($checkbox);
         ParticipationUpdateHandler.updateCheckBoxWrapper($checkbox);
         CombinedMealService.updateDish($checkbox, data.participantID, data.bookedDishSlugs);
-        console.log(data);
-        //let $slotBox = $checkbox.closest('.meal').find('.slot-selector');
-        //$slotBox.addClass('tmp-disabled').prop('disabled', true);
-        //$slotBox.parent().children('.loader').css('visibility', 'visible');
     }
 
     public static acceptOffer($checkbox: JQuery, data: AcceptOfferData): void {
@@ -206,5 +204,10 @@ export class ParticipationUpdateHandler {
         this.updateCheckboxEnabled($checkbox);
         this.updateCheckBoxWrapper($checkbox);
         this.toggleTooltip($checkbox, TooltipLabel.OFFERED_MEAL);
+    }
+
+    public static changeToAssignedSlot($checkbox: JQuery, slot: string){
+        let $assignedSlot = $checkbox.closest('.meal').find('[value='+ slot +']');
+        $assignedSlot.prop('selected', 'selected');
     }
 }

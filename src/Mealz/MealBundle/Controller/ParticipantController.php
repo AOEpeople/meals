@@ -84,17 +84,16 @@ class ParticipantController extends BaseController
         $profile = $participant->getProfile()->getUsername();
         $participant->setCombinedDishes(null);
 
+
+
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->remove($participant);
         $entityManager->flush();
 
         $this->eventDispatcher->dispatch(new ParticipationUpdateEvent($participant));
-        if($participant->getSlot()->getLimit() &&
-            !$this->getParticipantRepository()->hasParticipantBookedAMeal($meal->getDateTime(), $participant->getProfile())) {
+        if(!$this->getParticipantRepository()->hasParticipantBookedAMeal($meal->getDateTime(), $participant->getProfile())) {
             $this->eventDispatcher->dispatch(new SlotUpdateEvent($participant));
         }
-
-
         if (($this->getDoorman()->isKitchenStaff()) === true) {
             $logger = $this->get('monolog.logger.balance');
             $logger->info(

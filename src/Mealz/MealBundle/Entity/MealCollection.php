@@ -61,7 +61,7 @@ class MealCollection extends ArrayCollection
     /**
      * Group meals by meal type, i.e. simple or combined.
      *
-     * @param bool $combinedFirst Weather or not to put combined meals before simple meals in result
+     * @param bool $combinedFirst Weather or not to place combined meals before simple meals in result
      */
     public function groupByType(bool $combinedFirst = true): MealCollection
     {

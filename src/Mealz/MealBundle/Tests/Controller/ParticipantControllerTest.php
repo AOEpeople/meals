@@ -276,7 +276,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     {
         $crawler = $this->getCurrentWeekParticipations()->filter('.table-content');
         $tableRow = '<tr class="table-row"><td class="text table-data wide-cell">__name__<\/td>';
-        $tableData = '<td class="meal-participation table-data" data-attribute-action=".*__username__"><i class="glyphicon"><\/i><\/td>';
+        $tableData = '<td class="meal-participation table-data" data-action=".*__username__"><i class="glyphicon"><\/i><\/td>';
 
         $regex = '/(' . $tableRow . ')(' . $tableData . ')+(<\/tr>)/';
 

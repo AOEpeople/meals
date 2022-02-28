@@ -15,6 +15,7 @@ interface SwapResponse extends ActionResponse {
 export interface ToggleResponse extends SwapResponse {
     participantsCount: number;
     bookedDishSlugs: string[];
+    slot: string;
 }
 
 
@@ -26,6 +27,7 @@ export class ParticipationResponseHandler {
             url: response.url,
             participantsCount: response.participantsCount,
             bookedDishSlugs: response.bookedDishSlugs,
+            slot: response.slot,
         };
         ParticipationUpdateHandler.toggle($checkbox, data);
     }

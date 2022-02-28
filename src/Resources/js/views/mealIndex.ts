@@ -46,7 +46,7 @@ export default class MealIndexView {
             .addClass('participation-allowed');
         }
     }
-    public handleUpdateOffers(data: OfferData) {
+    private handleUpdateOffers(data: OfferData) {
         let available = data.isAvailable;
         let $mealWrapper = $('[data-id=' + data.mealId + ']');
         let $checkbox = $mealWrapper.find('.participation-checkbox');
@@ -84,11 +84,10 @@ export default class MealIndexView {
             ParticipationUpdateHandler.changeToOfferIsGone($checkbox);
         }
     }
-
+    
     private handleUpdateSlots(data: SlotData)
     {
         const slotOption = $(`#day-${data.date}-slots option[value=${data.slotSlug}]`);
-
         slotOption.text(`${slotOption.data('title')} (${data.slotCount}/${slotOption.data('limit')})`);
         slotOption.prop('disabled', slotOption.data('limit') <= data.slotCount);
     }

@@ -7,29 +7,22 @@ services:
     restart: unless-stopped
     command: /usr/bin/caddy run -config /etc/caddy/Caddyfile.dev
     environment:
-      SERVER_NAME: 'meals.test, mercure'
       MERCURE_PUBLISHER_JWT_ALG: HS256
       MERCURE_PUBLISHER_JWT_KEY: testing
       MERCURE_SUBSCRIBER_JWT_ALG: HS256
       MERCURE_SUBSCRIBER_JWT_KEY: testing
+      HTTP_EXPOSE: '8080:8080'
+      HTTPS_EXPOSE: '8081:8080'
+      VIRTUAL_HOST: ${DDEV_HOSTNAME}
     labels:
       com.ddev.site-name: ${DDEV_SITENAME}
-      com.ddev.approot: $DDEV_APPROOT
-    ports:
-      - mode: ingress
-        target: 80
-        published: 2080
-        protocol: tcp
-      - mode: ingress
-        target: 443
-        published: 2443
-        protocol: tcp
+      com.ddev.approot: ${DDEV_APPROOT}
+    expose:
+      - 8080
     volumes:
       - caddy_data:/data
       - caddy_config:/config
       - ./caddy/Caddyfile.dev:/etc/caddy/Caddyfile.dev
-      - ./caddy/cert/:/etc/ssl/private/
-
 
 volumes:
   caddy_data:

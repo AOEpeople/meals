@@ -1,14 +1,11 @@
 # Learn how to configure the Mercure.rocks Hub on https://mercure.rocks/docs/hub/config
 {
-	{$GLOBAL_OPTIONS}
-	
+	auto_https off
 }
 
-{$SERVER_NAME:localhost}
+http://meals.test:8080, http://mercure:8080
 
 log
-
-tls /etc/ssl/private/meals.test.pem /etc/ssl/private/meals.test-key.pem
 
 route {
 	redir / /.well-known/mercure/ui/
@@ -28,7 +25,7 @@ route {
 		anonymous
 		subscriptions
 		# Extra directives
-		{$MERCURE_EXTRA_DIRECTIVES}
+		# {$MERCURE_EXTRA_DIRECTIVES}
 	}
 
 	respond /healthz 200

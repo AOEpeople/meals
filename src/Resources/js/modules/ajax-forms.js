@@ -96,7 +96,7 @@ Mealz.prototype.loadAjaxForm = function ($element) {
     $.ajax({
         method: 'GET',
         url: url,
-        dataType: 'json',
+        dataType: 'text',
         success: function (data) {
             var $wrapperForm;
 
@@ -140,7 +140,7 @@ Mealz.prototype.loadAjaxFormPayment = function ($element) {
     $.ajax({
         method: 'GET',
         url: url,
-        dataType: 'json',
+        dataType: 'text',
         async: false,
         success: function (data) {
             that.$iconCells.find('form').addClass(that.hiddenClass);

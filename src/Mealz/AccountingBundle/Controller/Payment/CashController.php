@@ -10,7 +10,6 @@ use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Doctrine\ORM\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +22,7 @@ class CashController extends BaseController
     /**
      * @param Profile $profile
      */
-    public function getPaymentFormForProfile($profile, Wallet $wallet): JsonResponse
+    public function getPaymentFormForProfile($profile, Wallet $wallet): Response
     {
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
@@ -52,7 +51,7 @@ class CashController extends BaseController
             ]
         );
 
-        return new JsonResponse($renderedForm->getContent());
+        return new Response($renderedForm->getContent());
     }
 
     /**
@@ -60,7 +59,7 @@ class CashController extends BaseController
      *
      * @param Profile $profile
      */
-    public function getSettlementFormForProfile($profile): JsonResponse
+    public function getSettlementFormForProfile($profile): Response
     {
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
@@ -75,7 +74,7 @@ class CashController extends BaseController
             ]
         );
 
-        return new JsonResponse($renderedForm->getContent());
+        return new Response($renderedForm->getContent());
     }
 
     /**

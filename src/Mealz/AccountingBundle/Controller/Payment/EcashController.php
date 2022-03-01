@@ -10,7 +10,6 @@ use App\Mealz\MealBundle\Controller\BaseController;
 use App\Mealz\UserBundle\Entity\Profile;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -20,7 +19,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class EcashController extends BaseController
 {
-    public function getPaymentFormForProfile(Profile $profile, Wallet $wallet): JsonResponse
+    public function getPaymentFormForProfile(Profile $profile, Wallet $wallet): Response
     {
         $profileRepository = $this->getDoctrine()->getRepository(Profile::class);
         $profile = $profileRepository->find($profile);
@@ -43,7 +42,7 @@ class EcashController extends BaseController
         $template = 'MealzAccountingBundle:Accounting/Payment/Ecash:form_ecash_amount.html.twig';
         $renderedForm = $this->render($template, ['form' => $form->createView()]);
 
-        return new JsonResponse($renderedForm->getContent());
+        return new Response($renderedForm->getContent());
     }
 
     /**

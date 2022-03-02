@@ -73,7 +73,7 @@
             <tr>
                 <td class="text table-data wide-cell">{{ 'table.total' | trans({}, 'general') }}</td>
                 {% for day in week.days %}
-                    {% for meal in day.meals %}
+                    {% for meal in day.meals.groupByType() %}
                         <td class="meal-count text text-center table-data"><span>{{ meal.participants | length }}</span></td>
                     {% endfor %}
                 {% endfor %}

@@ -1,7 +1,7 @@
 type ParticipationCountData = {
-    mealId:     number,
-    count:      number,
-    isLocked:   boolean
+    mealId:         number,
+    count:          number,
+    isAvailable:    boolean
 };
 
 type OfferData = {

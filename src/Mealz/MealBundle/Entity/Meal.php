@@ -8,6 +8,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -29,18 +30,14 @@ class Meal
     /**
      * @ORM\ManyToOne(targetEntity="Dish", cascade={"refresh"}, fetch="EAGER")
      * @ORM\JoinColumn(name="dish_id", referencedColumnName="id")
-     *
-     * @var Dish
      */
-    protected Dish $dish;
+    private Dish $dish;
 
     /**
      * @Assert\NotBlank()
      * @ORM\Column(type="decimal", precision=10, scale=4, nullable=FALSE)
-     *
-     * @var float
      */
-    protected float $price;
+    private float $price = 0.0;
 
     /**
      * @Assert\NotBlank()
@@ -51,19 +48,15 @@ class Meal
     /**
      * @ORM\ManyToOne(targetEntity="Day", inversedBy="meals")
      * @ORM\JoinColumn(name="day", referencedColumnName="id")
-     *
-     * @var Day
      */
-    protected Day $day;
+    private Day $day;
 
     /**
      * @Assert\NotBlank()
      * @Assert\Type(type="DateTime")
      * @ORM\Column(type="datetime", nullable=FALSE)
-     *
-     * @var DateTime
      */
-    protected DateTime $dateTime;
+    private DateTime $dateTime;
 
     /**
      * @ORM\OneToMany(targetEntity="Participant", mappedBy="meal")
@@ -74,6 +67,9 @@ class Meal
     public function __construct()
     {
         $this->participants = new ArrayCollection();
+        $this->dish = new Dish();
+        $this->day = new Day();
+        $this->dateTime = new DateTime();
     }
 
     public function getId(): ?int
@@ -81,55 +77,37 @@ class Meal
         return $this->id;
     }
 
-    /**
-     * @param float $price
-     */
     public function setPrice(float $price): void
     {
         $this->price = $price;
     }
 
-    /**
-     * @return float
-     */
     public function getPrice(): float
     {
         return $this->price;
     }
 
-    /**
-     * @param int $participationLimit
-     */
     public function setParticipationLimit(int $participationLimit): void
     {
         $this->participationLimit = $participationLimit;
     }
 
-    /**
-     * @return int
-     */
     public function getParticipationLimit(): int
     {
         return $this->participationLimit;
     }
 
-    /**
-     * @param Dish $dish
-     */
     public function setDish(Dish $dish): void
     {
         $this->dish = $dish;
     }
 
-    /**
-     * @return Dish
-     */
     public function getDish(): Dish
     {
         return $this->dish;
     }
 
-    public function getParticipants(): Collection
+    public function getParticipants(): ArrayCollection
     {
         if (null === $this->participants) {
             $this->participants = new ArrayCollection();
@@ -138,17 +116,11 @@ class Meal
         return new ArrayCollection($this->participants->toArray());
     }
 
-    /**
-     * @return Day
-     */
     public function getDay(): Day
     {
         return $this->day;
     }
 
-    /**
-     * @param Day $day
-     */
     public function setDay(Day $day): void
     {
         $this->day = $day;
@@ -159,54 +131,14 @@ class Meal
         $this->dateTime = $dateTime;
     }
 
-    /**
-     * @return DateTime
-     */
     public function getDateTime(): DateTime
     {
         return $this->dateTime;
     }
 
-    /**
-     * @return DateTime
-     */
     public function getLockDateTime(): DateTime
     {
         return $this->day->getLockParticipationDateTime();
-    }
-
-    /**
-     *  checks if a meal has reached his booking limit
-     * @return bool
-     */
-    public function isLimitReached(): bool
-    {
-        return ($this->getParticipationLimit() &&
-            $this->getParticipationLimit() <= $this->getParticipants()->count());
-    }
-
-    /**
-     * checks if a meal can be booked or has at least one available offer.
-     * @return bool
-     * @throws \Exception
-     */
-    public function isAvailable(): bool
-    {
-        if($this->isLimitReached()) {
-
-            return false;
-        }
-        /**
-         * @var Participant $participant
-         */
-        foreach($this->getParticipants()->getIterator() as $index => $participant) {
-            if($participant->getOfferedAt() > 0) {
-
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**

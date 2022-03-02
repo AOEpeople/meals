@@ -6,6 +6,7 @@ namespace App\Mealz\MealBundle\Event\Subscriber;
 
 use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
 use App\Mealz\MealBundle\Service\Publisher\PublisherInterface;
+use App\Mealz\MealBundle\Service\ParticipationService;
 use Psr\Log\LoggerInterface;
 use App\Mealz\MealBundle\Service\Publisher\Publisher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -14,11 +15,13 @@ class ParticipationUpdatePublisher implements EventSubscriberInterface
 {
     private PublisherInterface $publisher;
     private LoggerInterface $logger;
+    private ParticipationService  $participationService;
 
-    public function __construct(PublisherInterface $publisher, LoggerInterface $logger)
+    public function __construct(PublisherInterface $publisher, LoggerInterface $logger, ParticipationService $participationService)
     {
         $this->publisher    = $publisher;
         $this->logger       = $logger;
+        $this->participationService = $participationService;
     }
 
     public static function getSubscribedEvents() : array
@@ -40,7 +43,7 @@ class ParticipationUpdatePublisher implements EventSubscriberInterface
             [
                 'mealId'            => $event->getParticipant()->getMeal()->getId(),
                 'count'             => $count,
-                'isLimitReached'    => $event->getParticipant()->getMeal()->isLimitReached()
+                'isAvailable'       => $this->participationService->isAvailable($event->getParticipant()->getMeal())
             ]);
         if(!$success) {
             $this->logger->error('topic publish error', ['topic' => Publisher::TOPIC_PARTICIPANT_COUNT]);

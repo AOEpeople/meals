@@ -60,6 +60,8 @@ class Day extends AbstractMessage
     public function __construct()
     {
         $this->meals = new MealCollection();
+        $this->dateTime = new DateTime();
+        $this->lockParticipationDateTime = $this->dateTime;
     }
 
     /**

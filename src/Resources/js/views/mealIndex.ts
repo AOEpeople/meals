@@ -36,16 +36,17 @@ export default class MealIndexView {
 
     private static handleUpdateParticipation(data: ParticipationCountData) {
         $(`div[data-id=${data.mealId}] .count`).text(data.count);
-        if(data.isLocked) {
+        if(data.isAvailable) {
             $(`div[data-id=${data.mealId}] .participants-count`)
-            .removeClass('participation-allowed')
-            .addClass('participation-limit-reached');
+                .removeClass('participation-limit-reached')
+                .addClass('participation-allowed');
         } else {
             $(`div[data-id=${data.mealId}] .participants-count`)
-            .removeClass('participation-limit-reached')
-            .addClass('participation-allowed');
+                .removeClass('participation-allowed')
+                .addClass('participation-limit-reached');
         }
     }
+
     private static handleUpdateOffers(data: OfferData) {
         let available = data.isAvailable;
         let $mealWrapper = $('[data-id=' + data.mealId + ']');

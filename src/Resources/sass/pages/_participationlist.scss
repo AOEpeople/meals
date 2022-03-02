@@ -121,20 +121,38 @@ $text-color: $color-base;
 }
 
 .edit-participation {
+  table {
+    border-collapse: separate;
+  }
+
   .table-wrapper {
     overflow: auto;
+    padding-bottom: 20px;
+  }
+
+  .table-head span {
+    display: inline-block;
+    width: 100px;
   }
 
   .table-head:first-child,
   .table-data:first-child {
     position: sticky;
     left: 0;
-    z-index: 9999;
+    z-index: 1;
+    min-width: 120px;
+    padding-right: 25px;
+    white-space: nowrap;
     background-color: #fff;
+    box-shadow: 1px 0 0 $border-color;
+
+    span {
+      width: auto;
+    }
   }
 
   .table {
-    width: 200%;
+    width: auto;
 
     thead.table-header,
     tbody.table-data {

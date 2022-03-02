@@ -58,6 +58,8 @@
       font-weight: bold;
 
       &::after {
+        position: absolute;
+        right: 10px;
         display: inline-block;
         width: 13px;
         height: 12px;

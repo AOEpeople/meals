@@ -17,7 +17,7 @@
         {% endif %}
     {% endif %}
 
-    <td class="meal-participation table-data{{ participation ? ' participating' }}"
+    <td class="meal-participation table-data{{ participation or (not meal.isCombinedMeal and combinedMealParticipation and combinedMealParticipation.combinedDishes.contains(meal.dish)) ? ' participating' }}"
         {%- if action %}data-action="{{ action }}"{% endif %}>
         <i class="glyphicon{{ participation ? ' glyphicon-ok' }}"></i>
         {% if not meal.isCombinedMeal and combinedMealParticipation and combinedMealParticipation.combinedDishes.contains(meal.dish) %}

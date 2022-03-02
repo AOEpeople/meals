@@ -7,7 +7,6 @@ import '../sass/mealz.scss'
 
 // include vendors
 import 'jquery';
-import 'jquery-migrate';
 import 'jquery-datetimepicker/build/jquery.datetimepicker.full';
 import '@fancyapps/fancybox';
 import 'easy-autocomplete';

@@ -353,4 +353,23 @@ class ParticipationService
 
         return $meal->getDateTime() > $now;
     }
+
+    /**
+     *  checks if a meal has reached his booking limit
+     * @param Meal $meal
+     * @return bool
+     */
+    public function isAvailable(Meal $meal): bool
+    {
+        if (!$this->isOpenMeal($meal)) {
+            return false;
+        }
+
+        if (1 > $meal->getParticipationLimit()) {
+            return true;
+        }
+
+        $mealPartCount = $this->participantRepo->getCountByMeal($meal);
+        return $meal->getParticipationLimit() > $mealPartCount;
+    }
 }

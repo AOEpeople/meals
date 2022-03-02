@@ -121,10 +121,6 @@ $text-color: $color-base;
 }
 
 .edit-participation {
-  table {
-    border-collapse: separate;
-  }
-
   .table-wrapper {
     overflow: auto;
     padding-bottom: 20px;
@@ -152,6 +148,7 @@ $text-color: $color-base;
   }
 
   .table {
+    border-collapse: separate;
     width: auto;
 
     thead.table-header,

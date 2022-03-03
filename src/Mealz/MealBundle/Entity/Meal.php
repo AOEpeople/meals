@@ -64,12 +64,12 @@ class Meal
      */
     public ?Collection $participants = null;
 
-    public function __construct()
+    public function __construct(Dish $dish, Day $day)
     {
         $this->participants = new ArrayCollection();
-        $this->dish = new Dish();
-        $this->day = new Day();
-        $this->dateTime = new DateTime();
+        $this->dish = $dish;
+        $this->day = $day;
+        $this->dateTime = clone $day->getDateTime();
     }
 
     public function getId(): ?int

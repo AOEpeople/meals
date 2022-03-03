@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Tests;
 
 use App\Mealz\MealBundle\Entity\Category;
+use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Entity\Meal;
@@ -106,16 +107,12 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
         return $dish;
     }
 
-    protected function createMeal(Dish $dish = null, DateTime $datetime = null): Meal
+    protected function createMeal(Dish $dish = null, Day $day = null): Meal
     {
-        if (null === $datetime) {
-            $datetime = new DateTime();
-            $datetime->setTime(12, 0);
-        }
+        $dish = $dish ?: $this->createDish();
+        $day = $day ?: new Day();
 
-        $meal = new Meal();
-        $meal->setDish($dish ?: $this->createDish());
-        $meal->setDateTime($datetime);
+        $meal = new Meal($dish, $day);
         $meal->setPrice(1.23);
 
         return $meal;

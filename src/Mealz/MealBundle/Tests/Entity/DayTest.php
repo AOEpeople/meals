@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Tests\Entity;
 
 use App\Mealz\MealBundle\Entity\Day;
+use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
 use PHPUnit\Framework\TestCase;
 
@@ -35,7 +36,7 @@ class DayTest extends TestCase
     public function addMeal(): void
     {
         for ($i = 0; $i < 10; ++$i) {
-            $meal = new Meal();
+            $meal = new Meal(new Dish(), $this->day);
             $meal->setPrice($i + 1);
             $this->day->addMeal($meal);
             $this->assertCount($i + 1, $this->day->getMeals());
@@ -55,7 +56,7 @@ class DayTest extends TestCase
         $meals = null;
         $numberOfMeals = 10;
         for ($i = 0; $i < $numberOfMeals; ++$i) {
-            $meal = new Meal();
+            $meal = new Meal(new Dish(), $this->day);
             $meal->setPrice($i + 1.99);
             $meals[] = $meal;
             $this->day->addMeal($meal);

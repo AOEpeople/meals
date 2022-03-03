@@ -22,19 +22,19 @@ export default class MealGuestView {
             new ParticipationPreToggleHandler(participationToggleHandler);
         }
 
-        this.mercureSubscribeHandler = new MercureSubscribeHandler(['/participation-update'], this.handleParticipationUpdate)
+        new MercureSubscribeHandler(['/participant-update'], MealGuestView.handleUpdateParticipation);
     }
 
-    private handleParticipationUpdate(data: ParticipationCountData) {
+    private static handleUpdateParticipation(data: ParticipationCountData) {
         $(`div[data-id=${data.mealId}] .count`).text(data.count);
-        if(data.isLocked) {
+        if(data.isAvailable) {
             $(`div[data-id=${data.mealId}] .participants-count`)
-            .removeClass('participation-allowed')
-            .addClass('participation-limit-reached');
+                .removeClass('participation-limit-reached')
+                .addClass('participation-allowed');
         } else {
             $(`div[data-id=${data.mealId}] .participants-count`)
-            .removeClass('participation-limit-reached')
-            .addClass('participation-allowed');
+                .removeClass('participation-allowed')
+                .addClass('participation-limit-reached');
         }
     }
 

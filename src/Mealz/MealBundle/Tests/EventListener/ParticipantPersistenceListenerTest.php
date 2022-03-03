@@ -25,7 +25,7 @@ class ParticipantPersistenceListenerTest extends AbstractDatabaseTestCase
         $profile = $this->createProfile();
         $participant1 = new Participant($profile, $meal);
         $participant2 = clone $participant1;
-        $this->persistAndFlushAll([$meal, $meal->getDish(), $profile, $participant1]);
+        $this->persistAndFlushAll([$meal, $meal->getDish(), $meal->getDay(), $profile, $participant1]);
 
         // persist second participant
         $this->expectException(ParticipantNotUniqueException::class);
@@ -46,7 +46,7 @@ class ParticipantPersistenceListenerTest extends AbstractDatabaseTestCase
         $profile = $this->createProfile();
         $participant1 = new Participant($profile, $meal1);
         $participant2 = new Participant($profile, $meal2);
-        $this->persistAndFlushAll([$meal1, $meal1->getDish(), $meal2, $meal2->getDish(), $profile, $participant1, $participant2]);
+        $this->persistAndFlushAll([$meal1, $meal1->getDish(), $meal1->getDay(), $meal2, $meal2->getDish(), $meal2->getDay(), $profile, $participant1, $participant2]);
 
         // change first participant
         $this->expectException(ParticipantNotUniqueException::class);

@@ -24,7 +24,7 @@ class MealRepositoryTest extends AbstractDatabaseTestCase
     {
         $dish = $this->createDish();
         $meal = $this->createMeal($dish);
-        $this->persistAndFlushAll([$dish, $meal]);
+        $this->persistAndFlushAll([$dish, $meal->getDay(), $meal]);
 
         $result = $this->mealRepository->findOneByDateAndDish(date('Y-m-d'), $dish->getSlug());
 
@@ -35,7 +35,7 @@ class MealRepositoryTest extends AbstractDatabaseTestCase
     {
         $dish = $this->createDish();
         $meal = $this->createMeal($dish);
-        $this->persistAndFlushAll([$dish, $meal]);
+        $this->persistAndFlushAll([$dish, $meal->getDay(), $meal]);
 
         $this->expectException(InvalidArgumentException::class);
 

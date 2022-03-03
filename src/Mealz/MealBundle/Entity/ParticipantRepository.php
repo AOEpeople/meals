@@ -175,6 +175,8 @@ class ParticipantRepository extends EntityRepository
             ->join('p.profile', 'up')
             ->join('p.meal', 'm', Join::WITH, 'm.dateTime >= :startTime AND m.dateTime <= :endTime')
             ->orderBy('s.order', 'ASC')
+            ->addOrderBy('up.name')
+            ->addOrderBy('up.firstName')
             ->setParameters([
                 'startTime' => (clone $date)->setTime(0, 0),
                 'endTime' => (clone $date)->setTime(23, 59),

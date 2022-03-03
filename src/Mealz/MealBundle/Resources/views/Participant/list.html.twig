@@ -7,12 +7,14 @@
         <h1 class="headline">{{ 'headings.week.participationsprint'|trans({},'general') }} {{ day.dateTime | date('l') | trans({}, 'date') }}{{ day.dateTime | date(', d.m.') }}</h1>
     </div>
     {% if users is not empty and day.enabled and (day.meals | length > 0) %}
+        {% set meals =  day.meals.groupByType() -%}
+
         {% for slot, participants in users %}
             <table class="table">
                 <thead class="table-header">
                     <tr>
                         <th class="table-head wide-cell week-date">{{ slot }}</th>
-                        {% for meal in day.meals %}
+                        {% for meal in meals %}
                             <th class="table-head meal-title">
                                 <span>
                                     {% if meal.dish.parent %}<b>{{ meal.dish.parent.title }}</b><br>{% endif %}{{ meal.dish.title }}
@@ -23,16 +25,11 @@
                 </thead>
                 <tbody class="table-content">
                 {% for name, participations in participants %}
-                    {% set profile = participations[0].profile %}
+                    {% set profile = participations[0].profile -%}
 
                     <tr class="table-row">
                         <td class="text table-data wide-cell">{{ profile.fullName }} {% if profile.isGuest %}({{ profile.company }}){% endif %}</td>
-                        {% for meal in day.meals %}
-                            {% set participation = isParticipant(participations, meal.participants) %}
-                            <td class="meal-participation table-data {% if participation is not null%}participating{% endif %}">
-                                <i class="glyphicon {% if participation is not null%}glyphicon-ok{% endif %}"></i>
-                            </td>
-                        {% endfor %}
+                        {% include 'MealzMealBundle:Participant/partials:participation.html.twig' %}
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -42,7 +39,7 @@
             <tbody class="table-content">
                 <tr>
                     <td class="text table-data wide-cell">{{ 'headings.week.participations'|trans({},'general') }}</td>
-                    {% for meal in day.meals %}
+                    {% for meal in meals %}
                         <td class="meal-count text text-center table-data"><span>{{ meal.participants | length }}</span></td>
                     {% endfor %}
                 </tr>

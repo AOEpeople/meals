@@ -1,0 +1,27 @@
+{% set combinedMealParticipation = null %}
+{% for meal in meals %}
+    {% set participation = isParticipant(participations, meal.participants) %}
+    {% if meal.isCombinedMeal and participation is not null %}
+        {% set combinedMealParticipation = participation %}
+    {% endif %}
+
+    {% set action = null %}
+    {% if actions is defined %}
+        {% if participation is not null %}
+            {% set action = actions.delete|replace({'_participantID_': participation.id}) %}
+        {% else %}
+            {% set action = actions.join|replace({
+                '_date_': meal.dateTime | date('Y-m-d'),
+                '_dishSlug_': meal.dish.slug
+            }) %}
+        {% endif %}
+    {% endif %}
+
+    <td class="meal-participation table-data{{ participation ? ' participating' }}"
+        {%- if action %}data-action="{{ action }}"{% endif %}>
+        <i class="glyphicon{{ participation ? ' glyphicon-ok' }}"></i>
+        {% if not meal.isCombinedMeal and combinedMealParticipation and combinedMealParticipation.combinedDishes.contains(meal.dish) %}
+            <i class="glyphicon glyphicon-adjust"></i>
+        {% endif %}
+    </td>
+{% endfor %}

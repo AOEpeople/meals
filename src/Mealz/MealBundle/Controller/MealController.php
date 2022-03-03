@@ -7,11 +7,9 @@ namespace App\Mealz\MealBundle\Controller;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
-use App\Mealz\MealBundle\Entity\ParticipantRepository;
 use App\Mealz\MealBundle\Entity\SlotRepository;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Entity\WeekRepository;
-use App\Mealz\MealBundle\Event\OfferUpdateEvent;
 use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
 use App\Mealz\MealBundle\Event\SlotUpdateEvent;
 use App\Mealz\MealBundle\Service\DishService;
@@ -154,8 +152,10 @@ class MealController extends BaseController
         }
 
         $this->eventDispatcher->dispatch(new ParticipationUpdateEvent($participant));
-        if($participant->getSlot()->getLimit() &&
-            $this->getParticipantRepository()->hasParticipantBookedAMeal($meal->getDateTime(), $participant->getProfile()) === 1) {
+
+        $slot = $participant->getSlot();
+        if($slot && $slot->getLimit()
+            && $this->getParticipantRepository()->hasParticipantBookedAMeal($meal->getDateTime(), $participant->getProfile()) === 1) {
                 $this->eventDispatcher->dispatch(new SlotUpdateEvent($participant));
         }
 
@@ -171,7 +171,7 @@ class MealController extends BaseController
             ),
             'actionText' => $action,
             'bookedDishSlugs' => $bookedDishSlugs,
-            'slot' => $participant->getSlot()->getSlug()
+            'slot' => $slot ? $slot->getSlug() : ''
         ]);
     }
 

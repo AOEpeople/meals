@@ -16,6 +16,7 @@ use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\Role;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class GuestParticipationServiceTest extends AbstractParticipationServiceTest
 {
@@ -39,7 +40,8 @@ class GuestParticipationServiceTest extends AbstractParticipationServiceTest
             $this->participantRepo,
             $profileRepo,
             $roleRepo,
-            $this->slotRepo
+            $this->slotRepo,
+            $this->prophesize(EventDispatcherInterface::class)->reveal()
         ));
 
         $price = (float) self::$kernel->getContainer()->getParameter('mealz.meal.combined.price');

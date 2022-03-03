@@ -27,6 +27,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use RuntimeException;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
 {
@@ -171,8 +172,7 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
         $day->setLockParticipationDateTime($mealLockDate);
         $day->setDateTime($mealDate);
 
-        $meal = $this->createMeal($dish, $mealDate);
-        $meal->setDay($day);
+        $meal = $this->createMeal($dish, $day);
         $meal->getDay()->addMeal($meal);
 
         $entities = [$meal->getDish(), $day, $meal];

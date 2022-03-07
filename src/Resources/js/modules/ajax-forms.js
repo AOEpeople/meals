@@ -141,7 +141,6 @@ Mealz.prototype.loadAjaxFormPayment = function ($element) {
         method: 'GET',
         url: url,
         dataType: 'text',
-        async: false,
         success: function (data) {
             that.$iconCells.find('form').addClass(that.hiddenClass);
             $element.after(data);

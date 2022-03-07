@@ -29,12 +29,20 @@
       text-align: center;
     }
 
-    .table-data {
+    .table-name {
       vertical-align: middle;
       padding: 15px 5px;
       word-wrap: break-word;
       font-size: 14px;
       text-align: center;
+    }
+
+    .table-data {
+      vertical-align: middle;
+      padding: 15px 3rem 15px 5px;
+      word-wrap: break-word;
+      font-size: 14px;
+      text-align: right;
     }
 
     .icon-cell {
@@ -114,12 +122,12 @@
     // Highlight last month
     th:nth-child(5),
     td:nth-child(5) {
-      padding: 15px;
       border-right: 1px solid $color-orange;
       border-left: 1px solid $color-orange;
     }
 
     th:nth-child(5) {
+      padding: 15px;
       border-top: 1px solid $color-orange;
     }
 

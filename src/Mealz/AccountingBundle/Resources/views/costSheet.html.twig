@@ -7,7 +7,7 @@
 {% set wrapperClass = 'print-costsheet' %}
 
 {%- block cost_widget -%}
-    {{ cost | number_format(2) }}<i class="glyphicon glyphicon-euro"></i>
+    {{ cost | number_format(2, 'payment.separator.decimals'|trans({},'messages'), 'payment.separator.thousands'|trans({},'messages')) }} <i class="glyphicon glyphicon-euro"> </i>
 {%- endblock cost_widget -%}
 
 {% block body %}
@@ -50,7 +50,7 @@
             <tbody>
             {% for username, user in users %}
                 <tr class="table-row{{ user.hidden ? ' user-hidden' : '' }}">
-                    <td class="table-data">{{ user.name }}, {{ user.firstName }}</td>
+                    <td class="table-name">{{ user.name }}, {{ user.firstName }}</td>
                     {% for cost in user.costs %}
                         <td class="table-data">
                             {% if cost > 0 %}

@@ -11,16 +11,19 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PayPalCheckOrderCommand extends Command
 {
     private PayPalService $paypalService;
+    private TranslatorInterface $translator;
 
-    public function __construct(PayPalService $paypalService)
+    public function __construct(PayPalService $paypalService, TranslatorInterface $translator)
     {
         parent::__construct();
 
         $this->paypalService = $paypalService;
+        $this->translator = $translator;
     }
 
     /**
@@ -61,7 +64,9 @@ class PayPalCheckOrderCommand extends Command
         $output->writeln([
             '',
             'Order-ID:' . $order->getId(),
-            'Amount: ' . number_format($order->getAmount(), 2) . ' EUR',
+            'Amount: ' . number_format($order->getAmount(), 2,
+                $this->translator->trans('payment.separator.decimals'),
+                $this->translator->trans('payment.separator.thousands')) . ' EUR',
             'Date: ' . $order->getDateTime()->format('Y-m-d H:i:s'),
             'Status: ' . $order->getStatus(),
             '',

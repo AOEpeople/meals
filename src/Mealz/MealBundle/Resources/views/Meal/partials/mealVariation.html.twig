@@ -25,7 +25,7 @@
                         <span class="new-flag">{{ 'content.participation.dish.new'|trans({},'general') }}</span>
                     {% endif -%}
                 </div>
-                <div class="text price">{{ meal.price|number_format(2, '.', ',') }} €</div>
+                <div class="text price">{{ meal.price|number_format(2, 'payment.separator.decimals'|trans({},'messages'), 'payment.separator.thousands'|trans({},'messages')) }} €</div>
             </div>
             {% include 'MealzMealBundle:Meal/partials:mealActionsWrapper.html.twig' %}
         </div>

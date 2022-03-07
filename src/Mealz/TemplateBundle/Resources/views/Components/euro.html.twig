@@ -5,6 +5,6 @@
 #}
 {% macro create(value) %}
     {%- apply spaceless -%}
-        {{ value | number_format(2) }} <i class='glyphicon glyphicon-euro'></i>
+        {{ value | number_format(2, 'payment.separator.decimals'|trans({},'messages'), 'payment.separator.thousands'|trans({},'messages')) }} <i class='glyphicon glyphicon-euro'></i>
     {%- endapply -%}
 {% endmacro %}

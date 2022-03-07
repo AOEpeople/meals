@@ -98,7 +98,11 @@ class CashController extends BaseController
                     $message = $this->get('translator')->trans(
                         'payment.cash.success',
                         [
-                            '%amount%' => $transaction->getAmount(),
+                            '%amount%' => number_format(
+                                $transaction->getAmount(), 2,
+                                $this->get('translator')->trans('payment.separator.decimals'),
+                                $this->get('translator')->trans('payment.separator.thousands')
+                            ),
                             '%name%' => $transaction->getProfile()->getFullName(),
                         ],
                         'messages'

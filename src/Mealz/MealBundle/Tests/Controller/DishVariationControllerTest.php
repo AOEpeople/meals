@@ -101,7 +101,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         $this->assertTrue(1 === $formNode->count());
 
         $inputDeDescNode = $crawler->filterXPath('//input[@name="dishvariation[title_de]"]');
-        $this->assertTrue(1 ===$inputDeDescNode->count());
+        $this->assertTrue(1 === $inputDeDescNode->count());
 
         $inputEnDescNode = $crawler->filterXPath('//input[@name="dishvariation[title_en]"]');
         $this->assertTrue(1 === $inputEnDescNode->count());

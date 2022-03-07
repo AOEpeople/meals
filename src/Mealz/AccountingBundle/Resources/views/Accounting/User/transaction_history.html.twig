@@ -20,7 +20,7 @@
     </div>
 
     <div class="last-account-balance">
-        {{ 'payment.transaction_history.balance_past'|trans({}, 'messages') ~ ' ' ~ date("-28days")|date("d.m.Y") }}:<span {% if((balance + participations_total - transactions_total) < 0) %}class="dept"{% endif %}>{{ (balance + participations_total - transactions_total)|number_format(2, '.', ',') }} €</span>
+        {{ 'payment.transaction_history.balance_past'|trans({}, 'messages') ~ ' ' ~ date("-28days")|date("d.m.Y") }}:<span {% if((balance + participations_total - transactions_total) < 0) %}class="dept"{% endif %}>{{ (balance + participations_total - transactions_total)|number_format(2, 'payment.separator.decimals'|trans({},'messages'), 'payment.separator.thousands'|trans({},'messages')) }} €</span>
     </div>
     <table class="table table-full-width">
         <thead>
@@ -49,7 +49,7 @@
                                 {{ transaction_record.meal.dish.title }}
                             {% endif %}
                         </td>
-                        <td class="table-data"><span>-</span> {{ transaction_record.meal.price|number_format(2, '.', ',') }} €</td>
+                        <td class="table-data"><span>-</span> {{ transaction_record.meal.price|number_format(2, 'payment.separator.decimals'|trans({},'messages'), 'payment.separator.thousands'|trans({},'messages')) }} €</td>
                     </tr>
                 {% else %}
                     <tr class="table-row transaction-payment">
@@ -62,7 +62,7 @@
                         {% else %}
                             <td class="table-data transaction-description cash">{{ 'payment.transaction_history.cash_payment'|trans({}, 'messages') }}</td>
                         {% endif %}
-                        <td class="table-data"><span>+</span> {{ transaction_record.amount|number_format(2, '.', ',') }} €</td>
+                        <td class="table-data"><span>+</span> {{ transaction_record.amount|number_format(2, 'payment.separator.decimals'|trans({},'messages'), 'payment.separator.thousands'|trans({},'messages')) }} €</td>
                     </tr>
                 {% endif %}
         {% endfor %}
@@ -71,7 +71,7 @@
             <tr class="table-row">
                 <td class="table-data transaction-description" colspan="2">{{ 'payment.transaction_history.balance_now'|trans({}, 'messages') }}:</td>
                 <td class="table-data">
-                    <span {% if(balance < 0) %}class="dept"{% endif %}>{{ balance|number_format(2, '.', ',') }} €</span>
+                    <span {% if(balance < 0) %}class="dept"{% endif %}>{{ balance|number_format(2, 'payment.separator.decimals'|trans({},'messages'), 'payment.separator.thousands'|trans({},'messages')) }} €</span>
                 </td>
             </tr>
         </tfoot>

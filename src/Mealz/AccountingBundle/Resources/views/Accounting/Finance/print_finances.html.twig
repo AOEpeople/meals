@@ -37,7 +37,7 @@
                     'class': 'name'
                 },
                 'amount': {
-                    'content': transaction.amount | number_format(2) ~ " €",
+                    'content': transaction.amount | number_format(2, 'payment.separator.decimals'|trans({},'messages'), 'payment.separator.thousands'|trans({},'messages')) ~ " €",
                     'class': 'amount'
                 },
                 'dailyClosing': {
@@ -64,7 +64,7 @@
                 'class': 'amount'
             },
             'daily-closing': {
-                'content': dailyClosing | number_format(2) ~ " €",
+                'content': dailyClosing | number_format(2, 'payment.separator.decimals'|trans({},'messages'), 'payment.separator.thousands'|trans({},'messages')) ~ " €",
                 'class': 'daily-closing'
             },
         }]) %}

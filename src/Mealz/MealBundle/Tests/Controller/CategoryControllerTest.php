@@ -79,7 +79,7 @@ class CategoryControllerTest extends AbstractControllerTestCase
 
         // Request
         $this->client->request('GET', '/category/form/' . $category->getSlug());
-        $crawler = $this->getJsonResponseCrawler();
+        $crawler = $this->getRawResponseCrawler();
 
         // Check if form is loaded
         $node = $crawler->filterXPath('//form[@action="/category/' . $category->getSlug() . '/edit"]');

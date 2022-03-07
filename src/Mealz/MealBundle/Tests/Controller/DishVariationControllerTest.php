@@ -45,8 +45,8 @@ class DishVariationControllerTest extends AbstractControllerTestCase
 
         // Assert that we get JSON response
         $this->assertTrue(
-            $this->client->getResponse()->headers->contains('Content-Type', 'application/json'),
-            'DishVariationController::newAction should return JSON response.'
+            $this->client->getResponse()->headers->contains('Content-Type', 'text/html; charset=UTF-8'),
+            'DishVariationController::newAction should return HTML response.'
         );
 
         $crawler = $this->getRawResponseCrawler();
@@ -90,10 +90,10 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         $url = '/dish/variation/' . $dishVariation->getId() . '/edit';
         $this->client->request('GET', $url);
 
-        // Assert that we get JSON response
+        // Assert that we get html response
         $this->assertTrue(
-            $this->client->getResponse()->headers->contains('Content-Type', 'application/json'),
-            'DishVariationController::editAction should return JSON response.'
+            $this->client->getResponse()->headers->contains('Content-Type', 'text/html; charset=UTF-8'),
+            'DishVariationController::editAction should return HTML response.'
         );
 
         $crawler = $this->getRawResponseCrawler();
@@ -101,7 +101,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         $this->assertTrue(1 === $formNode->count());
 
         $inputDeDescNode = $crawler->filterXPath('//input[@name="dishvariation[title_de]"]');
-        $this->assertTrue(1 === $inputDeDescNode->count());
+        $this->assertTrue(1 ===$inputDeDescNode->count());
 
         $inputEnDescNode = $crawler->filterXPath('//input[@name="dishvariation[title_en]"]');
         $this->assertTrue(1 === $inputEnDescNode->count());
@@ -172,6 +172,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
 
         // check if there is a form shown for adding a new dish variation
         $node = $crawler->filter('form[action$="/' . $dishId . '/variation/new"]');
+
         $this->assertTrue(1 === $node->count());
     }
 
@@ -298,7 +299,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         $content = $this->client->getResponse()->getContent();
         $hostUrl = $this->getHostUrl();
 
-        return new Crawler(json_decode($content), $hostUrl);
+        return new Crawler($content, $hostUrl);
     }
 
     /**

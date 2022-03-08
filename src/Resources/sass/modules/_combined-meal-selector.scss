@@ -1,5 +1,4 @@
 .combined-meal-selector {
-  background-color: $color-gray-dark;
   .dish,
   .dish-variation {
     overflow: hidden;
@@ -28,29 +27,31 @@
 
     input[type="radio"] {
       appearance: none;
-      background-color: #fff;
-      margin: 0;
-      font: inherit;
-      color: $color-green;
+      display: grid;
       width: 1.15em;
       height: 1.15em;
+      margin: 0;
       border: 0.15em solid $color-green;
       border-radius: 50%;
-      display: grid;
+      color: $color-green;
+      background-color: #fff;
+      font: inherit;
       place-content: center;
 
       &::before {
-        content: "";
         width: 0.5em;
         height: 0.5em;
         border-radius: 50%;
+        content: "";
         transform: scale(0);
         transition: 120ms transform ease-in-out;
         box-shadow: inset 1em 1em $color-green;
       }
-      &:checked:before {
+
+      &:checked::before {
         transform: scale(1);
       }
+
       &:hover {
         cursor: pointer;
       }

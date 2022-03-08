@@ -7,7 +7,7 @@
 {% set wrapperClass = 'print-costsheet' %}
 
 {%- block cost_widget -%}
-    {{ cost | number_format(2, 'payment.separator.decimals'|trans({},'messages'), 'payment.separator.thousands'|trans({},'messages')) }}<i class="glyphicon glyphicon-euro"></i>
+    {{ cost | number_format(2, 'payment.separator.decimals'|trans({},'messages'), 'payment.separator.thousands'|trans({},'messages')) }} <i class="glyphicon glyphicon-euro"></i>
 {%- endblock cost_widget -%}
 
 {% block body %}
@@ -60,7 +60,7 @@
                             {% endif %}
                         </td>
                     {% endfor %}
-                    <td class="table-data">
+                    <td class="table-button">
                         {{ MealzButton.buttonbar(
                             '',
                             'costsheet-buttonbar',

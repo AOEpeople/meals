@@ -103,7 +103,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     {
         $userProfile = $this->getUserProfile(self::USER_STANDARD);
 
-        //find locked meal and make user a participant of that
+        // find locked meal and make user a participant of that
         $lockedMealsArray = $this->getLockedMeals();
         $lockedMeal = $lockedMealsArray[0];
         $lockedParticipant = $this->createParticipant($userProfile, $lockedMeal);
@@ -114,7 +114,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $participantId = $lockedParticipant->getId();
         $this->client->request('GET', '/menu/meal/' . $participantId . '/swap');
 
-        //verification by checking the database
+        // verification by checking the database
         $offeringParticipant = $this->getDoctrine()->getRepository(Participant::class)->find($participantId);
         $this->assertNotSame($offeringParticipant->getOfferedAt(), 0, 'offeredAt value not changed');
     }
@@ -135,7 +135,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $this->loginAs(self::USER_STANDARD);
         $this->client->request('GET', '/menu/meal/' . $participantId . '/unswap');
 
-        //verification by checking the database
+        // verification by checking the database
         $participant = $this->getDoctrine()->getRepository(Participant::class)->find($participantId);
         $this->assertSame($participant->getOfferedAt(), 0, 'failed to retain swapped meal');
     }
@@ -157,7 +157,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $this->loginAs(self::USER_STANDARD);
         $this->client->request('GET', '/menu/meal/' . $participantId . '/swap');
 
-        //verification by checking the database
+        // verification by checking the database
         $notOfferingPart = $this->getDoctrine()->getRepository(Participant::class)->find($participantId);
         $this->assertSame($notOfferingPart->getOfferedAt(), 0, 'user still offered meal');
     }

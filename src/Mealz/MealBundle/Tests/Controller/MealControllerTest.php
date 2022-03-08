@@ -51,22 +51,22 @@ class MealControllerTest extends AbstractControllerTestCase
     {
         $this->loginAs(self::USER_STANDARD);
 
-        //create a test profile
+        // create a test profile
         $profile = $this->createProfile('Max', 'Mustermann' . time());
         $this->persistAndFlushAll([$profile]);
 
-        //get first locked meal and make it an available offer
+        // get first locked meal and make it an available offer
         $lockedMeals = $this->getLockedMeals();
         $firstLockedMeal = $lockedMeals[0];
         $participant = $this->createParticipant($profile, $firstLockedMeal);
         $participant->setOfferedAt(time());
         $this->persistAndFlushAll([$participant]);
 
-        //variables for first case
+        // variables for first case
         $date = date_format($firstLockedMeal->getDateTime(), 'Y-m-d');
         $dish = $firstLockedMeal->getDish()->getSlug();
 
-        //first case: accept available offer
+        // first case: accept available offer
         $this->client->request('GET', '/menu/' . $date . '/' . $dish . '/accept-offer');
         $this->assertTrue($this->client->getResponse()->isSuccessful(), 'accepting offer failed');
     }
@@ -78,38 +78,38 @@ class MealControllerTest extends AbstractControllerTestCase
     {
         $this->loginAs(self::USER_STANDARD);
 
-        //create a test profile
+        // create a test profile
         $profile = $this->createProfile('Max', 'Mustermann' . time());
 
-        //create second test profile
+        // create second test profile
         $secondProfile = $this->createProfile('Meike', 'Musterfrau' . time());
         $this->persistAndFlushAll([$profile, $secondProfile]);
 
-        //get first locked meal and make it an available offer
+        // get first locked meal and make it an available offer
         $lockedMealsArray = $this->getLockedMeals();
         $lockedMeal = $lockedMealsArray[0];
         $participant = $this->createParticipant($profile, $lockedMeal);
         $participant->setOfferedAt(time());
 
-        //create second participant for same locked meal and make it an available offer (which was offered after the first one)
+        // create second participant for same locked meal and make it an available offer (which was offered after the first one)
         $secondParticipant = $this->createParticipant($secondProfile, $lockedMeal);
         $secondParticipant->setOfferedAt(time() + 1);
 
         $this->persistAndFlushAll([$participant, $secondParticipant]);
 
-        //variables for first case
+        // variables for first case
         $date = date_format($lockedMeal->getDateTime(), 'Y-m-d');
         $dish = $lockedMeal->getDish()->getSlug();
 
-        //first case: accept available offer
+        // first case: accept available offer
         $this->client->request('GET', '/menu/' . $date . '/' . $dish . '/accept-offer');
         $this->assertTrue($this->client->getResponse()->isSuccessful(), 'accepting offer failed');
 
-        //verification by checking the database
+        // verification by checking the database
         $newParticipant = $this->getDoctrine()->getRepository(Participant::class)->find($participant->getId());
         $this->assertTrue(0 === $newParticipant->getOfferedAt());
 
-        //second case: check if second offer is still available
+        // second case: check if second offer is still available
         $secondOffer = $this->getDoctrine()->getRepository(Participant::class)->find($secondParticipant->getId());
         $this->assertTrue(0 != $secondOffer->getOfferedAt(), 'second offer was taken');
     }
@@ -121,18 +121,18 @@ class MealControllerTest extends AbstractControllerTestCase
     {
         $this->loginAs(self::USER_STANDARD);
 
-        //create a test profile
+        // create a test profile
         $profile = $this->createProfile('Max', 'Mustermann' . time());
         $this->persistAndFlushAll([$profile]);
 
-        //variables for third case
+        // variables for third case
         $outdatedMealsArray = $this->getDoctrine()->getRepository(Meal::class)->getOutdatedMeals();
         $outdatedMeal = $outdatedMealsArray[0];
 
         $date = date_format($outdatedMeal->getDateTime(), 'Y-m-d');
         $dish = $outdatedMeal->getDish();
 
-        //third case: accepting outdated offer
+        // third case: accepting outdated offer
         $this->client->request('GET', '/menu/' . $date . '/' . $dish . '/accept-offer');
         $statusCode = $this->client->getResponse()->getStatusCode();
         $this->assertGreaterThanOrEqual(403, $statusCode, 'user accepted outdated offer');

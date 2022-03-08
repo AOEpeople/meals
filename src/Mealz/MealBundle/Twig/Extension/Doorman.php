@@ -64,7 +64,7 @@ class Doorman extends AbstractExtension
      */
     public function isUserAllowedToSwap(Meal $meal)
     {
-        //proxy method
+        // proxy method
         return $this->doormanService->isUserAllowedToSwap($meal);
     }
 
@@ -73,7 +73,7 @@ class Doorman extends AbstractExtension
      */
     public function isUserAllowedToUnswap(Meal $meal, Participant $participant)
     {
-        //proxy method
+        // proxy method
         return $this->doormanService->isUserAllowedToUnswap($meal, $participant);
     }
 
@@ -82,7 +82,7 @@ class Doorman extends AbstractExtension
      */
     public function isParticipationPending(Participant $participant)
     {
-        //proxy method
+        // proxy method
         return $this->doormanService->isParticipationPending($participant);
     }
 
@@ -93,7 +93,7 @@ class Doorman extends AbstractExtension
      */
     public function isOfferAvailable(Meal $meal, Participant $participant = null)
     {
-        //proxy method
+        // proxy method
         return $this->doormanService->isOfferAvailable($meal, $participant);
     }
 

@@ -47,6 +47,12 @@
       border: 0;
       color: $color-white;
       background-color: $color-gray-primary;
+      transition-duration: 0.3s;
+
+      &:hover {
+        background-color: $color-gray-dark;
+        box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2), 0 1.5px 5px 0 rgba(0,0,0,0.19);
+      }
     }
   }
 }

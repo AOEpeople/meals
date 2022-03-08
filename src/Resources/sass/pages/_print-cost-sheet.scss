@@ -13,7 +13,7 @@
 
   .costsheet-buttonbar {
     float: right;
-    margin-right: 2.5px;
+    margin-right: -2px;
   }
 
   .costsheet-buttonbar .buttonbar-element {
@@ -30,15 +30,18 @@
       text-align: center;
     }
 
-    .table-data .table-user .table-button {
+    .table-data,
+    .table-user,
+    .table-button {
       vertical-align: middle;
       word-wrap: break-word;
+      padding: 15px 5px;
       font-size: 14px;
+      text-align: center;
     }
 
-    .table-user .table-button {
-      padding: 15px 5px;
-      text-align: center;
+    .table-user {
+      text-align: left;
     }
 
     .table-data {

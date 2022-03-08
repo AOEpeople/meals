@@ -1,7 +1,8 @@
 .combined-meal-selector {
+  background-color: $color-gray-dark;
   .dish,
   .dish-variation {
-    overflow: auto;
+    overflow: hidden;
     width: 100%;
   }
 
@@ -23,6 +24,36 @@
 
     .dish-variation {
       margin-top: 20px;
+    }
+
+    input[type="radio"] {
+      appearance: none;
+      background-color: #fff;
+      margin: 0;
+      font: inherit;
+      color: $color-green;
+      width: 1.15em;
+      height: 1.15em;
+      border: 0.15em solid $color-green;
+      border-radius: 50%;
+      display: grid;
+      place-content: center;
+
+      &::before {
+        content: "";
+        width: 0.5em;
+        height: 0.5em;
+        border-radius: 50%;
+        transform: scale(0);
+        transition: 120ms transform ease-in-out;
+        box-shadow: inset 1em 1em $color-green;
+      }
+      &:checked:before {
+        transform: scale(1);
+      }
+      &:hover {
+        cursor: pointer;
+      }
     }
   }
 }

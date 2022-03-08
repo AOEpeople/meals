@@ -6,7 +6,7 @@ payment:
     success: Booked cash payment of %amount% € for %name%
     failure: The payment was not booked. Negative values are invalid.s
   acknowledge_debts:
-    text: I know that my account balance is %amount%€ in the red and I will pay my debt very soon.
+    text: I know that my account balance is %amount% € in the red and I will pay my debt very soon.
     button: Understood!
     pay_now: Pay now
   transaction_history:

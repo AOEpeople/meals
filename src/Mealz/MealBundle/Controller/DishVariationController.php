@@ -7,7 +7,6 @@ use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Form\Dish\DishVariationForm;
 use Doctrine\ORM\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -47,13 +46,13 @@ class DishVariationController extends BaseController
             'dishVariation' => $dishVariation,
         ]);
 
-        return new JsonResponse($renderedForm->getContent());
+        return new Response($renderedForm->getContent());
     }
 
     /**
      * @param string $slug
      *
-     * @return JsonResponse|RedirectResponse
+     * @return Response|RedirectResponse
      */
     public function edit(Request $request, $slug)
     {
@@ -98,7 +97,7 @@ class DishVariationController extends BaseController
             ]
         );
 
-        return new JsonResponse($renderedForm->getContent());
+        return new Response($renderedForm->getContent());
     }
 
     /**

@@ -21,7 +21,7 @@ Mealz.prototype.initAjaxForms = function () {
 
         // remove other Payment Forms opened
         if(formsRendered.length > 0) {
-            $(document).mouseup(function(e){
+            $(document).on('mouseup', function(e){
                 // if the target of the click isn't the container
                 // nor a descendant of the container
                 if (formsRendered.is(e.target) === false &&
@@ -141,7 +141,6 @@ Mealz.prototype.loadAjaxFormPayment = function ($element) {
         method: 'GET',
         url: url,
         dataType: 'text',
-        async: false,
         success: function (data) {
             that.$iconCells.find('form').addClass(that.hiddenClass);
             $element.after(data);

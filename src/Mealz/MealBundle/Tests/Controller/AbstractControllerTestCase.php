@@ -69,8 +69,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
     protected function getFormCSRFToken(string $uri, string $tokenFieldSelector): string
     {
         $this->client->xmlHttpRequest('GET', $uri);
-        $jsonEncodedForm = $this->client->getResponse()->getContent();
-        $htmlForm = json_decode($jsonEncodedForm, false, 512, JSON_THROW_ON_ERROR);
+        $htmlForm = $this->client->getResponse()->getContent();
         $crawler = new Crawler($htmlForm);
         $token = $crawler->filter($tokenFieldSelector)->attr('value');
 

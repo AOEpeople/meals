@@ -258,6 +258,6 @@ class DishControllerTest extends AbstractControllerTestCase
         $content = $this->client->getResponse()->getContent();
         $uri = 'http://www.mealz.local';
 
-        return new Crawler(json_decode($content), $uri);
+        return new Crawler($content, $uri);
     }
 }

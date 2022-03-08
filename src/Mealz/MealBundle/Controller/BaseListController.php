@@ -3,7 +3,6 @@
 namespace App\Mealz\MealBundle\Controller;
 
 use Doctrine\Persistence\ObjectRepository;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -121,7 +120,7 @@ abstract class BaseListController extends BaseController
     }
 
     /**
-     * @return JsonResponse
+     * @return Response
      */
     public function getEmptyForm()
     {
@@ -136,13 +135,13 @@ abstract class BaseListController extends BaseController
         $entity = new $this->entityClassPath();
         $action = $this->generateUrl('MealzMealBundle_' . $this->entityName . '_new');
 
-        return new JsonResponse($this->getRenderedEntityForm($entity, $action));
+        return new Response($this->getRenderedEntityForm($entity, $action));
     }
 
     /**
      * @param $slug
      *
-     * @return JsonResponse
+     * @return Response
      */
     public function getPreFilledForm($slug)
     {
@@ -157,12 +156,12 @@ abstract class BaseListController extends BaseController
         $entity = $this->repository->findOneBy(['slug' => $slug]);
 
         if (null === $entity) {
-            return new JsonResponse(null, 404);
+            return new Response('', 404);
         }
 
         $action = $this->generateUrl('MealzMealBundle_' . $this->entityName . '_edit', ['slug' => $slug]);
 
-        return new JsonResponse($this->getRenderedEntityForm($entity, $action, true));
+        return new Response($this->getRenderedEntityForm($entity, $action, true));
     }
 
     /**

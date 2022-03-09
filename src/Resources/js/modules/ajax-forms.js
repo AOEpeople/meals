@@ -15,34 +15,6 @@ Mealz.prototype.initAjaxForms = function () {
         e.stopPropagation();
 
         that.loadAjaxFormPayment($(this));
-
-        var thisParent = $(this).parent();
-        var formsRendered = thisParent.children('form');
-
-        // remove other Payment Forms opened
-        if(formsRendered.length > 0) {
-            $(document).on('mouseup', function(e){
-                // if the target of the click isn't the container
-                // nor a descendant of the container
-                if (formsRendered.is(e.target) === false &&
-                    formsRendered.has(e.target).length === 0) {
-                        formsRendered.remove();
-                }
-            });
-        }
-
-        if ($('form[name="settleform"]').length >= 1) {
-            Mealz.prototype.confirmAction(
-                'a#settle-account',
-                'data-account-settlement-confirmation',
-                '#account-settlement-confirmation-continue'
-            );
-        }
-
-        if ($('.load-payment-form').is("#ecash") === true && $('.paypal-button-container').length >= 1) {
-            that.enablePaypal();
-        }
-
     });
 };
 
@@ -148,6 +120,33 @@ Mealz.prototype.loadAjaxFormPayment = function ($element) {
             $elementParent.children('form').on('click', function (e) {
                 e.stopPropagation();
             });
+
+            // reinit $form after change DOM
+            $form = $elementParent.find('form');
+
+            // remove other Payment Forms opened
+            if($form.length > 0) {
+                $(document).on('mouseup', function(e){
+                    // if the target of the click isn't the container
+                    // nor a descendant of the container
+                    if ($form.is(e.target) === false &&
+                        $form.has(e.target).length === 0) {
+                        $form.remove();
+                    }
+                });
+            }
+
+            if ($('form[name="settleform"]').length >= 1) {
+                Mealz.prototype.confirmAction(
+                    'a#settle-account',
+                    'data-account-settlement-confirmation',
+                    '#account-settlement-confirmation-continue'
+                );
+            }
+
+            if ($('.load-payment-form').is("#ecash") === true && $('.paypal-button-container').length >= 1) {
+                that.enablePaypal();
+            }
         },
         error: function (xhr) {
             console.log(xhr.status + ': ' + xhr.statusText);

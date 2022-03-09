@@ -11,7 +11,7 @@ use App\Mealz\MealBundle\Entity\SlotRepository;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Entity\WeekRepository;
 use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
-use App\Mealz\MealBundle\Event\SlotUpdateEvent;
+use App\Mealz\MealBundle\Event\SlotAllocationUpdateEvent;
 use App\Mealz\MealBundle\Service\DishService;
 use App\Mealz\MealBundle\Service\Mailer;
 use App\Mealz\MealBundle\Service\MealAvailabilityService;
@@ -120,12 +120,12 @@ class MealController extends BaseController
             $remainingOfferCount = $this->offerService->getOfferCount($meal->getDateTime());
             $this->sendMealTakenNotifications($out['offerer'], $meal, $remainingOfferCount);
 
-            return $this->generateResponse('MealzMealBundle_Participant_swap', 'added', $meal, $out['participant']);
+            return $this->generateResponse('MealzMealBundle_Participant_swap', 'added', $out['participant']);
         }
 
         $this->logAdd($meal, $out['participant']);
 
-        return $this->generateResponse('MealzMealBundle_Participant_delete', 'added', $meal, $out['participant']);
+        return $this->generateResponse('MealzMealBundle_Participant_delete', 'added', $out['participant']);
     }
 
     /**
@@ -146,20 +146,22 @@ class MealController extends BaseController
         return $profileRepository->find($profileId);
     }
 
-    private function generateResponse(string $route, string $action, Meal $meal, Participant $participant): JsonResponse
+    private function generateResponse(string $route, string $action, Participant $participant): JsonResponse
     {
         $bookedDishSlugs = [];
         $dishes = $participant->getCombinedDishes();
+
         if (0 < $dishes->count()) {
             $bookedDishSlugs = array_map(fn (Dish $dish) => $dish->getSlug(), $dishes->toArray());
         }
 
         $this->eventDispatcher->dispatch(new ParticipationUpdateEvent($participant));
 
+        $meal = $participant->getMeal();
         $slot = $participant->getSlot();
-        if ($slot && $slot->getLimit()
-            && 1 === $this->getParticipantRepository()->hasParticipantBookedAMeal($meal->getDateTime(), $participant->getProfile())) {
-            $this->eventDispatcher->dispatch(new SlotUpdateEvent($participant));
+
+        if ($slot && $slot->getLimit()) {
+            $this->eventDispatcher->dispatch(new SlotAllocationUpdateEvent($slot, $meal->getDateTime()));
         }
 
         return new JsonResponse([

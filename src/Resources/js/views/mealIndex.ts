@@ -1,18 +1,18 @@
 import {ParticipationPreToggleHandler} from "../modules/participation-pre-toggle-handler";
 import {ParticipationToggleHandler} from "../modules/participation-toggle-handler";
-import {MercureSubscribeHandler} from "../modules/mercure-subscribe-handler";
 import {CombinedMealDialog, SerializedFormData} from "../modules/combined-meal-dialog";
 import {ParticipationRequest, ParticipationRequestHandler} from "../modules/participation-request-handler";
 import {ParticipationAction, ParticipationUpdateHandler} from "../modules/participation-update-handler";
 import {ParticipationResponse} from "../modules/participation-response-handler";
 import {CombinedMealService} from "../modules/combined-meal-service";
+import {MercureSubscriber} from "../modules/subscriber/mercure-subscriber";
 
 export default class MealIndexView {
     participationPreToggleHandler: ParticipationPreToggleHandler;
     $participationCheckboxes: JQuery;
 
     constructor() {
-        this.updateSlots();
+        // this.updateSlots();
 
         this.$participationCheckboxes = $('.meals-list .meal .participation-checkbox');
         this.initEvents();
@@ -22,9 +22,11 @@ export default class MealIndexView {
             this.participationPreToggleHandler = new ParticipationPreToggleHandler(participationToggleHandler);
 
         }
-        new MercureSubscribeHandler(['/participant-update'], MealIndexView.handleUpdateParticipation);
-        new MercureSubscribeHandler(['/offer-update'], MealIndexView.handleUpdateOffers);
-        new MercureSubscribeHandler(['/slot-update'], MealIndexView.handleUpdateSlots);
+
+        let messageSubscriber = new MercureSubscriber($('.weeks').data('msgSubscribeUrl'));
+        messageSubscriber.subscribe(['/participant-update'], MealIndexView.handleUpdateParticipation);
+        messageSubscriber.subscribe(['/offer-update'], MealIndexView.handleUpdateOffers);
+        messageSubscriber.subscribe(['/slot-update'], MealIndexView.handleUpdateSlot);
     }
 
     private initEvents(): void {
@@ -86,11 +88,20 @@ export default class MealIndexView {
         }
     }
 
-    private static handleUpdateSlots(data: SlotData)
+    private static handleUpdateSlot(data: SlotData)
     {
-        const slotOption = $(`#day-${data.date}-slots option[value=${data.slotSlug}]`);
-        slotOption.text(`${slotOption.data('title')} (${data.slotCount}/${slotOption.data('limit')})`);
-        slotOption.prop('disabled', slotOption.data('limit') <= data.slotCount);
+        let slotOption = $(`#day-${data.date}-slots option[value=${data.slotSlug}]`);
+        if (1 !== slotOption.length) {
+            return;
+        }
+
+        const slotLimit = slotOption.data('limit');
+        if (1 > slotLimit) {
+            return;
+        }
+
+        slotOption.text(`${slotOption.data('title')} (${data.slotCount}/${slotLimit})`);
+        slotOption.prop('disabled', slotLimit <= data.slotCount);
     }
 
     private handleChangeSlot(event: JQuery.TriggeredEvent) {

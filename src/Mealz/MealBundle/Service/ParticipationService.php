@@ -346,4 +346,9 @@ class ParticipationService
 
         return $meal->getParticipationLimit() > $mealPartCount;
     }
+
+    public function getCountByMeal(Meal $meal): int
+    {
+        return $this->participantRepo->getCountByMeal($meal);
+    }
 }

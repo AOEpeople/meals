@@ -10,7 +10,7 @@ use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Entity\WeekRepository;
-use App\Mealz\MealBundle\Event\OfferUpdateEvent;
+use App\Mealz\MealBundle\Event\MealOfferedEvent;
 use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
 use App\Mealz\MealBundle\Event\SlotUpdateEvent;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;
@@ -38,8 +38,11 @@ class ParticipantController extends BaseController
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    public function updateCombinedMeal(Request $request, Participant $participant, ParticipationService $participationSrv): JsonResponse
-    {
+    public function updateCombinedMeal(
+        Request $request,
+        Participant $participant,
+        ParticipationService $participationSrv
+    ): JsonResponse {
         $dishSlugs = $request->request->get('dishes', []);
 
         try {
@@ -86,8 +89,7 @@ class ParticipantController extends BaseController
         $entityManager->flush();
 
         $this->eventDispatcher->dispatch(new ParticipationUpdateEvent($participant));
-        if ($participant->getSlot()->getLimit() &&
-            !$this->getParticipantRepository()->hasParticipantBookedAMeal($meal->getDateTime(), $participant->getProfile())) {
+        if ($participant->getSlot()->getLimit()) {
             $this->eventDispatcher->dispatch(new SlotUpdateEvent($participant));
         }
 
@@ -147,7 +149,7 @@ class ParticipantController extends BaseController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();
 
-            $this->eventDispatcher->dispatch(new OfferUpdateEvent($participant));
+            $this->eventDispatcher->dispatch(new MealOfferedEvent($participant));
 
             return $this->generateResponse('MealzMealBundle_Participant_swap', 'unswapped', $participant);
         }
@@ -155,7 +157,7 @@ class ParticipantController extends BaseController
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->flush();
 
-        $this->eventDispatcher->dispatch(new OfferUpdateEvent($participant));
+        $this->eventDispatcher->dispatch(new MealOfferedEvent($participant));
 
         $dishTitle = $participant->getMeal()->getDish()->getTitleEn();
 

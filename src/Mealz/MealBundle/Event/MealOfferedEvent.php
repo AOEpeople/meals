@@ -7,7 +7,7 @@ namespace App\Mealz\MealBundle\Event;
 use App\Mealz\MealBundle\Entity\Participant;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class SlotUpdateEvent extends Event
+class MealOfferedEvent extends Event
 {
     private Participant $participant;
 

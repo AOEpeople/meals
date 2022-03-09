@@ -16,6 +16,9 @@ parameters:
     app.idp.client_id: '%env(IDP_CLIENT_ID)%'
     app.idp.client_secret: '%env(IDP_CLIENT_SECRET)%'
 
+    app.pubsub.publish_url: '%env(MERCURE_URL)%'
+    app.pubsub.subscribe_url: '%env(MERCURE_PUBLIC_URL)%'
+
     # Total unpaid amount for the consumed meals that will trigger
     # an acknowledgment popup on every page load. It must be negative.
     app.payment_notification_debt: '%env(PAYMENT_NOTIFICATION_DEBT)%'

@@ -116,13 +116,11 @@ Mealz.prototype.loadAjaxFormPayment = function ($element) {
         success: function (data) {
             that.$iconCells.find('form').addClass(that.hiddenClass);
             $element.after(data);
+            $form = $elementParent.find('form');
             $form.find('input[type=text]').focus();
-            $elementParent.children('form').on('click', function (e) {
+            $form.on('click', function (e) {
                 e.stopPropagation();
             });
-
-            // reinit $form after change DOM
-            $form = $elementParent.find('form');
 
             // remove other Payment Forms opened
             if($form.length > 0) {
@@ -130,7 +128,7 @@ Mealz.prototype.loadAjaxFormPayment = function ($element) {
                     // if the target of the click isn't the container
                     // nor a descendant of the container
                     if ($form.is(e.target) === false &&
-                        $form.has(e.target).length === 0) {
+                        $elementParent.has(e.target).length === 0) {
                         $form.remove();
                     }
                 });
@@ -144,7 +142,7 @@ Mealz.prototype.loadAjaxFormPayment = function ($element) {
                 );
             }
 
-            if ($('.load-payment-form').is("#ecash") === true && $('.paypal-button-container').length >= 1) {
+            if ($('.load-payment-form').is('#ecash') === true && $('.paypal-button-container').length >= 1) {
                 that.enablePaypal();
             }
         },

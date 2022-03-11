@@ -11,17 +11,11 @@ class OfferUpdateEvent extends Event
 {
     private Participant $participant;
 
-    /**
-     * @param Participant $participant
-     */
     public function __construct(Participant $participant)
     {
         $this->participant = $participant;
     }
 
-    /**
-     * @return Participant
-     */
     public function getParticipant(): Participant
     {
         return $this->participant;

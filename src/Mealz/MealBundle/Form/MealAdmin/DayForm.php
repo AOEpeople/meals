@@ -56,9 +56,7 @@ class DayForm extends AbstractType
 
             foreach ($meals as $meal) {
                 /** @var Meal $meal */
-                if (null === $meal->getDish() &&
-                    UnitOfWork::STATE_NEW === $this->entityManager->getUnitOfWork()->getEntityState($meal)
-                ) {
+                if (UnitOfWork::STATE_NEW === $this->entityManager->getUnitOfWork()->getEntityState($meal)) {
                     $meals->removeElement($meal);
                 }
             }

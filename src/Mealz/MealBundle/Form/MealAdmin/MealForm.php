@@ -57,15 +57,13 @@ class MealForm extends AbstractType
             /** @var Meal $meal */
             $meal = $event->getData();
             if (null === $meal->getDateTime()) {
-                $day = $meal->getDay() ?? $event->getForm()->getParent()->getParent()->getData();
+                $day = $event->getForm()->getParent()->getParent()->getData();
                 $meal->setDay($day);
                 $meal->setDateTime($day->getDateTime());
             }
-            if (null !== $meal->getDish()) {
-                $dishPrice = $meal->getDish()->getPrice();
-                $meal->setPrice($dishPrice);
-                $event->setData($meal);
-            }
+            $dishPrice = $meal->getDish()->getPrice();
+            $meal->setPrice($dishPrice);
+            $event->setData($meal);
         });
     }
 

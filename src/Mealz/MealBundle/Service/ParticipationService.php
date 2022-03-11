@@ -78,13 +78,13 @@ class ParticipationService
     {
         $meal = $participant->getMeal();
 
-        if (!$this->isOpenMeal($meal)) {
+        if (!$meal->isOpen()) {
             throw new ParticipationException(
                 'invalid operation; meal expired',
                 ParticipationException::ERR_PARTICIPATION_EXPIRED
             );
         }
-        if ($this->isParticipationLocked($meal)) {
+        if ($meal->isLocked()) {
             throw new ParticipationException(
                 'invalid operation; participation is locked',
                 ParticipationException::ERR_UPDATE_LOCKED_PARTICIPATION
@@ -151,7 +151,7 @@ class ParticipationService
      */
     private function allowedToAccept(Meal $meal): bool
     {
-        return $this->isParticipationLocked($meal) && $this->isOpenMeal($meal);
+        return $meal->isOpen() && $meal->isLocked();
     }
 
     private function getNextOfferingParticipant(Meal $meal, array $dishSlugs = []): ?Participant
@@ -303,14 +303,6 @@ class ParticipationService
         };
     }
 
-    /**
-     * Gets count of offered meals on $date.
-     */
-    public function getOfferCount(DateTime $date): int
-    {
-        return $this->participantRepo->getOfferCount($date);
-    }
-
     public function getSlot(Profile $profile, DateTime $date): ?Slot
     {
         $startDate = (clone $date)->setTime(0, 0);
@@ -337,31 +329,12 @@ class ParticipationService
         return $participant->getCombinedDishes();
     }
 
-    private function isParticipationLocked(Meal $meal): bool
-    {
-        $now = new DateTime('now');
-
-        return $meal->getLockDateTime() < $now;
-    }
-
     /**
-     * Check if the given meal is still open, i.e. not expired.
-     */
-    public function isOpenMeal(Meal $meal): bool
-    {
-        $now = new DateTime('now');
-
-        return $meal->getDateTime() > $now;
-    }
-
-    /**
-     *  checks if a meal has reached his booking limit
-     * @param Meal $meal
-     * @return bool
+     *  checks if a meal has reached his booking limit.
      */
     public function isAvailable(Meal $meal): bool
     {
-        if (!$this->isOpenMeal($meal)) {
+        if (!$meal->isOpen()) {
             return false;
         }
 
@@ -370,6 +343,7 @@ class ParticipationService
         }
 
         $mealPartCount = $this->participantRepo->getCountByMeal($meal);
+
         return $meal->getParticipationLimit() > $mealPartCount;
     }
 }

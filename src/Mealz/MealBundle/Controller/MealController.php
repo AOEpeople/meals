@@ -33,15 +33,18 @@ class MealController extends BaseController
     private Mailer $mailer;
     private NotifierInterface $notifier;
     private EventDispatcherInterface $eventDispatcher;
+    private OfferService $offerService;
 
     public function __construct(
         Mailer $mailer,
         NotifierInterface $notifier,
-        EventDispatcherInterface $eventDispatcher)
+        EventDispatcherInterface $eventDispatcher,
+        OfferService $offerService)
     {
         $this->mailer = $mailer;
         $this->notifier = $notifier;
         $this->eventDispatcher = $eventDispatcher;
+        $this->offerService = $offerService;
     }
 
     public function index(
@@ -111,7 +114,7 @@ class MealController extends BaseController
         }
 
         if (null !== $out['offerer']) {
-            $remainingOfferCount = $participationSrv->getOfferCount($meal->getDateTime());
+            $remainingOfferCount = $this->offerService->getOfferCount($meal->getDateTime());
             $this->sendMealTakenNotifications($out['offerer'], $meal, $remainingOfferCount);
 
             return $this->generateResponse('MealzMealBundle_Participant_swap', 'added', $meal, $out['participant']);
@@ -151,11 +154,10 @@ class MealController extends BaseController
         $this->eventDispatcher->dispatch(new ParticipationUpdateEvent($participant));
 
         $slot = $participant->getSlot();
-        if($slot && $slot->getLimit()
-            && $this->getParticipantRepository()->hasParticipantBookedAMeal($meal->getDateTime(), $participant->getProfile()) === 1) {
-                $this->eventDispatcher->dispatch(new SlotUpdateEvent($participant));
+        if ($slot && $slot->getLimit()
+            && 1 === $this->getParticipantRepository()->hasParticipantBookedAMeal($meal->getDateTime(), $participant->getProfile())) {
+            $this->eventDispatcher->dispatch(new SlotUpdateEvent($participant));
         }
-
 
         return new JsonResponse([
             'id' => $participant->getId(),
@@ -168,7 +170,7 @@ class MealController extends BaseController
             ),
             'actionText' => $action,
             'bookedDishSlugs' => $bookedDishSlugs,
-            'slot' => $slot ? $slot->getSlug() : ''
+            'slot' => $slot ? $slot->getSlug() : '',
         ]);
     }
 
@@ -227,7 +229,7 @@ class MealController extends BaseController
      */
     public function getOffers(Meal $meal): JsonResponse
     {
-        $offers = OfferService::getOffers($meal);
+        $offers = $this->offerService->getOffers($meal);
 
         if (empty($offers)) {
             return new JsonResponse(null, 404);

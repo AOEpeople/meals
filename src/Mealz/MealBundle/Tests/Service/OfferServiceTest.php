@@ -33,6 +33,7 @@ class OfferServiceTest extends AbstractParticipationServiceTest
         $price = (float) self::$kernel->getContainer()->getParameter('mealz.meal.combined.price');
         $dishRepo = static::$container->get(DishRepository::class);
         $this->cms = new CombinedMealService($price, $this->entityManager, $dishRepo);
+        $this->offerService = new OfferService($this->participantRepo);
     }
 
     /**
@@ -44,7 +45,7 @@ class OfferServiceTest extends AbstractParticipationServiceTest
     {
         $meal = $this->getMeal();
 
-        $offers = OfferService::getOffers($meal);
+        $offers = $this->offerService->getOffers($meal);
 
         $this->assertEmpty($offers);
     }
@@ -58,7 +59,7 @@ class OfferServiceTest extends AbstractParticipationServiceTest
     {
         $meal = $this->getMeal(true);
 
-        $offers = OfferService::getOffers($meal);
+        $offers = $this->offerService->getOffers($meal);
 
         $this->assertEmpty($offers);
     }
@@ -72,7 +73,7 @@ class OfferServiceTest extends AbstractParticipationServiceTest
     {
         $meal = $this->getMeal(true, true); // same as $this->getMeal(false, true) – if a meal is expired, it's also locked
 
-        $offers = OfferService::getOffers($meal);
+        $offers = $this->offerService->getOffers($meal);
 
         $this->assertEmpty($offers);
     }
@@ -87,7 +88,7 @@ class OfferServiceTest extends AbstractParticipationServiceTest
         $offerer = $this->getProfile('bob.meals');
         $meal = $this->getMeal(true, false, [$offerer], false);
 
-        $offers = OfferService::getOffers($meal);
+        $offers = $this->offerService->getOffers($meal);
 
         $this->assertEmpty($offers);
     }
@@ -102,7 +103,7 @@ class OfferServiceTest extends AbstractParticipationServiceTest
         $offerer = $this->getProfile('bob.meals');
         $meal = $this->getMeal(true, false, [$offerer]);
 
-        $offers = OfferService::getOffers($meal);
+        $offers = $this->offerService->getOffers($meal);
 
         $dishSlug = $meal->getDish()->getSlug();
 
@@ -128,7 +129,7 @@ class OfferServiceTest extends AbstractParticipationServiceTest
         ];
         $meal = $this->getMeal(true, false, $offerers);
 
-        $offers = OfferService::getOffers($meal);
+        $offers = $this->offerService->getOffers($meal);
 
         $dishSlug = $meal->getDish()->getSlug();
 
@@ -151,7 +152,7 @@ class OfferServiceTest extends AbstractParticipationServiceTest
         $meals = $this->createAndCheckMealCollection();
         $combinedMeal = $this->getCombinedMeal($meals);
 
-        $offers = OfferService::getOffers($combinedMeal);
+        $offers = $this->offerService->getOffers($combinedMeal);
         $this->assertEmpty($offers);
     }
 
@@ -174,7 +175,7 @@ class OfferServiceTest extends AbstractParticipationServiceTest
         $offerers = $this->addCombinedMealOfferers($combinedMeal, $profiles, $bookedDishes);
         $this->assertCount(count($profiles), $offerers);
 
-        $offers = OfferService::getOffers($combinedMeal);
+        $offers = $this->offerService->getOffers($combinedMeal);
 
         $participant = $offerers[0];
         $combinedDishSlugs = null;
@@ -215,7 +216,7 @@ class OfferServiceTest extends AbstractParticipationServiceTest
         $offerers = $this->addCombinedMealOfferers($combinedMeal, $profiles, $bookedDishes);
         $this->assertCount(count($profiles), $offerers);
 
-        $offers = OfferService::getOffers($combinedMeal);
+        $offers = $this->offerService->getOffers($combinedMeal);
 
         $combinationID = null;
         /** @var Participant $offerer */
@@ -291,7 +292,7 @@ class OfferServiceTest extends AbstractParticipationServiceTest
 
         $this->assertCount(count($profiles), $offerers);
 
-        $offers = OfferService::getOffers($combinedMeal);
+        $offers = $this->offerService->getOffers($combinedMeal);
 
         /** @var Participant $offerer */
         foreach ($offerers as $idx => $offerer) {

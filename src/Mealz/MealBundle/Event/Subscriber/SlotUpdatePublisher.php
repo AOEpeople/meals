@@ -14,18 +14,13 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class SlotUpdatePublisher implements EventSubscriberInterface
 {
     private PublisherInterface $publisher;
-    private ParticipantRepository $participantRepository;
+    private ParticipantRepository $participantRepo;
     private LoggerInterface $logger;
 
-    /**
-     * @param PublisherInterface $publisher
-     * @param ParticipantRepository $participantRepository
-     * @param LoggerInterface $logger
-     */
-    public function __construct(PublisherInterface $publisher, ParticipantRepository $participantRepository, LoggerInterface $logger)
+    public function __construct(PublisherInterface $publisher, ParticipantRepository $participantRepo, LoggerInterface $logger)
     {
         $this->publisher = $publisher;
-        $this->participantRepository = $participantRepository;
+        $this->participantRepo = $participantRepo;
         $this->logger = $logger;
     }
 
@@ -42,10 +37,10 @@ class SlotUpdatePublisher implements EventSubscriberInterface
             [
                 'date' => $event->getParticipant()->getMeal()->getDateTime()->format('Ymd'),
                 'slotSlug' => $event->getParticipant()->getSlot()->getSlug(),
-                'slotCount' => $this->participantRepository->getCountBySlot(
+                'slotCount' => $this->participantRepo->getCountBySlot(
                     $event->getParticipant()->getSlot(),
                     $event->getParticipant()->getMeal()->getDateTime()
-                )
+                ),
             ]);
         if (!$success) {
             $this->logger->error('topic publish error', ['topic' => Publisher::TOPIC_UPDATE_SLOT]);

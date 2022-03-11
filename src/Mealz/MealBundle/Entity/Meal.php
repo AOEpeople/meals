@@ -8,7 +8,6 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Exception;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -193,7 +192,24 @@ class Meal
 
     public function isCombinedMeal(): bool
     {
-        return $this->dish && $this->dish->isCombinedDish();
+        return $this->dish->isCombinedDish();
+    }
+
+    public function isLocked(): bool
+    {
+        $now = new DateTime('now');
+
+        return $this->getLockDateTime() < $now;
+    }
+
+    /**
+     * Check if the given meal is still open, i.e. not expired.
+     */
+    public function isOpen(): bool
+    {
+        $now = new DateTime('now');
+
+        return $this->getDateTime() > $now;
     }
 
     public function __toString()

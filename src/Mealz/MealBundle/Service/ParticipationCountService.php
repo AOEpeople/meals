@@ -85,38 +85,11 @@ class ParticipationCountService
         /** @var Meal $meal */
         foreach ($day->getMeals() as $meal) {
             $participation[self::PARTICIPATION_COUNT_KEY][$meal->getId()] = [];
+
             if ($meal->getDish()->isCombinedDish()) {
-                /** @var Participant $participant */
-                foreach ($meal->getParticipants() as $participant) {
-                    /** @var Dish $dish */
-                    foreach ($participant->getCombinedDishes() as $dish) {
-                        if (!array_key_exists(self::PARTICIPATION_TOTAL_COUNT_KEY, $participation)) {
-                            $participation[self::PARTICIPATION_TOTAL_COUNT_KEY] = [];
-                        }
-                        if (!array_key_exists($dish->getSlug(), $participation[self::PARTICIPATION_TOTAL_COUNT_KEY])) {
-                            $participation[self::PARTICIPATION_TOTAL_COUNT_KEY][$dish->getSlug()][self::COUNT_KEY] = 0.0;
-                        }
-
-                        $participation[self::PARTICIPATION_TOTAL_COUNT_KEY][$dish->getSlug()][self::COUNT_KEY] += 0.5;
-
-                        if (!array_key_exists($dish->getSlug(), $participation[self::PARTICIPATION_COUNT_KEY][$meal->getId()])) {
-                            $participation[self::PARTICIPATION_COUNT_KEY][$meal->getId()][$dish->getSlug()][self::COUNT_KEY] = 0.0;
-                            $participation[self::PARTICIPATION_COUNT_KEY][$meal->getId()][$dish->getSlug()][self::LIMIT_KEY] = 0.0;
-                        }
-
-                        ++$participation[self::PARTICIPATION_COUNT_KEY][$meal->getId()][$dish->getSlug()][self::COUNT_KEY];
-                    }
-                }
+                self::setParticipationForCombinedDish($meal, $participation);
             } else {
-                if (!array_key_exists(self::PARTICIPATION_TOTAL_COUNT_KEY, $participation)) {
-                    $participation[self::PARTICIPATION_TOTAL_COUNT_KEY] = [];
-                }
-                if (!array_key_exists($meal->getDish()->getSlug(), $participation[self::PARTICIPATION_TOTAL_COUNT_KEY])) {
-                    $participation[self::PARTICIPATION_TOTAL_COUNT_KEY][$meal->getDish()->getSlug()][self::COUNT_KEY] = 0.0;
-                }
-
-                $participation[self::PARTICIPATION_TOTAL_COUNT_KEY][$meal->getDish()->getSlug()][self::COUNT_KEY] += $meal->getParticipants()->count();
-                $participation[self::PARTICIPATION_TOTAL_COUNT_KEY][$meal->getDish()->getSlug()][self::LIMIT_KEY] = $meal->getParticipationLimit();
+                self::setParticipationForDish($meal, $participation);
             }
 
             $participation[self::PARTICIPATION_COUNT_KEY][$meal->getId()][$meal->getDish()->getSlug()][self::COUNT_KEY] = $meal->getParticipants()->count();
@@ -126,6 +99,44 @@ class ParticipationCountService
         self::calculateLimits($day, $participation);
 
         return $participation;
+    }
+
+    public static function setParticipationForCombinedDish(Meal $meal, array &$participation): void
+    {
+        /** @var Participant $participant */
+        foreach ($meal->getParticipants() as $participant) {
+            /** @var Dish $dish */
+            foreach ($participant->getCombinedDishes() as $dish) {
+                if (!array_key_exists(self::PARTICIPATION_TOTAL_COUNT_KEY, $participation)) {
+                    $participation[self::PARTICIPATION_TOTAL_COUNT_KEY] = [];
+                }
+                if (!array_key_exists($dish->getSlug(), $participation[self::PARTICIPATION_TOTAL_COUNT_KEY])) {
+                    $participation[self::PARTICIPATION_TOTAL_COUNT_KEY][$dish->getSlug()][self::COUNT_KEY] = 0.0;
+                }
+
+                $participation[self::PARTICIPATION_TOTAL_COUNT_KEY][$dish->getSlug()][self::COUNT_KEY] += 0.5;
+
+                if (!array_key_exists($dish->getSlug(), $participation[self::PARTICIPATION_COUNT_KEY][$meal->getId()])) {
+                    $participation[self::PARTICIPATION_COUNT_KEY][$meal->getId()][$dish->getSlug()][self::COUNT_KEY] = 0.0;
+                    $participation[self::PARTICIPATION_COUNT_KEY][$meal->getId()][$dish->getSlug()][self::LIMIT_KEY] = 0.0;
+                }
+
+                ++$participation[self::PARTICIPATION_COUNT_KEY][$meal->getId()][$dish->getSlug()][self::COUNT_KEY];
+            }
+        }
+    }
+
+    public static function setParticipationForDish(Meal $meal, array &$participation): void
+    {
+        if (!array_key_exists(self::PARTICIPATION_TOTAL_COUNT_KEY, $participation)) {
+            $participation[self::PARTICIPATION_TOTAL_COUNT_KEY] = [];
+        }
+        if (!array_key_exists($meal->getDish()->getSlug(), $participation[self::PARTICIPATION_TOTAL_COUNT_KEY])) {
+            $participation[self::PARTICIPATION_TOTAL_COUNT_KEY][$meal->getDish()->getSlug()][self::COUNT_KEY] = 0.0;
+        }
+
+        $participation[self::PARTICIPATION_TOTAL_COUNT_KEY][$meal->getDish()->getSlug()][self::COUNT_KEY] += $meal->getParticipants()->count();
+        $participation[self::PARTICIPATION_TOTAL_COUNT_KEY][$meal->getDish()->getSlug()][self::LIMIT_KEY] = $meal->getParticipationLimit();
     }
 
     private static function calculateLimits(Day $day, array &$participation): void

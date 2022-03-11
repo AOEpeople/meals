@@ -131,7 +131,7 @@ class ParticipantRepository extends EntityRepository
             ->setParameters([
                 'startDate' => (clone $date),
                 'endDate' => (clone $date),
-                'userName' => $profile->getUsername()
+                'userName' => $profile->getUsername(),
             ]);
 
         $result = $queryBuilder->getQuery()->getArrayResult();

@@ -10,6 +10,7 @@ use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\SlotRepository;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Entity\WeekRepository;
+use App\Mealz\MealBundle\Event\OfferUpdateEvent;
 use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
 use App\Mealz\MealBundle\Event\SlotUpdateEvent;
 use App\Mealz\MealBundle\Service\DishService;
@@ -114,6 +115,7 @@ class MealController extends BaseController
         }
 
         if (null !== $out['offerer']) {
+            $this->eventDispatcher->dispatch(new OfferUpdateEvent($out['participant']));
             $remainingOfferCount = $this->offerService->getOfferCount($meal->getDateTime());
             $this->sendMealTakenNotifications($out['offerer'], $meal, $remainingOfferCount);
 

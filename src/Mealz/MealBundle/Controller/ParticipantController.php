@@ -86,7 +86,9 @@ class ParticipantController extends BaseController
         $entityManager->flush();
 
         $this->eventDispatcher->dispatch(new ParticipationUpdateEvent($participant));
-        if ($participant->getSlot()->getLimit() &&
+
+        $slot = $participant->getSlot();
+        if (isset($slot) && $slot->getLimit() &&
             !$this->getParticipantRepository()->hasParticipantBookedAMeal($meal->getDateTime(), $participant->getProfile())) {
             $this->eventDispatcher->dispatch(new SlotUpdateEvent($participant));
         }

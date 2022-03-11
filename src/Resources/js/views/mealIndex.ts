@@ -48,12 +48,11 @@ export default class MealIndexView {
     }
 
     private static handleUpdateOffers(data: OfferData) {
-        let available = data.isAvailable;
         let $mealWrapper = $('[data-id=' + data.mealId + ']');
         let $checkbox = $mealWrapper.find('.participation-checkbox');
 
         // new offer available and checkbox not checked yet
-        if (available === true &&
+        if (data.isAvailable === true &&
             $checkbox.is(':checked') === false &&
             $checkbox.hasClass(ParticipationAction.UNSWAP) === false &&
             $checkbox.hasClass(ParticipationAction.ACCEPT_OFFER) === false &&
@@ -80,8 +79,8 @@ export default class MealIndexView {
             });
         }
 
-        // no offer available (anymore)
-        if (available === false && $checkbox.hasClass(ParticipationAction.ACCEPT_OFFER) === true) {
+        // no offers available (anymore)
+        if (data.isAvailable === false && $checkbox.hasClass(ParticipationAction.ACCEPT_OFFER) === true) {
             ParticipationUpdateHandler.changeToOfferIsGone($checkbox);
         }
     }

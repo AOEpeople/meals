@@ -69,7 +69,7 @@ class GuestParticipationService
 
         $participants = $this->register($guestProfile, $meals, $slot, $dishSlugs);
 
-        foreach ($participants as $participant){
+        foreach ($participants as $participant) {
             $this->eventDispatcher->dispatch(new ParticipationUpdateEvent($participant));
         }
     }

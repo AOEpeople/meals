@@ -15,16 +15,19 @@ class OfferUpdatePublisher implements EventSubscriberInterface
 {
     private PublisherInterface $publisher;
     private LoggerInterface $logger;
+    private OfferService $offerService;
 
     public function __construct(
         PublisherInterface $publisher,
-        LoggerInterface $logger)
+        LoggerInterface $logger,
+        OfferService $offerService)
     {
-        $this->publisher            = $publisher;
-        $this->logger               = $logger;
+        $this->publisher = $publisher;
+        $this->logger = $logger;
+        $this->offerService = $offerService;
     }
 
-    public static function getSubscribedEvents() : array
+    public static function getSubscribedEvents(): array
     {
         return [
             OfferUpdateEvent::class => 'onOfferUpdate',
@@ -35,12 +38,12 @@ class OfferUpdatePublisher implements EventSubscriberInterface
     {
         $success = $this->publisher->publish(Publisher::TOPIC_UPDATE_OFFER,
             [
-                'mealId'          => $event->getParticipant()->getMeal()->getId(),
-                'isAvailable'     => !empty(OfferService::getOffers($event->getParticipant()->getMeal())),
-                'date'            => $event->getParticipant()->getMeal()->getDateTime()->format('Y-m-d'),
-                'dishSlug'        => $event->getParticipant()->getMeal()->getDish()->getSlug()
+                'mealId' => $event->getParticipant()->getMeal()->getId(),
+                'isAvailable' => !empty($this->offerService->getOffers($event->getParticipant()->getMeal())),
+                'date' => $event->getParticipant()->getMeal()->getDateTime()->format('Y-m-d'),
+                'dishSlug' => $event->getParticipant()->getMeal()->getDish()->getSlug(),
             ]);
-        if(!$success) {
+        if (!$success) {
             $this->logger->error('topic publish error', ['topic' => Publisher::TOPIC_UPDATE_OFFER]);
         }
     }

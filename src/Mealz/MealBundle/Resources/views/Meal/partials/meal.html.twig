@@ -17,7 +17,7 @@
 
 <div class="meal-row{{ dish.isCombinedDish ? ' combined-meal' }}"
      data-slug="{{ dish.slug }}"
-    {% if participationService.openMeal(meal) %}
+    {% if meal.isOpen() %}
         data-id="{{ participant ? participant.id }}"
         data-booked-dishes="{{ combinedDishIDs }}"
         data-description="{{ dishDescription }}"

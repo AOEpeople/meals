@@ -18,15 +18,15 @@ class MercurePublisher implements PublisherInterface
     }
 
     /**
-     *  publish data to a topic
-     * @return bool                         //  on success returns true
+     * publish data to a topic.
+     *
      * @throws JsonException
      */
-    public function publish(string $topic, array $data) : bool
+    public function publish(string $topic, array $data): bool
     {
         $payload = json_encode($data, JSON_THROW_ON_ERROR);
         $update = new Update($topic, $payload, false, null, null, null);
 
-        return ($this->hub->publish($update) !== '');
+        return '' !== $this->hub->publish($update);
     }
 }

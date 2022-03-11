@@ -3,6 +3,7 @@
 namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Day;
+use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\DishRepository;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Week;
@@ -186,7 +187,7 @@ class MealAdminController extends BaseController
         foreach ($week->getDays() as $day) {
             /** @var Meal $meal */
             foreach ($day->getMeals() as $meal) {
-                if (null === $meal->getDish()) {
+                if ($meal->getDish() instanceof Dish) {
                     $day->removeMeal($meal);
                 }
             }

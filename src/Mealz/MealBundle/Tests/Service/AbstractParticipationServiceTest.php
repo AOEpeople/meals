@@ -19,6 +19,7 @@ use App\Mealz\MealBundle\Service\CombinedMealService;
 use App\Mealz\MealBundle\Service\Doorman;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\MealBundle\Service\GuestParticipationService;
+use App\Mealz\MealBundle\Service\OfferService;
 use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use App\Mealz\UserBundle\Entity\Profile;
@@ -27,7 +28,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use RuntimeException;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
 {
@@ -35,6 +35,7 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
 
     protected EntityManagerInterface $entityManager;
     protected CombinedMealService $cms;
+    protected OfferService $offerService;
     protected ParticipantRepository $participantRepo;
     protected SlotRepository $slotRepo;
     /** @var ParticipationService|GuestParticipationService */

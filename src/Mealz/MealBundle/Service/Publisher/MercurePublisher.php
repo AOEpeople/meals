@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Service\Publisher;
 
-use GuzzleHttp\Exception\BadResponseException;
+use Exception;
 use JsonException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mercure\HubInterface;
@@ -33,7 +33,7 @@ class MercurePublisher implements PublisherInterface
             $update = new Update($topic, $payload, false, null, null, null);
 
             return '' !== $this->hub->publish($update);
-        } catch (BadResponseException $e) {
+        } catch (Exception $e) {
             $this->logger->error('publish error', ['error' => $e->getMessage()]);
         }
 

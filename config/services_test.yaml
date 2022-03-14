@@ -1,0 +1,3 @@
+services:
+    App\Mealz\MealBundle\Service\Publisher\PublisherInterface: '@App\Mealz\MealBundle\Service\Publisher\NoopPublisher'
+

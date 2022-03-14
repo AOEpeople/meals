@@ -34,7 +34,7 @@ class MercurePublisher implements PublisherInterface
             $update = new Update($topic, $payload, false, null, null, null);
 
             return '' !== $this->hub->publish($update);
-        } catch (BadResponseException $e){
+        } catch (BadResponseException $e) {
             $this->logger->error('publish error', ['error' => $e->getMessage()]);
         }
 

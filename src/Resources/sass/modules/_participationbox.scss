@@ -109,6 +109,7 @@
 
   .easy-autocomplete-container {
     position: absolute;
+    z-index: 5;
     min-width: 210px;
     background: $color-white;
     box-shadow: 0 2px 5px 0 $box-shadow;

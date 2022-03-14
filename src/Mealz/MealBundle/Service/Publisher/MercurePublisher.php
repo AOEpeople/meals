@@ -6,10 +6,9 @@ namespace App\Mealz\MealBundle\Service\Publisher;
 
 use GuzzleHttp\Exception\BadResponseException;
 use JsonException;
-
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
-use Psr\Log\LoggerInterface;
 
 class MercurePublisher implements PublisherInterface
 {

@@ -92,12 +92,12 @@ MealzMealBundle_Participant_delete:
     defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::delete }
 
 MealzMealBundle_Participant_swap:
-    path: /menu/meal/{participant}/swap
-    defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::swap }
+    path: /menu/meal/{participant}/offer-meal
+    defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::offerMeal }
 
 MealzMealBundle_Participant_unswap:
-    path: /menu/meal/{participant}/unswap
-    defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::swap }
+    path: /menu/meal/{participant}/cancel-offered-meal
+    defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::cancelOfferedMeal }
 
 MealzMealBundle_Participant_updateSlot:
     path: /menu/meal/{date}/update-slot

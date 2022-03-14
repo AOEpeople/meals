@@ -7,6 +7,6 @@ namespace App\Mealz\MealBundle\Service\Publisher;
 abstract class Publisher
 {
     public const TOPIC_PARTICIPANT_COUNT = '/participant-update';
-    public const TOPIC_UPDATE_OFFER = '/offer-update';
-    public const TOPIC_UPDATE_SLOT = '/slot-update';
+    public const TOPIC_MEAL_OFFERS = 'meal-offers';
+    public const TOPIC_SLOT_UPDATES = 'slot-updates';
 }

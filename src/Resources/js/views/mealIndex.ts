@@ -2,18 +2,16 @@ import {ParticipationPreToggleHandler} from "../modules/participation-pre-toggle
 import {ParticipationToggleHandler} from "../modules/participation-toggle-handler";
 import {CombinedMealDialog, SerializedFormData} from "../modules/combined-meal-dialog";
 import {ParticipationRequest, ParticipationRequestHandler} from "../modules/participation-request-handler";
-import {ParticipationAction, ParticipationUpdateHandler} from "../modules/participation-update-handler";
 import {ParticipationResponse} from "../modules/participation-response-handler";
 import {CombinedMealService} from "../modules/combined-meal-service";
 import {MercureSubscriber} from "../modules/subscriber/mercure-subscriber";
+import {MealOfferUpdate, MealOfferUpdateHandler} from "../modules/meal-offer-update-handler";
 
 export default class MealIndexView {
     participationPreToggleHandler: ParticipationPreToggleHandler;
     $participationCheckboxes: JQuery;
 
     constructor() {
-        // this.updateSlots();
-
         this.$participationCheckboxes = $('.meals-list .meal .participation-checkbox');
         this.initEvents();
 
@@ -25,8 +23,8 @@ export default class MealIndexView {
 
         let messageSubscriber = new MercureSubscriber($('.weeks').data('msgSubscribeUrl'));
         messageSubscriber.subscribe(['/participant-update'], MealIndexView.handleUpdateParticipation);
-        messageSubscriber.subscribe(['/offer-update'], MealIndexView.handleUpdateOffers);
-        messageSubscriber.subscribe(['/slot-update'], MealIndexView.handleUpdateSlot);
+        messageSubscriber.subscribe(['meal-offer-updates'], MealIndexView.handleMealOfferUpdate);
+        messageSubscriber.subscribe(['slot-allocation-updates'], MealIndexView.handleSlotAllocationUpdate);
     }
 
     private initEvents(): void {
@@ -49,46 +47,17 @@ export default class MealIndexView {
         }
     }
 
-    private static handleUpdateOffers(data: OfferData) {
-        let available = data.isAvailable;
-        let $mealWrapper = $('[data-id=' + data.mealId + ']');
-        let $checkbox = $mealWrapper.find('.participation-checkbox');
-
-        // new offer available and checkbox not checked yet
-        if (available === true &&
-            $checkbox.is(':checked') === false &&
-            $checkbox.hasClass(ParticipationAction.UNSWAP) === false &&
-            $checkbox.hasClass(ParticipationAction.ACCEPT_OFFER) === false &&
-            $checkbox.hasClass(ParticipationAction.JOIN) === false) {
-            let date = data.date;
-            let dishSlug = data.dishSlug;
-            ParticipationUpdateHandler.changeToOfferIsAvailable(
-                $checkbox,
-                '/menu/' + date + '/' + dishSlug + '/accept-offer'
-            );
+    private static handleMealOfferUpdate(data: MealOfferUpdate) {
+        let $checkbox = $(`[data-id=${data.mealId}] input[type=checkbox]`);
+        if (1 > $checkbox.length) {
+            console.log(`error: meal not found, mealId: ${data.mealId}, method: MealIndexView.handleMealOfferUpdate`);
+            return;
         }
 
-        // if a user's offer is gone and the participation-badge is still showing 'pending', disable the checkbox, tooltip and change badge
-        if ($checkbox.hasClass(ParticipationAction.UNSWAP) === true) {
-            let participantId = parseInt($checkbox.data('participant-id'));
-            if (isNaN(participantId)) {
-                console.log('Error: Participant ID is not a number');
-                return;
-            }
-            $.getJSON('/menu/meal/' + participantId + '/isParticipationPending', function (isParticipationPendingResponse) {
-                if (isParticipationPendingResponse[0] === false) {
-                    ParticipationUpdateHandler.changeToOfferIsTaken($checkbox);
-                }
-            });
-        }
-
-        // no offer available (anymore)
-        if (available === false && $checkbox.hasClass(ParticipationAction.ACCEPT_OFFER) === true) {
-            ParticipationUpdateHandler.changeToOfferIsGone($checkbox);
-        }
+        MealOfferUpdateHandler.handleUpdate($checkbox, data);
     }
 
-    private static handleUpdateSlot(data: SlotData)
+    private static handleSlotAllocationUpdate(data: SlotData)
     {
         let slotOption = $(`#day-${data.date}-slots option[value=${data.slotSlug}]`);
         if (1 !== slotOption.length) {

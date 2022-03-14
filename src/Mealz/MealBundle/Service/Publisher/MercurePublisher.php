@@ -18,7 +18,7 @@ class MercurePublisher implements PublisherInterface
     }
 
     /**
-     * publish data to a topic.
+     * {@inheritdoc}
      *
      * @throws JsonException
      */

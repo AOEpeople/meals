@@ -11,6 +11,7 @@ use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Entity\WeekRepository;
 use App\Mealz\MealBundle\Event\MealOfferedEvent;
+use App\Mealz\MealBundle\Event\MealOfferCancelledEvent;
 use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
 use App\Mealz\MealBundle\Event\SlotUpdateEvent;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;
@@ -24,7 +25,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Translation\Translator;
 
 /**
  * @Security("is_granted('ROLE_USER')")
@@ -119,75 +119,62 @@ class ParticipantController extends BaseController
     }
 
     /**
-     * Offers an existing participation by setting the participant's 'offeredAt' value to the timestamp.
-     * Takes an existing offer back by setting the 'offeredAt' value back to 0.
+     * Makes a booked meal by a participant to be available for taken over.
      */
-    public function swap(Participant $participant, NotifierInterface $notifier): JsonResponse
+    public function offerMeal(Participant $participant, NotifierInterface $notifier): JsonResponse
     {
-        $dateTime = $participant->getMeal()->getDateTime();
-        $counter = $this->getParticipantRepository()->getOfferCount($dateTime);
-
         if (false === is_object($this->getUser())) {
             return $this->ajaxSessionExpiredRedirect();
         }
 
-        if ($this->getProfile() !== $participant->getProfile() || false === $this->getDoorman()->isUserAllowedToSwap($participant->getMeal())) {
+        $meal = $participant->getMeal();
+        if ($this->getProfile() !== $participant->getProfile()
+            || false === $this->getDoorman()->isUserAllowedToSwap($meal)) {
             return new JsonResponse(null, 403);
         }
 
-        /*
-         * Set "offeredAt" to the time.
-         */
-        if (0 === $participant->getOfferedAt()) {
-            $participant->setOfferedAt(time());
-        } else {
-            // If user is already offering a meal (it's pending), take the offer back by setting "offeredAt" to 0.
-            if (true === $participant->isPending()) {
-                $participant->setOfferedAt(0);
-            }
-
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->flush();
-
-            $this->eventDispatcher->dispatch(new MealOfferedEvent($participant));
-
-            return $this->generateResponse('MealzMealBundle_Participant_swap', 'unswapped', $participant);
-        }
+        $participant->setOfferedAt(time());
 
         $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($participant);
         $entityManager->flush();
 
-        $this->eventDispatcher->dispatch(new MealOfferedEvent($participant));
-
-        $dishTitle = $participant->getMeal()->getDish()->getTitleEn();
-
-        if ($participant->getMeal()->getDish()->isCombinedDish()) {
-            $combinedDishes = $participant->getCombinedDishes();
-            /** @var Dish $dish */
-            foreach ($combinedDishes as $dish) {
-                $dishTitle = $dishTitle . ' - ' . $dish->getTitleEn();
-            }
-        }
-
-        // If the meal has variations, get its parent and concatenate the title of the parent meal with the title of the variation.
-        if ($participant->getMeal()->getDish()->getParent()) {
-            $dishTitle = $participant->getMeal()->getDish()->getParent()->getTitleEn() . ' ' . $dishTitle;
-        }
+        // trigger meal-offered event
+        $this->eventDispatcher->dispatch(new MealOfferedEvent($meal));
 
         // Mattermost integration
-        $translator = new Translator('en_EN');
-        $chefbotMessage = $translator->transChoice(
-            $this->get('translator')->trans('mattermost.offered', [], 'messages'),
-            $counter,
+        $dishTitle = $this->getBookedDishTitle($participant);
+        $counter = $this->getParticipantRepository()->getOfferCount($meal->getDateTime());
+
+        $chefBotMessage = $this->get('translator')->trans(
+            'mattermost.offered',
             [
                 '%counter%' => $counter,
                 '%dish%' => $dishTitle,
-            ]
+            ],
+            'messages',
+            'en_EN'
         );
 
-        $notifier->sendAlert($chefbotMessage);
+        $notifier->sendAlert($chefBotMessage);
 
         return $this->generateResponse('MealzMealBundle_Participant_unswap', 'swapped', $participant);
+    }
+
+    /**
+     * Cancels an offered meal by a participant, so it can no longer be taken over by other users.
+     */
+    public function cancelOfferedMeal(Participant $participant): JsonResponse
+    {
+        $participant->setOfferedAt(0);
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($participant);
+        $entityManager->flush();
+
+        $this->eventDispatcher->dispatch(new MealOfferCancelledEvent($participant->getMeal()));
+
+        return $this->generateResponse('MealzMealBundle_Participant_swap', 'unswapped', $participant);
     }
 
     /**
@@ -268,5 +255,27 @@ class ParticipantController extends BaseController
             'id' => $participant->getId(),
             'actionText' => $action,
         ]);
+    }
+
+    private function getBookedDishTitle(Participant $participant): string
+    {
+        $bookedDish = $participant->getMeal()->getDish();
+        $dishTitle = $bookedDish->getTitleEn();
+
+        if ($bookedDish->isCombinedDish()) {
+            $combinedDishes = $participant->getCombinedDishes();
+            /** @var Dish $dish */
+            foreach ($combinedDishes as $dish) {
+                $dishTitle .= ' - ' . $dish->getTitleEn();
+            }
+        }
+
+        // If the meal has variations, get its parent and concatenate
+        // the title of the parent meal with the title of the variation.
+        if ($bookedDish->getParent()) {
+            $dishTitle = $bookedDish->getParent()->getTitleEn() . ' ' . $dishTitle;
+        }
+
+        return $dishTitle;
     }
 }

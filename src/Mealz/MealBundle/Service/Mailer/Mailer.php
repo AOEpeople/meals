@@ -2,23 +2,23 @@
 
 declare(strict_types=1);
 
-namespace App\Mealz\MealBundle\Service;
+namespace App\Mealz\MealBundle\Service\Mailer;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
-use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mailer\MailerInterface as SymfonyMailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 
-class Mailer
+class Mailer implements MailerInterface
 {
     private string $senderEmail;
 
     private LoggerInterface $logger;
-    private MailerInterface $mailer;
+    private SymfonyMailerInterface $mailer;
 
     public function __construct(
-        MailerInterface $mailer,
+        SymfonyMailerInterface $mailer,
         LoggerInterface $logger,
         string $senderEmail
     ) {
@@ -27,7 +27,10 @@ class Mailer
         $this->senderEmail = $senderEmail;
     }
 
-    public function sendMail(string $recipient, string $subject, string $content, bool $isHTML = false): void
+    /**
+     * {@inheritDoc}
+     */
+    public function send(string $recipient, string $subject, string $content, bool $isHTML = false): void
     {
         $email = (new Email())
             ->from(Address::create($this->senderEmail))

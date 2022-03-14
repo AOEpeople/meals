@@ -386,6 +386,28 @@ class ParticipantRepository extends EntityRepository
     }
 
     /**
+     * Returns count of booked meals available to be taken by others.
+     */
+    public function getOfferCountByMeal(Meal $meal): int
+    {
+        $mealDate = $meal->getDateTime();
+        $queryBuilder = $this->createQueryBuilder('p');
+        $queryBuilder
+            ->join('p.meal', 'm', Join::WITH, 'm.dateTime >= :startDate AND m.dateTime <= :endDate AND m.id = :mealId')
+            ->select('count(p.id) AS count')
+            ->where('p.offeredAt != 0')
+            ->setParameters([
+                'mealId' => $meal->getId(),
+                'startDate' => (clone $mealDate)->setTime(0, 0),
+                'endDate' => (clone $mealDate)->setTime(23, 59, 59),
+            ]);
+
+        $result = $queryBuilder->getQuery()->getArrayResult();
+
+        return $result[0]['count'] ?? 0;
+    }
+
+    /**
      * Gets number of participants (booked meals) per slot on a given $date.
      *
      * @psalm-return list<array{date: DateTime, slot: int, count: int}>

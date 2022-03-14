@@ -96,6 +96,7 @@ services:
     # Interface Implementations
     App\Mealz\MealBundle\Service\Notification\NotifierInterface: '@mealz_meal.notifier.mattermost'
     App\Mealz\MealBundle\Service\Publisher\PublisherInterface: '@App\Mealz\MealBundle\Service\Publisher\MercurePublisher'
+    App\Mealz\MealBundle\Service\Mailer\MailerInterface: '@App\Mealz\MealBundle\Service\Mailer\Mailer'
 
     # Event Listeners
     App\Mealz\MealBundle\EventListener\ParticipantPersistenceListener:
@@ -179,10 +180,6 @@ services:
     App\Mealz\MealBundle\Service\HttpHeaderUtility:
         arguments:
             $locales: '%app.locales%'
-
-    App\Mealz\MealBundle\Service\Mailer:
-        arguments:
-            $senderEmail: '%app.email.sender%'
 
     App\Mealz\MealBundle\Service\Notification\MattermostService:
         lazy: true

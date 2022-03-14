@@ -10,6 +10,7 @@ use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\SlotRepository;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Entity\WeekRepository;
+use App\Mealz\MealBundle\Event\MealOfferAcceptedEvent;
 use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
 use App\Mealz\MealBundle\Event\SlotAllocationUpdateEvent;
 use App\Mealz\MealBundle\Service\DishService;
@@ -31,19 +32,13 @@ use Symfony\Component\HttpFoundation\Response;
 
 class MealController extends BaseController
 {
-    private Mailer $mailer;
-    private NotifierInterface $notifier;
     private EventDispatcherInterface $eventDispatcher;
     private OfferService $offerService;
 
     public function __construct(
-        Mailer $mailer,
-        NotifierInterface $notifier,
         EventDispatcherInterface $eventDispatcher,
-        OfferService $offerService)
-    {
-        $this->mailer = $mailer;
-        $this->notifier = $notifier;
+        OfferService $offerService
+    ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->offerService = $offerService;
     }
@@ -89,7 +84,8 @@ class MealController extends BaseController
         Meal $meal,
         ?string $profile,
         ParticipationService $participationSrv,
-        SlotRepository $slotRepo
+        SlotRepository $slotRepo,
+        EventDispatcherInterface $eventDispatcher
     ): JsonResponse {
         $userProfile = $this->checkProfile($profile);
         if (null === $userProfile) {
@@ -105,27 +101,26 @@ class MealController extends BaseController
         $dishSlugs = $request->request->get('dishes', []);
 
         try {
-            $out = $participationSrv->join($userProfile, $meal, $slot, $dishSlugs);
+            $result = $participationSrv->join($userProfile, $meal, $slot, $dishSlugs);
         } catch (Exception $e) {
             $this->logException($e);
 
             return new JsonResponse(null, 500);
         }
 
-        if (null === $out) {
+        if (null === $result) {
             return new JsonResponse(null, 404);
         }
 
-        if (null !== $out['offerer']) {
-            $remainingOfferCount = $this->offerService->getOfferCount($meal->getDateTime());
-            $this->sendMealTakenNotifications($out['offerer'], $meal, $remainingOfferCount);
+        if (null !== $result['offerer']) {
+            $eventDispatcher->dispatch(new MealOfferAcceptedEvent($result['offerer']));
 
-            return $this->generateResponse('MealzMealBundle_Participant_swap', 'added', $out['participant']);
+            return $this->generateResponse('MealzMealBundle_Participant_swap', 'added', $result['participant']);
         }
 
-        $this->logAdd($meal, $out['participant']);
+        $this->logAdd($meal, $result['participant']);
 
-        return $this->generateResponse('MealzMealBundle_Participant_delete', 'added', $out['participant']);
+        return $this->generateResponse('MealzMealBundle_Participant_delete', 'added', $result['participant']);
     }
 
     /**
@@ -177,55 +172,6 @@ class MealController extends BaseController
             'bookedDishSlugs' => $bookedDishSlugs,
             'slot' => $slot ? $slot->getSlug() : '',
         ]);
-    }
-
-    private function sendMealTakenNotifications(Profile $offerer, Meal $meal, int $remainingOfferCount): void
-    {
-        $dish = $meal->getDish();
-        $dishTitle = $dish->getTitleEn();
-        $parentDish = $dish->getParent();
-
-        if (null !== $parentDish) {
-            $dishTitle = $parentDish->getTitleEn() . ' ' . $dishTitle;
-        }
-
-        $this->sendMealTakenEmail($offerer, $dishTitle);
-
-        $this->sendMealTakenMattermostMsg($dishTitle, $remainingOfferCount);
-    }
-
-    private function sendMealTakenEmail(Profile $profile, string $dishTitle): void
-    {
-        $translator = $this->get('translator');
-
-        $recipient = $profile->getUsername() . $translator->trans('mail.domain', [], 'messages');
-        $subject = $translator->trans('mail.subject', [], 'messages');
-
-        $message = $translator->trans(
-            'mail.message',
-            [
-                '%firstname%' => $profile->getFirstname(),
-                '%takenOffer%' => $dishTitle,
-            ],
-            'messages'
-        );
-
-        $this->mailer->sendMail($recipient, $subject, $message);
-    }
-
-    private function sendMealTakenMattermostMsg(string $dishTitle, int $remainingOfferCount): void
-    {
-        $this->notifier->sendAlert(
-            $this->get('translator')->trans(
-                'mattermost.offer_taken',
-                [
-                    '%count%' => $remainingOfferCount,
-                    '%counter%' => $remainingOfferCount,
-                    '%takenOffer%' => $dishTitle,
-                ],
-                'messages'
-            )
-        );
     }
 
     /**

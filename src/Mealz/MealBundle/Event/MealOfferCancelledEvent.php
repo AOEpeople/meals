@@ -7,17 +7,20 @@ namespace App\Mealz\MealBundle\Event;
 use App\Mealz\MealBundle\Entity\Meal;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class MealOfferedEvent extends Event
+/**
+ * Event when all offers for a meal are gone.
+ */
+class MealOfferCancelledEvent extends Event
 {
-    private Meal $Meal;
+    private Meal $meal;
 
     public function __construct(Meal $meal)
     {
-        $this->Meal = $meal;
+        $this->meal = $meal;
     }
 
     public function getMeal(): Meal
     {
-        return $this->Meal;
+        return $this->meal;
     }
 }

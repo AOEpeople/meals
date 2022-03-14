@@ -72,4 +72,12 @@ class OfferService
     {
         return $this->participantRepo->getOfferCount($date);
     }
+
+    /**
+     * Gets count of offered meals on $date.
+     */
+    public function getOfferCountByMeal(Meal $meal): int
+    {
+        return $this->participantRepo->getOfferCountByMeal($meal);
+    }
 }

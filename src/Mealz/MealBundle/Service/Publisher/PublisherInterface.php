@@ -7,9 +7,7 @@ namespace App\Mealz\MealBundle\Service\Publisher;
 interface PublisherInterface
 {
     /**
-     *  publish data to a topic.
-     *
-     *  @return bool                         //  on success returns true
+     * Publishes data to a given topic to the configured message server.
      */
     public function publish(string $topic, array $data): bool;
 }

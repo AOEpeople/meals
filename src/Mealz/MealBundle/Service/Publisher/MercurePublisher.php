@@ -4,17 +4,22 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Service\Publisher;
 
+use GuzzleHttp\Exception\BadResponseException;
 use JsonException;
+
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
+use Psr\Log\LoggerInterface;
 
 class MercurePublisher implements PublisherInterface
 {
     private HubInterface $hub;
+    private LoggerInterface $logger;
 
-    public function __construct(HubInterface $hub)
+    public function __construct(HubInterface $hub, LoggerInterface $logger)
     {
         $this->hub = $hub;
+        $this->logger = $logger;
     }
 
     /**
@@ -24,9 +29,15 @@ class MercurePublisher implements PublisherInterface
      */
     public function publish(string $topic, array $data): bool
     {
-        $payload = json_encode($data, JSON_THROW_ON_ERROR);
-        $update = new Update($topic, $payload, false, null, null, null);
+        try {
+            $payload = json_encode($data, JSON_THROW_ON_ERROR);
+            $update = new Update($topic, $payload, false, null, null, null);
 
-        return '' !== $this->hub->publish($update);
+            return '' !== $this->hub->publish($update);
+        } catch (BadResponseException $e){
+            $this->logger->error('publish error', ['error' => $e->getMessage()]);
+        }
+
+        return false;
     }
 }

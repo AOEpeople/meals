@@ -68,7 +68,6 @@ class MealControllerTest extends AbstractControllerTestCase
 
         // first case: accept available offer
         $this->client->request('GET', '/menu/' . $date . '/' . $dish . '/accept-offer');
-        $this->assertEquals('', $this->client->getResponse()->getContent());
         $this->assertTrue($this->client->getResponse()->isSuccessful(), 'accepting offer failed');
     }
 

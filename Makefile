@@ -1,6 +1,6 @@
 export DOCKER_BUILDKIT=1
 
-.PHONY: build build-yarn create-migrations get-users load-testdata poweroff run-devbox run-lint-sass run-cs-fixer run-phpmd run-psalm run-tests ssh update-schema
+.PHONY: build build-yarn create-migrations get-users load-testdata poweroff run-devbox run-lint-sass run-cs-fixer run-phpmd run-psalm run-tests ssh update-schema run-checks
 
 help:
 	@echo ""
@@ -59,6 +59,8 @@ create-migration:
 
 run-tests:
 	ddev run tests
+
+run-checks: run-lint-sass run-cs-fixer run-phpmd run-psalm run-tests
 
 ssh:
 	ddev ssh

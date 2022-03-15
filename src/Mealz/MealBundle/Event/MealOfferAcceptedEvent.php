@@ -6,6 +6,7 @@ namespace App\Mealz\MealBundle\Event;
 
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
+use App\Mealz\UserBundle\Entity\Profile;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
@@ -14,22 +15,33 @@ use Symfony\Contracts\EventDispatcher\Event;
 class MealOfferAcceptedEvent extends Event
 {
     /**
-     * Previous participant who offered the meal.
+     * Updated (new user) meal participant
      */
-    private Participant $offerer;
+    private Participant $participant;
 
-    public function __construct(Participant $offerer)
+    /**
+     * User who offered the meal.
+     */
+    private Profile $offerer;
+
+    public function __construct(Participant $participant, Profile $offerer)
     {
+        $this->participant = $participant;
         $this->offerer = $offerer;
     }
 
     public function getMeal(): Meal
     {
-        return $this->offerer->getMeal();
+        return $this->participant->getMeal();
     }
 
-    public function getOfferer(): Participant
+    public function getOfferer(): Profile
     {
         return $this->offerer;
+    }
+
+    public function getParticipant(): Participant
+    {
+        return $this->participant;
     }
 }

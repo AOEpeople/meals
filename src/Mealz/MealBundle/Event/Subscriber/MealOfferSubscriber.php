@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Event\Subscriber;
 
+use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Event\MealOfferAcceptedEvent;
 use App\Mealz\MealBundle\Event\MealOfferedEvent;
@@ -63,15 +64,15 @@ class MealOfferSubscriber implements EventSubscriberInterface
 
     public function onOfferAccepted(MealOfferAcceptedEvent $event): void
     {
-        $offerer = $event->getOfferer();
-        $this->sendOfferAcceptedNotifications($offerer);
-
         $meal = $event->getMeal();
+        $offerer = $event->getOfferer();
+        $this->sendOfferAcceptedNotifications($offerer, $meal);
+
         $offerCount = $this->offerService->getOfferCountByMeal($meal);
         $this->publish([
             'state' => 'accepted',
             'mealId' => $meal->getId(),
-            'offererId' => $event->getOfferer()->getId(),
+            'participantId' => $event->getParticipant()->getId(),
             'available' => (0 < $offerCount),
         ]);
     }
@@ -104,11 +105,10 @@ class MealOfferSubscriber implements EventSubscriberInterface
     /**
      * Sends all the notifications on successful acceptance of an offer.
      *
-     * @param Participant $offerer Previous participant whose meal was offered
+     * @param Profile $offerer User who offered the meal
      */
-    private function sendOfferAcceptedNotifications(Participant $offerer): void
+    private function sendOfferAcceptedNotifications(Profile $offerer, Meal $meal): void
     {
-        $meal = $offerer->getMeal();
         $dish = $meal->getDish();
         $dishTitle = $dish->getTitleEn();
 

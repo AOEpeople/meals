@@ -113,7 +113,7 @@ class MealController extends BaseController
         }
 
         if (null !== $result['offerer']) {
-            $eventDispatcher->dispatch(new MealOfferAcceptedEvent($result['offerer']));
+            $eventDispatcher->dispatch(new MealOfferAcceptedEvent($result['participant'], $result['offerer']));
 
             return $this->generateResponse('MealzMealBundle_Participant_swap', 'added', $result['participant']);
         }

@@ -6,7 +6,7 @@ use App\Mealz\AccountingBundle\Entity\Transaction;
 use App\Mealz\AccountingBundle\Event\ProfileSettlementEvent;
 use App\Mealz\AccountingBundle\Service\Wallet;
 use App\Mealz\MealBundle\Controller\BaseController;
-use App\Mealz\MealBundle\Service\Mailer;
+use App\Mealz\MealBundle\Service\Mailer\MailerInterface;
 use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\ProfileRepository;
 use DateTime;
@@ -17,10 +17,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CostSheetController extends BaseController
 {
-    private Mailer $mailer;
+    private MailerInterface $mailer;
     private EventDispatcherInterface $eventDispatcher;
 
-    public function __construct(Mailer $mailer, EventDispatcherInterface $eventDispatcher)
+    public function __construct(MailerInterface $mailer, EventDispatcherInterface $eventDispatcher)
     {
         $this->mailer = $mailer;
         $this->eventDispatcher = $eventDispatcher;
@@ -243,7 +243,7 @@ class CostSheetController extends BaseController
     {
         $translator = $this->get('translator');
 
-        $receiver = $this->getParameter('app.email.settlement_request.receiver');
+        $receiver = (string) $this->getParameter('app.email.settlement_request.receiver');
         $subject = $translator->trans('payment.costsheet.mail.subject', [], 'messages');
         $body = $translator->trans(
             'payment.costsheet.mail.body',
@@ -258,6 +258,6 @@ class CostSheetController extends BaseController
             'messages'
         );
 
-        $this->mailer->sendMail($receiver, $subject, $body, true);
+        $this->mailer->send($receiver, $subject, $body, true);
     }
 }

@@ -9,8 +9,8 @@ export enum MealOfferStates {
 export interface MealOfferUpdate {
     state: MealOfferStates;
     mealId: number;
-    offererId?: number;
-    available?: boolean;
+    participantId?: number; // Updated participant's ID
+    available?: boolean;    // Flag to specify if the meal is still available or not
 }
 
 export class MealOfferUpdateHandler {
@@ -24,7 +24,7 @@ export class MealOfferUpdateHandler {
 
                 break;
             case MealOfferStates.Accepted:
-                if (data.offererId === undefined) {
+                if (data.participantId === undefined) {
                     console.log('error: invalid meal-offer update; property "offerer-id" not found');
                     return;
                 }
@@ -33,7 +33,7 @@ export class MealOfferUpdateHandler {
                     return;
                 }
 
-                MealOfferUpdateHandler.handleMealOfferAccepted($checkbox, data.offererId);
+                MealOfferUpdateHandler.handleMealOfferAccepted($checkbox, data.participantId);
 
                 if (!data.available) {
                     MealOfferUpdateHandler.handleAllTaken($checkbox);
@@ -64,14 +64,13 @@ export class MealOfferUpdateHandler {
     /**
      * Handles event when an offered meals is accepted by some user.
      */
-    static handleMealOfferAccepted($checkbox: JQuery, offererId: number): void {
+    static handleMealOfferAccepted($checkbox: JQuery, participantId: number): void {
         if ($checkbox.hasClass(ParticipationAction.UNSWAP) === true) {
-            let participantId = $checkbox.data('participantId');
             if (isNaN(participantId)) {
                 console.log('Error: Participant-ID is not a number');
                 return;
             }
-            if (participantId === offererId) {
+            if (participantId === $checkbox.data('participantId')) {
                 ParticipationUpdateHandler.changeToOfferIsTaken($checkbox);
             }
         }

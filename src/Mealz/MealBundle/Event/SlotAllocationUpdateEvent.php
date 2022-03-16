@@ -11,12 +11,22 @@ use Symfony\Contracts\EventDispatcher\Event;
 class SlotAllocationUpdateEvent extends Event
 {
     private DateTime $day;
+
+    /**
+     * Currently allocated/freed slot
+     */
     private Slot $slot;
 
-    public function __construct(Slot $slot, DateTime $day)
+    /**
+     * Previously allocated slot
+     */
+    private ?Slot $prevSlot;
+
+    public function __construct(DateTime $day, Slot $slot, Slot $prev = null)
     {
-        $this->slot = $slot;
         $this->day = $day;
+        $this->slot = $slot;
+        $this->prevSlot = $prev;
     }
 
     public function getDay(): DateTime
@@ -27,5 +37,10 @@ class SlotAllocationUpdateEvent extends Event
     public function getSlot(): Slot
     {
         return $this->slot;
+    }
+
+    public function getPreviousSlot(): ?Slot
+    {
+        return $this->prevSlot;
     }
 }

@@ -230,7 +230,7 @@ class ParticipationService
     }
 
     /**
-     * @psalm-return list<array{date: string, slot: string, booked: int, booked_by_user: bool}>
+     * @psalm-return array<string, int> Key-value pair of slot-slug and related allocation count
      */
     public function getSlotsStatusOn(DateTime $date): array
     {
@@ -241,16 +241,13 @@ class ParticipationService
 
         $slotsStatus = [];
 
-        foreach ($openMealDaysSlots as $idx => $item) {
-            $slotsStatus[$idx] = [
-                'date' => $item['date']->format('Y-m-d'),
-                'slot' => $item['slot']->getSlug(),
-                'booked' => $slotCountProvider($item['date'], $item['slot']),
-                'booked_by_user' => false,
-            ];
+        foreach ($openMealDaysSlots as $item) {
+            $slotSlug = $item['slot']->getSlug();
+            $allocationCount = $slotCountProvider($item['date'], $item['slot']);
+            $slotsStatus[$slotSlug] = $allocationCount;
         }
 
-        return array_values($slotsStatus);
+        return $slotsStatus;
     }
 
     /**

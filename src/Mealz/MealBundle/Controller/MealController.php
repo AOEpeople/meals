@@ -32,14 +32,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class MealController extends BaseController
 {
-    private EventDispatcherInterface $eventDispatcher;
     private OfferService $offerService;
 
-    public function __construct(
-        EventDispatcherInterface $eventDispatcher,
-        OfferService $offerService
-    ) {
-        $this->eventDispatcher = $eventDispatcher;
+    public function __construct(OfferService $offerService)
+    {
         $this->offerService = $offerService;
     }
 
@@ -112,9 +108,9 @@ class MealController extends BaseController
             return new JsonResponse(null, 404);
         }
 
-        if (null !== $result['offerer']) {
-            $eventDispatcher->dispatch(new MealOfferAcceptedEvent($result['participant'], $result['offerer']));
+        $this->triggerJoinEvents($eventDispatcher, $result['participant'], $result['offerer']);
 
+        if (null !== $result['offerer']) {
             return $this->generateResponse('MealzMealBundle_Participant_swap', 'added', $result['participant']);
         }
 
@@ -150,14 +146,8 @@ class MealController extends BaseController
             $bookedDishSlugs = array_map(fn (Dish $dish) => $dish->getSlug(), $dishes->toArray());
         }
 
-        $this->eventDispatcher->dispatch(new ParticipationUpdateEvent($participant));
-
         $meal = $participant->getMeal();
         $slot = $participant->getSlot();
-
-        if ($slot && $slot->getLimit()) {
-            $this->eventDispatcher->dispatch(new SlotAllocationUpdateEvent($slot, $meal->getDateTime()));
-        }
 
         return new JsonResponse([
             'id' => $participant->getId(),
@@ -246,5 +236,24 @@ class MealController extends BaseController
                 'meal' => $meal,
             ]
         );
+    }
+
+    private function triggerJoinEvents(
+        EventDispatcherInterface $eventDispatcher,
+        Participant $participant,
+        ?Profile $offerer
+    ): void {
+        if (null !== $offerer) {
+            $eventDispatcher->dispatch(new MealOfferAcceptedEvent($participant, $offerer));
+
+            return;
+        }
+
+        $eventDispatcher->dispatch(new ParticipationUpdateEvent($participant));
+
+        $slot = $participant->getSlot();
+        if (null !== $slot) {
+            $eventDispatcher->dispatch(new SlotAllocationUpdateEvent($participant->getMeal()->getDateTime(), $slot));
+        }
     }
 }

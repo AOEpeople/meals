@@ -11,9 +11,11 @@ use App\Mealz\MealBundle\Entity\SlotRepository;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Entity\WeekRepository;
 use App\Mealz\MealBundle\Service\MealAvailabilityService;
+use App\Mealz\MealBundle\Event\SlotAllocationUpdateEvent;
 use App\Mealz\MealBundle\Service\ParticipationCountService;
 use App\Mealz\MealBundle\Service\ParticipationService;
 use DateTime;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,6 +28,7 @@ class ParticipationUpdateController extends BaseController
     public function updateSlot(
         Request $request,
         DateTime $date,
+        EventDispatcherInterface $eventDispatcher,
         SlotRepository $slotRepo,
         ParticipationService $participationSrv
     ): JsonResponse {
@@ -39,12 +42,14 @@ class ParticipationUpdateController extends BaseController
             return new JsonResponse(null, 400);
         }
 
-        $slot = $slotRepo->findOneBy(['slug' => $slotSlug, 'disabled' => 0, 'deleted' => 0]);
-        if (null === $slot) {
+        $newSlot = $slotRepo->findOneBy(['slug' => $slotSlug, 'disabled' => 0, 'deleted' => 0]);
+        if (null === $newSlot) {
             return new JsonResponse(null, 422);
         }
 
-        $participationSrv->updateSlot($profile, $date, $slot);
+        $prevSlot = $participationSrv->getSlot($profile, $date);
+        $participationSrv->updateSlot($profile, $date, $newSlot);
+        $eventDispatcher->dispatch(new SlotAllocationUpdateEvent($date, $newSlot, $prevSlot));
 
         return new JsonResponse(null, 200);
     }

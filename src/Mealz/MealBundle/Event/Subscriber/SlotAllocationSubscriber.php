@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Event\Subscriber;
 
-use App\Mealz\MealBundle\Entity\ParticipantRepository;
 use App\Mealz\MealBundle\Event\SlotAllocationUpdateEvent;
+use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\MealBundle\Service\Publisher\Publisher;
 use App\Mealz\MealBundle\Service\Publisher\PublisherInterface;
+use DateTime;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -15,16 +16,16 @@ class SlotAllocationSubscriber implements EventSubscriberInterface
 {
     private LoggerInterface $logger;
     private PublisherInterface $publisher;
-    private ParticipantRepository $participantRepository;
+    private ParticipationService $participationSrv;
 
     public function __construct(
         LoggerInterface $logger,
         PublisherInterface $publisher,
-        ParticipantRepository $participantRepository
+        ParticipationService $participationSrv
     ) {
         $this->logger = $logger;
         $this->publisher = $publisher;
-        $this->participantRepository = $participantRepository;
+        $this->participationSrv = $participationSrv;
     }
 
     public static function getSubscribedEvents(): array
@@ -36,20 +37,38 @@ class SlotAllocationSubscriber implements EventSubscriberInterface
 
     public function onSlotAllocationUpdate(SlotAllocationUpdateEvent $event): void
     {
-        $slot = $event->getSlot();
-        $day = $event->getDay();
+        // do not publish if update involves only unrestricted slot (limit: 0)
+        if (!$this->eventInvolvesRestrictedSlot($event)) {
+            return;
+        }
 
-        $ok = $this->publisher->publish(
-            Publisher::TOPIC_UPDATE_SLOT,
-            [
-                'slot' => $slot->getSlug(),
-                'date' => $day->format('Ymd'),
-                'count' => $this->participantRepository->getCountBySlot($slot, $day)
-            ]
+        $day = $event->getDay();
+        $this->publish([
+            'date' => $day->format('Ymd'),
+            'slotAllocation' => $this->participationSrv->getSlotsStatusOn($day)
+        ]);
+    }
+
+    private function eventInvolvesRestrictedSlot(SlotAllocationUpdateEvent $event): bool
+    {
+        if (0 < $event->getSlot()->getLimit()) {
+            return true;
+        }
+
+        $prevSlot = $event->getPreviousSlot();
+
+        return $prevSlot && $prevSlot->getLimit() > 0;
+    }
+
+    private function publish(array $data): void
+    {
+        $published = $this->publisher->publish(
+            Publisher::TOPIC_SLOT_ALLOCATION_UPDATES,
+            $data
         );
 
-        if (!$ok) {
-            $this->logger->error('publish error', ['topic' => Publisher::TOPIC_UPDATE_SLOT]);
+        if (!$published) {
+            $this->logger->error('publish failure', ['topic' => Publisher::TOPIC_SLOT_ALLOCATION_UPDATES]);
         }
     }
 }

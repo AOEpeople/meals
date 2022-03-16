@@ -7,6 +7,18 @@ import {CombinedMealService} from "../modules/combined-meal-service";
 import {MercureSubscriber} from "../modules/subscriber/mercure-subscriber";
 import {MealOfferUpdate, MealOfferUpdateHandler} from "../modules/meal-offer-update-handler";
 
+interface SlotAllocationUpdate {
+    date: Date;
+    slotAllocation: {
+        // key: slot, value: count
+        [key: string]: number;
+    };
+}
+
+interface UpdateResponse extends ParticipationResponse {
+    bookedDishSlugs: string[];
+}
+
 export default class MealIndexView {
     participationPreToggleHandler: ParticipationPreToggleHandler;
     $participationCheckboxes: JQuery;
@@ -57,20 +69,32 @@ export default class MealIndexView {
         MealOfferUpdateHandler.handleUpdate($checkbox, data);
     }
 
-    private static handleSlotAllocationUpdate(data: SlotData)
+    private static handleSlotAllocationUpdate(data: SlotAllocationUpdate)
     {
-        let slotOption = $(`#day-${data.date}-slots option[value=${data.slotSlug}]`);
-        if (1 !== slotOption.length) {
+        let $slotSelector = $(`#day-${data.date}-slots`);
+        if (1 !== $slotSelector.length) {
             return;
         }
 
-        const slotLimit = slotOption.data('limit');
-        if (1 > slotLimit) {
-            return;
-        }
+        for (const [slot, count] of Object.entries(data.slotAllocation)) {
+            let $slotOption = $slotSelector.find(`option[value="${slot}"]`);
+            if (1 !== $slotOption.length) {
+                continue;
+            }
 
-        slotOption.text(`${slotOption.data('title')} (${data.slotCount}/${slotLimit})`);
-        slotOption.prop('disabled', slotLimit <= data.slotCount);
+            const slotLimit = $slotOption.data('limit');
+            if (slotLimit > 0) {
+                const slotTitle = $slotOption.data('title');
+                const slotText = `${slotTitle} (${count}/${slotLimit})`;
+                $slotOption.text(slotText);
+                // disable slot-option if no. of booked slots reach the slot limit
+                $slotOption.prop('disabled', slotLimit <= count);
+            }
+
+            if ('' !== $slotSelector.val()) {
+                $slotSelector.find('option[value=""]').hide();
+            }
+        }
     }
 
     private handleChangeSlot(event: JQuery.TriggeredEvent) {
@@ -204,8 +228,4 @@ export default class MealIndexView {
         );
         cmd.open();
     }
-}
-
-interface UpdateResponse extends ParticipationResponse {
-    bookedDishSlugs: string[];
 }

@@ -8,7 +8,6 @@ use App\Mealz\MealBundle\Event\SlotAllocationUpdateEvent;
 use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\MealBundle\Service\Publisher\Publisher;
 use App\Mealz\MealBundle\Service\Publisher\PublisherInterface;
-use DateTime;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -37,7 +36,7 @@ class SlotAllocationSubscriber implements EventSubscriberInterface
 
     public function onSlotAllocationUpdate(SlotAllocationUpdateEvent $event): void
     {
-        // do not publish if update involves only unrestricted slot (limit: 0)
+        // do not publish if update involves unrestricted slot (limit: 0)
         if (!$this->eventInvolvesRestrictedSlot($event)) {
             return;
         }

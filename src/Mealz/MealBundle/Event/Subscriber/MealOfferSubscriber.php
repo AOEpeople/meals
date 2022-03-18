@@ -95,10 +95,10 @@ class MealOfferSubscriber implements EventSubscriberInterface
 
     private function publish(array $data): void
     {
-        $published = $this->publisher->publish(Publisher::TOPIC_MEAL_OFFERS, $data);
+        $published = $this->publisher->publish(Publisher::TOPIC_MEAL_OFFER_UPDATES, $data);
 
         if (!$published) {
-            $this->logger->error('publish failure', ['topic' => Publisher::TOPIC_MEAL_OFFERS]);
+            $this->logger->error('publish failure', ['topic' => Publisher::TOPIC_MEAL_OFFER_UPDATES]);
         }
     }
 

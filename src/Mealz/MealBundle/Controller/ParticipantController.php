@@ -13,7 +13,7 @@ use App\Mealz\MealBundle\Entity\WeekRepository;
 use App\Mealz\MealBundle\Event\MealOfferedEvent;
 use App\Mealz\MealBundle\Event\MealOfferCancelledEvent;
 use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
-use App\Mealz\MealBundle\Event\SlotUpdateEvent;
+use App\Mealz\MealBundle\Event\SlotAllocationUpdateEvent;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\MealBundle\Service\Notification\NotifierInterface;
 use App\Mealz\MealBundle\Service\ParticipationService;
@@ -88,10 +88,7 @@ class ParticipantController extends BaseController
         $entityManager->remove($participant);
         $entityManager->flush();
 
-        $this->eventDispatcher->dispatch(new ParticipationUpdateEvent($participant));
-        if ($participant->getSlot()->getLimit()) {
-            $this->eventDispatcher->dispatch(new SlotUpdateEvent($participant));
-        }
+        $this->triggerDeleteEvents($participant);
 
         if (($this->getDoorman()->isKitchenStaff()) === true) {
             $logger = $this->get('monolog.logger.balance');
@@ -277,5 +274,17 @@ class ParticipantController extends BaseController
         }
 
         return $dishTitle;
+    }
+
+    private function triggerDeleteEvents(Participant $participant): void
+    {
+        $this->eventDispatcher->dispatch(new ParticipationUpdateEvent($participant));
+
+        $slot = $participant->getSlot();
+        if (null !== $slot) {
+            $this->eventDispatcher->dispatch(
+                new SlotAllocationUpdateEvent($participant->getMeal()->getDateTime(), $slot)
+            );
+        }
     }
 }

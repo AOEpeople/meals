@@ -299,14 +299,14 @@ jobs:
       - name: Deploy to staging environment
         env:
           IMAGE: ${{ needs.buildImages.outputs.image }}
-          GITLAB_TRIGGER_TOKEN: ${{ secrets.GITLAB_TRIGGER_TOKEN }}
+          GITLAB_K8S_IT_TRIGGER: ${{ secrets.GITLAB_K8S_IT_TRIGGER }}
         run: |
           curl -X POST \
             -F "ref=master" \
             -F "variables[IMAGE]=$IMAGE" \
             -F "variables[GITHUB_SHA]=$GITHUB_SHA" \
-            -F "token=$GITLAB_TRIGGER_TOKEN" \
-            https://gitlab.aoe.com/api/v4/projects/1504/trigger/pipeline
+            -F "token=$GITLAB_K8S_IT_TRIGGER" \
+            https://gitlab.aoe.com/api/v4/projects/2872/trigger/pipeline
       - name: Notify team
         env:
           COMMIT_MSG: ${{ github.event.head_commit.message }}

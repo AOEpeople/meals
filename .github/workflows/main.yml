@@ -302,7 +302,7 @@ jobs:
           GITLAB_K8S_IT_TRIGGER: ${{ secrets.GITLAB_K8S_IT_TRIGGER }}
         run: |
           curl -X POST \
-            -F "ref=master" \
+            -F "ref=develop" \
             -F "variables[IMAGE]=$IMAGE" \
             -F "variables[GITHUB_SHA]=$GITHUB_SHA" \
             -F "token=$GITLAB_K8S_IT_TRIGGER" \

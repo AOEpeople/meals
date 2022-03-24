@@ -18,7 +18,7 @@ export class ParticipationRequest {
 type ParticipationResponseHandlerMethod = ($checkbox: JQuery, response: ParticipationResponse) => void;
 
 export class ParticipationRequestHandler {
-    static sendRequest(participationRequest: ParticipationRequest, $checkbox: JQuery, handle: ParticipationResponseHandlerMethod) {
+    public static sendRequest(participationRequest: ParticipationRequest, $checkbox: JQuery, handle: ParticipationResponseHandlerMethod) {
         if (undefined === $checkbox) {
             console.log('Error: No checkbox found');
             return;
@@ -28,6 +28,8 @@ export class ParticipationRequestHandler {
             console.log('Error: URL is missing');
             return;
         }
+
+        let self = this
 
         $.ajax({
             method: participationRequest.method,
@@ -39,7 +41,22 @@ export class ParticipationRequestHandler {
             },
             error: function (xhr) {
                 console.log(xhr.status + ': ' + xhr.statusText);
+                if (true === ParticipationRequestHandler.isJoinRequest(participationRequest.url)) {
+                    let mealTitle = $checkbox.closest('.meal-row').children('.title').text();
+                    let errMsg = $('.weeks').data('errJoinNotPossible').replace('%dish%', mealTitle);
+                    ParticipationRequestHandler.sendAlert(errMsg);
+                }
             }
         });
+    }
+
+    private static isJoinRequest(url: string): boolean {
+        return (url.indexOf('join') !== -1);
+    }
+
+    private static sendAlert(message: string):void {
+        if (message.length > 0) {
+            alert(message);
+        }
     }
 }

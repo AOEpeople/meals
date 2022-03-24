@@ -7,7 +7,7 @@
 
 {% block body %}
 
-    <div class="weeks" data-err-update-not-possible="{{ 'error.meal.update_not_allowed' | trans({}, 'messages') }}">
+    <div class="weeks" data-err-update-not-possible="{{ 'error.meal.update_not_allowed' | trans({}, 'messages') }}" data-err-join-not-possible="{{ 'error.meal.join_not_allowed' | trans({}, 'messages') }}">
         {% for week in weeks %}
             {% include 'MealzMealBundle:Meal/partials:week.html.twig' %}
         {% endfor %}

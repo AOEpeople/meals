@@ -369,11 +369,11 @@
     margin-right: 5px;
     padding: 5px 10px 7px 12px;
     border-radius: 20px;
+    white-space: nowrap;
     color: $color-white;
     background: $color-gray-secondary;
     font-size: 12px;
     font-family: $font-bold;
-    white-space: nowrap;
 
     @include breakpoint(small) {
       padding: 5px 10px 7px 5px;

@@ -189,11 +189,15 @@
 
     .description {
       float: left;
-      width: 75%;
+      width: 70%;
+
+      @include breakpoint(small) {
+        width: 62%;
+      }
 
       .dish-combination {
         float: left;
-        width: 90%;
+        width: 83%;
 
         .dish {
           margin-bottom: 5px;
@@ -202,9 +206,10 @@
 
       .price {
         float: right;
-        width: 10%;
+        width: 17%;
         padding: 1px 0;
         font-size: 12px;
+        text-align: right;
       }
     }
 
@@ -309,7 +314,7 @@
     }
 
     @include breakpoint(large) {
-      width: 25%;
+      width: 30%;
     }
   }
 
@@ -332,11 +337,11 @@
     text-align: right;
 
     @include breakpoint(medium) {
-      width: 50%;
+      width: calc(70% - 10px);
     }
 
     @include breakpoint(small) {
-      width: 75%;
+      width: calc(75% - 10px);
     }
   }
 
@@ -346,7 +351,7 @@
     padding-top: 0;
 
     @include breakpoint(medium) {
-      width: 50%;
+      width: 30%;
     }
 
     @include breakpoint(small) {
@@ -368,6 +373,7 @@
     background: $color-gray-secondary;
     font-size: 12px;
     font-family: $font-bold;
+    white-space: nowrap;
 
     @include breakpoint(small) {
       padding: 5px 10px 7px 5px;

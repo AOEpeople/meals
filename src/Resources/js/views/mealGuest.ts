@@ -25,7 +25,7 @@ export default class MealGuestView {
         new MercureSubscribeHandler(['/participant-update'], MealGuestView.handleUpdateParticipation);
     }
 
-    private static handleUpdateParticipation(data: ParticipationCountData) {
+    private static handleUpdateParticipation(data: any) {
         $(`div[data-id=${data.mealId}] .count`).text(data.count);
         if(data.isAvailable) {
             $(`div[data-id=${data.mealId}] .participants-count`)

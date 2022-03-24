@@ -27,27 +27,28 @@ class ParticipationUpdatePublisher implements EventSubscriberInterface
 
     public static function getSubscribedEvents(): array
     {
-        return [
-            ParticipationUpdateEvent::class => 'onParticipationUpdate',
-        ];
+        return [];
+//        return [
+//            ParticipationUpdateEvent::class => 'onParticipationUpdate',
+//        ];
     }
 
     public function onParticipationUpdate(ParticipationUpdateEvent $event): void
     {
-        $count = $event->getParticipant()->getMeal()->getParticipants()->count();
-
-        if ($event->getParticipant()->getProfile() instanceof Profile && $event->getParticipant()->getProfile()->isGuest()) {
-            ++$count;
-        }
-
-        $success = $this->publisher->publish(Publisher::TOPIC_PARTICIPANT_COUNT,
-            [
-                'mealId' => $event->getParticipant()->getMeal()->getId(),
-                'count' => $count,
-                'isAvailable' => $this->participationService->isAvailable($event->getParticipant()->getMeal()),
-            ]);
-        if (!$success) {
-            $this->logger->error('topic publish error', ['topic' => Publisher::TOPIC_PARTICIPANT_COUNT]);
-        }
+//        $count = $event->getParticipant()->getMeal()->getParticipants()->count();
+//
+//        if ($event->getParticipant()->getProfile() instanceof Profile && $event->getParticipant()->getProfile()->isGuest()) {
+//            ++$count;
+//        }
+//
+//        $success = $this->publisher->publish(Publisher::TOPIC_PARTICIPATION_UPDATES,
+//            [
+//                'mealId' => $event->getParticipant()->getMeal()->getId(),
+//                'count' => $count,
+//                'isAvailable' => $this->participationService->isAvailable($event->getParticipant()->getMeal()),
+//            ]);
+//        if (!$success) {
+//            $this->logger->error('topic publish error', ['topic' => Publisher::TOPIC_PARTICIPATION_UPDATES]);
+//        }
     }
 }

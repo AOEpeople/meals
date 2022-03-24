@@ -23,22 +23,26 @@ class ParticipationService
 
     private EntityManagerInterface $em;
     private Doorman $doorman;
+    private MealAvailabilityService $availabilityService;
+
+    private DayRepository $dayRepo;
     private ParticipantRepository $participantRepo;
     private SlotRepository $slotRepo;
-    private DayRepository $dayRepo;
 
     public function __construct(
         EntityManagerInterface $em,
         Doorman $doorman,
+        MealAvailabilityService $availabilityService,
+        DayRepository $dayRepo,
         ParticipantRepository $participantRepo,
-        SlotRepository $slotRepo,
-        DayRepository $dayRepo
+        SlotRepository $slotRepo
     ) {
         $this->em = $em;
         $this->doorman = $doorman;
+        $this->availabilityService = $availabilityService;
+        $this->dayRepo = $dayRepo;
         $this->participantRepo = $participantRepo;
         $this->slotRepo = $slotRepo;
-        $this->dayRepo = $dayRepo;
     }
 
     /**
@@ -327,21 +331,11 @@ class ParticipationService
     }
 
     /**
-     *  checks if a meal has reached his booking limit.
+     * Checks if participation in a given meal is possible.
      */
-    public function isAvailable(Meal $meal): bool
+    public function isOpen(Meal $meal): bool
     {
-        if (!$meal->isOpen()) {
-            return false;
-        }
-
-        if (1 > $meal->getParticipationLimit()) {
-            return true;
-        }
-
-        $mealPartCount = $this->participantRepo->getCountByMeal($meal);
-
-        return $meal->getParticipationLimit() > $mealPartCount;
+        return $this->availabilityService->isAvailable($meal);
     }
 
     public function getCountByMeal(Meal $meal): int

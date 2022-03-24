@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MealForm extends AbstractType
@@ -73,7 +74,13 @@ class MealForm extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Meal::class,
+//            'data_class' => Meal::class,
+            'empty_data' => static function(FormInterface $form) {
+                return new Meal(
+                    $form->get('dish')->getData(),
+                    $form->get('day')->getData()
+                );
+            },
             'error_bubbling' => false,
         ]);
     }

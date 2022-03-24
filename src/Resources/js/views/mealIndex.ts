@@ -7,10 +7,18 @@ import {CombinedMealService} from "../modules/combined-meal-service";
 import {MercureSubscriber} from "../modules/subscriber/mercure-subscriber";
 import {MealOfferUpdate, MealOfferUpdateHandler} from "../modules/meal-offer-update-handler";
 
+interface ParticipationUpdate {
+    mealId: number;
+    count: number;
+    available: boolean;
+    // list of available dishes(-slugs) for next combined meal participation
+    availableWith?: string[];
+}
+
 interface SlotAllocationUpdate {
     date: Date;
     slotAllocation: {
-        // key: slot, value: count
+        // key: slot, value: allocation count
         [key: string]: number;
     };
 }
@@ -30,11 +38,10 @@ export default class MealIndexView {
         if (this.$participationCheckboxes.length > 0) {
             let participationToggleHandler = new ParticipationToggleHandler(this.$participationCheckboxes);
             this.participationPreToggleHandler = new ParticipationPreToggleHandler(participationToggleHandler);
-
         }
 
         let messageSubscriber = new MercureSubscriber($('.weeks').data('msgSubscribeUrl'));
-        messageSubscriber.subscribe(['/participant-update'], MealIndexView.handleUpdateParticipation);
+        messageSubscriber.subscribe(['participation-updates'], MealIndexView.handleParticipationUpdate);
         messageSubscriber.subscribe(['meal-offer-updates'], MealIndexView.handleMealOfferUpdate);
         messageSubscriber.subscribe(['slot-allocation-updates'], MealIndexView.handleSlotAllocationUpdate);
     }
@@ -42,20 +49,43 @@ export default class MealIndexView {
     private initEvents(): void {
         // set handler for slot change event
         $('.meals-list .meal .slot-selector').on('change', this.handleChangeSlot);
-        this.$participationCheckboxes.on('change', MealIndexView.handleParticipationUpdate);
+        this.$participationCheckboxes.on('change', MealIndexView.postToggleParticipation);
         $('.meals-list .meal .meal-row').on('click', ' .title.edit', this.handleCombinedMealEdit.bind(this));
     }
 
-    private static handleUpdateParticipation(data: ParticipationCountData) {
-        $(`div[data-id=${data.mealId}] .count`).text(data.count);
-        if(data.isAvailable) {
-            $(`div[data-id=${data.mealId}] .participants-count`)
-                .removeClass('participation-limit-reached')
-                .addClass('participation-allowed');
-        } else {
-            $(`div[data-id=${data.mealId}] .participants-count`)
-                .removeClass('participation-allowed')
-                .addClass('participation-limit-reached');
+    private static handleParticipationUpdate(data: ParticipationUpdate[]) {
+        for (const [mealId, update] of Object.entries(data)) {
+            console.log(update);
+            let $mealActionWrapper = $(`div[data-id=${mealId}]`);
+            if (1 > $mealActionWrapper.length) {
+                return;
+            }
+
+            $mealActionWrapper.find('.count').text(update.count);
+
+            if (update.available) {
+                $mealActionWrapper.find('.participants-count')
+                    .removeClass('participation-limit-reached')
+                    .addClass('participation-allowed');
+                $mealActionWrapper.find('.checkbox-wrapper')
+                    .removeClass('disabled')
+                    .find('[type=checkbox]')
+                    .prop('disabled', false);
+
+                if (update.availableWith !== undefined) {
+                    $mealActionWrapper
+                        .closest('.meal-row')
+                        .attr('data-available-dishes', update.availableWith.join(','))
+                }
+            } else {
+                $mealActionWrapper.find('.participants-count')
+                    .removeClass('participation-allowed')
+                    .addClass('participation-limit-reached');
+                $mealActionWrapper.find('.checkbox-wrapper')
+                    .addClass('disabled')
+                    .find('[type=checkbox]')
+                    .prop('disabled', true);
+            }
         }
     }
 
@@ -121,12 +151,12 @@ export default class MealIndexView {
         }
     }
 
-    private static handleParticipationUpdate(event: JQuery.TriggeredEvent) {
+    private static postToggleParticipation(event: JQuery.TriggeredEvent) {
         const $updatedDishCheckbox = $(event.target);
         const $mealContainer = $updatedDishCheckbox.closest('.meal');
         let $slotSelector = $mealContainer.find('.slot-selector');
 
-        // do nothing if user is joining a meal
+        // hide default slot option (autoselect) if user joined a meal
         if ($updatedDishCheckbox.is(':checked')) {
             $slotSelector.find('option[value=""]').hide();
             return;
@@ -158,49 +188,7 @@ export default class MealIndexView {
         this.showMealConfigurator($dishContainer);
     }
 
-    private updateSlots() {
-        $.ajax({
-            url: '/participation/slots-status',
-            dataType: 'json',
-            success: function (data) {
-                $.each(data, function (k, v) {
-                    const slotSelectorId = 'day-'+v.date.replaceAll('-', '')+'-slots';
-
-                    let $slotSelector = $('#'+slotSelectorId);
-                    if ($slotSelector.length < 1) {
-                        return;
-                    }
-
-                    let $slotOption = $slotSelector.find('option[value="'+v.slot+'"]');
-
-                    const slotLimit = $slotOption.data('limit');
-                    if (slotLimit > 0) {
-                        const slotTitle = $slotOption.data('title');
-                        const slotText = slotTitle + ' (' + v.booked+'/'+slotLimit + ')';
-                        $slotOption.text(slotText);
-                        // disable slot-option if no. of booked slots reach the slot limit
-                        $slotOption.prop('disabled', slotLimit <= v.booked);
-                    }
-
-                    if (v.booked_by_user) {
-                        // do not overwrite user selected value
-                        if ('' === $slotSelector.val()) {
-                            $slotOption.prop('selected', true);
-                        }
-                        $slotSelector.find('option[value=""]').hide();
-                        $slotSelector.prop('disabled', false);
-                    }
-
-                    if ($slotSelector.hasClass('tmp-disabled') === true) {
-                        $slotSelector.removeClass('tmp-disabled').prop('disabled', false)
-                           .parent().children('.loader').css('visibility', 'hidden');
-                    }
-                });
-            }
-        });
-    } 
-
-    public showMealConfigurator($dishContainer: JQuery): void {
+    private showMealConfigurator($dishContainer: JQuery): void {
         let self = this;
         let $mealContainer = $dishContainer.closest('.meal');
         const slotSlug: string = $mealContainer.find('.slot-selector').val().toString();

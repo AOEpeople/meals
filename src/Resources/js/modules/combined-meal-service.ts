@@ -84,6 +84,10 @@ export class CombinedMealService {
         return false;
     }
 
+    public static isCombinedDish($dishContainer: JQuery): boolean {
+        return $dishContainer.hasClass('combined-meal');
+    }
+
     private static getAllDishes($mealContainer: JQuery): Dish[] {
         let dishes: Dish[] = [];
 
@@ -119,9 +123,9 @@ export class CombinedMealService {
             return;
         }
 
-        let availableDishes = $combinedMeal.attr('data-available-dishes');
+        let availableDishes = $combinedMeal.data('available-dishes');
 
-        return (undefined === availableDishes || '' === availableDishes) ? [] : availableDishes.split(',');
+        return availableDishes === undefined ? [] : availableDishes.split(',');
     }
 
     private static getBookedDishTitles(dishIDs: string[], dishes: Dish[] | DishVariation[]) {
@@ -149,10 +153,6 @@ export class CombinedMealService {
         }
         $dishContainer.attr('data-id', '');
         $dishContainer.attr('data-booked-dishes', '');
-    }
-
-    public static isCombinedDish($dishContainer: JQuery): boolean {
-        return $dishContainer.hasClass('combined-meal');
     }
 
     private static isLockedMeal($mealContainer: JQuery): boolean {

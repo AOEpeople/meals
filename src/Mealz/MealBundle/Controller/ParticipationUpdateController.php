@@ -83,8 +83,13 @@ class ParticipationUpdateController extends BaseController
 
             $participationByDays = ParticipationCountService::getParticipationByDays($week, true);
             if (!empty($participationByDays)) {
+                $now = new DateTime();
                 /** @var Day $day */
                 foreach ($week->getDays() as $day) {
+                    if ($now > $day->getDateTime()) {
+                        continue;
+                    }
+
                     $fmtDate = $day->getDateTime()->format('Y-m-d');
                     /** @var Meal $meal */
                     foreach ($day->getMeals() as $meal) {

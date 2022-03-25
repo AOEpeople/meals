@@ -123,29 +123,31 @@ export class ParticipantCounter {
     }
 
     updateUI() {
-        let self = this;
-        this.$participantsCountWrapper.fadeOut('fast', function () {
-            self.$count.text(self.nextCount + self.offset);
+        this.$count.text(this.nextCount + this.offset);
 
-            let isAvailable = self.isAvailable()
-            self.$participantsCountWrapper.toggleClass('participation-allowed', isAvailable)
+        let isAvailable = this.isAvailable();
+        this.$participantsCountWrapper.toggleClass('participation-allowed', isAvailable);
 
-            if (self.hasLimit()) {
-                self.$limit.text(self.delimiter + Math.floor(self.limit));
-                let limitIsReached = self.isLimitReached();
-                self.$participantsCountWrapper.toggleClass('participation-limit-reached', limitIsReached);
-                self.$participantsCountWrapper.toggleClass('participation-allowed', isAvailable && !limitIsReached);
+        if (this.hasLimit()) {
+            this.$limit.text(this.delimiter + Math.floor(this.limit));
+            let limitIsReached = this.isLimitReached();
+            if (limitIsReached && this.$participantsCountWrapper.hasClass('participation-allowed')) {
+                this.$participantsCountWrapper.removeClass('participation-allowed')
             }
 
-            let oldState = self.getParticipationState();
-            if (oldState !== self.nextState) {
-                if (ParticipationState.DEFAULT !== oldState)
-                    self.$participantsCountWrapper.removeClass(oldState);
-                if (ParticipationState.DEFAULT !== self.nextState)
-                    self.$participantsCountWrapper.addClass(self.nextState);
-            }
+            this.$participantsCountWrapper.toggleClass('participation-allowed', isAvailable && !limitIsReached);
+        }
 
-            self.$participantsCountWrapper.fadeIn('fast');
-        });
+        let oldState = this.getParticipationState();
+        if (oldState !== this.nextState) {
+            if (ParticipationState.DEFAULT !== oldState)
+                this.$participantsCountWrapper.removeClass(oldState);
+            if (ParticipationState.DEFAULT !== this.nextState)
+                this.$participantsCountWrapper.addClass(this.nextState);
+        }
+    }
+
+    toggle(state: boolean) {
+        this.$participantsCountWrapper.toggleClass('participation-allowed', state);
     }
 }

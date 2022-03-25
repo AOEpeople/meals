@@ -175,6 +175,23 @@ class Meal
         return $this->day->getLockParticipationDateTime();
     }
 
+    public function isCombinedMeal(): bool
+    {
+        return $this->dish && $this->dish->isCombinedDish();
+    }
+
+    public function isLocked(): bool
+    {
+        $lockDateTime = $this->getLockDateTime();
+
+        return $lockDateTime && ($lockDateTime <= (new DateTime('now')));
+    }
+
+    public function isOpen(): bool
+    {
+        return $this->dateTime && ($this->dateTime > (new DateTime('now')));
+    }
+
     /**
      * get the participant object of the given profile if it is registered.
      */
@@ -223,11 +240,6 @@ class Meal
         }
 
         return $totalParticipation;
-    }
-
-    public function isCombinedMeal(): bool
-    {
-        return $this->dish && $this->dish->isCombinedDish();
     }
 
     public function __toString()

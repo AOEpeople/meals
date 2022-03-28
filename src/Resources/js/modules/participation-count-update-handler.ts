@@ -77,7 +77,7 @@ export class ParticipationGuestCountUpdateHandler extends AbstractParticipationC
                     let participantCounter = $checkbox.data(ParticipantCounter.NAME);
                     let countStatus = data[participantCounter.getMealId()][participantCounter.getDishSlug()];
                     if (undefined !== countStatus) {
-                        const mealStatus = data[participantCounter.getDay()]['countByMealIds'][participantCounter.getMealId()];
+                        const mealStatus = data[participantCounter.getMealId()];
 
                         let $dishContainer = $checkbox.closest('.meal-row');
                         if (undefined !== mealStatus['availableWith']) {

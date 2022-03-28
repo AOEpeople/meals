@@ -5,7 +5,7 @@
 
 {% set participantsCountClasses = ['participants-count'] %}
 
-{% if day.enabled and not isParticipationLimitReached and (day.lockParticipationDateTime | date('U') > 'now' | date('U')) %}
+{% if day.enabled and availabilityService.available(meal) %}
     {% set participantsCountClasses = participantsCountClasses|merge(['participation-allowed']) %}
 {% endif %}
 

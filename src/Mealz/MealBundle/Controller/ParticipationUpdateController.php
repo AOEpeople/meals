@@ -93,7 +93,13 @@ class ParticipationUpdateController extends BaseController
                     $fmtDate = $day->getDateTime()->format('Y-m-d');
                     /** @var Meal $meal */
                     foreach ($day->getMeals() as $meal) {
-                        $participationByDays[$fmtDate]['countByMealIds'][$meal->getId()]['available'] = $availabilityService->isAvailable($meal);
+                        $availability = $availabilityService->getByMeal($meal);
+                        if (is_bool($availability)) {
+                            $participationByDays[$fmtDate]['countByMealIds'][$meal->getId()]['available'] = $availability;
+                        } else {
+                            $participationByDays[$fmtDate]['countByMealIds'][$meal->getId()]['available'] = $availability['available'];
+                            $participationByDays[$fmtDate]['countByMealIds'][$meal->getId()]['availableWith'] = $availability['availableWith'];
+                        }
                         $participationByDays[$fmtDate]['countByMealIds'][$meal->getId()]['open'] = $meal->isOpen();
                     }
                 }

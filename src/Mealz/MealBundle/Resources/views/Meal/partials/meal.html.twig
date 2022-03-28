@@ -6,6 +6,7 @@
 {% set dishDescription = dish.description|default('content.participation.dish.no_description'|trans({},'general')) %}
 
 {% if dish.isCombinedDish %}
+    {% set availability = availabilityService.byMeal(meal) %}
     {% set bookedDishCombination = participationService.getBookedDishCombination(app.user.profile, meal) %}
     {% if bookedDishCombination|length > 0 %}
         {% set bookedDishTitles = bookedDishCombination.toArray|map(d => d.title) %}
@@ -16,11 +17,14 @@
 
 <div class="meal-row{{ dish.isCombinedDish ? ' combined-meal' }}"
      data-slug="{{ dish.slug }}"
-    {% if participationService.openMeal(meal) -%}
+    {% if participationService.openMeal(meal) %}
         data-id="{{ participant ? participant.id }}"
         data-booked-dishes="{{ combinedDishIDs }}"
         data-description="{{ dishDescription }}"
-    {%- endif -%}
+    {% endif %}
+    {% if dish.isCombinedDish and availability['availableWith'] is defined %}
+        data-available-dishes="{{ availability['availableWith']|join(',') }}"
+    {% endif %}
      data-qa-combined="{{ dish.isCombinedDish ? 1 : 0 }}"
     >
     <div class="title{{ canEditCombinedDish ? ' edit' }}">

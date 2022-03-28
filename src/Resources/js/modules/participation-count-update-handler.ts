@@ -1,5 +1,5 @@
 import {ParticipantCounter} from "./participant-counter";
-import {ParticipationUpdateHandler} from "./participation-update-handler";
+import {ParticipationUpdateData, ParticipationUpdateHandler} from "./participation-update-handler";
 
 export abstract class AbstractParticipationCountUpdateHandler {
     protected readonly updateInterval: number = 5000;
@@ -30,7 +30,15 @@ export class ParticipationCountUpdateHandler extends AbstractParticipationCountU
                     if (undefined !== data[participantCounter.getDay()]) {
                         let countStatus = data[participantCounter.getDay()]['countByMealIds'][participantCounter.getMealId()][participantCounter.getDishSlug()];
                         if (undefined !== countStatus) {
-                            ParticipationUpdateHandler.updateParticipation($checkbox, countStatus['count'], countStatus['limit']);
+                            const mealStatus = data[participantCounter.getDay()]['countByMealIds'][participantCounter.getMealId()];
+                            let update: ParticipationUpdateData = {
+                                mealId: participantCounter.getMealId(),
+                                count: countStatus['count'],
+                                limit: countStatus['limit'],
+                                available: mealStatus['available'],
+                                open: mealStatus['open']
+                            };
+                            ParticipationUpdateHandler.updateParticipation($checkbox, update);
                         } else {
                             console.log("Warning: Values for count status update undefined. No values on " + participantCounter.getDay() + " for meal " + participantCounter.getMealId() + " and dish " + participantCounter.getDishSlug());
                         }
@@ -61,7 +69,15 @@ export class ParticipationGuestCountUpdateHandler extends AbstractParticipationC
                     let participantCounter = $checkbox.data(ParticipantCounter.NAME);
                     let countStatus = data[participantCounter.getMealId()][participantCounter.getDishSlug()];
                     if (undefined !== countStatus) {
-                        ParticipationUpdateHandler.updateParticipation($checkbox, countStatus['count'], countStatus['limit']);
+                        const mealStatus = data[participantCounter.getDay()]['countByMealIds'][participantCounter.getMealId()];
+                        let update: ParticipationUpdateData = {
+                            mealId: participantCounter.getMealId(),
+                            count: countStatus['count'],
+                            limit: countStatus['limit'],
+                            available: mealStatus['available'],
+                            open: mealStatus['open']
+                        };
+                        ParticipationUpdateHandler.updateParticipation($checkbox, update);
                     } else {
                         console.log("Warning: Values for count status update undefined. No values for meal " + participantCounter.getMealId() + " and dish " + participantCounter.getDishSlug());
                     }

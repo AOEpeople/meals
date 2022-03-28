@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Controller;
 
+use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\DayRepository;
+use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\SlotRepository;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Entity\WeekRepository;
+use App\Mealz\MealBundle\Service\MealAvailabilityService;
 use App\Mealz\MealBundle\Service\ParticipationCountService;
 use App\Mealz\MealBundle\Service\ParticipationService;
 use DateTime;
@@ -65,45 +68,69 @@ class ParticipationUpdateController extends BaseController
         return new JsonResponse($data);
     }
 
-    public function getParticipationCountStatus(WeekRepository $weekRepository): JsonResponse
-    {
-        $participations = [];
-        /** @var Week $currentWeek */
-        $currentWeek = $weekRepository->getCurrentWeek();
-        if (null !== $currentWeek) {
-            $participationByDays = ParticipationCountService::getParticipationByDays($currentWeek, true);
+    public function getParticipationCountStatus(
+        WeekRepository $weekRepository,
+        MealAvailabilityService $availabilityService
+    ): JsonResponse {
+        $participation = [];
+        /** @var list<Week|null> $weeks */
+        $weeks = [$weekRepository->getCurrentWeek(), $weekRepository->getNextWeek()];
+
+        foreach ($weeks as $week) {
+            if (null === $week) {
+                continue;
+            }
+
+            $participationByDays = ParticipationCountService::getParticipationByDays($week, true);
             if (!empty($participationByDays)) {
-                $participations = $participationByDays;
+                $now = new DateTime();
+                /** @var Day $day */
+                foreach ($week->getDays() as $day) {
+                    if ($now > $day->getDateTime()) {
+                        continue;
+                    }
+
+                    $fmtDate = $day->getDateTime()->format('Y-m-d');
+                    /** @var Meal $meal */
+                    foreach ($day->getMeals() as $meal) {
+                        $participationByDays[$fmtDate]['countByMealIds'][$meal->getId()]['available'] = $availabilityService->isAvailable($meal);
+                        $participationByDays[$fmtDate]['countByMealIds'][$meal->getId()]['open'] = $meal->isOpen();
+                    }
+                }
+
+                $participation[] = $participationByDays;
             }
         }
 
-        $nextWeek = $weekRepository->getNextWeek();
-        if (null !== $nextWeek) {
-            $participationByDays = ParticipationCountService::getParticipationByDays($nextWeek, true);
-            if (!empty($participationByDays)) {
-                $participations = array_merge($participations, $participationByDays);
-            }
-        }
-
-        if (empty($participations)) {
+        if (empty($participation)) {
             return new JsonResponse(null, 204);
         }
 
-        return new JsonResponse($participations);
+        return new JsonResponse(array_merge([], ...$participation));
     }
 
-    public function getParticipationCountStatusOn(DateTime $date, DayRepository $dayRepository): JsonResponse
-    {
+    public function getParticipationCountStatusOn(
+        DateTime $date,
+        DayRepository $dayRepository,
+        MealAvailabilityService $availabilityService
+    ): JsonResponse {
         $day = $dayRepository->getDayByDate($date);
         if (null === $day) {
             return new JsonResponse(null, 404);
         }
 
-        $participations = ParticipationCountService::getParticipationByDay($day);
-        if (empty($participations[ParticipationCountService::PARTICIPATION_COUNT_KEY])) {
+        $participation = ParticipationCountService::getParticipationByDay($day);
+        if (empty($participation[ParticipationCountService::PARTICIPATION_COUNT_KEY])) {
             return new JsonResponse(null, 204);
         }
 
-        return new JsonResponse($participations[ParticipationCountService::PARTICIPATION_COUNT_KEY]);
+        $fmtDate = $day->getDateTime()->format('Y-m-d');
+        /** @var Meal $meal */
+        foreach ($day->getMeals() as $meal) {
+            $participation[$fmtDate]['countByMealIds'][$meal->getId()]['available'] = $availabilityService->isAvailable($meal);
+            $participation[$fmtDate]['countByMealIds'][$meal->getId()]['open'] = $meal->isOpen();
+        }
+
+        return new JsonResponse($participation[ParticipationCountService::PARTICIPATION_COUNT_KEY]);
     }
 }

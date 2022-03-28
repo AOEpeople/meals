@@ -21,6 +21,14 @@ export interface ToggleData extends AcceptOfferData {
     actionText: string;
 }
 
+export interface ParticipationUpdateData {
+    mealId: number;
+    count: number;
+    limit: number;
+    available: boolean;
+    open: boolean;
+}
+
 export class ParticipationUpdateHandler {
 
     public static toggle($checkbox: JQuery, data: ToggleData) {
@@ -72,18 +80,22 @@ export class ParticipationUpdateHandler {
         $checkboxWrapper.toggleClass('disabled', $checkbox.is(':disabled'));
     }
 
-    private static updateCheckboxEnabled($checkbox: JQuery) {
-        let checkboxEnabled = false;
-        let participantCounter = $checkbox.data(ParticipantCounter.NAME);
-        if (participantCounter.isAvailable()) {
-            checkboxEnabled = !participantCounter.hasLimit()
-                || (participantCounter.hasLimit() && ((participantCounter.isLimitReached() && $checkbox.is(':checked')) || !participantCounter.isLimitReached()));
-        } else {
-            checkboxEnabled =
-                $checkbox.hasClass(ParticipationAction.SWAP)
-                || $checkbox.hasClass(ParticipationAction.UNSWAP)
-                || $checkbox.hasClass(ParticipationAction.ACCEPT_OFFER);
-        }
+    private static updateCheckboxEnabled($checkbox: JQuery, isAvailable: boolean = true, isOpen: boolean = true) {
+        let checkboxEnabled =
+            isAvailable ||
+            (
+                !isAvailable &&
+                $checkbox.is(':checked') &&
+                isOpen
+            ) ||
+            (
+                isOpen &&
+                (
+                    $checkbox.hasClass(ParticipationAction.SWAP) ||
+                    $checkbox.hasClass(ParticipationAction.UNSWAP) ||
+                    $checkbox.hasClass(ParticipationAction.ACCEPT_OFFER)
+                )
+            );
 
         $checkbox.prop('disabled', !checkboxEnabled);
     }
@@ -104,7 +116,7 @@ export class ParticipationUpdateHandler {
         }
     }
 
-    private static changeParticipationCounter($checkbox: JQuery, state?: ParticipationState, count?: number, limit?: number): void {
+    private static changeParticipationCounter($checkbox: JQuery, state?: ParticipationState, count?: number, limit?: number, available: boolean = true): void {
         let participantCounter = $checkbox.data(ParticipantCounter.NAME);
         if ((undefined !== state) ||
             (undefined !== count && count !== participantCounter.getCount()) ||
@@ -114,14 +126,16 @@ export class ParticipationUpdateHandler {
             if (undefined !== state) participantCounter.setNextParticipationState(state);
             participantCounter.updateUI();
         }
+
+        participantCounter.toggle(available);
     }
 
-    public static updateParticipation($checkbox: JQuery, count: number, limit: number) {
+    public static updateParticipation($checkbox: JQuery, data: ParticipationUpdateData) {
         // change
-        this.changeParticipationCounter($checkbox, undefined, count, limit);
+        this.changeParticipationCounter($checkbox, undefined, data['count'], data['limit'], data['available']);
 
         // update
-        this.updateCheckboxEnabled($checkbox);
+        this.updateCheckboxEnabled($checkbox, data['available'], data['open']);
         this.updateCheckBoxWrapper($checkbox);
     }
 

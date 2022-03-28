@@ -5,6 +5,7 @@ namespace App\Mealz\MealBundle\Entity;
 use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\Role;
 use DateTime;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
@@ -340,6 +341,23 @@ class ParticipantRepository extends EntityRepository
                 'startTime' => (clone $date)->setTime(0, 0),
                 'endTime' => (clone $date)->setTime(23, 59),
             ]);
+
+        $result = $queryBuilder->getQuery()->getArrayResult();
+
+        return $result[0]['count'] ?? 0;
+    }
+
+    /**
+     * Returns count of booked meals available to be taken by others on a given $date.
+     */
+    public function getOfferCountByMeal(Meal $meal): int
+    {
+        $queryBuilder = $this->createQueryBuilder('p');
+        $queryBuilder
+            ->join('p.meal', 'm', Join::WITH, 'm.id >= :mealId')
+            ->select('count(p.id) AS count')
+            ->where('p.offeredAt > 0')
+            ->setParameter('mealId', $meal->getId(), ParameterType::INTEGER);
 
         $result = $queryBuilder->getQuery()->getArrayResult();
 

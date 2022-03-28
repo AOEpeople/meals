@@ -1,5 +1,5 @@
-{% set participations = participations[meal.data.id][meal.data.dish.slug] %}
-{% set hasLimit = 0 < participations['limit'] %}
+{% set participation = participation[meal.data.id][meal.data.dish.slug] %}
+{% set hasLimit = 0 < participation['limit'] %}
 {% set participantsCountClasses = ['participants-count'] %}
 {% set checkboxWrapperClasses = ['checkbox-wrapper'] %}
 
@@ -12,10 +12,10 @@
     <div class="participants">
         <span class="{{ participantsCountClasses|join(' ') }}">
             <span>
-                {{- participations["count"] -}}
+                {{- participation["count"] -}}
             </span>
             <label>
-                {{- hasLimit ? ' / ' ~ participations['limit'] -}}
+                {{- hasLimit ? ' / ' ~ participation['limit'] -}}
             </label>
         </span>
     </div>

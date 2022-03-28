@@ -108,7 +108,7 @@ class MealAvailabilityService
         if (($dishCount > 0) && ($dishCount < count($meals))) {
             return [
                 'available' => true,
-                'availableWith' => $dishes
+                'availableWith' => $dishes,
             ];
         }
 
@@ -127,11 +127,11 @@ class MealAvailabilityService
         $dishAvailability = $this->getCombinedMealDishAvailability($meals);
 
         foreach ($dishAvailability as $dishSlug => $availability) {
-            if ($availability === false) {
+            if (false === $availability) {
                 return [];
             }
 
-            if ($availability === true) {
+            if (true === $availability) {
                 $dishes[] = [$dishSlug];
             } elseif (is_array($availability)) {  // $availability contains availability of dish variations
                 $availableItems = array_filter($availability);  // filter out available variations

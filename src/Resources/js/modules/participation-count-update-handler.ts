@@ -31,6 +31,14 @@ export class ParticipationCountUpdateHandler extends AbstractParticipationCountU
                         let countStatus = data[participantCounter.getDay()]['countByMealIds'][participantCounter.getMealId()][participantCounter.getDishSlug()];
                         if (undefined !== countStatus) {
                             const mealStatus = data[participantCounter.getDay()]['countByMealIds'][participantCounter.getMealId()];
+
+                            let $dishContainer = $checkbox.closest('.meal-row');
+                            if (undefined !== mealStatus['availableWith']) {
+                                $dishContainer.attr('data-available-dishes', mealStatus['availableWith'].join(','));
+                            } else {
+                                $dishContainer.attr('data-available-dishes', '');
+                            }
+
                             let update: ParticipationUpdateData = {
                                 mealId: participantCounter.getMealId(),
                                 count: countStatus['count'],
@@ -69,7 +77,15 @@ export class ParticipationGuestCountUpdateHandler extends AbstractParticipationC
                     let participantCounter = $checkbox.data(ParticipantCounter.NAME);
                     let countStatus = data[participantCounter.getMealId()][participantCounter.getDishSlug()];
                     if (undefined !== countStatus) {
-                        const mealStatus = data[participantCounter.getDay()]['countByMealIds'][participantCounter.getMealId()];
+                        const mealStatus = data[participantCounter.getMealId()];
+
+                        let $dishContainer = $checkbox.closest('.meal-row');
+                        if (undefined !== mealStatus['availableWith']) {
+                            $dishContainer.attr('data-available-dishes', mealStatus['availableWith'].join(','));
+                        } else {
+                            $dishContainer.attr('data-available-dishes', '');
+                        }
+
                         let update: ParticipationUpdateData = {
                             mealId: participantCounter.getMealId(),
                             count: countStatus['count'],

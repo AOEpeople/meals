@@ -91,10 +91,14 @@ class ParticipationUpdateController extends BaseController
                     }
 
                     $fmtDate = $day->getDateTime()->format('Y-m-d');
+
                     /** @var Meal $meal */
                     foreach ($day->getMeals() as $meal) {
-                        $participationByDays[$fmtDate]['countByMealIds'][$meal->getId()]['available'] = $availabilityService->isAvailable($meal);
-                        $participationByDays[$fmtDate]['countByMealIds'][$meal->getId()]['open'] = $meal->isOpen();
+                        $this->addAvailability(
+                            $meal,
+                            $participationByDays[$fmtDate]['countByMealIds'][$meal->getId()],
+                            $availabilityService
+                        );
                     }
                 }
 
@@ -124,13 +128,27 @@ class ParticipationUpdateController extends BaseController
             return new JsonResponse(null, 204);
         }
 
-        $fmtDate = $day->getDateTime()->format('Y-m-d');
+        $result = $participation[ParticipationCountService::PARTICIPATION_COUNT_KEY];
+
         /** @var Meal $meal */
         foreach ($day->getMeals() as $meal) {
-            $participation[$fmtDate]['countByMealIds'][$meal->getId()]['available'] = $availabilityService->isAvailable($meal);
-            $participation[$fmtDate]['countByMealIds'][$meal->getId()]['open'] = $meal->isOpen();
+            $this->addAvailability($meal, $result[$meal->getId()], $availabilityService);
         }
 
-        return new JsonResponse($participation[ParticipationCountService::PARTICIPATION_COUNT_KEY]);
+        return new JsonResponse($result);
+    }
+
+    private function addAvailability(Meal $meal, array &$participation, MealAvailabilityService $mas): void
+    {
+        $availability = $mas->getByMeal($meal);
+
+        if (is_bool($availability)) {
+            $participation['available'] = $availability;
+        } else {
+            $participation['available'] = $availability['available'];
+            $participation['availableWith'] = $availability['availableWith'];
+        }
+
+        $participation['open'] = $meal->isOpen();
     }
 }

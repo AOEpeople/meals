@@ -12,6 +12,7 @@ use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Form\Guest\InvitationForm;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\MealBundle\Service\GuestParticipationService;
+use App\Mealz\MealBundle\Service\MealAvailabilityService;
 use App\Mealz\MealBundle\Service\ParticipationCountService;
 use App\Mealz\UserBundle\Entity\Profile;
 use Exception;
@@ -28,8 +29,12 @@ class MealGuestController extends BaseController
     /**
      * @ParamConverter("invitation", options={"id" = "hash"})
      */
-    public function joinAsGuest(Request $request, GuestInvitation $invitation, GuestParticipationService $gps): Response
-    {
+    public function joinAsGuest(
+        Request $request,
+        GuestInvitation $invitation,
+        GuestParticipationService $gps,
+        MealAvailabilityService $availabilityService
+    ): Response {
         $form = $this->getGuestInvitationForm($invitation);
         $form->handleRequest($request);
 
@@ -55,7 +60,8 @@ class MealGuestController extends BaseController
 
         return $this->render('MealzMealBundle:Meal:guest.html.twig', [
             'form' => $form->createView(),
-            'participations' => ParticipationCountService::getParticipationByDay($invitation->getDay())[ParticipationCountService::PARTICIPATION_COUNT_KEY],
+            'participation' => ParticipationCountService::getParticipationByDay($invitation->getDay())[ParticipationCountService::PARTICIPATION_COUNT_KEY],
+            'availabilityService' => $availabilityService,
         ]);
     }
 

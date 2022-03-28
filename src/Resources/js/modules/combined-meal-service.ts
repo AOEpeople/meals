@@ -5,31 +5,31 @@ export class CombinedMealService {
      */
     private static readonly DISH_COUNT = 2;
 
-    public static getDishes($mealContainer: JQuery): Dish[] {
-        let dishes: Dish[] = [];
-        $mealContainer.find('.meal-row').each(function () {
-            const $dishContainer = $(this);
-            if (CombinedMealService.isCombinedDish($dishContainer)) {
-                return;
-            }
+    /**
+     * Gets the available dishes for the combined dish.
+     */
+    public static getDishes($dayMealsContainer: JQuery): Dish[] {
+        let dishes = CombinedMealService.getAllDishes($dayMealsContainer);
+        let availableDishSlugs = CombinedMealService.getAvailableDishSlugs($dayMealsContainer);
 
-            let dish: Dish = {
-                title: $dishContainer.find('.title').contents().get(0).nodeValue.trim(),
-                slug: $dishContainer.data('slug'),
-                variations: []
-            };
-            $dishContainer.find('.variation-row').each(function () {
-                const $dishVarRow = $(this);
-                let dishVariation: DishVariation = {
-                    title: $dishVarRow.find('.text-variation').text().trim(),
-                    slug: $dishVarRow.data('slug')
-                };
-                dish.variations.push(dishVariation);
-            });
-            dishes.push(dish);
+        if (0 === availableDishSlugs.length) {
+            return dishes;
+        }
+
+        let availableDishes: Dish[] = [];
+        dishes.forEach((dish) => {
+            if (dish.slug === undefined) {
+                let dv = dish.variations.filter(dv => availableDishSlugs.includes(dv.slug));
+                if (0 < dv.length) {
+                    dish.variations = dv;
+                    availableDishes.push(dish);
+                }
+            } else if (availableDishSlugs.includes(dish.slug)) {
+                availableDishes.push(dish);
+            }
         });
 
-        return dishes;
+        return availableDishes;
     }
 
     /**
@@ -81,6 +81,46 @@ export class CombinedMealService {
         }
 
         return false;
+    }
+
+    private static getAllDishes($mealContainer: JQuery): Dish[] {
+        let dishes: Dish[] = [];
+
+        $mealContainer.find('.meal-row').each(function () {
+            const $dishContainer = $(this);
+            if (CombinedMealService.isCombinedDish($dishContainer)) {
+                return;
+            }
+
+            let dish: Dish = {
+                title: $dishContainer.find('.title').contents().get(0).nodeValue.trim(),
+                slug: $dishContainer.data('slug'),
+                variations: []
+            };
+            $dishContainer.find('.variation-row').each(function () {
+                const $dishVarRow = $(this);
+                let dishVariation: DishVariation = {
+                    title: $dishVarRow.find('.text-variation').text().trim(),
+                    slug: $dishVarRow.data('slug')
+                };
+                dish.variations.push(dishVariation);
+            });
+            dishes.push(dish);
+        });
+
+        return dishes;
+    }
+
+    private static getAvailableDishSlugs($dayMealsContainer: JQuery): string[] {
+        let $combinedMeal = $dayMealsContainer.find('.combined-meal');
+        if (0 === $combinedMeal.length) {
+            console.log(`error: combined meal not found, date: ${$dayMealsContainer.data('date')}`);
+            return;
+        }
+
+        let availableDishes = $combinedMeal.attr('data-available-dishes');
+
+        return (undefined === availableDishes || '' === availableDishes) ? [] : availableDishes.split(',');
     }
 
     private static getBookedDishTitles(dishIDs: string[], dishes: Dish[] | DishVariation[]) {

@@ -14,11 +14,11 @@ class MealAvailabilityService
     private array $availabilityCache = [];
     private array $participantCount = [];
 
-    private ParticipantRepository $participantRepository;
+    private ParticipantRepository $participantRepo;
 
     public function __construct(ParticipantRepository $participantRepository)
     {
-        $this->participantRepository = $participantRepository;
+        $this->participantRepo = $participantRepository;
     }
 
     /**
@@ -184,7 +184,7 @@ class MealAvailabilityService
 
         // meal is locked and there are offers to overtake the meal
         if ($meal->isLocked()) {
-            return 0 < $this->participantRepository->getOfferCountByMeal($meal);
+            return 0 < $this->participantRepo->getOfferCountByMeal($meal);
         }
 
         // meal is yet to take place, it's not locked and has no participation limit

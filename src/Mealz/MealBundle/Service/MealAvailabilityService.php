@@ -16,9 +16,9 @@ class MealAvailabilityService
 
     private ParticipantRepository $participantRepo;
 
-    public function __construct(ParticipantRepository $participantRepository)
+    public function __construct(ParticipantRepository $participantRepo)
     {
-        $this->participantRepo = $participantRepository;
+        $this->participantRepo = $participantRepo;
     }
 
     /**

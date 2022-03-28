@@ -34,7 +34,7 @@ header {
     float: left;
     margin-top: 11px;
 
-    @include breakpoint(small) {
+    @include breakpoint(medium) {
       float: none;
       margin-bottom: 20px;
       padding: 20px 0;
@@ -60,7 +60,7 @@ header {
       font-size: 16px;
       font-family: $font-bold;
 
-      @include breakpoint(small) {
+      @include breakpoint(medium) {
         &.active {
           text-decoration: underline;
         }
@@ -76,7 +76,7 @@ header {
         content: " ";
         pointer-events: none;
 
-        @include breakpoint(small) {
+        @include breakpoint(medium) {
           border: 0;
         }
       }
@@ -86,7 +86,7 @@ header {
   .header-toggle {
     display: none;
 
-    @include breakpoint(small) {
+    @include breakpoint(medium) {
       display: block;
     }
   }
@@ -97,20 +97,20 @@ header {
     width: calc(100% - #{$logo-width});
     transition: all 0.3s ease;
 
-    @include breakpoint(small) {
+    @include breakpoint(medium) {
       position: absolute;
       top: 65px;
       left: 0;
+      display: none;
       width: 100%;
       padding: 20px;
       background: $header-background;
-      opacity: 0;
 
       &.is-open {
         top: 70px;
         z-index: 10;
+        display: block;
         padding-bottom: 40px;
-        opacity: 1;
       }
 
       .login-form {
@@ -133,7 +133,7 @@ header {
       float: right;
       align-items: center;
 
-      @include breakpoint(small) {
+      @include breakpoint(medium) {
         float: none;
 
         .balance-text {
@@ -168,14 +168,16 @@ header {
       a {
         margin-left: 10px;
         color: $header-link-color;
-
-        @include breakpoint(small) {
-          margin-left: 0;
-        }
       }
 
       a:hover {
         color: $color-white;
+      }
+
+      a.icon {
+        @include breakpoint(medium) {
+          margin-left: 0;
+        }
       }
 
     }
@@ -193,7 +195,7 @@ header {
       text-transform: uppercase;
       transition: all 0.3s ease;
 
-      @include breakpoint(small) {
+      @include breakpoint(medium) {
         position: absolute;
         bottom: 42px;
         left: 20px;
@@ -214,7 +216,7 @@ header {
         max-height: 70%;
         margin: 8% 1px 0 5px;
 
-        @include breakpoint(small) {
+        @include breakpoint(medium) {
           margin: 5px 2px 0 6px;
         }
       }
@@ -224,14 +226,14 @@ header {
         float: left;
         margin: 6px 2px 0;
 
-        @include breakpoint(small) {
+        @include breakpoint(medium) {
           margin: 10px 0 0 3px;
         }
       }
     }
 
     .logged-in a.language-switch {
-      @include breakpoint(small) {
+      @include breakpoint(medium) {
         right: 22px;
         bottom: 23px;
         left: auto;
@@ -241,12 +243,12 @@ header {
     .guest {
       padding-top: 9px;
 
-      @include breakpoint(small) {
+      @include breakpoint(medium) {
         padding-top: 0;
       }
 
       a.language-switch {
-        @include breakpoint(small) {
+        @include breakpoint(medium) {
           right: 70px;
           bottom: 62px;
           left: auto;

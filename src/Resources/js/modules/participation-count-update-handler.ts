@@ -27,28 +27,23 @@ export class ParticipationCountUpdateHandler extends AbstractParticipationCountU
                 $checkboxes.each(function (idx, checkbox) {
                     let $checkbox = $(checkbox);
                     let participantCounter = $checkbox.data(ParticipantCounter.NAME);
-                    if (undefined !== data[participantCounter.getDay()]) {
-                        let countStatus = data[participantCounter.getDay()]['countByMealIds'][participantCounter.getMealId()][participantCounter.getDishSlug()];
-                        if (undefined !== countStatus) {
-                            const mealStatus = data[participantCounter.getDay()]['countByMealIds'][participantCounter.getMealId()];
-
+                    let day = participantCounter.getDay();
+                    if (undefined !== data[day]) {
+                        let mealId = participantCounter.getMealId();
+                        let dishSlug = participantCounter.getDishSlug();
+                        if (undefined !== data[day]['countByMealIds'][mealId][dishSlug]) {
                             let $dishContainer = $checkbox.closest('.meal-row');
+                            const mealStatus = data[day]['countByMealIds'][mealId];
                             if (undefined !== mealStatus['availableWith']) {
                                 $dishContainer.attr('data-available-dishes', mealStatus['availableWith'].join(','));
                             } else {
                                 $dishContainer.attr('data-available-dishes', '');
                             }
 
-                            let update: ParticipationUpdateData = {
-                                mealId: participantCounter.getMealId(),
-                                count: countStatus['count'],
-                                limit: countStatus['limit'],
-                                available: mealStatus['available'],
-                                open: mealStatus['open']
-                            };
+                            let update = getParticipationUpdateData($checkbox, data[day], mealId, dishSlug);
                             ParticipationUpdateHandler.updateParticipation($checkbox, update);
                         } else {
-                            console.log("Warning: Values for count status update undefined. No values on " + participantCounter.getDay() + " for meal " + participantCounter.getMealId() + " and dish " + participantCounter.getDishSlug());
+                            console.log("Warning: Values for count status update undefined. No values on " + day + " for meal " + mealId + " and dish " + dishSlug);
                         }
                     }
                 });
@@ -75,27 +70,21 @@ export class ParticipationGuestCountUpdateHandler extends AbstractParticipationC
                 $checkboxes.each(function (idx, checkbox) {
                     let $checkbox = $(checkbox);
                     let participantCounter = $checkbox.data(ParticipantCounter.NAME);
-                    let countStatus = data[participantCounter.getMealId()][participantCounter.getDishSlug()];
-                    if (undefined !== countStatus) {
-                        const mealStatus = data[participantCounter.getMealId()];
-
+                    let mealId = participantCounter.getMealId();
+                    let dishSlug = participantCounter.getDishSlug();
+                    if (undefined !== data['countByMealIds'][mealId][dishSlug]) {
                         let $dishContainer = $checkbox.closest('.meal-row');
+                        const mealStatus = data['countByMealIds'][mealId];
                         if (undefined !== mealStatus['availableWith']) {
                             $dishContainer.attr('data-available-dishes', mealStatus['availableWith'].join(','));
                         } else {
                             $dishContainer.attr('data-available-dishes', '');
                         }
 
-                        let update: ParticipationUpdateData = {
-                            mealId: participantCounter.getMealId(),
-                            count: countStatus['count'],
-                            limit: countStatus['limit'],
-                            available: mealStatus['available'],
-                            open: mealStatus['open']
-                        };
+                        let update = getParticipationUpdateData($checkbox, data, mealId, dishSlug);
                         ParticipationUpdateHandler.updateParticipation($checkbox, update);
                     } else {
-                        console.log("Warning: Values for count status update undefined. No values for meal " + participantCounter.getMealId() + " and dish " + participantCounter.getDishSlug());
+                        console.log("Warning: Values for count status update undefined. No values for meal " + mealId + " and dish " + dishSlug);
                     }
                 });
             },
@@ -104,4 +93,24 @@ export class ParticipationGuestCountUpdateHandler extends AbstractParticipationC
             }
         });
     }
+}
+
+function getParticipationUpdateData($checkbox: JQuery, data: any, mealId: number, dishSlug: string): ParticipationUpdateData {
+    let count: number, limit: number;
+    let $dishContainer = $checkbox.closest('.meal-row');
+    if ($dishContainer.hasClass('combined-meal')) {
+        count = data['countByMealIds'][mealId][dishSlug]['count'];
+        limit = data['countByMealIds'][mealId][dishSlug]['limit'];
+    } else {
+        limit = data['totalCountByDishSlugs'][dishSlug]['limit'];
+        count = Math.ceil(data['totalCountByDishSlugs'][dishSlug]['count']);
+    }
+
+    return {
+        mealId: mealId,
+        count: count,
+        limit: limit,
+        available: data['countByMealIds'][mealId]['available'],
+        open: data['countByMealIds'][mealId]['open']
+    };
 }

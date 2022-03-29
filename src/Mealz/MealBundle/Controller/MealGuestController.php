@@ -60,7 +60,7 @@ class MealGuestController extends BaseController
 
         return $this->render('MealzMealBundle:Meal:guest.html.twig', [
             'form' => $form->createView(),
-            'participation' => ParticipationCountService::getParticipationByDay($invitation->getDay())[ParticipationCountService::PARTICIPATION_COUNT_KEY],
+            'participation' => ParticipationCountService::getParticipationByDay($invitation->getDay()),
             'availabilityService' => $availabilityService,
         ]);
     }

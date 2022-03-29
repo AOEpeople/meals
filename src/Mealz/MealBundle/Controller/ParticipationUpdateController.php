@@ -128,14 +128,16 @@ class ParticipationUpdateController extends BaseController
             return new JsonResponse(null, 204);
         }
 
-        $result = $participation[ParticipationCountService::PARTICIPATION_COUNT_KEY];
-
         /** @var Meal $meal */
         foreach ($day->getMeals() as $meal) {
-            $this->addAvailability($meal, $result[$meal->getId()], $availabilityService);
+            $this->addAvailability(
+                $meal,
+                $participation['countByMealIds'][$meal->getId()],
+                $availabilityService
+            );
         }
 
-        return new JsonResponse($result);
+        return new JsonResponse($participation);
     }
 
     private function addAvailability(Meal $meal, array &$participation, MealAvailabilityService $mas): void

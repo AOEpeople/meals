@@ -46,6 +46,7 @@ content:
     day:
       disabled: Kein Angebot für diesen Tag!
     meal:
+      clipboard: In die Zwischenablage kopiert!
       no_service: Kein Angebot!
       select_slot: Autoselektion nächster freier Slot
     dish:

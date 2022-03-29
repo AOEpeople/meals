@@ -17,6 +17,12 @@
     }
   }
 
+  .wrapper-variation-vertical-center {
+    @include breakpoint(small) {
+      width: 30%;
+    }
+  }
+
   &.is-available {
     border-color: transparent;
 
@@ -38,17 +44,14 @@
 
   .participants {
     width: 65%;
-    margin-left: 10%;
     text-align: right;
 
     @include breakpoint(small) {
       width: 65%;
-      margin-left: 10%;
     }
 
     @include breakpoint(smaller) {
       width: 75%;
-      margin-left: 0;
     }
   }
 
@@ -61,6 +64,7 @@
 
     .text-variation {
       float: left;
+      width: 70%;
     }
   }
 }

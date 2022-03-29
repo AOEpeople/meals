@@ -1,15 +1,11 @@
 {% set dish = meal.data.dish %}
 <div class="meal-row{{ dish.isCombinedDish ? ' combined-meal' }}"
      data-slug="{{ dish.slug }}"
-     data-description="{{ dish.description|default('content.participation.dish.no_description'|trans({},'general')) }}"
+     data-description="{{ dish.description }}"
      data-qa-combined="{{ dish.isCombinedDish ? 1 : 0 }}">
-    <div class="title">{{ dish.title }}</div>
+    <div class="title{{ not dish.description ? ' no-description'}}">{{ dish.title }}</div>
     <div class="description">
-        {%- if dish.description -%}
-            {{- dish.description -}}
-        {%- else -%}
-            {{- 'content.participation.dish.no_description'|trans({},'general') -}}
-        {%- endif -%}
+        {{- dish.description -}}
     </div>
     {% include 'MealzMealBundle:Meal/partials:guestMealActionsWrapper.html.twig' %}
 </div>

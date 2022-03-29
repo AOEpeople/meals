@@ -3,7 +3,7 @@
 {% set combinedDishIDs = '' %}
 {% set bookedDishTitles = [] %}
 {% set participant = meal.getParticipant(app.user.profile) %}
-{% set dishDescription = dish.description|default('content.participation.dish.no_description'|trans({},'general')) %}
+{% set dishDescription = dish.description %}
 
 {% if dish.isCombinedDish %}
     {% set availability = availabilityService.byMeal(meal) %}
@@ -27,7 +27,7 @@
     {% endif %}
      data-qa-combined="{{ dish.isCombinedDish ? 1 : 0 }}"
     >
-    <div class="title{{ canEditCombinedDish ? ' edit' }}">
+    <div class="title{{ canEditCombinedDish ? ' edit' }}{{ not dishDescription and not bookedDishTitles ? ' no-description'}}">
         {{- dish.title -}}
         {%- if dishService.isNew(dish) %}
             <span class="new-flag">{{ 'content.participation.dish.new'|trans({},'general') }}</span>

@@ -162,6 +162,12 @@
       font-family: $font-bold;
       line-height: 1.5;
 
+      &.no-description {
+        width: 50%;
+        height: 0;
+        margin-top: 5px;
+      }
+
       &.edit:hover {
         cursor: pointer;
       }
@@ -179,7 +185,7 @@
       }
     }
 
-    .text .new-flag {
+    .new-flag {
       padding: 2px 7px;
       color: $color-gray-lighter;
       background-color: $color-red;

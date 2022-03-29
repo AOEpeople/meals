@@ -49,7 +49,6 @@ content:
       no_service: Kein Angebot!
       select_slot: Autoselektion nächster freier Slot
     dish:
-      no_description: Keine Beschreibung
       new: Neu!
     legend:
       available: Verfügbar

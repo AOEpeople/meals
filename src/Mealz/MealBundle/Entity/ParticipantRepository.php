@@ -354,7 +354,7 @@ class ParticipantRepository extends EntityRepository
     {
         $queryBuilder = $this->createQueryBuilder('p');
         $queryBuilder
-            ->join('p.meal', 'm', Join::WITH, 'm.id >= :mealId')
+            ->join('p.meal', 'm', Join::WITH, 'm.id = :mealId')
             ->select('count(p.id) AS count')
             ->where('p.offeredAt > 0')
             ->setParameter('mealId', $meal->getId(), ParameterType::INTEGER);

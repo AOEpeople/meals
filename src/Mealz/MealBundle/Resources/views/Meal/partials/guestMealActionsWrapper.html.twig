@@ -1,27 +1,36 @@
-{% set participation = participation[meal.data.id][meal.data.dish.slug] %}
-{% set hasLimit = 0 < participation['limit'] %}
 {% set participantsCountClasses = ['participants-count'] %}
 {% set checkboxWrapperClasses = ['checkbox-wrapper'] %}
+{% set meal = meal.data %}
 
-{% if availabilityService.available(meal.data) %}
+{% set count = 0 %}
+{% set limit = 0 %}
+{% if dish.isCombinedDish %}
+    {% set count = participation['countByMealIds'][meal.id][meal.dish.slug]['count'] %}
+    {% set limit = participation['countByMealIds'][meal.id][meal.dish.slug]['limit'] %}
+{% else %}
+    {% set count = participation['totalCountByDishSlugs'][meal.dish.slug]['count']|round(0, 'ceil') %}
+    {% set limit = participation['totalCountByDishSlugs'][meal.dish.slug]['limit'] %}
+{% endif %}
+
+{% if availabilityService.available(meal) %}
     {% set participantsCountClasses = participantsCountClasses|merge(['participation-allowed']) %}
 {% else %}
     {% set checkboxWrapperClasses = checkboxWrapperClasses|merge(['disabled']) %}
 {% endif %}
-<div class="wrapper-meal-actions wrapper-variation-vertical-center" data-id="{{ meal.data.id }}">
+<div class="wrapper-meal-actions wrapper-variation-vertical-center" data-id="{{ meal.id }}">
     <div class="participants">
         <span class="{{ participantsCountClasses|join(' ') }}">
             <span>
-                {{- participation["count"] -}}
+                {{- count -}}
             </span>
             <label>
-                {{- hasLimit ? ' / ' ~ participation['limit'] -}}
+                {{- 0 < limit ? ' / ' ~ limit -}}
             </label>
         </span>
     </div>
     <div class="action">
         <div class="{{ checkboxWrapperClasses|join(' ') }}">
-        {{ form_row(form.children.day.children.meals.children[meal.value]) }}
+        {{ form_row(form.children.day.children.meals.children[meal.id]) }}
         </div>
     </div>
 </div>

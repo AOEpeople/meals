@@ -1,7 +1,16 @@
 {% apply spaceless %}
-{% set participations = participations[day.dateTime.format('Y-m-d')]['countByMealIds'][meal.id][meal.dish.slug] %}
-{% set hasLimit = 0 < participations['limit'] %}
+{% set dayParticipation = participations[day.dateTime.format('Y-m-d')] %}
 {% set participantsCountClasses = ['participants-count'] %}
+
+{% set count = 0 %}
+{% set limit = 0 %}
+{% if dish.isCombinedDish %}
+    {% set count = dayParticipation['countByMealIds'][meal.id][meal.dish.slug]['count'] %}
+    {% set limit = dayParticipation['countByMealIds'][meal.id][meal.dish.slug]['limit'] %}
+{% else %}
+    {% set count = dayParticipation['totalCountByDishSlugs'][meal.dish.slug]['count']|round(0, 'ceil') %}
+    {% set limit = dayParticipation['totalCountByDishSlugs'][meal.dish.slug]['limit'] %}
+{% endif %}
 
 {% if day.enabled and availabilityService.available(meal) %}
     {% set participantsCountClasses = participantsCountClasses|merge(['participation-allowed']) %}
@@ -32,8 +41,8 @@
 {% endapply %}
 <div class="participants">
     <span class="{{ participantsCountClasses|join(' ') }}">
-        <span>{{ participations['count'] }}</span>
-        <label>{{ hasLimit ? ' / ' ~ participations['limit'] }}</label>
+        <span>{{ count }}</span>
+        <label>{{ 0 < limit ? ' / ' ~ limit }}</label>
         <span class="{{ tooltipClasses|join(' ') }}">{{ tooltipText|trans({}, "messages") }}</span>
     </span>
 </div>

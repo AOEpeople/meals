@@ -13,7 +13,13 @@
 {% endif %}
 
 {% if day.enabled and availabilityService.available(meal) %}
-    {% set participantsCountClasses = participantsCountClasses|merge(['participation-allowed']) %}
+    {% set participant = meal.getParticipant(app.user.profile) %}
+    {% if meal.locked and not participant %}
+        {% set participantsCountClasses = participantsCountClasses|merge(['participation-allowed']) %}
+    {% endif %}
+    {% if not meal.locked %}
+        {% set participantsCountClasses = participantsCountClasses|merge(['participation-allowed']) %}
+    {% endif %}
 {% endif %}
 
 {% set tooltipClasses = ['tooltiptext'] %}

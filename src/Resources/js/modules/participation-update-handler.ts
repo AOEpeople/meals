@@ -127,7 +127,9 @@ export class ParticipationUpdateHandler {
             participantCounter.updateUI();
         }
 
-        participantCounter.toggle(available);
+        if (available && $checkbox.is('not:checked')) {
+            participantCounter.toggle(available);
+        }
     }
 
     public static updateParticipation($checkbox: JQuery, data: ParticipationUpdateData) {

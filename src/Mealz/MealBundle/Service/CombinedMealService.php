@@ -77,8 +77,8 @@ class CombinedMealService
         $combinedDish->setPrice($this->defaultPrice);
         $combinedDish->setTitleEn(self::COMBINED_DISH_TITLE_EN);
         $combinedDish->setTitleDe('Kombi-Gericht');
-        $combinedDish->setDescriptionEn('Description - ' . $combinedDish->getTitleEn());
-        $combinedDish->setDescriptionDe('Beschreibung - ' . $combinedDish->getTitleDe());
+        $combinedDish->setDescriptionEn('');
+        $combinedDish->setDescriptionDe('');
 
         $this->entityManager->persist($combinedDish);
         $this->entityManager->flush();

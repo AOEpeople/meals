@@ -430,11 +430,13 @@
     visibility: hidden;
     width: 135px;
     margin-left: -60px;
-    padding: 5px 0;
+    padding: 6px 3px;
     border-radius: 6px;
+    white-space: normal;
     color: $color-white;
     background-color: $color-base;
     opacity: 0;
+    line-height: 1.2em;
     text-align: center;
     transition: opacity 1s;
 

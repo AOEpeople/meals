@@ -74,6 +74,7 @@ export class CombinedMealService {
             // update dish description with titles of booked dishes
             const bookedDishTitles = bdt.map(dishTitle => $(`<div class="dish">${dishTitle}</div>`));
             $dishContainer.find('.description .dish-combination').empty().append(...bookedDishTitles);
+            $dishContainer.find('.title').removeClass('no-description');
             // update booked dish IDs in data attribute
             $dishContainer.attr('data-booked-dishes', bookedDishSlugs.join(','));
 
@@ -142,7 +143,7 @@ export class CombinedMealService {
     private static resetDish($dishContainer: JQuery): void {
         let desc = $dishContainer.data('description');
         $dishContainer.find('.description .dish-combination').empty().text(desc);
-        $dishContainer.find('.title').removeClass('edit');
+        $dishContainer.find('.title').removeClass('edit').addClass('no-description');
         $dishContainer.attr('data-id', '');
         $dishContainer.attr('data-booked-dishes', '');
     }

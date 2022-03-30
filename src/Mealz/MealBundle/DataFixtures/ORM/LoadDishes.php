@@ -37,6 +37,18 @@ class LoadDishes extends Fixture implements OrderedFixtureInterface
         $this->addDish('Innards', 'Innards DE');
         $this->addDish('Fish (so juicy sweat)', 'Fish (so juicy sweat) DE');
         $this->addDish('Limbs', 'Limbs DE');
+        $this->addDish(
+            'Century Eggs, paired with a compote of seasonal berries and rye bread',
+            'Century Eggs, serviert mit einem Kompott aus Beeren der Saison und Roggenbrot'
+        );
+        $this->addDish(
+            'Limbs oh la la la (oven backed) + Finger food with a slimy sweet and sour sauce',
+            'Limbs oh la la la (Ofen gebacken) + Finger food mit einer schlammigen Suß-Sauer-Soße'
+        );
+        $this->addDish(
+            'Massaman Curry with Carrots - Potatoes - Coconutcream + Naan Bread',
+            'Massaman Curry mit Karotten - Kartoffeln + Kokosmilch mit Naan Brot'
+        );
 
         $this->objectManager->flush();
     }

@@ -78,34 +78,34 @@ class MealAvailabilityService
      */
     private function getMealAvailability(Meal $meal)
     {
-        if ($meal->isCombinedMeal()) {
-            $simpleMeals = array_filter(
-                $meal->getDay()->getMeals()->toArray(),
-                static fn (Meal $meal) => !$meal->isCombinedMeal()
-            );
-            $availability = $this->getCombinedMealAvailability($simpleMeals);
-        } else {
-            $availability = $this->isMealAvailable($meal);
+        if (!$this->isMealAvailable($meal)) {
+            return false;
         }
 
-        return $availability;
+        if ($meal->isCombinedMeal()) {
+            return $this->getCombinedMealAvailability($meal);
+        }
+
+        return true;
     }
 
-    /**
-     * @param Meal[] $meals Array of simple meals
-     */
-    private function getCombinedMealAvailability(array $meals)
+    private function getCombinedMealAvailability(Meal $meal)
     {
-        $dishes = $this->getCombinedMealAvailableDishes($meals);
+        $simpleMeals = array_filter(
+            $meal->getDay()->getMeals()->toArray(),
+            static fn (Meal $meal) => !$meal->isCombinedMeal()
+        );
+
+        $dishes = $this->getCombinedMealAvailableDishes($simpleMeals);
         $dishCount = count($dishes);
 
         // dish count equals simple meal count, i.e. all dishes all available; unrestricted availability
-        if ($dishCount === count($meals)) {
+        if ($dishCount === count($simpleMeals)) {
             return true;
         }
 
         // dish count is greater than zero, but less than simple meal count; restricted availability
-        if (($dishCount > 0) && ($dishCount < count($meals))) {
+        if (($dishCount > 0) && ($dishCount < count($simpleMeals))) {
             return [
                 'available' => true,
                 'availableWith' => $dishes,

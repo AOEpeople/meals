@@ -144,6 +144,7 @@ export class ParticipationGuestToggleHandler extends AbstractParticipationToggle
         let $dishDesc = $dishContainer.find('.description').empty();
         if (0 === dishSlugs.length) {
             $dishDesc.text($dishContainer.data('description'));
+            $dishContainer.find('.title').addClass('no-description');
             return;
         }
 
@@ -152,6 +153,7 @@ export class ParticipationGuestToggleHandler extends AbstractParticipationToggle
             $dishList.append(`<div class="dish">${dishSlug}</div>`)
         });
         $dishDesc.append($dishList);
+        $dishContainer.find('.title').removeClass('no-description');
     }
 }
 

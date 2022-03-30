@@ -39,15 +39,14 @@ class LoadDishes extends Fixture implements OrderedFixtureInterface
         $this->addDish('Limbs', 'Limbs DE');
         $this->addDish(
             'Century Eggs, paired with a compote of seasonal berries and rye bread',
-            'Century Eggs, serviert mit einem Kompott aus Beeren der Saison und Roggenbrot'
+            'Century Eggs, serviert mit einem Kompott aus Beeren der Saison und Roggenbrot',
+            'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, '
+            . 'sed diam nonumy eirmod tempor invidunt ut labore et dolore '
+            . 'magna aliquyam erat, sed diam voluptua.'
         );
         $this->addDish(
             'Limbs oh la la la (oven backed) + Finger food with a slimy sweet and sour sauce',
-            'Limbs oh la la la (Ofen gebacken) + Finger food mit einer schlammigen Suß-Sauer-Soße'
-        );
-        $this->addDish(
-            'Massaman Curry with Carrots - Potatoes - Coconutcream + Naan Bread',
-            'Massaman Curry mit Karotten - Kartoffeln + Kokosmilch mit Naan Brot'
+            'Limbs oh la la la (Ofen gebacken) + Finger food mit einer schlammigen Süß-Sauer-Soße'
         );
 
         $this->objectManager->flush();
@@ -70,14 +69,14 @@ class LoadDishes extends Fixture implements OrderedFixtureInterface
         return self::ORDER_NUMBER;
     }
 
-    protected function addDish(string $titleEN, string $titleDE): void
+    protected function addDish(string $titleEN, string $titleDE, string $descEN = null, string $descDE = null): void
     {
         $dish = new Dish();
         $dish->setPrice(3.60);
         $dish->setTitleEn($titleEN);
         $dish->setTitleDe($titleDE);
         $dish->setDescriptionEn('Description - ' . $titleEN);
-        $dish->setDescriptionDe('Beschreibung - ' . $titleDE);
+        $dish->setDescriptionDe($descDE ?? $descEN ?? 'Beschreibung - ' . $titleDE);
         $randomCategory = (0 === count($this->categories)) ? null : $this->categories[array_rand($this->categories, 1)];
         $dish->setCategory($randomCategory);
         $this->objectManager->persist($dish);

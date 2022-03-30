@@ -259,11 +259,19 @@ jobs:
             fi
             docker push $tag;
           done
-
+      - name: Image digest
+          id: image_digest
+          env:
+            IMAGE: ${{ needs.buildImages.outputs.image }}
+          run: |
+            docker pull $IMAGE
+            echo "::set-output name=digest::$(docker inspect $IMAGE | jq -r '.[0].RepoDigests[0]' | cut -d'@' -f2)"
       - name: Delete docker image artifact
         uses: geekyeggo/delete-artifact@v1
         with:
           name: docker-images
+    outputs:
+      imageDigest: ${{ steps.image_digest.outputs.digest }}
 
   snyk:
     name: Scan vulnerabilities
@@ -298,13 +306,14 @@ jobs:
     steps:
       - name: Deploy to staging environment
         env:
-          IMAGE: ${{ needs.buildImages.outputs.image }}
+          IMAGE_TAG: ${{ needs.buildImages.outputs.image }}
+          IMAGE_DIGEST: ${{ needs.publish.outputs.imageDigest }}
           GITLAB_K8S_IT_TRIGGER: ${{ secrets.GITLAB_K8S_IT_TRIGGER }}
         run: |
           curl -X POST \
             -F "ref=develop" \
-            -F "variables[IMAGE]=$IMAGE" \
-            -F "variables[GITHUB_SHA]=$GITHUB_SHA" \
+            -F "variables[IMAGE_TAG]=$IMAGE_TAG" \
+            -F "variables[IMAGE_DIGEST]=$IMAGE_DIGEST" \
             -F "token=$GITLAB_K8S_IT_TRIGGER" \
             https://gitlab.aoe.com/api/v4/projects/2872/trigger/pipeline
       - name: Notify team

@@ -30,6 +30,10 @@ class DishService
      */
     public function isNew(Dish $dish): bool
     {
+        if ($dish->isCombinedDish()) {
+            return false;
+        }
+
         return $this->dishRepository->countNumberDishWasTaken($dish, '0000-01-01') < $this->newFlagThreshold;
     }
 }

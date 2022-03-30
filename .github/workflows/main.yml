@@ -260,12 +260,12 @@ jobs:
             docker push $tag;
           done
       - name: Image digest
-          id: image_digest
-          env:
-            IMAGE: ${{ needs.buildImages.outputs.image }}
-          run: |
-            docker pull $IMAGE
-            echo "::set-output name=digest::$(docker inspect $IMAGE | jq -r '.[0].RepoDigests[0]' | cut -d'@' -f2)"
+        id: image_digest
+        env:
+          IMAGE: ${{ needs.buildImages.outputs.image }}
+        run: |
+          docker pull $IMAGE
+          echo "::set-output name=digest::$(docker inspect $IMAGE | jq -r '.[0].RepoDigests[0]' | cut -d'@' -f2)"
       - name: Delete docker image artifact
         uses: geekyeggo/delete-artifact@v1
         with:

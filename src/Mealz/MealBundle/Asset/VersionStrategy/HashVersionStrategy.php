@@ -13,6 +13,6 @@ class HashVersionStrategy implements VersionStrategyInterface
 
     public function applyVersion($path)
     {
-        return sprintf('%s?v=%s', $path, $this->getVersion($path));
+        return file_exists($path) === true ? sprintf('%s?v=%s', $path, $this->getVersion($path)) : '';
     }
 }

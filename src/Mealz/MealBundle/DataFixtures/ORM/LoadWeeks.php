@@ -51,7 +51,7 @@ class LoadWeeks extends Fixture implements OrderedFixtureInterface
     private function getCurrentTestWeeks(): array
     {
         $currentWeeks = [];
-        $date = new DateTime('first monday of -2 months');
+        $date = new DateTime('first monday of -5 months');
         $maxDate = new DateTime('+1 month');
 
         while ($date < $maxDate) {

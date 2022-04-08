@@ -74,7 +74,7 @@ class MealForm extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-//            'data_class' => Meal::class,
+            'data_class' => Meal::class,
             'empty_data' => static function(FormInterface $form) {
                 return new Meal(
                     $form->get('dish')->getData(),

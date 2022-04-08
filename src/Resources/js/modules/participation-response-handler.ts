@@ -20,7 +20,7 @@ export interface ToggleResponse extends SwapResponse {
 
 
 export class ParticipationResponseHandler {
-    public static onSuccessfulToggle($checkbox: JQuery, response: ToggleResponse) {
+    public static onToggle($checkbox: JQuery, response: ToggleResponse) {
         const data: ToggleData = {
             participantID: response.id,
             actionText: response.actionText,
@@ -32,7 +32,7 @@ export class ParticipationResponseHandler {
         ParticipationUpdateHandler.toggle($checkbox, data);
     }
 
-    public static onSuccessfulAcceptOffer($checkbox: JQuery, response: ToggleResponse) {
+    public static onAcceptOffer($checkbox: JQuery, response: ToggleResponse) {
         const data: AcceptOfferData = {
             participantID: response.id,
             url: response.url,
@@ -42,11 +42,11 @@ export class ParticipationResponseHandler {
         ParticipationUpdateHandler.acceptOffer($checkbox, data);
     }
 
-    public static onSuccessfulSwap($checkbox: JQuery, response: SwapResponse) {
-        ParticipationUpdateHandler.changeToUnswapState($checkbox, response.url, response.id);
+    public static onOffer($checkbox: JQuery, response: SwapResponse) {
+        ParticipationUpdateHandler.setOffered($checkbox, response.url, response.id);
     }
 
-    public static onSuccessfulUnswap($checkbox: JQuery, response: SwapResponse) {
-        ParticipationUpdateHandler.changeToSwapState($checkbox, response.url);
+    public static onRollbackOffer($checkbox: JQuery, response: SwapResponse) {
+        ParticipationUpdateHandler.rollbackOffer($checkbox, response.url);
     }
 }

@@ -4,11 +4,11 @@
         {% set participant = meal.getParticipant(app.user.profile) %}
         {% if participant %}
             {% if is_allowed_to_leave(meal) %}
-                {{ MealzCheckbox.create(link(participant, 'delete') ,'participation-checkbox delete-action', {'checked': 'checked'}) }}
+                {{ MealzCheckbox.create(link(participant, 'delete') ,'participation-checkbox delete-action', {'checked': 'checked', 'data-action': 'delete'}) }}
             {% elseif is_allowed_to_unswap(meal, participant) %}
-                {{ MealzCheckbox.create(link(participant, 'unswap') ,'participation-checkbox unswap-action', {'checked': 'checked', 'data-participant-id': participant.getId}) }}
+                {{ MealzCheckbox.create(link(participant, 'unswap') ,'participation-checkbox unswap-action', {'checked': 'checked', 'data-action': 'rollbackOffer', 'data-participant-id': participant.getId}) }}
             {% elseif is_allowed_to_swap(meal) %}
-                {{ MealzCheckbox.create(link(participant, 'swap') ,'participation-checkbox swap-action', {'checked': 'checked'}) }}
+                {{ MealzCheckbox.create(link(participant, 'swap') ,'participation-checkbox swap-action', {'checked': 'checked', 'data-action': 'offer'}) }}
             {% else %}
                 {{ MealzCheckbox.create('' ,'participation-checkbox', {'checked': 'checked', 'disabled': 'disabled'}) }}
             {% endif %}
@@ -16,7 +16,7 @@
             {% if is_allowed_to_join(meal) %}
                 {{ MealzCheckbox.create(link(meal, 'join') ,'participation-checkbox join-action', {'data-action': 'join'}) }}
             {% elseif is_offer_available(meal) and is_allowed_to_swap(meal) %}
-                {{ MealzCheckbox.create(link(meal, 'accept_offer') , 'participation-checkbox acceptOffer-action') }}
+                {{ MealzCheckbox.create(link(meal, 'accept_offer') , 'participation-checkbox acceptOffer-action', {'data-action': 'acceptOffer'}) }}
             {% else %}
                 {{ MealzCheckbox.create('' ,'participation-checkbox', {'disabled': 'disabled'}) }}
             {% endif %}

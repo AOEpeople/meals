@@ -369,7 +369,7 @@ class ParticipantRepository extends EntityRepository
     }
 
     /**
-     * Returns count of booked meals available to be taken by others on a given $date.
+     * Returns count of booked meals available to be taken over by others.
      */
     public function getOfferCountByMeal(Meal $meal): int
     {
@@ -379,28 +379,6 @@ class ParticipantRepository extends EntityRepository
             ->select('count(p.id) AS count')
             ->where('p.offeredAt > 0')
             ->setParameter('mealId', $meal->getId(), ParameterType::INTEGER);
-
-        $result = $queryBuilder->getQuery()->getArrayResult();
-
-        return $result[0]['count'] ?? 0;
-    }
-
-    /**
-     * Returns count of booked meals available to be taken by others.
-     */
-    public function getOfferCountByMeal(Meal $meal): int
-    {
-        $mealDate = $meal->getDateTime();
-        $queryBuilder = $this->createQueryBuilder('p');
-        $queryBuilder
-            ->join('p.meal', 'm', Join::WITH, 'm.dateTime >= :startDate AND m.dateTime <= :endDate AND m.id = :mealId')
-            ->select('count(p.id) AS count')
-            ->where('p.offeredAt != 0')
-            ->setParameters([
-                'mealId' => $meal->getId(),
-                'startDate' => (clone $mealDate)->setTime(0, 0),
-                'endDate' => (clone $mealDate)->setTime(23, 59, 59),
-            ]);
 
         $result = $queryBuilder->getQuery()->getArrayResult();
 

@@ -1,12 +1,12 @@
 import {ParticipationGuestToggleHandler} from "../modules/participation-toggle-handler";
 import {ParticipationPreToggleHandler} from "../modules/participation-pre-toggle-handler";
 import {MercureSubscribeHandler} from "../modules/mercure-subscribe-handler";
+import {ParticipationUpdateHandler} from "../modules/participation-update-handler";
 
 export default class MealGuestView {
     $participationCheckboxes: JQuery;
     $slotDropDown: JQuery;
     mealDate: string;
-    mercureSubscribeHandler: MercureSubscribeHandler;
 
     constructor() {
         this.$participationCheckboxes = $('.meal-guest input[type="checkbox"]');
@@ -22,20 +22,7 @@ export default class MealGuestView {
             new ParticipationPreToggleHandler(participationToggleHandler);
         }
 
-        new MercureSubscribeHandler(['/participant-update'], MealGuestView.handleUpdateParticipation);
-    }
-
-    private static handleUpdateParticipation(data: any) {
-        $(`div[data-id=${data.mealId}] .count`).text(data.count);
-        if(data.isAvailable) {
-            $(`div[data-id=${data.mealId}] .participants-count`)
-                .removeClass('participation-limit-reached')
-                .addClass('participation-allowed');
-        } else {
-            $(`div[data-id=${data.mealId}] .participants-count`)
-                .removeClass('participation-allowed')
-                .addClass('participation-limit-reached');
-        }
+        new MercureSubscribeHandler(['participation-updates'], ParticipationUpdateHandler.updateParticipation);
     }
 
     private updateSlots() {

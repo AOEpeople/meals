@@ -46,10 +46,10 @@ class MealAvailabilityService
         $dayId = $meal->getDay()->getId();
 
         if (!isset($this->availabilityCache[$dayId][$mealId])) {
-            $this->availabilityCache[$dayId][$mealId] = $this->getMealAvailability($meal);
+            $this->availabilityCache[$dayId] = $this->getAvailability($meal->getDay()->getMeals());
         }
 
-        return $this->availabilityCache[$dayId][$mealId];
+        return $this->availabilityCache[$dayId][$mealId] ?? false;
     }
 
     public function isAvailable(Meal $meal): bool

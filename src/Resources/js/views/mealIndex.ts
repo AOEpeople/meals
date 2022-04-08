@@ -6,14 +6,7 @@ import {ParticipationResponse} from "../modules/participation-response-handler";
 import {CombinedMealService} from "../modules/combined-meal-service";
 import {MercureSubscriber} from "../modules/subscriber/mercure-subscriber";
 import {MealOfferUpdate, MealOfferUpdateHandler} from "../modules/meal-offer-update-handler";
-
-interface ParticipationUpdate {
-    mealId: number;
-    count: number;
-    available: boolean;
-    // list of available dishes(-slugs) for next combined meal participation
-    availableWith?: string[];
-}
+import {ParticipationUpdateHandler} from "../modules/participation-update-handler";
 
 interface SlotAllocationUpdate {
     date: Date;
@@ -41,7 +34,7 @@ export default class MealIndexView {
         }
 
         let messageSubscriber = new MercureSubscriber($('.weeks').data('msgSubscribeUrl'));
-        messageSubscriber.subscribe(['participation-updates'], MealIndexView.handleParticipationUpdate);
+        messageSubscriber.subscribe(['participation-updates'], ParticipationUpdateHandler.updateParticipation);
         messageSubscriber.subscribe(['meal-offer-updates'], MealIndexView.handleMealOfferUpdate);
         messageSubscriber.subscribe(['slot-allocation-updates'], MealIndexView.handleSlotAllocationUpdate);
     }
@@ -51,42 +44,6 @@ export default class MealIndexView {
         $('.meals-list .meal .slot-selector').on('change', this.handleChangeSlot);
         this.$participationCheckboxes.on('change', MealIndexView.postToggleParticipation);
         $('.meals-list .meal .meal-row').on('click', ' .title.edit', this.handleCombinedMealEdit.bind(this));
-    }
-
-    private static handleParticipationUpdate(data: ParticipationUpdate[]) {
-        for (const [mealId, update] of Object.entries(data)) {
-            console.log(update);
-            let $mealActionWrapper = $(`div[data-id=${mealId}]`);
-            if (1 > $mealActionWrapper.length) {
-                return;
-            }
-
-            $mealActionWrapper.find('.count').text(update.count);
-
-            if (update.available) {
-                $mealActionWrapper.find('.participants-count')
-                    .removeClass('participation-limit-reached')
-                    .addClass('participation-allowed');
-                $mealActionWrapper.find('.checkbox-wrapper')
-                    .removeClass('disabled')
-                    .find('[type=checkbox]')
-                    .prop('disabled', false);
-
-                if (update.availableWith !== undefined) {
-                    $mealActionWrapper
-                        .closest('.meal-row')
-                        .attr('data-available-dishes', update.availableWith.join(','))
-                }
-            } else {
-                $mealActionWrapper.find('.participants-count')
-                    .removeClass('participation-allowed')
-                    .addClass('participation-limit-reached');
-                $mealActionWrapper.find('.checkbox-wrapper')
-                    .addClass('disabled')
-                    .find('[type=checkbox]')
-                    .prop('disabled', true);
-            }
-        }
     }
 
     private static handleMealOfferUpdate(data: MealOfferUpdate) {

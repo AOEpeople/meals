@@ -340,6 +340,12 @@ class ParticipationService
 
     public function getCountByMeal(Meal $meal): int
     {
-        return $this->participantRepo->getCountByMeal($meal);
+        $participation = ParticipationCountService::getParticipationByDay($meal->getDay());
+
+        if ($meal->isCombinedMeal()) {
+            return $participation['countByMealIds'][$meal->getId()][$meal->getDish()->getSlug()]['count'] ?? 0;
+        }
+
+        return (int) ceil($participation['totalCountByDishSlugs'][$meal->getDish()->getSlug()]['count'] ?? 0);
     }
 }

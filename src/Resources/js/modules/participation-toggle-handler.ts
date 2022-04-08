@@ -5,7 +5,6 @@ import {
     ParticipationRequestHandler
 } from "./participation-request-handler";
 import {ConfirmSwapDialog} from "./confirm-swap-dialog";
-import {ParticipationAction} from "./participation-update-handler";
 import {CombinedMealService} from "./combined-meal-service";
 
 export abstract class AbstractParticipationToggleHandler {
@@ -41,41 +40,34 @@ export abstract class AbstractParticipationToggleHandler {
 
 export class ParticipationToggleHandler extends AbstractParticipationToggleHandler {
     public toggle($checkbox: JQuery, data?: {}) {
-        let participationRequest;
-        let requestData = data;
-        const url = $checkbox.attr('value');
-
-        if ($checkbox.hasClass(ParticipationAction.JOIN) && undefined === requestData) {
+        const action = $checkbox.attr('data-action');
+        if ('join' === action && undefined === data) {
             let slotSlug: string = $checkbox.closest('.meal').find('.slot-selector').val().toString();
-            requestData = {
-                'slot': slotSlug
-            }
+            data = { 'slot': slotSlug }
         }
 
-        participationRequest = new ParticipationRequest(url, requestData);
+        const url = $checkbox.attr('value');
+        let request = new ParticipationRequest(url, data);
 
-        let handlerMethod;
-        if ($checkbox.hasClass(ParticipationAction.SWAP)) {
-            handlerMethod = ParticipationResponseHandler.onSuccessfulSwap;
-            let csd = new ConfirmSwapDialog(
-                {
-                    participationRequest,
-                    $checkbox,
-                    handlerMethod
-                }
-            );
-
-            csd.open();
-        } else {
-            if ($checkbox.hasClass(ParticipationAction.UNSWAP)) {
-                handlerMethod = ParticipationResponseHandler.onSuccessfulUnswap;
-            } else if ($checkbox.hasClass(ParticipationAction.ACCEPT_OFFER)) {
-                handlerMethod = ParticipationResponseHandler.onSuccessfulAcceptOffer;
-            } else { // JOIN or DELETE
-                handlerMethod = ParticipationResponseHandler.onSuccessfulToggle;
-            }
-
-            ParticipationRequestHandler.sendRequest(participationRequest, $checkbox, handlerMethod);
+        switch (action) {
+            case 'join':
+            case 'delete':
+                ParticipationRequestHandler.sendRequest(request, $checkbox, ParticipationResponseHandler.onToggle);
+                break;
+            case 'acceptOffer':
+                ParticipationRequestHandler.sendRequest(request, $checkbox, ParticipationResponseHandler.onAcceptOffer);
+                break;
+            case 'rollbackOffer':
+                ParticipationRequestHandler.sendRequest(request, $checkbox, ParticipationResponseHandler.onRollbackOffer);
+                break;
+            case 'offer':
+                let dialog = new ConfirmSwapDialog({
+                    participationRequest: request,
+                    $checkbox: $checkbox,
+                    handlerMethod: ParticipationResponseHandler.onOffer,
+                });
+                dialog.open();
+                break;
         }
     }
 

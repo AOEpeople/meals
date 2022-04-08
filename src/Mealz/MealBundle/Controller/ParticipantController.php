@@ -67,7 +67,7 @@ class ParticipantController extends BaseController
         );
     }
 
-    public function delete(Participant $participant): JsonResponse
+    public function delete(Participant $participant, ParticipationService $participationSrv): JsonResponse
     {
         if (false === is_object($this->getUser())) {
             return $this->ajaxSessionExpiredRedirect();
@@ -105,7 +105,7 @@ class ParticipantController extends BaseController
         }
 
         return new JsonResponse([
-            'participantsCount' => $meal->getParticipants()->count(),
+            'participantsCount' => $participationSrv->getCountByMeal($meal),
             'url' => $this->generateUrl('MealzMealBundle_Meal_join', [
                 'date' => $date,
                 'dish' => $dish,

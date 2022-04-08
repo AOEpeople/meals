@@ -1,4 +1,4 @@
-import {ParticipationAction, ParticipationUpdateHandler} from "./participation-update-handler";
+import {ParticipationUpdateHandler} from "./participation-update-handler";
 
 export enum MealOfferStates {
     New = 'new',
@@ -33,15 +33,12 @@ export class MealOfferUpdateHandler {
                     return;
                 }
 
-                MealOfferUpdateHandler.handleMealOfferAccepted($checkbox, data.participantId);
-
-                if (!data.available) {
-                    MealOfferUpdateHandler.handleAllTaken($checkbox);
-                }
+                MealOfferUpdateHandler.handleMealOfferAccepted($checkbox, data.participantId, data.available);
 
                 break;
             case MealOfferStates.Gone:
-                MealOfferUpdateHandler.handleAllTaken($checkbox);
+                ParticipationUpdateHandler.changeToOfferIsGone($checkbox);
+
                 break;
         }
     }
@@ -50,38 +47,38 @@ export class MealOfferUpdateHandler {
      * Handles event when a meal is offered.
      */
     static handleNewMealOffer($checkbox: JQuery, date: string, dishSlug: string): void {
-        if ($checkbox.is(':checked') === false &&
-            $checkbox.hasClass(ParticipationAction.UNSWAP) === false &&
-            $checkbox.hasClass(ParticipationAction.ACCEPT_OFFER) === false &&
-            $checkbox.hasClass(ParticipationAction.JOIN) === false) {
-            ParticipationUpdateHandler.changeToOfferIsAvailable(
-                $checkbox,
-                `/menu/${date}/${dishSlug}/accept-offer`
-            );
+        if ($checkbox.is(':checked')) {
+            return; // Meal is already booked
         }
+
+        const nextAction = $checkbox.attr('data-action');
+        if (undefined !== nextAction && '' !== nextAction) {
+            return; // Meal is open to overtake, i.e. accept offered meal
+        }
+
+        ParticipationUpdateHandler.changeToOfferIsAvailable(
+            $checkbox,
+            `/menu/${date}/${dishSlug}/accept-offer`
+        );
     }
 
     /**
      * Handles event when an offered meals is accepted by some user.
+     *
+     * @param $checkbox     Meal Checkbox
+     * @param participantId Participant's ID whose offered meal got accepted.
+     * @param available     Is the accepted/taken meal is still available, i.e. still being offered.
      */
-    static handleMealOfferAccepted($checkbox: JQuery, participantId: number): void {
-        if ($checkbox.hasClass(ParticipationAction.UNSWAP) === true) {
-            if (isNaN(participantId)) {
-                console.log('Error: Participant-ID is not a number');
-                return;
-            }
-            if (participantId === $checkbox.data('participantId')) {
-                ParticipationUpdateHandler.changeToOfferIsTaken($checkbox);
-            }
+    static handleMealOfferAccepted($checkbox: JQuery, participantId: number, available: boolean): void {
+        if (isNaN(participantId)) {
+            console.log('Error: Participant-ID is not a number');
+            return;
         }
-    }
-
-    /**
-     * Handles event when all offered meals are taken.
-     */
-    static handleAllTaken($checkbox: JQuery): void {
-        if ($checkbox.hasClass(ParticipationAction.ACCEPT_OFFER) === true) {
-            ParticipationUpdateHandler.changeToOfferIsGone($checkbox);
+        // change participation state for
+        // - offerer whose meal has been taken, or
+        // - everyone if meal is no longer available
+        if (participantId === $checkbox.data('participantId') || !available) {
+            ParticipationUpdateHandler.changeToOfferIsTaken($checkbox, available);
         }
     }
 }

@@ -110,13 +110,16 @@ class MealController extends BaseController
 
         $this->triggerJoinEvents($eventDispatcher, $result['participant'], $result['offerer']);
 
-        if (null !== $result['offerer']) {
-            return $this->generateResponse('MealzMealBundle_Participant_swap', 'added', $result['participant']);
+        $participationCount = $participationSrv->getCountByMeal($meal);
+
+        if (null === $result['offerer']) {
+            $this->logAdd($meal, $result['participant']);
+            $nextActionRoute = 'MealzMealBundle_Participant_delete';
+        } else {
+            $nextActionRoute = 'MealzMealBundle_Participant_swap';
         }
 
-        $this->logAdd($meal, $result['participant']);
-
-        return $this->generateResponse('MealzMealBundle_Participant_delete', 'added', $result['participant']);
+        return $this->generateResponse($nextActionRoute, 'added', $result['participant'], $participationCount);
     }
 
     /**
@@ -137,8 +140,12 @@ class MealController extends BaseController
         return $profileRepository->find($profileId);
     }
 
-    private function generateResponse(string $route, string $action, Participant $participant): JsonResponse
-    {
+    private function generateResponse(
+        string $route,
+        string $action,
+        Participant $participant,
+        int $participantCount
+    ): JsonResponse {
         $bookedDishSlugs = [];
         $dishes = $participant->getCombinedDishes();
 
@@ -151,7 +158,7 @@ class MealController extends BaseController
 
         return new JsonResponse([
             'id' => $participant->getId(),
-            'participantsCount' => $meal->getParticipants()->count(),
+            'participantsCount' => $participantCount,
             'url' => $this->generateUrl(
                 $route,
                 [

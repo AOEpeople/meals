@@ -22,6 +22,7 @@ export interface AcceptOfferData {
 export interface ToggleData extends AcceptOfferData {
     actionText: string;
     slot: string;
+    available: boolean
 }
 
 export interface ParticipationUpdateData {
@@ -32,12 +33,42 @@ export interface ParticipationUpdateData {
     locked: boolean;
 }
 
-export class ParticipationUpdateHandler {
+interface CheckboxAttributes {
+    value: string;
+    checked: boolean;
+    disabled: boolean;
+    action: string;
+    participantID: number;
+}
 
+interface Status {
+    state: State;
+    action?: string;
+    actionURL?: string;
+    count?: number;
+    participantID?: number;
+}
+
+export class ParticipationUpdateHandler {
+    /**
+     * Handles event when a user successfully accepts an offered meal.
+     *
+     * @param $checkbox Meal Checkbox
+     * @param data      Server response
+     */
     public static acceptOffer($checkbox: JQuery, data: AcceptOfferData): void {
-        this.rollbackOffer($checkbox, data.url);
+        this.updateStatus($checkbox, {
+            state: State.BOOKED_AND_CLOSED,
+            action: 'offer',
+            actionURL: data.url
+        });
+        this.toggleTooltip($checkbox);
 
         let $dishContainer = $checkbox.closest('.meal-row');
+        if (1 > $dishContainer.length) {
+            return;
+        }
+
         if (CombinedMealService.isCombinedDish($dishContainer)) {
             CombinedMealService.updateDishes($checkbox, data.participantID, data.bookedDishSlugs);
         }
@@ -47,11 +78,20 @@ export class ParticipationUpdateHandler {
         for (const [mealId, update] of Object.entries(data)) {
             let $checkbox = $(`div[data-id=${mealId}] input[type=checkbox]`);
             if (1 > $checkbox.length) {
+                console.error(`checkbox not found, mealId: ${mealId}`);
                 continue;
             }
 
-            const state = ParticipationUpdateHandler.getState($checkbox, update.available, update.locked);
-            ParticipationUpdateHandler.updateStatus($checkbox, state, update.count);
+            const state = ParticipationUpdateHandler.getNextState(
+                $checkbox,
+                $checkbox.prop('checked'),
+                update.available,
+                update.locked
+            );
+            ParticipationUpdateHandler.updateStatus($checkbox, {
+                state: state,
+                count: update.count
+            });
 
             if (update.availableWith === undefined) {
                 continue;
@@ -71,30 +111,53 @@ export class ParticipationUpdateHandler {
         $assignedSlot.prop('selected', 'selected');
     }
 
+    /**
+     * Handles event when a meal is offered to be taken over by other users.
+     *
+     * @param $checkbox Meal Checkbox
+     * @param url       URL to send the accept-meal request
+     */
     public static changeToOfferIsAvailable($checkbox: JQuery, url: string) {
-        this.updateCheckboxAttributes($checkbox, 'acceptOffer', url);
-        this.updateStatus($checkbox, State.OPEN);
+        this.updateStatus($checkbox, {
+            state: State.OPEN,
+            action: 'acceptOffer',
+            actionURL: url
+        });
         this.toggleTooltip($checkbox, TooltipLabel.AVAILABLE_MEAL);
     }
 
     /**
+     * Handles event when an offered meal is accepted by some user.
+     *
      * @param $checkbox Meal Checkbox
-     * @param available Is the accepted/taken meal is still available, i.e. still being offered.
+     * @param offererId Participant-ID of the accepted meal
+     * @param available Weather or not the accepted/taken meal is still available, i.e. still being offered
      */
-    public static changeToOfferIsTaken($checkbox: JQuery, available: boolean = false) {
-        let nextState = State.CLOSED;
-
-        if (available) {
-            nextState = State.OPEN;
-            const acceptOfferURL = ParticipationUpdateHandler.getAcceptOfferURL($checkbox);
-            this.updateCheckboxAttributes($checkbox, 'acceptOffer', acceptOfferURL)
-        } else {
-            this.updateCheckboxAttributes($checkbox)
+    public static offerAccepted($checkbox: JQuery, offererId: number, available: boolean = false) {
+        let $dishContainer = $checkbox.closest('.meal-row');
+        if (1 > $dishContainer.length) {
+            console.error('dish container not found');
+            return;
         }
 
-        this.updateStatus($checkbox, nextState);
+        // unset OFFERED state if participant-ID and offerer-ID are same, i.e. current user's meal got accepted
+        const participantId = Number($dishContainer.attr('data-id'));
+        if (offererId === participantId) {
+            if (available) {
+                ParticipationUpdateHandler.updateStatus($checkbox, {
+                    state: State.OPEN,
+                    action: 'acceptOffer',
+                    actionURL: ParticipationUpdateHandler.getAcceptOfferURL($checkbox),
+                    participantID: null
+                });
+            } else {
+                ParticipationUpdateHandler.updateStatus($checkbox, { state: State.CLOSED });
+            }
 
-        if (CombinedMealService.isCombinedDish($checkbox)) {
+            return;
+        }
+
+        if (CombinedMealService.isCombinedDish($dishContainer)) {
             CombinedMealService.updateDishes($checkbox, undefined, []);
         }
 
@@ -102,18 +165,21 @@ export class ParticipationUpdateHandler {
     }
 
     public static changeToOfferIsGone($checkbox: JQuery) {
-        const state = ParticipationUpdateHandler.getState($checkbox, false, true);
-
-        if (State.CLOSED === state) {   // clear previously set accept meal attributes
-            ParticipationUpdateHandler.updateCheckboxAttributes($checkbox);
-        }
-
-        this.updateStatus($checkbox, state);
+        const nextState = ParticipationUpdateHandler.getNextState(
+            $checkbox,
+            $checkbox.prop('checked'),
+            false,
+            true
+        );
+        this.updateStatus($checkbox, {state: nextState});
     }
 
     public static rollbackOffer($checkbox: JQuery, url: string) {
-        this.updateCheckboxAttributes($checkbox, 'offer', url);
-        this.updateStatus($checkbox, State.BOOKED_AND_CLOSED);
+        this.updateStatus($checkbox, {
+            state: State.BOOKED_AND_CLOSED,
+            action: 'offer',
+            actionURL: url
+        });
         this.toggleTooltip($checkbox);
     }
 
@@ -125,23 +191,39 @@ export class ParticipationUpdateHandler {
      * @param participantId Meal participant ID
      */
     public static setOffered($checkbox: JQuery, url: string, participantId: number) {
-        this.updateCheckboxAttributes($checkbox, 'rollbackOffer', url, participantId);
-        this.updateStatus($checkbox, State.OFFERED);
+        this.updateStatus($checkbox, {
+            state: State.OFFERED,
+            action: 'rollbackOffer',
+            actionURL: url,
+            participantID: participantId
+        });
         this.toggleTooltip($checkbox, TooltipLabel.OFFERED_MEAL);
     }
 
     public static toggle($checkbox: JQuery, data: ToggleData): void {
         const nextAction = ('deleted' === data.actionText) ? 'join' : 'delete';
-        ParticipationUpdateHandler.updateCheckboxAttributes($checkbox, nextAction, data.url);
-
-        const state = (nextAction === 'join') ? State.OPEN : State.BOOKED;
-        ParticipationUpdateHandler.updateStatus($checkbox, state, data.participantsCount);
+        const state = ParticipationUpdateHandler.getNextState(
+            $checkbox,
+            !$checkbox.prop('checked'),
+            data.available,
+            false
+        );
+        ParticipationUpdateHandler.updateStatus($checkbox, {
+            state: state,
+            count: data.participantsCount,
+            action: nextAction,
+            actionURL: data.url
+        });
 
         if ('added' === data.actionText && data.slot !== '') {
             ParticipationUpdateHandler.changeToAssignedSlot($checkbox, data.slot);
         }
 
         let $dishContainer = $checkbox.closest('.meal-row');
+        if (1 > $dishContainer.length) {
+            return;
+        }
+
         if (CombinedMealService.isCombinedDish($dishContainer)) {
             CombinedMealService.updateDishes($checkbox, data.participantID, data.bookedDishSlugs);
         }
@@ -161,42 +243,65 @@ export class ParticipationUpdateHandler {
         return `/menu/${date}/${dishSlug}/accept-offer`;
     }
 
-    private static getState($checkbox: JQuery, available: boolean, locked: boolean): State {
+    /**
+     * @param $checkbox Meal Checkbox
+     * @param check     Weather or not the meal checkbox be checked
+     * @param available Weather or not the meal is available
+     * @param locked    Weather or not the meal is locked
+     * @private
+     */
+    private static getNextState($checkbox: JQuery, check: boolean, available: boolean, locked: boolean): State {
         if (available) {
             // no participation, and meal is not locked
-            if (!$checkbox.is(':checked') && !locked) {
+            if (!check && !locked) {
                 return State.OPEN;
             }
             // no participation, and meal is locked
-            if (!$checkbox.is(':checked') && locked) {
+            if (!check && locked) {
                 return State.CLOSED;
             }
-            // participation and meal is locked
-            if ($checkbox.is(':checked') && locked) {
-                return State.BOOKED_AND_CLOSED;
+            // participation, and meal is locked
+            if (check && locked) {
+                return ('rollbackOffer' === $checkbox.attr('data-action')) ? State.OFFERED : State.BOOKED_AND_CLOSED;
             }
-            if ($checkbox.is(':checked') && !locked) {
+            if (check && !locked) {
                 return State.BOOKED;
             }
         }
 
-        // no participation and meal is not available
-        if (!$checkbox.is(':checked')) {
+        // no participation, and meal is not available
+        if (!check) {
             return State.CLOSED;
         }
 
-        // participation; meal is locked and offered
-        if (locked && ('rollbackOffer' === $checkbox.attr('data-action'))) {
-            return State.OFFERED;
-        }
-
-        // participation and meal is not available
+        // participation, and meal is not available
         return State.BOOKED_AND_CLOSED;
     }
 
-    private static updateStatus($checkbox: JQuery, state: State, count?: number): void {
-        ParticipationUpdateHandler.setState($checkbox, state);
-        ParticipationUpdateHandler.setCount($checkbox, state, count);
+    private static updateStatus($checkbox: JQuery, status: Status): void {
+        const state = status.state;
+        const checked = state === State.BOOKED || state === State.BOOKED_AND_CLOSED || state === State.OFFERED;
+        const disabled = state === State.CLOSED;
+
+        let attrs: Partial<CheckboxAttributes> = {
+            checked: checked,
+            disabled: disabled,
+        };
+
+        if (State.CLOSED === state) {
+            attrs.action = null;
+            attrs.value = '';
+            attrs.participantID = null;
+        } else {
+            attrs.action = status.action;
+            attrs.value = status.actionURL;
+            attrs.participantID = status.participantID;
+        }
+
+        ParticipationUpdateHandler.updateCheckboxAttributes($checkbox, attrs);
+        this.updateCheckboxWrapper($checkbox);
+
+        ParticipationUpdateHandler.setCount($checkbox, state, status.count);
     }
 
     private static setCount($checkbox: JQuery, state: State, count?: number): void {
@@ -227,24 +332,6 @@ export class ParticipationUpdateHandler {
         }
     }
 
-    private static setState($checkbox: JQuery, state: State): void {
-        const checked = state === State.BOOKED || state === State.BOOKED_AND_CLOSED || state === State.OFFERED;
-        const disabled = state === State.CLOSED;
-        $checkbox
-            .prop('checked', checked)
-            .trigger('change')
-            .prop('disabled', disabled);
-
-        if (!checked) {
-            $checkbox.removeAttr('checked');
-        }
-        if (!disabled) {
-            $checkbox.removeAttr('disabled');
-        }
-
-        this.updateCheckboxWrapper($checkbox);
-    }
-
     private static toggleTooltip($checkbox: JQuery, label?: TooltipLabel) {
         let $tooltip = $checkbox.closest('.wrapper-meal-actions').find('.tooltiptext');
         if (undefined !== label) {
@@ -269,25 +356,40 @@ export class ParticipationUpdateHandler {
     }
 
     /**
-     * @param $checkbox     Meal Checkbox
-     * @param action        Action performed on next state change of checkbox
-     * @param value         Checkbox value
-     * @param participantId Participant-ID
+     * @param $checkbox Meal Checkbox
+     * @param attrs     Checkbox attributes
      * @private
      */
-    private static updateCheckboxAttributes($checkbox: JQuery, action?: string, value?: string, participantId?: number) {
-        if (undefined === action) {
-            $checkbox.removeAttr('data-action');
-        } else {
-            $checkbox.attr('data-action', action);
+    private static updateCheckboxAttributes($checkbox: JQuery, attrs: Partial<CheckboxAttributes>) {
+        if (undefined !== attrs.checked) {
+            $checkbox.prop('checked', attrs.checked).trigger('change');
+            if (false === attrs.checked) {
+                $checkbox.removeAttr('checked');
+            }
+        }
+        if (undefined !== attrs.disabled) {
+            $checkbox.prop('disabled', attrs.disabled);
+            if (false === attrs.disabled) {
+                $checkbox.removeAttr('disabled');
+            }
+        }
+        if (undefined !== attrs.action) {
+            if (null === attrs.action) {
+                $checkbox.removeAttr('data-action');
+            } else {
+                $checkbox.attr('data-action', attrs.action);
+            }
+        }
+        if (undefined !== attrs.value) {
+            $checkbox.attr('value', attrs.value);
         }
 
-        $checkbox.attr('value', (undefined === value) ? '' : value);
-
-        if (undefined === participantId) {
-            $checkbox.removeAttr('data-participant-id');
-        } else {
-            $checkbox.attr('data-participant-id', participantId);
+        if (undefined !== attrs.participantID) {
+            if (null === attrs.participantID) {
+                $checkbox.removeAttr('data-participant-id');
+            } else {
+                $checkbox.attr('data-participant-id', attrs.participantID);
+            }
         }
     }
 }

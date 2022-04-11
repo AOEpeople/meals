@@ -32,16 +32,17 @@ use Symfony\Component\HttpFoundation\Response;
 
 class MealController extends BaseController
 {
+    private MealAvailabilityService $availabilityService;
     private OfferService $offerService;
 
-    public function __construct(OfferService $offerService)
+    public function __construct(OfferService $offerService, MealAvailabilityService $availabilityService)
     {
+        $this->availabilityService = $availabilityService;
         $this->offerService = $offerService;
     }
 
     public function index(
         DishService $dishService,
-        MealAvailabilityService $availabilityService,
         ParticipationService $participationService,
         SlotRepository $slotRepo,
         WeekRepository $weekRepository
@@ -57,7 +58,7 @@ class MealController extends BaseController
         }
 
         return $this->render('MealzMealBundle:Meal:index.html.twig', [
-            'availabilityService' => $availabilityService,
+            'availabilityService' => $this->availabilityService,
             'dishService' => $dishService,
             'participationService' => $participationService,
             'weeks' => [$currentWeek, $nextWeek],
@@ -168,6 +169,7 @@ class MealController extends BaseController
             'actionText' => $action,
             'bookedDishSlugs' => $bookedDishSlugs,
             'slot' => $slot ? $slot->getSlug() : '',
+            'available' => $this->availabilityService->isAvailable($meal)
         ]);
     }
 

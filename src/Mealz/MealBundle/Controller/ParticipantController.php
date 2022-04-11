@@ -15,6 +15,7 @@ use App\Mealz\MealBundle\Event\MealOfferCancelledEvent;
 use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
 use App\Mealz\MealBundle\Event\SlotAllocationUpdateEvent;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;
+use App\Mealz\MealBundle\Service\MealAvailabilityService;
 use App\Mealz\MealBundle\Service\Notification\NotifierInterface;
 use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\UserBundle\Entity\Profile;
@@ -67,8 +68,11 @@ class ParticipantController extends BaseController
         );
     }
 
-    public function delete(Participant $participant, ParticipationService $participationSrv): JsonResponse
-    {
+    public function delete(
+        MealAvailabilityService $availabilityService,
+        Participant $participant,
+        ParticipationService $participationSrv
+    ): JsonResponse {
         if (false === is_object($this->getUser())) {
             return $this->ajaxSessionExpiredRedirect();
         }
@@ -112,6 +116,7 @@ class ParticipantController extends BaseController
                 'profile' => $profile,
             ]),
             'actionText' => 'deleted',
+            'available' => $availabilityService->isAvailable($meal),
         ]);
     }
 

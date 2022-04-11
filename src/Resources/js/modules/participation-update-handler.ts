@@ -93,16 +93,16 @@ export class ParticipationUpdateHandler {
                 count: update.count
             });
 
-            if (update.availableWith === undefined) {
-                continue;
-            }
-
             let $mealContainer = $checkbox.closest('.meal-row');
             if (1 > $mealContainer.length) {
                 continue;
             }
 
-            $mealContainer.attr('data-available-dishes', update.availableWith.join(','))
+            if (update.availableWith === undefined) {
+                $mealContainer.attr('data-available-dishes', '');
+            } else {
+                $mealContainer.attr('data-available-dishes', update.availableWith.join(','))
+            }
         }
     }
 

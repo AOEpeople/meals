@@ -128,9 +128,9 @@ export class CombinedMealService {
             return;
         }
 
-        let availableDishes = $combinedMeal.data('available-dishes');
+        let availableDishes = $combinedMeal.attr('data-available-dishes');
 
-        return availableDishes === undefined ? [] : availableDishes.split(',');
+        return availableDishes === undefined || availableDishes === '' ? [] : availableDishes.split(',');
     }
 
     private static getBookedDishTitles(dishIDs: string[], dishes: Dish[] | DishVariation[]) {

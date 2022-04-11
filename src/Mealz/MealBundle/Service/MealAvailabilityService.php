@@ -183,7 +183,7 @@ class MealAvailabilityService
             return false;
         }
 
-        return ($participantCount + $factor) <= (float) $participationLimit;
+        return ($participantCount + $factor) < (float) $participationLimit;
     }
 
     private function getParticipantCount(Meal $meal): ?int

@@ -60,7 +60,7 @@ class InvitationForm extends AbstractType
                 },
                 'choice_value' => 'slug',
                 /* @SuppressWarnings(PHPMD.UnusedFormalParameter) */
-                'choice_attr' => static function (Slot $slot, string $key, string $slug) {
+                'choice_attr' => static function (Slot $slot) {
                     return [
                         'data-limit' => $slot->getLimit(),
                         'data-title' => $slot->getTitle(),

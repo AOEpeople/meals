@@ -7,14 +7,7 @@ import {CombinedMealService} from "../modules/combined-meal-service";
 import {MercureSubscriber} from "../modules/subscriber/mercure-subscriber";
 import {MealOfferUpdate, MealOfferUpdateHandler} from "../modules/meal-offer-update-handler";
 import {ParticipationUpdateHandler} from "../modules/participation-update-handler";
-
-interface SlotAllocationUpdate {
-    date: Date;
-    slotAllocation: {
-        // key: slot, value: allocation count
-        [key: string]: number;
-    };
-}
+import {SlotAllocationUpdateHandler} from "../modules/slot-allocation-update-handler";
 
 interface UpdateResponse extends ParticipationResponse {
     bookedDishSlugs: string[];
@@ -36,7 +29,7 @@ export default class MealIndexView {
         let messageSubscriber = new MercureSubscriber($('.weeks').data('msgSubscribeUrl'));
         messageSubscriber.subscribe(['participation-updates'], ParticipationUpdateHandler.updateParticipation);
         messageSubscriber.subscribe(['meal-offer-updates'], MealIndexView.handleMealOfferUpdate);
-        messageSubscriber.subscribe(['slot-allocation-updates'], MealIndexView.handleSlotAllocationUpdate);
+        messageSubscriber.subscribe(['slot-allocation-updates'], SlotAllocationUpdateHandler.handleUpdate);
     }
 
     private initEvents(): void {
@@ -54,34 +47,6 @@ export default class MealIndexView {
         }
 
         MealOfferUpdateHandler.handleUpdate($checkbox, data);
-    }
-
-    private static handleSlotAllocationUpdate(data: SlotAllocationUpdate)
-    {
-        let $slotSelector = $(`#day-${data.date}-slots`);
-        if (1 !== $slotSelector.length) {
-            return;
-        }
-
-        for (const [slot, count] of Object.entries(data.slotAllocation)) {
-            let $slotOption = $slotSelector.find(`option[value="${slot}"]`);
-            if (1 !== $slotOption.length) {
-                continue;
-            }
-
-            const slotLimit = $slotOption.data('limit');
-            if (slotLimit > 0) {
-                const slotTitle = $slotOption.data('title');
-                const slotText = `${slotTitle} (${count}/${slotLimit})`;
-                $slotOption.text(slotText);
-                // disable slot-option if no. of booked slots reach the slot limit
-                $slotOption.prop('disabled', slotLimit <= count);
-            }
-
-            if ('' !== $slotSelector.val()) {
-                $slotSelector.find('option[value=""]').hide();
-            }
-        }
     }
 
     private handleChangeSlot(event: JQuery.TriggeredEvent) {

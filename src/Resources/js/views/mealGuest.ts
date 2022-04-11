@@ -1,7 +1,8 @@
 import {ParticipationGuestToggleHandler} from "../modules/participation-toggle-handler";
 import {ParticipationPreToggleHandler} from "../modules/participation-pre-toggle-handler";
-import {MercureSubscribeHandler} from "../modules/mercure-subscribe-handler";
 import {ParticipationUpdateHandler} from "../modules/participation-update-handler";
+import {MercureSubscriber} from "../modules/subscriber/mercure-subscriber";
+import {SlotAllocationUpdateHandler} from "../modules/slot-allocation-update-handler";
 
 export default class MealGuestView {
     $participationCheckboxes: JQuery;
@@ -22,7 +23,9 @@ export default class MealGuestView {
             new ParticipationPreToggleHandler(participationToggleHandler);
         }
 
-        new MercureSubscribeHandler(['participation-updates'], ParticipationUpdateHandler.updateParticipation);
+        let messageSubscriber = new MercureSubscriber($('[data-msg-subscribe-url]').data('msgSubscribeUrl'));
+        messageSubscriber.subscribe(['participation-updates'], ParticipationUpdateHandler.updateParticipation);
+        messageSubscriber.subscribe(['slot-allocation-updates'], SlotAllocationUpdateHandler.handleUpdate);
     }
 
     private updateSlots() {

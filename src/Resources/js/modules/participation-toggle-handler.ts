@@ -88,13 +88,6 @@ export class ParticipationGuestToggleHandler extends AbstractParticipationToggle
         $checkbox.prop('checked', !$checkbox.is(':checked'));
         let $checkboxWrapper = $checkbox.closest('.checkbox-wrapper');
         $checkboxWrapper.toggleClass('checked', $checkbox.is(':checked'));
-
-        let participantCounter = $checkbox.data(ParticipantCounter.NAME);
-        if ((!participantCounter.hasOffset() && $checkbox.is(':checked')) ||
-            (participantCounter.hasOffset() && !$checkbox.is(':checked'))) {
-            participantCounter.toggleOffset();
-            participantCounter.updateUI();
-        }
     }
 
     private updateDishSelection($checkbox: JQuery, data?: Array<Entry>) {

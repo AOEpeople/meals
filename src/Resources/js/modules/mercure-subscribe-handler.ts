@@ -1,4 +1,4 @@
-export class MercureSubscribeHandler{
+export class MercureSubscribeHandler {
 
     private eventSource: EventSource;
 
@@ -8,7 +8,6 @@ export class MercureSubscribeHandler{
         topics.forEach(topic => {
             url.searchParams.append('topic', topic);
         });
-        console.log(url)
 
         this.eventSource  = new EventSource(url);
         this.eventSource.onmessage = ({data}) => onRecieve(JSON.parse(data));

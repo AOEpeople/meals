@@ -46,10 +46,10 @@ content:
     day:
       disabled: No service this day!
     meal:
+      clipboard: Copied to clipboard!
       no_service: No service!
       select_slot: Autoselect next free slot
     dish:
-      no_description: No description
       new: New!
     legend:
       available: Available

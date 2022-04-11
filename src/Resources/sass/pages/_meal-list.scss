@@ -153,6 +153,10 @@
       &:first-child::before {
         background: $color-green;
       }
+
+      &:nth-child(3)::before {
+        background: $color-orange;
+      }
     }
   }
 

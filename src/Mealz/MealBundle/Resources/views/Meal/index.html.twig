@@ -20,6 +20,7 @@
     <ul class="legend">
         <li>{{ 'content.participation.legend.available' | trans({}, 'general') }}</li>
         <li>{{ 'content.participation.legend.unavailable' | trans({}, 'general') }}</li>
+        <li>{{ 'content.participation.legend.tradeable' | trans({}, 'general') }}</li>
         {% if is_granted('ROLE_KITCHEN_STAFF') %}
             <li class="print">
                 {{ MealzButton.link(

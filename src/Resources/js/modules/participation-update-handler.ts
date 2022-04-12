@@ -1,5 +1,6 @@
 import {Labels, TooltipLabel} from "./labels";
 import {CombinedMealService} from "./combined-meal-service";
+import {MealService} from "./meal-service";
 
 /**
  * Meal States
@@ -88,9 +89,12 @@ export class ParticipationUpdateHandler {
                 update.available,
                 update.locked
             );
+            const [action, url] = ParticipationUpdateHandler.stateToAction($checkbox, state);
             ParticipationUpdateHandler.updateStatus($checkbox, {
                 state: state,
-                count: update.count
+                count: update.count,
+                action: action,
+                actionURL: url
             });
 
             let $mealContainer = $checkbox.closest('.meal-row');
@@ -147,7 +151,7 @@ export class ParticipationUpdateHandler {
                 ParticipationUpdateHandler.updateStatus($checkbox, {
                     state: State.OPEN,
                     action: 'acceptOffer',
-                    actionURL: ParticipationUpdateHandler.getAcceptOfferURL($checkbox),
+                    actionURL: ParticipationUpdateHandler.getURL($checkbox, 'acceptOffer'),
                     participantID: null
                 });
             } else {
@@ -229,18 +233,40 @@ export class ParticipationUpdateHandler {
         }
     }
 
-    private static getAcceptOfferURL($checkbox: JQuery): string {
-        const date = $checkbox.closest('[data-date]').data('date');
-        if (undefined === date || '' === date) {
+    private static getURL($checkbox: JQuery, action: string): string {
+        if ('join' === action || 'acceptOffer' === action) {
+            const date = MealService.getDate($checkbox);
+            if (null === date) {
+                return '';
+            }
+
+            const dishSlug = MealService.getDishSlug($checkbox);
+            if (null === dishSlug) {
+                return '';
+            }
+
+            if ('join' === action) {
+                return `/menu/${date}/${dishSlug}/join`;
+            }
+
+            return `/menu/${date}/${dishSlug}/accept-offer`;
+        }
+
+        const participantId = MealService.getParticipantId($checkbox);
+        if (null === participantId) {
             return '';
         }
 
-        const dishSlug = $checkbox.closest('[data-slug]').data('slug');
-        if (undefined === dishSlug || '' === dishSlug) {
-            return '';
+        switch (action) {
+            case 'delete':
+                return `/menu/meal/${participantId}/delete`;
+            case 'offer':
+                return `/menu/meal/${participantId}/offer-meal`;
+            case 'rollbackOffer':
+                return `/menu/meal/${participantId}/cancel-offered-meal`;
         }
 
-        return `/menu/${date}/${dishSlug}/accept-offer`;
+        return '';
     }
 
     /**
@@ -390,6 +416,24 @@ export class ParticipationUpdateHandler {
             } else {
                 $checkbox.attr('data-participant-id', attrs.participantID);
             }
+        }
+    }
+
+    /**
+     * Returns the (next) action and corresponding request URL to the given meal state.
+     */
+    private static stateToAction($checkbox: JQuery, state: State): string[] {
+        switch (state) {
+            case State.OPEN:
+                return ['join', ParticipationUpdateHandler.getURL($checkbox, 'join')];
+            case State.CLOSED:
+                return [null, ''];
+            case State.BOOKED:
+                return ['delete', ParticipationUpdateHandler.getURL($checkbox, 'delete')];
+            case State.OFFERED:
+                return ['rollbackOffer', ParticipationUpdateHandler.getURL($checkbox, 'rollbackOffer')];
+            case State.BOOKED_AND_CLOSED:
+                return ['offer', ParticipationUpdateHandler.getURL($checkbox, 'offer')];
         }
     }
 }

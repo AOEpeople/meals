@@ -162,7 +162,7 @@ class MealController extends BaseController
             'participantsCount' => $participantCount,
             'url' => $this->generateUrl(
                 $route,
-                [ 'participant' => $participant->getId() ]
+                ['participant' => $participant->getId()]
             ),
             'actionText' => $action,
             'bookedDishSlugs' => $bookedDishSlugs,

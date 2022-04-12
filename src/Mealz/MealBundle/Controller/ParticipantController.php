@@ -56,6 +56,8 @@ class ParticipantController extends BaseController
             return new JsonResponse(['error' => 'unexpected error'], 500);
         }
 
+        $this->eventDispatcher->dispatch(new ParticipationUpdateEvent($participant));
+
         return new JsonResponse(
             [
                 'actionText' => 'updated',

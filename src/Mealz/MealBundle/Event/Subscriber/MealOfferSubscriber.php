@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Event\Subscriber;
 
 use App\Mealz\MealBundle\Entity\Meal;
-use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Event\MealOfferAcceptedEvent;
-use App\Mealz\MealBundle\Event\MealOfferedEvent;
 use App\Mealz\MealBundle\Event\MealOfferCancelledEvent;
+use App\Mealz\MealBundle\Event\MealOfferedEvent;
 use App\Mealz\MealBundle\Service\Mailer\Mailer;
 use App\Mealz\MealBundle\Service\Mailer\MailerInterface;
 use App\Mealz\MealBundle\Service\Notification\NotifierInterface;

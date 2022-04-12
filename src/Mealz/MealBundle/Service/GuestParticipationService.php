@@ -64,7 +64,7 @@ class GuestParticipationService
             $slot = $this->getNextFreeSlot($mealDate);
         }
 
-       return $this->register($guestProfile, $meals, $slot, $dishSlugs);
+        return $this->register($guestProfile, $meals, $slot, $dishSlugs);
     }
 
     /**

@@ -144,10 +144,10 @@ class MealGuestController extends BaseController
     }
 
     /**
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param Participant[]            $participants
+     * @param Participant[] $participants
      */
-    private function triggerJoinEvents(EventDispatcherInterface $eventDispatcher, array $participants): void {
+    private function triggerJoinEvents(EventDispatcherInterface $eventDispatcher, array $participants): void
+    {
         if (!isset($participants[0]) || !($participants[0] instanceof Participant)) {
             return;
         }

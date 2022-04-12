@@ -162,14 +162,12 @@ class MealController extends BaseController
             'participantsCount' => $participantCount,
             'url' => $this->generateUrl(
                 $route,
-                [
-                    'participant' => $participant->getId(),
-                ]
+                [ 'participant' => $participant->getId() ]
             ),
             'actionText' => $action,
             'bookedDishSlugs' => $bookedDishSlugs,
             'slot' => $slot ? $slot->getSlug() : '',
-            'available' => $this->availabilityService->isAvailable($meal)
+            'available' => $this->availabilityService->isAvailable($meal),
         ]);
     }
 

@@ -15,7 +15,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 class MealOfferAcceptedEvent extends Event
 {
     /**
-     * Updated (new user) meal participant
+     * Updated (new user) meal participant.
      */
     private Participant $participant;
 

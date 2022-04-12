@@ -2,7 +2,6 @@
 
 namespace App\Mealz\MealBundle\Service;
 
-use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\UserBundle\Entity\Profile;

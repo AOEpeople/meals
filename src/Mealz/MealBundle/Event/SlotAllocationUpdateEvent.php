@@ -13,12 +13,12 @@ class SlotAllocationUpdateEvent extends Event
     private DateTime $day;
 
     /**
-     * Currently allocated/freed slot
+     * Currently allocated/freed slot.
      */
     private Slot $slot;
 
     /**
-     * Previously allocated slot
+     * Previously allocated slot.
      */
     private ?Slot $prevSlot;
 

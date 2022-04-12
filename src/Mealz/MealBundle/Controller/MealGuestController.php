@@ -9,6 +9,9 @@ use App\Mealz\MealBundle\Entity\GuestInvitation;
 use App\Mealz\MealBundle\Entity\GuestInvitationRepository;
 use App\Mealz\MealBundle\Entity\InvitationWrapper;
 use App\Mealz\MealBundle\Entity\Meal;
+use App\Mealz\MealBundle\Entity\Participant;
+use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
+use App\Mealz\MealBundle\Event\SlotAllocationUpdateEvent;
 use App\Mealz\MealBundle\Form\Guest\InvitationForm;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\MealBundle\Service\GuestParticipationService;
@@ -18,6 +21,7 @@ use App\Mealz\UserBundle\Entity\Profile;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,6 +35,7 @@ class MealGuestController extends BaseController
      */
     public function joinAsGuest(
         Request $request,
+        EventDispatcherInterface $eventDispatcher,
         GuestInvitation $invitation,
         GuestParticipationService $gps,
         MealAvailabilityService $availabilityService
@@ -44,7 +49,8 @@ class MealGuestController extends BaseController
 
                 $dishSlugs = $request->request->get('dishes', []);
 
-                $gps->join($profile, $meals, $slot, $dishSlugs);
+                $participants = $gps->join($profile, $meals, $slot, $dishSlugs);
+                $this->triggerJoinEvents($eventDispatcher, $participants);
 
                 $message = $this->get('translator')->trans('participation.successful', [], 'messages');
                 $this->addFlashMessage($message, 'success');
@@ -135,5 +141,25 @@ class MealGuestController extends BaseController
             ),
             200
         );
+    }
+
+    /**
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param Participant[]            $participants
+     */
+    private function triggerJoinEvents(EventDispatcherInterface $eventDispatcher, array $participants): void {
+        if (!isset($participants[0]) || !($participants[0] instanceof Participant)) {
+            return;
+        }
+
+        // We trigger the event only once for one participant/meal.
+        // Due to combined meal integration an update is sent for all the meals on the same day.
+        $participant = $participants[0];
+        $eventDispatcher->dispatch(new ParticipationUpdateEvent($participant));
+
+        $slot = $participant->getSlot();
+        if (null !== $slot) {
+            $eventDispatcher->dispatch(new SlotAllocationUpdateEvent($participant->getMeal()->getDateTime(), $slot));
+        }
     }
 }

@@ -9,7 +9,6 @@ use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\ParticipantRepository;
 use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Entity\SlotRepository;
-use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\ProfileRepository;
@@ -20,7 +19,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use RuntimeException;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class GuestParticipationService
 {
@@ -31,28 +29,27 @@ class GuestParticipationService
     private ProfileRepository $profileRepo;
     private RoleRepository $roleRepo;
     private SlotRepository $slotRepo;
-    private EventDispatcherInterface $eventDispatcher;
 
     public function __construct(
         EntityManagerInterface $entityManager,
         ParticipantRepository $participantRepo,
         ProfileRepository $profileRepo,
         RoleRepository $roleRepo,
-        SlotRepository $slotRepo,
-        EventDispatcherInterface $eventDispatcher
+        SlotRepository $slotRepo
     ) {
         $this->entityManager = $entityManager;
         $this->participantRepo = $participantRepo;
         $this->profileRepo = $profileRepo;
         $this->roleRepo = $roleRepo;
         $this->slotRepo = $slotRepo;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
+     * @return Participant[]
+     *
      * @throws ParticipationException
      */
-    public function join(Profile $profile, Collection $meals, ?Slot $slot = null, array $dishSlugs = []): void
+    public function join(Profile $profile, Collection $meals, ?Slot $slot = null, array $dishSlugs = []): array
     {
         $mealDate = $meals->first()->getDateTime();
 
@@ -67,11 +64,7 @@ class GuestParticipationService
             $slot = $this->getNextFreeSlot($mealDate);
         }
 
-        $participants = $this->register($guestProfile, $meals, $slot, $dishSlugs);
-
-        foreach ($participants as $participant) {
-            $this->eventDispatcher->dispatch(new ParticipationUpdateEvent($participant));
-        }
+       return $this->register($guestProfile, $meals, $slot, $dishSlugs);
     }
 
     /**
@@ -168,6 +161,8 @@ class GuestParticipationService
             $participant->setCostAbsorbed(true);
             $this->entityManager->persist($participant);
             $participants[] = $participant;
+
+            $meal->participants->add($participant);
         }
 
         return $participants;

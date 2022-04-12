@@ -145,7 +145,7 @@ class ParticipationService
         $this->em->persist($participant);
         $this->em->flush();
 
-        $this->em->refresh($meal);
+        $meal->participants->add($participant);
 
         return $participant;
     }

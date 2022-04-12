@@ -9,8 +9,8 @@ use App\Mealz\MealBundle\Entity\MealCollection;
 use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
 use App\Mealz\MealBundle\Service\MealAvailabilityService;
 use App\Mealz\MealBundle\Service\ParticipationService;
-use App\Mealz\MealBundle\Service\Publisher\PublisherInterface;
 use App\Mealz\MealBundle\Service\Publisher\Publisher;
+use App\Mealz\MealBundle\Service\Publisher\PublisherInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 

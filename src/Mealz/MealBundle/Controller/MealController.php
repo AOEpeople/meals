@@ -190,30 +190,6 @@ class MealController extends BaseController
         ]);
     }
 
-    /**
-     * Returns swappable meals in an array.
-     * Marks meals that are being offered.
-     */
-    public function updateOffers(): JsonResponse
-    {
-        $mealsArray = [];
-        $meals = $this->getMealRepository()->getFutureMeals();
-
-        // Adds meals that can be swapped into $mealsArray. Marks a meal as "true", if there's an available offer for it.
-        foreach ($meals as $meal) {
-            if (true === $this->getDoorman()->isUserAllowedToSwap($meal)) {
-                $mealsArray[$meal->getId()] =
-                    [
-                        $this->getDoorman()->isOfferAvailable($meal),
-                        date_format($meal->getDateTime(), 'Y-m-d'),
-                        $meal->getDish()->getSlug(),
-                    ];
-            }
-        }
-
-        return new JsonResponse($mealsArray);
-    }
-
     private function createEmptyNonPersistentWeek(DateTime $dateTime): Week
     {
         $week = new Week();

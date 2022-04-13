@@ -35,10 +35,6 @@ MealzMealBundle_Meal_offers:
     path: /menu/{date}/{dish}/offers
     defaults: { _controller: App\Mealz\MealBundle\Controller\MealController::getOffers }
 
-MealzMealBundle_Meal_updateOffers:
-    path: /menu/meal/update-offers
-    defaults: { _controller: App\Mealz\MealBundle\Controller\MealController::updateOffers }
-
 MealzMealBundle_Meal_guest:
     path: /menu/guest/{hash}
     defaults: { _controller: App\Mealz\MealBundle\Controller\MealGuestController::joinAsGuest }

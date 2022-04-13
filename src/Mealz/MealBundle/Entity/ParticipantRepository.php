@@ -10,7 +10,6 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
-use PDO;
 
 class ParticipantRepository extends EntityRepository
 {

@@ -48,8 +48,8 @@ class TransactionRepository extends EntityRepository
 
         $queryBuilder->andWhere('t.date >= :minDate');
         $queryBuilder->andWhere('t.date <= :maxDate');
-        $queryBuilder->setParameter('minDate', $minDate, Types::DATE_MUTABLE);
-        $queryBuilder->setParameter('maxDate', $maxDate, Types::DATE_MUTABLE);
+        $queryBuilder->setParameter('minDate', $minDate, Types::DATETIME_MUTABLE);
+        $queryBuilder->setParameter('maxDate', $maxDate, Types::DATETIME_MUTABLE);
 
         $queryBuilder->andWhere('t.profile = :profile');
         $queryBuilder->setParameter('profile', $profile->getUsername(), Types::STRING);
@@ -79,12 +79,12 @@ class TransactionRepository extends EntityRepository
 
         if ($minDate instanceof DateTime) {
             $queryBuilder->andWhere('t.date >= :minDate');
-            $queryBuilder->setParameter('minDate', $minDate, Types::DATE_MUTABLE);
+            $queryBuilder->setParameter('minDate', $minDate, Types::DATETIME_MUTABLE);
         }
 
         if ($maxDate instanceof DateTime) {
             $queryBuilder->andWhere('t.date <= :maxDate');
-            $queryBuilder->setParameter('maxDate', $maxDate, Types::DATE_MUTABLE);
+            $queryBuilder->setParameter('maxDate', $maxDate, Types::DATETIME_MUTABLE);
         }
 
         if ($profile instanceof Profile) {
@@ -125,8 +125,8 @@ class TransactionRepository extends EntityRepository
 
         $queryBuilder->andWhere('t.date >= :minDate');
         $queryBuilder->andWhere('t.date <= :maxDate');
-        $queryBuilder->setParameter('minDate', $minDate, Types::DATE_MUTABLE);
-        $queryBuilder->setParameter('maxDate', $maxDate, Types::DATE_MUTABLE);
+        $queryBuilder->setParameter('minDate', $minDate, Types::DATETIME_MUTABLE);
+        $queryBuilder->setParameter('maxDate', $maxDate, Types::DATETIME_MUTABLE);
 
         $queryBuilder->orderBy('t.date', 'ASC');
 
@@ -165,8 +165,8 @@ class TransactionRepository extends EntityRepository
         $queryBuilder->andWhere('t.date >= :minDate');
         $queryBuilder->andWhere('t.date <= :maxDate');
         $queryBuilder->andWhere('t.paymethod IS NULL');
-        $queryBuilder->setParameter('minDate', $minDate, Types::DATE_MUTABLE);
-        $queryBuilder->setParameter('maxDate', $maxDate, Types::DATE_MUTABLE);
+        $queryBuilder->setParameter('minDate', $minDate, Types::DATETIME_MUTABLE);
+        $queryBuilder->setParameter('maxDate', $maxDate, Types::DATETIME_MUTABLE);
 
         $queryBuilder->orderBy('t.date', 'ASC');
 

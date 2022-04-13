@@ -73,8 +73,8 @@ class MealRepository extends EntityRepository
         $queryBuilder
             ->where('m.dateTime >= :startTime')
             ->andWhere('m.dateTime <= :endTime')
-            ->setParameter('startTime', (clone $date)->setTime(0, 0), Types::DATE_MUTABLE)
-            ->setParameter('endTime', (clone $date)->setTime(23, 59), Types::DATE_MUTABLE);
+            ->setParameter('startTime', (clone $date)->setTime(0, 0), Types::DATETIME_MUTABLE)
+            ->setParameter('endTime', (clone $date)->setTime(23, 59), Types::DATETIME_MUTABLE);
 
         return $queryBuilder->getQuery()->getResult();
     }
@@ -106,7 +106,7 @@ class MealRepository extends EntityRepository
     {
         $queryBuilder = $this->createQueryBuilder('m');
         $queryBuilder->where('m.dateTime >= :now');
-        $queryBuilder->setParameter(':now', new DateTime('now'), Types::DATE_MUTABLE);
+        $queryBuilder->setParameter(':now', new DateTime('now'), Types::DATETIME_MUTABLE);
 
         return $queryBuilder->getQuery()->getResult();
     }
@@ -120,7 +120,7 @@ class MealRepository extends EntityRepository
     {
         $queryBuilder = $this->createQueryBuilder('m');
         $queryBuilder->where('m.dateTime <= :now');
-        $queryBuilder->setParameter(':now', new DateTime('now'), Types::DATE_MUTABLE);
+        $queryBuilder->setParameter(':now', new DateTime('now'), Types::DATETIME_MUTABLE);
 
         return $queryBuilder->getQuery()->getResult();
     }
@@ -141,7 +141,7 @@ class MealRepository extends EntityRepository
             ->andWhere('m.dateTime > :now')
             ->orderBy('m.dateTime', 'DESC');
 
-        $queryBuilder->setParameter(':now', new DateTime('now'), Types::DATE_MUTABLE);
+        $queryBuilder->setParameter(':now', new DateTime('now'), Types::DATETIME_MUTABLE);
 
         return $queryBuilder->getQuery()->getResult();
     }

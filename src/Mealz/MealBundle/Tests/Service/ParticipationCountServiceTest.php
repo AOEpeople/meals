@@ -188,7 +188,7 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
 
         $participation = ParticipationCountService::getParticipationByDay($combinedMeal->getDay());
 
-        $participation = $participation[ParticipationCountService::PARTICIPATION_TOTAL_COUNT_KEY];
+        $totalParticipation = $participation[ParticipationCountService::PARTICIPATION_TOTAL_COUNT_KEY];
 
         /*
          * Note:
@@ -202,64 +202,64 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
 
         // Yes, dishA: 1.5 of 2
         $this->assertTrue(ParticipationCountService::isParticipationPossibleForDishes(
-            $participation,
+            $totalParticipation,
             [$mealA->getDish()->getSlug()],
             1
         ));
 
         // No, dishA: 2.5 of 2
-        $participation = $participation[ParticipationCountService::PARTICIPATION_TOTAL_COUNT_KEY];
+        $totalParticipation = $participation[ParticipationCountService::PARTICIPATION_TOTAL_COUNT_KEY];
         $this->assertFalse(ParticipationCountService::isParticipationPossibleForDishes(
-            $participation,
+            $totalParticipation,
             [$mealA->getDish()->getSlug()],
             2
         ));
 
         // Yes, dishB: 3.5 of 5
         $this->assertTrue(ParticipationCountService::isParticipationPossibleForDishes(
-            $participation,
+            $totalParticipation,
             [$mealB->getDish()->getSlug()],
             1
         ));
 
         // Yes, dishB: 4.5 of 5
         $this->assertTrue(ParticipationCountService::isParticipationPossibleForDishes(
-            $participation,
+            $totalParticipation,
             [$mealB->getDish()->getSlug()],
             2
         ));
 
         // No, dishB: 5.5 of 5
         $this->assertFalse(ParticipationCountService::isParticipationPossibleForDishes(
-            $participation,
+            $totalParticipation,
             [$mealB->getDish()->getSlug()],
             3
         ));
 
         // Yes, for combined dishes: dishA: 1 of 2; dishB: 3 of 5
         $this->assertTrue(ParticipationCountService::isParticipationPossibleForDishes(
-            $participation,
+            $totalParticipation,
             $bookedDishSlugs,
             0.5
         ));
 
         // Yes, for two combined dishes: dishA: 1.5 of 2; dishB: 3.5 of 5
         $this->assertTrue(ParticipationCountService::isParticipationPossibleForDishes(
-            $participation,
+            $totalParticipation,
             $bookedDishSlugs,
             1.0
         ));
 
         // Yes, for three combined dishes (or 1 full dish and one combined dish): dishA: 2 of 2; dishB: 4 of 5
         $this->assertTrue(ParticipationCountService::isParticipationPossibleForDishes(
-            $participation,
+            $totalParticipation,
             $bookedDishSlugs,
             1.5
         ));
 
         // No, for four combined dishes (or 2 full dish or another combination): dishA: 2.5 of 2; dishB: 4.5 of 5
         $this->assertFalse(ParticipationCountService::isParticipationPossibleForDishes(
-            $participation,
+            $totalParticipation,
             $bookedDishSlugs,
             2.0
         ));
@@ -322,10 +322,10 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
 
         foreach ($meals as $meal) {
             $date = $meal->getDay()->getDateTime()->format('Y-m-d');
-            $participation = $participation[$date][ParticipationCountService::PARTICIPATION_COUNT_KEY][$meal->getId()];
+            $mealParticipation = $participation[$date][ParticipationCountService::PARTICIPATION_COUNT_KEY][$meal->getId()];
 
             $this->assertFalse(ParticipationCountService::isParticipationPossibleForDishes(
-                $participation,
+                $mealParticipation,
                 [],
                 1
             ));
@@ -351,10 +351,10 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
 
         foreach ($meals as $meal) {
             $date = $meal->getDay()->getDateTime()->format('Y-m-d');
-            $participation = $participation[$date][ParticipationCountService::PARTICIPATION_COUNT_KEY][$meal->getId()];
+            $mealParticipation = $participation[$date][ParticipationCountService::PARTICIPATION_COUNT_KEY][$meal->getId()];
 
             $this->assertFalse(ParticipationCountService::isParticipationPossibleForDishes(
-                $participation,
+                $mealParticipation,
                 ['wrong-slug'],
                 1
             ));
@@ -382,9 +382,9 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
             $date = $meal->getDay()->getDateTime()->format('Y-m-d');
             $mealDishSlug = $meal->getDish()->getSlug();
 
-            $participation = $participation[$date][ParticipationCountService::PARTICIPATION_COUNT_KEY][$meal->getId()];
+            $mealParticipation = $participation[$date][ParticipationCountService::PARTICIPATION_COUNT_KEY][$meal->getId()];
             $this->assertTrue(ParticipationCountService::isParticipationPossibleForDishes(
-                $participation,
+                $mealParticipation,
                 [$mealDishSlug],
                 1
             ));
@@ -412,9 +412,9 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
             $date = $meal->getDay()->getDateTime()->format('Y-m-d');
             $mealDishSlug = $meal->getDish()->getSlug();
 
-            $participation = $participation[$date][ParticipationCountService::PARTICIPATION_COUNT_KEY][$meal->getId()];
+            $mealParticipation = $participation[$date][ParticipationCountService::PARTICIPATION_COUNT_KEY][$meal->getId()];
             $this->assertFalse(ParticipationCountService::isParticipationPossibleForDishes(
-                $participation,
+                $mealParticipation,
                 [$mealDishSlug],
                 1
             ));

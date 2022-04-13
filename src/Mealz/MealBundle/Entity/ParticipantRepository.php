@@ -82,7 +82,7 @@ class ParticipantRepository extends EntityRepository
             ->andWhere('d.enabled = 1')
             ->andWhere('w.enabled = 1');
         $queryBuilder->setParameter('user', $username, Types::STRING);
-        $queryBuilder->setParameter('now', new DateTime(), Types::DATE_MUTABLE);
+        $queryBuilder->setParameter('now', new DateTime(), Types::DATETIME_MUTABLE);
 
         $result = $queryBuilder->getQuery()->getResult();
         if ($result && is_array($result) && count($result) >= 1) {
@@ -109,7 +109,7 @@ class ParticipantRepository extends EntityRepository
         $queryBuilder->andWhere('p.costAbsorbed = :costAbsorbed');
         $queryBuilder->setParameter('costAbsorbed', false, Types::BOOLEAN);
         $queryBuilder->andWhere('m.dateTime <= :now');
-        $queryBuilder->setParameter('now', new DateTime(), Types::DATE_MUTABLE);
+        $queryBuilder->setParameter('now', new DateTime(), Types::DATETIME_MUTABLE);
 
         $queryBuilder->orderBy('m.dateTime', 'desc');
         if (true === is_int($limit)) {

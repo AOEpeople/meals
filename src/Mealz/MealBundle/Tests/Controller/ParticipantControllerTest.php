@@ -112,7 +112,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
 
         $this->loginAs(self::USER_STANDARD);
         $participantId = $lockedParticipant->getId();
-        $this->client->request('GET', '/menu/meal/' . $participantId . '/swap');
+        $this->client->request('GET', '/menu/meal/' . $participantId . '/offer-meal');
 
         // verification by checking the database
         $offeringParticipant = $this->getDoctrine()->getRepository(Participant::class)->find($participantId);
@@ -133,7 +133,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $this->persistAndFlushAll([$lockedParticipant]);
 
         $this->loginAs(self::USER_STANDARD);
-        $this->client->request('GET', '/menu/meal/' . $participantId . '/unswap');
+        $this->client->request('GET', '/menu/meal/' . $participantId . '/cancel-offered-meal');
 
         // verification by checking the database
         $participant = $this->getDoctrine()->getRepository(Participant::class)->find($participantId);
@@ -155,7 +155,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $this->persistAndFlushAll([$outdatedParticipant]);
 
         $this->loginAs(self::USER_STANDARD);
-        $this->client->request('GET', '/menu/meal/' . $participantId . '/swap');
+        $this->client->request('GET', '/menu/meal/' . $participantId . '/offer-meal');
 
         // verification by checking the database
         $notOfferingPart = $this->getDoctrine()->getRepository(Participant::class)->find($participantId);

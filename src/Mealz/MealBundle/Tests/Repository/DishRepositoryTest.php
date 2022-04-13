@@ -97,7 +97,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
         $meal = $this->createMeal($dish);
         $this->persistAndFlushAll([$dish, $meal->getDay(), $meal]);
         $result = $this->dishRepository->hasDishAssociatedMeals($dish);
-        $this->assertTrue(1 == $result);
+        $this->assertTrue($result);
     }
 
     public function testCountNumberDishWasTakenWithNoCounts(): void

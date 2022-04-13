@@ -73,7 +73,7 @@ class DishRepository extends LocalizedRepository
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    public function hasDishAssociatedMeals(Dish $dish): int
+    public function hasDishAssociatedMeals(Dish $dish): bool
     {
         $query = $this->_em->createQueryBuilder();
         $query->select('COUNT(m.dish)');
@@ -81,7 +81,7 @@ class DishRepository extends LocalizedRepository
         $query->where('m.dish = :dish');
         $query->setParameter('dish', $dish->getId(), Types::INTEGER);
 
-        return $query->getQuery()->getSingleScalarResult();
+        return 0 < $query->getQuery()->getSingleScalarResult();
     }
 
     /**
@@ -99,8 +99,8 @@ class DishRepository extends LocalizedRepository
         $query->where('m.dish = :dish');
         $query->andWhere($query->expr()->between('m.dateTime', ':date_from', ':date_to'));
         $query->setParameter('dish', $dish->getId(), Types::INTEGER);
-        $query->setParameter('date_from', new DateTime($countPeriod), Types::DATE_MUTABLE);
-        $query->setParameter('date_to', new DateTime('this week +6 days'), Types::DATE_MUTABLE);
+        $query->setParameter('date_from', new DateTime($countPeriod), Types::DATETIME_MUTABLE);
+        $query->setParameter('date_to', new DateTime('this week +6 days'), Types::DATETIME_MUTABLE);
 
         return (int) $query->getQuery()->getSingleScalarResult();
     }

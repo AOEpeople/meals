@@ -6,6 +6,7 @@ use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\Role;
 use DateTime;
 use Doctrine\DBAL\ParameterType;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
@@ -81,8 +82,8 @@ class ParticipantRepository extends EntityRepository
             ->andWhere('p.costAbsorbed = 0')
             ->andWhere('d.enabled = 1')
             ->andWhere('w.enabled = 1');
-        $queryBuilder->setParameter('user', $username, PDO::PARAM_STR);
-        $queryBuilder->setParameter('now', new DateTime());
+        $queryBuilder->setParameter('user', $username, Types::STRING);
+        $queryBuilder->setParameter('now', new DateTime(), Types::DATE_MUTABLE);
 
         $result = $queryBuilder->getQuery()->getResult();
         if ($result && is_array($result) && count($result) >= 1) {
@@ -105,11 +106,11 @@ class ParticipantRepository extends EntityRepository
         );
 
         $queryBuilder->andWhere('p.profile = :user');
-        $queryBuilder->setParameter('user', $profile);
+        $queryBuilder->setParameter('user', $profile->getUsername(), Types::STRING);
         $queryBuilder->andWhere('p.costAbsorbed = :costAbsorbed');
-        $queryBuilder->setParameter('costAbsorbed', false);
+        $queryBuilder->setParameter('costAbsorbed', false, Types::BOOLEAN);
         $queryBuilder->andWhere('m.dateTime <= :now');
-        $queryBuilder->setParameter('now', new DateTime());
+        $queryBuilder->setParameter('now', new DateTime(), Types::DATE_MUTABLE);
 
         $queryBuilder->orderBy('m.dateTime', 'desc');
         if (true === is_int($limit)) {
@@ -117,27 +118,6 @@ class ParticipantRepository extends EntityRepository
         }
 
         return $queryBuilder->getQuery()->execute();
-    }
-
-    public function hasParticipantBookedAMeal(DateTime $date, Profile $profile): int
-    {
-        $queryBuilder = $this->createQueryBuilder('p');
-        $queryBuilder
-            ->select(['p', 'm', 'up', 'count(p.id) AS count'])
-            ->join('p.meal', 'm')
-            ->join('p.profile', 'up')
-            ->where('m.dateTime >= :startDate')
-            ->andWhere('m.dateTime <= :endDate')
-            ->andWhere('up.username = :userName')
-            ->setParameters([
-                'startDate' => (clone $date),
-                'endDate' => (clone $date),
-                'userName' => $profile->getUsername(),
-            ]);
-
-        $result = $queryBuilder->getQuery()->getArrayResult();
-
-        return $result[0]['count'] ?? 0;
     }
 
     public function findCostsGroupedByUserGroupedByMonth(): array

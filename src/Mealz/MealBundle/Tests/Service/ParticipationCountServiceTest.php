@@ -12,6 +12,7 @@ use App\Mealz\MealBundle\Entity\MealCollection;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Service\CombinedMealService;
+use App\Mealz\MealBundle\Service\MealAvailabilityService;
 use App\Mealz\MealBundle\Service\ParticipationCountService;
 use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
@@ -36,13 +37,15 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
 
         $doorman = $this->getDoormanMock(true, false);
         $dayRepo = $this->entityManager->getRepository(Day::class);
+        $availabilityService = self::$container->get(MealAvailabilityService::class);
 
         $this->setParticipationService(new ParticipationService(
             $this->entityManager,
             $doorman,
+            $availabilityService,
+            $dayRepo,
             $this->participantRepo,
-            $this->slotRepo,
-            $dayRepo
+            $this->slotRepo
         ));
 
         $price = (float) self::$kernel->getContainer()->getParameter('mealz.meal.combined.price');
@@ -59,8 +62,8 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
     {
         $day = new Day();
         $day->setDateTime(new DateTime());
-        $participations = ParticipationCountService::getParticipationByDay($day);
-        $this->assertEmpty($participations);
+        $participation = ParticipationCountService::getParticipationByDay($day);
+        $this->assertEmpty($participation);
     }
 
     /**
@@ -72,8 +75,8 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
     {
         $meals = $this->getMixedMealsOnSameDay();
         $weekDay = $this->createWeekForMealsOnSameDay($meals);
-        $participations = ParticipationCountService::getParticipationByDay($weekDay);
-        $this->checkParticipationByDay($participations, $meals);
+        $participation = ParticipationCountService::getParticipationByDay($weekDay);
+        $this->checkParticipationByDay($participation, $meals);
     }
 
     /**
@@ -85,8 +88,8 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
     {
         $meals = $this->getMixedMealsOnSameDay(true);
         $weekDay = $this->createWeekForMealsOnSameDay($meals);
-        $participations = ParticipationCountService::getParticipationByDay($weekDay);
-        $this->checkParticipationByDay($participations, $meals);
+        $participation = ParticipationCountService::getParticipationByDay($weekDay);
+        $this->checkParticipationByDay($participation, $meals);
     }
 
     /**
@@ -98,8 +101,8 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
     {
         $meals = $this->getMixedMealsOnSameDay(true, true);
         $weekDay = $this->createWeekForMealsOnSameDay($meals);
-        $participations = ParticipationCountService::getParticipationByDay($weekDay);
-        $this->checkParticipationByDay($participations, $meals);
+        $participation = ParticipationCountService::getParticipationByDay($weekDay);
+        $this->checkParticipationByDay($participation, $meals);
     }
 
     /**
@@ -117,8 +120,8 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
         $combinedMeal = $this->getCombinedMeal($meals);
         $meals->add($combinedMeal);
 
-        $participations = ParticipationCountService::getParticipationByDay($combinedMeal->getDay());
-        $this->checkParticipationByDay($participations, $meals);
+        $participation = ParticipationCountService::getParticipationByDay($combinedMeal->getDay());
+        $this->checkParticipationByDay($participation, $meals);
     }
 
     /**
@@ -149,8 +152,8 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
         $combinedMeal = $this->getCombinedMeal($meals, [$profiles[0]], $bookedDishSlugs);
         $meals->add($combinedMeal);
 
-        $participations = ParticipationCountService::getParticipationByDay($combinedMeal->getDay());
-        $this->checkParticipationByDay($participations, $meals);
+        $participation = ParticipationCountService::getParticipationByDay($combinedMeal->getDay());
+        $this->checkParticipationByDay($participation, $meals);
     }
 
     /**
@@ -183,9 +186,9 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
         $combinedMeal = $this->getCombinedMeal($meals, [$profiles[0]], $bookedDishSlugs);
         $meals->add($combinedMeal);
 
-        $participations = ParticipationCountService::getParticipationByDay($combinedMeal->getDay());
+        $participation = ParticipationCountService::getParticipationByDay($combinedMeal->getDay());
 
-        $participation = $participations[ParticipationCountService::PARTICIPATION_TOTAL_COUNT_KEY];
+        $participation = $participation[ParticipationCountService::PARTICIPATION_TOTAL_COUNT_KEY];
 
         /*
          * Note:
@@ -205,7 +208,7 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
         ));
 
         // No, dishA: 2.5 of 2
-        $participation = $participations[ParticipationCountService::PARTICIPATION_TOTAL_COUNT_KEY];
+        $participation = $participation[ParticipationCountService::PARTICIPATION_TOTAL_COUNT_KEY];
         $this->assertFalse(ParticipationCountService::isParticipationPossibleForDishes(
             $participation,
             [$mealA->getDish()->getSlug()],
@@ -270,8 +273,8 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
     public function participationCountIsEmptyForEmptyWeek(): void
     {
         $currentWeek = $this->createWeek(new MealCollection());
-        $participations = ParticipationCountService::getParticipationByDays($currentWeek);
-        $this->assertEmpty($participations);
+        $participation = ParticipationCountService::getParticipationByDays($currentWeek);
+        $this->assertEmpty($participation);
     }
 
     /**
@@ -315,11 +318,11 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
     public function participationIsNotPossibleForEmptyDishSlugs(): void
     {
         $meals = $this->getMixedMeals();
-        $participations = $this->getAndCheckParticipationByDays($meals);
+        $participation = $this->getAndCheckParticipationByDays($meals);
 
         foreach ($meals as $meal) {
             $date = $meal->getDay()->getDateTime()->format('Y-m-d');
-            $participation = $participations[$date][ParticipationCountService::PARTICIPATION_COUNT_KEY][$meal->getId()];
+            $participation = $participation[$date][ParticipationCountService::PARTICIPATION_COUNT_KEY][$meal->getId()];
 
             $this->assertFalse(ParticipationCountService::isParticipationPossibleForDishes(
                 $participation,
@@ -327,7 +330,7 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
                 1
             ));
 
-            $totalParticipation = $participations[$date][ParticipationCountService::PARTICIPATION_TOTAL_COUNT_KEY];
+            $totalParticipation = $participation[$date][ParticipationCountService::PARTICIPATION_TOTAL_COUNT_KEY];
             $this->assertFalse(ParticipationCountService::isParticipationPossibleForDishes(
                 $totalParticipation,
                 [],
@@ -344,11 +347,11 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
     public function participationIsNotPossibleForWrongDishSlugs(): void
     {
         $meals = $this->getMixedMeals();
-        $participations = $this->getAndCheckParticipationByDays($meals);
+        $participation = $this->getAndCheckParticipationByDays($meals);
 
         foreach ($meals as $meal) {
             $date = $meal->getDay()->getDateTime()->format('Y-m-d');
-            $participation = $participations[$date][ParticipationCountService::PARTICIPATION_COUNT_KEY][$meal->getId()];
+            $participation = $participation[$date][ParticipationCountService::PARTICIPATION_COUNT_KEY][$meal->getId()];
 
             $this->assertFalse(ParticipationCountService::isParticipationPossibleForDishes(
                 $participation,
@@ -356,7 +359,7 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
                 1
             ));
 
-            $totalParticipation = $participations[$date][ParticipationCountService::PARTICIPATION_TOTAL_COUNT_KEY];
+            $totalParticipation = $participation[$date][ParticipationCountService::PARTICIPATION_TOTAL_COUNT_KEY];
             $this->assertFalse(ParticipationCountService::isParticipationPossibleForDishes(
                 $totalParticipation,
                 ['wrong-slug'],
@@ -373,20 +376,20 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
     public function participationIsPossibleForWeekWithLimitsWhereLimitIsNotReached(): void
     {
         $meals = $this->getMixedMeals(false);
-        $participations = $this->getAndCheckParticipationByDays($meals);
+        $participation = $this->getAndCheckParticipationByDays($meals);
 
         foreach ($meals as $meal) {
             $date = $meal->getDay()->getDateTime()->format('Y-m-d');
             $mealDishSlug = $meal->getDish()->getSlug();
 
-            $participation = $participations[$date][ParticipationCountService::PARTICIPATION_COUNT_KEY][$meal->getId()];
+            $participation = $participation[$date][ParticipationCountService::PARTICIPATION_COUNT_KEY][$meal->getId()];
             $this->assertTrue(ParticipationCountService::isParticipationPossibleForDishes(
                 $participation,
                 [$mealDishSlug],
                 1
             ));
 
-            $totalParticipation = $participations[$date][ParticipationCountService::PARTICIPATION_TOTAL_COUNT_KEY];
+            $totalParticipation = $participation[$date][ParticipationCountService::PARTICIPATION_TOTAL_COUNT_KEY];
             $this->assertTrue(ParticipationCountService::isParticipationPossibleForDishes(
                 $totalParticipation,
                 [$mealDishSlug],
@@ -403,20 +406,20 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
     public function participationIsNotPossibleForWeekWhereLimitIsReached(): void
     {
         $meals = new MealCollection($this->getMixedMealsWithLimitReached());
-        $participations = $this->getAndCheckParticipationByDays($meals);
+        $participation = $this->getAndCheckParticipationByDays($meals);
 
         foreach ($meals as $meal) {
             $date = $meal->getDay()->getDateTime()->format('Y-m-d');
             $mealDishSlug = $meal->getDish()->getSlug();
 
-            $participation = $participations[$date][ParticipationCountService::PARTICIPATION_COUNT_KEY][$meal->getId()];
+            $participation = $participation[$date][ParticipationCountService::PARTICIPATION_COUNT_KEY][$meal->getId()];
             $this->assertFalse(ParticipationCountService::isParticipationPossibleForDishes(
                 $participation,
                 [$mealDishSlug],
                 1
             ));
 
-            $totalParticipation = $participations[$date][ParticipationCountService::PARTICIPATION_TOTAL_COUNT_KEY];
+            $totalParticipation = $participation[$date][ParticipationCountService::PARTICIPATION_TOTAL_COUNT_KEY];
             $this->assertFalse(ParticipationCountService::isParticipationPossibleForDishes(
                 $totalParticipation,
                 [$mealDishSlug],

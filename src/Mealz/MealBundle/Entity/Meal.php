@@ -142,19 +142,17 @@ class Meal
 
     public function isCombinedMeal(): bool
     {
-        return $this->dish && $this->dish->isCombinedDish();
+        return $this->dish->isCombinedDish();
     }
 
     public function isLocked(): bool
     {
-        $lockDateTime = $this->getLockDateTime();
-
-        return $lockDateTime && ($lockDateTime <= (new DateTime('now')));
+        return $this->getLockDateTime() <= (new DateTime('now'));
     }
 
     public function isOpen(): bool
     {
-        return $this->dateTime && ($this->dateTime > (new DateTime('now')));
+        return $this->dateTime > (new DateTime('now'));
     }
 
     /**
@@ -170,24 +168,6 @@ class Meal
         }
 
         return null;
-    }
-
-    /**
-     * get all guests that the given profile has invited.
-     *
-     * @return Participant[]
-     */
-    public function getGuestParticipants(Profile $profile): array
-    {
-        $participants = [];
-        foreach ($this->participants as $participant) {
-            /** @var Participant $participant */
-            if ($participant->isGuest() && $participant->getProfile() === $profile) {
-                $participants[] = $participant;
-            }
-        }
-
-        return $participants;
     }
 
     /**

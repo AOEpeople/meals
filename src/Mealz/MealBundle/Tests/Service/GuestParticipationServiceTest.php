@@ -16,7 +16,6 @@ use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\Role;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class GuestParticipationServiceTest extends AbstractParticipationServiceTest
 {
@@ -41,7 +40,6 @@ class GuestParticipationServiceTest extends AbstractParticipationServiceTest
             $profileRepo,
             $roleRepo,
             $this->slotRepo,
-            $this->prophesize(EventDispatcherInterface::class)->reveal()
         ));
 
         $price = (float) self::$kernel->getContainer()->getParameter('mealz.meal.combined.price');
@@ -117,7 +115,7 @@ class GuestParticipationServiceTest extends AbstractParticipationServiceTest
      *
      * @testdox An anonymous user (Profile) can join a combined meal.
      */
-    public function joinCombinedMealSuccess()
+    public function joinCombinedMealSuccess(): void
     {
         $this->checkJoinCombinedMealSuccess($this->profile);
     }
@@ -137,7 +135,7 @@ class GuestParticipationServiceTest extends AbstractParticipationServiceTest
      *
      * @testdox An anonymous user (Profile) can't join a combined meal with wrong slugs.
      */
-    public function joinCombinedMealWithWrongSlugFail()
+    public function joinCombinedMealWithWrongSlugFail(): void
     {
         $this->checkJoinCombinedMealWithWrongSlugFail($this->profile);
     }
@@ -147,7 +145,7 @@ class GuestParticipationServiceTest extends AbstractParticipationServiceTest
      *
      * @testdox An anonymous user (Profile) can't join a combined meal with empty slugs.
      */
-    public function joinCombinedMealWithEmptySlugFail()
+    public function joinCombinedMealWithEmptySlugFail(): void
     {
         $this->checkJoinCombinedMealWithEmptySlugFail($this->profile);
     }

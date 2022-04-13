@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="day")
- * @ORM\Entity(repositoryClass="DayRepository")
+ * @ORM\Entity(repositoryClass="App\Mealz\MealBundle\Entity\DayRepository")
  */
 class Day extends AbstractMessage
 {

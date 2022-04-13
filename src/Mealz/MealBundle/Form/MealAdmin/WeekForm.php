@@ -29,6 +29,11 @@ class WeekForm extends AbstractType
                 'required' => false,
                 'attr' => ['class' => 'js-switch'],
             ])
+            ->add('notifyCheckbox', CheckboxType::class, [
+                'required' => false,
+                'mapped' => false,
+                'attr' => ['class' => 'js-switch'],
+            ])
             ->add('Cancel', SubmitType::class, [
                 'label' => 'button.cancel',
                 'translation_domain' => 'actions',

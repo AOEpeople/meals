@@ -79,3 +79,6 @@ form:
     title: Titel
     limit: Limit
     order: Sortierung
+
+  week:
+    notification: Kunden benachrichtigen

@@ -81,4 +81,4 @@ form:
     order: Sort Order
 
   week:
-    notification: Notify customers
+    notification: Announce menu via Mattermost

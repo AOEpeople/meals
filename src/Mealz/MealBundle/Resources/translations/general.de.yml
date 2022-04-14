@@ -81,4 +81,4 @@ form:
     order: Sortierung
 
   week:
-    notification: Kunden benachrichtigen
+    notification: Menü in Mattermost bekanntgeben

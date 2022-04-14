@@ -384,7 +384,7 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
 
         $participant = $combinedMeal->getParticipant($profile);
         $dishCombination = $participant->getCombinedDishes();
-//        $dishCombination = $this->getParticipationService()->getBookedDishCombination($profile, $combinedMeal);
+
         $this->assertNotEmpty($dishCombination);
         $this->assertSameSize($dishSlugs, $dishCombination);
         /** @var Dish $dish */

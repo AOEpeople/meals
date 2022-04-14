@@ -9,13 +9,14 @@ use App\Mealz\MealBundle\Entity\MealCollection;
 use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
 use App\Mealz\MealBundle\Service\MealAvailabilityService;
 use App\Mealz\MealBundle\Service\ParticipationService;
-use App\Mealz\MealBundle\Service\Publisher\Publisher;
 use App\Mealz\MealBundle\Service\Publisher\PublisherInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ParticipationUpdateSubscriber implements EventSubscriberInterface
 {
+    private const TOPIC_PARTICIPATION_UPDATES = 'participation-updates';
+
     private LoggerInterface $logger;
     private MealAvailabilityService $availabilityService;
     private ParticipationService $participationSrv;
@@ -99,10 +100,10 @@ class ParticipationUpdateSubscriber implements EventSubscriberInterface
 
     private function publish(array $data): void
     {
-        $published = $this->publisher->publish(Publisher::TOPIC_PARTICIPATION_UPDATES, $data);
+        $published = $this->publisher->publish(self::TOPIC_PARTICIPATION_UPDATES, $data);
 
         if (!$published) {
-            $this->logger->error('publish failure', ['topic' => Publisher::TOPIC_PARTICIPATION_UPDATES]);
+            $this->logger->error('publish failure', ['topic' => self::TOPIC_PARTICIPATION_UPDATES]);
         }
     }
 }

@@ -6,13 +6,14 @@ namespace App\Mealz\MealBundle\Event\Subscriber;
 
 use App\Mealz\MealBundle\Event\SlotAllocationUpdateEvent;
 use App\Mealz\MealBundle\Service\ParticipationService;
-use App\Mealz\MealBundle\Service\Publisher\Publisher;
 use App\Mealz\MealBundle\Service\Publisher\PublisherInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class SlotAllocationSubscriber implements EventSubscriberInterface
 {
+    private const TOPIC_SLOT_ALLOCATION_UPDATES = 'slot-allocation-updates';
+
     private LoggerInterface $logger;
     private PublisherInterface $publisher;
     private ParticipationService $participationSrv;
@@ -61,13 +62,10 @@ class SlotAllocationSubscriber implements EventSubscriberInterface
 
     private function publish(array $data): void
     {
-        $published = $this->publisher->publish(
-            Publisher::TOPIC_SLOT_ALLOCATION_UPDATES,
-            $data
-        );
+        $published = $this->publisher->publish(self::TOPIC_SLOT_ALLOCATION_UPDATES, $data);
 
         if (!$published) {
-            $this->logger->error('publish failure', ['topic' => Publisher::TOPIC_SLOT_ALLOCATION_UPDATES]);
+            $this->logger->error('publish failure', ['topic' => self::TOPIC_SLOT_ALLOCATION_UPDATES]);
         }
     }
 }

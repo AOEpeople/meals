@@ -12,7 +12,6 @@ use App\Mealz\MealBundle\Service\Mailer\Mailer;
 use App\Mealz\MealBundle\Service\Mailer\MailerInterface;
 use App\Mealz\MealBundle\Service\Notification\NotifierInterface;
 use App\Mealz\MealBundle\Service\OfferService;
-use App\Mealz\MealBundle\Service\Publisher\Publisher;
 use App\Mealz\MealBundle\Service\Publisher\PublisherInterface;
 use App\Mealz\UserBundle\Entity\Profile;
 use Psr\Log\LoggerInterface;
@@ -21,6 +20,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class MealOfferSubscriber implements EventSubscriberInterface
 {
+    private const TOPIC_MEAL_OFFER_UPDATES = 'meal-offer-updates';
+
     private LoggerInterface $logger;
     private Mailer $mailer;
     private NotifierInterface $notifier;
@@ -94,10 +95,10 @@ class MealOfferSubscriber implements EventSubscriberInterface
 
     private function publish(array $data): void
     {
-        $published = $this->publisher->publish(Publisher::TOPIC_MEAL_OFFER_UPDATES, $data);
+        $published = $this->publisher->publish(self::TOPIC_MEAL_OFFER_UPDATES, $data);
 
         if (!$published) {
-            $this->logger->error('publish failure', ['topic' => Publisher::TOPIC_MEAL_OFFER_UPDATES]);
+            $this->logger->error('publish failure', ['topic' => self::TOPIC_MEAL_OFFER_UPDATES]);
         }
     }
 

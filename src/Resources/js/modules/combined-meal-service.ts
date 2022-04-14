@@ -1,3 +1,5 @@
+import {MealService} from "./meal-service";
+
 export class CombinedMealService {
 
     /**
@@ -52,7 +54,7 @@ export class CombinedMealService {
         const success = CombinedMealService.updateBookedDishes($checkbox, dishes, bookedDishSlugs);
 
         if (success) {
-            $dishContainer.attr('data-id', participantID);
+            MealService.setParticipantId($checkbox, participantID);
             if (CombinedMealService.mealHasDishVariations($mealContainer)
                 && !CombinedMealService.isLockedMeal($mealContainer)) {
                 $dishContainer.find('.title').addClass('edit');
@@ -150,6 +152,9 @@ export class CombinedMealService {
     }
 
     private static resetDish($dishContainer: JQuery): void {
+        const $checkbox = $dishContainer.find('input[type=checkbox]');
+        MealService.setParticipantId($checkbox, null);
+
         let desc = $dishContainer.data('description');
         $dishContainer.find('.description .dish-combination').empty().text(desc);
         $dishContainer.find('.title').removeClass('edit');

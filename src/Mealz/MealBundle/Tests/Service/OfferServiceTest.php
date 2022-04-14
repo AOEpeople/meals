@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Tests\Service;
 
-use App\Mealz\MealBundle\Entity\DishCollection;
 use App\Mealz\MealBundle\Entity\DishRepository;
 use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Entity\Meal;
@@ -351,7 +350,7 @@ class OfferServiceTest extends AbstractParticipationServiceTest
         foreach ($profiles as $profile) {
             $participant = new Participant($profile, $combinedMeal);
             $participant->setOfferedAt(time());
-            $participant->setCombinedDishes(new DishCollection($bookedDishes));
+            $participant->setCombinedDishes($bookedDishes);
 
             $participants[] = $participant;
         }

@@ -1,4 +1,5 @@
 import {ParticipationUpdateHandler} from "./participation-update-handler";
+import {MealService} from "./meal-service";
 
 export enum MealOfferStates {
     New = 'new',
@@ -77,7 +78,7 @@ export class MealOfferUpdateHandler {
         // change participation state for
         // - offerer whose meal has been taken, or
         // - everyone if meal is no longer available
-        if (offererId === $checkbox.data('participantId') || !available) {
+        if (offererId === MealService.getParticipantId($checkbox) || !available) {
             ParticipationUpdateHandler.offerAccepted($checkbox, offererId, available);
         }
     }

@@ -195,14 +195,17 @@ class Participant
         return new DishCollection($this->combinedDishes->toArray());
     }
 
-    public function setCombinedDishes(?DishCollection $collection): void
+    /**
+     * @param Dish[] $dishes
+     */
+    public function setCombinedDishes(?array $dishes): void
     {
-        if (null === $collection) {
+        if (null === $dishes) {
             if (null !== $this->combinedDishes) {
                 $this->combinedDishes->clear();
             }
         } else {
-            $this->combinedDishes = new DishCollection($collection->toArray());
+            $this->combinedDishes = new DishCollection($dishes);
         }
     }
 

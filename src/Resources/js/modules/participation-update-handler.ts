@@ -39,7 +39,6 @@ interface CheckboxAttributes {
     checked: boolean;
     disabled: boolean;
     action: string;
-    participantID: number;
 }
 
 interface Status {
@@ -145,8 +144,7 @@ export class ParticipationUpdateHandler {
         }
 
         // unset OFFERED state if participant-ID and offerer-ID are same, i.e. current user's meal got accepted
-        const participantId = Number($dishContainer.attr('data-id'));
-        if (offererId === participantId) {
+        if (offererId === MealService.getParticipantId($checkbox)) {
             if (available) {
                 ParticipationUpdateHandler.updateStatus($checkbox, {
                     state: State.OPEN,
@@ -205,18 +203,28 @@ export class ParticipationUpdateHandler {
     }
 
     public static toggle($checkbox: JQuery, data: ToggleData): void {
-        const nextAction = ('deleted' === data.actionText) ? 'join' : 'delete';
         const state = ParticipationUpdateHandler.getNextState(
             $checkbox,
             !$checkbox.prop('checked'),
             data.available,
             false
         );
+
+        let nextAction, participantId;
+        if ('deleted' === data.actionText) {
+            nextAction = 'join';
+            participantId = null;
+        } else {
+            nextAction = 'delete';
+            participantId = data.participantID;
+        }
+
         ParticipationUpdateHandler.updateStatus($checkbox, {
             state: state,
             count: data.participantsCount,
             action: nextAction,
-            actionURL: data.url
+            actionURL: data.url,
+            participantID: participantId
         });
 
         if ('added' === data.actionText && data.slot !== '') {
@@ -317,15 +325,17 @@ export class ParticipationUpdateHandler {
         if (State.CLOSED === state) {
             attrs.action = null;
             attrs.value = '';
-            attrs.participantID = null;
         } else {
             attrs.action = status.action;
             attrs.value = status.actionURL;
-            attrs.participantID = status.participantID;
         }
 
         ParticipationUpdateHandler.updateCheckboxAttributes($checkbox, attrs);
-        this.updateCheckboxWrapper($checkbox);
+        ParticipationUpdateHandler.updateCheckboxWrapper($checkbox);
+
+        if (undefined !== status.participantID) {
+            MealService.setParticipantId($checkbox, status.participantID);
+        }
 
         ParticipationUpdateHandler.setCount($checkbox, state, status.count);
     }
@@ -408,14 +418,6 @@ export class ParticipationUpdateHandler {
         }
         if (undefined !== attrs.value) {
             $checkbox.attr('value', attrs.value);
-        }
-
-        if (undefined !== attrs.participantID) {
-            if (null === attrs.participantID) {
-                $checkbox.removeAttr('data-participant-id');
-            } else {
-                $checkbox.attr('data-participant-id', attrs.participantID);
-            }
         }
     }
 

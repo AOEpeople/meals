@@ -16,12 +16,18 @@ export class MealService {
     }
 
     static getParticipantId($checkbox: JQuery): number {
-        let strID = $checkbox.closest('[data-id]').attr('data-id');
+        let strID = $checkbox.closest('[data-participant-id]').attr('data-participant-id');
         if (undefined === strID) {
             return null;
         }
 
         const id = Number(strID);
         return isNaN(id) ? null : id;
+    }
+
+    static setParticipantId($checkbox: JQuery, participantId: number): void {
+        $checkbox
+            .closest('[data-participant-id]')
+            .attr('data-participant-id', participantId ?? '');
     }
 }

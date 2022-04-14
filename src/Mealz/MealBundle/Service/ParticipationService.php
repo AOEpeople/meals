@@ -6,7 +6,6 @@ namespace App\Mealz\MealBundle\Service;
 
 use App\Mealz\MealBundle\Entity\DayRepository;
 use App\Mealz\MealBundle\Entity\Dish;
-use App\Mealz\MealBundle\Entity\DishCollection;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\ParticipantRepository;
@@ -23,7 +22,6 @@ class ParticipationService
 
     private EntityManagerInterface $em;
     private Doorman $doorman;
-    private MealAvailabilityService $availabilityService;
 
     private DayRepository $dayRepo;
     private ParticipantRepository $participantRepo;
@@ -32,14 +30,12 @@ class ParticipationService
     public function __construct(
         EntityManagerInterface $em,
         Doorman $doorman,
-        MealAvailabilityService $availabilityService,
         DayRepository $dayRepo,
         ParticipantRepository $participantRepo,
         SlotRepository $slotRepo
     ) {
         $this->em = $em;
         $this->doorman = $doorman;
-        $this->availabilityService = $availabilityService;
         $this->dayRepo = $dayRepo;
         $this->participantRepo = $participantRepo;
         $this->slotRepo = $slotRepo;
@@ -194,46 +190,6 @@ class ParticipationService
     }
 
     /**
-     * @psalm-return list<array{date: string, slot: string, booked: int, booked_by_user: bool}>
-     */
-    public function getSlotsStatusFor(Profile $profile): array
-    {
-        $fromDate = new DateTime('now');
-        $toDate = new DateTime('friday next week 23:59:59');
-        $openMealDaysSlots = $this->getOpenMealDaysWithSlots($fromDate, $toDate);
-        $slotCountProvider = $this->getBookedSlotCountProvider($fromDate, $toDate);
-
-        $slotsStatus = [];
-
-        foreach ($openMealDaysSlots as $idx => $item) {
-            $slotsStatus[$idx] = [
-                'date' => $item['date']->format('Y-m-d'),
-                'slot' => $item['slot']->getSlug(),
-                'booked' => $slotCountProvider($item['date'], $item['slot']),
-                'booked_by_user' => false,
-            ];
-        }
-
-        $userParticipation = $this->participantRepo->getParticipantsOnDays($fromDate, $toDate, $profile);
-
-        foreach ($userParticipation as $participation) {
-            $slot = $participation->getSlot();
-            if (null === $slot || $slot->isDisabled() || $slot->isDeleted()) {
-                continue;
-            }
-
-            $k = $participation->getMeal()->getDateTime()->format('Y-m-d-') . $slot->getId();
-            if (!isset($slotsStatus[$k])) {
-                continue;   // skip, not an open participation
-            }
-
-            $slotsStatus[$k]['booked_by_user'] = isset($slotsStatus[$k]);
-        }
-
-        return array_values($slotsStatus);
-    }
-
-    /**
      * @psalm-return array<string, int> Key-value pair of slot-slug and related allocation count
      */
     public function getSlotsStatusOn(DateTime $date): array
@@ -318,24 +274,6 @@ class ParticipationService
         }
 
         return null;
-    }
-
-    public function getBookedDishCombination(Profile $profile, Meal $meal): DishCollection
-    {
-        $participant = $meal->getParticipant($profile);
-        if (null === $participant) {
-            return new DishCollection();
-        }
-
-        return $participant->getCombinedDishes();
-    }
-
-    /**
-     * Checks if participation in a given meal is possible.
-     */
-    public function isOpen(Meal $meal): bool
-    {
-        return $this->availabilityService->isAvailable($meal);
     }
 
     public function getCountByMeal(Meal $meal): int

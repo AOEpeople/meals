@@ -6,7 +6,6 @@ namespace App\Mealz\MealBundle\Tests\Service;
 
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
-use App\Mealz\MealBundle\Entity\DishCollection;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\MealCollection;
 use App\Mealz\MealBundle\Entity\MealRepository;
@@ -285,7 +284,7 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
         $participants = [];
         foreach ($profiles as $profile) {
             $participant = new Participant($profile, $combinedMeal);
-            $participant->setCombinedDishes(new DishCollection($dishes));
+            $participant->setCombinedDishes($dishes);
             $this->assertGreaterThan(0, $participant->getCombinedDishes()->count());
             $participants[] = $participant;
         }

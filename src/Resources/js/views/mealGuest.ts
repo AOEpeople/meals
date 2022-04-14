@@ -6,17 +6,9 @@ import {SlotAllocationUpdateHandler} from "../modules/slot-allocation-update-han
 
 export default class MealGuestView {
     $participationCheckboxes: JQuery;
-    $slotDropDown: JQuery;
-    mealDate: string;
 
     constructor() {
         this.$participationCheckboxes = $('.meal-guest input[type="checkbox"]');
-        this.mealDate = $('.meal-guest').data('date');
-        this.$slotDropDown = $('#invitation_form_slot');
-
-        if (0 < this.$slotDropDown.length) {
-            this.updateSlots();
-        }
 
         if (this.$participationCheckboxes.length > 0) {
             let participationToggleHandler = new ParticipationGuestToggleHandler(this.$participationCheckboxes);
@@ -26,38 +18,5 @@ export default class MealGuestView {
         let messageSubscriber = new MercureSubscriber($('[data-msg-subscribe-url]').data('msgSubscribeUrl'));
         messageSubscriber.subscribe(['participation-updates'], ParticipationUpdateHandler.updateParticipation);
         messageSubscriber.subscribe(['slot-allocation-updates'], SlotAllocationUpdateHandler.handleUpdate);
-    }
-
-    private updateSlots() {
-        let self = this;
-
-        $.ajax({
-            'url': '/participation/slots-status/' + self.mealDate,
-            dataType: 'json',
-            'success': function (data) {
-                $.each(data, function (k, v) {
-                    let $slotOption = self.$slotDropDown.find('option[value="'+v.slot+'"]');
-
-                    const slotLimit = $slotOption.data('limit');
-                    if (slotLimit > 0) {
-                        const slotTitle = $slotOption.data('title');
-                        const slotText = slotTitle + ' (' + v.booked+'/'+slotLimit + ')';
-                        $slotOption.text(slotText);
-                        // disable slot if no. of bookings reached the slot limit
-                        if (slotLimit <= v.booked) {
-                            $slotOption.prop('disabled', true);
-                        }
-                    }
-
-                    if (v.booked_by_user) {
-                        // do not overwrite user selected value
-                        if ('' === self.$slotDropDown.val()) {
-                            $slotOption.prop('selected', true);
-                        }
-                        self.$slotDropDown.prop('disabled', false);
-                    }
-                });
-            }
-        });
     }
 };

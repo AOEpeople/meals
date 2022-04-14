@@ -13,7 +13,6 @@ use App\Mealz\MealBundle\Entity\MealCollection;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Service\CombinedMealService;
-use App\Mealz\MealBundle\Service\MealAvailabilityService;
 use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
@@ -22,7 +21,6 @@ use App\Mealz\UserBundle\Entity\Profile;
 class ParticipationServiceTest extends AbstractParticipationServiceTest
 {
     private DayRepository $dayRepo;
-    private MealAvailabilityService $availabilityService;
 
     protected function setUp(): void
     {
@@ -36,12 +34,10 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
 
         $doorman = $this->getDoormanMock(true, false);
         $this->dayRepo = $this->entityManager->getRepository(Day::class);
-        $this->availabilityService = self::$container->get(MealAvailabilityService::class);
 
         $this->setParticipationService(new ParticipationService(
             $this->entityManager,
             $doorman,
-            $this->availabilityService,
             $this->dayRepo,
             $this->participantRepo,
             $this->slotRepo
@@ -63,7 +59,7 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
         $profile = $this->getProfile('alice.meals');
         $meal = $this->getMeal();
 
-        $sut = new ParticipationService($this->entityManager, $doorman, $this->availabilityService, $this->dayRepo, $this->participantRepo, $this->slotRepo);
+        $sut = new ParticipationService($this->entityManager, $doorman, $this->dayRepo, $this->participantRepo, $this->slotRepo);
         $out = $sut->join($profile, $meal);
 
         $this->assertArrayHasKey('participant', $out);
@@ -88,7 +84,7 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
         $profile = $this->getProfile('alice.meals');
         $meal = $this->getMeal();
 
-        $sut = new ParticipationService($this->entityManager, $doorman, $this->availabilityService, $this->dayRepo, $this->participantRepo, $this->slotRepo);
+        $sut = new ParticipationService($this->entityManager, $doorman, $this->dayRepo, $this->participantRepo, $this->slotRepo);
         $out = $sut->join($profile, $meal);
 
         $this->assertArrayHasKey('participant', $out);
@@ -117,7 +113,7 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
         $profile = $this->getProfile('alice.meals');
         $meal = $this->getMeal();
 
-        $sut = new ParticipationService($this->entityManager, $doorman, $this->availabilityService, $this->dayRepo, $this->participantRepo, $this->slotRepo);
+        $sut = new ParticipationService($this->entityManager, $doorman, $this->dayRepo, $this->participantRepo, $this->slotRepo);
         $out = $sut->join($profile, $meal);
 
         $this->assertArrayHasKey('participant', $out);
@@ -154,7 +150,7 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
         $user2 = $this->getProfile('bob.meals');
         $meal = $this->getMeal();
 
-        $sut = new ParticipationService($this->entityManager, $doorman, $this->availabilityService, $this->dayRepo, $this->participantRepo, $this->slotRepo);
+        $sut = new ParticipationService($this->entityManager, $doorman, $this->dayRepo, $this->participantRepo, $this->slotRepo);
 
         // occupy first slot
         $sut->join($user1, $meal);
@@ -186,7 +182,7 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
         $profile = $this->getProfile('alice.meals');
         $meal = $this->getMeal();
 
-        $sut = new ParticipationService($this->entityManager, $doorman, $this->availabilityService, $this->dayRepo, $this->participantRepo, $this->slotRepo);
+        $sut = new ParticipationService($this->entityManager, $doorman, $this->dayRepo, $this->participantRepo, $this->slotRepo);
         $out = $sut->join($profile, $meal);
 
         $this->assertArrayHasKey('participant', $out);
@@ -221,7 +217,7 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
         $user2 = $this->getProfile('bob.meals');
         $meal = $this->getMeal();
 
-        $sut = new ParticipationService($this->entityManager, $doorman, $this->availabilityService, $this->dayRepo, $this->participantRepo, $this->slotRepo);
+        $sut = new ParticipationService($this->entityManager, $doorman, $this->dayRepo, $this->participantRepo, $this->slotRepo);
 
         // occupy first slot
         $sut->join($user1, $meal);
@@ -251,7 +247,7 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
         $profile = $this->getProfile('alice.meals');
         $meal = $this->getMeal();
 
-        $sut = new ParticipationService($this->entityManager, $doorman, $this->availabilityService, $this->dayRepo, $this->participantRepo, $this->slotRepo);
+        $sut = new ParticipationService($this->entityManager, $doorman, $this->dayRepo, $this->participantRepo, $this->slotRepo);
         $out = $sut->join($profile, $meal);
 
         $this->assertNull($out);
@@ -269,7 +265,7 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
         $offerer = $this->getProfile('bob.meals');
         $meal = $this->getMeal(true, false, [$offerer]);
 
-        $sut = new ParticipationService($this->entityManager, $doorman, $this->availabilityService, $this->dayRepo, $this->participantRepo, $this->slotRepo);
+        $sut = new ParticipationService($this->entityManager, $doorman, $this->dayRepo, $this->participantRepo, $this->slotRepo);
         $out = $sut->join($user, $meal);
 
         $this->assertIsArray($out);
@@ -294,7 +290,7 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
         $offerer = $this->getProfile('bob.meals');
         $meal = $this->getMeal(true, true, [$offerer]);
 
-        $sut = new ParticipationService($this->entityManager, $doorman, $this->availabilityService, $this->dayRepo, $this->participantRepo, $this->slotRepo);
+        $sut = new ParticipationService($this->entityManager, $doorman, $this->dayRepo, $this->participantRepo, $this->slotRepo);
         $out = $sut->join($user, $meal);
 
         $this->assertNull($out);
@@ -311,7 +307,7 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
         $user = $this->getProfile('alice.meals');
         $meal = $this->getMeal(true);
 
-        $sut = new ParticipationService($this->entityManager, $doorman, $this->availabilityService, $this->dayRepo, $this->participantRepo, $this->slotRepo);
+        $sut = new ParticipationService($this->entityManager, $doorman, $this->dayRepo, $this->participantRepo, $this->slotRepo);
         $out = $sut->join($user, $meal);
 
         $this->assertNull($out);
@@ -386,7 +382,9 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
 
         $this->getParticipationService()->join($profile, $combinedMeal, $slot, $dishSlugs);
 
-        $dishCombination = $this->getParticipationService()->getBookedDishCombination($profile, $combinedMeal);
+        $participant = $combinedMeal->getParticipant($profile);
+        $dishCombination = $participant->getCombinedDishes();
+//        $dishCombination = $this->getParticipationService()->getBookedDishCombination($profile, $combinedMeal);
         $this->assertNotEmpty($dishCombination);
         $this->assertSameSize($dishSlugs, $dishCombination);
         /** @var Dish $dish */

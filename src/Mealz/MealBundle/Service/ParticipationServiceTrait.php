@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Service;
 
-use App\Mealz\MealBundle\Entity\DishCollection;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\ParticipantRepository;
@@ -146,7 +145,7 @@ trait ParticipationServiceTrait
             );
         }
 
-        $participant->setCombinedDishes(new DishCollection($dishes));
+        $participant->setCombinedDishes($dishes);
     }
 
     private function getCombinedMealDishes(Meal $meal, array $dishSlugs): array

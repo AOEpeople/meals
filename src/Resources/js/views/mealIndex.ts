@@ -8,6 +8,7 @@ import {MercureSubscriber} from "../modules/subscriber/mercure-subscriber";
 import {MealOfferUpdate, MealOfferUpdateHandler} from "../modules/meal-offer-update-handler";
 import {ParticipationUpdateHandler} from "../modules/participation-update-handler";
 import {SlotAllocationUpdateHandler} from "../modules/slot-allocation-update-handler";
+import {MealService} from "../modules/meal-service";
 
 interface UpdateResponse extends ParticipationResponse {
     bookedDishSlugs: string[];
@@ -124,11 +125,12 @@ export default class MealIndexView {
             slotSlug,
             {
                 ok: function (reqPayload: SerializedFormData) {
-                    let $participationCheckbox = $dishContainer.find('input[type=checkbox]');
-                    const participationID = $dishContainer.attr('data-id');
-                    const url = '/meal/participation/-/update'.replace('-', participationID);
+                    let $mealCheckbox = $dishContainer.find('input[type=checkbox]');
+
+                    const participationID = MealService.getParticipantId($mealCheckbox);
+                    const url = `/meal/participation/${participationID}/update`;
                     let req = new ParticipationRequest(url, reqPayload);
-                    ParticipationRequestHandler.sendRequest(req, $participationCheckbox, function($checkbox, data: UpdateResponse) {
+                    ParticipationRequestHandler.sendRequest(req, $mealCheckbox, function($checkbox, data: UpdateResponse) {
                         if (0 < data.bookedDishSlugs.length) {
                             CombinedMealService.updateBookedDishes($checkbox, dishes, data.bookedDishSlugs);
                         }

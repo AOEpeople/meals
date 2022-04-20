@@ -3,12 +3,17 @@
 namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Day;
+use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\DishRepository;
+use App\Mealz\MealBundle\Entity\DishVariation;
+use App\Mealz\MealBundle\Entity\DishVariationTreeCollection;
 use App\Mealz\MealBundle\Entity\Meal;
+use App\Mealz\MealBundle\Entity\DishVariationTree;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Entity\WeekRepository;
 use App\Mealz\MealBundle\Event\WeekChangedEvent;
 use App\Mealz\MealBundle\Form\MealAdmin\WeekForm;
+use App\Mealz\MealBundle\Service\Notification\NotifierInterface;
 use App\Mealz\MealBundle\Service\WeekService;
 use App\Mealz\MealBundle\Validator\Constraints\DishConstraint;
 use DateTime;
@@ -25,10 +30,15 @@ use Symfony\Component\Validator\ConstraintViolation;
 class MealAdminController extends BaseController
 {
     private EventDispatcherInterface $eventDispatcher;
+    private NotifierInterface $notifier;
 
-    public function __construct(EventDispatcherInterface $eventDispatcher)
+    public function __construct(
+        EventDispatcherInterface $eventDispatcher,
+        NotifierInterface        $notifier
+    )
     {
         $this->eventDispatcher = $eventDispatcher;
+        $this->notifier = $notifier;
     }
 
     /**
@@ -93,6 +103,11 @@ class MealAdminController extends BaseController
             if ($form->isValid()) {
                 $this->updateWeek($week);
 
+                $notifyChecked = $form->get('notifyCheckbox')->getData();
+                if ($notifyChecked) {
+                    $this->sendWeekNotification('create', $week);
+                }
+
                 $message = $this->get('translator')->trans('week.created', [], 'messages');
                 $this->addFlashMessage($message, 'success');
 
@@ -139,6 +154,11 @@ class MealAdminController extends BaseController
 
             if (true === $form->isValid()) {
                 $this->updateWeek($week);
+
+                $notifyChecked = $form->get('notifyCheckbox')->getData();
+                if ($notifyChecked) {
+                    $this->sendWeekNotification('edit', $week);
+                }
 
                 $message = $this->get('translator')->trans('week.modified', [], 'messages');
                 $this->addFlashMessage($message, 'success');
@@ -195,5 +215,56 @@ class MealAdminController extends BaseController
         $entityManager->flush();
 
         $this->eventDispatcher->dispatch(new WeekChangedEvent($week));
+    }
+
+    private function sendWeekNotification(Week $week, string $action = 'create'): void
+    {
+        $this->createNotificationMessage($week, $action);
+        //var_dump($message);
+        //exit();
+        //$this->notifier->sendAlert($message);
+    }
+
+    private function createNotificationMessage(Week $week, string $action): string
+    {
+        $translator = $this->get('translator');
+
+        $header = $translator->trans('week.notification.header.' . $action, [
+            '%weekStart%' => $week->getStartTime()->format('d.m.'),
+            '%weekEnd%' => $week->getEndTime()->format('d.m.')],
+            'messages'
+        );
+
+        if ($week->isEnabled()) {
+            $body = '';
+            $dailyDishTree = new DishVariationTreeCollection();
+
+            /** @var Day $day */
+            foreach ($week->getDays() as $day) {
+                $body .= "\n" . $day . ": ";
+
+                if (!$day->isEnabled()) {
+                    $body .= $translator->trans('week.notification.content.no_meals', [], 'messages');
+                    continue;
+                }
+
+                $dailyDishTree->addDayToCollection($day);
+
+                if (count($dailyDishTree) == 0) {
+                    $body .= $translator->trans('week.notification.content.no_meals', [], 'messages');
+                } else {
+                    $body .= implode(', ', $dailyDishTree->toArray());
+                }
+                $dailyDishTree->clear();
+            }
+
+            $footer = $translator->trans('week.notification.footer.default', [], 'messages');
+
+        } else {
+            $body = $translator->trans('week.notification.content.no_week', [], 'messages') . "\n";
+            $footer = $translator->trans('week.notification.footer.no_week', [], 'messages');
+        }
+
+        return nl2br($header . "\n" . $body . "\n\n" . $footer);
     }
 }

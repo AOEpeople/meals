@@ -1,6 +1,18 @@
 week:
   created: Week has been created.
   modified: Week has been modified.
+  notification:
+    header:
+      create: 'We are happy to offer the menu for the week %weekStart%-%weekEnd%'
+      edit: 'Attention! The menu during the week of %weekStart%-%weekEnd% has been edited'
+      no_week: 'Attention! The menu during the week of %weekStart%-%weekEnd% has been disabled'
+    footer:
+      default: Log into your account at https://meals.aoe.com/ to get it!
+      no_week: Log into your account at https://meals.aoe.com/ to take a look at other available meals!
+    content:
+      no_meals: No offers for this day
+      no_week: No offers for this week
+
 entity:
   added: '%entityName% has been added.'
   modified: '%entityName% has been modified.'

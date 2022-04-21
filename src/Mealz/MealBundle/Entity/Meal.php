@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\MealBundle\Entity;
 
 use App\Mealz\MealBundle\Validator\Constraints as MealBundleAssert;
@@ -123,6 +125,7 @@ class Meal
     public function setDay(Day $day): void
     {
         $this->day = $day;
+        $this->setDateTime($day->getDateTime());
     }
 
     public function setDateTime(DateTime $dateTime): void

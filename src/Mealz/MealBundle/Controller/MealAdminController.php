@@ -3,7 +3,6 @@
 namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Day;
-use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\DishRepository;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Week;
@@ -16,6 +15,7 @@ use DateTime;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\UnitOfWork;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -183,17 +183,19 @@ class MealAdminController extends BaseController
      */
     private function updateWeek(Week $week, bool $notify = false): void
     {
+        /** @var EntityManager $entityManager */
+        $entityManager = $this->getDoctrine()->getManager();
+
         /** @var Day $day */
         foreach ($week->getDays() as $day) {
             /** @var Meal $meal */
             foreach ($day->getMeals() as $meal) {
-                if ($meal->getDish() instanceof Dish) {
+                if (UnitOfWork::STATE_REMOVED === $entityManager->getUnitOfWork()->getEntityState($meal)) {
                     $day->removeMeal($meal);
                 }
             }
         }
-        /** @var EntityManager $entityManager */
-        $entityManager = $this->getDoctrine()->getManager();
+
         $entityManager->persist($week);
         $entityManager->flush();
         $this->eventDispatcher->dispatch(new WeekUpdateEvent($week, $notify));

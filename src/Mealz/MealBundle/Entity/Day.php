@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\MealBundle\Entity;
 
 use DateTime;
@@ -17,26 +19,20 @@ class Day extends AbstractMessage
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     *
-     * @var int
      */
-    private $id;
+    private ?int $id = null;
 
     /**
      * @Assert\Type(type="DateTime")
      * @ORM\Column(type="datetime", nullable=FALSE)
-     *
-     * @var DateTime
      */
-    private $dateTime;
+    private DateTime $dateTime;
 
     /**
      * @ORM\ManyToOne(targetEntity="Week", inversedBy="days")
      * @ORM\JoinColumn(name="week_id", referencedColumnName="id")
-     *
-     * @var Week
      */
-    private $week;
+    private Week $week;
 
     /**
      * @ORM\OneToMany(targetEntity="Meal", mappedBy="day", cascade={"all"})
@@ -48,68 +44,43 @@ class Day extends AbstractMessage
     /**
      * @Assert\Type(type="DateTime")
      * @ORM\Column(type="datetime", nullable=TRUE)
-     *
-     * @var DateTime
      */
-    private $lockParticipationDateTime;
+    private DateTime $lockParticipationDateTime;
 
-    /**
-     * Constructor
-     * Day constructor.
-     */
     public function __construct()
     {
+        $this->week = new Week();
         $this->meals = new MealCollection();
         $this->dateTime = new DateTime();
         $this->lockParticipationDateTime = $this->dateTime;
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     *
-     * @SuppressWarnings (PHPMD.ShortVariable)
-     */
-    public function setId($id): void
+    public function setId(int $id): void
     {
         $this->id = $id;
     }
 
-    /**
-     * @return DateTime
-     */
-    public function getDateTime()
+    public function getDateTime(): DateTime
     {
         return $this->dateTime;
     }
 
-    /**
-     * @param DateTime $dateTime
-     */
-    public function setDateTime($dateTime): void
+    public function setDateTime(DateTime $dateTime): void
     {
         $this->dateTime = $dateTime;
     }
 
-    /**
-     * @return Week
-     */
-    public function getWeek()
+    public function getWeek(): Week
     {
         return $this->week;
     }
 
-    /**
-     * @param Week $week
-     */
-    public function setWeek($week): void
+    public function setWeek(Week $week): void
     {
         $this->week = $week;
     }
@@ -123,10 +94,7 @@ class Day extends AbstractMessage
         return new MealCollection($this->meals->toArray());
     }
 
-    /**
-     * @param MealCollection $meals
-     */
-    public function setMeals($meals): void
+    public function setMeals(MealCollection $meals): void
     {
         $this->meals = $meals;
     }
@@ -142,27 +110,18 @@ class Day extends AbstractMessage
         $this->meals->removeElement($meal);
     }
 
-    /**
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->dateTime->format('l');
-    }
-
-    /**
-     * @return DateTime
-     */
-    public function getLockParticipationDateTime()
+    public function getLockParticipationDateTime(): DateTime
     {
         return $this->lockParticipationDateTime;
     }
 
-    /**
-     * @param DateTime $lockDateTime
-     */
-    public function setLockParticipationDateTime($lockDateTime): void
+    public function setLockParticipationDateTime(DateTime $lockDateTime): void
     {
         $this->lockParticipationDateTime = $lockDateTime;
+    }
+
+    public function __toString(): string
+    {
+        return $this->dateTime->format('l');
     }
 }

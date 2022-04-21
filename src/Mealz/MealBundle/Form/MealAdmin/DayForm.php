@@ -1,11 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\MealBundle\Form\MealAdmin;
 
 use App\Mealz\MealBundle\Entity\Day;
-use App\Mealz\MealBundle\Entity\Meal;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\UnitOfWork;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -48,21 +48,6 @@ class DayForm extends AbstractType
                 'required' => false,
                 'attr' => ['class' => 'js-switch'],
             ]);
-
-        $builder->addEventListener(FormEvents::SUBMIT, function (FormEvent $event) {
-            /** @var Day $day */
-            $day = $event->getData();
-            $meals = $day->getMeals();
-
-            foreach ($meals as $meal) {
-                /** @var Meal $meal */
-                if (UnitOfWork::STATE_NEW === $this->entityManager->getUnitOfWork()->getEntityState($meal)) {
-                    $meals->removeElement($meal);
-                }
-            }
-
-            $event->setData($day);
-        });
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, static function (FormEvent $event) {
             $day = $event->getData();

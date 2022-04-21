@@ -49,27 +49,35 @@ class WeekChangedSubscriber implements EventSubscriberInterface
     private function sendWeekNotification(Week $week): void
     {
         $this->createNotificationMessage($week);
-
-        //$this->notifier->sendAlert($message);
     }
 
     private function createNotificationMessage(Week $week): string
     {
-        $header = $this->translator->trans('week.notification.header.default', [
-            '%weekStart%' => $week->getStartTime()->format('d.m.'),
-            '%weekEnd%' => $week->getEndTime()->format('d.m.'), ],
+        $header = $this->translator->trans(
+            'week.notification.header.no_week',
+            [
+                '%weekStart%' => $week->getStartTime()->format('d.m.'),
+                '%weekEnd%' => $week->getEndTime()->format('d.m.'),
+            ],
             'messages'
         );
+        $body = '';
+        $footer = '';
 
         if ($week->isEnabled()) {
+            $header = $this->translator->trans(
+                'week.notification.header.default',
+                [
+                    '%weekStart%' => $week->getStartTime()->format('d.m.'),
+                    '%weekEnd%' => $week->getEndTime()->format('d.m.'),
+                ],
+                'messages'
+            );
             $body = $this->addWeekToMessage($week);
             $footer = $this->translator->trans('week.notification.footer.default', [], 'messages');
-        } else {
-            $body = $this->translator->trans('week.notification.content.no_week', [], 'messages') . "\n";
-            $footer = $this->translator->trans('week.notification.footer.no_week', [], 'messages');
         }
 
-        return nl2br($header . "\n" . $body . "\n\n" . $footer);
+        return $header . "\n" . $body . "\n\n" . $footer;
     }
 
     private function addWeekToMessage(Week $week): string
@@ -86,14 +94,13 @@ class WeekChangedSubscriber implements EventSubscriberInterface
 
     private function addDayToMessage(Day $day): string
     {
-        $body = "\n" . $day . ': ';
+        $body = "\n" . $day . ': ' . "\t";
 
         if (!$day->isEnabled()) {
             $body .= $this->translator->trans('week.notification.content.no_meals', [], 'messages');
 
             return $body;
         }
-
         $mealsOfTheDay = [];
 
         /** @var Meal $meal */
@@ -106,22 +113,20 @@ class WeekChangedSubscriber implements EventSubscriberInterface
             if ($dish instanceof DishVariation) {
                 $mealsOfTheDay[$dish->getParent()->getTitleEn()][] = $dish->getTitleEn();
             } else {
-                if (!array_key_exists($dish->getTitleEn(), $mealsOfTheDay)) {
-                    $mealsOfTheDay[$dish->getTitleEn()] = [];
-                }
+                $mealsOfTheDay[$dish->getTitleEn()] = [];
             }
         }
 
-        if (0 == count($mealsOfTheDay)) {
+        if (empty($mealsOfTheDay)) {
             $body .= $this->translator->trans('week.notification.content.no_meals', [], 'messages');
         } else {
-            $body .= $this->TwoDArrayToString($mealsOfTheDay);
+            $body .= $this->nestedArrayToString($mealsOfTheDay);
         }
 
         return $body;
     }
 
-    public function TwoDArrayToString(array $array): string
+    public function nestedArrayToString(array $array): string
     {
         $result = '';
 
@@ -131,11 +136,11 @@ class WeekChangedSubscriber implements EventSubscriberInterface
          */
         foreach ($array as $key => $value) {
             $result .= $key;
-            if (!(array_key_last($array) === $key)) {
+            if (array_key_last($array) !== $key) {
                 $result .= ', ';
             }
             if (!empty($value)) {
-                $result .= '(' . implode(', ', $value) . ')';
+                $result .= ' (' . implode(', ', $value) . ')';
             }
         }
 

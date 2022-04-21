@@ -13,13 +13,15 @@ Mealz.prototype.styleCheckboxes = function () {
 
         // Enable switchery for week
         var weekSwitchery = new Switchery(this.weekCheckbox);
-        weekSwitchery = $(weekSwitchery.switcher).detach();
-        weekSwitchery.appendTo('.meal-form .headline-tool .switchery-placeholder');
+        $(weekSwitchery.switcher)
+            .detach()
+            .appendTo('.meal-form .headline-tool .switchery-placeholder');
 
         // Enable switchery for notifyCheckbox
         var notifySwitchery = new Switchery(this.notifyCheckbox);
-        notifySwitchery = $(notifySwitchery.switcher).detach();
-        notifySwitchery.appendTo('.meal-form .week-notify-action');
+        $(notifySwitchery.switcher)
+            .detach()
+            .appendTo('.meal-form .week-notify-action');
 
         // Toggle day switcher and dropdown state on changed week state
         this.weekCheckbox.onchange = function () {

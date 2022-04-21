@@ -1,15 +1,6 @@
 week:
   created: Woche wurde angelegt.
   modified: Woche wurde geändert.
-  notification:
-    header:
-      default: 'We are happy to offer the menu for the week %weekStart%-%weekEnd%'
-      no_week: 'The menu during the week of %weekStart%-%weekEnd% has been disabled'
-    footer:
-      default: Log into your account at https://meals.aoe.com/ to get it!
-      no_week: Log into your account at https://meals.aoe.com/ to take a look at other available meals!
-    content:
-      no_meals: No offers for this day
 
 entity:
   added: '%entityName% wurde hinzugefügt.'

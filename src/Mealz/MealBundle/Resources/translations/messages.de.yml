@@ -3,8 +3,7 @@ week:
   modified: Woche wurde geändert.
   notification:
     header:
-      create: 'We are happy to offer the menu for the week %weekStart%-%weekEnd%'
-      edit: 'The menu during the week of %weekStart%-%weekEnd% has been updated'
+      default: 'We are happy to offer the menu for the week %weekStart%-%weekEnd%'
       no_week: 'The menu during the week of %weekStart%-%weekEnd% has been disabled'
     footer:
       default: Log into your account at https://meals.aoe.com/ to get it!

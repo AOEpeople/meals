@@ -10,14 +10,21 @@ use Symfony\Contracts\EventDispatcher\Event;
 class WeekChangedEvent extends Event
 {
     private Week $week;
+    private bool $notify;
 
-    public function __construct($week)
+    public function __construct($week, bool $notify = false)
     {
         $this->week = $week;
+        $this->notify = $notify;
     }
 
     public function getWeek(): Week
     {
         return $this->week;
+    }
+
+    public function doNotify(): bool
+    {
+        return $this->notify;
     }
 }

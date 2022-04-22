@@ -1,57 +1,32 @@
 <?php
 
-declare(strict_types=1);
-
-namespace App\Mealz\MealBundle\Event\Subscriber;
+namespace App\Mealz\MealBundle\Service\Notification;
 
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Week;
-use App\Mealz\MealBundle\Event\WeekChangedEvent;
-use App\Mealz\MealBundle\Service\CombinedMealService;
-use App\Mealz\MealBundle\Service\Notification\NotifierInterface;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class WeekChangedSubscriber implements EventSubscriberInterface
+class MealsNotificationService
 {
     private NotifierInterface $notifier;
-    private CombinedMealService $combinedMealService;
     private TranslatorInterface $translator;
 
     public function __construct(
         NotifierInterface $notifier,
-        CombinedMealService $combinedMealService,
         TranslatorInterface $translator
     ) {
         $this->notifier = $notifier;
-        $this->combinedMealService = $combinedMealService;
         $this->translator = $translator;
     }
 
-    public static function getSubscribedEvents(): array
+    public function sendMattermostNotification(string $message): void
     {
-        return [
-            WeekChangedEvent::class => 'onWeekChanged',
-        ];
+        $this->notifier->sendAlert($message);
     }
 
-    public function onWeekChanged(WeekChangedEvent $event): void
-    {
-        $this->combinedMealService->update($event->getWeek());
-
-        if ($event->doNotify()) {
-            $this->sendWeekNotification($event->getWeek());
-        }
-    }
-
-    private function sendWeekNotification(Week $week): void
-    {
-        $this->createNotificationMessage($week);
-    }
-
-    private function createNotificationMessage(Week $week): string
+    public function createWeekNotification(Week $week): string
     {
         $header = $this->translator->trans(
             'week.notification.header.no_week',
@@ -65,14 +40,14 @@ class WeekChangedSubscriber implements EventSubscriberInterface
         $footer = '';
 
         if ($week->isEnabled()) {
-            $header = $this->translator->trans(
-                'week.notification.header.default',
-                [
-                    '%weekStart%' => $week->getStartTime()->format('d.m.'),
-                    '%weekEnd%' => $week->getEndTime()->format('d.m.'),
-                ],
-                'messages'
-            );
+            $header = '#### ' . $this->translator->trans(
+                    'week.notification.header.default',
+                    [
+                        '%weekStart%' => $week->getStartTime()->format('d.m.'),
+                        '%weekEnd%' => $week->getEndTime()->format('d.m.'),
+                    ],
+                    'messages'
+                );
             $body = $this->addWeekToMessage($week);
             $footer = $this->translator->trans('week.notification.footer.default', [], 'messages');
         }
@@ -82,7 +57,7 @@ class WeekChangedSubscriber implements EventSubscriberInterface
 
     private function addWeekToMessage(Week $week): string
     {
-        $body = '';
+        $body = "\n";
 
         /** @var Day $day */
         foreach ($week->getDays() as $day) {
@@ -94,7 +69,7 @@ class WeekChangedSubscriber implements EventSubscriberInterface
 
     private function addDayToMessage(Day $day): string
     {
-        $body = "\n" . $day . ': ' . "\t";
+        $body = "\n" . $day . ': ';
 
         if (!$day->isEnabled()) {
             $body .= $this->translator->trans('week.notification.content.no_meals', [], 'messages');
@@ -126,7 +101,7 @@ class WeekChangedSubscriber implements EventSubscriberInterface
         return $body;
     }
 
-    public function nestedArrayToString(array $array): string
+    private function nestedArrayToString(array $array): string
     {
         $result = '';
 
@@ -135,7 +110,7 @@ class WeekChangedSubscriber implements EventSubscriberInterface
          * @var array  $value
          */
         foreach ($array as $key => $value) {
-            $result .= $key;
+            $result .= '**' . $key . '**';
             if (array_key_last($array) !== $key) {
                 $result .= ', ';
             }

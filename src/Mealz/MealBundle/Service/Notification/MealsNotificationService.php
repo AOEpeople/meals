@@ -25,11 +25,11 @@ class MealsNotificationService
 
     public function sendWeeklyMenuUpdate(Week $week): void
     {
-        $msg = $this->createWeekNotification($week);
+        $msg = $this->getMenuUpdateNotification($week);
         $this->notifier->sendAlert($msg);
     }
 
-    public function createWeekNotification(Week $week): string
+    private function getMenuUpdateNotification(Week $week): string
     {
         $header = $this->translator->trans(
             'week.notification.header.no_week',
@@ -44,72 +44,62 @@ class MealsNotificationService
 
         if ($week->isEnabled()) {
             $header = '#### ' . $this->translator->trans(
-                    'week.notification.header.default',
-                    [
-                        '%weekStart%' => $week->getStartTime()->format('d.m.'),
-                        '%weekEnd%' => $week->getEndTime()->format('d.m.'),
-                    ],
-                    'messages'
-                );
-            $body = $this->addWeekToMessage($week);
+                'week.notification.header.default',
+                [
+                    '%weekStart%' => $week->getStartTime()->format('d.m.'),
+                    '%weekEnd%' => $week->getEndTime()->format('d.m.'),
+                ],
+                'messages'
+            );
+            $body = $this->getOfferedDishesByWeek($week);
             $footer = $this->translator->trans('week.notification.footer.default', [], 'messages');
         }
 
         return $header . "\n" . $body . "\n\n" . $footer;
     }
 
-    private function addWeekToMessage(Week $week): string
+    private function getOfferedDishesByWeek(Week $week): string
     {
         $body = [];
 
-        /** @var Day $day */
         foreach ($week->getDays() as $day) {
-            $body[] = $this->addDayToMessage($day);
+            $body[] = $this->getOfferedDishesByDay($day);
         }
 
         return "\n" . implode("\n", $body);
     }
 
-    private function addDayToMessage(Day $day): string
+    private function getOfferedDishesByDay(Day $day): string
     {
         $body = $day->getDateTime()->format('l') . ': ';
 
-        if (!$day->isEnabled()) {
-            $body .= $this->translator->trans('week.notification.content.no_meals', [], 'messages');
-
-            return $body;
-        }
-
-        $dayMeals = $day->getMeals();
-        if (0 === count($dayMeals)) {
+        if (!$day->isEnabled() || (0 === count($day->getMeals()))) {
             return $body . $this->translator->trans('week.notification.content.no_meals', [], 'messages');
         }
 
-        $mealsOfTheDay = [];
+        $offeredDishes = [];
 
         /** @var Meal $meal */
-        foreach ($dayMeals as $meal) {
+        foreach ($day->getMeals() as $meal) {
             if ($meal->isCombinedMeal()) {
                 continue;
             }
 
             $dish = $meal->getDish();
             if ($dish instanceof DishVariation) {
-                $mealsOfTheDay[$dish->getParent()->getTitleEn()][] = $dish->getTitleEn();
+                $offeredDishes[$dish->getParent()->getTitleEn()][] = $dish->getTitleEn();
             } else {
-                $mealsOfTheDay[$dish->getTitleEn()] = [];
+                $offeredDishes[$dish->getTitleEn()] = [];
             }
         }
 
-        $body .= $this->nestedArrayToString($mealsOfTheDay);
-
-        return $body;
+        return $body . $this->toString($offeredDishes);
     }
 
     /**
-     * @param array<string, array> $dishes
+     * @param array<string, list<string>> $dishes
      */
-    private function nestedArrayToString(array $dishes): string
+    private function toString(array $dishes): string
     {
         $result = [];
 

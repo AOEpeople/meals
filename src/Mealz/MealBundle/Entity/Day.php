@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Entity;
 
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -49,10 +50,10 @@ class Day extends AbstractMessage
 
     public function __construct()
     {
-        $this->week = new Week();
-        $this->meals = new MealCollection();
         $this->dateTime = new DateTime();
+        $this->week = $this->getDefaultWeek($this->dateTime);
         $this->lockParticipationDateTime = $this->dateTime;
+        $this->meals = new MealCollection();
     }
 
     public function getId(): ?int
@@ -123,5 +124,18 @@ class Day extends AbstractMessage
     public function __toString(): string
     {
         return $this->dateTime->format('l');
+    }
+
+    private function getDefaultWeek(DateTime $date): Week
+    {
+        $year = (int) $date->format('Y');
+        $calWeek = (int) $date->format('W');
+
+        $week = new Week();
+        $week->setYear($year);
+        $week->setCalendarWeek($calWeek);
+        $week->setDays(new ArrayCollection([$this]));
+
+        return $week;
     }
 }

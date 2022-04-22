@@ -25,14 +25,14 @@ class ParticipantPersistenceListenerTest extends AbstractDatabaseTestCase
         $profile = $this->createProfile();
         $participant1 = new Participant($profile, $meal);
         $participant2 = clone $participant1;
-        $this->persistAndFlushAll([$meal, $meal->getDish(), $meal->getDay(), $profile, $participant1]);
+        $this->persistAndFlushAll([$meal, $profile, $participant1]);
 
         // persist second participant
         $this->expectException(ParticipantNotUniqueException::class);
 
         /** @var EntityManager $entityManager */
         $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->transactional(static function ($entityManager) use ($participant2) {
+        $entityManager->wrapInTransaction(static function ($entityManager) use ($participant2) {
             $entityManager->persist($participant2);
             $entityManager->flush();
         });
@@ -55,7 +55,7 @@ class ParticipantPersistenceListenerTest extends AbstractDatabaseTestCase
 
         /** @var EntityManager $entityManager */
         $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->transactional(static function ($entityManager) use ($participant2) {
+        $entityManager->wrapInTransaction(static function ($entityManager) use ($participant2) {
             $entityManager->persist($participant2);
             $entityManager->flush();
         });

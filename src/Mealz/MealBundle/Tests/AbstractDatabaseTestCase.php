@@ -143,10 +143,16 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
         /** @var EntityManagerInterface $entityManager */
         $entityManager = $this->getDoctrine()->getManager();
 
-        $entityManager->transactional(
+        $entityManager->wrapInTransaction(
             static function (EntityManagerInterface $entityManager) use ($entities) {
                 // transaction is need for Participant entities
                 foreach ($entities as $entity) {
+                    if ($entity instanceof Meal) {
+                        $entityManager->persist($entity->getDish());
+                        $entityManager->persist($entity->getDay()->getWeek());
+                        $entityManager->persist($entity->getDay());
+                    }
+
                     $entityManager->persist($entity);
                 }
 

@@ -95,7 +95,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
     {
         $dish = $this->createDish();
         $meal = $this->createMeal($dish);
-        $this->persistAndFlushAll([$dish, $meal->getDay(), $meal]);
+        $this->persistAndFlushAll([$meal]);
         $result = $this->dishRepository->hasDishAssociatedMeals($dish);
         $this->assertTrue($result);
     }
@@ -112,7 +112,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
     {
         $dish = $this->createDish();
         $meal = $this->createMeal($dish, new Day());
-        $this->persistAndFlushAll([$dish, $meal->getDay(),  $meal]);
+        $this->persistAndFlushAll([$meal]);
         $result = $this->dishRepository->countNumberDishWasTaken($dish, '4 weeks ago');
         $this->assertTrue(1 == $result);
     }
@@ -124,8 +124,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
         $day = new Day();
         $day->setDateTime(new \DateTime('2 weeks ago'));
         $meal2 = $this->createMeal($dish, $day);
-        $this->persistAndFlushAll([$dish, $meal->getDay(), $meal]);
-        $this->persistAndFlushAll([$dish, $meal2->getDay(), $meal2]);
+        $this->persistAndFlushAll([$meal, $meal2]);
         $result = $this->dishRepository->countNumberDishWasTaken($dish, '4 weeks ago');
         $this->assertTrue(2 == $result);
     }
@@ -137,8 +136,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
         $day = new Day();
         $day->setDateTime(new \DateTime('30 weeks ago'));
         $meal2 = $this->createMeal($dish, $day);
-        $this->persistAndFlushAll([$dish, $meal->getDay(), $meal]);
-        $this->persistAndFlushAll([$dish, $meal2->getDay(), $meal2]);
+        $this->persistAndFlushAll([$meal, $meal2]);
         $result = $this->dishRepository->countNumberDishWasTaken($dish, '4 weeks ago');
         $this->assertTrue(1 == $result);
     }

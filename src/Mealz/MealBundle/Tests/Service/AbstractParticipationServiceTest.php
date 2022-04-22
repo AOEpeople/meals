@@ -175,7 +175,7 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
         $meal = $this->createMeal($dish, $day);
         $meal->getDay()->addMeal($meal);
 
-        $entities = [$meal->getDish(), $day, $meal];
+        $entities = [$meal];
 
         foreach ($profiles as $profile) {
             $participant = new Participant($profile, $meal);

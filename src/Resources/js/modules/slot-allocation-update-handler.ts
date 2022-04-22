@@ -23,9 +23,9 @@ export class SlotAllocationUpdateHandler {
             if (slotLimit > 0) {
                 const slotTitle = $slotOption.data('title');
                 const slotText = `${slotTitle} (${count}/${slotLimit})`;
-                $slotOption.text(slotText);
-                // disable slot-option if no. of booked slots reach the slot limit
-                $slotOption.prop('disabled', slotLimit <= count);
+                $slotOption
+                    .text(slotText)
+                    .prop('disabled', slotLimit <= count);  // disable slot-option if no. of booked slots reach the slot limit
             }
 
             if ('' !== $slotSelector.val()) {

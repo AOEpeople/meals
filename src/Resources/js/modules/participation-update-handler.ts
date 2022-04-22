@@ -110,8 +110,10 @@ export class ParticipationUpdateHandler {
     }
 
     public static changeToAssignedSlot($checkbox: JQuery, slot: string){
-        let $assignedSlot = $checkbox.closest('.meal').find('[value='+ slot +']');
-        $assignedSlot.prop('selected', 'selected');
+        $checkbox
+            .closest('.meal')
+            .find('[value='+ slot +']')
+            .prop('selected', 'selected');
     }
 
     /**
@@ -386,9 +388,10 @@ export class ParticipationUpdateHandler {
     }
 
     private static updateCheckboxWrapper($checkbox: JQuery) {
-        let $checkboxWrapper = $checkbox.closest('.checkbox-wrapper');
-        $checkboxWrapper.toggleClass('checked', $checkbox.is(':checked'));
-        $checkboxWrapper.toggleClass('disabled', $checkbox.is(':disabled'));
+        $checkbox
+            .closest('.checkbox-wrapper')
+            .toggleClass('checked', $checkbox.is(':checked'))
+            .toggleClass('disabled', $checkbox.is(':disabled'));
     }
 
     /**

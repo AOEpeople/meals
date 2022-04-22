@@ -66,7 +66,7 @@ class OfferService
     }
 
     /**
-     * Gets count of offered meals on $date.
+     * Gets count of offered meals on a specific date.
      */
     public function getOfferCount(DateTime $date): int
     {
@@ -74,7 +74,7 @@ class OfferService
     }
 
     /**
-     * Gets count of offered meals on $date.
+     * Gets count of offers for a specific meal.
      */
     public function getOfferCountByMeal(Meal $meal): int
     {

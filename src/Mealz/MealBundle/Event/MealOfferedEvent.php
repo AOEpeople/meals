@@ -9,15 +9,15 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class MealOfferedEvent extends Event
 {
-    private Meal $Meal;
+    private Meal $meal;
 
     public function __construct(Meal $meal)
     {
-        $this->Meal = $meal;
+        $this->meal = $meal;
     }
 
     public function getMeal(): Meal
     {
-        return $this->Meal;
+        return $this->meal;
     }
 }

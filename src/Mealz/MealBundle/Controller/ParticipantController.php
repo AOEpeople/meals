@@ -267,20 +267,21 @@ class ParticipantController extends BaseController
         $dishTitle = $bookedDish->getTitleEn();
 
         if ($bookedDish->isCombinedDish()) {
-            $combinedDishes = $participant->getCombinedDishes();
             /** @var Dish $dish */
-            foreach ($combinedDishes as $dish) {
+            foreach ($participant->getCombinedDishes() as $dish) {
                 $dishTitle .= ' - ' . $dish->getTitleEn();
             }
+
+            return $dishTitle;
         }
 
-        // If the meal has variations, get its parent and concatenate
-        // the title of the parent meal with the title of the variation.
-        if ($bookedDish->getParent()) {
-            $dishTitle = $bookedDish->getParent()->getTitleEn() . ' ' . $dishTitle;
+        $parentDish = $bookedDish->getParent();
+        if (null === $parentDish) {     // i.e. simple dish
+            return $dishTitle;
         }
 
-        return $dishTitle;
+        // booked dish is a variation, return parent dish title concatenated with dish title
+        return $parentDish->getTitleEn() . ' ' . $dishTitle;
     }
 
     private function triggerDeleteEvents(Participant $participant): void

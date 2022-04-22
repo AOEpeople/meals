@@ -31,11 +31,11 @@ class WeekUpdateSubscriber implements EventSubscriberInterface
 
     public function onWeekUpdate(WeekUpdateEvent $event): void
     {
-        $this->combinedMealService->update($event->getWeek());
+        $week = $event->getWeek();
+        $this->combinedMealService->update($week);
 
         if ($event->getNotify()) {
-            $message = $this->notificationService->createWeekNotification($event->getWeek());
-            $this->notificationService->sendMattermostNotification($message);
+            $this->notificationService->sendWeeklyMenuUpdate($week);
         }
     }
 }

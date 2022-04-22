@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\MealBundle\Service\Notification;
 
 use App\Mealz\MealBundle\Entity\Day;
@@ -21,9 +23,10 @@ class MealsNotificationService
         $this->translator = $translator;
     }
 
-    public function sendMattermostNotification(string $message): void
+    public function sendWeeklyMenuUpdate(Week $week): void
     {
-        $this->notifier->sendAlert($message);
+        $msg = $this->createWeekNotification($week);
+        $this->notifier->sendAlert($msg);
     }
 
     public function createWeekNotification(Week $week): string
@@ -57,34 +60,40 @@ class MealsNotificationService
 
     private function addWeekToMessage(Week $week): string
     {
-        $body = "\n";
+        $body = [];
 
         /** @var Day $day */
         foreach ($week->getDays() as $day) {
-            $body .= $this->addDayToMessage($day);
+            $body[] = $this->addDayToMessage($day);
         }
 
-        return $body;
+        return "\n" . implode("\n", $body);
     }
 
     private function addDayToMessage(Day $day): string
     {
-        $body = "\n" . $day . ': ';
+        $body = $day->getDateTime()->format('l') . ': ';
 
         if (!$day->isEnabled()) {
             $body .= $this->translator->trans('week.notification.content.no_meals', [], 'messages');
 
             return $body;
         }
+
+        $dayMeals = $day->getMeals();
+        if (0 === count($dayMeals)) {
+            return $body . $this->translator->trans('week.notification.content.no_meals', [], 'messages');
+        }
+
         $mealsOfTheDay = [];
 
         /** @var Meal $meal */
-        foreach ($day->getMeals() as $meal) {
+        foreach ($dayMeals as $meal) {
             if ($meal->isCombinedMeal()) {
                 continue;
             }
-            $dish = $meal->getDish();
 
+            $dish = $meal->getDish();
             if ($dish instanceof DishVariation) {
                 $mealsOfTheDay[$dish->getParent()->getTitleEn()][] = $dish->getTitleEn();
             } else {
@@ -92,33 +101,26 @@ class MealsNotificationService
             }
         }
 
-        if (empty($mealsOfTheDay)) {
-            $body .= $this->translator->trans('week.notification.content.no_meals', [], 'messages');
-        } else {
-            $body .= $this->nestedArrayToString($mealsOfTheDay);
-        }
+        $body .= $this->nestedArrayToString($mealsOfTheDay);
 
         return $body;
     }
 
-    private function nestedArrayToString(array $array): string
+    /**
+     * @param array<string, array> $dishes
+     */
+    private function nestedArrayToString(array $dishes): string
     {
-        $result = '';
+        $result = [];
 
-        /**
-         * @var string $key
-         * @var array  $value
-         */
-        foreach ($array as $key => $value) {
-            $result .= '**' . $key . '**';
-            if (array_key_last($array) !== $key) {
-                $result .= ', ';
-            }
-            if (!empty($value)) {
-                $result .= ' (' . implode(', ', $value) . ')';
+        foreach ($dishes as $dishTitle => $dishVarTitles) {
+            $result[$dishTitle] = '**' . $dishTitle . '**';
+
+            if (!empty($dishVarTitles)) {
+                $result[$dishTitle] .= sprintf(' (%s)', implode(', ', $dishVarTitles));
             }
         }
 
-        return $result;
+        return implode(', ', $result);
     }
 }

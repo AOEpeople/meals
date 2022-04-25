@@ -39,6 +39,7 @@ class MealsNotificationService
             ],
             'messages'
         );
+        $tableHeader = '';
         $body = '';
         $footer = '';
 
@@ -51,33 +52,40 @@ class MealsNotificationService
                 ],
                 'messages'
             );
-            $body = $this->getOfferedDishesByWeek($week);
+            $tableHeader = "\n|Day|Meals|\n|:-----|:-----|\n";
+            $body = $this->getDishesByWeek($week);
             $footer = $this->translator->trans('week.notification.footer.default', [], 'messages');
         }
 
-        return $header . "\n" . $body . "\n\n" . $footer;
+        return $header . $tableHeader . $body . "\n\n" . $footer;
     }
 
-    private function getOfferedDishesByWeek(Week $week): string
+    /**
+     * given a Week returns a formatted string of all dishes that are being offered on the menu for the week
+     */
+    private function getDishesByWeek(Week $week): string
     {
         $body = [];
 
         foreach ($week->getDays() as $day) {
-            $body[] = $this->getOfferedDishesByDay($day);
+            $body[] = $this->getDishesByDay($day);
         }
 
-        return "\n" . implode("\n", $body);
+        return "| " . implode("\n| ", $body);
     }
 
-    private function getOfferedDishesByDay(Day $day): string
+    /**
+     * given a Day returns a formatted string of all dishes that are being offered on the menu for the day
+     */
+    private function getDishesByDay(Day $day): string
     {
-        $body = $day->getDateTime()->format('l') . ': ';
+        $body = $day->getDateTime()->format('l') . ' | ';
 
         if (!$day->isEnabled() || (0 === count($day->getMeals()))) {
-            return $body . $this->translator->trans('week.notification.content.no_meals', [], 'messages');
+            return $body . $this->translator->trans('week.notification.content.no_meals', [], 'messages') . ' | ';
         }
 
-        $offeredDishes = [];
+        $dishes = [];
 
         /** @var Meal $meal */
         foreach ($day->getMeals() as $meal) {
@@ -87,13 +95,13 @@ class MealsNotificationService
 
             $dish = $meal->getDish();
             if ($dish instanceof DishVariation) {
-                $offeredDishes[$dish->getParent()->getTitleEn()][] = $dish->getTitleEn();
+                $dishes[$dish->getParent()->getTitleEn()][] = $dish->getTitleEn();
             } else {
-                $offeredDishes[$dish->getTitleEn()] = [];
+                $dishes[$dish->getTitleEn()] = [];
             }
         }
 
-        return $body . $this->toString($offeredDishes);
+        return $body . $this->toString($dishes);
     }
 
     /**
@@ -111,6 +119,6 @@ class MealsNotificationService
             }
         }
 
-        return implode(', ', $result);
+        return implode(', ', $result) . ' |';
     }
 }

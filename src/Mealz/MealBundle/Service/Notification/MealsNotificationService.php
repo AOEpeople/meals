@@ -61,7 +61,7 @@ class MealsNotificationService
     }
 
     /**
-     * given a Week returns a formatted string of all dishes that are being offered on the menu for the week
+     * given a Week returns a formatted string of all dishes that are being offered on the menu for the week.
      */
     private function getDishesByWeek(Week $week): string
     {
@@ -71,11 +71,11 @@ class MealsNotificationService
             $body[] = $this->getDishesByDay($day);
         }
 
-        return "| " . implode("\n| ", $body);
+        return '| ' . implode("\n| ", $body);
     }
 
     /**
-     * given a Day returns a formatted string of all dishes that are being offered on the menu for the day
+     * given a Day returns a formatted string of all dishes that are being offered on the menu for the day.
      */
     private function getDishesByDay(Day $day): string
     {

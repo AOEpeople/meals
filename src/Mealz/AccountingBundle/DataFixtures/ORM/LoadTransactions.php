@@ -43,7 +43,7 @@ class LoadTransactions extends Fixture implements OrderedFixtureInterface
     public function load(ObjectManager $manager): void
     {
         $this->objectManager = $manager;
-        $usersWithTransactions = [];
+        $usersWithTrans = [];
 
         for ($i = 0; $i < 5; ++$i) {
             foreach ($this->getRandomUsers() as $user) {
@@ -53,12 +53,12 @@ class LoadTransactions extends Fixture implements OrderedFixtureInterface
 
                 $date = new DateTime('first day of -' . $i . 'months');
                 $this->addTransaction($user, random_int(20000, 40000) / 100, $date);
-                $usersWithTransactions[$user->getUsername()] = '';
+                $usersWithTrans[$user->getUsername()] = '';
             }
         }
 
-        // ensure one transaction for USER_WITH_TRANSACTION
-        if (!isset($usersWithTransactions[self::USER_WITH_TRANSACTION])) {
+        // ensure USER_WITH_TRANSACTION got at-least one transaction
+        if (!isset($usersWithTrans[self::USER_WITH_TRANSACTION])) {
             $user = $this->getUser(self::USER_WITH_TRANSACTION);
             $this->addTransaction($user, 200.00, new DateTime());
         }

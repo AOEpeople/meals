@@ -15,7 +15,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ParticipationUpdateSubscriber implements EventSubscriberInterface
 {
-    private const TOPIC_PARTICIPATION_UPDATES = 'participation-updates';
+    private const PUBLISH_TOPIC = 'participation-updates';
+    private const PUBLISH_MSG_TYPE = 'participationUpdate';
 
     private LoggerInterface $logger;
     private MealAvailabilityService $availabilityService;
@@ -100,10 +101,10 @@ class ParticipationUpdateSubscriber implements EventSubscriberInterface
 
     private function publish(array $data): void
     {
-        $published = $this->publisher->publish(self::TOPIC_PARTICIPATION_UPDATES, $data);
+        $published = $this->publisher->publish(self::PUBLISH_TOPIC, $data, self::PUBLISH_MSG_TYPE);
 
         if (!$published) {
-            $this->logger->error('publish failure', ['topic' => self::TOPIC_PARTICIPATION_UPDATES]);
+            $this->logger->error('publish failure', ['topic' => self::PUBLISH_TOPIC]);
         }
     }
 }

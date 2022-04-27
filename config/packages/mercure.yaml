@@ -6,4 +6,7 @@ mercure:
             jwt:
                 secret: '%env(MERCURE_JWT_SECRET)%'
                 publish: '*'
-                subscribe: '*'
+                subscribe:
+                    - participation-updates
+                    - meal-offer-updates
+                    - slot-allocation-updates

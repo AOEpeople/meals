@@ -4,7 +4,6 @@ import {CombinedMealDialog, SerializedFormData} from "../modules/combined-meal-d
 import {ParticipationRequest, ParticipationRequestHandler} from "../modules/participation-request-handler";
 import {ParticipationResponse} from "../modules/participation-response-handler";
 import {CombinedMealService} from "../modules/combined-meal-service";
-import {MercureSubscriber} from "../modules/subscriber/mercure-subscriber";
 import {MealOfferUpdate, MealOfferUpdateHandler} from "../modules/meal-offer-update-handler";
 import {ParticipationUpdateHandler} from "../modules/participation-update-handler";
 import {SlotAllocationUpdateHandler} from "../modules/slot-allocation-update-handler";
@@ -21,16 +20,28 @@ export default class MealIndexView {
     constructor() {
         this.$participationCheckboxes = $('.meals-list .meal .participation-checkbox');
         this.initEvents();
+        this.configureMealUpdateHandlers();
 
         if (this.$participationCheckboxes.length > 0) {
             let participationToggleHandler = new ParticipationToggleHandler(this.$participationCheckboxes);
             this.participationPreToggleHandler = new ParticipationPreToggleHandler(participationToggleHandler);
         }
+    }
 
-        let messageSubscriber = new MercureSubscriber($('.weeks').data('msgSubscribeUrl'));
-        messageSubscriber.subscribe(['participation-updates'], ParticipationUpdateHandler.updateParticipation);
-        messageSubscriber.subscribe(['meal-offer-updates'], MealIndexView.handleMealOfferUpdate);
-        messageSubscriber.subscribe(['slot-allocation-updates'], SlotAllocationUpdateHandler.handleUpdate);
+    /**
+     * Configure handlers to process meal push notifications.
+     */
+    private configureMealUpdateHandlers(): void {
+        const event = new EventSource($('.weeks').data('msgSubscribeUrl'), { withCredentials: true });
+        event.addEventListener('participationUpdate', (event: MessageEvent) => {
+            ParticipationUpdateHandler.updateParticipation(JSON.parse(event.data));
+        });
+        event.addEventListener('mealOfferUpdate', (event: MessageEvent) => {
+            MealIndexView.handleMealOfferUpdate(JSON.parse(event.data));
+        });
+        event.addEventListener('slotAllocationUpdate', (event: MessageEvent) => {
+            SlotAllocationUpdateHandler.handleUpdate(JSON.parse(event.data));
+        });
     }
 
     private initEvents(): void {

@@ -22,10 +22,10 @@ class MercurePublisher implements PublisherInterface
      *
      * @throws JsonException
      */
-    public function publish(string $topic, array $data): bool
+    public function publish(string $topic, array $data, string $type): bool
     {
         $payload = json_encode($data, JSON_THROW_ON_ERROR);
-        $update = new Update($topic, $payload, false, null, null, null);
+        $update = new Update($topic, $payload, true, null, $type, null);
 
         return '' !== $this->hub->publish($update);
     }

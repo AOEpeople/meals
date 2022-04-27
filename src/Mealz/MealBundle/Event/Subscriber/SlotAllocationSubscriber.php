@@ -12,7 +12,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class SlotAllocationSubscriber implements EventSubscriberInterface
 {
-    private const TOPIC_SLOT_ALLOCATION_UPDATES = 'slot-allocation-updates';
+    private const PUBLISH_TOPIC = 'slot-allocation-updates';
+    private const PUBLISH_MSG_TYPE = 'slotAllocationUpdate';
 
     private LoggerInterface $logger;
     private PublisherInterface $publisher;
@@ -62,10 +63,10 @@ class SlotAllocationSubscriber implements EventSubscriberInterface
 
     private function publish(array $data): void
     {
-        $published = $this->publisher->publish(self::TOPIC_SLOT_ALLOCATION_UPDATES, $data);
+        $published = $this->publisher->publish(self::PUBLISH_TOPIC, $data, self::PUBLISH_MSG_TYPE);
 
         if (!$published) {
-            $this->logger->error('publish failure', ['topic' => self::TOPIC_SLOT_ALLOCATION_UPDATES]);
+            $this->logger->error('publish failure', ['topic' => self::PUBLISH_TOPIC]);
         }
     }
 }

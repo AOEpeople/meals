@@ -1,7 +1,6 @@
 import {ParticipationGuestToggleHandler} from "../modules/participation-toggle-handler";
 import {ParticipationPreToggleHandler} from "../modules/participation-pre-toggle-handler";
 import {ParticipationUpdateHandler} from "../modules/participation-update-handler";
-import {MercureSubscriber} from "../modules/subscriber/mercure-subscriber";
 import {SlotAllocationUpdateHandler} from "../modules/slot-allocation-update-handler";
 
 export default class MealGuestView {
@@ -9,14 +8,26 @@ export default class MealGuestView {
 
     constructor() {
         this.$participationCheckboxes = $('.meal-guest input[type="checkbox"]');
-
-        if (this.$participationCheckboxes.length > 0) {
-            let participationToggleHandler = new ParticipationGuestToggleHandler(this.$participationCheckboxes);
-            new ParticipationPreToggleHandler(participationToggleHandler);
+        if (1 > this.$participationCheckboxes.length) {
+            return;
         }
 
-        let messageSubscriber = new MercureSubscriber($('[data-msg-subscribe-url]').data('msgSubscribeUrl'));
-        messageSubscriber.subscribe(['participation-updates'], ParticipationUpdateHandler.updateParticipation);
-        messageSubscriber.subscribe(['slot-allocation-updates'], SlotAllocationUpdateHandler.handleUpdate);
+        let participationToggleHandler = new ParticipationGuestToggleHandler(this.$participationCheckboxes);
+        new ParticipationPreToggleHandler(participationToggleHandler);
+
+        this.configureMealUpdateHandlers();
+    }
+
+    /**
+     * Configure handlers to process meal push notifications.
+     */
+    private configureMealUpdateHandlers(): void {
+        const event = new EventSource($('.weeks').data('msgSubscribeUrl'), { withCredentials: true });
+        event.addEventListener('participationUpdate', (event: MessageEvent) => {
+            ParticipationUpdateHandler.updateParticipation(JSON.parse(event.data));
+        });
+        event.addEventListener('slotAllocationUpdate', (event: MessageEvent) => {
+            SlotAllocationUpdateHandler.handleUpdate(JSON.parse(event.data));
+        });
     }
 };

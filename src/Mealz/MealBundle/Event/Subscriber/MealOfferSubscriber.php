@@ -20,7 +20,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class MealOfferSubscriber implements EventSubscriberInterface
 {
-    private const TOPIC_MEAL_OFFER_UPDATES = 'meal-offer-updates';
+    private const PUBLISH_TOPIC = 'meal-offer-updates';
+    private const PUBLISH_MSG_TYPE = 'mealOfferUpdate';
 
     private LoggerInterface $logger;
     private Mailer $mailer;
@@ -95,10 +96,10 @@ class MealOfferSubscriber implements EventSubscriberInterface
 
     private function publish(array $data): void
     {
-        $published = $this->publisher->publish(self::TOPIC_MEAL_OFFER_UPDATES, $data);
+        $published = $this->publisher->publish(self::PUBLISH_TOPIC, $data, self::PUBLISH_MSG_TYPE);
 
         if (!$published) {
-            $this->logger->error('publish failure', ['topic' => self::TOPIC_MEAL_OFFER_UPDATES]);
+            $this->logger->error('publish failure', ['topic' => self::PUBLISH_TOPIC]);
         }
     }
 

@@ -27,11 +27,14 @@
     </p>
     {{ form_start(form) }}
 
+    {# topics for which to receive the notifications/messages from server #}
+    {% set topics = ['participation-updates', 'slot-allocation-updates'] -%}
+
     <div class="meal meal-guest{{ available ? ' is-available' }}"
          data-date="{{ form.vars.value.day.datetime | date('Y-m-d') }}"
          data-day-enabled="{{ form.vars.value.day.enabled }}"
          data-lock-date-time="{{ form.vars.value.day.lockParticipationDateTime | date('Y-m-d\\TH:i:sP') }}"
-         data-msg-subscribe-url="{{ pubsub_subscribe_url }}"
+         data-msg-subscribe-url="{{ mercure(topics, {subscribe: topics})|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_HEX_TAG'))|raw|trim('"') }}"
          data-qa="meal"
          data-qa-is-available="{{ available ? 1 : 0 }}">
         <div class="header">

@@ -157,7 +157,7 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
 
     protected function getMeal(bool $locked = false, bool $expired = false, array $profiles = [], bool $offering = true, ?Dish $dish = null): Meal
     {
-        $zeroMinAndSec = static fn (DateTime $date): DateTime => $date->setTime($date->format('H'), 0);
+        $zeroMinAndSec = static fn (DateTime $date): DateTime => $date->setTime((int) $date->format('H'), 0);
 
         if ($expired) {
             $mealDate = $zeroMinAndSec(new DateTime('-1 hour'));

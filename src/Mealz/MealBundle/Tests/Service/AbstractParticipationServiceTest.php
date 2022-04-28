@@ -157,15 +157,17 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
 
     protected function getMeal(bool $locked = false, bool $expired = false, array $profiles = [], bool $offering = true, ?Dish $dish = null): Meal
     {
+        $zeroMinAndSec = static fn (DateTime $date): DateTime => $date->setTime($date->format('H'), 0);
+
         if ($expired) {
-            $mealDate = new DateTime('-1 hour');
-            $mealLockDate = new DateTime('-12 hours');
+            $mealDate = $zeroMinAndSec(new DateTime('-1 hour'));
+            $mealLockDate = $zeroMinAndSec(new DateTime('-12 hours'));
         } elseif ($locked) {
-            $mealDate = new DateTime('+4 hour');
-            $mealLockDate = new DateTime('-8 hours');
+            $mealDate = $zeroMinAndSec(new DateTime('+4 hour'));
+            $mealLockDate = $zeroMinAndSec(new DateTime('-8 hours'));
         } else {
-            $mealDate = new DateTime('+16 hour');
-            $mealLockDate = new DateTime('+4 hours');
+            $mealDate = $zeroMinAndSec(new DateTime('+16 hour'));
+            $mealLockDate = $zeroMinAndSec(new DateTime('+4 hours'));
         }
 
         $day = new Day();

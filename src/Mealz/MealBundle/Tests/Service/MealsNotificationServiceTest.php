@@ -10,6 +10,7 @@ use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Service\Notification\MealsNotificationService;
+use App\Mealz\MealBundle\Service\Notification\NotifierInterface;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Prophecy\Argument;
@@ -25,15 +26,16 @@ class MealsNotificationServiceTest extends WebTestCase
 
     protected function setUp(): void
     {
-        parent::setUp();
         self::bootKernel();
 
         $prophet = new Prophet();
-        $this->mockNotifier = $prophet->prophesize('App\Mealz\MealBundle\Service\Notification\NotifierInterface');
+        $this->mockNotifier = $prophet->prophesize(NotifierInterface::class);
         $this->translator = self::$container->get('translator');
     }
 
-    // if a day contains a dish, then it should appear and vice versa
+    /**
+     * @testdox Mattermost Notification message shows inserted dish of the week
+     */
     public function testContainsDish(): void
     {
         $days = new ArrayCollection([
@@ -50,7 +52,9 @@ class MealsNotificationServiceTest extends WebTestCase
         $mockedService->sendWeeklyMenuUpdate($week);
     }
 
-    // if the week is disabled, then no days should be shown
+    /**
+     * @testdox If the week is disabled no day should be shown
+     */
     public function testWeekDisabled(): void
     {
         $days = new ArrayCollection([
@@ -61,6 +65,7 @@ class MealsNotificationServiceTest extends WebTestCase
         $week->setEnabled(false);
 
         $this->mockNotifier->sendAlert(Argument::that(static function (string $msg) {
+            self::assertStringNotContainsString('Monday', $msg);
             self::assertStringNotContainsString('Tuesday', $msg);
         }));
         $mockedService = new MealsNotificationService($this->mockNotifier->reveal(), $this->translator);
@@ -68,7 +73,9 @@ class MealsNotificationServiceTest extends WebTestCase
         $mockedService->sendWeeklyMenuUpdate($week);
     }
 
-    // if a day is disabled, then the corresponding dish should not appear
+    /**
+     * @testdox If a certain day is disabled, this day should not be shown
+     */
     public function testDayDisabled(): void
     {
         $days = new ArrayCollection([
@@ -89,7 +96,9 @@ class MealsNotificationServiceTest extends WebTestCase
         $mockedService->sendWeeklyMenuUpdate($week);
     }
 
-    // if a Variation is added, it should also add its parent and categorize as Variation beneath it
+    /**
+     * @testdox If a Variation is added, the parent should also be added accordingly
+     */
     public function testVariationsAddParent(): void
     {
         $days = new ArrayCollection([

@@ -54,6 +54,7 @@ content:
     legend:
       available: Verfügbar
       unavailable: Nicht bestellbar
+      tradeable: Deine Bestellung wird anderen zum Tausch angeboten
     no_service: Kein Service
   menu:
     week: Woche

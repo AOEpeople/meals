@@ -54,6 +54,7 @@ content:
     legend:
       available: Available
       unavailable: Unavailable for order
+      tradeable: Your order is being offered to others
     no_service: No service
   menu:
     week: Week
@@ -79,6 +80,5 @@ form:
     title: Title
     limit: Limit
     order: Sort Order
-
   week:
     notification: Announce menu via Mattermost

@@ -131,27 +131,43 @@
 
   .legend {
     li {
+      position: relative;
       display: block;
       float: left;
       margin-right: 20px;
+      line-height: 1.3em;
 
       @include breakpoint(medium) {
+        position: relative;
+        top: -10px;
+        float: none;
         margin-bottom: 20px;
+        padding-top: 5px;
+        padding-left: 35px;
+
+        &::before {
+          position: absolute;
+          top: 0;
+          left: 0;
+        }
       }
 
       &::before {
-        position: relative;
-        top: 6px;
         display: inline-block;
         width: 25px;
         height: 25px;
         margin-right: 10px;
+        margin-bottom: -6px;
         content: "";
         background: $color-gray-secondary;
       }
 
       &:first-child::before {
         background: $color-green;
+      }
+
+      &:nth-child(3)::before {
+        background: $color-orange;
       }
     }
   }

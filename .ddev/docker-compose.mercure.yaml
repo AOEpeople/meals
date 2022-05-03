@@ -2,10 +2,9 @@ version: '3.6'
 
 services:
   mercure:
-    image: aoepeople/meals-mercure-hub:latest
+    image: dunglas/mercure:v0.13
     container_name: ddev-${DDEV_SITENAME}-mercure
     restart: unless-stopped
-    command: /usr/bin/caddy run -config /etc/caddy/Caddyfile
     environment:
       MERCURE_ALLOWED_ORIGINS: https://meals.test
       MERCURE_ALLOWED_PUBLISH_ORIGINS: web
@@ -25,6 +24,7 @@ services:
     volumes:
       - caddy_data:/data
       - caddy_config:/config
+      - ./caddy/Caddyfile.dev:/etc/caddy/Caddyfile
 
 volumes:
   caddy_data:

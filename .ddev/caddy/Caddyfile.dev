@@ -1,34 +1,29 @@
 # Learn how to configure the Mercure.rocks Hub on https://mercure.rocks/docs/hub/config
 {
-	auto_https off
+    auto_https off
 }
 
-http://meals.test:8080, http://mercure:8080
+{$SERVER_ADDRESS}
 
 log
 
 route {
-	redir / /.well-known/mercure/ui/
-	encode zstd gzip
+    redir / /.well-known/mercure/ui/
+    encode zstd gzip
 
-	mercure {
-		# Transport to use (default to Bolt)
-		transport_url {$MERCURE_TRANSPORT_URL:bolt://mercure.db}
-		# Publisher JWT key
-		publisher_jwt {env.MERCURE_PUBLISHER_JWT_KEY} {env.MERCURE_PUBLISHER_JWT_ALG}
-		# Subscriber JWT key
-		subscriber_jwt {env.MERCURE_SUBSCRIBER_JWT_KEY} {env.MERCURE_SUBSCRIBER_JWT_ALG}
-		# Permissive configuration for the development environment
-		cors_origins *
-		publish_origins *
-		demo
-		anonymous
-		subscriptions
-		# Extra directives
-		# {$MERCURE_EXTRA_DIRECTIVES}
-	}
+    mercure {
+        # Transport to use (default to Bolt)
+        transport_url {$MERCURE_TRANSPORT_URL:bolt://mercure.db}
+        # Publisher JWT key
+        publisher_jwt {env.MERCURE_PUBLISHER_JWT_KEY} {env.MERCURE_PUBLISHER_JWT_ALG}
+        # Subscriber JWT key
+        subscriber_jwt {env.MERCURE_SUBSCRIBER_JWT_KEY} {env.MERCURE_SUBSCRIBER_JWT_ALG}
 
-	respond /healthz 200
+        cors_origins {$MERCURE_ALLOWED_ORIGINS}
+        publish_origins {$MERCURE_ALLOWED_PUBLISH_ORIGINS}
+    }
 
-	respond "Not Found" 404
+    respond /healthz 200
+
+    respond "Not Found" 404
 }

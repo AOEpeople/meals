@@ -158,7 +158,7 @@ export class CombinedMealService {
         let desc = $dishContainer.data('description');
         $dishContainer.find('.description .dish-combination').empty().text(desc);
         $dishContainer.find('.title').removeClass('edit');
-        if (true === $dishContainer.hasClass('combined-meal')) {
+        if (CombinedMealService.isCombinedDish($dishContainer)) {
             $dishContainer.find('.title').addClass('no-description');
         }
         $dishContainer.attr('data-id', '');

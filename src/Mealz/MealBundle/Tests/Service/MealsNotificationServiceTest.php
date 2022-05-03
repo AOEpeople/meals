@@ -108,8 +108,6 @@ class MealsNotificationServiceTest extends WebTestCase
         $dishVariationA = new DishVariation();
         $dishVariationB = new DishVariation();
         $dishParent = new Dish();
-        $mealA = new Meal();
-        $mealB = new Meal();
 
         $dishVariationA->setTitleEn('VariationA');
         $dishVariationB->setTitleEn('VariationB');
@@ -119,11 +117,12 @@ class MealsNotificationServiceTest extends WebTestCase
         $dishVariationA->setParent($dishParent);
         $dishVariationB->setParent($dishParent);
 
-        $mealA->setDish($dishVariationA);
-        $mealB->setDish($dishVariationB);
+        $day = $days->first();
+        $mealA = new Meal($dishVariationA, $day);
+        $mealB = new Meal($dishVariationB, $day);
 
-        $days->first()->addMeal($mealA);
-        $days->first()->addMeal($mealB);
+        $day->addMeal($mealA);
+        $day->addMeal($mealB);
 
         $week = $this->generateWeek($days);
 
@@ -154,9 +153,7 @@ class MealsNotificationServiceTest extends WebTestCase
             $dish = new Dish();
             $dish->setTitleEn($dishTitle);
 
-            $meal = new Meal();
-            $meal->setDish($dish);
-
+            $meal = new Meal($dish, $day);
             $day->addMeal($meal);
         }
 

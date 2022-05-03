@@ -17,6 +17,7 @@ use DateTime;
 use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
 use Prophecy\PhpUnit\ProphecyTrait;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -184,8 +185,13 @@ class TransactionServiceTest extends AbstractDatabaseTestCase
     {
         /** @var ProfileRepository $profileRepo */
         $profileRepo = $this->getDoctrine()->getRepository(Profile::class);
+        $profile = $profileRepo->find($username);
 
-        return $profileRepo->find($username);
+        if (null === $profile) {
+            throw new RuntimeException($username . ': profile not found');
+        }
+
+        return $profile;
     }
 
     /**

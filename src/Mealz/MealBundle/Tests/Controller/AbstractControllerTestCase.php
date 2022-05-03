@@ -54,8 +54,8 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         $repo = $this->client->getContainer()->get('doctrine')->getRepository(Profile::class);
         $user = $repo->find($username);
 
-        if (!($user instanceof UserInterface)) {
-            throw new RuntimeException('user not found: ' . $username);
+        if (!($user instanceof Profile)) {
+            throw new RuntimeException($username . ': user not found');
         }
 
         $token = new UsernamePasswordToken($user, null, $firewall, $user->getRoles());
@@ -170,13 +170,13 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         $criteria
             ->where(Criteria::expr()->lte('dateTime', $dateTime))
             ->orderBy(['dateTime' => Criteria::DESC]);
-        $meals = $mealRepository->matching($criteria);
 
-        if (1 > $meals->count()) {
-            $this->fail('No test meal found.');
+        $meal = $mealRepository->matching($criteria)->first();
+        if ($meal instanceof Meal) {
+            return $meal;
         }
 
-        return $meals->first();
+        throw new RuntimeException('test meal not found');
     }
 
     /**

@@ -80,3 +80,6 @@ form:
     title: Titel
     limit: Limit
     order: Sortierung
+
+  week:
+    notification: Menü in Mattermost bekanntgeben

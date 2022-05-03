@@ -7,7 +7,7 @@ use App\Mealz\MealBundle\Entity\DishRepository;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Entity\WeekRepository;
-use App\Mealz\MealBundle\Event\WeekChangedEvent;
+use App\Mealz\MealBundle\Event\WeekUpdateEvent;
 use App\Mealz\MealBundle\Form\MealAdmin\WeekForm;
 use App\Mealz\MealBundle\Service\WeekService;
 use App\Mealz\MealBundle\Validator\Constraints\DishConstraint;
@@ -91,7 +91,8 @@ class MealAdminController extends BaseController
             }
 
             if ($form->isValid()) {
-                $this->updateWeek($week);
+                $notify = $form->get('notifyCheckbox')->getData();
+                $this->updateWeek($week, $notify);
 
                 $message = $this->get('translator')->trans('week.created', [], 'messages');
                 $this->addFlashMessage($message, 'success');
@@ -138,7 +139,8 @@ class MealAdminController extends BaseController
             }
 
             if (true === $form->isValid()) {
-                $this->updateWeek($week);
+                $notify = $form->get('notifyCheckbox')->getData();
+                $this->updateWeek($week, $notify);
 
                 $message = $this->get('translator')->trans('week.modified', [], 'messages');
                 $this->addFlashMessage($message, 'success');
@@ -178,7 +180,7 @@ class MealAdminController extends BaseController
     /**
      * @throws OptimisticLockException|ORMException
      */
-    private function updateWeek(Week $week): void
+    private function updateWeek(Week $week, bool $notify = false): void
     {
         /** @var Day $day */
         foreach ($week->getDays() as $day) {
@@ -193,7 +195,6 @@ class MealAdminController extends BaseController
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($week);
         $entityManager->flush();
-
-        $this->eventDispatcher->dispatch(new WeekChangedEvent($week));
+        $this->eventDispatcher->dispatch(new WeekUpdateEvent($week, $notify));
     }
 }

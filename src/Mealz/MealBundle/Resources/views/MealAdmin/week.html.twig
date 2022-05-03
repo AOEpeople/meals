@@ -93,6 +93,10 @@
                 </div>
             </div>
         {% endfor %}
+        <div class="week-notify-action">
+            {{- 'form.week.notification'|trans({},'general') -}}
+            {{ form_widget(form.notifyCheckbox) }}
+        </div>
         {{ form_widget(form.Cancel) }}
         {{ form_widget(form.Save) }}
         {{ form_rest(form) }}

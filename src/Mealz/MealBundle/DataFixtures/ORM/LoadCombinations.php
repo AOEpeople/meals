@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\DataFixtures\ORM;
 
 use App\Mealz\MealBundle\Entity\Week;
-use App\Mealz\MealBundle\Event\WeekChangedEvent;
+use App\Mealz\MealBundle\Event\WeekUpdateEvent;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -66,7 +66,7 @@ class LoadCombinations extends Fixture implements OrderedFixtureInterface
     private function loadCombination(): void
     {
         foreach ($this->weeks as $week) {
-            $this->eventDispatcher->dispatch(new WeekChangedEvent($week));
+            $this->eventDispatcher->dispatch(new WeekUpdateEvent($week));
         }
     }
 }

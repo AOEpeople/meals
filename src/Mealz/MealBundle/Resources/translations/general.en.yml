@@ -66,6 +66,7 @@ content:
     message_body: As our guest, we would like to invite you to lunch in the AOE Eatery. To order a meal, register no later than one day before your visit to AOE with your personal information and choose the desired dish. Your order will be forwarded to our cooks.
     message_ending: We hope that you enjoy your lunch
     message_signature: AOE
+
 form:
   placeholder:
     title: Title
@@ -79,3 +80,5 @@ form:
     title: Title
     limit: Limit
     order: Sort Order
+  week:
+    notification: Announce menu via Mattermost

@@ -34,6 +34,7 @@ window.Mealz = function () {
     this.hiddenClass = 'hidden';
     this.weekCheckbox = $('.meal-form .week-disable input[type="checkbox"]')[0];
     this.$weekDayCheckboxes = $('.meal-form .week-day-action input[type="checkbox"]');
+    this.notifyCheckbox = $('.meal-form .week-notify-action input[type="checkbox"]')[0];
     this.$participationCheckboxes = $('.meals-list input.checkbox, .meals-list input[type = "checkbox"]');
     this.$guestParticipationCheckboxes = $('.meal-guests input.checkbox, .meal-guests input[type = "checkbox"]');
     this.$iconCells = $('.icon-cell');

@@ -143,7 +143,10 @@ export class CombinedMealService {
     private static resetDish($dishContainer: JQuery): void {
         let desc = $dishContainer.data('description');
         $dishContainer.find('.description .dish-combination').empty().text(desc);
-        $dishContainer.find('.title').removeClass('edit').addClass('no-description');
+        $dishContainer.find('.title').removeClass('edit');
+        if (true === $dishContainer.hasClass('combined-meal')) {
+            $dishContainer.find('.title').addClass('no-description');
+        }
         $dishContainer.attr('data-id', '');
         $dishContainer.attr('data-booked-dishes', '');
     }

@@ -8,6 +8,7 @@
         {% endif %}
     {% endfor %}
     {% for meal in mealVariationGroup %}
+        {% set participant = meal.getParticipant(app.user.profile) -%}
         {% set dish = meal.dish %}
         {% if loop.first %}
             <div class="title">
@@ -17,7 +18,7 @@
                 {% endif -%}
             </div>
         {% endif %}
-        <div class="variation-row" data-slug="{{ dish.slug }}">
+        <div class="variation-row" data-slug="{{ dish.slug }}" data-participant-id="{{ participant ? participant.id }}">
             <div class="description">
                 <div class="text text-variation">
                     {{- dish.title -}}

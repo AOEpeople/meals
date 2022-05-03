@@ -11,9 +11,6 @@ use App\Mealz\MealBundle\Entity\ParticipantRepository;
 
 class MealAvailabilityService
 {
-    private array $availabilityCache = [];
-    private array $participantCount = [];
-
     private ParticipantRepository $participantRepo;
 
     public function __construct(ParticipantRepository $participantRepo)
@@ -26,15 +23,7 @@ class MealAvailabilityService
      */
     public function getByDay(Day $day): array
     {
-        $dayId = $day->getId();
-
-        if (isset($this->availabilityCache[$dayId])) {
-            return $this->availabilityCache[$dayId];
-        }
-
-        $this->availabilityCache[$dayId] = $this->getAvailability($day->getMeals());
-
-        return $this->availabilityCache[$dayId];
+        return $this->getAvailability($day->getMeals());
     }
 
     /**
@@ -42,14 +31,9 @@ class MealAvailabilityService
      */
     public function getByMeal(Meal $meal)
     {
-        $mealId = $meal->getId();
-        $dayId = $meal->getDay()->getId();
+        $availability = $this->getAvailability($meal->getDay()->getMeals());
 
-        if (!isset($this->availabilityCache[$dayId][$mealId])) {
-            $this->availabilityCache[$dayId][$mealId] = $this->getMealAvailability($meal);
-        }
-
-        return $this->availabilityCache[$dayId][$mealId];
+        return $availability[$meal->getId()] ?? false;
     }
 
     public function isAvailable(Meal $meal): bool
@@ -204,17 +188,14 @@ class MealAvailabilityService
 
     private function getParticipantCount(Meal $meal): ?int
     {
-        $mealDate = $meal->getDateTime()->format('Ymd');
-        if (!isset($this->participantCount[$mealDate])) {
-            $this->participantCount[$mealDate] = ParticipationCountService::getParticipationByDay($meal->getDay());
-        }
+        $participantCount = ParticipationCountService::getParticipationByDay($meal->getDay());
 
         $dishSlug = $meal->getDish()->getSlug();
-        if (!isset($this->participantCount[$mealDate]['countByMealIds'][$meal->getId()][$dishSlug])) {
+        if (!isset($participantCount['countByMealIds'][$meal->getId()][$dishSlug])) {
             return null;
         }
 
-        return $this->participantCount[$mealDate]['countByMealIds'][$meal->getId()][$dishSlug]['count'];
+        return $participantCount['countByMealIds'][$meal->getId()][$dishSlug]['count'];
     }
 
     private function getTotalParticipantCount(Meal $meal): ?float
@@ -223,16 +204,13 @@ class MealAvailabilityService
             return $this->getParticipantCount($meal);
         }
 
-        $mealDate = $meal->getDateTime()->format('Ymd');
-        if (!isset($this->participantCount[$mealDate])) {
-            $this->participantCount[$mealDate] = ParticipationCountService::getParticipationByDay($meal->getDay());
-        }
+        $participantCount = ParticipationCountService::getParticipationByDay($meal->getDay());
 
         $dishSlug = $meal->getDish()->getSlug();
-        if (!isset($this->participantCount[$mealDate]['totalCountByDishSlugs'][$dishSlug])) {
+        if (!isset($participantCount['totalCountByDishSlugs'][$dishSlug])) {
             return null;
         }
 
-        return $this->participantCount[$mealDate]['totalCountByDishSlugs'][$dishSlug]['count'];
+        return $participantCount['totalCountByDishSlugs'][$dishSlug]['count'];
     }
 }

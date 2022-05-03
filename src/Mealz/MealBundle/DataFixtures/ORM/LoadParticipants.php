@@ -6,7 +6,6 @@ namespace App\Mealz\MealBundle\DataFixtures\ORM;
 
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
-use App\Mealz\MealBundle\Entity\DishCollection;
 use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
@@ -87,7 +86,7 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
             $profile = $this->getProfile($username);
 
             $participant = new Participant($profile, $combinedMeal);
-            $participant->setCombinedDishes(new DishCollection($combinedMealDishes));
+            $participant->setCombinedDishes($combinedMealDishes);
 
             $this->objectManager->persist($participant);
         }

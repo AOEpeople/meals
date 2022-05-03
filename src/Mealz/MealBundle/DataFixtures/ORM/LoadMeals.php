@@ -82,11 +82,8 @@ class LoadMeals extends Fixture implements OrderedFixtureInterface
      */
     public function loadNewMeal(Day $day, Dish $dish): void
     {
-        $meal = new Meal();
-        $meal->setDay($day);
+        $meal = new Meal($dish, $day);
 
-        $meal->setDateTime(clone $day->getDateTime());
-        $meal->setDish($dish);
         $meal->setPrice($dish->getPrice());
         $this->objectManager->persist($meal);
         $this->addReference('meal-' . $this->counter++, $meal);

@@ -38,9 +38,9 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
         $this->setParticipationService(new ParticipationService(
             $this->entityManager,
             $doorman,
+            $this->dayRepo,
             $this->participantRepo,
-            $this->slotRepo,
-            $this->dayRepo
+            $this->slotRepo
         ));
 
         $price = (float) self::$kernel->getContainer()->getParameter('mealz.meal.combined.price');
@@ -59,7 +59,7 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
         $profile = $this->getProfile('alice.meals');
         $meal = $this->getMeal();
 
-        $sut = new ParticipationService($this->entityManager, $doorman, $this->participantRepo, $this->slotRepo, $this->dayRepo);
+        $sut = new ParticipationService($this->entityManager, $doorman, $this->dayRepo, $this->participantRepo, $this->slotRepo);
         $out = $sut->join($profile, $meal);
 
         $this->assertArrayHasKey('participant', $out);
@@ -84,7 +84,7 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
         $profile = $this->getProfile('alice.meals');
         $meal = $this->getMeal();
 
-        $sut = new ParticipationService($this->entityManager, $doorman, $this->participantRepo, $this->slotRepo, $this->dayRepo);
+        $sut = new ParticipationService($this->entityManager, $doorman, $this->dayRepo, $this->participantRepo, $this->slotRepo);
         $out = $sut->join($profile, $meal);
 
         $this->assertArrayHasKey('participant', $out);
@@ -113,7 +113,7 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
         $profile = $this->getProfile('alice.meals');
         $meal = $this->getMeal();
 
-        $sut = new ParticipationService($this->entityManager, $doorman, $this->participantRepo, $this->slotRepo, $this->dayRepo);
+        $sut = new ParticipationService($this->entityManager, $doorman, $this->dayRepo, $this->participantRepo, $this->slotRepo);
         $out = $sut->join($profile, $meal);
 
         $this->assertArrayHasKey('participant', $out);
@@ -150,7 +150,7 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
         $user2 = $this->getProfile('bob.meals');
         $meal = $this->getMeal();
 
-        $sut = new ParticipationService($this->entityManager, $doorman, $this->participantRepo, $this->slotRepo, $this->dayRepo);
+        $sut = new ParticipationService($this->entityManager, $doorman, $this->dayRepo, $this->participantRepo, $this->slotRepo);
 
         // occupy first slot
         $sut->join($user1, $meal);
@@ -182,7 +182,7 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
         $profile = $this->getProfile('alice.meals');
         $meal = $this->getMeal();
 
-        $sut = new ParticipationService($this->entityManager, $doorman, $this->participantRepo, $this->slotRepo, $this->dayRepo);
+        $sut = new ParticipationService($this->entityManager, $doorman, $this->dayRepo, $this->participantRepo, $this->slotRepo);
         $out = $sut->join($profile, $meal);
 
         $this->assertArrayHasKey('participant', $out);
@@ -217,7 +217,7 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
         $user2 = $this->getProfile('bob.meals');
         $meal = $this->getMeal();
 
-        $sut = new ParticipationService($this->entityManager, $doorman, $this->participantRepo, $this->slotRepo, $this->dayRepo);
+        $sut = new ParticipationService($this->entityManager, $doorman, $this->dayRepo, $this->participantRepo, $this->slotRepo);
 
         // occupy first slot
         $sut->join($user1, $meal);
@@ -247,7 +247,7 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
         $profile = $this->getProfile('alice.meals');
         $meal = $this->getMeal();
 
-        $sut = new ParticipationService($this->entityManager, $doorman, $this->participantRepo, $this->slotRepo, $this->dayRepo);
+        $sut = new ParticipationService($this->entityManager, $doorman, $this->dayRepo, $this->participantRepo, $this->slotRepo);
         $out = $sut->join($profile, $meal);
 
         $this->assertNull($out);
@@ -259,13 +259,13 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
     public function testAcceptMealSuccess(): void
     {
         // mock to lock participation (no more joining) and fake normal user login, i.e. no admin or kitchen staff
-        $doormanMock = $this->getDoormanMock(false, false);
+        $doorman = $this->getDoormanMock(false, false);
 
         $user = $this->getProfile('alice.meals');
         $offerer = $this->getProfile('bob.meals');
         $meal = $this->getMeal(true, false, [$offerer]);
 
-        $sut = new ParticipationService($this->entityManager, $doormanMock, $this->participantRepo, $this->slotRepo, $this->dayRepo);
+        $sut = new ParticipationService($this->entityManager, $doorman, $this->dayRepo, $this->participantRepo, $this->slotRepo);
         $out = $sut->join($user, $meal);
 
         $this->assertIsArray($out);
@@ -284,13 +284,13 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
     public function testAcceptMealFailureMealExpired(): void
     {
         // mock to lock participation (no more joining) and fake normal user login, i.e. no admin or kitchen staff
-        $doormanMock = $this->getDoormanMock(false, false);
+        $doorman = $this->getDoormanMock(false, false);
 
         $user = $this->getProfile('alice.meals');
         $offerer = $this->getProfile('bob.meals');
         $meal = $this->getMeal(true, true, [$offerer]);
 
-        $sut = new ParticipationService($this->entityManager, $doormanMock, $this->participantRepo, $this->slotRepo, $this->dayRepo);
+        $sut = new ParticipationService($this->entityManager, $doorman, $this->dayRepo, $this->participantRepo, $this->slotRepo);
         $out = $sut->join($user, $meal);
 
         $this->assertNull($out);
@@ -302,12 +302,12 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
     public function testAcceptMealFailureMealNotOffered(): void
     {
         // mock to lock participation (no more joining) and fake normal user login, i.e. no admin or kitchen staff
-        $doormanMock = $this->getDoormanMock(false, false);
+        $doorman = $this->getDoormanMock(false, false);
 
         $user = $this->getProfile('alice.meals');
         $meal = $this->getMeal(true);
 
-        $sut = new ParticipationService($this->entityManager, $doormanMock, $this->participantRepo, $this->slotRepo, $this->dayRepo);
+        $sut = new ParticipationService($this->entityManager, $doorman, $this->dayRepo, $this->participantRepo, $this->slotRepo);
         $out = $sut->join($user, $meal);
 
         $this->assertNull($out);
@@ -318,7 +318,7 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
      *
      * @testdox An anonymous user (Profile) can join a combined meal.
      */
-    public function joinCombinedMealSuccess()
+    public function joinCombinedMealSuccess(): void
     {
         $profile = $this->getProfile('alice.meals');
         $this->checkJoinCombinedMealSuccess($profile);
@@ -329,7 +329,7 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
      *
      * @testdox An anonymous user (Profile) can't join a combined meal with more than 2 slugs.
      */
-    public function joinCombinedMealWithThreeMealsSuccess()
+    public function joinCombinedMealWithThreeMealsSuccess(): void
     {
         $profile = $this->getProfile('alice.meals');
         $this->checkJoinCombinedMealWithThreeMealsFail($profile);
@@ -340,7 +340,7 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
      *
      * @testdox An anonymous user (Profile) can't join a combined meal with wrong slugs.
      */
-    public function joinCombinedMealWithWrongSlugFail()
+    public function joinCombinedMealWithWrongSlugFail(): void
     {
         $profile = $this->getProfile('alice.meals');
         $this->checkJoinCombinedMealWithWrongSlugFail($profile);
@@ -351,7 +351,7 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
      *
      * @testdox An anonymous user (Profile) can't join a combined meal with empty slugs.
      */
-    public function joinCombinedMealWithEmptySlugFail()
+    public function joinCombinedMealWithEmptySlugFail(): void
     {
         $profile = $this->getProfile('alice.meals');
         $this->checkJoinCombinedMealWithEmptySlugFail($profile);
@@ -362,7 +362,7 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
      *
      * @testdox
      */
-    public function getBookedDishCombination()
+    public function getBookedDishCombination(): void
     {
         $profile = $this->getProfile('alice.meals');
 
@@ -382,7 +382,9 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
 
         $this->getParticipationService()->join($profile, $combinedMeal, $slot, $dishSlugs);
 
-        $dishCombination = $this->getParticipationService()->getBookedDishCombination($profile, $combinedMeal);
+        $participant = $combinedMeal->getParticipant($profile);
+        $dishCombination = $participant->getCombinedDishes();
+
         $this->assertNotEmpty($dishCombination);
         $this->assertSameSize($dishSlugs, $dishCombination);
         /** @var Dish $dish */

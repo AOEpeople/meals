@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * The name "profile" was chosen because in Symfony a "User" is someone who is allowed to log in.
  *
  * @ORM\Table(name="profile")
- * @ORM\Entity(repositoryClass="ProfileRepository")
+ * @ORM\Entity(repositoryClass="App\Mealz\UserBundle\Entity\ProfileRepository")
  */
 class Profile implements UserInterface
 {

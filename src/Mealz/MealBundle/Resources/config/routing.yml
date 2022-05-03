@@ -35,10 +35,6 @@ MealzMealBundle_Meal_offers:
     path: /menu/{date}/{dish}/offers
     defaults: { _controller: App\Mealz\MealBundle\Controller\MealController::getOffers }
 
-MealzMealBundle_Meal_updateOffers:
-    path: /menu/meal/update-offers
-    defaults: { _controller: App\Mealz\MealBundle\Controller\MealController::updateOffers }
-
 MealzMealBundle_Meal_guest:
     path: /menu/guest/{hash}
     defaults: { _controller: App\Mealz\MealBundle\Controller\MealGuestController::joinAsGuest }
@@ -92,12 +88,12 @@ MealzMealBundle_Participant_delete:
     defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::delete }
 
 MealzMealBundle_Participant_swap:
-    path: /menu/meal/{participant}/swap
-    defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::swap }
+    path: /menu/meal/{participant}/offer-meal
+    defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::offerMeal }
 
 MealzMealBundle_Participant_unswap:
-    path: /menu/meal/{participant}/unswap
-    defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::swap }
+    path: /menu/meal/{participant}/cancel-offered-meal
+    defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::cancelOfferedMeal }
 
 MealzMealBundle_Participant_updateSlot:
     path: /menu/meal/{date}/update-slot
@@ -181,19 +177,3 @@ MealzMealBundle_Print_participations:
 mealz_meal_edit_participations:
     path: /participations/{week}/edit
     defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::editParticipation }
-
-MealzMealBundle_Slots_status_on:
-    path: /participation/slots-status/{date}
-    defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipationUpdateController::getSlotStatusOn }
-
-MealzMealBundle_Slots_status:
-    path: /participation/slots-status
-    defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipationUpdateController::getSlotStatus }
-
-MealzMealBundle_Participation_count_status:
-    path: /participation/count-status
-    defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipationUpdateController::getParticipationCountStatus }
-
-MealzMealBundle_Participation_count_status_on:
-    path: /participation/count-status/{date}
-    defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipationUpdateController::getParticipationCountStatusOn }

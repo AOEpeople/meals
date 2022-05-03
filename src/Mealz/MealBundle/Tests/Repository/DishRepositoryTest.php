@@ -2,6 +2,7 @@
 
 namespace App\Mealz\MealBundle\Tests\Repository;
 
+use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\DishRepository;
 use App\Mealz\MealBundle\EventListener\LocalisationListener;
@@ -94,9 +95,9 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
     {
         $dish = $this->createDish();
         $meal = $this->createMeal($dish);
-        $this->persistAndFlushAll([$dish, $meal]);
+        $this->persistAndFlushAll([$meal]);
         $result = $this->dishRepository->hasDishAssociatedMeals($dish);
-        $this->assertTrue(1 == $result);
+        $this->assertTrue($result);
     }
 
     public function testCountNumberDishWasTakenWithNoCounts(): void
@@ -110,8 +111,8 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
     public function testCountNumberDishWasTakenWithAtLeastOneCount(): void
     {
         $dish = $this->createDish();
-        $meal = $this->createMeal($dish);
-        $this->persistAndFlushAll([$dish, $meal]);
+        $meal = $this->createMeal($dish, new Day());
+        $this->persistAndFlushAll([$meal]);
         $result = $this->dishRepository->countNumberDishWasTaken($dish, '4 weeks ago');
         $this->assertTrue(1 == $result);
     }
@@ -120,9 +121,10 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
     {
         $dish = $this->createDish();
         $meal = $this->createMeal($dish);
-        $meal2 = $this->createMeal($dish, new \DateTime('2 weeks ago'));
-        $this->persistAndFlushAll([$dish, $meal]);
-        $this->persistAndFlushAll([$dish, $meal2]);
+        $day = new Day();
+        $day->setDateTime(new \DateTime('2 weeks ago'));
+        $meal2 = $this->createMeal($dish, $day);
+        $this->persistAndFlushAll([$meal, $meal2]);
         $result = $this->dishRepository->countNumberDishWasTaken($dish, '4 weeks ago');
         $this->assertTrue(2 == $result);
     }
@@ -131,9 +133,10 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
     {
         $dish = $this->createDish();
         $meal = $this->createMeal($dish);
-        $meal2 = $this->createMeal($dish, new \DateTime('30 weeks ago'));
-        $this->persistAndFlushAll([$dish, $meal]);
-        $this->persistAndFlushAll([$dish, $meal2]);
+        $day = new Day();
+        $day->setDateTime(new \DateTime('30 weeks ago'));
+        $meal2 = $this->createMeal($dish, $day);
+        $this->persistAndFlushAll([$meal, $meal2]);
         $result = $this->dishRepository->countNumberDishWasTaken($dish, '4 weeks ago');
         $this->assertTrue(1 == $result);
     }

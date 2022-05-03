@@ -29,8 +29,6 @@ export class ParticipationRequestHandler {
             return;
         }
 
-        let self = this
-
         $.ajax({
             method: participationRequest.method,
             url: participationRequest.url,

@@ -10,10 +10,11 @@ use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\SlotRepository;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Entity\WeekRepository;
+use App\Mealz\MealBundle\Event\MealOfferAcceptedEvent;
+use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
+use App\Mealz\MealBundle\Event\SlotAllocationUpdateEvent;
 use App\Mealz\MealBundle\Service\DishService;
-use App\Mealz\MealBundle\Service\Mailer;
 use App\Mealz\MealBundle\Service\MealAvailabilityService;
-use App\Mealz\MealBundle\Service\Notification\NotifierInterface;
 use App\Mealz\MealBundle\Service\OfferService;
 use App\Mealz\MealBundle\Service\ParticipationCountService;
 use App\Mealz\MealBundle\Service\ParticipationService;
@@ -22,26 +23,24 @@ use DateTime;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class MealController extends BaseController
 {
-    private Mailer $mailer;
-    private NotifierInterface $notifier;
+    private MealAvailabilityService $availabilityService;
+    private OfferService $offerService;
 
-    public function __construct(
-        Mailer $mailer,
-        NotifierInterface $notifier
-    ) {
-        $this->mailer = $mailer;
-        $this->notifier = $notifier;
+    public function __construct(OfferService $offerService, MealAvailabilityService $availabilityService)
+    {
+        $this->availabilityService = $availabilityService;
+        $this->offerService = $offerService;
     }
 
     public function index(
         DishService $dishService,
-        MealAvailabilityService $availabilityService,
         ParticipationService $participationService,
         SlotRepository $slotRepo,
         WeekRepository $weekRepository
@@ -57,7 +56,7 @@ class MealController extends BaseController
         }
 
         return $this->render('MealzMealBundle:Meal:index.html.twig', [
-            'availabilityService' => $availabilityService,
+            'availabilityService' => $this->availabilityService,
             'dishService' => $dishService,
             'participationService' => $participationService,
             'weeks' => [$currentWeek, $nextWeek],
@@ -80,7 +79,8 @@ class MealController extends BaseController
         Meal $meal,
         ?string $profile,
         ParticipationService $participationSrv,
-        SlotRepository $slotRepo
+        SlotRepository $slotRepo,
+        EventDispatcherInterface $eventDispatcher
     ): JsonResponse {
         $userProfile = $this->checkProfile($profile);
         if (null === $userProfile) {
@@ -96,27 +96,29 @@ class MealController extends BaseController
         $dishSlugs = $request->request->get('dishes', []);
 
         try {
-            $out = $participationSrv->join($userProfile, $meal, $slot, $dishSlugs);
+            $result = $participationSrv->join($userProfile, $meal, $slot, $dishSlugs);
         } catch (Exception $e) {
             $this->logException($e);
 
             return new JsonResponse(null, 500);
         }
 
-        if (null === $out) {
+        if (null === $result) {
             return new JsonResponse(null, 404);
         }
 
-        if (null !== $out['offerer']) {
-            $remainingOfferCount = $participationSrv->getOfferCount($meal->getDateTime());
-            $this->sendMealTakenNotifications($out['offerer'], $meal, $remainingOfferCount);
+        $this->triggerJoinEvents($eventDispatcher, $result['participant'], $result['offerer']);
 
-            return $this->generateResponse('MealzMealBundle_Participant_swap', 'added', $meal, $out['participant']);
+        $participationCount = $participationSrv->getCountByMeal($meal);
+
+        if (null === $result['offerer']) {
+            $this->logAdd($meal, $result['participant']);
+            $nextActionRoute = 'MealzMealBundle_Participant_delete';
+        } else {
+            $nextActionRoute = 'MealzMealBundle_Participant_swap';
         }
 
-        $this->logAdd($meal, $out['participant']);
-
-        return $this->generateResponse('MealzMealBundle_Participant_delete', 'added', $meal, $out['participant']);
+        return $this->generateResponse($nextActionRoute, 'added', $result['participant'], $participationCount);
     }
 
     /**
@@ -137,75 +139,34 @@ class MealController extends BaseController
         return $profileRepository->find($profileId);
     }
 
-    private function generateResponse(string $route, string $action, Meal $meal, Participant $participant): JsonResponse
-    {
+    private function generateResponse(
+        string $route,
+        string $action,
+        Participant $participant,
+        int $participantCount
+    ): JsonResponse {
         $bookedDishSlugs = [];
         $dishes = $participant->getCombinedDishes();
+
         if (0 < $dishes->count()) {
             $bookedDishSlugs = array_map(fn (Dish $dish) => $dish->getSlug(), $dishes->toArray());
         }
 
+        $meal = $participant->getMeal();
+        $slot = $participant->getSlot();
+
         return new JsonResponse([
             'id' => $participant->getId(),
-            'participantsCount' => $meal->getParticipants()->count(),
+            'participantsCount' => $participantCount,
             'url' => $this->generateUrl(
                 $route,
-                [
-                    'participant' => $participant->getId(),
-                ]
+                ['participant' => $participant->getId()]
             ),
             'actionText' => $action,
             'bookedDishSlugs' => $bookedDishSlugs,
+            'slot' => $slot ? $slot->getSlug() : '',
+            'available' => $this->availabilityService->isAvailable($meal),
         ]);
-    }
-
-    private function sendMealTakenNotifications(Profile $offerer, Meal $meal, int $remainingOfferCount): void
-    {
-        $dish = $meal->getDish();
-        $dishTitle = $dish->getTitleEn();
-        $parentDish = $dish->getParent();
-
-        if (null !== $parentDish) {
-            $dishTitle = $parentDish->getTitleEn() . ' ' . $dishTitle;
-        }
-
-        $this->sendMealTakenEmail($offerer, $dishTitle);
-
-        $this->sendMealTakenMattermostMsg($dishTitle, $remainingOfferCount);
-    }
-
-    private function sendMealTakenEmail(Profile $profile, string $dishTitle): void
-    {
-        $translator = $this->get('translator');
-
-        $recipient = $profile->getUsername() . $translator->trans('mail.domain', [], 'messages');
-        $subject = $translator->trans('mail.subject', [], 'messages');
-
-        $message = $translator->trans(
-            'mail.message',
-            [
-                '%firstname%' => $profile->getFirstname(),
-                '%takenOffer%' => $dishTitle,
-            ],
-            'messages'
-        );
-
-        $this->mailer->sendMail($recipient, $subject, $message);
-    }
-
-    private function sendMealTakenMattermostMsg(string $dishTitle, int $remainingOfferCount): void
-    {
-        $this->notifier->sendAlert(
-            $this->get('translator')->trans(
-                'mattermost.offer_taken',
-                [
-                    '%count%' => $remainingOfferCount,
-                    '%counter%' => $remainingOfferCount,
-                    '%takenOffer%' => $dishTitle,
-                ],
-                'messages'
-            )
-        );
     }
 
     /**
@@ -214,7 +175,7 @@ class MealController extends BaseController
      */
     public function getOffers(Meal $meal): JsonResponse
     {
-        $offers = OfferService::getOffers($meal);
+        $offers = $this->offerService->getOffers($meal);
 
         if (empty($offers)) {
             return new JsonResponse(null, 404);
@@ -227,30 +188,6 @@ class MealController extends BaseController
             'title' => $title,
             'offers' => array_values($offers),
         ]);
-    }
-
-    /**
-     * Returns swappable meals in an array.
-     * Marks meals that are being offered.
-     */
-    public function updateOffers(): JsonResponse
-    {
-        $mealsArray = [];
-        $meals = $this->getMealRepository()->getFutureMeals();
-
-        // Adds meals that can be swapped into $mealsArray. Marks a meal as "true", if there's an available offer for it.
-        foreach ($meals as $meal) {
-            if (true === $this->getDoorman()->isUserAllowedToSwap($meal)) {
-                $mealsArray[$meal->getId()] =
-                    [
-                        $this->getDoorman()->isOfferAvailable($meal),
-                        date_format($meal->getDateTime(), 'Y-m-d'),
-                        $meal->getDish()->getSlug(),
-                    ];
-            }
-        }
-
-        return new JsonResponse($mealsArray);
     }
 
     private function createEmptyNonPersistentWeek(DateTime $dateTime): Week
@@ -280,5 +217,24 @@ class MealController extends BaseController
                 'meal' => $meal,
             ]
         );
+    }
+
+    private function triggerJoinEvents(
+        EventDispatcherInterface $eventDispatcher,
+        Participant $participant,
+        ?Profile $offerer
+    ): void {
+        if (null !== $offerer) {
+            $eventDispatcher->dispatch(new MealOfferAcceptedEvent($participant, $offerer));
+
+            return;
+        }
+
+        $eventDispatcher->dispatch(new ParticipationUpdateEvent($participant));
+
+        $slot = $participant->getSlot();
+        if (null !== $slot) {
+            $eventDispatcher->dispatch(new SlotAllocationUpdateEvent($participant->getMeal()->getDateTime(), $slot));
+        }
     }
 }

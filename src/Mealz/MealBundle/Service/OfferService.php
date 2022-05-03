@@ -7,10 +7,19 @@ namespace App\Mealz\MealBundle\Service;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
+use App\Mealz\MealBundle\Entity\ParticipantRepository;
+use DateTime;
 
 class OfferService
 {
-    public static function getOffers(Meal $meal): array
+    private ParticipantRepository $participantRepo;
+
+    public function __construct(ParticipantRepository $participantRepo)
+    {
+        $this->participantRepo = $participantRepo;
+    }
+
+    public function getOffers(Meal $meal): array
     {
         $offers = [];
         /** @var Participant $participant */
@@ -20,7 +29,7 @@ class OfferService
             }
 
             if (!$meal->getDish()->isCombinedDish()) {
-                self::updateOfferCount($offers, $meal->getDish()->getSlug());
+                $this->updateOfferCount($offers, $meal->getDish()->getSlug());
                 continue;
             }
 
@@ -37,13 +46,13 @@ class OfferService
             $dishSlugs = array_keys($dishes);
             sort($dishSlugs, SORT_NATURAL);
             $combinationID = implode(',', $dishSlugs);
-            self::updateOfferCount($offers, $combinationID, array_values($dishes));
+            $this->updateOfferCount($offers, $combinationID, array_values($dishes));
         }
 
         return $offers;
     }
 
-    public static function updateOfferCount(array &$offers, string $key, array $dishes = [])
+    public function updateOfferCount(array &$offers, string $key, array $dishes = [])
     {
         if (isset($offers[$key])) {
             ++$offers[$key]['count'];
@@ -54,5 +63,21 @@ class OfferService
                 'dishes' => (!empty($dishes) ? array_values($dishes) : $dishes),
             ];
         }
+    }
+
+    /**
+     * Gets count of offered meals on a specific date.
+     */
+    public function getOfferCount(DateTime $date): int
+    {
+        return $this->participantRepo->getOfferCount($date);
+    }
+
+    /**
+     * Gets count of offers for a specific meal.
+     */
+    public function getOfferCountByMeal(Meal $meal): int
+    {
+        return $this->participantRepo->getOfferCountByMeal($meal);
     }
 }

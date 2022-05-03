@@ -1,3 +1,5 @@
+import {MealService} from "./meal-service";
+
 export class CombinedMealService {
 
     /**
@@ -34,11 +36,14 @@ export class CombinedMealService {
 
     /**
      * @param $checkbox       Combined Dish Checkbox
-     * @param participantID   Participation ID for booked combined meal
+     * @param participantID   Participant's ID for the booked combined meal
      * @param bookedDishSlugs Dish IDs in booked combined meal
      */
-    public static updateDish($checkbox: JQuery, participantID: number, bookedDishSlugs: string[]) {
+    public static updateDishes($checkbox: JQuery, participantID: number, bookedDishSlugs: string[]) {
         let $dishContainer = $checkbox.closest('.meal-row');
+        if (!CombinedMealService.isCombinedDish($dishContainer)) {
+            return;
+        }
         if (typeof participantID === 'undefined' || !Array.isArray(bookedDishSlugs) || 0 === bookedDishSlugs.length) {
             CombinedMealService.resetDish($dishContainer);
             return;
@@ -49,7 +54,7 @@ export class CombinedMealService {
         const success = CombinedMealService.updateBookedDishes($checkbox, dishes, bookedDishSlugs);
 
         if (success) {
-            $dishContainer.attr('data-id', participantID);
+            MealService.setParticipantId($checkbox, participantID);
             if (CombinedMealService.mealHasDishVariations($mealContainer)
                 && !CombinedMealService.isLockedMeal($mealContainer)) {
                 $dishContainer.find('.title').addClass('edit');
@@ -63,11 +68,13 @@ export class CombinedMealService {
      * @param bookedDishSlugs Dish Slugs in booked combined meal
      */
     public static updateBookedDishes($checkbox: JQuery, $dishes: Dish[], bookedDishSlugs: string[]): boolean {
-        if (!Array.isArray(bookedDishSlugs) || 0 === bookedDishSlugs.length) {
+        let $dishContainer = $checkbox.closest('.meal-row');
+        if (!CombinedMealService.isCombinedDish($dishContainer) ||
+            !Array.isArray(bookedDishSlugs) ||
+            0 === bookedDishSlugs.length) {
             return false;
         }
 
-        let $dishContainer = $checkbox.closest('.meal-row');
         let bdt = CombinedMealService.getBookedDishTitles(bookedDishSlugs, $dishes);
 
         if (CombinedMealService.DISH_COUNT === bdt.length) {
@@ -82,6 +89,10 @@ export class CombinedMealService {
         }
 
         return false;
+    }
+
+    public static isCombinedDish($dishContainer: JQuery): boolean {
+        return $dishContainer.hasClass('combined-meal');
     }
 
     private static getAllDishes($mealContainer: JQuery): Dish[] {
@@ -121,7 +132,7 @@ export class CombinedMealService {
 
         let availableDishes = $combinedMeal.attr('data-available-dishes');
 
-        return (undefined === availableDishes || '' === availableDishes) ? [] : availableDishes.split(',');
+        return availableDishes === undefined || availableDishes === '' ? [] : availableDishes.split(',');
     }
 
     private static getBookedDishTitles(dishIDs: string[], dishes: Dish[] | DishVariation[]) {
@@ -141,18 +152,17 @@ export class CombinedMealService {
     }
 
     private static resetDish($dishContainer: JQuery): void {
+        const $checkbox = $dishContainer.find('input[type=checkbox]');
+        MealService.setParticipantId($checkbox, null);
+
         let desc = $dishContainer.data('description');
         $dishContainer.find('.description .dish-combination').empty().text(desc);
         $dishContainer.find('.title').removeClass('edit');
-        if (true === $dishContainer.hasClass('combined-meal')) {
+        if (CombinedMealService.isCombinedDish($dishContainer)) {
             $dishContainer.find('.title').addClass('no-description');
         }
         $dishContainer.attr('data-id', '');
         $dishContainer.attr('data-booked-dishes', '');
-    }
-
-    public static isCombinedDish($dishContainer: JQuery): boolean {
-        return $dishContainer.hasClass('combined-meal');
     }
 
     private static isLockedMeal($mealContainer: JQuery): boolean {

@@ -6,7 +6,6 @@ namespace App\Mealz\MealBundle\Tests\Service;
 
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
-use App\Mealz\MealBundle\Entity\DishCollection;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\MealCollection;
 use App\Mealz\MealBundle\Entity\MealRepository;
@@ -19,6 +18,7 @@ use App\Mealz\MealBundle\Service\CombinedMealService;
 use App\Mealz\MealBundle\Service\Doorman;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\MealBundle\Service\GuestParticipationService;
+use App\Mealz\MealBundle\Service\OfferService;
 use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use App\Mealz\UserBundle\Entity\Profile;
@@ -34,6 +34,7 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
 
     protected EntityManagerInterface $entityManager;
     protected CombinedMealService $cms;
+    protected OfferService $offerService;
     protected ParticipantRepository $participantRepo;
     protected SlotRepository $slotRepo;
     /** @var ParticipationService|GuestParticipationService */
@@ -156,26 +157,27 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
 
     protected function getMeal(bool $locked = false, bool $expired = false, array $profiles = [], bool $offering = true, ?Dish $dish = null): Meal
     {
+        $zeroMinAndSec = static fn (DateTime $date): DateTime => $date->setTime((int) $date->format('H'), 0);
+
         if ($expired) {
-            $mealDate = new DateTime('-1 hour');
-            $mealLockDate = new DateTime('-12 hours');
+            $mealDate = $zeroMinAndSec(new DateTime('-1 hour'));
+            $mealLockDate = $zeroMinAndSec(new DateTime('-12 hours'));
         } elseif ($locked) {
-            $mealDate = new DateTime('+4 hour');
-            $mealLockDate = new DateTime('-8 hours');
+            $mealDate = $zeroMinAndSec(new DateTime('+4 hour'));
+            $mealLockDate = $zeroMinAndSec(new DateTime('-8 hours'));
         } else {
-            $mealDate = new DateTime('+16 hour');
-            $mealLockDate = new DateTime('+4 hours');
+            $mealDate = $zeroMinAndSec(new DateTime('+16 hour'));
+            $mealLockDate = $zeroMinAndSec(new DateTime('+4 hours'));
         }
 
         $day = new Day();
         $day->setLockParticipationDateTime($mealLockDate);
         $day->setDateTime($mealDate);
 
-        $meal = $this->createMeal($dish, $mealDate);
-        $meal->setDay($day);
+        $meal = $this->createMeal($dish, $day);
         $meal->getDay()->addMeal($meal);
 
-        $entities = [$meal->getDish(), $day, $meal];
+        $entities = [$meal];
 
         foreach ($profiles as $profile) {
             $participant = new Participant($profile, $meal);
@@ -284,7 +286,7 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
         $participants = [];
         foreach ($profiles as $profile) {
             $participant = new Participant($profile, $combinedMeal);
-            $participant->setCombinedDishes(new DishCollection($dishes));
+            $participant->setCombinedDishes($dishes);
             $this->assertGreaterThan(0, $participant->getCombinedDishes()->count());
             $participants[] = $participant;
         }

@@ -82,7 +82,7 @@ class Variation extends AbstractExtension
             /** @var Meal $meal */
             $meal = $formView->vars['data'];
             $dish = $meal->getDish();
-            if (null !== $dish && $dish->isEnabled()) {
+            if ($dish->isEnabled()) {
                 $parentDish = $dish->getParent();
                 $dishId = (null === $parentDish) ? $dish->getId() : $parentDish->getId();
                 $dishesGroupByParent[$dishId]['ids'][] = $dish->getId();

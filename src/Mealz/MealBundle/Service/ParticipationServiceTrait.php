@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Service;
 
-use App\Mealz\MealBundle\Entity\DishCollection;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\ParticipantRepository;
@@ -76,7 +75,7 @@ trait ParticipationServiceTrait
     /**
      * Checks if any participant is offering its meal.
      */
-    private function mealIsOffered(Meal $meal): bool
+    public function mealIsOffered(Meal $meal): bool
     {
         /** @var Participant $participant */
         foreach ($meal->getParticipants() as $participant) {
@@ -146,7 +145,7 @@ trait ParticipationServiceTrait
             );
         }
 
-        $participant->setCombinedDishes(new DishCollection($dishes));
+        $participant->setCombinedDishes($dishes);
     }
 
     private function getCombinedMealDishes(Meal $meal, array $dishSlugs): array

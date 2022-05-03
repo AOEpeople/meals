@@ -12,12 +12,7 @@ import '@fancyapps/fancybox';
 import 'easy-autocomplete';
 import 'daterangepicker';
 import {Controller} from "./controller";
-import {
-    ParticipationCountUpdateHandler, ParticipationGuestCountUpdateHandler
-} from "./modules/participation-count-update-handler";
-import {ParticipationGuestToggleHandler, ParticipationToggleHandler} from "./modules/participation-toggle-handler";
-import {ParticipationPreToggleHandler} from "./modules/participation-pre-toggle-handler";
-import {UpdateOffersHandler} from "./modules/update-offers-handler";
+
 
 
 if (process.env.MODE !== 'production' && import.meta.webpackHot) {

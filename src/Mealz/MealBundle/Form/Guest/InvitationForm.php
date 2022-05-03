@@ -8,6 +8,7 @@ use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\InvitationWrapper;
 use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Entity\SlotRepository;
+use App\Mealz\MealBundle\Service\ParticipationService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -17,11 +18,16 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class InvitationForm extends AbstractType
 {
-    private TranslatorInterface $translator;
+    private ParticipationService $participationSrv;
     private SlotRepository $slotRepo;
+    private TranslatorInterface $translator;
 
-    public function __construct(TranslatorInterface $translator, SlotRepository $slotRepo)
-    {
+    public function __construct(
+        ParticipationService $participationSrv,
+        SlotRepository $slotRepo,
+        TranslatorInterface $translator
+    ) {
+        $this->participationSrv = $participationSrv;
         $this->translator = $translator;
         $this->slotRepo = $slotRepo;
     }
@@ -33,14 +39,28 @@ class InvitationForm extends AbstractType
     {
         /** @var Day $day */
         $day = $options['data']->getDay();
+        $slotAllocationCount = $this->participationSrv->getSlotsStatusOn($day->getDateTime());
 
         $builder
             ->add('slot', ChoiceType::class, [
                 'choices' => $this->slotRepo->findBy(['disabled' => 0, 'deleted' => 0], ['order' => 'ASC']),
-                'choice_label' => 'title',
+                'choice_label' => static function (Slot $slot) use ($slotAllocationCount): string {
+                    if ($slot->getLimit() && isset($slotAllocationCount[$slot->getSlug()])) {
+                        $label = sprintf(
+                            '%s (%d/%d)',
+                            $slot->getTitle(),
+                            $slotAllocationCount[$slot->getSlug()],
+                            $slot->getLimit()
+                        );
+                    } else {
+                        $label = $slot->getTitle();
+                    }
+
+                    return $label;
+                },
                 'choice_value' => 'slug',
                 /* @SuppressWarnings(PHPMD.UnusedFormalParameter) */
-                'choice_attr' => static function (Slot $slot, string $key, string $slug) {
+                'choice_attr' => static function (Slot $slot) {
                     return [
                         'data-limit' => $slot->getLimit(),
                         'data-title' => $slot->getTitle(),

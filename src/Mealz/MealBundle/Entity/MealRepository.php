@@ -3,6 +3,7 @@
 namespace App\Mealz\MealBundle\Entity;
 
 use DateTime;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityRepository;
 
 class MealRepository extends EntityRepository
@@ -72,10 +73,8 @@ class MealRepository extends EntityRepository
         $queryBuilder
             ->where('m.dateTime >= :startTime')
             ->andWhere('m.dateTime <= :endTime')
-            ->setParameters([
-                'startTime' => (clone $date)->setTime(0, 0),
-                'endTime' => (clone $date)->setTime(23, 59),
-            ]);
+            ->setParameter('startTime', (clone $date)->setTime(0, 0), Types::DATETIME_MUTABLE)
+            ->setParameter('endTime', (clone $date)->setTime(23, 59), Types::DATETIME_MUTABLE);
 
         return $queryBuilder->getQuery()->getResult();
     }
@@ -101,13 +100,13 @@ class MealRepository extends EntityRepository
     /**
      * Returns all meals that are going to take place in the future.
      *
-     * @return array
+     * @return Meal[]
      */
-    public function getFutureMeals()
+    public function getFutureMeals(): array
     {
         $queryBuilder = $this->createQueryBuilder('m');
         $queryBuilder->where('m.dateTime >= :now');
-        $queryBuilder->setParameter(':now', new DateTime('now'));
+        $queryBuilder->setParameter(':now', new DateTime('now'), Types::DATETIME_MUTABLE);
 
         return $queryBuilder->getQuery()->getResult();
     }
@@ -115,13 +114,13 @@ class MealRepository extends EntityRepository
     /**
      * Returns all meals that are going to took place in the past.
      *
-     * @return array
+     * @return Meal[]
      */
-    public function getOutdatedMeals()
+    public function getOutdatedMeals(): array
     {
         $queryBuilder = $this->createQueryBuilder('m');
         $queryBuilder->where('m.dateTime <= :now');
-        $queryBuilder->setParameter(':now', new DateTime('now'));
+        $queryBuilder->setParameter(':now', new DateTime('now'), Types::DATETIME_MUTABLE);
 
         return $queryBuilder->getQuery()->getResult();
     }
@@ -129,20 +128,20 @@ class MealRepository extends EntityRepository
     /**
      * Returns all meals that are going to take place in the future but aren't available to join/leave anymore.
      *
-     * @return array
+     * @return Meal[]
      */
-    public function getLockedMeals()
+    public function getLockedMeals(): array
     {
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('m')
-            ->from('MealzMealBundle:Meal', 'm')
+            ->from(Meal::class, 'm')
             ->innerJoin('m.day', 'd')
             ->where('d.lockParticipationDateTime < :now')
             ->andWhere('m.dateTime > :now')
             ->orderBy('m.dateTime', 'DESC');
 
-        $queryBuilder->setParameter(':now', new DateTime('now'));
+        $queryBuilder->setParameter(':now', new DateTime('now'), Types::DATETIME_MUTABLE);
 
         return $queryBuilder->getQuery()->getResult();
     }

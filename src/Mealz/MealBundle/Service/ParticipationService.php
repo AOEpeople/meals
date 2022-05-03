@@ -6,7 +6,6 @@ namespace App\Mealz\MealBundle\Service;
 
 use App\Mealz\MealBundle\Entity\DayRepository;
 use App\Mealz\MealBundle\Entity\Dish;
-use App\Mealz\MealBundle\Entity\DishCollection;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\ParticipantRepository;
@@ -23,22 +22,23 @@ class ParticipationService
 
     private EntityManagerInterface $em;
     private Doorman $doorman;
+
+    private DayRepository $dayRepo;
     private ParticipantRepository $participantRepo;
     private SlotRepository $slotRepo;
-    private DayRepository $dayRepo;
 
     public function __construct(
         EntityManagerInterface $em,
         Doorman $doorman,
+        DayRepository $dayRepo,
         ParticipantRepository $participantRepo,
-        SlotRepository $slotRepo,
-        DayRepository $dayRepo
+        SlotRepository $slotRepo
     ) {
         $this->em = $em;
         $this->doorman = $doorman;
+        $this->dayRepo = $dayRepo;
         $this->participantRepo = $participantRepo;
         $this->slotRepo = $slotRepo;
-        $this->dayRepo = $dayRepo;
     }
 
     /**
@@ -78,13 +78,13 @@ class ParticipationService
     {
         $meal = $participant->getMeal();
 
-        if (!$this->isOpenMeal($meal)) {
+        if (!$meal->isOpen()) {
             throw new ParticipationException(
                 'invalid operation; meal expired',
                 ParticipationException::ERR_PARTICIPATION_EXPIRED
             );
         }
-        if ($this->isParticipationLocked($meal)) {
+        if ($meal->isLocked()) {
             throw new ParticipationException(
                 'invalid operation; participation is locked',
                 ParticipationException::ERR_UPDATE_LOCKED_PARTICIPATION
@@ -141,7 +141,7 @@ class ParticipationService
         $this->em->persist($participant);
         $this->em->flush();
 
-        $this->em->refresh($meal);
+        $meal->participants->add($participant);
 
         return $participant;
     }
@@ -151,7 +151,7 @@ class ParticipationService
      */
     private function allowedToAccept(Meal $meal): bool
     {
-        return $this->isParticipationLocked($meal) && $this->isOpenMeal($meal);
+        return $meal->isOpen() && $meal->isLocked();
     }
 
     private function getNextOfferingParticipant(Meal $meal, array $dishSlugs = []): ?Participant
@@ -190,47 +190,7 @@ class ParticipationService
     }
 
     /**
-     * @psalm-return list<array{date: string, slot: string, booked: int, booked_by_user: bool}>
-     */
-    public function getSlotsStatusFor(Profile $profile): array
-    {
-        $fromDate = new DateTime('now');
-        $toDate = new DateTime('friday next week 23:59:59');
-        $openMealDaysSlots = $this->getOpenMealDaysWithSlots($fromDate, $toDate);
-        $slotCountProvider = $this->getBookedSlotCountProvider($fromDate, $toDate);
-
-        $slotsStatus = [];
-
-        foreach ($openMealDaysSlots as $idx => $item) {
-            $slotsStatus[$idx] = [
-                'date' => $item['date']->format('Y-m-d'),
-                'slot' => $item['slot']->getSlug(),
-                'booked' => $slotCountProvider($item['date'], $item['slot']),
-                'booked_by_user' => false,
-            ];
-        }
-
-        $userParticipation = $this->participantRepo->getParticipantsOnDays($fromDate, $toDate, $profile);
-
-        foreach ($userParticipation as $participation) {
-            $slot = $participation->getSlot();
-            if (null === $slot || $slot->isDisabled() || $slot->isDeleted()) {
-                continue;
-            }
-
-            $k = $participation->getMeal()->getDateTime()->format('Y-m-d-') . $slot->getId();
-            if (!isset($slotsStatus[$k])) {
-                continue;   // skip, not an open participation
-            }
-
-            $slotsStatus[$k]['booked_by_user'] = isset($slotsStatus[$k]);
-        }
-
-        return array_values($slotsStatus);
-    }
-
-    /**
-     * @psalm-return list<array{date: string, slot: string, booked: int, booked_by_user: bool}>
+     * @psalm-return array<string, int> Key-value pair of slot-slug and related allocation count
      */
     public function getSlotsStatusOn(DateTime $date): array
     {
@@ -241,16 +201,13 @@ class ParticipationService
 
         $slotsStatus = [];
 
-        foreach ($openMealDaysSlots as $idx => $item) {
-            $slotsStatus[$idx] = [
-                'date' => $item['date']->format('Y-m-d'),
-                'slot' => $item['slot']->getSlug(),
-                'booked' => $slotCountProvider($item['date'], $item['slot']),
-                'booked_by_user' => false,
-            ];
+        foreach ($openMealDaysSlots as $item) {
+            $slotSlug = $item['slot']->getSlug();
+            $allocationCount = $slotCountProvider($item['date'], $item['slot']);
+            $slotsStatus[$slotSlug] = $allocationCount;
         }
 
-        return array_values($slotsStatus);
+        return $slotsStatus;
     }
 
     /**
@@ -303,14 +260,6 @@ class ParticipationService
         };
     }
 
-    /**
-     * Gets count of offered meals on $date.
-     */
-    public function getOfferCount(DateTime $date): int
-    {
-        return $this->participantRepo->getOfferCount($date);
-    }
-
     public function getSlot(Profile $profile, DateTime $date): ?Slot
     {
         $startDate = (clone $date)->setTime(0, 0);
@@ -327,30 +276,14 @@ class ParticipationService
         return null;
     }
 
-    public function getBookedDishCombination(Profile $profile, Meal $meal): DishCollection
+    public function getCountByMeal(Meal $meal): int
     {
-        $participant = $meal->getParticipant($profile);
-        if (null === $participant) {
-            return new DishCollection();
+        $participation = ParticipationCountService::getParticipationByDay($meal->getDay());
+
+        if ($meal->isCombinedMeal()) {
+            return $participation['countByMealIds'][$meal->getId()][$meal->getDish()->getSlug()]['count'] ?? 0;
         }
 
-        return $participant->getCombinedDishes();
-    }
-
-    private function isParticipationLocked(Meal $meal): bool
-    {
-        $now = new DateTime('now');
-
-        return $meal->getLockDateTime() < $now;
-    }
-
-    /**
-     * Check if the given meal is still open, i.e. not expired.
-     */
-    public function isOpenMeal(Meal $meal): bool
-    {
-        $now = new DateTime('now');
-
-        return $meal->getDateTime() > $now;
+        return (int) ceil($participation['totalCountByDishSlugs'][$meal->getDish()->getSlug()]['count'] ?? 0);
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Service;
 
 use App\Mealz\MealBundle\Entity\Meal;
+use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\ParticipantRepository;
 use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Entity\SlotRepository;
@@ -44,9 +45,11 @@ class GuestParticipationService
     }
 
     /**
+     * @return Participant[]
+     *
      * @throws ParticipationException
      */
-    public function join(Profile $profile, Collection $meals, ?Slot $slot = null, array $dishSlugs = []): void
+    public function join(Profile $profile, Collection $meals, ?Slot $slot = null, array $dishSlugs = []): array
     {
         $mealDate = $meals->first()->getDateTime();
 
@@ -61,7 +64,7 @@ class GuestParticipationService
             $slot = $this->getNextFreeSlot($mealDate);
         }
 
-        $this->register($guestProfile, $meals, $slot, $dishSlugs);
+        return $this->register($guestProfile, $meals, $slot, $dishSlugs);
     }
 
     /**
@@ -69,10 +72,12 @@ class GuestParticipationService
      *
      * @param Collection<int, Meal> $meals
      *
+     * @return Participant[]
+     *
      * @throws ParticipationException
      * @throws Exception
      */
-    private function register(Profile $profile, Collection $meals, ?Slot $slot = null, array $dishSlugs = []): void
+    private function register(Profile $profile, Collection $meals, ?Slot $slot = null, array $dishSlugs = []): array
     {
         $this->validateBookableMeals($meals, $dishSlugs);
 
@@ -80,10 +85,12 @@ class GuestParticipationService
 
         try {
             $this->entityManager->persist($profile);
-            $this->create($profile, $meals, $slot, $dishSlugs);
+            $participants = $this->create($profile, $meals, $slot, $dishSlugs);
 
             $this->entityManager->flush();
             $this->entityManager->commit();
+
+            return $participants;
         } catch (Exception $exc) {
             $this->entityManager->rollBack();
             throw $exc;
@@ -100,6 +107,7 @@ class GuestParticipationService
         $flippedDishSlugs = array_flip($dishSlugs);
 
         $participations = [];
+
         /** @var Meal $meal */
         foreach ($meals as $meal) {
             if (empty($participations)) {
@@ -134,22 +142,30 @@ class GuestParticipationService
      *
      * @param Collection<int, Meal> $meals
      *
+     * @return Participant[]
+     *
      * @throws ParticipationException
      */
-    private function create(Profile $profile, Collection $meals, ?Slot $slot = null, array $dishSlugs = []): void
+    private function create(Profile $profile, Collection $meals, ?Slot $slot = null, array $dishSlugs = []): array
     {
+        $participants = [];
+
         foreach ($meals as $meal) {
             try {
-                $participation = $this->createParticipation($profile, $meal, $slot, $dishSlugs);
+                $participant = $this->createParticipation($profile, $meal, $slot, $dishSlugs);
             } catch (ParticipationException $pex) {
                 $pex->addContext(['operation' => 'guest participation create']);
                 throw $pex;
             }
 
-            $participation->setCostAbsorbed(true);
+            $participant->setCostAbsorbed(true);
+            $this->entityManager->persist($participant);
+            $participants[] = $participant;
 
-            $this->entityManager->persist($participation);
+            $meal->participants->add($participant);
         }
+
+        return $participants;
     }
 
     private function getCreateGuestProfile(

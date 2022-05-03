@@ -1,14 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\MealBundle\Entity;
 
 use DateTime;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
-use Exception;
 
-/**
- * Class DishRepository.
- */
 class DishRepository extends LocalizedRepository
 {
     protected array $defaultOptions = [
@@ -69,35 +70,37 @@ class DishRepository extends LocalizedRepository
     }
 
     /**
-     * @return int
+     * @throws NoResultException
+     * @throws NonUniqueResultException
      */
-    public function hasDishAssociatedMeals(Dish $dish)
+    public function hasDishAssociatedMeals(Dish $dish): bool
     {
         $query = $this->_em->createQueryBuilder();
         $query->select('COUNT(m.dish)');
-        $query->from('App\Mealz\MealBundle\Entity\Meal', 'm');
+        $query->from(Meal::class, 'm');
         $query->where('m.dish = :dish');
-        $query->setParameter('dish', $dish);
+        $query->setParameter('dish', $dish->getId(), Types::INTEGER);
 
-        return $query->getQuery()->getSingleScalarResult();
+        return 0 < $query->getQuery()->getSingleScalarResult();
     }
 
     /**
      * Counts the number of Dish was taken in the last X Weeks.
      *
-     * @throws Exception
+     * @throws NoResultException
+     * @throws NonUniqueResultException
      */
     public function countNumberDishWasTaken(Dish $dish, string $countPeriod): int
     {
         // prepare sql statement counting all meals taken
         $query = $this->getEntityManager()->createQueryBuilder();
         $query->select('COUNT(m.dish)');
-        $query->from('App\Mealz\MealBundle\Entity\Meal', 'm');
+        $query->from(Meal::class, 'm');
         $query->where('m.dish = :dish');
         $query->andWhere($query->expr()->between('m.dateTime', ':date_from', ':date_to'));
-        $query->setParameter('dish', $dish);
-        $query->setParameter('date_from', new DateTime($countPeriod));
-        $query->setParameter('date_to', new DateTime('this week +6 days'));
+        $query->setParameter('dish', $dish->getId(), Types::INTEGER);
+        $query->setParameter('date_from', new DateTime($countPeriod), Types::DATETIME_MUTABLE);
+        $query->setParameter('date_to', new DateTime('this week +6 days'), Types::DATETIME_MUTABLE);
 
         return (int) $query->getQuery()->getSingleScalarResult();
     }

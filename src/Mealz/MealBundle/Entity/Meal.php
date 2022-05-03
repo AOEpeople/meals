@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\MealBundle\Entity;
 
 use App\Mealz\MealBundle\Validator\Constraints as MealBundleAssert;
@@ -29,18 +31,14 @@ class Meal
     /**
      * @ORM\ManyToOne(targetEntity="Dish", cascade={"refresh"}, fetch="EAGER")
      * @ORM\JoinColumn(name="dish_id", referencedColumnName="id")
-     *
-     * @var Dish
      */
-    protected $dish;
+    private Dish $dish;
 
     /**
      * @Assert\NotBlank()
      * @ORM\Column(type="decimal", precision=10, scale=4, nullable=FALSE)
-     *
-     * @var float
      */
-    protected $price;
+    private float $price = 0.0;
 
     /**
      * @Assert\NotBlank()
@@ -51,19 +49,15 @@ class Meal
     /**
      * @ORM\ManyToOne(targetEntity="Day", inversedBy="meals")
      * @ORM\JoinColumn(name="day", referencedColumnName="id")
-     *
-     * @var Day
      */
-    protected $day;
+    private Day $day;
 
     /**
      * @Assert\NotBlank()
      * @Assert\Type(type="DateTime")
      * @ORM\Column(type="datetime", nullable=FALSE)
-     *
-     * @var DateTime
      */
-    protected $dateTime;
+    private DateTime $dateTime;
 
     /**
      * @ORM\OneToMany(targetEntity="Participant", mappedBy="meal")
@@ -71,9 +65,12 @@ class Meal
      */
     public ?Collection $participants = null;
 
-    public function __construct()
+    public function __construct(Dish $dish, Day $day)
     {
         $this->participants = new ArrayCollection();
+        $this->dish = $dish;
+        $this->day = $day;
+        $this->dateTime = clone $day->getDateTime();
     }
 
     public function getId(): ?int
@@ -81,55 +78,37 @@ class Meal
         return $this->id;
     }
 
-    /**
-     * @param float $price
-     */
-    public function setPrice($price): void
+    public function setPrice(float $price): void
     {
         $this->price = $price;
     }
 
-    /**
-     * @return float
-     */
-    public function getPrice()
+    public function getPrice(): float
     {
         return $this->price;
     }
 
-    /**
-     * @param int $participationLimit
-     */
-    public function setParticipationLimit($participationLimit): void
+    public function setParticipationLimit(int $participationLimit): void
     {
         $this->participationLimit = $participationLimit;
     }
 
-    /**
-     * @return int
-     */
-    public function getParticipationLimit()
+    public function getParticipationLimit(): int
     {
         return $this->participationLimit;
     }
 
-    /**
-     * @param Dish $dish
-     */
-    public function setDish($dish): void
+    public function setDish(Dish $dish): void
     {
         $this->dish = $dish;
     }
 
-    /**
-     * @return Dish
-     */
-    public function getDish()
+    public function getDish(): Dish
     {
         return $this->dish;
     }
 
-    public function getParticipants(): Collection
+    public function getParticipants(): ArrayCollection
     {
         if (null === $this->participants) {
             $this->participants = new ArrayCollection();
@@ -138,20 +117,15 @@ class Meal
         return new ArrayCollection($this->participants->toArray());
     }
 
-    /**
-     * @return Day
-     */
-    public function getDay()
+    public function getDay(): Day
     {
         return $this->day;
     }
 
-    /**
-     * @param Day $day
-     */
-    public function setDay($day): void
+    public function setDay(Day $day): void
     {
         $this->day = $day;
+        $this->setDateTime($day->getDateTime());
     }
 
     public function setDateTime(DateTime $dateTime): void
@@ -159,37 +133,29 @@ class Meal
         $this->dateTime = $dateTime;
     }
 
-    /**
-     * @return DateTime
-     */
-    public function getDateTime()
+    public function getDateTime(): DateTime
     {
         return $this->dateTime;
     }
 
-    /**
-     * @return DateTime
-     */
-    public function getLockDateTime()
+    public function getLockDateTime(): DateTime
     {
         return $this->day->getLockParticipationDateTime();
     }
 
     public function isCombinedMeal(): bool
     {
-        return $this->dish && $this->dish->isCombinedDish();
+        return $this->dish->isCombinedDish();
     }
 
     public function isLocked(): bool
     {
-        $lockDateTime = $this->getLockDateTime();
-
-        return $lockDateTime && ($lockDateTime <= (new DateTime('now')));
+        return $this->getLockDateTime() <= (new DateTime('now'));
     }
 
     public function isOpen(): bool
     {
-        return $this->dateTime && ($this->dateTime > (new DateTime('now')));
+        return $this->dateTime > (new DateTime('now'));
     }
 
     /**
@@ -205,24 +171,6 @@ class Meal
         }
 
         return null;
-    }
-
-    /**
-     * get all guests that the given profile has invited.
-     *
-     * @return Participant[]
-     */
-    public function getGuestParticipants(Profile $profile): array
-    {
-        $participants = [];
-        foreach ($this->participants as $participant) {
-            /** @var Participant $participant */
-            if ($participant->isGuest() && $participant->getProfile() === $profile) {
-                $participants[] = $participant;
-            }
-        }
-
-        return $participants;
     }
 
     /**

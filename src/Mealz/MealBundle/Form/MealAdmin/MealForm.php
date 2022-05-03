@@ -1,31 +1,39 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\MealBundle\Form\MealAdmin;
 
-use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Form\Type\EntityHiddenType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MealForm extends AbstractType
 {
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * {@inheritDoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        // we take day value from parent day form; see configureOptions() method below.
         $builder
             ->add('dish', EntityHiddenType::class, [
                 'class' => Dish::class,
-            ])
-            ->add('day', EntityHiddenType::class, [
-                'class' => Day::class,
             ])
             ->add('participationLimit', IntegerType::class, [
                 'required' => false,
@@ -53,19 +61,30 @@ class MealForm extends AbstractType
             }
         });
 
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+            /** @var array $data client submitted meal data */
+            $data = $event->getData();
+
+            if (isset($data['dish']) && '' === $data['dish']) {
+                // Empty dish value from client means meal needs to be deleted.
+                // We cannot set meal's dish to null, so we just mark the meal for removal.
+                /** @var Meal $meal */
+                $meal = $event->getForm()->getData();
+                $data['dish'] = $meal->getDish()->getId();  // restore original dish value
+                $this->entityManager->remove($meal);        // mark the meal to be removed
+                $meal->getDay()->removeMeal($meal);
+
+                $event->setData($data);
+                $event->getForm()->setData($meal);
+            }
+        });
+
         $builder->addEventListener(FormEvents::SUBMIT, static function (FormEvent $event) {
             /** @var Meal $meal */
             $meal = $event->getData();
-            if (null === $meal->getDateTime()) {
-                $day = $meal->getDay() ?? $event->getForm()->getParent()->getParent()->getData();
-                $meal->setDay($day);
-                $meal->setDateTime($day->getDateTime());
-            }
-            if (null !== $meal->getDish()) {
-                $dishPrice = $meal->getDish()->getPrice();
-                $meal->setPrice($dishPrice);
-                $event->setData($meal);
-            }
+            $dishPrice = $meal->getDish()->getPrice();
+            $meal->setPrice($dishPrice);
+            $event->setData($meal);
         });
     }
 
@@ -76,6 +95,12 @@ class MealForm extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Meal::class,
+            'empty_data' => static function (FormInterface $form) {
+                $dish = $form->get('dish')->getData();
+                $day = $form->getParent()->getParent()->getData();
+
+                return new Meal($dish, $day);
+            },
             'error_bubbling' => false,
         ]);
     }

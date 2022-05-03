@@ -11,6 +11,9 @@
     "clue/stream-filter": {
         "version": "v1.5.0"
     },
+    "composer/package-versions-deprecated": {
+        "version": "1.11.99.5"
+    },
     "composer/pcre": {
         "version": "1.0.0"
     },
@@ -142,38 +145,6 @@
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.5"
     },
-    "friendsofsymfony/oauth-server-bundle": {
-        "version": "1.6",
-        "recipe": {
-            "repo": "github.com/symfony/recipes-contrib",
-            "branch": "master",
-            "version": "1.6",
-            "ref": "7300db1277b1ba025cdc2791171d9bf3e7adcc42"
-        },
-        "files": [
-            "config/packages/fos_oauth_server.yaml",
-            "config/routes/fos_oauth_server.yaml",
-            "src/Aoe/Ptct/Application/PlanningBundle/Entity/AccessToken.php",
-            "src/Aoe/Ptct/Application/PlanningBundle/Entity/AuthCode.php",
-            "src/Aoe/Ptct/Application/PlanningBundle/Entity/Client.php",
-            "src/Aoe/Ptct/Application/PlanningBundle/Entity/RefreshToken.php"
-        ]
-    },
-    "friendsofsymfony/oauth2-php": {
-        "version": "1.3.1"
-    },
-    "friendsofsymfony/rest-bundle": {
-        "version": "2.2",
-        "recipe": {
-            "repo": "github.com/symfony/recipes-contrib",
-            "branch": "master",
-            "version": "2.2",
-            "ref": "fa845143b7e0a4c70aedd1a88c549e6d977e9ae5"
-        },
-        "files": [
-            "config/packages/fos_rest.yaml"
-        ]
-    },
     "gedmo/doctrine-extensions": {
         "version": "v3.1.0"
     },
@@ -228,6 +199,12 @@
     "laminas/laminas-zendframework-bridge": {
         "version": "1.3.0"
     },
+    "lcobucci/clock": {
+        "version": "2.0.0"
+    },
+    "lcobucci/jwt": {
+        "version": "4.1.5"
+    },
     "monolog/monolog": {
         "version": "2.3.2"
     },
@@ -242,9 +219,6 @@
     },
     "openlss/lib-array2xml": {
         "version": "1.0.0"
-    },
-    "paragonie/random_compat": {
-        "version": "v2.0.20"
     },
     "paypal/paypal-checkout-sdk": {
         "version": "1.0.1"
@@ -358,6 +332,9 @@
             "phpunit.xml.dist",
             "tests/bootstrap.php"
         ]
+    },
+    "psalm/plugin-symfony": {
+        "version": "v3.1.4"
     },
     "psr/cache": {
         "version": "1.0.1"
@@ -516,6 +493,18 @@
     "symfony/debug": {
         "version": "v4.4.27"
     },
+    "symfony/debug-bundle": {
+        "version": "5.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "4.1",
+            "ref": "0ce7a032d344fb7b661cd25d31914cd703ad445b"
+        },
+        "files": [
+            "config/packages/dev/debug.yaml"
+        ]
+    },
     "symfony/dependency-injection": {
         "version": "v4.4.27"
     },
@@ -609,6 +598,21 @@
             "config/packages/mailer.yaml"
         ]
     },
+    "symfony/mercure": {
+        "version": "v0.6.1"
+    },
+    "symfony/mercure-bundle": {
+        "version": "0.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "0.3",
+            "ref": "e0a854b5439186e04b28fb8887b42c54f24a0d32"
+        },
+        "files": [
+            "config/packages/mercure.yaml"
+        ]
+    },
     "symfony/mime": {
         "version": "v4.4.27"
     },
@@ -668,9 +672,6 @@
     },
     "symfony/process": {
         "version": "v5.4.0"
-    },
-    "symfony/profiler-pack": {
-        "version": "v1.0.5"
     },
     "symfony/property-access": {
         "version": "v5.3.4"
@@ -791,6 +792,9 @@
     "symfony/var-exporter": {
         "version": "v5.3.4"
     },
+    "symfony/web-link": {
+        "version": "v5.2.12"
+    },
     "symfony/web-profiler-bundle": {
         "version": "3.3",
         "recipe": {
@@ -825,11 +829,5 @@
     },
     "webmozart/path-util": {
         "version": "2.3.0"
-    },
-    "willdurand/jsonp-callback-validator": {
-        "version": "v1.1.0"
-    },
-    "willdurand/negotiation": {
-        "version": "3.0.0"
     }
 }

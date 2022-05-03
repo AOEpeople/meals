@@ -39,7 +39,7 @@ class GuestParticipationServiceTest extends AbstractParticipationServiceTest
             $this->participantRepo,
             $profileRepo,
             $roleRepo,
-            $this->slotRepo
+            $this->slotRepo,
         ));
 
         $price = (float) self::$kernel->getContainer()->getParameter('mealz.meal.combined.price');
@@ -115,7 +115,7 @@ class GuestParticipationServiceTest extends AbstractParticipationServiceTest
      *
      * @testdox An anonymous user (Profile) can join a combined meal.
      */
-    public function joinCombinedMealSuccess()
+    public function joinCombinedMealSuccess(): void
     {
         $this->checkJoinCombinedMealSuccess($this->profile);
     }
@@ -135,7 +135,7 @@ class GuestParticipationServiceTest extends AbstractParticipationServiceTest
      *
      * @testdox An anonymous user (Profile) can't join a combined meal with wrong slugs.
      */
-    public function joinCombinedMealWithWrongSlugFail()
+    public function joinCombinedMealWithWrongSlugFail(): void
     {
         $this->checkJoinCombinedMealWithWrongSlugFail($this->profile);
     }
@@ -145,7 +145,7 @@ class GuestParticipationServiceTest extends AbstractParticipationServiceTest
      *
      * @testdox An anonymous user (Profile) can't join a combined meal with empty slugs.
      */
-    public function joinCombinedMealWithEmptySlugFail()
+    public function joinCombinedMealWithEmptySlugFail(): void
     {
         $this->checkJoinCombinedMealWithEmptySlugFail($this->profile);
     }

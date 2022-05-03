@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Tests;
 
 use App\Mealz\MealBundle\Entity\Category;
+use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\UserBundle\Entity\Profile;
-use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\FixtureInterface;
@@ -106,16 +106,12 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
         return $dish;
     }
 
-    protected function createMeal(Dish $dish = null, DateTime $datetime = null): Meal
+    protected function createMeal(Dish $dish = null, Day $day = null): Meal
     {
-        if (null === $datetime) {
-            $datetime = new DateTime();
-            $datetime->setTime(12, 0);
-        }
+        $dish = $dish ?: $this->createDish();
+        $day = $day ?: new Day();
 
-        $meal = new Meal();
-        $meal->setDish($dish ?: $this->createDish());
-        $meal->setDateTime($datetime);
+        $meal = new Meal($dish, $day);
         $meal->setPrice(1.23);
 
         return $meal;
@@ -147,10 +143,16 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
         /** @var EntityManagerInterface $entityManager */
         $entityManager = $this->getDoctrine()->getManager();
 
-        $entityManager->transactional(
+        $entityManager->wrapInTransaction(
             static function (EntityManagerInterface $entityManager) use ($entities) {
                 // transaction is need for Participant entities
                 foreach ($entities as $entity) {
+                    if ($entity instanceof Meal) {
+                        $entityManager->persist($entity->getDish());
+                        $entityManager->persist($entity->getDay()->getWeek());
+                        $entityManager->persist($entity->getDay());
+                    }
+
                     $entityManager->persist($entity);
                 }
 

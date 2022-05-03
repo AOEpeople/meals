@@ -88,10 +88,7 @@ class CombinedMealService
 
     private function createCombinedMeal(Day $day): void
     {
-        $combinedMeal = new Meal();
-        $combinedMeal->setDay($day);
-        $combinedMeal->setDateTime(clone $day->getDateTime());
-        $combinedMeal->setDish($this->combinedDish);
+        $combinedMeal = new Meal($this->combinedDish, $day);
         $combinedMeal->setPrice($this->defaultPrice);
 
         $day->addMeal($combinedMeal);

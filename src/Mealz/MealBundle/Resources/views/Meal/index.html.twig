@@ -4,10 +4,14 @@
 
 {% block pageView %}mealIndex{% endblock %}
 {% set wrapperClass = 'meals-list' %}
+{# topics for which to receive the notifications/messages from server #}
+{% set topics = ['participation-updates', 'meal-offer-updates', 'slot-allocation-updates'] -%}
 
 {% block body %}
-
-    <div class="weeks" data-err-update-not-possible="{{ 'error.meal.update_not_allowed' | trans({}, 'messages') }}" data-err-join-not-possible="{{ 'error.meal.join_not_allowed' | trans({}, 'messages') }}">
+    <div class="weeks"
+         data-err-join-not-possible="{{ 'error.meal.join_not_allowed' | trans({}, 'messages') }}"
+         data-err-update-not-possible="{{ 'error.meal.update_not_allowed' | trans({}, 'messages') }}"
+         data-msg-subscribe-url="{{ mercure(topics, {subscribe: topics})|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_HEX_TAG'))|raw|trim('"') }}">
         {% for week in weeks %}
             {% include 'MealzMealBundle:Meal/partials:week.html.twig' %}
         {% endfor %}

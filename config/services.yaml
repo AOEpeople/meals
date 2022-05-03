@@ -16,6 +16,9 @@ parameters:
     app.idp.client_id: '%env(IDP_CLIENT_ID)%'
     app.idp.client_secret: '%env(IDP_CLIENT_SECRET)%'
 
+    app.pubsub.publish_url: '%env(MERCURE_URL)%'
+    app.pubsub.subscribe_url: '%env(MERCURE_PUBLIC_URL)%'
+
     # Total unpaid amount for the consumed meals that will trigger
     # an acknowledgment popup on every page load. It must be negative.
     app.payment_notification_debt: '%env(PAYMENT_NOTIFICATION_DEBT)%'
@@ -92,6 +95,8 @@ services:
 
     # Interface Implementations
     App\Mealz\MealBundle\Service\Notification\NotifierInterface: '@mealz_meal.notifier.mattermost'
+    App\Mealz\MealBundle\Service\Publisher\PublisherInterface: '@App\Mealz\MealBundle\Service\Publisher\MercurePublisher'
+    App\Mealz\MealBundle\Service\Mailer\MailerInterface: '@App\Mealz\MealBundle\Service\Mailer\Mailer'
 
     # Event Listeners
     App\Mealz\MealBundle\EventListener\ParticipantPersistenceListener:
@@ -176,7 +181,7 @@ services:
         arguments:
             $locales: '%app.locales%'
 
-    App\Mealz\MealBundle\Service\Mailer:
+    App\Mealz\MealBundle\Service\Mailer\Mailer:
         arguments:
             $senderEmail: '%app.email.sender%'
 
@@ -260,4 +265,3 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
-

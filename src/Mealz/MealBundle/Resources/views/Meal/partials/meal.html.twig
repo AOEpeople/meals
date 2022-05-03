@@ -7,7 +7,7 @@
 
 {% if dish.isCombinedDish %}
     {% set availability = availabilityService.byMeal(meal) %}
-    {% set bookedDishCombination = participationService.getBookedDishCombination(app.user.profile, meal) %}
+    {% set bookedDishCombination = participant ? participant.combinedDishes %}
     {% if bookedDishCombination|length > 0 %}
         {% set bookedDishTitles = bookedDishCombination.toArray|map(d => d.title) %}
         {% set combinedDishIDs = bookedDishCombination.toArray|map(d => d.slug)|join(',') %}
@@ -17,8 +17,8 @@
 
 <div class="meal-row{{ dish.isCombinedDish ? ' combined-meal' }}"
      data-slug="{{ dish.slug }}"
-    {% if participationService.openMeal(meal) %}
-        data-id="{{ participant ? participant.id }}"
+    {% if meal.isOpen() %}
+        data-participant-id="{{ participant ? participant.id }}"
         data-booked-dishes="{{ combinedDishIDs }}"
         data-description="{{ dishDescription }}"
     {% endif %}

@@ -1,0 +1,31 @@
+version: '3.6'
+
+services:
+  mercure:
+    image: dunglas/mercure:v0.13
+    container_name: ddev-${DDEV_SITENAME}-mercure
+    restart: unless-stopped
+    environment:
+      MERCURE_ALLOWED_ORIGINS: https://meals.test
+      MERCURE_ALLOWED_PUBLISH_ORIGINS: web
+      MERCURE_PUBLISHER_JWT_ALG: HS256
+      MERCURE_PUBLISHER_JWT_KEY: testing
+      MERCURE_SUBSCRIBER_JWT_ALG: HS256
+      MERCURE_SUBSCRIBER_JWT_KEY: testing
+      HTTP_EXPOSE: '8080:8080'
+      HTTPS_EXPOSE: '8081:8080'
+      SERVER_ADDRESS: 'http://meals.test:8080, http://mercure:8080'
+      VIRTUAL_HOST: ${DDEV_HOSTNAME}
+    labels:
+      com.ddev.site-name: ${DDEV_SITENAME}
+      com.ddev.approot: ${DDEV_APPROOT}
+    expose:
+      - 8080
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+      - ./caddy/Caddyfile.dev:/etc/caddy/Caddyfile
+
+volumes:
+  caddy_data:
+  caddy_config:

@@ -6,10 +6,10 @@ use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\Role;
 use DateTime;
 use Doctrine\DBAL\ParameterType;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
-use PDO;
 
 class ParticipantRepository extends EntityRepository
 {
@@ -81,8 +81,8 @@ class ParticipantRepository extends EntityRepository
             ->andWhere('p.costAbsorbed = 0')
             ->andWhere('d.enabled = 1')
             ->andWhere('w.enabled = 1');
-        $queryBuilder->setParameter('user', $username, PDO::PARAM_STR);
-        $queryBuilder->setParameter('now', new DateTime());
+        $queryBuilder->setParameter('user', $username, Types::STRING);
+        $queryBuilder->setParameter('now', new DateTime(), Types::DATETIME_MUTABLE);
 
         $result = $queryBuilder->getQuery()->getResult();
         if ($result && is_array($result) && count($result) >= 1) {
@@ -105,11 +105,11 @@ class ParticipantRepository extends EntityRepository
         );
 
         $queryBuilder->andWhere('p.profile = :user');
-        $queryBuilder->setParameter('user', $profile);
+        $queryBuilder->setParameter('user', $profile->getUsername(), Types::STRING);
         $queryBuilder->andWhere('p.costAbsorbed = :costAbsorbed');
-        $queryBuilder->setParameter('costAbsorbed', false);
+        $queryBuilder->setParameter('costAbsorbed', false, Types::BOOLEAN);
         $queryBuilder->andWhere('m.dateTime <= :now');
-        $queryBuilder->setParameter('now', new DateTime());
+        $queryBuilder->setParameter('now', new DateTime(), Types::DATETIME_MUTABLE);
 
         $queryBuilder->orderBy('m.dateTime', 'desc');
         if (true === is_int($limit)) {
@@ -348,7 +348,7 @@ class ParticipantRepository extends EntityRepository
     }
 
     /**
-     * Returns count of booked meals available to be taken by others on a given $date.
+     * Returns count of booked meals available to be taken over by others.
      */
     public function getOfferCountByMeal(Meal $meal): int
     {
@@ -422,6 +422,19 @@ class ParticipantRepository extends EntityRepository
                 'startDate' => (clone $date)->setTime(0, 0),
                 'endDate' => (clone $date)->setTime(23, 59, 59),
             ]);
+
+        return count($queryBuilder->getQuery()->getArrayResult());
+    }
+
+    /**
+     * Gets number of participants booked for a certain meal.
+     */
+    public function getCountByMeal(Meal $meal): int
+    {
+        $queryBuilder = $this->createQueryBuilder('p');
+        $queryBuilder
+            ->select(['p.id'])
+            ->where($queryBuilder->expr()->eq('p.meal', $meal->getId()));
 
         return count($queryBuilder->getQuery()->getArrayResult());
     }

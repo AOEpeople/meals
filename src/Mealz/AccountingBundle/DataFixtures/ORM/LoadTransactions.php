@@ -11,10 +11,18 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Exception;
+use RuntimeException;
 
 class LoadTransactions extends Fixture implements OrderedFixtureInterface
 {
+    /**
+     * User guaranteed to have a transaction.
+     */
     private const USER_WITH_TRANSACTION = 'alice.meals';
+
+    /**
+     * User guaranteed to have no transaction.
+     */
     private const USER_WITHOUT_TRANSACTION = 'john.meals';
 
     /**
@@ -22,7 +30,12 @@ class LoadTransactions extends Fixture implements OrderedFixtureInterface
      */
     private const ORDER_NUMBER = 4;
 
-    protected ObjectManager $objectManager;
+    private ObjectManager $objectManager;
+
+    /**
+     * @var Profile[]
+     */
+    private ?array $profiles = null;
 
     /**
      * @throws Exception
@@ -30,22 +43,24 @@ class LoadTransactions extends Fixture implements OrderedFixtureInterface
     public function load(ObjectManager $manager): void
     {
         $this->objectManager = $manager;
+        $usersWithTrans = [];
 
-        for ($i = 0; $i < 3; ++$i) {
-            $randomUsers = $this->getRandomUsers();
-            foreach ($randomUsers as $user) {
-                if (self::USER_WITHOUT_TRANSACTION !== $user->getUsername()) {
-                    $this->addTransaction($user, random_int(500, 1200) / 100);
-                    $this->addLastMonthTransaction($user, random_int(500, 1000) / 100);
+        for ($i = 0; $i < 5; ++$i) {
+            foreach ($this->getRandomUsers() as $user) {
+                if (self::USER_WITHOUT_TRANSACTION === $user->getUsername()) {
+                    continue;
                 }
+
+                $date = new DateTime('first day of -' . $i . 'months');
+                $this->addTransaction($user, random_int(20000, 40000) / 100, $date);
+                $usersWithTrans[$user->getUsername()] = '';
             }
         }
 
-        foreach ($this->referenceRepository->getReferences() as $reference) {
-            if ($reference instanceof Profile && self::USER_WITH_TRANSACTION === $reference->getUsername()) {
-                $this->addTransaction($reference, random_int(500, 1200) / 100);
-                $this->addLastMonthTransaction($reference, random_int(500, 1000) / 100);
-            }
+        // ensure USER_WITH_TRANSACTION got at-least one transaction
+        if (!isset($usersWithTrans[self::USER_WITH_TRANSACTION])) {
+            $user = $this->getUser(self::USER_WITH_TRANSACTION);
+            $this->addTransaction($user, 200.00, new DateTime());
         }
 
         $this->objectManager->flush();
@@ -63,35 +78,40 @@ class LoadTransactions extends Fixture implements OrderedFixtureInterface
      */
     protected function getRandomUsers(): array
     {
-        $profiles = [];
-        foreach ($this->referenceRepository->getReferences() as $referenceName => $reference) {
-            if ($reference instanceof Profile) {
-                $profiles[] = $this->getReference($referenceName);
-            }
-        }
-
-        $number = random_int(1, count($profiles));
         $profilesToReturn = [];
+        $profiles = $this->getProfiles();
+        $number = random_int(2, count($profiles));
 
-        if (1 === $number) {
-            $profilesToReturn[] = $profiles[array_rand($profiles)];
-        } elseif ($number > 1) {
-            foreach (array_rand($profiles, $number) as $userKey) {
-                $profilesToReturn[] = $profiles[$userKey];
-            }
+        foreach (array_rand($profiles, $number) as $userKey) {
+            $profilesToReturn[$userKey] = $profiles[$userKey];
         }
 
-        return $profilesToReturn;
+        return array_values($profilesToReturn);
     }
 
-    /**
-     * @throws Exception
-     */
-    private function addLastMonthTransaction(Profile $user, float $amount): void
+    private function getProfiles(): array
     {
-        // Generate some random date from last month
-        $lastMonthTimestamp = strtotime('first day of previous month') + (random_int(1, 27) * 86400);
-        $this->addTransaction($user, $amount, new DateTime('@' . $lastMonthTimestamp));
+        if (null === $this->profiles) {
+            $this->profiles = [];
+            foreach ($this->referenceRepository->getReferences() as $key => $reference) {
+                if ($reference instanceof Profile) {
+                    $this->profiles[$reference->getUsername()] = $this->getReference($key);
+                }
+            }
+        }
+
+        return $this->profiles;
+    }
+
+    private function getUser(string $username): Profile
+    {
+        $profiles = $this->getProfiles();
+
+        if (!isset($profiles[$username])) {
+            throw new RuntimeException($username . ': user not found');
+        }
+
+        return $profiles[$username];
     }
 
     /**
@@ -99,17 +119,11 @@ class LoadTransactions extends Fixture implements OrderedFixtureInterface
      */
     private function addTransaction(Profile $user, float $amount, DateTime $date = null): void
     {
-        if (true === is_null($date)) {
-            $date = new DateTime();
-        }
-
-        // make transactions more realistic (random minute, NO identical Date)
-        $date->modify('+' . random_int(1, 1400) . ' second');
-
         $transaction = new Transaction();
-        $transaction->setDate($date);
+        $transaction->setDate($date ?? new DateTime());
         $transaction->setAmount($amount);
         $transaction->setProfile($user);
+
         $this->objectManager->persist($transaction);
     }
 }

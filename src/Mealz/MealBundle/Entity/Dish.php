@@ -2,7 +2,6 @@
 
 namespace App\Mealz\MealBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -232,13 +231,13 @@ class Dish
         $this->category = $category;
     }
 
-    public function getVariations(): Collection
+    public function getVariations(): DishCollection
     {
         if (null === $this->variations) {
-            $this->variations = new ArrayCollection();
+            $this->variations = new DishCollection();
         }
 
-        return $this->variations;
+        return new DishCollection($this->variations->toArray());
     }
 
     public function setVariations(Collection $dishVariations): void

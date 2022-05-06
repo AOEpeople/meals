@@ -96,14 +96,4 @@ class Doorman extends AbstractExtension
         // proxy method
         return $this->doormanService->isOfferAvailable($meal, $participant);
     }
-
-    /**
-     * Returns the name of the extension.
-     *
-     * @return string The extension name
-     */
-    public function getName()
-    {
-        return 'doorman';
-    }
 }

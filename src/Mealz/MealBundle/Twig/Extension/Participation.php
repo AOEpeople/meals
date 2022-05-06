@@ -31,12 +31,4 @@ class Participation extends AbstractExtension
 
         return null;
     }
-
-    /**
-     * Returns the name of the extension.
-     */
-    public function getName(): string
-    {
-        return 'participation';
-    }
 }

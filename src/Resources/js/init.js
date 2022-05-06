@@ -12,8 +12,10 @@ import '@fancyapps/fancybox';
 import 'easy-autocomplete';
 import 'daterangepicker';
 import {Controller} from "./controller";
+import { createApp } from 'vue'
+import App from '../vue/App.vue'
 
-
+createApp(App).mount('#app')
 
 if (process.env.MODE !== 'production' && import.meta.webpackHot) {
     import.meta.webpackHot.accept();

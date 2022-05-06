@@ -55,7 +55,9 @@
 	{% endif %}
 
 	<div class="container content-wrapper {{ wrapperClass }}">
+		<div id="app"></div>
         {% include 'MealzTemplateBundle::partials/flashMessages.html.twig' %}
+
 		{% block body %}
 		{% endblock %}
 	</div>

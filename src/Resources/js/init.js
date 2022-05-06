@@ -15,8 +15,7 @@ import {Controller} from './controller';
 import { createApp } from 'vue'
 import App from '../vue/App.vue'
 
-const vueApp = createApp(App);
-vueApp.mount('#app');
+createApp(App).mount('#app')
 
 if (process.env.MODE !== 'production' && import.meta.webpackHot) {
     import.meta.webpackHot.accept();

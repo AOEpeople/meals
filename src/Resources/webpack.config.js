@@ -3,6 +3,7 @@ const webpack = require('webpack')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const TerserPlugin = require('terser-webpack-plugin');
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin')
+const { VueLoaderPlugin } = require('vue-loader');
 
 module.exports = function(env, argv) {
     return {
@@ -78,6 +79,12 @@ module.exports = function(env, argv) {
                     exclude: /node_modules/,
                 },
                 {
+                    test :/\.vue$/,
+                    use: [
+                        'vue-loader',
+                    ],
+                },
+                {
                     test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/i,
                     // More information here https://webpack.js.org/guides/asset-modules/
                     type: 'asset/resource',
@@ -120,6 +127,7 @@ module.exports = function(env, argv) {
         plugins: [
             new WebpackManifestPlugin(),
             new MiniCssExtractPlugin(),
+            new VueLoaderPlugin(),
             new webpack.BannerPlugin({
                 banner: 'name:[name], file:[file], fullhash:[fullhash], chunkhash:[chunkhash]',
             }),

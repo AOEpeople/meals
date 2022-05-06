@@ -6,19 +6,28 @@
     {% endif %}
 
     {% set action = null %}
+    {% set actionURL = null %}
     {% if actions is defined %}
         {% if participation is not null %}
-            {% set action = actions.delete|replace({'_participantID_': participation.id}) %}
+            {% set action = 'delete' %}
+            {% set actionURL = actions.delete|replace({'_participantID_': participation.id}) %}
         {% else %}
-            {% set action = actions.join|replace({
-                '_date_': meal.dateTime | date('Y-m-d'),
+            {% set action = 'join' %}
+            {% set actionURL = actions.join|replace({
+                '_date_': meal.dateTime.format('Y-m-d'),
                 '_dishSlug_': meal.dish.slug
             }) %}
         {% endif %}
     {% endif %}
 
     <td class="meal-participation table-data{{ participation ? ' participating' }}"
-        {%- if action %}data-action="{{ action }}"{% endif %}>
+        {%- if action %}
+            data-action="{{ action }}"
+            data-action-url="{{ actionURL }}"
+        {% endif %}
+        data-dish-slug="{{ meal.dish.slug }}"
+        data-date="{{ meal.dateTime.format('Y-m-d') }}"
+        data-combined="{{ meal.isCombinedMeal ? 1 : 0 }}">
         <i class="glyphicon{{ participation ? ' glyphicon-ok' }}"></i>
         {% if not meal.isCombinedMeal and combinedMealParticipation and combinedMealParticipation.combinedDishes.contains(meal.dish) %}
             <i class="glyphicon glyphicon-adjust"></i>

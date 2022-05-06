@@ -64,7 +64,6 @@ Mealz.prototype.addProfile = function () {
     function reinitialize() {
         Mealz.prototype.initAutocomplete();
         Mealz.prototype.showProfiles();
-        Mealz.prototype.initToggleParticipation();
     }
 };
 

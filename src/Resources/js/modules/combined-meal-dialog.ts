@@ -61,6 +61,9 @@ export class CombinedMealDialog extends BaseDialog {
         let $dishes = $('<div class="dishes"></div>');
 
         dishes.forEach((dish, index) => {
+            if (dish.isCombined) {
+                return;
+            }
             let $dishField = this.getDishField(dish, index, selectedDishIDs);
             $dishes.append($dishField);
         });

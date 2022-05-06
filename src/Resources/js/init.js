@@ -102,11 +102,6 @@ $(function () {
          */
         mealz.initAutocomplete();
         mealz.showProfiles();
-
-        /**
-         * init toggle participation
-         */
-        mealz.initToggleParticipation();
     }
 
     mealz.exportTransactions();

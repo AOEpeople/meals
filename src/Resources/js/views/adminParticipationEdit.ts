@@ -24,7 +24,7 @@ type ReqSuccessFn = (data: unknown) => void;
 
 enum MealToggleAction {
     Join = 'join',
-    Quit = 'delete'
+    Cancel = 'delete'
 }
 
 export default class AdminParticipationEditView {
@@ -94,7 +94,7 @@ export default class AdminParticipationEditView {
             url,
             null,
             function(data: JoinResponseData){
-                const nextAction = action === MealToggleAction.Quit ? MealToggleAction.Join : MealToggleAction.Quit;
+                const nextAction = action === MealToggleAction.Cancel ? MealToggleAction.Join : MealToggleAction.Cancel;
                 $mealContainer
                     .attr('data-action-url', data.url)
                     .attr('data-action', nextAction)
@@ -102,64 +102,16 @@ export default class AdminParticipationEditView {
                     .find('i:first')
                     .toggleClass('glyphicon-check glyphicon-unchecked');
             },
-            (error: string) => this.toggleFailure(error, action, url)
+            (error: string) => AdminParticipationEditView.toggleFailure(error, action, url)
         );
-    }
-
-    private getDishesOn(day: string): Dish[]|null {
-        let dishes = $('[data-weekly-menu]').data('weeklyMenu');
-
-        if (undefined === dishes[day]) {
-            return null;
-        }
-
-        return dishes[day]
-    }
-
-    private findDish(slug: string, dishes: Dish[]): Dish|DishVariation|null {
-        for (const dish of dishes) {
-            if (slug === dish.slug) {
-                return dish;
-            }
-            if (0 === dish.variations.length) {
-                continue;
-            }
-            for (const dv of dish.variations) {
-                if (slug === dv.slug) {
-                    return dv;
-                }
-            }
-        }
-    }
-
-    private dishesContainVariation(dishes: Dish[]): boolean {
-        for (const dish of dishes) {
-            if (0 < dish.variations.length) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private getSimpleDishSlugs(dishes: Dish[]): string[] {
-        let slugs: string[] = [];
-        for (const dish of dishes) {
-            if (dish.isCombined) {
-                continue;
-            }
-            slugs.push(dish.slug);
-        }
-
-        return slugs;
     }
 
     private handleToggleCombinedMealParticipation(event: JQuery.TriggeredEvent): void {
         let $mealContainer = $(event.target).closest('[data-combined]');
         const action = $mealContainer.attr('data-action');
 
-        if (MealToggleAction.Quit === action) {
-            this.quitMeal($mealContainer);
+        if (MealToggleAction.Cancel === action) {
+            this.cancelMeal($mealContainer);
             return;
         }
 
@@ -168,16 +120,16 @@ export default class AdminParticipationEditView {
 
     private joinCombinedMeal($mealContainer: JQuery): void {
         const day = $mealContainer.data('date');
-        let dishes = this.getDishesOn(day);
+        let dishes = AdminParticipationEditView.getDishesOn(day);
         const dishSlug = $mealContainer.data('dishSlug');
-        const dish = this.findDish(dishSlug, dishes);
+        const dish = AdminParticipationEditView.findDish(dishSlug, dishes);
 
         if (null === dish) {
             console.log(`dish not found, slug: ${dishSlug}`);
             return;
         }
 
-        if (this.dishesContainVariation(dishes)) {
+        if (AdminParticipationEditView.dishesContainVariation(dishes)) {
             this.joinCombinedMealWithVariations($mealContainer);
         } else {
             this.joinCombinedMealWithoutVariations($mealContainer);
@@ -187,9 +139,9 @@ export default class AdminParticipationEditView {
     private joinCombinedMealWithVariations($mealContainer: JQuery): void {
         let self = this;
         const day = $mealContainer.data('date');
-        let dishes = this.getDishesOn(day);
+        let dishes = AdminParticipationEditView.getDishesOn(day);
         const dishSlug = $mealContainer.data('dishSlug');
-        const dish = this.findDish(dishSlug, dishes);
+        const dish = AdminParticipationEditView.findDish(dishSlug, dishes);
         const url = $mealContainer.attr('data-action-url');
         let cmd = new CombinedMealDialog(
             dish.title,
@@ -201,8 +153,8 @@ export default class AdminParticipationEditView {
                     self.sendRequest(
                         url,
                         payload,
-                        (data: JoinResponseData) => self.combinedMealJoinSuccess($mealContainer, data),
-                        (error: string) => self.toggleFailure(error, MealToggleAction.Join, url)
+                        (data: JoinResponseData) => AdminParticipationEditView.combinedMealJoinSuccess($mealContainer, data),
+                        (error: string) => AdminParticipationEditView.toggleFailure(error, MealToggleAction.Join, url)
                     );
                 }
             }
@@ -211,10 +163,9 @@ export default class AdminParticipationEditView {
     }
 
     private joinCombinedMealWithoutVariations($mealContainer: JQuery): void {
-        let self = this;
         const day = $mealContainer.data('date');
-        let dishes = this.getDishesOn(day);
-        const dishSlugs = this.getSimpleDishSlugs(dishes);
+        let dishes = AdminParticipationEditView.getDishesOn(day);
+        const dishSlugs = AdminParticipationEditView.getSimpleDishSlugs(dishes);
 
         let payload: SerializedFormData[] = [];
         dishSlugs.forEach(function (slug, i) {
@@ -228,26 +179,25 @@ export default class AdminParticipationEditView {
         this.sendRequest(
             url,
             payload,
-            (data: JoinResponseData) => self.combinedMealJoinSuccess($mealContainer, data),
-            (error: string) => self.toggleFailure(error, MealToggleAction.Join, url)
+            (data: JoinResponseData) => AdminParticipationEditView.combinedMealJoinSuccess($mealContainer, data),
+            (error: string) => AdminParticipationEditView.toggleFailure(error, MealToggleAction.Join, url)
         );
     }
 
-    private quitMeal($mealContainer: JQuery): void {
-        let self = this;
+    private cancelMeal($mealContainer: JQuery): void {
         const url = $mealContainer.attr('data-action-url');
         this.sendRequest(
             url,
             null,
-            (data: DeleteResponseData) => self.combinedMealQuitSuccess($mealContainer, data),
-            (error: string) => self.toggleFailure(error, MealToggleAction.Quit, url)
+            (data: DeleteResponseData) => AdminParticipationEditView.combinedMealCancelSuccess($mealContainer, data),
+            (error: string) => AdminParticipationEditView.toggleFailure(error, MealToggleAction.Cancel, url)
         );
     }
 
-    private combinedMealJoinSuccess($mealContainer: JQuery, data: JoinResponseData): void {
+    private static combinedMealJoinSuccess($mealContainer: JQuery, data: JoinResponseData): void {
         $mealContainer
             .addClass('participating')
-            .attr('data-action', MealToggleAction.Quit)
+            .attr('data-action', MealToggleAction.Cancel)
             .attr('data-action-url', data.url)
             .find('.glyphicon')
             .removeClass('glyphicon-unchecked')
@@ -260,7 +210,7 @@ export default class AdminParticipationEditView {
         });
     }
 
-    private combinedMealQuitSuccess($mealContainer: JQuery, data: DeleteResponseData): void {
+    private static combinedMealCancelSuccess($mealContainer: JQuery, data: DeleteResponseData): void {
         const day = $mealContainer.data('date');
         $(`.table-row.editing .meal-participation[data-date=${day}][data-combined='0'] .glyphicon-adjust`).remove();
         $(`.table-row.editing .meal-participation[data-date=${day}][data-combined='1'] .glyphicon-check`)
@@ -272,9 +222,74 @@ export default class AdminParticipationEditView {
             .attr('data-action-url', data.url);
     }
 
-    private toggleFailure(error: string, action: MealToggleAction, url: string, payload?: SerializedFormData[]): void {
+    /**
+     * Error response handler for join and cancel requests for both simple and combined meals.
+     */
+    private static toggleFailure(error: string, action: MealToggleAction, url: string, payload?: SerializedFormData[]): void {
         let logMsg = `toggle failure, error: ${error}, action: ${action}, url: ${url}, payload: ${payload}`;
         console.log(logMsg);
+    }
+
+    /**
+     * @param day Date in YYYY-MM-DD format.
+     */
+    private static getDishesOn(day: string): Dish[]|null {
+        let dishes = $('[data-weekly-menu]').data('weeklyMenu');
+
+        if (undefined === dishes[day]) {
+            return null;
+        }
+
+        return dishes[day]
+    }
+
+    /**
+     * Extracts simple dish slugs from a given dish collection.
+     *
+     * @return List of simple dish slugs.
+     */
+    private static getSimpleDishSlugs(dishes: Dish[]): string[] {
+        let slugs: string[] = [];
+        for (const dish of dishes) {
+            if (dish.isCombined) {
+                continue;
+            }
+            slugs.push(dish.slug);
+        }
+
+        return slugs;
+    }
+
+    /**
+     * Checks weather or not a dish collection contains a dish variation.
+     */
+    private static dishesContainVariation(dishes: Dish[]): boolean {
+        for (const dish of dishes) {
+            if (0 < dish.variations.length) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Finds a dish, or a dish variation with given slug in a dish collection.
+     */
+    private static findDish(slug: string, dishes: Dish[]): Dish|DishVariation|null {
+        for (const dish of dishes) {
+            if (slug === dish.slug) {
+                return dish;
+            }
+            if (0 === dish.variations.length) {
+                continue;
+            }
+            for (const dv of dish.variations) {
+                if (slug === dv.slug) {
+                    return dv;
+                }
+            }
+        }
     }
 
     private sendRequest(url: string, payload?: SerializedFormData[], successFn?: ReqSuccessFn, failureFn?: ReqFailureFn) {

@@ -274,13 +274,15 @@ class ParticipantControllerTest extends AbstractControllerTestCase
      */
     public function testCheckTableDataPrototype(): void
     {
-        $crawler = $this->getCurrentWeekParticipations()->filter('.table-content');
-        $tableRow = '<tr class="table-row"><td class="text table-data wide-cell">__name__<\/td>';
-        $tableData = '<td class="meal-participation table-data" data-action=".*__username__"><i class="glyphicon"><\/i><\/td>';
+        $prototypeHTML = $this->getCurrentWeekParticipations()->filter('.table-content')->attr('data-prototype');
+        $crawler = new Crawler($prototypeHTML);
 
-        $regex = '/(' . $tableRow . ')(' . $tableData . ')+(<\/tr>)/';
-
-        $this->assertMatchesRegularExpression($regex, preg_replace('~\\s{2,}~', '', trim($crawler->attr('data-prototype'))));
+        $this->assertSame('__name__', $crawler->filter('td.text')->extract(['_text'])[0]);
+        $this->assertSame('join', $crawler->filter('td.meal-participation')->extract(['data-action'])[0]);
+        $this->assertStringEndsWith('/__username__', $crawler->filter('td.meal-participation')->extract(['data-action-url'])[0]);
+        $this->assertNotEmpty($crawler->filter('td.meal-participation')->extract(['data-dish-slug'])[0]);
+        $this->assertMatchesRegularExpression('/\d{4}-\d{2}-\d{2}/', $crawler->filter('td.meal-participation')->extract(['data-date'])[0]);
+        $this->assertContains($crawler->filter('td.meal-participation')->extract(['data-combined'])[0], ['0', '1']);
     }
 
     /**

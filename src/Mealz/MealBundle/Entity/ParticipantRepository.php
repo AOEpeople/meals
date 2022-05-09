@@ -147,19 +147,21 @@ class ParticipantRepository extends EntityRepository
         return $result;
     }
 
-    public function groupParticipantsByName(array $participations): array
+    public function groupParticipantsByName(array $participants): array
     {
         $result = [];
 
-        foreach ($participations as $participation) {
-            /** @var Participant $participation */
-            $name = $participation->getProfile()->getUsername();
-            if (true === array_key_exists($name, $result)) {
-                $result[$name][] = $participation;
+        /** @var Participant $participant */
+        foreach ($participants as $participant) {
+            $name = $participant->getProfile()->getUsername();
+            if (isset($result[$name])) {
+                $result[$name][] = $participant;
             } else {
-                $result[$name] = [$participation];
+                $result[$name] = [$participant];
             }
         }
+
+        ksort($result);
 
         return $result;
     }

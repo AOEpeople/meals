@@ -50,7 +50,12 @@ class ParticipationUpdateSubscriber implements EventSubscriberInterface
      */
     public function onUpdate(ParticipationUpdateEvent $event): void
     {
-        $mealDay = $event->getParticipant()->getMeal()->getDay();
+        $meal = $event->getParticipant()->getMeal();
+        if (!$meal->isOpen()) { // do not send updates for past meals
+            return;
+        }
+
+        $mealDay = $meal->getDay();
         $mealsAvailability = $this->availabilityService->getByDay($mealDay);
         $dayMeals = $mealDay->getMeals();
         $participationCount = $this->getParticipationCount($dayMeals);

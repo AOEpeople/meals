@@ -4,18 +4,13 @@ import {Dish, DishVariation} from "../modules/combined-meal-service";
 interface DeleteResponseData {
     participantsCount: number;
     url: string;
-    actionText: string;
-    available: boolean;
 }
 
 interface JoinResponseData {
     id: number,
     participantsCount: number;
     url: string;
-    actionText: string;
     bookedDishSlugs: string[];
-    slot: string;
-    available: boolean;
 }
 
 // function type for request success/failure handlers
@@ -89,21 +84,59 @@ export default class AdminParticipationEditView {
     private handleToggleSimpleMealParticipation(event: JQuery.TriggeredEvent): void {
         let $mealContainer = $(event.target).closest('[data-combined]');
         const action = $mealContainer.attr('data-action') as MealToggleAction;
+        if (action === MealToggleAction.Join) {
+            this.joinSimpleMeal($mealContainer);
+        } else {
+            this.cancelSimpleMeal($mealContainer);
+        }
+    }
+
+    private joinSimpleMeal($mealContainer: JQuery): void {
         const url = $mealContainer.attr('data-action-url');
         this.sendRequest(
             url,
             null,
-            function(data: JoinResponseData){
-                const nextAction = action === MealToggleAction.Cancel ? MealToggleAction.Join : MealToggleAction.Cancel;
-                $mealContainer
-                    .attr('data-action-url', data.url)
-                    .attr('data-action', nextAction)
-                    .toggleClass('participating')
-                    .find('i:first')
-                    .toggleClass('glyphicon-check glyphicon-unchecked');
-            },
-            (error: string) => AdminParticipationEditView.toggleFailure(error, action, url)
+            (data: JoinResponseData) => AdminParticipationEditView.simpleMealJoinSuccess($mealContainer, data),
+            (error: string) => AdminParticipationEditView.toggleFailure(error, MealToggleAction.Join, url)
         );
+    }
+
+    private static simpleMealJoinSuccess($mealContainer: JQuery, data: JoinResponseData): void {
+        $mealContainer
+            .attr('data-action-url', data.url)
+            .attr('data-action', MealToggleAction.Cancel)
+            .toggleClass('participating')
+            .find('i:first')
+            .removeClass('glyphicon-unchecked')
+            .addClass('glyphicon-check');
+
+        const dishSlug = $mealContainer.data('dishSlug');
+        const day = $mealContainer.data('date');
+        AdminParticipationEditView.updateParticipantCount(dishSlug, day, data.participantsCount);
+    }
+
+    private cancelSimpleMeal($mealContainer: JQuery): void {
+        const url = $mealContainer.attr('data-action-url');
+        this.sendRequest(
+            url,
+            null,
+            (data: DeleteResponseData) => AdminParticipationEditView.simpleMealCancelSuccess($mealContainer, data),
+            (error: string) => AdminParticipationEditView.toggleFailure(error, MealToggleAction.Cancel, url)
+        );
+    }
+
+    private static simpleMealCancelSuccess($mealContainer: JQuery, data: DeleteResponseData): void {
+        $mealContainer
+            .attr('data-action-url', data.url)
+            .attr('data-action', MealToggleAction.Join)
+            .toggleClass('participating')
+            .find('i:first')
+            .removeClass('glyphicon-check')
+            .addClass('glyphicon-unchecked');
+
+        const dishSlug = $mealContainer.data('dishSlug');
+        const day = $mealContainer.data('date');
+        AdminParticipationEditView.updateParticipantCount(dishSlug, day, data.participantsCount);
     }
 
     private handleToggleCombinedMealParticipation(event: JQuery.TriggeredEvent): void {
@@ -111,7 +144,7 @@ export default class AdminParticipationEditView {
         const action = $mealContainer.attr('data-action');
 
         if (MealToggleAction.Cancel === action) {
-            this.cancelMeal($mealContainer);
+            this.cancelCombinedMeal($mealContainer);
             return;
         }
 
@@ -139,10 +172,9 @@ export default class AdminParticipationEditView {
     private joinCombinedMealWithVariations($mealContainer: JQuery): void {
         let self = this;
         const day = $mealContainer.data('date');
-        let dishes = AdminParticipationEditView.getDishesOn(day);
+        const dishes = AdminParticipationEditView.getDishesOn(day);
         const dishSlug = $mealContainer.data('dishSlug');
         const dish = AdminParticipationEditView.findDish(dishSlug, dishes);
-        const url = $mealContainer.attr('data-action-url');
         let cmd = new CombinedMealDialog(
             dish.title,
             dishes,
@@ -150,6 +182,7 @@ export default class AdminParticipationEditView {
             null,
             {
                 ok: function (payload: SerializedFormData[]) {
+                    const url = $mealContainer.attr('data-action-url');
                     self.sendRequest(
                         url,
                         payload,
@@ -164,7 +197,7 @@ export default class AdminParticipationEditView {
 
     private joinCombinedMealWithoutVariations($mealContainer: JQuery): void {
         const day = $mealContainer.data('date');
-        let dishes = AdminParticipationEditView.getDishesOn(day);
+        const dishes = AdminParticipationEditView.getDishesOn(day);
         const dishSlugs = AdminParticipationEditView.getSimpleDishSlugs(dishes);
 
         let payload: SerializedFormData[] = [];
@@ -184,16 +217,6 @@ export default class AdminParticipationEditView {
         );
     }
 
-    private cancelMeal($mealContainer: JQuery): void {
-        const url = $mealContainer.attr('data-action-url');
-        this.sendRequest(
-            url,
-            null,
-            (data: DeleteResponseData) => AdminParticipationEditView.combinedMealCancelSuccess($mealContainer, data),
-            (error: string) => AdminParticipationEditView.toggleFailure(error, MealToggleAction.Cancel, url)
-        );
-    }
-
     private static combinedMealJoinSuccess($mealContainer: JQuery, data: JoinResponseData): void {
         $mealContainer
             .addClass('participating')
@@ -202,12 +225,29 @@ export default class AdminParticipationEditView {
             .find('.glyphicon')
             .removeClass('glyphicon-unchecked')
             .addClass('glyphicon-check glyphicon-ok');
+
         const day = $mealContainer.data('date');
         $(`.table-row.editing .meal-participation[data-date='${day}'][data-combined='0']`).each(function(){
             if (data.bookedDishSlugs.includes($(this).data('dishSlug'))) {
                 $(this).append('<i class="glyphicon glyphicon-adjust"></i>');
             }
         });
+
+        const dishSlug = $mealContainer.data('dishSlug');
+        AdminParticipationEditView.updateParticipantCount(dishSlug, day, data.participantsCount);
+    }
+
+    /**
+     * Cancels a booked combined meal.
+     */
+    private cancelCombinedMeal($mealContainer: JQuery): void {
+        const url = $mealContainer.attr('data-action-url');
+        this.sendRequest(
+            url,
+            null,
+            (data: DeleteResponseData) => AdminParticipationEditView.combinedMealCancelSuccess($mealContainer, data),
+            (error: string) => AdminParticipationEditView.toggleFailure(error, MealToggleAction.Cancel, url)
+        );
     }
 
     private static combinedMealCancelSuccess($mealContainer: JQuery, data: DeleteResponseData): void {
@@ -220,10 +260,13 @@ export default class AdminParticipationEditView {
             .removeClass('participating')
             .attr('data-action', MealToggleAction.Join)
             .attr('data-action-url', data.url);
+
+        const dishSlug = $mealContainer.data('dishSlug');
+        AdminParticipationEditView.updateParticipantCount(dishSlug, day, data.participantsCount);
     }
 
     /**
-     * Error response handler for join and cancel requests for both simple and combined meals.
+     * Error response handler for join and cancel operations on both simple and combined meals.
      */
     private static toggleFailure(error: string, action: MealToggleAction, url: string, payload?: SerializedFormData[]): void {
         let logMsg = `toggle failure, error: ${error}, action: ${action}, url: ${url}, payload: ${payload}`;
@@ -290,6 +333,10 @@ export default class AdminParticipationEditView {
                 }
             }
         }
+    }
+
+    private static updateParticipantCount(dishSlug: string, day: string, count: number): void {
+        $(`.meal-count[data-dish-slug=${dishSlug}][data-day=${day}] .count`).text(count);
     }
 
     private sendRequest(url: string, payload?: SerializedFormData[], successFn?: ReqSuccessFn, failureFn?: ReqFailureFn) {

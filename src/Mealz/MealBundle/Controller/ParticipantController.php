@@ -213,7 +213,7 @@ class ParticipantController extends BaseController
         ]);
     }
 
-    public function editParticipation(Week $week): Response
+    public function editParticipation(Week $week, ParticipationService $participationSrv): Response
     {
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
@@ -245,6 +245,7 @@ class ParticipantController extends BaseController
         $prototype = $this->renderView('@MealzMeal/Participant/edit_row_prototype.html.twig', ['week' => $week]);
 
         return $this->render('MealzMealBundle:Participant:edit.html.twig', [
+            'participationSrv' => $participationSrv,
             'week' => $week,
             'users' => $groupedParticipation,
             'profilesJson' => json_encode($profilesArray),

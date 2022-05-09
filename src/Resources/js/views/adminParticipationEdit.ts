@@ -34,23 +34,23 @@ export default class AdminParticipationEditView {
 
     private initEvents(): void {
         $('.table-content')
-            // edit meal participation event
+            // edit meal participation
             .on(
                 'click',
                 '.table-row .table-data.text',
-                this.handleEditMealParticipation.bind(this)
+                this.handleEditMealParticipation
             )
-            // simple meal participation toggle event
+            // toggle simple meal participation
             .on(
                 'click',
                 '.table-row.editing .meal-participation[data-combined=0]',
-                this.handleSimpleMealToggleParticipation.bind(this)
+                this.handleToggleSimpleMealParticipation.bind(this)
             )
-            // combined meal participation toggle event
+            // toggle combined meal participation
             .on(
                 'click',
                 '.table-row.editing .meal-participation[data-combined=1]',
-                this.handleCombinedMealToggleParticipation.bind(this)
+                this.handleToggleCombinedMealParticipation.bind(this)
             );
     }
 
@@ -72,7 +72,7 @@ export default class AdminParticipationEditView {
                 });
         });
 
-        // select user row was in edit mode, and has been reset; do nothing
+        // selected user row was in edit mode, and now has been reset; do nothing
         if ($isParticipantRowEditable) {
             return;
         }
@@ -86,7 +86,7 @@ export default class AdminParticipationEditView {
         });
     }
 
-    private handleSimpleMealToggleParticipation(event: JQuery.TriggeredEvent): void {
+    private handleToggleSimpleMealParticipation(event: JQuery.TriggeredEvent): void {
         let $mealContainer = $(event.target).closest('[data-combined]');
         const action = $mealContainer.attr('data-action') as MealToggleAction;
         const url = $mealContainer.attr('data-action-url');
@@ -154,7 +154,7 @@ export default class AdminParticipationEditView {
         return slugs;
     }
 
-    private handleCombinedMealToggleParticipation(event: JQuery.TriggeredEvent): void {
+    private handleToggleCombinedMealParticipation(event: JQuery.TriggeredEvent): void {
         let $mealContainer = $(event.target).closest('[data-combined]');
         const action = $mealContainer.attr('data-action');
 

@@ -27,12 +27,4 @@ class Link extends AbstractExtension
     {
         return $this->linkService->link($object, $action, $referenceType);
     }
-
-    /**
-     * Returns the name of the extension.
-     */
-    public function getName(): string
-    {
-        return 'link';
-    }
 }

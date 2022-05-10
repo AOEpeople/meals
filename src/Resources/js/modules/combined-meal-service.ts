@@ -107,13 +107,14 @@ export class CombinedMealService {
             let dish: Dish = {
                 title: $dishContainer.find('.title').contents().get(0).nodeValue.trim(),
                 slug: $dishContainer.data('slug'),
-                variations: []
+                variations: [],
+                isCombined: false
             };
             $dishContainer.find('.variation-row').each(function () {
                 const $dishVarRow = $(this);
                 let dishVariation: DishVariation = {
                     title: $dishVarRow.find('.text-variation').text().trim(),
-                    slug: $dishVarRow.data('slug')
+                    slug: $dishVarRow.data('slug'),
                 };
                 dish.variations.push(dishVariation);
             });
@@ -178,10 +179,11 @@ export class CombinedMealService {
 }
 
 export interface Dish extends DishVariation {
-    variations: DishVariation[]
+    variations: DishVariation[];
+    'isCombined': boolean;
 }
 
 export interface DishVariation {
-    title: string
-    slug: string
+    title: string;
+    slug: string;
 }

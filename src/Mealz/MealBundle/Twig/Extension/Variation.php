@@ -129,14 +129,6 @@ class Variation extends AbstractExtension
     }
 
     /**
-     * Returns the name of the extension.
-     */
-    public function getName(): string
-    {
-        return 'variation';
-    }
-
-    /**
      * @throws Exception
      */
     public function getDishCount(Dish $dish): int

@@ -72,7 +72,9 @@ class LoadDishVariations extends Fixture implements OrderedFixtureInterface
         $dishVariation->setParent($dish);
         $dishVariation->setPrice(3.60);
 
-        $dish->getVariations()->add($dishVariation);
+        $variations = $dish->getVariations();
+        $variations->add($dishVariation);
+        $dish->setVariations($variations);
 
         return $dishVariation;
     }

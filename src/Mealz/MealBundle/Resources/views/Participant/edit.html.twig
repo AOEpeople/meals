@@ -2,6 +2,7 @@
 
 {% import 'MealzTemplateBundle::Components/headline.html.twig' as MealzHeadline %}
 
+{% block pageView %}adminParticipationEdit{% endblock %}
 {% set wrapperClass = 'edit-participation' %}
 
 {% block body %}
@@ -17,7 +18,7 @@
         {% include 'MealzMealBundle:Participant/partials:profile-list.html.twig' %}
     {% endif %}
 
-    <div class="table-wrapper">
+    <div class="table-wrapper" data-weekly-menu="{{ weeklyMenu(week)|json_encode }}">
         <table class="table" {% if users is empty %} style="display: none" {% endif %}>
             <thead class="table-header">
             <tr>
@@ -74,11 +75,13 @@
                 <td class="text table-data wide-cell">{{ 'table.total' | trans({}, 'general') }}</td>
                 {% for day in week.days %}
                     {% for meal in day.meals.groupByType() %}
-                        <td class="meal-count text text-center table-data"><span>{{ meal.participants | length }}</span></td>
+                        <td class="meal-count text text-center table-data" data-dish-slug="{{ meal.dish.slug }}" data-day="{{ meal.dateTime.format('Y-m-d') }}"><span class="count">{{ participationSrv.countByMeal(meal) }}</span></td>
                     {% endfor %}
                 {% endfor %}
             </tr>
             </tbody>
         </table>
     </div>
+
+    <div id="combined-meal-selector" class="combined-meal-selector" data-qa="combined-meal-selector"></div>
 {% endblock %}

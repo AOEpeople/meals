@@ -8,7 +8,7 @@ monolog:
             buffer_size: 50 # How many messages should be saved? Prevent memory leaks
         grouped_main:
             type: group
-            members: [nested, deduplicated, slackwebhook]
+            members: [nested, deduplicated]
         nested:
             type: stream
             path: php://stderr
@@ -31,7 +31,8 @@ monolog:
             type: slackwebhook
             webhook_url: '%app.alerts.webhook_url%'
 
-            # keep it concise, i.e. just the errors
+            # keep it concise, i.e. just the errors with context
             level: error
+            include_extra: true
 
             bot_name: Meals Logger

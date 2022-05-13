@@ -4,9 +4,12 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    app.alerts.webhook_url: '%env(APP_ALERTS_WEBHOOK_URL)%'
+
     app.assets_server: '%env(ASSETS_SERVER)%'
     app.base_url: '%env(APP_BASE_URL)%'
-    app.email.sender: '%env(EMAIL_SENDER)%'
+    app.email.admin: '%env(APP_EMAIL_ADMIN)%'
+    app.email.sender: '%env(APP_EMAIL_SENDER)%'
     app.email.settlement_request.receiver: '%env(SETTLEMENT_REQ_EMAIL_RECEIVER)%'
 
     # default period for counting a dish consumption; specified as format used by PHP date() function

@@ -36,7 +36,7 @@ module.exports = function(env, argv) {
             ],
         },
         entry: {
-            app: './js/init.js',
+            app: './js/test.js',
         },
         output: {
             path: path.resolve(__dirname, '../../public/static/'),

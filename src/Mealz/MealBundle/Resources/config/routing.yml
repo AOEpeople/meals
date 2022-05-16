@@ -6,6 +6,10 @@ MealzMealBundle_home:
     path:  /
     defaults: { _controller: App\Mealz\MealBundle\Controller\MealController::index }
 
+MealzMealBundle_test:
+    path: /test
+    defaults: { _controller: App\Mealz\MealBundle\Controller\TestController::test }
+
 MealzMealBundle_Meal:
     path:  /menu
     defaults: { _controller: App\Mealz\MealBundle\Controller\MealAdminController::list }

@@ -33,6 +33,7 @@
     "@babel/preset-env": "^7.15.0",
     "@types/jquery": "^3.5.10",
     "@types/jqueryui": "^1.12.16",
+    "aoe-group-web-cd": "git+ssh://git@gitlab.aoe.com:project/aoe-internal/aoe-group-web-cd.git",
     "autoprefixer": "^10.3.1",
     "babel-loader": "^8.2.2",
     "core-js": "^3.19",

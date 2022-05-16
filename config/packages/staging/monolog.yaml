@@ -1,0 +1,23 @@
+monolog:
+    channels: [balance]
+    handlers:
+        main:
+            type: fingers_crossed
+            action_level: error
+            handler: stderr
+            excluded_http_codes: [404, 405]
+            buffer_size: 50
+            channels: [ "!event", "!php", "!doctrine", "!balance" ]
+        stderr:
+            type: stream
+            path: php://stderr
+            level: debug
+        console:
+            type: console
+            process_psr_3_messages: false
+            channels: ["!event", "!doctrine"]
+        balance:
+            type: stream
+            path: "%kernel.logs_dir%/%kernel.environment%.admin-balance-change.log"
+            level: info
+            channels: ["balance"]

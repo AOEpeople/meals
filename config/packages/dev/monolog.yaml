@@ -1,19 +1,34 @@
 monolog:
-    handlers:
-        doctrine:
-            type: stream
-            path: "%kernel.logs_dir%/doctrine.log"
-            level: debug
-            channels: ["doctrine"]
-        # uncomment to get logging in your browser
-        # you may have to allow bigger header sizes in your Web server configuration
-        #firephp:
-        #    type: firephp
-        #    level: info
-        #chromephp:
-        #    type: chromephp
-        #    level: info
-        console:
-            type: console
-            process_psr_3_messages: false
-            channels: ["!event", "!doctrine", "!console"]
+  channels: [balance]
+  handlers:
+    main:
+      type: group
+      members: [stderr, file]
+      channels: ["!event", "!php", "!doctrine", "!balance"]
+    stderr:
+      type: stream
+      path: php://stderr
+      level: debug
+    file:
+      type: stream
+      path: "%kernel.logs_dir%/%kernel.environment%.log"
+      level: debug
+    doctrine:
+      type: stream
+      path: "%kernel.logs_dir%/%kernel.environment%.doctrine.log"
+      level: debug
+      channels: ["doctrine"]
+    deprecation:
+      type: stream
+      level: debug
+      path: '%kernel.logs_dir%/%kernel.environment%.deprecation.log'
+      channels: ["php"]
+    console:
+      type: console
+      process_psr_3_messages: false
+      channels: ["!event", "!doctrine"]
+    balance:
+      type: stream
+      path: "%kernel.logs_dir%/%kernel.environment%.admin-balance-change.log"
+      level:  info
+      channels: ["balance"]

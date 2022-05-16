@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>AOE Meals</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+    <link rel="stylesheet" href="{{ assets_server }}{{ asset('static/vendors.css') }}" />
+    <link rel="stylesheet" href="{{ assets_server }}{{ asset('static/app.css') }}" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    {% block head %}{% endblock %}
+</head>
+
+{% set pageView = block('pageView') is defined ? block('pageView') : '' %}
+
+{% set activeRoute = app.request.attributes.get('_route') %}
+{% set userAgent = app.request.headers.get('User-Agent') %}
+
+<body>
+
+{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+    {% set balance = wallet.getBalance(app.user.profile) %}
+{% endif %}
+
+{% block body %}{% endblock %}
+
+<script src="{{ assets_server }}/static/vendors.js"></script>
+<script src="{{ assets_server }}/static/app.js"></script>
+</body>
+</html>

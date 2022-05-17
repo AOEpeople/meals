@@ -158,14 +158,26 @@ export class ParticipationUpdateHandler {
                 ParticipationUpdateHandler.updateStatus($checkbox, { state: State.CLOSED });
             }
 
+            if (CombinedMealService.isCombinedDish($dishContainer)) {
+                CombinedMealService.updateDishes($checkbox, undefined, []);
+            }
+
+            this.toggleTooltip($checkbox, available ? TooltipLabel.AVAILABLE_MEAL : undefined);
             return;
         }
 
-        if (CombinedMealService.isCombinedDish($dishContainer)) {
-            CombinedMealService.updateDishes($checkbox, undefined, []);
-        }
+        // set participation state for other users
+        const nextState = ParticipationUpdateHandler.getNextState(
+            $checkbox,
+            $checkbox.prop('checked'),
+            available,
+            true
+        );
+        this.updateStatus($checkbox, {state: nextState});
 
-        this.toggleTooltip($checkbox);
+        if (nextState === State.CLOSED || nextState === State.BOOKED_AND_CLOSED) {
+            this.toggleTooltip($checkbox);
+        }
     }
 
     public static changeToOfferIsGone($checkbox: JQuery) {
@@ -352,6 +364,9 @@ export class ParticipationUpdateHandler {
 
         switch (state) {
             case State.OPEN:
+                if ('acceptOffer' === $checkbox.attr('data-action')) {
+                    $countContainer.addClass('offer-available');
+                }
             case State.BOOKED:
                 $countContainer.addClass('participation-allowed');
                 break;
@@ -380,10 +395,10 @@ export class ParticipationUpdateHandler {
                     } else {
                         $tooltip.text(labels.en.tooltip[label]);
                     }
-                    $tooltip.toggleClass('active');
+                    $tooltip.addClass('active');
                 });
         } else {
-            $tooltip.toggleClass('active');
+            $tooltip.removeClass('active');
         }
     }
 

@@ -10,7 +10,6 @@ use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
 use App\Mealz\MealBundle\Service\MealAvailabilityService;
 use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\MealBundle\Service\Publisher\PublisherInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ParticipationUpdateSubscriber implements EventSubscriberInterface
@@ -18,18 +17,15 @@ class ParticipationUpdateSubscriber implements EventSubscriberInterface
     private const PUBLISH_TOPIC = 'participation-updates';
     private const PUBLISH_MSG_TYPE = 'participationUpdate';
 
-    private LoggerInterface $logger;
     private MealAvailabilityService $availabilityService;
     private ParticipationService $participationSrv;
     private PublisherInterface $publisher;
 
     public function __construct(
-        LoggerInterface $logger,
         MealAvailabilityService $availabilityService,
         ParticipationService $participationSrv,
         PublisherInterface $publisher
     ) {
-        $this->logger = $logger;
         $this->availabilityService = $availabilityService;
         $this->participationSrv = $participationSrv;
         $this->publisher = $publisher;
@@ -61,7 +57,7 @@ class ParticipationUpdateSubscriber implements EventSubscriberInterface
         $participationCount = $this->getParticipationCount($dayMeals);
         $data = $this->getParticipationStatus($dayMeals, $mealsAvailability, $participationCount);
 
-        $this->publish($data);
+        $this->publisher->publish(self::PUBLISH_TOPIC, $data, self::PUBLISH_MSG_TYPE);
     }
 
     private function getParticipationCount(MealCollection $meals): array
@@ -102,14 +98,5 @@ class ParticipationUpdateSubscriber implements EventSubscriberInterface
         }
 
         return $status;
-    }
-
-    private function publish(array $data): void
-    {
-        $published = $this->publisher->publish(self::PUBLISH_TOPIC, $data, self::PUBLISH_MSG_TYPE);
-
-        if (!$published) {
-            $this->logger->error('publish failure', ['topic' => self::PUBLISH_TOPIC]);
-        }
     }
 }

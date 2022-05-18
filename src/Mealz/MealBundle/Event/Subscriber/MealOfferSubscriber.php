@@ -14,7 +14,6 @@ use App\Mealz\MealBundle\Service\Notification\NotifierInterface;
 use App\Mealz\MealBundle\Service\OfferService;
 use App\Mealz\MealBundle\Service\Publisher\PublisherInterface;
 use App\Mealz\UserBundle\Entity\Profile;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -23,7 +22,6 @@ class MealOfferSubscriber implements EventSubscriberInterface
     private const PUBLISH_TOPIC = 'meal-offer-updates';
     private const PUBLISH_MSG_TYPE = 'mealOfferUpdate';
 
-    private LoggerInterface $logger;
     private Mailer $mailer;
     private NotifierInterface $notifier;
     private OfferService $offerService;
@@ -31,14 +29,12 @@ class MealOfferSubscriber implements EventSubscriberInterface
     private TranslatorInterface $translator;
 
     public function __construct(
-        LoggerInterface $logger,
         MailerInterface $mailer,
         NotifierInterface $notifier,
         OfferService $offerService,
         PublisherInterface $publisher,
         TranslatorInterface $translator
     ) {
-        $this->logger = $logger;
         $this->mailer = $mailer;
         $this->offerService = $offerService;
         $this->notifier = $notifier;
@@ -57,10 +53,14 @@ class MealOfferSubscriber implements EventSubscriberInterface
 
     public function onNewOffer(MealOfferedEvent $event): void
     {
-        $this->publish([
-            'state' => 'new',
-            'mealId' => $event->getMeal()->getId(),
-        ]);
+        $this->publisher->publish(
+            self::PUBLISH_TOPIC,
+            [
+                'state' => 'new',
+                'mealId' => $event->getMeal()->getId(),
+            ],
+            self::PUBLISH_MSG_TYPE
+        );
     }
 
     public function onOfferAccepted(MealOfferAcceptedEvent $event): void
@@ -70,12 +70,16 @@ class MealOfferSubscriber implements EventSubscriberInterface
         $this->sendOfferAcceptedNotifications($offerer, $meal);
 
         $offerCount = $this->offerService->getOfferCountByMeal($meal);
-        $this->publish([
-            'state' => 'accepted',
-            'mealId' => $meal->getId(),
-            'participantId' => $event->getParticipant()->getId(),
-            'available' => (0 < $offerCount),
-        ]);
+        $this->publisher->publish(
+            self::PUBLISH_TOPIC,
+            [
+                'state' => 'accepted',
+                'mealId' => $meal->getId(),
+                'participantId' => $event->getParticipant()->getId(),
+                'available' => (0 < $offerCount),
+            ],
+            self::PUBLISH_MSG_TYPE
+        );
     }
 
     public function onOfferCancelled(MealOfferCancelledEvent $event): void
@@ -88,19 +92,14 @@ class MealOfferSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $this->publish([
-            'state' => 'gone',
-            'mealId' => $meal->getId(),
-        ]);
-    }
-
-    private function publish(array $data): void
-    {
-        $published = $this->publisher->publish(self::PUBLISH_TOPIC, $data, self::PUBLISH_MSG_TYPE);
-
-        if (!$published) {
-            $this->logger->error('publish failure', ['topic' => self::PUBLISH_TOPIC]);
-        }
+        $this->publisher->publish(
+            self::PUBLISH_TOPIC,
+            [
+                'state' => 'gone',
+                'mealId' => $meal->getId(),
+            ],
+            self::PUBLISH_MSG_TYPE
+        );
     }
 
     /**

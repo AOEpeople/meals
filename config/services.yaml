@@ -4,8 +4,6 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    app.alerts.webhook_url: '%env(APP_ALERTS_WEBHOOK_URL)%'
-
     app.assets_server: '%env(ASSETS_SERVER)%'
     app.base_url: '%env(APP_BASE_URL)%'
     app.email.admin: '%env(APP_EMAIL_ADMIN)%'
@@ -18,6 +16,10 @@ parameters:
     app.idp.server: '%env(IDP_SERVER)%'
     app.idp.client_id: '%env(IDP_CLIENT_ID)%'
     app.idp.client_secret: '%env(IDP_CLIENT_SECRET)%'
+
+    app.notifier.mattermost.meal_offers.webhook_url: '%env(MATTERMOST_WEBHOOK_URL_MEAL_OFFERS)%'
+    app.notifier.mattermost.weekly_menu.webhook_url: '%env(MATTERMOST_WEBHOOK_URL_WEEKLY_MENU)%'
+    app.notifier.mattermost.system_errors.webhook_url: '%env(MATTERMOST_WEBHOOK_URL_SYSTEM_ERRORS)%'
 
     app.pubsub.publish_url: '%env(MERCURE_URL)%'
     app.pubsub.subscribe_url: '%env(MERCURE_PUBLIC_URL)%'
@@ -59,8 +61,6 @@ services:
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
-        bind:
-            $combinedPrice: '%mealz.meal.combined.price%'
 
     # define handler service to store and manage sessions in database
     session.handler.pdo:
@@ -97,9 +97,9 @@ services:
             - [setEntityName, ['Slot']]
 
     # Interface Implementations
-    App\Mealz\MealBundle\Service\Notification\NotifierInterface: '@mealz_meal.notifier.mattermost'
-    App\Mealz\MealBundle\Service\Publisher\PublisherInterface: '@App\Mealz\MealBundle\Service\Publisher\MercurePublisher'
+    App\Mealz\MealBundle\Service\Logger\MealsLoggerInterface: '@App\Mealz\MealBundle\Service\Logger\MealsLogger'
     App\Mealz\MealBundle\Service\Mailer\MailerInterface: '@App\Mealz\MealBundle\Service\Mailer\Mailer'
+    App\Mealz\MealBundle\Service\Publisher\PublisherInterface: '@App\Mealz\MealBundle\Service\Publisher\MercurePublisher'
 
     # Event Listeners
     App\Mealz\MealBundle\EventListener\ParticipantPersistenceListener:
@@ -180,6 +180,14 @@ services:
             $newFlagThreshold: '%mealz.meal.new_flag_counter%'
             $dishRepository: '@mealz_meal.repository.dish'
 
+    App\Mealz\MealBundle\Event\Subscriber\MealOfferSubscriber:
+        arguments:
+            $mealOfferNotifier: '@mealz_meal.notifier.mattermost.meal_offer_notifier'
+
+    App\Mealz\MealBundle\Event\Subscriber\WeekUpdateSubscriber:
+        arguments:
+            $weeklyMenuNotifier: '@mealz_meal.notifier.mattermost.weekly_menu_notifier'
+
     App\Mealz\MealBundle\Service\HttpHeaderUtility:
         arguments:
             $locales: '%app.locales%'
@@ -187,16 +195,6 @@ services:
     App\Mealz\MealBundle\Service\Mailer\Mailer:
         arguments:
             $senderEmail: '%app.email.sender%'
-
-    App\Mealz\MealBundle\Service\Notification\MattermostService:
-        lazy: true
-        arguments:
-            $httpClient: '@http_client'
-            $logger: '@logger'
-            $enabled: '%env(bool:MATTERMOST_NOTIFICATIONS)%'
-            $webhookURL: '%env(MATTERMOST_WEBHOOK_URL)%'
-            $username: 'Chef'
-            $appName: 'Meals'
 
     App\Mealz\MealBundle\Service\Workday:
         calls:
@@ -211,17 +209,26 @@ services:
     mealz_meal.doorman: '@App\Mealz\MealBundle\Service\Doorman'
     mealz_meal.factory.localized_repository: '@App\Mealz\MealBundle\Service\LocalizedRepositoryFactory'
     mealz_meal.http_header_utility: '@App\Mealz\MealBundle\Service\HttpHeaderUtility'
-    mealz_meal.notifier.mattermost: '@App\Mealz\MealBundle\Service\Notification\MattermostService'
+    mealz_meal.notifier.mattermost.meal_offer_notifier:
+        class: App\Mealz\MealBundle\Service\Notification\MattermostNotifier
+        lazy: true
+        arguments: &mm_service_args
+            $enabled: '%env(bool:MATTERMOST_NOTIFICATIONS)%'
+            $webhookURL: '%app.notifier.mattermost.meal_offers.webhook_url%'
+            $username: 'Chef'
+            $appName: 'Meals'
+    mealz_meal.notifier.mattermost.weekly_menu_notifier:
+        class: App\Mealz\MealBundle\Service\Notification\MattermostNotifier
+        lazy: true
+        arguments:
+            <<: *mm_service_args
+            $webhookURL: '%app.notifier.mattermost.weekly_menu.webhook_url%'
 
     Qipsius\TCPDFBundle\Controller\TCPDFController: '@qipsius.tcpdf'
 
-# TODO: check why it doesn't work, only bind $combinedPrice works.
-#    mealz_meal.service.combined_meal_service:
-#        class: App\Mealz\MealBundle\Service\CombinedMealService
-#        arguments:
-#            - '%mealz.meal.combined.price%'
-#            - '@logger'
-#            - '@doctrine.orm.default_entity_manager'
+    App\Mealz\MealBundle\Service\CombinedMealService:
+        arguments:
+            $combinedPrice: '%mealz.meal.combined.price%'
 
     ##################################################################
     # Accounting BUNDLE

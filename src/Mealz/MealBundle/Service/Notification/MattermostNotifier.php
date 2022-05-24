@@ -74,7 +74,7 @@ class MattermostNotifier implements NotifierInterface
         try {
             $response = $this->httpClient->request('POST', $this->webhookURL, $requestOptions);
             $responseStatus = $response->getStatusCode();
-        } catch (TransportExceptionInterface | Exception $e) {
+        } catch (TransportExceptionInterface|Exception $e) {
             $this->logger->logException($e, 'message send error');
 
             return false;

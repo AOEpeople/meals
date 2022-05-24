@@ -17,7 +17,7 @@ function main() {
 }
 
 function execTests() {
-  vendor/bin/phpunit -c tests/phpunit.xml.dist -- "${@:2}"
+  export APP_ENV=test && vendor/bin/phpunit -c tests/phpunit.xml.dist -- "${@:2}"
 }
 
 function  execMigrateTestDb() {

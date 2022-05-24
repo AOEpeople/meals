@@ -16,7 +16,6 @@ use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
 use App\Mealz\MealBundle\Event\SlotAllocationUpdateEvent;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\MealBundle\Service\MealAvailabilityService;
-use App\Mealz\MealBundle\Service\Notification\NotifierInterface;
 use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
@@ -125,7 +124,7 @@ class ParticipantController extends BaseController
     /**
      * Makes a booked meal by a participant to be available for taken over.
      */
-    public function offerMeal(Participant $participant, NotifierInterface $notifier): JsonResponse
+    public function offerMeal(Participant $participant): JsonResponse
     {
         if (false === is_object($this->getUser())) {
             return $this->ajaxSessionExpiredRedirect();
@@ -144,23 +143,7 @@ class ParticipantController extends BaseController
         $entityManager->flush();
 
         // trigger meal-offered event
-        $this->eventDispatcher->dispatch(new MealOfferedEvent($meal));
-
-        // Mattermost integration
-        $dishTitle = $this->getBookedDishTitle($participant);
-        $counter = $this->getParticipantRepository()->getOfferCount($meal->getDateTime());
-
-        $chefBotMessage = $this->get('translator')->trans(
-            'mattermost.offered',
-            [
-                '%counter%' => $counter,
-                '%dish%' => $dishTitle,
-            ],
-            'messages',
-            'en_EN'
-        );
-
-        $notifier->sendAlert($chefBotMessage);
+        $this->eventDispatcher->dispatch(new MealOfferedEvent($participant));
 
         return $this->generateResponse('MealzMealBundle_Participant_unswap', 'swapped', $participant);
     }
@@ -260,29 +243,6 @@ class ParticipantController extends BaseController
             'id' => $participant->getId(),
             'actionText' => $action,
         ]);
-    }
-
-    private function getBookedDishTitle(Participant $participant): string
-    {
-        $bookedDish = $participant->getMeal()->getDish();
-        $dishTitle = $bookedDish->getTitleEn();
-
-        if ($bookedDish->isCombinedDish()) {
-            /** @var Dish $dish */
-            foreach ($participant->getCombinedDishes() as $dish) {
-                $dishTitle .= ' - ' . $dish->getTitleEn();
-            }
-
-            return $dishTitle;
-        }
-
-        $parentDish = $bookedDish->getParent();
-        if (null === $parentDish) {     // i.e. simple dish
-            return $dishTitle;
-        }
-
-        // booked dish is a variation, return parent dish title concatenated with dish title
-        return $parentDish->getTitleEn() . ' ' . $dishTitle;
     }
 
     private function triggerDeleteEvents(Participant $participant): void

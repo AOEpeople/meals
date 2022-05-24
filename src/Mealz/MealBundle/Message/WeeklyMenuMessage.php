@@ -2,40 +2,32 @@
 
 declare(strict_types=1);
 
-namespace App\Mealz\MealBundle\Service\Notification;
+namespace App\Mealz\MealBundle\Message;
 
 use App\Mealz\MealBundle\Entity\Day;
-use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Week;
+use App\Mealz\MealBundle\Service\Notification\MessageInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class MealsNotificationService
+class WeeklyMenuMessage implements MessageInterface
 {
-    private NotifierInterface $notifier;
+    private Week $week;
     private TranslatorInterface $translator;
 
-    public function __construct(
-        NotifierInterface $notifier,
-        TranslatorInterface $translator
-    ) {
-        $this->notifier = $notifier;
+    public function __construct(Week $week, TranslatorInterface $translator)
+    {
+        $this->week = $week;
         $this->translator = $translator;
     }
 
-    public function sendWeeklyMenuUpdate(Week $week): void
-    {
-        $msg = $this->getMenuUpdateNotification($week);
-        $this->notifier->sendAlert($msg);
-    }
-
-    private function getMenuUpdateNotification(Week $week): string
+    public function getContent(): string
     {
         $header = $this->translator->trans(
             'week.notification.header.no_week',
             [
-                '%weekStart%' => $week->getStartTime()->format('d.m.'),
-                '%weekEnd%' => $week->getEndTime()->format('d.m.'),
+                '%weekStart%' => $this->week->getStartTime()->format('d.m.'),
+                '%weekEnd%' => $this->week->getEndTime()->format('d.m.'),
             ],
             'messages'
         );
@@ -43,17 +35,17 @@ class MealsNotificationService
         $body = '';
         $footer = '';
 
-        if ($week->isEnabled()) {
+        if ($this->week->isEnabled()) {
             $header = '#### ' . $this->translator->trans(
-                'week.notification.header.default',
-                [
-                    '%weekStart%' => $week->getStartTime()->format('d.m.'),
-                    '%weekEnd%' => $week->getEndTime()->format('d.m.'),
-                ],
-                'messages'
-            );
+                    'week.notification.header.default',
+                    [
+                        '%weekStart%' => $this->week->getStartTime()->format('d.m.'),
+                        '%weekEnd%' => $this->week->getEndTime()->format('d.m.'),
+                    ],
+                    'messages'
+                );
             $tableHeader = "\n|Day|Meals|\n|:-----|:-----|\n";
-            $body = $this->getDishesByWeek($week);
+            $body = $this->getDishesByWeek($this->week);
             $footer = $this->translator->trans('week.notification.footer.default', [], 'messages');
         }
 
@@ -94,8 +86,10 @@ class MealsNotificationService
             }
 
             $dish = $meal->getDish();
-            if ($dish instanceof DishVariation) {
-                $dishes[$dish->getParent()->getTitleEn()][] = $dish->getTitleEn();
+            $parentDish = $dish->getParent();
+
+            if (null !== $parentDish) {
+                $dishes[$parentDish->getTitleEn()][] = $dish->getTitleEn();
             } else {
                 $dishes[$dish->getTitleEn()] = [];
             }

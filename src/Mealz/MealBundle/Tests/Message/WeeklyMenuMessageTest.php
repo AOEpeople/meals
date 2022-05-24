@@ -2,34 +2,27 @@
 
 declare(strict_types=1);
 
-namespace App\Mealz\MealBundle\Tests\Service;
+namespace App\Mealz\MealBundle\Tests\Message;
 
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Week;
-use App\Mealz\MealBundle\Service\Notification\MealsNotificationService;
-use App\Mealz\MealBundle\Service\Notification\NotifierInterface;
+use App\Mealz\MealBundle\Message\WeeklyMenuMessage;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
-use Prophecy\Argument;
-use Prophecy\Prophecy\ObjectProphecy;
-use Prophecy\Prophet;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class MealsNotificationServiceTest extends WebTestCase
+class WeeklyMenuMessageTest extends WebTestCase
 {
-    private ObjectProphecy $mockNotifier;
     private TranslatorInterface $translator;
 
     protected function setUp(): void
     {
         self::bootKernel();
 
-        $prophet = new Prophet();
-        $this->mockNotifier = $prophet->prophesize(NotifierInterface::class);
         $this->translator = self::$container->get('translator');
     }
 
@@ -38,18 +31,12 @@ class MealsNotificationServiceTest extends WebTestCase
      */
     public function testContainsDish(): void
     {
-        $days = new ArrayCollection([
-            $this->generateDay(['dish'], new DateTime('Monday')),
-        ]);
-
+        $days = new ArrayCollection([$this->generateDay(['dish'], new DateTime('Monday'))]);
         $week = $this->generateWeek($days);
 
-        $this->mockNotifier->sendAlert(Argument::that(static function (string $msg) {
-            self::assertStringContainsString('dish', $msg);
-        }));
-        $mockedService = new MealsNotificationService($this->mockNotifier->reveal(), $this->translator);
+        $message = new WeeklyMenuMessage($week, $this->translator);
 
-        $mockedService->sendWeeklyMenuUpdate($week);
+        self::assertStringContainsString('dish', $message->getContent());
     }
 
     /**
@@ -64,13 +51,11 @@ class MealsNotificationServiceTest extends WebTestCase
         $week = $this->generateWeek($days);
         $week->setEnabled(false);
 
-        $this->mockNotifier->sendAlert(Argument::that(static function (string $msg) {
-            self::assertStringNotContainsString('Monday', $msg);
-            self::assertStringNotContainsString('Tuesday', $msg);
-        }));
-        $mockedService = new MealsNotificationService($this->mockNotifier->reveal(), $this->translator);
+        $message = new WeeklyMenuMessage($week, $this->translator);
+        $content = $message->getContent();
 
-        $mockedService->sendWeeklyMenuUpdate($week);
+        self::assertStringNotContainsString('Monday', $content);
+        self::assertStringNotContainsString('Tuesday', $content);
     }
 
     /**
@@ -82,18 +67,14 @@ class MealsNotificationServiceTest extends WebTestCase
             $this->generateDay(['Fish'], new DateTime('Monday')),
             $this->generateDay(['Chips'], new DateTime('Tuesday')),
         ]);
-
         $days->first()->setEnabled(false);
-
         $week = $this->generateWeek($days);
 
-        $this->mockNotifier->sendAlert(Argument::that(static function (string $msg) {
-            self::assertStringNotContainsString('Fish', $msg);
-            self::assertStringContainsString('Chips', $msg);
-        }));
-        $mockedService = new MealsNotificationService($this->mockNotifier->reveal(), $this->translator);
+        $message = new WeeklyMenuMessage($week, $this->translator);
+        $content = $message->getContent();
 
-        $mockedService->sendWeeklyMenuUpdate($week);
+        self::assertStringNotContainsString('Fish', $content);
+        self::assertStringContainsString('Chips', $content);
     }
 
     /**
@@ -126,19 +107,16 @@ class MealsNotificationServiceTest extends WebTestCase
 
         $week = $this->generateWeek($days);
 
-        $this->mockNotifier->sendAlert(Argument::that(static function (string $msg) {
-            self::assertStringContainsString('Parent', $msg);
-            self::assertStringContainsString('(VariationA, VariationB)', $msg);
-        }));
-        $mockedService = new MealsNotificationService($this->mockNotifier->reveal(), $this->translator);
+        $message = new WeeklyMenuMessage($week, $this->translator);
+        $content = $message->getContent();
 
-        $mockedService->sendWeeklyMenuUpdate($week);
+        self::assertStringContainsString('Parent', $content);
+        self::assertStringContainsString('(VariationA, VariationB)', $content);
     }
 
     private function generateWeek(ArrayCollection $days): Week
     {
         $week = new Week();
-
         $week->setDays($days);
 
         return $week;

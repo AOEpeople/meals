@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Event\Subscriber;
 
-use App\Mealz\MealBundle\Entity\Meal;
+use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Event\MealOfferAcceptedEvent;
 use App\Mealz\MealBundle\Event\MealOfferCancelledEvent;
 use App\Mealz\MealBundle\Event\MealOfferedEvent;
-use App\Mealz\MealBundle\Service\Mailer\Mailer;
+use App\Mealz\MealBundle\Message\NewOfferMessage;
+use App\Mealz\MealBundle\Message\OfferAcceptedMessage;
 use App\Mealz\MealBundle\Service\Mailer\MailerInterface;
 use App\Mealz\MealBundle\Service\Notification\NotifierInterface;
 use App\Mealz\MealBundle\Service\OfferService;
@@ -22,7 +23,7 @@ class MealOfferSubscriber implements EventSubscriberInterface
     private const PUBLISH_TOPIC = 'meal-offer-updates';
     private const PUBLISH_MSG_TYPE = 'mealOfferUpdate';
 
-    private Mailer $mailer;
+    private MailerInterface $mailer;
     private NotifierInterface $notifier;
     private OfferService $offerService;
     private PublisherInterface $publisher;
@@ -30,14 +31,14 @@ class MealOfferSubscriber implements EventSubscriberInterface
 
     public function __construct(
         MailerInterface $mailer,
-        NotifierInterface $notifier,
+        NotifierInterface $mealOfferNotifier,
         OfferService $offerService,
         PublisherInterface $publisher,
         TranslatorInterface $translator
     ) {
         $this->mailer = $mailer;
         $this->offerService = $offerService;
-        $this->notifier = $notifier;
+        $this->notifier = $mealOfferNotifier;
         $this->publisher = $publisher;
         $this->translator = $translator;
     }
@@ -53,6 +54,9 @@ class MealOfferSubscriber implements EventSubscriberInterface
 
     public function onNewOffer(MealOfferedEvent $event): void
     {
+        $msg = new NewOfferMessage($event->getParticipant(), $this->offerService, $this->translator);
+        $this->notifier->send($msg);
+
         $this->publisher->publish(
             self::PUBLISH_TOPIC,
             [
@@ -67,7 +71,8 @@ class MealOfferSubscriber implements EventSubscriberInterface
     {
         $meal = $event->getMeal();
         $offerer = $event->getOfferer();
-        $this->sendOfferAcceptedNotifications($offerer, $meal);
+        $participant = $event->getParticipant();
+        $this->sendOfferAcceptedNotifications($offerer, $participant);
 
         $offerCount = $this->offerService->getOfferCountByMeal($meal);
         $this->publisher->publish(
@@ -107,9 +112,9 @@ class MealOfferSubscriber implements EventSubscriberInterface
      *
      * @param Profile $offerer User who offered the meal
      */
-    private function sendOfferAcceptedNotifications(Profile $offerer, Meal $meal): void
+    private function sendOfferAcceptedNotifications(Profile $offerer, Participant $participant): void
     {
-        $dish = $meal->getDish();
+        $dish = $participant->getMeal()->getDish();
         $dishTitle = $dish->getTitleEn();
 
         $parentDish = $dish->getParent();
@@ -119,8 +124,9 @@ class MealOfferSubscriber implements EventSubscriberInterface
 
         $this->sendOfferAcceptedEmail($offerer->getProfile(), $dishTitle);
 
-        $remainingOfferCount = $this->offerService->getOfferCount($meal->getDateTime());
-        $this->sendOfferAcceptedMessage($dishTitle, $remainingOfferCount);
+        // send message to the configured messaging service
+        $msg = new OfferAcceptedMessage($participant, $this->offerService, $this->translator);
+        $this->notifier->send($msg);
     }
 
     /**
@@ -144,23 +150,5 @@ class MealOfferSubscriber implements EventSubscriberInterface
         );
 
         $this->mailer->send($recipient, $subject, $message);
-    }
-
-    /**
-     * Sends a message to the configured messaging service that an offer has been accepted, i.e. gone.
-     */
-    private function sendOfferAcceptedMessage(string $dishTitle, int $remainingOfferCount): void
-    {
-        $this->notifier->sendAlert(
-            $this->translator->trans(
-                'mattermost.offer_taken',
-                [
-                    '%count%' => $remainingOfferCount,
-                    '%counter%' => $remainingOfferCount,
-                    '%takenOffer%' => $dishTitle,
-                ],
-                'messages'
-            )
-        );
     }
 }

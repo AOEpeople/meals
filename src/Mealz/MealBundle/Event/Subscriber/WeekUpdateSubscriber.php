@@ -5,21 +5,26 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Event\Subscriber;
 
 use App\Mealz\MealBundle\Event\WeekUpdateEvent;
+use App\Mealz\MealBundle\Message\WeeklyMenuMessage;
 use App\Mealz\MealBundle\Service\CombinedMealService;
-use App\Mealz\MealBundle\Service\Notification\MealsNotificationService;
+use App\Mealz\MealBundle\Service\Notification\NotifierInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class WeekUpdateSubscriber implements EventSubscriberInterface
 {
-    private MealsNotificationService $notificationService;
     private CombinedMealService $combinedMealService;
+    private NotifierInterface $notifier;
+    private TranslatorInterface $translator;
 
     public function __construct(
-        MealsNotificationService $notificationService,
-        CombinedMealService $combinedMealService
+        CombinedMealService $combinedMealService,
+        NotifierInterface $weeklyMenuNotifier,
+        TranslatorInterface $translator
     ) {
-        $this->notificationService = $notificationService;
+        $this->notifier = $weeklyMenuNotifier;
         $this->combinedMealService = $combinedMealService;
+        $this->translator = $translator;
     }
 
     public static function getSubscribedEvents(): array
@@ -35,7 +40,8 @@ class WeekUpdateSubscriber implements EventSubscriberInterface
         $this->combinedMealService->update($week);
 
         if ($event->getNotify()) {
-            $this->notificationService->sendWeeklyMenuUpdate($week);
+            $msg = new WeeklyMenuMessage($week, $this->translator);
+            $this->notifier->send($msg);
         }
     }
 }

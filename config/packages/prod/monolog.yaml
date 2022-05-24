@@ -32,7 +32,7 @@ monolog:
             content_type: text/html
         slackwebhook:
             type: slackwebhook
-            webhook_url: '%app.alerts.webhook_url%'
+            webhook_url: '%app.notifier.mattermost.system_errors.webhook_url%'
             bot_name: 'Meals Logger'
 
             # keep it concise, i.e. only errors with context

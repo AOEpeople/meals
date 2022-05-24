@@ -1,2 +1,0 @@
-imports:
-  - { resource: ../staging/monolog.yaml }

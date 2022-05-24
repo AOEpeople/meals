@@ -46,7 +46,7 @@ run-psalm:
 	ddev exec vendor/bin/psalm --use-baseline=./psalm.baseline.xml
 
 run-cs-fixer:
-	ddev exec vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist
+	ddev exec vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist --diff --dry-run -v
 
 update-schema:
 	ddev exec php bin/console doctrine:schema:update --force

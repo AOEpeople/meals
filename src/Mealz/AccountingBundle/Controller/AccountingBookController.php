@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\AccountingBundle\Controller;
 
 use App\Mealz\MealBundle\Controller\BaseController;
@@ -9,20 +11,14 @@ use Qipsius\TCPDFBundle\Controller\TCPDFController;
 use ReflectionException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * Class AccountingBookController.
+ * @Security("is_granted('ROLE_FINANCE')")
  */
 class AccountingBookController extends BaseController
 {
     public function list(): Response
     {
-        // Deny access for unprivileged (non-admin) users
-        if (false === $this->isGranted('ROLE_FINANCE')) {
-            throw new AccessDeniedException();
-        }
-
         // Get first and last day of previous month
         $minDateFirst = new DateTime('first day of previous month');
         $minDateFirst->setTime(0, 0);
@@ -59,12 +55,8 @@ class AccountingBookController extends BaseController
      *
      * @throws Exception
      */
-    public function listAllTransactions($dateRange): Response
+    public function listAllTransactions(?string $dateRange): Response
     {
-        if (false === $this->isGranted('ROLE_FINANCE')) {
-            throw new AccessDeniedException();
-        }
-
         $headingFirst = null;
         $transactionsFirst = null;
         $minDateFirst = null;
@@ -113,10 +105,8 @@ class AccountingBookController extends BaseController
      *
      * @throws ReflectionException
      * @throws Exception
-     *
-     * @Security("is_granted('ROLE_FINANCE')")
      */
-    public function exportPDF(?string $dateRange, TCPDFController $pdfGen): string
+    public function exportPDF(?string $dateRange, TCPDFController $pdfGen): Response
     {
         // Get date range set with date range picker by user
         $dateRange = str_replace('-', '/', $dateRange);
@@ -153,6 +143,14 @@ class AccountingBookController extends BaseController
 
         $pdf->writeHTML($includeCSS . $html);
 
-        return $pdf->Output($filename . '.pdf', 'I');
+        $content = $pdf->Output($filename . '.pdf', 'S');
+        $now = gmdate('D, d M Y H:i:s') . ' GMT';
+
+        return new Response($content, 200, [
+            'Content-Type' => 'application/pdf',
+            'Expires' => $now,
+            'Last-Modified' => $now,
+            'Content-Disposition' => 'inline; filename="' . basename($filename) . '"',
+        ]);
     }
 }

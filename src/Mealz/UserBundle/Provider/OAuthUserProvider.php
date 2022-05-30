@@ -94,7 +94,7 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
      */
     public function supportsClass($class): bool
     {
-        return Profile::class === $class;
+        return Profile::class === $class || is_subclass_of($class, Profile::class);
     }
 
     /**

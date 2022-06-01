@@ -86,6 +86,15 @@ class Dish
      */
     protected bool $enabled = true;
 
+    /**
+     * Dish with this flag set can only have obe serving size.
+     *
+     * It can not be reduced, like half a portion or so.
+     *
+     * @ORM\Column(type="boolean", nullable=FALSE)
+     */
+    protected bool $oneServingSize = false;
+
     protected string $currentLocale = 'en';
 
     /**
@@ -164,6 +173,16 @@ class Dish
     public function isEnabled(): bool
     {
         return $this->enabled;
+    }
+
+    public function setOneServingSize(bool $oneServingSize): void
+    {
+        $this->oneServingSize = $oneServingSize;
+    }
+
+    public function hasOneServingSize(): bool
+    {
+        return $this->oneServingSize;
     }
 
     public function setCurrentLocale(string $currentLocale): void

@@ -91,7 +91,7 @@ class Dish
      *
      * It can not be reduced, like half a portion or so.
      *
-     * @ORM\Column(type="boolean", nullable=FALSE)
+     * @ORM\Column(name="one_serving_size", type="boolean", nullable=FALSE)
      */
     protected bool $oneServingSize = false;
 

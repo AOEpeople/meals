@@ -98,7 +98,7 @@ class Dish
     protected string $currentLocale = 'en';
 
     /**
-     * @ORM\OneToMany(targetEntity="DishVariation", mappedBy="parent")
+     * @ORM\OneToMany(targetEntity="DishVariation", mappedBy="parent", cascade={"persist"})
      */
     protected ?Collection $variations = null;
 

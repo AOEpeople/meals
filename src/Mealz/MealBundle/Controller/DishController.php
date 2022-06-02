@@ -1,13 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\DishRepository;
-use Doctrine\ORM\EntityManager;
+use App\Mealz\MealBundle\Entity\DishVariation;
+use App\Mealz\MealBundle\Form\Dish\DishForm;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @Security("is_granted('ROLE_KITCHEN_STAFF')")
+ */
 class DishController extends BaseListController
 {
     private DishRepository $dishRepository;
@@ -19,45 +27,39 @@ class DishController extends BaseListController
         $this->setEntityName('Dish');
     }
 
-    public function deleteAction($slug): RedirectResponse
+    /**
+     * @return RedirectResponse|Response
+     */
+    public function editAction(Request $request, Dish $dish)
     {
-        if (!$this->isGranted('ROLE_KITCHEN_STAFF')) {
-            throw new AccessDeniedException();
-        }
+        $form = $this->createForm(DishForm::class, $dish);
 
-        /** @var Dish $dish */
-        $dish = $this->dishRepository->findOneBy(['slug' => $slug]);
+        // handle form submission
+        if ($request->isMethod('POST')) {
+            $form->handleRequest($request);
 
-        if (!$dish) {
-            throw $this->createNotFoundException();
-        }
+            if ($form->isValid()) {
+                /** @var DishVariation $variation */
+                foreach ($dish->getVariations() as $variation) {
+                    $variation->setOneServingSize($dish->hasOneServingSize());
+                }
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($dish);
+                $entityManager->flush();
 
-        /** @var EntityManager $entityManager */
-        $entityManager = $this->getDoctrine()->getManager();
-
-        if ($this->dishRepository->hasDishAssociatedMeals($dish)) {
-            // if there are meals assigned: just hide this record, but do not delete it
-            $dish->setEnabled(false);
-
-            $entityManager->persist($dish);
-            $entityManager->flush();
-            $message = $this->get('translator')->trans(
-                'dish.hidden',
-                ['%dish%' => $dish->getTitle()],
-                'messages'
-            );
-            $this->addFlashMessage($message, 'success');
-        } else {
-            // else: no need to keep an unused record
-            $entityManager->remove($dish);
-            $entityManager->flush();
-
-            $message = $this->get('translator')->trans(
-                'dish.deleted',
-                ['%dish%' => $dish->getTitle()],
-                'messages'
-            );
-            $this->addFlashMessage($message, 'success');
+                $translator = $this->get('translator');
+                $translatedEntityName = $translator->trans('entity.Dish', [], 'messages');
+                $message = $translator->trans(
+                    'entity.modified',
+                    ['%entityName%' => $translatedEntityName],
+                    'messages'
+                );
+                $this->addFlashMessage($message, 'success');
+            } else {
+                return $this->renderEntityList([
+                    'form' => $form->createView(),
+                ]);
+            }
         }
 
         return $this->redirectToRoute('MealzMealBundle_Dish');

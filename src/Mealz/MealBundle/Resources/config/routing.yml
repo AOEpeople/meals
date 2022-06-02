@@ -140,7 +140,7 @@ MealzMealBundle_Dish_new:
 
 MealzMealBundle_Dish_edit:
     path:  /dish/{slug}/edit
-    defaults: { _controller: App\Mealz\MealBundle\Controller\DishController::edit }
+    defaults: { _controller: App\Mealz\MealBundle\Controller\DishController::editAction }
 
 MealzMealBundle_Dish_delete:
     path:  /dish/{slug}/delete

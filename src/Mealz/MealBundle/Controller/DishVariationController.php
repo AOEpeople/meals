@@ -11,15 +11,17 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @Security("is_granted('ROLE_KITCHEN_STAFF')")
+ */
 class DishVariationController extends BaseController
 {
-    /**
-     * @Security("is_granted('ROLE_KITCHEN_STAFF')")
-     */
     public function new(Request $request, Dish $dish): Response
     {
         $dishVariation = new DishVariation();
         $dishVariation->setParent($dish);
+        $dishVariation->setOneServingSize($dish->hasOneServingSize());
+
         $dishVariationForm = $this->createForm(
             $this->getNewForm(),
             $dishVariation,
@@ -56,8 +58,6 @@ class DishVariationController extends BaseController
      */
     public function edit(Request $request, $slug)
     {
-        $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
-
         /** @var \App\Mealz\MealBundle\Entity\DishVariationRepository $dishVariationRepo */
         $dishVariationRepo = $this->getDoctrine()->getRepository(DishVariation::class);
 
@@ -105,8 +105,6 @@ class DishVariationController extends BaseController
      */
     public function delete($slug): RedirectResponse
     {
-        $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
-
         /* @var \App\Mealz\MealBundle\Entity\DishVariationRepository $dishRepository */
         if (true === is_object($this->getDoctrine()->getRepository(DishVariation::class))) {
             $dishVariationRepo = $this->getDoctrine()->getRepository(DishVariation::class);

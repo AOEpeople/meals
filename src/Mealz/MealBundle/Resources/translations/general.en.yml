@@ -76,9 +76,14 @@ form:
     first_name: First name
     company: Company
 
+  create_edit_dish:
+    category: Category
+    one_serving_size: This dish has only one serving size
+
   create-slot:
     title: Title
     limit: Limit
     order: Sort Order
+
   week:
     notification: Announce menu via Mattermost

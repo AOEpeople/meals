@@ -127,7 +127,7 @@ class Category
      */
     public function getTitle()
     {
-        if ('de' == $this->currentLocale && $this->title_de) {
+        if ('de' === $this->currentLocale && $this->title_de) {
             return $this->getTitleDe();
         }
 

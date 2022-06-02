@@ -91,8 +91,17 @@
     }
   }
 
+  .create-form,
   .edit-form {
     border-bottom: 1px solid $color-gray-middle;
+
+    fieldset {
+      label {
+        float: left;
+        padding: 6px 20px 0 0;
+        font-size: 12px;
+      }
+    }
   }
 }
 

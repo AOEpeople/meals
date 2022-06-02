@@ -13,9 +13,17 @@
         {{ form_row(form.description_en) }}
     </fieldset>
 
-    <div class="clear"></div>
+    <fieldset>
+        <label>Category</label>
+        {{ form_row(form.category) }}
+    </fieldset>
+    <fieldset>
+        <label>One Serving Size</label>
+        <div class='switchery-placeholder'></div>
+        {{ form_row(form.oneServingSize) }}
+    </fieldset>
 
-    {{ form_row(form.category) }}
+    <div class="clear"></div>
 
     {{ form_rest(form) }}
     {{ form_end(form) }}

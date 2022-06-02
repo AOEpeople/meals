@@ -76,6 +76,10 @@ form:
     first_name: Vorname
     company: Firma
 
+  create_edit_dish:
+    category: Kategorie
+    one_serving_size: Dieses Gericht ist nicht teilbar
+
   create-slot:
     title: Titel
     limit: Limit

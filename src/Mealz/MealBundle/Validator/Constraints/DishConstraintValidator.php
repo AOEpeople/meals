@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\MealBundle\Validator\Constraints;
 
-use App\Mealz\MealBundle\Entity\Dish;
+use App\Mealz\MealBundle\Entity\Meal;
+use App\Mealz\MealBundle\Entity\NullDish;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\UnitOfWork;
 use Symfony\Component\Validator\Constraint;
@@ -20,27 +23,33 @@ class DishConstraintValidator extends ConstraintValidator
         $this->entityManager = $entityManager;
     }
 
-    public function validate($entity, Constraint $constraint): void
+    /**
+     * @param Meal $value
+     */
+    public function validate($value, Constraint $constraint): void
     {
-        if ($entity->getDish() instanceof Dish) {
+        if (!($value->getDish() instanceof NullDish)) {
             return;
         }
 
         $unitOfWork = $this->entityManager->getUnitOfWork();
-        $day = $entity->getDay();
+        $day = $value->getDay();
 
-        if (UnitOfWork::STATE_NEW !== $unitOfWork->getEntityState($entity) &&
-            0 == $entity->getParticipants()->count()
+        if (UnitOfWork::STATE_NEW !== $unitOfWork->getEntityState($value) &&
+            0 === $value->getParticipants()->count()
         ) {
-            $this->entityManager->remove($entity);
-            $this->entityManager->flush($entity);
-            $day->getMeals()->removeElement($entity);
+            $meals = $day->getMeals();
+            $meals->removeElement($value);
+            $day->setMeals($meals);
+
+            $this->entityManager->remove($value);
+            $this->entityManager->flush();
         } else {
-            $this->entityManager->refresh($entity);
+            $this->entityManager->refresh($value);
             $this->context
                 ->buildViolation($constraint->message)
-                ->setParameter('%dish%', $entity->getDish())
-                ->setParameter('%day%', $day)
+                ->setParameter('%dish%', $value->getDish()->getTitle())
+                ->setParameter('%day%', $day->getDateTime()->format('l'))
                 ->addViolation();
         }
     }

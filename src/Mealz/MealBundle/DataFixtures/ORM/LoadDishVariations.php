@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\MealBundle\DataFixtures\ORM;
 
 use App\Mealz\MealBundle\Entity\Dish;
@@ -18,7 +20,7 @@ class LoadDishVariations extends Fixture implements OrderedFixtureInterface
     protected ObjectManager $objectManager;
 
     /**
-     * @var Dish[]
+     * @var array<int, Dish>
      */
     protected array $dishes = [];
 
@@ -33,13 +35,15 @@ class LoadDishVariations extends Fixture implements OrderedFixtureInterface
         $this->loadDishes();
 
         foreach ($this->dishes as $key => $dish) {
-            // Create two variation for each dish EXCEPT THE FIRST ONE
-            if ($key > 0) {
-                for ($i = 0; $i < 2; ++$i) {
-                    $dishVariation = $this->getDishVariation($dish);
-                    $this->objectManager->persist($dishVariation);
-                    $this->addReference('dishVariation-' . $this->counter++, $dishVariation);
-                }
+            // Create two variations for every third dish
+            if (($key + 1) % 3) {
+                continue;
+            }
+
+            for ($i = 0; $i < 2; ++$i) {
+                $dishVariation = $this->getDishVariation($dish);
+                $this->objectManager->persist($dishVariation);
+                $this->addReference('dishVariation-' . $this->counter++, $dishVariation);
             }
         }
 

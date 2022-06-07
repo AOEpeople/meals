@@ -3,13 +3,17 @@
 namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Dish;
+use App\Mealz\MealBundle\Entity\DishRepository;
 use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Form\Dish\DishVariationForm;
+use App\Mealz\MealBundle\Service\Logger\MealsLoggerInterface;
 use Doctrine\ORM\EntityManager;
+use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Security("is_granted('ROLE_KITCHEN_STAFF')")
@@ -100,48 +104,32 @@ class DishVariationController extends BaseController
         return new Response($renderedForm->getContent());
     }
 
-    /**
-     * @param int $slug
-     */
-    public function delete($slug): RedirectResponse
-    {
-        /* @var \App\Mealz\MealBundle\Entity\DishVariationRepository $dishRepository */
-        if (true === is_object($this->getDoctrine()->getRepository(DishVariation::class))) {
-            $dishVariationRepo = $this->getDoctrine()->getRepository(DishVariation::class);
-        }
+    public function deleteAction(
+        DishVariation $dishVariation,
+        DishRepository $dishRepo,
+        MealsLoggerInterface $logger,
+        TranslatorInterface $translator
+    ): RedirectResponse {
+        try {
+            /** @var EntityManager $entityManager */
+            $entityManager = $this->getDoctrine()->getManager();
 
-        /** @var \App\Mealz\MealBundle\Entity\DishVariation $dishVariation */
-        $dishVariation = $dishVariationRepo->find($slug);
+            // hide the dish variation if it has been assigned to a meal, else delete it
+            if ($dishRepo->hasDishAssociatedMeals($dishVariation)) {
+                $dishVariation->setEnabled(false);
+                $entityManager->persist($dishVariation);
+                $message = $translator->trans('dish_variation.hidden', ['%dishVariation%' => $dishVariation->getTitle()], 'messages');
+            } else {
+                $entityManager->remove($dishVariation);
+                $message = $translator->trans('dish_variation.deleted', ['%dishVariation%' => $dishVariation->getTitle()], 'messages');
+            }
 
-        if (null === $dishVariation) {
-            throw $this->createNotFoundException();
-        }
-
-        /** @var EntityManager $entityManager */
-        $entityManager = $this->getDoctrine()->getManager();
-
-        if (true === $dishVariationRepo->hasDishAssociatedMeals($dishVariation)) {
-            // if there are meals assigned: just hide this record, but do not delete it
-            $dishVariation->setEnabled(false);
-            $entityManager->persist($dishVariation);
             $entityManager->flush();
-            $message = $this->get('translator')->trans(
-                'dish_variation.hidden',
-                ['%dishVariation%' => $dishVariation->getTitle()],
-                'messages'
-            );
             $this->addFlashMessage($message, 'success');
-        } else {
-            // else: no need to keep an unused record
-            $entityManager->remove($dishVariation);
-            $entityManager->flush();
-
-            $message = $this->get('translator')->trans(
-                'dish_variation.deleted',
-                ['%dishVariation%' => $dishVariation->getTitle()],
-                'messages'
-            );
-            $this->addFlashMessage($message, 'success');
+        } catch (Exception $e) {
+            $logger->logException($e, 'dish delete error');
+            $message = $translator->trans('dish_variation.delete_error', ['%dishVariation%' => $dishVariation->getTitle()], 'messages');
+            $this->addFlashMessage($message, 'danger');
         }
 
         return $this->redirectToRoute('MealzMealBundle_Dish');

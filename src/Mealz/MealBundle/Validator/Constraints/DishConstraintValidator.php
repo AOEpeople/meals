@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Validator\Constraints;
 
-use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\NullDish;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\UnitOfWork;
@@ -24,7 +23,7 @@ class DishConstraintValidator extends ConstraintValidator
     }
 
     /**
-     * @param Meal $value
+     * {@inheritDoc}
      */
     public function validate($value, Constraint $constraint): void
     {

@@ -31,12 +31,12 @@ class LoadMeals extends Fixture implements OrderedFixtureInterface
     /**
      * @var Dish[]
      */
-    private array $dishesWithVariations = [];
+    private array $dishesWithVar = [];
 
     /**
      * @var Dish[]
      */
-    private array $dishesWithoutVariations = [];
+    private array $dishesWithoutVar = [];
 
     /**
      * @var array<int, Day>
@@ -55,32 +55,32 @@ class LoadMeals extends Fixture implements OrderedFixtureInterface
         $this->objectManager = $manager;
         $this->loadDishes();
         $this->loadDays();
-        $lastDishWithVariations = null;
-        $lastDishWithoutVariations = null;
+        $lastDishWithVar = null;
+        $lastDishWithoutVar = null;
 
         foreach ($this->days as $key => $day) {
             $normDayIndex = ($key + 10) % 10;
 
             // every alt. Mon. and Wed. get one meal with simple dish and two meals with dish variations
             if (self::IDX_ALT_MONDAY === $normDayIndex || self::IDX_ALT_WEDNESDAY === $normDayIndex) {
-                $dish = $this->getRandomDishWithoutVariations($lastDishWithoutVariations);
+                $dish = $this->getRandomDishWithoutVariations($lastDishWithoutVar);
                 $this->loadNewMeal($day, $dish);
-                $lastDishWithoutVariations = $dish;
+                $lastDishWithoutVar = $dish;
 
-                $dish = $this->getRandomDishWithVariations($lastDishWithVariations);
+                $dish = $this->getRandomDishWithVariations($lastDishWithVar);
                 foreach ($dish->getVariations()->slice(0, 2) as $dishVariation) {
                     $this->loadNewMeal($day, $dishVariation);
                 }
-                $lastDishWithVariations = $dish;
+                $lastDishWithVar = $dish;
 
                 continue;
             }
 
             // add 2 meals with simple dishes (no variations)
             for ($i = 0; $i < 2; ++$i) {
-                $dish = $this->getRandomDishWithoutVariations($lastDishWithoutVariations);
+                $dish = $this->getRandomDishWithoutVariations($lastDishWithoutVar);
                 $this->loadNewMeal($day, $dish);
-                $lastDishWithoutVariations = $dish;
+                $lastDishWithoutVar = $dish;
             }
         }
 
@@ -115,9 +115,9 @@ class LoadMeals extends Fixture implements OrderedFixtureInterface
                 $dish = $this->getReference($referenceName);
 
                 if ($dish->hasVariations()) {
-                    $this->dishesWithVariations[] = $dish;
+                    $this->dishesWithVar[] = $dish;
                 } else {
-                    $this->dishesWithoutVariations[] = $dish;
+                    $this->dishesWithoutVar[] = $dish;
                 }
             }
         }
@@ -137,8 +137,8 @@ class LoadMeals extends Fixture implements OrderedFixtureInterface
     private function getRandomDishWithVariations(?Dish $previousDish = null): Dish
     {
         do {
-            $randomDishKey = array_rand($this->dishesWithVariations);
-            $dish = $this->dishesWithVariations[$randomDishKey];
+            $randomDishKey = array_rand($this->dishesWithVar);
+            $dish = $this->dishesWithVar[$randomDishKey];
         } while ($dish === $previousDish);
 
         return $dish;
@@ -150,8 +150,8 @@ class LoadMeals extends Fixture implements OrderedFixtureInterface
     private function getRandomDishWithoutVariations(?Dish $previousDish = null): Dish
     {
         do {
-            $randomDishKey = array_rand($this->dishesWithoutVariations);
-            $dish = $this->dishesWithoutVariations[$randomDishKey];
+            $randomDishKey = array_rand($this->dishesWithoutVar);
+            $dish = $this->dishesWithoutVar[$randomDishKey];
         } while ($dish === $previousDish);
 
         return $dish;

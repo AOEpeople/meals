@@ -131,15 +131,15 @@ class DishVariationControllerTest extends AbstractControllerTestCase
 
     public function testDeleteDishVariation(): void
     {
-        /** @var Dish $dish */
-        $dish = $this->getDish(null, true);
-        $dishVariation = $dish->getVariations()->get(0);
+        /** @var DishVariation $dishVariation */
+        $dishVariation = $this->getDish(null, true)->getVariations()->get(0);
+        $dishVariationId = $dishVariation->getId();
         $this->assertTrue($dishVariation->isEnabled());
 
         $this->client->request('GET', '/dish/variation/' . $dishVariation->getSlug() . '/delete');
         $this->assertTrue($this->client->getResponse()->isRedirect('/dish'));
 
-        $updatedDishVariation = $this->getDishVariationBy('id', $dishVariation->getId(), false);
+        $updatedDishVariation = $this->getDishVariationBy('id', $dishVariationId, false);
         if ($updatedDishVariation instanceof DishVariation) {
             $this->assertFalse($updatedDishVariation->isEnabled());
         } else {

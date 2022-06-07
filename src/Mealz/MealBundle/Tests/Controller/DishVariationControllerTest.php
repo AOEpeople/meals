@@ -134,13 +134,12 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         /** @var Dish $dish */
         $dish = $this->getDish(null, true);
         $dishVariation = $dish->getVariations()->get(0);
-        $dishVariationId = $dishVariation->getId();
         $this->assertTrue($dishVariation->isEnabled());
 
-        $this->client->request('GET', '/dish/variation/' . $dishVariation->getId() . '/delete');
+        $this->client->request('GET', '/dish/variation/' . $dishVariation->getSlug() . '/delete');
         $this->assertTrue($this->client->getResponse()->isRedirect('/dish'));
 
-        $updatedDishVariation = $this->getDishVariationBy('id', $dishVariationId, false);
+        $updatedDishVariation = $this->getDishVariationBy('id', $dishVariation->getId(), false);
         if ($updatedDishVariation instanceof DishVariation) {
             $this->assertFalse($updatedDishVariation->isEnabled());
         } else {
@@ -277,12 +276,12 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         /* @var $dishVariation DishVariation */
         $dishVariation = $dish->getVariations()->get(0);
 
-        $dishVariationId = $dishVariation->getId();
-        $this->client->request('GET', "/dish/variation/$dishVariationId/delete");
+        $dishVariationSlug = $dishVariation->getSlug();
+        $this->client->request('GET', "/dish/variation/$dishVariationSlug/delete");
         $dishVariationRepo = $this->getDoctrine()->getRepository(DishVariation::class);
-        $queryResult = $dishVariationRepo->find($dishVariationId);
+        $queryResult = $dishVariationRepo->findBy(['slug' => $dishVariationSlug]);
 
-        $this->assertEquals(null, $queryResult);
+        $this->assertEmpty($queryResult);
     }
 
     /**

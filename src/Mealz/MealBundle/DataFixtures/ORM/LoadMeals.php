@@ -12,7 +12,6 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Exception;
-use RuntimeException;
 
 class LoadMeals extends Fixture implements OrderedFixtureInterface
 {
@@ -32,14 +31,19 @@ class LoadMeals extends Fixture implements OrderedFixtureInterface
     /**
      * @var Dish[]
      */
-    protected array $dishes = [];
+    private array $dishesWithVar = [];
+
+    /**
+     * @var Dish[]
+     */
+    private array $dishesWithoutVar = [];
 
     /**
      * @var array<int, Day>
      */
-    protected array $days = [];
+    private array $days = [];
 
-    protected int $counter = 0;
+    private int $counter = 0;
 
     /**
      * {@inheritDoc}
@@ -51,26 +55,32 @@ class LoadMeals extends Fixture implements OrderedFixtureInterface
         $this->objectManager = $manager;
         $this->loadDishes();
         $this->loadDays();
-        $dish = null;
+        $lastDishWithVar = null;
+        $lastDishWithoutVar = null;
 
         foreach ($this->days as $key => $day) {
             $normDayIndex = ($key + 10) % 10;
 
             // every alt. Mon. and Wed. get one meal with simple dish and two meals with dish variations
             if (self::IDX_ALT_MONDAY === $normDayIndex || self::IDX_ALT_WEDNESDAY === $normDayIndex) {
-                $this->loadNewMeal($day, $this->dishes[0]);
-                $dish = $this->getRandomDishWithVariations();
+                $dish = $this->getRandomDishWithoutVariations($lastDishWithoutVar);
+                $this->loadNewMeal($day, $dish);
+                $lastDishWithoutVar = $dish;
+
+                $dish = $this->getRandomDishWithVariations($lastDishWithVar);
                 foreach ($dish->getVariations()->slice(0, 2) as $dishVariation) {
                     $this->loadNewMeal($day, $dishVariation);
                 }
+                $lastDishWithVar = $dish;
 
                 continue;
             }
 
             // add 2 meals with simple dishes (no variations)
             for ($i = 0; $i < 2; ++$i) {
-                $dish = $this->getRandomDish($dish);
+                $dish = $this->getRandomDishWithoutVariations($lastDishWithoutVar);
                 $this->loadNewMeal($day, $dish);
+                $lastDishWithoutVar = $dish;
             }
         }
 
@@ -101,7 +111,14 @@ class LoadMeals extends Fixture implements OrderedFixtureInterface
             if (($reference instanceof Dish) && !($reference instanceof DishVariation)) {
                 // we can't just use $reference here, because
                 // getReference() does some doctrine magic that getReferences() does not
-                $this->dishes[] = $this->getReference($referenceName);
+                /** @var Dish $dish */
+                $dish = $this->getReference($referenceName);
+
+                if ($dish->hasVariations()) {
+                    $this->dishesWithVar[] = $dish;
+                } else {
+                    $this->dishesWithoutVar[] = $dish;
+                }
             }
         }
     }
@@ -117,33 +134,24 @@ class LoadMeals extends Fixture implements OrderedFixtureInterface
         }
     }
 
-    private function getRandomDishWithVariations(): Dish
+    private function getRandomDishWithVariations(?Dish $previousDish = null): Dish
     {
-        $dishesWithVariations = [];
+        do {
+            $randomDishKey = array_rand($this->dishesWithVar);
+            $dish = $this->dishesWithVar[$randomDishKey];
+        } while ($dish === $previousDish);
 
-        foreach ($this->dishes as $dish) {
-            if ($dish->hasVariations()) {
-                $dishesWithVariations[] = $dish;
-            }
-        }
-
-        if (0 === count($dishesWithVariations)) {
-            throw new RuntimeException('dish with variations not found');
-        }
-
-        $randomDishKey = array_rand($dishesWithVariations);
-
-        return $dishesWithVariations[$randomDishKey];
+        return $dish;
     }
 
     /**
      * Get random Dishes without Variations.
      */
-    protected function getRandomDish(?Dish $previousDish): Dish
+    private function getRandomDishWithoutVariations(?Dish $previousDish = null): Dish
     {
         do {
-            $key = array_rand($this->dishes);
-            $dish = $this->dishes[$key];
+            $randomDishKey = array_rand($this->dishesWithoutVar);
+            $dish = $this->dishesWithoutVar[$randomDishKey];
         } while ($dish === $previousDish);
 
         return $dish;

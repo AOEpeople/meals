@@ -145,7 +145,7 @@ class MealAvailabilityService
             $dishAvailability = $this->isMealAvailable($meal, 0.5);
 
             if (null !== $parentDish) {
-                $availability[$parentDish->getSlug()][$dish->getSlug()] = $dishAvailability;
+                $availability[$parentDish->getSlug()] = [$dish->getSlug() => $dishAvailability];
             } else {
                 $availability[$dish->getSlug()] = $dishAvailability;
             }

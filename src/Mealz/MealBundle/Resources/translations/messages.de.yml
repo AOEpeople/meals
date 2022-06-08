@@ -12,8 +12,11 @@ entity:
 dish:
   hidden: Gericht "%dish%" wurde verborgen.
   deleted: Gericht "%dish%" wurde gelöscht.
+  delete_error: Gericht "%dish%" kann nicht gelöscht werden. Wir kümmern uns darum. Bitte versuchen Sie es später noch einmal.
 dish_variation:
+  hidden: Gericht variation "%dishVariation%" wurde verborgen.
   deleted: Gericht variation "%dishVariation%" wurde gelöscht.
+  delete_error: Gericht variation "%dishVariation%" kann nicht gelöscht werden. Wir kümmern uns darum. Bitte versuchen Sie es später noch einmal.
 error:
   unknown: Ein unbekannter Fehler ist aufgetreten.
   profile:

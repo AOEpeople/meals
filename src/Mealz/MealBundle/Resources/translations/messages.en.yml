@@ -18,10 +18,13 @@ entity:
   Category: Category
   Slot: Slot
 dish:
-  hidden: Dish "%dish%" has been hidden.
-  deleted: Dish "%dish%" has been deleted.
+  hidden: Dish "%dish%" has been marked as hidden.
+  deleted: Dish "%dish%" has been successfully deleted.
+  delete_error: Unable to delete "%dish%". We are looking into it. Please try again later.
 dish_variation:
+  hidden: Dish variation "%dishVariation%" has been marked as hidden.
   deleted: Dish variation "%dishVariation%" has been successfully deleted.
+  delete_error: Unable to delete dish variation "%dishVariation%". We are looking into it. Please try again later.
 error:
   unknown: An unknown error occured.
   profile:

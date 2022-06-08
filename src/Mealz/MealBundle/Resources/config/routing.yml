@@ -118,9 +118,7 @@ MealzMealBundle_DishVariation_edit:
 
 MealzMealBundle_DishVariation_delete:
     path:  /dish/variation/{slug}/delete
-    defaults: { _controller: App\Mealz\MealBundle\Controller\DishVariationController::delete }
-    requirements:
-      slug: '[1-9][0-9]*'
+    defaults: { _controller: App\Mealz\MealBundle\Controller\DishVariationController::deleteAction }
 
 MealzMealBundle_Dish:
     path:  /dish
@@ -144,7 +142,7 @@ MealzMealBundle_Dish_edit:
 
 MealzMealBundle_Dish_delete:
     path:  /dish/{slug}/delete
-    defaults: { _controller: App\Mealz\MealBundle\Controller\DishController::delete }
+    defaults: { _controller: App\Mealz\MealBundle\Controller\DishController::deleteAction }
 
 MealzMealBundle_Category:
     path:  /category

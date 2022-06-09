@@ -6,13 +6,14 @@ use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use JsonSerializable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="transaction")
  */
-class Transaction
+class Transaction implements JsonSerializable
 {
     /**
      * @var int
@@ -150,5 +151,15 @@ class Transaction
     public function __toString()
     {
         return $this->profile . ' ' . $this->amount;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'type' => 'transaction',
+            'date' => $this->getDate()->format('d M Y'),
+            'description' => $this->paymethod,
+            'amount' =>  $this->amount,
+        ];
     }
 }

@@ -36,7 +36,7 @@ module.exports = function(env, argv) {
             ],
         },
         entry: {
-            app: './js/test.js',
+            app: './test.js',
         },
         output: {
             path: path.resolve(__dirname, '../../public/static/'),
@@ -57,6 +57,7 @@ module.exports = function(env, argv) {
             ],
             alias: {
                 jquery: path.resolve('./node_modules/jquery/dist/jquery.js'),
+                '@': path.resolve(__dirname, './vue'),
             }
         },
         module: {

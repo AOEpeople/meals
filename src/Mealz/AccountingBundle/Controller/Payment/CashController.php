@@ -10,6 +10,7 @@ use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Doctrine\ORM\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -153,6 +154,53 @@ class CashController extends BaseController
                 'participations_total' => $participationsTotal,
             ]
         );
+    }
+
+    /**
+     * Send transactions for logged in user.
+     */
+    public function showTransactionData(): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        $profile = $this->getUser()->getProfile();
+
+        $dateFrom = new DateTime('-28 days 00:00:00');
+        $dateTo = new DateTime();
+
+        list($costDifference, $transactionHistory) = $this->getTransactionData($dateFrom, $dateTo, $profile);
+
+        ksort($transactionHistory);
+
+        return new JsonResponse([
+            'data' => $transactionHistory,
+            'difference' => $costDifference,
+        ]);
+    }
+
+    private function getTransactionData(DateTime $dateFrom, DateTime $dateTo, Profile $profile): array
+    {
+        $participantRepo = $this->getParticipantRepository();
+        $participations = $participantRepo->getParticipantsOnDays($dateFrom, $dateTo, $profile);
+
+        $transactionRepo = $this->getTransactionRepository();
+        $transactions = $transactionRepo->getSuccessfulTransactionsOnDays($dateFrom, $dateTo, $profile);
+
+        $costDifference = 0;
+        $transactionHistory = [];
+        foreach ($transactions as $transaction) {
+            $costDifference += $transaction->getAmount();
+            $transactionHistory[$transaction->getDate()->getTimestamp()] = $transaction;
+        }
+
+        foreach ($participations as $participation) {
+            $costDifference -= $participation->getMeal()->getPrice();
+            $transactionHistory[$participation->getMeal()->getDateTime()->getTimestamp() . '-' . $participation->getMeal()->getId()] = $participation;
+        }
+
+        $costDifference = round($costDifference, 2);
+
+        return [$costDifference, $transactionHistory];
     }
 
     /**

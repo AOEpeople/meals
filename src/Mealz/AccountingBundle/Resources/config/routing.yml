@@ -25,7 +25,7 @@ mealz_accounting_payment_settlement_form:
 
 mealz_accounting_payment_transaction_history:
     path: /accounting/transactions
-    defaults: { _controller: App\Mealz\AccountingBundle\Controller\Payment\CashController::showTransactionHistory }
+    defaults: { _controller: App\Mealz\AccountingBundle\Controller\Payment\CashController::showTransactionData }
 
 mealz_accounting_accounting_book:
     path: /accounting/book

@@ -1,10 +1,12 @@
 <template>
-  <MainView />
+  <NavBar />
+  <Content />
+  <Footer />
 </template>
 
 <script setup>
-import MainView from "./view/MainView.vue";
-</script>
+import NavBar from '@/components/NavBar.vue'
+import Footer from '@/components/Footer.vue'
+import Content from "@/components/Content.vue";
 
-<style>
-</style>
+</script>

@@ -4,7 +4,31 @@ MealzMealBundle_language_switch:
 
 MealzMealBundle_home:
     path:  /
-    defaults: { _controller: App\Mealz\MealBundle\Controller\MealController::index }
+    defaults: { _controller: App\Mealz\MealBundle\Controller\TestController::test }
+
+MealzMealBundle_menu:
+  path:  /menu
+  defaults: { _controller: App\Mealz\MealBundle\Controller\TestController::test }
+
+MealzMealBundle_categories:
+  path: /categories
+  defaults: { _controller: App\Mealz\MealBundle\Controller\TestController::test }
+
+MealzMealBundle_timeslots:
+  path: /time-slots
+  defaults: { _controller: App\Mealz\MealBundle\Controller\TestController::test }
+
+MealzMealBundle_costs:
+  path: /costs
+  defaults: { _controller: App\Mealz\MealBundle\Controller\TestController::test }
+
+MealzMealBundle_finance:
+  path: /finance
+  defaults: { _controller: App\Mealz\MealBundle\Controller\TestController::test }
+
+MealzMealBundle_balance:
+  path: /balance
+  defaults: { _controller: App\Mealz\MealBundle\Controller\TestController::test }
 
 MealzMealBundle_test:
     path: /test
@@ -127,6 +151,10 @@ MealzMealBundle_DishVariation_edit:
 MealzMealBundle_DishVariation_delete:
     path:  /dish/variation/{slug}/delete
     defaults: { _controller: App\Mealz\MealBundle\Controller\DishVariationController::deleteAction }
+
+MealzMealBundle_Dishes:
+  path: /dishes
+  defaults: { _controller: App\Mealz\MealBundle\Controller\TestController::test }
 
 MealzMealBundle_Dish:
     path:  /dish

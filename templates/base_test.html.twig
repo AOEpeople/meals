@@ -18,6 +18,10 @@
 
 {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
     {% set balance = wallet.getBalance(app.user.profile) %}
+    <script type="text/javascript">
+        sessionStorage.setItem('balance', '{{ balance }}');
+        sessionStorage.setItem('user', '{{ app.user }}')
+    </script>
 {% endif %}
 
 {% block body %}{% endblock %}

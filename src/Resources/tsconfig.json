@@ -2,13 +2,39 @@
   "compilerOptions": {
     "outDir": "../../public/static",
     "noImplicitAny": true,
-    "module": "es6",
-    "target": "es5",
+    "module": "esnext",
+    "target": "es2017",
+    "strict": true,
+    "jsx": "preserve",
     "allowJs": true,
+    "experimentalDecorators": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "useDefineForClassFields": true,
+    "sourceMap": true,
     "moduleResolution": "node",
     "typeRoots": [
       "./node_modules/@types",
       "./js/types"
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./vue/*"]
+    },
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable",
+      "scripthost"
     ]
-  }
+  },
+  "include": [
+    "./vue/**/*",
+    "./*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

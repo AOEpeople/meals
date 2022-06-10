@@ -4,21 +4,33 @@
       <div class="items-center py-4">
         <img class="mx-auto h-10 xl:mx-0" src="../../images/aoe-logo.svg" alt="AOE Logo" />
       </div>
-      <div class="hidden self-center text-right xl:inline-block">
-        <img class="inline-block mr-1 w-5" src="../../images/flag.svg" alt="flag" />
-        <a class="self-center cursor-pointer hover:text-highlight">
-          {{ lang }} version
+      <div class="hidden self-center text-right xl:inline-block cursor-pointer">
+        <a id="language">
+          <Icons icon="flag" box="0 0 26 26" class="inline-block w-[26px] h-[26px] align-top fill-primary" />
+          <span class="self-center text-primary text-[14px] leading-[20px] align-top">
+            {{ lang }} version
+          </span>
         </a>
       </div>
     </div>
     <div class="bg-[rgb(244,247,249)] w-full py-4 px-4 text-center">
-      <a> @ 2022 AOE. All rights reserved </a>
+      <span class="text-[#A1A1B0] font-normal text-[14px] leading-[20px]"> © 2022 AOE. All right reserved. </span>
     </div>
     <router-link to="/guest">guest</router-link>
   </footer>
 </template>
 
 <script setup>
+import Icons from "@/components/Icons.vue"
 let lang = 'German';
 
 </script>
+
+<style scoped>
+#language:hover svg {
+  @apply fill-secondary;
+}
+#language:hover span {
+  @apply text-secondary;
+}
+</style>

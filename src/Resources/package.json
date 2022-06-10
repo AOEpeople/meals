@@ -32,6 +32,7 @@
     "switchery.js": "^1.0",
     "vue": "^3.2.33",
     "vue-class-component": "^8.0.0-0",
+    "vue-i18n": "^9.1.10",
     "vue-loader": "^17.0.0",
     "vue-router": "4",
     "vue-template-compiler": "^2.6.14",

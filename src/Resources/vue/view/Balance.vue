@@ -45,7 +45,7 @@
 
 <script>
 import Table from '@/components/Table.vue'
-import useTransactions from '@/hooks/Transactions';
+import useTransactions from '@/hooks/getTransactions.ts';
 import {defineComponent} from "vue";
 import Popover from "../components/Popover.vue";
 import TransactionPanel from "../components/TransactionPanel.vue";

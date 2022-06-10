@@ -1,18 +1,26 @@
 <template>
-  <div class="flex rounded w-3/4 shadow-[0_15px_35px_0_#5B788F21] w-max-screen-aoe mx-auto h-[200px] bg-white">
-    <div class="flex-none grid w-[24px] bg-primary-2 rounded-l-[5px]">
-
+  <div class="flex mx-auto w-3/4 h-auto bg-white rounded w-max-screen-aoe">
+    <div class="flex justify-center w-[24px] bg-primary-2 rounded-l-[5px]">
+      <div id="icon" class="relative left-[425%] bottom-[1%]">
+        <Icons icon="guest" box="0 0 13 13" class="w-[13px] h-[13px] fill-white"/>
+      </div>
+      <div class="grid weekday min-w-[200px]">
+        <div id="dayLabel" class="mb-1">
+          <span class="uppercase dayLabel align-top">{{ props.day.name }}</span>
+        </div>
+      </div>
     </div>
-    <div class="flex-1 grid grid-rows-3">
-      <MealData :data="props.day.meal1" />
-      <MealData :data="props.day.meal2" />
-      <MealData :data="props.day.kombi" />
+    <div class="flex flex-col flex-1">
+      <MealData :data="props.day.meal1" class="py-[13px] mx-[15px] border-b-[0.7px]" />
+      <MealData :data="props.day.meal2" class="py-[13px] mx-[15px] border-b-[0.7px]" />
+      <MealData :data="props.day.kombi" class="py-[13px] mx-[15px]" />
     </div>
   </div>
 </template>
 
 <script setup>
 import MealData from "./day/MealData.vue";
+import Icons from "@/components/Icons.vue";
 
 const props = defineProps([
     'day',
@@ -20,6 +28,35 @@ const props = defineProps([
 
 </script>
 
-<style>
+<style scoped>
+.day-shadow {
+  box-shadow: 0 4px 0 hsla(0,0%,100%,.46),0 15px 35px rgba(216,225,233,.8);
+}
+.weekday {
+  align-items: center;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%) rotate(-90deg);
+}
+.divider {
+  margin: 0 15px;
+  border: 0.7px solid rgba(205, 205, 205, 1)
+}
+.dayLabel {
+  color: #fff;
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 16px;
+  letter-spacing: 1.5px;
+}
+
+#icon {
+  align-self: self-end;
+}
+
+#dayLabel {
+  text-align-last: center;
+}
 
 </style>

@@ -113,10 +113,7 @@ Mealz.prototype.enablePaypal = function () {
                         }]
                     });
                 },
-
                 onApprove: function (data, actions) {
-                    $('body').prepend('<div class="cover"></div>');
-
                     return actions.order.capture().then(function (details) {
                         $('#ecash_orderid').val(data.orderID);
                         return fetch('/payment/ecash/form/submit', {
@@ -154,5 +151,4 @@ Mealz.prototype.enablePaypal = function () {
         }
         return (neg ? '-' : '') + parseFloat(total.replace(/,/g, '.')).toFixed(2).toString();
     }
-
 };

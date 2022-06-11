@@ -2,6 +2,7 @@
   "session": {
     "expired": "Session abgelaufen!"
   },
+  "currentWeek": "Aktuelle Woche",
   "changeLanguage": "English version",
   "button": {
     "ok": "OK",
@@ -25,6 +26,11 @@
     "cash_register": "Kasse",
     "show_hidden_users": "Ausgeblendete Benutzer anzeigen"
   },
+  "Mon": "Mo.",
+  "Tue": "Di.",
+  "Wed": "Mi.",
+  "Thu": "Do.",
+  "Fri": "Fr.",
   "Monday": "Montag",
   "Tuesday": "Dienstag",
   "Wednesday": "Mittwoch",
@@ -44,18 +50,5 @@
     "logged_in_text": "Eingeloggt als",
     "balance": "Kontostand"
   },
-  "dashboard": {
-    "0": "Aktuelle Woche",
-    "1": "Nächste Woche"
-  },
-  "balance": {
-    "current": "Momentaner Kontostand",
-    "old": "Kontostand vom",
-    "transactions": "Transaktionen",
-    "paypal": "PayPal Bezahlung",
-    "cash": "Barzahlung",
-    "add": "Geld einzahlen",
-    "amount": "Betrag"
-  },
-  "logout": "Ausloggen"
+  "loggout": "Ausloggen"
 }

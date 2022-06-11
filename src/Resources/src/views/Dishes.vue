@@ -14,7 +14,7 @@
 <script setup>
 import Table from '@/components/misc/Table.vue'
 import {Disclosure, DisclosureButton, DisclosurePanel} from "@headlessui/vue";
-import ModifyDishes from "@/components/dishes/ModifyDishes.vue";
+import ModifyDishes from "@/components/mealsMain/ModifyDishes.vue";
 const tableLabels = ['Title', 'Category'];
 const tableData = [
   { title_en: 'Dish1', title_de: 'Gericht1', desc_en: 'Description', desc_de: 'Beschreibung', category: 'Meat' },

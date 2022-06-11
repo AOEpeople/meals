@@ -1,39 +1,26 @@
 <template>
-    <div class="flex m-8 justify-center">
-      <h5 class="w-32 m-0 self-center text-black">{{ t('balance.amount') }}: €</h5>
-      <input
-          type="text"
-          :value="balance < 0 ? balance.toFixed(2).slice(1).replace(/\./g, ',') : '0,00'"
-          ref="input"
-          class="bg-white border-[2px] border-solid border-[#CAD6E1] rounded-[100px] h-12 text-center"
-      />
-    </div>
-    <div id="paypal-container" class="mx-8 my-2"></div>
+  <div class="w-[500px] h-[500px]">
+    <input
+        type="text"
+        :value="balance < 0 ? balance.toFixed(2).slice(1).replace(/\./g, ',') : '0,00'"
+        ref="input"
+    />
+
+    <div id="paypal-container"></div>
+  </div>
 </template>
 
-<script>
-import { loadScript } from "@paypal/paypal-js";
-import { balanceStore } from "@/store/balanceStore";
-import { transactionStore } from "@/store/transactionStore";
-import { useI18n } from "vue-i18n";
-import {ref} from "vue";
+<script >
+import {loadScript} from "@paypal/paypal-js";
 
 export default {
   data() {
     return {
-      balance: parseFloat(sessionStorage.getItem('balance')),
-      locale: ref('en'),
+      balance: parseFloat(sessionStorage.getItem('balance'))
     }
-  },
-  setup() {
-    const { t } = useI18n();
-    return { t };
   },
   async mounted() {
     let amountField = this.$refs['input'];
-    let panel = this;
-
-    let { locale } = useI18n();
 
     function formatCurrency(total) {
       let neg = false;
@@ -67,17 +54,6 @@ export default {
                     // If the input is valid (matches the HTML pattern: "\d*([.,]?\d{0,2})") and the value is above 0.00..
                     if (amountField.checkValidity() === true && amountFieldValue > 0.00) {
 
-                      if (locale.value === 'en') {
-
-                        // ..add missing decimal places and render the amount in the point format.
-                        amountField.value = amountFieldValue.toFixed(2);
-
-                        // If the language is set to German..
-                      } else {
-                        // ..add missing decimal places and render the amount in the comma format.
-                        amountField.value = amountFieldValue.toFixed(2).replace(/\./g, ',');
-                      }
-
                       // Enable PayPal buttons and remove the warning message.
                       actions.enable();
                     } else {
@@ -85,6 +61,24 @@ export default {
                       amountField.setCustomValidity('Invalid field');
                     }
                   });
+
+                },
+                onError: function (err) {
+                  // if its the "Window navigated away" Error which always happens caused by redirect - ignore it
+                  if (err.text() !== 'Window navigated away') {
+                    return fetch('/payment/ecash/form/submit', {
+                      method: 'post',
+                      headers: {
+                        'content-type': 'application/json'
+                      },
+                    }).then(function (redirect) {
+                      if (redirect.status === 200 && !redirect.redirected) {
+                        return (redirect.text());
+                      }
+                    }).then(function (redirect) {
+                      actions.redirect(window.location.origin + redirect);
+                    });
+                  }
                 },
                 // Set up the transaction
                 createOrder: function (data, actions) {
@@ -109,11 +103,9 @@ export default {
                         { 'name': 'ecash[amount]', 'value': formatCurrency(amountField.value) }
                       ])
                     }).then((response) => {
-                      if(response.ok) {
-                        balanceStore.adjustAmount(parseFloat(formatCurrency(amountField.value)));
-                        transactionStore.fillStore();
-                        panel.$emit('closePanel');
-                      }
+                      console.log(response)
+                    }).then((redirectPath) => {
+                      console.log(redirectPath);
                     });
                   });
                 },
@@ -128,5 +120,4 @@ export default {
         });
   }
 }
-
 </script>

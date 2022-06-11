@@ -58,7 +58,6 @@ module.exports = function(env, argv) {
             alias: {
                 jquery: path.resolve('./node_modules/jquery/dist/jquery.js'),
                 '@': path.resolve(__dirname, './src'),
-                'vue-i18n': 'vue-i18n/dist/vue-i18n.runtime.esm-bundler.js'
             }
         },
         module: {
@@ -152,14 +151,6 @@ module.exports = function(env, argv) {
             new webpack.DefinePlugin({
                 'process.browser': true,
                 'process.env.MODE': JSON.stringify(argv.mode),
-                'process.env.APP_BASE_URL': JSON.stringify(process.env.APP_BASE_URL),
-                'process.env.PAYMENT_NOTIFICATION_DEBT': JSON.stringify(process.env.PAYMENT_NOTIFICATION_DEBT),
-                'process.env.PAYPAL_ID': JSON.stringify(process.env.PAYPAL_ID),
-                __VUE_OPTIONS_API__: true,
-                __VUE_PROD_DEVTOOLS__: false,
-                __VUE_I18N_FULL_INSTALL__: true,
-                __VUE_I18N_LEGACY_API__: false,
-                __INTLIFY_PROD_DEVTOOLS__: false
             })
         ],
         devServer: {

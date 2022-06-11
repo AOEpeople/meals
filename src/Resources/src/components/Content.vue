@@ -1,10 +1,12 @@
 <template>
-  <main>
-    <div class="max-w-screen-aoe mx-auto mt-10">
+  <main class="bg-[rgb(244,247,249)]">
+    <div class="max-w-screen-aoe mx-auto my-10">
       <Suspense>
         <template #default>
           <router-view v-slot="{ Component }">
-            <component :is="Component" />
+            <transition name="fade">
+              <component :is="Component" />
+            </transition>
           </router-view>
         </template>
         <template #fallback>
@@ -14,3 +16,7 @@
     </div>
   </main>
 </template>
+
+<script setup>
+
+</script>

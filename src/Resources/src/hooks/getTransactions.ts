@@ -4,16 +4,14 @@ import { ref } from "vue";
 export type Transaction = {
     data: [{
         type: string,
-        date: Object,
-        timestamp: string,
-        description_en: string,
-        description_de: string,
+        date: string,
+        description: string,
         amount: number,
     }],
     difference: number,
 };
 
-export async function useTransactions(){
+export default async function useTransactions(){
     const { response: transactions, request } = useApi<Transaction>(
         "GET",
         "accounting/transactions",

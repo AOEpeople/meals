@@ -1,8 +1,8 @@
 <template>
   <header class="bg-white shadow-[0_15px_35px_0_#5B788F21] h-[60px] xl:h-24">
     <Disclosure v-slot="{ open }">
-      <nav class="grid grid-cols-3 h-[inherit] items-center content-center xl:mx-auto xl:max-w-screen-aoe xl:grid-cols-10" aria-label="Top">
-        <div class="justify-self-start ml-6 xl:hidden" id="dropdown">
+      <nav class="grid grid-cols-3 h-[inherit] items-center content-center mx-auto max-w-screen-aoe xl:grid-cols-10" aria-label="Top">
+        <div class="justify-self-center xl:hidden" id="dropdown">
           <DisclosureButton class="inline-flex justify-center items-center p-2 -mx-2 text-gray-400 rounded-md hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
             <span class="sr-only">Open menu</span>
             <MenuIcon v-if="!open" class="block w-6 h-6" aria-hidden="true" />
@@ -34,14 +34,14 @@
           <div class="hidden self-center space-x-2 text-right xl:inline-block">
             <Icons icon="person-outline" class="inline-block w-6 fill-primary" />
             <span class="text-[14px] leading-[22px] font-medium text-black">
-              {{ user }}
+              {{ userName }}
             </span>
           </div>
           <div id="balance" class="hidden text-right xl:inline-block">
             <router-link class="text-[14px] leading-[22px] font-medium text-black" to="/balance">
               {{ t('header.balance') }}:
               <span class="text-primary-2">
-                € {{ balanceString }}
+                € {{ balance }}
               </span>
             </router-link>
           </div>
@@ -52,34 +52,41 @@
           </div>
         </div>
       </nav>
-      <MobileDropdown :open="open" :userName="user" :balance="balanceString" :navigation="navigation" />
+      <MobileDropdown :userName="userName" :balance="balance" :navigation="navigation" />
     </Disclosure>
   </header>
 </template>
 
 <script setup>
-  import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
+  import { Disclosure, DisclosureButton } from '@headlessui/vue';
   import { MenuIcon, XIcon } from '@heroicons/vue/outline';
   import MobileDropdown from "./navbar/MobileDropdown.vue";
   import Icons from "@/components/misc/Icons.vue"
   import { useI18n } from "vue-i18n";
-  import { balanceStore } from "@/store/balanceStore";
-  import {computed} from "vue";
 
   const { t, locale } = useI18n();
+</script>
+<script>
 
-  let balanceString = computed(() => balanceStore.toLocalString());
 
-  const user = sessionStorage.getItem('user')
+export default {
+  data() {
+    const balance = sessionStorage.getItem('balance')
+    const userName = sessionStorage.getItem('user')
 
-  const navigation = [
-    { name: 'header.navigation.menu',       to: '/menu',        current: false },
-    { name: 'header.navigation.dishes',     to: '/dishes',      current: false },
-    { name: 'header.navigation.categories', to: '/categories',  current: false },
-    { name: 'header.navigation.slots',      to: '/time-slots',  current: false },
-    { name: 'header.navigation.costs',      to: '/costs',       current: false },
-    { name: 'header.navigation.finance',    to: '/finance',     current: false },
-  ];
+    const navigation = [
+      { name: 'header.navigation.menu',       to: '/menu',        current: false },
+      { name: 'header.navigation.dishes',     to: '/dishes',      current: false },
+      { name: 'header.navigation.categories', to: '/categories',  current: false },
+      { name: 'header.navigation.slots',      to: '/time-slots',  current: false },
+      { name: 'header.navigation.costs',      to: '/costs',       current: false },
+      { name: 'header.navigation.finance',    to: '/finance',     current: false },
+    ];
+
+    return { balance, userName, navigation }
+  }
+}
+
 </script>
 
 <style scoped>

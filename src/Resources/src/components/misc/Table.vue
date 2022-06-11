@@ -1,45 +1,38 @@
 <template>
-  <div class="flex flex-col max-w-screen-aoe mx-auto">
-    <div class="inline-block min-w-full py-2">
-      <table class="min-w-full border-spacing-none table-fixed max-w-fit">
-        <thead>
-          <tr>
-            <th scope="col"
-                class="text-left text-[11px] leading-4 font-bold tracking-[1.5px] uppercase"
-                v-for="label in localeLabels"
-                :key="label"
-            >
-              {{ label }}
-            </th>
-          </tr>
-        </thead>
-        <tbody class="text-[18px] leading-6 font-light">
-          <slot></slot>
-        </tbody>
-      </table>
+  <div class="mt-8 flex flex-col max-w-screen-aoe mx-auto">
+    <div class="-my-2">
+      <div class="inline-block min-w-full py-2 align-middle">
+        <table class="min-w-full border-separate border-spacing-none">
+          <thead class="bg-gray-50">
+            <tr>
+              <th scope="col"
+                  class="py-3.5 px-3 text-left text-sm font-semibold text-gray-900"
+                  v-for="label in props.labels"
+                  :key="label"
+              >
+                {{ label }}
+              </th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <slot></slot>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { useI18n } from "vue-i18n";
-import {computed} from "vue";
-const { locale } = useI18n();
 const props = defineProps([
     'labels',
 ])
 
-let localeLabels = computed(() => locale.value === 'en' ? props.labels.en : props.labels.de);
 </script>
 
-<style>
+<style scoped>
 .border-spacing-none {
   border-spacing: 0
 }
-
-th:last-child {
-  text-align: right;
-}
-
 
 </style>

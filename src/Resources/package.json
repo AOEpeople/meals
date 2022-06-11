@@ -15,7 +15,7 @@
     "lint:sass": "stylelint '**/*.scss'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "main": "./src/main.ts",
+  "main": "./src/main.js",
   "dependencies": {
     "@headlessui/vue": "^1.6.1",
     "@heroicons/vue": "^1.0.6",
@@ -36,9 +36,7 @@
     "vue-i18n": "^9.1.10",
     "vue-loader": "^17.0.0",
     "vue-router": "4",
-    "vue-screen": "^2.1.0-beta.1",
     "vue-template-compiler": "^2.6.14",
-    "vue3-tabs": "^0.1.13-beta.3",
     "webpack-merge": "^5.8.0"
   },
   "devDependencies": {

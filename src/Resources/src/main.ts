@@ -1,14 +1,14 @@
 import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
-import { createI18n } from 'vue-i18n'
-import VueScreen from 'vue-screen'
+import { createI18n } from 'vue-i18n' // import from runtime only
 
-// Style
+import en from '@/locales/en.json';
+import de from '@/locales/de.json';
+
 import '../style/output.css'
 
-// Vue Components
 import App          from '@/App.vue'
-import Dashboard    from '@/views/Dashboard.vue'
+import MealsMain    from '@/views/MealsMain.vue'
 import Menu         from '@/views/Menu.vue'
 import Dishes       from '@/views/Dishes.vue'
 import Categories   from '@/views/Categories.vue'
@@ -18,26 +18,19 @@ import Finance      from '@/views/Finance.vue'
 import Balance      from '@/views/Balance.vue'
 import Guest        from '@/views/Guest.vue'
 
-// Translation
-import en from '@/locales/en.json'
-import de from '@/locales/de.json'
-
 const i18n = createI18n({
     locale: navigator.language,
     fallbackLocale: 'en',
-    fallbackWarn: false,
-    missingWarn: false,
     messages: {
         en,
         de
     }
 })
 
-// Routing
 const router = createRouter({
     history: createWebHistory(),
     routes: [
-        {path: '/',             name: 'Dashboard',  component: Dashboard},
+        {path: '/',             name: 'Root',       component: MealsMain},
         {path: '/menu',         name: 'Menu',       component: Menu},
         {path: '/dishes',       name: 'Dishes',     component: Dishes},
         {path: '/categories',   name: 'Categories', component: Categories},
@@ -49,10 +42,7 @@ const router = createRouter({
     ],
 })
 
-// Vue initialisation
-const VueApp = createApp(App)
-VueApp.config.performance = true // enable Vue Devtools
-VueApp.use(i18n)
-VueApp.use(router)
-VueApp.use(VueScreen)
-VueApp.mount('#app')
+const vueApp = createApp(App);
+vueApp.use(i18n);
+vueApp.use(router);
+vueApp.mount('#app');

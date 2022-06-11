@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import Day from '@/components/dashboard/Day.vue'
+import Day from '@/components/mealsMain/Day.vue'
 
 var meal1 = {
   name: 'Meal1',

@@ -11,16 +11,8 @@
     "logged_in_text": "You are logged in as",
     "balance": "Balance"
   },
+  "currentWeek": "Current Week",
   "changeLanguage": "Deutsche Version",
-  "balance": {
-    "current": "current balance",
-    "old": "balance on",
-    "transactions": "Transactions",
-    "paypal": "PayPal Payment",
-    "cash": "Cash Payment",
-    "add": "Add Funds",
-    "amount": "Amount"
-  },
   "headings": {
     "week": {
       "list": "List of weeks",
@@ -50,10 +42,6 @@
     "name": "Name",
     "category": "Category",
     "total": "Total"
-  },
-  "dashboard": {
-    "0": "Current Week",
-    "1": "Next Week"
   },
   "content": {
     "participation": {
@@ -95,6 +83,24 @@
       "message_body": "As our guest, we would like to invite you to lunch in the AOE Eatery. To order a meal, register no later than one day before your visit to AOE with your personal information and choose the desired dish. Your order will be forwarded to our cooks.",
       "message_ending": "We hope that you enjoy your lunch",
       "message_signature": "AOE"
+    }
+  },
+  "form": {
+    "placeholder": {
+      "title": "Title",
+      "description": "Description",
+      "category": "No category",
+      "name": "Last name",
+      "first_name": "First name",
+      "company": "Company"
+    },
+    "create-slot": {
+      "title": "Title",
+      "limit": "Limit",
+      "order": "Sort Order"
+    },
+    "week": {
+      "notification": "Announce menu via Mattermost"
     }
   }
 }

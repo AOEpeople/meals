@@ -2,11 +2,11 @@ import axios from "axios";
 import { ref } from "vue";
 
 const instance = axios.create({
-    baseURL: process.env.APP_BASE_URL,
+    baseURL: 'https://meals.test/',
     timeout: 1000,
 });
 
-export default function useApi<T>(method: string, url: string, contentType: string = 'application/json', data?: string){
+export default function useApi<T>(method: string, url: string, contentType: string = 'application/json', data?: JSON){
     const response = ref<T>();
     const request = async () => {
         await instance({

@@ -1,78 +1,85 @@
 <template>
-  <div class="xl:mx-auto mx-[5%]">
-    <BalanceHeader />
-    <div class="text-right mb-[2.5rem]">
-      <span class="contents font-bold tracking-[1px] text-note float-right text-primary-1 uppercase">
-        {{ t('balance.old') }} {{ oldDateString }}:
-        <span :class="[oldBalance >= 0 ? 'text-green' : 'text-red', 'whitespace-nowrap']">
-          € {{ oldBalanceString }}
-        </span>
-      </span>
+  <div class="items-center text-center xl:grid xl:grid-cols-2">
+    <div class="xl:justify-self-start">
+      <h1 class="m-0">Transactions</h1>
     </div>
-
-    <span v-if="transactions.isLoading">TEST</span>
-    <Table v-if="!transactions.isLoading" :labels="tableLabels" class="mt-10 mb-5">
-      <tr v-for="(transaction, index) in transactions.data" :key="index" class="max-h-[62px] border-b-2 border-gray-200">
-        <td>
-          <span class="text-[12px] xl:text-[18px]">
-            {{ new Date(transaction.date.date).toLocaleDateString(locale, dateOptions) }}
-          </span>
-        </td>
-        <td class="flex">
-          <BalanceDesc :transaction="transaction" />
-        </td>
-        <td :class="[transaction.type === 'credit' ? 'text-green' : 'text-red', 'text-right']">
-          <span class="whitespace-nowrap">
-            {{ (transaction.type === 'credit' ? '+ '  : '- ') +
-              (locale === 'en' ? transaction.amount.toFixed(2) : transaction.amount.toFixed(2).replace(/\./g, ',')) }} €
-          </span>
-        </td>
-      </tr>
-    </Table>
-
-    <div class="text-right mb-[2.5rem]">
-      <span class="contents font-bold tracking-[1px] text-note float-right text-primary-1 uppercase">
-        {{ t('balance.current') }}:
-        <span :class="[balance >= 0 ? 'text-green' : 'text-red', 'whitespace-nowrap']">
-          € {{ balanceString }}
-        </span>
-      </span>
+    <div class="xl:justify-self-end">
+      <Popover>
+        <template #button="{ open }">
+          <button class="btn-secondary">+ Add Funds</button>
+        </template>
+        <template #panel>
+          <TransactionPanel />
+        </template>
+      </Popover>
     </div>
   </div>
+  <a class="font-bold tracking-[1px] text-note float-right text-primary-1 uppercase">
+    balance on {{ oldDateString }}:
+    <a :class="[oldBalance >= 0 ? 'text-green' : 'text-red']">
+      € {{ oldBalance.toFixed(2) }}
+    </a>
+  </a>
+
+  <Table :labels="tableLabels">
+    <tr v-for="(transaction, index) in transactions.data" :key="index">
+      <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
+        {{ transaction.date }}
+      </td>
+      <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
+        {{ transaction.type === 'transaction' ? 'Cash' : transaction.description }}
+      </td>
+      <td :class="[transaction.type === 'transaction' ? 'text-green' : 'text-red', 'whitespace-nowrap py-4 px-3 text-sm']">
+        {{ transaction.type === 'transaction' ? '+ ' + parseInt(transaction.amount).toFixed(2) : '- ' + transaction.amount.toFixed(2) }} €
+      </td>
+    </tr>
+  </Table>
+
+  <a class="font-bold tracking-[1px] text-note float-right text-primary-1">
+    CURRENT BALANCE:
+    <a :class="[balance >= 0 ? 'text-green' : 'text-red']">
+      € {{ balance }}
+    </a>
+  </a>
 </template>
 
-<script setup>
+<script>
 import Table from '@/components/misc/Table.vue'
-import BalanceDesc from "@/components/balance/BalanceDesc.vue";
-import BalanceHeader from "@/components/balance/BalanceHeader.vue";
+import useTransactions from '@/hooks/getTransactions.ts';
+import {defineComponent} from "vue";
+import Popover from "../components/misc/Popover.vue";
+import TransactionPanel from "../components/balance/TransactionPanel.vue";
+export default defineComponent({
+  name: "Balance",
+  components: {
+    TransactionPanel,
+    Popover,
+    Table,
+  },
+  data() {
+    return {
+      tableLabels: ['Date', 'Description', 'Amount'],
+    }
+  },
+  async setup() {
+    const { transactions } = await useTransactions();
+    let oldDate = new Date();
+    oldDate.setDate(oldDate.getDate() - 28);
+    console.log(oldDate)
+    const oldDateString = oldDate.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    })
 
-import { useI18n } from "vue-i18n";
-import {balanceStore} from "@/store/balanceStore";
-import {transactionStore} from "@/store/transactionStore";
-import {computed} from "vue";
+    let balance = parseFloat(sessionStorage.getItem('balance'));
+    let oldBalance = balance;
+    if(balance != null) {
+      oldBalance = parseFloat(balance - transactions.value?.difference);
+    }
 
-const { t, locale } = useI18n();
-transactionStore.fillStore();
-
-let transactions = computed(() => transactionStore.getState());
-let balance = computed(() => balanceStore.getState().amount);
-let balanceString = computed(() => balanceStore.toLocalString());
-let oldBalance = computed(() => balance.value - transactions.value.difference);
-let oldBalanceString = computed(() =>
-    locale.value === 'en'
-        ? oldBalance.value.toFixed(2)
-        : oldBalance.value.toFixed(2).replace(/\./g, ',')
-)
-
-let tableLabels = {
-  en: ['Date', 'Description', 'Amount'],
-  de: ['Datum', 'Beschreibung', 'Menge']
-};
-
-let dateOptions = { month: "short", day: "numeric", year: "numeric" };
-
-let oldDate = new Date();
-oldDate.setDate(oldDate.getDate() - 28);
-const oldDateString = oldDate.toLocaleDateString(locale.value, dateOptions)
-
+    console.log([transactions, balance, transactions.value?.difference, oldBalance])
+    return { transactions, balance, oldBalance, oldDateString };
+  }
+});
 </script>

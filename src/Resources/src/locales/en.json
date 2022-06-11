@@ -1,0 +1,106 @@
+{
+  "header": {
+    "navigation": {
+      "menu": "Menu",
+      "dishes": "Dishes",
+      "categories": "Categories",
+      "slots": "Time Slots",
+      "costs": "Costs",
+      "finance": "Finance"
+    },
+    "logged_in_text": "You are logged in as",
+    "balance": "Balance"
+  },
+  "currentWeek": "Current Week",
+  "changeLanguage": "Deutsche Version",
+  "headings": {
+    "week": {
+      "list": "List of weeks",
+      "create": "Create week",
+      "edit": "Edit week",
+      "participations": "Participations",
+      "participationsprint": "Participations on"
+    },
+    "dishes": {
+      "list": "List of dishes"
+    },
+    "categories": {
+      "list": "List of categories"
+    },
+    "slots": {
+      "list": "Meal Slots"
+    },
+    "costs": {
+      "list": "Cost listing"
+    },
+    "guest_enrollment": "Lunch at AOE"
+  },
+  "copyright": "All rights reserved.",
+  "table": {
+    "title": "Title",
+    "actions": "Actions",
+    "name": "Name",
+    "category": "Category",
+    "total": "Total"
+  },
+  "content": {
+    "participation": {
+      "week": {
+        "current": "Current week",
+        "next": "Next week",
+        "disabled": "No service this week!",
+        "no_meals": "Be patient - we don't have\na menu yet but we're working on it!\n",
+        "participant.none": "There are no participations for this week so far."
+      },
+      "day": {
+        "disabled": "No service this day!"
+      },
+      "meal": {
+        "clipboard": "Copied to clipboard!",
+        "no_service": "No service!",
+        "select_slot": "Autoselect next free slot"
+      },
+      "dish": {
+        "new": "New!"
+      },
+      "legend": {
+        "available": "Available",
+        "unavailable": "Unavailable for order",
+        "tradeable": "Your order is being offered to others"
+      },
+      "no_service": "No service"
+    },
+    "menu": {
+      "week": "Week",
+      "no_service": "No Service"
+    },
+    "print": {
+      "costs": {
+        "no_data": "There exist no costs."
+      }
+    },
+    "guest_enrollment": {
+      "message_body": "As our guest, we would like to invite you to lunch in the AOE Eatery. To order a meal, register no later than one day before your visit to AOE with your personal information and choose the desired dish. Your order will be forwarded to our cooks.",
+      "message_ending": "We hope that you enjoy your lunch",
+      "message_signature": "AOE"
+    }
+  },
+  "form": {
+    "placeholder": {
+      "title": "Title",
+      "description": "Description",
+      "category": "No category",
+      "name": "Last name",
+      "first_name": "First name",
+      "company": "Company"
+    },
+    "create-slot": {
+      "title": "Title",
+      "limit": "Limit",
+      "order": "Sort Order"
+    },
+    "week": {
+      "notification": "Announce menu via Mattermost"
+    }
+  }
+}

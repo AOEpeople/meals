@@ -8,5 +8,4 @@
 import NavBar from '@/components/NavBar.vue'
 import Footer from '@/components/Footer.vue'
 import Content from "@/components/Content.vue";
-
 </script>

@@ -2,8 +2,8 @@
   <div class="flex flex-row w-auto xl:grid-cols-6 justify-around">
     <div class="basis-10/12 gap-8 items-center self-center xl:col-span-5">
       <div class="self-center break-words">
-        <span class="text-primary uppercase tracking-[1px] text-note font-bold">{{ props.data.name }}</span><br>
-        <p v-if="props.data.description !== ''" class="description m-0 font-light text-primary">{{ props.data.description }}</p>
+        <span class="text-primary uppercase tracking-[1px] text-note font-bold">{{ title }}</span><br>
+        <p v-if="description !== ''" class="description m-0 font-light text-primary">{{ description }}</p>
       </div>
     </div>
     <div class="flex basis-2/12 flex-none justify-end items-center text-align-last">
@@ -20,7 +20,14 @@
 </template>
 
 <script setup>
-import Icons from "@/components/Icons.vue";
+import Icons from "@/components/misc/Icons.vue";
+import { useI18n } from "vue-i18n";
+import {computed} from "vue";
+
+const { t, locale } = useI18n();
+
+let title       = computed(() => locale.value.substring(0, 2) === 'en' ? props.data.title_en       : props.data.title_de);
+let description = computed(() => locale.value.substring(0, 2) === 'en' ? props.data.description_en : props.data.description_de);
 
 const props = defineProps([
   'data',

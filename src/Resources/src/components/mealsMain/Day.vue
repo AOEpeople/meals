@@ -1,12 +1,12 @@
 <template>
-  <div class="flex mx-auto w-3/4 h-auto bg-white rounded w-max-screen-aoe">
+  <div class="flex mx-auto w-3/4 h-auto bg-white rounded day-shadow w-max-screen-aoe">
     <div class="flex justify-center w-[24px] bg-primary-2 rounded-l-[5px]">
       <div id="icon" class="relative left-[425%] bottom-[1%]">
         <Icons icon="guest" box="0 0 13 13" class="w-[13px] h-[13px] fill-white"/>
       </div>
       <div class="grid weekday min-w-[200px]">
         <div id="dayLabel" class="mb-1">
-          <span class="uppercase dayLabel align-top">{{ props.day.name }}</span>
+          <span class="uppercase align-top dayLabel">{{ t(props.day.name) }}</span>
         </div>
       </div>
     </div>
@@ -19,8 +19,11 @@
 </template>
 
 <script setup>
-import MealData from "./day/MealData.vue";
-import Icons from "@/components/Icons.vue";
+import MealData from "./MealData.vue";
+import Icons from "@/components/misc/Icons.vue";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 const props = defineProps([
     'day',
@@ -37,10 +40,6 @@ const props = defineProps([
   position: relative;
   top: 50%;
   transform: translateY(-50%) rotate(-90deg);
-}
-.divider {
-  margin: 0 15px;
-  border: 0.7px solid rgba(205, 205, 205, 1)
 }
 .dayLabel {
   color: #fff;

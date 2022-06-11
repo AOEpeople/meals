@@ -1,17 +1,31 @@
 import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
-import './style/output.css'
+import { createI18n } from 'vue-i18n' // import from runtime only
+
+import en from '@/locales/en.json';
+import de from '@/locales/de.json';
+
+import '../style/output.css'
 
 import App          from '@/App.vue'
-import MealsMain    from '@/view/MealsMain.vue'
-import Menu         from '@/view/Menu.vue'
-import Dishes       from '@/view/Dishes.vue'
-import Categories   from '@/view/Categories.vue'
-import TimeSlots    from '@/view/TimeSlots.vue'
-import Costs        from '@/view/Costs.vue'
-import Finance      from '@/view/Finance.vue'
-import Balance      from '@/view/Balance.vue'
-import Guest        from '@/view/Guest.vue'
+import MealsMain    from '@/views/MealsMain.vue'
+import Menu         from '@/views/Menu.vue'
+import Dishes       from '@/views/Dishes.vue'
+import Categories   from '@/views/Categories.vue'
+import TimeSlots    from '@/views/TimeSlots.vue'
+import Costs        from '@/views/Costs.vue'
+import Finance      from '@/views/Finance.vue'
+import Balance      from '@/views/Balance.vue'
+import Guest        from '@/views/Guest.vue'
+
+const i18n = createI18n({
+    locale: navigator.language,
+    fallbackLocale: 'en',
+    messages: {
+        en,
+        de
+    }
+})
 
 const router = createRouter({
     history: createWebHistory(),
@@ -29,5 +43,6 @@ const router = createRouter({
 })
 
 const vueApp = createApp(App);
+vueApp.use(i18n);
 vueApp.use(router);
 vueApp.mount('#app');

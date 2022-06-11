@@ -36,7 +36,7 @@ module.exports = function(env, argv) {
             ],
         },
         entry: {
-            app: './test.js',
+            app: './src/main.ts',
         },
         output: {
             path: path.resolve(__dirname, '../../public/static/'),
@@ -57,7 +57,7 @@ module.exports = function(env, argv) {
             ],
             alias: {
                 jquery: path.resolve('./node_modules/jquery/dist/jquery.js'),
-                '@': path.resolve(__dirname, './vue'),
+                '@': path.resolve(__dirname, './src'),
             }
         },
         module: {
@@ -84,6 +84,14 @@ module.exports = function(env, argv) {
                     use: [
                         'vue-loader',
                     ],
+                },
+                {
+                    test: /\.(json5?|ya?ml)$/, // target json, json5, yaml and yml files
+                    type: 'javascript/auto',
+                    loader: '@intlify/vue-i18n-loader',
+                    include: [ // Use `Rule.include` to specify the files of locale messages to be pre-compiled
+                        path.resolve(__dirname, 'src/locales')
+                    ]
                 },
                 {
                     test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/i,

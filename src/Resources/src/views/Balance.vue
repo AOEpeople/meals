@@ -44,11 +44,11 @@
 </template>
 
 <script>
-import Table from '@/components/Table.vue'
+import Table from '@/components/misc/Table.vue'
 import useTransactions from '@/hooks/getTransactions.ts';
 import {defineComponent} from "vue";
-import Popover from "../components/Popover.vue";
-import TransactionPanel from "../components/TransactionPanel.vue";
+import Popover from "../components/misc/Popover.vue";
+import TransactionPanel from "../components/balance/TransactionPanel.vue";
 export default defineComponent({
   name: "Balance",
   components: {

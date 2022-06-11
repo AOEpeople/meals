@@ -23,11 +23,11 @@
         </div>
         <div class="hidden col-span-4 space-x-3 xl:inline-block">
           <router-link v-for="link in navigation"
+                       v-html="t(link.name)"
              :key="link.name"
              :to="link.to"
              class="text-[16px] leading-[18px] font-medium text-primary hover:text-highlight cursor-pointer"
           >
-            {{ link.name }}
           </router-link>
         </div>
         <div class="inline-block col-span-4 justify-self-end space-x-4">
@@ -39,7 +39,7 @@
           </div>
           <div id="balance" class="hidden text-right xl:inline-block">
             <router-link class="text-[14px] leading-[22px] font-medium text-black" to="/balance">
-              Balance:
+              {{ t('header.balance') }}:
               <span class="text-primary-2">
                 € {{ balance }}
               </span>
@@ -58,22 +58,34 @@
 </template>
 
 <script setup>
-import { Disclosure, DisclosureButton } from '@headlessui/vue'
-import { MenuIcon, XIcon } from '@heroicons/vue/outline'
-import MobileDropdown from "./navbar/MobileDropdown.vue";
-import Icons from "@/components/Icons.vue"
+  import { Disclosure, DisclosureButton } from '@headlessui/vue';
+  import { MenuIcon, XIcon } from '@heroicons/vue/outline';
+  import MobileDropdown from "./navbar/MobileDropdown.vue";
+  import Icons from "@/components/misc/Icons.vue"
+  import { useI18n } from "vue-i18n";
 
-const balance = sessionStorage.getItem('balance')
-const userName = sessionStorage.getItem('user')
+  const { t, locale } = useI18n();
+</script>
+<script>
 
-const navigation = [
-  { name: 'Menu',       to: '/menu',        current: false },
-  { name: 'Dishes',     to: '/dishes',      current: false },
-  { name: 'Categories', to: '/categories',  current: false },
-  { name: 'Time Slots', to: '/time-slots',  current: false },
-  { name: 'Costs',      to: '/costs',       current: false },
-  { name: 'Finance',    to: '/finance',     current: false },
-];
+
+export default {
+  data() {
+    const balance = sessionStorage.getItem('balance')
+    const userName = sessionStorage.getItem('user')
+
+    const navigation = [
+      { name: 'header.navigation.menu',       to: '/menu',        current: false },
+      { name: 'header.navigation.dishes',     to: '/dishes',      current: false },
+      { name: 'header.navigation.categories', to: '/categories',  current: false },
+      { name: 'header.navigation.slots',      to: '/time-slots',  current: false },
+      { name: 'header.navigation.costs',      to: '/costs',       current: false },
+      { name: 'header.navigation.finance',    to: '/finance',     current: false },
+    ];
+
+    return { balance, userName, navigation }
+  }
+}
 
 </script>
 

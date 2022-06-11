@@ -1,27 +1,26 @@
 {
   "compilerOptions": {
-    "outDir": "../../public/static",
-    "noImplicitAny": true,
+    "target": "esnext",
     "module": "esnext",
-    "target": "es2017",
     "strict": true,
     "jsx": "preserve",
-    "allowJs": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
     "experimentalDecorators": true,
-    "skipLibCheck": true,
+    "allowJs": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "useDefineForClassFields": true,
     "sourceMap": true,
-    "moduleResolution": "node",
-    "typeRoots": [
-      "./node_modules/@types",
-      "./js/types"
-    ],
     "baseUrl": ".",
+    "types": [
+      "webpack-env"
+    ],
     "paths": {
-      "@/*": ["./vue/*"]
+      "@/*": [
+        "src/*"
+      ]
     },
     "lib": [
       "esnext",
@@ -31,8 +30,11 @@
     ]
   },
   "include": [
-    "./vue/**/*",
-    "./*.ts"
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "tests/**/*.ts",
+    "tests/**/*.tsx"
   ],
   "exclude": [
     "node_modules"

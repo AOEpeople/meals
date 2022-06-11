@@ -74,7 +74,7 @@ onCreated(async () => {
             });
           },
           onApprove: function (data, actions) {
-            return actions.order.capture().then(function (details) {
+            return actions.order.capture().then(() => {
               $('#ecash_orderid').val(data.orderID);
               return fetch('/payment/ecash/form/submit', {
                 method: 'post',

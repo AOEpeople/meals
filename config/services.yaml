@@ -6,6 +6,7 @@
 parameters:
     app.assets_server: '%env(ASSETS_SERVER)%'
     app.base_url: '%env(APP_BASE_URL)%'
+    app.db.url: '%env(resolve:DB_URL)%'
     app.email.admin: '%env(APP_EMAIL_ADMIN)%'
     app.email.sender: '%env(resolve:APP_EMAIL_SENDER)%'
     app.email.settlement_request.receiver: '%env(SETTLEMENT_REQ_EMAIL_RECEIVER)%'
@@ -68,7 +69,7 @@ services:
     # define handler service to store and manage sessions in database
     session.handler.pdo:
         class:     Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
-        arguments: ['%env(DB_URL)%', '%app.session.handler.pdo.options%']
+        arguments: ['%app.db.url%', '%app.session.handler.pdo.options%']
 
     ##################################################################
     # Meal BUNDLE

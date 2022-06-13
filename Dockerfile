@@ -12,7 +12,7 @@ COPY public .
 RUN NODE_ENV=production yarn run build
 
 # build production container
-FROM php:7.4-apache
+FROM php:8.1.7-apache
 RUN apt-get update && apt-get upgrade -y && apt-get install --no-install-recommends --no-install-suggests -y \
         ca-certificates \
         git \

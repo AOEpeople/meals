@@ -9,10 +9,9 @@ xdebug_enabled: false
 additional_hostnames: []
 additional_fqdns:
 - meals.test
-mariadb_version: ""
-mysql_version: "5.7"
-nfs_mount_enabled: false
-mutagen_enabled: false
+database:
+  type: mysql
+  version: "5.7"
 hooks:
   post-start:
   - exec: echo 'export PHP_IDE_CONFIG='serverName=meals.test'' >> ~/.bashrc
@@ -35,6 +34,7 @@ web_environment:
 - MERCURE_JWT_SECRET=testing
 - MERCURE_URL=http://mercure:8080/.well-known/mercure
 - MERCURE_PUBLIC_URL=https://meals.test:8081/.well-known/mercure
+nodejs_version: "16"
 
 # Key features of ddev's config.yaml:
 

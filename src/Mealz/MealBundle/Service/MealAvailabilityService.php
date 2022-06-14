@@ -137,7 +137,7 @@ class MealAvailabilityService
      */
     private function getCombinedMealDishAvailability(array $meals): array
     {
-        $availability = [];
+        $availability = ['simpleDishes' => [], 'dishVariants' => []];
 
         foreach ($meals as $meal) {
             $dish = $meal->getDish();
@@ -145,13 +145,13 @@ class MealAvailabilityService
             $dishAvailability = $this->isMealAvailable($meal, 0.5);
 
             if (null !== $parentDish) {
-                $availability[$parentDish->getSlug()] = [$dish->getSlug() => $dishAvailability];
+                $availability['dishVariants'][$parentDish->getSlug()][$dish->getSlug()] = $dishAvailability;
             } else {
-                $availability[$dish->getSlug()] = $dishAvailability;
+                $availability['simpleDishes'][$dish->getSlug()] = $dishAvailability;
             }
         }
 
-        return $availability;
+        return array_merge($availability['simpleDishes'], $availability['dishVariants']);
     }
 
     /**

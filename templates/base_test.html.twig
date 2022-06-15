@@ -17,10 +17,11 @@
 <body>
 
 {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-    {% set balance = wallet.getBalance(app.user.profile) %}
     <script type="text/javascript">
-        sessionStorage.setItem('balance', '{{ balance }}');
-        sessionStorage.setItem('user', '{{ app.user }}')
+        let profile = {{ app.user.profile | json_encode() | raw }};
+        sessionStorage.setItem('user', profile.user)
+        sessionStorage.setItem('roles', profile.roles)
+        sessionStorage.setItem('balance', '{{ wallet.getBalance(app.user.profile) }}');
     </script>
 {% endif %}
 

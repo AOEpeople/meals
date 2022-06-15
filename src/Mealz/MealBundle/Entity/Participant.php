@@ -7,14 +7,13 @@ namespace App\Mealz\MealBundle\Entity;
 use App\Mealz\UserBundle\Entity\Profile;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use JsonSerializable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="participant")
  * @ORM\Entity(repositoryClass="App\Mealz\MealBundle\Entity\ParticipantRepository")
  */
-class Participant implements JsonSerializable
+class Participant
 {
     /**
      * @ORM\Column(name="id", type="integer")
@@ -218,15 +217,5 @@ class Participant implements JsonSerializable
     public function __clone()
     {
         $this->id = null;
-    }
-
-    public function jsonSerialize(): array
-    {
-        return [
-            'type' => 'participation',
-            'date' => $this->getMeal()->getDateTime()->format('d M Y'),
-            'description' => $this->getMeal()->getDish()->getTitle(),
-            'amount' => $this->getMeal()->getPrice(),
-        ];
     }
 }

@@ -22,16 +22,16 @@ security:
             security: false
 
         # disable, i.e. comment out the complete 'dev' firewall config to use oauth authenticator on devbox
-        dev:
-            host: ^meals\.test$
-            provider: database
-            anonymous: lazy
-            form_login:
-                login_path: /login
-                check_path: /login
-            logout:
-                path: MealzUserBundle_logout
-                target: /
+#        dev:
+#            host: ^meals\.test$
+#            provider: database
+#            anonymous: lazy
+#            form_login:
+#                login_path: /login
+#                check_path: /login
+#            logout:
+#                path: MealzUserBundle_logout
+#                target: /
 
         main:
             provider: oauth_user_provider

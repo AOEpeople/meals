@@ -21,6 +21,7 @@
     <g v-if="props.icon === 'checked'">
         <path d="M1.54617 3.5L4.43387 6L10.2734 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
     </g>
+    <slot></slot>
   </svg>
 </template>
 

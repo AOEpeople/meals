@@ -11,7 +11,7 @@ export type Transaction = {
     difference: number,
 };
 
-export default async function useTransactions(){
+export async function useTransactions(){
     const { response: transactions, request } = useApi<Transaction>(
         "GET",
         "accounting/transactions",

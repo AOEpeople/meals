@@ -245,12 +245,42 @@ class CashController extends BaseController
         $transactionHistory = [];
         foreach ($transactions as $transaction) {
             $costDifference += $transaction->getAmount();
-            $transactionHistory[$transaction->getDate()->getTimestamp()] = $transaction;
+            $timestamp = $transaction->getDate()->getTimestamp();
+
+            $date = $transaction->getDate();
+            $description = $transaction->getPaymethod();
+            $amount = $transaction->getAmount();
+
+            $credit = [
+                'type' => 'credit',
+                'date' => $date,
+                'description_en' => $description,
+                'description_de' => $description,
+                'amount' => $amount
+            ];
+
+            $transactionHistory[$timestamp] = $credit;
         }
 
         foreach ($participations as $participation) {
             $costDifference -= $participation->getMeal()->getPrice();
-            $transactionHistory[$participation->getMeal()->getDateTime()->getTimestamp() . '-' . $participation->getMeal()->getId()] = $participation;
+            $timestamp = $participation->getMeal()->getDateTime()->getTimestamp();
+            $mealId = $participation->getMeal()->getId();
+
+            $date = $participation->getMeal()->getDateTime();
+            $description_en = $participation->getMeal()->getDish()->getTitleEn();
+            $description_de = $participation->getMeal()->getDish()->getTitleDe();
+            $amount = $participation->getMeal()->getPrice();
+
+            $debit = [
+                'type' => 'debit',
+                'date' => $date,
+                'description_en' => $description_en,
+                'description_de' => $description_de,
+                'amount' => $amount
+            ];
+
+            $transactionHistory[$timestamp . '-' . $mealId] = $debit;
         }
 
         $costDifference = round($costDifference, 2);

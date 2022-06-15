@@ -13,8 +13,8 @@
         leave-from-class="opacity-100 translate-y-0"
         leave-to-class="opacity-0 translate-y-1"
     >
-      <PopoverPanel class="absolute z-10 left-1/2 transform -translate-x-1/2 mt-3 px-2 w-screen max-w-md sm:px-0">
-        <div class="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden bg-gray-200">
+      <PopoverPanel class="absolute left-1/2 mt-5 transform -translate-x-1/2 xl:-translate-x-3/4">
+        <div class="overflow-hidden bg-gray-200 rounded-lg ring-1 ring-black ring-opacity-5 shadow-lg w-[95vw] xl:w-auto">
           <slot name="panel"></slot>
         </div>
       </PopoverPanel>

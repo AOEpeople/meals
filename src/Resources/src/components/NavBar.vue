@@ -34,7 +34,7 @@
           <div class="hidden self-center space-x-2 text-right xl:inline-block">
             <Icons icon="person-outline" class="inline-block w-6 fill-primary" />
             <span class="text-[14px] leading-[22px] font-medium text-black">
-              {{ userName }}
+              {{ user }}
             </span>
           </div>
           <div id="balance" class="hidden text-right xl:inline-block">
@@ -52,13 +52,13 @@
           </div>
         </div>
       </nav>
-      <MobileDropdown :userName="userName" :balance="balance" :navigation="navigation" />
+      <MobileDropdown :open="open" :userName="user" :balance="balance" :navigation="navigation" />
     </Disclosure>
   </header>
 </template>
 
 <script setup>
-  import { Disclosure, DisclosureButton } from '@headlessui/vue';
+  import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
   import { MenuIcon, XIcon } from '@heroicons/vue/outline';
   import MobileDropdown from "./navbar/MobileDropdown.vue";
   import Icons from "@/components/misc/Icons.vue"
@@ -72,7 +72,7 @@
 export default {
   data() {
     const balance = sessionStorage.getItem('balance')
-    const userName = sessionStorage.getItem('user')
+    const user = sessionStorage.getItem('user')
 
     const navigation = [
       { name: 'header.navigation.menu',       to: '/menu',        current: false },
@@ -83,7 +83,7 @@ export default {
       { name: 'header.navigation.finance',    to: '/finance',     current: false },
     ];
 
-    return { balance, userName, navigation }
+    return { balance, user, navigation }
   }
 }
 

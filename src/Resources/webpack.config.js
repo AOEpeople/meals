@@ -1,5 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
+const DotEnv = require('dotenv-webpack')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const TerserPlugin = require('terser-webpack-plugin');
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin')
@@ -136,6 +137,9 @@ module.exports = function(env, argv) {
         plugins: [
             new WebpackManifestPlugin(),
             new MiniCssExtractPlugin(),
+            new DotEnv({
+                path: '../../.env'
+            }),
             new VueLoaderPlugin(),
             new webpack.BannerPlugin({
                 banner: 'name:[name], file:[file], fullhash:[fullhash], chunkhash:[chunkhash]',

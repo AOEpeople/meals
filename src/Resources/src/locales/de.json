@@ -50,5 +50,14 @@
     "logged_in_text": "Eingeloggt als",
     "balance": "Kontostand"
   },
-  "loggout": "Ausloggen"
+  "balance": {
+    "current": "Momentaner Kontostand",
+    "old": "Kontostand vom",
+    "transactions": "Transaktionen",
+    "paypal": "PayPal Bezahlung",
+    "cash": "Barzahlung",
+    "add": "Geld einzahlen",
+    "amount": "Betrag"
+  },
+  "logout": "Ausloggen"
 }

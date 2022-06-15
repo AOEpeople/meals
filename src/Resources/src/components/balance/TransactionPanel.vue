@@ -1,17 +1,19 @@
 <template>
-  <div class="w-[500px] h-[500px]">
+  <div class="flex m-8 justify-center">
+    <h5 class="w-32 m-0 self-center text-black">{{ t('balance.amount') }}: €</h5>
     <input
         type="text"
         :value="balance < 0 ? balance.toFixed(2).slice(1).replace(/\./g, ',') : '0,00'"
         ref="input"
+        class="bg-white border-[2px] border-solid border-[#CAD6E1] rounded-[100px] h-12 text-center"
     />
-
-    <div id="paypal-container"></div>
   </div>
+
+  <div id="paypal-container" class="mx-8 my-2"></div>
 </template>
 
-<script >
-import {loadScript} from "@paypal/paypal-js";
+<script>
+import { loadScript } from "@paypal/paypal-js";
 
 export default {
   data() {
@@ -32,7 +34,7 @@ export default {
     }
 
     loadScript({
-      "client-id": "Acbj_OdOFasvxF6I2mJrrQTMN3vuSE65WbnyRkBBCMF5U32g63sXbCbPflPDA8sMDttBUsbLW7r59OtE",
+      "client-id": process.env.IDP_CLIENT_ID,
       currency: "EUR",
     })
         .then((paypal) => {
@@ -120,4 +122,9 @@ export default {
         });
   }
 }
+</script>
+
+<script setup>
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 </script>

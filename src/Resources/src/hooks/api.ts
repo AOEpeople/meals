@@ -2,7 +2,7 @@ import axios from "axios";
 import { ref } from "vue";
 
 const instance = axios.create({
-    baseURL: 'https://meals.test/',
+    baseURL: process.env.baseURL,
     timeout: 1000,
 });
 

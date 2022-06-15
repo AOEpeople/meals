@@ -1,17 +1,15 @@
 <template>
-  <div class="items-center text-center xl:grid xl:grid-cols-2 xl:my-[42px]">
+  <div class="items-center text-center xl:grid xl:grid-cols-2">
     <div class="xl:justify-self-start">
-      <h2 class="m-0">{{ t('balance.transactions') }}</h2>
+      <h1 class="m-0">{{ t('balance.transactions') }}</h1>
     </div>
     <div class="xl:justify-self-end">
       <Popover>
         <template #button="{ open }">
-          <button class="btn-secondary">
-            <span class="leading-[10px] align-middle">+ {{ t('balance.add') }}</span>
-          </button>
+          <button class="btn-secondary">+ {{ t('balance.add') }}</button>
         </template>
-        <template #panel="{ close }">
-          <TransactionPanel @closePanel="close()" />
+        <template #panel>
+          <TransactionPanel />
         </template>
       </Popover>
     </div>

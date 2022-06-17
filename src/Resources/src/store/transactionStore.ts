@@ -13,6 +13,7 @@ class TransactionStore extends Store<any> {
     async fillStore() {
         this.state.isLoading = true;
         let { transactions } = await useTransactions();
+        console.log(transactions)
         try {
             if(transactions.value){
                 this.state.data = transactions.value.data;

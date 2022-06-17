@@ -63,30 +63,23 @@
   import MobileDropdown from "./navbar/MobileDropdown.vue";
   import Icons from "@/components/misc/Icons.vue"
   import { useI18n } from "vue-i18n";
+  import { balanceStore } from "@/store/balanceStore";
+  import {computed} from "vue";
 
   const { t, locale } = useI18n();
-</script>
-<script>
 
+  let balance = computed(() => balanceStore.getState().amount.toFixed(2));
 
-export default {
-  data() {
-    const balance = sessionStorage.getItem('balance')
-    const user = sessionStorage.getItem('user')
+  const user = sessionStorage.getItem('user')
 
-    const navigation = [
-      { name: 'header.navigation.menu',       to: '/menu',        current: false },
-      { name: 'header.navigation.dishes',     to: '/dishes',      current: false },
-      { name: 'header.navigation.categories', to: '/categories',  current: false },
-      { name: 'header.navigation.slots',      to: '/time-slots',  current: false },
-      { name: 'header.navigation.costs',      to: '/costs',       current: false },
-      { name: 'header.navigation.finance',    to: '/finance',     current: false },
-    ];
-
-    return { balance, user, navigation }
-  }
-}
-
+  const navigation = [
+    { name: 'header.navigation.menu',       to: '/menu',        current: false },
+    { name: 'header.navigation.dishes',     to: '/dishes',      current: false },
+    { name: 'header.navigation.categories', to: '/categories',  current: false },
+    { name: 'header.navigation.slots',      to: '/time-slots',  current: false },
+    { name: 'header.navigation.costs',      to: '/costs',       current: false },
+    { name: 'header.navigation.finance',    to: '/finance',     current: false },
+  ];
 </script>
 
 <style scoped>

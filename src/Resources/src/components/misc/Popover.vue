@@ -13,9 +13,9 @@
         leave-from-class="opacity-100 translate-y-0"
         leave-to-class="opacity-0 translate-y-1"
     >
-      <PopoverPanel class="absolute left-1/2 mt-5 transform -translate-x-1/2 xl:-translate-x-3/4">
+      <PopoverPanel v-slot="{ close }" class="absolute left-1/2 mt-5 transform -translate-x-1/2 xl:-translate-x-3/4">
         <div class="overflow-hidden bg-gray-200 rounded-lg ring-1 ring-black ring-opacity-5 shadow-lg w-[95vw] xl:w-auto">
-          <slot name="panel"></slot>
+          <slot name="panel" :close="close"></slot>
         </div>
       </PopoverPanel>
     </transition>

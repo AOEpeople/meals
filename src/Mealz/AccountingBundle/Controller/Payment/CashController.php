@@ -4,10 +4,8 @@ namespace App\Mealz\AccountingBundle\Controller\Payment;
 
 use App\Mealz\AccountingBundle\Entity\Transaction;
 use App\Mealz\AccountingBundle\Form\CashPaymentAdminForm;
-use App\Mealz\AccountingBundle\Repository\TransactionRepositoryInterface;
 use App\Mealz\AccountingBundle\Service\Wallet;
 use App\Mealz\MealBundle\Controller\BaseController;
-use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Doctrine\ORM\EntityManager;
@@ -143,7 +141,7 @@ class CashController extends BaseController
         list($costDifference, $transactionHistory) = $this->getTransactionData($dateFrom, $dateTo, $profile);
 
         usort($transactionHistory, function($a, $b) {
-            return $a['timestamp'] <=> $b['timestamp'];
+            return $b['timestamp'] <=> $a['timestamp'];
         });
 
         return new JsonResponse([
@@ -212,14 +210,12 @@ class CashController extends BaseController
     /**
      * Merge participation and transactions into 1 array.
      */
-    private function getFullTransactionHistory(
-        DateTime $dateFrom,
-        DateTime $dateTo,
-        Profile $profile,
-        ParticipantRepositoryInterface $participantRepo,
-        TransactionRepositoryInterface $transactionRepo
-    ): array {
+    private function getFullTransactionHistory(DateTime $dateFrom, DateTime $dateTo, Profile $profile): array
+    {
+        $participantRepo = $this->getParticipantRepository();
         $participations = $participantRepo->getParticipantsOnDays($dateFrom, $dateTo, $profile);
+
+        $transactionRepo = $this->getTransactionRepository();
         $transactions = $transactionRepo->getSuccessfulTransactionsOnDays($dateFrom, $dateTo, $profile);
 
         $transactionsTotal = 0;

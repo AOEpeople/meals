@@ -1,7 +1,7 @@
 date.timezone = "Europe/Berlin"
 display_errors = Off
-max_execution_time = ${PHP_MAX_EXECUTION_TIME:=300}
-memory_limit = ${PHP_MEMORY_LIMIT:=-128M}
+max_execution_time = ${PHP_MAX_EXECUTION_TIME}
+memory_limit = ${PHP_MEMORY_LIMIT}
 variables_order = EGPCS
 
 [opcache]

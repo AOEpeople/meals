@@ -6,7 +6,7 @@ const instance = axios.create({
     timeout: 1000,
 });
 
-export default function useApi<T>(method: string, url: string, contentType: string = 'application/json', data?: JSON){
+export default function useApi<T>(method: string, url: string, contentType: string = 'application/json', data?: string){
     const response = ref<T>();
     const request = async () => {
         await instance({

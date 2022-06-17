@@ -129,40 +129,6 @@ class CashController extends BaseController
     }
 
     /**
-     * Show transactions for logged-in user.
-     */
-    public function showTransactionHistory(
-        ParticipantRepositoryInterface $participantRepo,
-        TransactionRepositoryInterface $transactionRepo
-    ): Response {
-        $this->denyAccessUnlessGranted('ROLE_USER');
-
-        $profile = $this->getUser()->getProfile();
-
-        $dateFrom = new DateTime('-28 days 00:00:00');
-        $dateTo = new DateTime();
-
-        [$transactionsTotal, $transactionHistory, $participationsTotal] = $this->getFullTransactionHistory(
-            $dateFrom,
-            $dateTo,
-            $profile,
-            $participantRepo,
-            $transactionRepo
-        );
-
-        ksort($transactionHistory);
-
-        return $this->render(
-            'MealzAccountingBundle:Accounting/User:transaction_history.html.twig',
-            [
-                'transaction_history_records' => $transactionHistory,
-                'transactions_total' => $transactionsTotal,
-                'participations_total' => $participationsTotal,
-            ]
-        );
-    }
-
-    /**
      * Send transactions for logged in user.
      */
     public function showTransactionData(): Response
@@ -176,7 +142,9 @@ class CashController extends BaseController
 
         list($costDifference, $transactionHistory) = $this->getTransactionData($dateFrom, $dateTo, $profile);
 
-        ksort($transactionHistory);
+        usort($transactionHistory, function($a, $b) {
+            return $b['timestamp'] <=> $a['timestamp'];
+        });
 
         return new JsonResponse([
             'data' => $transactionHistory,
@@ -196,21 +164,22 @@ class CashController extends BaseController
         $transactionHistory = [];
         foreach ($transactions as $transaction) {
             $costDifference += $transaction->getAmount();
-            $timestamp = $transaction->getDate()->getTimestamp();
 
+            $timestamp = $transaction->getDate()->getTimestamp();
             $date = $transaction->getDate();
             $description = $transaction->getPaymethod();
             $amount = $transaction->getAmount();
 
             $credit = [
                 'type' => 'credit',
+                'timestamp' => $timestamp,
                 'date' => $date,
                 'description_en' => $description,
                 'description_de' => $description,
                 'amount' => $amount
             ];
 
-            $transactionHistory[$timestamp] = $credit;
+            $transactionHistory[] = $credit;
         }
 
         foreach ($participations as $participation) {
@@ -226,12 +195,13 @@ class CashController extends BaseController
             $debit = [
                 'type' => 'debit',
                 'date' => $date,
+                'timestamp' => $timestamp . '-' . $mealId,
                 'description_en' => $description_en,
                 'description_de' => $description_de,
                 'amount' => $amount
             ];
 
-            $transactionHistory[$timestamp . '-' . $mealId] = $debit;
+            $transactionHistory[] = $debit;
         }
 
         $costDifference = round($costDifference, 2);

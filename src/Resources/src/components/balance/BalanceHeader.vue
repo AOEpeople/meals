@@ -8,8 +8,8 @@
         <template #button="{ open }">
           <button class="btn-secondary">+ {{ t('balance.add') }}</button>
         </template>
-        <template #panel>
-          <TransactionPanel />
+        <template #panel="{ close }">
+          <TransactionPanel @closePanel="close()" />
         </template>
       </Popover>
     </div>

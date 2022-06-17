@@ -4,8 +4,10 @@ import { ref } from "vue";
 export type Transaction = {
     data: [{
         type: string,
-        date: string,
-        description: string,
+        date: Object,
+        timestamp: string,
+        description_en: string,
+        description_de: string,
         amount: number,
     }],
     difference: number,

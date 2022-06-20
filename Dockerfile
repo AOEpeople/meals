@@ -34,7 +34,7 @@ ENV APP_DEBUG="0" \
 
 WORKDIR $APP_ROOT
 
-# tasks that should/can only be performed as root ???
+# tasks that can only be performed as root
 RUN chown -R www-data:www-data $APP_ROOT
 
 # add service configuration

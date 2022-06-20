@@ -7,3 +7,17 @@ variables_order = EGPCS
 [opcache]
 opcache.enable = 1
 opcache.enable_cli = 1
+
+; How often (in seconds) to check file timestamps for changes to the shared
+; memory storage allocation. ("1" means validate once per second, but only
+; once per request. "0" means always validate)
+opcache.revalidate_freq = 300
+
+opcache.validate_timestamps = 1
+
+; The maximum number of keys (scripts) in the OPcache hash table.
+; Only numbers between 200 and 1000000 are allowed.
+opcache.max_accelerated_files = 17000
+
+; set preload script
+opcache.preload = /var/www/meals/config/preload.php

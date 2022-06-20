@@ -12,33 +12,35 @@ COPY public .
 RUN NODE_ENV=production yarn run build
 
 # build production container
-FROM php:7.4-apache
-RUN apt-get update && apt-get upgrade -y && apt-get install --no-install-recommends --no-install-suggests -y \
-        ca-certificates \
-        git \
-        libicu-dev \
-        libfreetype6-dev \
-        libjpeg62-turbo-dev \
-        libpng-dev \
-        libmcrypt-dev \
-        zip \
+FROM php:7.4-fpm-alpine
+RUN apk --no-cache add \
         unzip \
-        netcat \
-        --no-install-recommends \
-    && pecl install mcrypt-1.0.4 \
-    && a2enmod rewrite \
-    && docker-php-ext-install -j$(nproc) bcmath calendar gd intl pdo_mysql mysqli opcache \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-configure intl \
-    && docker-php-ext-enable mcrypt mysqli \
-    && rm -rf /var/lib/apt/lists/* \
-    && rm -rf /tmp/* \
+    && docker-php-ext-install bcmath calendar pdo_mysql opcache \
     && mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
-    && curl -L https://github.com/a8m/envsubst/releases/download/v1.2.0/envsubst-Linux-x86_64 -o /usr/local/bin/envsubst \
-    && chmod +x /usr/local/bin/envsubst
+    # cleanup
+    && rm -rf /tmp/*
 
+# copy php.ini overrides
+COPY docker/web/php.ini-overrides /usr/local/etc/php/conf.d/meals-overrides.ini
 COPY docker/web/scripts/wait-for /usr/local/bin/
+
+ENV APP_DEBUG="0" \
+    APP_ENV="prod" \
+    APP_ROOT="/var/www/meals" \
+    # PHP settings
+    PHP_MAX_EXECUTION_TIME=60 \
+    PHP_MEMORY_LIMIT=120M
+
+WORKDIR $APP_ROOT
+
+# tasks that can only be performed as root
+RUN chown -R www-data:www-data $APP_ROOT
+
+# add service configuration
+COPY --chown=www-data:www-data docker/web/ /container/
+
+USER www-data:www-data
 
 # add composer dependencies
 COPY composer.json composer.lock ./
@@ -51,26 +53,21 @@ RUN composer install \
     && mkdir -p public/bundles/ \
     && chown -R www-data:www-data public/bundles
 
-# add packages and configure development image
-ARG BUILD_DEV=false
-RUN  if [ "$BUILD_DEV" = "true" ]; then \
-    echo "Installing dev dependencies" \
-    && apt-get update -y && apt-get install -y \
-        vim \
-        --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/* /tmp/* \
-; fi
-
-# add service configuration
-COPY --chown=www-data:www-data docker/web/ /container/
 
 # add custom code and compiled frontend assets
-COPY --chown=www-data:www-data . /var/www/html/
+COPY --chown=www-data:www-data . .
 COPY --chown=www-data:www-data --from=frontend /var/www/html/public/static ./public/static
 
 # clear symfony cache and fix file permissions
-RUN composer run-script --no-cache post-install-cmd \
-    && chown -R www-data:www-data /var/www/html
+RUN composer run-script --no-cache post-install-cmd
+
+# fix file permissions
+RUN find . -type d -exec chmod 755 '{}' \+ \
+    && find . -type f -exec chmod 640 '{}' \+ \
+    # set CLI scripts to be executables
+    && find bin scripts vendor/bin -type f -exec chmod 740 '{}' \+ \
+    # non php files in public directory should be readable by others, e.g. nginx
+    && find public -type f -not -name "*.php" -exec chmod 644 '{}' \+
 
 ENTRYPOINT ["/container/entrypoint"]
-CMD ["apache2-foreground"]
+CMD ["php-fpm"]

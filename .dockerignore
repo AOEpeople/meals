@@ -9,6 +9,7 @@
 !/docker/
 !/migrations/
 !/public/
+!/scripts/
 !/src/
 !/templates/
 !/translations/

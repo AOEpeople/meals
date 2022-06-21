@@ -143,7 +143,7 @@ class CashController extends BaseController
         list($costDifference, $transactionHistory) = $this->getTransactionData($dateFrom, $dateTo, $profile);
 
         usort($transactionHistory, function($a, $b) {
-            return $b['timestamp'] <=> $a['timestamp'];
+            return $a['timestamp'] <=> $b['timestamp'];
         });
 
         return new JsonResponse([

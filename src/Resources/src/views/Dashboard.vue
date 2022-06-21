@@ -1,19 +1,34 @@
 <template>
-  <div class="text-center">
-    <h2 class="m-0">{{ t('currentWeek') }}</h2>
-    <p class="description text-primary">{{t('Mon')}} 04.10. - {{ t('Fri') }} 08.10.</p>
-  </div>
-  <div class="grid gap-y-10" id="weekly-menu">
-    <Day v-for="day in week"
-         :day="day"
-         :key="day.name"
-    />
-  </div>
+<tabs v-model="selectedTab" class="justify-center mb-5">
+
+  <tab
+      v-for="(week, index) in weeks"
+      :key="`t${index}`"
+      :val="week.number"
+      :label="t(week.label)"
+      indicator="true" />
+
+</tabs>
+<tab-panels
+    v-model="selectedTab"
+    :animate="true"
+    :swipeable="$screen.width <= 1200"
+>
+  <tab-panel
+      v-for="(week, i) in weeks"
+      :key="`tp${i}`"
+      :val="week.number"
+  >
+    <Week :week="week" />
+  </tab-panel>
+</tab-panels>
 </template>
 
 <script setup>
-import Day from '@/components/mealsMain/Day.vue'
+import Week from '@/components/dashboard/Week.vue'
+import { Tabs, Tab, TabPanels, TabPanel } from 'vue3-tabs';
 import { useI18n } from "vue-i18n";
+import {ref} from "vue";
 
 const { t } = useI18n();
 
@@ -75,12 +90,28 @@ var friday = {
   kombi: kombi,
 }
 
-var week = [
-  monday,
-  thuesday,
-  wednesday,
-  thursday,
-  friday,
-]
+var week1 = {
+  number: 0,
+  label: 'dashboard.current',
+  value: [
+    monday,
+    thuesday,
+    wednesday,
+    thursday,
+    friday,
+  ]}
 
+var week2 = {
+  number: 1,
+  label: 'dashboard.next',
+  value: [
+    monday,
+    thuesday,
+    wednesday,
+    thursday,
+    friday,
+  ]}
+
+var weeks = [week1, week2];
+const selectedTab = ref(weeks[0].number)
 </script>

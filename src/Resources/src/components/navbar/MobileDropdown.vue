@@ -22,7 +22,7 @@
             <Icons icon="person-outline" box="0 0 10 10" class="w-[10px] h-[10px] fill-primary" />
           </div>
           <div class="ml-3">
-            <div class="text-base font-medium text-gray-800">{{ props.userName }}</div>
+            <div class="text-base font-medium text-gray-800">{{ userName }}</div>
           </div>
         </div>
         <span class="block cursor-pointer px-4 py-2 text-base font-medium text-gray-500 hover:text-highlight hover:bg-gray-100" @click="changeLocale">
@@ -32,12 +32,12 @@
           <router-link @click="close()" to="/balance" class="block cursor-pointer px-4 py-2 text-base font-medium text-gray-500 hover:text-highlight hover:bg-gray-100">
             {{ t('header.balance') }}:
             <a class="text-primary hover:text-primary">
-              € {{ props.balance }}
+              € {{ balance }}
             </a>
           </router-link>
 
           <DisclosureButton as="a" href="/logout" class="block px-4 py-2 text-base font-medium text-gray-500 capitalize hover:text-highlight hover:bg-gray-100">
-            {{ t('loggout') }}
+            {{ t('logout') }}
           </DisclosureButton>
         </div>
       </div>
@@ -45,7 +45,7 @@
 </template>
 
 <script setup>
-import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
+import { DisclosureButton, DisclosurePanel } from "@headlessui/vue";
 import Icons from '@/components/misc/Icons.vue'
 import { useI18n } from "vue-i18n";
 

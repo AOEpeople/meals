@@ -1,39 +1,43 @@
 <template>
-  <BalanceHeader />
-
-  <span class="font-bold tracking-[1px] text-note float-right text-primary-1 uppercase mr-[5%] xl:mr-0">
-    {{ t('balance.old') }} {{ oldDateString }}:
-    <span :class="[oldBalance >= 0 ? 'text-green' : 'text-red']">
-      € {{ oldBalance.toFixed(2) }}
-    </span>
-  </span>
-
-  <span v-if="transactions.isLoading">TEST</span>
-  <Table v-if="!transactions.isLoading" :labels="tableLabels" class="mt-10 mb-5 mx-[5%] xl:mx-0">
-    <tr v-for="(transaction, index) in transactions.data" :key="index" class="max-h-[62px]">
-      <td>
-        <span>
-          {{ new Date(transaction.date.date).toLocaleDateString(locale, dateOptions) }}
+  <div class="xl:mx-auto mx-[5%]">
+    <BalanceHeader />
+    <div class="text-right mb-[2.5rem]">
+      <span class="contents font-bold tracking-[1px] text-note float-right text-primary-1 uppercase">
+        {{ t('balance.old') }} {{ oldDateString }}:
+        <span :class="[oldBalance >= 0 ? 'text-green' : 'text-red', 'whitespace-nowrap']">
+          € {{ oldBalanceString }}
         </span>
-      </td>
-      <td class="flex">
-        <BalanceDesc :transaction="transaction" />
-      </td>
-      <td :class="[transaction.type === 'credit' ? 'text-green' : 'text-red', 'text-right']">
-        <span>
-          {{ (transaction.type === 'credit' ? '+ '  : '- ') + transaction.amount.toFixed(2) }} €
-        </span>
-      </td>
-    </tr>
-  </Table>
-
-  <div class="text-right">
-    <span class="contents font-bold tracking-[1px] text-note float-right text-primary-1 uppercase mr-[5%] xl:mr-0">
-      {{ t('balance.current') }}:
-      <span :class="[balance >= 0 ? 'text-green' : 'text-red']">
-        € {{ balance.toFixed(2) }}
       </span>
-    </span>
+    </div>
+
+    <span v-if="transactions.isLoading">TEST</span>
+    <Table v-if="!transactions.isLoading" :labels="tableLabels" class="mt-10 mb-5">
+      <tr v-for="(transaction, index) in transactions.data" :key="index" class="max-h-[62px] border-b-2 border-gray-200">
+        <td>
+          <span>
+            {{ new Date(transaction.date.date).toLocaleDateString(locale, dateOptions) }}
+          </span>
+        </td>
+        <td class="flex">
+          <BalanceDesc :transaction="transaction" />
+        </td>
+        <td :class="[transaction.type === 'credit' ? 'text-green' : 'text-red', 'text-right']">
+          <span class="whitespace-nowrap">
+            {{ (transaction.type === 'credit' ? '+ '  : '- ') +
+              (locale === 'en' ? transaction.amount.toFixed(2) : transaction.amount.toFixed(2).replace(/\./g, ',')) }} €
+          </span>
+        </td>
+      </tr>
+    </Table>
+
+    <div class="text-right mb-[2.5rem]">
+      <span class="contents font-bold tracking-[1px] text-note float-right text-primary-1 uppercase">
+        {{ t('balance.current') }}:
+        <span :class="[balance >= 0 ? 'text-green' : 'text-red', 'whitespace-nowrap']">
+          € {{ balanceString }}
+        </span>
+      </span>
+    </div>
   </div>
 </template>
 
@@ -52,7 +56,14 @@ transactionStore.fillStore();
 
 let transactions = computed(() => transactionStore.getState());
 let balance = computed(() => balanceStore.getState().amount);
+let balanceString = computed(() => balanceStore.toLocalString());
 let oldBalance = computed(() => balance.value - transactions.value.difference);
+let oldBalanceString = computed(() =>
+    locale.value === 'en'
+        ? oldBalance.value.toFixed(2)
+        : oldBalance.value.toFixed(2).replace(/\./g, ',')
+)
+
 
 let tableLabels = {
   en: ['Date', 'Description', 'Amount'],

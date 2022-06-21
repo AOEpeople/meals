@@ -14,6 +14,7 @@ RUN NODE_ENV=production yarn run build
 # build production container
 FROM php:7.4-fpm-alpine
 RUN apk --no-cache add \
+        icu-dev \
         unzip \
     && docker-php-ext-install bcmath calendar intl opcache pdo_mysql  \
     && mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" \

@@ -2,7 +2,7 @@
   <header class="bg-white shadow-[0_15px_35px_0_#5B788F21] h-[60px] xl:h-24">
     <Disclosure v-slot="{ open }">
       <nav class="grid grid-cols-3 h-[inherit] items-center content-center mx-auto max-w-screen-aoe xl:grid-cols-10" aria-label="Top">
-        <div class="justify-self-center xl:hidden" id="dropdown">
+        <div class="justify-self-start ml-[20%] xl:hidden" id="dropdown">
           <DisclosureButton class="inline-flex justify-center items-center p-2 -mx-2 text-gray-400 rounded-md hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
             <span class="sr-only">Open menu</span>
             <MenuIcon v-if="!open" class="block w-6 h-6" aria-hidden="true" />
@@ -41,7 +41,7 @@
             <router-link class="text-[14px] leading-[22px] font-medium text-black" to="/balance">
               {{ t('header.balance') }}:
               <span class="text-primary-2">
-                € {{ balance }}
+                € {{ balanceString }}
               </span>
             </router-link>
           </div>
@@ -52,7 +52,7 @@
           </div>
         </div>
       </nav>
-      <MobileDropdown :open="open" :userName="user" :balance="balance" :navigation="navigation" />
+      <MobileDropdown :open="open" :userName="user" :balance="balanceString" :navigation="navigation" />
     </Disclosure>
   </header>
 </template>
@@ -68,7 +68,7 @@
 
   const { t, locale } = useI18n();
 
-  let balance = computed(() => balanceStore.getState().amount.toFixed(2));
+  let balanceString = computed(() => balanceStore.toLocalString());
 
   const user = sessionStorage.getItem('user')
 

@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import { createI18n } from 'vue-i18n' // import from runtime only
+import VueScreen from 'vue-screen'
 
 import en from '@/locales/en.json';
 import de from '@/locales/de.json';
@@ -8,7 +9,7 @@ import de from '@/locales/de.json';
 import '../style/output.css'
 
 import App          from '@/App.vue'
-import MealsMain    from '@/views/MealsMain.vue'
+import Dashboard    from '@/views/Dashboard.vue'
 import Menu         from '@/views/Menu.vue'
 import Dishes       from '@/views/Dishes.vue'
 import Categories   from '@/views/Categories.vue'
@@ -30,7 +31,7 @@ const i18n = createI18n({
 const router = createRouter({
     history: createWebHistory(),
     routes: [
-        {path: '/',             name: 'Root',       component: MealsMain},
+        {path: '/',             name: 'Dashboard',  component: Dashboard},
         {path: '/menu',         name: 'Menu',       component: Menu},
         {path: '/dishes',       name: 'Dishes',     component: Dishes},
         {path: '/categories',   name: 'Categories', component: Categories},
@@ -45,4 +46,5 @@ const router = createRouter({
 const vueApp = createApp(App);
 vueApp.use(i18n);
 vueApp.use(router);
+vueApp.use(VueScreen);
 vueApp.mount('#app');

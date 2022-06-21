@@ -15,7 +15,7 @@ RUN NODE_ENV=production yarn run build
 FROM php:7.4-fpm-alpine
 RUN apk --no-cache add \
         unzip \
-    && docker-php-ext-install bcmath calendar pdo_mysql opcache \
+    && docker-php-ext-install bcmath calendar intl opcache pdo_mysql  \
     && mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     # cleanup

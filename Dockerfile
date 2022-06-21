@@ -1,4 +1,4 @@
-# build frontend assets
+# generate frontend assets
 FROM node:17 as frontend
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y -o Dpkg::Options::="--force-confold" --no-install-recommends --no-install-suggests \
@@ -21,53 +21,49 @@ RUN apk --no-cache add \
     # cleanup
     && rm -rf /tmp/*
 
-# copy php.ini overrides
-COPY docker/web/php.ini-overrides /usr/local/etc/php/conf.d/meals-overrides.ini
-COPY docker/web/scripts/wait-for /usr/local/bin/
+# add service configuration
+COPY --chown=www-data:www-data docker/web/ /container/
 
 ENV APP_DEBUG="0" \
     APP_ENV="prod" \
     APP_ROOT="/var/www/meals" \
-    # PHP settings
+    # PHP default settings
     PHP_MAX_EXECUTION_TIME=60 \
     PHP_MEMORY_LIMIT=120M
 
 WORKDIR $APP_ROOT
 
-# tasks that can only be performed as root
 RUN chown -R www-data:www-data $APP_ROOT
-
-# add service configuration
-COPY --chown=www-data:www-data docker/web/ /container/
 
 USER www-data:www-data
 
 # add composer dependencies
-COPY composer.json composer.lock ./
+COPY --chown=www-data:www-data composer.json composer.lock ./
 RUN composer install \
         --no-plugins \
         --no-scripts \
         --optimize-autoloader \
-        --prefer-dist \
-    && composer clearcache \
-    && mkdir -p public/bundles/ \
-    && chown -R www-data:www-data public/bundles
+        --prefer-dist
 
-
-# add custom code and compiled frontend assets
+# add application code and assets
 COPY --chown=www-data:www-data . .
 COPY --chown=www-data:www-data --from=frontend /var/www/html/public/static ./public/static
 
-# clear symfony cache and fix file permissions
+# trigger composer post install scripts, e.g. clear cache, create auto-load script
 RUN composer run-script --no-cache post-install-cmd
 
-# fix file permissions
-RUN find . -type d -exec chmod 755 '{}' \+ \
+USER root
+RUN \
+    # copy php.ini overrides
+    cp /container/php.ini-overrides /usr/local/etc/php/conf.d/meals-overrides.ini \
+    # fix file permissions
+    && find . -type d -exec chmod 755 '{}' \+ \
     && find . -type f -exec chmod 640 '{}' \+ \
-    # set CLI scripts to be executables
+    # make CLI scripts executable
     && find bin scripts vendor/bin -type f -exec chmod 740 '{}' \+ \
-    # non php files in public directory should be readable by others, e.g. nginx
+    # set non php files in public directory as readonly
     && find public -type f -not -name "*.php" -exec chmod 644 '{}' \+
 
+USER www-data:www-data
 ENTRYPOINT ["/container/entrypoint"]
 CMD ["php-fpm"]

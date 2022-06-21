@@ -2,7 +2,7 @@
 set -e
 
 echo "Check database"
-/usr/local/bin/wait-for "${DB_HOST}:${DB_PORT}" -t 60 -- echo "Database is available"
+/container/scripts/wait-for "${DB_HOST}:${DB_PORT}" -t 60 -- echo "Database is available"
 
 # execute system initialization scripts
 "${APP_ROOT}/scripts/init.sh"

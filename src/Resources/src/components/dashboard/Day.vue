@@ -6,19 +6,14 @@
       </div>
       <div class="grid weekday min-w-[200px]">
         <div id="dayLabel" class="mb-1">
-          <span class="uppercase align-top dayLabel">{{ weekday }}</span>
+          <span class="uppercase align-top dayLabel">{{ t(props.day.name) }}</span>
         </div>
       </div>
     </div>
     <div class="flex flex-col flex-1">
-      <div
-          v-for="meal in day.meals"
-          :key="meal.id"
-          class="py-[13px] mx-[15px] border-b-[0.7px] last:border-b-0"
-      >
-        <VariationsData v-if="meal.variations" :meal="meal"/>
-        <MealData v-if="!meal.variations" :meal="meal" />
-      </div>
+      <MealData :data="props.day.meal1" class="py-[13px] mx-[15px] border-b-[0.7px]" />
+      <MealData :data="props.day.meal2" class="py-[13px] mx-[15px] border-b-[0.7px]" />
+      <MealData :data="props.day.kombi" class="py-[13px] mx-[15px]" />
     </div>
   </div>
 </template>
@@ -27,17 +22,12 @@
 import MealData from "@/components/dashboard/MealData.vue";
 import Icons from "@/components/misc/Icons.vue";
 import { useI18n } from "vue-i18n";
-import VariationsData from "@/components/dashboard/VariationsData.vue";
-import {computed, ref} from "vue";
 
-const { t, locale } = useI18n();
+const { t } = useI18n();
 
 const props = defineProps([
-  'day',
+    'day',
 ])
-
-const date = new Date(Date.parse(props.day.date.date));
-let weekday = computed(() => date.toLocaleDateString(locale.value, { weekday: 'long' }))
 
 </script>
 

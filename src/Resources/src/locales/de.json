@@ -2,7 +2,6 @@
   "session": {
     "expired": "Session abgelaufen!"
   },
-  "currentWeek": "Aktuelle Woche",
   "changeLanguage": "English version",
   "button": {
     "ok": "OK",
@@ -49,6 +48,10 @@
     },
     "logged_in_text": "Eingeloggt als",
     "balance": "Kontostand"
+  },
+  "dashboard": {
+    "current": "Aktuelle Woche",
+    "next": "Nächste Woche"
   },
   "balance": {
     "current": "Momentaner Kontostand",

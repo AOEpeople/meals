@@ -1,24 +1,22 @@
 <template>
   <div class="flex flex-col max-w-screen-aoe mx-auto">
-    <div class="-my-2">
-      <div class="inline-block min-w-full py-2 align-middle">
-        <table class="min-w-[95%] xl:min-w-full border-spacing-none table-fixed max-w-fit">
-          <thead>
-            <tr>
-              <th scope="col"
-                  class="text-left text-[11px] leading-4 font-bold tracking-[1.5px] uppercase"
-                  v-for="label in localeLabels"
-                  :key="label"
-              >
-                {{ label }}
-              </th>
-            </tr>
-          </thead>
-          <tbody class="divide-y-2 divide-gray-200 text-[18px] leading-6 font-light">
-            <slot></slot>
-          </tbody>
-        </table>
-      </div>
+    <div class="inline-block min-w-full py-2">
+      <table class="min-w-full border-spacing-none table-fixed max-w-fit">
+        <thead>
+          <tr>
+            <th scope="col"
+                class="text-left text-[11px] leading-4 font-bold tracking-[1.5px] uppercase"
+                v-for="label in localeLabels"
+                :key="label"
+            >
+              {{ label }}
+            </th>
+          </tr>
+        </thead>
+        <tbody class="text-[18px] leading-6 font-light">
+          <slot></slot>
+        </tbody>
+      </table>
     </div>
   </div>
 </template>

@@ -17,6 +17,7 @@ parameters:
     app.idp.client_id: '%env(IDP_CLIENT_ID)%'
     app.idp.client_secret: '%env(IDP_CLIENT_SECRET)%'
 
+    app.mailer_dsn: '%env(resolve:MAILER_DSN)%'
     app.notifier.mattermost.meal_offers.webhook_url: '%env(MATTERMOST_WEBHOOK_URL_MEAL_OFFERS)%'
     app.notifier.mattermost.weekly_menu.webhook_url: '%env(MATTERMOST_WEBHOOK_URL_WEEKLY_MENU)%'
     app.notifier.mattermost.system_errors.webhook_url: '%env(MATTERMOST_WEBHOOK_URL_SYSTEM_ERRORS)%'

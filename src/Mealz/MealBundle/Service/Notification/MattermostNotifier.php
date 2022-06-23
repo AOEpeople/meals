@@ -80,7 +80,7 @@ class MattermostNotifier implements NotifierInterface
             return false;
         }
 
-        if (self::HTTP_STATUS_SUCCESS === $responseStatus) {
+        if (self::HTTP_STATUS_SUCCESS !== $responseStatus) {
             $this->logger->error('message sent failure', [
                 'url' => $this->webhookURL,
                 'response_status' => $responseStatus,

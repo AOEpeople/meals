@@ -20,7 +20,7 @@ monolog:
             type: deduplication
             handler: notification_group
         notification_group:
-            type: group
+            type: whatfailuregroup
             members: [symfony_mailer, slackwebhook]
         symfony_mailer:
             type: symfony_mailer

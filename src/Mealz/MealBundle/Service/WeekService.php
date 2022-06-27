@@ -6,10 +6,18 @@ namespace App\Mealz\MealBundle\Service;
 
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Week;
+use App\Mealz\MealBundle\Entity\WeekRepository;
 use DateTime;
 
 class WeekService
 {
+    private WeekRepository $weekRepo;
+
+    public function __construct(WeekRepository $weekRepo)
+    {
+        $this->weekRepo = $weekRepo;
+    }
+
     public static function generateEmptyWeek(DateTime $dateTime, string $dateTimeModifier): Week
     {
         $week = new Week();
@@ -32,5 +40,29 @@ class WeekService
         }
 
         return $week;
+    }
+
+    private function createEmptyNonPersistentWeek(DateTime $dateTime): Week
+    {
+        $week = new Week();
+        $week->setCalendarWeek((int) $dateTime->format('W'));
+        $week->setYear((int) $dateTime->format('o'));
+
+        return $week;
+    }
+
+    public function getNextTwoWeeks(): array
+    {
+        $currentWeek = $this->weekRepo->getCurrentWeek();
+        if (null === $currentWeek) {
+            $currentWeek = $this->createEmptyNonPersistentWeek(new DateTime());
+        }
+
+        $nextWeek = $this->weekRepo->getNextWeek();
+        if (null === $nextWeek) {
+            $nextWeek = $this->createEmptyNonPersistentWeek(new DateTime('next week'));
+        }
+
+        return [$currentWeek, $nextWeek];
     }
 }

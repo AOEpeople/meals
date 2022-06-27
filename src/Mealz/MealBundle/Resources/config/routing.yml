@@ -2,6 +2,10 @@ MealzMealBundle_language_switch:
     path:  /language-switch
     defaults: { _controller: App\Mealz\MealBundle\Controller\LanguageController::switch }
 
+MealzMealBundle_api_dashboard:
+    path: /api/dashboard
+    defaults: { _controller: App\Mealz\MealBundle\Controller\MealController::getDashboardData }
+
 MealzMealBundle_home:
     path:  /
     defaults: { _controller: App\Mealz\MealBundle\Controller\TestController::test }

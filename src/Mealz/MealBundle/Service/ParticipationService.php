@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Service;
 
+use App\Mealz\MealBundle\Controller\BaseController;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
@@ -16,7 +17,7 @@ use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 
-class ParticipationService
+class ParticipationService extends BaseController
 {
     use ParticipationServiceTrait;
 
@@ -285,5 +286,20 @@ class ParticipationService
         }
 
         return (int) ceil($participation['totalCountByDishSlugs'][$meal->getDish()->getSlug()]['count'] ?? 0);
+    }
+
+    public function isUserParticipating(Meal $meal): bool
+    {
+        $profile = $this->getUser()->getProfile();
+
+        /* @var Participant $participant */
+        foreach ($meal->getParticipants() as $participant) {
+            if($participant->getProfile() === $profile) {
+
+                return true;
+            }
+        }
+
+        return false;
     }
 }

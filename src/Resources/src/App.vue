@@ -11,5 +11,5 @@ import Content from "@/components/Content.vue";
 
 import { balanceStore } from "@/store/balanceStore";
 
-balanceStore.updateAmount(parseFloat(sessionStorage.getItem('balance')));
+balanceStore.fillStore();
 </script>

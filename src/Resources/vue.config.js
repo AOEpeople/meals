@@ -10,5 +10,5 @@ module.exports = defineConfig({
       compositionOnly: false,
       fullInstall: true
     }
-  }
+  },
 })

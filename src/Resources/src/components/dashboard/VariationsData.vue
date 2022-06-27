@@ -1,15 +1,21 @@
 <template>
-  <div class="flex flex-row w-auto gap-4 xl:grid-cols-6 justify-around">
-    <div class="basis-10/12 items-center self-center xl:col-span-5">
-      <div class="self-center break-words">
-        <span class="text-primary uppercase tracking-[1px] text-note font-bold">{{ title }}</span><br>
-        <p v-if="description !== ''" class="description m-0 font-light text-primary">{{ description }}</p>
+  <div>
+    <span class="text-primary uppercase tracking-[1px] text-note font-bold">{{ title }}</span><br>
+  </div>
+  <div v-for="variation in meal.variations" class="flex flex-row w-auto gap-4 mb-1.5 last:mb-0 xl:grid-cols-6 justify-around">
+    <div class="items-center self-center basis-10/12 xl:col-span-5">
+      <div class="self-center">
+        <p class="m-0 break-words font-light description text-primary">
+          {{ locale.substring(0, 2) === 'en' ? variation.title.en : variation.title.de }}
+        </p>
       </div>
     </div>
-    <div class="flex basis-2/12 flex-none justify-end items-center text-align-last">
+    <div class="flex flex-none justify-end items-center basis-2/12 text-align-last">
       <div class="grid grid-cols-2 content-center rounded-md w-[46px] h-[20px] mr-[15px] bg-primary-4">
         <Icons icon="person" box="0 0 12 12" class="fill-white w-3 h-3 my-[7px] mx-1"/>
-        <span class="text-white h-4 w-[15px] self-center leading-4 font-bold text-[11px] my-0.5 mr-[7px] tracking-[1.5px]">{{ meal.participations }}</span>
+        <span class="text-white h-4 w-[15px] self-center leading-4 font-bold text-[11px] my-0.5 mr-[7px] tracking-[1.5px]">
+          {{ variation.participations }}
+        </span>
       </div>
       <label class="check">
         <input type="checkbox">
@@ -22,15 +28,15 @@
 <script setup>
 import Icons from "@/components/misc/Icons.vue";
 import { useI18n } from "vue-i18n";
-import {computed} from "vue";
+import { computed } from "vue";
+
+const { t, locale } = useI18n();
+
+let title = computed(() => locale.value.substring(0, 2) === 'en' ? props.meal.title.en : props.meal.title.de);
 
 const props = defineProps([
   'meal',
 ]);
-const { t, locale } = useI18n();
-
-let title       = computed(() => locale.value.substring(0, 2) === 'en' ? props.meal.title.en       : props.meal.title.de);
-let description = computed(() => locale.value.substring(0, 2) === 'en' ? props.meal.description.en : props.meal.description.de);
 
 </script>
 

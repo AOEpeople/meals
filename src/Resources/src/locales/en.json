@@ -52,8 +52,8 @@
     "total": "Total"
   },
   "dashboard": {
-    "current": "Current Week",
-    "next": "Next Week"
+    "0": "Current Week",
+    "1": "Next Week"
   },
   "content": {
     "participation": {

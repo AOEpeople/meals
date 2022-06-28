@@ -73,12 +73,12 @@
   const user = sessionStorage.getItem('user')
 
   const navigation = [
-    { name: 'header.navigation.menu',       to: '/menu',        current: false },
-    { name: 'header.navigation.dishes',     to: '/dishes',      current: false },
-    { name: 'header.navigation.categories', to: '/categories',  current: false },
-    { name: 'header.navigation.slots',      to: '/time-slots',  current: false },
-    { name: 'header.navigation.costs',      to: '/costs',       current: false },
-    { name: 'header.navigation.finance',    to: '/finance',     current: false },
+    { name: 'header.navigation.menu',       to: '/menu' },
+    { name: 'header.navigation.dishes',     to: '/dishes' },
+    { name: 'header.navigation.categories', to: '/categories' },
+    { name: 'header.navigation.slots',      to: '/time-slots' },
+    { name: 'header.navigation.costs',      to: '/costs' },
+    { name: 'header.navigation.finance',    to: '/finance' },
   ];
 </script>
 

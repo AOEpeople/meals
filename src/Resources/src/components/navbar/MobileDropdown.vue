@@ -1,5 +1,5 @@
 <template>
-    <DisclosurePanel class="xl:hidden" v-slot="{ close }">
+    <DisclosurePanel class="xl:hidden bg-white" v-slot="{ close }">
       <div class="pt-2 pb-3">
         <router-link
          v-for="link in props.navigation"

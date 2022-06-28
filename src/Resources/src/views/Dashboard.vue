@@ -31,6 +31,7 @@ import Week from '@/components/dashboard/Week.vue'
 import { Tabs, Tab, TabPanels, TabPanel } from 'vue3-tabs';
 import { useI18n } from "vue-i18n";
 import { ref } from "vue";
+import { useProgress } from '@marcoschulte/vue3-progress'
 import { useDashboardData } from "@/hooks/getDashboardData";
 
 const { dashboardData: weeks } = await useDashboardData();
@@ -38,4 +39,8 @@ const { dashboardData: weeks } = await useDashboardData();
 const { t } = useI18n();
 
 const selectedTab = ref(weeks.value[0].id)
+
+setTimeout(function () {
+  progress.finish()
+}, 500)
 </script>

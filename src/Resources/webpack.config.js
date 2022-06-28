@@ -137,10 +137,10 @@ module.exports = function(env, argv) {
         plugins: [
             new WebpackManifestPlugin(),
             new MiniCssExtractPlugin(),
-            new VueLoaderPlugin(),
             new webpack.BannerPlugin({
                 banner: 'name:[name], file:[file], fullhash:[fullhash], chunkhash:[chunkhash]',
             }),
+            new VueLoaderPlugin(),
             new webpack.IgnorePlugin({
                 resourceRegExp: /^\.\/locale$/,
                 contextRegExp: /moment$/,

@@ -2,9 +2,11 @@ import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import { createI18n } from 'vue-i18n'
 import VueScreen from 'vue-screen'
+import {Vue3ProgressPlugin} from '@marcoschulte/vue3-progress'
 
 // Style
 import '../style/output.css'
+import '../scss/meals.scss'
 
 // Vue Components
 import App          from '@/App.vue'
@@ -49,10 +51,9 @@ const router = createRouter({
     ],
 })
 
-// Vue initialisation
-const VueApp = createApp(App)
-VueApp.config.performance = true // enable Vue Devtools
-VueApp.use(i18n)
-VueApp.use(router)
-VueApp.use(VueScreen)
-VueApp.mount('#app')
+const vueApp = createApp(App)
+vueApp.use(i18n)
+vueApp.use(router)
+vueApp.use(VueScreen)
+vueApp.use(Vue3ProgressPlugin)
+vueApp.mount('#app')

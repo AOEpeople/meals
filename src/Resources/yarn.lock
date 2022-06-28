@@ -1648,6 +1648,11 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz#b2ac626d6cb9c8718ab459166d4bb405b8ffa78b"
   integrity sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==
 
+"@marcoschulte/vue3-progress@^0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@marcoschulte/vue3-progress/-/vue3-progress-0.0.6.tgz#91474e9be601e7504ab320f4ba23e9c574106ce4"
+  integrity sha512-/aaMpm6Jnwex3eu9cm9iDVUiP2nGOjWhiYM489iqWMcy58ReWyrnMsYDqASnZEv1y6vbbSrpoIE4xTHMhr9Nog==
+
 "@node-ipc/js-queue@2.0.3":
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/@node-ipc/js-queue/-/js-queue-2.0.3.tgz#ac7fe33d766fa53e233ef8fedaf3443a01c5a4cd"

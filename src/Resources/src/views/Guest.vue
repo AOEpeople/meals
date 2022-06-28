@@ -18,6 +18,9 @@
 
 <script setup>
 import Day from '@/components/dashboard/Day.vue'
+import {useProgress} from '@marcoschulte/vue3-progress'
+
+const progress = useProgress().start()
 
 var meal1 = {
   name: 'Meal1',
@@ -46,6 +49,9 @@ var wednesday = {
   kombi: kombi,
 }
 
+setTimeout(function () {
+    progress.finish()
+}, 500)
 </script>
 
 <style scoped>

@@ -220,7 +220,8 @@ jobs:
 
   publish:
     name: Publish
-    if: ${{ github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v') }}
+    if: ${{ false }}
+    #    if: ${{ github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v') }}
     needs: [ buildImages, testUnitFunctional ]
     runs-on: ubuntu-latest
     env:
@@ -301,6 +302,7 @@ jobs:
 
   deploy:
     name: Deploy and notify
+    if: ${{ false }}
     needs: [ publish, buildImages ]
     runs-on: ubuntu-latest
     steps:

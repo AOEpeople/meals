@@ -156,10 +156,6 @@ MealzMealBundle_Dishes:
   path: /dishes
   defaults: { _controller: App\Mealz\MealBundle\Controller\TestController::test }
 
-MealzMealBundle_Dishes:
-  path: /dishes
-  defaults: { _controller: App\Mealz\MealBundle\Controller\TestController::test }
-
 MealzMealBundle_Dish:
     path:  /dish
     defaults: { _controller: App\Mealz\MealBundle\Controller\DishController::list }

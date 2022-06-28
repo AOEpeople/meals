@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-row w-auto gap-4 xl:grid-cols-6 justify-around">
     <div class="basis-10/12 items-center self-center xl:col-span-5">
-      <div class="self-center break-words">
+      <div class="self-center sm:break-words break-all">
         <span class="text-primary uppercase tracking-[1px] text-note font-bold">{{ title }}</span><br>
         <p v-if="description !== ''" class="description m-0 font-light text-primary">{{ description }}</p>
       </div>

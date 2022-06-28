@@ -1,11 +1,13 @@
 # Learn how to configure the Mercure.rocks Hub on https://mercure.rocks/docs/hub/config
 {
     auto_https off
+
+    log {
+        level warn
+    }
 }
 
 {$SERVER_ADDRESS}
-
-log
 
 route {
     redir / /.well-known/mercure/ui/

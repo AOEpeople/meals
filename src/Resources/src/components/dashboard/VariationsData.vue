@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mb-1">
     <span class="text-primary uppercase tracking-[1px] text-note font-bold">{{ title }}</span><br>
   </div>
   <div v-for="variation in meal.variations" class="flex flex-row w-auto gap-4 mb-1.5 last:mb-0 xl:grid-cols-6 justify-around">

@@ -26,11 +26,14 @@
 
 <script setup>
 import Week from '@/components/dashboard/Week.vue'
-import { Tabs, Tab, TabPanels, TabPanel } from 'vue3-tabs';
-import { useI18n } from "vue-i18n";
-import {ref} from "vue";
+import { Tabs, Tab, TabPanels, TabPanel } from 'vue3-tabs'
+import { useI18n } from 'vue-i18n'
+import {useProgress} from '@marcoschulte/vue3-progress'
+import {ref} from 'vue'
 
-const { t } = useI18n();
+const progress = useProgress().start()
+
+const { t } = useI18n()
 
 var meal1 = {
   title_en: 'Asian carrot soup',
@@ -114,4 +117,8 @@ var week2 = {
 
 var weeks = [week1, week2];
 const selectedTab = ref(weeks[0].number)
+
+setTimeout(function () {
+    progress.finish()
+}, 500)
 </script>

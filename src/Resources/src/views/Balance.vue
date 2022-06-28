@@ -43,16 +43,19 @@
 
 <script setup>
 import Table from '@/components/misc/Table.vue'
-import BalanceDesc from "@/components/balance/BalanceDesc.vue";
-import BalanceHeader from "@/components/balance/BalanceHeader.vue";
+import BalanceDesc from "@/components/balance/BalanceDesc.vue"
+import BalanceHeader from "@/components/balance/BalanceHeader.vue"
 
-import { useI18n } from "vue-i18n";
-import {balanceStore} from "@/store/balanceStore";
-import {transactionStore} from "@/store/transactionStore";
-import {computed} from "vue";
+import { useI18n } from "vue-i18n"
+import {balanceStore} from "@/store/balanceStore"
+import {useProgress} from '@marcoschulte/vue3-progress'
+import {transactionStore} from "@/store/transactionStore"
+import {computed} from "vue"
 
-const { t, locale } = useI18n();
-transactionStore.fillStore();
+const progress = useProgress().start()
+
+const { t, locale } = useI18n()
+transactionStore.fillStore()
 
 let transactions = computed(() => transactionStore.getState());
 let balance = computed(() => balanceStore.getState().amount);
@@ -70,9 +73,13 @@ let tableLabels = {
   de: ['Datum', 'Beschreibung', 'Menge']
 };
 
-let dateOptions = { month: "short", day: "numeric", year: "numeric" };
+let dateOptions = { month: "short", day: "numeric", year: "numeric" }
 
-let oldDate = new Date();
-oldDate.setDate(oldDate.getDate() - 28);
+let oldDate = new Date()
+oldDate.setDate(oldDate.getDate() - 28)
 const oldDateString = oldDate.toLocaleDateString(locale.value, dateOptions)
+
+setTimeout(function () {
+    progress.finish()
+}, 500)
 </script>

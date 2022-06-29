@@ -4,8 +4,6 @@ namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\AccountingBundle\Entity\Transaction;
 use App\Mealz\AccountingBundle\Entity\TransactionRepository;
-use App\Mealz\MealBundle\Entity\Category;
-use App\Mealz\MealBundle\Entity\CategoryRepository;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\MealRepository;
 use App\Mealz\MealBundle\Entity\Participant;
@@ -46,14 +44,6 @@ abstract class BaseController extends AbstractController
     protected function getParticipantRepository()
     {
         return $this->getDoctrine()->getRepository(Participant::class);
-    }
-
-    /**
-     * @return CategoryRepository
-     */
-    protected function getCategoryRepository()
-    {
-        return $this->getDoctrine()->getRepository(Category::class);
     }
 
     /**

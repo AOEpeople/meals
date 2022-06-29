@@ -19,7 +19,7 @@ class MealAvailabilityService
     }
 
     /**
-     * @psalm-return array<int, bool|array{available: bool, availableWith: list<int>}> Key-value pair of meal-ID and corresponding availability
+     * @psalm-return array<int, bool|array{available: bool, availableWith: list<string>}> Key-value pair of meal-ID and corresponding availability
      */
     public function getByDay(Day $day): array
     {
@@ -27,7 +27,7 @@ class MealAvailabilityService
     }
 
     /**
-     * @psalm-return bool|array{available: bool, availableWith: list<int>}
+     * @psalm-return bool|array{available: bool, availableWith: list<string>}
      */
     public function getByMeal(Meal $meal)
     {
@@ -44,21 +44,24 @@ class MealAvailabilityService
     }
 
     /**
-     * @return array<int, bool|array{available: bool, availableWith: list<int>}> Key-value pair of meal-ID and corresponding availability
+     * @return array<int, bool|array{available: bool, availableWith: list<string>}> Key-value pair of meal-ID and corresponding availability
      */
     private function getAvailability(MealCollection $meals): array
     {
         $availability = [];
 
         foreach ($meals as $meal) {
-            $availability[$meal->getId()] = $this->getMealAvailability($meal);
+            $mealId = $meal->getId();
+            if (null !== $mealId) {
+                $availability[$mealId] = $this->getMealAvailability($meal);
+            }
         }
 
         return $availability;
     }
 
     /**
-     * @return bool|array{available: bool, availableWith: list<int>}
+     * @return bool|array{available: bool, availableWith: list<string>}
      */
     private function getMealAvailability(Meal $meal)
     {

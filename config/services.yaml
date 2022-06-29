@@ -87,11 +87,6 @@ services:
         resource: '../src/Mealz/MealBundle/Controller/'
         tags: ['controller.service_arguments']
 
-    App\Mealz\MealBundle\Controller\CategoryController:
-        calls:
-            - [setRepository, ['@mealz_meal.repository.category']]
-            - [setEntityName, ['Category']]
-
     App\Mealz\MealBundle\Controller\SlotController:
         calls:
             - [setRepository, ['@mealz_meal.repository.slot']]
@@ -101,6 +96,8 @@ services:
     App\Mealz\MealBundle\Service\Logger\MealsLoggerInterface: '@App\Mealz\MealBundle\Service\Logger\MealsLogger'
     App\Mealz\MealBundle\Service\Mailer\MailerInterface: '@App\Mealz\MealBundle\Service\Mailer\Mailer'
     App\Mealz\MealBundle\Service\Publisher\PublisherInterface: '@App\Mealz\MealBundle\Service\Publisher\MercurePublisher'
+
+    App\Mealz\MealBundle\Repository\CategoryRepositoryInterface: '@App\Mealz\MealBundle\Repository\CategoryRepository'
 
     # Event Listeners
     App\Mealz\MealBundle\EventListener\ParticipantPersistenceListener:
@@ -118,12 +115,9 @@ services:
         abstract: true
         factory: ['@mealz_meal.factory.localized_repository', createLocalizedRepository]
 
-    mealz_meal.repository.category:
-        class: App\Mealz\MealBundle\Entity\CategoryRepository
-        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+    App\Mealz\MealBundle\Repository\CategoryRepository:
         arguments:
-            - 'MealzMealBundle:Category'
-    App\Mealz\MealBundle\Entity\CategoryRepository: '@mealz_meal.repository.category'
+            $entityClass: App\Mealz\MealBundle\Entity\Category
 
     mealz_meal.repository.day:
         class: App\Mealz\MealBundle\Entity\DayRepository

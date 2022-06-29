@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Repository;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ObjectRepository;
 
 /**
@@ -15,6 +16,8 @@ abstract class BaseRepository implements ObjectRepository
 {
     private string $entityClass;
 
+    private EntityManagerInterface $entityManager;
+
     /**
      * @psalm-var ObjectRepository<T>
      */
@@ -23,8 +26,20 @@ abstract class BaseRepository implements ObjectRepository
     public function __construct(EntityManagerInterface $entityManager, string $entityClass)
     {
         $this->entityClass = $entityClass;
+        $this->entityManager = $entityManager;
+
         /** @psalm-var  objectRepository<T> */
-        $this->objectRepository = $entityManager->getRepository($this->entityClass);
+        $this->objectRepository = $this->entityManager->getRepository($this->entityClass);
+    }
+
+    /**
+     * Creates a new QueryBuilder instance that is pre-populated for this entity name.
+     */
+    public function createQueryBuilder(string $alias, ?string $indexBy = null): QueryBuilder
+    {
+        return $this->entityManager->createQueryBuilder()
+            ->select($alias)
+            ->from($this->entityClass, $alias, $indexBy);
     }
 
     /**
@@ -59,6 +74,9 @@ abstract class BaseRepository implements ObjectRepository
         return $this->objectRepository->findOneBy($criteria);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getClassName(): string
     {
         return $this->entityClass;

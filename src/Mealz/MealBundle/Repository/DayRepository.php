@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Mealz\MealBundle\Entity;
+namespace App\Mealz\MealBundle\Repository;
 
+use App\Mealz\MealBundle\Entity\Day;
 use DateTime;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 
 /**
- * @extends EntityRepository<Day>
+ * @extends BaseRepository<Day>
  */
-class DayRepository extends EntityRepository
+class DayRepository extends BaseRepository implements DayRepositoryInterface
 {
     public function getCurrentDay(): ?Day
     {
@@ -38,11 +38,7 @@ class DayRepository extends EntityRepository
     }
 
     /**
-     * Get all active meal days between $startDate and $endDate.
-     *
-     * An active meal day is the day that is not disabled, and has an open meal, i.e. meal that is open for participation.
-     *
-     * @return Day[]
+     * {@inheritDoc}
      */
     public function findAllActive(DateTime $startDate, DateTime $endDate): array
     {
@@ -57,5 +53,10 @@ class DayRepository extends EntityRepository
             ]);
 
         return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function getClassName(): string
+    {
+        return Day::class;
     }
 }

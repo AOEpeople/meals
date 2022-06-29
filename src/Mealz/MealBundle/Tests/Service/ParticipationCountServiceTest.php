@@ -11,6 +11,7 @@ use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\MealCollection;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
+use App\Mealz\MealBundle\Repository\DayRepository;
 use App\Mealz\MealBundle\Service\CombinedMealService;
 use App\Mealz\MealBundle\Service\ParticipationCountService;
 use App\Mealz\MealBundle\Service\ParticipationService;
@@ -35,7 +36,7 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
         ]);
 
         $doorman = $this->getDoormanMock(true, false);
-        $dayRepo = $this->entityManager->getRepository(Day::class);
+        $dayRepo = self::$container->get(DayRepository::class);
 
         $this->setParticipationService(new ParticipationService(
             $this->entityManager,

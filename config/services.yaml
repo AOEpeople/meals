@@ -97,6 +97,7 @@ services:
     App\Mealz\MealBundle\Service\Mailer\MailerInterface: '@App\Mealz\MealBundle\Service\Mailer\Mailer'
     App\Mealz\MealBundle\Service\Publisher\PublisherInterface: '@App\Mealz\MealBundle\Service\Publisher\MercurePublisher'
 
+    App\Mealz\MealBundle\Repository\DayRepositoryInterface: '@App\Mealz\MealBundle\Repository\DayRepository'
     App\Mealz\MealBundle\Repository\CategoryRepositoryInterface: '@App\Mealz\MealBundle\Repository\CategoryRepository'
 
     # Event Listeners
@@ -115,16 +116,13 @@ services:
         abstract: true
         factory: ['@mealz_meal.factory.localized_repository', createLocalizedRepository]
 
+    App\Mealz\MealBundle\Repository\DayRepository:
+        arguments:
+            $entityClass: App\Mealz\MealBundle\Entity\Day
+
     App\Mealz\MealBundle\Repository\CategoryRepository:
         arguments:
             $entityClass: App\Mealz\MealBundle\Entity\Category
-
-    mealz_meal.repository.day:
-        class: App\Mealz\MealBundle\Entity\DayRepository
-        factory: ['@doctrine.orm.default_entity_manager', getRepository]
-        arguments:
-            - 'MealzMealBundle:Day'
-    App\Mealz\MealBundle\Entity\DayRepository: '@mealz_meal.repository.day'
 
     mealz_meal.repository.dish:
         class: App\Mealz\MealBundle\Entity\DishRepository

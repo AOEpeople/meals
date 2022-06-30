@@ -35,6 +35,7 @@ class MealController extends BaseController
 {
     private MealAvailabilityService $availabilityService;
     private WeekService $weekService;
+    private DishService $dishService;
     private OfferService $offerService;
     private ParticipationService $participationService;
 
@@ -42,13 +43,15 @@ class MealController extends BaseController
         OfferService $offerService,
         MealAvailabilityService $availabilityService,
         WeekService $weekService,
-        ParticipationService $participationService
+        ParticipationService $participationService,
+        DishService $dishService
     )
     {
         $this->availabilityService = $availabilityService;
         $this->offerService = $offerService;
         $this->weekService = $weekService;
         $this->participationService = $participationService;
+        $this->dishService = $dishService;
     }
 
     public function index(
@@ -216,6 +219,9 @@ class MealController extends BaseController
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     public function getDashboardData(): JsonResponse
     {
         $weeks = $this->weekService->getNextTwoWeeks();
@@ -250,6 +256,7 @@ class MealController extends BaseController
                                     'reachedLimit' => $meal->hasReachedParticipationLimit(),
                                     'isOpen' => $meal->isOpen(),
                                     'isLocked' => $meal->isLocked(),
+                                    'isNew' => $this->dishService->isNew($meal->getDish()),
                                     'participations' => $meal->getParticipants()->count(),
                                     'isParticipating' => $this->participationService->isUserParticipating($meal)
                                 ];
@@ -275,6 +282,7 @@ class MealController extends BaseController
                                     'reachedLimit' => $meal->hasReachedParticipationLimit(),
                                     'isOpen' => $meal->isOpen(),
                                     'isLocked' => $meal->isLocked(),
+                                    'isNew' => $this->dishService->isNew($meal->getDish()),
                                     'participations' => $meal->getParticipants()->count(),
                                     'isParticipating' => $this->participationService->isUserParticipating($meal)
                                 ])
@@ -296,6 +304,7 @@ class MealController extends BaseController
                             'reachedLimit' => $meal->hasReachedParticipationLimit(),
                             'isOpen' => $meal->isOpen(),
                             'isLocked' => $meal->isLocked(),
+                            'isNew' => $this->dishService->isNew($meal->getDish()),
                             'participations' => $meal->getParticipants()->count(),
                             'isParticipating' => $this->participationService->isUserParticipating($meal)
                         ];

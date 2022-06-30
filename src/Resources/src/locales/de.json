@@ -46,7 +46,8 @@
   },
   "dashboard": {
     "0": "Aktuelle Woche",
-    "1": "Nächste Woche"
+    "1": "Nächste Woche",
+    "no_service": "Keine Angebote für diesen Tag."
   },
   "balance": {
     "current": "Momentaner Kontostand",

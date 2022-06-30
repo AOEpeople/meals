@@ -7,8 +7,8 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ORM\Entity
  * @ORM\Table(name="guest_invitation")
- * @ORM\Entity(repositoryClass="App\Mealz\MealBundle\Entity\GuestInvitationRepository")
  * @ORM\HasLifecycleCallbacks
  */
 class GuestInvitation

@@ -101,6 +101,7 @@ services:
     App\Mealz\MealBundle\Repository\DishRepositoryInterface: '@App\Mealz\MealBundle\Repository\DishRepository'
     App\Mealz\MealBundle\Repository\DishVariationRepositoryInterface: '@App\Mealz\MealBundle\Repository\DishVariationRepository'
     App\Mealz\MealBundle\Repository\CategoryRepositoryInterface: '@App\Mealz\MealBundle\Repository\CategoryRepository'
+    App\Mealz\MealBundle\Repository\GuestInvitationRepositoryInterface: '@App\Mealz\MealBundle\Repository\GuestInvitationRepository'
 
     # Event Listeners
     App\Mealz\MealBundle\EventListener\ParticipantPersistenceListener:
@@ -133,6 +134,10 @@ services:
     App\Mealz\MealBundle\Repository\DishVariationRepository:
         arguments:
             $entityClass: App\Mealz\MealBundle\Entity\DishVariation
+
+    App\Mealz\MealBundle\Repository\GuestInvitationRepository:
+        arguments:
+            $entityClass: App\Mealz\MealBundle\Entity\GuestInvitation
 
     mealz_meal.repository.participant:
         class: App\Mealz\MealBundle\Entity\ParticipantRepository

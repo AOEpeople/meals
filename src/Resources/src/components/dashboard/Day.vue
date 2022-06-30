@@ -1,6 +1,6 @@
 <template>
   <div class="flex mx-auto w-3/4 h-auto bg-white rounded day-shadow w-max-screen-aoe">
-    <div class="flex justify-center w-[24px] bg-primary-2 rounded-l-[5px]">
+    <div :class="[disabled ? 'bg-[#80909F]' : 'bg-primary-2', 'flex justify-center w-[24px] rounded-l-[5px]']">
       <div id="icon" class="relative left-[425%] bottom-[2%]">
         <Icons icon="guest" box="0 0 13 13" class="w-[13px] h-[13px] fill-white"/>
       </div>
@@ -16,8 +16,8 @@
           :key="meal.id"
           class="py-[13px] mx-[15px] border-b-[0.7px] last:border-b-0"
       >
-        <VariationsData v-if="meal.variations" :meal="meal"/>
-        <MealData v-if="!meal.variations" :meal="meal" />
+        <VariationsData v-if="meal.variations" :meal="meal" :disabled="disabled"/>
+        <MealData v-if="!meal.variations" :meal="meal" :disabled="disabled" />
       </div>
     </div>
   </div>
@@ -38,6 +38,8 @@ const props = defineProps([
 
 const date = new Date(Date.parse(props.day.date.date));
 let weekday = computed(() => date.toLocaleDateString(locale.value, { weekday: 'long' }))
+
+let disabled = props.day.meals[0].isLocked
 
 </script>
 

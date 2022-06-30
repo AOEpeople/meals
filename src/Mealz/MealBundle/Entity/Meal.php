@@ -190,6 +190,14 @@ class Meal
         return $totalParticipation;
     }
 
+    public function hasReachedParticipationLimit(): bool
+    {
+        $participations = $this->getParticipants()->count();
+        $limit = $this->getParticipationLimit();
+
+        return($limit !== 0 && $participations >= $limit);
+    }
+
     public function __toString()
     {
         return $this->getDateTime()->format('Y-m-d H:i:s') . ' ' . $this->getDish();

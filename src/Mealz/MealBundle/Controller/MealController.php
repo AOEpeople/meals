@@ -233,9 +233,10 @@ class MealController extends BaseController
                                     ],
                                     'price' => $meal->getPrice(),
                                     'limit' => $meal->getParticipationLimit(),
+                                    'reachedLimit' => $meal->hasReachedParticipationLimit(),
                                     'isOpen' => $meal->isOpen(),
                                     'isLocked' => $meal->isLocked(),
-                                    'participations' => $meal->getTotalConfirmedParticipations(),
+                                    'participations' => $meal->getParticipants()->count(),
                                     'isParticipating' => $this->participationService->isUserParticipating($meal)
                                 ];
                                 $parentExistsInArray = true;
@@ -257,9 +258,10 @@ class MealController extends BaseController
                                     ],
                                     'price' => $meal->getPrice(),
                                     'limit' => $meal->getParticipationLimit(),
+                                    'reachedLimit' => $meal->hasReachedParticipationLimit(),
                                     'isOpen' => $meal->isOpen(),
                                     'isLocked' => $meal->isLocked(),
-                                    'participations' => $meal->getTotalConfirmedParticipations(),
+                                    'participations' => $meal->getParticipants()->count(),
                                     'isParticipating' => $this->participationService->isUserParticipating($meal)
                                 ])
                             ];
@@ -277,6 +279,7 @@ class MealController extends BaseController
                             ],
                             'price' => $meal->getPrice(),
                             'limit' => $meal->getParticipationLimit(),
+                            'reachedLimit' => $meal->hasReachedParticipationLimit(),
                             'isOpen' => $meal->isOpen(),
                             'isLocked' => $meal->isLocked(),
                             'participations' => $meal->getParticipants()->count(),

@@ -1,19 +1,24 @@
 <template>
   <div class="flex mx-auto w-3/4 h-auto bg-white rounded day-shadow w-max-screen-aoe">
-    <div class="flex justify-center w-[24px] bg-primary-2 rounded-l-[5px]">
+    <div :class="[disabled ? 'bg-[#80909F]' : 'bg-primary-2', 'flex justify-center w-[24px] rounded-l-[5px]']">
       <div id="icon" class="relative left-[425%] bottom-[2%]">
         <Icons icon="guest" box="0 0 13 13" class="w-[13px] h-[13px] fill-white"/>
       </div>
       <div class="grid weekday min-w-[200px]">
         <div id="dayLabel" class="mb-1">
-          <span class="uppercase align-top dayLabel">{{ t(props.day.name) }}</span>
+          <span class="uppercase align-top dayLabel">{{ weekday }}</span>
         </div>
       </div>
     </div>
     <div class="flex flex-col flex-1">
-      <MealData :data="props.day.meal1" class="py-[13px] mx-[15px] border-b-[0.7px]" />
-      <MealData :data="props.day.meal2" class="py-[13px] mx-[15px] border-b-[0.7px]" />
-      <MealData :data="props.day.kombi" class="py-[13px] mx-[15px]" />
+      <div
+          v-for="meal in day.meals"
+          :key="meal.id"
+          class="py-[13px] mx-[15px] border-b-[0.7px] last:border-b-0"
+      >
+        <VariationsData v-if="meal.variations" :meal="meal" :disabled="disabled"/>
+        <MealData v-if="!meal.variations" :meal="meal" :disabled="disabled" />
+      </div>
     </div>
   </div>
 </template>
@@ -22,12 +27,19 @@
 import MealData from "@/components/dashboard/MealData.vue";
 import Icons from "@/components/misc/Icons.vue";
 import { useI18n } from "vue-i18n";
+import VariationsData from "@/components/dashboard/VariationsData.vue";
+import {computed, ref} from "vue";
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 
 const props = defineProps([
-    'day',
+  'day',
 ])
+
+const date = new Date(Date.parse(props.day.date.date));
+let weekday = computed(() => date.toLocaleDateString(locale.value, { weekday: 'long' }))
+
+let disabled = props.day.meals[0].isLocked
 
 </script>
 

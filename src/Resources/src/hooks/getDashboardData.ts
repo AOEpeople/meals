@@ -6,6 +6,7 @@ type Meal = {
     title: { en: string, de: string }
     description: { en: string, de: string } | null
     limit: number,
+    reachedLimit: boolean,
     isOpen: boolean,
     isLocked: boolean,
     price: number,

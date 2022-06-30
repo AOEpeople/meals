@@ -18,8 +18,8 @@ return $config
         ],
         'phpdoc_to_comment' => [
             'ignored_tags' => [
-                'psalm-var'     // Psalm doesn't like /* */ inline comments and php-cs-fixer /** */
-                                // The latter one is used by psalm and a valid php-doc comment.
+                'psalm-suppress',     // Psalm doesn't like /* */ inline comments and php-cs-fixer /** */
+                'psalm-var',          // The latter one is used by psalm and a valid php-doc comment.
             ],
         ],
         'single_line_throw' => false,

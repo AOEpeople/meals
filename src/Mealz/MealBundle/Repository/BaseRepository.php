@@ -95,14 +95,13 @@ abstract class BaseRepository implements ObjectRepository, Selectable
     /**
      * Select all elements from a selectable that match the expression and
      * return a new collection containing these elements.
-     *
-     * @return AbstractLazyCollection
-     * @psalm-return LazyCriteriaCollection<int, T>
      */
-    public function matching(Criteria $criteria)
+    public function matching(Criteria $criteria): AbstractLazyCollection
     {
         $persister = $this->entityManager->getUnitOfWork()->getEntityPersister($this->entityClass);
+        /** @var AbstractLazyCollection<int, T> $collection */
+        $collection = new LazyCriteriaCollection($persister, $criteria);
 
-        return new LazyCriteriaCollection($persister, $criteria);
+        return $collection;
     }
 }

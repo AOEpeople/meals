@@ -6,6 +6,7 @@ use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Form\Dish\DishVariationForm;
 use App\Mealz\MealBundle\Repository\DishRepository;
+use App\Mealz\MealBundle\Repository\DishVariationRepositoryInterface;
 use App\Mealz\MealBundle\Service\Logger\MealsLoggerInterface;
 use Doctrine\ORM\EntityManager;
 use Exception;
@@ -60,11 +61,8 @@ class DishVariationController extends BaseController
      *
      * @return Response|RedirectResponse
      */
-    public function edit(Request $request, $slug)
+    public function edit(Request $request, $slug, DishVariationRepositoryInterface $dishVariationRepo)
     {
-        /** @var \App\Mealz\MealBundle\Entity\DishVariationRepository $dishVariationRepo */
-        $dishVariationRepo = $this->getDoctrine()->getRepository(DishVariation::class);
-
         /** @var \App\Mealz\MealBundle\Entity\DishVariation $dish */
         $dishVariation = $dishVariationRepo->find($slug);
 

@@ -98,6 +98,8 @@ services:
     App\Mealz\MealBundle\Service\Publisher\PublisherInterface: '@App\Mealz\MealBundle\Service\Publisher\MercurePublisher'
 
     App\Mealz\MealBundle\Repository\DayRepositoryInterface: '@App\Mealz\MealBundle\Repository\DayRepository'
+    App\Mealz\MealBundle\Repository\DishRepositoryInterface: '@App\Mealz\MealBundle\Repository\DishRepository'
+    App\Mealz\MealBundle\Repository\DishVariationRepositoryInterface: '@App\Mealz\MealBundle\Repository\DishVariationRepository'
     App\Mealz\MealBundle\Repository\CategoryRepositoryInterface: '@App\Mealz\MealBundle\Repository\CategoryRepository'
 
     # Event Listeners
@@ -128,12 +130,9 @@ services:
         arguments:
             $entityClass: App\Mealz\MealBundle\Entity\Dish
 
-    mealz_meal.repository.dish_variation:
-        class: App\Mealz\MealBundle\Entity\DishVariationRepository
-        parent: mealz_meal.repository.abstract.localized
+    App\Mealz\MealBundle\Repository\DishVariationRepository:
         arguments:
-            - 'MealzMealBundle:DishVariation'
-    App\Mealz\MealBundle\Entity\DishVariationRepository: '@mealz_meal.repository.dish_variation'
+            $entityClass: App\Mealz\MealBundle\Entity\DishVariation
 
     mealz_meal.repository.participant:
         class: App\Mealz\MealBundle\Entity\ParticipantRepository

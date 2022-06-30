@@ -25,11 +25,6 @@
     "cash_register": "Kasse",
     "show_hidden_users": "Ausgeblendete Benutzer anzeigen"
   },
-  "Mon": "Mo.",
-  "Tue": "Di.",
-  "Wed": "Mi.",
-  "Thu": "Do.",
-  "Fri": "Fr.",
   "Monday": "Montag",
   "Tuesday": "Dienstag",
   "Wednesday": "Mittwoch",
@@ -50,8 +45,9 @@
     "balance": "Kontostand"
   },
   "dashboard": {
-    "current": "Aktuelle Woche",
-    "next": "Nächste Woche"
+    "0": "Aktuelle Woche",
+    "1": "Nächste Woche",
+    "no_service": "Keine Angebote für diesen Tag."
   },
   "balance": {
     "current": "Momentaner Kontostand",

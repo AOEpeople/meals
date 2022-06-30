@@ -10,7 +10,7 @@
         </div>
       </div>
     </div>
-    <div class="flex flex-col flex-1">
+    <div v-if="!emptyDay" class="flex flex-col flex-1">
       <div
           v-for="meal in day.meals"
           :key="meal.id"
@@ -19,6 +19,9 @@
         <VariationsData v-if="meal.variations" :meal="meal" :disabled="disabled"/>
         <MealData v-if="!meal.variations" :meal="meal" :disabled="disabled" />
       </div>
+    </div>
+    <div v-if="emptyDay" class="h-[134px]">
+      <span class="relative top-[53px] description text-primary-1 ml-[23px]">{{ t('dashboard.no_service') }}</span>
     </div>
   </div>
 </template>
@@ -39,7 +42,13 @@ const props = defineProps([
 const date = new Date(Date.parse(props.day.date.date));
 let weekday = computed(() => date.toLocaleDateString(locale.value, { weekday: 'long' }))
 
-let disabled = props.day.meals[0].isLocked
+let emptyDay = false
+let disabled = true
+if(props.day.meals.length === 0) {
+  emptyDay = true
+} else {
+  disabled = props.day.meals[0].isLocked
+}
 
 </script>
 

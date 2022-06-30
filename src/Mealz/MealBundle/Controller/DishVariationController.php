@@ -3,9 +3,9 @@
 namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Dish;
-use App\Mealz\MealBundle\Entity\DishRepository;
 use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Form\Dish\DishVariationForm;
+use App\Mealz\MealBundle\Repository\DishRepository;
 use App\Mealz\MealBundle\Service\Logger\MealsLoggerInterface;
 use Doctrine\ORM\EntityManager;
 use Exception;

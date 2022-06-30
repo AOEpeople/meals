@@ -6,8 +6,8 @@ use App\Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishVariations;
 use App\Mealz\MealBundle\Entity\Dish;
-use App\Mealz\MealBundle\Entity\DishRepository;
 use App\Mealz\MealBundle\Entity\DishVariation;
+use App\Mealz\MealBundle\Repository\DishRepository;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use Doctrine\ORM\EntityManager;
@@ -356,7 +356,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
     private function getDish($identifier = null, $dishVarRequired = false)
     {
         /** @var DishRepository $dishRepository */
-        $dishRepository = $this->getDoctrine()->getRepository(Dish::class);
+        $dishRepository = self::$container->get(DishRepository::class);
         $dish = null;
 
         if ($identifier > 0) {

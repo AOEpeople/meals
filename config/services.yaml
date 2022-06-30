@@ -116,20 +116,17 @@ services:
         abstract: true
         factory: ['@mealz_meal.factory.localized_repository', createLocalizedRepository]
 
-    App\Mealz\MealBundle\Repository\DayRepository:
-        arguments:
-            $entityClass: App\Mealz\MealBundle\Entity\Day
-
     App\Mealz\MealBundle\Repository\CategoryRepository:
         arguments:
             $entityClass: App\Mealz\MealBundle\Entity\Category
 
-    mealz_meal.repository.dish:
-        class: App\Mealz\MealBundle\Entity\DishRepository
-        parent: mealz_meal.repository.abstract.localized
+    App\Mealz\MealBundle\Repository\DayRepository:
         arguments:
-            - 'MealzMealBundle:Dish'
-    App\Mealz\MealBundle\Entity\DishRepository: '@mealz_meal.repository.dish'
+            $entityClass: App\Mealz\MealBundle\Entity\Day
+
+    App\Mealz\MealBundle\Repository\DishRepository:
+        arguments:
+            $entityClass: App\Mealz\MealBundle\Entity\Dish
 
     mealz_meal.repository.dish_variation:
         class: App\Mealz\MealBundle\Entity\DishVariationRepository
@@ -171,7 +168,6 @@ services:
     App\Mealz\MealBundle\Service\DishService:
         arguments:
             $newFlagThreshold: '%mealz.meal.new_flag_counter%'
-            $dishRepository: '@mealz_meal.repository.dish'
 
     App\Mealz\MealBundle\Event\Subscriber\MealOfferSubscriber:
         arguments:

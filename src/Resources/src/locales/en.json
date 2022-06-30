@@ -54,7 +54,8 @@
   "dashboard": {
     "0": "Current Week",
     "1": "Next Week",
-    "no_service": "No Service this day."
+    "no_service": "No Service this day.",
+    "new": "new"
   },
   "content": {
     "participation": {

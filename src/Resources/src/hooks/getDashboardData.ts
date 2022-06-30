@@ -9,6 +9,7 @@ type Meal = {
     reachedLimit: boolean,
     isOpen: boolean,
     isLocked: boolean,
+    isNew: boolean,
     price: number,
     participations: number,
     isParticipating: boolean

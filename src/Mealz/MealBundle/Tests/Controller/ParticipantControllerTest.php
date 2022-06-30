@@ -16,6 +16,7 @@ use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Entity\WeekRepository;
+use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use App\Mealz\UserBundle\Entity\Profile;
@@ -147,7 +148,8 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     {
         $userProfile = $this->getUserProfile(self::USER_STANDARD);
 
-        $outdatedMealsArray = $this->getDoctrine()->getRepository(Meal::class)->getOutdatedMeals();
+        $mealsRepo = self::$container->get(MealRepositoryInterface::class);
+        $outdatedMealsArray = $mealsRepo->getOutdatedMeals();
         $outdatedMeal = $outdatedMealsArray[0];
         $outdatedParticipant = $this->createParticipant($userProfile, $outdatedMeal);
         $participantId = $outdatedParticipant->getId();

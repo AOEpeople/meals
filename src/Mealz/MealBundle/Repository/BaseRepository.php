@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Repository;
 
+use Doctrine\Common\Collections\AbstractLazyCollection;
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\Selectable;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\LazyCriteriaCollection;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ObjectRepository;
 
@@ -13,7 +17,7 @@ use Doctrine\Persistence\ObjectRepository;
  * @template T of object
  * @template-implements ObjectRepository<T>
  */
-abstract class BaseRepository implements ObjectRepository
+abstract class BaseRepository implements ObjectRepository, Selectable
 {
     private string $entityClass;
 
@@ -86,5 +90,19 @@ abstract class BaseRepository implements ObjectRepository
     public function getEntityManager(): EntityManager
     {
         return $this->entityManager;
+    }
+
+    /**
+     * Select all elements from a selectable that match the expression and
+     * return a new collection containing these elements.
+     *
+     * @return AbstractLazyCollection
+     * @psalm-return LazyCriteriaCollection<int, T>
+     */
+    public function matching(Criteria $criteria)
+    {
+        $persister = $this->entityManager->getUnitOfWork()->getEntityPersister($this->entityClass);
+
+        return new LazyCriteriaCollection($persister, $criteria);
     }
 }

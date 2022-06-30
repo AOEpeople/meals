@@ -25,11 +25,15 @@ MealzMealBundle_Meal_join:
     path:  /menu/{date}/{dish}/join/{profile}
     defaults: { _controller: App\Mealz\MealBundle\Controller\MealController::join, profile: null }
     methods: [POST]
+    requirements:
+        date: '^\d{4}-\d{2}-\d{2}$'
 
 MealzMealBundle_Meal_accept_offer:
     path: /menu/{date}/{dish}/accept-offer/{profile}
     defaults: { _controller: App\Mealz\MealBundle\Controller\MealController::join, profile: null }
     methods: [GET,POST]
+    requirements:
+        date: '^\d{4}-\d{2}-\d{2}$'
 
 MealzMealBundle_Meal_offers:
     path: /menu/{date}/{dish}/offers

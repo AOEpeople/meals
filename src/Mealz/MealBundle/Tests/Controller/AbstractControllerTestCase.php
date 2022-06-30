@@ -6,8 +6,8 @@ namespace App\Mealz\MealBundle\Tests\Controller;
 
 use App\Mealz\AccountingBundle\Entity\Transaction;
 use App\Mealz\MealBundle\Entity\Meal;
-use App\Mealz\MealBundle\Entity\MealRepository;
 use App\Mealz\MealBundle\Entity\Participant;
+use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
 use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\Role;
@@ -163,8 +163,8 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
             $dateTime = new DateTime();
         }
 
-        /** @var MealRepository $mealRepository */
-        $mealRepository = $this->getDoctrine()->getRepository(Meal::class);
+        /** @var MealRepositoryInterface $mealRepository */
+        $mealRepository = self::$container->get(MealRepositoryInterface::class);
         $criteria = Criteria::create();
         $criteria
             ->where(Criteria::expr()->lte('dateTime', $dateTime))
@@ -185,10 +185,9 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
      */
     protected function getLockedMeals(): array
     {
-        /** @var MealRepository $mealsRepo */
-        $mealsRepo = $this->getDoctrine()->getRepository(Meal::class);
+        /** @var MealRepositoryInterface $mealsRepo */
+        $mealsRepo = self::$container->get(MealRepositoryInterface::class);
 
-        /** @var Meal[] $meals */
         $meals = $mealsRepo->getLockedMeals();
         if (0 < count($meals)) {
             return $meals;

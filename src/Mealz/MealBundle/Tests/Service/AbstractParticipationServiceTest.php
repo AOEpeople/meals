@@ -8,12 +8,12 @@ use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\MealCollection;
-use App\Mealz\MealBundle\Entity\MealRepository;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\ParticipantRepository;
 use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Entity\SlotRepository;
 use App\Mealz\MealBundle\Entity\Week;
+use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
 use App\Mealz\MealBundle\Service\CombinedMealService;
 use App\Mealz\MealBundle\Service\Doorman;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;
@@ -278,9 +278,9 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
         // Creates combined meal(s)
         $this->cms->update($day->getWeek());
 
-        /** @var MealRepository $mealRepo */
-        $mealRepo = $this->getDoctrine()->getRepository(Meal::class);
-        $combinedMeal = $mealRepo->findOneByDateAndDish($day->getDateTime()->format('Y-m-d'), Dish::COMBINED_DISH_SLUG);
+        /** @var MealRepositoryInterface $mealRepo */
+        $mealRepo = self::$container->get(MealRepositoryInterface::class);
+        $combinedMeal = $mealRepo->findOneByDateAndDish($day->getDateTime(), Dish::COMBINED_DISH_SLUG);
         $this->assertNotNull($combinedMeal);
 
         $participants = [];
@@ -310,7 +310,7 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
     /**
      * @param ParticipationService|GuestParticipationService $service
      */
-    protected function setParticipationService($service)
+    protected function setParticipationService($service): void
     {
         $this->sut = $service;
     }

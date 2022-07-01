@@ -7,15 +7,15 @@ namespace App\Mealz\MealBundle\Service;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
-use App\Mealz\MealBundle\Entity\SlotRepository;
 use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
+use App\Mealz\MealBundle\Repository\SlotRepository;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 
 /**
  * @property ParticipantRepositoryInterface $participantRepo
- * @property SlotRepository        $slotRepo
+ * @property SlotRepository                 $slotRepo
  */
 trait ParticipationServiceTrait
 {

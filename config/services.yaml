@@ -150,10 +150,10 @@ services:
             $entityClass: App\Mealz\MealBundle\Entity\Participant
 
     mealz_meal.repository.slot:
-        class: App\Mealz\MealBundle\Entity\SlotRepository
+        class: App\Mealz\MealBundle\Repository\SlotRepository
         arguments:
-            - '@doctrine.orm.default_entity_manager'
-    App\Mealz\MealBundle\Entity\SlotRepository: '@mealz_meal.repository.slot'
+            $entityClass: App\Mealz\MealBundle\Entity\Slot
+    App\Mealz\MealBundle\Repository\SlotRepository: '@mealz_meal.repository.slot'
 
     mealz_meal.repository.week:
         class: App\Mealz\MealBundle\Entity\WeekRepository

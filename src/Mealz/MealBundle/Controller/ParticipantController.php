@@ -8,13 +8,13 @@ use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Week;
-use App\Mealz\MealBundle\Entity\WeekRepository;
 use App\Mealz\MealBundle\Event\MealOfferCancelledEvent;
 use App\Mealz\MealBundle\Event\MealOfferedEvent;
 use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
 use App\Mealz\MealBundle\Event\SlotAllocationUpdateEvent;
 use App\Mealz\MealBundle\Repository\DayRepository;
 use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
+use App\Mealz\MealBundle\Repository\WeekRepositoryInterface;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\MealBundle\Service\MealAvailabilityService;
 use App\Mealz\MealBundle\Service\ParticipationService;
@@ -199,13 +199,12 @@ class ParticipantController extends BaseController
     public function editParticipation(
         Week $week,
         ParticipationService $participationSrv,
-        ParticipantRepositoryInterface $participantRepo
+        ParticipantRepositoryInterface $participantRepo,
+        WeekRepositoryInterface $weekRepo
     ): Response {
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
-        /** @var WeekRepository $weekRepository */
-        $weekRepository = $this->getDoctrine()->getRepository(Week::class);
-        $week = $weekRepository->findWeekByDate($week->getStartTime(), ['only_enabled_days' => true]);
+        $week = $weekRepo->findWeekByDate($week->getStartTime(), ['only_enabled_days' => true]);
 
         // Get user participation to list them as table rows
         $participation = $participantRepo->getParticipantsOnDays(

@@ -12,9 +12,8 @@ use App\Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
-use App\Mealz\MealBundle\Entity\Week;
-use App\Mealz\MealBundle\Entity\WeekRepository;
 use App\Mealz\MealBundle\Repository\DishRepository;
+use App\Mealz\MealBundle\Repository\WeekRepositoryInterface;
 use App\Mealz\MealBundle\Service\CombinedMealService;
 use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use Doctrine\ORM\EntityManagerInterface;
@@ -56,8 +55,8 @@ class CombinedMealServiceTest extends AbstractDatabaseTestCase
      */
     public function updateWeek(): void
     {
-        /** @var WeekRepository $weekRepository */
-        $weekRepository = $this->getDoctrine()->getRepository(Week::class);
+        /** @var WeekRepositoryInterface $weekRepository */
+        $weekRepository = self::$container->get(WeekRepositoryInterface::class);
         $week = $weekRepository->getCurrentWeek();
         $this->assertNotNull($week);
         $this->assertNotEmpty($week->getDays());

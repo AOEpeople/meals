@@ -8,12 +8,12 @@ use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Week;
-use App\Mealz\MealBundle\Entity\WeekRepository;
 use App\Mealz\MealBundle\Event\MealOfferAcceptedEvent;
 use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
 use App\Mealz\MealBundle\Event\SlotAllocationUpdateEvent;
 use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
 use App\Mealz\MealBundle\Repository\SlotRepository;
+use App\Mealz\MealBundle\Repository\WeekRepositoryInterface;
 use App\Mealz\MealBundle\Service\DishService;
 use App\Mealz\MealBundle\Service\MealAvailabilityService;
 use App\Mealz\MealBundle\Service\OfferService;
@@ -43,7 +43,7 @@ class MealController extends BaseController
         DishService $dishService,
         ParticipationService $participationService,
         SlotRepository $slotRepo,
-        WeekRepository $weekRepository
+        WeekRepositoryInterface $weekRepository
     ): Response {
         $currentWeek = $weekRepository->getCurrentWeek();
         if (null === $currentWeek) {

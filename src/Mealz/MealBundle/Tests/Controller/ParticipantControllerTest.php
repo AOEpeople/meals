@@ -15,8 +15,8 @@ use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Week;
-use App\Mealz\MealBundle\Entity\WeekRepository;
 use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
+use App\Mealz\MealBundle\Repository\WeekRepositoryInterface;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use App\Mealz\UserBundle\Entity\Profile;
@@ -314,8 +314,8 @@ class ParticipantControllerTest extends AbstractControllerTestCase
      */
     protected function getCurrentWeek(): ?Week
     {
-        /** @var WeekRepository $weekRepository */
-        $weekRepository = $this->getDoctrine()->getRepository(Week::class);
+        /** @var WeekRepositoryInterface $weekRepository */
+        $weekRepository = self::$container->get(WeekRepositoryInterface::class);
 
         return $weekRepository->getCurrentWeek();
     }

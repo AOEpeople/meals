@@ -1,16 +1,18 @@
 <?php
 
-namespace App\Mealz\MealBundle\Entity;
+declare(strict_types=1);
 
+namespace App\Mealz\MealBundle\Repository;
+
+use App\Mealz\MealBundle\Entity\Week;
 use DateTime;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 
 /**
  * Class WeekRepository.
  */
-class WeekRepository extends EntityRepository
+class WeekRepository extends BaseRepository implements WeekRepositoryInterface
 {
     protected array $defaultOptions = [
         'load_participants' => true,
@@ -31,12 +33,10 @@ class WeekRepository extends EntityRepository
     }
 
     /**
-     * @return mixed
-     *
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    public function getWeeksMealCount(Week $week)
+    public function getWeeksMealCount(Week $week): int
     {
         $query = $this->createQueryBuilder('w');
         $query->leftJoin('w.days', 'days');

@@ -155,12 +155,10 @@ services:
             $entityClass: App\Mealz\MealBundle\Entity\Slot
     App\Mealz\MealBundle\Repository\SlotRepository: '@mealz_meal.repository.slot'
 
-    mealz_meal.repository.week:
-        class: App\Mealz\MealBundle\Entity\WeekRepository
-        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+    App\Mealz\MealBundle\Repository\WeekRepository:
         arguments:
-            - 'MealzMealBundle:Week'
-    App\Mealz\MealBundle\Entity\WeekRepository: '@mealz_meal.repository.week'
+            $entityClass: App\Mealz\MealBundle\Entity\Week
+
 
     # Forms
     mealz_meal.form.dish:

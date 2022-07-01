@@ -11,6 +11,7 @@
       </div>
     </div>
     <div v-if="!emptyDay" class="flex flex-col flex-1">
+      <Slots :slots="day.slots" :disabled="disabled" :activeSlot="day.activeSlot"/>
       <div
           v-for="meal in day.meals"
           :key="meal.id"
@@ -27,13 +28,14 @@
 </template>
 
 <script setup>
-import MealData from "@/components/dashboard/MealData.vue";
-import Icons from "@/components/misc/Icons.vue";
-import { useI18n } from "vue-i18n";
-import VariationsData from "@/components/dashboard/VariationsData.vue";
-import {computed, ref} from "vue";
+import MealData from '@/components/dashboard/MealData.vue'
+import Slots from '@/components/dashboard/Slots.vue'
+import Icons from '@/components/misc/Icons.vue'
+import { useI18n } from 'vue-i18n'
+import VariationsData from '@/components/dashboard/VariationsData.vue'
+import { computed } from 'vue'
 
-const { t, locale } = useI18n();
+const { t, locale } = useI18n()
 
 const props = defineProps([
   'day',

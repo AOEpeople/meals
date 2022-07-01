@@ -34,6 +34,8 @@ import { ref } from "vue";
 import { useProgress } from '@marcoschulte/vue3-progress'
 import { useDashboardData } from "@/hooks/getDashboardData";
 
+const progress = useProgress().start()
+
 const { dashboardData: weeks } = await useDashboardData();
 
 const { t } = useI18n();

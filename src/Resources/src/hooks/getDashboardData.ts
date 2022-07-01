@@ -26,11 +26,20 @@ type DateTime = {
     timezone: string
 }
 
+type Slot = {
+    id: number,
+    title: string,
+    count: number,
+    limit: number,
+    slug: string
+}
+
 type Day = {
     id: number,
     meals: Array<Meal | Meal_Variations>,
     date: DateTime,
-    slots: []
+    slots: Array<Slot>,
+    activeSlot: number
 }
 
 export type Dashboard = {

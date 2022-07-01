@@ -5,16 +5,26 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Service;
 
 use App\Mealz\MealBundle\Entity\Slot;
+use App\Mealz\MealBundle\Entity\SlotRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 
 class SlotService
 {
     private EntityManagerInterface $em;
+    private ParticipationService $participantService;
+    private SlotRepository $slotRepository;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(
+        EntityManagerInterface $em,
+        ParticipationService $participantService,
+        SlotRepository $slotRepository
+    )
     {
         $this->em = $em;
+        $this->participantService = $participantService;
+        $this->slotRepository = $slotRepository;
     }
 
     public function updateState(Slot $slot, string $state): void
@@ -35,5 +45,25 @@ class SlotService
 
         $this->em->persist($slot);
         $this->em->flush();
+    }
+
+    public function getSlotStatusForDay(DateTime $datetime): array
+    {
+        $status = $this->participantService->getSlotsStatusOn($datetime);
+        $slots = [];
+
+        foreach ($status as $name => $count)
+        {
+            $slot = $this->slotRepository->findOneBy(["slug" => $name]);
+            $slots[] = [
+                "id" => $slot->getId(),
+                "title" => $slot->getTitle(),
+                "count" => $count,
+                "limit" => $slot->getLimit(),
+                "slug" => $slot->getSlug()
+            ];
+        }
+
+        return $slots;
     }
 }

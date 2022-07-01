@@ -15,7 +15,15 @@
 <script setup>
 import Day from '@/components/dashboard/Day.vue'
 import { useI18n } from "vue-i18n";
+import { useProgress } from '@marcoschulte/vue3-progress'
+
+const progress = useProgress().start()
+
 const props = defineProps(['week', 'index']);
 
 const { t } = useI18n();
+
+setTimeout(function () {
+  progress.finish()
+}, 500)
 </script>

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Controller;
 
-use App\Mealz\AccountingBundle\Entity\Transaction;
-use App\Mealz\AccountingBundle\Entity\TransactionRepository;
 use App\Mealz\MealBundle\Service\Doorman;
 use App\Mealz\UserBundle\Entity\Profile;
 use Exception;
@@ -26,14 +24,6 @@ abstract class BaseController extends AbstractController
         $services['translator'] = '?' . TranslatorInterface::class;
 
         return $services;
-    }
-
-    /**
-     * @return TransactionRepository
-     */
-    protected function getTransactionRepository()
-    {
-        return $this->getDoctrine()->getRepository(Transaction::class);
     }
 
     /**

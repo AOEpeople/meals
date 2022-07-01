@@ -4,6 +4,7 @@ namespace App\Mealz\AccountingBundle\Controller;
 
 use App\Mealz\AccountingBundle\Entity\Transaction;
 use App\Mealz\AccountingBundle\Event\ProfileSettlementEvent;
+use App\Mealz\AccountingBundle\Repository\TransactionRepositoryInterface;
 use App\Mealz\AccountingBundle\Service\Wallet;
 use App\Mealz\MealBundle\Controller\BaseController;
 use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
@@ -30,13 +31,13 @@ class CostSheetController extends BaseController
     /**
      * @TODO: use own data model for user costs
      */
-    public function list(ParticipantRepositoryInterface $participantRepo): Response
-    {
+    public function list(
+        ParticipantRepositoryInterface $participantRepo,
+        TransactionRepositoryInterface $transactionRepo
+    ): Response {
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
-        $transactionRepo = $this->getTransactionRepository();
         $transactionsPerUser = $transactionRepo->findUserDataAndTransactionAmountForGivenPeriod();
-
         $users = $participantRepo->findCostsGroupedByUserGroupedByMonth();
 
         // create column names
@@ -81,8 +82,11 @@ class CostSheetController extends BaseController
         ]);
     }
 
-    public function hideUserRequest(Profile $profile, ParticipantRepositoryInterface $participantRepo): Response
-    {
+    public function hideUserRequest(
+        Profile $profile,
+        ParticipantRepositoryInterface $participantRepo,
+        TransactionRepositoryInterface $transactionRepo
+    ): Response {
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
         if (!$profile->isHidden()) {
@@ -108,7 +112,7 @@ class CostSheetController extends BaseController
 
         $this->addFlashMessage($message, $severity);
 
-        return $this->list($participantRepo);
+        return $this->list($participantRepo, $transactionRepo);
     }
 
     private function getRemainingCosts($costs, &$transactions)
@@ -130,7 +134,8 @@ class CostSheetController extends BaseController
     public function sendSettlementRequest(
         Profile $userProfile,
         Wallet $wallet,
-        ParticipantRepositoryInterface $participantRepo
+        ParticipantRepositoryInterface $participantRepo,
+        TransactionRepositoryInterface $transactionRepo
     ): Response {
         if (null === $userProfile->getSettlementHash() && $wallet->getBalance($userProfile) > 0.00) {
             $username = $userProfile->getUsername();
@@ -165,7 +170,7 @@ class CostSheetController extends BaseController
 
         $this->addFlashMessage($message, $severity);
 
-        return $this->list($participantRepo);
+        return $this->list($participantRepo, $transactionRepo);
     }
 
     public function renderConfirmButton(string $hash): Response

@@ -4,6 +4,7 @@ namespace App\Mealz\AccountingBundle\Controller\Payment;
 
 use App\Mealz\AccountingBundle\Entity\Transaction;
 use App\Mealz\AccountingBundle\Form\CashPaymentAdminForm;
+use App\Mealz\AccountingBundle\Repository\TransactionRepositoryInterface;
 use App\Mealz\AccountingBundle\Service\Wallet;
 use App\Mealz\MealBundle\Controller\BaseController;
 use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
@@ -129,8 +130,10 @@ class CashController extends BaseController
     /**
      * Show transactions for logged-in user.
      */
-    public function showTransactionHistory(ParticipantRepositoryInterface $participantRepo): Response
-    {
+    public function showTransactionHistory(
+        ParticipantRepositoryInterface $participantRepo,
+        TransactionRepositoryInterface $transactionRepo
+    ): Response {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
         $profile = $this->getUser()->getProfile();
@@ -142,7 +145,8 @@ class CashController extends BaseController
             $dateFrom,
             $dateTo,
             $profile,
-            $participantRepo
+            $participantRepo,
+            $transactionRepo
         );
 
         ksort($transactionHistory);
@@ -164,11 +168,10 @@ class CashController extends BaseController
         DateTime $dateFrom,
         DateTime $dateTo,
         Profile $profile,
-        ParticipantRepositoryInterface $participantRepo
+        ParticipantRepositoryInterface $participantRepo,
+        TransactionRepositoryInterface $transactionRepo
     ): array {
         $participations = $participantRepo->getParticipantsOnDays($dateFrom, $dateTo, $profile);
-
-        $transactionRepo = $this->getTransactionRepository();
         $transactions = $transactionRepo->getSuccessfulTransactionsOnDays($dateFrom, $dateTo, $profile);
 
         $transactionsTotal = 0;

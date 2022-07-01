@@ -256,6 +256,10 @@ services:
     mealz_accounting.wallet:
         class: App\Mealz\AccountingBundle\Service\Wallet
 
+    App\Mealz\AccountingBundle\Repository\TransactionRepository:
+        arguments:
+            $entityClass: App\Mealz\AccountingBundle\Entity\Transaction
+
     ##################################################################
     # User BUNDLE
     ##################################################################

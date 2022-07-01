@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Mealz\AccountingBundle\Entity;
+namespace App\Mealz\AccountingBundle\Repository;
 
+use App\Mealz\AccountingBundle\Entity\Transaction;
+use App\Mealz\MealBundle\Repository\BaseRepository;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 
-class TransactionRepository extends EntityRepository
+class TransactionRepository extends BaseRepository implements TransactionRepositoryInterface
 {
     /**
      * Get total amount of transactions. Prevent unnecessary ORM mapping.

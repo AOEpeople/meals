@@ -1,10 +1,2 @@
 parameters:
     mealz_accounting.participant_list_factory.class: App\Mealz\AccountingBundle\ParticipantList\ParticipantListFactory
-
-services:
-    mealz_accounting.repository.transaction:
-        alias: App\Mealz\AccountingBundle\Entity\TransactionRepository
-    App\Mealz\AccountingBundle\Entity\TransactionRepository:
-        factory: ['@doctrine.orm.default_entity_manager', getRepository]
-        arguments:
-            - 'MealzAccountingBundle:Transaction'

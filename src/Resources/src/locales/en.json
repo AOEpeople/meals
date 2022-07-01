@@ -55,7 +55,8 @@
     "0": "Current Week",
     "1": "Next Week",
     "no_service": "No Service this day.",
-    "new": "new"
+    "new": "new",
+    "auto": "Autoselect next free slot"
   },
   "content": {
     "participation": {

@@ -21,6 +21,7 @@ use App\Mealz\MealBundle\Service\MealAvailabilityService;
 use App\Mealz\MealBundle\Service\OfferService;
 use App\Mealz\MealBundle\Service\ParticipationCountService;
 use App\Mealz\MealBundle\Service\ParticipationService;
+use App\Mealz\MealBundle\Service\SlotService;
 use App\Mealz\MealBundle\Service\WeekService;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
@@ -30,12 +31,14 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use function Amp\Iterator\map;
 
 class MealController extends BaseController
 {
     private MealAvailabilityService $availabilityService;
     private WeekService $weekService;
     private DishService $dishService;
+    private SlotService $slotService;
     private OfferService $offerService;
     private ParticipationService $participationService;
 
@@ -44,7 +47,8 @@ class MealController extends BaseController
         MealAvailabilityService $availabilityService,
         WeekService $weekService,
         ParticipationService $participationService,
-        DishService $dishService
+        DishService $dishService,
+        SlotService $slotService
     )
     {
         $this->availabilityService = $availabilityService;
@@ -52,6 +56,7 @@ class MealController extends BaseController
         $this->weekService = $weekService;
         $this->participationService = $participationService;
         $this->dishService = $dishService;
+        $this->slotService = $slotService;
     }
 
     public function index(
@@ -234,6 +239,13 @@ class MealController extends BaseController
             /* @var Day $day */
             foreach ($week->getDays() as $day) {
 
+                $activeSlot = $this->participationService->getSlot($this->getProfile(), $day->getDateTime());
+                if($activeSlot) {
+                    $activeSlot = $activeSlot->getId();
+                }
+                $slots = $this->slotService->getSlotStatusForDay($day->getDateTime());
+                array_unshift($slots, ["id" => null, "title" => "auto", "count" => 0, "limit" => 0, "slug" => "auto"]);
+
                 $meals = [];
                 /* @var Meal $meal */
                 foreach ($day->getMeals() as $meal) {
@@ -314,7 +326,8 @@ class MealController extends BaseController
                     'id' => $day->getId(),
                     'meals' => $meals,
                     'date' => $day->getDateTime(),
-                    'slots' => $this->participationService->getSlotsStatusOn($day->getDateTime()),
+                    'slots' => $slots,
+                    'activeSlot' => $activeSlot,
                 ];
             }
             $response[] = [

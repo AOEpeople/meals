@@ -8,13 +8,6 @@ services:
     mealz.oauthuserprovider:
         alias: App\Mealz\UserBundle\Provider\OAuthUserProvider
 
-    mealz_user.repository.profile:
-        class: App\Mealz\UserBundle\Entity\ProfileRepository
-        factory: ['@doctrine.orm.default_entity_manager', getRepository]
-        arguments:
-            - 'MealzUserBundle:Profile'
-    App\Mealz\UserBundle\Entity\ProfileRepository: '@mealz_user.repository.profile'
-
     mealz_user.repository.role:
         class: App\Mealz\UserBundle\Entity\RoleRepository
         factory: ['@doctrine.orm.default_entity_manager', getRepository]

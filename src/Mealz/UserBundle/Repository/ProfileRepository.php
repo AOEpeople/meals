@@ -1,22 +1,17 @@
 <?php
 
-namespace App\Mealz\UserBundle\Entity;
+declare(strict_types=1);
 
-use Doctrine\ORM\EntityRepository;
+namespace App\Mealz\UserBundle\Repository;
 
-/**
- * Class ProfileRepository.
- */
-class ProfileRepository extends EntityRepository
+use App\Mealz\MealBundle\Repository\BaseRepository;
+
+class ProfileRepository extends BaseRepository implements ProfileRepositoryInterface
 {
     /**
-     * find all profiles except the one with the given username.
-     *
-     * @param array $usernames
-     *
-     * @return array
+     * {@inheritDoc}
      */
-    public function findAllExcept($usernames)
+    public function findAllExcept($usernames): array
     {
         $queryBuilder = $this->createQueryBuilder('p');
         $queryBuilder->addSelect('r');

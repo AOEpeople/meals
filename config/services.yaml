@@ -269,10 +269,18 @@ services:
             - '../src/Mealz/UserBundle/Resources/'
             - '../src/Mealz/UserBundle/Tests/'
 
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
+
     App\Mealz\UserBundle\Provider\LogoutSuccessHandler:
         arguments:
             $logoutUrl: '%app.idp.endpoint.logout%'
             $baseUri: '%app.base_url%'
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    App\Mealz\UserBundle\Repository\ProfileRepository:
+        arguments:
+            $entityClass: App\Mealz\UserBundle\Entity\Profile
+
+    # Interface implementations
+    App\Mealz\UserBundle\Repository\ProfileRepositoryInterface: '@App\Mealz\UserBundle\Repository\ProfileRepository'

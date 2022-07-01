@@ -10,7 +10,7 @@ use App\Mealz\MealBundle\Controller\BaseController;
 use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\MealBundle\Service\Mailer\MailerInterface;
 use App\Mealz\UserBundle\Entity\Profile;
-use App\Mealz\UserBundle\Entity\ProfileRepository;
+use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
 use DateTime;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -173,11 +173,10 @@ class CostSheetController extends BaseController
         return $this->list($participantRepo, $transactionRepo);
     }
 
-    public function renderConfirmButton(string $hash): Response
+    public function renderConfirmButton(string $hash, ProfileRepositoryInterface $profileRepo): Response
     {
         $profile = null;
-        $profileRepository = $this->getDoctrine()->getRepository(Profile::class);
-        $queryResult = $profileRepository->findBy(['settlementHash' => urldecode($hash)]);
+        $queryResult = $profileRepo->findBy(['settlementHash' => urldecode($hash)]);
 
         if (true === is_array($queryResult) && false === empty($queryResult)) {
             $profile = $queryResult[0];
@@ -195,7 +194,7 @@ class CostSheetController extends BaseController
      */
     public function confirmSettlement(
         string $hash,
-        ProfileRepository $profileRepository,
+        ProfileRepositoryInterface $profileRepository,
         Wallet $wallet
     ): Response {
         $queryResult = $profileRepository->findBy(['settlementHash' => urldecode($hash)]);

@@ -11,9 +11,9 @@ use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\MealBundle\Repository\SlotRepository;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\UserBundle\Entity\Profile;
-use App\Mealz\UserBundle\Entity\ProfileRepository;
 use App\Mealz\UserBundle\Entity\Role;
 use App\Mealz\UserBundle\Entity\RoleRepository;
+use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -26,14 +26,14 @@ class GuestParticipationService
 
     private EntityManagerInterface $entityManager;
     private ParticipantRepositoryInterface $participantRepo;
-    private ProfileRepository $profileRepo;
+    private ProfileRepositoryInterface $profileRepo;
     private RoleRepository $roleRepo;
     private SlotRepository $slotRepo;
 
     public function __construct(
         EntityManagerInterface $entityManager,
         ParticipantRepositoryInterface $participantRepo,
-        ProfileRepository $profileRepo,
+        ProfileRepositoryInterface $profileRepo,
         RoleRepository $roleRepo,
         SlotRepository $slotRepo
     ) {

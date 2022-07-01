@@ -8,6 +8,7 @@ use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Provider\OAuthUserProvider;
+use App\Mealz\UserBundle\Repository\RoleRepositoryInterface;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use Prophecy\PhpUnit\ProphecyTrait;
 
@@ -24,7 +25,10 @@ class OAuthProviderTest extends AbstractControllerTestCase
         $this->clearAllTables();
         $this->loadFixtures([new LoadRoles()]);
 
-        $this->sut = new OAuthUserProvider($this->getDoctrine()->getManager());
+        $this->sut = new OAuthUserProvider(
+            $this->getDoctrine()->getManager(),
+            self::$container->get(RoleRepositoryInterface::class)
+        );
     }
 
     /**

@@ -16,6 +16,7 @@ use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\Role;
 use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
+use App\Mealz\UserBundle\Repository\RoleRepositoryInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class GuestParticipationServiceTest extends AbstractParticipationServiceTest
@@ -34,7 +35,7 @@ class GuestParticipationServiceTest extends AbstractParticipationServiceTest
 
         /** @var ProfileRepositoryInterface $profileRepo */
         $profileRepo = self::$container->get(ProfileRepositoryInterface::class);
-        $roleRepo = $this->entityManager->getRepository(Role::class);
+        $roleRepo = self::$container->get(RoleRepositoryInterface::class);
 
         $this->setParticipationService(new GuestParticipationService(
             $this->entityManager,

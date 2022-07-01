@@ -7,7 +7,7 @@ namespace App\Mealz\AccountingBundle\Tests\Controller;
 use App\Mealz\AccountingBundle\DataFixtures\ORM\LoadTransactions;
 use App\Mealz\AccountingBundle\Entity\Transaction;
 use App\Mealz\AccountingBundle\Service\Wallet;
-use App\Mealz\MealBundle\Entity\Participant;
+use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
@@ -31,7 +31,7 @@ class CostSheetControllerTest extends AbstractControllerTestCase
             new LoadTransactions(),
         ]);
 
-        $participantRepo = $this->getDoctrine()->getRepository(Participant::class);
+        $participantRepo = self::$container->get(ParticipantRepositoryInterface::class);
         $transactionRepo = $this->getDoctrine()->getRepository(Transaction::class);
         $this->wallet = new Wallet($participantRepo, $transactionRepo);
 
@@ -51,7 +51,7 @@ class CostSheetControllerTest extends AbstractControllerTestCase
         $this->assertGreaterThan(0.00, $balance);
 
         $this->client->request('GET', '/print/costsheet/settlement/request/' . $profile->getUsername());
-        $this->assertResponseIsSuccessful();
+        self::assertResponseIsSuccessful();
 
         $this->assertNotNull($profile->getSettlementHash(), 'SettlementHash was not set');
     }

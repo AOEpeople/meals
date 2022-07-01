@@ -103,6 +103,7 @@ services:
     App\Mealz\MealBundle\Repository\CategoryRepositoryInterface: '@App\Mealz\MealBundle\Repository\CategoryRepository'
     App\Mealz\MealBundle\Repository\GuestInvitationRepositoryInterface: '@App\Mealz\MealBundle\Repository\GuestInvitationRepository'
     App\Mealz\MealBundle\Repository\MealRepositoryInterface: '@App\Mealz\MealBundle\Repository\MealRepository'
+    App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface: '@App\Mealz\MealBundle\Repository\ParticipantRepository'
 
     # Event Listeners
     App\Mealz\MealBundle\EventListener\ParticipantPersistenceListener:
@@ -144,12 +145,9 @@ services:
         arguments:
             $entityClass: App\Mealz\MealBundle\Entity\Meal
 
-    mealz_meal.repository.participant:
-        class: App\Mealz\MealBundle\Entity\ParticipantRepository
-        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+    App\Mealz\MealBundle\Repository\ParticipantRepository:
         arguments:
-            - 'MealzMealBundle:Participant'
-    App\Mealz\MealBundle\Entity\ParticipantRepository: '@mealz_meal.repository.participant'
+            $entityClass: App\Mealz\MealBundle\Entity\Participant
 
     mealz_meal.repository.slot:
         class: App\Mealz\MealBundle\Entity\SlotRepository
@@ -215,6 +213,7 @@ services:
             $webhookURL: '%app.notifier.mattermost.meal_offers.webhook_url%'
             $username: 'Chef'
             $appName: 'Meals'
+            $env: '%env(APP_ENV)%'
     mealz_meal.notifier.mattermost.weekly_menu_notifier:
         class: App\Mealz\MealBundle\Service\Notification\MattermostNotifier
         lazy: true
@@ -254,6 +253,8 @@ services:
         arguments:
             - '@paypal.sdk.env'
 
+    mealz_accounting.wallet:
+        class: App\Mealz\AccountingBundle\Service\Wallet
 
     ##################################################################
     # User BUNDLE

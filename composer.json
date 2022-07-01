@@ -87,7 +87,8 @@
         "symfony/var-dumper": "^4.4",
         "symfony/var-exporter": "^4.4",
         "symfony/web-profiler-bundle": "^4.4",
-        "vimeo/psalm": "^4.9.2"
+        "vimeo/psalm": "^4.9.2",
+        "weirdan/doctrine-psalm-plugin": "^2.3"
     },
     "conflict": {
         "symfony/symfony": "*"

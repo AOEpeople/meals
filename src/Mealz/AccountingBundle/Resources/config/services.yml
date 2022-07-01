@@ -1,24 +1,10 @@
 parameters:
     mealz_accounting.participant_list_factory.class: App\Mealz\AccountingBundle\ParticipantList\ParticipantListFactory
-    mealz_accounting.wallet.class: App\Mealz\AccountingBundle\Service\Wallet
 
 services:
-    mealz_accounting.participant_list_factory:
-        class: '%mealz_accounting.participant_list_factory.class%'
-        arguments:
-            - '@mealz_meal.repository.participant'
-
     mealz_accounting.repository.transaction:
         alias: App\Mealz\AccountingBundle\Entity\TransactionRepository
     App\Mealz\AccountingBundle\Entity\TransactionRepository:
         factory: ['@doctrine.orm.default_entity_manager', getRepository]
         arguments:
             - 'MealzAccountingBundle:Transaction'
-
-    mealz_accounting.wallet:
-        class: '%mealz_accounting.wallet.class%'
-        public: true
-        arguments:
-            - '@mealz_meal.repository.participant'
-            - '@mealz_accounting.repository.transaction'
-        lazy: true

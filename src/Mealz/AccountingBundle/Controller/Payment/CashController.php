@@ -6,6 +6,7 @@ use App\Mealz\AccountingBundle\Entity\Transaction;
 use App\Mealz\AccountingBundle\Form\CashPaymentAdminForm;
 use App\Mealz\AccountingBundle\Service\Wallet;
 use App\Mealz\MealBundle\Controller\BaseController;
+use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Doctrine\ORM\EntityManager;
@@ -126,9 +127,9 @@ class CashController extends BaseController
     }
 
     /**
-     * Show transactions for logged in user.
+     * Show transactions for logged-in user.
      */
-    public function showTransactionHistory(): Response
+    public function showTransactionHistory(ParticipantRepositoryInterface $participantRepo): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
@@ -137,10 +138,11 @@ class CashController extends BaseController
         $dateFrom = new DateTime('-28 days 00:00:00');
         $dateTo = new DateTime();
 
-        list($transactionsTotal, $transactionHistory, $participationsTotal) = $this->getFullTransactionHistory(
+        [$transactionsTotal, $transactionHistory, $participationsTotal] = $this->getFullTransactionHistory(
             $dateFrom,
             $dateTo,
-            $profile
+            $profile,
+            $participantRepo
         );
 
         ksort($transactionHistory);
@@ -158,9 +160,12 @@ class CashController extends BaseController
     /**
      * Merge participation and transactions into 1 array.
      */
-    private function getFullTransactionHistory(DateTime $dateFrom, DateTime $dateTo, Profile $profile): array
-    {
-        $participantRepo = $this->getParticipantRepository();
+    private function getFullTransactionHistory(
+        DateTime $dateFrom,
+        DateTime $dateTo,
+        Profile $profile,
+        ParticipantRepositoryInterface $participantRepo
+    ): array {
         $participations = $participantRepo->getParticipantsOnDays($dateFrom, $dateTo, $profile);
 
         $transactionRepo = $this->getTransactionRepository();

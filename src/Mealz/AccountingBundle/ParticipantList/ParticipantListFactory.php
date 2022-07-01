@@ -1,29 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\AccountingBundle\ParticipantList;
 
-use App\Mealz\MealBundle\Entity\ParticipantRepository;
+use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 
 class ParticipantListFactory
 {
-    /**
-     * @var ParticipantRepository
-     */
-    protected $participantRepository;
+    private ParticipantRepositoryInterface $participantRepository;
 
-    public function __construct(ParticipantRepository $participantRepository)
+    public function __construct(ParticipantRepositoryInterface $participantRepository)
     {
         $this->participantRepository = $participantRepository;
     }
 
-    /**
-     * @param Profile $profile
-     *
-     * @return ParticipantList
-     */
-    public function getList(DateTime $minDate, DateTime $maxDate, Profile $profile = null)
+    public function getList(DateTime $minDate, DateTime $maxDate, Profile $profile = null): ParticipantList
     {
         $participants = $this->participantRepository->getParticipantsOnDays($minDate, $maxDate, $profile);
 

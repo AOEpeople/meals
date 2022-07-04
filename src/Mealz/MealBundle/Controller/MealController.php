@@ -7,12 +7,13 @@ namespace App\Mealz\MealBundle\Controller;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
-use App\Mealz\MealBundle\Entity\SlotRepository;
 use App\Mealz\MealBundle\Entity\Week;
-use App\Mealz\MealBundle\Entity\WeekRepository;
 use App\Mealz\MealBundle\Event\MealOfferAcceptedEvent;
 use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
 use App\Mealz\MealBundle\Event\SlotAllocationUpdateEvent;
+use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
+use App\Mealz\MealBundle\Repository\SlotRepository;
+use App\Mealz\MealBundle\Repository\WeekRepositoryInterface;
 use App\Mealz\MealBundle\Service\DishService;
 use App\Mealz\MealBundle\Service\MealAvailabilityService;
 use App\Mealz\MealBundle\Service\OfferService;
@@ -21,7 +22,6 @@ use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Exception;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -43,7 +43,7 @@ class MealController extends BaseController
         DishService $dishService,
         ParticipationService $participationService,
         SlotRepository $slotRepo,
-        WeekRepository $weekRepository
+        WeekRepositoryInterface $weekRepository
     ): Response {
         $currentWeek = $weekRepository->getCurrentWeek();
         if (null === $currentWeek) {
@@ -71,13 +71,16 @@ class MealController extends BaseController
     /**
      * Lets the currently logged-in user either join a meal, or accept an already booked meal offered by a participant.
      *
+     * @param string $dish Dish Slug
+     *
      * @Security("is_granted('ROLE_USER')")
-     * @Entity("meal", expr="repository.findOneByDateAndDish(date, dish)")
      */
     public function join(
         Request $request,
-        Meal $meal,
+        DateTime $date,
+        string $dish,
         ?string $profile,
+        MealRepositoryInterface $mealRepo,
         ParticipationService $participationSrv,
         SlotRepository $slotRepo,
         EventDispatcherInterface $eventDispatcher
@@ -85,6 +88,11 @@ class MealController extends BaseController
         $userProfile = $this->checkProfile($profile);
         if (null === $userProfile) {
             return new JsonResponse(null, 403);
+        }
+
+        $meal = $mealRepo->findOneByDateAndDish($date, $dish);
+        if (null === $meal) {
+            return new JsonResponse(null, 404);
         }
 
         $slot = null;
@@ -170,11 +178,17 @@ class MealController extends BaseController
     }
 
     /**
+     * @param string $dish Dish Slug
+     *
      * @Security("is_granted('ROLE_USER')")
-     * @Entity("meal", expr="repository.findOneByDateAndDish(date, dish)")
      */
-    public function getOffers(Meal $meal): JsonResponse
+    public function getOffers(DateTime $date, string $dish, MealRepositoryInterface $mealRepo): JsonResponse
     {
+        $meal = $mealRepo->findOneByDateAndDish($date, $dish);
+        if (null === $meal) {
+            return new JsonResponse(null, 404);
+        }
+
         $offers = $this->offerService->getOffers($meal);
 
         if (empty($offers)) {

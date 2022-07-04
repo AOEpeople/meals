@@ -6,9 +6,9 @@ namespace App\Mealz\MealBundle\Service;
 
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
-use App\Mealz\MealBundle\Entity\DishRepository;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Week;
+use App\Mealz\MealBundle\Repository\DishRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class CombinedMealService

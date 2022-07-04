@@ -2,15 +2,22 @@
 
 declare(strict_types=1);
 
-namespace App\Mealz\MealBundle\Entity;
+namespace App\Mealz\MealBundle\Repository;
 
+use App\Mealz\MealBundle\Entity\Dish;
+use App\Mealz\MealBundle\Entity\Meal;
+use App\Mealz\MealBundle\EventListener\LocalisationListener;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 
-class DishRepository extends LocalizedRepository
+/**
+ * @extends BaseRepository<Dish>
+ */
+class DishRepository extends BaseRepository implements DishRepositoryInterface
 {
     protected array $defaultOptions = [
         'load_category' => true,
@@ -19,30 +26,18 @@ class DishRepository extends LocalizedRepository
         'load_disabled_variations' => false,
     ];
 
-    /**
-     * Return a query builder that fetches all dish that have NO variations
-     * and all variations without their dishes.
-     */
-    public function getDishesAndVariations(): QueryBuilder
+    private LocalisationListener $localisationListener;
+
+    public function __construct(EntityManagerInterface $em, string $entityClass, LocalisationListener $listener)
     {
-        $query = $this->createQueryBuilder('d');
-        $qb2 = $this->createQueryBuilder('s');
+        parent::__construct($em, $entityClass);
 
-        $qb2->select('IDENTITY(s.parent)');
-        $qb2->where('IDENTITY(s.parent) is not null');
-        $qb2->distinct(true);
-
-        $query->select('d');
-        $query->where(
-            $query->expr()->notIn('d.id', $qb2->getDQL())
-        );
-
-        return $query;
+        $this->localisationListener = $listener;
     }
 
     public function getSortedDishesQueryBuilder(array $options = []): QueryBuilder
     {
-        $currentLocale = $this->localizationListener->getLocale();
+        $currentLocale = $this->localisationListener->getLocale();
 
         $options = array_merge($this->defaultOptions, $options);
 
@@ -75,7 +70,7 @@ class DishRepository extends LocalizedRepository
      */
     public function hasDishAssociatedMeals(Dish $dish): bool
     {
-        $query = $this->_em->createQueryBuilder();
+        $query = $this->getEntityManager()->createQueryBuilder();
         $query->select('COUNT(m.dish)');
         $query->from(Meal::class, 'm');
         $query->where('m.dish = :dish');

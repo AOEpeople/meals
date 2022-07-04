@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace App\Mealz\AccountingBundle\Event\Subscriber;
 
 use App\Mealz\AccountingBundle\Event\ProfileSettlementEvent;
-use App\Mealz\MealBundle\Entity\ParticipantRepository;
+use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class SettlementSubscriber implements EventSubscriberInterface
 {
-    private ParticipantRepository $participantRepo;
+    private ParticipantRepositoryInterface $participantRepo;
 
-    public function __construct(ParticipantRepository $participantRepo)
+    public function __construct(ParticipantRepositoryInterface $participantRepo)
     {
         $this->participantRepo = $participantRepo;
     }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Service;
 
 use App\Mealz\MealBundle\Entity\Dish;
-use App\Mealz\MealBundle\Entity\DishRepository;
+use App\Mealz\MealBundle\Repository\DishRepository;
 use Exception;
 
 class DishService

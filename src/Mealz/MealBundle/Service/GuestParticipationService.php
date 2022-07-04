@@ -6,14 +6,14 @@ namespace App\Mealz\MealBundle\Service;
 
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
-use App\Mealz\MealBundle\Entity\ParticipantRepository;
 use App\Mealz\MealBundle\Entity\Slot;
-use App\Mealz\MealBundle\Entity\SlotRepository;
+use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
+use App\Mealz\MealBundle\Repository\SlotRepositoryInterface;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\UserBundle\Entity\Profile;
-use App\Mealz\UserBundle\Entity\ProfileRepository;
 use App\Mealz\UserBundle\Entity\Role;
-use App\Mealz\UserBundle\Entity\RoleRepository;
+use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
+use App\Mealz\UserBundle\Repository\RoleRepositoryInterface;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,17 +25,17 @@ class GuestParticipationService
     use ParticipationServiceTrait;
 
     private EntityManagerInterface $entityManager;
-    private ParticipantRepository $participantRepo;
-    private ProfileRepository $profileRepo;
-    private RoleRepository $roleRepo;
-    private SlotRepository $slotRepo;
+    private ParticipantRepositoryInterface $participantRepo;
+    private ProfileRepositoryInterface $profileRepo;
+    private RoleRepositoryInterface $roleRepo;
+    private SlotRepositoryInterface $slotRepo;
 
     public function __construct(
         EntityManagerInterface $entityManager,
-        ParticipantRepository $participantRepo,
-        ProfileRepository $profileRepo,
-        RoleRepository $roleRepo,
-        SlotRepository $slotRepo
+        ParticipantRepositoryInterface $participantRepo,
+        ProfileRepositoryInterface $profileRepo,
+        RoleRepositoryInterface $roleRepo,
+        SlotRepositoryInterface $slotRepo
     ) {
         $this->entityManager = $entityManager;
         $this->participantRepo = $participantRepo;

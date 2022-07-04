@@ -6,12 +6,13 @@ namespace App\Mealz\MealBundle\Tests\Controller;
 
 use App\Mealz\AccountingBundle\Entity\Transaction;
 use App\Mealz\MealBundle\Entity\Meal;
-use App\Mealz\MealBundle\Entity\MealRepository;
 use App\Mealz\MealBundle\Entity\Participant;
+use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
 use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\Role;
-use App\Mealz\UserBundle\Entity\RoleRepository;
+use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
+use App\Mealz\UserBundle\Repository\RoleRepositoryInterface;
 use DateTime;
 use Doctrine\Common\Collections\Criteria;
 use Exception;
@@ -81,8 +82,8 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
 
     protected function getUserProfile(string $username): Profile
     {
-        /** @var RoleRepository $profileRepository */
-        $profileRepository = $this->getDoctrine()->getRepository(Profile::class);
+        /** @var ProfileRepositoryInterface $profileRepository */
+        $profileRepository = self::$container->get(ProfileRepositoryInterface::class);
         $userProfile = $profileRepository->findOneBy(['username' => $username]);
 
         if (!($userProfile instanceof Profile)) {
@@ -109,8 +110,8 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
      */
     protected function getRole(string $roleType): Role
     {
-        /** @var RoleRepository $roleRepository */
-        $roleRepository = $this->getDoctrine()->getRepository(Role::class);
+        /** @var RoleRepositoryInterface $roleRepository */
+        $roleRepository = self::$container->get(RoleRepositoryInterface::class);
         $role = $roleRepository->findOneBy(['sid' => $roleType]);
         if (!($role instanceof Role)) {
             $this->fail('user role not found:  "' . $roleType);
@@ -163,8 +164,8 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
             $dateTime = new DateTime();
         }
 
-        /** @var MealRepository $mealRepository */
-        $mealRepository = $this->getDoctrine()->getRepository(Meal::class);
+        /** @var MealRepositoryInterface $mealRepository */
+        $mealRepository = self::$container->get(MealRepositoryInterface::class);
         $criteria = Criteria::create();
         $criteria
             ->where(Criteria::expr()->lte('dateTime', $dateTime))
@@ -185,10 +186,9 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
      */
     protected function getLockedMeals(): array
     {
-        /** @var MealRepository $mealsRepo */
-        $mealsRepo = $this->getDoctrine()->getRepository(Meal::class);
+        /** @var MealRepositoryInterface $mealsRepo */
+        $mealsRepo = self::$container->get(MealRepositoryInterface::class);
 
-        /** @var Meal[] $meals */
         $meals = $mealsRepo->getLockedMeals();
         if (0 < count($meals)) {
             return $meals;

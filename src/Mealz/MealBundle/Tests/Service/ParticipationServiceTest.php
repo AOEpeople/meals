@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Tests\Service;
 
-use App\Mealz\MealBundle\Entity\Day;
-use App\Mealz\MealBundle\Entity\DayRepository;
 use App\Mealz\MealBundle\Entity\Dish;
-use App\Mealz\MealBundle\Entity\DishRepository;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\MealCollection;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
+use App\Mealz\MealBundle\Repository\DayRepository;
+use App\Mealz\MealBundle\Repository\DishRepository;
 use App\Mealz\MealBundle\Service\CombinedMealService;
 use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
@@ -33,7 +32,7 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
         ]);
 
         $doorman = $this->getDoormanMock(true, false);
-        $this->dayRepo = $this->entityManager->getRepository(Day::class);
+        $this->dayRepo = self::$container->get(DayRepository::class);
 
         $this->setParticipationService(new ParticipationService(
             $this->entityManager,

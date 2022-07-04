@@ -6,15 +6,14 @@ namespace App\Mealz\MealBundle\Tests\Repository;
 
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
 use App\Mealz\MealBundle\Entity\Week;
-use App\Mealz\MealBundle\Entity\WeekRepository;
+use App\Mealz\MealBundle\Repository\WeekRepositoryInterface;
 use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use DateTime;
 use DateTimeImmutable;
 
 class WeekRepositoryTest extends AbstractDatabaseTestCase
 {
-    /** @var WeekRepository */
-    protected $weekRepository;
+    protected WeekRepositoryInterface $weekRepository;
 
     protected function setUp(): void
     {
@@ -23,7 +22,7 @@ class WeekRepositoryTest extends AbstractDatabaseTestCase
         $this->clearAllTables();
         $this->loadFixtures([new LoadWeeks()]);
 
-        $this->weekRepository = $this->getDoctrine()->getRepository(Week::class);
+        $this->weekRepository = self::$container->get(WeekRepositoryInterface::class);
     }
 
     public function testGetGetCurrentWeek(): void

@@ -7,19 +7,19 @@ namespace App\Mealz\MealBundle\Service;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\MealCollection;
-use App\Mealz\MealBundle\Entity\ParticipantRepository;
+use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 
 class MealAvailabilityService
 {
-    private ParticipantRepository $participantRepo;
+    private ParticipantRepositoryInterface $participantRepo;
 
-    public function __construct(ParticipantRepository $participantRepo)
+    public function __construct(ParticipantRepositoryInterface $participantRepo)
     {
         $this->participantRepo = $participantRepo;
     }
 
     /**
-     * @psalm-return array<int, bool|array{available: bool, availableWith: list<int>}> Key-value pair of meal-ID and corresponding availability
+     * @psalm-return array<int, bool|array{available: bool, availableWith: list<string>}> Key-value pair of meal-ID and corresponding availability
      */
     public function getByDay(Day $day): array
     {
@@ -27,7 +27,7 @@ class MealAvailabilityService
     }
 
     /**
-     * @psalm-return bool|array{available: bool, availableWith: list<int>}
+     * @psalm-return bool|array{available: bool, availableWith: list<string>}
      */
     public function getByMeal(Meal $meal)
     {
@@ -44,21 +44,24 @@ class MealAvailabilityService
     }
 
     /**
-     * @return array<int, bool|array{available: bool, availableWith: list<int>}> Key-value pair of meal-ID and corresponding availability
+     * @return array<int, bool|array{available: bool, availableWith: list<string>}> Key-value pair of meal-ID and corresponding availability
      */
     private function getAvailability(MealCollection $meals): array
     {
         $availability = [];
 
         foreach ($meals as $meal) {
-            $availability[$meal->getId()] = $this->getMealAvailability($meal);
+            $mealId = $meal->getId();
+            if (null !== $mealId) {
+                $availability[$mealId] = $this->getMealAvailability($meal);
+            }
         }
 
         return $availability;
     }
 
     /**
-     * @return bool|array{available: bool, availableWith: list<int>}
+     * @return bool|array{available: bool, availableWith: list<string>}
      */
     private function getMealAvailability(Meal $meal)
     {

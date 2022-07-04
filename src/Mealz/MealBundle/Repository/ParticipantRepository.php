@@ -1,17 +1,24 @@
 <?php
 
-namespace App\Mealz\MealBundle\Entity;
+declare(strict_types=1);
 
+namespace App\Mealz\MealBundle\Repository;
+
+use App\Mealz\MealBundle\Entity\Meal;
+use App\Mealz\MealBundle\Entity\Participant;
+use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\Role;
 use DateTime;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 
-class ParticipantRepository extends EntityRepository
+/**
+ * @extends BaseRepository<Participant>
+ */
+class ParticipantRepository extends BaseRepository implements ParticipantRepositoryInterface
 {
     /**
      * default options for database queries.
@@ -60,7 +67,7 @@ class ParticipantRepository extends EntityRepository
      *
      * @return mixed
      */
-    public function sortParticipantsByName($participants)
+    private function sortParticipantsByName($participants)
     {
         usort($participants, [$this, 'compareNameOfParticipants']);
 
@@ -147,11 +154,15 @@ class ParticipantRepository extends EntityRepository
         return $result;
     }
 
+    /**
+     * @param Participant[] $participants
+     *
+     * @return array<string, list<Participant>>
+     */
     public function groupParticipantsByName(array $participants): array
     {
         $result = [];
 
-        /** @var Participant $participant */
         foreach ($participants as $participant) {
             $name = $participant->getProfile()->getUsername();
             if (isset($result[$name])) {
@@ -221,9 +232,9 @@ class ParticipantRepository extends EntityRepository
     }
 
     /**
-     * @return mixed
+     * @return Participant[]
      */
-    public function getParticipantsOnCurrentDay(array $options = [])
+    public function getParticipantsOnCurrentDay(array $options = []): array
     {
         $options = array_merge(
             $options,

@@ -7,14 +7,14 @@ namespace App\Mealz\MealBundle\Service;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
-use App\Mealz\MealBundle\Entity\ParticipantRepository;
+use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use DateTime;
 
 class OfferService
 {
-    private ParticipantRepository $participantRepo;
+    private ParticipantRepositoryInterface $participantRepo;
 
-    public function __construct(ParticipantRepository $participantRepo)
+    public function __construct(ParticipantRepositoryInterface $participantRepo)
     {
         $this->participantRepo = $participantRepo;
     }

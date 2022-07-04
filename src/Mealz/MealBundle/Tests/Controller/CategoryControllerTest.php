@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\MealBundle\Tests\Controller;
 
 use App\Mealz\MealBundle\Entity\Category;
+use App\Mealz\MealBundle\Repository\CategoryRepository;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
-use Doctrine\ORM\EntityManager;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
@@ -39,9 +41,7 @@ class CategoryControllerTest extends AbstractControllerTestCase
         $this->client->request('POST', '/category/new', $form);
 
         // Get persisted entity
-        /** @var EntityManager $entityManager */
-        $entityManager = $this->client->getContainer()->get('doctrine')->getManager();
-        $categoryRepository = $entityManager->getRepository(Category::class);
+        $categoryRepository = self::$container->get(CategoryRepository::class);
         $category = $categoryRepository->findOneBy([
             'title_de' => 'category-form-title-de',
             'title_en' => 'category-form-title-en',
@@ -108,7 +108,7 @@ class CategoryControllerTest extends AbstractControllerTestCase
         ];
 
         $this->client->request('POST', '/category/' . $category->getSlug() . '/edit', $form);
-        $categoryRepository = $this->getDoctrine()->getRepository(Category::class);
+        $categoryRepository = self::$container->get(CategoryRepository::class);
         unset($form['category']['category']);
         unset($form['category']['_token']);
         $editedCategory = $categoryRepository->findOneBy($form['category']);
@@ -130,7 +130,7 @@ class CategoryControllerTest extends AbstractControllerTestCase
 
         $categoryId = $category->getId();
         $this->client->request('GET', '/category/' . $category->getSlug() . '/delete');
-        $categoryRepository = $this->getDoctrine()->getRepository(Category::class);
+        $categoryRepository = self::$container->get(CategoryRepository::class);
         $queryResult = $categoryRepository->find($categoryId);
 
         $this->assertNull($queryResult);

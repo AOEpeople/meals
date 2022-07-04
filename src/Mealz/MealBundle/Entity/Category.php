@@ -2,14 +2,13 @@
 
 namespace App\Mealz\MealBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Table()
- * @ORM\Entity(repositoryClass="App\Mealz\MealBundle\Entity\CategoryRepository")
+ * @ORM\Entity
+ * @ORM\Table(name="Category")
  *
  * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  * @SuppressWarnings(PHPMD.CamelCaseVariableName)
@@ -52,17 +51,7 @@ class Category
      */
     protected $title_de;
 
-    /**
-     * @var string
-     */
-    protected $currentLocale = 'en';
-
-    /**
-     * @ORM\OneToMany(targetEntity="Dish", mappedBy="category")
-     *
-     * @var ArrayCollection
-     */
-    protected $dishes;
+    protected string $currentLocale = 'en';
 
     /**
      * @return int
@@ -81,16 +70,6 @@ class Category
     }
 
     /**
-     * @param int $id
-     *
-     * @SuppressWarnings (PHPMD.ShortVariable)
-     */
-    public function setId($id): void
-    {
-        $this->id = $id;
-    }
-
-    /**
      * @return string
      */
     public function getTitleEn()
@@ -98,12 +77,9 @@ class Category
         return $this->title_en;
     }
 
-    /**
-     * @param string $title_en
-     */
-    public function setTitleEn($title_en): void
+    public function setTitleEn(string $title): void
     {
-        $this->title_en = $title_en;
+        $this->title_en = $title;
     }
 
     /**
@@ -114,12 +90,9 @@ class Category
         return $this->title_de;
     }
 
-    /**
-     * @param string $title_de
-     */
-    public function setTitleDe($title_de): void
+    public function setTitleDe(string $title): void
     {
-        $this->title_de = $title_de;
+        $this->title_de = $title;
     }
 
     /**
@@ -139,12 +112,9 @@ class Category
         return $this->getTitle();
     }
 
-    /**
-     * @param string $currentLocale
-     */
-    public function setCurrentLocale($currentLocale): void
+    public function setCurrentLocale(string $locale): void
     {
-        $this->currentLocale = $currentLocale;
+        $this->currentLocale = $locale;
     }
 
     /**
@@ -153,13 +123,5 @@ class Category
     public function getCurrentLocale()
     {
         return $this->currentLocale;
-    }
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getDishes()
-    {
-        return $this->dishes;
     }
 }

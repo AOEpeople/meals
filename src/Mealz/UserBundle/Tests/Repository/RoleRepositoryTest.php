@@ -7,11 +7,11 @@ namespace App\Mealz\UserBundle\Tests\Repository;
 use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\Entity\Role;
-use App\Mealz\UserBundle\Entity\RoleRepository;
+use App\Mealz\UserBundle\Repository\RoleRepositoryInterface;
 
 class RoleRepositoryTest extends AbstractDatabaseTestCase
 {
-    private RoleRepository $roleRepository;
+    private RoleRepositoryInterface $roleRepository;
 
     protected function setUp(): void
     {
@@ -22,7 +22,7 @@ class RoleRepositoryTest extends AbstractDatabaseTestCase
             new LoadRoles(),
         ]);
 
-        $this->roleRepository = $this->getDoctrine()->getRepository(Role::class);
+        $this->roleRepository = self::$container->get(RoleRepositoryInterface::class);
     }
 
     /**

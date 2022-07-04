@@ -4,6 +4,7 @@ namespace App\Mealz\UserBundle\Provider;
 
 use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\Role;
+use App\Mealz\UserBundle\Repository\RoleRepositoryInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
@@ -34,10 +35,12 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
     ];
 
     private EntityManagerInterface $entityManager;
+    private RoleRepositoryInterface $roleRepo;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, RoleRepositoryInterface $roleRepo)
     {
         $this->entityManager = $entityManager;
+        $this->roleRepo = $roleRepo;
     }
 
     /**
@@ -141,9 +144,7 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
 
         $mappedRoles = array_unique(array_values($mappedRoles));
         $maxPrivilegedRole = $this->getMaxPrivilegedRole($mappedRoles);
-
-        $roleRepository = $this->entityManager->getRepository(Role::class);
-        $roles = $roleRepository->findBySID([$maxPrivilegedRole]);
+        $roles = $this->roleRepo->findBySID([$maxPrivilegedRole]);
 
         return (0 < count($roles)) ? array_shift($roles) : null;
     }

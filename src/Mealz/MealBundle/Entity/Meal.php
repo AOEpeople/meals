@@ -13,11 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Meal.
- *
+ * @ORM\Entity
  * @MealBundleAssert\DishConstraint()
  * @ORM\Table(name="meal")
- * @ORM\Entity(repositoryClass="MealRepository")
  */
 class Meal
 {

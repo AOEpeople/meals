@@ -100,7 +100,7 @@ class EcashController extends BaseController
             $message,
             [
                 'request_method' => $request->getMethod(),
-                'request_content' => $request->getContent()
+                'request_content' => $request->getContent(),
             ]
         );
     }

@@ -7,7 +7,7 @@ parameters:
     app.assets_server: '%env(ASSETS_SERVER)%'
     app.base_url: '%env(APP_BASE_URL)%'
     app.email.admin: '%env(APP_EMAIL_ADMIN)%'
-    app.email.sender: '%env(APP_EMAIL_SENDER)%'
+    app.email.sender: '%env(resolve:APP_EMAIL_SENDER)%'
     app.email.settlement_request.receiver: '%env(SETTLEMENT_REQ_EMAIL_RECEIVER)%'
 
     # default period for counting a dish consumption; specified as format used by PHP date() function
@@ -19,7 +19,7 @@ parameters:
 
     app.mailer_dsn: '%env(resolve:MAILER_DSN)%'
 
-    app.notifier.mattermost.app_name: '%env(MATTERMOST_APP_NAME)%'
+    app.notifier.mattermost.app_name: '%env(APP_NAME)%'
     app.notifier.mattermost.meal_offers.webhook_url: '%env(MATTERMOST_WEBHOOK_URL_MEAL_OFFERS)%'
     app.notifier.mattermost.weekly_menu.webhook_url: '%env(MATTERMOST_WEBHOOK_URL_WEEKLY_MENU)%'
     app.notifier.mattermost.system_errors.webhook_url: '%env(MATTERMOST_WEBHOOK_URL_SYSTEM_ERRORS)%'

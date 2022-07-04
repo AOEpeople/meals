@@ -26,8 +26,6 @@ class MattermostNotifier implements NotifierInterface
 
     private string $webhookURL;
 
-    private string $env;
-
     /**
      * User-friendly bot name that will be displayed in the notification message.
      */
@@ -41,8 +39,7 @@ class MattermostNotifier implements NotifierInterface
         bool $enabled,
         string $webhookURL,
         string $username,
-        string $appName,
-        string $env
+        string $appName
     ) {
         $this->httpClient = $httpClient;
         $this->logger = $logger;
@@ -51,7 +48,6 @@ class MattermostNotifier implements NotifierInterface
         $this->webhookURL = $webhookURL;
         $this->username = $username;
         $this->appName = $appName;
-        $this->env = $env;
     }
 
     /**
@@ -69,7 +65,6 @@ class MattermostNotifier implements NotifierInterface
             'json' => [
                 'username' => $this->username,
                 'attachments' => [[
-                    'author_name' => $this->env,
                     'text' => $message->getContent(),
                     'title' => $this->appName,
                 ]],

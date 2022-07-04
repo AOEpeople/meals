@@ -5,16 +5,18 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Tests\Service;
 
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadSlots;
-use App\Mealz\MealBundle\Entity\DishRepository;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\MealCollection;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
+use App\Mealz\MealBundle\Repository\DishRepository;
 use App\Mealz\MealBundle\Service\CombinedMealService;
 use App\Mealz\MealBundle\Service\GuestParticipationService;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\Role;
+use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
+use App\Mealz\UserBundle\Repository\RoleRepositoryInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class GuestParticipationServiceTest extends AbstractParticipationServiceTest
@@ -31,8 +33,9 @@ class GuestParticipationServiceTest extends AbstractParticipationServiceTest
             new LoadSlots(),
         ]);
 
-        $profileRepo = $this->entityManager->getRepository(Profile::class);
-        $roleRepo = $this->entityManager->getRepository(Role::class);
+        /** @var ProfileRepositoryInterface $profileRepo */
+        $profileRepo = self::$container->get(ProfileRepositoryInterface::class);
+        $roleRepo = self::$container->get(RoleRepositoryInterface::class);
 
         $this->setParticipationService(new GuestParticipationService(
             $this->entityManager,

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Tests\Service;
 
-use App\Mealz\MealBundle\Entity\DishRepository;
 use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\MealCollection;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
+use App\Mealz\MealBundle\Repository\DishRepository;
 use App\Mealz\MealBundle\Service\CombinedMealService;
 use App\Mealz\MealBundle\Service\OfferService;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;

@@ -1,32 +1,31 @@
 <?php
 
-namespace App\Mealz\MealBundle\Entity;
+declare(strict_types=1);
 
+namespace App\Mealz\MealBundle\Repository;
+
+use App\Mealz\MealBundle\Entity\Meal;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\EntityRepository;
+use InvalidArgumentException;
+use LogicException;
 
-class MealRepository extends EntityRepository
+/**
+ * @extends BaseRepository<Meal>
+ */
+class MealRepository extends BaseRepository implements MealRepositoryInterface
 {
     /**
-     * @param string $date           "YYYY-MM-DD"
-     * @param string $dish           slug of the dish
+     * @param string $dish           Dish slug
      * @param array  $userSelections already selected meals for that day
      *
      * @return mixed|null
      *
-     * @throws \LogicException
-     * @throws \InvalidArgumentException
+     * @throws LogicException
+     * @throws InvalidArgumentException
      */
-    public function findOneByDateAndDish($date, $dish, $userSelections = [])
+    public function findOneByDateAndDish(DateTime $date, string $dish, array $userSelections = []): ?Meal
     {
-        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/ims', $date)) {
-            throw new \InvalidArgumentException('$date has to be a string of the format "YYYY-MM-DD".');
-        }
-        if ($date instanceof DateTime) {
-            $date = $date->format('Y-m-d');
-        }
-
         $queryBuilder = $this->createQueryBuilder('m');
 
         // SELECT
@@ -38,15 +37,11 @@ class MealRepository extends EntityRepository
         // WHERE
         $queryBuilder->andWhere('m.dateTime >= :min_date');
         $queryBuilder->andWhere('m.dateTime <= :max_date');
-        $queryBuilder->setParameter('min_date', $date . ' 00:00:00');
-        $queryBuilder->setParameter('max_date', $date . ' 23:59:29');
+        $queryBuilder->setParameter('min_date', $date->format('Y-m-d 00:00:00'));
+        $queryBuilder->setParameter('max_date', $date->format('Y-m-d 23:59:59'));
 
-        if (is_numeric($dish)) {
-            $queryBuilder->andWhere('d.id = :dish');
-        } else {
-            $queryBuilder->andWhere('d.slug = :dish');
-        }
-        $queryBuilder->setParameter('dish', $dish);
+        $queryBuilder->andWhere('d.slug = :slug');
+        $queryBuilder->setParameter('slug', $dish);
 
         $result = $queryBuilder->getQuery()->execute();
 
@@ -82,9 +77,9 @@ class MealRepository extends EntityRepository
     /**
      * Created for Test with Dish variations.
      *
-     * @return mixed
+     * @psalm-return list<array{id: int}>
      */
-    public function getMealsOnADayWithVariationOptions()
+    public function getMealsOnADayWithVariationOptions(): array
     {
         $entityManager = $this->getEntityManager();
         $query = $entityManager->createQuery(

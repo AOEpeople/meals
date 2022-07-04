@@ -4,13 +4,17 @@ namespace App\Mealz\MealBundle\Tests\Repository;
 
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
-use App\Mealz\MealBundle\Entity\DishRepository;
 use App\Mealz\MealBundle\EventListener\LocalisationListener;
+use App\Mealz\MealBundle\Repository\DishRepository;
 use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
+use Doctrine\ORM\EntityManagerInterface;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 // @TODO: check if load_category=false option is working
 class DishRepositoryTest extends AbstractDatabaseTestCase
 {
+    use ProphecyTrait;
+
     /** @var DishRepository */
     protected $dishRepository;
 
@@ -20,13 +24,16 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
     {
         parent::setUp();
 
-        $this->dishRepository = $this->getDoctrine()->getRepository(Dish::class);
+        $this->dishRepository = self::$container->get(DishRepository::class);
         $this->locale = 'en';
         $this->clearAllTables();
     }
 
     public function testGetSortedDishesQueryBuilderOrderByTitle(): void
     {
+        $localisationListener = $this->getMockedLocalisationListener('en');
+        $this->dishRepository = $this->getDishRepository($localisationListener);
+
         $dishes = $this->createMultipleDishes(10);
         $this->sortDishByTitle($dishes);
 
@@ -35,12 +42,15 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
             'orderBy_category' => false,
         ];
 
-        $this->setRepositoryLocalization();
         $this->assertNoQueryResultDiff($dishes, $options);
     }
 
     public function testGetSortedDishesQueryBuilderOrderByCategory(): void
     {
+        $this->locale = 'en';
+        $localisationListener = $this->getMockedLocalisationListener($this->locale);
+        $this->dishRepository = $this->getDishRepository($localisationListener);
+
         $dishes = $this->createMultipleDishes(10);
         $this->sortDishByCategoryAndTitle($dishes);
 
@@ -49,13 +59,14 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
             'orderBy_category' => true,
         ];
 
-        $this->setRepositoryLocalization();
         $this->assertNoQueryResultDiff($dishes, $options);
     }
 
     public function testGetSortedDishesQueryBuilderLocalizedOrderByTitle(): void
     {
         $this->locale = 'de';
+        $localisationListener = $this->getMockedLocalisationListener($this->locale);
+        $this->dishRepository = $this->getDishRepository($localisationListener);
         $dishes = $this->createMultipleDishes(10);
         $this->sortDishByTitle($dishes);
 
@@ -64,13 +75,15 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
             'orderBy_category' => false,
         ];
 
-        $this->setRepositoryLocalization();
         $this->assertNoQueryResultDiff($dishes, $options);
     }
 
     public function testGetSortedDishesQueryBuilderLocalizedOrderByCategory(): void
     {
         $this->locale = 'de';
+        $localisationListener = $this->getMockedLocalisationListener($this->locale);
+        $this->dishRepository = $this->getDishRepository($localisationListener);
+
         $dishes = $this->createMultipleDishes(10);
         $this->sortDishByCategoryAndTitle($dishes);
 
@@ -79,7 +92,6 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
             'orderBy_category' => true,
         ];
 
-        $this->setRepositoryLocalization();
         $this->assertNoQueryResultDiff($dishes, $options);
     }
 
@@ -139,21 +151,6 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
         $this->persistAndFlushAll([$meal, $meal2]);
         $result = $this->dishRepository->countNumberDishWasTaken($dish, '4 weeks ago');
         $this->assertTrue(1 == $result);
-    }
-
-    protected function setRepositoryLocalization(): void
-    {
-        $localizationListener = $this->getMockBuilder(LocalisationListener::class)
-            ->setMethods([
-                'getLocale',
-            ])
-            ->disableOriginalConstructor()
-            ->getMock();
-        $localizationListener->expects($this->atLeastOnce())
-            ->method('getLocale')
-            ->will($this->returnValue($this->locale));
-
-        $this->dishRepository->setLocalizationListener($localizationListener);
     }
 
     protected function sortDishByTitle(&$dishes): void
@@ -224,5 +221,21 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
         $diff = array_diff_assoc($dishes, $result);
 
         $this->assertEmpty($diff);
+    }
+
+    private function getDishRepository(LocalisationListener $listener): DishRepository
+    {
+        $em = self::$container->get(EntityManagerInterface::class);
+
+        return new DishRepository($em, Dish::class, $listener);
+    }
+
+    private function getMockedLocalisationListener(string $locale): LocalisationListener
+    {
+        $prophet = $this->prophesize(LocalisationListener::class);
+        /** @psalm-suppress TooManyArguments */
+        $prophet->getLocale()->willReturn($locale);
+
+        return $prophet->reveal();
     }
 }

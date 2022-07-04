@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\UserBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -12,7 +14,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Entity
  * @ORM\Table(name="role")
- * @ORM\Entity(repositoryClass="RoleRepository")
  */
 class Role
 {

@@ -42,10 +42,7 @@ class TransactionService
 
     public function createFromRequest(Request $request): void
     {
-        $profile = $this->security->getUser();
-        if (!($profile instanceof Profile)) {
-            throw new AccessDeniedHttpException('login required');
-        }
+        $profile = $this->getProfile();
 
         try {
             $orderID = $this->getOrderID($request->getContent());
@@ -121,6 +118,28 @@ class TransactionService
         }
 
         return $data['ecash[orderid]'];
+    }
+
+    private function getProfile(): Profile
+    {
+        $profile = $this->security->getUser();
+
+        if (null === $profile) {
+            throw new AccessDeniedHttpException('login required');
+        }
+
+        if (!($profile instanceof Profile)) {
+            if (!method_exists($profile, 'getProfile')) {
+                throw new AccessDeniedHttpException();
+            }
+
+            $profile = $profile->getProfile();
+            if (!($profile instanceof Profile)) {
+                throw new AccessDeniedHttpException();
+            }
+        }
+
+        return $profile;
     }
 
     /**

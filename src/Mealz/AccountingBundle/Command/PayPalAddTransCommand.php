@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Mealz\AccountingBundle\Command;
 
 use App\Mealz\AccountingBundle\Service\TransactionService;
-use App\Mealz\UserBundle\Entity\ProfileRepository;
+use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
 use Exception;
 use RuntimeException;
 use Symfony\Component\Console\Command\Command;
@@ -15,10 +15,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class PayPalAddTransCommand extends Command
 {
-    private ProfileRepository $profileRepo;
+    private ProfileRepositoryInterface $profileRepo;
     private TransactionService $transService;
 
-    public function __construct(ProfileRepository $profileRepo, TransactionService $transService)
+    public function __construct(ProfileRepositoryInterface $profileRepo, TransactionService $transService)
     {
         parent::__construct();
 

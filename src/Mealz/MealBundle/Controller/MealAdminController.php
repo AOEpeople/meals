@@ -3,12 +3,12 @@
 namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Day;
-use App\Mealz\MealBundle\Entity\DishRepository;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Week;
-use App\Mealz\MealBundle\Entity\WeekRepository;
 use App\Mealz\MealBundle\Event\WeekUpdateEvent;
 use App\Mealz\MealBundle\Form\MealAdmin\WeekForm;
+use App\Mealz\MealBundle\Repository\DishRepository;
+use App\Mealz\MealBundle\Repository\WeekRepositoryInterface;
 use App\Mealz\MealBundle\Service\WeekService;
 use App\Mealz\MealBundle\Validator\Constraints\DishConstraint;
 use DateTime;
@@ -35,7 +35,7 @@ class MealAdminController extends BaseController
     /**
      * @Security("is_granted('ROLE_KITCHEN_STAFF')")
      */
-    public function list(WeekRepository $weekRepository): Response
+    public function list(WeekRepositoryInterface $weekRepository): Response
     {
         $weeks = [];
         $dateTime = new DateTime();
@@ -69,8 +69,12 @@ class MealAdminController extends BaseController
      *
      * @Security("is_granted('ROLE_KITCHEN_STAFF')")
      */
-    public function new(Request $request, DateTime $date, WeekRepository $weekRepository, DishRepository $dishRepository)
-    {
+    public function new(
+        Request $request,
+        DateTime $date,
+        WeekRepositoryInterface $weekRepository,
+        DishRepository $dishRepository
+    ) {
         $week = $weekRepository->findOneBy([
             'year' => $date->format('o'),
             'calendarWeek' => $date->format('W'),

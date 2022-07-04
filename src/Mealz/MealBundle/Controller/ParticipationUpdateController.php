@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Controller;
 
-use App\Mealz\MealBundle\Entity\SlotRepository;
 use App\Mealz\MealBundle\Event\SlotAllocationUpdateEvent;
+use App\Mealz\MealBundle\Repository\SlotRepository;
 use App\Mealz\MealBundle\Service\ParticipationService;
 use DateTime;
 use Psr\EventDispatcher\EventDispatcherInterface;

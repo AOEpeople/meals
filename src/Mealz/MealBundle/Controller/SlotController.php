@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Slot;
-use App\Mealz\MealBundle\Entity\SlotRepository;
+use App\Mealz\MealBundle\Repository\SlotRepository;
 use App\Mealz\MealBundle\Service\SlotService;
 use Exception;
 use InvalidArgumentException;

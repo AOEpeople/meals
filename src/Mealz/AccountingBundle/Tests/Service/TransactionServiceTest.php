@@ -12,7 +12,7 @@ use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use App\Mealz\UserBundle\Entity\Profile;
-use App\Mealz\UserBundle\Entity\ProfileRepository;
+use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
 use DateTime;
 use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
@@ -183,8 +183,8 @@ class TransactionServiceTest extends AbstractDatabaseTestCase
 
     private function getProfile(string $username): Profile
     {
-        /** @var ProfileRepository $profileRepo */
-        $profileRepo = $this->getDoctrine()->getRepository(Profile::class);
+        /** @var ProfileRepositoryInterface $profileRepo */
+        $profileRepo = self::$container->get(ProfileRepositoryInterface::class);
         $profile = $profileRepo->find($username);
 
         if (null === $profile) {

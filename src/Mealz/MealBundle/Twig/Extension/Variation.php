@@ -3,8 +3,8 @@
 namespace App\Mealz\MealBundle\Twig\Extension;
 
 use App\Mealz\MealBundle\Entity\Dish;
-use App\Mealz\MealBundle\Entity\DishRepository;
 use App\Mealz\MealBundle\Entity\Meal;
+use App\Mealz\MealBundle\Repository\DishRepository;
 use Exception;
 use Symfony\Component\Form\FormView;
 use Twig\Extension\AbstractExtension;

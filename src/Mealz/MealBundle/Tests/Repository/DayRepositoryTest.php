@@ -7,15 +7,15 @@ namespace App\Mealz\MealBundle\Tests\Repository;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadDays;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
 use App\Mealz\MealBundle\Entity\Day;
-use App\Mealz\MealBundle\Entity\DayRepository;
+use App\Mealz\MealBundle\Repository\DayRepository;
+use App\Mealz\MealBundle\Repository\DayRepositoryInterface;
 use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class DayRepositoryTest extends AbstractDatabaseTestCase
 {
-    /** @var DayRepository */
-    protected $dayRepository;
+    private DayRepositoryInterface $dayRepository;
 
     protected function setUp(): void
     {
@@ -26,13 +26,14 @@ class DayRepositoryTest extends AbstractDatabaseTestCase
             new LoadWeeks(),
             new LoadDays(),
         ]);
-        $this->dayRepository = $this->getDoctrine()->getRepository(Day::class);
+
+        $this->dayRepository = self::$container->get(DayRepository::class);
     }
 
     /**
      * @test
      */
-    public function getCurrentDay()
+    public function getCurrentDay(): void
     {
         $currentDateTime = new DateTime();
         $day = $this->dayRepository->getCurrentDay();
@@ -45,7 +46,7 @@ class DayRepositoryTest extends AbstractDatabaseTestCase
      *
      * @throws \Exception
      */
-    public function getDayByDate()
+    public function getDayByDate(): void
     {
         $days = $this->dayRepository->findAll();
         $dayIdx = array_rand($days, 1);
@@ -61,7 +62,7 @@ class DayRepositoryTest extends AbstractDatabaseTestCase
      *
      * @throws \Exception
      */
-    public function noDayByDate()
+    public function noDayByDate(): void
     {
         $days = $this->dayRepository->findAll();
         $dayCollection = new ArrayCollection($days);
@@ -71,7 +72,7 @@ class DayRepositoryTest extends AbstractDatabaseTestCase
         $notFound = false;
         $dateTimeWithNoDay = new DateTime();
         while (!$notFound) {
-            $randomTimestamp = mt_rand($startTime->getTimestamp(), $endTime->getTimestamp());
+            $randomTimestamp = random_int($startTime->getTimestamp(), $endTime->getTimestamp());
             $dateTimeWithNoDay->setTimestamp($randomTimestamp);
             $daysOnRandomDateTime = $dayCollection->filter(fn (Day $day) => $dateTimeWithNoDay->format('Y-m-d') === $day->getDateTime()->format('Y-m-d'));
             $notFound = $daysOnRandomDateTime->isEmpty();

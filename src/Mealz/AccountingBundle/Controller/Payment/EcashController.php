@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\AccountingBundle\Controller\Payment;
 
 use App\Mealz\AccountingBundle\Entity\Transaction;
@@ -16,15 +18,13 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Throwable;
 
 class EcashController extends BaseController
 {
     public function getPaymentFormForProfile(Profile $profile, Wallet $wallet): Response
     {
-        $profileRepository = $this->getDoctrine()->getRepository(Profile::class);
-        $profile = $profileRepository->find($profile);
-
-        // Default value for Ecash payment overlay
+        // Default value for E-Cash payment overlay
         $balance = $wallet->getBalance($profile) * (-1);
         if ($balance <= 0) {
             $balance = 0;
@@ -60,15 +60,15 @@ class EcashController extends BaseController
         } catch (AccessDeniedHttpException $ade) {
             return new Response('', Response::HTTP_FORBIDDEN);
         } catch (BadRequestHttpException $bre) {
-            $this->logException($bre, 'bad request');
+            $this->logPostPaymentException($bre, 'bad request', $request);
 
             return new Response('', Response::HTTP_BAD_REQUEST);
         } catch (UnprocessableEntityHttpException $uehe) {
-            $this->logException($uehe, 'unprocessable entity');
+            $this->logPostPaymentException($uehe, 'unprocessable entity', $request);
 
             return new Response('', Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (Exception $e) {
-            $this->logException($e, 'transaction create error');
+            $this->logPostPaymentException($e, 'transaction create error', $request);
 
             return new Response('', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -91,5 +91,17 @@ class EcashController extends BaseController
         $this->addFlashMessage($message, $severity);
 
         return $this->redirect($this->generateUrl('mealz_accounting_payment_transaction_history'));
+    }
+
+    private function logPostPaymentException(Throwable $exc, string $message, Request $request): void
+    {
+        $this->get('logger')->logException(
+            $exc,
+            $message,
+            [
+                'request_method' => $request->getMethod(),
+                'request_content' => $request->getContent(),
+            ]
+        );
     }
 }

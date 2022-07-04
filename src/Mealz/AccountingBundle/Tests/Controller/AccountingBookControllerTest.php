@@ -3,6 +3,7 @@
 namespace App\Mealz\AccountingBundle\Tests\Controller;
 
 use App\Mealz\AccountingBundle\Entity\Transaction;
+use App\Mealz\AccountingBundle\Repository\TransactionRepositoryInterface;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
 use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
@@ -147,7 +148,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
 
         // fetch infos for previous month from database.
         // These results are already ordered by lastname, firstname!!
-        $transactionRepo = $this->getDoctrine()->getRepository(Transaction::class);
+        $transactionRepo = self::$container->get(TransactionRepositoryInterface::class);
         $usersAndTheirTotals = $transactionRepo->findUserDataAndTransactionAmountForGivenPeriod($minDate, $maxDate);
 
         // fetch what is displayed in the accounting book table....

@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\MealBundle\Tests\Repository;
 
-use App\Mealz\MealBundle\Entity\Meal;
-use App\Mealz\MealBundle\Entity\MealRepository;
+use App\Mealz\MealBundle\Repository\MealRepository;
+use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
 use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
-use InvalidArgumentException;
+use DateTime;
 
 class MealRepositoryTest extends AbstractDatabaseTestCase
 {
@@ -16,7 +18,7 @@ class MealRepositoryTest extends AbstractDatabaseTestCase
     {
         parent::setUp();
 
-        $this->mealRepository = $this->getDoctrine()->getRepository(Meal::class);
+        $this->mealRepository = self::$container->get(MealRepositoryInterface::class);
         $this->clearAllTables();
     }
 
@@ -26,20 +28,9 @@ class MealRepositoryTest extends AbstractDatabaseTestCase
         $meal = $this->createMeal($dish);
         $this->persistAndFlushAll([$meal]);
 
-        $result = $this->mealRepository->findOneByDateAndDish(date('Y-m-d'), $dish->getSlug());
+        $result = $this->mealRepository->findOneByDateAndDish(new DateTime(), $dish->getSlug());
 
         $this->assertEquals($meal, $result);
-    }
-
-    public function testFindOneByDateAndDishInvalidDate(): void
-    {
-        $dish = $this->createDish();
-        $meal = $this->createMeal($dish);
-        $this->persistAndFlushAll([$meal]);
-
-        $this->expectException(InvalidArgumentException::class);
-
-        $this->mealRepository->findOneByDateAndDish(date('Y-m-'), $dish->getSlug());
     }
 
     public function testFindOneByDateAndDishNoResults(): void
@@ -47,7 +38,7 @@ class MealRepositoryTest extends AbstractDatabaseTestCase
         $dish = $this->createDish();
         $this->persistAndFlushAll([$dish]);
 
-        $result = $this->mealRepository->findOneByDateAndDish(date('Y-m-d'), $dish->getSlug());
+        $result = $this->mealRepository->findOneByDateAndDish(new DateTime(), $dish->getSlug());
 
         $this->assertNull($result);
     }

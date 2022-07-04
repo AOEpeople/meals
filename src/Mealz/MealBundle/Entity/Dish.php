@@ -8,8 +8,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
+ * @ORM\Entity
  * @ORM\Table(name="dish")
- * @ORM\Entity(repositoryClass="DishRepository")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({"dish" = "Dish", "dish_variation" = "DishVariation"})

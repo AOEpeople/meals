@@ -6,8 +6,9 @@ namespace App\Mealz\AccountingBundle\Tests\Controller;
 
 use App\Mealz\AccountingBundle\DataFixtures\ORM\LoadTransactions;
 use App\Mealz\AccountingBundle\Entity\Transaction;
+use App\Mealz\AccountingBundle\Repository\TransactionRepositoryInterface;
 use App\Mealz\AccountingBundle\Service\Wallet;
-use App\Mealz\MealBundle\Entity\Participant;
+use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
@@ -31,8 +32,8 @@ class CostSheetControllerTest extends AbstractControllerTestCase
             new LoadTransactions(),
         ]);
 
-        $participantRepo = $this->getDoctrine()->getRepository(Participant::class);
-        $transactionRepo = $this->getDoctrine()->getRepository(Transaction::class);
+        $participantRepo = self::$container->get(ParticipantRepositoryInterface::class);
+        $transactionRepo = self::$container->get(TransactionRepositoryInterface::class);
         $this->wallet = new Wallet($participantRepo, $transactionRepo);
 
         $this->loginAs(self::USER_KITCHEN_STAFF);
@@ -51,7 +52,7 @@ class CostSheetControllerTest extends AbstractControllerTestCase
         $this->assertGreaterThan(0.00, $balance);
 
         $this->client->request('GET', '/print/costsheet/settlement/request/' . $profile->getUsername());
-        $this->assertResponseIsSuccessful();
+        self::assertResponseIsSuccessful();
 
         $this->assertNotNull($profile->getSettlementHash(), 'SettlementHash was not set');
     }
@@ -93,7 +94,7 @@ class CostSheetControllerTest extends AbstractControllerTestCase
         $entityManager->persist($transaction);
         $entityManager->flush();
 
-        $transactionRepo = $this->getDoctrine()->getRepository(Transaction::class);
+        $transactionRepo = self::$container->get(TransactionRepositoryInterface::class);
         $balanceBefore = $transactionRepo->getTotalAmount($profile->getUsername());
 
         // Pre-action tests

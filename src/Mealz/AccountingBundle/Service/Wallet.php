@@ -1,32 +1,33 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mealz\AccountingBundle\Service;
 
-use App\Mealz\AccountingBundle\Entity\TransactionRepository;
-use App\Mealz\MealBundle\Entity\ParticipantRepository;
+use App\Mealz\AccountingBundle\Repository\TransactionRepositoryInterface;
+use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\UserBundle\Entity\Profile;
 
 class Wallet
 {
-    private ParticipantRepository $participantRepo;
+    private ParticipantRepositoryInterface $participantRepo;
 
-    private TransactionRepository $transactionRepo;
+    private TransactionRepositoryInterface $transactionRepo;
 
-    public function __construct(ParticipantRepository $participantRepo, TransactionRepository $transactionRepo)
-    {
+    public function __construct(
+        ParticipantRepositoryInterface $participantRepo,
+        TransactionRepositoryInterface $transactionRepo
+    ) {
         $this->participantRepo = $participantRepo;
         $this->transactionRepo = $transactionRepo;
     }
 
-    /**
-     * @return float
-     */
-    public function getBalance(Profile $profile)
+    public function getBalance(Profile $profile): float
     {
         $username = $profile->getUsername();
         $costs = $this->participantRepo->getTotalCost($username);
         $transactions = $this->transactionRepo->getTotalAmount($username);
 
-        return bcsub($transactions, $costs, 2);
+        return $transactions - $costs;
     }
 }

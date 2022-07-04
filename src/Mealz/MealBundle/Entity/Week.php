@@ -7,8 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ORM\Entity
  * @ORM\Table(name="week")
- * @ORM\Entity(repositoryClass="WeekRepository")
  */
 class Week extends AbstractMessage
 {

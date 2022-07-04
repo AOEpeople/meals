@@ -7,7 +7,7 @@ parameters:
     app.assets_server: '%env(ASSETS_SERVER)%'
     app.base_url: '%env(APP_BASE_URL)%'
     app.email.admin: '%env(APP_EMAIL_ADMIN)%'
-    app.email.sender: '%env(APP_EMAIL_SENDER)%'
+    app.email.sender: '%env(resolve:APP_EMAIL_SENDER)%'
     app.email.settlement_request.receiver: '%env(SETTLEMENT_REQ_EMAIL_RECEIVER)%'
 
     # default period for counting a dish consumption; specified as format used by PHP date() function
@@ -18,6 +18,8 @@ parameters:
     app.idp.client_secret: '%env(IDP_CLIENT_SECRET)%'
 
     app.mailer_dsn: '%env(resolve:MAILER_DSN)%'
+
+    app.notifier.mattermost.app_name: '%env(APP_NAME)%'
     app.notifier.mattermost.meal_offers.webhook_url: '%env(MATTERMOST_WEBHOOK_URL_MEAL_OFFERS)%'
     app.notifier.mattermost.weekly_menu.webhook_url: '%env(MATTERMOST_WEBHOOK_URL_WEEKLY_MENU)%'
     app.notifier.mattermost.system_errors.webhook_url: '%env(MATTERMOST_WEBHOOK_URL_SYSTEM_ERRORS)%'
@@ -87,11 +89,6 @@ services:
         resource: '../src/Mealz/MealBundle/Controller/'
         tags: ['controller.service_arguments']
 
-    App\Mealz\MealBundle\Controller\CategoryController:
-        calls:
-            - [setRepository, ['@mealz_meal.repository.category']]
-            - [setEntityName, ['Category']]
-
     App\Mealz\MealBundle\Controller\SlotController:
         calls:
             - [setRepository, ['@mealz_meal.repository.slot']]
@@ -101,6 +98,14 @@ services:
     App\Mealz\MealBundle\Service\Logger\MealsLoggerInterface: '@App\Mealz\MealBundle\Service\Logger\MealsLogger'
     App\Mealz\MealBundle\Service\Mailer\MailerInterface: '@App\Mealz\MealBundle\Service\Mailer\Mailer'
     App\Mealz\MealBundle\Service\Publisher\PublisherInterface: '@App\Mealz\MealBundle\Service\Publisher\MercurePublisher'
+
+    App\Mealz\MealBundle\Repository\DayRepositoryInterface: '@App\Mealz\MealBundle\Repository\DayRepository'
+    App\Mealz\MealBundle\Repository\DishRepositoryInterface: '@App\Mealz\MealBundle\Repository\DishRepository'
+    App\Mealz\MealBundle\Repository\DishVariationRepositoryInterface: '@App\Mealz\MealBundle\Repository\DishVariationRepository'
+    App\Mealz\MealBundle\Repository\CategoryRepositoryInterface: '@App\Mealz\MealBundle\Repository\CategoryRepository'
+    App\Mealz\MealBundle\Repository\GuestInvitationRepositoryInterface: '@App\Mealz\MealBundle\Repository\GuestInvitationRepository'
+    App\Mealz\MealBundle\Repository\MealRepositoryInterface: '@App\Mealz\MealBundle\Repository\MealRepository'
+    App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface: '@App\Mealz\MealBundle\Repository\ParticipantRepository'
 
     # Event Listeners
     App\Mealz\MealBundle\EventListener\ParticipantPersistenceListener:
@@ -118,53 +123,44 @@ services:
         abstract: true
         factory: ['@mealz_meal.factory.localized_repository', createLocalizedRepository]
 
-    mealz_meal.repository.category:
-        class: App\Mealz\MealBundle\Entity\CategoryRepository
-        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+    App\Mealz\MealBundle\Repository\CategoryRepository:
         arguments:
-            - 'MealzMealBundle:Category'
-    App\Mealz\MealBundle\Entity\CategoryRepository: '@mealz_meal.repository.category'
+            $entityClass: App\Mealz\MealBundle\Entity\Category
 
-    mealz_meal.repository.day:
-        class: App\Mealz\MealBundle\Entity\DayRepository
-        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+    App\Mealz\MealBundle\Repository\DayRepository:
         arguments:
-            - 'MealzMealBundle:Day'
-    App\Mealz\MealBundle\Entity\DayRepository: '@mealz_meal.repository.day'
+            $entityClass: App\Mealz\MealBundle\Entity\Day
 
-    mealz_meal.repository.dish:
-        class: App\Mealz\MealBundle\Entity\DishRepository
-        parent: mealz_meal.repository.abstract.localized
+    App\Mealz\MealBundle\Repository\DishRepository:
         arguments:
-            - 'MealzMealBundle:Dish'
-    App\Mealz\MealBundle\Entity\DishRepository: '@mealz_meal.repository.dish'
+            $entityClass: App\Mealz\MealBundle\Entity\Dish
 
-    mealz_meal.repository.dish_variation:
-        class: App\Mealz\MealBundle\Entity\DishVariationRepository
-        parent: mealz_meal.repository.abstract.localized
+    App\Mealz\MealBundle\Repository\DishVariationRepository:
         arguments:
-            - 'MealzMealBundle:DishVariation'
-    App\Mealz\MealBundle\Entity\DishVariationRepository: '@mealz_meal.repository.dish_variation'
+            $entityClass: App\Mealz\MealBundle\Entity\DishVariation
 
-    mealz_meal.repository.participant:
-        class: App\Mealz\MealBundle\Entity\ParticipantRepository
-        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+    App\Mealz\MealBundle\Repository\GuestInvitationRepository:
         arguments:
-            - 'MealzMealBundle:Participant'
-    App\Mealz\MealBundle\Entity\ParticipantRepository: '@mealz_meal.repository.participant'
+            $entityClass: App\Mealz\MealBundle\Entity\GuestInvitation
+
+    App\Mealz\MealBundle\Repository\MealRepository:
+        arguments:
+            $entityClass: App\Mealz\MealBundle\Entity\Meal
+
+    App\Mealz\MealBundle\Repository\ParticipantRepository:
+        arguments:
+            $entityClass: App\Mealz\MealBundle\Entity\Participant
 
     mealz_meal.repository.slot:
-        class: App\Mealz\MealBundle\Entity\SlotRepository
+        class: App\Mealz\MealBundle\Repository\SlotRepository
         arguments:
-            - '@doctrine.orm.default_entity_manager'
-    App\Mealz\MealBundle\Entity\SlotRepository: '@mealz_meal.repository.slot'
+            $entityClass: App\Mealz\MealBundle\Entity\Slot
+    App\Mealz\MealBundle\Repository\SlotRepository: '@mealz_meal.repository.slot'
 
-    mealz_meal.repository.week:
-        class: App\Mealz\MealBundle\Entity\WeekRepository
-        factory: ['@doctrine.orm.default_entity_manager', getRepository]
+    App\Mealz\MealBundle\Repository\WeekRepository:
         arguments:
-            - 'MealzMealBundle:Week'
-    App\Mealz\MealBundle\Entity\WeekRepository: '@mealz_meal.repository.week'
+            $entityClass: App\Mealz\MealBundle\Entity\Week
+
 
     # Forms
     mealz_meal.form.dish:
@@ -179,7 +175,6 @@ services:
     App\Mealz\MealBundle\Service\DishService:
         arguments:
             $newFlagThreshold: '%mealz.meal.new_flag_counter%'
-            $dishRepository: '@mealz_meal.repository.dish'
 
     App\Mealz\MealBundle\Event\Subscriber\MealOfferSubscriber:
         arguments:
@@ -217,7 +212,7 @@ services:
             $enabled: '%env(bool:MATTERMOST_NOTIFICATIONS)%'
             $webhookURL: '%app.notifier.mattermost.meal_offers.webhook_url%'
             $username: 'Chef'
-            $appName: 'Meals'
+            $appName: '%app.notifier.mattermost.app_name%'
     mealz_meal.notifier.mattermost.weekly_menu_notifier:
         class: App\Mealz\MealBundle\Service\Notification\MattermostNotifier
         lazy: true
@@ -257,6 +252,12 @@ services:
         arguments:
             - '@paypal.sdk.env'
 
+    mealz_accounting.wallet:
+        class: App\Mealz\AccountingBundle\Service\Wallet
+
+    App\Mealz\AccountingBundle\Repository\TransactionRepository:
+        arguments:
+            $entityClass: App\Mealz\AccountingBundle\Entity\Transaction
 
     ##################################################################
     # User BUNDLE
@@ -269,10 +270,23 @@ services:
             - '../src/Mealz/UserBundle/Resources/'
             - '../src/Mealz/UserBundle/Tests/'
 
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
+
     App\Mealz\UserBundle\Provider\LogoutSuccessHandler:
         arguments:
             $logoutUrl: '%app.idp.endpoint.logout%'
             $baseUri: '%app.base_url%'
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    App\Mealz\UserBundle\Repository\ProfileRepository:
+        arguments:
+            $entityClass: App\Mealz\UserBundle\Entity\Profile
+
+    App\Mealz\UserBundle\Repository\RoleRepository:
+        arguments:
+            $entityClass: App\Mealz\UserBundle\Entity\Role
+
+    # Interface implementations
+    App\Mealz\UserBundle\Repository\ProfileRepositoryInterface: '@App\Mealz\UserBundle\Repository\ProfileRepository'
+    App\Mealz\UserBundle\Repository\RoleRepositoryInterface: '@App\Mealz\UserBundle\Repository\RoleRepository'

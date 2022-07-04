@@ -13,9 +13,9 @@ use App\Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\GuestInvitation;
 use App\Mealz\MealBundle\Entity\Meal;
-use App\Mealz\MealBundle\Entity\MealRepository;
 use App\Mealz\MealBundle\Entity\Participant;
-use App\Mealz\MealBundle\Entity\ParticipantRepository;
+use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
+use App\Mealz\MealBundle\Repository\ParticipantRepository;
 use App\Mealz\MealBundle\Service\Doorman;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
@@ -126,7 +126,8 @@ class MealControllerTest extends AbstractControllerTestCase
         $this->persistAndFlushAll([$profile]);
 
         // variables for third case
-        $outdatedMealsArray = $this->getDoctrine()->getRepository(Meal::class)->getOutdatedMeals();
+        $mealsRepo = self::$container->get(MealRepositoryInterface::class);
+        $outdatedMealsArray = $mealsRepo->getOutdatedMeals();
         $outdatedMeal = $outdatedMealsArray[0];
 
         $date = date_format($outdatedMeal->getDateTime(), 'Y-m-d');
@@ -166,7 +167,6 @@ class MealControllerTest extends AbstractControllerTestCase
             // Verify if enrollment is successful
             $mealParticipants = $this->getMealParticipants($dataRow[1]);
 
-            /** @var Participant $participant */
             foreach ($mealParticipants as $participant) {
                 $profile = $participant->getProfile();
 
@@ -189,14 +189,13 @@ class MealControllerTest extends AbstractControllerTestCase
      */
     private function getJoinAMealData(): array
     {
-        /** @var MealRepository $mealRepository */
-        $mealRepository = $this->getDoctrine()->getRepository(Meal::class);
+        $mealRepository = self::$container->get(MealRepositoryInterface::class);
         $meals = $mealRepository->getMealsOnADayWithVariationOptions();
 
         $dataProvider = [];
-        foreach ($meals as $meal) {
+        foreach ($meals as $mealItem) {
             /** @var Meal $meal */
-            $meal = $mealRepository->find($meal['id']);
+            $meal = $mealRepository->find($mealItem['id']);
             $dataProvider[] = [date('Y-m-d', $meal->getDay()->getDateTime()->getTimestamp()), $meal];
         }
 
@@ -274,8 +273,7 @@ class MealControllerTest extends AbstractControllerTestCase
     {
         $availableMeal = null;
 
-        /** @var MealRepository $mealRepository */
-        $mealRepository = $this->getDoctrine()->getRepository(Meal::class);
+        $mealRepository = self::$container->get(MealRepositoryInterface::class);
         $criteria = Criteria::create();
         $meals = $mealRepository->matching($criteria->where(Criteria::expr()->gte('dateTime', new DateTime())));
 

@@ -6,7 +6,7 @@ namespace App\Mealz\MealBundle\Tests\Service;
 
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadSlots;
 use App\Mealz\MealBundle\Entity\Slot;
-use App\Mealz\MealBundle\Entity\SlotRepository;
+use App\Mealz\MealBundle\Repository\SlotRepository;
 use App\Mealz\MealBundle\Service\SlotService;
 use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use Doctrine\ORM\EntityManagerInterface;

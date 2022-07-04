@@ -7,7 +7,7 @@ namespace App\Mealz\MealBundle\Form\Guest;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\InvitationWrapper;
 use App\Mealz\MealBundle\Entity\Slot;
-use App\Mealz\MealBundle\Entity\SlotRepository;
+use App\Mealz\MealBundle\Repository\SlotRepository;
 use App\Mealz\MealBundle\Service\ParticipationService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;

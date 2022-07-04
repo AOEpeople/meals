@@ -1,2 +1,7 @@
 imports:
     - { resource: ../prod/monolog.yaml }
+
+monolog:
+    handlers:
+        slackwebhook:
+            bot_name: 'Meals Logger (Staging)'

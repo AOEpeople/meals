@@ -8,12 +8,12 @@ use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\MealCollection;
-use App\Mealz\MealBundle\Entity\MealRepository;
 use App\Mealz\MealBundle\Entity\Participant;
-use App\Mealz\MealBundle\Entity\ParticipantRepository;
 use App\Mealz\MealBundle\Entity\Slot;
-use App\Mealz\MealBundle\Entity\SlotRepository;
 use App\Mealz\MealBundle\Entity\Week;
+use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
+use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
+use App\Mealz\MealBundle\Repository\SlotRepository;
 use App\Mealz\MealBundle\Service\CombinedMealService;
 use App\Mealz\MealBundle\Service\Doorman;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;
@@ -35,7 +35,7 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
     protected EntityManagerInterface $entityManager;
     protected CombinedMealService $cms;
     protected OfferService $offerService;
-    protected ParticipantRepository $participantRepo;
+    protected ParticipantRepositoryInterface $participantRepo;
     protected SlotRepository $slotRepo;
     /** @var ParticipationService|GuestParticipationService */
     private $sut;
@@ -50,7 +50,7 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
         /* @var EntityManagerInterface $entityManager */
         $this->entityManager = $this->getDoctrine()->getManager();
 
-        $this->participantRepo = $this->entityManager->getRepository(Participant::class);
+        $this->participantRepo = self::$container->get(ParticipantRepositoryInterface::class);
         $this->slotRepo = self::$container->get(SlotRepository::class);
     }
 
@@ -278,9 +278,9 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
         // Creates combined meal(s)
         $this->cms->update($day->getWeek());
 
-        /** @var MealRepository $mealRepo */
-        $mealRepo = $this->getDoctrine()->getRepository(Meal::class);
-        $combinedMeal = $mealRepo->findOneByDateAndDish($day->getDateTime()->format('Y-m-d'), Dish::COMBINED_DISH_SLUG);
+        /** @var MealRepositoryInterface $mealRepo */
+        $mealRepo = self::$container->get(MealRepositoryInterface::class);
+        $combinedMeal = $mealRepo->findOneByDateAndDish($day->getDateTime(), Dish::COMBINED_DISH_SLUG);
         $this->assertNotNull($combinedMeal);
 
         $participants = [];
@@ -310,7 +310,7 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
     /**
      * @param ParticipationService|GuestParticipationService $service
      */
-    protected function setParticipationService($service)
+    protected function setParticipationService($service): void
     {
         $this->sut = $service;
     }

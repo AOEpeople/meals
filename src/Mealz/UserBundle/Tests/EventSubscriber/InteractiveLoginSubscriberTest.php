@@ -7,9 +7,8 @@ namespace App\Mealz\UserBundle\Tests\EventSubscriber;
 use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
-use App\Mealz\UserBundle\Entity\Profile;
-use App\Mealz\UserBundle\Entity\ProfileRepository;
 use App\Mealz\UserBundle\EventSubscriber\InteractiveLoginSubscriber;
+use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -35,8 +34,8 @@ class InteractiveLoginSubscriberTest extends AbstractControllerTestCase
         /** @var EntityManager $entityManager */
         $entityManager = $this->client->getContainer()->get('doctrine')->getManager();
 
-        /** @var ProfileRepository $profileRepo */
-        $profileRepo = $this->getDoctrine()->getRepository(Profile::class);
+        /** @var ProfileRepositoryInterface $profileRepo */
+        $profileRepo = self::$container->get(ProfileRepositoryInterface::class);
 
         $this->iaLoginSubscriber = new InteractiveLoginSubscriber($entityManager, $profileRepo);
     }

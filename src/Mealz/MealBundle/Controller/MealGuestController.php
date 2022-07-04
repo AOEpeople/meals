@@ -6,13 +6,13 @@ namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\GuestInvitation;
-use App\Mealz\MealBundle\Entity\GuestInvitationRepository;
 use App\Mealz\MealBundle\Entity\InvitationWrapper;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
 use App\Mealz\MealBundle\Event\SlotAllocationUpdateEvent;
 use App\Mealz\MealBundle\Form\Guest\InvitationForm;
+use App\Mealz\MealBundle\Repository\GuestInvitationRepositoryInterface;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\MealBundle\Service\GuestParticipationService;
 use App\Mealz\MealBundle\Service\MealAvailabilityService;
@@ -127,10 +127,10 @@ class MealGuestController extends BaseController
      *
      * @Security("is_granted('ROLE_USER')")
      */
-    public function newGuestInvitation(Day $mealDay): JsonResponse
-    {
-        /** @var GuestInvitationRepository $guestInvitationRepo */
-        $guestInvitationRepo = $this->getDoctrine()->getRepository(GuestInvitation::class);
+    public function newGuestInvitation(
+        Day $mealDay,
+        GuestInvitationRepositoryInterface $guestInvitationRepo
+    ): JsonResponse {
         $guestInvitation = $guestInvitationRepo->findOrCreateInvitation($this->getUser()->getProfile(), $mealDay);
 
         return new JsonResponse(

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mealz\AccountingBundle\Controller;
 
+use App\Mealz\AccountingBundle\Repository\TransactionRepositoryInterface;
 use App\Mealz\MealBundle\Controller\BaseController;
 use DateTime;
 use Exception;
@@ -17,7 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class AccountingBookController extends BaseController
 {
-    public function list(): Response
+    public function list(TransactionRepositoryInterface $transactionRepo): Response
     {
         // Get first and last day of previous month
         $minDateFirst = new DateTime('first day of previous month');
@@ -36,7 +37,6 @@ class AccountingBookController extends BaseController
         $heading = $minDate->format('d.m.-') . $maxDate->format('d.m.Y');
 
         // Get array of users with their amount of transactions in previous month
-        $transactionRepo = $this->getTransactionRepository();
         $usersFirst = $transactionRepo->findUserDataAndTransactionAmountForGivenPeriod($minDateFirst, $maxDateFirst);
 
         // Get array of users with their amount of transactions in actual month
@@ -55,7 +55,7 @@ class AccountingBookController extends BaseController
      *
      * @throws Exception
      */
-    public function listAllTransactions(?string $dateRange): Response
+    public function listAllTransactions(?string $dateRange, TransactionRepositoryInterface $transactionRepo): Response
     {
         $headingFirst = null;
         $transactionsFirst = null;
@@ -78,7 +78,7 @@ class AccountingBookController extends BaseController
             $minDate->setTime(0, 0);
             $maxDate->setTime(23, 59, 59);
 
-            $transactionsFirst = $this->getTransactionRepository()->findAllTransactionsInDateRange($minDateFirst, $maxDateFirst);
+            $transactionsFirst = $transactionRepo->findAllTransactionsInDateRange($minDateFirst, $maxDateFirst);
         } else {
             // Get date range set with date range picker by user
             $dateRangeArray = explode('&', $dateRange);
@@ -88,7 +88,7 @@ class AccountingBookController extends BaseController
 
         $heading = $minDate->format('d.m.') . ' - ' . $maxDate->format('d.m.Y');
 
-        $transactions = $this->getTransactionRepository()->findAllTransactionsInDateRange($minDate, $maxDate);
+        $transactions = $transactionRepo->findAllTransactionsInDateRange($minDate, $maxDate);
 
         return $this->render('MealzAccountingBundle:Accounting/Finance:finances.html.twig', [
             'headingFirst' => $headingFirst,
@@ -106,8 +106,11 @@ class AccountingBookController extends BaseController
      * @throws ReflectionException
      * @throws Exception
      */
-    public function exportPDF(?string $dateRange, TCPDFController $pdfGen): Response
-    {
+    public function exportPDF(
+        ?string $dateRange,
+        TCPDFController $pdfGen,
+        TransactionRepositoryInterface $transactionRepo
+    ): Response {
         // Get date range set with date range picker by user
         $dateRange = str_replace('-', '/', $dateRange);
         $dateRangeArray = explode('&', $dateRange);
@@ -115,7 +118,6 @@ class AccountingBookController extends BaseController
         $maxDate = new DateTime($dateRangeArray[1]);
 
         $heading = $minDate->format('d.m.') . ' - ' . $maxDate->format('d.m.Y');
-        $transactionRepo = $this->getTransactionRepository();
         $transactions = $transactionRepo->findAllTransactionsInDateRange($minDate, $maxDate);
 
         // Create PDF file

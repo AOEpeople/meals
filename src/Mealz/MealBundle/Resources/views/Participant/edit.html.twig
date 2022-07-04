@@ -59,9 +59,11 @@
                     </td>
                     {% for day in week.days %}
                         {% set meals = day.meals.groupByType() %}
+                        {# We are using "2014-01-06" (date of first meals commit as marker below. #}
+                        {# Due to URL parameter restrictions in routing yaml invalid date can't be specified #}
                         {% set actions = {
                             'join': path('MealzMealBundle_Meal_join', {
-                                date: '_date_',
+                                date: '2014-01-06',
                                 dish: '_dishSlug_',
                                 profile: profile.username
                             }),

@@ -1,7 +1,7 @@
 <?php
 
 // Only check for files in $lookupDir
-$lookupDir = [__DIR__ . '/src', __DIR__ . '/tests'];
+$lookupDir = [__DIR__ . '/src/Mealz', __DIR__ . '/tests'];
 
 $finder = PhpCsFixer\Finder::create()->in($lookupDir);
 
@@ -15,6 +15,12 @@ return $config
                 'class', 'function', 'const',
             ],
             'sort_algorithm' => 'alpha',
+        ],
+        'phpdoc_to_comment' => [
+            'ignored_tags' => [
+                'psalm-suppress',     // Psalm doesn't like /* */ inline comments and php-cs-fixer /** */
+                'psalm-var',          // The latter one is used by psalm and a valid php-doc comment.
+            ],
         ],
         'single_line_throw' => false,
     ])

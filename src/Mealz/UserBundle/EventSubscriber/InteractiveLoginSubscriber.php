@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mealz\UserBundle\EventSubscriber;
 
-use App\Mealz\UserBundle\Entity\ProfileRepository;
+use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
@@ -14,9 +14,9 @@ class InteractiveLoginSubscriber implements EventSubscriberInterface
 {
     private EntityManagerInterface $entityManager;
 
-    private ProfileRepository $profileRepository;
+    private ProfileRepositoryInterface $profileRepository;
 
-    public function __construct(EntityManagerInterface $entityManager, ProfileRepository $profileRepository)
+    public function __construct(EntityManagerInterface $entityManager, ProfileRepositoryInterface $profileRepository)
     {
         $this->entityManager = $entityManager;
         $this->profileRepository = $profileRepository;

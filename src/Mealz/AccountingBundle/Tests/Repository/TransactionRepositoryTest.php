@@ -3,7 +3,8 @@
 namespace App\Mealz\AccountingBundle\Tests\Repository;
 
 use App\Mealz\AccountingBundle\Entity\Transaction;
-use App\Mealz\AccountingBundle\Entity\TransactionRepository;
+use App\Mealz\AccountingBundle\Repository\TransactionRepository;
+use App\Mealz\AccountingBundle\Repository\TransactionRepositoryInterface;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadCombinations;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadDays;
@@ -33,7 +34,7 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
     {
         parent::setUp();
 
-        $this->transactionRepo = $this->getDoctrine()->getRepository(Transaction::class);
+        $this->transactionRepo = self::$container->get(TransactionRepositoryInterface::class);
         $this->locale = 'en';
 
         $this->clearAllTables();
@@ -150,7 +151,7 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
         for ($i = 1; $i < 12; ++$i) {
             $transaction = new Transaction();
             $transaction->setProfile($testUser);
-            $transaction->setAmount(mt_rand(10, 120) + 0.13);
+            $transaction->setAmount(random_int(10, 120) + 0.13);
             // $period is to gather 2 transactions for current month, 2 for penultimate one and 8 for last month
             $period = ($i <= 2) ? 'this' : 'last';
             $period = ($i > 10) ? 'penultimate' : $period;

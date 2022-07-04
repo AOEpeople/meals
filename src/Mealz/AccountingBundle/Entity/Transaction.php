@@ -9,8 +9,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
+ * @ORM\Entity
  * @ORM\Table(name="transaction")
- * @ORM\Entity(repositoryClass="App\Mealz\AccountingBundle\Entity\TransactionRepository")
  */
 class Transaction
 {

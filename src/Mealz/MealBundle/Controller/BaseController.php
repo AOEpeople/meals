@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Service\Doorman;
+use App\Mealz\MealBundle\Service\Logger\MealsLoggerInterface;
 use App\Mealz\UserBundle\Entity\Profile;
 use Exception;
 use Psr\Log\LoggerInterface;
@@ -18,7 +19,7 @@ abstract class BaseController extends AbstractController
     public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();
-        $services['logger'] = '?' . LoggerInterface::class;
+        $services['logger'] = '?' . MealsLoggerInterface::class;
         $services['mealz_meal.doorman'] = '?' . Doorman::class;
         $services['monolog.logger.balance'] = '?' . LoggerInterface::class;
         $services['translator'] = '?' . TranslatorInterface::class;
@@ -66,27 +67,6 @@ abstract class BaseController extends AbstractController
      */
     protected function logException(Throwable $exc, string $message = '', array $context = []): void
     {
-        $excChain = ['message' => ('' === $message ? 'exception' : $message)];
-
-        for ($i = 0; $exc; ++$i) {
-            $excLog = ['type' => get_class($exc)];
-
-            if (0 < $exc->getCode()) {
-                $excLog['code'] = $exc->getCode();
-            }
-
-            $excLog['message'] = $exc->getMessage();
-            $excLog['file'] = $exc->getFile() . ':' . $exc->getLine();
-
-            $prev = $exc->getPrevious();
-            if (null === $prev) {
-                $excLog['trace'] = $exc->getTraceAsString();
-            }
-
-            $exc = $prev;
-            $excChain['#' . $i] = $excLog;
-        }
-
-        $this->get('logger')->error(json_encode($excChain), $context);
+        $this->get('logger')->logException($exc, $message, $context);
     }
 }

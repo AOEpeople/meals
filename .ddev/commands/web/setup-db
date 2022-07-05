@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# fully drop (if exists) and create application DB schema
+./bin/console doctrine:schema:drop --full-database --force --no-interaction
+./bin/console doctrine:migrations:migrate --no-interaction
+
+# import test data fixtures
+./bin/console doctrine:fixtures:load --no-interaction
+
+
+#########################
+# Setup test database
+#########################
+
+# export test environment variables
+source .env.test
+
+# setup tests database
+mysql -hdb -uroot -proot <<-EOQ
+  CREATE DATABASE IF NOT EXISTS ${DB_NAME}; \
+  GRANT ALL ON ${DB_NAME}.* TO "${DB_USER}"@'%' IDENTIFIED BY "${DB_USER}";
+EOQ
+
+# fully drop (if exists) and create application DB schema for test environment
+./bin/console doctrine:schema:drop --env=test --full-database --force --no-interaction
+./bin/console doctrine:migrations:migrate --env=test --no-interaction

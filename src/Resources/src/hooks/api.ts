@@ -2,8 +2,8 @@ import axios from "axios";
 import { ref } from "vue";
 
 const instance = axios.create({
-    baseURL: process.env.baseURL,
-    timeout: 1000,
+    baseURL: process.env.APP_BASE_URL,
+    timeout: 5000,
 });
 
 export default function useApi<T>(method: string, url: string, contentType: string = 'application/json', data?: string){

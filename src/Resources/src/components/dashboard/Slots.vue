@@ -58,7 +58,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import {computed, ref} from 'vue'
 import {
   Listbox,
   ListboxButton,
@@ -68,8 +68,9 @@ import {
 
 import {useI18n} from "vue-i18n";
 import { CheckIcon, SelectorIcon } from '@heroicons/vue/solid'
+import {dashboardStore} from "@/store/dashboardStore";
 
-const props = defineProps(['slots', 'activeSlot', 'disabled'])
+const props = defineProps(['slots', 'activeSlot', 'disabled', 'dayId'])
 const { t } = useI18n();
 
 let selectedSlot
@@ -80,8 +81,6 @@ props.slots.forEach((slot, index) => {
   }
 })
 
+computed(() => dashboardStore.updateActiveSlotForDayById(props.dayId.value, selectedSlot.value))
+
 </script>
-
-<style scoped>
-
-</style>

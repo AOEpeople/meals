@@ -4,39 +4,35 @@ MealzMealBundle_language_switch:
 
 MealzMealBundle_api_dashboard:
     path: /api/dashboard
-    defaults: { _controller: App\Mealz\MealBundle\Controller\MealController::getDashboardData }
+    defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::ApiGetDashboardData }
 
 MealzMealBundle_home:
     path:  /
-    defaults: { _controller: App\Mealz\MealBundle\Controller\TestController::test }
+    defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
 
 MealzMealBundle_menu:
   path:  /menu
-  defaults: { _controller: App\Mealz\MealBundle\Controller\TestController::test }
+  defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
 
 MealzMealBundle_categories:
   path: /categories
-  defaults: { _controller: App\Mealz\MealBundle\Controller\TestController::test }
+  defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
 
 MealzMealBundle_timeslots:
   path: /time-slots
-  defaults: { _controller: App\Mealz\MealBundle\Controller\TestController::test }
+  defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
 
 MealzMealBundle_costs:
   path: /costs
-  defaults: { _controller: App\Mealz\MealBundle\Controller\TestController::test }
+  defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
 
 MealzMealBundle_finance:
   path: /finance
-  defaults: { _controller: App\Mealz\MealBundle\Controller\TestController::test }
+  defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
 
 MealzMealBundle_balance:
   path: /balance
-  defaults: { _controller: App\Mealz\MealBundle\Controller\TestController::test }
-
-MealzMealBundle_test:
-    path: /test
-    defaults: { _controller: App\Mealz\MealBundle\Controller\TestController::test }
+  defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
 
 MealzMealBundle_test:
     path: /test
@@ -60,6 +56,11 @@ MealzMealBundle_Meal_new:
 MealzMealBundle_Meal_edit:
     path:  /menu/{week}/edit
     defaults: { _controller: App\Mealz\MealBundle\Controller\MealAdminController::edit }
+
+MealzMealBundle_api_join_Meal:
+  path: /api/join-meal
+  defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::joinMeal }
+  methods: [POST]
 
 MealzMealBundle_Meal_join:
     path:  /menu/{date}/{dish}/join/{profile}
@@ -166,7 +167,7 @@ MealzMealBundle_DishVariation_delete:
 
 MealzMealBundle_Dishes:
   path: /dishes
-  defaults: { _controller: App\Mealz\MealBundle\Controller\TestController::test }
+  defaults: { _controller: App\Mealz\MealBundle\Controller\TestController::renderIndex }
 
 MealzMealBundle_Dishes:
   path: /dishes

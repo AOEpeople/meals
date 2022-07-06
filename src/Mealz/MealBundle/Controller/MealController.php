@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Controller;
 
-use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
-use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Week;
@@ -21,8 +19,6 @@ use App\Mealz\MealBundle\Service\MealAvailabilityService;
 use App\Mealz\MealBundle\Service\OfferService;
 use App\Mealz\MealBundle\Service\ParticipationCountService;
 use App\Mealz\MealBundle\Service\ParticipationService;
-use App\Mealz\MealBundle\Service\SlotService;
-use App\Mealz\MealBundle\Service\WeekService;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Exception;
@@ -31,32 +27,19 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use function Amp\Iterator\map;
 
 class MealController extends BaseController
 {
     private MealAvailabilityService $availabilityService;
-    private WeekService $weekService;
-    private DishService $dishService;
-    private SlotService $slotService;
     private OfferService $offerService;
-    private ParticipationService $participationService;
 
     public function __construct(
         OfferService $offerService,
-        MealAvailabilityService $availabilityService,
-        WeekService $weekService,
-        ParticipationService $participationService,
-        DishService $dishService,
-        SlotService $slotService
+        MealAvailabilityService $availabilityService
     )
     {
         $this->availabilityService = $availabilityService;
         $this->offerService = $offerService;
-        $this->weekService = $weekService;
-        $this->participationService = $participationService;
-        $this->dishService = $dishService;
-        $this->slotService = $slotService;
     }
 
     public function index(
@@ -222,121 +205,6 @@ class MealController extends BaseController
             'title' => $title,
             'offers' => array_values($offers),
         ]);
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function getDashboardData(): JsonResponse
-    {
-        $weeks = $this->weekService->getNextTwoWeeks();
-
-        $response = [];
-        /* @var Week $week */
-        foreach ($weeks as $week) {
-
-            $days = [];
-            /* @var Day $day */
-            foreach ($week->getDays() as $day) {
-
-                $activeSlot = $this->participationService->getSlot($this->getProfile(), $day->getDateTime());
-                if($activeSlot) {
-                    $activeSlot = $activeSlot->getId();
-                }
-                $slots = $this->slotService->getSlotStatusForDay($day->getDateTime());
-                array_unshift($slots, ["id" => null, "title" => "auto", "count" => 0, "limit" => 0, "slug" => "auto"]);
-
-                $meals = [];
-                /* @var Meal $meal */
-                foreach ($day->getMeals() as $meal) {
-
-                    if($meal->getDish() instanceof DishVariation) {
-                        $parentExistsInArray = false;
-
-                        /* @var Meal $addedMeal */
-                        foreach ($meals as $id => $addedMeal) {
-                            if($addedMeal['id'] === $meal->getDish()->getParent()->getId()) {
-
-                                $meals[$id]['variations'][] = [
-                                    'id' => $meal->getId(),
-                                    'title' => [
-                                        'en' => $meal->getDish()->getTitleEn(),
-                                        'de' => $meal->getDish()->getTitleDe()
-                                    ],
-                                    'price' => $meal->getPrice(),
-                                    'limit' => $meal->getParticipationLimit(),
-                                    'reachedLimit' => $meal->hasReachedParticipationLimit(),
-                                    'isOpen' => $meal->isOpen(),
-                                    'isLocked' => $meal->isLocked(),
-                                    'isNew' => $this->dishService->isNew($meal->getDish()),
-                                    'participations' => $meal->getParticipants()->count(),
-                                    'isParticipating' => $this->participationService->isUserParticipating($meal)
-                                ];
-                                $parentExistsInArray = true;
-                                break;
-                            }
-                        }
-                        if(!$parentExistsInArray) {
-                            $meals[] = [
-                                'id' => $meal->getDish()->getParent()->getId(),
-                                'title' => [
-                                    'en' => $meal->getDish()->getParent()->getTitleEn(),
-                                    'de' => $meal->getDish()->getParent()->getTitleDe()
-                                ],
-                                'variations' => array([
-                                    'id' => $meal->getId(),
-                                    'title' => [
-                                        'en' => $meal->getDish()->getTitleEn(),
-                                        'de' => $meal->getDish()->getTitleDe()
-                                    ],
-                                    'price' => $meal->getPrice(),
-                                    'limit' => $meal->getParticipationLimit(),
-                                    'reachedLimit' => $meal->hasReachedParticipationLimit(),
-                                    'isOpen' => $meal->isOpen(),
-                                    'isLocked' => $meal->isLocked(),
-                                    'isNew' => $this->dishService->isNew($meal->getDish()),
-                                    'participations' => $meal->getParticipants()->count(),
-                                    'isParticipating' => $this->participationService->isUserParticipating($meal)
-                                ])
-                            ];
-                        }
-                    } else {
-                        $meals[] = [
-                            'id' => $meal->getId(),
-                            'title' => [
-                                'en' => $meal->getDish()->getTitleEn(),
-                                'de' => $meal->getDish()->getTitleDe()
-                            ],
-                            'description' => [
-                                'en' => $meal->getDish()->getDescriptionEn(),
-                                'de' => $meal->getDish()->getDescriptionDe()
-                            ],
-                            'price' => $meal->getPrice(),
-                            'limit' => $meal->getParticipationLimit(),
-                            'reachedLimit' => $meal->hasReachedParticipationLimit(),
-                            'isOpen' => $meal->isOpen(),
-                            'isLocked' => $meal->isLocked(),
-                            'isNew' => $this->dishService->isNew($meal->getDish()),
-                            'participations' => $meal->getParticipants()->count(),
-                            'isParticipating' => $this->participationService->isUserParticipating($meal)
-                        ];
-                    }
-                }
-                $days[] = [
-                    'id' => $day->getId(),
-                    'meals' => $meals,
-                    'date' => $day->getDateTime(),
-                    'slots' => $slots,
-                    'activeSlot' => $activeSlot,
-                ];
-            }
-            $response[] = [
-                'id' => $week->getId(),
-                'days' => $days,
-            ];
-        }
-
-        return new JsonResponse($response);
     }
 
     private function createEmptyNonPersistentWeek(DateTime $dateTime): Week

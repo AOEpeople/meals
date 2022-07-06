@@ -19,7 +19,7 @@
         <Icons icon="person" box="0 0 12 12" class="fill-white w-3 h-3 ml-[7px] my-auto"/>
         <span class="text-white h-4 w-[15px] self-center leading-4 font-bold text-[11px] my-0.5 mr-[7px] tracking-[1.5px]">{{ meal.participations + [meal.limit > 0 ? '/' + meal.limit : ''] }}</span>
       </div>
-      <Checkbox :mealData="meal" :disabled="disabled"/>
+      <Checkbox :mealData="meal" :disabled="disabled" :dayId="dayId"/>
     </div>
   </div>
 </template>
@@ -32,7 +32,8 @@ import {computed} from "vue";
 
 const props = defineProps([
     'meal',
-    'disabled'
+    'disabled',
+    'dayId'
 ]);
 const { t, locale } = useI18n();
 

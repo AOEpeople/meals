@@ -15,19 +15,20 @@
 
 <script setup>
 import { ref } from 'vue'
+import {dashboardStore} from "@/store/dashboardStore";
 
-const props = defineProps(['mealData', 'disabled'])
+const props = defineProps(['mealData', 'disabled', 'dayId'])
 
 const enabled = ref(props.mealData.isParticipating)
 
-function handle() {
+async function handle() {
   if(!props.disabled) {
-    enabled.value = !enabled.value
+    if(enabled.value) {
+
+    } else {
+
+       await dashboardStore.joinMeal(props.mealData.id, [props.mealData.dishSlug], props.dayId)
+    }
   }
 }
-
 </script>
-
-<style scoped>
-
-</style>

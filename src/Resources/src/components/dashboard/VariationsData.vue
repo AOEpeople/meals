@@ -23,7 +23,7 @@
           {{ variation.participations }}
         </span>
       </div>
-      <Checkbox :mealData="variation" :disabled="disabled"/>
+      <Checkbox :mealData="variation" :disabled="disabled" :dayId="dayId"/>
     </div>
   </div>
 </template>
@@ -40,7 +40,8 @@ let title = computed(() => locale.value.substring(0, 2) === 'en' ? props.meal.ti
 
 const props = defineProps([
   'meal',
-  'disabled'
+  'disabled',
+  'dayId'
 ]);
 
 </script>

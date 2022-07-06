@@ -1,7 +1,7 @@
 import useApi from "@/hooks/api";
 import { ref } from "vue";
 
-type Meal = {
+export type Meal = {
     id: number,
     title: { en: string, de: string }
     description: { en: string, de: string } | null
@@ -12,29 +12,30 @@ type Meal = {
     isNew: boolean,
     price: number,
     participations: number,
-    isParticipating: boolean
+    isParticipating: boolean,
+    dishSlug: string
 }
 
-type Meal_Variations = {
+export type Meal_Variations = {
     title: { en: string, de: string }
     variations: Array<Meal>
 }
 
-type DateTime = {
+export type DateTime = {
     date: string,
     timezone_type: number,
     timezone: string
 }
 
-type Slot = {
+export type Slot = {
     id: number,
     title: string,
     count: number,
     limit: number,
-    slug: string
+    slug: string | null
 }
 
-type Day = {
+export type Day = {
     id: number,
     meals: Array<Meal | Meal_Variations>,
     date: DateTime,
@@ -42,11 +43,13 @@ type Day = {
     activeSlot: number
 }
 
+export type Week = {
+    id: number,
+    days: Array<Day>,
+}
+
 export type Dashboard = {
-    week: [{
-        id: number,
-        days: Array<Day>,
-    }];
+    weeks: Array<Week>;
 };
 
 

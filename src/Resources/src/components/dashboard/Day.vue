@@ -11,14 +11,14 @@
       </div>
     </div>
     <div v-if="!emptyDay" class="flex flex-col flex-1">
-      <Slots :slots="day.slots" :disabled="disabled" :activeSlot="day.activeSlot"/>
+      <Slots :slots="day.slots" :disabled="disabled" :activeSlot="day.activeSlot" :dayid="day.id"/>
       <div
-          v-for="meal in day.meals"
-          :key="meal.id"
+          v-for="(meal, index) in day.meals"
+          :key="meal.id + index"
           class="py-[13px] mx-[15px] border-b-[0.7px] last:border-b-0"
       >
-        <VariationsData v-if="meal.variations" :meal="meal" :disabled="disabled"/>
-        <MealData v-if="!meal.variations" :meal="meal" :disabled="disabled" />
+        <VariationsData v-if="meal.variations" :meal="meal" :disabled="disabled" :dayId="day.id" />
+        <MealData v-if="!meal.variations" :meal="meal" :disabled="disabled" :dayId="day.id" />
       </div>
     </div>
     <div v-if="emptyDay" class="h-[134px]">

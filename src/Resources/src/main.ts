@@ -51,9 +51,11 @@ const router = createRouter({
     ],
 })
 
-const vueApp = createApp(App)
-vueApp.use(i18n)
-vueApp.use(router)
-vueApp.use(VueScreen)
-vueApp.use(Vue3ProgressPlugin)
-vueApp.mount('#app')
+// Vue initialisation
+const VueApp = createApp(App)
+VueApp.config.performance = true // enable Vue Devtools
+VueApp.use(i18n)
+VueApp.use(router)
+VueApp.use(VueScreen)
+VueApp.use(Vue3ProgressPlugin)
+VueApp.mount('#app')

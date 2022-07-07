@@ -6,7 +6,7 @@ namespace App\Mealz\MealBundle\Service;
 
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Week;
-use App\Mealz\MealBundle\Entity\WeekRepository;
+use App\Mealz\MealBundle\Repository\WeekRepository;
 use DateTime;
 
 class WeekService

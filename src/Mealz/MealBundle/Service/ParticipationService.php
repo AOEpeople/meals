@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Service;
 
 use App\Mealz\MealBundle\Controller\BaseController;
+use App\Mealz\MealBundle\Repository\DayRepository;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
-use App\Mealz\MealBundle\Repository\DayRepository;
 use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\MealBundle\Repository\SlotRepository;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;

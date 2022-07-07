@@ -1,14 +1,14 @@
 import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
-import { createI18n } from 'vue-i18n' // import from runtime only
+import { createI18n } from 'vue-i18n'
 import VueScreen from 'vue-screen'
+import {Vue3ProgressPlugin} from '@marcoschulte/vue3-progress'
 
-import en from '@/locales/en.json';
-import de from '@/locales/de.json';
-
+// Style
 import '../style/output.css'
 import '../scss/meals.scss'
 
+// Vue Components
 import App          from '@/App.vue'
 import Dashboard    from '@/views/Dashboard.vue'
 import Menu         from '@/views/Menu.vue'
@@ -19,17 +19,23 @@ import Costs        from '@/views/Costs.vue'
 import Finance      from '@/views/Finance.vue'
 import Balance      from '@/views/Balance.vue'
 import Guest        from '@/views/Guest.vue'
-import {Vue3ProgressPlugin} from '@marcoschulte/vue3-progress'
+
+// Translation
+import en from '@/locales/en.json'
+import de from '@/locales/de.json'
 
 const i18n = createI18n({
     locale: navigator.language,
     fallbackLocale: 'en',
+    fallbackWarn: false,
+    missingWarn: false,
     messages: {
         en,
         de
     }
 })
 
+// Routing
 const router = createRouter({
     history: createWebHistory(),
     routes: [
@@ -45,9 +51,11 @@ const router = createRouter({
     ],
 })
 
-const vueApp = createApp(App);
-vueApp.use(i18n);
-vueApp.use(router);
-vueApp.use(VueScreen);
-vueApp.use(Vue3ProgressPlugin);
-vueApp.mount('#app');
+// Vue initialisation
+const VueApp = createApp(App)
+VueApp.config.performance = true // enable Vue Devtools
+VueApp.use(i18n)
+VueApp.use(router)
+VueApp.use(VueScreen)
+VueApp.use(Vue3ProgressPlugin)
+VueApp.mount('#app')

@@ -22,6 +22,15 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class CashController extends BaseController
 {
+    private ParticipantRepositoryInterface $participantRepo;
+    private TransactionRepositoryInterface $transactionRepo;
+
+    public function __construct(ParticipantRepositoryInterface $participantRepo, TransactionRepositoryInterface $transactionRepo)
+    {
+        $this->participantRepo = $participantRepo;
+        $this->transactionRepo = $transactionRepo;
+    }
+
     /**
      * @param Profile $profile
      */
@@ -154,35 +163,12 @@ class CashController extends BaseController
         ]);
     }
 
-    /**
-     * Send transactions for logged in user.
-     */
-    public function showTransactionData(): Response
-    {
-        $this->denyAccessUnlessGranted('ROLE_USER');
-
-        $profile = $this->getUser()->getProfile();
-
-        $dateFrom = new DateTime('-28 days 00:00:00');
-        $dateTo = new DateTime();
-
-        list($costDifference, $transactionHistory) = $this->getTransactionData($dateFrom, $dateTo, $profile);
-
-        ksort($transactionHistory);
-
-        return new JsonResponse([
-            'data' => $transactionHistory,
-            'difference' => $costDifference,
-        ]);
-    }
-
     private function getTransactionData(DateTime $dateFrom, DateTime $dateTo, Profile $profile): array
     {
-        $participantRepo = $this->getParticipantRepository();
-        $participations = $participantRepo->getParticipantsOnDays($dateFrom, $dateTo, $profile);
 
-        $transactionRepo = $this->getTransactionRepository();
-        $transactions = $transactionRepo->getSuccessfulTransactionsOnDays($dateFrom, $dateTo, $profile);
+        $participations = $this->participantRepo->getParticipantsOnDays($dateFrom, $dateTo, $profile);
+
+        $transactions = $this->transactionRepo->getSuccessfulTransactionsOnDays($dateFrom, $dateTo, $profile);
 
         $costDifference = 0;
         $transactionHistory = [];
@@ -236,11 +222,9 @@ class CashController extends BaseController
      */
     private function getFullTransactionHistory(DateTime $dateFrom, DateTime $dateTo, Profile $profile): array
     {
-        $participantRepo = $this->getParticipantRepository();
-        $participations = $participantRepo->getParticipantsOnDays($dateFrom, $dateTo, $profile);
+        $participations = $this->participantRepo->getParticipantsOnDays($dateFrom, $dateTo, $profile);
 
-        $transactionRepo = $this->getTransactionRepository();
-        $transactions = $transactionRepo->getSuccessfulTransactionsOnDays($dateFrom, $dateTo, $profile);
+        $transactions = $this->transactionRepo->getSuccessfulTransactionsOnDays($dateFrom, $dateTo, $profile);
 
         $costDifference = 0;
         $transactionHistory = [];
@@ -289,111 +273,5 @@ class CashController extends BaseController
         $costDifference = round($costDifference, 2);
 
         return [$costDifference, $transactionHistory];
-    }
-
-    /**
-     * Send transactions for logged in user.
-     */
-    public function showTransactionData(): Response
-    {
-        $this->denyAccessUnlessGranted('ROLE_USER');
-
-        $profile = $this->getUser()->getProfile();
-
-        $dateFrom = new DateTime('-28 days 00:00:00');
-        $dateTo = new DateTime();
-
-        list($costDifference, $transactionHistory) = $this->getTransactionData($dateFrom, $dateTo, $profile);
-
-        ksort($transactionHistory);
-
-        return new JsonResponse([
-            'data' => $transactionHistory,
-            'difference' => $costDifference,
-        ]);
-    }
-
-    private function getTransactionData(DateTime $dateFrom, DateTime $dateTo, Profile $profile): array
-    {
-        $participantRepo = $this->getParticipantRepository();
-        $participations = $participantRepo->getParticipantsOnDays($dateFrom, $dateTo, $profile);
-
-        $transactionRepo = $this->getTransactionRepository();
-        $transactions = $transactionRepo->getSuccessfulTransactionsOnDays($dateFrom, $dateTo, $profile);
-
-        $costDifference = 0;
-        $transactionHistory = [];
-        foreach ($transactions as $transaction) {
-            $costDifference += $transaction->getAmount();
-            $timestamp = $transaction->getDate()->getTimestamp();
-
-            $date = $transaction->getDate();
-            $description = $transaction->getPaymethod();
-            $amount = $transaction->getAmount();
-
-            $credit = [
-                'type' => 'credit',
-                'date' => $date,
-                'description_en' => $description,
-                'description_de' => $description,
-                'amount' => $amount
-            ];
-
-            $transactionHistory[$timestamp] = $credit;
-        }
-
-        foreach ($participations as $participation) {
-            $costDifference -= $participation->getMeal()->getPrice();
-            $timestamp = $participation->getMeal()->getDateTime()->getTimestamp();
-            $mealId = $participation->getMeal()->getId();
-
-            $date = $participation->getMeal()->getDateTime();
-            $description_en = $participation->getMeal()->getDish()->getTitleEn();
-            $description_de = $participation->getMeal()->getDish()->getTitleDe();
-            $amount = $participation->getMeal()->getPrice();
-
-            $debit = [
-                'type' => 'debit',
-                'date' => $date,
-                'description_en' => $description_en,
-                'description_de' => $description_de,
-                'amount' => $amount
-            ];
-
-            $transactionHistory[$timestamp . '-' . $mealId] = $debit;
-        }
-
-        $costDifference = round($costDifference, 2);
-
-        return [$costDifference, $transactionHistory];
-    }
-
-    /**
-     * Merge participation and transactions into 1 array.
-     */
-    private function getFullTransactionHistory(
-        DateTime $dateFrom,
-        DateTime $dateTo,
-        Profile $profile,
-        ParticipantRepositoryInterface $participantRepo,
-        TransactionRepositoryInterface $transactionRepo
-    ): array {
-        $participations = $participantRepo->getParticipantsOnDays($dateFrom, $dateTo, $profile);
-        $transactions = $transactionRepo->getSuccessfulTransactionsOnDays($dateFrom, $dateTo, $profile);
-
-        $transactionsTotal = 0;
-        $transactionHistory = [];
-        foreach ($transactions as $transaction) {
-            $transactionsTotal += $transaction->getAmount();
-            $transactionHistory[$transaction->getDate()->getTimestamp()] = $transaction;
-        }
-
-        $participationsTotal = 0;
-        foreach ($participations as $participation) {
-            $participationsTotal += $participation->getMeal()->getPrice();
-            $transactionHistory[$participation->getMeal()->getDateTime()->getTimestamp() . '-' . $participation->getMeal()->getId()] = $participation;
-        }
-
-        return [$transactionsTotal, $transactionHistory, $participationsTotal];
     }
 }

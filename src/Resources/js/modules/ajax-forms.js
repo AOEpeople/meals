@@ -1,3 +1,5 @@
+import AjaxErrorHandler from "./ajax-error-handler";
+
 Mealz.prototype.initAjaxForms = function () {
     var that = this;
     $('.load-ajax-form').on('click', function (e) {
@@ -88,8 +90,8 @@ Mealz.prototype.loadAjaxForm = function ($element) {
 
             $element.addClass('loaded');
         },
-        error: function (xhr) {
-            console.log(xhr.status + ': ' + xhr.statusText);
+        error: function (jqXHR) {
+            AjaxErrorHandler.handleError(jqXHR);
         }
     });
 };
@@ -146,8 +148,8 @@ Mealz.prototype.loadAjaxFormPayment = function ($element) {
                 that.enablePaypal();
             }
         },
-        error: function (xhr) {
-            console.log(xhr.status + ': ' + xhr.statusText);
+        error: function (jqXHR) {
+            AjaxErrorHandler.handleError(jqXHR);
         }
     });
 };

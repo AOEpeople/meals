@@ -8,6 +8,7 @@ import {MealOfferUpdate, MealOfferUpdateHandler} from "../modules/meal-offer-upd
 import {ParticipationUpdateHandler} from "../modules/participation-update-handler";
 import {SlotAllocationUpdateHandler} from "../modules/slot-allocation-update-handler";
 import {MealService} from "../modules/meal-service";
+import AjaxErrorHandler from "../modules/ajax-error-handler";
 
 interface UpdateResponse extends ParticipationResponse {
     bookedDishSlugs: string[];
@@ -78,8 +79,8 @@ export default class MealIndexView {
                     // hide default option to auto-select slot [TP##250006]
                     $slotSelector.find('option[value=""]').hide()
                 },
-                error: function () {
-                    alert('An unknown error occurred');
+                error: function (jqXHR) {
+                    AjaxErrorHandler.handleError(jqXHR);
                 }
             });
         }

@@ -1,4 +1,5 @@
 import {ParticipationResponse} from "./participation-response-handler";
+import AjaxErrorHandler from "./ajax-error-handler";
 
 export class ParticipationRequest {
     readonly url: string;
@@ -37,13 +38,14 @@ export class ParticipationRequestHandler {
             success: function (data) {
                 handle($checkbox, data);
             },
-            error: function (xhr) {
-                console.log(xhr.status + ': ' + xhr.statusText);
-                if (true === ParticipationRequestHandler.isJoinRequest(participationRequest.url)) {
-                    let mealTitle = $checkbox.closest('.meal-row').children('.title').text();
-                    let errMsg = $('.weeks').data('errJoinNotPossible').replace('%dish%', mealTitle);
-                    ParticipationRequestHandler.sendAlert(errMsg);
-                }
+            error: function (jqXHR) {
+                AjaxErrorHandler.handleError(jqXHR, function (){
+                    if (true === ParticipationRequestHandler.isJoinRequest(participationRequest.url)) {
+                        let mealTitle = $checkbox.closest('.meal-row').children('.title').text();
+                        let errMsg = $('.weeks').data('errJoinNotPossible').replace('%dish%', mealTitle);
+                        ParticipationRequestHandler.sendAlert(errMsg);
+                    }
+                });
             }
         });
     }

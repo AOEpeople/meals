@@ -32,15 +32,16 @@ import { Tabs, Tab, TabPanels, TabPanel } from 'vue3-tabs';
 import { useI18n } from "vue-i18n";
 import { ref } from "vue";
 import { useProgress } from '@marcoschulte/vue3-progress'
-import { useDashboardData } from "@/hooks/getDashboardData";
+import { dashboardStore } from '@/store/dashboardStore'
 
 const progress = useProgress().start()
 
-const { dashboardData: weeks } = await useDashboardData();
+await dashboardStore.fillStore()
+const weeks = dashboardStore.getState().weeks
 
 const { t } = useI18n();
 
-const selectedTab = ref(weeks.value[0].id)
+const selectedTab = ref(weeks[0].id)
 
 setTimeout(function () {
   progress.finish()

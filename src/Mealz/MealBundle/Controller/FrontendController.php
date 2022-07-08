@@ -20,6 +20,7 @@ use App\Mealz\MealBundle\Service\SlotService;
 use App\Mealz\MealBundle\Service\WeekService;
 use App\Mealz\UserBundle\Entity\Profile;
 use Exception;
+use JMS\Serializer\Tests\Serializer\EventDispatcher\EventDispatcherTest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,13 +37,16 @@ class FrontendController extends BaseController
     private SlotRepository $slotRepo;
     private MealRepository $mealRepo;
 
+    private EventDispatcherInterface $eventDispatcher;
+
     public function __construct(
         DishService $dishSrv,
         SlotService $slotSrv,
         SlotRepository $slotRepo,
         WeekService $weekSrv,
         ParticipationService $participationSrv,
-        MealRepository $mealRepo
+        MealRepository $mealRepo,
+        EventDispatcherInterface $eventDispatcher
     ){
         $this->dishSrv = $dishSrv;
         $this->slotSrv = $slotSrv;
@@ -50,6 +54,7 @@ class FrontendController extends BaseController
         $this->weekSrv = $weekSrv;
         $this->participationSrv = $participationSrv;
         $this->mealRepo = $mealRepo;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function renderIndex(): Response
@@ -62,7 +67,7 @@ class FrontendController extends BaseController
      *
      * @Security("is_granted('ROLE_USER')")
      */
-    public function joinMeal(Request $request, EventDispatcherInterface $eventDispatcher): JsonResponse
+    public function joinMeal(Request $request): JsonResponse
     {
         $profile = $this->getUser()->getProfile();
         if (null === $profile) {
@@ -81,13 +86,55 @@ class FrontendController extends BaseController
             return new JsonResponse(null, 500);
         }
 
-        $this->triggerJoinEvents($eventDispatcher, $result['participant'], $result['offerer']);
+        $this->triggerJoinEvents($result['participant'], $result['offerer']);
 
         if (null === $result['offerer']) {
             $this->logAdd($meal, $result['participant']);
         }
 
-        return new JsonResponse($result);
+        return new JsonResponse($result['participant']->getId());
+    }
+
+    /**
+     * Lets the currently logged-in user either leave a meal, or put it up for offer
+     *
+     * @Security("is_granted('ROLE_USER')")
+     */
+    public function leaveMeal(Request $request): JsonResponse {
+        if (false === is_object($this->getUser())) {
+            return $this->ajaxSessionExpiredRedirect();
+        }
+
+        $parameters = json_decode($request->getContent(), true);
+        $meal = $this->mealRepo->find($parameters['mealID']);
+        $participant = $this->participationSrv->getParticipationByMealAndUser($meal);
+
+        if (false === $this->getDoorman()->isUserAllowedToLeave($meal) &&
+            (false === $this->getDoorman()->isKitchenStaff())) {
+            return new JsonResponse(null, 403);
+        }
+
+        $participant->setCombinedDishes(null);
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($participant);
+        $entityManager->flush();
+
+        $this->triggerLeaveEvents($participant);
+
+        if (($this->getDoorman()->isKitchenStaff()) === true) {
+            $logger = $this->get('monolog.logger.balance');
+            $logger->info(
+                'admin removed {profile} from {meal} (Meal: {mealId})',
+                [
+                    'profile' => $participant->getProfile(),
+                    'meal' => $meal,
+                    'mealId' => $meal->getId(),
+                ]
+            );
+        }
+
+        return new JsonResponse(null, 200);
     }
 
     /**
@@ -110,7 +157,7 @@ class FrontendController extends BaseController
                     $activeSlot = $activeSlot->getId();
                 }
                 $slots = $this->slotSrv->getSlotStatusForDay($day->getDateTime());
-                array_unshift($slots, ["id" => null, "title" => "auto", "count" => 0, "limit" => 0, "slug" => null]);
+                array_unshift($slots, ["id" => -1, "title" => "auto", "count" => 0, "limit" => 0, "slug" => "auto"]);
 
                 $meals = [];
                 /* @var Meal $meal */
@@ -208,22 +255,31 @@ class FrontendController extends BaseController
         return new JsonResponse(['weeks' => $response]);
     }
 
-    private function triggerJoinEvents(
-        EventDispatcherInterface $eventDispatcher,
-        Participant $participant,
-        ?Profile $offerer
-    ): void {
+    private function triggerJoinEvents(Participant $participant, ?Profile $offerer): void
+    {
         if (null !== $offerer) {
-            $eventDispatcher->dispatch(new MealOfferAcceptedEvent($participant, $offerer));
+            $this->eventDispatcher->dispatch(new MealOfferAcceptedEvent($participant, $offerer));
 
             return;
         }
 
-        $eventDispatcher->dispatch(new ParticipationUpdateEvent($participant));
+        $this->eventDispatcher->dispatch(new ParticipationUpdateEvent($participant));
 
         $slot = $participant->getSlot();
         if (null !== $slot) {
-            $eventDispatcher->dispatch(new SlotAllocationUpdateEvent($participant->getMeal()->getDateTime(), $slot));
+            $this->eventDispatcher->dispatch(new SlotAllocationUpdateEvent($participant->getMeal()->getDateTime(), $slot));
+        }
+    }
+
+    private function triggerLeaveEvents(Participant $participant): void
+    {
+        $this->eventDispatcher->dispatch(new ParticipationUpdateEvent($participant));
+
+        $slot = $participant->getSlot();
+        if (null !== $slot) {
+            $this->eventDispatcher->dispatch(
+                new SlotAllocationUpdateEvent($participant->getMeal()->getDateTime(), $slot)
+            );
         }
     }
 

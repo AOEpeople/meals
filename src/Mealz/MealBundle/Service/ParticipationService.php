@@ -190,6 +190,20 @@ class ParticipationService extends BaseController
         return null;
     }
 
+    public function getParticipationByMealAndUser(Meal $meal): ?Participant
+    {
+        $participants = $meal->getParticipants();
+        $profile = $this->getUser()->getProfile();
+
+        foreach ($participants as $participant) {
+            if($participant->getProfile() === $profile) {
+                return $participant;
+            }
+        }
+
+        return null;
+    }
+
     /**
      * @psalm-return array<string, int> Key-value pair of slot-slug and related allocation count
      */

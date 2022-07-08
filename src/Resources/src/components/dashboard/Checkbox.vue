@@ -15,7 +15,9 @@
 
 <script setup>
 import { ref } from 'vue'
-import {dashboardStore} from "@/store/dashboardStore";
+import { dashboardStore } from '@/store/dashboardStore';
+import { useJoinMeal } from '@/hooks/postJoinMeal'
+import { useLeaveMeal } from '@/hooks/postLeaveMeal'
 
 const props = defineProps(['mealData', 'disabled', 'dayId'])
 
@@ -24,11 +26,29 @@ const enabled = ref(props.mealData.isParticipating)
 async function handle() {
   if(!props.disabled) {
     if(enabled.value) {
-
+      await leaveMeal(props.mealData.id)
     } else {
-
-       await dashboardStore.joinMeal(props.mealData.id, [props.mealData.dishSlug], props.dayId)
+      await joinMeal(props.mealData.id, [props.mealData.dishSlug], props.dayId)
     }
   }
 }
+
+async function joinMeal(mealId, dishSlugs, dayId) {
+  let data = {
+    mealID: mealId,
+    dishSlugs: dishSlugs,
+    slotID: dashboardStore.getDayById(dayId)?.activeSlot
+  }
+
+  await useJoinMeal(JSON.stringify(data));
+}
+
+async function leaveMeal(mealId) {
+  let data = {
+    mealID: mealId
+  }
+
+  await useLeaveMeal(JSON.stringify(data));
+}
+
 </script>

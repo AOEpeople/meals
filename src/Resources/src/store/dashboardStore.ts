@@ -19,31 +19,25 @@ class DashboardStore extends Store<Dashboard> {
         }
     }
 
-    async joinMeal(mealId: number, dishSlugs: Array<String>, dayId: number) {
-        let data = {
-            mealID: mealId,
-            dishSlugs: dishSlugs,
-            slotID: this.getDayById(dayId)?.activeSlot
-        }
-
-        let { response } = await useJoinMeal(JSON.stringify(data));
-
-        console.log(response)
-    }
-
     public updateActiveSlotForDayById(id: number, newActiveSlot: number): void {
-        let day = this.getDayById(id);
-        day!.activeSlot = newActiveSlot;
+        let day = this.getDayById(id)
+        day!.activeSlot = newActiveSlot
     }
 
-    private getDayById(id: number): Day | null {
-        this.state.weeks.forEach((week: Week) => week.days.forEach((day: Day) => {
-            if(day.id === id) {
-               return day;
-            }
-        }))
+    public getDayById(id: number): Day | null {
+        let result = null
 
-        return null;
+        this.state.weeks.forEach((week: Week) => {
+            for (let day of week.days) {
+                if (day.id === id) {
+                    result = day
+                    return day
+                }
+            }
+            return null
+        })
+
+        return result
     }
 }
 

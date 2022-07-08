@@ -52,7 +52,6 @@ export type Dashboard = {
     weeks: Array<Week>;
 };
 
-
 export async function useDashboardData() {
     const { response: dashboardData, request } = useApi<Dashboard>(
         "GET",

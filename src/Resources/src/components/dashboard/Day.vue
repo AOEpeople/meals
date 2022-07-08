@@ -11,7 +11,7 @@
       </div>
     </div>
     <div v-if="!emptyDay" class="flex flex-col flex-1">
-      <Slots :slots="day.slots" :disabled="disabled" :activeSlot="day.activeSlot" :dayid="day.id"/>
+      <Slots :slots="day.slots" :disabled="disabled" :activeSlot="day.activeSlot" :dayId="day.id"/>
       <div
           v-for="(meal, index) in day.meals"
           :key="meal.id + index"

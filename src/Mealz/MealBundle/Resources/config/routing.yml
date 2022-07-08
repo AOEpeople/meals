@@ -62,6 +62,11 @@ MealzMealBundle_api_join_Meal:
   defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::joinMeal }
   methods: [POST]
 
+MealzMealBundle_api_leave_Meal:
+  path: /api/leave-meal
+  defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::leaveMeal }
+  methods: [POST]
+
 MealzMealBundle_Meal_join:
     path:  /menu/{date}/{dish}/join/{profile}
     defaults: { _controller: App\Mealz\MealBundle\Controller\MealController::join, profile: null }

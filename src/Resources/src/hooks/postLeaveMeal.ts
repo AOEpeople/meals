@@ -1,16 +1,14 @@
 import useApi from "@/hooks/api";
 import { ref } from "vue";
 
-export type JoinMeal = {
-    mealID: number,
-    dishSlugs: Array<string>,
-    slotID: number,
+export type LeaveMeal = {
+    mealID: number
 };
 
-export async function useJoinMeal(data: string) {
-    const { response, request } = useApi<JoinMeal>(
+export async function useLeaveMeal(data: string) {
+    const { response, request } = useApi<LeaveMeal>(
         "POST",
-        "api/join-meal",
+        "api/leave-meal",
         'application/json',
         data,
     );

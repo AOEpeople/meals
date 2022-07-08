@@ -58,7 +58,7 @@
 </template>
 
 <script setup>
-import {computed, ref} from 'vue'
+import {watchEffect, ref} from 'vue'
 import {
   Listbox,
   ListboxButton,
@@ -73,7 +73,7 @@ import {dashboardStore} from "@/store/dashboardStore";
 const props = defineProps(['slots', 'activeSlot', 'disabled', 'dayId'])
 const { t } = useI18n();
 
-let selectedSlot
+let selectedSlot = ref(props.slots[0])
 
 props.slots.forEach((slot, index) => {
   if(slot.id === props.activeSlot) {
@@ -81,6 +81,8 @@ props.slots.forEach((slot, index) => {
   }
 })
 
-computed(() => dashboardStore.updateActiveSlotForDayById(props.dayId.value, selectedSlot.value))
+if(!props.disabled){
+  watchEffect(() => dashboardStore.updateActiveSlotForDayById(props.dayId, selectedSlot.value.id))
+}
 
 </script>

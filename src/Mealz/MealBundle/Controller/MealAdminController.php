@@ -189,17 +189,6 @@ class MealAdminController extends BaseController
     {
         /** @var EntityManager $entityManager */
         $entityManager = $this->getDoctrine()->getManager();
-
-        /** @var Day $day */
-        foreach ($week->getDays() as $day) {
-            /** @var Meal $meal */
-            foreach ($day->getMeals() as $meal) {
-                if (UnitOfWork::STATE_REMOVED === $entityManager->getUnitOfWork()->getEntityState($meal)) {
-                    $day->removeMeal($meal);
-                }
-            }
-        }
-
         $entityManager->persist($week);
         $entityManager->flush();
         $this->eventDispatcher->dispatch(new WeekUpdateEvent($week, $notify));

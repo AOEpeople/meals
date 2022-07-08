@@ -1,4 +1,4 @@
-{% if not day.enabled %}
+{% if not day.enabled or 1 > day.meals.count %}
     <div class="meal">
         <div class="meal-row no-meal">{{ 'content.participation.day.disabled'|trans({}, 'general') }}</div>
         <div class="week-day"><span>{{- day.dateTime.format('D') | trans({}, 'date') -}}</span></div>

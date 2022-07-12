@@ -1,6 +1,5 @@
 import {Store} from '@/store/store';
 import {useDashboardData, Day, Dashboard, Week} from '@/hooks/getDashboardData';
-import {useJoinMeal} from '@/hooks/postJoinMeal';
 
 class DashboardStore extends Store<Dashboard> {
 
@@ -17,6 +16,8 @@ class DashboardStore extends Store<Dashboard> {
         } else {
             console.log('could not receive Transactions')
         }
+
+        this.configureMealUpdateHandlers()
     }
 
     public updateActiveSlotForDayById(id: number, newActiveSlot: number): void {
@@ -38,6 +39,36 @@ class DashboardStore extends Store<Dashboard> {
         })
 
         return result
+    }
+
+    /**
+     * Configure handlers to process meal push notifications.
+     */
+    private configureMealUpdateHandlers(): void {
+        const eventSrc = new EventSource('https://meals.test/.well-known/mercure?topic=participation-updates&topic=meal-offer-updates&topic=slot-allocation-updates', { withCredentials: true })
+
+        // @ts-ignore
+        eventSrc.addEventListener('participationUpdate', (event: MessageEvent) => {
+            this.handleParticipationUpdate(JSON.parse(event.data))
+        })
+        // @ts-ignore
+        eventSrc.addEventListener('mealOfferUpdate', (event: MessageEvent) => {
+            this.handleMealOfferUpdate(JSON.parse(event.data))
+        })
+        // @ts-ignore
+        eventSrc.addEventListener('slotAllocationUpdate', (event: MessageEvent) => {
+            this.handleSlotAllocationUpdate(JSON.parse(event.data))
+        })
+    }
+
+    private handleParticipationUpdate(data: any): void {
+
+    }
+    private handleMealOfferUpdate(data: any): void {
+
+    }
+    private handleSlotAllocationUpdate(data: any): void {
+
     }
 }
 

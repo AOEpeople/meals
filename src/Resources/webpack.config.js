@@ -155,6 +155,7 @@ module.exports = function(env, argv) {
                 'process.env.APP_BASE_URL': JSON.stringify(process.env.APP_BASE_URL),
                 'process.env.PAYMENT_NOTIFICATION_DEBT': JSON.stringify(process.env.PAYMENT_NOTIFICATION_DEBT),
                 'process.env.PAYPAL_ID': JSON.stringify(process.env.PAYPAL_ID),
+                'process.env.MERCURE_PUBLIC_URL': JSON.stringify(process.env.MERCURE_PUBLIC_URL),
                 __VUE_OPTIONS_API__: true,
                 __VUE_PROD_DEVTOOLS__: false,
                 __VUE_I18N_FULL_INSTALL__: true,

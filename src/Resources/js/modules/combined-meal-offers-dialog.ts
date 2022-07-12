@@ -1,5 +1,5 @@
 import 'jquery-ui/ui/widgets/dialog';
-import {BaseDialog} from "./base-dialog";
+import {BaseDialog} from './base-dialog';
 
 export class CombinedMealOffersDialog extends BaseDialog {
     private readonly containerID: string = '#combined-meal-selector';

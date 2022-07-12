@@ -1,14 +1,14 @@
-import {ParticipationPreToggleHandler} from "../modules/participation-pre-toggle-handler";
-import {ParticipationToggleHandler} from "../modules/participation-toggle-handler";
-import {CombinedMealDialog, SerializedFormData} from "../modules/combined-meal-dialog";
-import {ParticipationRequest, ParticipationRequestHandler} from "../modules/participation-request-handler";
-import {ParticipationResponse} from "../modules/participation-response-handler";
-import {CombinedMealService} from "../modules/combined-meal-service";
-import {MealOfferUpdate, MealOfferUpdateHandler} from "../modules/meal-offer-update-handler";
-import {ParticipationUpdateHandler} from "../modules/participation-update-handler";
-import {SlotAllocationUpdateHandler} from "../modules/slot-allocation-update-handler";
-import {MealService} from "../modules/meal-service";
-import AjaxErrorHandler from "../modules/ajax-error-handler";
+import {ParticipationPreToggleHandler} from '../modules/participation-pre-toggle-handler';
+import {ParticipationToggleHandler} from '../modules/participation-toggle-handler';
+import {CombinedMealDialog, SerializedFormData} from '../modules/combined-meal-dialog';
+import {ParticipationRequest, ParticipationRequestHandler} from '../modules/participation-request-handler';
+import {ParticipationResponse} from '../modules/participation-response-handler';
+import {CombinedMealService} from '../modules/combined-meal-service';
+import {MealOfferUpdate, MealOfferUpdateHandler} from '../modules/meal-offer-update-handler';
+import {ParticipationUpdateHandler} from '../modules/participation-update-handler';
+import {SlotAllocationUpdateHandler} from '../modules/slot-allocation-update-handler';
+import {MealService} from '../modules/meal-service';
+import AjaxErrorHandler from '../modules/ajax-error-handler';
 
 interface UpdateResponse extends ParticipationResponse {
     bookedDishSlugs: string[];

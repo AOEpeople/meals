@@ -1,5 +1,5 @@
-import Switchery from "switchery.js";
-import AjaxErrorHandler from "../modules/ajax-error-handler";
+import Switchery from 'switchery.js';
+import AjaxErrorHandler from '../modules/ajax-error-handler';
 
 export default class SlotIndexView {
     constructor() {

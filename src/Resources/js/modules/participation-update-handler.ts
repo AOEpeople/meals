@@ -1,6 +1,6 @@
-import {Labels, TooltipLabel} from "./labels";
-import {CombinedMealService} from "./combined-meal-service";
-import {MealService} from "./meal-service";
+import {Labels, TooltipLabel} from './labels';
+import {CombinedMealService} from './combined-meal-service';
+import {MealService} from './meal-service';
 
 /**
  * Meal States

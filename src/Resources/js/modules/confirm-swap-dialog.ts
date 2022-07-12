@@ -1,7 +1,7 @@
 import 'jquery-ui/ui/widgets/dialog';
-import {ParticipationRequest, ParticipationRequestHandler} from "./participation-request-handler";
-import {ActionResponse} from "./participation-response-handler";
-import {BaseDialog} from "./base-dialog";
+import {ParticipationRequest, ParticipationRequestHandler} from './participation-request-handler';
+import {ActionResponse} from './participation-response-handler';
+import {BaseDialog} from './base-dialog';
 
 export class ConfirmSwapDialog extends BaseDialog {
     private readonly containerID: string = '#confirm-swapbox';

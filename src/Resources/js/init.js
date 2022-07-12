@@ -11,7 +11,7 @@ import 'jquery-datetimepicker/build/jquery.datetimepicker.full';
 import '@fancyapps/fancybox';
 import 'easy-autocomplete';
 import 'daterangepicker';
-import {Controller} from "./controller";
+import {Controller} from './controller';
 
 
 

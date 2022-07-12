@@ -1,6 +1,6 @@
-import {CombinedMealDialog, SerializedFormData} from "../modules/combined-meal-dialog";
-import {Dish, DishVariation} from "../modules/combined-meal-service";
-import AjaxErrorHandler from "../modules/ajax-error-handler";
+import {CombinedMealDialog, SerializedFormData} from '../modules/combined-meal-dialog';
+import {Dish, DishVariation} from '../modules/combined-meal-service';
+import AjaxErrorHandler from '../modules/ajax-error-handler';
 
 interface DeleteResponseData {
     participantsCount: number;

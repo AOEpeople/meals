@@ -1,4 +1,4 @@
-import AjaxErrorHandler from "./ajax-error-handler";
+import AjaxErrorHandler from './ajax-error-handler';
 
 Mealz.prototype.toggleArrayItem = function (a, v) {
     var i = a.indexOf(v);

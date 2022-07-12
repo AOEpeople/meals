@@ -1,5 +1,5 @@
-import {ParticipationResponse} from "./participation-response-handler";
-import AjaxErrorHandler from "./ajax-error-handler";
+import {ParticipationResponse} from './participation-response-handler';
+import AjaxErrorHandler from './ajax-error-handler';
 
 export class ParticipationRequest {
     readonly url: string;

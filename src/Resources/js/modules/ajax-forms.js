@@ -1,4 +1,4 @@
-import AjaxErrorHandler from "./ajax-error-handler";
+import AjaxErrorHandler from './ajax-error-handler';
 
 Mealz.prototype.initAjaxForms = function () {
     var that = this;

@@ -45,7 +45,7 @@ class DashboardStore extends Store<Dashboard> {
      * Configure handlers to process meal push notifications.
      */
     private configureMealUpdateHandlers(): void {
-        const eventSrc = new EventSource('https://meals.test/.well-known/mercure?topic=participation-updates&topic=meal-offer-updates&topic=slot-allocation-updates', { withCredentials: true })
+        const eventSrc = new EventSource('https://meals.test:8081/.well-known/mercure?topic=participation-updates&topic=meal-offer-updates&topic=slot-allocation-updates', { withCredentials: true })
 
         // @ts-ignore
         eventSrc.addEventListener('participationUpdate', (event: MessageEvent) => {

@@ -1,7 +1,7 @@
 import 'jquery-ui/ui/widgets/dialog';
-import {CombinedMealOffersDialog, Offer} from "./combined-meal-offers-dialog";
-import {AbstractParticipationToggleHandler} from "./participation-toggle-handler";
-import {ParticipantCounter} from "./participant-counter";
+import {CombinedMealOffersDialog, Offer} from './combined-meal-offers-dialog';
+import {AbstractParticipationToggleHandler} from './participation-toggle-handler';
+import {ParticipantCounter} from './participant-counter';
 
 export class CombinedMealOffersService {
     public static execute($checkbox: JQuery, participationToggleHandler: AbstractParticipationToggleHandler) {

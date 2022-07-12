@@ -1,4 +1,4 @@
-import {AcceptOfferData, ParticipationUpdateHandler, ToggleData} from "./participation-update-handler";
+import {AcceptOfferData, ParticipationUpdateHandler, ToggleData} from './participation-update-handler';
 
 export interface ParticipationResponse {
     actionText: string;

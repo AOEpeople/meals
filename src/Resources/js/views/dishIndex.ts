@@ -1,4 +1,4 @@
-import Switchery from "switchery.js";
+import Switchery from 'switchery.js';
 
 export default class DishIndex {
     constructor() {

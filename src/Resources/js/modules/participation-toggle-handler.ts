@@ -1,11 +1,11 @@
-import {ParticipantCounter} from "./participant-counter";
-import {ParticipationResponseHandler} from "./participation-response-handler";
+import {ParticipantCounter} from './participant-counter';
+import {ParticipationResponseHandler} from './participation-response-handler';
 import {
     ParticipationRequest,
     ParticipationRequestHandler
-} from "./participation-request-handler";
-import {ConfirmSwapDialog} from "./confirm-swap-dialog";
-import {CombinedMealService} from "./combined-meal-service";
+} from './participation-request-handler';
+import {ConfirmSwapDialog} from './confirm-swap-dialog';
+import {CombinedMealService} from './combined-meal-service';
 
 export abstract class AbstractParticipationToggleHandler {
     constructor($checkboxes: JQuery) {

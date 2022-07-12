@@ -1,4 +1,5 @@
-import Switchery from "switchery.js";
+import Switchery from 'switchery.js';
+import AjaxErrorHandler from '../modules/ajax-error-handler';
 
 export default class SlotIndexView {
     constructor() {
@@ -50,9 +51,13 @@ export default class SlotIndexView {
                 msg = $flashContainer.data('del-success-msg').replace('_', slotTitle);
                 self.showFlashMsg(msg, 'success');
             })
-            .fail(function () {
-                msg = $flashContainer.data('err-msg');
-                self.showFlashMsg(msg, 'error');
+            .fail(function (jqXHR) {
+                AjaxErrorHandler.handleError(jqXHR, function(){
+                    msg = $flashContainer.data('err-msg');
+                    if (0 < msg.length) {
+                        self.showFlashMsg(msg, 'error');
+                    }
+                });
             });
     }
 

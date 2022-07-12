@@ -1,5 +1,5 @@
-import {ParticipationUpdateHandler} from "./participation-update-handler";
-import {MealService} from "./meal-service";
+import {ParticipationUpdateHandler} from './participation-update-handler';
+import {MealService} from './meal-service';
 
 export enum MealOfferStates {
     New = 'new',

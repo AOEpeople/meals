@@ -1,9 +1,9 @@
-import {CombinedMealDialog, SerializedFormData} from "./combined-meal-dialog";
+import {CombinedMealDialog, SerializedFormData} from './combined-meal-dialog';
 import Event = JQuery.Event;
-import {AbstractParticipationToggleHandler} from "./participation-toggle-handler";
-import {ParticipantCounter} from "./participant-counter";
-import {CombinedMealOffersService} from "./combined-meal-offers-service";
-import {CombinedMealService} from "./combined-meal-service";
+import {AbstractParticipationToggleHandler} from './participation-toggle-handler';
+import {ParticipantCounter} from './participant-counter';
+import {CombinedMealOffersService} from './combined-meal-offers-service';
+import {CombinedMealService} from './combined-meal-service';
 
 export class ParticipationPreToggleHandler {
     private readonly participationToggleHandler: AbstractParticipationToggleHandler;

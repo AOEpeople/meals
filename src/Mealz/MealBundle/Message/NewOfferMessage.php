@@ -26,13 +26,13 @@ class NewOfferMessage extends AbstractOfferMessage
         $offerCount = $this->offerService->getOfferCount($this->participant->getMeal()->getDateTime());
 
         return $this->translator->trans(
-                'mattermost.offered',
-                [
-                    '%count%' => $offerCount,
-                    '%dish%' => $this->getBookedDishTitle($this->participant),
-                ],
-                'messages',
-                'en_EN'
-            );
+            'mattermost.offered',
+            [
+                '%count%' => $offerCount,
+                '%dish%' => $this->getBookedDishTitle($this->participant),
+            ],
+            'messages',
+            'en_EN'
+        );
     }
 }

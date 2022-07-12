@@ -1,4 +1,4 @@
-import {MealService} from "./meal-service";
+import {MealService} from './meal-service';
 
 export class CombinedMealService {
 

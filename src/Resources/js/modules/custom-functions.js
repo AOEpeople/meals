@@ -1,3 +1,5 @@
+import AjaxErrorHandler from './ajax-error-handler';
+
 Mealz.prototype.toggleArrayItem = function (a, v) {
     var i = a.indexOf(v);
     if (i === -1)
@@ -59,6 +61,9 @@ Mealz.prototype.copyToClipboard = function() {
                     }
                 }
                 return false;
+            },
+            error: function(jqXHR){
+                AjaxErrorHandler.handleError(jqXHR);
             }
         });
     });

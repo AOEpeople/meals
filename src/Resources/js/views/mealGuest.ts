@@ -1,7 +1,7 @@
-import {ParticipationGuestToggleHandler} from "../modules/participation-toggle-handler";
-import {ParticipationPreToggleHandler} from "../modules/participation-pre-toggle-handler";
-import {ParticipationUpdateHandler} from "../modules/participation-update-handler";
-import {SlotAllocationUpdateHandler} from "../modules/slot-allocation-update-handler";
+import {ParticipationGuestToggleHandler} from '../modules/participation-toggle-handler';
+import {ParticipationPreToggleHandler} from '../modules/participation-pre-toggle-handler';
+import {ParticipationUpdateHandler} from '../modules/participation-update-handler';
+import {SlotAllocationUpdateHandler} from '../modules/slot-allocation-update-handler';
 
 export default class MealGuestView {
     $participationCheckboxes: JQuery;

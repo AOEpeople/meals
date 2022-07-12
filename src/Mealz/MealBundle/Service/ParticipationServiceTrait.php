@@ -129,7 +129,7 @@ trait ParticipationServiceTrait
                 ParticipationException::ERR_INVALID_OPERATION
             );
         }
-        if ((2 !== count($dishSlugs))) {
+        if (2 !== count($dishSlugs)) {
             throw new ParticipationException(
                 'invalid dish count; combined meal expects 2 dishes, got ' . count($dishSlugs),
                 ParticipationException::ERR_COMBI_MEAL_INVALID_DISH_COUNT

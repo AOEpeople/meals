@@ -1,5 +1,6 @@
-import {CombinedMealDialog, SerializedFormData} from "../modules/combined-meal-dialog";
-import {Dish, DishVariation} from "../modules/combined-meal-service";
+import {CombinedMealDialog, SerializedFormData} from '../modules/combined-meal-dialog';
+import {Dish, DishVariation} from '../modules/combined-meal-service';
+import AjaxErrorHandler from '../modules/ajax-error-handler';
 
 interface DeleteResponseData {
     participantsCount: number;
@@ -346,14 +347,16 @@ export default class AdminParticipationEditView {
             data: payload,
             dataType: 'json',
             success: successFn,
-            error: function (xhr, status, error) {
-                if (failureFn) {
-                    let errMsg = status;
-                    if ('' !== error) {
-                        errMsg += `, ${error}`;
+            error: function (jqXHR, status, error) {
+                AjaxErrorHandler.handleError(jqXHR, function(){
+                    if (failureFn) {
+                        let errMsg = status;
+                        if ('' !== error) {
+                            errMsg += `, ${error}`;
+                        }
+                        failureFn(errMsg);
                     }
-                    failureFn(errMsg);
-                }
+                });
             }
         });
     }

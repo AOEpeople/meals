@@ -1,6 +1,5 @@
 const path = require('path')
 const webpack = require('webpack')
-const DotEnv = require('dotenv-webpack')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const TerserPlugin = require('terser-webpack-plugin');
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin')
@@ -59,6 +58,7 @@ module.exports = function(env, argv) {
             alias: {
                 jquery: path.resolve('./node_modules/jquery/dist/jquery.js'),
                 '@': path.resolve(__dirname, './src'),
+                'vue-i18n': 'vue-i18n/dist/vue-i18n.runtime.esm-bundler.js'
             }
         },
         module: {
@@ -137,13 +137,10 @@ module.exports = function(env, argv) {
         plugins: [
             new WebpackManifestPlugin(),
             new MiniCssExtractPlugin(),
-            new DotEnv({
-                path: '../../.env'
-            }),
-            new VueLoaderPlugin(),
             new webpack.BannerPlugin({
                 banner: 'name:[name], file:[file], fullhash:[fullhash], chunkhash:[chunkhash]',
             }),
+            new VueLoaderPlugin(),
             new webpack.IgnorePlugin({
                 resourceRegExp: /^\.\/locale$/,
                 contextRegExp: /moment$/,
@@ -155,6 +152,15 @@ module.exports = function(env, argv) {
             new webpack.DefinePlugin({
                 'process.browser': true,
                 'process.env.MODE': JSON.stringify(argv.mode),
+                'process.env.APP_BASE_URL': JSON.stringify(process.env.APP_BASE_URL),
+                'process.env.PAYMENT_NOTIFICATION_DEBT': JSON.stringify(process.env.PAYMENT_NOTIFICATION_DEBT),
+                'process.env.PAYPAL_ID': JSON.stringify(process.env.PAYPAL_ID),
+                'process.env.MERCURE_PUBLIC_URL': JSON.stringify(process.env.MERCURE_PUBLIC_URL),
+                __VUE_OPTIONS_API__: true,
+                __VUE_PROD_DEVTOOLS__: false,
+                __VUE_I18N_FULL_INSTALL__: true,
+                __VUE_I18N_LEGACY_API__: false,
+                __INTLIFY_PROD_DEVTOOLS__: false
             })
         ],
         devServer: {

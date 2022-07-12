@@ -96,7 +96,7 @@ class ParticipantController extends BaseController
 
         $this->triggerDeleteEvents($participant);
 
-        if (($this->getDoorman()->isKitchenStaff()) === true) {
+        if (true === $this->getDoorman()->isKitchenStaff()) {
             $logger = $this->get('monolog.logger.balance');
             $logger->info(
                 'admin removed {profile} from {meal} (Meal: {mealId})',

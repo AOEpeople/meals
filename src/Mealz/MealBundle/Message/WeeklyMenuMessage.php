@@ -37,13 +37,13 @@ class WeeklyMenuMessage implements MessageInterface
 
         if ($this->week->isEnabled()) {
             $header = '#### ' . $this->translator->trans(
-                    'week.notification.header.default',
-                    [
-                        '%weekStart%' => $this->week->getStartTime()->format('d.m.'),
-                        '%weekEnd%' => $this->week->getEndTime()->format('d.m.'),
-                    ],
-                    'messages'
-                );
+                'week.notification.header.default',
+                [
+                    '%weekStart%' => $this->week->getStartTime()->format('d.m.'),
+                    '%weekEnd%' => $this->week->getEndTime()->format('d.m.'),
+                ],
+                'messages'
+            );
             $tableHeader = "\n|Day|Meals|\n|:-----|:-----|\n";
             $body = $this->getDishesByWeek($this->week);
             $footer = $this->translator->trans('week.notification.footer.default', [], 'messages');

@@ -3,7 +3,7 @@
     auto_https off
 
     log {
-        level warn
+        level info
     }
 }
 

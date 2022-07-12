@@ -42,7 +42,6 @@ class DishConstraintValidator extends ConstraintValidator
             $day->setMeals($meals);
 
             $this->entityManager->remove($value);
-            $this->entityManager->flush();
         } else {
             $this->entityManager->refresh($value);
             $this->context

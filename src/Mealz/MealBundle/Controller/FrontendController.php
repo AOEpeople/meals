@@ -20,7 +20,6 @@ use App\Mealz\MealBundle\Service\SlotService;
 use App\Mealz\MealBundle\Service\WeekService;
 use App\Mealz\UserBundle\Entity\Profile;
 use Exception;
-use JMS\Serializer\Tests\Serializer\EventDispatcher\EventDispatcherTest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;

@@ -13,6 +13,8 @@
 
 {% set activeRoute = app.request.attributes.get('_route') %}
 {% set userAgent = app.request.headers.get('User-Agent') %}
+{# topics for which to receive the notifications/messages from server #}
+{% set topics = ['participation-updates', 'meal-offer-updates', 'slot-allocation-updates'] -%}
 
 <body>
 
@@ -22,6 +24,7 @@
         sessionStorage.setItem('user', profile.user)
         sessionStorage.setItem('roles', profile.roles)
         sessionStorage.setItem('balance', '{{ wallet.getBalance(app.user.profile) }}');
+        sessionStorage.setItem('mercure_url', '{{ mercure(topics, {subscribe: topics})|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_HEX_TAG'))|raw|trim('"') }}');
     </script>
 {% endif %}
 

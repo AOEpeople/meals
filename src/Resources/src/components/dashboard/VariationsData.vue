@@ -1,6 +1,6 @@
 <template>
   <div class="mb-1">
-    <span class="text-primary uppercase tracking-[1px] text-note font-bold">{{ title }}</span><br>
+    <span class="text-primary uppercase tracking-[1px] text-note font-bold">{{ parentTitle }}</span><br>
   </div>
   <div v-for="variation in meal.variations" class="flex flex-row w-auto gap-4 mb-1.5 last:mb-0 xl:grid-cols-6 justify-around">
     <div class="items-center self-center basis-10/12 xl:col-span-5">
@@ -34,15 +34,15 @@ import Checkbox from '@/components/dashboard/Checkbox.vue'
 import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
 
-const { t, locale } = useI18n();
-
-let title = computed(() => locale.value.substring(0, 2) === 'en' ? props.meal.title.en : props.meal.title.de);
+const { t, locale } = useI18n()
 
 const props = defineProps([
   'meal',
   'disabled',
   'dayId'
-]);
+])
+
+let parentTitle = computed(() => locale.value.substring(0, 2) === 'en' ? props.meal.title.en : props.meal.title.de)
 
 </script>
 

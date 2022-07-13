@@ -1,5 +1,5 @@
 import {Store} from "@/store/store";
-import { useTransactions } from "@/hooks/getTransactions";
+import { useTransactionData } from "@/hooks/getTransactionData";
 
 class TransactionStore extends Store<any> {
     protected data(): any {
@@ -12,17 +12,13 @@ class TransactionStore extends Store<any> {
 
     async fillStore() {
         this.state.isLoading = true;
-        let { transactions } = await useTransactions();
-        try {
-            if(transactions.value){
-                this.state.data = transactions.value.data;
-                this.state.difference = transactions.value.difference;
-                this.state.isLoading = false;
-            } else {
-                throw new Error('could not receive Transactions');
-            }
-        } catch (e) {
-            console.log(e)
+        let {transactions} = await useTransactionData();
+        if (transactions.value) {
+            this.state.data = transactions.value.data;
+            this.state.difference = transactions.value.difference;
+            this.state.isLoading = false;
+        } else {
+            console.log('could not receive Transactions');
         }
     }
 }

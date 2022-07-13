@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Event\Subscriber;
 
 use App\Mealz\MealBundle\Event\SlotAllocationUpdateEvent;
-use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\MealBundle\Service\Publisher\PublisherInterface;
+use App\Mealz\MealBundle\Service\SlotService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class SlotAllocationSubscriber implements EventSubscriberInterface
@@ -15,14 +15,14 @@ class SlotAllocationSubscriber implements EventSubscriberInterface
     private const PUBLISH_MSG_TYPE = 'slotAllocationUpdate';
 
     private PublisherInterface $publisher;
-    private ParticipationService $participationSrv;
+    private SlotService $slotSrv;
 
     public function __construct(
         PublisherInterface $publisher,
-        ParticipationService $participationSrv
+        SlotService $slotSrv
     ) {
         $this->publisher = $publisher;
-        $this->participationSrv = $participationSrv;
+        $this->slotSrv = $slotSrv;
     }
 
     public static function getSubscribedEvents(): array
@@ -44,7 +44,7 @@ class SlotAllocationSubscriber implements EventSubscriberInterface
             self::PUBLISH_TOPIC,
             [
                 'date' => $day->format('Ymd'),
-                'slotAllocation' => $this->participationSrv->getSlotsStatusOn($day),
+                'slotAllocation' => $this->slotSrv->getSlotsStatusOn($day),
             ],
             self::PUBLISH_MSG_TYPE
         );

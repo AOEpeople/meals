@@ -193,7 +193,7 @@ class Meal
         $participations = $this->getParticipants()->count();
         $limit = $this->getParticipationLimit();
 
-        return($limit !== 0 && $participations >= $limit);
+        return 0 !== $limit && $participations >= $limit;
     }
 
     public function __toString()

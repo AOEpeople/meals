@@ -37,8 +37,12 @@ const props = defineProps([
 ]);
 const { t, locale } = useI18n();
 
-let title       = computed(() => locale.value.substring(0, 2) === 'en' ? props.meal.title.en       : props.meal.title.de);
-let description = computed(() => locale.value.substring(0, 2) === 'en' ? props.meal.description.en : props.meal.description.de);
+let title = computed(() => locale.value.substring(0, 2) === 'en' ? props.meal.title.en : props.meal.title.de);
+
+let description = ''
+if(props.meal.description !== null) {
+  description = computed(() => locale.value.substring(0, 2) === 'en' ? props.meal.description.en : props.meal.description.de);
+}
 
 let disabled = props.disabled || props.meal.reachedLimit
 

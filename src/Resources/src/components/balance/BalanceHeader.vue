@@ -7,7 +7,7 @@
       <Popover>
         <template #button="{ open }">
           <button class="btn-secondary">
-            <span class="align-middle">+ {{ t('balance.add') }}</span>
+            <span class="leading-[10px] align-middle">+ {{ t('balance.add') }}</span>
           </button>
         </template>
         <template #panel="{ close }">

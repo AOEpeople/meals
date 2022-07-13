@@ -151,7 +151,7 @@ class CashController extends BaseController
         $dateFrom = new DateTime('-28 days 00:00:00');
         $dateTo = new DateTime();
 
-        list($costDifference, $transactionHistory) = $this->getTransactionData($dateFrom, $dateTo, $profile);
+        list($costDifference, $transactionHistory) = $this->getFullTransactionHistory($dateFrom, $dateTo, $profile);
 
         usort($transactionHistory, function($a, $b) {
             return $a['timestamp'] <=> $b['timestamp'];
@@ -161,60 +161,6 @@ class CashController extends BaseController
             'data' => $transactionHistory,
             'difference' => $costDifference,
         ]);
-    }
-
-    private function getTransactionData(DateTime $dateFrom, DateTime $dateTo, Profile $profile): array
-    {
-
-        $participations = $this->participantRepo->getParticipantsOnDays($dateFrom, $dateTo, $profile);
-
-        $transactions = $this->transactionRepo->getSuccessfulTransactionsOnDays($dateFrom, $dateTo, $profile);
-
-        $costDifference = 0;
-        $transactionHistory = [];
-        foreach ($transactions as $transaction) {
-            $costDifference += $transaction->getAmount();
-            $timestamp = $transaction->getDate()->getTimestamp();
-
-            $date = $transaction->getDate();
-            $description = $transaction->getPaymethod();
-            $amount = $transaction->getAmount();
-
-            $credit = [
-                'type' => 'credit',
-                'date' => $date,
-                'description_en' => $description,
-                'description_de' => $description,
-                'amount' => $amount
-            ];
-
-            $transactionHistory[$timestamp] = $credit;
-        }
-
-        foreach ($participations as $participation) {
-            $costDifference -= $participation->getMeal()->getPrice();
-            $timestamp = $participation->getMeal()->getDateTime()->getTimestamp();
-            $mealId = $participation->getMeal()->getId();
-
-            $date = $participation->getMeal()->getDateTime();
-            $description_en = $participation->getMeal()->getDish()->getTitleEn();
-            $description_de = $participation->getMeal()->getDish()->getTitleDe();
-            $amount = $participation->getMeal()->getPrice();
-
-            $debit = [
-                'type' => 'debit',
-                'date' => $date,
-                'description_en' => $description_en,
-                'description_de' => $description_de,
-                'amount' => $amount
-            ];
-
-            $transactionHistory[$timestamp . '-' . $mealId] = $debit;
-        }
-
-        $costDifference = round($costDifference, 2);
-
-        return [$costDifference, $transactionHistory];
     }
 
     /**

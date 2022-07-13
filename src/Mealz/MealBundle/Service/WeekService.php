@@ -6,14 +6,14 @@ namespace App\Mealz\MealBundle\Service;
 
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Week;
-use App\Mealz\MealBundle\Repository\WeekRepository;
+use App\Mealz\MealBundle\Repository\WeekRepositoryInterface;
 use DateTime;
 
 class WeekService
 {
-    private WeekRepository $weekRepo;
+    private WeekRepositoryInterface $weekRepo;
 
-    public function __construct(WeekRepository $weekRepo)
+    public function __construct(WeekRepositoryInterface $weekRepo)
     {
         $this->weekRepo = $weekRepo;
     }

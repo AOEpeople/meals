@@ -1,8 +1,8 @@
 {
   "name": "mealz",
-  "version": "0.0.1",
+  "version": "1.0.1",
   "description": "",
-  "author": "",
+  "author": "AOE GmbH",
   "scripts": {
     "build": "yarn build-style && webpack --mode production",
     "lint": "yarn run lint:sass",

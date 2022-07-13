@@ -8,7 +8,7 @@ use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\InvitationWrapper;
 use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Repository\SlotRepository;
-use App\Mealz\MealBundle\Service\ParticipationService;
+use App\Mealz\MealBundle\Service\SlotService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -18,16 +18,16 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class InvitationForm extends AbstractType
 {
-    private ParticipationService $participationSrv;
+    private SlotService $slotSrv;
     private SlotRepository $slotRepo;
     private TranslatorInterface $translator;
 
     public function __construct(
-        ParticipationService $participationSrv,
+        SlotService $slotSrv,
         SlotRepository $slotRepo,
         TranslatorInterface $translator
     ) {
-        $this->participationSrv = $participationSrv;
+        $this->slotSrv = $slotSrv;
         $this->translator = $translator;
         $this->slotRepo = $slotRepo;
     }
@@ -39,7 +39,7 @@ class InvitationForm extends AbstractType
     {
         /** @var Day $day */
         $day = $options['data']->getDay();
-        $slotAllocationCount = $this->participationSrv->getSlotsStatusOn($day->getDateTime());
+        $slotAllocationCount = $this->slotSrv->getSlotsStatusOn($day->getDateTime());
 
         $builder
             ->add('slot', ChoiceType::class, [

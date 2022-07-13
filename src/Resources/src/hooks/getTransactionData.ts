@@ -13,10 +13,10 @@ export type Transaction = {
     difference: number,
 };
 
-export async function useTransactions(){
+export async function useTransactionData(){
     const { response: transactions, request } = useApi<Transaction>(
         "GET",
-        "accounting/transactions",
+        "api/transactions",
     );
 
     const loaded = ref(false);

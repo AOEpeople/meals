@@ -4,7 +4,11 @@ MealzMealBundle_language_switch:
 
 MealzMealBundle_api_dashboard:
     path: /api/dashboard
-    defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::ApiGetDashboardData }
+    defaults: { _controller: App\Mealz\MealBundle\Controller\ApiController::getDashboardData }
+
+MealzMealBundle_api_transactions:
+  path: /api/transactions
+  defaults: { _controller: App\Mealz\MealBundle\Controller\ApiController::getTransactionData }
 
 MealzMealBundle_home:
     path:  /
@@ -34,20 +38,9 @@ MealzMealBundle_balance:
   path: /balance
   defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
 
-MealzMealBundle_test:
-    path: /test
-    defaults: { _controller: App\Mealz\MealBundle\Controller\TestController::test }
-
 MealzMealBundle_Meal:
     path:  /menu
     defaults: { _controller: App\Mealz\MealBundle\Controller\MealAdminController::list }
-
-MealzMealBundle_Meal_new:
-    path:  /menu/{date}/new
-    defaults: { _controller: App\Mealz\MealBundle\Controller\MealAdminController::new }
-    requirements:
-        # format "2014W12" 12th week in 2014
-        date: 20\d{2}W[0-5]\d
 
 MealzMealBundle_Meal_edit:
     path:  /menu/{week}/edit
@@ -55,27 +48,13 @@ MealzMealBundle_Meal_edit:
 
 MealzMealBundle_api_join_Meal:
   path: /api/join-meal
-  defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::joinMeal }
+  defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::joinMeal }
   methods: [POST]
 
 MealzMealBundle_api_leave_Meal:
   path: /api/leave-meal
-  defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::leaveMeal }
+  defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::leaveMeal }
   methods: [POST]
-
-MealzMealBundle_Meal_join:
-    path:  /menu/{date}/{dish}/join/{profile}
-    defaults: { _controller: App\Mealz\MealBundle\Controller\MealController::join, profile: null }
-    methods: [POST]
-    requirements:
-        date: '^\d{4}-\d{2}-\d{2}$'
-
-MealzMealBundle_Meal_accept_offer:
-    path: /menu/{date}/{dish}/accept-offer/{profile}
-    defaults: { _controller: App\Mealz\MealBundle\Controller\MealController::join, profile: null }
-    methods: [GET,POST]
-    requirements:
-        date: '^\d{4}-\d{2}-\d{2}$'
 
 MealzMealBundle_Meal_offers:
     path: /menu/{date}/{dish}/offers
@@ -128,10 +107,6 @@ MealzMealBundle_Participant_update:
     path:  /meal/participation/{participant}/update
     defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::updateCombinedMeal }
     methods: [POST]
-
-MealzMealBundle_Participant_delete:
-    path:  /menu/meal/{participant}/delete
-    defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::delete }
 
 MealzMealBundle_Participant_swap:
     path: /menu/meal/{participant}/offer-meal

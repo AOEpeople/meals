@@ -6,17 +6,19 @@ namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
+use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Event\MealOfferCancelledEvent;
 use App\Mealz\MealBundle\Event\MealOfferedEvent;
 use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
-use App\Mealz\MealBundle\Event\SlotAllocationUpdateEvent;
 use App\Mealz\MealBundle\Repository\DayRepository;
+use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
 use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
+use App\Mealz\MealBundle\Repository\SlotRepositoryInterface;
 use App\Mealz\MealBundle\Repository\WeekRepositoryInterface;
+use App\Mealz\MealBundle\Service\EventService;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;
-use App\Mealz\MealBundle\Service\MealAvailabilityService;
 use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
@@ -33,10 +35,99 @@ use Symfony\Component\HttpFoundation\Response;
 class ParticipantController extends BaseController
 {
     private EventDispatcherInterface $eventDispatcher;
+    private EventService $eventSrv;
+    private ParticipationService $participationSrv;
+    private MealRepositoryInterface $mealRepo;
+    private SlotRepositoryInterface $slotRepo;
 
-    public function __construct(EventDispatcherInterface $eventDispatcher)
-    {
+    public function __construct(
+        EventDispatcherInterface $eventDispatcher,
+        EventService $eventSrv,
+        ParticipationService $participationSrv,
+        MealRepositoryInterface $mealRepo,
+        SlotRepositoryInterface $slotRepo
+    ) {
         $this->eventDispatcher = $eventDispatcher;
+        $this->eventSrv = $eventSrv;
+        $this->participationSrv = $participationSrv;
+        $this->mealRepo = $mealRepo;
+        $this->slotRepo = $slotRepo;
+    }
+
+    /**
+     * Lets the currently logged-in user either join a meal, or accept an already booked meal offered by a participant.
+     *
+     * @Security("is_granted('ROLE_USER')")
+     */
+    public function joinMeal(Request $request): JsonResponse
+    {
+        $profile = $this->getProfile();
+        if (null === $profile) {
+            return new JsonResponse(null, 403);
+        }
+
+        $parameters = json_decode($request->getContent(), true);
+        $slot = $this->slotRepo->find($parameters['slotID']);
+        $meal = $this->mealRepo->find($parameters['mealID']);
+
+        try {
+            $result = $this->participationSrv->join($profile, $meal, $slot, $parameters['dishSlugs']);
+        } catch (Exception $e) {
+            $this->logException($e);
+
+            return new JsonResponse(null, 500);
+        }
+
+        $this->eventSrv->triggerJoinEvents($result['participant'], $result['offerer']);
+
+        if (null === $result['offerer']) {
+            $this->logAdd($meal, $result['participant']);
+        }
+
+        return new JsonResponse($result['participant']->getId());
+    }
+
+    /**
+     * Lets the currently logged-in user either leave a meal, or put it up for offer.
+     *
+     * @Security("is_granted('ROLE_USER')")
+     */
+    public function leaveMeal(Request $request): JsonResponse
+    {
+        $profile = $this->getProfile();
+        if (null === $profile) {
+            return new JsonResponse(null, 403);
+        }
+        $parameters = json_decode($request->getContent(), true);
+        $meal = $this->mealRepo->find($parameters['mealID']);
+        $participant = $this->participationSrv->getParticipationByMealAndUser($meal, $profile);
+
+        if (false === $this->getDoorman()->isUserAllowedToLeave($meal) &&
+            (false === $this->getDoorman()->isKitchenStaff())) {
+            return new JsonResponse(null, 403);
+        }
+
+        $participant->setCombinedDishes(null);
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($participant);
+        $entityManager->flush();
+
+        $this->eventSrv->triggerLeaveEvents($participant);
+
+        if (true === $this->getDoorman()->isKitchenStaff()) {
+            $logger = $this->get('monolog.logger.balance');
+            $logger->info(
+                'admin removed {profile} from {meal} (Meal: {mealId})',
+                [
+                    'profile' => $participant->getProfile(),
+                    'meal' => $meal,
+                    'mealId' => $meal->getId(),
+                ]
+            );
+        }
+
+        return new JsonResponse(null, 200);
     }
 
     public function updateCombinedMeal(
@@ -68,58 +159,6 @@ class ParticipantController extends BaseController
             ],
             200
         );
-    }
-
-    public function delete(
-        MealAvailabilityService $availabilityService,
-        Participant $participant,
-        ParticipationService $participationSrv
-    ): JsonResponse {
-        if (false === is_object($this->getUser())) {
-            return $this->ajaxSessionExpiredRedirect();
-        }
-
-        $meal = $participant->getMeal();
-        if (false === $this->getDoorman()->isUserAllowedToLeave($meal) &&
-            ($this->getProfile() === $participant->getProfile() || false === $this->getDoorman()->isKitchenStaff())) {
-            return new JsonResponse(null, 403);
-        }
-
-        $date = $meal->getDateTime()->format('Y-m-d');
-        $dish = $meal->getDish()->getSlug();
-        $profile = $participant->getProfile()->getUsername();
-        $participant->setCombinedDishes(null);
-
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->remove($participant);
-        $entityManager->flush();
-
-        $this->triggerDeleteEvents($participant);
-
-        if (true === $this->getDoorman()->isKitchenStaff()) {
-            $logger = $this->get('monolog.logger.balance');
-            $logger->info(
-                'admin removed {profile} from {meal} (Meal: {mealId})',
-                [
-                    'profile' => $participant->getProfile(),
-                    'meal' => $meal,
-                    'mealId' => $meal->getId(),
-                ]
-            );
-        } else {
-            $profile = null;    // we don't need to send any identity info for already logged-in user
-        }
-
-        return new JsonResponse([
-            'participantsCount' => $participationSrv->getCountByMeal($meal),
-            'url' => $this->generateUrl('MealzMealBundle_Meal_join', [
-                'date' => $date,
-                'dish' => $dish,
-                'profile' => $profile,
-            ]),
-            'actionText' => 'deleted',
-            'available' => $availabilityService->isAvailable($meal),
-        ]);
     }
 
     /**
@@ -261,15 +300,23 @@ class ParticipantController extends BaseController
         ]);
     }
 
-    private function triggerDeleteEvents(Participant $participant): void
+    /**
+     * Log add action of staff member.
+     */
+    private function logAdd(Meal $meal, Participant $participant): void
     {
-        $this->eventDispatcher->dispatch(new ParticipationUpdateEvent($participant));
-
-        $slot = $participant->getSlot();
-        if (null !== $slot) {
-            $this->eventDispatcher->dispatch(
-                new SlotAllocationUpdateEvent($participant->getMeal()->getDateTime(), $slot)
-            );
+        if (false === is_object($this->getDoorman()->isKitchenStaff())) {
+            return;
         }
+
+        $logger = $this->get('monolog.logger.balance');
+        $logger->info(
+            'admin added {profile} to {meal} (Participant: {participantId})',
+            [
+                'participantId' => $participant->getId(),
+                'profile' => $participant->getProfile(),
+                'meal' => $meal,
+            ]
+        );
     }
 }

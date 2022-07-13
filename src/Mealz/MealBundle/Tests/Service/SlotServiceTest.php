@@ -6,7 +6,7 @@ namespace App\Mealz\MealBundle\Tests\Service;
 
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadSlots;
 use App\Mealz\MealBundle\Entity\Slot;
-use App\Mealz\MealBundle\Repository\SlotRepository;
+use App\Mealz\MealBundle\Repository\SlotRepositoryInterface;
 use App\Mealz\MealBundle\Service\SlotService;
 use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use Doctrine\ORM\EntityManagerInterface;
@@ -14,7 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 class SlotServiceTest extends AbstractDatabaseTestCase
 {
     private EntityManagerInterface $entityManager;
-    private SlotRepository $slotRepo;
+    private SlotRepositoryInterface $slotRepo;
     private SlotService $sut;
 
     /**
@@ -26,11 +26,8 @@ class SlotServiceTest extends AbstractDatabaseTestCase
 
         $this->loadFixtures([new LoadSlots()]);
 
-        /* @var EntityManagerInterface $entityManager */
-        $this->entityManager = $this->getDoctrine()->getManager();
-
-        $this->slotRepo = static::$container->get(SlotRepository::class);
-        $this->sut = new SlotService($this->entityManager);
+        /* @var SlotService $sut */
+        $this->sut = static::$container->get(SlotService::class);
     }
 
     /**

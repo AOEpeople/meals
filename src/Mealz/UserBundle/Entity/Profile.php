@@ -202,6 +202,7 @@ class Profile implements UserInterface, JsonSerializable
     public function eraseCredentials(): void
     {
     }
+
     public function __toString()
     {
         return $this->getUsername();

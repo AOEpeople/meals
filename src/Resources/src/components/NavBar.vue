@@ -1,8 +1,8 @@
 <template>
   <Disclosure v-slot="{ open }">
     <header class="bg-white shadow-[0_15px_35px_0_#5B788F21] h-[60px] xl:h-24">
-      <nav class="grid grid-cols-3 h-[inherit] items-center content-center mx-auto max-w-screen-aoe xl:grid-cols-10" aria-label="Top">
-        <div class="justify-self-start ml-[20%] xl:hidden" id="dropdown">
+      <nav class="grid grid-cols-3 h-[inherit] items-center content-center xl:mx-auto xl:max-w-screen-aoe xl:grid-cols-10" aria-label="Top">
+        <div class="justify-self-start ml-6 xl:hidden" id="dropdown">
           <DisclosureButton class="inline-flex justify-center items-center p-2 -mx-2 text-gray-400 rounded-md hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
             <span class="sr-only">Open menu</span>
             <MenuIcon v-if="!open" class="block w-6 h-6" aria-hidden="true" />

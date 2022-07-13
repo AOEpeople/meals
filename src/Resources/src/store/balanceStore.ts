@@ -12,6 +12,19 @@ class BalanceStore extends Store<Balance> {
         };
     }
 
+    fillStore(): void {
+        try {
+            let balance = sessionStorage.getItem('balance');
+            if (balance) {
+                this.state.amount = parseFloat(balance);
+            } else {
+                throw new Error('Balance not set')
+            }
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
     updateAmount(newAmount: number): void {
         this.state.amount = newAmount;
     }

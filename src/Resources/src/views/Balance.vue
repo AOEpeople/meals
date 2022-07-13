@@ -14,7 +14,7 @@
     <Table v-if="!transactions.isLoading" :labels="tableLabels" class="mt-10 mb-5">
       <tr v-for="(transaction, index) in transactions.data" :key="index" class="max-h-[62px] border-b-2 border-gray-200">
         <td>
-          <span>
+          <span class="text-[12px] xl:text-[18px]">
             {{ new Date(transaction.date.date).toLocaleDateString(locale, dateOptions) }}
           </span>
         </td>
@@ -66,7 +66,6 @@ let oldBalanceString = computed(() =>
         ? oldBalance.value.toFixed(2)
         : oldBalance.value.toFixed(2).replace(/\./g, ',')
 )
-
 
 let tableLabels = {
   en: ['Date', 'Description', 'Amount'],

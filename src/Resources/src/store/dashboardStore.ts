@@ -1,5 +1,17 @@
 import {Store} from '@/store/store';
-import {useDashboardData, Day, Dashboard, Week} from '@/hooks/getDashboardData';
+import {useDashboardData, Day, Dashboard, Week, Meal, Meal_Variations} from '@/hooks/getDashboardData';
+
+type Meal_Update = {
+    dayId: number,
+    meal: {
+        mealId: number,
+        limit: number,
+        reachedLimit: boolean,
+        isOpen: boolean,
+        isLocked: boolean,
+        participations: number,
+    }
+}
 
 class DashboardStore extends Store<Dashboard> {
 
@@ -14,7 +26,7 @@ class DashboardStore extends Store<Dashboard> {
         if(dashboardData.value){
             this.state = dashboardData.value;
         } else {
-            console.log('could not receive Transactions')
+            console.log('could not receive DashboardData')
         }
 
         this.configureMealUpdateHandlers()
@@ -41,6 +53,24 @@ class DashboardStore extends Store<Dashboard> {
         return result
     }
 
+    // @ts-ignore
+    private static getMealByIdAndDay(id: number, day: Day): Meal | null {
+        for (let meal_mealVariation of day.meals) {
+            // @ts-ignore
+            if(meal_mealVariation.variations) {
+                // @ts-ignore
+                for (let meal of meal_mealVariation.variations) {
+                    if(meal.id === id) return meal
+                }
+            } else {
+                // @ts-ignore
+                if(meal_mealVariation.id === id) return meal_mealVariation
+            }
+        }
+
+        return null
+    }
+
     /**
      * Configure handlers to process meal push notifications.
      */
@@ -61,8 +91,18 @@ class DashboardStore extends Store<Dashboard> {
         })
     }
 
-    private handleParticipationUpdate(data: any): void {
-
+    private handleParticipationUpdate(data: Meal_Update): void {
+        let day = this.getDayById(data.dayId)
+        if(day !== null) {
+            let meal = DashboardStore.getMealByIdAndDay(data.meal.mealId, day)
+            if(meal !== null) {
+                meal.limit = data.meal.limit
+                meal.participations = data.meal.participations
+                meal.isOpen = data.meal.isOpen
+                meal.isLocked = data.meal.isLocked
+                meal.reachedLimit = data.meal.reachedLimit
+            }
+        }
     }
     private handleMealOfferUpdate(data: any): void {
 

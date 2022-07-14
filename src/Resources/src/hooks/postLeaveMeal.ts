@@ -6,7 +6,7 @@ export type LeaveMeal = {
 };
 
 export async function useLeaveMeal(data: string) {
-    const { response, request } = useApi<LeaveMeal>(
+    const { error, request } = useApi<LeaveMeal>(
         "POST",
         "api/leave-meal",
         'application/json',
@@ -20,5 +20,5 @@ export async function useLeaveMeal(data: string) {
         loaded.value = true;
     }
 
-    return { response };
+    return error
 }

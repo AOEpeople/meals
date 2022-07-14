@@ -1,5 +1,5 @@
-import useApi from "@/hooks/api";
-import { ref } from "vue";
+import useApi from "@/hooks/api"
+import { ref } from "vue"
 
 export type Transaction = {
     data: [{
@@ -11,7 +11,7 @@ export type Transaction = {
         amount: number,
     }],
     difference: number,
-};
+}
 
 export async function useTransactionData(){
     const { response: transactions, request } = useApi<Transaction>(
@@ -19,12 +19,12 @@ export async function useTransactionData(){
         "api/transactions",
     );
 
-    const loaded = ref(false);
+    const loaded = ref(false)
 
     if (loaded.value === false) {
-        await request();
-        loaded.value = true;
+        await request()
+        loaded.value = true
     }
 
-    return { transactions };
+    return { transactions }
 }

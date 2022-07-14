@@ -8,7 +8,7 @@ export type JoinMeal = {
 };
 
 export async function useJoinMeal(data: string) {
-    const { response, request } = useApi<JoinMeal>(
+    const { request, error } = useApi<JoinMeal>(
         "POST",
         "api/join-meal",
         'application/json',
@@ -22,5 +22,5 @@ export async function useJoinMeal(data: string) {
         loaded.value = true;
     }
 
-    return { response };
+    return error
 }

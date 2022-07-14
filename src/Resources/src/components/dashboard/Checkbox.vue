@@ -40,7 +40,10 @@ async function joinMeal(mealId, dishSlugs, dayId) {
     slotID: dashboardStore.getDayById(dayId)?.activeSlot
   }
 
-  await useJoinMeal(JSON.stringify(data));
+  const error = await useJoinMeal(JSON.stringify(data))
+  if(error.value === false) {
+    enabled.value = true
+  }
 }
 
 async function leaveMeal(mealId) {
@@ -48,7 +51,10 @@ async function leaveMeal(mealId) {
     mealID: mealId
   }
 
-  await useLeaveMeal(JSON.stringify(data));
+  const error = await useLeaveMeal(JSON.stringify(data))
+  if(error.value === false) {
+    enabled.value = false
+  }
 }
 
 </script>

@@ -30,7 +30,7 @@ class EventService
 
         $slot = $participant->getSlot();
         if (null !== $slot) {
-            $this->eventDispatcher->dispatch(new SlotAllocationUpdateEvent($participant->getMeal()->getDateTime(), $slot));
+            $this->eventDispatcher->dispatch(new SlotAllocationUpdateEvent($participant->getMeal()->getDay(), $slot));
         }
     }
 
@@ -41,7 +41,7 @@ class EventService
         $slot = $participant->getSlot();
         if (null !== $slot) {
             $this->eventDispatcher->dispatch(
-                new SlotAllocationUpdateEvent($participant->getMeal()->getDateTime(), $slot)
+                new SlotAllocationUpdateEvent($participant->getMeal()->getDay(), $slot)
             );
         }
     }

@@ -1,5 +1,5 @@
 import {Store} from '@/store/store';
-import {useDashboardData, Day, Dashboard, Week, Meal, Meal_Variations} from '@/hooks/getDashboardData';
+import {useDashboardData, Day, Dashboard, Week, Meal, Slot} from '@/hooks/getDashboardData';
 
 type Meal_Update = {
     dayId: number,
@@ -13,6 +13,15 @@ type Meal_Update = {
     }
 }
 
+type Slot_Update = {
+    dayId: number,
+    slot: {
+        slotId: number,
+        limit: number,
+        count: number,
+    }
+}
+
 class DashboardStore extends Store<Dashboard> {
 
     protected data(): Dashboard {
@@ -22,7 +31,7 @@ class DashboardStore extends Store<Dashboard> {
     }
 
     async fillStore() {
-        let { dashboardData } = await useDashboardData();
+        let { dashboardData } = await useDashboardData()
         if(dashboardData.value){
             this.state = dashboardData.value;
         } else {
@@ -71,6 +80,14 @@ class DashboardStore extends Store<Dashboard> {
         return null
     }
 
+    private static getSlotByIdAndDay(id: number, day: Day): Slot | null {
+        for (let slot of day.slots) {
+            if (slot.id === id) return slot
+        }
+
+        return null
+    }
+
     /**
      * Configure handlers to process meal push notifications.
      */
@@ -107,8 +124,15 @@ class DashboardStore extends Store<Dashboard> {
     private handleMealOfferUpdate(data: any): void {
 
     }
-    private handleSlotAllocationUpdate(data: any): void {
-
+    private handleSlotAllocationUpdate(data: Slot_Update): void {
+        let day = this.getDayById(data.dayId)
+        if(day !== null) {
+            let slot = DashboardStore.getSlotByIdAndDay(data.slot.slotId, day)
+            if(slot !== null) {
+                slot.limit = data.slot.limit
+                slot.count = data.slot.count
+            }
+        }
     }
 }
 

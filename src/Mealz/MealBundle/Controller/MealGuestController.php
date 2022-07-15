@@ -159,7 +159,7 @@ class MealGuestController extends BaseController
 
         $slot = $participant->getSlot();
         if (null !== $slot) {
-            $eventDispatcher->dispatch(new SlotAllocationUpdateEvent($participant->getMeal()->getDateTime(), $slot));
+            $eventDispatcher->dispatch(new SlotAllocationUpdateEvent($participant->getMeal()->getDay(), $slot));
         }
     }
 }

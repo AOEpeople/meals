@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Event\SlotAllocationUpdateEvent;
-use App\Mealz\MealBundle\Repository\SlotRepository;
+use App\Mealz\MealBundle\Repository\SlotRepositoryInterface;
+use App\Mealz\MealBundle\Repository\DayRepositoryInterface;
 use App\Mealz\MealBundle\Service\ParticipationService;
 use DateTime;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -22,8 +23,9 @@ class ParticipationUpdateController extends BaseController
         Request $request,
         DateTime $date,
         EventDispatcherInterface $eventDispatcher,
-        SlotRepository $slotRepo,
-        ParticipationService $participationSrv
+        SlotRepositoryInterface $slotRepo,
+        ParticipationService $participationSrv,
+        DayRepositoryInterface $dayRepo
     ): JsonResponse {
         $profile = $this->getProfile();
         if (null === $profile) {
@@ -42,7 +44,8 @@ class ParticipationUpdateController extends BaseController
 
         $prevSlot = $participationSrv->getSlot($profile, $date);
         $participationSrv->updateSlot($profile, $date, $newSlot);
-        $eventDispatcher->dispatch(new SlotAllocationUpdateEvent($date, $newSlot, $prevSlot));
+        $day = $dayRepo->getDayByDate($date);
+        $eventDispatcher->dispatch(new SlotAllocationUpdateEvent($day, $newSlot, $prevSlot));
 
         return new JsonResponse(null, 200);
     }

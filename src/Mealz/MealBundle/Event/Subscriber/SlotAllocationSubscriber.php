@@ -40,11 +40,16 @@ class SlotAllocationSubscriber implements EventSubscriberInterface
         }
 
         $day = $event->getDay();
+        $slot = $event->getSlot();
         $this->publisher->publish(
             self::PUBLISH_TOPIC,
             [
-                'date' => $day->format('Ymd'),
-                'slotAllocation' => $this->slotSrv->getSlotsStatusOn($day),
+                'dayId' => $day->getId(),
+                'slot' => [
+                    'slotId' => $slot->getId(),
+                    'limit' => $slot->getLimit(),
+                    'count' => $slot->getParticipants()->count(),
+                ],
             ],
             self::PUBLISH_MSG_TYPE
         );

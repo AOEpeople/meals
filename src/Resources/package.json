@@ -20,7 +20,7 @@
     "easy-autocomplete": "1.3.5",
     "jquery": "^3.5",
     "jquery-datetimepicker": "2.5.21",
-    "jquery-ui": "^1.13.0",
+    "jquery-ui": "^1.13.2",
     "switchery.js": "^1.0"
   },
   "devDependencies": {

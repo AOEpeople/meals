@@ -8,7 +8,8 @@ help:
 	@echo ""
 	@echo "	build              - Build an image from the Dockerfile"
 	@echo "	build-yarn         - (Re-)build production ready frontend assets i.e. CSS, JS"
-	@echo "	build-yarn-dev     - (Re-)build development ready frontend assets i.e. CSS, JS"
+	@echo "	build-yarn-dev     - (Re-)build development ready frontend assets i.e. JS"
+	@echo "	build-yarn-dev-css - (Re-)build development ready frontend assets i.e. CSS, JS"
 	@echo "	build-yarn-watch   - (Re-)build and watch development ready frontend assets i.e. CSS, JS"
 	@echo "	create-migration   - Create Doctrine migration from code"
 	@echo "	get-users          - Get test users and their passwords"
@@ -36,6 +37,9 @@ build-yarn:
 
 build-yarn-dev:
 	ddev exec yarn --cwd=src/Resources build-dev
+
+build-yarn-dev-css:
+	ddev exec yarn --cwd=src/Resources build-dev-css
 
 build-yarn-watch:
 	ddev exec yarn --cwd=src/Resources build-dev --watch

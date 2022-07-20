@@ -1,5 +1,5 @@
 import {Store} from '@/store/store';
-import {useDashboardData, Day, Dashboard, Week, Meal, Slot} from '@/hooks/getDashboardData';
+import {useDashboardData, Day, Dashboard, Week, Meal, Slot, Meal_Variations} from '@/hooks/getDashboardData';
 
 type Meal_Update = {
     dayId: number,
@@ -75,6 +75,16 @@ class DashboardStore extends Store<Dashboard> {
                 // @ts-ignore
                 if(meal_mealVariation.id === id) return meal_mealVariation
             }
+        }
+
+        return null
+    }
+
+    public getMealsByDayId(id: number, no_combined: boolean = false): Array<Meal | Meal_Variations> | null {
+        let day = this.getDayById(id)
+        if(day !== null) {
+            //@ts-ignore
+            return no_combined ? day.meals.filter(meal => meal.dishSlug !== 'combined-dish') : day.meals
         }
 
         return null

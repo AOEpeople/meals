@@ -164,7 +164,7 @@ class ApiController extends BaseController
         /* @var Meal $addedMeal */
         foreach ($meals as $id => $addedMeal) {
             if ($addedMeal['id'] === $meal->getDish()->getParent()->getId()) {
-                $meals[$id]['variations'] = [$this->convertMealForDashboard($meal, $profile)];
+                $meals[$id]['variations'][] = $this->convertMealForDashboard($meal, $profile);
                 $parentExistsInArray = true;
                 break;
             }
@@ -176,7 +176,7 @@ class ApiController extends BaseController
                     'en' => $meal->getDish()->getParent()->getTitleEn(),
                     'de' => $meal->getDish()->getParent()->getTitleDe(),
                 ],
-                'variations' => $this->convertMealForDashboard($meal, $profile),
+                'variations' => [$this->convertMealForDashboard($meal, $profile)],
             ];
         }
     }

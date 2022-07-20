@@ -18,7 +18,7 @@
           class="py-[13px] mx-[15px] border-b-[0.7px] last:border-b-0"
       >
         <VariationsData v-if="meal.variations" :meal="meal" :disabled="disabled" :dayId="day.id" />
-        <MealData v-if="!meal.variations" :meal="meal" :disabled="disabled" :dayId="day.id" />
+        <MealData v-else :meal="meal" :disabled="disabled" :dayId="day.id" />
       </div>
     </div>
     <div v-if="emptyDay" class="h-[134px]">

@@ -41,6 +41,7 @@ class ParticipationUpdateSubscriber implements EventSubscriberInterface
         }
 
         $data = [
+            'weekId' => $meal->getDay()->getWeek()->getId(),
             'dayId' => $meal->getDay()->getId(),
             'meal' => [
                 'mealId' => $meal->getId(),

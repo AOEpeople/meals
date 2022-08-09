@@ -1,15 +1,13 @@
 <template>
   <tabs v-model="selectedTab" class="justify-center mb-5">
-
     <tab
-        v-for="(week, index) in weeks"
-        :key="`t${index}`"
-        :val="week.id"
+        v-for="(week, weekID, index) in weeks"
+        :key="`t${weekID}`"
+        :val="weekID"
         :label="t('dashboard.' + index)"
         :indicator="true"
         class="cursor-pointer"
     />
-
   </tabs>
   <tab-panels
       v-model="selectedTab"
@@ -17,31 +15,31 @@
       :swipeable="$screen.width <= 1200"
   >
     <tab-panel
-        v-for="(week, index) in weeks"
-        :key="`tp${index}`"
-        :val="week.id"
+        v-for="(week, weekID, index) in weeks"
+        :key="`tp${weekID}`"
+        :val="weekID"
     >
-      <Week :week="week" :index="index" />
+      <Week :weekID="weekID" :index="index"/>
     </tab-panel>
   </tab-panels>
 </template>
 
 <script setup>
 import Week from '@/components/dashboard/Week.vue'
-import { Tabs, Tab, TabPanels, TabPanel } from 'vue3-tabs';
-import { useI18n } from "vue-i18n";
-import { ref } from "vue";
+import { Tabs, Tab, TabPanels, TabPanel } from 'vue3-tabs'
+import { useI18n } from "vue-i18n"
+import {ref, watch} from "vue"
 import { useProgress } from '@marcoschulte/vue3-progress'
 import { dashboardStore } from '@/store/dashboardStore'
 
 const progress = useProgress().start()
 
 await dashboardStore.fillStore()
-const weeks = dashboardStore.getState().weeks
+const weeks = dashboardStore.getWeeks()
 
-const { t } = useI18n();
+const { t } = useI18n()
 
-const selectedTab = ref(weeks[0].id)
+const selectedTab = ref(Object.keys(weeks)[0])
 
 setTimeout(function () {
   progress.finish()

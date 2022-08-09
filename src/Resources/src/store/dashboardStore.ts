@@ -1,149 +1,109 @@
 import {Store} from '@/store/store';
-import {useDashboardData, Day, Dashboard, Week, Meal, Slot, Meal_Variations} from '@/hooks/getDashboardData';
-
-type Meal_Update = {
-    dayId: number,
-    meal: {
-        mealId: number,
-        limit: number,
-        reachedLimit: boolean,
-        isOpen: boolean,
-        isLocked: boolean,
-        participations: number,
-    }
-}
-
-type Slot_Update = {
-    dayId: number,
-    slot: {
-        slotId: number,
-        limit: number,
-        count: number,
-    }
-}
+import {Dashboard, Day, Meal, Slot, useDashboardData, Week} from '@/hooks/getDashboardData';
+import {Dictionary} from "../../types/types";
+import {mercureReceiver} from "@/hooks/mercureReciever";
 
 class DashboardStore extends Store<Dashboard> {
 
     protected data(): Dashboard {
         return {
-            weeks: new Array<Week>(),
+            weeks: {},
         }
     }
 
     async fillStore() {
         let { dashboardData } = await useDashboardData()
         if(dashboardData.value){
-            this.state = dashboardData.value;
+            this.state = dashboardData.value
+            console.log(this.state)
         } else {
             console.log('could not receive DashboardData')
         }
 
-        this.configureMealUpdateHandlers()
+        mercureReceiver.init()
     }
 
-    public updateActiveSlotForDayById(id: number, newActiveSlot: number): void {
-        let day = this.getDayById(id)
-        day!.activeSlot = newActiveSlot
+    public getWeek(weekID: number | string): Week | undefined {
+        let week = this.state.weeks[weekID as number];
+        if(week === undefined) {
+            console.log('week with ID: week: ' + weekID + ' not found')
+        }
+        return week
     }
 
-    public getDayById(id: number): Day | null {
-        let result = null
+    public getWeeks(): Dictionary<Week> {
+        return this.state.weeks
+    }
 
-        this.state.weeks.forEach((week: Week) => {
-            for (let day of week.days) {
-                if (day.id === id) {
-                    result = day
-                    return day
-                }
+    public getDay(weekID: number | string, dayID: number | string): Day | undefined {
+        let week = this.getWeek(weekID);
+        if(week !== undefined) {
+            let day = week.days[dayID as number]
+            if (day === undefined) {
+                console.log('day with ID: week: ' + weekID + ' day: '+ dayID + ' not found')
             }
-            return null
-        })
-
-        return result
+            return day
+        }
+        return undefined
     }
 
-    // @ts-ignore
-    private static getMealByIdAndDay(id: number, day: Day): Meal | null {
-        for (let meal_mealVariation of day.meals) {
-            // @ts-ignore
-            if(meal_mealVariation.variations) {
-                // @ts-ignore
-                for (let meal of meal_mealVariation.variations) {
-                    if(meal.id === id) return meal
-                }
-            } else {
-                // @ts-ignore
-                if(meal_mealVariation.id === id) return meal_mealVariation
+    public getDays(weekID: number | string): Dictionary<Day> {
+        let week = this.getWeek(weekID)
+        return week!.days
+    }
+
+    public getSlot(weekID: number | string, dayID: number | string, slotID: number | string): Slot | undefined {
+        let day = this.getDay(weekID, dayID)
+        if(day !== undefined) {
+            let slot = day.slots[slotID as number]
+            if (slot === undefined) {
+                console.log('slot with ID: week: ' + weekID + ' day: '+ dayID + ' slot: ' + slotID + ' not found')
             }
+            return slot
         }
-
-        return null
+        return undefined
     }
 
-    public getMealsByDayId(id: number, no_combined: boolean = false): Array<Meal | Meal_Variations> | null {
-        let day = this.getDayById(id)
-        if(day !== null) {
-            //@ts-ignore
-            return no_combined ? day.meals.filter(meal => meal.dishSlug !== 'combined-dish') : day.meals
-        }
-
-        return null
+    public getSlots(weekID: number | string, dayID: number | string): Dictionary<Slot> {
+        let day = this.getDay(weekID, dayID)
+        return day!.slots
     }
 
-    private static getSlotByIdAndDay(id: number, day: Day): Slot | null {
-        for (let slot of day.slots) {
-            if (slot.id === id) return slot
-        }
-
-        return null
-    }
-
-    /**
-     * Configure handlers to process meal push notifications.
-     */
-    private configureMealUpdateHandlers(): void {
-        const eventSrc = new EventSource('https://meals.test:8081/.well-known/mercure?topic=participation-updates&topic=meal-offer-updates&topic=slot-allocation-updates', { withCredentials: true })
-
-        // @ts-ignore
-        eventSrc.addEventListener('participationUpdate', (event: MessageEvent) => {
-            this.handleParticipationUpdate(JSON.parse(event.data))
-        })
-        // @ts-ignore
-        eventSrc.addEventListener('mealOfferUpdate', (event: MessageEvent) => {
-            this.handleMealOfferUpdate(JSON.parse(event.data))
-        })
-        // @ts-ignore
-        eventSrc.addEventListener('slotAllocationUpdate', (event: MessageEvent) => {
-            this.handleSlotAllocationUpdate(JSON.parse(event.data))
-        })
-    }
-
-    private handleParticipationUpdate(data: Meal_Update): void {
-        let day = this.getDayById(data.dayId)
-        if(day !== null) {
-            let meal = DashboardStore.getMealByIdAndDay(data.meal.mealId, day)
-            if(meal !== null) {
-                meal.limit = data.meal.limit
-                meal.participations = data.meal.participations
-                meal.isOpen = data.meal.isOpen
-                meal.isLocked = data.meal.isLocked
-                meal.reachedLimit = data.meal.reachedLimit
+    public getMeal(weekID: number | string, dayID: number | string, mealID: number | string): Meal | undefined {
+        let day = this.getDay(weekID, dayID)
+        if(day !== undefined) {
+            let meal = day.meals[mealID as number]
+            if (meal === undefined) {
+                console.log('meal with ID: week: ' + weekID + ' day: '+ dayID + ' meal: ' + mealID + ' not found')
             }
+            return meal
         }
+        return undefined
     }
-    private handleMealOfferUpdate(data: any): void {
 
+    public getMeals(weekID: number | string, dayID: number | string): Dictionary<Meal> {
+        let day = this.getDay(weekID, dayID)
+        return day!.meals
     }
-    private handleSlotAllocationUpdate(data: Slot_Update): void {
-        let day = this.getDayById(data.dayId)
-        if(day !== null) {
-            let slot = DashboardStore.getSlotByIdAndDay(data.slot.slotId, day)
-            if(slot !== null) {
-                slot.limit = data.slot.limit
-                slot.count = data.slot.count
+
+    public getVariation(weekID: number | string, dayID: number | string, parentMealID: number | string, variationID: number | string): Meal | undefined {
+        let parentMeal = this.getMeal(weekID, dayID, parentMealID)
+        if(parentMeal !== undefined) {
+            let variation = parentMeal.variations![variationID as number]
+            if (variation === undefined) {
+                console.log('variation with ID: week: ' + weekID + ' day: '+ dayID + ' ParentMeal: ' + parentMealID + ' variation: ' + variationID + ' not found')
             }
+            return variation
         }
+        return undefined
+    }
+
+    public getVariations(weekID: number | string, dayID: number | string, parentMealID: number | string): Dictionary<Meal> {
+        let parentMeal = this.getMeal(weekID, dayID, parentMealID)
+        return parentMeal!.variations!
     }
 }
+
+
 
 export const dashboardStore: DashboardStore = new DashboardStore()

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Service;
 
+use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
@@ -61,7 +62,7 @@ class ParticipationService
 
             $participant = $this->create($profile, $meal, $slot, $dishSlugs);
 
-            return ['participant' => $participant, 'offerer' => null];
+            return ['participant' => $participant, 'offerer' => null, 'slot' => $slot];
         }
 
         return null;
@@ -200,6 +201,17 @@ class ParticipationService
         }
 
         return null;
+    }
+
+    public function getCountOfActiveParticipationsByDayAndUser(Day $day, Profile $profile): int
+    {
+        $activeParticipations = $this->participantRepo->getParticipantsOnDays(
+            $day->getDateTime(),
+            $day->getDateTime(),
+            $profile
+        );
+
+        return count($activeParticipations);
     }
 
     public function getSlot(Profile $profile, DateTime $date): ?Slot

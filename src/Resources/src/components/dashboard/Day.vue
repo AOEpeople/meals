@@ -1,6 +1,6 @@
 <template>
   <div class="flex mx-auto w-3/4 h-auto bg-white rounded day-shadow w-max-screen-aoe">
-    <div :class="[disabled ? 'bg-[#80909F]' : 'bg-primary-2', 'flex justify-center w-[24px] rounded-l-[5px]']">
+    <div :class="[day.isLocked ? 'bg-[#80909F]' : 'bg-primary-2', 'flex justify-center w-[24px] rounded-l-[5px]']">
       <div id="icon" class="relative left-[425%] bottom-[2%]">
         <Icons icon="guest" box="0 0 13 13" class="w-[13px] h-[13px] fill-white"/>
       </div>
@@ -11,14 +11,27 @@
       </div>
     </div>
     <div v-if="!emptyDay" class="flex flex-col flex-1">
-      <Slots :slots="day.slots" :disabled="disabled" :activeSlot="day.activeSlot" :dayId="day.id"/>
+      <Slots
+          :weekID="weekID"
+          :dayID="dayID"
+      />
       <div
-          v-for="(meal, index) in day.meals"
-          :key="meal.id + index"
+          v-for="(meal, mealID) in day.meals"
+          :key="mealID"
           class="py-[13px] mx-[15px] border-b-[0.7px] last:border-b-0"
       >
-        <VariationsData v-if="meal.variations" :meal="meal" :disabled="disabled" :dayId="day.id" />
-        <MealData v-else :meal="meal" :disabled="disabled" :dayId="day.id" />
+        <VariationsData v-if="meal.variations"
+          :disabled="day.isLocked"
+          :weekID="weekID"
+          :dayID="dayID"
+          :mealID="mealID"
+        />
+        <MealData v-else
+          :disabled="day.isLocked"
+          :weekID="weekID"
+          :dayID="dayID"
+          :mealID="mealID"
+        />
       </div>
     </div>
     <div v-if="emptyDay" class="h-[134px]">
@@ -31,26 +44,22 @@
 import MealData from '@/components/dashboard/MealData.vue'
 import Slots from '@/components/dashboard/Slots.vue'
 import Icons from '@/components/misc/Icons.vue'
-import { useI18n } from 'vue-i18n'
+import {useI18n} from 'vue-i18n'
 import VariationsData from '@/components/dashboard/VariationsData.vue'
-import { computed } from 'vue'
+import {computed, ref} from 'vue'
+import {dashboardStore} from "@/store/dashboardStore";
 
 const { t, locale } = useI18n()
 
 const props = defineProps([
-  'day',
+    'weekID',
+    'dayID'
 ])
 
-const date = new Date(Date.parse(props.day.date.date));
+const day = dashboardStore.getDay(props.weekID, props.dayID)
+const date = new Date(Date.parse(day.date.date));
 let weekday = computed(() => date.toLocaleDateString(locale.value, { weekday: 'long' }))
-
-let emptyDay = false
-let disabled = true
-if(props.day.meals.length === 0) {
-  emptyDay = true
-} else {
-  disabled = props.day.meals[0].isLocked
-}
+let emptyDay = Object.keys(day.meals).length === 0
 
 </script>
 

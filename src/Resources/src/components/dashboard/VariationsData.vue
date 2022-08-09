@@ -2,7 +2,7 @@
   <div class="mb-1">
     <span class="text-primary uppercase tracking-[1px] text-note font-bold">{{ parentTitle }}</span><br>
   </div>
-  <div v-for="variation in meal.variations" class="flex flex-row w-auto gap-4 mb-1.5 last:mb-0 xl:grid-cols-6 justify-around">
+  <div v-for="(variation, variationID) in meal.variations" class="flex flex-row w-auto gap-4 mb-1.5 last:mb-0 xl:grid-cols-6 justify-around">
     <div class="items-center self-center basis-10/12 xl:col-span-5">
       <div class="self-center">
         <p class="m-0 font-light break-words description text-primary">
@@ -23,7 +23,13 @@
           {{ variation.participations }}
         </span>
       </div>
-      <Checkbox :mealData="variation" :disabled="disabled" :dayId="dayId"/>
+      <Checkbox
+          :disabled="disabled"
+          :weekID="weekID"
+          :dayID="dayID"
+          :mealID="mealID"
+          :variationID="variationID"
+      />
     </div>
   </div>
 </template>
@@ -33,16 +39,20 @@ import Icons from '@/components/misc/Icons.vue'
 import Checkbox from '@/components/dashboard/Checkbox.vue'
 import { useI18n } from 'vue-i18n'
 import { computed } from 'vue'
+import {dashboardStore} from "@/store/dashboardStore";
 
 const { t, locale } = useI18n()
 
 const props = defineProps([
-  'meal',
-  'disabled',
-  'dayId'
+    'weekID',
+    'dayID',
+    'mealID',
+    'disabled',
 ])
 
-let parentTitle = computed(() => locale.value.substring(0, 2) === 'en' ? props.meal.title.en : props.meal.title.de)
+const meal = dashboardStore.getMeal(props.weekID, props.dayID, props.mealID)
+
+let parentTitle = computed(() => locale.value.substring(0, 2) === 'en' ? meal.title.en : meal.title.de)
 
 </script>
 

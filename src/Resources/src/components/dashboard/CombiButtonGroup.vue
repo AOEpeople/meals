@@ -1,5 +1,5 @@
 <template>
-  <RadioGroup v-model="selected" :disabled="!isVariation">
+  <RadioGroup v-model="selected" :disabled="!meal.variations">
     <RadioGroupLabel class="sr-only">Combi Meal Selection</RadioGroupLabel>
     <div class="bg-white rounded-md -space-y-px">
       <RadioGroupOption as="template" v-for="(dish, index) in dishes"
@@ -28,37 +28,42 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { RadioGroup, RadioGroupDescription, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue'
+import {dashboardStore} from "@/store/dashboardStore";
 
-const props = defineProps(['meal', 'slugs'])
+const props = defineProps([
+    'weekID',
+    'dayID',
+    'mealID'
+])
+
+const meal = dashboardStore.getMeal(props.weekID, props.dayID, props.mealID)
 const emit = defineEmits(['addEntry', 'removeEntry'])
 const selected = ref()
-const isVariation = props.meal.variations !== undefined
 let dishes = []
 let oldSlug = ''
 
-if(isVariation) {
-  for (const variation of props.meal.variations) {
+if(meal.variations) {
+  for (const variationID in meal.variations) {
     dishes.push({
-      id: variation.id,
-      title: props.meal.title.en,
-      description: variation.title.en,
-      slug: variation.dishSlug,
+      id: variationID,
+      title: meal.title.en,
+      description: meal.variations[variationID].title.en,
+      slug: meal.variations[variationID].dishSlug,
     })
   }
   selected.value = dishes[0]
 } else {
   dishes.push({
-    id: props.meal.id,
-    title: props.meal.title.en,
-    description: props.meal.description.en,
-    slug: props.meal.dishSlug,
+    id: props.mealID,
+    title: meal.title.en,
+    description: meal.description.en,
+    slug: meal.dishSlug,
   })
-  selected.value = props.meal.dishSlug
-  emit('addEntry', props.meal.dishSlug)
+  selected.value = meal.dishSlug
+  emit('addEntry', meal.dishSlug)
 }
 
 watch(selected, () => {
-  console.log(oldSlug)
   if(oldSlug !== ''){
     emit('removeEntry', oldSlug)
   }

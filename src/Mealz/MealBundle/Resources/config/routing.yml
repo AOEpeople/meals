@@ -5,10 +5,22 @@ MealzMealBundle_language_switch:
 MealzMealBundle_api_dashboard:
     path: /api/dashboard
     defaults: { _controller: App\Mealz\MealBundle\Controller\ApiController::getDashboardData }
+    methods: [GET]
 
 MealzMealBundle_api_transactions:
   path: /api/transactions
   defaults: { _controller: App\Mealz\MealBundle\Controller\ApiController::getTransactionData }
+  methods: [GET]
+
+MealzMealBundle_api_timeslots:
+  path: /api/timeslots
+  defaults: { _controller: App\Mealz\MealBundle\Controller\ApiController::getTimeSlotData }
+  methods: [GET]
+
+MealzMealBundle_api_update-slot:
+  path: /api/update-slot
+  defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::updateSlot }
+  methods: [POST]
 
 MealzMealBundle_home:
     path:  /
@@ -55,6 +67,11 @@ MealzMealBundle_api_leave_Meal:
   path: /api/leave-meal
   defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::leaveMeal }
   methods: [POST]
+
+MealzMealBundle_api_update_selected_Slot:
+  path: /api/update-selected-slot
+  defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipationUpdateController::updateSlot }
+  methods: [ POST ]
 
 MealzMealBundle_Meal_offers:
     path: /menu/{date}/{dish}/offers

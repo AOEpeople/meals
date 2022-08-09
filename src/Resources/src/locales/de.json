@@ -49,7 +49,9 @@
     "1": "Nächste Woche",
     "no_service": "Keine Angebote für diesen Tag.",
     "new": "neu",
-    "auto": "Autoselektion nächster freier Slot"
+    "slot": {
+      "auto": "Autoselektion nächster freier Slot"
+    }
   },
   "balance": {
     "current": "Momentaner Kontostand",

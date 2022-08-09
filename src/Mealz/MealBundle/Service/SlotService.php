@@ -31,6 +31,30 @@ class SlotService
         $this->dayRepo = $dayRepo;
     }
 
+    public function updateSlot(array $parameters): Slot
+    {
+        /** @var Slot $slot */
+        $slot = $this->slotRepo->find($parameters['id']);
+
+        if(isset($parameters['title'])) {
+            $slot->setTitle($parameters['title']);
+        }
+        if(isset($parameters['limit'])) {
+            $slot->setLimit($parameters['limit']);
+        }
+        if(isset($parameters['order'])) {
+            $slot->setOrder($parameters['order']);
+        }
+        if(isset($parameters['enabled'])) {
+            $slot->setDisabled(!$parameters['enabled']);
+        }
+
+        $this->em->persist($slot);
+        $this->em->flush();
+
+        return $slot;
+    }
+
     public function updateState(Slot $slot, string $state): void
     {
         if (!in_array($state, ['0', '1'], true)) {
@@ -139,5 +163,10 @@ class SlotService
 
             return $slotBookingStatus[$k] ?? 0;
         };
+    }
+
+    public function getAllSlots(): array
+    {
+        return $this->slotRepo->findBy(['deleted' => 0]);
     }
 }

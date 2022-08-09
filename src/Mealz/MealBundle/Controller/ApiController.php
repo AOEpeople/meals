@@ -7,6 +7,7 @@ namespace App\Mealz\MealBundle\Controller;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Entity\Meal;
+use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Service\ApiService;
 use App\Mealz\MealBundle\Service\DishService;
@@ -57,42 +58,67 @@ class ApiController extends BaseController
         $weeks = $this->weekSrv->getNextTwoWeeks();
 
         $response = [];
+
         /* @var Week $week */
         foreach ($weeks as $week) {
-            $days = [];
+            $response[$week->getId()] = [
+                'startDate' => $week->getStartTime(),
+                'endDate' => $week->getEndTime(),
+                'days' => [],
+            ];
             /* @var Day $day */
             foreach ($week->getDays() as $day) {
                 $activeSlot = $this->participationSrv->getSlot($profile, $day->getDateTime());
-                if ($activeSlot) {
+                if ($activeSlot !== null) {
                     $activeSlot = $activeSlot->getId();
+                } else {
+                    $activeSlot = -1;
                 }
-                $slots = $this->slotSrv->getSlotStatusForDay($day->getDateTime());
-                array_unshift($slots, ['id' => -1, 'title' => 'auto', 'count' => 0, 'limit' => 0, 'slug' => 'auto']);
 
-                $meals = [];
+                $activeParticipations = $this->participationSrv->getCountOfActiveParticipationsByDayAndUser($day, $profile);
+                $response[$week->getId()]['days'][$day->getId()] = [
+                    'date' => $day->getDateTime(),
+                    'isLocked' => $day->getLockParticipationDateTime() < new DateTime(),
+                    'activeSlot' => $activeSlot,
+                    'slots' => [],
+                    'meals' => [],
+                ];
+                $slots = $this->slotSrv->getSlotStatusForDay($day->getDateTime());
+                $this->addSlots($response[$week->getId()]['days'][$day->getId()]['slots'], $slots, $activeParticipations);
                 /* @var Meal $meal */
                 foreach ($day->getMeals() as $meal) {
-                    if ($meal->getDish() instanceof DishVariation) {
-                        $this->addMealWithVariations($meal, $profile, $meals);
+                    if($meal->getDish() instanceof DishVariation) {
+                        $this->addMealWithVariations($meal, $profile, $response[$week->getId()]['days'][$day->getId()]['meals']);
                     } else {
-                        $meals[] = $this->convertMealForDashboard($meal, $profile);
+                        $response[$week->getId()]['days'][$day->getId()]['meals'][$meal->getId()] = $this->convertMealForDashboard($meal, $profile);
                     }
                 }
-                $days[] = [
-                    'id' => $day->getId(),
-                    'meals' => $meals,
-                    'date' => $day->getDateTime(),
-                    'slots' => $slots,
-                    'activeSlot' => $activeSlot,
-                ];
             }
-            $response[] = [
-                'id' => $week->getId(),
-                'days' => $days,
-            ];
         }
 
         return new JsonResponse(['weeks' => $response]);
+    }
+
+    private function addSlots(array &$slotArray, array $slots, int $activeParticipations): void
+    {
+        $slotArray[-1] = [
+            'id' => -1,
+            'title' => 'auto',
+            'count' => 0,
+            'limit' => 0,
+            'slug' => 'auto',
+            'disabled' => $activeParticipations > 0
+        ];
+        foreach ($slots as $slot) {
+            $slotArray[$slot['id']] = [
+                'id' => $slot['id'],
+                'title' => $slot['title'],
+                'count' => $slot['count'],
+                'limit' => $slot['limit'],
+                'slug' => $slot['slug'],
+                'disabled' => false
+            ];
+        }
     }
 
     /**
@@ -123,20 +149,46 @@ class ApiController extends BaseController
     }
 
     /**
+     * Send TimeSlot Data for logged-in cook.
+     *
+     * @Security("is_granted('ROLE_USER')")
+     */
+    public function getTimeSlotData(): JsonResponse
+    {
+        $slots = $this->slotSrv->getAllSlots();
+
+        $response = [];
+
+        /** @var Slot $slot */
+        foreach ($slots as $slot) {
+            $response[$slot->getId()] = [
+                'title' => $slot->getTitle(),
+                'limit' => $slot->getLimit(),
+                'order' => $slot->getOrder(),
+                'enabled' => $slot->isEnabled(),
+            ];
+        }
+
+        return new JsonResponse($response, 200);
+    }
+
+    /**
      * @throws Exception
      */
     private function convertMealForDashboard(Meal $meal, Profile $profile): array
     {
         $description = null;
+        $parentId = null;
         if (!$meal->getDish() instanceof DishVariation) {
             $description = [
                 'en' => $meal->getDish()->getDescriptionEn(),
                 'de' => $meal->getDish()->getDescriptionDe(),
             ];
+        } else {
+            $parentId = $meal->getDish()->getParent()->getId();
         }
 
         return [
-            'id' => $meal->getId(),
             'title' => [
                 'en' => $meal->getDish()->getTitleEn(),
                 'de' => $meal->getDish()->getTitleDe(),
@@ -149,6 +201,7 @@ class ApiController extends BaseController
             'isOpen' => $meal->isOpen(),
             'isLocked' => $meal->isLocked(),
             'isNew' => $this->dishSrv->isNew($meal->getDish()),
+            'parentId' => $parentId,
             'participations' => $meal->getParticipants()->count(),
             'isParticipating' => $this->participationSrv->isUserParticipating($meal, $profile),
         ];
@@ -159,25 +212,20 @@ class ApiController extends BaseController
      */
     private function addMealWithVariations(Meal $meal, Profile $profile, array &$meals): void
     {
-        $parentExistsInArray = false;
+        $parent = $meal->getDish()->getParent();
+        $parentExistsInArray = array_key_exists($parent->getId(), $meals);
 
-        /* @var Meal $addedMeal */
-        foreach ($meals as $id => $addedMeal) {
-            if ($addedMeal['id'] === $meal->getDish()->getParent()->getId()) {
-                $meals[$id]['variations'][] = $this->convertMealForDashboard($meal, $profile);
-                $parentExistsInArray = true;
-                break;
-            }
-        }
-        if (!$parentExistsInArray) {
-            $meals[] = [
-                'id' => $meal->getDish()->getParent()->getId(),
+        if(!$parentExistsInArray) {
+            $meals[$parent->getId()] = [
                 'title' => [
-                    'en' => $meal->getDish()->getParent()->getTitleEn(),
-                    'de' => $meal->getDish()->getParent()->getTitleDe(),
+                    'en' => $parent->getTitleEn(),
+                    'de' => $parent->getTitleDe(),
                 ],
-                'variations' => [$this->convertMealForDashboard($meal, $profile)],
+                'isNew' => $this->dishSrv->isNew($parent),
+                'variations' => []
             ];
         }
+
+        $meals[$parent->getId()]['variations'][$meal->getId()] = $this->convertMealForDashboard($meal, $profile);
     }
 }

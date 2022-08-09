@@ -3,7 +3,7 @@
       <div class="relative mt-1">
         <ListboxButton class="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
           <span class="block truncate">
-            {{ selectedSlot.slug === 'auto' ? t('dashboard.auto') : selectedSlot.title }}
+            {{ selectedSlot.slug === 'auto' ? t('dashboard.slot.auto') : selectedSlot.title }}
             <span v-if="selectedSlot.limit !== 0">
               {{ '( ' + selectedSlot.count + ' / ' + selectedSlot.limit + ' )'}}
             </span>
@@ -21,7 +21,8 @@
           <ListboxOptions class="mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
             <ListboxOption
                 v-slot="{ active, selected }"
-                v-for="slot in slots"
+                v-for="slot in day.slots"
+                :v-if="slot.disabled === false"
                 :key="slot.slug"
                 :value="slot"
                 as="template"
@@ -32,12 +33,8 @@
                   'relative cursor-default select-none py-2 pl-10 pr-4',
                 ]"
               >
-                <span
-                    :class="[
-                    selected ? 'font-medium' : 'font-normal',
-                    'block truncate',
-                  ]"
-                >{{ slot.slug === 'auto' ? t('dashboard.auto') : slot.title }}
+                <span :class="[selected ? 'font-medium' : 'font-normal', 'block truncate']">
+                  {{ slot.slug === 'auto' ? t('dashboard.slot.auto') : slot.title }}
                   <span v-if="slot.limit !== 0">
                     {{ '( ' + slot.count + ' / ' + slot.limit + ' )'}}
                   </span>
@@ -58,7 +55,7 @@
 </template>
 
 <script setup>
-import {watchEffect, ref} from 'vue'
+import {computed, ref, watch} from 'vue'
 import {
   Listbox,
   ListboxButton,
@@ -67,22 +64,55 @@ import {
 } from '@headlessui/vue'
 
 import {useI18n} from "vue-i18n";
+import {useUpdateSelectedSlot} from "@/hooks/postUpdateSelectedSlot";
 import { CheckIcon, SelectorIcon } from '@heroicons/vue/solid'
 import {dashboardStore} from "@/store/dashboardStore";
 
-const props = defineProps(['slots', 'activeSlot', 'disabled', 'dayId'])
-const { t } = useI18n();
+const props = defineProps([
+  'weekID',
+  'dayID',
+])
+const { t } = useI18n()
+const day = dashboardStore.getDay(props.weekID, props.dayID)
+const meals = dashboardStore.getMeals(props.weekID, props.dayID)
+const selectedSlot = ref(day.slots[day.activeSlot])
+const activeSlot = computed(() => day.slots[day.activeSlot])
+const disabled = computed(() => day.isLocked)
+const isParticipating = ref(false)
 
-let selectedSlot = ref(props.slots[0])
+watch(meals, () => {
+  isParticipating.value = checkIfParticipating()
+}, { deep: true })
 
-props.slots.forEach((slot, index) => {
-  if(slot.id === props.activeSlot) {
-    selectedSlot = ref(props.slots[index])
+watch(selectedSlot, async () => {
+  day.activeSlot = selectedSlot.value.id
+  if (isParticipating.value) {
+    let data = {
+      slotID: selectedSlot.value,
+      dayID: props.dayID
+    }
+    await useUpdateSelectedSlot(JSON.stringify(data))
   }
 })
 
-if(!props.disabled){
-  watchEffect(() => dashboardStore.updateActiveSlotForDayById(props.dayId, selectedSlot.value.id))
+watch(activeSlot, () => {
+  selectedSlot.value = activeSlot.value
+})
+
+function checkIfParticipating() {
+  for (const mealId in meals) {
+    if (meals[mealId].variations !== null) {
+      for (const variationsId in meals[mealId].variations) {
+        if(meals[mealId].variations[variationsId].isParticipating) {
+          return true
+        }
+      }
+    }
+    if(meals[mealId].isParticipating) {
+      return true
+    }
+  }
+  return false
 }
 
 </script>

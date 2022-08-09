@@ -1,24 +1,21 @@
 import useApi from "@/hooks/api";
+import { Dictionary } from "../../types/types";
 import { ref } from "vue";
 
 export type Meal = {
-    id: number,
-    title: { en: string, de: string }
-    description: { en: string, de: string } | null
-    limit: number,
-    reachedLimit: boolean,
+    variations: Dictionary<Meal> | null
+    title: { en: string, de: string },
+    description: { en: string, de: string } | null,
+    limit: number | null,
+    reachedLimit: boolean | null,
     isOpen: boolean,
     isLocked: boolean,
     isNew: boolean,
-    price: number,
-    participations: number,
-    isParticipating: boolean,
-    dishSlug: string
-}
-
-export type Meal_Variations = {
-    title: { en: string, de: string }
-    variations: Array<Meal>
+    price: number | null,
+    participations: number | null,
+    isParticipating: boolean | null,
+    parentId: number | null,
+    dishSlug: string | null,
 }
 
 export type DateTime = {
@@ -28,29 +25,31 @@ export type DateTime = {
 }
 
 export type Slot = {
-    id: number,
+    id: number | string,
     title: string,
     count: number,
     limit: number,
-    slug: string | null
+    slug: string | null,
+    disabled: boolean
 }
 
 export type Day = {
-    id: number,
-    meals: Array<Meal | Meal_Variations>,
     date: DateTime,
-    slots: Array<Slot>,
-    activeSlot: number
+    isLocked: boolean,
+    activeSlot: number | string,
+    meals: Dictionary<Meal>,
+    slots: Dictionary<Slot>,
 }
 
 export type Week = {
-    id: number,
-    days: Array<Day>,
+    days: Dictionary<Day>,
+    startDate: DateTime,
+    endDate: DateTime
 }
 
 export type Dashboard = {
-    weeks: Array<Week>;
-};
+    weeks: Dictionary<Week>
+}
 
 export async function useDashboardData() {
     const { response: dashboardData, request } = useApi<Dashboard>(

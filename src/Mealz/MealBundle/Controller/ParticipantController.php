@@ -66,8 +66,12 @@ class ParticipantController extends BaseController
             return new JsonResponse(null, 403);
         }
 
+        $slot = null;
+
         $parameters = json_decode($request->getContent(), true);
-        $slot = $this->slotRepo->find($parameters['slotID']);
+        if($parameters['slotID'] !== -1) {
+            $slot = $this->slotRepo->find($parameters['slotID']);
+        }
         $meal = $this->mealRepo->find($parameters['mealID']);
 
         try {
@@ -84,7 +88,7 @@ class ParticipantController extends BaseController
             $this->logAdd($meal, $result['participant']);
         }
 
-        return new JsonResponse($result['participant']->getId());
+        return new JsonResponse(['slotID' => $result['slot']->getId()]);
     }
 
     /**
@@ -127,7 +131,13 @@ class ParticipantController extends BaseController
             );
         }
 
-        return new JsonResponse(null, 200);
+        $activeSlot = $this->participationSrv->getSlot($profile, $meal->getDateTime());
+        $slotID = -1;
+        if($activeSlot !== null) {
+            $slotID = $activeSlot->getId();
+        }
+
+        return new JsonResponse(['slotID' => $slotID], 200);
     }
 
     public function updateCombinedMeal(

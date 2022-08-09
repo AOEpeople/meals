@@ -10,7 +10,6 @@
       </span>
     </div>
 
-    <span v-if="transactions.isLoading">TEST</span>
     <Table v-if="!transactions.isLoading" :labels="tableLabels" class="mt-10 mb-5">
       <tr v-for="(transaction, index) in transactions.data" :key="index" class="max-h-[62px] border-b-2 border-gray-200">
         <td>

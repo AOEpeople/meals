@@ -19,7 +19,12 @@
         <Icons icon="person" box="0 0 12 12" class="fill-white w-3 h-3 ml-[7px] my-auto"/>
         <span class="text-white h-4 w-[15px] self-center leading-4 font-bold text-[11px] my-0.5 mr-[7px] tracking-[1.5px]">{{ meal.participations + [meal.limit > 0 ? '/' + meal.limit : ''] }}</span>
       </div>
-      <Checkbox :mealData="meal" :disabled="disabled" :dayId="dayId"/>
+      <Checkbox
+          :disabled="disabled"
+          :weekID="weekID"
+          :dayID="dayID"
+          :mealID="mealID"
+      />
     </div>
   </div>
 </template>
@@ -29,22 +34,27 @@ import Icons from "@/components/misc/Icons.vue";
 import Checkbox from '@/components/dashboard/Checkbox.vue'
 import { useI18n } from "vue-i18n";
 import {computed} from "vue";
+import {dashboardStore} from "@/store/dashboardStore";
 
 const props = defineProps([
-    'meal',
-    'disabled',
-    'dayId'
-]);
+  'weekID',
+  'dayID',
+  'mealID',
+  'disabled',
+])
+
+const meal = dashboardStore.getMeal(props.weekID, props.dayID, props.mealID)
+
 const { t, locale } = useI18n();
 
-let title = computed(() => locale.value.substring(0, 2) === 'en' ? props.meal.title.en : props.meal.title.de);
+let title = computed(() => locale.value.substring(0, 2) === 'en' ? meal.title.en : meal.title.de);
 
 let description = ''
-if(props.meal.description !== null) {
-  description = computed(() => locale.value.substring(0, 2) === 'en' ? props.meal.description.en : props.meal.description.de);
+if(meal.description !== null) {
+  description = computed(() => locale.value.substring(0, 2) === 'en' ? meal.description.en : meal.description.de);
 }
 
-let disabled = props.disabled || props.meal.reachedLimit
+let disabled = props.disabled || meal.reachedLimit
 
 </script>
 

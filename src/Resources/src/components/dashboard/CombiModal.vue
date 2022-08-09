@@ -12,8 +12,17 @@
               <div>
                 <div class="mt-3 sm:mt-5">
                   <DialogTitle as="h2" class="text-primary">Choose a combination for your combined dish </DialogTitle>
-                  <div v-for="meal of meals" class="grid mt-2">
-                    <CombiButtonGroup :meal="meal" @addEntry="addEntry" @removeEntry="removeEntry"/>
+                  <div v-for="key in keys"
+                       class="grid mt-2"
+                       :key="key"
+                  >
+                    <CombiButtonGroup
+                        :weekID="weekID"
+                        :dayID="dayID"
+                        :mealID="key"
+                        :key="key"
+                        @addEntry="addEntry"
+                        @removeEntry="removeEntry"/>
                   </div>
                 </div>
               </div>
@@ -32,9 +41,18 @@
 <script setup>
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import CombiButtonGroup from "@/components/dashboard/CombiButtonGroup.vue";
+import {dashboardStore} from "@/store/dashboardStore";
 
-const props = defineProps(['open', 'meals'])
+const props = defineProps([
+    'open',
+    'weekID',
+    'dayID',
+])
 const emit = defineEmits(['closeCombiModal'])
+
+let meals = dashboardStore.getMeals(props.weekID, props.dayID)
+
+let keys = Object.keys(meals).filter(mealID => meals[mealID].dishSlug !== 'combined-dish')
 
 let slugs = [];
 

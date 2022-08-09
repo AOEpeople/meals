@@ -1,6 +1,6 @@
 <template>
   <span @click="handle"
-       :class="[enabled
+       :class="[meal.isParticipating
          ? disabled ? 'bg-[#80909F]' : 'bg-primary-4 hover:bg-primary-3 cursor-pointer'
          : disabled ? 'bg-[#FAFAFA] opacity-50' : 'cursor-pointer bg-[#FAFAFA] hover:bg-gray-100'
          , 'rounded-md h-[30px] w-[30px] xl:h-[20px] xl:w-[20px] border-[0.5px] border-gray-200'
@@ -11,7 +11,11 @@
       <path d="M1.54617 3.5L4.43387 6L10.2734 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
   </span>
-  <CombiModal :open="open" :meals="meals_no_combined" @closeCombiModal="closeCombiModal"/>
+  <CombiModal
+      :open="open"
+      :weekID="weekID"
+      :dayID="dayID"
+      @closeCombiModal="closeCombiModal"/>
 </template>
 
 <script setup>
@@ -21,22 +25,32 @@ import { useLeaveMeal } from '@/hooks/postLeaveMeal'
 import { dashboardStore } from '@/store/dashboardStore'
 import CombiModal from "@/components/dashboard/CombiModal.vue";
 
-const props = defineProps(['mealData', 'disabled', 'dayId'])
+const props = defineProps([
+  'weekID',
+  'dayID',
+  'mealID',
+  'variationID',
+  'disabled',
+])
 
-let meals_no_combined = []
-if(!props.disabled) {
-  meals_no_combined = dashboardStore.getMealsByDayId(props.dayId, true)
+let day = dashboardStore.getDay(props.weekID, props.dayID)
+
+let meal
+if(props.variationID) {
+  meal = dashboardStore.getVariation(props.weekID, props.dayID, props.mealID, props.variationID)
+} else {
+  meal = dashboardStore.getMeal(props.weekID, props.dayID, props.mealID)
 }
 
 const open = ref(false)
-const enabled = ref(props.mealData.isParticipating)
+const enabled = ref(meal.isParticipating)
 
 async function handle() {
   if(!props.disabled) {
     if(enabled.value) {
       await leaveMeal()
     } else {
-      let slugs = [props.mealData.dishSlug]
+      let slugs = [meal.dishSlug]
       if(slugs[0] === 'combined-dish') {
         slugs = getDishSlugs()
         if(slugs === -1) return
@@ -48,12 +62,15 @@ async function handle() {
 
 function getDishSlugs() {
   let slugs = []
-  for (let meal of meals_no_combined) {
-    if(meal.variations) {
+  for (let mealID in day.meals) {
+    if (day.meals[mealID].variations) {
       open.value = true
       return -1
+    } else {
+      if (day.meals[mealID].dishSlug !== "combined-dish") {
+        slugs.push(day.meals[mealID].dishSlug)
+      }
     }
-    slugs.push(meal.dishSlug)
   }
 
   return slugs
@@ -61,31 +78,35 @@ function getDishSlugs() {
 
 async function joinMeal(dishSlugs) {
   let data = {
-    mealID: props.mealData.id,
+    mealID: props.mealID,
     dishSlugs: dishSlugs,
-    slotID: dashboardStore.getDayById(props.dayId)?.activeSlot
+    slotID: day.activeSlot
   }
 
-  const error = await useJoinMeal(JSON.stringify(data))
-  if(error.value === false) {
+  const { response, error } = await useJoinMeal(JSON.stringify(data))
+  if (error.value === false) {
     enabled.value = true
+    day.activeSlot = response.value.slotID
+    meal.isParticipating = true
   }
 }
 
 async function leaveMeal() {
   let data = {
-    mealID: props.mealData.id
+    mealID: props.mealID
   }
 
-  const error = await useLeaveMeal(JSON.stringify(data))
-  if(error.value === false) {
+  const { response, error } = await useLeaveMeal(JSON.stringify(data))
+  if (error.value === false) {
     enabled.value = false
+    day.activeSlot = response.value.slotID
+    meal.isParticipating = false
   }
 }
 
 async function closeCombiModal(slugs) {
   open.value = false
-  if(slugs !== undefined) {
+  if (slugs !== undefined) {
     await joinMeal(slugs)
   }
 }

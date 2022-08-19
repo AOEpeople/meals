@@ -1,16 +1,12 @@
 <?php
-
 declare(strict_types=1);
-
 namespace App\Mealz\MealBundle\Form\MealAdmin;
 
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
-use App\Mealz\MealBundle\Entity\NullDish;
 use App\Mealz\MealBundle\Form\Type\EntityHiddenType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\DataMapperInterface;
-use Symfony\Component\Form\Exception\UnexpectedTypeException;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -18,8 +14,15 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class MealForm extends AbstractType implements DataMapperInterface
+class MealForm extends AbstractType
 {
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -34,8 +37,7 @@ class MealForm extends AbstractType implements DataMapperInterface
                 'required' => false,
                 'empty_data' => '0',
                 'attr' => ['class' => 'hidden-form-field participation-limit'],
-            ])
-            ->setDataMapper($this);
+            ]);
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, static function (FormEvent $event) {
             /** @var Meal|null $meal */
@@ -43,17 +45,32 @@ class MealForm extends AbstractType implements DataMapperInterface
             if (null === $meal) {
                 return;
             }
-
             $day = $meal->getDay();
             $week = $day->getWeek();
-
             if (false === $day->isEnabled() || false === $week->isEnabled()) {
                 $form = $event->getForm();
                 $config = $form->get('dish')->getConfig();
                 $opts = $config->getOptions();
                 $opts['attr'] = ['readonly' => 'readonly'];
-
                 $form->add('dish', EntityHiddenType::class, $opts);
+            }
+        });
+
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+            /** @var array $data client submitted meal data */
+            $data = $event->getData();
+
+            if (isset($data['dish']) && '' === $data['dish']) {
+                // Empty dish value from client means meal needs to be deleted.
+                // We cannot set meal's dish to null, so we just mark the meal for removal.
+                /** @var Meal $meal */
+                $meal = $event->getForm()->getData();
+                $data['dish'] = $meal->getDish()->getId();  // restore original dish value
+                $this->entityManager->remove($meal);        // mark the meal to be removed
+                $meal->getDay()->removeMeal($meal);
+
+                $event->setData($data);
+                $event->getForm()->setData($meal);
             }
         });
 
@@ -65,7 +82,6 @@ class MealForm extends AbstractType implements DataMapperInterface
             $event->setData($meal);
         });
     }
-
     /**
      * {@inheritDoc}
      */
@@ -76,49 +92,9 @@ class MealForm extends AbstractType implements DataMapperInterface
             'empty_data' => static function (FormInterface $form) {
                 $dish = $form->get('dish')->getData();
                 $day = $form->getParent()->getParent()->getData();
-
                 return new Meal($dish, $day);
             },
             'error_bubbling' => false,
         ]);
-    }
-
-    public function mapDataToForms($viewData, $forms): void
-    {
-        // there is no data yet, so nothing to pre-populate
-        if (null === $viewData) {
-            return;
-        }
-
-        if (!$viewData instanceof Meal) {
-            throw new UnexpectedTypeException($viewData, Meal::class);
-        }
-
-        /** @var FormInterface[] $forms */
-        $forms = iterator_to_array($forms);
-
-        // initialize form field values
-        $forms['dish']->setData($viewData->getDish());
-        $forms['participationLimit']->setData($viewData->getParticipationLimit());
-    }
-
-    public function mapFormsToData($forms, &$viewData): void
-    {
-        /** @var FormInterface[] $forms */
-        $forms = iterator_to_array($forms);
-        $dish = $forms['dish']->getData();
-        if (null === $dish) {
-            $dish = new NullDish();
-        }
-
-        $meal = $forms['dish']->getParent()->getData();
-        if (null === $meal) {   // new meal
-            $day = $forms['dish']->getParent()->getParent()->getParent()->getData();
-            $meal = new Meal($dish, $day);
-        } else {
-            $meal->setDish($dish);
-        }
-
-        $viewData = $meal;
     }
 }

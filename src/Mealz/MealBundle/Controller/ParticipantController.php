@@ -204,12 +204,27 @@ class ParticipantController extends BaseController
     ): Response {
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
-        $week = $weekRepo->findWeekByDate($week->getStartTime(), ['only_enabled_days' => true]);
+        $filteredWeek = $weekRepo->findWeekByDate($week->getStartTime(), ['only_enabled_days' => true]);
+
+        // If all days are disabled don't render list
+        if (null === $filteredWeek) {
+            $translator = $this->get('translator');
+            $message = $translator->trans('error.all_days_disabled', [
+                '%startDate%' => $week->getStartTime()->format('d.m'),
+                '%endDate%' => $week->getEndTime()->format('d.m')
+            ]);
+            $this->addFlashMessage($message, 'danger');
+
+            return $this->redirectToRoute(
+                'MealzMealBundle_Meal_edit',
+                ['week' => $week->getId()]
+            );
+        }
 
         // Get user participation to list them as table rows
         $participation = $participantRepo->getParticipantsOnDays(
-            $week->getStartTime(),
-            $week->getEndTime()
+            $filteredWeek->getStartTime(),
+            $filteredWeek->getEndTime()
         );
         $groupedParticipation = $participantRepo->groupParticipantsByName($participation);
 
@@ -230,7 +245,7 @@ class ParticipantController extends BaseController
 
         return $this->render('MealzMealBundle:Participant:edit.html.twig', [
             'participationSrv' => $participationSrv,
-            'week' => $week,
+            'week' => $filteredWeek,
             'users' => $groupedParticipation,
             'profilesJson' => json_encode($profilesArray),
             'prototype' => $prototype,

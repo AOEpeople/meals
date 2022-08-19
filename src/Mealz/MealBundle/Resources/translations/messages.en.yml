@@ -27,6 +27,7 @@ dish_variation:
   delete_error: Unable to delete dish variation "%dishVariation%". We are looking into it. Please try again later.
 error:
   unknown: An unknown error occured.
+  all_days_disabled: No list can be shown because all days for the week of %startDate% - %endDate% are deactivated.
   profile:
     already_exists: A profile with this name already exists.
   participation:

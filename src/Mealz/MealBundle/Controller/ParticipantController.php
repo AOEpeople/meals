@@ -211,7 +211,7 @@ class ParticipantController extends BaseController
             $translator = $this->get('translator');
             $message = $translator->trans('error.all_days_disabled', [
                 '%startDate%' => $week->getStartTime()->format('d.m'),
-                '%endDate%' => $week->getEndTime()->format('d.m')
+                '%endDate%' => $week->getEndTime()->format('d.m'),
             ]);
             $this->addFlashMessage($message, 'danger');
 
@@ -224,7 +224,7 @@ class ParticipantController extends BaseController
         // Get user participation to list them as table rows
         $participation = $participantRepo->getParticipantsOnDays(
             $filteredWeek->getStartTime(),
-            $filteredWeek->getEndTime()
+            $filteredWeek->getEndTime(),
         );
         $groupedParticipation = $participantRepo->groupParticipantsByName($participation);
 

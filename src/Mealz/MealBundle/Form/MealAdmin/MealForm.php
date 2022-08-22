@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace App\Mealz\MealBundle\Form\MealAdmin;
 
 use App\Mealz\MealBundle\Entity\Dish;
@@ -82,6 +84,7 @@ class MealForm extends AbstractType
             $event->setData($meal);
         });
     }
+
     /**
      * {@inheritDoc}
      */
@@ -92,6 +95,7 @@ class MealForm extends AbstractType
             'empty_data' => static function (FormInterface $form) {
                 $dish = $form->get('dish')->getData();
                 $day = $form->getParent()->getParent()->getData();
+
                 return new Meal($dish, $day);
             },
             'error_bubbling' => false,

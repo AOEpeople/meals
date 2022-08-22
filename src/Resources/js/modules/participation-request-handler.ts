@@ -30,6 +30,8 @@ export class ParticipationRequestHandler {
             return;
         }
 
+        $checkbox.closest('.checkbox-wrapper').toggleClass('submitting');
+
         $.ajax({
             method: participationRequest.method,
             url: participationRequest.url,
@@ -39,6 +41,7 @@ export class ParticipationRequestHandler {
                 handle($checkbox, data);
             },
             error: function (jqXHR) {
+                $checkbox.closest('.checkbox-wrapper').toggleClass('submitting');
                 AjaxErrorHandler.handleError(jqXHR, function (){
                     if (true === ParticipationRequestHandler.isJoinRequest(participationRequest.url)) {
                         let mealTitle = $checkbox.closest('.meal-row').children('.title').text();

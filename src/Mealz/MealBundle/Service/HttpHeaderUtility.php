@@ -19,9 +19,9 @@ class HttpHeaderUtility
      *
      * @param $headerString
      *
-     * @throws \InvalidArgumentException
-     *
      * @return mixed
+     *
+     * @throws \InvalidArgumentException
      */
     public function getLocaleFromAcceptLanguageHeader($headerString)
     {

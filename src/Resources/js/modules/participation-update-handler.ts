@@ -253,6 +253,8 @@ export class ParticipationUpdateHandler {
         if (CombinedMealService.isCombinedDish($dishContainer)) {
             CombinedMealService.updateDishes($checkbox, data.participantID, data.bookedDishSlugs);
         }
+
+        $checkbox.closest('.checkbox-wrapper').toggleClass('submitting');
     }
 
     private static getURL($checkbox: JQuery, action: string): string {

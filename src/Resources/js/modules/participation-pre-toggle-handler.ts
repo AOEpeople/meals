@@ -17,7 +17,7 @@ export class ParticipationPreToggleHandler {
         let self = this
         $('.checkbox-wrapper').on('click', function (e: Event) {
             let $checkboxWrapper = $(this);
-            if ($checkboxWrapper.hasClass('disabled')) {
+            if ($checkboxWrapper.hasClass('disabled') || $checkboxWrapper.hasClass('submitting')) {
                 return;
             }
 

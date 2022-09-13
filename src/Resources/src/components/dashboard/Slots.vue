@@ -19,35 +19,36 @@
             leave-to-class="opacity-0"
         >
           <ListboxOptions class="mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-            <ListboxOption
-                v-slot="{ active, selected }"
-                v-for="slot in day.slots"
-                :v-if="slot.disabled === false"
-                :key="slot.slug"
-                :value="slot"
-                as="template"
-            >
-              <li
-                  :class="[
-                  active ? 'bg-amber-100 text-amber-900 cursor-pointer' : 'text-gray-900',
-                  'relative cursor-default select-none py-2 pl-10 pr-4',
-                ]"
+            <template v-for="slot in day.slots">
+              <ListboxOption
+                  v-slot="{ active, selected }"
+                  v-if="slot.id !== 0 || !isParticipating"
+                  :key="slot.slug"
+                  :value="slot"
+                  as="template"
               >
-                <span :class="[selected ? 'font-medium' : 'font-normal', 'block truncate']">
-                  {{ slot.slug === 'auto' ? t('dashboard.slot.auto') : slot.title }}
-                  <span v-if="slot.limit !== 0">
-                    {{ '( ' + slot.count + ' / ' + slot.limit + ' )'}}
+                <li
+                    :class="[
+                    active ? 'bg-amber-100 text-amber-900 cursor-pointer' : 'text-gray-900',
+                    'relative cursor-default select-none py-2 pl-10 pr-4',
+                  ]"
+                >
+                  <span :class="[selected ? 'font-medium' : 'font-normal', 'block truncate']">
+                    {{ slot.slug === 'auto' ? t('dashboard.slot.auto') : slot.title }}
+                    <span v-if="slot.limit !== 0">
+                      {{ '( ' + slot.count + ' / ' + slot.limit + ' )'}}
+                    </span>
+                  </span
+                  >
+                  <span
+                      v-if="selected"
+                      class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
+                  >
+                    <CheckIcon class="h-5 w-5" aria-hidden="true" />
                   </span>
-                </span
-                >
-                <span
-                    v-if="selected"
-                    class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
-                >
-                  <CheckIcon class="h-5 w-5" aria-hidden="true" />
-                </span>
-              </li>
-            </ListboxOption>
+                </li>
+              </ListboxOption>
+            </template>
           </ListboxOptions>
         </transition>
       </div>
@@ -74,29 +75,30 @@ const props = defineProps([
 ])
 const { t } = useI18n()
 const day = dashboardStore.getDay(props.weekID, props.dayID)
-const meals = dashboardStore.getMeals(props.weekID, props.dayID)
+const meals = day.meals
 const selectedSlot = ref(day.slots[day.activeSlot])
 const activeSlot = computed(() => day.slots[day.activeSlot])
 const disabled = computed(() => day.isLocked)
-const isParticipating = ref(false)
+const isParticipating = ref(checkIfParticipating())
 
 watch(meals, () => {
   isParticipating.value = checkIfParticipating()
 }, { deep: true })
 
-watch(selectedSlot, async () => {
+watch(activeSlot, () => {
+  selectedSlot.value = activeSlot.value
+})
+
+watch(selectedSlot, () => {
+  console.log(selectedSlot.value)
   day.activeSlot = selectedSlot.value.id
   if (isParticipating.value) {
     let data = {
-      slotID: selectedSlot.value,
+      slotID: selectedSlot.value.id,
       dayID: props.dayID
     }
-    await useUpdateSelectedSlot(JSON.stringify(data))
+    useUpdateSelectedSlot(JSON.stringify(data))
   }
-})
-
-watch(activeSlot, () => {
-  selectedSlot.value = activeSlot.value
 })
 
 function checkIfParticipating() {
@@ -112,6 +114,7 @@ function checkIfParticipating() {
       return true
     }
   }
+
   return false
 }
 

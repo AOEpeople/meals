@@ -27,8 +27,22 @@
                 </div>
               </div>
               <div class="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
-                <button type="button" class="w-full inline-flex justify-center btn-primary" @click="bookMeal">Book</button>
-                <button type="button" class="w-full inline-flex justify-center btn-tertiary" @click="emit('closeCombiModal')" ref="cancelButtonRef">Cancel</button>
+                <button
+                    type="button"
+                    :class="[bookingDisabled ? 'btn-disabled' : 'btn-primary', 'w-full inline-flex justify-center']"
+                    @click="resolveModal('book')"
+                    :disabled="bookingDisabled"
+                >
+                  Book
+                </button>
+                <button
+                    type="button"
+                    class="w-full inline-flex justify-center btn-tertiary"
+                    @click="resolveModal('cancel')"
+                    ref="cancelButtonRef"
+                >
+                  Cancel
+                </button>
               </div>
             </DialogPanel>
           </TransitionChild>
@@ -42,6 +56,7 @@
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import CombiButtonGroup from "@/components/dashboard/CombiButtonGroup.vue";
 import {dashboardStore} from "@/store/dashboardStore";
+import {computed, ref} from "vue";
 
 const props = defineProps([
     'open',
@@ -51,22 +66,28 @@ const props = defineProps([
 const emit = defineEmits(['closeCombiModal'])
 
 let meals = dashboardStore.getMeals(props.weekID, props.dayID)
-
 let keys = Object.keys(meals).filter(mealID => meals[mealID].dishSlug !== 'combined-dish')
+const slugs = ref([])
+const bookingDisabled = computed(() => slugs.value.length < 2)
 
-let slugs = [];
-
-function bookMeal() {
-  emit("closeCombiModal", slugs)
-  slugs = []
+function resolveModal(mode) {
+  if(mode === 'cancel') {
+    slugs.value = []
+    emit("closeCombiModal")
+  }
+  if(mode === 'book') {
+    emit("closeCombiModal", slugs.value)
+    slugs.value = []
+  }
 }
 
 function removeEntry(slug) {
-  slugs = slugs.filter(entry => entry !== slug)
+  slugs.value = slugs.value.filter(entry => entry !== slug)
 }
 
 function addEntry(slug) {
-  slugs.push(slug)
+  slugs.value.push(slug)
+  console.log(slugs.value.length)
 }
 
 </script>

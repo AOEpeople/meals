@@ -69,7 +69,7 @@ class ParticipantController extends BaseController
         $slot = null;
 
         $parameters = json_decode($request->getContent(), true);
-        if($parameters['slotID'] !== -1) {
+        if (0 !== $parameters['slotID']) {
             $slot = $this->slotRepo->find($parameters['slotID']);
         }
         $meal = $this->mealRepo->find($parameters['mealID']);
@@ -132,8 +132,8 @@ class ParticipantController extends BaseController
         }
 
         $activeSlot = $this->participationSrv->getSlot($profile, $meal->getDateTime());
-        $slotID = -1;
-        if($activeSlot !== null) {
+        $slotID = 0;
+        if (null !== $activeSlot) {
             $slotID = $activeSlot->getId();
         }
 

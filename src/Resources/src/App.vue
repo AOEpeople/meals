@@ -14,3 +14,9 @@ import { balanceStore } from '@/store/balanceStore'
 
 balanceStore.fillStore()
 </script>
+<style>
+.btn-disabled {
+  @apply shadow-btn font-medium drop-shadow-btn text-btn rounded-btn mx-2 mt-4 mb-6 px-[34px] h-9 text-center items-center;
+  @apply bg-grey text-white shadow-light-grey;
+}
+</style>

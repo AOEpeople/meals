@@ -30,7 +30,7 @@ type Slot_Update = {
         slotId: number,
         limit: number,
         count: number,
-    } | {}
+    } | null
 }
 
 class MercureReceiver {
@@ -56,7 +56,13 @@ class MercureReceiver {
     }
 
     private static handleParticipationUpdate(data: Meal_Update): void {
-        let meal = dashboardStore.getMeal(data.weekId, data.dayId, data.meal.mealId) as Meal
+        let meal;
+        if(data.meal.parentId !== null) {
+            meal = dashboardStore.getVariation(data.weekId, data.dayId, data.meal.parentId, data.meal.mealId) as Meal
+        } else {
+            meal = dashboardStore.getMeal(data.weekId, data.dayId, data.meal.mealId) as Meal
+        }
+
         if(meal !== undefined) {
             meal.limit = data.meal.limit
             meal.participations = data.meal.participations
@@ -71,10 +77,18 @@ class MercureReceiver {
     }
 
     private static handleSlotAllocationUpdate(data: Slot_Update): void {
+        console.log(data)
         let newSlot = dashboardStore.getSlot(data.weekId, data.dayId, data.newSlot.slotId)
         if (newSlot !== undefined) {
             newSlot.limit = data.newSlot.limit
             newSlot.count = data.newSlot.count
+        }
+        if(data.prevSlot !== null) {
+            let prevSlot = dashboardStore.getSlot(data.weekId, data.dayId, data.prevSlot.slotId)
+            if (prevSlot !== undefined) {
+                prevSlot.limit = data.prevSlot.limit
+                prevSlot.count = data.prevSlot.count
+            }
         }
     }
 }

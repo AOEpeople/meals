@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Service;
 
-use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
@@ -203,11 +202,11 @@ class ParticipationService
         return null;
     }
 
-    public function getCountOfActiveParticipationsByDayAndUser(Day $day, Profile $profile): int
+    public function getCountOfActiveParticipationsByDayAndUser(DateTime $dateTime, Profile $profile): int
     {
         $activeParticipations = $this->participantRepo->getParticipantsOnDays(
-            $day->getDateTime(),
-            $day->getDateTime(),
+            $dateTime,
+            $dateTime,
             $profile
         );
 

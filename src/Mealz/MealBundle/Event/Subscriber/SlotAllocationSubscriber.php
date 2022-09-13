@@ -8,6 +8,7 @@ use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Event\SlotAllocationUpdateEvent;
 use App\Mealz\MealBundle\Service\Publisher\PublisherInterface;
 use App\Mealz\MealBundle\Service\SlotService;
+use DateTime;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class SlotAllocationSubscriber implements EventSubscriberInterface
@@ -48,23 +49,26 @@ class SlotAllocationSubscriber implements EventSubscriberInterface
             [
                 'weekId' => $day->getWeek()->getId(),
                 'dayId' => $day->getId(),
-                'newSlot' => $this->addSlot($newSlot),
-                'prevSlot' => $this->addSlot($prevSlot),
+                'newSlot' => $this->addSlot($newSlot, $day->getDateTime()),
+                'prevSlot' => $this->addSlot($prevSlot, $day->getDateTime()),
             ],
             self::PUBLISH_MSG_TYPE
         );
     }
 
-    private function addSlot(?Slot $slot): array
+    private function addSlot(?Slot $slot, DateTime $dateTime): ?array
     {
-        if($slot !== null) {
+        if (null !== $slot) {
+            $count = $this->slotSrv->getSlotsStatusOn($dateTime)[$slot->getSlug()];
+
             return [
                 'slotId' => $slot->getId(),
                 'limit' => $slot->getLimit(),
-                'count' => $slot->getParticipants()->count(),
+                'count' => $count,
             ];
         }
-        return [];
+
+        return null;
     }
 
     private function eventInvolvesRestrictedSlot(SlotAllocationUpdateEvent $event): bool

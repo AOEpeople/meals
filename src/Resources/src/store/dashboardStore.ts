@@ -57,7 +57,7 @@ class DashboardStore extends Store<Dashboard> {
         if(day !== undefined) {
             let slot = day.slots[slotID as number]
             if (slot === undefined) {
-                console.log('slot with ID: week: ' + weekID + ' day: '+ dayID + ' slot: ' + slotID + ' not found')
+                console.log('getSlot: slot with ID ( week: ' + weekID + ' day: '+ dayID + ' slot: ' + slotID + ' ) not found')
             }
             return slot
         }
@@ -74,7 +74,7 @@ class DashboardStore extends Store<Dashboard> {
         if(day !== undefined) {
             let meal = day.meals[mealID as number]
             if (meal === undefined) {
-                console.log('meal with ID: week: ' + weekID + ' day: '+ dayID + ' meal: ' + mealID + ' not found')
+                console.log('getMeal: meal with ID ( week: ' + weekID + ' day: '+ dayID + ' meal: ' + mealID + ' ) not found')
             }
             return meal
         }
@@ -91,7 +91,7 @@ class DashboardStore extends Store<Dashboard> {
         if(parentMeal !== undefined) {
             let variation = parentMeal.variations![variationID as number]
             if (variation === undefined) {
-                console.log('variation with ID: week: ' + weekID + ' day: '+ dayID + ' ParentMeal: ' + parentMealID + ' variation: ' + variationID + ' not found')
+                console.log('getVariation: variation with ID ( week: ' + weekID + ' day: '+ dayID + ' ParentMeal: ' + parentMealID + ' variation: ' + variationID + ' ) not found')
             }
             return variation
         }

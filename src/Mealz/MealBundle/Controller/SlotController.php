@@ -29,8 +29,7 @@ class SlotController extends BaseListController
     public function updateSlot(Request $request, SlotService $slotService): JsonResponse
     {
         $parameters = json_decode($request->getContent(), true);
-
-        $slot = $slotService->updateSlot($parameters);
+        $slotService->updateSlot($parameters);
 
         return new JsonResponse(null);
     }

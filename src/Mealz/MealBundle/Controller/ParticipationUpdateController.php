@@ -30,7 +30,7 @@ class ParticipationUpdateController extends BaseController
         $newSlot = null;
 
         $parameters = json_decode($request->getContent(), true);
-        if($parameters['slotID'] !== -1) {
+        if (-1 !== $parameters['slotID']) {
             $newSlot = $slotRepo->find($parameters['slotID']);
         }
         /** @var Day $day */

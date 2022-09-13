@@ -78,7 +78,7 @@ function getDishSlugs() {
 
 async function joinMeal(dishSlugs) {
   let data = {
-    mealID: props.mealID,
+    mealID: props.variationID ? props.variationID : props.mealID,
     dishSlugs: dishSlugs,
     slotID: day.activeSlot
   }
@@ -93,7 +93,7 @@ async function joinMeal(dishSlugs) {
 
 async function leaveMeal() {
   let data = {
-    mealID: props.mealID
+    mealID: props.variationID ? props.variationID : props.mealID
   }
 
   const { response, error } = await useLeaveMeal(JSON.stringify(data))

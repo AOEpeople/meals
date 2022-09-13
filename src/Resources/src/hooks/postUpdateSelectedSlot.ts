@@ -1,10 +1,10 @@
-import useApi from "@/hooks/api";
-import { ref } from "vue";
+import useApi from '@/hooks/api';
+import { ref } from 'vue';
 
 export async function useUpdateSelectedSlot(data: string) {
     const { request, response, error } = useApi(
-        "POST",
-        "api/update-selected-slot",
+        'POST',
+        'api/update-selected-slot',
         'application/json',
         data,
     );

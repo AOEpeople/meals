@@ -39,12 +39,17 @@ class ParticipationUpdateSubscriber implements EventSubscriberInterface
         if (!$meal->isOpen()) { // do not send updates for past meals
             return;
         }
+        $parentId = null;
+        if (null !== $meal->getDish()->getParent()) {
+            $parentId = $meal->getDish()->getParent()->getId();
+        }
 
         $data = [
             'weekId' => $meal->getDay()->getWeek()->getId(),
             'dayId' => $meal->getDay()->getId(),
             'meal' => [
                 'mealId' => $meal->getId(),
+                'parentId' => $parentId,
                 'limit' => $meal->getParticipationLimit(),
                 'reachedLimit' => $meal->hasReachedParticipationLimit(),
                 'isOpen' => $meal->isOpen(),

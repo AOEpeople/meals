@@ -36,16 +36,16 @@ class SlotService
         /** @var Slot $slot */
         $slot = $this->slotRepo->find($parameters['id']);
 
-        if(isset($parameters['title'])) {
+        if (isset($parameters['title'])) {
             $slot->setTitle($parameters['title']);
         }
-        if(isset($parameters['limit'])) {
+        if (isset($parameters['limit'])) {
             $slot->setLimit($parameters['limit']);
         }
-        if(isset($parameters['order'])) {
+        if (isset($parameters['order'])) {
             $slot->setOrder($parameters['order']);
         }
-        if(isset($parameters['enabled'])) {
+        if (isset($parameters['enabled'])) {
             $slot->setDisabled(!$parameters['enabled']);
         }
 

@@ -15,16 +15,14 @@
     </div>
     <div class="flex flex-none justify-end items-center basis-2/12 text-align-last">
       <div :class="
-        [variation.limit > 9 ? 'w-[65px]' : 'w-[46px]',
-        [disabled || variation.reachedLimit ? 'bg-[#80909F]' : 'bg-primary-4', 'grid grid-cols-2 content-center rounded-md h-[30px] xl:h-[20px] mr-[15px]']]
-      ">
+        [variation.limit > 9 ? 'w-[65px]' : 'w-[46px]', mealCSS[variationID]]">
         <Icons icon="person" box="0 0 12 12" class="fill-white w-3 h-3 my-[7px] mx-1"/>
         <span class="text-white h-4 w-[15px] self-center leading-4 font-bold text-[11px] my-0.5 mr-[7px] tracking-[1.5px]">
           {{ variation.participations }}
         </span>
       </div>
       <Checkbox
-          :disabled="disabled"
+          :mealState="mealState[variationID]"
           :weekID="weekID"
           :dayID="dayID"
           :mealID="mealID"
@@ -38,7 +36,7 @@
 import Icons from '@/components/misc/Icons.vue'
 import Checkbox from '@/components/dashboard/Checkbox.vue'
 import { useI18n } from 'vue-i18n'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import {dashboardStore} from "@/store/dashboardStore";
 
 const { t, locale } = useI18n()
@@ -47,12 +45,53 @@ const props = defineProps([
     'weekID',
     'dayID',
     'mealID',
-    'disabled',
 ])
 
 const meal = dashboardStore.getMeal(props.weekID, props.dayID, props.mealID)
 
 let parentTitle = computed(() => locale.value.substring(0, 2) === 'en' ? meal.title.en : meal.title.de)
+
+const mealState = computed(() => {
+  let array = []
+  for (const variationId in meal.variations) {
+    let variation = meal.variations[variationId]
+    if(variation.isLocked && meal.isOpen) {
+      if (variation.offerStatus === true) {
+        array[variationId] = 'offering'
+      } else if (variation.isParticipating === true && variation.offerStatus === false) {
+        array[variationId] = 'offerable'
+      } else if (variation.isParticipating === false && variation.currentOfferCount > 0) {
+        array[variationId] = 'tradeable'
+      }
+    } else if(!variation.isLocked && variation.isOpen && !variation.reachedLimit) {
+      array[variationId] = 'open'
+    } else {
+      array[variationId] = 'disabled'
+    }
+  }
+  return array
+});
+
+const mealCSS = computed(() => {
+  let array = []
+  for (const variationId in meal.variations) {
+    array[variationId] = 'grid grid-cols-2 content-center rounded-md h-[30px] xl:h-[20px] mr-[15px] '
+    switch (mealState.value[variationId]) {
+      case 'disabled':
+      case 'offerable':
+        array[variationId] += 'bg-[#80909F]'
+        break
+      case 'open':
+        array[variationId] += 'bg-primary-4'
+        break
+      case 'tradeable':
+      case 'offering':
+        array[variationId] += 'bg-highlight'
+        break
+    }
+  }
+  return array
+})
 
 </script>
 

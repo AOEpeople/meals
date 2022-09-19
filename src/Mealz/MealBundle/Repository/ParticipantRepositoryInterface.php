@@ -55,6 +55,11 @@ interface ParticipantRepositoryInterface extends ObjectRepository
     public function getOfferCountByMeal(Meal $meal): int;
 
     /**
+     * Returns true if the specified user is offering the specified meal
+     */
+    public function isOfferingMeal(Profile $profile, Meal $meal): bool;
+
+    /**
      * Gets number of participants (booked meals) per slot on a given $date.
      *
      * @psalm-return list<array{date: DateTime, slot: int, count: int}>

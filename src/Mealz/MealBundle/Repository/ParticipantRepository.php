@@ -378,6 +378,30 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
     }
 
     /**
+     * Returns true if the specified user is offering the specified meal
+     */
+    public function isOfferingMeal(Profile $profile, Meal $meal): bool
+    {
+        $queryBuilder = $this->createQueryBuilder('p');
+        $queryBuilder
+            ->innerJoin('App\Mealz\MealBundle\Entity\Meal', 'm', Join::WITH, 'm = p.meal')
+            ->innerJoin('App\Mealz\UserBundle\Entity\Profile', 'u', Join::WITH, 'u = p.profile')
+            ->select('count(p.id) AS count')
+            ->where(
+                $queryBuilder->expr()->gt('p.offeredAt', 0),
+                $queryBuilder->expr()->eq('m.id', ':mealId'),
+                $queryBuilder->expr()->like('u.username', ':profileId')
+            )
+            ->setParameters([
+                'mealId' => $meal->getId(),
+                'profileId' => $profile->getUsername(),
+            ]);
+        $result = $queryBuilder->getQuery()->getArrayResult();
+
+        return $result[0]['count'] > 0;
+    }
+
+    /**
      * Gets number of participants (booked meals) per slot on a given $date.
      *
      * @psalm-return list<array{date: DateTime, slot: int, count: int}>

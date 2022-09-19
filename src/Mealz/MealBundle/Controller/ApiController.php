@@ -11,6 +11,7 @@ use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Service\ApiService;
 use App\Mealz\MealBundle\Service\DishService;
+use App\Mealz\MealBundle\Service\OfferService;
 use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\MealBundle\Service\SlotService;
 use App\Mealz\MealBundle\Service\WeekService;
@@ -28,19 +29,22 @@ class ApiController extends BaseController
     private WeekService $weekSrv;
     private ParticipationService $participationSrv;
     private ApiService $apiSrv;
+    private OfferService $offerSrv;
 
     public function __construct(
         DishService $dishSrv,
         SlotService $slotSrv,
         WeekService $weekSrv,
         ParticipationService $participationSrv,
-        ApiService $apiSrv
+        ApiService $apiSrv,
+        OfferService $offerSrv
     ) {
         $this->dishSrv = $dishSrv;
         $this->slotSrv = $slotSrv;
         $this->weekSrv = $weekSrv;
         $this->participationSrv = $participationSrv;
         $this->apiSrv = $apiSrv;
+        $this->offerSrv = $offerSrv;
     }
 
     /**
@@ -203,7 +207,9 @@ class ApiController extends BaseController
             'isNew' => $this->dishSrv->isNew($meal->getDish()),
             'parentId' => $parentId,
             'participations' => $meal->getParticipants()->count(),
-            'isParticipating' => $this->participationSrv->isUserParticipating($meal, $profile),
+            'isParticipating' => $this->participationSrv->getParticipationByMealAndUser($meal, $profile) !== null,
+            'currentOfferCount' => $this->offerSrv->getOfferCountByMeal($meal),
+            'offerStatus' => $this->offerSrv->isOfferingMeal($profile, $meal),
         ];
     }
 
@@ -223,6 +229,8 @@ class ApiController extends BaseController
                 ],
                 'isNew' => $this->dishSrv->isNew($parent),
                 'variations' => [],
+                'isLocked' => $meal->isLocked(),
+                'isOpen' => $meal->isOpen(),
             ];
         }
 

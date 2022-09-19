@@ -21,13 +21,11 @@
           class="py-[13px] mx-[15px] border-b-[0.7px] last:border-b-0"
       >
         <VariationsData v-if="meal.variations"
-          :disabled="day.isLocked"
           :weekID="weekID"
           :dayID="dayID"
           :mealID="mealID"
         />
         <MealData v-else
-          :disabled="day.isLocked"
           :weekID="weekID"
           :dayID="dayID"
           :mealID="mealID"
@@ -46,7 +44,7 @@ import Slots from '@/components/dashboard/Slots.vue'
 import Icons from '@/components/misc/Icons.vue'
 import {useI18n} from 'vue-i18n'
 import VariationsData from '@/components/dashboard/VariationsData.vue'
-import {computed, ref} from 'vue'
+import {computed} from 'vue'
 import {dashboardStore} from "@/store/dashboardStore";
 
 const { t, locale } = useI18n()

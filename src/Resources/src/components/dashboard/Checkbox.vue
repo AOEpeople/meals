@@ -1,15 +1,8 @@
 <template>
-  <span @click="handle"
-       :class="[meal.isParticipating
-         ? disabled ? 'bg-[#80909F]' : 'bg-primary-4 hover:bg-primary-3 cursor-pointer'
-         : disabled ? 'bg-[#FAFAFA] opacity-50' : 'cursor-pointer bg-[#FAFAFA] hover:bg-gray-100'
-         , 'rounded-md h-[30px] w-[30px] xl:h-[20px] xl:w-[20px] border-[0.5px] border-gray-200'
-       ]"
-  >
-    <svg class="relative top-[10px] xl:top-[6px] m-auto xl:w-[12px] xl:h-[7px] w-[18px] h-[10.5px]" v-if="enabled" viewBox="0 0 12 7" fill="none" fill-opacity="0%" xmlns="http://www.w3.org/2000/svg">
-      <path fill-rule="evenodd" clip-rule="evenodd" d="M1.54617 3.5L4.43387 6L10.2734 1" fill="#518AD5"/>
-      <path d="M1.54617 3.5L4.43387 6L10.2734 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
+  <span @click="handle" :class="checkboxCSS">
+    <CheckIcon v-if="enabled && (mealState === 'open' || mealState === 'disabled')" class="text-white w-[80%] h-[80%] relative top-[10%] left-[10%]" />
+    <LockClosedIcon v-if="enabled && mealState === 'offerable'" class="text-white w-[80%] h-[80%] relative top-[10%] left-[10%]" />
+    <LockOpenIcon v-if="enabled && mealState === 'offering'" class="text-white w-[80%] h-[80%] relative top-[10%] left-[10%]"/>
   </span>
   <CombiModal
       :open="open"
@@ -19,22 +12,24 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import {computed, ref} from 'vue'
 import { useJoinMeal } from '@/hooks/postJoinMeal'
 import { useLeaveMeal } from '@/hooks/postLeaveMeal'
+import { useOfferMeal } from '@/hooks/postOfferMeal'
+import { useCancelOffer } from '@/hooks/postCancelOffer'
 import { dashboardStore } from '@/store/dashboardStore'
-import CombiModal from "@/components/dashboard/CombiModal.vue";
+import { LockClosedIcon, LockOpenIcon, CheckIcon } from '@heroicons/vue/solid'
+import CombiModal from '@/components/dashboard/CombiModal.vue'
 
 const props = defineProps([
   'weekID',
   'dayID',
   'mealID',
   'variationID',
-  'disabled',
+  'mealState',
 ])
 
 let day = dashboardStore.getDay(props.weekID, props.dayID)
-
 let meal
 if(props.variationID) {
   meal = dashboardStore.getVariation(props.weekID, props.dayID, props.mealID, props.variationID)
@@ -45,8 +40,38 @@ if(props.variationID) {
 const open = ref(false)
 const enabled = ref(meal.isParticipating)
 
+const checkboxCSS = computed(() => {
+  let cssResult = 'rounded-md h-[30px] w-[30px] xl:h-[20px] xl:w-[20px] border-[0.5px] border-gray-200 '
+
+  if(enabled.value) {
+    switch (props.mealState) {
+      case 'disabled':
+        cssResult += 'bg-[#80909F]'
+        return cssResult
+      case 'tradeable':
+      case 'open':
+        cssResult += 'bg-primary-4 hover:bg-primary-3 cursor-pointer'
+        return cssResult
+      case 'offering':
+      case 'offerable':
+        cssResult += 'bg-highlight cursor-pointer'
+        return cssResult
+    }
+  } else {
+    switch (props.mealState) {
+      case 'disabled':
+        cssResult += 'bg-[#FAFAFA] opacity-50'
+        return cssResult
+      case 'tradeable':
+      case 'open':
+        cssResult += 'cursor-pointer bg-[#FAFAFA] hover:bg-gray-100'
+        return cssResult
+    }
+  }
+})
+
 async function handle() {
-  if(!props.disabled) {
+  if(props.mealState === 'open' || props.mealState === 'tradeable') {
     if(enabled.value) {
       await leaveMeal()
     } else {
@@ -57,6 +82,13 @@ async function handle() {
       }
       await joinMeal(slugs)
     }
+  }
+  if(props.mealState === 'offerable') {
+    await sendOffer()
+    return
+  }
+  if(props.mealState === 'offering') {
+    await cancelOffer()
   }
 }
 
@@ -101,6 +133,28 @@ async function leaveMeal() {
     enabled.value = false
     day.activeSlot = response.value.slotID
     meal.isParticipating = false
+  }
+}
+
+async function sendOffer() {
+  let data = {
+    'mealId': props.mealID
+  }
+
+  const { error } = await useOfferMeal(JSON.stringify(data))
+  if (error.value === false) {
+    meal.offerStatus = true
+  }
+}
+
+async function cancelOffer() {
+  let data = {
+    'mealId': props.mealID
+  }
+
+  const { error } = await useCancelOffer(JSON.stringify(data))
+  if (error.value === false) {
+    meal.offerStatus = false
   }
 }
 

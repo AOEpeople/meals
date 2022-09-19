@@ -23,6 +23,7 @@ use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Exception;
+use PHPUnit\Util\Json;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -173,14 +174,21 @@ class ParticipantController extends BaseController
 
     /**
      * Makes a booked meal by a participant to be available for taken over.
+     *
+     * @Security("is_granted('ROLE_USER')")
      */
-    public function offerMeal(Participant $participant): JsonResponse
+    public function offerMeal(Request $request): JsonResponse
     {
         if (false === is_object($this->getUser())) {
             return $this->ajaxSessionExpiredRedirect();
         }
 
+        $participant = $this->getParticipantFromRequest($request);
+        if (null === $participant) {
+            return new JsonResponse(null, 403);
+        }
         $meal = $participant->getMeal();
+
         if ($this->getProfile() !== $participant->getProfile()
             || false === $this->getDoorman()->isUserAllowedToSwap($meal)) {
             return new JsonResponse(null, 403);
@@ -195,14 +203,27 @@ class ParticipantController extends BaseController
         // trigger meal-offered event
         $this->eventDispatcher->dispatch(new MealOfferedEvent($participant));
 
-        return $this->generateResponse('MealzMealBundle_Participant_unswap', 'swapped', $participant);
+        return new JsonResponse(null, 200);
     }
 
     /**
      * Cancels an offered meal by a participant, so it can no longer be taken over by other users.
+     *
+     * @Security("is_granted('ROLE_USER')")
      */
-    public function cancelOfferedMeal(Participant $participant): JsonResponse
+    public function cancelOfferedMeal(Request $request): JsonResponse
     {
+        $parameters = json_decode($request->getContent(), true);
+
+        if (null === $parameters['mealId']) {
+            return new JsonResponse(null, 403);
+        }
+
+        $participant = $this->getParticipantFromRequest($request);
+        if (null === $participant) {
+            return new JsonResponse(null, 403);
+        }
+
         $participant->setOfferedAt(0);
 
         $entityManager = $this->getDoctrine()->getManager();
@@ -308,6 +329,17 @@ class ParticipantController extends BaseController
             'id' => $participant->getId(),
             'actionText' => $action,
         ]);
+    }
+
+    private function getParticipantFromRequest(Request $request): ?Participant
+    {
+        $parameters = json_decode($request->getContent(), true);
+        if (null === $parameters['mealId']) {
+            return null;
+        }
+        $meal = $this->mealRepo->find($parameters['mealId']);
+
+        return $this->participationSrv->getParticipationByMealAndUser($meal, $this->getProfile());
     }
 
     /**

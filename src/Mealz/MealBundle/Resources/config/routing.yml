@@ -68,6 +68,16 @@ MealzMealBundle_api_leave_Meal:
   defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::leaveMeal }
   methods: [POST]
 
+MealzMealBundle_api_offer_meal:
+  path: /api/offer-meal
+  defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::offerMeal }
+  methods: [POST]
+
+MealzMealBundle_api_cancel_offer:
+  path: /api/cancel-offer
+  defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::cancelOfferedMeal }
+  methods: [POST]
+
 MealzMealBundle_api_update_selected_Slot:
   path: /api/update-selected-slot
   defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipationUpdateController::updateSlot }

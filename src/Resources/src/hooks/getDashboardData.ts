@@ -16,6 +16,8 @@ export type Meal = {
     isParticipating: boolean | null,
     parentId: number | null,
     dishSlug: string | null,
+    currentOfferCount: number,
+    offerStatus: string | null,
 }
 
 export type DateTime = {

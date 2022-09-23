@@ -13,11 +13,12 @@ export type Meal = {
     isNew: boolean,
     price: number | null,
     participations: number | null,
-    isParticipating: boolean | null,
+    isParticipating: number | null,
     parentId: number | null,
     dishSlug: string | null,
-    currentOfferCount: number,
-    offerStatus: string | null,
+    hasOffers: boolean,
+    isOffering: boolean,
+    mealState: string,
 }
 
 export type DateTime = {

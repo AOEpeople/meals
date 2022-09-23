@@ -20,8 +20,7 @@
           {{ meal.participations + [meal.limit > 0 ? '/' + meal.limit : ''] }}
         </span>
       </div>
-      <Checkbox id="checkbox"
-          :mealState="mealState"
+      <Checkbox
           :weekID="weekID"
           :dayID="dayID"
           :mealID="mealID"
@@ -54,24 +53,9 @@ if(meal.description !== null) {
   description = computed(() => locale.value.substring(0, 2) === 'en' ? meal.description.en : meal.description.de);
 }
 
-const mealState = computed(() => {
-  if(meal.isLocked && meal.isOpen) {
-    if (meal.offerStatus === true) {
-      return 'offering'
-    } else if (meal.isParticipating === true && meal.offerStatus === false) {
-      return 'offerable'
-    } else if (meal.isParticipating === false && meal.currentOfferCount > 0) {
-      return 'tradeable'
-    }
-  } else if(!meal.isLocked && meal.isOpen && !meal.reachedLimit) {
-    return 'open'
-  }
-  return 'disabled'
-});
-
 const mealCSS = computed(() => {
   let css = 'grid grid-cols-2 content-center rounded-md h-[30px] xl:h-[20px] mr-[15px] '
-  switch (mealState.value) {
+  switch (meal.mealState) {
     case 'disabled':
     case 'offerable':
       css += 'bg-[#80909F]'

@@ -7,6 +7,7 @@ namespace App\Mealz\MealBundle\Controller;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Entity\Meal;
+use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Service\ApiService;
@@ -15,6 +16,7 @@ use App\Mealz\MealBundle\Service\OfferService;
 use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\MealBundle\Service\SlotService;
 use App\Mealz\MealBundle\Service\WeekService;
+use App\Mealz\MealBundle\Twig\Extension\Participation;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Exception;
@@ -183,6 +185,7 @@ class ApiController extends BaseController
     {
         $description = null;
         $parentId = null;
+        $participationId = null;
         if (!$meal->getDish() instanceof DishVariation) {
             $description = [
                 'en' => $meal->getDish()->getDescriptionEn(),
@@ -190,6 +193,11 @@ class ApiController extends BaseController
             ];
         } else {
             $parentId = $meal->getDish()->getParent()->getId();
+        }
+
+        $participation = $this->participationSrv->getParticipationByMealAndUser($meal, $profile);
+        if (null !== $participation) {
+            $participationId = $participation->getId();
         }
 
         return [
@@ -207,9 +215,10 @@ class ApiController extends BaseController
             'isNew' => $this->dishSrv->isNew($meal->getDish()),
             'parentId' => $parentId,
             'participations' => $meal->getParticipants()->count(),
-            'isParticipating' => $this->participationSrv->getParticipationByMealAndUser($meal, $profile) !== null,
-            'currentOfferCount' => $this->offerSrv->getOfferCountByMeal($meal),
-            'offerStatus' => $this->offerSrv->isOfferingMeal($profile, $meal),
+            'isParticipating' => $participationId,
+            'hasOffers' => $this->offerSrv->getOfferCountByMeal($meal) > 0,
+            'isOffering' => $this->offerSrv->isOfferingMeal($profile, $meal),
+            'mealState' => $this->getMealState($meal, $profile, $participation),
         ];
     }
 
@@ -235,5 +244,28 @@ class ApiController extends BaseController
         }
 
         $meals[$parent->getId()]['variations'][$meal->getId()] = $this->convertMealForDashboard($meal, $profile);
+    }
+
+    private function getMealState(Meal $meal, Profile $profile, ?Participant $participant): string
+    {
+        if ($meal->isLocked() && $meal->isOpen()) {
+            $isOffering = $this->offerSrv->isOfferingMeal($profile, $meal);
+            if ($isOffering) {
+
+                return 'offering';
+            } else if (null !== $participant) {
+
+                return 'offerable';
+            } else if ($this->offerSrv->getOfferCountByMeal($meal) > 0) {
+
+                return 'tradeable';
+            }
+        }
+        if(!$meal->isLocked() && $meal->isOpen() && !$meal->hasReachedParticipationLimit()) {
+
+            return 'open';
+        }
+
+        return 'disabled';
     }
 }

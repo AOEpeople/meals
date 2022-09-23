@@ -1,8 +1,8 @@
 <template>
   <span @click="handle" :class="checkboxCSS">
-    <CheckIcon v-if="enabled && (mealState === 'open' || mealState === 'disabled')" class="text-white w-[80%] h-[80%] relative top-[10%] left-[10%]" />
-    <LockClosedIcon v-if="enabled && mealState === 'offerable'" class="text-white w-[80%] h-[80%] relative top-[10%] left-[10%]" />
-    <LockOpenIcon v-if="enabled && mealState === 'offering'" class="text-white w-[80%] h-[80%] relative top-[10%] left-[10%]"/>
+    <CheckIcon v-if="enabled && (meal.mealState === 'open' || meal.mealState === 'disabled')" class="text-white w-[80%] h-[80%] relative top-[10%] left-[10%]" />
+    <LockClosedIcon v-if="enabled && meal.mealState === 'offerable'" class="text-white w-[80%] h-[80%] relative top-[10%] left-[10%]" />
+    <LockOpenIcon v-if="enabled && meal.mealState === 'offering'" class="text-white w-[80%] h-[80%] relative top-[10%] left-[10%]"/>
   </span>
   <CombiModal
       :open="open"
@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import {computed, ref} from 'vue'
+import { computed, ref } from 'vue'
 import { useJoinMeal } from '@/hooks/postJoinMeal'
 import { useLeaveMeal } from '@/hooks/postLeaveMeal'
 import { useOfferMeal } from '@/hooks/postOfferMeal'
@@ -26,7 +26,6 @@ const props = defineProps([
   'dayID',
   'mealID',
   'variationID',
-  'mealState',
 ])
 
 let day = dashboardStore.getDay(props.weekID, props.dayID)
@@ -38,13 +37,13 @@ if(props.variationID) {
 }
 
 const open = ref(false)
-const enabled = ref(meal.isParticipating)
+const enabled = computed(() => meal.isParticipating !== null)
 
 const checkboxCSS = computed(() => {
   let cssResult = 'rounded-md h-[30px] w-[30px] xl:h-[20px] xl:w-[20px] border-[0.5px] border-gray-200 '
 
   if(enabled.value) {
-    switch (props.mealState) {
+    switch (meal.mealState) {
       case 'disabled':
         cssResult += 'bg-[#80909F]'
         return cssResult
@@ -58,7 +57,7 @@ const checkboxCSS = computed(() => {
         return cssResult
     }
   } else {
-    switch (props.mealState) {
+    switch (meal.mealState) {
       case 'disabled':
         cssResult += 'bg-[#FAFAFA] opacity-50'
         return cssResult
@@ -71,7 +70,7 @@ const checkboxCSS = computed(() => {
 })
 
 async function handle() {
-  if(props.mealState === 'open' || props.mealState === 'tradeable') {
+  if(meal.mealState === 'open' || meal.mealState === 'tradeable') {
     if(enabled.value) {
       await leaveMeal()
     } else {
@@ -82,13 +81,12 @@ async function handle() {
       }
       await joinMeal(slugs)
     }
-  }
-  if(props.mealState === 'offerable') {
-    await sendOffer()
-    return
-  }
-  if(props.mealState === 'offering') {
-    await cancelOffer()
+  } else {
+    if(meal.mealState === 'offerable') {
+      await sendOffer()
+    } else if(meal.mealState === 'offering') {
+      await cancelOffer()
+    }
   }
 }
 
@@ -117,9 +115,9 @@ async function joinMeal(dishSlugs) {
 
   const { response, error } = await useJoinMeal(JSON.stringify(data))
   if (error.value === false) {
-    enabled.value = true
-    day.activeSlot = response.value.slotID
-    meal.isParticipating = true
+    day.activeSlot = response.value.slotId
+    meal.isParticipating = response.value.participantId
+    meal.mealState = response.value.mealState
   }
 }
 
@@ -130,9 +128,8 @@ async function leaveMeal() {
 
   const { response, error } = await useLeaveMeal(JSON.stringify(data))
   if (error.value === false) {
-    enabled.value = false
-    day.activeSlot = response.value.slotID
-    meal.isParticipating = false
+    day.activeSlot = response.value.slotId
+    meal.isParticipating = null
   }
 }
 
@@ -143,7 +140,7 @@ async function sendOffer() {
 
   const { error } = await useOfferMeal(JSON.stringify(data))
   if (error.value === false) {
-    meal.offerStatus = true
+    meal.mealState = 'offering'
   }
 }
 
@@ -154,7 +151,7 @@ async function cancelOffer() {
 
   const { error } = await useCancelOffer(JSON.stringify(data))
   if (error.value === false) {
-    meal.offerStatus = false
+    meal.mealState = 'offerable'
   }
 }
 

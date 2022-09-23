@@ -18,10 +18,10 @@ class EventService
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    public function triggerJoinEvents(Participant $participant, ?Profile $offerer): void
+    public function triggerJoinEvents(Participant $participant, ?Participant $offerer): void
     {
         if (null !== $offerer) {
-            $this->eventDispatcher->dispatch(new MealOfferAcceptedEvent($participant, $offerer));
+            $this->eventDispatcher->dispatch(new MealOfferAcceptedEvent($participant, $offerer->getProfile()));
 
             return;
         }

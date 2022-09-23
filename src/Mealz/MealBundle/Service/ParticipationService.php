@@ -118,7 +118,9 @@ class ParticipationService
             return null;
         }
 
-        $offerer = $participant->getProfile();
+        $offerer = $participant;
+
+        $slot = $participant->getSlot();
 
         $participant->setProfile($profile);
         $participant->setOfferedAt(0);
@@ -126,7 +128,9 @@ class ParticipationService
         $this->em->persist($participant);
         $this->em->flush();
 
-        return ['participant' => $participant, 'offerer' => $offerer];
+
+
+        return ['participant' => $participant, 'offerer' => $offerer, 'slot' => $slot];
     }
 
     /**
@@ -162,7 +166,7 @@ class ParticipationService
         /** @var Participant $participant */
         foreach ($meal->getParticipants() as $participant) {
             if (true === $participant->isPending()) {
-                if (empty($flippedDishSlugs)) {
+                if (count($flippedDishSlugs) === 1) {
                     return $participant;
                 }
 

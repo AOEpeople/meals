@@ -2,7 +2,7 @@ import useApi from "@/hooks/api";
 import { ref } from "vue";
 
 export type LeaveMeal = {
-    slotID: number
+    slotId: number
 };
 
 export async function useLeaveMeal(data: string) {

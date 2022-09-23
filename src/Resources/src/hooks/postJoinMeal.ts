@@ -2,7 +2,9 @@ import useApi from "@/hooks/api";
 import { ref } from "vue";
 
 export type JoinMeal = {
-    slotID: number,
+    slotId: number,
+    participantId: number,
+    mealState: string,
 };
 
 export async function useJoinMeal(data: string) {

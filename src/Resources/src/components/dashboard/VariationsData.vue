@@ -22,7 +22,6 @@
         </span>
       </div>
       <Checkbox
-          :mealState="mealState[variationID]"
           :weekID="weekID"
           :dayID="dayID"
           :mealID="mealID"
@@ -51,32 +50,11 @@ const meal = dashboardStore.getMeal(props.weekID, props.dayID, props.mealID)
 
 let parentTitle = computed(() => locale.value.substring(0, 2) === 'en' ? meal.title.en : meal.title.de)
 
-const mealState = computed(() => {
-  let array = []
-  for (const variationId in meal.variations) {
-    let variation = meal.variations[variationId]
-    if(variation.isLocked && meal.isOpen) {
-      if (variation.offerStatus === true) {
-        array[variationId] = 'offering'
-      } else if (variation.isParticipating === true && variation.offerStatus === false) {
-        array[variationId] = 'offerable'
-      } else if (variation.isParticipating === false && variation.currentOfferCount > 0) {
-        array[variationId] = 'tradeable'
-      }
-    } else if(!variation.isLocked && variation.isOpen && !variation.reachedLimit) {
-      array[variationId] = 'open'
-    } else {
-      array[variationId] = 'disabled'
-    }
-  }
-  return array
-});
-
 const mealCSS = computed(() => {
   let array = []
   for (const variationId in meal.variations) {
     array[variationId] = 'grid grid-cols-2 content-center rounded-md h-[30px] xl:h-[20px] mr-[15px] '
-    switch (mealState.value[variationId]) {
+    switch (meal.variations[variationId].mealState) {
       case 'disabled':
       case 'offerable':
         array[variationId] += 'bg-[#80909F]'

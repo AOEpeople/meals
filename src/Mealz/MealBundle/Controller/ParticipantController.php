@@ -89,7 +89,25 @@ class ParticipantController extends BaseController
             $this->logAdd($meal, $result['participant']);
         }
 
-        return new JsonResponse(['slotID' => $result['slot']->getId()]);
+        $mealState = 'open';
+        if ($meal->isLocked() && $meal->isOpen()) {
+            $mealState = 'offerable';
+        }
+
+        $slotID = 0;
+        $slot = $result['slot'];
+        if(null !== $slot) {
+            $slotID = $slot->getId();
+        }
+
+        return new JsonResponse(
+            [
+                'slotId' => $slotID,
+                'participantId' => $result['participant']->getId(),
+                'mealState' => $mealState,
+            ],
+            200
+        );
     }
 
     /**

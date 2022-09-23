@@ -33,6 +33,20 @@ type Slot_Update = {
     } | null
 }
 
+const OFFER_NEW = 0
+const OFFER_ACCEPTED = 1
+const OFFER_GONE = 2
+
+type Offer_Update = {
+    type: number,
+    weekId: number,
+    dayId: number,
+    mealId: number,
+    parentId: number | null,
+    participantId: number | null,
+    lastOffer: boolean,
+}
+
 class MercureReceiver {
     public init() {
         this.configureMealUpdateHandlers()
@@ -72,12 +86,38 @@ class MercureReceiver {
         }
     }
 
-    private static handleMealOfferUpdate(data: any): void {
-
+    private static handleMealOfferUpdate(data: Offer_Update): void {
+        let meal = data.parentId === null
+            ? dashboardStore.getMeal(data.weekId, data.dayId, data.mealId)
+            : dashboardStore.getVariation(data.weekId, data.dayId, data.parentId, data.mealId)
+        switch (data.type) {
+            case OFFER_NEW:
+                meal!.hasOffers = true
+                if (!meal!.isParticipating) {
+                    meal!.mealState = 'tradeable'
+                }
+                break
+            case OFFER_ACCEPTED:
+                if (data.participantId === meal!.isParticipating) {
+                    meal!.isParticipating = null
+                    if (data.lastOffer) {
+                        meal!.mealState = 'disabled'
+                        meal!.hasOffers = false
+                    } else {
+                        meal!.mealState = 'tradeable'
+                    }
+                }
+                break
+            case OFFER_GONE:
+                meal!.hasOffers = false
+                if (!meal!.isParticipating) {
+                    meal!.mealState = 'disabled'
+                }
+                break
+        }
     }
 
     private static handleSlotAllocationUpdate(data: Slot_Update): void {
-        console.log(data)
         let newSlot = dashboardStore.getSlot(data.weekId, data.dayId, data.newSlot.slotId)
         if (newSlot !== undefined) {
             newSlot.limit = data.newSlot.limit

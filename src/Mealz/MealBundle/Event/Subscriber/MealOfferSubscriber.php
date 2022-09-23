@@ -23,6 +23,10 @@ class MealOfferSubscriber implements EventSubscriberInterface
     private const PUBLISH_TOPIC = 'meal-offer-updates';
     private const PUBLISH_MSG_TYPE = 'mealOfferUpdate';
 
+    private const OFFER_NEW = 0;
+    private const OFFER_ACCEPTED = 1;
+    private const OFFER_GONE = 2;
+
     private MailerInterface $mailer;
     private NotifierInterface $notifier;
     private OfferService $offerService;
@@ -57,11 +61,29 @@ class MealOfferSubscriber implements EventSubscriberInterface
         $msg = new NewOfferMessage($event->getParticipant(), $this->offerService, $this->translator);
         $this->notifier->send($msg);
 
+        $meal = $event->getMeal();
+        $offerCount = $this->offerService->getOfferCountByMeal($meal);
+
+        // we won't send an update for each new offer, rather only when new offers are available
+        if (0 > $offerCount) {
+            return;
+        }
+
+        $parentId = null;
+        if (null !== $meal->getDish()->getParent()) {
+            $parentId = $meal->getDish()->getParent()->getId();
+        }
+        $day = $meal->getDay();
+        $week = $day->getWeek();
+
         $this->publisher->publish(
             self::PUBLISH_TOPIC,
             [
-                'state' => 'new',
-                'mealId' => $event->getMeal()->getId(),
+                'type' => self::OFFER_NEW,
+                'weekId' => $week->getId(),
+                'dayId' => $day->getId(),
+                'mealId' => $meal->getId(),
+                'parentId' => $parentId,
             ],
             self::PUBLISH_MSG_TYPE
         );
@@ -69,19 +91,32 @@ class MealOfferSubscriber implements EventSubscriberInterface
 
     public function onOfferAccepted(MealOfferAcceptedEvent $event): void
     {
-        $meal = $event->getMeal();
         $offerer = $event->getOfferer();
         $participant = $event->getParticipant();
+
         $this->sendOfferAcceptedNotifications($offerer, $participant);
 
+        $meal = $event->getMeal();
+        $day = $meal->getDay();
+        $week = $day->getWeek();
+
         $offerCount = $this->offerService->getOfferCountByMeal($meal);
+
+        $parentId = null;
+        if (null !== $meal->getDish()->getParent()) {
+            $parentId = $meal->getDish()->getParent()->getId();
+        }
+
         $this->publisher->publish(
             self::PUBLISH_TOPIC,
             [
-                'state' => 'accepted',
+                'type' => self::OFFER_ACCEPTED,
+                'weekId' => $week->getId(),
+                'dayId' => $day->getId(),
                 'mealId' => $meal->getId(),
-                'participantId' => $event->getParticipant()->getId(),
-                'available' => (0 < $offerCount),
+                'parentId' => $parentId,
+                'participantId' => $participant->getId(),
+                'lastOffer' => $offerCount === 0,
             ],
             self::PUBLISH_MSG_TYPE
         );
@@ -92,16 +127,27 @@ class MealOfferSubscriber implements EventSubscriberInterface
         $meal = $event->getMeal();
         $offerCount = $this->offerService->getOfferCountByMeal($meal);
 
+        $day = $meal->getDay();
+        $week = $day->getWeek();
+
+        $parentId = null;
+        if (null !== $meal->getDish()->getParent()) {
+            $parentId = $meal->getDish()->getParent()->getId();
+        }
+
         // we won't send an update for each cancellation, rather only when no further meal offers are available
-        if (1 < $offerCount) {
+        if (0 < $offerCount) {
             return;
         }
 
         $this->publisher->publish(
             self::PUBLISH_TOPIC,
             [
-                'state' => 'gone',
+                'type' => self::OFFER_GONE,
+                'weekId' => $week->getId(),
+                'dayId' => $day->getId(),
                 'mealId' => $meal->getId(),
+                'parentId' => $parentId,
             ],
             self::PUBLISH_MSG_TYPE
         );

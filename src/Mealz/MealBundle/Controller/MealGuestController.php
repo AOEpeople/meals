@@ -134,12 +134,12 @@ class MealGuestController extends BaseController
         $guestInvitation = $guestInvitationRepo->findOrCreateInvitation($this->getUser()->getProfile(), $mealDay);
 
         return new JsonResponse(
-            $this->generateUrl(
-                'MealzMealBundle_Meal_guest',
-                ['hash' => $guestInvitation->getId()],
-                UrlGeneratorInterface::ABSOLUTE_URL
-            ),
-            200
+            [
+                'url' => $this->generateUrl(
+                    'MealzMealBundle_Meal_guest',
+                    ['hash' => $guestInvitation->getId()],
+                    UrlGeneratorInterface::ABSOLUTE_URL)
+            ],200
         );
     }
 

@@ -89,7 +89,7 @@ MealzMealBundle_Meal_offers:
 
 MealzMealBundle_Meal_guest:
     path: /menu/guest/{hash}
-    defaults: { _controller: App\Mealz\MealBundle\Controller\MealGuestController::joinAsGuest }
+    defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderGuest }
     methods: [GET, POST]
 
 MealzMealBundle_Meal_newGuestInvitation:

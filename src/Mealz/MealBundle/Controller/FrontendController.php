@@ -12,4 +12,9 @@ class FrontendController extends BaseController
     {
         return $this->render('MealzMealBundle:Test:index.html.twig');
     }
+
+    public function renderGuest(): Response
+    {
+        return $this->render('MealzMealBundle:Test:guestpage.html.twig');
+    }
 }

@@ -6,12 +6,14 @@ namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\DishVariation;
+use App\Mealz\MealBundle\Entity\GuestInvitation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Service\ApiService;
 use App\Mealz\MealBundle\Service\DishService;
+use App\Mealz\MealBundle\Service\GuestParticipationService;
 use App\Mealz\MealBundle\Service\OfferService;
 use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\MealBundle\Service\SlotService;
@@ -20,6 +22,7 @@ use App\Mealz\MealBundle\Twig\Extension\Participation;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Exception;
+use http\Env\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,6 +35,7 @@ class ApiController extends BaseController
     private ParticipationService $participationSrv;
     private ApiService $apiSrv;
     private OfferService $offerSrv;
+    private GuestParticipationService $guestParticipationSrv;
 
     public function __construct(
         DishService $dishSrv,
@@ -39,7 +43,8 @@ class ApiController extends BaseController
         WeekService $weekSrv,
         ParticipationService $participationSrv,
         ApiService $apiSrv,
-        OfferService $offerSrv
+        OfferService $offerSrv,
+        GuestParticipationService $guestParticipationSrv
     ) {
         $this->dishSrv = $dishSrv;
         $this->slotSrv = $slotSrv;
@@ -47,6 +52,7 @@ class ApiController extends BaseController
         $this->participationSrv = $participationSrv;
         $this->apiSrv = $apiSrv;
         $this->offerSrv = $offerSrv;
+        $this->guestParticipationSrv = $guestParticipationSrv;
     }
 
     /**
@@ -105,15 +111,20 @@ class ApiController extends BaseController
         return new JsonResponse(['weeks' => $response]);
     }
 
-    private function addSlots(array &$slotArray, array $slots, int $activeParticipations): void
+    private function addSlots(array &$slotArray, array $slots, ?int $activeParticipations): void
     {
+        $disabled = false;
+        if (null !== $activeParticipations) {
+            $disabled = $activeParticipations > 0;
+        }
+
         $slotArray[0] = [
             'id' => 0,
             'title' => 'auto',
             'count' => 0,
             'limit' => 0,
             'slug' => 'auto',
-            'disabled' => $activeParticipations > 0,
+            'disabled' => $disabled,
         ];
         foreach ($slots as $slot) {
             $slotArray[$slot['id']] = [
@@ -181,11 +192,15 @@ class ApiController extends BaseController
     /**
      * @throws Exception
      */
-    private function convertMealForDashboard(Meal $meal, Profile $profile): array
+    private function convertMealForDashboard(Meal $meal, ?Profile $profile): array
     {
         $description = null;
         $parentId = null;
         $participationId = null;
+        $isOffering = false;
+        $mealState = 'open';
+
+
         if (!$meal->getDish() instanceof DishVariation) {
             $description = [
                 'en' => $meal->getDish()->getDescriptionEn(),
@@ -195,9 +210,13 @@ class ApiController extends BaseController
             $parentId = $meal->getDish()->getParent()->getId();
         }
 
-        $participation = $this->participationSrv->getParticipationByMealAndUser($meal, $profile);
-        if (null !== $participation) {
-            $participationId = $participation->getId();
+        if (null !== $profile) {
+            $participation = $this->participationSrv->getParticipationByMealAndUser($meal, $profile);
+            if (null !== $participation) {
+                $participationId = $participation->getId();
+            }
+            $isOffering = $this->offerSrv->isOfferingMeal($profile, $meal);
+            $mealState = $this->getMealState($meal, $profile, $participation);
         }
 
         return [
@@ -217,15 +236,15 @@ class ApiController extends BaseController
             'participations' => $meal->getParticipants()->count(),
             'isParticipating' => $participationId,
             'hasOffers' => $this->offerSrv->getOfferCountByMeal($meal) > 0,
-            'isOffering' => $this->offerSrv->isOfferingMeal($profile, $meal),
-            'mealState' => $this->getMealState($meal, $profile, $participation),
+            'isOffering' => $isOffering,
+            'mealState' => $mealState,
         ];
     }
 
     /**
      * @throws Exception
      */
-    private function addMealWithVariations(Meal $meal, Profile $profile, array &$meals): void
+    private function addMealWithVariations(Meal $meal, ?Profile $profile, array &$meals): void
     {
         $parent = $meal->getDish()->getParent();
         $parentExistsInArray = array_key_exists($parent->getId(), $meals);
@@ -267,5 +286,38 @@ class ApiController extends BaseController
         }
 
         return 'disabled';
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getGuestData(string $guestInvitationId): JsonResponse
+    {
+        $guestInvitation = $this->guestParticipationSrv->getGuestInvitationById($guestInvitationId);
+        if (null === $guestInvitation) {
+            return new JsonResponse(null, 404);
+        }
+
+        $day = $guestInvitation->getDay();
+
+        $response = [
+            'date' => $day->getDateTime(),
+            'meals' => [],
+            'slots' => []
+        ];
+
+        $slots = $this->slotSrv->getSlotStatusForDay($day->getDateTime());
+        $this->addSlots($response['slots'], $slots, null);
+
+        /* @var Meal $meal */
+        foreach ($day->getMeals() as $meal) {
+            if ($meal->getDish() instanceof DishVariation) {
+                $this->addMealWithVariations($meal, null, $response['meals']);
+            } else {
+                $response['meals'][$meal->getId()] = $this->convertMealForDashboard($meal, null);
+            }
+        }
+
+        return new JsonResponse($response, 200);
     }
 }

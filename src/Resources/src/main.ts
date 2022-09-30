@@ -18,7 +18,7 @@ import TimeSlots    from '@/views/TimeSlots.vue'
 import Costs        from '@/views/Costs.vue'
 import Finance      from '@/views/Finance.vue'
 import Balance      from '@/views/Balance.vue'
-import Guest        from '@/views/Guest.vue'
+import Guest        from '@/Guest.vue'
 
 // Translation
 import en from '@/locales/en.json'
@@ -47,15 +47,20 @@ const router = createRouter({
         {path: '/costs',        name: 'Costs',      component: Costs},
         {path: '/finance',      name: 'Finance',    component: Finance},
         {path: '/balance',      name: 'Balance',    component: Balance},
-        {path: '/guest',        name: 'Guest',      component: Guest},
     ],
 })
 
 // Vue initialisation
-const VueApp = createApp(App)
-VueApp.config.performance = true // enable Vue Devtools
-VueApp.use(i18n)
-VueApp.use(router)
-VueApp.use(VueScreen)
-VueApp.use(Vue3ProgressPlugin)
-VueApp.mount('#app')
+const MainApp = createApp(App)
+MainApp.config.performance = true // enable Vue Devtools
+MainApp.use(i18n)
+MainApp.use(router)
+MainApp.use(VueScreen)
+MainApp.use(Vue3ProgressPlugin)
+MainApp.mount('#app')
+
+// Guest initialisation
+const GuestApp = createApp(Guest)
+GuestApp.config.performance = true
+GuestApp.use(i18n)
+GuestApp.mount('#guest')

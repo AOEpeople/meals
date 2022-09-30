@@ -2,7 +2,7 @@
   <div class="flex mx-auto w-3/4 h-auto bg-white rounded day-shadow w-max-screen-aoe">
     <div :class="[day.isLocked ? 'bg-[#80909F]' : 'bg-primary-2', 'flex justify-center w-[24px] rounded-l-[5px]']">
       <div id="icon" class="relative left-[425%] bottom-[2%]">
-        <Icons icon="guest" box="0 0 13 13" class="w-[13px] h-[13px] fill-white"/>
+        <GuestButton :dayID="dayID"/>
       </div>
       <div class="grid weekday min-w-[200px]">
         <div id="dayLabel" class="mb-1">
@@ -41,11 +41,11 @@
 <script setup>
 import MealData from '@/components/dashboard/MealData.vue'
 import Slots from '@/components/dashboard/Slots.vue'
-import Icons from '@/components/misc/Icons.vue'
 import {useI18n} from 'vue-i18n'
 import VariationsData from '@/components/dashboard/VariationsData.vue'
 import {computed} from 'vue'
 import {dashboardStore} from "@/store/dashboardStore";
+import GuestButton from "@/components/dashboard/GuestButton.vue";
 
 const { t, locale } = useI18n()
 

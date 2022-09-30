@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Service;
 
+use App\Mealz\MealBundle\Entity\GuestInvitation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
+use App\Mealz\MealBundle\Repository\GuestInvitationRepositoryInterface;
 use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\MealBundle\Repository\SlotRepositoryInterface;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;
@@ -29,19 +31,22 @@ class GuestParticipationService
     private ProfileRepositoryInterface $profileRepo;
     private RoleRepositoryInterface $roleRepo;
     private SlotRepositoryInterface $slotRepo;
+    private GuestInvitationRepositoryInterface $guestInvitationRepo;
 
     public function __construct(
         EntityManagerInterface $entityManager,
         ParticipantRepositoryInterface $participantRepo,
         ProfileRepositoryInterface $profileRepo,
         RoleRepositoryInterface $roleRepo,
-        SlotRepositoryInterface $slotRepo
+        SlotRepositoryInterface $slotRepo,
+        GuestInvitationRepositoryInterface $guestInvitationRepo
     ) {
         $this->entityManager = $entityManager;
         $this->participantRepo = $participantRepo;
         $this->profileRepo = $profileRepo;
         $this->roleRepo = $roleRepo;
         $this->slotRepo = $slotRepo;
+        $this->guestInvitationRepo = $guestInvitationRepo;
     }
 
     /**
@@ -198,5 +203,10 @@ class GuestParticipationService
         }
 
         return $guestRole;
+    }
+
+    public function getGuestInvitationById(string $guestInvitationId): ?GuestInvitation
+    {
+        return $this->guestInvitationRepo->find($guestInvitationId);
     }
 }

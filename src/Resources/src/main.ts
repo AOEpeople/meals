@@ -10,6 +10,7 @@ import '../scss/meals.scss'
 
 // Vue Components
 import App          from '@/App.vue'
+import GuestApp     from '@/GuestApp.vue'
 import Dashboard    from '@/views/Dashboard.vue'
 import Menu         from '@/views/Menu.vue'
 import Dishes       from '@/views/Dishes.vue'
@@ -18,7 +19,7 @@ import TimeSlots    from '@/views/TimeSlots.vue'
 import Costs        from '@/views/Costs.vue'
 import Finance      from '@/views/Finance.vue'
 import Balance      from '@/views/Balance.vue'
-import Guest        from '@/Guest.vue'
+import Guest        from '@/views/Guest.vue'
 
 // Translation
 import en from '@/locales/en.json'
@@ -60,7 +61,17 @@ MainApp.use(Vue3ProgressPlugin)
 MainApp.mount('#app')
 
 // Guest initialisation
-const GuestApp = createApp(Guest)
-GuestApp.config.performance = true
-GuestApp.use(i18n)
-GuestApp.mount('#guest')
+const guestRoute = createRouter({
+    history: createWebHistory(),
+    routes: [
+        {path: '/guest/:hash', name: 'Guest',      component: Guest}
+    ]
+})
+
+const GuestAppl = createApp(GuestApp)
+GuestAppl.config.performance = true
+GuestAppl.use(guestRoute)
+GuestAppl.use(i18n)
+GuestAppl.use(VueScreen)
+GuestAppl.use(Vue3ProgressPlugin)
+GuestAppl.mount('#guest')

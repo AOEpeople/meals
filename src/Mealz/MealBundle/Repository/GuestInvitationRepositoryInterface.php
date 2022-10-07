@@ -14,6 +14,4 @@ interface GuestInvitationRepositoryInterface
      * Gets the guest invitation from a particular user on a particular day.
      */
     public function findOrCreateInvitation(Profile $host, Day $day): GuestInvitation;
-
-    public function find($id): ?GuestInvitation;
 }

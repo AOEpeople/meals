@@ -83,12 +83,17 @@ MealzMealBundle_api_update_selected_Slot:
   defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipationUpdateController::updateSlot }
   methods: [ POST ]
 
+MealzMealBundle_api_invitationdata:
+  path: /api/guest-invitation-{guestInvitationId}
+  defaults: { _controller: App\Mealz\MealBundle\Controller\ApiController::getGuestData }
+  methods: [ GET ]
+
 MealzMealBundle_Meal_offers:
     path: /menu/{date}/{dish}/offers
     defaults: { _controller: App\Mealz\MealBundle\Controller\MealController::getOffers }
 
 MealzMealBundle_Meal_guest:
-    path: /menu/guest/{hash}
+    path: /guest/{hash}
     defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderGuest }
     methods: [GET, POST]
 

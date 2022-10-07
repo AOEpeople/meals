@@ -14,7 +14,6 @@
     <div class="bg-[rgb(244,247,249)] w-full py-4 px-4 text-center">
       <span class="text-[#A1A1B0] font-normal text-[14px] leading-[20px]"> © 2022 AOE. {{ t('copyright') }} </span>
     </div>
-    <router-link to="/guest">guest</router-link>
   </footer>
 </template>
 

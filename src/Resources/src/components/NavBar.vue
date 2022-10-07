@@ -2,7 +2,7 @@
   <Disclosure v-slot="{ open }">
     <header class="bg-white shadow-[0_15px_35px_0_#5B788F21] h-[60px] xl:h-24">
       <nav class="grid grid-cols-3 h-[inherit] items-center content-center xl:mx-auto xl:max-w-screen-aoe xl:grid-cols-10" aria-label="Top">
-        <div class="justify-self-start ml-6 xl:hidden" id="dropdown">
+        <div v-if="guest === false" class="justify-self-start ml-6 xl:hidden" id="dropdown">
           <DisclosureButton class="inline-flex justify-center items-center p-2 -mx-2 text-gray-400 rounded-md hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
             <span class="sr-only">Open menu</span>
             <MenuIcon v-if="!open" class="block w-6 h-6" aria-hidden="true" />
@@ -21,7 +21,7 @@
             </svg>
           </router-link>
         </div>
-        <div class="hidden col-span-4 space-x-3 xl:inline-block">
+        <div v-if="guest === false" class="hidden col-span-4 space-x-3 xl:inline-block">
           <router-link v-for="link in navigation"
                        v-html="t(link.name)"
              :key="link.name"
@@ -30,7 +30,7 @@
           >
           </router-link>
         </div>
-        <div class="inline-block col-span-4 justify-self-end space-x-4">
+        <div v-if="guest === false" class="inline-block col-span-4 justify-self-end space-x-4">
           <div class="hidden self-center space-x-2 text-right xl:inline-block">
             <Icons icon="person-outline" class="inline-block w-6 fill-primary" />
             <span class="text-[14px] leading-[22px] font-medium text-black">
@@ -53,7 +53,7 @@
         </div>
       </nav>
     </header>
-    <MobileDropdown :open="open" :userName="user" :balance="balanceString" :navigation="navigation" />
+    <MobileDropdown v-if="guest === false" :open="open" :userName="user" :balance="balanceString" :navigation="navigation" />
   </Disclosure>
 </template>
 
@@ -67,6 +67,12 @@
   import {computed} from "vue";
 
   const { t, locale } = useI18n();
+  const props = defineProps({
+    guest: {
+      default: false
+    }
+  })
+
 
   let balanceString = computed(() => balanceStore.toLocalString());
 

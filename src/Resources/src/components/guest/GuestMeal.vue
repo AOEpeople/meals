@@ -13,67 +13,41 @@
     </div>
     <div class="flex flex-none justify-end items-center basis-2/12 text-align-last">
       <div :class="
-        [meal.limit > 9 ? 'w-[65px]' : 'w-[46px]', mealCSS]
+        [meal.limit > 9 ? 'w-[65px]' : 'w-[46px]', 'grid grid-cols-2 content-center rounded-md h-[30px] xl:h-[20px] mr-[15px] bg-primary']
       ">
         <Icons icon="person" box="0 0 12 12" class="fill-white w-3 h-3 ml-[7px] my-auto"/>
         <span class="text-white h-4 w-[15px] self-center leading-4 font-bold text-[11px] my-0.5 mr-[7px] tracking-[1.5px]">
           {{ meal.participations + [meal.limit > 0 ? '/' + meal.limit : ''] }}
         </span>
       </div>
-      <Checkbox
-          :weekID="weekID"
-          :dayID="dayID"
-          :mealID="mealID"
-      />
+      <GuestCheckbox :meal="meal"/>
     </div>
   </div>
 </template>
 
 <script setup>
-import Icons from "@/components/misc/Icons.vue";
-import Checkbox from '@/components/dashboard/Checkbox.vue'
-import { useI18n } from "vue-i18n";
 import {computed} from "vue";
-import {dashboardStore} from "@/store/dashboardStore";
+import Icons from "@/components/misc/Icons.vue";
+import { useI18n } from "vue-i18n";
+import GuestCheckbox from '@/components/guest/GuestCheckbox.vue'
 
-const props = defineProps([
-  'weekID',
-  'dayID',
-  'mealID',
-])
-
-const meal = dashboardStore.getMeal(props.weekID, props.dayID, props.mealID)
-
+const props = defineProps(['meal'])
+const emit = defineEmits(['processMeal'])
 const { t, locale } = useI18n();
 
-let title = computed(() => locale.value.substring(0, 2) === 'en' ? meal.title.en : meal.title.de);
-
+let title = computed(() => locale.value.substring(0, 2) === 'en' ? props.meal.title.en : props.meal.title.de)
 let description = ''
-if(meal.description !== null) {
-  description = computed(() => locale.value.substring(0, 2) === 'en' ? meal.description.en : meal.description.de);
+if(props.meal.description !== null) {
+  description = computed(() => locale.value.substring(0, 2) === 'en' ? props.meal.description.en : props.meal.description.de);
 }
 
-const mealCSS = computed(() => {
-  let css = 'grid grid-cols-2 content-center rounded-md h-[30px] xl:h-[20px] mr-[15px] '
-  switch (meal.mealState) {
-    case 'disabled':
-    case 'offerable':
-      css += 'bg-[#80909F]'
-      return css
-    case 'open':
-      css += 'bg-primary-4'
-      return css
-    case 'tradeable':
-    case 'offering':
-      css += 'bg-highlight'
-      return css
-  }
-})
+function processMeal(slug) {
+  console.log(slug)
+  emit('processMeal', slug)
+}
 
 </script>
 
 <style scoped>
-.text-align-last {
-  text-align-last: center;
-}
+
 </style>

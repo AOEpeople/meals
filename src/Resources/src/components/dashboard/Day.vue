@@ -5,7 +5,7 @@
         <GuestButton :dayID="dayID"/>
       </div>
       <div class="grid weekday min-w-[200px]">
-        <div id="dayLabel" class="mb-1">
+        <div id="dayLabel" :class="[day.isLocked ? '-mb-[0.65rem]' : 'mb-1']">
           <span class="uppercase align-top dayLabel">{{ weekday }}</span>
         </div>
       </div>

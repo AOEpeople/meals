@@ -90,8 +90,8 @@ watch(activeSlot, () => {
 })
 
 watch(selectedSlot, () => {
-  console.log(selectedSlot.value)
   day.activeSlot = selectedSlot.value.id
+  console.log(isParticipating.value)
   if (isParticipating.value) {
     let data = {
       slotID: selectedSlot.value.id,

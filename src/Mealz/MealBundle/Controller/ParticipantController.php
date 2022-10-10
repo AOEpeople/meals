@@ -156,7 +156,7 @@ class ParticipantController extends BaseController
             $slotID = $activeSlot->getId();
         }
 
-        return new JsonResponse(['slotID' => $slotID], 200);
+        return new JsonResponse(['slotId' => $slotID], 200);
     }
 
     public function updateCombinedMeal(

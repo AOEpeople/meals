@@ -59,6 +59,7 @@ class Meal
 
     /**
      * @ORM\OneToMany(targetEntity="Participant", mappedBy="meal")
+     * 
      * @psalm-var Collection<int, Participant>
      */
     public ?Collection $participants = null;

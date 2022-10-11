@@ -15,6 +15,7 @@ class GuestInvitation
 {
     /**
      * @var string
+     * 
      * @ORM\Column(name="id", type="string")
      * @ORM\Id
      */
@@ -22,12 +23,14 @@ class GuestInvitation
 
     /**
      * @var DateTime
+     * 
      * @ORM\Column(name="created_on", type="datetime")
      */
     private $createdOn;
 
     /**
      * @var Profile
+     * 
      * @ORM\ManyToOne(targetEntity="App\Mealz\UserBundle\Entity\Profile")
      * @ORM\JoinColumn(name="host_id", referencedColumnName="id", nullable=FALSE, onDelete="NO ACTION")
      */
@@ -35,6 +38,7 @@ class GuestInvitation
 
     /**
      * @var Day
+     * 
      * @ORM\ManyToOne(targetEntity="Day")
      * @ORM\JoinColumn(name="meal_day_id", referencedColumnName="id", nullable=FALSE, onDelete="NO ACTION")
      */

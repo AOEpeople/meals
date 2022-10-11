@@ -15,7 +15,7 @@ use Doctrine\Persistence\ObjectRepository;
 
 /**
  * @template T of object
- * 
+ *
  * @template-implements ObjectRepository<T>
  */
 abstract class BaseRepository implements ObjectRepository, Selectable

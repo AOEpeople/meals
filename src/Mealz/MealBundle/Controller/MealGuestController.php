@@ -123,7 +123,7 @@ class MealGuestController extends BaseController
 
     /**
      * @param Day $mealDay meal day for which to generate the invitation
-     * 
+     *
      * @ParamConverter("mealDay", options={"mapping": {"dayId": "id"}})
      * @Security("is_granted('ROLE_USER')")
      */

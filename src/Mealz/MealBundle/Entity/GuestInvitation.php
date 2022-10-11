@@ -15,7 +15,7 @@ class GuestInvitation
 {
     /**
      * @var string
-     * 
+     *
      * @ORM\Column(name="id", type="string")
      * @ORM\Id
      */
@@ -23,7 +23,7 @@ class GuestInvitation
 
     /**
      * @var DateTime
-     * 
+     *
      * @ORM\Column(name="created_on", type="datetime")
      */
     private $createdOn;
@@ -38,7 +38,7 @@ class GuestInvitation
 
     /**
      * @var Day
-     * 
+     *
      * @ORM\ManyToOne(targetEntity="Day")
      * @ORM\JoinColumn(name="meal_day_id", referencedColumnName="id", nullable=FALSE, onDelete="NO ACTION")
      */

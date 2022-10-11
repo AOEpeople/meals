@@ -66,6 +66,7 @@ jobs:
       - name: Setup PHP environment
         uses: shivammathur/setup-php@v2
         with:
+          node-version: '16'
           coverage: none
           tools: phpmd
       - name: Run PHPMD

@@ -30,7 +30,7 @@ class GuestInvitation
 
     /**
      * @var Profile
-     * 
+     *
      * @ORM\ManyToOne(targetEntity="App\Mealz\UserBundle\Entity\Profile")
      * @ORM\JoinColumn(name="host_id", referencedColumnName="id", nullable=FALSE, onDelete="NO ACTION")
      */

@@ -23,7 +23,7 @@ jobs:
     env:
       PHP_CS_FIXER_FUTURE_MODE: 1
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup PHP environment
         uses: shivammathur/setup-php@v2
         with:
@@ -40,12 +40,10 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: false
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '14'
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
       - name: Cache node_modules
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
@@ -62,7 +60,7 @@ jobs:
     continue-on-error: true
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Setup PHP environment
         uses: shivammathur/setup-php@v2
         with:
@@ -77,7 +75,7 @@ jobs:
     continue-on-error: false
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Setup PHP environment
         uses: shivammathur/setup-php@v2
         with:
@@ -94,11 +92,11 @@ jobs:
     needs: [test-cgl, lint, psalm]
     steps:
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
+        uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v2
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 10
       - name: Prepare build
@@ -106,19 +104,19 @@ jobs:
           mkdir -p /tmp/docker/buildx
           git log -n 10 --date=short --format=format:"%C(auto)%h %ad @%al %s" >> public/changelog.txt
       - name: Setup docker build caches
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           key: ${{ runner.os }}-buildx
           path: /tmp/docker/buildx
       - name: Login to DockerHub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
       # Production image
       - name: Get Docker meta for production image
         id: meta
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v4
         with:
           images: aoepeople/meals
           tags: |
@@ -129,7 +127,7 @@ jobs:
             type=edge,branch=master
       - name: Build and push production image
         id: build_latest
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: .
           push: false
@@ -143,7 +141,7 @@ jobs:
       # Development image
       - name: Get Docker meta for development
         id: devmeta
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v4
         with:
           images: aoepeople/meals
           flavor: |
@@ -153,7 +151,7 @@ jobs:
             type=ref,event=branch
       - name: Build and push development image
         id: build_dev
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           file: Dockerfile
           push: false
@@ -168,7 +166,7 @@ jobs:
           outputs: type=docker,dest=/tmp/docker/dev.tar
       # Upload artifacts
       - name: Upload docker images
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: docker-images
           path: /tmp/docker/*.tar
@@ -189,10 +187,10 @@ jobs:
       COMPOSE_INTERACTIVE_NO_CLI: true
     steps:
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-      - uses: actions/checkout@v2
+        uses: docker/setup-buildx-action@v2
+      - uses: actions/checkout@v3
       - name: Download docker images
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: docker-images
           path: /tmp/docker
@@ -207,13 +205,13 @@ jobs:
           docker-compose -f docker-compose-test.yaml up --abort-on-container-exit
           docker-compose -f docker-compose-test.yaml down --remove-orphans
       - name: Upload coverage report artifact
-        uses: actions/upload-artifact@v2.2.4
+        uses: actions/upload-artifact@v3
         if: always()
         with:
           name: reports
           path: build/artifacts/qa/
       - name: Publish unit-test results
-        uses: mikepenz/action-junit-report@v2
+        uses: mikepenz/action-junit-report@v3
         if: always()
         with:
           report_paths: 'build/artifacts/qa/*.xml'
@@ -228,14 +226,14 @@ jobs:
       IMAGES_DEV: ${{ needs.buildImages.outputs.imagesDev }}
     steps:
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v2
       - name: Login to DockerHub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
       - name: Download docker images
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: docker-images
           path: /tmp/docker
@@ -280,7 +278,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Run Snyk to check Docker image for vulnerabilities
         # Snyk can be used to break the build when it detects vulnerabilities.
         # In this case we want to upload the issues to GitHub Code Scanning

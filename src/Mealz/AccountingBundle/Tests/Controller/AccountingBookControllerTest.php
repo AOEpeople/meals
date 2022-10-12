@@ -11,7 +11,7 @@ use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use DOMElement;
-use DomNode;
+use DOMNode;
 use Exception;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -175,7 +175,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
      *
      * @return float
      */
-    protected function getFloatFromNode(DomNode $node)
+    protected function getFloatFromNode(DOMNode $node)
     {
         $res = $node->textContent;
         $res = str_replace(',', '', $res);

@@ -42,7 +42,10 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
             $this->slotRepo
         ));
 
-        $price = (float) self::$kernel->getContainer()->getParameter('mealz.meal.combined.price');
+        /* https://stackoverflow.com/questions/73209831/unitenum-cannot-be-cast-to-string */
+        $price = self::$kernel->getContainer()->getParameter('mealz.meal.combined.price');
+        $price = is_float($price) ? $price : 0;
+
         $dishRepo = static::$container->get(DishRepository::class);
         $this->cms = new CombinedMealService($price, $this->entityManager, $dishRepo);
     }

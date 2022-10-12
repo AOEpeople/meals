@@ -67,7 +67,8 @@
         "symfony/twig-bundle": "^4.4",
         "symfony/validator": "^4.4",
         "symfony/yaml": "^4.4",
-        "twig/twig": "^2.12"
+        "twig/twig": "^2.12",
+        "lcobucci/jwt": "^4.1"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.3",

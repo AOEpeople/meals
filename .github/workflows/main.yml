@@ -116,7 +116,7 @@ jobs:
       # Production image
       - name: Get Docker meta for production image
         id: meta
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v4
         with:
           images: aoepeople/meals
           tags: |
@@ -127,7 +127,7 @@ jobs:
             type=edge,branch=master
       - name: Build and push production image
         id: build_latest
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           context: .
           push: false
@@ -141,7 +141,7 @@ jobs:
       # Development image
       - name: Get Docker meta for development
         id: devmeta
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v4
         with:
           images: aoepeople/meals
           flavor: |
@@ -151,7 +151,7 @@ jobs:
             type=ref,event=branch
       - name: Build and push development image
         id: build_dev
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           file: Dockerfile
           push: false
@@ -190,7 +190,7 @@ jobs:
         uses: docker/setup-buildx-action@v2
       - uses: actions/checkout@v3
       - name: Download docker images
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: docker-images
           path: /tmp/docker

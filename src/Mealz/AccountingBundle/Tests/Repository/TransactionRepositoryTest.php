@@ -85,10 +85,11 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
         $usersTotalAmount = floatval($userData[$firstTransaction->getProfile()->getUsername()]['amount']);
 
         // calculate sum of amount for tempTransactions
-        $assumedTotalAmount = round($this->getAssumedTotalAmountForTransactionsFromLastMonth($tempTransactions), 2);
+        $assumedTotalAmount = $this->getAssumedTotalAmountForTransactionsFromLastMonth($tempTransactions);
 
         // compare both amounts
-        $this->assertEquals($usersTotalAmount, $assumedTotalAmount);
+        $epsilon = 0.00001;
+        $this->assertTrue(abs($usersTotalAmount - $assumedTotalAmount) < $epsilon);
     }
 
     /**

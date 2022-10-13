@@ -91,7 +91,9 @@ class CashControllerTest extends AbstractControllerTestCase
             $transactionAmount += (float) trim(substr($transaction, 1, strpos($transaction, '€')));
         }
 
-        $calculatedBalance = round($previousBalance - $participationAmount + $transactionAmount, 2);
-        $this->assertEquals($currentBalance, $calculatedBalance);
+        $assumedTotalAmount = $previousBalance - $participationAmount + $transactionAmount;
+
+        $epsilon = 0.00001;
+        $this->assertTrue(abs($currentBalance - $assumedTotalAmount) < $epsilon);
     }
 }

@@ -4,7 +4,7 @@
       <Icons icon="guest" box="0 0 13 13" class="w-[13px] h-[13px] fill-white"/>
     </PopoverButton>
 
-    <PopoverPanel class="absolute z-10">
+    <PopoverPanel class="absolute top-12 -left-6 z-2">
       <GuestLink :dayID="dayID"/>
     </PopoverPanel>
   </Popover>

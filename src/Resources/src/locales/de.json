@@ -51,7 +51,8 @@
     "new": "neu",
     "slot": {
       "auto": "Autoselektion nächster freier Slot"
-    }
+    },
+    "guest": "In die Zwischenablage kopiert!"
   },
   "balance": {
     "current": "Momentaner Kontostand",

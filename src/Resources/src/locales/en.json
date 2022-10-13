@@ -58,7 +58,8 @@
     "new": "new",
     "slot": {
       "auto": "Autoselect next free slot"
-    }
+    },
+    "guest": "Copied to clipboard!"
   },
   "content": {
     "participation": {

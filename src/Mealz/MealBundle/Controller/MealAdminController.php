@@ -2,6 +2,8 @@
 
 namespace App\Mealz\MealBundle\Controller;
 
+use App\Mealz\MealBundle\Entity\Day;
+use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Event\WeekUpdateEvent;
 use App\Mealz\MealBundle\Form\MealAdmin\WeekForm;
@@ -13,6 +15,7 @@ use DateTime;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\UnitOfWork;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -142,10 +145,10 @@ class MealAdminController extends BaseController
 
             if (true === $form->isValid()) {
                 $notify = $form->get('notifyCheckbox')->getData();
-                $this->updateWeek($week, $notify);
-
-                $message = $this->get('translator')->trans('week.modified', [], 'messages');
-                $this->addFlashMessage($message, 'success');
+                if (true === $this->updateWeek($week, $notify)) {
+                    $message = $this->get('translator')->trans('week.modified', [], 'messages');
+                    $this->addFlashMessage($message, 'success');
+                }
             } else {
                 $errors = $form->getErrors(true);
                 foreach ($errors as $error) {
@@ -182,12 +185,37 @@ class MealAdminController extends BaseController
     /**
      * @throws OptimisticLockException|ORMException
      */
-    private function updateWeek(Week $week, bool $notify = false): void
+    private function updateWeek(Week $week, bool $notify = false): bool
     {
         /** @var EntityManager $entityManager */
         $entityManager = $this->getDoctrine()->getManager();
+
+        /** @var Day $day */
+        foreach ($week->getDays() as $day) {
+            /** @var Meal $meal */
+            foreach ($day->getMeals() as $meal) {
+                if (UnitOfWork::STATE_REMOVED === $entityManager->getUnitOfWork()->getEntityState($meal) && 0 < count($meal->getParticipants())) {
+                    $message = $this->get('translator')->trans(
+                        'error.meal.has_participants',
+                        [
+                            '%dish%' => $meal->getDish()->getTitle(),
+                            '%day%' => $day->getDateTime()->format('d.m'),
+                        ],
+                        'messages'
+                    );
+                    $this->addFlashMessage($message, 'danger');
+
+                    return false;
+                } elseif (UnitOfWork::STATE_REMOVED === $entityManager->getUnitOfWork()->getEntityState($meal)) {
+                    $day->removeMeal($meal);
+                }
+            }
+        }
+
         $entityManager->persist($week);
         $entityManager->flush();
         $this->eventDispatcher->dispatch(new WeekUpdateEvent($week, $notify));
+
+        return true;
     }
 }

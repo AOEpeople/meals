@@ -89,13 +89,13 @@ class MealAdminController extends BaseController
         $form = $this->createForm(WeekForm::class, $week);
 
         // handle form submission
-        if ($request->isMethod('POST')) {
+        if (true === $request->isMethod('POST')) {
             $form->handleRequest($request);
-            if ($form->get('Cancel')->isClicked()) {
+            if (true === $form->get('Cancel')->isClicked()) {
                 return $this->redirectToRoute('MealzMealBundle_Meal');
             }
 
-            if ($form->isValid()) {
+            if (true === $form->isValid()) {
                 $notify = $form->get('notifyCheckbox')->getData();
                 $this->updateWeek($week, $notify);
 
@@ -139,7 +139,7 @@ class MealAdminController extends BaseController
         if (true === $request->isMethod('POST')) {
             $form->handleRequest($request);
 
-            if ($form->get('Cancel')->isClicked()) {
+            if (true === $form->get('Cancel')->isClicked()) {
                 return $this->redirectToRoute('MealzMealBundle_Meal');
             }
 

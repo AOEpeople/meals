@@ -32,7 +32,7 @@ class LoadDishes extends Fixture implements OrderedFixtureInterface
 
         $this->loadCategories();
 
-        $this->addDish('Braaaaaiiinnnzzzzzz', 'Braaaaaiiinnnzzzzzz DE');
+        $this->addDish('Braaaaaiiinnnzzzzzz', 'Braaaaaiiinnnzzzzzz DE', 'Description', 'Beschreibung', true);
         $this->addDish('Tasty Worms', 'Tasty Worms DE');
         $this->addDish('Innards', 'Innards DE');
         $this->addDish('Fish (so juicy sweat)', 'Fish (so juicy sweat) DE');
@@ -69,7 +69,7 @@ class LoadDishes extends Fixture implements OrderedFixtureInterface
         return self::ORDER_NUMBER;
     }
 
-    protected function addDish(string $titleEN, string $titleDE, string $descEN = null, string $descDE = null): void
+    protected function addDish(string $titleEN, string $titleDE, string $descEN = null, string $descDE = null, bool $oneSize = false): void
     {
         $dish = new Dish();
         $dish->setPrice(3.60);
@@ -79,6 +79,7 @@ class LoadDishes extends Fixture implements OrderedFixtureInterface
         $dish->setDescriptionDe($descDE ?? $descEN ?? 'Beschreibung - ' . $titleDE);
         $randomCategory = (0 === count($this->categories)) ? null : $this->categories[array_rand($this->categories, 1)];
         $dish->setCategory($randomCategory);
+        $dish->setOneServingSize($oneSize);
         $this->objectManager->persist($dish);
         $this->addReference('dish-' . $this->counter++, $dish);
     }

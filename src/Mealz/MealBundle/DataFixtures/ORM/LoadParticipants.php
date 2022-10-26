@@ -81,14 +81,16 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
         $days = $this->getDaysWithDishVariations();
 
         foreach ($days as $day) {
-            $combinedMeal = $this->getCombinedMeal($day);
-            $combinedMealDishes = $this->getRandomCombinedMealDishes($day);
-            $profile = $this->getProfile($username);
+            if (true === $this->hasCombinedMeal($day)) {
+                $combinedMeal = $this->getCombinedMeal($day);
+                $combinedMealDishes = $this->getRandomCombinedMealDishes($day);
+                $profile = $this->getProfile($username);
 
-            $participant = new Participant($profile, $combinedMeal);
-            $participant->setCombinedDishes($combinedMealDishes);
+                $participant = new Participant($profile, $combinedMeal);
+                $participant->setCombinedDishes($combinedMealDishes);
 
-            $this->objectManager->persist($participant);
+                $this->objectManager->persist($participant);
+            }
         }
     }
 
@@ -109,6 +111,17 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
         }
 
         return array_values($days);
+    }
+
+    private function hasCombinedMeal(Day $day): bool
+    {
+        foreach ($day->getMeals() as $meal) {
+            if ($meal->isCombinedMeal()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function getCombinedMeal(Day $day): Meal

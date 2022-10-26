@@ -114,11 +114,7 @@ class ParticipationCountService
                     $participation[self::PARTICIPATION_TOTAL_COUNT_KEY][$dish->getSlug()][self::COUNT_KEY] = 0.0;
                 }
 
-                if ($dish->hasOneServingSize()) {
-                    $participation[self::PARTICIPATION_TOTAL_COUNT_KEY][$dish->getSlug()][self::COUNT_KEY] += 1.0;
-                } else {
-                    $participation[self::PARTICIPATION_TOTAL_COUNT_KEY][$dish->getSlug()][self::COUNT_KEY] += 0.5;
-                }
+                $participation[self::PARTICIPATION_TOTAL_COUNT_KEY][$dish->getSlug()][self::COUNT_KEY] += 0.5;
 
                 if (!array_key_exists($dish->getSlug(), $participation[self::PARTICIPATION_COUNT_KEY][$meal->getId()])) {
                     $participation[self::PARTICIPATION_COUNT_KEY][$meal->getId()][$dish->getSlug()][self::COUNT_KEY] = 0.0;

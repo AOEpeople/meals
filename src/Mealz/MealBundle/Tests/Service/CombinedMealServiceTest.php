@@ -81,6 +81,7 @@ class CombinedMealServiceTest extends AbstractDatabaseTestCase
 
         /** @var Day $day */
         foreach ($week->getDays() as $day) {
+            $dayHasOneSizeMeal = false;
             $combinedMeal = null;
             $baseMeals = [];
             /** @var Meal $meal */
@@ -92,9 +93,13 @@ class CombinedMealServiceTest extends AbstractDatabaseTestCase
                 } elseif (null !== $meal->getDish()->getParent()) {
                     $baseMeals[$meal->getDish()->getParent()->getId()] = $meal->getDish()->getParent();
                 }
+
+                if (true === $meal->getDish()->hasOneServingSize()) {
+                    $dayHasOneSizeMeal = true;
+                }
             }
 
-            if (2 <= count($baseMeals)) {
+            if (2 <= count($baseMeals) && false === $dayHasOneSizeMeal) {
                 $this->assertNotNull($combinedMeal);
                 $this->assertEquals($combinedMeal->getDish()->getId(), $this->combinedDish->getId());
             } else {

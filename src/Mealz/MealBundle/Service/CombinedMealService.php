@@ -21,8 +21,11 @@ class CombinedMealService
 
     private Dish $combinedDish;
 
-    public function __construct(float $combinedPrice, EntityManagerInterface $entityManager, DishRepository $dishRepo)
-    {
+    public function __construct(
+        float $combinedPrice,
+        EntityManagerInterface $entityManager,
+        DishRepository $dishRepo
+    ) {
         $this->defaultPrice = $combinedPrice;
         $this->entityManager = $entityManager;
         $this->combinedDish = $this->createCombinedDish($dishRepo);
@@ -33,11 +36,12 @@ class CombinedMealService
         $update = false;
         /** @var Day $day */
         foreach ($week->getDays() as $day) {
-            if (empty($day->getMeals())) {
+            if (true === empty($day->getMeals())) {
                 continue;
             }
 
             $combinedMeal = null;
+            $dayHasOneSizeMeal = false;
             $baseMeals = []; // NOTE: in case of variations, we only need the parent
             /** @var Meal $meal */
             foreach ($day->getMeals() as $meal) {
@@ -48,18 +52,22 @@ class CombinedMealService
                 } elseif (null !== $meal->getDish()->getParent()) {
                     $baseMeals[$meal->getDish()->getParent()->getId()] = $meal->getDish()->getParent();
                 }
+
+                if (true === $meal->getDish()->hasOneServingSize()) {
+                    $dayHasOneSizeMeal = true;
+                }
             }
 
-            if (null === $combinedMeal && 1 < count($baseMeals)) {
+            if (null === $combinedMeal && 1 < count($baseMeals) && false === $dayHasOneSizeMeal) {
                 $this->createCombinedMeal($day);
                 $update = true;
-            } elseif (null !== $combinedMeal && 1 >= count($baseMeals)) {
+            } elseif (null !== $combinedMeal && (1 >= count($baseMeals) || true === $dayHasOneSizeMeal)) {
                 $this->removeCombinedMeal($day, $combinedMeal);
                 $update = true;
             }
         }
 
-        if ($update) {
+        if (true === $update) {
             $this->entityManager->persist($week);
             $this->entityManager->flush();
         }

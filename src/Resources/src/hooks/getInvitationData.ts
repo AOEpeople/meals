@@ -21,6 +21,6 @@ export async function useInvitationData(hash: string){
         await request()
         loaded.value = true
     }
-console.log(invitation)
+
     return { invitation, error }
 }

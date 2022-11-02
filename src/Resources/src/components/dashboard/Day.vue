@@ -1,7 +1,7 @@
 <template>
   <div class="flex mx-auto w-3/4 h-auto bg-white rounded day-shadow w-max-screen-aoe">
     <div :class="[day.isLocked ? 'bg-[#80909F]' : 'bg-primary-2', 'flex justify-center w-[24px] rounded-l-[5px]']">
-      <div v-if="!day.isLocked" id="icon" class="relative left-[425%] bottom-[2%]">
+      <div v-if="!day.isLocked" id="icon" class="relative left-[425%] bottom-[2%] z-[2]">
         <GuestButton :dayID="dayID"/>
       </div>
       <div class="grid weekday min-w-[200px]">
@@ -10,7 +10,7 @@
         </div>
       </div>
     </div>
-    <div v-if="!emptyDay" class="flex flex-col flex-1">
+    <div v-if="!emptyDay" class="flex flex-col flex-1 z-[3]">
       <Slots
           :weekID="weekID"
           :dayID="dayID"

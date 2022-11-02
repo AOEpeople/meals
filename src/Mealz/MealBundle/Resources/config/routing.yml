@@ -46,6 +46,11 @@ MealzMealBundle_finance:
   path: /finance
   defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
 
+MealzMealBundle_Meal_guest:
+  path: /guest/{hash}
+  defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
+  methods: [ GET, POST ]
+
 MealzMealBundle_balance:
   path: /balance
   defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
@@ -62,6 +67,11 @@ MealzMealBundle_api_join_Meal:
   path: /api/join-meal
   defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::joinMeal }
   methods: [POST]
+
+MealzMealBundle_api_join_Meal_Guest:
+  path: /guest/api/join-meal
+  defaults: { _controller: App\Mealz\MealBundle\Controller\MealGuestController::joinAsGuest }
+  methods: [ POST ]
 
 MealzMealBundle_api_leave_Meal:
   path: /api/leave-meal
@@ -91,11 +101,6 @@ MealzMealBundle_api_invitationdata:
 MealzMealBundle_Meal_offers:
     path: /menu/{date}/{dish}/offers
     defaults: { _controller: App\Mealz\MealBundle\Controller\MealController::getOffers }
-
-MealzMealBundle_Meal_guest:
-    path: /guest/{hash}
-    defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderGuest }
-    methods: [GET, POST]
 
 MealzMealBundle_Meal_newGuestInvitation:
     path:  /menu/{dayId}/new-guest-invitation

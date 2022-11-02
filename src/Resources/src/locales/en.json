@@ -96,11 +96,24 @@
       "costs": {
         "no_data": "There exist no costs."
       }
-    },
-    "guest_enrollment": {
-      "message_body": "As our guest, we would like to invite you to lunch in the AOE Eatery. To order a meal, register no later than one day before your visit to AOE with your personal information and choose the desired dish. Your order will be forwarded to our cooks.",
-      "message_ending": "We hope that you enjoy your lunch",
-      "message_signature": "AOE"
     }
+  },
+  "combiModal": {
+    "title": "Choose a combination for your combined dish",
+    "submit": "Select meals",
+    "cancel": "Cancel"
+  },
+  "guest": {
+    "form": {
+      "firstname": "Firstname",
+      "lastname": "Lastname",
+      "company": "Company"
+    },
+    "submit": "Book meals",
+    "data_error": "Invalid Invitation.",
+    "resolve_success": "Meals booked successfully!",
+    "resolve_error": "Error booking the selected meals.",
+    "title": "Lunch at AOE",
+    "description": "As our guest, we would like to invite you to lunch in the AOE Eatery. To order a meal, register no later than one day before your visit to AOE with your personal information and choose the desired dish. Your order will be forwarded to our cooks.\n\nWe hope that you enjoy your lunch\nAOE"
   }
 }

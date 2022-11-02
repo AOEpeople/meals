@@ -63,5 +63,23 @@
     "add": "Geld einzahlen",
     "amount": "Betrag"
   },
-  "logout": "Ausloggen"
+  "combiModal": {
+    "title": "Wähle eine Kombination für dein Kombi-Meal",
+    "submit": "Gerichte auswählen",
+    "cancel": "Abbrechen"
+  },
+  "logout": "Ausloggen",
+  "guest": {
+    "form": {
+      "firstname": "Vorname",
+      "lastname": "Nachname",
+      "company": "Betrieb"
+    },
+    "submit": "Gerichte buchen",
+    "data_error": "Diese Einladung ist leider ungültig.",
+    "resolve_success": "Essensbuchung erfolgreich!",
+    "resolve_error": "Fehler bei der Essensbuchung.",
+    "title": "Mittagessen bei AOE",
+    "description": "Als Gast in unserem Haus laden wir Sie gerne zu einem Mittagessen in der AOE Eatery ein. Für Ihre Bestellung tragen Sie sich bitte bis spätestens einen Tag vorher mit Ihren Daten ein und wählen das gewünschte Gericht aus, das dann an unsere Köche weitergeleitet wird.\n\nGuten Appetit wünscht Ihnen,\nAOE"
+  }
 }

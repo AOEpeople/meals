@@ -12,14 +12,7 @@
       </div>
     </div>
     <div class="flex flex-none justify-end items-center basis-2/12 text-align-last">
-      <div :class="
-        [meal.limit > 9 ? 'w-[65px]' : 'w-[46px]', mealCSS]
-      ">
-        <Icons icon="person" box="0 0 12 12" class="fill-white w-3 h-3 ml-[7px] my-auto"/>
-        <span class="text-white h-4 w-[15px] self-center leading-4 font-bold text-[11px] my-0.5 mr-[7px] tracking-[1.5px]">
-          {{ meal.participations + [meal.limit > 0 ? '/' + meal.limit : ''] }}
-        </span>
-      </div>
+      <ParticipationCounter :meal="meal" :mealCSS="mealCSS"/>
       <Checkbox
           :weekID="weekID"
           :dayID="dayID"
@@ -30,7 +23,7 @@
 </template>
 
 <script setup>
-import Icons from "@/components/misc/Icons.vue";
+import ParticipationCounter from "@/components/menuCard/ParticipationCounter.vue";
 import Checkbox from '@/components/dashboard/Checkbox.vue'
 import { useI18n } from "vue-i18n";
 import {computed} from "vue";
@@ -54,7 +47,7 @@ if(meal.description !== null) {
 }
 
 const mealCSS = computed(() => {
-  let css = 'grid grid-cols-2 content-center rounded-md h-[30px] xl:h-[20px] mr-[15px] '
+  let css = 'flex content-center rounded-md h-[30px] xl:h-[20px] mr-[15px] '
   switch (meal.mealState) {
     case 'disabled':
     case 'offerable':

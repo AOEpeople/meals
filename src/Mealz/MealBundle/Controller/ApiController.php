@@ -243,6 +243,8 @@ class ApiController extends BaseController
 
     /**
      * @throws Exception
+     *
+     * @Security("is_granted('ROLE_USER')")
      */
     private function addMealWithVariations(Meal $meal, ?Profile $profile, array &$meals): void
     {

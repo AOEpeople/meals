@@ -169,4 +169,9 @@ class SlotService
     {
         return $this->slotRepo->findBy(['deleted' => 0]);
     }
+
+    public function getSlotById(int $id): ?Slot
+    {
+        return $this->slotRepo->find($id);
+    }
 }

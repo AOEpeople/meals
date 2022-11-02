@@ -33,10 +33,11 @@ import {dashboardStore} from "@/store/dashboardStore";
 const props = defineProps([
     'weekID',
     'dayID',
-    'mealID'
+    'mealID',
+    'meal'
 ])
 
-const meal = dashboardStore.getMeal(props.weekID, props.dayID, props.mealID)
+const meal = props.meal !== undefined ? props.meal : dashboardStore.getMeal(props.weekID, props.dayID, props.mealID)
 const emit = defineEmits(['addEntry', 'removeEntry'])
 const selected = ref()
 let dishes = []

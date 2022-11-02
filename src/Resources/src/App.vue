@@ -2,7 +2,7 @@
   <NavBar />
   <vue3-progress-bar></vue3-progress-bar>
   <Content />
-  <Footer class="z-1" />
+  <Footer class="z-[2]" />
 </template>
 
 <script setup>
@@ -12,7 +12,11 @@ import Content from '@/components/Content.vue'
 
 import { balanceStore } from '@/store/balanceStore'
 
-balanceStore.fillStore()
+const isAuthenticated = sessionStorage.getItem('auth') === 'granted'
+if (isAuthenticated) {
+  balanceStore.fillStore()
+}
+
 </script>
 <style>
 .btn-disabled {

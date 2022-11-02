@@ -17,12 +17,12 @@
 {% set topics = ['participation-updates', 'meal-offer-updates', 'slot-allocation-updates'] -%}
 
 <body>
-
 {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
     <script type="text/javascript">
         let profile = {{ app.user.profile | json_encode() | raw }};
+        sessionStorage.setItem('auth', 'granted')
         sessionStorage.setItem('user', profile.user)
-        sessionStorage.setItem('roles', profile.roles)
+        sessionStorage.setItem('role', profile.roles[0])
         sessionStorage.setItem('balance', '{{ wallet.getBalance(app.user.profile) }}');
         sessionStorage.setItem('mercure_url', '{{ mercure(topics, {subscribe: topics})|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_HEX_TAG'))|raw|trim('"') }}');
     </script>

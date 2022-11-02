@@ -1,43 +1,87 @@
 <template>
-  <div v-if="error === false">
-    <div>
-      <h2>Lunch at AOE</h2>
-      <p>As our guest, we would like to invite you to lunch in the AOE Eatery. To order a meal, register no later than one day before your visit to AOE with your personal information and choose the desired dish. Your order will be forwarded to our cooks.</p>
+  <GuestCompletion v-if="result !== ''" :result="result" />
+  <div v-else>
+    <div class="mx-4">
+      <h2>{{ t('guest.title') }}</h2>
+      <p class="whitespace-pre-line">{{ t('guest.description') }}</p>
     </div>
-    <GuestSelection :invitation="invitation"/>
-    <form>
-      <div class="grid grid-rows-4 mx-auto mt-10">
-        <input type="text" placeholder="Your first name">
-        <input type="text" placeholder="Your last name">
-        <input type="text" placeholder="Your company">
-        <button type="submit" class="btn-primary">
-          {{ error }}
-        </button>
-      </div>
-    </form>
-  </div>
-  <div v-if="error === true">
-    <span>error</span>
+    <GuestSelection
+        :invitation="invitation"
+    />
+    <GuestForm
+        v-model:firstName="form.firstName"
+        v-model:lastName="form.lastName"
+        v-model:company="form.company"
+        :filled="filled"
+        @submitForm="submitForm"
+    />
   </div>
 </template>
 
 <script setup>
-import { useProgress } from '@marcoschulte/vue3-progress'
-import { useRoute } from 'vue-router'
-import { useInvitationData } from '@/hooks/getInvitationData'
-import GuestSelection from '@/components/guest/GuestSelection.vue';
-const progress = useProgress().start()
+import {useProgress} from '@marcoschulte/vue3-progress'
+import {useRoute} from 'vue-router'
+import {useInvitationData} from '@/hooks/getInvitationData'
+import useEventsBus from '@/hooks/eventBus'
+import {ref, computed} from 'vue'
+import {useJoinMealGuest} from '@/hooks/postJoinMealGuest'
+import {useI18n} from 'vue-i18n'
+import GuestCompletion from '@/components/guest/GuestCompletion.vue'
+import GuestSelection from '@/components/guest/GuestSelection.vue'
+import GuestForm from '@/components/guest/GuestForm.vue'
 
+const progress = useProgress().start()
 const route = useRoute()
 const { invitation, error } = await useInvitationData(route.params.hash)
-console.log(invitation)
+const result = ref(error.value === true ? 'data_error' : '')
+const { receive } = useEventsBus()
+const { t } = useI18n()
+
+const form = ref({
+  firstName: '',
+  lastName: '',
+  company: '',
+  chosenSlot: 0,
+  chosenMeals: [],
+  combiDishes: []
+})
+
+const filled = computed(() =>
+    form.value.firstName !== ''
+    && form.value.lastName !== ''
+    && form.value.company !== ''
+    && form.value.chosenMeals.length !== 0
+);
+
+receive('guestChosenMeals', (slug) => {
+  const index = form.value.chosenMeals.indexOf(slug)
+  if (index !== -1) {
+    form.value.chosenMeals.splice(index, 1)
+  } else {
+    form.value.chosenMeals.push(slug)
+  }
+})
+
+receive('guestChosenSlot', (slot) => {
+  form.value.chosenSlot = slot
+})
+
+receive('guestChosenCombi', (dishes) => {
+  form.value.combiDishes = dishes
+})
+
+async function submitForm() {
+  if (filled.value) {
+    const { error } = await useJoinMealGuest(JSON.stringify(form.value))
+    if (error.value === false) {
+      result.value = "resolve_success"
+    } else {
+      result.value = "resolve_error"
+    }
+  }
+}
+
 setTimeout(function () {
     progress.finish()
 }, 500)
 </script>
-
-<style scoped>
-input {
-  @apply bg-white border-[2px] border-solid border-[#CAD6E1] rounded-[100px] h-12
-}
-</style>

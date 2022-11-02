@@ -14,13 +14,7 @@
       </div>
     </div>
     <div class="flex flex-none justify-end items-center basis-2/12 text-align-last">
-      <div :class="
-        [variation.limit > 9 ? 'w-[65px]' : 'w-[46px]', mealCSS[variationID]]">
-        <Icons icon="person" box="0 0 12 12" class="fill-white w-3 h-3 my-[7px] mx-1"/>
-        <span class="text-white h-4 w-[15px] self-center leading-4 font-bold text-[11px] my-0.5 mr-[7px] tracking-[1.5px]">
-          {{ variation.participations }}
-        </span>
-      </div>
+      <ParticipationCounter :meal="variation" :mealCSS="mealCSS[variationID]"/>
       <Checkbox
           :weekID="weekID"
           :dayID="dayID"
@@ -32,7 +26,7 @@
 </template>
 
 <script setup>
-import Icons from '@/components/misc/Icons.vue'
+import ParticipationCounter from "@/components/menuCard/ParticipationCounter.vue";
 import Checkbox from '@/components/dashboard/Checkbox.vue'
 import { useI18n } from 'vue-i18n'
 import { computed, ref } from 'vue'

@@ -2,7 +2,7 @@
   <Disclosure v-slot="{ open }">
     <header class="bg-white shadow-[0_15px_35px_0_#5B788F21] h-[60px] xl:h-24">
       <nav class="grid grid-cols-3 h-[inherit] items-center content-center xl:mx-auto xl:max-w-screen-aoe xl:grid-cols-10" aria-label="Top">
-        <div v-if="guest === false" class="justify-self-start ml-6 xl:hidden" id="dropdown">
+        <div v-if="isAuthenticated" class="justify-self-start ml-6 xl:hidden" id="dropdown">
           <DisclosureButton class="inline-flex justify-center items-center p-2 -mx-2 text-gray-400 rounded-md hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
             <span class="sr-only">Open menu</span>
             <MenuIcon v-if="!open" class="block w-6 h-6" aria-hidden="true" />
@@ -21,16 +21,18 @@
             </svg>
           </router-link>
         </div>
-        <div v-if="guest === false" class="hidden col-span-4 space-x-3 xl:inline-block">
-          <router-link v-for="link in navigation"
-                       v-html="t(link.name)"
-             :key="link.name"
-             :to="link.to"
-             class="text-[16px] leading-[18px] font-medium text-primary hover:text-highlight cursor-pointer"
-          >
-          </router-link>
+        <div v-if="isAuthenticated" class="hidden col-span-4 space-x-3 xl:inline-block">
+          <span v-for="link in navigation">
+            <router-link
+              v-if="link.access.includes(role)"
+              v-html="t(link.name)"
+              :key="link.name"
+              :to="link.to"
+              class="text-[16px] leading-[18px] font-medium text-primary hover:text-highlight cursor-pointer"
+            />
+          </span>
         </div>
-        <div v-if="guest === false" class="inline-block col-span-4 justify-self-end space-x-4">
+        <div v-if="isAuthenticated" class="inline-block col-span-4 justify-self-end space-x-4">
           <div class="hidden self-center space-x-2 text-right xl:inline-block">
             <Icons icon="person-outline" class="inline-block w-6 fill-primary" />
             <span class="text-[14px] leading-[22px] font-medium text-black">
@@ -46,46 +48,53 @@
             </router-link>
           </div>
           <div class="hidden justify-self-end xl:inline-block">
-            <a href="/logout" >
+            <div @click="logout" >
               <Icons icon="logout" class="inline-block w-6 cursor-pointer fill-primary hover:fill-secondary" />
-            </a>
+            </div>
           </div>
         </div>
       </nav>
     </header>
-    <MobileDropdown v-if="guest === false" :open="open" :userName="user" :balance="balanceString" :navigation="navigation" />
+    <MobileDropdown v-if="isAuthenticated" :open="open" :userName="user" :balance="balanceString" :navigation="navigation" />
   </Disclosure>
 </template>
 
 <script setup>
-  import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
-  import { MenuIcon, XIcon } from '@heroicons/vue/outline';
-  import MobileDropdown from "./navbar/MobileDropdown.vue";
-  import Icons from "@/components/misc/Icons.vue"
-  import { useI18n } from "vue-i18n";
-  import { balanceStore } from "@/store/balanceStore";
-  import {computed} from "vue";
+  import {Disclosure, DisclosureButton} from '@headlessui/vue'
+  import {MenuIcon, XIcon} from '@heroicons/vue/outline'
+  import MobileDropdown from './navbar/MobileDropdown.vue'
+  import Icons from '@/components/misc/Icons.vue'
+  import {useI18n} from 'vue-i18n'
+  import {balanceStore} from '@/store/balanceStore'
+  import {computed} from 'vue'
 
-  const { t, locale } = useI18n();
+  const { t, locale } = useI18n()
   const props = defineProps({
     guest: {
       default: false
     }
   })
 
-
   let balanceString = computed(() => balanceStore.toLocalString());
 
   const user = sessionStorage.getItem('user')
+  const role = sessionStorage.getItem('role')
+  const isAuthenticated = sessionStorage.getItem('auth') === 'granted'
 
   const navigation = [
-    { name: 'header.navigation.menu',       to: '/menu' },
-    { name: 'header.navigation.dishes',     to: '/dishes' },
-    { name: 'header.navigation.categories', to: '/categories' },
-    { name: 'header.navigation.slots',      to: '/time-slots' },
-    { name: 'header.navigation.costs',      to: '/costs' },
-    { name: 'header.navigation.finance',    to: '/finance' },
+    { name: 'header.navigation.menu',       to: '/menu',       access: ['ROLE_KITCHEN_STAFF', 'ROLE_ADMIN'] },
+    { name: 'header.navigation.dishes',     to: '/dishes',     access: ['ROLE_KITCHEN_STAFF', 'ROLE_ADMIN'] },
+    { name: 'header.navigation.categories', to: '/categories', access: ['ROLE_KITCHEN_STAFF', 'ROLE_ADMIN'] },
+    { name: 'header.navigation.slots',      to: '/time-slots', access: ['ROLE_KITCHEN_STAFF', 'ROLE_ADMIN'] },
+    { name: 'header.navigation.costs',      to: '/costs',      access: ['ROLE_KITCHEN_STAFF', 'ROLE_ADMIN', 'ROLE_FINANCE'] },
+    { name: 'header.navigation.finance',    to: '/finance',    access: ['ROLE_KITCHEN_STAFF', 'ROLE_ADMIN', 'ROLE_FINANCE'] },
   ];
+
+  function logout() {
+    sessionStorage.clear()
+    window.location.href = '/logout'
+  }
+
 </script>
 
 <style scoped>

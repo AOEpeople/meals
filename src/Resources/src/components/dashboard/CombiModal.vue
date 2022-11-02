@@ -11,7 +11,7 @@
             <DialogPanel class="relative bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:p-6">
               <div>
                 <div class="mt-3 sm:mt-5">
-                  <DialogTitle as="h2" class="text-primary">Choose a combination for your combined dish </DialogTitle>
+                  <DialogTitle as="h2" class="text-primary"> {{ t('combiModal.title') }} </DialogTitle>
                   <div v-for="key in keys"
                        class="grid mt-2"
                        :key="key"
@@ -20,6 +20,7 @@
                         :weekID="weekID"
                         :dayID="dayID"
                         :mealID="key"
+                        :meal="meals[key]"
                         :key="key"
                         @addEntry="addEntry"
                         @removeEntry="removeEntry"/>
@@ -33,7 +34,7 @@
                     @click="resolveModal('book')"
                     :disabled="bookingDisabled"
                 >
-                  Book
+                  {{ t('combiModal.submit') }}
                 </button>
                 <button
                     type="button"
@@ -41,7 +42,7 @@
                     @click="resolveModal('cancel')"
                     ref="cancelButtonRef"
                 >
-                  Cancel
+                  {{ t('combiModal.cancel') }}
                 </button>
               </div>
             </DialogPanel>
@@ -57,15 +58,18 @@ import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } fro
 import CombiButtonGroup from "@/components/dashboard/CombiButtonGroup.vue";
 import {dashboardStore} from "@/store/dashboardStore";
 import {computed, ref} from "vue";
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps([
     'open',
     'weekID',
     'dayID',
+    'meals'
 ])
-const emit = defineEmits(['closeCombiModal'])
 
-let meals = dashboardStore.getMeals(props.weekID, props.dayID)
+const { t } = useI18n()
+const emit = defineEmits(['closeCombiModal'])
+let meals = props.meals !== undefined ? props.meals : dashboardStore.getMeals(props.weekID, props.dayID)
 let keys = Object.keys(meals).filter(mealID => meals[mealID].dishSlug !== 'combined-dish')
 const slugs = ref([])
 const bookingDisabled = computed(() => slugs.value.length < 2)
@@ -87,7 +91,6 @@ function removeEntry(slug) {
 
 function addEntry(slug) {
   slugs.value.push(slug)
-  console.log(slugs.value.length)
 }
 
 </script>

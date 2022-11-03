@@ -1,7 +1,7 @@
 <template>
   <RadioGroup v-model="selected" :disabled="!meal.variations">
     <RadioGroupLabel class="sr-only">Combi Meal Selection</RadioGroupLabel>
-    <div class="bg-white rounded-md -space-y-px">
+    <div class="rounded-md bg-white -space-y-px">
       <RadioGroupOption as="template" v-for="(dish, index) in dishes"
         :key="dish.id"
         :value="dish.slug"

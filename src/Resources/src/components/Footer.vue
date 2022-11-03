@@ -1,5 +1,5 @@
 <template>
-  <footer class="relative bg-[rgb(225,232,238)] mt-8">
+  <footer class="bg-[rgb(225,232,238)] mt-8">
     <div class="grid mx-auto max-w-screen-aoe xl:grid-cols-2">
       <div class="items-center py-4">
         <img class="mx-auto h-10 xl:mx-0" src="../../images/aoe-logo.svg" alt="AOE Logo" />

@@ -1,12 +1,12 @@
 <template>
-  <div class="flex mx-auto w-3/4 h-auto bg-white rounded day-shadow w-max-screen-aoe">
-    <div :class="[day.isLocked ? 'bg-[#80909F]' : 'bg-primary-2', 'flex justify-center w-[24px] rounded-l-[5px]']">
-      <div v-if="!day.isLocked" id="icon" class="relative left-[425%] bottom-[2%] z-[2]">
+  <div class="mx-auto flex h-auto w-3/4 rounded bg-white day-shadow w-max-screen-aoe">
+    <div :class="[day.isLocked ? 'bg-[#80909F]' : 'bg-primary-2', 'flex relative justify-center w-[24px] rounded-l-[5px]']">
+      <div v-if="!day.isLocked" id="icon" class="absolute w-[24px] text-center bottom-[1px] left-[2px] z-[2]">
         <GuestButton :dayID="dayID" :index="index"/>
       </div>
       <div class="grid weekday min-w-[200px]">
-        <div id="dayLabel" :class="[day.isLocked ? '-mb-[0.65rem]' : 'mb-1']">
-          <span class="uppercase align-top dayLabel">{{ weekday }}</span>
+        <div id="dayLabel" class="h-[26px]">
+          <span class="align-middle uppercase dayLabel">{{ weekday }}</span>
         </div>
       </div>
     </div>
@@ -78,7 +78,7 @@ let emptyDay = Object.keys(day.meals).length === 0
   font-size: 11px;
   font-weight: 700;
   line-height: 16px;
-  letter-spacing: 1.5px;
+  letter-spacing: 3px;
 }
 
 #icon {

@@ -1,7 +1,7 @@
 <template>
-  <div class="flex flex-col max-w-screen-aoe mx-auto">
+  <div class="mx-auto flex flex-col max-w-screen-aoe">
     <div class="inline-block min-w-full py-2">
-      <table class="min-w-full border-spacing-none table-fixed max-w-fit">
+      <table class="min-w-full max-w-fit table-fixed border-spacing-none">
         <thead>
           <tr>
             <th scope="col"

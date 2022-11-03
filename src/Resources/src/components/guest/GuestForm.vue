@@ -1,5 +1,5 @@
 <template>
-  <div class="grid grid-cols-3 gap-4 mx-4">
+  <div class="mx-4 grid grid-cols-3 gap-4">
     <div class="grid grid-rows-2">
           <span class="ml-2 text-primary-3 uppercase tracking-[1px] text-note font-bold self-center">
             {{ t('guest.form.firstname') }}*

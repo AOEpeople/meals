@@ -1,6 +1,12 @@
 <template>
-    <div class="flex m-8 justify-center">
-      <h5 class="w-32 m-0 self-center text-black">{{ t('balance.amount') }}: €</h5>
+  <radar-spinner v-if="!loaded"
+      :animation-duration="2000"
+      :size="60"
+      color="#1b5298"
+  />
+  <div v-show="loaded">
+    <div class="m-8 flex justify-center">
+      <h5 class="m-0 w-32 self-center text-black">{{ t('balance.amount') }}: €</h5>
       <input
           type="text"
           :value="balance < 0 ? balance.toFixed(2).slice(1).replace(/\./g, ',') : '0,00'"
@@ -9,9 +15,11 @@
       />
     </div>
     <div id="paypal-container" class="mx-8 my-2"></div>
+  </div>
 </template>
 
 <script>
+import { RadarSpinner } from 'epic-spinners'
 import { loadScript } from "@paypal/paypal-js";
 import { balanceStore } from "@/store/balanceStore";
 import { transactionStore } from "@/store/transactionStore";
@@ -19,10 +27,12 @@ import { useI18n } from "vue-i18n";
 import {ref} from "vue";
 
 export default {
+  components: {RadarSpinner},
   data() {
     return {
       balance: parseFloat(sessionStorage.getItem('balance')),
       locale: ref('en'),
+      loaded: ref(false)
     }
   },
   setup() {
@@ -125,7 +135,8 @@ export default {
         })
         .catch((error) => {
           console.error("failed to load the PayPal JS SDK script", error);
-        });
+        })
+        .then(() => this.loaded = true);
   }
 }
 

@@ -1,9 +1,9 @@
 <template>
-  <div class="m-2 bg-white border-2">
-    <div class="bg-primary-1 text-white">
+  <div class="m-2 border-2 bg-white">
+    <div class="text-white bg-primary-1">
       <span class="m-2">{{ dateString }}</span>
     </div>
-    <div class="flex flex-col flex-1">
+    <div class="flex flex-1 flex-col">
       <GuestSlots :slots="invitation.slots" />
       <div v-for="(meal, mealId) in invitation.meals"
            class="py-[13px] mx-[15px] border-b-[0.7px] last:border-b-0"

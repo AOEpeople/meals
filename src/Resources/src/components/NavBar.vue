@@ -1,15 +1,15 @@
 <template>
   <Disclosure v-slot="{ open }">
-    <header class="bg-white shadow-[0_15px_35px_0_#5B788F21] h-[60px] xl:h-24">
+    <header class="z-[3] relative bg-white shadow-[0_15px_35px_0_#5B788F21] h-[60px] xl:h-24">
       <nav class="grid grid-cols-3 h-[inherit] items-center content-center xl:mx-auto xl:max-w-screen-aoe xl:grid-cols-10" aria-label="Top">
-        <div v-if="isAuthenticated" class="justify-self-start ml-6 xl:hidden" id="dropdown">
-          <DisclosureButton class="inline-flex justify-center items-center p-2 -mx-2 text-gray-400 rounded-md hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+        <div v-if="isAuthenticated" class="ml-6 justify-self-start xl:hidden" id="dropdown">
+          <DisclosureButton class="-mx-2 inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
             <span class="sr-only">Open menu</span>
-            <MenuIcon v-if="!open" class="block w-6 h-6" aria-hidden="true" />
-            <XIcon v-else class="block w-6 h-6" aria-hidden="true" />
+            <MenuIcon v-if="!open" class="block h-6 w-6" aria-hidden="true" />
+            <XIcon v-else class="block h-6 w-6" aria-hidden="true" />
           </DisclosureButton>
         </div>
-        <div id="logo" class="inline-block justify-self-center xl:justify-self-start xl:col-span-2">
+        <div id="logo" class="inline-block justify-self-center xl:col-span-2 xl:justify-self-start">
           <router-link to="/">
             <svg class="w-[197px] h-[39px] cursor-pointer" viewBox="0 0 179 39" fill="none" xmlns="http://www.w3.org/2000/svg">
               <g id="meals" class="fill-secondary">
@@ -21,7 +21,7 @@
             </svg>
           </router-link>
         </div>
-        <div v-if="isAuthenticated" class="hidden col-span-4 space-x-3 xl:inline-block">
+        <div v-if="isAuthenticated" class="col-span-4 hidden space-x-3 xl:inline-block">
           <span v-for="link in navigation">
             <router-link
               v-if="link.access.includes(role)"
@@ -32,8 +32,8 @@
             />
           </span>
         </div>
-        <div v-if="isAuthenticated" class="inline-block col-span-4 justify-self-end space-x-4">
-          <div class="hidden self-center space-x-2 text-right xl:inline-block">
+        <div v-if="isAuthenticated" class="col-span-4 inline-block justify-self-end space-x-4">
+          <div class="hidden self-center text-right space-x-2 xl:inline-block">
             <Icons icon="person-outline" class="inline-block w-6 fill-primary" />
             <span class="text-[14px] leading-[22px] font-medium text-black">
               {{ user }}

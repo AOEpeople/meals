@@ -1,17 +1,17 @@
 <template>
-  <div class="flex flex-row gap-4 justify-around w-auto xl:grid-cols-6">
-    <div class="items-center self-center basis-10/12 xl:col-span-5">
-      <div class="self-center break-all sm:break-words">
-        <span class="text-primary uppercase tracking-[1px] text-note font-bold">
+  <div class="flex w-auto flex-row justify-around gap-4 xl:grid-cols-6">
+    <div class="basis-10/12 items-center self-center xl:col-span-5">
+      <div class="self-center">
+        <span class="inline-block text-primary uppercase tracking-[0.5px] leading-[20px] text-note font-bold break-words">
           {{ title }}
           <span v-if="meal.isNew" class="w-[36px] h-[17px] bg-highlight text-white align-text-bottom ml-1 pl-1 pr-[3px] py-[1px] leading-[16px] text-[11px] tracking-[1.5px]">
             {{ t('dashboard.new') }}
           </span>
         </span><br>
-        <p v-if="description !== ''" class="m-0 font-light description text-primary">{{ description }}</p>
+        <p v-if="description !== ''" class="m-0 break-words font-light description text-primary">{{ description }}</p>
       </div>
     </div>
-    <div class="flex flex-none justify-end items-center basis-2/12 text-align-last">
+    <div class="flex flex-none basis-2/12 items-center justify-end text-align-last">
       <ParticipationCounter :meal="meal" :mealCSS="mealCSS"/>
       <Checkbox
           :weekID="weekID"

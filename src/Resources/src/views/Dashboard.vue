@@ -1,5 +1,5 @@
 <template>
-  <tabs v-model="selectedTab" class="justify-center mb-5">
+  <tabs v-model="selectedTab" class="mb-5 justify-center">
     <tab
         v-for="(week, weekID, index) in weeks"
         :key="`t${weekID}`"

@@ -40,30 +40,30 @@ const open = ref(false)
 const enabled = computed(() => meal.isParticipating !== null)
 
 const checkboxCSS = computed(() => {
-  let cssResult = 'rounded-md h-[30px] w-[30px] xl:h-[20px] xl:w-[20px] border-[0.5px] border-gray-200 '
+  let cssResult = 'rounded-md h-[30px] w-[30px] xl:h-[20px] xl:w-[20px] '
 
   if(enabled.value) {
     switch (meal.mealState) {
       case 'disabled':
-        cssResult += 'bg-[#80909F]'
+        cssResult += 'bg-[#80909F] border-0'
         return cssResult
-      case 'tradeable':
       case 'open':
-        cssResult += 'bg-primary-4 hover:bg-primary-3 cursor-pointer'
+      case 'tradeable':
+        cssResult += 'bg-primary-4 hover:bg-primary-3 cursor-pointer border-0'
         return cssResult
       case 'offering':
       case 'offerable':
-        cssResult += 'bg-highlight cursor-pointer'
+        cssResult += 'bg-highlight cursor-pointer border-0'
         return cssResult
     }
   } else {
     switch (meal.mealState) {
       case 'disabled':
-        cssResult += 'bg-[#FAFAFA] opacity-50'
+        cssResult += 'bg-[#FAFAFA] opacity-50 border-[0.5px]'
         return cssResult
       case 'tradeable':
       case 'open':
-        cssResult += 'cursor-pointer bg-[#FAFAFA] hover:bg-gray-100'
+        cssResult += 'cursor-pointer bg-[#FAFAFA] hover:bg-gray-100 border-[0.5px]'
         return cssResult
     }
   }

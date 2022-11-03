@@ -11,7 +11,7 @@
           </button>
         </template>
         <template #panel="{ close }">
-          <TransactionPanel @closePanel="close()" />
+          <TransactionPanel @closePanel="close()" class="w-[420px] h-[450px]" />
         </template>
       </Popover>
     </div>

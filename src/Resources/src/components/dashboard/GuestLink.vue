@@ -1,10 +1,10 @@
 <template>
-  <div class="bg-white p-4 border-2 rounded">
+  <div class="rounded border-2 bg-white p-4">
     <span>{{ url }}</span>
-    <span class="text-green">
-      <CheckIcon class="w-4" />
-      {{ t('dashboard.guest') }}
-    </span>
+    <div class="flex gap-2 text-green">
+      <CheckIcon class="w-5 flex-initial" />
+      <span class="flex-auto text-left">{{ t('dashboard.guest') }}</span>
+    </div>
   </div>
 </template>
 

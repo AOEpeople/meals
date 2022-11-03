@@ -28,7 +28,7 @@
 import Week from '@/components/dashboard/Week.vue'
 import { Tabs, Tab, TabPanels, TabPanel } from 'vue3-tabs'
 import { useI18n } from "vue-i18n"
-import {ref, watch} from "vue"
+import { ref } from "vue"
 import { useProgress } from '@marcoschulte/vue3-progress'
 import { dashboardStore } from '@/store/dashboardStore'
 

@@ -2,7 +2,7 @@
   <div class="flex mx-auto w-3/4 h-auto bg-white rounded day-shadow w-max-screen-aoe">
     <div :class="[day.isLocked ? 'bg-[#80909F]' : 'bg-primary-2', 'flex justify-center w-[24px] rounded-l-[5px]']">
       <div v-if="!day.isLocked" id="icon" class="relative left-[425%] bottom-[2%] z-[2]">
-        <GuestButton :dayID="dayID"/>
+        <GuestButton :dayID="dayID" :index="index"/>
       </div>
       <div class="grid weekday min-w-[200px]">
         <div id="dayLabel" :class="[day.isLocked ? '-mb-[0.65rem]' : 'mb-1']">
@@ -10,7 +10,7 @@
         </div>
       </div>
     </div>
-    <div v-if="!emptyDay" class="flex flex-col flex-1 z-[3]">
+    <div v-if="!emptyDay" class="flex flex-col flex-1 z-[1]">
       <Slots
           :weekID="weekID"
           :dayID="dayID"
@@ -51,7 +51,8 @@ const { t, locale } = useI18n()
 
 const props = defineProps([
     'weekID',
-    'dayID'
+    'dayID',
+    'index'
 ])
 
 const day = dashboardStore.getDay(props.weekID, props.dayID)

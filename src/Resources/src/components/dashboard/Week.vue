@@ -4,10 +4,11 @@
     <p class="description text-primary">{{ (start + ' - ' + end).replaceAll(',', '') }}</p>
   </div>
   <div class="grid" id="weekly-menu">
-    <Day v-for="(day, dayID) in days"
+    <Day v-for="(day, dayID, index) in days"
          :weekID="weekID"
          :dayID="dayID"
          :key="dayID"
+         :index="index"
          class="mb-[2.5rem]"
     />
   </div>

@@ -2,7 +2,7 @@
   <NavBar />
   <vue3-progress-bar></vue3-progress-bar>
   <Content />
-  <Footer class="z-[2]" />
+  <Footer />
 </template>
 
 <script setup>

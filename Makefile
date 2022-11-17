@@ -42,7 +42,7 @@ build-yarn-dev-css:
 	ddev exec yarn --cwd=src/Resources build-dev-css
 
 build-yarn-watch:
-	ddev exec yarn --cwd=src/Resources build-dev --watch
+	ddev exec yarn --cwd=src/Resources build-watch
 
 run-lint-sass:
 	ddev exec yarn --cwd src/Resources lint:sass

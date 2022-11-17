@@ -21,10 +21,11 @@ import {useI18n} from 'vue-i18n'
 import GuestSlots from '@/components/guest/GuestSlots.vue'
 import GuestMeal from '@/components/guest/GuestMeal.vue'
 import GuestVariation from '@/components/guest/GuestVariation.vue'
+import {computed} from "vue";
 
 const { t, locale } = useI18n()
 const props = defineProps(['invitation'])
 
 const date = new Date(Date.parse(props.invitation.date.date));
-const dateString = date.toLocaleDateString(locale.value, {weekday: 'short', year: 'numeric', month: 'numeric', day: 'numeric'})
+const dateString = computed(() => date.toLocaleDateString(locale.value, {weekday: 'short', year: 'numeric', month: 'numeric', day: 'numeric'}))
 </script>

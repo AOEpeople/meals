@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-auto flex h-auto w-3/4 rounded bg-white day-shadow w-max-screen-aoe">
+  <div :class="[day.slotsEnabled ? 'min-h-[400px]' : 'min-h-[350px]' , 'mx-auto flex h-auto xs:w-5/6 w-[95%] rounded bg-white aoe-shadow w-max-screen-aoe']">
     <div :class="[day.isLocked ? 'bg-[#80909F]' : 'bg-primary-2', 'flex relative justify-center w-[24px] rounded-l-[5px]']">
       <div v-if="!day.isLocked" id="icon" class="absolute w-[24px] text-center bottom-[1px] left-[2px] z-[2]">
         <GuestButton :dayID="dayID" :index="index"/>
@@ -11,14 +11,14 @@
       </div>
     </div>
     <div v-if="!emptyDay" class="flex flex-col flex-1 z-[1]">
-      <Slots
+      <Slots v-if="day.slotsEnabled"
           :weekID="weekID"
           :dayID="dayID"
       />
       <div
           v-for="(meal, mealID) in day.meals"
           :key="mealID"
-          class="py-[13px] mx-[15px] border-b-[0.7px] last:border-b-0"
+          class="my-auto mx-[15px]"
       >
         <VariationsData v-if="meal.variations"
           :weekID="weekID"
@@ -63,9 +63,6 @@ let emptyDay = Object.keys(day.meals).length === 0
 </script>
 
 <style scoped>
-.day-shadow {
-  box-shadow: 0 4px 0 hsla(0,0%,100%,.46),0 15px 35px rgba(216,225,233,.8);
-}
 .weekday {
   align-items: center;
   position: relative;

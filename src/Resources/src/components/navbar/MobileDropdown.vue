@@ -1,6 +1,5 @@
 <template>
-    <DisclosurePanel class="bg-white xl:hidden" v-slot="{ close }">
-      <div class="grid border-t-2 border-gray-200 sm:grid-cols-2">
+    <DisclosurePanel class="grid border-t-2 border-gray-200 sm:grid-cols-2 bg-white xl:hidden hover:overflow-scroll" v-slot="{ close }">
         <div class="pt-2 pb-3">
           <router-link
             v-for="link in props.navigation"
@@ -25,13 +24,10 @@
               <div class="text-base font-medium text-gray-800">{{ userName }}</div>
             </div>
           </div>
-          <span class="block cursor-pointer px-4 py-2 text-base font-medium text-gray-600 hover:text-highlight hover:bg-gray-100" @click="changeLocale">
-            {{ t('changeLanguage') }}
-          </span>
           <router-link
-            @click="close()"
-            to="/balance"
-           :class="['/balance' === $route.path
+              @click="close()"
+              to="/balance"
+              :class="['/balance' === $route.path
             ? 'bg-indigo-50 border-primary text-primary'
             : 'border-transparent text-gray-600 hover:border-highlight hover:text-highlight',
              'block pl-3 pr-4 py-2 border-l-4 hover:bg-gray-200 text-base font-medium'
@@ -42,11 +38,13 @@
               € {{ balance }}
             </a>
           </router-link>
+          <span class="block cursor-pointer px-4 py-2 text-base font-medium text-gray-600 hover:text-highlight hover:bg-gray-100" @click="changeLocale">
+            {{ t('changeLanguage') }}
+          </span>
           <DisclosureButton as="a" href="/logout" class="block px-4 py-2 text-base font-medium capitalize text-gray-600 hover:text-highlight hover:bg-gray-100">
             {{ t('logout') }}
           </DisclosureButton>
         </div>
-      </div>
     </DisclosurePanel>
 </template>
 

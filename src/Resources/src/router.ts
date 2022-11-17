@@ -10,6 +10,7 @@ import Balance from "@/views/Balance.vue";
 import Guest from "@/views/Guest.vue";
 import Login from "@/views/Login.vue";
 import NotAllowed from "@/views/NotAllowed.vue";
+import PrintableList from "@/views/PrintableList.vue"
 
 declare module 'vue-router' {
     interface RouteMeta {
@@ -108,6 +109,14 @@ const router = createRouter({
                 allowedRoles: ['ROLE_KITCHEN_STAFF', 'ROLE_USER', 'ROLE_ADMIN', 'ROLE_FINANCE']
             }
         },
+        {
+            path: '/print/participations',
+            name: 'PrintableList',
+            component: PrintableList,
+            meta: {
+                allowedRoles: ['ROLE_KITCHEN_STAFF', 'ROLE_USER', 'ROLE_ADMIN', 'ROLE_FINANCE']
+            }
+        }
     ],
 })
 

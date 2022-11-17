@@ -26,9 +26,7 @@ const tableData = [
   { title_en: 'Dish3', title_de: 'Gericht3', desc_en: 'Description', desc_de: 'Beschreibung', category: 'Vegetarian' },
 ]
 
-setTimeout(function () {
-    progress.finish()
-}, 500)
+progress.finish()
 </script>
 
 <style scoped>

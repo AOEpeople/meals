@@ -216,12 +216,15 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
 
         foreach ($participants as $participant) {
             $slot = $participant->getSlot();
-            if (null === $slot || $slot->isDisabled() || $slot->isDeleted()) {
-                $noSlotParticipants[$participant->getProfile()->getUsername()][] = $participant;
-                continue;
-            }
 
-            $groupedParticipants[$slot->getTitle()][$participant->getProfile()->getUsername()][] = $participant;
+            /** @var Meal $meal */
+            foreach ($participant->getMeal()->getDay()->getMeals() as $meal) {
+                if (null === $slot || $slot->isDisabled() || $slot->isDeleted()) {
+                    $noSlotParticipants[$participant->getProfile()->getUsername()][$meal->getDish()->getSlug()] = null !== $meal->getParticipant($participant->getProfile());
+                    continue;
+                }
+                    $groupedParticipants[$slot->getTitle()][$participant->getProfile()->getUsername()][$meal->getDish()->getSlug()] = null !== $meal->getParticipant($participant->getProfile());
+                }
         }
 
         if (0 < count($noSlotParticipants)) {

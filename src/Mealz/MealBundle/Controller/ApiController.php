@@ -87,16 +87,19 @@ class ApiController extends BaseController
                     $activeSlot = 0;
                 }
 
+                $slots = $this->slotSrv->getAllActiveSlots();
+
                 $activeParticipations = $this->participationSrv->getCountOfActiveParticipationsByDayAndUser($day->getDateTime(), $profile);
                 $response[$week->getId()]['days'][$day->getId()] = [
                     'date' => $day->getDateTime(),
                     'isLocked' => $day->getLockParticipationDateTime() < new DateTime(),
                     'activeSlot' => $activeSlot,
+                    'slotsEnabled' => count($slots) > 0,
                     'slots' => [],
                     'meals' => [],
                 ];
-                $slots = $this->slotSrv->getSlotStatusForDay($day->getDateTime());
-                $this->addSlots($response[$week->getId()]['days'][$day->getId()]['slots'], $slots, $activeParticipations);
+
+                $this->addSlots($response[$week->getId()]['days'][$day->getId()]['slots'], $slots, $day, $activeParticipations);
                 /* @var Meal $meal */
                 foreach ($day->getMeals() as $meal) {
                     if ($meal->getDish() instanceof DishVariation) {
@@ -111,7 +114,7 @@ class ApiController extends BaseController
         return new JsonResponse(['weeks' => $response]);
     }
 
-    private function addSlots(array &$slotArray, array $slots, ?int $activeParticipations): void
+    private function addSlots(array &$slotArray, array $slots, Day $day, ?int $activeParticipations): void
     {
         $disabled = false;
         if (null !== $activeParticipations) {
@@ -126,13 +129,14 @@ class ApiController extends BaseController
             'slug' => 'auto',
             'disabled' => $disabled,
         ];
+        /** @var Slot $slot */
         foreach ($slots as $slot) {
-            $slotArray[$slot['id']] = [
-                'id' => $slot['id'],
-                'title' => $slot['title'],
-                'count' => $slot['count'],
-                'limit' => $slot['limit'],
-                'slug' => $slot['slug'],
+            $slotArray[$slot->getId()] = [
+                'id' => $slot->getId(),
+                'title' => $slot->getTitle(),
+                'count' => $this->slotSrv->getSlotParticipationCountOnDay($day, $slot),
+                'limit' => $slot->getLimit(),
+                'slug' => $slot->getSlug(),
                 'disabled' => false,
             ];
         }

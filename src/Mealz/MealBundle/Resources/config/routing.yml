@@ -232,7 +232,12 @@ MealzMealBundle_Category_Form_preFilled:
 
 MealzMealBundle_Print_participations:
     path: /print/participations
-    defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::list }
+    defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
+
+MealzMealBundle_Print_participations_api:
+  path: /api/print/participations
+  defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::list }
+  methods: [ GET ]
 
 mealz_meal_edit_participations:
     path: /participations/{week}/edit

@@ -3,4 +3,11 @@ module.exports = {
   presets: [
       require("./node_modules/aoe-group-web-cd/aoe.config.js"),
   ],
+    theme: {
+      extend: {
+          screens: {
+              'xs': '455px'
+          }
+      }
+    }
 }

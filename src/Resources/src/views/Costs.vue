@@ -6,9 +6,7 @@ Costs
 import {useProgress} from '@marcoschulte/vue3-progress'
 const progress = useProgress().start()
 
-setTimeout(function () {
-    progress.finish()
-}, 500)
+progress.finish()
 </script>
 
 <style scoped>

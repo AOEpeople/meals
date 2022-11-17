@@ -38,9 +38,7 @@ const tableLabels = {
   de: ['Title', 'Limit', 'Aktionen']
 };
 
-setTimeout(function () {
-    progress.finish()
-}, 500)
+progress.finish()
 </script>
 
 <style scoped>

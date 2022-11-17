@@ -81,7 +81,5 @@ async function submitForm() {
   }
 }
 
-setTimeout(function () {
-    progress.finish()
-}, 500)
+progress.finish()
 </script>

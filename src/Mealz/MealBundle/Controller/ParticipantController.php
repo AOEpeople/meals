@@ -20,6 +20,7 @@ use App\Mealz\MealBundle\Repository\WeekRepositoryInterface;
 use App\Mealz\MealBundle\Service\EventService;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\MealBundle\Service\ParticipationService;
+use App\Mealz\MealBundle\Service\SlotService;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Exception;
@@ -29,6 +30,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\Constraints\Date;
 
 /**
  * @Security("is_granted('ROLE_USER')")
@@ -37,6 +39,7 @@ class ParticipantController extends BaseController
 {
     private EventDispatcherInterface $eventDispatcher;
     private EventService $eventSrv;
+    private SlotService $slotSrv;
     private ParticipationService $participationSrv;
     private MealRepositoryInterface $mealRepo;
     private SlotRepositoryInterface $slotRepo;
@@ -44,12 +47,14 @@ class ParticipantController extends BaseController
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
         EventService $eventSrv,
+        SlotService $slotSrv,
         ParticipationService $participationSrv,
         MealRepositoryInterface $mealRepo,
         SlotRepositoryInterface $slotRepo
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->eventSrv = $eventSrv;
+        $this->slotSrv = $slotSrv;
         $this->participationSrv = $participationSrv;
         $this->mealRepo = $mealRepo;
         $this->slotRepo = $slotRepo;
@@ -266,22 +271,25 @@ class ParticipantController extends BaseController
     /**
      * @Security("is_granted('ROLE_KITCHEN_STAFF')")
      */
-    public function list(DayRepository $dayRepo, ParticipantRepositoryInterface $participantRepo): Response
+    public function list(DayRepository $dayRepo, ParticipantRepositoryInterface $participantRepo): JSONResponse
     {
-        $participants = [];
-        $day = $dayRepo->getCurrentDay();
+        $day = $dayRepo->getDayByDate(new DateTime('tomorrow'));
 
-        if (null === $day) {
-            $day = new Day();
-            $day->setDateTime(new DateTime());
-        } else {
-            $participants = $participantRepo->findAllGroupedBySlotAndProfileID($day->getDateTime());
+        $slots = $this->slotSrv->getAllActiveSlots();
+        $list['data'] = $this->participationSrv->getParticipationListBySlots($day, $slots);
+
+        $meals = $this->participationSrv->getMealsForTheDay($day);
+
+        $list['meals']['en'] = array_map((fn($meal): String => $meal->getDish()->getTitleEn()), $meals->toArray());
+        $list['meals']['de'] = array_map((fn($meal): String => $meal->getDish()->getTitleDe()), $meals->toArray());
+        $list['day'] = $day->getDateTime();
+
+        /** @var Meal $meal */
+        foreach ($meals as $meal) {
+            $list['participations'][$meal->getDish()->getSlug()] = $this->participationSrv->getCountByMeal($meal, true);
         }
 
-        return $this->render('MealzMealBundle:Participant:list.html.twig', [
-            'day' => $day,
-            'users' => $participants,
-        ]);
+        return new JsonResponse($list, 200);
     }
 
     public function editParticipation(

@@ -69,7 +69,7 @@ class ParticipationCountService
                 }
             }
 
-            $participationByDay = self::getParticipationByDay($day);
+            $participationByDay = (new ParticipationCountService)->getParticipationByDay($day);
             if (!empty($participationByDay)) {
                 $participationByDays[$day->getDateTime()->format('Y-m-d')] = $participationByDay;
             }
@@ -78,7 +78,7 @@ class ParticipationCountService
         return $participationByDays;
     }
 
-    public static function getParticipationByDay(Day $day): array
+    public function getParticipationByDay(Day $day): array
     {
         $participation = [];
 

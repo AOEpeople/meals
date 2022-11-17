@@ -115,5 +115,9 @@
     "resolve_error": "Error booking the selected meals.",
     "title": "Lunch at AOE",
     "description": "As our guest, we would like to invite you to lunch in the AOE Eatery. To order a meal, register no later than one day before your visit to AOE with your personal information and choose the desired dish. Your order will be forwarded to our cooks.\n\nWe hope that you enjoy your lunch\nAOE"
+  },
+  "printList": {
+    "title": "Participations on ",
+    "participations": "Participations"
   }
 }

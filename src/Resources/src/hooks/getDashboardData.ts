@@ -42,6 +42,7 @@ export type Day = {
     activeSlot: number | string,
     meals: Dictionary<Meal>,
     slots: Dictionary<Slot>,
+    slotsEnabled: boolean,
 }
 
 export type Week = {

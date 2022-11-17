@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Service;
 
+use App\Mealz\MealBundle\Entity\Day;
+use App\Mealz\MealBundle\Entity\Meal;
+use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Repository\DayRepositoryInterface;
 use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
@@ -165,9 +168,30 @@ class SlotService
         };
     }
 
+    public function getSlotParticipationCountOnDay(Day $day, Slot $slot): int
+    {
+        $count = [];
+
+        /** @var Meal $meal */
+        foreach ($day->getMeals() as $meal) {
+            /** @var Participant $participant */
+            foreach ($meal->getParticipants() as $participant)
+                if ($participant->getSlot() === $slot) {
+                    $count[$participant->getProfile()->getUsername()] = true;
+                }
+        }
+
+        return count($count);
+    }
+
     public function getAllSlots(): array
     {
         return $this->slotRepo->findBy(['deleted' => 0]);
+    }
+
+    public function getAllActiveSlots(): array
+    {
+        return $this->slotRepo->findBy(['deleted' => 0, 'disabled' => 0]);
     }
 
     public function getSlotById(int $id): ?Slot

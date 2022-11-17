@@ -77,7 +77,5 @@ let oldDate = new Date()
 oldDate.setDate(oldDate.getDate() - 28)
 const oldDateString = oldDate.toLocaleDateString(locale.value, dateOptions)
 
-setTimeout(function () {
-    progress.finish()
-}, 500)
+progress.finish()
 </script>

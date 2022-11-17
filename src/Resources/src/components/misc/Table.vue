@@ -32,7 +32,7 @@ const props = defineProps([
 let localeLabels = computed(() => locale.value === 'en' ? props.labels.en : props.labels.de);
 </script>
 
-<style>
+<style scoped>
 .border-spacing-none {
   border-spacing: 0
 }

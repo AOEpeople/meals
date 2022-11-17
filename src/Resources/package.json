@@ -4,6 +4,7 @@
   "description": "",
   "author": "AOE GmbH",
   "scripts": {
+    "build-watch": "concurrently \"yarn build-style-watch\" \"yarn build-dev-watch\"",
     "build": "yarn build-style && webpack --mode production",
     "lint": "yarn run lint:sass",
     "build-dev": "webpack --mode development",
@@ -59,6 +60,7 @@
     "aoe-group-web-cd": "git+https://aoe-group-web-cd:xsaXc7zxEcsZFHtkLJAP@gitlab.aoe.com/project/aoe-internal/aoe-group-web-cd.git",
     "autoprefixer": "^10.3.1",
     "babel-loader": "^8.2.2",
+    "concurrently": "^7.5.0",
     "css-loader": "^6.5",
     "cssnano": "^5.0",
     "cssnano-preset-advanced": "^5.1.3",

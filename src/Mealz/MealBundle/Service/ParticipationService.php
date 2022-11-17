@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Service;
 
+use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
+use App\Mealz\MealBundle\Entity\MealCollection;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Repository\DayRepositoryInterface;
@@ -15,6 +17,7 @@ use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use phpDocumentor\Reflection\Types\Boolean;
 
 class ParticipationService
 {
@@ -233,11 +236,11 @@ class ParticipationService
         return null;
     }
 
-    public function getCountByMeal(Meal $meal): int
+    public function getCountByMeal(Meal $meal, bool $withoutCombined = false): int
     {
-        $participation = ParticipationCountService::getParticipationByDay($meal->getDay());
+        $participation = (new ParticipationCountService)->getParticipationByDay($meal->getDay());
 
-        if ($meal->isCombinedMeal()) {
+        if ($meal->isCombinedMeal() || $withoutCombined) {
             return $participation['countByMealIds'][$meal->getId()][$meal->getDish()->getSlug()]['count'] ?? 0;
         }
 
@@ -254,5 +257,22 @@ class ParticipationService
         }
 
         return false;
+    }
+
+    public function getParticipationListBySlots(Day $day, array $slots): array
+    {
+        return $this->participantRepo->findAllGroupedBySlotAndProfileID($day->getDateTime());
+    }
+
+    public function getMealsForTheDay(Day $day): MealCollection
+    {
+        $result = new MealCollection();
+
+        /** @var Meal $meal */
+        foreach ($day->getMeals() as $meal) {
+            $result->add($meal);
+        }
+
+        return $result;
     }
 }

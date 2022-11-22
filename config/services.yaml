@@ -162,16 +162,6 @@ services:
         arguments:
             $entityClass: App\Mealz\MealBundle\Entity\Week
 
-
-    # Forms
-    mealz_meal.form.dish:
-        class: App\Mealz\MealBundle\Form\Dish\DishForm
-        arguments: ['%mealz.meal.price%']
-
-    mealz_meal.form.dishvariation:
-        class: App\Mealz\MealBundle\Form\Dish\DishVariationForm
-        arguments: ['%mealz.meal.price%']
-
     # Services
     App\Mealz\MealBundle\Service\DishService:
         arguments:
@@ -196,10 +186,6 @@ services:
     App\Mealz\MealBundle\Service\Workday:
         calls:
             - [setDayBlacklist, [['01-01', '05-01', '10-31', '12-24', '12-25', '12-26', '12-27', '12-28', '12-29', '12-30', '12-31']]]
-
-    App\Mealz\MealBundle\Twig\Extension\Variation:
-        arguments:
-            $dishConsCountPeriod: '%app.dish_consumption_count_period%'
 
     # Service Aliases
     mealz_meal.service.dish_service: '@App\Mealz\MealBundle\Service\DishService'

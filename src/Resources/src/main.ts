@@ -6,7 +6,6 @@ import {Vue3ProgressPlugin} from '@marcoschulte/vue3-progress'
 
 // Style
 import '../style/output.css'
-import '../scss/meals.scss'
 
 // Vue Components
 import App          from '@/App.vue'

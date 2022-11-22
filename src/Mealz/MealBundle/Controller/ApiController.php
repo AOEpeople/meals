@@ -36,6 +36,7 @@ class ApiController extends BaseController
     private ApiService $apiSrv;
     private OfferService $offerSrv;
     private GuestParticipationService $guestParticipationSrv;
+    private string $paypalId;
 
     public function __construct(
         DishService $dishSrv,
@@ -44,7 +45,8 @@ class ApiController extends BaseController
         ParticipationService $participationSrv,
         ApiService $apiSrv,
         OfferService $offerSrv,
-        GuestParticipationService $guestParticipationSrv
+        GuestParticipationService $guestParticipationSrv,
+        string $paypalId
     ) {
         $this->dishSrv = $dishSrv;
         $this->slotSrv = $slotSrv;
@@ -53,6 +55,7 @@ class ApiController extends BaseController
         $this->apiSrv = $apiSrv;
         $this->offerSrv = $offerSrv;
         $this->guestParticipationSrv = $guestParticipationSrv;
+        $this->paypalId = $paypalId;
     }
 
     /**
@@ -313,7 +316,7 @@ class ApiController extends BaseController
         ];
 
         $slots = $this->slotSrv->getSlotStatusForDay($day->getDateTime());
-        $this->addSlots($response['slots'], $slots, null);
+        $this->addSlots($response['slots'], $slots, $day, null);
 
         /* @var Meal $meal */
         foreach ($day->getMeals() as $meal) {
@@ -325,5 +328,10 @@ class ApiController extends BaseController
         }
 
         return new JsonResponse($response, 200);
+    }
+
+    public function getPaypalId(): JsonResponse
+    {
+        return new JsonResponse($this->paypalId, 200);
     }
 }

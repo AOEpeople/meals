@@ -95,6 +95,10 @@ services:
             - [setRepository, ['@mealz_meal.repository.slot']]
             - [setEntityName, ['Slot']]
 
+    App\Mealz\MealBundle\Controller\ApiController:
+        arguments:
+            $paypalId: '%app.paypal.client_id%'
+
     # Interface Implementations
     App\Mealz\MealBundle\Service\Logger\MealsLoggerInterface: '@App\Mealz\MealBundle\Service\Logger\MealsLogger'
     App\Mealz\MealBundle\Service\Mailer\MailerInterface: '@App\Mealz\MealBundle\Service\Mailer\Mailer'

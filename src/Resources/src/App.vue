@@ -1,6 +1,6 @@
 <template>
   <NavBar />
-  <div class="z-[4] relative">
+  <div class="z-[4] absolute">
     <vue3-progress-bar/>
   </div>
   <Content class="z-[2] relative" />

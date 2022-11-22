@@ -25,6 +25,7 @@ import { balanceStore } from "@/store/balanceStore";
 import { transactionStore } from "@/store/transactionStore";
 import { useI18n } from "vue-i18n";
 import {ref} from "vue";
+import {usePaypal} from "@/hooks/getPaypal";
 
 export default {
   components: {RadarSpinner},
@@ -43,7 +44,9 @@ export default {
     let amountField = this.$refs['input'];
     let panel = this;
 
-    let { locale } = useI18n();
+    const { locale } = useI18n();
+
+    const { id } = await usePaypal()
 
     function formatCurrency(total) {
       let neg = false;
@@ -55,7 +58,7 @@ export default {
     }
 
     loadScript({
-      "client-id": "Acbj_OdOFasvxF6I2mJrrQTMN3vuSE65WbnyRkBBCMF5U32g63sXbCbPflPDA8sMDttBUsbLW7r59OtE",
+      "client-id": id,
       currency: "EUR",
     })
         .then((paypal) => {

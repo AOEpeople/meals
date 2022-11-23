@@ -1,14 +1,27 @@
 <template>
-  <span @click="handle" :class="checkboxCSS">
-    <CheckIcon v-if="enabled && (meal.mealState === 'open' || meal.mealState === 'disabled')" class="text-white w-[80%] h-[80%] relative top-[10%] left-[10%]" />
-    <LockClosedIcon v-if="enabled && meal.mealState === 'offerable'" class="text-white w-[80%] h-[80%] relative top-[10%] left-[10%]" />
-    <LockOpenIcon v-if="enabled && meal.mealState === 'offering'" class="text-white w-[80%] h-[80%] relative top-[10%] left-[10%]"/>
+  <span
+    :class="checkboxCSS"
+    @click="handle"
+  >
+    <CheckIcon
+      v-if="enabled && (meal.mealState === 'open' || meal.mealState === 'disabled')"
+      class="text-white w-[80%] h-[80%] relative top-[10%] left-[10%]"
+    />
+    <LockClosedIcon
+      v-if="enabled && meal.mealState === 'offerable'"
+      class="text-white w-[80%] h-[80%] relative top-[10%] left-[10%]"
+    />
+    <LockOpenIcon
+      v-if="enabled && meal.mealState === 'offering'"
+      class="text-white w-[80%] h-[80%] relative top-[10%] left-[10%]"
+    />
   </span>
   <CombiModal
-      :open="open"
-      :weekID="weekID"
-      :dayID="dayID"
-      @closeCombiModal="closeCombiModal"/>
+    :open="open"
+    :weekID="weekID"
+    :dayID="dayID"
+    @closeCombiModal="closeCombiModal"
+  />
 </template>
 
 <script setup>

@@ -2,7 +2,11 @@
   <div class="grid grid-cols-3 ">
     <button>edit</button>
     <button>delete</button>
-    <Switch @toggle="(state) => enabled = state" :sr="'Enable TimeSlot'" :initial="initial"/>
+    <Switch
+      :sr="'Enable TimeSlot'"
+      :initial="initial"
+      @toggle="(state) => enabled = state"
+    />
   </div>
 </template>
 

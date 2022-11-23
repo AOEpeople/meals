@@ -1,14 +1,22 @@
 <template>
   <div class="text-center">
-    <h1 class="m-0">List of dishes</h1>
+    <h1 class="m-0">
+      List of dishes
+    </h1>
     <Disclosure>
-      <DisclosureButton class="btn-secondary">CREATE DISH</DisclosureButton>
+      <DisclosureButton class="btn-secondary">
+        CREATE DISH
+      </DisclosureButton>
       <DisclosurePanel>
         <ModifyDishes />
       </DisclosurePanel>
     </Disclosure>
   </div>
-  <Table :labels="tableLabels" :data="tableData" :actions="true" />
+  <Table
+    :labels="tableLabels"
+    :data="tableData"
+    :actions="true"
+  />
 </template>
 
 <script setup>

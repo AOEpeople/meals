@@ -1,38 +1,57 @@
 <template>
   <div :class="[day.slotsEnabled ? 'min-h-[400px]' : 'min-h-[350px]' , 'mx-auto flex h-auto xs:w-5/6 w-[95%] rounded bg-white aoe-shadow w-max-screen-aoe']">
     <div :class="[day.isLocked ? 'bg-[#80909F]' : 'bg-primary-2', 'flex relative justify-center w-[24px] rounded-l-[5px]']">
-      <div v-if="!day.isLocked" id="icon" class="absolute w-[24px] text-center bottom-[1px] left-[2px] z-[2]">
-        <GuestButton :dayID="dayID" :index="index"/>
+      <div
+        v-if="!day.isLocked"
+        id="icon"
+        class="absolute w-[24px] text-center bottom-[1px] left-[2px] z-[2]"
+      >
+        <GuestButton
+          :dayID="dayID"
+          :index="index"
+        />
       </div>
       <div class="grid weekday min-w-[200px]">
-        <div id="dayLabel" class="h-[26px]">
+        <div
+          id="dayLabel"
+          class="h-[26px]"
+        >
           <span class="align-middle uppercase dayLabel">{{ weekday }}</span>
         </div>
       </div>
     </div>
-    <div v-if="!emptyDay" class="flex flex-col flex-1 z-[1]">
-      <Slots v-if="day.slotsEnabled"
-          :weekID="weekID"
-          :dayID="dayID"
+    <div
+      v-if="!emptyDay"
+      class="flex flex-col flex-1 z-[1]"
+    >
+      <Slots
+        v-if="day.slotsEnabled"
+        :weekID="weekID"
+        :dayID="dayID"
       />
       <div
-          v-for="(meal, mealID) in day.meals"
-          :key="mealID"
-          class="my-auto mx-[15px]"
+        v-for="(meal, mealID) in day.meals"
+        :key="mealID"
+        class="my-auto mx-[15px]"
       >
-        <VariationsData v-if="meal.variations"
+        <VariationsData
+          v-if="meal.variations"
           :weekID="weekID"
           :dayID="dayID"
           :mealID="mealID"
         />
-        <MealData v-else
+        <MealData
+          v-else
           :weekID="weekID"
           :dayID="dayID"
           :mealID="mealID"
         />
       </div>
     </div>
-    <div v-if="emptyDay" class="h-[134px]">
+    <div
+      v-if="emptyDay"
+      class="h-[134px]"
+    >
       <span class="relative top-[53px] description text-primary-1 ml-[23px]">{{ t('dashboard.no_service') }}</span>
     </div>
   </div>

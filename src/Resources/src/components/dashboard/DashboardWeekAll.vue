@@ -1,7 +1,13 @@
 <template>
   <div class="divide-x-2 inline-flex">
-    <div class="" v-for="(week, weekID, index) in weeks">
-      <Week :weekID="weekID" :index="index"/>
+    <div
+      v-for="(week, weekID, index) in weeks"
+      class=""
+    >
+      <Week
+        :weekID="weekID"
+        :index="index"
+      />
     </div>
   </div>
 </template>

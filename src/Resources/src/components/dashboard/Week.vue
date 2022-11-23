@@ -1,15 +1,23 @@
 <template>
   <div class="text-center">
-    <h2 class="m-0">{{ t('dashboard.' + index) }}</h2>
-    <p class="description text-primary">{{ (start + ' - ' + end).replaceAll(',', '') }}</p>
+    <h2 class="m-0">
+      {{ t('dashboard.' + index) }}
+    </h2>
+    <p class="description text-primary">
+      {{ (start + ' - ' + end).replaceAll(',', '') }}
+    </p>
   </div>
-  <div class="grid" id="weekly-menu">
-    <Day v-for="(day, dayID, index) in days"
-         :weekID="weekID"
-         :dayID="dayID"
-         :key="dayID"
-         :index="index"
-         class="mb-[2.5rem]"
+  <div
+    id="weekly-menu"
+    class="grid"
+  >
+    <Day
+      v-for="(day, dayID, index) in days"
+      :key="dayID"
+      :weekID="weekID"
+      :dayID="dayID"
+      :index="index" 
+      class="mb-[2.5rem]"
     />
   </div>
 </template>

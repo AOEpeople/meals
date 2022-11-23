@@ -4,19 +4,30 @@
       <div class="self-center">
         <span class="inline-block text-primary uppercase tracking-[0.5px] leading-[20px] text-note font-bold break-words">
           {{ title }}
-          <span v-if="meal.isNew" class="w-[36px] h-[17px] bg-highlight text-white align-text-bottom ml-1 pl-1 pr-[3px] py-[1px] leading-[16px] text-[11px] tracking-[1.5px]">
+          <span
+            v-if="meal.isNew"
+            class="w-[36px] h-[17px] bg-highlight text-white align-text-bottom ml-1 pl-1 pr-[3px] py-[1px] leading-[16px] text-[11px] tracking-[1.5px]"
+          >
             {{ t('dashboard.new') }}
           </span>
         </span><br>
-        <p v-if="description !== ''" class="m-0 break-words font-light description text-primary">{{ description }}</p>
+        <p
+          v-if="description !== ''"
+          class="m-0 break-words font-light description text-primary"
+        >
+          {{ description }}
+        </p>
       </div>
     </div>
     <div class="flex flex-none basis-2/12 items-center justify-end text-align-last">
-      <ParticipationCounter :meal="meal" :mealCSS="mealCSS"/>
+      <ParticipationCounter
+        :meal="meal"
+        :mealCSS="mealCSS"
+      />
       <Checkbox
-          :weekID="weekID"
-          :dayID="dayID"
-          :mealID="mealID"
+        :weekID="weekID"
+        :dayID="dayID"
+        :mealID="mealID"
       />
     </div>
   </div>

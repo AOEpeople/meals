@@ -1,9 +1,15 @@
 <template>
-  <div :class="
-        [meal.limit > 9 ? 'w-[65px]' : 'w-[50px]', mealCSS]">
+  <div
+    :class="
+      [meal.limit > 9 ? 'w-[65px]' : 'w-[50px]', mealCSS]"
+  >
     <div class="table flex-auto">
       <div class="table-cell align-middle">
-       <Icons icon="person" box="0 0 12 12" class="fill-white ml-[50%] -left-1/4 relative w-3 h-3"/>
+        <Icons
+          icon="person"
+          box="0 0 12 12"
+          class="fill-white ml-[50%] -left-1/4 relative w-3 h-3"
+        />
       </div>
     </div>
 

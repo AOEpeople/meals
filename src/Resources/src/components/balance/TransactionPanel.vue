@@ -1,20 +1,26 @@
 <template>
-  <radar-spinner v-if="!loaded"
-      :animation-duration="2000"
-      :size="60"
-      color="#1b5298"
+  <radar-spinner
+    v-if="!loaded"
+    :animation-duration="2000"
+    :size="60"
+    color="#1b5298"
   />
   <div v-show="loaded">
     <div class="m-8 flex justify-center">
-      <h5 class="m-0 w-32 self-center text-black">{{ t('balance.amount') }}: €</h5>
+      <h5 class="m-0 w-32 self-center text-black">
+        {{ t('balance.amount') }}: €
+      </h5>
       <input
-          type="text"
-          :value="balance < 0 ? balance.toFixed(2).slice(1).replace(/\./g, ',') : '0,00'"
-          ref="input"
-          class="bg-white border-[2px] border-solid border-[#CAD6E1] rounded-[100px] h-12 text-center"
-      />
+        ref="input"
+        type="text"
+        :value="balance < 0 ? balance.toFixed(2).slice(1).replace(/\./g, ',') : '0,00'"
+        class="bg-white border-[2px] border-solid border-[#CAD6E1] rounded-[100px] h-12 text-center"
+      >
     </div>
-    <div id="paypal-container" class="mx-8 my-2"></div>
+    <div
+      id="paypal-container"
+      class="mx-8 my-2"
+    />
   </div>
 </template>
 
@@ -29,16 +35,16 @@ import {usePaypal} from "@/hooks/getPaypal";
 
 export default {
   components: {RadarSpinner},
+  setup() {
+    const { t } = useI18n();
+    return { t };
+  },
   data() {
     return {
       balance: parseFloat(sessionStorage.getItem('balance')),
       locale: ref('en'),
       loaded: ref(false)
     }
-  },
-  setup() {
-    const { t } = useI18n();
-    return { t };
   },
   async mounted() {
     let amountField = this.$refs['input'];

@@ -5,12 +5,20 @@
     </div>
     <div class="flex flex-1 flex-col">
       <GuestSlots :slots="invitation.slots" />
-      <div v-for="(meal, mealId) in invitation.meals"
-           class="py-[13px] mx-[15px] border-b-[0.7px] last:border-b-0"
-           :key="mealId"
+      <div
+        v-for="(meal, mealId) in invitation.meals"
+        :key="mealId"
+        class="py-[13px] mx-[15px] border-b-[0.7px] last:border-b-0"
       >
-          <GuestMeal v-if="!meal.variations" :meals="invitation.meals" :mealId="mealId"/>
-          <GuestVariation v-else :meal="meal"/>
+        <GuestMeal
+          v-if="!meal.variations"
+          :meals="invitation.meals"
+          :mealId="mealId"
+        />
+        <GuestVariation
+          v-else
+          :meal="meal"
+        />
       </div>
     </div>
   </div>

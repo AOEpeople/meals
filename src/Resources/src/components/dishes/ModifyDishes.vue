@@ -6,10 +6,16 @@
           Deutsch
         </div>
         <div>
-          <input type="text" placeholder="Neues Gericht" />
+          <input
+            type="text"
+            placeholder="Neues Gericht"
+          >
         </div>
         <div>
-          <input type="text" placeholder="Beschreibung" />
+          <input
+            type="text"
+            placeholder="Beschreibung"
+          >
         </div>
       </div>
       <div class="grid grid-rows-3">
@@ -17,10 +23,17 @@
           English
         </div>
         <div>
-          <input type="text" placeholder="New Dish" :value="undefined">
+          <input
+            type="text"
+            placeholder="New Dish"
+            :value="undefined"
+          >
         </div>
         <div>
-          <input type="text" placeholder="Description" />
+          <input
+            type="text"
+            placeholder="Description"
+          >
         </div>
       </div>
     </div>
@@ -38,7 +51,9 @@
         </ListboxOptions>
       </Listbox>
     </div>
-    <button class="btn-primary">SAVE</button>
+    <button class="btn-primary">
+      SAVE
+    </button>
   </div>
 </template>
 

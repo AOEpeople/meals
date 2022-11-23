@@ -1,5 +1,5 @@
 <template>
-Categories
+  Categories
 </template>
 
 <script setup>

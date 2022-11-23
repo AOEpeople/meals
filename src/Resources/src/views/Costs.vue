@@ -1,5 +1,5 @@
 <template>
-Costs
+  Costs
 </template>
 
 <script setup>

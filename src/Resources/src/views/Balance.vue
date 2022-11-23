@@ -10,8 +10,16 @@
       </span>
     </div>
 
-    <Table v-if="!transactions.isLoading" :labels="tableLabels" class="mt-10 mb-5">
-      <tr v-for="(transaction, index) in transactions.data" :key="index" class="max-h-[62px] border-b-2 border-gray-200">
+    <Table
+      v-if="!transactions.isLoading"
+      :labels="tableLabels"
+      class="mt-10 mb-5"
+    >
+      <tr
+        v-for="(transaction, index) in transactions.data"
+        :key="index"
+        class="max-h-[62px] border-b-2 border-gray-200"
+      >
         <td>
           <span class="text-[12px] xl:text-[18px]">
             {{ new Date(transaction.date.date).toLocaleDateString(locale, dateOptions) }}
@@ -22,7 +30,7 @@
         </td>
         <td :class="[transaction.type === 'credit' ? 'text-green' : 'text-red', 'text-right']">
           <span class="whitespace-nowrap">
-            {{ (transaction.type === 'credit' ? '+ '  : '- ') +
+            {{ (transaction.type === 'credit' ? '+ ' : '- ') +
               (locale === 'en' ? transaction.amount.toFixed(2) : transaction.amount.toFixed(2).replace(/\./g, ',')) }} €
           </span>
         </td>

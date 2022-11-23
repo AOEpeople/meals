@@ -1,7 +1,9 @@
 <template>
   <div class="items-center text-center xl:grid xl:grid-cols-2 xl:my-[42px]">
     <div class="xl:justify-self-start">
-      <h2 class="m-0">{{ t('slots.header') }}</h2>
+      <h2 class="m-0">
+        {{ t('slots.header') }}
+      </h2>
     </div>
     <div class="xl:justify-self-end">
       <Popover>

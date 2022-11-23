@@ -153,8 +153,6 @@ module.exports = function(env, argv) {
                 'process.browser': true,
                 'process.env.MODE': JSON.stringify(argv.mode),
                 'process.env.APP_BASE_URL': JSON.stringify(process.env.APP_BASE_URL),
-                'process.env.PAYMENT_NOTIFICATION_DEBT': JSON.stringify(process.env.PAYMENT_NOTIFICATION_DEBT),
-                'process.env.PAYPAL_ID': JSON.stringify(process.env.PAYPAL_ID),
                 'process.env.MERCURE_PUBLIC_URL': JSON.stringify(process.env.MERCURE_PUBLIC_URL),
                 __VUE_OPTIONS_API__: true,
                 __VUE_PROD_DEVTOOLS__: true,

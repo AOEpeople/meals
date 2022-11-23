@@ -1,9 +1,15 @@
 <template>
-  <span @click="handle" :class="[enabled ? 'bg-primary-3' : '', 'rounded-md h-[30px] w-[30px] cursor-pointer xl:h-[20px] xl:w-[20px] border-[0.5px] border-gray-200']">
-    <CheckIcon v-if="enabled" class="text-white w-[80%] h-[80%] relative top-[10%] left-[10%]" />
+  <span
+    :class="[enabled ? 'bg-primary-3' : '', 'rounded-md h-[30px] w-[30px] cursor-pointer xl:h-[20px] xl:w-[20px] border-[0.5px] border-gray-200']"
+    @click="handle"
+  >
+    <CheckIcon
+      v-if="enabled"
+      class="text-white w-[80%] h-[80%] relative top-[10%] left-[10%]"
+    />
   </span>
   <CombiModal
-      v-if="isCombiBox"
+    v-if="isCombiBox"
     :open="open"
     :meals="meals"
     @closeCombiModal="handleCombiModal"

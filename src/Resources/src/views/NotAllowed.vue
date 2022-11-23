@@ -1,5 +1,5 @@
 <template>
-not allowed
+  not allowed
 </template>
 
 <script setup>

@@ -4,16 +4,30 @@
       <div class="self-center break-all sm:break-words">
         <span class="text-primary uppercase tracking-[1px] text-note font-bold">
           {{ title }}
-          <span v-if="meals[mealId].isNew" class="w-[36px] h-[17px] bg-highlight text-white align-text-bottom ml-1 pl-1 pr-[3px] py-[1px] leading-[16px] text-[11px] tracking-[1.5px]">
+          <span
+            v-if="meals[mealId].isNew"
+            class="w-[36px] h-[17px] bg-highlight text-white align-text-bottom ml-1 pl-1 pr-[3px] py-[1px] leading-[16px] text-[11px] tracking-[1.5px]"
+          >
             {{ t('dashboard.new') }}
           </span>
         </span><br>
-        <p v-if="description !== ''" class="m-0 font-light description text-primary">{{ description }}</p>
+        <p
+          v-if="description !== ''"
+          class="m-0 font-light description text-primary"
+        >
+          {{ description }}
+        </p>
       </div>
     </div>
     <div class="flex flex-none basis-2/12 items-center justify-end text-align-last">
-      <ParticipationCounter :meal="meals[mealId]" :mealCSS="mealCSS"/>
-      <GuestCheckbox :meals="meals" :mealId="mealId" />
+      <ParticipationCounter
+        :meal="meals[mealId]"
+        :mealCSS="mealCSS"
+      />
+      <GuestCheckbox
+        :meals="meals"
+        :mealId="mealId"
+      />
     </div>
   </div>
 </template>

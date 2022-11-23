@@ -4,17 +4,18 @@
       <table class="min-w-full max-w-fit table-fixed border-spacing-none">
         <thead>
           <tr>
-            <th scope="col"
-                class="text-left text-[11px] leading-4 font-bold tracking-[1.5px] uppercase"
-                v-for="label in localeLabels"
-                :key="label"
+            <th
+              v-for="label in localeLabels"
+              :key="label"
+              scope="col"
+              class="text-left text-[11px] leading-4 font-bold tracking-[1.5px] uppercase"
             >
               {{ label }}
             </th>
           </tr>
         </thead>
         <tbody class="text-[18px] leading-6 font-light">
-          <slot></slot>
+          <slot />
         </tbody>
       </table>
     </div>

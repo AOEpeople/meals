@@ -19,6 +19,7 @@ node_modules
 !.php-cs-fixer.dist
 !/migrations
 !/public/.htaccess
+!.github
 
 ###> symfony/framework-bundle ###
 /.env.local

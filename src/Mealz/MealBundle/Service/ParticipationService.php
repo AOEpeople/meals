@@ -160,7 +160,7 @@ class ParticipationService
         $flippedDishSlugs = array_flip($dishSlugs);
 
         /** @var Participant $participant */
-        foreach ($meal->getParticipants() as $participant) {
+        foreach ($meal->getSortedParticipants() as $participant) {
             if (true === $participant->isPending()) {
                 if (empty($flippedDishSlugs)) {
                     return $participant;

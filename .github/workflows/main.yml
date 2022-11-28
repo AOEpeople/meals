@@ -265,7 +265,7 @@ jobs:
           docker pull $IMAGE
           echo "::set-output name=digest::$(docker inspect $IMAGE | jq -r '.[0].RepoDigests[0]' | cut -d'@' -f2)"
       - name: Delete docker image artifact
-        uses: geekyeggo/delete-artifact@v1
+        uses: geekyeggo/delete-artifact@v2
         with:
           name: docker-images
     outputs:

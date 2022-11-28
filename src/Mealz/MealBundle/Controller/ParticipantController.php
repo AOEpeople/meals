@@ -204,11 +204,11 @@ class ParticipantController extends BaseController
     ): Response {
         $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
 
+        $translator = $this->get('translator');
         $filteredWeek = $weekRepo->findWeekByDate($week->getStartTime(), ['only_enabled_days' => true]);
 
         // If all days are disabled don't render list
         if (null === $filteredWeek) {
-            $translator = $this->get('translator');
             $message = $translator->trans('error.all_days_disabled', [
                 '%startDate%' => $week->getStartTime()->format('d.m'),
                 '%endDate%' => $week->getEndTime()->format('d.m'),
@@ -233,8 +233,12 @@ class ParticipantController extends BaseController
         $profilesArray = [];
         foreach ($profiles as $profile) {
             if (false === array_key_exists($profile->getUsername(), $groupedParticipation)) {
+                $label = $profile->getFullName();
+                if (true === $profile->isGuest()) {
+                    $label .= ' (' . $translator->trans('profile.guest') . ')';
+                }
                 $profilesArray[] = [
-                    'label' => $profile->getFullName(),
+                    'label' => $label,
                     'value' => $profile->getUsername(),
                 ];
             }

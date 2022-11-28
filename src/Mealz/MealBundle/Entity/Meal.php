@@ -9,6 +9,7 @@ use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -114,6 +115,15 @@ class Meal
         }
 
         return new ArrayCollection($this->participants->toArray());
+    }
+
+    public function getSortedParticipants()
+    {
+        $participants = $this->getParticipants();
+        $criteria = Criteria::create()
+            ->orderBy(['offeredAt' => Criteria::ASC]);
+
+        return $participants->matching($criteria);
     }
 
     public function getDay(): Day

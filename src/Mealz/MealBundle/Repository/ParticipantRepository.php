@@ -178,7 +178,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
     }
 
     /**
-     * @psalm-return array<string, array<string, list<Participant>>>
+     * @psalm-return array<string, array<string, array<string, bool>>>
      */
     public function findAllGroupedBySlotAndProfileID(DateTime $date): array
     {
@@ -207,7 +207,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
     /**
      * @param Participant[] $participants
      *
-     * @psalm-return array<string, array<string, list<Participant>>>
+     * @psalm-return array<string, array<string, array<string, bool>>>
      */
     private function groupBySlotAndProfileID(array $participants): array
     {
@@ -223,8 +223,8 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
                     $noSlotParticipants[$participant->getProfile()->getUsername()][$meal->getDish()->getSlug()] = null !== $meal->getParticipant($participant->getProfile());
                     continue;
                 }
-                    $groupedParticipants[$slot->getTitle()][$participant->getProfile()->getUsername()][$meal->getDish()->getSlug()] = null !== $meal->getParticipant($participant->getProfile());
-                }
+                $groupedParticipants[$slot->getTitle()][$participant->getProfile()->getUsername()][$meal->getDish()->getSlug()] = null !== $meal->getParticipant($participant->getProfile());
+            }
         }
 
         if (0 < count($noSlotParticipants)) {
@@ -381,7 +381,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
     }
 
     /**
-     * Returns true if the specified user is offering the specified meal
+     * Returns true if the specified user is offering the specified meal.
      */
     public function isOfferingMeal(Profile $profile, Meal $meal): bool
     {

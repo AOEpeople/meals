@@ -9,11 +9,7 @@ use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
 use App\Mealz\MealBundle\Event\SlotAllocationUpdateEvent;
 use App\Mealz\MealBundle\Repository\GuestInvitationRepositoryInterface;
-use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\MealBundle\Service\GuestParticipationService;
-use App\Mealz\MealBundle\Service\SlotService;
-use App\Mealz\UserBundle\Entity\Profile;
-use DateTime;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -35,8 +31,7 @@ class MealGuestController extends BaseController
 
     public function joinAsGuest(Request $request): JsonResponse
     {
-        try
-        {
+        try {
             [
                 'profile' => $profile,
                 'meals' => $meals,
@@ -48,6 +43,7 @@ class MealGuestController extends BaseController
             $this->triggerJoinEvents($participants);
         } catch (Exception $e) {
             $this->logException($e, 'guest registration error');
+
             return new JsonResponse($e->getMessage(), 400);
         }
 
@@ -71,8 +67,8 @@ class MealGuestController extends BaseController
                 'url' => $this->generateUrl(
                     'MealzMealBundle_Meal_guest',
                     ['hash' => $guestInvitation->getId()],
-                    UrlGeneratorInterface::ABSOLUTE_URL)
-            ],200
+                    UrlGeneratorInterface::ABSOLUTE_URL),
+            ], 200
         );
     }
 

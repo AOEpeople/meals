@@ -116,7 +116,7 @@ class MealOfferSubscriber implements EventSubscriberInterface
                 'mealId' => $meal->getId(),
                 'parentId' => $parentId,
                 'participantId' => $participant->getId(),
-                'lastOffer' => $offerCount === 0,
+                'lastOffer' => 0 === $offerCount,
             ],
             self::PUBLISH_MSG_TYPE
         );

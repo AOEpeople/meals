@@ -52,7 +52,7 @@ class LoadSlots extends Fixture implements OrderedFixtureInterface
             ],
         ];
 
-        foreach ($slotItems as $key=>$item) {
+        foreach ($slotItems as $key => $item) {
             $slot = new Slot();
             $slot->setTitle($item['title']);
             $slot->setLimit($item['limit']);

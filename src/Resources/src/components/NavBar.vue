@@ -1,5 +1,5 @@
 <template>
-  <div class="relative top-0 z-[3]">
+  <div class="relative top-0 z-[3] print:hidden">
     <Disclosure v-slot="{ open }">
       <header class="relative bg-white shadow-[0_15px_35px_0_#5B788F21] h-[60px] xl:h-24">
         <nav

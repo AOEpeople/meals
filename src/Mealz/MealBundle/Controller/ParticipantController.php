@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Controller;
 
-use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
@@ -24,13 +23,11 @@ use App\Mealz\MealBundle\Service\SlotService;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Exception;
-use PHPUnit\Util\Json;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Validator\Constraints\Date;
 
 /**
  * @Security("is_granted('ROLE_USER')")
@@ -101,7 +98,7 @@ class ParticipantController extends BaseController
 
         $slotID = 0;
         $slot = $result['slot'];
-        if(null !== $slot) {
+        if (null !== $slot) {
             $slotID = $slot->getId();
         }
 
@@ -271,17 +268,16 @@ class ParticipantController extends BaseController
     /**
      * @Security("is_granted('ROLE_KITCHEN_STAFF')")
      */
-    public function list(DayRepository $dayRepo, ParticipantRepositoryInterface $participantRepo): JSONResponse
+    public function list(DayRepository $dayRepo): JSONResponse
     {
         $day = $dayRepo->getDayByDate(new DateTime('tomorrow'));
 
-        $slots = $this->slotSrv->getAllActiveSlots();
-        $list['data'] = $this->participationSrv->getParticipationListBySlots($day, $slots);
+        $list['data'] = $this->participationSrv->getParticipationListBySlots($day);
 
         $meals = $this->participationSrv->getMealsForTheDay($day);
 
-        $list['meals']['en'] = array_map((fn($meal): String => $meal->getDish()->getTitleEn()), $meals->toArray());
-        $list['meals']['de'] = array_map((fn($meal): String => $meal->getDish()->getTitleDe()), $meals->toArray());
+        $list['meals']['en'] = array_map((fn ($meal): String => $meal->getDish()->getTitleEn()), $meals->toArray());
+        $list['meals']['de'] = array_map((fn ($meal): String => $meal->getDish()->getTitleDe()), $meals->toArray());
         $list['day'] = $day->getDateTime();
 
         /** @var Meal $meal */

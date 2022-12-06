@@ -122,7 +122,7 @@ class GuestParticipationService
         /** @var Meal $meal */
         foreach ($meals as $meal) {
             if (empty($participations)) {
-                $participations = (new ParticipationCountService)->getParticipationByDay($meal->getDay());
+                $participations = (new ParticipationCountService())->getParticipationByDay($meal->getDay());
             }
 
             $bookable = $this->mealIsBookable($meal);
@@ -255,7 +255,7 @@ class GuestParticipationService
             'profile' => $profile,
             'meals' => $meals,
             'slot' => $slot,
-            'dishSlugs' => $dishSlugs
+            'dishSlugs' => $dishSlugs,
         ];
     }
 }

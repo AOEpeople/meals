@@ -175,10 +175,11 @@ class SlotService
         /** @var Meal $meal */
         foreach ($day->getMeals() as $meal) {
             /** @var Participant $participant */
-            foreach ($meal->getParticipants() as $participant)
+            foreach ($meal->getParticipants() as $participant) {
                 if ($participant->getSlot() === $slot) {
                     $count[$participant->getProfile()->getUsername()] = true;
                 }
+            }
         }
 
         return count($count);

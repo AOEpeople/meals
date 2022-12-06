@@ -6,7 +6,6 @@ namespace App\Mealz\MealBundle\Entity;
 
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
-use PhpParser\Node\Scalar\String_;
 use RuntimeException;
 
 /**

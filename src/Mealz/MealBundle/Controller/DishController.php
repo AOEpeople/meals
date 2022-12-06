@@ -6,7 +6,6 @@ namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\DishVariation;
-use App\Mealz\MealBundle\Form\Dish\DishForm;
 use App\Mealz\MealBundle\Repository\DishRepository;
 use App\Mealz\MealBundle\Service\Logger\MealsLoggerInterface;
 use Doctrine\ORM\EntityManager;
@@ -31,43 +30,43 @@ class DishController extends BaseListController
         $this->setEntityName('Dish');
     }
 
-    /**
-     * @return RedirectResponse|Response
-     */
-    public function editAction(Request $request, Dish $dish)
-    {
-        $form = $this->createForm(DishForm::class, $dish);
-
-        // handle form submission
-        if ($request->isMethod('POST')) {
-            $form->handleRequest($request);
-
-            if ($form->isValid()) {
-                /** @var DishVariation $variation */
-                foreach ($dish->getVariations() as $variation) {
-                    $variation->setOneServingSize($dish->hasOneServingSize());
-                }
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($dish);
-                $entityManager->flush();
-
-                $translator = $this->get('translator');
-                $translatedEntityName = $translator->trans('entity.Dish', [], 'messages');
-                $message = $translator->trans(
-                    'entity.modified',
-                    ['%entityName%' => $translatedEntityName],
-                    'messages'
-                );
-                $this->addFlashMessage($message, 'success');
-            } else {
-                return $this->renderEntityList([
-                    'form' => $form->createView(),
-                ]);
-            }
-        }
-
-        return $this->redirectToRoute('MealzMealBundle_Dish');
-    }
+//    /**
+//     * @return RedirectResponse|Response
+//     */
+//    public function editAction(Request $request, Dish $dish)
+//    {
+//        $form = $this->createForm(DishForm::class, $dish);
+//
+//        // handle form submission
+//        if ($request->isMethod('POST')) {
+//            $form->handleRequest($request);
+//
+//            if ($form->isValid()) {
+//                /** @var DishVariation $variation */
+//                foreach ($dish->getVariations() as $variation) {
+//                    $variation->setOneServingSize($dish->hasOneServingSize());
+//                }
+//                $entityManager = $this->getDoctrine()->getManager();
+//                $entityManager->persist($dish);
+//                $entityManager->flush();
+//
+//                $translator = $this->get('translator');
+//                $translatedEntityName = $translator->trans('entity.Dish', [], 'messages');
+//                $message = $translator->trans(
+//                    'entity.modified',
+//                    ['%entityName%' => $translatedEntityName],
+//                    'messages'
+//                );
+//                $this->addFlashMessage($message, 'success');
+//            } else {
+//                return $this->renderEntityList([
+//                    'form' => $form->createView(),
+//                ]);
+//            }
+//        }
+//
+//        return $this->redirectToRoute('MealzMealBundle_Dish');
+//    }
 
     public function deleteAction(
         Dish $dish,

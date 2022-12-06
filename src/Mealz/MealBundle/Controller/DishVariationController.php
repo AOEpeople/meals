@@ -2,18 +2,13 @@
 
 namespace App\Mealz\MealBundle\Controller;
 
-use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\DishVariation;
-use App\Mealz\MealBundle\Form\Dish\DishVariationForm;
 use App\Mealz\MealBundle\Repository\DishRepository;
-use App\Mealz\MealBundle\Repository\DishVariationRepositoryInterface;
 use App\Mealz\MealBundle\Service\Logger\MealsLoggerInterface;
 use Doctrine\ORM\EntityManager;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -21,86 +16,86 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class DishVariationController extends BaseController
 {
-    public function new(Request $request, Dish $dish): Response
-    {
-        $dishVariation = new DishVariation();
-        $dishVariation->setParent($dish);
-        $dishVariation->setOneServingSize($dish->hasOneServingSize());
+//    public function new(Request $request, Dish $dish): Response
+//    {
+//        $dishVariation = new DishVariation();
+//        $dishVariation->setParent($dish);
+//        $dishVariation->setOneServingSize($dish->hasOneServingSize());
+//
+//        $dishVariationForm = $this->createForm(
+//            $this->getNewForm(),
+//            $dishVariation,
+//            ['action' => $this->generateUrl('MealzMealBundle_DishVariation_new', ['id' => $dish->getId()])]
+//        );
+//        $dishVariationForm->handleRequest($request);
+//
+//        if ($dishVariationForm->isSubmitted() && $dishVariationForm->isValid()) {
+//            $dishVariation = $dishVariationForm->getData();
+//            $this->persistEntity($dishVariation);
+//
+//            $message = $this->get('translator')->trans(
+//                'entity.added',
+//                ['%entityName%' => $dishVariation->getTitle()],
+//                'messages'
+//            );
+//            $this->addFlashMessage($message, 'success');
+//
+//            return $this->redirectToRoute('MealzMealBundle_Dish');
+//        }
+//
+//        $renderedForm = $this->render('MealzMealBundle:DishVariation:new.html.twig', [
+//            'form' => $dishVariationForm->createView(),
+//            'dishVariation' => $dishVariation,
+//        ]);
+//
+//        return new Response($renderedForm->getContent());
+//    }
 
-        $dishVariationForm = $this->createForm(
-            $this->getNewForm(),
-            $dishVariation,
-            ['action' => $this->generateUrl('MealzMealBundle_DishVariation_new', ['id' => $dish->getId()])]
-        );
-        $dishVariationForm->handleRequest($request);
-
-        if ($dishVariationForm->isSubmitted() && $dishVariationForm->isValid()) {
-            $dishVariation = $dishVariationForm->getData();
-            $this->persistEntity($dishVariation);
-
-            $message = $this->get('translator')->trans(
-                'entity.added',
-                ['%entityName%' => $dishVariation->getTitle()],
-                'messages'
-            );
-            $this->addFlashMessage($message, 'success');
-
-            return $this->redirectToRoute('MealzMealBundle_Dish');
-        }
-
-        $renderedForm = $this->render('MealzMealBundle:DishVariation:new.html.twig', [
-            'form' => $dishVariationForm->createView(),
-            'dishVariation' => $dishVariation,
-        ]);
-
-        return new Response($renderedForm->getContent());
-    }
-
-    /**
-     * @param string $slug
-     *
-     * @return Response|RedirectResponse
-     */
-    public function edit(Request $request, $slug, DishVariationRepositoryInterface $dishVariationRepo)
-    {
-        /** @var \App\Mealz\MealBundle\Entity\DishVariation $dish */
-        $dishVariation = $dishVariationRepo->find($slug);
-
-        if (!$dishVariation) {
-            throw $this->createNotFoundException();
-        }
-
-        $dishVariationForm = $this->createForm(
-            $this->getNewForm(),
-            $dishVariation,
-            ['action' => $this->generateUrl('MealzMealBundle_DishVariation_edit', ['slug' => $dishVariation->getId()])]
-        );
-        $dishVariationForm->handleRequest($request);
-
-        if ($dishVariationForm->isSubmitted() && $dishVariationForm->isValid()) {
-            $dishVariation = $dishVariationForm->getData();
-            $this->persistEntity($dishVariation);
-
-            $message = $this->get('translator')->trans(
-                'entity.modified',
-                ['%entityName%' => $dishVariation->getTitle()],
-                'messages'
-            );
-            $this->addFlashMessage($message, 'success');
-
-            return $this->redirectToRoute('MealzMealBundle_Dish');
-        }
-
-        $renderedForm = $this->render(
-            'MealzMealBundle:DishVariation:new.html.twig',
-            [
-                'form' => $dishVariationForm->createView(),
-                'dishVariation' => $dishVariation,
-            ]
-        );
-
-        return new Response($renderedForm->getContent());
-    }
+//    /**
+//     * @param string $slug
+//     *
+//     * @return Response|RedirectResponse
+//     */
+//    public function edit(Request $request, $slug, DishVariationRepositoryInterface $dishVariationRepo)
+//    {
+//        /** @var \App\Mealz\MealBundle\Entity\DishVariation $dish */
+//        $dishVariation = $dishVariationRepo->find($slug);
+//
+//        if (!$dishVariation) {
+//            throw $this->createNotFoundException();
+//        }
+//
+//        $dishVariationForm = $this->createForm(
+//            $this->getNewForm(),
+//            $dishVariation,
+//            ['action' => $this->generateUrl('MealzMealBundle_DishVariation_edit', ['slug' => $dishVariation->getId()])]
+//        );
+//        $dishVariationForm->handleRequest($request);
+//
+//        if ($dishVariationForm->isSubmitted() && $dishVariationForm->isValid()) {
+//            $dishVariation = $dishVariationForm->getData();
+//            $this->persistEntity($dishVariation);
+//
+//            $message = $this->get('translator')->trans(
+//                'entity.modified',
+//                ['%entityName%' => $dishVariation->getTitle()],
+//                'messages'
+//            );
+//            $this->addFlashMessage($message, 'success');
+//
+//            return $this->redirectToRoute('MealzMealBundle_Dish');
+//        }
+//
+//        $renderedForm = $this->render(
+//            'MealzMealBundle:DishVariation:new.html.twig',
+//            [
+//                'form' => $dishVariationForm->createView(),
+//                'dishVariation' => $dishVariation,
+//            ]
+//        );
+//
+//        return new Response($renderedForm->getContent());
+//    }
 
     public function deleteAction(
         DishVariation $dishVariation,
@@ -133,19 +128,19 @@ class DishVariationController extends BaseController
         return $this->redirectToRoute('MealzMealBundle_Dish');
     }
 
-    protected function getNewForm()
-    {
-        return DishVariationForm::class;
-    }
+//    protected function getNewForm()
+//    {
+//        return DishVariationForm::class;
+//    }
 
-    /**
-     * @param $entity
-     */
-    private function persistEntity($entity): void
-    {
-        /** @var EntityManager $entityManager */
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($entity);
-        $entityManager->flush();
-    }
+//    /**
+//     * @param $entity
+//     */
+//    private function persistEntity($entity): void
+//    {
+//        /** @var EntityManager $entityManager */
+//        $entityManager = $this->getDoctrine()->getManager();
+//        $entityManager->persist($entity);
+//        $entityManager->flush();
+//    }
 }

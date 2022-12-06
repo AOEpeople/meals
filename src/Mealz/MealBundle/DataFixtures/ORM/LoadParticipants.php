@@ -82,7 +82,7 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
                     $participant->setOfferedAt(0);
                 }
 
-                $indexString = $user->getUsername() . "_" . $meal->getDay()->getId();
+                $indexString = $user->getUsername() . '_' . $meal->getDay()->getId();
 
                 if (!array_key_exists($indexString, $this->slotIndex)) {
                     $randomSlot = $this->getRandomActiveSlot();
@@ -111,16 +111,15 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
                 $participant = new Participant($profile, $combinedMeal);
                 $participant->setCombinedDishes($combinedMealDishes);
 
-            $indexString = $username . "_" . $day->getId();
+                $indexString = $username . '_' . $day->getId();
 
-            if (!array_key_exists($indexString, $this->slotIndex)) {
-                $randomSlot = $this->getRandomActiveSlot();
-                $this->slotIndex[$indexString] = $randomSlot;
-                $participant->setSlot($randomSlot);
-            } else {
-                $participant->setSlot($this->slotIndex[$indexString]);
-            }
-
+                if (!array_key_exists($indexString, $this->slotIndex)) {
+                    $randomSlot = $this->getRandomActiveSlot();
+                    $this->slotIndex[$indexString] = $randomSlot;
+                    $participant->setSlot($randomSlot);
+                } else {
+                    $participant->setSlot($this->slotIndex[$indexString]);
+                }
                 $this->objectManager->persist($participant);
             }
         }
@@ -168,16 +167,16 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
     }
 
     /**
-     *  Returns a currently active Random Slot
-     *
-     * @return Slot
+     *  Returns a currently active Random Slot.
      */
     private function getRandomActiveSlot(): Slot
     {
         // only use active slots
-        $slots = array_filter($this->slots, fn($slot) => $slot->isEnabled() && !$slot->isDeleted());
+        $slots = array_filter($this->slots, fn ($slot) => $slot->isEnabled() && !$slot->isDeleted());
+
         return $slots[array_rand($slots)];
     }
+
     /**
      * @return Dish[]
      */

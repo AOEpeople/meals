@@ -6,7 +6,6 @@ use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Event\MealOfferAcceptedEvent;
 use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
 use App\Mealz\MealBundle\Event\SlotAllocationUpdateEvent;
-use App\Mealz\UserBundle\Entity\Profile;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class EventService

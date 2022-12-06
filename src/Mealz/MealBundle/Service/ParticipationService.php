@@ -17,7 +17,6 @@ use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use phpDocumentor\Reflection\Types\Boolean;
 
 class ParticipationService
 {
@@ -45,7 +44,7 @@ class ParticipationService
     }
 
     /**
-     * @psalm-return array{participant: Participant, offerer: Profile|null}|null
+     * @psalm-return array{participant: Participant, offerer: Participant|null, slot: Slot|null}|null
      *
      * @throws ParticipationException
      */
@@ -112,7 +111,7 @@ class ParticipationService
     /**
      * Reassigns $meal - offered by a participant - to $profile.
      *
-     * @psalm-return array{participant: Participant, offerer: Profile}|null
+     * @psalm-return array{participant: Participant, offerer: Participant, slot: Slot|null}|null
      */
     private function reassignOfferedMeal(Meal $meal, Profile $profile, array $dishSlugs = []): ?array
     {
@@ -130,8 +129,6 @@ class ParticipationService
 
         $this->em->persist($participant);
         $this->em->flush();
-
-
 
         return ['participant' => $participant, 'offerer' => $offerer, 'slot' => $slot];
     }
@@ -169,7 +166,7 @@ class ParticipationService
         /** @var Participant $participant */
         foreach ($meal->getParticipants() as $participant) {
             if (true === $participant->isPending()) {
-                if (count($flippedDishSlugs) === 1) {
+                if (1 === count($flippedDishSlugs)) {
                     return $participant;
                 }
 
@@ -238,7 +235,7 @@ class ParticipationService
 
     public function getCountByMeal(Meal $meal, bool $withoutCombined = false): int
     {
-        $participation = (new ParticipationCountService)->getParticipationByDay($meal->getDay());
+        $participation = (new ParticipationCountService())->getParticipationByDay($meal->getDay());
 
         if ($meal->isCombinedMeal() || $withoutCombined) {
             return $participation['countByMealIds'][$meal->getId()][$meal->getDish()->getSlug()]['count'] ?? 0;
@@ -247,19 +244,7 @@ class ParticipationService
         return (int) ceil($participation['totalCountByDishSlugs'][$meal->getDish()->getSlug()]['count'] ?? 0);
     }
 
-    public function isUserParticipating(Meal $meal, Profile $profile): bool
-    {
-        /* @var Participant $participant */
-        foreach ($meal->getParticipants() as $participant) {
-            if ($participant->getProfile() === $profile) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public function getParticipationListBySlots(Day $day, array $slots): array
+    public function getParticipationListBySlots(Day $day): array
     {
         return $this->participantRepo->findAllGroupedBySlotAndProfileID($day->getDateTime());
     }

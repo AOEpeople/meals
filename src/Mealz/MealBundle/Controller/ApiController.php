@@ -6,7 +6,6 @@ namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\DishVariation;
-use App\Mealz\MealBundle\Entity\GuestInvitation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
@@ -18,14 +17,11 @@ use App\Mealz\MealBundle\Service\OfferService;
 use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\MealBundle\Service\SlotService;
 use App\Mealz\MealBundle\Service\WeekService;
-use App\Mealz\MealBundle\Twig\Extension\Participation;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Exception;
-use http\Env\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 class ApiController extends BaseController
 {
@@ -35,7 +31,7 @@ class ApiController extends BaseController
     private ParticipationService $participationSrv;
     private ApiService $apiSrv;
     private OfferService $offerSrv;
-    private GuestParticipationService $guestParticipationSrv;
+    private GuestParticipationService $guestPartiSrv;
     private string $paypalId;
 
     public function __construct(
@@ -45,7 +41,7 @@ class ApiController extends BaseController
         ParticipationService $participationSrv,
         ApiService $apiSrv,
         OfferService $offerSrv,
-        GuestParticipationService $guestParticipationSrv,
+        GuestParticipationService $guestPartiSrv,
         string $paypalId
     ) {
         $this->dishSrv = $dishSrv;
@@ -54,7 +50,7 @@ class ApiController extends BaseController
         $this->participationSrv = $participationSrv;
         $this->apiSrv = $apiSrv;
         $this->offerSrv = $offerSrv;
-        $this->guestParticipationSrv = $guestParticipationSrv;
+        $this->guestPartiSrv = $guestPartiSrv;
         $this->paypalId = $paypalId;
     }
 
@@ -150,7 +146,7 @@ class ApiController extends BaseController
      *
      * @Security("is_granted('ROLE_USER')")
      */
-    public function getTransactionData(): Response
+    public function getTransactionData(): JsonResponse
     {
         $profile = $this->getProfile();
         if (null === $profile) {
@@ -206,7 +202,6 @@ class ApiController extends BaseController
         $participationId = null;
         $isOffering = false;
         $mealState = 'open';
-
 
         if (!$meal->getDish() instanceof DishVariation) {
             $description = [
@@ -279,18 +274,14 @@ class ApiController extends BaseController
         if ($meal->isLocked() && $meal->isOpen()) {
             $isOffering = $this->offerSrv->isOfferingMeal($profile, $meal);
             if ($isOffering) {
-
                 return 'offering';
-            } else if (null !== $participant) {
-
+            } elseif (null !== $participant) {
                 return 'offerable';
-            } else if ($this->offerSrv->getOfferCountByMeal($meal) > 0) {
-
+            } elseif ($this->offerSrv->getOfferCountByMeal($meal) > 0) {
                 return 'tradeable';
             }
         }
-        if(!$meal->isLocked() && $meal->isOpen() && !$meal->hasReachedParticipationLimit()) {
-
+        if (!$meal->isLocked() && $meal->isOpen() && !$meal->hasReachedParticipationLimit()) {
             return 'open';
         }
 
@@ -302,7 +293,7 @@ class ApiController extends BaseController
      */
     public function getGuestData(string $guestInvitationId): JsonResponse
     {
-        $guestInvitation = $this->guestParticipationSrv->getGuestInvitationById($guestInvitationId);
+        $guestInvitation = $this->guestPartiSrv->getGuestInvitationById($guestInvitationId);
         if (null === $guestInvitation) {
             return new JsonResponse(null, 404);
         }
@@ -312,7 +303,7 @@ class ApiController extends BaseController
         $response = [
             'date' => $day->getDateTime(),
             'meals' => [],
-            'slots' => []
+            'slots' => [],
         ];
 
         $slots = $this->slotSrv->getSlotStatusForDay($day->getDateTime());

@@ -1,8 +1,14 @@
-import {Store} from "@/store/store";
-import { useTransactionData } from "@/hooks/getTransactionData";
+import {Store} from "@/stores/store";
+import { useTransactionData } from "@/api/getTransactionData";
 
-class TransactionStore extends Store<any> {
-    protected data(): any {
+type TransStore = {
+    data: object[],
+    difference: number,
+    isLoading: boolean
+}
+
+class TransactionStore extends Store<TransStore> {
+    protected data(): TransStore {
         return {
             data: [{}],
             difference: 0,
@@ -12,7 +18,7 @@ class TransactionStore extends Store<any> {
 
     async fillStore() {
         this.state.isLoading = true;
-        let {transactions} = await useTransactionData();
+        const {transactions} = await useTransactionData();
         if (transactions.value) {
             this.state.data = transactions.value.data;
             this.state.difference = transactions.value.difference;

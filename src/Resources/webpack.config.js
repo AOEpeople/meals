@@ -58,7 +58,8 @@ module.exports = function(env, argv) {
             alias: {
                 jquery: path.resolve('./node_modules/jquery/dist/jquery.js'),
                 '@': path.resolve(__dirname, './src'),
-                'vue-i18n': 'vue-i18n/dist/vue-i18n.runtime.esm-bundler.js'
+                'vue-i18n': 'vue-i18n/dist/vue-i18n.runtime.esm-bundler.js',
+                'tools': path.resolve(__dirname, './src/tools'),
             }
         },
         module: {

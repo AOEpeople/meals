@@ -20,6 +20,12 @@
     "paths": {
       "@/*": [
         "src/*"
+      ],
+      "tools/*": [
+        "src/tools/*"
+      ],
+      "vue-i18n": [
+        "vue-i18n/dist/vue-i18n.runtime.esm-bundler.js"
       ]
     },
     "lib": [
@@ -29,6 +35,9 @@
       "scripthost"
     ]
   },
+  "types": [
+    "jest"
+  ],
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",

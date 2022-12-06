@@ -1,7 +1,6 @@
-import {Store} from "@/store/store";
-import {TimeSlots, useTimeSlotData} from "@/hooks/getTimeSlotData";
-import {useUpdateSlot} from "@/hooks/postSlotUpdate";
-import {useUpdateSelectedSlot} from "@/hooks/postUpdateSelectedSlot";
+import {Store} from "@/stores/store";
+import {TimeSlots, useTimeSlotData} from "@/api/getTimeSlotData";
+import {useUpdateSlot} from "@/api/postSlotUpdate";
 
 type TimeSlot = {
     slots: TimeSlots,
@@ -18,7 +17,7 @@ class TimeSlotStore extends Store<TimeSlot> {
 
     public async fillStore() {
         this.state.isLoading = true;
-        let {timeslots} = await useTimeSlotData();
+        const {timeslots} = await useTimeSlotData();
         if (timeslots.value) {
             this.state.slots = timeslots.value;
             this.state.isLoading = false;
@@ -28,7 +27,7 @@ class TimeSlotStore extends Store<TimeSlot> {
     }
 
     public async changeDisabledState(id: number, state: boolean): Promise<boolean> {
-        let data = {
+        const data = {
             id: id,
             enabled: state
         }

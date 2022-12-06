@@ -13,7 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class SlotServiceTest extends AbstractDatabaseTestCase
 {
-    private EntityManagerInterface $entityManager;
+    private EntityManagerInterface $em;
     private SlotRepositoryInterface $slotRepo;
     private SlotService $sut;
 
@@ -28,6 +28,8 @@ class SlotServiceTest extends AbstractDatabaseTestCase
 
         /* @var SlotService $sut */
         $this->sut = static::$container->get(SlotService::class);
+        $this->slotRepo = static::$container->get(SlotRepositoryInterface::class);
+        $this->em = static::$container->get(EntityManagerInterface::class);
     }
 
     /**
@@ -45,7 +47,7 @@ class SlotServiceTest extends AbstractDatabaseTestCase
         $slotID = $slot->getId();
         $this->sut->updateState($slot, '1');
 
-        $this->entityManager->clear();
+        $this->em->clear();
         $slot = $this->slotRepo->find($slotID);
 
         $this->assertTrue($slot->isDisabled());
@@ -66,7 +68,7 @@ class SlotServiceTest extends AbstractDatabaseTestCase
         $slotID = $slot->getId();
         $this->sut->updateState($slot, '0');
 
-        $this->entityManager->clear();
+        $this->em->clear();
         $slot = $this->slotRepo->find($slotID);
 
         $this->assertFalse($slot->isDisabled());
@@ -86,7 +88,7 @@ class SlotServiceTest extends AbstractDatabaseTestCase
 
         $slotID = $slot->getId();
         $this->sut->delete($slot);
-        $this->entityManager->clear();
+        $this->em->clear();
 
         $slot = $this->slotRepo->find($slotID);
         $this->assertTrue($slot->isDeleted());

@@ -59,14 +59,17 @@
             v-if="isAuthenticated"
             class="col-span-4 hidden space-x-3 xl:inline-block"
           >
-            <span v-for="link in navigation">
+            <span
+              v-for="link in navigation"
+              :key="link.name"
+            >
               <router-link
                 v-if="link.access.includes(role)"
-                :key="link.name"
                 :to="link.to"
                 class="text-[16px] leading-[18px] font-medium text-primary hover:text-highlight cursor-pointer"
-                v-html="t(link.name)"
-              />
+              >
+                {{ t(link.name) }}
+              </router-link>
             </span>
           </div>
           <div
@@ -124,15 +127,14 @@
 <script setup>
   import {Disclosure, DisclosureButton} from '@headlessui/vue'
   import {MenuIcon, XIcon, CalendarIcon, CalculatorIcon, CakeIcon, CashIcon, BookmarkIcon, ClockIcon} from '@heroicons/vue/outline'
-  import MobileDropdown from './navbar/MobileDropdown.vue'
   import Icons from '@/components/misc/Icons.vue'
   import {useI18n} from 'vue-i18n'
-  import {balanceStore} from '@/store/balanceStore'
+  import {balanceStore} from '@/stores/balanceStore'
   import {computed} from 'vue'
   import MobileDropdown2 from "@/components/navbar/MobileDropdown2.vue";
 
-  const { t, locale } = useI18n()
-  const props = defineProps({
+  const { t } = useI18n()
+  defineProps({
     guest: {
       default: false
     }

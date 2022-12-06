@@ -63,8 +63,9 @@ import Slots from '@/components/dashboard/Slots.vue'
 import {useI18n} from 'vue-i18n'
 import VariationsData from '@/components/dashboard/VariationsData.vue'
 import {computed} from 'vue'
-import {dashboardStore} from "@/store/dashboardStore";
+import {dashboardStore} from "@/stores/dashboardStore";
 import GuestButton from "@/components/dashboard/GuestButton.vue";
+import {translateWeekday} from "tools/localeHelper";
 
 const { t, locale } = useI18n()
 
@@ -75,8 +76,7 @@ const props = defineProps([
 ])
 
 const day = dashboardStore.getDay(props.weekID, props.dayID)
-const date = new Date(Date.parse(day.date.date));
-let weekday = computed(() => date.toLocaleDateString(locale.value, { weekday: 'long' }))
+const weekday = computed(() => translateWeekday(day.date, locale))
 let emptyDay = Object.keys(day.meals).length === 0
 
 </script>

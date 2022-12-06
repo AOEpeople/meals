@@ -13,7 +13,7 @@
 <script setup>
 import Switch from "@/components/misc/Switch.vue"
 import {ref, watch} from "vue"
-import {timeSlotStore} from "@/store/timeSlotStore";
+import {timeSlotStore} from "@/stores/timeSlotStore";
 
 const props = defineProps(['timeSlot', 'timeSlotID'])
 const initial = ref(props.timeSlot.enabled)

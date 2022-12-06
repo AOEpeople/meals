@@ -1,8 +1,20 @@
 {
-  "session": {
-    "expired": "Session abgelaufen!"
+  "Friday": "Freitag",
+  "Monday": "Montag",
+  "Saturday": "Samstag",
+  "Sunday": "Sonntag",
+  "Thursday": "Donnerstag",
+  "Tuesday": "Dienstag",
+  "Wednesday": "Mittwoch",
+  "balance": {
+    "current": "Momentaner Kontostand",
+    "old": "Kontostand vom",
+    "transactions": "Transaktionen",
+    "paypal": "PayPal Bezahlung",
+    "cash": "Barzahlung",
+    "add": "Geld einzahlen",
+    "amount": "Betrag"
   },
-  "changeLanguage": "English version",
   "button": {
     "ok": "OK",
     "save": "Speichern",
@@ -11,39 +23,16 @@
     "delete": "Löschen",
     "add_variation": "Variation hinzufügen"
   },
-  "copyright": "Alle Rechte vorbehalten.",
-  "dish": {
-    "create": "Gericht erstellen"
-  },
   "category": {
     "create": "Kategorie erstellen"
   },
-  "slot": {
-    "create": "Slot erstellen"
+  "changeLanguage": "English version",
+  "combiModal": {
+    "title": "Wähle eine Kombination für dein Kombi-Meal",
+    "submit": "Gerichte auswählen",
+    "cancel": "Abbrechen"
   },
-  "costs": {
-    "cash_register": "Kasse",
-    "show_hidden_users": "Ausgeblendete Benutzer anzeigen"
-  },
-  "Monday": "Montag",
-  "Tuesday": "Dienstag",
-  "Wednesday": "Mittwoch",
-  "Thursday": "Donnerstag",
-  "Friday": "Freitag",
-  "Saturday": "Samstag",
-  "Sunday": "Sonntag",
-  "header": {
-    "navigation": {
-      "menu": "Mahlzeiten",
-      "dishes": "Gerichte",
-      "categories": "Kategorien",
-      "slots": "Zeitslot",
-      "costs": "Kosten",
-      "finance": "Finanzen"
-    },
-    "logged_in_text": "Eingeloggt als",
-    "balance": "Kontostand"
-  },
+  "copyright": "Alle Rechte vorbehalten.",
   "dashboard": {
     "0": "Aktuelle Woche",
     "1": "Nächste Woche",
@@ -54,21 +43,9 @@
     },
     "guest": "In die Zwischenablage kopiert!"
   },
-  "balance": {
-    "current": "Momentaner Kontostand",
-    "old": "Kontostand vom",
-    "transactions": "Transaktionen",
-    "paypal": "PayPal Bezahlung",
-    "cash": "Barzahlung",
-    "add": "Geld einzahlen",
-    "amount": "Betrag"
+  "dish": {
+    "create": "Gericht erstellen"
   },
-  "combiModal": {
-    "title": "Wähle eine Kombination für dein Kombi-Meal",
-    "submit": "Gerichte auswählen",
-    "cancel": "Abbrechen"
-  },
-  "logout": "Ausloggen",
   "guest": {
     "form": {
       "firstname": "Vorname",
@@ -82,8 +59,27 @@
     "title": "Mittagessen bei AOE",
     "description": "Als Gast in unserem Haus laden wir Sie gerne zu einem Mittagessen in der AOE Eatery ein. Für Ihre Bestellung tragen Sie sich bitte bis spätestens einen Tag vorher mit Ihren Daten ein und wählen das gewünschte Gericht aus, das dann an unsere Köche weitergeleitet wird.\n\nGuten Appetit wünscht Ihnen,\nAOE"
   },
+  "header": {
+    "navigation": {
+      "menu": "Mahlzeiten",
+      "dishes": "Gerichte",
+      "categories": "Kategorien",
+      "slots": "Zeitslot",
+      "costs": "Kosten",
+      "finance": "Finanzen"
+    },
+    "logged_in_text": "Eingeloggt als",
+    "balance": "Kontostand"
+  },
+  "logout": "Ausloggen",
   "printList": {
     "title": "Teilnahmen am ",
     "participations": "Teilnahmen"
+  },
+  "session": {
+    "expired": "Session abgelaufen!"
+  },
+  "slot": {
+    "create": "Slot erstellen"
   }
 }

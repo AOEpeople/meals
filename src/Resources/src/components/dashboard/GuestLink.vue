@@ -9,7 +9,7 @@
 </template>
 
 <script setup>
-import {useGuestLink} from "@/hooks/getGuestLink";
+import {useGuestLink} from "@/api/getGuestLink";
 import {useI18n} from "vue-i18n";
 import { CheckIcon } from "@heroicons/vue/solid";
 

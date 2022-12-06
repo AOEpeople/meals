@@ -1,10 +1,10 @@
-import useApi from '@/hooks/api';
-import { ref } from 'vue';
+import useApi from "@/api/api";
+import { ref } from 'vue'
 
-export async function useUpdateSelectedSlot(data: string) {
+export async function useJoinMealGuest(data: string) {
     const { request, response, error } = useApi(
-        'POST',
-        'api/update-selected-slot',
+        "POST",
+        "api/join-meal",
         'application/json',
         data,
     );

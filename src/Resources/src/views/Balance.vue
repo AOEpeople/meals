@@ -54,9 +54,9 @@ import BalanceDesc from "@/components/balance/BalanceDesc.vue"
 import BalanceHeader from "@/components/balance/BalanceHeader.vue"
 
 import { useI18n } from "vue-i18n"
-import {balanceStore} from "@/store/balanceStore"
+import {balanceStore} from "@/stores/balanceStore"
 import {useProgress} from '@marcoschulte/vue3-progress'
-import {transactionStore} from "@/store/transactionStore"
+import {transactionStore} from "@/stores/transactionStore"
 import {computed} from "vue"
 
 const progress = useProgress().start()

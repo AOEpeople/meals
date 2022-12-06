@@ -69,11 +69,11 @@ import {
   ListboxOption,
 } from '@headlessui/vue'
 import { CheckIcon, SelectorIcon } from '@heroicons/vue/solid'
-import useEventsBus from '@/hooks/eventBus'
+import useEventsBus from '@/tools/eventBus'
 import {ref, watch} from "vue";
 import {useI18n} from "vue-i18n";
 
-const { t, locale } = useI18n()
+const { t } = useI18n()
 const props = defineProps(['slots'])
 const selectedSlot = ref(props.slots[0])
 const { emit } = useEventsBus()

@@ -86,7 +86,7 @@
 <script setup>
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import CombiButtonGroup from "@/components/dashboard/CombiButtonGroup.vue";
-import {dashboardStore} from "@/store/dashboardStore";
+import {dashboardStore} from "@/stores/dashboardStore";
 import {computed, ref} from "vue";
 import { useI18n } from 'vue-i18n'
 

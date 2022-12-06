@@ -30,7 +30,6 @@
   </tab-panels>
 </template>
 <script setup>
-
 import { Tabs, Tab, TabPanels, TabPanel } from 'vue3-tabs';
 import {useI18n} from "vue-i18n"
 import {ref} from "vue"

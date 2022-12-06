@@ -2,7 +2,7 @@
   <div class="divide-x-2 inline-flex">
     <div
       v-for="(week, weekID, index) in weeks"
-      class=""
+      :key="index"
     >
       <Week
         :weekID="weekID"
@@ -15,11 +15,6 @@
 <script setup>
 import Week from "./Week.vue";
 
-const props = defineProps(['weeks'])
-
+defineProps(['weeks'])
 
 </script>
-
-<style scoped>
-
-</style>

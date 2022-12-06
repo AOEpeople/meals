@@ -56,7 +56,7 @@ class ParticipationCountService
                 && $participation[self::LIMIT_KEY] >= ($participation[self::COUNT_KEY] + $participationCount));
     }
 
-    public static function getParticipationByDays(Week $week, bool $onlyFutureMeals = false): array
+    public function getParticipationByDays(Week $week, bool $onlyFutureMeals = false): array
     {
         $now = new DateTime();
         $participationByDays = [];
@@ -69,7 +69,7 @@ class ParticipationCountService
                 }
             }
 
-            $participationByDay = (new ParticipationCountService)->getParticipationByDay($day);
+            $participationByDay = $this->getParticipationByDay($day);
             if (!empty($participationByDay)) {
                 $participationByDays[$day->getDateTime()->format('Y-m-d')] = $participationByDay;
             }

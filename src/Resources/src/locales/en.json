@@ -1,17 +1,11 @@
 {
-  "header": {
-    "navigation": {
-      "menu": "Menu",
-      "dishes": "Dishes",
-      "categories": "Categories",
-      "slots": "Time Slots",
-      "costs": "Costs",
-      "finance": "Finance"
-    },
-    "logged_in_text": "You are logged in as",
-    "balance": "Balance"
-  },
-  "changeLanguage": "Deutsche Version",
+  "Friday": "Friday",
+  "Monday": "Monday",
+  "Saturday": "Saturday",
+  "Sunday": "Sunday",
+  "Thursday": "Thursday",
+  "Tuesday": "Tuesday",
+  "Wednesday": "Wednesday",
   "balance": {
     "current": "current balance",
     "old": "balance on",
@@ -21,36 +15,24 @@
     "add": "Add Funds",
     "amount": "Amount"
   },
-  "headings": {
-    "week": {
-      "list": "List of weeks",
-      "create": "Create week",
-      "edit": "Edit week",
-      "participations": "Participations",
-      "participationsprint": "Participations on"
-    },
-    "dishes": {
-      "list": "List of dishes"
-    },
-    "categories": {
-      "list": "List of categories"
-    },
-    "slots": {
-      "list": "Meal Slots"
-    },
-    "costs": {
-      "list": "Cost listing"
-    },
-    "guest_enrollment": "Lunch at AOE"
+  "button": {
+    "ok": "OK",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "add_variation": "add new Variation"
+  },
+  "category": {
+    "create": "create categorie"
+  },
+  "changeLanguage": "Deutsche Version",
+  "combiModal": {
+    "title": "Choose a combination for your combined dish",
+    "submit": "Select meals",
+    "cancel": "Cancel"
   },
   "copyright": "All rights reserved.",
-  "table": {
-    "title": "Title",
-    "actions": "Actions",
-    "name": "Name",
-    "category": "Category",
-    "total": "Total"
-  },
   "dashboard": {
     "0": "Current Week",
     "1": "Next Week",
@@ -61,47 +43,8 @@
     },
     "guest": "Copied to clipboard!"
   },
-  "content": {
-    "participation": {
-      "week": {
-        "current": "Current week",
-        "next": "Next week",
-        "disabled": "No service this week!",
-        "no_meals": "Be patient - we don't have\na menu yet but we're working on it!\n",
-        "participant.none": "There are no participations for this week so far."
-      },
-      "day": {
-        "disabled": "No service this day!"
-      },
-      "meal": {
-        "clipboard": "Copied to clipboard!",
-        "no_service": "No service!",
-        "select_slot": "Autoselect next free slot"
-      },
-      "dish": {
-        "new": "New!"
-      },
-      "legend": {
-        "available": "Available",
-        "unavailable": "Unavailable for order",
-        "tradeable": "Your order is being offered to others"
-      },
-      "no_service": "No service"
-    },
-    "menu": {
-      "week": "Week",
-      "no_service": "No Service"
-    },
-    "print": {
-      "costs": {
-        "no_data": "There exist no costs."
-      }
-    }
-  },
-  "combiModal": {
-    "title": "Choose a combination for your combined dish",
-    "submit": "Select meals",
-    "cancel": "Cancel"
+  "dish": {
+    "create": "create Dish"
   },
   "guest": {
     "form": {
@@ -116,8 +59,27 @@
     "title": "Lunch at AOE",
     "description": "As our guest, we would like to invite you to lunch in the AOE Eatery. To order a meal, register no later than one day before your visit to AOE with your personal information and choose the desired dish. Your order will be forwarded to our cooks.\n\nWe hope that you enjoy your lunch\nAOE"
   },
+  "header": {
+    "navigation": {
+      "menu": "Menu",
+      "dishes": "Dishes",
+      "categories": "Categories",
+      "slots": "Time Slots",
+      "costs": "Costs",
+      "finance": "Finance"
+    },
+    "logged_in_text": "You are logged in as",
+    "balance": "Balance"
+  },
+  "logout": "Logout",
   "printList": {
     "title": "Participations on ",
     "participations": "Participations"
+  },
+  "session": {
+    "expired": "Session expired!"
+  },
+  "slot": {
+    "create": "create Slot"
   }
 }

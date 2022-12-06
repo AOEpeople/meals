@@ -44,7 +44,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { RadioGroup, RadioGroupDescription, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue'
-import {dashboardStore} from "@/store/dashboardStore";
+import {dashboardStore} from "@/stores/dashboardStore";
 
 const props = defineProps([
     'weekID',

@@ -3,11 +3,11 @@ const bus = ref(new Map())
 
 export default function useEventsBus() {
 
-    function emit(event: string, ...args: any): void {
+    function emit(event: string, ...args: unknown[]): void {
         bus.value.set(event, args)
     }
 
-    function receive(event: string, callback: Function): void {
+    function receive<T>(event: string, callback: (data: T) => void): void {
         watch(() => bus.value.get(event), val => {
             const [ payload ] = val ?? []
             callback(payload)

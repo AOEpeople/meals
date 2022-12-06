@@ -26,11 +26,11 @@
 
 <script setup>
 import { computed, ref } from 'vue'
-import { useJoinMeal } from '@/hooks/postJoinMeal'
-import { useLeaveMeal } from '@/hooks/postLeaveMeal'
-import { useOfferMeal } from '@/hooks/postOfferMeal'
-import { useCancelOffer } from '@/hooks/postCancelOffer'
-import { dashboardStore } from '@/store/dashboardStore'
+import { useJoinMeal } from '@/api/postJoinMeal'
+import { useLeaveMeal } from '@/api/postLeaveMeal'
+import { useOfferMeal } from '@/api/postOfferMeal'
+import { useCancelOffer } from '@/api/postCancelOffer'
+import { dashboardStore } from '@/stores/dashboardStore'
 import { LockClosedIcon, LockOpenIcon, CheckIcon } from '@heroicons/vue/solid'
 import CombiModal from '@/components/dashboard/CombiModal.vue'
 
@@ -68,6 +68,8 @@ const checkboxCSS = computed(() => {
       case 'offerable':
         cssResult += 'bg-highlight cursor-pointer border-0'
         return cssResult
+      default:
+        return cssResult
     }
   } else {
     switch (meal.mealState) {
@@ -77,6 +79,8 @@ const checkboxCSS = computed(() => {
       case 'tradeable':
       case 'open':
         cssResult += 'cursor-pointer bg-[#FAFAFA] hover:bg-gray-100 border-[0.5px]'
+        return cssResult
+      default:
         return cssResult
     }
   }

@@ -1,4 +1,4 @@
-import axios, {AxiosResponseHeaders} from "axios";
+import axios from "axios";
 import { ref } from "vue";
 
 const instance = axios.create({
@@ -6,7 +6,7 @@ const instance = axios.create({
     timeout: 5000,
 })
 
-export default function useApi<T>(method: string, url: string, contentType: string = 'application/json', data?: string){
+export default function useApi<T>(method: string, url: string, contentType = 'application/json', data?: string){
     const response = ref<T>()
     const error = ref<boolean>(false)
     const request = async () => {

@@ -1,10 +1,10 @@
-import useApi from "@/hooks/api";
+import useApi from "@/api/api";
 import { ref } from "vue";
 
-export async function useCancelOffer(data: string) {
+export async function useOfferMeal(data: string) {
     const { request, response, error } = useApi(
         "POST",
-        "api/cancel-offer",
+        "api/offer-meal",
         'application/json',
         data,
     );

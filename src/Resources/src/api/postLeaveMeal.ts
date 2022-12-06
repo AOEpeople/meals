@@ -1,10 +1,14 @@
-import useApi from "@/hooks/api";
+import useApi from "@/api/api";
 import { ref } from "vue";
 
-export async function useUpdateSlot(data: string) {
-    const { error, request, response } = useApi(
+export type LeaveMeal = {
+    slotId: number
+};
+
+export async function useLeaveMeal(data: string) {
+    const { error, request, response } = useApi<LeaveMeal>(
         "POST",
-        "api/update-slot",
+        "api/leave-meal",
         'application/json',
         data,
     );

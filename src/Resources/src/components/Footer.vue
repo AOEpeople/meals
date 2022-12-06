@@ -32,7 +32,6 @@
 <script setup>
 import Icons from "@/components/misc/Icons.vue"
 import { useI18n } from "vue-i18n";
-import {now} from "jquery";
 
 const { t, locale } = useI18n();
 

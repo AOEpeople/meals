@@ -3,7 +3,8 @@
     <span class="inline-block text-primary uppercase tracking-[0.5px] leading-[20px] break-words text-note font-bold">{{ parentTitle }}</span><br>
   </div>
   <div
-    v-for="(variation, variationID) in meal.variations"
+    v-for="(variation, variationID, index) in meal.variations"
+    :key="index"
     class="flex flex-row w-auto gap-4 mb-1.5 last:mb-0 xl:grid-cols-6 justify-around"
   >
     <div class="basis-10/12 items-center self-center xl:col-span-5">
@@ -38,8 +39,8 @@
 import ParticipationCounter from "@/components/menuCard/ParticipationCounter.vue";
 import Checkbox from '@/components/dashboard/Checkbox.vue'
 import { useI18n } from 'vue-i18n'
-import { computed, ref } from 'vue'
-import {dashboardStore} from "@/store/dashboardStore";
+import { computed } from 'vue'
+import {dashboardStore} from "@/stores/dashboardStore";
 
 const { t, locale } = useI18n()
 

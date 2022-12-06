@@ -37,7 +37,7 @@ import Table from '@/components/misc/Table.vue'
 import SlotHeader from '@/components/timeslots/SlotHeader.vue'
 import SlotActions from '@/components/timeslots/SlotActions.vue'
 import {useProgress} from '@marcoschulte/vue3-progress'
-import {timeSlotStore} from "@/store/timeSlotStore"
+import {timeSlotStore} from "@/stores/timeSlotStore"
 
 const progress = useProgress().start()
 

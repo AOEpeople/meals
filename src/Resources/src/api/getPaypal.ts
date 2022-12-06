@@ -1,4 +1,4 @@
-import useApi from "@/hooks/api"
+import useApi from "@/api/api";
 import { ref } from "vue"
 
 export async function usePaypal() {
@@ -7,7 +7,7 @@ export async function usePaypal() {
         return { id: paypalId }
     }
 
-    const { response: id, request, error } = useApi<String>(
+    const { response: id, request, error } = useApi<string>(
         "GET",
         "/api/paypal-id",
     );

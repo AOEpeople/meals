@@ -20,7 +20,8 @@ help:
 	@echo "	run-cs-fixer       - Run Coding Standards Fixer"
 	@echo "	run-phpmd          - Run PHP Mess Detector"
 	@echo "	run-psalm          - Run static code analysis"
-	@echo "	run-tests          - Run tests"
+	@echo "	run-tests-be       - Run backend-tests"
+	@echo "	run-tests-fe       - Run frontend-tests"
 	@echo "	ssh                - Open a bash session in the web container"
 	@echo "	update-schema      - Update the Doctrine schema"
 	@echo ""
@@ -65,8 +66,11 @@ load-testdata:
 create-migration:
 	ddev exec php bin/console doctrine:migrations:diff
 
-run-tests:
+run-tests-be:
 	ddev run tests
+
+run-tests-fe:
+	ddev exec yarn --cwd=src/Resources test
 
 ssh:
 	ddev ssh

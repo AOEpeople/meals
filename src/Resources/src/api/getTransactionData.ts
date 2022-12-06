@@ -1,10 +1,10 @@
-import useApi from "@/hooks/api"
+import useApi from "@/api/api";
 import { ref } from "vue"
 
 export type Transaction = {
     data: [{
         type: string,
-        date: Object,
+        date: object,
         timestamp: string,
         description_en: string,
         description_de: string,

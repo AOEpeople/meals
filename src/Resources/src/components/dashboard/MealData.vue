@@ -38,7 +38,7 @@ import ParticipationCounter from "@/components/menuCard/ParticipationCounter.vue
 import Checkbox from '@/components/dashboard/Checkbox.vue'
 import { useI18n } from "vue-i18n";
 import {computed} from "vue";
-import {dashboardStore} from "@/store/dashboardStore";
+import {dashboardStore} from "@/stores/dashboardStore";
 
 const props = defineProps([
   'weekID',
@@ -70,6 +70,8 @@ const mealCSS = computed(() => {
     case 'tradeable':
     case 'offering':
       css += 'bg-highlight'
+      return css
+    default:
       return css
   }
 })

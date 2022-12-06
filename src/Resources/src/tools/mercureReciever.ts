@@ -1,8 +1,8 @@
 /**
  * Configure handlers to process meal push notifications.
  */
-import {Meal} from "@/hooks/getDashboardData";
-import {dashboardStore} from "@/store/dashboardStore";
+import {Meal} from "@/api/getDashboardData";
+import {dashboardStore} from "@/stores/dashboardStore";
 
 type Meal_Update = {
     weekId: number,
@@ -55,15 +55,14 @@ class MercureReceiver {
     private configureMealUpdateHandlers(): void {
         const eventSrc = new EventSource('https://meals.test:8081/.well-known/mercure?topic=participation-updates&topic=meal-offer-updates&topic=slot-allocation-updates', { withCredentials: true })
 
-        // @ts-ignore
         eventSrc.addEventListener('participationUpdate', (event: MessageEvent) => {
             MercureReceiver.handleParticipationUpdate(JSON.parse(event.data))
         })
-        // @ts-ignore
+
         eventSrc.addEventListener('mealOfferUpdate', (event: MessageEvent) => {
             MercureReceiver.handleMealOfferUpdate(JSON.parse(event.data))
         })
-        // @ts-ignore
+
         eventSrc.addEventListener('slotAllocationUpdate', (event: MessageEvent) => {
             MercureReceiver.handleSlotAllocationUpdate(JSON.parse(event.data))
         })
@@ -87,44 +86,47 @@ class MercureReceiver {
     }
 
     private static handleMealOfferUpdate(data: Offer_Update): void {
-        let meal = data.parentId === null
+        const meal = data.parentId === null
             ? dashboardStore.getMeal(data.weekId, data.dayId, data.mealId)
             : dashboardStore.getVariation(data.weekId, data.dayId, data.parentId, data.mealId)
-        switch (data.type) {
-            case OFFER_NEW:
-                meal!.hasOffers = true
-                if (!meal!.isParticipating) {
-                    meal!.mealState = 'tradeable'
-                }
-                break
-            case OFFER_ACCEPTED:
-                if (data.participantId === meal!.isParticipating) {
-                    meal!.isParticipating = null
-                    if (data.lastOffer) {
-                        meal!.mealState = 'disabled'
-                        meal!.hasOffers = false
-                    } else {
-                        meal!.mealState = 'tradeable'
+
+        if (meal !== undefined) {
+            switch (data.type) {
+                case OFFER_NEW:
+                    meal.hasOffers = true
+                    if (!meal.isParticipating) {
+                        meal.mealState = 'tradeable'
                     }
-                }
-                break
-            case OFFER_GONE:
-                meal!.hasOffers = false
-                if (!meal!.isParticipating) {
-                    meal!.mealState = 'disabled'
-                }
-                break
+                    break
+                case OFFER_ACCEPTED:
+                    if (data.participantId === meal.isParticipating) {
+                        meal.isParticipating = null
+                        if (data.lastOffer) {
+                            meal.mealState = 'disabled'
+                            meal.hasOffers = false
+                        } else {
+                            meal.mealState = 'tradeable'
+                        }
+                    }
+                    break
+                case OFFER_GONE:
+                    meal.hasOffers = false
+                    if (!meal.isParticipating) {
+                        meal.mealState = 'disabled'
+                    }
+                    break
+            }
         }
     }
 
     private static handleSlotAllocationUpdate(data: Slot_Update): void {
-        let newSlot = dashboardStore.getSlot(data.weekId, data.dayId, data.newSlot.slotId)
+        const newSlot = dashboardStore.getSlot(data.weekId, data.dayId, data.newSlot.slotId)
         if (newSlot !== undefined) {
             newSlot.limit = data.newSlot.limit
             newSlot.count = data.newSlot.count
         }
         if(data.prevSlot !== null) {
-            let prevSlot = dashboardStore.getSlot(data.weekId, data.dayId, data.prevSlot.slotId)
+            const prevSlot = dashboardStore.getSlot(data.weekId, data.dayId, data.prevSlot.slotId)
             if (prevSlot !== undefined) {
                 prevSlot.limit = data.prevSlot.limit
                 prevSlot.count = data.prevSlot.count

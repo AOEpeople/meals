@@ -27,14 +27,15 @@
 <script>
 import { RadarSpinner } from 'epic-spinners'
 import { loadScript } from "@paypal/paypal-js";
-import { balanceStore } from "@/store/balanceStore";
-import { transactionStore } from "@/store/transactionStore";
+import { balanceStore } from "@/stores/balanceStore";
+import { transactionStore } from "@/stores/transactionStore";
 import { useI18n } from "vue-i18n";
 import {ref} from "vue";
-import {usePaypal} from "@/hooks/getPaypal";
+import {usePaypal} from "@/api/getPaypal";
 
 export default {
   components: {RadarSpinner},
+  emits: ['closePanel'],
   setup() {
     const { t } = useI18n();
     return { t };
@@ -48,7 +49,7 @@ export default {
   },
   async mounted() {
     let amountField = this.$refs['input'];
-    let panel = this;
+    const vm = this;
 
     const { locale } = useI18n();
 
@@ -91,7 +92,7 @@ export default {
                         // ..add missing decimal places and render the amount in the point format.
                         amountField.value = amountFieldValue.toFixed(2);
 
-                        // If the language is set to German..
+                        // If the language is set to German.
                       } else {
                         // ..add missing decimal places and render the amount in the comma format.
                         amountField.value = amountFieldValue.toFixed(2).replace(/\./g, ',');
@@ -131,7 +132,7 @@ export default {
                       if(response.ok) {
                         balanceStore.adjustAmount(parseFloat(formatCurrency(amountField.value)));
                         transactionStore.fillStore();
-                        panel.$emit('closePanel');
+                        vm.$emit('closePanel');
                       }
                     });
                   });

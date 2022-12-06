@@ -1,4 +1,4 @@
-import useApi from "@/hooks/api";
+import useApi from "@/api/api";
 import { Dictionary } from "../../types/types";
 import { ref } from "vue";
 

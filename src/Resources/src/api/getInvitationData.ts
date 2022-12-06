@@ -1,6 +1,6 @@
-import useApi from "@/hooks/api"
+import useApi from "@/api/api";
 import { ref } from "vue"
-import {DateTime, Meal, Slot} from "@/hooks/getDashboardData";
+import {DateTime, Meal, Slot} from "@/api/getDashboardData";
 import {Dictionary} from "../../types/types";
 
 type GuestDay = {

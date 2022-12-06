@@ -1,4 +1,4 @@
-import {Store} from "@/store/store";
+import {Store} from "@/stores/store";
 import { useI18n } from "vue-i18n";
 
 interface Balance extends Object {
@@ -13,16 +13,8 @@ class BalanceStore extends Store<Balance> {
     }
 
     fillStore(): void {
-        try {
-            let balance = sessionStorage.getItem('balance');
-            if (balance) {
-                this.state.amount = parseFloat(balance);
-            } else {
-                throw new Error('Balance not set')
-            }
-        } catch (e) {
-            console.log(e)
-        }
+            const balance = sessionStorage.getItem('balance');
+            balance ? this.state.amount = parseFloat(balance) : console.log('Balance not set')
     }
 
     updateAmount(newAmount: number): void {
@@ -34,7 +26,7 @@ class BalanceStore extends Store<Balance> {
     }
 
     toLocalString(): string {
-        let { locale } = useI18n();
+        const { locale } = useI18n();
         if(locale.value === 'en') {
             return this.state.amount.toFixed(2);
         } else {

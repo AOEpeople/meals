@@ -19,7 +19,7 @@
 <script setup>
 import { CheckIcon } from '@heroicons/vue/solid'
 import { ref } from 'vue'
-import useEventsBus from '@/hooks/eventBus'
+import useEventsBus from 'tools/eventBus'
 import CombiModal from '@/components/dashboard/CombiModal.vue'
 
 const props = defineProps(['meals', 'mealId'])

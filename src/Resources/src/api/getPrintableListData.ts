@@ -1,13 +1,13 @@
-import useApi from "@/hooks/api"
+import useApi from "@/api/api";
 import { ref } from "vue"
 import type {Dictionary} from "../../types/types";
-import type {DateTime} from "@/hooks/getDashboardData"
+import type {DateTime} from "@/api/getDashboardData"
 
 type ListData = {
     data: Dictionary<Dictionary<boolean>>
     meals: {
-        en: String,
-        de: String
+        en: string,
+        de: string
     },
     day: DateTime,
     participations: Dictionary<number>

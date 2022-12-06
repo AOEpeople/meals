@@ -1,7 +1,7 @@
 <template>
   <NavBar />
   <div class="z-[4] absolute">
-    <vue3-progress-bar/>
+    <vue3-progress-bar />
   </div>
   <Content class="z-[2] relative" />
   <Footer class="z-[1] relative" />
@@ -12,7 +12,7 @@ import NavBar from '@/components/NavBar.vue'
 import Footer from '@/components/Footer.vue'
 import Content from '@/components/Content.vue'
 
-import { balanceStore } from '@/store/balanceStore'
+import { balanceStore } from '@/stores/balanceStore'
 
 const isAuthenticated = sessionStorage.getItem('auth') === 'granted'
 if (isAuthenticated) {

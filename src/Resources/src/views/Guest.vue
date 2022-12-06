@@ -1,19 +1,24 @@
 <template>
-  <GuestCompletion v-if="result !== ''" :result="result" />
+  <GuestCompletion
+    v-if="result !== ''"
+    :result="result"
+  />
   <div v-else>
     <div class="mx-4">
       <h2>{{ t('guest.title') }}</h2>
-      <p class="whitespace-pre-line">{{ t('guest.description') }}</p>
+      <p class="whitespace-pre-line">
+        {{ t('guest.description') }}
+      </p>
     </div>
     <GuestSelection
-        :invitation="invitation"
+      :invitation="invitation"
     />
     <GuestForm
-        v-model:firstName="form.firstName"
-        v-model:lastName="form.lastName"
-        v-model:company="form.company"
-        :filled="filled"
-        @submitForm="submitForm"
+      v-model:firstName="form.firstName"
+      v-model:lastName="form.lastName"
+      v-model:company="form.company"
+      :filled="filled"
+      @submitForm="submitForm"
     />
   </div>
 </template>
@@ -21,10 +26,10 @@
 <script setup>
 import {useProgress} from '@marcoschulte/vue3-progress'
 import {useRoute} from 'vue-router'
-import {useInvitationData} from '@/hooks/getInvitationData'
-import useEventsBus from '@/hooks/eventBus'
+import {useInvitationData} from '@/api/getInvitationData'
+import useEventsBus from 'tools/eventBus'
 import {ref, computed} from 'vue'
-import {useJoinMealGuest} from '@/hooks/postJoinMealGuest'
+import {useJoinMealGuest} from '@/api/postJoinMealGuest'
 import {useI18n} from 'vue-i18n'
 import GuestCompletion from '@/components/guest/GuestCompletion.vue'
 import GuestSelection from '@/components/guest/GuestSelection.vue'

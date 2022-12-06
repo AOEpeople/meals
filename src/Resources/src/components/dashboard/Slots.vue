@@ -73,9 +73,9 @@ import {
 } from '@headlessui/vue'
 
 import {useI18n} from "vue-i18n";
-import {useUpdateSelectedSlot} from "@/hooks/postUpdateSelectedSlot";
+import {useUpdateSelectedSlot} from "@/api/postUpdateSelectedSlot";
 import { CheckIcon, SelectorIcon } from '@heroicons/vue/solid'
-import {dashboardStore} from "@/store/dashboardStore";
+import {dashboardStore} from "@/stores/dashboardStore";
 
 const props = defineProps([
   'weekID',

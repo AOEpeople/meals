@@ -5,7 +5,7 @@
   >
     <CheckIcon
       v-if="enabled"
-      class="text-white w-[80%] h-[80%] relative top-[10%] left-[10%]"
+      class="relative top-[10%] left-[10%] h-[80%] w-[80%] text-white"
     />
   </span>
   <CombiModal

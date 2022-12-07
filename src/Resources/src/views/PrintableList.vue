@@ -1,7 +1,7 @@
 <template>
   <div class="text-center">
     <svg
-      class="inline mr-2 align-text-bottom min-w-[36px] text-primary"
+      class="mr-2 inline min-w-[36px] align-text-bottom text-primary"
       width="36"
       height="36"
       viewBox="0 0 14 20"
@@ -32,17 +32,17 @@
       {{ t('printList.title') + dateString }}
     </h1>
   </div> 
-  <div class="px-4 mb-20 sm:px-6 lg:px-8">
+  <div class="mb-20 px-4 sm:px-6 lg:px-8">
     <div class="mt-8 flex flex-col">
       <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-          <div class="overflow-hidden aoe-shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+          <div class="aoe-shadow overflow-hidden ring-1 ring-black/5 md:rounded-lg">
             <table class="min-w-full divide-y divide-gray-300">
               <thead class="bg-white">
                 <tr class="divide-y divide-gray-200">
                   <th
                     scope="col"
-                    class="px-4 py-3.5 pl-4 text-left text-sm font-semibold text-primary"
+                    class="px-4 py-3.5 text-left text-sm font-semibold text-primary"
                   />
                   <th
                     v-for="(mealName, index) in mealNames"
@@ -54,7 +54,7 @@
                   </th>
                 </tr>
               </thead>
-              <tbody class="bg-white divide-y divide-gray-200">
+              <tbody class="divide-y divide-gray-200 bg-white">
                 <template
                   v-for="(participant, slotName) in listData.data"
                   :key="slotName"

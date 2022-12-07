@@ -1,26 +1,26 @@
 <template>
   <div class="mb-1">
-    <span class="inline-block text-primary uppercase tracking-[0.5px] leading-[20px] break-words text-note font-bold">{{ parentTitle }}</span><br>
+    <span class="inline-block break-words text-note font-bold uppercase leading-[20px] tracking-[0.5px] text-primary">{{ parentTitle }}</span><br>
   </div>
   <div
     v-for="(variation, variationID, index) in meal.variations"
     :key="index"
-    class="flex flex-row w-auto gap-4 mb-1.5 last:mb-0 xl:grid-cols-6 justify-around"
+    class="mb-1.5 flex w-auto flex-row justify-around gap-4 last:mb-0 xl:grid-cols-6"
   >
     <div class="basis-10/12 items-center self-center xl:col-span-5">
       <div class="self-center">
-        <p class="m-0 font-light description text-primary">
+        <p class="description m-0 font-light text-primary">
           {{ locale.substring(0, 2) === 'en' ? variation.title.en : variation.title.de }}
           <span
             v-if="variation.isNew"
-            class="w-[36px] h-[17px] uppercase font-bold bg-highlight text-white align-text-bottom ml-1 pl-1 pr-[3px] py-[1px] leading-[16px] text-[11px] tracking-[1.5px]"
+            class="ml-1 h-[17px] w-[36px] bg-highlight py-[1px] pl-1 pr-[3px] align-text-bottom text-[11px] font-bold uppercase leading-[16px] tracking-[1.5px] text-white"
           >
             {{ t('dashboard.new') }}
           </span> 
         </p>
       </div>
     </div>
-    <div class="flex flex-none basis-2/12 items-center justify-end text-align-last">
+    <div class="text-align-last flex flex-none basis-2/12 items-center justify-end">
       <ParticipationCounter
         :meal="variation"
         :mealCSS="mealCSS[variationID]"

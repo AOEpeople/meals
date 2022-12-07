@@ -1,10 +1,10 @@
 <template>
   <NavBar />
-  <div class="z-[4] absolute">
+  <div class="absolute z-[4]">
     <vue3-progress-bar />
   </div>
-  <Content class="z-[2] relative" />
-  <Footer class="z-[1] relative" />
+  <Content class="relative z-[2]" />
+  <Footer class="relative z-[1]" />
 </template>
 
 <script setup>
@@ -26,6 +26,6 @@ if (isAuthenticated) {
   @apply text-white bg-grey shadow-light-grey;
 }
 .aoe-shadow {
-  box-shadow: 0 4px 0 hsla(0,0%,100%,.46),0 15px 35px rgba(216,225,233,.8);
+  @apply box-shadow: 0 4px 0 hsla(0,0%,100%,.46),0 15px 35px rgba(216,225,233,.8);
 }
 </style>

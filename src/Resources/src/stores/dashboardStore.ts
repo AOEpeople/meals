@@ -47,9 +47,14 @@ class DashboardStore extends Store<Dashboard> {
         return undefined
     }
 
-    public getDays(weekID: number | string): Dictionary<Day> {
+    public getDays(weekID: number | string): Dictionary<Day> | undefined {
         const week = this.getWeek(weekID)
-        return week!.days
+
+        if (week !== undefined) {
+            return week.days
+        }
+
+        return undefined
     }
 
     public getSlot(weekID: number | string, dayID: number | string, slotID: number | string): Slot | undefined {
@@ -61,12 +66,8 @@ class DashboardStore extends Store<Dashboard> {
             }
             return slot
         }
-        return undefined
-    }
 
-    public getSlots(weekID: number | string, dayID: number | string): Dictionary<Slot> {
-        const day = this.getDay(weekID, dayID)
-        return day!.slots
+        return undefined
     }
 
     public getMeal(weekID: number | string, dayID: number | string, mealID: number | string): Meal | undefined {
@@ -81,15 +82,19 @@ class DashboardStore extends Store<Dashboard> {
         return undefined
     }
 
-    public getMeals(weekID: number | string, dayID: number | string): Dictionary<Meal> {
+    public getMeals(weekID: number | string, dayID: number | string): Dictionary<Meal> | undefined {
         const day = this.getDay(weekID, dayID)
-        return day!.meals
+
+        if (day !== undefined) {
+            return day.meals
+        }
+        return undefined
     }
 
     public getVariation(weekID: number | string, dayID: number | string, parentMealID: number | string, variationID: number | string): Meal | undefined {
         const parentMeal = this.getMeal(weekID, dayID, parentMealID)
-        if(parentMeal !== undefined) {
-            const variation = parentMeal.variations![variationID as number]
+        if(parentMeal !== undefined && parentMeal.variations !== null) {
+            const variation = parentMeal.variations[variationID as number]
             if (variation === undefined) {
                 console.log('getVariation: variation with ID ( week: ' + weekID + ' day: '+ dayID + ' ParentMeal: ' + parentMealID + ' variation: ' + variationID + ' ) not found')
             }
@@ -97,13 +102,6 @@ class DashboardStore extends Store<Dashboard> {
         }
         return undefined
     }
-
-    public getVariations(weekID: number | string, dayID: number | string, parentMealID: number | string): Dictionary<Meal> {
-        const parentMeal = this.getMeal(weekID, dayID, parentMealID)
-        return parentMeal!.variations!
-    }
 }
-
-
 
 export const dashboardStore: DashboardStore = new DashboardStore()

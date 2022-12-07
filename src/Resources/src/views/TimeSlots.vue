@@ -1,5 +1,5 @@
 <template>
-  <div class="xl:mx-auto mx-[5%]">
+  <div class="mx-[5%] xl:mx-auto">
     <SlotHeader />
     <Table
       v-if="!timeSlots.isLoading"

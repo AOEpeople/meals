@@ -1,6 +1,6 @@
 <template>
   <main>
-    <div class="max-w-screen-aoe mx-auto mt-10">
+    <div class="mx-auto mt-10 max-w-screen-aoe">
       <Suspense>
         <template #default>
           <router-view v-slot="{ Component }">

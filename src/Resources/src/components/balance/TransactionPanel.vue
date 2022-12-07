@@ -14,7 +14,7 @@
         ref="input"
         type="text"
         :value="balance < 0 ? balance.toFixed(2).slice(1).replace(/\./g, ',') : '0,00'"
-        class="bg-white border-[2px] border-solid border-[#CAD6E1] rounded-[100px] h-12 text-center"
+        class="h-12 rounded-[100px] border-[2px] border-solid border-[#CAD6E1] bg-white text-center"
       >
     </div>
     <div

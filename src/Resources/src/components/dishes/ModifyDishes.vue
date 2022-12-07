@@ -59,7 +59,7 @@
 
 <script setup>
 import { ref } from 'vue'
-const props = defineProps([
+defineProps([
     'data'
 ])
 import {Listbox, ListboxButton, ListboxOption, ListboxOptions} from "@headlessui/vue";

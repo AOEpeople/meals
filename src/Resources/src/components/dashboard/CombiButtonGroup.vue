@@ -6,7 +6,7 @@
     <RadioGroupLabel class="sr-only">
       Combi Meal Selection
     </RadioGroupLabel>
-    <div class="rounded-md bg-white -space-y-px">
+    <div class="-space-y-px rounded-md bg-white">
       <RadioGroupOption
         v-for="(dish, index) in dishes"
         :key="dish.id"
@@ -19,7 +19,7 @@
             :class="[checked ? 'bg-indigo-600 border-transparent' : 'bg-white border-gray-300', active ? 'ring-2 ring-offset-2 ring-indigo-500' : '', 'h-4 w-4 mt-0.5 cursor-pointer shrink-0 rounded-full border flex items-center justify-center']"
             aria-hidden="true"
           >
-            <span class="rounded-full bg-white w-1.5 h-1.5" />
+            <span class="h-1.5 w-1.5 rounded-full bg-white" />
           </span>
           <span class="ml-3 flex flex-col">
             <RadioGroupLabel

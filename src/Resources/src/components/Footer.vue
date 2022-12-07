@@ -1,6 +1,6 @@
 <template>
-  <footer class="bg-[rgb(225,232,238)] mt-8">
-    <div class="grid mx-auto max-w-screen-aoe xl:grid-cols-2">
+  <footer class="mt-8 bg-[rgb(225,232,238)]">
+    <div class="mx-auto grid max-w-screen-aoe xl:grid-cols-2">
       <div class="items-center py-4">
         <img
           class="mx-auto h-10 xl:mx-0"
@@ -10,21 +10,21 @@
       </div>
       <div
         id="language"
-        class="hidden self-center text-right xl:inline-block cursor-pointer w-fit justify-self-end"
+        class="hidden w-fit cursor-pointer self-center justify-self-end text-right xl:inline-block"
         @click="changeLocale"
       >
         <Icons
           icon="flag"
           box="0 0 26 26"
-          class="inline-block w-[26px] h-[26px] align-top fill-primary"
+          class="inline-block h-[26px] w-[26px] fill-primary align-top"
         />
-        <span class="self-center text-primary text-[14px] leading-[20px] align-top">
+        <span class="self-center align-top text-[14px] leading-[20px] text-primary">
           {{ t('changeLanguage') }}
         </span>
       </div>
     </div>
-    <div class="bg-[rgb(244,247,249)] w-full py-4 px-4 text-center">
-      <span class="text-[#A1A1B0] font-normal text-[14px] leading-[20px]"> © {{ year }} AOE. {{ t('copyright') }} </span>
+    <div class="w-full bg-[rgb(244,247,249)] p-4 text-center">
+      <span class="text-[14px] font-normal leading-[20px] text-[#A1A1B0]"> © {{ year }} AOE. {{ t('copyright') }} </span>
     </div>
   </footer>
 </template>

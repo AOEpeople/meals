@@ -1,5 +1,5 @@
 <template>
-  <div class="items-center text-center xl:grid xl:grid-cols-2 xl:my-[42px]">
+  <div class="items-center text-center xl:my-[42px] xl:grid xl:grid-cols-2">
     <div class="xl:justify-self-start">
       <h2 class="m-0">
         {{ t('balance.transactions') }}
@@ -9,12 +9,12 @@
       <Popover>
         <template #button="{ open }">
           <button class="btn-secondary">
-            <span class="leading-[10px] align-middle">+ {{ t('balance.add') }}</span>
+            <span class="align-middle leading-[10px]">+ {{ t('balance.add') }}</span>
           </button>
         </template>
         <template #panel="{ close }">
           <TransactionPanel
-            class="w-[420px] h-[450px]"
+            class="h-[450px] w-[420px]"
             @closePanel="close()"
           />
         </template>

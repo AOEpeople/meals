@@ -1,11 +1,11 @@
 <template>
   <div class="mx-4 grid grid-cols-3 gap-4">
     <div class="grid grid-rows-2">
-      <span class="ml-2 text-primary-3 uppercase tracking-[1px] text-note font-bold self-center">
+      <span class="ml-2 self-center text-note font-bold uppercase tracking-[1px] text-primary-3">
         {{ t('guest.form.firstname') }}*
       </span>
       <input
-        class="bg-white border-[2px] border-solid border-[#CAD6E1] rounded-[100px] h-12"
+        class="h-12 rounded-[100px] border-[2px] border-solid border-[#CAD6E1] bg-white"
         type="text"
         required
         @input="$emit('update:firstName', $event.target.value)"
@@ -13,11 +13,11 @@
       >
     </div>
     <div class="grid grid-rows-2">
-      <span class="ml-2 text-primary-3 uppercase tracking-[1px] text-note font-bold self-center">
+      <span class="ml-2 self-center text-note font-bold uppercase tracking-[1px] text-primary-3">
         {{ t('guest.form.lastname') }}*
       </span>
       <input
-        class="bg-white border-[2px] border-solid border-[#CAD6E1] rounded-[100px] h-12"
+        class="h-12 rounded-[100px] border-[2px] border-solid border-[#CAD6E1] bg-white"
         type="text"
         required
         @input="$emit('update:lastName', $event.target.value)"
@@ -25,11 +25,11 @@
       >
     </div>
     <div class="grid grid-rows-2">
-      <span class="ml-2 text-primary-3 uppercase tracking-[1px] text-note font-bold self-center">
+      <span class="ml-2 self-center text-note font-bold uppercase tracking-[1px] text-primary-3">
         {{ t('guest.form.company') }}*
       </span>
       <input
-        class="bg-white border-[2px] border-solid border-[#CAD6E1] rounded-[100px] h-12"
+        class="h-12 rounded-[100px] border-[2px] border-solid border-[#CAD6E1] bg-white"
         type="text"
         required
         @input="$emit('update:company', $event.target.value)"
@@ -51,6 +51,6 @@ import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 defineProps(['firstname', 'lastname', 'company', 'filled'])
-const emit = defineEmits(['submitForm', 'update:modelValue'])
+const emit = defineEmits(['submitForm', 'update:modelValue', 'update:firstName', 'update:lastName', 'update:company'])
 
 </script>

@@ -16,7 +16,7 @@ help:
 	@echo "	load-testdata      - Load test data i.e. dishes, meals and users"
 	@echo "	poweroff           - Stop all related containers and projects"
 	@echo "	run-devbox         - Run devbox"
-	@echo "	run-lint-sass      - Run code linter for sass"
+	@echo "	run-lint           - Run code linter"
 	@echo "	run-cs-fixer       - Run Coding Standards Fixer"
 	@echo "	run-phpmd          - Run PHP Mess Detector"
 	@echo "	run-psalm          - Run static code analysis"
@@ -45,8 +45,8 @@ build-yarn-dev-css:
 build-yarn-watch:
 	ddev exec yarn --cwd=src/Resources build-watch
 
-run-lint-sass:
-	ddev exec yarn --cwd src/Resources lint:sass
+run-lint:
+	ddev exec yarn --cwd src/Resources lint
 
 run-phpmd:
 	ddev exec vendor/bin/phpmd src/Mealz text ./phpmd.xml --baseline-file ./phpmd.baseline.xml --exclude */Tests/*

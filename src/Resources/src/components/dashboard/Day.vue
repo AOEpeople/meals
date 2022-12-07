@@ -4,25 +4,25 @@
       <div
         v-if="!day.isLocked"
         id="icon"
-        class="absolute w-[24px] text-center bottom-[1px] left-[2px] z-[2]"
+        class="absolute bottom-[1px] left-[2px] z-[2] w-[24px] text-center"
       >
         <GuestButton
           :dayID="dayID"
           :index="index"
         />
       </div>
-      <div class="grid weekday min-w-[200px]">
+      <div class="weekday grid min-w-[200px]">
         <div
           id="dayLabel"
           class="h-[26px]"
         >
-          <span class="align-middle uppercase dayLabel">{{ weekday }}</span>
+          <span class="dayLabel align-middle uppercase">{{ weekday }}</span>
         </div>
       </div>
     </div>
     <div
       v-if="!emptyDay"
-      class="flex flex-col flex-1 z-[1]"
+      class="z-[1] flex flex-1 flex-col"
     >
       <Slots
         v-if="day.slotsEnabled"
@@ -52,7 +52,7 @@
       v-if="emptyDay"
       class="h-[134px]"
     >
-      <span class="relative top-[53px] description text-primary-1 ml-[23px]">{{ t('dashboard.no_service') }}</span>
+      <span class="description relative top-[53px] ml-[23px] text-primary-1">{{ t('dashboard.no_service') }}</span>
     </div>
   </div>
 </template>

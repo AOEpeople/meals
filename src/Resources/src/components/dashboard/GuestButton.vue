@@ -4,7 +4,7 @@
       <Icons
         icon="guest"
         box="0 0 13 13"
-        class="w-[13px] h-[13px] fill-white"
+        class="h-[13px] w-[13px] fill-white"
       />
     </PopoverButton>
 
@@ -19,7 +19,7 @@ import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
 import Icons from '@/components/misc/Icons.vue'
 import GuestLink from "@/components/dashboard/GuestLink.vue";
 
-const props = defineProps(['dayID', 'index'])
+defineProps(['dayID', 'index'])
 
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-  <td class="py-[19px] flex">
+  <td class="flex py-[19px]">
     <img
       v-if="props.transaction.type === 'credit' && description === '0'"
       class="min-w-[21px]"

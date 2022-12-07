@@ -1,5 +1,5 @@
 <template>
-  <div class="items-center text-center xl:grid xl:grid-cols-2 xl:my-[42px]">
+  <div class="items-center text-center xl:my-[42px] xl:grid xl:grid-cols-2">
     <div class="xl:justify-self-start">
       <h2 class="m-0">
         {{ t('slots.header') }}
@@ -9,7 +9,7 @@
       <Popover>
         <template #button="{ open }">
           <button class="btn-secondary">
-            <span class="leading-[10px] align-middle">+ {{ t('slot.create') }}</span>
+            <span class="align-middle leading-[10px]">+ {{ t('slot.create') }}</span>
           </button>
         </template>
         <template #panel="{ close }">

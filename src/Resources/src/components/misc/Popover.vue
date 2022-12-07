@@ -20,9 +20,9 @@
     >
       <PopoverPanel
         v-slot="{ close }"
-        class="absolute left-1/2 mt-5 -translate-x-1/2 transform xl:-translate-x-3/4"
+        class="absolute left-1/2 mt-5 -translate-x-1/2 xl:-translate-x-3/4"
       >
-        <div class="overflow-hidden bg-gray-200 rounded-lg ring-1 ring-black ring-opacity-5 shadow-lg w-[95vw] xl:w-auto">
+        <div class="w-[95vw] overflow-hidden rounded-lg bg-gray-200 shadow-lg ring-1 ring-black/5 xl:w-auto">
           <slot
             name="panel"
             :close="close"

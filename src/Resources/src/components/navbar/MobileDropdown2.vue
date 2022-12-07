@@ -37,15 +37,15 @@
             </div>
           </nav>
         </div>
-        <div class="flex flex-1 flex-col overflow-y-auto pt-5 pb-4 border-t border-gray-200">
+        <div class="flex flex-1 flex-col overflow-y-auto border-t border-gray-200 pt-5 pb-4">
           <nav
             class="flex-1 space-y-1 bg-white px-2"
             aria-label="Sidebar"
           >
-            <div class="text-gray-600 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+            <div class="group flex items-center rounded-md p-2 text-sm font-medium text-gray-600">
               <Icons
                 icon="person-outline"
-                class="fill-primary mr-3 flex-shrink-0 h-6 w-6"
+                class="mr-3 h-6 w-6 shrink-0 fill-primary"
               />
               <span class="flex-1">{{ userName }}</span>
             </div>
@@ -61,22 +61,22 @@
               <span class="flex-1">{{ balance }}</span>
             </router-link>
             <div
-              class="text-gray-600 hover:text-gray-900 hover:bg-gray-50 hover:cursor-pointer group flex items-center px-2 py-2 text-sm font-medium rounded-md"
+              class="group flex items-center rounded-md p-2 text-sm font-medium text-gray-600 hover:cursor-pointer hover:bg-gray-50 hover:text-gray-900"
               @click="changeLocale"
             >
               <Icons
                 icon="flag"
-                class="fill-primary mr-3 flex-shrink-0 h-6 w-6"
+                class="mr-3 h-6 w-6 shrink-0 fill-primary"
               />
               <span class="flex-1">{{ t('changeLanguage') }}</span>
             </div>
             <div
-              class="text-gray-600 hover:text-gray-900 hover:cursor-pointer hover:bg-gray-50 group flex items-center px-2 py-2 text-sm font-medium rounded-md"
+              class="group flex items-center rounded-md p-2 text-sm font-medium text-gray-600 hover:cursor-pointer hover:bg-gray-50 hover:text-gray-900"
               @click="() => emits('logout')"
             >
               <Icons
                 icon="logout"
-                class="fill-primary mr-3 flex-shrink-0 h-6 w-6"
+                class="mr-3 h-6 w-6 shrink-0 fill-primary"
               />
               <span class="flex-1">{{ t('logout') }}</span>
             </div>
@@ -99,7 +99,7 @@ const changeLocale = () => {
   locale.value = locale.value.substring(0, 2) === 'en' ? 'de' : 'en';
 }
 const emits = defineEmits(['logout'])
-const props = defineProps([
+defineProps([
     'userName',
     'balance',
     'navigation',

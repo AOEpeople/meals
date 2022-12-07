@@ -1,7 +1,7 @@
 <template>
   <DisclosurePanel
     v-slot="{ close }"
-    class="grid border-t-2 border-gray-200 sm:grid-cols-2 bg-white xl:hidden hover:overflow-scroll"
+    class="grid border-t-2 border-gray-200 bg-white hover:overflow-scroll sm:grid-cols-2 xl:hidden"
   >
     <div class="pt-2 pb-3">
       <router-link
@@ -15,12 +15,13 @@
           'block pl-3 pr-4 py-2 border-l-4 hover:bg-gray-200 text-base font-medium'
         ]"
         @click="close()"
-        v-html="t(link.name)"
-      />
+      >
+        {{ t(link.name) }}
+      </router-link>
     </div>
     <div class="border-t border-gray-200 pt-4 pb-3 sm:border-t-0 sm:border-l">
       <div class="flex items-center px-4 py-2">
-        <div class="flex-shrink-0">
+        <div class="shrink-0">
           <Icons
             icon="person-outline"
             class="inline-block w-6 fill-primary"
@@ -47,7 +48,7 @@
         </a>
       </router-link>
       <span
-        class="block cursor-pointer px-4 py-2 text-base font-medium text-gray-600 hover:text-highlight hover:bg-gray-100"
+        class="block cursor-pointer px-4 py-2 text-base font-medium text-gray-600 hover:bg-gray-100 hover:text-highlight"
         @click="changeLocale"
       >
         {{ t('changeLanguage') }}
@@ -55,7 +56,7 @@
       <DisclosureButton
         as="a"
         href="/logout"
-        class="block px-4 py-2 text-base font-medium capitalize text-gray-600 hover:text-highlight hover:bg-gray-100"
+        class="block px-4 py-2 text-base font-medium capitalize text-gray-600 hover:bg-gray-100 hover:text-highlight"
       >
         {{ t('logout') }}
       </DisclosureButton>

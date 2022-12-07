@@ -1,5 +1,5 @@
 <template>
-  <div class="divide-x-2 inline-flex">
+  <div class="inline-flex divide-x-2">
     <div
       v-for="(week, weekID, index) in weeks"
       :key="index"

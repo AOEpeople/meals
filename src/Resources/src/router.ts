@@ -8,13 +8,12 @@ import Costs from "@/views/Costs.vue";
 import Finance from "@/views/Finance.vue";
 import Balance from "@/views/Balance.vue";
 import Guest from "@/views/Guest.vue";
-import Login from "@/views/Login.vue";
 import NotAllowed from "@/views/NotAllowed.vue";
 import PrintableList from "@/views/PrintableList.vue"
 
 declare module 'vue-router' {
     interface RouteMeta {
-        allowedRoles: Array<String>
+        allowedRoles: Array<string>
     }
 }
 
@@ -120,8 +119,7 @@ const router = createRouter({
     ],
 })
 
-
-router.beforeEach((to, from) => {
+router.beforeEach((to) => {
     const isAuthenticated = sessionStorage.getItem('auth') === 'granted'
 
     if (!isAuthenticated) {
@@ -135,7 +133,7 @@ router.beforeEach((to, from) => {
 
         const role = sessionStorage.getItem('role')
 
-        if (!to.meta.allowedRoles.includes(role!)) {
+        if (role !== null && !to.meta.allowedRoles.includes(role)) {
             return { name: 'NotAllowed' }
         }
     }

@@ -1,9 +1,9 @@
 <template>
   <div class="relative top-0 z-[3] print:hidden">
     <Disclosure v-slot="{ open }">
-      <header class="relative bg-white shadow-[0_15px_35px_0_#5B788F21] h-[60px] xl:h-24">
+      <header class="relative h-[60px] bg-white shadow-[0_15px_35px_0_#5B788F21] xl:h-24">
         <nav
-          class="grid grid-cols-3 h-[inherit] items-center content-center xl:mx-auto xl:max-w-screen-aoe xl:grid-cols-10"
+          class="grid h-[inherit] grid-cols-3 content-center items-center xl:mx-auto xl:max-w-screen-aoe xl:grid-cols-10"
           aria-label="Top"
         >
           <div
@@ -31,7 +31,7 @@
           >
             <router-link to="/">
               <svg
-                class="w-[197px] h-[39px] cursor-pointer"
+                class="h-[39px] w-[197px] cursor-pointer"
                 viewBox="0 0 179 39"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -66,7 +66,7 @@
               <router-link
                 v-if="link.access.includes(role)"
                 :to="link.to"
-                class="text-[16px] leading-[18px] font-medium text-primary hover:text-highlight cursor-pointer"
+                class="cursor-pointer text-[16px] font-medium leading-[18px] text-primary hover:text-highlight"
               >
                 {{ t(link.name) }}
               </router-link>
@@ -74,14 +74,14 @@
           </div>
           <div
             v-if="isAuthenticated"
-            class="col-span-4 inline-block justify-self-end space-x-4"
+            class="col-span-4 inline-block space-x-4 justify-self-end"
           >
-            <div class="hidden self-center text-right space-x-2 xl:inline-block">
+            <div class="hidden space-x-2 self-center text-right xl:inline-block">
               <Icons
                 icon="person-outline"
                 class="inline-block w-6 fill-primary"
               />
-              <span class="text-[14px] leading-[22px] font-medium text-black">
+              <span class="text-[14px] font-medium leading-[22px] text-black">
                 {{ user }}
               </span>
             </div>
@@ -90,7 +90,7 @@
               class="hidden text-right xl:inline-block"
             >
               <router-link
-                class="text-[14px] leading-[22px] font-medium text-black"
+                class="text-[14px] font-medium leading-[22px] text-black"
                 to="/balance"
               >
                 {{ t('header.balance') }}:

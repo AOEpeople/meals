@@ -8,13 +8,13 @@
         <Icons
           icon="person"
           box="0 0 12 12"
-          class="fill-white ml-[50%] -left-1/4 relative w-3 h-3"
+          class="relative -left-1/4 ml-[50%] h-3 w-3 fill-white"
         />
       </div>
     </div>
 
     <div class="table flex-auto">
-      <span class="table-cell align-middle text-white h-4 self-center leading-4 font-bold text-[12px] tracking-[1.5px]">
+      <span class="table-cell h-4 self-center align-middle text-[12px] font-bold leading-4 tracking-[1.5px] text-white">
         {{ participations }}
       </span>
     </div>

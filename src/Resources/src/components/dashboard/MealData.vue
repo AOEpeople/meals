@@ -2,24 +2,24 @@
   <div class="flex w-auto flex-row justify-around gap-4 xl:grid-cols-6">
     <div class="basis-10/12 items-center self-center xl:col-span-5">
       <div class="self-center">
-        <span class="inline-block text-primary uppercase tracking-[0.5px] leading-[20px] text-note font-bold break-words">
+        <span class="inline-block break-words text-note font-bold uppercase leading-[20px] tracking-[0.5px] text-primary">
           {{ title }}
           <span
             v-if="meal.isNew"
-            class="w-[36px] h-[17px] bg-highlight text-white align-text-bottom ml-1 pl-1 pr-[3px] py-[1px] leading-[16px] text-[11px] tracking-[1.5px]"
+            class="ml-1 h-[17px] w-[36px] bg-highlight py-[1px] pl-1 pr-[3px] align-text-bottom text-[11px] leading-[16px] tracking-[1.5px] text-white"
           >
             {{ t('dashboard.new') }}
           </span>
         </span><br>
         <p
           v-if="description !== ''"
-          class="m-0 break-words font-light description text-primary"
+          class="description m-0 break-words font-light text-primary"
         >
           {{ description }}
         </p>
       </div>
     </div>
-    <div class="flex flex-none basis-2/12 items-center justify-end text-align-last">
+    <div class="text-align-last flex flex-none basis-2/12 items-center justify-end">
       <ParticipationCounter
         :meal="meal"
         :mealCSS="mealCSS"

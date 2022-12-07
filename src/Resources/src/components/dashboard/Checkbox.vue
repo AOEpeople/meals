@@ -5,15 +5,15 @@
   >
     <CheckIcon
       v-if="enabled && (meal.mealState === 'open' || meal.mealState === 'disabled')"
-      class="text-white w-[80%] h-[80%] relative top-[10%] left-[10%]"
+      class="relative top-[10%] left-[10%] h-[80%] w-[80%] text-white"
     />
     <LockClosedIcon
       v-if="enabled && meal.mealState === 'offerable'"
-      class="text-white w-[80%] h-[80%] relative top-[10%] left-[10%]"
+      class="relative top-[10%] left-[10%] h-[80%] w-[80%] text-white"
     />
     <LockOpenIcon
       v-if="enabled && meal.mealState === 'offering'"
-      class="text-white w-[80%] h-[80%] relative top-[10%] left-[10%]"
+      class="relative top-[10%] left-[10%] h-[80%] w-[80%] text-white"
     />
   </span>
   <CombiModal

@@ -238,7 +238,7 @@ jobs:
   publish:
     name: Publish
     if: ${{ github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v') }}
-    needs: [ buildImages, testUnitFunctional ]
+    needs: [ buildImages, testBackendUnitFunctional, testFrontendUnitFunctional ]
     runs-on: ubuntu-latest
     env:
       IMAGES_APP: ${{ needs.buildImages.outputs.images }}

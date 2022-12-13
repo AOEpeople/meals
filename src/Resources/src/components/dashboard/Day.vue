@@ -1,9 +1,8 @@
 <template>
-  <div :class="[day.slotsEnabled ? 'min-h-[400px]' : 'min-h-[350px]' , 'mx-auto flex h-auto xs:w-5/6 w-[95%] rounded bg-white aoe-shadow w-max-screen-aoe']">
+  <div class="day-shadow w-max-screen-aoe mx-auto flex h-auto w-3/4 rounded bg-white">
     <div :class="[day.isLocked ? 'bg-[#80909F]' : 'bg-primary-2', 'flex relative justify-center w-[24px] rounded-l-[5px]']">
       <div
         v-if="!day.isLocked"
-        id="icon"
         class="absolute bottom-[1px] left-[2px] z-[2] w-[24px] text-center"
       >
         <GuestButton
@@ -11,12 +10,9 @@
           :index="index"
         />
       </div>
-      <div class="weekday grid min-w-[200px]">
-        <div
-          id="dayLabel"
-          class="h-[26px]"
-        >
-          <span class="dayLabel align-middle uppercase">{{ weekday }}</span>
+      <div class="relative top-1/2 grid min-w-[200px] -translate-y-1/2 -rotate-90 items-center">
+        <div class="text-center">
+          <span class="align-middle text-[11px] font-bold uppercase leading-4 tracking-[3px] text-white">{{ weekday }}</span>
         </div>
       </div>
     </div>
@@ -32,7 +28,7 @@
       <div
         v-for="(meal, mealID) in day.meals"
         :key="mealID"
-        class="my-auto mx-[15px]"
+        class="mx-[15px] border-b-[0.7px] py-[13px] last:border-b-0"
       >
         <VariationsData
           v-if="meal.variations"
@@ -77,32 +73,5 @@ const props = defineProps([
 
 const day = dashboardStore.getDay(props.weekID, props.dayID)
 const weekday = computed(() => translateWeekday(day.date, locale))
-let emptyDay = Object.keys(day.meals).length === 0
-
+const emptyDay = Object.keys(day.meals).length === 0
 </script>
-
-<style scoped>
-.weekday {
-  align-items: center;
-  position: relative;
-  top: 50%;
-  transform: translateY(-50%) rotate(-90deg);
-}
-.dayLabel {
-  color: #fff;
-  font-family: Roboto, Helvetica, Arial, sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  line-height: 16px;
-  letter-spacing: 3px;
-}
-
-#icon {
-  align-self: self-end;
-}
-
-#dayLabel {
-  text-align-last: center;
-}
-
-</style>

@@ -7,9 +7,7 @@
     v-else
     :weeks="weeks"
   />
-  <router-link to="/print/participations">
-    <span>print</span>
-  </router-link>
+  <PrintLink class="mr-[27px] text-right" />
 </template>
 
 <script setup>
@@ -17,6 +15,7 @@ import {useProgress} from '@marcoschulte/vue3-progress'
 import {dashboardStore} from '@/stores/dashboardStore'
 import DashboardWeekTabs from "@/components/dashboard/DashboardWeekTabs.vue";
 import DashboardWeekAll from "@/components/dashboard/DashboardWeekAll.vue";
+import PrintLink from "@/views/PrintLink.vue";
 
 const progress = useProgress().start()
 

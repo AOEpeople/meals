@@ -38,6 +38,7 @@
     "1": "Next Week",
     "no_service": "No Service this day.",
     "new": "new",
+    "print": "Today's Participations",
     "slot": {
       "auto": "Autoselect next free slot"
     },

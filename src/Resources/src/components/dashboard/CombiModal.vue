@@ -6,7 +6,7 @@
     <Dialog
       as="div"
       class="relative z-10"
-      @close="emit('closeCombiModal')"
+      @close="resolveModal('cancel')"
     >
       <TransitionChild
         as="template"

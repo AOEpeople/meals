@@ -4,15 +4,7 @@
     @click="handle"
   >
     <CheckIcon
-      v-if="enabled && (meal.mealState === 'open' || meal.mealState === 'disabled')"
-      class="relative top-[10%] left-[10%] h-[80%] w-[80%] text-white"
-    />
-    <LockClosedIcon
-      v-if="enabled && meal.mealState === 'offerable'"
-      class="relative top-[10%] left-[10%] h-[80%] w-[80%] text-white"
-    />
-    <LockOpenIcon
-      v-if="enabled && meal.mealState === 'offering'"
+      v-if="isParticipating"
       class="relative top-[10%] left-[10%] h-[80%] w-[80%] text-white"
     />
   </span>
@@ -31,34 +23,29 @@ import { useLeaveMeal } from '@/api/postLeaveMeal'
 import { useOfferMeal } from '@/api/postOfferMeal'
 import { useCancelOffer } from '@/api/postCancelOffer'
 import { dashboardStore } from '@/stores/dashboardStore'
-import { LockClosedIcon, LockOpenIcon, CheckIcon } from '@heroicons/vue/solid'
+import { CheckIcon } from '@heroicons/vue/solid'
 import CombiModal from '@/components/dashboard/CombiModal.vue'
 
-const props = defineProps([
-  'weekID',
-  'dayID',
-  'mealID',
-  'variationID',
-])
+const props = defineProps(['weekID', 'dayID', 'mealID', 'variationID'])
 
 let day = dashboardStore.getDay(props.weekID, props.dayID)
 let meal
-if(props.variationID) {
+if (props.variationID) {
   meal = dashboardStore.getVariation(props.weekID, props.dayID, props.mealID, props.variationID)
 } else {
   meal = dashboardStore.getMeal(props.weekID, props.dayID, props.mealID)
 }
 
 const open = ref(false)
-const enabled = computed(() => meal.isParticipating !== null)
+const isParticipating = computed(() => meal.isParticipating !== null)
 
 const checkboxCSS = computed(() => {
   let cssResult = 'rounded-md h-[30px] w-[30px] xl:h-[20px] xl:w-[20px] '
 
-  if(enabled.value) {
+  if(isParticipating.value === true) {
     switch (meal.mealState) {
       case 'disabled':
-        cssResult += 'bg-[#80909F] border-0'
+        cssResult += 'bg-[#B4C1CE] border-[0.5px] border-[#ABABAB]'
         return cssResult
       case 'open':
       case 'tradeable':
@@ -68,27 +55,24 @@ const checkboxCSS = computed(() => {
       case 'offerable':
         cssResult += 'bg-highlight cursor-pointer border-0'
         return cssResult
-      default:
-        return cssResult
     }
-  } else {
+  } else if (isParticipating.value === false) {
     switch (meal.mealState) {
       case 'disabled':
-        cssResult += 'bg-[#FAFAFA] opacity-50 border-[0.5px]'
+        cssResult += 'bg-[#EDEDED] border-[0.5px] border-[#ABABAB]'
         return cssResult
       case 'tradeable':
       case 'open':
-        cssResult += 'cursor-pointer bg-[#FAFAFA] hover:bg-gray-100 border-[0.5px]'
-        return cssResult
-      default:
+        cssResult += 'cursor-pointer bg-[#FAFAFA] border-[0.5px] border-[#ABABAB]'
         return cssResult
     }
   }
+  return cssResult
 })
 
 async function handle() {
   if(meal.mealState === 'open' || meal.mealState === 'tradeable') {
-    if(enabled.value) {
+    if(isParticipating.value) {
       await leaveMeal()
     } else {
       let slugs = [meal.dishSlug]

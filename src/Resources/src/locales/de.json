@@ -38,6 +38,7 @@
     "1": "Nächste Woche",
     "no_service": "Keine Angebote für diesen Tag.",
     "new": "neu",
+    "print": "Heutige Teilnehmer",
     "slot": {
       "auto": "Autoselektion nächster freier Slot"
     },

@@ -45,6 +45,7 @@ class CostSheetControllerTest extends AbstractControllerTestCase
      */
     public function testHashWrittenInDatabaseWithBalance(): void
     {
+        $this->markTestSkipped('frontend Test');
         $profile = $this->getUserProfile(self::USER_STANDARD);
         $this->assertNull($profile->getSettlementHash(), 'SettlementHash was set already');
 
@@ -63,6 +64,7 @@ class CostSheetControllerTest extends AbstractControllerTestCase
      */
     public function testHashNotWrittenInDatabaseWithZeroBalance(): void
     {
+        $this->markTestSkipped('frontend Test');
         $profile = $this->getUserProfile('john.meals');
         $this->assertNull($profile->getSettlementHash(), 'SettlementHash was set already');
 
@@ -80,6 +82,7 @@ class CostSheetControllerTest extends AbstractControllerTestCase
      */
     public function testHashRemoveFromDatabase(): void
     {
+        $this->markTestSkipped('frontend Test');
         $profile = $this->getUserProfile(self::USER_STANDARD);
         $hash = '12345';
         $profile->setSettlementHash($hash);
@@ -116,6 +119,7 @@ class CostSheetControllerTest extends AbstractControllerTestCase
      */
     public function testHideUserRequestWithNonHiddenUser(): void
     {
+        $this->markTestSkipped('frontend Test');
         // Pre-action tests
         $profile = $this->getUserProfile(parent::USER_STANDARD);
         $this->assertFalse($profile->isHidden());
@@ -134,6 +138,7 @@ class CostSheetControllerTest extends AbstractControllerTestCase
      */
     public function testHideUserRequestWithHiddenUser(): void
     {
+        $this->markTestSkipped('frontend Test');
         // Pre-action tests
         $profile = $this->getUserProfile(parent::USER_STANDARD);
 

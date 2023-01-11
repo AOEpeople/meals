@@ -10,6 +10,8 @@ use App\Mealz\MealBundle\Entity\MealCollection;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Repository\DishRepository;
+use App\Mealz\MealBundle\Repository\GuestInvitationRepositoryInterface;
+use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
 use App\Mealz\MealBundle\Service\CombinedMealService;
 use App\Mealz\MealBundle\Service\GuestParticipationService;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
@@ -36,6 +38,8 @@ class GuestParticipationServiceTest extends AbstractParticipationServiceTest
         /** @var ProfileRepositoryInterface $profileRepo */
         $profileRepo = self::$container->get(ProfileRepositoryInterface::class);
         $roleRepo = self::$container->get(RoleRepositoryInterface::class);
+        $guestInvitationRepo = self::$container->get(GuestInvitationRepositoryInterface::class);
+        $mealRepo = self::$container->get(MealRepositoryInterface::class);
 
         $this->setParticipationService(new GuestParticipationService(
             $this->entityManager,
@@ -43,6 +47,8 @@ class GuestParticipationServiceTest extends AbstractParticipationServiceTest
             $profileRepo,
             $roleRepo,
             $this->slotRepo,
+            $guestInvitationRepo,
+            $mealRepo
         ));
 
         /* https://stackoverflow.com/questions/73209831/unitenum-cannot-be-cast-to-string */

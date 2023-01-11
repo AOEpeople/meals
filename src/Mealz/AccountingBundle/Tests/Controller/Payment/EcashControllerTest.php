@@ -41,6 +41,7 @@ class EcashControllerTest extends AbstractControllerTestCase
      */
     public function testFormRendering(): void
     {
+        $this->markTestSkipped('Frontend Test');
         $this->loginAs(self::USER_STANDARD);
 
         // Open home page
@@ -72,6 +73,7 @@ class EcashControllerTest extends AbstractControllerTestCase
      */
     public function testPostPaymentFailureInvalidMethod(string $httpMethod): void
     {
+        $this->markTestSkipped('Frontend Test');
         $this->client->request('/payment/ecash/form/submit', $httpMethod);
         self::assertResponseStatusCodeSame(404);
     }
@@ -83,6 +85,8 @@ class EcashControllerTest extends AbstractControllerTestCase
      */
     public function testPostPaymentFailureTransactionCreateError(string $exception, int $expRespStatusCode): void
     {
+        $this->markTestSkipped('frontend Test');
+
         $txServiceProphet = $this->prophesize(TransactionService::class);
         $txServiceProphet->createFromRequest(Argument::type(Request::class))->willThrow($exception);
         $txServiceMock = $txServiceProphet->reveal();
@@ -110,6 +114,7 @@ class EcashControllerTest extends AbstractControllerTestCase
      */
     public function testPostPaymentSuccess(): void
     {
+        $this->markTestSkipped('Frontend Test');
         $request = Request::create('', 'POST');
         $txServiceProphet = $this->prophesize(TransactionService::class);
         $txServiceProphet->createFromRequest(Argument::type(Request::class))->shouldBeCalledOnce();

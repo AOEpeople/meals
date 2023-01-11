@@ -26,6 +26,14 @@ class SlotController extends BaseListController
         return $this->render('MealzMealBundle:Slot:list.html.twig', ['slots' => $slots]);
     }
 
+    public function updateSlot(Request $request, SlotService $slotService): JsonResponse
+    {
+        $parameters = json_decode($request->getContent(), true);
+        $slotService->updateSlot($parameters);
+
+        return new JsonResponse(null);
+    }
+
     public function updateState(Request $request, SlotService $slotService, Slot $slot): JsonResponse
     {
         $state = (string) $request->request->get('disabled');

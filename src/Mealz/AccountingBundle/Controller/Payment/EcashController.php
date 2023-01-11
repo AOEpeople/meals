@@ -70,7 +70,7 @@ class EcashController extends BaseController
         } catch (Exception $e) {
             $this->logPostPaymentException($e, 'transaction create error', $request);
 
-            return new Response('', Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new Response($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $message = $translator->trans('payment.transaction_history.successful_payment', [], 'messages');

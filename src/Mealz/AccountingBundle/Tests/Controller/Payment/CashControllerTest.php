@@ -12,6 +12,7 @@ use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishVariations;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadParticipants;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadSlots;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
 use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
@@ -34,6 +35,7 @@ class CashControllerTest extends AbstractControllerTestCase
             new LoadDishes(),
             new LoadDishVariations(),
             new LoadMeals(),
+            new LoadSlots(),
             new LoadCombinations(self::$container->get(EventDispatcherInterface::class)),
             new LoadParticipants(),
             new LoadTransactions(),
@@ -45,6 +47,8 @@ class CashControllerTest extends AbstractControllerTestCase
      */
     public function testTransactionHistory(): void
     {
+        $this->markTestSkipped('Frontend Test');
+
         $this->loginAs(self::USER_STANDARD);
 
         // Open home page

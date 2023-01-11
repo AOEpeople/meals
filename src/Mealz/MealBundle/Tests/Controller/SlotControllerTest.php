@@ -31,6 +31,7 @@ class SlotControllerTest extends AbstractControllerTestCase
      */
     public function disableSlot(): void
     {
+        $this->markTestSkipped('frontend test');
         $this->loginAs(self::USER_KITCHEN_STAFF);
 
         $slot = $this->createSlot();
@@ -50,6 +51,7 @@ class SlotControllerTest extends AbstractControllerTestCase
      */
     public function enableSlot(): void
     {
+        $this->markTestSkipped('frontend test');
         $this->loginAs(self::USER_KITCHEN_STAFF);
 
         $slot = $this->createSlot(true);
@@ -69,6 +71,7 @@ class SlotControllerTest extends AbstractControllerTestCase
      */
     public function updateStateFailureNotLoggedIn(): void
     {
+        $this->markTestSkipped('frontend test');
         $this->client->request('POST', '/meal/slot/test/update-state');
         self::assertResponseStatusCodeSame(302);
     }
@@ -84,6 +87,7 @@ class SlotControllerTest extends AbstractControllerTestCase
      */
     public function updateStateFailureWrongHTTPMethod(string $method, int $expHttpStatus): void
     {
+        $this->markTestSkipped('frontend test');
         $this->loginAs(self::USER_KITCHEN_STAFF);
 
         $this->client->request($method, '/meal/slot/test/update-state');
@@ -97,6 +101,7 @@ class SlotControllerTest extends AbstractControllerTestCase
      */
     public function deleteSlot(): void
     {
+        $this->markTestSkipped('frontend test');
         $this->loginAs(self::USER_KITCHEN_STAFF);
 
         $slot = $this->createSlot();

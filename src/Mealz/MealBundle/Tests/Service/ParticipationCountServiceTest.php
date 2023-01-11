@@ -63,7 +63,7 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
     {
         $day = new Day();
         $day->setDateTime(new DateTime());
-        $participation = ParticipationCountService::getParticipationByDay($day);
+        $participation = (new ParticipationCountService())->getParticipationByDay($day);
         $this->assertEmpty($participation);
     }
 
@@ -76,7 +76,7 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
     {
         $meals = $this->getMixedMealsOnSameDay();
         $weekDay = $this->createWeekForMealsOnSameDay($meals);
-        $participation = ParticipationCountService::getParticipationByDay($weekDay);
+        $participation = (new ParticipationCountService())->getParticipationByDay($weekDay);
         $this->checkParticipationByDay($participation, $meals);
     }
 
@@ -89,7 +89,7 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
     {
         $meals = $this->getMixedMealsOnSameDay(true);
         $weekDay = $this->createWeekForMealsOnSameDay($meals);
-        $participation = ParticipationCountService::getParticipationByDay($weekDay);
+        $participation = (new ParticipationCountService())->getParticipationByDay($weekDay);
         $this->checkParticipationByDay($participation, $meals);
     }
 
@@ -102,7 +102,7 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
     {
         $meals = $this->getMixedMealsOnSameDay(true, true);
         $weekDay = $this->createWeekForMealsOnSameDay($meals);
-        $participation = ParticipationCountService::getParticipationByDay($weekDay);
+        $participation = (new ParticipationCountService())->getParticipationByDay($weekDay);
         $this->checkParticipationByDay($participation, $meals);
     }
 
@@ -121,7 +121,7 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
         $combinedMeal = $this->getCombinedMeal($meals);
         $meals->add($combinedMeal);
 
-        $participation = ParticipationCountService::getParticipationByDay($combinedMeal->getDay());
+        $participation = (new ParticipationCountService())->getParticipationByDay($combinedMeal->getDay());
         $this->checkParticipationByDay($participation, $meals);
     }
 
@@ -153,7 +153,7 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
         $combinedMeal = $this->getCombinedMeal($meals, [$profiles[0]], $bookedDishSlugs);
         $meals->add($combinedMeal);
 
-        $participation = ParticipationCountService::getParticipationByDay($combinedMeal->getDay());
+        $participation = (new ParticipationCountService())->getParticipationByDay($combinedMeal->getDay());
         $this->checkParticipationByDay($participation, $meals);
     }
 
@@ -187,7 +187,7 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
         $combinedMeal = $this->getCombinedMeal($meals, [$profiles[0]], $bookedDishSlugs);
         $meals->add($combinedMeal);
 
-        $participation = ParticipationCountService::getParticipationByDay($combinedMeal->getDay());
+        $participation = (new ParticipationCountService())->getParticipationByDay($combinedMeal->getDay());
 
         $totalParticipation = $participation[ParticipationCountService::PARTICIPATION_TOTAL_COUNT_KEY];
 
@@ -274,7 +274,7 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
     public function participationCountIsEmptyForEmptyWeek(): void
     {
         $currentWeek = $this->createWeek(new MealCollection());
-        $participation = ParticipationCountService::getParticipationByDays($currentWeek);
+        $participation = (new ParticipationCountService())->getParticipationByDays($currentWeek);
         $this->assertEmpty($participation);
     }
 
@@ -520,7 +520,7 @@ class ParticipationCountServiceTest extends AbstractParticipationServiceTest
         $week = $this->createWeek($meals);
         $this->assertGreaterThan(0, count($week->getDays()));
 
-        $participations = ParticipationCountService::getParticipationByDays($week);
+        $participations = (new ParticipationCountService())->getParticipationByDays($week);
         $this->assertNotEmpty($participations);
 
         /** @var Day $day */

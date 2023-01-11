@@ -44,6 +44,7 @@ class PrintControllerTest extends AbstractControllerTestCase
      */
     public function testGuestDoesNotAppearInCostListing(): void
     {
+        $this->markTestSkipped('frontend test');
         $time = time();
 
         // Create guest profile

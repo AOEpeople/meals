@@ -5,120 +5,49 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Day;
-use App\Mealz\MealBundle\Entity\GuestInvitation;
-use App\Mealz\MealBundle\Entity\InvitationWrapper;
-use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
 use App\Mealz\MealBundle\Event\SlotAllocationUpdateEvent;
-use App\Mealz\MealBundle\Form\Guest\InvitationForm;
 use App\Mealz\MealBundle\Repository\GuestInvitationRepositoryInterface;
-use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\MealBundle\Service\GuestParticipationService;
-use App\Mealz\MealBundle\Service\MealAvailabilityService;
-use App\Mealz\MealBundle\Service\ParticipationCountService;
-use App\Mealz\UserBundle\Entity\Profile;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class MealGuestController extends BaseController
 {
-    /**
-     * @ParamConverter("invitation", options={"id" = "hash"})
-     */
-    public function joinAsGuest(
-        Request $request,
-        EventDispatcherInterface $eventDispatcher,
-        GuestInvitation $invitation,
-        GuestParticipationService $gps,
-        MealAvailabilityService $availabilityService
-    ): Response {
-        $form = $this->getGuestInvitationForm($invitation);
-        $form->handleRequest($request);
+    private GuestParticipationService $gps;
+    private EventDispatcherInterface $eventDispatcher;
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                ['profile' => $profile, 'meals' => $meals, 'slot' => $slot] = $this->getGuestInvitationData($form);
-
-                $dishSlugs = $request->request->get('dishes', []);
-
-                $participants = $gps->join($profile, $meals, $slot, $dishSlugs);
-                $this->triggerJoinEvents($eventDispatcher, $participants);
-
-                $message = $this->get('translator')->trans('participation.successful', [], 'messages');
-                $this->addFlashMessage($message, 'success');
-
-                return $this->render('base.html.twig');
-            } catch (ParticipationException $pex) {
-                $this->addFlashMessage($this->exceptionToError($pex), 'danger');
-            } catch (Exception $e) {
-                $this->logException($e, 'guest registration error');
-                $this->addFlashMessage($this->exceptionToError($e), 'danger');
-            }
-        }
-
-        return $this->render('MealzMealBundle:Meal:guest.html.twig', [
-            'form' => $form->createView(),
-            'participation' => ParticipationCountService::getParticipationByDay($invitation->getDay()),
-            'availabilityService' => $availabilityService,
-        ]);
+    public function __construct(GuestParticipationService $gps, EventDispatcherInterface $eventDispatcher)
+    {
+        $this->gps = $gps;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
-    private function getGuestInvitationForm(GuestInvitation $invitation): FormInterface
+    public function joinAsGuest(Request $request): JsonResponse
     {
-        $invitationWrapper = new InvitationWrapper();
-        $invitationWrapper->setDay($invitation->getDay());
-        $invitationWrapper->setProfile(new Profile());
+        try {
+            [
+                'profile' => $profile,
+                'meals' => $meals,
+                'slot' => $slot,
+                'dishSlugs' => $dishSlugs
+            ] = $this->gps->getGuestInvitationData($request);
 
-        return $this->createForm(InvitationForm::class, $invitationWrapper);
-    }
+            $participants = $this->gps->join($profile, $meals, $slot, $dishSlugs);
+            $this->triggerJoinEvents($participants);
+        } catch (Exception $e) {
+            $this->logException($e, 'guest registration error');
 
-    /**
-     * @throws ParticipationException
-     */
-    private function getGuestInvitationData(FormInterface $form): array
-    {
-        $data = [
-            'profile' => $form->get('profile')->getData(),
-            'meals' => $form->get('day')->get('meals')->getData(),
-            'slot' => $form->get('slot')->getData(),
-        ];
-
-        if ((null === $data['meals']) || (0 === count($data['meals']))) {
-            throw new ParticipationException('invalid data', ParticipationException::ERR_GUEST_REG_MEAL_NOT_FOUND);
+            return new JsonResponse($e->getMessage(), 400);
         }
 
-        return $data;
-    }
-
-    private function exceptionToError(Exception $exception): string
-    {
-        $translator = $this->get('translator');
-
-        if ($exception instanceof ParticipationException) {
-            switch ($exception->getCode()) {
-                case ParticipationException::ERR_GUEST_REG_MEAL_NOT_FOUND:
-                    return $translator->trans('error.participation.no_meal_selected', [], 'messages');
-                case ParticipationException::ERR_MEAL_NOT_BOOKABLE:
-                    /** @var Meal $unbookableMeal */
-                    $unbookableMeal = $exception->getContext()['meal'];
-
-                    return $translator->trans(
-                        'error.meal.join_not_allowed',
-                        ['%dish%' => $unbookableMeal->getDish()->getTitle()],
-                        'messages'
-                    );
-            }
-        }
-
-        return $translator->trans('error.unknown', [], 'messages');
+        return new JsonResponse(null, 200);
     }
 
     /**
@@ -134,19 +63,19 @@ class MealGuestController extends BaseController
         $guestInvitation = $guestInvitationRepo->findOrCreateInvitation($this->getUser()->getProfile(), $mealDay);
 
         return new JsonResponse(
-            $this->generateUrl(
-                'MealzMealBundle_Meal_guest',
-                ['hash' => $guestInvitation->getId()],
-                UrlGeneratorInterface::ABSOLUTE_URL
-            ),
-            200
+            [
+                'url' => $this->generateUrl(
+                    'MealzMealBundle_Meal_guest',
+                    ['hash' => $guestInvitation->getId()],
+                    UrlGeneratorInterface::ABSOLUTE_URL),
+            ], 200
         );
     }
 
     /**
      * @param Participant[] $participants
      */
-    private function triggerJoinEvents(EventDispatcherInterface $eventDispatcher, array $participants): void
+    private function triggerJoinEvents(array $participants): void
     {
         if (!isset($participants[0]) || !($participants[0] instanceof Participant)) {
             return;
@@ -155,11 +84,11 @@ class MealGuestController extends BaseController
         // We trigger the event only once for one participant/meal.
         // Due to combined meal integration an update is sent for all the meals on the same day.
         $participant = $participants[0];
-        $eventDispatcher->dispatch(new ParticipationUpdateEvent($participant));
+        $this->eventDispatcher->dispatch(new ParticipationUpdateEvent($participant));
 
         $slot = $participant->getSlot();
         if (null !== $slot) {
-            $eventDispatcher->dispatch(new SlotAllocationUpdateEvent($participant->getMeal()->getDateTime(), $slot));
+            $this->eventDispatcher->dispatch(new SlotAllocationUpdateEvent($participant->getMeal()->getDay(), $slot));
         }
     }
 }

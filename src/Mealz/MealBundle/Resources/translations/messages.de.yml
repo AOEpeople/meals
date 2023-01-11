@@ -32,8 +32,6 @@ error:
     variation_required: Bitte wähle eine Variation aus!
 participation:
   successful: Essensbuchung erfolgreich!
-profile:
-  guest: Gast
 notification:
   confirm_swap: Leider ist es schon zu spät, um dein Essen zu stornieren. Du hast aber die Möglichkeit, es jemand anderem zu überlassen.
 tooltip:

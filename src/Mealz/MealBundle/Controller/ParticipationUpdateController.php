@@ -28,17 +28,21 @@ class ParticipationUpdateController extends BaseController
         }
 
         $parameters = json_decode($request->getContent(), true);
-        $newSlot = $slotRepo->find($parameters['slotID']);
 
         /** @var Day $day */
         $day = $dayRepo->find($parameters['dayID']);
 
-        if (null === $newSlot || null === $day) {
+        if (null === $day) {
             return new JsonResponse(null, 422);
         }
 
+        $newSlot = $slotRepo->find($parameters['slotID']);
+
         $prevSlot = $participationSrv->getSlot($profile, $day->getDateTime());
-        $participationSrv->updateSlot($profile, $day->getDateTime(), $newSlot);
+
+        if (null != $newSlot) {
+            $participationSrv->updateSlot($profile, $day->getDateTime(), $newSlot);
+        }
         $eventDispatcher->dispatch(new SlotAllocationUpdateEvent($day, $newSlot, $prevSlot));
 
         return new JsonResponse(null, 200);

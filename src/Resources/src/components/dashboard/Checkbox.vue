@@ -30,10 +30,13 @@ const props = defineProps(['weekID', 'dayID', 'mealID', 'variationID'])
 
 let day = dashboardStore.getDay(props.weekID, props.dayID)
 let meal
+let mealId
 if (props.variationID) {
   meal = dashboardStore.getVariation(props.weekID, props.dayID, props.mealID, props.variationID)
+  mealId = props.variationID
 } else {
   meal = dashboardStore.getMeal(props.weekID, props.dayID, props.mealID)
+  mealId = props.mealID
 }
 
 const open = ref(false)
@@ -109,7 +112,7 @@ function getDishSlugs() {
 
 async function joinMeal(dishSlugs) {
   let data = {
-    mealID: props.variationID ? props.variationID : props.mealID,
+    mealID: mealId,
     dishSlugs: dishSlugs,
     slotID: day.activeSlot
   }
@@ -124,7 +127,7 @@ async function joinMeal(dishSlugs) {
 
 async function leaveMeal() {
   let data = {
-    mealID: props.variationID ? props.variationID : props.mealID
+    mealId: mealId
   }
 
   const { response, error } = await useLeaveMeal(JSON.stringify(data))
@@ -136,7 +139,7 @@ async function leaveMeal() {
 
 async function sendOffer() {
   let data = {
-    'mealId': props.mealID
+    mealId: mealId
   }
 
   const { error } = await useOfferMeal(JSON.stringify(data))
@@ -147,7 +150,7 @@ async function sendOffer() {
 
 async function cancelOffer() {
   let data = {
-    'mealId': props.mealID
+    mealId: mealId
   }
 
   const { error } = await useCancelOffer(JSON.stringify(data))

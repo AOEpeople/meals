@@ -15,14 +15,14 @@ class SlotAllocationUpdateEvent extends Event
     /**
      * Currently allocated/freed slot.
      */
-    private Slot $slot;
+    private ?Slot $slot;
 
     /**
      * Previously allocated slot.
      */
     private ?Slot $prevSlot;
 
-    public function __construct(Day $day, Slot $slot, Slot $prev = null)
+    public function __construct(Day $day, ?Slot $slot, Slot $prev = null)
     {
         $this->day = $day;
         $this->slot = $slot;
@@ -34,7 +34,7 @@ class SlotAllocationUpdateEvent extends Event
         return $this->day;
     }
 
-    public function getSlot(): Slot
+    public function getSlot(): ?Slot
     {
         return $this->slot;
     }

@@ -69,12 +69,8 @@ class ParticipantController extends BaseController
             return new JsonResponse(null, 403);
         }
 
-        $slot = null;
-
         $parameters = json_decode($request->getContent(), true);
-        if (0 !== $parameters['slotID']) {
-            $slot = $this->slotRepo->find($parameters['slotID']);
-        }
+        $slot = $this->slotRepo->find($parameters['slotID']);
         $meal = $this->mealRepo->find($parameters['mealID']);
 
         try {
@@ -124,7 +120,7 @@ class ParticipantController extends BaseController
             return new JsonResponse(null, 403);
         }
         $parameters = json_decode($request->getContent(), true);
-        $meal = $this->mealRepo->find($parameters['mealID']);
+        $meal = $this->mealRepo->find($parameters['mealId']);
         $participant = $this->participationSrv->getParticipationByMealAndUser($meal, $profile);
 
         if (false === $this->getDoorman()->isUserAllowedToLeave($meal) &&

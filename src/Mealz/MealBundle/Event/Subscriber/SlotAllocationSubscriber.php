@@ -36,24 +36,23 @@ class SlotAllocationSubscriber implements EventSubscriberInterface
 
     public function onSlotAllocationUpdate(SlotAllocationUpdateEvent $event): void
     {
-        // do not publish if update involves unrestricted slot (limit: 0)
-        if (!$this->eventInvolvesRestrictedSlot($event)) {
-            return;
-        }
+        // do not publish if both slots are unrestricted (limit = 0)
+        if ($this->eventInvolvesRestrictedSlot($event)) {
 
-        $day = $event->getDay();
-        $newSlot = $event->getSlot();
-        $prevSlot = $event->getPreviousSlot();
-        $this->publisher->publish(
-            self::PUBLISH_TOPIC,
-            [
-                'weekId' => $day->getWeek()->getId(),
-                'dayId' => $day->getId(),
-                'newSlot' => $this->addSlot($newSlot, $day->getDateTime()),
-                'prevSlot' => $this->addSlot($prevSlot, $day->getDateTime()),
-            ],
-            self::PUBLISH_MSG_TYPE
-        );
+            $day = $event->getDay();
+            $newSlot = $event->getSlot();
+            $prevSlot = $event->getPreviousSlot();
+            $this->publisher->publish(
+                self::PUBLISH_TOPIC,
+                [
+                    'weekId' => $day->getWeek()->getId(),
+                    'dayId' => $day->getId(),
+                    'newSlot' => $this->addSlot($newSlot, $day->getDateTime()),
+                    'prevSlot' => $this->addSlot($prevSlot, $day->getDateTime()),
+                ],
+                self::PUBLISH_MSG_TYPE
+            );
+        }
     }
 
     private function addSlot(?Slot $slot, DateTime $dateTime): ?array
@@ -68,17 +67,18 @@ class SlotAllocationSubscriber implements EventSubscriberInterface
             ];
         }
 
-        return null;
+        return [
+            'slotId' => 0,
+            'limit' => 0,
+            'count' => 0,
+        ];
     }
 
     private function eventInvolvesRestrictedSlot(SlotAllocationUpdateEvent $event): bool
     {
-        if (0 < $event->getSlot()->getLimit()) {
-            return true;
-        }
-
         $prevSlot = $event->getPreviousSlot();
+        $newSlot = $event->getSlot();
 
-        return $prevSlot && $prevSlot->getLimit() > 0;
+        return $newSlot && $event->getSlot()->getLimit() > 0 || $prevSlot && $prevSlot->getLimit() > 0;
     }
 }

@@ -30,7 +30,7 @@ type Slot_Update = {
         slotId: number,
         limit: number,
         count: number,
-    } | null
+    }
 }
 
 const OFFER_NEW = 0
@@ -125,11 +125,11 @@ class MercureReceiver {
             newSlot.limit = data.newSlot.limit
             newSlot.count = data.newSlot.count
         }
-        if(data.prevSlot !== null) {
+        if(data.prevSlot.slotId !== 0) {
             const prevSlot = dashboardStore.getSlot(data.weekId, data.dayId, data.prevSlot.slotId)
             if (prevSlot !== undefined) {
                 prevSlot.limit = data.prevSlot.limit
-                prevSlot.count = data.prevSlot.count
+                prevSlot.count = data.prevSlot.count - 1
             }
         }
     }

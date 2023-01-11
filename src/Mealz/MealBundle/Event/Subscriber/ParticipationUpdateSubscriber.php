@@ -44,6 +44,10 @@ class ParticipationUpdateSubscriber implements EventSubscriberInterface
         if (!$eventMeal->isOpen()) { // do not send updates for past meals
             return;
         }
+        $parentId = null;
+        if (null !== $meal->getDish()->getParent()) {
+            $parentId = $meal->getDish()->getParent()->getId();
+        }
 
         $participationsPerDay = $this->partCountSrv->getParticipationByDay($eventMeal->getDay());
 

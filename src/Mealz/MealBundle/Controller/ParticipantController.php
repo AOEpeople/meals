@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Controller;
 
-use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
@@ -20,6 +19,7 @@ use App\Mealz\MealBundle\Repository\SlotRepositoryInterface;
 use App\Mealz\MealBundle\Service\EventService;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\MealBundle\Service\ParticipationService;
+use App\Mealz\MealBundle\Service\SlotService;
 use App\Mealz\UserBundle\Entity\Profile;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
@@ -430,6 +430,29 @@ class ParticipantController extends BaseController
                 ]
             );
         }
+        $meal = $this->mealRepo->find($parameters['mealId']);
+
+        return $this->participationSrv->getParticipationByMealAndUser($meal, $this->getProfile());
+    }
+
+    /**
+     * Log add action of staff member.
+     */
+    private function logAdd(Meal $meal, Participant $participant): void
+    {
+        if (false === is_object($this->getDoorman()->isKitchenStaff())) {
+            return;
+        }
+
+        $logger = $this->get('monolog.logger.balance');
+        $logger->info(
+            'admin added {profile} to {meal} (Participant: {participantId})',
+            [
+                'participantId' => $participant->getId(),
+                'profile' => $participant->getProfile(),
+                'meal' => $meal,
+            ]
+        );
     }
 
     private function addParticipationInfo(array $response, ArrayCollection $participants, Day $day): array

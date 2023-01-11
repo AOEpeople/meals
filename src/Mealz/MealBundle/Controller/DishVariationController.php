@@ -2,7 +2,6 @@
 
 namespace App\Mealz\MealBundle\Controller;
 
-use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Repository\DishRepository;
 use Doctrine\ORM\EntityManagerInterface;

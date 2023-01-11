@@ -5,6 +5,7 @@ namespace App\Mealz\UserBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -16,7 +17,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  * @ORM\Table(name="profile")
  */
-class Profile implements UserInterface
+class Profile implements UserInterface, JsonSerializable
 {
     /**
      * @ORM\Column(name="id", type="string", length=255, nullable=FALSE)
@@ -119,11 +120,6 @@ class Profile implements UserInterface
         return "$this->name, $this->firstName";
     }
 
-    public function __toString()
-    {
-        return $this->getUsername();
-    }
-
     public function addRole(Role $role): self
     {
         if (null === $this->roles) {
@@ -220,5 +216,18 @@ class Profile implements UserInterface
 
     public function eraseCredentials(): void
     {
+    }
+
+    public function __toString()
+    {
+        return $this->getUsername();
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'user' => $this->username,
+            'roles' => $this->getRoles(),
+        ];
     }
 }

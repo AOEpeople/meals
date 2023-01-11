@@ -178,7 +178,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
     }
 
     /**
-     * @psalm-return array<string, array<string, list<Participant>>>
+     * @psalm-return array<string, array<string, array<string, bool>>>
      */
     public function findAllGroupedBySlotAndProfileID(DateTime $date): array
     {
@@ -207,7 +207,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
     /**
      * @param Participant[] $participants
      *
-     * @psalm-return array<string, array<string, list<Participant>>>
+     * @psalm-return array<string, array<string, array<string, bool>>>
      */
     private function groupBySlotAndProfileID(array $participants): array
     {
@@ -216,12 +216,15 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
 
         foreach ($participants as $participant) {
             $slot = $participant->getSlot();
-            if (null === $slot || $slot->isDisabled() || $slot->isDeleted()) {
-                $noSlotParticipants[$participant->getProfile()->getUsername()][] = $participant;
-                continue;
-            }
 
-            $groupedParticipants[$slot->getTitle()][$participant->getProfile()->getUsername()][] = $participant;
+            /** @var Meal $meal */
+            foreach ($participant->getMeal()->getDay()->getMeals() as $meal) {
+                if (null === $slot || $slot->isDisabled() || $slot->isDeleted()) {
+                    $noSlotParticipants[$participant->getProfile()->getUsername()][$meal->getDish()->getSlug()] = null !== $meal->getParticipant($participant->getProfile());
+                    continue;
+                }
+                $groupedParticipants[$slot->getTitle()][$participant->getProfile()->getUsername()][$meal->getDish()->getSlug()] = null !== $meal->getParticipant($participant->getProfile());
+            }
         }
 
         if (0 < count($noSlotParticipants)) {
@@ -375,6 +378,30 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
         $result = $queryBuilder->getQuery()->getArrayResult();
 
         return $result[0]['count'] ?? 0;
+    }
+
+    /**
+     * Returns true if the specified user is offering the specified meal.
+     */
+    public function isOfferingMeal(Profile $profile, Meal $meal): bool
+    {
+        $queryBuilder = $this->createQueryBuilder('p');
+        $queryBuilder
+            ->innerJoin('App\Mealz\MealBundle\Entity\Meal', 'm', Join::WITH, 'm = p.meal')
+            ->innerJoin('App\Mealz\UserBundle\Entity\Profile', 'u', Join::WITH, 'u = p.profile')
+            ->select('count(p.id) AS count')
+            ->where(
+                $queryBuilder->expr()->gt('p.offeredAt', 0),
+                $queryBuilder->expr()->eq('m.id', ':mealId'),
+                $queryBuilder->expr()->like('u.username', ':profileId')
+            )
+            ->setParameters([
+                'mealId' => $meal->getId(),
+                'profileId' => $profile->getUsername(),
+            ]);
+        $result = $queryBuilder->getQuery()->getArrayResult();
+
+        return $result[0]['count'] > 0;
     }
 
     /**

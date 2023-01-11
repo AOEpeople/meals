@@ -191,7 +191,7 @@ class MealAvailabilityService
 
     private function getParticipantCount(Meal $meal): ?int
     {
-        $participantCount = ParticipationCountService::getParticipationByDay($meal->getDay());
+        $participantCount = (new ParticipationCountService())->getParticipationByDay($meal->getDay());
 
         $dishSlug = $meal->getDish()->getSlug();
         if (!isset($participantCount['countByMealIds'][$meal->getId()][$dishSlug])) {
@@ -207,7 +207,7 @@ class MealAvailabilityService
             return $this->getParticipantCount($meal);
         }
 
-        $participantCount = ParticipationCountService::getParticipationByDay($meal->getDay());
+        $participantCount = (new ParticipationCountService())->getParticipationByDay($meal->getDay());
 
         $dishSlug = $meal->getDish()->getSlug();
         if (!isset($participantCount['totalCountByDishSlugs'][$dishSlug])) {

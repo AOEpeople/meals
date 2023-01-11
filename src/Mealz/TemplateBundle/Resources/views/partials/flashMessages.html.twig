@@ -1,7 +1,0 @@
-{% for severity in ['danger', 'warning', 'info', 'success'] %}
-	{% for flashMessage in app.session.flashbag.get(severity) %}
-		<div class="alert alert-{{ severity }}" data-qa-alert="{{ severity }}">
-			{{ flashMessage }}
-		</div>
-	{% endfor %}
-{% endfor %}

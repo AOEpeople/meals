@@ -2,47 +2,110 @@ MealzMealBundle_language_switch:
     path:  /language-switch
     defaults: { _controller: App\Mealz\MealBundle\Controller\LanguageController::switch }
 
+MealzMealBundle_api_dashboard:
+    path: /api/dashboard
+    defaults: { _controller: App\Mealz\MealBundle\Controller\ApiController::getDashboardData }
+    methods: [GET]
+
+MealzMealBundle_api_transactions:
+  path: /api/transactions
+  defaults: { _controller: App\Mealz\MealBundle\Controller\ApiController::getTransactionData }
+  methods: [GET]
+
+MealzMealBundle_api_paypal:
+  path: /api/paypal-id
+  defaults: { _controller: App\Mealz\MealBundle\Controller\ApiController::getPaypalId }
+  methods: [ GET ]
+
+MealzMealBundle_api_timeslots:
+  path: /api/timeslots
+  defaults: { _controller: App\Mealz\MealBundle\Controller\ApiController::getTimeSlotData }
+  methods: [GET]
+
+MealzMealBundle_api_update-slot:
+  path: /api/update-slot
+  defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::updateSlot }
+  methods: [POST]
+
 MealzMealBundle_home:
     path:  /
-    defaults: { _controller: App\Mealz\MealBundle\Controller\MealController::index }
+    defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
+
+MealzMealBundle_menu:
+  path:  /menu
+  defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
+
+MealzMealBundle_categories:
+  path: /categories
+  defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
+
+MealzMealBundle_timeslots:
+  path: /time-slots
+  defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
+
+MealzMealBundle_costs:
+  path: /costs
+  defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
+
+MealzMealBundle_finance:
+  path: /finance
+  defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
+
+MealzMealBundle_Meal_guest:
+  path: /guest/{hash}
+  defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
+  methods: [ GET, POST ]
+
+MealzMealBundle_balance:
+  path: /balance
+  defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
 
 MealzMealBundle_Meal:
     path:  /menu
     defaults: { _controller: App\Mealz\MealBundle\Controller\MealAdminController::list }
 
-MealzMealBundle_Meal_new:
-    path:  /menu/{date}/new
-    defaults: { _controller: App\Mealz\MealBundle\Controller\MealAdminController::new }
-    requirements:
-        # format "2014W12" 12th week in 2014
-        date: 20\d{2}W[0-5]\d
-
 MealzMealBundle_Meal_edit:
     path:  /menu/{week}/edit
     defaults: { _controller: App\Mealz\MealBundle\Controller\MealAdminController::edit }
 
-MealzMealBundle_Meal_join:
-    path:  /menu/{date}/{dish}/join/{profile}
-    defaults: { _controller: App\Mealz\MealBundle\Controller\MealController::join, profile: null }
-    methods: [POST]
-    requirements:
-        date: '^\d{4}-\d{2}-\d{2}$'
+MealzMealBundle_api_join_Meal:
+  path: /api/join-meal
+  defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::joinMeal }
+  methods: [POST]
 
-MealzMealBundle_Meal_accept_offer:
-    path: /menu/{date}/{dish}/accept-offer/{profile}
-    defaults: { _controller: App\Mealz\MealBundle\Controller\MealController::join, profile: null }
-    methods: [GET,POST]
-    requirements:
-        date: '^\d{4}-\d{2}-\d{2}$'
+MealzMealBundle_api_join_Meal_Guest:
+  path: /guest/api/join-meal
+  defaults: { _controller: App\Mealz\MealBundle\Controller\MealGuestController::joinAsGuest }
+  methods: [ POST ]
+
+MealzMealBundle_api_leave_Meal:
+  path: /api/leave-meal
+  defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::leaveMeal }
+  methods: [POST]
+
+MealzMealBundle_api_offer_meal:
+  path: /api/offer-meal
+  defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::offerMeal }
+  methods: [POST]
+
+MealzMealBundle_api_cancel_offer:
+  path: /api/cancel-offer
+  defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::cancelOfferedMeal }
+  methods: [POST]
+
+MealzMealBundle_api_update_selected_Slot:
+  path: /api/update-selected-slot
+  defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipationUpdateController::updateSlot }
+  methods: [ POST ]
+
+MealzMealBundle_api_invitationdata:
+  path: /api/guest-invitation-{guestInvitationId}
+  defaults: { _controller: App\Mealz\MealBundle\Controller\ApiController::getGuestData }
+  methods: [ GET ]
 
 MealzMealBundle_Meal_offers:
     path: /menu/{date}/{dish}/offers
     defaults: { _controller: App\Mealz\MealBundle\Controller\MealController::getOffers }
-
-MealzMealBundle_Meal_guest:
-    path: /menu/guest/{hash}
-    defaults: { _controller: App\Mealz\MealBundle\Controller\MealGuestController::joinAsGuest }
-    methods: [GET, POST]
 
 MealzMealBundle_Meal_newGuestInvitation:
     path:  /menu/{dayId}/new-guest-invitation
@@ -87,10 +150,6 @@ MealzMealBundle_Participant_update:
     defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::updateCombinedMeal }
     methods: [POST]
 
-MealzMealBundle_Participant_delete:
-    path:  /menu/meal/{participant}/delete
-    defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::delete }
-
 MealzMealBundle_Participant_swap:
     path: /menu/meal/{participant}/offer-meal
     defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::offerMeal }
@@ -123,6 +182,10 @@ MealzMealBundle_DishVariation_edit:
 MealzMealBundle_DishVariation_delete:
     path:  /dish/variation/{slug}/delete
     defaults: { _controller: App\Mealz\MealBundle\Controller\DishVariationController::deleteAction }
+
+MealzMealBundle_Dishes:
+  path: /dishes
+  defaults: { _controller: App\Mealz\MealBundle\Controller\TestController::renderIndex }
 
 MealzMealBundle_Dish:
     path:  /dish
@@ -174,7 +237,12 @@ MealzMealBundle_Category_Form_preFilled:
 
 MealzMealBundle_Print_participations:
     path: /print/participations
-    defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::list }
+    defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
+
+MealzMealBundle_Print_participations_api:
+  path: /api/print/participations
+  defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::list }
+  methods: [ GET ]
 
 mealz_meal_edit_participations:
     path: /participations/{week}/edit

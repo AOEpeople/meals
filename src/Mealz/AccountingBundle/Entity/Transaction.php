@@ -92,7 +92,7 @@ class Transaction
         return $this;
     }
 
-    public function getAmount()
+    public function getAmount(): float
     {
         return $this->amount;
     }

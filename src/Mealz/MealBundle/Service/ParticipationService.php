@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Service;
 
+use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
+use App\Mealz\MealBundle\Entity\MealCollection;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
-use App\Mealz\MealBundle\Repository\DayRepository;
+use App\Mealz\MealBundle\Repository\DayRepositoryInterface;
 use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
-use App\Mealz\MealBundle\Repository\SlotRepository;
+use App\Mealz\MealBundle\Repository\SlotRepositoryInterface;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
@@ -23,16 +25,16 @@ class ParticipationService
     private EntityManagerInterface $em;
     private Doorman $doorman;
 
-    private DayRepository $dayRepo;
+    private DayRepositoryInterface $dayRepo;
     private ParticipantRepositoryInterface $participantRepo;
-    private SlotRepository $slotRepo;
+    private SlotRepositoryInterface $slotRepo;
 
     public function __construct(
         EntityManagerInterface $em,
         Doorman $doorman,
-        DayRepository $dayRepo,
+        DayRepositoryInterface $dayRepo,
         ParticipantRepositoryInterface $participantRepo,
-        SlotRepository $slotRepo
+        SlotRepositoryInterface $slotRepo
     ) {
         $this->em = $em;
         $this->doorman = $doorman;
@@ -42,7 +44,7 @@ class ParticipationService
     }
 
     /**
-     * @psalm-return array{participant: Participant, offerer: Profile|null}|null
+     * @psalm-return array{participant: Participant, offerer: Participant|null, slot: Slot|null}|null
      *
      * @throws ParticipationException
      */
@@ -61,7 +63,7 @@ class ParticipationService
 
             $participant = $this->create($profile, $meal, $slot, $dishSlugs);
 
-            return ['participant' => $participant, 'offerer' => null];
+            return ['participant' => $participant, 'offerer' => null, 'slot' => $slot];
         }
 
         return null;
@@ -109,7 +111,7 @@ class ParticipationService
     /**
      * Reassigns $meal - offered by a participant - to $profile.
      *
-     * @psalm-return array{participant: Participant, offerer: Profile}|null
+     * @psalm-return array{participant: Participant, offerer: Participant, slot: Slot|null}|null
      */
     private function reassignOfferedMeal(Meal $meal, Profile $profile, array $dishSlugs = []): ?array
     {
@@ -118,7 +120,9 @@ class ParticipationService
             return null;
         }
 
-        $offerer = $participant->getProfile();
+        $offerer = $participant;
+
+        $slot = $participant->getSlot();
 
         $participant->setProfile($profile);
         $participant->setOfferedAt(0);
@@ -126,7 +130,7 @@ class ParticipationService
         $this->em->persist($participant);
         $this->em->flush();
 
-        return ['participant' => $participant, 'offerer' => $offerer];
+        return ['participant' => $participant, 'offerer' => $offerer, 'slot' => $slot];
     }
 
     /**
@@ -160,9 +164,9 @@ class ParticipationService
         $flippedDishSlugs = array_flip($dishSlugs);
 
         /** @var Participant $participant */
-        foreach ($meal->getSortedParticipants() as $participant) {
+        foreach ($meal->getParticipants() as $participant) {
             if (true === $participant->isPending()) {
-                if (empty($flippedDishSlugs)) {
+                if (1 === count($flippedDishSlugs)) {
                     return $participant;
                 }
 
@@ -189,75 +193,28 @@ class ParticipationService
         return null;
     }
 
-    /**
-     * @psalm-return array<string, int> Key-value pair of slot-slug and related allocation count
-     */
-    public function getSlotsStatusOn(DateTime $date): array
+    public function getParticipationByMealAndUser(Meal $meal, Profile $profile): ?Participant
     {
-        $startDate = (clone $date)->setTime(0, 0);
-        $endDate = (clone $date)->setTime(23, 59, 59);
-        $openMealDaysSlots = $this->getOpenMealDaysWithSlots($startDate, $endDate);
-        $slotCountProvider = $this->getBookedSlotCountProvider($startDate, $endDate);
+        $participants = $meal->getParticipants();
 
-        $slotsStatus = [];
-
-        foreach ($openMealDaysSlots as $item) {
-            $slotSlug = $item['slot']->getSlug();
-            $allocationCount = $slotCountProvider($item['date'], $item['slot']);
-            $slotsStatus[$slotSlug] = $allocationCount;
-        }
-
-        return $slotsStatus;
-    }
-
-    /**
-     * Get slots for each open (not expired) meal day up to a given date in the future.
-     *
-     * @return array An array of arrays, each containing date and related slot.
-     *               Top level array items are indexed by a composite key composed of date and slot-ID, i.e. Y-m-d-slot_id.
-     *
-     * @psalm-return array<string, array{date: DateTime, slot: Slot}>
-     */
-    private function getOpenMealDaysWithSlots(DateTime $stateDate, DateTime $endDate): array
-    {
-        $daysWithSlots = [];
-        $mealDays = $this->dayRepo->findAllActive($stateDate, $endDate);
-        $mealSlots = $this->slotRepo->findBy(['disabled' => 0, 'deleted' => 0], ['order' => 'ASC']);
-
-        foreach ($mealDays as $day) {
-            foreach ($mealSlots as $slot) {
-                $date = $day->getDateTime();
-                $k = $date->format('Y-m-d') . '-' . $slot->getId();
-                $daysWithSlots[$k] = [
-                    'date' => $date,
-                    'slot' => $slot,
-                ];
+        foreach ($participants as $participant) {
+            if ($participant->getProfile() === $profile) {
+                return $participant;
             }
         }
 
-        return $daysWithSlots;
+        return null;
     }
 
-    /**
-     * Get status of booked slots from $startDate to $endDate.
-     *
-     * The return results are indexed by a composite key comprised of concatenated date and slot-ID.
-     */
-    private function getBookedSlotCountProvider(DateTime $startDate, DateTime $endDate): callable
+    public function getCountOfActiveParticipationsByDayAndUser(DateTime $dateTime, Profile $profile): int
     {
-        $slotBookingStatus = [];
-        $bookedSlotsStatus = $this->participantRepo->getCountBySlots($startDate, $endDate);
+        $activeParticipations = $this->participantRepo->getParticipantsOnDays(
+            $dateTime,
+            $dateTime,
+            $profile
+        );
 
-        foreach ($bookedSlotsStatus as $bss) {
-            $k = $bss['date']->format('Y-m-d-') . $bss['slot'];
-            $slotBookingStatus[$k] = $bss['count'];
-        }
-
-        return static function (DateTime $date, Slot $slot) use ($slotBookingStatus): int {
-            $k = $date->format('Y-m-d-') . $slot->getId();
-
-            return $slotBookingStatus[$k] ?? 0;
-        };
+        return count($activeParticipations);
     }
 
     public function getSlot(Profile $profile, DateTime $date): ?Slot
@@ -276,14 +233,31 @@ class ParticipationService
         return null;
     }
 
-    public function getCountByMeal(Meal $meal): int
+    public function getCountByMeal(Meal $meal, bool $withoutCombined = false): int
     {
-        $participation = ParticipationCountService::getParticipationByDay($meal->getDay());
+        $participation = (new ParticipationCountService())->getParticipationByDay($meal->getDay());
 
-        if ($meal->isCombinedMeal()) {
+        if ($meal->isCombinedMeal() || $withoutCombined) {
             return $participation['countByMealIds'][$meal->getId()][$meal->getDish()->getSlug()]['count'] ?? 0;
         }
 
         return (int) ceil($participation['totalCountByDishSlugs'][$meal->getDish()->getSlug()]['count'] ?? 0);
+    }
+
+    public function getParticipationListBySlots(Day $day): array
+    {
+        return $this->participantRepo->findAllGroupedBySlotAndProfileID($day->getDateTime());
+    }
+
+    public function getMealsForTheDay(Day $day): MealCollection
+    {
+        $result = new MealCollection();
+
+        /** @var Meal $meal */
+        foreach ($day->getMeals() as $meal) {
+            $result->add($meal);
+        }
+
+        return $result;
     }
 }

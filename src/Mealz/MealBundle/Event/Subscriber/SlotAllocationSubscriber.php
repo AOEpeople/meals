@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Event\Subscriber;
 
+use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Event\SlotAllocationUpdateEvent;
-use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\MealBundle\Service\Publisher\PublisherInterface;
+use App\Mealz\MealBundle\Service\SlotService;
+use DateTime;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class SlotAllocationSubscriber implements EventSubscriberInterface
@@ -15,14 +17,14 @@ class SlotAllocationSubscriber implements EventSubscriberInterface
     private const PUBLISH_MSG_TYPE = 'slotAllocationUpdate';
 
     private PublisherInterface $publisher;
-    private ParticipationService $participationSrv;
+    private SlotService $slotSrv;
 
     public function __construct(
         PublisherInterface $publisher,
-        ParticipationService $participationSrv
+        SlotService $slotSrv
     ) {
         $this->publisher = $publisher;
-        $this->participationSrv = $participationSrv;
+        $this->slotSrv = $slotSrv;
     }
 
     public static function getSubscribedEvents(): array
@@ -40,14 +42,33 @@ class SlotAllocationSubscriber implements EventSubscriberInterface
         }
 
         $day = $event->getDay();
+        $newSlot = $event->getSlot();
+        $prevSlot = $event->getPreviousSlot();
         $this->publisher->publish(
             self::PUBLISH_TOPIC,
             [
-                'date' => $day->format('Ymd'),
-                'slotAllocation' => $this->participationSrv->getSlotsStatusOn($day),
+                'weekId' => $day->getWeek()->getId(),
+                'dayId' => $day->getId(),
+                'newSlot' => $this->addSlot($newSlot, $day->getDateTime()),
+                'prevSlot' => $this->addSlot($prevSlot, $day->getDateTime()),
             ],
             self::PUBLISH_MSG_TYPE
         );
+    }
+
+    private function addSlot(?Slot $slot, DateTime $dateTime): ?array
+    {
+        if (null !== $slot) {
+            $count = $this->slotSrv->getSlotsStatusOn($dateTime)[$slot->getSlug()];
+
+            return [
+                'slotId' => $slot->getId(),
+                'limit' => $slot->getLimit(),
+                'count' => $count,
+            ];
+        }
+
+        return null;
     }
 
     private function eventInvolvesRestrictedSlot(SlotAllocationUpdateEvent $event): bool

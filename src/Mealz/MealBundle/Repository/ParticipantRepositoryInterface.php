@@ -35,7 +35,7 @@ interface ParticipantRepositoryInterface extends ObjectRepository
     public function groupParticipantsByName(array $participants): array;
 
     /**
-     * @psalm-return array<string, array<string, list<Participant>>>
+     * @psalm-return array<string, array<string, array<string, bool>>>
      */
     public function findAllGroupedBySlotAndProfileID(DateTime $date): array;
 
@@ -53,6 +53,11 @@ interface ParticipantRepositoryInterface extends ObjectRepository
      * Returns count of booked meals available to be taken over by others.
      */
     public function getOfferCountByMeal(Meal $meal): int;
+
+    /**
+     * Returns true if the specified user is offering the specified meal.
+     */
+    public function isOfferingMeal(Profile $profile, Meal $meal): bool;
 
     /**
      * Gets number of participants (booked meals) per slot on a given $date.

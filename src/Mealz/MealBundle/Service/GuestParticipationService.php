@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Service;
 
+use App\Mealz\MealBundle\Entity\GuestInvitation;
 use App\Mealz\MealBundle\Entity\Meal;
+use App\Mealz\MealBundle\Entity\MealCollection;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
+use App\Mealz\MealBundle\Repository\GuestInvitationRepositoryInterface;
+use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
 use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\MealBundle\Repository\SlotRepositoryInterface;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;
@@ -19,6 +23,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use RuntimeException;
+use Symfony\Component\HttpFoundation\Request;
 
 class GuestParticipationService
 {
@@ -29,19 +34,25 @@ class GuestParticipationService
     private ProfileRepositoryInterface $profileRepo;
     private RoleRepositoryInterface $roleRepo;
     private SlotRepositoryInterface $slotRepo;
+    private GuestInvitationRepositoryInterface $guestInvitationRepo;
+    private MealRepositoryInterface $mealRepo;
 
     public function __construct(
         EntityManagerInterface $entityManager,
         ParticipantRepositoryInterface $participantRepo,
         ProfileRepositoryInterface $profileRepo,
         RoleRepositoryInterface $roleRepo,
-        SlotRepositoryInterface $slotRepo
+        SlotRepositoryInterface $slotRepo,
+        GuestInvitationRepositoryInterface $guestInvitationRepo,
+        MealRepositoryInterface $mealRepo
     ) {
         $this->entityManager = $entityManager;
         $this->participantRepo = $participantRepo;
         $this->profileRepo = $profileRepo;
         $this->roleRepo = $roleRepo;
         $this->slotRepo = $slotRepo;
+        $this->guestInvitationRepo = $guestInvitationRepo;
+        $this->mealRepo = $mealRepo;
     }
 
     /**
@@ -111,7 +122,7 @@ class GuestParticipationService
         /** @var Meal $meal */
         foreach ($meals as $meal) {
             if (empty($participations)) {
-                $participations = ParticipationCountService::getParticipationByDay($meal->getDay());
+                $participations = (new ParticipationCountService())->getParticipationByDay($meal->getDay());
             }
 
             $bookable = $this->mealIsBookable($meal);
@@ -198,5 +209,53 @@ class GuestParticipationService
         }
 
         return $guestRole;
+    }
+
+    public function getGuestInvitationById(string $guestInvitationId): ?GuestInvitation
+    {
+        return $this->guestInvitationRepo->find($guestInvitationId);
+    }
+
+    /**
+     * @throws ParticipationException
+     * @throws Exception
+     */
+    public function getGuestInvitationData(Request $request): array
+    {
+        $parameters = json_decode($request->getContent(), true);
+        $meals = new MealCollection();
+
+        foreach ($parameters['chosenMeals'] as $mealId) {
+            $meal = $this->mealRepo->find($mealId);
+
+            if (null === $meal) {
+                $meals = null;
+                break;
+            }
+            $meals->add($meal);
+        }
+
+        if ((null === $meals) || (0 === count($meals))) {
+            throw new ParticipationException('invalid data', ParticipationException::ERR_GUEST_REG_MEAL_NOT_FOUND);
+        }
+
+        $dishSlugs = $parameters['combiDishes'];
+
+        $slot = null;
+        if (0 !== $parameters['chosenSlot']) {
+            $slot = $this->slotRepo->find($parameters['chosenSlot']);
+        }
+
+        $profile = new Profile();
+        $profile->setName($parameters['lastName']);
+        $profile->setFirstName($parameters['firstName']);
+        $profile->setCompany($parameters['company']);
+
+        return [
+            'profile' => $profile,
+            'meals' => $meals,
+            'slot' => $slot,
+            'dishSlugs' => $dishSlugs,
+        ];
     }
 }

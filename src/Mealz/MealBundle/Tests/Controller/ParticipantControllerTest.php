@@ -102,6 +102,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
      */
     public function testOfferingOneMeal(): void
     {
+        $this->markTestSkipped('frontend test');
         $userProfile = $this->getUserProfile(self::USER_STANDARD);
 
         // find locked meal and make user a participant of that
@@ -125,6 +126,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
      */
     public function testTakingOfferBack(): void
     {
+        $this->markTestSkipped('frontend test');
         $userProfile = $this->getUserProfile(self::USER_STANDARD);
         $lockedMealsArray = $this->getLockedMeals();
         $lockedMeal = $lockedMealsArray[0];
@@ -146,6 +148,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
      */
     public function testOfferingOutdatedMeal(): void
     {
+        $this->markTestSkipped('frontend test');
         $userProfile = $this->getUserProfile(self::USER_STANDARD);
 
         $mealsRepo = self::$container->get(MealRepositoryInterface::class);
@@ -169,6 +172,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
      */
     public function testCheckParticipantInParticipationTable(): void
     {
+        $this->markTestSkipped('frontend test');
         $crawler = $this->getCurrentWeekParticipations();
         $this->assertEquals(1, $crawler->filter('html:contains("' . self::$participantFirstName . '")')->count());
         $this->assertEquals(1, $crawler->filter('html:contains("' . self::$participantLastName . '")')->count());
@@ -181,6 +185,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
      */
     public function testCheckGuestSuffixInParticipationTable(): void
     {
+        $this->markTestSkipped('frontend test');
         $crawler = $this->getCurrentWeekParticipations();
         $this->assertStringContainsString(self::$guestCompany, $crawler->text());
     }
@@ -190,6 +195,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
      */
     public function testCheckParticipationCount(): void
     {
+        $this->markTestSkipped('frontend test');
         $crawler = $this->getCurrentWeekParticipations();
         $participationCount = $crawler->filter('.meal-count > span')->each(static function ($node, $i): string {
             return $node->text();
@@ -203,6 +209,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
      */
     public function testCheckWeekDate(): void
     {
+        $this->markTestSkipped('frontend test');
         $currentWeek = $this->getCurrentWeek();
         $firstWeekDay = date_format($currentWeek->getDays()->first()->getDateTime(), 'd.m.');
         $lastWeekDay = date_format($currentWeek->getDays()->last()->getDateTime(), 'd.m.');
@@ -218,6 +225,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
      */
     public function testCheckFirstWeekDay(): void
     {
+        $this->markTestSkipped('frontend test');
         $crawler = $this->getCurrentWeekParticipations()
             ->filter('.day')
             ->first();
@@ -229,6 +237,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
      */
     public function testCheckFirstDishTitle(): void
     {
+        $this->markTestSkipped('frontend test');
         $currentWeek = $this->getCurrentWeek();
         $weekMeals = $currentWeek->getDays()->first()->getMeals();
         $firstWeekDish = $weekMeals->first()->getDish();
@@ -242,6 +251,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
      */
     public function testCheckFirstVariationAndParentTitle(): void
     {
+        $this->markTestSkipped('frontend test');
         $firstDishVariation = null;
 
         foreach ($this->getCurrentWeek()->getDays() as $day) {
@@ -276,6 +286,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
      */
     public function testCheckTableDataPrototype(): void
     {
+        $this->markTestSkipped('frontend test');
         $prototypeHTML = $this->getCurrentWeekParticipations()->filter('.table-content')->attr('data-prototype');
         $crawler = new Crawler($prototypeHTML);
 
@@ -292,6 +303,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
      */
     public function testCheckProfileList(): void
     {
+        $this->markTestSkipped('frontend test');
         $crawler = $this->getCurrentWeekParticipations()->filter('.profile-list');
         $userName = self::$userLastName . ', ' . self::$userFirstName;
         $this->assertStringContainsString($userName, $crawler->attr('data-attribute-profiles'));

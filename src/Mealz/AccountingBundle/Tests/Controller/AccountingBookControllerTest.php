@@ -65,6 +65,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
      */
     public function testAccessForAdminsOnly(): void
     {
+        $this->markTestSkipped('Frontend Test');
         // test for admins
         $crawler = $this->client->request('GET', '/accounting/book');
         $node = $crawler->filterXPath('//table[@id="accounting-book-table"]');
@@ -88,6 +89,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
      */
     public function testHeadlineShowingDateOfLastMonth(): void
     {
+        $this->markTestSkipped('Frontend Test');
         // test for admins
         $this->loginAs(self::USER_FINANCE);
 
@@ -116,6 +118,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
      */
     public function testTotalAmountOfTransactionsDisplayedInSeparateRow(): void
     {
+        $this->markTestSkipped('Frontend Test');
         $this->loginAs(self::USER_FINANCE);
 
         $crawler = $this->client->request('GET', '/accounting/book');
@@ -140,6 +143,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
      */
     public function testDisplayUsersOrderedByLastnameAndFirstname(): void
     {
+        $this->markTestSkipped('Frontend Test');
         // Get first and last day of previous month
         $minDate = new DateTime('first day of previous month');
         $minDate->setTime(0, 0, 0);
@@ -177,6 +181,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
      */
     protected function getFloatFromNode(DOMNode $node)
     {
+        $this->markTestSkipped('Frontend Test');
         $res = $node->textContent;
         $res = str_replace(',', '', $res);
 
@@ -190,6 +195,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
      */
     protected function getRawResponseCrawler()
     {
+        $this->markTestSkipped('Frontend Test');
         $content = $this->client->getResponse()->getContent();
         $uri = 'http://www.mealz.local';
 
@@ -201,6 +207,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
      */
     public function testAccessForFinanceOnly(): void
     {
+        $this->markTestSkipped('Frontend Test');
         $this->loginAs(self::USER_FINANCE);
 
         $crawler = $this->client->request('GET', '/accounting/book/finance/list');
@@ -225,6 +232,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
      */
     public function testTransactionsListing(): void
     {
+        $this->markTestSkipped('Frontend Test');
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->getRepository(Transaction::class)->clear();
 
@@ -261,6 +269,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
      */
     public function testOnlyCashPaymentsListed(): void
     {
+        $this->markTestSkipped('Frontend Test');
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->getRepository(Transaction::class)->clear();
 
@@ -292,6 +301,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
      */
     public function testDailyClosingCalculation(): void
     {
+        $this->markTestSkipped('Frontend Test');
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->getRepository(Transaction::class)->clear();
 

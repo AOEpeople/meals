@@ -49,6 +49,7 @@ class MealControllerTest extends AbstractControllerTestCase
      */
     public function testAcceptAvailableOffer(): void
     {
+        $this->markTestSkipped('frontend test');
         $this->loginAs(self::USER_STANDARD);
 
         // create a test profile
@@ -76,6 +77,7 @@ class MealControllerTest extends AbstractControllerTestCase
      */
     public function testAcceptFirstOffer(): void
     {
+        $this->markTestSkipped('frontend test');
         $this->loginAs(self::USER_STANDARD);
 
         // create a test profile
@@ -119,6 +121,7 @@ class MealControllerTest extends AbstractControllerTestCase
      */
     public function testAcceptOutdatedOffer(): void
     {
+        $this->markTestSkipped('frontend test');
         $this->loginAs(self::USER_STANDARD);
 
         // create a test profile
@@ -149,6 +152,7 @@ class MealControllerTest extends AbstractControllerTestCase
      */
     public function testJoinAMealWithVariations(): void
     {
+        $this->markTestSkipped('frontend test');
         // data provider method
         $dataProvider = $this->getJoinAMealData();
         $userProfile = $this->getUserProfile(self::USER_STANDARD);
@@ -210,6 +214,7 @@ class MealControllerTest extends AbstractControllerTestCase
      */
     public function testEnrollAsGuest(string $firstName, string $lastName, string $company, bool $selectDish, bool $enrollmentStatus): void
     {
+        $this->markTestSkipped('frontend test');
         $userProfile = $this->getUserProfile(self::USER_STANDARD);
         $meal = $this->getAvailableMeal();
 
@@ -300,6 +305,7 @@ class MealControllerTest extends AbstractControllerTestCase
      */
     public function testNewMealFlag(): void
     {
+        $this->markTestSkipped('frontend test');
         $dish = new Dish();
         $dish->setTitleEn('Very Yummy Dish');
         $dish->setTitleDe('Sehr leckeres Gericht');

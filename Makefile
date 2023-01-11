@@ -8,17 +8,20 @@ help:
 	@echo ""
 	@echo "	build              - Build an image from the Dockerfile"
 	@echo "	build-yarn         - (Re-)build production ready frontend assets i.e. CSS, JS"
-	@echo "	build-yarn-dev     - (Re-)build development ready frontend assets i.e. CSS, JS"
+	@echo "	build-yarn-dev     - (Re-)build development ready frontend assets i.e. JS"
+	@echo "	build-yarn-dev-css - (Re-)build development ready frontend assets i.e. CSS, JS"
+	@echo "	build-yarn-watch   - (Re-)build and watch development ready frontend assets i.e. CSS, JS"
 	@echo "	create-migration   - Create Doctrine migration from code"
 	@echo "	get-users          - Get test users and their passwords"
 	@echo "	load-testdata      - Load test data i.e. dishes, meals and users"
 	@echo "	poweroff           - Stop all related containers and projects"
 	@echo "	run-devbox         - Run devbox"
-	@echo "	run-lint-sass      - Run code linter for sass"
+	@echo "	run-lint           - Run code linter"
 	@echo "	run-cs-fixer       - Run Coding Standards Fixer"
 	@echo "	run-phpmd          - Run PHP Mess Detector"
 	@echo "	run-psalm          - Run static code analysis"
-	@echo "	run-tests          - Run tests"
+	@echo "	run-tests-be       - Run backend-tests"
+	@echo "	run-tests-fe       - Run frontend-tests"
 	@echo "	ssh                - Open a bash session in the web container"
 	@echo "	update-schema      - Update the Doctrine schema"
 	@echo ""
@@ -36,8 +39,14 @@ build-yarn:
 build-yarn-dev:
 	ddev exec yarn --cwd=src/Resources build-dev
 
-run-lint-sass:
-	ddev exec yarn --cwd src/Resources lint:sass
+build-yarn-dev-css:
+	ddev exec yarn --cwd=src/Resources build-dev-css
+
+build-yarn-watch:
+	ddev exec yarn --cwd=src/Resources build-watch
+
+run-lint:
+	ddev exec yarn --cwd src/Resources lint
 
 run-phpmd:
 	ddev exec vendor/bin/phpmd src/Mealz text ./phpmd.xml --baseline-file ./phpmd.baseline.xml --exclude */Tests/*
@@ -57,8 +66,11 @@ load-testdata:
 create-migration:
 	ddev exec php bin/console doctrine:migrations:diff
 
-run-tests:
+run-tests-be:
 	ddev run tests
+
+run-tests-fe:
+	ddev exec yarn --cwd=src/Resources test
 
 ssh:
 	ddev ssh

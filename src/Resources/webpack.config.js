@@ -3,6 +3,7 @@ const webpack = require('webpack')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const TerserPlugin = require('terser-webpack-plugin');
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin')
+const { VueLoaderPlugin } = require('vue-loader');
 
 module.exports = function(env, argv) {
     return {
@@ -35,7 +36,7 @@ module.exports = function(env, argv) {
             ],
         },
         entry: {
-            app: './js/init.js',
+            app: './src/main.ts',
         },
         output: {
             path: path.resolve(__dirname, '../../public/static/'),
@@ -56,6 +57,9 @@ module.exports = function(env, argv) {
             ],
             alias: {
                 jquery: path.resolve('./node_modules/jquery/dist/jquery.js'),
+                '@': path.resolve(__dirname, './src'),
+                'vue-i18n': 'vue-i18n/dist/vue-i18n.runtime.esm-bundler.js',
+                'tools': path.resolve(__dirname, './src/tools'),
             }
         },
         module: {
@@ -76,6 +80,20 @@ module.exports = function(env, argv) {
                     test: /\.tsx?$/,
                     use: 'ts-loader',
                     exclude: /node_modules/,
+                },
+                {
+                    test :/\.vue$/,
+                    use: [
+                        'vue-loader',
+                    ],
+                },
+                {
+                    test: /\.(json5?|ya?ml)$/, // target json, json5, yaml and yml files
+                    type: 'javascript/auto',
+                    loader: '@intlify/vue-i18n-loader',
+                    include: [ // Use `Rule.include` to specify the files of locale messages to be pre-compiled
+                        path.resolve(__dirname, 'src/locales')
+                    ]
                 },
                 {
                     test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/i,
@@ -123,6 +141,7 @@ module.exports = function(env, argv) {
             new webpack.BannerPlugin({
                 banner: 'name:[name], file:[file], fullhash:[fullhash], chunkhash:[chunkhash]',
             }),
+            new VueLoaderPlugin(),
             new webpack.IgnorePlugin({
                 resourceRegExp: /^\.\/locale$/,
                 contextRegExp: /moment$/,
@@ -134,6 +153,13 @@ module.exports = function(env, argv) {
             new webpack.DefinePlugin({
                 'process.browser': true,
                 'process.env.MODE': JSON.stringify(argv.mode),
+                'process.env.APP_BASE_URL': JSON.stringify(process.env.APP_BASE_URL),
+                'process.env.MERCURE_PUBLIC_URL': JSON.stringify(process.env.MERCURE_PUBLIC_URL),
+                __VUE_OPTIONS_API__: true,
+                __VUE_PROD_DEVTOOLS__: true,
+                __VUE_I18N_FULL_INSTALL__: true,
+                __VUE_I18N_LEGACY_API__: false,
+                __INTLIFY_PROD_DEVTOOLS__: false
             })
         ],
         devServer: {

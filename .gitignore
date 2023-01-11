@@ -19,7 +19,6 @@ node_modules
 !.php-cs-fixer.dist
 !/migrations
 !/public/.htaccess
-!.github
 
 ###> symfony/framework-bundle ###
 /.env.local
@@ -40,3 +39,6 @@ node_modules
 /.php-cs-fixer.php
 /.php-cs-fixer.cache
 ###< friendsofphp/php-cs-fixer ###
+
+/src/Resources/style/output.css
+/**/*.d.ts

@@ -8,6 +8,7 @@ use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
+use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 
 class OfferService
@@ -79,5 +80,13 @@ class OfferService
     public function getOfferCountByMeal(Meal $meal): int
     {
         return $this->participantRepo->getOfferCountByMeal($meal);
+    }
+
+    /**
+     * User ist currently offering a specific meal.
+     */
+    public function isOfferingMeal(Profile $profile, Meal $meal): bool
+    {
+        return $this->participantRepo->isOfferingMeal($profile, $meal);
     }
 }

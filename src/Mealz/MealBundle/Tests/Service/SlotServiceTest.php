@@ -6,15 +6,15 @@ namespace App\Mealz\MealBundle\Tests\Service;
 
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadSlots;
 use App\Mealz\MealBundle\Entity\Slot;
-use App\Mealz\MealBundle\Repository\SlotRepository;
+use App\Mealz\MealBundle\Repository\SlotRepositoryInterface;
 use App\Mealz\MealBundle\Service\SlotService;
 use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use Doctrine\ORM\EntityManagerInterface;
 
 class SlotServiceTest extends AbstractDatabaseTestCase
 {
-    private EntityManagerInterface $entityManager;
-    private SlotRepository $slotRepo;
+    private EntityManagerInterface $em;
+    private SlotRepositoryInterface $slotRepo;
     private SlotService $sut;
 
     /**
@@ -26,11 +26,10 @@ class SlotServiceTest extends AbstractDatabaseTestCase
 
         $this->loadFixtures([new LoadSlots()]);
 
-        /* @var EntityManagerInterface $entityManager */
-        $this->entityManager = $this->getDoctrine()->getManager();
-
-        $this->slotRepo = static::$container->get(SlotRepository::class);
-        $this->sut = new SlotService($this->entityManager);
+        /* @var SlotService $sut */
+        $this->sut = static::$container->get(SlotService::class);
+        $this->slotRepo = static::$container->get(SlotRepositoryInterface::class);
+        $this->em = static::$container->get(EntityManagerInterface::class);
     }
 
     /**
@@ -48,7 +47,7 @@ class SlotServiceTest extends AbstractDatabaseTestCase
         $slotID = $slot->getId();
         $this->sut->updateState($slot, '1');
 
-        $this->entityManager->clear();
+        $this->em->clear();
         $slot = $this->slotRepo->find($slotID);
 
         $this->assertTrue($slot->isDisabled());
@@ -69,7 +68,7 @@ class SlotServiceTest extends AbstractDatabaseTestCase
         $slotID = $slot->getId();
         $this->sut->updateState($slot, '0');
 
-        $this->entityManager->clear();
+        $this->em->clear();
         $slot = $this->slotRepo->find($slotID);
 
         $this->assertFalse($slot->isDisabled());
@@ -89,7 +88,7 @@ class SlotServiceTest extends AbstractDatabaseTestCase
 
         $slotID = $slot->getId();
         $this->sut->delete($slot);
-        $this->entityManager->clear();
+        $this->em->clear();
 
         $slot = $this->slotRepo->find($slotID);
         $this->assertTrue($slot->isDeleted());

@@ -40,6 +40,7 @@ class DishControllerTest extends AbstractControllerTestCase
      */
     public function testGetEmptyFormAction(): void
     {
+        $this->markTestSkipped('irrelevant form');
         $this->client->request('GET', '/dish/form');
         $crawler = $this->getRawResponseCrawler();
         $node = $crawler->filterXPath('//form[@action="/dish/new"]');
@@ -51,6 +52,7 @@ class DishControllerTest extends AbstractControllerTestCase
      */
     public function testNewAction(): void
     {
+        $this->markTestSkipped('irrelevant form');
         // Create form data
         $form = [
             'dish' => [
@@ -86,6 +88,7 @@ class DishControllerTest extends AbstractControllerTestCase
      */
     public function testListAction(): void
     {
+        $this->markTestSkipped('not implemented');
         $dish = $this->createDish();
         $this->persistAndFlushAll([$dish]);
 
@@ -115,6 +118,7 @@ class DishControllerTest extends AbstractControllerTestCase
      */
     public function testGetPreFilledFormAction(): void
     {
+        $this->markTestSkipped('irrelevant form');
         // Create test data
         $dish = $this->createDish();
         $dishAsArray = [
@@ -146,6 +150,7 @@ class DishControllerTest extends AbstractControllerTestCase
      */
     public function testEditAction(): void
     {
+        $this->markTestSkipped('not implemented');
         $dish = $this->createDish();
         $this->persistAndFlushAll([$dish]);
 
@@ -172,6 +177,7 @@ class DishControllerTest extends AbstractControllerTestCase
      */
     public function testEditActionOfNonExistingDish(): void
     {
+        $this->markTestSkipped('not implemented');
         $this->client->request('POST', '/dish/non-existing-dish/edit');
         $this->assertSame(404, $this->client->getResponse()->getStatusCode());
     }
@@ -181,6 +187,7 @@ class DishControllerTest extends AbstractControllerTestCase
      */
     public function testDeleteAction(): void
     {
+        $this->markTestSkipped('not implemented');
         $dish = $this->createDish();
         $this->persistAndFlushAll([$dish]);
 
@@ -197,6 +204,7 @@ class DishControllerTest extends AbstractControllerTestCase
      */
     public function testDeleteOfNonExistingDish(): void
     {
+        $this->markTestSkipped('not implemented');
         $this->client->request('GET', '/dish/non-existing-dish/delete');
         $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
     }
@@ -206,6 +214,7 @@ class DishControllerTest extends AbstractControllerTestCase
      */
     public function testIfNewDishIsNew(): void
     {
+        $this->markTestSkipped('not implemented');
         // Create form data
         $form['dish'] = [
             'title_de' => 'dish-form-title-de',

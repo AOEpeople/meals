@@ -1,67 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="x-ua-compatible" content="ie=edge">
-	<title>AOE Meals</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
-	<link rel="stylesheet" href="{{ assets_server }}{{ asset('static/vendors.css') }}" />
-	<link rel="stylesheet" href="{{ assets_server }}{{ asset('static/app.css') }}" />
-	{% block head %}{% endblock %}
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>AOE Meals</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+    <link rel="stylesheet" href="{{ assets_server }}{{ asset('static/app.css') }}" />
+    {% block head %}{% endblock %}
 </head>
 
 {% set pageView = block('pageView') is defined ? block('pageView') : '' %}
 
 {% set activeRoute = app.request.attributes.get('_route') %}
 {% set userAgent = app.request.headers.get('User-Agent') %}
-{% set isWebview = false %}
-{% if userAgent matches '/MealsApp Android WebView/' == true %}
-        {% set isWebview = true %}
+{# topics for which to receive the notifications/messages from server #}
+{% set topics = ['participation-updates', 'meal-offer-updates', 'slot-allocation-updates'] -%}
+
+<body>
+{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+    <script type="text/javascript">
+        let profile = {{ app.user.profile | json_encode() | raw }};
+        sessionStorage.setItem('auth', 'granted')
+        sessionStorage.setItem('user', profile.user)
+        sessionStorage.setItem('role', profile.roles[0])
+        sessionStorage.setItem('balance', '{{ wallet.getBalance(app.user.profile) }}');
+        sessionStorage.setItem('mercure_url', '{{ mercure(topics, {subscribe: topics})|json_encode(constant('JSON_UNESCAPED_SLASHES') b-or constant('JSON_HEX_TAG'))|raw|trim('"') }}');
+    </script>
 {% endif %}
 
-<body
-		class="{{ activeRoute matches '/MealzMealBundle_Meal_guest.*/' ? 'guest-wrapper' }} {{ isWebview == true ? 'webview' }}"
-		{% if pageView %}data-view="{{ pageView }}"{% endif %}
->
-	{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-		{% set balance = wallet.getBalance(app.user.profile) %}
-	{% endif %}
+{% block body %}{% endblock %}
 
-	{% include 'MealzTemplateBundle::partials/balanceNotification.html.twig' %}
-
-	{% if isWebview == false %}
-	<header>
-		<div class="container">
-			<a class="logo" href="{{ path('MealzMealBundle_home') }}">
-				<img src="{{ asset('images/logo.png') }}" alt="AOE" />
-				<span>AOE Meals</span>
-			</a>
-
-			<div class="header-content">
-
-                    {% block headerContent %}
-
-                    {% endblock %}
-			</div>
-			<div class="header-toggle hamburger">
-				<span>toggle</span>
-			</div>
-		</div>
-	</header>
-	{% endif %}
-
-	{% if wrapperClass is not defined %}
-		{% set wrapperClass = '' %}
-	{% endif %}
-
-	<div class="container content-wrapper {{ wrapperClass }}">
-
-        {% include 'MealzTemplateBundle::partials/flashMessages.html.twig' %}
-
-		{% block body %}
-		{% endblock %}
-	</div>
-		<script src="{{ assets_server }}/static/vendors.js"></script>
-		<script src="{{ assets_server }}/static/app.js"></script>
-	</body>
+<script src="{{ assets_server }}/static/vendors.js"></script>
+<script src="{{ assets_server }}/static/app.js"></script>
+</body>
 </html>

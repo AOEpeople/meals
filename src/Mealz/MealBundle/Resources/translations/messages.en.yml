@@ -40,8 +40,6 @@ error:
     variation_required: Please select a variation!
 participation:
   successful: Meal participation successful
-profile:
-  guest: Guest
 notification:
   confirm_swap: Unfortunately it's already too late to cancel your order, but you have the possibility to offer it to someone else.
 tooltip:

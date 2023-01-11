@@ -9,6 +9,7 @@ use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
+use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -37,6 +38,16 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
     protected array $profiles = [];
 
     /**
+     * @var Slot[]
+     */
+    protected array $slots = [];
+
+    /**
+     * @var array<string, Slot>
+     */
+    protected array $slotIndex = [];
+
+    /**
      * {@inheritDoc}
      *
      * @throws Exception
@@ -62,12 +73,23 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
 
             foreach ($users as $user) {
                 $participant = new Participant($user, $meal);
+
                 $participant->setCostAbsorbed(false);
 
                 if ($meal->getLockDateTime() < new DateTime()) {
                     $participant->setOfferedAt(time());
                 } else {
                     $participant->setOfferedAt(0);
+                }
+
+                $indexString = $user->getUsername() . '_' . $meal->getDay()->getId();
+
+                if (!array_key_exists($indexString, $this->slotIndex)) {
+                    $randomSlot = $this->getRandomActiveSlot();
+                    $this->slotIndex[$indexString] = $randomSlot;
+                    $participant->setSlot($randomSlot);
+                } else {
+                    $participant->setSlot($this->slotIndex[$indexString]);
                 }
 
                 $this->objectManager->persist($participant);
@@ -89,6 +111,15 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
                 $participant = new Participant($profile, $combinedMeal);
                 $participant->setCombinedDishes($combinedMealDishes);
 
+                $indexString = $username . '_' . $day->getId();
+
+                if (!array_key_exists($indexString, $this->slotIndex)) {
+                    $randomSlot = $this->getRandomActiveSlot();
+                    $this->slotIndex[$indexString] = $randomSlot;
+                    $participant->setSlot($randomSlot);
+                } else {
+                    $participant->setSlot($this->slotIndex[$indexString]);
+                }
                 $this->objectManager->persist($participant);
             }
         }
@@ -133,6 +164,17 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
         }
 
         throw new RuntimeException('no combined meal found on ' . $day->getDateTime()->format('Y-m-d'));
+    }
+
+    /**
+     *  Returns a currently active Random Slot.
+     */
+    private function getRandomActiveSlot(): Slot
+    {
+        // only use active slots
+        $slots = array_filter($this->slots, fn ($slot) => $slot->isEnabled() && !$slot->isDeleted());
+
+        return $slots[array_rand($slots)];
     }
 
     /**
@@ -191,6 +233,8 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
                 $this->meals[] = $this->getReference($referenceName);
             } elseif ($reference instanceof Profile) {
                 $this->profiles[] = $this->getReference($referenceName);
+            } elseif ($reference instanceof Slot) {
+                $this->slots[] = $this->getReference($referenceName);
             }
         }
     }

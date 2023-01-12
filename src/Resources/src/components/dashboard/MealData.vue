@@ -2,7 +2,7 @@
   <div class="flex w-auto flex-row justify-around gap-4 xl:grid-cols-6">
     <div class="basis-10/12 items-center self-center xl:col-span-5">
       <div class="self-center">
-        <span class="inline-block break-words text-note font-bold uppercase leading-[20px] tracking-[0.5px] text-primary">
+        <span class="inline-block break-words text-note font-bold leading-[20px] tracking-[0.5px] text-primary">
           {{ title }}
           <span
             v-if="meal.isNew"
@@ -28,6 +28,8 @@
         :weekID="weekID"
         :dayID="dayID"
         :mealID="mealID"
+        :meal="meal"
+        :day="day"
       />
     </div>
   </div>
@@ -44,9 +46,11 @@ const props = defineProps([
   'weekID',
   'dayID',
   'mealID',
+    'meal',
+    'day'
 ])
 
-const meal = dashboardStore.getMeal(props.weekID, props.dayID, props.mealID)
+const meal = props.meal ? props.meal : dashboardStore.getMeal(props.weekID, props.dayID, props.mealID)
 
 const { t, locale } = useI18n();
 

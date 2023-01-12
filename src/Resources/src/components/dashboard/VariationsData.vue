@@ -1,6 +1,6 @@
 <template>
   <div class="mb-1">
-    <span class="inline-block break-words text-note font-bold uppercase leading-[20px] tracking-[0.5px] text-primary">{{ parentTitle }}</span><br>
+    <span class="inline-block break-words text-note font-bold leading-[20px] tracking-[0.5px] text-primary">{{ parentTitle }}</span><br>
   </div>
   <div
     v-for="(variation, variationID, index) in meal.variations"
@@ -30,6 +30,8 @@
         :dayID="dayID"
         :mealID="mealID"
         :variationID="variationID"
+        :meal="variation"
+        :day="day"
       />
     </div>
   </div>
@@ -48,9 +50,11 @@ const props = defineProps([
     'weekID',
     'dayID',
     'mealID',
+    'day',
+    'meal'
 ])
 
-const meal = dashboardStore.getMeal(props.weekID, props.dayID, props.mealID)
+const meal = props.meal ? props.meal : dashboardStore.getMeal(props.weekID, props.dayID, props.mealID)
 
 let parentTitle = computed(() => locale.value.substring(0, 2) === 'en' ? meal.title.en : meal.title.de)
 

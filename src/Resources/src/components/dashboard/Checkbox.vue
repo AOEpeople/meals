@@ -12,6 +12,7 @@
     :open="open"
     :weekID="weekID"
     :dayID="dayID"
+    :meals="day.meals"
     @closeCombiModal="closeCombiModal"
   />
 </template>
@@ -26,19 +27,19 @@ import { dashboardStore } from '@/stores/dashboardStore'
 import { CheckIcon } from '@heroicons/vue/solid'
 import CombiModal from '@/components/dashboard/CombiModal.vue'
 
-const props = defineProps(['weekID', 'dayID', 'mealID', 'variationID'])
+const props = defineProps(['weekID', 'dayID', 'mealID', 'variationID', 'meal', 'day'])
 
-let day = dashboardStore.getDay(props.weekID, props.dayID)
+const day = props.day ? props.day : dashboardStore.getDay(props.weekID, props.dayID)
 let meal
 let mealId
 if (props.variationID) {
-  meal = dashboardStore.getVariation(props.weekID, props.dayID, props.mealID, props.variationID)
+  meal = props.meal ? props.meal : dashboardStore.getVariation(props.weekID, props.dayID, props.mealID, props.variationID)
   mealId = props.variationID
 } else {
-  meal = dashboardStore.getMeal(props.weekID, props.dayID, props.mealID)
+  meal = props.meal ? props.meal : dashboardStore.getMeal(props.weekID, props.dayID, props.mealID)
   mealId = props.mealID
 }
-
+console.log(props.meal)
 const open = ref(false)
 const isParticipating = computed(() => meal.isParticipating !== null)
 
@@ -92,6 +93,10 @@ async function handle() {
       await cancelOffer()
     }
   }
+}
+
+async function handleGuest() {
+
 }
 
 function getDishSlugs() {

@@ -245,8 +245,6 @@ class ApiController extends BaseController
 
     /**
      * @throws Exception
-     *
-     * @Security("is_granted('ROLE_USER')")
      */
     private function addMealWithVariations(Meal $meal, ?Profile $profile, array &$meals): void
     {
@@ -299,26 +297,29 @@ class ApiController extends BaseController
         }
 
         $day = $guestInvitation->getDay();
+        $slots = $this->slotSrv->getAllActiveSlots();
 
-        $response = [
+        $guestData = [
             'date' => $day->getDateTime(),
-            'meals' => [],
+            'isLocked' => $day->getLockParticipationDateTime() < new DateTime(),
+            'activeSlot' => 0,
+            'slotsEnabled' => count($slots) > 0,
             'slots' => [],
+            'meals' => [],
         ];
 
-        $slots = $this->slotSrv->getSlotStatusForDay($day->getDateTime());
-        $this->addSlots($response['slots'], $slots, $day, null);
+        $this->addSlots($guestData['slots'], $slots, $day, 0);
 
         /* @var Meal $meal */
         foreach ($day->getMeals() as $meal) {
             if ($meal->getDish() instanceof DishVariation) {
-                $this->addMealWithVariations($meal, null, $response['meals']);
+                $this->addMealWithVariations($meal, null, $guestData['meals']);
             } else {
-                $response['meals'][$meal->getId()] = $this->convertMealForDashboard($meal, null);
+                $guestData['meals'][$meal->getId()] = $this->convertMealForDashboard($meal, null);
             }
         }
 
-        return new JsonResponse($response, 200);
+        return new JsonResponse($guestData, 200);
     }
 
     public function getPaypalId(): JsonResponse

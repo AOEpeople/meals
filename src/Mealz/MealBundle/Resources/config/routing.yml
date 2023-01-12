@@ -7,6 +7,11 @@ MealzMealBundle_api_dashboard:
     defaults: { _controller: App\Mealz\MealBundle\Controller\ApiController::getDashboardData }
     methods: [GET]
 
+MealzMealBundle_guest_api_dashboard:
+  path: /guest/api/dashboard
+  defaults: { _controller: App\Mealz\MealBundle\Controller\ApiController::getDashboardData }
+  methods: [ GET ]
+
 MealzMealBundle_api_transactions:
   path: /api/transactions
   defaults: { _controller: App\Mealz\MealBundle\Controller\ApiController::getTransactionData }

@@ -1,12 +1,9 @@
 import useApi from "@/api/api";
 import { ref } from "vue"
-import {DateTime, Meal, Slot} from "@/api/getDashboardData";
-import {Dictionary} from "../../types/types";
+import {Day} from "@/api/getDashboardData";
 
 type GuestDay = {
-    date: DateTime
-    meals: Dictionary<Meal>
-    slots: Dictionary<Slot>
+    guestData: Day
 }
 
 export async function useInvitationData(hash: string){

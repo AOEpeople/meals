@@ -62,7 +62,3 @@ function handleCombiModal(dishes) {
 }
 
 </script>
-
-<style scoped>
-
-</style>

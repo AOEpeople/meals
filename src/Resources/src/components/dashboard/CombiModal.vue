@@ -99,7 +99,7 @@ const props = defineProps([
 
 const { t } = useI18n()
 const emit = defineEmits(['closeCombiModal'])
-let meals = props.meals !== undefined ? props.meals : dashboardStore.getMeals(props.weekID, props.dayID)
+const meals = props.meals ? props.meals : dashboardStore.getMeals(props.weekID, props.dayID)
 let keys = Object.keys(meals).filter(mealID => meals[mealID].dishSlug !== 'combined-dish')
 const slugs = ref([])
 const bookingDisabled = computed(() => slugs.value.length < 2)

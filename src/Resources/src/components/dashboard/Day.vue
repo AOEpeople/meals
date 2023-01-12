@@ -1,11 +1,12 @@
 <template>
-  <div class="day-shadow w-max-screen-aoe mx-auto flex h-auto w-3/4 rounded bg-white">
+  <div class="day-shadow w-max-screen-aoe mx-auto flex h-auto rounded bg-white">
     <div :class="[day.isLocked ? 'bg-[#80909F]' : 'bg-primary-2', 'flex relative justify-center w-[24px] rounded-l-[5px]']">
       <div
         v-if="!day.isLocked"
         class="absolute bottom-[1px] left-[2px] z-[2] w-[24px] text-center"
       >
         <GuestButton
+            v-if="!guestData"
           :dayID="dayID"
           :index="index"
         />
@@ -20,11 +21,18 @@
       v-if="!emptyDay"
       class="z-[1] flex flex-1 flex-col"
     >
-      <Slots
-        v-if="day.slotsEnabled"
-        :weekID="weekID"
-        :dayID="dayID"
-      />
+      <div class="flex items-center px-[15px] border-b-[2px] h-[54px]">
+        <span class="inline-block mr-2 font-bold text-[11px] tracking-[1.5px] leading-4 uppercase text-primary">
+          {{ t('dashboard.slot.timeslot') }}
+        </span>
+        <Slots
+          v-if="day.slotsEnabled"
+          class="inline-block"
+          :weekID="weekID"
+          :dayID="dayID"
+          :day="day"
+        />
+      </div>
       <div
         v-for="(meal, mealID) in day.meals"
         :key="mealID"
@@ -35,12 +43,16 @@
           :weekID="weekID"
           :dayID="dayID"
           :mealID="mealID"
+          :day="day"
+          :meal="meal"
         />
         <MealData
           v-else
           :weekID="weekID"
           :dayID="dayID"
           :mealID="mealID"
+          :day="day"
+          :meal="meal"
         />
       </div>
     </div>
@@ -68,10 +80,12 @@ const { t, locale } = useI18n()
 const props = defineProps([
     'weekID',
     'dayID',
-    'index'
+    'index',
+    'guestData'
 ])
 
-const day = dashboardStore.getDay(props.weekID, props.dayID)
+const day = props.guestData ? props.guestData : dashboardStore.getDay(props.weekID, props.dayID)
 const weekday = computed(() => translateWeekday(day.date, locale))
 const emptyDay = Object.keys(day.meals).length === 0
+
 </script>

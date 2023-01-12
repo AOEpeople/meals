@@ -40,7 +40,8 @@
     "new": "new",
     "print": "Today's Participations",
     "slot": {
-      "auto": "Autoselect next free slot"
+      "timeslot": "Timeslot",
+      "auto": "Autoselect"
     },
     "guest": "Copied to clipboard!"
   },
@@ -49,9 +50,12 @@
   },
   "guest": {
     "form": {
-      "firstname": "Firstname",
-      "lastname": "Lastname",
-      "company": "Company"
+      "firstname": "First name",
+      "firstnamePlaceholder": "Your first name",
+      "lastname": "Last name",
+      "lastnamePlaceholder": "Your last name",
+      "company": "Company",
+      "companyPlaceholder": "Your company"
     },
     "submit": "Book meals",
     "data_error": "Invalid Invitation.",

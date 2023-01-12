@@ -40,7 +40,8 @@
     "new": "neu",
     "print": "Heutige Teilnehmer",
     "slot": {
-      "auto": "Autoselektion nächster freier Slot"
+      "timeslot": "Zeitfenster",
+      "auto": "Autoselektion"
     },
     "guest": "In die Zwischenablage kopiert!"
   },
@@ -50,8 +51,11 @@
   "guest": {
     "form": {
       "firstname": "Vorname",
+      "firstnamePlaceholder": "Dein Vorname",
       "lastname": "Nachname",
-      "company": "Betrieb"
+      "lastnamePlaceholder": "Dein Nachname",
+      "company": "Betrieb",
+      "companyPlaceholder": "Dein Betrieb"
     },
     "submit": "Gerichte buchen",
     "data_error": "Diese Einladung ist leider ungültig.",

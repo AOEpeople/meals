@@ -4,14 +4,14 @@
     :result="result"
   />
   <div v-else>
-    <div class="mx-4">
-      <h2>{{ t('guest.title') }}</h2>
-      <p class="whitespace-pre-line">
+    <div>
+      <h2 class="text-primary">{{ t('guest.title') }} | {{ localeDate }}</h2>
+      <p class="whitespace-pre-line text-[18px] leading-[24px] text-primary-1">
         {{ t('guest.description') }}
       </p>
     </div>
-    <GuestSelection
-      :invitation="invitation"
+    <Day
+      :guestData="invitation"
     />
     <GuestForm
       v-model:firstName="form.firstName"
@@ -32,16 +32,15 @@ import {ref, computed} from 'vue'
 import {useJoinMealGuest} from '@/api/postJoinMealGuest'
 import {useI18n} from 'vue-i18n'
 import GuestCompletion from '@/components/guest/GuestCompletion.vue'
-import GuestSelection from '@/components/guest/GuestSelection.vue'
 import GuestForm from '@/components/guest/GuestForm.vue'
+import Day from '@/components/dashboard/Day.vue'
 
 const progress = useProgress().start()
 const route = useRoute()
 const { invitation, error } = await useInvitationData(route.params.hash)
 const result = ref(error.value === true ? 'data_error' : '')
 const { receive } = useEventsBus()
-const { t } = useI18n()
-
+const { t, locale } = useI18n()
 const form = ref({
   firstName: '',
   lastName: '',
@@ -50,7 +49,6 @@ const form = ref({
   chosenMeals: [],
   combiDishes: []
 })
-
 const filled = computed(() =>
     form.value.firstName !== ''
     && form.value.lastName !== ''
@@ -74,6 +72,9 @@ receive('guestChosenSlot', (slot) => {
 receive('guestChosenCombi', (dishes) => {
   form.value.combiDishes = dishes
 })
+
+const date = new Date(invitation.value.date.date)
+const localeDate = computed(() => date.toLocaleDateString(locale.value, { weekday: 'long', month: 'numeric', day: 'numeric' }))
 
 async function submitForm() {
   if (filled.value) {

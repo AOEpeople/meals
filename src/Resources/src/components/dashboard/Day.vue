@@ -27,7 +27,6 @@
         </span>
         <Slots
           v-if="day.slotsEnabled"
-          class="inline-block"
           :dayID="dayID"
           :day="day"
         />

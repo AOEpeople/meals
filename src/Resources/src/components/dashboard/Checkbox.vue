@@ -26,6 +26,7 @@ import { useCancelOffer } from '@/api/postCancelOffer'
 import { dashboardStore } from '@/stores/dashboardStore'
 import { CheckIcon } from '@heroicons/vue/solid'
 import CombiModal from '@/components/dashboard/CombiModal.vue'
+import useEventsBus from "tools/eventBus";
 
 const props = defineProps(['weekID', 'dayID', 'mealID', 'variationID', 'meal', 'day'])
 
@@ -39,9 +40,10 @@ if (props.variationID) {
   meal = props.meal ? props.meal : dashboardStore.getMeal(props.weekID, props.dayID, props.mealID)
   mealId = props.mealID
 }
-console.log(props.meal)
+
 const open = ref(false)
 const isParticipating = computed(() => meal.isParticipating !== null)
+const isCombiBox = props.day.meals[props.mealID].dishSlug === 'combined-dish'
 
 const checkboxCSS = computed(() => {
   let cssResult = 'rounded-md h-[30px] w-[30px] xl:h-[20px] xl:w-[20px] '
@@ -75,12 +77,15 @@ const checkboxCSS = computed(() => {
 })
 
 async function handle() {
+  // Meal is not locked
   if(meal.mealState === 'open' || meal.mealState === 'tradeable') {
+
+    // User is participating
     if(isParticipating.value) {
       await leaveMeal()
     } else {
       let slugs = [meal.dishSlug]
-      if(slugs[0] === 'combined-dish') {
+      if(isCombiBox) {
         slugs = getDishSlugs()
         if(slugs === -1) return
       }
@@ -93,10 +98,6 @@ async function handle() {
       await cancelOffer()
     }
   }
-}
-
-async function handleGuest() {
-
 }
 
 function getDishSlugs() {
@@ -116,29 +117,46 @@ function getDishSlugs() {
 }
 
 async function joinMeal(dishSlugs) {
-  let data = {
-    mealID: mealId,
-    dishSlugs: dishSlugs,
-    slotID: day.activeSlot
-  }
+  // is a guest component
+  if (!props.dayID) {
+    const { emit } = useEventsBus()
+    if (isCombiBox) emit('guestChosenCombi', dishSlugs)
+    emit('guestChosenMeals', props.mealID)
+    meal.isParticipating = -1
+  } else {
+    let data = {
+      mealID: mealId,
+      dishSlugs: dishSlugs,
+      slotID: day.activeSlot
+    }
 
-  const { response, error } = await useJoinMeal(JSON.stringify(data))
-  if (error.value === false) {
-    day.activeSlot = response.value.slotId
-    meal.isParticipating = response.value.participantId
-    meal.mealState = response.value.mealState
+    const { response, error } = await useJoinMeal(JSON.stringify(data))
+    if (error.value === false) {
+      day.activeSlot = response.value.slotId
+      meal.isParticipating = response.value.participantId
+      meal.mealState = response.value.mealState
+    }
   }
 }
 
 async function leaveMeal() {
-  let data = {
-    mealId: mealId
-  }
-
-  const { response, error } = await useLeaveMeal(JSON.stringify(data))
-  if (error.value === false) {
-    day.activeSlot = response.value.slotId
+  // is a guest component
+  if (!props.dayID) {
+    const { emit } = useEventsBus()
+    const dishSlugs = getDishSlugs()
+    if (isCombiBox) emit('guestChosenCombi', dishSlugs)
+    emit('guestChosenMeals', props.mealID)
     meal.isParticipating = null
+  } else {
+    let data = {
+      mealId: mealId
+    }
+
+    const {response, error} = await useLeaveMeal(JSON.stringify(data))
+    if (error.value === false) {
+      day.activeSlot = response.value.slotId
+      meal.isParticipating = null
+    }
   }
 }
 

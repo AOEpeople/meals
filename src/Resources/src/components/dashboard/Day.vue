@@ -6,7 +6,7 @@
         class="absolute bottom-[1px] left-[2px] z-[2] w-[24px] text-center"
       >
         <GuestButton
-            v-if="!guestData"
+          v-if="!guestData"
           :dayID="dayID"
           :index="index"
         />
@@ -21,14 +21,13 @@
       v-if="!emptyDay"
       class="z-[1] flex flex-1 flex-col"
     >
-      <div class="flex items-center px-[15px] border-b-[2px] h-[54px]">
-        <span class="inline-block mr-2 font-bold text-[11px] tracking-[1.5px] leading-4 uppercase text-primary">
+      <div class="flex h-[54px] items-center border-b-[2px] px-[15px]">
+        <span class="mr-2 inline-block text-[11px] font-bold uppercase leading-4 tracking-[1.5px] text-primary">
           {{ t('dashboard.slot.timeslot') }}
         </span>
         <Slots
           v-if="day.slotsEnabled"
           class="inline-block"
-          :weekID="weekID"
           :dayID="dayID"
           :day="day"
         />

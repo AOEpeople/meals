@@ -5,7 +5,9 @@
   />
   <div v-else>
     <div>
-      <h2 class="text-primary">{{ t('guest.title') }} | {{ localeDate }}</h2>
+      <h2 class="text-primary">
+        {{ t('guest.title') }} | {{ localeDate }}
+      </h2>
       <p class="whitespace-pre-line text-[18px] leading-[24px] text-primary-1">
         {{ t('guest.description') }}
       </p>

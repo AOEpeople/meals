@@ -1,10 +1,14 @@
 <template>
   <Listbox
+    v-slot="{ open }"
     v-model="selectedSlot"
     :disabled="disabled"
   >
     <div class="relative">
-      <ListboxButton class="focus-visible:ring-offset-orange-300 relative flex h-8 w-64 cursor-default items-center rounded-3xl border bg-white pr-10 pl-3 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2">
+      <ListboxButton
+        :class="open ? 'rounded-t-2xl border-x border-t' : 'rounded-3xl border'"
+        class="focus-visible:ring-offset-orange-300 relative flex h-8 w-64 cursor-default items-center border-[#B4C1CE] bg-white pr-10 pl-4 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2"
+      >
         <span class="text-gray block truncate text-note">
           {{ selectedSlot.slug === 'auto' ? t('dashboard.slot.auto') : selectedSlot.title }}
           <span v-if="selectedSlot.limit !== 0">
@@ -14,51 +18,45 @@
         <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
           <ChevronDownIcon
             class="h-5 w-5 text-gray-400"
+            :class="open ? 'rotate-180 transform' : ''"
             aria-hidden="true"
           />
         </span>
       </ListboxButton>
-
-      <transition
-        leave-active-class="transition duration-100 ease-in"
-        leave-from-class="opacity-100"
-        leave-to-class="opacity-0"
+      <!--      <transition
+        enter-active-class="transition duration-100 ease-out"
+        enter-from-class="transform -translate-y-2"
+        enter-to-class="transform translate-y-0"
+        leave-active-class="transition duration-75 ease-out"
+        leave-from-class="transform translate-y-0"
+        leave-to-class="transform -translate-y-2"
+      >-->
+      <ListboxOptions
+        class="absolute -mt-[1px] max-h-60 w-full overflow-auto rounded-b-2xl border-x border-b border-[#B4C1CE] bg-white text-note shadow-lg focus:outline-none sm:text-sm"
       >
-        <ListboxOptions class="absolute max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-note shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
-          <template v-for="slot in day.slots">
-            <ListboxOption
-              v-if="slot.id !== 0 || !isParticipating"
-              v-slot="{ active, selected }"
-              :key="slot.slug"
-              :value="slot"
-              as="template"
+        <template v-for="slot in day.slots">
+          <ListboxOption
+            v-if="slot.id !== 0 || !isParticipating"
+            v-slot="{ active, selected }"
+            :key="slot.slug"
+            :value="slot"
+            as="template"
+          >
+            <li
+              :class="selected ? 'bg-[#F4F4F4]' : ''"
+              class="pl-4"
             >
-              <li
-                :class="[
-                  active ? 'bg-amber-100 text-amber-900 cursor-pointer' : 'text-gray-900',
-                  'relative cursor-default select-none py-2 pl-10 pr-4',
-                ]"
-              >
-                <span :class="[selected ? 'font-medium' : 'font-normal', 'block truncate text-note']">
-                  {{ slot.slug === 'auto' ? t('dashboard.slot.auto') : slot.title }}
-                  <span v-if="slot.limit !== 0">
-                    {{ '( ' + slot.count + ' / ' + slot.limit + ' )' }}
-                  </span>
+              <span :class="[selected ? 'font-medium' : 'font-normal', 'block truncate text-note py-2']">
+                {{ slot.slug === 'auto' ? t('dashboard.slot.auto') : slot.title }}
+                <span v-if="slot.limit !== 0">
+                  {{ '( ' + slot.count + ' / ' + slot.limit + ' )' }}
                 </span>
-                <span
-                  v-if="selected"
-                  class="absolute inset-y-0 left-0 flex items-center pl-1 text-amber-600"
-                >
-                  <CheckIcon
-                    class="h-5 w-5"
-                    aria-hidden="true"
-                  />
-                </span>
-              </li>
-            </ListboxOption>
-          </template>
-        </ListboxOptions>
-      </transition>
+              </span>
+            </li>
+          </ListboxOption>
+        </template>
+      </ListboxOptions>
+      <!-- </transition> -->
     </div>
   </Listbox>
 </template>
@@ -74,7 +72,7 @@ import {
 
 import {useI18n} from "vue-i18n";
 import {useUpdateSelectedSlot} from "@/api/postUpdateSelectedSlot";
-import { CheckIcon, ChevronDownIcon } from '@heroicons/vue/solid'
+import { ChevronDownIcon } from '@heroicons/vue/solid'
 import useEventsBus from "tools/eventBus";
 
 const props = defineProps([

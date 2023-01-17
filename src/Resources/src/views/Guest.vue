@@ -3,9 +3,12 @@
     v-if="result !== ''"
     :result="result"
   />
-  <div v-else>
+  <div
+    v-else
+    class="mx-4 xl:mx-0"
+  >
     <div>
-      <h2 class="text-primary">
+      <h2 class="text-primary text-center xl:text-left">
         {{ t('guest.title') }} | {{ localeDate }}
       </h2>
       <p class="whitespace-pre-line text-[18px] leading-[24px] text-primary-1">

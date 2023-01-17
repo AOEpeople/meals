@@ -34,7 +34,9 @@ Object.values(props.meals)
     .forEach((meal) => meal.variations ? hasVariations = true : '')
 
 function handle() {
+  // Is a combi meal
   if (isCombiBox) {
+    // has variations
     if (hasVariations) {
       open.value = true
     } else {

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Mealz\AccountingBundle\Controller\Payment;
 
 use App\Mealz\AccountingBundle\Entity\Transaction;
-use App\Mealz\AccountingBundle\Form\EcashPaymentAdminForm;
 use App\Mealz\AccountingBundle\Service\TransactionService;
 use App\Mealz\AccountingBundle\Service\Wallet;
 use App\Mealz\MealBundle\Controller\BaseController;
@@ -22,7 +21,7 @@ use Throwable;
 
 class EcashController extends BaseController
 {
-    public function getPaymentFormForProfile(Profile $profile, Wallet $wallet): Response
+    /* public function getPaymentFormForProfile(Profile $profile, Wallet $wallet): Response
     {
         // Default value for E-Cash payment overlay
         $balance = $wallet->getBalance($profile) * (-1);
@@ -43,7 +42,7 @@ class EcashController extends BaseController
         $renderedForm = $this->render($template, ['form' => $form->createView()]);
 
         return new Response($renderedForm->getContent());
-    }
+    } */
 
     /**
      * Triggers actions after a PayPal transaction (payment) is successfully completed.

@@ -16,7 +16,7 @@
       :key="dayID"
       :weekID="weekID"
       :dayID="dayID"
-      :index=d_index
+      :index="d_index"
       class="mb-[2.5rem] w-3/4"
     />
   </div>

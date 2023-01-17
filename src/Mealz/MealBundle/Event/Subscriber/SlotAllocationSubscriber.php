@@ -38,7 +38,6 @@ class SlotAllocationSubscriber implements EventSubscriberInterface
     {
         // do not publish if both slots are unrestricted (limit = 0)
         if ($this->eventInvolvesRestrictedSlot($event)) {
-
             $day = $event->getDay();
             $newSlot = $event->getSlot();
             $prevSlot = $event->getPreviousSlot();

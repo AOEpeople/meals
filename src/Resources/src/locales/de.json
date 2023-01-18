@@ -39,6 +39,7 @@
     "no_service": "Keine Angebote für diesen Tag.",
     "new": "neu",
     "print": "Heutige Teilnehmer",
+    "popover": "Jemand anderes kann jetzt\ndein Gericht nehmen.",
     "slot": {
       "timeslot": "Zeitfenster",
       "auto": "Autoselektion"

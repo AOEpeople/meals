@@ -19,7 +19,16 @@
         </p>
       </div>
     </div>
-    <div class="text-align-last flex flex-none basis-2/12 items-center justify-end">
+    <OfferPopover v-if="openPopover" />
+    <div
+      class="
+          text-align-last
+          flex
+          flex-none
+          basis-2
+          items-center
+          justify-end"
+    >
       <ParticipationCounter
         :meal="meal"
         :mealCSS="mealCSS"
@@ -38,16 +47,20 @@
 <script setup>
 import ParticipationCounter from "@/components/menuCard/ParticipationCounter.vue";
 import Checkbox from '@/components/dashboard/Checkbox.vue'
-import { useI18n } from "vue-i18n";
-import {computed} from "vue";
+import {useI18n} from "vue-i18n";
+import {computed, ref} from "vue";
 import {dashboardStore} from "@/stores/dashboardStore";
+import useEventsBus from "tools/eventBus.ts"
+import OfferPopover from "@/components/dashboard/OfferPopover.vue";
+
+const { receive } = useEventsBus()
 
 const props = defineProps([
   'weekID',
   'dayID',
   'mealID',
-    'meal',
-    'day'
+  'meal',
+  'day'
 ])
 
 const meal = props.meal ? props.meal : dashboardStore.getMeal(props.weekID, props.dayID, props.mealID)
@@ -80,6 +93,11 @@ const mealCSS = computed(() => {
   }
 })
 
+const openPopover = ref(true)
+
+receive("openOfferPanel_" + props.mealID, () => {
+  openPopover.value = false
+})
 </script>
 
 <style scoped>

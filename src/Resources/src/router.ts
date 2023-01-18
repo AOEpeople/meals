@@ -9,7 +9,7 @@ import Finance from "@/views/Finance.vue";
 import Balance from "@/views/Balance.vue";
 import Guest from "@/views/Guest.vue";
 import NotAllowed from "@/views/NotAllowed.vue";
-import PrintableList from "@/views/PrintableList.vue"
+import PrintableList from "@/views/PrintableList.vue";
 
 declare module 'vue-router' {
     interface RouteMeta {

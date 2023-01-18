@@ -39,6 +39,7 @@
     "no_service": "No Service this day.",
     "new": "new",
     "print": "Today's Participations",
+    "popover": "Someone else can\ntake your meal now.",
     "slot": {
       "timeslot": "Timeslot",
       "auto": "Autoselect"

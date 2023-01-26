@@ -8,7 +8,7 @@ import {Vue3ProgressPlugin} from '@marcoschulte/vue3-progress'
 import '../style/output.css'
 
 // Vue Components
-import App          from '@/App.vue'
+import App from '@/App.vue'
 
 // Translation
 import en from '@/locales/en.json'

@@ -5,7 +5,7 @@
       <span class="float-right contents text-note font-bold uppercase tracking-[1px] text-primary-1">
         {{ t('balance.old') }} {{ oldDateString }}:
         <span :class="[oldBalance >= 0 ? 'text-green' : 'text-red', 'whitespace-nowrap']">
-          € {{ oldBalanceString }}
+          {{ locale === 'en' ? '€' + oldBalanceString : oldBalanceString + '€' }}
         </span>
       </span>
     </div>
@@ -41,7 +41,7 @@
       <span class="float-right contents text-note font-bold uppercase tracking-[1px] text-primary-1">
         {{ t('balance.current') }}:
         <span :class="[balance >= 0 ? 'text-green' : 'text-red', 'whitespace-nowrap']">
-          € {{ balanceString }}
+          {{ locale === 'en' ? '€' + balanceString : balanceString + '€' }}
         </span>
       </span>
     </div>

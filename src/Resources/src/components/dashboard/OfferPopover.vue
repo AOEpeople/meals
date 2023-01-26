@@ -1,9 +1,9 @@
 <template>
   <div class="relative flex">
-    <div class="absolute bottom-[46px] z-10 h-auto w-auto rounded-[5px] bg-black/90 p-1 text-center">
-      <span class="whitespace-pre text-[11px] leading-[14px] text-white">{{ t('dashboard.popover') }}</span>
+    <div class="absolute z-10 inline-block h-auto w-[120px] rounded-[5px] bg-black/75 p-1 text-center leading-[14px]">
+      <span class="text-[11px] text-white">{{ t('dashboard.popover') }}</span>
     </div>
-    <div class="absolute left-[40px] h-0 w-0 border-x-[10px] border-t-[10px] border-black/90 border-x-transparent" />
+    <div class="absolute h-0 w-0 border-x-[10px] border-t-[10px] border-black/75 border-x-transparent" />
   </div>
 </template>
 <script setup>

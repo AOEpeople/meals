@@ -31,6 +31,7 @@ module.exports = {
             }
         ],
         'tailwindcss/no-custom-classname': 'off',
+        'tailwindcss/enforces-negative-arbitrary-values': 'off'
     },
     ignorePatterns: ['node_modules/', 'dist/', 'src/**/*.d.ts', '*.config.js', 'js/']
 }

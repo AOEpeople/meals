@@ -8,7 +8,7 @@
     class="mx-4 xl:mx-0"
   >
     <div>
-      <h2 class="text-primary text-center xl:text-left">
+      <h2 class="text-center text-primary xl:text-left">
         {{ t('guest.title') }} | {{ localeDate }}
       </h2>
       <p class="whitespace-pre-line text-[18px] leading-[24px] text-primary-1">
@@ -16,12 +16,16 @@
       </p>
     </div>
     <Day
+      :class="{'outline-2 outline-red': mealsMissing}"
       :guestData="invitation"
     />
     <GuestForm
       v-model:firstName="form.firstName"
       v-model:lastName="form.lastName"
       v-model:company="form.company"
+      :firstNameMissing="firstNameMissing"
+      :lastNameMissing="lastNameMissing"
+      :companyMissing="companyMissing"
       :filled="filled"
       @submitForm="submitForm"
     />
@@ -60,6 +64,10 @@ const filled = computed(() =>
     && form.value.company !== ''
     && form.value.chosenMeals.length !== 0
 );
+let firstNameMissing = false
+let lastNameMissing = false
+let companyMissing = false
+let mealsMissing = false
 
 receive('guestChosenMeals', (slug) => {
   const index = form.value.chosenMeals.indexOf(slug)
@@ -89,7 +97,16 @@ async function submitForm() {
     } else {
       result.value = "resolve_error"
     }
+  } else {
+    showFormErrors()
   }
+}
+
+function showFormErrors() {
+  firstNameMissing = form.value.firstName === ''
+  lastNameMissing = form.value.lastName === ''
+  companyMissing = form.value.company === ''
+  mealsMissing = form.value.chosenMeals.length === 0
 }
 
 progress.finish()

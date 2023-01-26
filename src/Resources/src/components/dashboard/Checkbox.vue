@@ -168,6 +168,8 @@ async function sendOffer() {
   const { error } = await useOfferMeal(JSON.stringify(data))
   if (error.value === false) {
     meal.mealState = 'offering'
+    const { emit } = useEventsBus()
+    emit("openOfferPanel_" + mealId)
   }
 }
 

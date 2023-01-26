@@ -20,6 +20,16 @@
         </p>
       </div>
     </div>
+    <transition
+      enter="transition-opacity ease-linear duration-300"
+      enter-from="opacity-0"
+      enter-to="opacity-100"
+      leave="transition-opacity ease-linear duration-300"
+      leave-from="opacity-100"
+      leave-to="opacity-0"
+    >
+      <OfferPopover v-if="openPopover" />
+    </transition>
     <div class="text-align-last flex flex-none basis-2/12 items-center justify-end">
       <ParticipationCounter
         :meal="variation"
@@ -41,8 +51,12 @@
 import ParticipationCounter from "@/components/menuCard/ParticipationCounter.vue";
 import Checkbox from '@/components/dashboard/Checkbox.vue'
 import { useI18n } from 'vue-i18n'
-import { computed } from 'vue'
+import {computed, ref} from 'vue'
 import {dashboardStore} from "@/stores/dashboardStore";
+import useEventsBus from "tools/eventBus.ts"
+import OfferPopover from "@/components/dashboard/OfferPopover.vue";
+
+const { receive } = useEventsBus()
 
 const { t, locale } = useI18n()
 
@@ -77,6 +91,13 @@ const mealCSS = computed(() => {
     }
   }
   return array
+})
+
+const openPopover = ref(false)
+
+receive("openOfferPanel_" + props.mealID, () => {
+  openPopover.value = true
+  setTimeout(() => openPopover.value = false, 5000)
 })
 
 </script>

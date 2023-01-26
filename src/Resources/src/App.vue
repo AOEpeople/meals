@@ -28,4 +28,8 @@ if (isAuthenticated) {
 .aoe-shadow {
   box-shadow: 0 4px 0 hsla(0,0%,100%,.46),0 15px 35px rgba(216,225,233,.8);
 }
+
+.btn-highlight-shadow {
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.25), 0 3px 0 #FF890E;
+}
 </style>

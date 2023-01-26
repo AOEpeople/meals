@@ -19,7 +19,17 @@
         </p>
       </div>
     </div>
-    <OfferPopover v-if="openPopover" />
+    <TransitionRoot
+      :show="openPopover"
+      enter="transition-opacity ease-linear duration-300"
+      enter-from="opacity-0"
+      enter-to="opacity-100"
+      leave="transition-opacity ease-linear duration-300"
+      leave-from="opacity-100"
+      leave-to="opacity-0"
+    >
+      <OfferPopover />
+    </TransitionRoot>
     <div
       class="
           text-align-last
@@ -52,6 +62,7 @@ import {computed, ref} from "vue";
 import {dashboardStore} from "@/stores/dashboardStore";
 import useEventsBus from "tools/eventBus.ts"
 import OfferPopover from "@/components/dashboard/OfferPopover.vue";
+import {TransitionRoot} from "@headlessui/vue";
 
 const { receive } = useEventsBus()
 
@@ -93,10 +104,11 @@ const mealCSS = computed(() => {
   }
 })
 
-const openPopover = ref(true)
+const openPopover = ref(false)
 
 receive("openOfferPanel_" + props.mealID, () => {
-  openPopover.value = false
+  openPopover.value = true
+  setTimeout(() => openPopover.value = false, 5000)
 })
 </script>
 

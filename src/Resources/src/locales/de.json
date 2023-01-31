@@ -7,7 +7,7 @@
   "Tuesday": "Dienstag",
   "Wednesday": "Mittwoch",
   "balance": {
-    "current": "Momentaner Kontostand",
+    "current": "Aktueller Kontostand",
     "old": "Kontostand vom",
     "transactions": "Transaktionen",
     "paypal": "PayPal Bezahlung",

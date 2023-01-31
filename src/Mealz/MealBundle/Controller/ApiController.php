@@ -32,7 +32,6 @@ class ApiController extends BaseController
     private ApiService $apiSrv;
     private OfferService $offerSrv;
     private GuestParticipationService $guestPartiSrv;
-    private string $paypalId;
 
     public function __construct(
         DishService $dishSrv,
@@ -41,8 +40,7 @@ class ApiController extends BaseController
         ParticipationService $participationSrv,
         ApiService $apiSrv,
         OfferService $offerSrv,
-        GuestParticipationService $guestPartiSrv,
-        string $paypalId
+        GuestParticipationService $guestPartiSrv
     ) {
         $this->dishSrv = $dishSrv;
         $this->slotSrv = $slotSrv;
@@ -51,7 +49,16 @@ class ApiController extends BaseController
         $this->apiSrv = $apiSrv;
         $this->offerSrv = $offerSrv;
         $this->guestPartiSrv = $guestPartiSrv;
-        $this->paypalId = $paypalId;
+    }
+
+    public function getEnvironmentVars(): JsonResponse
+    {
+        $response = [
+            "paypalId" => $_ENV["PAYPAL_ID"],
+            "mercureUrl" => $_ENV["MERCURE_PUBLIC_URL"]
+        ];
+
+        return new JsonResponse($response, 200);
     }
 
     /**
@@ -320,10 +327,5 @@ class ApiController extends BaseController
         }
 
         return new JsonResponse($guestData, 200);
-    }
-
-    public function getPaypalId(): JsonResponse
-    {
-        return new JsonResponse($this->paypalId, 200);
     }
 }

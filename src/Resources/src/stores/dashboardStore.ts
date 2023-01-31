@@ -1,7 +1,7 @@
 import {Store} from '@/stores/store';
 import {Dashboard, Day, Meal, Slot, useDashboardData, Week} from '@/api/getDashboardData';
 import {Dictionary} from "../../types/types";
-import {mercureReceiver} from "@/tools/mercureReciever";
+import {mercureReceiver} from "tools/mercureReceiver";
 
 class DashboardStore extends Store<Dashboard> {
 
@@ -15,7 +15,6 @@ class DashboardStore extends Store<Dashboard> {
         const { dashboardData } = await useDashboardData()
         if(dashboardData.value){
             this.state = dashboardData.value
-            console.log(this.state)
         } else {
             console.log('could not receive DashboardData')
         }

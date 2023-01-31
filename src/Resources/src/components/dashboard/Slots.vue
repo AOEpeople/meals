@@ -4,10 +4,12 @@
     v-model="selectedSlot"
     :disabled="disabled"
   >
-    <div class="relative">
+    <div
+      class="relative"
+    >
       <ListboxButton
-        :class="open ? 'rounded-t-2xl border-x border-t' : 'rounded-3xl border'"
-        class="focus-visible:ring-offset-orange-300 relative flex h-8 w-64 cursor-default items-center border-[#B4C1CE] bg-white pr-10 pl-4 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2"
+        :class="[open ? 'rounded-t-2xl border-x border-t' : 'rounded-3xl border', disabled ? '' : 'cursor-pointer']"
+        class="focus-visible:ring-offset-orange-300 relative flex h-8 w-64 items-center border-[#B4C1CE] bg-white pr-10 pl-4 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2"
       >
         <span class="text-gray block truncate text-note">
           {{ selectedSlot.slug === 'auto' ? t('dashboard.slot.auto') : selectedSlot.title }}
@@ -43,8 +45,8 @@
             as="template"
           >
             <li
-              :class="selected ? 'bg-[#F4F4F4]' : ''"
-              class="pl-4"
+              :class="selected ? 'bg-[#F4F4F4]' : 'hover:bg-[#FAFAFA]'"
+              class="cursor-pointer pl-4"
             >
               <span :class="[selected ? 'font-medium' : 'font-normal', 'block truncate text-note py-2']">
                 {{ slot.slug === 'auto' ? t('dashboard.slot.auto') : slot.title }}

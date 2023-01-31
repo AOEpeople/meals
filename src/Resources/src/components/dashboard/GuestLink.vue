@@ -25,7 +25,7 @@ if (error.value === false) {
 }
 
 async function fallbackCopyTextToClipboard(text) {
-  var textArea = document.createElement("textarea");
+  let textArea = document.createElement("textarea");
   textArea.value = text;
 
   // Avoid scrolling to bottom
@@ -37,16 +37,11 @@ async function fallbackCopyTextToClipboard(text) {
   textArea.focus();
   textArea.select();
 
-  try {
-    var successful = document.execCommand('copy');
-    var msg = successful ? 'successful' : 'unsuccessful';
-    console.log('Fallback: Copying text command was ' + msg);
-  } catch (err) {
-    console.error('Fallback: Oops, unable to copy', err);
-  }
+  document.execCommand('copy');
 
   document.body.removeChild(textArea);
 }
+
 async function copyTextToClipboard(text) {
   if (!navigator.clipboard) {
     await fallbackCopyTextToClipboard(text);
@@ -60,7 +55,3 @@ async function copyTextToClipboard(text) {
 }
 
 </script>
-
-<style scoped>
-
-</style>

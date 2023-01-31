@@ -31,7 +31,7 @@ import { balanceStore } from "@/stores/balanceStore";
 import { transactionStore } from "@/stores/transactionStore";
 import { useI18n } from "vue-i18n";
 import {ref} from "vue";
-import {usePaypal} from "@/api/getPaypal";
+import getEnv from "tools/getEnv";
 
 export default {
   components: {RadarSpinner},
@@ -53,7 +53,7 @@ export default {
 
     const { locale } = useI18n();
 
-    const { id } = await usePaypal()
+    const ENV = await getEnv()
 
     function formatCurrency(total) {
       let neg = false;
@@ -65,7 +65,7 @@ export default {
     }
 
     loadScript({
-      "client-id": id,
+      "client-id": ENV.paypalId,
       currency: "EUR",
     })
         .then((paypal) => {

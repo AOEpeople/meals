@@ -5,7 +5,7 @@
       <span class="float-right contents text-note font-bold uppercase tracking-[1px] text-primary-1">
         {{ t('balance.old') }} {{ oldDateString }}:
         <span :class="[oldBalance >= 0 ? 'text-green' : 'text-red', 'whitespace-nowrap']">
-          {{ locale === 'en' ? '€' + oldBalanceString : oldBalanceString + '€' }}
+          {{ locale === 'en' ? '€ ' + oldBalanceString : oldBalanceString + ' €' }}
         </span>
       </span>
     </div>
@@ -41,7 +41,7 @@
       <span class="float-right contents text-note font-bold uppercase tracking-[1px] text-primary-1">
         {{ t('balance.current') }}:
         <span :class="[balance >= 0 ? 'text-green' : 'text-red', 'whitespace-nowrap']">
-          {{ locale === 'en' ? '€' + balanceString : balanceString + '€' }}
+          {{ locale === 'en' ? '€ ' + balanceString : balanceString + ' €' }}
         </span>
       </span>
     </div>
@@ -79,11 +79,11 @@ let tableLabels = {
   de: ['Datum', 'Beschreibung', 'Menge']
 };
 
-let dateOptions = { month: "short", day: "numeric", year: "numeric" }
+let dateOptions = { month: "long", day: "numeric", year: "numeric" }
 
 let oldDate = new Date()
 oldDate.setDate(oldDate.getDate() - 28)
-const oldDateString = oldDate.toLocaleDateString(locale.value, dateOptions)
+const oldDateString = computed(() => oldDate.toLocaleDateString(locale.value, dateOptions))
 
 progress.finish()
 </script>

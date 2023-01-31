@@ -152,9 +152,9 @@ module.exports = function(env, argv) {
             }),
             new webpack.DefinePlugin({
                 'process.browser': true,
-                'process.env.MODE': JSON.stringify(argv.mode),
-                'process.env.APP_BASE_URL': JSON.stringify(process.env.APP_BASE_URL),
-                'process.env.MERCURE_PUBLIC_URL': JSON.stringify(process.env.MERCURE_PUBLIC_URL),
+                'process.env.MODE': argv.mode,
+                'process.env.APP_BASE_URL': env.platform === process.env.APP_BASE_URL,
+                'process.env.MERCURE_PUBLIC_URL': process.env.MERCURE_PUBLIC_URL,
                 __VUE_OPTIONS_API__: true,
                 __VUE_PROD_DEVTOOLS__: true,
                 __VUE_I18N_FULL_INSTALL__: true,

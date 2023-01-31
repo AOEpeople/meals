@@ -13,6 +13,7 @@ import Footer from '@/components/Footer.vue'
 import Content from '@/components/Content.vue'
 
 import { balanceStore } from '@/stores/balanceStore'
+import { useEnvs } from "@/api/getEnvironmentals";
 
 const isAuthenticated = sessionStorage.getItem('auth') === 'granted'
 if (isAuthenticated) {

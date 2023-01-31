@@ -17,11 +17,6 @@ MealzMealBundle_api_transactions:
   defaults: { _controller: App\Mealz\MealBundle\Controller\ApiController::getTransactionData }
   methods: [GET]
 
-MealzMealBundle_api_paypal:
-  path: /api/paypal-id
-  defaults: { _controller: App\Mealz\MealBundle\Controller\ApiController::getPaypalId }
-  methods: [ GET ]
-
 MealzMealBundle_api_timeslots:
   path: /api/timeslots
   defaults: { _controller: App\Mealz\MealBundle\Controller\ApiController::getTimeSlotData }
@@ -31,6 +26,11 @@ MealzMealBundle_api_update-slot:
   path: /api/update-slot
   defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::updateSlot }
   methods: [POST]
+
+MealzMealBundle_api_environmentals:
+  path: /api/environmentals
+  defaults: { _controller: App\Mealz\MealBundle\Controller\ApiController::getEnvironmentVars }
+  methods: [GET]
 
 MealzMealBundle_home:
     path:  /

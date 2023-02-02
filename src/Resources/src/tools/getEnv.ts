@@ -5,7 +5,6 @@ export default async function getEnv(): Promise<Env | undefined> {
     if (rawEnvs !== null) {
         return JSON.parse(rawEnvs) as Env
     } else {
-
         const { env, error } = await useEnvs();
         if (error.value) {
             console.log("couldn't receive Environmentals")

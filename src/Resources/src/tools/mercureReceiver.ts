@@ -55,7 +55,6 @@ class MercureReceiver {
 
     private async configureMealUpdateHandlers(): Promise<void> {
         const ENV = await getEnv()
-
         const eventSrc = new EventSource(ENV?.mercureUrl + '?topic=participation-updates&topic=meal-offer-updates&topic=slot-allocation-updates', {withCredentials: true})
 
         eventSrc.addEventListener('participationUpdate', (event: MessageEvent) => {

@@ -53,12 +53,10 @@ class ApiController extends BaseController
 
     public function getEnvironmentVars(): JsonResponse
     {
-        $response = [
-            "paypalId" => $_ENV["PAYPAL_ID"],
-            "mercureUrl" => $_ENV["MERCURE_PUBLIC_URL"]
-        ];
-
-        return new JsonResponse($response, 200);
+        return new JsonResponse([
+            'paypalId' => $this->getParameter('app.paypal.client_id'),
+            'mercureUrl' => $this->getParameter('app.pubsub.subscribe_url')
+        ], 200);
     }
 
     /**

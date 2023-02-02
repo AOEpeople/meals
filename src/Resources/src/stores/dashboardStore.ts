@@ -19,7 +19,7 @@ class DashboardStore extends Store<Dashboard> {
             console.log('could not receive DashboardData')
         }
 
-        mercureReceiver.init()
+        await mercureReceiver.init()
     }
 
     public getWeek(weekID: number | string): Week | undefined {

@@ -113,7 +113,7 @@ const router = createRouter({
             name: 'PrintableList',
             component: PrintableList,
             meta: {
-                allowedRoles: ['ROLE_KITCHEN_STAFF', 'ROLE_USER', 'ROLE_ADMIN', 'ROLE_FINANCE']
+                allowedRoles: ['ROLE_KITCHEN_STAFF', 'ROLE_ADMIN']
             }
         }
     ],

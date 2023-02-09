@@ -8,6 +8,18 @@
     </p>
   </div>
   <div
+    v-if="index === 1"
+    class="mb-20 text-center text-[18px] tracking-[1.5px] text-[#acbdc7]"
+  >
+    <img
+      class="mx-auto mb-8 mt-16 block"
+      src="../../../images/empty_week.png"
+      alt="no week"
+    >
+    <span>{{ t('dashboard.no_week') }}</span>
+  </div>
+  <div
+    v-else
     id="weekly-menu"
     class="grid"
   >

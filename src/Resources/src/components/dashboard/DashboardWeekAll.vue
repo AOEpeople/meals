@@ -1,8 +1,11 @@
 <template>
-  <div class="inline-flex divide-x-2">
+  <div
+    class="inline-flex divide-x-2"
+  >
     <div
       v-for="(week, weekID, index) in weeks"
       :key="index"
+      class="w-[585px] flex-initial"
     >
       <Week
         :weekID="weekID"

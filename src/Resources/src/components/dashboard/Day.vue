@@ -87,3 +87,9 @@ const weekday = computed(() => translateWeekday(day.date, locale))
 const emptyDay = Object.keys(day.meals).length === 0
 
 </script>
+
+<style>
+.day-shadow {
+  box-shadow: 0 4px 0 hsla(0,0%,100%,.46),0 15px 35px rgba(216,225,233,.8);
+}
+</style>

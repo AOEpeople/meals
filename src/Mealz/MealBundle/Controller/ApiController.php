@@ -55,7 +55,7 @@ class ApiController extends BaseController
     {
         return new JsonResponse([
             'paypalId' => $this->getParameter('app.paypal.client_id'),
-            'mercureUrl' => $this->getParameter('app.pubsub.subscribe_url')
+            'mercureUrl' => $this->getParameter('app.pubsub.subscribe_url'),
         ], 200);
     }
 

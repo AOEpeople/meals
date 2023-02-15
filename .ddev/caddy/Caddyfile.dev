@@ -9,8 +9,18 @@
 
 {$SERVER_ADDRESS}
 
+log {
+    format filter {
+        wrap console
+        fields {
+            uri query {
+                replace authorization REDACTED
+            }
+        }
+    }
+}
+
 route {
-    redir / /.well-known/mercure/ui/
     encode zstd gzip
 
     mercure {
@@ -22,10 +32,10 @@ route {
         subscriber_jwt {env.MERCURE_SUBSCRIBER_JWT_KEY} {env.MERCURE_SUBSCRIBER_JWT_ALG}
 
         cors_origins {$MERCURE_ALLOWED_ORIGINS}
-        publish_origins {$MERCURE_ALLOWED_PUBLISH_ORIGINS}
+        publish_origins *
     }
 
+    redir / /.well-known/mercure/ui/
     respond /healthz 200
-
     respond "Not Found" 404
 }

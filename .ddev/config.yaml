@@ -31,7 +31,7 @@ web_environment:
 - DB_USER=db
 - DB_PASS=db
 - DB_VERS=5.7
-- MERCURE_JWT_SECRET=testing
+- MERCURE_JWT_SECRET=testing-testing-testing-testing!
 - MERCURE_URL=http://mercure:8080/.well-known/mercure
 - MERCURE_PUBLIC_URL=https://meals.test:8081/.well-known/mercure
 nodejs_version: "16"

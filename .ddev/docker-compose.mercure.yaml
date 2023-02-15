@@ -2,16 +2,16 @@ version: '3.6'
 
 services:
   mercure:
-    image: dunglas/mercure:v0.13
+    image: dunglas/mercure:v0.14
     container_name: ddev-${DDEV_SITENAME}-mercure
     restart: unless-stopped
     environment:
       MERCURE_ALLOWED_ORIGINS: https://meals.test
       MERCURE_ALLOWED_PUBLISH_ORIGINS: web
       MERCURE_PUBLISHER_JWT_ALG: HS256
-      MERCURE_PUBLISHER_JWT_KEY: testing
+      MERCURE_PUBLISHER_JWT_KEY: testing-testing-testing-testing!
       MERCURE_SUBSCRIBER_JWT_ALG: HS256
-      MERCURE_SUBSCRIBER_JWT_KEY: testing
+      MERCURE_SUBSCRIBER_JWT_KEY: testing-testing-testing-testing!
       HTTP_EXPOSE: '8080:8080'
       HTTPS_EXPOSE: '8081:8080'
       SERVER_ADDRESS: 'http://meals.test:8080, http://mercure:8080'

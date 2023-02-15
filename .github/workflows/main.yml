@@ -263,7 +263,7 @@ jobs:
           IMAGE: ${{ needs.buildImages.outputs.image }}
         run: |
           docker pull $IMAGE
-          echo "::set-output name=digest::$(docker inspect $IMAGE | jq -r '.[0].RepoDigests[0]' | cut -d'@' -f2)"
+          echo "name=digest=$(docker inspect $IMAGE | jq -r '.[0].RepoDigests[0]' | cut -d'@' -f2) >> $GITHUB_OUTPUT"
       - name: Delete docker image artifact
         uses: geekyeggo/delete-artifact@v2
         with:

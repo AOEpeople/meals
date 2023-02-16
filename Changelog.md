@@ -1,5 +1,20 @@
 # Changelog
 
+## Version v2.3.4 (2023-02-16)
+
+### Fixes
+
+- Fix path (936e7802)
+- Fix digiest output (71973347)
+- Fix code style messages (3b724a78)
+- Fix digest output (26530052)
+
+### Other
+
+- run crond (1bc125ca)
+- add cronjob (54022abf)
+- Add keep-alive subscriber (de3c035a)
+
 ## Version v2.3.3 (2023-02-15)
 
 ### Chores and tidying

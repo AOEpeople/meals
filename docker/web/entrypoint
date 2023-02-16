@@ -7,4 +7,6 @@ echo "Check database"
 # execute system initialization scripts
 "${APP_ROOT}/scripts/init.sh"
 
+crond
+
 exec docker-php-entrypoint "$@"

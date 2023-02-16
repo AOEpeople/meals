@@ -65,7 +65,7 @@ RUN \
     # set non php files in public directory as readonly
     && find public -type f -not -name "*.php" -exec chmod 644 '{}' \+
 
-RUN crontab -l | { cat; echo "*/1 * * * * /var/www/html/bin/console meals:keep-alive-connection 2>&1"; } | crontab -
+RUN crontab -l | { cat; echo "*/1 * * * * /var/www/meals/bin/console meals:keep-alive-connection 2>&1"; } | crontab -
 
 USER www-data:www-data
 ENTRYPOINT ["/container/entrypoint"]

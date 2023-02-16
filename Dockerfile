@@ -16,6 +16,7 @@ FROM php:7.4-fpm-alpine
 RUN apk --no-cache add \
         icu-dev \
         unzip \
+        busybox-suid \
     && docker-php-ext-install bcmath calendar intl opcache pdo_mysql  \
     && mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
@@ -65,7 +66,7 @@ RUN \
     # set non php files in public directory as readonly
     && find public -type f -not -name "*.php" -exec chmod 644 '{}' \+
 
-RUN echo "* * * * * /var/www/meals/bin/console meals:keep-alive-connection 2>&1" >> /etc/crontabs/root
+RUN echo "* * * * * /var/www/meals/bin/console meals:keep-alive-connection > /dev/stdout" >> /etc/crontabs/www-data
 
 USER www-data:www-data
 ENTRYPOINT ["/container/entrypoint"]

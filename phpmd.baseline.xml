@@ -35,4 +35,6 @@
   <violation rule="PHPMD\Rule\Design\LongMethod" file="src/Resources/node_modules/easy-autocomplete/test/core/remote/countries.php"/>
   <violation rule="PHPMD\Rule\Design\CountInLoopExpression" file="src/Resources/node_modules/flatted/php/flatted.php"/>
   <violation rule="PHPMD\Rule\UnusedPrivateMethod" file="src/Resources/node_modules/flatted/php/flatted.php" method="asString"/>
+  <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Mealz/MealBundle/Command/KeepAliveConnectionCommand.php"/>
+  <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Mealz/MealBundle/Event/Subscriber/KeepAliveConnectionSubscriber.php"/>
 </phpmd-baseline>

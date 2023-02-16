@@ -8,5 +8,4 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class KeepAliveConnectionEvent extends Event
 {
-
 }

@@ -27,11 +27,11 @@
 <script>
 import { RadarSpinner } from 'epic-spinners'
 import { loadScript } from "@paypal/paypal-js";
-import { balanceStore } from "@/stores/balanceStore";
 import { transactionStore } from "@/stores/transactionStore";
 import { useI18n } from "vue-i18n";
 import {ref} from "vue";
-import getEnv from "tools/getEnv";
+import {userDataStore} from "@/stores/userDataStore";
+import {environmentStore} from "@/stores/environmentStore";
 
 export default {
   components: {RadarSpinner},
@@ -42,7 +42,7 @@ export default {
   },
   data() {
     return {
-      balance: parseFloat(sessionStorage.getItem('balance')),
+      balance: userDataStore.getState().balance,
       locale: ref('en'),
       loaded: ref(false)
     }
@@ -52,8 +52,6 @@ export default {
     const vm = this;
 
     const { locale } = useI18n();
-
-    const ENV = await getEnv()
 
     function formatCurrency(total) {
       let neg = false;
@@ -65,7 +63,7 @@ export default {
     }
 
     loadScript({
-      "client-id": ENV.paypalId,
+      "client-id": environmentStore.getState().paypalId,
       currency: "EUR",
     })
         .then((paypal) => {
@@ -124,13 +122,13 @@ export default {
                         'content-type': 'application/json'
                       },
                       body: JSON.stringify([
-                        { 'name': 'ecash[profile]', 'value': sessionStorage.getItem('user') },
+                        { 'name': 'ecash[profile]', 'value': userDataStore.getState().user },
                         { 'name': 'ecash[orderid]', 'value': data.orderID },
                         { 'name': 'ecash[amount]', 'value': formatCurrency(amountField.value) }
                       ])
                     }).then((response) => {
                       if(response.ok) {
-                        balanceStore.adjustAmount(parseFloat(formatCurrency(amountField.value)));
+                        userDataStore.adjustBalance(parseFloat(formatCurrency(amountField.value)));
                         transactionStore.fillStore();
                         vm.$emit('closePanel');
                       }

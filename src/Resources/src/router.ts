@@ -1,15 +1,17 @@
-import {createRouter, createWebHistory} from "vue-router";
-import Dashboard from       "@/views/Dashboard.vue";
-import Menu from            "@/views/Menu.vue";
-import Dishes from          "@/views/Dishes.vue";
-import Categories from      "@/views/Categories.vue";
-import TimeSlots from       "@/views/TimeSlots.vue";
-import Costs from           "@/views/Costs.vue";
-import Finance from         "@/views/Finance.vue";
-import Balance from         "@/views/Balance.vue";
-import Guest from           "@/views/Guest.vue";
-import NotAllowed from      "@/views/NotAllowed.vue";
-import PrintableList from   "@/views/PrintableList.vue";
+import Dashboard     from "@/views/Dashboard.vue";
+import Menu          from "@/views/Menu.vue";
+import Dishes        from "@/views/Dishes.vue";
+import Categories    from "@/views/Categories.vue";
+import TimeSlots     from "@/views/TimeSlots.vue";
+import Costs         from "@/views/Costs.vue";
+import Finance       from "@/views/Finance.vue";
+import Balance       from "@/views/Balance.vue";
+import Guest         from "@/views/Guest.vue";
+import NotAllowed    from "@/views/NotAllowed.vue";
+import PrintableList from "@/views/PrintableList.vue";
+
+import { createRouter, createWebHistory } from "vue-router";
+import { userDataStore }                  from "@/stores/userDataStore";
 
 declare module 'vue-router' {
     interface RouteMeta {
@@ -97,7 +99,7 @@ const router = createRouter({
             name: 'Guest',
             component: Guest,
             meta: {
-                allowedRoles: ['ROLE_KITCHEN_STAFF', 'ROLE_USER', 'ROLE_ADMIN', 'ROLE_FINANCE']
+                allowedRoles: ['ROLE_KITCHEN_STAFF', 'ROLE_USER', 'ROLE_ADMIN', 'ROLE_FINANCE', 'ROLE_GUEST']
             }
         },
         {
@@ -105,7 +107,7 @@ const router = createRouter({
             name: 'NotAllowed',
             component: NotAllowed,
             meta: {
-                allowedRoles: ['ROLE_KITCHEN_STAFF', 'ROLE_USER', 'ROLE_ADMIN', 'ROLE_FINANCE']
+                allowedRoles: ['ROLE_KITCHEN_STAFF', 'ROLE_USER', 'ROLE_ADMIN', 'ROLE_FINANCE', 'ROLE_GUEST']
             }
         },
         {
@@ -120,21 +122,17 @@ const router = createRouter({
 })
 
 router.beforeEach((to) => {
-    const isAuthenticated = sessionStorage.getItem('auth') === 'granted'
-
-    if (!isAuthenticated) {
+    if (userDataStore.getState().roles.includes('ROLE_GUEST')) {
         if (to.name !== 'Guest' && to.name !== 'Login') {
-            return { name: 'Login' }
+            return {name: 'Login'}
         }
     } else {
         if (to.name === 'Login') {
             return false
         }
 
-        const role = sessionStorage.getItem('role')
-
-        if (role !== null && !to.meta.allowedRoles.includes(role)) {
-            return { name: 'NotAllowed' }
+        if (!userDataStore.roleAllowsRoute(to.path)) {
+           return {name: 'NotAllowed'}
         }
     }
 })

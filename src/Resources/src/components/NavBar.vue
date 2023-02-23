@@ -1,6 +1,6 @@
 <template>
   <div class="relative top-0 z-[3] print:hidden">
-    <Disclosure v-slot="{ open }">
+    <Menu v-slot="{ open }">
       <header class="relative h-[60px] bg-white shadow-[0_15px_35px_0_#5B788F21] xl:h-24">
         <nav
           class="grid h-[inherit] grid-cols-3 content-center items-center xl:mx-auto xl:max-w-screen-aoe xl:grid-cols-10"
@@ -11,7 +11,7 @@
             id="dropdown"
             class="ml-6 justify-self-start xl:hidden"
           >
-            <DisclosureButton class="-mx-2 inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+            <MenuButton class="-mx-2 inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500">
               <span class="sr-only">Open menu</span>
               <MenuIcon
                 v-if="!open"
@@ -23,7 +23,7 @@
                 class="block h-6 w-6"
                 aria-hidden="true"
               />
-            </DisclosureButton>
+            </MenuButton>
           </div>
           <div
             id="logo"
@@ -64,9 +64,9 @@
               :key="link.name"
             >
               <router-link
-                v-if="link.access.includes(role)"
+                v-if="link.access"
                 :to="link.to"
-                class="cursor-pointer text-[16px] font-medium leading-[18px] text-primary hover:text-highlight"
+                class="cursor-pointer text-[16px] font-bold leading-[18px] text-primary hover:text-highlight"
               >
                 {{ t(link.name) }}
               </router-link>
@@ -81,7 +81,7 @@
                 icon="person-outline"
                 class="inline-block w-6 fill-primary"
               />
-              <span class="text-[14px] font-medium leading-[22px] text-black">
+              <span class="text-[14px] font-bold leading-[22px] text-black">
                 {{ user }}
               </span>
             </div>
@@ -90,7 +90,7 @@
               class="hidden text-right xl:inline-block"
             >
               <router-link
-                class="text-[14px] font-medium leading-[22px] text-black"
+                class="text-[14px] font-bold leading-[22px] text-black"
                 to="/balance"
               >
                 {{ t('header.balance') }}:
@@ -110,28 +110,26 @@
           </div>
         </nav>
       </header>
-      <!-- <MobileDropdown v-if="isAuthenticated" :open="open" :userName="user" :balance="balanceString" :navigation="navigation" /> -->
-      <MobileDropdown2
+      <MobileDropdown3
         v-if="isAuthenticated"
         :open="open"
-        :role="role"
         :userName="user"
         :balance="balanceString"
         :navigation="navigation"
         @logout="logout"
       />
-    </Disclosure>
+    </Menu>
   </div>
 </template>
 
 <script setup>
-  import {Disclosure, DisclosureButton} from '@headlessui/vue'
+  import {Menu, MenuButton} from '@headlessui/vue'
   import {MenuIcon, XIcon, CalendarIcon, CalculatorIcon, CakeIcon, CashIcon, BookmarkIcon, ClockIcon} from '@heroicons/vue/outline'
   import Icons from '@/components/misc/Icons.vue'
   import {useI18n} from 'vue-i18n'
-  import {balanceStore} from '@/stores/balanceStore'
   import {computed} from 'vue'
-  import MobileDropdown2 from "@/components/navbar/MobileDropdown2.vue";
+  import MobileDropdown3 from "@/components/navbar/MobileDropdown3.vue";
+  import {userDataStore} from "@/stores/userDataStore";
 
   const { t } = useI18n()
   defineProps({
@@ -140,19 +138,18 @@
     }
   })
 
-  let balanceString = computed(() => balanceStore.toLocalString());
+  let balanceString = computed(() => userDataStore.balanceToLocalString());
 
-  const user = sessionStorage.getItem('user')
-  const role = sessionStorage.getItem('role')
-  const isAuthenticated = sessionStorage.getItem('auth') === 'granted'
+  const user = userDataStore.getState().user
+  const isAuthenticated = !userDataStore.getState().roles.includes("ROLE_GUEST")
 
   const navigation = [
-    { name: 'header.navigation.menu',       to: '/menu',       icon: CalendarIcon,   access: ['ROLE_KITCHEN_STAFF', 'ROLE_ADMIN'] },
-    { name: 'header.navigation.dishes',     to: '/dishes',     icon: CakeIcon,       access: ['ROLE_KITCHEN_STAFF', 'ROLE_ADMIN'] },
-    { name: 'header.navigation.categories', to: '/categories', icon: BookmarkIcon,   access: ['ROLE_KITCHEN_STAFF', 'ROLE_ADMIN'] },
-    { name: 'header.navigation.slots',      to: '/time-slots', icon: ClockIcon,      access: ['ROLE_KITCHEN_STAFF', 'ROLE_ADMIN'] },
-    { name: 'header.navigation.costs',      to: '/costs',      icon: CashIcon,       access: ['ROLE_KITCHEN_STAFF', 'ROLE_ADMIN', 'ROLE_FINANCE'] },
-    { name: 'header.navigation.finance',    to: '/finance',    icon: CalculatorIcon, access: ['ROLE_KITCHEN_STAFF', 'ROLE_ADMIN', 'ROLE_FINANCE'] },
+    { name: 'header.navigation.menu',       to: '/menu',       icon: CalendarIcon,   access: userDataStore.roleAllowsRoute('/menu'      ) },
+    { name: 'header.navigation.dishes',     to: '/dishes',     icon: CakeIcon,       access: userDataStore.roleAllowsRoute('/dishes'    ) },
+    { name: 'header.navigation.categories', to: '/categories', icon: BookmarkIcon,   access: userDataStore.roleAllowsRoute('/categories') },
+    { name: 'header.navigation.slots',      to: '/time-slots', icon: ClockIcon,      access: userDataStore.roleAllowsRoute('/time-slots') },
+    { name: 'header.navigation.costs',      to: '/costs',      icon: CashIcon,       access: userDataStore.roleAllowsRoute('/costs'     ) },
+    { name: 'header.navigation.finance',    to: '/finance',    icon: CalculatorIcon, access: userDataStore.roleAllowsRoute('/finance'   ) },
   ];
 
   function logout() {

@@ -54,10 +54,10 @@ import BalanceDesc from "@/components/balance/BalanceDesc.vue"
 import BalanceHeader from "@/components/balance/BalanceHeader.vue"
 
 import { useI18n } from "vue-i18n"
-import {balanceStore} from "@/stores/balanceStore"
 import {useProgress} from '@marcoschulte/vue3-progress'
 import {transactionStore} from "@/stores/transactionStore"
 import {computed} from "vue"
+import {userDataStore} from "@/stores/userDataStore";
 
 const progress = useProgress().start()
 
@@ -65,8 +65,8 @@ const { t, locale } = useI18n()
 transactionStore.fillStore()
 
 let transactions = computed(() => transactionStore.getState());
-let balance = computed(() => balanceStore.getState().amount);
-let balanceString = computed(() => balanceStore.toLocalString());
+let balance = computed(() => userDataStore.getState().balance);
+let balanceString = computed(() => userDataStore.balanceToLocalString());
 let oldBalance = computed(() => balance.value - transactions.value.difference);
 let oldBalanceString = computed(() =>
     locale.value === 'en'

@@ -11,14 +11,6 @@
 import NavBar from '@/components/NavBar.vue'
 import Footer from '@/components/Footer.vue'
 import Content from '@/components/Content.vue'
-
-import { balanceStore } from '@/stores/balanceStore'
-
-const isAuthenticated = sessionStorage.getItem('auth') === 'granted'
-if (isAuthenticated) {
-  balanceStore.fillStore()
-}
-
 </script>
 
 <style>

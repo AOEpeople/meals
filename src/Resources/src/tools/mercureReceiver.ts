@@ -3,7 +3,7 @@
  */
 import {Meal} from "@/api/getDashboardData";
 import {dashboardStore} from "@/stores/dashboardStore";
-import getEnv from "tools/getEnv";
+import {environmentStore} from "@/stores/environmentStore";
 
 type Meal_Update = {
     weekId: number,
@@ -54,8 +54,7 @@ class MercureReceiver {
     }
 
     private async configureMealUpdateHandlers(): Promise<void> {
-        const ENV = await getEnv()
-        const eventSrc = new EventSource(ENV?.mercureUrl + '?topic=participation-updates&topic=meal-offer-updates&topic=slot-allocation-updates', {withCredentials: true})
+        const eventSrc = new EventSource(environmentStore.getState().mercureUrl + '?topic=participation-updates&topic=meal-offer-updates&topic=slot-allocation-updates', {withCredentials: true})
 
         eventSrc.addEventListener('participationUpdate', (event: MessageEvent) => {
             MercureReceiver.handleParticipationUpdate(JSON.parse(event.data))

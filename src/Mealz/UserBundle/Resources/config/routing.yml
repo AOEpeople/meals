@@ -6,3 +6,8 @@ MealzUserBundle_login:
 MealzUserBundle_logout:
     path:  /logout
     # magic method that Symfony intercepts and is therefore never called
+
+MealzUserBundle_api_user_data:
+    path: /api/user
+    defaults: { _controller: App\Mealz\UserBundle\Controller\UserController::getUserData }
+    methods: [GET]

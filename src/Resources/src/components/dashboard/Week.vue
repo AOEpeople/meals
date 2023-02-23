@@ -8,7 +8,7 @@
     </p>
   </div>
   <div
-    v-if="index === 1"
+    v-if="days === undefined"
     class="mb-20 text-center text-[18px] tracking-[1.5px] text-[#acbdc7]"
   >
     <img

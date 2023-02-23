@@ -19,10 +19,5 @@ export async function useEnvs() {
         loaded.value = true
     }
 
-    console.log(environmental.value, request, error)
-    if (!error.value) {
-        sessionStorage.setItem('ENV', JSON.stringify(environmental.value));
-    }
-
     return { env: environmental.value, error }
 }

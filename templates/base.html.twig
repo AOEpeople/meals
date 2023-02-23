@@ -13,16 +13,10 @@
 
 {% set activeRoute = app.request.attributes.get('_route') %}
 {% set userAgent = app.request.headers.get('User-Agent') %}
-
 <body>
 {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-    <script type="text/javascript">
-        let profile = {{ app.user.profile | json_encode() | raw }};
-        sessionStorage.setItem('auth', 'granted')
-        sessionStorage.setItem('user', profile.user)
-        sessionStorage.setItem('role', profile.roles[0])
-        sessionStorage.setItem('balance', '{{ wallet.getBalance(app.user.profile) }}');
-    </script>
+{% set topics = ['participation-updates', 'meal-offer-updates', 'slot-allocation-updates'] -%}
+{% set mercure = mercure(topics, {subscribe: topics}) %}
 {% endif %}
 
 {% block body %}{% endblock %}

@@ -65,9 +65,10 @@ RUN \
     && find bin scripts vendor/bin -type f -exec chmod 740 '{}' \+ \
     # set non php files in public directory as readonly
     && find public -type f -not -name "*.php" -exec chmod 644 '{}' \+
-
+ 
 RUN echo "* * * * * /var/www/meals/bin/console meals:keep-alive-connection > /dev/stdout" >> /etc/crontabs/www-data
 
-USER www-data:www-data
 ENTRYPOINT ["/container/entrypoint"]
+
+USER www-data:www-data
 CMD ["php-fpm"]

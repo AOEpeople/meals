@@ -21,3 +21,4 @@ opcache.max_accelerated_files = 17000
 
 ; set preload script
 opcache.preload = /var/www/meals/config/preload.php
+opcache.preload_user = www-data

@@ -1,5 +1,22 @@
 # Changelog
 
+## Version v2.3.5 (2023-03-07)
+
+### Fixes
+
+- fix access error (c413fe47)
+- fix access error (4c7a41f7)
+
+### Other
+
+- remove comment line (3ddb2f46)
+- define opcache preload user (d829a8cb)
+- run init script as ww-data user (f76449ba)
+- run php-fpm as www-data (d4306d63)
+- try to run as root (4456cd11)
+- try to run only CMD as www-data (4b896050)
+- add alpine busybox-suid; run cron from www-data; (ae299d2f)
+
 ## Version v2.3.4 (2023-02-16)
 
 ### Fixes

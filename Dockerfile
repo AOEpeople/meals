@@ -70,5 +70,5 @@ RUN echo "* * * * * /var/www/meals/bin/console meals:keep-alive-connection > /de
 
 ENTRYPOINT ["/container/entrypoint"]
 
-USER www-data:www-data
+#USER www-data:www-data
 CMD ["php-fpm"]

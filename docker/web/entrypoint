@@ -5,7 +5,7 @@ echo "Check database"
 /container/scripts/wait-for "${DB_HOST}:${DB_PORT}" -t 60 -- echo "Database is available"
 
 # execute system initialization scripts
-"${APP_ROOT}/scripts/init.sh"
+su -s /bin/sh www-data -c "${APP_ROOT}/scripts/init.sh"
 
 crond
 

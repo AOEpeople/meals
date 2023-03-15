@@ -5,7 +5,7 @@
   <div
     v-for="(variation, variationID, index) in meal.variations"
     :key="index"
-    class="mb-1.5 flex w-auto flex-row justify-around gap-4 last:mb-0 xl:grid-cols-6"
+    class="mb-1.5 flex w-auto flex-row justify-around gap-2 last:mb-0 xl:grid-cols-6"
   >
     <div class="basis-10/12 items-center self-center xl:col-span-5">
       <div class="self-center">
@@ -30,7 +30,11 @@
     >
       <OfferPopover v-if="openPopover" />
     </transition>
-    <div class="text-align-last flex flex-none basis-2/12 items-center justify-end">
+    <PriceTag
+      class="align-center my-auto flex"
+      :price="variation.price"
+    />
+    <div class="text-align-last flex flex-auto basis-2/12 items-center justify-end">
       <ParticipationCounter
         :meal="variation"
         :mealCSS="mealCSS[variationID]"
@@ -50,11 +54,12 @@
 <script setup>
 import ParticipationCounter from "@/components/menuCard/ParticipationCounter.vue";
 import Checkbox from '@/components/dashboard/Checkbox.vue'
-import { useI18n } from 'vue-i18n'
+import {useI18n} from 'vue-i18n'
 import {computed, ref} from 'vue'
 import {dashboardStore} from "@/stores/dashboardStore";
 import useEventsBus from "tools/eventBus.ts"
 import OfferPopover from "@/components/dashboard/OfferPopover.vue";
+import PriceTag from "@/components/dashboard/PriceTag.vue";
 
 const { receive } = useEventsBus()
 
@@ -75,7 +80,7 @@ let parentTitle = computed(() => locale.value.substring(0, 2) === 'en' ? meal.ti
 const mealCSS = computed(() => {
   let array = []
   for (const variationId in meal.variations) {
-    array[variationId] = 'grid grid-cols-2 content-center rounded-md h-[30px] xl:h-[20px] mr-[15px] '
+    array[variationId] = 'flex content-center rounded-md h-[30px] xl:h-[20px] mr-[15px] '
     switch (meal.variations[variationId].mealState) {
       case 'disabled':
       case 'offerable':

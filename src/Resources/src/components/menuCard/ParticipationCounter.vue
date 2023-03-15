@@ -1,20 +1,18 @@
 <template>
   <div
     :class="
-      [meal.limit > 9 ? 'w-[65px]' : 'w-[50px]', mealCSS]"
+      [meal.limit > 9 ? 'min-w-[65px]' : 'min-w-[50px]', mealCSS]"
   >
-    <div class="table flex-auto">
-      <div class="table-cell align-middle">
-        <Icons
-          icon="person"
-          box="0 0 12 12"
-          class="relative -left-1/4 ml-[50%] h-3 w-3 fill-white"
-        />
-      </div>
+    <div class="my-auto h-3 w-6 flex-none">
+      <Icons
+        icon="person"
+        box="0 0 12 12"
+        class="mx-auto h-3 w-3 fill-white"
+      />
     </div>
 
-    <div class="table flex-auto">
-      <span class="table-cell h-4 self-center align-middle text-[12px] font-bold leading-4 tracking-[1.5px] text-white">
+    <div class="my-auto mr-[5px] h-3 flex-auto">
+      <span class="block self-center align-middle text-[12px] font-bold leading-[12px] tracking-[1.5px] text-white">
         {{ participations }}
       </span>
     </div>

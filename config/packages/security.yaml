@@ -75,6 +75,8 @@ security:
         - { path: ^/guest, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/guest/api/dashboard, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/api/guest-invitation, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/api/environmentals, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/api/user, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: '^/participation/slots-status/\d{4}-\d{2}-\d{2}$', roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: '^/participation/count-status/\d{4}-\d{2}-\d{2}$', roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/language-switch, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }

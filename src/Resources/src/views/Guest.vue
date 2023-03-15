@@ -16,7 +16,7 @@
       </p>
     </div>
     <Day
-      :class="{'outline-2 outline-red': mealsMissing}"
+      :class="{'ring-2 ring-red': mealsMissing}"
       :guestData="invitation"
     />
     <GuestForm
@@ -64,10 +64,10 @@ const filled = computed(() =>
     && form.value.company !== ''
     && form.value.chosenMeals.length !== 0
 );
-let firstNameMissing = false
-let lastNameMissing = false
-let companyMissing = false
-let mealsMissing = false
+const firstNameMissing = ref(false)
+const lastNameMissing = ref(false)
+const companyMissing = ref(false)
+const mealsMissing = ref(false)
 
 receive('guestChosenMeals', (slug) => {
   const index = form.value.chosenMeals.indexOf(slug)
@@ -103,10 +103,11 @@ async function submitForm() {
 }
 
 function showFormErrors() {
-  firstNameMissing = form.value.firstName === ''
-  lastNameMissing = form.value.lastName === ''
-  companyMissing = form.value.company === ''
-  mealsMissing = form.value.chosenMeals.length === 0
+  console.log("ztest")
+  firstNameMissing.value = form.value.firstName === ''
+  lastNameMissing.value = form.value.lastName === ''
+  companyMissing.value = form.value.company === ''
+  mealsMissing.value = form.value.chosenMeals.length === 0
 }
 
 progress.finish()

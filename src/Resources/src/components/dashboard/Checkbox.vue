@@ -15,6 +15,17 @@
     :meals="day.meals"
     @closeCombiModal="closeCombiModal"
   />
+  <TransitionRoot
+    :show="openPopover"
+    enter="transition-opacity ease-linear duration-300"
+    enter-from="opacity-0"
+    enter-to="opacity-100"
+    leave="transition-opacity ease-linear duration-300"
+    leave-from="opacity-100"
+    leave-to="opacity-0"
+  >
+    <OfferPopover />
+  </TransitionRoot>
 </template>
 
 <script setup>
@@ -27,6 +38,8 @@ import { dashboardStore } from '@/stores/dashboardStore'
 import { CheckIcon } from '@heroicons/vue/solid'
 import CombiModal from '@/components/dashboard/CombiModal.vue'
 import useEventsBus from "tools/eventBus";
+import {TransitionRoot} from "@headlessui/vue";
+import OfferPopover from "@/components/dashboard/OfferPopover.vue";
 
 const props = defineProps(['weekID', 'dayID', 'mealID', 'variationID', 'meal', 'day'])
 
@@ -44,6 +57,14 @@ if (props.variationID) {
 const open = ref(false)
 const isParticipating = computed(() => meal.isParticipating !== null)
 const isCombiBox = props.day.meals[props.mealID].dishSlug === 'combined-dish'
+
+const openPopover = ref(false)
+const { receive } = useEventsBus()
+
+receive("openOfferPanel_" + props.mealID, () => {
+  openPopover.value = true
+  setTimeout(() => openPopover.value = false, 3500)
+})
 
 const checkboxCSS = computed(() => {
   let cssResult = 'rounded-md h-[30px] w-[30px] xl:h-[20px] xl:w-[20px] '

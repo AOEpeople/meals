@@ -1,5 +1,5 @@
 <template>
-  <div class="flex w-auto flex-row justify-around gap-4 xl:grid-cols-6">
+  <div class="flex w-auto flex-row justify-between gap-2 xl:grid-cols-6">
     <div class="basis-10/12 items-center self-center xl:col-span-5">
       <div class="self-center">
         <span class="inline-block break-words text-note font-bold leading-[20px] tracking-[0.5px] text-primary">
@@ -19,26 +19,11 @@
         </p>
       </div>
     </div>
-    <TransitionRoot
-      :show="openPopover"
-      enter="transition-opacity ease-linear duration-300"
-      enter-from="opacity-0"
-      enter-to="opacity-100"
-      leave="transition-opacity ease-linear duration-300"
-      leave-from="opacity-100"
-      leave-to="opacity-0"
-    >
-      <OfferPopover />
-    </TransitionRoot>
-    <div
-      class="
-          text-align-last
-          flex
-          flex-none
-          basis-2
-          items-center
-          justify-end"
-    >
+    <PriceTag
+      class="align-center my-auto flex"
+      :price="meal.price"
+    />
+    <div class="text-align-last flex flex-auto basis-2/12 items-center justify-end">
       <ParticipationCounter
         :meal="meal"
         :mealCSS="mealCSS"
@@ -58,13 +43,9 @@
 import ParticipationCounter from "@/components/menuCard/ParticipationCounter.vue";
 import Checkbox from '@/components/dashboard/Checkbox.vue'
 import {useI18n} from "vue-i18n";
-import {computed, ref} from "vue";
+import {computed} from "vue";
 import {dashboardStore} from "@/stores/dashboardStore";
-import useEventsBus from "tools/eventBus.ts"
-import OfferPopover from "@/components/dashboard/OfferPopover.vue";
-import {TransitionRoot} from "@headlessui/vue";
-
-const { receive } = useEventsBus()
+import PriceTag from "@/components/dashboard/PriceTag.vue";
 
 const props = defineProps([
   'weekID',
@@ -78,9 +59,9 @@ const meal = props.meal ? props.meal : dashboardStore.getMeal(props.weekID, prop
 
 const { t, locale } = useI18n();
 
-let title = computed(() => locale.value.substring(0, 2) === 'en' ? meal.title.en : meal.title.de);
+let description
+const title = computed(() => locale.value.substring(0, 2) === 'en' ? meal.title.en : meal.title.de);
 
-let description = ''
 if(meal.description !== null) {
   description = computed(() => locale.value.substring(0, 2) === 'en' ? meal.description.en : meal.description.de);
 }
@@ -104,12 +85,6 @@ const mealCSS = computed(() => {
   }
 })
 
-const openPopover = ref(false)
-
-receive("openOfferPanel_" + props.mealID, () => {
-  openPopover.value = true
-  setTimeout(() => openPopover.value = false, 5000)
-})
 </script>
 
 <style scoped>

@@ -8,7 +8,7 @@
     </p>
   </div>
   <div
-    v-if="days === undefined"
+    v-if="Object.keys(days).length === 0"
     class="mb-20 text-center text-[18px] tracking-[1.5px] text-[#acbdc7]"
   >
     <img

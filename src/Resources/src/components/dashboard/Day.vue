@@ -2,7 +2,7 @@
   <div class="day-shadow mx-auto flex h-auto max-w-[414px] rounded bg-white sm:max-w-none">
     <div :class="[day.isLocked ? 'bg-[#80909F]' : 'bg-primary-2', 'flex relative justify-center w-[24px] rounded-l-[5px]']">
       <div
-        v-if="!day.isLocked"
+        v-if="!day.isLocked && !emptyDay"
         class="absolute bottom-[1px] left-[2px] z-[2] w-[24px] text-center"
       >
         <GuestButton
@@ -56,7 +56,7 @@
     </div>
     <div
       v-if="emptyDay"
-      class="h-[134px]"
+      class="z-[1] h-[134px] min-w-[390px]"
     >
       <span class="description relative top-[53px] ml-[23px] text-primary-1">{{ t('dashboard.no_service') }}</span>
     </div>

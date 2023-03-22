@@ -105,6 +105,7 @@ Mealz.prototype.enablePaypal = function () {
 
                 // Set up the transaction
                 createOrder: function (data, actions) {
+                    $('.form-header').hide();
                     return actions.order.create({
                         purchase_units: [{
                             amount: {

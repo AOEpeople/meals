@@ -4,9 +4,11 @@
     {{ form_widget(form.profile) }}
     {{ form_widget(form.orderid) }}
 
-    {{ form_label(form.amount) }}
-    {{ form_widget(form.amount) }}
-    <span class="invalid-amount">{{ 'payment.transaction_history.invalid'|trans({}, 'messages') }}</span>
+    <div class="form-header">
+        {{ form_label(form.amount) }}
+        {{ form_widget(form.amount) }}
+        <span class="invalid-amount">{{ 'payment.transaction_history.invalid'|trans({}, 'messages') }}</span>
+    </div>
 
     {# Only render payment method options if there is more than one #}
     {% if form.paymethod.count > 1 %}

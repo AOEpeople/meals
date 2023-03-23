@@ -1,6 +1,6 @@
 <template>
   <div class="text-center">
-    <h2 class="m-0">
+    <h2 class="m-0 text-primary-2">
       {{ t('dashboard.' + index) }}
     </h2>
     <p class="description text-primary">

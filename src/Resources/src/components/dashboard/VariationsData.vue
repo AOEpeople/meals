@@ -1,6 +1,6 @@
 <template>
   <div class="mb-1">
-    <span class="inline-block break-words text-note font-bold leading-[20px] tracking-[0.5px] text-primary">{{ parentTitle }}</span><br>
+    <span class="inline-block break-words text-note font-bold leading-[20px] tracking-[0.5px] text-primary-1">{{ parentTitle }}</span><br>
   </div>
   <div
     v-for="(variation, variationID, index) in meal.variations"

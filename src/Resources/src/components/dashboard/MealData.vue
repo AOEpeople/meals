@@ -2,7 +2,7 @@
   <div class="flex w-auto flex-row justify-between gap-2 xl:grid-cols-6">
     <div class="basis-10/12 items-center self-center xl:col-span-5">
       <div class="self-center">
-        <span class="inline-block break-words text-note font-bold leading-[20px] tracking-[0.5px] text-primary">
+        <span class="inline-block break-words text-note font-bold leading-[20px] tracking-[0.5px] text-primary-1">
           {{ title }}
           <span
             v-if="meal.isNew"

@@ -16,7 +16,7 @@
         </template>
         <template #panel="{ close }">
           <TransactionPanel
-            class="h-[450px] w-[420px]"
+            class="h-[450px] w-[420px] text-center align-middle"
             @closePanel="close()"
           />
         </template>

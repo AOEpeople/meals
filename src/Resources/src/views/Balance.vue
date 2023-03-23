@@ -11,7 +11,7 @@
     </div>
 
     <Table
-      v-if="!transactions.isLoading"
+      v-if="!transactions.isLoading && transactions.data.length !== 0"
       :labels="tableLabels"
       class="mt-10 mb-5"
     >

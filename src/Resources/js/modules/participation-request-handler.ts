@@ -30,18 +30,18 @@ export class ParticipationRequestHandler {
             return;
         }
 
-        $checkbox.closest('.checkbox-wrapper').toggleClass('submitting');
-
         $.ajax({
             method: participationRequest.method,
             url: participationRequest.url,
             data: participationRequest.data,
             dataType: 'json',
+            beforeSend: function () {
+                $checkbox.closest('.checkbox-wrapper').toggleClass('submitting');
+            },
             success: function (data) {
                 handle($checkbox, data);
             },
             error: function (jqXHR) {
-                $checkbox.closest('.checkbox-wrapper').toggleClass('submitting');
                 AjaxErrorHandler.handleError(jqXHR, function (){
                     if (true === ParticipationRequestHandler.isJoinRequest(participationRequest.url)) {
                         let mealTitle = $checkbox.closest('.meal-row').children('.title').text();
@@ -49,6 +49,9 @@ export class ParticipationRequestHandler {
                         ParticipationRequestHandler.sendAlert(errMsg);
                     }
                 });
+            },
+            complete: function () {
+                $checkbox.closest('.checkbox-wrapper').toggleClass('submitting');
             }
         });
     }

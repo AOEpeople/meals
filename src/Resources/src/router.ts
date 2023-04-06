@@ -9,6 +9,7 @@ import Balance       from "@/views/Balance.vue";
 import Guest         from "@/views/Guest.vue";
 import NotAllowed    from "@/views/NotAllowed.vue";
 import PrintableList from "@/views/PrintableList.vue";
+import ParticipantList from "@/views/ParticipantsList.vue";
 
 import { createRouter, createWebHistory } from "vue-router";
 import { userDataStore }                  from "@/stores/userDataStore";
@@ -116,6 +117,14 @@ const router = createRouter({
             component: PrintableList,
             meta: {
                 allowedRoles: ['ROLE_KITCHEN_STAFF', 'ROLE_ADMIN']
+            }
+        },
+        {
+            path: '/show/participations',
+            name: 'ParticipantList',
+            component: ParticipantList,
+            meta: {
+                allowedRoles: ['ROLE_KITCHEN_STAFF', 'ROLE_ADMIN', 'ROLE_GUEST']
             }
         }
     ],

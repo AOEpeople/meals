@@ -4,6 +4,7 @@
       v-for="(meal, index) in mealsWithVariations"
       :key="index"
       :meal="meal"
+      class="flex-1"
     />
   </div>
 </template>
@@ -15,7 +16,7 @@ import Meal from './Meal.vue';
 import { getShowParticipations } from '@/api/getShowParticipations';
 // import type { IMealWithVariations } from '@/api/getShowParticipations';
 
-const { participationsState, loadShowParticipations, loadedState, getMealsWithVariations } = getShowParticipations();
+const { loadShowParticipations, loadedState, getMealsWithVariations } = getShowParticipations();
 
 const mealsWithVariations = ref([]);
 

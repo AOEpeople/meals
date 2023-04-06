@@ -31,6 +31,9 @@ export interface IMealWithVariations {
     participations: number
 }
 
+/**
+ * State containing the meals, and participations per meal for a specific day
+ */
 const participationsState = reactive<IParticipationsState>({
     data: {},
     meals: {},
@@ -41,6 +44,9 @@ const participationsState = reactive<IParticipationsState>({
     }
 });
 
+/**
+ * State that contains wether the participationsState was successfully loaded, if not an error is set
+ */
 const loadedState = reactive<ILoadedState>({
     loaded: false,
     error: ""
@@ -48,6 +54,10 @@ const loadedState = reactive<ILoadedState>({
 
 export function getShowParticipations() {
 
+    /**
+     * Bundles all the meals with their variations from the participationsState.meals
+     * @returns Array of the parent dishes
+     */
     function getMealsWithVariations() {
         const meals: IMealWithVariations[] = [];
         if(loadedState.loaded) {
@@ -70,6 +80,11 @@ export function getShowParticipations() {
         return meals;
     }
     
+    /**
+     * Bundles a meal with its variations into one object
+     * @param mealKey key to acces the meal in the participationsState.meals
+     * @returns A meal that contains its variations
+     */
     function createMealWithVariations(mealKey: string): IMealWithVariations {
         const mealWithVariations: IMealWithVariations = {
             title: {
@@ -82,6 +97,11 @@ export function getShowParticipations() {
         return mealWithVariations;
     }
 
+    /**
+     * Collects all the variations of a meal
+     * @param parentKey key to acces the meal in the participationsState.meals
+     * @returns Array of the variations of a meal
+     */
     function getVariationsOfMeal(parentKey: string) {
         const variations: IMealData[] = [];
         for(const value of Object.values(participationsState.meals)) {
@@ -92,6 +112,10 @@ export function getShowParticipations() {
         return variations;
     }
 
+    /**
+     * Function performs a GET request to '/api/print/participations' and sets
+     * the participationsState if no error occures
+     */
     async function loadShowParticipations() {
         if(loadedState.loaded) {
             return true;

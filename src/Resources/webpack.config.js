@@ -73,14 +73,28 @@ module.exports = function(env, argv) {
                 },
                 {
                     test: /\.(js)$/,
-                    exclude: [/node_modules/],
                     use: ['babel-loader'],
+                    exclude: [/node_modules/],
                 },
                 {
                     test: /\.tsx?$/,
-                    use: 'ts-loader',
+                    loader: 'ts-loader',
+                    options: { appendTsSuffixTo: [/\.vue$/] },
                     exclude: /node_modules/,
                 },
+                // {
+                //     test: /\.vue$/i,
+                //     loader: "vue-loader",
+                //     options: {
+                //         esModule: true,
+                //     },
+                //     exclude: /node_modules/,
+                // },
+                // {
+                //     test: /\.ts$/,
+                //     loader: 'ts-loader',
+                //     options: { appendTsSuffixTo: [/\.vue$/] }
+                // },
                 {
                     test :/\.vue$/,
                     use: [

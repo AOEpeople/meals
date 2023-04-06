@@ -10,15 +10,15 @@
 </template>
 
 
-<script setup>
+<script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import Meal from './Meal.vue';
 import { getShowParticipations } from '@/api/getShowParticipations';
-// import type { IMealWithVariations } from '@/api/getShowParticipations';
+import { IMealWithVariations } from '@/api/getShowParticipations';
 
 const { loadShowParticipations, loadedState, getMealsWithVariations } = getShowParticipations();
 
-const mealsWithVariations = ref([]);
+const mealsWithVariations = ref<IMealWithVariations[]>([]);
 
 onMounted(async () => {
   await loadShowParticipations();

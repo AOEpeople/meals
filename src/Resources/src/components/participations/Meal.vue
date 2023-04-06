@@ -22,19 +22,21 @@
 </template>
 
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { IMealWithVariations, type IMealData } from '@/api/getShowParticipations';
 
 const { locale } = useI18n();
 
-defineProps({
-  meal: null
-});
+const props = defineProps<{
+  meal: IMealWithVariations
+}>();
+
 
 const languageIsEnglish = computed(() => locale.value === 'en');
 
-function getTitleForLocale(variation) {
+function getTitleForLocale(variation: IMealData) {
   return languageIsEnglish.value ? variation.title.en : variation.title.de;
 }
 

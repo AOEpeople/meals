@@ -3,7 +3,7 @@ import { reactive, readonly } from "vue"
 import { DateTime } from "./getDashboardData"
 
 export interface IParticipationsState {
-    data: Dictionary<Dictionary<boolean>>,
+    data: Dictionary<Dictionary<Dictionary<boolean>>>,
     meals: Dictionary<IMealData>,
     day: DateTime
 }
@@ -55,6 +55,15 @@ const loadedState = reactive<ILoadedState>({
 export function getShowParticipations() {
 
     /**
+     * @returns A list of strings that represent all the meals of the day
+     */
+    function getListOfMeals() {
+        const mealsSlotOne = Object.keys(participationsState.data)[0];
+        const firstParticipant = Object.keys(participationsState.data[mealsSlotOne])[0];
+        return Object.keys(participationsState.data[mealsSlotOne][firstParticipant]);
+    }
+
+    /**
      * Bundles all the meals with their variations from the participationsState.meals
      * @returns Array of the parent dishes
      */
@@ -79,7 +88,7 @@ export function getShowParticipations() {
         }
         return meals;
     }
-    
+
     /**
      * Bundles a meal with its variations into one object
      * @param mealKey key to acces the meal in the participationsState.meals
@@ -160,6 +169,7 @@ export function getShowParticipations() {
         participationsState: readonly(participationsState),
         loadedState: readonly(loadedState),
         loadShowParticipations,
-        getMealsWithVariations
+        getMealsWithVariations,
+        getListOfMeals
     }
 }

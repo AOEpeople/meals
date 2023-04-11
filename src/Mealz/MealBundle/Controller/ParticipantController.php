@@ -275,7 +275,7 @@ class ParticipantController extends BaseController
         // $list['meals']['en'] = array_map((fn ($meal): String => $meal->getDish()->getTitleEn()), $meals->toArray());
         // $list['meals']['de'] = array_map((fn ($meal): String => $meal->getDish()->getTitleDe()), $meals->toArray());
 
-        foreach($meals as $meal) {
+        foreach ($meals as $meal) {
             $list['meals'][$meal->getDish()->getId()] = [
                 'title' => [
                     'en' => $meal->getDish()->getTitleEn(),
@@ -284,7 +284,7 @@ class ParticipantController extends BaseController
                 'parent' => $meal->getDish()->getParent() ? $meal->getDish()->getParent()->getId() : null,
                 'participations' => $this->participationSrv->getCountByMeal($meal, true),
             ];
-            
+
             if (null != $meal->getDish()->getParent()) {
                 $list['meals'][$meal->getDish()->getParent()->getId()] = [
                     'title' => [
@@ -293,14 +293,14 @@ class ParticipantController extends BaseController
                     ],
                     //'parent' => $meal->getDish()->getParent()->getParent(),
                     //'participations' => $this->participationSrv->getCountByMeal($meal->getDish()->getParent(), true),
-                ];  
+                ];
             }
         }
 
-        #$list['meals'] = $meals->toArray();
+        //$list['meals'] = $meals->toArray();
         $list['day'] = $day->getDateTime();
 
-        /** @var Meal $meal */
+        /* @var Meal $meal */
         // foreach ($meals as $meal) {
         //     $list['participations'][$meal->getDish()->getSlug()] = $this->participationSrv->getCountByMeal($meal, true);
         // }

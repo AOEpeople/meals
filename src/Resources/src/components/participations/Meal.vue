@@ -1,6 +1,6 @@
 <template>
-  <table 
-    v-if="meal" 
+  <table
+    v-if="meal"
     class="table-fixed border-2 border-solid border-black"
   >
     <thead>
@@ -29,7 +29,7 @@ import { IMealWithVariations, type IMealData } from '@/api/getShowParticipations
 
 const { locale } = useI18n();
 
-const props = defineProps<{
+defineProps<{
   meal: IMealWithVariations
 }>();
 

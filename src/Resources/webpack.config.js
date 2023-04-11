@@ -82,19 +82,6 @@ module.exports = function(env, argv) {
                     options: { appendTsSuffixTo: [/\.vue$/] },
                     exclude: /node_modules/,
                 },
-                // {
-                //     test: /\.vue$/i,
-                //     loader: "vue-loader",
-                //     options: {
-                //         esModule: true,
-                //     },
-                //     exclude: /node_modules/,
-                // },
-                // {
-                //     test: /\.ts$/,
-                //     loader: 'ts-loader',
-                //     options: { appendTsSuffixTo: [/\.vue$/] }
-                // },
                 {
                     test :/\.vue$/,
                     use: [

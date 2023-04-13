@@ -272,38 +272,13 @@ class ParticipantController extends BaseController
 
         $meals = $this->participationSrv->getMealsForTheDay($day);
 
-        // $list['meals']['en'] = array_map((fn ($meal): String => $meal->getDish()->getTitleEn()), $meals->toArray());
-        // $list['meals']['de'] = array_map((fn ($meal): String => $meal->getDish()->getTitleDe()), $meals->toArray());
+        $list['meals'] = [];
 
         foreach ($meals as $meal) {
-            $list['meals'][$meal->getDish()->getId()] = [
-                'title' => [
-                    'en' => $meal->getDish()->getTitleEn(),
-                    'de' => $meal->getDish()->getTitleDe(),
-                ],
-                'parent' => $meal->getDish()->getParent() ? $meal->getDish()->getParent()->getId() : null,
-                'participations' => $this->participationSrv->getCountByMeal($meal, true),
-            ];
-
-            if (null != $meal->getDish()->getParent()) {
-                $list['meals'][$meal->getDish()->getParent()->getId()] = [
-                    'title' => [
-                        'en' => $meal->getDish()->getParent()->getTitleEn(),
-                        'de' => $meal->getDish()->getParent()->getTitleDe(),
-                    ],
-                    //'parent' => $meal->getDish()->getParent()->getParent(),
-                    //'participations' => $this->participationSrv->getCountByMeal($meal->getDish()->getParent(), true),
-                ];
-            }
+            $list['meals'] = $list['meals'] + $this->getDishData($meal);
         }
 
-        //$list['meals'] = $meals->toArray();
         $list['day'] = $day->getDateTime();
-
-        /* @var Meal $meal */
-        // foreach ($meals as $meal) {
-        //     $list['participations'][$meal->getDish()->getSlug()] = $this->participationSrv->getCountByMeal($meal, true);
-        // }
 
         return new JsonResponse($list, 200);
     }
@@ -362,6 +337,29 @@ class ParticipantController extends BaseController
             'profilesJson' => json_encode($profilesArray),
             'prototype' => $prototype,
         ]);
+    }
+
+    private function getDishData(Meal $meal): array
+    {
+        $collection[$meal->getDish()->getId()] = [
+            'title' => [
+                'en' => $meal->getDish()->getTitleEn(),
+                'de' => $meal->getDish()->getTitleDe(),
+            ],
+            'parent' => $meal->getDish()->getParent() ? $meal->getDish()->getParent()->getId() : null,
+            'participations' => $this->participationSrv->getCountByMeal($meal, true),
+        ];
+
+        if (null != $meal->getDish()->getParent()) {
+            $collection[$meal->getDish()->getParent()->getId()] = [
+                'title' => [
+                    'en' => $meal->getDish()->getParent()->getTitleEn(),
+                    'de' => $meal->getDish()->getParent()->getTitleDe(),
+                ],
+            ];
+        }
+
+        return $collection;
     }
 
     private function generateResponse(string $route, string $action, Participant $participant): JsonResponse

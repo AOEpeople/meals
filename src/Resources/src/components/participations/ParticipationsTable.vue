@@ -1,6 +1,5 @@
 <template>
-  <table class="w-full table-fixed">
-    <!-- <ParticipantsTableHead /> -->
+  <table class="mt-1 w-full table-fixed">
     <ParticipantsTableTop />
     <ParticipantsTableBody />
   </table>
@@ -8,7 +7,6 @@
 
 
 <script setup lang="ts">
-import ParticipantsTableHead from './ParticipantsTableHead.vue';
 import ParticipantsTableBody from './ParticipantsTableBody.vue';
 import ParticipantsTableTop from './ParticipantsTableTop.vue';
 

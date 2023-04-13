@@ -1,33 +1,22 @@
 <template>
   <tr class="text-center">
     <td>{{ participantName }}</td>
-    <td>{{ combiBooked }}</td>
     <td
-      v-for="(value, key) in mealData"
-      :key="key"
+      v-for="value in meals"
+      :key="value.mealId"
     >
-      {{ value }}
+      {{ bookedMeals.booked.includes(value.mealId) }}
     </td>
   </tr>
 </template>
 
 <script setup lang="ts">
-import { Dictionary } from 'types/types';
-import { computed } from 'vue';
+import { IBookedData, IMealWithVariations } from '@/api/getShowParticipations';
 
-const props = defineProps<{
+defineProps<{
   participantName: string,
-  mealData: Dictionary<boolean>
+  bookedMeals: IBookedData,
+  meals: IMealWithVariations[]
 }>();
-
-const combiBooked = computed(() => {
-  let numberOfBookedMeals = 0;
-  for(const booked of Object.values(props.mealData)) {
-    if(booked) {
-      numberOfBookedMeals++;
-    }
-  }
-  return numberOfBookedMeals > 1;
-});
 
 </script>

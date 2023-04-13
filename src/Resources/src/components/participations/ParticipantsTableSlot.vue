@@ -5,10 +5,11 @@
     </th>
   </tr>
   <ParticipantsTableRow
-    v-for="(participantData, name) in participats"
+    v-for="(bookedMeals, name) in participants"
     :key="name"
     :participant-name="name.toString()"
-    :meal-data="participantData"
+    :booked-meals="bookedMeals"
+    :meals="meals"
   />
 </template>
 
@@ -16,14 +17,15 @@
 import { Dictionary } from 'types/types';
 import ParticipantsTableRow from './ParticipantsTableRow.vue';
 import { computed } from 'vue';
+import { IBookedData, IMealWithVariations } from '@/api/getShowParticipations';
 
 const props = defineProps<{
   slotName: string,
-  participats: Dictionary<Dictionary<boolean>>
+  participants: Dictionary<IBookedData>,
+  meals: IMealWithVariations[]
 }>();
 
 const numberOfMeals = computed(() => {
-  const firstParticipant = Object.keys(props.participats)[0];
-  return Object.keys(props.participats[firstParticipant]).length + 2;
+  return props.meals.length + 1;
 });
 </script>

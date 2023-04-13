@@ -1,14 +1,14 @@
 <template>
   <table class="w-full table-fixed border-t-2">
     <tr class="pt-10">
-      <td class="h-full w-full border-r-2 p-1 align-top">
+      <td class="h-full w-full p-1 align-top">
         <MealsSummary
           v-if="nextThreeDaysArr.length > 0"
           :day="nextThreeDaysArr[0]"
           class="border-r-2"
         />
       </td>
-      <td class="h-full w-full border-r-2 p-1 align-top">
+      <td class="h-full w-full p-1 align-top">
         <MealsSummary
           v-if="nextThreeDaysArr.length > 1"
           :day="nextThreeDaysArr[1]"

@@ -5,8 +5,6 @@
 
 
 <script setup lang="ts">
-import { useI18n } from 'vue-i18n';
-import MealsList from '@/components/participations/MealsList.vue';
 import ParticipationsTable from '@/components/participations/ParticipationsTable.vue';
 import MealOverview from '@/components/participations/MealOverview.vue';
 import { getShowParticipations } from '@/api/getShowParticipations';

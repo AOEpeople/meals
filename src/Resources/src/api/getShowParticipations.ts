@@ -1,6 +1,6 @@
-import { Dictionary } from "types/types"
-import { reactive, readonly } from "vue"
-import { DateTime } from "./getDashboardData"
+import { Dictionary } from "types/types";
+import { reactive, readonly } from "vue";
+import { DateTime } from "./getDashboardData";
 
 // !! any was used to circumvent a bug caused by exporting as readonly
 // TODO: remove any and use IBookedData interface angain
@@ -18,7 +18,7 @@ export interface IMealData {
         en: string,
         de: string
     },
-    parent?: number,
+    parent?: number | null,
     participations?: number
 }
 

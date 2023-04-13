@@ -1,11 +1,16 @@
 <template>
   <table
     v-if="meal"
-    class="table-fixed border-2 border-solid border-black"
+    class="h-full w-full table-fixed"
   >
     <thead>
       <tr>
-        <th>{{ languageIsEnglish ? meal.title.en : meal.title.de }}</th>
+        <th
+          :colspan="meal.variations.length > 0 ? meal.variations.length : 1"
+          class="p-1 text-center align-top"
+        >
+          {{ languageIsEnglish ? meal.title.en : meal.title.de }}
+        </th>
       </tr>
     </thead>
     <tbody v-if="meal.variations.length > 0">
@@ -13,6 +18,7 @@
         <td
           v-for="(variation, index) in meal.variations"
           :key="index"
+          class="font-light"
         >
           {{ getTitleForLocale(variation) }}
         </td>
@@ -32,7 +38,6 @@ const { locale } = useI18n();
 defineProps<{
   meal: IMealWithVariations
 }>();
-
 
 const languageIsEnglish = computed(() => locale.value === 'en');
 

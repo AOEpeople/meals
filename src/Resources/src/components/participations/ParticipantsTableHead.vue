@@ -1,6 +1,6 @@
 <template>
   <thead>
-    <tr>
+    <tr class="align-top">
       <th>Name</th>
       <th>Kombi</th>
       <th

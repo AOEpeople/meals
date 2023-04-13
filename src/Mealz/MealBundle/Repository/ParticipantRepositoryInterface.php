@@ -35,7 +35,7 @@ interface ParticipantRepositoryInterface extends ObjectRepository
     public function groupParticipantsByName(array $participants): array;
 
     /**
-     * @psalm-return array<string, array<string, array<string, bool>>>
+     * @psalm-return array<string, array<string, array{booked: non-empty-list<int>}>>
      */
     public function findAllGroupedBySlotAndProfileID(DateTime $date): array;
 

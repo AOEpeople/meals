@@ -178,7 +178,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
     }
 
     /**
-     * @psalm-return array<string, array<string, array<string, bool>>>
+     * @psalm-return array<string, array<string, array{booked: non-empty-list<int>}>>
      */
     public function findAllGroupedBySlotAndProfileID(DateTime $date): array
     {
@@ -207,7 +207,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
     /**
      * @param Participant[] $participants
      *
-     * @psalm-return array<string, array<string, array<string, bool>>>
+     * @psalm-return array<string, array<string, array{booked: non-empty-list<int>}>>
      */
     private function groupBySlotAndProfileID(array $participants): array
     {
@@ -217,13 +217,20 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
         foreach ($participants as $participant) {
             $slot = $participant->getSlot();
 
+            if (array_key_exists($participant->getProfile()->getUsername(), $noSlotParticipants) || (array_key_exists($slot->getTitle(), $groupedParticipants) && array_key_exists($participant->getProfile()->getUsername(), $groupedParticipants[$slot->getTitle()]))) {
+                continue;
+            }
+
             /** @var Meal $meal */
             foreach ($participant->getMeal()->getDay()->getMeals() as $meal) {
-                if (null === $slot || $slot->isDisabled() || $slot->isDeleted()) {
-                    $noSlotParticipants[$participant->getProfile()->getUsername()][$meal->getDish()->getSlug()] = null !== $meal->getParticipant($participant->getProfile());
+                if (null !== $meal->getParticipant($participant->getProfile()) && (null === $slot || $slot->isDisabled() || $slot->isDeleted())) {
+                    $noSlotParticipants[$participant->getProfile()->getUsername()]['booked'][] = $meal->getDish()->getId();
                     continue;
                 }
-                $groupedParticipants[$slot->getTitle()][$participant->getProfile()->getUsername()][$meal->getDish()->getSlug()] = null !== $meal->getParticipant($participant->getProfile());
+
+                if (null !== $meal->getParticipant($participant->getProfile())) {
+                    $groupedParticipants[$slot->getTitle()][$participant->getProfile()->getUsername()]['booked'][] = $meal->getDish()->getId();
+                }
             }
         }
 

@@ -1,30 +1,39 @@
 <template>
-  <div class="flex flex-row gap-1">
+  <th
+    v-for="(meal, index) in mealsWithVariations"
+    :key="index"
+    class="h-full w-full border-2 border-solid border-black"
+  >
     <Meal
-      v-for="(meal, index) in mealsWithVariations"
-      :key="index"
       :meal="meal"
-      class="flex-1"
     />
-  </div>
+  </th>
 </template>
 
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import Meal from './Meal.vue';
 import { getShowParticipations } from '@/api/getShowParticipations';
 import { IMealWithVariations } from '@/api/getShowParticipations';
 
 const { loadShowParticipations, loadedState, getMealsWithVariations } = getShowParticipations();
 
-const mealsWithVariations = ref<IMealWithVariations[]>([]);
+// const mealsWithVariations = ref<IMealWithVariations[]>([]);
 
-onMounted(async () => {
-  await loadShowParticipations();
+const mealsWithVariations = computed(() => {
   if(loadedState.loaded && loadedState.error === "") {
-    mealsWithVariations.value = getMealsWithVariations();
+    return getMealsWithVariations();
+  } else {
+    return [];
   }
 });
+
+// onMounted(async () => {
+//   await loadShowParticipations();
+//   if(loadedState.loaded && loadedState.error === "") {
+//     mealsWithVariations.value = getMealsWithVariations();
+//   }
+// });
 
 </script>

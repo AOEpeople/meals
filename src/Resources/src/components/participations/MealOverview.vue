@@ -1,19 +1,21 @@
 <template>
-  <table class="w-full table-fixed">
-    <tr>
-      <td>
+  <table class="w-full table-fixed border-t-2">
+    <tr class="pt-10">
+      <td class="h-full w-full border-r-2 p-1 align-top">
         <MealsSummary
           v-if="nextThreeDaysArr.length > 0"
           :day="nextThreeDaysArr[0]"
+          class="border-r-2"
         />
       </td>
-      <td>
+      <td class="h-full w-full border-r-2 p-1 align-top">
         <MealsSummary
           v-if="nextThreeDaysArr.length > 1"
           :day="nextThreeDaysArr[1]"
+          class="border-r-2"
         />
       </td>
-      <td>
+      <td class="h-full w-full p-1 align-top">
         <MealsSummary
           v-if="nextThreeDaysArr.length > 2"
           :day="nextThreeDaysArr[2]"
@@ -28,32 +30,14 @@ import { onMounted, ref } from 'vue';
 import MealsSummary from './MealsSummary.vue';
 import { dashboardStore } from '@/stores/dashboardStore';
 import { Day } from '@/api/getDashboardData';
+import { getShowParticipations } from '@/api/getShowParticipations';
 
+const { getCurrentDay } = getShowParticipations();
 const nextThreeDaysArr = ref<Day[]>([]);
 
 onMounted(async () => {
+  // TODO: fehleranfällig, durch eigenen fetch ersetzen (läd manchmal nicht)
   await dashboardStore.fillStore();
-  nextThreeDaysArr.value = getNextThreeDays();
+  nextThreeDaysArr.value = dashboardStore.getNextThreeDays(getCurrentDay());
 });
-
-
-function getNextThreeDays(): Day[] {
-  const nextThreeDays: Day[] = [];
-  const weeks = dashboardStore.getWeeks();
-  for(const weekKey of Object.keys(weeks)) {
-    const days = dashboardStore.getDays(weekKey);
-    if(days) {
-      for(const [dayKey, dayValue] of Object.entries(days)) {
-        if(!dayValue.isLocked) {
-          console.log(`Adding day <${dayValue.date.date}> to the next three days.`);
-          nextThreeDays.push(dayValue);
-        }
-        if(nextThreeDays.length === 3) {
-          return nextThreeDays;
-        }
-      }
-    }
-  }
-  return nextThreeDays;
-}
 </script>

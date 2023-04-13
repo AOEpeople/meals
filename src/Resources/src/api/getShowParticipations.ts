@@ -2,12 +2,17 @@ import { Dictionary } from "types/types"
 import { reactive, readonly } from "vue"
 import { DateTime } from "./getDashboardData"
 
+// !! any was used to circumvent a bug caused by exporting as readonly
+// TODO: remove any and use IBookedData interface angain
 export interface IParticipationsState {
-    data: Dictionary<Dictionary<Dictionary<boolean>>>,
+    data: Dictionary<Dictionary<any>>,
     meals: Dictionary<IMealData>,
     day: DateTime
 }
 
+export interface IBookedData {
+    booked: number[]
+}
 export interface IMealData {
     title: {
         en: string,
@@ -27,8 +32,9 @@ export interface IMealWithVariations {
         en: string,
         de: string
     },
-    variations: IMealData[],
-    participations: number
+    variations: IMealWithVariations[],
+    participations: number,
+    mealId: number
 }
 
 /**
@@ -55,12 +61,40 @@ const loadedState = reactive<ILoadedState>({
 export function getShowParticipations() {
 
     /**
+     * @returns the current day from the participationState
+     */
+    function getCurrentDay() {
+        return new Date(participationsState.day.date);
+    }
+
+    /**
      * @returns A list of strings that represent all the meals of the day
      */
     function getListOfMeals() {
         const mealsSlotOne = Object.keys(participationsState.data)[0];
         const firstParticipant = Object.keys(participationsState.data[mealsSlotOne])[0];
         return Object.keys(participationsState.data[mealsSlotOne][firstParticipant]);
+    }
+
+    /**
+     * Creates a list of all meals of the day that can be booked.
+     * e.g. meals that have variations, can't be booked. Only their variations can.
+     * meals that don't have variations are bookable
+     * @returns A list of bookable meals
+     */
+    function getListOfBookableMeals() {
+        const listOfBookableMeals: IMealWithVariations[] = [];
+        const meals: IMealWithVariations[] = getMealsWithVariations();
+
+        for(const meal of meals) {
+            if(meal.variations.length === 0) {
+                listOfBookableMeals.push(meal);
+            } else {
+                meal.variations.forEach((variation) => listOfBookableMeals.push(variation));
+            }
+        }
+
+        return listOfBookableMeals;
     }
 
     /**
@@ -73,16 +107,6 @@ export function getShowParticipations() {
             for(const [key, value] of Object.entries(participationsState.meals)) {
                 if(!value.parent) {
                     meals.push(createMealWithVariations(key));
-                } else if(value.parent === null && value.participations) {
-                    const mealWithoutParent: IMealWithVariations = {
-                        title: {
-                            en: value.title.en,
-                            de: value.title.de
-                        },
-                        variations: [],
-                        participations: value.participations
-                    }
-                    meals.push(mealWithoutParent);
                 }
             }
         }
@@ -90,18 +114,40 @@ export function getShowParticipations() {
     }
 
     /**
-     * Bundles a meal with its variations into one object
-     * @param mealKey key to acces the meal in the participationsState.meals
-     * @returns A meal that contains its variations
+     * Creates an object that conforms to the IMealWithVariations interface, but has no variations
+     * @param mealId key to acces the meal in the participationsState.meals
+     * @returns A meal without variations
      */
-    function createMealWithVariations(mealKey: string): IMealWithVariations {
+    function createMealWithoutVariations(mealId: string): IMealWithVariations {
+        const numberOfParticipants = participationsState.meals[mealId].participations;
+
         const mealWithVariations: IMealWithVariations = {
             title: {
-                en: participationsState.meals[mealKey].title.en,
-                de: participationsState.meals[mealKey].title.de
+                en: participationsState.meals[mealId].title.en,
+                de: participationsState.meals[mealId].title.de
             },
-            variations: getVariationsOfMeal(mealKey),
-            participations: 0
+            variations: [],
+            participations: numberOfParticipants  !== undefined ? numberOfParticipants : 0,
+            mealId: Number.parseInt(mealId)
+        }
+
+        return mealWithVariations;
+    }
+
+    /**
+     * Bundles a meal with its variations into one object
+     * @param mealId key to acces the meal in the participationsState.meals
+     * @returns A meal that contains its variations
+     */
+    function createMealWithVariations(mealId: string): IMealWithVariations {
+        const mealWithVariations: IMealWithVariations = {
+            title: {
+                en: participationsState.meals[mealId].title.en,
+                de: participationsState.meals[mealId].title.de
+            },
+            variations: getVariationsOfMeal(mealId),
+            participations: 0,
+            mealId: Number.parseInt(mealId)
         }
         return mealWithVariations;
     }
@@ -112,10 +158,10 @@ export function getShowParticipations() {
      * @returns Array of the variations of a meal
      */
     function getVariationsOfMeal(parentKey: string) {
-        const variations: IMealData[] = [];
-        for(const value of Object.values(participationsState.meals)) {
+        const variations: IMealWithVariations[] = [];
+        for(const [key, value] of Object.entries(participationsState.meals)) {
             if(value.parent && value.parent === Number.parseInt(parentKey)) {
-                variations.push(value);
+                variations.push(createMealWithoutVariations(key));
             }
         }
         return variations;
@@ -170,6 +216,8 @@ export function getShowParticipations() {
         loadedState: readonly(loadedState),
         loadShowParticipations,
         getMealsWithVariations,
-        getListOfMeals
+        getListOfBookableMeals,
+        getListOfMeals,
+        getCurrentDay
     }
 }

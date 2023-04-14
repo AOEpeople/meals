@@ -1,6 +1,7 @@
 <template>
-  <table class="mt-1 w-full table-fixed">
-    <ParticipantsTableTop />
+  <table class="flex h-[300px] w-full table-fixed flex-col">
+    <!-- <ParticipantsTableTop class="top-0" /> -->
+    <ParticipantsTableHead />
     <ParticipantsTableBody />
   </table>
 </template>
@@ -8,6 +9,6 @@
 
 <script setup lang="ts">
 import ParticipantsTableBody from './ParticipantsTableBody.vue';
-import ParticipantsTableTop from './ParticipantsTableTop.vue';
+import ParticipantsTableHead from './ParticipantsTableHead.vue';
 
 </script>

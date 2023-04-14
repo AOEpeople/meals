@@ -1,14 +1,12 @@
 <template>
-  <th
-    v-for="(meal, index) in mealsWithVariations"
-    :key="index"
-    class="h-full border-2"
-    :class="meal.title.en === 'Combined Dish' ? 'w-1/2' : 'w-full'"
-  >
+  <div class="flex h-fit flex-row gap-4">
     <Meal
+      v-for="(meal, index) in mealsWithVariations"
+      :key="index"
+      class="flex-1 border-2"
       :meal="meal"
     />
-  </th>
+  </div>
 </template>
 
 

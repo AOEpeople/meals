@@ -1,16 +1,25 @@
 <template>
-  <NavBar />
-  <div class="absolute z-[4]">
-    <vue3-progress-bar />
+  <div :class="{ 'h-screen': showParticipations } ">
+    <NavBar />
+    <div class="absolute z-[4]">
+      <vue3-progress-bar />
+    </div>
+    <Content class="relative z-[2]" />
+    <Footer class="relative z-[1]" />
   </div>
-  <Content class="relative z-[2]" />
-  <Footer class="relative z-[1]" />
 </template>
 
 <script setup>
 import NavBar from '@/components/NavBar.vue'
 import Footer from '@/components/Footer.vue'
 import Content from '@/components/Content.vue'
+import { useRoute } from 'vue-router'
+import { computed } from 'vue'
+
+const route = useRoute();
+const showParticipations = computed(() => {
+  return route.path === '/show/participations';
+});
 </script>
 
 <style>

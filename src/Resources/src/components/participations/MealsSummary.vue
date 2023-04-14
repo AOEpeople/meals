@@ -1,13 +1,17 @@
 <template>
-  <table class="h-full w-full table-fixed align-top">
+  <table class="h-full w-full table-fixed border-2 align-top">
     <tr>
-      <th>{{ weekDay }}</th>
+      <th class="p-4">
+        {{ weekDay }}
+      </th>
     </tr>
     <tr
       v-for="meal in mealNames"
       :key="meal"
     >
-      <td>{{ meal }}</td>
+      <td class="truncate border-t-2 p-4">
+        {{ meal }}
+      </td>
     </tr>
   </table>
 </template>

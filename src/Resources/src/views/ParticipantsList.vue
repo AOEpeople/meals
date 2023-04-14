@@ -1,6 +1,9 @@
 <template>
-  <ParticipationsTable />
-  <MealOverview class="mt-10" />
+  <div class="h-full w-full">
+    <MealsList class="mb-10" />
+    <ParticipationsTable class="max-w-screen-aoe mx-auto" />
+    <MealOverview class="max-w-screen-aoe mx-auto bg-white" />
+  </div>
 </template>
 
 
@@ -9,11 +12,17 @@ import ParticipationsTable from '@/components/participations/ParticipationsTable
 import MealOverview from '@/components/participations/MealOverview.vue';
 import { getShowParticipations } from '@/api/getShowParticipations';
 import { onMounted } from 'vue';
+import { useProgress } from '@marcoschulte/vue3-progress';
+import MealsList from '@/components/participations/MealsList.vue';
+
+const progress = useProgress().start();
 
 const { loadShowParticipations } = getShowParticipations();
 
 onMounted(async () => {
   await loadShowParticipations();
+  progress.finish();
 });
+
 
 </script>

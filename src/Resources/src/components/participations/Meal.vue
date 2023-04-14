@@ -1,7 +1,7 @@
 <template>
   <table
     v-if="meal"
-    class="h-full w-full table-fixed"
+    class="grow-1 table-fixed bg-white"
   >
     <thead>
       <tr>

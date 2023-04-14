@@ -1,8 +1,8 @@
 <template>
-  <tr class="border-b-2">
+  <tr class="table w-full table-fixed border-b-2">
     <th
-      :colspan="1"
-      class="py-4"
+      :colspan="numberOfMeals"
+      class="py-4 pl-4 text-left"
     >
       {{ slotName }}
     </th>
@@ -21,14 +21,15 @@
 import { Dictionary } from 'types/types';
 import ParticipantsTableRow from './ParticipantsTableRow.vue';
 import { IBookedData, IMealWithVariations } from '@/api/getShowParticipations';
+import { computed } from 'vue';
 
-defineProps<{
+const props = defineProps<{
   slotName: string,
   participants: Dictionary<IBookedData>,
   meals: IMealWithVariations[]
 }>();
 
-// const numberOfMeals = computed(() => {
-//   return props.meals.length + 1;
-// });
+const numberOfMeals = computed(() => {
+  return props.meals.length + 1;
+});
 </script>

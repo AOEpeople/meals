@@ -57,12 +57,10 @@ class DashboardStore extends Store<Dashboard> {
     }
 
     public getNextThreeDays(dayDate: Date): Day[] {
-        console.log(`GetNextThreeDays for date: ${dayDate}`);
         const nextThreeDays: Day[] = [];
         for(const week of Object.values(this.state.weeks)) {
             for(const day of Object.values(week.days)) {
                 const date = new Date(day.date.date);
-                // console.log(`Looking at day: ${day.date.date}`);
                 if(date.getTime() > dayDate.getTime()) {
                     nextThreeDays.push(day);
                 }

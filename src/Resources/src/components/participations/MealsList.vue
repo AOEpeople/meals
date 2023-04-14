@@ -2,7 +2,8 @@
   <th
     v-for="(meal, index) in mealsWithVariations"
     :key="index"
-    class="h-full w-full border-2"
+    class="h-full border-2"
+    :class="meal.title.en === 'Combined Dish' ? 'w-1/2' : 'w-full'"
   >
     <Meal
       :meal="meal"

@@ -1,13 +1,13 @@
 <template>
-  <table class="w-full table-fixed border-t-2">
+  <table class="w-full table-fixed">
     <tr class="pt-10">
-      <td class="h-full w-full border-r-2 p-1 align-top">
+      <td class="h-full w-full p-1 align-top">
         <MealsSummary
           v-if="nextThreeDaysArr.length > 0"
           :day="nextThreeDaysArr[0]"
         />
       </td>
-      <td class="h-full w-full border-r-2 p-1 align-top">
+      <td class="h-full w-full p-1 align-top">
         <MealsSummary
           v-if="nextThreeDaysArr.length > 1"
           :day="nextThreeDaysArr[1]"
@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import MealsSummary from './MealsSummary.vue';
 import { dashboardStore } from '@/stores/dashboardStore';
 import { Day } from '@/api/getDashboardData';
@@ -32,12 +32,15 @@ import { getShowParticipations } from '@/api/getShowParticipations';
 
 const { getCurrentDay, loadedState } = getShowParticipations();
 const nextThreeDaysArr = ref<Day[]>([]);
+const dashboardStoreLoaded = ref<boolean>(false);
+const loadingFinished = computed(() => dashboardStoreLoaded.value && loadedState.loaded);
 
 onMounted(async () => {
   await dashboardStore.fillStore();
+  dashboardStoreLoaded.value = true;
 });
 
-watch(loadedState, () => {
+watch(loadingFinished, () => {
   nextThreeDaysArr.value = dashboardStore.getNextThreeDays(getCurrentDay());
 });
 </script>

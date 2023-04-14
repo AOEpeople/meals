@@ -32,7 +32,6 @@ class UserDataStore extends Store<UserData> {
     public roleAllowsRoute(path: string) : boolean
     {
         const route = router.getRoutes().find(r => r.path === path)
-        console.log(`Route: ${route}, for path: ${path}`)
         if (route === undefined) return false
 
         return this.state.roles.some(role => route.meta.allowedRoles.includes(role))

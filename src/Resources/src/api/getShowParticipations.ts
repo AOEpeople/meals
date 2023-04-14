@@ -179,7 +179,7 @@ export function getShowParticipations() {
             const controller = new AbortController();
             const URL = `${window.location.origin}/api/print/participations`;
 
-            const timeoutId = setTimeout(() => controller.abort(), 1000);
+            const timeoutId = setTimeout(() => controller.abort(), 5000);
 
             const response = await fetch(URL, {
                 method: 'GET',

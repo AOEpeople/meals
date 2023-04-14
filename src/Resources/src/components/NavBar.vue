@@ -7,7 +7,7 @@
           aria-label="Top"
         >
           <div
-            v-if="isAuthenticated"
+            v-if="isAuthenticated && path !== '/show/participations'"
             id="dropdown"
             class="ml-6 justify-self-start xl:hidden"
           >
@@ -56,7 +56,7 @@
             </router-link>
           </div>
           <div
-            v-if="isAuthenticated"
+            v-if="isAuthenticated && path !== '/show/participations'"
             class="col-span-4 hidden space-x-3 xl:inline-block"
           >
             <span
@@ -73,7 +73,7 @@
             </span>
           </div>
           <div
-            v-if="isAuthenticated"
+            v-if="isAuthenticated && path !== '/show/participations'"
             class="col-span-4 inline-block space-x-4 justify-self-end"
           >
             <div class="hidden space-x-2 self-center text-right xl:inline-block">
@@ -111,7 +111,7 @@
         </nav>
       </header>
       <MobileDropdown3
-        v-if="isAuthenticated"
+        v-if="isAuthenticated && path !== '/show/participations'"
         :open="open"
         :userName="user"
         :balance="balanceString"
@@ -130,6 +130,7 @@
   import {computed} from 'vue'
   import MobileDropdown3 from "@/components/navbar/MobileDropdown3.vue";
   import {userDataStore} from "@/stores/userDataStore";
+  import { useRoute } from 'vue-router'
 
   const { t } = useI18n()
   defineProps({
@@ -151,6 +152,9 @@
     { name: 'header.navigation.costs',      to: '/costs',      icon: CashIcon,       access: userDataStore.roleAllowsRoute('/costs'     ) },
     { name: 'header.navigation.finance',    to: '/finance',    icon: CalculatorIcon, access: userDataStore.roleAllowsRoute('/finance'   ) },
   ];
+
+  const route = useRoute();
+  const path = computed(() => route.path);
 
   function logout() {
     sessionStorage.clear()

@@ -24,13 +24,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, onMounted, onUpdated, ref, watch } from 'vue';
 import MealsSummary from './MealsSummary.vue';
 import { dashboardStore } from '@/stores/dashboardStore';
 import { Day } from '@/api/getDashboardData';
 import { getShowParticipations } from '@/api/getShowParticipations';
+import { useComponentHeights } from '@/services/useComponentHeights';
 
 const { getCurrentDay, loadedState } = getShowParticipations();
+const { setSummaryUpdated } = useComponentHeights()
 const nextThreeDaysArr = ref<Day[]>([]);
 const dashboardStoreLoaded = ref<boolean>(false);
 const loadingFinished = computed(() => dashboardStoreLoaded.value && loadedState.loaded);
@@ -42,5 +44,10 @@ onMounted(async () => {
 
 watch(loadingFinished, () => {
   nextThreeDaysArr.value = dashboardStore.getNextThreeDays(getCurrentDay());
+  setSummaryUpdated();
+});
+
+onUpdated(() => {
+  setSummaryUpdated();
 });
 </script>

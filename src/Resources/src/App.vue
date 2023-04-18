@@ -1,12 +1,13 @@
 <template>
-  <div :class="{ 'h-screen': showParticipations } ">
-    <NavBar />
-    <div class="absolute z-[4]">
-      <vue3-progress-bar />
-    </div>
-    <Content class="relative z-[2]" />
-    <Footer class="relative z-[1]" />
+  <NavBar id="navibar" />
+  <div class="absolute z-[4]">
+    <vue3-progress-bar />
   </div>
+  <Content class="relative z-[2]" />
+  <Footer
+    v-if="!showParticipations"
+    class="relative z-[1]"
+  />
 </template>
 
 <script setup>
@@ -14,11 +15,18 @@ import NavBar from '@/components/NavBar.vue'
 import Footer from '@/components/Footer.vue'
 import Content from '@/components/Content.vue'
 import { useRoute } from 'vue-router'
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
+import { useComponentHeights } from '@/services/useComponentHeights'
 
 const route = useRoute();
+const { setNaviBarId } = useComponentHeights();
+
 const showParticipations = computed(() => {
   return route.path === '/show/participations';
+});
+
+onMounted(() => {
+  setNaviBarId('navibar');
 });
 </script>
 

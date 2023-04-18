@@ -7,7 +7,7 @@
       <tr>
         <th
           :colspan="meal.variations.length > 0 ? meal.variations.length : 1"
-          class="p-1 text-center align-top"
+          class="p-1 text-center align-top text-xl"
         >
           {{ languageIsEnglish ? meal.title.en : meal.title.de }}
         </th>

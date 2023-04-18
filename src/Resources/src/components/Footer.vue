@@ -39,7 +39,7 @@ const changeLocale = () => {
   locale.value = locale.value.substring(0, 2) === 'en' ? 'de' : 'en';
 }
 
-const year = (new Date()).getFullYear()
+const year = (new Date()).getFullYear();
 </script>
 <style scoped>
 #language:hover svg {

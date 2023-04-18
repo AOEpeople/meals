@@ -1,5 +1,8 @@
 <template>
-  <thead class="shrink-0 grow-0 basis-auto bg-white">
+  <thead
+    ref="tableHead"
+    class="shrink-0 grow-0 basis-auto bg-white"
+  >
     <tr class="table w-full table-fixed align-top">
       <th class="h-full w-1/2 border-2 p-2">
         Name
@@ -30,5 +33,4 @@ const mealsWithVariations = computed(() => {
     return [];
   }
 });
-
 </script>

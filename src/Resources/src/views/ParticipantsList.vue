@@ -1,8 +1,16 @@
 <template>
-  <div class="h-full w-full">
-    <MealsList class="mb-10" />
-    <ParticipationsTable class="max-w-screen-aoe mx-auto" />
-    <MealOverview class="max-w-screen-aoe mx-auto bg-white" />
+  <div class="h-full w-full px-8">
+    <MealsList
+      id="mealsList"
+      ref="mealsList"
+      class="mb-10"
+    />
+    <ParticipationsTable class="mx-auto" />
+    <MealOverview
+      id="mealsOverview"
+      ref="mealsOverview"
+      class="mx-auto"
+    />
   </div>
 </template>
 
@@ -14,15 +22,17 @@ import { getShowParticipations } from '@/api/getShowParticipations';
 import { onMounted } from 'vue';
 import { useProgress } from '@marcoschulte/vue3-progress';
 import MealsList from '@/components/participations/MealsList.vue';
+import { useComponentHeights } from '@/services/useComponentHeights';
 
 const progress = useProgress().start();
 
 const { loadShowParticipations } = getShowParticipations();
+const { setMealsSummaryId, setMealsListId } = useComponentHeights();
 
 onMounted(async () => {
   await loadShowParticipations();
   progress.finish();
+  setMealsSummaryId('mealsOverview');
+  setMealsListId('mealsList');
 });
-
-
 </script>

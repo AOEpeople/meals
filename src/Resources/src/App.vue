@@ -1,5 +1,8 @@
 <template>
-  <NavBar id="navibar" />
+  <NavBar
+    id="navibar"
+    ref="navibar"
+  />
   <div class="absolute z-[4]">
     <vue3-progress-bar />
   </div>
@@ -15,19 +18,35 @@ import NavBar from '@/components/NavBar.vue'
 import Footer from '@/components/Footer.vue'
 import Content from '@/components/Content.vue'
 import { useRoute } from 'vue-router'
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, onUpdated, ref, watch } from 'vue'
 import { useComponentHeights } from '@/services/useComponentHeights'
 
 const route = useRoute();
-const { setNaviBarId } = useComponentHeights();
+const { setNavBarHeight, windowWidth } = useComponentHeights();
+
+const navibar = ref(null);
 
 const showParticipations = computed(() => {
   return route.path === '/show/participations';
 });
 
-onMounted(() => {
-  setNaviBarId('navibar');
+watch(windowWidth, () => {
+  if(navibar.value) {
+    setNavBarHeight(navibar.value.$el.offsetHeight, 'navibar');
+  }
 });
+
+onMounted(() => {
+  if(navibar.value) {
+    setNavBarHeight(navibar.value.$el.offsetHeight, 'navibar');
+  }
+});
+
+onUpdated(() => {
+  if(navibar.value) {
+    setNavBarHeight(navibar.value.$el.offsetHeight, 'navibar');
+  }
+})
 </script>
 
 <style>

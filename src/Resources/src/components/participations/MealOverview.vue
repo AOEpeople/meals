@@ -1,5 +1,9 @@
 <template>
-  <table class="w-full table-fixed">
+  <table
+    id="mealsOverview"
+    ref="mealsOverview"
+    class="w-full table-fixed"
+  >
     <tr class="pt-10">
       <td class="h-full w-full p-1 align-top">
         <MealsSummary
@@ -32,7 +36,9 @@ import { getShowParticipations } from '@/api/getShowParticipations';
 import { useComponentHeights } from '@/services/useComponentHeights';
 
 const { getCurrentDay, loadedState } = getShowParticipations();
-const { setSummaryUpdated } = useComponentHeights()
+const { setMealOverviewHeight, windowWidth } = useComponentHeights();
+
+const mealsOverview = ref<HTMLTableElement | null>(null);
 const nextThreeDaysArr = ref<Day[]>([]);
 const dashboardStoreLoaded = ref<boolean>(false);
 const loadingFinished = computed(() => dashboardStoreLoaded.value && loadedState.loaded);
@@ -40,14 +46,24 @@ const loadingFinished = computed(() => dashboardStoreLoaded.value && loadedState
 onMounted(async () => {
   await dashboardStore.fillStore();
   dashboardStoreLoaded.value = true;
+  if(mealsOverview.value) {
+    setMealOverviewHeight(mealsOverview.value.offsetHeight, 'mealsOverview');
+  }
 });
 
 watch(loadingFinished, () => {
   nextThreeDaysArr.value = dashboardStore.getNextThreeDays(getCurrentDay());
-  setSummaryUpdated();
 });
 
+watch(windowWidth, () => {
+  if(mealsOverview.value) {
+    setMealOverviewHeight(mealsOverview.value.offsetHeight, 'mealsOverview');
+  }
+})
+
 onUpdated(() => {
-  setSummaryUpdated();
+  if(mealsOverview.value) {
+    setMealOverviewHeight(mealsOverview.value.offsetHeight, 'mealsOverview');
+  }
 });
 </script>

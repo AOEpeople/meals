@@ -4,25 +4,44 @@
     :style="{ height: tableHeight }"
   >
     <!-- <ParticipantsTableTop class="top-0" /> -->
-    <ParticipantsTableHead id="tableHead" />
+    <ParticipantsTableHead
+      id="tableHead"
+      ref="tableHead"
+    />
     <ParticipantsTableBody />
   </table>
 </template>
 
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, onUpdated, ref, watch } from 'vue';
 import ParticipantsTableBody from './ParticipantsTableBody.vue';
 import ParticipantsTableHead from './ParticipantsTableHead.vue';
 import { useComponentHeights } from '@/services/useComponentHeights';
 
-const { maxTableHeight, setTableHeaderId } = useComponentHeights();
+const { maxTableHeight, setTableHeadHight, windowWidth } = useComponentHeights();
+
+const tableHead = ref<InstanceType<typeof ParticipantsTableHead> | null>(null);
 
 const tableHeight = computed(() => {
   return `${maxTableHeight.value}px`;
 });
 
+watch(windowWidth, () => {
+  if(tableHead.value) {
+    setTableHeadHight(tableHead.value.$el.offsetHeight, 'tableHead');
+  }
+});
+
 onMounted(() => {
-  setTableHeaderId('tableHead');
+  if(tableHead.value) {
+    setTableHeadHight(tableHead.value.$el.offsetHeight, 'tableHead');
+  }
+});
+
+onUpdated(() => {
+  if(tableHead.value) {
+    setTableHeadHight(tableHead.value.$el.offsetHeight, 'tableHead');
+  }
 });
 </script>

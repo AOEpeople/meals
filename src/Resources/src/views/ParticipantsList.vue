@@ -22,17 +22,13 @@ import { getShowParticipations } from '@/api/getShowParticipations';
 import { onMounted } from 'vue';
 import { useProgress } from '@marcoschulte/vue3-progress';
 import MealsList from '@/components/participations/MealsList.vue';
-import { useComponentHeights } from '@/services/useComponentHeights';
 
 const progress = useProgress().start();
 
 const { loadShowParticipations } = getShowParticipations();
-const { setMealsSummaryId, setMealsListId } = useComponentHeights();
 
 onMounted(async () => {
   await loadShowParticipations();
   progress.finish();
-  setMealsSummaryId('mealsOverview');
-  setMealsListId('mealsList');
 });
 </script>

@@ -1,67 +1,28 @@
-import { onMounted, onUnmounted, reactive, ref, watch } from "vue";
-import { getShowParticipations } from "@/api/getShowParticipations";
+import { computed, onMounted, onUnmounted, reactive, readonly, ref } from "vue";
 
 interface IComponentHeightState {
-  componentsHeight: number,
+  navBarHeight: number,
+  tableHeadHeight: number,
+  mealListHeight: number,
+  mealOverviewHeight: number,
   screenHeight: number
 }
 
-interface IElementIdsState {
-  naviBarId: string,
-  tableHeaderId: string,
-  mealsSummaryId: string,
-  mealsListId: string
-}
-
-const { loadedState } = getShowParticipations();
-
-const maxTableHeight = ref(0);
-
 const listenerActive = ref(false);
 
-const summaryUpdated = ref(0);
+const windowWidth = ref(0);
 
 const componentHeightState = reactive<IComponentHeightState>({
-  componentsHeight: 0,
-  screenHeight: 0
+  navBarHeight: 0,
+  screenHeight: 0,
+  tableHeadHeight: 0,
+  mealListHeight: 0,
+  mealOverviewHeight: 0
 });
 
-const elementIdsState = reactive<IElementIdsState>({
-  naviBarId: "",
-  tableHeaderId: "",
-  mealsSummaryId: "",
-  mealsListId: ""
+const maxTableHeight = computed(() => {
+  return componentHeightState.screenHeight - (componentHeightState.navBarHeight + componentHeightState.tableHeadHeight + componentHeightState.mealListHeight + componentHeightState.mealOverviewHeight);
 });
-
-watch(
-  elementIdsState,
-  () => computeCombinedComponentHeight(),
-  { deep: true }
-);
-
-watch(
-  () => componentHeightState.componentsHeight,
-  () => computeMaxTableHeight()
-);
-
-watch(
-  () => componentHeightState.screenHeight,
-  () => computeMaxTableHeight()
-);
-
-watch(
-  () => loadedState.loaded,
-  () => computeCombinedComponentHeight()
-);
-
-watch(
-  () => summaryUpdated.value,
-  () => computeCombinedComponentHeight()
-);
-
-function computeMaxTableHeight() {
-  maxTableHeight.value = componentHeightState.screenHeight - componentHeightState.componentsHeight;
-}
 
 function getMarginHeightByElementId(elementId: string) {
   const element = document.getElementById(elementId);
@@ -73,29 +34,9 @@ function getMarginHeightByElementId(elementId: string) {
   }
 }
 
-function getOffsetHeightByElementId(elementId: string) {
-  const element = document.getElementById(elementId);
-  if(element) {
-    return element.offsetHeight;
-  } else {
-    return 0;
-  }
-}
-
-function computeCombinedComponentHeight() {
-  componentHeightState.componentsHeight = 0;
-  for(const elementId of Object.values(elementIdsState)) {
-    if(elementId === "") {
-      continue;
-    }
-    const margin = getMarginHeightByElementId(elementId);
-    const height = getOffsetHeightByElementId(elementId);
-    componentHeightState.componentsHeight += height + margin;
-  }
-}
-
 function setWindowHeight() {
   componentHeightState.screenHeight = window.innerHeight;
+  windowWidth.value = window.innerWidth;
 }
 
 export function useComponentHeights() {
@@ -115,32 +56,28 @@ export function useComponentHeights() {
     }
   });
 
-  function setNaviBarId(elementId: string) {
-    elementIdsState.naviBarId = elementId;
+  function setNavBarHeight(height: number, elementId: string) {
+    componentHeightState.navBarHeight = height + getMarginHeightByElementId(elementId);
   }
 
-  function setTableHeaderId(elementId: string) {
-    elementIdsState.tableHeaderId = elementId;
+  function setTableHeadHight(height: number, elementId: string) {
+    componentHeightState.tableHeadHeight = height + getMarginHeightByElementId(elementId);
   }
 
-  function setMealsSummaryId(elementId: string) {
-    elementIdsState.mealsSummaryId = elementId;
+  function setMealListHight(height: number, elementId: string) {
+    componentHeightState.mealListHeight = height + getMarginHeightByElementId(elementId);
   }
 
-  function setMealsListId(elementId: string) {
-    elementIdsState.mealsListId = elementId;
-  }
-
-  function setSummaryUpdated() {
-    summaryUpdated.value += 1;
+  function setMealOverviewHeight(height: number, elementId: string) {
+    componentHeightState.mealOverviewHeight = height + getMarginHeightByElementId(elementId);
   }
 
   return {
     maxTableHeight,
-    setNaviBarId,
-    setTableHeaderId,
-    setMealsSummaryId,
-    setMealsListId,
-    setSummaryUpdated
+    windowWidth: readonly(windowWidth),
+    setNavBarHeight,
+    setTableHeadHight,
+    setMealListHight,
+    setMealOverviewHeight
   }
 }

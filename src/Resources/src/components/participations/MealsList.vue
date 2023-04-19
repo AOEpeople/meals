@@ -1,8 +1,12 @@
 <template>
-  <div class="flex h-fit flex-row gap-4">
+  <div
+    id="mealsList"
+    ref="mealsList"
+    class="flex h-fit flex-row gap-4"
+  >
     <Meal
-      v-for="(meal, index) in mealsWithVariations"
-      :key="index"
+      v-for="meal in mealsWithVariations"
+      :key="meal.mealId"
       class="flex-1 border-2"
       :meal="meal"
     />
@@ -11,17 +15,39 @@
 
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, onMounted, onUpdated, ref, watch } from 'vue';
 import Meal from './Meal.vue';
 import { getShowParticipations } from '@/api/getShowParticipations';
+import { useComponentHeights } from '@/services/useComponentHeights';
 
 const { loadedState, getMealsWithVariations } = getShowParticipations();
+const { setMealListHight, windowWidth } = useComponentHeights();
+
+const mealsList = ref<HTMLDivElement | null>(null);
 
 const mealsWithVariations = computed(() => {
   if(loadedState.loaded && loadedState.error === "") {
     return getMealsWithVariations();
   } else {
     return [];
+  }
+});
+
+watch(windowWidth, () => {
+  if(mealsList.value) {
+    setMealListHight(mealsList.value.offsetHeight, 'mealsList');
+  }
+});
+
+onMounted(() => {
+  if(mealsList.value) {
+    setMealListHight(mealsList.value.offsetHeight, 'mealsList');
+  }
+});
+
+onUpdated(() => {
+  if(mealsList.value) {
+    setMealListHight(mealsList.value.offsetHeight, 'mealsList');
   }
 });
 </script>

@@ -1,8 +1,8 @@
 <template>
   <main>
     <div
-      class="mx-auto mt-10"
-      :class="[isShowParticipations ? 'max-w-full' : 'max-w-screen-aoe']"
+      class="mx-auto"
+      :class="[isShowParticipations ? 'max-w-full' : 'max-w-screen-aoe mt-10']"
     >
       <Suspense>
         <template #default>
@@ -18,7 +18,7 @@
   </main>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 

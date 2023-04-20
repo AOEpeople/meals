@@ -1,9 +1,8 @@
 <template>
-  <div class="h-full w-full px-8">
+  <div class="h-full w-full px-4">
     <MealsList
       id="mealsList"
       ref="mealsList"
-      class="mb-10"
     />
     <ParticipationsTable class="mx-auto" />
     <MealOverview

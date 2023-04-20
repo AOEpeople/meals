@@ -2,7 +2,7 @@
   <div
     id="mealsList"
     ref="mealsList"
-    class="flex h-fit flex-row gap-4"
+    class="my-6 flex h-fit flex-row gap-4"
   >
     <Meal
       v-for="meal in mealsWithVariations"

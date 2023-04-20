@@ -29,19 +29,19 @@ const tableHeight = computed(() => {
 
 watch(windowWidth, () => {
   if(tableHead.value) {
-    setTableHeadHight(tableHead.value.$el.offsetHeight, 'tableHead');
+    setTableHeadHight(0, 'tableHead');
   }
 });
 
 onMounted(() => {
   if(tableHead.value) {
-    setTableHeadHight(tableHead.value.$el.offsetHeight, 'tableHead');
+    setTableHeadHight(0, 'tableHead');
   }
 });
 
 onUpdated(() => {
   if(tableHead.value) {
-    setTableHeadHight(tableHead.value.$el.offsetHeight, 'tableHead');
+    setTableHeadHight(0, 'tableHead');
   }
 });
 </script>

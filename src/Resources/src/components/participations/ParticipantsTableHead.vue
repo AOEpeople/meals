@@ -1,16 +1,16 @@
 <template>
   <thead
     ref="tableHead"
-    class="shrink-0 grow-0 basis-auto bg-white"
+    class="shrink-0 grow-0 basis-auto rounded-t-lg bg-white shadow-[0_15px_35px_0_#5B788F21]"
   >
     <tr class="table w-full table-fixed align-top">
-      <th class="h-full w-1/2 border-2 px-2 py-4">
+      <th class="h-full w-1/2 px-2 py-4">
         Name
       </th>
       <th
         v-for="meal in mealsWithVariations"
         :key="meal.mealId"
-        class="h-full border-2 px-2 py-4"
+        class="h-full border-l-2 px-2 py-4"
         :class="meal.title.en === 'Combined Dish' ? 'w-1/2' : 'w-full'"
       >
         <MealHead :meal="meal" />

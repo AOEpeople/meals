@@ -1,5 +1,5 @@
 <template>
-  <tbody class="grow-1 shrink-1 block basis-auto overflow-y-auto overflow-x-hidden py-4">
+  <tbody class="grow-1 shrink-1 block basis-auto overflow-y-auto overflow-x-hidden">
     <ParticipantsTableSlot
       v-for="(participants, slot) in participationsState.data"
       :key="slot"

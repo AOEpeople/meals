@@ -1,15 +1,15 @@
 <template>
   <tr class="table w-full table-fixed border-b-2 text-center">
     <td
-      class="w-1/2 truncate border-r-2 py-4"
+      class="w-1/2 truncate py-4"
     >
       {{ participantName }}
     </td>
     <td
       v-for="value in meals"
       :key="value.mealId"
-      class="py-4"
       :class="value.title.en === 'Combined Dish' ? 'w-1/2' : 'w-full'"
+      class="py-4"
     >
       <ParticipantsTableData
         :booked-meals="bookedMeals"

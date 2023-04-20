@@ -1,12 +1,12 @@
 <template>
   <div
     v-if="meal.variations.length > 0"
-    class="flex h-full w-full flex-row"
+    class="flex flex-row items-stretch"
   >
     <div
       v-for="(variation, index) in meal.variations"
       :key="variation.mealId"
-      class="h-full w-full flex-1 text-center"
+      class="flex-1 border-l-2 text-center"
     >
       <svg
         v-if="bookedMeals.booked.includes(variation.mealId)"
@@ -25,7 +25,7 @@
   </div>
   <div
     v-else
-    class="h-full w-full text-center"
+    class="h-full min-h-[24px] border-l-2 text-center"
   >
     <svg
       v-if="bookedMeals.booked.includes(meal.mealId)"

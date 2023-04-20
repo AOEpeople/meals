@@ -12,6 +12,9 @@ const listenerActive = ref(false);
 
 const windowWidth = ref(0);
 
+/**
+ * State for the different heights of components used in the ParticipantsList view
+ */
 const componentHeightState = reactive<IComponentHeightState>({
   navBarHeight: 0,
   screenHeight: 0,
@@ -20,10 +23,18 @@ const componentHeightState = reactive<IComponentHeightState>({
   mealOverviewHeight: 0
 });
 
+/**
+ * Computed maximum possible height of the table body of the ParticipantsTableBody component.
+ */
 const maxTableHeight = computed(() => {
   return componentHeightState.screenHeight - (componentHeightState.navBarHeight + componentHeightState.tableHeadHeight + componentHeightState.mealListHeight + componentHeightState.mealOverviewHeight);
 });
 
+/**
+ * Computes the sum of margin-bottom and margin-top of an HTMLELement.
+ * @param elementId ID of the HTMLElement
+ * @returns height in pixel
+ */
 function getMarginHeightByElementId(elementId: string) {
   const element = document.getElementById(elementId);
   if(element) {
@@ -34,11 +45,18 @@ function getMarginHeightByElementId(elementId: string) {
   }
 }
 
+/**
+ * Sets screenHeight in the componentHeightState and the value of windowWidth to the current window dimensions
+ */
 function setWindowHeight() {
   componentHeightState.screenHeight = window.innerHeight;
   windowWidth.value = window.innerWidth;
 }
 
+/**
+ * Composable function to get the maximum possible height of the table body of the ParticipantsTableBody component.
+ * Initiates an eventlistener for the 'resize'-event when first Mounted.
+ */
 export function useComponentHeights() {
 
   onMounted(() => {
@@ -56,18 +74,38 @@ export function useComponentHeights() {
     }
   });
 
+  /**
+   * Sets the height (offsetHeight + marginHeight) of the NavBar in the componentHeightState
+   * @param height offsetHeight of the Element
+   * @param elementId ID of the HTMLElement fromm which the height was passed in
+   */
   function setNavBarHeight(height: number, elementId: string) {
     componentHeightState.navBarHeight = height + getMarginHeightByElementId(elementId);
   }
 
+  /**
+   * Sets the height (offsetHeight + marginHeight) of the TableHead in the componentHeightState
+   * @param height offsetHeight of the Element
+   * @param elementId ID of the HTMLElement fromm which the height was passed in
+   */
   function setTableHeadHight(height: number, elementId: string) {
     componentHeightState.tableHeadHeight = height + getMarginHeightByElementId(elementId);
   }
 
+  /**
+   * Sets the height (offsetHeight + marginHeight) of the MealList in the componentHeightState
+   * @param height offsetHeight of the Element
+   * @param elementId ID of the HTMLElement fromm which the height was passed in
+   */
   function setMealListHight(height: number, elementId: string) {
     componentHeightState.mealListHeight = height + getMarginHeightByElementId(elementId);
   }
 
+  /**
+   * Sets the height (offsetHeight + marginHeight) of the MealOverview in the componentHeightState
+   * @param height offsetHeight of the Element
+   * @param elementId ID of the HTMLElement fromm which the height was passed in
+   */
   function setMealOverviewHeight(height: number, elementId: string) {
     componentHeightState.mealOverviewHeight = height + getMarginHeightByElementId(elementId);
   }

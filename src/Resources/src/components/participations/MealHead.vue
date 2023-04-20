@@ -1,21 +1,20 @@
 <template>
-  <div
-    v-if="meal.variations.length > 0"
-    class="flex h-full w-full flex-row"
-  >
-    <div
-      v-for="variation in meal.variations"
-      :key="variation.mealId"
-      class="h-full w-full flex-1 truncate text-center"
-    >
-      {{ getTitleForLocale(variation) }}
+  <div class="flex h-full w-full flex-col">
+    <div class="h-full w-full flex-1 truncate text-center">
+      {{ getTitleForLocale(meal) }}
     </div>
-  </div>
-  <div
-    v-else
-    class="h-full w-full truncate text-center"
-  >
-    {{ getTitleForLocale(meal) }}
+    <div
+      v-if="meal.variations.length > 0"
+      class="flex h-full w-full flex-1 flex-row"
+    >
+      <div
+        v-for="variation in meal.variations"
+        :key="variation.mealId"
+        class="h-full w-full flex-1 truncate border-r-2 text-center last:border-r-0"
+      >
+        {{ getTitleForLocale(variation) }}
+      </div>
+    </div>
   </div>
 </template>
 

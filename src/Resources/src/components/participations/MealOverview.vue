@@ -2,22 +2,22 @@
   <table
     id="mealsOverview"
     ref="mealsOverview"
-    class="w-full table-fixed"
+    class="h-full w-full table-fixed"
   >
-    <tr class="pt-10">
-      <td class="h-full w-full p-1 align-top">
+    <tr>
+      <td class="h-full w-full pb-6 pr-4 align-top">
         <MealsSummary
           v-if="nextThreeDaysArr.length > 0"
           :day="nextThreeDaysArr[0]"
         />
       </td>
-      <td class="h-full w-full p-1 align-top">
+      <td class="h-full w-full pb-6 pr-4 align-top">
         <MealsSummary
           v-if="nextThreeDaysArr.length > 1"
           :day="nextThreeDaysArr[1]"
         />
       </td>
-      <td class="h-full w-full p-1 align-top">
+      <td class="h-full w-full pb-6 align-top">
         <MealsSummary
           v-if="nextThreeDaysArr.length > 2"
           :day="nextThreeDaysArr[2]"

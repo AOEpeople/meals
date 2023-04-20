@@ -13,7 +13,6 @@
     :participant-name="name.toString()"
     :booked-meals="bookedMeals"
     :meals="meals"
-    class="mt-4"
   />
 </template>
 

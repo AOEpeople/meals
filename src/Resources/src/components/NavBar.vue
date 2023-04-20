@@ -7,7 +7,7 @@
           aria-label="Top"
         >
           <div
-            v-if="isAuthenticated"
+            v-if="isAuthenticated && !isShowParticipations"
             id="dropdown"
             class="ml-6 justify-self-start xl:hidden"
           >
@@ -111,7 +111,7 @@
         </nav>
       </header>
       <MobileDropdown3
-        v-if="isAuthenticated"
+        v-if="isAuthenticated && !isShowParticipations"
         :open="open"
         :userName="user"
         :balance="balanceString"
@@ -130,6 +130,7 @@
   import {computed} from 'vue'
   import MobileDropdown3 from "@/components/navbar/MobileDropdown3.vue";
   import {userDataStore} from "@/stores/userDataStore";
+  import { useRoute } from 'vue-router';
 
   const { t } = useI18n()
   defineProps({
@@ -137,6 +138,12 @@
       default: false
     }
   })
+
+  const route = useRoute();
+
+  const isShowParticipations = computed(() => {
+    return route.path === '/show/participations';
+  });
 
   let balanceString = computed(() => userDataStore.balanceToLocalString());
 

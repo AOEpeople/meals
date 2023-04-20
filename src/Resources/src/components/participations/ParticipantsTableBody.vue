@@ -14,7 +14,6 @@
 </template>
 
 <script setup lang="ts">
-
 import { getShowParticipations } from '@/api/getShowParticipations';
 import ParticipantsTableSlot from './ParticipantsTableSlot.vue';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
@@ -23,6 +22,7 @@ const { participationsState, getMealsWithVariations, loadedState } = getShowPart
 
 const tableBody = ref<HTMLTableSectionElement | null>(null);
 const scrollDirectionDown = ref(true);
+
 const INTERVAL_DELAY = 16;
 const SCROLL_AMOUNT = 1;
 const TIMEOUT_AFTER_SCROLLING = 3000;
@@ -39,7 +39,7 @@ const mealsWithVariations = computed(() => {
 });
 
 onMounted(() => {
-  scrollProcessId = window.setInterval(() => scrollDown(tableBody.value), INTERVAL_DELAY);
+  scrollProcessId = window.setInterval(() => autoScroll(tableBody.value), INTERVAL_DELAY);
 });
 
 onUnmounted(() => {
@@ -48,7 +48,11 @@ onUnmounted(() => {
   }
 })
 
-function scrollDown(element: HTMLTableSectionElement | null) {
+/**
+ * Scrolls the passed in element in the direction indicated by scrollDirection
+ * @param element HTMLSectionElement to scroll
+ */
+function autoScroll(element: HTMLTableSectionElement | null) {
   if(scrollingActive && element) {
     setScrollDirection(element)
     element.scrollBy({
@@ -58,6 +62,11 @@ function scrollDown(element: HTMLTableSectionElement | null) {
   }
 }
 
+/**
+ * Sets the scrollDirectionDown value depending on the current scroll position.
+ * If the direction changes the sleep fuunction is called
+ * @param element element that is scrolled
+ */
 function setScrollDirection(element: HTMLTableSectionElement | null) {
   const cachedScrollDirection = scrollDirectionDown.value;
   if(element && scrollDirectionDown.value) {
@@ -72,6 +81,11 @@ function setScrollDirection(element: HTMLTableSectionElement | null) {
 
 }
 
+/**
+ * Sets scrollingActive to false, then waits a passed in number of milliseconds,
+ * then sets scrollingActive to true again
+ * @param ms
+ */
 function sleep(ms: number) {
   scrollingActive = false;
   setTimeout(() => scrollingActive = true, ms);

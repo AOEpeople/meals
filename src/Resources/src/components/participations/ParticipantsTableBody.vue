@@ -1,7 +1,7 @@
 <template>
   <tbody
     ref="tableBody"
-    class="grow-1 shrink-1 block basis-auto overflow-y-auto overflow-x-hidden"
+    class="z-1 grow-1 shrink-1 scrollbar-styling block basis-auto overflow-y-auto overflow-x-hidden rounded-b-lg bg-white px-1 pb-6"
   >
     <ParticipantsTableSlot
       v-for="(participants, slot) in participationsState.data"
@@ -29,6 +29,7 @@ const TIMEOUT_AFTER_SCROLLING = 3000;
 
 let scrollProcessId:number;
 let scrollingActive = true;
+let time: number;
 
 const mealsWithVariations = computed(() => {
   if(loadedState.loaded && loadedState.error === "") {
@@ -39,6 +40,7 @@ const mealsWithVariations = computed(() => {
 });
 
 onMounted(() => {
+  time = Date.now();
   scrollProcessId = window.setInterval(() => autoScroll(tableBody.value), INTERVAL_DELAY);
 });
 
@@ -53,13 +55,15 @@ onUnmounted(() => {
  * @param element HTMLSectionElement to scroll
  */
 function autoScroll(element: HTMLTableSectionElement | null) {
+  const timeSinceLastScroll = Date.now() - time;
   if(scrollingActive && element) {
     setScrollDirection(element)
     element.scrollBy({
-      top: scrollDirectionDown.value ? SCROLL_AMOUNT : -SCROLL_AMOUNT,
+      top: scrollDirectionDown.value ? scrollAmount(timeSinceLastScroll) : -scrollAmount(timeSinceLastScroll),
       behavior: 'smooth'
     });
   }
+  time = Date.now();
 }
 
 /**
@@ -90,8 +94,22 @@ function sleep(ms: number) {
   scrollingActive = false;
   setTimeout(() => scrollingActive = true, ms);
 }
+
+/**
+ * Computes the amount to scroll the table by in pixel
+ * @param timeSinceLastScroll
+ */
+function scrollAmount(timeSinceLastScroll: number) {
+  return timeSinceLastScroll * (SCROLL_AMOUNT / INTERVAL_DELAY);
+}
 </script>
 
 <style scoped>
+.scrollbar-styling {
+  scrollbar-width: none;
+}
 
+.scrollbar-styling::-webkit-scrollbar {
+  display: none;
+}
 </style>

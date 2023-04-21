@@ -46,6 +46,6 @@ const weekDay = computed(() => {
 });
 
 function mealNameIsEmpty(txt: string) {
-  return txt === "";
+  return txt === "" || txt === "Kombi-Gericht" || txt === "Combined Dish";
 }
 </script>

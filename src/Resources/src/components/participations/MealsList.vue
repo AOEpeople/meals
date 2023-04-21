@@ -7,7 +7,7 @@
     <Meal
       v-for="meal in mealsWithVariations"
       :key="meal.mealId"
-      class="flex-1 border-separate rounded-lg shadow-[0_15px_35px_0_#5B788F21]"
+      class="flex-1"
       :meal="meal"
     />
   </div>

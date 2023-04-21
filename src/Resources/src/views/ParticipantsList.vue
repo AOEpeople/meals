@@ -8,7 +8,7 @@
     <MealOverview
       id="mealsOverview"
       ref="mealsOverview"
-      class="mx-auto"
+      class="mx-auto mt-6"
     />
   </div>
 </template>

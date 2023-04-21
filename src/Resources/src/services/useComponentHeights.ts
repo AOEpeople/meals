@@ -77,7 +77,7 @@ export function useComponentHeights() {
   /**
    * Sets the height (offsetHeight + marginHeight) of the NavBar in the componentHeightState
    * @param height offsetHeight of the Element
-   * @param elementId ID of the HTMLElement fromm which the height was passed in
+   * @param elementId ID of the HTMLElement from which the height was passed in
    */
   function setNavBarHeight(height: number, elementId: string) {
     componentHeightState.navBarHeight = height + getMarginHeightByElementId(elementId);
@@ -86,7 +86,7 @@ export function useComponentHeights() {
   /**
    * Sets the height (offsetHeight + marginHeight) of the TableHead in the componentHeightState
    * @param height offsetHeight of the Element
-   * @param elementId ID of the HTMLElement fromm which the height was passed in
+   * @param elementId ID of the HTMLElement from which the height was passed in
    */
   function setTableHeadHight(height: number, elementId: string) {
     componentHeightState.tableHeadHeight = height + getMarginHeightByElementId(elementId);
@@ -95,7 +95,7 @@ export function useComponentHeights() {
   /**
    * Sets the height (offsetHeight + marginHeight) of the MealList in the componentHeightState
    * @param height offsetHeight of the Element
-   * @param elementId ID of the HTMLElement fromm which the height was passed in
+   * @param elementId ID of the HTMLElement from which the height was passed in
    */
   function setMealListHight(height: number, elementId: string) {
     componentHeightState.mealListHeight = height + getMarginHeightByElementId(elementId);
@@ -104,7 +104,7 @@ export function useComponentHeights() {
   /**
    * Sets the height (offsetHeight + marginHeight) of the MealOverview in the componentHeightState
    * @param height offsetHeight of the Element
-   * @param elementId ID of the HTMLElement fromm which the height was passed in
+   * @param elementId ID of the HTMLElement from which the height was passed in
    */
   function setMealOverviewHeight(height: number, elementId: string) {
     componentHeightState.mealOverviewHeight = height + getMarginHeightByElementId(elementId);

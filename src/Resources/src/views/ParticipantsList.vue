@@ -18,16 +18,21 @@
 import ParticipationsTable from '@/components/participations/ParticipationsTable.vue';
 import MealOverview from '@/components/participations/MealOverview.vue';
 import { getShowParticipations } from '@/api/getShowParticipations';
-import { onMounted } from 'vue';
+import { onMounted, onUnmounted } from 'vue';
 import { useProgress } from '@marcoschulte/vue3-progress';
 import MealsList from '@/components/participations/MealsList.vue';
 
 const progress = useProgress().start();
 
-const { loadShowParticipations } = getShowParticipations();
+const { loadShowParticipations, activatePeriodicFetch, disablePeriodicFetch } = getShowParticipations();
 
 onMounted(async () => {
   await loadShowParticipations();
   progress.finish();
+  activatePeriodicFetch();
+});
+
+onUnmounted(() => {
+  disablePeriodicFetch();
 });
 </script>

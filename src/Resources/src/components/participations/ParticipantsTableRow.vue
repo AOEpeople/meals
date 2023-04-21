@@ -1,5 +1,5 @@
 <template>
-  <tr class="table w-full table-fixed border-b-2 text-center">
+  <tr class="table w-full table-fixed border-b-[1px] text-center">
     <td
       class="w-1/2 truncate py-4"
     >

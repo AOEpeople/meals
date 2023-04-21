@@ -1,6 +1,10 @@
 import { Dictionary } from "types/types";
-import { reactive, readonly } from "vue";
+import { reactive, readonly, ref, watch } from "vue";
 import { DateTime } from "./getDashboardData";
+
+// timeout in ms between fetches of the participations
+// TODO: Increase timeout period for production
+const PERIODIC_TIMEOUT = 10000;
 
 // !! any was used to circumvent a bug caused by exporting as readonly
 // TODO: remove any and use IBookedData interface angain
@@ -56,9 +60,92 @@ const participationsState = reactive<IParticipationsState>({
 const loadedState = reactive<ILoadedState>({
     loaded: false,
     error: ""
-})
+});
+
+const periodicFetchActive = ref(false);
+
+/**
+ * Watcher that activates the periodicFetchParticipations-function when periodicFetchActive is set to true
+ * and was false before that
+ */
+watch(periodicFetchActive, (newPeriodicFetchActive, oldPeriodicFetchActive) => {
+    if(newPeriodicFetchActive && newPeriodicFetchActive !== oldPeriodicFetchActive) {
+        periodicFetchParticipations();
+    }
+});
+
+/**
+ * Fetches participations periodically, ends when periodicFetchActive is set to false
+ */
+async function periodicFetchParticipations() {
+    if(periodicFetchActive.value) {
+        setTimeout(async () => {
+            await fetchParticipations();
+            periodicFetchParticipations();
+        }, PERIODIC_TIMEOUT);
+    }
+
+}
+
+/**
+ * Function performs a GET request to '/api/print/participations' and sets
+ * the participationsState if no error occures
+ */
+async function fetchParticipations() {
+    // if(loadedState.loaded) {
+    //     return true;
+    // }
+    try {
+        const controller = new AbortController();
+        const URL = `${window.location.origin}/api/print/participations`;
+
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+        const response = await fetch(URL, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            signal: controller.signal
+        });
+
+        clearTimeout(timeoutId);
+
+        if(!response.ok) {
+            throw new Error("Getting the list of participants failed!");
+        }
+
+        const jsonObject: IParticipationsState = await response.json();
+        participationsState.data = jsonObject.data;
+        participationsState.day = jsonObject.day;
+        participationsState.meals = jsonObject.meals;
+        loadedState.loaded = true;
+
+    } catch(error) {
+        if(error instanceof Error) {
+            loadedState.error = error.message;
+        } else {
+            loadedState.error = 'Unknown error occured';
+        }
+        loadedState.loaded = false;
+    }
+}
 
 export function getShowParticipations() {
+
+    /**
+     * Activates the periodic fetching of participations
+     */
+    function activatePeriodicFetch() {
+        periodicFetchActive.value = true;
+    }
+
+    /**
+     * Disables the periodic fetching of participations
+     */
+    function disablePeriodicFetch() {
+        periodicFetchActive.value = false;
+    }
 
     /**
      * @returns the current day from the participationState
@@ -168,47 +255,10 @@ export function getShowParticipations() {
     }
 
     /**
-     * Function performs a GET request to '/api/print/participations' and sets
-     * the participationsState if no error occures
+     * Calls fetchParticipations
      */
     async function loadShowParticipations() {
-        if(loadedState.loaded) {
-            return true;
-        }
-        try {
-            const controller = new AbortController();
-            const URL = `${window.location.origin}/api/print/participations`;
-
-            const timeoutId = setTimeout(() => controller.abort(), 5000);
-
-            const response = await fetch(URL, {
-                method: 'GET',
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                signal: controller.signal
-            });
-
-            clearTimeout(timeoutId);
-
-            if(!response.ok) {
-                throw new Error("Getting the list of participants failed!");
-            }
-
-            const jsonObject: IParticipationsState = await response.json();
-            participationsState.data = jsonObject.data;
-            participationsState.day = jsonObject.day;
-            participationsState.meals = jsonObject.meals;
-            loadedState.loaded = true;
-
-        } catch(error) {
-            if(error instanceof Error) {
-                loadedState.error = error.message;
-            } else {
-                loadedState.error = 'Unknown error occured';
-            }
-            loadedState.loaded = false;
-        }
+        return fetchParticipations();
     }
 
     return {
@@ -218,6 +268,8 @@ export function getShowParticipations() {
         getMealsWithVariations,
         getListOfBookableMeals,
         getListOfMeals,
-        getCurrentDay
+        getCurrentDay,
+        activatePeriodicFetch,
+        disablePeriodicFetch
     }
 }

@@ -1,13 +1,13 @@
 <template>
   <table
     v-if="meal"
-    class="grow-1 table-fixed bg-white"
+    class="grow-1 table-fixed border-separate rounded-t-[18px] rounded-b-lg border-0 border-none bg-white"
   >
-    <thead>
-      <tr>
+    <thead class="py-4 shadow-[0_15px_35px_0_#5B788F21]">
+      <tr class="w-full">
         <th
           :colspan="meal.variations.length > 0 ? meal.variations.length : 1"
-          class="p-1 text-center align-top text-lg"
+          class="text-primary text-center align-top text-lg"
         >
           {{ languageIsEnglish ? meal.title.en : meal.title.de }}
         </th>
@@ -18,7 +18,7 @@
         <td
           v-for="(variation, index) in meal.variations"
           :key="index"
-          class="font-light"
+          class="pb-4 font-light"
         >
           {{ getTitleForLocale(variation) }}
         </td>

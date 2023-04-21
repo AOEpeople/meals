@@ -2,7 +2,7 @@
   <tr class="table w-full table-fixed border-b-2">
     <th
       :colspan="numberOfMeals"
-      class="py-4 pl-4 text-left"
+      class="text-primary py-4 pl-4 text-left"
     >
       {{ slotName }}
     </th>

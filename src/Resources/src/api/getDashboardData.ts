@@ -1,6 +1,6 @@
 import useApi from "@/api/api";
 import { Dictionary } from "../../types/types";
-import { ref } from "vue";
+import { reactive, readonly, ref, watch } from "vue";
 
 export type Meal = {
     variations: Dictionary<Meal> | null
@@ -53,6 +53,85 @@ export type Week = {
 
 export type Dashboard = {
     weeks: Dictionary<Week>
+}
+
+// Sets the timeout period for getting the meals for the next three days in milliseconds (3600000 for one hour)
+const PERIODIC_TIMEOUT = 3600000;
+
+const dashBoardState = reactive<Dashboard>({
+    weeks: {}
+});
+
+const periodicFetchActive = ref(false);
+
+/**
+ * Watcher that activates the periodicFetchDashboard-function when periodicFetchActive is set to true
+ * and was false before that
+ */
+watch(periodicFetchActive, (newPeriodicFetchActive, oldPeriodicFetchActive) => {
+    if(newPeriodicFetchActive && newPeriodicFetchActive !== oldPeriodicFetchActive) {
+        periodicFetchDashboard();
+    }
+});
+
+/**
+ * Fetches dashboard periodically, ends when periodicFetchActive is set to false
+ */
+async function periodicFetchDashboard() {
+    if(periodicFetchActive.value) {
+        setTimeout(async () => {
+            await getDashboard();
+            periodicFetchDashboard();
+        }, PERIODIC_TIMEOUT);
+    }
+}
+
+async function getDashboard() {
+    const { response: dashboardData, request } = useApi<Dashboard>(
+        "GET",
+        "api/dashboard",
+    );
+
+    await request();
+
+    if(dashboardData.value) {
+        dashBoardState.weeks = dashboardData.value.weeks;
+    }
+}
+
+export function getDashboardData() {
+
+    function activatePeriodicFetch() {
+        periodicFetchActive.value = true;
+    }
+
+    function disablePeriodicFetch() {
+        periodicFetchActive.value = false;
+    }
+
+    function getNextThreeDays(dayDate: Date): Day[] {
+        const nextThreeDays: Day[] = [];
+        for(const week of Object.values(dashBoardState.weeks)) {
+            for(const day of Object.values(week.days)) {
+                const date = new Date(day.date.date);
+                if(date.getTime() > dayDate.getTime()) {
+                    nextThreeDays.push(day);
+                }
+                if(nextThreeDays.length >= 3) {
+                    return nextThreeDays;
+                }
+            }
+        }
+        return nextThreeDays;
+    }
+
+    return {
+        dashBoardState: readonly(dashBoardState),
+        getDashboard,
+        activatePeriodicFetch,
+        disablePeriodicFetch,
+        getNextThreeDays
+    }
 }
 
 export async function useDashboardData() {

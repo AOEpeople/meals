@@ -14,6 +14,7 @@
       <ParticipantsTableData
         :booked-meals="bookedMeals"
         :meal="value"
+        :booked-combined-meal="bookedCombinedMeal"
       />
     </td>
   </tr>
@@ -22,11 +23,22 @@
 <script setup lang="ts">
 import { IBookedData, IMealWithVariations } from '@/api/getShowParticipations';
 import ParticipantsTableData from './ParticipantsTableData.vue';
+import { computed } from 'vue';
 
-defineProps<{
+const props = defineProps<{
   participantName: string,
   bookedMeals: IBookedData,
   meals: IMealWithVariations[]
 }>();
 
+const bookedCombinedMeal = computed(() => {
+  for(const meal of props.meals) {
+    if(meal.title.en === 'Combined Dish') {
+      if(props.bookedMeals.booked.includes(meal.mealId)) {
+        return true;
+      }
+    }
+  }
+  return false;
+});
 </script>

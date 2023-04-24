@@ -1,10 +1,11 @@
 import { Dictionary } from "types/types";
 import { reactive, readonly, ref, watch } from "vue";
 import { DateTime } from "./getDashboardData";
+import useApi from "./api";
 
 // timeout in ms between fetches of the participations
 // TODO: Increase timeout period for production
-const PERIODIC_TIMEOUT = 10000;
+const PERIODIC_TIMEOUT = 60000;
 
 // !! any was used to circumvent a bug caused by exporting as readonly
 // TODO: remove any and use IBookedData interface angain
@@ -88,46 +89,20 @@ async function periodicFetchParticipations() {
 }
 
 /**
- * Function performs a GET request to '/api/print/participations' and sets
- * the participationsState if no error occures
+ * Function performs a GET request to '/api/print/participations' and sets the IParticipationsState accordingly
  */
 async function fetchParticipations() {
-    // if(loadedState.loaded) {
-    //     return true;
-    // }
-    try {
-        const controller = new AbortController();
-        const URL = `${window.location.origin}/api/print/participations`;
+    const { response: listData, request, error } = useApi<IParticipationsState>(
+        "GET",
+        "/api/print/participations",
+    );
 
-        const timeoutId = setTimeout(() => controller.abort(), 5000);
-
-        const response = await fetch(URL, {
-            method: 'GET',
-            headers: {
-                "Content-Type": "application/json",
-            },
-            signal: controller.signal
-        });
-
-        clearTimeout(timeoutId);
-
-        if(!response.ok) {
-            throw new Error("Getting the list of participants failed!");
-        }
-
-        const jsonObject: IParticipationsState = await response.json();
-        participationsState.data = jsonObject.data;
-        participationsState.day = jsonObject.day;
-        participationsState.meals = jsonObject.meals;
+    await request();
+    if(listData.value && error.value === false) {
+        participationsState.data = listData.value.data;
+        participationsState.day = listData.value.day;
+        participationsState.meals = listData.value.meals;
         loadedState.loaded = true;
-
-    } catch(error) {
-        if(error instanceof Error) {
-            loadedState.error = error.message;
-        } else {
-            loadedState.error = 'Unknown error occured';
-        }
-        loadedState.loaded = false;
     }
 }
 

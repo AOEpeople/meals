@@ -7,13 +7,18 @@
       {{ slotName }}
     </th>
   </tr>
-  <ParticipantsTableRow
-    v-for="(bookedMeals, name) in participants"
-    :key="name"
-    :participant-name="name.toString()"
-    :booked-meals="bookedMeals"
-    :meals="meals"
-  />
+  <TransitionGroup
+    name="rows"
+    appear
+  >
+    <ParticipantsTableRow
+      v-for="(bookedMeals, name) in participants"
+      :key="name"
+      :participant-name="name.toString()"
+      :booked-meals="bookedMeals"
+      :meals="meals"
+    />
+  </TransitionGroup>
 </template>
 
 <script setup lang="ts">
@@ -32,3 +37,16 @@ const numberOfMeals = computed(() => {
   return props.meals.length + 1;
 });
 </script>
+
+<style>
+.rows-move,
+.rows-enter-active,
+.rows-leave-active {
+  transition: all 0.5s ease;
+}
+.rows-enter-from,
+.rows-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+</style>

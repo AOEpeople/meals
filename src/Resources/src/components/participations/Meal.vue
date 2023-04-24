@@ -3,22 +3,25 @@
     v-if="meal"
     class="grow-1 table-fixed border-separate rounded-t-[18px] rounded-b-lg border-0 border-none bg-white"
   >
-    <thead class="py-4 shadow-[0_15px_35px_0_#5B788F21]">
+    <thead class="h-full shadow-[0_15px_35px_0_#5B788F21]">
       <tr class="w-full">
         <th
           :colspan="meal.variations.length > 0 ? meal.variations.length : 1"
-          class="text-primary text-center align-top text-lg"
+          class="text-primary py-4 text-center text-lg"
         >
           {{ languageIsEnglish ? meal.title.en : meal.title.de }}
         </th>
       </tr>
     </thead>
-    <tbody v-if="meal.variations.length > 0">
+    <tbody
+      v-if="meal.variations.length > 0"
+      class="h-full"
+    >
       <tr>
         <td
           v-for="(variation, index) in meal.variations"
           :key="index"
-          class="pb-4 font-light"
+          class="pb-4 text-center font-light"
         >
           {{ getTitleForLocale(variation) }}
         </td>

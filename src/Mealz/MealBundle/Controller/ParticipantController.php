@@ -160,7 +160,7 @@ class ParticipantController extends BaseController
         $entityManager->persist($participant);
         $entityManager->flush();
 
-        $this->eventDispatcher->dispatch(new MealOfferCancelledEvent($participant->getMeal()));
+        $this->eventDispatcher->dispatch(new MealOfferCancelledEvent($participant));
 
         return $this->generateResponse('MealzMealBundle_Participant_swap', 'unswapped', $participant);
     }

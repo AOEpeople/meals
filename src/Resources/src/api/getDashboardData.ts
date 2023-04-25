@@ -62,6 +62,8 @@ const dashBoardState = reactive<Dashboard>({
     weeks: {}
 });
 
+const errorState = ref(false);
+
 const periodicFetchActive = ref(false);
 
 /**
@@ -87,15 +89,18 @@ async function periodicFetchDashboard() {
 }
 
 async function getDashboard() {
-    const { response: dashboardData, request } = useApi<Dashboard>(
+    const { response: dashboardData, request, error } = useApi<Dashboard>(
         "GET",
         "api/dashboard",
     );
 
     await request();
 
-    if(dashboardData.value) {
+    if(dashboardData.value && !error.value) {
+        errorState.value = false;
         dashBoardState.weeks = dashboardData.value.weeks;
+    } else {
+        errorState.value = true;
     }
 }
 
@@ -127,6 +132,7 @@ export function getDashboardData() {
 
     return {
         dashBoardState: readonly(dashBoardState),
+        errorState: readonly(errorState),
         getDashboard,
         activatePeriodicFetch,
         disablePeriodicFetch,

@@ -4,7 +4,6 @@ import { DateTime } from "./getDashboardData";
 import useApi from "./api";
 
 // timeout in ms between fetches of the participations
-// TODO: Increase timeout period for production
 const PERIODIC_TIMEOUT = 60000;
 
 // !! any was used to circumvent a bug caused by exporting as readonly
@@ -98,11 +97,16 @@ async function fetchParticipations() {
     );
 
     await request();
-    if(listData.value && error.value === false) {
+    if(listData.value && !error.value) {
+        loadedState.error = "";
         participationsState.data = listData.value.data;
         participationsState.day = listData.value.day;
         participationsState.meals = listData.value.meals;
         loadedState.loaded = true;
+    } else if(!listData.value) {
+        loadedState.error = "ERROR while fetching listData for IParticipationState";
+    } else if(error.value) {
+        loadedState.error = "Unknown error in getShowParticipations";
     }
 }
 

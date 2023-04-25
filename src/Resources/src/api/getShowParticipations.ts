@@ -9,10 +9,8 @@ const PERIODIC_TIMEOUT = 60000;
 // timeout betweeen refetches if an error occures
 const REFETCH_TIME_ON_ERROR = 10000;
 
-// !! any was used to circumvent a bug caused by exporting as readonly
-// TODO: remove any and use IBookedData interface angain
 export interface IParticipationsState {
-    data: Dictionary<Dictionary<any>>,
+    data: Dictionary<Dictionary<IBookedData>>,
     meals: Dictionary<IMealData>,
     day: DateTime
 }

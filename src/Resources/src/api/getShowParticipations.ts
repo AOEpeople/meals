@@ -6,6 +6,9 @@ import useApi from "./api";
 // timeout in ms between fetches of the participations
 const PERIODIC_TIMEOUT = 60000;
 
+// timeout betweeen refetches if an error occures
+const REFETCH_TIME_ON_ERROR = 10000;
+
 // !! any was used to circumvent a bug caused by exporting as readonly
 // TODO: remove any and use IBookedData interface angain
 export interface IParticipationsState {
@@ -105,8 +108,10 @@ async function fetchParticipations() {
         loadedState.loaded = true;
     } else if(!listData.value) {
         loadedState.error = "ERROR while fetching listData for IParticipationState";
+        setTimeout(fetchParticipations, REFETCH_TIME_ON_ERROR);
     } else if(error.value) {
         loadedState.error = "Unknown error in getShowParticipations";
+        setTimeout(fetchParticipations, REFETCH_TIME_ON_ERROR);
     }
 }
 

@@ -58,6 +58,9 @@ export type Dashboard = {
 // Sets the timeout period for getting the meals for the next three days in milliseconds (3600000 for one hour)
 const PERIODIC_TIMEOUT = 3600000;
 
+// timeout betweeen refetches if an error occures
+const REFETCH_TIME_ON_ERROR = 10000;
+
 const dashBoardState = reactive<Dashboard>({
     weeks: {}
 });
@@ -101,6 +104,7 @@ async function getDashboard() {
         dashBoardState.weeks = dashboardData.value.weeks;
     } else {
         errorState.value = true;
+        setTimeout(getDashboard, REFETCH_TIME_ON_ERROR);
     }
 }
 

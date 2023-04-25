@@ -1,7 +1,7 @@
 <template>
   <div class="text-center">
     <svg
-      class="mr-2 inline min-w-[36px] align-text-bottom text-primary"
+      class="text-primary mr-2 inline min-w-[36px] align-text-bottom"
       width="36"
       height="36"
       viewBox="0 0 14 20"
@@ -31,7 +31,7 @@
     <h1 class="inline">
       {{ t('printList.title') + dateString }}
     </h1>
-  </div> 
+  </div>
   <div class="mb-20 px-4 sm:px-6 lg:px-8">
     <div class="mt-8 flex flex-col">
       <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -42,13 +42,13 @@
                 <tr class="divide-y divide-gray-200">
                   <th
                     scope="col"
-                    class="px-4 py-3.5 text-left text-sm font-semibold text-primary"
+                    class="text-primary px-4 py-3.5 text-left text-sm font-semibold"
                   />
                   <th
                     v-for="(mealName, index) in mealNames"
                     :key="index"
                     scope="col"
-                    class="px-3 py-3.5 text-center text-sm font-semibold text-primary"
+                    class="text-primary px-3 py-3.5 text-center text-sm font-semibold"
                   >
                     {{ mealName }}
                   </th>
@@ -57,7 +57,7 @@
               <tbody class="divide-y divide-gray-200 bg-white">
                 <template
                   v-for="(participant, slotName) in listData.data"
-                  :key="slotName"
+                  :key="String(slotName)"
                 >
                   <tr class="border-t border-gray-200">
                     <th
@@ -65,7 +65,7 @@
                       scope="colgroup"
                       class="bg-gray-50 px-4 py-2 text-left text-sm font-semibold text-gray-900 sm:px-6"
                     >
-                      {{ slotName }}
+                      {{ String(slotName) }}
                     </th>
                   </tr>
                   <tr
@@ -73,20 +73,20 @@
                     :key="index"
                     :class="[index === 0 ? 'border-gray-300' : 'border-gray-200', 'border-t']"
                   >
-                    <td class="whitespace-nowrap py-4 pr-3 pl-4 text-sm font-medium text-primary sm:pl-6">
-                      {{ participantName }}
+                    <td class="text-primary whitespace-nowrap py-4 pr-3 pl-4 text-sm font-medium sm:pl-6">
+                      {{ String(participantName) }}
                     </td>
                     <td
-                      v-for="(participation, p_index) in participations"
-                      :key="index + '_' + p_index"
+                      v-for="(meal, mealId) in listData.meals"
+                      :key="`${index}${String(mealId)}`"
                       class="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500"
                     >
                       <svg
-                        v-if="participation"
+                        v-if="participations.booked.includes(parseInt(String(mealId)))"
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
                         fill="currentColor"
-                        class="m-auto block h-6 w-6 text-primary"
+                        class="text-primary m-auto block h-6 w-6"
                       >
                         <path
                           fill-rule="evenodd"
@@ -105,7 +105,7 @@
                     {{ t('printList.participations') }}
                   </th>
                   <th
-                    v-for="(totalSum, index) in listData.participations"
+                    v-for="(totalSum, index) in participationCount"
                     :key="index"
                     scope="colgroup"
                     class="bg-gray-50 px-4 py-2 text-center text-sm font-semibold text-gray-900 sm:px-6"
@@ -122,23 +122,34 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {useI18n} from "vue-i18n";
-import {usePrintableListData} from "@/api/getPrintableListData";
-import {computed} from "vue";
+import { usePrintableListData } from "@/api/getPrintableListData";
+import { computed } from "vue";
 import {useProgress} from "@marcoschulte/vue3-progress";
+
 const progress = useProgress().start()
 const { t, locale } = useI18n()
 
-const {listData, error} = await usePrintableListData()
-if ( error.value ) {
+const { listData } = usePrintableListData();
 
-}
+const mealNames = computed(() => {
+  const names: string[] = [];
+  Object.values(listData.meals).forEach(meal => {
+    names.push(locale.value === 'en' ? meal.title.en : meal.title.de);
+  });
+  return names;
+});
 
-const mealNames = computed(() => locale.value === 'en' ? listData.value.meals.en : listData.value.meals.de)
+const participationCount = computed(() => {
+  const count: number[] = [];
+  Object.values(listData.meals).forEach(meal => {
+    count.push(meal.participations ? meal.participations : 0);
+  })
+  return count;
+})
 
-const date = new Date(Date.parse(listData.value.day.date));
-const dateString = computed(() => date.toLocaleDateString(locale.value, {weekday: 'long', month: 'numeric', day: 'numeric'}))
+const dateString = computed(() => new Date(Date.parse(listData.day.date)).toLocaleDateString(locale.value, {weekday: 'long', month: 'numeric', day: 'numeric'}));
 
 progress.finish()
 </script>

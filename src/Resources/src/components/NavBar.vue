@@ -56,7 +56,7 @@
             </router-link>
           </div>
           <div
-            v-if="isAuthenticated"
+            v-if="isAuthenticated && !isShowParticipations"
             class="col-span-4 hidden space-x-3 xl:inline-block"
           >
             <span
@@ -73,7 +73,7 @@
             </span>
           </div>
           <div
-            v-if="isAuthenticated"
+            v-if="isAuthenticated && !isShowParticipations"
             class="col-span-4 inline-block space-x-4 justify-self-end"
           >
             <div class="hidden space-x-2 self-center text-right xl:inline-block">
@@ -108,6 +108,11 @@
               </div>
             </div>
           </div>
+          <ErrorTrafficLight
+            v-if="isShowParticipations"
+            :error-states="[errorState, getShowParticipationsError]"
+            class="col-end-4 inline-block justify-self-center xl:col-end-12"
+          />
         </nav>
       </header>
       <MobileDropdown3
@@ -131,6 +136,9 @@
   import MobileDropdown3 from "@/components/navbar/MobileDropdown3.vue";
   import {userDataStore} from "@/stores/userDataStore";
   import { useRoute } from 'vue-router';
+  import ErrorTrafficLight from './navbar/ErrorTrafficLight.vue'
+  import { getDashboardData } from '@/api/getDashboardData';
+  import { getShowParticipations } from '@/api/getShowParticipations';
 
   const { t } = useI18n()
   defineProps({
@@ -139,11 +147,16 @@
     }
   })
 
+  const { errorState } = getDashboardData();
+  const { loadedState } = getShowParticipations();
+
   const route = useRoute();
 
   const isShowParticipations = computed(() => {
     return route.path === '/show/participations';
   });
+
+  const getShowParticipationsError = computed(() => loadedState.error !== "");
 
   let balanceString = computed(() => userDataStore.balanceToLocalString());
 

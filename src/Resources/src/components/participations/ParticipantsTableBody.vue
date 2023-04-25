@@ -7,16 +7,18 @@
       v-for="(participants, slot) in participationsState.data"
       :key="slot"
       :slot-name="slot.toString()"
-      :participants="participants"
+      :participants="// @ts-ignore
+        convertToIBookedData(participants)"
       :meals="mealsWithVariations"
     />
   </tbody>
 </template>
 
 <script setup lang="ts">
-import { getShowParticipations } from '@/api/getShowParticipations';
+import { IBookedData, getShowParticipations } from '@/api/getShowParticipations';
 import ParticipantsTableSlot from './ParticipantsTableSlot.vue';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { Dictionary } from 'types/types';
 
 const { participationsState, getMealsWithVariations, loadedState } = getShowParticipations();
 
@@ -101,6 +103,15 @@ function sleep(ms: number) {
  */
 function scrollAmount(timeSinceLastScroll: number) {
   return timeSinceLastScroll * (SCROLL_AMOUNT / INTERVAL_DELAY);
+}
+
+/**
+ * Workaround for a typescript linting problem where Dictionary<IBookedData>
+ * is not recognized
+ * @param participant The dictionary from the v-for, found in participationsState.data
+ */
+function convertToIBookedData(participant: Dictionary<IBookedData>): Dictionary<IBookedData> {
+  return participant;
 }
 </script>
 

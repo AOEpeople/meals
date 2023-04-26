@@ -38,7 +38,7 @@
           fill-rule="evenodd"
           clip-rule="evenodd"
           viewBox="0 0 512 508.47"
-          class="text-primary m-auto block h-6 w-6"
+          class="text-primary m-auto block h-[20px] w-[20px] pt-[2px]"
         >
           <path
             fill-rule="nonzero"
@@ -83,7 +83,7 @@
         fill-rule="evenodd"
         clip-rule="evenodd"
         viewBox="0 0 512 508.47"
-        class="text-primary m-auto block h-6 w-6"
+        class="text-primary m-auto block h-[20px] w-[20px] pt-[2px]"
       >
         <path
           fill-rule="nonzero"

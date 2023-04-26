@@ -1,6 +1,6 @@
 <template>
   <table
-    class="flex w-full table-fixed border-separate flex-col border-0 border-none"
+    class="flex w-full table-fixed border-collapse border-spacing-0 flex-col border-0 border-none"
     :style="{ height: tableHeight }"
   >
     <!-- <ParticipantsTableTop class="top-0" /> -->

@@ -1,7 +1,7 @@
 <template>
   <tbody
     ref="tableBody"
-    class="z-1 grow-1 shrink-1 scrollbar-styling block basis-auto overflow-y-auto overflow-x-hidden rounded-b-lg bg-white px-1 pb-6"
+    class="z-1 grow-1 shrink-1 scrollbar-styling block basis-auto overflow-y-auto overflow-x-hidden rounded-b-lg bg-white"
   >
     <ParticipantsTableSlot
       v-for="(participants, slot) in participationsState.data"
@@ -61,8 +61,7 @@ function autoScroll(element: HTMLTableSectionElement | null) {
   if(scrollingActive && element) {
     setScrollDirection(element)
     element.scrollBy({
-      top: scrollDirectionDown.value ? scrollAmount(timeSinceLastScroll) : -scrollAmount(timeSinceLastScroll),
-      behavior: 'smooth'
+      top: scrollDirectionDown.value ? scrollAmount(timeSinceLastScroll) : -scrollAmount(timeSinceLastScroll)
     });
   }
   time = Date.now();

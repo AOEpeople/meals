@@ -1,5 +1,5 @@
 <template>
-  <table class="h-full w-full table-fixed border-separate rounded-t-[18px] rounded-b-lg border-0 border-none bg-white align-top shadow-[0_15px_35px_0_#5B788F21]">
+  <table class="h-full w-full table-fixed border-collapse rounded-t-[18px] rounded-b-lg border-0 border-none bg-white p-0 align-top shadow-[0_15px_35px_0_#5B788F21]">
     <tr>
       <th class="text-primary p-4 shadow-[0_15px_35px_0_#5B788F21]">
         {{ weekDay }}

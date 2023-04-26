@@ -7,6 +7,9 @@ module.exports = {
       extend: {
           screens: {
               'xs': '455px'
+          },
+          animation: {
+            'spin-receiving': 'spin 4s reverse linear infinite'
           }
       }
     }

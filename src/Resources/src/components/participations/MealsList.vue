@@ -26,7 +26,7 @@ const { setMealListHight, windowWidth } = useComponentHeights();
 const mealsList = ref<HTMLDivElement | null>(null);
 
 const mealsWithVariations = computed(() => {
-  if(loadedState.loaded && loadedState.error === "") {
+  if(loadedState.loaded) {
     return getMealsWithVariations();
   } else {
     return [];

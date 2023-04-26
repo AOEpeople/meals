@@ -27,7 +27,7 @@ import MealHead from './MealHead.vue';
 const { getMealsWithVariations, loadedState } = getShowParticipations();
 
 const mealsWithVariations = computed(() => {
-  if(loadedState.loaded && loadedState.error === "") {
+  if(loadedState.loaded) {
     return getMealsWithVariations();
   } else {
     return [];

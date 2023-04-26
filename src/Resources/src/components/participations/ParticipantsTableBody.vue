@@ -34,7 +34,7 @@ let scrollingActive = true;
 let time: number;
 
 const mealsWithVariations = computed(() => {
-  if(loadedState.loaded && loadedState.error === "") {
+  if(loadedState.loaded) {
     return getMealsWithVariations();
   } else {
     return [];

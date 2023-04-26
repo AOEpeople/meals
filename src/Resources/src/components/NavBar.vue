@@ -3,7 +3,8 @@
     <Menu v-slot="{ open }">
       <header class="relative h-[60px] bg-white shadow-[0_15px_35px_0_#5B788F21] xl:h-24">
         <nav
-          class="grid h-[inherit] grid-cols-3 content-center items-center xl:mx-auto xl:max-w-screen-aoe xl:grid-cols-10"
+          class="grid h-[inherit] grid-cols-3 content-center items-center xl:mx-auto xl:grid-cols-10"
+          :class="[isShowParticipations ? 'max-w-screen' : 'xl:max-w-screen-aoe']"
           aria-label="Top"
         >
           <div
@@ -27,7 +28,8 @@
           </div>
           <div
             id="logo"
-            class="inline-block justify-self-center xl:col-span-2 xl:justify-self-start"
+            class="inline-block xl:col-span-2"
+            :class="[isShowParticipations ? 'justify-self-start pl-4' : 'justify-self-center xl:justify-self-start']"
           >
             <router-link to="/">
               <svg
@@ -111,7 +113,8 @@
           <ErrorTrafficLight
             v-if="isShowParticipations"
             :error-states="[errorState, getShowParticipationsError]"
-            class="col-end-4 inline-block justify-self-center xl:col-end-12"
+            class="col-end-4 inline-block xl:col-end-12"
+            :class="[isShowParticipations ? 'justify-self-end pr-4' : 'justify-self-center xl:justify-self-start']"
           />
         </nav>
       </header>

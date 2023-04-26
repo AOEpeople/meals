@@ -1,5 +1,5 @@
 <template>
-  <tr class="table w-full table-fixed border-b-2">
+  <tr class="border-t-1 table w-full table-fixed border-b-2 first:border-t-0">
     <th
       :colspan="numberOfMeals"
       class="text-primary py-4 pl-4 text-left"

@@ -1,13 +1,16 @@
 <template>
   <table
-    v-if="meal"
-    class="grow-1 table-fixed border-separate rounded-t-[18px] rounded-b-lg border-0 border-none bg-white"
+    v-if="meal && meal.title.en !== 'Combined Dish'"
+    class="grow-1 table-fixed border-collapse rounded-t-[18px] rounded-b-lg border-0 border-none bg-white"
   >
-    <thead class="h-full shadow-[0_15px_35px_0_#5B788F21]">
+    <thead
+      class="h-full shadow-[0_15px_35px_0_#5B788F21]"
+      :class="[meal.variations.length > 0 ? '' : 'rounded-b-lg']"
+    >
       <tr class="w-full">
         <th
           :colspan="meal.variations.length > 0 ? meal.variations.length : 1"
-          class="text-primary py-4 text-center text-lg"
+          class="text-primary py-4 align-top text-lg"
         >
           {{ languageIsEnglish ? meal.title.en : meal.title.de }}
         </th>
@@ -17,11 +20,13 @@
       v-if="meal.variations.length > 0"
       class="h-full"
     >
-      <tr>
+      <tr
+        v-for="(variation, index) in meal.variations"
+        :key="index"
+      >
         <td
-          v-for="(variation, index) in meal.variations"
-          :key="index"
-          class="pb-4 text-center font-light"
+          class="p-4"
+          :class="[meal.variations.length - 1 > index ? 'border-b-[1px] border-solid' : 'border-none']"
         >
           {{ getTitleForLocale(variation) }}
         </td>

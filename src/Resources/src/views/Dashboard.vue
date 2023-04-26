@@ -11,10 +11,6 @@
     v-if="isAllowedToPrint"
     class="mr-[27px] text-right"
   />
-  <ShowLink 
-    v-if="isAllowedToShow"
-    class="mr-[27px] text-right"
-  />
 </template>
 
 <script setup>
@@ -24,7 +20,6 @@ import DashboardWeekTabs from "@/components/dashboard/DashboardWeekTabs.vue";
 import DashboardWeekAll from "@/components/dashboard/DashboardWeekAll.vue";
 import PrintLink from "@/views/PrintLink.vue";
 import {userDataStore} from "@/stores/userDataStore";
-import ShowLink from './ShowLink.vue';
 
 const progress = useProgress().start()
 
@@ -32,6 +27,5 @@ await dashboardStore.fillStore()
 const weeks = dashboardStore.getWeeks()
 
 const isAllowedToPrint = userDataStore.roleAllowsRoute('/print/participations')
-const isAllowedToShow = userDataStore.roleAllowsRoute('/show/participations');
 progress.finish()
 </script>

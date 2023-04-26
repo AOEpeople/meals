@@ -1,5 +1,12 @@
 # Changelog
 
+## Version v2.3.7 (2023-03-15)
+
+### Other
+
+- Bump webpack from 5.75.0 to 5.76.0 in /src/Resources (b64d6d67)
+- Bump docker/build-push-action from 3 to 4 (2f82ba6f)
+
 ## Version v2.3.4 (2023-02-16)
 
 ### Fixes

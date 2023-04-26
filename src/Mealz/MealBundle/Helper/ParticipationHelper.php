@@ -4,16 +4,21 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Helper;
 
-class ParticipationHelper {
+use App\Mealz\MealBundle\Entity\Meal;
+use App\Mealz\MealBundle\Entity\Participant;
+use App\Mealz\MealBundle\Entity\Slot;
 
+class ParticipationHelper
+{
     /**
      * helper function to sort participants by their name or guest name.
      *
+     * @param mixed $participantRepo
      * @param mixed $participants
      *
      * @return mixed
      */
-    public function sortParticipantsByName(ParticipantRepository $participantRepo, $participants)
+    public function sortParticipantsByName($participantRepo, $participants)
     {
         usort($participants, [$participantRepo, 'compareNameOfParticipants']);
 
@@ -30,10 +35,9 @@ class ParticipationHelper {
         $groupedParticipants = [];
 
         foreach ($participants as $participant) {
-
             $slot = $participant->getSlot();
 
-            if ($slot !== null && array_key_exists($slot->getTitle(), $groupedParticipants) && array_key_exists($participant->getProfile()->getUsername(), $groupedParticipants[$slot->getTitle()])) {
+            if (null !== $slot && array_key_exists($slot->getTitle(), $groupedParticipants) && array_key_exists($participant->getProfile()->getUsername(), $groupedParticipants[$slot->getTitle()])) {
                 continue;
             }
 

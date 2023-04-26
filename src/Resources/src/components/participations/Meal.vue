@@ -26,7 +26,8 @@
       >
         <td
           class="p-4"
-          :class="[meal.variations.length - 1 > index ? 'border-b-[1px] border-solid' : 'border-none']"
+          :class=" //@ts-ignore
+            [(meal.variations.length - 1) > index ? 'border-b-[1px] border-solid' : 'border-none']"
         >
           {{ getTitleForLocale(variation) }}
         </td>

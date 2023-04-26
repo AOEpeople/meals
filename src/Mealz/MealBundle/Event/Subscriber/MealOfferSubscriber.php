@@ -97,6 +97,10 @@ class MealOfferSubscriber implements EventSubscriberInterface
             return;
         }
 
+        // send message to the configured messaging service
+        $msg = new OfferAcceptedMessage($event->getParticipant(), $this->offerService, $this->translator);
+        $this->notifier->send($msg);
+
         $this->publisher->publish(
             self::PUBLISH_TOPIC,
             [

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Event;
 
 use App\Mealz\MealBundle\Entity\Meal;
+use App\Mealz\MealBundle\Entity\Participant;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
@@ -12,15 +13,20 @@ use Symfony\Contracts\EventDispatcher\Event;
  */
 class MealOfferCancelledEvent extends Event
 {
-    private Meal $meal;
+    private Participant $participant;
 
-    public function __construct(Meal $meal)
+    public function __construct(Participant $participant)
     {
-        $this->meal = $meal;
+        $this->participant = $participant;
     }
 
     public function getMeal(): Meal
     {
-        return $this->meal;
+        return $this->participant->getMeal();
+    }
+
+    public function getParticipant(): Participant
+    {
+        return $this->participant;
     }
 }

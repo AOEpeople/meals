@@ -9,9 +9,11 @@ use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\Role;
+use App\Mealz\MealBundle\Helper\ParticipationHelper;
 use DateTime;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 
@@ -28,6 +30,15 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
         'load_profile' => true,
         'load_roles' => false,
     ];
+
+    protected ParticipationHelper $participationHelper;
+
+    public function __construct(EntityManagerInterface $entityManager, string $entityClass, ParticipationHelper $participationHelper)
+    {
+        parent::__construct($entityManager, $entityClass);
+
+        $this->participationHelper = $participationHelper;
+    }
 
     /**
      * @return Participant[]
@@ -58,20 +69,6 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
         }
 
         return $queryBuilder->getQuery()->execute();
-    }
-
-    /**
-     * helper function to sort participants by their name or guest name.
-     *
-     * @param mixed $participants
-     *
-     * @return mixed
-     */
-    private function sortParticipantsByName($participants)
-    {
-        usort($participants, [$this, 'compareNameOfParticipants']);
-
-        return $participants;
     }
 
     public function getTotalCost(string $username): float
@@ -201,49 +198,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
             return [];
         }
 
-        return $this->groupBySlotAndProfileID($result);
-    }
-
-    /**
-     * @param Participant[] $participants
-     *
-     * @psalm-return array<string, array<string, array{booked: non-empty-list<int>}>>
-     */
-    private function groupBySlotAndProfileID(array $participants): array
-    {
-        $groupedParticipants = [];
-
-        foreach ($participants as $participant) {
-
-            $slot = $participant->getSlot();
-
-            if ($slot !== null && array_key_exists($slot->getTitle(), $groupedParticipants) && array_key_exists($participant->getProfile()->getUsername(), $groupedParticipants[$slot->getTitle()])) {
-                continue;
-            }
-
-            $groupedParticipants = array_merge_recursive($groupedParticipants, $this->getParticipationbySlot($participant, $slot));
-        }
-
-        return $groupedParticipants;
-    }
-
-    private function getParticipationbySlot(Participant $participant, ?Slot $slot): array
-    {
-        $slots = [];
-
-        /** @var Meal $meal */
-        foreach ($participant->getMeal()->getDay()->getMeals() as $meal) {
-            if (null !== $meal->getParticipant($participant->getProfile()) && (null === $slot || $slot->isDisabled() || $slot->isDeleted())) {
-                $slots[''][$participant->getProfile()->getUsername()]['booked'][] = $meal->getDish()->getId();
-                continue;
-            }
-
-            if (null !== $meal->getParticipant($participant->getProfile())) {
-                $slots[$slot->getTitle()][$participant->getProfile()->getUsername()]['booked'][] = $meal->getDish()->getId();
-            }
-        }
-
-        return $slots;
+        return $this->participationHelper->groupBySlotAndProfileID($result);
     }
 
     /**
@@ -267,22 +222,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
 
         $participants = $queryBuilder->getQuery()->execute();
 
-        return $this->sortParticipantsByName($participants);
-    }
-
-    protected function compareNameOfParticipants(Participant $participant1, Participant $participant2): int
-    {
-        $result = strcasecmp($participant1->getProfile()->getName(), $participant2->getProfile()->getName());
-
-        if (0 !== $result) {
-            return $result;
-        } elseif ($participant1->getMeal()->getDateTime() < $participant2->getMeal()->getDateTime()) {
-            return 1;
-        } elseif ($participant1->getMeal()->getDateTime() > $participant2->getMeal()->getDateTime()) {
-            return -1;
-        }
-
-        return 0;
+        return $this->participationHelper->sortParticipantsByName($this, $participants);
     }
 
     protected function getQueryBuilderWithOptions(array $options): QueryBuilder

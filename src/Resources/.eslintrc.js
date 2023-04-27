@@ -5,15 +5,20 @@ module.exports = {
         'plugin:@typescript-eslint/recommended',
         'plugin:tailwindcss/recommended',
     ],
+
     parser: "vue-eslint-parser",
+
     parserOptions: {
         parser: '@typescript-eslint/parser',
     },
+
     plugins: [
         '@typescript-eslint',
         'tailwindcss'
     ],
+
     root: true,
+
     rules: {
         // override/add rules settings here, such as:
         'vue/no-unused-vars': 'off',
@@ -33,5 +38,18 @@ module.exports = {
         'tailwindcss/no-custom-classname': 'off',
         'tailwindcss/enforces-negative-arbitrary-values': 'off'
     },
-    ignorePatterns: ['node_modules/', 'dist/', 'src/**/*.d.ts', '*.config.js', 'js/']
+
+    ignorePatterns: ['node_modules/', 'dist/', 'src/**/*.d.ts', '*.config.js', 'js/'],
+
+    overrides: [
+      {
+        files: [
+          '**/__tests__/*.{j,t}s?(x)',
+          '**/tests/unit/**/*.spec.{j,t}s?(x)'
+        ],
+        env: {
+          jest: true
+        }
+      }
+    ]
 }

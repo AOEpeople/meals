@@ -1,0 +1,75 @@
+{
+    "data": {
+        "Active w\/ limit": {
+            "admin.meals": {
+                "booked": [
+                    19,
+                    14
+                ]
+            },
+            "bob.meals": {
+                "booked": [
+                    19,
+                    14
+                ]
+            },
+            "finance.meals": {
+                "booked": [
+                    19,
+                    14
+                ]
+            },
+            "jane.meals": {
+                "booked": [
+                    19,
+                    14
+                ]
+            },
+            "john.meals": {
+                "booked": [
+                    19,
+                    14
+                ]
+            }
+        },
+        "Active w\/o limit": {
+            "kochomi.meals": {
+                "booked": [
+                    19,
+                    14
+                ]
+            }
+        }
+    },
+    "meals": {
+        "19": {
+            "title": {
+                "en": "Limbs oh la la la (oven backed) + Finger food with a slimy sweet and sour sauce",
+                "de": "Limbs oh la la la (Ofen gebacken) + Finger food mit einer schlammigen S\u00fc\u00df-Sauer-So\u00dfe"
+            },
+            "parent": null,
+            "participations": 6
+        },
+        "14": {
+            "title": {
+                "en": "Tasty Worms",
+                "de": "Tasty Worms DE"
+            },
+            "parent": null,
+            "participations": 6
+        },
+        "24": {
+            "title": {
+                "en": "Combined Dish",
+                "de": "Kombi-Gericht"
+            },
+            "parent": null,
+            "participations": 0
+        }
+    },
+    "day": {
+        "date": "2023-04-28 12:00:00.000000",
+        "timezone_type": 3,
+        "timezone": "Europe\/Berlin"
+    }
+}

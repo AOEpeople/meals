@@ -6,27 +6,16 @@
     <div
       v-for="(variation, index) in meal.variations"
       :key="variation.mealId"
-      class="min-h-[24px] flex-1 border-l-[1px] text-center"
+      class="variations-class min-h-[24px] flex-1 border-l-[1px] text-center"
     >
       <Transition
         name="participations-data"
         appear
       >
-        <svg
-          v-if="bookedMeals.booked.includes(variation.mealId) && !bookedCombinedMeal"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          class="text-primary m-auto block h-6 w-6"
-        >
-          <path
-            d="M12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm0,18a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z"
-            fill="currentColor"
-          />
-          <path
-            d="M14.7,8.39l-3.78,5L9.29,11.28a1,1,0,0,0-1.58,1.23l2.43,3.11a1,1,0,0,0,.79.38h0a1,1,0,0,0,.79-.39l4.57-6a1,1,0,1,0-1.6-1.22Z"
-            fill="currentColor"
-          />
-        </svg>
+        <CheckCircleIcon
+          v-if="(bookedMeals.booked.includes(variation.mealId) && !bookedCombinedMeal) || (bookedMeals.booked.includes(meal.mealId) && meal.title.en === 'Combined Dish')"
+          class="text-primary check-circle-icon m-auto block h-6 w-6"
+        />
       </Transition>
       <Transition
         name="participations-data"
@@ -38,7 +27,7 @@
           fill-rule="evenodd"
           clip-rule="evenodd"
           viewBox="0 0 512 508.47"
-          class="text-primary m-auto block h-[20px] w-[20px] pt-[2px]"
+          class="combined-meal text-primary m-auto block h-[20px] w-[20px] pt-[2px]"
         >
           <path
             fill-rule="nonzero"
@@ -51,27 +40,16 @@
   </div>
   <div
     v-else
-    class="h-full min-h-[24px] border-l-[1px] text-center"
+    class="no-variations-class h-full min-h-[24px] border-l-[1px] text-center"
   >
     <Transition
       name="participations-data"
       appear
     >
-      <svg
+      <CheckCircleIcon
         v-if="(bookedMeals.booked.includes(meal.mealId) && !bookedCombinedMeal) || (bookedMeals.booked.includes(meal.mealId) && meal.title.en === 'Combined Dish')"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        class="text-primary m-auto block h-6 w-6"
-      >
-        <path
-          d="M12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm0,18a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z"
-          fill="currentColor"
-        />
-        <path
-          d="M14.7,8.39l-3.78,5L9.29,11.28a1,1,0,0,0-1.58,1.23l2.43,3.11a1,1,0,0,0,.79.38h0a1,1,0,0,0,.79-.39l4.57-6a1,1,0,1,0-1.6-1.22Z"
-          fill="currentColor"
-        />
-      </svg>
+        class="text-primary check-circle-icon m-auto block h-6 w-6"
+      />
     </Transition>
     <Transition
       name="participations-data"
@@ -83,7 +61,7 @@
         fill-rule="evenodd"
         clip-rule="evenodd"
         viewBox="0 0 512 508.47"
-        class="text-primary m-auto block h-[20px] w-[20px] pt-[2px]"
+        class="combined-meal text-primary m-auto block h-[20px] w-[20px] pt-[2px]"
       >
         <path
           fill-rule="nonzero"
@@ -97,6 +75,7 @@
 
 <script setup lang="ts">
 import { IBookedData, IMealWithVariations } from '@/api/getShowParticipations';
+import { CheckCircleIcon } from '@heroicons/vue/solid';
 
 defineProps<{
   bookedMeals: IBookedData,

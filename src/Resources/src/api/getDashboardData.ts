@@ -1,6 +1,7 @@
 import useApi from "@/api/api";
 import { Dictionary } from "../../types/types";
-import { reactive, readonly, ref, watch } from "vue";
+import { reactive, readonly, ref } from "vue";
+import { usePeriodicFetch } from "@/services/usePeriodicFetch";
 
 export type Meal = {
     variations: Dictionary<Meal> | null
@@ -67,30 +68,9 @@ const dashBoardState = reactive<Dashboard>({
 
 const errorState = ref(false);
 
-const periodicFetchActive = ref(false);
-
 /**
- * Watcher that activates the periodicFetchDashboard-function when periodicFetchActive is set to true
- * and was false before that
+ * Performs a GET request to '/api/dashboard' and sets the dashBoardState accordingly
  */
-watch(periodicFetchActive, (newPeriodicFetchActive, oldPeriodicFetchActive) => {
-    if(newPeriodicFetchActive && newPeriodicFetchActive !== oldPeriodicFetchActive) {
-        periodicFetchDashboard();
-    }
-});
-
-/**
- * Fetches dashboard periodically, ends when periodicFetchActive is set to false
- */
-async function periodicFetchDashboard() {
-    if(periodicFetchActive.value) {
-        setTimeout(async () => {
-            await getDashboard();
-            periodicFetchDashboard();
-        }, PERIODIC_TIMEOUT);
-    }
-}
-
 async function getDashboard() {
     const { response: dashboardData, request, error } = useApi<Dashboard>(
         "GET",
@@ -108,6 +88,8 @@ async function getDashboard() {
     }
 }
 
+const { periodicFetchActive } = usePeriodicFetch(PERIODIC_TIMEOUT, getDashboard);
+
 export function getDashboardData() {
 
     function activatePeriodicFetch() {
@@ -118,6 +100,11 @@ export function getDashboardData() {
         periodicFetchActive.value = false;
     }
 
+    /**
+     * Returns a list of dates for the next three days with meals, starting from the day after the passed in date
+     * @param dayDate date to start the search for new dates from
+     * @returns a list of dates
+     */
     function getNextThreeDays(dayDate: Date): Day[] {
         const nextThreeDays: Day[] = [];
         for(const week of Object.values(dashBoardState.weeks)) {

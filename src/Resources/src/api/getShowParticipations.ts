@@ -1,7 +1,8 @@
 import { Dictionary } from "types/types";
-import { reactive, readonly, ref, watch } from "vue";
+import { reactive, readonly } from "vue";
 import { DateTime } from "./getDashboardData";
 import useApi from "./api";
+import { usePeriodicFetch } from "@/services/usePeriodicFetch";
 
 // timeout in ms between fetches of the participations
 const PERIODIC_TIMEOUT = 60000;
@@ -63,31 +64,6 @@ const loadedState = reactive<ILoadedState>({
     error: ""
 });
 
-const periodicFetchActive = ref(false);
-
-/**
- * Watcher that activates the periodicFetchParticipations-function when periodicFetchActive is set to true
- * and was false before that
- */
-watch(periodicFetchActive, (newPeriodicFetchActive, oldPeriodicFetchActive) => {
-    if(newPeriodicFetchActive && newPeriodicFetchActive !== oldPeriodicFetchActive) {
-        periodicFetchParticipations();
-    }
-});
-
-/**
- * Fetches participations periodically, ends when periodicFetchActive is set to false
- */
-async function periodicFetchParticipations() {
-    if(periodicFetchActive.value) {
-        setTimeout(async () => {
-            await fetchParticipations();
-            periodicFetchParticipations();
-        }, PERIODIC_TIMEOUT);
-    }
-
-}
-
 /**
  * Function performs a GET request to '/api/print/participations' and sets the IParticipationsState accordingly
  */
@@ -112,6 +88,8 @@ async function fetchParticipations() {
         setTimeout(fetchParticipations, REFETCH_TIME_ON_ERROR);
     }
 }
+
+const { periodicFetchActive } = usePeriodicFetch(PERIODIC_TIMEOUT, fetchParticipations);
 
 export function getShowParticipations() {
 

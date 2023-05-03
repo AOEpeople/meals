@@ -1,0 +1,45 @@
+import participations from '../fixtures/participations.json';
+import MealsList from '@/components/participations/MealsList.vue';
+import Meal from '@/components/participations/Meal.vue';
+import { describe } from '@jest/globals';
+import { ref } from 'vue';
+import { getShowParticipations } from '@/api/getShowParticipations';
+import { flushPromises, mount } from '@vue/test-utils';
+import useApi from '@/api/api';
+
+const asyncFunc: () => Promise<void> = async () => {
+    new Promise(resolve => resolve(undefined));
+};
+
+const mockedReturnValue = {
+    response: ref(participations),
+    request: asyncFunc,
+    error: ref(false)
+}
+
+// @ts-expect-error ts doesn't like mocking with jest.fn()
+useApi = jest.fn(useApi);
+// @ts-expect-error continuation of expect error from line above
+useApi.mockReturnValue(mockedReturnValue);
+
+jest.mock("vue-i18n", () => ({
+    useI18n: () => ({
+        t: (key: string) => key,
+        locale: 'en'
+    })
+}));
+
+describe('Test MealsList', () => {
+    const { loadShowParticipations } = getShowParticipations();
+    beforeEach(async () => {
+        await loadShowParticipations();
+    });
+
+    it('should render a Meal-Component for each Meal', async () => {
+        const wrapper = mount(MealsList);
+
+        await flushPromises();
+
+        expect(wrapper.findAllComponents(Meal)).toHaveLength(3);
+    });
+});

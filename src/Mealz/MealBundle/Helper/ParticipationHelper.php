@@ -37,7 +37,7 @@ class ParticipationHelper
         foreach ($participants as $participant) {
             $slot = $participant->getSlot();
 
-            if (null !== $slot && array_key_exists($slot->getTitle(), $groupedParticipants) && array_key_exists($participant->getProfile()->getUsername(), $groupedParticipants[$slot->getTitle()])) {
+            if (null !== $slot && array_key_exists($slot->getTitle(), $groupedParticipants) && array_key_exists($participant->getProfile()->getFullName(), $groupedParticipants[$slot->getTitle()])) {
                 continue;
             }
 
@@ -69,12 +69,12 @@ class ParticipationHelper
         /** @var Meal $meal */
         foreach ($participant->getMeal()->getDay()->getMeals() as $meal) {
             if (null !== $meal->getParticipant($participant->getProfile()) && (null === $slot || $slot->isDisabled() || $slot->isDeleted())) {
-                $slots[''][$participant->getProfile()->getUsername()]['booked'][] = $meal->getDish()->getId();
+                $slots[''][$participant->getProfile()->getFullName()]['booked'][] = $meal->getDish()->getId();
                 continue;
             }
 
             if (null !== $meal->getParticipant($participant->getProfile())) {
-                $slots[$slot->getTitle()][$participant->getProfile()->getUsername()]['booked'][] = $meal->getDish()->getId();
+                $slots[$slot->getTitle()][$participant->getProfile()->getFullName()]['booked'][] = $meal->getDish()->getId();
             }
         }
 

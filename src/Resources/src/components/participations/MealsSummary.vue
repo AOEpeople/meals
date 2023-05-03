@@ -1,17 +1,18 @@
 <template>
-  <table class="h-full w-full table-fixed border-collapse rounded-t-[18px] rounded-b-lg border-0 border-none bg-white p-0 align-top shadow-[0_15px_35px_0_#5B788F21]">
-    <tr>
-      <th class="text-primary p-4 shadow-[0_15px_35px_0_#5B788F21]">
+  <table class="h-full w-full table-fixed border-collapse rounded-b-lg rounded-t-[18px] border-0 border-none bg-white p-0 align-top shadow-[0_15px_35px_0_#5B788F21]">
+    <tr class="h-[60px]">
+      <th class="text-primary h-[60px] p-4 shadow-[0_15px_35px_0_#5B788F21]">
         {{ weekDay }}
       </th>
     </tr>
     <tr
-      v-for="meal in mealNames"
-      :key="meal"
+      v-for="(meal, index) in mealNames"
+      :key="`${meal}_${index}`"
+      class="h-[60px]"
     >
       <td
         class="truncate p-4"
-        :class="[mealNameIsEmpty(meal) ? 'h-[60px]' : 'border-b-[1px] border-solid']"
+        :class="[mealNameIsEmpty(meal) ? 'h-[60px]' : 'h-[60px] border-b-[1px] border-solid']"
       >
         {{ meal }}
       </td>
@@ -35,7 +36,8 @@ const mealNames = computed(() => {
   for(const meal of Object.values(props.day.meals)) {
     locale.value === 'en' ? names.push(meal.title.en) : names.push(meal.title.de);
   }
-  for(let i = 0; i < (3 - names.length); i++) {
+  const timesToFill = 3 - names.length;
+  for(let i = 0; i < timesToFill; i++) {
     names.push("");
   }
   return names;

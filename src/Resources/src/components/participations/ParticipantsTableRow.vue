@@ -1,7 +1,7 @@
 <template>
   <tr class="table w-full table-fixed border-b-[1px] text-center last:border-b-0">
     <td
-      class="w-1/2 truncate px-0 py-4"
+      class="w-1/2 truncate py-4 pl-4 pr-0 text-left"
     >
       {{ participantName }}
     </td>

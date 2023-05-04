@@ -29,6 +29,14 @@ jest.mock("vue-i18n", () => ({
     })
 }));
 
+const mockSetMealsListHeight = jest.fn((height: number, elementId: string) => void 0);
+jest.mock("@/services/useComponentHeights", () => ({
+    useComponentHeights: () => ({
+        setMealListHight: mockSetMealsListHeight,
+        windowWidth: ref(1080)
+    })
+}));
+
 describe('Test MealsList', () => {
     const { loadShowParticipations } = getShowParticipations();
     beforeEach(async () => {
@@ -42,4 +50,12 @@ describe('Test MealsList', () => {
 
         expect(wrapper.findAllComponents(Meal)).toHaveLength(3);
     });
+
+    it('should call setMealListHight', async () => {
+        const wrapper = mount(MealsList);
+
+        await flushPromises();
+
+        expect(mockSetMealsListHeight).toHaveBeenCalled();
+    })
 });

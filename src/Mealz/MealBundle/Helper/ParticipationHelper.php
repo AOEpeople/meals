@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Helper;
 
+use App\Mealz\MealBundle\Entity\DishCollection;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
@@ -68,17 +69,12 @@ class ParticipationHelper
 
         /** @var Meal $meal */
         foreach ($participant->getMeal()->getDay()->getMeals() as $meal) {
-
-            $combinedDishes = [];
-
-            if (true === $meal->isCombinedMeal() && null !== $meal->getParticipant($participant->getProfile())) {
-                $combinedDishes = $meal->getParticipant($participant->getProfile())->getCombinedDishes();
-            }
+            $combinedDishes = $this->getCombinedDishesFromMeal($meal, $participant);
 
             if (null !== $meal->getParticipant($participant->getProfile()) && (null === $slot || $slot->isDisabled() || $slot->isDeleted())) {
                 $slots[''][$participant->getProfile()->getFullName()]['booked'][] = $meal->getDish()->getId();
 
-                foreach( $combinedDishes as $dish){
+                foreach ($combinedDishes as $dish) {
                     $slots[''][$participant->getProfile()->getFullname()]['booked'][] = $dish->getId();
                 }
                 continue;
@@ -87,12 +83,21 @@ class ParticipationHelper
             if (null !== $meal->getParticipant($participant->getProfile())) {
                 $slots[$slot->getTitle()][$participant->getProfile()->getFullName()]['booked'][] = $meal->getDish()->getId();
 
-                foreach( $combinedDishes as $dish){
+                foreach ($combinedDishes as $dish) {
                     $slots[$slot->getTitle()][$participant->getProfile()->getUsername()]['booked'][] = $dish->getId();
                 }
             }
         }
 
         return $slots;
+    }
+
+    private function getCombinedDishesFromMeal(Meal $meal, Participant $participant): DishCollection
+    {
+        if (true === $meal->isCombinedMeal() && null !== $meal->getParticipant($participant->getProfile())) {
+            return $meal->getParticipant($participant->getProfile())->getCombinedDishes();
+        }
+
+        return new DishCollection([]);
     }
 }

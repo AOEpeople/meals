@@ -84,7 +84,7 @@ class ParticipationHelper
                 $slots[$slot->getTitle()][$participant->getProfile()->getFullName()]['booked'][] = $meal->getDish()->getId();
 
                 foreach ($combinedDishes as $dish) {
-                    $slots[$slot->getTitle()][$participant->getProfile()->getUsername()]['booked'][] = $dish->getId();
+                    $slots[$slot->getTitle()][$participant->getProfile()->getFullname()]['booked'][] = $dish->getId();
                 }
             }
         }

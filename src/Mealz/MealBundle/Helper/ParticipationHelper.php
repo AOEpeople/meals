@@ -68,13 +68,28 @@ class ParticipationHelper
 
         /** @var Meal $meal */
         foreach ($participant->getMeal()->getDay()->getMeals() as $meal) {
+
+            $combinedDishes = [];
+
+            if (true === $meal->isCombinedMeal() && null !== $meal->getParticipant($participant->getProfile())) {
+                $combinedDishes = $meal->getParticipant($participant->getProfile())->getCombinedDishes();
+            }
+
             if (null !== $meal->getParticipant($participant->getProfile()) && (null === $slot || $slot->isDisabled() || $slot->isDeleted())) {
                 $slots[''][$participant->getProfile()->getFullName()]['booked'][] = $meal->getDish()->getId();
+
+                foreach( $combinedDishes as $dish){
+                    $slots[''][$participant->getProfile()->getFullname()]['booked'][] = $dish->getId();
+                }
                 continue;
             }
 
             if (null !== $meal->getParticipant($participant->getProfile())) {
                 $slots[$slot->getTitle()][$participant->getProfile()->getFullName()]['booked'][] = $meal->getDish()->getId();
+
+                foreach( $combinedDishes as $dish){
+                    $slots[$slot->getTitle()][$participant->getProfile()->getUsername()]['booked'][] = $dish->getId();
+                }
             }
         }
 

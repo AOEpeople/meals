@@ -2,6 +2,7 @@ import { mount, shallowMount } from '@vue/test-utils';
 import { test, expect, describe } from '@jest/globals';
 import Footer from '@/components/Footer.vue';
 import HelloTest from '@/components/test/HelloTest.vue';
+import { computed } from 'vue';
 
 
 const MessageComponent = {
@@ -12,7 +13,7 @@ const MessageComponent = {
 jest.mock("vue-i18n", () => ({
   useI18n: () => ({
     t: (key: string) => key,
-    locale: 'en'
+    locale: computed(() => 'en')
   })
 }));
 

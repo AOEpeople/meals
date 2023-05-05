@@ -44,4 +44,8 @@ onUpdated(() => {
     setTableHeadHight(0, 'tableHead');
   }
 });
+
+if(process.env.NODE_ENV === "TEST") {
+  defineExpose({ tableHeight })
+}
 </script>

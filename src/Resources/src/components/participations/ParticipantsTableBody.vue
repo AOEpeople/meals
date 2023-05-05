@@ -112,6 +112,11 @@ function scrollAmount(timeSinceLastScroll: number) {
 function convertToIBookedData(participant: Dictionary<IBookedData>): Dictionary<IBookedData> {
   return participant;
 }
+
+// expose functions for testing
+if(process.env.NODE_ENV === "TEST") {
+  defineExpose({scrollAmount, setScrollDirection, scrollDirectionDown, mealsWithVariations});
+}
 </script>
 
 <style scoped>

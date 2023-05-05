@@ -4,7 +4,10 @@
     class="z-10 shrink-0 grow-0 basis-auto rounded-t-[18px] bg-white shadow-[0_15px_35px_0_#5B788F21]"
   >
     <tr class="table w-full table-fixed align-top">
-      <th class="text-primary h-full w-1/2 px-2 py-4">
+      <th
+        class="text-primary h-full w-1/2 px-2 py-4"
+        data-test="meal-head-th"
+      >
         Name
       </th>
       <th
@@ -12,6 +15,7 @@
         :key="meal.mealId"
         class="text-primary h-full border-l-[1px] px-2 py-4"
         :class="meal.title.en === 'Combined Dish' ? 'w-1/2' : 'w-full'"
+        data-test="meal-head-th"
       >
         <MealHead :meal="meal" />
       </th>

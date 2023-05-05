@@ -1,10 +1,13 @@
 import useApi from "@/api/api";
 import { describe, jest, it } from "@jest/globals";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import dashboard from "../fixtures/dashboard.json";
 import participations from "../fixtures/participations.json";
-import { mount } from "@vue/test-utils";
+import { flushPromises, mount } from "@vue/test-utils";
 import MealOverView from '@/components/participations/MealOverview.vue';
+import { getShowParticipations } from "@/api/getShowParticipations";
+import { getDashboardData } from "@/api/getDashboardData";
+import MealsSummary from "@/components/participations/MealsSummary.vue";
 
 const asyncFunc: () => Promise<void> = async () => {
     new Promise(resolve => resolve(undefined));
@@ -32,7 +35,7 @@ const getMockedResponses = (url: string) => {
 jest.mock("vue-i18n", () => ({
     useI18n: () => ({
         t: (key: string) => key,
-        locale: 'en'
+        locale: computed(() => 'en')
     })
 }));
 
@@ -40,11 +43,23 @@ jest.mock("vue-i18n", () => ({
 useApi = jest.fn().mockImplementation((method: string, url: string) => getMockedResponses(url));
 
 describe('Test MealOverView', () => {
-    it('should render three MealSummaries', () => {
+
+    const { loadShowParticipations } = getShowParticipations();
+    const { getDashboard } = getDashboardData();
+
+    it('should render three MealSummaries', async () => {
+        await getDashboard();
+        await loadShowParticipations();
+
         const wrapper = mount(MealOverView);
         const testNames = ['Monday', 'Tuesday', 'Wednesday'];
 
+        await flushPromises();
+
+        expect(wrapper.findAllComponents(MealsSummary)).toHaveLength(3);
+
         const listOfHeaders = wrapper.findAll('th');
+        expect(listOfHeaders).toHaveLength(3);
 
         for(const th of listOfHeaders) {
             expect(testNames.includes(th.text())).toBe(true);

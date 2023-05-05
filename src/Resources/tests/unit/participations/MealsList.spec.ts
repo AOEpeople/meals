@@ -2,7 +2,7 @@ import participations from '../fixtures/participations.json';
 import MealsList from '@/components/participations/MealsList.vue';
 import Meal from '@/components/participations/Meal.vue';
 import { describe } from '@jest/globals';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { getShowParticipations } from '@/api/getShowParticipations';
 import { flushPromises, mount } from '@vue/test-utils';
 import useApi from '@/api/api';
@@ -25,7 +25,7 @@ useApi.mockReturnValue(mockedReturnValue);
 jest.mock("vue-i18n", () => ({
     useI18n: () => ({
         t: (key: string) => key,
-        locale: 'en'
+        locale: computed(() => 'en')
     })
 }));
 

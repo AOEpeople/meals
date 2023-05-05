@@ -2,6 +2,7 @@ import { IMealWithVariations } from "@/api/getShowParticipations";
 import Meal from "@/components/participations/Meal.vue";
 import { describe, expect } from "@jest/globals";
 import { mount } from "@vue/test-utils";
+import { computed } from "vue";
 
 const mealOne: IMealWithVariations = {
     title: {
@@ -53,7 +54,7 @@ const mealFive: IMealWithVariations = {
 jest.mock("vue-i18n", () => ({
     useI18n: () => ({
         t: (key: string) => key,
-        locale: 'en'
+        locale: computed(() => 'en')
     })
 }));
 

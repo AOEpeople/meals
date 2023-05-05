@@ -2,6 +2,7 @@ import { Day } from '@/api/getDashboardData';
 import MealsSummary from '@/components/participations/MealsSummary.vue';
 import { describe, it } from '@jest/globals';
 import { mount } from '@vue/test-utils';
+import { computed } from 'vue';
 
 const dayOne: Day = {
     date: {
@@ -187,7 +188,7 @@ const dayFour: Day = {
 jest.mock("vue-i18n", () => ({
     useI18n: () => ({
         t: (key: string) => key,
-        locale: 'en'
+        locale: computed(() => 'en')
     })
 }));
 

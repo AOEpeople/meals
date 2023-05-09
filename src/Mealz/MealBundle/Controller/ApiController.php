@@ -10,6 +10,7 @@ use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Entity\Week;
+use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Service\ApiService;
 use App\Mealz\MealBundle\Service\DishService;
 use App\Mealz\MealBundle\Service\GuestParticipationService;
@@ -32,6 +33,7 @@ class ApiController extends BaseController
     private ApiService $apiSrv;
     private OfferService $offerSrv;
     private GuestParticipationService $guestPartiSrv;
+
 
     public function __construct(
         DishService $dishSrv,
@@ -116,6 +118,48 @@ class ApiController extends BaseController
         }
 
         return new JsonResponse(['weeks' => $response]);
+    }
+
+    public function getNextThreeDays(): JSONResponse
+    {
+        $result = [];
+
+        $today = new DateTime('today');
+
+        for($i = 0; $i < 3; $i++) {
+            $today->modify('+1 weekday');
+            $meals = $this->apiSrv->findAllOn($today);
+            $dishes = [];
+
+            /* @var Meal $meal */
+            foreach($meals as $meal) {
+                $dishes['en'][] = $meal->getDish()->getTitleEn();
+                $dishes['de'][] = $meal->getDish()->getTitleDe();
+            }
+
+            $result[$today->format('Y-m-d')] = $dishes;
+        }
+
+        return new JsonResponse($result, 200);
+    }
+
+    public function list(): JSONResponse
+    {
+        $day = $this->apiSrv->getDayByDate(new DateTime('today'));
+
+        $list['data'] = $this->participationSrv->getParticipationListBySlots($day);
+
+        $meals = $this->participationSrv->getMealsForTheDay($day);
+
+        $list['meals'] = [];
+
+        foreach ($meals as $meal) {
+            $list['meals'] = $list['meals'] + $this->getDishData($meal);
+        }
+
+        $list['day'] = $day->getDateTime();
+
+        return new JsonResponse($list, 200);
     }
 
     private function addSlots(array &$slotArray, array $slots, Day $day, ?int $activeParticipations): void
@@ -325,5 +369,28 @@ class ApiController extends BaseController
         }
 
         return new JsonResponse($guestData, 200);
+    }
+
+    private function getDishData(Meal $meal): array
+    {
+        $collection[$meal->getDish()->getId()] = [
+            'title' => [
+                'en' => $meal->getDish()->getTitleEn(),
+                'de' => $meal->getDish()->getTitleDe(),
+            ],
+            'parent' => $meal->getDish()->getParent() ? $meal->getDish()->getParent()->getId() : null,
+            'participations' => $this->participationSrv->getCountByMeal($meal, true),
+        ];
+
+        if (null != $meal->getDish()->getParent()) {
+            $collection[$meal->getDish()->getParent()->getId()] = [
+                'title' => [
+                    'en' => $meal->getDish()->getParent()->getTitleEn(),
+                    'de' => $meal->getDish()->getParent()->getTitleDe(),
+                ],
+            ];
+        }
+
+        return $collection;
     }
 }

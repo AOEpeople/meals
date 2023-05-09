@@ -112,7 +112,7 @@
           </div>
           <ErrorTrafficLight
             v-if="isShowParticipations"
-            :error-states="[errorState, getShowParticipationsError]"
+            :error-states="[nextThreeDaysState.error, getShowParticipationsError]"
             class="col-end-4 inline-block xl:col-end-12"
             :class="[isShowParticipations ? 'justify-self-end pr-4' : 'justify-self-center xl:justify-self-start']"
           />
@@ -140,7 +140,7 @@
   import {userDataStore} from "@/stores/userDataStore";
   import { useRoute } from 'vue-router';
   import ErrorTrafficLight from './navbar/ErrorTrafficLight.vue'
-  import { getDashboardData } from '@/api/getDashboardData';
+  import { getNextThreeDays } from '@/api/getMealsNextThreeDays'
   import { getShowParticipations } from '@/api/getShowParticipations';
 
   const { t } = useI18n()
@@ -150,7 +150,7 @@
     }
   })
 
-  const { errorState } = getDashboardData();
+  const { nextThreeDaysState } = getNextThreeDays();
   const { loadedState } = getShowParticipations();
 
   const route = useRoute();

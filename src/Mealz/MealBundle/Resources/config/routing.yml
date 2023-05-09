@@ -246,7 +246,7 @@ MealzMealBundle_Print_participations:
 
 MealzMealBundle_Print_participations_api:
   path: /api/print/participations
-  defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::list }
+  defaults: { _controller: App\Mealz\MealBundle\Controller\ApiController::list }
   methods: [ GET ]
 
 mealz_meal_edit_participations:
@@ -256,3 +256,8 @@ mealz_meal_edit_participations:
 MealzMealBundle_Show_participations:
     path: /show/participations
     defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
+
+MealzMealBundle_api_meals_next_three_days:
+    path: /api/meals/nextThreeDays
+    defaults: { _controller: App\Mealz\MealBundle\Controller\ApiController::getNextThreeDays }
+    methods: [ GET ]

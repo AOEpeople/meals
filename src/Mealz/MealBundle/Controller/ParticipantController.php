@@ -261,28 +261,6 @@ class ParticipantController extends BaseController
         ]);
     }
 
-    /**
-     * @Security("is_granted('ROLE_KITCHEN_STAFF')")
-     */
-    public function list(DayRepository $dayRepo): JSONResponse
-    {
-        $day = $dayRepo->getDayByDate(new DateTime('today'));
-
-        $list['data'] = $this->participationSrv->getParticipationListBySlots($day);
-
-        $meals = $this->participationSrv->getMealsForTheDay($day);
-
-        $list['meals'] = [];
-
-        foreach ($meals as $meal) {
-            $list['meals'] = $list['meals'] + $this->getDishData($meal);
-        }
-
-        $list['day'] = $day->getDateTime();
-
-        return new JsonResponse($list, 200);
-    }
-
     public function editParticipation(
         Week $week,
         ParticipationService $participationSrv,
@@ -337,29 +315,6 @@ class ParticipantController extends BaseController
             'profilesJson' => json_encode($profilesArray),
             'prototype' => $prototype,
         ]);
-    }
-
-    private function getDishData(Meal $meal): array
-    {
-        $collection[$meal->getDish()->getId()] = [
-            'title' => [
-                'en' => $meal->getDish()->getTitleEn(),
-                'de' => $meal->getDish()->getTitleDe(),
-            ],
-            'parent' => $meal->getDish()->getParent() ? $meal->getDish()->getParent()->getId() : null,
-            'participations' => $this->participationSrv->getCountByMeal($meal, true),
-        ];
-
-        if (null != $meal->getDish()->getParent()) {
-            $collection[$meal->getDish()->getParent()->getId()] = [
-                'title' => [
-                    'en' => $meal->getDish()->getParent()->getTitleEn(),
-                    'de' => $meal->getDish()->getParent()->getTitleDe(),
-                ],
-            ];
-        }
-
-        return $collection;
     }
 
     private function generateResponse(string $route, string $action, Participant $participant): JsonResponse

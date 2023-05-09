@@ -12,8 +12,8 @@
           @afterEnter="onAfterEnter"
         >
           <MealsSummary
-            v-if="nextThreeDaysArr.length > 0"
-            :day="nextThreeDaysArr[0]"
+            v-if="nextThreeDaysState.days.length > 0"
+            :day="(nextThreeDaysState.days[0] as IDay)"
           />
         </Transition>
       </td>
@@ -23,8 +23,8 @@
           appear
         >
           <MealsSummary
-            v-if="nextThreeDaysArr.length > 1"
-            :day="nextThreeDaysArr[1]"
+            v-if="nextThreeDaysState.days.length > 1"
+            :day="(nextThreeDaysState.days[1] as IDay)"
           />
         </Transition>
       </td>
@@ -34,8 +34,8 @@
           appear
         >
           <MealsSummary
-            v-if="nextThreeDaysArr.length > 2"
-            :day="nextThreeDaysArr[2]"
+            v-if="nextThreeDaysState.days.length > 2"
+            :day="(nextThreeDaysState.days[2] as IDay)"
           />
         </Transition>
       </td>
@@ -44,38 +44,23 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, onUpdated, ref, watch } from 'vue';
+import { onMounted, onUnmounted, onUpdated, ref, watch } from 'vue';
 import MealsSummary from './MealsSummary.vue';
-import { getDashboardData } from '@/api/getDashboardData';
-import { Day } from '@/api/getDashboardData';
-import { getShowParticipations } from '@/api/getShowParticipations';
+import { IDay, getNextThreeDays } from '@/api/getMealsNextThreeDays';
 import { useComponentHeights } from '@/services/useComponentHeights';
 
-const { getCurrentDay, loadedState } = getShowParticipations();
 const { setMealOverviewHeight, windowWidth } = useComponentHeights();
-const { activatePeriodicFetch, disablePeriodicFetch, getNextThreeDays, getDashboard, dashBoardState } = getDashboardData();
+const { nextThreeDaysState, activatePeriodicFetch, disablePeriodicFetch, fetchNextThreeDays } = getNextThreeDays();
 
 const mealsOverview = ref<HTMLTableElement | null>(null);
-const nextThreeDaysArr = ref<Day[]>([]);
-const dashBoardLoaded = ref(false);
-const loaded = computed(() => loadedState.loaded && dashBoardLoaded.value);
 
 onMounted(async () => {
-  await getDashboard();
-  dashBoardLoaded.value = true;
+  await fetchNextThreeDays();
   if(mealsOverview.value) {
     setMealOverviewHeight(mealsOverview.value.offsetHeight, 'mealsOverview');
   }
   activatePeriodicFetch();
 });
-
-watch(
-  () => dashBoardState.weeks,
-  () => {
-  nextThreeDaysArr.value = getNextThreeDays(getCurrentDay());
-});
-
-watch(loaded, () => nextThreeDaysArr.value = getNextThreeDays(getCurrentDay()));
 
 watch(windowWidth, () => {
   if(mealsOverview.value) {

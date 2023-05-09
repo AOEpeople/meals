@@ -1,13 +1,13 @@
 import useApi from "@/api/api";
 import { describe, jest, it } from "@jest/globals";
 import { computed, ref } from "vue";
-import dashboard from "../fixtures/dashboard.json";
+import nextThreeDays from "../fixtures/nextThreeDays.json";
 import participations from "../fixtures/participations.json";
 import { flushPromises, mount } from "@vue/test-utils";
 import MealOverView from '@/components/participations/MealOverview.vue';
 import { getShowParticipations } from "@/api/getShowParticipations";
-import { getDashboardData } from "@/api/getDashboardData";
 import MealsSummary from "@/components/participations/MealsSummary.vue";
+import { getNextThreeDays } from "@/api/getMealsNextThreeDays";
 
 const asyncFunc: () => Promise<void> = async () => {
     new Promise(resolve => resolve(undefined));
@@ -15,9 +15,9 @@ const asyncFunc: () => Promise<void> = async () => {
 
 const getMockedResponses = (url: string) => {
     switch(url) {
-        case "api/dashboard":
+        case "api/meals/nextThreeDays":
             return {
-                response: ref(dashboard),
+                response: ref(nextThreeDays),
                 request: asyncFunc,
                 error: ref(false)
             };
@@ -45,14 +45,12 @@ useApi = jest.fn().mockImplementation((method: string, url: string) => getMocked
 describe('Test MealOverView', () => {
 
     const { loadShowParticipations } = getShowParticipations();
-    const { getDashboard } = getDashboardData();
 
     it('should render three MealSummaries', async () => {
-        await getDashboard();
         await loadShowParticipations();
 
         const wrapper = mount(MealOverView);
-        const testNames = ['Monday', 'Tuesday', 'Wednesday'];
+        const testNames = ['Wednesday', 'Thursday', 'Friday'];
 
         await flushPromises();
 

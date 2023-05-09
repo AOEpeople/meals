@@ -3,6 +3,10 @@
 namespace App\Mealz\MealBundle\Service;
 
 use App\Mealz\AccountingBundle\Repository\TransactionRepositoryInterface;
+use App\Mealz\MealBundle\Entity\Day;
+use App\Mealz\MealBundle\Entity\Meal;
+use App\Mealz\MealBundle\Repository\DayRepositoryInterface;
+use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
 use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
@@ -11,13 +15,19 @@ class ApiService
 {
     private ParticipantRepositoryInterface $participantRepo;
     private TransactionRepositoryInterface $transactionRepo;
+    private MealRepositoryInterface $mealRepo;
+    private DayRepositoryInterface $dayRepo;
 
     public function __construct(
         ParticipantRepositoryInterface $participantRepo,
-        TransactionRepositoryInterface $transactionRepo
+        TransactionRepositoryInterface $transactionRepo,
+        MealRepositoryInterface $mealRepo,
+        DayRepositoryInterface $dayRepo
     ) {
         $this->participantRepo = $participantRepo;
         $this->transactionRepo = $transactionRepo;
+        $this->mealRepo = $mealRepo;
+        $this->dayRepo = $dayRepo;
     }
 
     /**
@@ -76,5 +86,18 @@ class ApiService
         $costDifference = round($costDifference, 2);
 
         return [$costDifference, $transactionHistory];
+    }
+
+    /**
+     * @return Meal[]
+     */
+    public function findAllOn(DateTime $date): array
+    {
+        return $this->mealRepo->findAllOn($date);
+    }
+
+    public function getDayByDate(DateTime $dateTime): ?Day
+    {
+        return $this->dayRepo->getDayByDate($dateTime);
     }
 }

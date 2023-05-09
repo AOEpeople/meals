@@ -124,7 +124,7 @@ const router = createRouter({
             name: 'ParticipantList',
             component: ParticipantList,
             meta: {
-                allowedRoles: ['ROLE_KITCHEN_STAFF', 'ROLE_ADMIN', 'ROLE_GUEST']
+                allowedRoles: ['ROLE_KITCHEN_STAFF', 'ROLE_ADMIN', 'ROLE_GUEST', 'IS_AUTHENTICATED_ANONYMOUSLY']
             }
         }
     ],
@@ -132,7 +132,7 @@ const router = createRouter({
 
 router.beforeEach((to) => {
     if (userDataStore.getState().roles.includes('ROLE_GUEST')) {
-        if (to.name !== 'Guest' && to.name !== 'Login') {
+        if (to.name !== 'Guest' && to.name !== 'Login' && to.name !== 'ParticipantList') {
             return {name: 'Login'}
         }
     } else {

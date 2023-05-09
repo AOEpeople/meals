@@ -74,6 +74,10 @@ security:
         - { path: ^/connect, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/guest, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/guest/api/dashboard, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/show/participations, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/api/meals/nextThreeDays, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/api/print/participations, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/api/dashboard, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/api/guest-invitation, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/api/environmentals, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/api/user, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }

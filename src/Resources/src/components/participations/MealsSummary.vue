@@ -21,20 +21,20 @@
 </template>
 
 <script setup lang="ts">
-import { Day } from '@/api/getDashboardData';
+import { IDay } from '@/api/getMealsNextThreeDays';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const { locale } = useI18n();
 
 const props = defineProps<{
-  day: Day
+  day: IDay
 }>();
 
 const mealNames = computed(() => {
   const names: string[] = [];
-  for(const meal of Object.values(props.day.meals)) {
-    locale.value === 'en' ? names.push(meal.title.en) : names.push(meal.title.de);
+  for(const meal of Object.values(locale.value === 'en' ? props.day.en : props.day.de)) {
+     names.push(meal);
   }
   const timesToFill = 3 - names.length;
   for(let i = 0; i < timesToFill; i++) {
@@ -44,7 +44,7 @@ const mealNames = computed(() => {
 })
 
 const weekDay = computed(() => {
-  return (new Date(props.day.date.date)).toLocaleDateString(locale.value, { weekday: 'long' });
+  return (new Date(props.day.date)).toLocaleDateString(locale.value, { weekday: 'long' });
 });
 
 function mealNameIsEmpty(txt: string) {

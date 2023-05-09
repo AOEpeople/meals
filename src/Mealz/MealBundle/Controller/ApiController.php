@@ -10,7 +10,6 @@ use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Entity\Week;
-use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Service\ApiService;
 use App\Mealz\MealBundle\Service\DishService;
 use App\Mealz\MealBundle\Service\GuestParticipationService;
@@ -33,7 +32,6 @@ class ApiController extends BaseController
     private ApiService $apiSrv;
     private OfferService $offerSrv;
     private GuestParticipationService $guestPartiSrv;
-
 
     public function __construct(
         DishService $dishSrv,
@@ -126,13 +124,13 @@ class ApiController extends BaseController
 
         $today = new DateTime('today');
 
-        for($i = 0; $i < 3; $i++) {
+        for ($i = 0; $i < 3; $i = $i + 1) {
             $today->modify('+1 weekday');
             $meals = $this->apiSrv->findAllOn($today);
             $dishes = [];
 
             /* @var Meal $meal */
-            foreach($meals as $meal) {
+            foreach ($meals as $meal) {
                 $dishes['en'][] = $meal->getDish()->getTitleEn();
                 $dishes['de'][] = $meal->getDish()->getTitleDe();
             }

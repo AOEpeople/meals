@@ -105,7 +105,7 @@ Finance has access to all user features and the finance tab.
 ## Devbox Installation
 We're using [ddev](https://ddev.readthedocs.io/) for local development. `ddev` is a CLI tool which uses Docker to simplify local development. Please make sure that `ddev`, `mkcert` and `docker` are installed. Before starting the Devbox run:
 ```
-mkcert -install 
+mkcert -install
 ```
 
 To simplify things, we have put common commands into a **Makefile**. To see all available options, run the following command:
@@ -121,6 +121,12 @@ make run-devbox
 Point your web browser to https://meals.test  :tada:
 
 :memo:  Don't forget to add `127.0.0.1 meals.test` to your local hosts file if not done automatically via ddev.
+
+To run End-to-End testing via cypress run te following command:
+```
+make run-cypress
+```
+You need to start the devbox before running any tests with cypress.
 
 ## Troubleshooting
 

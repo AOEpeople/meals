@@ -1,14 +1,14 @@
 <template>
   <tr class="table w-full table-fixed border-b-[1px] text-center last:border-b-0">
     <td
-      class="w-1/2 truncate py-4 pl-4 pr-0 text-left"
+      class="w-2/3 truncate py-4 pl-4 pr-0 text-left font-bold tracking-wider"
     >
       {{ participantName }}
     </td>
     <td
       v-for="value in meals"
       :key="value.mealId"
-      :class="value.title.en === 'Combined Dish' ? 'w-1/2' : 'w-full'"
+      :class="value.title.en === 'Combined Dish' ? 'w-1/3' : 'w-full'"
       class="px-0 py-4"
     >
       <ParticipantsTableData

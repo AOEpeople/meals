@@ -8,7 +8,7 @@ interface INextThreeDaysState {
     error: boolean
 }
 
-interface IMealList {
+export interface IMealList {
     en: string[],
     de: string[]
 }

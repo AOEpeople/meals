@@ -127,7 +127,7 @@ class ApiController extends BaseController
         for ($i = 0; $i < 3; $i = $i + 1) {
             $today->modify('+1 weekday');
             $meals = $this->apiSrv->findAllOn($today);
-            $dishes = [];
+            $dishes = ['en' => [], 'de' => []];
 
             /* @var Meal $meal */
             foreach ($meals as $meal) {

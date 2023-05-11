@@ -32,6 +32,9 @@ defineProps<{
 const languageIsEnglish = computed(() => locale.value === 'en');
 
 function getTitleForLocale(variation: IMealWithVariations) {
-  return languageIsEnglish.value ? variation.title.en : variation.title.de;
+  if(languageIsEnglish.value) {
+    return variation.title.en === 'Combined Dish' ? 'Combi' : variation.title.en;
+  }
+  return variation.title.de === 'Kombi-Gericht' ? 'Kombi' : variation.title.de;
 }
 </script>

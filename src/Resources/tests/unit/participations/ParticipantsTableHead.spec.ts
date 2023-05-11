@@ -54,7 +54,7 @@ describe('Test ParticipantsTableHead', () => {
     });
 
     it('should contain the correct meal titles', async () => {
-        const testmealTitles = [participations.meals[6].title.en, participations.meals[14].title.en, participations.meals[24].title.en];
+        const testmealTitles = [participations.meals[6].title.en, participations.meals[14].title.en, 'Combi'];
 
         const { loadShowParticipations } = getShowParticipations();
         const wrapper = mount(ParticipantsTableHead);

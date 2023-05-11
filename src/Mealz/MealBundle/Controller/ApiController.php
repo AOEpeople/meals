@@ -131,8 +131,10 @@ class ApiController extends BaseController
 
             /* @var Meal $meal */
             foreach ($meals as $meal) {
-                $dishes['en'][] = $meal->getDish()->getTitleEn();
-                $dishes['de'][] = $meal->getDish()->getTitleDe();
+                if (!($meal->getDish() instanceof DishVariation)) {
+                    $dishes['en'][] = $meal->getDish()->getTitleEn();
+                    $dishes['de'][] = $meal->getDish()->getTitleDe();
+                }
             }
 
             $result[$today->format('Y-m-d')] = $dishes;

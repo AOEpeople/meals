@@ -1,4 +1,4 @@
-// import { baseUrl } from "./commands/urls";
+import { baseUrl } from "./commands/urls";
 import {loginAs} from "./commands/login";
 import {setCookieInterceptor} from "./interceptors";
 
@@ -39,11 +39,11 @@ export const viewportXL = () => cy.viewport(1344, 800);
 
 export const visitMeals = () => {
   setCookieInterceptor();
-  cy.visit(`${'/'}`);
+  cy.visit(`${baseUrl}`);
 };
 
 export const visitMealsViaWindowObject = () => {
-  cy.window().then(win => win.location.href = `${'/'}`);
+  cy.window().then(win => win.location.href = `${baseUrl}`);
 };
 
 // add commands to Cypress

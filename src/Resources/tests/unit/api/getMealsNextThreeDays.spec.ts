@@ -2,7 +2,8 @@ import { ref } from "vue";
 import nextThreeDays from "../fixtures/nextThreeDays.json";
 import useApi from "@/api/api";
 import { describe, expect } from "@jest/globals";
-import { IDay, getNextThreeDays } from "@/api/getMealsNextThreeDays";
+import { IDay, IMealList, getNextThreeDays } from "@/api/getMealsNextThreeDays";
+import { Dictionary } from "types/types";
 
 const testDays: IDay[] = [
     {
@@ -20,12 +21,28 @@ const testDays: IDay[] = [
     }
 ];
 
+const testDaysTwo: IDay[] = [
+    {
+        date: new Date('2023-05-12T00:00:00.000Z'),
+        de: ["Überraschungsessen auch zum mitnehmen"],
+        en: ["Menü Surprise also for Take Away"]
+    }, {
+        date: new Date('2023-05-15T00:00:00.000Z'),
+        de: [],
+        en: []
+    }, {
+        date: new Date('2023-05-16T00:00:00.000Z'),
+        de: [ "Tortellini mit einer Tomaten-Ricotta - Sauce", "Nudeln mit Lachs", "Kombi-Gericht"],
+        en: ["Tortellini with a tomato-ricotta-Sauce", "Pasta with salmon", "Combined Dish"]
+    }
+]
+
 const asyncFunc: () => Promise<void> = async () => {
     new Promise(resolve => resolve(undefined));
 };
 
 const mockedReturnValue = {
-    response: ref(nextThreeDays),
+    response: ref(nextThreeDays.dataOne),
     request: asyncFunc,
     error: ref(false)
 }
@@ -41,6 +58,7 @@ describe('Test getMealsNextThreeDays', () => {
 
     beforeEach(() => {
         mockedReturnValue.error.value = false;
+        mockedReturnValue.response.value = nextThreeDays.dataOne;
         resetState();
     });
 
@@ -77,5 +95,14 @@ describe('Test getMealsNextThreeDays', () => {
         await fetchNextThreeDays();
 
         expect(nextThreeDaysState.days).toEqual(testDays);
+    });
+
+    it('should hae three days where one day has no meals one has two meals and one has one meal', async () => {
+        const { nextThreeDaysState, fetchNextThreeDays } = getNextThreeDays();
+
+        // @ts-expect-error because there is no interface implemented for the ref ts shows an error on reassigning the response value
+        mockedReturnValue.response.value = nextThreeDays.dataTwo;
+
+        await fetchNextThreeDays();
     });
 })

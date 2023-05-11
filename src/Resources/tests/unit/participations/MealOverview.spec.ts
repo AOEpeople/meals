@@ -17,7 +17,7 @@ const getMockedResponses = (url: string) => {
     switch(url) {
         case "api/meals/nextThreeDays":
             return {
-                response: ref(nextThreeDays),
+                response: ref(nextThreeDays.dataOne),
                 request: asyncFunc,
                 error: ref(false)
             };

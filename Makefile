@@ -22,6 +22,7 @@ help:
 	@echo "	run-psalm          - Run static code analysis"
 	@echo "	run-tests-be       - Run backend-tests"
 	@echo "	run-tests-fe       - Run frontend-tests"
+	@echo " run-cypress        - Run cypress"
 	@echo "	ssh                - Open a bash session in the web container"
 	@echo "	update-schema      - Update the Doctrine schema"
 	@echo ""
@@ -71,6 +72,9 @@ run-tests-be:
 
 run-tests-fe:
 	ddev exec yarn --cwd=src/Resources test
+
+run-cypress:
+	yarn --cwd=./tests/e2e cypress open
 
 ssh:
 	ddev ssh

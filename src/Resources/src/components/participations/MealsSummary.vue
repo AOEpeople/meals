@@ -11,6 +11,7 @@
       class="h-[60px]"
     >
       <td
+        v-if="index < 3"
         class="truncate p-4"
         :class="[mealNameIsEmpty(meal) ? 'h-[60px]' : 'h-[60px] border-b-[1px] border-solid']"
       >

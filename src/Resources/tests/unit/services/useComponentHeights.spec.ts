@@ -14,6 +14,7 @@ describe('Test the composable useComponenetHeights', () => {
         expect(result).toBeDefined();
 
         expect(result?.windowWidth.value).toBe(1200);
+        result?.addWindowHeightListener();
 
         global.innerWidth = 800;
         global.dispatchEvent(new Event('resize'));

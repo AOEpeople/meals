@@ -67,19 +67,22 @@ function setWindowHeight() {
 export function useComponentHeights() {
 
   onMounted(() => {
-    if (!listenerActive.value) {
-      listenerActive.value = true;
-      setWindowHeight();
-      window.addEventListener('resize', setWindowHeight);
-    }
+    setWindowHeight();
   });
 
-  onUnmounted(() => {
+  function addWindowHeightListener() {
+    if(!listenerActive.value) {
+      listenerActive.value = true;
+      window.addEventListener('resize', setWindowHeight);
+    }
+  }
+
+  function removeWindowHeightListener() {
     if (listenerActive.value) {
       listenerActive.value = false;
       window.removeEventListener('resize', setWindowHeight);
     }
-  });
+  }
 
   /**
    * Sets the height (offsetHeight + marginHeight) of the NavBar in the componentHeightState
@@ -124,6 +127,8 @@ export function useComponentHeights() {
     setNavBarHeight,
     setTableHeadHight,
     setMealListHight,
-    setMealOverviewHeight
+    setMealOverviewHeight,
+    addWindowHeightListener,
+    removeWindowHeightListener
   }
 }

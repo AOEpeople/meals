@@ -102,5 +102,8 @@
     "slotLimit": "Limit",
     "slotActions": "Aktionen",
     "header": "Liste der Slots"
+  },
+  "participantList": {
+    "no_meals": "Heute kein Essen"
   }
 }

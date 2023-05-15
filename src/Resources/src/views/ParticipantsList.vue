@@ -1,10 +1,18 @@
 <template>
   <div class="h-full w-full px-4">
     <MealsList
+      v-if="Object.entries(participationsState.meals).length > 0"
       id="mealsList"
       ref="mealsList"
     />
-    <ParticipationsTable class="mx-auto" />
+    <ParticipationsTable
+      v-if="Object.entries(participationsState.meals).length > 0"
+      class="mx-auto"
+    />
+    <NoParticipations
+      v-if="Object.entries(participationsState.meals).length === 0"
+      :day="participationsState.day"
+    />
     <MealOverview
       id="mealsOverview"
       ref="mealsOverview"
@@ -21,18 +29,23 @@ import { getShowParticipations } from '@/api/getShowParticipations';
 import { onMounted, onUnmounted } from 'vue';
 import { useProgress } from '@marcoschulte/vue3-progress';
 import MealsList from '@/components/participations/MealsList.vue';
+import NoParticipations from '@/components/participations/NoParticipations.vue';
+import { useComponentHeights } from '@/services/useComponentHeights';
 
 const progress = useProgress().start();
 
-const { loadShowParticipations, activatePeriodicFetch, disablePeriodicFetch } = getShowParticipations();
+const { participationsState, loadShowParticipations, activatePeriodicFetch, disablePeriodicFetch } = getShowParticipations();
+const { addWindowHeightListener, removeWindowHeightListener } = useComponentHeights();
 
 onMounted(async () => {
   await loadShowParticipations();
   progress.finish();
   activatePeriodicFetch();
+  addWindowHeightListener();
 });
 
 onUnmounted(() => {
   disablePeriodicFetch();
+  removeWindowHeightListener();
 });
 </script>

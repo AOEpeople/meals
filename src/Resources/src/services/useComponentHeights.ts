@@ -31,6 +31,13 @@ const maxTableHeight = computed(() => {
 });
 
 /**
+ * Computed maximum possible height of the NoParticipations-component.
+ */
+const maxNoParticipationsHeight = computed(() => {
+  return componentHeightState.screenHeight - (componentHeightState.navBarHeight + componentHeightState.mealOverviewHeight);
+})
+
+/**
  * Computes the sum of margin-bottom and margin-top of an HTMLELement.
  * @param elementId ID of the HTMLElement
  * @returns height in pixel
@@ -60,19 +67,22 @@ function setWindowHeight() {
 export function useComponentHeights() {
 
   onMounted(() => {
-    if (!listenerActive.value) {
-      listenerActive.value = true;
-      setWindowHeight();
-      window.addEventListener('resize', setWindowHeight);
-    }
+    setWindowHeight();
   });
 
-  onUnmounted(() => {
+  function addWindowHeightListener() {
+    if(!listenerActive.value) {
+      listenerActive.value = true;
+      window.addEventListener('resize', setWindowHeight);
+    }
+  }
+
+  function removeWindowHeightListener() {
     if (listenerActive.value) {
       listenerActive.value = false;
       window.removeEventListener('resize', setWindowHeight);
     }
-  });
+  }
 
   /**
    * Sets the height (offsetHeight + marginHeight) of the NavBar in the componentHeightState
@@ -113,9 +123,12 @@ export function useComponentHeights() {
   return {
     maxTableHeight,
     windowWidth: readonly(windowWidth),
+    maxNoParticipationsHeight: readonly(maxNoParticipationsHeight),
     setNavBarHeight,
     setTableHeadHight,
     setMealListHight,
-    setMealOverviewHeight
+    setMealOverviewHeight,
+    addWindowHeightListener,
+    removeWindowHeightListener
   }
 }

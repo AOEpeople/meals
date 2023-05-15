@@ -13,7 +13,12 @@
     "paypal": "PayPal Bezahlung",
     "cash": "Barzahlung",
     "add": "Geld einzahlen",
-    "amount": "Betrag"
+    "amount": "Betrag",
+    "table": {
+      "date": "Datum",
+      "description": "Beschreibung",
+      "amount": "Betrag"
+    }
   },
   "button": {
     "ok": "OK",
@@ -49,7 +54,11 @@
     "guest": "In die Zwischenablage kopiert!"
   },
   "dish": {
-    "create": "Gericht erstellen"
+    "create": "Gericht erstellen",
+    "table": {
+      "title": "Titel",
+      "category": "Kategorie"
+    }
   },
   "guest": {
     "form": {
@@ -88,6 +97,10 @@
     "expired": "Session abgelaufen!"
   },
   "slot": {
-    "create": "Slot erstellen"
+    "create": "Slot erstellen",
+    "slotTitle": "Titel",
+    "slotLimit": "Limit",
+    "slotActions": "Aktionen",
+    "header": "Liste der Slots"
   }
 }

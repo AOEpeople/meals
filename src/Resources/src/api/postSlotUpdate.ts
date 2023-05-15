@@ -1,8 +1,9 @@
 import useApi from "@/api/api";
 import { ref } from "vue";
+import { TimeSlot } from "@/stores/timeSlotStore";
 
-export async function useUpdateSlot(data: string) {
-    const { error, request, response } = useApi(
+async function postUpdateSlot(data: string) {
+    const { error, request, response } = useApi<TimeSlot>(
         "POST",
         "api/update-slot",
         'application/json',
@@ -17,4 +18,14 @@ export async function useUpdateSlot(data: string) {
     }
 
     return {error, response}
+}
+
+export function useUpdateSlot() {
+    async function updateSlotEnabled(id: number, state: boolean) {
+        return postUpdateSlot(JSON.stringify({ id: id, enabled: state }));
+    }
+
+    return {
+        updateSlotEnabled
+    }
 }

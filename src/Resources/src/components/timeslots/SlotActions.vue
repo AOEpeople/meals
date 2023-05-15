@@ -5,7 +5,8 @@
     <Switch
       :sr="'Enable TimeSlot'"
       :initial="initial"
-      @toggle="(state) => enabled = state"
+      @toggle="// @ts-ignore-error ts thinks toggle has any type but is typed in switch
+        (state: boolean) => enabled = state"
     />
   </div>
 </template>
@@ -28,5 +29,4 @@ const enabled = ref(initial.value)
 watch(enabled, async () => {
   await changeDisabledState(props.timeSlotID, enabled.value);
 });
-
 </script>

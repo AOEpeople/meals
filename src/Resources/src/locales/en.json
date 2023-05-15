@@ -97,10 +97,9 @@
     "expired": "Session expired!"
   },
   "slot": {
-    "create": "create Slot",
-    "slotTitle": "Title",
-    "slotLimit": "Limit",
-    "slotActions": "Actions",
-    "header": "List of Slots"
+    "create": "create Slot"
+  },
+  "participantList": {
+    "no_meals": "No meals today"
   }
 }

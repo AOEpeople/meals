@@ -97,10 +97,9 @@
     "expired": "Session abgelaufen!"
   },
   "slot": {
-    "create": "Slot erstellen",
-    "slotTitle": "Titel",
-    "slotLimit": "Limit",
-    "slotActions": "Aktionen",
-    "header": "Liste der Slots"
+    "create": "Slot erstellen"
+  },
+  "participantList": {
+    "no_meals": "Heute kein Essen"
   }
 }

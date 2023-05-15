@@ -13,7 +13,7 @@ export type TimeSlots = {
 }
 
 export async function useTimeSlotData(){
-    const { response: timeslots, request } = useApi<TimeSlots>(
+    const { response: timeslots, request, error } = useApi<TimeSlots>(
         "GET",
         "api/timeslots",
     );
@@ -25,5 +25,5 @@ export async function useTimeSlotData(){
         loaded.value = true
     }
 
-    return { timeslots }
+    return { timeslots, error }
 }

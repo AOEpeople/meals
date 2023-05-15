@@ -10,20 +10,23 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import Switch from "@/components/misc/Switch.vue"
-import {ref, watch} from "vue"
-import {timeSlotStore} from "@/stores/timeSlotStore";
+import { ref, watch } from "vue"
+import { useTimeSlots, TimeSlot } from "@/stores/timeSlotStore";
 
-const props = defineProps(['timeSlot', 'timeSlotID'])
-const initial = ref(props.timeSlot.enabled)
+const { changeDisabledState } = useTimeSlots();
+
+const props = defineProps<{
+  timeSlot: TimeSlot,
+  timeSlotID: number
+}>();
+
+const initial = ref(props.timeSlot.enabled);
 const enabled = ref(initial.value)
 
-watch(enabled, () => {
-  timeSlotStore.changeDisabledState(props.timeSlotID, enabled.value)
-  .then((success) => {if(success === false) {
-    initial.value = enabled.value
-  }})
-})
+watch(enabled, async () => {
+  await changeDisabledState(props.timeSlotID, enabled.value);
+});
 
 </script>

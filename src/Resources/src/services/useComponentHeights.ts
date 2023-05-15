@@ -50,6 +50,13 @@ const maxNoParticipationsHeight = computed(() => {
 });
 
 /**
+ * Computed maximum possible height of the NoParticipations-component.
+ */
+const maxNoParticipationsHeight = computed(() => {
+  return componentHeightState.screenHeight - (componentHeightState.navBarHeight + componentHeightState.mealOverviewHeight);
+})
+
+/**
  * Computes the sum of margin-bottom and margin-top of an HTMLELement.
  * @param elementId ID of the HTMLElement
  * @returns height in pixel

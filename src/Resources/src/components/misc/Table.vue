@@ -1,14 +1,14 @@
 <template>
   <div class="max-w-screen-aoe mx-auto flex flex-col">
     <div class="inline-block min-w-full py-2">
-      <table class="border-spacing-none min-w-full max-w-fit table-fixed">
+      <table class="min-w-full max-w-fit table-fixed border-spacing-0">
         <thead>
           <tr>
             <th
               v-for="label in labels"
               :key="label"
               scope="col"
-              class="text-left text-[11px] font-bold uppercase leading-4 tracking-[1.5px]"
+              class="text-left text-[11px] font-bold uppercase leading-4 tracking-[1.5px] last:text-right"
             >
               {{ label }}
             </th>
@@ -27,15 +27,3 @@ defineProps<{
   labels: string[]
 }>();
 </script>
-
-<style scoped>
-.border-spacing-none {
-  border-spacing: 0
-}
-
-th:last-child {
-  text-align: right;
-}
-
-
-</style>

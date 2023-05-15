@@ -89,5 +89,8 @@
   },
   "slot": {
     "create": "Slot erstellen"
+  },
+  "participantList": {
+    "no_meals": "Heute kein Essen"
   }
 }

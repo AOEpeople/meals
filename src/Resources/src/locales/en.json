@@ -89,5 +89,8 @@
   },
   "slot": {
     "create": "create Slot"
+  },
+  "participantList": {
+    "no_meals": "No meals today"
   }
 }

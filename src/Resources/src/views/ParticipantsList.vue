@@ -30,18 +30,22 @@ import { onMounted, onUnmounted } from 'vue';
 import { useProgress } from '@marcoschulte/vue3-progress';
 import MealsList from '@/components/participations/MealsList.vue';
 import NoParticipations from '@/components/participations/NoParticipations.vue';
+import { useComponentHeights } from '@/services/useComponentHeights';
 
 const progress = useProgress().start();
 
 const { participationsState, loadShowParticipations, activatePeriodicFetch, disablePeriodicFetch } = getShowParticipations();
+const { addWindowHeightListener, removeWindowHeightListener } = useComponentHeights();
 
 onMounted(async () => {
   await loadShowParticipations();
   progress.finish();
   activatePeriodicFetch();
+  addWindowHeightListener();
 });
 
 onUnmounted(() => {
   disablePeriodicFetch();
+  removeWindowHeightListener();
 });
 </script>

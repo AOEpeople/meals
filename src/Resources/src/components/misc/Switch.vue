@@ -15,14 +15,22 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { Switch } from '@headlessui/vue'
 import {computed, ref, watch} from "vue";
 
-const props = defineProps(['sr', 'initial'])
-const emits = defineEmits(['toggle'])
-const enabled = ref(props.initial)
-const re = computed(() => props.initial)
+export interface Emits {
+  (e: 'toggle', value: boolean): void;
+}
+
+const props = defineProps<{
+  sr: string,
+  initial: boolean
+}>();
+
+const emits = defineEmits<Emits>();
+const enabled = ref(props.initial);
+const re = computed(() => props.initial);
 
 watch(enabled, () => emits('toggle', enabled.value))
 watch(re, () => enabled.value = re.value)

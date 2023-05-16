@@ -7,15 +7,15 @@
     </tr>
     <tr
       v-for="(meal, index) in mealNames"
-      :key="`${meal}_${index}`"
+      :key="`${String(meal)}_${String(index)}`"
       class="h-[60px]"
     >
       <td
         v-if="index < 3"
         class="truncate p-4"
-        :class="[mealNameIsEmpty(meal) ? 'h-[60px]' : 'h-[60px] border-b-[1px] border-solid']"
+        :class="[mealNameIsEmpty(String(meal)) ? 'h-[60px]' : 'h-[60px] border-b-[1px] border-solid']"
       >
-        {{ meal }}
+        {{ String(meal) }}
       </td>
     </tr>
   </table>
@@ -35,7 +35,7 @@ const props = defineProps<{
 const mealNames = computed(() => {
   const names: string[] = [];
   for(const meal of Object.values(locale.value === 'en' ? props.day.en : props.day.de)) {
-     names.push(meal);
+     names.push(meal as string);
   }
   const timesToFill = 3 - names.length;
   for(let i = 0; i < timesToFill; i++) {

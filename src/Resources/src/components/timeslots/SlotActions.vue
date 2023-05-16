@@ -1,5 +1,5 @@
 <template>
-  <div class="grid grid-cols-3 ">
+  <div class="grid grid-cols-3">
     <button>edit</button>
     <button>delete</button>
     <Switch

@@ -1,12 +1,12 @@
 <template>
   <Popover
     v-slot="{ open }"
-    class="relative"
+    class="relative z-[100]"
   >
-    <PopoverButton>
+    <PopoverButton class="focus:outline-none">
       <slot
         name="button"
-        :open="open"
+        :open="(open)"
       />
     </PopoverButton>
 
@@ -20,7 +20,7 @@
     >
       <PopoverPanel
         v-slot="{ close }"
-        class="absolute left-1/2 mt-5 -translate-x-1/2 xl:-translate-x-3/4"
+        class="absolute left-1/2 z-[101] mt-5 -translate-x-1/2 opacity-[99.9%] xl:-translate-x-3/4"
       >
         <div class="w-[95vw] overflow-hidden rounded-lg bg-gray-200 shadow-lg ring-1 ring-black/5 xl:w-auto">
           <slot

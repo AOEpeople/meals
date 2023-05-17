@@ -69,4 +69,12 @@ class SlotController extends BaseListController
 
         return new JsonResponse(['status' => 'success']);
     }
+
+    public function createSlot(Request $request, SlotService $slotService): JsonResponse
+    {
+        $parameters = json_decode($request->getContent(), true);
+        $slotService->createSlot($parameters);
+
+        return new JsonResponse(['status' => 'success'], 200);
+    }
 }

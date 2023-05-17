@@ -14,6 +14,7 @@ use App\Mealz\MealBundle\Repository\SlotRepositoryInterface;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
+use Exception;
 
 class SlotService
 {
@@ -116,6 +117,26 @@ class SlotService
         }
 
         return $slotsStatus;
+    }
+
+    /**
+     * Creates a new slot if the slot doesn`t already exist
+     */
+    public function createSlot(array $parameters)
+    {
+        $slot = new Slot();
+        if (isset($parameters['title'])) {
+            $slot->setTitle($parameters['title']);
+        }
+        if (isset($parameters['limit'])) {
+            $slot->setLimit($parameters['limit']);
+        }
+        if (isset($parameters['order'])) {
+            $slot->setOrder($parameters['order']);
+        }
+
+        $this->$em->persist($slot);
+        $this->$em->flush();
     }
 
     /**

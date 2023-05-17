@@ -1,27 +1,27 @@
 <template>
-  <div class="mx-[5%] xl:mx-auto">
+  <div class="relative z-0 mx-[5%] xl:mx-auto">
     <SlotHeader />
     <Table
       v-if="!TimeSlotState.isLoading"
       :labels="[t('slot.slotTitle'), t('slot.slotLimit'), t('slot.slotActions')]"
-      class="mb-5 mt-10"
+      class="z-1 mb-5 mt-10"
     >
       <tr
         v-for="(timeSlot, id) in TimeSlotState.timeSlots"
         :key="id"
-        class="max-h-[62px] border-b-2 border-gray-200"
+        class="z-1 max-h-[62px] border-b-2 border-gray-200"
       >
-        <td>
+        <td class="w-[60%]">
           <span class="text-[12px] xl:text-[18px]">
             {{ timeSlot.title }}
           </span>
         </td>
-        <td>
+        <td class="w-[10%]">
           <span class="text-[12px] xl:text-[18px]">
             {{ timeSlot.limit }}
           </span>
         </td>
-        <td>
+        <td class="z-1 w-[30%]">
           <SlotActions
             :timeSlot="timeSlot"
             :timeSlotID="Number(id)"

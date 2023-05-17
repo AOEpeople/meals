@@ -27,6 +27,11 @@ MealzMealBundle_api_update-slot:
   defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::updateSlot }
   methods: [POST]
 
+MealzMealBundle_api_create-slot:
+  path: /api/create-slot
+  defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::createSlot }
+  methods: [POST]
+
 MealzMealBundle_api_environmentals:
   path: /api/environmentals
   defaults: { _controller: App\Mealz\MealBundle\Controller\ApiController::getEnvironmentVars }

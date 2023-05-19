@@ -1,7 +1,7 @@
 import useApi from "./api";
 import { TimeSlot } from "@/stores/timeSlotStore";
 
-interface ISuccess {
+export interface ISuccess {
     status: string
 }
 

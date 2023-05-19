@@ -57,10 +57,11 @@ class SlotController extends BaseListController
         return new JsonResponse(['status' => 'success']);
     }
 
-    public function deleteSlot(Slot $slot, SlotService $slotService): JsonResponse
+    public function deleteSlot(Request $request, SlotService $slotService): JsonResponse
     {
         try {
-            $slotService->delete($slot);
+            $parameters = json_decode($request->getContent(), true);
+            $slotService->delete($parameters);
         } catch (Exception $e) {
             $this->logException($e);
 
@@ -72,8 +73,14 @@ class SlotController extends BaseListController
 
     public function createSlot(Request $request, SlotService $slotService): JsonResponse
     {
-        $parameters = json_decode($request->getContent(), true);
-        $slotService->createSlot($parameters);
+        try {
+            $parameters = json_decode($request->getContent(), true);
+            $slotService->createSlot($parameters);
+        } catch (Exception $e) {
+            $this->logException($e);
+
+            return new JsonResponse(null, 500);
+        }
 
         return new JsonResponse(['status' => 'success'], 200);
     }

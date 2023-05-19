@@ -9,12 +9,12 @@
       :action="Action.DELETE"
       :btn-text="t('button.delete')"
       :row="true"
+      @click="deleteSlot(timeSlotID)"
     />
     <Switch
       :sr="'Enable TimeSlot'"
       :initial="initial"
-      @toggle="// @ts-ignore-error ts thinks toggle has any type but is typed in switch
-        (state: boolean) => enabled = state"
+      @toggle="(value) => setEnabled(value)"
     />
   </div>
 </template>
@@ -27,7 +27,7 @@ import ActionButton from "./ActionButton.vue";
 import { useI18n } from "vue-i18n";
 import { Action } from '@/enums/Actions';
 
-const { changeDisabledState } = useTimeSlots();
+const { changeDisabledState, deleteSlot } = useTimeSlots();
 const { t } = useI18n();
 
 const props = defineProps<{
@@ -41,4 +41,8 @@ const enabled = ref(initial.value)
 watch(enabled, async () => {
   await changeDisabledState(props.timeSlotID, enabled.value);
 });
+
+function setEnabled(state: boolean) {
+  enabled.value = state;
+}
 </script>

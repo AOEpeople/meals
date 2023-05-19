@@ -13,8 +13,8 @@ use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\MealBundle\Repository\SlotRepositoryInterface;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use InvalidArgumentException;
 use Exception;
+use InvalidArgumentException;
 
 class SlotService
 {
@@ -131,7 +131,7 @@ class SlotService
     }
 
     /**
-     * Creates a new slot if the slot doesn`t already exist
+     * Creates a new slot if the slot doesn`t already exist.
      */
     public function createSlot(array $parameters): void
     {

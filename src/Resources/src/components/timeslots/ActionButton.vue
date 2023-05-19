@@ -1,17 +1,17 @@
 <template>
   <button
-    class="flex place-items-center"
+    class="z-[1] flex place-items-center"
     :class="[row ? 'flex-row' : 'flex-col']"
   >
     <PencilIcon
       v-if="action === Action.EDIT"
-      class="aspect-square h-8 w-8"
+      class="z-[1] aspect-square h-8 w-8"
     />
     <XIcon
       v-if="action === Action.DELETE"
-      class="aspect-square h-10 w-10"
+      class="z-[1] aspect-square h-10 w-10"
     />
-    <p class="m-0 flex h-full w-full place-items-center">
+    <p class="z-[1] m-0 flex h-full w-full place-items-center">
       {{ btnText }}
     </p>
   </button>

@@ -1,6 +1,7 @@
 import useApi from "@/api/api";
 import { ref } from "vue";
 import { TimeSlot } from "@/stores/timeSlotStore";
+import { stringify } from "querystring";
 
 async function postUpdateSlot(data: string) {
     const { error, request, response } = useApi<TimeSlot>(
@@ -25,7 +26,12 @@ export function useUpdateSlot() {
         return postUpdateSlot(JSON.stringify({ id: id, enabled: state }));
     }
 
+    async function updateTimeSlot(id: number, slot: TimeSlot) {
+        return postUpdateSlot(JSON.stringify({ id: id, title: slot.title, limit: slot.limit, order: slot.order }))
+    }
+
     return {
-        updateSlotEnabled
+        updateSlotEnabled,
+        updateTimeSlot
     }
 }

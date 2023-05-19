@@ -104,7 +104,9 @@
     "header": "List of Slots",
     "slotOrder": "Order",
     "submit": "Create",
-    "createHeader": "Create new Slot"
+    "createHeader": "Create new Slot",
+    "editSlot": "Slot bearbeiten",
+    "save": "Speichern"
   },
   "participantList": {
     "no_meals": "No meals today"

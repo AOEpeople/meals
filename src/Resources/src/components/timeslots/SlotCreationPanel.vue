@@ -52,7 +52,6 @@ async function onSubmit() {
     order: parseInt(orderInput.value),
     enabled: true
   }
-  // console.log(`Submit timeslot for creation: { title: ${timeSlot.title}, limit: ${timeSlot.limit}, order: ${timeSlot.order}, enabled: ${timeSlot.enabled} }`);
   await createSlot(timeSlot);
 }
 </script>

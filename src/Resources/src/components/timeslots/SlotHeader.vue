@@ -21,7 +21,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import Popover from "@/components/misc/Popover.vue"
 import SlotCreationPanel from "@/components/timeslots/SlotCreationPanel.vue"
 import { useI18n } from "vue-i18n"

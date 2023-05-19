@@ -71,12 +71,23 @@ class SlotService
         $this->em->flush();
     }
 
-    public function delete(Slot $slot): void
+    public function delete(array $parameters): void
     {
-        $slot->setDeleted(true);
+        if (isset($parameters['id'])) {
+            $slot = $this->getSlotById($parameters['id']);
+            if (null === $slot) {
+                throw new Exception('Slot does  not exists');
+            }
+            if (null === $slot->getId()) {
+                throw new Exception('Slot ID is not set');
+            }
+            if ($slot->getId() !== $parameters['id']) {
+                throw new Exception('Slot ID is not equal to requested ID');
+            }
 
-        $this->em->persist($slot);
-        $this->em->flush();
+            $this->em->remove($slot);
+            $this->em->flush();
+        }
     }
 
     public function getSlotStatusForDay(DateTime $datetime): array
@@ -122,7 +133,7 @@ class SlotService
     /**
      * Creates a new slot if the slot doesn`t already exist
      */
-    public function createSlot(array $parameters)
+    public function createSlot(array $parameters): void
     {
         $slot = new Slot();
         if (isset($parameters['title'])) {
@@ -135,8 +146,8 @@ class SlotService
             $slot->setOrder($parameters['order']);
         }
 
-        $this->$em->persist($slot);
-        $this->$em->flush();
+        $this->em->persist($slot);
+        $this->em->flush();
     }
 
     /**

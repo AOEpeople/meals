@@ -1,10 +1,28 @@
 <template>
-  <div class="z-1 flex flex-row content-center items-center justify-end justify-items-end gap-4">
-    <ActionButton
-      :action="Action.EDIT"
-      :btn-text="t('button.edit')"
-      :row="true"
-    />
+  <div class="flex flex-row content-center items-center justify-end justify-items-end gap-4">
+    <Popover :translateX="'-30%'">
+      <template #button="{ open }">
+        <ActionButton
+          :action="Action.EDIT"
+          :btn-text="t('button.edit')"
+          :row="true"
+          class="relative z-0"
+        />
+      </template>
+      <template #panel="{ close }">
+        <SlotCreationPanel
+          :id="timeSlotID"
+          :edit="true"
+          :class="[close ? 'isolate z-40' : '']"
+          :submit="t('slot.save')"
+          :header="t('slot.editSlot')"
+          :title="timeSlot.title"
+          :limit="String(timeSlot.limit)"
+          :order="String(timeSlot.order)"
+          @closePanel="close()"
+        />
+      </template>
+    </Popover>
     <ActionButton
       :action="Action.DELETE"
       :btn-text="t('button.delete')"
@@ -26,6 +44,8 @@ import { useTimeSlots, TimeSlot } from "@/stores/timeSlotStore";
 import ActionButton from "./ActionButton.vue";
 import { useI18n } from "vue-i18n";
 import { Action } from '@/enums/Actions';
+import Popover from "../misc/Popover.vue";
+import SlotCreationPanel from "./SlotCreationPanel.vue";
 
 const { changeDisabledState, deleteSlot } = useTimeSlots();
 const { t } = useI18n();

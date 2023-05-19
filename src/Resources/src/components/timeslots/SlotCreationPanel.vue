@@ -1,27 +1,27 @@
 <template>
   <form
-    class="z-[102] grid grid-cols-6 grid-rows-3 p-4 xl:w-[800px]"
+    class="relative grid w-[300px] grid-cols-6 grid-rows-4 gap-2 p-4 sm:w-[400px]"
     @submit.prevent="onSubmit()"
   >
     <h3 class="col-span-6 col-start-1">
-      {{ t('slot.createHeader') }}
+      {{ header }}
     </h3>
     <InputLabel
       v-model="titleInput"
       :label-text="t('slot.slotTitle')"
-      class="col-span-4 col-start-1"
+      class="col-span-6 col-start-1"
     />
     <InputLabel
       v-model="limitInput"
       :label-text="t('slot.slotLimit')"
       type="number"
-      class="col-span-1 col-start-5"
+      class="col-span-3 col-start-1"
     />
     <InputLabel
       v-model="orderInput"
       :label-text="t('slot.slotOrder')"
       type="number"
-      class="col-span-1 col-start-6"
+      class="col-span-3 col-start-4"
     />
     <input
       type="submit"
@@ -39,11 +39,26 @@ import { TimeSlot } from '@/stores/timeSlotStore';
 import { useTimeSlots } from '@/stores/timeSlotStore';
 
 const { t } = useI18n();
-const { createSlot } = useTimeSlots();
+const { createSlot, editSlot } = useTimeSlots();
 
-const titleInput = ref('');
-const limitInput = ref('0');
-const orderInput = ref('0');
+const props = withDefaults(defineProps<{
+  header: string,
+  title?: string,
+  limit?: string,
+  order?: string,
+  submit: string,
+  edit?: boolean,
+  id: number
+}>(),{
+  title: "",
+  limit: '0',
+  order: '0',
+  edit: false
+});
+
+const titleInput = ref(props.title);
+const limitInput = ref(props.limit);
+const orderInput = ref(props.order);
 
 async function onSubmit() {
   const timeSlot: TimeSlot = {
@@ -52,6 +67,10 @@ async function onSubmit() {
     order: parseInt(orderInput.value),
     enabled: true
   }
-  await createSlot(timeSlot);
+  if(props.edit) {
+    await editSlot(props.id, timeSlot);
+  } else {
+    await createSlot(timeSlot);
+  }
 }
 </script>

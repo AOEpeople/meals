@@ -1,7 +1,6 @@
 <template>
   <Popover
     v-slot="{ open }"
-    class="relative z-[100]"
   >
     <PopoverButton class="focus:outline-none">
       <slot
@@ -20,9 +19,10 @@
     >
       <PopoverPanel
         v-slot="{ close }"
-        class="absolute left-1/2 z-[101] mt-5 -translate-x-1/2 opacity-[99.9%] xl:-translate-x-3/4"
+        class="absolute z-[101] mx-auto mt-5 opacity-[99.9%] xl:-translate-x-[80%]"
+        :style="{ transform: `translateX(${translateX})` }"
       >
-        <div class="w-[95vw] overflow-hidden rounded-lg bg-gray-200 shadow-lg ring-1 ring-black/5 xl:w-auto">
+        <div class="overflow-hidden rounded-lg bg-gray-200 shadow-lg ring-1 ring-black/5">
           <slot
             name="panel"
             :close="close"
@@ -33,7 +33,12 @@
   </Popover>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
 
+withDefaults(defineProps<{
+  translateX: string
+}>(), {
+  translateX: '0%'
+});
 </script>

@@ -14,7 +14,11 @@
           />
         </template>
         <template #panel="{ close }">
-          <SlotCreationPanel @closePanel="close()" />
+          <SlotCreationPanel
+            :header="t('slot.createHeader')"
+            :submit="t('slot.submit')"
+            @closePanel="close()"
+          />
         </template>
       </Popover>
     </div>

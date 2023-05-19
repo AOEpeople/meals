@@ -26,10 +26,10 @@ const TimeSlotState = reactive<ITimeSlotState>({
     error: ""
 });
 
-watch(
-    () => TimeSlotState.error,
-    () => console.log(`TimeslotState Error: ${TimeSlotState.error}`)
-);
+// watch(
+//     () => TimeSlotState.error,
+//     () => console.log(`TimeslotState Error: ${TimeSlotState.error}`)
+// );
 
 export function useTimeSlots() {
 
@@ -62,8 +62,26 @@ export function useTimeSlots() {
         }
     }
 
+    async function editSlot(id: number, slot: TimeSlot) {
+        const { updateTimeSlot } = useUpdateSlot();
+
+        const { error, response } = await updateTimeSlot(id, slot);
+
+        if(!error.value && response.value) {
+            updateTimeSlotState(response.value, id);
+        } else {
+            TimeSlotState.error = "Error on changing the slot state";
+        }
+    }
+
     function updateTimeSlotEnabled(newSlot: TimeSlot, id: number) {
         TimeSlotState.timeSlots[id].enabled = newSlot.enabled;
+    }
+
+    function updateTimeSlotState(slot: TimeSlot, id: number) {
+        TimeSlotState.timeSlots[id].title = slot.title;
+        TimeSlotState.timeSlots[id].limit = slot.limit;
+        TimeSlotState.timeSlots[id].order = slot.order;
     }
 
     async function createSlot(newSlot: TimeSlot) {
@@ -93,6 +111,7 @@ export function useTimeSlots() {
         fetchTimeSlots,
         changeDisabledState,
         createSlot,
-        deleteSlot
+        deleteSlot,
+        editSlot
     }
 }

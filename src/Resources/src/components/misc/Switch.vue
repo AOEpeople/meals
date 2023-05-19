@@ -30,9 +30,6 @@ const emits = defineEmits<Emits>();
 const enabled = ref(props.initial);
 const re = computed(() => props.initial);
 
-watch(enabled, () => {
-  console.log(`toggled: enabled(${enabled.value})`);
-  emits('toggle', enabled.value);
-});
+watch(enabled, () => emits('toggle', enabled.value));
 watch(re, () => enabled.value = re.value)
 </script>

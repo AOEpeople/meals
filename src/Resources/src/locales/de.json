@@ -104,7 +104,9 @@
     "header": "Liste der Slots",
     "slotOrder": "Sortierung",
     "submit": "Erstellen",
-    "createHeader": "Neuen Slot erstellen"
+    "createHeader": "Neuen Slot erstellen",
+    "editSlot": "Slot bearbeiten",
+    "save": "Speichern"
   },
   "participantList": {
     "no_meals": "Heute kein Essen"

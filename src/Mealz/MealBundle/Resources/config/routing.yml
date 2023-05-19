@@ -32,6 +32,11 @@ MealzMealBundle_api_create-slot:
   defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::createSlot }
   methods: [POST]
 
+MealzMealBundle_api_delete-slot:
+  path: /api/delete-slot
+  defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::deleteSlot }
+  methods: [POST]
+
 MealzMealBundle_api_environmentals:
   path: /api/environmentals
   defaults: { _controller: App\Mealz\MealBundle\Controller\ApiController::getEnvironmentVars }

@@ -1,8 +1,9 @@
 import { Dictionary } from "types/types";
-import { reactive, readonly } from "vue";
+import { reactive, readonly, watch } from "vue";
 import { useTimeSlotData } from "@/api/getTimeSlotData";
 import { useUpdateSlot } from "@/api/postSlotUpdate";
 import postCreateSlot from "@/api/postCreateSlot";
+import postDeleteSlot from "@/api/postDeleteSlot";
 
 interface ITimeSlotState {
     timeSlots: Dictionary<TimeSlot>,
@@ -24,6 +25,11 @@ const TimeSlotState = reactive<ITimeSlotState>({
     isLoading: false,
     error: ""
 });
+
+watch(
+    () => TimeSlotState.error,
+    () => console.log(`TimeslotState Error: ${TimeSlotState.error}`)
+);
 
 export function useTimeSlots() {
 
@@ -63,7 +69,18 @@ export function useTimeSlots() {
     async function createSlot(newSlot: TimeSlot) {
         const { error, response } = await postCreateSlot(newSlot);
 
-        if(error || response.value?.status !== "success") {
+        if(error.value || response.value?.status !== "success") {
+            TimeSlotState.error = "Error on creating slot";
+            return;
+        }
+
+        await getTimeSlots();
+    }
+
+    async function deleteSlot(id: number) {
+        const { error, response } = await postDeleteSlot(id);
+
+        if(error.value || response.value?.status !== "success") {
             TimeSlotState.error = "Error on creating slot";
             return;
         }
@@ -75,6 +92,7 @@ export function useTimeSlots() {
         TimeSlotState: readonly(TimeSlotState),
         fetchTimeSlots,
         changeDisabledState,
-        createSlot
+        createSlot,
+        deleteSlot
     }
 }

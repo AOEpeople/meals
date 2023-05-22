@@ -19,8 +19,8 @@
     >
       <PopoverPanel
         v-slot="{ close }"
-        class="absolute z-[101] mx-auto mt-5 opacity-[99.9%] xl:-translate-x-[80%]"
-        :style="{ transform: `translateX(${translateX})` }"
+        class="absolute z-[101] mx-auto mt-5 opacity-[99.9%]"
+        :style="{ transform: `translateX(${translateXComputed})` }"
       >
         <div class="overflow-hidden rounded-lg bg-gray-200 shadow-lg ring-1 ring-black/5">
           <slot
@@ -35,10 +35,34 @@
 
 <script setup lang="ts">
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
+import { computed, onMounted, onUnmounted } from 'vue';
+import { useComponentHeights } from "@/services/useComponentHeights";
 
-withDefaults(defineProps<{
-  translateX: string
+const { windowWidth, addWindowHeightListener, removeWindowHeightListener } = useComponentHeights();
+
+const props = withDefaults(defineProps<{
+  translateXMax?: string,
+  translateXMin?: string,
+  breakpointWidth?: number
 }>(), {
-  translateX: '0%'
+  translateXMax: 'default',
+  translateXMin: 'default',
+  breakpointWidth: 1200
+});
+
+onMounted(() => {
+  addWindowHeightListener();
+});
+
+onUnmounted(() => {
+  removeWindowHeightListener();
+})
+
+const translateXComputed = computed(() => {
+  if(windowWidth.value >= props.breakpointWidth) {
+    return props.translateXMax === 'default' ? '-80%' : props.translateXMax
+  } else {
+    return props.translateXMin === 'default' ? '-80%' : props.translateXMin
+  }
 });
 </script>

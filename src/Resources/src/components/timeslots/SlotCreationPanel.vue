@@ -25,8 +25,8 @@
     />
     <input
       type="submit"
-      value="Submit"
-      class="col-span-6 col-start-1"
+      :value="t('slot.save')"
+      class="col-span-6 col-start-1 hover:font-bold"
     >
   </form>
 </template>

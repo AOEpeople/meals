@@ -4,7 +4,10 @@ import { TimeSlot } from "@/stores/timeSlotStore";
 export interface ISuccess {
     status: string
 }
-
+/**
+ * Performs a POST to create a new timeslot
+ * @param timeSlot The timeslot to be created
+ */
 export default async function createSlot(timeSlot: TimeSlot) {
     const { error, request, response } = useApi<ISuccess>(
         "POST",

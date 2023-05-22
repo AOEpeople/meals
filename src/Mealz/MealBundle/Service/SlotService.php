@@ -131,7 +131,7 @@ class SlotService
     }
 
     /**
-     * Creates a new slot if the slot doesn`t already exist.
+     * Creates a new slot.
      */
     public function createSlot(array $parameters): void
     {

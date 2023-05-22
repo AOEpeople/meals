@@ -1,8 +1,9 @@
 <template>
-  <div class="w-full border-2 border-black">
+  <div class="w-full">
     <label
       v-if="labelText !== ''"
       :for="labelText"
+      class="w-full pl-2 text-start"
     >
       {{ labelText }}
     </label>
@@ -12,7 +13,7 @@
       :type="type"
       :name="labelText"
       :placeholder="labelText"
-      class="w-full p-2"
+      class="w-full rounded-lg border-0 border-none p-2"
     >
   </div>
 </template>

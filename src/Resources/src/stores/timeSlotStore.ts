@@ -1,5 +1,5 @@
 import { Dictionary } from "types/types";
-import { reactive, readonly, watch } from "vue";
+import { reactive, readonly } from "vue";
 import { useTimeSlotData } from "@/api/getTimeSlotData";
 import { useUpdateSlot } from "@/api/postSlotUpdate";
 import postCreateSlot from "@/api/postCreateSlot";
@@ -26,19 +26,22 @@ const TimeSlotState = reactive<ITimeSlotState>({
     error: ""
 });
 
-// watch(
-//     () => TimeSlotState.error,
-//     () => console.log(`TimeslotState Error: ${TimeSlotState.error}`)
-// );
-
 export function useTimeSlots() {
 
+    /**
+     * Calls getTimeSlots to fetch timeSlots and sets isLoading
+     * in the TimeSlotState to true during the request
+     */
     async function fetchTimeSlots() {
         TimeSlotState.isLoading = true;
         await getTimeSlots();
         TimeSlotState.isLoading = false;
     }
 
+    /**
+     * Calls useTimeSlotData to fetch the timeSlots and sets the state accordingly.
+     * Retries to fetch after a timeout if there are errors
+     */
     async function getTimeSlots() {
         const { timeslots, error } = await useTimeSlotData();
         if(!error.value && timeslots.value) {
@@ -106,12 +109,22 @@ export function useTimeSlots() {
         await getTimeSlots();
     }
 
+    /**
+     * Only to be used during testing
+     */
+    function resetState() {
+        TimeSlotState.timeSlots = {};
+        TimeSlotState.error = "";
+        TimeSlotState.isLoading = false;
+    }
+
     return {
         TimeSlotState: readonly(TimeSlotState),
         fetchTimeSlots,
         changeDisabledState,
         createSlot,
         deleteSlot,
-        editSlot
+        editSlot,
+        resetState
     }
 }

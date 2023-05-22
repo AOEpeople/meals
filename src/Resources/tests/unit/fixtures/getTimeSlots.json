@@ -1,0 +1,32 @@
+{
+    "5": {
+        "title": "Active w\/o limit",
+        "limit": 0,
+        "order": 0,
+        "enabled": true
+    },
+    "6": {
+        "title": "Active w\/ limit",
+        "limit": 10,
+        "order": 0,
+        "enabled": true
+    },
+    "7": {
+        "title": "Inactive",
+        "limit": 0,
+        "order": 0,
+        "enabled": false
+    },
+    "12": {
+        "title": "Omnevo",
+        "limit": 9,
+        "order": 1,
+        "enabled": true
+    },
+    "13": {
+        "title": "test",
+        "limit": 4,
+        "order": 0,
+        "enabled": true
+    }
+}

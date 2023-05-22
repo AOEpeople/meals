@@ -6,7 +6,10 @@
       </h2>
     </div>
     <div class="z-[99] xl:justify-self-end">
-      <Popover>
+      <Popover
+        :translate-x-min="'-25%'"
+        class="m-auto w-fit"
+      >
         <template #button="{ open }">
           <CreateButton
             :open="open"

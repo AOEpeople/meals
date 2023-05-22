@@ -11,7 +11,7 @@
       v-if="action === Action.DELETE"
       class="z-[1] aspect-square h-10 w-10"
     />
-    <p class="z-[1] m-0 flex h-full w-full place-items-center">
+    <p class="z-[1] m-0 flex h-full w-full place-items-center text-[10px] sm:text-[12px] xl:text-[18px]">
       {{ btnText }}
     </p>
   </button>

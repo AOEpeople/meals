@@ -1,10 +1,10 @@
 <template>
   <table
     v-if="meal && meal.title.en !== 'Combined Dish'"
-    class="grow-1 table-fixed border-collapse rounded-t-[18px] rounded-b-lg border-0 border-none bg-white"
+    class="grow-1 table-fixed border-collapse rounded-b-lg rounded-t-[18px] border-0 border-none bg-white"
   >
     <thead
-      class="h-full shadow-[0_15px_35px_0_#5B788F21]"
+      class="shadow-[0_15px_35px_0_#5B788F21]"
       :class="[meal.variations.length > 0 ? '' : 'rounded-b-lg']"
     >
       <tr class="w-full">
@@ -18,7 +18,6 @@
     </thead>
     <tbody
       v-if="meal.variations.length > 0"
-      class="h-full"
     >
       <tr
         v-for="(variation, index) in meal.variations"

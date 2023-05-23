@@ -1,7 +1,7 @@
 <template>
   <table
     v-if="meal && meal.title.en !== 'Combined Dish'"
-    class="grow-1 table-fixed border-collapse rounded-t-[18px] rounded-b-lg border-0 border-none bg-white"
+    class="grow-1 table-fixed border-collapse rounded-b-lg rounded-t-[18px] border-0 border-none bg-white"
   >
     <thead
       class="h-full shadow-[0_15px_35px_0_#5B788F21]"

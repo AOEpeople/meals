@@ -1,5 +1,11 @@
 # Changelog
 
+## Version v2.3.8 (2023-05-23)
+
+### Fixes
+
+- Fix booking when slots are disabled (73e1dafa)
+
 ## Version v2.3.7 (2023-03-15)
 
 ### Other

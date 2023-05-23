@@ -3,7 +3,7 @@
     class="relative grid w-[300px] grid-cols-6 grid-rows-4 gap-2 p-4 sm:w-[400px]"
     @submit.prevent="onSubmit()"
   >
-    <h3 class="col-span-6 col-start-1">
+    <h3 class="col-span-6 col-start-1 text-center">
       {{ header }}
     </h3>
     <InputLabel
@@ -26,7 +26,7 @@
     <input
       type="submit"
       :value="t('slot.save')"
-      class="col-span-6 col-start-1 hover:font-bold"
+      class="col-span-6 col-start-1 cursor-pointer hover:font-bold"
     >
   </form>
 </template>

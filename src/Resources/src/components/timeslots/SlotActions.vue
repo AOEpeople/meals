@@ -44,7 +44,7 @@
 import Switch from "@/components/misc/Switch.vue"
 import { ref, watch } from "vue"
 import { useTimeSlots, TimeSlot } from "@/stores/timeSlotStore";
-import ActionButton from "./ActionButton.vue";
+import ActionButton from "@/components/misc/ActionButton.vue";
 import { useI18n } from "vue-i18n";
 import { Action } from '@/enums/Actions';
 import Popover from "../misc/Popover.vue";

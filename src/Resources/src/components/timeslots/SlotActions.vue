@@ -9,7 +9,7 @@
           :action="Action.EDIT"
           :btn-text="t('button.edit')"
           :row="true"
-          class="relative z-0"
+          class="relative z-0 h-[40px]"
         />
       </template>
       <template #panel="{ close }">

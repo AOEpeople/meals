@@ -128,38 +128,6 @@ MealzMealBundle_Meal_newGuestInvitation:
     requirements:
         dayId: '[1-9][0-9]*'
 
-MealzMealBundle_Slot:
-    path:  /meal/slots
-    defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::listSlots }
-
-MealzMealBundle_Slot_Form_empty:
-    path:  /meal/slot/new
-    defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::getEmptyForm }
-
-MealzMealBundle_Slot_new:
-    path:  /meal/slot/create
-    defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::new }
-
-MealzMealBundle_Slot_Form_preFilled:
-    path:  /meal/slot/{slug}/edit
-    defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::getPreFilledForm }
-    methods: [GET]
-
-MealzMealBundle_Slot_edit:
-    path:  /meal/slot/{slug}/edit
-    defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::edit }
-    methods: [POST]
-
-MealzMealBundle_Slot_updateState:
-    path:  /meal/slot/{slug}/update-state
-    defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::updateState }
-    methods: [POST]
-
-MealzMealBundle_Slot_delete:
-    path:  /meal/slot/{slug}/delete
-    defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::deleteSlot }
-    methods: [DELETE]
-
 MealzMealBundle_Participant_update:
     path:  /meal/participation/{participant}/update
     defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::updateCombinedMeal }

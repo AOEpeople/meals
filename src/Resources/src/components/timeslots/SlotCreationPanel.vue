@@ -26,7 +26,10 @@
     <input
       type="submit"
       :value="t('slot.save')"
-      class="col-span-6 col-start-1 cursor-pointer hover:font-bold"
+      class="rounded-btn bg-highlight text-btn drop-shadow-btn col-span-6 col-start-1 mx-2 mb-6 mt-4 flex h-9 cursor-pointer items-center px-[34px] text-center font-bold leading-[10px] text-white transition-all duration-300 ease-out hover:bg-[#f7a043] focus:outline-none"
+      :class="activeBtnStyle"
+      @mousedown="isMouseDown = true"
+      @mouseup="isMouseDown = false"
     >
   </form>
 </template>
@@ -34,7 +37,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import InputLabel from "@/components/misc/InputLabel.vue";
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { TimeSlot } from '@/stores/timeSlotStore';
 import { useTimeSlots } from '@/stores/timeSlotStore';
 
@@ -59,6 +62,9 @@ const props = withDefaults(defineProps<{
 const titleInput = ref(props.title);
 const limitInput = ref(props.limit);
 const orderInput = ref(props.order);
+const isMouseDown = ref(false);
+
+const activeBtnStyle = computed(() => isMouseDown.value ? 'translate-y-0.5' : 'shadow-btn btn-highlight-shadow');
 
 async function onSubmit() {
   const timeSlot: TimeSlot = {

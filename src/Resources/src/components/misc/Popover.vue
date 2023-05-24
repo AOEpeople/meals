@@ -2,7 +2,7 @@
   <Popover
     v-slot="{ open }"
   >
-    <PopoverButton class="focus:outline-none">
+    <PopoverButton class="h-full focus:outline-none">
       <slot
         name="button"
         :open="(open)"
@@ -22,7 +22,7 @@
         class="absolute z-[101] mx-auto mt-5 opacity-[99.9%]"
         :style="{ transform: `translateX(${translateXComputed})` }"
       >
-        <div class="overflow-hidden rounded-lg bg-gray-200 shadow-lg ring-1 ring-black/5">
+        <div class="overflow-hidden rounded-lg bg-[rgb(244,247,249)] shadow-lg ring-1 ring-black/5">
           <slot
             name="panel"
             :close="close"

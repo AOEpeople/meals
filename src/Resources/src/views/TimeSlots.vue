@@ -4,7 +4,7 @@
     <Table
       v-if="!TimeSlotState.isLoading"
       :labels="[t('slot.slotTitle'), t('slot.slotLimit'), t('slot.slotActions')]"
-      class="mb-5 mt-10"
+      class="my-10"
     >
       <tr
         v-for="(timeSlot, id) in TimeSlotState.timeSlots"

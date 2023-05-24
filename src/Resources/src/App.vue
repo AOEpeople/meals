@@ -1,16 +1,18 @@
 <template>
-  <NavBar
-    id="navibar"
-    ref="navibar"
-  />
-  <div class="absolute z-[4]">
-    <vue3-progress-bar />
+  <div class="flex min-h-screen flex-col">
+    <NavBar
+      id="navibar"
+      ref="navibar"
+    />
+    <div class="absolute z-[4]">
+      <vue3-progress-bar />
+    </div>
+    <Content class="relative z-[2]" />
+    <Footer
+      v-if="!showParticipations"
+      class="relative z-[1] mt-auto"
+    />
   </div>
-  <Content class="relative z-[2]" />
-  <Footer
-    v-if="!showParticipations"
-    class="relative z-[1]"
-  />
 </template>
 
 <script setup>

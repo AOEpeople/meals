@@ -3,7 +3,7 @@
     <label
       v-if="labelText !== ''"
       :for="labelText"
-      class="w-full pl-2 text-start"
+      class="w-fulltext-start px-4 text-xs font-medium text-[#173D7A]"
     >
       {{ labelText }}
     </label>
@@ -13,7 +13,7 @@
       :type="type"
       :name="labelText"
       :placeholder="labelText"
-      class="w-full rounded-lg border-0 border-none p-2"
+      class="w-full rounded-full border-2 border-solid border-[#CAD6E1] px-4 py-2 text-[14px] font-medium text-[#B4C1CE]"
     >
   </div>
 </template>

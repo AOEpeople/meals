@@ -13,7 +13,7 @@
     </Disclosure>
   </div>
   <Table
-    :labels="tableLabels"
+    :labels="[t('dish.table.title'), t('dish.table.category')]"
     :data="tableData"
     :actions="true"
   />
@@ -24,10 +24,12 @@ import {Disclosure, DisclosureButton, DisclosurePanel} from '@headlessui/vue'
 import ModifyDishes from '@/components/dishes/ModifyDishes.vue'
 import {useProgress} from '@marcoschulte/vue3-progress'
 import Table from '@/components/misc/Table.vue'
+import { useI18n } from 'vue-i18n'
 
 const progress = useProgress().start();
 
-const tableLabels = ['Title', 'Category'];
+const { t } = useI18n();
+
 const tableData = [
   { title_en: 'Dish1', title_de: 'Gericht1', desc_en: 'Description', desc_de: 'Beschreibung', category: 'Meat' },
   { title_en: 'Dish2', title_de: 'Gericht2', desc_en: 'Description', desc_de: 'Beschreibung', category: 'Fish' },

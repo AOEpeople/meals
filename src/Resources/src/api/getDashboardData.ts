@@ -1,7 +1,6 @@
 import useApi from "@/api/api";
 import { Dictionary } from "../../types/types";
-import { reactive, readonly, ref } from "vue";
-import { usePeriodicFetch } from "@/services/usePeriodicFetch";
+import { ref } from "vue";
 
 export type Meal = {
     variations: Dictionary<Meal> | null

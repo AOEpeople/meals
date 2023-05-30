@@ -13,6 +13,7 @@ use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\MealBundle\Repository\SlotRepositoryInterface;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use InvalidArgumentException;
 
 class SlotService
@@ -70,12 +71,23 @@ class SlotService
         $this->em->flush();
     }
 
-    public function delete(Slot $slot): void
+    public function delete(array $parameters): void
     {
-        $slot->setDeleted(true);
+        if (isset($parameters['id'])) {
+            $slot = $this->getSlotById($parameters['id']);
+            if (null === $slot) {
+                throw new Exception('Slot does  not exists');
+            }
+            if (null === $slot->getId()) {
+                throw new Exception('Slot ID is not set');
+            }
+            if ($slot->getId() !== $parameters['id']) {
+                throw new Exception('Slot ID is not equal to requested ID');
+            }
 
-        $this->em->persist($slot);
-        $this->em->flush();
+            $this->em->remove($slot);
+            $this->em->flush();
+        }
     }
 
     public function getSlotStatusForDay(DateTime $datetime): array
@@ -116,6 +128,26 @@ class SlotService
         }
 
         return $slotsStatus;
+    }
+
+    /**
+     * Creates a new slot.
+     */
+    public function createSlot(array $parameters): void
+    {
+        $slot = new Slot();
+        if (isset($parameters['title'])) {
+            $slot->setTitle($parameters['title']);
+        }
+        if (isset($parameters['limit'])) {
+            $slot->setLimit($parameters['limit']);
+        }
+        if (isset($parameters['order'])) {
+            $slot->setOrder($parameters['order']);
+        }
+
+        $this->em->persist($slot);
+        $this->em->flush();
     }
 
     /**

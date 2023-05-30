@@ -1,45 +1,130 @@
-import {Store} from "@/stores/store";
-import {TimeSlots, useTimeSlotData} from "@/api/getTimeSlotData";
-import {useUpdateSlot} from "@/api/postSlotUpdate";
+import { Dictionary } from "types/types";
+import { reactive, readonly } from "vue";
+import { useTimeSlotData } from "@/api/getTimeSlotData";
+import { useUpdateSlot } from "@/api/postSlotUpdate";
+import postCreateSlot from "@/api/postCreateSlot";
+import postDeleteSlot from "@/api/postDeleteSlot";
 
-type TimeSlot = {
-    slots: TimeSlots,
-    isLoading: boolean
+interface ITimeSlotState {
+    timeSlots: Dictionary<TimeSlot>,
+    isLoading: boolean,
+    error: string
 }
 
-class TimeSlotStore extends Store<TimeSlot> {
-    protected data(): TimeSlot {
-        return {
-            slots: {},
-            isLoading: true
-        };
+export interface TimeSlot {
+    title: string,
+    limit: number,
+    order: number,
+    enabled: boolean
+}
+
+const TIMEOUT_PERIOD = 10000;
+
+const TimeSlotState = reactive<ITimeSlotState>({
+    timeSlots: {},
+    isLoading: false,
+    error: ""
+});
+
+export function useTimeSlots() {
+
+    /**
+     * Calls getTimeSlots to fetch timeSlots and sets isLoading
+     * in the TimeSlotState to true during the request
+     */
+    async function fetchTimeSlots() {
+        TimeSlotState.isLoading = true;
+        await getTimeSlots();
+        TimeSlotState.isLoading = false;
     }
 
-    public async fillStore() {
-        this.state.isLoading = true;
-        const {timeslots} = await useTimeSlotData();
-        if (timeslots.value) {
-            this.state.slots = timeslots.value;
-            this.state.isLoading = false;
+    /**
+     * Calls useTimeSlotData to fetch the timeSlots and sets the state accordingly.
+     * Retries to fetch after a timeout if there are errors
+     */
+    async function getTimeSlots() {
+        const { timeslots, error } = await useTimeSlotData();
+        if(!error.value && timeslots.value) {
+            TimeSlotState.timeSlots = timeslots.value;
+            TimeSlotState.error = "";
         } else {
-            console.log('could not receive TimeSlots');
+            setTimeout(fetchTimeSlots, TIMEOUT_PERIOD);
+            TimeSlotState.error = "Error on getting the TimeSlotData";
         }
     }
 
-    public async changeDisabledState(id: number, state: boolean): Promise<boolean> {
-        const data = {
-            id: id,
-            enabled: state
+    async function changeDisabledState(id: number, state: boolean) {
+        const { updateSlotEnabled } = useUpdateSlot();
+
+        const { error, response } = await updateSlotEnabled(id, state);
+
+        if(!error.value && response.value && response.value.enabled !== undefined) {
+            updateTimeSlotEnabled(response.value, id);
+        } else {
+            TimeSlotState.error = "Error on changing the slot state";
+        }
+    }
+
+    async function editSlot(id: number, slot: TimeSlot) {
+        const { updateTimeSlot } = useUpdateSlot();
+
+        const { error, response } = await updateTimeSlot(id, slot);
+
+        if(!error.value && response.value) {
+            updateTimeSlotState(response.value, id);
+        } else {
+            TimeSlotState.error = "Error on changing the slot state";
+        }
+    }
+
+    function updateTimeSlotEnabled(newSlot: TimeSlot, id: number) {
+        TimeSlotState.timeSlots[id].enabled = newSlot.enabled;
+    }
+
+    function updateTimeSlotState(slot: TimeSlot, id: number) {
+        TimeSlotState.timeSlots[id].title = slot.title;
+        TimeSlotState.timeSlots[id].limit = slot.limit;
+        TimeSlotState.timeSlots[id].order = slot.order;
+    }
+
+    async function createSlot(newSlot: TimeSlot) {
+        const { error, response } = await postCreateSlot(newSlot);
+
+        if(error.value || response.value?.status !== "success") {
+            TimeSlotState.error = "Error on creating slot";
+            return;
         }
 
-        const {error} = await useUpdateSlot(JSON.stringify(data))
+        await getTimeSlots();
+    }
 
-        if (error.value === false) {
-            this.state.slots[id].enabled = state;
-            return true
+    async function deleteSlot(id: number) {
+        const { error, response } = await postDeleteSlot(id);
+
+        if(error.value || response.value?.status !== "success") {
+            TimeSlotState.error = "Error on creating slot";
+            return;
         }
-        return false
+
+        await getTimeSlots();
+    }
+
+    /**
+     * Only to be used during testing
+     */
+    function resetState() {
+        TimeSlotState.timeSlots = {};
+        TimeSlotState.error = "";
+        TimeSlotState.isLoading = false;
+    }
+
+    return {
+        TimeSlotState: readonly(TimeSlotState),
+        fetchTimeSlots,
+        changeDisabledState,
+        createSlot,
+        deleteSlot,
+        editSlot,
+        resetState
     }
 }
-
-export const timeSlotStore: TimeSlotStore = new TimeSlotStore()

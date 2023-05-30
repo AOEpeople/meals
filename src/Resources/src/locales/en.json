@@ -13,7 +13,12 @@
     "paypal": "PayPal Payment",
     "cash": "Cash Payment",
     "add": "Add Funds",
-    "amount": "Amount"
+    "amount": "Amount",
+    "table": {
+      "date": "Date",
+      "description": "Description",
+      "amount": "Amount"
+    }
   },
   "button": {
     "ok": "OK",
@@ -24,7 +29,7 @@
     "add_variation": "add new Variation"
   },
   "category": {
-    "create": "create categorie"
+    "create": "create category"
   },
   "changeLanguage": "Deutsche Version",
   "combiModal": {
@@ -49,7 +54,11 @@
     "guest": "Copied to clipboard!"
   },
   "dish": {
-    "create": "create Dish"
+    "create": "create Dish",
+    "table": {
+      "title": "Title",
+      "category": "Category"
+    }
   },
   "guest": {
     "form": {
@@ -88,7 +97,16 @@
     "expired": "Session expired!"
   },
   "slot": {
-    "create": "create Slot"
+    "create": "create Slot",
+    "slotTitle": "Title",
+    "slotLimit": "Limit",
+    "slotActions": "Actions",
+    "header": "List of Slots",
+    "slotOrder": "Order",
+    "submit": "Create",
+    "createHeader": "Create new Slot",
+    "editSlot": "Slot bearbeiten",
+    "save": "Speichern"
   },
   "participantList": {
     "no_meals": "No meals today"

@@ -12,8 +12,8 @@
 
     <Table
       v-if="!transactions.isLoading && transactions.data.length !== 0"
-      :labels="tableLabels"
-      class="mt-10 mb-5"
+      :labels="[t('balance.table.date'), t('balance.table.description'), t('balance.table.amount')]"
+      class="mb-5 mt-10"
     >
       <tr
         v-for="(transaction, index) in transactions.data"
@@ -56,7 +56,7 @@ import BalanceHeader from "@/components/balance/BalanceHeader.vue"
 import { useI18n } from "vue-i18n"
 import {useProgress} from '@marcoschulte/vue3-progress'
 import {transactionStore} from "@/stores/transactionStore"
-import {computed} from "vue"
+import {computed, ref, watch} from "vue"
 import {userDataStore} from "@/stores/userDataStore";
 
 const progress = useProgress().start()
@@ -73,11 +73,6 @@ let oldBalanceString = computed(() =>
         ? oldBalance.value.toFixed(2)
         : oldBalance.value.toFixed(2).replace(/\./g, ',')
 )
-
-let tableLabels = {
-  en: ['Date', 'Description', 'Amount'],
-  de: ['Datum', 'Beschreibung', 'Menge']
-};
 
 let dateOptions = { month: "long", day: "numeric", year: "numeric" }
 

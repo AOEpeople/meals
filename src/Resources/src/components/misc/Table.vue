@@ -1,14 +1,14 @@
 <template>
-  <div class="mx-auto flex max-w-screen-aoe flex-col">
+  <div class="max-w-screen-aoe mx-auto flex flex-col">
     <div class="inline-block min-w-full py-2">
-      <table class="border-spacing-none min-w-full max-w-fit table-fixed">
+      <table class="min-w-full max-w-fit table-fixed border-spacing-0">
         <thead>
           <tr>
             <th
-              v-for="label in localeLabels"
+              v-for="label in labels"
               :key="label"
               scope="col"
-              class="text-left text-[11px] font-bold uppercase leading-4 tracking-[1.5px]"
+              class="text-left text-[11px] font-bold uppercase leading-4 tracking-[1.5px] last:text-right"
             >
               {{ label }}
             </th>
@@ -22,25 +22,8 @@
   </div>
 </template>
 
-<script setup>
-import { useI18n } from "vue-i18n";
-import {computed} from "vue";
-const { locale } = useI18n();
-const props = defineProps([
-    'labels',
-])
-
-let localeLabels = computed(() => locale.value === 'en' ? props.labels.en : props.labels.de);
+<script setup lang="ts">
+defineProps<{
+  labels: string[]
+}>();
 </script>
-
-<style scoped>
-.border-spacing-none {
-  border-spacing: 0
-}
-
-th:last-child {
-  text-align: right;
-}
-
-
-</style>

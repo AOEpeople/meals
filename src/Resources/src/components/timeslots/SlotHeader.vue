@@ -1,19 +1,27 @@
 <template>
-  <div class="items-center text-center xl:my-[42px] xl:grid xl:grid-cols-2">
-    <div class="xl:justify-self-start">
+  <div class="z-[90] items-center xl:my-[42px] xl:grid xl:grid-cols-2">
+    <div class="text-center xl:justify-self-start">
       <h2 class="m-0">
-        {{ t('slots.header') }}
+        {{ t('slot.header') }}
       </h2>
     </div>
-    <div class="xl:justify-self-end">
-      <Popover>
+    <div class="z-[99] xl:justify-self-end">
+      <Popover
+        :translate-x-min="'-25%'"
+        class="m-auto w-fit"
+      >
         <template #button="{ open }">
-          <button class="btn-secondary">
-            <span class="align-middle leading-[10px]">+ {{ t('slot.create') }}</span>
-          </button>
+          <CreateButton
+            :open="open"
+            :btn-text="`+ ${ t('slot.create') }`"
+          />
         </template>
         <template #panel="{ close }">
-          <SlotCreationPanel @closePanel="close()" />
+          <SlotCreationPanel
+            :header="t('slot.createHeader')"
+            :submit="t('slot.submit')"
+            @closePanel="close()"
+          />
         </template>
       </Popover>
     </div>
@@ -24,10 +32,7 @@
 import Popover from "@/components/misc/Popover.vue"
 import SlotCreationPanel from "@/components/timeslots/SlotCreationPanel.vue"
 import { useI18n } from "vue-i18n"
+import CreateButton from "../misc/CreateButton.vue";
 
 const { t } = useI18n()
 </script>
-
-<style scoped>
-
-</style>

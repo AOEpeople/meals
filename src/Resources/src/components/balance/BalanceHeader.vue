@@ -6,10 +6,13 @@
       </h2>
     </div>
     <div class="xl:justify-self-end">
-      <Popover>
+      <Popover
+        :translate-x-min="'-25%'"
+        class="m-auto w-fit"
+      >
         <template #button="{ open }">
           <button
-            class="hover:bg-highlight-2 btn-highlight-shadow mx-2 mt-4 mb-6 h-9 items-center rounded-btn bg-highlight px-[34px] text-center text-btn font-bold text-white shadow-btn drop-shadow-btn transition-all duration-300 ease-out active:translate-y-0.5 active:shadow-btn-active"
+            class="hover:bg-highlight-2 btn-highlight-shadow rounded-btn bg-highlight text-btn shadow-btn drop-shadow-btn active:shadow-btn-active mx-2 mb-6 mt-4 h-9 items-center px-[34px] text-center font-bold text-white transition-all duration-300 ease-out active:translate-y-0.5"
           >
             <span class="align-middle leading-[10px]">+ {{ t('balance.add') }}</span>
           </button>

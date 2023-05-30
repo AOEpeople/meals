@@ -61,11 +61,15 @@ export class ParticipationPreToggleHandler {
             return;
         }
 
-        const slotSlug: string = $mealContainer.find('.slot-selector').val().toString();
-        let data: SerializedFormData[] = [{
-            'name': 'slot',
-            'value': slotSlug
-        }];
+        let data: SerializedFormData[] = [];
+
+        if (0 !== $mealContainer.find('.slot-selector').length) {
+            const slotSlug: string = $mealContainer.find('.slot-selector').val().toString();
+            data.push({
+                'name': 'slot',
+                'value': slotSlug
+            });
+        }
         simpleDishSlugs.forEach(function (slug, i) {
             data.push({
                 'name': `dishes[${i}]`,

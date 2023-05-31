@@ -11,7 +11,7 @@
       class="absolute bg-white xl:hidden"
     >
       <div class="flex min-h-0 flex-1 flex-col border-r border-gray-200 bg-white">
-        <div class="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
+        <div class="flex flex-1 flex-col overflow-y-auto pb-4 pt-5">
           <nav
             class="mt-2 flex-1 space-y-1 bg-white px-2"
             aria-label="Sidebar"
@@ -25,12 +25,12 @@
               <router-link
                 v-if="item.access"
                 :to="item.to"
-                :class="[item.to === $route.path ? 'bg-gray-100 text-gray-900 hover:text-gray-900 hover:bg-gray-100' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50', 'group flex items-center px-2 py-2 text-sm font-medium rounded-md']"
+                :class="[item.to === $route.path ? 'bg-gray-100 text-gray-900 hover:bg-gray-100 hover:text-gray-900' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900', 'group flex items-center rounded-md p-2 text-sm font-medium']"
                 @click="close()"
               >
                 <component
                   :is="item.icon"
-                  :class="[item.to === $route.path ? 'text-highlight' : 'text-primary group-hover:text-highlight', 'mr-3 flex-shrink-0 h-6 w-6']"
+                  :class="[item.to === $route.path ? 'text-highlight' : 'text-primary group-hover:text-highlight', 'mr-3 h-6 w-6 shrink-0']"
                   aria-hidden="true"
                 />
                 <span class="flex-1">{{ t(item.name) }}</span>
@@ -38,7 +38,7 @@
             </MenuItem>
           </nav>
         </div>
-        <div class="flex flex-1 flex-col overflow-y-auto border-t border-gray-200 pt-5 pb-4">
+        <div class="flex flex-1 flex-col overflow-y-auto border-t border-gray-200 pb-4 pt-5">
           <nav
             class="flex-1 space-y-1 bg-white px-2"
             aria-label="Sidebar"
@@ -56,11 +56,11 @@
               <router-link
                 as="router-link"
                 to="/balance"
-                :class="['/balance' === $route.path ? 'bg-gray-100 text-gray-900 hover:text-gray-900 hover:bg-gray-100' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50', 'group flex items-center px-2 py-2 text-sm font-medium rounded-md']"
+                :class="['/balance' === $route.path ? 'bg-gray-100 text-gray-900 hover:bg-gray-100 hover:text-gray-900' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900', 'group flex items-center rounded-md p-2 text-sm font-medium']"
                 @click="close()"
               >
                 <CurrencyEuroIcon
-                  :class="['/balance' === $route.path ? 'text-highlight' : 'text-primary group-hover:text-highlight', 'mr-3 flex-shrink-0 h-6 w-6']"
+                  :class="['/balance' === $route.path ? 'text-highlight' : 'text-primary group-hover:text-highlight', 'mr-3 h-6 w-6 shrink-0']"
                   aria-hidden="true"
                 />
                 <span class="flex-1">{{ balance }}</span>

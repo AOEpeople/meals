@@ -78,7 +78,7 @@ onUnmounted(() => {
   disablePeriodicFetch();
 });
 
-function onAfterEnter(el: Element) {
+function onAfterEnter() {
   if(mealsOverview.value) {
     setMealOverviewHeight(mealsOverview.value.offsetHeight, 'mealsOverview');
   }

@@ -1,7 +1,7 @@
 <template>
   <Listbox v-model="selectedSlot">
     <div class="relative mt-1">
-      <ListboxButton class="focus-visible:ring-offset-orange-300 relative w-full cursor-default bg-white py-2 pr-10 pl-3 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 sm:text-sm">
+      <ListboxButton class="focus-visible:ring-offset-orange-300 relative w-full cursor-default bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 sm:text-sm">
         <span class="block truncate">
           {{ selectedSlot.slug === 'auto' ? t('dashboard.slot.auto') : selectedSlot.title }}
           <span v-if="selectedSlot.limit !== 0">
@@ -33,7 +33,7 @@
             >
               <li
                 :class="[
-                  active ? 'bg-amber-100 text-amber-900 cursor-pointer' : 'text-gray-900',
+                  active ? 'cursor-pointer bg-amber-100 text-amber-900' : 'text-gray-900',
                   'relative cursor-default select-none py-2 pl-10 pr-4',
                 ]"
               >

@@ -2,7 +2,7 @@
   <main>
     <div
       class="mx-auto"
-      :class="[isShowParticipations ? 'max-w-full' : 'max-w-screen-aoe mt-10']"
+      :class="[isShowParticipations ? 'max-w-full' : 'mt-10 max-w-screen-aoe']"
     >
       <Suspense>
         <template #default>

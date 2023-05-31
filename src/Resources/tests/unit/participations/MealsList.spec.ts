@@ -29,6 +29,7 @@ jest.mock("vue-i18n", () => ({
     })
 }));
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockSetMealsListHeight = jest.fn((height: number, elementId: string) => void 0);
 jest.mock("@/services/useComponentHeights", () => ({
     useComponentHeights: () => ({
@@ -52,7 +53,7 @@ describe('Test MealsList', () => {
     });
 
     it('should call setMealListHight', async () => {
-        const wrapper = mount(MealsList);
+        mount(MealsList);
 
         await flushPromises();
 

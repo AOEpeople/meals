@@ -1,7 +1,7 @@
 <template>
   <table class="h-full w-full table-fixed border-collapse rounded-b-lg rounded-t-[18px] border-0 border-none bg-white p-0 align-top shadow-[0_15px_35px_0_#5B788F21]">
     <tr class="h-[60px]">
-      <th class="text-primary h-[60px] p-4 shadow-[0_15px_35px_0_#5B788F21]">
+      <th class="h-[60px] p-4 text-primary shadow-[0_15px_35px_0_#5B788F21]">
         {{ weekDay }}
       </th>
     </tr>

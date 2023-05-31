@@ -1,7 +1,7 @@
 import ParticipantsTableHead from "@/components/participations/ParticipantsTableHead.vue";
 import participations from '../fixtures/participations.json';
 import useApi from "@/api/api";
-import { computed, nextTick, reactive, ref } from "vue";
+import { computed, ref } from "vue";
 import { describe, expect, it } from "@jest/globals";
 import { flushPromises, mount, shallowMount } from "@vue/test-utils";
 import { getShowParticipations } from "@/api/getShowParticipations";

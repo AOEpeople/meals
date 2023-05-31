@@ -1,11 +1,11 @@
 <template>
   <span
-    :class="[enabled ? 'bg-primary-3' : '', 'rounded-md h-[30px] w-[30px] cursor-pointer xl:h-[20px] xl:w-[20px] border-[0.5px] border-gray-200']"
+    :class="[enabled ? 'bg-primary-3' : '', 'h-[30px] w-[30px] cursor-pointer rounded-md border-[0.5px] border-gray-200 xl:h-[20px] xl:w-[20px]']"
     @click="handle"
   >
     <CheckIcon
       v-if="enabled"
-      class="relative top-[10%] left-[10%] h-[80%] w-[80%] text-white"
+      class="relative left-[10%] top-[10%] h-[80%] w-[80%] text-white"
     />
   </span>
   <CombiModal

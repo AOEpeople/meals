@@ -26,7 +26,7 @@
     <input
       type="submit"
       :value="t('slot.save')"
-      class="rounded-btn bg-highlight text-btn drop-shadow-btn col-span-6 col-start-1 mx-2 mb-6 mt-4 flex h-9 cursor-pointer items-center px-[34px] text-center font-bold leading-[10px] text-white transition-all duration-300 ease-out hover:bg-[#f7a043] focus:outline-none"
+      class="col-span-6 col-start-1 mx-2 mb-6 mt-4 flex h-9 cursor-pointer items-center rounded-btn bg-highlight px-[34px] text-center text-btn font-bold leading-[10px] text-white drop-shadow-btn transition-all duration-300 ease-out hover:bg-[#f7a043] focus:outline-none"
       :class="activeBtnStyle"
       @mousedown="isMouseDown = true"
       @mouseup="isMouseDown = false"

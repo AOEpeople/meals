@@ -2,7 +2,6 @@ import { ref } from "vue";
 import updatedSlot from "../fixtures/updatedSlot.json";
 import { useUpdateSlot } from "@/api/postSlotUpdate";
 import { describe, expect, it } from "@jest/globals";
-import { TimeSlot } from "@/stores/timeSlotStore";
 import useApi from "@/api/api";
 
 const asyncFunc: () => Promise<void> = async () => {

@@ -36,12 +36,13 @@ const getMockedResponses = (url: string) => {
 }
 
 // @ts-expect-error ts doesn't allow reassignig a import but we need that to mock that function
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 useApi = jest.fn().mockImplementation((method: string, url: string) => getMockedResponses(url));
 
 
 describe('Test timeSlotStore', () => {
 
-    const { TimeSlotState, resetState, fetchTimeSlots, editSlot, changeDisabledState } = useTimeSlots();
+    const { TimeSlotState, resetState, fetchTimeSlots, editSlot } = useTimeSlots();
 
     beforeEach(() => {
         resetState();

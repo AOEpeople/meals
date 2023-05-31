@@ -35,13 +35,13 @@ const nextThreeDaysState = reactive<INextThreeDaysState>({
  */
 async function fetchNextThreeDays() {
     const { response: daysData, request, error } = useApi<Dictionary<IMealList>>(
-        "GET",
-        "api/meals/nextThreeDays"
+        'GET',
+        'api/meals/nextThreeDays'
     );
 
     await request();
 
-    if(daysData.value && !error.value) {
+    if (daysData.value && !error.value) {
         nextThreeDaysState.error = false;
         nextThreeDaysState.days = convertMealsListToDay(daysData.value);
     } else {
@@ -53,7 +53,7 @@ async function fetchNextThreeDays() {
 function convertMealsListToDay(mealsList: Dictionary<IMealList>): IDay[] {
     const days: IDay[] = [];
 
-    for(const [dateStr, meals] of Object.entries(mealsList)) {
+    for (const [dateStr, meals] of Object.entries(mealsList)) {
         days.push({
             en: meals.en,
             de: meals.de,

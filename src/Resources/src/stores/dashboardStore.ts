@@ -13,7 +13,7 @@ class DashboardStore extends Store<Dashboard> {
 
     async fillStore() {
         const { dashboardData } = await useDashboardData()
-        if(dashboardData.value){
+        if (dashboardData.value){
             this.state = dashboardData.value
         } else {
             console.log('could not receive DashboardData')
@@ -24,7 +24,7 @@ class DashboardStore extends Store<Dashboard> {
 
     public getWeek(weekID: number | string): Week | undefined {
         const week = this.state.weeks[weekID as number];
-        if(week === undefined) {
+        if (week === undefined) {
             console.log('week with ID: week: ' + weekID + ' not found')
         }
         return week
@@ -36,7 +36,7 @@ class DashboardStore extends Store<Dashboard> {
 
     public getDay(weekID: number | string, dayID: number | string): Day | undefined {
         const week = this.getWeek(weekID);
-        if(week !== undefined) {
+        if (week !== undefined) {
             const day = week.days[dayID as number]
             if (day === undefined) {
                 console.log('day with ID: week: ' + weekID + ' day: '+ dayID + ' not found')
@@ -58,7 +58,7 @@ class DashboardStore extends Store<Dashboard> {
 
     public getSlot(weekID: number | string, dayID: number | string, slotID: number | string): Slot | undefined {
         const day = this.getDay(weekID, dayID)
-        if(day !== undefined) {
+        if (day !== undefined) {
             const slot = day.slots[slotID as number]
             if (slot === undefined) {
                 console.log('getSlot: slot with ID ( week: ' + weekID + ' day: '+ dayID + ' slot: ' + slotID + ' ) not found')
@@ -71,7 +71,7 @@ class DashboardStore extends Store<Dashboard> {
 
     public getMeal(weekID: number | string, dayID: number | string, mealID: number | string): Meal | undefined {
         const day = this.getDay(weekID, dayID)
-        if(day !== undefined) {
+        if (day !== undefined) {
             const meal = day.meals[mealID as number]
             if (meal === undefined) {
                 console.log('getMeal: meal with ID ( week: ' + weekID + ' day: '+ dayID + ' meal: ' + mealID + ' ) not found')
@@ -92,7 +92,7 @@ class DashboardStore extends Store<Dashboard> {
 
     public getVariation(weekID: number | string, dayID: number | string, parentMealID: number | string, variationID: number | string): Meal | undefined {
         const parentMeal = this.getMeal(weekID, dayID, parentMealID)
-        if(parentMeal !== undefined && parentMeal.variations !== null) {
+        if (parentMeal !== undefined && parentMeal.variations !== null) {
             const variation = parentMeal.variations[variationID as number]
             if (variation === undefined) {
                 console.log('getVariation: variation with ID ( week: ' + weekID + ' day: '+ dayID + ' ParentMeal: ' + parentMealID + ' variation: ' + variationID + ' ) not found')

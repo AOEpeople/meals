@@ -32,29 +32,68 @@ describe("Test TimeSlots View", () => {
     cy.get('span').contains('14');
 
     // Edit Slot
-    cy.get('span').contains('TestSlot1234').parent().parent().contains('p', 'Editieren').click();
+    cy.get('span')
+      .contains('TestSlot1234')
+      .parent()
+      .parent()
+      .contains('p', 'Editieren')
+      .click();
     cy.get('#Titel').clear().type('TestSlot5678');
     cy.get('#Limit').clear().type('17');
     cy.contains('input', 'Speichern').click();
 
     // Verify that the slot was successfully edited
-    cy.get('span').contains('TestSlot5678').parent().parent().contains('p', 'Editieren').click();
+    cy.get('span')
+      .contains('TestSlot5678')
+      .parent()
+      .parent()
+      .contains('p', 'Editieren')
+      .click();
     cy.get('span').contains('17');
 
     // Disable Slot
-    cy.get('span').contains('TestSlot5678').parent().parent().contains('span', 'Enable TimeSlot').parent().click();
+    cy.get('span')
+      .contains('TestSlot5678')
+      .parent()
+      .parent()
+      .contains('span', 'Enable TimeSlot')
+      .parent()
+      .click();
 
     // Verify disabled Slot
-    cy.get('span').contains('TestSlot5678').parent().parent().contains('span', 'Enable TimeSlot').parent().should('have.attr', 'aria-checked', 'false');
+    cy.get('span')
+      .contains('TestSlot5678')
+      .parent()
+      .parent()
+      .contains('span', 'Enable TimeSlot')
+      .parent()
+      .should('have.attr', 'aria-checked', 'false');
 
     // Enable Slot
-    cy.get('span').contains('TestSlot5678').parent().parent().contains('span', 'Enable TimeSlot').parent().click();
+    cy.get('span')
+      .contains('TestSlot5678')
+      .parent()
+      .parent()
+      .contains('span', 'Enable TimeSlot')
+      .parent()
+      .click();
 
     // Verify enabled Slot
-    cy.get('span').contains('TestSlot5678').parent().parent().contains('span', 'Enable TimeSlot').parent().should('have.attr', 'aria-checked', 'true');
+    cy.get('span')
+      .contains('TestSlot5678')
+      .parent()
+      .parent()
+      .contains('span', 'Enable TimeSlot')
+      .parent()
+      .should('have.attr', 'aria-checked', 'true');
 
     // Delete Slot
-    cy.get('span').contains('TestSlot5678').parent().parent().contains('p', 'Löschen').click();
+    cy.get('span')
+      .contains('TestSlot5678')
+      .parent()
+      .parent()
+      .contains('p', 'Löschen')
+      .click();
 
     // Verify that the slot was successfully deleted
     cy.get('span').contains('TestSlot5678').should('not.exist');

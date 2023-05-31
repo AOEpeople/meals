@@ -56,7 +56,7 @@ import BalanceHeader from "@/components/balance/BalanceHeader.vue"
 import { useI18n } from "vue-i18n"
 import {useProgress} from '@marcoschulte/vue3-progress'
 import {transactionStore} from "@/stores/transactionStore"
-import {computed, ref, watch} from "vue"
+import { computed } from "vue"
 import {userDataStore} from "@/stores/userDataStore";
 
 const progress = useProgress().start()
@@ -74,7 +74,7 @@ let oldBalanceString = computed(() =>
         : oldBalance.value.toFixed(2).replace(/\./g, ',')
 )
 
-let dateOptions = { month: "long", day: "numeric", year: "numeric" }
+let dateOptions = { month: 'long', day: 'numeric', year: 'numeric' }
 
 let oldDate = new Date()
 oldDate.setDate(oldDate.getDate() - 28)

@@ -8,8 +8,8 @@ export type Env = {
 
 export async function useEnvs() {
     const { response: environmental, request, error } = useApi<Env>(
-        "GET",
-        "/api/environmentals",
+        'GET',
+        '/api/environmentals',
     );
 
     const loaded = ref(false)

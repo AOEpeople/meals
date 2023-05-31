@@ -1,4 +1,4 @@
-import { computed, onMounted, onUnmounted, reactive, readonly, ref } from "vue";
+import { computed, onMounted, reactive, readonly, ref } from "vue";
 
 interface IComponentHeightState {
   navBarHeight: number,
@@ -44,7 +44,7 @@ const maxNoParticipationsHeight = computed(() => {
  */
 function getMarginHeightByElementId(elementId: string) {
   const element = document.getElementById(elementId);
-  if(element) {
+  if (element) {
     const computedStyle = window.getComputedStyle(element);
     return parseInt(computedStyle.marginTop, 10) + parseInt(computedStyle.marginBottom, 10);
   } else {
@@ -71,7 +71,7 @@ export function useComponentHeights() {
   });
 
   function addWindowHeightListener() {
-    if(!listenerActive.value) {
+    if (!listenerActive.value) {
       listenerActive.value = true;
       window.addEventListener('resize', setWindowHeight);
     }

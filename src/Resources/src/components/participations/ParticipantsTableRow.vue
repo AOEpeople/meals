@@ -32,9 +32,9 @@ const props = defineProps<{
 }>();
 
 const bookedCombinedMeal = computed(() => {
-  for(const meal of props.meals) {
-    if(meal.title.en === 'Combined Dish') {
-      if(props.bookedMeals.booked.includes(meal.mealId)) {
+  for (const meal of props.meals) {
+    if (meal.title.en === 'Combined Dish') {
+      if (props.bookedMeals.booked.includes(meal.mealId)) {
         return true;
       }
     }

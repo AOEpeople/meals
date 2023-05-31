@@ -120,12 +120,12 @@ if (props.dayID) {
     for (const mealId in props.day.meals) {
       if (props.day.meals[mealId].variations !== null) {
         for (const variationsId in props.day.meals[mealId].variations) {
-          if(props.day.meals[mealId].variations[variationsId].isParticipating) {
+          if (props.day.meals[mealId].variations[variationsId].isParticipating) {
             return true
           }
         }
       }
-      if(props.day.meals[mealId].isParticipating) {
+      if (props.day.meals[mealId].isParticipating) {
         return true
       }
     }

@@ -11,7 +11,7 @@ export interface ISuccess {
 export default async function createSlot(timeSlot: TimeSlot) {
     const { error, request, response } = useApi<ISuccess>(
         'POST',
-        'api/create-slot',
+        'api/slot/create',
         'application/json',
         JSON.stringify(timeSlot)
     );

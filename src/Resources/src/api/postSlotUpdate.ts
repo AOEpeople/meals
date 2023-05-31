@@ -10,7 +10,7 @@ import { TimeSlot } from "@/stores/timeSlotStore";
 async function postUpdateSlot(data: string) {
     const { error, request, response } = useApi<TimeSlot>(
         'POST',
-        'api/update-slot',
+        'api/slot/update',
         'application/json',
         data,
     );

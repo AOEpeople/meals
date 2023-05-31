@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Controller;
 
+use App\Mealz\MealBundle\Entity\Category;
 use App\Mealz\MealBundle\Service\CategoryService;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;

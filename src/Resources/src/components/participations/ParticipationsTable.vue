@@ -28,24 +28,24 @@ const tableHeight = computed(() => {
 });
 
 watch(windowWidth, () => {
-  if(tableHead.value) {
+  if (tableHead.value) {
     setTableHeadHight(0, 'tableHead');
   }
 });
 
 onMounted(() => {
-  if(tableHead.value) {
+  if (tableHead.value) {
     setTableHeadHight(0, 'tableHead');
   }
 });
 
 onUpdated(() => {
-  if(tableHead.value) {
+  if (tableHead.value) {
     setTableHeadHight(0, 'tableHead');
   }
 });
 
-if(process.env.NODE_ENV === "TEST") {
+if (process.env.NODE_ENV === 'TEST') {
   defineExpose({ tableHeight })
 }
 </script>

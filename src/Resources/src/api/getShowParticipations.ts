@@ -50,9 +50,9 @@ const participationsState = reactive<IParticipationsState>({
     data: {},
     meals: {},
     day: {
-        date: "",
+        date: '',
         timezone_type: 0,
-        timezone: ""
+        timezone: ''
     }
 });
 
@@ -61,7 +61,7 @@ const participationsState = reactive<IParticipationsState>({
  */
 const loadedState = reactive<ILoadedState>({
     loaded: false,
-    error: ""
+    error: ''
 });
 
 /**
@@ -69,22 +69,22 @@ const loadedState = reactive<ILoadedState>({
  */
 async function fetchParticipations() {
     const { response: listData, request, error } = useApi<IParticipationsState>(
-        "GET",
-        "/api/print/participations",
+        'GET',
+        '/api/print/participations',
     );
 
     await request();
-    if(listData.value && !error.value) {
+    if (listData.value && !error.value) {
         loadedState.error = "";
         participationsState.data = listData.value.data;
         participationsState.day = listData.value.day;
         participationsState.meals = listData.value.meals;
         loadedState.loaded = true;
-    } else if(!listData.value) {
-        loadedState.error = "ERROR while fetching listData for IParticipationState";
+    } else if (!listData.value) {
+        loadedState.error = 'ERROR while fetching listData for IParticipationState';
         setTimeout(fetchParticipations, REFETCH_TIME_ON_ERROR);
-    } else if(error.value) {
-        loadedState.error = "Unknown error in getShowParticipations";
+    } else if (error.value) {
+        loadedState.error = 'Unknown error in getShowParticipations';
         setTimeout(fetchParticipations, REFETCH_TIME_ON_ERROR);
     }
 }
@@ -133,8 +133,8 @@ export function getShowParticipations() {
         const listOfBookableMeals: IMealWithVariations[] = [];
         const meals: IMealWithVariations[] = getMealsWithVariations();
 
-        for(const meal of meals) {
-            if(meal.variations.length === 0) {
+        for (const meal of meals) {
+            if (meal.variations.length === 0) {
                 listOfBookableMeals.push(meal);
             } else {
                 meal.variations.forEach((variation) => listOfBookableMeals.push(variation));
@@ -150,8 +150,8 @@ export function getShowParticipations() {
      */
     function getMealsWithVariations() {
         const meals: IMealWithVariations[] = [];
-        if(loadedState.loaded) {
-            for(const [key, value] of Object.entries(participationsState.meals)) {
+        if (loadedState.loaded) {
+            for (const [key, value] of Object.entries(participationsState.meals)) {
                 if(!value.parent) {
                     meals.push(createMealWithVariations(key));
                 }
@@ -206,8 +206,8 @@ export function getShowParticipations() {
      */
     function getVariationsOfMeal(parentKey: string) {
         const variations: IMealWithVariations[] = [];
-        for(const [key, value] of Object.entries(participationsState.meals)) {
-            if(value.parent && value.parent === Number.parseInt(parentKey)) {
+        for (const [key, value] of Object.entries(participationsState.meals)) {
+            if (value.parent && value.parent === Number.parseInt(parentKey)) {
                 variations.push(createMealWithoutVariations(key));
             }
         }

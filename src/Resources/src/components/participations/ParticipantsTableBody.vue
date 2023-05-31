@@ -34,7 +34,7 @@ let scrollingActive = true;
 let time: number;
 
 const mealsWithVariations = computed(() => {
-  if(loadedState.loaded) {
+  if (loadedState.loaded) {
     return getMealsWithVariations();
   } else {
     return [];
@@ -47,7 +47,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  if(scrollProcessId) {
+  if (scrollProcessId) {
     clearInterval(scrollProcessId);
   }
 })
@@ -58,7 +58,7 @@ onUnmounted(() => {
  */
 function autoScroll(element: HTMLTableSectionElement | null) {
   const timeSinceLastScroll = Date.now() - time;
-  if(scrollingActive && element) {
+  if (scrollingActive && element) {
     setScrollDirection(element)
     element.scrollBy({
       top: scrollDirectionDown.value ? scrollAmount(timeSinceLastScroll) : -scrollAmount(timeSinceLastScroll)
@@ -74,13 +74,13 @@ function autoScroll(element: HTMLTableSectionElement | null) {
  */
 function setScrollDirection(element: HTMLTableSectionElement | null) {
   const cachedScrollDirection = scrollDirectionDown.value;
-  if(element && scrollDirectionDown.value) {
+  if (element && scrollDirectionDown.value) {
     scrollDirectionDown.value = (element.scrollTop + element.clientHeight) < element.scrollHeight;
-  } else if(element && !scrollDirectionDown.value) {
+  } else if (element && !scrollDirectionDown.value) {
     scrollDirectionDown.value = element.scrollTop === 0;
   }
 
-  if(cachedScrollDirection !== scrollDirectionDown.value) {
+  if (cachedScrollDirection !== scrollDirectionDown.value) {
     sleep(TIMEOUT_AFTER_SCROLLING);
   }
 
@@ -114,7 +114,7 @@ function convertToIBookedData(participant: Dictionary<IBookedData>): Dictionary<
 }
 
 // expose functions for testing
-if(process.env.NODE_ENV === "TEST") {
+if (process.env.NODE_ENV === 'TEST') {
   defineExpose({scrollAmount, setScrollDirection, scrollDirectionDown, mealsWithVariations});
 }
 </script>

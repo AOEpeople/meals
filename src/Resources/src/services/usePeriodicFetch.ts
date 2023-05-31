@@ -17,7 +17,7 @@ export function usePeriodicFetch(timeoutPeriod: number, fetchFunction: () => Pro
      * and was false before that
      */
     watch(periodicFetchActive, (newPeriodicFetchActive, oldPeriodicFetchActive) => {
-        if(newPeriodicFetchActive && newPeriodicFetchActive !== oldPeriodicFetchActive) {
+        if (newPeriodicFetchActive && newPeriodicFetchActive !== oldPeriodicFetchActive) {
             periodicFetch();
         } else if(!newPeriodicFetchActive && fetchID.value !== null) {
             window.clearTimeout(fetchID.value);
@@ -28,7 +28,7 @@ export function usePeriodicFetch(timeoutPeriod: number, fetchFunction: () => Pro
      * Uses the passed in callback periodically, ends when periodicFetchActive is set to false
      */
     async function periodicFetch() {
-        if(periodicFetchActive.value) {
+        if (periodicFetchActive.value) {
             fetchID.value = window.setTimeout(async () => {
                 await fetchFunction();
                 periodicFetch();

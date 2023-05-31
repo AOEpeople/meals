@@ -57,8 +57,8 @@ export type Dashboard = {
 
 export async function useDashboardData() {
     const { response: dashboardData, request } = useApi<Dashboard>(
-        "GET",
-        "api/dashboard",
+        'GET',
+        'api/dashboard',
     );
 
     const loaded = ref(false);

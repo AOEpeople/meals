@@ -44,12 +44,12 @@ export function useTimeSlots() {
      */
     async function getTimeSlots() {
         const { timeslots, error } = await useTimeSlotData();
-        if(!error.value && timeslots.value) {
+        if (!error.value && timeslots.value) {
             TimeSlotState.timeSlots = timeslots.value;
-            TimeSlotState.error = "";
+            TimeSlotState.error = '';
         } else {
             setTimeout(fetchTimeSlots, TIMEOUT_PERIOD);
-            TimeSlotState.error = "Error on getting the TimeSlotData";
+            TimeSlotState.error = 'Error on getting the TimeSlotData';
         }
     }
 
@@ -58,10 +58,10 @@ export function useTimeSlots() {
 
         const { error, response } = await updateSlotEnabled(id, state);
 
-        if(!error.value && response.value && response.value.enabled !== undefined) {
+        if (!error.value && response.value && response.value.enabled !== undefined) {
             updateTimeSlotEnabled(response.value, id);
         } else {
-            TimeSlotState.error = "Error on changing the slot state";
+            TimeSlotState.error = 'Error on changing the slot state';
         }
     }
 
@@ -70,10 +70,10 @@ export function useTimeSlots() {
 
         const { error, response } = await updateTimeSlot(id, slot);
 
-        if(!error.value && response.value) {
+        if (!error.value && response.value) {
             updateTimeSlotState(response.value, id);
         } else {
-            TimeSlotState.error = "Error on changing the slot state";
+            TimeSlotState.error = 'Error on changing the slot state';
         }
     }
 
@@ -90,8 +90,8 @@ export function useTimeSlots() {
     async function createSlot(newSlot: TimeSlot) {
         const { error, response } = await postCreateSlot(newSlot);
 
-        if(error.value || response.value?.status !== "success") {
-            TimeSlotState.error = "Error on creating slot";
+        if (error.value || response.value?.status !== 'success') {
+            TimeSlotState.error = 'Error on creating slot';
             return;
         }
 
@@ -101,8 +101,8 @@ export function useTimeSlots() {
     async function deleteSlot(id: number) {
         const { error, response } = await postDeleteSlot(id);
 
-        if(error.value || response.value?.status !== "success") {
-            TimeSlotState.error = "Error on creating slot";
+        if (error.value || response.value?.status !== 'success') {
+            TimeSlotState.error = 'Error on creating slot';
             return;
         }
 
@@ -114,7 +114,7 @@ export function useTimeSlots() {
      */
     function resetState() {
         TimeSlotState.timeSlots = {};
-        TimeSlotState.error = "";
+        TimeSlotState.error = '';
         TimeSlotState.isLoading = false;
     }
 

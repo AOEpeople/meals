@@ -9,8 +9,8 @@ import { TimeSlot } from "@/stores/timeSlotStore";
  */
 async function postUpdateSlot(data: string) {
     const { error, request, response } = useApi<TimeSlot>(
-        "POST",
-        "api/update-slot",
+        'POST',
+        'api/update-slot',
         'application/json',
         data,
     );
@@ -22,7 +22,7 @@ async function postUpdateSlot(data: string) {
         loaded.value = true;
     }
 
-    return {error, response}
+    return { error, response }
 }
 
 export function useUpdateSlot() {

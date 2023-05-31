@@ -9,8 +9,8 @@ export type JoinMeal = {
 
 export async function useJoinMeal(data: string) {
     const { request, response, error } = useApi<JoinMeal>(
-        "POST",
-        "api/join-meal",
+        'POST',
+        'api/join-meal',
         'application/json',
         data,
     );

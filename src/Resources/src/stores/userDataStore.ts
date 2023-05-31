@@ -47,7 +47,7 @@ class UserDataStore extends Store<UserData> {
 
     balanceToLocalString(): string {
         const { locale } = useI18n();
-        if(locale.value === 'en') {
+        if (locale.value === 'en') {
             return this.state.balance.toFixed(2);
         } else {
             return this.state.balance.toFixed(2).replace(/\./g, ',');

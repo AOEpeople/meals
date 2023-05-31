@@ -26,8 +26,8 @@ const props = withDefaults(defineProps<{
   modelValue: string,
   type?: string
 }>(), {
-  labelText: "",
-  type: "text"
+  labelText: '',
+  type: 'text'
 });
 
 const emit = defineEmits(['update:modelValue']);

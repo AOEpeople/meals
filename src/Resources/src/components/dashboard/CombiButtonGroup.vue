@@ -59,7 +59,7 @@ const selected = ref()
 let dishes = []
 let oldSlug = ''
 
-if(meal.variations) {
+if (meal.variations) {
   for (const variationID in meal.variations) {
     dishes.push({
       id: variationID,
@@ -81,7 +81,7 @@ if(meal.variations) {
 }
 
 watch(selected, () => {
-  if(oldSlug !== ''){
+  if (oldSlug !== ''){
     emit('removeEntry', oldSlug)
   }
   emit('addEntry', selected.value)

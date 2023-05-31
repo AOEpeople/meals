@@ -105,12 +105,12 @@ const slugs = ref([])
 const bookingDisabled = computed(() => slugs.value.length < 2)
 
 function resolveModal(mode) {
-  if(mode === 'cancel') {
+  if (mode === 'cancel') {
     slugs.value = []
-    emit("closeCombiModal")
+    emit('closeCombiModal')
   }
-  if(mode === 'book') {
-    emit("closeCombiModal", slugs.value)
+  if (mode === 'book') {
+    emit('closeCombiModal', slugs.value)
     slugs.value = []
   }
 }

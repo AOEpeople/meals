@@ -8,8 +8,8 @@ type GuestDay = {
 
 export async function useInvitationData(hash: string){
     const { response: invitation, request, error } = useApi<GuestDay>(
-        "GET",
-        "/api/guest-invitation-" + hash,
+        'GET',
+        '/api/guest-invitation-' + hash,
     );
 
     const loaded = ref(false)

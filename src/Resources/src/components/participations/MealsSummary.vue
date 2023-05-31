@@ -34,12 +34,12 @@ const props = defineProps<{
 
 const mealNames = computed(() => {
   const names: string[] = [];
-  for(const meal of Object.values(locale.value === 'en' ? props.day.en : props.day.de)) {
+  for (const meal of Object.values(locale.value === 'en' ? props.day.en : props.day.de)) {
      names.push(meal as string);
   }
   const timesToFill = 3 - names.length;
-  for(let i = 0; i < timesToFill; i++) {
-    names.push("");
+  for (let i = 0; i < timesToFill; i++) {
+    names.push('');
   }
   return names;
 })
@@ -49,6 +49,6 @@ const weekDay = computed(() => {
 });
 
 function mealNameIsEmpty(txt: string) {
-  return txt === "" || txt === "Kombi-Gericht" || txt === "Combined Dish";
+  return txt === '' || txt === 'Kombi-Gericht' || txt === 'Combined Dish';
 }
 </script>

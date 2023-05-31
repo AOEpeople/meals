@@ -14,7 +14,7 @@
       >
         <CheckCircleIcon
           v-if="(bookedMeals.booked.includes(variation.mealId) && !bookedCombinedMeal) || (bookedMeals.booked.includes(meal.mealId) && meal.title.en === 'Combined Dish')"
-          class="text-primary check-circle-icon m-auto block h-6 w-6"
+          class="check-circle-icon m-auto block h-6 w-6 text-primary"
         />
       </Transition>
       <Transition
@@ -27,7 +27,7 @@
           fill-rule="evenodd"
           clip-rule="evenodd"
           viewBox="0 0 512 508.47"
-          class="combined-meal text-primary m-auto block h-[20px] w-[20px] pt-[2px]"
+          class="combined-meal m-auto block h-[20px] w-[20px] pt-[2px] text-primary"
         >
           <path
             fill-rule="nonzero"
@@ -48,7 +48,7 @@
     >
       <CheckCircleIcon
         v-if="(bookedMeals.booked.includes(meal.mealId) && !bookedCombinedMeal) || (bookedMeals.booked.includes(meal.mealId) && meal.title.en === 'Combined Dish')"
-        class="text-primary check-circle-icon m-auto block h-6 w-6"
+        class="check-circle-icon m-auto block h-6 w-6 text-primary"
       />
     </Transition>
     <Transition
@@ -61,7 +61,7 @@
         fill-rule="evenodd"
         clip-rule="evenodd"
         viewBox="0 0 512 508.47"
-        class="combined-meal text-primary m-auto block h-[20px] w-[20px] pt-[2px]"
+        class="combined-meal m-auto block h-[20px] w-[20px] pt-[2px] text-primary"
       >
         <path
           fill-rule="nonzero"

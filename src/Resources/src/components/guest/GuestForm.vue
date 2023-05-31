@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="mt-6 grid grid-rows-2">
-      <span class="mt-auto mb-1 self-center text-[11px] font-bold uppercase leading-4 tracking-[1.5px] text-primary">
+      <span class="mb-1 mt-auto self-center text-[11px] font-bold uppercase leading-4 tracking-[1.5px] text-primary">
         {{ t('guest.form.firstname') }}
       </span>
       <input
@@ -15,7 +15,7 @@
       >
     </div>
     <div class="grid grid-rows-2">
-      <span class="mt-auto mb-1 self-center text-[11px] font-bold uppercase leading-4 tracking-[1.5px] text-primary">
+      <span class="mb-1 mt-auto self-center text-[11px] font-bold uppercase leading-4 tracking-[1.5px] text-primary">
         {{ t('guest.form.lastname') }}
       </span>
       <input
@@ -29,7 +29,7 @@
       >
     </div>
     <div class="grid grid-rows-2">
-      <span class="mt-auto mb-1 self-center text-[11px] font-bold uppercase leading-4 tracking-[1.5px] text-primary">
+      <span class="mb-1 mt-auto self-center text-[11px] font-bold uppercase leading-4 tracking-[1.5px] text-primary">
         {{ t('guest.form.company') }}
       </span>
       <input
@@ -44,7 +44,7 @@
     </div>
     <div class="mt-10 text-right">
       <button
-        class="hover:bg-highlight-2 btn-highlight-shadow mx-2 mt-4 mb-6 h-9 items-center rounded-btn bg-highlight px-[34px] text-center text-btn font-bold text-white shadow-btn drop-shadow-btn transition-all duration-300 ease-out active:translate-y-0.5 active:shadow-btn-active"
+        class="hover:bg-highlight-2 btn-highlight-shadow mx-2 mb-6 mt-4 h-9 items-center rounded-btn bg-highlight px-[34px] text-center text-btn font-bold text-white shadow-btn drop-shadow-btn transition-all duration-300 ease-out active:translate-y-0.5 active:shadow-btn-active"
         @click="emit('submitForm')"
       >
         {{ t('guest.submit') }}

@@ -32,6 +32,7 @@ const getMockedResponses = (url: string) => {
 }
 
 // @ts-expect-error ts doesn't allow reassignig a import but we need that to mock that function
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 useApi = jest.fn().mockImplementation((method: string, url: string) => getMockedResponses(url));
 
 jest.mock("vue-i18n", () => ({
@@ -43,6 +44,7 @@ jest.mock("vue-i18n", () => ({
 
 
 const mockedWindowWidth = ref(900);
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 let mockSetTableHeadHeight = jest.fn((height: number, elementId: string) => void 0);
 jest.mock('@/services/useComponentHeights', () => ({
     useComponentHeights: () => ({
@@ -55,17 +57,18 @@ jest.mock('@/services/useComponentHeights', () => ({
 describe('Test ParticipantsTable', () => {
 
     beforeEach(() => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         mockSetTableHeadHeight = jest.fn((height: number, elementId: string) => void 0);
     })
 
     it('should call setTableHeight onMounted', () => {
-        const wrapper = shallowMount(ParticipantsTable);
+        shallowMount(ParticipantsTable);
 
         expect(mockSetTableHeadHeight).toHaveBeenCalledTimes(1);
     });
 
     it('should call setTableHeight again after updating', async () => {
-        const wrapper = shallowMount(ParticipantsTable);
+        shallowMount(ParticipantsTable);
 
         mockedWindowWidth.value = 1000;
         await nextTick();

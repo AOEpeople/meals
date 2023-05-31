@@ -3,23 +3,23 @@
     v-slot="{ close }"
     class="grid border-t-2 border-gray-200 bg-white hover:overflow-scroll sm:grid-cols-2 xl:hidden"
   >
-    <div class="pt-2 pb-3">
+    <div class="pb-3 pt-2">
       <router-link
         v-for="link in props.navigation"
         :key="link.name"
         :to="link.to"
         :class="[
           link.to === $route.path
-            ? 'bg-indigo-50 border-primary text-primary'
+            ? 'border-primary bg-indigo-50 text-primary'
             : 'border-transparent text-gray-600 hover:border-highlight hover:text-highlight',
-          'block pl-3 pr-4 py-2 border-l-4 hover:bg-gray-200 text-base font-medium'
+          'block border-l-4 py-2 pl-3 pr-4 text-base font-medium hover:bg-gray-200'
         ]"
         @click="close()"
       >
         {{ t(link.name) }}
       </router-link>
     </div>
-    <div class="border-t border-gray-200 pt-4 pb-3 sm:border-t-0 sm:border-l">
+    <div class="border-t border-gray-200 pb-3 pt-4 sm:border-l sm:border-t-0">
       <div class="flex items-center px-4 py-2">
         <div class="shrink-0">
           <Icons
@@ -36,9 +36,9 @@
       <router-link
         to="/balance"
         :class="['/balance' === $route.path
-                   ? 'bg-indigo-50 border-primary text-primary'
+                   ? 'border-primary bg-indigo-50 text-primary'
                    : 'border-transparent text-gray-600 hover:border-highlight hover:text-highlight',
-                 'block pl-3 pr-4 py-2 border-l-4 hover:bg-gray-200 text-base font-medium'
+                 'block border-l-4 py-2 pl-3 pr-4 text-base font-medium hover:bg-gray-200'
         ]"
         @click="close()"
       >

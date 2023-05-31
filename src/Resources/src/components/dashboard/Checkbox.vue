@@ -5,7 +5,7 @@
   >
     <CheckIcon
       v-if="isParticipating"
-      class="relative top-[10%] left-[10%] h-[80%] w-[80%] text-white"
+      class="relative left-[10%] top-[10%] h-[80%] w-[80%] text-white"
     />
   </span>
   <CombiModal

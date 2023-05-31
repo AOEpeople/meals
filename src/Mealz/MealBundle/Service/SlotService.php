@@ -139,7 +139,7 @@ class SlotService
     {
         if (!isset($parameters['title'])) {
             throw new Exception('Title is missing');
-        } elseif ($parameters['title'] === '') {
+        } elseif ('' === $parameters['title']) {
             throw new Exception('Title is empty');
         }
         $slot = new Slot();

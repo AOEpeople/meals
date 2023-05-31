@@ -12,13 +12,13 @@ const asyncFunc: () => Promise<void> = async () => {
 
 const getMockedResponses = (url: string) => {
     switch(url) {
-        case "api/create-slot" || "api/delete-slot":
+        case "api/slot/create" || "api/slot/delete":
             return {
                 response: ref(success),
                 request: asyncFunc,
                 error: ref(false)
             };
-        case "api/update-slot":
+        case "api/slot/update":
             return {
                 response: ref(updatedSlot),
                 request: asyncFunc,

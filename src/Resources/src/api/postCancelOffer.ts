@@ -3,8 +3,8 @@ import { ref } from "vue";
 
 export async function useCancelOffer(data: string) {
     const { request, response, error } = useApi(
-        "POST",
-        "api/cancel-offer",
+        'POST',
+        'api/cancel-offer',
         'application/json',
         data,
     );

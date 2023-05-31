@@ -3,8 +3,8 @@ import { ref } from "vue";
 
 export async function useOfferMeal(data: string) {
     const { request, response, error } = useApi(
-        "POST",
-        "api/offer-meal",
+        'POST',
+        'api/offer-meal',
         'application/json',
         data,
     );

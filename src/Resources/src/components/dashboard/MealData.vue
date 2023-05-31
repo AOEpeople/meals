@@ -62,7 +62,7 @@ const { t, locale } = useI18n();
 let description
 const title = computed(() => locale.value.substring(0, 2) === 'en' ? meal.title.en : meal.title.de);
 
-if(meal.description !== null) {
+if (meal.description !== null) {
   description = computed(() => locale.value.substring(0, 2) === 'en' ? meal.description.en : meal.description.de);
 }
 

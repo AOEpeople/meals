@@ -164,7 +164,7 @@
   let balanceString = computed(() => userDataStore.balanceToLocalString());
 
   const user = userDataStore.getState().user
-  const isAuthenticated = !userDataStore.getState().roles.includes("ROLE_GUEST")
+  const isAuthenticated = !userDataStore.getState().roles.includes('ROLE_GUEST')
 
   const navigation = [
     { name: 'header.navigation.menu',       to: '/menu',       icon: CalendarIcon,   access: userDataStore.roleAllowsRoute('/menu'      ) },

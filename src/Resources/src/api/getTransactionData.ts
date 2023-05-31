@@ -15,8 +15,8 @@ export type Transaction = {
 
 export async function useTransactionData(){
     const { response: transactions, request } = useApi<Transaction>(
-        "GET",
-        "api/transactions",
+        'GET',
+        'api/transactions',
     );
 
     const loaded = ref(false)

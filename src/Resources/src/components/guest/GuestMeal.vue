@@ -44,7 +44,7 @@ const { t, locale } = useI18n();
 let title = computed(() => locale.value.substring(0, 2) === 'en' ? props.meals[props.mealId].title.en : props.meals[props.mealId].title.de)
 let description = ''
 
-if(props.meals[props.mealId].description !== null) {
+if (props.meals[props.mealId].description !== null) {
   description = computed(() => locale.value.substring(0, 2) === 'en' ? props.meals[props.mealId].description.en : props.meals[props.mealId].description.de);
 }
 

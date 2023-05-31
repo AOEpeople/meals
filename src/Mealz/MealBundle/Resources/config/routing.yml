@@ -22,18 +22,18 @@ MealzMealBundle_api_timeslots:
   defaults: { _controller: App\Mealz\MealBundle\Controller\ApiController::getTimeSlotData }
   methods: [GET]
 
-MealzMealBundle_api_update-slot:
-  path: /api/update-slot
+MealzMealBundle_api_slot_update:
+  path: /api/slot/update
   defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::updateSlot }
   methods: [POST]
 
-MealzMealBundle_api_create-slot:
-  path: /api/create-slot
+MealzMealBundle_api_slot_create:
+  path: /api/slot/create
   defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::createSlot }
   methods: [POST]
 
-MealzMealBundle_api_delete-slot:
-  path: /api/delete-slot
+MealzMealBundle_api_slot_delete:
+  path: /api/slot/delete
   defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::deleteSlot }
   methods: [POST]
 

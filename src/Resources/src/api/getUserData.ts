@@ -9,8 +9,8 @@ export type UserData = {
 
 export async function useUserData(){
     const { response: userData, request, error } = useApi<UserData>(
-        "GET",
-        "api/user",
+        'GET',
+        'api/user',
     );
 
     const loaded = ref(false)

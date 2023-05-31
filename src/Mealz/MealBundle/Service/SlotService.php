@@ -85,7 +85,9 @@ class SlotService
                 throw new Exception('Slot ID is not equal to requested ID');
             }
 
-            $this->em->remove($slot);
+            $slot->setDeleted(true);
+
+            $this->em->persist($slot);
             $this->em->flush();
         }
     }
@@ -135,10 +137,13 @@ class SlotService
      */
     public function createSlot(array $parameters): void
     {
-        $slot = new Slot();
-        if (isset($parameters['title'])) {
-            $slot->setTitle($parameters['title']);
+        if (!isset($parameters['title'])) {
+            throw new Exception('Title is missing');
+        } elseif ($parameters['title'] === '') {
+            throw new Exception('Title is empty');
         }
+        $slot = new Slot();
+        $slot->setTitle($parameters['title']);
         if (isset($parameters['limit'])) {
             $slot->setLimit($parameters['limit']);
         }

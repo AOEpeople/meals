@@ -53,7 +53,7 @@ const props = withDefaults(defineProps<{
   edit?: boolean,
   id: number
 }>(),{
-  title: "",
+  title: '',
   limit: '0',
   order: '0',
   edit: false
@@ -73,7 +73,7 @@ async function onSubmit() {
     order: parseInt(orderInput.value),
     enabled: true
   }
-  if(props.edit) {
+  if (props.edit) {
     await editSlot(props.id, timeSlot);
   } else {
     await createSlot(timeSlot);

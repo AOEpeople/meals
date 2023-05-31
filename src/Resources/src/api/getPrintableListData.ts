@@ -22,9 +22,9 @@ const listDataState = reactive<ListData>({
     data: {},
     meals: {},
     day: {
-        date: "",
+        date: '',
         timezone_type: 0,
-        timezone: ""
+        timezone: ''
     }
 });
 
@@ -38,8 +38,8 @@ export function usePrintableListData(){
 
     async function getListData() {
         const { response: listData, request, error } = useApi<ListData>(
-            "GET",
-            "/api/print/participations",
+            'GET',
+            '/api/print/participations',
         );
 
         if (loaded.value === false) {

@@ -20,7 +20,7 @@ class Slot
 {
     /**
      * @ORM\Id
-     * @ORM\Column
+     * @ORM\Column(type="integer", nullable=true)
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private ?int $id = null;

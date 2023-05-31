@@ -14,8 +14,8 @@ export type TimeSlots = {
 
 export async function useTimeSlotData(){
     const { response: timeslots, request, error } = useApi<TimeSlots>(
-        "GET",
-        "api/timeslots",
+        'GET',
+        'api/timeslots',
     );
 
     const loaded = ref(false)

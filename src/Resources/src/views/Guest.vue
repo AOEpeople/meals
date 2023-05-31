@@ -93,9 +93,9 @@ async function submitForm() {
   if (filled.value) {
     const { error } = await useJoinMealGuest(JSON.stringify(form.value))
     if (error.value === false) {
-      result.value = "resolve_success"
+      result.value = 'resolve_success'
     } else {
-      result.value = "resolve_error"
+      result.value = 'resolve_error'
     }
   } else {
     showFormErrors()
@@ -103,7 +103,7 @@ async function submitForm() {
 }
 
 function showFormErrors() {
-  console.log("ztest")
+  console.log('ztest')
   firstNameMissing.value = form.value.firstName === ''
   lastNameMissing.value = form.value.lastName === ''
   companyMissing.value = form.value.company === ''

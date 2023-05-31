@@ -69,7 +69,7 @@ receive("openOfferPanel_" + props.mealID, () => {
 const checkboxCSS = computed(() => {
   let cssResult = 'rounded-md h-[30px] w-[30px] xl:h-[20px] xl:w-[20px] '
 
-  if(isParticipating.value === true) {
+  if (isParticipating.value === true) {
     switch (meal.mealState) {
       case 'disabled':
         cssResult += 'bg-[#B4C1CE] border-[0.5px] border-[#ABABAB]'
@@ -99,23 +99,23 @@ const checkboxCSS = computed(() => {
 
 async function handle() {
   // Meal is not locked
-  if(meal.mealState === 'open' || meal.mealState === 'tradeable') {
+  if (meal.mealState === 'open' || meal.mealState === 'tradeable') {
 
     // User is participating
-    if(isParticipating.value) {
+    if (isParticipating.value) {
       await leaveMeal()
     } else {
       let slugs = [meal.dishSlug]
-      if(isCombiBox) {
+      if (isCombiBox) {
         slugs = getDishSlugs()
         if(slugs === -1) return
       }
       await joinMeal(slugs)
     }
   } else {
-    if(meal.mealState === 'offerable') {
+    if (meal.mealState === 'offerable') {
       await sendOffer()
-    } else if(meal.mealState === 'offering') {
+    } else if (meal.mealState === 'offering') {
       await cancelOffer()
     }
   }
@@ -128,7 +128,7 @@ function getDishSlugs() {
       open.value = true
       return -1
     } else {
-      if (day.meals[mealID].dishSlug !== "combined-dish") {
+      if (day.meals[mealID].dishSlug !== 'combined-dish') {
         slugs.push(day.meals[mealID].dishSlug)
       }
     }
@@ -190,7 +190,7 @@ async function sendOffer() {
   if (error.value === false) {
     meal.mealState = 'offering'
     const { emit } = useEventsBus()
-    emit("openOfferPanel_" + mealId)
+    emit('openOfferPanel_' + mealId)
   }
 }
 

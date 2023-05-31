@@ -6,6 +6,7 @@ namespace App\Mealz\MealBundle\Tests\Controller;
 
 use App\Mealz\MealBundle\Entity\Category;
 use App\Mealz\MealBundle\Repository\CategoryRepository;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use Symfony\Component\DomCrawler\Crawler;
@@ -23,9 +24,19 @@ class CategoryControllerTest extends AbstractControllerTestCase
         $this->loadFixtures([
             new LoadRoles(),
             new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
+            new LoadCategories(),
         ]);
 
         $this->loginAs(self::USER_KITCHEN_STAFF);
+    }
+
+    public function testGetCategories(): void
+    {
+        $this->client->request('GET', '/api/categories');
+        $response = json_decode($this->client->getResponse()->getContent(), true);
+
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals([], $response);
     }
 
     public function testNewAction(): void

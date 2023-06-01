@@ -52,12 +52,12 @@ const props = withDefaults(defineProps<{
   order?: string,
   submit: string,
   edit?: boolean,
-  id: number
+  id: number,
 }>(),{
   title: '',
   limit: '0',
   order: '0',
-  edit: false
+  edit: false,
 });
 
 const titleInput = ref(props.title);
@@ -69,7 +69,8 @@ async function onSubmit() {
     title: titleInput.value,
     limit: parseInt(limitInput.value),
     order: parseInt(orderInput.value),
-    enabled: true
+    enabled: true,
+    slug: null
   }
   if (props.edit) {
     await editSlot(props.id, timeSlot);

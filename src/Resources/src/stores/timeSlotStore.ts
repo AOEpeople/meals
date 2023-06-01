@@ -1,9 +1,9 @@
 import { Dictionary } from "types/types";
 import { reactive, readonly } from "vue";
 import { useTimeSlotData } from "@/api/getTimeSlotData";
-import { useUpdateSlot } from "@/api/postSlotUpdate";
+import { useUpdateSlot } from "@/api/putSlotUpdate";
 import postCreateSlot from "@/api/postCreateSlot";
-import postDeleteSlot from "@/api/postDeleteSlot";
+import deleteSlot from "@/api/deleteSlot";
 
 interface ITimeSlotState {
     timeSlots: Dictionary<TimeSlot>,
@@ -15,7 +15,8 @@ export interface TimeSlot {
     title: string,
     limit: number,
     order: number,
-    enabled: boolean
+    enabled: boolean,
+    slug?: string
 }
 
 const TIMEOUT_PERIOD = 10000;
@@ -56,7 +57,7 @@ export function useTimeSlots() {
     async function changeDisabledState(id: number, state: boolean) {
         const { updateSlotEnabled } = useUpdateSlot();
 
-        const { error, response } = await updateSlotEnabled(id, state);
+        const { error, response } = await updateSlotEnabled(TimeSlotState.timeSlots[id].slug, state);
 
         if (!error.value && response.value && response.value.enabled !== undefined) {
             updateTimeSlotEnabled(response.value, id);
@@ -68,7 +69,11 @@ export function useTimeSlots() {
     async function editSlot(id: number, slot: TimeSlot) {
         const { updateTimeSlot } = useUpdateSlot();
 
-        const { error, response } = await updateTimeSlot(id, slot);
+        if(slot.slug === null) {
+            slot.slug = TimeSlotState.timeSlots[id].slug;
+        }
+
+        const { error, response } = await updateTimeSlot(slot);
 
         if (!error.value && response.value) {
             updateTimeSlotState(response.value, id);
@@ -85,6 +90,7 @@ export function useTimeSlots() {
         TimeSlotState.timeSlots[id].title = slot.title;
         TimeSlotState.timeSlots[id].limit = slot.limit;
         TimeSlotState.timeSlots[id].order = slot.order;
+        TimeSlotState.timeSlots[id].slug = slot.slug;
     }
 
     async function createSlot(newSlot: TimeSlot) {
@@ -98,8 +104,8 @@ export function useTimeSlots() {
         await getTimeSlots();
     }
 
-    async function deleteSlot(id: number) {
-        const { error, response } = await postDeleteSlot(id);
+    async function deleteSlotWithSlug(slug: string) {
+        const { error, response } = await deleteSlot(slug);
 
         if (error.value || response.value?.status !== 'success') {
             TimeSlotState.error = 'Error on creating slot';
@@ -123,7 +129,7 @@ export function useTimeSlots() {
         fetchTimeSlots,
         changeDisabledState,
         createSlot,
-        deleteSlot,
+        deleteSlotWithSlug,
         editSlot,
         resetState
     }

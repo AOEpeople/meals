@@ -199,18 +199,18 @@ MealzMealBundle_api_categories:
     defaults: { _controller: App\Mealz\MealBundle\Controller\CategoryController::getCategoriesData }
     methods: [GET]
 
-MealzMealBundle_Category_create:
-    path:  /api/category/create
+MealzMealBundle_api_categories_create:
+    path:  /api/categories
     defaults: { _controller: App\Mealz\MealBundle\Controller\CategoryController::createCategory }
     methods: [POST]
 
 MealzMealBundle_Category_edit:
-    path:  /api/category/{id}/edit
+    path:  /api/categories/{slug}/edit
     defaults: { _controller: App\Mealz\MealBundle\Controller\CategoryController::editCategory }
-    methods: [POST]
+    methods: [PUT]
 
 MealzMealBundle_Category_delete:
-    path:  /api/category/{id}/delete
+    path:  /api/categories/{slug}/delete
     defaults: { _controller: App\Mealz\MealBundle\Controller\CategoryController::deleteCategory }
 
 MealzMealBundle_Print_participations:

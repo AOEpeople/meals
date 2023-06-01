@@ -31,31 +31,17 @@ class CategoryController extends BaseListController
     {
         $categories = $this->categorySrv->getAllCategories();
 
-        $response = [];
-
-        /** @var Category $category */
-        foreach ($categories as $category) {
-            $response[$category->getId()] = [
-                'title_en' => $category->getTitleEn(),
-                'title_de' => $category->getTitleDe(),
-            ];
-        }
-
-        return new JsonResponse($response, 200);
+        return new JsonResponse($categories, 200);
     }
 
-    public function editCategory(Request $request, int $id): JsonResponse
+    public function editCategory(Request $request, Category $category): JsonResponse
     {
         $parameters = json_decode($request->getContent(), true);
 
         try {
-            $category = $this->categorySrv->editCategory($parameters, $id);
-            $response = [
-                'title_de' => $category->getTitleDe(),
-                'title_en' => $category->getTitleEn(),
-            ];
+            $category = $this->categorySrv->editCategory($parameters, $category);
 
-            return new JsonResponse($response, 200);
+            return new JsonResponse($category, 200);
         } catch (Exception $e) {
             $this->logException($e);
 
@@ -63,10 +49,10 @@ class CategoryController extends BaseListController
         }
     }
 
-    public function deleteCategory(int $id): JsonResponse
+    public function deleteCategory(Category $category): JsonResponse
     {
         try {
-            $this->categorySrv->deleteCategory($id);
+            $this->categorySrv->deleteCategory($category);
         } catch (Exception $e) {
             $this->logException($e);
 

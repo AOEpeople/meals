@@ -10,34 +10,31 @@ const asyncFunc: () => Promise<void> = async () => {
     new Promise(resolve => resolve(undefined));
 };
 
-const getMockedResponses = (url: string) => {
-    switch(url) {
-        case "api/slot/create" || "api/slot/delete":
-            return {
-                response: ref(success),
-                request: asyncFunc,
-                error: ref(false)
-            };
-        case "api/slot/update":
-            return {
-                response: ref(updatedSlot),
-                request: asyncFunc,
-                error: ref(false)
-            }
-        case "api/timeslots":
-            return {
-                response: ref(timeSlots),
-                request: asyncFunc,
-                error: false
-            }
-        default:
-            return {}
+const getMockedResponses = (method: string, url: string) => {
+    if (url.includes('api/slots') && method === 'GET') {
+        return {
+            response: ref(timeSlots.response),
+            request: asyncFunc,
+            error: false
+        }
+    } else if (url.includes('api/slot') && (method === 'POST' || method === 'DELETE')) {
+        return {
+            response: ref(success),
+            request: asyncFunc,
+            error: ref(false)
+        }
+    } else if (url.includes('api/slot') && method === 'PUT') {
+        return {
+            response: ref(updatedSlot.response),
+            request: asyncFunc,
+            error: ref(false)
+        }
     }
 }
 
 // @ts-expect-error ts doesn't allow reassignig a import but we need that to mock that function
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-useApi = jest.fn().mockImplementation((method: string, url: string) => getMockedResponses(url));
+useApi = jest.fn().mockImplementation((method: string, url: string) => getMockedResponses(method, url));
 
 
 describe('Test timeSlotStore', () => {
@@ -50,25 +47,25 @@ describe('Test timeSlotStore', () => {
 
     it('should not contain slot data before fetching', () => {
         expect(TimeSlotState.timeSlots).toEqual({});
-        expect(TimeSlotState.error).toEqual("");
+        expect(TimeSlotState.error).toEqual('');
         expect(TimeSlotState.isLoading).toBeFalsy();
     });
 
     it('should contain the the timeslots from the fixture after fetching', async () => {
         await fetchTimeSlots();
 
-        expect(TimeSlotState.timeSlots).toEqual(timeSlots);
-        expect(TimeSlotState.error).toEqual("");
+        expect(TimeSlotState.timeSlots).toEqual(timeSlots.state);
+        expect(TimeSlotState.error).toEqual('');
         expect(TimeSlotState.isLoading).toBeFalsy();
     });
 
     it('should update the slotdata in the state', async () => {
         await fetchTimeSlots();
 
-        expect(TimeSlotState.timeSlots['13']).not.toEqual(updatedSlot);
+        expect(TimeSlotState.timeSlots[17]).not.toEqual(updatedSlot.state);
 
-        await editSlot(13, updatedSlot);
+        await editSlot(17, updatedSlot.state);
 
-        expect(TimeSlotState.timeSlots['13']).toEqual(updatedSlot);
+        expect(TimeSlotState.timeSlots[17]).toEqual(updatedSlot.state);
     });
 });

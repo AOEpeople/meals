@@ -23,7 +23,7 @@ describe('Test SlotActions', () => {
         const wrapper = mount(SlotActions, {
             props: {
                 timeSlot: timeSlot,
-                timeSlotID: 1
+                timeSlotId: 1
             }
         });
 

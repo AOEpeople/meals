@@ -14,7 +14,7 @@
       </template>
       <template #panel="{ close }">
         <SlotCreationPanel
-          :id="timeSlotID"
+          :id="timeSlotId"
           :edit="true"
           :class="[close ? 'isolate z-40' : '']"
           :submit="t('slot.save')"
@@ -22,6 +22,7 @@
           :title="timeSlot.title"
           :limit="String(timeSlot.limit)"
           :order="String(timeSlot.order)"
+          :slug="String(timeSlot.slug)"
           @closePanel="close()"
         />
       </template>
@@ -30,7 +31,7 @@
       :action="Action.DELETE"
       :btn-text="t('button.delete')"
       :row="true"
-      @click="deleteSlot(timeSlotID)"
+      @click="deleteSlotWithSlug(timeSlot.slug)"
     />
     <Switch
       :sr="'Enable TimeSlot'"
@@ -50,19 +51,19 @@ import { Action } from '@/enums/Actions';
 import Popover from "../misc/Popover.vue";
 import SlotCreationPanel from "./SlotCreationPanel.vue";
 
-const { changeDisabledState, deleteSlot } = useTimeSlots();
+const { changeDisabledState, deleteSlotWithSlug } = useTimeSlots();
 const { t } = useI18n();
 
 const props = defineProps<{
   timeSlot: TimeSlot,
-  timeSlotID: number
+  timeSlotId: number
 }>();
 
 const initial = ref(props.timeSlot.enabled);
 const enabled = ref(initial.value)
 
 watch(enabled, async () => {
-  await changeDisabledState(props.timeSlotID, enabled.value);
+  await changeDisabledState(props.timeSlotId, enabled.value);
 });
 
 function setEnabled(state: boolean) {

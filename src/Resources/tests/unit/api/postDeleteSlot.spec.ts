@@ -1,6 +1,6 @@
 import { ref } from "vue";
 import success from "../fixtures/createSlot.json";
-import postDeleteSlot from "@/api/postDeleteSlot";
+import deleteSlot from "@/api/deleteSlot";
 import { describe, expect, it } from "@jest/globals";
 import useApi from "@/api/api";
 
@@ -21,7 +21,7 @@ useApi.mockReturnValue(mockedReturnValue);
 
 describe('Test postDeleteSlot', () => {
     it('should return a success on deleting a slot', async () => {
-        const { error, response } = await postDeleteSlot(1);
+        const { error, response } = await deleteSlot('1');
 
         expect(useApi).toHaveBeenCalled();
         expect(error.value).toBeFalsy();

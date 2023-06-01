@@ -3,14 +3,13 @@ import { ISuccess } from "@/api/postCreateSlot";
 
 /**
  * Performs a POST request to delete a slot with a given ID
- * @param id The ID of the slot
+ * @param slug The identifier of the slot
  */
-export default async function postDeleteSlot(id: number) {
+export default async function deleteSlot(slug: string) {
     const { error, request, response } = useApi<ISuccess>(
-        'POST',
-        'api/slot/delete',
-        'application/json',
-        JSON.stringify({ id: id })
+        'DELETE',
+        `api/slots/${slug}`,
+        'application/json'
     );
 
     await request();

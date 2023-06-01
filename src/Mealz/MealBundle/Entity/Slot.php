@@ -155,6 +155,6 @@ class Slot implements JsonSerializable
             'order' => $this->order,
             'enabled' => $this->isEnabled(),
             'slug' => $this->slug,
-            ];
+        ];
     }
 }

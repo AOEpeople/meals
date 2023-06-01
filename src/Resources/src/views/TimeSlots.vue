@@ -50,7 +50,3 @@ onMounted(async () => {
   progress.finish();
 });
 </script>
-
-<style scoped>
-
-</style>

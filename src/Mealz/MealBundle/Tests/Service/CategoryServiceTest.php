@@ -67,7 +67,7 @@ class CategoryServiceTest extends AbstractDatabaseTestCase
         $category = $categories[0];
 
         $categoryId = $category->getId();
-        $this->categoryService->deleteCategory($categoryId);
+        $this->categoryService->deleteCategory($category);
         $this->em->clear();
 
         $category = $this->categoryRepo->find($categoryId);
@@ -87,7 +87,7 @@ class CategoryServiceTest extends AbstractDatabaseTestCase
         $category = $categories[0];
 
         $categoryId = $category->getId();
-        $this->categoryService->editCategory(['title_en' => 'Test_en_1234', 'title_de' => 'Test_de_1234'], $categoryId);
+        $this->categoryService->editCategory(['title_en' => 'Test_en_1234', 'title_de' => 'Test_de_1234'], $category);
 
         $this->em->clear();
         $category = $this->categoryRepo->find($categoryId);
@@ -96,5 +96,6 @@ class CategoryServiceTest extends AbstractDatabaseTestCase
         $this->assertInstanceOf(Category::class, $category);
         $this->assertEquals('Test_en_1234', $category->getTitleEn());
         $this->assertEquals('Test_de_1234', $category->getTitleDe());
+        $this->assertEquals('test-en-1234', $category->getSlug());
     }
 }

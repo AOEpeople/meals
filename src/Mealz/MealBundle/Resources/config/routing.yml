@@ -17,25 +17,25 @@ MealzMealBundle_api_transactions:
   defaults: { _controller: App\Mealz\MealBundle\Controller\ApiController::getTransactionData }
   methods: [GET]
 
-MealzMealBundle_api_timeslots:
-  path: /api/timeslots
+MealzMealBundle_api_slots:
+  path: /api/slots
   defaults: { _controller: App\Mealz\MealBundle\Controller\ApiController::getTimeSlotData }
   methods: [GET]
 
-MealzMealBundle_api_slot_update:
-  path: /api/slot/update
+MealzMealBundle_api_slots_update:
+  path: /api/slots/{slug}
   defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::updateSlot }
-  methods: [POST]
+  methods: [PUT]
 
-MealzMealBundle_api_slot_create:
-  path: /api/slot/create
+MealzMealBundle_api_slots_create:
+  path: /api/slots
   defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::createSlot }
   methods: [POST]
 
-MealzMealBundle_api_slot_delete:
-  path: /api/slot/delete
+MealzMealBundle_api_slots_delete:
+  path: /api/slots/{slug}
   defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::deleteSlot }
-  methods: [POST]
+  methods: [DELETE]
 
 MealzMealBundle_api_environmentals:
   path: /api/environmentals

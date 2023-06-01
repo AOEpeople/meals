@@ -226,19 +226,7 @@ class ApiController extends BaseController
     {
         $slots = $this->slotSrv->getAllSlots();
 
-        $response = [];
-
-        /** @var Slot $slot */
-        foreach ($slots as $slot) {
-            $response[$slot->getId()] = [
-                'title' => $slot->getTitle(),
-                'limit' => $slot->getLimit(),
-                'order' => $slot->getOrder(),
-                'enabled' => $slot->isEnabled(),
-            ];
-        }
-
-        return new JsonResponse($response, 200);
+        return new JsonResponse($slots, 200);
     }
 
     /**

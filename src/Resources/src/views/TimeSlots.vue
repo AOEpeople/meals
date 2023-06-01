@@ -24,7 +24,7 @@
         <td class="relative w-[30%]">
           <SlotActions
             :timeSlot="timeSlot"
-            :timeSlotID="Number(id)"
+            :timeSlotId="Number(id)"
           />
         </td>
       </tr>

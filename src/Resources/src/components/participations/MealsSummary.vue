@@ -1,7 +1,7 @@
 <template>
   <table class="h-full w-full table-fixed border-collapse rounded-b-lg rounded-t-[18px] border-0 border-none bg-white p-0 align-top shadow-[0_15px_35px_0_#5B788F21]">
     <tr class="h-[60px]">
-      <th class="text-primary h-[60px] p-4 shadow-[0_15px_35px_0_#5B788F21]">
+      <th class="h-[60px] p-4 text-primary shadow-[0_15px_35px_0_#5B788F21]">
         {{ weekDay }}
       </th>
     </tr>
@@ -34,12 +34,12 @@ const props = defineProps<{
 
 const mealNames = computed(() => {
   const names: string[] = [];
-  for(const meal of Object.values(locale.value === 'en' ? props.day.en : props.day.de)) {
+  for (const meal of Object.values(locale.value === 'en' ? props.day.en : props.day.de)) {
      names.push(meal as string);
   }
   const timesToFill = 3 - names.length;
-  for(let i = 0; i < timesToFill; i++) {
-    names.push("");
+  for (let i = 0; i < timesToFill; i++) {
+    names.push('');
   }
   return names;
 })
@@ -49,6 +49,6 @@ const weekDay = computed(() => {
 });
 
 function mealNameIsEmpty(txt: string) {
-  return txt === "" || txt === "Kombi-Gericht" || txt === "Combined Dish";
+  return txt === '' || txt === 'Kombi-Gericht' || txt === 'Combined Dish';
 }
 </script>

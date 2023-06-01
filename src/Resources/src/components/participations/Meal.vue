@@ -10,7 +10,7 @@
       <tr class="w-full">
         <th
           :colspan="meal.variations.length > 0 ? meal.variations.length : 1"
-          class="text-primary p-4 align-top text-lg"
+          class="p-4 align-top text-lg text-primary"
         >
           {{ languageIsEnglish ? meal.title.en : meal.title.de }}
         </th>

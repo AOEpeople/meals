@@ -5,7 +5,7 @@
   >
     <tr class="table w-full table-fixed align-top">
       <th
-        class="text-primary h-full w-2/3 px-2 py-4"
+        class="h-full w-2/3 px-2 py-4 text-primary"
         data-test="meal-head-th"
       >
         Name
@@ -13,7 +13,7 @@
       <th
         v-for="meal in mealsWithVariations"
         :key="meal.mealId"
-        class="text-primary h-full border-l-[1px] px-2 py-4"
+        class="h-full border-l-[1px] px-2 py-4 text-primary"
         :class="meal.title.en === 'Combined Dish' ? 'w-1/3' : 'w-full'"
         data-test="meal-head-th"
       >

@@ -7,8 +7,8 @@ type Link = {
 
 export async function useGuestLink(dayId: string){
     const { response: link, request, error } = useApi<Link>(
-        "GET",
-        "/menu/" + dayId + "/new-guest-invitation",
+        'GET',
+        '/menu/' + dayId + '/new-guest-invitation',
     );
 
     const loaded = ref(false)

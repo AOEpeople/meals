@@ -9,7 +9,7 @@
     >
       <ListboxButton
         :class="[open ? 'rounded-t-2xl border-x border-t' : 'rounded-3xl border', disabled ? '' : 'cursor-pointer']"
-        class="focus-visible:ring-offset-orange-300 relative flex h-8 w-64 items-center border-[#B4C1CE] bg-white pr-10 pl-4 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2"
+        class="focus-visible:ring-offset-orange-300 relative flex h-8 w-64 items-center border-[#B4C1CE] bg-white pl-4 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2"
       >
         <span class="text-gray block truncate text-note">
           {{ selectedSlot.slug === 'auto' ? t('dashboard.slot.auto') : selectedSlot.title }}
@@ -48,7 +48,7 @@
               :class="selected ? 'bg-[#F4F4F4]' : 'hover:bg-[#FAFAFA]'"
               class="cursor-pointer pl-4"
             >
-              <span :class="[selected ? 'font-medium' : 'font-normal', 'block truncate text-note py-2']">
+              <span :class="[selected ? 'font-medium' : 'font-normal', 'block truncate py-2 text-note']">
                 {{ slot.slug === 'auto' ? t('dashboard.slot.auto') : slot.title }}
                 <span v-if="slot.limit !== 0">
                   {{ '( ' + slot.count + ' / ' + slot.limit + ' )' }}
@@ -120,12 +120,12 @@ if (props.dayID) {
     for (const mealId in props.day.meals) {
       if (props.day.meals[mealId].variations !== null) {
         for (const variationsId in props.day.meals[mealId].variations) {
-          if(props.day.meals[mealId].variations[variationsId].isParticipating) {
+          if (props.day.meals[mealId].variations[variationsId].isParticipating) {
             return true
           }
         }
       }
-      if(props.day.meals[mealId].isParticipating) {
+      if (props.day.meals[mealId].isParticipating) {
         return true
       }
     }

@@ -7,7 +7,6 @@ import { flushPromises, mount } from "@vue/test-utils";
 import MealOverView from '@/components/participations/MealOverview.vue';
 import { getShowParticipations } from "@/api/getShowParticipations";
 import MealsSummary from "@/components/participations/MealsSummary.vue";
-import { getNextThreeDays } from "@/api/getMealsNextThreeDays";
 
 const asyncFunc: () => Promise<void> = async () => {
     new Promise(resolve => resolve(undefined));
@@ -40,6 +39,7 @@ jest.mock("vue-i18n", () => ({
 }));
 
 // @ts-expect-error ts doesn't allow reassignig a import but we need that to mock that function
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 useApi = jest.fn().mockImplementation((method: string, url: string) => getMockedResponses(url));
 
 describe('Test MealOverView', () => {

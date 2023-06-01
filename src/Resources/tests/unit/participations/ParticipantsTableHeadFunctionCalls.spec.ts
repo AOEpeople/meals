@@ -27,14 +27,14 @@ describe('Test function call of ParticipantsTableHead', () => {
     });
 
     it('should call getShowParticipations if loadedState is true', () => {
-        const wrapper = shallowMount(ParticipantsTableHead);
+        shallowMount(ParticipantsTableHead);
 
         expect(mockedGetShowParticipations).toHaveBeenCalledTimes(1);
     });
 
     it('should call getShowParticipations once loadedState switches to true', async () => {
         loadMock.loaded = false;
-        const wrapper = shallowMount(ParticipantsTableHead);
+        shallowMount(ParticipantsTableHead);
 
         expect(mockedGetShowParticipations).not.toHaveBeenCalled();
 

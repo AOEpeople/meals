@@ -31,7 +31,7 @@
             leave-from="opacity-100 translate-y-0 sm:scale-100"
             leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
-            <DialogPanel class="relative overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:p-6">
+            <DialogPanel class="relative overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:p-6">
               <div>
                 <div class="mt-3 sm:mt-5">
                   <DialogTitle
@@ -60,7 +60,7 @@
               <div class="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
                 <button
                   type="button"
-                  :class="[bookingDisabled ? 'btn-disabled' : 'btn-primary', 'w-full inline-flex justify-center']"
+                  :class="[bookingDisabled ? 'btn-disabled' : 'btn-primary', 'inline-flex w-full justify-center']"
                   :disabled="bookingDisabled"
                   @click="resolveModal('book')"
                 >
@@ -105,12 +105,12 @@ const slugs = ref([])
 const bookingDisabled = computed(() => slugs.value.length < 2)
 
 function resolveModal(mode) {
-  if(mode === 'cancel') {
+  if (mode === 'cancel') {
     slugs.value = []
-    emit("closeCombiModal")
+    emit('closeCombiModal')
   }
-  if(mode === 'book') {
-    emit("closeCombiModal", slugs.value)
+  if (mode === 'book') {
+    emit('closeCombiModal', slugs.value)
     slugs.value = []
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <div class="day-shadow mx-auto flex h-auto max-w-[414px] rounded bg-white sm:max-w-none">
-    <div :class="[day.isLocked ? 'bg-[#80909F]' : 'bg-primary-2', 'flex relative justify-center w-[24px] rounded-l-[5px]']">
+    <div :class="[day.isLocked ? 'bg-[#80909F]' : 'bg-primary-2', 'relative flex w-[24px] justify-center rounded-l-[5px]']">
       <div
         v-if="!day.isLocked && !emptyDay"
         class="absolute bottom-[1px] left-[2px] z-[2] w-[24px] text-center"

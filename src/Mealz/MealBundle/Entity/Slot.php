@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use JsonSerializable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -16,11 +17,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  * @ORM\Table(name="slot")
  */
-class Slot
+class Slot implements JsonSerializable
 {
     /**
      * @ORM\Id
-     * @ORM\Column
+     * @ORM\Column(type="integer", nullable=true)
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private ?int $id = null;
@@ -143,5 +144,17 @@ class Slot
         }
 
         return new ArrayCollection($this->participants->toArray());
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'limit' => $this->limit,
+            'order' => $this->order,
+            'enabled' => $this->isEnabled(),
+            'slug' => $this->slug,
+            ];
     }
 }

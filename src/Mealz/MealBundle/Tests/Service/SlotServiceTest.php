@@ -86,7 +86,7 @@ class SlotServiceTest extends AbstractDatabaseTestCase
         $this->assertInstanceOf(Slot::class, $slot);
 
         $slotID = $slot->getId();
-        $this->sut->delete(['id' => $slotID]);
+        $this->sut->delete($slot);
         $this->em->clear();
 
         $slot = $this->slotRepo->find($slotID);

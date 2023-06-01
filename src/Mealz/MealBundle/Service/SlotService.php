@@ -35,11 +35,8 @@ class SlotService
         $this->dayRepo = $dayRepo;
     }
 
-    public function updateSlot(array $parameters): Slot
+    public function updateSlot(array $parameters, Slot $slot): Slot
     {
-        /** @var Slot $slot */
-        $slot = $this->slotRepo->find($parameters['id']);
-
         if (isset($parameters['title'])) {
             $slot->setTitle($parameters['title']);
         }
@@ -71,23 +68,12 @@ class SlotService
         $this->em->flush();
     }
 
-    public function delete(array $parameters): void
+    public function delete(Slot $slot): void
     {
-        if (isset($parameters['id'])) {
-            $slot = $this->getSlotById($parameters['id']);
-            if (null === $slot) {
-                throw new Exception('Slot does  not exists');
-            }
-            if (null === $slot->getId()) {
-                throw new Exception('Slot ID is not set');
-            }
-            if ($slot->getId() !== $parameters['id']) {
-                throw new Exception('Slot ID is not equal to requested ID');
-            }
+        $slot->setDeleted(true);
 
-            $this->em->remove($slot);
-            $this->em->flush();
-        }
+        $this->em->persist($slot);
+        $this->em->flush();
     }
 
     public function getSlotStatusForDay(DateTime $datetime): array
@@ -135,10 +121,13 @@ class SlotService
      */
     public function createSlot(array $parameters): void
     {
-        $slot = new Slot();
-        if (isset($parameters['title'])) {
-            $slot->setTitle($parameters['title']);
+        if (!isset($parameters['title'])) {
+            throw new Exception('Title is missing');
+        } elseif ('' === $parameters['title']) {
+            throw new Exception('Title is empty');
         }
+        $slot = new Slot();
+        $slot->setTitle($parameters['title']);
         if (isset($parameters['limit'])) {
             $slot->setLimit($parameters['limit']);
         }

@@ -16,7 +16,7 @@
             class="ml-1 h-[17px] w-[36px] bg-highlight py-[1px] pl-1 pr-[3px] align-text-bottom text-[11px] font-bold uppercase leading-[16px] tracking-[1.5px] text-white"
           >
             {{ t('dashboard.new') }}
-          </span> 
+          </span>
         </p>
       </div>
     </div>
@@ -100,7 +100,7 @@ const mealCSS = computed(() => {
 
 const openPopover = ref(false)
 
-receive("openOfferPanel_" + props.mealID, () => {
+receive('openOfferPanel_' + props.mealID, () => {
   openPopover.value = true
   setTimeout(() => openPopover.value = false, 5000)
 })

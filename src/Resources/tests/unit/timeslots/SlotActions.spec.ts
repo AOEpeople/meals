@@ -3,7 +3,6 @@ import { describe, expect, it } from "@jest/globals";
 import { computed } from "vue";
 import { mount } from "@vue/test-utils";
 import { TimeSlot } from "@/stores/timeSlotStore";
-import { PopoverPanel, PopoverButton } from '@headlessui/vue'
 
 jest.mock("vue-i18n", () => ({
     useI18n: () => ({
@@ -24,7 +23,7 @@ describe('Test SlotActions', () => {
         const wrapper = mount(SlotActions, {
             props: {
                 timeSlot: timeSlot,
-                timeSlotID: 1
+                timeSlotId: 1
             }
         });
 

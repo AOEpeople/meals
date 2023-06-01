@@ -3,14 +3,14 @@ import { ref } from "vue";
 import { TimeSlot } from "@/stores/timeSlotStore";
 
 /**
- * Performs a POST request to update a slot
+ * Performs a PUT request to update a slot
  * @param data Stringified data cointaining the id of the slot and the data to be changed
  * @returns The updated slot
  */
-async function postUpdateSlot(data: string) {
+async function putUpdateSlot(slug: string, data: string) {
     const { error, request, response } = useApi<TimeSlot>(
-        "POST",
-        "api/update-slot",
+        'PUT',
+        `api/slots/${slug}`,
         'application/json',
         data,
     );
@@ -22,27 +22,27 @@ async function postUpdateSlot(data: string) {
         loaded.value = true;
     }
 
-    return {error, response}
+    return { error, response }
 }
 
 export function useUpdateSlot() {
 
     /**
      * Calls postSlotUpdate to enable or disable a slot
-     * @param id ID of the slot to be changed
+     * @param slug identifier of the slot to be changed
      * @param state current enabled state of the slot
      */
-    async function updateSlotEnabled(id: number, state: boolean) {
-        return postUpdateSlot(JSON.stringify({ id: id, enabled: state }));
+    async function updateSlotEnabled(slug: string, state: boolean) {
+        return putUpdateSlot(slug, JSON.stringify({ enabled: state }));
     }
 
     /**
      * Calls postSlotUpdate to change the attributes of a slot
-     * @param id ID of the slot to be changed
+     * @param slug idetifier of the slot to be changed
      * @param slot The slot as it should look after updating
      */
-    async function updateTimeSlot(id: number, slot: TimeSlot) {
-        return postUpdateSlot(JSON.stringify({ id: id, title: slot.title, limit: slot.limit, order: slot.order }))
+    async function updateTimeSlot(slot: TimeSlot) {
+        return putUpdateSlot(slot.slug, JSON.stringify({ title: slot.title, limit: slot.limit, order: slot.order }))
     }
 
     return {

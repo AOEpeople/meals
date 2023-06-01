@@ -13,6 +13,7 @@
       :type="type"
       :name="labelText"
       :placeholder="labelText"
+      :min="min"
       class="w-full rounded-full border-2 border-solid border-[#CAD6E1] px-4 py-2 text-[14px] font-medium text-[#B4C1CE]"
     >
   </div>
@@ -25,9 +26,11 @@ const props = withDefaults(defineProps<{
   labelText?: string,
   modelValue: string,
   type?: string
+  min?: number
 }>(), {
-  labelText: "",
-  type: "text"
+  labelText: '',
+  type: 'text',
+  min: 0
 });
 
 const emit = defineEmits(['update:modelValue']);

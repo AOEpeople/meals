@@ -126,7 +126,7 @@ class MercureReceiver {
             newSlot.limit = data.newSlot.limit
             newSlot.count = data.newSlot.count
         }
-        if(data.prevSlot.slotId !== 0) {
+        if (data.prevSlot.slotId !== 0) {
             const prevSlot = dashboardStore.getSlot(data.weekId, data.dayId, data.prevSlot.slotId)
             if (prevSlot !== undefined) {
                 prevSlot.limit = data.prevSlot.limit

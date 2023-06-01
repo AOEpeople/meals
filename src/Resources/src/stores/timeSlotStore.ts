@@ -1,9 +1,9 @@
 import { Dictionary } from "types/types";
 import { reactive, readonly } from "vue";
 import { useTimeSlotData } from "@/api/getTimeSlotData";
-import { useUpdateSlot } from "@/api/postSlotUpdate";
+import { useUpdateSlot } from "@/api/putSlotUpdate";
 import postCreateSlot from "@/api/postCreateSlot";
-import postDeleteSlot from "@/api/postDeleteSlot";
+import deleteSlot from "@/api/deleteSlot";
 
 interface ITimeSlotState {
     timeSlots: Dictionary<TimeSlot>,
@@ -15,7 +15,8 @@ export interface TimeSlot {
     title: string,
     limit: number,
     order: number,
-    enabled: boolean
+    enabled: boolean,
+    slug?: string
 }
 
 const TIMEOUT_PERIOD = 10000;
@@ -44,36 +45,40 @@ export function useTimeSlots() {
      */
     async function getTimeSlots() {
         const { timeslots, error } = await useTimeSlotData();
-        if(!error.value && timeslots.value) {
+        if (!error.value && timeslots.value) {
             TimeSlotState.timeSlots = timeslots.value;
-            TimeSlotState.error = "";
+            TimeSlotState.error = '';
         } else {
             setTimeout(fetchTimeSlots, TIMEOUT_PERIOD);
-            TimeSlotState.error = "Error on getting the TimeSlotData";
+            TimeSlotState.error = 'Error on getting the TimeSlotData';
         }
     }
 
     async function changeDisabledState(id: number, state: boolean) {
         const { updateSlotEnabled } = useUpdateSlot();
 
-        const { error, response } = await updateSlotEnabled(id, state);
+        const { error, response } = await updateSlotEnabled(TimeSlotState.timeSlots[id].slug, state);
 
-        if(!error.value && response.value && response.value.enabled !== undefined) {
+        if (!error.value && response.value && response.value.enabled !== undefined) {
             updateTimeSlotEnabled(response.value, id);
         } else {
-            TimeSlotState.error = "Error on changing the slot state";
+            TimeSlotState.error = 'Error on changing the slot state';
         }
     }
 
     async function editSlot(id: number, slot: TimeSlot) {
         const { updateTimeSlot } = useUpdateSlot();
 
-        const { error, response } = await updateTimeSlot(id, slot);
+        if(slot.slug === null) {
+            slot.slug = TimeSlotState.timeSlots[id].slug;
+        }
 
-        if(!error.value && response.value) {
+        const { error, response } = await updateTimeSlot(slot);
+
+        if (!error.value && response.value) {
             updateTimeSlotState(response.value, id);
         } else {
-            TimeSlotState.error = "Error on changing the slot state";
+            TimeSlotState.error = 'Error on changing the slot state';
         }
     }
 
@@ -85,24 +90,25 @@ export function useTimeSlots() {
         TimeSlotState.timeSlots[id].title = slot.title;
         TimeSlotState.timeSlots[id].limit = slot.limit;
         TimeSlotState.timeSlots[id].order = slot.order;
+        TimeSlotState.timeSlots[id].slug = slot.slug;
     }
 
     async function createSlot(newSlot: TimeSlot) {
         const { error, response } = await postCreateSlot(newSlot);
 
-        if(error.value || response.value?.status !== "success") {
-            TimeSlotState.error = "Error on creating slot";
+        if (error.value || response.value?.status !== 'success') {
+            TimeSlotState.error = 'Error on creating slot';
             return;
         }
 
         await getTimeSlots();
     }
 
-    async function deleteSlot(id: number) {
-        const { error, response } = await postDeleteSlot(id);
+    async function deleteSlotWithSlug(slug: string) {
+        const { error, response } = await deleteSlot(slug);
 
-        if(error.value || response.value?.status !== "success") {
-            TimeSlotState.error = "Error on creating slot";
+        if (error.value || response.value?.status !== 'success') {
+            TimeSlotState.error = 'Error on creating slot';
             return;
         }
 
@@ -114,7 +120,7 @@ export function useTimeSlots() {
      */
     function resetState() {
         TimeSlotState.timeSlots = {};
-        TimeSlotState.error = "";
+        TimeSlotState.error = '';
         TimeSlotState.isLoading = false;
     }
 
@@ -123,7 +129,7 @@ export function useTimeSlots() {
         fetchTimeSlots,
         changeDisabledState,
         createSlot,
-        deleteSlot,
+        deleteSlotWithSlug,
         editSlot,
         resetState
     }

@@ -35,8 +35,27 @@ class CategoryControllerTest extends AbstractControllerTestCase
         $this->client->request('GET', '/api/categories');
         $response = json_decode($this->client->getResponse()->getContent(), true);
 
+        $expectedCategories = [
+            [
+                'id' => $response[0]['id'],
+                'title_de' => 'Sonstiges',
+                'title_en' => 'Others',
+                'slug' => 'others',
+            ],[
+                'id' => $response[1]['id'],
+                'title_de' => 'Vegetarisch',
+                'title_en' => 'Vegetarian',
+                'slug' => 'vegetarian',
+            ],[
+                'id' => $response[2]['id'],
+                'title_de' => 'Fleisch',
+                'title_en' => 'Meat',
+                'slug' => 'meat',
+            ]
+        ];
+
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals([], $response);
+        $this->assertEquals($expectedCategories, $response);
     }
 
     public function testNewAction(): void

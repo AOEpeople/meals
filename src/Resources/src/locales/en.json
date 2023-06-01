@@ -29,7 +29,12 @@
     "add_variation": "add new Variation"
   },
   "category": {
-    "create": "create category"
+    "create": "create category",
+    "header": "List of Categories",
+    "table": {
+      "title": "Title",
+      "actions": "Actions"
+    }
   },
   "changeLanguage": "Deutsche Version",
   "combiModal": {

@@ -41,17 +41,8 @@ class CategoryService
     /**
      * Deletes a category.
      */
-    public function deleteCategory(int $id): void
+    public function deleteCategory(Category $category): void
     {
-        $category = $this->getCategoryById($id);
-        if (null === $category) {
-            throw new Exception('No category with this ID');
-        } elseif (null === $category->getId()) {
-            throw new Exception('Category ID not set');
-        } elseif ($category->getId() !== $id) {
-            throw new Exception('Category ID not equal to requested ID');
-        }
-
         $this->em->remove($category);
         $this->em->flush();
     }
@@ -59,15 +50,8 @@ class CategoryService
     /**
      * Edit a category.
      */
-    public function editCategory(array $parameters, int $id): Category
+    public function editCategory(array $parameters, Category $category): Category
     {
-        /** @var Category $category */
-        $category = $this->getCategoryById($id);
-
-        if (null === $category) {
-            throw new Exception('Category ID unknown');
-        }
-
         if (isset($parameters['title_en'])) {
             $category->setTitleEn($parameters['title_en']);
         }

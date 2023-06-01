@@ -24,7 +24,7 @@ const TIMEOUT_PERIOD = 10000;
 const TimeSlotState = reactive<ITimeSlotState>({
     timeSlots: {},
     isLoading: false,
-    error: ""
+    error: ''
 });
 
 export function useTimeSlots() {

@@ -4,6 +4,7 @@ namespace App\Mealz\MealBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use JsonSerializable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -13,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @SuppressWarnings(PHPMD.CamelCaseVariableName)
  * @SuppressWarnings(PHPMD.CamelCaseParameterName)
  */
-class Category
+class Category implements JsonSerializable
 {
     /**
      * @var int
@@ -27,10 +28,8 @@ class Category
     /**
      * @Gedmo\Slug(fields={"title_en"})
      * @ORM\Column(length=128, unique=true)
-     *
-     * @var string
      */
-    protected $slug;
+    private ?string $slug = null;
 
     /**
      * @Assert\NotBlank()
@@ -60,12 +59,14 @@ class Category
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getSlug()
+    public function getSlug(): string
     {
-        return $this->slug;
+        return $this->slug ?? '';
+    }
+
+    public function setSlug(string $slug): string
+    {
+        return $this->slug = $slug;
     }
 
     /**
@@ -122,5 +123,15 @@ class Category
     public function getCurrentLocale()
     {
         return $this->currentLocale;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'titleDe' => $this->title_de,
+            'titleEn' => $this->title_en,
+            'slug' => $this->slug,
+        ];
     }
 }

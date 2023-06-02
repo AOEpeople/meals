@@ -205,13 +205,14 @@ MealzMealBundle_api_categories_create:
     methods: [POST]
 
 MealzMealBundle_Category_edit:
-    path:  /api/categories/{slug}/edit
+    path:  /api/categories/{slug}
     defaults: { _controller: App\Mealz\MealBundle\Controller\CategoryController::editCategory }
     methods: [PUT]
 
 MealzMealBundle_Category_delete:
-    path:  /api/categories/{slug}/delete
+    path:  /api/categories/{slug}
     defaults: { _controller: App\Mealz\MealBundle\Controller\CategoryController::deleteCategory }
+    methods: [DELETE]
 
 MealzMealBundle_Print_participations:
     path: /print/participations

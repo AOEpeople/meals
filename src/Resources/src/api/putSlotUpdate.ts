@@ -4,6 +4,7 @@ import { TimeSlot } from "@/stores/timeSlotStore";
 
 /**
  * Performs a PUT request to update a slot
+ * @param slug The identifier of the slot to be changed
  * @param data Stringified data cointaining the id of the slot and the data to be changed
  * @returns The updated slot
  */

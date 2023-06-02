@@ -1,9 +1,7 @@
+import { ISuccess } from "@/interfaces/ISuccess";
 import useApi from "./api";
 import { TimeSlot } from "@/stores/timeSlotStore";
 
-export interface ISuccess {
-    status: string
-}
 /**
  * Performs a POST to create a new timeslot
  * @param timeSlot The timeslot to be created

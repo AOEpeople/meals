@@ -1,5 +1,8 @@
 import { reactive, readonly } from "vue";
 import getCategoriesData from "@/api/getCategoriesData";
+import deleteCategory from "@/api/deleteCategory";
+import postCreateCategory from "@/api/postCreateCategory";
+import putCategoryUpdate from "@/api/putCategoryUpdate";
 
 export interface Category {
     id: number,
@@ -41,8 +44,51 @@ export function useCategories() {
         }
     }
 
+    async function deleteCategoryWithSlug(slug: string) {
+        const { error, response } = await deleteCategory(slug);
+
+        if (error.value || response.value?.status !== 'success') {
+            CategoriesState.error = 'Error on deleting category';
+            return;
+        }
+
+        await getCategories();
+    }
+
+    async function createCategory(newCategory: Category) {
+        const { error, response } = await postCreateCategory(newCategory);
+
+        if (error.value || response.value?.status !== 'success') {
+            CategoriesState.error = 'Error on creating category';
+            return;
+        }
+
+        await getCategories();
+    }
+
+    async function editCategory(index: number, titleDe: string, titleEn: string) {
+        const { error, response } = await putCategoryUpdate(CategoriesState.categories[index].slug, titleDe, titleEn);
+
+        if (!error.value && response.value) {
+            updateCategoryState(index, response.value);
+        } else {
+            CategoriesState.error = 'Error on updating category';
+        }
+    }
+
+    function updateCategoryState(index: number, category: Category) {
+        if (CategoriesState.categories[index].id === category.id) {
+            CategoriesState.categories[index].titleDe = category.titleDe;
+            CategoriesState.categories[index].titleEn = category.titleEn;
+            CategoriesState.categories[index].slug = category.slug;
+        }
+    }
+
     return {
         CategoriesState: readonly(CategoriesState),
-        fetchCategories
+        fetchCategories,
+        deleteCategoryWithSlug,
+        createCategory,
+        editCategory
     }
 }

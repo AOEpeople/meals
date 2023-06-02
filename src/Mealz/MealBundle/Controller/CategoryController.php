@@ -45,7 +45,7 @@ class CategoryController extends BaseListController
         } catch (Exception $e) {
             $this->logException($e);
 
-            return new JsonResponse(null, 500);
+            return new JsonResponse(['status' => $e->getMessage()], 500);
         }
     }
 

@@ -7,7 +7,7 @@
     </div>
     <div class="z-[99] xl:justify-self-end">
       <Popover
-        :translate-x-min="'-25%'"
+        :translate-x-min="'-20%'"
         class="m-auto w-fit"
       >
         <template #button="{ open }">

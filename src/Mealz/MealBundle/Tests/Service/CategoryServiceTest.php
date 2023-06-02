@@ -39,7 +39,7 @@ class CategoryServiceTest extends AbstractDatabaseTestCase
      */
     public function createNewCategory(): void
     {
-        $parameters = ['title_de' => 'Test_de_1234', 'title_en' => 'Test_en_1234'];
+        $parameters = ['titleDe' => 'Test_de_1234', 'titleEn' => 'Test_en_1234'];
 
         $category = $this->categoryRepo->findOneBy(['title_de' => 'Test_de_1234']);
         $this->assertNull($category);
@@ -87,7 +87,7 @@ class CategoryServiceTest extends AbstractDatabaseTestCase
         $category = $categories[0];
 
         $categoryId = $category->getId();
-        $this->categoryService->editCategory(['title_en' => 'Test_en_1234', 'title_de' => 'Test_de_1234'], $category);
+        $this->categoryService->editCategory(['titleEn' => 'Test_en_1234', 'titleDe' => 'Test_de_1234'], $category);
 
         $this->em->clear();
         $category = $this->categoryRepo->find($categoryId);

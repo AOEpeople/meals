@@ -6,9 +6,11 @@ namespace App\Mealz\MealBundle\Tests\Controller;
 
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
 use App\Mealz\MealBundle\Entity\Category;
-use App\Mealz\MealBundle\Repository\CategoryRepository;
+use App\Mealz\MealBundle\Repository\CategoryRepositoryInterface;
+use App\Mealz\MealBundle\Service\CategoryService;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
@@ -16,6 +18,10 @@ use Symfony\Component\DomCrawler\Crawler;
  */
 class CategoryControllerTest extends AbstractControllerTestCase
 {
+    private EntityManagerInterface $em;
+    private CategoryRepositoryInterface $categoryRepo;
+    private CategoryService $categoryService;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -26,6 +32,11 @@ class CategoryControllerTest extends AbstractControllerTestCase
             new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
             new LoadCategories(),
         ]);
+
+        /* @var CategoryService $categoryService */
+        $this->categoryService = static::$container->get(CategoryService::class);
+        $this->categoryRepo = static::$container->get(CategoryRepositoryInterface::class);
+        $this->em = static::$container->get(EntityManagerInterface::class);
 
         $this->loginAs(self::USER_KITCHEN_STAFF);
     }
@@ -58,125 +69,49 @@ class CategoryControllerTest extends AbstractControllerTestCase
         $this->assertEquals($expectedCategories, $response);
     }
 
-    public function testNewAction(): void
+    public function testCreateCategory(): void
     {
-        $this->markTestSkipped('not implemented');
-        // Create form data
-        $form['category'] = [
-            'title_de' => 'category-form-title-de',
-            'title_en' => 'category-form-title-en',
-            '_token' => $this->getFormCSRFToken('/category/form', 'form #category__token'),
-        ];
+        $parameters = json_encode(['titleDe' => 'testDe987', 'titleEn' => 'testEn987']);
+        $this->client->request('POST', '/api/categories', [], [], [], $parameters);
 
-        // Call controller action
-        $this->client->request('POST', '/category/new', $form);
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(['status' => 'success'], json_decode($this->client->getResponse()->getContent(), true));
+    }
 
-        // Get persisted entity
-        $categoryRepository = self::$container->get(CategoryRepository::class);
-        $category = $categoryRepository->findOneBy([
-            'title_de' => 'category-form-title-de',
-            'title_en' => 'category-form-title-en',
-        ]);
+    public function testCreateCategoryFail(): void
+    {
+        $parameters = json_encode(['titleEn' => 'testEn987']);
+        $this->client->request('POST', '/api/categories', [], [], [], $parameters);
 
+        $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(['status' => 'Category titles not set or they already exist'], json_decode($this->client->getResponse()->getContent(), true));
+    }
+
+    public function testDeleteCategory(): void
+    {
+        $category = $this->categoryRepo->findOneBy(['slug' => 'others']);
         $this->assertInstanceOf(Category::class, $category);
+
+        $this->client->request('DELETE', '/api/categories/others');
+        $category = $this->categoryRepo->findOneBy(['slug' => 'others']);
+
+        $this->assertNull($category);
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testListAction(): void
+    public function testEditCategory(): void
     {
-        $this->markTestSkipped('not implemented');
-        $category = $this->createCategory();
-        $this->persistAndFlushAll([$category]);
-
-        // Request
-        $crawler = $this->client->request('GET', '/category');
-
-        // Get data for assertions from response
-        $heading = $crawler->filter('h1')->first()->text();
-        $categoryTitle = $crawler->filter('.table-row .category-title')->first()->text();
-
-        // Assertions
-        $this->assertEquals('List of categories', trim($heading));
-        $this->assertEquals($category->getTitle(), trim($categoryTitle));
-    }
-
-    public function testGetPreFilledFormAction(): void
-    {
-        $this->markTestSkipped('not implemented');
-        // Create test data
-        $category = $this->createCategory();
-        $categoryAsArray = [
-            'title_de' => $category->getTitleDe(),
-            'title_en' => $category->getTitleEn(),
-        ];
-        $this->persistAndFlushAll([$category]);
-
-        // Request
-        $this->client->request('GET', '/category/form/' . $category->getSlug());
-        $crawler = $this->getRawResponseCrawler();
-
-        // Check if form is loaded
-        $node = $crawler->filterXPath('//form[@action="/category/' . $category->getSlug() . '/edit"]');
-        $this->assertSame($node->count(), 1);
-
-        // Copy form values in array for comparison
-        $form = $crawler->selectButton('Save')->form();
-        $formCategoryAsArray = [
-            'title_de' => $form->get('category[title_de]')->getValue(),
-            'title_en' => $form->get('category[title_en]')->getValue(),
-        ];
-
-        // Assertions
-        $this->assertEquals($categoryAsArray, $formCategoryAsArray);
-    }
-
-    public function testEditAction(): void
-    {
-        $this->markTestSkipped('not implemented');
-        $category = $this->createCategory();
-        $this->persistAndFlushAll([$category]);
-
-        $form['category'] = [
-            'title_de' => 'category-form-edited-title-de',
-            'title_en' => 'category-form-edited-title-en',
-            '_token' => $this->getFormCSRFToken('/category/form/' . $category->getSlug(), 'form #category__token'),
-        ];
-
-        $this->client->request('POST', '/category/' . $category->getSlug() . '/edit', $form);
-        $categoryRepository = self::$container->get(CategoryRepository::class);
-        unset($form['category']['category']);
-        unset($form['category']['_token']);
-        $editedCategory = $categoryRepository->findOneBy($form['category']);
-
-        $this->assertInstanceOf(Category::class, $editedCategory);
-        $this->assertEquals($category->getId(), $editedCategory->getId());
-    }
-
-    public function testEditActionOfNonExistingCategory(): void
-    {
-        $this->markTestSkipped('not implemented');
-        $this->client->request('POST', '/category/non-existing-category/edit');
-        $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
-    }
-
-    public function testDeleteAction(): void
-    {
-        $this->markTestSkipped('not implemented');
-        $category = $this->createCategory();
-        $this->persistAndFlushAll([$category]);
-
+        $category = $this->categoryRepo->findOneBy(['slug' => 'others']);
+        $this->assertInstanceOf(Category::class, $category);
         $categoryId = $category->getId();
-        $this->client->request('GET', '/category/' . $category->getSlug() . '/delete');
-        $categoryRepository = self::$container->get(CategoryRepository::class);
-        $queryResult = $categoryRepository->find($categoryId);
 
-        $this->assertNull($queryResult);
-    }
+        $parameters = json_encode(['titleDe' => 'testDe743', 'titleEn' => 'testEn743']);
+        $this->client->request('PUT', '/api/categories/others', [], [], [], $parameters);
 
-    public function testDeleteOfNonExistingCategory(): void
-    {
-        $this->markTestSkipped('not implemented');
-        $this->client->request('GET', '/category/non-existing-category/delete');
-        $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
+        $category = $this->categoryRepo->find($categoryId);
+        $this->assertInstanceOf(Category::class, $category);
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(json_encode($category), $this->client->getResponse()->getContent());
     }
 
     protected function getRawResponseCrawler(): Crawler

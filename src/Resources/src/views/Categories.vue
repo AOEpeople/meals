@@ -1,20 +1,24 @@
 <template>
-  <div>
+  <div class="mx-[5%] xl:mx-auto">
     <CategoriesHeader />
     <Table
       :labels="[t('category.table.title'), t('category.table.actions')]"
     >
       <tr
-        v-for="(category, id) in CategoriesState.categories"
-        :key="id"
+        v-for="(category, index) in CategoriesState.categories"
+        :key="index"
+        class="max-h-[62px] border-b-2 border-gray-200"
       >
         <td class="w-[80%]">
-          <span>
+          <span class="text-[12px] xl:text-[18px]">
             {{ locale === 'en' ? category.titleEn : category.titleDe }}
           </span>
         </td>
         <td>
-          <CategoriesActions />
+          <CategoriesActions
+            :category="category"
+            :index="index"
+          />
         </td>
       </tr>
     </Table>

@@ -27,10 +27,10 @@ class CategoryService
      */
     public function createCategory(array $parameters): void
     {
-        if (isset($parameters['title_de']) && isset($parameters['title_en']) && null === $this->getCategoryByTitleEn($parameters['title_en']) && null === $this->getCategoryByTitleDe($parameters['title_de'])) {
+        if (isset($parameters['titleDe']) && isset($parameters['titleEn']) && null === $this->getCategoryByTitleEn($parameters['titleEn']) && null === $this->getCategoryByTitleDe($parameters['titleDe'])) {
             $category = new Category();
-            $category->setTitleEn($parameters['title_en']);
-            $category->setTitleDe($parameters['title_de']);
+            $category->setTitleEn($parameters['titleEn']);
+            $category->setTitleDe($parameters['titleDe']);
             $this->em->persist($category);
             $this->em->flush();
         } else {
@@ -52,11 +52,11 @@ class CategoryService
      */
     public function editCategory(array $parameters, Category $category): Category
     {
-        if (isset($parameters['title_en'])) {
-            $category->setTitleEn($parameters['title_en']);
+        if (isset($parameters['titleEn'])) {
+            $category->setTitleEn($parameters['titleEn']);
         }
-        if (isset($parameters['title_de'])) {
-            $category->setTitleDe($parameters['title_de']);
+        if (isset($parameters['titleDe'])) {
+            $category->setTitleDe($parameters['titleDe']);
         }
 
         $this->em->persist($category);
@@ -78,10 +78,5 @@ class CategoryService
     private function getCategoryByTitleDe(string $title): ?Category
     {
         return $this->categoryRepo->findOneBy(['title_de' => $title]);
-    }
-
-    private function getCategoryById(int $id): ?Category
-    {
-        return $this->categoryRepo->find($id);
     }
 }

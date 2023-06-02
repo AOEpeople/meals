@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Tests\Controller;
 
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
 use App\Mealz\MealBundle\Entity\Category;
 use App\Mealz\MealBundle\Repository\CategoryRepository;
-use App\Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use Symfony\Component\DomCrawler\Crawler;
@@ -38,20 +38,20 @@ class CategoryControllerTest extends AbstractControllerTestCase
         $expectedCategories = [
             [
                 'id' => $response[0]['id'],
-                'title_de' => 'Sonstiges',
-                'title_en' => 'Others',
+                'titleDe' => 'Sonstiges',
+                'titleEn' => 'Others',
                 'slug' => 'others',
-            ],[
+            ], [
                 'id' => $response[1]['id'],
-                'title_de' => 'Vegetarisch',
-                'title_en' => 'Vegetarian',
+                'titleDe' => 'Vegetarisch',
+                'titleEn' => 'Vegetarian',
                 'slug' => 'vegetarian',
-            ],[
+            ], [
                 'id' => $response[2]['id'],
-                'title_de' => 'Fleisch',
-                'title_en' => 'Meat',
+                'titleDe' => 'Fleisch',
+                'titleEn' => 'Meat',
                 'slug' => 'meat',
-            ]
+            ],
         ];
 
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());

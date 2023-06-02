@@ -34,6 +34,12 @@
     "table": {
       "title": "Title",
       "actions": "Actions"
+    },
+    "popover": {
+      "create": "Create new Category",
+      "edit": "Edit Category",
+      "german": "German Title",
+      "english": "English Title"
     }
   },
   "changeLanguage": "Deutsche Version",

@@ -108,7 +108,7 @@ export function useTimeSlots() {
         const { error, response } = await deleteSlot(slug);
 
         if (error.value || response.value?.status !== 'success') {
-            TimeSlotState.error = 'Error on creating slot';
+            TimeSlotState.error = 'Error on deleting slot';
             return;
         }
 

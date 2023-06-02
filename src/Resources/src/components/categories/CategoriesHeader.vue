@@ -1,9 +1,12 @@
 <template>
-  <div class="items-center xl:my-[42px] xl:grid xl:grid-cols-2">
+  <div class="grid grid-rows-2 items-center xl:my-[42px] xl:grid-cols-2">
     <h2 class="text-center xl:justify-self-start">
       {{ t('category.header') }}
     </h2>
-    <Popover class="xl:justify-self-end">
+    <Popover
+      :translate-x-min="'-15%'"
+      class="justify-self-center xl:justify-self-end"
+    >
       <template #button="{ open }">
         <CreateButton
           :open="open"

@@ -1,6 +1,6 @@
+import getCategoriesData from "@/api/getCategoriesData";
 import { ref } from "vue";
-import success from "../fixtures/Success.json";
-import deleteSlot from "@/api/deleteSlot";
+import Categories from "../fixtures/getCategories.json";
 import { describe, expect, it } from "@jest/globals";
 import useApi from "@/api/api";
 
@@ -9,7 +9,7 @@ const asyncFunc: () => Promise<void> = async () => {
 };
 
 const mockedReturnValue = {
-    response: ref(success),
+    response: ref(Categories),
     request: asyncFunc,
     error: ref(false)
 }
@@ -19,12 +19,11 @@ useApi = jest.fn(useApi);
 // @ts-expect-error continuation of expect error from line above
 useApi.mockReturnValue(mockedReturnValue);
 
-describe('Test postDeleteSlot', () => {
-    it('should return a success on deleting a slot', async () => {
-        const { error, response } = await deleteSlot('1');
+describe('Test getCategoriesData', () => {
+    it('should return a list of categories', async () => {
+        const { categories, error } = await getCategoriesData();
 
-        expect(useApi).toHaveBeenCalled();
         expect(error.value).toBeFalsy();
-        expect(response.value.status).toEqual("success");
+        expect(categories.value).toEqual(Categories);
     });
 });

@@ -1,4 +1,4 @@
-import { useCategories } from "@/stores/categoriesStore";
+import { Category, useCategories } from "@/stores/categoriesStore";
 import success from "../fixtures/Success.json";
 import Categories from "../fixtures/getCategories.json";
 import { ref } from "vue";
@@ -24,7 +24,7 @@ const getMockedResponses = (method: string, url: string) => {
         }
     } else if (url.includes('api/categories') && method === 'PUT') {
         return {
-            response: ref(Categories[1]),
+            response: ref(category2),
             request: asyncFunc,
             error: ref(false)
         }
@@ -35,9 +35,23 @@ const getMockedResponses = (method: string, url: string) => {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 useApi = jest.fn().mockImplementation((method: string, url: string) => getMockedResponses(method, url));
 
+const category1: Category = {
+    'id': 4,
+    'titleDe': 'Sonstiges',
+    'titleEn': 'Others',
+    'slug': 'others'
+};
+
+const category2: Category = {
+    'id': 4,
+    'titleDe': 'Vegetarisch',
+    'titleEn': 'Vegetarian',
+    'slug': 'others'
+};
+
 describe('Test categoriesStore', () => {
 
-    const { resetState, CategoriesState, fetchCategories } = useCategories();
+    const { resetState, CategoriesState, fetchCategories, editCategory } = useCategories();
 
     beforeEach(() => {
         resetState();
@@ -55,5 +69,15 @@ describe('Test categoriesStore', () => {
         expect(CategoriesState.categories).toEqual(Categories);
         expect(CategoriesState.error).toBe('');
         expect(CategoriesState.isLoading).toBeFalsy();
+    });
+
+    it('should update the state', async () => {
+        await fetchCategories();
+
+        expect(CategoriesState.categories[0]).toEqual(category1);
+
+        await editCategory(0, 'Vegetarisch', 'Vegetarian');
+
+        expect(CategoriesState.categories[0]).toEqual(category2);
     });
 })

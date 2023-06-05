@@ -4,7 +4,7 @@ import InputLabel from "@/components/misc/InputLabel.vue";
 import { describe, it } from "@jest/globals";
 import { mount } from "@vue/test-utils";
 
-jest.mock("vue-i18n", () => ({
+jest.mock('vue-i18n', () => ({
     useI18n: () => ({
         t: (key: string) => key,
         locale: computed(() => 'en')
@@ -12,7 +12,7 @@ jest.mock("vue-i18n", () => ({
 }));
 
 describe('Test SlotCreationPanel', () => {
-    it('should contain a header, three InputLbel-components and a separate inpt field', () => {
+    it('should contain a header, three InputLbel-components and a separate input field', () => {
         const wrapper = mount(SlotCreationPanel, {
             props: {
                 header: 'test',

@@ -22,9 +22,9 @@ useApi.mockReturnValue(mockedReturnValue);
 
 const category: Category = {
     id: 1,
-    titleDe: "Test",
-    titleEn: "Test",
-    slug: "test"
+    titleDe: 'Test',
+    titleEn: 'Test',
+    slug: 'test'
 };
 
 describe('Test postCreateCategory', () => {

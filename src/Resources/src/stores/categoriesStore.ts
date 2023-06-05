@@ -84,11 +84,18 @@ export function useCategories() {
         }
     }
 
+    function resetState() {
+        CategoriesState.categories = [];
+        CategoriesState.error = '';
+        CategoriesState.isLoading = false;
+    }
+
     return {
         CategoriesState: readonly(CategoriesState),
         fetchCategories,
         deleteCategoryWithSlug,
         createCategory,
-        editCategory
+        editCategory,
+        resetState
     }
 }

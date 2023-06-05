@@ -1,7 +1,7 @@
 import { ref } from "vue";
-import success from "../fixtures/Success.json";
-import deleteSlot from "@/api/deleteSlot";
-import { describe, expect, it } from "@jest/globals";
+import TimeSlots from "../fixtures/getTimeSlots.json";
+import { describe, it } from "@jest/globals";
+import { useTimeSlotData } from "@/api/getTimeSlotData";
 import useApi from "@/api/api";
 
 const asyncFunc: () => Promise<void> = async () => {
@@ -9,7 +9,7 @@ const asyncFunc: () => Promise<void> = async () => {
 };
 
 const mockedReturnValue = {
-    response: ref(success),
+    response: ref(TimeSlots.response),
     request: asyncFunc,
     error: ref(false)
 }
@@ -19,12 +19,11 @@ useApi = jest.fn(useApi);
 // @ts-expect-error continuation of expect error from line above
 useApi.mockReturnValue(mockedReturnValue);
 
-describe('Test postDeleteSlot', () => {
-    it('should return a success on deleting a slot', async () => {
-        const { error, response } = await deleteSlot('1');
+describe('Test getTimeSlotData', () => {
+    it('should return a list of TimeSlots', async () => {
+        const { timeslots, error } = await useTimeSlotData();
 
-        expect(useApi).toHaveBeenCalled();
         expect(error.value).toBeFalsy();
-        expect(response.value.status).toEqual("success");
+        expect(timeslots.value).toEqual(TimeSlots.state);
     });
 });

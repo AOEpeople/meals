@@ -168,11 +168,12 @@ MealzMealBundle_DishVariation_delete:
 
 MealzMealBundle_Dishes:
   path: /dishes
-  defaults: { _controller: App\Mealz\MealBundle\Controller\TestController::renderIndex }
+  defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
 
-MealzMealBundle_Dish:
-    path:  /dish
-    defaults: { _controller: App\Mealz\MealBundle\Controller\DishController::list }
+MealzMealBundle_api_dishes:
+    path:  /api/dishes
+    defaults: { _controller: App\Mealz\MealBundle\Controller\DishController::getDishes }
+    methods: [GET]
 
 MealzMealBundle_Dish_Form_empty:
     path:  /dish/form

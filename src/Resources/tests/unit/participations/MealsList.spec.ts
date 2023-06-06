@@ -22,7 +22,7 @@ useApi = jest.fn(useApi);
 // @ts-expect-error continuation of expect error from line above
 useApi.mockReturnValue(mockedReturnValue);
 
-jest.mock("vue-i18n", () => ({
+jest.mock('vue-i18n', () => ({
     useI18n: () => ({
         t: (key: string) => key,
         locale: computed(() => 'en')
@@ -31,7 +31,7 @@ jest.mock("vue-i18n", () => ({
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockSetMealsListHeight = jest.fn((height: number, elementId: string) => void 0);
-jest.mock("@/services/useComponentHeights", () => ({
+jest.mock('@/services/useComponentHeights', () => ({
     useComponentHeights: () => ({
         setMealListHight: mockSetMealsListHeight,
         windowWidth: ref(1080)

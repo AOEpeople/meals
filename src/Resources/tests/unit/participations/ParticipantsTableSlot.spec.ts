@@ -12,8 +12,8 @@ const bookedDataFour: IBookedData = { booked: [1, 4] };
 
 const mealOne: IMealWithVariations = {
     title: {
-        en: "Test1",
-        de: "Test1"
+        en: 'Test1',
+        de: 'Test1'
     },
     variations: [],
     participations: 3,
@@ -21,8 +21,8 @@ const mealOne: IMealWithVariations = {
 }
 const mealThree: IMealWithVariations = {
     title: {
-        en: "Test3",
-        de: "Test3"
+        en: 'Test3',
+        de: 'Test3'
     },
     variations: [],
     participations: 1,
@@ -30,8 +30,8 @@ const mealThree: IMealWithVariations = {
 }
 const mealFour: IMealWithVariations = {
     title: {
-        en: "Test4",
-        de: "Test4"
+        en: 'Test4',
+        de: 'Test4'
     },
     variations: [],
     participations: 2,
@@ -39,8 +39,8 @@ const mealFour: IMealWithVariations = {
 }
 const mealTwo: IMealWithVariations = {
     title: {
-        en: "Test2",
-        de: "Test2"
+        en: 'Test2',
+        de: 'Test2'
     },
     variations: [mealThree, mealFour],
     participations: 5,
@@ -48,16 +48,16 @@ const mealTwo: IMealWithVariations = {
 }
 
 const participantsData: Dictionary<IBookedData> = {
-    "testNameOne": bookedDataOne,
-    "testNameTwo": bookedDataTwo,
-    "testNameThree": bookedDataThree,
-    "testNameFour": bookedDataFour
+    'testNameOne': bookedDataOne,
+    'testNameTwo': bookedDataTwo,
+    'testNameThree': bookedDataThree,
+    'testNameFour': bookedDataFour
 }
 
 describe('Test ParticipationsTableSlot', () => {
     it('should display the slotname and render four ParticipantTableRows', () => {
         const meals = [mealOne, mealTwo];
-        const slotname = "testslot 12:00";
+        const slotname = 'testslot 12:00';
 
         const wrapper = mount(ParticipantsTableSlot, {
             props: {

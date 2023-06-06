@@ -132,9 +132,9 @@ class Slot implements JsonSerializable
         return $this->slug ?? '';
     }
 
-    public function setSlug(string $slug): string
+    public function setSlug(string $slug): void
     {
-        return $this->slug = $slug;
+        $this->slug = $slug;
     }
 
     public function getParticipants(): ArrayCollection
@@ -155,6 +155,6 @@ class Slot implements JsonSerializable
             'order' => $this->order,
             'enabled' => $this->isEnabled(),
             'slug' => $this->slug,
-            ];
+        ];
     }
 }

@@ -4,7 +4,7 @@ import { computed } from "vue";
 import { mount } from "@vue/test-utils";
 import { TimeSlot } from "@/stores/timeSlotStore";
 
-jest.mock("vue-i18n", () => ({
+jest.mock('vue-i18n', () => ({
     useI18n: () => ({
         t: (key: string) => key,
         locale: computed(() => 'en')
@@ -12,7 +12,7 @@ jest.mock("vue-i18n", () => ({
 }));
 
 const timeSlot: TimeSlot = {
-    title: "TestSlot 1234",
+    title: 'TestSlot 1234',
     limit: 12,
     order: 0,
     enabled: true

@@ -1,8 +1,8 @@
+import { ISuccess } from "@/interfaces/ISuccess";
 import useApi from "./api";
-import { ISuccess } from "@/api/postCreateSlot";
 
 /**
- * Performs a POST request to delete a slot with a given ID
+ * Performs a DELETE request to delete a slot with a given identifier
  * @param slug The identifier of the slot
  */
 export default async function deleteSlot(slug: string) {

@@ -10,8 +10,12 @@
     <XIcon
       v-if="action === Action.DELETE"
       class="z-[1] aspect-square h-10 w-10"
+      :class="widthFull ? 'w-8' : 'w-8'"
     />
-    <p class="z-[1] m-0 flex h-full w-full place-items-center text-[10px] sm:text-[12px]">
+    <p
+      class="z-[1] m-0 flex h-full place-items-center text-[10px] sm:text-[12px]"
+      :class="widthFull ? 'w-full' : ''"
+    >
       {{ btnText }}
     </p>
   </button>
@@ -24,8 +28,10 @@ import { XIcon, PencilIcon } from '@heroicons/vue/outline';
 withDefaults(defineProps<{
   btnText: string,
   action: Action,
-  row?: boolean
+  row?: boolean,
+  widthFull?: boolean
 }>(), {
-  row: true
+  row: true,
+  widthFull: true
 });
 </script>

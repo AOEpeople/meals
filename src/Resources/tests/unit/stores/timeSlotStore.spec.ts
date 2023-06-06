@@ -2,7 +2,7 @@ import { useTimeSlots } from "@/stores/timeSlotStore";
 import { beforeEach, describe } from "@jest/globals";
 import { ref } from "vue";
 import updatedSlot from "../fixtures/updatedSlot.json";
-import success from "../fixtures/createSlot.json";
+import success from "../fixtures/Success.json";
 import timeSlots from "../fixtures/getTimeSlots.json";
 import useApi from "@/api/api";
 

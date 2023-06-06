@@ -29,7 +29,18 @@
     "add_variation": "Variation hinzufügen"
   },
   "category": {
-    "create": "Kategorie erstellen"
+    "create": "Kategorie erstellen",
+    "header": "Liste der Kategorien",
+    "table": {
+      "title": "Titel",
+      "actions": "Aktionen"
+    },
+    "popover": {
+      "create": "Neue Kategorie erstellen",
+      "edit": "Kategorie editieren",
+      "german": "Deutscher Titel",
+      "english": "Englischer Titel"
+    }
   },
   "changeLanguage": "English version",
   "combiModal": {

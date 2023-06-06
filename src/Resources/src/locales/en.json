@@ -29,7 +29,18 @@
     "add_variation": "add new Variation"
   },
   "category": {
-    "create": "create category"
+    "create": "create category",
+    "header": "List of Categories",
+    "table": {
+      "title": "Title",
+      "actions": "Actions"
+    },
+    "popover": {
+      "create": "Create new Category",
+      "edit": "Edit Category",
+      "german": "German Title",
+      "english": "English Title"
+    }
   },
   "changeLanguage": "Deutsche Version",
   "combiModal": {

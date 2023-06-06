@@ -19,22 +19,22 @@ MealzMealBundle_api_transactions:
 
 MealzMealBundle_api_slots:
   path: /api/slots
-  defaults: { _controller: App\Mealz\MealBundle\Controller\ApiController::getTimeSlotData }
+  defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::getTimeSlots }
   methods: [GET]
 
 MealzMealBundle_api_slots_update:
   path: /api/slots/{slug}
-  defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::updateSlot }
+  defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::update }
   methods: [PUT]
 
 MealzMealBundle_api_slots_create:
   path: /api/slots
-  defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::createSlot }
+  defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::new }
   methods: [POST]
 
 MealzMealBundle_api_slots_delete:
   path: /api/slots/{slug}
-  defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::deleteSlot }
+  defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::delete }
   methods: [DELETE]
 
 MealzMealBundle_api_environmentals:
@@ -194,29 +194,25 @@ MealzMealBundle_Dish_delete:
     path:  /dish/{slug}/delete
     defaults: { _controller: App\Mealz\MealBundle\Controller\DishController::deleteAction }
 
-MealzMealBundle_Category:
-    path:  /category
-    defaults: { _controller: App\Mealz\MealBundle\Controller\CategoryController::list }
+MealzMealBundle_api_categories:
+    path: /api/categories
+    defaults: { _controller: App\Mealz\MealBundle\Controller\CategoryController::getCategories }
+    methods: [GET]
 
-MealzMealBundle_Category_new:
-    path:  /category/new
+MealzMealBundle_api_categories_new:
+    path:  /api/categories
     defaults: { _controller: App\Mealz\MealBundle\Controller\CategoryController::new }
+    methods: [POST]
 
-MealzMealBundle_Category_edit:
-    path:  /category/{slug}/edit
-    defaults: { _controller: App\Mealz\MealBundle\Controller\CategoryController::edit }
+MealzMealBundle_Category_update:
+    path:  /api/categories/{slug}
+    defaults: { _controller: App\Mealz\MealBundle\Controller\CategoryController::update }
+    methods: [PUT]
 
 MealzMealBundle_Category_delete:
-    path:  /category/{slug}/delete
+    path:  /api/categories/{slug}
     defaults: { _controller: App\Mealz\MealBundle\Controller\CategoryController::delete }
-
-MealzMealBundle_Category_Form_empty:
-    path:  /category/form
-    defaults: { _controller: App\Mealz\MealBundle\Controller\CategoryController::getEmptyForm }
-
-MealzMealBundle_Category_Form_preFilled:
-    path:  /category/form/{slug}
-    defaults: { _controller: App\Mealz\MealBundle\Controller\CategoryController::getPreFilledForm }
+    methods: [DELETE]
 
 MealzMealBundle_Print_participations:
     path: /print/participations

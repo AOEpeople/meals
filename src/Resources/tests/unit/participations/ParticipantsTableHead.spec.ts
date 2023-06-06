@@ -7,7 +7,7 @@ import { flushPromises, mount, shallowMount } from "@vue/test-utils";
 import { getShowParticipations } from "@/api/getShowParticipations";
 import MealHead from "@/components/participations/MealHead.vue";
 
-jest.mock("vue-i18n", () => ({
+jest.mock('vue-i18n', () => ({
     useI18n: () => ({
         t: (key: string) => key,
         locale: computed(() => 'en')

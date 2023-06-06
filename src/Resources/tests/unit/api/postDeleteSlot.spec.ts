@@ -1,5 +1,5 @@
 import { ref } from "vue";
-import success from "../fixtures/createSlot.json";
+import success from "../fixtures/Success.json";
 import deleteSlot from "@/api/deleteSlot";
 import { describe, expect, it } from "@jest/globals";
 import useApi from "@/api/api";

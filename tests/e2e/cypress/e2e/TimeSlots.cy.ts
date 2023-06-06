@@ -1,18 +1,50 @@
-describe("Test TimeSlots View", () => {
+describe('Test TimeSlots View', () => {
   beforeEach(() => {
-    cy.setCookie("locale", "de");
-    cy.loginAs("kochomi");
+    cy.setCookie('locale', 'de');
+    cy.loginAs('kochomi');
     cy.visitMeals();
   });
 
   it("should be able to navigate to '/time-slots' and have the header displayed", () => {
-    cy.visit("/time-slots");
+    cy.visit('/time-slots');
 
-    cy.get("h2").should((ele) => {
-      expect(ele.first()).to.contain("Liste der Slots");
+    cy.get('h2').should((ele) => {
+      expect(ele.first()).to.contain('Liste der Slots');
     });
 
     cy.contains('button', '+ Slot erstellen')
+  });
+
+  it('should be able to switch the locale to english and back to german', () => {
+    cy.visit('/time-slots');
+
+    // Switch language to english
+    cy.get('span').contains('English version').parent().click();
+
+    // Check wether text has switched to english
+    cy.get('h2').should(ele => {
+        expect(ele.first()).to.contain('List of Slots');
+    });
+    cy.contains('button', '+ create Slot');
+    cy.contains('p', 'Edit');
+    cy.contains('p', 'Delete');
+    cy.contains('th', 'Actions');
+    cy.contains('th', 'Limit');
+    cy.contains('th', 'Title');
+
+    // Switch language back to german
+    cy.get('span').contains('Deutsche Version').parent().click();
+
+    // Check wether text has switched to german
+    cy.get('h2').should(ele => {
+        expect(ele.first()).to.contain('Liste der Slots');
+    });
+    cy.contains('button', '+ Slot erstellen');
+    cy.contains('p', 'Editieren');
+    cy.contains('p', 'Löschen');
+    cy.contains('th', 'Aktionen');
+    cy.contains('th', 'Limit');
+    cy.contains('th', 'Titel');
   });
 
   it('should be able to create, edit and delete a slot', () => {

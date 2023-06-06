@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Category;
-use App\Mealz\MealBundle\Service\CategoryService;
+use App\Mealz\MealBundle\Repository\CategoryRepositoryInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -16,30 +17,44 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class CategoryController extends BaseListController
 {
-    private CategoryService $categorySrv;
+    private CategoryRepositoryInterface $categoryRepo;
+    private EntityManagerInterface $em;
 
     public function __construct(
-        CategoryService $categorySrv
+        CategoryRepositoryInterface $categoryRepo,
+        EntityManagerInterface $em
     ) {
-        $this->categorySrv = $categorySrv;
+        $this->categoryRepo = $categoryRepo;
+        $this->em = $em;
     }
 
     /**
      * Send Categories Data.
      */
-    public function getCategoriesData(): JsonResponse
+    public function getCategories(): JsonResponse
     {
-        $categories = $this->categorySrv->getAllCategories();
+        $categories = $this->categoryRepo->findAll();
 
         return new JsonResponse($categories, 200);
     }
 
-    public function editCategory(Request $request, Category $category): JsonResponse
+    /**
+     * Updates a category.
+     */
+    public function update(Request $request, Category $category): JsonResponse
     {
         $parameters = json_decode($request->getContent(), true);
 
         try {
-            $category = $this->categorySrv->editCategory($parameters, $category);
+            if (isset($parameters['titleEn'])) {
+                $category->setTitleEn($parameters['titleEn']);
+            }
+            if (isset($parameters['titleDe'])) {
+                $category->setTitleDe($parameters['titleDe']);
+            }
+
+            $this->em->persist($category);
+            $this->em->flush();
 
             return new JsonResponse($category, 200);
         } catch (Exception $e) {
@@ -49,10 +64,14 @@ class CategoryController extends BaseListController
         }
     }
 
-    public function deleteCategory(Category $category): JsonResponse
+    /**
+     * Deletes a category.
+     */
+    public function delete(Category $category): JsonResponse
     {
         try {
-            $this->categorySrv->deleteCategory($category);
+            $this->em->remove($category);
+            $this->em->flush();
         } catch (Exception $e) {
             $this->logException($e);
 
@@ -62,18 +81,33 @@ class CategoryController extends BaseListController
         return new JsonResponse(['status' => 'success'], 200);
     }
 
-    public function createCategory(Request $request): JsonResponse
+    /**
+     * Creates a new category.
+     */
+    public function new(Request $request): JsonResponse
     {
         $parameters = json_decode($request->getContent(), true);
 
-        try {
-            $this->categorySrv->createCategory($parameters);
-        } catch (Exception $e) {
-            $this->logException($e);
-
-            return new JsonResponse(['status' => $e->getMessage()], 500);
+        if (isset($parameters['titleDe']) && isset($parameters['titleEn']) && null === $this->getCategoryByTitleEn($parameters['titleEn']) && null === $this->getCategoryByTitleDe($parameters['titleDe'])) {
+            $category = new Category();
+            $category->setTitleEn($parameters['titleEn']);
+            $category->setTitleDe($parameters['titleDe']);
+            $this->em->persist($category);
+            $this->em->flush();
+        } else {
+            return new JsonResponse(['status' => 'Category titles not set or they already exist'], 500);
         }
 
         return new JsonResponse(['status' => 'success'], 200);
+    }
+
+    private function getCategoryByTitleEn(string $title): ?Category
+    {
+        return $this->categoryRepo->findOneBy(['title_en' => $title]);
+    }
+
+    private function getCategoryByTitleDe(string $title): ?Category
+    {
+        return $this->categoryRepo->findOneBy(['title_de' => $title]);
     }
 }

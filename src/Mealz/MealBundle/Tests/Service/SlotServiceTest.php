@@ -73,23 +73,4 @@ class SlotServiceTest extends AbstractDatabaseTestCase
 
         $this->assertFalse($slot->isDisabled());
     }
-
-    /*
-     * @test
-     *
-     * @testdox Delete a slot.
-     */
-    public function delete(): void
-    {
-        $slot = $this->slotRepo->findOneBy(['deleted' => 0]);
-
-        $this->assertInstanceOf(Slot::class, $slot);
-
-        $slotID = $slot->getId();
-        $this->sut->delete($slot);
-        $this->em->clear();
-
-        $slot = $this->slotRepo->find($slotID);
-        $this->assertNull($slot);
-    }
 }

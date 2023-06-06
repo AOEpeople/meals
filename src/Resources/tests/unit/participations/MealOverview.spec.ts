@@ -14,13 +14,13 @@ const asyncFunc: () => Promise<void> = async () => {
 
 const getMockedResponses = (url: string) => {
     switch(url) {
-        case "api/meals/nextThreeDays":
+        case 'api/meals/nextThreeDays':
             return {
                 response: ref(nextThreeDays.dataOne),
                 request: asyncFunc,
                 error: ref(false)
             };
-        case "/api/print/participations":
+        case '/api/print/participations':
             return {
                 response: ref(participations),
                 request: asyncFunc,
@@ -31,7 +31,7 @@ const getMockedResponses = (url: string) => {
     }
 }
 
-jest.mock("vue-i18n", () => ({
+jest.mock('vue-i18n', () => ({
     useI18n: () => ({
         t: (key: string) => key,
         locale: computed(() => 'en')

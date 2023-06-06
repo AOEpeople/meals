@@ -82,7 +82,7 @@ describe('Test ParticipantsTableBody', () => {
         Element.prototype.scrollBy = () => void {};
 
         const wrapper = mount(ParticipantsTableBody);
-        const slotNames = ["Active w/ limit", "Active w/o limit"];
+        const slotNames = ['Active w/ limit', 'Active w/o limit'];
 
         await flushPromises();
 

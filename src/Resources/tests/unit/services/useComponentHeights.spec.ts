@@ -27,10 +27,10 @@ describe('Test the composable useComponenetHeights', () => {
 
         const listOfHeights = [100, 125, 60, 14];
 
-        result?.setMealListHight(listOfHeights[0], "");
-        result?.setMealOverviewHeight(listOfHeights[1], "");
-        result?.setNavBarHeight(listOfHeights[2], "");
-        result?.setTableHeadHight(listOfHeights[3], "");
+        result?.setMealListHight(listOfHeights[0], '');
+        result?.setMealOverviewHeight(listOfHeights[1], '');
+        result?.setNavBarHeight(listOfHeights[2], '');
+        result?.setTableHeadHight(listOfHeights[3], '');
 
         expect(result?.maxTableHeight.value).toBe(1200 - listOfHeights.reduce((a, b) => a + b));
     });

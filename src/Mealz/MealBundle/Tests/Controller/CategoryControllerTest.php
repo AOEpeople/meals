@@ -7,7 +7,6 @@ namespace App\Mealz\MealBundle\Tests\Controller;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
 use App\Mealz\MealBundle\Entity\Category;
 use App\Mealz\MealBundle\Repository\CategoryRepositoryInterface;
-use App\Mealz\MealBundle\Service\CategoryService;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,7 +19,6 @@ class CategoryControllerTest extends AbstractControllerTestCase
 {
     private EntityManagerInterface $em;
     private CategoryRepositoryInterface $categoryRepo;
-    private CategoryService $categoryService;
 
     protected function setUp(): void
     {
@@ -33,8 +31,6 @@ class CategoryControllerTest extends AbstractControllerTestCase
             new LoadCategories(),
         ]);
 
-        /* @var CategoryService $categoryService */
-        $this->categoryService = static::$container->get(CategoryService::class);
         $this->categoryRepo = static::$container->get(CategoryRepositoryInterface::class);
         $this->em = static::$container->get(EntityManagerInterface::class);
 

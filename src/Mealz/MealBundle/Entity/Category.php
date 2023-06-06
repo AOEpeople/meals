@@ -64,9 +64,9 @@ class Category implements JsonSerializable
         return $this->slug ?? '';
     }
 
-    public function setSlug(string $slug): string
+    public function setSlug(string $slug): void
     {
-        return $this->slug = $slug;
+        $this->slug = $slug;
     }
 
     /**

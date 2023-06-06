@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Slot;
-use App\Mealz\MealBundle\Service\SlotService;
+use App\Mealz\MealBundle\Repository\SlotRepositoryInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -16,11 +17,46 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class SlotController extends BaseListController
 {
-    public function updateSlot(Request $request, Slot $slot, SlotService $slotService): JsonResponse
+    private EntityManagerInterface $em;
+    private SlotRepositoryInterface $slotRepo;
+
+    public function __construct(
+        EntityManagerInterface $em,
+        SlotRepositoryInterface $slotRepo
+    ) {
+        $this->em = $em;
+        $this->slotRepo = $slotRepo;
+    }
+
+    /**
+     * Send TimeSlot Data.
+     */
+    public function getTimeSlots(): JsonResponse
+    {
+        $slots = $this->slotRepo->findBy(['deleted' => 0]);
+
+        return new JsonResponse($slots, 200);
+    }
+
+    public function update(Request $request, Slot $slot): JsonResponse
     {
         try {
             $parameters = json_decode($request->getContent(), true);
-            $slot = $slotService->updateSlot($parameters, $slot);
+            if (isset($parameters['title'])) {
+                $slot->setTitle($parameters['title']);
+            }
+            if (isset($parameters['limit'])) {
+                $slot->setLimit($parameters['limit']);
+            }
+            if (isset($parameters['order'])) {
+                $slot->setOrder($parameters['order']);
+            }
+            if (isset($parameters['enabled'])) {
+                $slot->setDisabled(!$parameters['enabled']);
+            }
+
+            $this->em->persist($slot);
+            $this->em->flush();
 
             return new JsonResponse($slot, 200);
         } catch (Exception $e) {
@@ -28,10 +64,13 @@ class SlotController extends BaseListController
         }
     }
 
-    public function deleteSlot(Slot $slot, SlotService $slotService): JsonResponse
+    public function delete(Slot $slot): JsonResponse
     {
         try {
-            $slotService->delete($slot);
+            $slot->setDeleted(true);
+
+            $this->em->persist($slot);
+            $this->em->flush();
         } catch (Exception $e) {
             $this->logException($e);
 
@@ -41,11 +80,29 @@ class SlotController extends BaseListController
         return new JsonResponse(['status' => 'success']);
     }
 
-    public function createSlot(Request $request, SlotService $slotService): JsonResponse
+    /**
+     * Creates a new slot.
+     */
+    public function new(Request $request): JsonResponse
     {
         try {
             $parameters = json_decode($request->getContent(), true);
-            $slotService->createSlot($parameters);
+            if (!isset($parameters['title'])) {
+                throw new Exception('Title is missing');
+            } elseif ('' === $parameters['title']) {
+                throw new Exception('Title is empty');
+            }
+            $slot = new Slot();
+            $slot->setTitle($parameters['title']);
+            if (isset($parameters['limit'])) {
+                $slot->setLimit($parameters['limit']);
+            }
+            if (isset($parameters['order'])) {
+                $slot->setOrder($parameters['order']);
+            }
+
+            $this->em->persist($slot);
+            $this->em->flush();
         } catch (Exception $e) {
             $this->logException($e);
 

@@ -13,7 +13,6 @@ use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\MealBundle\Repository\SlotRepositoryInterface;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use InvalidArgumentException;
 
 class SlotService
@@ -35,27 +34,6 @@ class SlotService
         $this->dayRepo = $dayRepo;
     }
 
-    public function updateSlot(array $parameters, Slot $slot): Slot
-    {
-        if (isset($parameters['title'])) {
-            $slot->setTitle($parameters['title']);
-        }
-        if (isset($parameters['limit'])) {
-            $slot->setLimit($parameters['limit']);
-        }
-        if (isset($parameters['order'])) {
-            $slot->setOrder($parameters['order']);
-        }
-        if (isset($parameters['enabled'])) {
-            $slot->setDisabled(!$parameters['enabled']);
-        }
-
-        $this->em->persist($slot);
-        $this->em->flush();
-
-        return $slot;
-    }
-
     public function updateState(Slot $slot, string $state): void
     {
         if (!in_array($state, ['0', '1'], true)) {
@@ -63,14 +41,6 @@ class SlotService
         }
 
         $slot->setDisabled('1' === $state);
-
-        $this->em->persist($slot);
-        $this->em->flush();
-    }
-
-    public function delete(Slot $slot): void
-    {
-        $slot->setDeleted(true);
 
         $this->em->persist($slot);
         $this->em->flush();
@@ -114,29 +84,6 @@ class SlotService
         }
 
         return $slotsStatus;
-    }
-
-    /**
-     * Creates a new slot.
-     */
-    public function createSlot(array $parameters): void
-    {
-        if (!isset($parameters['title'])) {
-            throw new Exception('Title is missing');
-        } elseif ('' === $parameters['title']) {
-            throw new Exception('Title is empty');
-        }
-        $slot = new Slot();
-        $slot->setTitle($parameters['title']);
-        if (isset($parameters['limit'])) {
-            $slot->setLimit($parameters['limit']);
-        }
-        if (isset($parameters['order'])) {
-            $slot->setOrder($parameters['order']);
-        }
-
-        $this->em->persist($slot);
-        $this->em->flush();
     }
 
     /**
@@ -204,11 +151,6 @@ class SlotService
         }
 
         return count($count);
-    }
-
-    public function getAllSlots(): array
-    {
-        return $this->slotRepo->findBy(['deleted' => 0]);
     }
 
     public function getAllActiveSlots(): array

@@ -19,22 +19,22 @@ MealzMealBundle_api_transactions:
 
 MealzMealBundle_api_slots:
   path: /api/slots
-  defaults: { _controller: App\Mealz\MealBundle\Controller\ApiController::getTimeSlotData }
+  defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::getTimeSlots }
   methods: [GET]
 
 MealzMealBundle_api_slots_update:
   path: /api/slots/{slug}
-  defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::updateSlot }
+  defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::update }
   methods: [PUT]
 
 MealzMealBundle_api_slots_create:
   path: /api/slots
-  defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::createSlot }
+  defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::new }
   methods: [POST]
 
 MealzMealBundle_api_slots_delete:
   path: /api/slots/{slug}
-  defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::deleteSlot }
+  defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::delete }
   methods: [DELETE]
 
 MealzMealBundle_api_environmentals:
@@ -196,22 +196,22 @@ MealzMealBundle_Dish_delete:
 
 MealzMealBundle_api_categories:
     path: /api/categories
-    defaults: { _controller: App\Mealz\MealBundle\Controller\CategoryController::getCategoriesData }
+    defaults: { _controller: App\Mealz\MealBundle\Controller\CategoryController::getCategories }
     methods: [GET]
 
-MealzMealBundle_api_categories_create:
+MealzMealBundle_api_categories_new:
     path:  /api/categories
-    defaults: { _controller: App\Mealz\MealBundle\Controller\CategoryController::createCategory }
+    defaults: { _controller: App\Mealz\MealBundle\Controller\CategoryController::new }
     methods: [POST]
 
-MealzMealBundle_Category_edit:
+MealzMealBundle_Category_update:
     path:  /api/categories/{slug}
-    defaults: { _controller: App\Mealz\MealBundle\Controller\CategoryController::editCategory }
+    defaults: { _controller: App\Mealz\MealBundle\Controller\CategoryController::update }
     methods: [PUT]
 
 MealzMealBundle_Category_delete:
     path:  /api/categories/{slug}
-    defaults: { _controller: App\Mealz\MealBundle\Controller\CategoryController::deleteCategory }
+    defaults: { _controller: App\Mealz\MealBundle\Controller\CategoryController::delete }
     methods: [DELETE]
 
 MealzMealBundle_Print_participations:

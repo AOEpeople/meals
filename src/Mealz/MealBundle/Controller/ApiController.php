@@ -218,18 +218,6 @@ class ApiController extends BaseController
     }
 
     /**
-     * Send TimeSlot Data for logged-in cook.
-     *
-     * @Security("is_granted('ROLE_USER')")
-     */
-    public function getTimeSlotData(): JsonResponse
-    {
-        $slots = $this->slotSrv->getAllSlots();
-
-        return new JsonResponse($slots, 200);
-    }
-
-    /**
      * @throws Exception
      */
     private function convertMealForDashboard(Meal $meal, ?Profile $profile): array

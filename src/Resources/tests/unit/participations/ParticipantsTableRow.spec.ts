@@ -8,8 +8,8 @@ const bookedDataTwo: IBookedData = { booked: [1, 3, 5] };
 
 const mealOne: IMealWithVariations = {
     title: {
-        en: "Test1",
-        de: "Test1"
+        en: 'Test1',
+        de: 'Test1'
     },
     variations: [],
     participations: 3,
@@ -17,8 +17,8 @@ const mealOne: IMealWithVariations = {
 }
 const mealThree: IMealWithVariations = {
     title: {
-        en: "Test3",
-        de: "Test3"
+        en: 'Test3',
+        de: 'Test3'
     },
     variations: [],
     participations: 1,
@@ -26,8 +26,8 @@ const mealThree: IMealWithVariations = {
 }
 const mealFour: IMealWithVariations = {
     title: {
-        en: "Test4",
-        de: "Test4"
+        en: 'Test4',
+        de: 'Test4'
     },
     variations: [],
     participations: 2,
@@ -35,8 +35,8 @@ const mealFour: IMealWithVariations = {
 }
 const mealTwo: IMealWithVariations = {
     title: {
-        en: "Test2",
-        de: "Test2"
+        en: 'Test2',
+        de: 'Test2'
     },
     variations: [mealThree, mealFour],
     participations: 5,
@@ -45,8 +45,8 @@ const mealTwo: IMealWithVariations = {
 
 const mealFive: IMealWithVariations = {
     title: {
-        "en": "Combined Dish",
-        "de": "Kombi-Gericht"
+        'en': 'Combined Dish',
+        'de': 'Kombi-Gericht'
     },
     variations: [],
     participations: 1,
@@ -57,7 +57,7 @@ describe('Test ParticipantsTableRow', () => {
     it('should contain three td-elements', () => {
         const wrapper = mount(ParticipantsTableRow, {
            props: {
-                participantName: "test-user",
+                participantName: 'test-user',
                 bookedMeals: bookedDataOne,
                 meals: [mealOne, mealTwo]
            }
@@ -81,7 +81,7 @@ describe('Test ParticipantsTableRow', () => {
     it('should contain four td-elements with two variations, one normal meal and a combi meal', () => {
         const wrapper = mount(ParticipantsTableRow, {
             props: {
-                participantName: "test-user",
+                participantName: 'test-user',
                 bookedMeals: bookedDataTwo,
                 meals: [mealOne, mealTwo, mealFive]
             }

@@ -3,7 +3,7 @@ import { computed, nextTick, reactive } from "vue";
 import { describe, expect, it } from "@jest/globals";
 import { shallowMount } from "@vue/test-utils";
 
-jest.mock("vue-i18n", () => ({
+jest.mock('vue-i18n', () => ({
     useI18n: () => ({
         t: (key: string) => key,
         locale: computed(() => 'en')

@@ -14,13 +14,13 @@ const asyncFunc: () => Promise<void> = async () => {
 
 const getMockedResponses = (url: string) => {
     switch(url) {
-        case "api/dashboard":
+        case 'api/dashboard':
             return {
                 response: ref(dashboard),
                 request: asyncFunc,
                 error: ref(false)
             };
-        case "/api/print/participations":
+        case '/api/print/participations':
             return {
                 response: ref(participations),
                 request: asyncFunc,
@@ -35,7 +35,7 @@ const getMockedResponses = (url: string) => {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 useApi = jest.fn().mockImplementation((method: string, url: string) => getMockedResponses(url));
 
-jest.mock("vue-i18n", () => ({
+jest.mock('vue-i18n', () => ({
     useI18n: () => ({
         t: (key: string) => key,
         locale: computed(() => 'en')

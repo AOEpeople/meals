@@ -8,9 +8,10 @@ use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Repository\DishRepository;
 use App\Mealz\MealBundle\Service\Logger\MealsLoggerInterface;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,12 +23,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class DishController extends BaseListController
 {
     private DishRepository $dishRepository;
+    private EntityManagerInterface $em;
 
-    public function __construct(DishRepository $repository)
-    {
+    public function __construct(
+        DishRepository $repository,
+        EntityManagerInterface $em
+    ) {
         $this->dishRepository = $repository;
-        $this->setRepository($repository);
-        $this->setEntityName('Dish');
+        $this->em = $em;
     }
 
 //    /**
@@ -68,34 +71,41 @@ class DishController extends BaseListController
 //        return $this->redirectToRoute('MealzMealBundle_Dish');
 //    }
 
-    public function deleteAction(
-        Dish $dish,
-        MealsLoggerInterface $logger,
-        TranslatorInterface $translator
-    ): RedirectResponse {
-        try {
-            /** @var EntityManager $entityManager */
-            $entityManager = $this->getDoctrine()->getManager();
+    // public function deleteAction(
+    //     Dish $dish,
+    //     MealsLoggerInterface $logger,
+    //     TranslatorInterface $translator
+    // ): RedirectResponse {
+    //     try {
+    //         /** @var EntityManager $entityManager */
+    //         $entityManager = $this->getDoctrine()->getManager();
 
-            // hide the dish if it has been assigned to a meal, else delete it
-            if (true === $this->dishRepository->hasDishAssociatedMeals($dish)) {
-                $dish->setEnabled(false);
-                $entityManager->persist($dish);
-                $message = $translator->trans('dish.hidden', ['%dish%' => $dish->getTitle()], 'messages');
-            } else {
-                $entityManager->remove($dish);
-                $message = $translator->trans('dish.deleted', ['%dish%' => $dish->getTitle()], 'messages');
-            }
+    //         // hide the dish if it has been assigned to a meal, else delete it
+    //         if (true === $this->dishRepository->hasDishAssociatedMeals($dish)) {
+    //             $dish->setEnabled(false);
+    //             $entityManager->persist($dish);
+    //             $message = $translator->trans('dish.hidden', ['%dish%' => $dish->getTitle()], 'messages');
+    //         } else {
+    //             $entityManager->remove($dish);
+    //             $message = $translator->trans('dish.deleted', ['%dish%' => $dish->getTitle()], 'messages');
+    //         }
 
-            $entityManager->flush();
-            $this->addFlashMessage($message, 'success');
-        } catch (Exception $e) {
-            $logger->logException($e, 'dish delete error');
-            $message = $translator->trans('dish.delete_error', ['%dish%' => $dish->getTitle()], 'messages');
-            $this->addFlashMessage($message, 'danger');
-        }
+    //         $entityManager->flush();
+    //         $this->addFlashMessage($message, 'success');
+    //     } catch (Exception $e) {
+    //         $logger->logException($e, 'dish delete error');
+    //         $message = $translator->trans('dish.delete_error', ['%dish%' => $dish->getTitle()], 'messages');
+    //         $this->addFlashMessage($message, 'danger');
+    //     }
 
-        return $this->redirectToRoute('MealzMealBundle_Dish');
+    //     return $this->redirectToRoute('MealzMealBundle_Dish');
+    // }
+
+    public function getDishes(): JsonResponse
+    {
+        $dishes = $this->dishRepository->findBy(['parent' => null]);
+
+        return new JsonResponse($dishes, 200);
     }
 
     protected function getEntities(): array

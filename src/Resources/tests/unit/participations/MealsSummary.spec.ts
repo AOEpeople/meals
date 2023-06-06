@@ -15,7 +15,7 @@ const dayOne: IDay = {
         'Test112',
         "Kombi-Gericht"
     ],
-    date: new Date("2023-05-10")
+    date: new Date('2023-05-10')
 }
 
 const dayTwo: IDay = {
@@ -27,7 +27,7 @@ const dayTwo: IDay = {
         'Test111',
         'Test112',
     ],
-    date: new Date("2023-05-11")
+    date: new Date('2023-05-11')
 }
 
 const dayThree: IDay = {
@@ -37,16 +37,16 @@ const dayThree: IDay = {
     de: [
         'Test111'
     ],
-    date: new Date("2023-05-12")
+    date: new Date('2023-05-12')
 }
 
 const dayFour: IDay = {
     en: [],
     de: [],
-    date: new Date("2023-05-15")
+    date: new Date('2023-05-15')
 }
 
-jest.mock("vue-i18n", () => ({
+jest.mock('vue-i18n', () => ({
     useI18n: () => ({
         t: (key: string) => key,
         locale: computed(() => 'en')

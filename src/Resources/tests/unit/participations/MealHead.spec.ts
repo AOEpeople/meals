@@ -6,8 +6,8 @@ import { computed } from "vue";
 
 const mealOne: IMealWithVariations = {
     title: {
-        en: "Test1",
-        de: "Test1"
+        en: 'Test1',
+        de: 'Test1'
     },
     variations: [],
     participations: 3,
@@ -15,8 +15,8 @@ const mealOne: IMealWithVariations = {
 }
 const mealThree: IMealWithVariations = {
     title: {
-        en: "Test3",
-        de: "Test3"
+        en: 'Test3',
+        de: 'Test3'
     },
     variations: [],
     participations: 1,
@@ -24,8 +24,8 @@ const mealThree: IMealWithVariations = {
 }
 const mealFour: IMealWithVariations = {
     title: {
-        en: "Test4",
-        de: "Test4"
+        en: 'Test4',
+        de: 'Test4'
     },
     variations: [],
     participations: 2,
@@ -33,15 +33,15 @@ const mealFour: IMealWithVariations = {
 }
 const mealTwo: IMealWithVariations = {
     title: {
-        en: "Test2",
-        de: "Test2"
+        en: 'Test2',
+        de: 'Test2'
     },
     variations: [mealThree, mealFour],
     participations: 5,
     mealId: 2
 }
 
-jest.mock("vue-i18n", () => ({
+jest.mock('vue-i18n', () => ({
     useI18n: () => ({
         t: (key: string) => key,
         locale: computed(() => 'en')

@@ -37,7 +37,7 @@ describe('Unit tests are functional', () => {
               header: 'Test'
           }
       });
-      expect(wrapper.text()).toContain("Test");
+      expect(wrapper.text()).toContain('Test');
   });
 
   test('mounts normal component with nested component', () => {
@@ -47,7 +47,7 @@ describe('Unit tests are functional', () => {
               header: 'Test'
           }
       });
-      expect(wrapper.find('p').text()).toBe("Hello Mustermann");
+      expect(wrapper.find('p').text()).toBe('Hello Mustermann');
   });
 
   test('mounts component with i18n-dependency', () => {

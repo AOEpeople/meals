@@ -90,6 +90,10 @@ services:
         resource: '../src/Mealz/MealBundle/Controller/'
         tags: ['controller.service_arguments']
 
+    App\Mealz\MealBundle\Controller\DishController:
+        arguments:
+            $price: '%mealz.meal.price%'
+
     # Interface Implementations
     App\Mealz\MealBundle\Service\Logger\MealsLoggerInterface: '@App\Mealz\MealBundle\Service\Logger\MealsLogger'
     App\Mealz\MealBundle\Service\Mailer\MailerInterface: '@App\Mealz\MealBundle\Service\Mailer\Mailer'

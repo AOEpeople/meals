@@ -90,12 +90,25 @@ export function useCategories() {
         CategoriesState.isLoading = false;
     }
 
+    function getCategoryById(id: number) {
+        return CategoriesState.categories.find(category => category.id === id);
+    }
+
+    function getCategoryTitleById(id: number, locale = 'en') {
+        const category = getCategoryById(id);
+        if(category) {
+            return locale === 'en' ? category.titleEn : category.titleDe;
+        }
+        return '';
+    }
+
     return {
         CategoriesState: readonly(CategoriesState),
         fetchCategories,
         deleteCategoryWithSlug,
         createCategory,
         editCategory,
-        resetState
+        resetState,
+        getCategoryTitleById
     }
 }

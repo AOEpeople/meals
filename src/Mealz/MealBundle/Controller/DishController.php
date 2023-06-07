@@ -6,6 +6,8 @@ namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\DishVariation;
+use App\Mealz\MealBundle\Repository\CategoryRepository;
+use App\Mealz\MealBundle\Repository\CategoryRepositoryInterface;
 use App\Mealz\MealBundle\Repository\DishRepository;
 use App\Mealz\MealBundle\Service\Logger\MealsLoggerInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,14 +24,19 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class DishController extends BaseListController
 {
+    private float $defaultPrice;
+    private CategoryRepositoryInterface $categoryRepository;
     private DishRepository $dishRepository;
     private EntityManagerInterface $em;
 
     public function __construct(
-        DishRepository $repository,
+        float $price,
+        CategoryRepository $categoryRepository,
+        DishRepository $dishRepository,
         EntityManagerInterface $em
     ) {
-        $this->dishRepository = $repository;
+        $this->defaultPrice = $price;
+        $this->dishRepository = $dishRepository;
         $this->em = $em;
     }
 
@@ -103,9 +110,62 @@ class DishController extends BaseListController
 
     public function getDishes(): JsonResponse
     {
-        $dishes = $this->dishRepository->findBy(['parent' => null]);
+        $dishes = $this->dishRepository->findBy(['parent' => null, 'enabled' => true]);
 
         return new JsonResponse($dishes, 200);
+    }
+
+    public function new(Request $request): JsonResponse
+    {
+        try {
+            $parameters = json_decode($request->getContent(), true);
+            if (!isset($parameters['titleDe']) || !isset($parameters['titleEn']) || !isset($parameters['oneServingSize'])) {
+                throw new Exception('Missing parameters');
+            }
+
+            $dish = new Dish();
+            $dish->setTitleDe($parameters['titleDe']);
+            $dish->setTitleEn($parameters['titleEn']);
+            $dish->setOneServingSize($parameters['oneServingSize']);
+            $dish->setPrice($this->defaultPrice);
+
+            if (isset($parameters['descriptionDe']) && null !== $parameters['descriptionDe']) {
+                $dish->setDescriptionDe($parameters['descriptionDe']);
+            }
+            if (isset($parameters['descriptionEn']) && null !== $parameters['descriptionEn']) {
+                $dish->setDescriptionEn($parameters['descriptionEn']);
+            }
+            if (isset($parameters['category'])  && null !== $parameters['category']) {
+                $dish->setCategory($this->categoryRepository->find($parameters['category']));
+            }
+
+            $this->em->persist($dish);
+            $this->em->flush();
+
+            return new JsonResponse(['status' => 'success'], 200);
+        } catch (Exception $e) {
+            $this->logException($e);
+            return new JsonResponse(['status' => $e->getMessage()], 500);
+        }
+    }
+
+    public function delete(Dish $dish)
+    {
+        try {
+             // hide the dish if it has been assigned to a meal, else delete it
+            if ($this->dishRepository->hasDishAssociatedMeals($dish)) {
+                $dish->setEnabled(false);
+                $this->em->persist($dish);
+            } else {
+                $this->em->remove($dish);
+                $this->em->flush();
+            }
+
+            return new JsonResponse(['status' => 'success'], 200);
+        } catch (Exception $e) {
+            $this->logException($e);
+            return new JsonResponse(['status' => $e->getMessage()], 500);
+        }
     }
 
     protected function getEntities(): array

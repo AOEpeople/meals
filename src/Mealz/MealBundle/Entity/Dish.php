@@ -280,14 +280,13 @@ class Dish implements JsonSerializable
         return [
             'id' => $this->id,
             'slug' => $this->slug,
-            'enabled' => $this->enabled,
             'titleDe' => $this->title_de,
             'titleEn' => $this->title_en,
             'descriptionDe' => $this->description_de,
             'descriptionEn' => $this->description_en,
-            'categorySlug' => null !== $this->category ? $this->category->getId() : null,
+            'categoryId' => null !== $this->category ? $this->category->getId() : null,
             'oneServingSize' => $this->oneServingSize,
-            'parent' => null !== $this->parent ? $this->parent->getId() : null,
+            'parentId' => null !== $this->parent ? $this->parent->getId() : null,
             'variations' => $this->hasVariations() ? $this->variations->toArray() : [],
         ];
     }

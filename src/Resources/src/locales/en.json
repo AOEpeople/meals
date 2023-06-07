@@ -68,7 +68,20 @@
     "create": "create Dish",
     "table": {
       "title": "Title",
-      "category": "Category"
+      "category": "Category",
+      "actions": "Actions"
+    },
+    "header": "List of Dishes",
+    "popover": {
+      "create": "Create new Dish",
+      "edit": "Edit Dish",
+      "descriptionDe": "German Description",
+      "descriptionEn": "English Description",
+      "german": "German",
+      "english": "English",
+      "category": "Category",
+      "oneSizeServing": "This dish has only one serving size",
+      "save": "Save"
     }
   },
   "guest": {

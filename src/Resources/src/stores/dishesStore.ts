@@ -2,6 +2,7 @@ import getDishes from "@/api/getDishes";
 import { reactive, readonly } from "vue";
 import postCreateDish, { CreateDishDTO } from "@/api/postCreateDish";
 import deleteDish from "@/api/deleteDish";
+import putDishUpdate from "@/api/putDishUpdate";
 
 export interface Dish {
     id: number,
@@ -69,10 +70,37 @@ export function useDishes() {
         await fetchDishes();
     }
 
+    async function updateDish(id: number, dish: CreateDishDTO) {
+        const { error, response } = await putDishUpdate(getDishById(id).slug, dish);
+
+        if (!error.value && response.value) {
+            updateDishesState(response.value);
+        } else {
+            DishesState.error = 'Error on updating a dish';
+        }
+    }
+
+    function updateDishesState(dish: Dish) {
+        const dishToUpdate: Dish = getDishById(dish.id);
+
+        dishToUpdate.slug = dish.slug;
+        dishToUpdate.titleDe = dish.titleDe;
+        dishToUpdate.titleEn = dish.titleEn;
+        dishToUpdate.oneServingSize = dish.oneServingSize;
+        dishToUpdate.descriptionDe = dish.descriptionDe;
+        dishToUpdate.descriptionEn = dish.descriptionEn;
+        dishToUpdate.categoryId = dish.categoryId;
+    }
+
+    function getDishById(id: number) {
+        return DishesState.dishes.find(dish => dish.id === id);
+    }
+
     return {
         DishesState: readonly(DishesState),
         fetchDishes,
         createDish,
-        deleteDish
+        deleteDishWithSlug,
+        updateDish
     };
 }

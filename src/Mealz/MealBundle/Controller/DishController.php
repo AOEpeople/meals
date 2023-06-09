@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Dish;
-use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Repository\CategoryRepository;
 use App\Mealz\MealBundle\Repository\CategoryRepositoryInterface;
 use App\Mealz\MealBundle\Repository\DishRepository;
-use App\Mealz\MealBundle\Service\Logger\MealsLoggerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -17,7 +15,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Security("is_granted('ROLE_KITCHEN_STAFF')")
@@ -36,6 +33,7 @@ class DishController extends BaseListController
         EntityManagerInterface $em
     ) {
         $this->defaultPrice = $price;
+        $this->categoryRepository = $categoryRepository;
         $this->dishRepository = $dishRepository;
         $this->em = $em;
     }
@@ -78,36 +76,6 @@ class DishController extends BaseListController
 //        return $this->redirectToRoute('MealzMealBundle_Dish');
 //    }
 
-    // public function deleteAction(
-    //     Dish $dish,
-    //     MealsLoggerInterface $logger,
-    //     TranslatorInterface $translator
-    // ): RedirectResponse {
-    //     try {
-    //         /** @var EntityManager $entityManager */
-    //         $entityManager = $this->getDoctrine()->getManager();
-
-    //         // hide the dish if it has been assigned to a meal, else delete it
-    //         if (true === $this->dishRepository->hasDishAssociatedMeals($dish)) {
-    //             $dish->setEnabled(false);
-    //             $entityManager->persist($dish);
-    //             $message = $translator->trans('dish.hidden', ['%dish%' => $dish->getTitle()], 'messages');
-    //         } else {
-    //             $entityManager->remove($dish);
-    //             $message = $translator->trans('dish.deleted', ['%dish%' => $dish->getTitle()], 'messages');
-    //         }
-
-    //         $entityManager->flush();
-    //         $this->addFlashMessage($message, 'success');
-    //     } catch (Exception $e) {
-    //         $logger->logException($e, 'dish delete error');
-    //         $message = $translator->trans('dish.delete_error', ['%dish%' => $dish->getTitle()], 'messages');
-    //         $this->addFlashMessage($message, 'danger');
-    //     }
-
-    //     return $this->redirectToRoute('MealzMealBundle_Dish');
-    // }
-
     public function getDishes(): JsonResponse
     {
         $dishes = $this->dishRepository->findBy(['parent' => null, 'enabled' => true]);
@@ -129,13 +97,13 @@ class DishController extends BaseListController
             $dish->setOneServingSize($parameters['oneServingSize']);
             $dish->setPrice($this->defaultPrice);
 
-            if (isset($parameters['descriptionDe']) && null !== $parameters['descriptionDe']) {
+            if ($this->isParamValid($parameters, 'descriptionDe', 'string')) {
                 $dish->setDescriptionDe($parameters['descriptionDe']);
             }
-            if (isset($parameters['descriptionEn']) && null !== $parameters['descriptionEn']) {
+            if ($this->isParamValid($parameters, 'descriptionEn', 'string')) {
                 $dish->setDescriptionEn($parameters['descriptionEn']);
             }
-            if (isset($parameters['category'])  && null !== $parameters['category']) {
+            if ($this->isParamValid($parameters, 'category', 'integer')) {
                 $dish->setCategory($this->categoryRepository->find($parameters['category']));
             }
 
@@ -145,14 +113,15 @@ class DishController extends BaseListController
             return new JsonResponse(['status' => 'success'], 200);
         } catch (Exception $e) {
             $this->logException($e);
+
             return new JsonResponse(['status' => $e->getMessage()], 500);
         }
     }
 
-    public function delete(Dish $dish)
+    public function delete(Dish $dish): JsonResponse
     {
         try {
-             // hide the dish if it has been assigned to a meal, else delete it
+            // hide the dish if it has been assigned to a meal, else delete it
             if ($this->dishRepository->hasDishAssociatedMeals($dish)) {
                 $dish->setEnabled(false);
                 $this->em->persist($dish);
@@ -164,20 +133,56 @@ class DishController extends BaseListController
             return new JsonResponse(['status' => 'success'], 200);
         } catch (Exception $e) {
             $this->logException($e);
+
             return new JsonResponse(['status' => $e->getMessage()], 500);
         }
     }
 
-    protected function getEntities(): array
+    public function update(Dish $dish, Request $request): JsonResponse
     {
-        $parameters = [
-            'load_category' => true,
-            'load_variations' => true,
-            'orderBy_category' => false,
-        ];
+        try {
+            $parameters = json_decode($request->getContent(), true);
+            if ($this->isParamValid($parameters, 'titleDe', 'string')) {
+                $dish->setTitleDe($parameters['titleDe']);
+            }
+            if ($this->isParamValid($parameters, 'titleEn', 'string')) {
+                $dish->setTitleEn($parameters['titleEn']);
+            }
+            if ($this->isParamValid($parameters, 'oneServingSize', 'boolean')) {
+                $dish->setOneServingSize($parameters['oneServingSize']);
+            }
+            if ($this->isParamValid($parameters, 'descriptionDe', 'string')) {
+                $dish->setDescriptionDe($parameters['descriptionDe']);
+            }
+            if ($this->isParamValid($parameters, 'descriptionEn', 'string')) {
+                $dish->setDescriptionEn($parameters['descriptionEn']);
+            }
+            if ($this->isParamValid($parameters, 'category', 'integer')) {
+                $dish->setCategory($this->categoryRepository->find($parameters['category']));
+            }
 
-        $dishesQueryBuilder = $this->dishRepository->getSortedDishesQueryBuilder($parameters);
+            $this->em->persist($dish);
+            $this->em->flush();
 
-        return $dishesQueryBuilder->getQuery()->execute();
+            return new JsonResponse($dish, 200);
+        } catch (Exception $e) {
+            $this->logException($e);
+
+            return new JsonResponse(['status' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Checks wether the parameter at a given key exists and is valid.
+     *
+     * @param array  $parameters decoded json content
+     * @param string $key        key for the parameter to be checked
+     * @param string $type       the expected type of the parameter
+     */
+    protected function isParamValid($parameters, $key, $type): bool
+    {
+        return isset($parameters[$key])
+            && null !== $parameters[$key]
+            && $type === gettype($parameters[$key]);
     }
 }

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use JsonSerializable;
 use RuntimeException;
 
 /**

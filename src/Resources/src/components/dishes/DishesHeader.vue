@@ -5,6 +5,7 @@
     </h2>
     <Popover
       :translate-x-min="'-15%'"
+      :overflow-hidden="false"
       class="justify-self-center xl:justify-self-end"
     >
       <template #button="{ open }">

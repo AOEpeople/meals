@@ -14,7 +14,7 @@
       :name="labelText"
       :placeholder="labelText"
       :min="min"
-      class="w-full rounded-full border-2 border-solid border-[#CAD6E1] px-4 py-2 text-[14px] font-medium text-[#B4C1CE]"
+      class="w-full rounded-full border-2 border-solid border-[#CAD6E1] px-4 py-2 text-[14px] font-medium text-[#9CA3AF]"
     >
   </div>
 </template>

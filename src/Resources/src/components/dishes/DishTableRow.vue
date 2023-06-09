@@ -18,7 +18,10 @@
       colspan="1"
       class="w-[30%]"
     >
-      Actions for dish
+      <DishActions
+        :dish="dish"
+        :index="indexInList"
+      />
     </td>
   </tr>
   <tr
@@ -39,7 +42,7 @@
       colspan="1"
       class="w-[30%]"
     >
-      Actions for variations
+      Actions for Variations
     </td>
   </tr>
 </template>
@@ -48,12 +51,14 @@
 import { Dish } from '@/stores/dishesStore';
 import { useI18n } from 'vue-i18n';
 import { useCategories } from '@/stores/categoriesStore';
+import DishActions from './DishActions.vue';
 
 const { locale } = useI18n();
 const { getCategoryTitleById } = useCategories();
 
 defineProps<{
-  dish: Dish
+  dish: Dish,
+  indexInList: number
 }>();
 
 

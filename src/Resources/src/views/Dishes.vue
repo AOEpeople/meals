@@ -7,8 +7,8 @@
       <DishTableRow
         v-for="(dish, index) in DishesState.dishes"
         :key="index"
-        :dish="//@ts-expect-error
-          (dish as Dish)"
+        :dish="(dish as Dish)"
+        :index-in-list="index"
       />
     </Table>
   </div>

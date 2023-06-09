@@ -60,6 +60,8 @@ class SlotController extends BaseListController
 
             return new JsonResponse($slot, 200);
         } catch (Exception $e) {
+            $this->logException($e);
+
             return new JsonResponse(['status' => $e->getMessage()], 405);
         }
     }

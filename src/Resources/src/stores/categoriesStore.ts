@@ -109,6 +109,7 @@ export function useCategories() {
         createCategory,
         editCategory,
         resetState,
-        getCategoryTitleById
+        getCategoryTitleById,
+        getCategoryById
     }
 }

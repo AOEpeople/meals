@@ -56,7 +56,7 @@
 import { useI18n } from 'vue-i18n';
 import SubmitButton from '../misc/SubmitButton.vue';
 import InputLabel from '../misc/InputLabel.vue';
-import { Dish, useDishes } from '@/stores/dishesStore';
+import { useDishes } from '@/stores/dishesStore';
 import { onMounted, ref } from 'vue';
 import { CreateDishDTO } from '@/api/postCreateDish';
 import CategoriesDropDown from '../categories/CategoriesDropDown.vue';

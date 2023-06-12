@@ -7,7 +7,8 @@
       <DishTableRow
         v-for="(dish, index) in DishesState.dishes"
         :key="index"
-        :dish="(dish as Dish)"
+        :dish="// @ts-ignore
+          (dish as Dish)"
         :index-in-list="index"
       />
     </Table>
@@ -25,9 +26,9 @@ import { useCategories } from '@/stores/categoriesStore';
 import DishTableRow from '@/components/dishes/DishTableRow.vue';
 import { Dish } from '@/stores/dishesStore';
 
-const { t, locale } = useI18n();
+const { t } = useI18n();
 const { fetchDishes, DishesState } = useDishes();
-const { getCategoryTitleById, fetchCategories } = useCategories();
+const { fetchCategories } = useCategories();
 
 onMounted(async () => {
   const progress = useProgress().start();

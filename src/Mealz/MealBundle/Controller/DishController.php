@@ -12,9 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Security("is_granted('ROLE_KITCHEN_STAFF')")
@@ -37,44 +35,6 @@ class DishController extends BaseListController
         $this->dishRepository = $dishRepository;
         $this->em = $em;
     }
-
-//    /**
-//     * @return RedirectResponse|Response
-//     */
-//    public function editAction(Request $request, Dish $dish)
-//    {
-//        $form = $this->createForm(DishForm::class, $dish);
-//
-//        // handle form submission
-//        if ($request->isMethod('POST')) {
-//            $form->handleRequest($request);
-//
-//            if ($form->isValid()) {
-//                /** @var DishVariation $variation */
-//                foreach ($dish->getVariations() as $variation) {
-//                    $variation->setOneServingSize($dish->hasOneServingSize());
-//                }
-//                $entityManager = $this->getDoctrine()->getManager();
-//                $entityManager->persist($dish);
-//                $entityManager->flush();
-//
-//                $translator = $this->get('translator');
-//                $translatedEntityName = $translator->trans('entity.Dish', [], 'messages');
-//                $message = $translator->trans(
-//                    'entity.modified',
-//                    ['%entityName%' => $translatedEntityName],
-//                    'messages'
-//                );
-//                $this->addFlashMessage($message, 'success');
-//            } else {
-//                return $this->renderEntityList([
-//                    'form' => $form->createView(),
-//                ]);
-//            }
-//        }
-//
-//        return $this->redirectToRoute('MealzMealBundle_Dish');
-//    }
 
     public function getDishes(): JsonResponse
     {
@@ -127,8 +87,8 @@ class DishController extends BaseListController
                 $this->em->persist($dish);
             } else {
                 $this->em->remove($dish);
-                $this->em->flush();
             }
+            $this->em->flush();
 
             return new JsonResponse(['status' => 'success'], 200);
         } catch (Exception $e) {
@@ -150,6 +110,12 @@ class DishController extends BaseListController
             }
             if ($this->isParamValid($parameters, 'oneServingSize', 'boolean')) {
                 $dish->setOneServingSize($parameters['oneServingSize']);
+                if ($dish->hasVariations()) {
+                    /** @var Dish $variation */
+                    foreach ($dish->getVariations() as $variation) {
+                        $variation->setOneServingSize($parameters['oneServingSize']);
+                    }
+                }
             }
             if ($this->isParamValid($parameters, 'descriptionDe', 'string')) {
                 $dish->setDescriptionDe($parameters['descriptionDe']);

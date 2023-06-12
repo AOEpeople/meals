@@ -81,7 +81,12 @@
       "english": "English Title",
       "category": "Category",
       "oneSizeServing": "This dish has only one serving size",
-      "save": "Save"
+      "save": "Save",
+      "variation": {
+        "create": "Create new Variation",
+        "edit": "Edit Variation",
+        "new": "Create Variation"
+      }
     }
   },
   "guest": {

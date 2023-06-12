@@ -12,6 +12,10 @@
       class="z-[1] aspect-square h-10 w-10"
       :class="widthFull ? 'w-8' : 'w-8'"
     />
+    <PlusIcon
+      v-if="action === Action.CREATE"
+      class="z-[1] mr-1 aspect-square h-8 w-8"
+    />
     <p
       class="z-[1] m-0 flex h-full place-items-center text-[10px] sm:text-[12px]"
       :class="widthFull ? 'w-full' : ''"
@@ -23,7 +27,7 @@
 
 <script setup lang="ts">
 import { Action } from '@/enums/Actions';
-import { XIcon, PencilIcon } from '@heroicons/vue/outline';
+import { XIcon, PencilIcon, PlusIcon } from '@heroicons/vue/outline';
 
 withDefaults(defineProps<{
   btnText: string,

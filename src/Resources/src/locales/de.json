@@ -81,7 +81,12 @@
       "english": "Englischer Titel",
       "category": "Kategorie",
       "oneSizeServing": "Dieses Gericht ist nicht teilbar",
-      "save": "Speichern"
+      "save": "Speichern",
+      "variation": {
+        "create": "Neue Variation erstellen",
+        "edit": "Variation editieren",
+        "new": "Variation erstellen"
+      }
     }
   },
   "guest": {

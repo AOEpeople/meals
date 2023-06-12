@@ -1,5 +1,5 @@
 <template>
-  <tr class="topBottomShadow border-b-2 border-gray-200">
+  <tr class="border-b-2 border-gray-200">
     <td
       colspan="1"
       class="w-[60%] py-2"
@@ -42,7 +42,10 @@
       colspan="1"
       class="w-[30%]"
     >
-      Actions for Variations
+      <DishVariationActions
+        :variation="variation"
+        :parent-slug="dish.slug"
+      />
     </td>
   </tr>
 </template>
@@ -52,6 +55,7 @@ import { Dish } from '@/stores/dishesStore';
 import { useI18n } from 'vue-i18n';
 import { useCategories } from '@/stores/categoriesStore';
 import DishActions from './DishActions.vue';
+import DishVariationActions from './DishVariationActions.vue';
 
 const { locale } = useI18n();
 const { getCategoryTitleById } = useCategories();
@@ -60,20 +64,18 @@ defineProps<{
   dish: Dish,
   indexInList: number
 }>();
-
-
 </script>
 
 <style scoped>
+
 .topShadow {
-  box-shadow: inset 0 0 3px 3px rgba(20,65,124,0.16);
-  clip-path: inset(0px 10px 10px 10px);
-  /* margin: 0 -8px; */
+  background-color: #f4f6f9;
+  box-shadow: inset 0px 8px 6px -6px #e5e7eb;
 }
 
 .bottomShadow {
-  box-shadow: inset 0 0 3px 3px rgba(20,65,124,0.16);
-  clip-path: inset(10px 10px 0px 10px);
-  /* margin: 0 -8px; */
+  background-color: #f4f6f9;
+  box-shadow: inset 0px -8px 6px -6px #e5e7eb;
 }
+
 </style>

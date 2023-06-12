@@ -150,21 +150,20 @@ MealzMealBundle_Meal_isParticipationPending:
     path: /menu/meal/{participant}/isParticipationPending
     defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::isParticipationPending }
 
-MealzMealBundle_DishVariation_new:
-    path:  /dish/{id}/variation/new
+MealzMealBundle_api_DishVariation_new:
+    path:  /api/dishes/{slug}/variation
     defaults: { _controller: App\Mealz\MealBundle\Controller\DishVariationController::new }
-    requirements:
-      slug: '[1-9][0-9]*'
+    methods: [POST]
 
-MealzMealBundle_DishVariation_edit:
-    path:  /dish/variation/{slug}/edit
-    defaults: { _controller: App\Mealz\MealBundle\Controller\DishVariationController::edit }
-    requirements:
-      slug: '[1-9][0-9]*'
+MealzMealBundle_api_DishVariation_update:
+    path:  /api/dishes/variation/{slug}
+    defaults: { _controller: App\Mealz\MealBundle\Controller\DishVariationController::update }
+    methods: [PUT]
 
-MealzMealBundle_DishVariation_delete:
-    path:  /dish/variation/{slug}/delete
-    defaults: { _controller: App\Mealz\MealBundle\Controller\DishVariationController::deleteAction }
+MealzMealBundle_api_DishVariation_delete:
+    path:  /api/dishes/variation/{slug}
+    defaults: { _controller: App\Mealz\MealBundle\Controller\DishVariationController::delete }
+    methods: [DELETE]
 
 MealzMealBundle_Dishes:
   path: /dishes

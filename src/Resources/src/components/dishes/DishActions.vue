@@ -3,6 +3,19 @@
     <Popover>
       <template #button="{ open }">
         <ActionButton
+          :action="Action.CREATE"
+          :btn-text="t('dish.popover.variation.new')"
+        />
+      </template>
+      <template #panel="{ close }">
+        <DishVariationCreationPanel
+          :parent-slug="dish.slug"
+        />
+      </template>
+    </Popover>
+    <Popover>
+      <template #button="{ open }">
+        <ActionButton
           :action="Action.EDIT"
           :btn-text="t('dish.popover.edit')"
         />
@@ -37,6 +50,7 @@ import { useDishes } from '@/stores/dishesStore';
 import { Dish } from '@/stores/dishesStore';
 import Popover from '../misc/Popover.vue';
 import DishesCreationPanel from './DishesCreationPanel.vue';
+import DishVariationCreationPanel from './DishVariationCreationPanel.vue';
 
 const { t } = useI18n();
 const { deleteDishWithSlug } = useDishes();

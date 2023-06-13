@@ -2,7 +2,7 @@
   <Popover
     v-slot="{ open }"
   >
-    <PopoverButton class="h-full focus:outline-none">
+    <PopoverButton class="h-full align-middle focus:outline-none">
       <slot
         name="button"
         :open="(open)"

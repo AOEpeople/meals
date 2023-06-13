@@ -1,10 +1,15 @@
 <template>
   <div class="flex flex-row content-center items-center justify-end justify-items-end sm:gap-4">
-    <Popover>
+    <Popover
+      :breakpoint-width="564"
+      :translate-x-min="'-60%'"
+      :translate-x-max="'-50%'"
+    >
       <template #button="{ open }">
         <ActionButton
           :action="Action.CREATE"
           :btn-text="t('dish.popover.variation.new')"
+          :hide-text-on-mobile="true"
         />
       </template>
       <template #panel="{ close }">
@@ -13,11 +18,16 @@
         />
       </template>
     </Popover>
-    <Popover>
+    <Popover
+      :breakpoint-width="564"
+      :translate-x-min="'-75%'"
+      :translate-x-max="'-80%'"
+    >
       <template #button="{ open }">
         <ActionButton
           :action="Action.EDIT"
-          :btn-text="t('dish.popover.edit')"
+          :btn-text="t('button.edit')"
+          :hide-text-on-mobile="true"
         />
       </template>
       <template #panel="{ close }">
@@ -37,6 +47,7 @@
       :action="Action.DELETE"
       :btn-text="t('button.delete')"
       :width-full="false"
+      :hide-text-on-mobile="true"
       @click="deleteDishWithSlug(dish.slug)"
     />
   </div>

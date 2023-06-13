@@ -102,6 +102,18 @@ export function useCategories() {
         return '';
     }
 
+    function getCategoryIdsByTitle(title: string) {
+        const categories = CategoriesState.categories.filter(category => categoryContainsString(category, title));
+        return categories.map(category => category.id);
+    }
+
+    function categoryContainsString(category: Category, searchStr: string) {
+        return (
+            category.titleDe.toLowerCase().includes(searchStr.toLowerCase())
+            || category.titleEn.toLowerCase().includes(searchStr.toLowerCase())
+        );
+    }
+
     return {
         CategoriesState: readonly(CategoriesState),
         fetchCategories,
@@ -110,6 +122,7 @@ export function useCategories() {
         editCategory,
         resetState,
         getCategoryTitleById,
-        getCategoryById
+        getCategoryById,
+        getCategoryIdsByTitle
     }
 }

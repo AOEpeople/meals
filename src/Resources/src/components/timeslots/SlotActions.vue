@@ -31,6 +31,7 @@
       :action="Action.DELETE"
       :btn-text="t('button.delete')"
       :row="true"
+      :width-full="false"
       @click="deleteSlotWithSlug(timeSlot.slug)"
     />
     <Switch

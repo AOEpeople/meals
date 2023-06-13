@@ -1,11 +1,12 @@
 import getDishes from "@/api/getDishes";
-import { reactive, readonly } from "vue";
+import { computed, reactive, readonly } from "vue";
 import postCreateDish, { CreateDishDTO } from "@/api/postCreateDish";
 import deleteDish from "@/api/deleteDish";
 import putDishUpdate from "@/api/putDishUpdate";
 import postCreateDishVariation, { CreateDishVariationDTO } from "@/api/postCreateDishVariation";
 import deleteDishVariation from "@/api/deleteDishVariation";
 import putDishVariationUpdate from "@/api/putDishVariationUpdate";
+import { useCategories } from "./categoriesStore";
 
 export interface Dish {
     id: number,
@@ -22,6 +23,7 @@ export interface Dish {
 
 interface DishesState {
     dishes: Dish[],
+    filter: string,
     isLoading: boolean,
     error: string
 }
@@ -30,11 +32,29 @@ const TIMEOUT_PERIOD = 10000;
 
 const DishesState = reactive<DishesState>({
     dishes: [],
+    filter: '',
     isLoading: false,
     error: ''
 });
 
 export function useDishes() {
+
+    function setFilter(filterStr: string) {
+        DishesState.filter = filterStr;
+    }
+
+    const filteredDishes = computed(() => {
+        const { getCategoryIdsByTitle } = useCategories();
+        return DishesState.dishes.filter(dish => dishContainsString(dish, DishesState.filter) || getCategoryIdsByTitle(DishesState.filter).includes(dish.categoryId));
+    });
+
+    function dishContainsString(dish: Dish ,searchStr: string) {
+        return (
+            dish.titleDe.toLowerCase().includes(searchStr.toLowerCase())
+            || dish.titleEn.toLowerCase().includes(searchStr.toLowerCase())
+            || dish.variations.map(variation => dishContainsString(variation, searchStr)).includes(true)
+        );
+    }
 
     async function fetchDishes() {
         DishesState.isLoading = true;
@@ -145,12 +165,14 @@ export function useDishes() {
 
     return {
         DishesState: readonly(DishesState),
+        filteredDishes,
         fetchDishes,
         createDish,
         deleteDishWithSlug,
         updateDish,
         createDishVariation,
         deleteDishVariationWithSlug,
-        updateDishVariation
+        updateDishVariation,
+        setFilter
     };
 }

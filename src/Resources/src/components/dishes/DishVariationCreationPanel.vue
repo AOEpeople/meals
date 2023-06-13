@@ -3,7 +3,7 @@
     class="w-[300px] p-4 sm:w-[550px]"
     @submit.prevent="onSubmit"
   >
-    <h3>
+    <h3 class="text-center">
       {{ edit ? t('dish.popover.variation.edit') : t('dish.popover.variation.create') }}
     </h3>
     <InputLabel

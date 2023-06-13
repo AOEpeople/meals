@@ -2,7 +2,7 @@
   <tr class="border-b-2 border-gray-200">
     <td
       colspan="1"
-      class="w-[60%] py-2"
+      class="w-[50%] py-2"
     >
       <span class="text-[12px] xl:text-[18px]">
         {{ locale === 'en' ? dish.titleEn : dish.titleDe }}
@@ -10,13 +10,13 @@
     </td>
     <td
       colspan="1"
-      class="w-[10%]"
+      class="w-[10%] text-[12px] xl:text-[18px]"
     >
       {{ getCategoryTitleById(dish.categoryId, locale) }}
     </td>
     <td
       colspan="1"
-      class="w-[30%]"
+      class="w-[40%]"
     >
       <DishActions
         :dish="dish"
@@ -28,19 +28,19 @@
     v-for="(variation, index) in dish.variations"
     :key="variation.slug"
     class="overflow-hidden border-b-2 border-gray-200"
-    :class="index === 0 ? 'topShadow' : 'bottomShadow'"
+    :class="[index === 0 ? 'topShadow' : 'bottomShadow', dish.variations.length === 1 ? 'topBottomShadow' : '']"
   >
     <td
-      colspan="2"
-      class="w-[70%] py-2 pl-4"
+      colspan="1"
+      class="w-[50%] py-2 pl-4"
     >
       <span class="text-[12px] xl:text-[18px]">
         {{ locale === 'en' ? variation.titleEn : variation.titleDe }}
       </span>
     </td>
     <td
-      colspan="1"
-      class="w-[30%]"
+      colspan="2"
+      class="w-[50%]"
     >
       <DishVariationActions
         :variation="variation"
@@ -78,4 +78,8 @@ defineProps<{
   box-shadow: inset 0px -8px 6px -6px #e5e7eb;
 }
 
+.topBottomShadow {
+  background-color: #f4f6f9;
+  box-shadow:inset 0 0 0 0 #e5e7eb , inset 0px -8px 6px -6px #e5e7eb, inset 0 0 0 0 #e5e7eb, inset 0px 8px 6px -6px #e5e7eb;
+}
 </style>

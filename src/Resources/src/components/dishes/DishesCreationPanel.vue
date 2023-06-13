@@ -1,39 +1,39 @@
 <template>
   <form
-    class="w-[300px] p-4 sm:w-[550px]"
+    class="w-[300px] p-4 sm:w-[450px] md:w-[550px]"
     @submit.prevent="onSubmit"
   >
     <h3 class="text-center">
       {{ edit ? t('dish.popover.edit') : t('dish.popover.create') }}
     </h3>
-    <div class="z-0 grid gap-2 sm:grid-cols-2">
+    <div class="z-0 grid w-full grid-cols-2 sm:gap-2">
       <InputLabel
         v-model="titleDeInput"
         :label-text="t('dish.popover.german')"
-        class="z-[1] sm:col-span-1 sm:col-start-1"
+        class="z-[1] col-span-2 row-start-1 sm:col-span-1 sm:col-start-1 sm:row-start-1"
       />
       <InputLabel
         v-model="titleEnInput"
         :label-text="t('dish.popover.english')"
-        class="z-[1] sm:col-span-1 sm:col-start-2"
+        class="z-[1] col-span-2 row-start-2 sm:col-span-1 sm:col-start-2 sm:row-start-1"
       />
       <InputLabel
         v-model="descriptionDeInput"
         :label-text="t('dish.popover.descriptionDe')"
-        class="z-[1] sm:col-span-1 sm:col-start-1"
+        class="z-[1] col-span-2 row-start-3 sm:col-span-1 sm:col-start-1 sm:row-start-2"
       />
       <InputLabel
         v-model="descriptionEnInput"
         :label-text="t('dish.popover.descriptionEn')"
-        class="z-[1] sm:col-span-1 sm:col-start-2"
+        class="z-[1] col-span-2 row-start-4 sm:col-span-1 sm:col-start-2 sm:row-start-2"
       />
       <CategoriesDropDown
         ref="categoryDropDown"
         :category-id="categoryId"
-        class="z-[2] sm:col-span-1 sm:col-start-1"
+        class="z-[2] col-span-1 col-start-1 row-start-5 sm:row-start-3"
       />
       <SwitchGroup>
-        <div class="flex flex-col items-start pt-2">
+        <div class="col-span-1 col-start-2 row-start-5 flex flex-col items-start pt-2 sm:row-start-3">
           <SwitchLabel class="w-fulltext-start px-4 text-xs font-medium text-[#173D7A]">
             {{ t('dish.popover.oneSizeServing') }}
           </SwitchLabel>
@@ -46,7 +46,7 @@
         </div>
       </SwitchGroup>
       <SubmitButton
-        class="z-[1] sm:col-span-2 sm:col-start-1"
+        class="z-[1] col-span-2 row-start-6 sm:col-start-1 sm:row-start-4"
       />
     </div>
   </form>

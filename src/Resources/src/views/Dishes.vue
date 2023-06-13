@@ -5,7 +5,7 @@
       :labels="[t('dish.table.title'), t('dish.table.category'), t('dish.table.actions')]"
     >
       <DishTableRow
-        v-for="(dish, index) in DishesState.dishes"
+        v-for="(dish, index) in filteredDishes"
         :key="index"
         :dish="// @ts-ignore
           (dish as Dish)"
@@ -27,7 +27,7 @@ import DishTableRow from '@/components/dishes/DishTableRow.vue';
 import { Dish } from '@/stores/dishesStore';
 
 const { t } = useI18n();
-const { fetchDishes, DishesState } = useDishes();
+const { fetchDishes, DishesState, filteredDishes } = useDishes();
 const { fetchCategories } = useCategories();
 
 onMounted(async () => {

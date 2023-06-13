@@ -72,6 +72,7 @@
       "actions": "Aktionen"
     },
     "header": "Liste der Gerichte",
+    "search": "Suche nach Titel",
     "popover": {
       "create": "Neues Gericht erstellen",
       "edit": "Gericht editieren",

@@ -1,10 +1,11 @@
 <template>
-  <div class="flex flex-row content-center items-center justify-start justify-items-end sm:gap-4">
+  <div class="flex flex-row content-center items-center justify-end justify-items-end sm:gap-4">
     <Popover>
       <template #button="{ open }">
         <ActionButton
           :action="Action.EDIT"
-          :btn-text="t('dish.popover.variation.edit')"
+          :btn-text="t('button.edit')"
+          :hide-text-on-mobile="true"
         />
       </template>
       <template #panel="{ close }">
@@ -20,6 +21,8 @@
     <ActionButton
       :action="Action.DELETE"
       :btn-text="t('button.delete')"
+      :width-full="false"
+      :hide-text-on-mobile="true"
       @click="deleteDishVariationWithSlug(variation.slug)"
     />
   </div>

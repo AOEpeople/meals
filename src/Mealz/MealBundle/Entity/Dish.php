@@ -267,7 +267,7 @@ class Dish implements JsonSerializable
 
     public function hasVariations(): bool
     {
-        return count($this->variations) > 0;
+        return null !== $this->variations && count($this->variations) > 0;
     }
 
     public function isCombinedDish(): bool

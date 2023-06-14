@@ -39,15 +39,24 @@ const DishesState = reactive<DishesState>({
 
 export function useDishes() {
 
+    /**
+     * Updates the string to filter for in the DishesState
+     */
     function setFilter(filterStr: string) {
         DishesState.filter = filterStr;
     }
 
+    /**
+     * Returns a list of dishes that contain the filter string in their title, in the title of their variations or in the title of their category
+     */
     const filteredDishes = computed(() => {
         const { getCategoryIdsByTitle } = useCategories();
         return DishesState.dishes.filter(dish => dishContainsString(dish, DishesState.filter) || getCategoryIdsByTitle(DishesState.filter).includes(dish.categoryId));
     });
 
+    /**
+     * Determines wether a dish contains the search string in its title or in the title of one of its variations
+     */
     function dishContainsString(dish: Dish ,searchStr: string) {
         return (
             dish.titleDe.toLowerCase().includes(searchStr.toLowerCase())
@@ -56,6 +65,9 @@ export function useDishes() {
         );
     }
 
+    /**
+     * Fetches a list of dishes from the API and updates the DishesState
+     */
     async function fetchDishes() {
         DishesState.isLoading = true;
 
@@ -71,6 +83,10 @@ export function useDishes() {
         DishesState.isLoading = false;
     }
 
+    /**
+     * Calls postCreateDish to create a dish and fetches the dishes again
+     * @param dish The dish to create
+     */
     async function createDish(dish: CreateDishDTO) {
         const { error, response } = await postCreateDish(dish);
 
@@ -82,6 +98,10 @@ export function useDishes() {
         await fetchDishes();
     }
 
+    /**
+     * Calls deleteDish to delete a dish and fetches the dishes again
+     * @param slug The slug of the dish to delete
+     */
     async function deleteDishWithSlug(slug: string) {
         const { error, response } = await deleteDish(slug);
 
@@ -93,6 +113,11 @@ export function useDishes() {
         await fetchDishes();
     }
 
+    /**
+     * Creates a dishVariation and fetches the dishes again
+     * @param dishVariation The dishVariation to create
+     * @param parentSlug The identifier of the parent dish
+     */
     async function createDishVariation(dishVariation: CreateDishVariationDTO, parentSlug: string) {
         const { error, response } = await postCreateDishVariation(dishVariation, parentSlug);
 
@@ -104,6 +129,10 @@ export function useDishes() {
         await fetchDishes();
     }
 
+    /**
+     * Deletes a dishVariation and fetches the dishes again
+     * @param slug The identifier of the dishVariation to delete
+     */
     async function deleteDishVariationWithSlug(slug: string) {
         const { error, response } = await deleteDishVariation(slug);
 
@@ -115,6 +144,11 @@ export function useDishes() {
         await fetchDishes();
     }
 
+    /**
+     * Updates a dishVariation
+     * @param slug  The identifier of the dishVariation to update
+     * @param variation DTO containing the new values for the dishVariation
+     */
     async function updateDishVariation(slug: string, variation: CreateDishVariationDTO) {
         const { error, response } = await putDishVariationUpdate(slug, variation);
 
@@ -125,6 +159,11 @@ export function useDishes() {
         }
     }
 
+    /**
+     * Updates a dish
+     * @param id The ID of the dish to update
+     * @param dish DTO containing the new values for the dish
+     */
     async function updateDish(id: number, dish: CreateDishDTO) {
         const { error, response } = await putDishUpdate(getDishById(id).slug, dish);
 
@@ -135,6 +174,9 @@ export function useDishes() {
         }
     }
 
+    /**
+     * Updates the DishesState with the new values of a dish
+     */
     function updateDishesState(dish: Dish) {
         const dishToUpdate: Dish = getDishById(dish.id);
 
@@ -147,9 +189,13 @@ export function useDishes() {
         dishToUpdate.categoryId = dish.categoryId;
     }
 
+    /**
+     * Updates the DishesState with the new values of a dishVariation
+     */
     function updateDishVariationInState(parentId: number, variation: Dish) {
         const varationToUpdate: Dish = getDishVariationByParentIdAndId(parentId, variation.id);
 
+        varationToUpdate.slug = variation.slug;
         varationToUpdate.titleDe = variation.titleDe;
         varationToUpdate.titleEn = variation.titleEn;
     }
@@ -163,6 +209,17 @@ export function useDishes() {
         return parentDish.variations.find(variation => variation.id === variationId);
     }
 
+    /**
+     * Resets the DishesState.
+     * Only used for testing purposes.
+     */
+    function resetState() {
+        DishesState.dishes = [];
+        DishesState.error = '';
+        DishesState.filter = '';
+        DishesState.isLoading = false;
+    }
+
     return {
         DishesState: readonly(DishesState),
         filteredDishes,
@@ -173,6 +230,7 @@ export function useDishes() {
         createDishVariation,
         deleteDishVariationWithSlug,
         updateDishVariation,
-        setFilter
+        setFilter,
+        resetState
     };
 }

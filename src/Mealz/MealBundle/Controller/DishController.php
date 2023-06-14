@@ -8,6 +8,8 @@ use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Repository\CategoryRepository;
 use App\Mealz\MealBundle\Repository\CategoryRepositoryInterface;
 use App\Mealz\MealBundle\Repository\DishRepository;
+use App\Mealz\MealBundle\Service\ApiService;
+use App\Mealz\MealBundle\Service\DishService;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -23,19 +25,28 @@ class DishController extends BaseListController
     private CategoryRepositoryInterface $categoryRepository;
     private DishRepository $dishRepository;
     private EntityManagerInterface $em;
+    private DishService $dishService;
+    private ApiService $apiService;
 
     public function __construct(
         float $price,
+        ApiService $apiService,
         CategoryRepository $categoryRepository,
         DishRepository $dishRepository,
+        DishService $dishService,
         EntityManagerInterface $em
     ) {
         $this->defaultPrice = $price;
+        $this->apiService = $apiService;
         $this->categoryRepository = $categoryRepository;
         $this->dishRepository = $dishRepository;
+        $this->dishService = $dishService;
         $this->em = $em;
     }
 
+    /**
+     * Returns a list of all dishes and their variations.
+     */
     public function getDishes(): JsonResponse
     {
         $dishes = $this->dishRepository->findBy(['parent' => null, 'enabled' => true]);
@@ -43,6 +54,9 @@ class DishController extends BaseListController
         return new JsonResponse($dishes, 200);
     }
 
+    /**
+     * Creates a new dish.
+     */
     public function new(Request $request): JsonResponse
     {
         try {
@@ -57,13 +71,13 @@ class DishController extends BaseListController
             $dish->setOneServingSize($parameters['oneServingSize']);
             $dish->setPrice($this->defaultPrice);
 
-            if ($this->isParamValid($parameters, 'descriptionDe', 'string')) {
+            if ($this->apiService->isParamValid($parameters, 'descriptionDe', 'string')) {
                 $dish->setDescriptionDe($parameters['descriptionDe']);
             }
-            if ($this->isParamValid($parameters, 'descriptionEn', 'string')) {
+            if ($this->apiService->isParamValid($parameters, 'descriptionEn', 'string')) {
                 $dish->setDescriptionEn($parameters['descriptionEn']);
             }
-            if ($this->isParamValid($parameters, 'category', 'integer')) {
+            if ($this->apiService->isParamValid($parameters, 'category', 'integer')) {
                 $dish->setCategory($this->categoryRepository->find($parameters['category']));
             }
 
@@ -78,6 +92,9 @@ class DishController extends BaseListController
         }
     }
 
+    /**
+     * Deletes a dish.
+     */
     public function delete(Dish $dish): JsonResponse
     {
         try {
@@ -98,34 +115,15 @@ class DishController extends BaseListController
         }
     }
 
+    /**
+     * Updates a dish.
+     */
     public function update(Dish $dish, Request $request): JsonResponse
     {
         try {
             $parameters = json_decode($request->getContent(), true);
-            if ($this->isParamValid($parameters, 'titleDe', 'string')) {
-                $dish->setTitleDe($parameters['titleDe']);
-            }
-            if ($this->isParamValid($parameters, 'titleEn', 'string')) {
-                $dish->setTitleEn($parameters['titleEn']);
-            }
-            if ($this->isParamValid($parameters, 'oneServingSize', 'boolean')) {
-                $dish->setOneServingSize($parameters['oneServingSize']);
-                if ($dish->hasVariations()) {
-                    /** @var Dish $variation */
-                    foreach ($dish->getVariations() as $variation) {
-                        $variation->setOneServingSize($parameters['oneServingSize']);
-                    }
-                }
-            }
-            if ($this->isParamValid($parameters, 'descriptionDe', 'string')) {
-                $dish->setDescriptionDe($parameters['descriptionDe']);
-            }
-            if ($this->isParamValid($parameters, 'descriptionEn', 'string')) {
-                $dish->setDescriptionEn($parameters['descriptionEn']);
-            }
-            if ($this->isParamValid($parameters, 'category', 'integer')) {
-                $dish->setCategory($this->categoryRepository->find($parameters['category']));
-            }
+
+            $this->dishService->updateHelper($dish, $parameters);
 
             $this->em->persist($dish);
             $this->em->flush();
@@ -136,19 +134,5 @@ class DishController extends BaseListController
 
             return new JsonResponse(['status' => $e->getMessage()], 500);
         }
-    }
-
-    /**
-     * Checks wether the parameter at a given key exists and is valid.
-     *
-     * @param array  $parameters decoded json content
-     * @param string $key        key for the parameter to be checked
-     * @param string $type       the expected type of the parameter
-     */
-    protected function isParamValid($parameters, $key, $type): bool
-    {
-        return isset($parameters[$key])
-            && null !== $parameters[$key]
-            && $type === gettype($parameters[$key]);
     }
 }

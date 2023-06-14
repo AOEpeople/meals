@@ -27,12 +27,19 @@ const CategoriesState = reactive<CategoriesState>({
 
 export function useCategories() {
 
+    /**
+     * Calls getCategories and sets isLoading to true while fetching
+     */
     async function fetchCategories() {
         CategoriesState.isLoading = true;
         await getCategories();
         CategoriesState.isLoading = false;
     }
 
+    /**
+     * Calls getCategoriesData to fetch the categories and sets the categories state.
+     * Retries to fetch after a timeout if there are errors.
+     */
     async function getCategories() {
         const { categories, error } = await getCategoriesData();
         if (!error.value && categories.value) {
@@ -44,6 +51,10 @@ export function useCategories() {
         }
     }
 
+    /**
+     * Calls deleteCategory to delete a category and fetches the categories again
+     * @param slug The slug of the category to delete
+     */
     async function deleteCategoryWithSlug(slug: string) {
         const { error, response } = await deleteCategory(slug);
 
@@ -55,6 +66,10 @@ export function useCategories() {
         await getCategories();
     }
 
+    /**
+     * Calls postCreateCategory to create a new category and fetches the categories again
+     * @param newCategory The category to create
+     */
     async function createCategory(newCategory: Category) {
         const { error, response } = await postCreateCategory(newCategory);
 
@@ -66,6 +81,12 @@ export function useCategories() {
         await getCategories();
     }
 
+    /**
+     * Updates the categoryState after calling putCategoryUpdate
+     * @param index The index of the category to update
+     * @param titleDe The new german title
+     * @param titleEn The new english title
+     */
     async function editCategory(index: number, titleDe: string, titleEn: string) {
         const { error, response } = await putCategoryUpdate(CategoriesState.categories[index].slug, titleDe, titleEn);
 
@@ -76,6 +97,11 @@ export function useCategories() {
         }
     }
 
+    /**
+     * Updates the category at the given index with the given category
+     * @param index
+     * @param category
+     */
     function updateCategoryState(index: number, category: Category) {
         if (CategoriesState.categories[index].id === category.id) {
             CategoriesState.categories[index].titleDe = category.titleDe;
@@ -84,12 +110,19 @@ export function useCategories() {
         }
     }
 
+    /**
+     * Resets the categoryState.
+     * Used for testing.
+     */
     function resetState() {
         CategoriesState.categories = [];
         CategoriesState.error = '';
         CategoriesState.isLoading = false;
     }
 
+    /**
+     * Returns the category with the given id
+     */
     function getCategoryById(id: number) {
         return CategoriesState.categories.find(category => category.id === id);
     }
@@ -102,11 +135,18 @@ export function useCategories() {
         return '';
     }
 
+    /**
+     * Returns all categoryId's where the title contains the given string
+     * @param title The title to search for
+     */
     function getCategoryIdsByTitle(title: string) {
         const categories = CategoriesState.categories.filter(category => categoryContainsString(category, title));
         return categories.map(category => category.id);
     }
 
+    /**
+     * Searches wether the category contains the given string in the title
+     */
     function categoryContainsString(category: Category, searchStr: string) {
         return (
             category.titleDe.toLowerCase().includes(searchStr.toLowerCase())

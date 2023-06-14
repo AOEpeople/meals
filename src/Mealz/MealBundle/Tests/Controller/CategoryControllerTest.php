@@ -10,7 +10,6 @@ use App\Mealz\MealBundle\Repository\CategoryRepositoryInterface;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\DomCrawler\Crawler;
 
 /**
  * Class CategoryAbstractControllerTest.
@@ -108,21 +107,5 @@ class CategoryControllerTest extends AbstractControllerTestCase
         $this->assertInstanceOf(Category::class, $category);
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(json_encode($category), $this->client->getResponse()->getContent());
-    }
-
-    protected function getRawResponseCrawler(): Crawler
-    {
-        $content = $this->client->getResponse()->getContent();
-        $uri = 'http://meals.test';
-
-        return new Crawler($content, $uri);
-    }
-
-    protected function getJsonResponseCrawler(): Crawler
-    {
-        $content = $this->client->getResponse()->getContent();
-        $uri = 'http://meals.test';
-
-        return new Crawler(json_decode($content, true), $uri);
     }
 }

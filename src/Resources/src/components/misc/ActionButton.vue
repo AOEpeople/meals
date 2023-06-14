@@ -1,6 +1,6 @@
 <template>
   <button
-    class="z-[1] flex h-full place-items-center"
+    class="z-[1] flex h-full place-items-center rounded-lg px-[2px] hover:shadow-[0px_2px_8px_-1px_rgba(0,0,0,0.2)]"
     :class="row ? 'flex-row' : 'flex-col'"
   >
     <PencilIcon

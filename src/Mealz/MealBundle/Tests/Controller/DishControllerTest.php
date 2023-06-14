@@ -12,7 +12,6 @@ use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\DomCrawler\Crawler;
 
 class DishControllerTest extends AbstractControllerTestCase
 {
@@ -36,47 +35,27 @@ class DishControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * Test calling a form for new dish.
-     */
-    public function testGetEmptyFormAction(): void
-    {
-        $this->markTestSkipped('irrelevant form');
-        $this->client->request('GET', '/dish/form');
-        $crawler = $this->getRawResponseCrawler();
-        $node = $crawler->filterXPath('//form[@action="/dish/new"]');
-        $this->assertSame($node->count(), 1);
-    }
-
-    /**
      * Test creating a new dish.
      */
-    public function testNewAction(): void
+    public function testNew(): void
     {
-        $this->markTestSkipped('irrelevant form');
-        // Create form data
-        $form = [
-            'dish' => [
-                'title_de' => 'dish-form-title-de',
-                'title_en' => 'dish-form-title-en',
-                'description_de' => 'dish-form-desc-de',
-                'description_en' => 'dish-form-desc-en',
-                'category' => '',
-                '_token' => $this->getFormCSRFToken('/dish/form', 'form #dish__token'),
-            ],
-        ];
+        // Create data for request
+        $data = json_encode([
+            'titleDe' => 'Test De 123',
+            'titleEn' => 'Test En 123',
+            'oneServingSize' => false,
+        ]);
 
         // Call controller action
-        $this->client->request('POST', '/dish/new', $form);
+        $this->client->request('POST', '/api/dishes', [], [], [], $data);
 
         // Get persisted entity
         /** @var EntityManager $entityManager */
         $entityManager = $this->client->getContainer()->get('doctrine')->getManager();
         $dishRepository = $entityManager->getRepository(Dish::class);
         $dish = $dishRepository->findOneBy([
-            'title_de' => 'dish-form-title-de',
-            'title_en' => 'dish-form-title-en',
-            'description_de' => 'dish-form-desc-de',
-            'description_en' => 'dish-form-desc-en',
+            'title_de' => 'Test De 123',
+            'title_en' => 'Test En 123',
         ]);
 
         $this->assertNotNull($dish);
@@ -85,88 +64,57 @@ class DishControllerTest extends AbstractControllerTestCase
 
     /**
      * Test adding a new new dish and find it listed in dishes list.
+     *
+     * @outputBuffering disabled
      */
-    public function testListAction(): void
+    public function testGetDishes(): void
     {
-        $this->markTestSkipped('not implemented');
-        $dish = $this->createDish();
-        $this->persistAndFlushAll([$dish]);
+        $newDish = $this->createDish();
+        $this->persistAndFlushAll([$newDish]);
 
         // Request
-        $crawler = $this->client->request('GET', '/dish');
+        $this->client->request('GET', '/api/dishes');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         // Get data for assertions from response
-        $heading = $crawler->filter('h1')->first()->text();
+        $response = json_decode($this->client->getResponse()->getContent(), true);
 
-        $dishTitles = $crawler->filter('.table-row .dish-title');
         $found = false;
 
-        foreach ($dishTitles as $dishTitle) {
-            if ($dish->getTitle() === trim($dishTitle->nodeValue)) {
+        foreach ($response as $dish) {
+            if ($newDish->getTitleDe() === $dish['titleDe'] && $newDish->getTitleEn() === $dish['titleEn']) {
                 $found = true;
                 break;
             }
         }
 
         $this->assertTrue($found, 'Dish not found');
-        $this->assertEquals('List of dishes', trim($heading));
     }
 
     /**
-     * Test if a dish is selected for editing the form must be prefilled
-     * with the dishes data.
+     * Test a previously created dish can be updated.
      */
-    public function testGetPreFilledFormAction(): void
+    public function testUpdate(): void
     {
-        $this->markTestSkipped('irrelevant form');
-        // Create test data
-        $dish = $this->createDish();
-        $dishAsArray = [
-            'title_de' => $dish->getTitleDe(),
-            'title_en' => $dish->getTitleEn(),
-        ];
-        $this->persistAndFlushAll([$dish]);
-
-        // Request
-        $this->client->request('GET', '/dish/form/' . $dish->getSlug());
-        $crawler = $this->getRawResponseCrawler();
-
-        // Check if form is loaded
-        $node = $crawler->filterXPath('//form[@action="/dish/' . $dish->getSlug() . '/edit"]');
-        $this->assertSame($node->count(), 1);
-
-        // Copy form values in array for comparison
-        $form = $crawler->selectButton('Save')->form();
-        $formDishAsArray = [
-            'title_de' => $form->get('dish[title_de]')->getValue(),
-            'title_en' => $form->get('dish[title_en]')->getValue(),
-        ];
-
-        $this->assertEquals($dishAsArray, $formDishAsArray);
-    }
-
-    /**
-     * Test a previously created dish can be edited in a form.
-     */
-    public function testEditAction(): void
-    {
-        $this->markTestSkipped('not implemented');
         $dish = $this->createDish();
         $this->persistAndFlushAll([$dish]);
 
-        $form['dish'] = [
-            'title_de' => 'dish-form-edited-title-de',
-            'title_en' => 'dish-form-edited-title-en',
-            'description_de' => 'dish-form-edited-desc-de',
-            'description_en' => 'dish-form-edited-desc-en',
-            'category' => '',
-            '_token' => $this->getFormCSRFToken('/dish/form/' . $dish->getSlug(), 'form #dish__token'),
-        ];
+        $data = json_encode([
+            'titleDe' => 'Test De 321',
+            'titleEn' => 'Test En 321',
+            'oneServingSize' => true,
+            'descriptionDe' => 'Test De Description',
+            'descriptionEn' => 'Test En Description',
+        ]);
 
-        $this->client->request('POST', '/dish/' . $dish->getSlug() . '/edit', $form);
+        $this->client->request('PUT', '/api/dishes/' . $dish->getSlug(), [], [], [], $data);
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+
         $dishRepository = $this->getDoctrine()->getRepository(Dish::class);
-        unset($form['dish']['category'], $form['dish']['_token']);
-        $editedDish = $dishRepository->findOneBy($form['dish']);
+        $editedDish = $dishRepository->findOneBy([
+            'title_de' => 'Test De 321',
+            'title_en' => 'Test En 321',
+        ]);
 
         $this->assertInstanceOf(Dish::class, $editedDish);
         $this->assertEquals($dish->getId(), $editedDish->getId());
@@ -177,8 +125,7 @@ class DishControllerTest extends AbstractControllerTestCase
      */
     public function testEditActionOfNonExistingDish(): void
     {
-        $this->markTestSkipped('not implemented');
-        $this->client->request('POST', '/dish/non-existing-dish/edit');
+        $this->client->request('PUT', '/api/dishes/non-existing-dish');
         $this->assertSame(404, $this->client->getResponse()->getStatusCode());
     }
 
@@ -187,12 +134,13 @@ class DishControllerTest extends AbstractControllerTestCase
      */
     public function testDeleteAction(): void
     {
-        $this->markTestSkipped('not implemented');
         $dish = $this->createDish();
         $this->persistAndFlushAll([$dish]);
 
         $dishId = $dish->getId();
-        $this->client->request('GET', '/dish/' . $dish->getSlug() . '/delete');
+        $this->client->request('DELETE', '/api/dishes/' . $dish->getSlug());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+
         $dishRepository = $this->getDoctrine()->getRepository(Dish::class);
         $queryResult = $dishRepository->find($dishId);
 
@@ -204,8 +152,7 @@ class DishControllerTest extends AbstractControllerTestCase
      */
     public function testDeleteOfNonExistingDish(): void
     {
-        $this->markTestSkipped('not implemented');
-        $this->client->request('GET', '/dish/non-existing-dish/delete');
+        $this->client->request('DELETE', '/api/dishes/non-existing-dish');
         $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
     }
 
@@ -242,31 +189,5 @@ class DishControllerTest extends AbstractControllerTestCase
         $this->assertNotNull($dish);
         $dishService = self::$container->get('mealz_meal.service.dish_service');
         $this->assertTrue($dishService->isNew($dish));
-    }
-
-    /**
-     * Test if a often offered dish is not marked as new.
-     */
-    public function testIfOftenOfferedDishIsNotNew(): void
-    {
-        // Get persisted entity
-        /** @var EntityManager $entityManager */
-        $entityManager = $this->client->getContainer()->get('doctrine')->getManager();
-        $dishRepository = $entityManager->getRepository(Dish::class);
-        $dish = $dishRepository->findOneBy([
-            'slug' => 'braaaaaiiinnnzzzzzz',
-        ]);
-
-        $this->assertNotNull($dish);
-        $dishService = self::$container->get('mealz_meal.service.dish_service');
-        $this->assertFalse($dishService->isNew($dish));
-    }
-
-    protected function getRawResponseCrawler(): Crawler
-    {
-        $content = $this->client->getResponse()->getContent();
-        $uri = 'http://www.mealz.local';
-
-        return new Crawler($content, $uri);
     }
 }

@@ -54,6 +54,11 @@ export function useTimeSlots() {
         }
     }
 
+    /**
+     * Enables or disables a slot
+     * @param id The id of the slot
+     * @param state The new state of the slot
+     */
     async function changeDisabledState(id: number, state: boolean) {
         const { updateSlotEnabled } = useUpdateSlot();
 
@@ -66,6 +71,11 @@ export function useTimeSlots() {
         }
     }
 
+    /**
+     * Updates a slot
+     * @param id The id of the slot
+     * @param slot The new slot data
+     */
     async function editSlot(id: number, slot: TimeSlot) {
         const { updateTimeSlot } = useUpdateSlot();
 
@@ -82,10 +92,16 @@ export function useTimeSlots() {
         }
     }
 
+    /**
+     * Updates the enabled state of a slot
+     */
     function updateTimeSlotEnabled(newSlot: TimeSlot, id: number) {
         TimeSlotState.timeSlots[id].enabled = newSlot.enabled;
     }
 
+    /**
+     * Updates the data of a slot
+     */
     function updateTimeSlotState(slot: TimeSlot, id: number) {
         TimeSlotState.timeSlots[id].title = slot.title;
         TimeSlotState.timeSlots[id].limit = slot.limit;
@@ -93,6 +109,10 @@ export function useTimeSlots() {
         TimeSlotState.timeSlots[id].slug = slot.slug;
     }
 
+    /**
+     * Calls postCreateSlot to create a new slot
+     * @param newSlot The new slot to be created
+     */
     async function createSlot(newSlot: TimeSlot) {
         const { error, response } = await postCreateSlot(newSlot);
 
@@ -104,6 +124,10 @@ export function useTimeSlots() {
         await getTimeSlots();
     }
 
+    /**
+     * Calls deleteSlot to delete a slot
+     * @param slug The identifier of the slot to be deleted
+     */
     async function deleteSlotWithSlug(slug: string) {
         const { error, response } = await deleteSlot(slug);
 

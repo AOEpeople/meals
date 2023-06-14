@@ -1,6 +1,10 @@
 import { ISuccess } from "@/interfaces/ISuccess";
 import useApi from "./api";
 
+/**
+ * Performs a DELETE request to delete a dish with a given identifier
+ * @param slug The identifier of the dish
+ */
 export default async function deleteDish(slug: string) {
     const { error, request, response } = useApi<ISuccess>(
         'DELETE',

@@ -10,9 +10,6 @@ use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Repository\DishRepository;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
-use Doctrine\ORM\EntityManager;
-use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\DomCrawler\Link;
 
 /**
  * @author Dirk Rauscher <dirk.rauscher@aoe.com>
@@ -35,114 +32,64 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         $this->loginAs(self::USER_KITCHEN_STAFF);
     }
 
-    public function testNewForm(): void
+    /**
+     * Test creating a new dish variation.
+     */
+    public function testNew(): void
     {
-        $this->markTestSkipped('irrelevant form');
         /** @var Dish $dish */
         $dish = $this->getDish();
 
-        $url = '/dish/' . $dish->getId() . '/variation/new';
-        $this->client->request('GET', $url);
+        $data = json_encode([
+            'titleDe' => 'Test De Var123',
+            'titleEn' => 'Test En Var123',
+        ]);
 
-        // Assert that we get JSON response
-        $this->assertTrue(
-            $this->client->getResponse()->headers->contains('Content-Type', 'text/html; charset=UTF-8'),
-            'DishVariationController::newAction should return HTML response.'
-        );
+        $this->client->request('POST', '/api/dishes/' . $dish->getSlug() . '/variation', [], [], [], $data);
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
-        $crawler = $this->getRawResponseCrawler();
-        $formNode = $crawler->filterXPath('//form[@action="' . $url . '"]');
-        $this->assertTrue(1 === $formNode->count());
+        $found = false;
 
-        $inputDeDescNode = $crawler->filterXPath('//input[@name="dishvariation[title_de]"]');
-        $this->assertTrue(1 === $inputDeDescNode->count());
+        foreach ($dish->getVariations() as $variation) {
+            if ('Test De Var123' === $variation->getTitleDe() && 'Test En Var123' === $variation->getTitleEn()) {
+                $found = true;
+                break;
+            }
+        }
 
-        $inputEnDescNode = $crawler->filterXPath('//input[@name="dishvariation[title_en]"]');
-        $this->assertTrue(1 === $inputEnDescNode->count());
+        $this->assertTrue($found);
     }
 
-    public function testCreateDishVariation(): void
+    public function testUpdate(): void
     {
-        $this->markTestSkipped('irrelevant form');
-        /** @var Dish $dish */
-        $dish = $this->getDish(null, true);
-
-        $url = '/dish/' . $dish->getId() . '/variation/new';
-        $this->client->request('GET', $url);
-
-        $crawler = $this->getRawResponseCrawler();
-        $this->client->submit($crawler->filterXPath('//form[@action="' . $url . '"]')->form([
-            'dishvariation[title_de]' => 'new dish variation [de]',
-            'dishvariation[title_en]' => 'new dish variation [en]',
-        ]), []);
-
-        $this->assertTrue($this->client->getResponse()->isRedirect('/dish'));
-
-        $updatedDishVariation = $this->getDishVariationBy('title_de', 'new dish variation [de]');
-        $this->assertEquals('new dish variation [de]', $updatedDishVariation->getTitleDe());
-        $this->assertEquals('new dish variation [en]', $updatedDishVariation->getTitleEn());
-    }
-
-    public function testEditForm(): void
-    {
-        $this->markTestSkipped('irrelevant form');
         /** @var Dish $dish */
         $dish = $this->getDish(null, true);
         $dishVariation = $dish->getVariations()->get(0);
 
-        $url = '/dish/variation/' . $dishVariation->getId() . '/edit';
-        $this->client->request('GET', $url);
+        $data = json_encode([
+            'titleDe' => 'Test De Var123',
+            'titleEn' => 'Test En Var123',
+        ]);
 
-        // Assert that we get html response
-        $this->assertTrue(
-            $this->client->getResponse()->headers->contains('Content-Type', 'text/html; charset=UTF-8'),
-            'DishVariationController::editAction should return HTML response.'
-        );
+        $this->client->request('PUT', '/api/dishes/variation/' . $dishVariation->getSlug(), [], [], [], $data);
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
-        $crawler = $this->getRawResponseCrawler();
-        $formNode = $crawler->filterXPath('//form[@action="' . $url . '"]');
-        $this->assertTrue(1 === $formNode->count());
-
-        $inputDeDescNode = $crawler->filterXPath('//input[@name="dishvariation[title_de]"]');
-        $this->assertTrue(1 === $inputDeDescNode->count());
-
-        $inputEnDescNode = $crawler->filterXPath('//input[@name="dishvariation[title_en]"]');
-        $this->assertTrue(1 === $inputEnDescNode->count());
-    }
-
-    public function testUpdateDishVariation(): void
-    {
-        $this->markTestSkipped('irrelevant form');
-        /** @var Dish $dish */
-        $dish = $this->getDish(null, true);
-        $dishVariationId = $dish->getVariations()->get(0)->getId();
-
-        $url = '/dish/variation/' . $dishVariationId . '/edit';
-        $this->client->request('GET', $url);
-
-        $crawler = $this->getRawResponseCrawler();
-        $this->client->submit($crawler->filterXPath('//form[@action="' . $url . '"]')->form([
-            'dishvariation[title_de]' => 'dish variation [de]',
-            'dishvariation[title_en]' => 'dish variation [en]',
-        ]), []);
-
-        $this->assertTrue($this->client->getResponse()->isRedirect('/dish'));
-
-        $updatedDishVariation = $this->getDishVariationBy('id', $dishVariationId);
-        $this->assertEquals('dish variation [de]', $updatedDishVariation->getTitleDe());
-        $this->assertEquals('dish variation [en]', $updatedDishVariation->getTitleEn());
+        $updatedDishVariation = $this->getDishVariationBy('id', $dishVariation->getId(), false);
+        $this->assertNotNull($updatedDishVariation);
+        $this->assertInstanceOf(DishVariation::class, $updatedDishVariation);
+        $this->assertEquals('Test De Var123', $updatedDishVariation->getTitleDe());
+        $this->assertEquals('Test En Var123', $updatedDishVariation->getTitleEn());
     }
 
     public function testDeleteDishVariation(): void
     {
-        $this->markTestSkipped('irrelevant form');
         /** @var DishVariation $dishVariation */
         $dishVariation = $this->getDish(null, true)->getVariations()->get(0);
         $dishVariationId = $dishVariation->getId();
         $this->assertTrue($dishVariation->isEnabled());
 
-        $this->client->request('GET', '/dish/variation/' . $dishVariation->getSlug() . '/delete');
-        $this->assertTrue($this->client->getResponse()->isRedirect('/dish'));
+        $this->client->request('DELETE', '/api/dishes/variation/' . $dishVariation->getSlug());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         $updatedDishVariation = $this->getDishVariationBy('id', $dishVariationId, false);
         if ($updatedDishVariation instanceof DishVariation) {
@@ -154,205 +101,17 @@ class DishVariationControllerTest extends AbstractControllerTestCase
 
     public function testDeleteNonExistingDishVariation(): void
     {
-        $this->markTestSkipped('irrelevant form');
-        $this->client->request('GET', '/dish/variation/1234097354/delete');
+        $this->client->request('DELETE', '/api/dishes/variation/non-existent-dish-variation');
         $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
     }
 
     /**
-     * Test calling a form for new dish variation.
+     * Test calling a non existing dishvariation to be EDITED leads to a 404 error.
      */
-    public function testGetEmptyFormAction(): void
+    public function testUpdateActionOfNonExistingDishVariation(): void
     {
-        $this->markTestSkipped('irrelevant form');
-        // click add new variation button
-        $crawler = $this->client->request('GET', '/dish');
-        $link = $crawler->filterXPath(
-            "//a[contains(@href,'/variation/new') and contains(@class,'load-edit-form')]"
-        )->first()->link();
-        $this->client->click($link);
-        $crawler = $this->getRawResponseCrawler();
-
-        // get dish id from url
-        $dishId = $this->grepDishIdFromUri($link);
-
-        // check if there is a form shown for adding a new dish variation
-        $node = $crawler->filter('form[action$="/' . $dishId . '/variation/new"]');
-
-        $this->assertTrue(1 === $node->count());
-    }
-
-    /**
-     * Test creating a new dish variation.
-     */
-    public function testNewVariationAction(): void
-    {
-        $this->markTestSkipped('irrelevant form');
-        $dishId = $this->getHelperObject('dishid');
-        $formURI = '/dish/' . $dishId . '/variation/new';
-
-        // Create form data
-        $form['dishvariation'] = [
-            'title_de' => 'dishvariation-TITLE-de' . mt_rand(),
-            'title_en' => 'dishvariation-TITLE-en' . mt_rand(),
-            '_token' => $this->getFormCSRFToken($formURI, '#dishvariation__token'),
-        ];
-
-        // Call controller action
-        $this->client->request('POST', $formURI, $form);
-
-        // Get persisted entity
-        /** @var EntityManager $entityManager */
-        $entityManager = $this->client->getContainer()->get('doctrine')->getManager();
-        $dishVariationRepo = $entityManager->getRepository(DishVariation::class);
-        $dishVariation = $dishVariationRepo->findOneBy([
-            'title_de' => $form['dishvariation']['title_de'],
-            'title_en' => $form['dishvariation']['title_en'],
-        ]);
-
-        $this->assertNotNull($dishVariation);
-        $this->assertInstanceOf(DishVariation::class, $dishVariation);
-    }
-
-    /**
-     * Test adding a new new dishvariation and find it listed in dishes list.
-     */
-    public function testListAction(): void
-    {
-        $this->markTestSkipped('irrelevant form');
-        $dish = $this->getDish(null, true);
-        $dishVariation = $dish->getVariations()->get(0);
-
-        // Request
-        $crawler = $this->client->request('GET', '/dish');
-
-        // Get data for assertions from response
-        $heading = $crawler->filter('h1')->first()->text();
-
-        $dishVariationTitles = $crawler->filter('.table-row .dish-variation-title');
-        $found = false;
-
-        foreach ($dishVariationTitles as $dishVariationTitle) {
-            if (false !== strpos(trim($dishVariationTitle->nodeValue), $dishVariation->getTitle())) {
-                $found = true;
-                break;
-            }
-        }
-
-        $this->assertTrue($found, 'Dish variation not found');
-        $this->assertEquals('List of dishes', trim($heading));
-    }
-
-    /**
-     * Test a previously created dishvariation can be edited in a form.
-     */
-    public function testEditAction(): void
-    {
-        $this->markTestSkipped('irrelevant form');
-        $dish = $this->getDish(null, true);
-        $dishVariation = $dish->getVariations()->get(0);
-        $formURI = '/dish/variation/' . $dishVariation->getId() . '/edit';
-
-        $form['dishvariation'] = [
-            'title_de' => 'edited-dishvariation-de-' . mt_rand(),
-            'title_en' => 'edited-dishvariation-en-' . mt_rand(),
-            '_token' => $this->getFormCSRFToken($formURI, '#dishvariation__token'),
-        ];
-
-        $this->client->request('POST', $formURI, $form);
-        $dishRepository = $this->getDoctrine()->getRepository(DishVariation::class);
-        unset($form['dishvariation']['_token']);
-        $editedDishVariation = $dishRepository->findOneBy($form['dishvariation']);
-
-        $this->assertInstanceOf(DishVariation::class, $editedDishVariation);
-        $this->assertEquals($dishVariation->getId(), $editedDishVariation->getId());
-    }
-
-    /**
-     * Test calling a non existing dishvariation(ID) to be EDITED leads to a 404 error.
-     */
-    public function testEditActionOfNonExistingDishVariation(): void
-    {
-        $this->markTestSkipped('irrelevant form');
-        $this->client->request('POST', '/dish/variation/xxxnon-existing-dishvariation/edit');
+        $this->client->request('PUT', '/api/dishes/variation/non-existing-dishvariation');
         $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
-    }
-
-    /**
-     * Test firing a dish DELETION from the admin backend deletes the dishvariation from database.
-     */
-    public function testDeleteAction(): void
-    {
-        $this->markTestSkipped('irrelevant form');
-        $dish = $this->getDish(null, true);
-        /* @var $dishVariation DishVariation */
-        $dishVariation = $dish->getVariations()->get(0);
-
-        $dishVariationSlug = $dishVariation->getSlug();
-        $this->client->request('GET', "/dish/variation/$dishVariationSlug/delete");
-        $dishVariationRepo = $this->getDoctrine()->getRepository(DishVariation::class);
-        $queryResult = $dishVariationRepo->findBy(['slug' => $dishVariationSlug]);
-
-        $this->assertEmpty($queryResult);
-    }
-
-    /**
-     * Test calling a non existing dish(ID) to be DELETED leads to a 404 error.
-     */
-    public function testDeleteOfNonExistingDishVariation(): void
-    {
-        $this->markTestSkipped('irrelevant form');
-        $this->client->request('GET', '/dish/variation/xxxnon-existing-dishvariation/delete');
-        $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
-    }
-
-    protected function getRawResponseCrawler(): Crawler
-    {
-        $content = $this->client->getResponse()->getContent();
-        $hostUrl = $this->getHostUrl();
-
-        return new Crawler($content, $hostUrl);
-    }
-
-    /**
-     * Retrieve the first id (integer) that is contained in an URL.
-     *
-     * @param $link Link
-     *
-     * @return bool|int
-     */
-    private function grepDishIdFromUri(Link $link)
-    {
-        preg_match("|(?<=/)(\d+)(?=/)|", $link->getUri(), $match);
-
-        return (count($match)) ? (int) $match[0] : false;
-    }
-
-    /**
-     * @param string $type This function either returns a Crawler('crawler') object or an Id('id'). Default is crawler of a add variation form.
-     *
-     * @return Crawler
-     */
-    private function getHelperObject($type = 'crawler')
-    {
-        // click add new variation button
-        $crawler = $this->client->request('GET', '/dish');
-        $link = $crawler->filterXPath(
-            "//a[contains(@href,'/variation/new') and contains(@class,'load-edit-form')]"
-        )->first()->link();
-        $this->client->click($link);
-        $crawler = $this->getRawResponseCrawler();
-
-        // get dish id from url
-        $dishId = $this->grepDishIdFromUri($link);
-
-        switch (strtolower($type)) {
-            case 'dishid':
-                return $dishId;
-            case 'crawler':
-            default:
-                return $crawler;
-        }
     }
 
     /**
@@ -425,16 +184,5 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         }
 
         return $dishVariation;
-    }
-
-    private function getHostUrl(): string
-    {
-        $host = 'http://localhost/app.php/';
-        if (self::$kernel->getContainer()->hasParameter('mealz.host')) {
-            $host = self::$kernel->getContainer()->getParameter('mealz.host');
-            $host = rtrim($host, '/') . '/';
-        }
-
-        return $host;
     }
 }

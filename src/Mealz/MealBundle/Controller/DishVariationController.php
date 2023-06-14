@@ -30,8 +30,11 @@ class DishVariationController extends BaseController
         $this->em = $em;
     }
 
-   public function new(Request $request, Dish $dish): JsonResponse
-   {
+    /**
+     * Creates a new dish variation.
+     */
+    public function new(Request $request, Dish $dish): JsonResponse
+    {
         try {
             $parameters = json_decode($request->getContent(), true);
 
@@ -56,10 +59,13 @@ class DishVariationController extends BaseController
 
             return new JsonResponse(['status' => $e->getMessage()], 500);
         }
-   }
+    }
 
-   public function update(Request $request, DishVariation $dishVariation): JsonResponse
-   {
+    /**
+     * Updates a dish variation.
+     */
+    public function update(Request $request, DishVariation $dishVariation): JsonResponse
+    {
         try {
             $parameters = json_decode($request->getContent(), true);
             if (isset($parameters['titleDe'])) {
@@ -78,8 +84,11 @@ class DishVariationController extends BaseController
 
             return new JsonResponse(['status' => $e->getMessage()], 500);
         }
-   }
+    }
 
+    /**
+     * Deletes a dish variation.
+     */
     public function delete(DishVariation $dishVariation): JsonResponse
     {
         try {

@@ -1,16 +1,16 @@
-import putCategoryUpdate from "@/api/putCategoryUpdate";
+import postCreateDishVariation from "@/api/postCreateDishVariation";
+import { CreateDishVariationDTO } from "@/api/postCreateDishVariation";
 import useApi from "@/api/api";
-import { ref } from "vue";
-import Categories from "../fixtures/getCategories.json";
+import success from "../fixtures/Success.json";
 import { it, describe, expect } from "@jest/globals";
-import { Category } from "@/stores/categoriesStore";
+import { ref } from "vue";
 
 const asyncFunc: () => Promise<void> = async () => {
     new Promise(resolve => resolve(undefined));
 };
 
 const mockedReturnValue = {
-    response: ref(Categories[0]),
+    response: ref(success),
     request: asyncFunc,
     error: ref(false)
 }
@@ -20,18 +20,16 @@ useApi = jest.fn(useApi);
 // @ts-expect-error continuation of expect error from line above
 useApi.mockReturnValue(mockedReturnValue);
 
-const category: Category = {
-    id: 1,
-    titleDe: 'Test',
-    titleEn: 'Test',
-    slug: 'test'
+const dishVariation: CreateDishVariationDTO = {
+    titleDe: 'TestVarDe',
+    titleEn: 'TestVarEn'
 };
 
-describe('Test putCategoryUpdate', () => {
+describe('Test postCreateDishVariation', () => {
     it('should return a success object', async () => {
-        const { error, response } = await putCategoryUpdate('test', category.titleDe, category.titleEn);
+        const { error, response } = await postCreateDishVariation(dishVariation, 'testen');
 
         expect(error.value).toBeFalsy();
-        expect(response.value).toEqual(Categories[0]);
+        expect(response.value).toEqual(success);
     });
 });

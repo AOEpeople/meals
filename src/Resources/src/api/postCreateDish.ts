@@ -10,6 +10,10 @@ export interface CreateDishDTO {
     category?: number
 }
 
+/**
+ * Performs a POST to create a new dish
+ * @param dish The dish to create
+ */
 export default async function postCreateDish(dish: CreateDishDTO) {
     const { error, request, response } = useApi<ISuccess>(
         'POST',

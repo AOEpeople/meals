@@ -2,7 +2,6 @@ import { IMealWithVariations } from "@/api/getShowParticipations";
 import Meal from "@/components/participations/Meal.vue";
 import { describe, expect } from "@jest/globals";
 import { mount } from "@vue/test-utils";
-import { computed } from "vue";
 
 const mealOne: IMealWithVariations = {
     title: {
@@ -50,13 +49,6 @@ const mealFive: IMealWithVariations = {
     participations: 0,
     mealId: 5
 }
-
-jest.mock('vue-i18n', () => ({
-    useI18n: () => ({
-        t: (key: string) => key,
-        locale: computed(() => 'en')
-    })
-}));
 
 describe('Test Meal', () => {
     it('should render a th-eleent with the name of the meal and no variations', () => {

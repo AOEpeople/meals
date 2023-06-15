@@ -1,6 +1,6 @@
 import useApi from "@/api/api";
 import { describe, jest, it } from "@jest/globals";
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import nextThreeDays from "../fixtures/nextThreeDays.json";
 import participations from "../fixtures/participations.json";
 import { flushPromises, mount } from "@vue/test-utils";
@@ -30,13 +30,6 @@ const getMockedResponses = (url: string) => {
             return {}
     }
 }
-
-jest.mock('vue-i18n', () => ({
-    useI18n: () => ({
-        t: (key: string) => key,
-        locale: computed(() => 'en')
-    })
-}));
 
 // @ts-expect-error ts doesn't allow reassignig a import but we need that to mock that function
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

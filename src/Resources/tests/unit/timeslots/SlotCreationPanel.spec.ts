@@ -1,15 +1,7 @@
-import { computed } from "vue";
 import SlotCreationPanel from "@/components/timeslots/SlotCreationPanel.vue";
 import InputLabel from "@/components/misc/InputLabel.vue";
 import { describe, it } from "@jest/globals";
 import { mount } from "@vue/test-utils";
-
-jest.mock('vue-i18n', () => ({
-    useI18n: () => ({
-        t: (key: string) => key,
-        locale: computed(() => 'en')
-    })
-}));
 
 describe('Test SlotCreationPanel', () => {
     it('should contain a header, three InputLbel-components and a separate input field', () => {

@@ -2,20 +2,27 @@ import { useDishes, Dish } from "@/stores/dishesStore";
 import { useCategories } from "@/stores/categoriesStore";
 import useApi from "@/api/api";
 import { ref } from "vue";
-import { beforeAll, beforeEach, describe, it } from "@jest/globals";
+import { beforeAll, beforeEach, describe, expect, it } from "@jest/globals";
 import success from "../fixtures/Success.json";
 import Dishes from "../fixtures/getDishes.json";
 import Categories from "../fixtures/getCategories.json";
+import { CreateDishDTO } from "@/api/postCreateDish";
 
 const dish1: Dish = {
-    id: 0,
-    slug: "",
-    titleDe: "",
-    titleEn: "",
-    categoryId: 0,
+    id: 17,
+    slug: "limbs123",
+    titleDe: "Limbs DE 123",
+    titleEn: "Limbs 123",
+    categoryId: 6,
     oneServingSize: false,
-    parentId: 0,
+    parentId: null,
     variations: []
+};
+
+const dishUpdate: CreateDishDTO = {
+    titleDe: "Limbs DE 123",
+    titleEn: "Limbs 123",
+    oneServingSize: false
 };
 
 const asyncFunc: () => Promise<void> = async () => {
@@ -55,7 +62,7 @@ const getMockedResponses = (method: string, url: string) => {
 useApi = jest.fn().mockImplementation((method: string, url: string) => getMockedResponses(method, url));
 
 describe('Test dishesStore', () => {
-    const { resetState, DishesState, fetchDishes } = useDishes();
+    const { resetState, DishesState, fetchDishes, setFilter, filteredDishes, updateDish } = useDishes();
     const { fetchCategories } = useCategories();
 
     beforeAll(async () => {
@@ -80,5 +87,35 @@ describe('Test dishesStore', () => {
         expect(DishesState.isLoading).toBeFalsy();
         expect(DishesState.error).toEqual('');
         expect(DishesState.filter).toEqual('');
+    });
+
+    it('should contain data after fetching and filtering', async () => {
+        await fetchDishes();
+
+        expect(filteredDishes.value).toEqual(DishesState.dishes);
+
+        setFilter('testen');
+        expect(filteredDishes.value).toContainEqual(Dishes[0]);
+        expect(filteredDishes.value).not.toContainEqual(Dishes[1]);
+        expect(DishesState.filter).toEqual('testen');
+
+        setFilter('Fish (so juicy sweat)');
+        expect(filteredDishes.value).toContainEqual(Dishes[3]);
+        expect(filteredDishes.value).not.toContainEqual(Dishes[0]);
+
+        setFilter('Vegetarisch');
+        for(const dish of filteredDishes.value) {
+            expect(dish.categoryId).toBe(5);
+        }
+        expect(filteredDishes.value).not.toContainEqual(Dishes[3]);
+        expect(filteredDishes.value).toContainEqual(Dishes[0]);
+    });
+
+    it('should update the state after sending a PUT request', async () => {
+        await fetchDishes();
+
+        await updateDish(17, dishUpdate);
+
+        expect(DishesState.dishes).toContainEqual(dish1);
     });
 });

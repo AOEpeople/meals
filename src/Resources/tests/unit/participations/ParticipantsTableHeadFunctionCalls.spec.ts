@@ -1,14 +1,8 @@
 import ParticipantsTableHead from "@/components/participations/ParticipantsTableHead.vue";
-import { computed, nextTick, reactive } from "vue";
+import { nextTick, reactive } from "vue";
 import { describe, expect, it } from "@jest/globals";
 import { shallowMount } from "@vue/test-utils";
 
-jest.mock('vue-i18n', () => ({
-    useI18n: () => ({
-        t: (key: string) => key,
-        locale: computed(() => 'en')
-    })
-}));
 
 let mockedGetShowParticipations = jest.fn(() => []);
 const loadMock = reactive({ loaded: true })

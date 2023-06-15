@@ -1,15 +1,7 @@
 import SlotActions from "@/components/timeslots/SlotActions.vue";
 import { describe, expect, it } from "@jest/globals";
-import { computed } from "vue";
 import { mount } from "@vue/test-utils";
 import { TimeSlot } from "@/stores/timeSlotStore";
-
-jest.mock('vue-i18n', () => ({
-    useI18n: () => ({
-        t: (key: string) => key,
-        locale: computed(() => 'en')
-    })
-}));
 
 const timeSlot: TimeSlot = {
     title: 'TestSlot 1234',

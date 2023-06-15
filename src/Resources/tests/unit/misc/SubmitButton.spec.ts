@@ -1,14 +1,6 @@
 import SubmitButton from "@/components/misc/SubmitButton.vue";
 import { describe, expect, it } from "@jest/globals";
 import { mount } from "@vue/test-utils";
-import { computed } from "vue";
-
-jest.mock('vue-i18n', () => ({
-    useI18n: () => ({
-        t: (key: string) => key,
-        locale: computed(() => 'en')
-    })
-}));
 
 describe('Test SubmitButton', () => {
     it('should contain an input with an i18n-text', () => {

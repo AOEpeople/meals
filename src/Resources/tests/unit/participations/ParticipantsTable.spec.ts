@@ -35,14 +35,6 @@ const getMockedResponses = (url: string) => {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 useApi = jest.fn().mockImplementation((method: string, url: string) => getMockedResponses(url));
 
-jest.mock('vue-i18n', () => ({
-    useI18n: () => ({
-        t: (key: string) => key,
-        locale: computed(() => 'en')
-    })
-}));
-
-
 const mockedWindowWidth = ref(900);
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 let mockSetTableHeadHeight = jest.fn((height: number, elementId: string) => void 0);

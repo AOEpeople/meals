@@ -1,7 +1,6 @@
 import MealsSummary from '@/components/participations/MealsSummary.vue';
 import { describe, it } from '@jest/globals';
 import { mount } from '@vue/test-utils';
-import { computed } from 'vue';
 import { IDay } from '@/api/getMealsNextThreeDays';
 
 const dayOne: IDay = {
@@ -45,13 +44,6 @@ const dayFour: IDay = {
     de: [],
     date: new Date('2023-05-15')
 }
-
-jest.mock('vue-i18n', () => ({
-    useI18n: () => ({
-        t: (key: string) => key,
-        locale: computed(() => 'en')
-    })
-}));
 
 describe('Test MealsSummary', () => {
     it('should display three meals and no empty rows', () => {

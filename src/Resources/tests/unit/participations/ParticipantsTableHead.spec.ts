@@ -1,18 +1,11 @@
 import ParticipantsTableHead from "@/components/participations/ParticipantsTableHead.vue";
 import participations from '../fixtures/participations.json';
 import useApi from "@/api/api";
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import { describe, expect, it } from "@jest/globals";
 import { flushPromises, mount, shallowMount } from "@vue/test-utils";
 import { getShowParticipations } from "@/api/getShowParticipations";
 import MealHead from "@/components/participations/MealHead.vue";
-
-jest.mock('vue-i18n', () => ({
-    useI18n: () => ({
-        t: (key: string) => key,
-        locale: computed(() => 'en')
-    })
-}));
 
 describe('Test ParticipantsTableHead', () => {
 

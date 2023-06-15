@@ -31,5 +31,6 @@ module.exports = {
         refTransform: false
       }
     }
-  }
+  },
+  setupFilesAfterEnv: ["<rootDir>/tests/unit/setup-jest.ts"],
 };

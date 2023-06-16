@@ -2,7 +2,7 @@
   <Popover
     v-slot="{ open }"
   >
-    <PopoverButton class="h-full focus:outline-none">
+    <PopoverButton class="h-full align-middle focus:outline-none">
       <slot
         name="button"
         :open="(open)"
@@ -10,19 +10,22 @@
     </PopoverButton>
 
     <transition
-      enter-active-class="transition ease-out duration-400"
-      enter-from-class="translate-y-1 opacity-0"
-      enter-to-class="translate-y-0 opacity-100"
-      leave-active-class="transition ease-in duration-250"
-      leave-from-class="translate-y-0 opacity-100"
-      leave-to-class="translate-y-1 opacity-0"
+      enterActiveClass="transition ease-out duration-400"
+      enterFromClass="translate-y-1 opacity-0"
+      enterToClass="translate-y-0 opacity-100"
+      leaveActiveClass="transition ease-in duration-250"
+      leaveFromClass="translate-y-0 opacity-100"
+      leaveToClass="translate-y-1 opacity-0"
     >
       <PopoverPanel
         v-slot="{ close }"
         class="absolute z-[101] mx-auto mt-5 opacity-[99.9%]"
         :style="{ transform: `translateX(${translateXComputed})` }"
       >
-        <div class="overflow-hidden rounded-lg bg-[rgb(244,247,249)] shadow-lg ring-1 ring-black/5">
+        <div
+          class="rounded-lg bg-[rgb(244,247,249)] shadow-lg ring-1 ring-black/5"
+          :class="{ overflowHidden: 'overflow-hidden' }"
+        >
           <slot
             name="panel"
             :close="close"
@@ -43,11 +46,13 @@ const { windowWidth, addWindowHeightListener, removeWindowHeightListener } = use
 const props = withDefaults(defineProps<{
   translateXMax?: string,
   translateXMin?: string,
-  breakpointWidth?: number
+  breakpointWidth?: number,
+  overflowHidden?: boolean
 }>(), {
   translateXMax: 'default',
   translateXMin: 'default',
-  breakpointWidth: 1200
+  breakpointWidth: 1200,
+  overflowHidden: true
 });
 
 onMounted(() => {

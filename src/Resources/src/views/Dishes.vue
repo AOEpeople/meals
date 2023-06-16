@@ -1,44 +1,39 @@
 <template>
-  <div class="text-center">
-    <h1 class="m-0">
-      List of dishes
-    </h1>
-    <Disclosure>
-      <DisclosureButton class="btn-secondary">
-        CREATE DISH
-      </DisclosureButton>
-      <DisclosurePanel>
-        <ModifyDishes />
-      </DisclosurePanel>
-    </Disclosure>
+  <div class="mx-[5%] xl:mx-auto">
+    <DishesHeader />
+    <Table
+      :labels="[t('dish.table.title'), t('dish.table.category'), t('dish.table.actions')]"
+    >
+      <DishTableRow
+        v-for="(dish, index) in filteredDishes"
+        :key="index"
+        :dish="// @ts-ignore
+          (dish as Dish)"
+        :index-in-list="index"
+      />
+    </Table>
   </div>
-  <Table
-    :labels="[t('dish.table.title'), t('dish.table.category')]"
-    :data="tableData"
-    :actions="true"
-  />
 </template>
 
-<script setup>
-import {Disclosure, DisclosureButton, DisclosurePanel} from '@headlessui/vue'
-import ModifyDishes from '@/components/dishes/ModifyDishes.vue'
-import {useProgress} from '@marcoschulte/vue3-progress'
+<script setup lang="ts">
+import { useProgress } from '@marcoschulte/vue3-progress'
 import Table from '@/components/misc/Table.vue'
 import { useI18n } from 'vue-i18n'
-
-const progress = useProgress().start();
+import { onMounted } from 'vue';
+import { useDishes } from '@/stores/dishesStore';
+import DishesHeader from '@/components/dishes/DishesHeader.vue';
+import { useCategories } from '@/stores/categoriesStore';
+import DishTableRow from '@/components/dishes/DishTableRow.vue';
+import { Dish } from '@/stores/dishesStore';
 
 const { t } = useI18n();
+const { fetchDishes, DishesState, filteredDishes } = useDishes();
+const { fetchCategories } = useCategories();
 
-const tableData = [
-  { title_en: 'Dish1', title_de: 'Gericht1', desc_en: 'Description', desc_de: 'Beschreibung', category: 'Meat' },
-  { title_en: 'Dish2', title_de: 'Gericht2', desc_en: 'Description', desc_de: 'Beschreibung', category: 'Fish' },
-  { title_en: 'Dish3', title_de: 'Gericht3', desc_en: 'Description', desc_de: 'Beschreibung', category: 'Vegetarian' },
-]
-
-progress.finish()
+onMounted(async () => {
+  const progress = useProgress().start();
+  await fetchDishes();
+  await fetchCategories();
+  progress.finish();
+});
 </script>
-
-<style scoped>
-
-</style>

@@ -27,7 +27,7 @@ const category: Category = {
     slug: 'test'
 };
 
-describe('Test postCreateCategory', () => {
+describe('Test putCategoryUpdate', () => {
     it('should return a success object', async () => {
         const { error, response } = await putCategoryUpdate('test', category.titleDe, category.titleEn);
 

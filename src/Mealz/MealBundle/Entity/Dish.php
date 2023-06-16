@@ -5,6 +5,7 @@ namespace App\Mealz\MealBundle\Entity;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use JsonSerializable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -15,7 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\DiscriminatorMap({"dish" = "Dish", "dish_variation" = "DishVariation"})
  * @ORM\HasLifecycleCallbacks()
  */
-class Dish
+class Dish implements JsonSerializable
 {
     public const COMBINED_DISH_SLUG = 'combined-dish';
 
@@ -266,11 +267,27 @@ class Dish
 
     public function hasVariations(): bool
     {
-        return count($this->variations) > 0;
+        return null !== $this->variations && count($this->variations) > 0;
     }
 
     public function isCombinedDish(): bool
     {
         return self::COMBINED_DISH_SLUG === $this->slug;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'slug' => $this->slug,
+            'titleDe' => $this->title_de,
+            'titleEn' => $this->title_en,
+            'descriptionDe' => $this->description_de,
+            'descriptionEn' => $this->description_en,
+            'categoryId' => null !== $this->category ? $this->category->getId() : null,
+            'oneServingSize' => $this->oneServingSize,
+            'parentId' => null !== $this->parent ? $this->parent->getId() : null,
+            'variations' => $this->hasVariations() ? $this->variations->toArray() : [],
+        ];
     }
 }

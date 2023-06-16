@@ -100,4 +100,18 @@ class ApiService
     {
         return $this->dayRepo->getDayByDate($dateTime);
     }
+
+    /**
+     * Checks wether the parameter at a given key exists and is valid.
+     *
+     * @param array  $parameters decoded json content
+     * @param string $key        key for the parameter to be checked
+     * @param string $type       the expected type of the parameter
+     */
+    public function isParamValid($parameters, $key, $type): bool
+    {
+        return isset($parameters[$key])
+            && null !== $parameters[$key]
+            && $type === gettype($parameters[$key]);
+    }
 }

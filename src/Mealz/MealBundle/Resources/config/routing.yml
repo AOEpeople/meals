@@ -150,49 +150,44 @@ MealzMealBundle_Meal_isParticipationPending:
     path: /menu/meal/{participant}/isParticipationPending
     defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::isParticipationPending }
 
-MealzMealBundle_DishVariation_new:
-    path:  /dish/{id}/variation/new
+MealzMealBundle_api_DishVariation_new:
+    path:  /api/dishes/{slug}/variation
     defaults: { _controller: App\Mealz\MealBundle\Controller\DishVariationController::new }
-    requirements:
-      slug: '[1-9][0-9]*'
+    methods: [POST]
 
-MealzMealBundle_DishVariation_edit:
-    path:  /dish/variation/{slug}/edit
-    defaults: { _controller: App\Mealz\MealBundle\Controller\DishVariationController::edit }
-    requirements:
-      slug: '[1-9][0-9]*'
+MealzMealBundle_api_DishVariation_update:
+    path:  /api/dishes/variation/{slug}
+    defaults: { _controller: App\Mealz\MealBundle\Controller\DishVariationController::update }
+    methods: [PUT]
 
-MealzMealBundle_DishVariation_delete:
-    path:  /dish/variation/{slug}/delete
-    defaults: { _controller: App\Mealz\MealBundle\Controller\DishVariationController::deleteAction }
+MealzMealBundle_api_DishVariation_delete:
+    path:  /api/dishes/variation/{slug}
+    defaults: { _controller: App\Mealz\MealBundle\Controller\DishVariationController::delete }
+    methods: [DELETE]
 
 MealzMealBundle_Dishes:
   path: /dishes
-  defaults: { _controller: App\Mealz\MealBundle\Controller\TestController::renderIndex }
+  defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
 
-MealzMealBundle_Dish:
-    path:  /dish
-    defaults: { _controller: App\Mealz\MealBundle\Controller\DishController::list }
-
-MealzMealBundle_Dish_Form_empty:
-    path:  /dish/form
-    defaults: { _controller: App\Mealz\MealBundle\Controller\DishController::getEmptyForm }
-
-MealzMealBundle_Dish_Form_preFilled:
-    path:  /dish/form/{slug}
-    defaults: { _controller: App\Mealz\MealBundle\Controller\DishController::getPreFilledForm }
+MealzMealBundle_api_dishes:
+    path:  /api/dishes
+    defaults: { _controller: App\Mealz\MealBundle\Controller\DishController::getDishes }
+    methods: [GET]
 
 MealzMealBundle_Dish_new:
-    path:  /dish/new
+    path:  /api/dishes
     defaults: { _controller: App\Mealz\MealBundle\Controller\DishController::new }
+    methods: [POST]
 
-MealzMealBundle_Dish_edit:
-    path:  /dish/{slug}/edit
-    defaults: { _controller: App\Mealz\MealBundle\Controller\DishController::editAction }
+MealzMealBundle_Dish_update:
+    path:  /api/dishes/{slug}
+    defaults: { _controller: App\Mealz\MealBundle\Controller\DishController::update }
+    methods: [PUT]
 
 MealzMealBundle_Dish_delete:
-    path:  /dish/{slug}/delete
-    defaults: { _controller: App\Mealz\MealBundle\Controller\DishController::deleteAction }
+    path:  /api/dishes/{slug}
+    defaults: { _controller: App\Mealz\MealBundle\Controller\DishController::delete }
+    methods: [DELETE]
 
 MealzMealBundle_api_categories:
     path: /api/categories

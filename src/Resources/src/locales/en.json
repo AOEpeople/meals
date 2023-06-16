@@ -68,7 +68,26 @@
     "create": "create Dish",
     "table": {
       "title": "Title",
-      "category": "Category"
+      "category": "Category",
+      "actions": "Actions"
+    },
+    "header": "List of Dishes",
+    "search": "Search for title",
+    "popover": {
+      "create": "Create new Dish",
+      "edit": "Edit Dish",
+      "descriptionDe": "German Description",
+      "descriptionEn": "English Description",
+      "german": "German Title",
+      "english": "English Title",
+      "category": "Category",
+      "oneSizeServing": "This dish has only one serving size",
+      "save": "Save",
+      "variation": {
+        "create": "Create new Variation",
+        "edit": "Edit Variation",
+        "new": "Create Variation"
+      }
     }
   },
   "guest": {

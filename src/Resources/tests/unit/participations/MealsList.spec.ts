@@ -2,7 +2,7 @@ import participations from '../fixtures/participations.json';
 import MealsList from '@/components/participations/MealsList.vue';
 import Meal from '@/components/participations/Meal.vue';
 import { describe } from '@jest/globals';
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 import { getShowParticipations } from '@/api/getShowParticipations';
 import { flushPromises, mount } from '@vue/test-utils';
 import useApi from '@/api/api';
@@ -21,13 +21,6 @@ const mockedReturnValue = {
 useApi = jest.fn(useApi);
 // @ts-expect-error continuation of expect error from line above
 useApi.mockReturnValue(mockedReturnValue);
-
-jest.mock('vue-i18n', () => ({
-    useI18n: () => ({
-        t: (key: string) => key,
-        locale: computed(() => 'en')
-    })
-}));
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mockSetMealsListHeight = jest.fn((height: number, elementId: string) => void 0);

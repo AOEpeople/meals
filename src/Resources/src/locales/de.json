@@ -68,7 +68,26 @@
     "create": "Gericht erstellen",
     "table": {
       "title": "Titel",
-      "category": "Kategorie"
+      "category": "Kategorie",
+      "actions": "Aktionen"
+    },
+    "header": "Liste der Gerichte",
+    "search": "Suche nach Titel",
+    "popover": {
+      "create": "Neues Gericht erstellen",
+      "edit": "Gericht editieren",
+      "descriptionDe": "Deutsche Beschreibung",
+      "descriptionEn": "Englische Beschreibung",
+      "german": "Deutscher Titel",
+      "english": "Englischer Titel",
+      "category": "Kategorie",
+      "oneSizeServing": "Dieses Gericht ist nicht teilbar",
+      "save": "Speichern",
+      "variation": {
+        "create": "Neue Variation erstellen",
+        "edit": "Variation editieren",
+        "new": "Variation erstellen"
+      }
     }
   },
   "guest": {

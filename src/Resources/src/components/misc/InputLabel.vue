@@ -1,7 +1,7 @@
 <template>
   <div class="w-full">
     <label
-      v-if="labelText !== ''"
+      v-if="labelText !== '' && labelVisible"
       :for="labelText"
       class="w-fulltext-start px-4 text-xs font-medium text-[#173D7A]"
     >
@@ -14,7 +14,7 @@
       :name="labelText"
       :placeholder="labelText"
       :min="min"
-      class="w-full rounded-full border-2 border-solid border-[#CAD6E1] px-4 py-2 text-[14px] font-medium text-[#B4C1CE]"
+      class="w-full rounded-full border-2 border-solid border-[#CAD6E1] px-4 py-2 text-[14px] font-medium text-[#9CA3AF]"
     >
   </div>
 </template>
@@ -25,12 +25,14 @@ import { computed } from 'vue';
 const props = withDefaults(defineProps<{
   labelText?: string,
   modelValue: string,
-  type?: string
-  min?: number
+  type?: string,
+  min?: number,
+  labelVisible?: boolean
 }>(), {
   labelText: '',
   type: 'text',
-  min: 0
+  min: 0,
+  labelVisible: true
 });
 
 const emit = defineEmits(['update:modelValue']);

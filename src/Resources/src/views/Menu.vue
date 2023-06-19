@@ -1,14 +1,15 @@
 <template>
-  Menu
+  <Weeks />
 </template>
 
-<script setup>
-import {useProgress} from '@marcoschulte/vue3-progress'
-const progress = useProgress().start()
+<script setup lang="ts">
+import Weeks from '@/components/weeks/Weeks.vue';
+import { useProgress } from '@marcoschulte/vue3-progress';
+import { onMounted } from 'vue';
 
-progress.finish()
+onMounted(() => {
+  const progress = useProgress().start();
+
+  progress.finish();
+})
 </script>
-
-<style scoped>
-
-</style>

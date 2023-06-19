@@ -75,9 +75,10 @@ MealzMealBundle_balance:
   path: /balance
   defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
 
-MealzMealBundle_Meal:
-    path:  /menu
-    defaults: { _controller: App\Mealz\MealBundle\Controller\MealAdminController::list }
+MealzMealBundle_api_weeks:
+    path:  /api/weeks
+    defaults: { _controller: App\Mealz\MealBundle\Controller\MealAdminController::getWeeks }
+    methods: [GET]
 
 MealzMealBundle_Meal_edit:
     path:  /menu/{week}/edit

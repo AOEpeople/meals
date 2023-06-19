@@ -9,12 +9,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use JsonSerializable;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="day")
  */
-class Day extends AbstractMessage
+class Day extends AbstractMessage implements JsonSerializable
 {
     /**
      * @ORM\Column(name="id", type="integer")
@@ -153,5 +154,16 @@ class Day extends AbstractMessage
         $week->setDays(new ArrayCollection([$this]));
 
         return $week;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->getId(),
+            'dateTime' => $this->getDateTime()->format('Y-m-d'),
+            'lockParticipationDateTime' => $this->getLockParticipationDateTime()->format('Y-m-d'),
+            'week' => $this->getWeek()->getId(),
+            'meals' => $this->getMeals()->toArray(),
+        ];
     }
 }

@@ -11,13 +11,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use JsonSerializable;
 
 /**
  * @ORM\Entity
  * @MealBundleAssert\DishConstraint()
  * @ORM\Table(name="meal")
  */
-class Meal
+class Meal implements JsonSerializable
 {
     /**
      * @ORM\Column(name="id", type="integer")
@@ -200,5 +201,21 @@ class Meal
     public function __toString()
     {
         return $this->getDateTime()->format('Y-m-d H:i:s') . ' ' . $this->getDish();
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->getId(),
+            'dish' => [
+                'de' => $this->getDish()->getTitleDe(),
+                'en' => $this->getDish()->getTitleEn(),
+            ],
+            'price' => $this->getPrice(),
+            'participationLimit' => $this->getParticipationLimit(),
+            'day' => $this->getDay(),
+            'dateTime' => $this->getDateTime(),
+            'participants' => $this->getParticipants(),
+        ];
     }
 }

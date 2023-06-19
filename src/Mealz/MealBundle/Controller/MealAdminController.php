@@ -20,21 +20,26 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Validator\ConstraintViolation;
 
 class MealAdminController extends BaseController
 {
     private EventDispatcherInterface $eventDispatcher;
+    private WeekRepositoryInterface $weekRepository;
 
-    public function __construct(EventDispatcherInterface $eventDispatcher)
-    {
+    public function __construct(
+        EventDispatcherInterface $eventDispatcher,
+        WeekRepositoryInterface $weekRepository
+    ) {
         $this->eventDispatcher = $eventDispatcher;
+        $this->weekRepository = $weekRepository;
     }
 
     /**
      * @Security("is_granted('ROLE_KITCHEN_STAFF')")
      */
-    public function list(WeekRepositoryInterface $weekRepository): Response
+    public function getWeeks(): JsonResponse
     {
         $weeks = [];
         $dateTime = new DateTime();
@@ -42,7 +47,7 @@ class MealAdminController extends BaseController
         for ($i = 0; $i < 8; ++$i) {
             $modifiedDateTime = clone $dateTime;
             $modifiedDateTime->modify('+' . $i . ' weeks');
-            $week = $weekRepository->findOneBy(
+            $week = $this->weekRepository->findOneBy(
                 [
                     'year' => $modifiedDateTime->format('o'),
                     'calendarWeek' => $modifiedDateTime->format('W'),
@@ -58,7 +63,7 @@ class MealAdminController extends BaseController
             $weeks[] = $week;
         }
 
-        return $this->render('MealzMealBundle:MealAdmin:list.html.twig', ['weeks' => $weeks]);
+        return new JsonResponse($weeks, 200);
     }
 
 //    /**

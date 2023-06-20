@@ -7,38 +7,46 @@ use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Event\WeekUpdateEvent;
 use App\Mealz\MealBundle\Repository\DishRepository;
+use App\Mealz\MealBundle\Repository\DishRepositoryInterface;
 use App\Mealz\MealBundle\Repository\WeekRepositoryInterface;
 use App\Mealz\MealBundle\Service\WeekService;
 use App\Mealz\MealBundle\Validator\Constraints\DishConstraint;
 use DateTime;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\UnitOfWork;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Validator\ConstraintViolation;
 
+/**
+ * @Security("is_granted('ROLE_KITCHEN_STAFF')")
+ */
 class MealAdminController extends BaseController
 {
     private EventDispatcherInterface $eventDispatcher;
     private WeekRepositoryInterface $weekRepository;
+    private DishRepositoryInterface $dishRepository;
+    private EntityManagerInterface $em;
 
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
-        WeekRepositoryInterface $weekRepository
+        WeekRepositoryInterface $weekRepository,
+        DishRepositoryInterface $dishRepository,
+        EntityManagerInterface $em
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->weekRepository = $weekRepository;
+        $this->dishRepository = $dishRepository;
+        $this->em = $em;
     }
 
-    /**
-     * @Security("is_granted('ROLE_KITCHEN_STAFF')")
-     */
     public function getWeeks(): JsonResponse
     {
         $weeks = [];
@@ -66,66 +74,28 @@ class MealAdminController extends BaseController
         return new JsonResponse($weeks, 200);
     }
 
-//    /**
-//     * @return RedirectResponse|Response
-//     *
-//     * @throws OptimisticLockException|ORMException
-//     *
-//     * @Security("is_granted('ROLE_KITCHEN_STAFF')")
-//     */
-//    public function new(
-//        Request $request,
-//        DateTime $date,
-//        WeekRepositoryInterface $weekRepository,
-//        DishRepository $dishRepository
-//    ) {
-//        $week = $weekRepository->findOneBy([
-//            'year' => $date->format('o'),
-//            'calendarWeek' => $date->format('W'),
-//        ]);
-//
-//        if (null !== $week) {
-//            return $this->redirectToRoute('MealzMealBundle_Meal_edit', ['week' => $week->getId()]);
-//        }
-//
-//        $dateTimeModifier = $this->getParameter('mealz.lock_toggle_participation_at');
-//        $week = WeekService::generateEmptyWeek($date, $dateTimeModifier);
-//        $form = $this->createForm(WeekForm::class, $week);
-//
-//        // handle form submission
-//        if (true === $request->isMethod('POST')) {
-//            $form->handleRequest($request);
-//            if (true === $form->get('Cancel')->isClicked()) {
-//                return $this->redirectToRoute('MealzMealBundle_Meal');
-//            }
-//
-//            if (true === $form->isValid()) {
-//                $notify = $form->get('notifyCheckbox')->getData();
-//                $this->updateWeek($week, $notify);
-//
-//                $message = $this->get('translator')->trans('week.created', [], 'messages');
-//                $this->addFlashMessage($message, 'success');
-//
-//                return $this->redirect(
-//                    $this->generateUrl(
-//                        'MealzMealBundle_Meal_edit',
-//                        ['week' => $week->getId()]
-//                    )
-//                );
-//            }
-//        }
-//
-//        $dishes = $dishRepository->getSortedDishesQueryBuilder()->getQuery()->getResult();
-//
-//        return $this->render(
-//            'MealzMealBundle:MealAdmin:week.html.twig',
-//            [
-//                'week' => $week,
-//                'dishes' => $dishes,
-//                'form' => $form->createView(),
-//            ]
-//        );
-//    }
+    /**
+     * @Security("is_granted('ROLE_KITCHEN_STAFF')")
+     */
+    public function new(DateTime $date): JsonResponse
+    {
+        $week = $this->weekRepository->findOneBy([
+            'year' => $date->format('o'),
+            'calendarWeek' => $date->format('W'),
+        ]);
+
+        if (null !== $week) {
+            return new JsonResponse(['status' => 'week already exists'], 400);
+        }
+
+        $dateTimeModifier = $this->getParameter('mealz.lock_toggle_participation_at');
+        $week = WeekService::generateEmptyWeek($date, $dateTimeModifier);
+
+        $this->em->persist($week);
+        $this->em->flush();
+
+        return new JsonResponse(['status' => 'success'], 200);
+    }
 
 //    /**
 //     * @return RedirectResponse|Response

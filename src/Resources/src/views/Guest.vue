@@ -103,7 +103,6 @@ async function submitForm() {
 }
 
 function showFormErrors() {
-  console.log('ztest')
   firstNameMissing.value = form.value.firstName === ''
   lastNameMissing.value = form.value.lastName === ''
   companyMissing.value = form.value.company === ''

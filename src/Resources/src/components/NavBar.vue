@@ -167,12 +167,12 @@
   const isAuthenticated = !userDataStore.getState().roles.includes('ROLE_GUEST')
 
   const navigation = [
-    { name: 'header.navigation.menu',       to: '/menu',       icon: CalendarIcon,   access: userDataStore.roleAllowsRoute('/menu'      ) },
-    { name: 'header.navigation.dishes',     to: '/dishes',     icon: CakeIcon,       access: userDataStore.roleAllowsRoute('/dishes'    ) },
-    { name: 'header.navigation.categories', to: '/categories', icon: BookmarkIcon,   access: userDataStore.roleAllowsRoute('/categories') },
-    { name: 'header.navigation.slots',      to: '/time-slots', icon: ClockIcon,      access: userDataStore.roleAllowsRoute('/time-slots') },
-    { name: 'header.navigation.costs',      to: '/costs',      icon: CashIcon,       access: userDataStore.roleAllowsRoute('/costs'     ) },
-    { name: 'header.navigation.finance',    to: '/finance',    icon: CalculatorIcon, access: userDataStore.roleAllowsRoute('/finance'   ) },
+    { name: 'header.navigation.menu',       to: '/weeks',      icon: CalendarIcon,   access: userDataStore.roleAllowsRoute('Weeks'     ) },
+    { name: 'header.navigation.dishes',     to: '/dishes',     icon: CakeIcon,       access: userDataStore.roleAllowsRoute('Dishes'    ) },
+    { name: 'header.navigation.categories', to: '/categories', icon: BookmarkIcon,   access: userDataStore.roleAllowsRoute('Categories') },
+    { name: 'header.navigation.slots',      to: '/time-slots', icon: ClockIcon,      access: userDataStore.roleAllowsRoute('Time Slots') },
+    { name: 'header.navigation.costs',      to: '/costs',      icon: CashIcon,       access: userDataStore.roleAllowsRoute('Costs'     ) },
+    { name: 'header.navigation.finance',    to: '/finance',    icon: CalculatorIcon, access: userDataStore.roleAllowsRoute('Finance'   ) },
   ];
 
   function logout() {

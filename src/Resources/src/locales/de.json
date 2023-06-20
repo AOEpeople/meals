@@ -119,6 +119,10 @@
     "balance": "Kontostand"
   },
   "logout": "Ausloggen",
+  "menu": {
+    "list": "Liste der Wochen",
+    "week": "Woche"
+  },
   "printList": {
     "title": "Teilnahmen am ",
     "participations": "Teilnahmen"

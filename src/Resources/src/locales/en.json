@@ -119,6 +119,10 @@
     "balance": "Balance"
   },
   "logout": "Logout",
+  "menu": {
+    "list": "List of Weeks",
+    "week": "Week"
+  },
   "printList": {
     "title": "Participations on ",
     "participations": "Participations"

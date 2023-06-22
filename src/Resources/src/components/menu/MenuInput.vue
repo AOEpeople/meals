@@ -1,26 +1,31 @@
 <template>
   <Combobox
-    v-model="selectedDish"
+    v-slot="{ open }"
+    v-model="value"
     as="span"
     nullable
   >
     <div
-      class="flex w-full flex-row items-center overflow-hidden border-[#CAD6E1] bg-white px-4 py-2 text-left text-[14px] font-medium text-[#B4C1CE] focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2"
-      :class="openProp ? 'rounded-t-[23px] border-x-2 border-t-2' : 'rounded-full border-2'"
+      class="flex w-full flex-row items-center overflow-hidden border-[#CAD6E1] bg-white text-left text-[14px] font-medium text-[#B4C1CE] focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2"
+      :class="openProp ? 'rounded-t-[23px] border-x-2 border-t-2 border-b-[1px]' : 'rounded-full border-2'"
     >
       <ComboboxInput
         ref="comboboxInput"
         :displayValue="// @ts-ignore
           (dish) => locale === 'en' ? dish?.titleEn : dish?.titleDe"
-        class="w-full truncate border-none text-[#9CA3AF] focus-visible:hidden"
+        class="w-full truncate border-none px-4 py-2 text-[#9CA3AF] focus:outline-none"
         @change="query = $event.target.value"
         @click="handleClick"
       />
-      <XIcon
-        class="h-full w-5 justify-self-end text-[#9CA3AF]"
-        aria-hidden="true"
-        @click="selectedDish = null; query = ''"
-      />
+      <div
+        class="group flex h-full cursor-pointer items-center justify-self-end px-4 py-2"
+        @click="value = null; query = ''"
+      >
+        <XIcon
+          class="h-full w-5 text-[#9CA3AF] transition-transform group-hover:scale-[120%]"
+          aria-hidden="true"
+        />
+      </div>
     </div>
     <div v-show="openProp">
       <ComboboxOptions
@@ -31,7 +36,9 @@
           v-if="filteredDishes.length === 0 && query !== ''"
           class="cursor-pointer truncate text-[14px] text-[#9CA3AF]"
         >
-          Nothing found
+          <span class="h-full w-full px-4 py-2">
+            {{ t('menu.noDishFound') }}
+          </span>
         </li>
         <ComboboxOption
           v-for="dish in filteredDishes"
@@ -65,19 +72,36 @@
 
 <script setup lang="ts">
 import { Combobox, ComboboxInput, ComboboxOptions, ComboboxOption } from '@headlessui/vue';
-import { useDishes } from '@/stores/dishesStore';
+import { Dish, useDishes } from '@/stores/dishesStore';
 import { useI18n } from 'vue-i18n';
 import { computed, ref } from 'vue';
 import { CheckIcon, XIcon } from '@heroicons/vue/solid';
 import useDetectClickOutside from '@/services/useDetectClickOutside';
 
 const { DishesState } = useDishes();
-const { locale } = useI18n();
+const { locale, t } = useI18n();
+
+const props = withDefaults(defineProps<{
+  modelValue: Dish | null;
+}>(), {
+  modelValue: null
+});
+
+const emit = defineEmits(['update:modelValue']);
 
 const comboboxInput = ref<HTMLElement | null>(null);
 const selectedDish = ref(null);
 const query = ref('');
 const openProp = ref(false);
+
+const value = computed({
+  get() {
+    return props.modelValue;
+  },
+  set(value) {
+    emit('update:modelValue', value);
+  }
+})
 
 const filteredDishes = computed(() => {
    return query.value === '' ?

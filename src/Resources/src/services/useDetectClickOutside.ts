@@ -12,7 +12,7 @@ export default function useDetectClickOutside(componentRef: Ref<HTMLElement | nu
         if (listenerActive.value) {
             return;
         }
-        window.addEventListener('click', listener);
+        document.addEventListener('click', listener);
         listenerActive.value = true;
     }
 
@@ -20,7 +20,7 @@ export default function useDetectClickOutside(componentRef: Ref<HTMLElement | nu
         if (!listenerActive.value) {
             return;
         }
-        window.removeEventListener('click', listener);
+        document.removeEventListener('click', listener);
         listenerActive.value = false;
     }
 

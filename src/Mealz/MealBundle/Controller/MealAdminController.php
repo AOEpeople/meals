@@ -6,8 +6,10 @@ use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Event\WeekUpdateEvent;
+use App\Mealz\MealBundle\Repository\DayRepositoryInterface;
 use App\Mealz\MealBundle\Repository\DishRepository;
 use App\Mealz\MealBundle\Repository\DishRepositoryInterface;
+use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
 use App\Mealz\MealBundle\Repository\WeekRepositoryInterface;
 use App\Mealz\MealBundle\Service\WeekService;
 use App\Mealz\MealBundle\Validator\Constraints\DishConstraint;
@@ -33,17 +35,23 @@ class MealAdminController extends BaseController
     private EventDispatcherInterface $eventDispatcher;
     private WeekRepositoryInterface $weekRepository;
     private DishRepositoryInterface $dishRepository;
+    private MealRepositoryInterface $mealRepository;
+    private DayRepositoryInterface $dayRepository;
     private EntityManagerInterface $em;
 
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
         WeekRepositoryInterface $weekRepository,
         DishRepositoryInterface $dishRepository,
+        MealRepositoryInterface $mealRepository,
+        DayRepositoryInterface $dayRepository,
         EntityManagerInterface $em
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->weekRepository = $weekRepository;
         $this->dishRepository = $dishRepository;
+        $this->mealRepository = $mealRepository;
+        $this->dayRepository = $dayRepository;
         $this->em = $em;
     }
 
@@ -90,6 +98,31 @@ class MealAdminController extends BaseController
 
         $dateTimeModifier = $this->getParameter('mealz.lock_toggle_participation_at');
         $week = WeekService::generateEmptyWeek($date, $dateTimeModifier);
+
+        $this->em->persist($week);
+        $this->em->flush();
+
+        return new JsonResponse(['status' => 'success'], 200);
+    }
+
+    public function edit(Request $request, Week $week): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $days = $data['days'];
+
+        if (null === $data || null === $days) {
+            return new JsonResponse(['status' => 'invalid json'], 400);
+        }
+
+        /** @var Day $day */
+        foreach ($days as $day) {
+            $dayEntity = $this->dayRepository->find($day['id']);
+
+            /** @var Meal $meal */
+            foreach ($day['meals'] as $meal) {
+
+            }
+        }
 
         $this->em->persist($week);
         $this->em->flush();

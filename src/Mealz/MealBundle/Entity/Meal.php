@@ -158,6 +158,11 @@ class Meal implements JsonSerializable
         return $this->dateTime > (new DateTime('now'));
     }
 
+    public function hasParticipations(): bool
+    {
+        return $this->getParticipants()->count() > 0;
+    }
+
     /**
      * get the participant object of the given profile if it is registered.
      */

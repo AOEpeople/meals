@@ -11,6 +11,7 @@ use App\Mealz\MealBundle\Repository\DishRepository;
 use App\Mealz\MealBundle\Repository\DishRepositoryInterface;
 use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
 use App\Mealz\MealBundle\Repository\WeekRepositoryInterface;
+use App\Mealz\MealBundle\Service\DayService;
 use App\Mealz\MealBundle\Service\WeekService;
 use App\Mealz\MealBundle\Validator\Constraints\DishConstraint;
 use DateTime;
@@ -37,6 +38,7 @@ class MealAdminController extends BaseController
     private DishRepositoryInterface $dishRepository;
     private MealRepositoryInterface $mealRepository;
     private DayRepositoryInterface $dayRepository;
+    private DayService $dayService;
     private EntityManagerInterface $em;
 
     public function __construct(
@@ -45,6 +47,7 @@ class MealAdminController extends BaseController
         DishRepositoryInterface $dishRepository,
         MealRepositoryInterface $mealRepository,
         DayRepositoryInterface $dayRepository,
+        DayService $dayService,
         EntityManagerInterface $em
     ) {
         $this->eventDispatcher = $eventDispatcher;
@@ -52,6 +55,7 @@ class MealAdminController extends BaseController
         $this->dishRepository = $dishRepository;
         $this->mealRepository = $mealRepository;
         $this->dayRepository = $dayRepository;
+        $this->dayService = $dayService;
         $this->em = $em;
     }
 
@@ -105,6 +109,7 @@ class MealAdminController extends BaseController
         return new JsonResponse(['status' => 'success'], 200);
     }
 
+    // TODO: still some work to be done here
     public function edit(Request $request, Week $week): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
@@ -114,13 +119,42 @@ class MealAdminController extends BaseController
             return new JsonResponse(['status' => 'invalid json'], 400);
         }
 
-        /** @var Day $day */
         foreach ($days as $day) {
             $dayEntity = $this->dayRepository->find($day['id']);
+            if (null === $dayEntity) {
+                return new JsonResponse(['status' => 'day not found'], 400);
+            }
 
-            /** @var Meal $meal */
-            foreach ($day['meals'] as $meal) {
+            $mealCollection = $day['meals'];
 
+            // TODO: remove unused meals (check before changing entities to ensure that no participations exist)
+            $this->dayService->removeUnusedMeals($dayEntity, $mealCollection);
+
+            // if no meals exist, create and add new ones
+            if (0 === count($dayEntity->getMeals())) {
+                foreach ($mealCollection as $meal) {
+                    if (isset($meal['dishSlug'])) {
+                        $dishEntity = $this->dishRepository->findOneBy(['slug' => $meal['dishSlug']]);
+                        if (null === $dishEntity) {
+                            return new JsonResponse(['status' => 'dish not found'], 400);
+                        }
+                        $mealEntity = new Meal($dishEntity, $dayEntity);
+                        $mealEntity->setParticipationLimit($dishEntity->getParticipationLimit());
+                        $dayEntity->addMeal($mealEntity);
+                    }
+                }
+                continue;
+            }
+
+
+            foreach ($mealCollection as $meal) {
+                // if meal already exists and has no participations, update dish
+                if (isset($meal['mealId']) && $this->dayService->isMealInDay($day, $meal['mealId']) && !$this->dayService->mealHasParticipations($meal['mealId']) && !$this->dayService->isDishInDay($day, $meal['dishId'])) {
+                    $mealEntity = $this->mealRepository->find($meal['mealId']);
+                    $dishEntity = $this->dishRepository->find($meal['dishId']);
+                    $mealEntity->setDish($dishEntity);
+                }
+                // TODO: I forgot something...
             }
         }
 

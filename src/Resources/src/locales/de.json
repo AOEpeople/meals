@@ -121,7 +121,8 @@
   "logout": "Ausloggen",
   "menu": {
     "list": "Liste der Wochen",
-    "week": "Woche"
+    "week": "Woche",
+    "noDishFound": "Keine Gerichte gefunden."
   },
   "printList": {
     "title": "Teilnahmen am ",

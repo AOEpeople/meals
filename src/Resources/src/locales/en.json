@@ -121,7 +121,8 @@
   "logout": "Logout",
   "menu": {
     "list": "List of Weeks",
-    "week": "Week"
+    "week": "Week",
+    "noDishFound": "No dishes found."
   },
   "printList": {
     "title": "Participations on ",

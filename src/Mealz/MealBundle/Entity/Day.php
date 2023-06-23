@@ -158,12 +158,18 @@ class Day extends AbstractMessage implements JsonSerializable
 
     public function jsonSerialize(): array
     {
+        $meals = [];
+        foreach ($this->getMeals() as $meal) {
+            if (!$meal->isCombinedMeal()) {
+                $meals[$meal->getId()] = $meal->jsonSerialize();
+            }
+        }
+
         return [
-            'id' => $this->getId(),
-            'dateTime' => $this->getDateTime()->format('Y-m-d'),
-            'lockParticipationDateTime' => $this->getLockParticipationDateTime()->format('Y-m-d'),
+            'dateTime' => $this->getDateTime(),
+            'lockParticipationDateTime' => $this->getLockParticipationDateTime(),
             'week' => $this->getWeek()->getId(),
-            'meals' => $this->getMeals()->toArray(),
+            'meals' => $meals,
         ];
     }
 }

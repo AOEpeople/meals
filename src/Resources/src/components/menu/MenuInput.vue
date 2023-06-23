@@ -3,69 +3,72 @@
     v-slot="{ open }"
     v-model="value"
     as="span"
+    class="relative w-full"
     nullable
   >
     <div
-      class="flex w-full flex-row items-center overflow-hidden border-[#CAD6E1] bg-white text-left text-[14px] font-medium text-[#B4C1CE] focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2"
-      :class="openProp ? 'rounded-t-[23px] border-x-2 border-t-2 border-b-[1px]' : 'rounded-full border-2'"
+      ref="combobox"
+      class="relative w-full"
+      @click="handleClick"
     >
-      <ComboboxInput
-        ref="comboboxInput"
-        :displayValue="// @ts-ignore
-          (dish) => locale === 'en' ? dish?.titleEn : dish?.titleDe"
-        class="w-full truncate border-none px-4 py-2 text-[#9CA3AF] focus:outline-none"
-        @change="query = $event.target.value"
-        @click="handleClick"
-      />
       <div
-        class="group flex h-full cursor-pointer items-center justify-self-end px-4 py-2"
-        @click="value = null; query = ''"
+        class="flex w-full flex-row items-center overflow-hidden border-[#CAD6E1] bg-white text-left text-[14px] font-medium text-[#B4C1CE] focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2"
+        :class="openProp ? 'rounded-t-[23px] border-x-2 border-t-2 border-b-[1px]' : 'rounded-full border-2'"
       >
+        <ComboboxInput
+          :displayValue="// @ts-ignore
+            (dish) => locale === 'en' ? dish?.titleEn : dish?.titleDe"
+          class="w-full truncate border-none px-4 py-2 text-[#9CA3AF] focus:outline-none"
+          @change="query = $event.target.value"
+        />
         <XIcon
-          class="h-full w-5 text-[#9CA3AF] transition-transform group-hover:scale-[120%]"
+          class="mr-4 h-full w-10 cursor-pointer justify-self-end px-1 py-2 text-[#9CA3AF] transition-transform hover:scale-[120%]"
           aria-hidden="true"
+          @click="value = null; query = ''"
         />
       </div>
-    </div>
-    <div v-show="openProp">
-      <ComboboxOptions
-        class="scrollbar-styling max-h-60 w-full overflow-y-auto overflow-x-hidden rounded-b-[23px] border-x-2 border-b-2 border-[#CAD6E1] bg-white shadow-lg focus:outline-none"
-        static
+      <div
+        v-show="openProp"
+        class="absolute z-10 w-full"
       >
-        <li
-          v-if="filteredDishes.length === 0 && query !== ''"
-          class="cursor-pointer truncate text-[14px] text-[#9CA3AF]"
-        >
-          <span class="h-full w-full px-4 py-2">
-            {{ t('menu.noDishFound') }}
-          </span>
-        </li>
-        <ComboboxOption
-          v-for="dish in filteredDishes"
-          :key="dish.id"
-          v-slot="{ selected }"
-          as="template"
-          :value="dish"
-          @click="openProp = false"
+        <ComboboxOptions
+          class="scrollbar-styling absolute max-h-60 w-full overflow-y-auto overflow-x-hidden rounded-b-[23px] border-x-2 border-b-2 border-[#CAD6E1] bg-white shadow-lg focus:outline-none"
+          static
         >
           <li
-            class="flex cursor-pointer flex-row items-center truncate text-left text-[14px] font-medium text-[#9CA3AF] hover:bg-[#FAFAFA]"
-            :class="{ 'bg-[#F4F4F4]': selected }"
+            v-if="filteredDishes.length === 0 && query !== ''"
+            class="cursor-pointer truncate text-[14px] text-[#9CA3AF]"
           >
-            <span
-              class="h-full w-full px-4 py-2"
-              :class="selected ? 'font-medium' : 'font-normal'"
-            >
-              {{ locale === 'en' ? dish.titleEn : dish.titleDe }}
+            <span class="h-full w-full px-4 py-2">
+              {{ t('menu.noDishFound') }}
             </span>
-            <CheckIcon
-              v-if="selected"
-              class="h-full w-5 justify-self-end text-[#9CA3AF]"
-              aria-hidden="true"
-            />
           </li>
-        </ComboboxOption>
-      </ComboboxOptions>
+          <ComboboxOption
+            v-for="dish in filteredDishes"
+            :key="dish.id"
+            v-slot="{ selected }"
+            as="template"
+            :value="dish"
+          >
+            <li
+              class="flex cursor-pointer flex-row items-center truncate text-left text-[14px] font-medium text-[#9CA3AF] hover:bg-[#FAFAFA]"
+              :class="{ 'bg-[#F4F4F4]': selected }"
+            >
+              <span
+                class="h-full w-full px-4 py-2"
+                :class="selected ? 'font-medium' : 'font-normal'"
+              >
+                {{ locale === 'en' ? dish.titleEn : dish.titleDe }}
+              </span>
+              <CheckIcon
+                v-if="selected"
+                class="h-full w-5 justify-self-end text-[#9CA3AF]"
+                aria-hidden="true"
+              />
+            </li>
+          </ComboboxOption>
+        </ComboboxOptions>
+      </div>
     </div>
   </Combobox>
 </template>
@@ -89,8 +92,7 @@ const props = withDefaults(defineProps<{
 
 const emit = defineEmits(['update:modelValue']);
 
-const comboboxInput = ref<HTMLElement | null>(null);
-const selectedDish = ref(null);
+const combobox = ref<HTMLElement | null>(null);
 const query = ref('');
 const openProp = ref(false);
 
@@ -111,9 +113,8 @@ const filteredDishes = computed(() => {
 
 function handleClick() {
   openProp.value = true;
-  useDetectClickOutside(comboboxInput, () => openProp.value = false);
+  useDetectClickOutside(combobox, () => openProp.value = false);
 }
-
 </script>
 
 <style scoped>

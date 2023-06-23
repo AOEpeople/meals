@@ -209,6 +209,18 @@ export function useDishes() {
         return parentDish.variations.find(variation => variation.id === variationId);
     }
 
+    function getDishBySlug(slug: string) {
+        const dish = DishesState.dishes.find(dish => {
+            if (dish.slug === slug) {
+                return true;
+            }
+
+            return dish.variations.find(variation => variation.slug === slug);
+        });
+
+        return dish;
+    }
+
     /**
      * Resets the DishesState.
      * Only used for testing purposes.
@@ -231,6 +243,7 @@ export function useDishes() {
         deleteDishVariationWithSlug,
         updateDishVariation,
         setFilter,
-        resetState
+        resetState,
+        getDishBySlug
     };
 }

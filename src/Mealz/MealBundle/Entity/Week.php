@@ -133,10 +133,7 @@ class Week extends AbstractMessage implements JsonSerializable
     {
         $days = [];
         foreach ($this->getDays() as $day) {
-            $days[] = [
-                'id' => $day->getId(),
-                'dateTime' => $day->getDateTime()->format('Y-m-d'),
-            ];
+            $days[$day->getId()] = $day->jsonSerialize();
         }
 
         return [

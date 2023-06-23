@@ -5,7 +5,7 @@
     as="span"
     class="relative w-full"
   >
-    <ListboxLabel class="w-fulltext-start px-4 text-xs font-medium text-[#173D7A]">
+    <ListboxLabel class="w-full px-4 text-start text-xs font-medium text-[#173D7A]">
       {{ t('dish.popover.category') }}
     </ListboxLabel>
     <ListboxButton

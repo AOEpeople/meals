@@ -212,15 +212,11 @@ class Meal implements JsonSerializable
     {
         return [
             'id' => $this->getId(),
-            'dish' => [
-                'de' => $this->getDish()->getTitleDe(),
-                'en' => $this->getDish()->getTitleEn(),
-            ],
-            'price' => $this->getPrice(),
+            'dish' => $this->getDish()->getSlug(),
             'participationLimit' => $this->getParticipationLimit(),
-            'day' => $this->getDay(),
+            'day' => $this->getDay()->getId(),
             'dateTime' => $this->getDateTime(),
-            'participants' => $this->getParticipants(),
+            'lockTime' => $this->getLockDateTime(),
         ];
     }
 }

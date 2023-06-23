@@ -62,7 +62,7 @@ const getMockedResponses = (method: string, url: string) => {
 useApi = jest.fn().mockImplementation((method: string, url: string) => getMockedResponses(method, url));
 
 describe('Test dishesStore', () => {
-    const { resetState, DishesState, fetchDishes, setFilter, filteredDishes, updateDish } = useDishes();
+    const { resetState, DishesState, fetchDishes, setFilter, filteredDishes, updateDish, getDishBySlug } = useDishes();
     const { fetchCategories } = useCategories();
 
     beforeAll(async () => {
@@ -117,5 +117,12 @@ describe('Test dishesStore', () => {
         await updateDish(17, dishUpdate);
 
         expect(DishesState.dishes).toContainEqual(dish1);
+    });
+
+    it('should get the correct dishes by their respective slug', async () => {
+        await fetchDishes();
+
+        expect(getDishBySlug('testen')).toEqual(Dishes[0]);
+        expect(getDishBySlug('testvaren')).toEqual(Dishes[0]);
     });
 });

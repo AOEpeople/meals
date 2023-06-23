@@ -109,7 +109,7 @@ class MealAdminController extends BaseController
         return new JsonResponse(['status' => 'success'], 200);
     }
 
-    // TODO: still some work to be done here
+    // TODO: still some work to be done here, add variations, notifications, etc.
     public function edit(Request $request, Week $week): JsonResponse
     {
         $data = json_decode($request->getContent(), true);

@@ -8,14 +8,12 @@
 
 <script setup lang="ts">
 import { useProgress } from '@marcoschulte/vue3-progress';
-import { computed, onMounted, reactive } from 'vue';
+import { computed, onMounted, reactive, watch } from 'vue';
 import MenuDay from '@/components/menu/MenuDay.vue';
 import { useDishes } from '@/stores/dishesStore';
 import { useWeeks } from '@/stores/weeksStore';
 import { useCategories } from '@/stores/categoriesStore';
 import { WeekDTO } from '@/interfaces/DayDTO';
-import { Dictionary } from 'types/types';
-
 
 const { DishesState, fetchDishes } = useDishes();
 const { WeeksState, fetchWeeks, getMenuDay } = useWeeks();
@@ -49,9 +47,14 @@ onMounted(async () => {
     await fetchWeeks();
   }
 
-  menu.days[0] = getMenuDay(menu.id, '271');
+  menu.days[0] = getMenuDay(menu.id, '276');
 
   progress.finish();
 });
 
+watch(
+  () => menu.days[0],
+  () => {
+    console.log(`MenuDay changed: ${menu.days[0].meals[0].dishSlug}`);
+});
 </script>

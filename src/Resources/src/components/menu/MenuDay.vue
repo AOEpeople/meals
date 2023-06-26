@@ -26,7 +26,7 @@ import { Dish } from '@/stores/dishesStore';
 import { MealDTO, DayDTO } from '@/interfaces/DayDTO';
 import { useDishes } from '@/stores/dishesStore';
 
-const { getDishBySlug } = useDishes();
+const { getDishArrayBySlugs } = useDishes();
 
 const props = defineProps<{
   modelValue: DayDTO;
@@ -34,8 +34,8 @@ const props = defineProps<{
 
 const emit = defineEmits(['update:modelValue']);
 
-const selectedDishOne = ref<Dish | null>(null);
-const selectedDishTwo = ref<Dish | null>(null);
+const selectedDishOne = ref<Dish[] | null>(null);
+const selectedDishTwo = ref<Dish[] | null>(null);
 
 const selectedDishes = computed({
   get() {
@@ -46,17 +46,26 @@ const selectedDishes = computed({
   }
 });
 
-watch(selectedDishOne, () => {
-  selectedDishes.value.meals[0].dishSlug = selectedDishOne.value?.slug ?? null;
+watch(
+  () => selectedDishOne,
+  () => {
+    selectedDishes.value.meals[0].dishSlug = selectedDishOne.value[0].slug ?? null;
+    console.log(`MealOne changed: ${selectedDishes.value.meals[0].dishSlug}`);
 });
 
-watch(selectedDishTwo, () => {
-  selectedDishes.value.meals[1].dishSlug = selectedDishTwo.value?.slug ?? null;
+watch(
+  () => selectedDishTwo,
+  () => {
+    selectedDishes.value.meals[1].dishSlug = selectedDishTwo.value[1].slug ?? null;
+    console.log(`MealTwo changed: ${selectedDishes.value.meals[1].dishSlug}`);
 });
 
 onMounted(() => {
   console.log(`MealOne: ${props.modelValue.meals[0].dishSlug}, MealTwo: ${props.modelValue.meals[1].dishSlug}`);
-  selectedDishOne.value = props.modelValue.meals[0] ? getDishBySlug(props.modelValue.meals[0].dishSlug) : null;
-  selectedDishTwo.value = props.modelValue.meals[1] ? getDishBySlug(props.modelValue.meals[1].dishSlug) : null;
+
+  const dishes = getDishArrayBySlugs(props.modelValue.meals.map((meal: MealDTO) => meal.dishSlug));
+
+  selectedDishOne.value = dishes[0];
+  selectedDishTwo.value = dishes[1];
 });
 </script>

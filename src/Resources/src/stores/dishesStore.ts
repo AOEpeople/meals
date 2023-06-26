@@ -222,6 +222,64 @@ export function useDishes() {
     }
 
     /**
+     * Finds the dishes by their slugs and returns them in arrays of dishes, depending on if their parent matches.
+     * If they have the same parent they are returned in the same array with their parent. If they don't have a parent
+     * they are returned in an array containing only that dish.
+     * @param slugs The slugs of the dishes to return
+     * TODO: This function is not very performant. It should be refactored to be more performant.
+     */
+    function getDishArrayBySlugs(slugs: string[]) {
+        console.log(`Input slugs: ${slugs}`);
+        const dishesFromSlugs: Dish[] = slugs.map(slug => getDishBySlug(slug));
+        console.log(`Dishes from slugs: ${dishesFromSlugs.map(dish => dish.titleDe)}`);
+
+        let dishesWithParent: Dish[][];
+
+        for (const dish of dishesFromSlugs) {
+            console.log(`Dish: ${dish.titleDe}`);
+            const parentDishInArray = dishesWithParent ? parentDishAlreadyInArray(dishesWithParent, dish) : -1;
+            console.log(`Parent dish in array number: ${parentDishInArray}`)
+            // If the dish has a parent and the parent is not already in the array, add the parent and the dish to the array
+            if (dish.parentId && parentDishInArray === -1) {
+                const parentDish = getDishById(dish.parentId);
+                console.log(`Parent dish: ${parentDish.titleDe}`)
+
+                dishesWithParent.push([parentDish, dish]);
+            } else if (dish.parentId) {
+                // If the dish has a parent and the parent is already in the array, add the dish to the array of the parent
+                dishesWithParent[parentDishInArray].push(dish);
+            } else {
+                // If the dish has no parent, add it to the array
+                dishesWithParent.push([dish]);
+            }
+        }
+
+        // fill the array to have 2 elements
+        for (let i = 0; i < 2; i++) {
+            if (dishesWithParent[i] === null) {
+                dishesWithParent[i] = [];
+            }
+        }
+
+        return dishesWithParent;
+    }
+
+    /**
+     * Searches an array for a dish that has the same parent as the parentDish or is the parent dish
+     * @param dishesWithParent Array to search for the parentDish
+     * @param parentDish dish to search for
+     */
+    function parentDishAlreadyInArray(dishesWithParent: Dish[][], parentDish: Dish) {
+        for (let i = 0; i < dishesWithParent.length; i++) {
+            if (dishesWithParent[i].find(dish => dish.parentId === parentDish.parentId || dish.id === parentDish.parentId)) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    /**
      * Resets the DishesState.
      * Only used for testing purposes.
      */
@@ -244,6 +302,7 @@ export function useDishes() {
         updateDishVariation,
         setFilter,
         resetState,
-        getDishBySlug
+        getDishBySlug,
+        getDishArrayBySlugs,
     };
 }

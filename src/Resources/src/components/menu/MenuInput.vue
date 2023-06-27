@@ -24,7 +24,7 @@
         <XIcon
           class="mr-4 h-full w-10 cursor-pointer justify-self-end px-1 py-2 text-[#9CA3AF] transition-transform hover:scale-[120%]"
           aria-hidden="true"
-          @click="value = null; query = ''; selectedVariations = []"
+          @click="query = ''; selectedVariations = []; selectedDish = null"
         />
       </div>
       <div
@@ -148,14 +148,16 @@ watch(
   () => selectedDish.value,
   () => {
     selectedVariations.value = [];
-    value.value = [selectedDish.value];
+    value.value = selectedDish.value ? [selectedDish.value] : [];
   }
 );
 
 watch(
   () => selectedVariations.value,
   () => {
-    value.value = [selectedDish.value, ...selectedVariations.value];
+    if (selectedVariations.value.length !== 0) {
+      value.value = [selectedDish.value, ...selectedVariations.value];
+    }
   }
 );
 

@@ -17,7 +17,7 @@ export interface SimpleDay {
     dateTime: DateTime,
     lockParticipationDateTime: DateTime,
     week: number,
-    meals: Dictionary<SimpleMeal>
+    meals: Dictionary<SimpleMeal[]>
 }
 
 export interface SimpleMeal {
@@ -84,15 +84,23 @@ export function useWeeks() {
 
     function getMenuDay(weekId: number, dayId: string) {
         const menuDay: DayDTO = {
-            meals: [],
+            meals: {},
             id: parseInt(dayId),
             enabled: true
         };
         const week = getWeekById(weekId);
         const day = getDayById(week, dayId);
         if (week && day) {
-            for (const meal of Object.values(day.meals)) {
-                menuDay.meals.push(createMealDTO(meal));
+            for (const [key, meals] of Object.entries(day.meals)) {
+                menuDay.meals[key] = meals.map(meal => createMealDTO(meal));
+            }
+            // make sure to have 2 meals
+            const mealsLength = Object.keys(menuDay.meals).length;
+            if (mealsLength < 2) {
+                for (let i = mealsLength; i < 2; i++) {
+                    // use negative number to display the meal is to be created
+                    menuDay.meals[-i] = [];
+                }
             }
         }
         return menuDay;
@@ -118,6 +126,8 @@ export function useWeeks() {
         fetchWeeks,
         getDateRangeOfWeek,
         createWeek,
-        getMenuDay
+        getMenuDay,
+        createMealDTO,
+        getWeekById,
     }
 }

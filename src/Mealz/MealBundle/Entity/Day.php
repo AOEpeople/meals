@@ -159,9 +159,16 @@ class Day extends AbstractMessage implements JsonSerializable
     public function jsonSerialize(): array
     {
         $meals = [];
+
         foreach ($this->getMeals() as $meal) {
-            if (!$meal->isCombinedMeal()) {
-                $meals[$meal->getId()] = $meal->jsonSerialize();
+            if ($meal->isCombinedMeal()) {
+                continue;
+            }
+            $parent = $meal->getDish()->getParent();
+            if (null !== $parent) {
+                $meals[$parent->getId()][] = $meal->jsonSerialize();
+            } else {
+                $meals[$meal->getDish()->getId()][] = $meal->jsonSerialize();
             }
         }
 

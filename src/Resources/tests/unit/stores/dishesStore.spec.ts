@@ -62,7 +62,7 @@ const getMockedResponses = (method: string, url: string) => {
 useApi = jest.fn().mockImplementation((method: string, url: string) => getMockedResponses(method, url));
 
 describe('Test dishesStore', () => {
-    const { resetState, DishesState, fetchDishes, setFilter, filteredDishes, updateDish, getDishBySlug } = useDishes();
+    const { resetState, DishesState, fetchDishes, setFilter, filteredDishes, updateDish, getDishBySlug, getDishArrayBySlugs } = useDishes();
     const { fetchCategories } = useCategories();
 
     beforeAll(async () => {
@@ -124,5 +124,26 @@ describe('Test dishesStore', () => {
 
         expect(getDishBySlug('testen')).toEqual(Dishes[0]);
         expect(getDishBySlug('testvaren')).toEqual(Dishes[0]);
+    });
+
+    it('should return an array of dishes containing all dishes from the slugs and their parent if they have parents', async () => {
+        await fetchDishes();
+
+        const expectedSlugsOne = ['testen', 'testvaren', 'testvaren123'];
+        const expectedSlugsTwo = ['testen', 'testvaren'];
+
+        const slugArrOne = ['testvaren', 'testvaren123'];
+        const slugArrTwo= ['testvaren'];
+        const slugArrThree = ['testen'];
+
+        const dishArrOne = getDishArrayBySlugs(slugArrOne).map(dish => dish.slug);
+        // const dishArrTwo = expectedSlugsTwo.map(slug => getDishBySlug(slug));
+        // const dishArrThree = slugArrThree.map(slug => getDishBySlug(slug));
+
+        for (const dishSlug of dishArrOne) {
+            expect(expectedSlugsOne.includes(dishSlug)).toBeTruthy();
+        }
+        // expect(getDishArrayBySlugs(slugArrTwo)).toEqual(dishArrTwo);
+        // expect(getDishArrayBySlugs(slugArrThree)).toEqual(dishArrThree);
     });
 });

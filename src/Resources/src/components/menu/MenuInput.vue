@@ -17,7 +17,7 @@
       >
         <ComboboxInput
           :displayValue="// @ts-ignore
-            (dish) => locale === 'en' ? dish?.titleEn : dish?.titleDe"
+            (dish) => getStringRepr(dish)"
           class="w-full truncate border-none px-4 py-2 text-[#9CA3AF] focus:outline-none"
           @change="query = $event.target.value"
         />
@@ -112,6 +112,7 @@ const selectedVariations = ref([]);
 const selectedDish = ref<Dish | null>(null);
 
 onMounted(() => {
+  props.modelValue.forEach(dish => console.log(`dish: ${dish.slug}`));
   // set initial value for dish
   if (props.modelValue?.length > 0) {
     props.modelValue.forEach(dish => {
@@ -144,19 +145,22 @@ const filteredDishes = computed(() => {
 });
 
 // empty the array of variations when a dish is selected
+// TODO: BUG HERE
 watch(
-  () => selectedDish.value,
+  selectedDish,
   () => {
     selectedVariations.value = [];
     value.value = selectedDish.value ? [selectedDish.value] : [];
+    console.log(`\nUpdated SelectedDish: ${value.value}`);
   }
 );
 
 watch(
-  () => selectedVariations.value,
+  selectedVariations,
   () => {
     if (selectedVariations.value.length !== 0) {
       value.value = [selectedDish.value, ...selectedVariations.value];
+      console.log(`\nUpdated SelectedVariations: ${value.value}`);
     }
   }
 );
@@ -164,6 +168,14 @@ watch(
 function handleClick() {
   openProp.value = true;
   useDetectClickOutside(combobox, () => openProp.value = false);
+}
+
+function getStringRepr(dish: Dish) {
+  const dishStringRepr = locale.value === 'en' ? dish?.titleEn : dish?.titleDe;
+  if (selectedVariations.value.length === 0) {
+    return dishStringRepr;
+  }
+  return `${dishStringRepr}, ` + selectedVariations.value.map(variation => locale.value === 'en' ? variation.titleEn : variation.titleDe).join(', ');
 }
 </script>
 

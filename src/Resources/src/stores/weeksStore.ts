@@ -1,7 +1,8 @@
 import { DateTime } from "@/api/getDashboardData";
 import getWeeksData from "@/api/getWeeks";
 import postCreateWeek from "@/api/postCreateWeek";
-import { DayDTO, MealDTO } from "@/interfaces/DayDTO";
+import putWeekUpdate from "@/api/putWeekUpdate";
+import { DayDTO, MealDTO, WeekDTO } from "@/interfaces/DayDTO";
 import { Dictionary } from "types/types";
 import { reactive, readonly } from "vue";
 
@@ -73,6 +74,18 @@ export function useWeeks() {
         await getWeeks();
     }
 
+    async function updateWeek(week: WeekDTO) {
+
+        const { error, response } = await putWeekUpdate(week);
+
+        if (error.value || response.value?.status !== 'success') {
+            WeeksState.error = 'Error on updating the week';
+            return;
+        }
+
+        await getWeeks();
+    }
+
     // TODO: Test this thouroghly
     function getDateRangeOfWeek(isoWeek: number, year: number) {
         const date = new Date(year, 0, 1 + (isoWeek - 1) * 7);
@@ -129,5 +142,6 @@ export function useWeeks() {
         getMenuDay,
         createMealDTO,
         getWeekById,
+        updateWeek
     }
 }

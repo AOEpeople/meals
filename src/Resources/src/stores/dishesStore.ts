@@ -210,15 +210,21 @@ export function useDishes() {
     }
 
     function getDishBySlug(slug: string) {
-        const dish = DishesState.dishes.find(dish => {
+        let dishToReturn: Dish | null = null;
+
+        DishesState.dishes.forEach(dish => {
             if (dish.slug === slug) {
-                return true;
+                dishToReturn = dish;
             }
 
-            return dish.variations.find(variation => variation.slug === slug);
+            dish.variations.forEach(variation => {
+                if (variation.slug === slug) {
+                    dishToReturn = variation;
+                }
+            });
         });
 
-        return dish;
+        return dishToReturn;
     }
 
     /**
@@ -233,13 +239,13 @@ export function useDishes() {
 
         const dishesWithParent: Dish[] = [];
 
+        let parentDishInArray = false;
         for (const dish of dishesFromSlugs) {
-            const parentDishInArray = dishesWithParent.length === 0 ? parentDishAlreadyInArray(dishesWithParent, dish) : -1;
             // If the dish has a parent and the parent is not already in the array, add the parent and the dish to the array
-            if (dish.parentId && parentDishInArray === -1) {
+            if (dish.parentId && !parentDishInArray) {
                 const parentDish = getDishById(dish.parentId);
-
                 dishesWithParent.push(parentDish, dish);
+                parentDishInArray = true;
             } else if (dish.parentId) {
                 // If the dish has a parent and the parent is already in the array, add the dish to the array of the parent
                 dishesWithParent.push(dish);
@@ -250,15 +256,6 @@ export function useDishes() {
         }
 
         return dishesWithParent;
-    }
-
-    /**
-     * Searches an array for a dish that has the same parent as the parentDish or is the parent dish
-     * @param dishesWithParent Array to search for the parentDish
-     * @param parentDish dish to search for
-     */
-    function parentDishAlreadyInArray(dishesWithParent: Dish[], parentDish: Dish) {
-        return dishesWithParent.indexOf(parentDish);
     }
 
     /**

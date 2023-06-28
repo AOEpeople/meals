@@ -85,7 +85,6 @@ watch(
 onMounted(() => {
   // get mealKeys
   mealKeys = Object.keys(props.modelValue.meals)
-
   selectedDishOne.value = getDishArrayBySlugs(props.modelValue.meals[mealKeys[0]].map((meal: MealDTO) => meal.dishSlug));
   selectedDishTwo.value = getDishArrayBySlugs(props.modelValue.meals[mealKeys[1]].map((meal: MealDTO) => meal.dishSlug));
 });

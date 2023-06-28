@@ -93,9 +93,9 @@ MealzMealBundle_api_weeks_new:
         date: 20\d{2}W[0-5]\d
 
 MealzMealBundle_Meal_edit:
-    path:  /menu/{week}
+    path:  /api/menu/{id}
     defaults: { _controller: App\Mealz\MealBundle\Controller\MealAdminController::edit }
-    methods: [POST]
+    methods: [PUT]
 
 MealzMealBundle_api_join_Meal:
   path: /api/join-meal

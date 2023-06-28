@@ -109,53 +109,96 @@ class MealAdminController extends BaseController
         return new JsonResponse(['status' => 'success'], 200);
     }
 
-    // TODO: still some work to be done here, add variations, notifications, etc.
+    // TODO: still some work to be done here (enabled, date, notifications, etc.)
     public function edit(Request $request, Week $week): JsonResponse
     {
+        // /** @var Week $week */
+        // $week = $this->weekRepository->find($weekId);
         $data = json_decode($request->getContent(), true);
-        $days = $data['days'];
 
-        if (null === $data || null === $days) {
+        if (null === $week || !isset($data) || !isset($data['days']) || !isset($data['id']) || $data['id'] !== $week->getId()) {
             return new JsonResponse(['status' => 'invalid json'], 400);
         }
+        $days = $data['days'];
 
+        // TODO: throw instead of code 400 then catch and return, also outsource parts to services
         foreach ($days as $day) {
+            // check if day exists
             $dayEntity = $this->dayRepository->find($day['id']);
             if (null === $dayEntity) {
                 return new JsonResponse(['status' => 'day not found'], 400);
             }
 
             $mealCollection = $day['meals'];
+            // max 2 main meals allowed
+            if (2 < count($mealCollection)) {
+                return new JsonResponse(['status' => 'too many meals requested'], 400);
+            }
 
-            // TODO: remove unused meals (check before changing entities to ensure that no participations exist)
+            // TODO: check if it is even possible to set the day
             $this->dayService->removeUnusedMeals($dayEntity, $mealCollection);
 
-            // if no meals exist, create and add new ones
-            if (0 === count($dayEntity->getMeals())) {
-                foreach ($mealCollection as $meal) {
-                    if (isset($meal['dishSlug'])) {
-                        $dishEntity = $this->dishRepository->findOneBy(['slug' => $meal['dishSlug']]);
-                        if (null === $dishEntity) {
-                            return new JsonResponse(['status' => 'dish not found'], 400);
-                        }
+            // parentMeal is an array of either one meal without variations or 1-2 variations
+            foreach ($mealCollection as $parentDishId => $mealArr) {
+                foreach ($mealArr as $meal) {
+                    if (!isset($meal['dishSlug'])) {
+                        continue;
+                    }
+                    $dishEntity = $this->dishRepository->findOneBy(['slug' => $meal['dishSlug']]);
+                    if (null === $dishEntity) {
+                        return new JsonResponse(['status' => 'dish not found for slug: ' . $meal['dishSlug']], 400);
+                    }
+                    // if mealId is null create meal
+                    if (!isset($meal['mealId'])) {
                         $mealEntity = new Meal($dishEntity, $dayEntity);
-                        $mealEntity->setParticipationLimit($dishEntity->getParticipationLimit());
+                        // TODO: set Participation limit
+                        $mealEntity->setParticipationLimit(0);
                         $dayEntity->addMeal($mealEntity);
+                    } else {
+                        // check if meal already exists and can be modified (aka has no participations)
+                        $mealEntity = $this->mealRepository->find($meal['mealId']);
+                        if (null !== $mealEntity && !$mealEntity->hasParticipations()) {
+                            $mealEntity->setDish($dishEntity);
+                            // TODO: Participation limit can also be set per meal
+                            $mealEntity->setParticipationLimit(0);
+                        } elseif (null === $mealEntity) {
+                            // this happens because meals without participations are deleted, even though they could be modified later on (this shouldn't happen but might)
+                            $mealEntity = new Meal($dishEntity, $dayEntity);
+                            $mealEntity->setParticipationLimit(0);
+                            $dayEntity->addMeal($mealEntity);
+                        } else {
+                            return new JsonResponse(['status' => 'meal has participations for id: ' . $meal['mealId']], 400);
+                        }
                     }
                 }
-                continue;
             }
 
+            // if no meals exist, create and add new ones
+            // if (0 === count($dayEntity->getMeals())) {
+            //     foreach ($mealCollection as $meal) {
+            //         if (isset($meal['dishSlug'])) {
+            //             $dishEntity = $this->dishRepository->findOneBy(['slug' => $meal['dishSlug']]);
+            //             if (null === $dishEntity) {
+            //                 return new JsonResponse(['status' => 'dish not found'], 400);
+            //             }
+            //             $mealEntity = new Meal($dishEntity, $dayEntity);
+            //             $mealEntity->setParticipationLimit($dishEntity->getParticipationLimit());
+            //             $dayEntity->addMeal($mealEntity);
+            //         }
+            //     }
+            //     continue;
+            // }
 
-            foreach ($mealCollection as $meal) {
-                // if meal already exists and has no participations, update dish
-                if (isset($meal['mealId']) && $this->dayService->isMealInDay($day, $meal['mealId']) && !$this->dayService->mealHasParticipations($meal['mealId']) && !$this->dayService->isDishInDay($day, $meal['dishId'])) {
-                    $mealEntity = $this->mealRepository->find($meal['mealId']);
-                    $dishEntity = $this->dishRepository->find($meal['dishId']);
-                    $mealEntity->setDish($dishEntity);
-                }
-                // TODO: I forgot something...
-            }
+
+            // foreach ($mealCollection as $meal) {
+            //     // if meal already exists and has no participations, update dish
+            //     if (isset($meal['mealId']) && $this->dayService->isMealInDay($day, $meal['mealId']) && !$this->dayService->mealHasParticipations($meal['mealId']) && !$this->dayService->isDishInDay($day, $meal['dishId'])) {
+            //         $mealEntity = $this->mealRepository->find($meal['mealId']);
+            //         $dishEntity = $this->dishRepository->find($meal['dishId']);
+            //         $mealEntity->setDish($dishEntity);
+            //     }
+            //     // TODO: I forgot something...
+            // }
         }
 
         $this->em->persist($week);

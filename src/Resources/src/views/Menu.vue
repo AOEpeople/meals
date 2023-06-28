@@ -1,6 +1,6 @@
 <template>
   <form
-    class="bg-white p-4"
+    class="p-4"
     @submit.prevent="handleSubmit"
   >
     <div class="w-full text-center">
@@ -10,8 +10,11 @@
       v-for="(day, index) in menu.days"
       :key="day.id"
       v-model="menu.days[index]"
+      class="mt-4"
     />
-    <SubmitButton />
+    <SubmitButton
+      class="mt-4"
+    />
   </form>
 </template>
 
@@ -26,7 +29,7 @@ import { WeekDTO } from '@/interfaces/DayDTO';
 import SubmitButton from '@/components/misc/SubmitButton.vue';
 
 const { DishesState, fetchDishes } = useDishes();
-const { WeeksState, fetchWeeks, getMenuDay, getWeekById } = useWeeks();
+const { WeeksState, fetchWeeks, getMenuDay, getWeekById, updateWeek } = useWeeks();
 const { CategoriesState, fetchCategories } = useCategories();
 
 const props = defineProps<{
@@ -58,19 +61,18 @@ onMounted(async () => {
   }
 
   setUpDays();
-  // menu.days[0] = getMenuDay(menu.id, Object.keys(getWeekById(parseWeekId.value).days)[0]);
   progress.finish();
 });
 
-function handleSubmit() {
+async function handleSubmit() {
   console.log('submit');
+  await updateWeek(menu);
+  console.log('updated');
 }
 
 function setUpDays() {
-  const dayKeys = Object.keys(getWeekById(menu.id).days);
-  // keys seem to not be needed -> array
-  for (const dayId in dayKeys) {
-    console.log(dayId)
+  const dayKeys = Object.keys(getWeekById(parseWeekId.value).days);
+  for (const dayId of dayKeys) {
     menu.days.push(getMenuDay(menu.id, dayId));
   }
 }

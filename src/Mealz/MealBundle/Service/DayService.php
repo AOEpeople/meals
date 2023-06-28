@@ -57,12 +57,23 @@ class DayService
     public function removeUnusedMeals(Day $day, array $mealCollection): void
     {
         foreach ($day->getMeals() as $mealEntity) {
-            foreach ($mealCollection as $meal) {
-                if ($mealEntity->getId() === $meal['mealId']) {
-                    continue;
+            $canRemove = true;
+            // maybe implement a recursive search to make this process more efficient
+            foreach ($mealCollection as $parentDishId => $mealArr) {
+                if(!$canRemove) {
+                    break;
+                }
+                foreach ($mealArr as $meal) {
+                    // if dish is null and mealId is set the meal is removed
+                    if ($mealEntity->getId() === $meal['mealId'] && isset($meal['dishSlug'])) {
+                        $canRemove = false;
+                    }
+                    if(!$canRemove) {
+                        break;
+                    }
                 }
             }
-            if (!$mealEntity->hasParticipations()) {
+            if (!$mealEntity->hasParticipations() && $canRemove) {
                 $day->removeMeal($mealEntity);
                 $this->em->remove($mealEntity);
             }

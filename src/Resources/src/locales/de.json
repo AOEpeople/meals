@@ -122,7 +122,8 @@
   "menu": {
     "list": "Liste der Wochen",
     "week": "Woche",
-    "noDishFound": "Keine Gerichte gefunden."
+    "noDishFound": "Keine Gerichte gefunden.",
+    "enableDay": "Dieser Tag ist aktiviert"
   },
   "printList": {
     "title": "Teilnahmen am ",

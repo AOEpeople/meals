@@ -65,15 +65,13 @@ onMounted(async () => {
 });
 
 async function handleSubmit() {
-  console.log('submit');
+  menu.days.forEach(day => console.log(`Day #${day.id} is enabled: ${day.enabled}`));
   await updateWeek(menu);
-  console.log('updated');
+  setUpDays();
 }
 
 function setUpDays() {
   const dayKeys = Object.keys(getWeekById(parseWeekId.value).days);
-  for (const dayId of dayKeys) {
-    menu.days.push(getMenuDay(menu.id, dayId));
-  }
+  menu.days = dayKeys.map(dayId => getMenuDay(menu.id, dayId));
 }
 </script>

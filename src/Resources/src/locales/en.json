@@ -122,7 +122,8 @@
   "menu": {
     "list": "List of Weeks",
     "week": "Week",
-    "noDishFound": "No dishes found."
+    "noDishFound": "No dishes found.",
+    "enableDay": "Dieser Tag ist aktiviert"
   },
   "printList": {
     "title": "Participations on ",

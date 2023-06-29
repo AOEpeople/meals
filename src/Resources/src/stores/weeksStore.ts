@@ -2,7 +2,7 @@ import { DateTime } from "@/api/getDashboardData";
 import getWeeksData from "@/api/getWeeks";
 import postCreateWeek from "@/api/postCreateWeek";
 import putWeekUpdate from "@/api/putWeekUpdate";
-import { DayDTO, MealDTO, WeekDTO } from "@/interfaces/DayDTO";
+import { DayDTO, WeekDTO } from "@/interfaces/DayDTO";
 import { Dictionary } from "types/types";
 import { reactive, readonly } from "vue";
 
@@ -96,13 +96,16 @@ export function useWeeks() {
     }
 
     function getMenuDay(weekId: number, dayId: string) {
+        const week = getWeekById(weekId);
+        const day = getDayById(week, dayId);
+
         const menuDay: DayDTO = {
             meals: {},
             id: parseInt(dayId),
-            enabled: true
+            enabled: true,
+            date: day.dateTime
         };
-        const week = getWeekById(weekId);
-        const day = getDayById(week, dayId);
+
         if (week && day) {
             for (const [key, meals] of Object.entries(day.meals)) {
                 menuDay.meals[key] = meals.map(meal => createMealDTO(meal));

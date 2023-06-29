@@ -17,14 +17,14 @@
       >
         <ComboboxInput
           :displayValue="// @ts-ignore
-            (dish) => getStringRepr(dish)"
+            (dish) => titleStringRepr"
           class="w-full truncate border-none px-4 py-2 text-[#9CA3AF] focus:outline-none"
-          @change="query = $event.target.value"
+          @change="setFilter($event.target.value)"
         />
         <XIcon
           class="mr-4 h-full w-10 cursor-pointer justify-self-end px-1 py-2 text-[#9CA3AF] transition-transform hover:scale-[120%]"
           aria-hidden="true"
-          @click="query = ''; selectedVariations = []; selectedDish = null"
+          @click="setFilter(''); selectedDish = null"
         />
       </div>
       <div
@@ -36,7 +36,7 @@
           static
         >
           <li
-            v-if="filteredDishes.length === 0 && query !== ''"
+            v-if="filteredDishes.length === 0"
             class="cursor-pointer truncate text-[14px] text-[#9CA3AF]"
           >
             <span class="h-full w-full px-4 py-2">
@@ -61,7 +61,7 @@
                 {{ locale === 'en' ? dish.titleEn : dish.titleDe }}
               </span>
               <MenuDishVariationsCombobox
-                v-if="dish.variations.length > 0 && selected"
+                v-if="dish.variations.length > 0 && selected && loadingFinished"
                 v-model="selectedVariations"
                 :dish=" // @ts-ignore
                   (dish as Dish)"
@@ -89,12 +89,12 @@
 import { Combobox, ComboboxInput, ComboboxOptions, ComboboxOption } from '@headlessui/vue';
 import { Dish, useDishes } from '@/stores/dishesStore';
 import { useI18n } from 'vue-i18n';
-import { computed, onMounted, ref, watch } from 'vue';
+import { WatchStopHandle, computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { CheckIcon, XIcon } from '@heroicons/vue/solid';
 import useDetectClickOutside from '@/services/useDetectClickOutside';
 import MenuDishVariationsCombobox from './MenuDishVariationsCombobox.vue';
 
-const { DishesState } = useDishes();
+const { setFilter, filteredDishes } = useDishes();
 const { locale, t } = useI18n();
 
 const props = withDefaults(defineProps<{
@@ -106,13 +106,13 @@ const props = withDefaults(defineProps<{
 const emit = defineEmits(['update:modelValue']);
 
 const combobox = ref<HTMLElement | null>(null);
-const query = ref('');
 const openProp = ref(false);
-const selectedVariations = ref([]);
+const selectedVariations = ref<Dish[]>([]);
 const selectedDish = ref<Dish | null>(null);
+const loadingFinished = ref<boolean>(false);
+let unwatch: WatchStopHandle = null;
 
 onMounted(() => {
-  props.modelValue.forEach(dish => console.log(`dish: ${dish.slug}`));
   // set initial value for dish
   if (props.modelValue?.length > 0) {
     props.modelValue.forEach(dish => {
@@ -127,6 +127,23 @@ onMounted(() => {
       }
     });
   }
+  loadingFinished.value = true;
+
+  unwatch = watch(
+    selectedDish,
+    (newSelectedDish, oldSelectedDish) => {
+      if (loadingFinished.value && newSelectedDish?.id !== oldSelectedDish?.id) {
+        selectedVariations.value = [];
+        value.value = newSelectedDish ? [newSelectedDish] : [];
+      }
+    }
+  );
+
+  setFilter('');
+});
+
+onUnmounted(() => {
+  unwatch();
 });
 
 const value = computed({
@@ -138,44 +155,27 @@ const value = computed({
   }
 });
 
-const filteredDishes = computed(() => {
-   return query.value === '' ?
-    DishesState.dishes :
-    DishesState.dishes.filter(dish => dish.titleDe.toLocaleLowerCase().includes(query.value.toLocaleLowerCase()));
-});
-
-// empty the array of variations when a dish is selected
-// TODO: BUG HERE
-watch(
-  selectedDish,
-  () => {
-    selectedVariations.value = [];
-    value.value = selectedDish.value ? [selectedDish.value] : [];
-    console.log(`\nUpdated SelectedDish: ${value.value}`);
-  }
-);
-
 watch(
   selectedVariations,
-  () => {
-    if (selectedVariations.value.length !== 0) {
+  (newSelctedVariations, oldSelectedVariations) => {
+    if (loadingFinished.value && newSelctedVariations.length !== oldSelectedVariations.length) {
       value.value = [selectedDish.value, ...selectedVariations.value];
-      console.log(`\nUpdated SelectedVariations: ${value.value}`);
     }
   }
 );
 
+const titleStringRepr = computed(() => {
+  return value.value.map(dish => {
+    if (dish) {
+      return locale.value === 'en' ? dish.titleEn : dish.titleDe
+    }
+    return '';
+  }).join(', ');
+});
+
 function handleClick() {
   openProp.value = true;
   useDetectClickOutside(combobox, () => openProp.value = false);
-}
-
-function getStringRepr(dish: Dish) {
-  const dishStringRepr = locale.value === 'en' ? dish?.titleEn : dish?.titleDe;
-  if (selectedVariations.value.length === 0) {
-    return dishStringRepr;
-  }
-  return `${dishStringRepr}, ` + selectedVariations.value.map(variation => locale.value === 'en' ? variation.titleEn : variation.titleDe).join(', ');
 }
 </script>
 

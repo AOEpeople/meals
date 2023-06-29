@@ -20,6 +20,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\UnitOfWork;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -40,6 +41,7 @@ class MealAdminController extends BaseController
     private DayRepositoryInterface $dayRepository;
     private DayService $dayService;
     private EntityManagerInterface $em;
+    private LoggerInterface $logger;
 
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
@@ -48,7 +50,8 @@ class MealAdminController extends BaseController
         MealRepositoryInterface $mealRepository,
         DayRepositoryInterface $dayRepository,
         DayService $dayService,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        LoggerInterface $logger
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->weekRepository = $weekRepository;
@@ -57,6 +60,7 @@ class MealAdminController extends BaseController
         $this->dayRepository = $dayRepository;
         $this->dayService = $dayService;
         $this->em = $em;
+        $this->logger = $logger;
     }
 
     public function getWeeks(): JsonResponse
@@ -127,6 +131,12 @@ class MealAdminController extends BaseController
             $dayEntity = $this->dayRepository->find($day['id']);
             if (null === $dayEntity) {
                 return new JsonResponse(['status' => 'day not found'], 400);
+            }
+
+            // TODO: wtf happens here
+            $this->logger->info('day enabled is ' . $day['enabled']);
+            if (null !== $day['enabled']) {
+                $dayEntity->setEnabled($day['enabled']);
             }
 
             $mealCollection = $day['meals'];

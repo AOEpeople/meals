@@ -18,7 +18,8 @@ export interface SimpleDay {
     dateTime: DateTime,
     lockParticipationDateTime: DateTime,
     week: number,
-    meals: Dictionary<SimpleMeal[]>
+    meals: Dictionary<SimpleMeal[]>,
+    enabled: boolean
 }
 
 export interface SimpleMeal {
@@ -102,7 +103,7 @@ export function useWeeks() {
         const menuDay: DayDTO = {
             meals: {},
             id: parseInt(dayId),
-            enabled: true,
+            enabled: day.enabled,
             date: day.dateTime
         };
 
@@ -125,7 +126,8 @@ export function useWeeks() {
     function createMealDTO(meal: SimpleMeal) {
         return {
             dishSlug: meal.dish,
-            mealId: meal.id
+            mealId: meal.id,
+            participationLimit: meal.participationLimit
         }
     }
 

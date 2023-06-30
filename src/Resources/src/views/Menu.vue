@@ -65,7 +65,6 @@ onMounted(async () => {
 });
 
 async function handleSubmit() {
-  menu.days.forEach(day => console.log(`Day #${day.id} is enabled: ${day.enabled}`));
   await updateWeek(menu);
   setUpDays();
 }

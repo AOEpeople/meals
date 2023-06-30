@@ -113,7 +113,7 @@ class MealAdminController extends BaseController
         return new JsonResponse(['status' => 'success'], 200);
     }
 
-    // TODO: still some work to be done here (enabled, date, notifications, etc.)
+    // TODO: still some work to be done here (date, notifications, etc.)
     public function edit(Request $request, Week $week): JsonResponse
     {
         // /** @var Week $week */
@@ -133,8 +133,6 @@ class MealAdminController extends BaseController
                 return new JsonResponse(['status' => 'day not found'], 400);
             }
 
-            // TODO: wtf happens here
-            $this->logger->info('day enabled is ' . $day['enabled']);
             if (null !== $day['enabled']) {
                 $dayEntity->setEnabled($day['enabled']);
             }
@@ -161,8 +159,7 @@ class MealAdminController extends BaseController
                     // if mealId is null create meal
                     if (!isset($meal['mealId'])) {
                         $mealEntity = new Meal($dishEntity, $dayEntity);
-                        // TODO: set Participation limit
-                        $mealEntity->setParticipationLimit(0);
+                        $this->setParticipationLimit($mealEntity, $meal);
                         $dayEntity->addMeal($mealEntity);
                     } else {
                         // check if meal already exists and can be modified (aka has no participations)
@@ -170,11 +167,11 @@ class MealAdminController extends BaseController
                         if (null !== $mealEntity && !$mealEntity->hasParticipations()) {
                             $mealEntity->setDish($dishEntity);
                             // TODO: Participation limit can also be set per meal
-                            $mealEntity->setParticipationLimit(0);
+                            $this->setParticipationLimit($mealEntity, $meal);
                         } elseif (null === $mealEntity) {
                             // this happens because meals without participations are deleted, even though they could be modified later on (this shouldn't happen but might)
                             $mealEntity = new Meal($dishEntity, $dayEntity);
-                            $mealEntity->setParticipationLimit(0);
+                            $this->setParticipationLimit($mealEntity, $meal);
                             $dayEntity->addMeal($mealEntity);
                         } else {
                             return new JsonResponse(['status' => 'meal has participations for id: ' . $meal['mealId']], 400);
@@ -215,6 +212,16 @@ class MealAdminController extends BaseController
         $this->em->flush();
 
         return new JsonResponse(['status' => 'success'], 200);
+    }
+
+
+    private function setParticipationLimit(Meal $mealEntity, $meal): void
+    {
+        if (isset($meal['participationLimit']) && 0 < $meal['participationLimit']) {
+            $mealEntity->setParticipationLimit($meal['participationLimit']);
+        } else {
+            $mealEntity->setParticipationLimit(0);
+        }
     }
 
 //    /**

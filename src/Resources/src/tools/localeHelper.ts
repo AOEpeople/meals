@@ -8,5 +8,5 @@ export function translateWeekday(date: DateTime, locale: WritableComputedRef<str
 }
 
 export function translateWeekdayWithoutRef(date: DateTime, locale: string): string {
-    return new Date(date.date).toLocaleDateString(locale, { weekday: 'long' });
+    return new Date(date.date).toLocaleDateString(locale, { weekday: 'short' });
 }

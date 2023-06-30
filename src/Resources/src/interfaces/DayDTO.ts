@@ -19,4 +19,5 @@ export interface DayDTO {
 export interface MealDTO {
     dishSlug: string | null;
     mealId: number | null;
+    participationLimit: number;
 }

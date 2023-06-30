@@ -3,11 +3,28 @@
     class="day-shadow group grid grid-cols-[24px_minmax(0,1fr)_72px] grid-rows-2 rounded-lg border-0 border-none bg-white text-center align-middle"
   >
     <div
-      class="col-start-1 row-span-2 row-start-1 grid w-[24px] justify-center rounded-l-lg bg-[#1c5298]"
+      class="col-start-1 row-span-2 row-start-1 grid w-[24px] grid-rows-[24px_minmax(0,1fr)_24px] justify-center rounded-l-lg bg-[#1c5298] py-1"
     >
-      <span class="rotate-180 text-center text-[11px] font-bold uppercase leading-4 tracking-[3px] text-white [writing-mode:vertical-lr]">
+      <Popover>
+        <template #button="{ open }">
+          <UserIcon
+            class="row-start-1 h-5 w-5 cursor-pointer text-white"
+          />
+        </template>
+        <template #panel="{ close }">
+          <MenuParticipationPanel
+            :meals="modelValue.meals"
+            :close="close"
+          />
+        </template>
+      </Popover>
+      <span class="row-start-2 rotate-180 text-center text-[11px] font-bold uppercase leading-4 tracking-[3px] text-white [writing-mode:vertical-lr]">
         {{ translateWeekdayWithoutRef(modelValue.date, locale) }}
       </span>
+      <MenuLockDatePicker
+        :lock-date="modelValue.date"
+        class="row-start-3"
+      />
     </div>
     <MenuInput
       v-if="selectedDishOne"
@@ -41,6 +58,10 @@ import { useDishes } from '@/stores/dishesStore';
 import { translateWeekdayWithoutRef } from '@/tools/localeHelper';
 import { useI18n } from 'vue-i18n';
 import Switch from "@/components/misc/Switch.vue"
+import { UserIcon, CalendarIcon } from '@heroicons/vue/solid';
+import Popover from '../misc/Popover.vue';
+import MenuParticipationPanel from './MenuParticipationPanel.vue';
+import MenuLockDatePicker from './MenuLockDatePicker.vue';
 
 const { getDishArrayBySlugs } = useDishes();
 const { locale, t } = useI18n();
@@ -77,6 +98,7 @@ watch(
       return {
         dishSlug: dishSlug,
         mealId: mealIds.length > 0 ? mealIds.pop() : null,
+        participationLimit: getParticipationLimitFromModel(dishSlug, mealKeys[0])
       };
     });
 });
@@ -93,6 +115,7 @@ watch(
       return {
         dishSlug: dishSlug,
         mealId: mealIds.length > 0 ? mealIds.pop() : null,
+        participationLimit: getParticipationLimitFromModel(dishSlug, mealKeys[0])
       };
     });
 });
@@ -105,8 +128,9 @@ onMounted(() => {
 });
 
 watch(
-  () => props.modelValue.enabled,
-  () => console.log(`enabled changed to: ${props.modelValue.enabled}`)
+  () => props.modelValue.meals,
+  () => console.log(`meals changed`),
+  { deep: true }
 );
 
 /**
@@ -132,5 +156,14 @@ function getSlugsFromSelectedDishes(selectedDishRef: Ref<Dish[] | null>) {
   }
 
   return meals;
+}
+
+function getParticipationLimitFromModel(dishSlug: string, key: string) {
+  for (const meal of selectedDishes.value.meals[key]) {
+    if (meal.dishSlug === dishSlug) {
+      return meal.participationLimit;
+    }
+  }
+  return 0;
 }
 </script>

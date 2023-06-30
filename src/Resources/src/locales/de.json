@@ -123,7 +123,8 @@
     "list": "Liste der Wochen",
     "week": "Woche",
     "noDishFound": "Keine Gerichte gefunden.",
-    "enableDay": "Dieser Tag ist aktiviert"
+    "enableDay": "Dieser Tag ist aktiviert",
+    "lockDate": "Buchung möglich bis"
   },
   "printList": {
     "title": "Teilnahmen am ",

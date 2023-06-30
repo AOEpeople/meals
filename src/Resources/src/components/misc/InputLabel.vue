@@ -3,7 +3,7 @@
     <label
       v-if="labelText !== '' && labelVisible"
       :for="labelText"
-      class="w-fulltext-start px-4 text-xs font-medium text-[#173D7A]"
+      class="w-full px-4 text-start text-xs font-medium text-[#173D7A]"
     >
       {{ labelText }}
     </label>

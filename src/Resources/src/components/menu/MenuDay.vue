@@ -22,7 +22,7 @@
         {{ translateWeekdayWithoutRef(modelValue.date, locale) }}
       </span>
       <MenuLockDatePicker
-        :lock-date="modelValue.date"
+        :lock-date="modelValue.lockDate"
         class="row-start-3"
       />
     </div>
@@ -126,12 +126,6 @@ onMounted(() => {
   selectedDishOne.value = getDishArrayBySlugs(props.modelValue.meals[mealKeys[0]].map((meal: MealDTO) => meal.dishSlug));
   selectedDishTwo.value = getDishArrayBySlugs(props.modelValue.meals[mealKeys[1]].map((meal: MealDTO) => meal.dishSlug));
 });
-
-watch(
-  () => props.modelValue.meals,
-  () => console.log(`meals changed`),
-  { deep: true }
-);
 
 /**
  * Extract the slugs from the selected dishes. Returns the slugs of variations if there are selected variations.

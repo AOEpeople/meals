@@ -75,6 +75,21 @@ class MealRepository extends BaseRepository implements MealRepositoryInterface
     }
 
     /**
+     * @return Meal[]
+     */
+    public function findAllBetween(DateTime $startDate, DateTime $endDate): array
+    {
+        $queryBuilder = $this->createQueryBuilder('m');
+        $queryBuilder
+            ->where('m.dateTime >= :startTime')
+            ->andWhere('m.dateTime <= :endTime')
+            ->setParameter('startTime', (clone $startDate)->setTime(0, 0), Types::DATETIME_MUTABLE)
+            ->setParameter('endTime', (clone $endDate)->setTime(23, 59), Types::DATETIME_MUTABLE);
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
+    /**
      * Created for Test with Dish variations.
      *
      * @psalm-return list<array{id: int}>

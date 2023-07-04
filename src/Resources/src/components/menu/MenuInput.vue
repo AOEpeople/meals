@@ -72,11 +72,13 @@
               >
                 Variation
               </span>
-              <CheckIcon
-                v-if="selected"
-                class="col-start-3 mr-4 h-full w-5 justify-self-end text-[#9CA3AF]"
+              <div
+                v-if="MenuCountState.counts[dish.id] && MenuCountState.counts[dish.id] > 0"
+                class="col-start-3 mr-4 flex h-6 w-6 items-center justify-center self-center justify-self-end rounded-lg bg-[#029DF7] text-center text-white"
                 aria-hidden="true"
-              />
+              >
+                {{ MenuCountState.counts[dish.id] }}
+              </div>
             </li>
           </ComboboxOption>
         </ComboboxOptions>
@@ -88,14 +90,16 @@
 <script setup lang="ts">
 import { Combobox, ComboboxInput, ComboboxOptions, ComboboxOption } from '@headlessui/vue';
 import { Dish, useDishes } from '@/stores/dishesStore';
+import { useWeeks } from '@/stores/weeksStore';
 import { useI18n } from 'vue-i18n';
 import { WatchStopHandle, computed, onMounted, onUnmounted, ref, watch } from 'vue';
-import { CheckIcon, XIcon } from '@heroicons/vue/solid';
+import { XIcon } from '@heroicons/vue/solid';
 import useDetectClickOutside from '@/services/useDetectClickOutside';
 import MenuDishVariationsCombobox from './MenuDishVariationsCombobox.vue';
 
 const { setFilter, filteredDishes } = useDishes();
 const { locale, t } = useI18n();
+const { MenuCountState } = useWeeks();
 
 const props = withDefaults(defineProps<{
   modelValue: Dish[] | null;

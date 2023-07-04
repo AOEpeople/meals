@@ -124,7 +124,10 @@
     "week": "Woche",
     "noDishFound": "Keine Gerichte gefunden.",
     "enableDay": "Dieser Tag ist aktiviert",
-    "lockDate": "Buchung möglich bis"
+    "lockDate": "Buchung möglich bis",
+    "notify": "In Mattermost bekanntgeben",
+    "enableWeek": "Diese Woche ist aktiv",
+    "header": "Editiere Woche"
   },
   "printList": {
     "title": "Teilnahmen am ",

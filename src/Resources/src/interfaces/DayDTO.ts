@@ -5,7 +5,7 @@ import { Dictionary } from "types/types";
 export interface WeekDTO {
     id: number;
     notify: boolean;
-    enable: boolean;
+    enabled: boolean;
     days: DayDTO[];
 }
 
@@ -13,7 +13,8 @@ export interface DayDTO {
     meals: Dictionary<MealDTO[]>;
     enabled: boolean;
     id: number;
-    date: DateTime
+    date: DateTime;
+    lockDate: DateTime;
 }
 
 export interface MealDTO {

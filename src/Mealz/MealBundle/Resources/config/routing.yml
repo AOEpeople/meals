@@ -97,6 +97,11 @@ MealzMealBundle_Meal_edit:
     defaults: { _controller: App\Mealz\MealBundle\Controller\MealAdminController::edit }
     methods: [PUT]
 
+MealzMealBundle_Meal_count:
+    path:  /api/meals/count
+    defaults: { _controller: App\Mealz\MealBundle\Controller\MealAdminController::count }
+    methods: [GET]
+
 MealzMealBundle_api_join_Meal:
   path: /api/join-meal
   defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::joinMeal }

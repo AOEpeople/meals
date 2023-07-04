@@ -141,6 +141,7 @@ class Week extends AbstractMessage implements JsonSerializable
             'year' => $this->getYear(),
             'calendarWeek' => $this->getCalendarWeek(),
             'days' => $days,
+            'enabled' => $this->isEnabled(),
         ];
     }
 }

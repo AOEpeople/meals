@@ -5,6 +5,7 @@ namespace App\Mealz\MealBundle\Controller;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Week;
+use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Event\WeekUpdateEvent;
 use App\Mealz\MealBundle\Repository\DayRepositoryInterface;
 use App\Mealz\MealBundle\Repository\DishRepository;
@@ -12,9 +13,11 @@ use App\Mealz\MealBundle\Repository\DishRepositoryInterface;
 use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
 use App\Mealz\MealBundle\Repository\WeekRepositoryInterface;
 use App\Mealz\MealBundle\Service\DayService;
+use App\Mealz\MealBundle\Service\DishService;
 use App\Mealz\MealBundle\Service\WeekService;
 use App\Mealz\MealBundle\Validator\Constraints\DishConstraint;
 use DateTime;
+use DateTimeZone;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
@@ -40,6 +43,7 @@ class MealAdminController extends BaseController
     private MealRepositoryInterface $mealRepository;
     private DayRepositoryInterface $dayRepository;
     private DayService $dayService;
+    private DishService $dishService;
     private EntityManagerInterface $em;
     private LoggerInterface $logger;
 
@@ -50,6 +54,7 @@ class MealAdminController extends BaseController
         MealRepositoryInterface $mealRepository,
         DayRepositoryInterface $dayRepository,
         DayService $dayService,
+        DishService $dishService,
         EntityManagerInterface $em,
         LoggerInterface $logger
     ) {
@@ -59,6 +64,7 @@ class MealAdminController extends BaseController
         $this->mealRepository = $mealRepository;
         $this->dayRepository = $dayRepository;
         $this->dayService = $dayService;
+        $this->dishService = $dishService;
         $this->em = $em;
         $this->logger = $logger;
     }
@@ -116,14 +122,13 @@ class MealAdminController extends BaseController
     // TODO: still some work to be done here (date, notifications, etc.)
     public function edit(Request $request, Week $week): JsonResponse
     {
-        // /** @var Week $week */
-        // $week = $this->weekRepository->find($weekId);
         $data = json_decode($request->getContent(), true);
 
-        if (null === $week || !isset($data) || !isset($data['days']) || !isset($data['id']) || $data['id'] !== $week->getId()) {
+        if (null === $week || !isset($data) || !isset($data['days']) || !isset($data['id']) || $data['id'] !== $week->getId() || !isset($data['enabled'])) {
             return new JsonResponse(['status' => 'invalid json'], 400);
         }
         $days = $data['days'];
+        $week->setEnabled($data['enabled']);
 
         // TODO: throw instead of code 400 then catch and return, also outsource parts to services
         foreach ($days as $day) {
@@ -135,6 +140,12 @@ class MealAdminController extends BaseController
 
             if (null !== $day['enabled']) {
                 $dayEntity->setEnabled($day['enabled']);
+            }
+
+            if (null !== $day['lockDate'] && isset($day['lockDate']['date']) && isset($day['lockDate']['timezone'])) {
+                $newDateStr = str_replace(' ', 'T', $day['lockDate']['date']) . '+00:00';
+                $newDate = DateTime::createFromFormat('Y-m-d\TH:i:s.uP', $newDateStr, new DateTimeZone($day['lockDate']['timezone']));
+                $dayEntity->setLockParticipationDateTime($newDate);
             }
 
             $mealCollection = $day['meals'];
@@ -179,39 +190,33 @@ class MealAdminController extends BaseController
                     }
                 }
             }
-
-            // if no meals exist, create and add new ones
-            // if (0 === count($dayEntity->getMeals())) {
-            //     foreach ($mealCollection as $meal) {
-            //         if (isset($meal['dishSlug'])) {
-            //             $dishEntity = $this->dishRepository->findOneBy(['slug' => $meal['dishSlug']]);
-            //             if (null === $dishEntity) {
-            //                 return new JsonResponse(['status' => 'dish not found'], 400);
-            //             }
-            //             $mealEntity = new Meal($dishEntity, $dayEntity);
-            //             $mealEntity->setParticipationLimit($dishEntity->getParticipationLimit());
-            //             $dayEntity->addMeal($mealEntity);
-            //         }
-            //     }
-            //     continue;
-            // }
-
-
-            // foreach ($mealCollection as $meal) {
-            //     // if meal already exists and has no participations, update dish
-            //     if (isset($meal['mealId']) && $this->dayService->isMealInDay($day, $meal['mealId']) && !$this->dayService->mealHasParticipations($meal['mealId']) && !$this->dayService->isDishInDay($day, $meal['dishId'])) {
-            //         $mealEntity = $this->mealRepository->find($meal['mealId']);
-            //         $dishEntity = $this->dishRepository->find($meal['dishId']);
-            //         $mealEntity->setDish($dishEntity);
-            //     }
-            //     // TODO: I forgot something...
-            // }
         }
 
         $this->em->persist($week);
         $this->em->flush();
+        $this->logger->info('Notify: ' . $data['notify']);
+        $this->eventDispatcher->dispatch(new WeekUpdateEvent($week, $data['notify']));
 
         return new JsonResponse(['status' => 'success'], 200);
+    }
+
+    /**
+     * Returns a list of dish ids and how often they were taken in the last month.
+     */
+    public function count(): JsonResponse
+    {
+        $timer = floor(microtime(true) * 1000);
+        $dishes = $this->dishRepository->findAll();
+        $dishCount = [];
+
+        /** @var Dish $dish */
+        foreach ($dishes as $dish) {
+            $dishCount[$dish->getId()] = $this->dishService->getDishCount($dish);
+        }
+
+        $timer = floor(microtime(true) * 1000) - $timer;
+        $this->logger->info('Counting dishes took ' . $timer . 'ms');
+        return new JsonResponse($dishCount, 200);
     }
 
 

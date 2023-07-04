@@ -16,17 +16,23 @@ class DishService
      */
     private int $newFlagThreshold;
 
+    /**
+     * Period of time in which the number of times a dish was taken is counted.
+     */
+    private string $dishConsCountPeriod;
     private ApiService $apiService;
     private CategoryRepository $categoryRepository;
     private DishRepository $dishRepository;
 
     public function __construct(
         int $newFlagThreshold,
+        string $dishConsCountPeriod,
         ApiService $apiService,
         CategoryRepository $categoryRepository,
         DishRepository $dishRepository
     ) {
         $this->newFlagThreshold = $newFlagThreshold;
+        $this->dishConsCountPeriod = $dishConsCountPeriod;
         $this->apiService = $apiService;
         $this->categoryRepository = $categoryRepository;
         $this->dishRepository = $dishRepository;
@@ -73,5 +79,10 @@ class DishService
         if ($this->apiService->isParamValid($parameters, 'category', 'integer')) {
             $dish->setCategory($this->categoryRepository->find($parameters['category']));
         }
+    }
+
+    public function getDishCount(Dish $dish): int
+    {
+        return $this->dishRepository->countNumberDishWasTaken($dish, $this->dishConsCountPeriod);
     }
 }

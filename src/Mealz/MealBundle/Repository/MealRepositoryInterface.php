@@ -25,6 +25,11 @@ interface MealRepositoryInterface extends ObjectRepository, Selectable
     public function findAllOn(DateTime $date): array;
 
     /**
+     * @return Meal[]
+     */
+    public function findAllBetween(DateTime $startDate, DateTime $endDate): array;
+
+    /**
      * Created for Test with Dish variations.
      *
      * @psalm-return list<array{id: int}>

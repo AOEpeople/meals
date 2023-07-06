@@ -163,6 +163,17 @@ export function useWeeks() {
         return week.days[dayId];
     }
 
+    /**
+     * Resets the DishesState.
+     * Only used for testing purposes.
+     */
+    function resetStates() {
+        WeeksState.weeks = [];
+        WeeksState.error = '';
+        WeeksState.isLoading = false;
+        MenuCountState.counts = {};
+    }
+
     return {
         WeeksState: readonly(WeeksState),
         MenuCountState: readonly(MenuCountState),
@@ -173,6 +184,7 @@ export function useWeeks() {
         createMealDTO,
         getWeekById,
         updateWeek,
-        getDishCountForWeek
+        getDishCountForWeek,
+        resetStates
     }
 }

@@ -38,8 +38,8 @@ header {
       float: none;
       margin-bottom: 20px;
       padding: 20px 0;
-      border-top: 1px solid lighten($header-background, 10%);
-      border-bottom: 1px solid lighten($header-background, 10%);
+      border-top: 1px solid color.adjust($header-background, $lightness: 10%);
+      border-bottom: 1px solid color.adjust($header-background, $lightness: 10%);
     }
 
     li {
@@ -278,7 +278,7 @@ header {
       font-family: $font-medium;
 
       &:hover {
-        background: darken($header-login-button-background, 5%);
+        background: color.adjust($header-login-button-background, $lightness: -5%);
       }
     }
   }

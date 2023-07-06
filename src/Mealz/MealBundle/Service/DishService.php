@@ -81,8 +81,14 @@ class DishService
         }
     }
 
-    public function getDishCount(Dish $dish): int
+    public function getDishCount(): array
     {
-        return $this->dishRepository->countNumberDishWasTaken($dish, $this->dishConsCountPeriod);
+        $arr = [];
+        try {
+            $arr = $this->dishRepository->countNumberDishesWereTaken($this->dishConsCountPeriod);
+        } catch (Exception $e) {
+            throw new Exception('Error in count: ' . $e->getMessage());
+        }
+        return $arr;
     }
 }

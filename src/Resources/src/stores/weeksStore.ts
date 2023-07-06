@@ -111,7 +111,6 @@ export function useWeeks() {
         }
     }
 
-    // TODO: Test this thouroghly
     function getDateRangeOfWeek(isoWeek: number, year: number) {
         const date = new Date(year, 0, 1 + (isoWeek - 1) * 7);
         const day = date.getDay();

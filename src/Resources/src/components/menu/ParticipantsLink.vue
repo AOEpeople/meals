@@ -1,0 +1,17 @@
+<template>
+  <router-link
+    to=""
+    class="flex flex-row items-center gap-2"
+  >
+    <UserGroupIcon class="h-6 w-6" />
+    <span>{{ t('printList.participations') }}</span>
+  </router-link>
+</template>
+
+<script setup lang="ts">
+import { UserGroupIcon } from '@heroicons/vue/solid';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
+
+</script>

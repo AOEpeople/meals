@@ -14,7 +14,7 @@
       v-model="menu.days[index]"
       class="mt-4"
     />
-    <div class="grid w-full grid-cols-2 items-center">
+    <div class="mt-4 grid w-full grid-cols-2 items-center">
       <router-link
         to="/weeks"
         class="col-span-1 col-start-1 flex items-center justify-center"

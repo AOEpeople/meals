@@ -41,9 +41,10 @@ class OAuthProviderTest extends AbstractControllerTestCase
         $firstName = $idpUserData['given_name'];
         $lastName = $idpUserData['family_name'];
         $username = $idpUserData['username'];
+        $email = $idpUserData['email'];
         $idpRoles = $idpUserData['roles'];
 
-        $userResponseMock = $this->getMockedUserResponse($username, $firstName, $lastName, $idpRoles);
+        $userResponseMock = $this->getMockedUserResponse($username, $firstName, $lastName, $email, $idpRoles);
 
         // check if valid oAuth User comes in return
         $user = $this->sut->loadUserByOAuthUserResponse($userResponseMock);
@@ -68,6 +69,7 @@ class OAuthProviderTest extends AbstractControllerTestCase
                     'username' => 'kochomi.meals',
                     'given_name' => 'kochomi',
                     'family_name' => 'imohcok',
+                    'email' => 'kochomi.meals@aoe.com',
                     'roles' => ['meals.admin'],
                 ],
                 'mealsRoles' => ['ROLE_ADMIN'],
@@ -77,6 +79,7 @@ class OAuthProviderTest extends AbstractControllerTestCase
                     'username' => 'kochomi.meals',
                     'given_name' => 'kochomi',
                     'family_name' => 'imohcok',
+                    'email' => 'kochomi.meals@aoe.com',
                     'roles' => ['meals.kitchen'],
                 ],
                 'mealsRoles' => ['ROLE_KITCHEN_STAFF'],
@@ -86,6 +89,7 @@ class OAuthProviderTest extends AbstractControllerTestCase
                     'username' => 'alice.meals',
                     'given_name' => 'alice',
                     'family_name' => 'ecila',
+                    'email' => 'alice.meals@aoe.com',
                     'roles' => ['meals.user'],
                 ],
                 'mealsRoles' => ['ROLE_USER'],
@@ -95,6 +99,7 @@ class OAuthProviderTest extends AbstractControllerTestCase
                     'username' => 'finance.meals',
                     'given_name' => 'finance',
                     'family_name' => 'ecnanif',
+                    'email' => 'finance.meals@aoe.com',
                     'roles' => ['meals.user', 'meals.finance'],
                 ],
                 'mealsRoles' => ['ROLE_FINANCE'],
@@ -104,6 +109,7 @@ class OAuthProviderTest extends AbstractControllerTestCase
                     'username' => 'invalid.role',
                     'given_name' => 'invalid',
                     'family_name' => 'role',
+                    'email' => 'invalid.role@aoe.com',
                     'roles' => ['invalid.role'],
                 ],
                 'mealsRoles' => [],
@@ -114,12 +120,13 @@ class OAuthProviderTest extends AbstractControllerTestCase
     /**
      * Returns the mocked response from identity provider.
      */
-    private function getMockedUserResponse(string $username, string $firstName, string $lastName, array $roles): object
+    private function getMockedUserResponse(string $username, string $firstName, string $lastName, ?string $email, array $roles): object
     {
         $userData = [
             'preferred_username' => $username,
             'family_name' => $lastName,
             'given_name' => $firstName,
+            'email' => $email,
             'roles' => $roles,
         ];
         $responseProphet = $this->prophesize(UserResponseInterface::class);
@@ -127,6 +134,7 @@ class OAuthProviderTest extends AbstractControllerTestCase
         $responseProphet->getFirstName()->shouldBeCalledOnce()->willReturn($firstName);
         $responseProphet->getLastName()->shouldBeCalledOnce()->willReturn($lastName);
         $responseProphet->getNickname()->shouldBeCalledOnce()->willReturn($username);
+        $responseProphet->getEmail()->shouldBeCalledOnce()->willReturn($email);
 
         return $responseProphet->reveal();
     }

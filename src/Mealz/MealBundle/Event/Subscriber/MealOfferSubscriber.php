@@ -141,7 +141,11 @@ class MealOfferSubscriber implements EventSubscriberInterface
      */
     private function sendOfferAcceptedEmail(Profile $profile, string $dishTitle): void
     {
-        $recipient = $profile->getUsername() . $this->translator->trans('mail.domain', [], 'messages');
+        if (null === $profile->getEmail()) {
+            return;
+        }
+
+        $recipient = $profile->getEmail();
         $subject = $this->translator->trans('mail.subject', [], 'messages');
 
         $message = $this->translator->trans(

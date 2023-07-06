@@ -232,7 +232,6 @@ export function useDishes() {
      * If they have the same parent they are returned in the same array with their parent. If they don't have a parent
      * they are returned in an array containing only that dish.
      * @param slugs The slugs of the dishes to return
-     * TODO: This function is not very performant. It should be refactored to be more performant.
      */
     function getDishArrayBySlugs(slugs: string[]) {
         const dishesFromSlugs: Dish[] = slugs.map(slug => getDishBySlug(slug));

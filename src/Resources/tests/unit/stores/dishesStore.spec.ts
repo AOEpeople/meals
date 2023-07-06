@@ -123,7 +123,7 @@ describe('Test dishesStore', () => {
         await fetchDishes();
 
         expect(getDishBySlug('testen')).toEqual(Dishes[0]);
-        expect(getDishBySlug('testvaren')).toEqual(Dishes[0]);
+        expect(getDishBySlug('testvaren')).toEqual(Dishes[0].variations[0]);
     });
 
     it('should return an array of dishes containing all dishes from the slugs and their parent if they have parents', async () => {
@@ -137,13 +137,17 @@ describe('Test dishesStore', () => {
         const slugArrThree = ['testen'];
 
         const dishArrOne = getDishArrayBySlugs(slugArrOne).map(dish => dish.slug);
-        // const dishArrTwo = expectedSlugsTwo.map(slug => getDishBySlug(slug));
-        // const dishArrThree = slugArrThree.map(slug => getDishBySlug(slug));
+        const dishArrTwo = getDishArrayBySlugs(slugArrTwo).map(dish => dish.slug);
+        const dishArrThree = getDishArrayBySlugs(slugArrThree).map(dish => dish.slug);
 
         for (const dishSlug of dishArrOne) {
             expect(expectedSlugsOne.includes(dishSlug)).toBeTruthy();
         }
-        // expect(getDishArrayBySlugs(slugArrTwo)).toEqual(dishArrTwo);
-        // expect(getDishArrayBySlugs(slugArrThree)).toEqual(dishArrThree);
+
+        for (const dishSlug of dishArrTwo) {
+            expect(expectedSlugsTwo.includes(dishSlug)).toBeTruthy();
+        }
+
+        expect(dishArrThree).toEqual(['testen']);
     });
 });

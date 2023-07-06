@@ -11,7 +11,6 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class DayService
 {
-
     private MealRepositoryInterface $mealRepository;
     private EntityManagerInterface $em;
 
@@ -38,7 +37,7 @@ class DayService
     {
         foreach ($day->getMeals() as $meal) {
             $dish = $meal->getDish();
-            if (null !== $dish && $dish->getSlug() === $dishSlug) {
+            if ($dish->getSlug() === $dishSlug) {
                 return true;
             }
         }
@@ -57,26 +56,30 @@ class DayService
     public function removeUnusedMeals(Day $day, array $mealCollection): void
     {
         foreach ($day->getMeals() as $mealEntity) {
-            $canRemove = true;
-            // maybe implement a recursive search to make this process more efficient
-            foreach ($mealCollection as $parentDishId => $mealArr) {
-                if(!$canRemove) {
+            $this->removeUnusedMealHelper($mealEntity, $mealCollection, $day);
+        }
+    }
+
+    private function removeUnusedMealHelper(Meal $mealEntity, array $mealCollection, Day $day)
+    {
+        $canRemove = true;
+        foreach ($mealCollection as $mealArr) {
+            if (!$canRemove) {
+                break;
+            }
+            foreach ($mealArr as $meal) {
+                // if dish is null and mealId is set the meal is removed
+                if ($mealEntity->getId() === $meal['mealId'] && isset($meal['dishSlug'])) {
+                    $canRemove = false;
+                }
+                if (!$canRemove) {
                     break;
                 }
-                foreach ($mealArr as $meal) {
-                    // if dish is null and mealId is set the meal is removed
-                    if ($mealEntity->getId() === $meal['mealId'] && isset($meal['dishSlug'])) {
-                        $canRemove = false;
-                    }
-                    if(!$canRemove) {
-                        break;
-                    }
-                }
             }
-            if (!$mealEntity->hasParticipations() && $canRemove) {
-                $day->removeMeal($mealEntity);
-                $this->em->remove($mealEntity);
-            }
+        }
+        if (!$mealEntity->hasParticipations() && $canRemove) {
+            $day->removeMeal($mealEntity);
+            $this->em->remove($mealEntity);
         }
     }
 }

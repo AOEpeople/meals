@@ -1,5 +1,5 @@
 # generate frontend assets
-FROM node:17 as frontend
+FROM node:16 as frontend
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y -o Dpkg::Options::="--force-confold" --no-install-recommends --no-install-suggests \
         build-essential \
@@ -65,7 +65,7 @@ RUN \
     && find bin scripts vendor/bin -type f -exec chmod 740 '{}' \+ \
     # set non php files in public directory as readonly
     && find public -type f -not -name "*.php" -exec chmod 644 '{}' \+
- 
+
 RUN echo "* * * * * /var/www/meals/bin/console meals:keep-alive-connection > /dev/stdout" >> /etc/crontabs/www-data
 
 ENTRYPOINT ["/container/entrypoint"]

@@ -80,12 +80,12 @@ MealzMealBundle_balance:
   defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
 
 MealzMealBundle_api_weeks:
-    path:  /api/weeks
+    path: /api/weeks
     defaults: { _controller: App\Mealz\MealBundle\Controller\MealAdminController::getWeeks }
     methods: [GET]
 
 MealzMealBundle_api_weeks_new:
-    path:  /api/weeks/{date}
+    path: /api/weeks/{date}
     defaults: { _controller: App\Mealz\MealBundle\Controller\MealAdminController::new }
     methods: [POST]
     requirements:
@@ -93,12 +93,12 @@ MealzMealBundle_api_weeks_new:
         date: 20\d{2}W[0-5]\d
 
 MealzMealBundle_Meal_edit:
-    path:  /api/menu/{id}
+    path: /api/menu/{id}
     defaults: { _controller: App\Mealz\MealBundle\Controller\MealAdminController::edit }
     methods: [PUT]
 
 MealzMealBundle_Meal_count:
-    path:  /api/meals/count
+    path: /api/meals/count
     defaults: { _controller: App\Mealz\MealBundle\Controller\MealAdminController::count }
     methods: [GET]
 

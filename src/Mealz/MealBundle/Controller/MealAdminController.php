@@ -23,6 +23,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\UnitOfWork;
+use JMS\Serializer\Annotation\Exclude;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -31,6 +32,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\ConstraintViolation;
+use Exception;
 
 /**
  * @Security("is_granted('ROLE_KITCHEN_STAFF')")
@@ -119,7 +121,6 @@ class MealAdminController extends BaseController
         return new JsonResponse(['status' => 'success'], 200);
     }
 
-    // TODO: still some work to be done here (date, notifications, etc.)
     public function edit(Request $request, Week $week): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
@@ -206,13 +207,18 @@ class MealAdminController extends BaseController
     public function count(): JsonResponse
     {
         $timer = floor(microtime(true) * 1000);
-        $dishes = $this->dishRepository->findAll();
+        // $dishes = $this->dishRepository->findAll();
         $dishCount = [];
-
-        /** @var Dish $dish */
-        foreach ($dishes as $dish) {
-            $dishCount[$dish->getId()] = $this->dishService->getDishCount($dish);
+        try {
+            $dishCount = $this->dishService->getDishCount();
+        } catch (Exception $e) {
+            $this->logger->info('Exception occured: ' . $e->getMessage());
         }
+
+        // /** @var Dish $dish */
+        // foreach ($dishes as $dish) {
+        //     $dishCount[$dish->getId()] = $this->dishService->getDishCount($dish);
+        // }
 
         $timer = floor(microtime(true) * 1000) - $timer;
         $this->logger->info('Counting dishes took ' . $timer . 'ms');

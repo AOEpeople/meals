@@ -89,6 +89,7 @@ class DishService
         } catch (Exception $e) {
             throw new Exception('Error in count: ' . $e->getMessage());
         }
+
         return $arr;
     }
 }

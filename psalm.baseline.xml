@@ -253,7 +253,7 @@
     </UndefinedInterfaceMethod>
   </file>
   <file src="src/Mealz/UserBundle/Tests/Service/OAuthProviderTest.php">
-    <TooManyArguments occurrences="4">
+    <TooManyArguments occurrences="5">
       <code>willReturn</code>
       <code>willReturn</code>
       <code>willReturn</code>

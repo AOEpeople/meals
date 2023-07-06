@@ -27,7 +27,7 @@ import DishTableRow from '@/components/dishes/DishTableRow.vue';
 import { Dish } from '@/stores/dishesStore';
 
 const { t } = useI18n();
-const { fetchDishes, DishesState, filteredDishes } = useDishes();
+const { fetchDishes, filteredDishes } = useDishes();
 const { fetchCategories } = useCategories();
 
 onMounted(async () => {

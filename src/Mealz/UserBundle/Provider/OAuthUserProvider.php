@@ -66,6 +66,7 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
         $username = $response->getNickname();
         $firstName = $response->getFirstName();
         $lastName = $response->getLastName();
+        $email = $response->getEmail();
 
         $idpUserRoles = $response->getData()['roles'] ?? [];
         $role = $this->toMealsRole($idpUserRoles);
@@ -74,10 +75,10 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
         try {
             $user = $this->loadUserByUsername($username);
         } catch (UsernameNotFoundException $exception) {
-            return $this->createProfile($username, $firstName, $lastName, $roles);
+            return $this->createProfile($username, $firstName, $lastName, $email, $roles);
         }
 
-        return $this->updateProfile($user, $firstName, $lastName, $roles);
+        return $this->updateProfile($user, $firstName, $lastName, $email, $roles);
     }
 
     /**
@@ -107,12 +108,13 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
         string $username,
         string $firstName,
         string $lastName,
+        ?string $email,
         array $roles
     ): Profile {
         $profile = new Profile();
         $profile->setUsername($username);
 
-        return $this->updateProfile($profile, $firstName, $lastName, $roles);
+        return $this->updateProfile($profile, $firstName, $lastName, $email, $roles);
     }
 
     /**
@@ -122,10 +124,12 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
         Profile $profile,
         string $firstName,
         string $lastName,
+        ?string $email,
         array $roles
     ): Profile {
         $profile->setFirstName($firstName);
         $profile->setName($lastName);
+        $profile->setEmail($email);
         $profile->setHidden(false);
         $profile->setRoles(new ArrayCollection($roles));
 

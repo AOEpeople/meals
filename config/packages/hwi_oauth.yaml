@@ -19,6 +19,7 @@ hwi_oauth:
                 realname:   name
                 firstname:  given_name
                 lastname:   family_name
+                email: email
             options:
                 use_bearer_authorization: true
     http:

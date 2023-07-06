@@ -42,6 +42,5 @@ tooltip:
 offer_dialog:
   title: "Zum Tausch angeboten:"
 mail:
-  domain: '@aoe.com'
   subject: 'Your offered food has been taken'
   message: "Hi %firstname%,\nI would like to inform you that the \"%takenOffer%\" you offered has just been taken by someone.\nNo further action is required on your side.\n\nCheers, Your Chef Bot."

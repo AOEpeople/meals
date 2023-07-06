@@ -1,5 +1,24 @@
 # Changelog
 
+## Version v2.3.9 (2023-07-06)
+
+### Fixes
+
+- Fix installed version of semver, sill exists in babel-loader because of find-cache-dir 3.3.2 (37374d90)
+- Fix sca (90c6c677)
+
+### Chores and tidying
+
+- Update yarn packages (d54b8b46)
+- Update stylelint settings, Fix messages (bb31807c)
+- Update psalm.baseline.xml (bf485790)
+
+### Other
+
+- use node 16 (6625377f)
+- adjust oauth test (fc99dc6c)
+- Add email to profile (39aebb5b)
+
 ## Version v2.3.8 (2023-05-23)
 
 ### Fixes

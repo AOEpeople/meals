@@ -8,7 +8,6 @@ use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\EventListener\LocalisationListener;
 use DateTime;
-use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
@@ -112,7 +111,6 @@ class DishRepository extends BaseRepository implements DishRepositoryInterface
      */
     public function countNumberDishesWereTaken(string $countPeriod): array
     {
-
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult('count(dish_id)', 'count', 'integer');
         $rsm->addScalarResult('dish_id', 'id');

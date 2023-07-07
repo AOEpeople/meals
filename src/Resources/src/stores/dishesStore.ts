@@ -240,6 +240,9 @@ export function useDishes() {
 
         let parentDishInArray = false;
         for (const dish of dishesFromSlugs) {
+            if (!dish) {
+                continue;
+            }
             // If the dish has a parent and the parent is not already in the array, add the parent and the dish to the array
             if (dish.parentId && !parentDishInArray) {
                 const parentDish = getDishById(dish.parentId);

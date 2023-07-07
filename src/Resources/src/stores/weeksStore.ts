@@ -114,8 +114,8 @@ export function useWeeks() {
     function getDateRangeOfWeek(isoWeek: number, year: number) {
         const date = new Date(year, 0, 1 + (isoWeek - 1) * 7);
         const day = date.getDay();
-        const startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - day + 1);
-        const endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - day + 5);
+        const startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - day + 1, 12);
+        const endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - day + 5, 12);
         return [startDate, endDate];
     }
 

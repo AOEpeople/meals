@@ -42,7 +42,7 @@ const getMockedResponses = (method: string, url: string) => {
 useApi = jest.fn().mockImplementation((method: string, url: string) => getMockedResponses(method, url));
 
 describe('Test weeksStore', () => {
-    const { WeeksState, MenuCountState, fetchWeeks, getDishCountForWeek, resetStates } = useWeeks();
+    const { WeeksState, MenuCountState, fetchWeeks, getDishCountForWeek, resetStates, getDateRangeOfWeek, getMenuDay, getWeekById } = useWeeks();
 
     beforeEach(() => {
         resetStates();
@@ -63,5 +63,45 @@ describe('Test weeksStore', () => {
 
         await getDishCountForWeek();
         expect(MenuCountState.counts).toEqual(DishesCount);
+    });
+
+    it('should return a start date on Monday and end date on Friday within the same week', () => {
+        const weekOne = [27, 2023];
+        const weekTwo = [28, 2023];
+        const weekThree = [29, 2023];
+
+        const weekOneDates = getDateRangeOfWeek(weekOne[0], weekOne[1]);
+        const weekTwoDates = getDateRangeOfWeek(weekTwo[0], weekTwo[1]);
+        const weekThreeDates = getDateRangeOfWeek(weekThree[0], weekThree[1]);
+
+        expect(weekOneDates[0]).toEqual(new Date('2023-07-03T12:00:00.000+02:00'));
+        expect(weekOneDates[1]).toEqual(new Date('2023-07-07T12:00:00.000+02:00'));
+        expect(weekTwoDates[0]).toEqual(new Date('2023-07-10T12:00:00.000+02:00'));
+        expect(weekTwoDates[1]).toEqual(new Date('2023-07-14T12:00:00.000+02:00'));
+        expect(weekThreeDates[0]).toEqual(new Date('2023-07-17T12:00:00.000+02:00'));
+        expect(weekThreeDates[1]).toEqual(new Date('2023-07-21T12:00:00.000+02:00'));
+    });
+
+    it('should return the right menuday for a given weekId and dayId', async () => {
+        await fetchWeeks();
+
+        const ids = { week: 57, day: "281" };
+
+        const menuDay = getMenuDay(ids.week, ids.day);
+
+        expect(menuDay.id).toBe(parseInt(ids.day));
+        expect(menuDay.date.date).toEqual('2023-07-03 12:00:00.000000');
+        expect(menuDay.enabled).toBeTruthy();
+        expect(menuDay.lockDate.date).toEqual('2023-07-02 16:00:00.000000');
+    });
+
+    it('should return the right week for a given weekId', async () => {
+        await fetchWeeks();
+
+        const week = getWeekById(57);
+
+        expect(week.id).toBe(57);
+        expect(week.year).toBe(2023);
+        expect(week.calendarWeek).toBe(27);
     });
 });

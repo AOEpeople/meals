@@ -127,7 +127,8 @@
     "lockDate": "Booking possible until",
     "notify": "Announce in Mattermost",
     "enableWeek": "This week is enabled",
-    "header": "Edit week"
+    "header": "Edit week",
+    "lock": "Lock"
   },
   "printList": {
     "title": "Participations on ",

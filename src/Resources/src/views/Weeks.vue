@@ -1,8 +1,8 @@
 <template>
-  <h2>
+  <h2 class="px-2 xl:px-0">
     {{ t('menu.list') }}
   </h2>
-  <div class="grid grid-cols-4 gap-4">
+  <div class="grid grid-cols-1 gap-4 px-2 min-[380px]:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:px-0">
     <WeekOverview
       v-for="week in WeeksState.weeks"
       :key="week.calendarWeek"

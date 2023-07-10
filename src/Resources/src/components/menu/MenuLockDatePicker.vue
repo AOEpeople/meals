@@ -1,5 +1,8 @@
 <template>
-  <Popover>
+  <Popover
+    :translate-x-max="'-5%'"
+    :translate-x-min="'-5%'"
+  >
     <template #button="{ open }">
       <CalendarIcon
         class="h-5 w-5 cursor-pointer text-white"
@@ -24,6 +27,7 @@
             :value="getLockDateAsStrRepr(new Date(lockDate.date))"
             type="datetime-local"
             class="w-full rounded-full border-2 border-solid border-[#CAD6E1] px-4 py-2 text-center text-[14px] text-[#9CA3AF]"
+            data-cy="meal-lockdate-input"
             @change="event => lockDate.date = convertDateReprToLockDayFormat((event.target as HTMLInputElement).value)"
           >
         </label>

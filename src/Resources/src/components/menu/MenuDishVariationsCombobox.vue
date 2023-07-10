@@ -5,7 +5,7 @@
     multiple
   >
     <span
-      class="relative w-[300px]"
+      class="relative w-[95%] sm:w-[300px]"
       :class="open ? 'z-10' : 'z-0'"
     >
       <ListboxButton

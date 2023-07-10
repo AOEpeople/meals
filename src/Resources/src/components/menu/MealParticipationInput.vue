@@ -8,6 +8,7 @@
       type="number"
       :placeholder="String(meal.participationLimit)"
       class="w-[30%] rounded-full border-2 border-solid border-[#CAD6E1] px-4 py-2 text-center text-[14px] text-[#9CA3AF]"
+      data-cy="meal-participation-limit-input"
     >
   </label>
 </template>

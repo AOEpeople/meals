@@ -1,11 +1,14 @@
 <template>
   <div
-    class="day-shadow group grid grid-cols-[24px_minmax(0,1fr)_72px] grid-rows-2 rounded-lg border-0 border-none bg-white text-center align-middle"
+    class="day-shadow group grid grid-cols-[24px_minmax(0,1fr)_58px] grid-rows-2 rounded-lg border-0 border-none bg-white text-center align-middle sm:grid-cols-[24px_minmax(0,1fr)_72px]"
   >
     <div
       class="col-start-1 row-span-2 row-start-1 grid w-[24px] grid-rows-[24px_minmax(0,1fr)_24px] justify-center rounded-l-lg bg-[#1c5298] py-1"
     >
-      <Popover>
+      <Popover
+        :translate-x-min="'-5%'"
+        :translate-x-max="'-5%'"
+      >
         <template #button="{ open }">
           <UserIcon
             class="row-start-1 h-5 w-5 cursor-pointer text-white"
@@ -29,15 +32,15 @@
     <MenuInput
       v-if="selectedDishOne"
       v-model="selectedDishOne"
-      class="col-start-2 row-span-1 row-start-1 border-b-[1px] px-4 pt-4"
+      class="col-start-2 row-span-1 row-start-1 border-b-[1px] px-2 pt-4 md:px-4"
     />
     <MenuInput
       v-if="selectedDishTwo"
       v-model="selectedDishTwo"
-      class="col-start-2 row-span-1 row-start-2 px-4 pb-4 pt-2"
+      class="col-start-2 row-span-1 row-start-2 px-2 pb-4 pt-2 md:px-4"
     />
     <div
-      class="col-start-3 row-span-2 row-start-1 grid w-[72px] items-center rounded-r-lg border-l-2"
+      class="col-start-3 row-span-2 row-start-1 grid items-center rounded-r-lg border-l-2 sm:w-[72px]"
     >
       <Switch
         :sr="t('menu.enableDay')"

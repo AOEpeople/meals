@@ -15,8 +15,6 @@ describe('Test Weeks View', () => {
 
     it('should be able to browse to the menu page from the weekspage', () => {
 
-
-
         cy.visit('/weeks');
 
         cy.wait(['@getWeeks']);
@@ -31,6 +29,7 @@ describe('Test Weeks View', () => {
         cy.url().should('include', '/menu');
         cy.get('h2').should('contain', 'Editiere Woche #28 (10.07. - 14.07.)');
 
+        // change input
         cy.get('input')
             .first()
             .parent()
@@ -45,12 +44,87 @@ describe('Test Weeks View', () => {
             .click();
         cy.get('h2').should('contain', 'Editiere Woche #28 (10.07. - 14.07.)').click();
 
+        // change week enabled
+        cy.get('span')
+            .contains('Diese Woche ist aktiv')
+            .parent()
+            .find('button')
+            .click();
+
+        // change notify
+        cy.get('span')
+            .contains('In Mattermost bekanntgeben')
+            .parent()
+            .find('button')
+            .click();
+
+        // change day enabled
+        cy.get('span')
+            .contains('Dieser Tag ist aktiviert')
+            .parent()
+            .click();
+
+        // change participation limit
+        cy.get('input')
+            .first()
+            .parent()
+            .parent()
+            .parent()
+            .parent()
+            .find('div.col-start-1')
+            .first()
+            .find('button')
+            .first()
+            .click()
+        cy.get('[data-cy="meal-participation-limit-input"]')
+            .first()
+            .clear()
+            .type('17');
+        cy.get('span').contains('Limit').parent().find('svg').click();
+
+        // change lock date
+        cy.get('input')
+            .first()
+            .parent()
+            .parent()
+            .parent()
+            .parent()
+            .find('div.col-start-1')
+            .find('button')
+            .last()
+            .click()
+        cy.get('[data-cy="meal-lockdate-input"]')
+            .clear()
+            .type('2023-07-08T12:00')
+        cy.get('span').contains('Sperren').parent().find('svg').click();
+
+        // change input
+        cy.get('input')
+            .eq(1)
+            .parent()
+            .find('svg')
+            .click()
+            .parent()
+            .find('input')
+            .click()
+            .type('Innards')
+            .parent().parent()
+            .find('li').contains('Innards DE')
+            .click();
+        cy.get('button').contains('Variation').click();
+        cy.get('span').contains('Innards DE #v1').click();
+        cy.get('h2').should('contain', 'Editiere Woche #28 (10.07. - 14.07.)').click();
+
         cy.contains('input', 'Speichern').click();
 
-        cy.wait('@putMenu').its('request.body').should(obj => {
-            expect(JSON.stringify(obj)).to.equal(
-                '{"id":58,"days":[{"meals":{"13":[{"dishSlug":"lamb-in-beersauce-with-potatodumblings","mealId":null,"participationLimit":0}],"14":[{"dishSlug":"tasty-worms","mealId":808,"participationLimit":0}]},"id":286,"enabled":true,"date":{"date":"2023-07-10 12:00:00.000000","timezone_type":3,"timezone":"Europe/Berlin"},"lockDate":{"date":"2023-07-08 16:00:00.000000","timezone_type":3,"timezone":"Europe/Berlin"}},{"meals":{"16":[{"dishSlug":"fish-so-juicy-sweat","mealId":809,"participationLimit":0}],"17":[{"dishSlug":"limbs","mealId":810,"participationLimit":0}]},"id":287,"enabled":true,"date":{"date":"2023-07-11 12:00:00.000000","timezone_type":3,"timezone":"Europe/Berlin"},"lockDate":{"date":"2023-07-10 16:00:00.000000","timezone_type":3,"timezone":"Europe/Berlin"}},{"meals":{"15":[{"dishSlug":"innards-v1","mealId":813,"participationLimit":0},{"dishSlug":"innards-v2","mealId":812,"participationLimit":0}],"30":[{"dishSlug":"pork-in-beersauce-with-potatodumblings","mealId":814,"participationLimit":0}]},"id":288,"enabled":true,"date":{"date":"2023-07-12 12:00:00.000000","timezone_type":3,"timezone":"Europe/Berlin"},"lockDate":{"date":"2023-07-11 16:00:00.000000","timezone_type":3,"timezone":"Europe/Berlin"}},{"meals":{"15":[{"dishSlug":"innards","mealId":815,"participationLimit":0}],"18":[{"dishSlug":"century-eggs-paired-with-a-compote-of-seasonal-berries-and-rye-bread-v1","mealId":816,"participationLimit":0}]},"id":289,"enabled":true,"date":{"date":"2023-07-13 12:00:00.000000","timezone_type":3,"timezone":"Europe/Berlin"},"lockDate":{"date":"2023-07-12 16:00:00.000000","timezone_type":3,"timezone":"Europe/Berlin"}},{"meals":{"19":[{"dishSlug":"limbs-oh-la-la-la-oven-backed-finger-food-with-a-slimy-sweet-and-sour-sauce","mealId":817,"participationLimit":0}],"-1":[]},"id":290,"enabled":true,"date":{"date":"2023-07-14 12:00:00.000000","timezone_type":3,"timezone":"Europe/Berlin"},"lockDate":{"date":"2023-07-13 16:00:00.000000","timezone_type":3,"timezone":"Europe/Berlin"}}],"notify":false,"enabled":true}'
-            );
+        cy.fixture('menuPut.json').then(menuPut => {
+            cy.wait('@putMenu').its('request.body').should(obj => {
+                expect(JSON.stringify(obj)).to.equal(JSON.stringify(menuPut));
+            });
         });
+
+        cy.contains('div', 'Abbrechen').click();
+        cy.url().should('include', '/weeks');
+        cy.get('h2').should('contain', 'Liste der Wochen');
     });
 });

@@ -74,12 +74,12 @@ describe('Test weeksStore', () => {
         const weekTwoDates = getDateRangeOfWeek(weekTwo[0], weekTwo[1]);
         const weekThreeDates = getDateRangeOfWeek(weekThree[0], weekThree[1]);
 
-        expect(weekOneDates[0]).toEqual(new Date('2023-07-03T12:00:00.000+02:00'));
-        expect(weekOneDates[1]).toEqual(new Date('2023-07-07T12:00:00.000+02:00'));
-        expect(weekTwoDates[0]).toEqual(new Date('2023-07-10T12:00:00.000+02:00'));
-        expect(weekTwoDates[1]).toEqual(new Date('2023-07-14T12:00:00.000+02:00'));
-        expect(weekThreeDates[0]).toEqual(new Date('2023-07-17T12:00:00.000+02:00'));
-        expect(weekThreeDates[1]).toEqual(new Date('2023-07-21T12:00:00.000+02:00'));
+        expect(weekOneDates[0].toISOString()).toEqual(new Date('2023-07-03T12:00:00.000+02:00').toISOString());
+        expect(weekOneDates[1].toISOString()).toEqual(new Date('2023-07-07T12:00:00.000+02:00').toISOString());
+        expect(weekTwoDates[0].toISOString()).toEqual(new Date('2023-07-10T12:00:00.000+02:00').toISOString());
+        expect(weekTwoDates[1].toISOString()).toEqual(new Date('2023-07-14T12:00:00.000+02:00').toISOString());
+        expect(weekThreeDates[0].toISOString()).toEqual(new Date('2023-07-17T12:00:00.000+02:00').toISOString());
+        expect(weekThreeDates[1].toISOString()).toEqual(new Date('2023-07-21T12:00:00.000+02:00').toISOString());
     });
 
     it('should return the right menuday for a given weekId and dayId', async () => {

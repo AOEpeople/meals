@@ -1,18 +1,18 @@
 <template>
-  <div class="mb-8 grid w-full grid-cols-[minmax(0,2fr)_minmax(0,1fr)] grid-rows-[minmax(0,1fr)_30px] gap-1">
-    <h2 class="col-start-1 row-span-1 row-start-1 m-0 w-full self-center justify-self-start">
+  <div class="mb-8 grid w-full grid-cols-3 gap-3 sm:grid-rows-[minmax(0,1fr)_30px] min-[900px]:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] min-[900px]:gap-1">
+    <h2 class="col-span-3 col-start-1 row-span-1 row-start-1 m-0 w-full self-center justify-self-start min-[900px]:col-span-1">
       {{ `${ t('menu.header')} #${calendarWeek} (${getFormattedDateRange()})` }}
     </h2>
     <ParticipantsLink
-      class="col-start-1 row-start-2 justify-self-start"
+      class="col-span-3 row-start-2 justify-self-center sm:col-span-1 sm:col-start-1 sm:justify-self-start min-[900px]:row-start-2"
     />
     <EnableWeek
       :week="week"
-      class="col-start-2 row-start-1 justify-self-end"
+      class="col-span-3 row-start-3 justify-self-center sm:col-span-1 sm:col-start-2 sm:row-start-2 sm:justify-self-end min-[900px]:row-start-1"
     />
     <NotifyButton
       :week="week"
-      class="col-start-2 row-start-2 justify-self-end"
+      class="col-span-3 row-start-4 justify-self-center sm:col-span-1 sm:col-start-3 sm:row-start-2 sm:justify-self-end sm:text-end min-[900px]:col-start-2"
     />
   </div>
 </template>

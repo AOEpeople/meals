@@ -51,11 +51,11 @@
             :value="dish"
           >
             <li
-              class="relative grid cursor-pointer grid-cols-[minmax(0,_1fr)_300px_36px] items-center text-left text-[14px] font-medium text-[#9CA3AF] hover:bg-[#FAFAFA]"
+              class="relative grid cursor-pointer grid-cols-[minmax(0,1fr)_36px] grid-rows-2 items-center text-left text-[14px] font-medium text-[#9CA3AF] hover:bg-[#FAFAFA] md:grid-cols-[minmax(0,1fr)_300px_36px] md:grid-rows-1"
               :class="{ 'bg-[#F4F4F4]': selected }"
             >
               <span
-                class="h-full w-full truncate px-4 py-2"
+                class="col-span-1 col-start-1 row-start-1 h-full w-full truncate px-4 py-2"
                 :class="selected ? 'font-medium' : 'font-normal'"
               >
                 {{ locale === 'en' ? dish.titleEn : dish.titleDe }}
@@ -65,16 +65,17 @@
                 v-model="selectedVariations"
                 :dish=" // @ts-ignore
                   (dish as Dish)"
+                class="col-span-2 col-start-1 row-start-2 justify-self-center md:col-span-1 md:col-start-2 md:row-start-1"
               />
               <span
                 v-if="dish.variations.length > 0 && !selected"
-                class="relative w-full px-4 py-2 text-center text-[14px] font-medium text-[#9CA3AF] focus:outline-none"
+                class="relative col-span-2 col-start-1 row-start-2 w-full px-4 py-2 text-center text-[14px] font-medium text-[#9CA3AF] focus:outline-none md:col-span-1 md:col-start-2 md:row-start-1"
               >
                 Variation
               </span>
               <div
                 v-if="MenuCountState.counts[dish.id] && MenuCountState.counts[dish.id] > 0"
-                class="col-start-3 mr-4 flex h-6 w-6 items-center justify-center self-center justify-self-end rounded-lg bg-[#029DF7] text-center text-white"
+                class="col-start-2 row-start-1 mr-4 flex h-6 w-6 items-center justify-center self-center justify-self-end rounded-lg bg-[#029DF7] text-center text-white md:col-start-3"
                 aria-hidden="true"
               >
                 {{ MenuCountState.counts[dish.id] }}

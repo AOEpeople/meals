@@ -1,6 +1,6 @@
 <template>
   <form
-    class="p-4"
+    class="p-2 md:p-4"
     @submit.prevent="handleSubmit"
   >
     <MenuHeader

@@ -70,7 +70,6 @@ class CategoryControllerTest extends AbstractControllerTestCase
         $this->client->request('POST', '/api/categories', [], [], [], $parameters);
 
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(['status' => 'success'], json_decode($this->client->getResponse()->getContent(), true));
     }
 
     public function testCreateCategoryFail(): void
@@ -79,7 +78,7 @@ class CategoryControllerTest extends AbstractControllerTestCase
         $this->client->request('POST', '/api/categories', [], [], [], $parameters);
 
         $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(['status' => 'Category titles not set or they already exist'], json_decode($this->client->getResponse()->getContent(), true));
+        $this->assertEquals(['message' => 'Category titles not set or they already exist'], json_decode($this->client->getResponse()->getContent(), true));
     }
 
     public function testDeleteCategory(): void

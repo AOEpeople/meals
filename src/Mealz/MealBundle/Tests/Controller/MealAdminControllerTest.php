@@ -93,7 +93,7 @@ class MealAdminControllerTest extends AbstractControllerTestCase
         $this->client->request('POST', $routeStr);
         $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
         $response = json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertEquals('week already exists', $response['status']);
+        $this->assertEquals('week already exists', $response['message']);
     }
 
     public function testCount(): void

@@ -95,7 +95,7 @@ class MealAdminController extends BaseController
         ]);
 
         if (null !== $week) {
-            return new JsonResponse(['status' => 'week already exists'], 400);
+            return new JsonResponse(['message' => 'week already exists'], 400);
         }
 
         $dateTimeModifier = $this->getParameter('mealz.lock_toggle_participation_at');
@@ -104,7 +104,7 @@ class MealAdminController extends BaseController
         $this->em->persist($week);
         $this->em->flush();
 
-        return new JsonResponse(['status' => 'success'], 200);
+        return new JsonResponse(null, 200);
     }
 
     public function edit(Request $request, Week $week): JsonResponse
@@ -112,7 +112,7 @@ class MealAdminController extends BaseController
         $data = json_decode($request->getContent(), true);
 
         if (!isset($data) || !isset($data['days']) || !isset($data['id']) || $data['id'] !== $week->getId() || !isset($data['enabled'])) {
-            return new JsonResponse(['status' => 'invalid json'], 400);
+            return new JsonResponse(['message' => 'invalid json'], 400);
         }
         $days = $data['days'];
         $week->setEnabled($data['enabled']);
@@ -122,14 +122,14 @@ class MealAdminController extends BaseController
                 $this->handleDay($day);
             }
         } catch (Exception $e) {
-            return new JsonResponse(['status' => $e->getMessage()], 500);
+            return new JsonResponse(['message' => $e->getMessage()], 500);
         }
 
         $this->em->persist($week);
         $this->em->flush();
         $this->eventDispatcher->dispatch(new WeekUpdateEvent($week, $data['notify']));
 
-        return new JsonResponse(['status' => 'success'], 200);
+        return new JsonResponse(null, 200);
     }
 
     /**
@@ -141,7 +141,7 @@ class MealAdminController extends BaseController
         try {
             $dishCount = $this->dishService->getDishCount();
         } catch (Exception $e) {
-            return new JsonResponse(['status' => $e->getMessage(), 500]);
+            return new JsonResponse(['message' => $e->getMessage(), 500]);
         }
 
         return new JsonResponse($dishCount, 200);

@@ -4,6 +4,7 @@ import { useTimeSlotData } from "@/api/getTimeSlotData";
 import { useUpdateSlot } from "@/api/putSlotUpdate";
 import postCreateSlot from "@/api/postCreateSlot";
 import deleteSlot from "@/api/deleteSlot";
+import { isMessage } from "@/interfaces/IMessage";
 
 interface ITimeSlotState {
     timeSlots: Dictionary<TimeSlot>,
@@ -116,8 +117,8 @@ export function useTimeSlots() {
     async function createSlot(newSlot: TimeSlot) {
         const { error, response } = await postCreateSlot(newSlot);
 
-        if (error.value || response.value?.status !== 'success') {
-            TimeSlotState.error = 'Error on creating slot';
+        if (error.value || isMessage(response.value)) {
+            TimeSlotState.error = response.value?.message;
             return;
         }
 
@@ -131,8 +132,8 @@ export function useTimeSlots() {
     async function deleteSlotWithSlug(slug: string) {
         const { error, response } = await deleteSlot(slug);
 
-        if (error.value || response.value?.status !== 'success') {
-            TimeSlotState.error = 'Error on deleting slot';
+        if (error.value || isMessage(response.value)) {
+            TimeSlotState.error = response.value?.message;
             return;
         }
 

@@ -1,9 +1,9 @@
 import useApi from "@/api/api";
 import { WeekDTO } from "@/interfaces/DayDTO";
-import { ISuccess } from "@/interfaces/ISuccess";
+import { IMessage } from "@/interfaces/IMessage";
 
 export default async function putWeekUpdate(week: WeekDTO) {
-    const { error, request, response } = useApi<ISuccess>(
+    const { error, request, response } = useApi<IMessage>(
         'PUT',
         `api/menu/${week.id}`,
         'application/json',

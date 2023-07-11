@@ -60,7 +60,7 @@ class CategoryController extends BaseListController
         } catch (Exception $e) {
             $this->logException($e);
 
-            return new JsonResponse(['status' => $e->getMessage()], 500);
+            return new JsonResponse(['message' => $e->getMessage()], 500);
         }
     }
 
@@ -75,10 +75,10 @@ class CategoryController extends BaseListController
         } catch (Exception $e) {
             $this->logException($e);
 
-            return new JsonResponse(['status' => $e->getMessage()], 500);
+            return new JsonResponse(['message' => $e->getMessage()], 500);
         }
 
-        return new JsonResponse(['status' => 'success'], 200);
+        return new JsonResponse(null, 200);
     }
 
     /**
@@ -95,10 +95,10 @@ class CategoryController extends BaseListController
             $this->em->persist($category);
             $this->em->flush();
         } else {
-            return new JsonResponse(['status' => 'Category titles not set or they already exist'], 500);
+            return new JsonResponse(['message' => 'Category titles not set or they already exist'], 500);
         }
 
-        return new JsonResponse(['status' => 'success'], 200);
+        return new JsonResponse(null, 200);
     }
 
     private function getCategoryByTitleEn(string $title): ?Category

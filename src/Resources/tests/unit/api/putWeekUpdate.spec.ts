@@ -2,7 +2,6 @@ import putWeekUpdate from "@/api/putWeekUpdate";
 import { ref } from "vue";
 import useApi from "@/api/api";
 import { WeekDTO, DayDTO, MealDTO } from "@/interfaces/DayDTO";
-import Success from "../fixtures/Success.json";
 
 const testMeal: MealDTO = {
     dishSlug: "test",
@@ -38,7 +37,7 @@ const asyncFunc: () => Promise<void> = async () => {
 };
 
 const mockedReturnValue = {
-    response: ref(Success),
+    response: ref(null),
     request: asyncFunc,
     error: ref(false)
 }
@@ -49,10 +48,10 @@ useApi = jest.fn(useApi);
 useApi.mockReturnValue(mockedReturnValue);
 
 describe('Test putWeekUpdate', () => {
-    it('should return a success message', async () => {
+    it('should return null', async () => {
         const { error, response } = await putWeekUpdate(testWeek);
 
         expect(error.value).toBeFalsy();
-        expect(response.value).toEqual(Success);
+        expect(response.value).toBeNull();
     });
 });

@@ -1,4 +1,4 @@
-import { ISuccess } from "@/interfaces/ISuccess";
+import { IMessage } from "@/interfaces/IMessage";
 import useApi from "./api";
 
 /**
@@ -6,7 +6,7 @@ import useApi from "./api";
  * @param slug The identifier of the dish variation
  */
 export default async function deleteDishVariation(slug: string) {
-    const { error, request, response } = useApi<ISuccess>(
+    const { error, request, response } = useApi<IMessage | null>(
         'DELETE',
         `api/dishes/variation/${slug}`,
         'application/json'

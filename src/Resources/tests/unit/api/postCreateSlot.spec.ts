@@ -1,5 +1,4 @@
 import { ref } from "vue";
-import success from "../fixtures/Success.json";
 import createSlot from "@/api/postCreateSlot";
 import { describe, expect, it } from "@jest/globals";
 import { TimeSlot } from "@/stores/timeSlotStore";
@@ -10,7 +9,7 @@ const asyncFunc: () => Promise<void> = async () => {
 };
 
 const mockedReturnValue = {
-    response: ref(success),
+    response: ref(null),
     request: asyncFunc,
     error: ref(false)
 }
@@ -21,7 +20,7 @@ useApi = jest.fn(useApi);
 useApi.mockReturnValue(mockedReturnValue);
 
 describe('Test postCreateSlot', () => {
-    it('should return a success on creating a slot', async () => {
+    it('should return null on creating a slot', async () => {
         const slot: TimeSlot = {
             title: "Test",
             limit: 0,
@@ -33,6 +32,6 @@ describe('Test postCreateSlot', () => {
 
         expect(useApi).toHaveBeenCalled();
         expect(error.value).toBeFalsy();
-        expect(response.value.status).toEqual("success");
+        expect(response.value).toBeNull();
     });
 });

@@ -1,4 +1,4 @@
-import { ISuccess } from "@/interfaces/ISuccess";
+import { IMessage } from "@/interfaces/IMessage";
 import useApi from "./api";
 import { TimeSlot } from "@/stores/timeSlotStore";
 
@@ -7,7 +7,7 @@ import { TimeSlot } from "@/stores/timeSlotStore";
  * @param timeSlot The timeslot to be created
  */
 export default async function postCreateSlot(timeSlot: TimeSlot) {
-    const { error, request, response } = useApi<ISuccess>(
+    const { error, request, response } = useApi<IMessage | null>(
         'POST',
         'api/slots',
         'application/json',

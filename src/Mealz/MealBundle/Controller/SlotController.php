@@ -62,7 +62,7 @@ class SlotController extends BaseListController
         } catch (Exception $e) {
             $this->logException($e);
 
-            return new JsonResponse(['status' => $e->getMessage()], 405);
+            return new JsonResponse(['message' => $e->getMessage()], 405);
         }
     }
 
@@ -76,10 +76,10 @@ class SlotController extends BaseListController
         } catch (Exception $e) {
             $this->logException($e);
 
-            return new JsonResponse(['status' => $e->getMessage()], 405);
+            return new JsonResponse(['message' => $e->getMessage()], 405);
         }
 
-        return new JsonResponse(['status' => 'success']);
+        return new JsonResponse(null, 200);
     }
 
     /**
@@ -108,9 +108,9 @@ class SlotController extends BaseListController
         } catch (Exception $e) {
             $this->logException($e);
 
-            return new JsonResponse(['status' => $e->getMessage()], 500);
+            return new JsonResponse(['message' => $e->getMessage()], 500);
         }
 
-        return new JsonResponse(['status' => 'success'], 200);
+        return new JsonResponse(null, 200);
     }
 }

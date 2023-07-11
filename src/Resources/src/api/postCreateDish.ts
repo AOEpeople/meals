@@ -1,4 +1,4 @@
-import { ISuccess } from "@/interfaces/ISuccess";
+import { IMessage } from "@/interfaces/IMessage";
 import useApi from "./api";
 
 export interface CreateDishDTO {
@@ -15,7 +15,7 @@ export interface CreateDishDTO {
  * @param dish The dish to create
  */
 export default async function postCreateDish(dish: CreateDishDTO) {
-    const { error, request, response } = useApi<ISuccess>(
+    const { error, request, response } = useApi<IMessage | null>(
         'POST',
         'api/dishes',
         'application/json',

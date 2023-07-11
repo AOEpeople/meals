@@ -7,6 +7,7 @@ import postCreateDishVariation, { CreateDishVariationDTO } from "@/api/postCreat
 import deleteDishVariation from "@/api/deleteDishVariation";
 import putDishVariationUpdate from "@/api/putDishVariationUpdate";
 import { useCategories } from "./categoriesStore";
+import { isMessage } from "@/interfaces/IMessage";
 
 export interface Dish {
     id: number,
@@ -90,8 +91,8 @@ export function useDishes() {
     async function createDish(dish: CreateDishDTO) {
         const { error, response } = await postCreateDish(dish);
 
-        if (error.value || response.value?.status !== 'success') {
-            DishesState.error = 'Error on creating dish';
+        if (error.value || isMessage(response.value)) {
+            DishesState.error = response.value?.message;
             return;
         }
 
@@ -105,8 +106,8 @@ export function useDishes() {
     async function deleteDishWithSlug(slug: string) {
         const { error, response } = await deleteDish(slug);
 
-        if (error.value || response.value?.status !== 'success') {
-            DishesState.error = 'Error on creating dish';
+        if (error.value || isMessage(response.value)) {
+            DishesState.error = response.value?.message;
             return;
         }
 
@@ -121,8 +122,8 @@ export function useDishes() {
     async function createDishVariation(dishVariation: CreateDishVariationDTO, parentSlug: string) {
         const { error, response } = await postCreateDishVariation(dishVariation, parentSlug);
 
-        if (error.value || response.value?.status !== 'success') {
-            DishesState.error = 'Error on creating dish variation';
+        if (error.value || isMessage(response.value)) {
+            DishesState.error = response.value?.message;
             return;
         }
 
@@ -136,8 +137,8 @@ export function useDishes() {
     async function deleteDishVariationWithSlug(slug: string) {
         const { error, response } = await deleteDishVariation(slug);
 
-        if (error.value || response.value?.status !== 'success') {
-            DishesState.error = 'Error on deleting dish variation';
+        if (error.value || isMessage(response.value)) {
+            DishesState.error = response.value?.message;
             return;
         }
 

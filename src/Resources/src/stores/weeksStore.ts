@@ -6,6 +6,7 @@ import getDishCount from "@/api/getDishCount";
 import { DayDTO, WeekDTO } from "@/interfaces/DayDTO";
 import { Dictionary } from "types/types";
 import { reactive, readonly } from "vue";
+import { isMessage } from "@/interfaces/IMessage";
 
 export interface Week {
     id: number,
@@ -78,8 +79,8 @@ export function useWeeks() {
     async function createWeek(year: number, calendarWeek: number) {
         const { error, response } = await postCreateWeek(year, calendarWeek);
 
-        if (error.value && response.value?.status !== 'success') {
-            WeeksState.error = 'Error on creating the week';
+        if (error.value && isMessage(response.value)) {
+            WeeksState.error = response.value?.message;
             return;
         }
 
@@ -90,8 +91,8 @@ export function useWeeks() {
 
         const { error, response } = await putWeekUpdate(week);
 
-        if (error.value || response.value?.status !== 'success') {
-            WeeksState.error = 'Error on updating the week';
+        if (error.value || isMessage(response.value)) {
+            WeeksState.error = response.value?.message;
             return;
         }
 
@@ -101,12 +102,10 @@ export function useWeeks() {
     async function getDishCountForWeek() {
         const { error, response } = await getDishCount();
 
-        if (error.value) {
-            WeeksState.error = 'Error on getting the dish count';
+        if (error.value || isMessage(response.value)) {
+            WeeksState.error = response.value?.message as string;
             return;
-        }
-
-        if (response.value) {
+        } else if (response.value) {
             MenuCountState.counts = response.value;
         }
     }

@@ -1,7 +1,6 @@
 import postCreateDishVariation from "@/api/postCreateDishVariation";
 import { CreateDishVariationDTO } from "@/api/postCreateDishVariation";
 import useApi from "@/api/api";
-import success from "../fixtures/Success.json";
 import { it, describe, expect } from "@jest/globals";
 import { ref } from "vue";
 
@@ -10,7 +9,7 @@ const asyncFunc: () => Promise<void> = async () => {
 };
 
 const mockedReturnValue = {
-    response: ref(success),
+    response: ref(null),
     request: asyncFunc,
     error: ref(false)
 }
@@ -26,10 +25,10 @@ const dishVariation: CreateDishVariationDTO = {
 };
 
 describe('Test postCreateDishVariation', () => {
-    it('should return a success object', async () => {
+    it('should return null', async () => {
         const { error, response } = await postCreateDishVariation(dishVariation, 'testen');
 
         expect(error.value).toBeFalsy();
-        expect(response.value).toEqual(success);
+        expect(response.value).toBeNull();
     });
 });

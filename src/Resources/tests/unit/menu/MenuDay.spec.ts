@@ -3,7 +3,6 @@ import { mount } from "@vue/test-utils";
 import { DayDTO } from "@/interfaces/DayDTO";
 import { Ref, ref } from "vue";
 import useApi from "@/api/api";
-import Success from "../fixtures/Success.json";
 import Weeks from "../fixtures/getWeeks.json";
 import DishesCount from "../fixtures/dishesCount.json";
 import Dishes from "../fixtures/getDishes.json";
@@ -35,13 +34,13 @@ const getMockedResponses = (method: string, url: string) => {
         }
     } else if (url.includes('api/weeks/') && (method === 'POST')) {
         return {
-            response: ref(Success),
+            response: ref(null),
             request: asyncFunc,
             error: ref(false)
         }
     } else if (url.includes('api/menu/') && method === 'PUT') {
         return {
-            response: ref(Success),
+            response: ref(null),
             request: asyncFunc,
             error: ref(false)
         }

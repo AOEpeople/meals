@@ -84,11 +84,11 @@ class DishController extends BaseListController
             $this->em->persist($dish);
             $this->em->flush();
 
-            return new JsonResponse(['status' => 'success'], 200);
+            return new JsonResponse(null, 200);
         } catch (Exception $e) {
             $this->logException($e);
 
-            return new JsonResponse(['status' => $e->getMessage()], 500);
+            return new JsonResponse(['message' => $e->getMessage()], 500);
         }
     }
 
@@ -107,11 +107,11 @@ class DishController extends BaseListController
             }
             $this->em->flush();
 
-            return new JsonResponse(['status' => 'success'], 200);
+            return new JsonResponse(null, 200);
         } catch (Exception $e) {
             $this->logException($e);
 
-            return new JsonResponse(['status' => $e->getMessage()], 500);
+            return new JsonResponse(['message' => $e->getMessage()], 500);
         }
     }
 
@@ -132,7 +132,7 @@ class DishController extends BaseListController
         } catch (Exception $e) {
             $this->logException($e);
 
-            return new JsonResponse(['status' => $e->getMessage()], 500);
+            return new JsonResponse(['message' => $e->getMessage()], 500);
         }
     }
 }

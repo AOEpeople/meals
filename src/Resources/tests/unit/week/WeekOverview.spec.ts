@@ -1,5 +1,4 @@
 import WeekOverview from '@/components/weeks/WeekOverview.vue';
-import { PlusCircleIcon } from '@heroicons/vue/outline';
 import { Week } from '@/stores/weeksStore';
 import { mount } from '@vue/test-utils';
 

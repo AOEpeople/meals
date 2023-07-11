@@ -1,7 +1,6 @@
 import { useWeeks } from "@/stores/weeksStore";
 import useApi from "@/api/api";
 import { ref } from "vue";
-import Success from "../fixtures/Success.json";
 import Weeks from "../fixtures/getWeeks.json";
 import DishesCount from "../fixtures/dishesCount.json";
 
@@ -24,13 +23,13 @@ const getMockedResponses = (method: string, url: string) => {
         }
     } else if (url.includes('api/weeks/') && (method === 'POST')) {
         return {
-            response: ref(Success),
+            response: ref(null),
             request: asyncFunc,
             error: ref(false)
         }
     } else if (url.includes('api/menu/') && method === 'PUT') {
         return {
-            response: ref(Success),
+            response: ref(null),
             request: asyncFunc,
             error: ref(false)
         }

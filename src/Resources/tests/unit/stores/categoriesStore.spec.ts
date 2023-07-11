@@ -1,5 +1,4 @@
 import { Category, useCategories } from "@/stores/categoriesStore";
-import success from "../fixtures/Success.json";
 import Categories from "../fixtures/getCategories.json";
 import { ref } from "vue";
 import useApi from "@/api/api";
@@ -18,7 +17,7 @@ const getMockedResponses = (method: string, url: string) => {
         }
     } else if (url.includes('api/categories') && (method === 'POST' || method === 'DELETE')) {
         return {
-            response: ref(success),
+            response: ref(null),
             request: asyncFunc,
             error: ref(false)
         }

@@ -1,6 +1,5 @@
 import postCreateWeek from "@/api/postCreateWeek";
 import { ref } from "vue";
-import Success from "../fixtures/Success.json";
 import useApi from "@/api/api";
 
 const asyncFunc: () => Promise<void> = async () => {
@@ -8,7 +7,7 @@ const asyncFunc: () => Promise<void> = async () => {
 };
 
 const mockedReturnValue = {
-    response: ref(Success),
+    response: ref(null),
     request: asyncFunc,
     error: ref(false)
 }
@@ -23,6 +22,6 @@ describe('Test postCreateWeek', () => {
         const { error, response } = await postCreateWeek(2023, 20);
 
         expect(error.value).toBeFalsy();
-        expect(response.value).toEqual(Success);
+        expect(response.value).toBeNull();
     });
 });

@@ -3,6 +3,7 @@ import getCategoriesData from "@/api/getCategoriesData";
 import deleteCategory from "@/api/deleteCategory";
 import postCreateCategory from "@/api/postCreateCategory";
 import putCategoryUpdate from "@/api/putCategoryUpdate";
+import { isMessage } from "@/interfaces/IMessage";
 
 export interface Category {
     id: number,
@@ -58,8 +59,8 @@ export function useCategories() {
     async function deleteCategoryWithSlug(slug: string) {
         const { error, response } = await deleteCategory(slug);
 
-        if (error.value || response.value?.status !== 'success') {
-            CategoriesState.error = 'Error on deleting category';
+        if (error.value === true || isMessage(response.value)) {
+            CategoriesState.error = response.value?.message;
             return;
         }
 
@@ -73,8 +74,8 @@ export function useCategories() {
     async function createCategory(newCategory: Category) {
         const { error, response } = await postCreateCategory(newCategory);
 
-        if (error.value || response.value?.status !== 'success') {
-            CategoriesState.error = 'Error on creating category';
+        if (error.value === true || isMessage(response.value)) {
+            CategoriesState.error = response.value?.message;
             return;
         }
 

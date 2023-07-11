@@ -1,4 +1,4 @@
-import { ISuccess } from "@/interfaces/ISuccess";
+import { IMessage } from "@/interfaces/IMessage";
 import useApi from "./api";
 
 export interface CreateDishVariationDTO {
@@ -12,7 +12,7 @@ export interface CreateDishVariationDTO {
  * @param parentSlug The identifier of the parent dish
  */
 export default async function postCreateDishVariation(dishVariation: CreateDishVariationDTO, parentSlug: string) {
-    const { error, response, request } = useApi<ISuccess>(
+    const { error, response, request } = useApi<IMessage>(
         'POST',
         `api/dishes/${parentSlug}/variation`,
         'application/json',

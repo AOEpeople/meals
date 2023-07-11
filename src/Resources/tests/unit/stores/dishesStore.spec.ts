@@ -3,7 +3,6 @@ import { useCategories } from "@/stores/categoriesStore";
 import useApi from "@/api/api";
 import { ref } from "vue";
 import { beforeAll, beforeEach, describe, expect, it } from "@jest/globals";
-import success from "../fixtures/Success.json";
 import Dishes from "../fixtures/getDishes.json";
 import Categories from "../fixtures/getCategories.json";
 import { CreateDishDTO } from "@/api/postCreateDish";
@@ -44,7 +43,7 @@ const getMockedResponses = (method: string, url: string) => {
         }
     } else if (url.includes('api/dishes') && (method === 'POST' || method === 'DELETE')) {
         return {
-            response: ref(success),
+            response: ref(null),
             request: asyncFunc,
             error: ref(false)
         }

@@ -1,10 +1,11 @@
 import { Dictionary } from "types/types";
 import { reactive, readonly } from "vue";
-import { useTimeSlotData } from "@/api/getTimeSlotData";
+import { TimeSlots, useTimeSlotData } from "@/api/getTimeSlotData";
 import { useUpdateSlot } from "@/api/putSlotUpdate";
 import postCreateSlot from "@/api/postCreateSlot";
 import deleteSlot from "@/api/deleteSlot";
 import { isMessage } from "@/interfaces/IMessage";
+import { isResponseOkay } from "@/api/isResponseOkay";
 
 interface ITimeSlotState {
     timeSlots: Dictionary<TimeSlot>,
@@ -46,7 +47,7 @@ export function useTimeSlots() {
      */
     async function getTimeSlots() {
         const { timeslots, error } = await useTimeSlotData();
-        if (!error.value && timeslots.value) {
+        if (isResponseOkay<TimeSlots>(error, timeslots)) {
             TimeSlotState.timeSlots = timeslots.value;
             TimeSlotState.error = '';
         } else {
@@ -65,7 +66,7 @@ export function useTimeSlots() {
 
         const { error, response } = await updateSlotEnabled(TimeSlotState.timeSlots[id].slug, state);
 
-        if (!error.value && response.value && response.value.enabled !== undefined) {
+        if (isResponseOkay<TimeSlot>(error, response) && response.value.enabled !== undefined) {
             updateTimeSlotEnabled(response.value, id);
         } else {
             TimeSlotState.error = 'Error on changing the slot state';
@@ -86,7 +87,7 @@ export function useTimeSlots() {
 
         const { error, response } = await updateTimeSlot(slot);
 
-        if (!error.value && response.value) {
+        if (isResponseOkay<TimeSlot>(error, response)) {
             updateTimeSlotState(response.value, id);
         } else {
             TimeSlotState.error = 'Error on changing the slot state';

@@ -8,6 +8,7 @@ import deleteDishVariation from "@/api/deleteDishVariation";
 import putDishVariationUpdate from "@/api/putDishVariationUpdate";
 import { useCategories } from "./categoriesStore";
 import { isMessage } from "@/interfaces/IMessage";
+import { isResponseOkay } from "@/api/isResponseOkay";
 
 export interface Dish {
     id: number,
@@ -73,7 +74,7 @@ export function useDishes() {
         DishesState.isLoading = true;
 
         const { dishes, error } = await getDishes();
-        if (!error.value && dishes.value) {
+        if (isResponseOkay<Dish[]>(error, dishes)) {
             DishesState.dishes = dishes.value;
             DishesState.error = '';
         } else {
@@ -153,7 +154,7 @@ export function useDishes() {
     async function updateDishVariation(slug: string, variation: CreateDishVariationDTO) {
         const { error, response } = await putDishVariationUpdate(slug, variation);
 
-        if (!error.value && response.value && response.value.parentId) {
+        if (isResponseOkay<Dish>(error, response) && response.value.parentId) {
             updateDishVariationInState(response.value.parentId, response.value);
         } else {
             DishesState.error = 'Error on updating dishVariation';
@@ -168,7 +169,7 @@ export function useDishes() {
     async function updateDish(id: number, dish: CreateDishDTO) {
         const { error, response } = await putDishUpdate(getDishById(id).slug, dish);
 
-        if (!error.value && response.value) {
+        if (isResponseOkay<Dish>(error, response)) {
             updateDishesState(response.value);
         } else {
             DishesState.error = 'Error on updating a dish';

@@ -33,13 +33,13 @@ const getMockedResponses = (method: string, url: string) => {
         return {
             response: ref(Categories),
             request: asyncFunc,
-            error: false
+            error: ref(false)
         }
     } else if (url.includes('api/dishes') && method === 'GET') {
         return {
             response: ref(Dishes),
             request: asyncFunc,
-            error: false
+            error: ref(false)
         }
     } else if (url.includes('api/dishes') && (method === 'POST' || method === 'DELETE')) {
         return {

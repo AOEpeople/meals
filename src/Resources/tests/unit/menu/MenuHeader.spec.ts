@@ -1,6 +1,6 @@
 import MenuHeader from "@/components/menu/MenuHeader.vue";
 import { WeekDTO } from "@/interfaces/DayDTO";
-import { mount } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 
 const testWeek: WeekDTO = {
     id: 0,
@@ -11,7 +11,7 @@ const testWeek: WeekDTO = {
 
 describe('Test MenuHeader', () => {
     it('should contain the correct text', () => {
-        const wrapper = mount(MenuHeader, {
+        const wrapper = shallowMount(MenuHeader, {
             props: {
                 week: testWeek,
                 dateRange: ['2023-07-03T12:00:00.000+02:00', '2023-07-07T12:00:00.000+02:00'],

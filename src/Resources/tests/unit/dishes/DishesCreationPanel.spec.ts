@@ -41,7 +41,18 @@ describe('Test DishesCreationPanel', () => {
     });
 
     it('should contain a CategoriesDropDown with all categories', async () => {
-        const wrapper = mount(DishesCreationPanel);
+        const wrapper = mount(DishesCreationPanel, {
+            props: {
+                titleDe: Dishes[0].titleDe,
+                titleEn: Dishes[0].titleEn,
+                descriptionDe: Dishes[0].descriptionDe,
+                descriptionEn: Dishes[0].descriptionEn,
+                categoryId: Dishes[0].categoryId,
+                oneSizeServing: Dishes[0].oneServingSize,
+                dishId: Dishes[0].id,
+                edit: true
+            }
+        });
 
         expect(wrapper.findComponent(CategoriesDropDown).exists()).toBe(true);
 
@@ -77,7 +88,18 @@ describe('Test DishesCreationPanel', () => {
     });
 
     it('should not call createDish or updateDish if titles are empty', async () => {
-        const wrapper = mount(DishesCreationPanel);
+        const wrapper = mount(DishesCreationPanel, {
+            props: {
+                titleDe: '',
+                titleEn: '',
+                descriptionDe: Dishes[0].descriptionDe,
+                descriptionEn: Dishes[0].descriptionEn,
+                categoryId: Dishes[0].categoryId,
+                oneSizeServing: Dishes[0].oneServingSize,
+                dishId: Dishes[0].id,
+                edit: true
+            }
+        });
 
         await wrapper.trigger('submit.prevent');
 
@@ -90,6 +112,11 @@ describe('Test DishesCreationPanel', () => {
             props: {
                 titleDe: Dishes[0].titleDe,
                 titleEn: Dishes[0].titleEn,
+                descriptionDe: Dishes[0].descriptionDe,
+                descriptionEn: Dishes[0].descriptionEn,
+                categoryId: Dishes[0].categoryId,
+                oneSizeServing: Dishes[0].oneServingSize,
+                dishId: Dishes[0].id
             }
         });
 
@@ -104,6 +131,11 @@ describe('Test DishesCreationPanel', () => {
             props: {
                 titleDe: Dishes[0].titleDe,
                 titleEn: Dishes[0].titleEn,
+                descriptionDe: Dishes[0].descriptionDe,
+                descriptionEn: Dishes[0].descriptionEn,
+                categoryId: Dishes[0].categoryId,
+                oneSizeServing: Dishes[0].oneServingSize,
+                dishId: Dishes[0].id,
                 edit: true
             }
         });

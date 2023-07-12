@@ -13,13 +13,13 @@ const getMockedResponses = (method: string, url: string) => {
         return {
             response: ref(Weeks),
             request: asyncFunc,
-            error: false
+            error: ref(false)
         }
     } else if (url.includes('api/meals/count') && method === 'GET') {
         return {
             response: ref(DishesCount),
             request: asyncFunc,
-            error: false
+            error: ref(false)
         }
     } else if (url.includes('api/weeks/') && (method === 'POST')) {
         return {

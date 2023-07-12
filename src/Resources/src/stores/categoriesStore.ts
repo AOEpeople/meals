@@ -1,9 +1,10 @@
-import { reactive, readonly } from "vue";
+import { reactive, readonly, watch } from "vue";
 import getCategoriesData from "@/api/getCategoriesData";
 import deleteCategory from "@/api/deleteCategory";
 import postCreateCategory from "@/api/postCreateCategory";
 import putCategoryUpdate from "@/api/putCategoryUpdate";
 import { isMessage } from "@/interfaces/IMessage";
+import { isResponseOkay } from "@/api/isResponseOkay";
 
 export interface Category {
     id: number,
@@ -26,6 +27,11 @@ const CategoriesState = reactive<CategoriesState>({
     error: ''
 });
 
+watch(
+    () => CategoriesState.error,
+    () => console.log(`Error in Cat: ${CategoriesState.error}`)
+)
+
 export function useCategories() {
 
     /**
@@ -43,7 +49,8 @@ export function useCategories() {
      */
     async function getCategories() {
         const { categories, error } = await getCategoriesData();
-        if (!error.value && categories.value) {
+
+        if (isResponseOkay<Category[]>(error, categories)) {
             CategoriesState.categories = categories.value;
             CategoriesState.error = '';
         } else {
@@ -91,7 +98,7 @@ export function useCategories() {
     async function editCategory(index: number, titleDe: string, titleEn: string) {
         const { error, response } = await putCategoryUpdate(CategoriesState.categories[index].slug, titleDe, titleEn);
 
-        if (!error.value && response.value) {
+        if (isResponseOkay<Category>(error, response)) {
             updateCategoryState(index, response.value);
         } else {
             CategoriesState.error = 'Error on updating category';
@@ -130,7 +137,7 @@ export function useCategories() {
 
     function getCategoryTitleById(id: number, locale = 'en') {
         const category = getCategoryById(id);
-        if(category) {
+        if(category !== undefined && category !== null) {
             return locale === 'en' ? category.titleEn : category.titleDe;
         }
         return '';

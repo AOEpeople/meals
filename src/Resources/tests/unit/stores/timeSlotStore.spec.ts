@@ -14,7 +14,7 @@ const getMockedResponses = (method: string, url: string) => {
         return {
             response: ref(timeSlots.response),
             request: asyncFunc,
-            error: false
+            error: ref(false)
         }
     } else if (url.includes('api/slot') && (method === 'POST' || method === 'DELETE')) {
         return {

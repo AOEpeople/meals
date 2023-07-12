@@ -7,6 +7,7 @@ import { DayDTO, WeekDTO } from "@/interfaces/DayDTO";
 import { Dictionary } from "types/types";
 import { reactive, readonly } from "vue";
 import { isMessage } from "@/interfaces/IMessage";
+import { isResponseOkay } from "@/api/isResponseOkay";
 
 export interface Week {
     id: number,
@@ -67,7 +68,7 @@ export function useWeeks() {
 
     async function getWeeks() {
         const { weeks, error } = await getWeeksData();
-        if (!error.value && weeks.value) {
+        if (isResponseOkay<Week[]>(error, weeks)) {
             WeeksState.weeks = weeks.value;
             WeeksState.error = '';
         } else {

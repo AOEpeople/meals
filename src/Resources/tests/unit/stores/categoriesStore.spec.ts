@@ -13,7 +13,7 @@ const getMockedResponses = (method: string, url: string) => {
         return {
             response: ref(Categories),
             request: asyncFunc,
-            error: false
+            error: ref(false)
         }
     } else if (url.includes('api/categories') && (method === 'POST' || method === 'DELETE')) {
         return {

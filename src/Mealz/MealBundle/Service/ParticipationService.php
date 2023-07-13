@@ -51,13 +51,13 @@ class ParticipationService
     public function join(Profile $profile, Meal $meal, ?Slot $slot = null, array $dishSlugs = []): ?array
     {
         // user is attempting to take over an already booked meal by some participant
-        if ($this->mealIsOffered($meal) && $this->allowedToAccept($meal)) {
+        if (true === $this->mealIsOffered($meal) && true === $this->allowedToAccept($meal)) {
             return $this->reassignOfferedMeal($meal, $profile, $dishSlugs);
         }
 
         // self joining by user, or adding by a kitchen staff
         if ($this->doorman->isUserAllowedToJoin($meal, $dishSlugs) || $this->doorman->isKitchenStaff()) {
-            if ((null === $slot) || !$this->slotIsAvailable($slot, $meal->getDateTime())) {
+            if ((null === $slot) || false === $this->slotIsAvailable($slot, $meal->getDateTime())) {
                 $slot = $this->getNextFreeSlot($meal->getDateTime());
             }
 
@@ -80,13 +80,13 @@ class ParticipationService
     {
         $meal = $participant->getMeal();
 
-        if (!$meal->isOpen()) {
+        if (false === $meal->isOpen()) {
             throw new ParticipationException(
                 'invalid operation; meal expired',
                 ParticipationException::ERR_PARTICIPATION_EXPIRED
             );
         }
-        if ($meal->isLocked()) {
+        if (true === $meal->isLocked()) {
             throw new ParticipationException(
                 'invalid operation; participation is locked',
                 ParticipationException::ERR_UPDATE_LOCKED_PARTICIPATION
@@ -101,7 +101,7 @@ class ParticipationService
 
     public function updateSlot(Profile $profile, DateTime $date, Slot $slot): void
     {
-        if (!$this->slotIsAvailable($slot, $date)) {
+        if (false === $this->slotIsAvailable($slot, $date)) {
             $slot = $this->getNextFreeSlot($date);
         }
 
@@ -178,7 +178,7 @@ class ParticipationService
                 $combinationFound = true;
                 /** @var Dish $dish */
                 foreach ($combinedDishes as $dish) {
-                    if (!isset($flippedDishSlugs[$dish->getSlug()])) {
+                    if (false === isset($flippedDishSlugs[$dish->getSlug()])) {
                         $combinationFound = false;
                         break;
                     }
@@ -237,7 +237,7 @@ class ParticipationService
     {
         $participation = (new ParticipationCountService())->getParticipationByDay($meal->getDay());
 
-        if ($meal->isCombinedMeal() || $withoutCombined) {
+        if (true === $meal->isCombinedMeal() || true === $withoutCombined) {
             return $participation['countByMealIds'][$meal->getId()][$meal->getDish()->getSlug()]['count'] ?? 0;
         }
 

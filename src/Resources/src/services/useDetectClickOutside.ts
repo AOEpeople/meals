@@ -4,12 +4,12 @@ const listenerActive = ref(false);
 
 
 export default function useDetectClickOutside(componentRef: Ref<HTMLElement | null>, callback: () => void) {
-    if (!componentRef) {
+    if (componentRef === null || componentRef === undefined) {
         return;
     }
 
     function addListener() {
-        if (listenerActive.value) {
+        if (listenerActive.value === true) {
             return;
         }
         document.addEventListener('click', listener);
@@ -17,7 +17,7 @@ export default function useDetectClickOutside(componentRef: Ref<HTMLElement | nu
     }
 
     function removeListener() {
-        if (!listenerActive.value) {
+        if (listenerActive.value === false) {
             return;
         }
         document.removeEventListener('click', listener);
@@ -26,19 +26,19 @@ export default function useDetectClickOutside(componentRef: Ref<HTMLElement | nu
 
     function listener<E extends MouseEvent | PointerEvent >(event: E) {
 
-        if (event.defaultPrevented) {
+        if (event.defaultPrevented === true) {
             return;
         }
         const target = (event.composedPath?.()?.[0] || event.target) as HTMLElement | null;
 
-        if (!target || !target.getRootNode().contains(target) || !componentRef.value) {
+        if (target === null || target === undefined || target.getRootNode().contains(target) === false || componentRef.value === null || componentRef.value === undefined) {
             return;
         }
         const node = (componentRef.value as { $el?: HTMLElement }).$el ?? componentRef.value;
 
-        if (node?.contains(target)) {
+        if (node?.contains(target) === true) {
             return;
-        } else if (event.composed && event.composedPath().includes(node as EventTarget)) {
+        } else if (event.composed === true && event.composedPath().includes(node as EventTarget) === true) {
             return;
         } else if (typeof callback === 'function') {
             removeListener();

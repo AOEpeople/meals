@@ -26,7 +26,7 @@ const { setMealListHight, windowWidth } = useComponentHeights();
 const mealsList = ref<HTMLDivElement | null>(null);
 
 const mealsWithVariations = computed(() => {
-  if (loadedState.loaded) {
+  if (loadedState.loaded === true) {
     return getMealsWithVariations();
   } else {
     return [];
@@ -34,19 +34,19 @@ const mealsWithVariations = computed(() => {
 });
 
 watch(windowWidth, () => {
-  if (mealsList.value) {
+  if (mealsList.value !== null && mealsList.value !== undefined) {
     setMealListHight(mealsList.value.offsetHeight, 'mealsList');
   }
 });
 
 onMounted(() => {
-  if (mealsList.value) {
+  if (mealsList.value !== null && mealsList.value !== undefined) {
     setMealListHight(mealsList.value.offsetHeight, 'mealsList');
   }
 });
 
 onUpdated(() => {
-  if (mealsList.value) {
+  if (mealsList.value !== null && mealsList.value !== undefined) {
     setMealListHight(mealsList.value.offsetHeight, 'mealsList');
   }
 });

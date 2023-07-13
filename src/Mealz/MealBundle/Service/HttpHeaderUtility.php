@@ -30,7 +30,7 @@ class HttpHeaderUtility
         }
         $headerString = trim($headerString);
 
-        if (empty($headerString)) {
+        if (true === empty($headerString)) {
             return reset($this->locales);
         }
         $acceptLanguages = explode(',', $headerString);
@@ -57,9 +57,9 @@ class HttpHeaderUtility
             if ('*' == $acceptLanguage) {
                 $acceptLanguage = reset($this->locales);
             }
-            if (!in_array($acceptLanguage, $this->locales)) {
+            if (false === in_array($acceptLanguage, $this->locales)) {
                 $acceptLanguage = $this->parseShortAcceptLanguage($acceptLanguage);
-                if (!in_array($acceptLanguage, $this->locales)) {
+                if (false === in_array($acceptLanguage, $this->locales)) {
                     continue;
                 }
             }
@@ -68,7 +68,7 @@ class HttpHeaderUtility
                 continue;
             }
             $quality = intval($quality * 1000);
-            while (array_key_exists($quality, $orderedAcceptLangs)) {
+            while (true === array_key_exists($quality, $orderedAcceptLangs)) {
                 --$quality;
             }
             $orderedAcceptLangs[$quality] = $acceptLanguage;

@@ -138,15 +138,15 @@ onMounted(() => {
 function getSlugsFromSelectedDishes(selectedDishRef: Ref<Dish[] | null>) {
   const meals: string[] = [];
 
-  if (selectedDishRef.value && selectedDishRef.value.length === 1) {
+  if (selectedDishRef.value !== null && selectedDishRef.value !== undefined && selectedDishRef.value.length === 1) {
     selectedDishRef.value.forEach(dish => {
-      if (dish && dish.parentId === null) {
+      if (dish !== null && dish !== undefined && dish.parentId === null) {
         meals.push(dish.slug);
       }
     });
-  } else if (selectedDishRef.value && selectedDishRef.value.length > 1) {
+  } else if (selectedDishRef.value !== null && selectedDishRef.value !== undefined && selectedDishRef.value.length > 1) {
     selectedDishRef.value.forEach(dish => {
-      if (dish && dish.parentId !== null) {
+      if (dish !== null && dish !== undefined && dish.parentId !== null) {
         meals.push(dish.slug);
       }
     });

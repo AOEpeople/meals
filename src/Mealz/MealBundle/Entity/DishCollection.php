@@ -15,7 +15,7 @@ class DishCollection extends ArrayCollection
     public function __construct(array $items = [])
     {
         foreach ($items as $item) {
-            if (!($item instanceof Dish)) {
+            if (false === ($item instanceof Dish)) {
                 throw new RuntimeException('invalid argument; expected "Dish", got "' . gettype($item) . '"');
             }
         }
@@ -26,7 +26,7 @@ class DishCollection extends ArrayCollection
     public function containsDishVariation(): bool
     {
         foreach ($this as $item) {
-            if ($item instanceof DishVariation) {
+            if (true === ($item instanceof DishVariation)) {
                 return true;
             }
         }

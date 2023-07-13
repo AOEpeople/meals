@@ -19,7 +19,7 @@ class TransactionStore extends Store<TransStore> {
     async fillStore() {
         this.state.isLoading = true;
         const {transactions} = await useTransactionData();
-        if (transactions.value) {
+        if (transactions.value !== undefined && transactions.value !== null) {
             this.state.data = transactions.value.data;
             this.state.difference = transactions.value.difference;
             this.state.isLoading = false;

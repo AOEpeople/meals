@@ -46,10 +46,10 @@ class CategoryController extends BaseListController
         $parameters = json_decode($request->getContent(), true);
 
         try {
-            if (isset($parameters['titleEn'])) {
+            if (true === isset($parameters['titleEn'])) {
                 $category->setTitleEn($parameters['titleEn']);
             }
-            if (isset($parameters['titleDe'])) {
+            if (true === isset($parameters['titleDe'])) {
                 $category->setTitleDe($parameters['titleDe']);
             }
 
@@ -88,7 +88,12 @@ class CategoryController extends BaseListController
     {
         $parameters = json_decode($request->getContent(), true);
 
-        if (isset($parameters['titleDe']) && isset($parameters['titleEn']) && null === $this->getCategoryByTitleEn($parameters['titleEn']) && null === $this->getCategoryByTitleDe($parameters['titleDe'])) {
+        if (
+            true === isset($parameters['titleDe']) &&
+            true === isset($parameters['titleEn']) &&
+            null === $this->getCategoryByTitleEn($parameters['titleEn']) &&
+            null === $this->getCategoryByTitleDe($parameters['titleDe'])
+        ) {
             $category = new Category();
             $category->setTitleEn($parameters['titleEn']);
             $category->setTitleDe($parameters['titleDe']);

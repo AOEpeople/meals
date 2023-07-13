@@ -46,7 +46,7 @@ class Doorman
     {
         $mealAvailability = $this->availabilityService->getByMeal($meal);
 
-        if (is_bool($mealAvailability)) {
+        if (true === is_bool($mealAvailability)) {
             $mealIsAvailable = $mealAvailability;
         } else {
             $mealIsAvailable =
@@ -130,7 +130,7 @@ class Doorman
         // check access in terms of given $accesstype...
         switch ($accesstype) {
             case self::AT_MEAL_PARTICIPATION:
-                if (!isset($params['meal']) || !$params['meal'] instanceof Meal) {
+                if (false === isset($params['meal']) || false === ($params['meal'] instanceof Meal)) {
                     return false;
                 }
 

@@ -18,7 +18,7 @@ class UserDataStore extends Store<UserData> {
 
     private async writeUserData() {
         const {userData, error} = await useUserData()
-        if (error.value) {
+        if (error.value === true) {
             console.warn("couldn't receive User Data!")
             return;
         }
@@ -32,7 +32,7 @@ class UserDataStore extends Store<UserData> {
     public roleAllowsRoute(routeName: string) : boolean
     {
         const route = router.getRoutes().find(r => r.name === routeName)
-        if (!route) {
+        if (route === undefined || route === null) {
             return false;
         }
 

@@ -33,13 +33,13 @@ class Link
      */
     public function link($object, $action = null, $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH)
     {
-        if ($object instanceof Meal) {
+        if (true === ($object instanceof Meal)) {
             return $this->linkMeal($object, $action, $referenceType);
-        } elseif ($object instanceof Participant) {
+        } elseif (true === ($object instanceof Participant)) {
             return $this->linkParticipant($object, $action, $referenceType);
-        } elseif ($object instanceof Dish) {
+        } elseif (true === ($object instanceof Dish)) {
             return $this->linkDish($object, $action, $referenceType);
-        } elseif ($object instanceof Category) {
+        } elseif (true === ($object instanceof Category)) {
             return $this->linkCategory($object, $action, $referenceType);
         }
 
@@ -52,7 +52,7 @@ class Link
         int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH
     ): string {
         $dish = $meal->getDish();
-        if (!($dish instanceof Dish)) {
+        if (false === ($dish instanceof Dish)) {
             return '';
         }
 

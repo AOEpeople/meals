@@ -16,7 +16,7 @@ class MealCollection extends ArrayCollection
     public function __construct(array $items = [])
     {
         foreach ($items as $item) {
-            if (!($item instanceof Meal)) {
+            if (false === ($item instanceof Meal)) {
                 throw new RuntimeException('invalid argument; expected "Meal", got "' . gettype($item) . '"');
             }
         }
@@ -70,7 +70,7 @@ class MealCollection extends ArrayCollection
 
         /** @var Meal $meal */
         foreach ($this->getValues() as $meal) {
-            if ($meal->isCombinedMeal()) {
+            if (true === $meal->isCombinedMeal()) {
                 $combined[] = $meal;
             } else {
                 $simple[] = $meal;

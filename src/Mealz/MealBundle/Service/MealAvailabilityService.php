@@ -65,11 +65,11 @@ class MealAvailabilityService
      */
     private function getMealAvailability(Meal $meal)
     {
-        if (!$this->isMealAvailable($meal)) {
+        if (false === $this->isMealAvailable($meal)) {
             return false;
         }
 
-        if ($meal->isCombinedMeal()) {
+        if (true === $meal->isCombinedMeal()) {
             return $this->getCombinedMealAvailability($meal);
         }
 
@@ -120,7 +120,7 @@ class MealAvailabilityService
 
             if (true === $availability) {
                 $dishes[] = [$dishSlug];
-            } elseif (is_array($availability)) {  // $availability contains availability of dish variations
+            } elseif (true === is_array($availability)) {  // $availability contains availability of dish variations
                 $availableItems = array_filter($availability);  // filter out available variations
                 if (0 === count($availableItems)) {
                     return [];
@@ -165,12 +165,12 @@ class MealAvailabilityService
     private function isMealAvailable(Meal $meal, float $factor = 1.0): bool
     {
         // meal already occurred
-        if (!$meal->isOpen()) {
+        if (false === $meal->isOpen()) {
             return false;
         }
 
         // meal is locked and there are offers to overtake the meal
-        if ($meal->isLocked()) {
+        if (true === $meal->isLocked()) {
             return 0 < $this->participantRepo->getOfferCountByMeal($meal);
         }
 
@@ -194,7 +194,7 @@ class MealAvailabilityService
         $participantCount = (new ParticipationCountService())->getParticipationByDay($meal->getDay());
 
         $dishSlug = $meal->getDish()->getSlug();
-        if (!isset($participantCount['countByMealIds'][$meal->getId()][$dishSlug])) {
+        if (false === isset($participantCount['countByMealIds'][$meal->getId()][$dishSlug])) {
             return null;
         }
 
@@ -203,14 +203,14 @@ class MealAvailabilityService
 
     private function getTotalParticipantCount(Meal $meal): ?float
     {
-        if ($meal->isCombinedMeal()) {
+        if (true === $meal->isCombinedMeal()) {
             return $this->getParticipantCount($meal);
         }
 
         $participantCount = (new ParticipationCountService())->getParticipationByDay($meal->getDay());
 
         $dishSlug = $meal->getDish()->getSlug();
-        if (!isset($participantCount['totalCountByDishSlugs'][$dishSlug])) {
+        if (false === isset($participantCount['totalCountByDishSlugs'][$dishSlug])) {
             return null;
         }
 

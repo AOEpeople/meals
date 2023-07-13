@@ -1,5 +1,4 @@
 import { ref } from "vue";
-import success from "../fixtures/Success.json";
 import deleteSlot from "@/api/deleteSlot";
 import { describe, expect, it } from "@jest/globals";
 import useApi from "@/api/api";
@@ -9,7 +8,7 @@ const asyncFunc: () => Promise<void> = async () => {
 };
 
 const mockedReturnValue = {
-    response: ref(success),
+    response: ref(null),
     request: asyncFunc,
     error: ref(false)
 }
@@ -20,11 +19,11 @@ useApi = jest.fn(useApi);
 useApi.mockReturnValue(mockedReturnValue);
 
 describe('Test postDeleteSlot', () => {
-    it('should return a success on deleting a slot', async () => {
+    it('should return null on deleting a slot', async () => {
         const { error, response } = await deleteSlot('1');
 
         expect(useApi).toHaveBeenCalled();
         expect(error.value).toBeFalsy();
-        expect(response.value.status).toEqual("success");
+        expect(response.value).toBeNull();
     });
 });

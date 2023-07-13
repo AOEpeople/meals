@@ -61,7 +61,11 @@ class DishController extends BaseListController
     {
         try {
             $parameters = json_decode($request->getContent(), true);
-            if (!isset($parameters['titleDe']) || !isset($parameters['titleEn']) || !isset($parameters['oneServingSize'])) {
+            if (
+                false === isset($parameters['titleDe']) ||
+                false === isset($parameters['titleEn']) ||
+                false === isset($parameters['oneServingSize'])
+            ) {
                 throw new Exception('Missing parameters');
             }
 
@@ -71,24 +75,24 @@ class DishController extends BaseListController
             $dish->setOneServingSize($parameters['oneServingSize']);
             $dish->setPrice($this->defaultPrice);
 
-            if ($this->apiService->isParamValid($parameters, 'descriptionDe', 'string')) {
+            if (true === $this->apiService->isParamValid($parameters, 'descriptionDe', 'string')) {
                 $dish->setDescriptionDe($parameters['descriptionDe']);
             }
-            if ($this->apiService->isParamValid($parameters, 'descriptionEn', 'string')) {
+            if (true === $this->apiService->isParamValid($parameters, 'descriptionEn', 'string')) {
                 $dish->setDescriptionEn($parameters['descriptionEn']);
             }
-            if ($this->apiService->isParamValid($parameters, 'category', 'integer')) {
+            if (true === $this->apiService->isParamValid($parameters, 'category', 'integer')) {
                 $dish->setCategory($this->categoryRepository->find($parameters['category']));
             }
 
             $this->em->persist($dish);
             $this->em->flush();
 
-            return new JsonResponse(['status' => 'success'], 200);
+            return new JsonResponse(null, 200);
         } catch (Exception $e) {
             $this->logException($e);
 
-            return new JsonResponse(['status' => $e->getMessage()], 500);
+            return new JsonResponse(['message' => $e->getMessage()], 500);
         }
     }
 
@@ -99,7 +103,7 @@ class DishController extends BaseListController
     {
         try {
             // hide the dish if it has been assigned to a meal, else delete it
-            if ($this->dishRepository->hasDishAssociatedMeals($dish)) {
+            if (true === $this->dishRepository->hasDishAssociatedMeals($dish)) {
                 $dish->setEnabled(false);
                 $this->em->persist($dish);
             } else {
@@ -107,11 +111,11 @@ class DishController extends BaseListController
             }
             $this->em->flush();
 
-            return new JsonResponse(['status' => 'success'], 200);
+            return new JsonResponse(null, 200);
         } catch (Exception $e) {
             $this->logException($e);
 
-            return new JsonResponse(['status' => $e->getMessage()], 500);
+            return new JsonResponse(['message' => $e->getMessage()], 500);
         }
     }
 
@@ -132,7 +136,7 @@ class DishController extends BaseListController
         } catch (Exception $e) {
             $this->logException($e);
 
-            return new JsonResponse(['status' => $e->getMessage()], 500);
+            return new JsonResponse(['message' => $e->getMessage()], 500);
         }
     }
 }

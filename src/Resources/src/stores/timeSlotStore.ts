@@ -4,6 +4,8 @@ import { useTimeSlotData } from "@/api/getTimeSlotData";
 import { useUpdateSlot } from "@/api/putSlotUpdate";
 import postCreateSlot from "@/api/postCreateSlot";
 import deleteSlot from "@/api/deleteSlot";
+import { isMessage } from "@/interfaces/IMessage";
+import { isResponseObjectOkay, isResponseDictOkay } from "@/api/isResponseOkay";
 
 interface ITimeSlotState {
     timeSlots: Dictionary<TimeSlot>,
@@ -17,6 +19,16 @@ export interface TimeSlot {
     order: number,
     enabled: boolean,
     slug?: string
+}
+
+export function isTimeSlot(timeSlot: TimeSlot): timeSlot is TimeSlot {
+    return (
+        typeof (timeSlot as TimeSlot).title === 'string' &&
+        typeof (timeSlot as TimeSlot).limit === 'number' &&
+        typeof (timeSlot as TimeSlot).order === 'number' &&
+        typeof (timeSlot as TimeSlot).enabled === 'boolean' &&
+        (Object.keys(timeSlot).length >= 4 && Object.keys(timeSlot).length <= 6)
+    );
 }
 
 const TIMEOUT_PERIOD = 10000;
@@ -45,7 +57,7 @@ export function useTimeSlots() {
      */
     async function getTimeSlots() {
         const { timeslots, error } = await useTimeSlotData();
-        if (!error.value && timeslots.value) {
+        if (isResponseDictOkay<TimeSlot>(error, timeslots, isTimeSlot) === true) {
             TimeSlotState.timeSlots = timeslots.value;
             TimeSlotState.error = '';
         } else {
@@ -64,7 +76,7 @@ export function useTimeSlots() {
 
         const { error, response } = await updateSlotEnabled(TimeSlotState.timeSlots[id].slug, state);
 
-        if (!error.value && response.value && response.value.enabled !== undefined) {
+        if (isResponseObjectOkay<TimeSlot>(error, response, isTimeSlot) === true && response.value.enabled !== undefined) {
             updateTimeSlotEnabled(response.value, id);
         } else {
             TimeSlotState.error = 'Error on changing the slot state';
@@ -85,7 +97,7 @@ export function useTimeSlots() {
 
         const { error, response } = await updateTimeSlot(slot);
 
-        if (!error.value && response.value) {
+        if (isResponseObjectOkay<TimeSlot>(error, response, isTimeSlot) === true) {
             updateTimeSlotState(response.value, id);
         } else {
             TimeSlotState.error = 'Error on changing the slot state';
@@ -116,8 +128,8 @@ export function useTimeSlots() {
     async function createSlot(newSlot: TimeSlot) {
         const { error, response } = await postCreateSlot(newSlot);
 
-        if (error.value || response.value?.status !== 'success') {
-            TimeSlotState.error = 'Error on creating slot';
+        if (error.value === true || isMessage(response.value) === true) {
+            TimeSlotState.error = response.value?.message;
             return;
         }
 
@@ -131,8 +143,8 @@ export function useTimeSlots() {
     async function deleteSlotWithSlug(slug: string) {
         const { error, response } = await deleteSlot(slug);
 
-        if (error.value || response.value?.status !== 'success') {
-            TimeSlotState.error = 'Error on deleting slot';
+        if (error.value === true || isMessage(response.value) === true) {
+            TimeSlotState.error = response.value?.message;
             return;
         }
 

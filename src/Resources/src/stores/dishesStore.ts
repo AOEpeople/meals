@@ -7,6 +7,8 @@ import postCreateDishVariation, { CreateDishVariationDTO } from "@/api/postCreat
 import deleteDishVariation from "@/api/deleteDishVariation";
 import putDishVariationUpdate from "@/api/putDishVariationUpdate";
 import { useCategories } from "./categoriesStore";
+import { isMessage } from "@/interfaces/IMessage";
+import { isResponseObjectOkay, isResponseArrayOkay } from "@/api/isResponseOkay";
 
 export interface Dish {
     id: number,
@@ -26,6 +28,19 @@ interface DishesState {
     filter: string,
     isLoading: boolean,
     error: string
+}
+
+function isDish(dish: Dish): dish is Dish {
+    return (
+        typeof (dish as Dish).id === 'number' &&
+        typeof (dish as Dish).slug === 'string' &&
+        typeof (dish as Dish).titleDe === 'string' &&
+        typeof (dish as Dish).titleEn === 'string' &&
+        ((dish as Dish).categoryId === null || typeof (dish as Dish).categoryId === 'number') &&
+        typeof (dish as Dish).oneServingSize === 'boolean' &&
+        Array.isArray((dish as Dish).variations) &&
+        (Object.keys(dish).length >= 8 && Object.keys(dish).length <= 10)
+    )
 }
 
 const TIMEOUT_PERIOD = 10000;
@@ -72,7 +87,7 @@ export function useDishes() {
         DishesState.isLoading = true;
 
         const { dishes, error } = await getDishes();
-        if (!error.value && dishes.value) {
+        if (isResponseArrayOkay<Dish>(error, dishes, isDish) === true) {
             DishesState.dishes = dishes.value;
             DishesState.error = '';
         } else {
@@ -90,8 +105,8 @@ export function useDishes() {
     async function createDish(dish: CreateDishDTO) {
         const { error, response } = await postCreateDish(dish);
 
-        if (error.value || response.value?.status !== 'success') {
-            DishesState.error = 'Error on creating dish';
+        if (error.value === true || isMessage(response.value) === true) {
+            DishesState.error = response.value?.message;
             return;
         }
 
@@ -105,8 +120,8 @@ export function useDishes() {
     async function deleteDishWithSlug(slug: string) {
         const { error, response } = await deleteDish(slug);
 
-        if (error.value || response.value?.status !== 'success') {
-            DishesState.error = 'Error on creating dish';
+        if (error.value === true || isMessage(response.value) === true) {
+            DishesState.error = response.value?.message;
             return;
         }
 
@@ -121,8 +136,8 @@ export function useDishes() {
     async function createDishVariation(dishVariation: CreateDishVariationDTO, parentSlug: string) {
         const { error, response } = await postCreateDishVariation(dishVariation, parentSlug);
 
-        if (error.value || response.value?.status !== 'success') {
-            DishesState.error = 'Error on creating dish variation';
+        if (error.value === true || isMessage(response.value) === true) {
+            DishesState.error = response.value?.message;
             return;
         }
 
@@ -136,8 +151,8 @@ export function useDishes() {
     async function deleteDishVariationWithSlug(slug: string) {
         const { error, response } = await deleteDishVariation(slug);
 
-        if (error.value || response.value?.status !== 'success') {
-            DishesState.error = 'Error on deleting dish variation';
+        if (error.value === true || isMessage(response.value) === true) {
+            DishesState.error = response.value?.message;
             return;
         }
 
@@ -152,7 +167,7 @@ export function useDishes() {
     async function updateDishVariation(slug: string, variation: CreateDishVariationDTO) {
         const { error, response } = await putDishVariationUpdate(slug, variation);
 
-        if (!error.value && response.value && response.value.parentId) {
+        if (isResponseObjectOkay<Dish>(error, response, isDish) === true && typeof response.value.parentId === 'number') {
             updateDishVariationInState(response.value.parentId, response.value);
         } else {
             DishesState.error = 'Error on updating dishVariation';
@@ -167,7 +182,7 @@ export function useDishes() {
     async function updateDish(id: number, dish: CreateDishDTO) {
         const { error, response } = await putDishUpdate(getDishById(id).slug, dish);
 
-        if (!error.value && response.value) {
+        if (isResponseObjectOkay<Dish>(error, response, isDish) === true) {
             updateDishesState(response.value);
         } else {
             DishesState.error = 'Error on updating a dish';
@@ -209,6 +224,57 @@ export function useDishes() {
         return parentDish.variations.find(variation => variation.id === variationId);
     }
 
+    function getDishBySlug(slug: string) {
+        let dishToReturn: Dish | null = null;
+
+        DishesState.dishes.forEach(dish => {
+            if (dish.slug === slug) {
+                dishToReturn = dish;
+            }
+
+            dish.variations.forEach(variation => {
+                if (variation.slug === slug) {
+                    dishToReturn = variation;
+                }
+            });
+        });
+
+        return dishToReturn;
+    }
+
+    /**
+     * Finds the dishes by their slugs and returns them in arrays of dishes, depending on if their parent matches.
+     * If they have the same parent they are returned in the same array with their parent. If they don't have a parent
+     * they are returned in an array containing only that dish.
+     * @param slugs The slugs of the dishes to return
+     */
+    function getDishArrayBySlugs(slugs: string[]) {
+        const dishesFromSlugs: Dish[] = slugs.map(slug => getDishBySlug(slug));
+
+        const dishesWithParent: Dish[] = [];
+
+        let parentDishInArray = false;
+        for (const dish of dishesFromSlugs) {
+            if (dish === null || dish === undefined) {
+                continue;
+            }
+            // If the dish has a parent and the parent is not already in the array, add the parent and the dish to the array
+            if (typeof dish.parentId === 'number' && parentDishInArray === false) {
+                const parentDish = getDishById(dish.parentId);
+                dishesWithParent.push(parentDish, dish);
+                parentDishInArray = true;
+            } else if (typeof dish.parentId === 'number') {
+                // If the dish has a parent and the parent is already in the array, add the dish to the array of the parent
+                dishesWithParent.push(dish);
+            } else {
+                // If the dish has no parent, add it to the array
+                dishesWithParent.push(dish);
+            }
+        }
+
+        return dishesWithParent;
+    }
+
     /**
      * Resets the DishesState.
      * Only used for testing purposes.
@@ -231,6 +297,8 @@ export function useDishes() {
         deleteDishVariationWithSlug,
         updateDishVariation,
         setFilter,
-        resetState
+        resetState,
+        getDishBySlug,
+        getDishArrayBySlugs,
     };
 }

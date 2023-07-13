@@ -119,6 +119,17 @@
     "balance": "Balance"
   },
   "logout": "Logout",
+  "menu": {
+    "list": "List of Weeks",
+    "week": "Week",
+    "noDishFound": "No dishes found.",
+    "enableDay": "This day is active",
+    "lockDate": "Booking possible until",
+    "notify": "Announce in Mattermost",
+    "enableWeek": "This week is enabled",
+    "header": "Edit week",
+    "lock": "Lock"
+  },
   "printList": {
     "title": "Participations on ",
     "participations": "Participations"

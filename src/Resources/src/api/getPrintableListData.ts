@@ -46,7 +46,7 @@ export function usePrintableListData(){
             await request();
             loaded.value = true;
 
-            if(!error.value && listData.value) {
+            if (error.value === false && listData.value !== null && listData.value !== undefined) {
                 listDataState.data = listData.value.data;
                 listDataState.meals = listData.value.meals;
                 listDataState.day = listData.value.day;

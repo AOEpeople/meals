@@ -131,7 +131,7 @@ class ApiController extends BaseController
 
             /* @var Meal $meal */
             foreach ($meals as $meal) {
-                if (!($meal->getDish() instanceof DishVariation)) {
+                if (false === ($meal->getDish() instanceof DishVariation)) {
                     $dishes['en'][] = $meal->getDish()->getTitleEn();
                     $dishes['de'][] = $meal->getDish()->getTitleDe();
                 }
@@ -228,7 +228,7 @@ class ApiController extends BaseController
         $isOffering = false;
         $mealState = 'open';
 
-        if (!$meal->getDish() instanceof DishVariation) {
+        if (false === ($meal->getDish() instanceof DishVariation)) {
             $description = [
                 'en' => $meal->getDish()->getDescriptionEn(),
                 'de' => $meal->getDish()->getDescriptionDe(),
@@ -276,7 +276,7 @@ class ApiController extends BaseController
         $parent = $meal->getDish()->getParent();
         $parentExistsInArray = array_key_exists($parent->getId(), $meals);
 
-        if (!$parentExistsInArray) {
+        if (false === $parentExistsInArray) {
             $meals[$parent->getId()] = [
                 'title' => [
                     'en' => $parent->getTitleEn(),
@@ -294,7 +294,7 @@ class ApiController extends BaseController
 
     private function getMealState(Meal $meal, Profile $profile, ?Participant $participant): string
     {
-        if ($meal->isLocked() && $meal->isOpen()) {
+        if (true === $meal->isLocked() && true === $meal->isOpen()) {
             $isOffering = $this->offerSrv->isOfferingMeal($profile, $meal);
             if ($isOffering) {
                 return 'offering';
@@ -304,7 +304,7 @@ class ApiController extends BaseController
                 return 'tradeable';
             }
         }
-        if (!$meal->isLocked() && $meal->isOpen() && !$meal->hasReachedParticipationLimit()) {
+        if (false === $meal->isLocked() && true === $meal->isOpen() && false === $meal->hasReachedParticipationLimit()) {
             return 'open';
         }
 
@@ -337,7 +337,7 @@ class ApiController extends BaseController
 
         /* @var Meal $meal */
         foreach ($day->getMeals() as $meal) {
-            if ($meal->getDish() instanceof DishVariation) {
+            if (true === ($meal->getDish() instanceof DishVariation)) {
                 $this->addMealWithVariations($meal, null, $guestData['meals']);
             } else {
                 $guestData['meals'][$meal->getId()] = $this->convertMealForDashboard($meal, null);

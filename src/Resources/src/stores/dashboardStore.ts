@@ -13,7 +13,7 @@ class DashboardStore extends Store<Dashboard> {
 
     async fillStore() {
         const { dashboardData } = await useDashboardData()
-        if (dashboardData.value){
+        if (dashboardData.value !== undefined && dashboardData.value !== null){
             this.state = dashboardData.value
         } else {
             console.log('could not receive DashboardData')

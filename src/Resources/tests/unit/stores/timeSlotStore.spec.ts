@@ -2,7 +2,6 @@ import { useTimeSlots } from "@/stores/timeSlotStore";
 import { beforeEach, describe } from "@jest/globals";
 import { ref } from "vue";
 import updatedSlot from "../fixtures/updatedSlot.json";
-import success from "../fixtures/Success.json";
 import timeSlots from "../fixtures/getTimeSlots.json";
 import useApi from "@/api/api";
 
@@ -15,11 +14,11 @@ const getMockedResponses = (method: string, url: string) => {
         return {
             response: ref(timeSlots.response),
             request: asyncFunc,
-            error: false
+            error: ref(false)
         }
     } else if (url.includes('api/slot') && (method === 'POST' || method === 'DELETE')) {
         return {
-            response: ref(success),
+            response: ref(null),
             request: asyncFunc,
             error: ref(false)
         }

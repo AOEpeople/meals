@@ -47,7 +47,11 @@ MealzMealBundle_home:
     defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
 
 MealzMealBundle_menu:
-  path:  /menu
+  path:  /menu/{week}
+  defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
+
+MealzMealBundle_weeks:
+  path:  /weeks
   defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
 
 MealzMealBundle_categories:
@@ -75,13 +79,28 @@ MealzMealBundle_balance:
   path: /balance
   defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
 
-MealzMealBundle_Meal:
-    path:  /menu
-    defaults: { _controller: App\Mealz\MealBundle\Controller\MealAdminController::list }
+MealzMealBundle_api_weeks:
+    path: /api/weeks
+    defaults: { _controller: App\Mealz\MealBundle\Controller\MealAdminController::getWeeks }
+    methods: [GET]
+
+MealzMealBundle_api_weeks_new:
+    path: /api/weeks/{date}
+    defaults: { _controller: App\Mealz\MealBundle\Controller\MealAdminController::new }
+    methods: [POST]
+    requirements:
+        # format "2014W12" 12th week in 2014
+        date: 20\d{2}W[0-5]\d
 
 MealzMealBundle_Meal_edit:
-    path:  /menu/{week}/edit
+    path: /api/menu/{id}
     defaults: { _controller: App\Mealz\MealBundle\Controller\MealAdminController::edit }
+    methods: [PUT]
+
+MealzMealBundle_Meal_count:
+    path: /api/meals/count
+    defaults: { _controller: App\Mealz\MealBundle\Controller\MealAdminController::count }
+    methods: [GET]
 
 MealzMealBundle_api_join_Meal:
   path: /api/join-meal

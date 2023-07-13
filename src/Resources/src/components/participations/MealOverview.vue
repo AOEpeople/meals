@@ -56,20 +56,20 @@ const mealsOverview = ref<HTMLTableElement | null>(null);
 
 onMounted(async () => {
   await fetchNextThreeDays();
-  if (mealsOverview.value) {
+  if (mealsOverview.value !== null && mealsOverview.value !== undefined) {
     setMealOverviewHeight(mealsOverview.value.offsetHeight, 'mealsOverview');
   }
   activatePeriodicFetch();
 });
 
 watch(windowWidth, () => {
-  if (mealsOverview.value) {
+  if (mealsOverview.value !== null && mealsOverview.value !== undefined) {
     setMealOverviewHeight(mealsOverview.value.offsetHeight, 'mealsOverview');
   }
 })
 
 onUpdated(() => {
-  if (mealsOverview.value) {
+  if (mealsOverview.value !== null && mealsOverview.value !== undefined) {
     setMealOverviewHeight(mealsOverview.value.offsetHeight, 'mealsOverview');
   }
 });
@@ -79,7 +79,7 @@ onUnmounted(() => {
 });
 
 function onAfterEnter() {
-  if(mealsOverview.value) {
+  if(mealsOverview.value !== null && mealsOverview.value !== undefined) {
     setMealOverviewHeight(mealsOverview.value.offsetHeight, 'mealsOverview');
   }
 }

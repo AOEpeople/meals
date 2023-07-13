@@ -36,7 +36,7 @@ class SlotService
 
     public function updateState(Slot $slot, string $state): void
     {
-        if (!in_array($state, ['0', '1'], true)) {
+        if (false === in_array($state, ['0', '1'], true)) {
             throw new InvalidArgumentException('invalid slot state');
         }
 

@@ -3,6 +3,8 @@ import getCategoriesData from "@/api/getCategoriesData";
 import deleteCategory from "@/api/deleteCategory";
 import postCreateCategory from "@/api/postCreateCategory";
 import putCategoryUpdate from "@/api/putCategoryUpdate";
+import { isMessage } from "@/interfaces/IMessage";
+import { isResponseObjectOkay, isResponseArrayOkay } from "@/api/isResponseOkay";
 
 export interface Category {
     id: number,
@@ -15,6 +17,16 @@ interface CategoriesState {
     categories: Category[],
     isLoading: boolean,
     error: string
+}
+
+function isCategory(category: Category): category is Category {
+    return (
+        typeof (category as Category).id === 'number' &&
+        typeof (category as Category).titleDe === 'string' &&
+        typeof (category as Category).titleEn === 'string' &&
+        typeof (category as Category).slug === 'string' &&
+        Object.keys(category).length === 4
+    );
 }
 
 const TIMEOUT_PERIOD = 10000;
@@ -42,7 +54,8 @@ export function useCategories() {
      */
     async function getCategories() {
         const { categories, error } = await getCategoriesData();
-        if (!error.value && categories.value) {
+
+        if (isResponseArrayOkay<Category>(error, categories, isCategory) === true) {
             CategoriesState.categories = categories.value;
             CategoriesState.error = '';
         } else {
@@ -58,8 +71,8 @@ export function useCategories() {
     async function deleteCategoryWithSlug(slug: string) {
         const { error, response } = await deleteCategory(slug);
 
-        if (error.value || response.value?.status !== 'success') {
-            CategoriesState.error = 'Error on deleting category';
+        if (error.value === true || isMessage(response.value) === true) {
+            CategoriesState.error = response.value?.message;
             return;
         }
 
@@ -73,8 +86,8 @@ export function useCategories() {
     async function createCategory(newCategory: Category) {
         const { error, response } = await postCreateCategory(newCategory);
 
-        if (error.value || response.value?.status !== 'success') {
-            CategoriesState.error = 'Error on creating category';
+        if (error.value === true || isMessage(response.value) === true) {
+            CategoriesState.error = response.value?.message;
             return;
         }
 
@@ -90,7 +103,7 @@ export function useCategories() {
     async function editCategory(index: number, titleDe: string, titleEn: string) {
         const { error, response } = await putCategoryUpdate(CategoriesState.categories[index].slug, titleDe, titleEn);
 
-        if (!error.value && response.value) {
+        if (isResponseObjectOkay<Category>(error, response) === true) {
             updateCategoryState(index, response.value);
         } else {
             CategoriesState.error = 'Error on updating category';
@@ -129,7 +142,7 @@ export function useCategories() {
 
     function getCategoryTitleById(id: number, locale = 'en') {
         const category = getCategoryById(id);
-        if(category) {
+        if(category !== undefined && category !== null) {
             return locale === 'en' ? category.titleEn : category.titleDe;
         }
         return '';

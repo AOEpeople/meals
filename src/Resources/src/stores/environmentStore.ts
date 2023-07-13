@@ -12,7 +12,7 @@ class EnvironmentStore extends Store<Env> {
 
     async fillStore() {
         const { env, error } = await useEnvs()
-        if (error.value) {
+        if (error.value === true) {
             console.warn("couldn't receive EnvironmentalVars!")
             return;
         }

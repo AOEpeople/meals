@@ -12,6 +12,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\QueryBuilder;
 
 /**
@@ -98,5 +99,53 @@ class DishRepository extends BaseRepository implements DishRepositoryInterface
         $query->setParameter('date_to', new DateTime('this week +6 days'), Types::DATETIME_MUTABLE);
 
         return (int) $query->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * Counts how many times each Dish was taken in the last X Weeks.
+     *
+     * Example Query:   select
+     *                      count(dish_id), dish_id
+     *                  from (
+     *                      select
+     *                          dish_id
+     *                      from
+     *                          meal
+     *                      where
+     *                          dateTime < "2023-07-05 23:59:00" and dateTime > "2023-06-05 00:00:00"
+     *                  ) as D
+     *                  group by dish_id;
+     *
+     * @throws NoResultException
+     * @throws NonUniqueResultException
+     */
+    public function countNumberDishesWereTaken(string $countPeriod): array
+    {
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('count(dish_id)', 'count', 'integer');
+        $rsm->addScalarResult('dish_id', 'id');
+
+        $startDate = new DateTime($countPeriod);
+        $endDate = new DateTime('this week +6 days');
+
+        $sql = 'select count(dish_id), dish_id ' .
+                'from (' .
+                    'select dish_id ' .
+                    'from meal ' .
+                    'where
+                        dateTime < "' . date_format($endDate, 'Y-m-d H:i:s') .
+                        '" and dateTime > "' . date_format($startDate, 'Y-m-d H:i:s') .
+                        '") as D ' .
+                'group by dish_id';
+
+        $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
+        $result = $query->getResult();
+        $output = [];
+
+        foreach ($result as $count) {
+            $output[$count['id']] = $count['count'];
+        }
+
+        return $output;
     }
 }

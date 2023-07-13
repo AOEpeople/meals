@@ -25,11 +25,11 @@ class OfferService
         $offers = [];
         /** @var Participant $participant */
         foreach ($meal->getParticipants() as $participant) {
-            if (!$participant->isPending()) {
+            if (false === $participant->isPending()) {
                 continue;
             }
 
-            if (!$meal->getDish()->isCombinedDish()) {
+            if (false === $meal->getDish()->isCombinedDish()) {
                 $this->updateOfferCount($offers, $meal->getDish()->getSlug());
                 continue;
             }
@@ -55,7 +55,7 @@ class OfferService
 
     public function updateOfferCount(array &$offers, string $key, array $dishes = [])
     {
-        if (isset($offers[$key])) {
+        if (true === isset($offers[$key])) {
             ++$offers[$key]['count'];
         } else {
             $offers[$key] = [

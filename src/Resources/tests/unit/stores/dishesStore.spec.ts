@@ -3,7 +3,6 @@ import { useCategories } from "@/stores/categoriesStore";
 import useApi from "@/api/api";
 import { ref } from "vue";
 import { beforeAll, beforeEach, describe, expect, it } from "@jest/globals";
-import success from "../fixtures/Success.json";
 import Dishes from "../fixtures/getDishes.json";
 import Categories from "../fixtures/getCategories.json";
 import { CreateDishDTO } from "@/api/postCreateDish";
@@ -34,17 +33,17 @@ const getMockedResponses = (method: string, url: string) => {
         return {
             response: ref(Categories),
             request: asyncFunc,
-            error: false
+            error: ref(false)
         }
     } else if (url.includes('api/dishes') && method === 'GET') {
         return {
             response: ref(Dishes),
             request: asyncFunc,
-            error: false
+            error: ref(false)
         }
     } else if (url.includes('api/dishes') && (method === 'POST' || method === 'DELETE')) {
         return {
-            response: ref(success),
+            response: ref(null),
             request: asyncFunc,
             error: ref(false)
         }
@@ -62,7 +61,7 @@ const getMockedResponses = (method: string, url: string) => {
 useApi = jest.fn().mockImplementation((method: string, url: string) => getMockedResponses(method, url));
 
 describe('Test dishesStore', () => {
-    const { resetState, DishesState, fetchDishes, setFilter, filteredDishes, updateDish } = useDishes();
+    const { resetState, DishesState, fetchDishes, setFilter, filteredDishes, updateDish, getDishBySlug, getDishArrayBySlugs } = useDishes();
     const { fetchCategories } = useCategories();
 
     beforeAll(async () => {
@@ -117,5 +116,37 @@ describe('Test dishesStore', () => {
         await updateDish(17, dishUpdate);
 
         expect(DishesState.dishes).toContainEqual(dish1);
+    });
+
+    it('should get the correct dishes by their respective slug', async () => {
+        await fetchDishes();
+
+        expect(getDishBySlug('testen')).toEqual(Dishes[0]);
+        expect(getDishBySlug('testvaren')).toEqual(Dishes[0].variations[0]);
+    });
+
+    it('should return an array of dishes containing all dishes from the slugs and their parent if they have parents', async () => {
+        await fetchDishes();
+
+        const expectedSlugsOne = ['testen', 'testvaren', 'testvaren123'];
+        const expectedSlugsTwo = ['testen', 'testvaren'];
+
+        const slugArrOne = ['testvaren', 'testvaren123'];
+        const slugArrTwo= ['testvaren'];
+        const slugArrThree = ['testen'];
+
+        const dishArrOne = getDishArrayBySlugs(slugArrOne).map(dish => dish.slug);
+        const dishArrTwo = getDishArrayBySlugs(slugArrTwo).map(dish => dish.slug);
+        const dishArrThree = getDishArrayBySlugs(slugArrThree).map(dish => dish.slug);
+
+        for (const dishSlug of dishArrOne) {
+            expect(expectedSlugsOne.includes(dishSlug)).toBeTruthy();
+        }
+
+        for (const dishSlug of dishArrTwo) {
+            expect(expectedSlugsTwo.includes(dishSlug)).toBeTruthy();
+        }
+
+        expect(dishArrThree).toEqual(['testen']);
     });
 });

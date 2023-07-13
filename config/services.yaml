@@ -169,6 +169,7 @@ services:
     App\Mealz\MealBundle\Service\DishService:
         arguments:
             $newFlagThreshold: '%mealz.meal.new_flag_counter%'
+            $dishConsCountPeriod: '%app.dish_consumption_count_period%'
 
     App\Mealz\MealBundle\Event\Subscriber\MealOfferSubscriber:
         arguments:

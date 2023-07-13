@@ -1,6 +1,5 @@
 import postCreateDish from "@/api/postCreateDish";
 import useApi from "@/api/api";
-import success from "../fixtures/Success.json";
 import { CreateDishDTO } from "@/api/postCreateDish";
 import { it, describe, expect } from "@jest/globals";
 import { ref } from "vue";
@@ -10,7 +9,7 @@ const asyncFunc: () => Promise<void> = async () => {
 };
 
 const mockedReturnValue = {
-    response: ref(success),
+    response: ref(null),
     request: asyncFunc,
     error: ref(false)
 }
@@ -27,10 +26,10 @@ const dish: CreateDishDTO = {
 };
 
 describe('Test postCreateDish', () => {
-    it('should return a success object', async () => {
+    it('should return null', async () => {
         const { error, response } = await postCreateDish(dish);
 
         expect(error.value).toBeFalsy();
-        expect(response.value).toEqual(success);
+        expect(response.value).toBeNull();
     });
 });

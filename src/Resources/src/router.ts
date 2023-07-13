@@ -10,6 +10,7 @@ import Guest         from "@/views/Guest.vue";
 import NotAllowed    from "@/views/NotAllowed.vue";
 import PrintableList from "@/views/PrintableList.vue";
 import ParticipantList from "@/views/ParticipantsList.vue";
+import Weeks         from "@/views/Weeks.vue";
 
 import { createRouter, createWebHistory } from "vue-router";
 import { userDataStore }                  from "@/stores/userDataStore";
@@ -32,12 +33,21 @@ const router = createRouter({
             }
         },
         {
-            path: '/menu',
+            path: '/weeks',
+            name: 'Weeks',
+            component: Weeks,
+            meta: {
+                allowedRoles: ['ROLE_KITCHEN_STAFF', 'ROLE_ADMIN']
+            }
+        },
+        {
+            path: '/menu/:week',
             name: 'Menu',
             component: Menu,
             meta: {
                 allowedRoles: ['ROLE_KITCHEN_STAFF', 'ROLE_ADMIN']
-            }
+            },
+            props: true
         },
         {
             path: '/dishes',
@@ -131,17 +141,17 @@ const router = createRouter({
 })
 
 router.beforeEach((to) => {
-    if (userDataStore.getState().roles.includes('ROLE_GUEST')) {
+    if (userDataStore.getState().roles.includes('ROLE_GUEST') === true) {
         if (to.name !== 'Guest' && to.name !== 'Login' && to.name !== 'ParticipantList') {
-            return {name: 'Login'}
+            return { name: 'Login' }
         }
     } else {
         if (to.name === 'Login') {
             return false
         }
 
-        if (!userDataStore.roleAllowsRoute(to.path)) {
-           return {name: 'NotAllowed'}
+        if (userDataStore.roleAllowsRoute(String(to.name)) === false) {
+            return { name: 'NotAllowed' }
         }
     }
 })

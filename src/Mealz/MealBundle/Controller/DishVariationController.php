@@ -42,8 +42,9 @@ class DishVariationController extends BaseController
             $dishVariation->setParent($dish);
             $dishVariation->setOneServingSize($dish->hasOneServingSize());
             $dishVariation->setPrice($this->defaultPrice);
+            $dishVariation->setCategory($dish->getCategory());
 
-            if (isset($parameters['titleDe']) && isset($parameters['titleEn'])) {
+            if (true === isset($parameters['titleDe']) && true === isset($parameters['titleEn'])) {
                 $dishVariation->setTitleDe($parameters['titleDe']);
                 $dishVariation->setTitleEn($parameters['titleEn']);
             } else {
@@ -53,11 +54,11 @@ class DishVariationController extends BaseController
             $this->em->persist($dishVariation);
             $this->em->flush();
 
-            return new JsonResponse(['status' => 'success'], 200);
+            return new JsonResponse(null, 200);
         } catch (Exception $e) {
             $this->logException($e);
 
-            return new JsonResponse(['status' => $e->getMessage()], 500);
+            return new JsonResponse(['message' => $e->getMessage()], 500);
         }
     }
 
@@ -68,10 +69,10 @@ class DishVariationController extends BaseController
     {
         try {
             $parameters = json_decode($request->getContent(), true);
-            if (isset($parameters['titleDe'])) {
+            if (true === isset($parameters['titleDe'])) {
                 $dishVariation->setTitleDe($parameters['titleDe']);
             }
-            if (isset($parameters['titleEn'])) {
+            if (true === isset($parameters['titleEn'])) {
                 $dishVariation->setTitleEn($parameters['titleEn']);
             }
 
@@ -82,7 +83,7 @@ class DishVariationController extends BaseController
         } catch (Exception $e) {
             $this->logException($e);
 
-            return new JsonResponse(['status' => $e->getMessage()], 500);
+            return new JsonResponse(['message' => $e->getMessage()], 500);
         }
     }
 
@@ -93,7 +94,7 @@ class DishVariationController extends BaseController
     {
         try {
             // hide the dish variation if it has been assigned to a meal, else delete it
-            if ($this->dishRepository->hasDishAssociatedMeals($dishVariation)) {
+            if (true === $this->dishRepository->hasDishAssociatedMeals($dishVariation)) {
                 $dishVariation->setEnabled(false);
                 $this->em->persist($dishVariation);
             } else {
@@ -101,11 +102,11 @@ class DishVariationController extends BaseController
             }
             $this->em->flush();
 
-            return new JsonResponse(['status' => 'success'], 200);
+            return new JsonResponse(null, 200);
         } catch (Exception $e) {
             $this->logException($e);
 
-            return new JsonResponse(['status' => $e->getMessage()], 500);
+            return new JsonResponse(['message' => $e->getMessage()], 500);
         }
     }
 }

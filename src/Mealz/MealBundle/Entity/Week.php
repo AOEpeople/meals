@@ -5,12 +5,13 @@ namespace App\Mealz\MealBundle\Entity;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="week")
  */
-class Week extends AbstractMessage
+class Week extends AbstractMessage implements JsonSerializable
 {
     /**
      * @ORM\Column(type="integer")
@@ -126,5 +127,21 @@ class Week extends AbstractMessage
         $dateTime->setISODate($this->getYear(), $this->getCalendarWeek());
 
         return $dateTime;
+    }
+
+    public function jsonSerialize(): array
+    {
+        $days = [];
+        foreach ($this->getDays() as $day) {
+            $days[$day->getId()] = $day->jsonSerialize();
+        }
+
+        return [
+            'id' => $this->getId(),
+            'year' => $this->getYear(),
+            'calendarWeek' => $this->getCalendarWeek(),
+            'days' => $days,
+            'enabled' => $this->isEnabled(),
+        ];
     }
 }

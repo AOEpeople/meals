@@ -10,6 +10,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -17,7 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @MealBundleAssert\DishConstraint()
  * @ORM\Table(name="meal")
  */
-class Meal
+class Meal implements JsonSerializable
 {
     /**
      * @ORM\Column(name="id", type="integer")
@@ -157,6 +158,11 @@ class Meal
         return $this->dateTime > (new DateTime('now'));
     }
 
+    public function hasParticipations(): bool
+    {
+        return $this->getParticipants()->count() > 0;
+    }
+
     /**
      * get the participant object of the given profile if it is registered.
      */
@@ -164,7 +170,7 @@ class Meal
     {
         foreach ($this->participants as $participant) {
             /** @var Participant $participant */
-            if (!$participant->isGuest() && $participant->getProfile() === $profile) {
+            if (false === $participant->isGuest() && $participant->getProfile() === $profile) {
                 return $participant;
             }
         }
@@ -181,7 +187,7 @@ class Meal
 
         foreach ($this->getParticipants() as $participation) {
             /* @var Participant $participation */
-            if ($participation->isConfirmed()) {
+            if (true === $participation->isConfirmed()) {
                 ++$totalParticipation;
             }
         }
@@ -200,5 +206,17 @@ class Meal
     public function __toString()
     {
         return $this->getDateTime()->format('Y-m-d H:i:s') . ' ' . $this->getDish();
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->getId(),
+            'dish' => $this->getDish()->getSlug(),
+            'participationLimit' => $this->getParticipationLimit(),
+            'day' => $this->getDay()->getId(),
+            'dateTime' => $this->getDateTime(),
+            'lockTime' => $this->getLockDateTime(),
+        ];
     }
 }

@@ -8,13 +8,14 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="day")
  */
-class Day extends AbstractMessage
+class Day extends AbstractMessage implements JsonSerializable
 {
     /**
      * @ORM\Column(name="id", type="integer")
@@ -88,7 +89,7 @@ class Day extends AbstractMessage
 
     public function getMeals(): MealCollection
     {
-        if (!($this->meals instanceof Collection)) {
+        if (false === ($this->meals instanceof Collection)) {
             $this->meals = new MealCollection();
         }
 
@@ -137,5 +138,30 @@ class Day extends AbstractMessage
         $week->setDays(new ArrayCollection([$this]));
 
         return $week;
+    }
+
+    public function jsonSerialize(): array
+    {
+        $meals = [];
+
+        foreach ($this->getMeals() as $meal) {
+            if (true === $meal->isCombinedMeal()) {
+                continue;
+            }
+            $parent = $meal->getDish()->getParent();
+            if (null !== $parent) {
+                $meals[$parent->getId()][] = $meal->jsonSerialize();
+            } else {
+                $meals[$meal->getDish()->getId()][] = $meal->jsonSerialize();
+            }
+        }
+
+        return [
+            'dateTime' => $this->getDateTime(),
+            'lockParticipationDateTime' => $this->getLockParticipationDateTime(),
+            'week' => $this->getWeek()->getId(),
+            'meals' => $meals,
+            'enabled' => $this->isEnabled(),
+        ];
     }
 }

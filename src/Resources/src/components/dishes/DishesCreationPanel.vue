@@ -103,7 +103,7 @@ async function onSubmit() {
   if (titleDeInput.value === '' || titleEnInput.value === '') {
     return;
   }
-  if (props.edit) {
+  if (props.edit === true) {
     await updateDish(props.dishId, createDishDtoObject());
   } else {
     await createDish(createDishDtoObject());

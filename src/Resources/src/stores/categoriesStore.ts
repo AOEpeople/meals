@@ -1,10 +1,10 @@
-import { reactive, readonly, watch } from "vue";
+import { reactive, readonly } from "vue";
 import getCategoriesData from "@/api/getCategoriesData";
 import deleteCategory from "@/api/deleteCategory";
 import postCreateCategory from "@/api/postCreateCategory";
 import putCategoryUpdate from "@/api/putCategoryUpdate";
 import { isMessage } from "@/interfaces/IMessage";
-import { isResponseOkay } from "@/api/isResponseOkay";
+import { isResponseObjectOkay, isResponseArrayOkay } from "@/api/isResponseOkay";
 
 export interface Category {
     id: number,
@@ -19,6 +19,16 @@ interface CategoriesState {
     error: string
 }
 
+function isCategory(category: Category): category is Category {
+    return (
+        typeof (category as Category).id === 'number' &&
+        typeof (category as Category).titleDe === 'string' &&
+        typeof (category as Category).titleEn === 'string' &&
+        typeof (category as Category).slug === 'string' &&
+        Object.keys(category).length === 4
+    );
+}
+
 const TIMEOUT_PERIOD = 10000;
 
 const CategoriesState = reactive<CategoriesState>({
@@ -26,11 +36,6 @@ const CategoriesState = reactive<CategoriesState>({
     isLoading: false,
     error: ''
 });
-
-watch(
-    () => CategoriesState.error,
-    () => console.log(`Error in Cat: ${CategoriesState.error}`)
-)
 
 export function useCategories() {
 
@@ -50,7 +55,7 @@ export function useCategories() {
     async function getCategories() {
         const { categories, error } = await getCategoriesData();
 
-        if (isResponseOkay<Category[]>(error, categories)) {
+        if (isResponseArrayOkay<Category>(error, categories, isCategory)) {
             CategoriesState.categories = categories.value;
             CategoriesState.error = '';
         } else {
@@ -98,7 +103,7 @@ export function useCategories() {
     async function editCategory(index: number, titleDe: string, titleEn: string) {
         const { error, response } = await putCategoryUpdate(CategoriesState.categories[index].slug, titleDe, titleEn);
 
-        if (isResponseOkay<Category>(error, response)) {
+        if (isResponseObjectOkay<Category>(error, response)) {
             updateCategoryState(index, response.value);
         } else {
             CategoriesState.error = 'Error on updating category';

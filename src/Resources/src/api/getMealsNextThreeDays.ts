@@ -41,7 +41,7 @@ async function fetchNextThreeDays() {
 
     await request();
 
-    if (daysData.value && !error.value) {
+    if (daysData.value !== null && daysData.value !== undefined && error.value === false) {
         nextThreeDaysState.error = false;
         nextThreeDaysState.days = convertMealsListToDay(daysData.value);
     } else {

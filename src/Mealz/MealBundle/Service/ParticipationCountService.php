@@ -28,20 +28,20 @@ class ParticipationCountService
         array $dishSlugs,
         float $participationCount): bool
     {
-        if (empty($participations)) {
+        if (true === empty($participations)) {
             return false;
         }
 
-        if (empty($dishSlugs)) {
+        if (true === empty($dishSlugs)) {
             return false;
         }
 
         foreach ($dishSlugs as $dishSlug) {
-            if (!array_key_exists($dishSlug, $participations)) {
+            if (false === array_key_exists($dishSlug, $participations)) {
                 return false;
             }
 
-            if (!self::isParticipationPossible($participations[$dishSlug], $participationCount)) {
+            if (false === self::isParticipationPossible($participations[$dishSlug], $participationCount)) {
                 return false;
             }
         }
@@ -62,7 +62,7 @@ class ParticipationCountService
         $participationByDays = [];
         /** @var Day $day */
         foreach ($week->getDays() as $day) {
-            if ($onlyFutureMeals) {
+            if (true === $onlyFutureMeals) {
                 // skip past meals, provide updates just for future meals (locked included)
                 if ($now >= $day->getDateTime()) {
                     continue;
@@ -70,7 +70,7 @@ class ParticipationCountService
             }
 
             $participationByDay = $this->getParticipationByDay($day);
-            if (!empty($participationByDay)) {
+            if (false === empty($participationByDay)) {
                 $participationByDays[$day->getDateTime()->format('Y-m-d')] = $participationByDay;
             }
         }
@@ -86,7 +86,7 @@ class ParticipationCountService
         foreach ($day->getMeals() as $meal) {
             $participation[self::PARTICIPATION_COUNT_KEY][$meal->getId()] = [];
 
-            if ($meal->getDish()->isCombinedDish()) {
+            if (true === $meal->getDish()->isCombinedDish()) {
                 self::setParticipationForCombinedDish($meal, $participation);
             } else {
                 self::setParticipationForDish($meal, $participation);
@@ -107,16 +107,16 @@ class ParticipationCountService
         foreach ($meal->getParticipants() as $participant) {
             /** @var Dish $dish */
             foreach ($participant->getCombinedDishes() as $dish) {
-                if (!array_key_exists(self::PARTICIPATION_TOTAL_COUNT_KEY, $participation)) {
+                if (false === array_key_exists(self::PARTICIPATION_TOTAL_COUNT_KEY, $participation)) {
                     $participation[self::PARTICIPATION_TOTAL_COUNT_KEY] = [];
                 }
-                if (!array_key_exists($dish->getSlug(), $participation[self::PARTICIPATION_TOTAL_COUNT_KEY])) {
+                if (false === array_key_exists($dish->getSlug(), $participation[self::PARTICIPATION_TOTAL_COUNT_KEY])) {
                     $participation[self::PARTICIPATION_TOTAL_COUNT_KEY][$dish->getSlug()][self::COUNT_KEY] = 0.0;
                 }
 
                 $participation[self::PARTICIPATION_TOTAL_COUNT_KEY][$dish->getSlug()][self::COUNT_KEY] += 0.5;
 
-                if (!array_key_exists($dish->getSlug(), $participation[self::PARTICIPATION_COUNT_KEY][$meal->getId()])) {
+                if (false === array_key_exists($dish->getSlug(), $participation[self::PARTICIPATION_COUNT_KEY][$meal->getId()])) {
                     $participation[self::PARTICIPATION_COUNT_KEY][$meal->getId()][$dish->getSlug()][self::COUNT_KEY] = 0.0;
                     $participation[self::PARTICIPATION_COUNT_KEY][$meal->getId()][$dish->getSlug()][self::LIMIT_KEY] = 0.0;
                 }
@@ -128,10 +128,10 @@ class ParticipationCountService
 
     public static function setParticipationForDish(Meal $meal, array &$participation): void
     {
-        if (!array_key_exists(self::PARTICIPATION_TOTAL_COUNT_KEY, $participation)) {
+        if (false === array_key_exists(self::PARTICIPATION_TOTAL_COUNT_KEY, $participation)) {
             $participation[self::PARTICIPATION_TOTAL_COUNT_KEY] = [];
         }
-        if (!array_key_exists($meal->getDish()->getSlug(), $participation[self::PARTICIPATION_TOTAL_COUNT_KEY])) {
+        if (false === array_key_exists($meal->getDish()->getSlug(), $participation[self::PARTICIPATION_TOTAL_COUNT_KEY])) {
             $participation[self::PARTICIPATION_TOTAL_COUNT_KEY][$meal->getDish()->getSlug()][self::COUNT_KEY] = 0.0;
         }
 
@@ -143,12 +143,12 @@ class ParticipationCountService
     {
         /** @var Meal $meal */
         foreach ($day->getMeals() as $meal) {
-            if ($meal->getDish()->isCombinedDish()) {
+            if (true === $meal->getDish()->isCombinedDish()) {
                 /** @var Participant $participant */
                 foreach ($meal->getParticipants() as $participant) {
                     /** @var Dish $dish */
                     foreach ($participant->getCombinedDishes() as $dish) {
-                        if (isset($participation[self::PARTICIPATION_TOTAL_COUNT_KEY][$dish->getSlug()][self::LIMIT_KEY])
+                        if (true === isset($participation[self::PARTICIPATION_TOTAL_COUNT_KEY][$dish->getSlug()][self::LIMIT_KEY])
                             && 0 < $participation[self::PARTICIPATION_TOTAL_COUNT_KEY][$dish->getSlug()][self::LIMIT_KEY]) {
                             $participation[self::PARTICIPATION_COUNT_KEY][$meal->getId()][$dish->getSlug()][self::LIMIT_KEY] =
                                 // limit and count are doubled, because calculate the limit with half portions (two half portions are one full portion)

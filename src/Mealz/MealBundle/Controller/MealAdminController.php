@@ -84,9 +84,6 @@ class MealAdminController extends BaseController
         return new JsonResponse($weeks, 200);
     }
 
-    /**
-     * @Security("is_granted('ROLE_KITCHEN_STAFF')")
-     */
     public function new(DateTime $date): JsonResponse
     {
         $week = $this->weekRepository->findOneBy([
@@ -111,9 +108,16 @@ class MealAdminController extends BaseController
     {
         $data = json_decode($request->getContent(), true);
 
-        if (!isset($data) || !isset($data['days']) || !isset($data['id']) || $data['id'] !== $week->getId() || !isset($data['enabled'])) {
+        if (
+            false === isset($data) ||
+            false === isset($data['days']) ||
+            false === isset($data['id']) ||
+            $data['id'] !== $week->getId() ||
+            false === isset($data['enabled'])
+        ) {
             return new JsonResponse(['message' => 'invalid json'], 400);
         }
+
         $days = $data['days'];
         $week->setEnabled($data['enabled']);
 
@@ -149,7 +153,7 @@ class MealAdminController extends BaseController
 
     private function setParticipationLimit(Meal $mealEntity, $meal): void
     {
-        if (isset($meal['participationLimit']) && 0 < $meal['participationLimit']) {
+        if (true === isset($meal['participationLimit']) && 0 < $meal['participationLimit']) {
             $mealEntity->setParticipationLimit($meal['participationLimit']);
         } else {
             $mealEntity->setParticipationLimit(0);
@@ -186,7 +190,11 @@ class MealAdminController extends BaseController
 
     private function setLockParticipationForDay(Day $dayEntity, array $day)
     {
-        if (null !== $day['lockDate'] && isset($day['lockDate']['date']) && isset($day['lockDate']['timezone'])) {
+        if (
+            null !== $day['lockDate'] &&
+            true === isset($day['lockDate']['date']) &&
+            true === isset($day['lockDate']['timezone'])
+        ) {
             $newDateStr = str_replace(' ', 'T', $day['lockDate']['date']) . '+00:00';
             $newDate = DateTime::createFromFormat('Y-m-d\TH:i:s.uP', $newDateStr, new DateTimeZone($day['lockDate']['timezone']));
             $dayEntity->setLockParticipationDateTime($newDate);
@@ -196,7 +204,7 @@ class MealAdminController extends BaseController
     private function handleMealArray(array $mealArr, Day $dayEntity)
     {
         foreach ($mealArr as $meal) {
-            if (!isset($meal['dishSlug'])) {
+            if (false === isset($meal['dishSlug'])) {
                 continue;
             }
             $dishEntity = $this->dishRepository->findOneBy(['slug' => $meal['dishSlug']]);
@@ -204,7 +212,7 @@ class MealAdminController extends BaseController
                 throw new Exception('dish not found for slug: ' . $meal['dishSlug']);
             }
             // if mealId is null create meal
-            if (!isset($meal['mealId'])) {
+            if (false === isset($meal['mealId'])) {
                 $this->createMeal($dishEntity, $dayEntity, $meal);
             } else {
                 $this->modifyMeal($meal, $dishEntity, $dayEntity);
@@ -224,7 +232,7 @@ class MealAdminController extends BaseController
         $mealEntity = $this->mealRepository->find($meal['mealId']);
 
         // check if meal already exists and can be modified (aka has no participations)
-        if (null !== $mealEntity && !$mealEntity->hasParticipations()) {
+        if (null !== $mealEntity && false === $mealEntity->hasParticipations()) {
             $mealEntity->setDish($dishEntity);
             $this->setParticipationLimit($mealEntity, $meal);
         } elseif (null === $mealEntity) {

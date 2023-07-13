@@ -55,7 +55,7 @@ export function useCategories() {
     async function getCategories() {
         const { categories, error } = await getCategoriesData();
 
-        if (isResponseArrayOkay<Category>(error, categories, isCategory)) {
+        if (isResponseArrayOkay<Category>(error, categories, isCategory) === true) {
             CategoriesState.categories = categories.value;
             CategoriesState.error = '';
         } else {
@@ -71,7 +71,7 @@ export function useCategories() {
     async function deleteCategoryWithSlug(slug: string) {
         const { error, response } = await deleteCategory(slug);
 
-        if (error.value === true || isMessage(response.value)) {
+        if (error.value === true || isMessage(response.value) === true) {
             CategoriesState.error = response.value?.message;
             return;
         }
@@ -86,7 +86,7 @@ export function useCategories() {
     async function createCategory(newCategory: Category) {
         const { error, response } = await postCreateCategory(newCategory);
 
-        if (error.value === true || isMessage(response.value)) {
+        if (error.value === true || isMessage(response.value) === true) {
             CategoriesState.error = response.value?.message;
             return;
         }
@@ -103,7 +103,7 @@ export function useCategories() {
     async function editCategory(index: number, titleDe: string, titleEn: string) {
         const { error, response } = await putCategoryUpdate(CategoriesState.categories[index].slug, titleDe, titleEn);
 
-        if (isResponseObjectOkay<Category>(error, response)) {
+        if (isResponseObjectOkay<Category>(error, response) === true) {
             updateCategoryState(index, response.value);
         } else {
             CategoriesState.error = 'Error on updating category';

@@ -141,7 +141,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to) => {
-    if (userDataStore.getState().roles.includes('ROLE_GUEST')) {
+    if (userDataStore.getState().roles.includes('ROLE_GUEST') === true) {
         if (to.name !== 'Guest' && to.name !== 'Login' && to.name !== 'ParticipantList') {
             return { name: 'Login' }
         }
@@ -150,7 +150,7 @@ router.beforeEach((to) => {
             return false
         }
 
-        if (!userDataStore.roleAllowsRoute(String(to.name))) {
+        if (userDataStore.roleAllowsRoute(String(to.name)) === false) {
             return { name: 'NotAllowed' }
         }
     }

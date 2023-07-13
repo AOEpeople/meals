@@ -170,7 +170,7 @@ class Meal implements JsonSerializable
     {
         foreach ($this->participants as $participant) {
             /** @var Participant $participant */
-            if (!$participant->isGuest() && $participant->getProfile() === $profile) {
+            if (false === $participant->isGuest() && $participant->getProfile() === $profile) {
                 return $participant;
             }
         }
@@ -187,7 +187,7 @@ class Meal implements JsonSerializable
 
         foreach ($this->getParticipants() as $participation) {
             /* @var Participant $participation */
-            if ($participation->isConfirmed()) {
+            if (true === $participation->isConfirmed()) {
                 ++$totalParticipation;
             }
         }

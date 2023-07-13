@@ -137,7 +137,7 @@ onMounted(() => {
   unwatch = watch(
     selectedDish,
     (newSelectedDish, oldSelectedDish) => {
-      if (loadingFinished.value && newSelectedDish?.id !== oldSelectedDish?.id) {
+      if (loadingFinished.value !== null && loadingFinished.value !== undefined && newSelectedDish?.id !== oldSelectedDish?.id) {
         selectedVariations.value = [];
         value.value = newSelectedDish ? [newSelectedDish] : [];
       }
@@ -163,7 +163,7 @@ const value = computed({
 watch(
   selectedVariations,
   (newSelctedVariations, oldSelectedVariations) => {
-    if (loadingFinished.value && newSelctedVariations.length !== oldSelectedVariations.length) {
+    if (loadingFinished.value !== null && loadingFinished.value !== undefined && newSelctedVariations.length !== oldSelectedVariations.length) {
       value.value = [selectedDish.value, ...selectedVariations.value];
     }
   }
@@ -171,7 +171,7 @@ watch(
 
 const titleStringRepr = computed(() => {
   return value.value.map(dish => {
-    if (dish) {
+    if (dish !== null && dish !== undefined) {
       return locale.value === 'en' ? dish.titleEn : dish.titleDe
     }
     return '';

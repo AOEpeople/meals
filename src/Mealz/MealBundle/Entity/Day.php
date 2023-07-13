@@ -105,7 +105,7 @@ class Day extends AbstractMessage implements JsonSerializable
 
     public function getMeals(): MealCollection
     {
-        if (!($this->meals instanceof Collection)) {
+        if (false === ($this->meals instanceof Collection)) {
             $this->meals = new MealCollection();
         }
 
@@ -161,7 +161,7 @@ class Day extends AbstractMessage implements JsonSerializable
         $meals = [];
 
         foreach ($this->getMeals() as $meal) {
-            if ($meal->isCombinedMeal()) {
+            if (true === $meal->isCombinedMeal()) {
                 continue;
             }
             $parent = $meal->getDish()->getParent();

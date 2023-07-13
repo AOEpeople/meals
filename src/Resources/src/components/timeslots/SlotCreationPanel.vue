@@ -72,7 +72,7 @@ async function onSubmit() {
     enabled: true,
     slug: null
   }
-  if (props.edit) {
+  if (props.edit === true) {
     await editSlot(props.id, timeSlot);
   } else {
     await createSlot(timeSlot);

@@ -77,7 +77,7 @@ class MealGuestController extends BaseController
      */
     private function triggerJoinEvents(array $participants): void
     {
-        if (!isset($participants[0]) || !($participants[0] instanceof Participant)) {
+        if (false === isset($participants[0]) || false === ($participants[0] instanceof Participant)) {
             return;
         }
 

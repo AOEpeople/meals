@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Ref, ref } from "vue";
+import { ref } from "vue";
 
 const instance = axios.create({
     baseURL: window.location.origin,

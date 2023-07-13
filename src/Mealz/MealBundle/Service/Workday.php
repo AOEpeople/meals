@@ -83,7 +83,7 @@ class Workday
 
         while (true) {
             $date->modify('+1 day');
-            if ($this->dateIsValid($date)) {
+            if (true === $this->dateIsValid($date)) {
                 return $date;
             }
         }

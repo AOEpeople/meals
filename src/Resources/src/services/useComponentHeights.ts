@@ -44,7 +44,7 @@ const maxNoParticipationsHeight = computed(() => {
  */
 function getMarginHeightByElementId(elementId: string) {
   const element = document.getElementById(elementId);
-  if (element) {
+  if (element !== null && element !== undefined) {
     const computedStyle = window.getComputedStyle(element);
     return parseInt(computedStyle.marginTop, 10) + parseInt(computedStyle.marginBottom, 10);
   } else {
@@ -71,14 +71,14 @@ export function useComponentHeights() {
   });
 
   function addWindowHeightListener() {
-    if (!listenerActive.value) {
+    if (listenerActive.value === false) {
       listenerActive.value = true;
       window.addEventListener('resize', setWindowHeight);
     }
   }
 
   function removeWindowHeightListener() {
-    if (listenerActive.value) {
+    if (listenerActive.value === true) {
       listenerActive.value = false;
       window.removeEventListener('resize', setWindowHeight);
     }

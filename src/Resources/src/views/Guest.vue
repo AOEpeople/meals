@@ -90,7 +90,7 @@ const date = new Date(invitation.value.date.date)
 const localeDate = computed(() => date.toLocaleDateString(locale.value, { weekday: 'long', month: 'numeric', day: 'numeric' }))
 
 async function submitForm() {
-  if (filled.value) {
+  if (filled.value === true) {
     const { error } = await useJoinMealGuest(JSON.stringify(form.value))
     if (error.value === false) {
       result.value = 'resolve_success'

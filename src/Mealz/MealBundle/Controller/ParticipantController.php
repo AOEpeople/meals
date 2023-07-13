@@ -86,7 +86,7 @@ class ParticipantController extends BaseController
         }
 
         $mealState = 'open';
-        if ($meal->isLocked() && $meal->isOpen()) {
+        if (true === $meal->isLocked() && true === $meal->isOpen()) {
             $mealState = 'offerable';
         }
 
@@ -121,8 +121,10 @@ class ParticipantController extends BaseController
         $meal = $this->mealRepo->find($parameters['mealId']);
         $participant = $this->participationSrv->getParticipationByMealAndUser($meal, $profile);
 
-        if (false === $this->getDoorman()->isUserAllowedToLeave($meal) &&
-            (false === $this->getDoorman()->isKitchenStaff())) {
+        if (
+            false === $this->getDoorman()->isUserAllowedToLeave($meal) &&
+            false === $this->getDoorman()->isKitchenStaff()
+        ) {
             return new JsonResponse(null, 403);
         }
 

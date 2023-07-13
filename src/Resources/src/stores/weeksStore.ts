@@ -7,7 +7,7 @@ import { DayDTO, WeekDTO } from "@/interfaces/DayDTO";
 import { Dictionary } from "types/types";
 import { reactive, readonly } from "vue";
 import { isMessage } from "@/interfaces/IMessage";
-import { isResponseOkay } from "@/api/isResponseOkay";
+import { isResponseArrayOkay } from "@/api/isResponseOkay";
 
 export interface Week {
     id: number,
@@ -46,6 +46,17 @@ interface MenuCountState {
     counts: Dictionary<number>
 }
 
+function isWeek(week: Week): week is Week {
+    return (
+        typeof (week as Week).id === 'number' &&
+        typeof (week as Week).enabled === 'boolean' &&
+        typeof (week as Week).calendarWeek === 'number' &&
+        typeof (week as Week).year === 'number' &&
+        typeof (week as Week).days === 'object' &&
+        Object.keys(week).length === 5
+    );
+}
+
 const TIMEOUT_PERIOD = 10000;
 
 const WeeksState = reactive<WeeksState>({
@@ -68,7 +79,7 @@ export function useWeeks() {
 
     async function getWeeks() {
         const { weeks, error } = await getWeeksData();
-        if (isResponseOkay<Week[]>(error, weeks)) {
+        if (isResponseArrayOkay<Week>(error, weeks, isWeek)) {
             WeeksState.weeks = weeks.value;
             WeeksState.error = '';
         } else {
@@ -80,7 +91,7 @@ export function useWeeks() {
     async function createWeek(year: number, calendarWeek: number) {
         const { error, response } = await postCreateWeek(year, calendarWeek);
 
-        if (error.value && isMessage(response.value)) {
+        if (error.value === true && isMessage(response.value)) {
             WeeksState.error = response.value?.message;
             return;
         }
@@ -92,7 +103,7 @@ export function useWeeks() {
 
         const { error, response } = await putWeekUpdate(week);
 
-        if (error.value || isMessage(response.value)) {
+        if (error.value === true || isMessage(response.value)) {
             WeeksState.error = response.value?.message;
             return;
         }
@@ -103,7 +114,7 @@ export function useWeeks() {
     async function getDishCountForWeek() {
         const { error, response } = await getDishCount();
 
-        if (error.value || isMessage(response.value)) {
+        if (error.value === true || isMessage(response.value)) {
             WeeksState.error = response.value?.message as string;
             return;
         } else if (response.value) {

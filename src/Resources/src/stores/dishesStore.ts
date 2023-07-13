@@ -8,7 +8,7 @@ import deleteDishVariation from "@/api/deleteDishVariation";
 import putDishVariationUpdate from "@/api/putDishVariationUpdate";
 import { useCategories } from "./categoriesStore";
 import { isMessage } from "@/interfaces/IMessage";
-import { isResponseOkay } from "@/api/isResponseOkay";
+import { isResponseObjectOkay, isResponseArrayOkay } from "@/api/isResponseOkay";
 
 export interface Dish {
     id: number,
@@ -28,6 +28,19 @@ interface DishesState {
     filter: string,
     isLoading: boolean,
     error: string
+}
+
+function isDish(dish: Dish): dish is Dish {
+    return (
+        typeof (dish as Dish).id === 'number' &&
+        typeof (dish as Dish).slug === 'string' &&
+        typeof (dish as Dish).titleDe === 'string' &&
+        typeof (dish as Dish).titleEn === 'string' &&
+        ((dish as Dish).categoryId === null || typeof (dish as Dish).categoryId === 'number') &&
+        typeof (dish as Dish).oneServingSize === 'boolean' &&
+        Array.isArray((dish as Dish).variations) &&
+        (Object.keys(dish).length >= 8 && Object.keys(dish).length <= 10)
+    )
 }
 
 const TIMEOUT_PERIOD = 10000;
@@ -74,7 +87,7 @@ export function useDishes() {
         DishesState.isLoading = true;
 
         const { dishes, error } = await getDishes();
-        if (isResponseOkay<Dish[]>(error, dishes)) {
+        if (isResponseArrayOkay<Dish>(error, dishes, isDish)) {
             DishesState.dishes = dishes.value;
             DishesState.error = '';
         } else {
@@ -92,7 +105,7 @@ export function useDishes() {
     async function createDish(dish: CreateDishDTO) {
         const { error, response } = await postCreateDish(dish);
 
-        if (error.value || isMessage(response.value)) {
+        if (error.value === true || isMessage(response.value)) {
             DishesState.error = response.value?.message;
             return;
         }
@@ -107,7 +120,7 @@ export function useDishes() {
     async function deleteDishWithSlug(slug: string) {
         const { error, response } = await deleteDish(slug);
 
-        if (error.value || isMessage(response.value)) {
+        if (error.value === true || isMessage(response.value)) {
             DishesState.error = response.value?.message;
             return;
         }
@@ -123,7 +136,7 @@ export function useDishes() {
     async function createDishVariation(dishVariation: CreateDishVariationDTO, parentSlug: string) {
         const { error, response } = await postCreateDishVariation(dishVariation, parentSlug);
 
-        if (error.value || isMessage(response.value)) {
+        if (error.value === true || isMessage(response.value)) {
             DishesState.error = response.value?.message;
             return;
         }
@@ -138,7 +151,7 @@ export function useDishes() {
     async function deleteDishVariationWithSlug(slug: string) {
         const { error, response } = await deleteDishVariation(slug);
 
-        if (error.value || isMessage(response.value)) {
+        if (error.value === true || isMessage(response.value)) {
             DishesState.error = response.value?.message;
             return;
         }
@@ -154,7 +167,7 @@ export function useDishes() {
     async function updateDishVariation(slug: string, variation: CreateDishVariationDTO) {
         const { error, response } = await putDishVariationUpdate(slug, variation);
 
-        if (isResponseOkay<Dish>(error, response) && response.value.parentId) {
+        if (isResponseObjectOkay<Dish>(error, response, isDish) && response.value.parentId) {
             updateDishVariationInState(response.value.parentId, response.value);
         } else {
             DishesState.error = 'Error on updating dishVariation';
@@ -169,7 +182,7 @@ export function useDishes() {
     async function updateDish(id: number, dish: CreateDishDTO) {
         const { error, response } = await putDishUpdate(getDishById(id).slug, dish);
 
-        if (isResponseOkay<Dish>(error, response)) {
+        if (isResponseObjectOkay<Dish>(error, response, isDish)) {
             updateDishesState(response.value);
         } else {
             DishesState.error = 'Error on updating a dish';

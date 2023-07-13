@@ -87,7 +87,7 @@ export function useDishes() {
         DishesState.isLoading = true;
 
         const { dishes, error } = await getDishes();
-        if (isResponseArrayOkay<Dish>(error, dishes, isDish)) {
+        if (isResponseArrayOkay<Dish>(error, dishes, isDish) === true) {
             DishesState.dishes = dishes.value;
             DishesState.error = '';
         } else {
@@ -105,7 +105,7 @@ export function useDishes() {
     async function createDish(dish: CreateDishDTO) {
         const { error, response } = await postCreateDish(dish);
 
-        if (error.value === true || isMessage(response.value)) {
+        if (error.value === true || isMessage(response.value) === true) {
             DishesState.error = response.value?.message;
             return;
         }
@@ -120,7 +120,7 @@ export function useDishes() {
     async function deleteDishWithSlug(slug: string) {
         const { error, response } = await deleteDish(slug);
 
-        if (error.value === true || isMessage(response.value)) {
+        if (error.value === true || isMessage(response.value) === true) {
             DishesState.error = response.value?.message;
             return;
         }
@@ -136,7 +136,7 @@ export function useDishes() {
     async function createDishVariation(dishVariation: CreateDishVariationDTO, parentSlug: string) {
         const { error, response } = await postCreateDishVariation(dishVariation, parentSlug);
 
-        if (error.value === true || isMessage(response.value)) {
+        if (error.value === true || isMessage(response.value) === true) {
             DishesState.error = response.value?.message;
             return;
         }
@@ -151,7 +151,7 @@ export function useDishes() {
     async function deleteDishVariationWithSlug(slug: string) {
         const { error, response } = await deleteDishVariation(slug);
 
-        if (error.value === true || isMessage(response.value)) {
+        if (error.value === true || isMessage(response.value) === true) {
             DishesState.error = response.value?.message;
             return;
         }
@@ -167,7 +167,7 @@ export function useDishes() {
     async function updateDishVariation(slug: string, variation: CreateDishVariationDTO) {
         const { error, response } = await putDishVariationUpdate(slug, variation);
 
-        if (isResponseObjectOkay<Dish>(error, response, isDish) && response.value.parentId) {
+        if (isResponseObjectOkay<Dish>(error, response, isDish) === true && typeof response.value.parentId === 'number') {
             updateDishVariationInState(response.value.parentId, response.value);
         } else {
             DishesState.error = 'Error on updating dishVariation';
@@ -182,7 +182,7 @@ export function useDishes() {
     async function updateDish(id: number, dish: CreateDishDTO) {
         const { error, response } = await putDishUpdate(getDishById(id).slug, dish);
 
-        if (isResponseObjectOkay<Dish>(error, response, isDish)) {
+        if (isResponseObjectOkay<Dish>(error, response, isDish) === true) {
             updateDishesState(response.value);
         } else {
             DishesState.error = 'Error on updating a dish';
@@ -255,15 +255,15 @@ export function useDishes() {
 
         let parentDishInArray = false;
         for (const dish of dishesFromSlugs) {
-            if (!dish) {
+            if (dish === null || dish === undefined) {
                 continue;
             }
             // If the dish has a parent and the parent is not already in the array, add the parent and the dish to the array
-            if (dish.parentId && !parentDishInArray) {
+            if (typeof dish.parentId === 'number' && parentDishInArray === false) {
                 const parentDish = getDishById(dish.parentId);
                 dishesWithParent.push(parentDish, dish);
                 parentDishInArray = true;
-            } else if (dish.parentId) {
+            } else if (typeof dish.parentId === 'number') {
                 // If the dish has a parent and the parent is already in the array, add the dish to the array of the parent
                 dishesWithParent.push(dish);
             } else {

@@ -71,7 +71,7 @@ class GuestParticipationService
             $mealDate
         );
 
-        if (null === $slot || !$this->slotIsAvailable($slot, $mealDate)) {
+        if (null === $slot || false === $this->slotIsAvailable($slot, $mealDate)) {
             $slot = $this->getNextFreeSlot($mealDate);
         }
 
@@ -121,28 +121,28 @@ class GuestParticipationService
 
         /** @var Meal $meal */
         foreach ($meals as $meal) {
-            if (empty($participations)) {
+            if (true === empty($participations)) {
                 $participations = (new ParticipationCountService())->getParticipationByDay($meal->getDay());
             }
 
             $bookable = $this->mealIsBookable($meal);
-            if (!$bookable) {
+            if (false === $bookable) {
                 throw new ParticipationException('meal not bookable', ParticipationException::ERR_MEAL_NOT_BOOKABLE, null, ['meal' => $meal]);
             }
 
             $dishSlugArray = [$meal->getDish()->getSlug()];
             $participationCount = 1.0;
-            if ($meal->getDish()->isCombinedDish()) {
+            if (true === $meal->getDish()->isCombinedDish()) {
                 $dishSlugArray = $dishSlugs;
                 $participationCount = 0.5;
             } else {
                 // Note: There is an edge case, when a guest books a meal with limitation and a combined meal at once
-                if (isset($flippedDishSlugs[$meal->getDish()->getSlug()])) {
+                if (true === isset($flippedDishSlugs[$meal->getDish()->getSlug()])) {
                     $participationCount = 1.5;
                 }
             }
 
-            if (!ParticipationCountService::isParticipationPossibleForDishes($participations[ParticipationCountService::PARTICIPATION_TOTAL_COUNT_KEY], $dishSlugArray, $participationCount)) {
+            if (false === ParticipationCountService::isParticipationPossibleForDishes($participations[ParticipationCountService::PARTICIPATION_TOTAL_COUNT_KEY], $dishSlugArray, $participationCount)) {
                 throw new ParticipationException('meal not bookable', ParticipationException::ERR_MEAL_NOT_BOOKABLE, null, ['meal' => $meal, 'bookedCombinedDishes' => $dishSlugs]);
             }
         }
@@ -187,7 +187,7 @@ class GuestParticipationService
     ): Profile {
         $guestProfileID = sprintf('%s.%s_%s', $firstName, $lastName, $mealDate->format('Y-m-d'));
         $guestProfile = $this->profileRepo->find($guestProfileID);
-        if (($guestProfile instanceof Profile) && $guestProfile->isGuest()) {
+        if (true === ($guestProfile instanceof Profile) && true === $guestProfile->isGuest()) {
             return $guestProfile;
         }
 

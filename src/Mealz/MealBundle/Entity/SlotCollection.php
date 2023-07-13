@@ -26,7 +26,7 @@ class SlotCollection extends ArrayCollection
         $slots = [];
 
         foreach ($elements as $element) {
-            if ($element instanceof Slot) {
+            if (true === ($element instanceof Slot)) {
                 $slots[] = $element;
             }
         }

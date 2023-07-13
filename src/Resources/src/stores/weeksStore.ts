@@ -79,7 +79,7 @@ export function useWeeks() {
 
     async function getWeeks() {
         const { weeks, error } = await getWeeksData();
-        if (isResponseArrayOkay<Week>(error, weeks, isWeek)) {
+        if (isResponseArrayOkay<Week>(error, weeks, isWeek) === true) {
             WeeksState.weeks = weeks.value;
             WeeksState.error = '';
         } else {
@@ -91,7 +91,7 @@ export function useWeeks() {
     async function createWeek(year: number, calendarWeek: number) {
         const { error, response } = await postCreateWeek(year, calendarWeek);
 
-        if (error.value === true && isMessage(response.value)) {
+        if (error.value === true && isMessage(response.value) === true) {
             WeeksState.error = response.value?.message;
             return;
         }
@@ -103,7 +103,7 @@ export function useWeeks() {
 
         const { error, response } = await putWeekUpdate(week);
 
-        if (error.value === true || isMessage(response.value)) {
+        if (error.value === true || isMessage(response.value) === true) {
             WeeksState.error = response.value?.message;
             return;
         }
@@ -117,7 +117,7 @@ export function useWeeks() {
         if (error.value === true || isMessage(response.value)) {
             WeeksState.error = response.value?.message as string;
             return;
-        } else if (response.value) {
+        } else if (response.value !== undefined && response.value !== null) {
             MenuCountState.counts = response.value;
         }
     }
@@ -142,7 +142,7 @@ export function useWeeks() {
             lockDate: day.lockParticipationDateTime
         };
 
-        if (week && day) {
+        if (week !== undefined && week !== null && day !== undefined && day !== null) {
             for (const [key, meals] of Object.entries(day.meals)) {
                 menuDay.meals[key] = meals.map(meal => createMealDTO(meal));
             }

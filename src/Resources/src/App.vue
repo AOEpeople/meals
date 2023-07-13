@@ -33,19 +33,19 @@ const showParticipations = computed(() => {
 });
 
 watch(windowWidth, () => {
-  if(navibar.value) {
+  if(navibar.value !== null && navibar.value !== undefined) {
     setNavBarHeight(navibar.value.$el.offsetHeight, 'navibar');
   }
 });
 
 onMounted(() => {
-  if(navibar.value) {
+  if(navibar.value !== null && navibar.value !== undefined) {
     setNavBarHeight(navibar.value.$el.offsetHeight, 'navibar');
   }
 });
 
 onUpdated(() => {
-  if(navibar.value) {
+  if(navibar.value !== null && navibar.value !== undefined) {
     setNavBarHeight(navibar.value.$el.offsetHeight, 'navibar');
   }
 })

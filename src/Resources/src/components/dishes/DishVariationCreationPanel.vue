@@ -48,9 +48,9 @@ const titleEnInput = ref(props.titleEn);
 async function onSubmit() {
   if (titleDeInput.value === '' || titleEnInput.value === '') {
     return;
-  } else if (props.edit && props.slug) {
+  } else if (props.edit === true && typeof props.slug === 'string') {
     await updateDishVariation(props.slug, createDishVariationDtoObject());
-  } else if (!props.edit) {
+  } else if (props.edit === false) {
     await createDishVariation(createDishVariationDtoObject(), props.parentSlug);
   }
 }

@@ -43,7 +43,7 @@ class DishService
      */
     public function isNew(Dish $dish): bool
     {
-        if ($dish->isCombinedDish()) {
+        if (true === $dish->isCombinedDish()) {
             return false;
         }
 
@@ -55,28 +55,28 @@ class DishService
      */
     public function updateHelper(Dish $dish, array $parameters): void
     {
-        if ($this->apiService->isParamValid($parameters, 'titleDe', 'string')) {
+        if (true === $this->apiService->isParamValid($parameters, 'titleDe', 'string')) {
             $dish->setTitleDe($parameters['titleDe']);
         }
-        if ($this->apiService->isParamValid($parameters, 'titleEn', 'string')) {
+        if (true === $this->apiService->isParamValid($parameters, 'titleEn', 'string')) {
             $dish->setTitleEn($parameters['titleEn']);
         }
-        if ($this->apiService->isParamValid($parameters, 'oneServingSize', 'boolean')) {
+        if (true === $this->apiService->isParamValid($parameters, 'oneServingSize', 'boolean')) {
             $dish->setOneServingSize($parameters['oneServingSize']);
-            if ($dish->hasVariations()) {
+            if (true === $dish->hasVariations()) {
                 /** @var Dish $variation */
                 foreach ($dish->getVariations() as $variation) {
                     $variation->setOneServingSize($parameters['oneServingSize']);
                 }
             }
         }
-        if ($this->apiService->isParamValid($parameters, 'descriptionDe', 'string')) {
+        if (true === $this->apiService->isParamValid($parameters, 'descriptionDe', 'string')) {
             $dish->setDescriptionDe($parameters['descriptionDe']);
         }
-        if ($this->apiService->isParamValid($parameters, 'descriptionEn', 'string')) {
+        if (true === $this->apiService->isParamValid($parameters, 'descriptionEn', 'string')) {
             $dish->setDescriptionEn($parameters['descriptionEn']);
         }
-        if ($this->apiService->isParamValid($parameters, 'category', 'integer')) {
+        if (true === $this->apiService->isParamValid($parameters, 'category', 'integer')) {
             $dish->setCategory($this->categoryRepository->find($parameters['category']));
         }
     }

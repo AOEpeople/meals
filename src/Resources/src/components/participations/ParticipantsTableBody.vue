@@ -34,7 +34,7 @@ let scrollingActive = true;
 let time: number;
 
 const mealsWithVariations = computed(() => {
-  if (loadedState.loaded) {
+  if (loadedState.loaded === true) {
     return getMealsWithVariations();
   } else {
     return [];
@@ -47,7 +47,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-  if (scrollProcessId) {
+  if (scrollProcessId !== undefined && scrollProcessId !== null) {
     clearInterval(scrollProcessId);
   }
 })
@@ -58,7 +58,7 @@ onUnmounted(() => {
  */
 function autoScroll(element: HTMLTableSectionElement | null) {
   const timeSinceLastScroll = Date.now() - time;
-  if (scrollingActive && element) {
+  if (scrollingActive === true && element !== null && element !== undefined) {
     setScrollDirection(element)
     element.scrollBy({
       top: scrollDirectionDown.value ? scrollAmount(timeSinceLastScroll) : -scrollAmount(timeSinceLastScroll)
@@ -74,9 +74,9 @@ function autoScroll(element: HTMLTableSectionElement | null) {
  */
 function setScrollDirection(element: HTMLTableSectionElement | null) {
   const cachedScrollDirection = scrollDirectionDown.value;
-  if (element && scrollDirectionDown.value) {
+  if (element !== null && element !== undefined && scrollDirectionDown.value === true) {
     scrollDirectionDown.value = (element.scrollTop + element.clientHeight) < element.scrollHeight;
-  } else if (element && !scrollDirectionDown.value) {
+  } else if (element !== null && element !== undefined && scrollDirectionDown.value === false) {
     scrollDirectionDown.value = element.scrollTop === 0;
   }
 

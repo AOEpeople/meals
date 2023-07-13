@@ -39,7 +39,7 @@ trait ParticipationServiceTrait
 
         foreach ($slots as $slot) {
             $slotID = $slot->getId();
-            if (!isset($indexedSlotsPart[$slotID])) {
+            if (false === isset($indexedSlotsPart[$slotID])) {
                 return $slot; // $slot is not at all booked; return it
             }
 
@@ -65,7 +65,7 @@ trait ParticipationServiceTrait
         }
 
         // meal date-time is not in the past, but meal is locked and nobody is offering; not bookable
-        if (($meal->getLockDateTime() <= $now) && !$this->mealIsOffered($meal)) {
+        if (($meal->getLockDateTime() <= $now) && false === $this->mealIsOffered($meal)) {
             return false;
         }
 
@@ -109,7 +109,7 @@ trait ParticipationServiceTrait
             $participant->setSlot($slot);
         }
 
-        if ($meal->isCombinedMeal()) {
+        if (true === $meal->isCombinedMeal()) {
             $this->updateCombinedMealDishes($participant, $dishSlugs);
         }
 
@@ -123,7 +123,7 @@ trait ParticipationServiceTrait
     {
         $meal = $participant->getMeal();
 
-        if (!$meal->isCombinedMeal()) {
+        if (false === $meal->isCombinedMeal()) {
             throw new ParticipationException(
                 'invalid operation; normal meal participation cannot be updated',
                 ParticipationException::ERR_INVALID_OPERATION
@@ -154,7 +154,7 @@ trait ParticipationServiceTrait
 
         foreach ($meal->getDay()->getMeals() as $m) {
             $dish = $m->getDish();
-            if ($dish->isCombinedDish() || !in_array($dish->getSlug(), $dishSlugs, true)) {
+            if (true === $dish->isCombinedDish() || false === in_array($dish->getSlug(), $dishSlugs, true)) {
                 continue;
             }
 

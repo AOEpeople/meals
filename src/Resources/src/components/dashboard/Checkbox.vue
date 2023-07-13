@@ -106,7 +106,7 @@ async function handle() {
       await leaveMeal()
     } else {
       let slugs = [meal.dishSlug]
-      if (isCombiBox) {
+      if (isCombiBox === true) {
         slugs = getDishSlugs()
         if(slugs === -1) return
       }

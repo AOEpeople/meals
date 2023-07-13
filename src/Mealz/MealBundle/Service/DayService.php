@@ -64,7 +64,7 @@ class DayService
     {
         $canRemove = true;
         foreach ($mealCollection as $mealArr) {
-            if (!$canRemove) {
+            if (false === $canRemove) {
                 break;
             }
             foreach ($mealArr as $meal) {
@@ -72,12 +72,12 @@ class DayService
                 if ($mealEntity->getId() === $meal['mealId'] && isset($meal['dishSlug'])) {
                     $canRemove = false;
                 }
-                if (!$canRemove) {
+                if (false === $canRemove) {
                     break;
                 }
             }
         }
-        if (!$mealEntity->hasParticipations() && $canRemove) {
+        if (false === $mealEntity->hasParticipations() && true === $canRemove) {
             $day->removeMeal($mealEntity);
             $this->em->remove($mealEntity);
         }

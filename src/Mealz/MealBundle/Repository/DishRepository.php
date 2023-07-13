@@ -104,7 +104,17 @@ class DishRepository extends BaseRepository implements DishRepositoryInterface
     /**
      * Counts how many times each Dish was taken in the last X Weeks.
      *
-     * Example Query: select count(dish_id), dish_id from (select dish_id from meal where dateTime < "2023-07-05 23:59:00" and dateTime > "2023-06-05 00:00:00") as D group by dish_id;
+     * Example Query:   select
+     *                      count(dish_id), dish_id
+     *                  from (
+     *                      select
+     *                          dish_id
+     *                      from
+     *                          meal
+     *                      where
+     *                          dateTime < "2023-07-05 23:59:00" and dateTime > "2023-06-05 00:00:00"
+     *                  ) as D
+     *                  group by dish_id;
      *
      * @throws NoResultException
      * @throws NonUniqueResultException
@@ -118,7 +128,16 @@ class DishRepository extends BaseRepository implements DishRepositoryInterface
         $startDate = new DateTime($countPeriod);
         $endDate = new DateTime('this week +6 days');
 
-        $sql = 'select count(dish_id), dish_id from (select dish_id from meal where dateTime < "' . date_format($endDate, 'Y-m-d H:i:s') . '" and dateTime > "' . date_format($startDate, 'Y-m-d H:i:s') . '") as D group by dish_id';
+        $sql = 'select count(dish_id), dish_id ' .
+                'from (' .
+                    'select dish_id ' .
+                    'from meal ' .
+                    'where
+                        dateTime < "' . date_format($endDate, 'Y-m-d H:i:s') .
+                        '" and dateTime > "' . date_format($startDate, 'Y-m-d H:i:s') .
+                        '") as D ' .
+                'group by dish_id';
+
         $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
         $result = $query->getResult();
         $output = [];

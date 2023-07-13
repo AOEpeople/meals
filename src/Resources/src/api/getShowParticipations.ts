@@ -74,16 +74,16 @@ async function fetchParticipations() {
     );
 
     await request();
-    if (listData.value && !error.value) {
+    if (listData.value !== null && listData.value !== undefined && error.value === false) {
         loadedState.error = "";
         participationsState.data = listData.value.data;
         participationsState.day = listData.value.day;
         participationsState.meals = listData.value.meals;
         loadedState.loaded = true;
-    } else if (!listData.value) {
+    } else if (listData.value === null || listData.value === undefined) {
         loadedState.error = 'ERROR while fetching listData for IParticipationState';
         setTimeout(fetchParticipations, REFETCH_TIME_ON_ERROR);
-    } else if (error.value) {
+    } else if (error.value === true) {
         loadedState.error = 'Unknown error in getShowParticipations';
         setTimeout(fetchParticipations, REFETCH_TIME_ON_ERROR);
     }
@@ -150,9 +150,9 @@ export function getShowParticipations() {
      */
     function getMealsWithVariations() {
         const meals: IMealWithVariations[] = [];
-        if (loadedState.loaded) {
+        if (loadedState.loaded === true) {
             for (const [key, value] of Object.entries(participationsState.meals)) {
-                if(!value.parent) {
+                if (value.parent === undefined || value.parent === null) {
                     meals.push(createMealWithVariations(key));
                 }
             }

@@ -48,7 +48,7 @@ async function onSubmit() {
   if (titleDeInput.value === '' || titleEnInput.value === '') {
     return;
   }
-  if (props.edit) {
+  if (props.edit === true) {
     await editCategory(props.index, titleDeInput.value, titleEnInput.value);
   } else {
     const category: Category = {

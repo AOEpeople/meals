@@ -88,7 +88,7 @@ onMounted(async () => {
 });
 
 const dateRange = computed(() => {
-  if (menu.days[0] && menu.days[menu.days.length - 1]) {
+  if (menu.days[0] !== null && menu.days[0] !== undefined && menu.days[menu.days.length - 1] !== null && menu.days[menu.days.length - 1] !== undefined) {
     return [menu.days[0].date.date, menu.days[menu.days.length - 1].date.date];
   }
   return ['', ''];

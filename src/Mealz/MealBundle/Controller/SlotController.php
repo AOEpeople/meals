@@ -42,16 +42,16 @@ class SlotController extends BaseListController
     {
         try {
             $parameters = json_decode($request->getContent(), true);
-            if (isset($parameters['title'])) {
+            if (true === isset($parameters['title'])) {
                 $slot->setTitle($parameters['title']);
             }
-            if (isset($parameters['limit'])) {
+            if (true === isset($parameters['limit'])) {
                 $slot->setLimit($parameters['limit']);
             }
-            if (isset($parameters['order'])) {
+            if (true === isset($parameters['order'])) {
                 $slot->setOrder($parameters['order']);
             }
-            if (isset($parameters['enabled'])) {
+            if (true === isset($parameters['enabled'])) {
                 $slot->setDisabled(!$parameters['enabled']);
             }
 
@@ -89,17 +89,17 @@ class SlotController extends BaseListController
     {
         try {
             $parameters = json_decode($request->getContent(), true);
-            if (!isset($parameters['title'])) {
+            if (false === isset($parameters['title'])) {
                 throw new Exception('Title is missing');
             } elseif ('' === $parameters['title']) {
                 throw new Exception('Title is empty');
             }
             $slot = new Slot();
             $slot->setTitle($parameters['title']);
-            if (isset($parameters['limit'])) {
+            if (true === isset($parameters['limit'])) {
                 $slot->setLimit($parameters['limit']);
             }
-            if (isset($parameters['order'])) {
+            if (true === isset($parameters['order'])) {
                 $slot->setOrder($parameters['order']);
             }
 

@@ -42,6 +42,7 @@ class DishVariationController extends BaseController
             $dishVariation->setParent($dish);
             $dishVariation->setOneServingSize($dish->hasOneServingSize());
             $dishVariation->setPrice($this->defaultPrice);
+            $dishVariation->setCategory($dish->getCategory());
 
             if (isset($parameters['titleDe']) && isset($parameters['titleEn'])) {
                 $dishVariation->setTitleDe($parameters['titleDe']);

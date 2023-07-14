@@ -4,6 +4,7 @@
       {{ `${ t('menu.header')} #${calendarWeek} (${getFormattedDateRange()})` }}
     </h2>
     <ParticipantsLink
+      :week-id="week.id"
       class="col-span-3 row-start-2 justify-self-center sm:col-span-1 sm:col-start-1 sm:justify-self-start min-[900px]:row-start-2"
     />
     <EnableWeek

@@ -1,6 +1,6 @@
 <template>
   <router-link
-    to=""
+    :to="`/participations/${weekId}/edit`"
     class="flex flex-row items-center gap-2"
   >
     <UserGroupIcon class="h-6 w-6" />
@@ -14,4 +14,7 @@ import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
 
+defineProps<{
+  weekId: number
+}>();
 </script>

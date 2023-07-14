@@ -1,15 +1,15 @@
 <template>
   <div class="mb-1">
-    <span class="inline-block break-words text-note font-bold leading-[20px] tracking-[0.5px] text-primary-1">{{ parentTitle }}</span><br>
+    <span class="inline-block break-words text-[12px] font-bold leading-[20px] tracking-[0.5px] text-primary-1 min-[380px]:text-note">{{ parentTitle }}</span><br>
   </div>
   <div
     v-for="(variation, variationID, index) in meal.variations"
     :key="index"
-    class="mb-1.5 flex w-auto flex-row justify-around gap-2 last:mb-0 xl:grid-cols-6"
+    class="mb-1.5 flex w-auto flex-row justify-around gap-1 last:mb-0 min-[380px]:gap-2 xl:grid-cols-6"
   >
     <div class="basis-10/12 items-center self-center xl:col-span-5">
       <div class="self-center">
-        <p class="description m-0 font-light text-primary">
+        <p class="m-0 text-[12px] font-light leading-5 text-primary min-[380px]:text-[14px]">
           {{ locale.substring(0, 2) === 'en' ? variation.title.en : variation.title.de }}
           <span
             v-if="variation.isNew"
@@ -38,6 +38,7 @@
       <ParticipationCounter
         :meal="variation"
         :mealCSS="mealCSS[variationID]"
+        class="mr-[5px] min-[380px]:mr-[15px]"
       />
       <Checkbox
         :weekID="weekID"
@@ -80,7 +81,7 @@ let parentTitle = computed(() => locale.value.substring(0, 2) === 'en' ? meal.ti
 const mealCSS = computed(() => {
   let array = []
   for (const variationId in meal.variations) {
-    array[variationId] = 'flex content-center rounded-md h-[30px] xl:h-[20px] mr-[15px] '
+    array[variationId] = 'flex content-center rounded-md h-[30px] xl:h-[20px] '
     switch (meal.variations[variationId].mealState) {
       case 'disabled':
       case 'offerable':

@@ -1,8 +1,8 @@
 <template>
-  <div class="flex w-auto flex-row justify-between gap-2 xl:grid-cols-6">
+  <div class="flex w-auto flex-row justify-between gap-1 min-[380px]:gap-2 xl:grid-cols-6">
     <div class="basis-10/12 items-center self-center xl:col-span-5">
       <div class="self-center">
-        <span class="inline-block break-words text-note font-bold leading-[20px] tracking-[0.5px] text-primary-1">
+        <span class="inline-block break-words text-[12px] font-bold leading-[20px] tracking-[0.5px] text-primary-1 min-[380px]:text-note">
           {{ title }}
           <span
             v-if="meal.isNew"
@@ -13,7 +13,7 @@
         </span><br>
         <p
           v-if="description !== ''"
-          class="description m-0 break-words font-light text-primary"
+          class="m-0 break-words text-[12px] font-light leading-[20px] text-primary min-[380px]:text-[14px]"
         >
           {{ description }}
         </p>
@@ -27,6 +27,7 @@
       <ParticipationCounter
         :meal="meal"
         :mealCSS="mealCSS"
+        class="mr-[5px] min-[380px]:mr-[15px]"
       />
       <Checkbox
         :weekID="weekID"

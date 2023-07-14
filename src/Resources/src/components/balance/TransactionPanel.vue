@@ -5,16 +5,19 @@
     :size="60"
     color="#1b5298"
   />
-  <div v-show="loaded">
-    <div class="m-8 flex justify-center">
-      <h5 class="m-0 w-32 self-center text-black">
+  <div
+    v-show="loaded"
+    class="w-[300px] p-2 text-center align-middle sm:w-[420px]"
+  >
+    <div class="mb-8 flex justify-center gap-1">
+      <h5 class="m-0 self-center text-[14px] text-black sm:text-[18px]">
         {{ t('balance.amount') }}: €
       </h5>
       <input
         ref="input"
         type="text"
         :value="balance < 0 ? balance.toFixed(2).slice(1).replace(/\./g, ',') : '0,00'"
-        class="h-12 rounded-[100px] border-[2px] border-solid border-[#CAD6E1] bg-white text-center"
+        class="h-[46px] rounded-full border-[2px] border-solid border-[#CAD6E1] bg-white text-center"
       >
     </div>
     <div

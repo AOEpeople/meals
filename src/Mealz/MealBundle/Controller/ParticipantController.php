@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Controller;
 
+use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
@@ -315,6 +316,32 @@ class ParticipantController extends BaseController
             'profilesJson' => json_encode($profilesArray),
             'prototype' => $prototype,
         ]);
+    }
+
+    /**
+     * @Security("is_granted('ROLE_KITCHEN_STAFF')")
+     */
+    public function getParticipationsForWeek(Week $week): JsonResponse
+    {
+        $days = $week->getDays();
+
+        $response = [];
+
+        /** @var Day $day */
+        foreach ($days as $day) {
+            $participations = $this->participationSrv->getParticipationListBySlots($day);
+            // merge slots
+            foreach ($participations as $slot) {
+                if (true === isset($response[$day->getId()])) {
+                    $response[$day->getId()] = $slot + $response[$day->getId()];
+                } else {
+                    $response[$day->getId()] = $slot;
+                }
+            }
+            // TODO: possibly dublicate bookings
+        }
+
+        return new JsonResponse($response, 200);
     }
 
     private function generateResponse(string $route, string $action, Participant $participant): JsonResponse

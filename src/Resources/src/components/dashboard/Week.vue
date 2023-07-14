@@ -29,7 +29,7 @@
       :weekID="weekID"
       :dayID="dayID"
       :index="d_index"
-      class="mb-[2.5rem] w-auto sm:w-3/4"
+      class="mb-[2.5rem] w-[98%] sm:w-3/4"
     />
   </div>
 </template>

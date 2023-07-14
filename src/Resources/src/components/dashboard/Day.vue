@@ -19,7 +19,7 @@
     </div>
     <div
       v-if="!emptyDay"
-      class="z-[1] flex min-w-[390px] flex-1 flex-col"
+      class="z-[1] flex min-w-[290px] flex-1 flex-col"
     >
       <div class="flex h-[54px] items-center border-b-[2px] px-[15px]">
         <span class="mr-2 inline-block text-[11px] font-bold uppercase leading-4 tracking-[1.5px] text-primary">
@@ -56,7 +56,7 @@
     </div>
     <div
       v-if="emptyDay"
-      class="z-[1] h-[134px] min-w-[390px]"
+      class="z-[1] h-[134px] min-w-[290px]"
     >
       <span class="description relative top-[53px] ml-[23px] text-primary-1">{{ t('dashboard.no_service') }}</span>
     </div>

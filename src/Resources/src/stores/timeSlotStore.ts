@@ -23,6 +23,8 @@ export interface TimeSlot {
 
 export function isTimeSlot(timeSlot: TimeSlot): timeSlot is TimeSlot {
     return (
+        timeSlot !== null &&
+        timeSlot !== undefined &&
         typeof (timeSlot as TimeSlot).title === 'string' &&
         typeof (timeSlot as TimeSlot).limit === 'number' &&
         typeof (timeSlot as TimeSlot).order === 'number' &&

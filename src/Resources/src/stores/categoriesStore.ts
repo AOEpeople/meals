@@ -21,6 +21,8 @@ interface CategoriesState {
 
 function isCategory(category: Category): category is Category {
     return (
+        category !== null &&
+        category !== undefined &&
         typeof (category as Category).id === 'number' &&
         typeof (category as Category).titleDe === 'string' &&
         typeof (category as Category).titleEn === 'string' &&

@@ -32,6 +32,8 @@ interface DishesState {
 
 function isDish(dish: Dish): dish is Dish {
     return (
+        dish !== null &&
+        dish !== undefined &&
         typeof (dish as Dish).id === 'number' &&
         typeof (dish as Dish).slug === 'string' &&
         typeof (dish as Dish).titleDe === 'string' &&

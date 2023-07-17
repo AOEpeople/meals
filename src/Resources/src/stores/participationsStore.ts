@@ -38,8 +38,19 @@ export function useParticipations(weekId: number) {
         menuParticipationsState.isLoading = false;
     }
 
+    function getParticipants() {
+        const participants = new Set<string>();
+
+        for(const day of Object.values(menuParticipationsState.days)) {
+            Object.keys(day).forEach((participant) => participants.add(participant));
+        }
+
+        return participants;
+    }
+
     return {
         menuParticipationsState: readonly(menuParticipationsState),
-        fetchParticipations
+        fetchParticipations,
+        getParticipants
     }
 }

@@ -48,6 +48,8 @@ interface MenuCountState {
 
 function isWeek(week: Week): week is Week {
     return (
+        week !== null &&
+        week !== undefined &&
         typeof (week as Week).id === 'number' &&
         typeof (week as Week).enabled === 'boolean' &&
         typeof (week as Week).calendarWeek === 'number' &&
@@ -174,6 +176,10 @@ export function useWeeks() {
         return week.days[dayId];
     }
 
+    function getDayByWeekIdAndDayId(weekId: number, dayId: string) {
+        return getDayById(getWeekById(weekId), dayId);
+    }
+
     /**
      * Resets the DishesState.
      * Only used for testing purposes.
@@ -196,6 +202,8 @@ export function useWeeks() {
         getWeekById,
         updateWeek,
         getDishCountForWeek,
-        resetStates
+        resetStates,
+        getDayByWeekIdAndDayId,
+        isWeek
     }
 }

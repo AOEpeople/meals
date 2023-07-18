@@ -31,7 +31,7 @@ class ParticipationHelper
      *
      * @psalm-return array<string, array<string, array{booked: non-empty-list<int>}>>
      */
-    public function groupBySlotAndProfileID(array $participants): array
+    public function groupBySlotAndProfileID(array $participants, bool $getProfile = false): array
     {
         $groupedParticipants = [];
 
@@ -42,7 +42,7 @@ class ParticipationHelper
                 continue;
             }
 
-            $groupedParticipants = array_merge_recursive($groupedParticipants, $this->getParticipationbySlot($participant, $slot));
+            $groupedParticipants = array_merge_recursive($groupedParticipants, $this->getParticipationbySlot($participant, $slot, $getProfile));
         }
 
         return $groupedParticipants;
@@ -63,7 +63,7 @@ class ParticipationHelper
         return 0;
     }
 
-    private function getParticipationbySlot(Participant $participant, ?Slot $slot): array
+    private function getParticipationbySlot(Participant $participant, ?Slot $slot, bool $profile = false): array
     {
         $slots = [];
 
@@ -73,6 +73,9 @@ class ParticipationHelper
 
             if (null !== $meal->getParticipant($participant->getProfile()) && (null === $slot || $slot->isDisabled() || $slot->isDeleted())) {
                 $slots[''][$participant->getProfile()->getFullName()]['booked'][] = $meal->getDish()->getId();
+                if (true === $profile) {
+                    $slots[''][$participant->getProfile()->getFullName()]['profile'] = $participant->getProfile()->getUsername();
+                }
 
                 foreach ($combinedDishes as $dish) {
                     $slots[''][$participant->getProfile()->getFullname()]['booked'][] = $dish->getId();
@@ -82,6 +85,9 @@ class ParticipationHelper
 
             if (null !== $meal->getParticipant($participant->getProfile())) {
                 $slots[$slot->getTitle()][$participant->getProfile()->getFullName()]['booked'][] = $meal->getDish()->getId();
+                if (true === $profile) {
+                    $slots[$slot->getTitle()][$participant->getProfile()->getFullName()]['profile'] = $participant->getProfile()->getUsername();
+                }
 
                 foreach ($combinedDishes as $dish) {
                     $slots[$slot->getTitle()][$participant->getProfile()->getFullname()]['booked'][] = $dish->getId();

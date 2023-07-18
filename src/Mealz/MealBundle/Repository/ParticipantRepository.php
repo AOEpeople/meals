@@ -177,7 +177,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
     /**
      * @psalm-return array<string, array<string, array{booked: non-empty-list<int>}>>
      */
-    public function findAllGroupedBySlotAndProfileID(DateTime $date): array
+    public function findAllGroupedBySlotAndProfileID(DateTime $date, bool $getProfile = false): array
     {
         $queryBuilder = $this->createQueryBuilder('p');
         $queryBuilder
@@ -198,7 +198,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
             return [];
         }
 
-        return $this->participationHelper->groupBySlotAndProfileID($result);
+        return $this->participationHelper->groupBySlotAndProfileID($result, $getProfile);
     }
 
     /**

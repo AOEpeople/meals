@@ -244,9 +244,9 @@ class ParticipationService
         return (int) ceil($participation['totalCountByDishSlugs'][$meal->getDish()->getSlug()]['count'] ?? 0);
     }
 
-    public function getParticipationListBySlots(Day $day): array
+    public function getParticipationListBySlots(Day $day, bool $getProfile = false): array
     {
-        return $this->participantRepo->findAllGroupedBySlotAndProfileID($day->getDateTime());
+        return $this->participantRepo->findAllGroupedBySlotAndProfileID($day->getDateTime(), $getProfile);
     }
 
     public function getMealsForTheDay(Day $day): MealCollection

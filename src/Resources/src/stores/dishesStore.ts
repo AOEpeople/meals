@@ -68,7 +68,7 @@ export function useDishes() {
      */
     const filteredDishes = computed(() => {
         const { getCategoryIdsByTitle } = useCategories();
-        return DishesState.dishes.filter(dish => dishContainsString(dish, DishesState.filter) || getCategoryIdsByTitle(DishesState.filter).includes(dish.categoryId));
+        return DishesState.dishes.filter(dish => (dishContainsString(dish, DishesState.filter) || getCategoryIdsByTitle(DishesState.filter).includes(dish.categoryId)) && dish.slug !== 'combined-dish');
     });
 
     /**

@@ -15,6 +15,7 @@ use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Psr\Log\LoggerInterface;
 
 /**
  * @Security("is_granted('ROLE_KITCHEN_STAFF')")
@@ -27,6 +28,7 @@ class DishController extends BaseListController
     private EntityManagerInterface $em;
     private DishService $dishService;
     private ApiService $apiService;
+    private LoggerInterface $logger;
 
     public function __construct(
         float $price,
@@ -34,7 +36,8 @@ class DishController extends BaseListController
         CategoryRepository $categoryRepository,
         DishRepository $dishRepository,
         DishService $dishService,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        LoggerInterface $logger
     ) {
         $this->defaultPrice = $price;
         $this->apiService = $apiService;
@@ -42,6 +45,7 @@ class DishController extends BaseListController
         $this->dishRepository = $dishRepository;
         $this->dishService = $dishService;
         $this->em = $em;
+        $this->logger = $logger;
     }
 
     /**
@@ -50,6 +54,9 @@ class DishController extends BaseListController
     public function getDishes(): JsonResponse
     {
         $dishes = $this->dishRepository->findBy(['parent' => null, 'enabled' => true]);
+        $combiDish = $this->dishRepository->findBy(['slug' => 'combined-dish']);
+
+        $dishes[] = $combiDish[0];
 
         return new JsonResponse($dishes, 200);
     }

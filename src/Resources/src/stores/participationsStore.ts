@@ -15,13 +15,13 @@ function isDaysDict(days: Dictionary<Dictionary<IBookedData>>) {
     return null;
 }
 
-export function useParticipations(weekId: number) {
+const menuParticipationsState = reactive<IMenuParticipationsState>({
+    days: {},
+    error: '',
+    isLoading: false
+});
 
-    const menuParticipationsState = reactive<IMenuParticipationsState>({
-        days: {},
-        error: '',
-        isLoading: false
-    });
+export function useParticipations(weekId: number) {
 
     async function fetchParticipations() {
         menuParticipationsState.isLoading = true;
@@ -48,9 +48,22 @@ export function useParticipations(weekId: number) {
         return participants;
     }
 
+    function countBookedMeal(dayId: string, dishId: number) {
+        const day = menuParticipationsState.days[dayId];
+
+        let count = 0;
+        for(const participant of Object.values(day)) {
+            if (participant.booked.includes(dishId)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
     return {
         menuParticipationsState: readonly(menuParticipationsState),
         fetchParticipations,
-        getParticipants
+        getParticipants,
+        countBookedMeal
     }
 }

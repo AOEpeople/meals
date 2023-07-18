@@ -329,7 +329,7 @@ class ParticipantController extends BaseController
 
         /** @var Day $day */
         foreach ($days as $day) {
-            $participations = $this->participationSrv->getParticipationListBySlots($day);
+            $participations = $this->participationSrv->getParticipationListBySlots($day, true);
             // merge slots
             foreach ($participations as $slot) {
                 if (true === isset($response[$day->getId()])) {
@@ -338,10 +338,18 @@ class ParticipantController extends BaseController
                     $response[$day->getId()] = $slot;
                 }
             }
-            // TODO: possibly dublicate bookings
         }
 
         return new JsonResponse($response, 200);
+    }
+
+    /**
+     * @Security("is_granted('ROLE_KITCHEN_STAFF')")
+     */
+    public function add(): JsonResponse
+    {
+
+        return new JsonResponse(null, 200);
     }
 
     private function generateResponse(string $route, string $action, Participant $participant): JsonResponse

@@ -128,7 +128,9 @@
     "notify": "Announce in Mattermost",
     "enableWeek": "This week is enabled",
     "header": "Edit week",
-    "lock": "Lock"
+    "lock": "Lock",
+    "total": "Total",
+    "participations": "Participations"
   },
   "printList": {
     "title": "Participations on ",

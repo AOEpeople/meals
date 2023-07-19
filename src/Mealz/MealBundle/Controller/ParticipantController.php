@@ -27,6 +27,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Psr\Log\LoggerInterface;
 
 /**
  * @Security("is_granted('ROLE_USER')")
@@ -39,6 +40,7 @@ class ParticipantController extends BaseController
     private ParticipationService $participationSrv;
     private MealRepositoryInterface $mealRepo;
     private SlotRepositoryInterface $slotRepo;
+    private LoggerInterface $logger;
 
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
@@ -46,7 +48,8 @@ class ParticipantController extends BaseController
         SlotService $slotSrv,
         ParticipationService $participationSrv,
         MealRepositoryInterface $mealRepo,
-        SlotRepositoryInterface $slotRepo
+        SlotRepositoryInterface $slotRepo,
+        LoggerInterface $logger
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->eventSrv = $eventSrv;
@@ -54,6 +57,7 @@ class ParticipantController extends BaseController
         $this->participationSrv = $participationSrv;
         $this->mealRepo = $mealRepo;
         $this->slotRepo = $slotRepo;
+        $this->logger = $logger;
     }
 
     /**
@@ -137,17 +141,7 @@ class ParticipantController extends BaseController
 
         $this->eventSrv->triggerLeaveEvents($participant);
 
-        if (true === $this->getDoorman()->isKitchenStaff()) {
-            $logger = $this->get('monolog.logger.balance');
-            $logger->info(
-                'admin removed {profile} from {meal} (Meal: {mealId})',
-                [
-                    'profile' => $participant->getProfile(),
-                    'meal' => $meal,
-                    'mealId' => $meal->getId(),
-                ]
-            );
-        }
+        $this->logRemove($meal, $participant);
 
         $activeSlot = $this->participationSrv->getSlot($profile, $meal->getDateTime());
         $slotID = 0;
@@ -346,10 +340,55 @@ class ParticipantController extends BaseController
     /**
      * @Security("is_granted('ROLE_KITCHEN_STAFF')")
      */
-    public function add(): JsonResponse
+    public function add(Profile $profile, Meal $meal): JsonResponse
     {
+        $this->logger->info('Request to add Meal with ID ' . $meal->getId() . ' to Profile ' . $profile->getFullName() . '. Name of the meal: ' . $meal->getDish()->getSlug());
 
-        return new JsonResponse(null, 200);
+        try {
+            $result = $this->participationSrv->join($profile, $meal);
+
+            $this->eventSrv->triggerJoinEvents($result['participant'], $result['offerer']);
+            $this->logAdd($meal, $result['participant']);
+
+            return new JsonResponse([
+                'day' => $meal->getDay()->getId(),
+                'profile' => $profile->getFullName(),
+                'bookedDishes' => $this->participationSrv->getDishesByDayAndProfile($meal->getDay(), $profile),
+            ], 200);
+        } catch (Exception $e) {
+            $this->logException($e);
+
+            return new JsonResponse(['message' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * @Security("is_granted('ROLE_KITCHEN_STAFF')")
+     */
+    public function remove(Profile $profile, Meal $meal): JsonResponse
+    {
+        try {
+
+            $participation = $this->participationSrv->getParticipationByMealAndUser($meal, $profile);
+            $participation->setCombinedDishes(null);
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($participation);
+            $entityManager->flush();
+
+            $this->eventSrv->triggerLeaveEvents($participation);
+            $this->logRemove($meal, $participation);
+
+            return new JsonResponse([
+                'day' => $meal->getDay()->getId(),
+                'profile' => $profile->getFullName(),
+                'bookedDishes' => $this->participationSrv->getDishesByDayAndProfile($meal->getDay(), $profile),
+            ], 200);
+        } catch (Exception $e) {
+            $this->logException($e);
+
+            return new JsonResponse(['message' => $e->getMessage()], 500);
+        }
     }
 
     private function generateResponse(string $route, string $action, Participant $participant): JsonResponse
@@ -390,5 +429,20 @@ class ParticipantController extends BaseController
                 'meal' => $meal,
             ]
         );
+    }
+
+    private function logRemove(Meal $meal, Participant $participant): void
+    {
+        if (true === $this->getDoorman()->isKitchenStaff()) {
+            $logger = $this->get('monolog.logger.balance');
+            $logger->info(
+                'admin removed {profile} from {meal} (Meal: {mealId})',
+                [
+                    'profile' => $participant->getProfile(),
+                    'meal' => $meal,
+                    'mealId' => $meal->getId(),
+                ]
+            );
+        }
     }
 }

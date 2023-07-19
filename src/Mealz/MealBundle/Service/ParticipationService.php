@@ -249,6 +249,21 @@ class ParticipationService
         return $this->participantRepo->findAllGroupedBySlotAndProfileID($day->getDateTime(), $getProfile);
     }
 
+    public function getDishesByDayAndProfile(Day $day, Profile $profile): array
+    {
+        $meals = $day->getMeals();
+        $dishesOfProfile = [];
+
+        /** @var Meal $meal */
+        foreach ($meals as $meal) {
+            if (null !== $meal->getParticipant($profile)) {
+                $dishesOfProfile[] = $meal->getDish()->getId();
+            }
+        }
+
+        return $dishesOfProfile;
+    }
+
     public function getMealsForTheDay(Day $day): MealCollection
     {
         $result = new MealCollection();

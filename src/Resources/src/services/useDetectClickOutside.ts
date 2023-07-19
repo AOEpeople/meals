@@ -1,9 +1,9 @@
 import { Ref, onBeforeUnmount, ref } from "vue";
 
-const listenerActive = ref(false);
-
-
 export default function useDetectClickOutside(componentRef: Ref<HTMLElement | null>, callback: () => void) {
+    
+    const listenerActive = ref(false);
+
     if (componentRef === null || componentRef === undefined) {
         return;
     }

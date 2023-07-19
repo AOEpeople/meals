@@ -3,7 +3,7 @@
     <tr>
       <th
         rowspan="2"
-        class="border-b-2 border-r-2 border-solid border-gray-200 p-2 text-center"
+        class="whitespace-nowrap border-b-2 border-r-2 border-solid border-gray-200 px-4 py-2 text-center"
       >
         {{ dateRangeStr }}
       </th>
@@ -63,7 +63,7 @@ const dateRangeStr = computed(() => {
     return (
       getDateRangeOfWeek(week.calendarWeek, week.year)
         .map(date => date.toLocaleDateString(locale.value, { day: 'numeric', month: 'numeric' }))
-        .join('-')
+        .join(' - ')
     );
   }
   return 'invalid date'

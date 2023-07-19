@@ -1,6 +1,11 @@
 <template>
   <tbody>
-    <MenuTableDataRows :week-id="weekId" />
+    <MenuTableDataRows
+      v-for="participant in getParticipants()"
+      :key="participant"
+      :week-id="weekId"
+      :participant="participant"
+    />
     <MenuTableRow :week-id="weekId">
       <template #firstCell>
         <td class="border-y-2 border-solid border-gray-200 p-2 text-center">
@@ -31,7 +36,7 @@ const props = defineProps<{
   weekId: number
 }>();
 
-const { countBookedMeal } = useParticipations(props.weekId);
+const { countBookedMeal, getParticipants } = useParticipations(props.weekId);
 const { mealIdToDishIdDict } = useMealIdToDishId(props.weekId);
 const { t } = useI18n();
 

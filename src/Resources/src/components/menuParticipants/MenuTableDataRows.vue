@@ -1,12 +1,13 @@
 <template>
   <MenuTableRow
-    v-for="participant in getParticipants()"
-    :key="participant"
+    ref="row"
     :week-id="weekId"
+    :class="editRow === true ? 'bg-green' : ''"
   >
     <template #firstCell>
       <td
-        class="border-y-2 border-solid border-gray-200 p-2 text-center"
+        class="cursor-pointer whitespace-nowrap border-y-2 border-solid border-gray-200 p-2 text-center text-[12px] hover:bg-slate-400"
+        @click="editRow = !editRow"
       >
         {{ participant }}
       </td>
@@ -15,10 +16,11 @@
       <td
         v-for="meal, mealIndex in meals"
         :key="`${meal.id}.${mealIndex}`"
-        class="border-2 border-solid border-gray-200 p-2 text-center"
+        class="h-10 border-2 border-solid border-gray-200 text-center"
       >
         <span
           v-if="isBooked(dayId, participant, meal.id) === true"
+          class="flex place-content-center"
         >
           <svg
             v-if="meal.dish !== 'combined-dish' && isCombiBooked(dayId, participant, meals) === true"
@@ -37,8 +39,15 @@
           <CheckCircleIcon
             v-else
             class="check-circle-icon m-auto block h-6 w-6 text-primary"
+            @click="editRow === true && meal.dish !== 'combined-dish' && removeParticipantFromMeal(meal.id, participant, dayId)"
           />
         </span>
+        <span
+          v-else
+          class="flex h-full w-full place-content-center"
+          :class="{ 'cursor-pointer hover:bg-slate-400': editRow }"
+          @click="editRow === true && meal.dish !== 'combined-dish' && addParticipantToMeal(meal.id, participant, dayId)"
+        />
       </td>
     </template>
   </MenuTableRow>
@@ -50,13 +59,24 @@ import { useParticipations } from '@/stores/participationsStore';
 import { useMealIdToDishId } from '@/services/useMealIdToDishId';
 import { SimpleMeal } from '@/stores/weeksStore';
 import { CheckCircleIcon } from '@heroicons/vue/solid';
+import { ref, watch } from 'vue';
+import useDetectClickOutside from '@/services/useDetectClickOutside';
+
+const editRow = ref<boolean>(false);
+const row = ref<HTMLElement | null>(null);
 
 const props = defineProps<{
-  weekId: number
+  weekId: number,
+  participant: string
 }>();
 
-const { menuParticipationsState, getParticipants } = useParticipations(props.weekId);
+const { menuParticipationsState, addParticipantToMeal, removeParticipantFromMeal } = useParticipations(props.weekId);
 const { mealIdToDishIdDict } = useMealIdToDishId(props.weekId);
+
+watch(
+  editRow,
+  () => (editRow.value === true) && useDetectClickOutside(row, () => editRow.value = false)
+);
 
 function isBooked(dayId: string, participant: string, mealId: number) {
   const dishId = mealIdToDishIdDict.get(mealId);

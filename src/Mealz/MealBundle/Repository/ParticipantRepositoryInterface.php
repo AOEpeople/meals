@@ -37,7 +37,7 @@ interface ParticipantRepositoryInterface extends ObjectRepository
     /**
      * @psalm-return array<string, array<string, array{booked: non-empty-list<int>}>>
      */
-    public function findAllGroupedBySlotAndProfileID(DateTime $date): array;
+    public function findAllGroupedBySlotAndProfileID(DateTime $date, bool $getProfile = false): array;
 
     /**
      * @return Participant[]

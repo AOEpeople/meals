@@ -26,6 +26,6 @@ const progress = useProgress().start()
 await dashboardStore.fillStore()
 const weeks = dashboardStore.getWeeks()
 
-const isAllowedToPrint = userDataStore.roleAllowsRoute('/print/participations')
+const isAllowedToPrint = userDataStore.roleAllowsRoute('PrintableList')
 progress.finish()
 </script>

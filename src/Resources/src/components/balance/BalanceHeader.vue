@@ -7,7 +7,7 @@
     </div>
     <div class="xl:justify-self-end">
       <Popover
-        :translate-x-min="'-25%'"
+        :translate-x-min="'-18%'"
         class="m-auto w-fit"
       >
         <template #button="{ open }">
@@ -19,7 +19,6 @@
         </template>
         <template #panel="{ close }">
           <TransactionPanel
-            class="h-[450px] w-[420px] text-center align-middle"
             @closePanel="close()"
           />
         </template>

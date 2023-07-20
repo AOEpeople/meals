@@ -24,6 +24,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
+use Psr\Log\LoggerInterface;
 
 class GuestParticipationService
 {
@@ -36,6 +37,7 @@ class GuestParticipationService
     private SlotRepositoryInterface $slotRepo;
     private GuestInvitationRepositoryInterface $guestInvitationRepo;
     private MealRepositoryInterface $mealRepo;
+    private LoggerInterface $logger;
 
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -44,7 +46,8 @@ class GuestParticipationService
         RoleRepositoryInterface $roleRepo,
         SlotRepositoryInterface $slotRepo,
         GuestInvitationRepositoryInterface $guestInvitationRepo,
-        MealRepositoryInterface $mealRepo
+        MealRepositoryInterface $mealRepo,
+        LoggerInterface $logger
     ) {
         $this->entityManager = $entityManager;
         $this->participantRepo = $participantRepo;
@@ -53,6 +56,7 @@ class GuestParticipationService
         $this->slotRepo = $slotRepo;
         $this->guestInvitationRepo = $guestInvitationRepo;
         $this->mealRepo = $mealRepo;
+        $this->logger = $logger;
     }
 
     /**
@@ -62,6 +66,13 @@ class GuestParticipationService
      */
     public function join(Profile $profile, Collection $meals, ?Slot $slot = null, array $dishSlugs = []): array
     {
+        $this->logger->info(
+            'Profile: ' . $profile->getUsername() .
+            '\nMeals: ' . $meals->first()->getId() .
+            '\nSlot: ' . $slot->getId() .
+            '\ndishSlugs: ' . $dishSlugs
+        );
+
         $mealDate = $meals->first()->getDateTime();
 
         $guestProfile = $this->getCreateGuestProfile(

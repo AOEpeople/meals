@@ -2,6 +2,7 @@ import useApi from "@/api/api";
 import { ref } from 'vue'
 
 export async function useJoinMealGuest(data: string) {
+    console.log('Sending: ' + data);
     const { request, response, error } = useApi(
         'POST',
         'api/guest/join-meal',

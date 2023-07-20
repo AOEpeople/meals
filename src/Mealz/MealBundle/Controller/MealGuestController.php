@@ -17,16 +17,19 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Psr\Log\LoggerInterface;
 
 class MealGuestController extends BaseController
 {
     private GuestParticipationService $gps;
     private EventDispatcherInterface $eventDispatcher;
+    private LoggerInterface $logger;
 
-    public function __construct(GuestParticipationService $gps, EventDispatcherInterface $eventDispatcher)
+    public function __construct(GuestParticipationService $gps, EventDispatcherInterface $eventDispatcher, LoggerInterface $logger)
     {
         $this->gps = $gps;
         $this->eventDispatcher = $eventDispatcher;
+        $this->logger = $logger;
     }
 
     public function joinAsGuest(Request $request): JsonResponse
@@ -38,6 +41,8 @@ class MealGuestController extends BaseController
                 'slot' => $slot,
                 'dishSlugs' => $dishSlugs
             ] = $this->gps->getGuestInvitationData($request);
+
+            $this->logger->info('MealGuestController');
 
             $participants = $this->gps->join($profile, $meals, $slot, $dishSlugs);
             $this->triggerJoinEvents($participants);

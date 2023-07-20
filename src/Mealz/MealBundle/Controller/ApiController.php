@@ -145,7 +145,7 @@ class ApiController extends BaseController
 
     public function list(): JSONResponse
     {
-        $day = $this->apiSrv->getDayByDate(new DateTime('tomorrow'));
+        $day = $this->apiSrv->getDayByDate(new DateTime('today'));
 
         $list['data'] = $this->participationSrv->getParticipationListBySlots($day);
 

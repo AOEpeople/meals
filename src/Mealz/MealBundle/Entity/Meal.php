@@ -178,6 +178,18 @@ class Meal implements JsonSerializable
         return null;
     }
 
+    public function isParticipant(Participant $participantToCheck): bool
+    {
+        /** @var Participant $participant */
+        foreach ($this->participants as $participant) {
+            if ($participant === $participantToCheck) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * @TODO don't load every participant object (raw sql query in repo?)
      */

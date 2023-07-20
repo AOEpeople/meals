@@ -8,9 +8,17 @@ use App\Mealz\MealBundle\Entity\DishCollection;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
+use Psr\Log\LoggerInterface;
 
 class ParticipationHelper
 {
+    private LoggerInterface $logger;
+
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
     /**
      * helper function to sort participants by their name or guest name.
      *
@@ -35,6 +43,7 @@ class ParticipationHelper
     {
         $groupedParticipants = [];
 
+        /** @var Participant $participant */
         foreach ($participants as $participant) {
             $slot = $participant->getSlot();
 
@@ -71,7 +80,7 @@ class ParticipationHelper
         foreach ($participant->getMeal()->getDay()->getMeals() as $meal) {
             $combinedDishes = $this->getCombinedDishesFromMeal($meal, $participant);
 
-            if (null !== $meal->getParticipant($participant->getProfile()) && (null === $slot || $slot->isDisabled() || $slot->isDeleted())) {
+            if (true === $meal->isParticipant($participant) && (null === $slot || $slot->isDisabled() || $slot->isDeleted())) {
                 $slots[''][$participant->getProfile()->getFullName()]['booked'][] = $meal->getDish()->getId();
 
                 foreach ($combinedDishes as $dish) {
@@ -80,7 +89,7 @@ class ParticipationHelper
                 continue;
             }
 
-            if (null !== $meal->getParticipant($participant->getProfile())) {
+            if (true === $meal->isParticipant($participant)) {
                 $slots[$slot->getTitle()][$participant->getProfile()->getFullName()]['booked'][] = $meal->getDish()->getId();
 
                 foreach ($combinedDishes as $dish) {
@@ -99,5 +108,15 @@ class ParticipationHelper
         }
 
         return new DishCollection([]);
+    }
+
+    private function getParticipantName(Participant $participant): string
+    {
+        $displayName = $participant->getProfile()->getFullName();
+        if (true === $participant->isGuest()) {
+            $displayName += ' (' . $participant->getProfile()->getCompany() . ')';
+        }
+
+        return $displayName;
     }
 }

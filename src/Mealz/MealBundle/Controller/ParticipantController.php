@@ -68,7 +68,10 @@ class ParticipantController extends BaseController
         }
 
         $parameters = json_decode($request->getContent(), true);
-        $slot = $this->slotRepo->find($parameters['slotID']);
+        $slot = null;
+        if (true === isset($parameters['slotID'])) {
+            $slot = $this->slotRepo->find($parameters['slotID']);
+        }
         $meal = $this->mealRepo->find($parameters['mealID']);
 
         try {

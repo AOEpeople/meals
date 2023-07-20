@@ -66,13 +66,6 @@ class GuestParticipationService
      */
     public function join(Profile $profile, Collection $meals, ?Slot $slot = null, array $dishSlugs = []): array
     {
-        $this->logger->info(
-            'Profile: ' . $profile->getUsername() .
-            '\nMeals: ' . $meals->first()->getId() .
-            '\nSlot: ' . $slot->getId() .
-            '\ndishSlugs: ' . $dishSlugs
-        );
-
         $mealDate = $meals->first()->getDateTime();
 
         $guestProfile = $this->getCreateGuestProfile(
@@ -234,10 +227,16 @@ class GuestParticipationService
     public function getGuestInvitationData(Request $request): array
     {
         $parameters = json_decode($request->getContent(), true);
+        $this->logger->info(
+            '$parameters: ' .
+            '\nMeals: ' . implode(', ', $parameters['chosenMeals'])
+        );
+
         $meals = new MealCollection();
 
         foreach ($parameters['chosenMeals'] as $mealId) {
-            $meal = $this->mealRepo->find($mealId);
+            // $this->logger->info('MealId: ' . $mealId . ', typeof mealId: ' . gettype($mealId));
+            $meal = $this->mealRepo->find(intval($mealId));
 
             if (null === $meal) {
                 $meals = null;
@@ -246,9 +245,11 @@ class GuestParticipationService
             $meals->add($meal);
         }
 
+
         if ((null === $meals) || (0 === count($meals))) {
             throw new ParticipationException('invalid data', ParticipationException::ERR_GUEST_REG_MEAL_NOT_FOUND);
         }
+        $this->logger->info('Meals: ' . implode(', ', $meals->toArray()));
 
         $dishSlugs = $parameters['combiDishes'];
 

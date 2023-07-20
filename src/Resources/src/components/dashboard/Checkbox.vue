@@ -142,7 +142,7 @@ async function joinMeal(dishSlugs) {
   if (!props.dayID) {
     const { emit } = useEventsBus()
     if (isCombiBox) emit('guestChosenCombi', dishSlugs)
-    emit('guestChosenMeals', props.mealID)
+    emit('guestChosenMeals', mealId)
     meal.isParticipating = -1
   } else {
     let data = {

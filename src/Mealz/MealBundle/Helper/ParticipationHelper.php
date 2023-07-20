@@ -116,13 +116,13 @@ class ParticipationHelper
         return new DishCollection([]);
     }
 
-    private function getParticipantName(Participant $participant): string
-    {
-        $displayName = $participant->getProfile()->getFullName();
-        if (true === $participant->isGuest()) {
-            $displayName += ' (' . $participant->getProfile()->getCompany() . ')';
-        }
+    // private function getParticipantName(Participant $participant): string
+    // {
+    //     $displayName = $participant->getProfile()->getFullName();
+    //     if (true === $participant->isGuest()) {
+    //         $displayName += ' (' . $participant->getProfile()->getCompany() . ')';
+    //     }
 
-        return $displayName;
-    }
+    //     return $displayName;
+    // }
 }

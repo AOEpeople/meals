@@ -103,20 +103,10 @@ class ParticipationHelper
 
     private function getCombinedDishesFromMeal(Meal $meal, Participant $participant): DishCollection
     {
-        if (true === $meal->isCombinedMeal() && null !== $meal->getParticipant($participant->getProfile())) {
-            return $meal->getParticipant($participant->getProfile())->getCombinedDishes();
+        if (true === $meal->isCombinedMeal() && true === $meal->isParticipant($participant)) {
+            return $participant->getCombinedDishes();
         }
 
         return new DishCollection([]);
     }
-
-    // private function getParticipantName(Participant $participant): string
-    // {
-    //     $displayName = $participant->getProfile()->getFullName();
-    //     if (true === $participant->isGuest()) {
-    //         $displayName += ' (' . $participant->getProfile()->getCompany() . ')';
-    //     }
-
-    //     return $displayName;
-    // }
 }

@@ -21,12 +21,14 @@
       v-if="!emptyDay"
       class="z-[1] flex min-w-[290px] flex-1 flex-col"
     >
-      <div class="flex h-[54px] items-center border-b-[2px] px-[15px]">
+      <div
+        v-if="day.slotsEnabled"
+        class="flex h-[54px] items-center border-b-[2px] px-[15px]"
+      >
         <span class="mr-2 inline-block text-[11px] font-bold uppercase leading-4 tracking-[1.5px] text-primary">
           {{ t('dashboard.slot.timeslot') }}
         </span>
         <Slots
-          v-if="day.slotsEnabled"
           :dayID="dayID"
           :day="day"
         />

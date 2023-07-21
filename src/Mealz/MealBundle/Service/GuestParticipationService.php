@@ -24,7 +24,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
-use Psr\Log\LoggerInterface;
 
 class GuestParticipationService
 {
@@ -37,7 +36,6 @@ class GuestParticipationService
     private SlotRepositoryInterface $slotRepo;
     private GuestInvitationRepositoryInterface $guestInvitationRepo;
     private MealRepositoryInterface $mealRepo;
-    private LoggerInterface $logger;
 
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -46,8 +44,7 @@ class GuestParticipationService
         RoleRepositoryInterface $roleRepo,
         SlotRepositoryInterface $slotRepo,
         GuestInvitationRepositoryInterface $guestInvitationRepo,
-        MealRepositoryInterface $mealRepo,
-        LoggerInterface $logger
+        MealRepositoryInterface $mealRepo
     ) {
         $this->entityManager = $entityManager;
         $this->participantRepo = $participantRepo;
@@ -56,7 +53,6 @@ class GuestParticipationService
         $this->slotRepo = $slotRepo;
         $this->guestInvitationRepo = $guestInvitationRepo;
         $this->mealRepo = $mealRepo;
-        $this->logger = $logger;
     }
 
     /**
@@ -227,10 +223,6 @@ class GuestParticipationService
     public function getGuestInvitationData(Request $request): array
     {
         $parameters = json_decode($request->getContent(), true);
-        $this->logger->info(
-            '$parameters: ' .
-            '\nMeals: ' . implode(', ', $parameters['chosenMeals'])
-        );
 
         $meals = new MealCollection();
 
@@ -245,11 +237,9 @@ class GuestParticipationService
             $meals->add($meal);
         }
 
-
         if ((null === $meals) || (0 === count($meals))) {
             throw new ParticipationException('invalid data', ParticipationException::ERR_GUEST_REG_MEAL_NOT_FOUND);
         }
-        $this->logger->info('Meals: ' . implode(', ', $meals->toArray()));
 
         $dishSlugs = $parameters['combiDishes'];
 

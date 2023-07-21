@@ -1,6 +1,8 @@
 <template>
   <div>
-    <span class="whitespace-nowrap text-note font-light text-primary"> {{ localePrice }} </span>
+    <span class="whitespace-nowrap text-[11px] font-light text-primary min-[370px]:text-note">
+      {{ localePrice }}
+    </span>
   </div>
 </template>
 <script setup>

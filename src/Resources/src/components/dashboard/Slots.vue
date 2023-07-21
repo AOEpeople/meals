@@ -5,13 +5,13 @@
     :disabled="disabled"
   >
     <div
-      class="relative"
+      class="relative w-full"
     >
       <ListboxButton
         :class="[open ? 'rounded-t-2xl border-x border-t' : 'rounded-3xl border', disabled ? '' : 'cursor-pointer']"
-        class="focus-visible:ring-offset-orange-300 relative flex h-8 w-64 items-center border-[#B4C1CE] bg-white pl-4 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2"
+        class="focus-visible:ring-offset-orange-300 relative flex h-8 w-full items-center border-[#B4C1CE] bg-white pl-4 pr-2 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 min-[380px]:pr-10 sm:w-64"
       >
-        <span class="text-gray block truncate text-note">
+        <span class="text-gray block truncate text-[12px] leading-5 min-[380px]:text-note">
           {{ selectedSlot.slug === 'auto' ? t('dashboard.slot.auto') : selectedSlot.title }}
           <span v-if="selectedSlot.limit !== 0">
             {{ '( ' + selectedSlot.count + ' / ' + selectedSlot.limit + ' )' }}
@@ -34,7 +34,7 @@
         leave-to-class="transform -translate-y-2"
       >-->
       <ListboxOptions
-        class="absolute -mt-[1px] max-h-60 w-full overflow-auto rounded-b-2xl border-x border-b border-[#B4C1CE] bg-white text-note shadow-lg focus:outline-none sm:text-sm"
+        class="absolute -mt-[1px] max-h-60 w-full overflow-auto rounded-b-2xl border-x border-b border-[#B4C1CE] bg-white text-[12px] leading-5 shadow-lg focus:outline-none min-[380px]:text-note sm:text-sm"
       >
         <template v-for="slot in day.slots">
           <ListboxOption

@@ -118,7 +118,7 @@ MealzMealBundle_api_join_Meal:
   methods: [POST]
 
 MealzMealBundle_api_join_Meal_Guest:
-  path: /guest/api/join-meal
+  path: /api/guest/join-meal
   defaults: { _controller: App\Mealz\MealBundle\Controller\MealGuestController::joinAsGuest }
   methods: [ POST ]
 

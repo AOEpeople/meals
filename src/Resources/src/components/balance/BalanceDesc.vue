@@ -1,5 +1,5 @@
 <template>
-  <td class="flex py-[19px]">
+  <td class="flex items-center py-[19px]">
     <img
       v-if="props.transaction.type === 'credit' && description === '0'"
       class="min-w-[21px]"
@@ -77,9 +77,12 @@
         </clipPath>
       </defs>
     </svg>
-    <span class="ml-2">{{ props.transaction.type === 'credit'
-      ? (description === '0' ? t('balance.paypal') : t('balance.cash'))
-      : description }}
+    <span class="ml-2 text-[12px] sm:text-[14px] xl:text-[18px]">
+      {{
+        props.transaction.type === 'credit' ?
+          (description === '0' ? t('balance.paypal') : t('balance.cash')) :
+          description
+      }}
     </span>
   </td>
 </template>

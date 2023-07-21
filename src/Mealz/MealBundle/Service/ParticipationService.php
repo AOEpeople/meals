@@ -17,6 +17,7 @@ use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 
 class ParticipationService
 {
@@ -50,6 +51,10 @@ class ParticipationService
      */
     public function join(Profile $profile, Meal $meal, ?Slot $slot = null, array $dishSlugs = []): ?array
     {
+        if ($meal->getLockDateTime() < new DateTime('now')) {
+            throw new Exception('Meal is already locked');
+        }
+
         // user is attempting to take over an already booked meal by some participant
         if (true === $this->mealIsOffered($meal) && true === $this->allowedToAccept($meal)) {
             return $this->reassignOfferedMeal($meal, $profile, $dishSlugs);

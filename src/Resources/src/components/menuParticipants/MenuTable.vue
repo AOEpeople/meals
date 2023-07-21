@@ -1,5 +1,8 @@
 <template>
-  <table v-if="loaded === true">
+  <table
+    v-if="loaded === true"
+    class="border-separate border-spacing-0"  
+  >
     <MenuTableHead :week-id="weekId" />
     <MenuTableBody :week-id="weekId" />
   </table>

@@ -6,7 +6,7 @@
   >
     <template #firstCell>
       <td
-        class="cursor-pointer whitespace-nowrap border-y-2 border-solid border-gray-200 p-2 text-center text-[12px] hover:bg-slate-400"
+        class="sticky left-0 cursor-pointer whitespace-nowrap border-b-2 border-r-2 border-solid border-gray-200 bg-[#f4f7f9] p-2 text-center text-[12px] hover:bg-slate-400"
         @click="editRow = !editRow"
       >
         {{ participant }}
@@ -16,11 +16,11 @@
       <td
         v-for="meal, mealIndex in meals"
         :key="`${meal.id}.${mealIndex}`"
-        class="h-10 border-2 border-solid border-gray-200 text-center"
+        class="h-10 cursor-pointer border-b-2 border-r-2 border-solid border-gray-200 text-center"
       >
         <span
           v-if="isBooked(dayId, participant, meal.id) === true"
-          class="flex place-content-center"
+          class="flex place-content-center hover:bg-slate-400"
         >
           <svg
             v-if="meal.dish !== 'combined-dish' && isCombiBooked(dayId, participant, meals) === true"
@@ -38,7 +38,7 @@
           </svg>
           <CheckCircleIcon
             v-else
-            class="check-circle-icon m-auto block h-6 w-6 text-primary"
+            class="m-auto block h-6 w-6 text-primary hover:bg-slate-400"
             @click="editRow === true && meal.dish !== 'combined-dish' && removeParticipantFromMeal(meal.id, participant, dayId)"
           />
         </span>
@@ -46,8 +46,17 @@
           v-else
           class="flex h-full w-full place-content-center"
           :class="{ 'cursor-pointer hover:bg-slate-400': editRow }"
-          @click="editRow === true && meal.dish !== 'combined-dish' && addParticipantToMeal(meal.id, participant, dayId)"
-        />
+          @click="addParticipantOrOpenCombi(meal, participant, dayId)"
+        >
+          <CombiDialog
+            v-if="editRow === true && meal.dish === 'combined-dish'"
+            :openCombi="openCombi"
+            :meal-id="meal.id"
+            :day-id="dayId"
+            :week-id="weekId"
+            @close-dialog="closeCombiModal([])"
+          />
+        </span>
       </td>
     </template>
   </MenuTableRow>
@@ -61,9 +70,11 @@ import { SimpleMeal } from '@/stores/weeksStore';
 import { CheckCircleIcon } from '@heroicons/vue/solid';
 import { ref, watch } from 'vue';
 import useDetectClickOutside from '@/services/useDetectClickOutside';
+import CombiDialog from './CombiDialog.vue';
 
 const editRow = ref<boolean>(false);
 const row = ref<HTMLElement | null>(null);
+const openCombi = ref<number | null>(null);
 
 const props = defineProps<{
   weekId: number,
@@ -95,5 +106,20 @@ function isCombiBooked(dayId: string, participant: string, meals: SimpleMeal[]) 
   }
 
   return isBooked(dayId, participant, combiMeal);
+}
+
+function addParticipantOrOpenCombi(meal: SimpleMeal, participant: string, dayId: string) {
+  if (editRow.value === true && meal.dish !== 'combined-dish') {
+    addParticipantToMeal(meal.id, participant, dayId);
+  } else if (editRow.value === true && meal.dish === 'combined-dish') {
+    openCombi.value = meal.id;
+  }
+}
+
+function closeCombiModal(slugs: string[]) {
+  openCombi.value = null;
+  if (slugs !== undefined && slugs.length === 2) {
+    console.log(`Combi Slugs: ${slugs.join(', ')}`);
+  }
 }
 </script>

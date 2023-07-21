@@ -345,8 +345,6 @@ class ParticipantController extends BaseController
      */
     public function add(Profile $profile, Meal $meal): JsonResponse
     {
-        $this->logger->info('Request to add Meal with ID ' . $meal->getId() . ' to Profile ' . $profile->getFullName() . '. Name of the meal: ' . $meal->getDish()->getSlug());
-
         try {
             $result = $this->participationSrv->join($profile, $meal);
 

@@ -227,7 +227,6 @@ class GuestParticipationService
         $meals = new MealCollection();
 
         foreach ($parameters['chosenMeals'] as $mealId) {
-            // $this->logger->info('MealId: ' . $mealId . ', typeof mealId: ' . gettype($mealId));
             $meal = $this->mealRepo->find(intval($mealId));
 
             if (null === $meal) {

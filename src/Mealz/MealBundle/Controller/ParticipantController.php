@@ -12,6 +12,7 @@ use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Event\MealOfferCancelledEvent;
 use App\Mealz\MealBundle\Event\MealOfferedEvent;
 use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
+use App\Mealz\MealBundle\Repository\DayRepositoryInterface;
 use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
 use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\MealBundle\Repository\SlotRepositoryInterface;
@@ -21,6 +22,7 @@ use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\MealBundle\Service\SlotService;
 use App\Mealz\UserBundle\Entity\Profile;
+use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -40,6 +42,7 @@ class ParticipantController extends BaseController
     private ParticipationService $participationSrv;
     private MealRepositoryInterface $mealRepo;
     private SlotRepositoryInterface $slotRepo;
+    private DayRepositoryInterface $dayRepo;
     private LoggerInterface $logger;
 
     public function __construct(
@@ -49,6 +52,7 @@ class ParticipantController extends BaseController
         ParticipationService $participationSrv,
         MealRepositoryInterface $mealRepo,
         SlotRepositoryInterface $slotRepo,
+        DayRepositoryInterface $dayRepo,
         LoggerInterface $logger
     ) {
         $this->eventDispatcher = $eventDispatcher;
@@ -57,6 +61,7 @@ class ParticipantController extends BaseController
         $this->participationSrv = $participationSrv;
         $this->mealRepo = $mealRepo;
         $this->slotRepo = $slotRepo;
+        $this->dayRepo = $dayRepo;
         $this->logger = $logger;
     }
 
@@ -326,15 +331,14 @@ class ParticipantController extends BaseController
 
         /** @var Day $day */
         foreach ($days as $day) {
-            $participations = $this->participationSrv->getParticipationListBySlots($day, true);
-            // merge slots
-            foreach ($participations as $slot) {
-                if (true === isset($response[$day->getId()])) {
-                    $response[$day->getId()] = $slot + $response[$day->getId()];
-                } else {
-                    $response[$day->getId()] = $slot;
-                }
+            $meals = $day->getMeals();
+            $participants = new ArrayCollection();
+            /** @var Meal $meal */
+            foreach ($meals as $meal) {
+                $participants = new ArrayCollection(array_merge($participants->toArray(), $meal->getParticipants()->toArray()));
             }
+
+            $response = $this->addParticipationInfo($response, $participants, $day);
         }
 
         return new JsonResponse($response, 200);
@@ -343,18 +347,35 @@ class ParticipantController extends BaseController
     /**
      * @Security("is_granted('ROLE_KITCHEN_STAFF')")
      */
-    public function add(Profile $profile, Meal $meal): JsonResponse
+    public function add(Profile $profile, Meal $meal, Request $request): JsonResponse
     {
+        $parameters = json_decode($request->getContent(), true);
+        $result = null;
+
         try {
-            $result = $this->participationSrv->join($profile, $meal);
+            if (true === isset($parameters['combiDishes'])) {
+                $result = $this->participationSrv->join($profile, $meal, null, $parameters['combiDishes']);
+            } else {
+                $result = $this->participationSrv->join($profile, $meal);
+            }
 
             $this->eventSrv->triggerJoinEvents($result['participant'], $result['offerer']);
             $this->logAdd($meal, $result['participant']);
 
+            // get updated day
+            $day = $this->dayRepo->getDayByDate($meal->getDay()->getDateTime());
+            $participations = $this->participationSrv->getParticipationsByDayAndProfile($profile, $day);
+
+            $participationData = [];
+            foreach ($participations as $participation) {
+                $this->logger->info('Participation for dataconversion: ' . $participation->getId());
+                $participationData[] = $this->getParticipationData($participation);
+            }
+
             return new JsonResponse([
                 'day' => $meal->getDay()->getId(),
                 'profile' => $profile->getFullName(),
-                'bookedDishes' => $this->participationSrv->getDishesByDayAndProfile($meal->getDay(), $profile),
+                'booked' => $participationData
             ], 200);
         } catch (Exception $e) {
             $this->logException($e);
@@ -380,10 +401,17 @@ class ParticipantController extends BaseController
             $this->eventSrv->triggerLeaveEvents($participation);
             $this->logRemove($meal, $participation);
 
+            $participations = $this->participationSrv->getParticipationsByDayAndProfile($profile, $meal->getDay());
+
+            $participationData = [];
+            foreach ($participations as $participation) {
+                $participationData[] = $this->getParticipationData($participation);
+            }
+
             return new JsonResponse([
                 'day' => $meal->getDay()->getId(),
                 'profile' => $profile->getFullName(),
-                'bookedDishes' => $this->participationSrv->getDishesByDayAndProfile($meal->getDay(), $profile),
+                'booked' => $participationData
             ], 200);
         } catch (Exception $e) {
             $this->logException($e);
@@ -445,5 +473,29 @@ class ParticipantController extends BaseController
                 ]
             );
         }
+    }
+
+    private function addParticipationInfo(array $response, ArrayCollection $participants, Day $day): array
+    {
+        /** @var Participant $participant */
+        foreach ($participants as $participant) {
+            $participationData = $this->getParticipationData($participant);
+            $response[$day->getId()][$participant->getProfile()->getFullName()]['booked'][] = $participationData;
+            $response[$day->getId()][$participant->getProfile()->getFullName()]['profile'] = $participant->getProfile()->getUsername();
+        }
+
+        return $response;
+    }
+
+    private function getParticipationData(Participant $participant): array
+    {
+        $participationData['mealId'] = $participant->getMeal()->getId();
+        $participationData['dishId'] = $participant->getMeal()->getDish()->getId();
+        $participationData['combinedDishes'] = array_map(
+            fn ($dish) => $dish->getId(),
+            $participant->getCombinedDishes()->toArray()
+        );
+
+        return $participationData;
     }
 }

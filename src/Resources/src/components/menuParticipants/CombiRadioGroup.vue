@@ -1,16 +1,17 @@
 <template>
   <RadioGroup
     v-model="mealId"
-    class="my-2 rounded-md bg-white py-2 shadow-md"
+    class="my-2 rounded-md bg-white p-2 shadow-md"
   >
     <RadioGroupOption
       v-for="meal in meals"
       :key="`${meal.dishSlug}_${meal.mealId}`"
       v-slot="{ checked }"
       :value="meal.mealId"
+      class="mb-2 focus:outline-none"
     >
       <div
-        class="mb-2 flex cursor-pointer flex-row rounded-md border-2 border-transparent bg-white p-2 ring-4 hover:bg-slate-400"
+        class="m-2 flex cursor-pointer flex-row gap-2 rounded-md border-2 border-transparent bg-white p-2 ring-2 hover:bg-slate-400 focus:outline-none"
         :class="checked ? 'ring-indigo-600' : 'ring-gray-300'"
       >
         <span
@@ -31,7 +32,7 @@
 import { MealDTO } from '@/interfaces/DayDTO';
 import { useDishes } from '@/stores/dishesStore';
 import { RadioGroup, RadioGroupOption } from '@headlessui/vue'
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { CheckCircleIcon } from '@heroicons/vue/solid';
 
@@ -53,5 +54,9 @@ const mealId = computed({
     console.log(`Set mealId: ${mealId}`);
     emit('update:modelValue', mealId);
   }
-})
+});
+
+onMounted(() => {
+  mealId.value = props.meals[0].mealId;
+});
 </script>

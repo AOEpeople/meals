@@ -16,8 +16,11 @@ use App\Mealz\MealBundle\Repository\SlotRepositoryInterface;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Psr\Log\LoggerInterface;
+
 
 class ParticipationService
 {
@@ -29,19 +32,22 @@ class ParticipationService
     private DayRepositoryInterface $dayRepo;
     private ParticipantRepositoryInterface $participantRepo;
     private SlotRepositoryInterface $slotRepo;
+    private LoggerInterface $logger;
 
     public function __construct(
         EntityManagerInterface $em,
         Doorman $doorman,
         DayRepositoryInterface $dayRepo,
         ParticipantRepositoryInterface $participantRepo,
-        SlotRepositoryInterface $slotRepo
+        SlotRepositoryInterface $slotRepo,
+        LoggerInterface $logger
     ) {
         $this->em = $em;
         $this->doorman = $doorman;
         $this->dayRepo = $dayRepo;
         $this->participantRepo = $participantRepo;
         $this->slotRepo = $slotRepo;
+        $this->logger = $logger;
     }
 
     /**
@@ -146,11 +152,10 @@ class ParticipationService
     private function create(Profile $profile, Meal $meal, ?Slot $slot = null, array $dishSlugs = []): ?Participant
     {
         $participant = $this->createParticipation($profile, $meal, $slot, $dishSlugs);
+        $meal->participants->add($participant);
 
         $this->em->persist($participant);
         $this->em->flush();
-
-        $meal->participants->add($participant);
 
         return $participant;
     }
@@ -203,11 +208,10 @@ class ParticipationService
         $participants = $meal->getParticipants();
 
         foreach ($participants as $participant) {
-            if ($participant->getProfile() === $profile) {
+            if ($participant->getProfile()->getUsername() === $profile->getUsername()) {
                 return $participant;
             }
         }
-
         return null;
     }
 
@@ -278,6 +282,22 @@ class ParticipationService
             $result->add($meal);
         }
 
+        return $result;
+    }
+
+    public function getParticipationsByDayAndProfile(Profile $profile, Day $day): ArrayCollection
+    {
+        $result = new ArrayCollection();
+        $meals = $day->getMeals();
+
+        /** @var Meal $meal */
+        foreach ($meals as $meal) {
+            $participation = $this->getParticipationByMealAndUser($meal, $profile);
+            if (null !== $participation) {
+                $result->add($participation);
+            }
+        }
+        
         return $result;
     }
 }

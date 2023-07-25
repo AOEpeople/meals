@@ -1,13 +1,12 @@
-import { Dictionary } from "types/types";
 import useApi from "./api";
-import { IMenuParticipation } from "@/stores/participationsStore";
+import { IMenuParticipationDays } from "@/stores/participationsStore";
 
 /**
  * Fetches a list of all participations for a passed in week
  * @param weekId ID of the week
  */
 export default async function getParticipations(weekId: number) {
-    const { error, response: participations, request } = useApi<Dictionary<Dictionary<IMenuParticipation>>>(
+    const { error, response: participations, request } = useApi<IMenuParticipationDays>(
         'GET',
         `api/participations/${weekId}`
     );

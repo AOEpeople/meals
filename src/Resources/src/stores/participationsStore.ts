@@ -1,6 +1,5 @@
-import { IBookedData } from "@/api/getShowParticipations";
 import { Dictionary } from "types/types";
-import { Ref, reactive, readonly, watch } from "vue";
+import { Ref, reactive, readonly } from "vue";
 import getParticipations from "@/api/getParticipations";
 import { isResponseDictOkay, isResponseObjectOkay } from "@/api/isResponseOkay";
 import putParticipation from "@/api/putParticipation";
@@ -8,28 +7,39 @@ import { isMessage, IMessage } from "@/interfaces/IMessage";
 import deleteParticipation from "@/api/deleteParticipation";
 
 interface IMenuParticipationsState {
-    days: Dictionary<Dictionary<IMenuParticipation>>,
+    days: IMenuParticipationDays,
     error: string,
     isLoading: boolean
 }
 
-export interface IMenuParticipation extends IBookedData {
-    booked: number[],
+export type IMenuParticipationDays = {
+    [dayId: string]: IMenuParticipant
+}
+
+type IMenuParticipant = {
+    [participantName: string]: IMenuParticipation
+}
+export interface IMenuParticipation {
+    booked: Dictionary<IMealInfo>,
     profile: string
 }
 
-export interface IParticipationUpdate {
-    day: number,
-    profile: string,
-    bookedDishes: number[]
+interface IMealInfo {
+    mealId: number,
+    dishId: number,
+    combinedDishes: number[]
+}
+
+export interface IParticipationUpdate extends IMenuParticipation {
+    day: number
 }
 
 // TODO: to be implemented
-function isDaysDict(days: Dictionary<Dictionary<IMenuParticipation>>) {
+function isDaysDict(days: IMenuParticipationDays) {
     return null;
 }
 
-function isParticipationUpdate(participationUpdate: IParticipationUpdate) {
+function isParticipationUpdate(participationUpdate: IMenuParticipation) {
     return null;
 }
 
@@ -75,7 +85,14 @@ export function useParticipations(weekId: number) {
             }
 
             menuParticipationsState.error = '';
-            menuParticipationsState.days[dayId][profileFullname].booked = (response.value as IParticipationUpdate).bookedDishes;
+            if (menuParticipationsState.days[dayId][profileFullname] !== undefined) {
+                menuParticipationsState.days[dayId][profileFullname].booked = (response.value as IMenuParticipation).booked;
+            } else {
+                menuParticipationsState.days[dayId][profileFullname] = {
+                    booked: (response.value as IMenuParticipation).booked,
+                    profile: (response.value as IMenuParticipation).profile
+                };
+            }
         } else if (isMessage(response.value) === true) {
             menuParticipationsState.error = (response.value as IMessage).message;
         } else {
@@ -102,7 +119,7 @@ export function useParticipations(weekId: number) {
             }
 
             menuParticipationsState.error = '';
-            menuParticipationsState.days[dayId][profileFullname].booked = (response.value as IParticipationUpdate).bookedDishes;
+            menuParticipationsState.days[dayId][profileFullname].booked = (response.value as IMenuParticipation).booked;
         } else if (isMessage(response.value) === true) {
             menuParticipationsState.error = (response.value as IMessage).message;
         } else {
@@ -134,11 +151,33 @@ export function useParticipations(weekId: number) {
 
         let count = 0;
         for (const participant of Object.values(day)) {
-            if (participant.booked.includes(dishId)) {
+            if (Object.values(participant.booked).find(mealInfo => mealInfo.dishId === dishId) !== undefined) {
                 count++;
             }
         }
         return count;
+    }
+
+    function hasParticipantBookedMeal(dayId: string, participant: string, mealId: number) {
+        const participantMeals = menuParticipationsState.days[dayId][participant]?.booked;
+        if (participantMeals !== null && participantMeals !== undefined) {
+            return Object.values(participantMeals).find(mealInfo => mealInfo.mealId === mealId) !== undefined;
+        }
+        return false;
+    }
+
+    function hasParticipantBookedCombiDish(dayId: string, participant: string, dishId: number) {
+        const participantMeals = menuParticipationsState.days[dayId][participant]?.booked;
+
+        if (participantMeals !== null && participantMeals !== undefined) {
+            for (const meal of Object.values(participantMeals)) {
+                if (meal.combinedDishes.length > 0 && meal.combinedDishes.includes(dishId)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     return {
@@ -148,6 +187,8 @@ export function useParticipations(weekId: number) {
         countBookedMeal,
         getProfileId,
         addParticipantToMeal,
-        removeParticipantFromMeal
+        removeParticipantFromMeal,
+        hasParticipantBookedMeal,
+        hasParticipantBookedCombiDish
     }
 }

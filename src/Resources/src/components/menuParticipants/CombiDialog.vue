@@ -5,7 +5,7 @@
     @close="closeCombi(false)"
   >
     <div
-      class="fixed flex items-center justify-center p-4"
+      class="fixed inset-0 flex items-center justify-center p-4"
     >
       <DialogPanel
         class="relative overflow-hidden rounded-lg bg-white p-4 text-left shadow-xl sm:my-8 sm:p-6"
@@ -19,16 +19,16 @@
           v-model="selectedCombi[index]"
           :meals="meals"
         />
-        <div class="flex flex-row gap-2">
+        <div class="flex flex-row">
           <CreateButton
             :managed="true"
             :btn-text="t('combiModal.submit')"
-            class="cursor-pointer"
+            class="flex-1 cursor-pointer"
             @click="closeCombi(true)"
           />
           <CancelButton
             :btn-text="t('combiModal.cancel')"
-            class="cursor-pointer"
+            class="flex-1 cursor-pointer"
             @click="closeCombi(false)"
           />
         </div>

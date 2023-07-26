@@ -5,6 +5,7 @@ import { isResponseDictOkay, isResponseObjectOkay } from "@/api/isResponseOkay";
 import putParticipation from "@/api/putParticipation";
 import { isMessage, IMessage } from "@/interfaces/IMessage";
 import deleteParticipation from "@/api/deleteParticipation";
+import { profile } from "console";
 
 interface IMenuParticipationsState {
     days: IMenuParticipationDays,
@@ -39,8 +40,14 @@ function isDaysDict(days: IMenuParticipationDays) {
     return null;
 }
 
-function isParticipationUpdate(participationUpdate: IMenuParticipation) {
-    return null;
+function isParticipationUpdate(participationUpdate: IParticipationUpdate): participationUpdate is IParticipationUpdate {
+    return (
+        participationUpdate !== null &&
+        participationUpdate !== undefined &&
+        typeof (participationUpdate as IParticipationUpdate).day === 'number' &&
+        typeof (participationUpdate as IParticipationUpdate).profile === 'string' &&
+        Object.keys(participationUpdate).length === 3
+    );
 }
 
 const menuParticipationsState = reactive<IMenuParticipationsState>({
@@ -75,15 +82,23 @@ export function useParticipations(weekId: number) {
 
         const { error, response } = await putParticipation(mealId, profileId, combinedDishes);
 
-        if (isMessage(response.value) === false && isResponseObjectOkay<IParticipationUpdate>(error, (response as Ref<IParticipationUpdate>))) {
-            if (
-                parseInt(dayId) !== (response.value as IParticipationUpdate).day ||
-                profileFullname !== (response.value as IParticipationUpdate).profile
-            ) {
-                menuParticipationsState.error = 'Unknown Error occured on updating participations';
-                return;
-            }
+        handleParticipationUpdate(response, error, dayId, profileFullname);
+    }
 
+    async function removeParticipantFromMeal(mealId: number, profileFullname: string, dayId: string) {
+
+        const profileId = getProfileId(profileFullname);
+        if (typeof profileId !== 'string') {
+            return;
+        }
+
+        const { error, response } = await deleteParticipation(mealId, profileId);
+
+        handleParticipationUpdate(response, error, dayId, profileFullname);
+    }
+
+    function handleParticipationUpdate(response: Ref<IMessage | IParticipationUpdate>, error: Ref<boolean>, dayId: string, profileFullname: string) {
+        if (isMessage(response.value) === false && isResponseObjectOkay<IParticipationUpdate>(error, (response as Ref<IParticipationUpdate>), isParticipationUpdate)) {
             menuParticipationsState.error = '';
             if (menuParticipationsState.days[dayId][profileFullname] !== undefined) {
                 menuParticipationsState.days[dayId][profileFullname].booked = (response.value as IMenuParticipation).booked;
@@ -100,33 +115,6 @@ export function useParticipations(weekId: number) {
         }
     }
 
-    async function removeParticipantFromMeal(mealId: number, profileFullname: string, dayId: string) {
-
-        const profileId = getProfileId(profileFullname);
-        if (typeof profileId !== 'string') {
-            return;
-        }
-
-        const { error, response } = await deleteParticipation(mealId, profileId);
-
-        if (isMessage(response.value) === false && isResponseObjectOkay<IParticipationUpdate>(error, (response as Ref<IParticipationUpdate>))) {
-            if (
-                parseInt(dayId) !== (response.value as IParticipationUpdate).day ||
-                profileFullname !== (response.value as IParticipationUpdate).profile
-            ) {
-                menuParticipationsState.error = 'Unknown Error occured on deleting participations';
-                return;
-            }
-
-            menuParticipationsState.error = '';
-            menuParticipationsState.days[dayId][profileFullname].booked = (response.value as IMenuParticipation).booked;
-        } else if (isMessage(response.value) === true) {
-            menuParticipationsState.error = (response.value as IMessage).message;
-        } else {
-            menuParticipationsState.error = 'Unknown Error occured on deleting participations';
-        }
-    }
-
     function getParticipants() {
         const participants = new Set<string>();
 
@@ -134,7 +122,7 @@ export function useParticipations(weekId: number) {
             Object.keys(day).forEach((participant) => participants.add(participant));
         }
 
-        return participants;
+        return [...participants].sort();
     }
 
     function getProfileId(participant: string) {

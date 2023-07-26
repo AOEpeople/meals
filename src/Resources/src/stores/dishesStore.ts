@@ -302,5 +302,6 @@ export function useDishes() {
         resetState,
         getDishBySlug,
         getDishArrayBySlugs,
+        getDishById
     };
 }

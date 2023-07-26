@@ -66,14 +66,14 @@ export function useParticipations(weekId: number) {
         menuParticipationsState.isLoading = false;
     }
 
-    async function addParticipantToMeal(mealId: number, profileFullname: string, dayId: string) {
+    async function addParticipantToMeal(mealId: number, profileFullname: string, dayId: string, combinedDishes?: string[]) {
 
         const profileId = getProfileId(profileFullname);
         if (typeof profileId !== 'string') {
             return;
         }
 
-        const { error, response } = await putParticipation(mealId, profileId);
+        const { error, response } = await putParticipation(mealId, profileId, combinedDishes);
 
         if (isMessage(response.value) === false && isResponseObjectOkay<IParticipationUpdate>(error, (response as Ref<IParticipationUpdate>))) {
             if (

@@ -353,6 +353,10 @@ class ParticipantController extends BaseController
         $result = null;
 
         try {
+            if (true === $meal->isCombinedMeal() && false === isset($parameters['combiDishes'])) {
+                throw new Exception('Combined Meals need exactly two dishes');
+            }
+
             if (true === isset($parameters['combiDishes'])) {
                 $result = $this->participationSrv->join($profile, $meal, null, $parameters['combiDishes']);
             } else {

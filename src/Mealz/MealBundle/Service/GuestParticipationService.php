@@ -223,10 +223,11 @@ class GuestParticipationService
     public function getGuestInvitationData(Request $request): array
     {
         $parameters = json_decode($request->getContent(), true);
+
         $meals = new MealCollection();
 
         foreach ($parameters['chosenMeals'] as $mealId) {
-            $meal = $this->mealRepo->find($mealId);
+            $meal = $this->mealRepo->find((int) $mealId);
 
             if (null === $meal) {
                 $meals = null;

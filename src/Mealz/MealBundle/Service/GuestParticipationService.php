@@ -227,7 +227,7 @@ class GuestParticipationService
         $meals = new MealCollection();
 
         foreach ($parameters['chosenMeals'] as $mealId) {
-            $meal = $this->mealRepo->find(intval($mealId));
+            $meal = $this->mealRepo->find((int) $mealId);
 
             if (null === $meal) {
                 $meals = null;

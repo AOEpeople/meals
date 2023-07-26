@@ -10,15 +10,18 @@ use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\MealCollection;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
+use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Repository\DayRepositoryInterface;
 use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\MealBundle\Repository\SlotRepositoryInterface;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\UserBundle\Entity\Profile;
+use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use PhpCollection\Set;
 use Psr\Log\LoggerInterface;
 
 
@@ -32,6 +35,7 @@ class ParticipationService
     private DayRepositoryInterface $dayRepo;
     private ParticipantRepositoryInterface $participantRepo;
     private SlotRepositoryInterface $slotRepo;
+    private ProfileRepositoryInterface $profileRepo;
     private LoggerInterface $logger;
 
     public function __construct(
@@ -40,6 +44,7 @@ class ParticipationService
         DayRepositoryInterface $dayRepo,
         ParticipantRepositoryInterface $participantRepo,
         SlotRepositoryInterface $slotRepo,
+        ProfileRepositoryInterface $profileRepo,
         LoggerInterface $logger
     ) {
         $this->em = $em;
@@ -47,6 +52,7 @@ class ParticipationService
         $this->dayRepo = $dayRepo;
         $this->participantRepo = $participantRepo;
         $this->slotRepo = $slotRepo;
+        $this->profileRepo = $profileRepo;
         $this->logger = $logger;
     }
 
@@ -297,7 +303,26 @@ class ParticipationService
                 $result->add($participation);
             }
         }
-        
+
         return $result;
+    }
+
+    public function getNonParticipatingProfilesByWeek(Week $week): array
+    {
+        $participations = $this->participantRepo->getParticipantsOnDays($week->getStartTime(), $week->getEndTime());
+        $profiles = new Set(array_map(
+            fn ($participant) => $participant->getProfile()->getUserName(),
+            $participations
+        ));
+        $profiles = $profiles->all();
+
+        if (0 === count($profiles)) {
+            $profiles = [''];
+        }
+
+        $nonParticipatingProfiles = null;
+        $nonParticipatingProfiles = $this->profileRepo->findAllExcept($profiles);
+
+        return $nonParticipatingProfiles;
     }
 }

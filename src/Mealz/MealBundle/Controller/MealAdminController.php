@@ -176,7 +176,7 @@ class MealAdminController extends BaseController
 
         $mealCollection = $day['meals'];
         // max 2 main meals allowed
-        if (2 < count($mealCollection)) {
+        if (3 < count($mealCollection)) {
             throw new Exception('too many meals requested');
         }
 

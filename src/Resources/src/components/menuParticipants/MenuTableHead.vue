@@ -25,7 +25,9 @@
           :key="`${meal.id}_${mealIndex}`"
           class="border-b-2 border-r-2 border-solid border-gray-200 px-2 text-center"
         >
-          <span>{{ locale === 'en' ? getDishBySlug(meal.dish).titleEn : getDishBySlug(meal.dish).titleDe }}</span>
+          <span class="block w-[125px] hyphens-auto break-words text-[14px]">
+            {{ locale === 'en' ? getDishBySlug(meal.dish).titleEn : getDishBySlug(meal.dish).titleDe }}
+          </span>
         </th>
       </template>
     </MenuTableRow>

@@ -22,7 +22,7 @@
           fill-rule="evenodd"
           clip-rule="evenodd"
           viewBox="0 0 512 508.47"
-          class="block h-[22px] w-[22px] pt-[2px] text-primary"
+          class="block h-[22px] w-[22px] text-primary"
         >
           <path
             fill-rule="nonzero"
@@ -32,7 +32,7 @@
         </svg>
       </span>
       <span
-        v-if="bookedMeal === false"
+        v-if="bookedMeal === false && edit === true"
         class="flex h-full w-full flex-1 place-content-center items-center"
         :class="{ 'cursor-pointer hover:bg-slate-400': edit }"
         @click="addParticipantOrOpenCombi(meal, participant, dayId)"

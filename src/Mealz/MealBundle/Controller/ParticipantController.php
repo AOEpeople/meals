@@ -30,6 +30,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Psr\Log\LoggerInterface;
+use stdClass;
 
 /**
  * @Security("is_granted('ROLE_USER')")
@@ -424,6 +425,15 @@ class ParticipantController extends BaseController
         }
     }
 
+    /**
+     * @Security("is_granted('ROLE_KITCHEN_STAFF')")
+     */
+    public function getProfilesWithoutParticipation(Week $week): JsonResponse
+    {
+        $response = $this->participationSrv->getNonParticipatingProfilesByWeek($week);
+        return new JsonResponse($response, 200);
+    }
+
     private function generateResponse(string $route, string $action, Participant $participant): JsonResponse
     {
         return new JsonResponse([
@@ -481,6 +491,11 @@ class ParticipantController extends BaseController
 
     private function addParticipationInfo(array $response, ArrayCollection $participants, Day $day): array
     {
+        if (0 === count($participants)) {
+            $response[$day->getId()] = new stdClass();
+            return $response;
+        }
+
         /** @var Participant $participant */
         foreach ($participants as $participant) {
             $participationData = $this->getParticipationData($participant);

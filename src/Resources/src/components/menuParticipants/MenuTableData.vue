@@ -43,7 +43,7 @@
           :meal-id="meal.id"
           :day-id="dayId"
           :week-id="weekId"
-          @close-dialog="closeCombiModal([])"
+          @close-dialog="closeCombiModal"
         />
       </span>
     </div>
@@ -54,6 +54,7 @@
 import { SimpleMeal } from '@/stores/weeksStore';
 import { useMealIdToDishId } from '@/services/useMealIdToDishId';
 import { useParticipations } from '@/stores/participationsStore';
+import { useDishes } from '@/stores/dishesStore';
 import { CheckCircleIcon } from '@heroicons/vue/solid';
 import CombiDialog from './CombiDialog.vue';
 import { computed, ref } from 'vue';
@@ -70,6 +71,7 @@ const props = defineProps<{
 
 const { mealIdToDishIdDict } = useMealIdToDishId(props.weekId);
 const { addParticipantToMeal, removeParticipantFromMeal, hasParticipantBookedMeal, hasParticipantBookedCombiDish } = useParticipations(props.weekId);
+const { getDishById } = useDishes();
 
 const isCombi = computed(() => props.meal.dish === 'combined-dish');
 const bookedCombi = computed(() => hasParticipantBookedCombiDish(props.dayId, props.participant, mealIdToDishIdDict.get(props.meal.id)));
@@ -83,10 +85,12 @@ function addParticipantOrOpenCombi(meal: SimpleMeal, participant: string, dayId:
   }
 }
 
-function closeCombiModal(slugs: string[]) {
+async function closeCombiModal(combiMeals: number[]) {
   openCombi.value = null;
-  if (slugs !== undefined && slugs.length === 2) {
-    console.log(`Combi Slugs: ${slugs.join(', ')}`);
+  if (combiMeals !== undefined && combiMeals.length === 2) {
+    const dishSlugs = combiMeals.map(mealId => mealIdToDishIdDict.get(mealId)).map(dishId => getDishById(dishId).slug);
+    console.log(`Combi Slugs: ${dishSlugs.join(', ')}`);
+    await addParticipantToMeal(props.meal.id, props.participant, props.dayId, dishSlugs);
   }
 }
 </script>

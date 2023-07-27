@@ -5,7 +5,7 @@ import { isResponseDictOkay, isResponseObjectOkay } from "@/api/isResponseOkay";
 import putParticipation from "@/api/putParticipation";
 import { isMessage, IMessage } from "@/interfaces/IMessage";
 import deleteParticipation from "@/api/deleteParticipation";
-import { profile } from "console";
+import { IProfile } from "./profilesStore";
 
 interface IMenuParticipationsState {
     days: IMenuParticipationDays,
@@ -115,6 +115,14 @@ export function useParticipations(weekId: number) {
         }
     }
 
+    function addEmptyParticipationToState(profile: IProfile) {
+        const firstDayId = Object.keys(menuParticipationsState.days)[0];
+        menuParticipationsState.days[firstDayId][profile.fullName] = {
+            booked: {},
+            profile: profile.user
+        }
+    }
+
     function getParticipants() {
         const participants = new Set<string>();
 
@@ -177,6 +185,7 @@ export function useParticipations(weekId: number) {
         addParticipantToMeal,
         removeParticipantFromMeal,
         hasParticipantBookedMeal,
-        hasParticipantBookedCombiDish
+        hasParticipantBookedCombiDish,
+        addEmptyParticipationToState
     }
 }

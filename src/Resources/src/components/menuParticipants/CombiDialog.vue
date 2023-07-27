@@ -74,9 +74,7 @@ const menuOfTheDay = computed(() => {
 const selectedCombi = ref<number[]>([-1, -1]);
 
 function closeCombi(doSubmit: boolean) {
-  console.log(`Selected meals to post: ${selectedCombi.value.join(', ')}, with combi-meal: ${props.mealId}`);
   if (doSubmit === true && selectedCombi.value.includes(-1) === false) {
-    console.log('submitting choosen combi-meals')
     emit('closeDialog', selectedCombi.value);
   } else {
     emit('closeDialog', null);

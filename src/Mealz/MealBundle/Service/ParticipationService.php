@@ -323,6 +323,15 @@ class ParticipationService
         $nonParticipatingProfiles = null;
         $nonParticipatingProfiles = $this->profileRepo->findAllExcept($profiles);
 
-        return $nonParticipatingProfiles;
+        $profileData = array_map(
+            fn ($profile) => [
+                'user' => $profile->getUsername(),
+                'fullName' => $profile->getFullName(),
+                'roles' => $profile->getRoles(),
+            ],
+            $nonParticipatingProfiles
+        );
+
+        return $profileData;
     }
 }

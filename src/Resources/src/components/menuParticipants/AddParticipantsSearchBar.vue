@@ -43,7 +43,7 @@
             class="truncate p-4 text-[14px] text-[#9CA3AF]"
           >
             <span class="h-full w-full">
-              No profiles found for this query
+              {{ t('menu.notFound') }}
             </span>
           </li>
           <ComboboxOption
@@ -73,12 +73,14 @@ import { IProfile, useProfiles } from '@/stores/profilesStore';
 import { Combobox, ComboboxInput, ComboboxOptions, ComboboxOption, ComboboxLabel } from '@headlessui/vue';
 import { computed, onMounted, ref, useSlots } from 'vue';
 import { XIcon } from '@heroicons/vue/solid';
+import { useI18n } from 'vue-i18n';
 
 const props = defineProps<{
   weekId: number
 }>();
 
 const { ProfilesState, fetchAbsentingProfiles } = useProfiles(props.weekId);
+const { t, locale } = useI18n();
 const slot = useSlots();
 
 const emit = defineEmits(['profileSelected']);
@@ -112,7 +114,7 @@ const filteredProfiles = computed(() => {
 
 function getDisplayName(profile: IProfile) {
   if (profile.roles.includes('ROLE_GUEST')) {
-    return `(Guest) ${profile.fullName}`;
+    return `(${locale.value === 'en' ? 'Guest' : 'Gast'}) ${profile.fullName}`;
   }
   return profile.fullName;
 }

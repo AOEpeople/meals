@@ -1,5 +1,5 @@
 <template>
-  <thead>
+  <thead class="sticky">
     <tr>
       <th
         rowspan="2"

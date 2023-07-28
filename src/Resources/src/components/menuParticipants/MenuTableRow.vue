@@ -28,12 +28,6 @@ const { menuParticipationsState } = useParticipations(props.weekId);
 const { getDayByWeekIdAndDayId } = useWeeks();
 
 function getArrayFromDict(dict: Dictionary<SimpleMeal[]>) {
-  const outputArr: SimpleMeal[] = [];
-
-  for(const mealArr of Object.values(dict)) {
-    mealArr.forEach(meal => outputArr.push(meal));
-  }
-
-  return outputArr;
+  return Object.values(dict).reduce((outputArr, mealArr) => [...outputArr, ...mealArr]);
 }
 </script>

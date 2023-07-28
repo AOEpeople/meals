@@ -218,7 +218,21 @@ export function useDishes() {
     }
 
     function getDishById(id: number) {
-        return DishesState.dishes.find(dish => dish.id === id);
+        let dishToReturn: Dish | null = null;
+
+        DishesState.dishes.forEach(dish => {
+            if (dish.id === id) {
+                dishToReturn = dish;
+            }
+
+            dish.variations.forEach(variation => {
+                if (variation.id === id) {
+                    dishToReturn = variation;
+                }
+            });
+        });
+
+        return dishToReturn;
     }
 
     function getDishVariationByParentIdAndId(parentId: number, variationId: number) {

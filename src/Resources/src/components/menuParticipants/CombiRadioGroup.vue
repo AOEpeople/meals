@@ -51,7 +51,6 @@ const mealId = computed({
     return props.modelValue;
   },
   set(mealId) {
-    console.log(`Set mealId: ${mealId}`);
     emit('update:modelValue', mealId);
   }
 });

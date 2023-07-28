@@ -1,7 +1,7 @@
 <template>
   <tbody>
     <MenuTableDataRows
-      v-for="participant in getParticipants()"
+      v-for="participant in filteredParticipants"
       :key="participant"
       :week-id="weekId"
       :participant="participant"
@@ -31,13 +31,24 @@ import { useMealIdToDishId } from '@/services/useMealIdToDishId';
 import { useI18n } from 'vue-i18n';
 import MenuTableRow from './MenuTableRow.vue';
 import MenuTableDataRows from '@/components/menuParticipants/MenuTableDataRows.vue';
+import { Ref, computed, onMounted, ref } from 'vue';
 
 const props = defineProps<{
   weekId: number
 }>();
 
-const { countBookedMeal, getParticipants } = useParticipations(props.weekId);
+const { countBookedMeal, getParticipants, getFilter } = useParticipations(props.weekId);
 const { mealIdToDishIdDict } = useMealIdToDishId(props.weekId);
 const { t } = useI18n();
+const participants: Ref<string[]> = ref([]);
+
+const filteredParticipants = computed(() => {
+  if (getFilter() === '') return participants.value;
+  return participants.value.filter(participant => participant.toLowerCase().includes(getFilter().toLowerCase()));
+});
+
+onMounted(() => {
+  participants.value = getParticipants();
+});
 
 </script>

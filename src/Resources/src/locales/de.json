@@ -130,7 +130,10 @@
     "header": "Woche bearbeiten",
     "lock": "Sperren",
     "total": "Gesamt",
-    "participations": "Teilnahmen"
+    "participations": "Teilnahmen",
+    "add": "Teilnehmer hinzufügen",
+    "notFound": "No profiles found for this query",
+    "search": "Teilnehmer suchen"
   },
   "printList": {
     "title": "Teilnahmen am ",

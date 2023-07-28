@@ -10,7 +10,8 @@ import { IProfile } from "./profilesStore";
 interface IMenuParticipationsState {
     days: IMenuParticipationDays,
     error: string,
-    isLoading: boolean
+    isLoading: boolean,
+    filterStr: string
 }
 
 export type IMenuParticipationDays = {
@@ -53,7 +54,8 @@ function isParticipationUpdate(participationUpdate: IParticipationUpdate): parti
 const menuParticipationsState = reactive<IMenuParticipationsState>({
     days: {},
     error: '',
-    isLoading: false
+    isLoading: false,
+    filterStr: ''
 });
 
 export function useParticipations(weekId: number) {
@@ -176,6 +178,14 @@ export function useParticipations(weekId: number) {
         return false;
     }
 
+    function setFilter(str: string) {
+        menuParticipationsState.filterStr = str;
+    }
+
+    function getFilter() {
+        return menuParticipationsState.filterStr;
+    }
+
     return {
         menuParticipationsState: readonly(menuParticipationsState),
         fetchParticipations,
@@ -186,6 +196,8 @@ export function useParticipations(weekId: number) {
         removeParticipantFromMeal,
         hasParticipantBookedMeal,
         hasParticipantBookedCombiDish,
-        addEmptyParticipationToState
+        addEmptyParticipationToState,
+        setFilter,
+        getFilter
     }
 }

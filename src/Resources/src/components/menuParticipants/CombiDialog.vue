@@ -77,7 +77,7 @@ function closeCombi(doSubmit: boolean) {
   if (doSubmit === true && selectedCombi.value.includes(-1) === false) {
     emit('closeDialog', selectedCombi.value);
   } else {
-    emit('closeDialog', null);
+    emit('closeDialog', []);
   }
 }
 </script>

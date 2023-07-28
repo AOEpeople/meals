@@ -130,7 +130,10 @@
     "header": "Edit week",
     "lock": "Lock",
     "total": "Total",
-    "participations": "Participations"
+    "participations": "Participations",
+    "add": "Add a participant",
+    "notFound": "No profiles found for this query",
+    "search": "Search participant"
   },
   "printList": {
     "title": "Participations on ",

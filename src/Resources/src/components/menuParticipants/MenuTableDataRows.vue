@@ -2,14 +2,28 @@
   <MenuTableRow
     ref="row"
     :week-id="weekId"
-    :class="editRow === true ? 'bg-green' : ''"
+    :class="{ 'bg-tb-shadow shadow-tb': editRow }"
   >
     <template #firstCell>
       <td
-        class="sticky left-0 cursor-pointer whitespace-nowrap border-b-2 border-r-2 border-solid border-gray-200 bg-[#f4f7f9] p-2 text-center text-[12px] hover:bg-slate-400"
+        class="sticky left-0 cursor-pointer whitespace-nowrap border-b-2 border-r-2 border-solid border-gray-200 bg-[#f4f7f9] p-2 text-[12px] shadow-left hover:bg-tb-shadow hover:font-bold hover:shadow-tb"
+        :class="{ 'bg-tb-shadow shadow-tb': editRow }"
         @click="editRow = !editRow"
       >
-        {{ participant }}
+        <div
+          class="grid grid-cols-[1fr_30px]"
+        >
+          <span
+            class="pr-2 text-left"
+            :class="{ 'font-bold': editRow }"
+          >
+            {{ participant }}
+          </span>
+          <PencilIcon
+            v-if="editRow === true"
+            class="m-auto block h-5 w-5 text-primary"
+          />
+        </div>
       </td>
     </template>
     <template #dayMeals="{ dayId, meals }">
@@ -31,6 +45,7 @@ import MenuTableRow from './MenuTableRow.vue';
 import { ref, watch } from 'vue';
 import useDetectClickOutside from '@/services/useDetectClickOutside';
 import MenuTableData from './MenuTableData.vue';
+import { PencilIcon } from '@heroicons/vue/outline';
 
 const editRow = ref<boolean>(false);
 const row = ref<HTMLElement | null>(null);

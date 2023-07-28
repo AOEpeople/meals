@@ -379,7 +379,7 @@ class ParticipantController extends BaseController
 
             return new JsonResponse([
                 'day' => $meal->getDay()->getId(),
-                'profile' => $profile->getFullName(),
+                'profile' => $profile->getUsername(),
                 'booked' => $participationData
             ], 200);
         } catch (Exception $e) {
@@ -415,7 +415,7 @@ class ParticipantController extends BaseController
 
             return new JsonResponse([
                 'day' => $meal->getDay()->getId(),
-                'profile' => $profile->getFullName(),
+                'profile' => $profile->getUsername(),
                 'booked' => $participationData
             ], 200);
         } catch (Exception $e) {

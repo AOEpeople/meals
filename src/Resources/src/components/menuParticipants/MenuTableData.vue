@@ -1,13 +1,15 @@
 <template>
   <td
-    class="h-10 cursor-pointer border-b-2 border-r-2 border-solid border-gray-200 text-center"
+    class="h-10 border-b-2 border-r-2 border-solid border-gray-200 text-center"
+    :class="{ 'cursor-pointer hover:bg-white hover:shadow-tb': edit }"
   >
-    <div class="flex h-full w-full">
+    <div
+      class="flex h-full w-full"
+      @click="handleClick"
+    >
       <span
         v-if="bookedMeal === true"
         class="flex flex-1 place-content-center items-center"
-        :class="{ 'hover:bg-slate-400': edit }"
-        @click="edit === true && removeParticipantFromMeal(meal.id, participant, dayId)"
       >
         <CheckCircleIcon
           class="block h-6 w-6 text-primary"
@@ -31,21 +33,14 @@
           />
         </svg>
       </span>
-      <span
-        v-if="bookedMeal === false && edit === true"
-        class="flex h-full w-full flex-1 place-content-center items-center"
-        :class="{ 'cursor-pointer hover:bg-slate-400': edit }"
-        @click="addParticipantOrOpenCombi(meal, participant, dayId)"
-      >
-        <CombiDialog
-          v-if="edit === true && isCombi === true"
-          :openCombi="openCombi"
-          :meal-id="meal.id"
-          :day-id="dayId"
-          :week-id="weekId"
-          @close-dialog="closeCombiModal"
-        />
-      </span>
+      <CombiDialog
+        v-if="edit === true && isCombi === true"
+        :openCombi="openCombi"
+        :meal-id="meal.id"
+        :day-id="dayId"
+        :week-id="weekId"
+        @close-dialog="closeCombiModal"
+      />
     </div>
   </td>
 </template>
@@ -77,6 +72,14 @@ const isCombi = computed(() => props.meal.dish === 'combined-dish');
 const bookedCombi = computed(() => hasParticipantBookedCombiDish(props.dayId, props.participant, mealIdToDishIdDict.get(props.meal.id)));
 const bookedMeal = computed(() => hasParticipantBookedMeal(props.dayId, props.participant, props.meal.id))
 
+function handleClick() {
+  if (props.edit === true && bookedMeal.value === true) {
+    removeParticipantFromMeal(props.meal.id, props.participant, props.dayId);
+  } else if (props.edit === true && bookedMeal.value === false) {
+    addParticipantOrOpenCombi(props.meal, props.participant, props.dayId);
+  }
+}
+
 function addParticipantOrOpenCombi(meal: SimpleMeal, participant: string, dayId: string) {
   if (props.edit === true && isCombi.value === false) {
     addParticipantToMeal(meal.id, participant, dayId);
@@ -88,8 +91,7 @@ function addParticipantOrOpenCombi(meal: SimpleMeal, participant: string, dayId:
 async function closeCombiModal(combiMeals: number[]) {
   openCombi.value = null;
   if (combiMeals !== undefined && combiMeals.length === 2) {
-    const dishSlugs = combiMeals.map(mealId => mealIdToDishIdDict.get(mealId)).map(dishId => getDishById(dishId).slug);
-    console.log(`Combi Slugs: ${dishSlugs.join(', ')}`);
+    const dishSlugs = combiMeals.map(mealId => getDishById(mealIdToDishIdDict.get(mealId)).slug);
     await addParticipantToMeal(props.meal.id, props.participant, props.dayId, dishSlugs);
   }
 }

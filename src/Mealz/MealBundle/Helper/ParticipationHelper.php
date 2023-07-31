@@ -81,26 +81,22 @@ class ParticipationHelper
             $combinedDishes = $this->getCombinedDishesFromMeal($meal, $participant);
 
             if (true === $meal->isParticipant($participant) && (null === $slot || $slot->isDisabled() || $slot->isDeleted())) {
-                $slots[''][$participant->getProfile()->getFullName()]['booked'][] = $meal->getDish()->getId();
-                if (true === $profile) {
-                    $slots[''][$participant->getProfile()->getFullName()]['profile'] = $participant->getProfile()->getUsername();
-                }
-
-                foreach ($combinedDishes as $dish) {
-                    $slots[''][$participant->getProfile()->getFullname()]['booked'][] = $dish->getId();
-                }
+                $slots[''][$participant->getProfile()->getFullName()] = $this->getParticipationData(
+                    $meal,
+                    $profile,
+                    $participant,
+                    $combinedDishes
+                );
                 continue;
             }
 
             if (true === $meal->isParticipant($participant)) {
-                $slots[$slot->getTitle()][$participant->getProfile()->getFullName()]['booked'][] = $meal->getDish()->getId();
-                if (true === $profile) {
-                    $slots[$slot->getTitle()][$participant->getProfile()->getFullName()]['profile'] = $participant->getProfile()->getUsername();
-                }
-
-                foreach ($combinedDishes as $dish) {
-                    $slots[$slot->getTitle()][$participant->getProfile()->getFullname()]['booked'][] = $dish->getId();
-                }
+                $slots[$slot->getTitle()][$participant->getProfile()->getFullName()] = $this->getParticipationData(
+                    $meal,
+                    $profile,
+                    $participant,
+                    $combinedDishes
+                );
             }
         }
 
@@ -114,5 +110,20 @@ class ParticipationHelper
         }
 
         return new DishCollection([]);
+    }
+
+    private function getParticipationData(Meal $meal, bool $profile, Participant $participant, DishCollection $combinedDishes): array
+    {
+        $participantData = [];
+        $participantData['booked'][] = $meal->getDish()->getId();
+        if (true === $profile) {
+            $participantData['profile'] = $participant->getProfile()->getUsername();
+        }
+
+        foreach ($combinedDishes as $dish) {
+            $participantData['booked'][] = $dish->getId();
+        }
+
+        return $participantData;
     }
 }

@@ -1,11 +1,13 @@
 <template>
-  <table
-    v-if="loaded === true"
-    class="border-separate border-spacing-0"
-  >
-    <MenuTableHead :week-id="weekId" />
-    <MenuTableBody :week-id="weekId" />
-  </table>
+  <div class="z-[1] max-h-[70vh] max-w-screen-aoe overflow-auto">
+    <table
+      v-if="loaded === true"
+      class="z-[1] border-separate border-spacing-0"
+    >
+      <MenuTableHead :week-id="weekId" />
+      <MenuTableBody :week-id="weekId" />
+    </table>
+  </div>
 </template>
 
 <script setup lang="ts">

@@ -1,5 +1,5 @@
 <template>
-  <tbody>
+  <tbody class="z-10">
     <MenuTableDataRows
       v-for="participant in filteredParticipants"
       :key="participant"
@@ -43,8 +43,7 @@ const { t } = useI18n();
 const participants = computed(() => getParticipants());
 
 const filteredParticipants = computed(() => {
-  // TODO: Remove 4x array, only for testing big lists
-  if (getFilter() === '') return [...participants.value, ...participants.value, ...participants.value, ...participants.value];
+  if (getFilter() === '') return participants.value;
   return participants.value.filter(participant => participant.toLowerCase().includes(getFilter().toLowerCase()));
 });
 

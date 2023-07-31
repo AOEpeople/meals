@@ -6,7 +6,7 @@
   >
     <template #firstCell>
       <td
-        class="sticky left-0 cursor-pointer whitespace-nowrap border-b-2 border-r-2 border-solid border-gray-200 bg-[#f4f7f9] p-2 text-[12px] hover:bg-tb-shadow hover:font-bold hover:shadow-tb"
+        class="sticky left-0 z-10 cursor-pointer whitespace-nowrap border-b-2 border-r-2 border-solid border-gray-200 bg-[#f4f7f9] p-2 text-[12px] hover:bg-tb-shadow hover:font-bold hover:shadow-tb"
         :class="{ 'bg-tb-shadow shadow-tb': editRow }"
         @click="editRow = !editRow"
       >

@@ -1,6 +1,6 @@
 <template>
   <td
-    class="h-10 border-b-2 border-r-2 border-solid border-gray-200 text-center"
+    class="z-0 h-10 border-b-2 border-r-2 border-solid border-gray-200 text-center"
     :class="{ 'cursor-pointer hover:bg-white hover:shadow-tb': edit }"
   >
     <div

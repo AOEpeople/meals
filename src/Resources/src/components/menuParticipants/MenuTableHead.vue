@@ -1,9 +1,9 @@
 <template>
-  <thead class="sticky">
+  <thead class="sticky top-0 z-20">
     <tr>
       <th
         rowspan="2"
-        class="sticky left-0 whitespace-nowrap border-b-2 border-r-2 border-solid border-gray-200 bg-[#f4f7f9] px-4 py-2 text-center"
+        class="sticky left-0 top-0 z-40 whitespace-nowrap border-b-2 border-r-2 border-solid border-gray-200 bg-[#f4f7f9] px-4 py-2 text-center"
       >
         {{ dateRangeStr }}
       </th>
@@ -11,7 +11,7 @@
         v-for="menuDayId in Object.keys(menuParticipationsState.days)"
         :key="menuDayId"
         :colspan="getColspanFromMeals(menuDayId)"
-        class="border-b-2 border-r-2 border-solid border-gray-200 p-2 text-center"
+        class="sticky z-30 border-b-2 border-r-2 border-solid border-gray-200 bg-[#f4f7f9] p-2 text-center"
       >
         {{ new Date(getDayByWeekIdAndDayId(weekId, menuDayId).dateTime.date).toLocaleDateString(locale, { weekday: 'long' }) }}
       </th>
@@ -23,7 +23,7 @@
         <th
           v-for="meal, mealIndex in meals"
           :key="`${meal.id}_${mealIndex}`"
-          class="border-b-2 border-r-2 border-solid border-gray-200 px-2 text-center"
+          class="sticky top-0 z-20 border-b-2 border-r-2 border-solid border-gray-200 bg-[#f4f7f9] px-2 text-center"
         >
           <span class="block w-[100px] hyphens-auto break-words text-[14px]">
             {{ locale === 'en' ? getDishBySlug(meal.dish).titleEn : getDishBySlug(meal.dish).titleDe }}

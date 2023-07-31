@@ -24,13 +24,13 @@ use App\Mealz\MealBundle\Service\SlotService;
 use App\Mealz\UserBundle\Entity\Profile;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use stdClass;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Psr\Log\LoggerInterface;
-use stdClass;
 
 /**
  * @Security("is_granted('ROLE_USER')")
@@ -380,7 +380,7 @@ class ParticipantController extends BaseController
             return new JsonResponse([
                 'day' => $meal->getDay()->getId(),
                 'profile' => $profile->getUsername(),
-                'booked' => $participationData
+                'booked' => $participationData,
             ], 200);
         } catch (Exception $e) {
             $this->logException($e);
@@ -395,7 +395,6 @@ class ParticipantController extends BaseController
     public function remove(Profile $profile, Meal $meal): JsonResponse
     {
         try {
-
             $participation = $this->participationSrv->getParticipationByMealAndUser($meal, $profile);
             $participation->setCombinedDishes(null);
 
@@ -416,7 +415,7 @@ class ParticipantController extends BaseController
             return new JsonResponse([
                 'day' => $meal->getDay()->getId(),
                 'profile' => $profile->getUsername(),
-                'booked' => $participationData
+                'booked' => $participationData,
             ], 200);
         } catch (Exception $e) {
             $this->logException($e);
@@ -431,6 +430,7 @@ class ParticipantController extends BaseController
     public function getProfilesWithoutParticipation(Week $week): JsonResponse
     {
         $response = $this->participationSrv->getNonParticipatingProfilesByWeek($week);
+
         return new JsonResponse($response, 200);
     }
 
@@ -493,6 +493,7 @@ class ParticipantController extends BaseController
     {
         if (0 === count($participants)) {
             $response[$day->getId()] = new stdClass();
+
             return $response;
         }
 

@@ -18,12 +18,10 @@ use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use PhpCollection\Set;
 use Psr\Log\LoggerInterface;
-
 
 class ParticipationService
 {
@@ -218,6 +216,7 @@ class ParticipationService
                 return $participant;
             }
         }
+
         return null;
     }
 
@@ -291,16 +290,16 @@ class ParticipationService
         return $result;
     }
 
-    public function getParticipationsByDayAndProfile(Profile $profile, Day $day): ArrayCollection
+    public function getParticipationsByDayAndProfile(Profile $profile, Day $day): array
     {
-        $result = new ArrayCollection();
+        $result = [];
         $meals = $day->getMeals();
 
         /** @var Meal $meal */
         foreach ($meals as $meal) {
             $participation = $this->getParticipationByMealAndUser($meal, $profile);
             if (null !== $participation) {
-                $result->add($participation);
+                $result[] = $participation;
             }
         }
 
@@ -320,8 +319,7 @@ class ParticipationService
             $profiles = [''];
         }
 
-        $nonParticipatingProfiles = null;
-        $nonParticipatingProfiles = $this->profileRepo->findAllExcept($profiles);
+        $nonParticipating = $this->profileRepo->findAllExcept($profiles);
 
         $profileData = array_map(
             fn ($profile) => [
@@ -329,7 +327,7 @@ class ParticipationService
                 'fullName' => $profile->getFullName(),
                 'roles' => $profile->getRoles(),
             ],
-            $nonParticipatingProfiles
+            $nonParticipating
         );
 
         return $profileData;

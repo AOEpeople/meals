@@ -31,7 +31,7 @@ import { useMealIdToDishId } from '@/services/useMealIdToDishId';
 import { useI18n } from 'vue-i18n';
 import MenuTableRow from './MenuTableRow.vue';
 import MenuTableDataRows from '@/components/menuParticipants/MenuTableDataRows.vue';
-import { Ref, computed, onMounted, ref } from 'vue';
+import { computed } from 'vue';
 
 const props = defineProps<{
   weekId: number
@@ -40,15 +40,12 @@ const props = defineProps<{
 const { countBookedMeal, getParticipants, getFilter } = useParticipations(props.weekId);
 const { mealIdToDishIdDict } = useMealIdToDishId(props.weekId);
 const { t } = useI18n();
-const participants: Ref<string[]> = ref([]);
+const participants = computed(() => getParticipants());
 
 const filteredParticipants = computed(() => {
-  if (getFilter() === '') return participants.value;
+  // TODO: Remove 4x array, only for testing big lists
+  if (getFilter() === '') return [...participants.value, ...participants.value, ...participants.value, ...participants.value];
   return participants.value.filter(participant => participant.toLowerCase().includes(getFilter().toLowerCase()));
-});
-
-onMounted(() => {
-  participants.value = getParticipants();
 });
 
 </script>

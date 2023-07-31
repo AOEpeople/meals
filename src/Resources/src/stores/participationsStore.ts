@@ -122,7 +122,7 @@ export function useParticipations(weekId: number) {
         menuParticipationsState.days[firstDayId][profile.fullName] = {
             booked: {},
             profile: profile.user
-        }
+        };
     }
 
     function getParticipants() {

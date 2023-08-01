@@ -12,6 +12,7 @@ use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Event\MealOfferCancelledEvent;
 use App\Mealz\MealBundle\Event\MealOfferedEvent;
 use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
+use App\Mealz\MealBundle\Helper\ParticipationHelper;
 use App\Mealz\MealBundle\Repository\DayRepositoryInterface;
 use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
 use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
@@ -20,7 +21,6 @@ use App\Mealz\MealBundle\Repository\WeekRepositoryInterface;
 use App\Mealz\MealBundle\Service\EventService;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\MealBundle\Service\ParticipationService;
-use App\Mealz\MealBundle\Service\SlotService;
 use App\Mealz\UserBundle\Entity\Profile;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
@@ -39,31 +39,34 @@ class ParticipantController extends BaseController
 {
     private EventDispatcherInterface $eventDispatcher;
     private EventService $eventSrv;
-    private SlotService $slotSrv;
+    private ParticipationHelper $participationHelper;
     private ParticipationService $participationSrv;
     private MealRepositoryInterface $mealRepo;
     private SlotRepositoryInterface $slotRepo;
     private DayRepositoryInterface $dayRepo;
     private LoggerInterface $logger;
+    private ParticipantRepositoryInterface $participantRepo;
 
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
         EventService $eventSrv,
-        SlotService $slotSrv,
+        ParticipationHelper $participationHelper,
         ParticipationService $participationSrv,
         MealRepositoryInterface $mealRepo,
         SlotRepositoryInterface $slotRepo,
         DayRepositoryInterface $dayRepo,
+        ParticipantRepositoryInterface $participantRepo,
         LoggerInterface $logger
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->eventSrv = $eventSrv;
-        $this->slotSrv = $slotSrv;
         $this->participationSrv = $participationSrv;
         $this->mealRepo = $mealRepo;
         $this->slotRepo = $slotRepo;
         $this->dayRepo = $dayRepo;
+        $this->participantRepo = $participantRepo;
         $this->logger = $logger;
+        $this->participationHelper = $participationHelper;
     }
 
     /**
@@ -429,7 +432,8 @@ class ParticipantController extends BaseController
      */
     public function getProfilesWithoutParticipation(Week $week): JsonResponse
     {
-        $response = $this->participationSrv->getNonParticipatingProfilesByWeek($week);
+        $participations = $this->participantRepo->getParticipantsOnDays($week->getStartTime(), $week->getEndTime());
+        $response = $this->participationHelper->getNonParticipatingProfilesByWeek($participations);
 
         return new JsonResponse($response, 200);
     }

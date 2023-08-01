@@ -8,15 +8,17 @@ use App\Mealz\MealBundle\Entity\DishCollection;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
-use Psr\Log\LoggerInterface;
+use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
+use PhpCollection\Set;
 
 class ParticipationHelper
 {
-    private LoggerInterface $logger;
+    private ProfileRepositoryInterface $profileRepo;
 
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
+    public function __construct(
+        ProfileRepositoryInterface $profileRepo
+    ) {
+        $this->profileRepo = $profileRepo;
     }
 
     /**
@@ -55,6 +57,32 @@ class ParticipationHelper
         }
 
         return $groupedParticipants;
+    }
+
+    public function getNonParticipatingProfilesByWeek(array $participations): array
+    {
+        $profiles = new Set(array_map(
+            fn ($participant) => $participant->getProfile()->getUserName(),
+            $participations
+        ));
+        $profiles = $profiles->all();
+
+        if (0 === count($profiles)) {
+            $profiles = [''];
+        }
+
+        $nonParticipating = $this->profileRepo->findAllExcept($profiles);
+
+        $profileData = array_map(
+            fn ($profile) => [
+                'user' => $profile->getUsername(),
+                'fullName' => $profile->getFullName(),
+                'roles' => $profile->getRoles(),
+            ],
+            $nonParticipating
+        );
+
+        return $profileData;
     }
 
     protected function compareNameOfParticipants(Participant $participant1, Participant $participant2): int

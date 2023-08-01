@@ -1,6 +1,6 @@
 import getAbsentingProfiles from "@/api/getAbsentingProfiles";
 import { isResponseArrayOkay } from "@/api/isResponseOkay";
-import { reactive, readonly, ref } from "vue";
+import { reactive, readonly } from "vue";
 
 interface IProfilesState {
     profiles: IProfile[],
@@ -33,7 +33,7 @@ export function useProfiles(weekId: number) {
         isLoading: false
     });
 
-    const addedProfiles = ref<IProfile[]>([]);
+    // const addedProfiles = ref<IProfile[]>([]);
 
     async function fetchAbsentingProfiles() {
         ProfilesState.isLoading = true;

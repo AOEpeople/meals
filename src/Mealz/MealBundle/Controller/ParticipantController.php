@@ -17,7 +17,6 @@ use App\Mealz\MealBundle\Repository\DayRepositoryInterface;
 use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
 use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\MealBundle\Repository\SlotRepositoryInterface;
-use App\Mealz\MealBundle\Repository\WeekRepositoryInterface;
 use App\Mealz\MealBundle\Service\EventService;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\MealBundle\Service\ParticipationService;
@@ -30,7 +29,6 @@ use stdClass;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Security("is_granted('ROLE_USER')")
@@ -268,62 +266,6 @@ class ParticipantController extends BaseController
         ]);
     }
 
-    public function editParticipation(
-        Week $week,
-        ParticipationService $participationSrv,
-        ParticipantRepositoryInterface $participantRepo,
-        WeekRepositoryInterface $weekRepo
-    ): Response {
-        $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
-
-        $filteredWeek = $weekRepo->findWeekByDate($week->getStartTime(), ['only_enabled_days' => true]);
-
-        // If all days are disabled don't render list
-        if (null === $filteredWeek) {
-            $translator = $this->get('translator');
-            $message = $translator->trans('error.all_days_disabled', [
-                '%startDate%' => $week->getStartTime()->format('d.m'),
-                '%endDate%' => $week->getEndTime()->format('d.m'),
-            ]);
-            $this->addFlashMessage($message, 'danger');
-
-            return $this->redirectToRoute(
-                'MealzMealBundle_Meal_edit',
-                ['week' => $week->getId()]
-            );
-        }
-
-        // Get user participation to list them as table rows
-        $participation = $participantRepo->getParticipantsOnDays(
-            $filteredWeek->getStartTime(),
-            $filteredWeek->getEndTime(),
-        );
-        $groupedParticipation = $participantRepo->groupParticipantsByName($participation);
-
-        /** @var Profile[] $profiles */
-        $profiles = $this->getDoctrine()->getRepository(Profile::class)->findAll();
-        $profilesArray = [];
-        foreach ($profiles as $profile) {
-            if (false === array_key_exists($profile->getUsername(), $groupedParticipation)) {
-                $profilesArray[] = [
-                    'label' => $profile->getFullName(),
-                    'value' => $profile->getUsername(),
-                ];
-            }
-        }
-
-        // Create user participation row prototype
-        $prototype = $this->renderView('@MealzMeal/Participant/edit_row_prototype.html.twig', ['week' => $week]);
-
-        return $this->render('MealzMealBundle:Participant:edit.html.twig', [
-            'participationSrv' => $participationSrv,
-            'week' => $filteredWeek,
-            'users' => $groupedParticipation,
-            'profilesJson' => json_encode($profilesArray),
-            'prototype' => $prototype,
-        ]);
-    }
-
     /**
      * @Security("is_granted('ROLE_KITCHEN_STAFF')")
      */
@@ -376,7 +318,6 @@ class ParticipantController extends BaseController
 
             $participationData = [];
             foreach ($participations as $participation) {
-                $this->logger->info('Participation for dataconversion: ' . $participation->getId());
                 $participationData[] = $this->getParticipationData($participation);
             }
 

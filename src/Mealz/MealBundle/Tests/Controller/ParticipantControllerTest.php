@@ -10,17 +10,17 @@ use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishes;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadDishVariations;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
-use App\Mealz\MealBundle\Entity\Day;
-use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
+use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\MealBundle\Repository\WeekRepositoryInterface;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Entity\Role;
+use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
 use DateTime;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -96,217 +96,110 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         }
     }
 
-    /**
-     * Tests the swap action (offering a meal) in the participant controller.
-     * First case: A participant offers his meal on time.
-     */
-    public function testOfferingOneMeal(): void
+    public function testGetParticipationsForWeek(): void
     {
-        $this->markTestSkipped('frontend test');
-        $userProfile = $this->getUserProfile(self::USER_STANDARD);
+        $date = new DateTime('today 23:59:59');
+        $week = (int) $date->format('W');
 
-        // find locked meal and make user a participant of that
-        $lockedMealsArray = $this->getLockedMeals();
-        $lockedMeal = $lockedMealsArray[0];
-        $lockedParticipant = $this->createParticipant($userProfile, $lockedMeal);
+        $weekRepository = $this->getDoctrine()->getRepository(Week::class);
+        $weekEntity = $weekRepository->findOneBy([
+            'year' => $date->format('o'),
+            'calendarWeek' => $week,
+        ]);
+        $this->assertNotNull($weekEntity);
 
-        $this->persistAndFlushAll([$lockedParticipant]);
-
-        $this->loginAs(self::USER_STANDARD);
-        $participantId = $lockedParticipant->getId();
-        $this->client->request('GET', '/menu/meal/' . $participantId . '/offer-meal');
-
-        // verification by checking the database
-        $offeringParticipant = $this->getDoctrine()->getRepository(Participant::class)->find($participantId);
-        $this->assertNotSame($offeringParticipant->getOfferedAt(), 0, 'offeredAt value not changed');
+        $this->client->request('GET', '/api/participations/' . $weekEntity->getId());
+        $response = $this->client->getResponse();
+        $this->assertEquals(200, $response->getStatusCode());
+        $responseData = json_decode($response->getContent(), true);
+        foreach ($weekEntity->getDays() as $day) {
+            $this->assertArrayHasKey($day->getId(), $responseData);
+        }
     }
 
-    /**
-     * Second case: A participant takes his offer back.
-     */
-    public function testTakingOfferBack(): void
+    public function testAddParticipant(): void
     {
-        $this->markTestSkipped('frontend test');
-        $userProfile = $this->getUserProfile(self::USER_STANDARD);
-        $lockedMealsArray = $this->getLockedMeals();
-        $lockedMeal = $lockedMealsArray[0];
-        $lockedParticipant = $this->createParticipant($userProfile, $lockedMeal);
-        $lockedParticipant->setOfferedAt(time());
-        $participantId = $lockedParticipant->getId();
-        $this->persistAndFlushAll([$lockedParticipant]);
+        $mealRepo = self::$container->get(MealRepositoryInterface::class);
 
-        $this->loginAs(self::USER_STANDARD);
-        $this->client->request('GET', '/menu/meal/' . $participantId . '/cancel-offered-meal');
+        $profileToAdd = $this->getUserProfile(self::USER_STANDARD);
+        $mealToAdd = $mealRepo->getFutureMeals()[0];
+        $this->assertNotNull($mealToAdd);
 
-        // verification by checking the database
-        $participant = $this->getDoctrine()->getRepository(Participant::class)->find($participantId);
-        $this->assertSame($participant->getOfferedAt(), 0, 'failed to retain swapped meal');
+        $routeStr = '/api/participation/' . $profileToAdd->getUsername() . '/' . $mealToAdd->getId();
+        $this->client->request('PUT', $routeStr);
+
+        $response = $this->client->getResponse();
+        $this->assertEquals(200, $response->getStatusCode());
+        $responseData = json_decode($response->getContent(), true);
+
+        $this->assertEquals($profileToAdd->getUsername(), $responseData['profile']);
+        $this->assertEquals($mealToAdd->getDay()->getId(), $responseData['day']);
+        $this->assertEquals($mealToAdd->getId(), $responseData['booked'][0]['mealId']);
     }
 
-    /**
-     * Third case: A participant tries to offer his outdated meal.
-     */
-    public function testOfferingOutdatedMeal(): void
+    public function testRemoveParticipant(): void
     {
-        $this->markTestSkipped('frontend test');
-        $userProfile = $this->getUserProfile(self::USER_STANDARD);
+        $participantRepo = self::$container->get(ParticipantRepositoryInterface::class);
+        $mealRepo = self::$container->get(MealRepositoryInterface::class);
+        $meal = $mealRepo->getFutureMeals()[0];
+        $profile = $this->getUserProfile(self::USER_STANDARD);
 
-        $mealsRepo = self::$container->get(MealRepositoryInterface::class);
-        $outdatedMealsArray = $mealsRepo->getOutdatedMeals();
-        $outdatedMeal = $outdatedMealsArray[0];
-        $outdatedParticipant = $this->createParticipant($userProfile, $outdatedMeal);
-        $participantId = $outdatedParticipant->getId();
+        $participantToRemove = self::createParticipant($profile, $meal);
+        $this->assertNotNull($participantRepo->findOneBy(['id' => $participantToRemove->getId()]));
 
-        $this->persistAndFlushAll([$outdatedParticipant]);
+        $routeStr = '/api/participation/' . $profile->getUsername() . '/' . $meal->getId();
+        $this->client->request('DELETE', $routeStr);
 
-        $this->loginAs(self::USER_STANDARD);
-        $this->client->request('GET', '/menu/meal/' . $participantId . '/offer-meal');
+        $response = $this->client->getResponse();
+        $this->assertEquals(200, $response->getStatusCode());
 
-        // verification by checking the database
-        $notOfferingPart = $this->getDoctrine()->getRepository(Participant::class)->find($participantId);
-        $this->assertSame($notOfferingPart->getOfferedAt(), 0, 'user still offered meal');
+        $this->assertNull($participantRepo->findOneBy(['id' => $participantToRemove->getId()]));
     }
 
-    /**
-     * Check that the created participants are displayed in the participation table for the current week.
-     */
-    public function testCheckParticipantInParticipationTable(): void
+    public function testGetProfilesWithoutParticipation(): void
     {
-        $this->markTestSkipped('frontend test');
-        $crawler = $this->getCurrentWeekParticipations();
-        $this->assertEquals(1, $crawler->filter('html:contains("' . self::$participantFirstName . '")')->count());
-        $this->assertEquals(1, $crawler->filter('html:contains("' . self::$participantLastName . '")')->count());
-        $this->assertEquals(1, $crawler->filter('html:contains("' . self::$guestFirstName . '")')->count());
-        $this->assertEquals(1, $crawler->filter('html:contains("' . self::$guestLastName . '")')->count());
-    }
+        $date = new DateTime();
+        $date->modify('next monday');
 
-    /**
-     * Check that the guest participant is displayed with a (<company name>) suffix.
-     */
-    public function testCheckGuestSuffixInParticipationTable(): void
-    {
-        $this->markTestSkipped('frontend test');
-        $crawler = $this->getCurrentWeekParticipations();
-        $this->assertStringContainsString(self::$guestCompany, $crawler->text());
-    }
+        $weekRepository = $this->getDoctrine()->getRepository(Week::class);
+        $weekEntity = $weekRepository->findOneBy([
+            'year' => $date->format('o'),
+            'calendarWeek' => (int) $date->format('W'),
+        ]);
+        $this->assertNotNull($weekEntity);
 
-    /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function testCheckParticipationCount(): void
-    {
-        $this->markTestSkipped('frontend test');
-        $crawler = $this->getCurrentWeekParticipations();
-        $participationCount = $crawler->filter('.meal-count > span')->each(static function ($node, $i): string {
-            return $node->text();
-        });
+        $routeStr = '/api/participations/' . $weekEntity->getId() . '/abstaining';
+        $this->client->request('GET', $routeStr);
 
-        $this->assertContains('2', $participationCount);
-    }
+        $response = $this->client->getResponse();
+        $this->assertEquals(200, $response->getStatusCode());
 
-    /**
-     * Check the week date is displayed correct.
-     */
-    public function testCheckWeekDate(): void
-    {
-        $this->markTestSkipped('frontend test');
-        $currentWeek = $this->getCurrentWeek();
-        $firstWeekDay = date_format($currentWeek->getDays()->first()->getDateTime(), 'd.m.');
-        $lastWeekDay = date_format($currentWeek->getDays()->last()->getDateTime(), 'd.m.');
+        $responseData = json_decode($response->getContent(), true);
 
-        $crawler = $this->getCurrentWeekParticipations()
-            ->filter('.week-date')
-            ->first();
-        $this->assertStringContainsString($firstWeekDay . '-' . $lastWeekDay, $crawler->text());
-    }
+        $this->assertTrue(is_array($responseData));
+        $this->assertNotEmpty($responseData);
 
-    /**
-     * Check that the first day of the week is displayed correct.
-     */
-    public function testCheckFirstWeekDay(): void
-    {
-        $this->markTestSkipped('frontend test');
-        $crawler = $this->getCurrentWeekParticipations()
-            ->filter('.day')
-            ->first();
-        $this->assertStringContainsString('Monday', $crawler->text());
-    }
+        $profileToParticipate = $responseData[0]['user'];
+        $profileRepo = self::$container->get(ProfileRepositoryInterface::class);
+        $profile = $profileRepo->findOneBy(['username' => $profileToParticipate]);
+        $meal = $weekEntity->getDays()[0]->getMeals()[0];
+        $partToNotFind = self::createParticipant($profile, $meal);
 
-    /**
-     * Check that the first dish title is displayed.
-     */
-    public function testCheckFirstDishTitle(): void
-    {
-        $this->markTestSkipped('frontend test');
-        $currentWeek = $this->getCurrentWeek();
-        $weekMeals = $currentWeek->getDays()->first()->getMeals();
-        $firstWeekDish = $weekMeals->first()->getDish();
-        $crawler = $this->getCurrentWeekParticipations()->filter('.meal-title')->first();
+        $routeStr = '/api/participations/' . $weekEntity->getId() . '/abstaining';
+        $this->client->request('GET', $routeStr);
 
-        $this->assertEquals($firstWeekDish->getTitle(), $crawler->text());
-    }
+        $response = $this->client->getResponse();
+        $this->assertEquals(200, $response->getStatusCode());
 
-    /**
-     * Check that variations and parent-dish titles are displayed.
-     */
-    public function testCheckFirstVariationAndParentTitle(): void
-    {
-        $this->markTestSkipped('frontend test');
-        $firstDishVariation = null;
-
-        foreach ($this->getCurrentWeek()->getDays() as $day) {
-            /** @var Day $day */
-            foreach ($day->getMeals() as $meal) {
-                $dish = $meal->getDish();
-                if ($dish instanceof DishVariation) {
-                    $firstDishVariation = $dish;
-                    break 2;
-                }
+        $found = false;
+        $responseData = json_decode($response->getContent(), true);
+        foreach ($responseData as $part) {
+            if ($part['user'] === $profileToParticipate) {
+                $found = true;
+                break;
             }
         }
-
-        $this->assertNotNull($firstDishVariation);
-
-        $variationParentDish = $firstDishVariation->getParent();
-        $this->assertNotNull($variationParentDish);
-
-        $crawler = $this->getCurrentWeekParticipations()
-            ->filter('.meal-title > span > b')
-            ->eq(0)
-            ->closest('th');
-
-        $template = '<span><b>%s</b><br>%s</span>';
-        $html = sprintf($template, $variationParentDish->getTitle(), $firstDishVariation->getTitle());
-        // preg_replace() deletes every whitespace after the first
-        $this->assertEquals($html, preg_replace('~\\s{2,}~', '', trim($crawler->html())));
-    }
-
-    /**
-     * Check that the table data prototype is present in the dom.
-     */
-    public function testCheckTableDataPrototype(): void
-    {
-        $this->markTestSkipped('frontend test');
-        $prototypeHTML = $this->getCurrentWeekParticipations()->filter('.table-content')->attr('data-prototype');
-        $crawler = new Crawler($prototypeHTML);
-
-        $this->assertSame('__name__', $crawler->filter('td.text')->extract(['_text'])[0]);
-        $this->assertSame('join', $crawler->filter('td.meal-participation')->extract(['data-action'])[0]);
-        $this->assertStringEndsWith('/__username__', $crawler->filter('td.meal-participation')->extract(['data-action-url'])[0]);
-        $this->assertNotEmpty($crawler->filter('td.meal-participation')->extract(['data-dish-slug'])[0]);
-        $this->assertMatchesRegularExpression('/\d{4}-\d{2}-\d{2}/', $crawler->filter('td.meal-participation')->extract(['data-date'])[0]);
-        $this->assertContains($crawler->filter('td.meal-participation')->extract(['data-combined'])[0], ['0', '1']);
-    }
-
-    /**
-     * Check that the profiles list contains the non participating user.
-     */
-    public function testCheckProfileList(): void
-    {
-        $this->markTestSkipped('frontend test');
-        $crawler = $this->getCurrentWeekParticipations()->filter('.profile-list');
-        $userName = self::$userLastName . ', ' . self::$userFirstName;
-        $this->assertStringContainsString($userName, $crawler->attr('data-attribute-profiles'));
+        $this->assertFalse($found);
     }
 
     /**

@@ -56,7 +56,9 @@ class DishController extends BaseListController
         $dishes = $this->dishRepository->findBy(['parent' => null, 'enabled' => true]);
         $combiDish = $this->dishRepository->findBy(['slug' => 'combined-dish']);
 
-        $dishes[] = $combiDish[0];
+        if (null !== $combiDish && 0 < count($combiDish)) {
+            $dishes[] = $combiDish[0];
+        }
 
         return new JsonResponse($dishes, 200);
     }

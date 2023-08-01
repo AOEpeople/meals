@@ -1,10 +1,10 @@
 <template>
-  <div class="max-[1000px]:px-2">
+  <div class="z-0 max-[1000px]:px-2">
     <h2>{{ t('menu.participations') }}</h2>
-    <div class="grid w-full min-[650px]:grid-cols-[minmax(300px,400px)_1fr_minmax(300px,400px)]">
+    <div class="z-20 grid w-full min-[650px]:grid-cols-[minmax(300px,400px)_1fr_minmax(300px,400px)]">
       <AddParticipantsSearchBar
         :week-id="parseInt(week)"
-        class="col-start-1"
+        class="z-[99] col-start-1"
         @profile-selected="handleProfileSelect"
       >
         <template #label>
@@ -21,7 +21,7 @@
       />
     </div>
     <div
-      class="my-8 max-w-screen-aoe overflow-x-auto"
+      class="z-10 my-8 max-w-screen-aoe overflow-x-auto"
     >
       <MenuTable
         :week-id="parseInt(week)"

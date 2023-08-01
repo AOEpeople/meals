@@ -10,18 +10,13 @@ use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\MealCollection;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
-use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Repository\DayRepositoryInterface;
 use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\MealBundle\Repository\SlotRepositoryInterface;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\UserBundle\Entity\Profile;
-use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
-use PhpCollection\Set;
-use Psr\Log\LoggerInterface;
 
 class ParticipationService
 {
@@ -33,25 +28,19 @@ class ParticipationService
     private DayRepositoryInterface $dayRepo;
     private ParticipantRepositoryInterface $participantRepo;
     private SlotRepositoryInterface $slotRepo;
-    private ProfileRepositoryInterface $profileRepo;
-    private LoggerInterface $logger;
 
     public function __construct(
         EntityManagerInterface $em,
         Doorman $doorman,
         DayRepositoryInterface $dayRepo,
         ParticipantRepositoryInterface $participantRepo,
-        SlotRepositoryInterface $slotRepo,
-        ProfileRepositoryInterface $profileRepo,
-        LoggerInterface $logger
+        SlotRepositoryInterface $slotRepo
     ) {
         $this->em = $em;
         $this->doorman = $doorman;
         $this->dayRepo = $dayRepo;
         $this->participantRepo = $participantRepo;
         $this->slotRepo = $slotRepo;
-        $this->profileRepo = $profileRepo;
-        $this->logger = $logger;
     }
 
     /**
@@ -61,10 +50,6 @@ class ParticipationService
      */
     public function join(Profile $profile, Meal $meal, ?Slot $slot = null, array $dishSlugs = []): ?array
     {
-        if ($meal->getLockDateTime() < new DateTime('now')) {
-            throw new Exception('Meal is already locked');
-        }
-
         // user is attempting to take over an already booked meal by some participant
         if (true === $this->mealIsOffered($meal) && true === $this->allowedToAccept($meal)) {
             return $this->reassignOfferedMeal($meal, $profile, $dishSlugs);
@@ -304,32 +289,5 @@ class ParticipationService
         }
 
         return $result;
-    }
-
-    public function getNonParticipatingProfilesByWeek(Week $week): array
-    {
-        $participations = $this->participantRepo->getParticipantsOnDays($week->getStartTime(), $week->getEndTime());
-        $profiles = new Set(array_map(
-            fn ($participant) => $participant->getProfile()->getUserName(),
-            $participations
-        ));
-        $profiles = $profiles->all();
-
-        if (0 === count($profiles)) {
-            $profiles = [''];
-        }
-
-        $nonParticipating = $this->profileRepo->findAllExcept($profiles);
-
-        $profileData = array_map(
-            fn ($profile) => [
-                'user' => $profile->getUsername(),
-                'fullName' => $profile->getFullName(),
-                'roles' => $profile->getRoles(),
-            ],
-            $nonParticipating
-        );
-
-        return $profileData;
     }
 }

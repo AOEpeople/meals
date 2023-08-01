@@ -22,7 +22,7 @@
       <template #dayMeals="{ dayId, meals }">
         <th
           v-for="meal, mealIndex in meals"
-          :key="`${meal.id}_${mealIndex}`"
+          :key="`${String(meal.id)}_${String(mealIndex)}`"
           class="sticky top-0 z-20 border-b-2 border-r-2 border-solid border-gray-200 bg-[#f4f7f9] px-2 text-center"
         >
           <span class="block w-[100px] hyphens-auto break-words text-[14px]">

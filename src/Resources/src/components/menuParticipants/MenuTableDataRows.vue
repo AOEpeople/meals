@@ -29,7 +29,7 @@
     <template #dayMeals="{ dayId, meals }">
       <MenuTableData
         v-for="meal, mealIndex in meals"
-        :key="`${meal.id}.${mealIndex}`"
+        :key="`${String(meal.id)}.${String(mealIndex)}`"
         :edit="editRow"
         :participant="participant"
         :day-id="dayId"

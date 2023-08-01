@@ -48,14 +48,15 @@ export function useProfiles(weekId: number) {
         ProfilesState.isLoading = false;
     }
 
-    function removeProfileFromState(searchProfile: IProfile) {
-        const indexToDelete = ProfilesState.profiles.findIndex(profile => searchProfile.user === profile.user);
-        addedProfiles.value.push(...ProfilesState.profiles.splice(indexToDelete, 1));
-    }
+    // potentially still to be used
+    // function removeProfileFromState(searchProfile: IProfile) {
+    //     const indexToDelete = ProfilesState.profiles.findIndex(profile => searchProfile.user === profile.user);
+    //     addedProfiles.value.push(...ProfilesState.profiles.splice(indexToDelete, 1));
+    // }
 
-    function putAddedProfilesBackInState() {
-        ProfilesState.profiles = [...ProfilesState.profiles, ...addedProfiles.value];
-    }
+    // function putAddedProfilesBackInState() {
+    //     ProfilesState.profiles = [...ProfilesState.profiles, ...addedProfiles.value];
+    // }
 
     return {
         ProfilesState: readonly(ProfilesState),

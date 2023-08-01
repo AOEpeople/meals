@@ -1,7 +1,7 @@
 import { Dictionary } from "types/types";
 import { Ref, reactive, readonly } from "vue";
 import getParticipations from "@/api/getParticipations";
-import { isResponseDictOkay, isResponseObjectOkay } from "@/api/isResponseOkay";
+import { isResponseObjectOkay } from "@/api/isResponseOkay";
 import putParticipation from "@/api/putParticipation";
 import { isMessage, IMessage } from "@/interfaces/IMessage";
 import deleteParticipation from "@/api/deleteParticipation";
@@ -36,9 +36,12 @@ export interface IParticipationUpdate extends IMenuParticipation {
     day: number
 }
 
-// TODO: to be implemented
-function isDaysDict(days: IMenuParticipationDays) {
-    return null;
+function isMenuParticipation(days: IMenuParticipationDays): days is IMenuParticipationDays {
+    return (
+        days !== null &&
+        days !== undefined &&
+        Object.keys(days).length > 0
+    );
 }
 
 function isParticipationUpdate(participationUpdate: IParticipationUpdate): participationUpdate is IParticipationUpdate {
@@ -65,7 +68,7 @@ export function useParticipations(weekId: number) {
 
         const { error, participations } = await getParticipations(weekId);
 
-        if (isResponseDictOkay(error, participations) === true) {
+        if (isResponseObjectOkay<IMenuParticipationDays>(error, participations, isMenuParticipation) === true) {
             menuParticipationsState.days = participations.value;
             menuParticipationsState.error = '';
         } else {

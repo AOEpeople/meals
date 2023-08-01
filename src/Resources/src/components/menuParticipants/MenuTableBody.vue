@@ -15,7 +15,7 @@
       <template #dayMeals="{ dayId, meals }">
         <td
           v-for="meal, mealIndex in meals"
-          :key="`${meal.id}.${mealIndex}`"
+          :key="`${String(meal.id)}.${String(mealIndex)}`"
           class="border-b-2 border-r-2 border-solid border-gray-200 p-2 text-center"
         >
           <span>{{ countBookedMeal(dayId, mealIdToDishIdDict.get(meal.id)) }}</span>

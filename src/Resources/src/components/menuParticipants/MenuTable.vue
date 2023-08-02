@@ -44,4 +44,9 @@ onMounted(async () => {
   progress.finish();
   loaded.value = true;
 });
+
+// expose functions for testing
+if (process.env.NODE_ENV === 'TEST') {
+  defineExpose({loaded});
+}
 </script>

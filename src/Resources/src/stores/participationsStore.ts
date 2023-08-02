@@ -189,6 +189,16 @@ export function useParticipations(weekId: number) {
         return menuParticipationsState.filterStr;
     }
 
+    /**
+     * Resets the state to the initial state, only to be used in testing
+     */
+    function resetStates() {
+        menuParticipationsState.days = {};
+        menuParticipationsState.error = '';
+        menuParticipationsState.isLoading = false;
+        menuParticipationsState.filterStr = '';
+    }
+
     return {
         menuParticipationsState: readonly(menuParticipationsState),
         fetchParticipations,
@@ -201,6 +211,7 @@ export function useParticipations(weekId: number) {
         hasParticipantBookedCombiDish,
         addEmptyParticipationToState,
         setFilter,
-        getFilter
+        getFilter,
+        resetStates
     }
 }

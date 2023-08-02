@@ -51,24 +51,9 @@
                     "mealId": 1516,
                     "dishId": 48,
                     "combinedDishes": []
-                },
-                {
-                    "mealId": 1518,
-                    "dishId": 52,
-                    "combinedDishes": []
                 }
             ],
             "profile": "alice.meals"
-        },
-        "Meals, Jane": {
-            "booked": [
-                {
-                    "mealId": 1517,
-                    "dishId": 51,
-                    "combinedDishes": []
-                }
-            ],
-            "profile": "jane.meals"
         },
         "Meals, John": {
             "booked": [
@@ -132,16 +117,6 @@
             ],
             "profile": "finance.meals"
         },
-        "Meals, Jane": {
-            "booked": [
-                {
-                    "mealId": 1520,
-                    "dishId": 50,
-                    "combinedDishes": []
-                }
-            ],
-            "profile": "jane.meals"
-        },
         "Meals, Kochomi": {
             "booked": [
                 {
@@ -183,16 +158,6 @@
                 }
             ],
             "profile": "finance.meals"
-        },
-        "Meals, Jane": {
-            "booked": [
-                {
-                    "mealId": 1521,
-                    "dishId": 44,
-                    "combinedDishes": []
-                }
-            ],
-            "profile": "jane.meals"
         },
         "Meals, John": {
             "booked": [
@@ -271,21 +236,6 @@
             ],
             "profile": "finance.meals"
         },
-        "Meals, Jane": {
-            "booked": [
-                {
-                    "mealId": 1523,
-                    "dishId": 50,
-                    "combinedDishes": []
-                },
-                {
-                    "mealId": 1524,
-                    "dishId": 47,
-                    "combinedDishes": []
-                }
-            ],
-            "profile": "jane.meals"
-        },
         "Meals, John": {
             "booked": [
                 {
@@ -354,6 +304,14 @@
                     "mealId": 1526,
                     "dishId": 45,
                     "combinedDishes": []
+                },
+                {
+                    "mealId": 1527,
+                    "dishId": 55,
+                    "combinedDishes": [
+                        48,
+                        45
+                    ]
                 }
             ],
             "profile": "finance.meals"

@@ -1,27 +1,27 @@
 {
     "delete": {
-        "day": 581,
+        "day": 571,
         "profile": "alice.meals",
         "booked": [
             {
-                "mealId": 1636,
-                "dishId": 45,
+                "mealId": 1518,
+                "dishId": 52,
                 "combinedDishes": []
             }
         ]
     },
     "put": {
-        "day": 581,
+        "day": 571,
         "profile": "alice.meals",
         "booked": [
             {
-                "mealId": 1636,
-                "dishId": 45,
+                "mealId": 1516,
+                "dishId": 48,
                 "combinedDishes": []
             },
             {
-                "mealId": 1637,
-                "dishId": 44,
+                "mealId": 1518,
+                "dishId": 52,
                 "combinedDishes": []
             }
         ]

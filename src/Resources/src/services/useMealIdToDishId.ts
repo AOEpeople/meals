@@ -2,7 +2,10 @@ import { onMounted, reactive } from "vue";
 import { useWeeks } from "@/stores/weeksStore";
 import { useDishes } from "@/stores/dishesStore";
 
-
+/**
+ * Constructs a map from meal id to dish id for a given week and returns the map.
+ * @param weekId The id of the week to construct the map for.
+ */
 export function useMealIdToDishId(weekId: number) {
 
     const { getDishBySlug, fetchDishes, DishesState } = useDishes();

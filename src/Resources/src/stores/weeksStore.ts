@@ -46,6 +46,10 @@ interface MenuCountState {
     counts: Dictionary<number>
 }
 
+/**
+ * Checks if the given object is of type Week.
+ * @param week The week to check.
+ */
 function isWeek(week: Week): week is Week {
     return (
         week !== null &&
@@ -73,12 +77,18 @@ const MenuCountState = reactive<MenuCountState>({
 
 export function useWeeks() {
 
+    /**
+     * Calls getWeeks() and sets the isLoading flag to true while the request is pending.
+     */
     async function fetchWeeks() {
         WeeksState.isLoading = true;
         await getWeeks();
         WeeksState.isLoading = false;
     }
 
+    /**
+     * Fetches the weeks from the backend and sets the WeeksState accordingly.
+     */
     async function getWeeks() {
         const { weeks, error } = await getWeeksData();
         if (isResponseArrayOkay<Week>(error, weeks, isWeek) === true) {
@@ -90,6 +100,12 @@ export function useWeeks() {
         }
     }
 
+    /**
+     * Tries to create a new week with the given year and calendarWeek.
+     * If the request was successful, the weeks are fetched again.
+     * @param year          The year of the week to create.
+     * @param calendarWeek  The calendar week of the week to create.
+     */
     async function createWeek(year: number, calendarWeek: number) {
         const { error, response } = await postCreateWeek(year, calendarWeek);
 
@@ -101,6 +117,10 @@ export function useWeeks() {
         await getWeeks();
     }
 
+    /**
+     * Updates the given week i.e. the selected menu for the week.
+     * @param week Data of the week to update.
+     */
     async function updateWeek(week: WeekDTO) {
 
         const { error, response } = await putWeekUpdate(week);
@@ -113,6 +133,9 @@ export function useWeeks() {
         await getWeeks();
     }
 
+    /**
+     * Fetches the number of times each dish is booked for the current week.
+     */
     async function getDishCountForWeek() {
         const { error, response } = await getDishCount();
 
@@ -124,6 +147,11 @@ export function useWeeks() {
         }
     }
 
+    /**
+     * Gets the start and end date for the given week.
+     * @param isoWeek   The calendar week.
+     * @param year      The year.
+     */
     function getDateRangeOfWeek(isoWeek: number, year: number) {
         const date = new Date(year, 0, 1 + (isoWeek - 1) * 7);
         const day = date.getDay();
@@ -132,6 +160,11 @@ export function useWeeks() {
         return [startDate, endDate];
     }
 
+    /**
+     * Returns all the relevant data for a day.
+     * @param weekId    The id of the week.
+     * @param dayId     The id of the day.
+     */
     function getMenuDay(weekId: number, dayId: string) {
         const week = getWeekById(weekId);
         const day = getDayById(week, dayId);
@@ -160,6 +193,10 @@ export function useWeeks() {
         return menuDay;
     }
 
+    /**
+     * Creates a MealDTO for a meal.
+     * @param meal  The meal to create the DTO for.
+     */
     function createMealDTO(meal: SimpleMeal) {
         return {
             dishSlug: meal.dish,

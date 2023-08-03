@@ -133,7 +133,7 @@
     "participations": "Participations",
     "add": "Add a participant",
     "notFound": "No profiles found for this query",
-    "search": "Search participant"
+    "search": "Filter participant"
   },
   "printList": {
     "title": "Participations on ",

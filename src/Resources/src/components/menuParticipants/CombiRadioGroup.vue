@@ -11,8 +11,8 @@
       class="mb-2 focus:outline-none"
     >
       <div
-        class="m-2 flex cursor-pointer flex-row gap-2 rounded-md border-2 border-transparent bg-white p-2 ring-2 hover:bg-slate-400 focus:outline-none"
-        :class="checked ? 'ring-indigo-600' : 'ring-gray-300'"
+        class="m-2 flex cursor-pointer flex-row gap-2 rounded-md border-2 border-transparent bg-white p-2 ring-2 focus:outline-none"
+        :class="checked ? 'ring-indigo-600' : 'ring-gray-300 hover:bg-[#FAFAFA]'"
       >
         <span
           class="grow-[1] self-start justify-self-center text-primary"

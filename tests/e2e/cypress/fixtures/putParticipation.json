@@ -1,0 +1,11 @@
+{
+    "day": 287,
+    "profile": "alice.meals",
+    "booked": [
+        {
+            "mealId": 810,
+            "dishId": 17,
+            "combinedDishes": []
+        }
+    ]
+}

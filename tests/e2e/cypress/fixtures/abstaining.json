@@ -1,0 +1,37 @@
+[
+    {
+        "user": "bob.meals",
+        "fullName": "Meals, Bob",
+        "roles": [
+            "ROLE_USER"
+        ]
+    },
+    {
+        "user": "alice.meals",
+        "fullName": "Meals, Alice",
+        "roles": [
+            "ROLE_USER"
+        ]
+    },
+    {
+        "user": "jane.meals",
+        "fullName": "Meals, Jane",
+        "roles": [
+            "ROLE_USER"
+        ]
+    },
+    {
+        "user": "john.meals",
+        "fullName": "Meals, John",
+        "roles": [
+            "ROLE_USER"
+        ]
+    },
+    {
+        "user": "kochomi.meals",
+        "fullName": "Meals, Kochomi",
+        "roles": [
+            "ROLE_KITCHEN_STAFF"
+        ]
+    }
+]

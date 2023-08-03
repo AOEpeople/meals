@@ -8,7 +8,7 @@
     />
     <MenuTableRow :week-id="weekId">
       <template #firstCell>
-        <td class="sticky left-0 border-b-2 border-r-2 border-solid border-gray-200 bg-[#f4f7f9] p-2 text-center">
+        <td class="sticky left-0 border-b-2 border-r-2 border-solid border-gray-200 bg-[#f4f7f9] p-2 text-start">
           <span>{{ t('menu.total') }}</span>
         </td>
       </template>

@@ -14,6 +14,10 @@ export interface IProfile {
     roles: string[]
 }
 
+/**
+ * Checks if the given object is of type IProfile.
+ * @param profile The profile to check.
+ */
 function isProfile(profile: IProfile): profile is IProfile {
     return (
         profile !== null &&
@@ -35,6 +39,9 @@ export function useProfiles(weekId: number) {
 
     // const addedProfiles = ref<IProfile[]>([]);
 
+    /**
+     * Fetches the absenting profiles for the weekId given by usePofiles() and stores them in the ProfilesState.
+     */
     async function fetchAbsentingProfiles() {
         ProfilesState.isLoading = true;
         const { error, response } = await getAbsentingProfiles(weekId);

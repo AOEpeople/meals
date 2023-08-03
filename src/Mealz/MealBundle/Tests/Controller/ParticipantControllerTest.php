@@ -183,7 +183,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $profileRepo = self::$container->get(ProfileRepositoryInterface::class);
         $profile = $profileRepo->findOneBy(['username' => $profileToParticipate]);
         $meal = $weekEntity->getDays()[0]->getMeals()[0];
-        $partToNotFind = self::createParticipant($profile, $meal);
+        self::createParticipant($profile, $meal);
 
         $routeStr = '/api/participations/' . $weekEntity->getId() . '/abstaining';
         $this->client->request('GET', $routeStr);

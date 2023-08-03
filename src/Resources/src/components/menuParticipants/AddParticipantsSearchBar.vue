@@ -25,6 +25,7 @@
           @change="filter = $event.target.value"
         />
         <XIcon
+          v-if="filter !== ''"
           class="mr-4 h-full w-10 cursor-pointer justify-self-end px-1 py-2 text-[#9CA3AF] transition-transform hover:scale-[120%]"
           aria-hidden="true"
           @click="filter = ''"

@@ -7,6 +7,7 @@
       :week="menu"
       :date-range="dateRange"
       :calendar-week="calendarWeek"
+      :create="create !== null && create === 'create'"
     />
     <MenuDay
       v-for="(day, index) in menu.days"
@@ -32,7 +33,7 @@
 
 <script setup lang="ts">
 import { useProgress } from '@marcoschulte/vue3-progress';
-import { computed, onMounted, reactive, ref } from 'vue';
+import { computed, onMounted, reactive, ref, watch } from 'vue';
 import MenuDay from '@/components/menu/MenuDay.vue';
 import { useDishes } from '@/stores/dishesStore';
 import { useWeeks } from '@/stores/weeksStore';
@@ -42,20 +43,39 @@ import SubmitButton from '@/components/misc/SubmitButton.vue';
 import MenuHeader from '@/components/menu/MenuHeader.vue';
 import { useI18n } from 'vue-i18n';
 import CancelButton from '@/components/misc/CancelButton.vue';
+import { useRouter } from 'vue-router';
 
 const { DishesState, fetchDishes } = useDishes();
-const { WeeksState, MenuCountState, fetchWeeks, getMenuDay, getWeekById, updateWeek, getDishCountForWeek } = useWeeks();
+const {
+  WeeksState,
+  MenuCountState,
+  fetchWeeks,
+  getMenuDay,
+  getWeekById,
+  updateWeek,
+  getDishCountForWeek,
+  getWeekByCalendarWeek,
+  getDateRangeOfWeek,
+  createWeek
+} = useWeeks();
 const { CategoriesState, fetchCategories } = useCategories();
 const { t } = useI18n();
+const router = useRouter();
 
 
-const props = defineProps<{
-  week: string
-}>();
-
-const parseWeekId = computed(() => {
-  return parseInt(props.week);
+const props = withDefaults(defineProps<{
+  week: string,
+  create?: string | null
+}>(), {
+  create: null
 });
+
+const parseWeekId = ref(0);
+
+watch(
+  () => props.week,
+  () => parseWeekId.value = parseInt(props.week)
+);
 
 const menu = reactive<WeekDTO>({
   id: parseWeekId.value,
@@ -68,6 +88,7 @@ const calendarWeek = ref(0);
 
 onMounted(async () => {
   const progress = useProgress().start();
+  parseWeekId.value = parseInt(props.week);
 
   if (DishesState.dishes.length === 0) {
     await fetchDishes();
@@ -88,21 +109,32 @@ onMounted(async () => {
 });
 
 const dateRange = computed(() => {
-  if (menu.days[0] !== null && menu.days[0] !== undefined && menu.days[menu.days.length - 1] !== null && menu.days[menu.days.length - 1] !== undefined) {
-    return [menu.days[0].date.date, menu.days[menu.days.length - 1].date.date];
-  }
-  return ['', ''];
+  return getDateRangeOfWeek(calendarWeek.value, new Date().getFullYear());
 });
 
 async function handleSubmit() {
-  await updateWeek(menu);
-  setUpDaysAndEnabled();
+  if (props.create === null || props.create === undefined || props.create !== 'create') {
+    await updateWeek(menu);
+    setUpDaysAndEnabled();
+  } else {
+    const weekId = await createWeek(new Date().getFullYear(), calendarWeek.value, menu);
+    if (typeof(weekId) === 'number') {
+      parseWeekId.value = weekId;
+      router.push({ name: 'Menu', params: { week: weekId } });
+    }
+  }
 }
 
 async function setUpDaysAndEnabled() {
-  const week = getWeekById(parseWeekId.value);
+  const week = (props.create === null || props.create !== 'create') ? getWeekById(parseWeekId.value) : getWeekByCalendarWeek(parseWeekId.value);
   const dayKeys = Object.keys(week.days);
-  menu.days = dayKeys.map(dayId => getMenuDay(menu.id, dayId));
+  menu.days = dayKeys.map(dayId => {
+    if (props.create === null || props.create !== 'create') {
+      return getMenuDay(dayId, menu.id);
+    } else {
+      return getMenuDay(dayId, null, parseWeekId.value);
+    }
+  });
   menu.enabled = week.enabled;
   calendarWeek.value = week.calendarWeek;
 }

@@ -14,7 +14,7 @@ describe('Test MenuHeader', () => {
         const wrapper = shallowMount(MenuHeader, {
             props: {
                 week: testWeek,
-                dateRange: ['2023-07-03T12:00:00.000+02:00', '2023-07-07T12:00:00.000+02:00'],
+                dateRange: [new Date('2023-07-03T12:00:00.000+02:00'), new Date('2023-07-07T12:00:00.000+02:00')],
                 calendarWeek: 27
             }
         });

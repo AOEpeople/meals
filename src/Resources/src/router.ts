@@ -42,7 +42,7 @@ const router = createRouter({
             }
         },
         {
-            path: '/menu/:week',
+            path: '/menu/:week/:create?',
             name: 'Menu',
             component: Menu,
             meta: {

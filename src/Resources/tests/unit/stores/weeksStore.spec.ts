@@ -86,7 +86,7 @@ describe('Test weeksStore', () => {
 
         const ids = { week: 57, day: "281" };
 
-        const menuDay = getMenuDay(ids.week, ids.day);
+        const menuDay = getMenuDay(ids.day, ids.week);
 
         expect(menuDay.id).toBe(parseInt(ids.day));
         expect(menuDay.date.date).toEqual('2023-07-03 12:00:00.000000');

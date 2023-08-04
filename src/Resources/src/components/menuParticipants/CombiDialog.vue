@@ -61,9 +61,9 @@ const props = defineProps<{
 const emit = defineEmits(['closeDialog']);
 
 const menuOfTheDay = computed(() => {
-  Object.entries(getMenuDay(props.weekId, props.dayId).meals).filter(meals => meals[1].find(meal => meal.dishSlug !== 'combined-dish') !== undefined)
+  Object.entries(getMenuDay(props.dayId, props.weekId).meals).filter(meals => meals[1].find(meal => meal.dishSlug !== 'combined-dish') !== undefined)
   let menuDict: Dictionary<MealDTO[]> = {};
-  for (const [key, meals] of Object.entries(getMenuDay(props.weekId, props.dayId).meals)) {
+  for (const [key, meals] of Object.entries(getMenuDay(props.dayId, props.weekId).meals)) {
     if (meals.find(meal => meal.dishSlug !== 'combined-dish') !== undefined) {
       menuDict[key] = meals;
     }

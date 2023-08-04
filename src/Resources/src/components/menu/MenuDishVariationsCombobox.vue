@@ -22,21 +22,25 @@
           :key="variation.id"
           v-slot="{ selected }"
           :value="variation"
-          class="grid cursor-pointer grid-cols-[minmax(0,1fr)_24px] truncate text-[14px] text-[#9CA3AF] hover:bg-[#FAFAFA]"
+          class="cursor-pointer truncate text-[14px] text-[#9CA3AF] hover:bg-[#FAFAFA]"
           :class="index === dish.variations.length - 1 ? 'rounded-b-[23px]' : ''"
         >
-          <span
-            class="col-start-1 inline-block h-full w-full truncate px-4 py-2"
+          <div
+            class="grid h-full w-full grid-cols-[minmax(0,1fr)_24px]"
             :class="selected ? 'bg-[#F4F4F4] font-medium' : 'font-normal'"
           >
-            {{ locale === 'en' ? variation.titleEn : variation.titleDe }}
-          </span>
-          <div
-            v-if="MenuCountState.counts[variation.id] && MenuCountState.counts[variation.id] > 0"
-            class="col-start-2 mr-4 flex h-6 w-6 items-center justify-center self-center justify-self-end rounded-lg bg-[#029DF7] text-center text-white"
-            aria-hidden="true"
-          >
-            {{ MenuCountState.counts[variation.id] }}
+            <span
+              class="col-start-1 inline-block h-full w-full truncate px-4 py-2"
+            >
+              {{ locale === 'en' ? variation.titleEn : variation.titleDe }}
+            </span>
+            <div
+              v-if="MenuCountState.counts[variation.id] && MenuCountState.counts[variation.id] > 0"
+              class="col-start-2 mr-4 flex h-6 w-6 items-center justify-center self-center justify-self-end rounded-lg bg-[#029DF7] text-center text-white"
+              aria-hidden="true"
+            >
+              {{ MenuCountState.counts[variation.id] }}
+            </div>
           </div>
         </ListboxOption>
       </ListboxOptions>

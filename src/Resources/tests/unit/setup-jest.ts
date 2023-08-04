@@ -13,4 +13,10 @@ jest.mock('@marcoschulte/vue3-progress', () => ({
             finish: () => void 0
         }),
     }),
-}))
+}));
+
+jest.mock('vue-router', () => ({
+    useRouter: () => ({
+        push: () => void 0
+    }),
+}));

@@ -1,10 +1,19 @@
 import { IMessage } from "@/interfaces/IMessage";
 import useApi from "./api";
+import { WeekDTO } from "@/interfaces/DayDTO";
 
-export default async function postCreateWeek(year: number, calendarWeek: number) {
-    const { error, request, response } = useApi<IMessage | null>(
+/**
+ * 
+ * @param year 
+ * @param calendarWeek 
+ * @param week 
+ */
+export default async function postCreateWeek(year: number, calendarWeek: number, week: WeekDTO) {
+    const { error, request, response } = useApi<IMessage | number>(
         'POST',
-        `api/weeks/${year}W${calendarWeek}`
+        `api/weeks/${year}W${calendarWeek}`,
+        'application/json',
+        JSON.stringify(week)
     );
 
     await request();

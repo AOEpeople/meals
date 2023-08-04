@@ -112,15 +112,7 @@ class MealAdminControllerTest extends AbstractControllerTestCase
 
     public function testEdit(): void
     {
-        // Create new week
-        $date = new DateTime('+2 month');
-        $year = (int) $date->format('Y');
-        $week = (int) $date->format('W');
-        $routeStr = '/api/weeks/' . $year . 'W' . $week;
-
-        // Request
-        $this->client->request('POST', $routeStr);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $date = new DateTime('+2 week');
 
         // Get data for assertions with new request response
         $weekRepository = $this->getDoctrine()->getRepository(Week::class);
@@ -128,6 +120,9 @@ class MealAdminControllerTest extends AbstractControllerTestCase
             'year' => $date->format('o'),
             'calendarWeek' => $date->format('W'),
         ]);
+
+        $this->assertNotNull($createdWeek);
+        $this->assertInstanceOf(Week::class, $createdWeek);
 
         $foundDay = $createdWeek->getDays()[0];
         $foundMeal = $foundDay->getMeals()[0];

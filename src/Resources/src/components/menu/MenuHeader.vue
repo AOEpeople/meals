@@ -4,6 +4,7 @@
       {{ `${ t('menu.header')} #${calendarWeek} (${getFormattedDateRange()})` }}
     </h2>
     <ParticipantsLink
+      v-if="create === false"
       :week-id="week.id"
       class="col-span-3 row-start-2 justify-self-center sm:col-span-1 sm:col-start-1 sm:justify-self-start min-[900px]:row-start-2"
     />
@@ -29,13 +30,14 @@ const { t, locale } = useI18n();
 
 const props = defineProps<{
   week: WeekDTO,
-  dateRange: string[],
-  calendarWeek: number
+  dateRange: Date[],
+  calendarWeek: number,
+  create: boolean
 }>();
 
 function getFormattedDateRange() {
-  const start = new Date(props.dateRange[0]).toLocaleDateString(locale.value, { day: '2-digit', month: '2-digit' });
-  const end = new Date(props.dateRange[1]).toLocaleDateString(locale.value, { day: '2-digit', month: '2-digit' });
+  const start = props.dateRange[0].toLocaleDateString(locale.value, { day: '2-digit', month: '2-digit' });
+  const end = props.dateRange[1].toLocaleDateString(locale.value, { day: '2-digit', month: '2-digit' });
   return `${start} - ${end}`;
 }
 </script>

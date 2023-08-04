@@ -132,14 +132,17 @@ class Week extends AbstractMessage implements JsonSerializable
     public function jsonSerialize(): array
     {
         $days = [];
+        $replacementId = -1;
+
         foreach ($this->getDays() as $day) {
-            $days[$day->getId()] = $day->jsonSerialize();
+            $id = null !== $day->getId() ? $day->getId() : $replacementId--;
+            $days[$id] = $day->jsonSerialize();
         }
 
         return [
             'id' => $this->getId(),
-            'year' => $this->getYear(),
-            'calendarWeek' => $this->getCalendarWeek(),
+            'year' => (int) $this->getYear(),
+            'calendarWeek' => (int) $this->getCalendarWeek(),
             'days' => $days,
             'enabled' => $this->isEnabled(),
         ];

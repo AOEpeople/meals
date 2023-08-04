@@ -8,11 +8,11 @@
       :key="`${meal.dishSlug}_${meal.mealId}`"
       v-slot="{ checked }"
       :value="meal.mealId"
-      class="mb-2 focus:outline-none"
+      class="flex gap-2 focus:outline-none"
     >
       <div
-        class="m-2 flex cursor-pointer flex-row gap-2 rounded-md border-2 border-transparent bg-white p-2 ring-2 focus:outline-none"
-        :class="checked ? 'ring-indigo-600' : 'ring-gray-300 hover:bg-[#FAFAFA]'"
+        class="m-2 flex w-full cursor-pointer flex-row gap-2 rounded-md border-2 border-transparent bg-white p-2 ring-2 focus:outline-none"
+        :class="checked ? 'ring-indigo-600' : 'ring-gray-300 hover:bg-[#f4f7f9]'"
       >
         <span
           class="grow-[1] self-start justify-self-center text-primary"

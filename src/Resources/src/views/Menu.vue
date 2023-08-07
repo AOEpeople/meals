@@ -70,12 +70,14 @@ const props = withDefaults(defineProps<{
   create: null
 });
 
-const parseWeekId = ref(0);
+const parseWeekId = ref(parseInt(props.week));
 
 watch(
   () => props.week,
-  () => parseWeekId.value = parseInt(props.week)
-);
+  () => {
+    parseWeekId.value = parseInt(props.week);
+    menu.id = parseWeekId.value;
+});
 
 const menu = reactive<WeekDTO>({
   id: parseWeekId.value,
@@ -120,7 +122,8 @@ async function handleSubmit() {
     const weekId = await createWeek(new Date().getFullYear(), calendarWeek.value, menu);
     if (typeof(weekId) === 'number') {
       parseWeekId.value = weekId;
-      router.push({ name: 'Menu', params: { week: weekId } });
+      await router.push({ name: 'Menu', params: { week: weekId, create: null }, force: true, replace: true });
+      await setUpDaysAndEnabled();
     }
   }
 }

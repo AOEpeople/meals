@@ -3,6 +3,7 @@ describe('Test Weeks View', () => {
         cy.setCookie('locale', 'de');
         cy.loginAs('kochomi');
         cy.visitMeals();
+        cy.resetDB();
     });
 
     it('should contain the correct heading in german and english', () => {

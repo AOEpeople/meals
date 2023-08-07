@@ -3,6 +3,7 @@ describe('Test Menu Participations View', () => {
         cy.setCookie('locale', 'de');
         cy.loginAs('kochomi');
         cy.visitMeals();
+        cy.resetDB();
 
         // intercept the request to the backend
         cy.intercept('GET', '**/api/dishes', { fixture: 'dishes.json', statusCode: 200 }).as('getDishes');
@@ -12,7 +13,7 @@ describe('Test Menu Participations View', () => {
         cy.intercept('GET', '**/api/participations/*/abstaining', { fixture: 'abstaining.json', statusCode: 200 }).as('getAbstaining');
         cy.intercept('GET', '**/api/participations/*', { fixture: 'participations.json', statusCode: 200 }).as('getParticipations');
         cy.intercept('PUT', '**/api/participation/*/*', { fixture: 'putParticipation.json', statusCode: 200 }).as('putParticipation');
-        cy.intercept('DELETE', '**/api/participation/*/*', { fixture: 'deleteParticipation.json', statusCode: 200 }).as('putParticipation');
+        cy.intercept('DELETE', '**/api/participation/*/*', { fixture: 'deleteParticipation.json', statusCode: 200 }).as('deleteParticipation');
     });
 
     it('should be able to visit the menu participations page', () => {
@@ -92,7 +93,7 @@ describe('Test Menu Participations View', () => {
             });
 
         // Tests search functionality
-        cy.get('input[placeholder="Teilnehmer suchen"]').type('alice');
+        cy.get('input[placeholder="Teilnehmer filtern"]').type('alice');
 
         cy.get('table')
             .find('span')
@@ -109,7 +110,7 @@ describe('Test Menu Participations View', () => {
             .contains('Meals, Admin')
             .should('not.exist');
 
-        cy.get('input[placeholder="Teilnehmer suchen"]').clear();
+        cy.get('input[placeholder="Teilnehmer filtern"]').clear();
 
         cy.get('table')
             .find('span')

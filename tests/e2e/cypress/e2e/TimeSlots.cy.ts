@@ -3,6 +3,7 @@ describe('Test TimeSlots View', () => {
     cy.setCookie('locale', 'de');
     cy.loginAs('kochomi');
     cy.visitMeals();
+    cy.resetDB();
   });
 
   it("should be able to navigate to '/time-slots' and have the header displayed", () => {

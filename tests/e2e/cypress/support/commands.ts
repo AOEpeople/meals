@@ -1,6 +1,7 @@
 import { baseUrl } from "./commands/urls";
 import {loginAs} from "./commands/login";
 import {setCookieInterceptor} from "./interceptors";
+import { resetDB } from "./commands/reset";
 
 // add new command to the existing Cypress interface
 declare global {
@@ -30,6 +31,10 @@ declare global {
        * Checks if element is in viewport
        */
       isInViewport: (selector: string) => void;
+      /**
+       * Resets the Database
+       */
+      resetDB: () => Cypress.Chainable<null>;
     }
   }
 }
@@ -52,4 +57,4 @@ Cypress.Commands.add("viewportS", viewportS);
 Cypress.Commands.add("viewportXL", viewportXL);
 Cypress.Commands.add("visitMeals", visitMeals);
 Cypress.Commands.add("visitMealsViaWindowObject", visitMealsViaWindowObject);
-
+Cypress.Commands.add("resetDB", resetDB);

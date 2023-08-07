@@ -3,6 +3,7 @@ describe('Test Weeks View', () => {
         cy.setCookie('locale', 'de');
         cy.loginAs('kochomi');
         cy.visitMeals();
+        cy.resetDB();
 
         // intercept the request to the backend
         cy.intercept('GET', '**/api/weeks', { fixture: 'weeks.json', statusCode: 200 }).as('getWeeks');

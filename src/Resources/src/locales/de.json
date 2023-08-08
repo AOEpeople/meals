@@ -133,7 +133,8 @@
     "participations": "Teilnahmen",
     "add": "Teilnehmer hinzufügen",
     "notFound": "No profiles found for this query",
-    "search": "Teilnehmer filtern"
+    "search": "Teilnehmer filtern",
+    "guest": "Gast"
   },
   "printList": {
     "title": "Teilnahmen am ",

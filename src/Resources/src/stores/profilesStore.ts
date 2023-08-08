@@ -37,8 +37,6 @@ export function useProfiles(weekId: number) {
         isLoading: false
     });
 
-    // const addedProfiles = ref<IProfile[]>([]);
-
     /**
      * Fetches the absenting profiles for the weekId given by usePofiles() and stores them in the ProfilesState.
      */
@@ -54,16 +52,6 @@ export function useProfiles(weekId: number) {
         }
         ProfilesState.isLoading = false;
     }
-
-    // potentially still to be used
-    // function removeProfileFromState(searchProfile: IProfile) {
-    //     const indexToDelete = ProfilesState.profiles.findIndex(profile => searchProfile.user === profile.user);
-    //     addedProfiles.value.push(...ProfilesState.profiles.splice(indexToDelete, 1));
-    // }
-
-    // function putAddedProfilesBackInState() {
-    //     ProfilesState.profiles = [...ProfilesState.profiles, ...addedProfiles.value];
-    // }
 
     return {
         ProfilesState: readonly(ProfilesState),

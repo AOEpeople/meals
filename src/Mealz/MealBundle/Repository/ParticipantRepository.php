@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Repository;
 
+use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
@@ -177,7 +178,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
     /**
      * @psalm-return array<string, array<string, array{booked: non-empty-list<int>}>>
      */
-    public function findAllGroupedBySlotAndProfileID(DateTime $date): array
+    public function findAllGroupedBySlotAndProfileID(DateTime $date, bool $getProfile = false): array
     {
         $queryBuilder = $this->createQueryBuilder('p');
         $queryBuilder
@@ -198,7 +199,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
             return [];
         }
 
-        return $this->participationHelper->groupBySlotAndProfileID($result);
+        return $this->participationHelper->groupBySlotAndProfileID($result, $getProfile);
     }
 
     /**

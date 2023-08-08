@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Controller;
 
+use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
@@ -11,21 +12,23 @@ use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Event\MealOfferCancelledEvent;
 use App\Mealz\MealBundle\Event\MealOfferedEvent;
 use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
+use App\Mealz\MealBundle\Helper\ParticipationHelper;
+use App\Mealz\MealBundle\Repository\DayRepositoryInterface;
 use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
 use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\MealBundle\Repository\SlotRepositoryInterface;
-use App\Mealz\MealBundle\Repository\WeekRepositoryInterface;
 use App\Mealz\MealBundle\Service\EventService;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;
 use App\Mealz\MealBundle\Service\ParticipationService;
-use App\Mealz\MealBundle\Service\SlotService;
 use App\Mealz\UserBundle\Entity\Profile;
+use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use stdClass;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Security("is_granted('ROLE_USER')")
@@ -34,25 +37,34 @@ class ParticipantController extends BaseController
 {
     private EventDispatcherInterface $eventDispatcher;
     private EventService $eventSrv;
-    private SlotService $slotSrv;
+    private ParticipationHelper $participationHelper;
     private ParticipationService $participationSrv;
     private MealRepositoryInterface $mealRepo;
     private SlotRepositoryInterface $slotRepo;
+    private DayRepositoryInterface $dayRepo;
+    private LoggerInterface $logger;
+    private ParticipantRepositoryInterface $participantRepo;
 
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
         EventService $eventSrv,
-        SlotService $slotSrv,
+        ParticipationHelper $participationHelper,
         ParticipationService $participationSrv,
         MealRepositoryInterface $mealRepo,
-        SlotRepositoryInterface $slotRepo
+        SlotRepositoryInterface $slotRepo,
+        DayRepositoryInterface $dayRepo,
+        ParticipantRepositoryInterface $participantRepo,
+        LoggerInterface $logger
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->eventSrv = $eventSrv;
-        $this->slotSrv = $slotSrv;
         $this->participationSrv = $participationSrv;
         $this->mealRepo = $mealRepo;
         $this->slotRepo = $slotRepo;
+        $this->dayRepo = $dayRepo;
+        $this->participantRepo = $participantRepo;
+        $this->logger = $logger;
+        $this->participationHelper = $participationHelper;
     }
 
     /**
@@ -139,17 +151,7 @@ class ParticipantController extends BaseController
 
         $this->eventSrv->triggerLeaveEvents($participant);
 
-        if (true === $this->getDoorman()->isKitchenStaff()) {
-            $logger = $this->get('monolog.logger.balance');
-            $logger->info(
-                'admin removed {profile} from {meal} (Meal: {mealId})',
-                [
-                    'profile' => $participant->getProfile(),
-                    'meal' => $meal,
-                    'mealId' => $meal->getId(),
-                ]
-            );
-        }
+        $this->logRemove($meal, $participant);
 
         $activeSlot = $this->participationSrv->getSlot($profile, $meal->getDateTime());
         $slotID = 0;
@@ -264,60 +266,117 @@ class ParticipantController extends BaseController
         ]);
     }
 
-    public function editParticipation(
-        Week $week,
-        ParticipationService $participationSrv,
-        ParticipantRepositoryInterface $participantRepo,
-        WeekRepositoryInterface $weekRepo
-    ): Response {
-        $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
+    /**
+     * @Security("is_granted('ROLE_KITCHEN_STAFF')")
+     */
+    public function getParticipationsForWeek(Week $week): JsonResponse
+    {
+        $days = $week->getDays();
 
-        $filteredWeek = $weekRepo->findWeekByDate($week->getStartTime(), ['only_enabled_days' => true]);
+        $response = [];
 
-        // If all days are disabled don't render list
-        if (null === $filteredWeek) {
-            $translator = $this->get('translator');
-            $message = $translator->trans('error.all_days_disabled', [
-                '%startDate%' => $week->getStartTime()->format('d.m'),
-                '%endDate%' => $week->getEndTime()->format('d.m'),
-            ]);
-            $this->addFlashMessage($message, 'danger');
-
-            return $this->redirectToRoute(
-                'MealzMealBundle_Meal_edit',
-                ['week' => $week->getId()]
-            );
-        }
-
-        // Get user participation to list them as table rows
-        $participation = $participantRepo->getParticipantsOnDays(
-            $filteredWeek->getStartTime(),
-            $filteredWeek->getEndTime(),
-        );
-        $groupedParticipation = $participantRepo->groupParticipantsByName($participation);
-
-        /** @var Profile[] $profiles */
-        $profiles = $this->getDoctrine()->getRepository(Profile::class)->findAll();
-        $profilesArray = [];
-        foreach ($profiles as $profile) {
-            if (false === array_key_exists($profile->getUsername(), $groupedParticipation)) {
-                $profilesArray[] = [
-                    'label' => $profile->getFullName(),
-                    'value' => $profile->getUsername(),
-                ];
+        /** @var Day $day */
+        foreach ($days as $day) {
+            $meals = $day->getMeals();
+            $participants = new ArrayCollection();
+            /** @var Meal $meal */
+            foreach ($meals as $meal) {
+                $participants = new ArrayCollection(array_merge($participants->toArray(), $meal->getParticipants()->toArray()));
             }
+
+            $response = $this->addParticipationInfo($response, $participants, $day);
         }
 
-        // Create user participation row prototype
-        $prototype = $this->renderView('@MealzMeal/Participant/edit_row_prototype.html.twig', ['week' => $week]);
+        return new JsonResponse($response, 200);
+    }
 
-        return $this->render('MealzMealBundle:Participant:edit.html.twig', [
-            'participationSrv' => $participationSrv,
-            'week' => $filteredWeek,
-            'users' => $groupedParticipation,
-            'profilesJson' => json_encode($profilesArray),
-            'prototype' => $prototype,
-        ]);
+    /**
+     * @Security("is_granted('ROLE_KITCHEN_STAFF')")
+     */
+    public function add(Profile $profile, Meal $meal, Request $request): JsonResponse
+    {
+        $parameters = json_decode($request->getContent(), true);
+        $result = null;
+
+        try {
+            if (true === $meal->isCombinedMeal() && false === isset($parameters['combiDishes'])) {
+                throw new Exception('Combined Meals need exactly two dishes');
+            }
+
+            if (true === isset($parameters['combiDishes'])) {
+                $result = $this->participationSrv->join($profile, $meal, null, $parameters['combiDishes']);
+            } else {
+                $result = $this->participationSrv->join($profile, $meal);
+            }
+
+            $this->eventSrv->triggerJoinEvents($result['participant'], $result['offerer']);
+            $this->logAdd($meal, $result['participant']);
+
+            // get updated day
+            $day = $this->dayRepo->getDayByDate($meal->getDay()->getDateTime());
+            $participations = $this->participationSrv->getParticipationsByDayAndProfile($profile, $day);
+
+            $participationData = [];
+            foreach ($participations as $participation) {
+                $participationData[] = $this->getParticipationData($participation);
+            }
+
+            return new JsonResponse([
+                'day' => $meal->getDay()->getId(),
+                'profile' => $profile->getUsername(),
+                'booked' => $participationData,
+            ], 200);
+        } catch (Exception $e) {
+            $this->logException($e);
+
+            return new JsonResponse(['message' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * @Security("is_granted('ROLE_KITCHEN_STAFF')")
+     */
+    public function remove(Profile $profile, Meal $meal): JsonResponse
+    {
+        try {
+            $participation = $this->participationSrv->getParticipationByMealAndUser($meal, $profile);
+            $participation->setCombinedDishes(null);
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($participation);
+            $entityManager->flush();
+
+            $this->eventSrv->triggerLeaveEvents($participation);
+            $this->logRemove($meal, $participation);
+
+            $participations = $this->participationSrv->getParticipationsByDayAndProfile($profile, $meal->getDay());
+
+            $participationData = [];
+            foreach ($participations as $participation) {
+                $participationData[] = $this->getParticipationData($participation);
+            }
+
+            return new JsonResponse([
+                'day' => $meal->getDay()->getId(),
+                'profile' => $profile->getUsername(),
+                'booked' => $participationData,
+            ], 200);
+        } catch (Exception $e) {
+            $this->logException($e);
+
+            return new JsonResponse(['message' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * @Security("is_granted('ROLE_KITCHEN_STAFF')")
+     */
+    public function getProfilesWithoutParticipation(Week $week): JsonResponse
+    {
+        $participations = $this->participantRepo->getParticipantsOnDays($week->getStartTime(), $week->getEndTime());
+        $response = $this->participationHelper->getNonParticipatingProfilesByWeek($participations);
+
+        return new JsonResponse($response, 200);
     }
 
     private function generateResponse(string $route, string $action, Participant $participant): JsonResponse
@@ -358,5 +417,50 @@ class ParticipantController extends BaseController
                 'meal' => $meal,
             ]
         );
+    }
+
+    private function logRemove(Meal $meal, Participant $participant): void
+    {
+        if (true === $this->getDoorman()->isKitchenStaff()) {
+            $logger = $this->get('monolog.logger.balance');
+            $logger->info(
+                'admin removed {profile} from {meal} (Meal: {mealId})',
+                [
+                    'profile' => $participant->getProfile(),
+                    'meal' => $meal,
+                    'mealId' => $meal->getId(),
+                ]
+            );
+        }
+    }
+
+    private function addParticipationInfo(array $response, ArrayCollection $participants, Day $day): array
+    {
+        if (0 === count($participants)) {
+            $response[$day->getId()] = new stdClass();
+
+            return $response;
+        }
+
+        /** @var Participant $participant */
+        foreach ($participants as $participant) {
+            $participationData = $this->getParticipationData($participant);
+            $response[$day->getId()][$participant->getProfile()->getFullName()]['booked'][] = $participationData;
+            $response[$day->getId()][$participant->getProfile()->getFullName()]['profile'] = $participant->getProfile()->getUsername();
+        }
+
+        return $response;
+    }
+
+    private function getParticipationData(Participant $participant): array
+    {
+        $participationData['mealId'] = $participant->getMeal()->getId();
+        $participationData['dishId'] = $participant->getMeal()->getDish()->getId();
+        $participationData['combinedDishes'] = array_map(
+            fn ($dish) => $dish->getId(),
+            $participant->getCombinedDishes()->toArray()
+        );
+
+        return $participationData;
     }
 }

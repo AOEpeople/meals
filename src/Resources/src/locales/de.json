@@ -128,7 +128,13 @@
     "notify": "In Mattermost bekanntgeben",
     "enableWeek": "Diese Woche ist aktiv",
     "header": "Woche bearbeiten",
-    "lock": "Sperren"
+    "lock": "Sperren",
+    "total": "Gesamt",
+    "participations": "Teilnahmen",
+    "add": "Teilnehmer hinzufügen",
+    "notFound": "No profiles found for this query",
+    "search": "Teilnehmer filtern",
+    "guest": "Gast"
   },
   "printList": {
     "title": "Teilnahmen am ",

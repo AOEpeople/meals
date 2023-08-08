@@ -92,10 +92,28 @@ MealzMealBundle_api_weeks_new:
         # format "2014W12" 12th week in 2014
         date: 20\d{2}W[0-5]\d
 
-MealzMealBundle_Meal_edit:
+MealzMealBundle_api_weeks_empty:
+    path: /api/weeks/{date}
+    defaults: { _controller: App\Mealz\MealBundle\Controller\MealAdminController::getEmptyWeek }
+    methods: [GET]
+    requirements:
+        # format "2014W12" 12th week in 2014
+        date: 20\d{2}W[0-5]\d
+
+MealzMealBundle_api_menu_edit:
     path: /api/menu/{id}
     defaults: { _controller: App\Mealz\MealBundle\Controller\MealAdminController::edit }
     methods: [PUT]
+
+MealzMealBundle_api_participant_add:
+    path: /api/participation/{profile}/{meal}
+    defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::add }
+    methods: [PUT]
+
+MealzMealBundle_api_participant_remove:
+    path: /api/participation/{profile}/{meal}
+    defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::remove }
+    methods: [DELETE]
 
 MealzMealBundle_Meal_count:
     path: /api/meals/count
@@ -239,7 +257,17 @@ MealzMealBundle_Print_participations_api:
 
 mealz_meal_edit_participations:
     path: /participations/{week}/edit
-    defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::editParticipation }
+    defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
+
+MealzMealBundle_api_participations:
+    path: /api/participations/{week}
+    defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::getParticipationsForWeek }
+    methods: [ GET ]
+
+MealzMealBundle_api_non_participating:
+    path: /api/participations/{week}/abstaining
+    defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::getProfilesWithoutParticipation }
+    methods: [ GET ]
 
 MealzMealBundle_Show_participations:
     path: /show/participations

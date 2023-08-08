@@ -3,6 +3,7 @@ describe('Test Dishes View', () => {
         cy.setCookie('locale', 'de');
         cy.loginAs('kochomi');
         cy.visitMeals();
+        cy.resetDB();
     });
 
     it("should be able to navigate to '/dishes' and have the header displayed", () => {

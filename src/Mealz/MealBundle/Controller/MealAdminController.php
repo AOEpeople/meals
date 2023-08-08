@@ -84,7 +84,7 @@ class MealAdminController extends BaseController
         return new JsonResponse($weeks, 200);
     }
 
-    public function new(DateTime $date): JsonResponse
+    public function new(DateTime $date, Request $request): JsonResponse
     {
         $week = $this->weekRepository->findOneBy([
             'year' => $date->format('o'),
@@ -98,10 +98,50 @@ class MealAdminController extends BaseController
         $dateTimeModifier = $this->getParameter('mealz.lock_toggle_participation_at');
         $week = WeekService::generateEmptyWeek($date, $dateTimeModifier);
 
+        $data = json_decode($request->getContent(), true);
+        if (false === isset($data) || false === isset($data['days']) || false === isset($data['enabled'])) {
+            return new JsonResponse(['message' => 'invalid json'], 400);
+        }
+
+        $days = $data['days'];
+        $week->setEnabled($data['enabled']);
+        $weekDays = $week->getDays();
+
+        try {
+            $dayIndex = 0;
+            foreach ($days as $dayData) {
+                $this->handleNewDay($dayData, $weekDays[$dayIndex++]);
+            }
+        } catch (Exception $e) {
+            return new JsonResponse(['message' => $e->getMessage()], 500);
+        }
+
         $this->em->persist($week);
         $this->em->flush();
+        $this->eventDispatcher->dispatch(new WeekUpdateEvent($week, $data['notify']));
 
-        return new JsonResponse(null, 200);
+        return new JsonResponse($week->getId(), 200);
+    }
+
+    public function getEmptyWeek(DateTime $date): JsonResponse
+    {
+        $week = $this->weekRepository->findOneBy([
+            'year' => $date->format('o'),
+            'calendarWeek' => $date->format('W'),
+        ]);
+
+        if (null !== $week) {
+            return new JsonResponse(['message' => 'week already exists'], 500);
+        }
+
+        $dateTimeModifier = $this->getParameter('mealz.lock_toggle_participation_at');
+        if (is_string($dateTimeModifier)) {
+            $week = WeekService::generateEmptyWeek($date, $dateTimeModifier);
+
+            return new JsonResponse($week, 200);
+        }
+
+        return new JsonResponse(['message' => 'Error on generating empty week'], 500);
     }
 
     public function edit(Request $request, Week $week): JsonResponse
@@ -115,7 +155,7 @@ class MealAdminController extends BaseController
             $data['id'] !== $week->getId() ||
             false === isset($data['enabled'])
         ) {
-            return new JsonResponse(['message' => 'invalid json'], 400);
+            return new JsonResponse(['message' => 'invalid json'], 500);
         }
 
         $days = $data['days'];
@@ -175,8 +215,12 @@ class MealAdminController extends BaseController
         $this->setLockParticipationForDay($dayEntity, $day);
 
         $mealCollection = $day['meals'];
-        // max 2 main meals allowed
-        if (2 < count($mealCollection)) {
+        /*
+         * 3 Meals are comprised of 2 main meals and a potential combined meal.
+         * The combined meal is also in the collection, because meals that are
+         * not in the collection get removed.
+         */
+        if (3 < count($mealCollection)) {
             throw new Exception('too many meals requested');
         }
 
@@ -185,6 +229,31 @@ class MealAdminController extends BaseController
         // parentMeal is an array of either one meal without variations or 1-2 variations
         foreach ($mealCollection as $mealArr) {
             $this->handleMealArray($mealArr, $dayEntity);
+        }
+    }
+
+    private function handleNewDay($dayData, Day $day)
+    {
+        // check for negative id
+        if (0 < $dayData['id'] && $dayData['date'] === $day->getDateTime()) {
+            throw new Exception('no new day');
+        }
+
+        if (null !== $dayData['enabled']) {
+            $day->setEnabled($dayData['enabled']);
+        }
+
+        $this->setLockParticipationForDay($day, $dayData);
+
+        $mealCollection = $dayData['meals'];
+        // max 2 main meals allowed
+        if (2 < count($mealCollection)) {
+            throw new Exception('too many meals requested');
+        }
+
+        // parentMeal is an array of either one meal without variations or 1-2 variations
+        foreach ($mealCollection as $mealArr) {
+            $this->handleMealArray($mealArr, $day);
         }
     }
 

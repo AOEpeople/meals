@@ -2,7 +2,7 @@
   <div
     class="day-shadow group grid aspect-[16/10] cursor-pointer grid-cols-[24px_minmax(0,1fr)] grid-rows-2 rounded-lg border-0 border-none bg-white text-center align-middle transition-transform"
     :class="{ 'hover:scale-[115%]': week.id }"
-    @click="week.id ? $router.push({ name: 'Menu', params: { week: week.id } }) : createWeek(week.year, week.calendarWeek)"
+    @click="handleClick"
   >
     <PlusCircleIcon
       v-if="!week.id"
@@ -33,9 +33,11 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useWeeks } from '@/stores/weeksStore';
 import { PlusCircleIcon } from '@heroicons/vue/outline';
+import { useRouter } from 'vue-router';
 
-const { getDateRangeOfWeek, createWeek } = useWeeks();
+const { getDateRangeOfWeek, createEmptyWeek } = useWeeks();
 const { t, locale } = useI18n();
+const router = useRouter();
 
 const props = defineProps<{
   week: Week,
@@ -47,4 +49,16 @@ const dateRange = computed(() => {
     .map(date => date.toLocaleDateString(locale.value, { day: 'numeric', month: 'numeric' }))
   );
 });
+
+async function handleClick() {
+  if (props.week.id !== null && props.week.id !== undefined) {
+    router.push({ name: 'Menu', params: { week: props.week.id } })
+  } else {
+    const response = await createEmptyWeek(props.week.year, props.week.calendarWeek);
+
+    if (typeof response === 'number') {
+      router.push({ name: 'Menu', params: { week: response, create: 'create' } })
+    }
+  }
+}
 </script>

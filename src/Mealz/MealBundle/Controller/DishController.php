@@ -12,6 +12,7 @@ use App\Mealz\MealBundle\Service\ApiService;
 use App\Mealz\MealBundle\Service\DishService;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,6 +28,7 @@ class DishController extends BaseListController
     private EntityManagerInterface $em;
     private DishService $dishService;
     private ApiService $apiService;
+    private LoggerInterface $logger;
 
     public function __construct(
         float $price,
@@ -34,7 +36,8 @@ class DishController extends BaseListController
         CategoryRepository $categoryRepository,
         DishRepository $dishRepository,
         DishService $dishService,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        LoggerInterface $logger
     ) {
         $this->defaultPrice = $price;
         $this->apiService = $apiService;
@@ -42,6 +45,7 @@ class DishController extends BaseListController
         $this->dishRepository = $dishRepository;
         $this->dishService = $dishService;
         $this->em = $em;
+        $this->logger = $logger;
     }
 
     /**
@@ -50,6 +54,11 @@ class DishController extends BaseListController
     public function getDishes(): JsonResponse
     {
         $dishes = $this->dishRepository->findBy(['parent' => null, 'enabled' => true]);
+        $combiDish = $this->dishRepository->findBy(['slug' => 'combined-dish']);
+
+        if (null !== $combiDish && 0 < count($combiDish)) {
+            $dishes[] = $combiDish[0];
+        }
 
         return new JsonResponse($dishes, 200);
     }

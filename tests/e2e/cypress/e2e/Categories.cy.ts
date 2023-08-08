@@ -3,6 +3,7 @@ describe('Test Categories View', () => {
         cy.setCookie('locale', 'de');
         cy.loginAs('kochomi');
         cy.visitMeals();
+        cy.resetDB();
     });
 
     it("should be able to navigate to '/categories' and have the header displayed", () => {

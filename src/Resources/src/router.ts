@@ -11,6 +11,7 @@ import NotAllowed    from "@/views/NotAllowed.vue";
 import PrintableList from "@/views/PrintableList.vue";
 import ParticipantList from "@/views/ParticipantsList.vue";
 import Weeks         from "@/views/Weeks.vue";
+import MenuParticipations from "./views/MenuParticipations.vue";
 
 import { createRouter, createWebHistory } from "vue-router";
 import { userDataStore }                  from "@/stores/userDataStore";
@@ -41,9 +42,18 @@ const router = createRouter({
             }
         },
         {
-            path: '/menu/:week',
+            path: '/menu/:week/:create?',
             name: 'Menu',
             component: Menu,
+            meta: {
+                allowedRoles: ['ROLE_KITCHEN_STAFF', 'ROLE_ADMIN']
+            },
+            props: true
+        },
+        {
+            path: '/participations/:week/edit',
+            name: 'MenuParticipations',
+            component: MenuParticipations,
             meta: {
                 allowedRoles: ['ROLE_KITCHEN_STAFF', 'ROLE_ADMIN']
             },

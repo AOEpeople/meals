@@ -141,11 +141,10 @@ class ParticipationService
     private function create(Profile $profile, Meal $meal, ?Slot $slot = null, array $dishSlugs = []): ?Participant
     {
         $participant = $this->createParticipation($profile, $meal, $slot, $dishSlugs);
+        $meal->participants->add($participant);
 
         $this->em->persist($participant);
         $this->em->flush();
-
-        $meal->participants->add($participant);
 
         return $participant;
     }
@@ -198,7 +197,7 @@ class ParticipationService
         $participants = $meal->getParticipants();
 
         foreach ($participants as $participant) {
-            if ($participant->getProfile() === $profile) {
+            if ($participant->getProfile()->getUsername() === $profile->getUsername()) {
                 return $participant;
             }
         }
@@ -244,9 +243,24 @@ class ParticipationService
         return (int) ceil($participation['totalCountByDishSlugs'][$meal->getDish()->getSlug()]['count'] ?? 0);
     }
 
-    public function getParticipationListBySlots(Day $day): array
+    public function getParticipationListBySlots(Day $day, bool $getProfile = false): array
     {
-        return $this->participantRepo->findAllGroupedBySlotAndProfileID($day->getDateTime());
+        return $this->participantRepo->findAllGroupedBySlotAndProfileID($day->getDateTime(), $getProfile);
+    }
+
+    public function getDishesByDayAndProfile(Day $day, Profile $profile): array
+    {
+        $meals = $day->getMeals();
+        $dishesOfProfile = [];
+
+        /** @var Meal $meal */
+        foreach ($meals as $meal) {
+            if (null !== $meal->getParticipant($profile)) {
+                $dishesOfProfile[] = $meal->getDish()->getId();
+            }
+        }
+
+        return $dishesOfProfile;
     }
 
     public function getMealsForTheDay(Day $day): MealCollection
@@ -256,6 +270,22 @@ class ParticipationService
         /** @var Meal $meal */
         foreach ($day->getMeals() as $meal) {
             $result->add($meal);
+        }
+
+        return $result;
+    }
+
+    public function getParticipationsByDayAndProfile(Profile $profile, Day $day): array
+    {
+        $result = [];
+        $meals = $day->getMeals();
+
+        /** @var Meal $meal */
+        foreach ($meals as $meal) {
+            $participation = $this->getParticipationByMealAndUser($meal, $profile);
+            if (null !== $participation) {
+                $result[] = $participation;
+            }
         }
 
         return $result;

@@ -8,6 +8,7 @@ import { Dictionary } from "types/types";
 import { reactive, readonly } from "vue";
 import { isMessage } from "@/interfaces/IMessage";
 import { isResponseArrayOkay } from "@/api/isResponseOkay";
+import getEmptyWeek from "@/api/getEmptyWeek";
 
 export interface Week {
     id: number,
@@ -46,9 +47,15 @@ interface MenuCountState {
     counts: Dictionary<number>
 }
 
+/**
+ * Checks if the given object is of type Week.
+ * @param week The week to check.
+ */
 function isWeek(week: Week): week is Week {
     return (
-        typeof (week as Week).id === 'number' &&
+        week !== null &&
+        week !== undefined &&
+        (typeof (week as Week).id === 'number' || (week as Week).id === null) &&
         typeof (week as Week).enabled === 'boolean' &&
         typeof (week as Week).calendarWeek === 'number' &&
         typeof (week as Week).year === 'number' &&
@@ -71,12 +78,18 @@ const MenuCountState = reactive<MenuCountState>({
 
 export function useWeeks() {
 
+    /**
+     * Calls getWeeks() and sets the isLoading flag to true while the request is pending.
+     */
     async function fetchWeeks() {
         WeeksState.isLoading = true;
         await getWeeks();
         WeeksState.isLoading = false;
     }
 
+    /**
+     * Fetches the weeks from the backend and sets the WeeksState accordingly.
+     */
     async function getWeeks() {
         const { weeks, error } = await getWeeksData();
         if (isResponseArrayOkay<Week>(error, weeks, isWeek) === true) {
@@ -88,17 +101,56 @@ export function useWeeks() {
         }
     }
 
-    async function createWeek(year: number, calendarWeek: number) {
-        const { error, response } = await postCreateWeek(year, calendarWeek);
+    /**
+     * Gets an empty week from the backend with basic information about the week.
+     * Inserts the week into the state where it should be edited before it is send back to the backend for creation.
+     * @param year          The year of the week
+     * @param calendarWeek  The iso calendar week
+     */
+    async function createEmptyWeek(year: number, calendarWeek: number) {
+        const { error, response } = await getEmptyWeek(year, calendarWeek);
 
-        if (error.value === true && isMessage(response.value) === true) {
+        if (isMessage(response.value)) {
             WeeksState.error = response.value?.message;
             return;
         }
 
-        await getWeeks();
+        if (error.value === false && isWeek(response.value)) {
+            for (let i = 0; i < WeeksState.weeks.length; i++) {
+                if (WeeksState.weeks[i].calendarWeek === response.value.calendarWeek) {
+                    WeeksState.weeks[i] = response.value;
+                    break
+                }
+            }
+        }
+
+        return response.value.calendarWeek;
     }
 
+    /**
+     * Tries to create a new week with the given year and calendarWeek.
+     * If the request was successful, the weeks are fetched again and
+     * the id of the newly created week is returned.
+     * @param year          The year of the week to create.
+     * @param calendarWeek  The calendar week of the week to create.
+     * @param week          The week as it should be created
+     */
+    async function createWeek(year: number, calendarWeek: number, week: WeekDTO) {
+        const { error, response } = await postCreateWeek(year, calendarWeek, week);
+
+        if (error.value === true && isMessage(response.value)) {
+            WeeksState.error = response.value?.message;
+            return null;
+        }
+
+        await getWeeks();
+        return response.value;
+    }
+
+    /**
+     * Updates the given week i.e. the selected menu for the week.
+     * @param week Data of the week to update.
+     */
     async function updateWeek(week: WeekDTO) {
 
         const { error, response } = await putWeekUpdate(week);
@@ -111,6 +163,9 @@ export function useWeeks() {
         await getWeeks();
     }
 
+    /**
+     * Fetches the number of times each dish is booked for the current week.
+     */
     async function getDishCountForWeek() {
         const { error, response } = await getDishCount();
 
@@ -122,6 +177,11 @@ export function useWeeks() {
         }
     }
 
+    /**
+     * Gets the start and end date for the given week.
+     * @param isoWeek   The calendar week.
+     * @param year      The year.
+     */
     function getDateRangeOfWeek(isoWeek: number, year: number) {
         const date = new Date(year, 0, 1 + (isoWeek - 1) * 7);
         const day = date.getDay();
@@ -130,8 +190,16 @@ export function useWeeks() {
         return [startDate, endDate];
     }
 
-    function getMenuDay(weekId: number, dayId: string) {
-        const week = getWeekById(weekId);
+    /**
+     * Returns all the relevant data for a day.
+     * @param dayId         The id of the day.
+     * @param weekId        The id of the week, null if week is to be created.
+     * @param calendarWeek  (optional) The iso week. Only used if the week is to be created.
+     */
+    function getMenuDay(dayId: string, weekId: number | null, calendarWeek?: number) {
+        const week = (weekId === null && calendarWeek !== undefined && calendarWeek !== null) ?
+            getWeekByCalendarWeek(calendarWeek) :
+            getWeekById(weekId);
         const day = getDayById(week, dayId);
 
         const menuDay: DayDTO = {
@@ -158,6 +226,10 @@ export function useWeeks() {
         return menuDay;
     }
 
+    /**
+     * Creates a MealDTO for a meal.
+     * @param meal  The meal to create the DTO for.
+     */
     function createMealDTO(meal: SimpleMeal) {
         return {
             dishSlug: meal.dish,
@@ -172,6 +244,14 @@ export function useWeeks() {
 
     function getDayById(week: Week, dayId: string) {
         return week.days[dayId];
+    }
+
+    function getDayByWeekIdAndDayId(weekId: number, dayId: string) {
+        return getDayById(getWeekById(weekId), dayId);
+    }
+
+    function getWeekByCalendarWeek(isoWeek: number) {
+        return WeeksState.weeks.find(week => week.calendarWeek === isoWeek);
     }
 
     /**
@@ -196,6 +276,10 @@ export function useWeeks() {
         getWeekById,
         updateWeek,
         getDishCountForWeek,
-        resetStates
+        resetStates,
+        getDayByWeekIdAndDayId,
+        isWeek,
+        createEmptyWeek,
+        getWeekByCalendarWeek
     }
 }

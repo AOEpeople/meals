@@ -64,8 +64,6 @@ class DishControllerTest extends AbstractControllerTestCase
 
     /**
      * Test adding a new new dish and find it listed in dishes list.
-     *
-     * @outputBuffering disabled
      */
     public function testGetDishes(): void
     {

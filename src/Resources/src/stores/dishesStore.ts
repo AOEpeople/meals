@@ -32,6 +32,8 @@ interface DishesState {
 
 function isDish(dish: Dish): dish is Dish {
     return (
+        dish !== null &&
+        dish !== undefined &&
         typeof (dish as Dish).id === 'number' &&
         typeof (dish as Dish).slug === 'string' &&
         typeof (dish as Dish).titleDe === 'string' &&
@@ -66,7 +68,7 @@ export function useDishes() {
      */
     const filteredDishes = computed(() => {
         const { getCategoryIdsByTitle } = useCategories();
-        return DishesState.dishes.filter(dish => dishContainsString(dish, DishesState.filter) || getCategoryIdsByTitle(DishesState.filter).includes(dish.categoryId));
+        return DishesState.dishes.filter(dish => (dishContainsString(dish, DishesState.filter) || getCategoryIdsByTitle(DishesState.filter).includes(dish.categoryId)) && dish.slug !== 'combined-dish');
     });
 
     /**
@@ -216,7 +218,21 @@ export function useDishes() {
     }
 
     function getDishById(id: number) {
-        return DishesState.dishes.find(dish => dish.id === id);
+        let dishToReturn: Dish | null = null;
+
+        DishesState.dishes.forEach(dish => {
+            if (dish.id === id) {
+                dishToReturn = dish;
+            }
+
+            dish.variations.forEach(variation => {
+                if (variation.id === id) {
+                    dishToReturn = variation;
+                }
+            });
+        });
+
+        return dishToReturn;
     }
 
     function getDishVariationByParentIdAndId(parentId: number, variationId: number) {
@@ -300,5 +316,6 @@ export function useDishes() {
         resetState,
         getDishBySlug,
         getDishArrayBySlugs,
+        getDishById
     };
 }

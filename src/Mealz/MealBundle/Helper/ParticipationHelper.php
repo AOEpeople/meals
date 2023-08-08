@@ -8,15 +8,17 @@ use App\Mealz\MealBundle\Entity\DishCollection;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
-use Psr\Log\LoggerInterface;
+use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
+use PhpCollection\Set;
 
 class ParticipationHelper
 {
-    private LoggerInterface $logger;
+    private ProfileRepositoryInterface $profileRepo;
 
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
+    public function __construct(
+        ProfileRepositoryInterface $profileRepo
+    ) {
+        $this->profileRepo = $profileRepo;
     }
 
     /**
@@ -39,7 +41,7 @@ class ParticipationHelper
      *
      * @psalm-return array<string, array<string, array{booked: non-empty-list<int>}>>
      */
-    public function groupBySlotAndProfileID(array $participants): array
+    public function groupBySlotAndProfileID(array $participants, bool $getProfile = false): array
     {
         $groupedParticipants = [];
 
@@ -51,10 +53,36 @@ class ParticipationHelper
                 continue;
             }
 
-            $groupedParticipants = array_merge_recursive($groupedParticipants, $this->getParticipationbySlot($participant, $slot));
+            $groupedParticipants = array_merge_recursive($groupedParticipants, $this->getParticipationbySlot($participant, $slot, $getProfile));
         }
 
         return $groupedParticipants;
+    }
+
+    public function getNonParticipatingProfilesByWeek(array $participations): array
+    {
+        $profiles = new Set(array_map(
+            fn ($participant) => $participant->getProfile()->getUserName(),
+            $participations
+        ));
+        $profiles = $profiles->all();
+
+        if (0 === count($profiles)) {
+            $profiles = [''];
+        }
+
+        $nonParticipating = $this->profileRepo->findAllExcept($profiles);
+
+        $profileData = array_map(
+            fn ($profile) => [
+                'user' => $profile->getUsername(),
+                'fullName' => $profile->getFullName(),
+                'roles' => $profile->getRoles(),
+            ],
+            $nonParticipating
+        );
+
+        return $profileData;
     }
 
     protected function compareNameOfParticipants(Participant $participant1, Participant $participant2): int
@@ -72,7 +100,7 @@ class ParticipationHelper
         return 0;
     }
 
-    private function getParticipationbySlot(Participant $participant, ?Slot $slot): array
+    private function getParticipationbySlot(Participant $participant, ?Slot $slot, bool $profile = false): array
     {
         $slots = [];
 
@@ -81,20 +109,22 @@ class ParticipationHelper
             $combinedDishes = $this->getCombinedDishesFromMeal($meal, $participant);
 
             if (true === $meal->isParticipant($participant) && (null === $slot || $slot->isDisabled() || $slot->isDeleted())) {
-                $slots[''][$participant->getProfile()->getFullName()]['booked'][] = $meal->getDish()->getId();
-
-                foreach ($combinedDishes as $dish) {
-                    $slots[''][$participant->getProfile()->getFullname()]['booked'][] = $dish->getId();
-                }
+                $slots[''][$participant->getProfile()->getFullName()] = $this->getParticipationData(
+                    $meal,
+                    $profile,
+                    $participant,
+                    $combinedDishes
+                );
                 continue;
             }
 
             if (true === $meal->isParticipant($participant)) {
-                $slots[$slot->getTitle()][$participant->getProfile()->getFullName()]['booked'][] = $meal->getDish()->getId();
-
-                foreach ($combinedDishes as $dish) {
-                    $slots[$slot->getTitle()][$participant->getProfile()->getFullname()]['booked'][] = $dish->getId();
-                }
+                $slots[$slot->getTitle()][$participant->getProfile()->getFullName()] = $this->getParticipationData(
+                    $meal,
+                    $profile,
+                    $participant,
+                    $combinedDishes
+                );
             }
         }
 
@@ -108,5 +138,20 @@ class ParticipationHelper
         }
 
         return new DishCollection([]);
+    }
+
+    private function getParticipationData(Meal $meal, bool $profile, Participant $participant, DishCollection $combinedDishes): array
+    {
+        $participantData = [];
+        $participantData['booked'][] = $meal->getDish()->getId();
+        if (true === $profile) {
+            $participantData['profile'] = $participant->getProfile()->getUsername();
+        }
+
+        foreach ($combinedDishes as $dish) {
+            $participantData['booked'][] = $dish->getId();
+        }
+
+        return $participantData;
     }
 }

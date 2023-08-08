@@ -6,3 +6,17 @@ jest.mock('vue-i18n', () => ({
         locale: computed(() => 'en')
     })
 }));
+
+jest.mock('@marcoschulte/vue3-progress', () => ({
+    useProgress: () => ({
+        start: () => ({
+            finish: () => void 0
+        }),
+    }),
+}));
+
+jest.mock('vue-router', () => ({
+    useRouter: () => ({
+        push: () => void 0
+    }),
+}));

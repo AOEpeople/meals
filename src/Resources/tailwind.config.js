@@ -10,6 +10,12 @@ module.exports = {
           },
           animation: {
             'spin-receiving': 'spin 4s reverse linear infinite'
+          },
+          boxShadow: {
+            'tb': 'inset 0 0 0 0 #e5e7eb , inset 0px -8px 6px -6px #e5e7eb, inset 0 0 0 0 #e5e7eb, inset 0px 8px 6px -6px #e5e7eb'
+          },
+          colors: {
+            'tb-shadow': '#f4f6f9'
           }
       }
     }

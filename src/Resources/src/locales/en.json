@@ -128,7 +128,13 @@
     "notify": "Announce in Mattermost",
     "enableWeek": "This week is enabled",
     "header": "Edit week",
-    "lock": "Lock"
+    "lock": "Lock",
+    "total": "Total",
+    "participations": "Participations",
+    "add": "Add a participant",
+    "notFound": "No profiles found for this query",
+    "search": "Filter participant",
+    "guest": "Gast"
   },
   "printList": {
     "title": "Participations on ",

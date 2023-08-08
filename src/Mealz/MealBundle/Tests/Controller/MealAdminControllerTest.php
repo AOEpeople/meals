@@ -70,13 +70,10 @@ class MealAdminControllerTest extends AbstractControllerTestCase
     public function testNew(): void
     {
         $date = new DateTime('+2 month');
-        $year = (int) $date->format('Y');
-        $week = (int) $date->format('W');
-        $routeStr = '/api/weeks/' . $year . 'W' . $week;
-
-        // Request
-        $this->client->request('POST', $routeStr);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $year = $date->format('Y');
+        $week = $date->format('W');
+        $this->createFutureEmptyWeek($date);
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode(), 'Year: ' . $year . ', week: ' . $week);
 
         // Get data for assertions with new request response
         $weekRepository = $this->getDoctrine()->getRepository(Week::class);
@@ -90,7 +87,7 @@ class MealAdminControllerTest extends AbstractControllerTestCase
         $this->assertEquals($createdWeek->getCalendarWeek(), $week);
 
         // Trying to create the same week twice should fail
-        $this->client->request('POST', $routeStr);
+        $this->createFutureEmptyWeek($date);
         $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
         $response = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertEquals('week already exists', $response['message']);
@@ -112,24 +109,25 @@ class MealAdminControllerTest extends AbstractControllerTestCase
 
     public function testEdit(): void
     {
-        // Create new week
         $date = new DateTime('+2 month');
-        $year = (int) $date->format('Y');
-        $week = (int) $date->format('W');
-        $routeStr = '/api/weeks/' . $year . 'W' . $week;
+        $year = $date->format('o');
+        $week = $date->format('W');
 
-        // Request
-        $this->client->request('POST', $routeStr);
+        // Create new week
+        $this->createFutureEmptyWeek($date);
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         // Get data for assertions with new request response
         $weekRepository = $this->getDoctrine()->getRepository(Week::class);
         $createdWeek = $weekRepository->findOneBy([
-            'year' => $date->format('o'),
-            'calendarWeek' => $date->format('W'),
+            'year' => $year,
+            'calendarWeek' => $week,
         ]);
 
-        $foundDay = $createdWeek->getDays()[0];
+        $this->assertNotNull($createdWeek);
+        $this->assertInstanceOf(Week::class, $createdWeek);
+
+        $foundDay = $createdWeek->getDays()[1];
         $foundMeal = $foundDay->getMeals()[0];
         $dishRepository = $this->getDoctrine()->getRepository(Dish::class);
         $testDish = $dishRepository->findOneBy(['parent' => null]);
@@ -159,6 +157,26 @@ class MealAdminControllerTest extends AbstractControllerTestCase
                         "timezone": "Europe\/Berlin"
                     },
                     "lockDate": null
+                },
+                {
+                    "meals": {
+                        "0": [
+                            {
+                                "dishSlug": "' . $testDish->getSlug() . '",
+                                "mealId": null,
+                                "participationLimit": 0
+                            }
+                        ],
+                        "-1": []
+                    },
+                    "id": ' . $createdWeek->getDays()[1]->getId() . ',
+                    "enabled": true,
+                    "date": {
+                        "date": "' . $createdWeek->getDays()[1]->getDateTime()->format('Y-m-d') . ' 12:00:00.000000",
+                        "timezone_type": 3,
+                        "timezone": "Europe\/Berlin"
+                    },
+                    "lockDate": null
                 }
             ],
             "notify": false,
@@ -169,13 +187,53 @@ class MealAdminControllerTest extends AbstractControllerTestCase
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         $createdWeek = $weekRepository->findOneBy([
-            'year' => $date->format('o'),
-            'calendarWeek' => $date->format('W'),
+            'year' => $year,
+            'calendarWeek' => $week,
         ]);
 
-        $foundDay = $createdWeek->getDays()[0];
+        $foundDay = $createdWeek->getDays()[1];
         $foundMeal = $foundDay->getMeals()[0];
 
         $this->assertEquals($testDish->getId(), $foundMeal->getDish()->getId());
+    }
+
+    private function createFutureEmptyWeek(DateTime $date)
+    {
+        $year = $date->format('o');
+        $week = $date->format('W');
+        $dishRepository = $this->getDoctrine()->getRepository(Dish::class);
+        $testDish = $dishRepository->findOneBy(['parent' => null]);
+
+        $routeStr = '/api/weeks/' . $year . 'W' . $week;
+        $testPutStr = '{
+            "id": ' . $week . ',
+            "days": [
+                {
+                    "meals": {
+                        "0": [
+                            {
+                                "dishSlug": "' . $testDish->getSlug() . '",
+                                "mealId": null,
+                                "participationLimit": 0
+                            }
+                        ],
+                        "-1": []
+                    },
+                    "id": -1,
+                    "enabled": true,
+                    "date": {
+                        "date": "' . $date->format('Y-m-d') . ' 12:00:00.000000",
+                        "timezone_type": 3,
+                        "timezone": "Europe\/Berlin"
+                    },
+                    "lockDate": null
+                }
+            ],
+            "notify": false,
+            "enabled": true
+        }';
+
+        // Request
+        $this->client->request('POST', $routeStr, [], [], [], $testPutStr);
     }
 }

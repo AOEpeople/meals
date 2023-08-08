@@ -107,12 +107,7 @@ class DishService
                 $uniqueMeals->add($meal->getDish()->getParent());
             }
         }
-        $dishes = [];
 
-        foreach ($uniqueMeals as $dish) {
-            $dishes[] = $dish;
-        }
-
-        return $dishes;
+        return $uniqueMeals->all();
     }
 }

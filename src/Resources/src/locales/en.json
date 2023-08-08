@@ -133,7 +133,8 @@
     "participations": "Participations",
     "add": "Add a participant",
     "notFound": "No profiles found for this query",
-    "search": "Filter participant"
+    "search": "Filter participant",
+    "guest": "Gast"
   },
   "printList": {
     "title": "Participations on ",

@@ -20,7 +20,7 @@
     >
       <template #firstCell>
         <th
-          class="sticky left-0 top-0 z-20 whitespace-nowrap border-b-2 border-r-2 border-solid border-gray-200 bg-[#f4f7f9] px-4 py-2 text-start"
+          class="sticky left-0 top-0 z-40 whitespace-nowrap border-b-2 border-r-2 border-solid border-gray-200 bg-[#f4f7f9] px-4 py-2 text-start"
         />
       </template>
       <template #dayMeals="{ dayId, meals }">

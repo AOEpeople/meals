@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Day;
-use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
@@ -20,7 +19,6 @@ use App\Mealz\MealBundle\Service\WeekService;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Exception;
-use PhpCollection\Set;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -130,17 +128,8 @@ class ApiController extends BaseController
             $meals = $this->apiSrv->findAllOn($today);
             $dishes = ['en' => [], 'de' => []];
 
-            $uniqueMeals = new Set();
-            /* @var Meal $meal */
-            foreach ($meals as $meal) {
-                if (false === ($meal->getDish() instanceof DishVariation)) {
-                    $uniqueMeals->add($meal->getDish());
-                } else {
-                    $uniqueMeals->add($meal->getDish()->getParent());
-                }
-            }
+            $uniqueMeals = $this->dishSrv->getUniqueDishesFromMeals($meals);
 
-            /** @var Dish $dish */
             foreach ($uniqueMeals as $dish) {
                 $dishes['en'][] = $dish->getTitleEn();
                 $dishes['de'][] = $dish->getTitleDe();

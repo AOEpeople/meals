@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Service;
 
 use App\Mealz\MealBundle\Entity\Dish;
+use App\Mealz\MealBundle\Entity\DishVariation;
+use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Repository\CategoryRepository;
 use App\Mealz\MealBundle\Repository\DishRepository;
 use Exception;
+use PhpCollection\Set;
 
 class DishService
 {
@@ -91,5 +94,25 @@ class DishService
         }
 
         return $arr;
+    }
+
+    public function getUniqueDishesFromMeals(array $meals): array
+    {
+        $uniqueMeals = new Set();
+        /** @var Meal $meal */
+        foreach ($meals as $meal) {
+            if (false === ($meal->getDish() instanceof DishVariation)) {
+                $uniqueMeals->add($meal->getDish());
+            } else {
+                $uniqueMeals->add($meal->getDish()->getParent());
+            }
+        }
+        $dishes = [];
+
+        foreach ($uniqueMeals as $dish) {
+            $dishes[] = $dish;
+        }
+
+        return $dishes;
     }
 }

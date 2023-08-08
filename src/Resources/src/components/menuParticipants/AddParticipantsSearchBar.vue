@@ -81,7 +81,7 @@ const props = defineProps<{
 }>();
 
 const { ProfilesState, fetchAbsentingProfiles } = useProfiles(props.weekId);
-const { t, locale } = useI18n();
+const { t } = useI18n();
 const slot = useSlots();
 
 const emit = defineEmits(['profileSelected']);
@@ -115,7 +115,7 @@ const filteredProfiles = computed(() => {
 
 function getDisplayName(profile: IProfile) {
   if (profile.roles.includes('ROLE_GUEST')) {
-    return `(${locale.value === 'en' ? 'Guest' : 'Gast'}) ${profile.fullName}`;
+    return `(${t('menu.guest')}) ${profile.fullName}`;
   }
   return profile.fullName;
 }

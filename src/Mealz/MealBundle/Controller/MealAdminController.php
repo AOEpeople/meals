@@ -215,7 +215,11 @@ class MealAdminController extends BaseController
         $this->setLockParticipationForDay($dayEntity, $day);
 
         $mealCollection = $day['meals'];
-        // max 2 main meals allowed
+        /*
+         * 3 Meals are comprised of 2 main meals and a potential combined meal.
+         * The combined meal is also in the collection, because meals that are
+         * not in the collection get removed.
+         */
         if (3 < count($mealCollection)) {
             throw new Exception('too many meals requested');
         }
@@ -243,7 +247,7 @@ class MealAdminController extends BaseController
 
         $mealCollection = $dayData['meals'];
         // max 2 main meals allowed
-        if (3 < count($mealCollection)) {
+        if (2 < count($mealCollection)) {
             throw new Exception('too many meals requested');
         }
 

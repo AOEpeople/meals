@@ -42,6 +42,16 @@
       "english": "Englischer Titel"
     }
   },
+  "costs": {
+    "header": "Liste der Kosten",
+    "cashRegister": "Kasse",
+    "search": "Benutzer filtern",
+    "table": {
+      "earlier": "Vorher",
+      "total": "Gesamt",
+      "actions": "Aktionen"
+    }
+  },
   "changeLanguage": "English version",
   "combiModal": {
     "title": "Wähle eine Kombination für dein Kombi-Meal",

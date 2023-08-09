@@ -42,6 +42,16 @@
       "english": "English Title"
     }
   },
+  "costs": {
+    "header": "Liste der Kosten",
+    "cashRegister": "Kasse",
+    "search": "Filter users",
+    "table": {
+      "earlier": "Prior to that",
+      "total": "Total",
+      "actions": "Actions"
+    }
+  },
   "changeLanguage": "Deutsche Version",
   "combiModal": {
     "title": "Choose a combination for your combined dish",

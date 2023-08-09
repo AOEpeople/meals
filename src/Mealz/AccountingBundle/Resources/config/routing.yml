@@ -39,9 +39,10 @@ mealz_accounting_accounting_book_finance_export:
     path: /accounting/book/finance/export/{dateRange}
     defaults: { _controller: App\Mealz\AccountingBundle\Controller\AccountingBookController::exportPDF, dateRange: null }
 
-mealz_accounting.cost_sheet:
-    path: /print/costsheet
+mealz_accounting_api_costs:
+    path: /api/costs
     defaults: { _controller: App\Mealz\AccountingBundle\Controller\CostSheetController::list }
+    methods: [ GET ]
 
 mealz_accounting_cost_sheet_hide_user_request:
     path: /print/costsheet/hideuser/request/{profile}

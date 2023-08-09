@@ -15,8 +15,12 @@ use DateTime;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @Security("is_granted('ROLE_KITCHEN_STAFF')")
+ */
 class CostSheetController extends BaseController
 {
     private MailerInterface $mailer;
@@ -28,28 +32,23 @@ class CostSheetController extends BaseController
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    /**
-     * @TODO: use own data model for user costs
-     */
     public function list(
         ParticipantRepositoryInterface $participantRepo,
         TransactionRepositoryInterface $transactionRepo
-    ): Response {
-        $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
-
+    ): JsonResponse {
         $transactionsPerUser = $transactionRepo->findUserDataAndTransactionAmountForGivenPeriod();
         $users = $participantRepo->findCostsGroupedByUserGroupedByMonth();
 
         // create column names
         $numberOfMonths = 3;
-        $columnNames = ['earlier' => 'Prior to that'];
+        $columnNames = ['earlier' => 'earlier'];
         $dateTime = new DateTime("first day of -$numberOfMonths month 00:00");
         $earlierTimestamp = $dateTime->getTimestamp();
         for ($i = 0; $i < $numberOfMonths + 1; ++$i) {
-            $columnNames[$dateTime->getTimestamp()] = $dateTime->format('F');
+            $columnNames[$dateTime->getTimestamp()] = clone $dateTime;
             $dateTime->modify('+1 month');
         }
-        $columnNames['total'] = 'Total';
+        $columnNames['total'] = 'total';
 
         // create table rows
         foreach ($users as $username => &$user) {
@@ -57,14 +56,14 @@ class CostSheetController extends BaseController
             foreach ($user['costs'] as $cost) {
                 $monthCosts = $this->getRemainingCosts($cost['costs'], $transactionsPerUser[$username]['amount']);
                 if ($cost['timestamp'] < $earlierTimestamp) {
-                    $userCosts['earlier'] = bcadd($userCosts['earlier'], $monthCosts, 4);
+                    $userCosts['earlier'] = (float) bcadd($userCosts['earlier'], $monthCosts, 4);
                 } else {
                     $userCosts[$cost['timestamp']] = $monthCosts;
                 }
-                $userCosts['total'] = bcadd($userCosts['total'], $monthCosts, 4);
+                $userCosts['total'] = (float) bcadd($userCosts['total'], $monthCosts, 4);
             }
             if ($transactionsPerUser[$username]['amount'] > 0) {
-                $userCosts['total'] = '+' . $transactionsPerUser[$username]['amount'];
+                $userCosts['total'] = $transactionsPerUser[$username]['amount'];
             }
             $user['costs'] = $userCosts;
 
@@ -75,8 +74,10 @@ class CostSheetController extends BaseController
         }
 
         ksort($users, SORT_STRING);
+        unset($columnNames['total']);
+        unset($columnNames['earlier']);
 
-        return $this->render('MealzAccountingBundle::costSheet.html.twig', [
+        return new JsonResponse([
             'columnNames' => $columnNames,
             'users' => $users,
         ]);
@@ -128,9 +129,6 @@ class CostSheetController extends BaseController
         return ($result < 0) ? 0 : $result * -1;
     }
 
-    /**
-     * @Security("is_granted('ROLE_KITCHEN_STAFF')")
-     */
     public function sendSettlementRequest(
         Profile $userProfile,
         Wallet $wallet,

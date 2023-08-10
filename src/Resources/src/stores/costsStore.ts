@@ -4,6 +4,9 @@ import { isResponseObjectOkay } from "@/api/isResponseOkay";
 import { Dictionary } from "types/types";
 import { reactive, readonly } from "vue";
 import { translateMonth } from "@/tools/localeHelper";
+import postHideUser from "@/api/postHideUser";
+import { isMessage } from "@/interfaces/IMessage";
+import postSettlement from "@/api/postSettlement";
 
 export interface ICosts {
     columnNames: Dictionary<DateTime>,
@@ -69,15 +72,50 @@ export function useCosts() {
         CostsState.isLoading = false;
     }
 
+    async function hideUser(username: string) {
+        const { error, response } = await postHideUser(username);
+
+        if (error.value === true || isMessage(response)) {
+            CostsState.error = 'Error on hiding user';
+        } else {
+            CostsState.users[username].hidden = true;
+            CostsState.error = '';
+        }
+    }
+
+    async function sendSettlement(username: string) {
+        console.log(`Hier könnte das settlement für ${username} geschickt werden!`);
+        const { error, response } = await postSettlement(username);
+
+        if (error.value === true || isMessage(response)) {
+            CostsState.error = 'Error on sending settlement';
+        } else if (typeof response.value === 'number') {
+            CostsState.users[username].costs['total'] = response.value;
+            CostsState.error = '';
+        }
+    }
+
     function getColumnNames(locale: string) {
         return Object.values(CostsState.columnNames).map(dateTime => {
             return translateMonth(dateTime, locale);
         });
     }
 
+    function getFullNameByUser(username: string) {
+        const user = CostsState.users[username];
+        if (user !== undefined && user !== null) {
+            return `${user.firstName} ${user.name}`;
+        }
+
+        return 'undefined';
+    }
+
     return {
         CostsState: readonly(CostsState),
         fetchCosts,
-        getColumnNames
+        hideUser,
+        sendSettlement,
+        getColumnNames,
+        getFullNameByUser
     }
 }

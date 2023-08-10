@@ -44,13 +44,14 @@ mealz_accounting_api_costs:
     defaults: { _controller: App\Mealz\AccountingBundle\Controller\CostSheetController::list }
     methods: [ GET ]
 
-mealz_accounting_cost_sheet_hide_user_request:
-    path: /print/costsheet/hideuser/request/{profile}
-    defaults: { _controller: App\Mealz\AccountingBundle\Controller\CostSheetController::hideUserRequest }
+mealz_accounting_api_costs_hide_user:
+    path: /api/costs/hideuser/{profile}
+    defaults: { _controller: App\Mealz\AccountingBundle\Controller\CostSheetController::hideUser }
+    methods: [ POST ]
 
-mealz_accounting_cost_sheet_send_settlement_request:
-    path: /print/costsheet/settlement/request/{username}
-    defaults: { _controller: App\Mealz\AccountingBundle\Controller\CostSheetController::sendSettlementRequest }
+mealz_accounting_api_costs_settlement:
+    path: /api/costs/settlement/{profile}
+    defaults: { _controller: App\Mealz\AccountingBundle\Controller\CostSheetController::postSettlement }
 
 mealz_accounting_cost_sheet_redirect_to_confirm:
     path: /print/costsheet/redirect/confirm/{hash}

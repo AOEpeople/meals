@@ -46,11 +46,15 @@
     "header": "Liste der Kosten",
     "cashRegister": "Kasse",
     "search": "Benutzer filtern",
+    "showHidden": "Ausgeblendete Benutzer anzeigen",
     "table": {
       "earlier": "Vorher",
       "total": "Gesamt",
       "actions": "Aktionen"
-    }
+    },
+    "settlement": "Konto von #name# wirklich ausgleichen?",
+    "settle": "Ausgleichen",
+    "cancel": "Abbrechen"
   },
   "changeLanguage": "English version",
   "combiModal": {

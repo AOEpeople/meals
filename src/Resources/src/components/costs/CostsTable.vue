@@ -24,7 +24,10 @@
         {{ new Intl.NumberFormat(locale, { style: 'currency', currency: 'EUR' }).format(costs.costs['total']) }}
       </td>
       <td>
-        Actions to be implemented
+        <CostsTableActions
+          :username="username"
+          :balance="costs.costs['total']"
+        />
       </td>
     </tr>
   </Table>
@@ -35,28 +38,37 @@ import Table from '@/components/misc/Table.vue';
 import { useCosts } from '@/stores/costsStore';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import CostsTableActions from './CostsTableActions.vue';
 
 const { t, locale } = useI18n();
 const { CostsState, getColumnNames } = useCosts();
 
 const props = defineProps<{
-  filter: string
+  filter: string,
+  showHidden: boolean
 }>();
 
 const columnNames = computed(() => ['Name', t('costs.table.earlier'), ...getColumnNames(locale.value), t('costs.table.total'), t('costs.table.actions')]);
 
+const filterRegex = computed(() => {
+  const filterStrings = props.filter.split(/[\s,.]+/).map(filterStr => filterStr.toLowerCase());
+  return createRegexForFilter(filterStrings);
+});
+
+const hiddenUsers = computed(() => Object.entries(CostsState.users).filter(user => {
+  const [key, value] = user;
+  return value.hidden === false || (value.hidden === true && props.showHidden === true);
+}));
+
 const filteredUsers = computed(() => {
   if (props.filter === '') {
-    return Object.entries(CostsState.users)
+    return hiddenUsers.value
   }
 
-  const filterStrings = props.filter.split(/[\s,.]+/).map(filterStr => filterStr.toLowerCase());
-  const regex = createRegexForFilter(filterStrings);
-
-  return Object.entries(CostsState.users).filter(user => {
+  return hiddenUsers.value.filter(user => {
     const [key, value] = user;
     const searchStrings = [value.firstName, value.name].join(' ');
-    return regex.test(searchStrings);
+    return filterRegex.value.test(searchStrings);
   });
 });
 

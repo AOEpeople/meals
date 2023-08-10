@@ -83,37 +83,18 @@ class CostSheetController extends BaseController
         ]);
     }
 
-    public function hideUserRequest(
-        Profile $profile,
-        ParticipantRepositoryInterface $participantRepo,
-        TransactionRepositoryInterface $transactionRepo
-    ): Response {
-        $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
-
+    public function hideUser(Profile $profile): JsonResponse
+    {
         if (!$profile->isHidden()) {
             $entityManager = $this->getDoctrine()->getManager();
             $profile->setHidden(true);
             $entityManager->persist($profile);
             $entityManager->flush();
 
-            $message = $this->get('translator')->trans(
-                'payment.costsheet.hide_user.request.success',
-                ['%name%' => $profile->getFullName()],
-                'messages'
-            );
-            $severity = 'success';
+            return new JsonResponse(null, 200);
         } else {
-            $message = $this->get('translator')->trans(
-                'payment.costsheet.hide_user.request.info',
-                ['%name%' => $profile->getFullName()],
-                'messages'
-            );
-            $severity = 'info';
+            return new JsonResponse(['message' => 'Profile is already hidden'], 500);
         }
-
-        $this->addFlashMessage($message, $severity);
-
-        return $this->list($participantRepo, $transactionRepo);
     }
 
     private function getRemainingCosts($costs, &$transactions)
@@ -129,46 +110,27 @@ class CostSheetController extends BaseController
         return ($result < 0) ? 0 : $result * -1;
     }
 
-    public function sendSettlementRequest(
-        Profile $userProfile,
-        Wallet $wallet,
-        ParticipantRepositoryInterface $participantRepo,
-        TransactionRepositoryInterface $transactionRepo
-    ): Response {
-        if (null === $userProfile->getSettlementHash() && $wallet->getBalance($userProfile) > 0.00) {
-            $username = $userProfile->getUsername();
+    public function postSettlement(Profile $profile, Wallet $wallet): JsonResponse
+    {
+        if (null === $profile->getSettlementHash() && $wallet->getBalance($profile) > 0.00) {
+            $username = $profile->getUsername();
             $secret = $this->getParameter('app.secret');
             $hashCode = str_replace('/', '', crypt($username, $secret));
             $urlEncodedHash = urlencode($hashCode);
 
             $entityManager = $this->getDoctrine()->getManager();
-            $userProfile->setSettlementHash($hashCode);
-            $entityManager->persist($userProfile);
+            $profile->setSettlementHash($hashCode);
+            $entityManager->persist($profile);
             $entityManager->flush();
 
-            $this->sendSettlementRequestMail($userProfile, $urlEncodedHash);
+            $this->sendSettlementRequestMail($profile, $urlEncodedHash);
 
-            $message = $this->get('translator')->trans(
-                'payment.costsheet.account_settlement.request.success',
-                ['%name%' => $userProfile->getFullName()],
-                'messages'
-            );
-            $severity = 'success';
-        } elseif (null !== $userProfile->getSettlementHash() && $wallet->getBalance($userProfile) > 0.00) {
-            $message = $this->get('translator')->trans(
-                'payment.costsheet.account_settlement.request.already_sent',
-                ['%name%' => $userProfile->getFullName()],
-                'messages'
-            );
-            $severity = 'danger';
+            return new JsonResponse($wallet->getBalance($profile), 200);
+        } elseif (null !== $profile->getSettlementHash() && $wallet->getBalance($profile) > 0.00) {
+            return new JsonResponse(['message' => 'Settlement request already send'], 500);
         } else {
-            $message = $this->get('translator')->trans('payment.costsheet.account_settlement.request.failure');
-            $severity = 'danger';
+            return new JsonResponse(['message' => 'Settlement request failed'], 500);
         }
-
-        $this->addFlashMessage($message, $severity);
-
-        return $this->list($participantRepo, $transactionRepo);
     }
 
     public function renderConfirmButton(string $hash, ProfileRepositoryInterface $profileRepo): Response

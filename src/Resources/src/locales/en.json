@@ -46,11 +46,15 @@
     "header": "Liste der Kosten",
     "cashRegister": "Kasse",
     "search": "Filter users",
+    "showHidden": "Show hidden users",
     "table": {
       "earlier": "Prior to that",
       "total": "Total",
       "actions": "Actions"
-    }
+    },
+    "settlement": "Do you really want to settle #name#'s account?",
+    "settle": "Settle",
+    "cancel": "Cancel"
   },
   "changeLanguage": "Deutsche Version",
   "combiModal": {

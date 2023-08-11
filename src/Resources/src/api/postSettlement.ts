@@ -2,7 +2,7 @@ import useApi from '@/api/api';
 import { IMessage } from '@/interfaces/IMessage';
 
 export default async function postSettlement(username: string) {
-    const { error, request, response } = useApi<IMessage | number>(
+    const { error, request, response } = useApi<IMessage | null>(
         'POST',
         `api/costs/settlement/${username}`
     );

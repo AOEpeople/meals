@@ -125,12 +125,27 @@ class CostSheetController extends BaseController
 
             $this->sendSettlementRequestMail($profile, $urlEncodedHash);
 
-            return new JsonResponse($wallet->getBalance($profile), 200);
+            return new JsonResponse(null, 200);
         } elseif (null !== $profile->getSettlementHash() && $wallet->getBalance($profile) > 0.00) {
             return new JsonResponse(['message' => 'Settlement request already send'], 500);
         } else {
             return new JsonResponse(['message' => 'Settlement request failed'], 500);
         }
+    }
+
+    public function getProfileFromHash(string $hash, ProfileRepositoryInterface $profileRepository): JsonResponse
+    {
+        $queryResult = $profileRepository->findBy(['settlementHash' => urldecode($hash)]);
+        $profile = $queryResult[0];
+
+        if (null === $profile) {
+            return new JsonResponse(['message' => 'Not found'], 404);
+        }
+        return new JsonResponse([
+            'user' => $profile->getUsername(),
+            'fullName' => $profile->getFullName(),
+            'roles' => $profile->getRoles(),
+        ], 200);
     }
 
     public function renderConfirmButton(string $hash, ProfileRepositoryInterface $profileRepo): Response
@@ -218,7 +233,7 @@ class CostSheetController extends BaseController
                 '%admin%' => $this->getProfile()->getFullName(),
                 '%fullname%' => $profile->getFullName(),
                 '%link%' => rtrim($this->getParameter('app.base_url'), '/') . $this->generateUrl(
-                    'mealz_accounting_cost_sheet_redirect_to_confirm',
+                    'MealzMealBundle_costs_settlement_confirm',
                     ['hash' => $urlEncodedHash]
                 ),
             ],

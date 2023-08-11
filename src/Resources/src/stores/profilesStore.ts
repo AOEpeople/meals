@@ -1,6 +1,8 @@
 import getAbsentingProfiles from "@/api/getAbsentingProfiles";
-import { isResponseArrayOkay } from "@/api/isResponseOkay";
+import { isResponseArrayOkay, isResponseObjectOkay } from "@/api/isResponseOkay";
 import { reactive, readonly } from "vue";
+import getProfileWithHash from '@/api/getProfileWithHash';
+import { IMessage, isMessage } from "@/interfaces/IMessage";
 
 interface IProfilesState {
     profiles: IProfile[],
@@ -53,8 +55,21 @@ export function useProfiles(weekId: number) {
         ProfilesState.isLoading = false;
     }
 
+    async function fetchProfileWithHash(hash: string): Promise<IProfile | null> {
+        const { error, profile } = await getProfileWithHash(hash);
+
+        if (error.value === true && isMessage(profile) === true) {
+            ProfilesState.error = (profile.value as IMessage).message;
+        } else if (isResponseObjectOkay(error, profile, isProfile)) {
+            return (profile.value as IProfile);
+        }
+
+        return null;
+    }
+
     return {
         ProfilesState: readonly(ProfilesState),
-        fetchAbsentingProfiles
+        fetchAbsentingProfiles,
+        fetchProfileWithHash
     };
 }

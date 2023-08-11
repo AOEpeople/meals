@@ -1,7 +1,7 @@
 <template>
   <Table
     :labels="columnNames"
-    :header-text-left="false"
+    :header-text-position="'lmr'"
   >
     <tr
       v-for="[username, costs] in filteredUsers"

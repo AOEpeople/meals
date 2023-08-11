@@ -5,10 +5,22 @@
       :btn-text="''"
       @click="hideUser(username)"
     />
-    <ActionButton
-      :action="Action.CREATE"
-      :btn-text="''"
-    />
+    <Popover
+      :translate-x-min="'-50%'"
+    >
+      <template #button="{ open }">
+        <ActionButton
+          :action="Action.CREATE"
+          :btn-text="''"
+        />
+      </template>
+      <template #panel="{ close }">
+        <CashPaymentPanel
+          :username="username"
+          @closePanel="close()"
+        />
+      </template>
+    </Popover>
     <ActionButton
       v-if="balance > 0"
       :action="Action.BALANCE"
@@ -29,6 +41,8 @@ import { Action } from '@/enums/Actions';
 import { useCosts } from '@/stores/costsStore';
 import CostsActionSettlement from './CostsActionSettlement.vue';
 import { ref } from 'vue';
+import Popover from '../misc/Popover.vue';
+import CashPaymentPanel from './CashPaymentPanel.vue';
 
 const { hideUser, sendSettlement } = useCosts();
 

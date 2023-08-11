@@ -5,8 +5,9 @@ import { Dictionary } from "types/types";
 import { reactive, readonly } from "vue";
 import { translateMonth } from "@/tools/localeHelper";
 import postHideUser from "@/api/postHideUser";
-import { isMessage } from "@/interfaces/IMessage";
+import { IMessage, isMessage } from "@/interfaces/IMessage";
 import postSettlement from "@/api/postSettlement";
+import postCashPayment from "@/api/postCashPayment";
 
 export interface ICosts {
     columnNames: Dictionary<DateTime>,
@@ -84,14 +85,23 @@ export function useCosts() {
     }
 
     async function sendSettlement(username: string) {
-        console.log(`Hier könnte das settlement für ${username} geschickt werden!`);
         const { error, response } = await postSettlement(username);
 
         if (error.value === true || isMessage(response)) {
-            CostsState.error = 'Error on sending settlement';
-        } else if (typeof response.value === 'number') {
-            CostsState.users[username].costs['total'] = response.value;
+            CostsState.error = isMessage(response) === true ? response.value.message : 'Error on sending settlement';
+        } else {
             CostsState.error = '';
+        }
+    }
+
+    async function sendCashPayment(username: string, amount: number) {
+        const { error, response } = await postCashPayment(username, amount);
+
+        if ( error.value === true || isMessage(response)) {
+            CostsState.error = isMessage(response) === true ? (response.value as IMessage).message : 'Error on sending settlement';
+        } else if (typeof response.value === 'number') {
+            CostsState.error = '';
+            CostsState.users[username].costs['total'] += response.value;
         }
     }
 
@@ -115,6 +125,7 @@ export function useCosts() {
         fetchCosts,
         hideUser,
         sendSettlement,
+        sendCashPayment,
         getColumnNames,
         getFullNameByUser
     }

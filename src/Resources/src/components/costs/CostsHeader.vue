@@ -10,6 +10,7 @@
       class="col-span-3 row-start-2 justify-self-center sm:col-span-1 sm:col-start-1 sm:justify-self-start min-[900px]:row-start-2"
     />
     <CashRegisterLink
+      v-if="userDataStore.roleAllowsRoute('CashRegister')"
       class="col-span-3 row-start-3 justify-self-center sm:col-span-1 sm:col-start-2 sm:row-start-2 sm:justify-self-end min-[900px]:row-start-1"
     />
     <SwitchGroup>
@@ -37,6 +38,7 @@ import InputLabel from '../misc/InputLabel.vue';
 import { computed } from 'vue';
 import Switch from "@/components/misc/Switch.vue"
 import { SwitchGroup, SwitchLabel } from '@headlessui/vue';
+import { userDataStore } from '@/stores/userDataStore';
 
 const { t } = useI18n();
 

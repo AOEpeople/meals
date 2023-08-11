@@ -66,6 +66,14 @@ MealzMealBundle_costs:
   path: /costs
   defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
 
+MealzMealBundle_cash_register:
+  path: /cash-register
+  defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
+
+MealzMealBundle_costs_settlement_confirm:
+  path: /costs/settlement/confirm/{hash}
+  defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
+
 MealzMealBundle_finance:
   path: /finance
   defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }

@@ -54,7 +54,10 @@
     },
     "settlement": "Do you really want to settle #name#'s account?",
     "settle": "Settle",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "payment": "Add to balance of #name#",
+    "amount": "Amount",
+    "type": "Type"
   },
   "changeLanguage": "Deutsche Version",
   "combiModal": {

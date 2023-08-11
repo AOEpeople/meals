@@ -54,7 +54,10 @@
     },
     "settlement": "Konto von #name# wirklich ausgleichen?",
     "settle": "Ausgleichen",
-    "cancel": "Abbrechen"
+    "cancel": "Abbrechen",
+    "payment": "Konto von #name# aufladen",
+    "amount": "Betrag",
+    "type": "Art"
   },
   "changeLanguage": "English version",
   "combiModal": {

@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @Security("is_granted('ROLE_FINANCE')")
+ * @Security("is_granted('ROLE_KITCHEN_STAFF')")
  */
 class AccountingBookController extends BaseController
 {

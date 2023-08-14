@@ -61,170 +61,23 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
     }
 
     /**
-     * Testing access to accounting book site for non-admins and admins.
+     * Tests if admin staff can access the cash register other users can not.
      */
-    public function testAccessForAdminsOnly(): void
+    public function testAccessForAdminOnly(): void
     {
-        $this->markTestSkipped('Frontend Test');
-        // test for admins
-        $crawler = $this->client->request('GET', '/accounting/book');
-        $node = $crawler->filterXPath('//table[@id="accounting-book-table"]');
-        $this->assertFalse($node->count() > 0, 'Accounting book NOT accessible by Admins(ROLE_KITCHEN_STAFF)');
+        $this->loginAs(self::USER_FINANCE);
+        $this->client->request('GET', '/api/accounting/book');
+        $this->assertEquals(403, $this->client->getResponse()->getStatusCode(), 'Cash register page accessible by finance staff');
 
-        // test for no or non-admin user
+        // Test if default users can access the cash register page
         $this->loginAs(self::USER_STANDARD);
-        $crawler = $this->client->request('GET', '/accounting/book');
-        $node = $crawler->filterXPath('//table[@id="accounting-book-table"]');
-        $this->assertFalse($node->count() > 0, 'Accounting book accessible by Non-Admins');
+        $this->client->request('GET', '/api/accounting/book');
+        $this->assertFalse($this->client->getResponse()->isSuccessful(), 'Cash register page accessible by default users');
 
-        // test for finance admins
-        $this->loginAs(self::USER_FINANCE);
-        $crawler = $this->client->request('GET', '/accounting/book');
-        $node = $crawler->filterXPath('//table[@id="accounting-book-table"]');
-        $this->assertTrue($node->count() > 0, 'Accounting book NOT accessible by Admins(ROLE_KITCHEN_STAFF)');
-    }
-
-    /**
-     * Test the headline of accounting book showing the range of the last month.
-     */
-    public function testHeadlineShowingDateOfLastMonth(): void
-    {
-        $this->markTestSkipped('Frontend Test');
-        // test for admins
-        $this->loginAs(self::USER_FINANCE);
-
-        $crawler = $this->client->request('GET', '/accounting/book');
-        $node = $crawler->filterXPath('//div[contains(@class,"accounting-book")]//h1[@class="headline"]');
-        $this->assertTrue($node->count() > 0, 'There is no h1.headline element)');
-
-        $headline = $node->first()->text();
-
-        // Get first and last day of previous month
-        $minDate = new DateTime('first day of previous month');
-        $maxDate = new DateTime('last day of previous month');
-
-        $firstDay = $minDate->format('d');
-        $lastDay = $maxDate->format('d');
-        $monthNumber = $minDate->format('m');
-        $year = $minDate->format('Y');
-
-        $regex = '/' . preg_quote($firstDay) . "\." . preg_quote($monthNumber) . "\.(" . preg_quote($year) . ')? *[-|bis|to] *' . preg_quote($lastDay) . "\." . preg_quote($monthNumber) . "\.(" . preg_quote($year) . ')?/i';
-        $this->assertMatchesRegularExpression($regex, $headline, 'The headline is not set properly');
-    }
-
-    /**
-     * Test if sum of all transactions for the last month is displayed in a separate row at the end of the
-     * listed transactions.
-     */
-    public function testTotalAmountOfTransactionsDisplayedInSeparateRow(): void
-    {
-        $this->markTestSkipped('Frontend Test');
-        $this->loginAs(self::USER_FINANCE);
-
-        $crawler = $this->client->request('GET', '/accounting/book');
-        $nodesAmount = $crawler->filterXPath('//table[@id="accounting-book-table"]//td[contains(@class,"amount") and not(contains(@class, "table-data-total"))]');
-        $nodeTotal = $crawler->filterXPath('//table[@id="accounting-book-table"]//td[contains(@class,"table-data-total") and not(contains(@class, "amount"))]');
-
-        $res = [];
-        foreach ($nodesAmount as $value) {
-            $tmpCrawler = new Crawler($value);
-            $res[] = (float) $tmpCrawler->text();
-        }
-
-        $totalCalculated = (float) array_sum($res);
-        $totalShown = $this->getFloatFromNode($nodeTotal->siblings()->getNode(0));
-
-        $this->assertEquals($totalCalculated, $totalShown, 'Total amount of transactions inconsistent');
-    }
-
-    /**
-     * Test users are ordered by lastname, firstname and listed this way:
-     * lastname, firstname      amount.
-     */
-    public function testDisplayUsersOrderedByLastnameAndFirstname(): void
-    {
-        $this->markTestSkipped('Frontend Test');
-        // Get first and last day of previous month
-        $minDate = new DateTime('first day of previous month');
-        $minDate->setTime(0, 0, 0);
-        $maxDate = new DateTime('last day of previous month');
-        $maxDate->setTime(23, 59, 59);
-
-        // fetch infos for previous month from database.
-        // These results are already ordered by lastname, firstname!!
-        $transactionRepo = self::$container->get(TransactionRepositoryInterface::class);
-        $usersAndTheirTotals = $transactionRepo->findUserDataAndTransactionAmountForGivenPeriod($minDate, $maxDate);
-
-        // fetch what is displayed in the accounting book table....
-        $this->loginAs(self::USER_FINANCE);
-
-        $crawler = $this->client->request('GET', '/accounting/book');
-        $this->assertTrue($this->client->getResponse()->isSuccessful());
-
-        $nodesName = $crawler->filterXPath('//table[@id="accounting-book-table"]//td[contains(@class,"name")]');
-
-        // now compare order and displayed syntax of results
-        for ($i = 0; $i < $nodesName->count(); ++$i) {
-            $this->assertInstanceOf(DOMElement::class, $nodesName->getNode($i));
-            $nameDisplayed = $nodesName->getNode($i)->textContent;
-            $userInfo = current($usersAndTheirTotals);
-            next($usersAndTheirTotals);
-            $regex = '/' . preg_quote($userInfo['name']) . ' *, *' . preg_quote($userInfo['firstName']) . '/i';
-            $this->assertMatchesRegularExpression($regex, $nameDisplayed, 'Names are displayed incorrectly. Either sorting is wrong or the names are not displayed like it should be (name, firstname)');
-        }
-    }
-
-    /**
-     * Return a floatval from a node's textContent.
-     *
-     * @return float
-     */
-    protected function getFloatFromNode(DOMNode $node)
-    {
-        $this->markTestSkipped('Frontend Test');
-        $res = $node->textContent;
-        $res = str_replace(',', '', $res);
-
-        return floatval($res);
-    }
-
-    /**
-     * return a new crawler.
-     *
-     * @return Crawler
-     */
-    protected function getRawResponseCrawler()
-    {
-        $this->markTestSkipped('Frontend Test');
-        $content = $this->client->getResponse()->getContent();
-        $uri = 'http://www.mealz.local';
-
-        return new Crawler(json_decode($content), $uri);
-    }
-
-    /**
-     * Tests if finance staff can access the transaction export page and admins and default users can not.
-     */
-    public function testAccessForFinanceOnly(): void
-    {
-        $this->markTestSkipped('Frontend Test');
-        $this->loginAs(self::USER_FINANCE);
-
-        $crawler = $this->client->request('GET', '/accounting/book/finance/list');
-        $this->assertTrue($this->client->getResponse()->isSuccessful(), 'Finances page not accessible by finance staff');
-
-        $node = $crawler->filterXPath('//table[@id="accounting-book-table"]');
-        $this->assertTrue($node->count() > 0, 'Accounting book table could not be rendered on the finances page');
-
-        // Test if default users can access the finances page
-        $this->loginAs(self::USER_STANDARD);
-        $this->client->request('GET', '/accounting/book/finance/list');
-        $this->assertFalse($this->client->getResponse()->isSuccessful(), 'Finances page accessible by default users');
-
-        // Test if admins can access the finances page
+        // Test if admins can access the cash register page
         $this->loginAs(self::USER_KITCHEN_STAFF);
-        $this->client->request('GET', '/accounting/book/finance/list');
-        $this->assertFalse($this->client->getResponse()->isSuccessful(), 'Finances page accessible by administrators');
+        $this->client->request('GET', '/api/accounting/book');
+        $this->assertTrue($this->client->getResponse()->isSuccessful(), 'Cash register page not accessible by administrators');
     }
 
     /**

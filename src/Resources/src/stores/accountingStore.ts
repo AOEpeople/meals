@@ -64,6 +64,9 @@ export function useAccounting() {
         isLoading: false
     });
 
+    /**
+     * Fetches the a list of all users and their transactions.
+     */
     async function fetchTransactionHistory() {
         TransactionState.isLoading = true;
         const { error, transactions } = await getTransactionHistory();

@@ -8,6 +8,7 @@ import postHideUser from "@/api/postHideUser";
 import { IMessage, isMessage } from "@/interfaces/IMessage";
 import postSettlement from "@/api/postSettlement";
 import postCashPayment from "@/api/postCashPayment";
+import postConfirmSettlement from "@/api/postConfirmSettlement";
 
 export interface ICosts {
     columnNames: Dictionary<DateTime>,
@@ -59,6 +60,9 @@ function isCosts(costs: ICosts): costs is ICosts {
 
 export function useCosts() {
 
+    /**
+     * Fetches a list of all users and their balances in the last three month, before that and the current month.
+     */
     async function fetchCosts() {
         CostsState.isLoading = true;
         const { error, costs } = await getCosts();
@@ -73,6 +77,10 @@ export function useCosts() {
         CostsState.isLoading = false;
     }
 
+    /**
+     * Performs a request to hide the a user with a given username.
+     * @param username  The username of the user to hide.
+     */
     async function hideUser(username: string) {
         const { error, response } = await postHideUser(username);
 
@@ -84,6 +92,11 @@ export function useCosts() {
         }
     }
 
+    /**
+     * Sends a request to settle the balance of a user with a given username.
+     * The HR-Department will be informed about the request and needs to confirm it.
+     * @param username  The username of the user to do the settlement for.
+     */
     async function sendSettlement(username: string) {
         const { error, response } = await postSettlement(username);
 
@@ -94,14 +107,35 @@ export function useCosts() {
         }
     }
 
+    /**
+     * Sends the amount of money a user payed in cash to the backend.
+     * @param username  The username of the user that payed in cash.
+     * @param amount    The amount of money the user payed in cash.
+     */
     async function sendCashPayment(username: string, amount: number) {
         const { error, response } = await postCashPayment(username, amount);
 
-        if ( error.value === true || isMessage(response)) {
+        if (error.value === true || isMessage(response)) {
             CostsState.error = isMessage(response) === true ? (response.value as IMessage).message : 'Error on sending settlement';
         } else if (typeof response.value === 'number') {
             CostsState.error = '';
             CostsState.users[username].costs['total'] += response.value;
+        }
+    }
+
+    /**
+     * The confirmation of the settlement request by the HR-Department.
+     * @param hash  The hash of the settlement.
+     */
+    async function confirmSettlement(hash: string) {
+        const { error, response } = await postConfirmSettlement(hash);
+
+        if (error.value === true || isMessage(response)) {
+            CostsState.error = isMessage(response) === true ? (response.value as IMessage).message : 'Error on confirming settlement';
+            return false;
+        } else {
+            CostsState.error = '';
+            return true;
         }
     }
 
@@ -126,6 +160,7 @@ export function useCosts() {
         hideUser,
         sendSettlement,
         sendCashPayment,
+        confirmSettlement,
         getColumnNames,
         getFullNameByUser
     }

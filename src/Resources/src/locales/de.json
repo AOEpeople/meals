@@ -52,12 +52,16 @@
       "total": "Gesamt",
       "actions": "Aktionen"
     },
-    "settlement": "Konto von #name# wirklich ausgleichen?",
-    "settle": "Ausgleichen",
+    "settlement": "Der Kontostand von #name# wird auf 0,00 € gesetzt. Möchtest Du fortfahren?",
+    "settle": "Fortfahren",
     "cancel": "Abbrechen",
     "payment": "Konto von #name# aufladen",
     "amount": "Betrag",
-    "type": "Art"
+    "type": "Art",
+    "confirm": "Bestätigen",
+    "settlementMessage": "Bist du sicher, dass das Konto von #name# ausgeglichen werden soll und alle zukünftigen Essen storniert werden?",
+    "success": "Der Ausgleich des Kontos von #name# war erfolgreich.",
+    "settlementTitle": "Konto ausgleichen"
   },
   "changeLanguage": "English version",
   "combiModal": {

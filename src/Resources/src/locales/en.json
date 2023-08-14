@@ -52,12 +52,16 @@
       "total": "Total",
       "actions": "Actions"
     },
-    "settlement": "Do you really want to settle #name#'s account?",
-    "settle": "Settle",
+    "settlement": "The account balance of #name# will be set to € 0.00 Do you want to continue?",
+    "settle": "Continue",
     "cancel": "Cancel",
     "payment": "Add to balance of #name#",
     "amount": "Amount",
-    "type": "Type"
+    "type": "Type",
+    "confirm": "Confirm",
+    "settlementMessage": "Are you sure you want to settle account of #name# and cancel all future meals?",
+    "success": "The account settlement of #name# was successful.",
+    "settlementTitle": "Settle account"
   },
   "changeLanguage": "Deutsche Version",
   "combiModal": {

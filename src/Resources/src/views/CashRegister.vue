@@ -1,6 +1,6 @@
 <template>
   <div
-    class="mx-[5%] xl:mx-auto"
+    class="mx-[5%] mb-8 xl:mx-auto"
   >
     <CashRegisterTable
       v-if="loaded === true && TransactionState.transactions.usersLastMonth !== null"

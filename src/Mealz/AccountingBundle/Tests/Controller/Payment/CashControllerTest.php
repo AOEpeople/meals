@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Mealz\AccountingBundle\Tests\Controller\Payment;
 
 use App\Mealz\AccountingBundle\DataFixtures\ORM\LoadTransactions;
+use App\Mealz\AccountingBundle\Repository\TransactionRepositoryInterface;
+use App\Mealz\AccountingBundle\Service\Wallet;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadCategories;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadCombinations;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadDays;
@@ -14,13 +16,18 @@ use App\Mealz\MealBundle\DataFixtures\ORM\LoadMeals;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadParticipants;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadSlots;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
+use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\MealBundle\Tests\Controller\AbstractControllerTestCase;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
+use App\Mealz\UserBundle\Entity\Profile;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class CashControllerTest extends AbstractControllerTestCase
 {
+
+    protected Wallet $wallet;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -40,64 +47,32 @@ class CashControllerTest extends AbstractControllerTestCase
             new LoadParticipants(),
             new LoadTransactions(),
         ]);
+
+        $participantRepo = self::$container->get(ParticipantRepositoryInterface::class);
+        $transactionRepo = self::$container->get(TransactionRepositoryInterface::class);
+        $this->wallet = new Wallet($participantRepo, $transactionRepo);
     }
 
-    /**
-     * Checking if transaction history is correct for some user.
-     */
-    public function testTransactionHistory(): void
+    public function testPostPaymentCash(): void
     {
-        $this->markTestSkipped('Frontend Test');
+        $this->loginAs(self::USER_KITCHEN_STAFF);
 
-        $this->loginAs(self::USER_STANDARD);
+        $profileRepo = $this->getDoctrine()->getRepository(Profile::class);
+        $janeProfile = $profileRepo->findOneBy([
+            'username' => self::USER_STANDARD,
+        ]);
 
-        // Open home page
-        $crawler = $this->client->request('GET', '/');
-        self::assertResponseIsSuccessful();
+        $amount = 10;
+        $balanceBefore = $this->wallet->getBalance($janeProfile);
 
-        // read Current balance from header
-        $currentBalance = $crawler->filterXPath('//div[@class="balance-text"]/a')->text();
-        $currentBalance = (float) substr($currentBalance, 0, strpos($currentBalance, '€'));
+        // Request
+        $this->client->request('POST', '/api/payment/cash/' . self::USER_STANDARD . '?amount=' . $amount);
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
-        // click on the Balance link
-        $balanceLink = $crawler->filterXPath('//div[@class="balance-text"]/a')->link();
-        $crawler = $this->client->click($balanceLink);
+        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertEquals($amount, $response);
 
-        // you should be on Transaction history page
-        $this->assertGreaterThan(0, $crawler->filterXPath('//div[contains(@class,"transaction-history")]')->count());
-
-        // read balance 4 weeks ago
-        $previousBalance = $crawler->filterXPath('//div[@class="last-account-balance"]/span')->text();
-        $previousBalance = (float) substr($previousBalance, 0, strpos($previousBalance, '€'));
-
-        // read all participations
-        $participations = $crawler->filterXPath('//tr[contains(@class, "table-row") and contains(@class, "transaction-meal")]/td[3]')
-            ->each(
-                function ($node, $i) {
-                    return $node->text();
-                }
-            );
-
-        $participationAmount = 0;
-        foreach ($participations as $participation) {
-            $participationAmount += (float) trim(substr($participation, 1, strpos($participation, '€')));
-        }
-
-        $transactions = $crawler->filterXPath('//tr[contains(@class, "table-row") and contains(@class, "transaction-payment")]/td[3]')
-            ->each(
-                function ($node, $i) {
-                    return $node->text();
-                }
-            );
-
-        $transactionAmount = 0;
-        foreach ($transactions as $transaction) {
-            $transactionAmount += (float) trim(substr($transaction, 1, strpos($transaction, '€')));
-        }
-
-        $assumedTotalAmount = $previousBalance - $participationAmount + $transactionAmount;
-
-        $epsilon = 0.00001;
-        $this->assertTrue(abs($currentBalance - $assumedTotalAmount) < $epsilon);
+        $newBalance = round($this->wallet->getBalance($janeProfile) - $balanceBefore);
+        $this->assertEquals($amount, $newBalance);
     }
 }

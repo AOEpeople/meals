@@ -16,7 +16,6 @@ use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Security("is_granted('ROLE_KITCHEN_STAFF')")
@@ -141,27 +140,12 @@ class CostSheetController extends BaseController
         if (null === $profile) {
             return new JsonResponse(['message' => 'Not found'], 404);
         }
+
         return new JsonResponse([
             'user' => $profile->getUsername(),
             'fullName' => $profile->getFullName(),
             'roles' => $profile->getRoles(),
         ], 200);
-    }
-
-    public function renderConfirmButton(string $hash, ProfileRepositoryInterface $profileRepo): Response
-    {
-        $profile = null;
-        $queryResult = $profileRepo->findBy(['settlementHash' => urldecode($hash)]);
-
-        if (true === is_array($queryResult) && false === empty($queryResult)) {
-            $profile = $queryResult[0];
-        } else {
-            $this->addFlashMessage($this->get('translator')->trans('payment.costsheet.account_settlement.confirmation.failure'), 'danger');
-        }
-
-        return $this->render('MealzAccountingBundle::confirmationPage.html.twig', [
-            'hash' => $hash,
-            'profile' => $profile, ]);
     }
 
     /**
@@ -171,7 +155,7 @@ class CostSheetController extends BaseController
         string $hash,
         ProfileRepositoryInterface $profileRepository,
         Wallet $wallet
-    ): Response {
+    ): JsonResponse {
         $queryResult = $profileRepository->findBy(['settlementHash' => urldecode($hash)]);
 
         if (true === is_array($queryResult) && false === empty($queryResult)) {
@@ -191,34 +175,19 @@ class CostSheetController extends BaseController
             $entityManager->persist($transaction);
             $entityManager->flush();
 
-            /*
-             * for devbox situation, if you are not logged in with fake-login
-             * With Keycloak this if condition is not needed anymore
-             */
-            if (null !== $this->getProfile()) {
-                $logger = $this->get('monolog.logger.balance');
-                $logger->info(
-                    '{hr_member} settled {users} Balance.',
-                    [
-                        'hr_member' => $this->getProfile()->getFullName(),
-                        'users' => $profile->getFullName(),
-                    ]
-                );
-            }
-
-            $message = $this->get('translator')->trans(
-                'payment.costsheet.account_settlement.confirmation.success',
-                ['%fullname%' => $profile->getFullName()]
+            $logger = $this->get('monolog.logger.balance');
+            $logger->info(
+                '{hr_member} settled {users} Balance.',
+                [
+                    'hr_member' => $this->getProfile()->getFullName(),
+                    'users' => $profile->getFullName(),
+                ]
             );
-            $severity = 'success';
         } else {
-            $message = $this->get('translator')->trans('payment.costsheet.account_settlement.confirmation.failure');
-            $severity = 'danger';
+            return new JsonResponse(['message' => 'Settlement request invalid or already processed'], 500);
         }
 
-        $this->addFlashMessage($message, $severity);
-
-        return $this->render('@MealzAccounting/confirmationPage.html.twig', ['profile' => null]);
+        return new JsonResponse(null, 200);
     }
 
     private function sendSettlementRequestMail(Profile $profile, string $urlEncodedHash): void

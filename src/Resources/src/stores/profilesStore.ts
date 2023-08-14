@@ -55,6 +55,10 @@ export function useProfiles(weekId: number) {
         ProfilesState.isLoading = false;
     }
 
+    /**
+     * Fetches the profile for a given settlement hash.
+     * @param hash  The hash to fetch the profile for.
+     */
     async function fetchProfileWithHash(hash: string): Promise<IProfile | null> {
         const { error, profile } = await getProfileWithHash(hash);
 

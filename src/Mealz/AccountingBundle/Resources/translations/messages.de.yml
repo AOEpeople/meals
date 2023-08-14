@@ -9,54 +9,7 @@ payment:
     text: Ich weiß, dass ich einen Kontostand von %amount% € habe und werde meine Schulden umgehend begleichen.
     button: OK, kapiert!
     pay_now: Jetzt bezahlen
-  transaction_history:
-    account: Konto
-    add_funds: GELD EINZAHLEN
-    balance_past: Kontostand am
-    balance_now: Aktueller Kontostand
-    date: Datum
-    description: Beschreibung
-    amount: "Betrag:"
-    successful_payment: Die Bezahlung war erfolgreich.
-    payment_failed: Die Bezahlung ist fehlgeschlagen.
-    cash_payment: Barzahlung
-    paypal_payment: PayPal-Zahlung
-    payment_method: Zahlungsmethode
-    pay: Zahlen
-    paypal: PayPal
-    invalid: Bitte prüfe deine Eingabe.
-    finances:
-      export: Export
-      pdf: meals-finance
-      date: Datum
-      name: Name
-      amount: Betrag
-      daily_closing: Tagesabschluss
   costsheet:
-    account_settlement:
-      button: Konto ausgleichen
-      fancybox:
-        message: Der Kontostand dieses Nutzers wird auf 0,00 € gesetzt. Möchtest Du fortfahren?
-        continue: Fortfahren
-        cancel: Abbrechen
-      request:
-        already_sent: Eine Anfrage zum Ausgleich des Kontos von %name% wurde bereits gesendet.
-        success: Die Anfrage auf einen Kontoausgleich für %name% wurde an die HR-Abteilung gesendet.
-        failure: Die Anfrage ist fehlgeschlagen.
-      confirmation:
-        message: Bist du sicher, dass das Konto von %fullname% ausgeglichen werden soll und alle zukünftigen Essen storniert werden?
-        confirm: Bestätigen
-        success: Der Ausgleich des Kontos von %fullname% war erfolgreich.
-        failure: Die Anfrage ist ungültig oder wurde bereits bestätigt.
-    hide_user:
-      button: Benutzer ausblenden
-      fancybox:
-        message: Der Benutzer wird ausgeblendet. Möchtest Du fortfahren?
-        continue: Fortfahren
-        cancel: Abbrechen
-      request:
-        success: Der Benutzer %name% wurde ausgeblendet.
-        info: Der Benutzer %name% ist bereits ausgeblendet.
     mail:
       subject: Anfrage auf Kontoausgleich
       body: '<html><head></head><body>Hallo HR,<br><br>%admin% hat einen Kontoausgleich für %fullname% beantragt.<br>Klicke auf den folgenden Link, um die Anfrage zu bestätigen:<br><br><a href="%link%">%link%</a></body></html>'

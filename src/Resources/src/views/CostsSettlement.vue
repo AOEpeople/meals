@@ -1,25 +1,59 @@
 <template>
-  <div>{{ `Settlement for hash: ${hash}` }}</div>
-  <span
-    v-if="profile !== null"
+  <div
+    class="mx-[5%] flex w-full flex-col xl:mx-auto"
   >
-    {{ `And user: ${profile.fullName}` }}
-  </span>
+    <h2
+      class="w-full text-left max-[380px]:text-[24px]"
+    >
+      {{ t('costs.settlementTitle') }}
+    </h2>
+    <span
+      v-if="profile !== null"
+      class="w-full"
+    >
+      {{ t('costs.settlementMessage').replace('#name#', profile.fullName) }}
+    </span>
+    <CreateButton
+      v-if="isConfirmed === false"
+      :btn-text="t('costs.confirm')"
+      :managed="true"
+      class="ml-0 w-fit cursor-pointer justify-self-center"
+      @click="handleClick"
+    />
+    <span
+      v-else
+      class="w-full pt-4"
+    >
+      {{ t('costs.success').replace('#name#', profile.fullName) }}
+    </span>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { IProfile, useProfiles } from '@/stores/profilesStore';
 import { onMounted, ref } from 'vue';
+import { useCosts } from '@/stores/costsStore';
+import CreateButton from '@/components/misc/CreateButton.vue';
+import { useI18n } from 'vue-i18n';
 
 const { fetchProfileWithHash } = useProfiles(0);
+const { confirmSettlement } = useCosts();
+const { t } = useI18n();
 
 const props = defineProps<{
   hash: string
 }>();
 
 const profile = ref<IProfile>(null);
+const isConfirmed = ref(false);
 
 onMounted(async () => {
   profile.value = await fetchProfileWithHash(props.hash);
 });
+
+async function handleClick() {
+  if (isConfirmed.value === false && await confirmSettlement(props.hash) === true) {
+    isConfirmed.value = true;
+  }
+}
 </script>

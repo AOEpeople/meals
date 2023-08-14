@@ -25,7 +25,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class CashControllerTest extends AbstractControllerTestCase
 {
-
     protected Wallet $wallet;
 
     protected function setUp(): void

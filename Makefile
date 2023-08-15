@@ -25,6 +25,7 @@ help:
 	@echo " run-cypress        - Run cypress"
 	@echo "	ssh                - Open a bash session in the web container"
 	@echo "	update-schema      - Update the Doctrine schema"
+	@echo "	mailhog            - Open MailHog in the browser"
 	@echo ""
 
 build:
@@ -87,3 +88,6 @@ poweroff:
 
 get-users:
 	grep -n "'username'" src/Mealz/UserBundle/DataFixtures/ORM/LoadUsers.php
+
+mailhog:
+	ddev launch -m

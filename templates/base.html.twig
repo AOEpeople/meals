@@ -8,6 +8,23 @@
     <link rel="stylesheet" href="{{ assets_server }}{{ asset('static/app.css') }}" />
     {% block head %}{% endblock %}
 </head>
+<style>
+#loading-fallback-container {
+    display: grid;
+    place-content: center;
+    height: 100vh;
+    width: 100vw;
+    padding: 30vw;
+}
+
+#loading-fallback-img {
+    background: url("") no-repeat center;
+    background-image: url("{{ assets_server }}/images/loading.svg");
+    background-size: contain;
+    height: 20vw;
+    width: 20vw;
+}
+</style>
 
 {% set pageView = block('pageView') is defined ? block('pageView') : '' %}
 

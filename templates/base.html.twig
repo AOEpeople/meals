@@ -14,7 +14,7 @@
     place-content: center;
     height: 100vh;
     width: 100vw;
-    padding: 30vw;
+    overflow: hidden;
 }
 
 #loading-fallback-img {
@@ -23,6 +23,18 @@
     background-size: contain;
     height: 20vw;
     width: 20vw;
+    filter: drop-shadow(0 0 0.35rem rgba(0, 0, 0, 0.75));
+    animation: spin 1.5s ease-in-out infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(720deg);
+    }
 }
 </style>
 

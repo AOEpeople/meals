@@ -56,7 +56,7 @@ const filterRegex = computed(() => {
 });
 
 const hiddenUsers = computed(() => Object.entries(CostsState.users).filter(user => {
-  const [key, value] = user;
+  const value = user[1];
   return value.hidden === false || (value.hidden === true && props.showHidden === true);
 }));
 
@@ -66,7 +66,7 @@ const filteredUsers = computed(() => {
   }
 
   return hiddenUsers.value.filter(user => {
-    const [key, value] = user;
+    const value = user[1];
     const searchStrings = [value.firstName, value.name].join(' ');
     return filterRegex.value.test(searchStrings);
   });

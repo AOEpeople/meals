@@ -87,7 +87,7 @@ describe('Test CostsStore', () => {
         expect(columnNames[0]).toEqual('Mai');
         expect(columnNames[1]).toEqual('Juni');
         expect(columnNames[2]).toEqual('Juli');
-        expect(columnNames[3]).toEqual('15.08.');
+        expect(columnNames[3]).toEqual(new Date().toLocaleDateString('de', { month: '2-digit', day: '2-digit' }));
     });
 
     it('should return the full name of a user', () => {

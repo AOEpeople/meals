@@ -54,4 +54,38 @@ describe('Test Cost View', () => {
 
         cy.get('tr').should('have.length', 8);
     });
+
+    it('should be able to settle an account', () => {
+        cy.visit('/costs');
+
+        cy.wait('@getCosts');
+
+        // Hide Symphony's toolbar
+        cy.get('a[class="hide-button"]').click();
+
+        cy.get('h2').contains('Liste der Kosten');
+
+        cy.get('input[placeholder="Benutzer filtern"]').type('Alice');
+
+        cy.get('tr')
+            .eq(1)
+            .find('td')
+            .eq(0)
+            .contains('Meals, Alice')
+            .parent()
+            .find('td')
+            .should('have.length', 8);
+
+        cy.get('tr')
+            .eq(1)
+            .find('td')
+            .eq(7)
+            .find('button')
+            .last()
+            .click();
+
+        cy.get('div').contains('Fortfahren').click();
+
+        cy.visitSettlementLinkFromMail();
+    });
 });

@@ -7,14 +7,9 @@ const asyncFunc1 = jest.fn(async () => {
     new Promise(resolve => resolve(undefined));
 });
 
-const asyncFunc2: () => Promise<void> = async () => {
-    new Promise(resolve => resolve(undefined));
-};
-
 jest.mock('@/stores/costsStore', () => ({
     useCosts: () => ({
-        hideUser: asyncFunc1,
-        sendSettlement: asyncFunc2
+        hideUser: asyncFunc1
     })
 }));
 

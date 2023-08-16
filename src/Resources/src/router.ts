@@ -12,6 +12,8 @@ import PrintableList from "@/views/PrintableList.vue";
 import ParticipantList from "@/views/ParticipantsList.vue";
 import Weeks         from "@/views/Weeks.vue";
 import MenuParticipations from "./views/MenuParticipations.vue";
+import CostsSettlement from "./views/CostsSettlement.vue";
+import CashRegister from "./views/CashRegister.vue";
 
 import { createRouter, createWebHistory } from "vue-router";
 import { userDataStore }                  from "@/stores/userDataStore";
@@ -96,7 +98,7 @@ const router = createRouter({
             name: 'Costs',
             component: Costs,
             meta: {
-                allowedRoles: ['ROLE_KITCHEN_STAFF', 'ROLE_ADMIN', 'ROLE_FINANCE']
+                allowedRoles: ['ROLE_KITCHEN_STAFF', 'ROLE_ADMIN']
             }
         },
         {
@@ -146,6 +148,23 @@ const router = createRouter({
             meta: {
                 allowedRoles: ['ROLE_KITCHEN_STAFF', 'ROLE_ADMIN', 'ROLE_GUEST', 'IS_AUTHENTICATED_ANONYMOUSLY']
             }
+        },
+        {
+            path: '/cash-register',
+            name: 'CashRegister',
+            component: CashRegister,
+            meta: {
+                allowedRoles: ['ROLE_ADMIN', 'ROLE_FINANCE']
+            }
+        },
+        {
+            path: '/costs/settlement/confirm/:hash',
+            name: 'CostsSettlement',
+            component: CostsSettlement,
+            meta: {
+                allowedRoles: ['ROLE_ADMIN', 'ROLE_FINANCE']
+            },
+            props: true
         }
     ],
 })

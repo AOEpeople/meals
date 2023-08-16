@@ -11,14 +11,15 @@ use Exception;
 use Qipsius\TCPDFBundle\Controller\TCPDFController;
 use ReflectionException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @Security("is_granted('ROLE_FINANCE')")
+ * @Security("is_granted('ROLE_KITCHEN_STAFF')")
  */
 class AccountingBookController extends BaseController
 {
-    public function list(TransactionRepositoryInterface $transactionRepo): Response
+    public function list(TransactionRepositoryInterface $transactionRepo): JsonResponse
     {
         // Get first and last day of previous month
         $minDateFirst = new DateTime('first day of previous month');
@@ -42,12 +43,12 @@ class AccountingBookController extends BaseController
         // Get array of users with their amount of transactions in actual month
         $users = $transactionRepo->findUserDataAndTransactionAmountForGivenPeriod($minDate, $maxDate);
 
-        return $this->render('MealzAccountingBundle:Accounting/Admin:accountingBook.html.twig', [
-            'headingFirst' => $headingFirst,
-            'heading' => $heading,
-            'usersFirst' => $usersFirst,
-            'users' => $users,
-        ]);
+        return new JsonResponse([
+            'lastMonth' => $headingFirst,
+            'thisMonth' => $heading,
+            'usersLastMonth' => $usersFirst,
+            'usersThisMonth' => $users,
+        ], 200);
     }
 
     /**

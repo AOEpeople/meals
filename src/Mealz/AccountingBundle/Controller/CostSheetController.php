@@ -15,8 +15,11 @@ use DateTime;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+ * @Security("is_granted('ROLE_KITCHEN_STAFF')")
+ */
 class CostSheetController extends BaseController
 {
     private MailerInterface $mailer;
@@ -28,28 +31,23 @@ class CostSheetController extends BaseController
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    /**
-     * @TODO: use own data model for user costs
-     */
     public function list(
         ParticipantRepositoryInterface $participantRepo,
         TransactionRepositoryInterface $transactionRepo
-    ): Response {
-        $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
-
+    ): JsonResponse {
         $transactionsPerUser = $transactionRepo->findUserDataAndTransactionAmountForGivenPeriod();
         $users = $participantRepo->findCostsGroupedByUserGroupedByMonth();
 
         // create column names
         $numberOfMonths = 3;
-        $columnNames = ['earlier' => 'Prior to that'];
+        $columnNames = ['earlier' => 'earlier'];
         $dateTime = new DateTime("first day of -$numberOfMonths month 00:00");
         $earlierTimestamp = $dateTime->getTimestamp();
         for ($i = 0; $i < $numberOfMonths + 1; ++$i) {
-            $columnNames[$dateTime->getTimestamp()] = $dateTime->format('F');
+            $columnNames[$dateTime->getTimestamp()] = clone $dateTime;
             $dateTime->modify('+1 month');
         }
-        $columnNames['total'] = 'Total';
+        $columnNames['total'] = 'total';
 
         // create table rows
         foreach ($users as $username => &$user) {
@@ -57,14 +55,14 @@ class CostSheetController extends BaseController
             foreach ($user['costs'] as $cost) {
                 $monthCosts = $this->getRemainingCosts($cost['costs'], $transactionsPerUser[$username]['amount']);
                 if ($cost['timestamp'] < $earlierTimestamp) {
-                    $userCosts['earlier'] = bcadd($userCosts['earlier'], $monthCosts, 4);
+                    $userCosts['earlier'] = (float) bcadd($userCosts['earlier'], $monthCosts, 4);
                 } else {
                     $userCosts[$cost['timestamp']] = $monthCosts;
                 }
-                $userCosts['total'] = bcadd($userCosts['total'], $monthCosts, 4);
+                $userCosts['total'] = (float) bcadd($userCosts['total'], $monthCosts, 4);
             }
             if ($transactionsPerUser[$username]['amount'] > 0) {
-                $userCosts['total'] = '+' . $transactionsPerUser[$username]['amount'];
+                $userCosts['total'] = $transactionsPerUser[$username]['amount'];
             }
             $user['costs'] = $userCosts;
 
@@ -75,44 +73,27 @@ class CostSheetController extends BaseController
         }
 
         ksort($users, SORT_STRING);
+        unset($columnNames['total']);
+        unset($columnNames['earlier']);
 
-        return $this->render('MealzAccountingBundle::costSheet.html.twig', [
+        return new JsonResponse([
             'columnNames' => $columnNames,
             'users' => $users,
         ]);
     }
 
-    public function hideUserRequest(
-        Profile $profile,
-        ParticipantRepositoryInterface $participantRepo,
-        TransactionRepositoryInterface $transactionRepo
-    ): Response {
-        $this->denyAccessUnlessGranted('ROLE_KITCHEN_STAFF');
-
+    public function hideUser(Profile $profile): JsonResponse
+    {
         if (!$profile->isHidden()) {
             $entityManager = $this->getDoctrine()->getManager();
             $profile->setHidden(true);
             $entityManager->persist($profile);
             $entityManager->flush();
 
-            $message = $this->get('translator')->trans(
-                'payment.costsheet.hide_user.request.success',
-                ['%name%' => $profile->getFullName()],
-                'messages'
-            );
-            $severity = 'success';
+            return new JsonResponse(null, 200);
         } else {
-            $message = $this->get('translator')->trans(
-                'payment.costsheet.hide_user.request.info',
-                ['%name%' => $profile->getFullName()],
-                'messages'
-            );
-            $severity = 'info';
+            return new JsonResponse(['message' => 'Profile is already hidden'], 500);
         }
-
-        $this->addFlashMessage($message, $severity);
-
-        return $this->list($participantRepo, $transactionRepo);
     }
 
     private function getRemainingCosts($costs, &$transactions)
@@ -128,65 +109,43 @@ class CostSheetController extends BaseController
         return ($result < 0) ? 0 : $result * -1;
     }
 
-    /**
-     * @Security("is_granted('ROLE_KITCHEN_STAFF')")
-     */
-    public function sendSettlementRequest(
-        Profile $userProfile,
-        Wallet $wallet,
-        ParticipantRepositoryInterface $participantRepo,
-        TransactionRepositoryInterface $transactionRepo
-    ): Response {
-        if (null === $userProfile->getSettlementHash() && $wallet->getBalance($userProfile) > 0.00) {
-            $username = $userProfile->getUsername();
+    public function postSettlement(Profile $profile, Wallet $wallet): JsonResponse
+    {
+        if (null === $profile->getSettlementHash() && $wallet->getBalance($profile) > 0.00) {
+            $username = $profile->getUsername();
             $secret = $this->getParameter('app.secret');
             $hashCode = str_replace('/', '', crypt($username, $secret));
             $urlEncodedHash = urlencode($hashCode);
 
             $entityManager = $this->getDoctrine()->getManager();
-            $userProfile->setSettlementHash($hashCode);
-            $entityManager->persist($userProfile);
+            $profile->setSettlementHash($hashCode);
+            $entityManager->persist($profile);
             $entityManager->flush();
 
-            $this->sendSettlementRequestMail($userProfile, $urlEncodedHash);
+            $this->sendSettlementRequestMail($profile, $urlEncodedHash);
 
-            $message = $this->get('translator')->trans(
-                'payment.costsheet.account_settlement.request.success',
-                ['%name%' => $userProfile->getFullName()],
-                'messages'
-            );
-            $severity = 'success';
-        } elseif (null !== $userProfile->getSettlementHash() && $wallet->getBalance($userProfile) > 0.00) {
-            $message = $this->get('translator')->trans(
-                'payment.costsheet.account_settlement.request.already_sent',
-                ['%name%' => $userProfile->getFullName()],
-                'messages'
-            );
-            $severity = 'danger';
+            return new JsonResponse(null, 200);
+        } elseif (null !== $profile->getSettlementHash() && $wallet->getBalance($profile) > 0.00) {
+            return new JsonResponse(['message' => 'Settlement request already send'], 500);
         } else {
-            $message = $this->get('translator')->trans('payment.costsheet.account_settlement.request.failure');
-            $severity = 'danger';
+            return new JsonResponse(['message' => 'Settlement request failed'], 500);
         }
-
-        $this->addFlashMessage($message, $severity);
-
-        return $this->list($participantRepo, $transactionRepo);
     }
 
-    public function renderConfirmButton(string $hash, ProfileRepositoryInterface $profileRepo): Response
+    public function getProfileFromHash(string $hash, ProfileRepositoryInterface $profileRepository): JsonResponse
     {
-        $profile = null;
-        $queryResult = $profileRepo->findBy(['settlementHash' => urldecode($hash)]);
+        $queryResult = $profileRepository->findBy(['settlementHash' => urldecode($hash)]);
+        $profile = $queryResult[0];
 
-        if (true === is_array($queryResult) && false === empty($queryResult)) {
-            $profile = $queryResult[0];
-        } else {
-            $this->addFlashMessage($this->get('translator')->trans('payment.costsheet.account_settlement.confirmation.failure'), 'danger');
+        if (null === $profile) {
+            return new JsonResponse(['message' => 'Not found'], 404);
         }
 
-        return $this->render('MealzAccountingBundle::confirmationPage.html.twig', [
-            'hash' => $hash,
-            'profile' => $profile, ]);
+        return new JsonResponse([
+            'user' => $profile->getUsername(),
+            'fullName' => $profile->getFullName(),
+            'roles' => $profile->getRoles(),
+        ], 200);
     }
 
     /**
@@ -196,7 +155,7 @@ class CostSheetController extends BaseController
         string $hash,
         ProfileRepositoryInterface $profileRepository,
         Wallet $wallet
-    ): Response {
+    ): JsonResponse {
         $queryResult = $profileRepository->findBy(['settlementHash' => urldecode($hash)]);
 
         if (true === is_array($queryResult) && false === empty($queryResult)) {
@@ -216,34 +175,19 @@ class CostSheetController extends BaseController
             $entityManager->persist($transaction);
             $entityManager->flush();
 
-            /*
-             * for devbox situation, if you are not logged in with fake-login
-             * With Keycloak this if condition is not needed anymore
-             */
-            if (null !== $this->getProfile()) {
-                $logger = $this->get('monolog.logger.balance');
-                $logger->info(
-                    '{hr_member} settled {users} Balance.',
-                    [
-                        'hr_member' => $this->getProfile()->getFullName(),
-                        'users' => $profile->getFullName(),
-                    ]
-                );
-            }
-
-            $message = $this->get('translator')->trans(
-                'payment.costsheet.account_settlement.confirmation.success',
-                ['%fullname%' => $profile->getFullName()]
+            $logger = $this->get('monolog.logger.balance');
+            $logger->info(
+                '{hr_member} settled {users} Balance.',
+                [
+                    'hr_member' => $this->getProfile()->getFullName(),
+                    'users' => $profile->getFullName(),
+                ]
             );
-            $severity = 'success';
         } else {
-            $message = $this->get('translator')->trans('payment.costsheet.account_settlement.confirmation.failure');
-            $severity = 'danger';
+            return new JsonResponse(['message' => 'Settlement request invalid or already processed'], 500);
         }
 
-        $this->addFlashMessage($message, $severity);
-
-        return $this->render('@MealzAccounting/confirmationPage.html.twig', ['profile' => null]);
+        return new JsonResponse(null, 200);
     }
 
     private function sendSettlementRequestMail(Profile $profile, string $urlEncodedHash): void
@@ -258,7 +202,7 @@ class CostSheetController extends BaseController
                 '%admin%' => $this->getProfile()->getFullName(),
                 '%fullname%' => $profile->getFullName(),
                 '%link%' => rtrim($this->getParameter('app.base_url'), '/') . $this->generateUrl(
-                    'mealz_accounting_cost_sheet_redirect_to_confirm',
+                    'MealzMealBundle_costs_settlement_confirm',
                     ['hash' => $urlEncodedHash]
                 ),
             ],

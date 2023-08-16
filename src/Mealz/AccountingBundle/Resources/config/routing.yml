@@ -1,60 +1,33 @@
-mealz_accounting_payment_ecash_form_submit:
-    path: /payment/ecash/form/submit
-    defaults: { _controller: App\Mealz\AccountingBundle\Controller\Payment\EcashController::postPayment }
-    methods: [POST]
+mealz_accounting_api_payment_cash:
+    path: /api/payment/cash/{profile}
+    defaults: { _controller: App\Mealz\AccountingBundle\Controller\Payment\CashController::postPaymentCash }
+    methods: [ POST ]
 
-mealz_accounting_payment_ecash_form:
-    path: /payment/ecash/form/{profile}
-    defaults: { _controller: App\Mealz\AccountingBundle\Controller\Payment\EcashController::getPaymentFormForProfile }
-
-mealz_accounting_payment_ecash_transaction_failure:
-    path: /payment/ecash/transaction/failure
-    defaults: { _controller: App\Mealz\AccountingBundle\Controller\Payment\EcashController::transactionFailure }
-
-mealz_accounting_payment_cash_form_submit:
-    path: /payment/cash/form/submit
-    defaults: { _controller: App\Mealz\AccountingBundle\Controller\Payment\CashController::paymentFormHandling }
-
-mealz_accounting_payment_cash_form:
-    path: /payment/cash/form/{profile}
-    defaults: { _controller: App\Mealz\AccountingBundle\Controller\Payment\CashController::getPaymentFormForProfile }
-
-mealz_accounting_payment_settlement_form:
-    path: /payment/settlement/form/{profile}
-    defaults: { _controller: App\Mealz\AccountingBundle\Controller\Payment\CashController::getSettlementFormForProfile }
-
-mealz_accounting_payment_transaction_history:
-    path: /accounting/transactions
-    defaults: { _controller: App\Mealz\AccountingBundle\Controller\Payment\CashController::showTransactionData }
-
-mealz_accounting_accounting_book:
-    path: /accounting/book
+mealz_accounting_api_accounting_book:
+    path: /api/accounting/book
     defaults: { _controller: App\Mealz\AccountingBundle\Controller\AccountingBookController::list }
 
-mealz_accounting_accounting_book_finance:
-    path: /accounting/book/finance/list/{dateRange}
-    defaults: { _controller: App\Mealz\AccountingBundle\Controller\AccountingBookController::listAllTransactions, dateRange: null }
-
-mealz_accounting_accounting_book_finance_export:
-    path: /accounting/book/finance/export/{dateRange}
-    defaults: { _controller: App\Mealz\AccountingBundle\Controller\AccountingBookController::exportPDF, dateRange: null }
-
-mealz_accounting.cost_sheet:
-    path: /print/costsheet
+mealz_accounting_api_costs:
+    path: /api/costs
     defaults: { _controller: App\Mealz\AccountingBundle\Controller\CostSheetController::list }
+    methods: [ GET ]
 
-mealz_accounting_cost_sheet_hide_user_request:
-    path: /print/costsheet/hideuser/request/{profile}
-    defaults: { _controller: App\Mealz\AccountingBundle\Controller\CostSheetController::hideUserRequest }
+mealz_accounting_api_costs_hide_user:
+    path: /api/costs/hideuser/{profile}
+    defaults: { _controller: App\Mealz\AccountingBundle\Controller\CostSheetController::hideUser }
+    methods: [ POST ]
 
-mealz_accounting_cost_sheet_send_settlement_request:
-    path: /print/costsheet/settlement/request/{username}
-    defaults: { _controller: App\Mealz\AccountingBundle\Controller\CostSheetController::sendSettlementRequest }
+mealz_accounting_api_costs_settlement:
+    path: /api/costs/settlement/{profile}
+    defaults: { _controller: App\Mealz\AccountingBundle\Controller\CostSheetController::postSettlement }
+    methods: [ POST ]
 
-mealz_accounting_cost_sheet_redirect_to_confirm:
-    path: /print/costsheet/redirect/confirm/{hash}
-    defaults: { _controller: App\Mealz\AccountingBundle\Controller\CostSheetController::renderConfirmButton }
+mealz_accounting_costs_settlement_get_profile:
+    path: /api/costs/profile/{hash}
+    defaults: { _controller: App\Mealz\AccountingBundle\Controller\CostSheetController::getProfileFromHash }
+    methods: [ GET ]
 
-mealz_accounting_cost_sheet_confirm_settlement_request:
-    path: /print/costsheet/settlement/confirm/{hash}
+mealz_accounting_api_costs_confirm_settlement:
+    path: /api/costs/settlement/confirm/{hash}
     defaults: { _controller: App\Mealz\AccountingBundle\Controller\CostSheetController::confirmSettlement }
+    methods: [ POST ]

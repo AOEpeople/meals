@@ -162,7 +162,7 @@ const router = createRouter({
             name: 'CostsSettlement',
             component: CostsSettlement,
             meta: {
-                allowedRoles: ['ROLE_ADMIN', 'ROLE_FINANCE']
+                allowedRoles: ['ROLE_ADMIN', 'ROLE_KITCHEN_STAFF']
             },
             props: true
         }

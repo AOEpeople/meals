@@ -4,7 +4,7 @@ export const visitSettlementLinkFromMail = () => {
         cy.log(`Body: ${html}`);
         const replaced = html.replace(/(\r\n|\n|\r|=)/gm, "");
         cy.log(`Replaced: ${replaced}`);
-        const confirmationURL = replaced.split('https://meals.test/')[1];
+        const confirmationURL = replaced.split(Cypress.env('baseUrl'))[1];
         cy.visit(`${Cypress.env('baseUrl')}${confirmationURL}`);
     });
 }

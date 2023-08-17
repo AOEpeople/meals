@@ -8,7 +8,8 @@
               v-for="label in labels"
               :key="label"
               scope="col"
-              class="text-left text-[11px] font-bold uppercase leading-4 tracking-[1.5px] last:text-right"
+              class="text-[11px] font-bold uppercase leading-4 tracking-[1.5px] last:text-right"
+              :class="style"
             >
               {{ label }}
             </th>
@@ -23,7 +24,26 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{
-  labels: string[]
-}>();
+import { computed } from 'vue';
+
+const props = withDefaults(defineProps<{
+  labels: string[],
+  headerTextPosition?: string
+}>(), {
+  headerTextPosition: 'left'
+});
+
+const style = computed(() => {
+  switch(props.headerTextPosition) {
+    case 'left':
+      return 'text-left';
+    case 'lmr':
+      return 'first:text-left last:text-right text-center';
+    case 'lfr':
+      return 'first:text-left text-right';
+    default:
+      return 'text-left';
+  }
+
+});
 </script>

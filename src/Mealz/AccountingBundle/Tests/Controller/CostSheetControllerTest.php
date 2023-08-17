@@ -45,34 +45,32 @@ class CostSheetControllerTest extends AbstractControllerTestCase
      */
     public function testHashWrittenInDatabaseWithBalance(): void
     {
-        $this->markTestSkipped('frontend Test');
         $profile = $this->getUserProfile(self::USER_STANDARD);
         $this->assertNull($profile->getSettlementHash(), 'SettlementHash was set already');
 
         $balance = $this->wallet->getBalance($profile);
         $this->assertGreaterThan(0.00, $balance);
 
-        $this->client->request('GET', '/print/costsheet/settlement/request/' . $profile->getUsername());
+        $this->client->request('POST', '/api/costs/settlement/' . $profile->getUsername());
         self::assertResponseIsSuccessful();
 
         $this->assertNotNull($profile->getSettlementHash(), 'SettlementHash was not set');
     }
 
     /**
-     * @testdox Check that settlement request is successful for a user with zero balance but
-     * the settlement hash hasn't changed because the the account doesn't need to be settled.
+     * @testdox Check that settlement request returns an error for a user with zero balance and
+     * the settlement hash hasn't changed because the account doesn't need to be settled.
      */
     public function testHashNotWrittenInDatabaseWithZeroBalance(): void
     {
-        $this->markTestSkipped('frontend Test');
         $profile = $this->getUserProfile('john.meals');
         $this->assertNull($profile->getSettlementHash(), 'SettlementHash was set already');
 
         $balance = $this->wallet->getBalance($profile);
         $this->assertEquals(0.00, $balance);
 
-        $this->client->request('GET', '/print/costsheet/settlement/request/' . $profile->getUsername());
-        $this->assertResponseIsSuccessful();
+        $this->client->request('POST', '/api/costs/settlement/' . $profile->getUsername());
+        $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
 
         $this->assertNull($profile->getSettlementHash(), 'Settlement was set');
     }
@@ -82,7 +80,6 @@ class CostSheetControllerTest extends AbstractControllerTestCase
      */
     public function testHashRemoveFromDatabase(): void
     {
-        $this->markTestSkipped('frontend Test');
         $profile = $this->getUserProfile(self::USER_STANDARD);
         $hash = '12345';
         $profile->setSettlementHash($hash);
@@ -105,7 +102,7 @@ class CostSheetControllerTest extends AbstractControllerTestCase
         $this->assertNotNull($profile->getSettlementHash());
 
         // Trigger action
-        $this->client->request('GET', '/print/costsheet/settlement/confirm/' . $hash);
+        $this->client->request('POST', '/api/costs/settlement/confirm/' . $hash);
         $this->assertResponseIsSuccessful();
 
         // Check new balance
@@ -119,13 +116,12 @@ class CostSheetControllerTest extends AbstractControllerTestCase
      */
     public function testHideUserRequestWithNonHiddenUser(): void
     {
-        $this->markTestSkipped('frontend Test');
         // Pre-action tests
         $profile = $this->getUserProfile(parent::USER_STANDARD);
         $this->assertFalse($profile->isHidden());
 
         // Trigger action
-        $this->client->request('GET', '/print/costsheet/hideuser/request/' . $profile->getUsername());
+        $this->client->request('POST', '/api/costs/hideuser/' . $profile->getUsername());
         $this->assertResponseIsSuccessful();
 
         // Check after action
@@ -138,7 +134,6 @@ class CostSheetControllerTest extends AbstractControllerTestCase
      */
     public function testHideUserRequestWithHiddenUser(): void
     {
-        $this->markTestSkipped('frontend Test');
         // Pre-action tests
         $profile = $this->getUserProfile(parent::USER_STANDARD);
 
@@ -149,8 +144,8 @@ class CostSheetControllerTest extends AbstractControllerTestCase
         $this->assertTrue($profile->isHidden());
 
         // Trigger action
-        $this->client->request('GET', '/print/costsheet/hideuser/request/' . $profile->getUsername());
-        $this->assertResponseIsSuccessful();
+        $this->client->request('POST', '/api/costs/hideuser/' . $profile->getUsername());
+        $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
 
         // Check after action
         $profile = $this->getUserProfile(parent::USER_STANDARD);

@@ -42,6 +42,27 @@
       "english": "Englischer Titel"
     }
   },
+  "costs": {
+    "header": "Liste der Kosten",
+    "cashRegister": "Kasse",
+    "search": "Benutzer filtern",
+    "showHidden": "Ausgeblendete Benutzer anzeigen",
+    "table": {
+      "earlier": "Vorher",
+      "total": "Gesamt",
+      "actions": "Aktionen"
+    },
+    "settlement": "Der Kontostand von #name# wird auf 0,00 € gesetzt. Möchtest Du fortfahren?",
+    "settle": "Fortfahren",
+    "cancel": "Abbrechen",
+    "payment": "Konto von #name# aufladen",
+    "amount": "Betrag",
+    "type": "Art",
+    "confirm": "Bestätigen",
+    "settlementMessage": "Bist du sicher, dass das Konto von #name# ausgeglichen werden soll und alle zukünftigen Essen storniert werden?",
+    "success": "Der Ausgleich des Kontos von #name# war erfolgreich.",
+    "settlementTitle": "Konto ausgleichen"
+  },
   "changeLanguage": "English version",
   "combiModal": {
     "title": "Wähle eine Kombination für dein Kombi-Meal",

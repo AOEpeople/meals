@@ -3,7 +3,6 @@
 .*
 .DS_Store
 /build/
-/public/images/
 /public/static/
 node_modules
 /tools/

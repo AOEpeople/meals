@@ -42,6 +42,27 @@
       "english": "English Title"
     }
   },
+  "costs": {
+    "header": "Liste der Kosten",
+    "cashRegister": "Kasse",
+    "search": "Filter users",
+    "showHidden": "Show hidden users",
+    "table": {
+      "earlier": "Prior to that",
+      "total": "Total",
+      "actions": "Actions"
+    },
+    "settlement": "The account balance of #name# will be set to € 0.00 Do you want to continue?",
+    "settle": "Continue",
+    "cancel": "Cancel",
+    "payment": "Add to balance of #name#",
+    "amount": "Amount",
+    "type": "Type",
+    "confirm": "Confirm",
+    "settlementMessage": "Are you sure you want to settle account of #name# and cancel all future meals?",
+    "success": "The account settlement of #name# was successful.",
+    "settlementTitle": "Settle account"
+  },
   "changeLanguage": "Deutsche Version",
   "combiModal": {
     "title": "Choose a combination for your combined dish",

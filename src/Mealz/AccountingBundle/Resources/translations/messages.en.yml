@@ -9,54 +9,7 @@ payment:
     text: I know that my account balance is %amount% € in the red and I will pay my debt very soon.
     button: Understood!
     pay_now: Pay now
-  transaction_history:
-    account: Account
-    add_funds: ADD FUNDS
-    balance_past: Balance on the
-    balance_now: Current balance
-    date: Date
-    description: Description
-    amount: "Amount:"
-    successful_payment: The payment was successful.
-    payment_failed: The payment failed.
-    cash_payment: Cash Payment
-    paypal_payment: PayPal payment
-    payment_method: Payment Method
-    pay: Pay
-    paypal: PayPal
-    invalid: Please check your input.
-    finances:
-      export: Export
-      pdf: meals-finance
-      date: Date
-      name: Name
-      amount: Amount
-      daily_closing: Daily closing
   costsheet:
-    account_settlement:
-      button: Settle account
-      fancybox:
-        message: The account balance of this user will be set to € 0.00 Do you want to continue?
-        continue: Continue
-        cancel: Cancel
-      request:
-        already_sent: A request to settle account for %name% has already been sent.
-        success: The request for account settlement for %name% has been sent to the HR department.
-        failure: The request failed.
-      confirmation:
-        message: Are you sure you want to settle account of %fullname% and cancel all future meals?
-        confirm: Confirm
-        success: The account settlement of %fullname% was successful.
-        failure: The request is invalid or has already been confirmed.
-    hide_user:
-      button: Hide user
-      fancybox:
-        message: This user will be hidden. Do you want to continue?
-        continue: Continue
-        cancel: Cancel
-      request:
-        success: The user %name% has been hidden.
-        info: The user %name% is already hidden.
     mail:
       subject: Request for account settlement
       body: '<html><head></head><body>Hi HR,<br><br>%admin% requested an account settlement for %fullname%.<br>Click on the following link to confirm it:<br><br><a href="%link%">%link%</a></body></html>'

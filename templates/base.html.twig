@@ -8,6 +8,33 @@
     <link rel="stylesheet" href="{{ assets_server }}{{ asset('static/app.css') }}" />
     {% block head %}{% endblock %}
 </head>
+<style>
+#loading-fallback-container {
+    display: grid;
+    place-content: center;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+#loading-fallback-img {
+    background: no-repeat center/100% url("{{ assets_server }}/images/loading.svg");
+    height: 20vw;
+    width: 20vw;
+    filter: drop-shadow(0 0 0.35rem rgba(0, 0, 0, 0.75));
+    animation: spin 1.5s ease-in-out infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(720deg);
+    }
+}
+</style>
 
 {% set pageView = block('pageView') is defined ? block('pageView') : '' %}
 

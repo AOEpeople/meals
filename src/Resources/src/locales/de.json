@@ -61,7 +61,8 @@
     "confirm": "Bestätigen",
     "settlementMessage": "Bist du sicher, dass das Konto von #name# ausgeglichen werden soll und alle zukünftigen Essen storniert werden?",
     "success": "Der Ausgleich des Kontos von #name# war erfolgreich.",
-    "settlementTitle": "Konto ausgleichen"
+    "settlementTitle": "Konto ausgleichen",
+    "settlementNotPossible": "Das Konto kann nicht ausgeglichen werden, weil es entweder schon ausgeglichen wurde oder ein Fehler aufgetreten ist."
   },
   "changeLanguage": "English version",
   "combiModal": {

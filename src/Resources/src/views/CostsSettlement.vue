@@ -14,14 +14,19 @@
       {{ t('costs.settlementMessage').replace('#name#', profile.fullName) }}
     </span>
     <CreateButton
-      v-if="isConfirmed === false"
+      v-if="isConfirmed === false && profile !== null"
       :btn-text="t('costs.confirm')"
       :managed="true"
       class="ml-0 w-fit cursor-pointer justify-self-center"
       @click="handleClick"
     />
     <span
-      v-else
+      v-else-if="profile === null && loaded === true && isConfirmed === false"
+    >
+      {{ t('costs.settlementNotPossible') }}
+    </span>
+    <span
+      v-else-if="isConfirmed === true && profile !== null"
       class="w-full pt-4"
     >
       {{ t('costs.success').replace('#name#', profile.fullName) }}
@@ -46,9 +51,12 @@ const props = defineProps<{
 
 const profile = ref<IProfile>(null);
 const isConfirmed = ref(false);
+const loaded = ref(false);
 
 onMounted(async () => {
   profile.value = await fetchProfileWithHash(props.hash);
+
+  loaded.value = true;
 });
 
 async function handleClick() {

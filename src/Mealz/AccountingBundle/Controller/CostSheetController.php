@@ -12,14 +12,10 @@ use App\Mealz\MealBundle\Service\Mailer\MailerInterface;
 use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
 use DateTime;
-use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-/**
- * @Security("is_granted('ROLE_KITCHEN_STAFF')")
- */
 class CostSheetController extends BaseController
 {
     private MailerInterface $mailer;
@@ -31,6 +27,9 @@ class CostSheetController extends BaseController
         $this->eventDispatcher = $eventDispatcher;
     }
 
+    /**
+     * @Security("is_granted('ROLE_KITCHEN_STAFF')")
+     */
     public function list(
         ParticipantRepositoryInterface $participantRepo,
         TransactionRepositoryInterface $transactionRepo
@@ -82,6 +81,9 @@ class CostSheetController extends BaseController
         ]);
     }
 
+    /**
+     * @Security("is_granted('ROLE_KITCHEN_STAFF')")
+     */
     public function hideUser(Profile $profile): JsonResponse
     {
         if (!$profile->isHidden()) {
@@ -109,6 +111,9 @@ class CostSheetController extends BaseController
         return ($result < 0) ? 0 : $result * -1;
     }
 
+    /**
+     * @Security("is_granted('ROLE_KITCHEN_STAFF')")
+     */
     public function postSettlement(Profile $profile, Wallet $wallet): JsonResponse
     {
         if (null === $profile->getSettlementHash() && $wallet->getBalance($profile) > 0.00) {
@@ -132,6 +137,9 @@ class CostSheetController extends BaseController
         }
     }
 
+    /**
+     * @Security("is_granted('ROLE_USER')")
+     */
     public function getProfileFromHash(string $hash, ProfileRepositoryInterface $profileRepository): JsonResponse
     {
         $queryResult = $profileRepository->findBy(['settlementHash' => urldecode($hash)]);
@@ -149,7 +157,7 @@ class CostSheetController extends BaseController
     }
 
     /**
-     * @throws Exception
+     * @Security("is_granted('ROLE_USER')")
      */
     public function confirmSettlement(
         string $hash,
@@ -190,6 +198,9 @@ class CostSheetController extends BaseController
         return new JsonResponse(null, 200);
     }
 
+    /**
+     * @Security("is_granted('ROLE_KITCHEN_STAFF')")
+     */
     private function sendSettlementRequestMail(Profile $profile, string $urlEncodedHash): void
     {
         $translator = $this->get('translator');

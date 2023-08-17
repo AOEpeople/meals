@@ -43,8 +43,8 @@
     }
   },
   "costs": {
-    "header": "Liste der Kosten",
-    "cashRegister": "Kasse",
+    "header": "Listof Costs",
+    "cashRegister": "Cash Register",
     "search": "Filter users",
     "showHidden": "Show hidden users",
     "table": {
@@ -61,7 +61,8 @@
     "confirm": "Confirm",
     "settlementMessage": "Are you sure you want to settle account of #name# and cancel all future meals?",
     "success": "The account settlement of #name# was successful.",
-    "settlementTitle": "Settle account"
+    "settlementTitle": "Settle account",
+    "settlementNotPossible": "The account can't be settled, either because it was already settled or because an error occured."
   },
   "changeLanguage": "Deutsche Version",
   "combiModal": {

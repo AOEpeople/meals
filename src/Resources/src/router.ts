@@ -98,7 +98,7 @@ const router = createRouter({
             name: 'Costs',
             component: Costs,
             meta: {
-                allowedRoles: ['ROLE_KITCHEN_STAFF', 'ROLE_ADMIN']
+                allowedRoles: ['ROLE_KITCHEN_STAFF', 'ROLE_ADMIN', 'ROLE_FINANCE']
             }
         },
         {
@@ -154,7 +154,7 @@ const router = createRouter({
             name: 'CashRegister',
             component: CashRegister,
             meta: {
-                allowedRoles: ['ROLE_ADMIN', 'ROLE_FINANCE']
+                allowedRoles: ['ROLE_ADMIN', 'ROLE_FINANCE', 'ROLE_KITCHEN_STAFF']
             }
         },
         {
@@ -162,7 +162,7 @@ const router = createRouter({
             name: 'CostsSettlement',
             component: CostsSettlement,
             meta: {
-                allowedRoles: ['ROLE_ADMIN', 'ROLE_FINANCE']
+                allowedRoles: ['ROLE_KITCHEN_STAFF', 'ROLE_USER', 'ROLE_ADMIN', 'ROLE_FINANCE']
             },
             props: true
         }

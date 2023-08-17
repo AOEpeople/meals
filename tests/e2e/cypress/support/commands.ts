@@ -2,6 +2,7 @@ import { baseUrl } from "./commands/urls";
 import {loginAs} from "./commands/login";
 import {setCookieInterceptor} from "./interceptors";
 import { resetDB } from "./commands/reset";
+import { visitSettlementLinkFromMail } from "./commands/mailhog";
 
 // add new command to the existing Cypress interface
 declare global {
@@ -35,6 +36,10 @@ declare global {
        * Resets the Database
        */
       resetDB: () => Cypress.Chainable<null>;
+      /**
+       * Visits the settlement link from the most recent mail
+       */
+      visitSettlementLinkFromMail: () => Cypress.Chainable<null>;
     }
   }
 }
@@ -58,3 +63,4 @@ Cypress.Commands.add("viewportXL", viewportXL);
 Cypress.Commands.add("visitMeals", visitMeals);
 Cypress.Commands.add("visitMealsViaWindowObject", visitMealsViaWindowObject);
 Cypress.Commands.add("resetDB", resetDB);
+Cypress.Commands.add("visitSettlementLinkFromMail", visitSettlementLinkFromMail);

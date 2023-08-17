@@ -1,0 +1,103 @@
+{
+    "total": 1,
+    "count": 1,
+    "start": 0,
+    "items": [
+        {
+            "ID": "I-RJPYoueZGM-cDMZwF73zyNWQpu3BHakCj0S3RJ1Ts=@mailhog.example",
+            "From": {
+                "Relays": null,
+                "Mailbox": "noreply",
+                "Domain": "localhost",
+                "Params": ""
+            },
+            "To": [
+                {
+                    "Relays": null,
+                    "Mailbox": "jon.doe",
+                    "Domain": "localhost",
+                    "Params": ""
+                }
+            ],
+            "Content": {
+                "Headers": {
+                    "Content-Type": [
+                        "multipart/alternative; boundary=aVqUQMOj"
+                    ],
+                    "Date": [
+                        "Wed, 16 Aug 2023 13:09:14 +0200"
+                    ],
+                    "From": [
+                        "Meals Bot \u003cnoreply@localhost\u003e"
+                    ],
+                    "MIME-Version": [
+                        "1.0"
+                    ],
+                    "Message-ID": [
+                        "\u003ca8da2c5e4449b1e15db1255668de06ae@localhost\u003e"
+                    ],
+                    "Received": [
+                        "from [127.0.0.1] by mailhog.example (MailHog)\r\n          id I-RJPYoueZGM-cDMZwF73zyNWQpu3BHakCj0S3RJ1Ts=@mailhog.example; Wed, 16 Aug 2023 13:09:14 +0200"
+                    ],
+                    "Return-Path": [
+                        "\u003cnoreply@localhost\u003e"
+                    ],
+                    "Subject": [
+                        "Request for account settlement"
+                    ],
+                    "To": [
+                        "jon.doe@localhost"
+                    ]
+                },
+                "Body": "--aVqUQMOj\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nHi HR,Meals, Kochomi requested an account settlement for Meals, Alice.Click=\r\n on the following link to confirm it:https://meals.test/costs/settlement/co=\r\nnfirm/98LNiSInBn4mw\r\n--aVqUQMOj\r\nContent-Type: text/html; charset=utf-8\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n\u003chtml\u003e\u003chead\u003e\u003c/head\u003e\u003cbody\u003eHi HR,\u003cbr\u003e\u003cbr\u003eMeals, Kochomi requested an account =\r\nsettlement for Meals, Alice.\u003cbr\u003eClick on the following link to confirm it:\u003c=\r\nbr\u003e\u003cbr\u003e\u003ca href=3D\"https://meals.test/costs/settlement/confirm/98LNiSInBn4mw=\r\n\"\u003ehttps://meals.test/costs/settlement/confirm/98LNiSInBn4mw\u003c/a\u003e\u003c/body\u003e\u003c/htm=\r\nl\u003e\r\n--aVqUQMOj--\r\n",
+                "Size": 981,
+                "MIME": null
+            },
+            "Created": "2023-08-16T13:09:14.118009459+02:00",
+            "MIME": {
+                "Parts": [
+                    {
+                        "Headers": {
+                            "Content-Transfer-Encoding": [
+                                "quoted-printable"
+                            ],
+                            "Content-Type": [
+                                "text/plain; charset=utf-8"
+                            ]
+                        },
+                        "Body": "Hi HR,Meals, Kochomi requested an account settlement for Meals, Alice.Click=\r\n on the following link to confirm it:https://meals.test/costs/settlement/co=\r\nnfirm/98LNiSInBn4mw",
+                        "Size": 263,
+                        "MIME": null
+                    },
+                    {
+                        "Headers": {
+                            "Content-Transfer-Encoding": [
+                                "quoted-printable"
+                            ],
+                            "Content-Type": [
+                                "text/html; charset=utf-8"
+                            ]
+                        },
+                        "Body": "\u003chtml\u003e\u003chead\u003e\u003c/head\u003e\u003cbody\u003eHi HR,\u003cbr\u003e\u003cbr\u003eMeals, Kochomi requested an account =\r\nsettlement for Meals, Alice.\u003cbr\u003eClick on the following link to confirm it:\u003c=\r\nbr\u003e\u003cbr\u003e\u003ca href=3D\"https://meals.test/costs/settlement/confirm/98LNiSInBn4mw=\r\n\"\u003ehttps://meals.test/costs/settlement/confirm/98LNiSInBn4mw\u003c/a\u003e\u003c/body\u003e\u003c/htm=\r\nl\u003e",
+                        "Size": 401,
+                        "MIME": null
+                    },
+                    {
+                        "Headers": {},
+                        "Body": "--",
+                        "Size": 2,
+                        "MIME": null
+                    }
+                ]
+            },
+            "Raw": {
+                "From": "noreply@localhost",
+                "To": [
+                    "jon.doe@localhost"
+                ],
+                "Data": "From: Meals Bot \u003cnoreply@localhost\u003e\r\nTo: jon.doe@localhost\r\nSubject: Request for account settlement\r\nMessage-ID: \u003ca8da2c5e4449b1e15db1255668de06ae@localhost\u003e\r\nMIME-Version: 1.0\r\nDate: Wed, 16 Aug 2023 13:09:14 +0200\r\nContent-Type: multipart/alternative; boundary=aVqUQMOj\r\n\r\n--aVqUQMOj\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\nHi HR,Meals, Kochomi requested an account settlement for Meals, Alice.Click=\r\n on the following link to confirm it:https://meals.test/costs/settlement/co=\r\nnfirm/98LNiSInBn4mw\r\n--aVqUQMOj\r\nContent-Type: text/html; charset=utf-8\r\nContent-Transfer-Encoding: quoted-printable\r\n\r\n\u003chtml\u003e\u003chead\u003e\u003c/head\u003e\u003cbody\u003eHi HR,\u003cbr\u003e\u003cbr\u003eMeals, Kochomi requested an account =\r\nsettlement for Meals, Alice.\u003cbr\u003eClick on the following link to confirm it:\u003c=\r\nbr\u003e\u003cbr\u003e\u003ca href=3D\"https://meals.test/costs/settlement/confirm/98LNiSInBn4mw=\r\n\"\u003ehttps://meals.test/costs/settlement/confirm/98LNiSInBn4mw\u003c/a\u003e\u003c/body\u003e\u003c/htm=\r\nl\u003e\r\n--aVqUQMOj--\r\n",
+                "Helo": "[127.0.0.1]"
+            }
+        }
+    ]
+}

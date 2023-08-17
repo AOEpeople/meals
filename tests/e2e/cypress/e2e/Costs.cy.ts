@@ -8,6 +8,7 @@ describe('Test Cost View', () => {
         // spy on the request to the backend to wait for them to resolve before testing
         cy.intercept('GET', '**/api/costs').as('getCosts');
         cy.intercept('POST', '**/api/costs/hideuser/**').as('hideUser');
+        cy.intercept('POST', '**/api/costs/settlement/confirm/**').as('confirmSettlement');
     });
 
     it('should visit /costs and filter for a user and hide it', () => {
@@ -48,14 +49,14 @@ describe('Test Cost View', () => {
 
         cy.get('input').first().clear();
 
-        cy.get('tr').should('have.length', 7);
+        cy.get('tr:visible').should('have.length', 7);
 
         cy.get('label').contains('Ausgeblendete Benutzer anzeigen').click();
 
-        cy.get('tr').should('have.length', 8);
+        cy.get('tr:visible').should('have.length', 8);
     });
 
-    it('should be able to settle an account', () => {
+    it('should be able to settle an account and add balance to it', () => {
         cy.visit('/costs');
 
         cy.wait('@getCosts');
@@ -81,11 +82,66 @@ describe('Test Cost View', () => {
             .find('td')
             .eq(7)
             .find('button')
+            .eq(1)
+            .click();
+
+        cy.get('form')
+            .find('input')
+            .first()
+            .clear()
+            .type('1234');
+
+        cy.get('form')
+            .find('input[value="Speichern"]')
+            .click();
+
+        cy.get('tr')
+            .eq(1)
+            .find('td')
+            .eq(7)
+            .find('button')
             .last()
             .click();
 
         cy.get('div').contains('Fortfahren').click();
 
         cy.visitSettlementLinkFromMail();
+        cy.get('div').contains('Bestätigen').click();
+        cy.wait('@confirmSettlement');
+
+        cy.visit('/costs');
+        cy.wait('@getCosts');
+
+        cy.get('input[placeholder="Benutzer filtern"]').type('Alice');
+
+        cy.get('tr')
+            .eq(1)
+            .find('td')
+            .eq(6)
+            .contains('0,00 €');
+
+        cy.get('tr')
+            .eq(1)
+            .find('td')
+            .eq(7)
+            .find('button')
+            .last()
+            .click();
+
+        cy.get('form')
+            .find('input')
+            .first()
+            .clear()
+            .type('147');
+
+        cy.get('form')
+            .find('input[value="Speichern"]')
+            .click();
+
+        cy.get('tr')
+            .eq(1)
+            .find('td')
+            .eq(6)
+            .contains('147,00 €');
     });
 });

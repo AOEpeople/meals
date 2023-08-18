@@ -69,7 +69,7 @@ class DayService
             }
             foreach ($mealArr as $meal) {
                 // if dish is null and mealId is set the meal is removed
-                if ($mealEntity->getId() === $meal['mealId'] && isset($meal['dishSlug'])) {
+                if (true === $this->isMealNotRemovable($mealEntity, $meal)) {
                     $canRemove = false;
                 }
                 if (false === $canRemove) {
@@ -81,5 +81,10 @@ class DayService
             $day->removeMeal($mealEntity);
             $this->em->remove($mealEntity);
         }
+    }
+
+    private function isMealNotRemovable(Meal $mealEntity, array $meal): bool
+    {
+        return $mealEntity->getId() === $meal['mealId'] && isset($meal['dishSlug']) && 'combined-dish' !== $meal['dishSlug'];
     }
 }

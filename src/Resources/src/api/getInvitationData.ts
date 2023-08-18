@@ -2,7 +2,7 @@ import useApi from "@/api/api";
 import { ref } from "vue"
 import {Day} from "@/api/getDashboardData";
 
-type GuestDay = {
+export type GuestDay = {
     guestData: Day
 }
 

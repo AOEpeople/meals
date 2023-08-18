@@ -52,9 +52,9 @@
             </div>
             <MenuItem
               v-slot="{ close }"
+              as="div"
             >
               <router-link
-                as="router-link"
                 to="/balance"
                 :class="['/balance' === $route.path ? 'bg-gray-100 text-gray-900 hover:bg-gray-100 hover:text-gray-900' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900', 'group flex items-center rounded-md p-2 text-sm font-medium']"
                 @click="close()"
@@ -67,7 +67,7 @@
               </router-link>
             </MenuItem>
             <div
-              class="group flex items-center rounded-md p-2 text-sm font-medium text-gray-600 hover:cursor-pointer hover:bg-gray-50 hover:text-gray-900"
+              class="group flex cursor-pointer items-center rounded-md p-2 text-sm font-medium text-gray-600 hover:cursor-pointer hover:bg-gray-50 hover:text-gray-900"
               @click="changeLocale"
             >
               <Icons

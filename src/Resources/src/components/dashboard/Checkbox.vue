@@ -79,8 +79,9 @@ const checkboxCSS = computed(() => {
         cssResult += 'bg-primary-4 hover:bg-primary-3 cursor-pointer border-0'
         return cssResult
       case 'offering':
-      case 'offerable':
         cssResult += 'bg-highlight cursor-pointer border-0'
+      case 'offerable':
+        cssResult += 'bg-primary-4 cursor-pointer border-0'
         return cssResult
     }
   } else if (isParticipating.value === false) {

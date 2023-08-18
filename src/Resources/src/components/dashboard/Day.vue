@@ -1,21 +1,21 @@
 <template>
   <div class="day-shadow mx-auto flex h-auto max-w-[414px] rounded bg-white sm:max-w-none">
-    <div :class="[day.isLocked ? 'bg-[#80909F]' : 'bg-primary-2', 'relative flex w-[24px] justify-center rounded-l-[5px]']">
-      <div
-        v-if="!day.isLocked && !emptyDay"
-        class="absolute bottom-[1px] left-[2px] z-[2] w-[24px] text-center"
+    <div
+      class="relative grid w-[24px] justify-center gap-2 rounded-l-[5px] py-[2px]"
+      :class="[day.isLocked ? 'bg-[#80909F]' : 'grid-rows-[minmax(0,1fr)_24px] bg-primary-2']"
+    >
+      <span
+        class="row-start-1 rotate-180 place-self-center text-center text-[11px] font-bold uppercase leading-4 tracking-[3px] text-white [writing-mode:vertical-lr]"
+        :class="day.isLocked || emptyDay || guestData ? 'py-[24px]' : 'pb-[24px]'"
       >
-        <GuestButton
-          v-if="!guestData"
-          :dayID="dayID"
-          :index="index"
-        />
-      </div>
-      <div class="relative top-1/2 grid min-w-[200px] -translate-y-1/2 -rotate-90 items-center">
-        <div class="text-center">
-          <span class="align-middle text-[11px] font-bold uppercase leading-4 tracking-[3px] text-white">{{ weekday }}</span>
-        </div>
-      </div>
+        {{ weekday }}
+      </span>
+      <GuestButton
+        v-if="!day.isLocked && !emptyDay && !guestData"
+        :dayID="dayID"
+        :index="index"
+        class="row-start-2 w-[24px] pl-[3px] text-center"
+      />
     </div>
     <div
       v-if="!emptyDay"
@@ -65,28 +65,29 @@
   </div>
 </template>
 
-<script setup>
-import MealData from '@/components/dashboard/MealData.vue'
-import Slots from '@/components/dashboard/Slots.vue'
-import {useI18n} from 'vue-i18n'
-import VariationsData from '@/components/dashboard/VariationsData.vue'
-import {computed} from 'vue'
-import {dashboardStore} from "@/stores/dashboardStore";
-import GuestButton from "@/components/dashboard/GuestButton.vue";
-import {translateWeekday} from "tools/localeHelper";
+<script setup lang="ts">
+import MealData from '@/components/dashboard/MealData.vue';
+import Slots from '@/components/dashboard/Slots.vue';
+import { useI18n } from 'vue-i18n';
+import VariationsData from '@/components/dashboard/VariationsData.vue';
+import { computed } from 'vue';
+import { dashboardStore } from '@/stores/dashboardStore';
+import GuestButton from '@/components/dashboard/GuestButton.vue';
+import { translateWeekday } from 'tools/localeHelper';
+import { GuestDay } from '@/api/getInvitationData';
 
 const { t, locale } = useI18n()
 
-const props = defineProps([
-    'weekID',
-    'dayID',
-    'index',
-    'guestData'
-])
+const props = defineProps<{
+  weekID: string,
+  dayID: string,
+  index: number,
+  guestData: GuestDay | undefined
+}>();
 
-const day = props.guestData ? props.guestData : dashboardStore.getDay(props.weekID, props.dayID)
-const weekday = computed(() => translateWeekday(day.date, locale))
-const emptyDay = Object.keys(day.meals).length === 0
+const day = props.guestData ? props.guestData.guestData : dashboardStore.getDay(props.weekID, props.dayID);
+const weekday = computed(() => translateWeekday(day.date, locale));
+const emptyDay = Object.keys(day.meals).length === 0;
 
 </script>
 

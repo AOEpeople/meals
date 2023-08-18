@@ -6,14 +6,18 @@
       >
         {{ dateRangeStr }}
       </th>
-      <th
+      <template
         v-for="menuDayId in Object.keys(menuParticipationsState.days)"
         :key="menuDayId"
-        :colspan="getColspanFromMeals(menuDayId)"
-        class="sticky z-30 border-b-2 border-r-2 border-solid border-gray-200 bg-[#f4f7f9] p-2 text-center"
       >
-        {{ new Date(getDayByWeekIdAndDayId(weekId, menuDayId).dateTime.date).toLocaleDateString(locale, { weekday: 'long' }) }}
-      </th>
+        <th
+          v-if="Object.keys(getDayByWeekIdAndDayId(weekId, menuDayId).meals).length > 0"
+          :colspan="getColspanFromMeals(menuDayId)"
+          class="sticky z-30 border-b-2 border-r-2 border-solid border-gray-200 bg-[#f4f7f9] p-2 text-center"
+        >
+          {{ new Date(getDayByWeekIdAndDayId(weekId, menuDayId).dateTime.date).toLocaleDateString(locale, { weekday: 'long' }) }}
+        </th>
+      </template>
     </tr>
     <MenuTableRow
       :week-id="weekId"

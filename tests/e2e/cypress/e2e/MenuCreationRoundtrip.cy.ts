@@ -28,8 +28,8 @@ describe('Test Creating a Menu', () => {
         // Hide Symphony's toolbar
         cy.get('a[class="hide-button"]').click();
 
-        // Go to 5th week (it should not have been created yet because of db reset)
-        cy.get('h4').eq(5).contains('Woche').click();
+        // Go to 7th week (it should not have been created yet because of db reset)
+        cy.get('h4').eq(6).contains('Woche').click();
 
         cy.wait(['@getDishesCount', '@getCategories', '@getDishes']);
 
@@ -348,8 +348,8 @@ describe('Test Creating a Menu', () => {
         // Hide Symphony's toolbar
         cy.get('a[class="hide-button"]').click();
 
-        // Go to 5th week (it should not have been created yet because of db reset)
-        cy.get('h4').eq(5).contains('Woche').click();
+        // Go to 7th week (it should not have been created yet because of db reset)
+        cy.get('h4').eq(6).contains('Woche').click();
 
         // change input
         cy.get('input')
@@ -370,7 +370,7 @@ describe('Test Creating a Menu', () => {
         cy.contains('div', 'Abbrechen').click();
 
         cy.get('h4')
-            .eq(5)
+            .eq(6)
             .contains('Woche')
             .parent()
             .find('div')

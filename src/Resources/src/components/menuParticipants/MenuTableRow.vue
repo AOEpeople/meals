@@ -8,6 +8,7 @@
       :key="`${menuIndex}-${menuDayId}`"
     >
       <slot
+        v-if="Object.keys(getDayByWeekIdAndDayId(weekId, menuDayId).meals).length > 0"
         name="dayMeals"
         v-bind="{ dayId: menuDayId, meals: getArrayFromDict(getDayByWeekIdAndDayId(weekId, menuDayId).meals) }"
       />
@@ -28,6 +29,7 @@ const { menuParticipationsState } = useParticipations(props.weekId);
 const { getDayByWeekIdAndDayId } = useWeeks();
 
 function getArrayFromDict(dict: Dictionary<SimpleMeal[]>) {
-  return Object.values(dict).reduce((outputArr, mealArr) => [...outputArr, ...mealArr]);
+  const meals = Object.values(dict).reduce((outputArr, mealArr) => [...outputArr, ...mealArr], []);
+  return meals;
 }
 </script>

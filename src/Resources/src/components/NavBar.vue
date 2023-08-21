@@ -140,6 +140,7 @@
   import ErrorTrafficLight from './navbar/ErrorTrafficLight.vue'
   import { getNextThreeDays } from '@/api/getMealsNextThreeDays'
   import { getShowParticipations } from '@/api/getShowParticipations';
+  import MessageBanner from './messageBanner/MessageBanner.vue'
 
   const { t } = useI18n()
   defineProps({

@@ -14,12 +14,24 @@ export default function useApi<T>(method: string, url: string, contentType = 'ap
             method: method,
             url: url,
             data: data,
-            headers: {'content-type': contentType },
+            headers: { 'content-type': contentType },
         })
             .then((res) => {
                 response.value = res.data
             })
-            .catch(() => error.value = true)
+            .catch((err: unknown) => {
+                error.value = true;
+                // @ts-expect-error bla
+                console.log(err.response);
+                if (axios.isAxiosError(err))  {
+                  // Access to config, request, and response
+                  console.log('Err.message: ', err.message);
+                  console.log('response error: ', err.toJSON());
+                } else if (err instanceof Error) {
+                  // Just a stock error
+                  console.log('Stock err.msg: ', err.message);
+                }
+            })
     }
     return { response, request, error }
 }

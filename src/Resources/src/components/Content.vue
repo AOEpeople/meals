@@ -4,6 +4,9 @@
       class="mx-auto"
       :class="[isShowParticipations ? 'max-w-full' : 'mt-10 max-w-screen-aoe']"
     >
+      <MessageBanner
+        v-if="isShowParticipations !== true"
+      />
       <Suspense>
         <template #default>
           <router-view v-slot="{ Component }">
@@ -21,6 +24,7 @@
 <script setup>
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
+import MessageBanner from '@/components/messageBanner/MessageBanner.vue';
 
 const route = useRoute();
 

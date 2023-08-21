@@ -37,7 +37,7 @@ class MealAdminControllerTest extends AbstractControllerTestCase
 
     public function testGetWeeks(): void
     {
-        $meal = $this->getRecentMeal();
+        $meal = $this->getRecentMeal(new DateTime('+3 day'));
 
         // Request
         $this->client->request('GET', '/api/weeks');

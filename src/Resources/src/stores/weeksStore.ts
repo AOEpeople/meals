@@ -5,10 +5,11 @@ import putWeekUpdate from "@/api/putWeekUpdate";
 import getDishCount from "@/api/getDishCount";
 import { DayDTO, WeekDTO } from "@/interfaces/DayDTO";
 import { Dictionary } from "types/types";
-import { reactive, readonly } from "vue";
+import { reactive, readonly, watch } from "vue";
 import { isMessage } from "@/interfaces/IMessage";
 import { isResponseArrayOkay } from "@/api/isResponseOkay";
 import getEmptyWeek from "@/api/getEmptyWeek";
+import useEventsBus from "@/tools/eventBus";
 
 export interface Week {
     id: number,
@@ -75,6 +76,18 @@ const WeeksState = reactive<WeeksState>({
 const MenuCountState = reactive<MenuCountState>({
     counts: {}
 });
+
+const { emit } = useEventsBus();
+
+watch(
+    () => WeeksState.error,
+    () => {
+        console.log('WeekState error: ', WeeksState.error);
+        if (WeeksState.error !== '') {
+            emit('flashmessage', ['ERROR', WeeksState.error]);
+        }
+    }
+);
 
 export function useWeeks() {
 
@@ -154,13 +167,15 @@ export function useWeeks() {
     async function updateWeek(week: WeekDTO) {
 
         const { error, response } = await putWeekUpdate(week);
-
+        console.log('Result: ', response.value);
         if (error.value === true || isMessage(response.value) === true) {
+            console.log('isMsg, Result: ', response.value);
             WeeksState.error = response.value?.message;
             return;
         }
 
         await getWeeks();
+        emit('flashmessage', ['', 'Success']);
     }
 
     /**

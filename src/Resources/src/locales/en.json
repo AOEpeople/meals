@@ -112,6 +112,14 @@
       }
     }
   },
+  "flashMessage": {
+    "error": {
+      "108": "The meal cannot be changed because it already has participations"
+    },
+    "success": {
+      "menu": "Menü wurde gespeichert"
+    }
+  },
   "guest": {
     "form": {
       "firstname": "First name",

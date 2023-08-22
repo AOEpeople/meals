@@ -82,7 +82,6 @@ const { emit } = useEventsBus();
 watch(
     () => WeeksState.error,
     () => {
-        console.log('WeekState error: ', WeeksState.error);
         if (WeeksState.error !== '') {
             emit('flashmessage', ['ERROR', WeeksState.error]);
         }
@@ -167,15 +166,13 @@ export function useWeeks() {
     async function updateWeek(week: WeekDTO) {
 
         const { error, response } = await putWeekUpdate(week);
-        console.log('Result: ', response.value);
         if (error.value === true || isMessage(response.value) === true) {
-            console.log('isMsg, Result: ', response.value);
             WeeksState.error = response.value?.message;
             return;
         }
 
         await getWeeks();
-        emit('flashmessage', ['', 'Success']);
+        emit('flashmessage', ['', 'menu']);
     }
 
     /**

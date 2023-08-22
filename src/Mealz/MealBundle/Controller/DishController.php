@@ -75,7 +75,7 @@ class DishController extends BaseListController
                 false === isset($parameters['titleEn']) ||
                 false === isset($parameters['oneServingSize'])
             ) {
-                throw new Exception('Missing parameters');
+                throw new Exception('201: Missing parameters');
             }
 
             $dish = new Dish();

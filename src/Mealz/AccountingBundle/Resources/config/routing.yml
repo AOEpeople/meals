@@ -12,6 +12,14 @@ mealz_accounting_api_accounting_book:
     path: /api/accounting/book
     defaults: { _controller: App\Mealz\AccountingBundle\Controller\AccountingBookController::list }
 
+mealz_accounting_accounting_book_finance:
+    path: /api/accounting/book/finance/list/{dateRange}
+    defaults: { _controller: App\Mealz\AccountingBundle\Controller\AccountingBookController::listAllTransactions, dateRange: null }
+
+mealz_accounting_accounting_book_finance_export:
+    path: /api/accounting/book/finance/export/{dateRange}
+    defaults: { _controller: App\Mealz\AccountingBundle\Controller\AccountingBookController::exportPDF, dateRange: null }
+
 mealz_accounting_api_costs:
     path: /api/costs
     defaults: { _controller: App\Mealz\AccountingBundle\Controller\CostSheetController::list }

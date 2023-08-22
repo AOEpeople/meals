@@ -1,0 +1,56 @@
+[
+  {
+    "heading": "01.08. - 31.08.2023",
+    "transactions": {
+      "2023-08-01": [
+        {
+          "amount": 346.29000000000002,
+          "date": "01.08.2023",
+          "firstName": "Bob",
+          "name": "Meals"
+        },
+        {
+          "amount": 259.92000000000002,
+          "date": "01.08.2023",
+          "firstName": "Finance",
+          "name": "Meals"
+        },
+        {
+          "amount": 218.21000000000001,
+          "date": "01.08.2023",
+          "firstName": "Jane",
+          "name": "Meals"
+        },
+        {
+          "amount": 311.17000000000002,
+          "date": "01.08.2023",
+          "firstName": "Kochomi",
+          "name": "Meals"
+        },
+        {
+          "amount": 395.98000000000002,
+          "date": "01.08.2023",
+          "firstName": "Admin",
+          "name": "Meals"
+        }
+      ]
+    }
+  },
+  {
+    "heading": "01.09. - 13.09.2023",
+    "transactions": [
+      {
+        "amount": 311.17000000000002,
+        "date": "01.08.2023",
+        "firstName": "Kochomi",
+        "name": "Meals"
+      },
+      {
+        "amount": 395.98000000000002,
+        "date": "01.08.2023",
+        "firstName": "Admin",
+        "name": "Meals"
+      }
+    ]
+  }
+]

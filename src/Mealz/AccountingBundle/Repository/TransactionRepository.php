@@ -175,8 +175,9 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
 
         $result = [];
         foreach ($queryResult as $item) {
+            //TODO: should not be floatval
             $result[] = [
-                'amount' => $item['amount'],
+                'amount' => floatval($item['amount']),
                 'date' => $item['date']->format('d.m.Y'),
                 'firstName' => $item['firstName'],
                 'name' => $item['name'],

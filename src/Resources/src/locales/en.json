@@ -171,6 +171,15 @@
       }
     }
   },
+  "finance": {
+    "table": {
+      "date": "Date",
+      "name": "Name",
+      "amount": "Amount",
+      "dailyClosing": "Daily closing",
+      "export": "export"
+    }
+  },
   "guest": {
     "form": {
       "firstname": "First name",

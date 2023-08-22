@@ -56,12 +56,9 @@ class AccountingBookController extends BaseController
      *
      * @throws Exception
      */
-    public function listAllTransactions(?string $dateRange, TransactionRepositoryInterface $transactionRepo): Response
+    public function listAllTransactions(?string $dateRange, TransactionRepositoryInterface $transactionRepo): JsonResponse
     {
-        $headingFirst = null;
-        $transactionsFirst = null;
-        $minDateFirst = null;
-        $maxDateFirst = null;
+        $response = [];
 
         if (null === $dateRange) {
             // Get first and last day of previous month
@@ -80,6 +77,10 @@ class AccountingBookController extends BaseController
             $maxDate->setTime(23, 59, 59);
 
             $transactionsFirst = $transactionRepo->findAllTransactionsInDateRange($minDateFirst, $maxDateFirst);
+            $response[] = [
+                'heading' => $headingFirst,
+                'transactions' => $transactionsFirst,
+            ];
         } else {
             // Get date range set with date range picker by user
             $dateRangeArray = explode('&', $dateRange);
@@ -90,15 +91,12 @@ class AccountingBookController extends BaseController
         $heading = $minDate->format('d.m.') . ' - ' . $maxDate->format('d.m.Y');
 
         $transactions = $transactionRepo->findAllTransactionsInDateRange($minDate, $maxDate);
-
-        return $this->render('MealzAccountingBundle:Accounting/Finance:finances.html.twig', [
-            'headingFirst' => $headingFirst,
+        $response[] = [
             'heading' => $heading,
-            'transactionsFirst' => $transactionsFirst,
             'transactions' => $transactions,
-            'minDate' => (null === $minDateFirst) ? $minDate->format('m/d/Y') : $minDateFirst->format('m/d/Y'),
-            'maxDate' => (null === $maxDateFirst) ? $maxDate->format('m/d/Y') : $maxDateFirst->format('m/d/Y'),
-        ]);
+        ];
+
+        return new JsonResponse($response, 200);
     }
 
     /**

@@ -94,7 +94,7 @@ class CostSheetController extends BaseController
 
             return new JsonResponse(null, 200);
         } else {
-            return new JsonResponse(['message' => 'Profile is already hidden'], 500);
+            return new JsonResponse(['message' => '501: Profile is already hidden'], 500);
         }
     }
 
@@ -131,9 +131,9 @@ class CostSheetController extends BaseController
 
             return new JsonResponse(null, 200);
         } elseif (null !== $profile->getSettlementHash() && $wallet->getBalance($profile) > 0.00) {
-            return new JsonResponse(['message' => 'Settlement request already send'], 500);
+            return new JsonResponse(['message' => '502: Settlement request already send'], 500);
         } else {
-            return new JsonResponse(['message' => 'Settlement request failed'], 500);
+            return new JsonResponse(['message' => '503: Settlement request failed'], 500);
         }
     }
 
@@ -146,7 +146,7 @@ class CostSheetController extends BaseController
         $profile = $queryResult[0];
 
         if (null === $profile) {
-            return new JsonResponse(['message' => 'Not found'], 404);
+            return new JsonResponse(['message' => '504: Not found'], 404);
         }
 
         return new JsonResponse([
@@ -192,7 +192,7 @@ class CostSheetController extends BaseController
                 ]
             );
         } else {
-            return new JsonResponse(['message' => 'Settlement request invalid or already processed'], 500);
+            return new JsonResponse(['message' => '505: Settlement request invalid or already processed'], 500);
         }
 
         return new JsonResponse(null, 200);

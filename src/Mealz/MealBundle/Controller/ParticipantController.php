@@ -300,7 +300,7 @@ class ParticipantController extends BaseController
 
         try {
             if (true === $meal->isCombinedMeal() && false === isset($parameters['combiDishes'])) {
-                throw new Exception('Combined Meals need exactly two dishes');
+                throw new Exception('401: Combined Meals need exactly two dishes');
             }
 
             if (true === isset($parameters['combiDishes'])) {

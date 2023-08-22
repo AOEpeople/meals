@@ -112,6 +112,14 @@
       }
     }
   },
+  "flashMessage": {
+    "error": {
+      "108": "Ein Gericht, dass geändert werden soll darf keine Teilnehmer haben"
+    },
+    "success": {
+      "menu": "Menü wurde gespeichert"
+    }
+  },
   "guest": {
     "form": {
       "firstname": "Vorname",

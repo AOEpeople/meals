@@ -48,7 +48,7 @@ class DishVariationController extends BaseController
                 $dishVariation->setTitleDe($parameters['titleDe']);
                 $dishVariation->setTitleEn($parameters['titleEn']);
             } else {
-                throw new Exception('Title not set');
+                throw new Exception('202: Title not set');
             }
 
             $this->em->persist($dishVariation);

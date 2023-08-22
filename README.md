@@ -156,3 +156,30 @@ IDP_SERVER=https://login.some-domain.com/
 IDP_CLIENT_ID=client-id
 IDP_CLIENT_SECRET=client-secret
 ```
+
+### API Error Messages
+*MealAdminController 1xx*
+  * 101: Invalid JSON was received
+  * 102: No menu can be created in this week because a menu already exists
+  * 103: The week for this daterange is not empty, because it already exists
+  * 104: There was an unknown error on generating an empty week
+  * 105: A day whose meals should be edited doesn't exist
+  * 106: There were more than two meals requested for a specific day
+  * 107: The requested meal contains an unknown dish
+  * 108: The meal cannot be changed because it already has participations
+*DishController / DishVariationController 2xx*
+  * 201: There are parameters missing to create a dish
+  * 202: One or more titles haven't been sent
+  * 303: There was an error while counting the number of times dishes were taken
+*CategoryController 3xx*
+  * 301: The choosen titles for the category either are missing or do already exist
+*ParticipantController 4xx*
+  * 401: To add a user to a combined dish, the combined dish needs to have exactly two dishes
+*CostSheetController 5xx*
+  * 501: The profile that is requested to be hidden, is already hidden
+  * 502: The settlement request has already been sent
+  * 503: The settlement request failed
+  * 504: The profile for this hash cannot be found
+  * 505: The settlement request was already processed or the request is invalid
+*CashController 6xx*
+  * 601: The amount of cash that will be added, has to be more than zero

@@ -100,7 +100,7 @@ class CategoryController extends BaseListController
             $this->em->persist($category);
             $this->em->flush();
         } else {
-            return new JsonResponse(['message' => 'Category titles not set or they already exist'], 500);
+            return new JsonResponse(['message' => '301: Category titles not set or they already exist'], 500);
         }
 
         return new JsonResponse(null, 200);

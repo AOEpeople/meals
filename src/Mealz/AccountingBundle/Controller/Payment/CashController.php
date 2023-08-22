@@ -41,7 +41,7 @@ class CashController extends BaseController
 
                 return new JsonResponse($transaction->getAmount(), 200);
             } else {
-                throw new Exception('Amount less than 0');
+                throw new Exception('601: Amount less than 0');
             }
         } catch (Exception $e) {
             $logger = $this->get('monolog.logger.balance');

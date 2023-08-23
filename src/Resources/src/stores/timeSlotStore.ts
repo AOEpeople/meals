@@ -1,11 +1,13 @@
 import { Dictionary } from "types/types";
-import { reactive, readonly } from "vue";
+import { reactive, readonly, watch } from "vue";
 import { useTimeSlotData } from "@/api/getTimeSlotData";
 import { useUpdateSlot } from "@/api/putSlotUpdate";
 import postCreateSlot from "@/api/postCreateSlot";
 import deleteSlot from "@/api/deleteSlot";
 import { isMessage } from "@/interfaces/IMessage";
 import { isResponseObjectOkay, isResponseDictOkay } from "@/api/isResponseOkay";
+import useFlashMessage from "@/services/useFlashMessage";
+import { FlashMessageType } from "@/enums/FlashMessage";
 
 interface ITimeSlotState {
     timeSlots: Dictionary<TimeSlot>,
@@ -40,6 +42,20 @@ const TimeSlotState = reactive<ITimeSlotState>({
     isLoading: false,
     error: ''
 });
+
+const { sendFlashMessage } = useFlashMessage();
+
+watch(
+    () => TimeSlotState.error,
+    () => {
+        if (TimeSlotState.error !== '') {
+            sendFlashMessage({
+                type: FlashMessageType.ERROR,
+                message: TimeSlotState.error
+            });
+        }
+    }
+);
 
 export function useTimeSlots() {
 
@@ -101,6 +117,10 @@ export function useTimeSlots() {
 
         if (isResponseObjectOkay<TimeSlot>(error, response, isTimeSlot) === true) {
             updateTimeSlotState(response.value, id);
+            sendFlashMessage({
+                type: FlashMessageType.INFO,
+                message: 'timeslot.updated'
+            });
         } else {
             TimeSlotState.error = 'Error on changing the slot state';
         }
@@ -135,6 +155,10 @@ export function useTimeSlots() {
             return;
         }
 
+        sendFlashMessage({
+            type: FlashMessageType.INFO,
+            message: 'timeslot.created'
+        });
         await getTimeSlots();
     }
 
@@ -150,6 +174,10 @@ export function useTimeSlots() {
             return;
         }
 
+        sendFlashMessage({
+            type: FlashMessageType.INFO,
+            message: 'timeslot.deleted'
+        });
         await getTimeSlots();
     }
 

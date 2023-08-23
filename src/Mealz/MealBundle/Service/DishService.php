@@ -90,7 +90,7 @@ class DishService
         try {
             $arr = $this->dishRepository->countNumberDishesWereTaken($this->dishConsCountPeriod);
         } catch (Exception $e) {
-            throw new Exception('Error in count: ' . $e->getMessage());
+            throw new Exception('203: Error in count: ' . $e->getMessage());
         }
 
         return $arr;

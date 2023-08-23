@@ -1,7 +1,9 @@
 import { Dictionary } from "types/types";
-import { reactive } from "vue";
+import { reactive, watch } from "vue";
 import getTransactionHistory from "@/api/getTransactionHistory";
 import { isResponseObjectOkay } from "@/api/isResponseOkay";
+import useFlashMessage from "@/services/useFlashMessage";
+import { FlashMessageType } from "@/enums/FlashMessage";
 
 export interface IUserTransaction {
     firstName: string,
@@ -63,6 +65,20 @@ export function useAccounting() {
         error: '',
         isLoading: false
     });
+
+    const { sendFlashMessage } = useFlashMessage();
+
+    watch(
+        () => TransactionState.error,
+        () => {
+            if (TransactionState.error !== '') {
+                sendFlashMessage({
+                    type: FlashMessageType.ERROR,
+                    message: TransactionState.error
+                });
+            }
+        }
+    );
 
     /**
      * Fetches the a list of all users and their transactions.

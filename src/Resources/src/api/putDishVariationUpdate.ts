@@ -1,3 +1,4 @@
+import { IMessage } from "@/interfaces/IMessage";
 import useApi from "./api";
 import { CreateDishVariationDTO } from "./postCreateDishVariation";
 import { Dish } from "@/stores/dishesStore";
@@ -9,7 +10,7 @@ import { Dish } from "@/stores/dishesStore";
  * @returns The updated dish variation
  */
 export default async function putDishVariationUpdate(slug: string, dishVariation: CreateDishVariationDTO) {
-    const { error, request, response } = useApi<Dish>(
+    const { error, request, response } = useApi<Dish | IMessage>(
         'PUT',
         `api/dishes/variation/${slug}`,
         'application/json',

@@ -1,5 +1,6 @@
 import { Category } from "@/stores/categoriesStore";
 import useApi from "./api";
+import { IMessage } from "@/interfaces/IMessage";
 
 /**
  * Performs a PUT request to update a category
@@ -13,7 +14,7 @@ export default async function putCategoryUpdate(slug: string, titleDe: string, t
         titleEn: titleEn
     };
 
-    const { error, request, response } = useApi<Category>(
+    const { error, request, response } = useApi<Category | IMessage>(
         'PUT',
         `api/categories/${slug}`,
         'application/json',

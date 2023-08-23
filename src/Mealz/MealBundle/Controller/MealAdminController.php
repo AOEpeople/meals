@@ -166,7 +166,6 @@ class MealAdminController extends BaseController
                 $this->handleDay($day);
             }
         } catch (Exception $e) {
-
             return new JsonResponse(['message' => $e->getMessage()], 500);
         }
 

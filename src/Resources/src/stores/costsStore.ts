@@ -2,13 +2,15 @@ import getCosts from "@/api/getCosts";
 import { DateTime } from "@/api/getDashboardData";
 import { isResponseObjectOkay } from "@/api/isResponseOkay";
 import { Dictionary } from "types/types";
-import { reactive, readonly } from "vue";
+import { reactive, readonly, watch } from "vue";
 import { translateMonth } from "@/tools/localeHelper";
 import postHideUser from "@/api/postHideUser";
 import { IMessage, isMessage } from "@/interfaces/IMessage";
 import postSettlement from "@/api/postSettlement";
 import postCashPayment from "@/api/postCashPayment";
 import postConfirmSettlement from "@/api/postConfirmSettlement";
+import useFlashMessage from "@/services/useFlashMessage";
+import { FlashMessageType } from "@/enums/FlashMessage";
 
 export interface ICosts {
     columnNames: Dictionary<DateTime>,
@@ -30,9 +32,23 @@ interface ICostsState extends ICosts {
 const CostsState = reactive<ICostsState>({
     columnNames: {},
     users: {},
-    error: "",
+    error: '',
     isLoading: false
 });
+
+const { sendFlashMessage } = useFlashMessage();
+
+watch(
+    () => CostsState.error,
+    () => {
+        if (CostsState.error !== '') {
+            sendFlashMessage({
+                type: FlashMessageType.ERROR,
+                message: CostsState.error
+            });
+        }
+    }
+);
 
 function isCosts(costs: ICosts): costs is ICosts {
 
@@ -84,11 +100,15 @@ export function useCosts() {
     async function hideUser(username: string) {
         const { error, response } = await postHideUser(username);
 
-        if (error.value === true || isMessage(response)) {
-            CostsState.error = 'Error on hiding user';
+        if (error.value === true || isMessage(response.value)) {
+            CostsState.error = isMessage(response.value) === true ? response.value.message : 'Error on hiding user';
         } else {
             CostsState.users[username].hidden = true;
             CostsState.error = '';
+            sendFlashMessage({
+                type: FlashMessageType.INFO,
+                message: 'costs.hidden'
+            });
         }
     }
 
@@ -100,10 +120,14 @@ export function useCosts() {
     async function sendSettlement(username: string) {
         const { error, response } = await postSettlement(username);
 
-        if (error.value === true || isMessage(response)) {
-            CostsState.error = isMessage(response) === true ? response.value.message : 'Error on sending settlement';
+        if (error.value === true || isMessage(response.value)) {
+            CostsState.error = isMessage(response.value) === true ? response.value.message : 'Error on sending settlement';
         } else {
             CostsState.error = '';
+            sendFlashMessage({
+                type: FlashMessageType.INFO,
+                message: 'costs.settlementSent'
+            });
         }
     }
 
@@ -115,11 +139,15 @@ export function useCosts() {
     async function sendCashPayment(username: string, amount: number) {
         const { error, response } = await postCashPayment(username, amount);
 
-        if (error.value === true || isMessage(response)) {
-            CostsState.error = isMessage(response) === true ? (response.value as IMessage).message : 'Error on sending settlement';
+        if (error.value === true || isMessage(response.value)) {
+            CostsState.error = isMessage(response.value) === true ? (response.value as IMessage).message : 'Error on sending settlement';
         } else if (typeof response.value === 'number') {
             CostsState.error = '';
             CostsState.users[username].costs['total'] += response.value;
+            sendFlashMessage({
+                type: FlashMessageType.INFO,
+                message: 'costs.cashPayment'
+            });
         }
     }
 
@@ -130,11 +158,15 @@ export function useCosts() {
     async function confirmSettlement(hash: string) {
         const { error, response } = await postConfirmSettlement(hash);
 
-        if (error.value === true || isMessage(response)) {
-            CostsState.error = isMessage(response) === true ? (response.value as IMessage).message : 'Error on confirming settlement';
+        if (error.value === true || isMessage(response.value)) {
+            CostsState.error = isMessage(response.value) === true ? (response.value as IMessage).message : 'Error on confirming settlement';
             return false;
         } else {
             CostsState.error = '';
+            sendFlashMessage({
+                type: FlashMessageType.INFO,
+                message: 'costs.settlementConfirmed'
+            });
             return true;
         }
     }

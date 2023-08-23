@@ -170,7 +170,7 @@ IDP_CLIENT_SECRET=client-secret
 *DishController / DishVariationController 2xx*
   * 201: There are parameters missing to create a dish
   * 202: One or more titles haven't been sent
-  * 303: There was an error while counting the number of times dishes were taken
+  * 203: There was an error while counting the number of times dishes were taken
 *CategoryController 3xx*
   * 301: The choosen titles for the category either are missing or do already exist
 *ParticipantController 4xx*

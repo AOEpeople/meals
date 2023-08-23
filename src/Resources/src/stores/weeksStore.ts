@@ -9,7 +9,8 @@ import { reactive, readonly, watch } from "vue";
 import { isMessage } from "@/interfaces/IMessage";
 import { isResponseArrayOkay } from "@/api/isResponseOkay";
 import getEmptyWeek from "@/api/getEmptyWeek";
-import useEventsBus from "@/tools/eventBus";
+import useFlashMessage from "@/services/useFlashMessage";
+import { FlashMessageType } from "@/enums/FlashMessage";
 
 export interface Week {
     id: number,
@@ -77,13 +78,16 @@ const MenuCountState = reactive<MenuCountState>({
     counts: {}
 });
 
-const { emit } = useEventsBus();
+const { sendFlashMessage } = useFlashMessage();
 
 watch(
     () => WeeksState.error,
     () => {
         if (WeeksState.error !== '') {
-            emit('flashmessage', ['ERROR', WeeksState.error]);
+            sendFlashMessage({
+                type: FlashMessageType.ERROR,
+                message: WeeksState.error
+            });
         }
     }
 );
@@ -156,6 +160,10 @@ export function useWeeks() {
         }
 
         await getWeeks();
+        sendFlashMessage({
+            type: FlashMessageType.INFO,
+            message: 'menu.created'
+        });
         return response.value;
     }
 
@@ -172,7 +180,10 @@ export function useWeeks() {
         }
 
         await getWeeks();
-        emit('flashmessage', ['', 'menu']);
+        sendFlashMessage({
+            type: FlashMessageType.INFO,
+            message: 'menu.updated'
+        });
     }
 
     /**

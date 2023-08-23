@@ -1,11 +1,13 @@
 import { Dictionary } from "types/types";
-import { Ref, reactive, readonly } from "vue";
+import { Ref, reactive, readonly, watch } from "vue";
 import getParticipations from "@/api/getParticipations";
 import { isResponseObjectOkay } from "@/api/isResponseOkay";
 import putParticipation from "@/api/putParticipation";
 import { isMessage, IMessage } from "@/interfaces/IMessage";
 import deleteParticipation from "@/api/deleteParticipation";
 import { IProfile } from "./profilesStore";
+import useFlashMessage from "@/services/useFlashMessage";
+import { FlashMessageType } from "@/enums/FlashMessage";
 
 interface IMenuParticipationsState {
     days: IMenuParticipationDays,
@@ -70,6 +72,20 @@ const menuParticipationsState = reactive<IMenuParticipationsState>({
     filterStr: ''
 });
 
+const { sendFlashMessage } = useFlashMessage();
+
+watch(
+    () => menuParticipationsState.error,
+    () => {
+        if (menuParticipationsState.error !== '') {
+            sendFlashMessage({
+                type: FlashMessageType.ERROR,
+                message: menuParticipationsState.error
+            });
+        }
+    }
+);
+
 export function useParticipations(weekId: number) {
 
     /**
@@ -108,6 +124,10 @@ export function useParticipations(weekId: number) {
         const { error, response } = await putParticipation(mealId, profileId, combinedDishes);
 
         handleParticipationUpdate(response, error, dayId, profileFullname);
+        sendFlashMessage({
+            type: FlashMessageType.INFO,
+            message: 'participations.added'
+        });
     }
 
     /**
@@ -126,6 +146,10 @@ export function useParticipations(weekId: number) {
         const { error, response } = await deleteParticipation(mealId, profileId);
 
         handleParticipationUpdate(response, error, dayId, profileFullname);
+        sendFlashMessage({
+            type: FlashMessageType.INFO,
+            message: 'participations.removed'
+        });
     }
 
     /**

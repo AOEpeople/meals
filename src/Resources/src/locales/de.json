@@ -114,10 +114,56 @@
   },
   "flashMessage": {
     "error": {
-      "108": "Ein Gericht, dass geändert werden soll darf keine Teilnehmer haben"
+      "101": "Die abgeschickten Daten haben nicht den Anforderungen entsprochen. Deshalb konnte die Anfrage nicht bearbeitet werden.",
+      "102": "Die Woche kann nicht erstellt werden, da sie schon existiert. Falls das Problem weiterhin auftritt, kontaktiere den Support.",
+      "103": "Die Woche kann nicht erstellt werden, da sie schon existiert. Falls das Problem weiterhin auftritt, kontaktiere den Support.",
+      "104": "Die Woche kann durch einen unbekannten Fehler nicht erstellt werden. Falls das Problem weiterhin auftritt, kontaktiere den Support.",
+      "105": "Ein Tag des Menüs, für den Mahlzeiten editiert wurden, scheint nicht zu existieren. Falls das Problem weiterhin auftritt, kontaktiere den Support.",
+      "106": "Es wurden mehr als die maximal 2 zulässigen Mahlzeiten (für einen Tag) versucht einzutragen. Die Anfrage wurde abgebrochen.",
+      "107": "Das Menü scheint unbekannte Gerichte zu enthalten. Die Anfrage wurde abgebrochen.",
+      "108": "Ein Gericht, dass geändert werden soll darf keine Teilnehmer haben.",
+      "201": "Es fehlen noch Informationen um das Gericht estellen zu können.",
+      "202": "Ein oder mehrere Titel für das zu erstellende Gericht scheinen zu fehlen.",
+      "203": "Es gab einen fehler beim zählen, wie häufig einzelne Gerichte bestellt wurden.",
+      "301": "Die gewählten Titel für die Kategorie fehlen oder existieren schon.",
+      "401": "Um einen Benutzer zu einem Kombi-Gericht hinzuzufügen, müssen zwei Gerichte ausgewählt werden.",
+      "501": "Das Profil, dass versteckt werden soll ist bereits versteckt.",
+      "502": "Die Anfrage zum Ausgleich des Kontos dieses Nutzers wurde bereits verschickt.",
+      "503": "Die Anfrage zum Ausgleich ist fehlgeschlagen.",
+      "504": "Das Profil für den Ausgleich konnte nicht gefunden werden.",
+      "505": "Diese Anfrage zum Ausgleich wurde entweder bereits bearbeitet, oder ist ungültig.",
+      "601": "Der Betrag der dem Konto hinzugefügt werden soll, muss mehr als 0 sein."
     },
     "success": {
-      "menu": "Menü wurde gespeichert"
+      "menu": {
+        "created": "Das Menü wurde erfolgreich erstellt.",
+        "updated": "Das Menü wurde erfolgreich bearbeitet."
+      },
+      "category": {
+        "deleted": "Die Kategorie wurde erfolgreich gelöscht.",
+        "created": "Die Kategorie wurde erfolgreich erstellt.",
+        "updated": "Die Kategorie wurde erfolgreich bearbeitet."
+      },
+      "costs": {
+        "hidden": "Der Benutzer wurde erfolgreich versteckt.",
+        "settlementSent": "Die Anfrage zum Ausgleich des Kontos wurde erfolgreich verschickt.",
+        "cashPayment": "Der Betrag wurde dem Konto hinzugefügt.",
+        "settlementConfirmed": "Das Konto wurde erfolgreich ausgeglichen."
+      },
+      "dishes": {
+        "created": "Das Gericht wurde erfolgreich erstellt.",
+        "deleted": "Das Gericht wurde erfolgreich gelöscht.",
+        "updated": "Das Gericht wurde erfolgreich bearbeitet."
+      },
+      "participations": {
+        "added": "Ein Benutzer wurde zu einer Mahlzeit hinzugefügt.",
+        "removed": "Ein Benutzer wurde aus einer Mahlzeit entfernt."
+      },
+      "timeslot": {
+        "created": "Der Zeitslot wurde erfolgreich erstellt.",
+        "deleted": "Der Zeitslot wurde erfolgreich gelöscht.",
+        "updated": "Der Zeitslot wurde erfolgreich bearbeitet."
+      }
     }
   },
   "guest": {

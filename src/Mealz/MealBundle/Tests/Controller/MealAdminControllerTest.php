@@ -88,9 +88,9 @@ class MealAdminControllerTest extends AbstractControllerTestCase
 
         // Trying to create the same week twice should fail
         $this->createFutureEmptyWeek($date);
-        $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
         $response = json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertEquals('week already exists', $response['message']);
+        $this->assertEquals('102: week already exists', $response['message']);
     }
 
     public function testCount(): void

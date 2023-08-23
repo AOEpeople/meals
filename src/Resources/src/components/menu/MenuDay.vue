@@ -118,14 +118,14 @@ watch(
       return {
         dishSlug: dishSlug,
         mealId: mealIds.length > 0 ? mealIds.pop() : null,
-        participationLimit: getParticipationLimitFromModel(dishSlug, mealKeys[0])
+        participationLimit: getParticipationLimitFromModel(dishSlug, mealKeys[1])
       };
     });
 });
 
 onMounted(() => {
   // get mealKeys
-  mealKeys = Object.keys(props.modelValue.meals)
+  mealKeys = Object.keys(props.modelValue.meals);
   selectedDishOne.value = getDishArrayBySlugs(props.modelValue.meals[mealKeys[0]].map((meal: MealDTO) => meal.dishSlug));
   selectedDishTwo.value = getDishArrayBySlugs(props.modelValue.meals[mealKeys[1]].map((meal: MealDTO) => meal.dishSlug));
 });

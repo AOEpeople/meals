@@ -86,6 +86,11 @@
     },
     "guest": "Copied to clipboard!"
   },
+  "debt" : {
+    "text": "I know that my account balance is #balance# in the red and will pay my debt very soon.",
+    "ok": "Understood!",
+    "pay": "Pay now"
+  },
   "dish": {
     "create": "create Dish",
     "table": {

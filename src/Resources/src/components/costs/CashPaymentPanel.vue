@@ -9,7 +9,8 @@
     <InputLabel
       v-model="amount"
       :type="'number'"
-      :min="0"
+      :min="1"
+      :required="true"
     />
     <SubmitButton />
   </form>
@@ -25,7 +26,7 @@ import SubmitButton from '../misc/SubmitButton.vue';
 const { t } = useI18n();
 const { sendCashPayment, getFullNameByUser } = useCosts();
 
-const amount = ref('0');
+const amount = ref('1');
 
 const props = defineProps<{
   username: string

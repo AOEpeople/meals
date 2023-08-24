@@ -10,11 +10,13 @@
       <InputLabel
         v-model="titleDeInput"
         :label-text="t('dish.popover.german')"
+        :required="required"
         class="z-[1] col-span-2 row-start-1 sm:col-span-1 sm:col-start-1 sm:row-start-1"
       />
       <InputLabel
         v-model="titleEnInput"
         :label-text="t('dish.popover.english')"
+        :required="required"
         class="z-[1] col-span-2 row-start-2 sm:col-span-1 sm:col-start-2 sm:row-start-1"
       />
       <InputLabel
@@ -98,8 +100,10 @@ const descriptionDeInput = ref(props.descriptionDe);
 const descriptionEnInput = ref(props.descriptionEn);
 const categoryDropDown = ref<InstanceType<typeof CategoriesDropDown> | null>(null);
 const oneSizeServingInput = ref(props.oneSizeServing);
+const required = ref(false);
 
 async function onSubmit() {
+  required.value = true;
   if (titleDeInput.value === '' || titleEnInput.value === '') {
     return;
   }

@@ -9,10 +9,12 @@
     <InputLabel
       v-model="titleDeInput"
       :label-text="t('category.popover.german')"
+      :required="required"
     />
     <InputLabel
       v-model="titleEnInput"
       :label-text="t('category.popover.english')"
+      :required="required"
       class="mb-5 mt-3"
     />
     <SubmitButton />
@@ -43,8 +45,10 @@ const props = withDefaults(defineProps<{
 
 const titleDeInput = ref(props.titleDe);
 const titleEnInput = ref(props.titleEn);
+const required = ref(false);
 
 async function onSubmit() {
+  required.value = true;
   if (titleDeInput.value === '' || titleEnInput.value === '') {
     return;
   }

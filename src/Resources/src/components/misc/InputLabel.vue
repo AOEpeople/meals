@@ -14,7 +14,8 @@
       :name="labelText"
       :placeholder="labelText"
       :min="min"
-      class="w-full rounded-full border-2 border-solid border-[#CAD6E1] px-4 py-2 text-[14px] font-medium text-[#9CA3AF]"
+      :required="required"
+      class="w-full rounded-full border-2 border-solid border-[#CAD6E1] px-4 py-2 text-[14px] font-medium text-[#9CA3AF] invalid:border-[#E02927]"
     >
   </div>
 </template>
@@ -27,12 +28,14 @@ const props = withDefaults(defineProps<{
   modelValue: string,
   type?: string,
   min?: number,
-  labelVisible?: boolean
+  labelVisible?: boolean,
+  required?: boolean
 }>(), {
   labelText: '',
   type: 'text',
   min: 0,
-  labelVisible: true
+  labelVisible: true,
+  required: false
 });
 
 const emit = defineEmits(['update:modelValue']);

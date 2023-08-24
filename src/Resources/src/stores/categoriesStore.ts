@@ -1,10 +1,12 @@
-import { reactive, readonly } from "vue";
+import { Ref, reactive, readonly, watch } from "vue";
 import getCategoriesData from "@/api/getCategoriesData";
 import deleteCategory from "@/api/deleteCategory";
 import postCreateCategory from "@/api/postCreateCategory";
 import putCategoryUpdate from "@/api/putCategoryUpdate";
 import { isMessage } from "@/interfaces/IMessage";
 import { isResponseObjectOkay, isResponseArrayOkay } from "@/api/isResponseOkay";
+import useFlashMessage from "@/services/useFlashMessage";
+import { FlashMessageType } from "@/enums/FlashMessage";
 
 export interface Category {
     id: number,
@@ -38,6 +40,20 @@ const CategoriesState = reactive<CategoriesState>({
     isLoading: false,
     error: ''
 });
+
+const { sendFlashMessage } = useFlashMessage();
+
+watch(
+    () => CategoriesState.error,
+    () => {
+        if (CategoriesState.error !== '') {
+            sendFlashMessage({
+                type: FlashMessageType.ERROR,
+                message: CategoriesState.error
+            });
+        }
+    }
+);
 
 export function useCategories() {
 
@@ -79,6 +95,10 @@ export function useCategories() {
         }
 
         await getCategories();
+        sendFlashMessage({
+            type: FlashMessageType.INFO,
+            message: 'category.deleted'
+        });
     }
 
     /**
@@ -94,6 +114,10 @@ export function useCategories() {
         }
 
         await getCategories();
+        sendFlashMessage({
+            type: FlashMessageType.INFO,
+            message: 'category.created'
+        });
     }
 
     /**
@@ -105,10 +129,19 @@ export function useCategories() {
     async function editCategory(index: number, titleDe: string, titleEn: string) {
         const { error, response } = await putCategoryUpdate(CategoriesState.categories[index].slug, titleDe, titleEn);
 
-        if (isResponseObjectOkay<Category>(error, response) === true) {
-            updateCategoryState(index, response.value);
+        if (isMessage(response.value) === false && isResponseObjectOkay<Category>(error, response as Ref<Category>) === true) {
+            updateCategoryState(index, response.value as Category);
+            sendFlashMessage({
+                type: FlashMessageType.INFO,
+                message: 'category.updated'
+            });
+        } else if (isMessage(response.value)) {
+            CategoriesState.error = response.value.message;
         } else {
-            CategoriesState.error = 'Error on updating category';
+            sendFlashMessage({
+                type: FlashMessageType.UNKNOWN,
+                message: 'Unknown Error!'
+            });
         }
     }
 

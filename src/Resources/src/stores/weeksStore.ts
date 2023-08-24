@@ -5,10 +5,12 @@ import putWeekUpdate from "@/api/putWeekUpdate";
 import getDishCount from "@/api/getDishCount";
 import { DayDTO, WeekDTO } from "@/interfaces/DayDTO";
 import { Dictionary } from "types/types";
-import { reactive, readonly } from "vue";
+import { reactive, readonly, watch } from "vue";
 import { isMessage } from "@/interfaces/IMessage";
 import { isResponseArrayOkay } from "@/api/isResponseOkay";
 import getEmptyWeek from "@/api/getEmptyWeek";
+import useFlashMessage from "@/services/useFlashMessage";
+import { FlashMessageType } from "@/enums/FlashMessage";
 
 export interface Week {
     id: number,
@@ -75,6 +77,20 @@ const WeeksState = reactive<WeeksState>({
 const MenuCountState = reactive<MenuCountState>({
     counts: {}
 });
+
+const { sendFlashMessage } = useFlashMessage();
+
+watch(
+    () => WeeksState.error,
+    () => {
+        if (WeeksState.error !== '') {
+            sendFlashMessage({
+                type: FlashMessageType.ERROR,
+                message: WeeksState.error
+            });
+        }
+    }
+);
 
 export function useWeeks() {
 
@@ -144,6 +160,10 @@ export function useWeeks() {
         }
 
         await getWeeks();
+        sendFlashMessage({
+            type: FlashMessageType.INFO,
+            message: 'menu.created'
+        });
         return response.value;
     }
 
@@ -154,13 +174,16 @@ export function useWeeks() {
     async function updateWeek(week: WeekDTO) {
 
         const { error, response } = await putWeekUpdate(week);
-
         if (error.value === true || isMessage(response.value) === true) {
             WeeksState.error = response.value?.message;
             return;
         }
 
         await getWeeks();
+        sendFlashMessage({
+            type: FlashMessageType.INFO,
+            message: 'menu.updated'
+        });
     }
 
     /**

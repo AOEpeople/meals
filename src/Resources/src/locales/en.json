@@ -112,6 +112,60 @@
       }
     }
   },
+  "flashMessage": {
+    "error": {
+      "101": "The data sent did not meet the requirements. Therefore the request could not be processed.",
+      "102": "The week cannot be created because it already exists. If the problem persists, contact support.",
+      "103": "The week cannot be created because it already exists. If the problem persists, contact support.",
+      "104": "The week cannot be created due to an unknown error. If the problem persists, contact support.",
+      "105": "A tag of the menu for which meals have been edited does not appear to exist. If the problem persists, contact support.",
+      "106": "An attempt was made to enter more than the maximum 2 meals allowed (for one day). The request was canceled.",
+      "107": "The menu seems to contain unknown dishes. The request was canceled.",
+      "108": "The meal cannot be changed because it already has participations.",
+      "201": "Information is still missing to be able to create the dish.",
+      "202": "One or more titles for the dish being created appear to be missing.",
+      "203": "There was an error when counting how often individual dishes were ordered.",
+      "301": "The selected titles for the category are missing or already exist.",
+      "401": "To add a user to a combined meal, two dishes must be selected.",
+      "501": "The profile to be hidden is already hidden.",
+      "502": "The request to balance this user's account has already been sent.",
+      "503": "The settlement request failed.",
+      "504": "The profile for the settlement request could not be found.",
+      "505": "The settlement request has either already been processed or the request is invalid.",
+      "601": "The amount to add to the account must be more than 0."
+    },
+    "success": {
+      "menu": {
+        "created": "The menu was successfully created.",
+        "updated": "The menu was successfully changed."
+      },
+      "category": {
+        "deleted": "The category was succefully deleted.",
+        "created": "The category was successfully created.",
+        "updated": "The category was successfully updated."
+      },
+      "costs": {
+        "hidden": "The user was successfully hidden.",
+        "settlementSent": "The request to settle the users balance was successfully sent.",
+        "cashPayment": "Added a cash payment to the balance.",
+        "settlementConfirmed": "The account was successfully settled."
+      },
+      "dishes": {
+        "created": "The dish was successfully created.",
+        "deleted": "The dish was succefully deleted.",
+        "updated": "The dish was successfully updated."
+      },
+      "participations": {
+        "added": "A user was successfully added a meal.",
+        "removed": "A user was succefully removed fromm a meal."
+      },
+      "timeslot": {
+        "created": "The timeslot was successfully created.",
+        "deleted": "The timeslot was succefully deleted.",
+        "updated": "The timeslot was successfully updated."
+      }
+    }
+  },
   "guest": {
     "form": {
       "firstname": "First name",

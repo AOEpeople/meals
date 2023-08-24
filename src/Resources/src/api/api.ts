@@ -14,12 +14,15 @@ export default function useApi<T>(method: string, url: string, contentType = 'ap
             method: method,
             url: url,
             data: data,
-            headers: {'content-type': contentType },
-        })
-            .then((res) => {
-                response.value = res.data
-            })
-            .catch(() => error.value = true)
+            headers: { 'content-type': contentType },
+        }).then((res) => {
+            response.value = res.data
+        }).catch((err) => {
+            error.value = true;
+            if (err.response.data !== null && err.response.data !== undefined) {
+                response.value = err.response.data;
+            }
+        });
     }
-    return { response, request, error }
+    return { response, request, error };
 }

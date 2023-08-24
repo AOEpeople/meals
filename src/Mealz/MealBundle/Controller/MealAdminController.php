@@ -92,7 +92,7 @@ class MealAdminController extends BaseController
         ]);
 
         if (null !== $week) {
-            return new JsonResponse(['message' => 'week already exists'], 400);
+            return new JsonResponse(['message' => '102: week already exists'], 500);
         }
 
         $dateTimeModifier = $this->getParameter('mealz.lock_toggle_participation_at');
@@ -100,7 +100,7 @@ class MealAdminController extends BaseController
 
         $data = json_decode($request->getContent(), true);
         if (false === isset($data) || false === isset($data['days']) || false === isset($data['enabled'])) {
-            return new JsonResponse(['message' => 'invalid json'], 400);
+            return new JsonResponse(['message' => '101: invalid json'], 500);
         }
 
         $days = $data['days'];
@@ -131,7 +131,7 @@ class MealAdminController extends BaseController
         ]);
 
         if (null !== $week) {
-            return new JsonResponse(['message' => 'week already exists'], 500);
+            return new JsonResponse(['message' => '103: week already exists'], 500);
         }
 
         $dateTimeModifier = $this->getParameter('mealz.lock_toggle_participation_at');
@@ -141,7 +141,7 @@ class MealAdminController extends BaseController
             return new JsonResponse($week, 200);
         }
 
-        return new JsonResponse(['message' => 'Error on generating empty week'], 500);
+        return new JsonResponse(['message' => '104: Error on generating empty week'], 500);
     }
 
     public function edit(Request $request, Week $week): JsonResponse
@@ -155,7 +155,7 @@ class MealAdminController extends BaseController
             $data['id'] !== $week->getId() ||
             false === isset($data['enabled'])
         ) {
-            return new JsonResponse(['message' => 'invalid json'], 500);
+            return new JsonResponse(['message' => '101: invalid json'], 500);
         }
 
         $days = $data['days'];
@@ -205,7 +205,7 @@ class MealAdminController extends BaseController
         // check if day exists
         $dayEntity = $this->dayRepository->find($day['id']);
         if (null === $dayEntity) {
-            throw new Exception('day not found');
+            throw new Exception('105: day not found');
         }
 
         if (null !== $day['enabled']) {
@@ -221,7 +221,7 @@ class MealAdminController extends BaseController
          * not in the collection get removed.
          */
         if (3 < count($mealCollection)) {
-            throw new Exception('too many meals requested');
+            throw new Exception('106: too many meals requested');
         }
 
         $this->dayService->removeUnusedMeals($dayEntity, $mealCollection);
@@ -248,7 +248,7 @@ class MealAdminController extends BaseController
         $mealCollection = $dayData['meals'];
         // max 2 main meals allowed
         if (2 < count($mealCollection)) {
-            throw new Exception('too many meals requested');
+            throw new Exception('106: too many meals requested');
         }
 
         // parentMeal is an array of either one meal without variations or 1-2 variations
@@ -278,7 +278,7 @@ class MealAdminController extends BaseController
             }
             $dishEntity = $this->dishRepository->findOneBy(['slug' => $meal['dishSlug']]);
             if (null === $dishEntity) {
-                throw new Exception('dish not found for slug: ' . $meal['dishSlug']);
+                throw new Exception('107: dish not found for slug: ' . $meal['dishSlug']);
             }
             // if mealId is null create meal
             if (false === isset($meal['mealId'])) {
@@ -318,7 +318,7 @@ class MealAdminController extends BaseController
             $this->setParticipationLimit($mealEntity, $meal);
             $dayEntity->addMeal($mealEntity);
         } else {
-            throw new Exception('meal has participations for id: ' . $meal['mealId']);
+            throw new Exception('108: meal has participations for id: ' . $meal['mealId']);
         }
     }
 }

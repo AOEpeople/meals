@@ -1,5 +1,5 @@
 import getDishes from "@/api/getDishes";
-import { computed, reactive, readonly } from "vue";
+import { Ref, computed, reactive, readonly, watch } from "vue";
 import postCreateDish, { CreateDishDTO } from "@/api/postCreateDish";
 import deleteDish from "@/api/deleteDish";
 import putDishUpdate from "@/api/putDishUpdate";
@@ -9,6 +9,8 @@ import putDishVariationUpdate from "@/api/putDishVariationUpdate";
 import { useCategories } from "./categoriesStore";
 import { isMessage } from "@/interfaces/IMessage";
 import { isResponseObjectOkay, isResponseArrayOkay } from "@/api/isResponseOkay";
+import useFlashMessage from "@/services/useFlashMessage";
+import { FlashMessageType } from "@/enums/FlashMessage";
 
 export interface Dish {
     id: number,
@@ -53,6 +55,20 @@ const DishesState = reactive<DishesState>({
     isLoading: false,
     error: ''
 });
+
+const { sendFlashMessage } = useFlashMessage();
+
+watch(
+    () => DishesState.error,
+    () => {
+        if (DishesState.error !== '') {
+            sendFlashMessage({
+                type: FlashMessageType.ERROR,
+                message: DishesState.error
+            });
+        }
+    }
+);
 
 export function useDishes() {
 
@@ -112,6 +128,10 @@ export function useDishes() {
             return;
         }
 
+        sendFlashMessage({
+            type: FlashMessageType.INFO,
+            message: 'dishes.created'
+        });
         await fetchDishes();
     }
 
@@ -127,6 +147,10 @@ export function useDishes() {
             return;
         }
 
+        sendFlashMessage({
+            type: FlashMessageType.INFO,
+            message: 'dishes.deleted'
+        });
         await fetchDishes();
     }
 
@@ -143,6 +167,10 @@ export function useDishes() {
             return;
         }
 
+        sendFlashMessage({
+            type: FlashMessageType.INFO,
+            message: 'dishes.created'
+        });
         await fetchDishes();
     }
 
@@ -158,6 +186,10 @@ export function useDishes() {
             return;
         }
 
+        sendFlashMessage({
+            type: FlashMessageType.INFO,
+            message: 'dishes.deleted'
+        });
         await fetchDishes();
     }
 
@@ -169,10 +201,14 @@ export function useDishes() {
     async function updateDishVariation(slug: string, variation: CreateDishVariationDTO) {
         const { error, response } = await putDishVariationUpdate(slug, variation);
 
-        if (isResponseObjectOkay<Dish>(error, response, isDish) === true && typeof response.value.parentId === 'number') {
-            updateDishVariationInState(response.value.parentId, response.value);
+        if (isMessage(response.value) === false && isResponseObjectOkay<Dish>(error, response as Ref<Dish>, isDish) === true && typeof (response.value as Dish).parentId === 'number') {
+            updateDishVariationInState((response.value as Dish).parentId, response.value as Dish);
+            sendFlashMessage({
+                type: FlashMessageType.INFO,
+                message: 'dishes.updated'
+            });
         } else {
-            DishesState.error = 'Error on updating dishVariation';
+            DishesState.error = isMessage(response.value) ? response.value.message : 'Error on updating dishVariation';
         }
     }
 
@@ -184,10 +220,14 @@ export function useDishes() {
     async function updateDish(id: number, dish: CreateDishDTO) {
         const { error, response } = await putDishUpdate(getDishById(id).slug, dish);
 
-        if (isResponseObjectOkay<Dish>(error, response, isDish) === true) {
-            updateDishesState(response.value);
+        if (isMessage(response.value) === false && isResponseObjectOkay<Dish>(error, response as Ref<Dish>, isDish) === true) {
+            updateDishesState(response.value as Dish);
+            sendFlashMessage({
+                type: FlashMessageType.INFO,
+                message: 'dishes.updated'
+            });
         } else {
-            DishesState.error = 'Error on updating a dish';
+            DishesState.error = isMessage(response.value) ? response.value.message : 'Error on updating a dish';
         }
     }
 

@@ -1,8 +1,10 @@
 import getAbsentingProfiles from "@/api/getAbsentingProfiles";
 import { isResponseArrayOkay, isResponseObjectOkay } from "@/api/isResponseOkay";
-import { reactive, readonly } from "vue";
+import { reactive, readonly, watch } from "vue";
 import getProfileWithHash from '@/api/getProfileWithHash';
 import { IMessage, isMessage } from "@/interfaces/IMessage";
+import useFlashMessage from "@/services/useFlashMessage";
+import { FlashMessageType } from "@/enums/FlashMessage";
 
 interface IProfilesState {
     profiles: IProfile[],
@@ -38,6 +40,20 @@ export function useProfiles(weekId: number) {
         error: '',
         isLoading: false
     });
+
+    const { sendFlashMessage } = useFlashMessage();
+
+    watch(
+        () => ProfilesState.error,
+        () => {
+            if (ProfilesState.error !== '') {
+                sendFlashMessage({
+                    type: FlashMessageType.ERROR,
+                    message: ProfilesState.error
+                });
+            }
+        }
+    );
 
     /**
      * Fetches the absenting profiles for the weekId given by usePofiles() and stores them in the ProfilesState.

@@ -9,10 +9,12 @@
     <InputLabel
       v-model="titleDeInput"
       :label-text="t('dish.popover.german')"
+      :required="required"
     />
     <InputLabel
       v-model="titleEnInput"
       :label-text="t('dish.popover.english')"
+      :required="required"
     />
     <SubmitButton />
   </form>
@@ -44,8 +46,10 @@ const props = withDefaults(defineProps<{
 
 const titleDeInput = ref(props.titleDe);
 const titleEnInput = ref(props.titleEn);
+const required = ref(false);
 
 async function onSubmit() {
+  required.value = true;
   if (titleDeInput.value === '' || titleEnInput.value === '') {
     return;
   } else if (props.edit === true && typeof props.slug === 'string') {

@@ -10,6 +10,7 @@
       v-model="titleInput"
       :label-text="t('slot.slotTitle')"
       class="col-span-6 col-start-1"
+      :required="required"
     />
     <InputLabel
       v-model="limitInput"
@@ -56,8 +57,13 @@ const props = withDefaults(defineProps<{
 const titleInput = ref(props.title);
 const limitInput = ref(props.limit);
 const orderInput = ref(props.order);
+const required = ref(false);
 
 async function onSubmit() {
+  required.value = true;
+  if (titleInput.value === '') {
+    return;
+  }
   const timeSlot: TimeSlot = {
     title: titleInput.value,
     limit: parseInt(limitInput.value),

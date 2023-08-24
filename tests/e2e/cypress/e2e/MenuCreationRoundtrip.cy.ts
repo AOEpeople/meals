@@ -1,5 +1,3 @@
-import { clear } from "console";
-
 describe('Test Creating a Menu', () => {
     beforeEach(() => {
         cy.setCookie('locale', 'de');

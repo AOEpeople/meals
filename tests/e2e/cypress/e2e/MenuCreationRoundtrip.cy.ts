@@ -1,9 +1,9 @@
 describe('Test Creating a Menu', () => {
     beforeEach(() => {
+        cy.resetDB();
         cy.setCookie('locale', 'de');
         cy.loginAs('kochomi');
         cy.visitMeals();
-        cy.resetDB();
 
         // spy on the request to the backend to wait for them to resolve before testing
         cy.intercept('GET', '**/api/weeks').as('getWeeks');
@@ -158,14 +158,15 @@ describe('Test Creating a Menu', () => {
 
         // Edit Menu
         cy.get('input')
-            .eq(8)
-            .parent()
-            .find('input')
-            .click()
-            .parent().parent()
-            .find('li').contains('Innards DE')
-            .click();
+        .eq(8)
+        .parent()
+        .find('input')
+        .click()
+        .parent().parent()
+        .find('li').contains('Innards DE')
+        .click();
 
+        cy.get('[data-cy="msgClose"]').click();
         cy.get('h2').should('contain', 'Woche').click();
 
         cy.get('input')
@@ -201,6 +202,8 @@ describe('Test Creating a Menu', () => {
         cy.contains('input', 'Speichern').click();
 
         cy.wait(['@putMenu', '@getWeeks']);
+
+        cy.get('[data-cy="msgClose"]').click();
 
         // Check that all meals are saved
         cy.get('input')
@@ -287,6 +290,7 @@ describe('Test Creating a Menu', () => {
         // Add participant
         cy.get('input').first().click().clear().type('finance');
         cy.get('li').contains('Meals, Finance').click();
+        cy.get('[data-cy="msgClose"]').click();
         cy.get('h2').contains('Teilnahmen').click();
         cy.get('table')
             .find('span')

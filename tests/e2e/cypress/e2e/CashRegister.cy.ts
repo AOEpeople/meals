@@ -1,9 +1,9 @@
 describe('Test CashRegister', () => {
     beforeEach(() => {
+        cy.resetDB();
         cy.setCookie('locale', 'de');
         cy.loginAs('kochomi');
         cy.visitMeals();
-        cy.resetDB();
 
         // spy on the request to the backend to wait for them to resolve before testing
         cy.intercept('GET', '**/api/costs').as('getCosts');

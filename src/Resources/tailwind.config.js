@@ -9,7 +9,18 @@ module.exports = {
               'xs': '455px'
           },
           animation: {
-            'spin-receiving': 'spin 4s reverse linear infinite'
+            'spin-receiving': 'spin 4s reverse linear infinite',
+            'spin-loading': 'loading 1.5s ease-in-out infinite'
+          },
+          keyframes: {
+            'loading': {
+              '0%': {
+                transform: 'rotate(0deg)'
+              },
+              '100%': {
+                transform: 'rotate(720deg)'
+              }
+            }
           },
           boxShadow: {
             'tb': 'inset 0 0 0 0 #e5e7eb , inset 0px -8px 6px -6px #e5e7eb, inset 0 0 0 0 #e5e7eb, inset 0px 8px 6px -6px #e5e7eb'

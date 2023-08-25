@@ -1,8 +1,5 @@
 <template>
   <main>
-    <!-- <DebtPopup
-      class="z-40"
-    /> -->
     <div
       class="mx-auto"
       :class="[isShowParticipations ? 'max-w-full' : 'mt-10 max-w-screen-aoe']"
@@ -28,7 +25,6 @@
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import MessageBanner from '@/components/messageBanner/MessageBanner.vue';
-import DebtPopup from './debtPopup/DebtPopup.vue';
 
 const route = useRoute();
 

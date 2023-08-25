@@ -86,6 +86,11 @@
     },
     "guest": "In die Zwischenablage kopiert!"
   },
+  "debt" : {
+    "text": "Ich weiß, dass ich einen Kontostand von #balance# habe und werde meine Schulden umgehend begleichen.",
+    "ok": "Ok, kapiert!",
+    "pay": "Jetzt bezahlen"
+  },
   "dish": {
     "create": "Gericht erstellen",
     "table": {

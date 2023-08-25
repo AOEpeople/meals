@@ -7,7 +7,8 @@
     <div class="absolute z-[4]">
       <vue3-progress-bar />
     </div>
-    <Content class="relative z-[2]" />
+    <DebtPopup />
+    <Content class="relative z-[2] grow-[1]" />
     <Footer
       v-if="!showParticipations"
       class="relative z-[1] mt-auto"
@@ -22,6 +23,7 @@ import Content from '@/components/Content.vue'
 import { useRoute } from 'vue-router'
 import { computed, onMounted, onUpdated, ref, watch } from 'vue'
 import { useComponentHeights } from '@/services/useComponentHeights'
+import DebtPopup from './components/debtPopup/DebtPopup.vue'
 
 const route = useRoute();
 const { setNavBarHeight, windowWidth } = useComponentHeights();

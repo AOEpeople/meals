@@ -1,9 +1,9 @@
 describe('Test Weeks View', () => {
     beforeEach(() => {
+        cy.resetDB();
         cy.setCookie('locale', 'de');
         cy.loginAs('kochomi');
         cy.visitMeals();
-        cy.resetDB();
     });
 
     it('should contain the correct heading in german and english', () => {

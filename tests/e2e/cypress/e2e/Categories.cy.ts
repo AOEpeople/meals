@@ -1,9 +1,9 @@
 describe('Test Categories View', () => {
     beforeEach(() => {
+        cy.resetDB();
         cy.setCookie('locale', 'de');
         cy.loginAs('kochomi');
         cy.visitMeals();
-        cy.resetDB();
     });
 
     it("should be able to navigate to '/categories' and have the header displayed", () => {
@@ -55,6 +55,7 @@ describe('Test Categories View', () => {
         cy.get('input[placeholder="Deutscher Titel"]').type('TestKategorie1234');
         cy.get('input[placeholder="Englischer Titel"]').type('TestCategory1234');
         cy.contains('input', 'Speichern').click();
+        cy.get('[data-cy="msgClose"]').click();
 
         // Verify that the category was created
         cy.get('button').contains('+ Kategorie erstellen').click();
@@ -71,6 +72,7 @@ describe('Test Categories View', () => {
         cy.get('input[placeholder="Deutscher Titel"]').clear().type('TestKategorie5678');
         cy.get('input[placeholder="Englischer Titel"]').clear().type('TestKategory5678');
         cy.contains('input', 'Speichern').click();
+        cy.get('[data-cy="msgClose"]').click();
 
         // Verify that the category was successfully edited
         cy.get('span')
@@ -87,6 +89,8 @@ describe('Test Categories View', () => {
             .parent()
             .contains('p', 'Löschen')
             .click();
+
+        cy.get('[data-cy="msgClose"]').click();
 
         // Verify that the Category was successfully deleted
         cy.get('span').contains('TestKategorie5678').should('not.exist');

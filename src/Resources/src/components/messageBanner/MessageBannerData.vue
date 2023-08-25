@@ -1,6 +1,6 @@
 <template>
   <div
-    class="grid h-full w-full grid-cols-[50px_minmax(0,1fr)]"
+    class="grid w-full grid-cols-[50px_minmax(0,1fr)]"
   >
     <div
       class="col-start-1 m-auto h-fit w-fit rounded-full border-2 border-solid border-white p-2"

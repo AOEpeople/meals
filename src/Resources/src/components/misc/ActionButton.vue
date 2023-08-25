@@ -1,7 +1,7 @@
 <template>
   <button
-    class="z-[1] flex h-full place-items-center rounded-lg px-[2px] hover:shadow-[0px_2px_8px_-1px_rgba(0,0,0,0.2)]"
-    :class="row ? 'flex-row' : 'flex-col'"
+    class="z-[1] flex place-items-center rounded-lg px-[2px] hover:shadow-[0px_2px_8px_-1px_rgba(0,0,0,0.2)]"
+    :class="[row ? 'flex-row' : 'flex-col', heightFull ? 'h-full' : 'h-auto']"
   >
     <PencilIcon
       v-if="action === Action.EDIT"
@@ -48,10 +48,12 @@ withDefaults(defineProps<{
   action: Action,
   row?: boolean,
   widthFull?: boolean,
+  heightFull?: boolean,
   hideTextOnMobile?: boolean
 }>(), {
   row: true,
   widthFull: true,
+  heightFull: true,
   hideTextOnMobile: false
 });
 </script>

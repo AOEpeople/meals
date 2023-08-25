@@ -1,9 +1,9 @@
 describe('Test Menu Participations View', () => {
     beforeEach(() => {
+        cy.resetDB();
         cy.setCookie('locale', 'de');
         cy.loginAs('kochomi');
         cy.visitMeals();
-        cy.resetDB();
 
         // intercept the request to the backend
         cy.intercept('GET', '**/api/dishes', { fixture: 'dishes.json', statusCode: 200 }).as('getDishes');

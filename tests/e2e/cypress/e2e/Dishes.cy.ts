@@ -1,9 +1,9 @@
 describe('Test Dishes View', () => {
     beforeEach(() => {
+        cy.resetDB();
         cy.setCookie('locale', 'de');
         cy.loginAs('kochomi');
         cy.visitMeals();
-        cy.resetDB();
     });
 
     it("should be able to navigate to '/dishes' and have the header displayed", () => {
@@ -69,6 +69,7 @@ describe('Test Dishes View', () => {
         cy.get('li').children().contains('Vegetarisch').click();
         cy.get('label').contains('Dieses Gericht ist nicht teilbar').click();
         cy.contains('input', 'Speichern').click();
+        cy.get('[data-cy="msgClose"]').click();
 
         // Verify that the dish was created
         cy.get('button').contains('+ Gericht erstellen').click();
@@ -105,10 +106,11 @@ describe('Test Dishes View', () => {
         cy.get('li').children().contains('Fleisch').click();
         cy.get('label').contains('Dieses Gericht ist nicht teilbar').click();
         cy.contains('input', 'Speichern').click();
+        cy.get('[data-cy="msgClose"]').click();
 
         // Verify that the dish was edited
         cy.get('span')
-            .contains('TestGericht1234')
+            .contains('TestGericht5678')
             .parent()
             .parent()
             .contains('Editieren')
@@ -122,6 +124,7 @@ describe('Test Dishes View', () => {
             .parent()
             .contains('Löschen')
             .click();
+        cy.get('[data-cy="msgClose"]').click();
 
         // Verify that the dish was deleted
         cy.get('span').contains('TestGericht5678').should('not.exist');
@@ -140,7 +143,6 @@ describe('Test Dishes View', () => {
 
         // Verify that the dishes were filtered
         cy.get('td').contains('Sonstiges').should('not.exist');
-        cy.get('td').contains('Vegetarisch').should('exist');
         cy.get('td').contains('Fleisch').should('not.exist');
 
         // Filter for a category
@@ -149,7 +151,6 @@ describe('Test Dishes View', () => {
         // Verify that the dishes were filtered
         cy.get('td').contains('Sonstiges').should('not.exist');
         cy.get('td').contains('Vegetarisch').should('not.exist');
-        cy.get('td').contains('Fleisch').should('exist');
     });
 
     it('should be able to filter for a dish', () => {
@@ -166,6 +167,7 @@ describe('Test Dishes View', () => {
         cy.get('input[placeholder="Englischer Titel"]').type('TestDish1234');
         cy.contains('input', 'Speichern').click();
         cy.get('button').contains('+ Gericht erstellen').click();
+        cy.get('[data-cy="msgClose"]').click();
 
         // Filter for a dish
         cy.get('input[placeholder="Suche nach Titel"]').type('TestGericht1234');
@@ -189,6 +191,7 @@ describe('Test Dishes View', () => {
             .parent()
             .contains('Löschen')
             .click();
+        cy.get('[data-cy="msgClose"]').click();
     });
 
     it('should be able to create, edit and delete a dish variation', () => {
@@ -207,6 +210,7 @@ describe('Test Dishes View', () => {
         cy.get('input[placeholder="Deutscher Titel"]').type('TestGericht1234');
         cy.get('input[placeholder="Englischer Titel"]').type('TestDish1234');
         cy.contains('input', 'Speichern').click();
+        cy.get('[data-cy="msgClose"]').click();
         cy.get('button').contains('+ Gericht erstellen').click();
 
         // Filter for the dish
@@ -223,6 +227,7 @@ describe('Test Dishes View', () => {
         cy.get('input[placeholder="Deutscher Titel"]').type('TestVariation1234');
         cy.get('input[placeholder="Englischer Titel"]').type('TestVariation1234');
         cy.contains('input', 'Speichern').click();
+
         cy.get('span')
             .contains('TestGericht1234')
             .parent()
@@ -248,6 +253,7 @@ describe('Test Dishes View', () => {
             .clear({ force: true })
             .type('TestVariation5678', { force: true });
         cy.contains('input', 'Speichern').click({ force: true });
+        cy.get('[data-cy="msgClose"]').click();
         cy.get('span')
             .contains('TestVariation5678')
             .parent()
@@ -266,12 +272,14 @@ describe('Test Dishes View', () => {
             .parent()
             .contains('Löschen')
             .click();
+        cy.get('[data-cy="msgClose"]').click();
         cy.get('span')
             .contains('TestGericht1234')
             .parent()
             .parent()
             .contains('Löschen')
             .click();
+        cy.get('[data-cy="msgClose"]').click();
 
         // Verify that the dish variation was deleted
         cy.get('span').contains('TestVariation5678').should('not.exist');

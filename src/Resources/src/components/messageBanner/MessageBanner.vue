@@ -9,11 +9,13 @@
   >
     <div
       v-if="flashMessages.length > 0"
-      class="absolute top-0 z-50 flex h-fit w-full max-w-screen-aoe flex-col rounded-b-lg bg-white p-2 shadow-[0_0_15px_0_#7A8991]"
+      class="absolute top-0 z-[9999] flex h-fit w-full max-w-screen-aoe flex-col rounded-b-lg bg-white p-2 shadow-[0_0_15px_0_#7A8991]"
     >
       <ActionButton
         class="w-fit place-self-end"
+        data-cy="msgClose"
         :btn-text="''"
+        :height-full="false"
         :action="Action.DELETE"
         @click="() => clearMessages()"
       />

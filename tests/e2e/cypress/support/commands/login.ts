@@ -8,6 +8,7 @@ export const loginAs = (user: string) => {
   cy.fixture(`users/${user}.json`).then((credentials) => {
     login(credentials.username, credentials.password);
   });
+
 };
 
 export const logout = () => {

@@ -1,7 +1,7 @@
 describe('Test ParticipationsList view', () => {
   beforeEach(() => {
-    cy.setCookie('locale', 'de');
     cy.resetDB();
+    cy.setCookie('locale', 'de');
   });
 
   it('should be able to visit the page without authentication', () => {

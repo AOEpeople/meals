@@ -50,6 +50,12 @@ export const viewportXL = () => cy.viewport(1344, 800);
 export const visitMeals = () => {
   setCookieInterceptor();
   cy.visit(`${baseUrl}`);
+  cy.request({
+    method: 'POST',
+    url: `${Cypress.env('baseUrl')}api/payment/cash/kochomi.meals?amount=1000`
+  }).then((response) => {
+    expect(response.status).to.eq(200);
+  });
 };
 
 export const visitMealsViaWindowObject = () => {

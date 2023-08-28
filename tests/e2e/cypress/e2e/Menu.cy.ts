@@ -82,6 +82,7 @@ describe('Test Weeks View', () => {
             .clear()
             .type('17');
         cy.get('span').contains('Limit').parent().find('svg').click();
+        cy.get('h2').should('contain', 'Woche bearbeiten #28 (10.07. - 14.07.)').click();
 
         // change lock date
         cy.get('input')
@@ -98,6 +99,7 @@ describe('Test Weeks View', () => {
             .clear()
             .type('2023-07-08T12:00')
         cy.get('span').contains('Sperren').parent().find('svg').click();
+        cy.get('h2').should('contain', 'Woche bearbeiten #28 (10.07. - 14.07.)').click();
 
         // change input
         cy.get('input')

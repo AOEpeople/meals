@@ -14,7 +14,9 @@
           </router-view>
         </template>
         <template #fallback>
-          <div> loading </div>
+          <LoadingSpinner
+            :loaded="true"
+          />
         </template>
       </Suspense>
     </div>
@@ -25,6 +27,7 @@
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import MessageBanner from '@/components/messageBanner/MessageBanner.vue';
+import LoadingSpinner from './misc/LoadingSpinner.vue';
 
 const route = useRoute();
 

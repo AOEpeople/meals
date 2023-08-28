@@ -11,6 +11,9 @@
       :filter="filter"
       :showHidden="showHidden"
     />
+    <LoadingSpinner
+      :loaded="loaded"
+    />
   </div>
 </template>
 
@@ -20,6 +23,7 @@ import { onMounted, ref } from 'vue';
 import { useCosts } from '@/stores/costsStore';
 import CostsTable from '@/components/costs/CostsTable.vue';
 import CostsHeader from '@/components/costs/CostsHeader.vue';
+import LoadingSpinner from '@/components/misc/LoadingSpinner.vue';
 
 const { fetchCosts } = useCosts();
 const loaded = ref(false);

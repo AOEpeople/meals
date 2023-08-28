@@ -29,6 +29,9 @@
         </td>
       </tr>
     </Table>
+    <LoadingSpinner
+      :loaded="!TimeSlotState.isLoading"
+    />
   </div>
 </template>
 
@@ -40,6 +43,7 @@ import { useProgress } from '@marcoschulte/vue3-progress';
 import { useTimeSlots } from "@/stores/timeSlotStore";
 import { onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
+import LoadingSpinner from '@/components/misc/LoadingSpinner.vue';
 
 const { TimeSlotState, fetchTimeSlots } = useTimeSlots();
 const { t } = useI18n();

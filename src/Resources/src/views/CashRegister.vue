@@ -13,11 +13,15 @@
       :transactions="TransactionState.transactions.usersThisMonth"
       :date-range="TransactionState.transactions.thisMonth"
     />
+    <LoadingSpinner
+      :loaded="loaded"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import CashRegisterTable from '@/components/cashRegister/CashRegisterTable.vue';
+import LoadingSpinner from '@/components/misc/LoadingSpinner.vue';
 import { useAccounting } from '@/stores/accountingStore';
 import { onMounted, ref } from 'vue';
 

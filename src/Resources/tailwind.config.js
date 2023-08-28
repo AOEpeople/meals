@@ -10,7 +10,7 @@ module.exports = {
           },
           animation: {
             'spin-receiving': 'spin 4s reverse linear infinite',
-            'spin-loading': 'loading 1.5s ease-in-out infinite'
+            'spin-loading': 'loading 1.5s reverse ease-in-out infinite'
           },
           keyframes: {
             'loading': {

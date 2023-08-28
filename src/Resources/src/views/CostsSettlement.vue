@@ -31,6 +31,9 @@
     >
       {{ t('costs.success').replace('#name#', profile.fullName) }}
     </span>
+    <LoadingSpinner
+      :loaded="loaded"
+    />
   </div>
 </template>
 
@@ -40,6 +43,7 @@ import { onMounted, ref } from 'vue';
 import { useCosts } from '@/stores/costsStore';
 import CreateButton from '@/components/misc/CreateButton.vue';
 import { useI18n } from 'vue-i18n';
+import LoadingSpinner from '@/components/misc/LoadingSpinner.vue';
 
 const { fetchProfileWithHash } = useProfiles(0);
 const { confirmSettlement } = useCosts();

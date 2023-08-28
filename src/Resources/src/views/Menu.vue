@@ -15,6 +15,9 @@
       v-model="menu.days[index]"
       class="mt-4"
     />
+    <LoadingSpinner
+      :loaded="loaded"
+    />
     <div class="mt-4 grid w-full grid-cols-2 items-center">
       <router-link
         to="/weeks"
@@ -44,6 +47,7 @@ import MenuHeader from '@/components/menu/MenuHeader.vue';
 import { useI18n } from 'vue-i18n';
 import CancelButton from '@/components/misc/CancelButton.vue';
 import { useRouter } from 'vue-router';
+import LoadingSpinner from '@/components/misc/LoadingSpinner.vue';
 
 const { DishesState, fetchDishes } = useDishes();
 const {
@@ -71,6 +75,7 @@ const props = withDefaults(defineProps<{
 });
 
 const parseWeekId = ref(parseInt(props.week));
+const loaded = ref(false);
 
 watch(
   () => props.week,
@@ -107,6 +112,7 @@ onMounted(async () => {
 
   setUpDaysAndEnabled();
 
+  loaded.value = true;
   progress.finish();
 });
 

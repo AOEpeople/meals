@@ -8,6 +8,9 @@
       <MenuTableBody :week-id="weekId" />
     </table>
   </div>
+  <LoadingSpinner
+    :loaded="loaded"
+  />
 </template>
 
 <script setup lang="ts">
@@ -18,6 +21,7 @@ import { onMounted, ref } from 'vue';
 import MenuTableBody from '@/components/menuParticipants/MenuTableBody.vue';
 import MenuTableHead from './MenuTableHead.vue';
 import { useProgress } from '@marcoschulte/vue3-progress';
+import LoadingSpinner from '../misc/LoadingSpinner.vue';
 
 const props = defineProps<{
   weekId: number

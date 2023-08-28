@@ -12,6 +12,9 @@
         :index-in-list="index"
       />
     </Table>
+    <LoadingSpinner
+      :loaded="loaded"
+    />
   </div>
 </template>
 
@@ -19,21 +22,24 @@
 import { useProgress } from '@marcoschulte/vue3-progress'
 import Table from '@/components/misc/Table.vue'
 import { useI18n } from 'vue-i18n'
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useDishes } from '@/stores/dishesStore';
 import DishesHeader from '@/components/dishes/DishesHeader.vue';
 import { useCategories } from '@/stores/categoriesStore';
 import DishTableRow from '@/components/dishes/DishTableRow.vue';
 import { Dish } from '@/stores/dishesStore';
+import LoadingSpinner from '@/components/misc/LoadingSpinner.vue';
 
 const { t } = useI18n();
 const { fetchDishes, filteredDishes } = useDishes();
 const { fetchCategories } = useCategories();
+const loaded = ref(false);
 
 onMounted(async () => {
   const progress = useProgress().start();
   await fetchDishes();
   await fetchCategories();
+  loaded.value = true;
   progress.finish();
 });
 </script>

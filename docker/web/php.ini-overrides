@@ -3,7 +3,6 @@ display_errors = Off
 max_execution_time = ${PHP_MAX_EXECUTION_TIME}
 memory_limit = ${PHP_MEMORY_LIMIT}
 variables_order = EGPCS
-default_socket_timeout = 180
 
 [opcache]
 opcache.enable = 1

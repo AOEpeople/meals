@@ -76,7 +76,7 @@ class EcashController extends BaseController
         $this->addFlashMessage($message, 'success');
 
         return new Response(
-            $this->generateUrl('mealz_accounting_payment_transaction_history'),
+            $this->generateUrl('MealzMealBundle_Balance'),
             Response::HTTP_OK,
             ['content-type' => 'text/html']
         );
@@ -89,7 +89,7 @@ class EcashController extends BaseController
 
         $this->addFlashMessage($message, $severity);
 
-        return $this->redirect($this->generateUrl('mealz_accounting_payment_transaction_history'));
+        return $this->redirect($this->generateUrl('MealzMealBundle_Balance'));
     }
 
     private function logPostPaymentException(Throwable $exc, string $message, Request $request): void

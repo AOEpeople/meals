@@ -72,24 +72,11 @@ class EcashController extends BaseController
             return new Response($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        $message = $translator->trans('payment.transaction_history.successful_payment', [], 'messages');
-        $this->addFlashMessage($message, 'success');
-
         return new Response(
-            $this->generateUrl('MealzMealBundle_Balance'),
+            '',
             Response::HTTP_OK,
             ['content-type' => 'text/html']
         );
-    }
-
-    public function transactionFailure(TranslatorInterface $translator): Response
-    {
-        $message = $translator->trans('payment.transaction_history.payment_failed', [], 'messages');
-        $severity = 'danger';
-
-        $this->addFlashMessage($message, $severity);
-
-        return $this->redirect($this->generateUrl('MealzMealBundle_Balance'));
     }
 
     private function logPostPaymentException(Throwable $exc, string $message, Request $request): void

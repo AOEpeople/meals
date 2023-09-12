@@ -285,7 +285,3 @@ MealzMealBundle_api_meals_next_three_days:
     path: /api/meals/nextThreeDays
     defaults: { _controller: App\Mealz\MealBundle\Controller\ApiController::getNextThreeDays }
     methods: [ GET ]
-
-MealzMealBundle_Balance:
-    path: /balance
-    defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }

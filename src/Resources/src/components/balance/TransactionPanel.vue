@@ -118,6 +118,8 @@ export default {
                   });
                 },
                 onApprove: function (data, actions) {
+                  vm.$emit('closePanel');
+                  // gray out and show spinner
                   return actions.order.capture().then(() => {
                     return fetch('/payment/ecash/form/submit', {
                       method: 'post',
@@ -133,7 +135,7 @@ export default {
                       if(response.ok) {
                         userDataStore.adjustBalance(parseFloat(formatCurrency(amountField.value)));
                         transactionStore.fillStore();
-                        vm.$emit('closePanel');
+                        // disable gray out and show spinner
                       }
                     });
                   });

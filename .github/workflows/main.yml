@@ -116,7 +116,7 @@ jobs:
       # Production image
       - name: Get Docker meta for production image
         id: meta
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v5
         with:
           images: aoepeople/meals
           tags: |
@@ -141,7 +141,7 @@ jobs:
       # Development image
       - name: Get Docker meta for development
         id: devmeta
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v5
         with:
           images: aoepeople/meals
           flavor: |

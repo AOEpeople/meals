@@ -2,7 +2,7 @@
   <input
     v-model="value"
     type="text"
-    min="0"
+    pattern="\d*([.,]?\d{0,2})"
     required
     class="h-[46px] rounded-full border-[2px] border-solid border-[#CAD6E1] bg-white text-center"
   >
@@ -22,10 +22,12 @@ const emit = defineEmits(['update:modelValue']);
 
 const value = computed({
   get() {
+    console.log(`Getting Money: ${props.modelValue}`);
     return locale.value === 'en' ? props.modelValue.toFixed(2) : props.modelValue.toFixed(2).replace(/\./g, ',');
   },
   set(value) {
-    emit('update:modelValue', parseFloat(value));
+    console.log(`Emitting Money: ${value.replace(/,/, '.')}`);
+    emit('update:modelValue', parseFloat(value.replace(/,/, '.')));
   }
 })
 </script>

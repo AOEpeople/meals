@@ -118,7 +118,6 @@ export default {
                   });
                 },
                 onApprove: function (data, actions) {
-                  vm.$emit('closePanel');
                   // gray out and show spinner
                   return actions.order.capture().then(() => {
                     return fetch('/payment/ecash/form/submit', {
@@ -136,6 +135,7 @@ export default {
                         userDataStore.adjustBalance(parseFloat(formatCurrency(amountField.value)));
                         transactionStore.fillStore();
                         // disable gray out and show spinner
+                        vm.$emit('closePanel');
                       }
                     });
                   });

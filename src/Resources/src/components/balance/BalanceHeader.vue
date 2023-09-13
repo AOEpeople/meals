@@ -29,7 +29,7 @@
 
 <script setup>
 import Popover from "@/components/misc/Popover.vue";
-import TransactionPanel2 from "@/components/balance/TransactionPanel2.vue";
+import TransactionPanel2 from "@/components/balance/TransactionPanel.vue";
 
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();

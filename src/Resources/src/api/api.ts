@@ -3,7 +3,7 @@ import { ref } from "vue";
 
 const instance = axios.create({
     baseURL: window.location.origin,
-    timeout: 5000,
+    timeout: 15000,
 })
 
 export default function useApi<T>(method: string, url: string, contentType = 'application/json', data?: string){

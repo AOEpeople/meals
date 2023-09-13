@@ -105,48 +105,27 @@ onMounted(async () => {
           }]
         });
       },
-      onApprove: function (data, actions) {
+      onApprove: async function (data, actions) {
         console.log('onApprove called!');
-        return actions.order.capture().then(() => {
+        try {
+          const orderResponse = await actions.order.capture();
+
           console.log('order was Approved');
-          return fetch('/payment/ecash/form/submit', {
-            method: 'post',
-            headers: {
-              'content-type': 'application/json'
-            },
-            body: JSON.stringify([
-              { 'name': 'ecash[profile]', 'value': userDataStore.getState().user },
-              { 'name': 'ecash[orderid]', 'value': data.orderID },
-              { 'name': 'ecash[amount]', 'value': formatCurrency(amountFieldValue.value) }
-            ])
-          }).then((response) => {
-            if(response.ok) {
-              console.log('No errors from backend');
-              userDataStore.adjustBalance(parseFloat(formatCurrency(amountFieldValue.value)));
-              transactionStore.fillStore();
-              // disable gray out and show spinner
-            }
-          });
-        });
-        // console.log('onApprove called!');
-        // return actions.order.capture()
-        // .then(() => {
-        //   console.log('order was Approved');
-        //   return postPaypalOrder(amountFieldValue.value.toFixed(2), data.orderID);
-        // }).then(({error, response}) => {
-        //   if(error.value === false) {
-        //     console.log('No errors from backend');
-        //     userDataStore.adjustBalance(parseFloat(formatCurrency(amountFieldValue.value)));
-        //     transactionStore.fillStore();
-        //     // disable gray out and show spinner
-        //     emit('closePanel');
-        //   } else {
-        //     console.log('Error from Backend');
-        //   }
-        // }).catch(error => {
-        //   console.log(`error on approving: ${error}`);
-        // })
-      },
+          const { error, response } = await postPaypalOrder(amountFieldValue.value.toFixed(2), data.orderID);
+
+          if (error.value === false) {
+            console.log('No errors from backend');
+            userDataStore.adjustBalance(parseFloat(formatCurrency(amountFieldValue.value)));
+            transactionStore.fillStore();
+            // disable gray out and show spinner
+            emit('closePanel');
+          } else {
+            console.log('Error from Backend');
+          }
+        } catch (error) {
+          console.log(`error on approving: ${error}`);
+        }
+      }
     })
     .render('#paypal-container')
     .catch(error => console.error('failed to render the PayPal Buttons', error));

@@ -1,0 +1,31 @@
+<template>
+  <input
+    v-model="value"
+    type="text"
+    min="0"
+    required
+    class="h-[46px] rounded-full border-[2px] border-solid border-[#CAD6E1] bg-white text-center"
+  >
+</template>
+
+<script setup lang="ts">
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const props = defineProps<{
+  modelValue: number
+}>();
+
+const { locale } = useI18n();
+
+const emit = defineEmits(['update:modelValue']);
+
+const value = computed({
+  get() {
+    return locale.value === 'en' ? props.modelValue.toFixed(2) : props.modelValue.toFixed(2).replace(/\./g, ',');
+  },
+  set(value) {
+    emit('update:modelValue', parseFloat(value));
+  }
+})
+</script>

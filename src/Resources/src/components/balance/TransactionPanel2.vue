@@ -47,7 +47,10 @@ const balance = computed(() => userDataStore.getState().balance);
 // const amountField = ref<HTMLInputElement | null>(null);
 const amountFieldValue = ref(Math.abs(balance.value));
 const amountFieldStrRepr = computed(() => {
-  return locale.value === 'en' ? amountFieldValue.value.toFixed(2) : amountFieldValue.value.toFixed(2).replace(/./g, ',');
+  console.log(`Before conversion: ${amountFieldValue.value}`);
+  const amount = amountFieldValue.value.toFixed(2);
+  console.log(`After conversion: ${amount}`);
+  return locale.value === 'en' ? amountFieldValue.value.toFixed(2) : amountFieldValue.value.toFixed(2).replace(/\./, ',');
 });
 const loaded = ref(false);
 const actionsWatcher = ref<WatchStopHandle | null>(null);
@@ -93,7 +96,7 @@ onMounted(async () => {
         );
       },
       createOrder: function(data, actions) {
-        console.log('Created Order');
+        console.log(`Creating Order with amount: ${amountFieldValue.value}`);
         return actions.order.create({
           purchase_units: [{
             amount: {

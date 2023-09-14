@@ -1,4 +1,3 @@
-import useApi from "@/api/api";
 import { userDataStore } from "@/stores/userDataStore";
 
 export default async function postPaypalOrder(amount: string, orderId: string) {
@@ -8,16 +7,15 @@ export default async function postPaypalOrder(amount: string, orderId: string) {
         { 'name': 'ecash[amount]', 'value': amount }
     ]);
 
-    const { error, request, response } = useApi<null>(
-        'POST',
-        '/payment/ecash/form/submit',
-        'application/json',
-        data
-    );
-
-    await request();
+    const response = await fetch('/payment/ecash/form/submit', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json'
+        },
+        body: data
+    });
 
     console.log('Posted ecash payment!');
 
-    return { error, response };
+    return response;
 }

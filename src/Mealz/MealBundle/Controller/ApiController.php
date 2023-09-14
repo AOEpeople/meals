@@ -176,6 +176,18 @@ class ApiController extends BaseController
         return new JsonResponse($list, 200);
     }
 
+    public function listByDate(DateTime $date): JSONResponse
+    {
+        $day = $this->apiSrv->getDayByDate($date);
+        if (null === $day) {
+            return new JsonResponse('', 404);
+        }
+        $list['data'] = $this->participationSrv->getParticipationListBySlots($day);
+        $list['day'] = $day->getDateTime();
+
+        return new JsonResponse($list, 200);
+    }
+
     private function addSlots(array &$slotArray, array $slots, Day $day, ?int $activeParticipations): void
     {
         $disabled = false;

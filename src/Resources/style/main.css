@@ -9,6 +9,10 @@
   @apply bg-primary
 }
 
+.dp__input {
+  @apply w-full rounded-full border-2 border-solid border-[#CAD6E1] pr-4 pl-8 py-2 text-[14px] font-medium text-[#9CA3AF];
+}
+
 @layer base {
   @font-face {
     font-family: Roboto;

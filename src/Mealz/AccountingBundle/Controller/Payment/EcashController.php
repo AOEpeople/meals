@@ -16,7 +16,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
 
 class EcashController extends BaseController
@@ -51,7 +50,7 @@ class EcashController extends BaseController
      */
     public function postPayment(
         Request $request,
-        TransactionService $transactionService,
+        TransactionService $transactionService
     ): Response {
         try {
             $transactionService->createFromRequest($request);

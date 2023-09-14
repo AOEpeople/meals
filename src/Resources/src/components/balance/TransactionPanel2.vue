@@ -1,4 +1,7 @@
 <template>
+  <BlockPopup
+    :is-open="isLoading"
+  />
   <radar-spinner
     v-if="!loaded"
     :animation-duration="2000"
@@ -13,12 +16,6 @@
       <h5 class="m-0 self-center text-[14px] text-black sm:text-[18px]">
         {{ t('balance.amount') }}: €
       </h5>
-      <!-- <input
-        ref="amountField"
-        type="text"
-        :value="balance < 0 ? balance.toFixed(2).slice(1).replace(/\./g, ',') : '0,00'"
-        class="h-[46px] rounded-full border-[2px] border-solid border-[#CAD6E1] bg-white text-center"
-      > -->
       <MoneyInput
         v-model="amountFieldValue"
       />
@@ -40,12 +37,12 @@ import { userDataStore } from "@/stores/userDataStore";
 import { environmentStore } from "@/stores/environmentStore";
 import postPaypalOrder from '@/api/postPaypalOrder';
 import MoneyInput from '../misc/MoneyInput.vue';
+import BlockPopup from '../misc/BlockPopup.vue';
 
 const { t, locale } = useI18n();
 
 const balance = computed(() => userDataStore.getState().balance);
-// const amountField = ref<HTMLInputElement | null>(null);
-const amountFieldValue = ref(Math.abs(balance.value));
+const amountFieldValue = ref(0.00);
 const amountFieldStrRepr = computed(() => {
   console.log(`Before conversion: ${amountFieldValue.value}`);
   const amount = amountFieldValue.value.toFixed(2);
@@ -53,6 +50,7 @@ const amountFieldStrRepr = computed(() => {
   return locale.value === 'en' ? amountFieldValue.value.toFixed(2) : amountFieldValue.value.toFixed(2).replace(/\./, ',');
 });
 const loaded = ref(false);
+const isLoading = ref(true);
 const actionsWatcher = ref<WatchStopHandle | null>(null);
 
 const emit = defineEmits(['closePanel']);
@@ -63,6 +61,7 @@ watch(
 );
 
 onMounted(async () => {
+  amountFieldValue.value = balance.value < 0 ? Math.abs(balance.value) : 0.00;
   console.log('Mounted Paypal');
   try {
     const paypal = await loadScript({
@@ -105,15 +104,19 @@ onMounted(async () => {
           }]
         });
       },
+      onShippingChange: function(data, actions) {
+        return actions.resolve();
+      },
       onApprove: async function (data, actions) {
         console.log('onApprove called!');
         try {
           const orderResponse = await actions.order.capture();
 
           console.log('order was Approved');
-          const { error, response } = await postPaypalOrder(amountFieldValue.value.toFixed(2), data.orderID);
+          console.log(orderResponse);
+          const response = await postPaypalOrder(amountFieldValue.value.toFixed(2), data.orderID);
 
-          if (error.value === false) {
+          if (response.ok) {
             console.log('No errors from backend');
             userDataStore.adjustBalance(parseFloat(formatCurrency(amountFieldValue.value)));
             transactionStore.fillStore();

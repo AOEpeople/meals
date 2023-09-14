@@ -52,7 +52,6 @@ class EcashController extends BaseController
     public function postPayment(
         Request $request,
         TransactionService $transactionService,
-        TranslatorInterface $translator
     ): Response {
         try {
             $transactionService->createFromRequest($request);

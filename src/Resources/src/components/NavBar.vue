@@ -128,7 +128,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
   import {Menu, MenuButton} from '@headlessui/vue'
   import {MenuIcon, XIcon, CalendarIcon, CalculatorIcon, CakeIcon, CashIcon, BookmarkIcon, ClockIcon} from '@heroicons/vue/outline'
   import Icons from '@/components/misc/Icons.vue'
@@ -141,12 +141,13 @@
   import { getNextThreeDays } from '@/api/getMealsNextThreeDays'
   import { getShowParticipations } from '@/api/getShowParticipations';
 
-  const { t } = useI18n()
-  defineProps({
-    guest: {
-      default: false
-    }
-  })
+  const { t } = useI18n();
+
+  withDefaults(defineProps<{
+    guest?: boolean
+  }>(),{
+    guest: false
+  });
 
   const { nextThreeDaysState } = getNextThreeDays();
   const { loadedState } = getShowParticipations();

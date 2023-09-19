@@ -1,6 +1,6 @@
-import { mount } from "@vue/test-utils";
-import FinanceHeader from "@/components/finance/FinanceHeader.vue";
-import VueDatePicker from "@vuepic/vue-datepicker";
+import { mount } from '@vue/test-utils';
+import FinanceHeader from '@/components/finance/FinanceHeader.vue';
+import VueDatePicker from '@vuepic/vue-datepicker';
 
 jest.mock('epic-spinners', () => ({
     RadarSpinner: () => '<div>x</div>'
@@ -9,7 +9,7 @@ jest.mock('epic-spinners', () => ({
 describe('Test FinanceHeader (with controls)', () => {
     const wrapper = mount(FinanceHeader, {
         props: {
-            dateRange: "01.09.-10.09.2023",
+            dateRange: '01.09.-10.09.2023',
             showControls: true,
         }
     });
@@ -23,7 +23,7 @@ describe('Test FinanceHeader (with controls)', () => {
 describe('Test FinanceHeader (without controls)', () => {
     const wrapper = mount(FinanceHeader, {
         props: {
-            dateRange: "01.09.-10.09.2023",
+            dateRange: '01.09.-10.09.2023',
             showControls: false,
         }
     });

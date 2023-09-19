@@ -16,13 +16,19 @@
   />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { CheckIcon } from '@heroicons/vue/solid'
 import { ref } from 'vue'
 import useEventsBus from 'tools/eventBus'
 import CombiModal from '@/components/dashboard/CombiModal.vue'
+import { Meal } from '@/api/getDashboardData';
+import { Dictionary } from 'types/types';
 
-const props = defineProps(['meals', 'mealId'])
+const props = defineProps<{
+  meals: Dictionary<Meal>,
+  mealId: number | string
+}>();
+
 const enabled = ref(false)
 const open = ref(false)
 const { emit } = useEventsBus()
@@ -54,7 +60,7 @@ function handle() {
   }
 }
 
-function handleCombiModal(dishes) {
+function handleCombiModal(dishes: string[]) {
   if (dishes !== undefined) {
     emit('guestChosenCombi', dishes)
     emit('guestChosenMeals', props.mealId)

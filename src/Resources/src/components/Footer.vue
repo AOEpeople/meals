@@ -29,8 +29,9 @@
   </footer>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import Icons from "@/components/misc/Icons.vue"
+import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 const { t, locale } = useI18n();
@@ -39,8 +40,9 @@ const changeLocale = () => {
   locale.value = locale.value.substring(0, 2) === 'en' ? 'de' : 'en';
 }
 
-const year = (new Date()).getFullYear();
+const year = ref((new Date()).getFullYear());
 </script>
+
 <style scoped>
 #language:hover svg {
   @apply fill-secondary;

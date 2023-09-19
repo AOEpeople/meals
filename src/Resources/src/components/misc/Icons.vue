@@ -1,6 +1,6 @@
 <template>
   <svg
-    :viewBox="[box === undefined ? '0 0 16 16' : box]"
+    :viewBox="box === undefined ? '0 0 16 16' : box"
     xmlns="http://www.w3.org/2000/svg"
   >
     <g v-if="icon === 'logout'">
@@ -36,6 +36,9 @@
     </g>
   </svg>
 </template>
-<script setup>
-  defineProps(['icon', 'box'])
+<script setup lang="ts">
+  defineProps<{
+    icon: string,
+    box?: string
+  }>();
 </script>

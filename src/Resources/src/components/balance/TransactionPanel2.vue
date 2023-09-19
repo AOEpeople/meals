@@ -50,7 +50,7 @@ const amountFieldStrRepr = computed(() => {
   return locale.value === 'en' ? amountFieldValue.value.toFixed(2) : amountFieldValue.value.toFixed(2).replace(/\./, ',');
 });
 const loaded = ref(false);
-const isLoading = ref(true);
+const isLoading = ref(false);
 const actionsWatcher = ref<WatchStopHandle | null>(null);
 
 const emit = defineEmits(['closePanel']);
@@ -109,6 +109,7 @@ onMounted(async () => {
       },
       onApprove: async function (data, actions) {
         console.log('onApprove called!');
+        isLoading.value = true;
         try {
           const orderResponse = await actions.order.capture();
 
@@ -125,16 +126,22 @@ onMounted(async () => {
           } else {
             console.log('Error from Backend');
           }
+          isLoading.value = false;
         } catch (error) {
           console.log(`error on approving: ${error}`);
+          isLoading.value = false;
         }
       }
     })
     .render('#paypal-container')
-    .catch(error => console.error('failed to render the PayPal Buttons', error));
+    .catch(error => {
+      console.error('failed to render the PayPal Buttons', error);
+      isLoading.value = false;
+    });
 
   } catch(error) {
     console.error('failed to load the PayPal JS SDK script', error);
+    isLoading.value = false;
   }
   loaded.value = true;
 });

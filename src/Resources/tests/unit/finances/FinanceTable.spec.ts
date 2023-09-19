@@ -1,5 +1,5 @@
-import { mount } from "@vue/test-utils";
-import FinanceTable from "@/components/finance/FinanceTable.vue";
+import { mount } from '@vue/test-utils';
+import FinanceTable from '@/components/finance/FinanceTable.vue';
 import Finances from '../fixtures/finances.json';
 
 describe('Test FinanceTable', () => {

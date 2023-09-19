@@ -5,7 +5,7 @@
   >
     <tab
       v-for="(week, weekID, index) in weeks"
-      :key="`t${weekID}`"
+      :key="`t${String(weekID)}`"
       :val="weekID"
       :label="t('dashboard.' + index)"
       :indicator="true"
@@ -27,23 +27,27 @@
   >
     <tab-panel
       v-for="(week, weekID, index) in weeks"
-      :key="`tp${weekID}`"
+      :key="`tp${String(weekID)}`"
       :val="weekID"
     >
-      <Week
-        :weekID="weekID"
+      <WeekComp
+        :weekID="String(weekID)"
         :index="index"
       />
     </tab-panel>
   </tab-panels>
 </template>
-<script setup>
+<script setup lang="ts">
 import { Tabs, Tab, TabPanels, TabPanel } from 'vue3-tabs';
 import {useI18n} from "vue-i18n"
 import {ref} from "vue"
-import Week from "./Week.vue";
+import WeekComp from "./Week.vue";
+import { Dictionary } from 'types/types';
+import { Week } from '@/api/getDashboardData';
 
-const props = defineProps(['weeks'])
+const props = defineProps<{
+  weeks: Dictionary<Week>
+}>();
 
 const { t } = useI18n()
 

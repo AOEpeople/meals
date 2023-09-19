@@ -83,28 +83,30 @@
   </TransitionRoot>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import CombiButtonGroup from "@/components/dashboard/CombiButtonGroup.vue";
 import {dashboardStore} from "@/stores/dashboardStore";
 import {computed, ref} from "vue";
 import { useI18n } from 'vue-i18n'
+import { Meal } from '@/api/getDashboardData';
+import { Dictionary } from 'types/types';
 
-const props = defineProps([
-    'open',
-    'weekID',
-    'dayID',
-    'meals'
-])
+const props = defineProps<{
+  open: boolean,
+  weekID?: number | string,
+  dayID?: number | string,
+  meals: Dictionary<Meal>
+}>();
 
 const { t } = useI18n()
 const emit = defineEmits(['closeCombiModal'])
 const meals = props.meals ? props.meals : dashboardStore.getMeals(props.weekID, props.dayID)
 let keys = Object.keys(meals).filter(mealID => meals[mealID].dishSlug !== 'combined-dish')
-const slugs = ref([])
+const slugs = ref<string[]>([]);
 const bookingDisabled = computed(() => slugs.value.length < 2)
 
-function resolveModal(mode) {
+function resolveModal(mode: string) {
   if (mode === 'cancel') {
     slugs.value = []
     emit('closeCombiModal')
@@ -115,11 +117,11 @@ function resolveModal(mode) {
   }
 }
 
-function removeEntry(slug) {
+function removeEntry(slug: string) {
   slugs.value = slugs.value.filter(entry => entry !== slug)
 }
 
-function addEntry(slug) {
+function addEntry(slug: string) {
   slugs.value.push(slug)
 }
 

@@ -25,14 +25,6 @@
           />
         </span>
       </ListboxButton>
-      <!--      <transition
-        enter-active-class="transition duration-100 ease-out"
-        enter-from-class="transform -translate-y-2"
-        enter-to-class="transform translate-y-0"
-        leave-active-class="transition duration-75 ease-out"
-        leave-from-class="transform translate-y-0"
-        leave-to-class="transform -translate-y-2"
-      >-->
       <ListboxOptions
         class="absolute -mt-[1px] max-h-60 w-full overflow-auto rounded-b-2xl border-x border-b border-[#B4C1CE] bg-white text-[12px] leading-5 shadow-lg focus:outline-none min-[380px]:text-note sm:text-sm"
       >
@@ -58,12 +50,11 @@
           </ListboxOption>
         </template>
       </ListboxOptions>
-      <!-- </transition> -->
     </div>
   </Listbox>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {computed, ref, watch} from 'vue'
 import {
   Listbox,
@@ -76,11 +67,13 @@ import {useI18n} from "vue-i18n";
 import {useUpdateSelectedSlot} from "@/api/postUpdateSelectedSlot";
 import { ChevronDownIcon } from '@heroicons/vue/solid'
 import useEventsBus from "tools/eventBus";
+import { Day } from '@/api/getDashboardData';
 
-const props = defineProps([
-  'dayID',
-  'day'
-])
+const props = defineProps<{
+  dayID: number | string,
+  day: Day
+}>();
+
 const { t } = useI18n()
 
 const selectedSlot = ref(props.day.slots[props.day.activeSlot])

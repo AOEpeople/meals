@@ -87,14 +87,15 @@
   </td>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { Transaction } from "@/api/getTransactionData";
 import {computed} from "vue";
-
-const props = defineProps([
-    'transaction'
-])
-
 import { useI18n } from "vue-i18n";
+
+const props = defineProps<{
+  transaction: Transaction
+}>();
+
 const { t, locale } = useI18n();
 
 let description = computed(() => locale.value === 'en' ? props.transaction.description_en : props.transaction.description_de);

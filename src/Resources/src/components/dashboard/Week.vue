@@ -26,15 +26,15 @@
     <Day
       v-for="(day, dayID, d_index) in days"
       :key="dayID"
-      :weekID="weekID"
-      :dayID="dayID"
+      :weekID="String(weekID)"
+      :dayID="String(dayID)"
       :index="d_index"
       class="mb-[2.5rem] w-[98%] sm:w-3/4"
     />
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import Day from '@/components/dashboard/Day.vue'
 import { useI18n } from "vue-i18n"
 import { useProgress } from '@marcoschulte/vue3-progress'
@@ -44,7 +44,11 @@ import {computed} from "vue";
 const progress = useProgress().start()
 const { t, locale } = useI18n()
 
-const props = defineProps(['weekID', 'index'])
+const props = defineProps<{
+  weekID: number | string,
+  index: number
+}>();
+
 const week = dashboardStore.getWeek(props.weekID)
 const days = dashboardStore.getDays(props.weekID)
 

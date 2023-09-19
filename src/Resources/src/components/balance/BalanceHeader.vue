@@ -27,7 +27,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import Popover from "@/components/misc/Popover.vue";
 import TransactionPanel2 from "@/components/balance/TransactionPanel2.vue";
 

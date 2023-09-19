@@ -19,10 +19,10 @@
           leave-to="opacity-0"
         >
           <DialogPanel
-            class="relative h-full w-full overflow-hidden p-4 text-left align-middle sm:my-8 sm:p-6"
+            class="relative grid h-full w-full place-content-center overflow-hidden p-4 text-left align-middle sm:my-8 sm:p-6"
           >
             <p class="max-w-[300px] text-center align-middle font-bold sm:max-w-sm">
-              Request is being processed
+              {{ t('popup.processing') }}
             </p>
           </DialogPanel>
         </TransitionChild>
@@ -33,8 +33,11 @@
 
 <script setup lang="ts">
 import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue';
+import { useI18n } from 'vue-i18n';
 
 defineProps<{
   isOpen: boolean
 }>();
+
+const { t } = useI18n();
 </script>

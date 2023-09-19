@@ -14,10 +14,10 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, ref} from "vue";
-import FinanceTable from "@/components/finance/FinanceTable.vue";
-import {useFinances} from "@/stores/financesStore";
-import FinanceHeader from "@/components/finance/FinanceHeader.vue";
+import {onMounted, ref} from 'vue';
+import FinanceTable from '@/components/finance/FinanceTable.vue';
+import {useFinances} from '@/stores/financesStore';
+import FinanceHeader from '@/components/finance/FinanceHeader.vue';
 
 const {fetchFinances, FinancesState} = useFinances();
 const loaded = ref(false);

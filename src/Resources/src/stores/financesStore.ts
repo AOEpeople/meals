@@ -1,7 +1,7 @@
-import {reactive} from "vue";
-import getFinances from "@/api/getFinances";
-import {Dictionary} from "../../types/types";
-import {isResponseObjectOkay} from "@/api/isResponseOkay";
+import {reactive} from 'vue';
+import getFinances from '@/api/getFinances';
+import {Dictionary} from '../../types/types';
+import {isResponseObjectOkay} from '@/api/isResponseOkay';
 
 export interface Finances {
   heading: string;

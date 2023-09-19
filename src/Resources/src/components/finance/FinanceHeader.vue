@@ -35,17 +35,17 @@
 </template>
 
 <script setup lang="ts">
-import {onBeforeMount, ref} from "vue";
-import {useI18n} from "vue-i18n";
+import {onBeforeMount, ref} from 'vue';
+import {useI18n} from 'vue-i18n';
 import { DownloadIcon } from '@heroicons/vue/outline'
 import VueDatePicker from '@vuepic/vue-datepicker';
-import moment from "moment/moment";
+import moment from 'moment/moment';
 
 const emit = defineEmits(['dateChanged'])
 const { t, locale } = useI18n()
 const date = ref()
-let minDate = "";
-let maxDate = "";
+let minDate = '';
+let maxDate = '';
 
 defineProps<{
   dateRange: string,
@@ -60,8 +60,8 @@ onBeforeMount(() => {
 })
 
 const handleDateChange = (modelData: Date[]) => {
-  minDate = moment(modelData[0]).format("MM-DD-YYYY");
-  maxDate = moment(modelData[1]).format("MM-DD-YYYY");
+  minDate = moment(modelData[0]).format('MM-DD-YYYY');
+  maxDate = moment(modelData[1]).format('MM-DD-YYYY');
 
   emit('dateChanged', modelData);
 }

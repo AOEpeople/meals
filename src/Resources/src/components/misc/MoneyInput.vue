@@ -22,12 +22,10 @@ const emit = defineEmits(['update:modelValue']);
 
 const value = computed({
   get() {
-    console.log(`Getting Money: ${props.modelValue}`);
     return locale.value === 'en' ? props.modelValue.toFixed(2) : props.modelValue.toFixed(2).replace(/\./g, ',');
   },
   set(value) {
-    console.log(`Emitting Money: ${value.replace(/,/, '.')}`);
     emit('update:modelValue', parseFloat(value.replace(/,/, '.')));
   }
-})
+});
 </script>

@@ -18,7 +18,7 @@
           </button>
         </template>
         <template #panel="{ close }">
-          <TransactionPanel2
+          <TransactionPanel
             @closePanel="close()"
           />
         </template>
@@ -29,7 +29,7 @@
 
 <script setup lang="ts">
 import Popover from "@/components/misc/Popover.vue";
-import TransactionPanel2 from "@/components/balance/TransactionPanel2.vue";
+import TransactionPanel from "@/components/balance/TransactionPanel.vue";
 
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();

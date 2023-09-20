@@ -15,7 +15,5 @@ export default async function postPaypalOrder(amount: string, orderId: string) {
         body: data
     });
 
-    console.log('Posted ecash payment!');
-
     return response;
 }

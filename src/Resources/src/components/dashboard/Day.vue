@@ -2,11 +2,17 @@
   <div class="day-shadow mx-auto flex h-auto max-w-[414px] rounded bg-white sm:max-w-none">
     <div
       class="relative grid w-[24px] justify-center gap-2 rounded-l-[5px] py-[2px]"
-      :class="[day.isLocked ? 'bg-[#80909F]' : 'grid-rows-[minmax(0,1fr)_24px] bg-primary-2']"
+      :class="[day.isLocked ? 'bg-[#80909F]' : 'grid-rows-[24px_minmax(0,1fr)_24px] bg-primary-2']"
     >
+      <InformationButton
+        v-if="!day.isLocked && !emptyDay && !guestData"
+        :dayID="dayID"
+        :index="index"
+        class="row-start-1 w-[24px] text-center"
+      />
       <span
-        class="row-start-1 rotate-180 place-self-center text-center text-[11px] font-bold uppercase leading-4 tracking-[3px] text-white [writing-mode:vertical-lr]"
-        :class="day.isLocked || emptyDay || guestData ? 'py-[24px]' : 'pb-[24px]'"
+        class="row-start-2 rotate-180 place-self-center text-center text-[11px] font-bold uppercase leading-4 tracking-[3px] text-white [writing-mode:vertical-lr]"
+        :class="day.isLocked || emptyDay || guestData ? 'py-[24px]' : 'pb-[0px]'"
       >
         {{ weekday }}
       </span>
@@ -14,7 +20,7 @@
         v-if="!day.isLocked && !emptyDay && !guestData"
         :dayID="dayID"
         :index="index"
-        class="row-start-2 w-[24px] pl-[3px] text-center"
+        class="row-start-3 w-[24px] pl-[3px] text-center"
       />
     </div>
     <div
@@ -66,15 +72,16 @@
 </template>
 
 <script setup lang="ts">
+import { GuestDay } from '@/api/getInvitationData';
+import GuestButton from '@/components/dashboard/GuestButton.vue';
+import InformationButton from '@/components/dashboard/InformationButton.vue';
 import MealData from '@/components/dashboard/MealData.vue';
 import Slots from '@/components/dashboard/Slots.vue';
-import { useI18n } from 'vue-i18n';
 import VariationsData from '@/components/dashboard/VariationsData.vue';
-import { computed } from 'vue';
 import { dashboardStore } from '@/stores/dashboardStore';
-import GuestButton from '@/components/dashboard/GuestButton.vue';
 import { translateWeekday } from 'tools/localeHelper';
-import { GuestDay } from '@/api/getInvitationData';
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 const { t, locale } = useI18n()
 
@@ -95,4 +102,10 @@ const emptyDay = Object.keys(day.meals).length === 0;
 .day-shadow {
   box-shadow: 0 4px 0 hsla(0,0%,100%,.46),0 15px 35px rgba(216,225,233,.8);
 }
+
+.grid {
+    display: grid;
+    align-content: center;
+}
+
 </style>

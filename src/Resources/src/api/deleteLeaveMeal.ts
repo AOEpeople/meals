@@ -7,7 +7,7 @@ export type LeaveMeal = {
 
 export async function useLeaveMeal(data: string) {
     const { error, request, response } = useApi<LeaveMeal>(
-        'POST',
+        'DELETE',
         'api/leave-meal',
         'application/json',
         data,

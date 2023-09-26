@@ -129,34 +129,34 @@ MealzMealBundle_Meal_count:
     methods: [GET]
 
 MealzMealBundle_api_join_Meal:
-  path: /api/join-meal
+  path: /api/meal/participation
   defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::joinMeal }
   methods: [POST]
 
 MealzMealBundle_api_join_Meal_Guest:
-  path: /api/guest/join-meal
+  path: /api/guest/meal/participation
   defaults: { _controller: App\Mealz\MealBundle\Controller\MealGuestController::joinAsGuest }
-  methods: [ POST ]
+  methods: [POST]
 
 MealzMealBundle_api_leave_Meal:
-  path: /api/leave-meal
+  path: /api/meal/participation
   defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::leaveMeal }
   methods: [DELETE]
 
 MealzMealBundle_api_offer_meal:
-  path: /api/offer-meal
+  path: /api/meal/offer
   defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::offerMeal }
   methods: [POST]
 
 MealzMealBundle_api_cancel_offer:
-  path: /api/cancel-offer
+  path: /api/meal/offer
   defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::cancelOfferedMeal }
-  methods: [POST]
+  methods: [DELETE]
 
 MealzMealBundle_api_update_selected_Slot:
-  path: /api/update-selected-slot
+  path: /api/participation/slot
   defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipationUpdateController::updateSlot }
-  methods: [ POST ]
+  methods: [PUT]
 
 MealzMealBundle_api_invitationdata:
   path: /api/guest-invitation-{guestInvitationId}

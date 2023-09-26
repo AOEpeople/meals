@@ -64,7 +64,7 @@ import {
 } from '@headlessui/vue';
 
 import {useI18n} from 'vue-i18n';
-import {useUpdateSelectedSlot} from '@/api/postUpdateSelectedSlot';
+import {useUpdateSelectedSlot} from '@/api/putUpdateSelectedSlot';
 import { ChevronDownIcon } from '@heroicons/vue/solid';
 import useEventsBus from 'tools/eventBus';
 import { Day } from '@/api/getDashboardData';

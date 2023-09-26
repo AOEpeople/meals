@@ -11,7 +11,7 @@ export type JoinMeal = {
 export async function useJoinMeal(data: string) {
     const { request, response, error } = useApi<JoinMeal | IMessage>(
         'POST',
-        'api/join-meal',
+        'api/meal/participation',
         'application/json',
         data,
     );

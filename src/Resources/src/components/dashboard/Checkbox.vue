@@ -30,7 +30,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { useJoinMeal } from '@/api/postJoinMeal';
+import { JoinMeal, useJoinMeal } from '@/api/postJoinMeal';
 import { useLeaveMeal } from '@/api/deleteLeaveMeal';
 import { useOfferMeal } from '@/api/postOfferMeal';
 import { useCancelOffer } from '@/api/postCancelOffer';
@@ -41,9 +41,9 @@ import useEventsBus from 'tools/eventBus';
 import {TransitionRoot} from '@headlessui/vue';
 import OfferPopover from '@/components/dashboard/OfferPopover.vue';
 import { Day, Meal } from '@/api/getDashboardData';
-import useFlashMessage from '@/services/useFlashMessage'
-import { isMessage } from '@/interfaces/IMessage'
-import { FlashMessageType } from '@/enums/FlashMessage'
+import useFlashMessage from '@/services/useFlashMessage';
+import { IMessage, isMessage } from '@/interfaces/IMessage';
+import { FlashMessageType } from '@/enums/FlashMessage';
 
 const props = defineProps<{
   weekID: number | string,
@@ -166,14 +166,14 @@ async function joinMeal(dishSlugs) {
 
     const { response, error } = await useJoinMeal(JSON.stringify(data))
     if (error.value === false) {
-      day.activeSlot = response.value.slotId
-      meal.isParticipating = response.value.participantId
-      meal.mealState = response.value.mealState
+      day.activeSlot = (response.value as JoinMeal).slotId
+      meal.isParticipating = (response.value as JoinMeal).participantId
+      meal.mealState = (response.value as JoinMeal).mealState
     } else {
       if (isMessage(response.value) === true) {
         sendFlashMessage({
           type: FlashMessageType.ERROR,
-          message: response.value.message
+          message: (response.value as IMessage).message
         });
       }
     }

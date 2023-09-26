@@ -1,8 +1,8 @@
-import { Dictionary } from "types/types";
-import { reactive, readonly } from "vue";
-import { DateTime } from "./getDashboardData";
-import useApi from "./api";
-import { usePeriodicFetch } from "@/services/usePeriodicFetch";
+import { Dictionary } from 'types/types';
+import { reactive, readonly } from 'vue';
+import { DateTime } from './getDashboardData';
+import useApi from './api';
+import { usePeriodicFetch } from '@/services/usePeriodicFetch';
 
 // timeout in ms between fetches of the participations
 const PERIODIC_TIMEOUT = 60000;

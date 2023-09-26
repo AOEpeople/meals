@@ -1,20 +1,23 @@
-import useApi from "@/api/api";
-import { ref } from "vue"
+import useApi from '@/api/api';
+import { ref } from 'vue';
+import { DateTime } from './getDashboardData';
 
-export type Transaction = {
-    data: [{
-        type: string,
-        date: object,
-        timestamp: string,
-        description_en: string,
-        description_de: string,
-        amount: number,
-    }],
+export type Transactions = {
+    data: Transaction[],
     difference: number,
 }
 
+export type Transaction = {
+    type: string,
+    date: DateTime,
+    timestamp: string,
+    description_en: string,
+    description_de: string,
+    amount: number,
+}
+
 export async function useTransactionData(){
-    const { response: transactions, request } = useApi<Transaction>(
+    const { response: transactions, request } = useApi<Transactions>(
         'GET',
         'api/transactions',
     );

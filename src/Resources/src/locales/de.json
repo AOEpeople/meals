@@ -238,5 +238,8 @@
   },
   "participantList": {
     "no_meals": "Heute kein Essen"
+  },
+  "popup": {
+    "processing": "Die Anfrage wird bearbeitet"
   }
 }

@@ -60,6 +60,7 @@ describe('Test Categories View', () => {
         // Verify that the category was created
         cy.get('button').contains('+ Kategorie erstellen').click();
         cy.get('span').contains('TestKategorie1234');
+        cy.get('button').contains('+ Kategorie erstellen').click();
 
         // Edit Category
         cy.get('span')

@@ -7,10 +7,10 @@
 </template>
 
 <script setup lang="ts">
-import InputLabel from "@/components/misc/InputLabel.vue";
-import { useDishes } from "@/stores/dishesStore";
-import { ref, watch } from "vue";
-import { useI18n } from "vue-i18n";
+import InputLabel from '@/components/misc/InputLabel.vue';
+import { useDishes } from '@/stores/dishesStore';
+import { ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
 const { setFilter } = useDishes();

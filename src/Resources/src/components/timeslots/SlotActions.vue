@@ -43,14 +43,14 @@
 </template>
 
 <script setup lang="ts">
-import Switch from "@/components/misc/Switch.vue"
-import { ref, watch } from "vue"
-import { useTimeSlots, TimeSlot } from "@/stores/timeSlotStore";
-import ActionButton from "@/components/misc/ActionButton.vue";
-import { useI18n } from "vue-i18n";
+import Switch from '@/components/misc/Switch.vue';
+import { ref, watch } from 'vue';
+import { useTimeSlots, TimeSlot } from '@/stores/timeSlotStore';
+import ActionButton from '@/components/misc/ActionButton.vue';
+import { useI18n } from 'vue-i18n';
 import { Action } from '@/enums/Actions';
-import Popover from "../misc/Popover.vue";
-import SlotCreationPanel from "./SlotCreationPanel.vue";
+import Popover from '../misc/Popover.vue';
+import SlotCreationPanel from './SlotCreationPanel.vue';
 
 const { changeDisabledState, deleteSlotWithSlug } = useTimeSlots();
 const { t } = useI18n();

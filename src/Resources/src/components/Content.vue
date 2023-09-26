@@ -23,7 +23,7 @@
   </main>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import MessageBanner from '@/components/messageBanner/MessageBanner.vue';

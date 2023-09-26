@@ -40,7 +40,7 @@ import Table from '@/components/misc/Table.vue';
 import SlotHeader from '@/components/timeslots/SlotHeader.vue';
 import SlotActions from '@/components/timeslots/SlotActions.vue';
 import { useProgress } from '@marcoschulte/vue3-progress';
-import { useTimeSlots } from "@/stores/timeSlotStore";
+import { useTimeSlots } from '@/stores/timeSlotStore';
 import { onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import LoadingSpinner from '@/components/misc/LoadingSpinner.vue';

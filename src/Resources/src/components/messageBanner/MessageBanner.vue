@@ -29,10 +29,10 @@
 </template>
 
 <script setup lang="ts">
-import ActionButton from "../misc/ActionButton.vue";
-import { Action } from "@/enums/Actions";
-import MessageBannerData from "./MessageBannerData.vue";
-import useFlashMessage from "@/services/useFlashMessage";
+import ActionButton from '../misc/ActionButton.vue';
+import { Action } from '@/enums/Actions';
+import MessageBannerData from './MessageBannerData.vue';
+import useFlashMessage from '@/services/useFlashMessage';
 
 const { flashMessages, clearMessages } = useFlashMessage();
 

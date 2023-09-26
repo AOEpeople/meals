@@ -7,7 +7,7 @@
       :key="index"
       class="w-[585px] flex-initial"
     >
-      <Week
+      <WeekComp
         :weekID="weekID"
         :index="index"
       />
@@ -15,9 +15,12 @@
   </div>
 </template>
 
-<script setup>
-import Week from "./Week.vue";
+<script setup lang="ts">
+import { Dictionary } from 'types/types';
+import WeekComp from './Week.vue';
+import { Week } from '@/api/getDashboardData';
 
-defineProps(['weeks'])
-
+defineProps<{
+  weeks: Dictionary<Week>
+}>();
 </script>

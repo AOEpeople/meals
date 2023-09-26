@@ -40,21 +40,22 @@
   </div>
 </template>
 
-<script setup>
-import ParticipationCounter from "@/components/menuCard/ParticipationCounter.vue";
-import Checkbox from '@/components/dashboard/Checkbox.vue'
-import {useI18n} from "vue-i18n";
-import {computed} from "vue";
-import {dashboardStore} from "@/stores/dashboardStore";
-import PriceTag from "@/components/dashboard/PriceTag.vue";
+<script setup lang="ts">
+import ParticipationCounter from '@/components/menuCard/ParticipationCounter.vue';
+import Checkbox from '@/components/dashboard/Checkbox.vue';
+import {useI18n} from 'vue-i18n';
+import {computed} from 'vue';
+import {dashboardStore} from '@/stores/dashboardStore';
+import PriceTag from '@/components/dashboard/PriceTag.vue';
+import { Day, Meal } from '@/api/getDashboardData';
 
-const props = defineProps([
-  'weekID',
-  'dayID',
-  'mealID',
-  'meal',
-  'day'
-])
+const props = defineProps<{
+  weekID: number | string,
+  dayID: number | string,
+  mealID: number | string,
+  meal: Meal,
+  day: Day
+}>();
 
 const meal = props.meal ? props.meal : dashboardStore.getMeal(props.weekID, props.dayID, props.mealID)
 

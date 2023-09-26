@@ -86,10 +86,10 @@ import { useI18n } from 'vue-i18n';
 const { t, locale } = useI18n()
 
 const props = defineProps<{
-  weekID: string,
-  dayID: string,
-  index: number,
-  guestData: GuestDay | undefined
+  weekID?: string,
+  dayID?: string,
+  index?: number,
+  guestData?: GuestDay | undefined
 }>();
 
 const day = props.guestData ? props.guestData.guestData : dashboardStore.getDay(props.weekID, props.dayID);

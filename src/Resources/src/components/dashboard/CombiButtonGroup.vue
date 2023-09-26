@@ -41,17 +41,18 @@
   </RadioGroup>
 </template>
 
-<script setup>
-import { ref, watch } from 'vue'
-import { RadioGroup, RadioGroupDescription, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue'
-import {dashboardStore} from "@/stores/dashboardStore";
+<script setup lang="ts">
+import { ref, watch } from 'vue';
+import { RadioGroup, RadioGroupDescription, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue';
+import {dashboardStore} from '@/stores/dashboardStore';
+import { Meal } from '@/api/getDashboardData';
 
-const props = defineProps([
-    'weekID',
-    'dayID',
-    'mealID',
-    'meal'
-])
+const props = defineProps<{
+  weekID: number | string,
+  dayID: number | string,
+  mealID: number | string,
+  meal: Meal
+}>();
 
 const meal = props.meal !== undefined ? props.meal : dashboardStore.getMeal(props.weekID, props.dayID, props.mealID)
 const emit = defineEmits(['addEntry', 'removeEntry'])

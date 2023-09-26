@@ -1,7 +1,7 @@
-import { CreateDishDTO } from "@/api/postCreateDish";
-import { Dish } from "@/stores/dishesStore";
-import useApi from "./api";
-import { IMessage } from "@/interfaces/IMessage";
+import { CreateDishDTO } from '@/api/postCreateDish';
+import { Dish } from '@/stores/dishesStore';
+import useApi from './api';
+import { IMessage } from '@/interfaces/IMessage';
 
 /**
  * Performs a PUT request to update a dish

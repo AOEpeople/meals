@@ -1,6 +1,6 @@
-import { Store } from "@/stores/store";
-import { TimeSlots, useTimeSlotData } from "@/api/getTimeSlotData";
-import { useUpdateSlot } from "@/api/putSlotUpdate";
+import { Store } from '@/stores/store';
+import { TimeSlots, useTimeSlotData } from '@/api/getTimeSlotData';
+import { useUpdateSlot } from '@/api/putSlotUpdate';
 
 export type TimeSlot = {
     slots: TimeSlots,

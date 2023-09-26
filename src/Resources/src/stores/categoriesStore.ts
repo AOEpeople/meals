@@ -1,12 +1,12 @@
-import { Ref, reactive, readonly, watch } from "vue";
-import getCategoriesData from "@/api/getCategoriesData";
-import deleteCategory from "@/api/deleteCategory";
-import postCreateCategory from "@/api/postCreateCategory";
-import putCategoryUpdate from "@/api/putCategoryUpdate";
-import { isMessage } from "@/interfaces/IMessage";
-import { isResponseObjectOkay, isResponseArrayOkay } from "@/api/isResponseOkay";
-import useFlashMessage from "@/services/useFlashMessage";
-import { FlashMessageType } from "@/enums/FlashMessage";
+import { Ref, reactive, readonly, watch } from 'vue';
+import getCategoriesData from '@/api/getCategoriesData';
+import deleteCategory from '@/api/deleteCategory';
+import postCreateCategory from '@/api/postCreateCategory';
+import putCategoryUpdate from '@/api/putCategoryUpdate';
+import { isMessage } from '@/interfaces/IMessage';
+import { isResponseObjectOkay, isResponseArrayOkay } from '@/api/isResponseOkay';
+import useFlashMessage from '@/services/useFlashMessage';
+import { FlashMessageType } from '@/enums/FlashMessage';
 
 export interface Category {
     id: number,

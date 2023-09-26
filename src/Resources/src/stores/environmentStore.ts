@@ -1,5 +1,5 @@
-import {Store} from "@/stores/store";
-import {Env, useEnvs} from "@/api/getEnvironmentals";
+import {Store} from '@/stores/store';
+import {Env, useEnvs} from '@/api/getEnvironmentals';
 
 
 class EnvironmentStore extends Store<Env> {

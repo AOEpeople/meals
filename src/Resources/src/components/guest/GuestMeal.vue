@@ -32,21 +32,31 @@
   </div>
 </template>
 
-<script setup>
-import ParticipationCounter from "@/components/menuCard/ParticipationCounter.vue";
-import {computed} from "vue";
-import { useI18n } from "vue-i18n";
+<script setup lang="ts">
+import ParticipationCounter from '@/components/menuCard/ParticipationCounter.vue';
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import GuestCheckbox from '@/components/guest/GuestCheckbox.vue'
+import { Dictionary } from 'types/types';
+import { Meal } from '@/api/getDashboardData';
 
-const props = defineProps(['meals', 'mealId'])
+const props = defineProps<{
+  meals: Dictionary<Meal>,
+  mealId: number | string
+}>();
+
 const { t, locale } = useI18n();
 
-let title = computed(() => locale.value.substring(0, 2) === 'en' ? props.meals[props.mealId].title.en : props.meals[props.mealId].title.de)
-let description = ''
-
-if (props.meals[props.mealId].description !== null) {
-  description = computed(() => locale.value.substring(0, 2) === 'en' ? props.meals[props.mealId].description.en : props.meals[props.mealId].description.de);
-}
+const title = computed(() => locale.value.substring(0, 2) === 'en' ? props.meals[props.mealId].title.en : props.meals[props.mealId].title.de);
+const description = computed(() => {
+  if (props.meals[props.mealId].description !== null) {
+    if (locale.value.substring(0, 2) === 'en') {
+      return props.meals[props.mealId].description.en;
+    }
+    return props.meals[props.mealId].description.de;
+  }
+  return 1;
+});
 
 const mealCSS = computed(() => {
   let css = 'grid grid-cols-2 content-center rounded-md h-[30px] xl:h-[20px] mr-[15px] '
@@ -60,6 +70,5 @@ const mealCSS = computed(() => {
     default:
       return css
   }
-})
-
+});
 </script>

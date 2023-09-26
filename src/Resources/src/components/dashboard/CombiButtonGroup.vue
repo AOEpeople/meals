@@ -42,9 +42,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import { RadioGroup, RadioGroupDescription, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue'
-import {dashboardStore} from "@/stores/dashboardStore";
+import { ref, watch } from 'vue';
+import { RadioGroup, RadioGroupDescription, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue';
+import {dashboardStore} from '@/stores/dashboardStore';
 import { Meal } from '@/api/getDashboardData';
 
 const props = defineProps<{

@@ -49,15 +49,14 @@
 </template>
 
 <script setup lang="ts">
-import Table from '@/components/misc/Table.vue'
-import BalanceDesc from "@/components/balance/BalanceDesc.vue"
-import BalanceHeader from "@/components/balance/BalanceHeader.vue"
-
-import { useI18n } from "vue-i18n"
-import {useProgress} from '@marcoschulte/vue3-progress'
-import {transactionStore} from "@/stores/transactionStore"
-import { computed } from "vue"
-import {userDataStore} from "@/stores/userDataStore";
+import Table from '@/components/misc/Table.vue';
+import BalanceDesc from '@/components/balance/BalanceDesc.vue';
+import BalanceHeader from '@/components/balance/BalanceHeader.vue';
+import { useI18n } from 'vue-i18n';
+import {useProgress} from '@marcoschulte/vue3-progress';
+import {transactionStore} from '@/stores/transactionStore';
+import { computed } from 'vue';
+import {userDataStore} from '@/stores/userDataStore';
 
 const progress = useProgress().start();
 

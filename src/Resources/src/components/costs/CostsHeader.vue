@@ -36,7 +36,7 @@ import { useI18n } from 'vue-i18n';
 import CashRegisterLink from './CashRegisterLink.vue';
 import InputLabel from '../misc/InputLabel.vue';
 import { computed } from 'vue';
-import Switch from "@/components/misc/Switch.vue"
+import Switch from '@/components/misc/Switch.vue';
 import { SwitchGroup, SwitchLabel } from '@headlessui/vue';
 import { userDataStore } from '@/stores/userDataStore';
 

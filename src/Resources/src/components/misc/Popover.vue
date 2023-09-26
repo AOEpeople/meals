@@ -39,7 +39,7 @@
 <script setup lang="ts">
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
 import { computed, onMounted, onUnmounted } from 'vue';
-import { useComponentHeights } from "@/services/useComponentHeights";
+import { useComponentHeights } from '@/services/useComponentHeights';
 
 const { windowWidth, addWindowHeightListener, removeWindowHeightListener } = useComponentHeights();
 

@@ -1,7 +1,7 @@
-import { reactive, readonly } from "vue";
-import { Dictionary } from "types/types";
-import useApi from "./api";
-import { usePeriodicFetch } from "@/services/usePeriodicFetch";
+import { reactive, readonly } from 'vue';
+import { Dictionary } from 'types/types';
+import useApi from './api';
+import { usePeriodicFetch } from '@/services/usePeriodicFetch';
 
 interface INextThreeDaysState {
     days: IDay[],

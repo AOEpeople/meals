@@ -1,5 +1,5 @@
-import { IMessage } from "@/interfaces/IMessage";
-import useApi from "./api";
+import { IMessage } from '@/interfaces/IMessage';
+import useApi from './api';
 
 /**
  * Performs a DELETE request to delete a category with a given identifier

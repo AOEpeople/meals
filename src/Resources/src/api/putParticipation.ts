@@ -1,6 +1,6 @@
-import { IParticipationUpdate } from "@/stores/participationsStore";
-import useApi from "./api";
-import { IMessage } from "@/interfaces/IMessage";
+import { IParticipationUpdate } from '@/stores/participationsStore';
+import useApi from './api';
+import { IMessage } from '@/interfaces/IMessage';
 
 export default async function putParticipation(mealId: number, profileId: string, combiDishes?: string[]) {
 

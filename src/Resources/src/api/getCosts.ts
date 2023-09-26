@@ -1,5 +1,5 @@
-import { ICosts } from "@/stores/costsStore";
-import useApi from "./api";
+import { ICosts } from '@/stores/costsStore';
+import useApi from './api';
 
 /**
  * Performs a GET request for a list of costs.

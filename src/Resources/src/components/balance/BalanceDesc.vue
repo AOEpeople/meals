@@ -88,9 +88,9 @@
 </template>
 
 <script setup lang="ts">
-import { Transaction } from "@/api/getTransactionData";
-import {computed} from "vue";
-import { useI18n } from "vue-i18n";
+import { Transaction } from '@/api/getTransactionData';
+import {computed} from 'vue';
+import { useI18n } from 'vue-i18n';
 
 const props = defineProps<{
   transaction: Transaction

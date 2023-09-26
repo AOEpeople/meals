@@ -1,5 +1,5 @@
 import useApi from "@/api/api";
-import { IMessage } from "@/interfaces/IMessage";
+import { IMessage } from '@/interfaces/IMessage';
 import { ref } from "vue";
 
 export type JoinMeal = {

@@ -175,6 +175,7 @@ IDP_CLIENT_SECRET=client-secret
   * 301: The choosen titles for the category either are missing or do already exist
 *ParticipantController 4xx*
   * 401: To add a user to a combined dish, the combined dish needs to have exactly two dishes
+  * 402: On joining a Meal an error occured
 *CostSheetController 5xx*
   * 501: The profile that is requested to be hidden, is already hidden
   * 502: The settlement request has already been sent

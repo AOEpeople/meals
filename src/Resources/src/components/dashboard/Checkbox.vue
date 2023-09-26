@@ -31,7 +31,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useJoinMeal } from '@/api/postJoinMeal'
-import { useLeaveMeal } from '@/api/postLeaveMeal'
+import { useLeaveMeal } from '@/api/deleteLeaveMeal'
 import { useOfferMeal } from '@/api/postOfferMeal'
 import { useCancelOffer } from '@/api/postCancelOffer'
 import { dashboardStore } from '@/stores/dashboardStore'
@@ -40,8 +40,12 @@ import CombiModal from '@/components/dashboard/CombiModal.vue'
 import useEventsBus from "tools/eventBus";
 import {TransitionRoot} from "@headlessui/vue";
 import OfferPopover from "@/components/dashboard/OfferPopover.vue";
+import useFlashMessage from '@/services/useFlashMessage'
+import { isMessage } from '@/interfaces/IMessage'
+import { FlashMessageType } from '@/enums/FlashMessage'
 
 const props = defineProps(['weekID', 'dayID', 'mealID', 'variationID', 'meal', 'day'])
+const { sendFlashMessage } = useFlashMessage();
 
 const day = props.day ? props.day : dashboardStore.getDay(props.weekID, props.dayID)
 let meal
@@ -157,6 +161,13 @@ async function joinMeal(dishSlugs) {
       day.activeSlot = response.value.slotId
       meal.isParticipating = response.value.participantId
       meal.mealState = response.value.mealState
+    } else {
+      if (isMessage(response.value) === true) {
+        sendFlashMessage({
+          type: FlashMessageType.ERROR,
+          message: response.value.message
+        });
+      }
     }
   }
 }

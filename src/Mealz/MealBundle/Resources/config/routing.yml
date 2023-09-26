@@ -141,7 +141,7 @@ MealzMealBundle_api_join_Meal_Guest:
 MealzMealBundle_api_leave_Meal:
   path: /api/leave-meal
   defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::leaveMeal }
-  methods: [POST]
+  methods: [DELETE]
 
 MealzMealBundle_api_offer_meal:
   path: /api/offer-meal

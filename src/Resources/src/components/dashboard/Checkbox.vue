@@ -33,7 +33,7 @@ import { computed, ref } from 'vue';
 import { JoinMeal, useJoinMeal } from '@/api/postJoinMeal';
 import { useLeaveMeal } from '@/api/deleteLeaveMeal';
 import { useOfferMeal } from '@/api/postOfferMeal';
-import { useCancelOffer } from '@/api/postCancelOffer';
+import { useCancelOffer } from '@/api/deleteCancelOffer';
 import { dashboardStore } from '@/stores/dashboardStore';
 import { CheckIcon } from '@heroicons/vue/solid';
 import CombiModal from '@/components/dashboard/CombiModal.vue';

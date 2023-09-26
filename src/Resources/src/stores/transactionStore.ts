@@ -1,8 +1,8 @@
-import {Store} from "@/stores/store";
-import { useTransactionData } from "@/api/getTransactionData";
+import { Store } from '@/stores/store';
+import { Transaction, useTransactionData } from '@/api/getTransactionData';
 
 type TransStore = {
-    data: object[],
+    data: Transaction[],
     difference: number,
     isLoading: boolean
 }
@@ -10,7 +10,7 @@ type TransStore = {
 class TransactionStore extends Store<TransStore> {
     protected data(): TransStore {
         return {
-            data: [{}],
+            data: [{} as Transaction],
             difference: 0,
             isLoading: true,
         };

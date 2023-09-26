@@ -1,13 +1,13 @@
-import { Dictionary } from "types/types";
-import { Ref, reactive, readonly, watch } from "vue";
-import getParticipations from "@/api/getParticipations";
-import { isResponseObjectOkay } from "@/api/isResponseOkay";
-import putParticipation from "@/api/putParticipation";
-import { isMessage, IMessage } from "@/interfaces/IMessage";
-import deleteParticipation from "@/api/deleteParticipation";
-import { IProfile } from "./profilesStore";
-import useFlashMessage from "@/services/useFlashMessage";
-import { FlashMessageType } from "@/enums/FlashMessage";
+import { Dictionary } from 'types/types';
+import { Ref, reactive, readonly, watch } from 'vue';
+import getParticipations from '@/api/getParticipations';
+import { isResponseObjectOkay } from '@/api/isResponseOkay';
+import putParticipation from '@/api/putParticipation';
+import { isMessage, IMessage } from '@/interfaces/IMessage';
+import deleteParticipation from '@/api/deleteParticipation';
+import { IProfile } from './profilesStore';
+import useFlashMessage from '@/services/useFlashMessage';
+import { FlashMessageType } from '@/enums/FlashMessage';
 
 interface IMenuParticipationsState {
     days: IMenuParticipationDays,

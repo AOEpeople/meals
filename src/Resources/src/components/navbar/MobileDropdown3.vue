@@ -92,22 +92,24 @@
     </MenuItems>
   </transition>
 </template>
-<script setup>
-import { MenuItems, MenuItem } from "@headlessui/vue";
-import { CurrencyEuroIcon } from '@heroicons/vue/outline'
-import { useI18n } from "vue-i18n";
-import Icons from "../misc/Icons.vue";
+
+<script setup lang="ts">
+import { MenuItems, MenuItem } from '@headlessui/vue';
+import { CurrencyEuroIcon } from '@heroicons/vue/outline';
+import { useI18n } from 'vue-i18n';
+import Icons from '../misc/Icons.vue';
+import { INavigation } from '@/interfaces/INavigation';
 
 const { t, locale } = useI18n();
 
 const changeLocale = () => {
 locale.value = locale.value.substring(0, 2) === 'en' ? 'de' : 'en';
 }
-const emits = defineEmits(['logout'])
-defineProps([
-'userName',
-'balance',
-'navigation'
-]);
+const emits = defineEmits(['logout']);
 
+defineProps<{
+  userName: string,
+  balance: string,
+  navigation: INavigation[]
+}>();
 </script>

@@ -1,16 +1,16 @@
-import getCosts from "@/api/getCosts";
-import { DateTime } from "@/api/getDashboardData";
-import { isResponseObjectOkay } from "@/api/isResponseOkay";
-import { Dictionary } from "types/types";
-import { reactive, readonly, watch } from "vue";
-import { translateMonth } from "@/tools/localeHelper";
-import postHideUser from "@/api/postHideUser";
-import { IMessage, isMessage } from "@/interfaces/IMessage";
-import postSettlement from "@/api/postSettlement";
-import postCashPayment from "@/api/postCashPayment";
-import postConfirmSettlement from "@/api/postConfirmSettlement";
-import useFlashMessage from "@/services/useFlashMessage";
-import { FlashMessageType } from "@/enums/FlashMessage";
+import getCosts from '@/api/getCosts';
+import { DateTime } from '@/api/getDashboardData';
+import { isResponseObjectOkay } from '@/api/isResponseOkay';
+import { Dictionary } from 'types/types';
+import { reactive, readonly, watch } from 'vue';
+import { translateMonth } from '@/tools/localeHelper';
+import postHideUser from '@/api/postHideUser';
+import { IMessage, isMessage } from '@/interfaces/IMessage';
+import postSettlement from '@/api/postSettlement';
+import postCashPayment from '@/api/postCashPayment';
+import postConfirmSettlement from '@/api/postConfirmSettlement';
+import useFlashMessage from '@/services/useFlashMessage';
+import { FlashMessageType } from '@/enums/FlashMessage';
 
 export interface ICosts {
     columnNames: Dictionary<DateTime>,

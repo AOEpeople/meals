@@ -1,6 +1,6 @@
-import useEventsBus from "@/tools/eventBus";
-import { FlashMessageType } from "@/enums/FlashMessage";
-import { readonly, ref } from "vue";
+import useEventsBus from '@/tools/eventBus';
+import { FlashMessageType } from '@/enums/FlashMessage';
+import { readonly, ref } from 'vue';
 
 export interface FlashMessage {
     type: FlashMessageType,

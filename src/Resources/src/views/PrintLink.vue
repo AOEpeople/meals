@@ -9,9 +9,9 @@
     </router-link>
   </div>
 </template>
-<script setup>
-import {useI18n} from "vue-i18n";
-import Icons from "@/components/misc/Icons.vue";
+<script setup lang="ts">
+import { useI18n } from 'vue-i18n';
+import Icons from '@/components/misc/Icons.vue';
 
 const { t } = useI18n()
 </script>

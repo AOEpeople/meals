@@ -1,6 +1,6 @@
-import { onMounted, reactive } from "vue";
-import { useWeeks } from "@/stores/weeksStore";
-import { useDishes } from "@/stores/dishesStore";
+import { onMounted, reactive } from 'vue';
+import { useWeeks } from '@/stores/weeksStore';
+import { useDishes } from '@/stores/dishesStore';
 
 /**
  * Constructs a map from meal id to dish id for a given week and returns the map.

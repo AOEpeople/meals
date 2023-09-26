@@ -1,16 +1,16 @@
-import { DateTime } from "@/api/getDashboardData";
-import getWeeksData from "@/api/getWeeks";
-import postCreateWeek from "@/api/postCreateWeek";
-import putWeekUpdate from "@/api/putWeekUpdate";
-import getDishCount from "@/api/getDishCount";
-import { DayDTO, WeekDTO } from "@/interfaces/DayDTO";
-import { Dictionary } from "types/types";
-import { reactive, readonly, watch } from "vue";
-import { isMessage } from "@/interfaces/IMessage";
-import { isResponseArrayOkay } from "@/api/isResponseOkay";
-import getEmptyWeek from "@/api/getEmptyWeek";
-import useFlashMessage from "@/services/useFlashMessage";
-import { FlashMessageType } from "@/enums/FlashMessage";
+import { DateTime } from '@/api/getDashboardData';
+import getWeeksData from '@/api/getWeeks';
+import postCreateWeek from '@/api/postCreateWeek';
+import putWeekUpdate from '@/api/putWeekUpdate';
+import getDishCount from '@/api/getDishCount';
+import { DayDTO, WeekDTO } from '@/interfaces/DayDTO';
+import { Dictionary } from 'types/types';
+import { reactive, readonly, watch } from 'vue';
+import { isMessage } from '@/interfaces/IMessage';
+import { isResponseArrayOkay } from '@/api/isResponseOkay';
+import getEmptyWeek from '@/api/getEmptyWeek';
+import useFlashMessage from '@/services/useFlashMessage';
+import { FlashMessageType } from '@/enums/FlashMessage';
 
 export interface Week {
     id: number,

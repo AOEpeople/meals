@@ -1,5 +1,5 @@
-import useApi from "./api";
-import { IMenuParticipationDays } from "@/stores/participationsStore";
+import useApi from './api';
+import { IMenuParticipationDays } from '@/stores/participationsStore';
 
 /**
  * Fetches a list of all participations for a passed in week

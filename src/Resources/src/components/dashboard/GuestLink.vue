@@ -8,23 +8,28 @@
   </div>
 </template>
 
-<script setup>
-import {useGuestLink} from "@/api/getGuestLink";
-import {useI18n} from "vue-i18n";
-import { CheckIcon } from "@heroicons/vue/solid";
+<script setup lang="ts">
+import {useGuestLink} from '@/api/getGuestLink';
+import {useI18n} from 'vue-i18n';
+import { CheckIcon } from '@heroicons/vue/solid';
+import { onMounted, ref } from 'vue';
 
-const props = defineProps(['dayID'])
+const props = defineProps<{
+  dayID: string
+}>();
+
 const { t } = useI18n()
+const url = ref('');
 
-let url = ''
+onMounted(async () => {
+  const { link, error } = await useGuestLink(props.dayID)
+  if (error.value === false) {
+    copyTextToClipboard(link.value.url)
+    url.value = link.value.url
+  }
+});
 
-const { link, error } = await useGuestLink(props.dayID)
-if (error.value === false) {
-  copyTextToClipboard(link.value.url)
-  url = link.value.url
-}
-
-async function fallbackCopyTextToClipboard(text) {
+async function fallbackCopyTextToClipboard(text: string) {
   let textArea = document.createElement('textarea');
   textArea.value = text;
 
@@ -42,7 +47,7 @@ async function fallbackCopyTextToClipboard(text) {
   document.body.removeChild(textArea);
 }
 
-async function copyTextToClipboard(text) {
+async function copyTextToClipboard(text: string) {
   if (!navigator.clipboard) {
     await fallbackCopyTextToClipboard(text);
     return;

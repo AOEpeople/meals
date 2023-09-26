@@ -269,7 +269,7 @@ MealzMealBundle_Print_participations_api_date:
   methods: [ GET ]
   requirements:
         # format yyyy-mm-dd with
-        date: ^\d\d\d\d-\d\d-\d\d$
+        date: ^(20)\d\d-\d\d-\d\d$
 
 mealz_meal_edit_participations:
     path: /participations/{week}/edit

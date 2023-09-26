@@ -1,8 +1,8 @@
 <template>
-  <div class="day-shadow mx-auto flex h-auto max-w-[414px] rounded bg-white sm:max-w-none">
+  <div class="day-shadow mx-auto flex h-auto max-w-[414px] content-center rounded bg-white sm:max-w-none">
     <div
-      class="relative grid w-[24px] justify-center gap-2 rounded-l-[5px] py-[2px]"
-      :class="[day.isLocked ? 'bg-[#80909F]' : 'grid-rows-[24px_minmax(0,1fr)_24px] bg-primary-2']"
+      class="relative grid w-[24px] content-center justify-center gap-2 rounded-l-[5px] py-[2px]"
+      :class="[day.isLocked ? 'bg-[#80909F]' : 'bg-primary-2 grid-rows-[24px_minmax(0,1fr)_24px]']"
     >
       <InformationButton
         v-if="!day.isLocked && !emptyDay && !guestData"
@@ -31,7 +31,7 @@
         v-if="day.slotsEnabled"
         class="flex h-[54px] items-center border-b-[2px] px-[15px]"
       >
-        <span class="mr-2 inline-block text-[11px] font-bold uppercase leading-4 tracking-[1.5px] text-primary">
+        <span class="text-primary mr-2 inline-block text-[11px] font-bold uppercase leading-4 tracking-[1.5px]">
           {{ t('dashboard.slot.timeslot') }}
         </span>
         <Slots
@@ -66,7 +66,7 @@
       v-if="emptyDay"
       class="z-[1] h-[134px] min-w-[290px]"
     >
-      <span class="description relative top-[53px] ml-[23px] text-primary-1">{{ t('dashboard.no_service') }}</span>
+      <span class="description text-primary-1 relative top-[53px] ml-[23px]">{{ t('dashboard.no_service') }}</span>
     </div>
   </div>
 </template>
@@ -102,10 +102,4 @@ const emptyDay = Object.keys(day.meals).length === 0;
 .day-shadow {
   box-shadow: 0 4px 0 hsla(0,0%,100%,.46),0 15px 35px rgba(216,225,233,.8);
 }
-
-.grid {
-    display: grid;
-    align-content: center;
-}
-
 </style>

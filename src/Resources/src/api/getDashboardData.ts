@@ -1,6 +1,6 @@
-import useApi from "@/api/api";
-import { Dictionary } from "../../types/types";
-import { ref } from "vue";
+import useApi from '@/api/api';
+import { Dictionary } from '../../types/types';
+import { ref } from 'vue';
 
 export type Meal = {
     variations: Dictionary<Meal> | null

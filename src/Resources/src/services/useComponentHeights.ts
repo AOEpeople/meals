@@ -1,4 +1,4 @@
-import { computed, onMounted, reactive, readonly, ref } from "vue";
+import { computed, onMounted, reactive, readonly, ref } from 'vue';
 
 interface IComponentHeightState {
   navBarHeight: number,

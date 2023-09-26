@@ -5,12 +5,12 @@
         {{ t('guest.form.firstname') }}
       </span>
       <input
-        :class="{'border-2 border-red': firstNameMissing}"
+        :class="{ 'border-2 border-red': firstNameMissing }"
         class="h-12 rounded-[100px] border-[2px] border-solid border-[#CAD6E1] bg-white pl-4 placeholder:text-[14px] placeholder:font-semibold placeholder:leading-[22px] placeholder:opacity-50"
         type="text"
         :placeholder="t('guest.form.firstnamePlaceholder')"
         required
-        @input="$emit('update:firstName', $event.target.value)"
+        @input="$emit('update:firstName', ($event.target as HTMLInputElement).value)"
         v-text="firstname"
       >
     </div>
@@ -19,12 +19,12 @@
         {{ t('guest.form.lastname') }}
       </span>
       <input
-        :class="{'border-2 border-red':lastNameMissing}"
+        :class="{ 'border-2 border-red':lastNameMissing }"
         class="h-12 rounded-[100px] border-[2px] border-solid border-[#CAD6E1] bg-white pl-4 placeholder:text-[14px] placeholder:font-semibold placeholder:leading-[22px] placeholder:opacity-50"
         type="text"
         :placeholder="t('guest.form.lastnamePlaceholder')"
         required
-        @input="$emit('update:lastName', $event.target.value)"
+        @input="$emit('update:lastName', ($event.target as HTMLInputElement).value)"
         v-text="lastname"
       >
     </div>
@@ -33,12 +33,12 @@
         {{ t('guest.form.company') }}
       </span>
       <input
-        :class="{'border-2 border-red': companyMissing}"
+        :class="{ 'border-2 border-red': companyMissing }"
         class="h-12 rounded-[100px] border-[2px] border-solid border-[#CAD6E1] bg-white pl-4 placeholder:text-[14px] placeholder:font-semibold placeholder:leading-[22px] placeholder:opacity-50"
         type="text"
         :placeholder="t('guest.form.companyPlaceholder')"
         required
-        @input="$emit('update:company', $event.target.value)"
+        @input="$emit('update:company', ($event.target as HTMLInputElement).value)"
         v-text="company"
       >
     </div>
@@ -53,13 +53,20 @@
   </div>
 </template>
 
-<script setup>
-import { useI18n } from 'vue-i18n'
-import {computed} from "vue";
+<script setup lang="ts">
+import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n()
-const props = defineProps(['firstname', 'lastname', 'company', 'filled', 'firstNameMissing', 'lastNameMissing', 'companyMissing'])
-computed(() => console.log(props.filled.value))
+const { t } = useI18n();
+
+defineProps<{
+  firstname: string,
+  lastname: string,
+  company: string,
+  filled: boolean,
+  firstNameMissing: boolean,
+  lastNameMissing: boolean,
+  companyMissing: boolean
+}>();
+
 const emit = defineEmits(['submitForm', 'update:modelValue', 'update:firstName', 'update:lastName', 'update:company'])
-
 </script>

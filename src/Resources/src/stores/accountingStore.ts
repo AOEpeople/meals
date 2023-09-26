@@ -1,9 +1,9 @@
-import { Dictionary } from "types/types";
-import { reactive, watch } from "vue";
-import getTransactionHistory from "@/api/getTransactionHistory";
-import { isResponseObjectOkay } from "@/api/isResponseOkay";
-import useFlashMessage from "@/services/useFlashMessage";
-import { FlashMessageType } from "@/enums/FlashMessage";
+import { Dictionary } from 'types/types';
+import { reactive, watch } from 'vue';
+import getTransactionHistory from '@/api/getTransactionHistory';
+import { isResponseObjectOkay } from '@/api/isResponseOkay';
+import useFlashMessage from '@/services/useFlashMessage';
+import { FlashMessageType } from '@/enums/FlashMessage';
 
 export interface IUserTransaction {
     firstName: string,

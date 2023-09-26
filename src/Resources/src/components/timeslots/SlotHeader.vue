@@ -29,10 +29,10 @@
 </template>
 
 <script setup>
-import Popover from "@/components/misc/Popover.vue"
-import SlotCreationPanel from "@/components/timeslots/SlotCreationPanel.vue"
-import { useI18n } from "vue-i18n"
-import CreateButton from "../misc/CreateButton.vue";
+import Popover from '@/components/misc/Popover.vue';
+import SlotCreationPanel from '@/components/timeslots/SlotCreationPanel.vue';
+import { useI18n } from 'vue-i18n';
+import CreateButton from '../misc/CreateButton.vue';
 
 const { t } = useI18n()
 </script>

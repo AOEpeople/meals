@@ -1,5 +1,5 @@
-import { Category } from "@/stores/categoriesStore";
-import useApi from "./api";
+import { Category } from '@/stores/categoriesStore';
+import useApi from './api';
 
 /**
  * Performs a GET request to get a list of Categories

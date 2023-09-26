@@ -1,4 +1,4 @@
-import useApi from "@/api/api";
+import useApi from '@/api/api';
 import { ref } from 'vue';
 
 export async function useUpdateSelectedSlot(data: string) {

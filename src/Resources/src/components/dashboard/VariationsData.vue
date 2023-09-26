@@ -20,16 +20,16 @@
         </p>
       </div>
     </div>
-    <transition
-      enter="transition-opacity ease-linear duration-300"
-      enter-from="opacity-0"
-      enter-to="opacity-100"
-      leave="transition-opacity ease-linear duration-300"
-      leave-from="opacity-100"
-      leave-to="opacity-0"
+    <Transition
+      enter-active-class="transition-opacity ease-linear duration-300"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="transition-opacity ease-linear duration-300"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
     >
       <OfferPopover v-if="openPopover" />
-    </transition>
+    </Transition>
     <PriceTag
       class="align-center my-auto flex"
       :price="variation.price"
@@ -37,7 +37,7 @@
     <div class="text-align-last flex flex-auto basis-2/12 items-center justify-end">
       <ParticipationCounter
         :meal="variation"
-        :mealCSS="mealCSS[variationID]"
+        :mealCSS="mealCSS[String(variationID)]"
         class="mr-[5px] min-[380px]:mr-[15px]"
       />
       <Checkbox
@@ -52,34 +52,35 @@
   </div>
 </template>
 
-<script setup>
-import ParticipationCounter from "@/components/menuCard/ParticipationCounter.vue";
-import Checkbox from '@/components/dashboard/Checkbox.vue'
-import {useI18n} from 'vue-i18n'
-import {computed, ref} from 'vue'
-import {dashboardStore} from "@/stores/dashboardStore";
-import useEventsBus from "tools/eventBus.ts"
-import OfferPopover from "@/components/dashboard/OfferPopover.vue";
-import PriceTag from "@/components/dashboard/PriceTag.vue";
+<script setup lang="ts">
+import ParticipationCounter from '@/components/menuCard/ParticipationCounter.vue';
+import Checkbox from '@/components/dashboard/Checkbox.vue';
+import {useI18n} from 'vue-i18n';
+import {computed, ref} from 'vue';
+import {dashboardStore} from '@/stores/dashboardStore';
+import useEventsBus from 'tools/eventBus';
+import OfferPopover from '@/components/dashboard/OfferPopover.vue';
+import PriceTag from '@/components/dashboard/PriceTag.vue';
+import { Day, Meal } from '@/api/getDashboardData';
 
 const { receive } = useEventsBus()
 
 const { t, locale } = useI18n()
 
-const props = defineProps([
-    'weekID',
-    'dayID',
-    'mealID',
-    'day',
-    'meal'
-])
+const props = defineProps<{
+  weekID: number | string,
+  dayID: number | string,
+  mealID: number | string,
+  meal: Meal,
+  day: Day
+}>();
 
 const meal = props.meal ? props.meal : dashboardStore.getMeal(props.weekID, props.dayID, props.mealID)
 
 let parentTitle = computed(() => locale.value.substring(0, 2) === 'en' ? meal.title.en : meal.title.de)
 
 const mealCSS = computed(() => {
-  let array = []
+  let array: string[] = []
   for (const variationId in meal.variations) {
     array[variationId] = 'flex content-center rounded-md h-[30px] xl:h-[20px] '
     switch (meal.variations[variationId].mealState) {

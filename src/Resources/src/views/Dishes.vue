@@ -19,9 +19,9 @@
 </template>
 
 <script setup lang="ts">
-import { useProgress } from '@marcoschulte/vue3-progress'
-import Table from '@/components/misc/Table.vue'
-import { useI18n } from 'vue-i18n'
+import { useProgress } from '@marcoschulte/vue3-progress';
+import Table from '@/components/misc/Table.vue';
+import { useI18n } from 'vue-i18n';
 import { onMounted, ref } from 'vue';
 import { useDishes } from '@/stores/dishesStore';
 import DishesHeader from '@/components/dishes/DishesHeader.vue';

@@ -28,28 +28,36 @@
   </TransitionRoot>
 </template>
 
-<script setup>
-import { computed, ref } from 'vue'
-import { useJoinMeal } from '@/api/postJoinMeal'
-import { useLeaveMeal } from '@/api/deleteLeaveMeal'
-import { useOfferMeal } from '@/api/postOfferMeal'
-import { useCancelOffer } from '@/api/postCancelOffer'
-import { dashboardStore } from '@/stores/dashboardStore'
-import { CheckIcon } from '@heroicons/vue/solid'
-import CombiModal from '@/components/dashboard/CombiModal.vue'
-import useEventsBus from "tools/eventBus";
-import {TransitionRoot} from "@headlessui/vue";
-import OfferPopover from "@/components/dashboard/OfferPopover.vue";
+<script setup lang="ts">
+import { computed, ref } from 'vue';
+import { useJoinMeal } from '@/api/postJoinMeal';
+import { useLeaveMeal } from '@/api/deleteLeaveMeal';
+import { useOfferMeal } from '@/api/postOfferMeal';
+import { useCancelOffer } from '@/api/postCancelOffer';
+import { dashboardStore } from '@/stores/dashboardStore';
+import { CheckIcon } from '@heroicons/vue/solid';
+import CombiModal from '@/components/dashboard/CombiModal.vue';
+import useEventsBus from 'tools/eventBus';
+import {TransitionRoot} from '@headlessui/vue';
+import OfferPopover from '@/components/dashboard/OfferPopover.vue';
+import { Day, Meal } from '@/api/getDashboardData';
 import useFlashMessage from '@/services/useFlashMessage'
 import { isMessage } from '@/interfaces/IMessage'
 import { FlashMessageType } from '@/enums/FlashMessage'
 
-const props = defineProps(['weekID', 'dayID', 'mealID', 'variationID', 'meal', 'day'])
+const props = defineProps<{
+  weekID: number | string,
+  dayID: number | string,
+  mealID: number | string,
+  variationID?: number | string | null,
+  meal: Meal,
+  day: Day
+}>();
 const { sendFlashMessage } = useFlashMessage();
 
 const day = props.day ? props.day : dashboardStore.getDay(props.weekID, props.dayID)
-let meal
-let mealId
+let meal: Meal;
+let mealId: number | string;
 if (props.variationID) {
   meal = props.meal ? props.meal : dashboardStore.getVariation(props.weekID, props.dayID, props.mealID, props.variationID)
   mealId = props.variationID
@@ -113,7 +121,7 @@ async function handle() {
       let slugs = [meal.dishSlug]
       if (isCombiBox === true) {
         slugs = getDishSlugs()
-        if(slugs === -1) return
+        if(slugs.length === 0) return
       }
       await joinMeal(slugs)
     }
@@ -131,7 +139,7 @@ function getDishSlugs() {
   for (let mealID in day.meals) {
     if (day.meals[mealID].variations) {
       open.value = true
-      return -1
+      return []
     } else {
       if (day.meals[mealID].dishSlug !== 'combined-dish') {
         slugs.push(day.meals[mealID].dishSlug)

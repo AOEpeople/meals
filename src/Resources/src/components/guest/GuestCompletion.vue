@@ -6,13 +6,12 @@
   </div>
 </template>
 
-<script setup>
-import {useI18n} from 'vue-i18n'
+<script setup lang="ts">
+import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n()
-defineProps(['result'])
+const { t } = useI18n();
+
+defineProps<{
+  result: string
+}>();
 </script>
-
-<style scoped>
-
-</style>

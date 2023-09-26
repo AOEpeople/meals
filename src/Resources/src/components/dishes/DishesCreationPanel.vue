@@ -63,7 +63,7 @@ import { onMounted, ref } from 'vue';
 import { CreateDishDTO } from '@/api/postCreateDish';
 import CategoriesDropDown from '../categories/CategoriesDropDown.vue';
 import { useCategories } from '@/stores/categoriesStore';
-import Switch from "@/components/misc/Switch.vue"
+import Switch from '@/components/misc/Switch.vue';
 import { SwitchGroup, SwitchLabel } from '@headlessui/vue';
 
 const { t } = useI18n();

@@ -1,22 +1,22 @@
-import Dashboard     from "@/views/Dashboard.vue";
-import Menu          from "@/views/Menu.vue";
-import Dishes        from "@/views/Dishes.vue";
-import Categories    from "@/views/Categories.vue";
-import TimeSlots     from "@/views/TimeSlots.vue";
-import Costs         from "@/views/Costs.vue";
-import Finance       from "@/views/Finance.vue";
-import Balance       from "@/views/Balance.vue";
-import Guest         from "@/views/Guest.vue";
-import NotAllowed    from "@/views/NotAllowed.vue";
-import PrintableList from "@/views/PrintableList.vue";
-import ParticipantList from "@/views/ParticipantsList.vue";
-import Weeks         from "@/views/Weeks.vue";
-import MenuParticipations from "./views/MenuParticipations.vue";
-import CostsSettlement from "./views/CostsSettlement.vue";
-import CashRegister from "./views/CashRegister.vue";
+import Dashboard     from '@/views/Dashboard.vue';
+import Menu          from '@/views/Menu.vue';
+import Dishes        from '@/views/Dishes.vue';
+import Categories    from '@/views/Categories.vue';
+import TimeSlots     from '@/views/TimeSlots.vue';
+import Costs         from '@/views/Costs.vue';
+import Finance       from '@/views/Finance.vue';
+import Balance       from '@/views/Balance.vue';
+import Guest         from '@/views/Guest.vue';
+import NotAllowed    from '@/views/NotAllowed.vue';
+import PrintableList from '@/views/PrintableList.vue';
+import ParticipantList from '@/views/ParticipantsList.vue';
+import Weeks         from '@/views/Weeks.vue';
+import MenuParticipations from './views/MenuParticipations.vue';
+import CostsSettlement from './views/CostsSettlement.vue';
+import CashRegister from './views/CashRegister.vue';
 
-import { createRouter, createWebHistory } from "vue-router";
-import { userDataStore }                  from "@/stores/userDataStore";
+import { createRouter, createWebHistory } from 'vue-router';
+import { userDataStore }                  from '@/stores/userDataStore';
 
 declare module 'vue-router' {
     interface RouteMeta {

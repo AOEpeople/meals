@@ -16,14 +16,14 @@
   </div>
 </template>
 
-<script setup>
-import NavBar from '@/components/NavBar.vue'
-import Footer from '@/components/Footer.vue'
-import Content from '@/components/Content.vue'
-import { useRoute } from 'vue-router'
-import { computed, onMounted, onUpdated, ref, watch } from 'vue'
-import { useComponentHeights } from '@/services/useComponentHeights'
-import DebtPopup from './components/debtPopup/DebtPopup.vue'
+<script setup lang="ts">
+import NavBar from '@/components/NavBar.vue';
+import Footer from '@/components/Footer.vue';
+import Content from '@/components/Content.vue';
+import { useRoute } from 'vue-router';
+import { computed, onMounted, onUpdated, ref, watch } from 'vue';
+import { useComponentHeights } from '@/services/useComponentHeights';
+import DebtPopup from './components/debtPopup/DebtPopup.vue';
 
 const route = useRoute();
 const { setNavBarHeight, windowWidth } = useComponentHeights();

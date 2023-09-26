@@ -1,4 +1,5 @@
-import { ref, watch } from 'vue'
+import { ref, watch } from 'vue';
+
 const bus = ref(new Map())
 
 export default function useEventsBus() {

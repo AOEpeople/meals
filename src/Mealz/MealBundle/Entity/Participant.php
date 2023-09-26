@@ -24,6 +24,13 @@ class Participant
 
     /**
      * @Assert\NotNull()
+     * @ORM\ManyToOne(targetEntity="App\Mealz\MealBundle\Entity\Event")
+     * @ORM\JoinColumn(name="event_id", referencedColumnName="id", nullable=true)
+     */
+    private ?Event $event = null;
+
+    /**
+     * @Assert\NotNull()
      * @Assert\Type(type="App\Mealz\MealBundle\Entity\Meal")
      * @ORM\ManyToOne(targetEntity="Meal",inversedBy="participants")
      * @ORM\JoinColumn(name="meal_id", referencedColumnName="id")
@@ -114,6 +121,16 @@ class Participant
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getEvent(): ?Event
+    {
+        return $this->event;
+    }
+
+    public function setEvent(Event $event): void
+    {
+        $this->event = $event;
     }
 
     public function setMeal(Meal $meal): void

@@ -70,7 +70,7 @@ class Dish
     protected ?string $description_de = null;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Category", inversedBy="dishes")
+     * @ORM\ManyToOne(targetEntity="Category")
      * @ORM\JoinColumn(name="category_id", referencedColumnName="id", onDelete="SET NULL")
      */
     protected ?Category $category = null;

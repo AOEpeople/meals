@@ -1,5 +1,5 @@
-import { Dish } from "@/stores/dishesStore";
-import useApi from "./api";
+import { Dish } from '@/stores/dishesStore';
+import useApi from './api';
 
 /**
  * Performs a GET request for a list of available dishes

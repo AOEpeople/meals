@@ -9,10 +9,10 @@
 </template>
 
 <script setup lang="ts">
-import {useGuestLink} from "@/api/getGuestLink";
-import {useI18n} from "vue-i18n";
-import { CheckIcon } from "@heroicons/vue/solid";
-import { onMounted, ref } from "vue";
+import {useGuestLink} from '@/api/getGuestLink';
+import {useI18n} from 'vue-i18n';
+import { CheckIcon } from '@heroicons/vue/solid';
+import { onMounted, ref } from 'vue';
 
 const props = defineProps<{
   dayID: string

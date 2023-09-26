@@ -35,11 +35,11 @@
 </template>
 
 <script setup lang="ts">
-import Day from '@/components/dashboard/Day.vue'
-import { useI18n } from "vue-i18n"
-import { useProgress } from '@marcoschulte/vue3-progress'
-import {dashboardStore} from "@/stores/dashboardStore"
-import {computed} from "vue";
+import Day from '@/components/dashboard/Day.vue';
+import { useI18n } from 'vue-i18n';
+import { useProgress } from '@marcoschulte/vue3-progress';
+import {dashboardStore} from '@/stores/dashboardStore';
+import {computed} from 'vue';
 
 const progress = useProgress().start()
 const { t, locale } = useI18n()

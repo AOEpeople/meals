@@ -33,16 +33,16 @@
 </template>
 
 <script setup>
-import {useProgress} from '@marcoschulte/vue3-progress'
-import {useRoute} from 'vue-router'
-import {useInvitationData} from '@/api/getInvitationData'
-import useEventsBus from 'tools/eventBus'
-import {ref, computed} from 'vue'
-import {useJoinMealGuest} from '@/api/postJoinMealGuest'
-import {useI18n} from 'vue-i18n'
-import GuestCompletion from '@/components/guest/GuestCompletion.vue'
-import GuestForm from '@/components/guest/GuestForm.vue'
-import Day from '@/components/dashboard/Day.vue'
+import { useProgress } from '@marcoschulte/vue3-progress';
+import { useRoute } from 'vue-router';
+import { useInvitationData } from '@/api/getInvitationData';
+import useEventsBus from 'tools/eventBus';
+import { ref, computed } from 'vue';
+import { useJoinMealGuest } from '@/api/postJoinMealGuest';
+import { useI18n } from 'vue-i18n';
+import GuestCompletion from '@/components/guest/GuestCompletion.vue';
+import GuestForm from '@/components/guest/GuestForm.vue';
+import Day from '@/components/dashboard/Day.vue';
 
 const progress = useProgress().start()
 const route = useRoute()

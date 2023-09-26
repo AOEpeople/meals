@@ -19,8 +19,8 @@
 </template>
 <script setup lang="ts">
 import { Meal } from '@/api/getDashboardData';
-import Icons from '@/components/misc/Icons.vue'
-import { computed } from 'vue'
+import Icons from '@/components/misc/Icons.vue';
+import { computed } from 'vue';
 
 const props = defineProps<{
   meal: Meal,

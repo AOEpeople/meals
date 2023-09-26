@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import { Switch } from '@headlessui/vue'
-import {computed, ref, watch} from "vue";
+import { computed, ref, watch } from 'vue';
 
 export interface Emits {
   (e: 'toggle', value: boolean): void;

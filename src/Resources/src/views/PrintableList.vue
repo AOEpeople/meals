@@ -123,10 +123,10 @@
 </template>
 
 <script setup lang="ts">
-import {useI18n} from "vue-i18n";
-import { usePrintableListData } from "@/api/getPrintableListData";
-import { computed } from "vue";
-import {useProgress} from "@marcoschulte/vue3-progress";
+import { useI18n } from 'vue-i18n';
+import { usePrintableListData } from '@/api/getPrintableListData';
+import { computed } from 'vue';
+import { useProgress } from '@marcoschulte/vue3-progress';
 
 const progress = useProgress().start()
 const { t, locale } = useI18n()

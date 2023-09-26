@@ -45,13 +45,13 @@
 </template>
 
 <script setup lang="ts">
-import { userDataStore } from "@/stores/userDataStore";
+import { userDataStore } from '@/stores/userDataStore';
 import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue';
-import { computed, onMounted, ref, watch } from "vue";
-import { useRoute, useRouter } from 'vue-router'
-import CreateButton from "../misc/CreateButton.vue";
-import { useI18n } from "vue-i18n";
-import CancelButton from "../misc/CancelButton.vue";
+import { computed, onMounted, ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import CreateButton from '../misc/CreateButton.vue';
+import { useI18n } from 'vue-i18n';
+import CancelButton from '../misc/CancelButton.vue';
 
 const route = useRoute();
 const router = useRouter();

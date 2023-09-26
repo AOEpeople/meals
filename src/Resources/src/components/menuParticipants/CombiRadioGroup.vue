@@ -31,7 +31,7 @@
 <script setup lang="ts">
 import { MealDTO } from '@/interfaces/DayDTO';
 import { useDishes } from '@/stores/dishesStore';
-import { RadioGroup, RadioGroupOption } from '@headlessui/vue'
+import { RadioGroup, RadioGroupOption } from '@headlessui/vue';
 import { computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { CheckCircleIcon } from '@heroicons/vue/solid';

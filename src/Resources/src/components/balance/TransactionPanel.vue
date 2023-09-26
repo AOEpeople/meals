@@ -28,13 +28,13 @@
 </template>
 
 <script setup lang="ts">
-import { RadarSpinner } from 'epic-spinners'
-import { loadScript } from "@paypal/paypal-js";
-import { transactionStore } from "@/stores/transactionStore";
-import { useI18n } from "vue-i18n";
-import { WatchStopHandle, computed, onMounted, onUnmounted, ref, watch } from "vue";
-import { userDataStore } from "@/stores/userDataStore";
-import { environmentStore } from "@/stores/environmentStore";
+import { RadarSpinner } from 'epic-spinners';
+import { loadScript } from '@paypal/paypal-js';
+import { transactionStore } from '@/stores/transactionStore';
+import { useI18n } from 'vue-i18n';
+import { WatchStopHandle, computed, onMounted, onUnmounted, ref, watch } from 'vue';
+import { userDataStore } from '@/stores/userDataStore';
+import { environmentStore } from '@/stores/environmentStore';
 import postPaypalOrder from '@/api/postPaypalOrder';
 import MoneyInput from '../misc/MoneyInput.vue';
 import BlockPopup from '../misc/BlockPopup.vue';

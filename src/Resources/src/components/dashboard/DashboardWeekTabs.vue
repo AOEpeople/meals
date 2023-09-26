@@ -39,9 +39,9 @@
 </template>
 <script setup lang="ts">
 import { Tabs, Tab, TabPanels, TabPanel } from 'vue3-tabs';
-import {useI18n} from "vue-i18n"
-import {ref} from "vue"
-import WeekComp from "./Week.vue";
+import {useI18n} from 'vue-i18n';
+import {ref} from 'vue';
+import WeekComp from './Week.vue';
 import { Dictionary } from 'types/types';
 import { Week } from '@/api/getDashboardData';
 

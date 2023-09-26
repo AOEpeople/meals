@@ -30,7 +30,7 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
-import InputLabel from "@/components/misc/InputLabel.vue";
+import InputLabel from '@/components/misc/InputLabel.vue';
 import { TimeSlot } from '@/stores/timeSlotStore';
 import { useTimeSlots } from '@/stores/timeSlotStore';
 import SubmitButton from '../misc/SubmitButton.vue';

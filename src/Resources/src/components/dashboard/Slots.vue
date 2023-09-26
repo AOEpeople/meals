@@ -55,18 +55,18 @@
 </template>
 
 <script setup lang="ts">
-import {computed, ref, watch} from 'vue'
+import {computed, ref, watch} from 'vue';
 import {
   Listbox,
   ListboxButton,
   ListboxOptions,
   ListboxOption,
-} from '@headlessui/vue'
+} from '@headlessui/vue';
 
-import {useI18n} from "vue-i18n";
-import {useUpdateSelectedSlot} from "@/api/postUpdateSelectedSlot";
-import { ChevronDownIcon } from '@heroicons/vue/solid'
-import useEventsBus from "tools/eventBus";
+import {useI18n} from 'vue-i18n';
+import {useUpdateSelectedSlot} from '@/api/postUpdateSelectedSlot';
+import { ChevronDownIcon } from '@heroicons/vue/solid';
+import useEventsBus from 'tools/eventBus';
 import { Day } from '@/api/getDashboardData';
 
 const props = defineProps<{

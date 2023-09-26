@@ -1,4 +1,4 @@
-import { userDataStore } from "@/stores/userDataStore";
+import { userDataStore } from '@/stores/userDataStore';
 
 export default async function postPaypalOrder(amount: string, orderId: string) {
     const data = JSON.stringify([

@@ -1,13 +1,13 @@
-import { Dictionary } from "types/types";
-import { reactive, readonly, watch } from "vue";
-import { useTimeSlotData } from "@/api/getTimeSlotData";
-import { useUpdateSlot } from "@/api/putSlotUpdate";
-import postCreateSlot from "@/api/postCreateSlot";
-import deleteSlot from "@/api/deleteSlot";
-import { isMessage } from "@/interfaces/IMessage";
-import { isResponseObjectOkay, isResponseDictOkay } from "@/api/isResponseOkay";
-import useFlashMessage from "@/services/useFlashMessage";
-import { FlashMessageType } from "@/enums/FlashMessage";
+import { Dictionary } from 'types/types';
+import { reactive, readonly, watch } from 'vue';
+import { useTimeSlotData } from '@/api/getTimeSlotData';
+import { useUpdateSlot } from '@/api/putSlotUpdate';
+import postCreateSlot from '@/api/postCreateSlot';
+import deleteSlot from '@/api/deleteSlot';
+import { isMessage } from '@/interfaces/IMessage';
+import { isResponseObjectOkay, isResponseDictOkay } from '@/api/isResponseOkay';
+import useFlashMessage from '@/services/useFlashMessage';
+import { FlashMessageType } from '@/enums/FlashMessage';
 
 interface ITimeSlotState {
     timeSlots: Dictionary<TimeSlot>,

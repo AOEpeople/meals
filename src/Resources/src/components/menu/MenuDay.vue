@@ -60,7 +60,7 @@ import { MealDTO, DayDTO } from '@/interfaces/DayDTO';
 import { useDishes } from '@/stores/dishesStore';
 import { translateWeekdayWithoutRef } from '@/tools/localeHelper';
 import { useI18n } from 'vue-i18n';
-import Switch from "@/components/misc/Switch.vue"
+import Switch from '@/components/misc/Switch.vue';
 import { UserIcon } from '@heroicons/vue/solid';
 import Popover from '../misc/Popover.vue';
 import MenuParticipationPanel from './MenuParticipationPanel.vue';

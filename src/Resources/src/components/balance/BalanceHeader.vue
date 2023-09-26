@@ -28,8 +28,8 @@
 </template>
 
 <script setup lang="ts">
-import Popover from "@/components/misc/Popover.vue";
-import TransactionPanel from "@/components/balance/TransactionPanel.vue";
+import Popover from '@/components/misc/Popover.vue';
+import TransactionPanel from '@/components/balance/TransactionPanel.vue';
 
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();

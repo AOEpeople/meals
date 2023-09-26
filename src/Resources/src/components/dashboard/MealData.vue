@@ -41,13 +41,13 @@
 </template>
 
 <script setup lang="ts">
-import ParticipationCounter from "@/components/menuCard/ParticipationCounter.vue";
-import Checkbox from '@/components/dashboard/Checkbox.vue'
-import {useI18n} from "vue-i18n";
-import {computed} from "vue";
-import {dashboardStore} from "@/stores/dashboardStore";
-import PriceTag from "@/components/dashboard/PriceTag.vue";
-import { Day, Meal } from "@/api/getDashboardData";
+import ParticipationCounter from '@/components/menuCard/ParticipationCounter.vue';
+import Checkbox from '@/components/dashboard/Checkbox.vue';
+import {useI18n} from 'vue-i18n';
+import {computed} from 'vue';
+import {dashboardStore} from '@/stores/dashboardStore';
+import PriceTag from '@/components/dashboard/PriceTag.vue';
+import { Day, Meal } from '@/api/getDashboardData';
 
 const props = defineProps<{
   weekID: number | string,

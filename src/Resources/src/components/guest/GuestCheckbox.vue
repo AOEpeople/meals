@@ -17,10 +17,10 @@
 </template>
 
 <script setup lang="ts">
-import { CheckIcon } from '@heroicons/vue/solid'
-import { ref } from 'vue'
-import useEventsBus from 'tools/eventBus'
-import CombiModal from '@/components/dashboard/CombiModal.vue'
+import { CheckIcon } from '@heroicons/vue/solid';
+import { ref } from 'vue';
+import useEventsBus from 'tools/eventBus';
+import CombiModal from '@/components/dashboard/CombiModal.vue';
 import { Meal } from '@/api/getDashboardData';
 import { Dictionary } from 'types/types';
 

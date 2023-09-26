@@ -29,18 +29,18 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { useJoinMeal } from '@/api/postJoinMeal'
-import { useLeaveMeal } from '@/api/postLeaveMeal'
-import { useOfferMeal } from '@/api/postOfferMeal'
-import { useCancelOffer } from '@/api/postCancelOffer'
-import { dashboardStore } from '@/stores/dashboardStore'
-import { CheckIcon } from '@heroicons/vue/solid'
-import CombiModal from '@/components/dashboard/CombiModal.vue'
-import useEventsBus from "tools/eventBus";
-import {TransitionRoot} from "@headlessui/vue";
-import OfferPopover from "@/components/dashboard/OfferPopover.vue";
-import { Day, Meal } from '@/api/getDashboardData'
+import { computed, ref } from 'vue';
+import { useJoinMeal } from '@/api/postJoinMeal';
+import { useLeaveMeal } from '@/api/postLeaveMeal';
+import { useOfferMeal } from '@/api/postOfferMeal';
+import { useCancelOffer } from '@/api/postCancelOffer';
+import { dashboardStore } from '@/stores/dashboardStore';
+import { CheckIcon } from '@heroicons/vue/solid';
+import CombiModal from '@/components/dashboard/CombiModal.vue';
+import useEventsBus from 'tools/eventBus';
+import {TransitionRoot} from '@headlessui/vue';
+import OfferPopover from '@/components/dashboard/OfferPopover.vue';
+import { Day, Meal } from '@/api/getDashboardData';
 
 const props = defineProps<{
   weekID: number | string,

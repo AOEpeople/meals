@@ -1,5 +1,5 @@
-import useApi from "@/api/api";
-import { ref } from "vue"
+import useApi from '@/api/api';
+import { ref } from 'vue';
 
 export type UserData = {
     roles: Array<string>,

@@ -33,12 +33,12 @@
 </template>
 
 <script setup lang="ts">
-import ParticipationCounter from "@/components/menuCard/ParticipationCounter.vue";
-import {computed} from "vue";
-import { useI18n } from "vue-i18n";
+import ParticipationCounter from '@/components/menuCard/ParticipationCounter.vue';
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import GuestCheckbox from '@/components/guest/GuestCheckbox.vue'
-import { Dictionary } from "types/types";
-import { Meal } from "@/api/getDashboardData";
+import { Dictionary } from 'types/types';
+import { Meal } from '@/api/getDashboardData';
 
 const props = defineProps<{
   meals: Dictionary<Meal>,

@@ -84,11 +84,11 @@
 </template>
 
 <script setup lang="ts">
-import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
-import CombiButtonGroup from "@/components/dashboard/CombiButtonGroup.vue";
-import {dashboardStore} from "@/stores/dashboardStore";
-import {computed, ref} from "vue";
-import { useI18n } from 'vue-i18n'
+import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue';
+import CombiButtonGroup from '@/components/dashboard/CombiButtonGroup.vue';
+import {dashboardStore} from '@/stores/dashboardStore';
+import {computed, ref} from 'vue';
+import { useI18n } from 'vue-i18n';
 import { Meal } from '@/api/getDashboardData';
 import { Dictionary } from 'types/types';
 

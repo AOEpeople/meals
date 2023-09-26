@@ -15,9 +15,9 @@
 </template>
 
 <script setup lang="ts">
-import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
-import Icons from '@/components/misc/Icons.vue'
-import GuestLink from "@/components/dashboard/GuestLink.vue";
+import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue';
+import Icons from '@/components/misc/Icons.vue';
+import GuestLink from '@/components/dashboard/GuestLink.vue';
 
 defineProps<{
   dayID: number | string,

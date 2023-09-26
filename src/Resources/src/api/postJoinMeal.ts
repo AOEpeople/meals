@@ -1,4 +1,5 @@
 import useApi from "@/api/api";
+import { IMessage } from "@/interfaces/IMessage";
 import { ref } from "vue";
 
 export type JoinMeal = {
@@ -8,7 +9,7 @@ export type JoinMeal = {
 };
 
 export async function useJoinMeal(data: string) {
-    const { request, response, error } = useApi<JoinMeal>(
+    const { request, response, error } = useApi<JoinMeal | IMessage>(
         'POST',
         'api/join-meal',
         'application/json',

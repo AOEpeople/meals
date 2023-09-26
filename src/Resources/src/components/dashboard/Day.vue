@@ -38,7 +38,7 @@
         v-if="day.slotsEnabled"
         class="flex h-[54px] items-center border-b-[2px] px-[15px] print:hidden"
       >
-        <span class="mr-2 inline-block text-[11px] font-bold uppercase leading-4 tracking-[1.5px] text-primary">
+        <span class="text-primary mr-2 inline-block text-[11px] font-bold uppercase leading-4 tracking-[1.5px]">
           {{ t('dashboard.slot.timeslot') }}
         </span>
         <Slots
@@ -127,10 +127,4 @@ const isEventDay = day.event !== null;
     0 4px 0 hsla(0, 0%, 100%, 0.46),
     0 15px 35px rgba(216, 225, 233, 0.8);
 }
-
-.grid {
-    display: grid;
-    align-content: center;
-}
-
 </style>

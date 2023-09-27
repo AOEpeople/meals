@@ -38,6 +38,13 @@ class DayForm extends AbstractType
                 'constraints' => new Valid(),
                 'allow_add' => true,
             ])
+            ->add('event', CollectionType::class, [
+                'entry_type' => EventForm::class,
+                'allow_delete' => true,
+                'delete_empty' => true,
+                'constraints' => new Valid(),
+                'allow_add' => true,
+            ])
             ->add('lockParticipationDateTime', DateTimeType::class, [
                 'required' => false,
                 'widget' => 'single_text',

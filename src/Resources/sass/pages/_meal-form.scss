@@ -13,7 +13,8 @@
   .day {
     border-right: 70px solid transparent;
 
-    .meal-row  .form-row {
+    .meal-row .form-row,
+    .event-row .form-row {
       margin-bottom: 0;
     }
 
@@ -21,7 +22,8 @@
       display: block;
     }
 
-    .meal-rows-wrapper {
+    .meal-rows-wrapper,
+    .event-rows-wrapper {
       border-right: 1px solid $meal-border-color;
     }
 
@@ -32,7 +34,8 @@
       margin-top: -16px;
     }
 
-    .remove-meal {
+    .remove-meal,
+    .remove-event {
       display: none;
       float: right;
       margin: -11px -15px -9px -10px;

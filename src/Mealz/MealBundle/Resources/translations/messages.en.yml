@@ -25,6 +25,8 @@ dish_variation:
   hidden: Dish variation "%dishVariation%" has been marked as hidden.
   deleted: Dish variation "%dishVariation%" has been successfully deleted.
   delete_error: Unable to delete dish variation "%dishVariation%". We are looking into it. Please try again later.
+event:
+  not_available: No event exists
 error:
   unknown: An unknown error occured.
   all_days_disabled: No list can be shown because all days for the week of %startDate% - %endDate% are deactivated.

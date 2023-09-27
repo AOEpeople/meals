@@ -91,7 +91,7 @@ class ParticipantController extends BaseController
         } catch (Exception $e) {
             $this->logException($e);
 
-            return new JsonResponse(null, 500);
+            return new JsonResponse(['message' => '402: ' . $e->getMessage()], 500);
         }
 
         $this->eventSrv->triggerJoinEvents($result['participant'], $result['offerer']);
@@ -172,11 +172,11 @@ class ParticipantController extends BaseController
         try {
             $participationSrv->updateCombinedMeal($participant, $dishSlugs);
         } catch (ParticipationException $pex) {
-            return new JsonResponse(['error' => $pex->getMessage()], 422);
+            return new JsonResponse(['message' => $pex->getMessage()], 422);
         } catch (Exception $exc) {
             $this->logException($exc);
 
-            return new JsonResponse(['error' => 'unexpected error'], 500);
+            return new JsonResponse(['message' => 'unexpected error'], 500);
         }
 
         $this->eventDispatcher->dispatch(new ParticipationUpdateEvent($participant));

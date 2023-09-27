@@ -170,13 +170,11 @@ async function joinMeal(dishSlugs) {
       day.activeSlot = (response.value as JoinMeal).slotId
       meal.isParticipating = (response.value as JoinMeal).participantId
       meal.mealState = (response.value as JoinMeal).mealState
-    } else {
-      if (isMessage(response.value) === true) {
-        sendFlashMessage({
-          type: FlashMessageType.ERROR,
-          message: (response.value as IMessage).message
-        });
-      }
+    } else if (isMessage(response.value) === true) {
+      sendFlashMessage({
+        type: FlashMessageType.ERROR,
+        message: (response.value as IMessage).message
+      });
     }
   }
 }

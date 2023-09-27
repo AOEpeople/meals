@@ -19,9 +19,8 @@
     </h1>
     <a
       v-if="showControls === true"
-      :href="`api/accounting/book/finance/export/${minDate}&${maxDate}`"
-      target="_blank"
-      class="justify-self-end text-primary hover:text-secondary"
+      class="cursor-pointer justify-self-end text-primary hover:text-secondary"
+      @click="emit('generatePdf')"
     >
       <DownloadIcon
         class="inline-block w-6"
@@ -41,7 +40,7 @@ import { DownloadIcon } from '@heroicons/vue/outline'
 import VueDatePicker from '@vuepic/vue-datepicker';
 import moment from 'moment/moment';
 
-const emit = defineEmits(['dateChanged'])
+const emit = defineEmits(['dateChanged', 'generatePdf'])
 const { t, locale } = useI18n()
 const date = ref()
 let minDate = '';

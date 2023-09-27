@@ -1,10 +1,10 @@
-import useApi from "@/api/api";
-import { ref } from "vue";
+import useApi from '@/api/api';
+import { ref } from 'vue';
 
 export async function useOfferMeal(data: string) {
     const { request, response, error } = useApi(
         'POST',
-        'api/offer-meal',
+        'api/meal/offer',
         'application/json',
         data,
     );

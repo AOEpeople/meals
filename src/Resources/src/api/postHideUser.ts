@@ -1,5 +1,5 @@
-import { IMessage } from "@/interfaces/IMessage";
-import useApi from "./api";
+import { IMessage } from '@/interfaces/IMessage';
+import useApi from './api';
 
 /**
  * Sends a POST request to hide a user from the costs page.

@@ -1,10 +1,10 @@
-import useApi from "@/api/api";
-import { ref } from "vue";
+import useApi from '@/api/api';
+import { ref } from 'vue';
 
-export async function useCancelOffer(data: string) {
+export async function useUpdateSelectedSlot(data: string) {
     const { request, response, error } = useApi(
-        'POST',
-        'api/cancel-offer',
+        'PUT',
+        'api/participation/slot',
         'application/json',
         data,
     );

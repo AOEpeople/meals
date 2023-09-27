@@ -1,7 +1,7 @@
-import {Store} from "@/stores/store";
-import {useUserData, UserData} from "@/api/getUserData";
-import router from "@/router";
-import {useI18n} from "vue-i18n";
+import { Store } from '@/stores/store';
+import { useUserData, UserData } from '@/api/getUserData';
+import router from '@/router';
+import { useI18n } from 'vue-i18n';
 
 class UserDataStore extends Store<UserData> {
     protected data(): UserData {

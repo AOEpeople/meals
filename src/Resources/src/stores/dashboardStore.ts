@@ -1,7 +1,7 @@
-import {Store} from '@/stores/store';
-import {Dashboard, Day, Meal, Slot, useDashboardData, Week} from '@/api/getDashboardData';
-import {Dictionary} from "../../types/types";
-import {mercureReceiver} from "tools/mercureReceiver";
+import { Store } from '@/stores/store';
+import { Dashboard, Day, Meal, Slot, useDashboardData, Week } from '@/api/getDashboardData';
+import { Dictionary } from '../../types/types';
+import { mercureReceiver } from 'tools/mercureReceiver';
 
 class DashboardStore extends Store<Dashboard> {
 

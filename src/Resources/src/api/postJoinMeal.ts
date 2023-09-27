@@ -1,5 +1,6 @@
-import useApi from "@/api/api";
-import { ref } from "vue";
+import useApi from '@/api/api';
+import { IMessage } from '@/interfaces/IMessage';
+import { ref } from 'vue';
 
 export type JoinMeal = {
     slotId: number,
@@ -8,9 +9,9 @@ export type JoinMeal = {
 };
 
 export async function useJoinMeal(data: string) {
-    const { request, response, error } = useApi<JoinMeal>(
+    const { request, response, error } = useApi<JoinMeal | IMessage>(
         'POST',
-        'api/join-meal',
+        'api/meal/participation',
         'application/json',
         data,
     );

@@ -17,12 +17,15 @@
     </div>
   </div>
 </template>
-<script setup>
-import Icons from '@/components/misc/Icons.vue'
-import { computed } from 'vue'
+<script setup lang="ts">
+import { Meal } from '@/api/getDashboardData';
+import Icons from '@/components/misc/Icons.vue';
+import { computed } from 'vue';
 
-const props = defineProps(['meal', 'mealCSS'])
+const props = defineProps<{
+  meal: Meal,
+  mealCSS: string
+}>();
 
 const participations = computed(() => props.meal.limit > 0 ? props.meal.participations + '/' + props.meal.limit : props.meal.participations)
-
 </script>

@@ -1,5 +1,5 @@
-import useApi from "@/api/api";
-import { ref } from "vue";
+import useApi from '@/api/api';
+import { ref } from 'vue';
 
 export type LeaveMeal = {
     slotId: number
@@ -7,8 +7,8 @@ export type LeaveMeal = {
 
 export async function useLeaveMeal(data: string) {
     const { error, request, response } = useApi<LeaveMeal>(
-        'POST',
-        'api/leave-meal',
+        'DELETE',
+        'api/meal/participation',
         'application/json',
         data,
     );

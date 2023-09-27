@@ -9,20 +9,18 @@
     </PopoverButton>
 
     <PopoverPanel :class="[index === 4 ? '-top-12' : 'top-12' , 'absolute -left-6 z-[2]']">
-      <GuestLink :dayID="dayID" />
+      <GuestLink :dayID="String(dayID)" />
     </PopoverPanel>
   </Popover>
 </template>
 
-<script setup>
-import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
-import Icons from '@/components/misc/Icons.vue'
-import GuestLink from "@/components/dashboard/GuestLink.vue";
+<script setup lang="ts">
+import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue';
+import Icons from '@/components/misc/Icons.vue';
+import GuestLink from '@/components/dashboard/GuestLink.vue';
 
-defineProps(['dayID', 'index'])
-
+defineProps<{
+  dayID: number | string,
+  index: number
+}>();
 </script>
-
-<style scoped>
-
-</style>

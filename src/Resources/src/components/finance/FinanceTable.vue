@@ -1,6 +1,7 @@
 <template>
   <Table
     :labels="[t('finance.table.date'), t('finance.table.name'), t('finance.table.amount'), t('finance.table.dailyClosing')]"
+    :print="print"
   >
     <div
       v-for="([date, dateTransactions], index) in Object.entries(transactions)"
@@ -61,9 +62,12 @@ import {Dictionary} from '../../../types/types';
 
 const {t, locale} = useI18n()
 
-defineProps<{
+withDefaults(defineProps<{
   transactions: Dictionary<Transaction[]>,
-}>();
+  print: boolean
+}>(),{
+  print: false
+});
 
 function getTotalAmount(transactions: Transaction[]) {
   return Object.values(transactions)

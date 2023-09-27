@@ -1,5 +1,8 @@
 <template>
-  <div class="mx-auto flex max-w-screen-aoe flex-col">
+  <div
+    class="mx-auto flex flex-col"
+    :class="print === true ? 'w-[700px]' : 'max-w-screen-aoe'"
+  >
     <div class="inline-block min-w-full py-2">
       <table class="min-w-full max-w-fit table-fixed border-spacing-0">
         <thead>
@@ -28,9 +31,11 @@ import { computed } from 'vue';
 
 const props = withDefaults(defineProps<{
   labels: string[],
-  headerTextPosition?: string
+  headerTextPosition?: string,
+  print: boolean
 }>(), {
-  headerTextPosition: 'left'
+  headerTextPosition: 'left',
+  print: false
 });
 
 const style = computed(() => {

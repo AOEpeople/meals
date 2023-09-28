@@ -9,7 +9,9 @@
         :dayID="dayID"
         :index="index"
         class="row-start-1 w-[24px] text-center"
+        @click="openModal"
       />
+      <button @click="openModal">click mee</button>
       <span
         class="row-start-2 rotate-180 place-self-center text-center text-[11px] font-bold uppercase leading-4 tracking-[3px] text-white [writing-mode:vertical-lr]"
         :class="day.isLocked || emptyDay || guestData ? 'py-[24px]' : 'pb-[0px]'"
@@ -21,6 +23,10 @@
         :dayID="dayID"
         :index="index"
         class="row-start-3 w-[24px] pl-[3px] text-center"
+      />
+      <ParticipantsListModal
+        :openParticipantsModal="openParticipantsModal"
+        @close-dialog="closeParticipantsModal"
       />
     </div>
     <div
@@ -80,10 +86,12 @@ import Slots from '@/components/dashboard/Slots.vue';
 import VariationsData from '@/components/dashboard/VariationsData.vue';
 import { dashboardStore } from '@/stores/dashboardStore';
 import { translateWeekday } from 'tools/localeHelper';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import ParticipantsListModal from './ParticipantsListModal.vue';
 
 const { t, locale } = useI18n()
+const openParticipantsModal = ref<boolean | null>(false);
 
 const props = defineProps<{
   weekID?: string,
@@ -96,6 +104,12 @@ const day = props.guestData ? props.guestData.guestData : dashboardStore.getDay(
 const weekday = computed(() => translateWeekday(day.date, locale));
 const emptyDay = Object.keys(day.meals).length === 0;
 
+async function closeParticipantsModal() {
+  openParticipantsModal.value = false;
+}
+function openModal(){
+  openParticipantsModal.value = true;
+}
 </script>
 
 <style>

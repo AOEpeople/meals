@@ -35,25 +35,25 @@ class EventForm extends AbstractType
                 'class' => Event::class,
             ]);
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, static function (FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, static function (FormEvent $formEvent) {
             /** @var Meal|null $meal */
-            $meal = $event->getData();
-            if (null === $meal) {
+            $event = $formEvent->getData();
+            if (null === $event) {
                 return;
             }
             $day = $meal->getDay();
             $week = $day->getWeek();
             if (false === $day->isEnabled() || false === $week->isEnabled()) {
                 $form = $event->getForm();
-                $config = $form->get('dish')->getConfig();
+                $config = $form->get('event')->getConfig();
                 $opts = $config->getOptions();
                 $opts['attr'] = ['readonly' => 'readonly'];
-                $form->add('dish', EntityHiddenType::class, $opts);
+                $form->add('event', EntityHiddenType::class, $opts);
             }
         });
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
-            /** @var array $data client submitted meal data */
+            /** @var array $data client submitted event data */
             $data = $event->getData();
 
             if (isset($data['dish']) && '' === $data['dish']) {
@@ -71,8 +71,8 @@ class EventForm extends AbstractType
         });
 
         $builder->addEventListener(FormEvents::SUBMIT, static function (FormEvent $event) {
-            /** @var Meal $meal */
-            $meal = $event->getData();
+            /** @var Event $event */
+            $event = $event->getData();
             $dishPrice = $meal->getDish()->getPrice();
             $meal->setPrice($dishPrice);
             $event->setData($meal);
@@ -89,8 +89,8 @@ class EventForm extends AbstractType
             'empty_data' => static function (FormInterface $form) {
                 $event = $form->get('event')->getData();
                 $day = $form->getParent()->getParent()->getData();
-
-                return new Event($event, $day);
+                return $event;
+                #return new Event($event, $day);
             },
             'error_bubbling' => false,
         ]);

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Form\MealAdmin;
 
 use App\Mealz\MealBundle\Entity\Day;
+use App\Mealz\MealBundle\Entity\Event;
+use App\Mealz\MealBundle\Form\Type\EntityHiddenType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -38,12 +40,10 @@ class DayForm extends AbstractType
                 'constraints' => new Valid(),
                 'allow_add' => true,
             ])
-            ->add('event', CollectionType::class, [
-                'entry_type' => EventForm::class,
-                'allow_delete' => true,
-                'delete_empty' => true,
-                'constraints' => new Valid(),
-                'allow_add' => true,
+            ->add('event', EntityHiddenType::class, [
+                'class' => Event::class,
+                'empty_data' => null,
+                'required' => false,
             ])
             ->add('lockParticipationDateTime', DateTimeType::class, [
                 'required' => false,

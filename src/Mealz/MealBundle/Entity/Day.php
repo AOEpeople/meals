@@ -43,7 +43,6 @@ class Day extends AbstractMessage
     private Collection $meals;
 
     /**
-     * @Assert\NotNull()
      * @ORM\ManyToOne(targetEntity="Event")
      * @ORM\JoinColumn(name="event_id", referencedColumnName="id", nullable=true)
      */

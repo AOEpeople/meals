@@ -87,9 +87,10 @@
                     {% endif %}
                 </div>
 
-                <div class="event-rows-wrapper{% if form.children.days.children[loop.index0].enabled.vars.checked == false or form.enabled.vars.checked == false %} disabled{% endif %}" data-prototype="{{ form_widget(form.children.days.children[loop.index0].children.event.vars.prototype)|e('html_attr') }}">
+                <div class="event-rows-wrapper{% if form.children.days.children[loop.index0].enabled.vars.checked == false or form.enabled.vars.checked == false %} disabled{% endif %}" data-prototype="{{ form_widget(form.children.days.children[loop.index0].children.event)|e('html_attr') }}">
                     {# Render a event row #}
                     {% set selectedEvent = false %}
+                    {% set selectedEvent = form.days[loop.index0].event %}
                     {% include 'MealzMealBundle:MealAdmin/partials:event-row.html.twig' %}
                 </div>
 

@@ -366,9 +366,7 @@ Mealz.prototype.createEventFormElement = function ($eventRow, eventId) {
     prototypeForm = prototypeForm.replace(/__name__/g, this.prototypeFormId);
     var $prototypeFormElement = $(prototypeForm).appendTo($eventRow);
     $prototypeFormElement.addClass('event-selected');
-    var $prototypeFormElementInputs = $prototypeFormElement.find('input');
-    $prototypeFormElementInputs.last().val(day);
-    $prototypeFormElementInputs.first().val(eventId);
+    $prototypeFormElement.val(eventId);
 };
 
 Mealz.prototype.clearAllFormElements = function ($mealRow) {

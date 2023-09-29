@@ -5,7 +5,6 @@
 </template>
 
 <script setup lang="ts">
-import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue';
 import { InformationCircleIcon } from '@heroicons/vue/outline';
 
 defineProps<{

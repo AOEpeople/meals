@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-auto flex max-w-screen-aoe flex-col">
+  <div class="max-w-screen-aoe mx-auto flex flex-col">
     <div class="inline-block min-w-full py-2">
       <table class="min-w-full max-w-fit table-fixed border-spacing-0">
         <thead>

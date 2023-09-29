@@ -1,7 +1,7 @@
 <template>
   <td
     class="z-0 h-10 border-b-2 border-r-2 border-solid border-gray-200 text-center"
-    :class="{ 'cursor-pointer hover:bg-white hover:shadow-tb': edit }"
+    :class="{ 'hover:shadow-tb cursor-pointer hover:bg-white': edit }"
   >
     <div
       class="flex h-full w-full"
@@ -12,7 +12,7 @@
         class="flex flex-1 place-content-center items-center"
       >
         <CheckCircleIcon
-          class="block h-6 w-6 text-primary"
+          class="text-primary block h-6 w-6"
         />
       </span>
       <span
@@ -24,7 +24,7 @@
           fill-rule="evenodd"
           clip-rule="evenodd"
           viewBox="0 0 512 508.47"
-          class="block h-[22px] w-[22px] text-primary"
+          class="text-primary block h-[22px] w-[22px]"
         >
           <path
             fill-rule="nonzero"

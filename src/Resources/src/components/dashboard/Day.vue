@@ -11,7 +11,6 @@
         class="row-start-1 w-[24px] text-center"
         @click="openModal"
       />
-      <button @click="openModal">click mee</button>
       <span
         class="row-start-2 rotate-180 place-self-center text-center text-[11px] font-bold uppercase leading-4 tracking-[3px] text-white [writing-mode:vertical-lr]"
         :class="day.isLocked || emptyDay || guestData ? 'py-[24px]' : 'pb-[0px]'"

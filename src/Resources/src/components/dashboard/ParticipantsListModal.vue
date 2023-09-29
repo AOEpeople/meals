@@ -14,8 +14,7 @@
         <DialogTitle>
           {{ t('dashboard.print') }}
         </DialogTitle>
-        <ParticipationsTable
-          class="max-w-md overflow-auto"
+        <ParticipantsListByDay
         />
         <div class="flex max-h-96 flex-row">
           <CancelButton
@@ -37,11 +36,21 @@ import { useI18n } from 'vue-i18n';
 import CancelButton from '../misc/CancelButton.vue';
 
 import { getShowParticipations } from '@/api/getShowParticipations';
-import ParticipationsTable from '@/components/participations/ParticipationsTable.vue';
+import { useProgress } from '@marcoschulte/vue3-progress';
 
-const { participationsState } = getShowParticipations();
+import ParticipantsListByDay from '@/views/ParticipantsListByDay.vue';
+
+import { useComponentHeights } from '@/services/useComponentHeights';
+import { onMounted, onUnmounted } from 'vue';
+
+const { participationsState, loadShowParticipations, activatePeriodicFetch, disablePeriodicFetch } = getShowParticipations();
+const { addWindowHeightListener, removeWindowHeightListener } = useComponentHeights();
+const progress = useProgress().start();
+
+
 const { t } = useI18n();
 const loaded = ref(false);
+
 const props = defineProps<{
   openParticipantsModal: boolean,
   // mealId: number,
@@ -60,4 +69,17 @@ function closeParticipantsModal(doSubmit: boolean) {
     emit('closeDialog', []);
   }
 }
+
+onMounted(async () => {
+  await loadShowParticipations();
+  progress.finish();
+  activatePeriodicFetch();
+  addWindowHeightListener();
+});
+
+onUnmounted(() => {
+  disablePeriodicFetch();
+  removeWindowHeightListener();
+});
+
 </script>

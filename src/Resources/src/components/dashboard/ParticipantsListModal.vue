@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/html-closing-bracket-spacing -->
 <template>
   <Dialog
     :open="openParticipantsModal"
@@ -43,15 +42,13 @@ import ParticipantsListByDay from '@/views/ParticipantsListByDay.vue';
 
 import { useComponentHeights } from '@/services/useComponentHeights';
 import { onMounted, onUnmounted } from 'vue';
-import { DateTime } from '@/api/getDashboardData';
 
-const { participationsState, loadShowParticipations, activatePeriodicFetch, disablePeriodicFetch } = getShowParticipations();
+const { loadShowParticipations, activatePeriodicFetch, disablePeriodicFetch } = getShowParticipations();
 const { addWindowHeightListener, removeWindowHeightListener } = useComponentHeights();
 const progress = useProgress().start();
 
 
 const { t } = useI18n();
-const loaded = ref(false);
 
 const props = defineProps<{
   openParticipantsModal: boolean,

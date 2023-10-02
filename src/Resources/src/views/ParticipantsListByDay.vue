@@ -22,25 +22,20 @@ import { useI18n } from 'vue-i18n';
 const progress = useProgress().start()
 const { t, locale } = useI18n()
 
-const { listData } = useParticipantsByDayData();
+const props = defineProps<{
+  date: string,
+}>();
+console.log(props.date)
+const { listData } = useParticipantsByDayData(props.date);
 
-const mealNames = computed(() => {
-  const names: string[] = [];
-  Object.values(listData.meals).forEach(meal => {
-    names.push(locale.value === 'en' ? meal.title.en : meal.title.de);
-  });
-  return names;
-});
 
-const participationCount = computed(() => {
-  const count: number[] = [];
-  Object.values(listData.meals).forEach(meal => {
-    count.push(meal.participations ? meal.participations : 0);
-  })
-  return count;
-})
-
-const dateString = computed(() => new Date(Date.parse(listData.day.date)).toLocaleDateString(locale.value, { weekday: 'long', month: 'numeric', day: 'numeric' }));
+// const participationCount = computed(() => {
+//   const count: number[] = [];
+//   Object.values(listData.meals).forEach(meal => {
+//     count.push(meal.participations ? meal.participations : 0);
+//   })
+//   return count;
+// })
 
 progress.finish()
 </script>

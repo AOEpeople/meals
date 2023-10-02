@@ -1,6 +1,6 @@
 import useApi from '@/api/api';
 import type { DateTime } from '@/api/getDashboardData';
-import { onMounted, reactive, readonly, ref } from 'vue';
+import { onMounted, onUnmounted, reactive, readonly, ref } from 'vue';
 import type { Dictionary } from '../../types/types';
 
 export type ListData = {
@@ -19,11 +19,14 @@ const listDataState = reactive<ListData>({
 });
 
 export function useParticipantsByDayData(date: string){
-    console.log(date);
     const loaded = ref(false)
 
     onMounted(async () => {
         await getListData();
+    });
+
+    onUnmounted(() => {
+        listDataState.data = {};
     });
 
     async function getListData() {

@@ -5,22 +5,12 @@ import type { Dictionary } from '../../types/types';
 
 export type ListData = {
     data: Dictionary<Dictionary<Dictionary<Array<number>>>>
-    meals: Dictionary<MealData>,
     day: DateTime
 }
 
-type MealData = {
-    title: {
-        en: string,
-        de: string
-    },
-    parent?: number | null,
-    participations?: number
-}
 
 const listDataState = reactive<ListData>({
     data: {},
-    meals: {},
     day: {
         date: '',
         timezone_type: 0,
@@ -28,8 +18,8 @@ const listDataState = reactive<ListData>({
     }
 });
 
-export function useParticipantsByDayData(){
-
+export function useParticipantsByDayData(date: string){
+    console.log(date);
     const loaded = ref(false)
 
     onMounted(async () => {
@@ -37,9 +27,10 @@ export function useParticipantsByDayData(){
     });
 
     async function getListData() {
+
         const { response: listData, request, error } = useApi<ListData>(
             'GET',
-            '/api/print/participations/2023-10-02',
+            `/api/print/participations/${date}`,
         );
 
         if (loaded.value === false) {
@@ -48,9 +39,9 @@ export function useParticipantsByDayData(){
 
             if (error.value === false && listData.value !== null && listData.value !== undefined) {
                 listDataState.data = listData.value.data;
-                listDataState.meals = listData.value.meals;
                 listDataState.day = listData.value.day;
             }
+
         }
     }
 

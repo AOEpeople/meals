@@ -25,6 +25,7 @@
       />
       <ParticipantsListModal
         :openParticipantsModal="openParticipantsModal"
+        :date="date"
         @close-dialog="closeParticipantsModal"
       />
     </div>
@@ -91,6 +92,7 @@ import ParticipantsListModal from './ParticipantsListModal.vue';
 
 const { t, locale } = useI18n()
 const openParticipantsModal = ref<boolean | null>(false);
+const date = ref<string>();
 
 const props = defineProps<{
   weekID?: string,
@@ -108,6 +110,8 @@ async function closeParticipantsModal() {
 }
 function openModal(){
   openParticipantsModal.value = true;
+  // format date (2023-12-23) without time stamp
+  date.value = day.date.date.split(' ')[0];
 }
 </script>
 

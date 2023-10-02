@@ -9,17 +9,18 @@
       class="fixed inset-0 flex items-center justify-center p-4"
     >
       <DialogPanel
-        class="relative overflow-hidden rounded-lg bg-white p-4 text-left shadow-xl sm:my-8 sm:p-6"
+        class="relative overflow-hidden rounded-lg bg-white p-4 text-left drop-shadow-2xl  sm:my-8 sm:p-6 "
       >
         <DialogTitle>
           {{ t('dashboard.print') }}
         </DialogTitle>
         <ParticipantsListByDay
+          :date="date"
         />
         <div class="flex max-h-96 flex-row">
           <CancelButton
             :btn-text="t('combiModal.cancel')"
-            class="flex-1 cursor-pointer"
+            class="flex-1 cursor-pointer "
             @click="closeParticipantsModal(false)"
           />
         </div>
@@ -42,6 +43,7 @@ import ParticipantsListByDay from '@/views/ParticipantsListByDay.vue';
 
 import { useComponentHeights } from '@/services/useComponentHeights';
 import { onMounted, onUnmounted } from 'vue';
+import { DateTime } from '@/api/getDashboardData';
 
 const { participationsState, loadShowParticipations, activatePeriodicFetch, disablePeriodicFetch } = getShowParticipations();
 const { addWindowHeightListener, removeWindowHeightListener } = useComponentHeights();
@@ -53,9 +55,7 @@ const loaded = ref(false);
 
 const props = defineProps<{
   openParticipantsModal: boolean,
-  // mealId: number,
-  // dayId: string,
-  // weekId: number
+  date: string,
 }>();
 
 const emit = defineEmits(['closeDialog']);

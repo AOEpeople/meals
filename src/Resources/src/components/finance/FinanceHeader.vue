@@ -78,4 +78,3 @@ const getLastDayPreviousMonth = () => {
   .format('MM-DD-YYYY')
 }
 </script>
-

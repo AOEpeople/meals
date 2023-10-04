@@ -1,7 +1,9 @@
-import {reactive} from 'vue';
+import { reactive, watch } from 'vue';
 import getFinances from '@/api/getFinances';
-import {Dictionary} from '../../types/types';
-import {isResponseObjectOkay} from '@/api/isResponseOkay';
+import { Dictionary } from '../../types/types';
+import { isResponseObjectOkay } from '@/api/isResponseOkay';
+import useFlashMessage from '@/services/useFlashMessage';
+import { FlashMessageType } from '@/enums/FlashMessage';
 
 export interface Finances {
   heading: string;
@@ -39,7 +41,7 @@ function isFinances(finances: Finances[]): finances is Finances[] {
 }
 
 function isTransactions(transactions: Transaction[]): transactions is Transaction[] {
-  return transactions.some((transaction) => {
+  return transactions && transactions.some((transaction) => {
     return (
         transaction !== null &&
         transaction !== undefined &&
@@ -53,11 +55,25 @@ function isTransactions(transactions: Transaction[]): transactions is Transactio
 
 export function useFinances() {
 
+  const { sendFlashMessage } = useFlashMessage();
+
   const FinancesState = reactive<FinancesState>({
     finances: undefined,
     isLoading: false,
     error: ''
   });
+
+  watch(
+    () => FinancesState.error,
+    () => {
+      if (FinancesState.error !== '') {
+        sendFlashMessage({
+          type: FlashMessageType.ERROR,
+          message: FinancesState.error
+        })
+      }
+    }
+  )
 
   /**
    * Fetches a list of finances from the API and updates the FinancesState
@@ -69,7 +85,15 @@ export function useFinances() {
     if (isResponseObjectOkay(error, finances, isFinances)) {
       FinancesState.finances = finances.value;
       FinancesState.error = '';
+    } else if (error.value === false && finances.value[0] !== undefined && finances.value[0] !== null && typeof(finances.value[0].heading) === 'string') {
+      FinancesState.finances = finances.value;
+      FinancesState.error = '';
+      sendFlashMessage({
+        type: FlashMessageType.INFO,
+        message: 'finance.empty'
+      })
     } else {
+      FinancesState.finances = [];
       FinancesState.error = 'Error on fetching finances';
     }
 

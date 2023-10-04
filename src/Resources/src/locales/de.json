@@ -161,6 +161,9 @@
         "deleted": "Das Gericht wurde erfolgreich gelöscht.",
         "updated": "Das Gericht wurde erfolgreich bearbeitet."
       },
+      "finance": {
+        "empty": "Es gibt keine Transaktionen im ausgewählten Zeitraum"
+      },
       "participations": {
         "added": "Ein Benutzer wurde zu einer Mahlzeit hinzugefügt.",
         "removed": "Ein Benutzer wurde aus einer Mahlzeit entfernt."

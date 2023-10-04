@@ -21,12 +21,10 @@
       pdf-orientation="portrait"
       pdf-content-width="700px"
       :manual-pagination="true"
-      :preview-modal="true"
-      :enable-download="false"
     >
       <template #pdf-content>
         <FinancePdfTemplate
-          v-if="loaded && FinancesState.finances !== undefined"
+          v-if="loaded && FinancesState.finances !== undefined && FinancesState.finances.length > 0"
           :finances="FinancesState.finances[0]"
         />
       </template>
@@ -46,7 +44,6 @@ const {fetchFinances, FinancesState} = useFinances();
 const loaded = ref(false);
 
 const html2pdf = ref(null);
-const isGeneratingPdf = ref(false);
 
 onMounted(async () => {
   await fetchFinances();

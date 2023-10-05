@@ -3,8 +3,14 @@
 @import "tailwindcss/utilities.css";
 @import "aoe-group-web-cd/src/basic/typography.css";
 @import "@marcoschulte/vue3-progress/dist/index.css";
+@import "@vuepic/vue-datepicker/dist/main.css";
+
 .vue3-progress-bar-container .vue3-progress-bar {
   @apply bg-primary
+}
+
+.dp__input {
+  @apply w-full rounded-full border-2 border-solid border-[#CAD6E1] pr-4 pl-8 py-2 text-[14px] font-medium text-[#9CA3AF];
 }
 
 @layer base {

@@ -99,7 +99,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
 
         $this->loginAs(self::USER_FINANCE);
 
-        $crawler = $this->client->request('GET', '/accounting/book/finance/list/' . $dateFormatted . '&' . $dateFormatted);
+        $crawler = $this->client->request('GET', '/api/accounting/book/finance/list/' . $dateFormatted . '&' . $dateFormatted);
 
         $date = $crawler->filterXPath('//*[@class="table-data date"]/text()')->getNode(0)->textContent;
         $this->assertEquals($transactionDate->format('d.m.Y'), trim($date), 'Date displayed incorrectly');
@@ -137,7 +137,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
 
         $this->loginAs(self::USER_FINANCE);
 
-        $crawler = $this->client->request('GET', '/accounting/book/finance/list/' . $dateFormatted . '&' . $dateFormatted);
+        $crawler = $this->client->request('GET', '/api/accounting/book/finance/list/' . $dateFormatted . '&' . $dateFormatted);
 
         $nodes = $crawler->filterXPath('//*[@class="table-data amount"]/text()');
         $this->assertEquals(0, $nodes->count(), 'PayPal payment listed on finances page');
@@ -175,7 +175,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
 
         $this->loginAs(self::USER_FINANCE);
 
-        $crawler = $this->client->request('GET', '/accounting/book/finance/list/' . $dateFormatted . '&' . $dateFormatted);
+        $crawler = $this->client->request('GET', '/api/accounting/book/finance/list/' . $dateFormatted . '&' . $dateFormatted);
 
         $dailyClosing = $crawler->filterXPath('//*[@class="table-data daily-closing"]/text()')->getNode(0)->textContent;
         $this->assertEquals('100.00', trim($dailyClosing), 'Daily closing calculated incorrectly');

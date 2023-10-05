@@ -96,7 +96,7 @@ Lists all transactions booked for users in the last month.
 Finance has access to all user features and the finance tab.
 
 ### Dish variations
-**Route:** /accounting/book/finance/list
+**Route:** /api/accounting/book/finance/list
 **Available at:** Choose "Finance" in finance navigation bar.
 **Actions** Select Date to list all transaction and export as pdf.
 

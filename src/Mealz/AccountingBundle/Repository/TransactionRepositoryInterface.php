@@ -43,7 +43,12 @@ interface TransactionRepositoryInterface extends ObjectRepository
     ): array;
 
     /**
-     * Returns all transactions that were made between the given dates.
+     * Get all transactions that were made between the given dates.
+     *
+     * @param DateTime $minDate Start Date
+     * @param DateTime $maxDate End Date
+     *
+     * @psalm-return array<array-key, non-empty-list<array{amount: float, date: string, firstName: string, name: string}>>
      */
     public function findAllTransactionsInDateRange(DateTime $minDate, DateTime $maxDate): array;
 }

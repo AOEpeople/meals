@@ -113,6 +113,11 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
 
     /**
      * Returns all transactions that were made between the given dates.
+     *
+     * @param DateTime $minDate Start Date
+     * @param DateTime $maxDate End Date
+     *
+     * @psalm-return array<array-key, non-empty-list<array{amount: float, date: string, firstName: string, name: string}>>
      */
     public function findAllTransactionsInDateRange(DateTime $minDate, DateTime $maxDate): array
     {
@@ -175,8 +180,9 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
 
         $result = [];
         foreach ($queryResult as $item) {
+            //TODO: should not be floatval
             $result[] = [
-                'amount' => $item['amount'],
+                'amount' => floatval($item['amount']),
                 'date' => $item['date']->format('d.m.Y'),
                 'firstName' => $item['firstName'],
                 'name' => $item['name'],

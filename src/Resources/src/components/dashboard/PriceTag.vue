@@ -15,5 +15,5 @@ const props = defineProps<{
   price: number
 }>();
 
-const localePrice = computed(() => locale.value.substring(0, 2) === 'en' ? '€ ' + props.price.toFixed(2) : props.price.toFixed(2).replace(/\./g, ',') +  '€')
+const localePrice = computed(() => locale.value.substring(0, 2) === 'en' ? '€ ' + props.price.toFixed(2) : props.price.toFixed(2).replace(/\./g, ',') +  ' €')
 </script>

@@ -38,7 +38,7 @@
     "find-cache-dir": "^4.0",
     "html-loader": "^3.0",
     "mini-css-extract-plugin": "^2.4",
-    "postcss": "^8.4.21",
+    "postcss": "^8.4.31",
     "postcss-loader": "^6.2",
     "postcss-nested": "^5.0",
     "sass": "^1.44",

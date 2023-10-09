@@ -145,6 +145,10 @@ class ApiController extends BaseController
     {
         $day = $this->apiSrv->getDayByDate(new DateTime('today'));
 
+        if (null === $day) {
+            return new JsonResponse(null, 400);
+        }
+
         $list['data'] = $this->participationSrv->getParticipationListBySlots($day);
 
         $meals = $this->participationSrv->getMealsForTheDay($day);

@@ -80,6 +80,7 @@ class ApiController extends BaseController
                 'startDate' => $week->getStartTime(),
                 'endDate' => $week->getEndTime(),
                 'days' => [],
+                'isEnabled' => $week->isEnabled(),
             ];
             /* @var Day $day */
             foreach ($week->getDays() as $day) {
@@ -100,6 +101,7 @@ class ApiController extends BaseController
                     'slotsEnabled' => count($slots) > 0,
                     'slots' => [],
                     'meals' => [],
+                    'isEnabled' => $day->isEnabled(),
                 ];
 
                 $this->addSlots($response[$week->getId()]['days'][$day->getId()]['slots'], $slots, $day, $activeParticipations);

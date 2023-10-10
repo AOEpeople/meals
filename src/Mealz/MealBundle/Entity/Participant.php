@@ -147,7 +147,7 @@ class Participant
         return $this->slot;
     }
 
-    public function setSlot(Slot $slot): void
+    public function setSlot(Slot $slot = null): void
     {
         $this->slot = $slot;
     }

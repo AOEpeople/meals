@@ -43,9 +43,20 @@ class Event
     private ?string $slug = null;
 
     /**
+     * @ORM\Column(type="boolean", options={"default": false})
+     */
+    private bool $public = false;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Mealz\MealBundle\Entity\Participant", mappedBy="event")
      */
     private ?Collection $participants = null;
+
+    public function __construct(string $title, bool $isPublic = false)
+    {
+        $this->title = $title;
+        $this->public = $isPublic;
+    }
 
     public function getId(): int
     {
@@ -70,6 +81,16 @@ class Event
     public function setDeleted(bool $deleted): bool
     {
         return $this->deleted = $deleted;
+    }
+
+    public function isPublic(): bool
+    {
+        return $this->public;
+    }
+
+    public function setPublic(bool $public): bool
+    {
+        return $this->public = $public;
     }
 
     public function getSlug(): string

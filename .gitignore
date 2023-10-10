@@ -41,3 +41,4 @@ node_modules
 
 /src/Resources/style/output.css
 /**/*.d.ts
+src/Resources/style/output.css.map

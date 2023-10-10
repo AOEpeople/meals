@@ -76,7 +76,7 @@ const props = defineProps<{
 
 const { t } = useI18n()
 
-const selectedSlot = ref(props.day.slots[props.day.activeSlot])
+const selectedSlot = ref(props.day.slots[props.day.activeSlot] ?? props.day.slots['0'])
 const activeSlot = computed(() => props.day.slots[props.day.activeSlot])
 const disabled = computed(() => props.day.isLocked)
 

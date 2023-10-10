@@ -82,4 +82,9 @@ interface ParticipantRepositoryInterface extends ObjectRepository
      * Removes all future ordered meals for a given profile.
      */
     public function removeFutureMealsByProfile(Profile $profile): void;
+
+    /**
+     * Returns an array of all the participations for a given slot starting from the current week.
+     */
+    public function getParticipationsOfSlot(Slot $slot): array;
 }

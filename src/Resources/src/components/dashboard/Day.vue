@@ -2,7 +2,7 @@
   <div class="day-shadow mx-auto flex h-auto max-w-[414px] rounded bg-white sm:max-w-none">
     <div
       class="relative grid w-[24px] justify-center gap-2 rounded-l-[5px] py-[2px]"
-      :class="[day.isLocked ? 'bg-[#80909F]' : 'grid-rows-[minmax(0,1fr)_24px] bg-primary-2']"
+      :class="[day.isLocked || !day.isEnabled || emptyDay ? 'bg-[#80909F]' : 'bg-primary-2', !day.isLocked && !emptyDay && !guestData ? 'grid-rows-[minmax(0,1fr)_24px]' : '']"
     >
       <span
         class="row-start-1 rotate-180 place-self-center text-center text-[11px] font-bold uppercase leading-4 tracking-[3px] text-white [writing-mode:vertical-lr]"
@@ -11,14 +11,14 @@
         {{ weekday }}
       </span>
       <GuestButton
-        v-if="!day.isLocked && !emptyDay && !guestData"
+        v-if="!day.isLocked && !emptyDay && !guestData && day.isEnabled"
         :dayID="dayID"
         :index="index"
         class="row-start-2 w-[24px] pl-[3px] text-center"
       />
     </div>
     <div
-      v-if="!emptyDay"
+      v-if="!emptyDay && day.isEnabled"
       class="z-[1] flex min-w-[290px] flex-1 flex-col"
     >
       <div
@@ -57,10 +57,10 @@
       </div>
     </div>
     <div
-      v-if="emptyDay"
-      class="z-[1] h-[134px] min-w-[290px]"
+      v-if="emptyDay || !day.isEnabled"
+      class="z-[1] grid h-full min-w-[290px] items-center"
     >
-      <span class="description relative top-[53px] ml-[23px] text-primary-1">{{ t('dashboard.no_service') }}</span>
+      <span class="description relative ml-[23px] text-primary-1">{{ t('dashboard.no_service') }}</span>
     </div>
   </div>
 </template>

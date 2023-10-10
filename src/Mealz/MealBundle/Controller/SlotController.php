@@ -63,14 +63,8 @@ class SlotController extends BaseListController
                 $slot->setDisabled(!$parameters['enabled']);
                 if (true === $slot->isDisabled()) {
                     $participations = $this->participantRepo->getParticipationsOfSlot($slot);
-                    $logger = $this->get('monolog.logger.balance');
-                    $logger->info(json_encode($participations));
-
                     $this->participationSrv->setParticipationSlotsEmpty($participations);
-
                     $participations = $this->participantRepo->getParticipationsOfSlot($slot);
-                    $logger = $this->get('monolog.logger.balance');
-                    $logger->info(json_encode($participations));
                 }
             }
 

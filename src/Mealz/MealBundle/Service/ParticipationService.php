@@ -224,7 +224,7 @@ class ParticipationService
 
         foreach ($participants as $participant) {
             $slot = $participant->getSlot();
-            if (null !== $slot) {
+            if (null !== $slot && false === $slot->isDisabled()) {
                 return $slot;
             }
         }
@@ -289,5 +289,16 @@ class ParticipationService
         }
 
         return $result;
+    }
+
+    public function setParticipationSlotsEmpty(array $participations): void
+    {
+        /** @var Participant $participation */
+        foreach ($participations as $participation) {
+            $participation->setSlot(null);
+            $this->em->persist($participation);
+        }
+
+        $this->em->flush();
     }
 }

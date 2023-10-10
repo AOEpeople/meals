@@ -132,6 +132,7 @@ async function handleSubmit() {
       await setUpDaysAndEnabled();
     }
   }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 async function setUpDaysAndEnabled() {

@@ -43,12 +43,14 @@ export type Day = {
     meals: Dictionary<Meal>,
     slots: Dictionary<Slot>,
     slotsEnabled: boolean,
+    isEnabled: boolean
 }
 
 export type Week = {
     days: Dictionary<Day>,
     startDate: DateTime,
-    endDate: DateTime
+    endDate: DateTime,
+    isEnabled: boolean
 }
 
 export type Dashboard = {

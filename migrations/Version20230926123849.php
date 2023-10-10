@@ -24,6 +24,9 @@ final class Version20230926123849 extends AbstractMigration
         $this->addSql('ALTER TABLE participant ADD event_id INT DEFAULT NULL');
         $this->addSql('ALTER TABLE participant ADD CONSTRAINT FK_D79F6B1171F7E88B FOREIGN KEY (event_id) REFERENCES event (id)');
         $this->addSql('CREATE INDEX IDX_D79F6B1171F7E88B ON participant (event_id)');
+        $this->addSql('ALTER TABLE day ADD event_id INT DEFAULT NULL');
+        $this->addSql('ALTER TABLE day ADD CONSTRAINT FK_E5A0299071F7E88B FOREIGN KEY (event_id) REFERENCES event (id)');
+        $this->addSql('CREATE INDEX IDX_E5A0299071F7E88B ON day (event_id)');
     }
 
     public function down(Schema $schema): void
@@ -33,5 +36,9 @@ final class Version20230926123849 extends AbstractMigration
         $this->addSql('DROP TABLE event');
         $this->addSql('DROP INDEX IDX_D79F6B1171F7E88B ON participant');
         $this->addSql('ALTER TABLE participant DROP event_id');
+        $this->addSql('ALTER TABLE day DROP FOREIGN KEY FK_E5A02990C86F3B2F');
+        $this->addSql('ALTER TABLE day DROP FOREIGN KEY FK_E5A0299071F7E88B');
+        $this->addSql('DROP INDEX IDX_E5A0299071F7E88B ON day');
+        $this->addSql('ALTER TABLE day DROP event_id');
     }
 }

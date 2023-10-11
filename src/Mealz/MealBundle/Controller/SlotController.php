@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Slot;
+use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\MealBundle\Repository\SlotRepositoryInterface;
+use App\Mealz\MealBundle\Service\ParticipationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -19,13 +21,19 @@ class SlotController extends BaseListController
 {
     private EntityManagerInterface $em;
     private SlotRepositoryInterface $slotRepo;
+    private ParticipantRepositoryInterface $participantRepo;
+    private ParticipationService $participationSrv;
 
     public function __construct(
         EntityManagerInterface $em,
-        SlotRepositoryInterface $slotRepo
+        SlotRepositoryInterface $slotRepo,
+        ParticipantRepositoryInterface $participantRepo,
+        ParticipationService $participationSrv
     ) {
         $this->em = $em;
         $this->slotRepo = $slotRepo;
+        $this->participantRepo = $participantRepo;
+        $this->participationSrv = $participationSrv;
     }
 
     /**
@@ -53,6 +61,11 @@ class SlotController extends BaseListController
             }
             if (true === isset($parameters['enabled'])) {
                 $slot->setDisabled(!$parameters['enabled']);
+                if (true === $slot->isDisabled()) {
+                    $participations = $this->participantRepo->getParticipationsOfSlot($slot);
+                    $this->participationSrv->setParticipationSlotsEmpty($participations);
+                    $participations = $this->participantRepo->getParticipationsOfSlot($slot);
+                }
             }
 
             $this->em->persist($slot);

@@ -488,4 +488,18 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
                 ->execute();
         }
     }
+
+    public function getParticipationsOfSlot(Slot $slot): array
+    {
+        $queryBuilder = $this->createQueryBuilder('p')
+            ->leftJoin('p.meal', 'm')
+            ->andWhere('p.slot = :slotId')
+            ->setParameter('slotId', $slot->getId())
+            ->andWhere('m.dateTime >= :firstDay')
+            ->setParameter('firstDay', new DateTime('monday this week'), Types::DATETIME_MUTABLE);
+
+        $participations = $queryBuilder->getQuery()->execute();
+
+        return $participations;
+    }
 }

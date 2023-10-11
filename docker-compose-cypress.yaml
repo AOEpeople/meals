@@ -1,7 +1,7 @@
 services:
   app:
     image: "${IMAGE_APP:-aoepeople/meals:edge}"
-    command: composer run
+    command: composer run-script --no-cache post-install-cmd
     environment:
       - APP_DEBUG=1
       - APP_ENV=test

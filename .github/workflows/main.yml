@@ -235,6 +235,51 @@ jobs:
         with:
           report_paths: 'build/artifacts/qa/*.xml'
 
+  cypress:
+    name: Run E2E-tests via Cypress
+    needs: [ buildImages ]
+    runs-on: ubuntu-latest
+    env:
+      SERVICE: app # use `dev` to enable xdebug and code coverage
+      IMAGE_APP: ${{ needs.buildImages.outputs.image }}
+      IMAGE_DEV: ${{ needs.buildImages.outputs.imageDev }}
+      COMPOSE_INTERACTIVE_NO_CLI: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Download docker images
+        uses: actions/download-artifact@v3
+        with:
+          name: docker-images
+          path: /tmp/docker
+      - name: Import docker image
+        run: |
+          docker load --input /tmp/docker/app.tar
+          docker load --input /tmp/docker/dev.tar
+          docker image ls -a | grep aoepeople
+      - name: Test with docker compose
+        run: |
+          mkdir build
+          docker-compose -f docker-compose-cypress.yaml up --abort-on-container-exit
+          docker-compose -f docker-compose-cypress.yaml down --remove-orphans
+      - uses: actions/setup-node@v3
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+      - name: Install npm packages
+        working-directory: ./src/Resources
+        run: yarn install
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          working_directory: src/tests
+          build: yarn --cwd=src/Resources build
+          wait-on: 'https://meals.test'
+
+
+
   publish:
     name: Publish
     if: ${{ github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v') }}

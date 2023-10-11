@@ -23,6 +23,7 @@ help:
 	@echo "	run-tests-be       - Run backend-tests"
 	@echo "	run-tests-fe       - Run frontend-tests"
 	@echo " run-cypress        - Run cypress"
+	@echo " run-cypress-headless - Run cypress headless"
 	@echo "	ssh                - Open a bash session in the web container"
 	@echo "	update-schema      - Update the Doctrine schema"
 	@echo "	mailhog            - Open MailHog in the browser"
@@ -76,6 +77,9 @@ run-tests-fe:
 
 run-cypress:
 	yarn --cwd=./tests/e2e cypress open
+
+run-cypress-headless:
+	yarn --cwd=./tests/e2e cross-env-shell cypress run --headless --browser chrome --env baseUrl="https://meals.test/"
 
 ssh:
 	ddev ssh

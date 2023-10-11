@@ -1,7 +1,6 @@
 describe('Test CashRegister', () => {
     beforeEach(() => {
         cy.resetDB();
-        cy.setCookie('locale', 'de');
         cy.loginAs('kochomi');
         cy.visitMeals();
 

@@ -11,9 +11,6 @@ describe('Test the DebtPopup', () => {
         cy.visitMeals();
         cy.wait('@getUser');
 
-        // Hide Symphony's toolbar
-        cy.get('a[class="hide-button"]').click();
-
         cy.contains('p', /Kontostand von -50,10 € habe/);
 
         cy.get('div').contains('Ok, kapiert!').click();
@@ -25,9 +22,6 @@ describe('Test the DebtPopup', () => {
         cy.visitMeals();
 
         cy.wait('@getUser');
-
-        // Hide Symphony's toolbar
-        cy.get('a[class="hide-button"]').click();
 
         cy.contains('p', /Kontostand von -50,10 € habe/);
         cy.get('div').contains('Ok, kapiert!').click();

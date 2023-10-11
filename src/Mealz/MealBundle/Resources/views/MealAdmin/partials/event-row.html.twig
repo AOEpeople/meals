@@ -8,6 +8,8 @@
         {{ form_widget(selectedEvent, { 'attr': {'class':  'event-selected event-persisted'} }) }}
     {% endif %}
 
+    <p>{{ 'event.title'|trans({},'messages') }}</p>
+
     <div class="event-select-box">
         <ul>
             {% for event in events %}
@@ -23,7 +25,6 @@
         </ul>
     </div>
 
-    <p>{{ 'event.title'|trans({},'messages') }}</p>
     <div class="meal-select event">
         <span class="event-label">{% apply spaceless %}
         {% if selectedEvent is defined %}

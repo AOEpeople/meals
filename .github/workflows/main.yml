@@ -274,7 +274,7 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
-          working_directory: src/tests
+          working-directory: src/tests
           build: yarn --cwd=src/Resources build
           wait-on: 'https://meals.test'
 

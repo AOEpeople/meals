@@ -78,7 +78,7 @@ const emit = defineEmits(['update:modelValue']);
 const selectedDishOne = ref<Dish[] | null>(null);
 const selectedDishTwo = ref<Dish[] | null>(null);
 
-let mealKeys: string[] = [];
+const mealKeys = computed(() => Object.keys(props.modelValue.meals));
 
 const selectedDishes = computed({
   get() {
@@ -93,15 +93,15 @@ watch(
   selectedDishOne,
   () => {
     // meals that already exist in the backend can be changed to fit the new dishes
-    const mealIds = selectedDishes.value.meals[mealKeys[0]].map((meal: MealDTO) => meal.mealId);
+    const mealIds = selectedDishes.value.meals[mealKeys.value[0]].map((meal: MealDTO) => meal.mealId);
     // slugs of the dishes that were selected
     const dishSlugs = getSlugsFromSelectedDishes(selectedDishOne);
     // set the new dishes
-    selectedDishes.value.meals[mealKeys[0]] = dishSlugs.map(dishSlug => {
+    selectedDishes.value.meals[mealKeys.value[0]] = dishSlugs.map(dishSlug => {
       return {
         dishSlug: dishSlug,
         mealId: mealIds.length > 0 ? mealIds.pop() : null,
-        participationLimit: getParticipationLimitFromModel(dishSlug, mealKeys[0])
+        participationLimit: getParticipationLimitFromModel(dishSlug, mealKeys.value[0])
       };
     });
 });
@@ -110,24 +110,23 @@ watch(
   selectedDishTwo,
   () => {
     // meals that already exist in the backend can be changed to fit the new dishes
-    const mealIds = selectedDishes.value.meals[mealKeys[1]].map((meal: MealDTO) => meal.mealId);
+    const mealIds = selectedDishes.value.meals[mealKeys.value[1]].map((meal: MealDTO) => meal.mealId);
     // slugs of the dishes that were selected
     const dishSlugs = getSlugsFromSelectedDishes(selectedDishTwo);
     // set the new dishes
-    selectedDishes.value.meals[mealKeys[1]] = dishSlugs.map(dishSlug => {
+    selectedDishes.value.meals[mealKeys.value[1]] = dishSlugs.map(dishSlug => {
       return {
         dishSlug: dishSlug,
         mealId: mealIds.length > 0 ? mealIds.pop() : null,
-        participationLimit: getParticipationLimitFromModel(dishSlug, mealKeys[1])
+        participationLimit: getParticipationLimitFromModel(dishSlug, mealKeys.value[1])
       };
     });
 });
 
 onMounted(() => {
   // get mealKeys
-  mealKeys = Object.keys(props.modelValue.meals);
-  selectedDishOne.value = getDishArrayBySlugs(props.modelValue.meals[mealKeys[0]].map((meal: MealDTO) => meal.dishSlug));
-  selectedDishTwo.value = getDishArrayBySlugs(props.modelValue.meals[mealKeys[1]].map((meal: MealDTO) => meal.dishSlug));
+  selectedDishOne.value = getDishArrayBySlugs(props.modelValue.meals[mealKeys.value[0]].map((meal: MealDTO) => meal.dishSlug));
+  selectedDishTwo.value = getDishArrayBySlugs(props.modelValue.meals[mealKeys.value[1]].map((meal: MealDTO) => meal.dishSlug));
 });
 
 /**

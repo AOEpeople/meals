@@ -8,7 +8,7 @@
     </p>
   </div>
   <div
-    v-if="Object.keys(days).length === 0"
+    v-if="Object.keys(days).length === 0 || !dashboardStore.getWeek(weekID).isEnabled"
     class="mb-20 text-center text-[18px] tracking-[1.5px] text-[#acbdc7]"
   >
     <img

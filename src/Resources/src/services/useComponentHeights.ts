@@ -8,6 +8,8 @@ interface IComponentHeightState {
   screenHeight: number
 }
 
+const MIN_TABLE_HEIGHT = 250;
+
 const listenerActive = ref(false);
 
 const windowWidth = ref(0);
@@ -27,15 +29,25 @@ const componentHeightState = reactive<IComponentHeightState>({
  * Computed maximum possible height of the table body of the ParticipantsTableBody component.
  */
 const maxTableHeight = computed(() => {
-  return componentHeightState.screenHeight - (componentHeightState.navBarHeight + componentHeightState.tableHeadHeight + componentHeightState.mealListHeight + componentHeightState.mealOverviewHeight);
+  const height = componentHeightState.screenHeight - (componentHeightState.navBarHeight + componentHeightState.tableHeadHeight + componentHeightState.mealListHeight + componentHeightState.mealOverviewHeight);
+  if (height < MIN_TABLE_HEIGHT) {
+    return MIN_TABLE_HEIGHT;
+  }
+
+  return height;
 });
 
 /**
  * Computed maximum possible height of the NoParticipations-component.
  */
 const maxNoParticipationsHeight = computed(() => {
-  return componentHeightState.screenHeight - (componentHeightState.navBarHeight + componentHeightState.mealOverviewHeight);
-})
+  const height =  componentHeightState.screenHeight - (componentHeightState.navBarHeight + componentHeightState.mealOverviewHeight);
+  if (height < MIN_TABLE_HEIGHT) {
+    return MIN_TABLE_HEIGHT;
+  }
+
+  return height;
+});
 
 /**
  * Computes the sum of margin-bottom and margin-top of an HTMLELement.

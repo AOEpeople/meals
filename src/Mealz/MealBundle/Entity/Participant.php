@@ -24,7 +24,7 @@ class Participant
 
     /**
      * @Assert\NotNull()
-     * @ORM\ManyToOne(targetEntity="App\Mealz\MealBundle\Entity\Event")
+     * @ORM\ManyToOne(targetEntity="App\Mealz\MealBundle\Entity\Event", inversedBy="participants")
      * @ORM\JoinColumn(name="event_id", referencedColumnName="id", nullable=true)
      */
     private ?Event $event = null;
@@ -39,7 +39,7 @@ class Participant
 
     /**
      * @Assert\NotNull()
-     * @ORM\ManyToOne(targetEntity="App\Mealz\MealBundle\Entity\Slot")
+     * @ORM\ManyToOne(targetEntity="App\Mealz\MealBundle\Entity\Slot", inversedBy="participants")
      * @ORM\JoinColumn(name="slot_id", referencedColumnName="id", nullable=true)
      */
     private ?Slot $slot = null;

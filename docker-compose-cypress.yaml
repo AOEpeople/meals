@@ -1,0 +1,33 @@
+services:
+  app:
+    image: "${IMAGE_APP:-aoepeople/meals:edge}"
+    command: composer run
+    environment:
+      - APP_DEBUG=1
+      - APP_ENV=test
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_NAME=db_test
+      - DB_USER=db
+      - DB_PASS=db
+      - DB_VERS=5.7
+      - SMTP_HOST=mail
+      - SMTP_PORT=1025
+      - SMTP_AUTH=off
+    depends_on:
+      - db
+    ports:
+      - "8033:80"
+    volumes:
+      - ./build:/var/www/html/build
+
+  db:
+    image: "mysql:5.7"
+    command: --sql-mode="STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"
+    healthcheck:
+      test: out=$$(mysqladmin ping -h localhost -P 3306 -u db --password=db 2>&1); echo $$out | grep 'mysqld is alive' || { echo $$out; exit 1; }
+    environment:
+      - MYSQL_ROOT_PASSWORD=db
+      - MYSQL_DATABASE=db_test
+      - MYSQL_USER=db
+      - MYSQL_PASSWORD=db

@@ -1,7 +1,6 @@
 describe('Test Menu Participations View', () => {
     beforeEach(() => {
         cy.resetDB();
-        cy.setCookie('locale', 'de');
         cy.loginAs('kochomi');
         cy.visitMeals();
 

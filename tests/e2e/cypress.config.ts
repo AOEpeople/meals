@@ -10,6 +10,7 @@ export default defineConfig({
   },
   env: {
     "baseUrl": 'https://meals.test/',
+    "cookie_domain": 'meals.test',
     "oauth_enable": true,
     "oauth_base_url": "https://aoe.login.bare.id",
     "oauth_realm": "aoe-staging",
@@ -20,4 +21,6 @@ export default defineConfig({
   defaultCommandTimeout: 5000,
   viewportWidth: 1360,
   viewportHeight: 800,
+  screenshotOnRunFailure: false,
+  video: false,
 })

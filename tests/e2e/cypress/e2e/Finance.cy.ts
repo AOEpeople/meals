@@ -1,6 +1,5 @@
 describe('Test Cost View', () => {
     beforeEach(() => {
-        cy.setCookie('locale', 'de');
         cy.loginAs('kochomi');
         cy.visitMeals();
         cy.resetDB();

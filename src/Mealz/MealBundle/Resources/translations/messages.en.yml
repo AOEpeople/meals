@@ -26,6 +26,7 @@ dish_variation:
   deleted: Dish variation "%dishVariation%" has been successfully deleted.
   delete_error: Unable to delete dish variation "%dishVariation%". We are looking into it. Please try again later.
 event:
+  title: Event
   not_available: No event exists
 error:
   unknown: An unknown error occured.

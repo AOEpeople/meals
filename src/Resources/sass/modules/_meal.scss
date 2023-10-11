@@ -228,6 +228,15 @@
     }
   }
 
+  .event-row {
+    border-top: 2px solid $meal-border-color;
+
+    p {
+      padding: 5px 0 10px;
+      font-weight: 700;
+    }
+  }
+
   .select-wrapper {
     padding: 10px 15px;
     border-bottom: 2px solid $meal-border-color;

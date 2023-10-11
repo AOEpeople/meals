@@ -1,8 +1,11 @@
-<div class="event-row">
-    {% if selectedEvent != false %}
-        {% for formView in selectedEvent.formViews %}
-            {{ form_widget(formView, { 'attr': {'class':  'event-selected event-persisted'} }) }}
-        {% endfor %}
+<div class="event-row"
+    {% if selectedEvent is defined %}
+    data-attribute-selected-event="{{ selectedEvent.vars.value }}"
+    {% endif %}
+>
+
+    {% if selectedEvent is defined %}
+        {{ form_widget(selectedEvent, { 'attr': {'class':  'event-selected event-persisted'} }) }}
     {% endif %}
 
     <div class="event-select-box">
@@ -19,13 +22,19 @@
             {% endif %}
         </ul>
     </div>
+
+    <p>{{ 'event.title'|trans({},'messages') }}</p>
     <div class="meal-select event">
         <span class="event-label">{% apply spaceless %}
-        {% if selectedEvent != false %}
-            todo
+        {% if selectedEvent is defined %}
+            {% for event in events %}
+                {% if event.id == selectedEvent.vars.value %}
+                    {{ event.title }}
+                {% endif %}
+            {% endfor %}
         {% endif %}
         {% endapply %}</span>
-        <a class="remove-event" href="#">
+        <a class="remove-event" href="#"{% if selectedEvent is defined %}style="display: block;"{% endif %}>
             <span class="glyphicon glyphicon-remove"></span>
         </a>
     </div>

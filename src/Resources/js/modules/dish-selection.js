@@ -369,16 +369,18 @@ Mealz.prototype.createEventFormElement = function ($eventRow, eventId) {
     $prototypeFormElement.val(eventId);
 };
 
-Mealz.prototype.clearAllFormElements = function ($mealRow) {
+Mealz.prototype.clearAllFormElements = function ($row) {
     var that = this;
-    $mealRow.find('.meal-selected, .event-selected').each(function () {
+    $row.find('.meal-selected, .event-selected').each(function () {
         that.deleteSingleSelection($(this));
     });
 };
 
 Mealz.prototype.deleteSingleSelection = function ($element) {
-    if ($element.hasClass('meal-persisted') === true || $element.hasClass('event-persisted') === true) {
+    if ($element.hasClass('meal-persisted') === true) {
         $element.find('input:first').val('');
+    } else if ($element.hasClass('event-persisted') === true) {
+        $element.val('');
     } else {
         $element.remove();
     }

@@ -97,7 +97,7 @@ class Day extends AbstractMessage
         return $this->event;
     }
 
-    public function setEvent(Event $event): void
+    public function setEvent(?Event $event): void
     {
         $this->event = $event;
     }

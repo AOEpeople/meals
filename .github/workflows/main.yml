@@ -259,11 +259,10 @@ jobs:
           docker load --input /tmp/docker/app.tar
           docker load --input /tmp/docker/dev.tar
           docker image ls -a | grep aoepeople
-      - name: Test with docker compose
+      - name: Docker compose up
         run: |
           mkdir build
           docker-compose -f docker-compose-cypress.yaml up --abort-on-container-exit
-          docker-compose -f docker-compose-cypress.yaml down --remove-orphans
       - uses: actions/setup-node@v3
       - name: Cache node_modules
         uses: actions/cache@v3
@@ -278,3 +277,6 @@ jobs:
         with:
           working-directory: tests/e2e
           wait-on: 'https://meals.test'
+      - name: Docker compose down
+        run: |
+          docker-compose -f docker-compose-cypress.yaml down --remove-orphans

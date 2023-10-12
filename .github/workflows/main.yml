@@ -49,14 +49,14 @@ jobs:
       - name: Install npm packages
         working-directory: ./src/Resources
         run: yarn install
+      - name: Make build dir
+        run: |
+          mkdir build
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
           working-directory: tests/e2e
-          start: |
-            cd ../..
-            mkdir build
-            docker-compose -f docker-compose-cypress.yaml up --abort-on-container-exit
+          start: docker-compose -f ../../docker-compose-cypress.yaml up --abort-on-container-exit
           wait-on: 'https://meals.test'
       - name: Docker compose down
         run: |

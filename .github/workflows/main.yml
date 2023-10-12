@@ -273,10 +273,8 @@ jobs:
         run: yarn install
       - name: Test output
         run: |
-          echo "base directory"
-          ls
           echo "cypress directory"
-          ls test/e2e
+          ls tests/e2e
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:

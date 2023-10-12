@@ -276,11 +276,11 @@ jobs:
           echo "base directory"
           ls
           echo "cypress directory"
-          ls src/test/e2e
+          ls test/e2e
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
-          working-directory: src/tests/e2e
+          working-directory: tests/e2e
           build: yarn --cwd=src/Resources build
           wait-on: 'https://meals.test'
 

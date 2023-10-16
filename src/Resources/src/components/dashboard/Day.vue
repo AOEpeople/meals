@@ -13,7 +13,7 @@
         v-if="!day.isLocked && !emptyDay && !guestData"
         :dayID="dayID"
         :index="index"
-        class="row-start-1 w-[24px] text-center"
+        class="row-start-1 h-[24px] w-[24px] p-1 text-center"
         @click="openModal"
       />
       <span

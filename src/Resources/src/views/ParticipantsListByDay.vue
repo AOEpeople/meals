@@ -8,9 +8,9 @@
         <tr
           v-for="(participations, participantName, index) in participant"
           :key="index"
-          :class="[index === 0 ? 'border-gray-300' : 'border-gray-200', 'border-t']">
+          :class="[index === 0 ? 'border-gray-300' : 'border-gray-200', 'border-b']">
           <td
-            class="text-primary whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium sm:pl-6">
+            class="text-s leading- w-2/5 whitespace-nowrap py-4 pl-4 pr-3 text-[18px] font-light">
             {{ String(participantName) }}
           </td>
         </tr>

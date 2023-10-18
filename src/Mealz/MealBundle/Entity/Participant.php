@@ -35,7 +35,7 @@ class Participant
      * @ORM\ManyToOne(targetEntity="Meal",inversedBy="participants")
      * @ORM\JoinColumn(name="meal_id", referencedColumnName="id")
      */
-    private Meal $meal;
+    private ?Meal $meal;
 
     /**
      * @Assert\NotNull()
@@ -86,10 +86,11 @@ class Participant
      */
     private bool $confirmed = false;
 
-    public function __construct(Profile $profile, Meal $meal)
+    public function __construct(Profile $profile, ?Meal $meal, ?Event $event = null)
     {
         $this->profile = $profile;
         $this->meal = $meal;
+        $this->event = $event;
         $this->combinedDishes = new DishCollection();
     }
 
@@ -138,7 +139,7 @@ class Participant
         $this->meal = $meal;
     }
 
-    public function getMeal(): Meal
+    public function getMeal(): ?Meal
     {
         return $this->meal;
     }

@@ -1,0 +1,21 @@
+{% import 'MealzTemplateBundle::Components/checkbox.html.twig' as MealzCheckbox %}
+<div class="action">
+    {% if is_granted('ROLE_USER') %}
+        {% set participant = event.getParticipant(app.user.profile) %}
+        {% if participant %}
+            {#% if is_allowed_to_leave(meal) %#}
+                {{ MealzCheckbox.create(link(participant, 'delete') ,'participation-checkbox delete-action', {'checked': 'checked', 'data-action': 'delete'}) }}
+            {#% else %#}
+                {#{ MealzCheckbox.create('' ,'participation-checkbox', {'checked': 'checked', 'disabled': 'disabled'}) }#}
+            {#% endif %#}
+        {% else %}
+            {#% if is_allowed_to_join(meal) %#}
+                {{ MealzCheckbox.create(linkEvent(event, day, 'join') ,'participation-checkbox join-action', {'data-action': 'join'}) }}
+            {#% else %#}
+                {#{ MealzCheckbox.create('' ,'participation-checkbox', {'disabled': 'disabled'}) }#}
+            {#% endif %#}
+        {% endif %}
+    {% else %}
+        {{ MealzCheckbox.create('' ,'participation-checkbox no-user', {'disabled': 'disabled'}) }}
+    {% endif %}
+</div>

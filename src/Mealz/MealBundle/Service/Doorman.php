@@ -28,6 +28,13 @@ class Doorman
     private const AT_MEAL_PARTICIPATION = 0;
 
     /**
+     * Doorman constants defining access types.
+     *
+     * @see $this->hasAccessTo
+     */
+    #private const AT_EVENT_PARTICIPATION = 0;
+
+    /**
      * Current timestamp.
      */
     protected int $now;
@@ -65,6 +72,27 @@ class Doorman
         return $this->isToggleParticipationAllowed($meal->getDateTime())
                 && $this->hasAccessTo(self::AT_MEAL_PARTICIPATION, ['meal' => $meal]);
     }
+
+    /*
+    public function isUserAllowedToJoinEvent(Event $event, array $eventSlugs = []): bool
+    {
+        $eventAvailability = $this->availabilityService->getByEvent($event);
+
+        if (is_bool($eventAvailability)) {
+            $eventIsAvailable = $eventAvailability;
+        } else {
+            $eventlIsAvailable =
+                (true === $eventAvailability['available']) &&
+                ((1 > count($eventSlugs)) || (0 === count(array_diff($eventAvailability['availableWith'], $eventSlugs))));
+        }
+
+        if (false === $this->security->getUser()->getProfile() instanceof Profile || false === $eventIsAvailable) {
+            return false;
+        }
+
+        return $this->hasAccessTo(self::AT_EVENT_PARTICIPATION, ['event' => $event]);
+    }
+    */
 
     public function isOfferAvailable(Meal $meal): bool
     {

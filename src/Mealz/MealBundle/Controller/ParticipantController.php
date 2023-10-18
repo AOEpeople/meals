@@ -146,7 +146,7 @@ class ParticipantController extends BaseController
         // trigger meal-offered event
         $this->eventDispatcher->dispatch(new MealOfferedEvent($participant));
 
-        return $this->generateResponse('MealzMealBundle_Participant_unswap', 'swapped', $participant);
+        return $this->generateResponse('MealzMealBundle_Meal_Participant_unswap', 'swapped', $participant);
     }
 
     /**
@@ -162,7 +162,7 @@ class ParticipantController extends BaseController
 
         $this->eventDispatcher->dispatch(new MealOfferCancelledEvent($participant));
 
-        return $this->generateResponse('MealzMealBundle_Participant_swap', 'unswapped', $participant);
+        return $this->generateResponse('MealzMealBundle_Meal_Participant_swap', 'unswapped', $participant);
     }
 
     /**

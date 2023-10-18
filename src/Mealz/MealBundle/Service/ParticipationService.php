@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Service;
 
+use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
+use App\Mealz\MealBundle\Entity\Event;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
@@ -65,6 +67,23 @@ class ParticipationService
         }
 
         return null;
+    }
+
+    /**
+     * @psalm-return array{participant: Participant, offerer: Profile|null}|null
+     *
+     * @throws ParticipationException
+     */
+    public function joinEvent(Profile $profile, Event $event, Day $day, array $eventSlugs = []): ?array
+    {
+        // self joining by user
+        #if ($this->doorman->isUserAllowedToJoinEvent($event, $eventSlugs)) {
+            $participant = $this->createEvent($profile, $event, $day, $eventSlugs);
+
+            return ['participant' => $participant, 'offerer' => null];
+        #}
+
+        #return null;
     }
 
     /**
@@ -137,6 +156,23 @@ class ParticipationService
     private function create(Profile $profile, Meal $meal, ?Slot $slot = null, array $dishSlugs = []): ?Participant
     {
         $participant = $this->createParticipation($profile, $meal, $slot, $dishSlugs);
+
+        $this->em->persist($participant);
+        $this->em->flush();
+
+        $meal->participants->add($participant);
+
+        return $participant;
+    }
+
+    /**
+     * Creates a new participation for user $profile in meal $meal.
+     *
+     * @throws ParticipationException
+     */
+    private function createEvent(Profile $profile, Event $event, Day $day, array $eventSlugs = []): ?Participant
+    {
+        $participant = $this->createEventParticipation($profile, $event, $day, $eventSlugs);
 
         $this->em->persist($participant);
         $this->em->flush();

@@ -10,7 +10,7 @@
       class="mx-auto"
     />
     <NoParticipations
-      v-if="Object.entries(participationsState.meals).length === 0"
+      v-if="Object.entries(participationsState.meals).length === 0 && loadedState.loaded === true"
       :day="participationsState.day"
     />
     <MealOverview
@@ -34,7 +34,7 @@ import { useComponentHeights } from '@/services/useComponentHeights';
 
 const progress = useProgress().start();
 
-const { participationsState, loadShowParticipations, activatePeriodicFetch, disablePeriodicFetch } = getShowParticipations();
+const { participationsState, loadShowParticipations, activatePeriodicFetch, disablePeriodicFetch, loadedState } = getShowParticipations();
 const { addWindowHeightListener, removeWindowHeightListener } = useComponentHeights();
 
 onMounted(async () => {

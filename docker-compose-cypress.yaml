@@ -1,9 +1,9 @@
 services:
   app:
-    image: "${IMAGE_APP:-aoepeople/meals:edge}"
+    image: aoepeople/meals:beta
     environment:
       - APP_DEBUG=1
-      - APP_ENV=test
+      - APP_ENV=staging
       - DB_HOST=db
       - DB_PORT=3306
       - DB_NAME=db_test
@@ -13,10 +13,18 @@ services:
       - SMTP_HOST=mail
       - SMTP_PORT=1025
       - SMTP_AUTH=off
+      - IDP_SERVER=https://aoe.login.bare.id/auth/realms/aoe-staging
+      - APP_NAME=Meals
+      - APP_BASE_URL=http://localhost
+      - DB_URL=mysql://db:db@db:3306/db_test?serverVersion=5.7&charset=utf8
+      - MERCURE_URL=https://mercure/.well-known/mercure
+      - MERCURE_PUBLIC_URL=http://localhost:2443/.well-known/mercure
+      - MERCURE_JWT_SECRET="ChangeMeChangeMeChangeMeChangeMe"
+      - USE_FORWARDED_HEADERS=1
     depends_on:
       - db
     volumes:
-      - ./src:/var/www/html/
+      - shared:/var/www/meals/public/
 
   db:
     image: "mysql:5.7"
@@ -32,7 +40,33 @@ services:
   nginx:
     image: nginx:latest
     ports:
-      - "8033:80"
+      - "80:80"
     volumes:
-      - ./src:/var/www/html/
-      - ./site.conf:/etc/nginx/conf.d/default.conf
+      - shared:/var/www/meals/public
+      - ./default.conf:/etc/nginx/conf.d/default.conf
+
+  mercure:
+    image: dunglas/mercure:v0.14
+    restart: unless-stopped
+    environment:
+      MERCURE_ALLOWED_ORIGINS: http://localhost
+      MERCURE_ALLOWED_PUBLISH_ORIGINS: web
+      MERCURE_PUBLISHER_JWT_ALG: HS256
+      MERCURE_PUBLISHER_JWT_KEY: testing-testing-testing-testing!
+      MERCURE_SUBSCRIBER_JWT_ALG: HS256
+      MERCURE_SUBSCRIBER_JWT_KEY: testing-testing-testing-testing!
+      HTTP_EXPOSE: '8080:8080'
+      HTTPS_EXPOSE: '8081:8080'
+      SERVER_ADDRESS: 'http://localhost:8080, http://localhost:8080'
+    expose:
+      - 8080
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+      - ./.ddev/caddy/Caddyfile.dev:/etc/caddy/Caddyfile
+
+volumes:
+  shared:
+    driver: local
+  caddy_data:
+  caddy_config:

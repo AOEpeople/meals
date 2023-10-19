@@ -21,6 +21,8 @@ services:
       - MERCURE_PUBLIC_URL=http://localhost:2443/.well-known/mercure
       - MERCURE_JWT_SECRET="ChangeMeChangeMeChangeMeChangeMe"
       - USE_FORWARDED_HEADERS=1
+    env_file:
+      - ./.env.docker
     depends_on:
       - db
     volumes:

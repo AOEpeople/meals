@@ -27,16 +27,28 @@ const listDataState = reactive<ListData>({
         timezone: ''
     }
 });
+/**
+ * if date is passed participants list is specific to that date, if not it returns the list of today's participants
+ * @param date
+ * @returns list of participants
+ */
+export function usePrintableListData(date?: string){
 
-export function usePrintableListData() {
-    const loaded = ref(false);
+    const loaded = ref(false)
 
     onMounted(async () => {
         await getListData();
     });
 
+    onUnmounted(() => {
+        listDataState.data = {};
+    });
+
     async function getListData() {
-        const { response: listData, request, error } = useApi<ListData>('GET', '/api/print/participations');
+        const { response: listData, request, error } = useApi<ListData>(
+            'GET',
+    (date !== undefined && date !== null )? `/api/print/participations/${date}` : '/api/print/participations/'
+        );
 
         if (loaded.value === false) {
             await request();

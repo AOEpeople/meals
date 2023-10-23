@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { useParticipantsByDayData } from '@/api/getParticipationsByDate';
+import { usePrintableListData } from '@/api/getPrintableListData';
 import { useProgress } from '@marcoschulte/vue3-progress';
 
 const progress = useProgress().start()
@@ -30,8 +30,7 @@ const progress = useProgress().start()
 const props = defineProps<{
   date: string,
 }>();
-console.log(props.date)
-const { listData } = useParticipantsByDayData(props.date);
+const { listData } = usePrintableListData(props.date);
 
 progress.finish()
 </script>

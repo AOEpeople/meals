@@ -10,7 +10,9 @@
       <DialogPanel
         class="relative inset-0 w-96 overflow-hidden rounded-lg bg-white p-4 text-left drop-shadow-2xl sm:my-8 sm:p-6"
       >
-        <DialogTitle>
+        <DialogTitle
+          class="text-sm"
+        >
           {{ t('dashboard.print') }}
         </DialogTitle>
         <ParticipantsListByDay
@@ -18,7 +20,7 @@
         />
         <div class="flex max-h-96 flex-row pt-4">
           <CancelButton
-            :btn-text="t('combiModal.cancel')"
+            :btn-text="t('combiModal.close')"
             class="flex-1 cursor-pointer "
             @click="closeParticipantsModal(false)"
           />

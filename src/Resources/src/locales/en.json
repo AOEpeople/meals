@@ -68,7 +68,8 @@
   "combiModal": {
     "title": "Choose a combination for your combined dish",
     "submit": "Select meals",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "close": "Close"
   },
   "copyright": "All rights reserved.",
   "dashboard": {

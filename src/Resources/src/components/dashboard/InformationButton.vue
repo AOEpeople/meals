@@ -7,9 +7,4 @@
 <script setup lang="ts">
 import { InformationCircleIcon } from '@heroicons/vue/outline';
 
-defineProps<{
-  dayID: number | string,
-  index: number
-}>();
-
 </script>

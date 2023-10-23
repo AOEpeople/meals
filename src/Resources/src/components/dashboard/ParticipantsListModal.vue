@@ -20,7 +20,7 @@
         />
         <div class="flex max-h-96 flex-row pt-4">
           <CancelButton
-            :btn-text="t('combiModal.close')"
+            :btn-text="t('button.cancel')"
             class="flex-1 cursor-pointer "
             @click="closeParticipantsModal(false)"
           />
@@ -31,54 +31,24 @@
 </template>
 
 <script setup lang="ts">
-import { Dialog, DialogPanel, DialogTitle } from '@headlessui/vue';
-import { ref } from 'vue';
+import { Dialog, DialogPanel, DialogTitle} from '@headlessui/vue';
 import { useI18n } from 'vue-i18n';
-
 import CancelButton from '../misc/CancelButton.vue';
-
-import { getShowParticipations } from '@/api/getShowParticipations';
-import { useProgress } from '@marcoschulte/vue3-progress';
-
 import ParticipantsListByDay from '@/views/ParticipantsListByDay.vue';
-
-import { useComponentHeights } from '@/services/useComponentHeights';
-import { onMounted, onUnmounted } from 'vue';
-
-const { loadShowParticipations, activatePeriodicFetch, disablePeriodicFetch } = getShowParticipations();
-const { addWindowHeightListener, removeWindowHeightListener } = useComponentHeights();
-const progress = useProgress().start();
-
 
 const { t } = useI18n();
 
-const props = defineProps<{
+defineProps<{
   openParticipantsModal: boolean,
   date: string,
 }>();
 
 const emit = defineEmits(['closeDialog']);
 
-const selectedCombi = ref<number[]>([-1, -1]);
 
 function closeParticipantsModal(doSubmit: boolean) {
-  if (doSubmit === true && selectedCombi.value.includes(-1) === false) {
-    emit('closeDialog', selectedCombi.value);
-  } else {
-    emit('closeDialog', []);
-  }
+if (doSubmit === false){
+  emit('closeDialog');
 }
-
-onMounted(async () => {
-  await loadShowParticipations();
-  progress.finish();
-  activatePeriodicFetch();
-  addWindowHeightListener();
-});
-
-onUnmounted(() => {
-  disablePeriodicFetch();
-  removeWindowHeightListener();
-});
-
+}
 </script>

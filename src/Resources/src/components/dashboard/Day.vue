@@ -109,9 +109,9 @@ async function closeParticipantsModal() {
   openParticipantsModal.value = false;
 }
 function openModal(){
-  openParticipantsModal.value = true;
-  // format date (2023-12-23) without time stamp
+    // format date (2023-12-23) without time stamp
   date.value = day.date.date.split(' ')[0];
+  openParticipantsModal.value = true;
 }
 </script>
 

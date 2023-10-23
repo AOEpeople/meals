@@ -1,7 +1,7 @@
 <template>
   <div class="day-shadow mx-auto flex h-auto max-w-[414px] content-center rounded bg-white sm:max-w-none">
     <div
-      class="relative grid w-[24px] content-center justify-center  gap-2 rounded-l-[5px] py-[2px] text-center"
+      class="relative grid w-[24px] content-center justify-center gap-2 rounded-l-[5px] py-[2px] text-center"
       :class="[day.isLocked ? 'bg-[#80909F]' : 'bg-primary-2 grid-rows-[24px_minmax(0,1fr)_24px]']"
     >
       <InformationButton

@@ -41,7 +41,7 @@ jobs:
     continue-on-error: false
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
       - name: Cache node_modules
         uses: actions/cache@v3
         with:

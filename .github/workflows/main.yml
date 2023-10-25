@@ -276,7 +276,7 @@ jobs:
         with:
           working-directory: tests/e2e
           start: docker-compose -f ../../docker-compose-cypress.yaml up --abort-on-container-exit
-          wait-on: 'https://meals.test'
+          wait-on: 'http://localhost'
       - name: Docker compose down
         run: |
           docker-compose -f docker-compose-cypress.yaml down --remove-orphans

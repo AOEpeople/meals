@@ -3,10 +3,13 @@ describe('Test Dishes View', () => {
         cy.resetDB();
         cy.loginAs('kochomi');
         cy.visitMeals();
+
+        cy.intercept('GET', '**/api/dishes').as('getDishes');
+        cy.intercept('GET', '**/api/categories').as('getCategories');
     });
 
     it("should be able to navigate to '/dishes' and have the header displayed", () => {
-        cy.visit('/dishes');
+        cy.get('span > a').contains('Gerichte').click();
 
         cy.get('h2').should(ele => {
             expect(ele.first()).to.contain('Liste der Gerichte');
@@ -17,7 +20,7 @@ describe('Test Dishes View', () => {
     });
 
     it('should be able to switch the locale to english and back to german', () => {
-        cy.visit('/dishes');
+        cy.get('span > a').contains('Gerichte').click();
 
         // Switch language to english
         cy.get('span').contains('English version').parent().click();
@@ -47,15 +50,10 @@ describe('Test Dishes View', () => {
     });
 
     it('should be able to create, edit and delete a dish', () => {
-        cy.visit('/dishes');
+        cy.get('span > a').contains('Gerichte').click();
 
         // Wait for the dishes and categories to load
-        cy.intercept('GET', '/api/dishes').as('getDishes');
-        cy.intercept('GET', '/api/categories').as('getCategories');
         cy.wait(['@getDishes', '@getCategories']);
-
-        // Hide Symphony's toolbar
-        cy.get('a[class="hide-button"]').click();
 
         // Create Dish
         cy.get('button').contains('+ Gericht erstellen').click();
@@ -130,11 +128,9 @@ describe('Test Dishes View', () => {
     });
 
     it('should be able to filter for a category', () => {
-        cy.visit('/dishes');
+        cy.get('span > a').contains('Gerichte').click();
 
         // Wait for the dishes and categories to load
-        cy.intercept('GET', '/api/dishes').as('getDishes');
-        cy.intercept('GET', '/api/categories').as('getCategories');
         cy.wait(['@getDishes', '@getCategories']);
 
         // Filter for a category
@@ -153,11 +149,9 @@ describe('Test Dishes View', () => {
     });
 
     it('should be able to filter for a dish', () => {
-        cy.visit('/dishes');
+        cy.get('span > a').contains('Gerichte').click();
 
         // Wait for the dishes and categories to load
-        cy.intercept('GET', '/api/dishes').as('getDishes');
-        cy.intercept('GET', '/api/categories').as('getCategories');
         cy.wait(['@getDishes', '@getCategories']);
 
         // Create a dish to filter for
@@ -194,15 +188,10 @@ describe('Test Dishes View', () => {
     });
 
     it('should be able to create, edit and delete a dish variation', () => {
-        cy.visit('/dishes');
+        cy.get('span > a').contains('Gerichte').click();
 
         // Wait for the dishes and categories to load
-        cy.intercept('GET', '/api/dishes').as('getDishes');
-        cy.intercept('GET', '/api/categories').as('getCategories');
         cy.wait(['@getDishes', '@getCategories']);
-
-        // Hide Symphony's toolbar
-        cy.get('a[class="hide-button"]').click();
 
         // Create a dish
         cy.get('button').contains('+ Gericht erstellen').click();

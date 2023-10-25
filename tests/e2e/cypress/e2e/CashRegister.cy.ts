@@ -10,12 +10,9 @@ describe('Test CashRegister', () => {
     });
 
     it('should be able to navigate to the cash register', () => {
-        cy.visit('/costs');
+        cy.get('span > a').contains('Kosten').click();
 
         cy.wait('@getCosts');
-
-        // Hide Symphony's toolbar
-        cy.get('a[class="hide-button"]').click();
 
         cy.get('span').contains('Kasse').click();
 

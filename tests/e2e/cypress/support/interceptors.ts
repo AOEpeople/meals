@@ -1,6 +1,6 @@
 export const setCookieInterceptor = () => {
     // see: https://github.com/cypress-io/cypress/issues/9347
-    cy.intercept('https://meals.test/**', (req) => {
+    cy.intercept(`${Cypress.env('baseUrl')}**`, (req) => {
         req.on('response', (res) => {
             let cookies = res.headers['set-cookie'];
             if (!Array.isArray(cookies)) {

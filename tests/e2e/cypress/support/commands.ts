@@ -82,6 +82,10 @@ export const visitMeals = () => {
   }).then((response) => {
     expect(response.status).to.eq(200);
   });
+  // Hide Symphony's toolbar
+  if (Cypress.env('ddev_test')) {
+    cy.get('a[class="hide-button"]').click();
+  }
 };
 
 export const visitMealsViaWindowObject = () => {

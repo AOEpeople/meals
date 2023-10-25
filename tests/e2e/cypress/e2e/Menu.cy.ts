@@ -14,13 +14,9 @@ describe('Test Weeks View', () => {
     });
 
     it('should be able to browse to the menu page from the weekspage', () => {
-
-        cy.visit('/weeks');
+        cy.get('span > a').contains('Mahlzeiten').click();
 
         cy.wait(['@getWeeks']);
-
-        // Hide Symphony's toolbar
-        cy.get('a[class="hide-button"]').click();
 
         cy.get('h4').contains('Woche #28').click();
 

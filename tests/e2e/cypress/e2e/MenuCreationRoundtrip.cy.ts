@@ -18,12 +18,9 @@ describe('Test Creating a Menu', () => {
     });
 
     it('should create a week on submitting a valid menu', () => {
-        cy.visit('/weeks');
+        cy.get('span > a').contains('Mahlzeiten').click();
 
         cy.wait(['@getWeeks']);
-
-        // Hide Symphony's toolbar
-        cy.get('a[class="hide-button"]').click();
 
         // Go to 7th week (it should not have been created yet because of db reset)
         cy.get('h4').eq(6).contains('Woche').click();
@@ -344,10 +341,7 @@ describe('Test Creating a Menu', () => {
     });
 
     it('should not create a menu if the initial submission of a menu gets aborted', () => {
-        cy.visit('/weeks');
-
-        // Hide Symphony's toolbar
-        cy.get('a[class="hide-button"]').click();
+        cy.get('span > a').contains('Mahlzeiten').click();
 
         // Go to 7th week (it should not have been created yet because of db reset)
         cy.get('h4').eq(6).contains('Woche').click();

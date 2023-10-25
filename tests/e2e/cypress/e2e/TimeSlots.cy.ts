@@ -6,7 +6,7 @@ describe('Test TimeSlots View', () => {
   });
 
   it("should be able to navigate to '/time-slots' and have the header displayed", () => {
-    cy.visit('/time-slots');
+    cy.get('span > a').contains('Zeitslot').click();
 
     cy.get('h2').should((ele) => {
       expect(ele.first()).to.contain('Liste der Slots');
@@ -16,7 +16,7 @@ describe('Test TimeSlots View', () => {
   });
 
   it('should be able to switch the locale to english and back to german', () => {
-    cy.visit('/time-slots');
+    cy.get('span > a').contains('Zeitslot').click();
 
     // Switch language to english
     cy.get('span').contains('English version').parent().click();
@@ -48,7 +48,7 @@ describe('Test TimeSlots View', () => {
   });
 
   it('should be able to create, edit and delete a slot', () => {
-    cy.visit('/time-slots');
+    cy.get('span > a').contains('Zeitslot').click();
 
     // Create Slot
     cy.get('button').contains('+ Slot erstellen').click();

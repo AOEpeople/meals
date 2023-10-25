@@ -6,7 +6,7 @@ describe('Test Weeks View', () => {
     });
 
     it('should contain the correct heading in german and english', () => {
-        cy.visit('/weeks');
+        cy.get('span > a').contains('Mahlzeiten').click();
 
         cy.get('h2').should(ele => {
             expect(ele.first()).to.contain('Liste der Wochen');
@@ -20,7 +20,7 @@ describe('Test Weeks View', () => {
     });
 
     it('should contain eight weeks', () => {
-        cy.visit('/weeks');
+        cy.get('span > a').contains('Mahlzeiten').click();
 
         cy.get('h4').should('have.length', 8);
         cy.get('h4').each((ele) => {

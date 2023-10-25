@@ -79,7 +79,7 @@ run-cypress:
 	yarn --cwd=./tests/e2e cypress open
 
 run-cypress-headless:
-	yarn --cwd=./tests/e2e cross-env-shell cypress run --headless --browser chrome --env baseUrl="https://meals.test/"
+	yarn --cwd=./tests/e2e cross-env-shell cypress run --headless --browser electron --env "baseUrl=http://localhost:80/,cookie_domain=localhost,ddev_test=false"
 
 ssh:
 	ddev ssh

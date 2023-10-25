@@ -2,7 +2,6 @@ import { defineConfig } from 'cypress'
 
 export default defineConfig({
   e2e: {
-    baseUrl: 'https://meals.test/',
     setupNodeEvents(on, config) {
         return require('./cypress/plugins/index.js')(on, config)
     },
@@ -16,7 +15,8 @@ export default defineConfig({
     "oauth_realm": "aoe-staging",
     "oauth_client_id": "aoe-meals-staging",
     "oauth_redirect_uri": "login/check-meals",
-    "mailhog_url": "https://meals.ddev.site:8026"
+    "mailhog_url": "https://meals.ddev.site:8026",
+    "ddev_test": true
   },
   defaultCommandTimeout: 5000,
   viewportWidth: 1360,

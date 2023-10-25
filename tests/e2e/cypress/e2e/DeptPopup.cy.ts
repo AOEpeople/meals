@@ -26,19 +26,19 @@ describe('Test the DebtPopup', () => {
         cy.contains('p', /Kontostand von -50,10 € habe/);
         cy.get('div').contains('Ok, kapiert!').click();
 
-        cy.visit('/weeks');
+        cy.get('span > a').contains('Mahlzeiten').click();
         cy.contains('p', /Kontostand von -50,10 € habe/);
         cy.get('div').contains('Ok, kapiert!').click();
 
-        cy.visit('/dishes');
+        cy.get('span > a').contains('Gerichte').click();
         cy.contains('p', /Kontostand von -50,10 € habe/);
         cy.get('div').contains('Ok, kapiert!').click();
 
-        cy.visit('/categories');
+        cy.get('span > a').contains('Kategorien').click();
         cy.contains('p', /Kontostand von -50,10 € habe/);
         cy.get('div').contains('Ok, kapiert!').click();
 
-        cy.visit('/costs');
+        cy.get('span > a').contains('Kosten').click();
         cy.contains('p', /Kontostand von -50,10 € habe/);
         cy.get('div').contains('Jetzt bezahlen').click();
 

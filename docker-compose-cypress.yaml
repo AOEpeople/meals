@@ -51,11 +51,14 @@ services:
 
   nginx:
     image: nginx:latest
+    restart: unless-stopped
     ports:
       - "80:80"
     volumes:
       - shared:/var/www/meals/public
       - ./default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
 
   mercure:
     image: dunglas/mercure:v0.14

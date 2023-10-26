@@ -50,7 +50,7 @@ describe('Test Dishes View', () => {
     });
 
     it('should be able to create, edit and delete a dish', () => {
-        cy.get('span > a').contains('Gerichte').click();
+        cy.get('span > a').contains('Gerichte').click({ force: true });
 
         // Wait for the dishes and categories to load
         cy.wait(['@getDishes', '@getCategories']);

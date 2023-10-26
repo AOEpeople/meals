@@ -20,7 +20,6 @@ services:
       - MAILER_DSN=smtp://mailhog:1025
       - MAIL_ENCRYPTION=tls
       - SETTLEMENT_REQ_EMAIL_RECEIVER=jon.doe@localhost
-      - IDP_SERVER=https://aoe.login.bare.id/auth/realms/aoe-staging
       - APP_NAME=Meals
       - APP_BASE_URL=http://localhost
       - DB_URL=mysql://db:db@db:3306/db_test?serverVersion=5.7&charset=utf8
@@ -29,8 +28,9 @@ services:
       - MERCURE_PUBLISH_URL=http://mercure:8080/.well-known/mercure
       - MERCURE_JWT_SECRET="ChangeMeChangeMeChangeMeChangeMe"
       - USE_FORWARDED_HEADERS=1
-    env_file:
-      - ./.env.docker
+      - IDP_SERVER=${IDP_SERVER}
+      - IDP_CLIENT_ID=${IDP_CLIENT_ID}
+      - IDP_CLIENT_SECRET=${IDP_CLIENT_SECRET}
     depends_on:
       - db
     volumes:

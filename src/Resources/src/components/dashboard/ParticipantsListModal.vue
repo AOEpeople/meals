@@ -15,6 +15,12 @@
         >
           {{ t('dashboard.print') }}
         </DialogTitle>
+        <InputLabel
+          v-model="filter"
+          :label-text="t('costs.search')"
+          :label-visible="false"
+          class="col-span-3 row-start-2 justify-self-center sm:col-span-1 sm:col-start-1 sm:justify-self-start min-[900px]:row-start-2"
+        />
         <ParticipantsListByDay
           :date="date"
         />
@@ -32,17 +38,20 @@
 
 <script setup lang="ts">
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/vue';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import CancelButton from '../misc/CancelButton.vue';
+import InputLabel from '../misc/InputLabel.vue';
 import ParticipantsListByDay from '../participations/ParticipantsListByDay.vue';
 const { t } = useI18n();
 
-defineProps<{
+const props = defineProps<{
+  modelValue: string,
   openParticipantsModal: boolean,
   date: string,
 }>();
 
-const emit = defineEmits(['closeDialog']);
+const emit = defineEmits(['closeDialog','update:modelValue']);
 
 
 function closeParticipantsModal(doSubmit: boolean) {
@@ -50,4 +59,14 @@ if (doSubmit === false){
   emit('closeDialog');
 }
 }
+
+const filter = computed({
+  get() {
+    return props.modelValue;
+  },
+  set(filter) {
+    emit('update:modelValue', filter);
+    console.log(filter);
+  }
+})
 </script>

@@ -20,7 +20,7 @@
         />
         <div class="flex max-h-96 flex-row pt-4">
           <CancelButton
-            :btn-text="t('button.cancel')"
+            :btn-text="t('combiModal.close')"
             class="flex-1 cursor-pointer "
             @click="closeParticipantsModal(false)"
           />
@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { Dialog, DialogPanel, DialogTitle} from '@headlessui/vue';
+import { Dialog, DialogPanel, DialogTitle } from '@headlessui/vue';
 import { useI18n } from 'vue-i18n';
 import CancelButton from '../misc/CancelButton.vue';
 import ParticipantsListByDay from '../participations/ParticipantsListByDay.vue';

@@ -59,6 +59,9 @@ jobs:
           IDP_CLIENT_ID=${{ secrets.IDP_CLIENT_ID }}
           IDP_CLIENT_SECRET=${{ secrets.IDP_CLIENT_SECRET }}
           EOL"
+      - name: Show ip config
+        run: |
+          cat /etc/php5/fpm/pool.d/www.conf
       - name: Cypress run
         uses: cypress-io/github-action@v6
         env:
@@ -70,7 +73,7 @@ jobs:
           working-directory: tests/e2e
           start: docker compose -f ../../docker-compose-cypress.yaml up --abort-on-container-exit
           wait-on: 'http://localhost'
-          wait-on-timeout: 300
+          wait-on-timeout: 180
       - name: Docker compose down
         run: |
           docker compose -f docker-compose-cypress.yaml down --remove-orphans

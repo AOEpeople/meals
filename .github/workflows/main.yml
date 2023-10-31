@@ -280,7 +280,8 @@ jobs:
           EOL"
       - name: Run Docker compose
         run: |
-          docker compose -f ./docker-compose-cypress.yaml up --abort-on-container-exit
+          docker compose -f ./docker-compose-cypress.yaml up --abort-on-container-exit &&
+          echo "starting the docker compose..."
       - name: Cypress run
         uses: cypress-io/github-action@v6
         env:

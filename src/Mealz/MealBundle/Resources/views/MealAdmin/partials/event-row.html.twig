@@ -1,11 +1,11 @@
 <div class="event-row"
     {% if selectedEvent is defined %}
-    data-attribute-selected-event="{{ selectedEvent.vars.value }}"
+    data-attribute-selected-event="{{ selectedEvent }}"
     {% endif %}
 >
 
-    {% if selectedEvent is defined %}
-        {{ form_widget(selectedEvent, { 'attr': {'class':  'event-selected event-persisted'} }) }}
+    {% if eventForm is defined %}
+        {{ form_widget(eventForm, { 'attr': {'class':  'event-selected event-persisted', 'value': selectedEvent} }) }}
     {% endif %}
 
     <p>{{ 'event.title'|trans({},'messages') }}</p>
@@ -29,7 +29,7 @@
         <span class="event-label">{% apply spaceless %}
         {% if selectedEvent is defined %}
             {% for event in events %}
-                {% if event.id == selectedEvent.vars.value %}
+                {% if event.id == selectedEvent %}
                     {{ event.title }}
                 {% endif %}
             {% endfor %}

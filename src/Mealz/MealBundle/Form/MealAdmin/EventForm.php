@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Form\MealAdmin;
 
-use App\Mealz\MealBundle\Entity\Event;
+use App\Mealz\MealBundle\Entity\EventParticipation;
 use App\Mealz\MealBundle\Form\Type\EntityHiddenType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
@@ -31,12 +31,13 @@ class EventForm extends AbstractType
         // we take day value from parent day form; see configureOptions() method below.
         $builder
             ->add('event', EntityHiddenType::class, [
-                'class' => Event::class,
+                'class' => EventParticipation::class,
             ]);
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, static function (FormEvent $formEvent) {
             /** @var Event|null $event */
             $event = $formEvent->getData();
+
             if (null === $event) {
                 return;
             }
@@ -55,7 +56,7 @@ class EventForm extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Event::class,
+            'data_class' => EventParticipation::class,
             'empty_data' => static function (FormInterface $form) {
                 $event = $form->get('event')->getData();
 

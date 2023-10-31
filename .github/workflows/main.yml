@@ -278,9 +278,9 @@ jobs:
           IDP_CLIENT_ID=${{ secrets.IDP_CLIENT_ID }}
           IDP_CLIENT_SECRET=${{ secrets.IDP_CLIENT_SECRET }}
           EOL"
-      - name: Show ip config
+      - name: Run Docker compose
         run: |
-          cat /etc/php5/fpm/pool.d/www.conf
+          docker compose -f ../../docker-compose-cypress.yaml up --abort-on-container-exit
       - name: Cypress run
         uses: cypress-io/github-action@v6
         env:
@@ -290,7 +290,7 @@ jobs:
           CYPRESS_mailhog_url: http://localhost:8025
         with:
           working-directory: tests/e2e
-          start: docker compose -f ../../docker-compose-cypress.yaml up --abort-on-container-exit
+          start:  yarn --cwd=./tests/e2e cross-env-shell cypress run --headless --browser electron --env "baseUrl=http://localhost:80/,cookie_domain=localhost,ddev_test=false,mailhog_url=http://localhost:1025"
           wait-on: 'http://localhost'
           wait-on-timeout: 180
       - name: Docker compose down

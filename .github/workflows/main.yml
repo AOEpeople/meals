@@ -276,6 +276,7 @@ jobs:
           sh -c "cat > .env.docker << 'EOL'
           IDP_SERVER=${{ secrets.IDP_SERVER }}
           IDP_CLIENT_ID=${{ secrets.IDP_CLIENT_ID }}
+          IDP_CLIENT_SECRET=${{ secrets.IDP_CLIENT_SECRET }}
           EOL"
       - name: Check .env file
         run: |

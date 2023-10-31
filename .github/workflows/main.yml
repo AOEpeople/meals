@@ -59,9 +59,6 @@ jobs:
           IDP_CLIENT_ID=${{ secrets.IDP_CLIENT_ID }}
           IDP_CLIENT_SECRET=${{ secrets.IDP_CLIENT_SECRET }}
           EOL"
-      - name: Check .env file
-        run: |
-          cat .env.docker
       - name: Cypress run
         uses: cypress-io/github-action@v6
         env:

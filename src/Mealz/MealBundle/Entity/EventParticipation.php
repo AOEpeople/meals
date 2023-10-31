@@ -51,6 +51,31 @@ class EventParticipation
         $this->participants = $participants;
     }
 
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getDay(): Day
+    {
+        return $this->day;
+    }
+
+    public function setDay(Day $day): void
+    {
+        $this->day = $day;
+    }
+
+    public function getEvent(): Event
+    {
+        return $this->event;
+    }
+
+    public function setEvent(Event $event): void
+    {
+        $this->event = $event;
+    }
+
     /**
      * get the participant object of the given profile if it is registered.
      */

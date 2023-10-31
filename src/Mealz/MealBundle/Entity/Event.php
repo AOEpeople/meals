@@ -47,12 +47,7 @@ class Event
      */
     private bool $public = false;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Mealz\MealBundle\Entity\Participant", mappedBy="event")
-     */
-    private ?Collection $participants = null;
-
-    public function __construct(string $title, bool $isPublic = false)
+    public function __construct(string $title = '', bool $isPublic = false)
     {
         $this->title = $title;
         $this->public = $isPublic;
@@ -101,14 +96,5 @@ class Event
     public function setSlug(string $slug): string
     {
         return $this->slug = $slug;
-    }
-
-    public function getParticipants(): ArrayCollection
-    {
-        if (null === $this->participants) {
-            $this->participants = new ArrayCollection();
-        }
-
-        return new ArrayCollection($this->participants->toArray());
     }
 }

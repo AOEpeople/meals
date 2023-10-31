@@ -301,6 +301,9 @@ jobs:
       #     start:  docker compose -f ../../docker-compose-cypress.yaml up --abort-on-container-exit
       #     wait-on: 'http://0.0.0.0:80'
       #     wait-on-timeout: 180
+      - name: Docker logs
+        run: |
+          docker logs
       - name: Docker compose down
         run: |
           docker compose -f docker-compose-cypress.yaml down --remove-orphans

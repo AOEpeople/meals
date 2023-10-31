@@ -23,9 +23,8 @@ class Participant
     private ?int $id = null;
 
     /**
-     * @Assert\NotNull()
-     * @ORM\ManyToOne(targetEntity="App\Mealz\MealBundle\Entity\Event", inversedBy="participants")
-     * @ORM\JoinColumn(name="event_id", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="App\Mealz\MealBundle\Entity\EventParticipation", inversedBy="participants")
+     * @ORM\JoinColumn(name="event", referencedColumnName="id", nullable=true)
      */
     private ?Event $event = null;
 

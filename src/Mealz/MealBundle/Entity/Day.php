@@ -43,7 +43,7 @@ class Day extends AbstractMessage
     private Collection $meals;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Event")
+     * @ORM\ManyToOne(targetEntity="EventParticipation")
      * @ORM\JoinColumn(name="event_id", referencedColumnName="id", nullable=true)
      */
     private ?Event $event = null;

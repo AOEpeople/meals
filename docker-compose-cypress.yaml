@@ -28,15 +28,17 @@ services:
       - MERCURE_PUBLISH_URL=http://mercure:8080/.well-known/mercure
       - MERCURE_JWT_SECRET="ChangeMeChangeMeChangeMeChangeMe"
       - USE_FORWARDED_HEADERS=1
-      - IDP_SERVER=${secrets.IDP_SERVER}
-      - IDP_CLIENT_ID=${secrets.IDP_CLIENT_ID}
-      - IDP_CLIENT_SECRET=${secrets.IDP_CLIENT_SECRET}
+      - IDP_SERVER=${IDP_SERVER}
+      - IDP_CLIENT_ID=${IDP_CLIENT_ID}
+      - IDP_CLIENT_SECRET=${IDP_CLIENT_SECRET}
     depends_on:
       - db
     volumes:
       - shared:/var/www/meals/public/
     external_links:
       - mailhog
+    env_file:
+      - .env.docker
 
   db:
     image: "mysql:5.7"

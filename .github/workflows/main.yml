@@ -52,6 +52,15 @@ jobs:
       - name: Make build dir
         run: |
           mkdir build
+      - name: Make .env file
+        run: |
+          sh -c "cat > .env.docker << 'EOL'
+          IDP_SERVER=${{ secrets.IDP_SERVER }}
+          IDP_CLIENT_ID=${{ secrets.IDP_CLIENT_ID }}
+          EOL"
+      - name: Check .env file
+        run: |
+          cat .env.docker
       - name: Cypress run
         uses: cypress-io/github-action@v6
         env:

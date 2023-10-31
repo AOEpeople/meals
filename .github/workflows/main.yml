@@ -59,23 +59,24 @@ jobs:
           IDP_CLIENT_ID=${{ secrets.IDP_CLIENT_ID }}
           IDP_CLIENT_SECRET=${{ secrets.IDP_CLIENT_SECRET }}
           EOL"
-      - name: Run Docker compose
-        run: |
-          docker compose -f ./docker-compose-cypress.yaml up --abort-on-container-exit &
-          echo "starting the docker compose..." &
-          sleep 180 && echo "trying to find localhost" && curl http://localhost
-      # - name: Cypress run
-      #   uses: cypress-io/github-action@v6
-      #   env:
-      #     CYPRESS_baseUrl: http://localhost:80
-      #     CYPRESS_cookie_domain: localhost
-      #     CYPRESS_ddev_test: false
-      #     CYPRESS_mailhog_url: http://localhost:8025
-      #   with:
-      #     working-directory: tests/e2e
-      #     start:  docker compose -f ./docker-compose-cypress.yaml up --abort-on-container-exit
-      #     wait-on: 'http://localhost'
-      #     wait-on-timeout: 180
+      # - name: Run Docker compose
+      #   run: |
+      #     docker compose -f ./docker-compose-cypress.yaml up --abort-on-container-exit &
+      #     echo "starting the docker compose..." &
+      #     sleep 180 && echo "trying to find localhost" && curl http://localhost
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        env:
+          CYPRESS_baseUrl: http://localhost:80
+          CYPRESS_cookie_domain: localhost
+          CYPRESS_ddev_test: false
+          CYPRESS_mailhog_url: http://localhost:8025
+        with:
+          working-directory: tests/e2e
+          start:  docker compose -f ./docker-compose-cypress.yaml up --abort-on-container-exit
+          command: sleep 180
+          # wait-on: 'http://localhost'
+          # wait-on-timeout: 180
       - name: Docker compose down
         run: |
           docker compose -f docker-compose-cypress.yaml down --remove-orphans

@@ -287,7 +287,7 @@ jobs:
           echo "curl 127.0.0.1:80" && curl "127.0.0.1:80" &&
           echo "curl http://localhost:80" && curl "http://localhost:80" &&
           echo "curl 0.0.0.0:80" && curl "0.0.0.0:80" &&
-          yarn --cwd=./tests/e2e cross-env-shell cypress run --headless --browser electron --env "baseUrl=http://localhost:80/,cookie_domain=localhost,ddev_test=false,mailhog_url=http://localhost:8025"
+          yarn --cwd=./tests/e2e cross-env-shell DEBUG=cypress:* cypress run --headless --browser electron --env "baseUrl=http://localhost:80/,cookie_domain=localhost,ddev_test=false,mailhog_url=http://localhost:8025"
 
       # - name: Cypress run
       #   uses: cypress-io/github-action@v6
@@ -303,7 +303,7 @@ jobs:
       #     wait-on-timeout: 180
       - name: Docker logs
         run: |
-          docker logs
+          docker logs all
       - name: Docker compose down
         run: |
           docker compose -f docker-compose-cypress.yaml down --remove-orphans

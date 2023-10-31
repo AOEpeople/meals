@@ -46,7 +46,7 @@ class Day extends AbstractMessage
      * @ORM\ManyToOne(targetEntity="EventParticipation")
      * @ORM\JoinColumn(name="event_id", referencedColumnName="id", nullable=true)
      */
-    private ?Event $event = null;
+    private ?EventParticipation $event = null;
 
     /**
      * @Assert\Type(type="DateTime")
@@ -92,12 +92,12 @@ class Day extends AbstractMessage
         $this->week = $week;
     }
 
-    public function getEvent(): ?Event
+    public function getEvent(): ?EventParticipation
     {
         return $this->event;
     }
 
-    public function setEvent(?Event $event): void
+    public function setEvent(?EventParticipation $event): void
     {
         $this->event = $event;
     }

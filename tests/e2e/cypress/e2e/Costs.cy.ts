@@ -11,7 +11,7 @@ describe('Test Cost View', () => {
     });
 
     it('should visit /costs and filter for a user and hide it', () => {
-        cy.get('span > a').contains('Kosten').click();
+        cy.get('span > a').contains('Kosten').click({ force: true });
 
         cy.wait('@getCosts');
 

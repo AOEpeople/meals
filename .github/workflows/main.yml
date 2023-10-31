@@ -283,6 +283,9 @@ jobs:
       #     docker compose -f ./docker-compose-cypress.yaml up --abort-on-container-exit &
       #     echo "starting the docker compose..." &
       #     sleep 180 && echo "trying to find localhost" && curl http://localhost
+      - name: Run Docker compose
+        run: |
+          docker compose -f ./docker-compose-cypress.yaml up --abort-on-container-exit
       - name: Cypress run
         uses: cypress-io/github-action@v6
         env:
@@ -292,8 +295,8 @@ jobs:
           CYPRESS_mailhog_url: http://localhost:8025
         with:
           working-directory: tests/e2e
-          start:  docker compose -f ./docker-compose-cypress.yaml up --abort-on-container-exit
-          command: sleep 180
+          # start:  docker compose -f ./docker-compose-cypress.yaml up --abort-on-container-exit
+          command: yarn --cwd=./tests/e2e cross-env-shell cypress run --headless --browser electron --env "baseUrl=http://localhost:80/,cookie_domain=localhost,ddev_test=false,mailhog_url=http://localhost:1025"
           # wait-on: 'http://localhost'
           # wait-on-timeout: 180
       - name: Docker compose down

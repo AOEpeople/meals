@@ -270,8 +270,7 @@ jobs:
         run: yarn install
       - name: Make build dir
         run: |
-          mkdir build &&
-          curl https://aoe.login.bare.id/auth/realms/aoe-staging
+          mkdir build
       - name: Make .env file
         run: |
           sh -c "cat > .env.docker << 'EOL'
@@ -283,7 +282,12 @@ jobs:
         run: |
           docker compose -f ./docker-compose-cypress.yaml up --abort-on-container-exit &
           echo "starting the docker compose..." &
-          yarn --cwd=./tests/e2e install && sleep 180 && docker container ls --format "table {{.ID}}\t{{.Names}}\t{{.Ports}}" -a && yarn --cwd=./tests/e2e cross-env-shell cypress run --headless --browser electron --env "baseUrl=http://localhost:80/,cookie_domain=localhost,ddev_test=false,mailhog_url=http://localhost:8025"
+          yarn --cwd=./tests/e2e install && sleep 180 &&
+          docker container ls --format "table {{.ID}}\t{{.Names}}\t{{.Ports}}" -a &&
+          echo "curl 127.0.0.1:80" && curl "127.0.0.1:80" &&
+          echo "curl http://localhost:80" && curl "http://localhost:80" &&
+          echo "curl 0.0.0.0:80" && curl "0.0.0.0:80" &&
+          yarn --cwd=./tests/e2e cross-env-shell cypress run --headless --browser electron --env "baseUrl=http://localhost:80/,cookie_domain=localhost,ddev_test=false,mailhog_url=http://localhost:8025"
 
       # - name: Cypress run
       #   uses: cypress-io/github-action@v6

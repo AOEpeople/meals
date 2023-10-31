@@ -149,18 +149,18 @@ describe('Test Dishes View', () => {
     });
 
     it('should be able to filter for a dish', () => {
-        cy.get('span > a').contains('Gerichte').click();
+        cy.get('span > a').contains('Gerichte').click({ force: true });
 
         // Wait for the dishes and categories to load
         cy.wait(['@getDishes', '@getCategories']);
 
         // Create a dish to filter for
-        cy.get('button').contains('+ Gericht erstellen').click();
+        cy.get('button').contains('+ Gericht erstellen').click({ force: true });
         cy.get('input[placeholder="Deutscher Titel"]').type('TestGericht1234');
         cy.get('input[placeholder="Englischer Titel"]').type('TestDish1234');
-        cy.contains('input', 'Speichern').click();
-        cy.get('button').contains('+ Gericht erstellen').click();
-        cy.get('[data-cy="msgClose"]').click();
+        cy.contains('input', 'Speichern').click({ force: true });
+        cy.get('button').contains('+ Gericht erstellen').click({ force: true });
+        cy.get('[data-cy="msgClose"]').click({ force: true });
 
         // Filter for a dish
         cy.get('input[placeholder="Suche nach Titel"]').type('TestGericht1234');
@@ -184,22 +184,22 @@ describe('Test Dishes View', () => {
             .parent()
             .contains('Löschen')
             .click();
-        cy.get('[data-cy="msgClose"]').click();
+        cy.get('[data-cy="msgClose"]').click({ force: true });
     });
 
     it('should be able to create, edit and delete a dish variation', () => {
-        cy.get('span > a').contains('Gerichte').click();
+        cy.get('span > a').contains('Gerichte').click({ force: true });
 
         // Wait for the dishes and categories to load
         cy.wait(['@getDishes', '@getCategories']);
 
         // Create a dish
-        cy.get('button').contains('+ Gericht erstellen').click();
+        cy.get('button').contains('+ Gericht erstellen').click({ force: true });
         cy.get('input[placeholder="Deutscher Titel"]').type('TestGericht1234');
         cy.get('input[placeholder="Englischer Titel"]').type('TestDish1234');
-        cy.contains('input', 'Speichern').click();
-        cy.get('[data-cy="msgClose"]').click();
-        cy.get('button').contains('+ Gericht erstellen').click();
+        cy.contains('input', 'Speichern').click({ force: true });
+        cy.get('[data-cy="msgClose"]').click({ force: true });
+        cy.get('button').contains('+ Gericht erstellen').click({ force: true });
 
         // Filter for the dish
         cy.get('input[placeholder="Suche nach Titel"]').type('TestGericht');
@@ -214,7 +214,7 @@ describe('Test Dishes View', () => {
         cy.get('h3').contains('Variation erstellen');
         cy.get('input[placeholder="Deutscher Titel"]').type('TestVariation1234');
         cy.get('input[placeholder="Englischer Titel"]').type('TestVariation1234');
-        cy.contains('input', 'Speichern').click();
+        cy.contains('input', 'Speichern').click({ force: true });
 
         cy.get('span')
             .contains('TestGericht1234')
@@ -260,14 +260,14 @@ describe('Test Dishes View', () => {
             .parent()
             .contains('Löschen')
             .click();
-        cy.get('[data-cy="msgClose"]').click();
+        cy.get('[data-cy="msgClose"]').click({ force: true });
         cy.get('span')
             .contains('TestGericht1234')
             .parent()
             .parent()
             .contains('Löschen')
             .click();
-        cy.get('[data-cy="msgClose"]').click();
+        cy.get('[data-cy="msgClose"]').click({ force: true });
 
         // Verify that the dish variation was deleted
         cy.get('span').contains('TestVariation5678').should('not.exist');

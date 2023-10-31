@@ -72,7 +72,7 @@ jobs:
           CYPRESS_mailhog_url: http://localhost:8025
         with:
           working-directory: tests/e2e
-          start:  yarn cross-env-shell cypress run --headless --browser electron --env "baseUrl=http://localhost:80/,cookie_domain=localhost,ddev_test=false,mailhog_url=http://localhost:1025"
+          # start:  yarn cross-env-shell cypress run --headless --browser electron --env "baseUrl=http://localhost:80/,cookie_domain=localhost,ddev_test=false,mailhog_url=http://localhost:1025"
           wait-on: 'http://localhost'
           wait-on-timeout: 180
       - name: Docker compose down

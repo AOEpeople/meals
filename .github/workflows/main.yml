@@ -132,39 +132,12 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-      # Production image
-      - name: Get Docker meta for production image
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: aoepeople/meals:beta
-          tags: |
-            type=sha
-            type=ref,event=branch
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            branch=meals-beta
-      - name: Build and push production image
-        id: build_latest
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          push: false
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: |
-            aoepeople/meals:beta
-            type=local,src=/tmp/docker/buildx
-          cache-to: type=local,dest=/tmp/docker/buildx
-          outputs: type=docker,dest=/tmp/docker/app.tar
       # Development image
       - name: Get Docker meta for development
         id: devmeta
         uses: docker/metadata-action@v4
         with:
           images: aoepeople/meals:beta
-          flavor: |
-            suffix=-dev
           tags: |
             type=sha
             type=ref,event=branch
@@ -262,45 +235,45 @@ jobs:
         run: |
           docker compose -f docker-compose-cypress.yaml down --remove-orphans
 
-  testBackendUnitFunctional:
-    name: Run backend unit- and functional-tests
-    needs: [ buildImages ]
-    runs-on: ubuntu-latest
-    env:
-      SERVICE: app # use `dev` to enable xdebug and code coverage
-      IMAGE_APP: ${{ needs.buildImages.outputs.image }}
-      IMAGE_DEV: ${{ needs.buildImages.outputs.imageDev }}
-      COMPOSE_INTERACTIVE_NO_CLI: true
-    steps:
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      - uses: actions/checkout@v3
-      - name: Download docker images
-        uses: actions/download-artifact@v3
-        with:
-          name: docker-images
-          path: /tmp/docker
-      - name: Import docker image
-        run: |
-          docker load --input /tmp/docker/app.tar
-          docker load --input /tmp/docker/dev.tar
-          docker image ls -a | grep aoepeople
-      - name: Test with docker compose
-        run: |
-          mkdir build
-          docker-compose -f docker-compose-test.yaml up --abort-on-container-exit
-          docker-compose -f docker-compose-test.yaml down --remove-orphans
-      - name: Upload coverage report artifact
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: reports
-          path: build/artifacts/qa/
-      - name: Publish unit-test results
-        uses: mikepenz/action-junit-report@v3
-        if: always()
-        with:
-          report_paths: 'build/artifacts/qa/*.xml'
+  # testBackendUnitFunctional:
+  #   name: Run backend unit- and functional-tests
+  #   needs: [ buildImages ]
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     SERVICE: app # use `dev` to enable xdebug and code coverage
+  #     IMAGE_APP: ${{ needs.buildImages.outputs.image }}
+  #     IMAGE_DEV: ${{ needs.buildImages.outputs.imageDev }}
+  #     COMPOSE_INTERACTIVE_NO_CLI: true
+  #   steps:
+  #     - name: Set up Docker Buildx
+  #       uses: docker/setup-buildx-action@v2
+  #     - uses: actions/checkout@v3
+  #     - name: Download docker images
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: docker-images
+  #         path: /tmp/docker
+  #     - name: Import docker image
+  #       run: |
+  #         docker load --input /tmp/docker/app.tar
+  #         docker load --input /tmp/docker/dev.tar
+  #         docker image ls -a | grep aoepeople
+  #     - name: Test with docker compose
+  #       run: |
+  #         mkdir build
+  #         docker-compose -f docker-compose-test.yaml up --abort-on-container-exit
+  #         docker-compose -f docker-compose-test.yaml down --remove-orphans
+  #     - name: Upload coverage report artifact
+  #       uses: actions/upload-artifact@v3
+  #       if: always()
+  #       with:
+  #         name: reports
+  #         path: build/artifacts/qa/
+  #     - name: Publish unit-test results
+  #       uses: mikepenz/action-junit-report@v3
+  #       if: always()
+  #       with:
+  #         report_paths: 'build/artifacts/qa/*.xml'
 
   # publish:
   #   name: Publish

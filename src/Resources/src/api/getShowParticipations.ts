@@ -57,7 +57,7 @@ const participationsState = reactive<IParticipationsState>({
 });
 
 /**
- * State that contains wether the participationsState was successfully loaded, if not an error is set
+ * State that contains wether the participationsState was successfully loaded, if no error is set
  */
 const loadedState = reactive<ILoadedState>({
     loaded: false,
@@ -75,7 +75,7 @@ async function fetchParticipations() {
 
     await request();
     if (listData.value !== null && listData.value !== undefined && error.value === false) {
-        loadedState.error = "";
+        loadedState.error = '';
         participationsState.data = listData.value.data;
         participationsState.day = listData.value.day;
         participationsState.meals = listData.value.meals;

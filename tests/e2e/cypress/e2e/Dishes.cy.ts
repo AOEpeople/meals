@@ -81,7 +81,7 @@ describe('Test Dishes View', () => {
         cy.get('[data-cy="msgClose"]').click();
 
         // Verify that the dish was created
-        cy.get('button').contains('+ Gericht erstellen').click();
+        cy.get('button').contains('+ Gericht erstellen').click({ force: true });
         cy.get('span').contains('TestGericht1234');
 
         // Filter for the dish

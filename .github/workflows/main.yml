@@ -16,6 +16,185 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  test-cgl:
+    name: Coding Guidelines Check
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    env:
+      PHP_CS_FIXER_FUTURE_MODE: 1
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup PHP environment
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          tools: composer:v2
+      - name: Check code formatting with PHP-CS-Fixer
+        run: |
+          rm composer.json composer.lock
+          composer require friendsofphp/php-cs-fixer:3.4
+          vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist --diff --dry-run -v
+
+  lint:
+    name: FE Asset Linting
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+      - name: Install npm packages
+        working-directory: ./src/Resources
+        run: yarn install
+      - name: Run FE linters
+        working-directory: ./src/Resources
+        run: yarn lint
+
+  phpmd:
+    name: PHPMD
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup PHP environment
+        uses: shivammathur/setup-php@v2
+        with:
+          coverage: none
+          tools: phpmd
+      - name: Run PHPMD
+        run: phpmd src github ./phpmd.xml --baseline-file ./phpmd.baseline.xml --exclude */Tests/*
+
+  psalm:
+    name: Static Code Analysis
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup PHP environment
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          tools: composer
+      - name: Run composer install
+        run: composer install -n --prefer-dist
+      - name: Run Psalm
+        run: ./vendor/bin/psalm
+
+  testFrontendUnitFunctional:
+    name: Run frontend unit- and functional-tests
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+      - name: Install npm packages
+        working-directory: ./src/Resources
+        run: yarn install
+      - name: Run FE jest suite
+        working-directory: ./src/Resources
+        run: yarn test
+
+  buildImages:
+    name: Build Docker Images
+    runs-on: ubuntu-latest
+    needs: [test-cgl, psalm]
+    steps:
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 10
+      - name: Prepare build
+        run: |
+          mkdir -p /tmp/docker/buildx
+          git log -n 10 --date=short --format=format:"%C(auto)%h %ad @%al %s" >> public/changelog.txt
+      - name: Setup docker build caches
+        uses: actions/cache@v3
+        with:
+          key: ${{ runner.os }}-buildx
+          path: /tmp/docker/buildx
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      # Production image
+      - name: Get Docker meta for production image
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: aoepeople/meals:beta
+          tags: |
+            type=sha
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            branch=meals-beta
+      - name: Build and push production image
+        id: build_latest
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: false
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: |
+            aoepeople/meals:beta
+            type=local,src=/tmp/docker/buildx
+          cache-to: type=local,dest=/tmp/docker/buildx
+          outputs: type=docker,dest=/tmp/docker/app.tar
+      # Development image
+      - name: Get Docker meta for development
+        id: devmeta
+        uses: docker/metadata-action@v4
+        with:
+          images: aoepeople/meals:beta
+          flavor: |
+            suffix=-dev
+          tags: |
+            type=sha
+            type=ref,event=branch
+      - name: Build and push development image
+        id: build_dev
+        uses: docker/build-push-action@v4
+        with:
+          file: Dockerfile
+          push: false
+          tags: aoepeople/meals:test
+          labels: ${{ steps.devmeta.outputs.labels }}
+          build-args: |
+            BUILD_DEV="true"
+          cache-from: |
+            aoepeople/meals:beta
+            type=local,src=/tmp/docker/buildx
+          cache-to: type=local,dest=/tmp/docker/buildx
+          outputs: type=docker,dest=/tmp/docker/dev.tar
+      # Upload artifacts
+      - name: Upload docker images
+        uses: actions/upload-artifact@v3
+        with:
+          name: docker-images
+          path: /tmp/docker/*.tar
+    outputs:
+      image: ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
+      images: ${{ join(steps.meta.outputs.tags, ' ') }}
+      imageDev: ${{ fromJSON(steps.devmeta.outputs.json).tags[0] }}
+      imagesDev: ${{ join(steps.devmeta.outputs.tags, ' ') }}
+
   cypress:
     name: Run E2E-tests via Cypress
     # needs: [ buildImages ]
@@ -26,18 +205,17 @@ jobs:
       # IMAGE_DEV: ${{ needs.buildImages.outputs.imageDev }}
       COMPOSE_INTERACTIVE_NO_CLI: true
     steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
       - name: Checkout
         uses: actions/checkout@v4
       - name: Download docker images
-        uses: dawidd6/action-download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: docker-images
           path: /tmp/docker
-          branch: meals-beta
-          search_artifacts: true
       - name: Import docker image
         run: |
-          docker load --input /tmp/docker/app.tar
           docker load --input /tmp/docker/dev.tar
           docker image ls -a | grep aoepeople
       - uses: actions/setup-node@v3
@@ -84,3 +262,150 @@ jobs:
       - name: Docker compose down
         run: |
           docker compose -f docker-compose-cypress.yaml down --remove-orphans
+
+  testBackendUnitFunctional:
+    name: Run backend unit- and functional-tests
+    needs: [ buildImages ]
+    runs-on: ubuntu-latest
+    env:
+      SERVICE: app # use `dev` to enable xdebug and code coverage
+      IMAGE_APP: ${{ needs.buildImages.outputs.image }}
+      IMAGE_DEV: ${{ needs.buildImages.outputs.imageDev }}
+      COMPOSE_INTERACTIVE_NO_CLI: true
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - uses: actions/checkout@v3
+      - name: Download docker images
+        uses: actions/download-artifact@v3
+        with:
+          name: docker-images
+          path: /tmp/docker
+      - name: Import docker image
+        run: |
+          docker load --input /tmp/docker/app.tar
+          docker load --input /tmp/docker/dev.tar
+          docker image ls -a | grep aoepeople
+      - name: Test with docker compose
+        run: |
+          mkdir build
+          docker-compose -f docker-compose-test.yaml up --abort-on-container-exit
+          docker-compose -f docker-compose-test.yaml down --remove-orphans
+      - name: Upload coverage report artifact
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: reports
+          path: build/artifacts/qa/
+      - name: Publish unit-test results
+        uses: mikepenz/action-junit-report@v3
+        if: always()
+        with:
+          report_paths: 'build/artifacts/qa/*.xml'
+
+  publish:
+    name: Publish
+    if: ${{ github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v') }}
+    needs: [ buildImages, testBackendUnitFunctional, testFrontendUnitFunctional ]
+    runs-on: ubuntu-latest
+    env:
+      IMAGES_APP: ${{ needs.buildImages.outputs.images }}
+      IMAGES_DEV: ${{ needs.buildImages.outputs.imagesDev }}
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      - name: Download docker images
+        uses: actions/download-artifact@v3
+        with:
+          name: docker-images
+          path: /tmp/docker
+      - name: Import docker image
+        run: |
+          docker load --input /tmp/docker/app.tar
+          docker load --input /tmp/docker/dev.tar
+          docker image ls -a | grep aoepeople
+      - name: Deploy images
+        run: |
+          for tag in $IMAGES_APP; do
+            if [[ $tag = *sha-* ]]; then
+              continue;
+            fi
+            docker push $tag;
+          done
+
+          for tag in $IMAGES_DEV; do
+            if [[ $tag = *sha-* ]]; then
+              continue;
+            fi
+            docker push $tag;
+          done
+      - name: Image digest
+        id: image_digest
+        env:
+          IMAGE: ${{ needs.buildImages.outputs.image }}
+        run: |
+          docker pull $IMAGE
+          echo "digest=$(docker inspect $IMAGE | jq -r '.[0].RepoDigests[0]' | cut -d'@' -f2)" >> $GITHUB_OUTPUT
+      - name: Delete docker image artifact
+        uses: geekyeggo/delete-artifact@v1
+        with:
+          name: docker-images
+    outputs:
+      imageDigest: ${{ steps.image_digest.outputs.digest }}
+
+  snyk:
+    name: Scan vulnerabilities
+    if: ${{ github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v') }}
+    needs: [ publish, buildImages ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Run Snyk to check Docker image for vulnerabilities
+        # Snyk can be used to break the build when it detects vulnerabilities.
+        # In this case we want to upload the issues to GitHub Code Scanning
+        continue-on-error: true
+        uses: snyk/actions/docker@master
+        env:
+          # In order to use the Snyk Action you will need to have a Snyk API token.
+          # More details in https://github.com/snyk/actions#getting-your-snyk-token
+          # or you can signup for free at https://snyk.io/login
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          image: ${{ needs.buildImages.outputs.image }}
+          args: --file=Dockerfile
+      - name: Upload result to GitHub Code Scanning
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: snyk.sarif
+
+  deploy:
+    name: Deploy and notify
+    needs: [ publish, buildImages ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to staging environment
+        env:
+          IMAGE_TAG: ${{ needs.buildImages.outputs.image }}
+          IMAGE_DIGEST: ${{ needs.publish.outputs.imageDigest }}
+          GITLAB_K8S_IT_TRIGGER: ${{ secrets.GITLAB_K8S_IT_TRIGGER }}
+        run: |
+          curl -X POST \
+            -F "ref=develop" \
+            -F "variables[IMAGE_TAG]=$IMAGE_TAG" \
+            -F "variables[IMAGE_DIGEST]=$IMAGE_DIGEST" \
+            -F "token=$GITLAB_K8S_IT_TRIGGER" \
+            https://gitlab.aoe.com/api/v4/projects/2872/trigger/pipeline
+      - name: Notify team
+        env:
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
+          MATTERMOST_HOOK_URL: ${{ secrets.MATTERMOST_HOOK_URL }}
+        run: |
+          curl --silent -i -X POST -H 'Content-Type: application/json' \
+            -d '{"text": "Triggered deployment of `meals-staging.aoe.com@'"$GITHUB_SHA"'`\n> '"$COMMIT_MSG"'"}' \
+            $MATTERMOST_HOOK_URL

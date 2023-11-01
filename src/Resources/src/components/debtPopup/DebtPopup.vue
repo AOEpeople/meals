@@ -21,7 +21,10 @@
           <DialogPanel
             class="relative overflow-hidden rounded-lg bg-white p-4 text-left shadow-xl sm:my-8 sm:p-6"
           >
-            <p class="max-w-[300px] text-center align-middle font-bold sm:max-w-sm">
+            <p
+              class="max-w-[300px] text-center align-middle font-bold sm:max-w-sm"
+              data-test-id="debt-text"
+            >
               {{ t('debt.text').replace('#balance#', new Intl.NumberFormat(locale, { style: 'currency', currency: 'EUR' }).format(balance)) }}
             </p>
             <div class="flex flex-row">

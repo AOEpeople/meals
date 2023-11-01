@@ -283,8 +283,7 @@ jobs:
           docker compose -f ./docker-compose-cypress.yaml up --abort-on-container-exit &
           echo "starting the docker compose..." &
           yarn --cwd=./tests/e2e install && sleep 180 &&
-          docker container ls --format "table {{.ID}}\t{{.Names}}\t{{.Ports}}" -a &&
-          yarn --cwd=./tests/e2e cross-env-shell cypress run --headless --browser electron --env "baseUrl=http://localhost:80/,cookie_domain=localhost,ddev_test=false,mailhog_url=http://localhost:8025"
+          yarn --cwd=./tests/e2e cross-env-shell cypress run --headless --browser electron --env "baseUrl=http://localhost/,cookie_domain=localhost,ddev_test=false,mailhog_url=http://localhost:8025"
 
       # - name: Cypress run
       #   uses: cypress-io/github-action@v6

@@ -11,11 +11,11 @@ describe('Test the DebtPopup', () => {
         cy.visitMeals();
         cy.wait('@getUser');
 
-        cy.contains('p', /Kontostand von -50,10 € habe/);
+        cy.get('[data-test-id="debt-text"]').contains(/Kontostand von -50,10 € habe/);
 
         cy.get('div').contains('Ok, kapiert!').click();
 
-        cy.get('p').contains(/Kontostand von -50,10 € habe/).should('not.be.visible');
+        cy.get('[data-test-id="debt-text"]').contains(/Kontostand von -50,10 € habe/).should('not.be.visible');
     });
 
     it('should show a DebtPopUp every time a new route is loaded except when it is the balance route', () => {

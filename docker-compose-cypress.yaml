@@ -1,6 +1,6 @@
 services:
   app:
-    image: aoepeople/meals:beta
+    image: aoepeople/meals:test
     container_name: app
     environment:
       - APP_DEBUG=1

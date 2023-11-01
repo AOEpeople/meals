@@ -163,8 +163,6 @@ jobs:
           name: docker-images
           path: /tmp/docker/*.tar
     outputs:
-      image: ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
-      images: ${{ join(steps.meta.outputs.tags, ' ') }}
       imageDev: ${{ fromJSON(steps.devmeta.outputs.json).tags[0] }}
       imagesDev: ${{ join(steps.devmeta.outputs.tags, ' ') }}
 

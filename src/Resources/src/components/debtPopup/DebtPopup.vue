@@ -23,7 +23,7 @@
           >
             <p
               class="max-w-[300px] text-center align-middle font-bold sm:max-w-sm"
-              data-test-id="debt-text"
+              data-cy="debtText"
             >
               {{ t('debt.text').replace('#balance#', new Intl.NumberFormat(locale, { style: 'currency', currency: 'EUR' }).format(balance)) }}
             </p>

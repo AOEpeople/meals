@@ -54,6 +54,17 @@ Cypress.Commands.overwrite('visit', (originalFn, url, options) => {
   }, ...options });
 });
 
+Cypress.Commands.overwrite("log", function(log, ...args) {
+  if (Cypress.browser.isHeadless) {
+    return cy.task("log", args, { log: false }).then(() => {
+      return log(...args);
+    });
+  } else {
+    console.log(...args);
+    return log(...args);
+  }
+});
+
 export const viewportS = () => cy.viewport(320, 800);
 export const viewportXL = () => cy.viewport(1344, 800);
 

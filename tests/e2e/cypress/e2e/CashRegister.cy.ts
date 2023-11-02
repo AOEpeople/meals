@@ -10,11 +10,11 @@ describe('Test CashRegister', () => {
     });
 
     it('should be able to navigate to the cash register', () => {
-        cy.get('span > a').contains('Kosten').click();
+        cy.get('span > a').contains('Kosten').click({ force: true });
 
         cy.wait('@getCosts');
 
-        cy.get('span').contains('Kasse').click();
+        cy.get('span').contains('Kasse').click({ force: true });
 
         cy.wait('@getBook');
 

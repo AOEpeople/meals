@@ -204,6 +204,9 @@ class MealAdminControllerTest extends AbstractControllerTestCase
         $dishRepository = $this->getDoctrine()->getRepository(Dish::class);
         $testDish = $dishRepository->findOneBy(['parent' => null]);
 
+        $localDate = clone $date;
+        $lockDate = clone $date;
+
         $routeStr = '/api/weeks/' . $year . 'W' . $week;
         $testPutStr = '{
             "id": ' . $week . ',
@@ -232,8 +235,100 @@ class MealAdminControllerTest extends AbstractControllerTestCase
             "notify": false,
             "enabled": true
         }';
+        $weekJson = '{
+            "id": 49,
+            "days": [
+                {
+                    "meals": {
+                        "0": [],
+                        "-1": []
+                    },
+                    "id": -1,
+                    "enabled": true,
+                    "date": {
+                        "date": "' . $localDate->format('Y-m-d') . ' 12:00:00.000000",
+                        "timezone_type": 3,"timezone": "Europe/Berlin"
+                    },
+                    "lockDate": {
+                        "date": "'. $lockDate->modify('-1 day')->format('Y-m-d') . ' 16:00:00.000000",
+                        "timezone_type": 3,
+                        "timezone": "Europe/Berlin"
+                    }
+                },{
+                    "meals": {
+                        "0": [],
+                        "-1": []
+                    },
+                    "id": -2,
+                    "enabled": true,
+                    "date": {
+                        "date": "' . $localDate->modify('+1 day')->format('Y-m-d') . ' 12:00:00.000000",
+                        "timezone_type": 3,
+                        "timezone": "Europe/Berlin"
+                    },
+                    "lockDate": {
+                        "date": "'. $lockDate->modify('+1 day')->format('Y-m-d') . ' 16:00:00.000000",
+                        "timezone_type": 3,
+                        "timezone": "Europe/Berlin"
+                    }
+                },{
+                    "meals": {
+                        "0": [],
+                        "-1": []
+                    },
+                    "id": -3,
+                    "enabled": true,
+                    "date": {
+                        "date": "' . $localDate->modify('+1 day')->format('Y-m-d') . ' 12:00:00.000000",
+                        "timezone_type": 3,
+                        "timezone": "Europe/Berlin"
+                    },
+                    "lockDate": {
+                        "date": "'. $lockDate->modify('+1 day')->format('Y-m-d') . ' 16:00:00.000000",
+                        "timezone_type": 3,
+                        "timezone": "Europe/Berlin"
+                    }
+                },{
+                    "meals": {
+                        "0": [],
+                        "-1": []
+                    },
+                    "id": -4,
+                    "enabled": true,
+                    "date": {
+                        "date": "' . $localDate->modify('+1 day')->format('Y-m-d') . ' 12:00:00.000000",
+                        "timezone_type": 3,
+                        "timezone": "Europe/Berlin"
+                    },
+                    "lockDate": {
+                        "date": "'. $lockDate->modify('+1 day')->format('Y-m-d') . ' 16:00:00.000000",
+                        "timezone_type": 3,
+                        "timezone": "Europe/Berlin"
+                    }
+                },{
+                    "meals": {
+                        "0": [],
+                        "-1": []
+                    },
+                    "id": -5,
+                    "enabled": true,
+                    "date": {
+                        "date": "' . $localDate->modify('+1 day')->format('Y-m-d') . ' 12:00:00.000000",
+                        "timezone_type": 3,
+                        "timezone": "Europe/Berlin"
+                    },
+                    "lockDate": {
+                        "date": "'. $lockDate->modify('+1 day')->format('Y-m-d') . ' 16:00:00.000000",
+                        "timezone_type": 3,
+                        "timezone": "Europe/Berlin"
+                    }
+                }
+            ],
+            "notify": false,
+            "enabled": true
+        }';
 
         // Request
-        $this->client->request('POST', $routeStr, [], [], [], $testPutStr);
+        $this->client->request('POST', $routeStr, [], [], [], $weekJson);
     }
 }

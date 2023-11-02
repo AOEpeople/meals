@@ -208,33 +208,6 @@ class MealAdminControllerTest extends AbstractControllerTestCase
         $lockDate = clone $date;
 
         $routeStr = '/api/weeks/' . $year . 'W' . $week;
-        $testPutStr = '{
-            "id": ' . $week . ',
-            "days": [
-                {
-                    "meals": {
-                        "0": [
-                            {
-                                "dishSlug": "' . $testDish->getSlug() . '",
-                                "mealId": null,
-                                "participationLimit": 0
-                            }
-                        ],
-                        "-1": []
-                    },
-                    "id": -1,
-                    "enabled": true,
-                    "date": {
-                        "date": "' . $date->format('Y-m-d') . ' 12:00:00.000000",
-                        "timezone_type": 3,
-                        "timezone": "Europe\/Berlin"
-                    },
-                    "lockDate": null
-                }
-            ],
-            "notify": false,
-            "enabled": true
-        }';
         $weekJson = '{
             "id": 49,
             "days": [
@@ -250,7 +223,7 @@ class MealAdminControllerTest extends AbstractControllerTestCase
                         "timezone_type": 3,"timezone": "Europe/Berlin"
                     },
                     "lockDate": {
-                        "date": "'. $lockDate->modify('-1 day')->format('Y-m-d') . ' 16:00:00.000000",
+                        "date": "' . $lockDate->modify('-1 day')->format('Y-m-d') . ' 16:00:00.000000",
                         "timezone_type": 3,
                         "timezone": "Europe/Berlin"
                     }
@@ -267,7 +240,7 @@ class MealAdminControllerTest extends AbstractControllerTestCase
                         "timezone": "Europe/Berlin"
                     },
                     "lockDate": {
-                        "date": "'. $lockDate->modify('+1 day')->format('Y-m-d') . ' 16:00:00.000000",
+                        "date": "' . $lockDate->modify('+1 day')->format('Y-m-d') . ' 16:00:00.000000",
                         "timezone_type": 3,
                         "timezone": "Europe/Berlin"
                     }
@@ -284,7 +257,7 @@ class MealAdminControllerTest extends AbstractControllerTestCase
                         "timezone": "Europe/Berlin"
                     },
                     "lockDate": {
-                        "date": "'. $lockDate->modify('+1 day')->format('Y-m-d') . ' 16:00:00.000000",
+                        "date": "' . $lockDate->modify('+1 day')->format('Y-m-d') . ' 16:00:00.000000",
                         "timezone_type": 3,
                         "timezone": "Europe/Berlin"
                     }
@@ -301,7 +274,7 @@ class MealAdminControllerTest extends AbstractControllerTestCase
                         "timezone": "Europe/Berlin"
                     },
                     "lockDate": {
-                        "date": "'. $lockDate->modify('+1 day')->format('Y-m-d') . ' 16:00:00.000000",
+                        "date": "' . $lockDate->modify('+1 day')->format('Y-m-d') . ' 16:00:00.000000",
                         "timezone_type": 3,
                         "timezone": "Europe/Berlin"
                     }
@@ -318,7 +291,7 @@ class MealAdminControllerTest extends AbstractControllerTestCase
                         "timezone": "Europe/Berlin"
                     },
                     "lockDate": {
-                        "date": "'. $lockDate->modify('+1 day')->format('Y-m-d') . ' 16:00:00.000000",
+                        "date": "' . $lockDate->modify('+1 day')->format('Y-m-d') . ' 16:00:00.000000",
                         "timezone_type": 3,
                         "timezone": "Europe/Berlin"
                     }

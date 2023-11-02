@@ -26,7 +26,7 @@ class LoadTransactions extends Fixture implements OrderedFixtureInterface
     private const USER_WITHOUT_TRANSACTION = 'john.meals';
 
     /**
-     * User guaranteed to have a positive Balance
+     * User guaranteed to have a positive Balance.
      */
     private const USER_POSITIVE_BALANCE = 'kochomi.meals';
 

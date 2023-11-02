@@ -23,26 +23,36 @@ describe('Test the DebtPopup', () => {
 
         cy.wait('@getUser');
 
+        cy.wait(100);
+        cy.log('first');
         cy.get('[data-cy="debtText"]').contains(/Kontostand von -50,10 € habe/);
         cy.get('div').contains('Ok, kapiert!').click();
 
+        cy.wait(100);
+        cy.log('second');
         cy.get('span > a').contains('Mahlzeiten').click();
         cy.get('[data-cy="debtText"]').contains(/Kontostand von -50,10 € habe/);
         cy.get('div').contains('Ok, kapiert!').click();
 
+        cy.wait(100);
+        cy.log('third');
         cy.get('span > a').contains('Gerichte').click();
         cy.get('[data-cy="debtText"]').contains(/Kontostand von -50,10 € habe/);
         cy.get('div').contains('Ok, kapiert!').click();
 
+        cy.wait(100);
+        cy.log('fourth');
         cy.get('span > a').contains('Kategorien').click();
         cy.get('[data-cy="debtText"]').contains(/Kontostand von -50,10 € habe/);
         cy.get('div').contains('Ok, kapiert!').click();
 
+        cy.wait(100);
+        cy.log('fifth');
         cy.get('span > a').contains('Kosten').click();
         cy.get('[data-cy="debtText"]').contains(/Kontostand von -50,10 € habe/);
         cy.get('div').contains('Jetzt bezahlen').click();
 
-        cy.get('[data-cy="debtText"]').contains(/Kontostand von -50,10 € habe/).should('not.be.visible');
+        cy.contains('[data-cy="debtText"]', /Kontostand von -50,10 € habe/).should('not.be.visible');
 
         cy.location().should((location) => {
             expect(location.pathname).to.eq('/balance');

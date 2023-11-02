@@ -26,6 +26,11 @@ class LoadTransactions extends Fixture implements OrderedFixtureInterface
     private const USER_WITHOUT_TRANSACTION = 'john.meals';
 
     /**
+     * User guaranteed to have a positive Balance
+     */
+    private const USER_POSITIVE_BALANCE = 'kochomi.meals';
+
+    /**
      * Constant to declare load order of fixture.
      */
     private const ORDER_NUMBER = 4;
@@ -62,6 +67,9 @@ class LoadTransactions extends Fixture implements OrderedFixtureInterface
             $user = $this->getUser(self::USER_WITH_TRANSACTION);
             $this->addTransaction($user, 200.00, new DateTime());
         }
+
+        $posBalanceUser = $this->getUser(self::USER_POSITIVE_BALANCE);
+        $this->addTransaction($posBalanceUser, 5000.00, new DateTime());
 
         $this->objectManager->flush();
     }

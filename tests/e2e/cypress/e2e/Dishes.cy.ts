@@ -62,14 +62,13 @@ describe('Test Dishes View', () => {
         cy.get('input[placeholder="Englischer Titel"]').type('TestDish1234');
         cy.get('input[placeholder="Deutsche Beschreibung"]').type('TestBeschreibung1234');
         cy.get('input[placeholder="Englische Beschreibung"]').type('TestDescription1234');
-        cy.get('span').contains('Sonstiges').click({ force: true });
+        cy.contains('span', 'Sonstiges').click({ force: true });
         cy.get('li').children().contains('Vegetarisch').click({ force: true });
         cy.get('label').contains('Dieses Gericht ist nicht teilbar').click({ force: true });
         cy.contains('input', 'Speichern').click({ force: true });
         cy.get('[data-cy="msgClose"]').click({ force: true });
 
         // Verify that the dish was created
-        cy.get('button').contains('+ Gericht erstellen').click({ force: true });
         cy.get('span').contains('TestGericht1234');
 
         // Filter for the dish
@@ -106,12 +105,6 @@ describe('Test Dishes View', () => {
         cy.get('[data-cy="msgClose"]').click({ force: true });
 
         // Verify that the dish was edited
-        cy.get('span')
-            .contains('TestGericht5678')
-            .parent()
-            .parent()
-            .contains('Editieren')
-            .click();
         cy.get('span').contains('TestGericht5678');
 
         // Delete Dish
@@ -199,7 +192,6 @@ describe('Test Dishes View', () => {
         cy.get('input[placeholder="Englischer Titel"]').type('TestDish1234');
         cy.contains('input', 'Speichern').click({ force: true });
         cy.get('[data-cy="msgClose"]').click({ force: true });
-        cy.get('button').contains('+ Gericht erstellen').click({ force: true });
 
         // Filter for the dish
         cy.get('input[placeholder="Suche nach Titel"]').type('TestGericht');
@@ -216,12 +208,7 @@ describe('Test Dishes View', () => {
         cy.get('input[placeholder="Englischer Titel"]').type('TestVariation1234');
         cy.contains('input', 'Speichern').click({ force: true });
 
-        cy.get('span')
-            .contains('TestGericht1234')
-            .parent()
-            .parent()
-            .contains('Variation erstellen')
-            .click();
+        cy.get('[data-cy="msgClose"]').click({ force: true });
 
         // Verify that the dish variation was created
         cy.get('span').contains('TestVariation1234').should('exist');
@@ -242,12 +229,6 @@ describe('Test Dishes View', () => {
             .type('TestVariation5678', { force: true });
         cy.contains('input', 'Speichern').click({ force: true });
         cy.get('[data-cy="msgClose"]').click();
-        cy.get('span')
-            .contains('TestVariation5678')
-            .parent()
-            .parent()
-            .contains('Editieren')
-            .click();
 
         // Verify that the dish variation was edited
         cy.get('span').contains('TestVariation5678').should('exist');

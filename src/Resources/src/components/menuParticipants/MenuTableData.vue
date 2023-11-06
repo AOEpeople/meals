@@ -1,7 +1,7 @@
 <template>
   <td
     class="z-0 h-10 border-b-2 border-r-2 border-solid border-gray-200 text-center"
-    :class="{ 'hover:shadow-tb cursor-pointer hover:bg-white': edit }"
+    :class="{ 'cursor-pointer hover:bg-white hover:shadow-tb': edit }"
   >
     <div
       class="flex size-full"

@@ -22,7 +22,7 @@
   </Vue3Html2pdf>
   <div class="text-center">
     <svg
-      class="text-primary mr-2 inline min-w-[36px] align-text-bottom"
+      class="mr-2 inline min-w-[36px] align-text-bottom text-primary"
       width="36"
       height="36"
       viewBox="0 0 14 20"

@@ -2,7 +2,7 @@
   <table>
     <tbody>
       <template
-        v-for="(participant, slotName) in listData.data"
+        v-for="(participant, slotName) in filteredParticipants"
         :key="String(slotName)"
       >
         <tr
@@ -22,15 +22,17 @@
 </template>
 
 <script setup lang="ts">
-import { usePrintableListData } from '@/api/getPrintableListData';
 import { useProgress } from '@marcoschulte/vue3-progress';
+import { filterParticipantsList } from './filterParticipantsList';
 
 const progress = useProgress().start()
 
 const props = defineProps<{
   date: string,
+  filterString: string,
 }>();
-const { listData } = usePrintableListData(props.date);
+
+let filteredParticipants  = filterParticipantsList(props.filterString, props.date);
 
 progress.finish()
-</script>
+</script>@/components/participations/filterParticipantsList

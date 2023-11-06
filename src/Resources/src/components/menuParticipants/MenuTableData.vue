@@ -1,7 +1,7 @@
 <template>
   <td
     class="z-0 h-10 border-b-2 border-r-2 border-solid border-gray-200 text-center"
-    :class="{ 'hover:shadow-tb cursor-pointer hover:bg-white': edit }"
+    :class="{ 'cursor-pointer hover:bg-white hover:shadow-tb': edit }"
   >
     <div
       class="flex h-full w-full"
@@ -24,7 +24,7 @@
           fill-rule="evenodd"
           clip-rule="evenodd"
           viewBox="0 0 512 508.47"
-          class="text-primary block h-[22px] w-[22px]"
+          class="block h-[22px] w-[22px] text-primary"
         >
           <path
             fill-rule="nonzero"

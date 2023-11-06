@@ -66,7 +66,7 @@ describe('Test Dishes View', () => {
         cy.contains('input', 'Speichern').click({ force: true });
         cy.log('created dish');
         cy.wait(100);
-        cy.get('[data-cy="msgClose"]').click({ force: true });
+        cy.get('[data-cy="msgClose"]').click();
 
         // Verify that the dish was created
         cy.get('span').contains('TestGericht1234');
@@ -102,7 +102,7 @@ describe('Test Dishes View', () => {
         cy.contains('input', 'Speichern').click({ force: true });
         cy.log('edit dish');
         cy.wait(100);
-        cy.get('[data-cy="msgClose"]').click({ force: true });
+        cy.get('[data-cy="msgClose"]').click();
 
         // Verify that the dish was edited
         cy.get('span').contains('TestGericht5678');
@@ -116,7 +116,7 @@ describe('Test Dishes View', () => {
             .click();
         cy.log('delete dish');
         cy.wait(100);
-        cy.get('[data-cy="msgClose"]').click({ force: true });
+        cy.get('[data-cy="msgClose"]').click();
 
         // Verify that the dish was deleted
         cy.get('span').contains('TestGericht5678').should('not.exist');
@@ -181,7 +181,7 @@ describe('Test Dishes View', () => {
             .contains('Löschen')
             .click();
         cy.log('trying to delete dish');
-        cy.get('[data-cy="msgClose"]').click({ force: true });
+        cy.get('[data-cy="msgClose"]').click();
     });
 
     it('should be able to create, edit and delete a dish variation', () => {
@@ -197,7 +197,7 @@ describe('Test Dishes View', () => {
         cy.contains('input', 'Speichern').click({ force: true });
         cy.log('first msg');
         cy.wait(100);
-        cy.get('[data-cy="msgClose"]').click({ force: true });
+        cy.get('[data-cy="msgClose"]').click();
 
         // Filter for the dish
         cy.get('input[placeholder="Suche nach Titel"]').type('TestGericht');
@@ -215,7 +215,7 @@ describe('Test Dishes View', () => {
         cy.contains('input', 'Speichern').click({ force: true });
         cy.log('second msg');
         cy.wait(100);
-        cy.get('[data-cy="msgClose"]').click({ force: true });
+        cy.get('[data-cy="msgClose"]').click();
 
         // Verify that the dish variation was created
         cy.get('span').contains('TestVariation1234').should('exist');
@@ -237,7 +237,7 @@ describe('Test Dishes View', () => {
         cy.contains('input', 'Speichern').click({ force: true });
         cy.log('third msg');
         cy.wait(100);
-        cy.get('[data-cy="msgClose"]').click({ force: true });
+        cy.get('[data-cy="msgClose"]').click();
 
         // Verify that the dish variation was edited
         cy.get('span').contains('TestVariation5678').should('exist');
@@ -252,7 +252,7 @@ describe('Test Dishes View', () => {
             .click();
         cy.log('forth msg');
         cy.wait(100);
-        cy.get('[data-cy="msgClose"]').click({ force: true });
+        cy.get('[data-cy="msgClose"]').click();
         cy.get('span')
             .contains('TestGericht1234')
             .parent()
@@ -261,7 +261,7 @@ describe('Test Dishes View', () => {
             .click();
         cy.log('fifth msg');
         cy.wait(100);
-        cy.get('[data-cy="msgClose"]').click({ force: true });
+        cy.get('[data-cy="msgClose"]').click();
 
         // Verify that the dish variation was deleted
         cy.get('span').contains('TestVariation5678').should('not.exist');

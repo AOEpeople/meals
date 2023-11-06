@@ -62,8 +62,6 @@ describe('Test Dishes View', () => {
         cy.get('input[placeholder="Englischer Titel"]').type('TestDish1234');
         cy.get('input[placeholder="Deutsche Beschreibung"]').type('TestBeschreibung1234');
         cy.get('input[placeholder="Englische Beschreibung"]').type('TestDescription1234');
-        cy.contains('span', 'Sonstiges').click({ force: true });
-        cy.get('li').children().contains('Vegetarisch').click({ force: true });
         cy.get('label').contains('Dieses Gericht ist nicht teilbar').click({ force: true });
         cy.contains('input', 'Speichern').click({ force: true });
         cy.get('[data-cy="msgClose"]').click({ force: true });
@@ -98,8 +96,6 @@ describe('Test Dishes View', () => {
             .should('have.value', 'TestDescription1234')
             .clear()
             .type('TestDescription5678');
-        cy.get('span').contains('Vegetarisch').click({ force: true });
-        cy.get('li').children().contains('Fleisch').click({ force: true });
         cy.get('label').contains('Dieses Gericht ist nicht teilbar').click({ force: true });
         cy.contains('input', 'Speichern').click({ force: true });
         cy.get('[data-cy="msgClose"]').click({ force: true });
@@ -152,7 +148,6 @@ describe('Test Dishes View', () => {
         cy.get('input[placeholder="Deutscher Titel"]').type('TestGericht1234');
         cy.get('input[placeholder="Englischer Titel"]').type('TestDish1234');
         cy.contains('input', 'Speichern').click({ force: true });
-        cy.get('button').contains('+ Gericht erstellen').click({ force: true });
         cy.get('[data-cy="msgClose"]').click({ force: true });
 
         // Filter for a dish

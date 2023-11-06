@@ -148,6 +148,7 @@ describe('Test Dishes View', () => {
         cy.get('input[placeholder="Deutscher Titel"]').type('TestGericht1234');
         cy.get('input[placeholder="Englischer Titel"]').type('TestDish1234');
         cy.contains('input', 'Speichern').click({ force: true });
+        cy.log('created dish to filter for');
         cy.get('[data-cy="msgClose"]').click({ force: true });
 
         // Filter for a dish
@@ -172,6 +173,7 @@ describe('Test Dishes View', () => {
             .parent()
             .contains('Löschen')
             .click();
+        cy.log('trying to delete dish');
         cy.get('[data-cy="msgClose"]').click({ force: true });
     });
 

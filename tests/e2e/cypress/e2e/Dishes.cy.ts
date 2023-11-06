@@ -65,8 +65,6 @@ describe('Test Dishes View', () => {
         cy.get('label').contains('Dieses Gericht ist nicht teilbar').click({ force: true });
         cy.contains('input', 'Speichern').click({ force: true });
         cy.log('created dish');
-        cy.wait(100);
-        cy.get('[data-cy="msgClose"]').click();
 
         // Verify that the dish was created
         cy.get('span').contains('TestGericht1234');

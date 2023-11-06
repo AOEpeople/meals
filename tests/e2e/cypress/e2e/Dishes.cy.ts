@@ -64,6 +64,7 @@ describe('Test Dishes View', () => {
         cy.get('input[placeholder="Englische Beschreibung"]').type('TestDescription1234');
         cy.get('label').contains('Dieses Gericht ist nicht teilbar').click({ force: true });
         cy.contains('input', 'Speichern').click({ force: true });
+        cy.log('created dish');
         cy.get('[data-cy="msgClose"]').click({ force: true });
 
         // Verify that the dish was created
@@ -98,6 +99,7 @@ describe('Test Dishes View', () => {
             .type('TestDescription5678');
         cy.get('label').contains('Dieses Gericht ist nicht teilbar').click({ force: true });
         cy.contains('input', 'Speichern').click({ force: true });
+        cy.log('edit dish');
         cy.get('[data-cy="msgClose"]').click({ force: true });
 
         // Verify that the dish was edited
@@ -110,6 +112,7 @@ describe('Test Dishes View', () => {
             .parent()
             .contains('Löschen')
             .click();
+        cy.log('delete dish');
         cy.get('[data-cy="msgClose"]').click({ force: true });
 
         // Verify that the dish was deleted
@@ -152,6 +155,7 @@ describe('Test Dishes View', () => {
 
         // Filter for a dish
         cy.get('input[placeholder="Suche nach Titel"]').type('TestGericht1234');
+        cy.log('filtering for dish');
 
         // Verify that the dishes were filtered
         cy.get('span').contains('TestGericht1234').should('exist');
@@ -164,6 +168,7 @@ describe('Test Dishes View', () => {
             .parent()
             .children()
             .should('have.length', 1);
+        cy.log('verifiying that only one dish is shown');
 
         // Delete the dish
         cy.get('span')

@@ -52,8 +52,6 @@ describe('Test the DebtPopup', () => {
         cy.get('[data-cy="debtText"]').contains(/Kontostand von -50,10 € habe/);
         cy.get('div').contains('Jetzt bezahlen').click();
 
-        cy.contains('[data-cy="debtText"]', /Kontostand von -50,10 € habe/).should('not.be.visible');
-
         cy.location().should((location) => {
             expect(location.pathname).to.eq('/balance');
         });

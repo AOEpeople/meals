@@ -65,6 +65,7 @@ describe('Test Dishes View', () => {
         cy.get('label').contains('Dieses Gericht ist nicht teilbar').click({ force: true });
         cy.contains('input', 'Speichern').click({ force: true });
         cy.log('created dish');
+        cy.wait(100);
         cy.get('[data-cy="msgClose"]').click({ force: true });
 
         // Verify that the dish was created
@@ -100,6 +101,7 @@ describe('Test Dishes View', () => {
         cy.get('label').contains('Dieses Gericht ist nicht teilbar').click({ force: true });
         cy.contains('input', 'Speichern').click({ force: true });
         cy.log('edit dish');
+        cy.wait(100);
         cy.get('[data-cy="msgClose"]').click({ force: true });
 
         // Verify that the dish was edited
@@ -113,6 +115,7 @@ describe('Test Dishes View', () => {
             .contains('Löschen')
             .click();
         cy.log('delete dish');
+        cy.wait(100);
         cy.get('[data-cy="msgClose"]').click({ force: true });
 
         // Verify that the dish was deleted
@@ -193,6 +196,7 @@ describe('Test Dishes View', () => {
         cy.get('input[placeholder="Englischer Titel"]').type('TestDish1234');
         cy.contains('input', 'Speichern').click({ force: true });
         cy.log('first msg');
+        cy.wait(100);
         cy.get('[data-cy="msgClose"]').click({ force: true });
 
         // Filter for the dish
@@ -210,6 +214,7 @@ describe('Test Dishes View', () => {
         cy.get('input[placeholder="Englischer Titel"]').type('TestVariation1234');
         cy.contains('input', 'Speichern').click({ force: true });
         cy.log('second msg');
+        cy.wait(100);
         cy.get('[data-cy="msgClose"]').click({ force: true });
 
         // Verify that the dish variation was created
@@ -231,6 +236,7 @@ describe('Test Dishes View', () => {
             .type('TestVariation5678', { force: true });
         cy.contains('input', 'Speichern').click({ force: true });
         cy.log('third msg');
+        cy.wait(100);
         cy.get('[data-cy="msgClose"]').click({ force: true });
 
         // Verify that the dish variation was edited
@@ -245,6 +251,7 @@ describe('Test Dishes View', () => {
             .contains('Löschen')
             .click();
         cy.log('forth msg');
+        cy.wait(100);
         cy.get('[data-cy="msgClose"]').click({ force: true });
         cy.get('span')
             .contains('TestGericht1234')
@@ -253,6 +260,7 @@ describe('Test Dishes View', () => {
             .contains('Löschen')
             .click();
         cy.log('fifth msg');
+        cy.wait(100);
         cy.get('[data-cy="msgClose"]').click({ force: true });
 
         // Verify that the dish variation was deleted

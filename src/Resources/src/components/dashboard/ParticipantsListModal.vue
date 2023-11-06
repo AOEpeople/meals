@@ -15,14 +15,15 @@
         >
           {{ t('dashboard.print') }}
         </DialogTitle>
-        <InputLabel
-          v-model="filter"
-          :label-text="t('costs.search')"
-          :label-visible="false"
+        <p>Filter: {{ filterString }}</p>
+        <input
+          v-model="filterString"
+          :placeholder="t('costs.search')"
           class="col-span-3 row-start-2 justify-self-center sm:col-span-1 sm:col-start-1 sm:justify-self-start min-[900px]:row-start-2"
-        />
+        >
         <ParticipantsListByDay
           :date="date"
+          :filterString="filterString"
         />
         <div class="flex max-h-96 flex-row pt-4">
           <CancelButton
@@ -43,6 +44,7 @@ import { useI18n } from 'vue-i18n';
 import CancelButton from '../misc/CancelButton.vue';
 import InputLabel from '../misc/InputLabel.vue';
 import ParticipantsListByDay from '../participations/ParticipantsListByDay.vue';
+import { ref } from 'vue';
 const { t } = useI18n();
 
 const props = defineProps<{

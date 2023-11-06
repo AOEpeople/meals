@@ -12,7 +12,7 @@
         class="flex flex-1 place-content-center items-center"
       >
         <CheckCircleIcon
-          class="text-primary block h-6 w-6"
+          class="block h-6 w-6 text-primary"
         />
       </span>
       <span

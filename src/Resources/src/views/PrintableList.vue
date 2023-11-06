@@ -66,7 +66,7 @@
                 <tr class="divide-y divide-gray-200">
                   <th
                     scope="col"
-                    class="text-primary px-4 py-3.5 text-left text-sm font-semibold"
+                    class="px-4 py-3.5 text-left text-sm font-semibold text-primary"
                   />
                   <th
                     v-for="(mealName, index) in mealNames"
@@ -97,7 +97,7 @@
                     :key="index"
                     :class="[index === 0 ? 'border-gray-300' : 'border-gray-200', 'border-t']"
                   >
-                    <td class="text-primary whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium sm:pl-6">
+                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-primary sm:pl-6">
                       {{ String(participantName) }}
                     </td>
                     <td

@@ -2,7 +2,7 @@
   <div class="day-shadow mx-auto flex h-auto max-w-[414px] content-center rounded bg-white sm:max-w-none">
     <div
       class="relative grid w-[24px] content-center justify-center gap-2 rounded-l-[5px] py-[2px] text-center"
-      :class="[day.isLocked ? 'bg-[#80909F]' : 'bg-primary-2 grid-rows-[24px_minmax(0,1fr)_24px]']"
+      :class="[day.isLocked ? 'bg-[#80909F]' : 'grid-rows-[24px_minmax(0,1fr)_24px] bg-primary-2']"
     >
       <InformationButton
         v-if="!day.isLocked && !emptyDay && !guestData"
@@ -37,7 +37,7 @@
         v-if="day.slotsEnabled"
         class="flex h-[54px] items-center border-b-[2px] px-[15px]"
       >
-        <span class="text-primary mr-2 inline-block text-[11px] font-bold uppercase leading-4 tracking-[1.5px]">
+        <span class="mr-2 inline-block text-[11px] font-bold uppercase leading-4 tracking-[1.5px] text-primary">
           {{ t('dashboard.slot.timeslot') }}
         </span>
         <Slots
@@ -72,7 +72,7 @@
       v-if="emptyDay"
       class="z-[1] h-[134px] min-w-[290px]"
     >
-      <span class="description text-primary-1 relative top-[53px] ml-[23px]">{{ t('dashboard.no_service') }}</span>
+      <span class="description relative top-[53px] ml-[23px] text-primary-1">{{ t('dashboard.no_service') }}</span>
     </div>
   </div>
 </template>

@@ -196,8 +196,6 @@ describe('Test Dishes View', () => {
         cy.get('input[placeholder="Englischer Titel"]').type('TestDish1234');
         cy.contains('input', 'Speichern').click({ force: true });
         cy.log('first msg');
-        cy.wait(100);
-        cy.get('[data-cy="msgClose"]').click();
 
         // Filter for the dish
         cy.get('input[placeholder="Suche nach Titel"]').type('TestGericht');

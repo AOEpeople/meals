@@ -226,6 +226,11 @@
       float: right;
       margin-top: -2px;
     }
+
+    &.event {
+      background-color: rgba($color-green, .1);
+      border-top: 4px solid $meal-border-color;
+    }
   }
 
   .event-row {

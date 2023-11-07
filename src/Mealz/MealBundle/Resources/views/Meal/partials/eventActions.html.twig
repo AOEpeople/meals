@@ -3,17 +3,13 @@
     {% if is_granted('ROLE_USER') %}
         {% set participant = eventParticipation.getParticipant(app.user.profile) %}
         {% if participant %}
-            {#% if is_allowed_to_leave(meal) %#}
-                {{ MealzCheckbox.create(linkEventParticipant(participant, 'delete') ,'participation-checkbox delete-action', {'checked': 'checked', 'data-action': 'delete'}) }}
-            {#% else %#}
-                {#{ MealzCheckbox.create('' ,'participation-checkbox', {'checked': 'checked', 'disabled': 'disabled'}) }#}
-            {#% endif %#}
+            {{ MealzCheckbox.create(linkEventParticipant(participant, 'delete') ,'participation-checkbox delete-action', {'checked': 'checked', 'data-action': 'delete'}) }}
         {% else %}
-            {#% if is_allowed_to_join(meal) %#}
+            {% if is_allowed_to_join_event(eventParticipation) %}
                 {{ MealzCheckbox.create(linkEvent(eventParticipation, day, 'join') ,'participation-checkbox join-action', {'data-action': 'join'}) }}
-            {#% else %#}
-                {#{ MealzCheckbox.create('' ,'participation-checkbox', {'disabled': 'disabled'}) }#}
-            {#% endif %#}
+            {% else %}
+                {{ MealzCheckbox.create('' ,'participation-checkbox', {'disabled': 'disabled'}) }}
+            {% endif %}
         {% endif %}
     {% else %}
         {{ MealzCheckbox.create('' ,'participation-checkbox no-user', {'disabled': 'disabled'}) }}

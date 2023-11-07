@@ -2,6 +2,7 @@
 
 namespace App\Mealz\MealBundle\Service;
 
+use App\Mealz\MealBundle\Entity\EventParticipation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\UserBundle\Entity\Profile;
@@ -32,7 +33,7 @@ class Doorman
      *
      * @see $this->hasAccessTo
      */
-    #private const AT_EVENT_PARTICIPATION = 0;
+    private const AT_EVENT_PARTICIPATION = 0;
 
     /**
      * Current timestamp.
@@ -73,26 +74,14 @@ class Doorman
                 && $this->hasAccessTo(self::AT_MEAL_PARTICIPATION, ['meal' => $meal]);
     }
 
-    /*
-    public function isUserAllowedToJoinEvent(Event $event, array $eventSlugs = []): bool
+    public function isUserAllowedToJoinEvent(EventParticipation $event): bool
     {
-        $eventAvailability = $this->availabilityService->getByEvent($event);
-
-        if (is_bool($eventAvailability)) {
-            $eventIsAvailable = $eventAvailability;
-        } else {
-            $eventlIsAvailable =
-                (true === $eventAvailability['available']) &&
-                ((1 > count($eventSlugs)) || (0 === count(array_diff($eventAvailability['availableWith'], $eventSlugs))));
-        }
-
-        if (false === $this->security->getUser()->getProfile() instanceof Profile || false === $eventIsAvailable) {
+        if (false === $this->security->getUser()->getProfile() instanceof Profile) {
             return false;
         }
 
-        return $this->hasAccessTo(self::AT_EVENT_PARTICIPATION, ['event' => $event]);
+        return $this->isToggleParticipationAllowed($event->getDay()->getLockParticipationDateTime());
     }
-    */
 
     public function isOfferAvailable(Meal $meal): bool
     {

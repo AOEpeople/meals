@@ -77,13 +77,13 @@ class ParticipationService
     public function joinEvent(Profile $profile, EventParticipation $eventParticipation, Day $day, array $eventSlugs = []): ?array
     {
         // self joining by user
-        #if ($this->doorman->isUserAllowedToJoinEvent($event, $eventSlugs)) {
+        if ($this->doorman->isUserAllowedToJoinEvent($eventParticipation)) {
             $participant = $this->createEvent($profile, $eventParticipation, $day, $eventSlugs);
 
             return ['participant' => $participant, 'offerer' => null];
-        #}
+        }
 
-        #return null;
+        return null;
     }
 
     /**

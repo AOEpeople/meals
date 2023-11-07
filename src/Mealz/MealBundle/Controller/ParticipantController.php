@@ -131,10 +131,10 @@ class ParticipantController extends BaseController
         }
 
         $eventParticipation = $participant->getEvent();
-        #if (false === $this->getDoorman()->isUserAllowedToLeave($meal) &&
-        #    ($this->getProfile() === $participant->getProfile() || false === $this->getDoorman()->isKitchenStaff())) {
-        #    return new JsonResponse(null, 403);
-        #}
+
+        if ($this->getProfile() !== $participant->getProfile()) {
+            return new JsonResponse(null, 403);
+        }
 
         $date = $eventParticipation->getDay()->getDateTime()->format('Y-m-d');
         $event = $eventParticipation->getEvent()->getSlug();

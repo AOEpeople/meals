@@ -26,7 +26,7 @@ class Participant
      * @ORM\ManyToOne(targetEntity="App\Mealz\MealBundle\Entity\EventParticipation", inversedBy="participants")
      * @ORM\JoinColumn(name="event", referencedColumnName="id", nullable=true)
      */
-    private ?Event $event = null;
+    private ?EventParticipation $event = null;
 
     /**
      * @Assert\NotNull()
@@ -85,7 +85,7 @@ class Participant
      */
     private bool $confirmed = false;
 
-    public function __construct(Profile $profile, ?Meal $meal, ?Event $event = null)
+    public function __construct(Profile $profile, ?Meal $meal, ?EventParticipation $event = null)
     {
         $this->profile = $profile;
         $this->meal = $meal;
@@ -123,12 +123,12 @@ class Participant
         return $this->id;
     }
 
-    public function getEvent(): ?Event
+    public function getEvent(): ?EventParticipation
     {
         return $this->event;
     }
 
-    public function setEvent(Event $event): void
+    public function setEvent(EventParticipation $event): void
     {
         $this->event = $event;
     }

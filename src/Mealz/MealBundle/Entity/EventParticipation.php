@@ -27,7 +27,7 @@ class EventParticipation
     private ?int $id = null;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Day", inversedBy="event")
+     * @ORM\OneToOne(targetEntity="Day", inversedBy="event")
      * @ORM\JoinColumn(name="day", referencedColumnName="id")
      */
     private Day $day;
@@ -41,7 +41,7 @@ class EventParticipation
     /**
      * @ORM\OneToMany(targetEntity="Participant", mappedBy="event")
      */
-    private ?Collection $participants = null;
+    public ?Collection $participants = null;
 
 
     public function __construct(Day $day, Event $event, ?Collection $participants = null)

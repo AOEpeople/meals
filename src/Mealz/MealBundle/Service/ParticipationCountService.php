@@ -6,7 +6,7 @@ namespace App\Mealz\MealBundle\Service;
 
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
-use App\Mealz\MealBundle\Entity\Event;
+use App\Mealz\MealBundle\Entity\EventParticipation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Week;
@@ -146,16 +146,16 @@ class ParticipationCountService
         $participation[self::PARTICIPATION_TOTAL_COUNT_KEY][$meal->getDish()->getSlug()][self::LIMIT_KEY] = $meal->getParticipationLimit();
     }
 
-    public static function setParticipationForEvent(Event $event, array &$participation): void
+    public static function setParticipationForEvent(EventParticipation $eventParticipation, array &$participation): void
     {
         if (!array_key_exists(self::EVENT_PARTICIPATION_TOTAL_COUNT_KEY, $participation)) {
             $participation[self::EVENT_PARTICIPATION_TOTAL_COUNT_KEY] = [];
         }
-        if (!array_key_exists($event->getSlug(), $participation[self::PARTICIPATION_TOTAL_COUNT_KEY])) {
-            $participation[self::EVENT_PARTICIPATION_TOTAL_COUNT_KEY][$event->getSlug()][self::COUNT_KEY] = 0.0;
+        if (!array_key_exists($eventParticipation->getEvent()->getSlug(), $participation[self::PARTICIPATION_TOTAL_COUNT_KEY])) {
+            $participation[self::EVENT_PARTICIPATION_TOTAL_COUNT_KEY][$eventParticipation->getEvent()->getSlug()][self::COUNT_KEY] = 0.0;
         }
 
-        $participation[self::EVENT_PARTICIPATION_TOTAL_COUNT_KEY][$event->getSlug()][self::COUNT_KEY] += $event->getParticipants()->count();
+        $participation[self::EVENT_PARTICIPATION_TOTAL_COUNT_KEY][$eventParticipation->getEvent()->getSlug()][self::COUNT_KEY] += $eventParticipation->getParticipants()->count();
     }
 
     private static function calculateLimits(Day $day, array &$participation): void

@@ -122,6 +122,44 @@ class ParticipantController extends BaseController
         ]);
     }
 
+    public function deleteEvent(
+        Participant $participant,
+        ParticipationService $participationSrv
+    ): JsonResponse {
+        if (false === is_object($this->getUser())) {
+            return $this->ajaxSessionExpiredRedirect();
+        }
+
+        $eventParticipation = $participant->getEvent();
+        #if (false === $this->getDoorman()->isUserAllowedToLeave($meal) &&
+        #    ($this->getProfile() === $participant->getProfile() || false === $this->getDoorman()->isKitchenStaff())) {
+        #    return new JsonResponse(null, 403);
+        #}
+
+        $date = $eventParticipation->getDay()->getDateTime()->format('Y-m-d');
+        $event = $eventParticipation->getEvent()->getSlug();
+        $profile = $participant->getProfile()->getUsername();
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($participant);
+        $entityManager->flush();
+
+        $this->triggerDeleteEvents($participant);
+
+        $profile = null;
+
+        return new JsonResponse([
+            'participantsCount' => $participationSrv->getCountByEvent($eventParticipation),
+            'url' => $this->generateUrl('MealzMealBundle_Event_join', [
+                'date' => $date,
+                'event' => $event,
+                'profile' => $profile,
+            ]),
+            'actionText' => 'deleted',
+            'available' => true,
+        ]);
+    }
+
     /**
      * Makes a booked meal by a participant to be available for taken over.
      */
@@ -268,12 +306,5 @@ class ParticipantController extends BaseController
     private function triggerDeleteEvents(Participant $participant): void
     {
         $this->eventDispatcher->dispatch(new ParticipationUpdateEvent($participant));
-
-        $slot = $participant->getSlot();
-        if (null !== $slot) {
-            $this->eventDispatcher->dispatch(
-                new SlotAllocationUpdateEvent($participant->getMeal()->getDateTime(), $slot)
-            );
-        }
     }
 }

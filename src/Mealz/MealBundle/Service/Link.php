@@ -5,7 +5,7 @@ namespace App\Mealz\MealBundle\Service;
 use App\Mealz\MealBundle\Entity\Category;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
-use App\Mealz\MealBundle\Entity\Event;
+use App\Mealz\MealBundle\Entity\EventParticipation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -96,6 +96,20 @@ class Link
         throw new \InvalidArgumentException(sprintf('linking to "%s" action on a %s object is not configured.', $action, get_class($participant)));
     }
 
+    public function linkEventParticipant(
+        Participant $participant,
+        string $action = null,
+        int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH
+    ): string {
+        $action = $action ?? 'edit';
+
+        if ('edit' === $action || 'delete' === $action || 'confirm' === $action || 'swap' === $action || 'unswap' === $action) {
+            return $this->router->generate('MealzMealBundle_Event_Participant_' . $action, ['participant' => $participant->getId()], $referenceType);
+        }
+
+        throw new \InvalidArgumentException(sprintf('linking to "%s" action on a %s object is not configured.', $action, get_class($participant)));
+    }
+
     public function linkDish(
         Dish $dish,
         string $action = null,
@@ -141,7 +155,7 @@ class Link
     }
 
     public function linkEvent(
-        Event $event,
+        EventParticipation $eventParticipation,
         Day $day,
         string $action = null,
         int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH
@@ -151,21 +165,21 @@ class Link
         if ('show' === $action || 'join' === $action || 'join_someone' === $action) {
             return $this->router->generate('MealzMealBundle_Event_' . $action, [
                 'date' => $day->getDateTime()->format('Y-m-d'),
-                'event' => $event->getSlug(),
+                'event' => $eventParticipation->getEvent()->getSlug(),
             ], $referenceType);
         }
 
         if ('newParticipant' === $action) {
             return $this->router->generate('MealzMealBundle_Event_Participant_new', [
                 'date' => $day->getDateTime()->format('Y-m-d'),
-                'event' => $event->getSlug(),
+                'event' => $eventParticipation->getEvent()->getSlug(),
             ], $referenceType);
         }
 
-        if ('edit' === $action || 'delete' === $action) {
+        #if ('edit' === $action || 'delete' === $action) {
             // admin actions
-            return $this->router->generate('MealzMealBundle_Event_' . $action, ['event' => $event->getId()], $referenceType);
-        }
+        #    return $this->router->generate('MealzMealBundle_Event_' . $action, ['event' => $eventParticipation->getId()], $referenceType);
+        #}
 
         throw new \InvalidArgumentException(sprintf('linking to "%s" action on a %s object is not configured.', $action, get_class($event)));
     }

@@ -5,11 +5,11 @@
 {% set count = 0 %}
 {% set limit = 0 %}
 
-{% set count = dayParticipation['totalCountByEventSlugs'][event.slug]['count']|round(0, 'ceil') %}
+{% set count = dayParticipation['totalCountByEventSlugs'][eventParticipation.event.slug]['count']|round(0, 'ceil') %}
 
 
 {% if day.enabled %}
-    {% set participant = event.getParticipant(app.user.profile) %}
+    {% set participant = eventParticipation.getParticipant(app.user.profile) %}
 
     {% set participantsCountClasses = participantsCountClasses|merge(['participation-allowed']) %}
 {% endif %}
@@ -19,7 +19,7 @@
 {% set tooltipText = '' %}
 
 {% if is_granted('ROLE_USER') %}
-    {% set participant = event.getParticipant(app.user.profile) %}
+    {% set participant = eventParticipation.getParticipant(app.user.profile) %}
     {% if participant and is_participation_pending(participant) %}
         {% set tooltipClasses = tooltipClasses|merge(['active']) %}
         {% set tooltipId = 'tooltip_offered' %}

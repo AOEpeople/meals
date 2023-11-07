@@ -6,7 +6,7 @@ namespace App\Mealz\MealBundle\Service;
 
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
-use App\Mealz\MealBundle\Entity\Event;
+use App\Mealz\MealBundle\Entity\EventParticipation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
@@ -74,11 +74,11 @@ class ParticipationService
      *
      * @throws ParticipationException
      */
-    public function joinEvent(Profile $profile, Event $event, Day $day, array $eventSlugs = []): ?array
+    public function joinEvent(Profile $profile, EventParticipation $eventParticipation, Day $day, array $eventSlugs = []): ?array
     {
         // self joining by user
         #if ($this->doorman->isUserAllowedToJoinEvent($event, $eventSlugs)) {
-            $participant = $this->createEvent($profile, $event, $day, $eventSlugs);
+            $participant = $this->createEvent($profile, $eventParticipation, $day, $eventSlugs);
 
             return ['participant' => $participant, 'offerer' => null];
         #}
@@ -170,14 +170,14 @@ class ParticipationService
      *
      * @throws ParticipationException
      */
-    private function createEvent(Profile $profile, Event $event, Day $day, array $eventSlugs = []): ?Participant
+    private function createEvent(Profile $profile, EventParticipation $eventParticipation, Day $day, array $eventSlugs = []): ?Participant
     {
-        $participant = $this->createEventParticipation($profile, $event, $day, $eventSlugs);
+        $participant = $this->createEventParticipation($profile, $eventParticipation, $day, $eventSlugs);
 
         $this->em->persist($participant);
         $this->em->flush();
 
-        $meal->participants->add($participant);
+        $eventParticipation->participants->add($participant);
 
         return $participant;
     }
@@ -321,5 +321,12 @@ class ParticipationService
         }
 
         return (int) ceil($participation['totalCountByDishSlugs'][$meal->getDish()->getSlug()]['count'] ?? 0);
+    }
+
+    public function getCountByEvent(EventParticipation $eventParticipation): int
+    {
+        $participation = ParticipationCountService::getParticipationByDay($eventParticipation->getDay());
+
+        return (int) ceil($participation['totalCountByEventSlugs'][$eventParticipation->getEvent()->getSlug()]['count'] ?? 0);
     }
 }

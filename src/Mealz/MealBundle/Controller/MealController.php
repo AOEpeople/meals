@@ -153,15 +153,15 @@ class MealController extends BaseController
         }
 
         $day = $dayRepo->getDayByDate($date);
-        $event = $day->getEvent();
-        if (null === $event) {
+        $eventParticipation = $day->getEvent();
+        if (null === $eventParticipation) {
             return new JsonResponse(null, 404);
         }
 
         $eventSlugs = $request->request->get('events', []);
 
         try {
-            $result = $participationSrv->joinEvent($userProfile, $event, $day, $eventSlugs);
+            $result = $participationSrv->joinEvent($userProfile, $eventParticipation, $day, $eventSlugs);
         } catch (Exception $e) {
             $this->logException($e);
 
@@ -172,14 +172,21 @@ class MealController extends BaseController
             return new JsonResponse(null, 404);
         }
 
-        #$this->triggerJoinEvents($eventDispatcher, $result['participant'], $result['offerer']);
+        $eventDispatcher->dispatch(new ParticipationUpdateEvent($result['participant']));
 
-        #$participationCount = $participationSrv->getCountByEvent($event);
+        $participationCount = $participationSrv->getCountByEvent($eventParticipation);
 
-        #$this->logAdd($meal, $result['participant']);
-        #$nextActionRoute = 'MealzMealBundle_Event_Participant_delete';
+        $nextActionRoute = 'MealzMealBundle_Event_Participant_delete';
 
-        return $this->generateResponse($nextActionRoute, 'added', $result['participant'], $participationCount);
+        return new JsonResponse([
+            'id' => $result['participant']->getId(),
+            'participantsCount' => $participationCount,
+            'url' => $this->generateUrl(
+                $nextActionRoute,
+                ['participant' => $result['participant']->getId()]
+            ),
+            'actionText' => 'added',
+        ]);
     }
 
     /**

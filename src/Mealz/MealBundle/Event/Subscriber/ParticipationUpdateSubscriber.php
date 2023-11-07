@@ -46,18 +46,35 @@ class ParticipationUpdateSubscriber implements EventSubscriberInterface
      */
     public function onUpdate(ParticipationUpdateEvent $event): void
     {
+        $eventParticipation = $event->getParticipant()->getEvent();
         $meal = $event->getParticipant()->getMeal();
-        if (!$meal->isOpen()) { // do not send updates for past meals
-            return;
+
+        if (null !== $meal) {
+            if (!$meal->isOpen()) { // do not send updates for past meals
+                return;
+            }
+
+            $mealDay = $meal->getDay();
+            $mealsAvailability = $this->availabilityService->getByDay($mealDay);
+            $dayMeals = $mealDay->getMeals();
+            $participationCount = $this->getParticipationCount($dayMeals);
+            $data = $this->getParticipationStatus($dayMeals, $mealsAvailability, $participationCount);
+
+            $this->publisher->publish(self::PUBLISH_TOPIC, $data, self::PUBLISH_MSG_TYPE);
         }
 
-        $mealDay = $meal->getDay();
-        $mealsAvailability = $this->availabilityService->getByDay($mealDay);
-        $dayMeals = $mealDay->getMeals();
-        $participationCount = $this->getParticipationCount($dayMeals);
-        $data = $this->getParticipationStatus($dayMeals, $mealsAvailability, $participationCount);
+        if (null !== $eventParticipation) {
 
-        $this->publisher->publish(self::PUBLISH_TOPIC, $data, self::PUBLISH_MSG_TYPE);
+            $participationCount = $this->participationSrv->getCountByEvent($eventParticipation);
+
+            $data[$eventParticipation->getId()] = [
+                'count' => $participationCount ?? 0,
+                'locked' => false,
+                'available' => true,
+            ];
+
+            $this->publisher->publish(self::PUBLISH_TOPIC, $data, self::PUBLISH_MSG_TYPE);
+        }
     }
 
     private function getParticipationCount(MealCollection $meals): array

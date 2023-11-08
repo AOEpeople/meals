@@ -1,5 +1,50 @@
 # Changelog
 
+## Version v2.3.10 (2023-11-08)
+
+### Fixes
+
+- Fix entity in comment (35c4774e)
+- Fix linter messages (78b94bbf)
+- Fix entity relations (4c5c09a5)
+- Fix linter messages (9cdfeca5)
+- Fix non-existing inverse field (872e8937)
+
+### Chores and tidying
+
+- Update structure (c92f75d0)
+
+### Other
+
+- Bump actions/setup-node from 3 to 4 (c3de7356)
+- Bump @babel/traverse from 7.22.7 to 7.23.2 in /src/Resources (c07e1e01)
+- Bump postcss from 8.4.24 to 8.4.31 in /src/Resources (6da09741)
+- Bump docker/login-action from 2 to 3 (ae0f8d22)
+- check if join and delete is allowed (bc13c161)
+- Bump docker/metadata-action from 4 to 5 (d8f48b61)
+- WIP: join and delete event participation (de856e7a)
+- Bump docker/setup-buildx-action from 2 to 3 (a4f30630)
+- Bump docker/setup-qemu-action from 2 to 3 (22d5b030)
+- Bump actions/checkout from 3 to 4 (9be6189a)
+- assign event to a day with new structure (6190fa24)
+- Bump docker/build-push-action from 4 to 5 (4f233858)
+- revert change ob socket timeout (9952cd16)
+- 260252: add event field to menue (9f0ff9a4)
+- Bump mikepenz/action-junit-report from 3 to 4 (a620d9e0)
+- override default_socket_timeout (a1692f85)
+- Bump semver from 6.3.0 to 6.3.1 in /src/Resources (b1e44207)
+- add event selection (4b657edb)
+- Change db structure (be147bcd)
+- WIP: participate for event (8c3774dd)
+- 260252: add event field to menue (ac4c5071)
+- add missing inversedBy attribute (dcb8b982)
+- add event_id to day (70cdec62)
+- add public field (d3bd3554)
+- Save event (a7be3f99)
+- add event selection (da05b3da)
+- add migration (2005f831)
+- add event entity (ab43b303)
+
 ## Version v2.3.9 (2023-07-06)
 
 ### Fixes

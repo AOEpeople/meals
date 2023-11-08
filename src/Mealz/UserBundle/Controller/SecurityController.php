@@ -4,6 +4,7 @@ namespace App\Mealz\UserBundle\Controller;
 
 use HWI\Bundle\OAuthBundle\Security\Core\Authentication\Token\OAuthToken;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Security;
@@ -30,13 +31,6 @@ class SecurityController extends AbstractController
             $session->remove(Security::AUTHENTICATION_ERROR);
         }
 
-        return $this->render(
-            'MealzUserBundle:Security:login.html.twig',
-            [
-                // last username entered by the user
-                'last_username' => $session->get(Security::LAST_USERNAME),
-                'error' => $error,
-            ]
-        );
+        return $this->redirectToRoute('MealzMealBundle_home');
     }
 }

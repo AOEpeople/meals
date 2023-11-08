@@ -132,7 +132,7 @@ class MealController extends BaseController
     }
 
     /**
-     * Lets the currently logged-in user either join a meal, or accept an already booked meal offered by a participant.
+     * Lets the currently logged-in user either join an event.
      *
      * @param string $event Event Slug
      *

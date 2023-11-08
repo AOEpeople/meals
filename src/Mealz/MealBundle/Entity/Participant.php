@@ -85,7 +85,7 @@ class Participant
      */
     private bool $confirmed = false;
 
-    public function __construct(Profile $profile, ?Meal $meal, ?EventParticipation $event = null)
+    public function __construct(Profile $profile, ?Meal $meal)
     {
         $this->profile = $profile;
         $this->meal = $meal;

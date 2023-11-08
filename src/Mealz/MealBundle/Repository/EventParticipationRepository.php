@@ -7,7 +7,6 @@ namespace App\Mealz\MealBundle\Repository;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Event;
 use App\Mealz\MealBundle\Entity\EventParticipation;
-use Doctrine\ORM\QueryBuilder;
 
 class EventParticipationRepository extends BaseRepository implements EventParticipationRepositoryInterface
 {

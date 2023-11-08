@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Form\MealAdmin;
 
 use App\Mealz\MealBundle\Entity\Day;
+use App\Mealz\MealBundle\Entity\EventParticipation;
+use App\Mealz\MealBundle\Form\Type\EntityHiddenType;
+use App\Mealz\MealBundle\Repository\EventParticipationRepositoryInterface;
+use App\Mealz\MealBundle\Repository\EventRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -20,9 +24,15 @@ class DayForm extends AbstractType
 {
     protected EntityManagerInterface $entityManager;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    protected EventRepositoryInterface $eventRepository;
+
+    protected EventParticipationRepositoryInterface $eventPartRepository;
+
+    public function __construct(EntityManagerInterface $entityManager, EventRepositoryInterface $eventRepository, EventParticipationRepositoryInterface $eventPartRepository)
     {
         $this->entityManager = $entityManager;
+        $this->eventRepository = $eventRepository;
+        $this->eventPartRepository = $eventPartRepository;
     }
 
     /**
@@ -37,6 +47,11 @@ class DayForm extends AbstractType
                 'delete_empty' => true,
                 'constraints' => new Valid(),
                 'allow_add' => true,
+            ])
+            ->add('event', EntityHiddenType::class, [
+                'class' => EventParticipation::class,
+                'empty_data' => null,
+                'required' => false,
             ])
             ->add('lockParticipationDateTime', DateTimeType::class, [
                 'required' => false,
@@ -62,6 +77,23 @@ class DayForm extends AbstractType
             $opts['disabled'] = true;
 
             $form->add('enabled', CheckboxType::class, $opts);
+        });
+
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $formEvent) {
+            /** @var array $data client submitted meal data */
+            $data = $formEvent->getData();
+
+            if (!empty($data['event'])) {
+                $day = $formEvent->getForm()->getData();
+                $event = $this->eventRepository->find($data['event']);
+                $eventParticipation = $this->eventPartRepository->findByEventAndDay($day, $event);
+                if (null === $eventParticipation) {
+                    $eventParticipation = new EventParticipation($day, $event);
+                    $this->eventPartRepository->add($eventParticipation);
+                }
+                $data['event'] = $eventParticipation->getId();
+                $formEvent->setData($data);
+            }
         });
     }
 

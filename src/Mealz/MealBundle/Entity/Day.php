@@ -43,6 +43,12 @@ class Day extends AbstractMessage
     private Collection $meals;
 
     /**
+     * @ORM\OneToOne(targetEntity="EventParticipation", mappedBy="day")
+     * @ORM\JoinColumn(name="event_id", referencedColumnName="id", nullable=true)
+     */
+    private ?EventParticipation $event = null;
+
+    /**
      * @Assert\Type(type="DateTime")
      * @ORM\Column(type="datetime", nullable=TRUE)
      */
@@ -84,6 +90,16 @@ class Day extends AbstractMessage
     public function setWeek(Week $week): void
     {
         $this->week = $week;
+    }
+
+    public function getEvent(): ?EventParticipation
+    {
+        return $this->event;
+    }
+
+    public function setEvent(?EventParticipation $event): void
+    {
+        $this->event = $event;
     }
 
     public function getMeals(): MealCollection

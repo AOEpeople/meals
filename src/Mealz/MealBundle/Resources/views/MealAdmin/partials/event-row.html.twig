@@ -1,0 +1,42 @@
+<div class="event-row"
+    {% if selectedEvent is defined %}
+    data-attribute-selected-event="{{ selectedEvent }}"
+    {% endif %}
+>
+
+    {% if eventForm is defined %}
+        {{ form_widget(eventForm, { 'attr': {'class':  'event-selected event-persisted', 'value': selectedEvent} }) }}
+    {% endif %}
+
+    <p>{{ 'event.title'|trans({},'messages') }}</p>
+
+    <div class="event-select-box">
+        <ul>
+            {% for event in events %}
+                <li class="events" data-attribute-id="{{ event.id }}">
+                    <span class="event-title">{{ event.title }}</span>
+                </li>
+            {% endfor %}
+            {% if events|length == 0 %}
+                <li class="category">
+                    {{ 'event.not_available'|trans({},'messages') }}
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+
+    <div class="meal-select event">
+        <span class="event-label">{% apply spaceless %}
+        {% if selectedEvent is defined %}
+            {% for event in events %}
+                {% if event.id == selectedEvent %}
+                    {{ event.title }}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        {% endapply %}</span>
+        <a class="remove-event" href="#"{% if selectedEvent is defined %}style="display: block;"{% endif %}>
+            <span class="glyphicon glyphicon-remove"></span>
+        </a>
+    </div>
+</div>

@@ -43,22 +43,43 @@ class ParticipantPersistenceListener
     {
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder
-            ->select('COUNT(p.id)')
-            ->from('MealzMealBundle:Participant', 'p')
-            ->join('p.meal', 'm')
-            ->join('p.profile', 'u')
-            ->where('m = :meal AND u = :profile')
-        ;
-        if ($participant->getId()) {
-            $queryBuilder->andWhere('p.id != :id');
-            $queryBuilder->setParameter('id', $participant->getId());
-        }
+        if (null !== $participant->getMeal()) {
+            $queryBuilder
+                ->select('COUNT(p.id)')
+                ->from('MealzMealBundle:Participant', 'p')
+                ->join('p.meal', 'm')
+                ->join('p.profile', 'u')
+                ->where('m = :meal AND u = :profile')
+            ;
+            if ($participant->getId()) {
+                $queryBuilder->andWhere('p.id != :id');
+                $queryBuilder->setParameter('id', $participant->getId());
+            }
 
-        $query = $queryBuilder->getQuery();
-        $query->setParameter('meal', $participant->getMeal()->getId());
-        $query->setParameter('profile', $participant->getProfile()->getUsername());
-        $query->useResultCache(false);
+            $query = $queryBuilder->getQuery();
+            $query->setParameter('meal', $participant->getMeal()->getId());
+            $query->setParameter('profile', $participant->getProfile()->getUsername());
+            $query->useResultCache(false);
+        } elseif (null !== $participant->getEvent()) {
+            $queryBuilder
+                ->select('COUNT(p.id)')
+                ->from('MealzMealBundle:Participant', 'p')
+                ->join('p.event', 'e')
+                ->join('p.profile', 'u')
+                ->where('e = :event AND u = :profile')
+            ;
+            if ($participant->getId()) {
+                $queryBuilder->andWhere('p.id != :id');
+                $queryBuilder->setParameter('id', $participant->getId());
+            }
+
+            $query = $queryBuilder->getQuery();
+            $query->setParameter('event', $participant->getEvent()->getId());
+            $query->setParameter('profile', $participant->getProfile()->getUsername());
+            $query->useResultCache(false);
+        } else {
+            return false;
+        }
 
         return $query->execute(null, AbstractQuery::HYDRATE_SINGLE_SCALAR) > 0;
     }

@@ -11,7 +11,6 @@ use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Event\MealOfferCancelledEvent;
 use App\Mealz\MealBundle\Event\MealOfferedEvent;
 use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
-use App\Mealz\MealBundle\Event\SlotAllocationUpdateEvent;
 use App\Mealz\MealBundle\Repository\DayRepository;
 use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\MealBundle\Repository\WeekRepositoryInterface;
@@ -122,6 +121,44 @@ class ParticipantController extends BaseController
         ]);
     }
 
+    public function deleteEvent(
+        Participant $participant,
+        ParticipationService $participationSrv
+    ): JsonResponse {
+        if (false === is_object($this->getUser())) {
+            return $this->ajaxSessionExpiredRedirect();
+        }
+
+        $eventParticipation = $participant->getEvent();
+
+        if ($this->getProfile() !== $participant->getProfile()) {
+            return new JsonResponse(null, 403);
+        }
+
+        $date = $eventParticipation->getDay()->getDateTime()->format('Y-m-d');
+        $event = $eventParticipation->getEvent()->getSlug();
+        $profile = $participant->getProfile()->getUsername();
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($participant);
+        $entityManager->flush();
+
+        $this->triggerDeleteEvents($participant);
+
+        $profile = null;
+
+        return new JsonResponse([
+            'participantsCount' => $participationSrv->getCountByEvent($eventParticipation),
+            'url' => $this->generateUrl('MealzMealBundle_Event_join', [
+                'date' => $date,
+                'event' => $event,
+                'profile' => $profile,
+            ]),
+            'actionText' => 'deleted',
+            'available' => true,
+        ]);
+    }
+
     /**
      * Makes a booked meal by a participant to be available for taken over.
      */
@@ -146,7 +183,7 @@ class ParticipantController extends BaseController
         // trigger meal-offered event
         $this->eventDispatcher->dispatch(new MealOfferedEvent($participant));
 
-        return $this->generateResponse('MealzMealBundle_Participant_unswap', 'swapped', $participant);
+        return $this->generateResponse('MealzMealBundle_Meal_Participant_unswap', 'swapped', $participant);
     }
 
     /**
@@ -162,7 +199,7 @@ class ParticipantController extends BaseController
 
         $this->eventDispatcher->dispatch(new MealOfferCancelledEvent($participant));
 
-        return $this->generateResponse('MealzMealBundle_Participant_swap', 'unswapped', $participant);
+        return $this->generateResponse('MealzMealBundle_Meal_Participant_swap', 'unswapped', $participant);
     }
 
     /**
@@ -268,12 +305,5 @@ class ParticipantController extends BaseController
     private function triggerDeleteEvents(Participant $participant): void
     {
         $this->eventDispatcher->dispatch(new ParticipationUpdateEvent($participant));
-
-        $slot = $participant->getSlot();
-        if (null !== $slot) {
-            $this->eventDispatcher->dispatch(
-                new SlotAllocationUpdateEvent($participant->getMeal()->getDateTime(), $slot)
-            );
-        }
     }
 }

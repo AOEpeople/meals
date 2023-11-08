@@ -23,16 +23,22 @@ class Participant
     private ?int $id = null;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Mealz\MealBundle\Entity\EventParticipation", inversedBy="participants")
+     * @ORM\JoinColumn(name="event", referencedColumnName="id", nullable=true)
+     */
+    private ?EventParticipation $event = null;
+
+    /**
      * @Assert\NotNull()
      * @Assert\Type(type="App\Mealz\MealBundle\Entity\Meal")
      * @ORM\ManyToOne(targetEntity="Meal",inversedBy="participants")
      * @ORM\JoinColumn(name="meal_id", referencedColumnName="id")
      */
-    private Meal $meal;
+    private ?Meal $meal;
 
     /**
      * @Assert\NotNull()
-     * @ORM\ManyToOne(targetEntity="App\Mealz\MealBundle\Entity\Slot")
+     * @ORM\ManyToOne(targetEntity="App\Mealz\MealBundle\Entity\Slot", inversedBy="participants")
      * @ORM\JoinColumn(name="slot_id", referencedColumnName="id", nullable=true)
      */
     private ?Slot $slot = null;
@@ -79,10 +85,11 @@ class Participant
      */
     private bool $confirmed = false;
 
-    public function __construct(Profile $profile, Meal $meal)
+    public function __construct(Profile $profile, ?Meal $meal, ?EventParticipation $event = null)
     {
         $this->profile = $profile;
         $this->meal = $meal;
+        $this->event = $event;
         $this->combinedDishes = new DishCollection();
     }
 
@@ -116,12 +123,22 @@ class Participant
         return $this->id;
     }
 
+    public function getEvent(): ?EventParticipation
+    {
+        return $this->event;
+    }
+
+    public function setEvent(EventParticipation $event): void
+    {
+        $this->event = $event;
+    }
+
     public function setMeal(Meal $meal): void
     {
         $this->meal = $meal;
     }
 
-    public function getMeal(): Meal
+    public function getMeal(): ?Meal
     {
         return $this->meal;
     }

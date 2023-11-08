@@ -136,7 +136,8 @@
     }
   }
 
-  .meal-row {
+  .meal-row,
+  .event-row {
     position: relative;
     padding: 10px 15px;
 
@@ -224,6 +225,20 @@
       position: relative;
       float: right;
       margin-top: -2px;
+    }
+
+    &.event {
+      background-color: rgba($color-green, .1);
+      border-top: 4px solid $meal-border-color;
+    }
+  }
+
+  .event-row {
+    border-top: 2px solid $meal-border-color;
+
+    p {
+      padding: 5px 0 10px;
+      font-weight: 700;
     }
   }
 

@@ -87,11 +87,24 @@
                     {% endif %}
                 </div>
 
+                <div class="event-rows-wrapper{% if form.children.days.children[loop.index0].enabled.vars.checked == false or form.enabled.vars.checked == false %} disabled{% endif %}" data-prototype="<input type=&quot;hidden&quot; id=&quot;week_form_days_{{loop.index0}}_event&quot; name=&quot;week_form[days][{{loop.index0}}][event]&quot; />">
+                    {% set selectedEvent = null %}
+                    {% if day.event != null %}
+                        {% set selectedEvent = day.event.event.id %}
+                    {% endif %}
+
+                    {# Render a event row #}
+                    {% set eventForm = form.days[loop.index0].event %}
+
+                    {% include 'MealzMealBundle:MealAdmin/partials:event-row.html.twig' %}
+                </div>
+
                 <div class="week-day-action">
                     {{ form_widget(form.children.days.children[loop.index0].lockParticipationDateTime) }}
                     {{ form_widget(form.children.days.children[loop.index0].enabled) }}
                 </div>
             </div>
+
         {% endfor %}
         <div class="week-notify-action">
             {{- 'form.week.notification'|trans({},'general') -}}

@@ -53,6 +53,11 @@
         {% elseif day.meals | length == 0 %}
             <div class="meal-row no-meal">{{ 'content.participation.meal.no_service'|trans({},'general') }}</div>
         {% endif %}
+
+        {% if day.event  %}
+            {% set eventParticipation = day.event %}
+            {% include 'MealzMealBundle:Meal/partials:event.html.twig' %}
+        {% endif %}
     </div>
 {% endif %}
 

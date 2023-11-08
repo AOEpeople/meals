@@ -84,6 +84,20 @@ Mealz.prototype.initDishSelection = function () {
         that.selectDish($(this), e);
     });
 
+    $('.meal-select.event .remove-event').on('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        that.clearEventSelection($(this));
+        // disable remove icon
+        $(this).attr('style', 'display: none;');
+    });
+
+    $('.event-select-box .events').on('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        that.selectEvent($(this), e);
+    });
+
     // Click on 'variations' button to open up variations selection
     $('.meal-select-box .dishes .variation-button').on('click', function (e) {
         e.preventDefault();
@@ -174,6 +188,18 @@ Mealz.prototype.selectDish = function ($element, e) {
     }
 };
 
+Mealz.prototype.selectEvent = function ($element, e) {
+    var $eventRow = $element.closest('.event-row');
+    var eventId = $element.data('attribute-id');
+
+    $eventRow.find('.remove-event').attr('style', 'display: block;');
+    $eventRow.data('attribute-selected-event', eventId);
+    $eventRow.find('.event-label').text($element.find('.event-title').html());
+    this.clearAllFormElements($eventRow);
+    this.createEventFormElement($eventRow, eventId);
+    this.hideSelectBox();
+};
+
 Mealz.prototype.selectVariation = function ($element) {
     var parentId = $element.closest('.dishes').attr('data-attribute-id');
     var variationId = $element.parent('.variation').data('attribute-id');
@@ -258,6 +284,19 @@ Mealz.prototype.clearDishSelection = function ($element) {
     $mealRow.find('.variation-checkbox.checked').removeClass('checked');
 };
 
+Mealz.prototype.clearEventSelection = function ($element) {
+    var $eventRow = $element.closest('.event-row');
+
+    // Remove data attribute values from event-row
+    $eventRow.attr('data-attribute-selected-event', '');
+
+    // Clear dropdown text
+    $element.prev('.event-label').empty();
+
+    // Remove value (dish id) from default input field and remove others
+    this.clearAllFormElements($eventRow);
+};
+
 Mealz.prototype.setDropdownLabelForSelectedVariations = function (mealRow, parentId, variations) {
     var mealRowLabel = mealRow.find('.meal-label');
     if (variations.length > 0) {
@@ -276,7 +315,7 @@ Mealz.prototype.setDropdownLabelForSelectedVariations = function (mealRow, paren
 };
 
 Mealz.prototype.hideSelectBox = function () {
-    var $activeSelectBox = $('.meal-select-box:visible');
+    var $activeSelectBox = $('.meal-select-box:visible, .event-select-box:visible');
     this.hideVariationSelectBox($activeSelectBox);
     $activeSelectBox.hide();
 };
@@ -314,9 +353,25 @@ Mealz.prototype.createMealFormElement = function ($mealRow, dishId) {
     }
 };
 
-Mealz.prototype.clearAllFormElements = function ($mealRow) {
+Mealz.prototype.createEventFormElement = function ($eventRow, eventId) {
+    // Get prototype and day id and retrieve prototype form from data-prototype attribute
+    if (this.prototypeFormId === undefined) {
+        this.prototypeFormId = $eventRow.closest('.day').find('.event-selected').length;
+    }
+    this.prototypeFormId += 1;
+    var day = $eventRow.children('.event-selected:first').find('input:last').val();
+    var prototypeForm = $eventRow.parent('.event-rows-wrapper').data('prototype');
+
+    // Set prototype, day and event id in prototype form and append form element to related meal row
+    prototypeForm = prototypeForm.replace(/__name__/g, this.prototypeFormId);
+    var $prototypeFormElement = $(prototypeForm).appendTo($eventRow);
+    $prototypeFormElement.addClass('event-selected');
+    $prototypeFormElement.val(eventId);
+};
+
+Mealz.prototype.clearAllFormElements = function ($row) {
     var that = this;
-    $mealRow.find('.meal-selected').each(function () {
+    $row.find('.meal-selected, .event-selected').each(function () {
         that.deleteSingleSelection($(this));
     });
 };
@@ -324,6 +379,8 @@ Mealz.prototype.clearAllFormElements = function ($mealRow) {
 Mealz.prototype.deleteSingleSelection = function ($element) {
     if ($element.hasClass('meal-persisted') === true) {
         $element.find('input:first').val('');
+    } else if ($element.hasClass('event-persisted') === true) {
+        $element.val('');
     } else {
         $element.remove();
     }

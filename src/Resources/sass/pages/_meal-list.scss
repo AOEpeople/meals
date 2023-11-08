@@ -35,7 +35,8 @@
   }
 
   .meal {
-    .meal-row {
+    .meal-row,
+    .event-row {
       @include clearfix();
     }
 

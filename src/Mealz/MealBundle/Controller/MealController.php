@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Dish;
+use App\Mealz\MealBundle\Entity\Event;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Event\MealOfferAcceptedEvent;
 use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
 use App\Mealz\MealBundle\Event\SlotAllocationUpdateEvent;
+use App\Mealz\MealBundle\Repository\DayRepositoryInterface;
 use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
 use App\Mealz\MealBundle\Repository\SlotRepository;
 use App\Mealz\MealBundle\Repository\WeekRepositoryInterface;
@@ -121,12 +123,66 @@ class MealController extends BaseController
 
         if (null === $result['offerer']) {
             $this->logAdd($meal, $result['participant']);
-            $nextActionRoute = 'MealzMealBundle_Participant_delete';
+            $nextActionRoute = 'MealzMealBundle_Meal_Participant_delete';
         } else {
-            $nextActionRoute = 'MealzMealBundle_Participant_swap';
+            $nextActionRoute = 'MealzMealBundle_Meal_Participant_swap';
         }
 
         return $this->generateResponse($nextActionRoute, 'added', $result['participant'], $participationCount);
+    }
+
+    /**
+     * Lets the currently logged-in user either join an event.
+     *
+     * @param string $event Event Slug
+     *
+     * @Security("is_granted('ROLE_USER')")
+     */
+    public function joinEvent(
+        DateTime $date,
+        ?string $profile,
+        DayRepositoryInterface $dayRepo,
+        ParticipationService $participationSrv,
+        EventDispatcherInterface $eventDispatcher
+    ): JsonResponse {
+        $userProfile = $this->checkProfile($profile);
+        if (null === $userProfile) {
+            return new JsonResponse(null, 403);
+        }
+
+        $day = $dayRepo->getDayByDate($date);
+        $eventParticipation = $day->getEvent();
+        if (null === $eventParticipation) {
+            return new JsonResponse(null, 404);
+        }
+
+        try {
+            $result = $participationSrv->joinEvent($userProfile, $eventParticipation);
+        } catch (Exception $e) {
+            $this->logException($e);
+
+            return new JsonResponse(null, 500);
+        }
+
+        if (null === $result) {
+            return new JsonResponse(null, 404);
+        }
+
+        $eventDispatcher->dispatch(new ParticipationUpdateEvent($result['participant']));
+
+        $participationCount = $participationSrv->getCountByEvent($eventParticipation);
+
+        $nextActionRoute = 'MealzMealBundle_Event_Participant_delete';
+
+        return new JsonResponse([
+            'id' => $result['participant']->getId(),
+            'participantsCount' => $participationCount,
+            'url' => $this->generateUrl(
+                $nextActionRoute,
+                ['participant' => $result['participant']->getId()]
+            ),
+            'actionText' => 'added',
+        ]);
     }
 
     /**

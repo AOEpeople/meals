@@ -17,6 +17,9 @@ dish_variation:
   hidden: Gericht variation "%dishVariation%" wurde verborgen.
   deleted: Gericht variation "%dishVariation%" wurde gelöscht.
   delete_error: Gericht variation "%dishVariation%" kann nicht gelöscht werden. Wir kümmern uns darum. Bitte versuchen Sie es später noch einmal.
+event:
+  title: Event
+  not_available: Keine Events verfügbar
 error:
   unknown: Ein unbekannter Fehler ist aufgetreten.
   all_days_disabled: Es kann keine Liste angezeigt werden, da alle Tage der Woche vom %startDate% - %endDate% deaktiviert sind.

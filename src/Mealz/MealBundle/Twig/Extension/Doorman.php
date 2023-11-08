@@ -2,6 +2,7 @@
 
 namespace App\Mealz\MealBundle\Twig\Extension;
 
+use App\Mealz\MealBundle\Entity\EventParticipation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Service\Doorman as DoormanService;
@@ -38,6 +39,7 @@ class Doorman extends AbstractExtension
             new TwigFunction('is_allowed_to_unswap', [$this, 'isUserAllowedToUnswap']),
             new TwigFunction('is_participation_pending', [$this, 'isParticipationPending']),
             new TwigFunction('is_offer_available', [$this, 'isOfferAvailable']),
+            new TwigFunction('is_allowed_to_join_event', [$this, 'isUserAllowedToJoinEvent']),
         ];
     }
 
@@ -95,5 +97,14 @@ class Doorman extends AbstractExtension
     {
         // proxy method
         return $this->doormanService->isOfferAvailable($meal, $participant);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUserAllowedToJoinEvent(EventParticipation $event)
+    {
+        // proxy method
+        return $this->doormanService->isUserAllowedToJoinEvent($event);
     }
 }

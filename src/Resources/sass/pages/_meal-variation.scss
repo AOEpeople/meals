@@ -1,4 +1,5 @@
-.meal-select-box {
+.meal-select-box,
+.event-select-box {
   position: absolute;
   top: 15px;
   left: 15px;
@@ -20,7 +21,8 @@
   li {
     padding: 15px 25px;
 
-    &.dishes {
+    &.dishes,
+    &.events {
       position: relative;
       padding-left: 50px;
       border-bottom: 1px solid $color-gray-middle;
@@ -71,6 +73,10 @@
   }
 }
 
+.event-select-box {
+  margin-top: 30px;
+}
+
 .meal-select {
   height: 35px;
   padding: 11px 15px 0;
@@ -106,7 +112,12 @@
     }
   }
 
-  .meal-label {
+  &.event::before {
+    content: "\e034";
+  }
+
+  .meal-label,
+  .event-label {
     display: inline-block;
     overflow: hidden;
     text-overflow: ellipsis;

@@ -1,0 +1,39 @@
+{% apply spaceless %}
+{% set dayParticipation = participations[day.dateTime.format('Y-m-d')] %}
+{% set participantsCountClasses = ['participants-count'] %}
+
+{% set count = 0 %}
+{% set limit = 0 %}
+
+{% set count = dayParticipation['totalCountByEventSlugs'][eventParticipation.event.slug]['count']|round(0, 'ceil') %}
+
+
+{% if day.enabled %}
+    {% set participant = eventParticipation.getParticipant(app.user.profile) %}
+
+    {% set participantsCountClasses = participantsCountClasses|merge(['participation-allowed']) %}
+{% endif %}
+
+{% set tooltipClasses = ['tooltiptext'] %}
+{% set tooltipId = '' %}
+{% set tooltipText = '' %}
+
+{% if is_granted('ROLE_USER') %}
+    {% set participant = eventParticipation.getParticipant(app.user.profile) %}
+    {% if participant and is_participation_pending(participant) %}
+        {% set tooltipClasses = tooltipClasses|merge(['active']) %}
+        {% set tooltipId = 'tooltip_offered' %}
+        {% set tooltipText = "tooltip.offered_meal" %}
+    {% elseif false == participant %}
+        {% set tooltipClasses = tooltipClasses|merge(['active']) %}
+        {% set tooltipId = 'tooltip_available' %}
+        {% set tooltipText = "tooltip.available_meal" %}
+    {% endif %}
+{% endif %}
+{% endapply %}
+<div class="participants">
+    <span class="{{ participantsCountClasses|join(' ') }}">
+        <span class="count">{{ count }}</span>
+        <span class="{{ tooltipClasses|join(' ') }}">{{ tooltipText|trans({}, "messages") }}</span>
+    </span>
+</div>

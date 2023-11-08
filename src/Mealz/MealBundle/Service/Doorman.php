@@ -2,6 +2,7 @@
 
 namespace App\Mealz\MealBundle\Service;
 
+use App\Mealz\MealBundle\Entity\EventParticipation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\UserBundle\Entity\Profile;
@@ -26,6 +27,13 @@ class Doorman
      * @see $this->hasAccessTo
      */
     private const AT_MEAL_PARTICIPATION = 0;
+
+    /**
+     * Doorman constants defining access types.
+     *
+     * @see $this->hasAccessTo
+     */
+    private const AT_EVENT_PARTICIPATION = 0;
 
     /**
      * Current timestamp.
@@ -64,6 +72,15 @@ class Doorman
 
         return $this->isToggleParticipationAllowed($meal->getDateTime())
                 && $this->hasAccessTo(self::AT_MEAL_PARTICIPATION, ['meal' => $meal]);
+    }
+
+    public function isUserAllowedToJoinEvent(EventParticipation $event): bool
+    {
+        if (false === $this->security->getUser()->getProfile() instanceof Profile) {
+            return false;
+        }
+
+        return $this->isToggleParticipationAllowed($event->getDay()->getLockParticipationDateTime());
     }
 
     public function isOfferAvailable(Meal $meal): bool

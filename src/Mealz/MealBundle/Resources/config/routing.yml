@@ -50,6 +50,17 @@ MealzMealBundle_Meal_newGuestInvitation:
     requirements:
         dayId: '[1-9][0-9]*'
 
+MealzMealBundle_Event_join:
+    path:  /event/{date}/{event}/join/{profile}
+    defaults: { _controller: App\Mealz\MealBundle\Controller\MealController::joinEvent, profile: null }
+    methods: [POST]
+    requirements:
+        date: '^\d{4}-\d{2}-\d{2}$'
+
+MealzMealBundle_Event_Participant_delete:
+    path:  /menu/event/{participant}/delete
+    defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::deleteEvent }
+
 MealzMealBundle_Slot:
     path:  /meal/slots
     defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::listSlots }
@@ -82,24 +93,24 @@ MealzMealBundle_Slot_delete:
     defaults: { _controller: App\Mealz\MealBundle\Controller\SlotController::deleteSlot }
     methods: [DELETE]
 
-MealzMealBundle_Participant_update:
+MealzMealBundle_Meal_Participant_update:
     path:  /meal/participation/{participant}/update
     defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::updateCombinedMeal }
     methods: [POST]
 
-MealzMealBundle_Participant_delete:
+MealzMealBundle_Meal_Participant_delete:
     path:  /menu/meal/{participant}/delete
     defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::delete }
 
-MealzMealBundle_Participant_swap:
+MealzMealBundle_Meal_Participant_swap:
     path: /menu/meal/{participant}/offer-meal
     defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::offerMeal }
 
-MealzMealBundle_Participant_unswap:
+MealzMealBundle_Meal_Participant_unswap:
     path: /menu/meal/{participant}/cancel-offered-meal
     defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::cancelOfferedMeal }
 
-MealzMealBundle_Participant_updateSlot:
+MealzMealBundle_Meal_Participant_updateSlot:
     path: /menu/meal/{date}/update-slot
     defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipationUpdateController::updateSlot }
     methods: [POST]

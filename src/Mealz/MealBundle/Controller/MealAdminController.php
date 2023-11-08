@@ -8,6 +8,7 @@ use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Event\WeekUpdateEvent;
 use App\Mealz\MealBundle\Form\MealAdmin\WeekForm;
 use App\Mealz\MealBundle\Repository\DishRepository;
+use App\Mealz\MealBundle\Repository\EventRepository;
 use App\Mealz\MealBundle\Repository\WeekRepositoryInterface;
 use App\Mealz\MealBundle\Service\WeekService;
 use App\Mealz\MealBundle\Validator\Constraints\DishConstraint;
@@ -73,7 +74,8 @@ class MealAdminController extends BaseController
         Request $request,
         DateTime $date,
         WeekRepositoryInterface $weekRepository,
-        DishRepository $dishRepository
+        DishRepository $dishRepository,
+        EventRepository $eventRepository
     ) {
         $week = $weekRepository->findOneBy([
             'year' => $date->format('o'),
@@ -112,12 +114,14 @@ class MealAdminController extends BaseController
         }
 
         $dishes = $dishRepository->getSortedDishesQueryBuilder()->getQuery()->getResult();
+        $events = $eventRepository->getSortedEventsQueryBuilder()->getQuery()->getResult();
 
         return $this->render(
             'MealzMealBundle:MealAdmin:week.html.twig',
             [
                 'week' => $week,
                 'dishes' => $dishes,
+                'events' => $events,
                 'form' => $form->createView(),
             ]
         );
@@ -130,9 +134,14 @@ class MealAdminController extends BaseController
      *
      * @Security("is_granted('ROLE_KITCHEN_STAFF')")
      */
-    public function edit(Request $request, Week $week, DishRepository $dishRepository)
-    {
+    public function edit(
+        Request $request,
+        Week $week,
+        DishRepository $dishRepository,
+        EventRepository $eventRepository
+    ) {
         $dishes = $dishRepository->getSortedDishesQueryBuilder()->getQuery()->getResult();
+        $events = $eventRepository->getSortedEventsQueryBuilder()->getQuery()->getResult();
         $form = $this->createForm(WeekForm::class, $week);
 
         // handle form submission
@@ -176,6 +185,7 @@ class MealAdminController extends BaseController
             'MealzMealBundle:MealAdmin:week.html.twig',
             [
                 'dishes' => $dishes,
+                'events' => $events,
                 'week' => $week,
                 'form' => $form->createView(),
             ]

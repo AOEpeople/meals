@@ -3,7 +3,9 @@
 namespace App\Mealz\MealBundle\Service;
 
 use App\Mealz\MealBundle\Entity\Category;
+use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
+use App\Mealz\MealBundle\Entity\EventParticipation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -66,7 +68,7 @@ class Link
         }
 
         if ('newParticipant' === $action) {
-            return $this->router->generate('MealzMealBundle_Participant_new', [
+            return $this->router->generate('MealzMealBundle_Meal_Participant_new', [
                 'date' => $meal->getDateTime()->format('Y-m-d'),
                 'dish' => $meal->getDish()->getSlug(),
             ], $referenceType);
@@ -88,7 +90,21 @@ class Link
         $action = $action ?? 'edit';
 
         if ('edit' === $action || 'delete' === $action || 'confirm' === $action || 'swap' === $action || 'unswap' === $action) {
-            return $this->router->generate('MealzMealBundle_Participant_' . $action, ['participant' => $participant->getId()], $referenceType);
+            return $this->router->generate('MealzMealBundle_Meal_Participant_' . $action, ['participant' => $participant->getId()], $referenceType);
+        }
+
+        throw new \InvalidArgumentException(sprintf('linking to "%s" action on a %s object is not configured.', $action, get_class($participant)));
+    }
+
+    public function linkEventParticipant(
+        Participant $participant,
+        string $action = null,
+        int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH
+    ): string {
+        $action = $action ?? 'edit';
+
+        if ('edit' === $action || 'delete' === $action || 'confirm' === $action || 'swap' === $action || 'unswap' === $action) {
+            return $this->router->generate('MealzMealBundle_Event_Participant_' . $action, ['participant' => $participant->getId()], $referenceType);
         }
 
         throw new \InvalidArgumentException(sprintf('linking to "%s" action on a %s object is not configured.', $action, get_class($participant)));
@@ -136,5 +152,30 @@ class Link
         }
 
         throw new \InvalidArgumentException(sprintf('linking to "%s" action on a %s object is not configured.', $action, get_class($category)));
+    }
+
+    public function linkEvent(
+        EventParticipation $eventParticipation,
+        Day $day,
+        string $action = null,
+        int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH
+    ): string {
+        $action = $action ?: 'show';
+
+        if ('show' === $action || 'join' === $action || 'join_someone' === $action) {
+            return $this->router->generate('MealzMealBundle_Event_' . $action, [
+                'date' => $day->getDateTime()->format('Y-m-d'),
+                'event' => $eventParticipation->getEvent()->getSlug(),
+            ], $referenceType);
+        }
+
+        if ('newParticipant' === $action) {
+            return $this->router->generate('MealzMealBundle_Event_Participant_new', [
+                'date' => $day->getDateTime()->format('Y-m-d'),
+                'event' => $eventParticipation->getEvent()->getSlug(),
+            ], $referenceType);
+        }
+
+        throw new \InvalidArgumentException(sprintf('linking to "%s" action on a %s object is not configured.', $action, get_class($eventParticipation)));
     }
 }

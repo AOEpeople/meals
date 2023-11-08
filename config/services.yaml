@@ -11,6 +11,7 @@ parameters:
     app.email.sender: '%env(resolve:APP_EMAIL_SENDER)%'
     app.email.settlement_request.receiver: '%env(SETTLEMENT_REQ_EMAIL_RECEIVER)%'
 
+    app.auth.mode: 'oauth'
     # default period for counting a dish consumption; specified as format used by PHP date() function
     app.dish_consumption_count_period: '4 weeks ago'
 

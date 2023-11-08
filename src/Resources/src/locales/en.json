@@ -212,6 +212,7 @@
     "logged_in_text": "You are logged in as",
     "balance": "Balance"
   },
+  "login": "Login",
   "logout": "Logout",
   "menu": {
     "list": "List of Weeks",
@@ -252,7 +253,9 @@
   "participantList": {
     "no_meals": "No meals today"
   },
+  "password": "Password",
   "popup": {
     "processing": "Die Anfrage wird bearbeitet"
-  }
+  },
+  "username": "Username"
 }

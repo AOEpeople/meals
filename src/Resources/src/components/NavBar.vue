@@ -133,7 +133,7 @@
   import {MenuIcon, XIcon, CalendarIcon, CalculatorIcon, CakeIcon, CashIcon, BookmarkIcon, ClockIcon} from '@heroicons/vue/outline';
   import Icons from '@/components/misc/Icons.vue';
   import {useI18n} from 'vue-i18n';
-  import {computed} from 'vue';
+  import { computed } from 'vue';
   import MobileDropdown3 from '@/components/navbar/MobileDropdown3.vue';
   import {userDataStore} from '@/stores/userDataStore';
   import { useRoute } from 'vue-router';
@@ -160,25 +160,26 @@
 
   const getShowParticipationsError = computed(() => loadedState.error !== "");
 
-  let balanceString = computed(() => userDataStore.balanceToLocalString());
+  const balanceString = computed(() => userDataStore.balanceToLocalString());
 
-  const user = userDataStore.getState().user
-  const isAuthenticated = !userDataStore.getState().roles.includes('ROLE_GUEST')
+  const user = computed(() => userDataStore.getState().user);
+  const isAuthenticated = computed(() => !userDataStore.getState().roles.includes('ROLE_GUEST'));
 
-  const navigation = [
-    { name: 'header.navigation.menu',       to: '/weeks',      icon: CalendarIcon,   access: userDataStore.roleAllowsRoute('Weeks'     ) },
-    { name: 'header.navigation.dishes',     to: '/dishes',     icon: CakeIcon,       access: userDataStore.roleAllowsRoute('Dishes'    ) },
-    { name: 'header.navigation.categories', to: '/categories', icon: BookmarkIcon,   access: userDataStore.roleAllowsRoute('Categories') },
-    { name: 'header.navigation.slots',      to: '/time-slots', icon: ClockIcon,      access: userDataStore.roleAllowsRoute('Time Slots') },
-    { name: 'header.navigation.costs',      to: '/costs',      icon: CashIcon,       access: userDataStore.roleAllowsRoute('Costs'     ) },
-    { name: 'header.navigation.finance',    to: '/finance',    icon: CalculatorIcon, access: userDataStore.roleAllowsRoute('Finance'   ) },
-  ];
+  const navigation = computed(() => {
+    return [
+      { name: 'header.navigation.menu',       to: '/weeks',      icon: CalendarIcon,   access: userDataStore.roleAllowsRoute('Weeks'     ) },
+      { name: 'header.navigation.dishes',     to: '/dishes',     icon: CakeIcon,       access: userDataStore.roleAllowsRoute('Dishes'    ) },
+      { name: 'header.navigation.categories', to: '/categories', icon: BookmarkIcon,   access: userDataStore.roleAllowsRoute('Categories') },
+      { name: 'header.navigation.slots',      to: '/time-slots', icon: ClockIcon,      access: userDataStore.roleAllowsRoute('Time Slots') },
+      { name: 'header.navigation.costs',      to: '/costs',      icon: CashIcon,       access: userDataStore.roleAllowsRoute('Costs'     ) },
+      { name: 'header.navigation.finance',    to: '/finance',    icon: CalculatorIcon, access: userDataStore.roleAllowsRoute('Finance'   ) },
+    ]
+  });
 
   function logout() {
     sessionStorage.clear()
     window.location.href = '/logout'
   }
-
 </script>
 
 <style scoped>

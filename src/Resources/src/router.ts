@@ -14,6 +14,7 @@ import Weeks         from '@/views/Weeks.vue';
 import MenuParticipations from './views/MenuParticipations.vue';
 import CostsSettlement from './views/CostsSettlement.vue';
 import CashRegister from './views/CashRegister.vue';
+import Login from '@/views/Login.vue';
 
 import { createRouter, createWebHistory } from 'vue-router';
 import { userDataStore }                  from '@/stores/userDataStore';
@@ -77,14 +78,14 @@ const router = createRouter({
                 allowedRoles: ['ROLE_KITCHEN_STAFF', 'ROLE_ADMIN']
             }
         },
-       /* {
+        {
             path: '/login',
             name: 'Login',
             component: Login,
             meta: {
                 allowedRoles: []
             }
-        },*/
+        },
         {
             path: '/time-slots',
             name: 'Time Slots',
@@ -170,7 +171,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to) => {
-    if (userDataStore.getState().roles.includes('ROLE_GUEST') === true) {
+    if (userDataStore.getState().roles.includes('ROLE_GUEST') === true || userDataStore.getState().user === '') {
         if (to.name !== 'Guest' && to.name !== 'Login' && to.name !== 'ParticipantList') {
             return { name: 'Login' }
         }

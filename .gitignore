@@ -41,4 +41,7 @@ node_modules
 
 /src/Resources/style/output.css
 /**/*.d.ts
-/src/Resources/style/output.css.map
+src/Resources/style/output.css.map
+tests/e2e/cypress/videos/
+tests/e2e/cypress/screenshots/
+test_ci_cypress.sh

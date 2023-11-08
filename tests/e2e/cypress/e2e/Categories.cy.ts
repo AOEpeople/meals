@@ -1,13 +1,12 @@
 describe('Test Categories View', () => {
     beforeEach(() => {
         cy.resetDB();
-        cy.setCookie('locale', 'de');
         cy.loginAs('kochomi');
         cy.visitMeals();
     });
 
     it("should be able to navigate to '/categories' and have the header displayed", () => {
-        cy.visit('/categories');
+        cy.get('span > a').contains('Kategorie').click();
 
         cy.get('h2').should(ele => {
             expect(ele.first()).to.contain('Liste der Kategorien');
@@ -17,7 +16,7 @@ describe('Test Categories View', () => {
     });
 
     it('should be able to switch the locale to english and back to german', () => {
-        cy.visit('/categories');
+        cy.get('span > a').contains('Kategorie').click();
 
         // Switch language to english
         cy.get('span').contains('English version').parent().click();
@@ -47,7 +46,7 @@ describe('Test Categories View', () => {
     });
 
     it('should be able to create, edit and delete a category', () => {
-        cy.visit('/categories');
+        cy.get('span > a').contains('Kategorie').click();
 
         // Create Category
         cy.get('button').contains('+ Kategorie erstellen').click();

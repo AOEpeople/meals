@@ -1,7 +1,6 @@
 describe('Test Cost View', () => {
     beforeEach(() => {
         cy.resetDB();
-        cy.setCookie('locale', 'de');
         cy.loginAs('kochomi');
         cy.visitMeals();
 
@@ -12,12 +11,9 @@ describe('Test Cost View', () => {
     });
 
     it('should visit /costs and filter for a user and hide it', () => {
-        cy.visit('/costs');
+        cy.get('span > a').contains('Kosten').click({ force: true });
 
         cy.wait('@getCosts');
-
-        // Hide Symphony's toolbar
-        cy.get('a[class="hide-button"]').click();
 
         cy.get('h2').contains('Liste der Kosten');
 
@@ -43,8 +39,7 @@ describe('Test Cost View', () => {
 
         cy.wait('@hideUser');
 
-        cy.get('td')
-            .contains('Meals, Admin')
+        cy.contains('Meals, Admin')
             .should('not.exist');
 
         cy.get('input').first().clear();
@@ -57,12 +52,9 @@ describe('Test Cost View', () => {
     });
 
     it('should be able to settle an account and add balance to it', () => {
-        cy.visit('/costs');
+        cy.get('span > a').contains('Kosten').click();
 
         cy.wait('@getCosts');
-
-        // Hide Symphony's toolbar
-        cy.get('a[class="hide-button"]').click();
 
         cy.get('h2').contains('Liste der Kosten');
 
@@ -109,7 +101,7 @@ describe('Test Cost View', () => {
         cy.get('div').contains('Bestätigen').click();
         cy.wait('@confirmSettlement');
 
-        cy.visit('/costs');
+        cy.get('span > a').contains('Kosten').click();
         cy.wait('@getCosts');
 
         cy.get('input[placeholder="Benutzer filtern"]').type('Alice');

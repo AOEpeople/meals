@@ -1,6 +1,5 @@
 describe('Test Cost View', () => {
     beforeEach(() => {
-        cy.setCookie('locale', 'de');
         cy.loginAs('kochomi');
         cy.visitMeals();
         cy.resetDB();
@@ -11,12 +10,9 @@ describe('Test Cost View', () => {
     });
 
     it('should visit /finance', () => {
-        cy.visit('/finance');
+        cy.get('span > a').contains('Finanzen').click();
 
         cy.wait('@getFinances');
-
-        // Hide Symphony's toolbar
-        cy.get('a[class="hide-button"]').click();
 
         cy.get('table:visible').should('have.length', 2);
         cy.get('tr').eq(1).find('td').should('have.length', 3);
@@ -28,12 +24,9 @@ describe('Test Cost View', () => {
     });
 
     it('should be able to get finances for a specific date', () => {
-        cy.visit('/finance');
+        cy.get('span > a').contains('Finanzen').click();
 
         cy.wait('@getFinances');
-
-        // Hide Symphony's toolbar
-        cy.get('a[class="hide-button"]').click();
 
         cy.get('input').as('range').click();
         cy.get('.dp__calendar_item .dp__range_start').click();

@@ -1,4 +1,4 @@
-import { baseUrl } from "./commands/urls";
+import { baseUrl, cookieDomain } from "./commands/urls";
 import {loginAs} from "./commands/login";
 import {setCookieInterceptor} from "./interceptors";
 import { resetDB } from "./commands/reset";
@@ -44,18 +44,59 @@ declare global {
   }
 }
 
+Cypress.Commands.overwrite('visit', (originalFn, url, options) => {
+  // @ts-expect-error
+  return originalFn(url, {
+    onBeforeLoad(win) {
+      Object.defineProperty(win.navigator, 'language', { value: 'de-DE' });
+      Object.defineProperty(win.navigator, 'languages', { value: ['de'] });
+      Object.defineProperty(win.navigator, 'accept_languages', { value: ['de'] });
+  }, ...options });
+});
+
+Cypress.Commands.overwrite("log", function(log, ...args) {
+  if (Cypress.browser.isHeadless) {
+    return cy.task("log", args, { log: false }).then(() => {
+      return log(...args);
+    });
+  } else {
+    console.log(...args);
+    return log(...args);
+  }
+});
+
 export const viewportS = () => cy.viewport(320, 800);
 export const viewportXL = () => cy.viewport(1344, 800);
 
 export const visitMeals = () => {
   setCookieInterceptor();
-  cy.visit(`${baseUrl}`);
+  cy.setCookie('locale', 'de-DE', {
+    domain: cookieDomain,
+    httpOnly: true,
+    secure: true,
+    hostOnly: true,
+    sameSite: 'lax'
+  });
+  cy.visit(`${baseUrl}`, {
+    onBeforeLoad(win) {
+      Object.defineProperty(win.navigator, 'language', { value: 'de-DE' });
+      Object.defineProperty(win.navigator, 'languages', { value: ['de'] });
+      Object.defineProperty(win.navigator, 'accept_languages', { value: ['de'] });
+    },
+    headers: {
+      'Accept-Language': 'de',
+    },
+  });
   cy.request({
     method: 'POST',
     url: `${Cypress.env('baseUrl')}api/payment/cash/kochomi.meals?amount=1000`
   }).then((response) => {
     expect(response.status).to.eq(200);
   });
+  // Hide Symphony's toolbar
+  if (Cypress.env('ddev_test')) {
+    cy.get('a[class="hide-button"]').click();
+  }
 };
 
 export const visitMealsViaWindowObject = () => {

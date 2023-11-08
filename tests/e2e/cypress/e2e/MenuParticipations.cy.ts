@@ -1,7 +1,6 @@
 describe('Test Menu Participations View', () => {
     beforeEach(() => {
         cy.resetDB();
-        cy.setCookie('locale', 'de');
         cy.loginAs('kochomi');
         cy.visitMeals();
 
@@ -17,12 +16,9 @@ describe('Test Menu Participations View', () => {
     });
 
     it('should be able to visit the menu participations page', () => {
-        cy.visit('/weeks');
+        cy.get('span > a').contains('Mahlzeiten').click();
 
         cy.wait(['@getWeeks']);
-
-        // Hide Symphony's toolbar
-        cy.get('a[class="hide-button"]').click();
 
         cy.get('h4').eq(1).contains('Woche').click();
         cy.wait(['@getDishesCount', '@getCategories', '@getDishes']);

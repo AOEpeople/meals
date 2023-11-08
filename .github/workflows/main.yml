@@ -132,39 +132,12 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-      # Production image
-      - name: Get Docker meta for production image
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: aoepeople/meals
-          tags: |
-            type=sha
-            type=ref,event=branch
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=edge,branch=master
-      - name: Build and push production image
-        id: build_latest
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          push: false
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: |
-            aoepeople/meals:edge
-            type=local,src=/tmp/docker/buildx
-          cache-to: type=local,dest=/tmp/docker/buildx
-          outputs: type=docker,dest=/tmp/docker/app.tar
       # Development image
       - name: Get Docker meta for development
         id: devmeta
         uses: docker/metadata-action@v4
         with:
-          images: aoepeople/meals
-          flavor: |
-            suffix=-dev
+          images: aoepeople/meals:beta
           tags: |
             type=sha
             type=ref,event=branch
@@ -174,12 +147,12 @@ jobs:
         with:
           file: Dockerfile
           push: false
-          tags: ${{ steps.devmeta.outputs.tags }}
+          tags: aoepeople/meals:test
           labels: ${{ steps.devmeta.outputs.labels }}
           build-args: |
             BUILD_DEV="true"
           cache-from: |
-            aoepeople/meals:edge-dev
+            aoepeople/meals:beta
             type=local,src=/tmp/docker/buildx
           cache-to: type=local,dest=/tmp/docker/buildx
           outputs: type=docker,dest=/tmp/docker/dev.tar
@@ -190,10 +163,63 @@ jobs:
           name: docker-images
           path: /tmp/docker/*.tar
     outputs:
-      image: ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
-      images: ${{ join(steps.meta.outputs.tags, ' ') }}
       imageDev: ${{ fromJSON(steps.devmeta.outputs.json).tags[0] }}
       imagesDev: ${{ join(steps.devmeta.outputs.tags, ' ') }}
+
+  cypress:
+    name: Run E2E-tests via Cypress
+    needs: [ buildImages ]
+    runs-on: ubuntu-latest
+    env:
+      SERVICE: dev # use `dev` to enable xdebug and code coverage
+      IMAGE_DEV: ${{ needs.buildImages.outputs.imageDev }}
+      COMPOSE_INTERACTIVE_NO_CLI: true
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Download docker images
+        uses: actions/download-artifact@v3
+        with:
+          name: docker-images
+          path: /tmp/docker
+      - name: Import docker image
+        run: |
+          docker load --input /tmp/docker/dev.tar
+          docker image ls -a | grep aoepeople
+      - uses: actions/setup-node@v3
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+      - name: Install npm packages
+        working-directory: ./src/Resources
+        run: yarn install
+      - name: Make build dir
+        run: |
+          mkdir build
+      - name: Make .env file
+        run: |
+          sh -c "cat > .env.docker << 'EOL'
+          IDP_SERVER=\"${{ secrets.IDP_SERVER }}\"
+          IDP_CLIENT_ID=\"${{ secrets.IDP_CLIENT_ID }}\"
+          IDP_CLIENT_SECRET=\"${{ secrets.IDP_CLIENT_SECRET }}\"
+          EOL"
+      - name: Run Docker compose
+        run: |
+          docker compose -f ./docker-compose-cypress.yaml up --abort-on-container-exit &
+          echo "starting the docker compose..." &
+          yarn --cwd=./tests/e2e install &&
+          until $(curl --output /dev/null --silent --head --fail http://localhost:80/); do
+              printf '.'
+              sleep 5
+          done &&
+          yarn --cwd=./tests/e2e cross-env-shell cypress run --headless --browser electron --env "baseUrl=http://localhost/,cookie_domain=localhost,ddev_test=false,mailhog_url=http://localhost:8025"
+      - name: Docker compose down
+        run: |
+          docker compose -f docker-compose-cypress.yaml down --remove-orphans
 
   testBackendUnitFunctional:
     name: Run backend unit- and functional-tests
@@ -201,7 +227,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SERVICE: app # use `dev` to enable xdebug and code coverage
-      IMAGE_APP: ${{ needs.buildImages.outputs.image }}
       IMAGE_DEV: ${{ needs.buildImages.outputs.imageDev }}
       COMPOSE_INTERACTIVE_NO_CLI: true
     steps:
@@ -215,7 +240,6 @@ jobs:
           path: /tmp/docker
       - name: Import docker image
         run: |
-          docker load --input /tmp/docker/app.tar
           docker load --input /tmp/docker/dev.tar
           docker image ls -a | grep aoepeople
       - name: Test with docker compose
@@ -234,110 +258,3 @@ jobs:
         if: always()
         with:
           report_paths: 'build/artifacts/qa/*.xml'
-
-  publish:
-    name: Publish
-    if: ${{ github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v') }}
-    needs: [ buildImages, testBackendUnitFunctional, testFrontendUnitFunctional ]
-    runs-on: ubuntu-latest
-    env:
-      IMAGES_APP: ${{ needs.buildImages.outputs.images }}
-      IMAGES_DEV: ${{ needs.buildImages.outputs.imagesDev }}
-    steps:
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Login to DockerHub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-      - name: Download docker images
-        uses: actions/download-artifact@v3
-        with:
-          name: docker-images
-          path: /tmp/docker
-      - name: Import docker image
-        run: |
-          docker load --input /tmp/docker/app.tar
-          docker load --input /tmp/docker/dev.tar
-          docker image ls -a | grep aoepeople
-      - name: Deploy images
-        run: |
-          for tag in $IMAGES_APP; do
-            if [[ $tag = *sha-* ]]; then
-              continue;
-            fi
-            docker push $tag;
-          done
-
-          for tag in $IMAGES_DEV; do
-            if [[ $tag = *sha-* ]]; then
-              continue;
-            fi
-            docker push $tag;
-          done
-      - name: Image digest
-        id: image_digest
-        env:
-          IMAGE: ${{ needs.buildImages.outputs.image }}
-        run: |
-          docker pull $IMAGE
-          echo "digest=$(docker inspect $IMAGE | jq -r '.[0].RepoDigests[0]' | cut -d'@' -f2)" >> $GITHUB_OUTPUT
-      - name: Delete docker image artifact
-        uses: geekyeggo/delete-artifact@v1
-        with:
-          name: docker-images
-    outputs:
-      imageDigest: ${{ steps.image_digest.outputs.digest }}
-
-  snyk:
-    name: Scan vulnerabilities
-    if: ${{ github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v') }}
-    needs: [ publish, buildImages ]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Run Snyk to check Docker image for vulnerabilities
-        # Snyk can be used to break the build when it detects vulnerabilities.
-        # In this case we want to upload the issues to GitHub Code Scanning
-        continue-on-error: true
-        uses: snyk/actions/docker@master
-        env:
-          # In order to use the Snyk Action you will need to have a Snyk API token.
-          # More details in https://github.com/snyk/actions#getting-your-snyk-token
-          # or you can signup for free at https://snyk.io/login
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          image: ${{ needs.buildImages.outputs.image }}
-          args: --file=Dockerfile
-      - name: Upload result to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: snyk.sarif
-
-  deploy:
-    name: Deploy and notify
-    needs: [ publish, buildImages ]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to staging environment
-        env:
-          IMAGE_TAG: ${{ needs.buildImages.outputs.image }}
-          IMAGE_DIGEST: ${{ needs.publish.outputs.imageDigest }}
-          GITLAB_K8S_IT_TRIGGER: ${{ secrets.GITLAB_K8S_IT_TRIGGER }}
-        run: |
-          curl -X POST \
-            -F "ref=develop" \
-            -F "variables[IMAGE_TAG]=$IMAGE_TAG" \
-            -F "variables[IMAGE_DIGEST]=$IMAGE_DIGEST" \
-            -F "token=$GITLAB_K8S_IT_TRIGGER" \
-            https://gitlab.aoe.com/api/v4/projects/2872/trigger/pipeline
-      - name: Notify team
-        env:
-          COMMIT_MSG: ${{ github.event.head_commit.message }}
-          MATTERMOST_HOOK_URL: ${{ secrets.MATTERMOST_HOOK_URL }}
-        run: |
-          curl --silent -i -X POST -H 'Content-Type: application/json' \
-            -d '{"text": "Triggered deployment of `meals-staging.aoe.com@'"$GITHUB_SHA"'`\n> '"$COMMIT_MSG"'"}' \
-            $MATTERMOST_HOOK_URL

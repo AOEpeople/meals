@@ -1,0 +1,98 @@
+services:
+  app:
+    image: aoepeople/meals:test
+    container_name: app
+    environment:
+      - APP_DEBUG=1
+      - APP_ENV=staging
+      - APP_SECRET=98414ca3612ebba3061cf8c92c4a984e
+      - APP_EMAIL_SENDER="Meals Bot <noreply@localhost>"
+      - APP_EMAIL_ADMIN=admin@localhost
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_NAME=db_test
+      - DB_USER=db
+      - DB_PASS=db
+      - DB_VERS=5.7
+      - SMTP_HOST=mailhog
+      - SMTP_PORT=1025
+      - SMTP_AUTH=off
+      - MAILER_DSN=smtp://mailhog:1025
+      - MAIL_ENCRYPTION=tls
+      - SETTLEMENT_REQ_EMAIL_RECEIVER=jon.doe@localhost
+      - APP_NAME=Meals
+      - APP_BASE_URL=http://localhost
+      - DB_URL=mysql://db:db@db:3306/db_test?serverVersion=5.7&charset=utf8
+      - MERCURE_URL=http://mercure:8080/.well-known/mercure
+      - MERCURE_PUBLIC_URL=http://localhost:8080/.well-known/mercure
+      - MERCURE_PUBLISH_URL=http://mercure:8080/.well-known/mercure
+      - MERCURE_JWT_SECRET="ChangeMeChangeMeChangeMeChangeMe"
+      - USE_FORWARDED_HEADERS=1
+    env_file:
+      - ./.env.docker
+    depends_on:
+      - db
+    volumes:
+      - shared:/var/www/meals/public/
+    external_links:
+      - mailhog
+
+  db:
+    image: "mysql:5.7"
+    command: --sql-mode="STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"
+    healthcheck:
+      test: out=$$(mysqladmin ping -h localhost -P 3306 -u db --password=db 2>&1); echo $$out | grep 'mysqld is alive' || { echo $$out; exit 1; }
+    environment:
+      - MYSQL_ROOT_PASSWORD=db
+      - MYSQL_DATABASE=db_test
+      - MYSQL_USER=db
+      - MYSQL_PASSWORD=db
+
+  nginx:
+    image: nginx:latest
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - shared:/var/www/meals/public
+      - ./default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+
+  mercure:
+    image: dunglas/mercure:v0.14
+    restart: unless-stopped
+    environment:
+      MERCURE_ALLOWED_ORIGINS: http://localhost
+      MERCURE_ALLOWED_PUBLISH_ORIGINS: app
+      MERCURE_PUBLISHER_JWT_ALG: HS256
+      MERCURE_PUBLISHER_JWT_KEY: testing-testing-testing-testing!
+      MERCURE_SUBSCRIBER_JWT_ALG: HS256
+      MERCURE_SUBSCRIBER_JWT_KEY: testing-testing-testing-testing!
+      HTTP_EXPOSE: '8080:8080'
+      SERVER_ADDRESS: 'http://localhost:8080, http://localhost:8080'
+      SERVER_NAME: ":80"
+    ports:
+      - 8080:80
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+      - ./.ddev/caddy/Caddyfile.dev:/etc/caddy/Caddyfile
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    restart: always
+    container_name: mailhog
+    # logging:
+    #   driver: 'none'  # disable saving logs
+    ports:
+      - 1025:1025 # smtp server
+      - 8025:8025 # web ui
+    environment:
+      - MH_HOSTNAME=mailhog
+
+volumes:
+  shared:
+    driver: local
+  caddy_data:
+  caddy_config:

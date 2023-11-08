@@ -1,7 +1,6 @@
 describe('Test CashRegister', () => {
     beforeEach(() => {
         cy.resetDB();
-        cy.setCookie('locale', 'de');
         cy.loginAs('kochomi');
         cy.visitMeals();
 
@@ -11,14 +10,11 @@ describe('Test CashRegister', () => {
     });
 
     it('should be able to navigate to the cash register', () => {
-        cy.visit('/costs');
+        cy.get('span > a').contains('Kosten').click({ force: true });
 
         cy.wait('@getCosts');
 
-        // Hide Symphony's toolbar
-        cy.get('a[class="hide-button"]').click();
-
-        cy.get('span').contains('Kasse').click();
+        cy.get('span').contains('Kasse').click({ force: true });
 
         cy.wait('@getBook');
 

@@ -176,11 +176,6 @@ class Link
             ], $referenceType);
         }
 
-        #if ('edit' === $action || 'delete' === $action) {
-            // admin actions
-        #    return $this->router->generate('MealzMealBundle_Event_' . $action, ['event' => $eventParticipation->getId()], $referenceType);
-        #}
-
-        throw new \InvalidArgumentException(sprintf('linking to "%s" action on a %s object is not configured.', $action, get_class($event)));
+        throw new \InvalidArgumentException(sprintf('linking to "%s" action on a %s object is not configured.', $action, get_class($eventParticipation)));
     }
 }

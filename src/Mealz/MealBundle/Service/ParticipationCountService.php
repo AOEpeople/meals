@@ -94,7 +94,6 @@ class ParticipationCountService
                 self::setParticipationForDish($meal, $participation);
             }
 
-
             $participation[self::PARTICIPATION_COUNT_KEY][$meal->getId()][$meal->getDish()->getSlug()][self::COUNT_KEY] = $meal->getParticipants()->count();
             $participation[self::PARTICIPATION_COUNT_KEY][$meal->getId()][$meal->getDish()->getSlug()][self::LIMIT_KEY] = 0.0;
         }

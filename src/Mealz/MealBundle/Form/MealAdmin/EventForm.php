@@ -35,7 +35,7 @@ class EventForm extends AbstractType
             ]);
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, static function (FormEvent $formEvent) {
-            /** @var Event|null $event */
+            /** @var EventParticipation|null $event */
             $event = $formEvent->getData();
 
             if (null === $event) {

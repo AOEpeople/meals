@@ -74,11 +74,11 @@ class ParticipationService
      *
      * @throws ParticipationException
      */
-    public function joinEvent(Profile $profile, EventParticipation $eventParticipation, Day $day, array $eventSlugs = []): ?array
+    public function joinEvent(Profile $profile, EventParticipation $eventParticipation): ?array
     {
         // self joining by user
         if ($this->doorman->isUserAllowedToJoinEvent($eventParticipation)) {
-            $participant = $this->createEvent($profile, $eventParticipation, $day, $eventSlugs);
+            $participant = $this->createEvent($profile, $eventParticipation);
 
             return ['participant' => $participant, 'offerer' => null];
         }
@@ -170,9 +170,9 @@ class ParticipationService
      *
      * @throws ParticipationException
      */
-    private function createEvent(Profile $profile, EventParticipation $eventParticipation, Day $day, array $eventSlugs = []): ?Participant
+    private function createEvent(Profile $profile, EventParticipation $eventParticipation): ?Participant
     {
-        $participant = $this->createEventParticipation($profile, $eventParticipation, $day, $eventSlugs);
+        $participant = $this->createEventParticipation($profile, $eventParticipation);
 
         $this->em->persist($participant);
         $this->em->flush();

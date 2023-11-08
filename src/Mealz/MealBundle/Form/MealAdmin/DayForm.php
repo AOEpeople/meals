@@ -7,8 +7,8 @@ namespace App\Mealz\MealBundle\Form\MealAdmin;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\EventParticipation;
 use App\Mealz\MealBundle\Form\Type\EntityHiddenType;
-use App\Mealz\MealBundle\Repository\EventRepositoryInterface;
 use App\Mealz\MealBundle\Repository\EventParticipationRepositoryInterface;
+use App\Mealz\MealBundle\Repository\EventRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -26,13 +26,13 @@ class DayForm extends AbstractType
 
     protected EventRepositoryInterface $eventRepository;
 
-    protected EventParticipationRepositoryInterface $eventParticipationRepository;
+    protected EventParticipationRepositoryInterface $eventPartRepository;
 
-    public function __construct(EntityManagerInterface $entityManager, EventRepositoryInterface $eventRepository, EventParticipationRepositoryInterface $eventParticipationRepository)
+    public function __construct(EntityManagerInterface $entityManager, EventRepositoryInterface $eventRepository, EventParticipationRepositoryInterface $eventPartRepository)
     {
         $this->entityManager = $entityManager;
         $this->eventRepository = $eventRepository;
-        $this->eventParticipationRepository = $eventParticipationRepository;
+        $this->eventPartRepository = $eventPartRepository;
     }
 
     /**
@@ -86,10 +86,10 @@ class DayForm extends AbstractType
             if (!empty($data['event'])) {
                 $day = $formEvent->getForm()->getData();
                 $event = $this->eventRepository->find($data['event']);
-                $eventParticipation = $this->eventParticipationRepository->findByEventAndDay($day, $event);
+                $eventParticipation = $this->eventPartRepository->findByEventAndDay($day, $event);
                 if (null === $eventParticipation) {
                     $eventParticipation = new EventParticipation($day, $event);
-                    $this->eventParticipationRepository->add($eventParticipation);
+                    $this->eventPartRepository->add($eventParticipation);
                 }
                 $data['event'] = $eventParticipation->getId();
                 $formEvent->setData($data);

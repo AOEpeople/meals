@@ -139,9 +139,7 @@ class MealController extends BaseController
      * @Security("is_granted('ROLE_USER')")
      */
     public function joinEvent(
-        Request $request,
         DateTime $date,
-        string $event,
         ?string $profile,
         DayRepositoryInterface $dayRepo,
         ParticipationService $participationSrv,
@@ -158,10 +156,8 @@ class MealController extends BaseController
             return new JsonResponse(null, 404);
         }
 
-        $eventSlugs = $request->request->get('events', []);
-
         try {
-            $result = $participationSrv->joinEvent($userProfile, $eventParticipation, $day, $eventSlugs);
+            $result = $participationSrv->joinEvent($userProfile, $eventParticipation);
         } catch (Exception $e) {
             $this->logException($e);
 

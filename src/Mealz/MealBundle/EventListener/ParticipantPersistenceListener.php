@@ -60,7 +60,6 @@ class ParticipantPersistenceListener
             $query->setParameter('meal', $participant->getMeal()->getId());
             $query->setParameter('profile', $participant->getProfile()->getUsername());
             $query->useResultCache(false);
-
         } elseif (null !== $participant->getEvent()) {
             $queryBuilder
                 ->select('COUNT(p.id)')

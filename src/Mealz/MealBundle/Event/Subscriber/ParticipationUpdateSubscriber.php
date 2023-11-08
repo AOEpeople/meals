@@ -64,11 +64,10 @@ class ParticipationUpdateSubscriber implements EventSubscriberInterface
         }
 
         if (null !== $eventParticipation) {
-
             $participationCount = $this->participationSrv->getCountByEvent($eventParticipation);
 
             $data[$eventParticipation->getId()] = [
-                'count' => $participationCount ?? 0,
+                'count' => $participationCount,
                 'locked' => false,
                 'available' => true,
             ];

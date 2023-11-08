@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Service;
 
-use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\EventParticipation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
@@ -121,7 +120,7 @@ trait ParticipationServiceTrait
     /**
      * @throws ParticipationException
      */
-    private function createEventParticipation(Profile $profile, EventParticipation $eventParticipation, Day $day, array $eventSlugs = []): Participant
+    private function createEventParticipation(Profile $profile, EventParticipation $eventParticipation): Participant
     {
         return new Participant($profile, null, $eventParticipation);
     }

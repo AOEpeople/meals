@@ -38,4 +38,5 @@
   <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Mealz/MealBundle/Command/KeepAliveConnectionCommand.php"/>
   <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Mealz/MealBundle/Event/Subscriber/KeepAliveConnectionSubscriber.php"/>
   <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Form/MealAdmin/DayForm.php"/>
+  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Mealz/MealBundle/Service/ParticipationService.php"/>
 </phpmd-baseline>

@@ -8,8 +8,6 @@ use App\Mealz\UserBundle\Entity\Profile;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Defines a event participation.
@@ -43,7 +41,6 @@ class EventParticipation
      */
     public ?Collection $participants = null;
 
-
     public function __construct(Day $day, Event $event, ?Collection $participants = null)
     {
         $this->day = $day;
@@ -51,7 +48,7 @@ class EventParticipation
         $this->participants = $participants;
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

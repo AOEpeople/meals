@@ -16,21 +16,36 @@ security:
         database:
             entity: { class: App\Mealz\UserBundle\Entity\Login, property: username }
 
+        # all_users:
+        #     chain:
+        #         providers: [oauth_user_provider, database]
+
     firewalls:
         assets:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
         # disable, i.e. comment out the complete 'dev' firewall config to use oauth authenticator on devbox
-        dev:
-            host: ^meals\.test$
-            provider: database
+        classic:
+            # host: ^meals\.test$
+            # provider: all_users
             anonymous: lazy
+            oauth:
+                provider: oauth_user_provider
+                resource_owners:
+                    meals: meals_login
+                login_path: /connect/meals
+                use_forward: true
+                failure_path: /connect/meals
+                oauth_user_provider:
+                    service: mealz.oauthuserprovider
             json_login:
+                provider: database
                 check_path: /api/login
             logout:
                 path: MealzUserBundle_logout
                 target: /
+                success_handler: App\Mealz\UserBundle\Provider\LogoutSuccessHandler
 
         main:
             provider: oauth_user_provider
@@ -49,11 +64,6 @@ security:
                 # where to redirect after logout
                 target: /
                 success_handler: App\Mealz\UserBundle\Provider\LogoutSuccessHandler
-
-        # classic:
-        #     anonymous: lazy
-        #     json_login:
-        #         check_path: /api/login
 
         # activate different ways to authenticate
         # https://symfony.com/doc/current/security.html#firewalls-authentication
@@ -91,4 +101,4 @@ security:
         - { path: ^/css, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/js, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/images, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
-        - { path: ^/, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/, roles: ['%env(resolve:APP_AUTH_MODE)%'] }

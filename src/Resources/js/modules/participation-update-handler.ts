@@ -32,6 +32,7 @@ export interface ParticipationUpdateData {
     available: boolean;
     availableWith?: string[];
     locked: boolean;
+    event: boolean;
 }
 
 interface CheckboxAttributes {
@@ -76,6 +77,8 @@ export class ParticipationUpdateHandler {
 
     public static updateParticipation(data: ParticipationUpdateData[]) {
         for (const [mealId, update] of Object.entries(data)) {
+            let $isEvent = update.event;
+
             let $checkbox = $(`div[data-id=${mealId}] input[type=checkbox]`);
             if (1 > $checkbox.length) {
                 console.error(`checkbox not found, mealId: ${mealId}`);
@@ -88,7 +91,7 @@ export class ParticipationUpdateHandler {
                 update.available,
                 update.locked
             );
-            const [action, url] = ParticipationUpdateHandler.stateToAction($checkbox, state);
+            const [action, url] = ParticipationUpdateHandler.stateToAction($checkbox, state, $isEvent);
             ParticipationUpdateHandler.updateStatus($checkbox, {
                 state: state,
                 count: update.count,
@@ -291,6 +294,34 @@ export class ParticipationUpdateHandler {
         return '';
     }
 
+    private static getEventURL($checkbox: JQuery, action: string): string {
+        if ('join' === action) {
+            const date = MealService.getDate($checkbox);
+            if (null === date) {
+                return '';
+            }
+
+            const slug = MealService.getDishSlug($checkbox);
+            if (null === slug) {
+                return '';
+            }
+
+            return `/event/${date}/${slug}/join`;
+        }
+
+        const participantId = MealService.getParticipantId($checkbox);
+        if (null === participantId) {
+            return '';
+        }
+
+        switch (action) {
+            case 'delete':
+                return `/event/${participantId}/delete`;
+        }
+
+        return '';
+    }
+
     /**
      * @param $checkbox Meal Checkbox
      * @param check     Weather or not the meal checkbox be checked
@@ -442,13 +473,19 @@ export class ParticipationUpdateHandler {
     /**
      * Returns the (next) action and corresponding request URL to the given meal state.
      */
-    private static stateToAction($checkbox: JQuery, state: State): string[] {
+    private static stateToAction($checkbox: JQuery, state: State, $isEvent: boolean): string[] {
         switch (state) {
             case State.OPEN:
+                if ($isEvent) {
+                    return ['join', ParticipationUpdateHandler.getEventURL($checkbox, 'join')];
+                }
                 return ['join', ParticipationUpdateHandler.getURL($checkbox, 'join')];
             case State.CLOSED:
                 return [null, ''];
             case State.BOOKED:
+                if ($isEvent) {
+                    return ['delete', ParticipationUpdateHandler.getEventURL($checkbox, 'delete')];
+                }
                 return ['delete', ParticipationUpdateHandler.getURL($checkbox, 'delete')];
             case State.OFFERED:
                 return ['rollbackOffer', ParticipationUpdateHandler.getURL($checkbox, 'rollbackOffer')];

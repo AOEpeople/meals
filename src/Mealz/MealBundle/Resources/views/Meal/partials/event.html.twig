@@ -1,7 +1,7 @@
 
 {% set participant = eventParticipation.getParticipant(app.user.profile) %}
 
-<div class="meal-row event" data-slug="{{ eventParticipation.event.slug }}">
+<div class="meal-row event" data-slug="{{ eventParticipation.event.slug }}" data-participant-id="{{ participant ? participant.id }}">
     <div class="title no-description">
         {{ 'event.title'|trans({},'messages') }}: <span>{{- eventParticipation.event.title -}}</span>
     </div>

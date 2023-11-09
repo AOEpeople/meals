@@ -1,5 +1,14 @@
 # Changelog
 
+## Version v2.3.11 (2023-11-09)
+
+### Fixes
+
+- Fix migrations (d4fd031e)
+- Fix migrations (031bf540)
+- Fix migration (b50f4ad6)
+- Fix migration (1818f473)
+
 ## Version v2.3.10 (2023-11-08)
 
 ### Fixes

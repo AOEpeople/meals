@@ -58,7 +58,7 @@ MealzMealBundle_Event_join:
         date: '^\d{4}-\d{2}-\d{2}$'
 
 MealzMealBundle_Event_Participant_delete:
-    path:  /menu/event/{participant}/delete
+    path:  /event/{participant}/delete
     defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::deleteEvent }
 
 MealzMealBundle_Slot:

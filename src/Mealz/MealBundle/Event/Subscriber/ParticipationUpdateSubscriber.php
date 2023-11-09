@@ -70,6 +70,7 @@ class ParticipationUpdateSubscriber implements EventSubscriberInterface
                 'count' => $participationCount,
                 'locked' => false,
                 'available' => true,
+                'event' => true,
             ];
 
             $this->publisher->publish(self::PUBLISH_TOPIC, $data, self::PUBLISH_MSG_TYPE);
@@ -101,6 +102,7 @@ class ParticipationUpdateSubscriber implements EventSubscriberInterface
                 'count' => $participationCount[$mealId] ?? 0,
                 'locked' => $meal->isLocked(),
                 'available' => false,
+                'event' => false,
             ];
 
             if (is_array($mealAvailability) && $mealAvailability['available']) {

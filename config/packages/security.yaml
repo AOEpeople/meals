@@ -1,3 +1,6 @@
+# oauth: &oauth "ROLE_USER"
+# classic: &classic "IS_AUTHENTICATED_ANONYMOUSLY"
+
 security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
 
@@ -26,9 +29,20 @@ security:
             security: false
 
         # disable, i.e. comment out the complete 'dev' firewall config to use oauth authenticator on devbox
-        classic:
+        # dev:
             # host: ^meals\.test$
             # provider: all_users
+            # host: ^meals\.test$
+            # provider: database
+            # anonymous: lazy
+            # form_login:
+            #     login_path: /login
+            #     check_path: /login
+            # logout:
+            #     path: MealzUserBundle_logout
+            #     target: /
+
+        main:
             anonymous: lazy
             oauth:
                 provider: oauth_user_provider
@@ -44,24 +58,6 @@ security:
                 check_path: /api/login
             logout:
                 path: MealzUserBundle_logout
-                target: /
-                success_handler: App\Mealz\UserBundle\Provider\LogoutSuccessHandler
-
-        main:
-            provider: oauth_user_provider
-            anonymous: lazy
-            oauth:
-                resource_owners:
-                    meals: meals_login
-                login_path: /connect/meals
-                use_forward: true
-                failure_path: /connect/meals
-
-                oauth_user_provider:
-                    service: mealz.oauthuserprovider
-            logout:
-                path: MealzUserBundle_logout
-                # where to redirect after logout
                 target: /
                 success_handler: App\Mealz\UserBundle\Provider\LogoutSuccessHandler
 
@@ -84,7 +80,8 @@ security:
     # Anonymous access will only work if enabled in authentication listener
     # config, e.g. anonymous: ~, anonymous: lazy
     access_control:
-        - { path: ^/login, roles: [IS_AUTHENTICATED_ANONYMOUSLY], host: ^meals\.test$ }
+        - { path: ^/login, roles: ['%env(resolve:APP_AUTH_MODE)%'] }
+        - { path: ^/api/login, roles: ['%env(resolve:APP_AUTH_MODE)%'] }
         - { path: ^/connect, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/guest, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/guest/api/dashboard, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }

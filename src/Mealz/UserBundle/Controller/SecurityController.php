@@ -2,6 +2,7 @@
 
 namespace App\Mealz\UserBundle\Controller;
 
+use Error;
 use HWI\Bundle\OAuthBundle\Security\Core\Authentication\Token\OAuthToken;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,6 +26,7 @@ class SecurityController extends AbstractController
             $error = $request->attributes->get(
                 Security::AUTHENTICATION_ERROR
             );
+            throw new Error($error);
         } else {
             $error = $session->get(Security::AUTHENTICATION_ERROR);
             $session->remove(Security::AUTHENTICATION_ERROR);

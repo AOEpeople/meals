@@ -95,7 +95,8 @@ export const visitMeals = () => {
   });
   // Hide Symphony's toolbar
   if (Cypress.env('ddev_test')) {
-    cy.get('a[class="hide-button"]').click();
+    cy.wait(500)
+    cy.get('a[class="hide-button"]').click({ force: true });
   }
 };
 

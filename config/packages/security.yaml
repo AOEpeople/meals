@@ -1,6 +1,3 @@
-# oauth: &oauth "ROLE_USER"
-# classic: &classic "IS_AUTHENTICATED_ANONYMOUSLY"
-
 security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
 
@@ -80,8 +77,8 @@ security:
     # Anonymous access will only work if enabled in authentication listener
     # config, e.g. anonymous: ~, anonymous: lazy
     access_control:
-        - { path: ^/login, roles: ['%env(resolve:APP_AUTH_MODE)%'] }
-        - { path: ^/api/login, roles: ['%env(resolve:APP_AUTH_MODE)%'] }
+        - { path: ^/login, roles: ['%env(auth-mode:APP_AUTH_MODE)%'] }
+        - { path: ^/api/login, roles: ['%env(auth-mode:APP_AUTH_MODE)%'] }
         - { path: ^/connect, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/guest, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/guest/api/dashboard, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
@@ -98,4 +95,4 @@ security:
         - { path: ^/css, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/js, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/images, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
-        - { path: ^/, roles: ['%env(resolve:APP_AUTH_MODE)%'] }
+        - { path: ^/, roles: ['%env(auth-mode:APP_AUTH_MODE)%'] }

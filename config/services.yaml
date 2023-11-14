@@ -67,6 +67,9 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
+    App\Mealz\AuthenticationEnvVarProcessor:
+        tags: ['container.env_var_processor']
+
     # define handler service to store and manage sessions in database
     session.handler.pdo:
         class:     Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler

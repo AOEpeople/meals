@@ -14,7 +14,7 @@ class AuthenticationEnvVarProcessor implements EnvVarProcessorInterface
 
         $env = $getEnv($name);
 
-        switch($env) {
+        switch ($env) {
             case 'oauth':
                 return 'ROLE_USER';
             default:

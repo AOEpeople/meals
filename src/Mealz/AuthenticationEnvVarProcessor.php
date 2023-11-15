@@ -8,12 +8,17 @@ class AuthenticationEnvVarProcessor implements EnvVarProcessorInterface
 {
     public function getEnv($prefix, $name, \Closure $getEnv)
     {
+        if ('auth-mode' !== $prefix) {
+            return;
+        }
+
         $env = $getEnv($name);
 
-        if ('auth-mode' === $prefix && 'oauth' === $env) {
-            return 'ROLE_USER';
-        } elseif ('auth-mode' === $prefix) {
-            return 'IS_AUTHENTICATED_ANONYMOUSLY';
+        switch($env) {
+            case 'oauth':
+                return 'ROLE_USER';
+            default:
+                return 'IS_AUTHENTICATED_ANONYMOUSLY';
         }
     }
 

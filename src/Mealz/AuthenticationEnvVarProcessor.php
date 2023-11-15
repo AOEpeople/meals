@@ -12,7 +12,7 @@ class AuthenticationEnvVarProcessor implements EnvVarProcessorInterface
 
         if ('auth-mode' === $prefix && 'oauth' === $env) {
             return 'ROLE_USER';
-        } else if ('auth-mode' === $prefix) {
+        } elseif ('auth-mode' === $prefix) {
             return 'IS_AUTHENTICATED_ANONYMOUSLY';
         }
     }

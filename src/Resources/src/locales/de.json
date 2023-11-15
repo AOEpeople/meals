@@ -212,6 +212,7 @@
     "logged_in_text": "Eingeloggt als",
     "balance": "Kontostand"
   },
+  "login": "Einloggen",
   "logout": "Ausloggen",
   "menu": {
     "list": "Liste der Wochen",
@@ -252,7 +253,9 @@
   "participantList": {
     "no_meals": "Heute kein Essen"
   },
+  "password": "Passwort",
   "popup": {
     "processing": "Die Anfrage wird bearbeitet"
-  }
+  },
+  "username": "Nutzername"
 }

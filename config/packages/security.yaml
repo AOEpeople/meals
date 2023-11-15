@@ -22,39 +22,37 @@ security:
             security: false
 
         # disable, i.e. comment out the complete 'dev' firewall config to use oauth authenticator on devbox
-#        dev:
-#            host: ^meals\.test$
-#            provider: database
-#            anonymous: lazy
-#            form_login:
-#                login_path: /login
-#                check_path: /login
-#            logout:
-#                path: MealzUserBundle_logout
-#                target: /
+        # dev:
+            # host: ^meals\.test$
+            # provider: database
+            # anonymous: lazy
+            # form_login:
+            #     login_path: /login
+            #     check_path: /login
 
         main:
-            provider: oauth_user_provider
             anonymous: lazy
             oauth:
+                provider: oauth_user_provider
                 resource_owners:
                     meals: meals_login
                 login_path: /connect/meals
                 use_forward: true
                 failure_path: /connect/meals
-
                 oauth_user_provider:
                     service: mealz.oauthuserprovider
+            json_login:
+                provider: database
+                check_path: /api/login
             logout:
                 path: MealzUserBundle_logout
-                # where to redirect after logout
                 target: /
                 success_handler: App\Mealz\UserBundle\Provider\LogoutSuccessHandler
 
-            # activate different ways to authenticate
-            # https://symfony.com/doc/current/security.html#firewalls-authentication
+        # activate different ways to authenticate
+        # https://symfony.com/doc/current/security.html#firewalls-authentication
 
-            # https://symfony.com/doc/current/security/impersonating_user.html
+        # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
 
     # Define role compositions, e.g. role ROLE_KITCHEN_STAFF includes ROLE_USER role
@@ -70,7 +68,8 @@ security:
     # Anonymous access will only work if enabled in authentication listener
     # config, e.g. anonymous: ~, anonymous: lazy
     access_control:
-        - { path: ^/login, roles: [IS_AUTHENTICATED_ANONYMOUSLY], host: ^meals\.test$ }
+        - { path: ^/login, roles: ['%env(auth-mode:APP_AUTH_MODE)%'] }
+        - { path: ^/api/login, roles: ['%env(auth-mode:APP_AUTH_MODE)%'] }
         - { path: ^/connect, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/guest, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/guest/api/dashboard, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
@@ -87,4 +86,4 @@ security:
         - { path: ^/css, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/js, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/images, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
-        - { path: ^/, roles: [ROLE_USER] }
+        - { path: ^/, roles: ['%env(auth-mode:APP_AUTH_MODE)%'] }

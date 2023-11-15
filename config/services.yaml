@@ -11,6 +11,7 @@ parameters:
     app.email.sender: '%env(resolve:APP_EMAIL_SENDER)%'
     app.email.settlement_request.receiver: '%env(SETTLEMENT_REQ_EMAIL_RECEIVER)%'
 
+    app.auth.mode: 'oauth'
     # default period for counting a dish consumption; specified as format used by PHP date() function
     app.dish_consumption_count_period: '4 weeks ago'
 
@@ -65,6 +66,9 @@ services:
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    App\Mealz\AuthenticationEnvVarProcessor:
+        tags: ['container.env_var_processor']
 
     # define handler service to store and manage sessions in database
     session.handler.pdo:

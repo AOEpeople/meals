@@ -16,10 +16,6 @@ security:
         database:
             entity: { class: App\Mealz\UserBundle\Entity\Login, property: username }
 
-        # all_users:
-        #     chain:
-        #         providers: [oauth_user_provider, database]
-
     firewalls:
         assets:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -28,16 +24,11 @@ security:
         # disable, i.e. comment out the complete 'dev' firewall config to use oauth authenticator on devbox
         # dev:
             # host: ^meals\.test$
-            # provider: all_users
-            # host: ^meals\.test$
             # provider: database
             # anonymous: lazy
             # form_login:
             #     login_path: /login
             #     check_path: /login
-            # logout:
-            #     path: MealzUserBundle_logout
-            #     target: /
 
         main:
             anonymous: lazy

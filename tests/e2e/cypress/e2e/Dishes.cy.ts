@@ -215,10 +215,18 @@ describe('Test Dishes View', () => {
             .contains('Variation erstellen')
             .click();
         cy.get('h3').contains('Variation erstellen');
-        cy.get('input[placeholder="Deutscher Titel"]').type('TestVariation1234');
-        cy.get('input[placeholder="Englischer Titel"]').type('TestVariation1234');
-        cy.contains('input', 'Speichern').click({ force: true });
-        cy.wait(['@getDishes', '@postVariation']);
+        cy.get('input[placeholder="Deutscher Titel"]').type('TestVariation1234')
+            .invoke('val')
+            .then(val => {
+                expect(val).to.equal('TestVariation1234')
+            });
+        cy.get('input[placeholder="Englischer Titel"]').type('TestVariation1234')
+            .invoke('val')
+            .then(val => {
+                expect(val).to.equal('TestVariation1234')
+            });
+        cy.contains('input', 'Speichern').click();
+        cy.wait(['@getDishes']);
         cy.log('create variation');
         cy.get('[data-cy="msgClose"]').click();
 

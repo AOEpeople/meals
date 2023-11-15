@@ -34,47 +34,29 @@
 </template>
 
 <script setup lang="ts">
-import {onBeforeMount, ref} from 'vue';
+import {computed, ref} from 'vue';
 import {useI18n} from 'vue-i18n';
 import { DownloadIcon } from '@heroicons/vue/outline'
 import VueDatePicker from '@vuepic/vue-datepicker';
 import moment from 'moment/moment';
 
-const emit = defineEmits(['dateChanged', 'generatePdf'])
-const { t, locale } = useI18n()
-const date = ref()
-let minDate = '';
-let maxDate = '';
+const { t, locale } = useI18n();
+
+const emit = defineEmits(['dateChanged', 'generatePdf']);
 
 defineProps<{
   dateRange: string,
   showControls: boolean;
-}>()
+}>();
 
-onBeforeMount(() => {
-  minDate = getFirstDayPreviousMonth();
-  maxDate = getLastDayPreviousMonth();
-
-  date.value = [minDate, maxDate]
-})
+const minDate = ref(moment().subtract(1, 'months').startOf('month').format('MM-DD-YYYY'));
+const maxDate = ref(moment().subtract(1, 'months').endOf('month').format('MM-DD-YYYY'));
+const date = computed(() => [minDate.value, maxDate.value]);
 
 const handleDateChange = (modelData: Date[]) => {
-  minDate = moment(modelData[0]).format('MM-DD-YYYY');
-  maxDate = moment(modelData[1]).format('MM-DD-YYYY');
+  minDate.value = moment(modelData[0]).format('MM-DD-YYYY');
+  maxDate.value = moment(modelData[1]).format('MM-DD-YYYY');
 
   emit('dateChanged', modelData);
-}
-
-const getFirstDayPreviousMonth = () => {
-  return moment()
-  .subtract(1, 'months')
-  .startOf('month')
-  .format('MM-DD-YYYY')
-}
-const getLastDayPreviousMonth = () => {
-  return moment()
-  .subtract(1, 'months')
-  .endOf('month')
-  .format('MM-DD-YYYY')
 }
 </script>

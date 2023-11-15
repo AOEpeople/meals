@@ -149,7 +149,8 @@ The following roles are in use:
   * ROLE_FINANCE: for users who are from finance
 
 ### Login
-User authentication takes place using oauth with custom identity provider. To use it you must define the following env vars with correct values in `.env.local`:
+There are two possibilities for authentication. Either OAuth or a classic login via the database. The modes can be toggled with the `APP_AUTH_MODE` environment variable in `.env`.
+For User authentication using oauth with a custom identity provider you must define the following env vars with correct values in `.env.local`:
 
 ```shell
 IDP_SERVER=https://login.some-domain.com/

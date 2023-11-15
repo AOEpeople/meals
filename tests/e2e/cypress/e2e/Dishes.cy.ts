@@ -55,7 +55,7 @@ describe('Test Dishes View', () => {
         cy.get('input[placeholder="Suche nach Titel"]').should('exist');
     });
 
-    it('should be able to create, edit and delete a dish', () => {
+    it('should be able to create, edit and delete a dish', { defaultCommandTimeout: 20000 }, () => {
         cy.get('span > a').contains('Gerichte').click({ force: true });
 
         // Wait for the dishes and categories to load

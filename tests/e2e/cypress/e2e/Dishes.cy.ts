@@ -196,13 +196,24 @@ describe('Test Dishes View', () => {
         // Wait for the dishes and categories to load
         cy.wait(['@getDishes', '@getCategories']);
 
-        // Create a dish
-        cy.get('button').contains('+ Gericht erstellen').click({ force: true });
-        cy.get('input[placeholder="Deutscher Titel"]').type('TestGericht1234');
-        cy.get('input[placeholder="Englischer Titel"]').type('TestDish1234');
-        cy.contains('input', 'Speichern').click({ force: true });
+        // Create Dish
+        cy.get('button').contains('+ Gericht erstellen').click();
+        cy.wait(['@getCategories']);
+        cy.get('h3').contains('Neues Gericht erstellen');
+        cy.get('input[placeholder="Deutscher Titel"]').type('TestGericht1234')
+            .invoke('val')
+            .then(val => {
+                expect(val).to.equal('TestGericht1234')
+            });
+        cy.get('input[placeholder="Englischer Titel"]').type('TestDish1234')
+            .invoke('val')
+            .then(val => {
+                expect(val).to.equal('TestDish1234')
+            });
+        cy.contains('input', 'Speichern').click();
         cy.wait(['@getDishes']);
-        cy.log('create dish');
+        cy.log('created dish');
+        cy.get('[data-cy="msgClose"]').click();
 
         // Filter for the dish
         cy.get('input[placeholder="Suche nach Titel"]').type('TestGericht');

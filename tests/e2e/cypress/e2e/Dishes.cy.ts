@@ -70,7 +70,7 @@ describe('Test Dishes View', () => {
         cy.get('input[placeholder="Deutsche Beschreibung"]').type('TestBeschreibung1234');
         cy.get('input[placeholder="Englische Beschreibung"]').type('TestDescription1234');
         cy.get('label').contains('Dieses Gericht ist nicht teilbar').click({ force: true });
-        cy.contains('input', 'Speichern').click({ force: true });
+        cy.contains('input', 'Speichern').click();
         cy.wait(['@getDishes'], { requestTimeout: 20000 });
         cy.log('created dish');
 

@@ -10,7 +10,6 @@
       :clearable="false"
       :format="locale === 'de' ? 'dd.MM.yyyy' : 'MM/dd/yyyy'"
       auto-apply
-      @update:model-value="handleDateChange"
     />
   </div>
   <div class="grid grid-rows-1 items-center xl:my-[24px] xl:grid-cols-2">
@@ -51,12 +50,16 @@ defineProps<{
 
 const minDate = ref(moment().subtract(1, 'months').startOf('month').format('MM-DD-YYYY'));
 const maxDate = ref(moment().subtract(1, 'months').endOf('month').format('MM-DD-YYYY'));
-const date = computed(() => [minDate.value, maxDate.value]);
 
-const handleDateChange = (modelData: Date[]) => {
-  minDate.value = moment(modelData[0]).format('MM-DD-YYYY');
-  maxDate.value = moment(modelData[1]).format('MM-DD-YYYY');
+const date = computed({
+  get() {
+    return [minDate.value, maxDate.value];
+  },
+  set(value) {
+    minDate.value = moment(value[0]).format('MM-DD-YYYY');
+    maxDate.value = moment(value[1]).format('MM-DD-YYYY');
 
-  emit('dateChanged', modelData);
-}
+    emit('dateChanged', value);
+  }
+});
 </script>

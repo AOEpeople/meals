@@ -55,7 +55,7 @@ describe('Test Dishes View', () => {
         cy.get('input[placeholder="Suche nach Titel"]').should('exist');
     });
 
-    it('should be able to create, edit and delete a dish', { defaultCommandTimeout: 20000 }, () => {
+    it('should be able to create, edit and delete a dish', () => {
         cy.get('span > a').contains('Gerichte').click({ force: true });
 
         // Wait for the dishes and categories to load
@@ -71,7 +71,7 @@ describe('Test Dishes View', () => {
         cy.get('input[placeholder="Englische Beschreibung"]').type('TestDescription1234');
         cy.get('label').contains('Dieses Gericht ist nicht teilbar').click({ force: true });
         cy.contains('input', 'Speichern').click({ force: true });
-        cy.wait(['@getDishes']);
+        cy.wait(['@getDishes'], { requestTimeout: 20000 });
         cy.log('created dish');
 
         // Verify that the dish was created

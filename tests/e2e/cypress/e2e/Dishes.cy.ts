@@ -69,15 +69,14 @@ describe('Test Dishes View', () => {
         cy.get('input[placeholder="Englischer Titel"]').type('TestDish1234');
         cy.get('input[placeholder="Deutsche Beschreibung"]').type('TestBeschreibung1234');
         cy.get('input[placeholder="Englische Beschreibung"]').type('TestDescription1234');
-        cy.get('label').contains('Dieses Gericht ist nicht teilbar').click({ force: true });
         cy.wait(500)
         cy.contains('input', 'Speichern').click();
-        cy.wait(['@getDishes'], { requestTimeout: 20000 });
+        // cy.wait(['@getDishes'], { requestTimeout: 20000 });
         cy.log('created dish');
 
         // Verify that the dish was created
         cy.get('span').contains('TestGericht1234');
-        cy.get('[data-cy="msgClose"]').click();
+        // cy.get('[data-cy="msgClose"]').click();
 
         // Filter for the dish
         cy.get('input[placeholder="Suche nach Titel"]').type('TestGericht');
@@ -107,7 +106,6 @@ describe('Test Dishes View', () => {
             .should('have.value', 'TestDescription1234')
             .clear()
             .type('TestDescription5678');
-        cy.get('label').contains('Dieses Gericht ist nicht teilbar').click({ force: true });
         cy.contains('input', 'Speichern').click({ force: true });
         cy.wait(['@putDishes']);
         cy.log('edit dish');

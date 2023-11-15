@@ -201,7 +201,7 @@ describe('Test Dishes View', () => {
         cy.get('input[placeholder="Deutscher Titel"]').type('TestGericht1234');
         cy.get('input[placeholder="Englischer Titel"]').type('TestDish1234');
         cy.contains('input', 'Speichern').click({ force: true });
-        cy.wait(['@getDishes', '@postDishes']);
+        cy.wait(['@getDishes']);
         cy.log('create dish');
 
         // Filter for the dish

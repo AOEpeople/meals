@@ -38,6 +38,7 @@ import { useI18n } from 'vue-i18n';
 import { useParticipations } from '@/stores/participationsStore';
 import InputLabel from '@/components/misc/InputLabel.vue';
 import { ref, watch } from 'vue';
+import { refThrottled } from '@vueuse/core';
 
 const props = defineProps<{
   week: string;
@@ -47,9 +48,10 @@ const { t } = useI18n();
 const { addEmptyParticipationToState, setFilter } = useParticipations(parseInt(props.week));
 
 const participantFilter = ref('');
+const filter = refThrottled(participantFilter, 1000);
 
 watch(
-  () => participantFilter.value,
+  () => filter.value,
   () => {
     setFilter(participantFilter.value);
   }

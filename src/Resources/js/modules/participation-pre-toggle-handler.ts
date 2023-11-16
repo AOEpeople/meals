@@ -112,8 +112,12 @@ export class ParticipationPreToggleHandler {
         let self = this;
         let $dishContainer = $checkbox.closest('.meal-row');
         let $mealContainer = $dishContainer.closest('.meal');
+        let $slotSlug = '';
 
-        const slotSlug: string = $mealContainer.find('.slot-selector').val().toString();
+        if (0 !== $mealContainer.find('.slot-selector').length) {
+            $slotSlug = $mealContainer.find('.slot-selector').val().toString();
+        }
+
         const title = $dishContainer.find('.title').text();
         const dishes = CombinedMealService.getDishes($mealContainer);
         const $bookedDishIDs = this.getBookedDishSlugs($dishContainer);
@@ -121,7 +125,7 @@ export class ParticipationPreToggleHandler {
             title,
             dishes,
             $bookedDishIDs,
-            slotSlug,
+            $slotSlug,
             {
                 ok: function (data) {
                     self.participationToggleHandler.toggle($checkbox, data);

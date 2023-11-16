@@ -1,5 +1,16 @@
 # Changelog
 
+## Version v2.3.12 (2023-11-16)
+
+### Fixes
+
+- [BUGFIX] combined meal booking (4fb1d6c9)
+
+### Other
+
+- Bump symfony/twig-bridge from 4.4.49 to 4.4.51 (1529c9fb)
+- Load date fixture events (3f5723b0)
+
 ## Version v2.3.11 (2023-11-09)
 
 ### Fixes

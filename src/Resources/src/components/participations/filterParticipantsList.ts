@@ -1,29 +1,68 @@
-import { usePrintableListData } from "@/api/getPrintableListData";
-import { computed } from "vue";
+import { computed, reactive } from "vue";
 
-export function filterParticipantsList(filterString: string, date: string){
+interface ParticipantState {
+  participants: string[],
+  filter: string,
+  isLoading: boolean,
+  error: string
+}
 
-  const { listData } = usePrintableListData(date);
+export interface Participant {
+  name: string
+}
 
-  const filteredParticipants = computed(() => {
-    let filteredList: any[] = [];
-    return listData.data.filter(participant => (participantsContainString(participant, filterString);
+export function filterParticipantsList(date: string){
+
+  //const { listData } = usePrintableListData(date);
+  const fruits: string[] = ['Apple', 'Orange', 'Banana'];
+
+
+  function setFilter(filterStr: string) {
+    listData.filter = filterStr;
+    console.log(filteredParticipants);
+  }
+
+  const listData  = reactive<ParticipantState>({
+    participants: fruits,
+    filter: '',
+    isLoading: false,
+    error: ''
   });
 
-  function participantsContainString(participant: Participant) {
+  // const filteredNames = computed(() => {
+  //   const filteredList: any[] = [];
+
+  //   listData.participants.forEach((item) => {
+  //     if (
+  //       item.startsWith(filterString)
+  //     ) {
+  //       filteredList.push(item);
+  //     }
+  //   });
+
+  //   return filteredList;
+  // });
+
+  const filteredParticipants = computed(() => {
+    console.log(listData.participants);
+    // let filteredList: any[] = [];
+    // listData.forEach((fruits) => {}
+
+    // )
+    return listData.participants.filter(participant => (participantsContainString(participant, listData.filter)));
+  });
+
+
+  function participantsContainString(participant: string, filterInput: string) {
+    console.log(filterInput);
     return (
-      participant.participantName.toLowerCase().includes(filterString.toLowerCase())
+      participant.toLowerCase().includes(filterInput.toLowerCase())
     );
-}
-  //    return {
-  //     filteredList,
-  //     setFilter
-  //     filteredParticipants,
-  //    };
-  // });‚
+  }
+
+  return {
+      filteredParticipants,
+      setFilter
+  };
 
 }
-
-
-
-

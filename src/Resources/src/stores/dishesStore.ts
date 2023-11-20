@@ -1,16 +1,16 @@
-import getDishes from '@/api/getDishes';
-import { Ref, computed, reactive, readonly, watch } from 'vue';
-import postCreateDish, { CreateDishDTO } from '@/api/postCreateDish';
 import deleteDish from '@/api/deleteDish';
-import putDishUpdate from '@/api/putDishUpdate';
-import postCreateDishVariation, { CreateDishVariationDTO } from '@/api/postCreateDishVariation';
 import deleteDishVariation from '@/api/deleteDishVariation';
+import getDishes from '@/api/getDishes';
+import { isResponseArrayOkay, isResponseObjectOkay } from '@/api/isResponseOkay';
+import postCreateDish, { CreateDishDTO } from '@/api/postCreateDish';
+import postCreateDishVariation, { CreateDishVariationDTO } from '@/api/postCreateDishVariation';
+import putDishUpdate from '@/api/putDishUpdate';
 import putDishVariationUpdate from '@/api/putDishVariationUpdate';
-import { useCategories } from './categoriesStore';
-import { isMessage } from '@/interfaces/IMessage';
-import { isResponseObjectOkay, isResponseArrayOkay } from '@/api/isResponseOkay';
-import useFlashMessage from '@/services/useFlashMessage';
 import { FlashMessageType } from '@/enums/FlashMessage';
+import { isMessage } from '@/interfaces/IMessage';
+import useFlashMessage from '@/services/useFlashMessage';
+import { Ref, computed, reactive, readonly, watch } from 'vue';
+import { useCategories } from './categoriesStore';
 
 export interface Dish {
     id: number,

@@ -86,6 +86,7 @@ describe('Test Dishes View', () => {
 
         // Filter for the dish
         cy.get('input[placeholder="Suche nach Titel"]').type('TestGericht');
+        cy.wait(1100);
 
         // Edit Dish
         cy.get('span')
@@ -166,6 +167,7 @@ describe('Test Dishes View', () => {
 
         // Filter for a dish
         cy.get('input[placeholder="Suche nach Titel"]').type('TestGericht1234');
+        cy.wait(1100);
         cy.log('filtering for dish');
 
         // Verify that the dishes were filtered
@@ -217,6 +219,7 @@ describe('Test Dishes View', () => {
 
         // Filter for the dish
         cy.get('input[placeholder="Suche nach Titel"]').type('TestGericht');
+        cy.wait(1100);
 
         // Create a dish variation
         cy.get('span')

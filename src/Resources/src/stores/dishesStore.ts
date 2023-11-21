@@ -28,7 +28,6 @@ export interface Dish {
 
 interface DishesState {
     dishes: Dish[],
-    filter: string,
     isLoading: boolean,
     error: string
 }
@@ -52,7 +51,6 @@ const TIMEOUT_PERIOD = 10000;
 
 const DishesState = reactive<DishesState>({
     dishes: [],
-    filter: '',
     isLoading: false,
     error: ''
 });
@@ -343,12 +341,13 @@ export function useDishes() {
     function resetState() {
         DishesState.dishes = [];
         DishesState.error = '';
-        DishesState.filter = '';
         DishesState.isLoading = false;
+        filterState.value = '';
     }
 
     return {
         DishesState: readonly(DishesState),
+        filterState: readonly(filterState),
         filteredDishes,
         fetchDishes,
         createDish,

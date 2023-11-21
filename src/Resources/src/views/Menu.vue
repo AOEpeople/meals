@@ -125,7 +125,7 @@ async function handleSubmit() {
     await updateWeek(menu);
     setUpDaysAndEnabled();
   } else {
-    const weekId = await createWeek(new Date().getFullYear(), calendarWeek.value, menu);
+    const weekId = await createWeek(getWeekByCalendarWeek(calendarWeek.value).year, calendarWeek.value, menu);
     if (typeof(weekId) === 'number') {
       parseWeekId.value = weekId;
       await router.push({ name: 'Menu', params: { week: weekId, create: null }, force: true, replace: true });

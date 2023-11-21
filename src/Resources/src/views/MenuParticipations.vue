@@ -17,6 +17,7 @@
         v-model="participantFilter"
         :label-text="t('menu.search')"
         :label-visible="true"
+        :x-button-active="true"
         class="max-[650px]:row-start-2 min-[650px]:col-start-3"
       />
     </div>

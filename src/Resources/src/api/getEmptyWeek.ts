@@ -10,7 +10,7 @@ import { Week } from '@/stores/weeksStore';
 export default async function getEmptyWeek(year: number, calendarWeek: number) {
     const { error, request, response } = useApi<IMessage | Week>(
         'GET',
-        `api/weeks/${year}W${calendarWeek}`
+        `api/weeks/${year}W${calendarWeek.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false })}`
     );
 
     await request();

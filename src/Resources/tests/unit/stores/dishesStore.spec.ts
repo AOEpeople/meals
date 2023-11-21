@@ -61,7 +61,7 @@ const getMockedResponses = (method: string, url: string) => {
 useApi = jest.fn().mockImplementation((method: string, url: string) => getMockedResponses(method, url));
 
 describe('Test dishesStore', () => {
-    const { resetState, DishesState, fetchDishes, setFilter, filteredDishes, updateDish, getDishBySlug, getDishArrayBySlugs } = useDishes();
+    const { resetState, filterState, DishesState, fetchDishes, setFilter, filteredDishes, updateDish, getDishBySlug, getDishArrayBySlugs } = useDishes();
     const { fetchCategories } = useCategories();
 
     beforeAll(async () => {
@@ -76,7 +76,7 @@ describe('Test dishesStore', () => {
         expect(DishesState.dishes).toEqual([]);
         expect(DishesState.isLoading).toBeFalsy();
         expect(DishesState.error).toEqual('');
-        expect(DishesState.filter).toEqual('');
+        expect(filterState.value).toEqual('');
     });
 
     it('should contain data after fetching', async () => {
@@ -85,7 +85,7 @@ describe('Test dishesStore', () => {
         expect(DishesState.dishes).toEqual(Dishes);
         expect(DishesState.isLoading).toBeFalsy();
         expect(DishesState.error).toEqual('');
-        expect(DishesState.filter).toEqual('');
+        expect(filterState.value).toEqual('');
     });
 
     it('should contain data after fetching and filtering', async () => {
@@ -94,15 +94,19 @@ describe('Test dishesStore', () => {
         expect(filteredDishes.value).toEqual(DishesState.dishes);
 
         setFilter('testen');
+        await new Promise(r => setTimeout(r, 1100));
+
         expect(filteredDishes.value).toContainEqual(Dishes[0]);
         expect(filteredDishes.value).not.toContainEqual(Dishes[1]);
-        expect(DishesState.filter).toEqual('testen');
+        expect(filterState.value).toEqual('testen');
 
         setFilter('Fish (so juicy sweat)');
+        await new Promise(r => setTimeout(r, 1100));
         expect(filteredDishes.value).toContainEqual(Dishes[3]);
         expect(filteredDishes.value).not.toContainEqual(Dishes[0]);
 
         setFilter('Vegetarisch');
+        await new Promise(r => setTimeout(r, 1100));
         for(const dish of filteredDishes.value) {
             expect(dish.categoryId).toBe(5);
         }

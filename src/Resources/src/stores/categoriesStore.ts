@@ -1,4 +1,4 @@
-import { Ref, reactive, readonly, ref, watch } from 'vue';
+import { Ref, reactive, readonly, watch } from 'vue';
 import getCategoriesData from '@/api/getCategoriesData';
 import deleteCategory from '@/api/deleteCategory';
 import postCreateCategory from '@/api/postCreateCategory';

@@ -15,23 +15,9 @@
         >
           {{ t('dashboard.print') }}
         </DialogTitle>
-        <p>Filter: {{ filterInput }}</p>
-        <!-- <input
-          v-model="filterString"
-          :placeholder="t('costs.search')"
-          class="col-span-3 row-start-2 justify-self-center sm:col-span-1 sm:col-start-1 sm:justify-self-start min-[900px]:row-start-2"
-          @input="$emit('update:filterValue')"
-        > -->
-        <InputLabel
-          v-model="filterInput"
-          :label-text="t('dish.search')"
-          :label-visible="false"
-          class="col-span-3 row-start-2 justify-self-center sm:col-span-1 sm:col-start-1 sm:justify-self-start min-[900px]:row-start-2"
-        />
         <ParticipantsListByDay
           :date="date"
         />
-
         <div class="flex max-h-96 flex-row pt-4">
           <CancelButton
             :btn-text="t('combiModal.close')"
@@ -45,7 +31,6 @@
 </template>
 
 <script setup lang="ts">
-import InputLabel from '@/components/misc/InputLabel.vue';
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/vue';
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -65,12 +50,6 @@ const props = defineProps<{
 const emit = defineEmits(['closeDialog','update:modelValue','update:filterValue']);
 // const filterString = ref("");
 const { setFilter } = filterParticipantsList(props.date);
-const filterInput = ref('');
-
-watch(
-  () => filterInput.value,
-  () => setFilter(filterInput.value)
-);
 
 
 function closeParticipantsModal(doSubmit: boolean) {

@@ -41,3 +41,6 @@ node_modules
 
 /src/Resources/style/output.css
 /**/*.d.ts
+test_ci_cypress.sh
+src/Resources/style/output.css.map
+tests/e2e/cypress/e2e/FillDBWithStuff.cy.ts

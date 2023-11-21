@@ -49,7 +49,7 @@ export function filterParticipantsList(date: string){
     // listData.forEach((fruits) => {}
 
     // )
-    return listData.participants.filter(participant => (participantsContainString(participant, listData.filter)));
+    return listData.participants.filter(participant => participantsContainString(participant, listData.filter));
   });
 
 

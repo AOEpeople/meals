@@ -1,5 +1,5 @@
 import getDishes from '@/api/getDishes';
-import { Ref, computed, reactive, readonly, watch } from 'vue';
+import { Ref, computed, reactive, readonly, ref, watch } from 'vue';
 import postCreateDish, { CreateDishDTO } from '@/api/postCreateDish';
 import deleteDish from '@/api/deleteDish';
 import putDishUpdate from '@/api/putDishUpdate';
@@ -11,6 +11,7 @@ import { isMessage } from '@/interfaces/IMessage';
 import { isResponseObjectOkay, isResponseArrayOkay } from '@/api/isResponseOkay';
 import useFlashMessage from '@/services/useFlashMessage';
 import { FlashMessageType } from '@/enums/FlashMessage';
+import { refThrottled } from '@vueuse/core';
 
 export interface Dish {
     id: number,
@@ -27,7 +28,6 @@ export interface Dish {
 
 interface DishesState {
     dishes: Dish[],
-    filter: string,
     isLoading: boolean,
     error: string
 }
@@ -51,10 +51,12 @@ const TIMEOUT_PERIOD = 10000;
 
 const DishesState = reactive<DishesState>({
     dishes: [],
-    filter: '',
     isLoading: false,
     error: ''
 });
+
+const filterState = ref('')
+const dishFilter = refThrottled(filterState, 1000);
 
 const { sendFlashMessage } = useFlashMessage();
 
@@ -76,7 +78,8 @@ export function useDishes() {
      * Updates the string to filter for in the DishesState
      */
     function setFilter(filterStr: string) {
-        DishesState.filter = filterStr;
+        // DishesState.filter = filterStr;
+        filterState.value = filterStr;
     }
 
     /**
@@ -84,7 +87,7 @@ export function useDishes() {
      */
     const filteredDishes = computed(() => {
         const { getCategoryIdsByTitle } = useCategories();
-        return DishesState.dishes.filter(dish => (dishContainsString(dish, DishesState.filter) || getCategoryIdsByTitle(DishesState.filter).includes(dish.categoryId)) && dish.slug !== 'combined-dish');
+        return DishesState.dishes.filter(dish => (dishContainsString(dish, dishFilter.value) || getCategoryIdsByTitle(dishFilter.value).includes(dish.categoryId)) && dish.slug !== 'combined-dish');
     });
 
     /**
@@ -338,12 +341,13 @@ export function useDishes() {
     function resetState() {
         DishesState.dishes = [];
         DishesState.error = '';
-        DishesState.filter = '';
         DishesState.isLoading = false;
+        filterState.value = '';
     }
 
     return {
         DishesState: readonly(DishesState),
+        filterState: readonly(filterState),
         filteredDishes,
         fetchDishes,
         createDish,

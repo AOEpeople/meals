@@ -28,7 +28,7 @@
         />
       </div>
       <div
-        v-show="openProp"
+        v-if="openProp"
         class="absolute z-10 w-full"
       >
         <ComboboxOptions

@@ -15,7 +15,7 @@
         </template>
         <template #fallback>
           <LoadingSpinner
-            :loaded="true"
+            :loaded="false"
           />
         </template>
       </Suspense>

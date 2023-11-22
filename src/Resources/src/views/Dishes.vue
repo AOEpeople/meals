@@ -2,6 +2,7 @@
   <div class="mx-[5%] xl:mx-auto">
     <DishesHeader />
     <Table
+      v-if="loaded"
       :labels="[t('dish.table.title'), t('dish.table.category'), t('dish.table.actions')]"
     >
       <DishTableRow

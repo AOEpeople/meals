@@ -85,10 +85,9 @@ const props = defineProps<{
   guestData?: GuestDay | undefined
 }>();
 
-const day = props.guestData ? props.guestData.guestData : dashboardStore.getDay(props.weekID, props.dayID);
+const day = props.guestData ? props.guestData : dashboardStore.getDay(props.weekID, props.dayID);
 const weekday = computed(() => translateWeekday(day.date, locale));
 const emptyDay = Object.keys(day.meals).length === 0;
-
 </script>
 
 <style>

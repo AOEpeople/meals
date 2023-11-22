@@ -100,7 +100,7 @@ watch(
     selectedDishes.value.meals[mealKeys.value[0]] = dishSlugs.map(dishSlug => {
       return {
         dishSlug: dishSlug,
-        mealId: mealIds.length > 0 ? mealIds.pop() : null,
+        mealId: mealIds.length > 0 ? mealIds.shift() : null,
         participationLimit: getParticipationLimitFromModel(dishSlug, mealKeys.value[0])
       };
     });
@@ -117,7 +117,7 @@ watch(
     selectedDishes.value.meals[mealKeys.value[1]] = dishSlugs.map(dishSlug => {
       return {
         dishSlug: dishSlug,
-        mealId: mealIds.length > 0 ? mealIds.pop() : null,
+        mealId: mealIds.length > 0 ? mealIds.shift() : null,
         participationLimit: getParticipationLimitFromModel(dishSlug, mealKeys.value[1])
       };
     });

@@ -11,7 +11,7 @@ import { WeekDTO } from '@/interfaces/DayDTO';
 export default async function postCreateWeek(year: number, calendarWeek: number, week: WeekDTO) {
     const { error, request, response } = useApi<IMessage | number>(
         'POST',
-        `api/weeks/${year}W${calendarWeek}`,
+        `api/weeks/${year}W${calendarWeek.toLocaleString('en-US', { minimumIntegerDigits: 2, useGrouping: false })}`,
         'application/json',
         JSON.stringify(week)
     );

@@ -3,6 +3,7 @@
     v-model="filterInput"
     :label-text="t('dish.search')"
     :label-visible="false"
+    :x-button-active="true"
   />
 </template>
 

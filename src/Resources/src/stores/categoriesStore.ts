@@ -211,6 +211,6 @@ export function useCategories() {
         resetState,
         getCategoryTitleById,
         getCategoryById,
-        getCategoryIdsByTitle
+        getCategoryIdsByTitle,
     }
 }

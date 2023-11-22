@@ -32,7 +32,7 @@
         />
       </div>
       <div
-        v-show="openProp"
+        v-if="openProp"
         class="absolute z-10 w-full"
       >
         <ComboboxOptions
@@ -75,6 +75,7 @@ import { Combobox, ComboboxInput, ComboboxOptions, ComboboxOption, ComboboxLabel
 import { computed, onMounted, ref, useSlots } from 'vue';
 import { XIcon } from '@heroicons/vue/solid';
 import { useI18n } from 'vue-i18n';
+import { refThrottled } from '@vueuse/core';
 
 const props = defineProps<{
   weekId: number
@@ -89,7 +90,9 @@ const emit = defineEmits(['profileSelected']);
 const combobox = ref<HTMLElement | null>(null);
 const selectedProfile = ref<IProfile | null>(null);
 const openProp = ref(false);
+
 const filter = ref('');
+const profileFilter = refThrottled(filter, 1500);
 
 onMounted(async () => {
   await fetchAbsentingProfiles();
@@ -97,12 +100,12 @@ onMounted(async () => {
 
 const filteredProfiles = computed(() => {
   const output = [];
-  if (filter.value === '') {
+  if (profileFilter.value === '') {
     output.push(...ProfilesState.profiles);
   } else {
     output.push(...ProfilesState.profiles.filter(profile => (
-      profile.fullName.toLowerCase().includes(filter.value.toLowerCase()) ||
-      profile.roles.join(' ').toLowerCase().includes(filter.value.toLowerCase())
+      profile.fullName.toLowerCase().includes(profileFilter.value.toLowerCase()) ||
+      profile.roles.join(' ').toLowerCase().includes(profileFilter.value.toLowerCase())
     )));
   }
 

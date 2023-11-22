@@ -335,6 +335,7 @@ class ApiController extends BaseController
             'slotsEnabled' => count($slots) > 0,
             'slots' => [],
             'meals' => [],
+            'isEnabled' => $day->isEnabled(),
         ];
 
         $this->addSlots($guestData['slots'], $slots, $day, 0);

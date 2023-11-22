@@ -2,9 +2,7 @@ import useApi from '@/api/api';
 import { ref } from 'vue';
 import {Day} from '@/api/getDashboardData';
 
-export type GuestDay = {
-    guestData: Day
-}
+export type GuestDay = Day;
 
 export async function useInvitationData(hash: string){
     const { response: invitation, request, error } = useApi<GuestDay>(

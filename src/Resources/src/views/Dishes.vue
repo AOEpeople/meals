@@ -5,7 +5,7 @@
       v-if="loaded"
       :labels="[t('dish.table.title'), t('dish.table.category'), t('dish.table.actions')]"
     >
-      <DishTableRow
+      <LazyDishTableRow
         v-for="(dish, index) in filteredDishes"
         :key="index"
         :dish="// @ts-ignore
@@ -27,7 +27,7 @@ import { onMounted, ref } from 'vue';
 import { useDishes } from '@/stores/dishesStore';
 import DishesHeader from '@/components/dishes/DishesHeader.vue';
 import { useCategories } from '@/stores/categoriesStore';
-import DishTableRow from '@/components/dishes/DishTableRow.vue';
+import LazyDishTableRow from '@/components/dishes/LazyDishTableRow.vue';
 import { Dish } from '@/stores/dishesStore';
 import LoadingSpinner from '@/components/misc/LoadingSpinner.vue';
 

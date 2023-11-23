@@ -90,9 +90,11 @@ describe('Test Weeks View', () => {
             .find('button')
             .last()
             .click()
-        cy.get('[data-cy="meal-lockdate-input"]')
-            .clear()
-            .type('2023-07-08T12:00')
+        cy.get('[aria-label="Datepicker input"]')
+            .click()
+        cy.get('div[class^="dp__cell_inner"]')
+            .contains(new RegExp(/^7$/))
+            .click()
         cy.get('span').contains('Sperren').parent().find('svg').click();
         cy.get('h2').should('contain', 'Woche bearbeiten #28 (10.07. - 14.07.)').click();
 

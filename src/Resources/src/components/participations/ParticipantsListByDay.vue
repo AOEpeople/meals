@@ -1,4 +1,10 @@
 <template>
+  <InputLabel
+    v-model="filterInput"
+    :label-text="t('menu.search')"
+    :label-visible="false"
+    class="col-span-3 row-start-2 justify-self-center sm:col-span-1 sm:col-start-1 sm:justify-self-start min-[900px]:row-start-2"
+  />
   <table>
     <tbody>
       <template
@@ -21,6 +27,9 @@
 
 <script setup lang="ts">
 import { useProgress } from '@marcoschulte/vue3-progress';
+import { ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+import InputLabel from '../misc/InputLabel.vue';
 import { filterParticipantsList } from './filterParticipantsList';
 
 const progress = useProgress().start()

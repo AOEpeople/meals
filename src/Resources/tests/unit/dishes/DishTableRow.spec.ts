@@ -1,7 +1,7 @@
 import DishTableRow from "@/components/dishes/DishTableRow.vue";
-import { mount } from "@vue/test-utils";
+import { flushPromises, mount } from "@vue/test-utils";
 import { describe, it, expect } from "@jest/globals";
-import { ref } from "vue";
+import { defineComponent, ref } from "vue";
 import Dishes from "../fixtures/getDishes.json";
 import Categories from "../fixtures/getCategories.json";
 import useApi from "@/api/api";
@@ -29,14 +29,15 @@ describe('Test DishTableRow', () => {
         await fetchCategories();
     });
 
-    it('should render the dish from the props with no variations', () => {
+    it('should render the dish from the props with no variations', async () => {
         const wrapper = mount(DishTableRow, {
             props: {
                 dish: Dishes[4],
                 indexInList: 4
             }
         });
-
+        // rows only render after 300ms
+        await new Promise((resolve) => setTimeout(resolve, 500));
         const tds = wrapper.findAll('td');
 
         expect(wrapper.findAll('tr').length).toBe(1);
@@ -50,13 +51,15 @@ describe('Test DishTableRow', () => {
         });
     });
 
-    it('should render the dish from the props with variations', () => {
+    it('should render the dish from the props with variations', async () => {
         const wrapper = mount(DishTableRow, {
             props: {
                 dish: Dishes[0],
                 indexInList: 0
             }
         });
+        // rows only render after 300ms
+        await new Promise((resolve) => setTimeout(resolve, 500));
 
         expect(wrapper.findAll('tr').length).toBe(3);
         expect(wrapper.findAll('td').length).toBe(7);

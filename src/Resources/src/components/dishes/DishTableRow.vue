@@ -1,59 +1,59 @@
 <template>
-  <Lazy
+  <LazyTableRow
+    class="border-b-2 border-gray-200"
+    :min-height="40"
+  >
+    <td
+      colspan="1"
+      class="w-[50%] py-2"
+    >
+      <span class="text-[12px] xl:text-[18px]">
+        {{ locale === 'en' ? dish.titleEn : dish.titleDe }}
+      </span>
+    </td>
+    <td
+      colspan="1"
+      class="w-[10%] text-[12px] xl:text-[18px]"
+    >
+      {{ getCategoryTitleById(dish.categoryId, locale) }}
+    </td>
+    <td
+      colspan="1"
+      class="w-[40%]"
+    >
+      <DishActions
+        :dish="dish"
+        :index="indexInList"
+      />
+    </td>
+  </LazyTableRow>
+  <LazyTableRow
+    v-for="(variation, index) in dish.variations"
+    :key="variation.slug"
+    class="overflow-hidden border-b-2 border-gray-200"
+    :class="[index === 0 ? 'topShadow' : 'bottomShadow', dish.variations.length === 1 ? 'topBottomShadow' : '']"
     :render-on-idle="true"
     :min-height="40"
     :unrender="true"
   >
-    <tr class="border-b-2 border-gray-200">
-      <td
-        colspan="1"
-        class="w-[50%] py-2"
-      >
-        <span class="text-[12px] xl:text-[18px]">
-          {{ locale === 'en' ? dish.titleEn : dish.titleDe }}
-        </span>
-      </td>
-      <td
-        colspan="1"
-        class="w-[10%] text-[12px] xl:text-[18px]"
-      >
-        {{ getCategoryTitleById(dish.categoryId, locale) }}
-      </td>
-      <td
-        colspan="1"
-        class="w-[40%]"
-      >
-        <DishActions
-          :dish="dish"
-          :index="indexInList"
-        />
-      </td>
-    </tr>
-    <tr
-      v-for="(variation, index) in dish.variations"
-      :key="variation.slug"
-      class="overflow-hidden border-b-2 border-gray-200"
-      :class="[index === 0 ? 'topShadow' : 'bottomShadow', dish.variations.length === 1 ? 'topBottomShadow' : '']"
+    <td
+      colspan="1"
+      class="w-[50%] py-2 pl-4"
     >
-      <td
-        colspan="1"
-        class="w-[50%] py-2 pl-4"
-      >
-        <span class="text-[12px] xl:text-[18px]">
-          {{ locale === 'en' ? variation.titleEn : variation.titleDe }}
-        </span>
-      </td>
-      <td
-        colspan="2"
-        class="w-[50%]"
-      >
-        <DishVariationActions
-          :variation="variation"
-          :parent-slug="dish.slug"
-        />
-      </td>
-    </tr>
-  </Lazy>
+      <span class="text-[12px] xl:text-[18px]">
+        {{ locale === 'en' ? variation.titleEn : variation.titleDe }}
+      </span>
+    </td>
+    <td
+      colspan="2"
+      class="w-[50%]"
+    >
+      <DishVariationActions
+        :variation="variation"
+        :parent-slug="dish.slug"
+      />
+    </td>
+  </LazyTableRow>
 </template>
 
 <script setup lang="ts">
@@ -62,7 +62,7 @@ import { useI18n } from 'vue-i18n';
 import { useCategories } from '@/stores/categoriesStore';
 import DishActions from './DishActions.vue';
 import DishVariationActions from './DishVariationActions.vue';
-import Lazy from '../misc/Lazy.vue';
+import LazyTableRow from '../misc/LazyTableRow.vue'
 
 const { locale } = useI18n();
 const { getCategoryTitleById } = useCategories();

@@ -1,5 +1,7 @@
 <template>
-  <tr>
+  <LazyTableRow
+    :min-height="40"
+  >
     <slot
       name="firstCell"
     />
@@ -13,13 +15,14 @@
         v-bind="{ dayId: menuDayId, meals: getArrayFromDict(getDayByWeekIdAndDayId(weekId, menuDayId).meals) }"
       />
     </template>
-  </tr>
+  </LazyTableRow>
 </template>
 
 <script setup lang="ts">
 import { useParticipations } from '@/stores/participationsStore';
 import { SimpleMeal, useWeeks } from '@/stores/weeksStore';
 import { Dictionary } from 'types/types';
+import LazyTableRow from '../misc/LazyTableRow.vue';
 
 const props = defineProps<{
   weekId: number

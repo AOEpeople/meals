@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, ref, watch } from 'vue';
+import { nextTick, ref } from 'vue';
 import { useIntersectionObserver } from '@vueuse/core';
 
 const props = withDefaults(defineProps<{
@@ -33,11 +33,7 @@ const { stop } = useIntersectionObserver(
   elementRef,
   ([{ isIntersecting }]) => {
     if (isIntersecting === true) {
-      // perhaps the user re-scrolled to a component that was set to unrender. In that case stop the unrendering timer
       clearTimeout(unrenderTimer);
-      // if we're dealing underndering lets add a waiting period of 200ms before rendering.
-      // If a component enters the viewport and also leaves it within 200ms it will not render at all.
-      // This saves work and improves performance when user scrolls very fast
       if (props.unrender) {
         renderTimer = setTimeout(
           () => shouldRender.value = true,
@@ -51,7 +47,6 @@ const { stop } = useIntersectionObserver(
         stop();
       }
     } else if (props.unrender === true) {
-      // if the component was set to render, cancel that
       clearTimeout(renderTimer);
       unrenderTimer = setTimeout(() => {
         fixedMinHeight.value = elementRef.value !== null ? elementRef.value.clientHeight : props.minHeight;
@@ -71,11 +66,6 @@ if (props.renderOnIdle) {
     }
   });
 }
-
-watch(
-  () => shouldRender.value,
-  () => console.log('rendering element now')
-)
 
 function onIdle(cb = () => void 0) {
   if ('requestIdleCallback' in window) {

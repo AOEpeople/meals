@@ -40,21 +40,24 @@ useApi = jest.fn().mockImplementation((method: string, url: string) => getMocked
 
 describe('Test MenuTableDataRows', () => {
 
-        const { fetchParticipations } = useParticipations(115);
-        const { fetchWeeks } = useWeeks();
+    const { fetchParticipations } = useParticipations(115);
+    const { fetchWeeks } = useWeeks();
 
-        it('should render the table row without errors', async () => {
-            await fetchParticipations();
-            await fetchWeeks();
+    it('should render the table row without errors', async () => {
+        await fetchParticipations();
+        await fetchWeeks();
 
-            const wrapper = mount(MenuTableDataRows, {
-                props: {
-                    weekId: 115,
-                    participant: 'Meals, Alice'
-                }
-            });
-
-            expect(wrapper.text()).toContain('Meals, Alice');
-            expect(wrapper.findAll('td').length).toBe(16);
+        const wrapper = mount(MenuTableDataRows, {
+            props: {
+                weekId: 115,
+                participant: 'Meals, Alice'
+            }
         });
+
+        // rows only render after 300ms
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        expect(wrapper.text()).toContain('Meals, Alice');
+        expect(wrapper.findAll('td').length).toBe(16);
+    });
 });

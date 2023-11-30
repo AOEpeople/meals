@@ -133,6 +133,7 @@
       "301": "The selected titles for the category are missing or already exist.",
       "401": "To add a user to a combined meal, two dishes must be selected.",
       "402": "Something went wrong while booking the meal",
+      "403": "The meal can't be booked, because the maximum number of this meal has already been booked.",
       "501": "The profile to be hidden is already hidden.",
       "502": "The request to balance this user's account has already been sent.",
       "503": "The settlement request failed.",

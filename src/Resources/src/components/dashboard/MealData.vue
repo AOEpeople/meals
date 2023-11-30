@@ -12,7 +12,7 @@
           </span>
         </span><br>
         <p
-          v-if="description !== ''"
+          v-if="description !== null && description !== undefined && description !== ''"
           class="m-0 break-words text-[12px] font-light leading-[20px] text-primary min-[380px]:text-[14px]"
         >
           {{ description }}
@@ -44,8 +44,8 @@
 import ParticipationCounter from '@/components/menuCard/ParticipationCounter.vue';
 import Checkbox from '@/components/dashboard/Checkbox.vue';
 import {useI18n} from 'vue-i18n';
-import {computed} from 'vue';
-import {dashboardStore} from '@/stores/dashboardStore';
+import { computed } from 'vue';
+import { dashboardStore } from '@/stores/dashboardStore';
 import PriceTag from '@/components/dashboard/PriceTag.vue';
 import { Day, Meal } from '@/api/getDashboardData';
 
@@ -61,12 +61,9 @@ const meal = props.meal ? props.meal : dashboardStore.getMeal(props.weekID, prop
 
 const { t, locale } = useI18n();
 
-let description
 const title = computed(() => locale.value.substring(0, 2) === 'en' ? meal.title.en : meal.title.de);
 
-if (meal.description !== null) {
-  description = computed(() => locale.value.substring(0, 2) === 'en' ? meal.description.en : meal.description.de);
-}
+const description = computed(() => locale.value.substring(0, 2) === 'en' ? meal.description.en : meal.description.de);
 
 const mealCSS = computed(() => {
   let css = 'flex content-center rounded-md h-[30px] xl:h-[20px] mr-[15px] '
@@ -86,7 +83,6 @@ const mealCSS = computed(() => {
       return css
   }
 })
-
 </script>
 
 <style scoped>

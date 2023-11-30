@@ -27,5 +27,6 @@ const props = defineProps<{
   mealCSS: string
 }>();
 
-const participations = computed(() => props.meal.limit > 0 ? props.meal.participations + '/' + props.meal.limit : props.meal.participations)
+const participationsCount = computed(() => Math.ceil(parseFloat((props.meal.participations).toFixed(1))))
+const participations = computed(() => props.meal.limit > 0 ? `${participationsCount.value}/${props.meal.limit}` : participationsCount.value)
 </script>

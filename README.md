@@ -177,6 +177,7 @@ IDP_CLIENT_SECRET=client-secret
 *ParticipantController 4xx*
   * 401: To add a user to a combined dish, the combined dish needs to have exactly two dishes
   * 402: On joining a Meal an error occured
+  * 403: User is not allowed to join meal
 *CostSheetController 5xx*
   * 501: The profile that is requested to be hidden, is already hidden
   * 502: The settlement request has already been sent

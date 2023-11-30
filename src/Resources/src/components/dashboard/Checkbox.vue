@@ -85,7 +85,12 @@ const checkboxCSS = computed(() => {
   if (isParticipating.value === true) {
     switch (meal.mealState) {
       case 'disabled':
-        cssResult += 'bg-[#B4C1CE] border-[0.5px] border-[#ABABAB]'
+        cssResult += 'border-[0.5px] border-[#ABABAB]'
+        if (meal.isLocked === false) {
+          cssResult += ' bg-[#80909F] cursor-pointer'
+        } else {
+          cssResult += ' bg-[#B4C1CE]'
+        }
         return cssResult
       case 'open':
       case 'tradeable':
@@ -113,7 +118,7 @@ const checkboxCSS = computed(() => {
 
 async function handle() {
   // Meal is not locked
-  if (meal.mealState === 'open' || meal.mealState === 'tradeable') {
+  if (meal.isLocked === false) {
 
     // User is participating
     if (isParticipating.value) {
@@ -188,14 +193,15 @@ async function leaveMeal() {
     emit('guestChosenMeals', props.mealID)
     meal.isParticipating = null
   } else {
-    let data = {
+    const data = {
       mealId: mealId
     }
 
     const {response, error} = await useLeaveMeal(JSON.stringify(data))
     if (error.value === false) {
-      day.activeSlot = response.value.slotId
-      meal.isParticipating = null
+      day.activeSlot = response.value.slotId;
+      meal.mealState = response.value.mealState;
+      meal.isParticipating = null;
     }
   }
 }

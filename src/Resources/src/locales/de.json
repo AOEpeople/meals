@@ -133,6 +133,7 @@
       "301": "Die gewählten Titel für die Kategorie fehlen oder existieren schon.",
       "401": "Um einen Benutzer zu einem Kombi-Gericht hinzuzufügen, müssen zwei Gerichte ausgewählt werden.",
       "402": "Etwas ist beim Buchen der Mahlzeit schiefgegangen.",
+      "403": "Die Mahlzeit kann nicht gebucht werden, da schon die maximale Anzahl dieser Mahlzeit gebucht wurde.",
       "501": "Das Profil, dass versteckt werden soll ist bereits versteckt.",
       "502": "Die Anfrage zum Ausgleich des Kontos dieses Nutzers wurde bereits verschickt.",
       "503": "Die Anfrage zum Ausgleich ist fehlgeschlagen.",

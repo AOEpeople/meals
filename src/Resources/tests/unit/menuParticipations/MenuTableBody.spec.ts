@@ -56,6 +56,9 @@ describe('Test MenuTableBody', () => {
             }
         });
 
+        // rows only render after 300ms
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
         expect(wrapper.text()).toContain('menu.total');
         for (const participant of getParticipants()) {
             expect(wrapper.text()).toContain(participant);

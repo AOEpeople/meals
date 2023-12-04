@@ -8,16 +8,16 @@
   <table>
     <tbody>
       <template
-        v-for="(participant, slotName, index) in filteredParticipants"
-        :key="String(slotName)"
+        v-for="(participant, index) in filteredParticipants"
+        :key="index"
       >
         <tr
-          :class="[index === 0 ? 'border-gray-300' : 'border-gray-200', 'border-b']"
+          :class="[0 ? 'border-gray-300' : 'border-gray-200', 'border-b']"
         >
           <td
             class="text-s leading- w-2/5 whitespace-nowrap py-4 pl-4 pr-3 font-light"
           >
-            {{ String(participant) }}
+            {{ participant }}
           </td>
         </tr>
       </template>

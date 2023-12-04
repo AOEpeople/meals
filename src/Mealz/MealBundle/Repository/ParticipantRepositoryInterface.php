@@ -42,6 +42,11 @@ interface ParticipantRepositoryInterface extends ObjectRepository
     /**
      * @return Participant[]
      */
+    public function getParticipantsByDay(DateTime $date, array $options = []): array;
+
+    /**
+     * @return Participant[]
+     */
     public function getParticipantsOnCurrentDay(array $options = []): array;
 
     /**

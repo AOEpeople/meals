@@ -1,7 +1,8 @@
-import { computed, reactive } from "vue";
+import { useParticipationsListData } from "@/api/getParticipationsByDay";
+import { computed } from "vue";
 
 interface ParticipantState {
-  participants: string[],
+  participants: any,
   filter: string,
   isLoading: boolean,
   error: string
@@ -13,21 +14,15 @@ export interface Participant {
 
 export function filterParticipantsList(date: string){
 
-  //const { listData } = usePrintableListData(date);
-  const fruits: string[] = ['Apple', 'Orange', 'Banana'];
+  const { listData } = useParticipationsListData(date);
+  //const fruits: string[] = ['Apple', 'Orange', 'Banana'];
 
 
   function setFilter(filterStr: string) {
-    listData.filter = filterStr;
+    //listData.filter = filterStr;
     console.log(filteredParticipants);
   }
 
-  const listData  = reactive<ParticipantState>({
-    participants: fruits,
-    filter: '',
-    isLoading: false,
-    error: ''
-  });
 
   // const filteredNames = computed(() => {
   //   const filteredList: any[] = [];
@@ -44,12 +39,12 @@ export function filterParticipantsList(date: string){
   // });
 
   const filteredParticipants = computed(() => {
-    console.log(listData.participants);
+    //console.log(listData.participants);
     // let filteredList: any[] = [];
     // listData.forEach((fruits) => {}
 
     // )
-    return listData.participants.filter(participant => participantsContainString(participant, listData.filter));
+    return listData.value.filter(participant => participantsContainString(participant, ''));
   });
 
 

@@ -13,14 +13,12 @@ use App\Mealz\MealBundle\Service\ApiService;
 use App\Mealz\MealBundle\Service\DishService;
 use App\Mealz\MealBundle\Service\GuestParticipationService;
 use App\Mealz\MealBundle\Service\OfferService;
-use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\MealBundle\Service\ParticipationCountService;
+use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\MealBundle\Service\SlotService;
 use App\Mealz\MealBundle\Service\WeekService;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
-use DateTimeZone;
-use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -62,10 +60,8 @@ class ApiController extends BaseController
 
     /**
      * Send Dashboard Data.
-     *
-     * @throws Exception
      */
-    public function getDashboardData(ParticipationCountService $participationCountService): JsonResponse
+    public function getDashboardData(ParticipationCountService $partCountSrv): JsonResponse
     {
         $profile = $this->getProfile();
         if (null === $profile) {
@@ -86,7 +82,7 @@ class ApiController extends BaseController
             ];
             /* @var Day $day */
             foreach ($week->getDays() as $day) {
-                $participationsPerDay = $participationCountService->getParticipationByDay($day);
+                $participationsPerDay = $partCountSrv->getParticipationByDay($day);
 
                 $activeSlot = $this->participationSrv->getSlot($profile, $day->getDateTime());
                 if (null !== $activeSlot) {
@@ -232,9 +228,6 @@ class ApiController extends BaseController
         ]);
     }
 
-    /**
-     * @throws Exception
-     */
     private function convertMealForDashboard(Meal $meal, float $participationCount, ?Profile $profile): array
     {
         $description = null;
@@ -285,9 +278,6 @@ class ApiController extends BaseController
         ];
     }
 
-    /**
-     * @throws Exception
-     */
     private function addMealWithVariations(Meal $meal, float $participationCount, ?Profile $profile, array &$meals): void
     {
         $parent = $meal->getDish()->getParent();
@@ -328,10 +318,7 @@ class ApiController extends BaseController
         return 'disabled';
     }
 
-    /**
-     * @throws Exception
-     */
-    public function getGuestData(string $guestInvitationId, ParticipationCountService $participationCountService): JsonResponse
+    public function getGuestData(string $guestInvitationId, ParticipationCountService $partCountSrv): JsonResponse
     {
         $guestInvitation = $this->guestPartiSrv->getGuestInvitationById($guestInvitationId);
         if (null === $guestInvitation) {
@@ -340,7 +327,7 @@ class ApiController extends BaseController
 
         $day = $guestInvitation->getDay();
         $slots = $this->slotSrv->getAllActiveSlots();
-        $participationsPerDay = $participationCountService->getParticipationByDay($day);
+        $participationsPerDay = $partCountSrv->getParticipationByDay($day);
 
         $guestData = [
             'date' => $day->getDateTime(),

@@ -8,17 +8,21 @@ use App\Mealz\MealBundle\Entity\DishCollection;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
+use App\Mealz\MealBundle\Service\ParticipationCountService;
 use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
 use PhpCollection\Set;
 
 class ParticipationHelper
 {
     private ProfileRepositoryInterface $profileRepo;
+    private ParticipationCountService $partCountSrv;
 
     public function __construct(
-        ProfileRepositoryInterface $profileRepo
+        ProfileRepositoryInterface $profileRepo,
+        ParticipationCountService $partCountSrv
     ) {
         $this->profileRepo = $profileRepo;
+        $this->partCountSrv = $partCountSrv;
     }
 
     /**
@@ -83,6 +87,43 @@ class ParticipationHelper
         );
 
         return $profileData;
+    }
+
+    public function getReachedLimit(Meal $meal): bool
+    {
+        $participationsPerDay = $this->partCountSrv->getParticipationByDay($meal->getDay());
+        $participationCount = null;
+        if (array_key_exists($meal->getDish()->getSlug(), $participationsPerDay['totalCountByDishSlugs'])) {
+            $participationCount = $participationsPerDay['totalCountByDishSlugs'][$meal->getDish()->getSlug()]['count'];
+        } else {
+            $participationCount = $meal->getParticipants()->count();
+        }
+
+        return $meal->getParticipationLimit() > 0.0 ? $participationCount >= $meal->getParticipationLimit() : false;
+    }
+
+    public function getParticipationMealData(Participant $participant): array
+    {
+        $participationData['mealId'] = $participant->getMeal()->getId();
+        $participationData['dishId'] = $participant->getMeal()->getDish()->getId();
+        $participationData['combinedDishes'] = array_map(
+            fn ($dish) => $dish->getId(),
+            $participant->getCombinedDishes()->toArray()
+        );
+
+        return $participationData;
+    }
+
+    public function getMealState(Meal $meal)
+    {
+        $mealState = 'open';
+        if (true === $meal->isLocked() && true === $meal->isOpen()) {
+            $mealState = 'offerable';
+        } elseif ($this->getReachedLimit($meal)) {
+            $mealState = 'disabled';
+        }
+
+        return $mealState;
     }
 
     protected function compareNameOfParticipants(Participant $participant1, Participant $participant2): int

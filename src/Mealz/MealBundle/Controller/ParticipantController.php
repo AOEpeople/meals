@@ -19,7 +19,6 @@ use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\MealBundle\Repository\SlotRepositoryInterface;
 use App\Mealz\MealBundle\Service\EventService;
 use App\Mealz\MealBundle\Service\Exception\ParticipationException;
-use App\Mealz\MealBundle\Service\ParticipationCountService;
 use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\UserBundle\Entity\Profile;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -43,7 +42,6 @@ class ParticipantController extends BaseController
     private SlotRepositoryInterface $slotRepo;
     private DayRepositoryInterface $dayRepo;
     private ParticipantRepositoryInterface $participantRepo;
-    private ParticipationCountService $participationCountService;
 
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
@@ -53,8 +51,7 @@ class ParticipantController extends BaseController
         MealRepositoryInterface $mealRepo,
         SlotRepositoryInterface $slotRepo,
         DayRepositoryInterface $dayRepo,
-        ParticipantRepositoryInterface $participantRepo,
-        ParticipationCountService $participationCountService
+        ParticipantRepositoryInterface $participantRepo
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->eventSrv = $eventSrv;
@@ -64,7 +61,6 @@ class ParticipantController extends BaseController
         $this->dayRepo = $dayRepo;
         $this->participantRepo = $participantRepo;
         $this->participationHelper = $participationHelper;
-        $this->participationCountService = $participationCountService;
     }
 
     /**
@@ -104,13 +100,6 @@ class ParticipantController extends BaseController
             $this->logAdd($meal, $result['participant']);
         }
 
-        $mealState = 'open';
-        if (true === $meal->isLocked() && true === $meal->isOpen()) {
-            $mealState = 'offerable';
-        } elseif($this->getReachedLimit($meal)) {
-            $mealState = 'disabled';
-        }
-
         $slotID = 0;
         $slot = $result['slot'];
         if (null !== $slot) {
@@ -121,7 +110,7 @@ class ParticipantController extends BaseController
             [
                 'slotId' => $slotID,
                 'participantId' => $result['participant']->getId(),
-                'mealState' => $mealState,
+                'mealState' => $this->participationHelper->getMealState($meal),
             ],
             200
         );
@@ -159,13 +148,6 @@ class ParticipantController extends BaseController
 
         $this->logRemove($meal, $participant);
 
-        $mealState = 'open';
-        if (true === $meal->isLocked() && true === $meal->isOpen()) {
-            $mealState = 'offerable';
-        } elseif($this->getReachedLimit($meal)) {
-            $mealState = 'disabled';
-        }
-
         $activeSlot = $this->participationSrv->getSlot($profile, $meal->getDateTime());
         $slotID = 0;
         if (null !== $activeSlot) {
@@ -174,7 +156,7 @@ class ParticipantController extends BaseController
 
         return new JsonResponse([
             'slotId' => $slotID,
-            'mealState' => $mealState,
+            'mealState' => $this->participationHelper->getMealState($meal),
         ], 200);
     }
 
@@ -334,7 +316,7 @@ class ParticipantController extends BaseController
 
             $participationData = [];
             foreach ($participations as $participation) {
-                $participationData[] = $this->getParticipationData($participation);
+                $participationData[] = $this->participationHelper->getParticipationMealData($participation);
             }
 
             return new JsonResponse([
@@ -369,7 +351,7 @@ class ParticipantController extends BaseController
 
             $participationData = [];
             foreach ($participations as $participation) {
-                $participationData[] = $this->getParticipationData($participation);
+                $participationData[] = $this->participationHelper->getParticipationMealData($participation);
             }
 
             return new JsonResponse([
@@ -460,36 +442,11 @@ class ParticipantController extends BaseController
 
         /** @var Participant $participant */
         foreach ($participants as $participant) {
-            $participationData = $this->getParticipationData($participant);
+            $participationData = $this->participationHelper->getParticipationMealData($participant);
             $response[$day->getId()][$participant->getProfile()->getFullName()]['booked'][] = $participationData;
             $response[$day->getId()][$participant->getProfile()->getFullName()]['profile'] = $participant->getProfile()->getUsername();
         }
 
         return $response;
-    }
-
-    private function getParticipationData(Participant $participant): array
-    {
-        $participationData['mealId'] = $participant->getMeal()->getId();
-        $participationData['dishId'] = $participant->getMeal()->getDish()->getId();
-        $participationData['combinedDishes'] = array_map(
-            fn ($dish) => $dish->getId(),
-            $participant->getCombinedDishes()->toArray()
-        );
-
-        return $participationData;
-    }
-
-    private function getReachedLimit(Meal $meal): bool
-    {
-        $participationsPerDay = $this->participationCountService->getParticipationByDay($meal->getDay());
-        $participationCount = null;
-        if (array_key_exists($meal->getDish()->getSlug(), $participationsPerDay['totalCountByDishSlugs'])) {
-            $participationCount = $participationsPerDay['totalCountByDishSlugs'][$meal->getDish()->getSlug()]['count'];
-        } else {
-            $participationCount = $meal->getParticipants()->count();
-        }
-
-        return $meal->getParticipationLimit() > 0.0 ? $participationCount >= $meal->getParticipationLimit() : false;
     }
 }

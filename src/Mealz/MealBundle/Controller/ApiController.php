@@ -13,12 +13,12 @@ use App\Mealz\MealBundle\Service\ApiService;
 use App\Mealz\MealBundle\Service\DishService;
 use App\Mealz\MealBundle\Service\GuestParticipationService;
 use App\Mealz\MealBundle\Service\OfferService;
+use App\Mealz\MealBundle\Service\ParticipationCountService;
 use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\MealBundle\Service\SlotService;
 use App\Mealz\MealBundle\Service\WeekService;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
-use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -60,10 +60,8 @@ class ApiController extends BaseController
 
     /**
      * Send Dashboard Data.
-     *
-     * @throws Exception
      */
-    public function getDashboardData(): JsonResponse
+    public function getDashboardData(ParticipationCountService $partCountSrv): JsonResponse
     {
         $profile = $this->getProfile();
         if (null === $profile) {
@@ -84,6 +82,8 @@ class ApiController extends BaseController
             ];
             /* @var Day $day */
             foreach ($week->getDays() as $day) {
+                $participationsPerDay = $partCountSrv->getParticipationByDay($day);
+
                 $activeSlot = $this->participationSrv->getSlot($profile, $day->getDateTime());
                 if (null !== $activeSlot) {
                     $activeSlot = $activeSlot->getId();
@@ -105,12 +105,19 @@ class ApiController extends BaseController
                 ];
 
                 $this->addSlots($response[$week->getId()]['days'][$day->getId()]['slots'], $slots, $day, $activeParticipations);
-                /* @var Meal $meal */
+                /** @var Meal $meal */
                 foreach ($day->getMeals() as $meal) {
-                    if ($meal->getDish() instanceof DishVariation) {
-                        $this->addMealWithVariations($meal, $profile, $response[$week->getId()]['days'][$day->getId()]['meals']);
+                    $participationCount = null;
+                    if (array_key_exists($meal->getDish()->getSlug(), $participationsPerDay['totalCountByDishSlugs'])) {
+                        $participationCount = $participationsPerDay['totalCountByDishSlugs'][$meal->getDish()->getSlug()]['count'];
                     } else {
-                        $response[$week->getId()]['days'][$day->getId()]['meals'][$meal->getId()] = $this->convertMealForDashboard($meal, $profile);
+                        $participationCount = $meal->getParticipants()->count();
+                    }
+
+                    if ($meal->getDish() instanceof DishVariation) {
+                        $this->addMealWithVariations($meal, $participationCount, $profile, $response[$week->getId()]['days'][$day->getId()]['meals']);
+                    } else {
+                        $response[$week->getId()]['days'][$day->getId()]['meals'][$meal->getId()] = $this->convertMealForDashboard($meal, $participationCount, $profile);
                     }
                 }
             }
@@ -221,10 +228,7 @@ class ApiController extends BaseController
         ]);
     }
 
-    /**
-     * @throws Exception
-     */
-    private function convertMealForDashboard(Meal $meal, ?Profile $profile): array
+    private function convertMealForDashboard(Meal $meal, float $participationCount, ?Profile $profile): array
     {
         $description = null;
         $parentId = null;
@@ -250,6 +254,8 @@ class ApiController extends BaseController
             $mealState = $this->getMealState($meal, $profile, $participation);
         }
 
+        $reachedLimit = $meal->getParticipationLimit() > 0.0 ? $participationCount >= $meal->getParticipationLimit() : false;
+
         return [
             'title' => [
                 'en' => $meal->getDish()->getTitleEn(),
@@ -259,12 +265,12 @@ class ApiController extends BaseController
             'dishSlug' => $meal->getDish()->getSlug(),
             'price' => $meal->getPrice(),
             'limit' => $meal->getParticipationLimit(),
-            'reachedLimit' => $meal->hasReachedParticipationLimit(),
+            'reachedLimit' => $reachedLimit,
             'isOpen' => $meal->isOpen(),
             'isLocked' => $meal->isLocked(),
             'isNew' => $this->dishSrv->isNew($meal->getDish()),
             'parentId' => $parentId,
-            'participations' => $meal->getParticipants()->count(),
+            'participations' => $participationCount,
             'isParticipating' => $participationId,
             'hasOffers' => $this->offerSrv->getOfferCountByMeal($meal) > 0,
             'isOffering' => $isOffering,
@@ -272,10 +278,7 @@ class ApiController extends BaseController
         ];
     }
 
-    /**
-     * @throws Exception
-     */
-    private function addMealWithVariations(Meal $meal, ?Profile $profile, array &$meals): void
+    private function addMealWithVariations(Meal $meal, float $participationCount, ?Profile $profile, array &$meals): void
     {
         $parent = $meal->getDish()->getParent();
         $parentExistsInArray = array_key_exists($parent->getId(), $meals);
@@ -293,7 +296,7 @@ class ApiController extends BaseController
             ];
         }
 
-        $meals[$parent->getId()]['variations'][$meal->getId()] = $this->convertMealForDashboard($meal, $profile);
+        $meals[$parent->getId()]['variations'][$meal->getId()] = $this->convertMealForDashboard($meal, $participationCount, $profile);
     }
 
     private function getMealState(Meal $meal, Profile $profile, ?Participant $participant): string
@@ -315,10 +318,7 @@ class ApiController extends BaseController
         return 'disabled';
     }
 
-    /**
-     * @throws Exception
-     */
-    public function getGuestData(string $guestInvitationId): JsonResponse
+    public function getGuestData(string $guestInvitationId, ParticipationCountService $partCountSrv): JsonResponse
     {
         $guestInvitation = $this->guestPartiSrv->getGuestInvitationById($guestInvitationId);
         if (null === $guestInvitation) {
@@ -327,6 +327,7 @@ class ApiController extends BaseController
 
         $day = $guestInvitation->getDay();
         $slots = $this->slotSrv->getAllActiveSlots();
+        $participationsPerDay = $partCountSrv->getParticipationByDay($day);
 
         $guestData = [
             'date' => $day->getDateTime(),
@@ -340,12 +341,19 @@ class ApiController extends BaseController
 
         $this->addSlots($guestData['slots'], $slots, $day, 0);
 
-        /* @var Meal $meal */
+        /** @var Meal $meal */
         foreach ($day->getMeals() as $meal) {
-            if (true === ($meal->getDish() instanceof DishVariation)) {
-                $this->addMealWithVariations($meal, null, $guestData['meals']);
+            $participationCount = null;
+            if (array_key_exists($meal->getDish()->getSlug(), $participationsPerDay['totalCountByDishSlugs'])) {
+                $participationCount = $participationsPerDay['totalCountByDishSlugs'][$meal->getDish()->getSlug()]['count'];
             } else {
-                $guestData['meals'][$meal->getId()] = $this->convertMealForDashboard($meal, null);
+                $participationCount = $meal->getParticipants()->count();
+            }
+
+            if (true === ($meal->getDish() instanceof DishVariation)) {
+                $this->addMealWithVariations($meal, $participationCount, null, $guestData['meals']);
+            } else {
+                $guestData['meals'][$meal->getId()] = $this->convertMealForDashboard($meal, $participationCount, null);
             }
         }
 

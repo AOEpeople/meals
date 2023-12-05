@@ -55,9 +55,9 @@
 <script setup lang="ts">
 import ParticipationCounter from '@/components/menuCard/ParticipationCounter.vue';
 import Checkbox from '@/components/dashboard/Checkbox.vue';
-import {useI18n} from 'vue-i18n';
-import {computed, ref} from 'vue';
-import {dashboardStore} from '@/stores/dashboardStore';
+import { useI18n } from 'vue-i18n';
+import { computed, ref } from 'vue';
+import { dashboardStore } from '@/stores/dashboardStore';
 import useEventsBus from 'tools/eventBus';
 import OfferPopover from '@/components/dashboard/OfferPopover.vue';
 import PriceTag from '@/components/dashboard/PriceTag.vue';
@@ -77,10 +77,10 @@ const props = defineProps<{
 
 const meal = props.meal ? props.meal : dashboardStore.getMeal(props.weekID, props.dayID, props.mealID)
 
-let parentTitle = computed(() => locale.value.substring(0, 2) === 'en' ? meal.title.en : meal.title.de)
+const parentTitle = computed(() => locale.value.substring(0, 2) === 'en' ? meal.title.en : meal.title.de)
 
 const mealCSS = computed(() => {
-  let array: string[] = []
+  const array: string[] = []
   for (const variationId in meal.variations) {
     array[variationId] = 'flex content-center rounded-md h-[30px] xl:h-[20px] '
     switch (meal.variations[variationId].mealState) {
@@ -106,7 +106,6 @@ receive('openOfferPanel_' + props.mealID, () => {
   openPopover.value = true
   setTimeout(() => openPopover.value = false, 5000)
 })
-
 </script>
 
 <style scoped>

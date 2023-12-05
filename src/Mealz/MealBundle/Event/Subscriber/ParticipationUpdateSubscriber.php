@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Event\Subscriber;
 
 use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
+use App\Mealz\MealBundle\Service\ParticipationCountService;
 use App\Mealz\MealBundle\Service\Publisher\PublisherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -14,10 +15,12 @@ class ParticipationUpdateSubscriber implements EventSubscriberInterface
     private const PUBLISH_MSG_TYPE = 'participationUpdate';
 
     private PublisherInterface $publisher;
+    private ParticipationCountService $partCountSrv;
 
-    public function __construct(PublisherInterface $publisher)
+    public function __construct(PublisherInterface $publisher, ParticipationCountService $partCountSrv)
     {
         $this->publisher = $publisher;
+        $this->partCountSrv = $partCountSrv;
     }
 
     /**
@@ -44,6 +47,14 @@ class ParticipationUpdateSubscriber implements EventSubscriberInterface
             $parentId = $meal->getDish()->getParent()->getId();
         }
 
+        $participationsPerDay = $this->partCountSrv->getParticipationByDay($meal->getDay());
+        $participationCount = null;
+        if (array_key_exists($meal->getDish()->getSlug(), $participationsPerDay['totalCountByDishSlugs'])) {
+            $participationCount = $participationsPerDay['totalCountByDishSlugs'][$meal->getDish()->getSlug()]['count'];
+        } else {
+            $participationCount = $meal->getParticipants()->count();
+        }
+
         $data = [
             'weekId' => $meal->getDay()->getWeek()->getId(),
             'dayId' => $meal->getDay()->getId(),
@@ -51,10 +62,10 @@ class ParticipationUpdateSubscriber implements EventSubscriberInterface
                 'mealId' => $meal->getId(),
                 'parentId' => $parentId,
                 'limit' => $meal->getParticipationLimit(),
-                'reachedLimit' => $meal->hasReachedParticipationLimit(),
+                'reachedLimit' => $meal->getParticipationLimit() > 0.0 ? $participationCount >= $meal->getParticipationLimit() : false,
                 'isOpen' => $meal->isOpen(),
                 'isLocked' => $meal->isLocked(),
-                'participations' => $meal->getParticipants()->count(),
+                'participations' => $participationCount,
             ],
         ];
 

@@ -23,7 +23,6 @@ use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\UserBundle\Entity\Profile;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
-use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use stdClass;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -42,7 +41,6 @@ class ParticipantController extends BaseController
     private MealRepositoryInterface $mealRepo;
     private SlotRepositoryInterface $slotRepo;
     private DayRepositoryInterface $dayRepo;
-    private LoggerInterface $logger;
     private ParticipantRepositoryInterface $participantRepo;
 
     public function __construct(
@@ -53,8 +51,7 @@ class ParticipantController extends BaseController
         MealRepositoryInterface $mealRepo,
         SlotRepositoryInterface $slotRepo,
         DayRepositoryInterface $dayRepo,
-        ParticipantRepositoryInterface $participantRepo,
-        LoggerInterface $logger
+        ParticipantRepositoryInterface $participantRepo
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->eventSrv = $eventSrv;
@@ -63,7 +60,6 @@ class ParticipantController extends BaseController
         $this->slotRepo = $slotRepo;
         $this->dayRepo = $dayRepo;
         $this->participantRepo = $participantRepo;
-        $this->logger = $logger;
         $this->participationHelper = $participationHelper;
     }
 
@@ -94,15 +90,14 @@ class ParticipantController extends BaseController
             return new JsonResponse(['message' => '402: ' . $e->getMessage()], 500);
         }
 
+        if (null === $result) {
+            return new JsonResponse(['message' => '403: User is not allowed to join meal'], 500);
+        }
+
         $this->eventSrv->triggerJoinEvents($result['participant'], $result['offerer']);
 
         if (null === $result['offerer']) {
             $this->logAdd($meal, $result['participant']);
-        }
-
-        $mealState = 'open';
-        if (true === $meal->isLocked() && true === $meal->isOpen()) {
-            $mealState = 'offerable';
         }
 
         $slotID = 0;
@@ -115,7 +110,7 @@ class ParticipantController extends BaseController
             [
                 'slotId' => $slotID,
                 'participantId' => $result['participant']->getId(),
-                'mealState' => $mealState,
+                'mealState' => $this->participationHelper->getMealState($meal),
             ],
             200
         );
@@ -159,7 +154,10 @@ class ParticipantController extends BaseController
             $slotID = $activeSlot->getId();
         }
 
-        return new JsonResponse(['slotId' => $slotID], 200);
+        return new JsonResponse([
+            'slotId' => $slotID,
+            'mealState' => $this->participationHelper->getMealState($meal),
+        ], 200);
     }
 
     public function updateCombinedMeal(
@@ -318,7 +316,7 @@ class ParticipantController extends BaseController
 
             $participationData = [];
             foreach ($participations as $participation) {
-                $participationData[] = $this->getParticipationData($participation);
+                $participationData[] = $this->participationHelper->getParticipationMealData($participation);
             }
 
             return new JsonResponse([
@@ -353,7 +351,7 @@ class ParticipantController extends BaseController
 
             $participationData = [];
             foreach ($participations as $participation) {
-                $participationData[] = $this->getParticipationData($participation);
+                $participationData[] = $this->participationHelper->getParticipationMealData($participation);
             }
 
             return new JsonResponse([
@@ -444,23 +442,11 @@ class ParticipantController extends BaseController
 
         /** @var Participant $participant */
         foreach ($participants as $participant) {
-            $participationData = $this->getParticipationData($participant);
+            $participationData = $this->participationHelper->getParticipationMealData($participant);
             $response[$day->getId()][$participant->getProfile()->getFullName()]['booked'][] = $participationData;
             $response[$day->getId()][$participant->getProfile()->getFullName()]['profile'] = $participant->getProfile()->getUsername();
         }
 
         return $response;
-    }
-
-    private function getParticipationData(Participant $participant): array
-    {
-        $participationData['mealId'] = $participant->getMeal()->getId();
-        $participationData['dishId'] = $participant->getMeal()->getDish()->getId();
-        $participationData['combinedDishes'] = array_map(
-            fn ($dish) => $dish->getId(),
-            $participant->getCombinedDishes()->toArray()
-        );
-
-        return $participationData;
     }
 }

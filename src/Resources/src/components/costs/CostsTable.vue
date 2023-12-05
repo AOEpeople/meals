@@ -3,9 +3,10 @@
     :labels="columnNames"
     :header-text-position="'lfr'"
   >
-    <tr
+    <LazyTableRow
       v-for="[username, costs] in filteredUsers"
       :key="username"
+      :min-height="40"
       class="max-h-[62px] border-b-2 border-gray-200 text-right text-[12px] xl:text-[18px]"
     >
       <td class="py-2 text-left">
@@ -29,7 +30,7 @@
           :balance="costs.costs['total']"
         />
       </td>
-    </tr>
+    </LazyTableRow>
   </Table>
 </template>
 
@@ -39,6 +40,7 @@ import { useCosts } from '@/stores/costsStore';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import CostsTableActions from './CostsTableActions.vue';
+import LazyTableRow from '../misc/LazyTableRow.vue';
 
 const { t, locale } = useI18n();
 const { CostsState, getColumnNames } = useCosts();

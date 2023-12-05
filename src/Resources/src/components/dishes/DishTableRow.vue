@@ -1,5 +1,8 @@
 <template>
-  <tr class="border-b-2 border-gray-200">
+  <LazyTableRow
+    class="border-b-2 border-gray-200"
+    :min-height="40"
+  >
     <td
       colspan="1"
       class="w-[50%] py-2"
@@ -23,12 +26,15 @@
         :index="indexInList"
       />
     </td>
-  </tr>
-  <tr
+  </LazyTableRow>
+  <LazyTableRow
     v-for="(variation, index) in dish.variations"
     :key="variation.slug"
     class="overflow-hidden border-b-2 border-gray-200"
     :class="[index === 0 ? 'topShadow' : 'bottomShadow', dish.variations.length === 1 ? 'topBottomShadow' : '']"
+    :render-on-idle="true"
+    :min-height="40"
+    :unrender="true"
   >
     <td
       colspan="1"
@@ -47,7 +53,7 @@
         :parent-slug="dish.slug"
       />
     </td>
-  </tr>
+  </LazyTableRow>
 </template>
 
 <script setup lang="ts">
@@ -56,6 +62,7 @@ import { useI18n } from 'vue-i18n';
 import { useCategories } from '@/stores/categoriesStore';
 import DishActions from './DishActions.vue';
 import DishVariationActions from './DishVariationActions.vue';
+import LazyTableRow from '../misc/LazyTableRow.vue'
 
 const { locale } = useI18n();
 const { getCategoryTitleById } = useCategories();

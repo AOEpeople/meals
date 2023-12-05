@@ -55,9 +55,9 @@
 <script setup lang="ts">
 import ParticipationCounter from '@/components/menuCard/ParticipationCounter.vue';
 import Checkbox from '@/components/dashboard/Checkbox.vue';
-import {useI18n} from 'vue-i18n';
-import {computed, ref, watch} from 'vue';
-import {dashboardStore} from '@/stores/dashboardStore';
+import { useI18n } from 'vue-i18n';
+import { computed, ref } from 'vue';
+import { dashboardStore } from '@/stores/dashboardStore';
 import useEventsBus from 'tools/eventBus';
 import OfferPopover from '@/components/dashboard/OfferPopover.vue';
 import PriceTag from '@/components/dashboard/PriceTag.vue';

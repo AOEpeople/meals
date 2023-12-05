@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Event\Subscriber;
 
+use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
 use App\Mealz\MealBundle\Service\ParticipationCountService;
 use App\Mealz\MealBundle\Service\Publisher\PublisherInterface;
@@ -38,16 +39,29 @@ class ParticipationUpdateSubscriber implements EventSubscriberInterface
      */
     public function onUpdate(ParticipationUpdateEvent $event): void
     {
-        $meal = $event->getParticipant()->getMeal();
-        if (!$meal->isOpen()) { // do not send updates for past meals
+        $eventMeal = $event->getParticipant()->getMeal();
+        $meals = $eventMeal->getDay()->getMeals();
+        if (!$eventMeal->isOpen()) { // do not send updates for past meals
             return;
         }
-        $parentId = null;
-        if (null !== $meal->getDish()->getParent()) {
-            $parentId = $meal->getDish()->getParent()->getId();
+
+        $participationsPerDay = $this->partCountSrv->getParticipationByDay($eventMeal->getDay());
+
+        $data = [
+            'weekId' => $eventMeal->getDay()->getWeek()->getId(),
+            'dayId' => $eventMeal->getDay()->getId(),
+            'meals' => [],
+        ];
+
+        foreach ($meals as $meal) {
+            $data['meals'][] = $this->getMealInfo($meal, $participationsPerDay);
         }
 
-        $participationsPerDay = $this->partCountSrv->getParticipationByDay($meal->getDay());
+        $this->publisher->publish(self::PUBLISH_TOPIC, $data, self::PUBLISH_MSG_TYPE);
+    }
+
+    private function getMealInfo(Meal $meal, array $participationsPerDay): array
+    {
         $participationCount = null;
         if (array_key_exists($meal->getDish()->getSlug(), $participationsPerDay['totalCountByDishSlugs'])) {
             $participationCount = $participationsPerDay['totalCountByDishSlugs'][$meal->getDish()->getSlug()]['count'];
@@ -55,20 +69,16 @@ class ParticipationUpdateSubscriber implements EventSubscriberInterface
             $participationCount = $meal->getParticipants()->count();
         }
 
-        $data = [
-            'weekId' => $meal->getDay()->getWeek()->getId(),
-            'dayId' => $meal->getDay()->getId(),
-            'meal' => [
-                'mealId' => $meal->getId(),
-                'parentId' => $parentId,
-                'limit' => $meal->getParticipationLimit(),
-                'reachedLimit' => $meal->getParticipationLimit() > 0.0 ? $participationCount >= $meal->getParticipationLimit() : false,
-                'isOpen' => $meal->isOpen(),
-                'isLocked' => $meal->isLocked(),
-                'participations' => $participationCount,
-            ],
+        $meal = [
+            'mealId' => $meal->getId(),
+            'parentId' => $meal->getDish()->getParent() ? $meal->getDish()->getParent()->getId() : null,
+            'limit' => $meal->getParticipationLimit(),
+            'reachedLimit' => $meal->getParticipationLimit() > 0.0 ? $participationCount >= $meal->getParticipationLimit() : false,
+            'isOpen' => $meal->isOpen(),
+            'isLocked' => $meal->isLocked(),
+            'participations' => $participationCount,
         ];
 
-        $this->publisher->publish(self::PUBLISH_TOPIC, $data, self::PUBLISH_MSG_TYPE);
+        return $meal;
     }
 }

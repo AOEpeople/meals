@@ -15,12 +15,12 @@ class ParticipationUpdateSubscriber implements EventSubscriberInterface
     private const PUBLISH_MSG_TYPE = 'participationUpdate';
 
     private PublisherInterface $publisher;
-    private ParticipationCountService $participationCountService;
+    private ParticipationCountService $partCountSrv;
 
-    public function __construct(PublisherInterface $publisher, ParticipationCountService $participationCountService)
+    public function __construct(PublisherInterface $publisher, ParticipationCountService $partCountSrv)
     {
         $this->publisher = $publisher;
-        $this->participationCountService = $participationCountService;
+        $this->partCountSrv = $partCountSrv;
     }
 
     /**
@@ -47,7 +47,7 @@ class ParticipationUpdateSubscriber implements EventSubscriberInterface
             $parentId = $meal->getDish()->getParent()->getId();
         }
 
-        $participationsPerDay = $this->participationCountService->getParticipationByDay($meal->getDay());
+        $participationsPerDay = $this->partCountSrv->getParticipationByDay($meal->getDay());
         $participationCount = null;
         if (array_key_exists($meal->getDish()->getSlug(), $participationsPerDay['totalCountByDishSlugs'])) {
             $participationCount = $participationsPerDay['totalCountByDishSlugs'][$meal->getDish()->getSlug()]['count'];

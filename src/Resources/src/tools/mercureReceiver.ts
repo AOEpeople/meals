@@ -8,15 +8,17 @@ import { environmentStore } from '@/stores/environmentStore';
 type Meal_Update = {
     weekId: number,
     dayId: number,
-    meal: {
-        mealId: number,
-        parentId: number,
-        limit: number,
-        reachedLimit: boolean,
-        isOpen: boolean,
-        isLocked: boolean,
-        participations: number,
-    }
+    meals: Meal_Participation_Update[]
+}
+
+type Meal_Participation_Update = {
+    mealId: number,
+    parentId: number,
+    limit: number,
+    reachedLimit: boolean,
+    isOpen: boolean,
+    isLocked: boolean,
+    participations: number,
 }
 
 type Slot_Update = {
@@ -70,19 +72,21 @@ class MercureReceiver {
     }
 
     private static handleParticipationUpdate(data: Meal_Update): void {
-        let meal;
-        if(data.meal.parentId !== null) {
-            meal = dashboardStore.getVariation(data.weekId, data.dayId, data.meal.parentId, data.meal.mealId) as Meal
-        } else {
-            meal = dashboardStore.getMeal(data.weekId, data.dayId, data.meal.mealId) as Meal
-        }
+        for(const mealData of data.meals) {
+            let meal: Meal;
+            if (mealData.parentId !== null) {
+                meal = dashboardStore.getVariation(data.weekId, data.dayId, mealData.parentId, mealData.mealId) as Meal
+            } else {
+                meal = dashboardStore.getMeal(data.weekId, data.dayId, mealData.mealId) as Meal
+            }
 
-        if(meal !== undefined) {
-            meal.limit = data.meal.limit
-            meal.participations = data.meal.participations
-            meal.isOpen = data.meal.isOpen
-            meal.isLocked = data.meal.isLocked
-            meal.reachedLimit = data.meal.reachedLimit
+            if (meal !== undefined) {
+                meal.limit = mealData.limit
+                meal.participations = mealData.participations
+                meal.isOpen = mealData.isOpen
+                meal.isLocked = mealData.isLocked
+                meal.reachedLimit = mealData.reachedLimit
+            }
         }
     }
 

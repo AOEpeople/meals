@@ -301,6 +301,7 @@ class MealAdminController extends BaseController
     {
         $mealEntity = $this->mealRepository->find($meal['mealId']);
 
+        $this->setParticipationLimit($mealEntity, $meal);
         // check if the requested dish is the same as before
         if ($mealEntity->getDish()->getId() === $dishEntity->getId()) {
             return;
@@ -310,12 +311,10 @@ class MealAdminController extends BaseController
         if (null !== $mealEntity && false === $mealEntity->hasParticipations()) {
             $mealEntity->setDish($dishEntity);
             $mealEntity->setPrice($dishEntity->getPrice());
-            $this->setParticipationLimit($mealEntity, $meal);
         } elseif (null === $mealEntity) {
             // this happens because meals without participations are deleted, even though they could be modified later on (this shouldn't happen but might)
             $mealEntity = new Meal($dishEntity, $dayEntity);
             $mealEntity->setPrice($dishEntity->getPrice());
-            $this->setParticipationLimit($mealEntity, $meal);
             $dayEntity->addMeal($mealEntity);
         } else {
             throw new Exception('108: meal has participations for id: ' . $meal['mealId']);

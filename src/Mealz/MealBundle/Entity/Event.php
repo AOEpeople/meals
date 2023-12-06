@@ -6,6 +6,7 @@ namespace App\Mealz\MealBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use JsonSerializable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -14,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  * @ORM\Table(name="event")
  */
-class Event
+class Event implements JsonSerializable
 {
     /**
      * @ORM\Id
@@ -94,5 +95,15 @@ class Event
     public function setSlug(string $slug): string
     {
         return $this->slug = $slug;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'slug' => $this->slug,
+            'public' => $this->public
+        ];
     }
 }

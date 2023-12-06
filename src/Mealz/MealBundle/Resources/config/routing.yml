@@ -163,6 +163,26 @@ MealzMealBundle_api_invitationdata:
   defaults: { _controller: App\Mealz\MealBundle\Controller\ApiController::getGuestData }
   methods: [ GET ]
 
+MealzMealBundle_api_events:
+  path: /api/events
+  defaults: { _controller: App\Mealz\MealBundle\Controller\EventController::getEventList }
+  methods: [ GET ]
+
+MealzMealBundle_api_events_new:
+  path: /api/events
+  defaults: { _controller: App\Mealz\MealBundle\Controller\EventController::new }
+  methods: [ POST ]
+
+MealzMealBundle_api_events_update:
+  path: /api/events/{event}
+  defaults: { _controller: App\Mealz\MealBundle\Controller\EventController::update }
+  methods: [ PUT ]
+
+MealzMealBundle_api_events_delete:
+  path: /api/events/{event}
+  defaults: { _controller: App\Mealz\MealBundle\Controller\EventController::delete }
+  methods: [ DELETE ]
+
 MealzMealBundle_Meal_offers:
     path: /menu/{date}/{dish}/offers
     defaults: { _controller: App\Mealz\MealBundle\Controller\MealController::getOffers }

@@ -53,7 +53,7 @@ const props = defineProps<{
   meal: Meal,
   day: Day
 }>();
-const props = defineProps(['weekID', 'dayID', 'mealID', 'variationID', 'meal', 'day'])
+
 const { sendFlashMessage } = useFlashMessage();
 
 const day = props.day ? props.day : dashboardStore.getDay(props.weekID, props.dayID)

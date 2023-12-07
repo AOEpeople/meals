@@ -62,6 +62,10 @@ MealzMealBundle_timeslots:
   path: /time-slots
   defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
 
+MealzMealBundle_events:
+  path: /events
+  defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
+
 MealzMealBundle_costs:
   path: /costs
   defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }

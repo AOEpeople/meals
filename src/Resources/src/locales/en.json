@@ -176,6 +176,13 @@
       }
     }
   },
+  "event": {
+    "table": {
+      "title": "Title",
+      "public": "Public",
+      "actions": "Actions"
+    }
+  },
   "finance": {
     "table": {
       "date": "Date",
@@ -208,7 +215,8 @@
       "categories": "Categories",
       "slots": "Time Slots",
       "costs": "Costs",
-      "finance": "Finance"
+      "finance": "Finance",
+      "events": "Events"
     },
     "logged_in_text": "You are logged in as",
     "balance": "Balance"

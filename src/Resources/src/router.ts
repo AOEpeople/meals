@@ -15,6 +15,7 @@ import MenuParticipations from './views/MenuParticipations.vue';
 import CostsSettlement from './views/CostsSettlement.vue';
 import CashRegister from './views/CashRegister.vue';
 import Login from '@/views/Login.vue';
+import Events from './views/Events.vue';
 
 import { createRouter, createWebHistory } from 'vue-router';
 import { userDataStore }                  from '@/stores/userDataStore';
@@ -166,6 +167,14 @@ const router = createRouter({
                 allowedRoles: ['ROLE_KITCHEN_STAFF', 'ROLE_USER', 'ROLE_ADMIN', 'ROLE_FINANCE']
             },
             props: true
+        },
+        {
+            path: '/events',
+            name: 'Events',
+            component: Events,
+            meta: {
+                allowedRoles: ['ROLE_KITCHEN_STAFF', 'ROLE_ADMIN']
+            }
         }
     ],
 })

@@ -117,6 +117,13 @@
       }
     }
   },
+  "event": {
+    "table": {
+      "title": "Titel",
+      "public": "Öffentlich",
+      "actions": "Aktionen"
+    }
+  },
   "flashMessage": {
     "error": {
       "101": "Die abgeschickten Daten haben nicht den Anforderungen entsprochen. Deshalb konnte die Anfrage nicht bearbeitet werden.",
@@ -208,7 +215,8 @@
       "categories": "Kategorien",
       "slots": "Zeitslot",
       "costs": "Kosten",
-      "finance": "Finanzen"
+      "finance": "Finanzen",
+      "events": "Events"
     },
     "logged_in_text": "Eingeloggt als",
     "balance": "Kontostand"

@@ -8,14 +8,14 @@
       class="w-[50%] py-2"
     >
       <span class="text-[12px] xl:text-[18px]">
-        !! Platzhalter Titel !!
+        {{ event.title }}
       </span>
     </td>
     <td
       colspan="1"
       class="w-[10%] text-[12px] xl:text-[18px]"
     >
-      !! ?Öffi? !!
+      {{ event.public }}
     </td>
     <td
       colspan="1"
@@ -28,5 +28,9 @@
 
 <script setup lang="ts">
 import LazyTableRow from '../misc/LazyTableRow.vue';
+import { Event } from '@/stores/eventsStore';
 
+defineProps<{
+  event: Event
+}>();
 </script>

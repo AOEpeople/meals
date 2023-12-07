@@ -103,7 +103,7 @@ class Event implements JsonSerializable
             'id' => $this->id,
             'title' => $this->title,
             'slug' => $this->slug,
-            'public' => $this->public
+            'public' => $this->public,
         ];
     }
 }

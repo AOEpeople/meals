@@ -186,3 +186,5 @@ IDP_CLIENT_SECRET=client-secret
   * 505: The settlement request was already processed or the request is invalid
 *CashController 6xx*
   * 601: The amount of cash that will be added, has to be more than zero
+*EventController 7xx*
+  * 701: Event creation parameters are missing

@@ -4,7 +4,11 @@
     v-if="loaded"
     :labels="[t('event.table.title'), t('event.table.public'), t('event.table.actions')]"
   >
-    <EventsTableRow />
+    <EventsTableRow
+      v-for="event in EventsState.events"
+      :key="event.id"
+      :event="event"
+    />
   </Table>
   <LoadingSpinner
     :loaded="loaded"
@@ -19,14 +23,19 @@ import EventsTableRow from '@/components/events/EventsTableRow.vue';
 import { useProgress } from '@marcoschulte/vue3-progress';
 import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useEvents } from '@/stores/eventsStore';
 
 const { t } = useI18n();
+const { fetchEvents, EventsState } = useEvents();
+
 const loaded = ref(false);
 
 onMounted(async () => {
   const progress = useProgress().start();
-  loaded.value = true;
 
+  await fetchEvents();
+
+  loaded.value = true;
   progress.finish();
 });
 </script>

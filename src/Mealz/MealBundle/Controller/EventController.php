@@ -23,8 +23,7 @@ class EventController extends BaseListController
     public function __construct(
         EntityManagerInterface $entityManager,
         EventRepositoryInterface $eventRepository
-    )
-    {
+    ) {
         $this->em = $entityManager;
         $this->eventRepo = $eventRepository;
     }

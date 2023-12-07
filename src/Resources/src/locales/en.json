@@ -117,6 +117,19 @@
       }
     }
   },
+  "event": {
+    "header": "List of Events",
+    "table": {
+      "title": "Title",
+      "public": "Public",
+      "actions": "Actions"
+    },
+    "create": "+ create Event",
+    "search": "Suche nach Event",
+    "popover": {
+      "create": "Neues Event erstellen"
+    }
+  },
   "flashMessage": {
     "error": {
       "101": "The data sent did not meet the requirements. Therefore the request could not be processed.",
@@ -174,13 +187,6 @@
         "deleted": "The timeslot was succefully deleted.",
         "updated": "The timeslot was successfully updated."
       }
-    }
-  },
-  "event": {
-    "table": {
-      "title": "Title",
-      "public": "Public",
-      "actions": "Actions"
     }
   },
   "finance": {

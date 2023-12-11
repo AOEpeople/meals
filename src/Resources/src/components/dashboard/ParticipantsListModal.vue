@@ -50,7 +50,8 @@ import { Dialog, DialogPanel, DialogTitle } from '@headlessui/vue';
 import { useI18n } from 'vue-i18n';
 import CancelButton from '../misc/CancelButton.vue';
 import ParticipantsListByDay from '../participations/ParticipantsListByDay.vue';
-import { filterParticipantsList } from '../participations/filterParticipantsList';
+import { filterParticipantsList } from '@/services/filterParticipantsList';
+
 
 const { t } = useI18n();
 

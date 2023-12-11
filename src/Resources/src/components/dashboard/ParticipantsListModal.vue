@@ -55,10 +55,8 @@ import { filterParticipantsList } from '../participations/filterParticipantsList
 const { t } = useI18n();
 
 const props = defineProps<{
-  modelValue: string,
   openParticipantsModal: boolean,
   date: string,
-  filterValue: string
 }>();
 
 const emit = defineEmits(['closeDialog','update:modelValue','update:filterValue']);

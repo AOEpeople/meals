@@ -1,8 +1,8 @@
 import { useParticipationsListData } from "@/api/getParticipationsByDay";
-import { Ref, computed, reactive, ref } from "vue";
+import { Ref, computed, reactive } from "vue";
 
 interface ParticipantState {
-  participants: Readonly<Ref<readonly any[]>>,
+  participants: Readonly<Ref<readonly string[]>>,
   filter: string,
   isLoading: boolean,
   error: string
@@ -22,7 +22,6 @@ export function filterParticipantsList(date: string){
     participations.filter = filterStr;
   }
 
-
   const filteredParticipants = computed(() => {
     console.log(participations.participants);
     return participations.participants.filter(participant => participantsContainString(participant, participations.filter));
@@ -41,8 +40,6 @@ export function filterParticipantsList(date: string){
 
   //   return filteredList;
   // });
-
-
 
   function participantsContainString(participant: string, filterInput: string) {
     console.log(filterInput);

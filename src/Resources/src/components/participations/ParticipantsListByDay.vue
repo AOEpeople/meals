@@ -50,4 +50,4 @@ watch(
 );
 
 progress.finish()
-</script>
+</script>../../services/filterParticipantsList

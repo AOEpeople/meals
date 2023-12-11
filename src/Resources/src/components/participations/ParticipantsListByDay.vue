@@ -41,4 +41,4 @@ const { filteredParticipants } = filterParticipantsList(props.date);
 //let filteredParticipants  = filterParticipantsList(props.filterString, props.date);
 
 progress.finish()
-</script>@/components/participations/filterParticipantsList
+</script>../../services/filterParticipantsList

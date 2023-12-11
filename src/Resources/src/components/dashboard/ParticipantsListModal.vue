@@ -8,7 +8,7 @@
       class="fixed inset-0 flex items-center justify-center bg-black/30 p-4"
     >
       <DialogPanel
-        class="relative inset-0 w-96 overflow-hidden rounded-lg bg-white p-4 text-left drop-shadow-2xl sm:my-8 sm:p-6"
+        class="relative inset-0 max-h-96 w-96 overflow-scroll rounded-lg bg-white p-4 text-left drop-shadow-2xl sm:my-8 sm:p-6"
       >
         <DialogTitle
           class="text-sm"
@@ -47,7 +47,6 @@
 <script setup lang="ts">
 import InputLabel from '@/components/misc/InputLabel.vue';
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/vue';
-import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import CancelButton from '../misc/CancelButton.vue';
 import ParticipantsListByDay from '../participations/ParticipantsListByDay.vue';
@@ -78,4 +77,4 @@ if (doSubmit === false){
   emit('closeDialog');
 }
 }
-</script>
+</script>../../services/filterParticipantsList

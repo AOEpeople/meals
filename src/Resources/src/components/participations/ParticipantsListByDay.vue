@@ -26,11 +26,12 @@
 </template>
 
 <script setup lang="ts">
+import { filterParticipantsList } from '@/services/filterParticipantsList';
 import { useProgress } from '@marcoschulte/vue3-progress';
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import InputLabel from '../misc/InputLabel.vue';
-import { filterParticipantsList } from './filterParticipantsList';
+
 
 const progress = useProgress().start()
 

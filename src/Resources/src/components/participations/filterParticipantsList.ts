@@ -1,49 +1,30 @@
 import { useParticipationsListData } from "@/api/getParticipationsByDay";
-import { computed } from "vue";
+import { computed, reactive } from "vue";
 
-// interface ParticipantState {
-//   participants: any,
-//   filter: string,
-//   isLoading: boolean,
-//   error: string
-// }
-
-// export interface Participant {
-//   name: string
-// }
+interface ParticipantState {
+  participants: any,
+  filter: string,
+  isLoading: boolean,
+  error: string
+}
 
 export function filterParticipantsList(date: string){
 
   const { listData } = useParticipationsListData(date);
-
+  const participations  = reactive<ParticipantState>({
+    participants: listData,
+    filter: '',
+    isLoading: false,
+    error: ''
+  });
 
   function setFilter(filterStr: string) {
-    //listData.filter = filterStr;
-    console.log(filteredParticipants);
+    participations.filter = filterStr;
   }
 
 
-  // const filteredNames = computed(() => {
-  //   const filteredList: any[] = [];
-
-  //   listData.participants.forEach((item) => {
-  //     if (
-  //       item.startsWith(filterString)
-  //     ) {
-  //       filteredList.push(item);
-  //     }
-  //   });
-
-  //   return filteredList;
-  // });
-
   const filteredParticipants = computed(() => {
-    //console.log(listData.participants);
-    // let filteredList: any[] = [];
-    // listData.forEach((fruits) => {}
-
-    // )
-    return listData.value.filter(participant => participantsContainString(participant, ''));
+    return participations.participants.filter(participant => participantsContainString(participant, participations.filter));
   });
 
 

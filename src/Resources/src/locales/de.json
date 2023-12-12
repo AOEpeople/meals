@@ -117,6 +117,23 @@
       }
     }
   },
+  "event": {
+    "header": "Liste der Events",
+    "table": {
+      "title": "Titel",
+      "public": "Öffentlich",
+      "actions": "Aktionen"
+    },
+    "create": "+ Event erstellen",
+    "search": "Suche nach Event",
+    "popover": {
+      "create": "Neues Event erstellen",
+      "update": "Event editieren",
+      "submit": "Erstellen",
+      "title": "Titel",
+      "isPublic": "Öffentliches Event?"
+    }
+  },
   "flashMessage": {
     "error": {
       "101": "Die abgeschickten Daten haben nicht den Anforderungen entsprochen. Deshalb konnte die Anfrage nicht bearbeitet werden.",
@@ -161,6 +178,11 @@
         "created": "Das Gericht wurde erfolgreich erstellt.",
         "deleted": "Das Gericht wurde erfolgreich gelöscht.",
         "updated": "Das Gericht wurde erfolgreich bearbeitet."
+      },
+      "events": {
+        "created": "Das Event wurde erfolgreich erstellt.",
+        "deleted": "Das Event wurde erfolgreich gelöscht.",
+        "updated": "Das Event wurde erfolgreich bearbeitet."
       },
       "finance": {
         "empty": "Es gibt keine Transaktionen im ausgewählten Zeitraum"
@@ -208,7 +230,8 @@
       "categories": "Kategorien",
       "slots": "Zeitslot",
       "costs": "Kosten",
-      "finance": "Finanzen"
+      "finance": "Finanzen",
+      "events": "Events"
     },
     "logged_in_text": "Eingeloggt als",
     "balance": "Kontostand"

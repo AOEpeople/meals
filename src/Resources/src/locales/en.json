@@ -125,9 +125,13 @@
       "actions": "Actions"
     },
     "create": "+ create Event",
-    "search": "Suche nach Event",
+    "search": "Search for event",
     "popover": {
-      "create": "Neues Event erstellen"
+      "create": "Create new event",
+      "update": "Edit event",
+      "submit": "Create",
+      "title": "Title",
+      "isPublic": "Public event?"
     }
   },
   "flashMessage": {
@@ -174,6 +178,11 @@
         "created": "The dish was successfully created.",
         "deleted": "The dish was succefully deleted.",
         "updated": "The dish was successfully updated."
+      },
+      "events": {
+        "created": "The event was successfully created.",
+        "deleted": "The event was succefully deleted.",
+        "updated": "The event was successfully updated."
       },
       "finance": {
         "empty": "There are no transactions for the selected timeframe"

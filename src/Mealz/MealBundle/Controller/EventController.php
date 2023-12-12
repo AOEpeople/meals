@@ -65,7 +65,7 @@ class EventController extends BaseListController
             $this->em->persist($event);
             $this->em->flush();
 
-            return new JsonResponse(null, 200);
+            return new JsonResponse($event, 200);
         } catch (Exception $e) {
             $this->logException($e);
 

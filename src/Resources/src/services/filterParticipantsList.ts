@@ -23,12 +23,10 @@ export function filterParticipantsList(date: string){
   }
 
   const filteredParticipants = computed(() => {
-    console.log(participations.participants);
     return participations.participants.filter(participant => participantsContainString(participant, participations.filterValue));
   });
 
   function participantsContainString(participant: string, filterInput: string) {
-    console.log(filterInput);
     return (
       participant.toLowerCase().includes(filterInput.toLowerCase())
     );
@@ -38,5 +36,4 @@ export function filterParticipantsList(date: string){
       filteredParticipants,
       setFilter
   };
-
 }

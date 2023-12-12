@@ -178,12 +178,12 @@ MealzMealBundle_api_events_new:
   methods: [ POST ]
 
 MealzMealBundle_api_events_update:
-  path: /api/events/{event}
+  path: /api/events/{slug}
   defaults: { _controller: App\Mealz\MealBundle\Controller\EventController::update }
   methods: [ PUT ]
 
 MealzMealBundle_api_events_delete:
-  path: /api/events/{event}
+  path: /api/events/{slug}
   defaults: { _controller: App\Mealz\MealBundle\Controller\EventController::delete }
   methods: [ DELETE ]
 

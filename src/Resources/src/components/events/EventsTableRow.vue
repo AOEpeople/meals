@@ -15,13 +15,22 @@
       colspan="1"
       class="w-[10%] text-[12px] xl:text-[18px]"
     >
-      {{ event.public }}
+      <CheckIcon
+        v-if="event.public === true"
+        class="aspect-square h-8 w-8"
+      />
+      <XIcon
+        v-else
+        class="aspect-square h-8 w-8"
+      />
     </td>
     <td
       colspan="1"
       class="w-[40%]"
     >
-      !! Hier könnten ihre Aktionen stehen !!
+      <EventsActions
+        :event="event"
+      />
     </td>
   </LazyTableRow>
 </template>
@@ -29,6 +38,8 @@
 <script setup lang="ts">
 import LazyTableRow from '../misc/LazyTableRow.vue';
 import { Event } from '@/stores/eventsStore';
+import { CheckIcon, XIcon } from '@heroicons/vue/outline';
+import EventsActions from './EventsActions.vue';
 
 defineProps<{
   event: Event

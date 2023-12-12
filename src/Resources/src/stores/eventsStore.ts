@@ -1,6 +1,12 @@
 import getEvents from "@/api/getEvents";
 import { isResponseArrayOkay } from "@/api/isResponseOkay";
-import { reactive, readonly } from "vue";
+import { computed, reactive, readonly, ref, watch } from "vue";
+import postCreateEvent from '@/api/postCreateEvent';
+import { IMessage, isMessage } from "@/interfaces/IMessage";
+import useFlashMessage from "@/services/useFlashMessage";
+import { FlashMessageType } from "@/enums/FlashMessage";
+import putEventUpdate from "@/api/putEventUpdate";
+import deleteEvent from "@/api/deleteEvent";
 
 export interface Event {
     id: number,
@@ -34,7 +40,27 @@ const EventsState = reactive<EventsState>({
     isLoading: false
 });
 
+const { sendFlashMessage } = useFlashMessage();
+
+watch(
+    () => EventsState.error,
+    () => {
+        if (EventsState.error !== '') {
+            sendFlashMessage({
+                type: FlashMessageType.ERROR,
+                message: EventsState.error
+            });
+        }
+    }
+)
+
 export function useEvents() {
+
+    const filterStr = ref('');
+
+    const filteredEvents = computed(() => {
+        return EventsState.events.filter((event) => event.title.toLowerCase().includes(filterStr.value.toLowerCase()))
+    });
 
     async function fetchEvents() {
         EventsState.isLoading = true;
@@ -51,8 +77,61 @@ export function useEvents() {
         EventsState.isLoading = false;
     }
 
+    async function createEvent(title: string, isPublic: boolean) {
+        const { error, response } = await postCreateEvent(title, isPublic);
+
+        if (error.value === true || isMessage(response.value) === true) {
+            EventsState.error = response.value?.message;
+            return;
+        }
+
+        sendFlashMessage({
+            type: FlashMessageType.INFO,
+            message: 'events.created'
+        });
+        await fetchEvents();
+    }
+
+    async function updateEvent(slug: string, title: string, isPublic: boolean) {
+        const { error, response } = await putEventUpdate(slug, title, isPublic);
+
+        if (error.value === true && isMessage(response.value as IMessage) === true) {
+            EventsState.error = (response.value as IMessage)?.message;
+        } else if (error.value === false && isEvent(response.value as Event)) {
+            const event = getEventBySlug(slug);
+            event.public = (response.value as Event).public;
+            event.title = (response.value as Event).title;
+            event.slug = (response.value as Event).slug;
+        } else {
+            EventsState.error = 'An unknown error occured while updating an event!';
+        }
+    }
+
+    async function deleteEventWithSlug(slug: string) {
+        const { error, response } = await deleteEvent(slug);
+
+        if (error.value === true && isMessage(response.value) === true) {
+            EventsState.error = response.value?.message;
+        } else {
+            EventsState.events.splice(EventsState.events.findIndex((event) => event.slug === slug))
+        }
+    }
+
+    function setFilter(newFilter: string) {
+        filterStr.value = newFilter;
+    }
+
+    function getEventBySlug(slug: string) {
+        return EventsState.events.find((event) => event.slug === slug);
+    }
+
     return {
         EventsState: readonly(EventsState),
-        fetchEvents
+        filteredEvents,
+        fetchEvents,
+        createEvent,
+        updateEvent,
+        deleteEventWithSlug,
+        setFilter
     }
 }

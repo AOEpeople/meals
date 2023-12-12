@@ -1,11 +1,13 @@
 <template>
-  <EventsHeader />
+  <EventsHeader
+    v-model="filterInput"
+  />
   <Table
     v-if="loaded"
     :labels="[t('event.table.title'), t('event.table.public'), t('event.table.actions')]"
   >
     <EventsTableRow
-      v-for="event in EventsState.events"
+      v-for="event in filteredEvents"
       :key="event.id"
       :event="event"
     />
@@ -21,12 +23,12 @@ import LoadingSpinner from '@/components/misc/LoadingSpinner.vue';
 import Table from '@/components/misc/Table.vue';
 import EventsTableRow from '@/components/events/EventsTableRow.vue';
 import { useProgress } from '@marcoschulte/vue3-progress';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useEvents } from '@/stores/eventsStore';
 
 const { t } = useI18n();
-const { fetchEvents, EventsState } = useEvents();
+const { fetchEvents, filteredEvents, setFilter } = useEvents();
 
 const loaded = ref(false);
 
@@ -38,4 +40,13 @@ onMounted(async () => {
   loaded.value = true;
   progress.finish();
 });
+
+const filterInput = ref('');
+
+watch(
+  () => filterInput.value,
+  () => {
+    setFilter(filterInput.value);
+  }
+)
 </script>

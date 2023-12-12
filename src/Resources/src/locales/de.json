@@ -127,7 +127,11 @@
     "create": "+ Event erstellen",
     "search": "Suche nach Event",
     "popover": {
-      "create": "Neues Event erstellen"
+      "create": "Neues Event erstellen",
+      "update": "Event editieren",
+      "submit": "Erstellen",
+      "title": "Titel",
+      "isPublic": "Öffentliches Event?"
     }
   },
   "flashMessage": {
@@ -174,6 +178,11 @@
         "created": "Das Gericht wurde erfolgreich erstellt.",
         "deleted": "Das Gericht wurde erfolgreich gelöscht.",
         "updated": "Das Gericht wurde erfolgreich bearbeitet."
+      },
+      "events": {
+        "created": "Das Event wurde erfolgreich erstellt.",
+        "deleted": "Das Event wurde erfolgreich gelöscht.",
+        "updated": "Das Event wurde erfolgreich bearbeitet."
       },
       "finance": {
         "empty": "Es gibt keine Transaktionen im ausgewählten Zeitraum"

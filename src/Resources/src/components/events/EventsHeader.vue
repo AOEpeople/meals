@@ -17,11 +17,7 @@
         />
       </template>
       <template #panel="{ close }">
-        <div
-          class="p-4"
-        >
-          {{ t('event.popover.create') }}
-        </div>
+        <EventCreationPanel />
       </template>
     </Popover>
     <InputLabel
@@ -39,9 +35,23 @@ import { useI18n } from 'vue-i18n';
 import Popover from '../misc/Popover.vue';
 import CreateButton from '../misc/CreateButton.vue';
 import InputLabel from '../misc/InputLabel.vue';
-import { ref } from 'vue';
+import { computed } from 'vue';
+import EventCreationPanel from './EventCreationPanel.vue';
 
 const { t } = useI18n();
 
-const filterInput = ref('');
+const props = defineProps<{
+  modelValue: string
+}>();
+
+const emit = defineEmits(['update:modelValue']);
+
+const filterInput = computed({
+  get() {
+    return props.modelValue;
+  },
+  set(value) {
+    emit('update:modelValue', value);
+  }
+});
 </script>

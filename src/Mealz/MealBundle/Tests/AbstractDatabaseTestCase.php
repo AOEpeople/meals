@@ -8,6 +8,7 @@ use App\Mealz\MealBundle\Entity\Category;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\DishVariation;
+use App\Mealz\MealBundle\Entity\Event;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\UserBundle\Entity\Profile;
 use Doctrine\Bundle\DoctrineBundle\Registry;
@@ -115,6 +116,14 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
         $meal->setPrice(1.23);
 
         return $meal;
+    }
+
+    protected function createEvent(): Event
+    {
+        $event = new Event();
+        $event->setTitle('TestEvent' . mt_rand());
+
+        return $event;
     }
 
     protected function createProfile(): Profile

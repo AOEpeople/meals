@@ -15,14 +15,22 @@
       colspan="1"
       class="w-[10%] text-[12px] xl:text-[18px]"
     >
-      <CheckIcon
+      <div
         v-if="event.public === true"
-        class="aspect-square h-8 w-8"
-      />
-      <XIcon
+        data-cy="checkIcon"
+      >
+        <CheckIcon
+          class="aspect-square h-8 w-8"
+        />
+      </div>
+      <div
         v-else
-        class="aspect-square h-8 w-8"
-      />
+        data-cy="xIcon"
+      >
+        <XIcon
+          class="aspect-square h-8 w-8"
+        />
+      </div>
     </td>
     <td
       colspan="1"

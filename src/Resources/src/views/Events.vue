@@ -1,17 +1,21 @@
 <template>
-  <EventsHeader
-    v-model="filterInput"
-  />
-  <Table
-    v-if="loaded"
-    :labels="[t('event.table.title'), t('event.table.public'), t('event.table.actions')]"
+  <div
+    class="mx-[5%]"
   >
-    <EventsTableRow
-      v-for="event in filteredEvents"
-      :key="event.id"
-      :event="event"
+    <EventsHeader
+      v-model="filterInput"
     />
-  </Table>
+    <Table
+      v-if="loaded"
+      :labels="[t('event.table.title'), t('event.table.public'), t('event.table.actions')]"
+    >
+      <EventsTableRow
+        v-for="event in filteredEvents"
+        :key="event.id"
+        :event="event"
+      />
+    </Table>
+  </div>
   <LoadingSpinner
     :loaded="loaded"
   />

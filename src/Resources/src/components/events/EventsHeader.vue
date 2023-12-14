@@ -5,9 +5,8 @@
     </h2>
     <Popover
       :breakpoint-width="768"
-      :translate-x-max="'-65%'"
-      :translate-x-min="'-15%'"
-      :overflow-hidden="false"
+      :translate-x-max="'-60%'"
+      :translate-x-min="'-20%'"
       class="justify-self-center md:col-start-2 md:row-start-2 md:justify-self-end"
     >
       <template #button="{ open }">

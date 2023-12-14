@@ -13,6 +13,7 @@ use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
 use App\Mealz\MealBundle\Repository\WeekRepositoryInterface;
 use App\Mealz\MealBundle\Service\DayService;
 use App\Mealz\MealBundle\Service\DishService;
+use App\Mealz\MealBundle\Service\EventParticipationService;
 use App\Mealz\MealBundle\Service\WeekService;
 use DateTime;
 use DateTimeZone;
@@ -35,6 +36,7 @@ class MealAdminController extends BaseController
     private DayRepositoryInterface $dayRepository;
     private DayService $dayService;
     private DishService $dishService;
+    private EventParticipationService $eventService;
     private EntityManagerInterface $em;
 
     public function __construct(
@@ -45,6 +47,7 @@ class MealAdminController extends BaseController
         DayRepositoryInterface $dayRepository,
         DayService $dayService,
         DishService $dishService,
+        EventParticipationService $eventService,
         EntityManagerInterface $em
     ) {
         $this->eventDispatcher = $eventDispatcher;
@@ -54,6 +57,7 @@ class MealAdminController extends BaseController
         $this->dayRepository = $dayRepository;
         $this->dayService = $dayService;
         $this->dishService = $dishService;
+        $this->eventService = $eventService;
         $this->em = $em;
     }
 
@@ -213,6 +217,7 @@ class MealAdminController extends BaseController
         }
 
         $this->setLockParticipationForDay($dayEntity, $day);
+        $this->eventService->handleEventParticipation($dayEntity, $day['eventId']);
 
         $mealCollection = $day['meals'];
         /*
@@ -244,6 +249,7 @@ class MealAdminController extends BaseController
         }
 
         $this->setLockParticipationForDay($day, $dayData);
+        $this->eventService->handleEventParticipation($day, $dayData['eventId']);
 
         $mealCollection = $dayData['meals'];
         // max 2 main meals allowed

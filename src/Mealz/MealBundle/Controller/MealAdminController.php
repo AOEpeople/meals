@@ -217,7 +217,7 @@ class MealAdminController extends BaseController
         }
 
         $this->setLockParticipationForDay($dayEntity, $day);
-        $this->eventService->handleEventParticipation($dayEntity, $day['eventId']);
+        $this->eventService->handleEventParticipation($dayEntity, $day['event']);
 
         $mealCollection = $day['meals'];
         /*
@@ -249,7 +249,7 @@ class MealAdminController extends BaseController
         }
 
         $this->setLockParticipationForDay($day, $dayData);
-        $this->eventService->handleEventParticipation($day, $dayData['eventId']);
+        $this->eventService->handleEventParticipation($day, $dayData['event']);
 
         $mealCollection = $dayData['meals'];
         // max 2 main meals allowed

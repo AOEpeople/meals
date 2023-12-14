@@ -26,6 +26,7 @@ export interface SimpleDay {
     lockParticipationDateTime: DateTime,
     week: number,
     meals: Dictionary<SimpleMeal[]>,
+    event: number | null,
     enabled: boolean
 }
 
@@ -229,6 +230,7 @@ export function useWeeks() {
             meals: {},
             id: parseInt(dayId),
             enabled: day.enabled,
+            event: day.event,
             date: day.dateTime,
             lockDate: day.lockParticipationDateTime
         };

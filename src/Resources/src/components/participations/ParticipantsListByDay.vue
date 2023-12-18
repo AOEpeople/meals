@@ -5,7 +5,9 @@
     :label-visible="false"
     class="col-span-3 row-start-2 justify-self-center sm:col-span-1 sm:col-start-1 sm:justify-self-start min-[900px]:row-start-2"
   />
-  <table>
+  <table
+    class="w-full"
+  >
     <tbody>
       <template
         v-for="(participant, index) in filteredParticipants"
@@ -15,7 +17,7 @@
           :class="[0 ? 'border-gray-300' : 'border-gray-200', 'border-b']"
         >
           <td
-            class="text-s leading- w-2/5 whitespace-nowrap py-4 pl-4 pr-3 font-light"
+            class="leading- whitespace-nowrap py-4 pl-4 pr-3 text-[11px] font-light"
           >
             {{ participant }}
           </td>
@@ -38,8 +40,17 @@ const progress = useProgress().start()
 const props = defineProps<{
   date: string
 }>();
-const { filteredParticipants } = filterParticipantsList(props.date);
-//let filteredParticipants  = filterParticipantsList(props.filterString, props.date);
+
+const { filteredParticipants, setFilter } = filterParticipantsList(props.date);
+console.log("Bananananananana" + filteredParticipants);
+const { t } = useI18n();
+
+const filterInput = ref('');
+
+watch(
+  () => filterInput.value,
+  () => setFilter(filterInput.value)
+);
 
 progress.finish()
 </script>../../services/filterParticipantsList

@@ -3,7 +3,7 @@ import { Ref, computed, reactive } from "vue";
 
 interface ParticipantState {
   participants: Readonly<Ref<readonly string[]>>,
-  filter: string,
+  filterValue: string,
   isLoading: boolean,
   error: string
 }
@@ -13,33 +13,19 @@ export function filterParticipantsList(date: string){
   const { listData } = useParticipationsListData(date);
   const participations  = reactive<ParticipantState>({
     participants: listData,
-    filter: '',
+    filterValue: '',
     isLoading: false,
     error: ''
   });
 
   function setFilter(filterStr: string) {
-    participations.filter = filterStr;
+    participations.filterValue = filterStr;
   }
 
   const filteredParticipants = computed(() => {
     console.log(participations.participants);
-    return participations.participants.filter(participant => participantsContainString(participant, participations.filter));
+    return participations.participants.filter(participant => participantsContainString(participant, participations.filterValue));
   });
-
-  // const filteredParticipants = computed(() => {
-  //   const filteredList: any[] = [];
-
-  //   participations.participants.forEach((elf) => {
-  //     if (
-  //       elf.includes(participations.filter)
-  //     ) {
-  //       filteredList.push(elf);
-  //     }
-  //   });
-
-  //   return filteredList;
-  // });
 
   function participantsContainString(participant: string, filterInput: string) {
     console.log(filterInput);

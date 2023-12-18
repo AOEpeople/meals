@@ -186,7 +186,9 @@ class ApiController extends BaseController
             $list[] = $participant->getProfile()->getFirstName() .' '. $participant->getProfile()->getName();
         }
 
-        return new JsonResponse($list, 200);
+        $uniqueArray = array_unique($list);
+
+        return new JsonResponse($uniqueArray, 200);
     }
 
     private function addSlots(array &$slotArray, array $slots, Day $day, ?int $activeParticipations): void

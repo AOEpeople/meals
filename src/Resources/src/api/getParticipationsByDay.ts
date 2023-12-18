@@ -3,9 +3,6 @@ import { onMounted, onUnmounted, readonly, ref } from 'vue';
 
 export type ListData = []
 
-
-//let listDataState = reactive<ListData>([]);
-
 const listDataState = ref([])
 
 /**
@@ -13,7 +10,7 @@ const listDataState = ref([])
  * @param date
  * @returns list of participants
  */
-export function useParticipationsListData(date?: string){
+export function useParticipationsListData(date: string){
 
     const loaded = ref(false)
 
@@ -22,7 +19,7 @@ export function useParticipationsListData(date?: string){
     });
 
     onUnmounted(() => {
-        //listData = [];
+        listDataState.value = [];
     });
 
     async function getListData() {
@@ -31,6 +28,7 @@ export function useParticipationsListData(date?: string){
             `/api/participations/day/${date}`
         );
 
+        console.log("Meals huraaaaaaaaaa!!!!!!! 8477987r987r97" + date);
         if (loaded.value === false) {
             await request();
             loaded.value = true;

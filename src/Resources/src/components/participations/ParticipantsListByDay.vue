@@ -42,7 +42,6 @@ const props = defineProps<{
 }>();
 
 const { filteredParticipants, setFilter } = filterParticipantsList(props.date);
-console.log("Bananananananana" + filteredParticipants);
 const { t } = useI18n();
 
 const filterInput = ref('');

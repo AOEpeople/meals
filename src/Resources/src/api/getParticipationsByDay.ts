@@ -32,7 +32,6 @@ export function useParticipationsListData(date: string){
             `/api/participations/day/${date}`
         );
 
-        console.log("Meals huraaaaaaaaaa!!!!!!! 8477987r987r97" + date);
         if (loaded.value === false) {
             await request();
             loaded.value = true;

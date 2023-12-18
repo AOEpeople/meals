@@ -23,6 +23,10 @@ export function useParticipationsListData(date: string){
     });
 
     async function getListData() {
+        if (undefined === date) {
+            return;
+        }
+
         const { response: listData, request, error } = useApi<ListData>(
             'GET',
             `/api/participations/day/${date}`

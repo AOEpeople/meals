@@ -28,7 +28,6 @@ export function filterParticipantsList(date: string){
   });
 
   function participantsContainString(participant: string, filterInput: string) {
-    console.log(filterInput);
     return (
       participant.toLowerCase().includes(filterInput.toLowerCase())
     );
@@ -38,5 +37,4 @@ export function filterParticipantsList(date: string){
       filteredParticipants,
       setFilter
   };
-
 }

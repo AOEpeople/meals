@@ -43,7 +43,8 @@ export type Day = {
     meals: Dictionary<Meal>,
     slots: Dictionary<Slot>,
     slotsEnabled: boolean,
-    isEnabled: boolean
+    isEnabled: boolean,
+    event: number | null
 }
 
 export type Week = {

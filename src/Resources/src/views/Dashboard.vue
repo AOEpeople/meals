@@ -23,15 +23,18 @@ import { userDataStore } from '@/stores/userDataStore';
 import { onMounted, ref } from 'vue';
 import { Dictionary } from 'types/types';
 import { Week } from '@/api/getDashboardData';
+import { useEvents } from '@/stores/eventsStore';
 
 const weeks = ref<Dictionary<Week>>({});
 const isAllowedToPrint = ref(false);
+const { fetchEvents } = useEvents();
 
 onMounted(async () => {
   const progress = useProgress().start();
 
   await dashboardStore.fillStore();
   weeks.value = dashboardStore.getWeeks();
+  await fetchEvents();
 
   isAllowedToPrint.value = userDataStore.roleAllowsRoute('PrintableList');
   progress.finish();

@@ -153,7 +153,7 @@ class MealAdminControllerTest extends AbstractControllerTestCase
                         "-1": []
                     },
                     "id": ' . $createdWeek->getDays()[0]->getId() . ',
-                    "eventId": null,
+                    "event": null,
                     "enabled": true,
                     "date": {
                         "date": "' . $date->format('Y-m-d') . ' 12:00:00.000000",
@@ -174,7 +174,7 @@ class MealAdminControllerTest extends AbstractControllerTestCase
                         "-1": []
                     },
                     "id": ' . $createdWeek->getDays()[1]->getId() . ',
-                    "eventId": null,
+                    "event": null,
                     "enabled": true,
                     "date": {
                         "date": "' . $createdWeek->getDays()[1]->getDateTime()->format('Y-m-d') . ' 12:00:00.000000",
@@ -224,7 +224,7 @@ class MealAdminControllerTest extends AbstractControllerTestCase
                         "-1": []
                     },
                     "id": -1,
-                    "eventId": null,
+                    "event": null,
                     "enabled": true,
                     "date": {
                         "date": "' . $localDate->format('Y-m-d') . ' 12:00:00.000000",
@@ -241,7 +241,7 @@ class MealAdminControllerTest extends AbstractControllerTestCase
                         "-1": []
                     },
                     "id": -2,
-                    "eventId": null,
+                    "event": null,
                     "enabled": true,
                     "date": {
                         "date": "' . $localDate->modify('+1 day')->format('Y-m-d') . ' 12:00:00.000000",
@@ -259,7 +259,7 @@ class MealAdminControllerTest extends AbstractControllerTestCase
                         "-1": []
                     },
                     "id": -3,
-                    "eventId": null,
+                    "event": null,
                     "enabled": true,
                     "date": {
                         "date": "' . $localDate->modify('+1 day')->format('Y-m-d') . ' 12:00:00.000000",
@@ -277,7 +277,7 @@ class MealAdminControllerTest extends AbstractControllerTestCase
                         "-1": []
                     },
                     "id": -4,
-                    "eventId": null,
+                    "event": null,
                     "enabled": true,
                     "date": {
                         "date": "' . $localDate->modify('+1 day')->format('Y-m-d') . ' 12:00:00.000000",
@@ -295,7 +295,7 @@ class MealAdminControllerTest extends AbstractControllerTestCase
                         "-1": []
                     },
                     "id": -5,
-                    "eventId": null,
+                    "event": null,
                     "enabled": true,
                     "date": {
                         "date": "' . $localDate->modify('+1 day')->format('Y-m-d') . ' 12:00:00.000000",

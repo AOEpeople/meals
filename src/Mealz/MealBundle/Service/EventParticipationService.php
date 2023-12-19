@@ -46,14 +46,9 @@ class EventParticipationService
         if (null !== $event && null === $day->getEvent()) {
             $eventParticipation = new EventParticipation($day, $event);
             $day->setEvent($eventParticipation);
-
-            $this->em->persist($eventParticipation);
-            $this->em->flush();
         } elseif (null !== $event && $day->getEvent()->getEvent()->getId() !== $event->getId()) {
             // edit eventparticipation
             $day->getEvent()->setEvent($event);
-
-            $this->em->flush();
         }
     }
 
@@ -62,7 +57,6 @@ class EventParticipationService
         if (null !== $day->getEvent()) {
             $this->em->remove($day->getEvent());
             $day->setEvent(null);
-            $this->em->flush();
         }
     }
 }

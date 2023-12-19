@@ -48,7 +48,7 @@ const getMockedResponses = (method: string, url: string) => {
 useApi = jest.fn().mockImplementation((method: string, url: string) => getMockedResponses(method, url));
 
 describe('Test EventsStore', () => {
-    const { EventsState, fetchEvents, setFilter, filteredEvents, createEvent, updateEvent, deleteEventWithSlug, getEventBySlug, resetState } = useEvents();
+    const { EventsState, fetchEvents, setFilter, filteredEvents, updateEvent, deleteEventWithSlug, getEventBySlug, resetState } = useEvents();
 
     beforeEach(() => {
         resetState();

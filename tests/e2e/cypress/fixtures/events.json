@@ -1,0 +1,14 @@
+[
+    {
+        "id": 348,
+        "title": "Afterwork",
+        "slug": "afterwork",
+        "public": true
+    },
+    {
+        "id": 349,
+        "title": "Alumni Afterwork",
+        "slug": "alumni-afterwork",
+        "public": true
+    }
+]

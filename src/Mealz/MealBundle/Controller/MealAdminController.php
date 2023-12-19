@@ -117,7 +117,7 @@ class MealAdminController extends BaseController
                 $this->handleNewDay($dayData, $weekDays[$dayIndex++]);
             }
         } catch (Exception $e) {
-            return new JsonResponse(['message' => $e->getMessage()], 500);
+            return new JsonResponse(['message' => 'NoErrorNumber: ' . $e->getMessage()], 500);
         }
 
         $this->em->persist($week);

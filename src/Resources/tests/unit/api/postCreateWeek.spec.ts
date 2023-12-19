@@ -13,6 +13,7 @@ const testDay: DayDTO = {
     meals: { 0: [testMeal] },
     enabled: false,
     id: 0,
+    event: null,
     date: {
         date: "",
         timezone_type: 0,

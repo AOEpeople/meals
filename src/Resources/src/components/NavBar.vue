@@ -130,7 +130,7 @@
 
 <script setup lang="ts">
   import {Menu, MenuButton} from '@headlessui/vue';
-  import {MenuIcon, XIcon, CalendarIcon, CalculatorIcon, CakeIcon, CashIcon, BookmarkIcon, ClockIcon, StarIcon} from '@heroicons/vue/outline';
+  import {MenuIcon, XIcon, CalendarIcon, CalculatorIcon, CashIcon, BookmarkIcon, ClockIcon} from '@heroicons/vue/outline';
   import Icons from '@/components/misc/Icons.vue';
   import {useI18n} from 'vue-i18n';
   import { computed } from 'vue';
@@ -140,6 +140,8 @@
   import ErrorTrafficLight from './navbar/ErrorTrafficLight.vue';
   import { getNextThreeDays } from '@/api/getMealsNextThreeDays';
   import { getShowParticipations } from '@/api/getShowParticipations';
+  import EventIcon from './misc/EventIcon.vue';
+  import MealIcon from './menu/MealIcon.vue';
 
   const { t } = useI18n();
 
@@ -168,10 +170,10 @@
   const navigation = computed(() => {
     return [
       { name: 'header.navigation.menu',       to: '/weeks',      icon: CalendarIcon,   access: userDataStore.roleAllowsRoute('Weeks'     ) },
-      { name: 'header.navigation.dishes',     to: '/dishes',     icon: CakeIcon,       access: userDataStore.roleAllowsRoute('Dishes'    ) },
+      { name: 'header.navigation.dishes',     to: '/dishes',     icon: MealIcon,       access: userDataStore.roleAllowsRoute('Dishes'    ) },
       { name: 'header.navigation.categories', to: '/categories', icon: BookmarkIcon,   access: userDataStore.roleAllowsRoute('Categories') },
       { name: 'header.navigation.slots',      to: '/time-slots', icon: ClockIcon,      access: userDataStore.roleAllowsRoute('Time Slots') },
-      { name: 'header.navigation.events',     to: '/events',     icon: StarIcon,       access: userDataStore.roleAllowsRoute('Events'    ) },
+      { name: 'header.navigation.events',     to: '/events',     icon: EventIcon,       access: userDataStore.roleAllowsRoute('Events'    ) },
       { name: 'header.navigation.costs',      to: '/costs',      icon: CashIcon,       access: userDataStore.roleAllowsRoute('Costs'     ) },
       { name: 'header.navigation.finance',    to: '/finance',    icon: CalculatorIcon, access: userDataStore.roleAllowsRoute('Finance'   ) },
     ]

@@ -174,7 +174,7 @@ class Day extends AbstractMessage implements JsonSerializable
             'lockParticipationDateTime' => $this->getLockParticipationDateTime(),
             'week' => $this->getWeek()->getId(),
             'meals' => $meals,
-            'event' => null !== $this->event ? $this->event->getId() : null,
+            'event' => null !== $this->event ? $this->event->getEvent()->getId() : null,
             'enabled' => $this->isEnabled(),
         ];
     }

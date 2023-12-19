@@ -242,6 +242,7 @@
     "list": "Liste der Wochen",
     "week": "Woche",
     "noDishFound": "Keine Gerichte gefunden.",
+    "noEventFound": "Keine Events gefunden.",
     "enableDay": "Dieser Tag ist aktiviert",
     "lockDate": "Buchung möglich bis",
     "notify": "In Mattermost bekanntgeben",

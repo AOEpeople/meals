@@ -15,6 +15,7 @@ describe('Test Creating a Menu', () => {
         cy.intercept('GET', '**/api/participations/*').as('getParticipations');
         cy.intercept('PUT', '**/api/participation/*/*').as('putParticipation');
         cy.intercept('DELETE', '**/api/participation/*/*').as('deleteParticipation');
+        cy.intercept('GET', '**/api/events').as('getEvents');
     });
 
     it('should create a week on submitting a valid menu', () => {
@@ -107,6 +108,18 @@ describe('Test Creating a Menu', () => {
 
         cy.get('h2').should('contain', 'Woche').click();
 
+        cy.get('input')
+            .eq(8)
+            .parent()
+            .find('input')
+            .click()
+            .parent().parent()
+            .find('li')
+            .contains('Alumni Afterwork')
+            .click();
+
+        cy.get('h2').should('contain', 'Woche').click();
+
         // Thursday
         cy.get('input')
             .eq(9)
@@ -154,17 +167,32 @@ describe('Test Creating a Menu', () => {
 
         cy.wait(['@postWeeks', '@getWeeks']);
 
+        cy.get('[data-cy="msgClose"]').click();
+
+        // Find the saved event
+        cy.get('input')
+            .eq(8)
+            .should('have.value', 'Alumni Afterwork');
+
         // Edit Menu
         cy.get('input')
-        .eq(12)
-        .parent()
-        .find('input')
-        .click()
-        .parent().parent()
-        .find('li').contains('Innards DE')
-        .click();
+            .eq(12)
+            .parent()
+            .find('input')
+            .click()
+            .parent().parent()
+            .find('li').contains('Innards DE')
+            .click();
 
-        cy.get('[data-cy="msgClose"]').click();
+        cy.get('h2').should('contain', 'Woche').click();
+
+        cy.get('input')
+            .eq(8)
+            .parent()
+            .find('svg')
+            .eq(1)
+            .click()
+
         cy.get('h2').should('contain', 'Woche').click();
 
         cy.get('input')
@@ -203,7 +231,7 @@ describe('Test Creating a Menu', () => {
 
         cy.get('[data-cy="msgClose"]').click();
 
-        // Check that all meals are saved
+        // Check that all meals and the event are saved
         cy.get('input')
             .eq(0)
             .should('have.value', 'Tasty Worms DE');
@@ -227,6 +255,10 @@ describe('Test Creating a Menu', () => {
         cy.get('input')
             .eq(7)
             .should('have.value', 'Limbs oh la la la (Ofen gebacken) + Finger food mit einer schlammigen Süß-Sauer-Soße');
+
+        cy.get('input')
+            .eq(8)
+            .should('have.value', '');
 
         cy.get('input')
             .eq(9)

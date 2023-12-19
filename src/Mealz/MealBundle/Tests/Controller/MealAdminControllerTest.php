@@ -295,7 +295,7 @@ class MealAdminControllerTest extends AbstractControllerTestCase
                         "-1": []
                     },
                     "id": -5,
-                    "event": null,
+                    "event": ' . $testEvent->getId() . ',
                     "enabled": true,
                     "date": {
                         "date": "' . $localDate->modify('+1 day')->format('Y-m-d') . ' 12:00:00.000000",

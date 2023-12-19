@@ -15,6 +15,10 @@
         class="flex w-full flex-row items-center overflow-hidden border-[#CAD6E1] bg-white text-left text-[14px] font-medium text-[#B4C1CE] focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2"
         :class="openProp ? 'rounded-t-[23px] border-x-2 border-t-2 border-b-[1px]' : 'rounded-full border-2'"
       >
+        <MealIcon
+          class="ml-4 aspect-square h-full"
+          :fill-colour="'fill-[#9CA3AF]'"
+        />
         <ComboboxInput
           :displayValue="// @ts-ignore
             (dish) => titleStringRepr"
@@ -97,6 +101,7 @@ import { WatchStopHandle, computed, onMounted, onUnmounted, ref, watch } from 'v
 import { XIcon } from '@heroicons/vue/solid';
 import useDetectClickOutside from '@/services/useDetectClickOutside';
 import MenuDishVariationsCombobox from './MenuDishVariationsCombobox.vue';
+import MealIcon from './MealIcon.vue';
 
 const { setFilter, filteredDishes } = useDishes();
 const { locale, t } = useI18n();

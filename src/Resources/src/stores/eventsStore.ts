@@ -164,6 +164,10 @@ export function useEvents() {
         return EventsState.events.find((event) => event.slug === slug);
     }
 
+    function getEventById(eventId: number) {
+        return EventsState.events.find(event => event.id === eventId);
+    }
+
     /**
      * Resets the EventsState. Should only be used for Testing
      */
@@ -182,6 +186,7 @@ export function useEvents() {
         deleteEventWithSlug,
         resetState,
         getEventBySlug,
+        getEventById,
         setFilter
     }
 }

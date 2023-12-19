@@ -48,6 +48,7 @@ import { useI18n } from 'vue-i18n';
 import CancelButton from '@/components/misc/CancelButton.vue';
 import { useRouter } from 'vue-router';
 import LoadingSpinner from '@/components/misc/LoadingSpinner.vue';
+import { useEvents } from '@/stores/eventsStore';
 
 const { DishesState, fetchDishes } = useDishes();
 const {
@@ -65,6 +66,7 @@ const {
 const { CategoriesState, fetchCategories } = useCategories();
 const { t } = useI18n();
 const router = useRouter();
+const { fetchEvents, EventsState } = useEvents();
 
 
 const props = withDefaults(defineProps<{
@@ -108,6 +110,9 @@ onMounted(async () => {
   }
   if (Object.keys(MenuCountState.counts).length === 0) {
     await getDishCountForWeek();
+  }
+  if (EventsState.events.length === 0) {
+    await fetchEvents();
   }
 
   setUpDaysAndEnabled();

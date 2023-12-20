@@ -102,7 +102,7 @@ class ApiController extends BaseController
                     'slots' => [],
                     'meals' => [],
                     'isEnabled' => $day->isEnabled(),
-                    'event' => null !== $day->getEvent() ? $day->getEvent()->getEvent()->getId() : null,
+                    'event' => $this->apiSrv->getEventParticipationData($day, $profile),
                 ];
 
                 $this->addSlots($response[$week->getId()]['days'][$day->getId()]['slots'], $slots, $day, $activeParticipations);

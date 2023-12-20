@@ -1,7 +1,7 @@
 <template>
-  <div class="day-shadow mx-auto flex h-auto max-w-[414px] rounded bg-white sm:max-w-none">
+  <div class="day-shadow mx-auto grid h-auto max-w-[414px] grid-cols-[auto_minmax(0,1fr)] grid-rows-[minmax(0,1fr)_auto] rounded bg-white sm:max-w-none">
     <div
-      class="relative grid w-[24px] justify-center gap-2 rounded-l-[5px] py-[2px]"
+      class="relative col-span-1 col-start-1 row-span-2 row-start-1 grid w-[24px] justify-center gap-2 rounded-l-[5px] py-[2px]"
       :class="[day.isLocked || !day.isEnabled || emptyDay ? 'bg-[#80909F]' : 'bg-primary-2', !day.isLocked && !emptyDay && !guestData ? 'grid-rows-[minmax(0,1fr)_24px]' : '']"
     >
       <span
@@ -19,7 +19,7 @@
     </div>
     <div
       v-if="!emptyDay && day.isEnabled"
-      class="z-[1] flex min-w-[290px] flex-1 flex-col"
+      class="z-[1] col-start-2 row-start-1 flex min-w-[290px] flex-1 flex-col"
     >
       <div
         v-if="day.slotsEnabled"
@@ -58,10 +58,15 @@
     </div>
     <div
       v-if="emptyDay || !day.isEnabled"
-      class="z-[1] grid h-full min-w-[290px] items-center"
+      class="z-[1] col-start-2 row-start-1 grid h-full min-w-[290px] items-center"
     >
       <span class="description relative ml-[23px] text-primary-1">{{ t('dashboard.no_service') }}</span>
     </div>
+    <EventData
+      v-if="day.event !== null"
+      class="col-start-2 row-start-2 border-t-2"
+      :day="day"
+    />
   </div>
 </template>
 
@@ -75,6 +80,7 @@ import { dashboardStore } from '@/stores/dashboardStore';
 import GuestButton from '@/components/dashboard/GuestButton.vue';
 import { translateWeekday } from 'tools/localeHelper';
 import { GuestDay } from '@/api/getInvitationData';
+import EventData from './EventData.vue';
 
 const { t, locale } = useI18n()
 

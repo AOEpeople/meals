@@ -8,6 +8,7 @@ use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Repository\DayRepositoryInterface;
 use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
 use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
+use App\Mealz\MealBundle\Service\EventParticipationService;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 
@@ -17,17 +18,20 @@ class ApiService
     private TransactionRepositoryInterface $transactionRepo;
     private MealRepositoryInterface $mealRepo;
     private DayRepositoryInterface $dayRepo;
+    private EventParticipationService $eventPartSrv;
 
     public function __construct(
         ParticipantRepositoryInterface $participantRepo,
         TransactionRepositoryInterface $transactionRepo,
         MealRepositoryInterface $mealRepo,
-        DayRepositoryInterface $dayRepo
+        DayRepositoryInterface $dayRepo,
+        EventParticipationService $eventPartSrv
     ) {
         $this->participantRepo = $participantRepo;
         $this->transactionRepo = $transactionRepo;
         $this->mealRepo = $mealRepo;
         $this->dayRepo = $dayRepo;
+        $this->eventPartSrv = $eventPartSrv;
     }
 
     /**
@@ -113,5 +117,10 @@ class ApiService
         return isset($parameters[$key])
             && null !== $parameters[$key]
             && $type === gettype($parameters[$key]);
+    }
+
+    public function getEventParticipationData(Day $day, Profile $profile): ?array
+    {
+        return $this->eventPartSrv->getEventParticipationData($day, $profile);
     }
 }

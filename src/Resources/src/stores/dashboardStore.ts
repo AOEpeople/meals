@@ -101,6 +101,13 @@ class DashboardStore extends Store<Dashboard> {
         }
         return undefined
     }
+
+    public updateEventParticipation(weekId: number, dayId: number, eventId: number, participations: number) {
+        const day = this.getDay(weekId, dayId);
+        if (day !== null && day !== undefined && day.event !== null && day.event.eventId === eventId) {
+            day.event.participations = participations;
+        }
+    }
 }
 
 export const dashboardStore: DashboardStore = new DashboardStore()

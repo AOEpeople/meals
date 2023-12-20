@@ -8,7 +8,7 @@
     :weeks="weeks"
   />
   <PrintLink
-    v-if="isAllowedToPrint"
+    v-if="userDataStore.roleAllowsRoute('PrintableList')"
     class="mr-[27px] text-right"
   />
 </template>
@@ -26,7 +26,6 @@ import { Week } from '@/api/getDashboardData';
 import { useEvents } from '@/stores/eventsStore';
 
 const weeks = ref<Dictionary<Week>>({});
-const isAllowedToPrint = ref(false);
 const { fetchEvents } = useEvents();
 
 onMounted(async () => {
@@ -36,7 +35,6 @@ onMounted(async () => {
   weeks.value = dashboardStore.getWeeks();
   await fetchEvents();
 
-  isAllowedToPrint.value = userDataStore.roleAllowsRoute('PrintableList');
   progress.finish();
 });
 </script>

@@ -8,7 +8,7 @@
       class="fixed inset-0 flex items-center justify-center bg-black/30 p-4"
     >
       <DialogPanel
-        class="day-shadow relative inset-0 mx-auto h-auto w-max overflow-scroll rounded-lg bg-white p-2 text-left drop-shadow-2xl sm:p-6"
+        class="day-shadow relative inset-0 mx-auto h-auto w-max overflow-scroll rounded-lg bg-white px-4 pb-4 pt-2.5 text-left drop-shadow-2xl"
       >
         <ParticipantsListByDay
           :date="date"

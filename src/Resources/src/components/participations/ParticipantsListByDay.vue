@@ -1,5 +1,5 @@
 <template>
-  <InputLabel
+  <FilterInput
     v-model="filterInput"
     :label-text="t('menu.search')"
     :label-visible="false"
@@ -32,7 +32,7 @@ import { filterParticipantsList } from '@/services/filterParticipantsList';
 import { useProgress } from '@marcoschulte/vue3-progress';
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import InputLabel from '../misc/InputLabel.vue';
+import FilterInput from '../misc/FilterInput.vue';
 
 
 const progress = useProgress().start()

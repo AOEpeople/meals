@@ -1,38 +1,59 @@
 <template>
-  <FilterInput
-    v-model="filterInput"
-    :label-text="t('menu.search')"
-    :label-visible="false"
-    class="col-span-3 row-start-2 justify-self-center sm:col-span-1 sm:col-start-1 sm:justify-self-start min-[900px]:row-start-2"
-  />
-  <table
-    class="w-full"
+  <div
+    class="grid grid-cols-1 divide-y"
   >
-    <tbody>
-      <template
-        v-for="(participant, index) in filteredParticipants"
-        :key="index"
+    <div
+      :class="[0 ? 'border-gray-300' : 'border-gray-200', 'border-b', 'flex', 'items-center', 'gap-4', 'pb-2.5']"
+    >
+      <DialogTitle
+        class="mb-0 inline-block flex-none text-[11px] font-bold uppercase tracking-[1.5px] text-primary"
       >
-        <tr
-          :class="[0 ? 'border-gray-300' : 'border-gray-200', 'border-b']"
+        {{ t('dashboard.print') }}
+      </DialogTitle>
+      <FilterInput
+        v-model="filterInput"
+        :label-text="t('menu.search')"
+        :label-visible="false"
+        class="col-span-3 row-start-2 justify-self-center sm:col-span-1 sm:col-start-1 sm:justify-self-start min-[900px]:grow"
+      />
+      <IconCancel
+        :btn-text="t('combiModal.close')"
+        class="flex-1 cursor-pointer "
+        @click="closeParticipantsModal(false)"
+      />
+    </div>
+
+    <table
+      class="w-full"
+    >
+      <tbody>
+        <template
+          v-for="(participant, index) in filteredParticipants"
+          :key="index"
         >
-          <td
-            class="leading- whitespace-nowrap py-4 pl-4 pr-3 text-[11px] font-light"
+          <tr
+            :class="[0 ? 'border-gray-300' : 'border-gray-200', 'border-b']"
           >
-            {{ participant }}
-          </td>
-        </tr>
-      </template>
-    </tbody>
-  </table>
+            <td
+              class="leading- whitespace-nowrap py-1 text-[11px] font-light"
+            >
+              {{ participant }}
+            </td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { filterParticipantsList } from '@/services/filterParticipantsList';
+import { DialogTitle } from '@headlessui/vue';
 import { useProgress } from '@marcoschulte/vue3-progress';
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import FilterInput from '../misc/FilterInput.vue';
+import IconCancel from '../misc/IconCancel.vue';
 
 
 const progress = useProgress().start()
@@ -50,6 +71,14 @@ watch(
   () => filterInput.value,
   () => setFilter(filterInput.value)
 );
+
+const emit = defineEmits(['closeDialog','update:modelValue','update:filterValue']);
+
+function closeParticipantsModal(doSubmit: boolean) {
+if (doSubmit === false){
+  emit('closeDialog');
+}
+}
 
 progress.finish()
 </script>../../services/filterParticipantsList

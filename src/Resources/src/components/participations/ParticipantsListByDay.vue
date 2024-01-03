@@ -65,14 +65,5 @@ watch(
   () => setFilter(filterInput.value)
 );
 
-const emit = defineEmits(['closeDialog','update:modelValue','update:filterValue']);
-
-function closeParticipantsModal(doSubmit: boolean) {
-if (doSubmit === false){
-  console.log('closeDialog')
-  emit('closeDialog');
-}
-}
-
 progress.finish()
-</script>../../services/filterParticipantsList
+</script>

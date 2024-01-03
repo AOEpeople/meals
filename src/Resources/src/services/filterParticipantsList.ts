@@ -23,6 +23,10 @@ export function filterParticipantsList(date: string){
   }
 
   const filteredParticipants = computed(() => {
+    if (participations.participants.length===0){
+      return [];
+    }
+    console.log(participations.participants);
     return participations.participants.filter(participant => participantsContainString(participant, participations.filterValue));
   });
 

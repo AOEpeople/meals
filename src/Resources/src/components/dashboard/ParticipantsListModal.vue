@@ -8,7 +8,7 @@
       class="fixed inset-0 flex items-center justify-center bg-black/30 p-4"
     >
       <DialogPanel
-        class="day-shadow relative inset-0 mx-auto h-auto w-max overflow-visible rounded-lg bg-white px-4 pb-4 pt-2.5 text-left drop-shadow-2xl"
+        class="day-shadow relative inset-0 mx-auto h-auto w-max overflow-auto rounded-lg bg-white px-4 pb-4 pt-2.5 text-left drop-shadow-2xl"
       >
         <IconCancel
           :btn-text="t('combiModal.close')"

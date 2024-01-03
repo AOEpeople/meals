@@ -6,7 +6,7 @@
       :class="[0 ? 'border-gray-300' : 'border-gray-200', 'border-b', 'flex', 'items-center', 'gap-4', 'pb-2.5', 'h-12']"
     >
       <DialogTitle
-        class="inline-block h-6 flex-none text-[11px] font-bold uppercase tracking-[1.5px] text-primary"
+        class="inline-block h-6 flex-none align-middle text-[11px] font-bold uppercase tracking-[1.5px] text-primary"
       >
         {{ t('dashboard.print') }}
       </DialogTitle>
@@ -14,12 +14,12 @@
         v-model="filterInput"
         :label-text="t('menu.search')"
         :label-visible="false"
-        class="col-span-3 row-start-2 mr-8 justify-self-center sm:col-span-1 sm:col-start-1 sm:justify-self-start min-[900px]:grow"
+        class="col-span-3 row-start-2 mr-8 justify-self-center min-[400px]:grow sm:col-span-1 sm:col-start-1 sm:justify-self-start"
       />
     </div>
 
     <table
-      class="w-full"
+      :class="'w-full overflow-auto'"
     >
       <tbody>
         <template
@@ -30,7 +30,7 @@
             :class="[0 ? 'border-gray-300' : 'border-gray-200', 'border-b']"
           >
             <td
-              class="leading- whitespace-nowrap py-1 text-[11px] font-light text-primary"
+              class="leading- h-6 whitespace-nowrap py-1 text-[12px] font-light text-primary"
             >
               {{ participant }}
             </td>

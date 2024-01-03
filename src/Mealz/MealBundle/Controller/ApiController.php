@@ -204,7 +204,7 @@ class ApiController extends BaseController
 
         $uniqueArray = array_unique($list);
 
-        return new JsonResponse($uniqueArray, 200);
+        return new JsonResponse(array_values($uniqueArray), 200);
     }
 
     private function addSlots(array &$slotArray, array $slots, Day $day, ?int $activeParticipations): void

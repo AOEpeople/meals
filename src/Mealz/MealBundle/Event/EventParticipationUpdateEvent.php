@@ -8,7 +8,7 @@ use App\Mealz\MealBundle\Entity\EventParticipation;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- * Event that is triggert when a event participation is updated
+ * Event that is triggert when a event participation is updated.
  */
 class EventParticipationUpdateEvent extends Event
 {

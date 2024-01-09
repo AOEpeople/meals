@@ -9,7 +9,7 @@ use App\Mealz\MealBundle\Service\EventParticipationService;
 use App\Mealz\MealBundle\Service\Publisher\PublisherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class EventParticipationUpdateSubscriber extends EventSubscriberInterface
+class EventParticipationUpdateSubscriber implements EventSubscriberInterface
 {
     private const PUBLISH_TOPIC = 'event-participation-update';
     private const PUBLISH_MSG_TYPE = 'eventParticipationUpdate';

@@ -111,9 +111,7 @@ onMounted(async () => {
   if (Object.keys(MenuCountState.counts).length === 0) {
     await getDishCountForWeek();
   }
-  if (EventsState.events.length === 0) {
-    await fetchEvents();
-  }
+  await fetchEvents();
 
   setUpDaysAndEnabled();
 

@@ -36,11 +36,13 @@
     />
     <div class="text-align-last flex flex-auto basis-2/12 items-center justify-end">
       <ParticipationCounter
-        :meal="variation"
+        :limit="variation.limit"
         :mealCSS="mealCSS[String(variationID)]"
         class="mr-[5px] min-[380px]:mr-[15px]"
-      />
-      <Checkbox
+      >
+        {{ getParticipationDisplayString(variation) }}
+      </ParticipationCounter>
+      <MealCheckbox
         :weekID="weekID"
         :dayID="dayID"
         :mealID="mealID"
@@ -54,7 +56,7 @@
 
 <script setup lang="ts">
 import ParticipationCounter from '@/components/menuCard/ParticipationCounter.vue';
-import Checkbox from '@/components/dashboard/Checkbox.vue';
+import MealCheckbox from '@/components/dashboard/MealCheckbox.vue';
 import { useI18n } from 'vue-i18n';
 import { computed, ref } from 'vue';
 import { dashboardStore } from '@/stores/dashboardStore';
@@ -105,7 +107,12 @@ const openPopover = ref(false)
 receive('openOfferPanel_' + props.mealID, () => {
   openPopover.value = true
   setTimeout(() => openPopover.value = false, 5000)
-})
+});
+
+const getParticipationDisplayString = (variation: Meal) => {
+  const fixedCount = Math.ceil(parseFloat(variation.participations.toFixed(1)));
+  return variation.limit > 0 ? `${fixedCount}/${variation.limit}` : fixedCount;
+}
 </script>
 
 <style scoped>

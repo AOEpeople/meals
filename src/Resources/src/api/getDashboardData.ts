@@ -36,6 +36,12 @@ export type Slot = {
     disabled: boolean
 }
 
+export type EventParticipation = {
+    eventId: number,
+    participations: number,
+    isParticipating: boolean
+}
+
 export type Day = {
     date: DateTime,
     isLocked: boolean,
@@ -44,7 +50,7 @@ export type Day = {
     slots: Dictionary<Slot>,
     slotsEnabled: boolean,
     isEnabled: boolean,
-    event: number | null
+    event: EventParticipation | null
 }
 
 export type Week = {

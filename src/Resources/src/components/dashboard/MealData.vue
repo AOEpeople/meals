@@ -25,11 +25,13 @@
     />
     <div class="text-align-last flex flex-auto basis-2/12 items-center justify-end">
       <ParticipationCounter
-        :meal="meal"
         :mealCSS="mealCSS"
+        :limit="meal.limit"
         class="mr-[5px] min-[380px]:mr-[15px]"
-      />
-      <Checkbox
+      >
+        {{ participationDisplayString }}
+      </ParticipationCounter>
+      <MealCheckbox
         :weekID="weekID"
         :dayID="dayID"
         :mealID="mealID"
@@ -42,7 +44,7 @@
 
 <script setup lang="ts">
 import ParticipationCounter from '@/components/menuCard/ParticipationCounter.vue';
-import Checkbox from '@/components/dashboard/Checkbox.vue';
+import MealCheckbox from '@/components/dashboard/MealCheckbox.vue';
 import {useI18n} from 'vue-i18n';
 import { computed } from 'vue';
 import { dashboardStore } from '@/stores/dashboardStore';
@@ -82,7 +84,12 @@ const mealCSS = computed(() => {
     default:
       return css
   }
-})
+});
+
+const participationDisplayString = computed(() => {
+  const fixedCount = Math.ceil(parseFloat(meal.participations.toFixed(1)));
+  return meal.limit > 0 ? `${fixedCount}/${meal.limit}` : fixedCount;
+});
 </script>
 
 <style scoped>

@@ -7,6 +7,7 @@ use App\Mealz\MealBundle\Entity\Event;
 use App\Mealz\MealBundle\Entity\EventParticipation;
 use App\Mealz\MealBundle\Repository\EventParticipationRepositoryInterface;
 use App\Mealz\MealBundle\Repository\EventRepositoryInterface;
+use App\Mealz\UserBundle\Entity\Profile;
 use Doctrine\ORM\EntityManagerInterface;
 
 class EventParticipationService
@@ -38,6 +39,20 @@ class EventParticipationService
             $event = $this->eventRepo->find($eventId);
             $this->addEventToDay($day, $event);
         }
+    }
+
+    public function getEventParticipationData(Day $day, Profile $profile): ?array
+    {
+        $eventParticipation = $day->getEvent();
+        if (null === $eventParticipation) {
+            return null;
+        }
+
+        return [
+            'eventId' => $eventParticipation->getEvent()->getId(),
+            'participations' => count($eventParticipation->getParticipants()),
+            'isParticipating' => null !== $eventParticipation->getParticipant($profile),
+        ];
     }
 
     private function addEventToDay(Day $day, ?Event $event)

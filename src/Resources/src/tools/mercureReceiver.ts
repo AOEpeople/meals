@@ -21,6 +21,15 @@ type Meal_Participation_Update = {
     participations: number,
 }
 
+type Event_Participation_Update = {
+    weekId: number,
+    dayId: number,
+    event: {
+        eventId: number,
+        participations: number
+    }
+}
+
 type Slot_Update = {
     weekId: number,
     dayId: number,
@@ -56,7 +65,7 @@ class MercureReceiver {
     }
 
     private async configureMealUpdateHandlers(): Promise<void> {
-        const eventSrc = new EventSource(environmentStore.getState().mercureUrl + '?topic=participation-updates&topic=meal-offer-updates&topic=slot-allocation-updates', {withCredentials: true})
+        const eventSrc = new EventSource(environmentStore.getState().mercureUrl + '?topic=participation-updates&topic=meal-offer-updates&topic=slot-allocation-updates&topic=event-participation-update', {withCredentials: true})
 
         eventSrc.addEventListener('participationUpdate', (event: MessageEvent) => {
             MercureReceiver.handleParticipationUpdate(JSON.parse(event.data))
@@ -69,6 +78,14 @@ class MercureReceiver {
         eventSrc.addEventListener('slotAllocationUpdate', (event: MessageEvent) => {
             MercureReceiver.handleSlotAllocationUpdate(JSON.parse(event.data))
         })
+
+        eventSrc.addEventListener('eventParticipationUpdate', (event: MessageEvent) => {
+            MercureReceiver.handleEventParticipationUpdate(JSON.parse(event.data));
+        })
+    }
+
+    private static handleEventParticipationUpdate(data: Event_Participation_Update) {
+        dashboardStore.updateEventParticipation(data.weekId, data.dayId, data.event.eventId, data.event.participations);
     }
 
     private static handleParticipationUpdate(data: Meal_Update): void {

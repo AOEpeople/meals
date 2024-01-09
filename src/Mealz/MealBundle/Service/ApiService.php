@@ -8,7 +8,6 @@ use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Repository\DayRepositoryInterface;
 use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
 use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
-use App\Mealz\MealBundle\Service\EventParticipationService;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 

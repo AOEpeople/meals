@@ -2,9 +2,14 @@
   <div
     class="flex w-full flex-row items-center px-[15px] py-[13px]"
   >
-    <span class="mr-[5px] inline-block grow break-words text-[12px] font-bold leading-[20px] tracking-[0.5px] text-primary-1 min-[380px]:text-note">
-      {{ getEventById(day.event.eventId)?.title }}
-    </span>
+    <div class="grid w-full grid-cols-[24px_minmax(0,1fr)] gap-1">
+      <EventIcon
+        class="w-[24px] self-center"
+      />
+      <span class="mr-[5px] inline-block grow self-center break-words text-[12px] font-bold leading-[20px] tracking-[0.5px] text-primary-1 min-[380px]:text-note">
+        {{ getEventById(day.event.eventId)?.title }}
+      </span>
+    </div>
     <ParticipationCounter
       class="justify-self-end"
       :limit="0"
@@ -25,6 +30,7 @@ import { Day } from '@/api/getDashboardData';
 import { useEvents } from '@/stores/eventsStore';
 import ParticipationCounter from '../menuCard/ParticipationCounter.vue';
 import CheckBox from '../misc/CheckBox.vue';
+import EventIcon from '../misc/EventIcon.vue';
 
 defineProps<{
   day: Day

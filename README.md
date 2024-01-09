@@ -122,11 +122,20 @@ Point your web browser to https://meals.test  :tada:
 
 :memo:  Don't forget to add `127.0.0.1 meals.test` to your local hosts file if not done automatically via ddev.
 
-To run End-to-End testing via cypress run te following command:
+To run End-to-End testing via cypress run the following command:
 ```
 make run-cypress
 ```
 You need to start the devbox before running any tests with cypress.
+
+## Component testing
+
+To run specific component tests with JEST in isolation:
+```
+ddev exec yarn --cwd=src/Resources test -- -t "<test-filename> <testname>"
+```
+`<test-filename>` for a file with the name `xyz.spec.ts` would be `xyz`
+`<testname>` is optional, if no testname is specified the whole file is run
 
 ## Troubleshooting
 

@@ -108,6 +108,15 @@ class DashboardStore extends Store<Dashboard> {
             day.event.participations = participations;
         }
     }
+
+    /**
+     * Only for testing purposes
+     */
+    public resetState() {
+        this.state = {
+            weeks: {},
+        }
+    }
 }
 
 export const dashboardStore: DashboardStore = new DashboardStore()

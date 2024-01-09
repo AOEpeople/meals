@@ -20,3 +20,9 @@ jest.mock('vue-router', () => ({
         push: () => void 0
     }),
 }));
+
+jest.mock('tools/mercureReceiver', () => ({
+    mercureReceiver: {
+        init: async () => new Promise(resolve => resolve(undefined))
+    }
+}));

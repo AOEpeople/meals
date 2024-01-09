@@ -1,6 +1,7 @@
 <template>
   <span
     :class="checkboxCSS"
+    data-cy="mealCheckbox"
     @click="handle"
   >
     <CheckIcon

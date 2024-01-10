@@ -106,7 +106,84 @@ describe('Test Dashboard View', () => {
             .parent()
             .parent()
             .find('[data-cy="mealCheckbox"]')
-            .should('exist');
-        // cy.get('[data-cy="mealCheckbox"]').click();
+            .eq(0)
+            .then((ele) => {
+                // if ele has children, the meal is booked
+                if (ele.children().length > 0) {
+                    // cancel meal
+                    cy.get('h2')
+                        .contains('Nächste Woche')
+                        .parent()
+                        .parent()
+                        .find('[data-cy="mealCheckbox"]')
+                        .eq(0)
+                        .click();
+
+                    cy.wait(1000);
+                    cy.get('h2')
+                        .contains('Nächste Woche')
+                        .parent()
+                        .parent()
+                        .find('[data-cy="mealCheckbox"]')
+                        .eq(0)
+                        .children()
+                        .should('have.length', 0)
+
+                    cy.get('h2')
+                        .contains('Nächste Woche')
+                        .parent()
+                        .parent()
+                        .find('[data-cy="mealCheckbox"]')
+                        .eq(0)
+                        .click();
+
+                    cy.wait(1000);
+                    cy.get('h2')
+                        .contains('Nächste Woche')
+                        .parent()
+                        .parent()
+                        .find('[data-cy="mealCheckbox"]')
+                        .eq(0)
+                        .children()
+                        .should('have.length', 1)
+                } else {
+                    // book meal
+                    cy.get('h2')
+                        .contains('Nächste Woche')
+                        .parent()
+                        .parent()
+                        .find('[data-cy="mealCheckbox"]')
+                        .eq(0)
+                        .click();
+
+                    cy.wait(1000);
+                    cy.get('h2')
+                        .contains('Nächste Woche')
+                        .parent()
+                        .parent()
+                        .find('[data-cy="mealCheckbox"]')
+                        .eq(0)
+                        .children()
+                        .should('have.length', 1)
+
+                    cy.get('h2')
+                        .contains('Nächste Woche')
+                        .parent()
+                        .parent()
+                        .find('[data-cy="mealCheckbox"]')
+                        .eq(0)
+                        .click();
+
+                    cy.wait(1000);
+                    cy.get('h2')
+                        .contains('Nächste Woche')
+                        .parent()
+                        .parent()
+                        .find('[data-cy="mealCheckbox"]')
+                        .eq(0)
+                        .children()
+                        .should('have.length', 0)
+                }
+            });
     });
 });

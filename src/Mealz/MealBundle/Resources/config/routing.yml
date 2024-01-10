@@ -187,6 +187,16 @@ MealzMealBundle_api_events_delete:
   defaults: { _controller: App\Mealz\MealBundle\Controller\EventController::delete }
   methods: [ DELETE ]
 
+MealzMealBundle_api_events_join:
+  path: /api/events/participation
+  defaults: { _controller: App\Mealz\MealBundle\Controller\EventParticipationController::join }
+  methods: [ POST ]
+
+MealzMealBundle_api_events_join:
+  path: /api/events/participation
+  defaults: { _controller: App\Mealz\MealBundle\Controller\EventParticipationController::leave }
+  methods: [ DELETE ]
+
 MealzMealBundle_Meal_offers:
     path: /menu/{date}/{dish}/offers
     defaults: { _controller: App\Mealz\MealBundle\Controller\MealController::getOffers }

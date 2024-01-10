@@ -30,7 +30,7 @@ class MealOfferAcceptedEvent extends Event
         $this->offerer = $offerer;
     }
 
-    public function getMeal(): Meal
+    public function getMeal(): ?Meal
     {
         return $this->participant->getMeal();
     }

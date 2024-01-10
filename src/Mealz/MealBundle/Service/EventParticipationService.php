@@ -69,6 +69,7 @@ class EventParticipationService
                 $this->em->flush();
 
                 $eventParticipation->addParticipant($participation);
+
                 return $eventParticipation;
             }
         }
@@ -81,15 +82,11 @@ class EventParticipationService
         $eventParticipation = $day->getEvent();
         $participation = $eventParticipation->getParticipant($profile);
 
-        if (null !== $eventParticipation) {
-            $eventParticipation->removeParticipant($participation);
-            $this->em->remove($participation);
-            $this->em->flush();
+        $eventParticipation->removeParticipant($participation);
+        $this->em->remove($participation);
+        $this->em->flush();
 
-            return $eventParticipation;
-        }
-
-        return null;
+        return $eventParticipation;
     }
 
     private function addEventToDay(Day $day, ?Event $event)

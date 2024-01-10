@@ -96,4 +96,14 @@ class EventParticipation
 
         return new ArrayCollection($this->participants->toArray());
     }
+
+    public function addParticipant(Participant $participant): void
+    {
+        $this->participants->add($participant);
+    }
+
+    public function removeParticipant(Participant $participant): bool
+    {
+        return $this->participants->removeElement($participant);
+    }
 }

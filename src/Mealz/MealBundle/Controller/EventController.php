@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Controller;
 
+use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Event;
+use App\Mealz\MealBundle\Event\EventParticipationUpdateEvent;
 use App\Mealz\MealBundle\Repository\EventRepositoryInterface;
+use App\Mealz\MealBundle\Service\EventParticipationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -19,13 +23,19 @@ class EventController extends BaseListController
 {
     private EntityManagerInterface $em;
     private EventRepositoryInterface $eventRepo;
+    private EventDispatcherInterface $eventDispatcher;
+    private EventParticipationService $eventPartSrv;
 
     public function __construct(
         EntityManagerInterface $entityManager,
-        EventRepositoryInterface $eventRepository
+        EventRepositoryInterface $eventRepository,
+        EventDispatcherInterface $eventDispatcher,
+        EventParticipationService $eventPartSrv
     ) {
         $this->em = $entityManager;
         $this->eventRepo = $eventRepository;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->eventPartSrv = $eventPartSrv;
     }
 
     public function getEventList(): JsonResponse
@@ -87,5 +97,39 @@ class EventController extends BaseListController
 
             return new JsonResponse(['message' => $e->getMessage(), 500]);
         }
+    }
+
+    public function join(Day $day): JsonResponse
+    {
+        $profile = $this->getProfile();
+        if (null === $profile) {
+            return new JsonResponse(['messasge' => '801: User is not allowed to join'], 403);
+        }
+
+        $eventParticipation = $this->eventPartSrv->join($profile, $day);
+        if (null === $eventParticipation) {
+            return new JsonResponse(['messasge' => '802: User could not join the event'], 500);
+        }
+
+        $this->eventDispatcher->dispatch(new EventParticipationUpdateEvent($eventParticipation));
+
+        return new JsonResponse(['isParticipating' => true], 200);
+    }
+
+    public function leave(Day $day): JsonResponse
+    {
+        $profile = $this->getProfile();
+        if (null === $profile) {
+            return new JsonResponse(['messasge' => '801: User is not allowed to leave'], 403);
+        }
+
+        $eventParticipation = $this->eventPartSrv->leave($profile, $day);
+        if (null === $eventParticipation) {
+            return new JsonResponse(['messasge' => '802: User could not leave the event'], 500);
+        }
+
+        $this->eventDispatcher->dispatch(new EventParticipationUpdateEvent($eventParticipation));
+
+        return new JsonResponse(['isParticipating' => false], 200);
     }
 }

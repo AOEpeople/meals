@@ -197,3 +197,7 @@ IDP_CLIENT_SECRET=client-secret
   * 601: The amount of cash that will be added, has to be more than zero
 *EventController 7xx*
   * 701: Event creation parameters are missing
+*EventParticipationController 8xx*
+  * 801: User has no permission to enter or leave
+  * 802: User could not join the event
+  * 803: User could not leave the event

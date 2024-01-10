@@ -5,6 +5,7 @@ namespace App\Mealz\MealBundle\Service;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Event;
 use App\Mealz\MealBundle\Entity\EventParticipation;
+use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Repository\EventParticipationRepositoryInterface;
 use App\Mealz\MealBundle\Repository\EventRepositoryInterface;
 use App\Mealz\UserBundle\Entity\Profile;
@@ -12,15 +13,18 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class EventParticipationService
 {
+    private Doorman $doorman;
     private EntityManagerInterface $em;
     private EventParticipationRepositoryInterface $eventPartRepo;
     private EventRepositoryInterface $eventRepo;
 
     public function __construct(
+        Doorman $doorman,
         EntityManagerInterface $em,
         EventRepositoryInterface $eventRepo,
         EventParticipationRepositoryInterface $eventPartRepo
     ) {
+        $this->doorman = $doorman;
         $this->em = $em;
         $this->eventPartRepo = $eventPartRepo;
         $this->eventRepo = $eventRepo;
@@ -55,6 +59,36 @@ class EventParticipationService
         ];
     }
 
+    public function join(Profile $profile, Day $day): ?EventParticipation
+    {
+        $eventParticipation = $day->getEvent();
+        if (null !== $eventParticipation && true === $this->doorman->isUserAllowedToJoinEvent($eventParticipation)) {
+            $participation = $this->createEventParticipation($profile, $eventParticipation);
+            if (null !== $participation) {
+                $this->em->persist($participation);
+                $this->em->flush();
+
+                $eventParticipation->addParticipant($participation);
+
+                return $eventParticipation;
+            }
+        }
+
+        return null;
+    }
+
+    public function leave(Profile $profile, Day $day): ?EventParticipation
+    {
+        $eventParticipation = $day->getEvent();
+        $participation = $eventParticipation->getParticipant($profile);
+
+        $eventParticipation->removeParticipant($participation);
+        $this->em->remove($participation);
+        $this->em->flush();
+
+        return $eventParticipation;
+    }
+
     private function addEventToDay(Day $day, ?Event $event)
     {
         // new eventparticipation
@@ -73,5 +107,10 @@ class EventParticipationService
             $this->em->remove($day->getEvent());
             $day->setEvent(null);
         }
+    }
+
+    private function createEventParticipation(Profile $profile, EventParticipation $eventParticiation): ?Participant
+    {
+        return new Participant($profile, null, $eventParticiation);
     }
 }

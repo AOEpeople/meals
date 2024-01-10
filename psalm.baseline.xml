@@ -153,8 +153,7 @@
     </UndefinedClass>
   </file>
   <file src="src/Mealz/MealBundle/Service/Doorman.php">
-    <UndefinedInterfaceMethod occurrences="2">
-      <code>getProfile</code>
+    <UndefinedInterfaceMethod occurrences="3">
       <code>getProfile</code>
     </UndefinedInterfaceMethod>
   </file>

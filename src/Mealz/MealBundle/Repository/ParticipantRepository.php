@@ -217,7 +217,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
 
         $queryBuilder = $this->getQueryBuilderWithOptions($options);
         $queryBuilder->andWhere('m.dateTime LIKE :date');
-        $queryBuilder->setParameter(':date', $date);
+        $queryBuilder->setParameter(':date', $date->format("2024-03-21"));
 
         $queryBuilder->orderBy('u.name', 'ASC');
 

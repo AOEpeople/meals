@@ -10,9 +10,10 @@ const listDataState = ref([])
  * @param date
  * @returns list of participants
  */
-export default function useParticipationsListData(date: string){
+export default async function useParticipationsListData(date: string){
 
     const loaded = ref(false)
+    let useParticipationsError = false
 
     onMounted(async () => {
         await getListData();
@@ -23,10 +24,15 @@ export default function useParticipationsListData(date: string){
     });
 
     async function getListData() {
-        const { response: listData, request, error } = useApi<ListData>(
+        if (undefined === date) {
+            return;
+        }
+
+        const { error, response: listData, request } = useApi<ListData>(
             'GET',
             `/api/participations/day/${date}`
         );
+        useParticipationsError = error.value
 
         if (loaded.value === false) {
             await request();
@@ -37,7 +43,7 @@ export default function useParticipationsListData(date: string){
     }
 
     return {
-        listData: readonly(listDataState)
-    }
+        useParticipationsError, listData: readonly(listDataState)
+    };
 }
 

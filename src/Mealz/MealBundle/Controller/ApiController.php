@@ -199,7 +199,7 @@ class ApiController extends BaseController
         $data = $this->participationSrv->getParticipationList($day);
 
         foreach ($data as $participant) {
-        $list[] = $participant->getProfile()->getFirstName() .' '. $participant->getProfile()->getName();
+            $list[] = $participant->getProfile()->getFirstName() .' '. $participant->getProfile()->getName();
         }
 
         $uniqueArray = array_unique($list);

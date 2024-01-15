@@ -27,7 +27,8 @@ export function filterParticipantsList(date: string){
 
   const filteredParticipants = computed(() => {
     if (participations.participants.length===0){
-      return ["Heute gibt es keine Teilnehmer."]
+      participations.participants = ["Hallo"]
+      return []
     }
     return participations.participants.filter(participant => participantsContainString(participant, participations.filterValue));
   });

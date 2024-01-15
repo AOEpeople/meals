@@ -20,9 +20,9 @@ useApi.mockReturnValue(mockedReturnValue);
 
 describe('Test getParticipations', () => {
     it('should return a list of participations', async () => {
-        const { listData } = useParticipationsListData("16/01/2024");
+        const {useParticipationsError, listData} = await useParticipationsListData("2024-01-16");
 
-        // expect(error.value).toBeFalsy();
-        expect(listData).toEqual(Participations);
+        expect(useParticipationsError).toBeFalsy();
+        expect(listData.value).toEqual(Participations);
     });
 });

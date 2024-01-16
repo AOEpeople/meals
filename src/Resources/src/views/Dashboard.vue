@@ -24,9 +24,12 @@ import { onMounted, ref } from 'vue';
 import { Dictionary } from 'types/types';
 import { Week } from '@/api/getDashboardData';
 import { useEvents } from '@/stores/eventsStore';
+import useEventsBus from '@/tools/eventBus';
+import { EventParticipationResponse } from '@/api/postJoinEvent';
 
 const weeks = ref<Dictionary<Week>>({});
 const { fetchEvents } = useEvents();
+const { receive } = useEventsBus();
 
 onMounted(async () => {
   const progress = useProgress().start();
@@ -36,5 +39,9 @@ onMounted(async () => {
   await fetchEvents();
 
   progress.finish();
+});
+
+receive<EventParticipationResponse>('eventParticipationUpdate', (participationUpdate) => {
+  dashboardStore.setIsParticipatingEvent(participationUpdate.participationId, participationUpdate.isParticipating);
 });
 </script>

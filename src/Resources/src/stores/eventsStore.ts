@@ -7,6 +7,9 @@ import useFlashMessage from "@/services/useFlashMessage";
 import { FlashMessageType } from "@/enums/FlashMessage";
 import putEventUpdate from "@/api/putEventUpdate";
 import deleteEvent from "@/api/deleteEvent";
+import postJoinEvent, { EventParticipationResponse } from "@/api/postJoinEvent";
+import useEventsBus from '@/tools/eventBus';
+import { deleteLeaveEvent } from "@/api/deleteLeaveEvent";
 
 export interface Event {
     id: number,
@@ -33,6 +36,7 @@ function isEvent(event: Event): event is Event {
 }
 
 const TIMEOUT_PERIOD = 10000;
+const EVENT_PARTICIPATION_UPDATE = 'eventParticipationUpdate';
 
 const EventsState = reactive<EventsState>({
     events: [],
@@ -40,6 +44,7 @@ const EventsState = reactive<EventsState>({
     isLoading: false
 });
 
+const { emit } = useEventsBus();
 const { sendFlashMessage } = useFlashMessage();
 
 watch(
@@ -148,6 +153,30 @@ export function useEvents() {
         }
     }
 
+    async function joinEvent(date: string) {
+        const { error, response } = await postJoinEvent(date);
+
+        if (error.value === true && isMessage(response.value) === true) {
+            EventsState.error = (response.value as IMessage)?.message;
+        } else if (error.value === true) {
+            EventsState.error = 'Unknown error occured on joining the event';
+        } else {
+            emit(EVENT_PARTICIPATION_UPDATE, response.value);
+        }
+    }
+
+    async function leaveEvent(date: string) {
+        const { error, response } = await deleteLeaveEvent(date);
+
+        if (error.value === true && isMessage(response.value) === true) {
+            EventsState.error = (response.value as IMessage)?.message;
+        } else if (error.value === true) {
+            EventsState.error = 'Unknown error occured on leaving the event';
+        } else {
+            emit(EVENT_PARTICIPATION_UPDATE, response.value);
+        }
+    }
+
     /**
      * Sets the filter string
      * @param newFilter The new filter string
@@ -187,6 +216,8 @@ export function useEvents() {
         resetState,
         getEventBySlug,
         getEventById,
-        setFilter
+        setFilter,
+        joinEvent,
+        leaveEvent
     }
 }

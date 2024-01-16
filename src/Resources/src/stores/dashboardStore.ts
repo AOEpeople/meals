@@ -46,6 +46,16 @@ class DashboardStore extends Store<Dashboard> {
         return undefined
     }
 
+    public getDayByEventParticipationId(eventParticipationId: number): Day | undefined {
+        for (const week of Object.values(this.state.weeks)) {
+            for (const day of Object.values(week.days)) {
+                if (day.event !== null && day.event !== undefined && day.event.participationId === eventParticipationId) {
+                    return day;
+                }
+            }
+        }
+    }
+
     public getDays(weekID: number | string): Dictionary<Day> | undefined {
         const week = this.getWeek(weekID)
 
@@ -106,6 +116,13 @@ class DashboardStore extends Store<Dashboard> {
         const day = this.getDay(weekId, dayId);
         if (day !== null && day !== undefined && day.event !== null && day.event.eventId === eventId) {
             day.event.participations = participations;
+        }
+    }
+
+    public setIsParticipatingEvent(participationId: number, isParticipating: boolean) {
+        const day = this.getDayByEventParticipationId(participationId);
+        if (day !== undefined) {
+            day.event.isParticipating = isParticipating;
         }
     }
 

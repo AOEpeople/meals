@@ -1,5 +1,8 @@
 import { useParticipationsListData } from "@/api/getParticipationsByDay";
 import { Ref, computed, reactive } from "vue";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 interface ParticipantState {
   participants: Readonly<Ref<readonly string[]>>,

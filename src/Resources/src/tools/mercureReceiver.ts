@@ -65,23 +65,23 @@ class MercureReceiver {
     }
 
     private async configureMealUpdateHandlers(): Promise<void> {
-        const eventSrc = new EventSource(environmentStore.getState().mercureUrl + '?topic=participation-updates&topic=meal-offer-updates&topic=slot-allocation-updates&topic=event-participation-update', {withCredentials: true})
+        const eventSrc = new EventSource(environmentStore.getState().mercureUrl + '?topic=participation-updates&topic=meal-offer-updates&topic=slot-allocation-updates&topic=event-participation-updates', {withCredentials: true});
 
         eventSrc.addEventListener('participationUpdate', (event: MessageEvent) => {
             MercureReceiver.handleParticipationUpdate(JSON.parse(event.data))
-        })
+        });
 
         eventSrc.addEventListener('mealOfferUpdate', (event: MessageEvent) => {
             MercureReceiver.handleMealOfferUpdate(JSON.parse(event.data))
-        })
+        });
 
         eventSrc.addEventListener('slotAllocationUpdate', (event: MessageEvent) => {
             MercureReceiver.handleSlotAllocationUpdate(JSON.parse(event.data))
-        })
+        });
 
         eventSrc.addEventListener('eventParticipationUpdate', (event: MessageEvent) => {
             MercureReceiver.handleEventParticipationUpdate(JSON.parse(event.data));
-        })
+        });
     }
 
     private static handleEventParticipationUpdate(data: Event_Participation_Update) {

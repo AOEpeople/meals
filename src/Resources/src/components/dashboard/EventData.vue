@@ -21,6 +21,7 @@
       class="justify-self-end"
       :isActive="new Date(day.date.date) > new Date()"
       :isChecked="day.event?.isParticipating ?? false"
+      @click="day.event?.isParticipating === false ? joinEvent(day.date.date) : leaveEvent(day.date.date)"
     />
   </div>
 </template>
@@ -36,5 +37,5 @@ defineProps<{
   day: Day
 }>();
 
-const { getEventById } = useEvents();
+const { getEventById, joinEvent, leaveEvent } = useEvents();
 </script>

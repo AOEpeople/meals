@@ -38,6 +38,7 @@ export type Slot = {
 
 export type EventParticipation = {
     eventId: number,
+    participationId: number,
     participations: number,
     isParticipating: boolean
 }

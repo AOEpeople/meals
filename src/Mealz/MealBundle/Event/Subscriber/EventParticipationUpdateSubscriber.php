@@ -11,7 +11,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class EventParticipationUpdateSubscriber implements EventSubscriberInterface
 {
-    private const PUBLISH_TOPIC = 'event-participation-update';
+    private const PUBLISH_TOPIC = 'event-participation-updates';
     private const PUBLISH_MSG_TYPE = 'eventParticipationUpdate';
 
     private PublisherInterface $publisher;
@@ -28,11 +28,11 @@ class EventParticipationUpdateSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            EventParticipationUpdateEvent::class => 'onUpdate',
+            EventParticipationUpdateEvent::class => 'onEventParticipationUpdate',
         ];
     }
 
-    public function onUpdate(EventParticipationUpdateEvent $event): void
+    public function onEventParticipationUpdate(EventParticipationUpdateEvent $event): void
     {
         $eventParticipation = $event->getEventParticipation();
 

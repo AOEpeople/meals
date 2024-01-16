@@ -2,10 +2,15 @@
 
 namespace App\Mealz\MealBundle\Tests\Controller;
 
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadDays;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadEvents;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
+use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Event;
+use App\Mealz\MealBundle\Repository\DayRepositoryInterface;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
+use DateTime;
 use Doctrine\ORM\EntityManager;
 
 class EventControllerTest extends AbstractControllerTestCase
@@ -16,9 +21,11 @@ class EventControllerTest extends AbstractControllerTestCase
 
         $this->clearAllTables();
         $this->loadFixtures([
+            new LoadDays(),
             new LoadEvents(),
             new LoadRoles(),
             new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
+            new LoadWeeks(),
         ]);
 
         $this->loginAs(self::USER_KITCHEN_STAFF);
@@ -112,5 +119,31 @@ class EventControllerTest extends AbstractControllerTestCase
         $event = $eventRepo->findOneBy(['slug' => $newEvent->getSlug()]);
 
         $this->assertTrue($event->isDeleted());
+    }
+
+    public function testJoin(): void
+    {
+        $newEvent = $this->createEvent();
+        $this->persistAndFlushAll([$newEvent]);
+
+        $dayRepo = self::$container->get(DayRepositoryInterface::class);
+
+        $criteria = new \Doctrine\Common\Collections\Criteria();
+        $criteria->where(\Doctrine\Common\Collections\Criteria::expr()->gt('lockParticipationDateTime', new DateTime()));
+
+        /** @var Day $day */
+        $day = $dayRepo->matching($criteria)->get(0);
+        $this->assertNotNull($day);
+
+        $eventParticipation = $this->createEventParticipation($day, $newEvent);
+
+        $url = '/api/events/participation/' . $day->getDateTime()->format('Y-m-d') . '%20' . $day->getDateTime()->format('H:i:s');
+        $this->client->request('POST', $url);
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode(), $this->client->getResponse());
+
+        /** @var Day $changedDay */
+        $changedDay = $dayRepo->getDayByDate($day->getDateTime());
+        $this->assertCount(1, $changedDay->getEvent()->getParticipants());
+        $this->assertEquals(self::USER_KITCHEN_STAFF, $changedDay->getEvent()->getParticipants()->get(0)->getProfile()->getUsername());
     }
 }

@@ -2,7 +2,7 @@
   <div class="day-shadow mx-auto grid h-auto max-w-[414px] grid-cols-[auto_minmax(0,1fr)] grid-rows-[minmax(0,1fr)_auto] rounded bg-white sm:max-w-none">
     <div
       class="relative col-span-1 col-start-1 row-span-2 row-start-1 grid w-[24px] justify-center gap-2 rounded-l-[5px] py-[2px]"
-      :class="[day.isLocked || !day.isEnabled || emptyDay ? 'bg-[#80909F]' : 'bg-primary-2', !day.isLocked && !emptyDay && !guestData ? 'grid-rows-[minmax(0,1fr)_24px]' : '']"
+      :class="[(day.isLocked || !day.isEnabled || emptyDay) && !isEventDay ? 'bg-[#80909F]' : 'bg-primary-2', !day.isLocked && !emptyDay && !guestData ? 'grid-rows-[minmax(0,1fr)_24px]' : '']"
     >
       <span
         class="row-start-1 rotate-180 place-self-center text-center text-[11px] font-bold uppercase leading-4 tracking-[3px] text-white [writing-mode:vertical-lr]"
@@ -36,7 +36,8 @@
       <div
         v-for="(meal, mealID) in day.meals"
         :key="mealID"
-        class="mx-[15px] border-b-[0.7px] py-[13px] last:border-b-0"
+        class="mx-[15px] border-b-[0.7px] last:border-b-0"
+        :class="day.event !== null ? 'pt-[13px] pb-[13px] last:pb-0 last:pt-[21px]' : 'py-[13px]'"
       >
         <VariationsData
           v-if="meal.variations"
@@ -64,7 +65,7 @@
     </div>
     <EventData
       v-if="day.event !== null"
-      class="col-start-2 row-start-2 border-t-2"
+      class="col-start-2 row-start-2"
       :day="day"
     />
   </div>
@@ -94,6 +95,7 @@ const props = defineProps<{
 const day = props.guestData ? props.guestData : dashboardStore.getDay(props.weekID, props.dayID);
 const weekday = computed(() => translateWeekday(day.date, locale));
 const emptyDay = Object.keys(day.meals).length === 0;
+const isEventDay = day.event !== null;
 </script>
 
 <style>

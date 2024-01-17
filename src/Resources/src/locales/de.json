@@ -132,7 +132,8 @@
       "submit": "Erstellen",
       "title": "Titel",
       "isPublic": "Öffentliches Event?"
-    }
+    },
+    "event": "Event"
   },
   "flashMessage": {
     "error": {

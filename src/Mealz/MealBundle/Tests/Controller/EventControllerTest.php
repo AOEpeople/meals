@@ -7,7 +7,8 @@ use App\Mealz\MealBundle\DataFixtures\ORM\LoadEvents;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Event;
-use App\Mealz\MealBundle\Repository\DayRepositoryInterface;
+use App\Mealz\MealBundle\Entity\Participant;
+use App\Mealz\MealBundle\Repository\DayRepository;
 use App\Mealz\MealBundle\Repository\EventParticipationRepositoryInterface;
 use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
@@ -128,7 +129,7 @@ class EventControllerTest extends AbstractControllerTestCase
         $newEvent = $this->createEvent();
         $this->persistAndFlushAll([$newEvent]);
 
-        $dayRepo = self::$container->get(DayRepositoryInterface::class);
+        $dayRepo = self::$container->get(DayRepository::class);
 
         $criteria = new \Doctrine\Common\Collections\Criteria();
         $criteria->where(\Doctrine\Common\Collections\Criteria::expr()->gt('lockParticipationDateTime', new DateTime()));
@@ -141,7 +142,7 @@ class EventControllerTest extends AbstractControllerTestCase
 
         $url = '/api/events/participation/' . $day->getDateTime()->format('Y-m-d') . '%20' . $day->getDateTime()->format('H:i:s');
         $this->client->request('POST', $url);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode(), $this->client->getResponse());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         $content = json_decode($this->client->getResponse()->getContent());
         $this->assertNotNull($content);
@@ -164,12 +165,11 @@ class EventControllerTest extends AbstractControllerTestCase
         $newEvent = $this->createEvent();
         $this->persistAndFlushAll([$newEvent]);
 
-        $dayRepo = self::$container->get(DayRepositoryInterface::class);
+        $dayRepo = self::$container->get(DayRepository::class);
 
         $criteria = new \Doctrine\Common\Collections\Criteria();
         $criteria->where(\Doctrine\Common\Collections\Criteria::expr()->gt('lockParticipationDateTime', new DateTime()));
 
-        /** @var Day $day */
         $day = $dayRepo->matching($criteria)->get(0);
 
         $eventParticipation = $this->createEventParticipation($day, $newEvent);
@@ -179,7 +179,7 @@ class EventControllerTest extends AbstractControllerTestCase
 
         $url = '/api/events/participation/' . $day->getDateTime()->format('Y-m-d') . '%20' . $day->getDateTime()->format('H:i:s');
         $this->client->request('DELETE', $url);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode(), $this->client->getResponse());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         $content = json_decode($this->client->getResponse()->getContent());
         $this->assertNotNull($content);

@@ -2,10 +2,18 @@
 
 namespace App\Mealz\MealBundle\Tests\Controller;
 
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadDays;
 use App\Mealz\MealBundle\DataFixtures\ORM\LoadEvents;
+use App\Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
+use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Event;
+use App\Mealz\MealBundle\Entity\Participant;
+use App\Mealz\MealBundle\Repository\DayRepository;
+use App\Mealz\MealBundle\Repository\EventParticipationRepositoryInterface;
+use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
+use DateTime;
 use Doctrine\ORM\EntityManager;
 
 class EventControllerTest extends AbstractControllerTestCase
@@ -16,9 +24,11 @@ class EventControllerTest extends AbstractControllerTestCase
 
         $this->clearAllTables();
         $this->loadFixtures([
+            new LoadDays(),
             new LoadEvents(),
             new LoadRoles(),
             new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
+            new LoadWeeks(),
         ]);
 
         $this->loginAs(self::USER_KITCHEN_STAFF);
@@ -112,5 +122,76 @@ class EventControllerTest extends AbstractControllerTestCase
         $event = $eventRepo->findOneBy(['slug' => $newEvent->getSlug()]);
 
         $this->assertTrue($event->isDeleted());
+    }
+
+    public function testJoin(): void
+    {
+        $newEvent = $this->createEvent();
+        $this->persistAndFlushAll([$newEvent]);
+
+        $dayRepo = self::$container->get(DayRepository::class);
+
+        $criteria = new \Doctrine\Common\Collections\Criteria();
+        $criteria->where(\Doctrine\Common\Collections\Criteria::expr()->gt('lockParticipationDateTime', new DateTime()));
+
+        /** @var Day $day */
+        $day = $dayRepo->matching($criteria)->get(0);
+        $this->assertNotNull($day);
+
+        $eventParticipation = $this->createEventParticipation($day, $newEvent);
+
+        $url = '/api/events/participation/' . $day->getDateTime()->format('Y-m-d') . '%20' . $day->getDateTime()->format('H:i:s');
+        $this->client->request('POST', $url);
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+
+        $content = json_decode($this->client->getResponse()->getContent());
+        $this->assertNotNull($content);
+
+        $eventPartRepo = self::$container->get(EventParticipationRepositoryInterface::class);
+        $eventPart = $eventPartRepo->findOneBy(['id' => $content->participationId]);
+        $this->assertNotNull($eventPart);
+
+        $partRepo = self::$container->get(ParticipantRepositoryInterface::class);
+
+        /** @var Participant $part */
+        $part = $partRepo->findOneBy(['event' => $eventPart->getId()]);
+        $this->assertNotNull($part);
+
+        $this->assertEquals(self::USER_KITCHEN_STAFF, $part->getProfile()->getUsername());
+    }
+
+    public function testLeave(): void
+    {
+        $newEvent = $this->createEvent();
+        $this->persistAndFlushAll([$newEvent]);
+
+        $dayRepo = self::$container->get(DayRepository::class);
+
+        $criteria = new \Doctrine\Common\Collections\Criteria();
+        $criteria->where(\Doctrine\Common\Collections\Criteria::expr()->gt('lockParticipationDateTime', new DateTime()));
+
+        $day = $dayRepo->matching($criteria)->get(0);
+
+        $eventParticipation = $this->createEventParticipation($day, $newEvent);
+
+        $url = '/api/events/participation/' . $day->getDateTime()->format('Y-m-d') . '%20' . $day->getDateTime()->format('H:i:s');
+        $this->client->request('POST', $url);
+
+        $url = '/api/events/participation/' . $day->getDateTime()->format('Y-m-d') . '%20' . $day->getDateTime()->format('H:i:s');
+        $this->client->request('DELETE', $url);
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+
+        $content = json_decode($this->client->getResponse()->getContent());
+        $this->assertNotNull($content);
+
+        $eventPartRepo = self::$container->get(EventParticipationRepositoryInterface::class);
+        $eventPart = $eventPartRepo->findOneBy(['id' => $content->participationId]);
+        $this->assertNotNull($eventPart);
+
+        $partRepo = self::$container->get(ParticipantRepositoryInterface::class);
+
+        /** @var Participant $part */
+        $part = $partRepo->findOneBy(['event' => $eventPart->getId()]);
+        $this->assertNull($part);
     }
 }

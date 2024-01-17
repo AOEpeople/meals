@@ -54,6 +54,7 @@ class EventParticipationService
 
         return [
             'eventId' => $eventParticipation->getEvent()->getId(),
+            'participationId' => $eventParticipation->getId(),
             'participations' => count($eventParticipation->getParticipants()),
             'isParticipating' => null !== $eventParticipation->getParticipant($profile),
         ];
@@ -68,8 +69,6 @@ class EventParticipationService
                 $this->em->persist($participation);
                 $this->em->flush();
 
-                $eventParticipation->addParticipant($participation);
-
                 return $eventParticipation;
             }
         }
@@ -82,7 +81,6 @@ class EventParticipationService
         $eventParticipation = $day->getEvent();
         $participation = $eventParticipation->getParticipant($profile);
 
-        $eventParticipation->removeParticipant($participation);
         $this->em->remove($participation);
         $this->em->flush();
 

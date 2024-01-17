@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Tests\Controller;
 
 use App\Mealz\AccountingBundle\Entity\Transaction;
+use App\Mealz\MealBundle\Entity\Day;
+use App\Mealz\MealBundle\Entity\Event;
+use App\Mealz\MealBundle\Entity\EventParticipation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
@@ -153,6 +156,15 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         $this->persistAndFlushAll([$participant]);
 
         return $participant;
+    }
+
+    protected function createEventParticipation(Day $day, Event $event): EventParticipation
+    {
+        $eventParticipation = new EventParticipation($day, $event);
+        $day->setEvent($eventParticipation);
+        $this->persistAndFlushAll([$eventParticipation, $day]);
+
+        return $eventParticipation;
     }
 
     /**

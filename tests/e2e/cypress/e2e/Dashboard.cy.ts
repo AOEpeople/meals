@@ -186,4 +186,134 @@ describe('Test Dashboard View', () => {
                 }
             });
     });
+
+    it('should create an event, book it then leave the event again', () => {
+        cy.intercept('GET', '**/api/weeks').as('getWeeks');
+        cy.intercept('GET', '**/api/meals/count').as('getDishesCount');
+        cy.intercept('GET', '**/api/categories').as('getCategories');
+        cy.intercept('GET', '**/api/dishes').as('getDishes');
+        cy.intercept('GET', '**/api/events').as('getEvents');
+        cy.intercept('GET', '**/api/dashboard').as('getDashboard');
+
+
+        cy.visitMeals();
+        cy.get('span > a').contains('Mahlzeiten').click();
+        cy.wait(['@getWeeks']);
+
+        // Go to the next week
+        cy.get('h4').eq(1).contains('Woche').click();
+        cy.wait(['@getDishesCount', '@getCategories', '@getDishes']);
+
+        // add an event on monday
+        cy.get('input')
+            .eq(2)
+            .click()
+            .parent().parent()
+            .find('li').contains('Afterwork')
+            .click();
+
+        cy.get('h2').should('contain', 'Woche').click();
+
+        // Save
+        cy.contains('input', 'Speichern').click();
+
+        cy.get('[data-cy="msgClose"]').click();
+
+        // find the saved event
+        cy.get('input')
+            .eq(2)
+            .should('have.value', 'Afterwork');
+
+        // go to dashboard
+        cy.get('header > nav > div > a > svg').click();
+        cy.wait(['@getDashboard', '@getEvents']);
+
+        // confirm event is not joined yet
+        cy.get('h2')
+            .contains('Nächste Woche')
+            .parent()
+            .parent()
+            .find('span')
+            .contains('Montag')
+            .parent()
+            .parent()
+            .find('span')
+            .contains('Afterwork')
+            .parent()
+            .parent()
+            .find('div')
+            .eq(4)
+            .children()
+            .should('have.length', 0);
+
+        // join afterwork
+        cy.get('h2')
+            .contains('Nächste Woche')
+            .parent()
+            .parent()
+            .find('span')
+            .contains('Montag')
+            .parent()
+            .parent()
+            .find('span')
+            .contains('Afterwork')
+            .parent()
+            .parent()
+            .find('div')
+            .eq(4)
+            .click();
+
+        // confirm event has been joined
+        cy.get('h2')
+            .contains('Nächste Woche')
+            .parent()
+            .parent()
+            .find('span')
+            .contains('Montag')
+            .parent()
+            .parent()
+            .find('span')
+            .contains('Afterwork')
+            .parent()
+            .parent()
+            .find('div')
+            .eq(4)
+            .children()
+            .should('have.length', 1);
+
+        // leave afterwork
+        cy.get('h2')
+            .contains('Nächste Woche')
+            .parent()
+            .parent()
+            .find('span')
+            .contains('Montag')
+            .parent()
+            .parent()
+            .find('span')
+            .contains('Afterwork')
+            .parent()
+            .parent()
+            .find('div')
+            .eq(4)
+            .click();
+
+        // confirm event has been left
+        cy.get('h2')
+            .contains('Nächste Woche')
+            .parent()
+            .parent()
+            .find('span')
+            .contains('Montag')
+            .parent()
+            .parent()
+            .find('span')
+            .contains('Afterwork')
+            .parent()
+            .parent()
+            .find('div')
+            .eq(4)
+            .children()
+            .should('have.length', 0);
+    });
 });

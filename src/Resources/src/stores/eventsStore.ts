@@ -7,7 +7,7 @@ import useFlashMessage from "@/services/useFlashMessage";
 import { FlashMessageType } from "@/enums/FlashMessage";
 import putEventUpdate from "@/api/putEventUpdate";
 import deleteEvent from "@/api/deleteEvent";
-import postJoinEvent, { EventParticipationResponse } from "@/api/postJoinEvent";
+import postJoinEvent from "@/api/postJoinEvent";
 import useEventsBus from '@/tools/eventBus';
 import { deleteLeaveEvent } from "@/api/deleteLeaveEvent";
 

@@ -3,5 +3,6 @@ export enum Action {
     DELETE = 'DELETE',
     CREATE = 'CREATE',
     HIDE = 'HIDE',
-    BALANCE = 'BALANCE'
+    BALANCE = 'BALANCE',
+    DOWNLOAD = 'DOWNLOAD'
 }

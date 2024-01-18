@@ -34,9 +34,8 @@ describe('Test Dashboard View', () => {
             .find('span')
             .contains('Afterwork')
             .parent()
-            .parent()
             .find('div')
-            .eq(1)
+            .eq(0)
             .find('div')
             .eq(1)
             .contains('span', '17')
@@ -240,9 +239,8 @@ describe('Test Dashboard View', () => {
             .find('span')
             .contains('Afterwork')
             .parent()
-            .parent()
             .find('div')
-            .eq(4)
+            .eq(3)
             .children()
             .should('have.length', 0);
 
@@ -258,9 +256,8 @@ describe('Test Dashboard View', () => {
             .find('span')
             .contains('Afterwork')
             .parent()
-            .parent()
             .find('div')
-            .eq(4)
+            .eq(3)
             .click();
 
         // confirm event has been joined
@@ -275,9 +272,8 @@ describe('Test Dashboard View', () => {
             .find('span')
             .contains('Afterwork')
             .parent()
-            .parent()
             .find('div')
-            .eq(4)
+            .eq(3)
             .children()
             .should('have.length', 1);
 
@@ -293,9 +289,8 @@ describe('Test Dashboard View', () => {
             .find('span')
             .contains('Afterwork')
             .parent()
-            .parent()
             .find('div')
-            .eq(4)
+            .eq(3)
             .click();
 
         // confirm event has been left
@@ -310,9 +305,8 @@ describe('Test Dashboard View', () => {
             .find('span')
             .contains('Afterwork')
             .parent()
-            .parent()
             .find('div')
-            .eq(4)
+            .eq(3)
             .children()
             .should('have.length', 0);
     });

@@ -13,12 +13,19 @@ const REFETCH_TIME_ON_ERROR = 10000;
 export interface IParticipationsState {
     data: Dictionary<Dictionary<IBookedData>>,
     meals: Dictionary<IMealData>,
+    event: IEventParticipations,
     day: DateTime
 }
 
 export interface IBookedData {
     booked: number[]
 }
+
+export interface IEventParticipations {
+    name: string,
+    participants: string[]
+}
+
 export interface IMealData {
     title: {
         en: string,
@@ -49,6 +56,10 @@ export interface IMealWithVariations {
 const participationsState = reactive<IParticipationsState>({
     data: {},
     meals: {},
+    event: {
+        name: '',
+        participants: []
+    },
     day: {
         date: '',
         timezone_type: 0,

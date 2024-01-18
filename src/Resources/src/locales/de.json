@@ -263,7 +263,8 @@
   },
   "printList": {
     "title": "Teilnahmen am ",
-    "participations": "Teilnahmen"
+    "participations": "Teilnahmen",
+    "download": "Pdf downloaden"
   },
   "session": {
     "expired": "Session abgelaufen!"

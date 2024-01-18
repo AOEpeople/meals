@@ -169,6 +169,8 @@ class ApiController extends BaseController
             $list['meals'] = $list['meals'] + $this->getDishData($meal);
         }
 
+        $list['event'] = $this->apiSrv->getEventParticipationInfo($day);
+
         $list['day'] = $day->getDateTime();
 
         return new JsonResponse($list, 200);

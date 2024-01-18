@@ -66,7 +66,7 @@ const {
 const { CategoriesState, fetchCategories } = useCategories();
 const { t } = useI18n();
 const router = useRouter();
-const { fetchEvents, EventsState } = useEvents();
+const { fetchEvents } = useEvents();
 
 
 const props = withDefaults(defineProps<{

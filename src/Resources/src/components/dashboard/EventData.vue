@@ -26,7 +26,7 @@
       <ParticipationCounter
         class="justify-self-end"
         :limit="0"
-        :mealCSS="new Date(day.date.date) > new Date() ? 'bg-primary-4' : 'bg-[#80909F]'"
+        :mealCSS="!day.isLocked ? 'bg-primary-4' : 'bg-[#80909F]'"
       >
         {{ day.event?.participations }}
       </ParticipationCounter>

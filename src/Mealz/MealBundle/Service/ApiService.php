@@ -118,8 +118,25 @@ class ApiService
             && $type === gettype($parameters[$key]);
     }
 
-    public function getEventParticipationData(Day $day, Profile $profile): ?array
+    public function getEventParticipationData(Day $day, Profile $profile = null): ?array
     {
         return $this->eventPartSrv->getEventParticipationData($day, $profile);
+    }
+
+    public function getEventParticipationInfo(Day $day): ?array
+    {
+        if (null === $day->getEvent()) {
+            return null;
+        }
+
+        return [
+            'name' => $day->getEvent()->getEvent()->getTitle(),
+            'participants' => $this->getEventParticipants($day),
+        ];
+    }
+
+    private function getEventParticipants(Day $day): array
+    {
+        return $this->eventPartSrv->getParticipants($day);
     }
 }

@@ -131,7 +131,7 @@ class ApiService
 
         return [
             'name' => $day->getEvent()->getEvent()->getTitle(),
-            'participants' => $this->getEventParticipants($day)
+            'participants' => $this->getEventParticipants($day),
         ];
     }
 

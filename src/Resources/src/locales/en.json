@@ -132,7 +132,8 @@
       "submit": "Create",
       "title": "Title",
       "isPublic": "Public event?"
-    }
+    },
+    "event": "Event"
   },
   "flashMessage": {
     "error": {

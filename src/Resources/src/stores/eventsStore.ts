@@ -153,6 +153,10 @@ export function useEvents() {
         }
     }
 
+    /**
+     * Joins an event on a specific date and emits an {EventParticipationResponse}
+     * @param date The date the event is on (format: 'YYYY-mm-dd hh:MM:ss')
+     */
     async function joinEvent(date: string) {
         const { error, response } = await postJoinEvent(date);
 
@@ -165,6 +169,10 @@ export function useEvents() {
         }
     }
 
+    /**
+     * Leaves an event on a specific date
+     * @param date The date the event is on (format: 'YYYY-mm-dd hh:MM:ss')
+     */
     async function leaveEvent(date: string) {
         const { error, response } = await deleteLeaveEvent(date);
 

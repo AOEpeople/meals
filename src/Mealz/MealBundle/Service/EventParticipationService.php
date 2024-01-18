@@ -45,19 +45,24 @@ class EventParticipationService
         }
     }
 
-    public function getEventParticipationData(Day $day, Profile $profile): ?array
+    public function getEventParticipationData(Day $day, Profile $profile = null): ?array
     {
         $eventParticipation = $day->getEvent();
         if (null === $eventParticipation) {
             return null;
         }
 
-        return [
+        $participationData = [
             'eventId' => $eventParticipation->getEvent()->getId(),
             'participationId' => $eventParticipation->getId(),
             'participations' => count($eventParticipation->getParticipants()),
-            'isParticipating' => null !== $eventParticipation->getParticipant($profile),
         ];
+
+        if (null !== $profile) {
+            $participationData['isParticipating'] = null !== $eventParticipation->getParticipant($profile);
+        }
+
+        return $participationData;
     }
 
     public function join(Profile $profile, Day $day): ?EventParticipation
@@ -85,6 +90,19 @@ class EventParticipationService
         $this->em->flush();
 
         return $eventParticipation;
+    }
+
+    public function getParticipants(Day $day): array
+    {
+        $eventParticipation = $day->getEvent();
+        if (null === $eventParticipation) {
+            return [];
+        }
+
+        return array_map(
+            fn (Participant $participant) => $participant->getProfile()->getFullName(),
+            $day->getEvent()->getParticipants()->toArray()
+        );
     }
 
     private function addEventToDay(Day $day, ?Event $event)

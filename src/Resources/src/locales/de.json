@@ -157,7 +157,11 @@
       "503": "Die Anfrage zum Ausgleich ist fehlgeschlagen.",
       "504": "Das Profil für den Ausgleich konnte nicht gefunden werden.",
       "505": "Diese Anfrage zum Ausgleich wurde entweder bereits bearbeitet, oder ist ungültig.",
-      "601": "Der Betrag der dem Konto hinzugefügt werden soll, muss mehr als 0 sein."
+      "601": "Der Betrag der dem Konto hinzugefügt werden soll, muss mehr als 0 sein.",
+      "701": "Es wurden noch nicht alle Details zu dem Event eingefügt",
+      "801": "Keine Berechtigung zum beitreten oder verlassen",
+      "802": "Dem Event konnte nicht beigetreten werden",
+      "803": "Das Event konnte nicht verlassen werden"
     },
     "success": {
       "menu": {

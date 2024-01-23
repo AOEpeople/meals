@@ -79,6 +79,9 @@
     "new": "neu",
     "print": "Heutige Teilnehmer",
     "show": "Zeige Teilnehmer",
+    "noParticipants": "Noch keine Teilnehmer für dieses Event",
+    "participations": "Teilnahmen \"%EventTitle%\"",
+    "participationCount": "Es gibt %count% Teilnehmer",
     "popover": "Jemand anderes kann jetzt dein Gericht nehmen.",
     "slot": {
       "timeslot": "Zeitfenster",

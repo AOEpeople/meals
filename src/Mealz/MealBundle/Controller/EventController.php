@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Event;
+use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Event\EventParticipationUpdateEvent;
 use App\Mealz\MealBundle\Repository\DayRepositoryInterface;
 use App\Mealz\MealBundle\Repository\EventRepositoryInterface;
@@ -148,5 +149,23 @@ class EventController extends BaseListController
         $this->eventDispatcher->dispatch(new EventParticipationUpdateEvent($eventParticipation));
 
         return new JsonResponse($this->eventPartSrv->getEventParticipationData($day, $profile), 200);
+    }
+
+    public function getEventParticipants(DateTime $date): JsonResponse
+    {
+        $day = $this->dayRepo->getDayByDate($date);
+
+        if (null === $day) {
+            return new JsonResponse(['message' => 'Could not find day'], 404);
+        }
+
+        $participants = $day->getEvent()->getParticipants();
+
+        $participantsNames = array_map(
+            fn (Participant $participant) => $participant->getProfile()->getFullName(),
+            $participants->toArray()
+        );
+
+        return new JsonResponse($participantsNames, 200);
     }
 }

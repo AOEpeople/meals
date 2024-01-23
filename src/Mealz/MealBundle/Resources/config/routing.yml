@@ -306,6 +306,11 @@ MealzMealBundle_api_participations:
     defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::getParticipationsForWeek }
     methods: [ GET ]
 
+MealzMealBundle_api_event_participations:
+    path: /api/participations/event/{date}
+    defaults: { _controller: App\Mealz\MealBundle\Controller\EventController::getEventParticipants }
+    methods: [ GET ]
+
 MealzMealBundle_api_non_participating:
     path: /api/participations/{week}/abstaining
     defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::getProfilesWithoutParticipation }

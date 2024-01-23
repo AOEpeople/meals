@@ -10,6 +10,7 @@ import deleteEvent from "@/api/deleteEvent";
 import postJoinEvent from "@/api/postJoinEvent";
 import useEventsBus from '@/tools/eventBus';
 import { deleteLeaveEvent } from "@/api/deleteLeaveEvent";
+import getEventParticipants from "@/api/getEventParticipants";
 
 export interface Event {
     id: number,
@@ -85,6 +86,7 @@ export function useEvents() {
             setTimeout(fetchEvents, TIMEOUT_PERIOD);
         }
 
+        EventsState.error = '';
         EventsState.isLoading = false;
     }
 
@@ -100,6 +102,8 @@ export function useEvents() {
             EventsState.error = response.value?.message;
             return;
         }
+
+        EventsState.error = '';
 
         sendFlashMessage({
             type: FlashMessageType.INFO,
@@ -126,6 +130,7 @@ export function useEvents() {
             event.slug = (response.value as Event).slug;
             event.id = (response.value as Event).id;
 
+            EventsState.error = '';
             sendFlashMessage({
                 type: FlashMessageType.INFO,
                 message: 'events.edited'
@@ -146,6 +151,7 @@ export function useEvents() {
             EventsState.error = response.value?.message;
         } else {
             EventsState.events.splice(EventsState.events.findIndex((event) => event.slug === slug), 1);
+            EventsState.error = '';
             sendFlashMessage({
                 type: FlashMessageType.INFO,
                 message: 'events.deleted'
@@ -165,6 +171,7 @@ export function useEvents() {
         } else if (error.value === true) {
             EventsState.error = 'Unknown error occured on joining the event';
         } else {
+            EventsState.error = '';
             emit(EVENT_PARTICIPATION_UPDATE, response.value);
         }
     }
@@ -181,7 +188,21 @@ export function useEvents() {
         } else if (error.value === true) {
             EventsState.error = 'Unknown error occured on leaving the event';
         } else {
+            EventsState.error = '';
             emit(EVENT_PARTICIPATION_UPDATE, response.value);
+        }
+    }
+
+    async function getParticipantsForEvent(date: string) {
+        const { error, response } = await getEventParticipants(date);
+
+        if (error.value === true && isMessage(response.value) === true) {
+            EventsState.error = (response.value as IMessage)?.message;
+        } else if (error.value === true) {
+            EventsState.error = 'Unknown error occured on getting participants for the event';
+        } else {
+            EventsState.error = '';
+            return (response.value as string[]);
         }
     }
 
@@ -226,6 +247,7 @@ export function useEvents() {
         getEventById,
         setFilter,
         joinEvent,
-        leaveEvent
+        leaveEvent,
+        getParticipantsForEvent
     }
 }

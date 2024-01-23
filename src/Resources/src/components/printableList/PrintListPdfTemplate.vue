@@ -123,7 +123,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import { type ListData } from '@/api/getPrintableListData';
-import { CheckIcon } from '@heroicons/vue/solid';
 
 const { t } = useI18n();
 

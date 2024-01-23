@@ -155,7 +155,6 @@ import Vue3Html2pdf from 'vue3-html2pdf';
 import ActionButton from '@/components/misc/ActionButton.vue';
 import { Action } from '@/enums/Actions';
 import PrintListPdfTemplate from '@/components/printableList/PrintListPdfTemplate.vue';
-import { CheckIcon } from '@heroicons/vue/solid';
 
 const progress = useProgress().start()
 const { t, locale } = useI18n()

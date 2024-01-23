@@ -28,6 +28,11 @@
       class="z-[1] aspect-square h-8 w-8"
       :class="{'mr-1': btnText !== ''}"
     />
+    <DownloadIcon
+      v-if="action === Action.DOWNLOAD"
+      class="z-[1] aspect-square h-8 w-8"
+      :class="{'mr-1': btnText !== ''}"
+    />
     <p
       v-if="btnText !== ''"
       class="z-[1] m-0 flex h-full place-items-center text-left text-[10px] sm:text-[12px]"
@@ -40,7 +45,7 @@
 
 <script setup lang="ts">
 import { Action } from '@/enums/Actions';
-import { XIcon, PencilIcon, PlusIcon } from '@heroicons/vue/outline';
+import { XIcon, PencilIcon, PlusIcon, DownloadIcon } from '@heroicons/vue/outline';
 import { EyeOffIcon, ScaleIcon } from '@heroicons/vue/solid';
 
 withDefaults(defineProps<{

@@ -36,23 +36,23 @@
         {{ t('printList.title') + dateString }}
       </h1>
     </div>
-    <div class="mb-20 px-4 sm:px-6 lg:px-8">
-      <div class="mt-8 flex flex-col">
-        <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-            <div class="aoe-shadow overflow-hidden ring-1 ring-black/5 md:rounded-lg">
-              <table class="min-w-full divide-y divide-gray-300">
+    <div class="w-[700px]">
+      <div class="flex w-[700px] flex-col">
+        <div class="w-[700px]">
+          <div class="inline-block w-[700px] min-w-full py-2 align-middle">
+            <div class="aoe-shadow w-[700px] ring-1 ring-black/5 md:rounded-lg">
+              <table class="w-[700px] min-w-full divide-y divide-gray-300">
                 <thead class="bg-white">
                   <tr class="divide-y divide-gray-200">
                     <th
                       scope="col"
-                      class="px-4 py-3.5 text-left text-sm font-semibold text-primary"
+                      class="px-4 py-3.5 text-left text-[18px]/[24px] font-semibold text-primary"
                     />
                     <th
                       v-for="(mealName, index) in mealNames"
                       :key="index"
                       scope="col"
-                      class="px-3 py-3.5 text-center text-sm font-semibold text-primary"
+                      class="px-3 py-3.5 text-center text-[18px]/[24px] font-semibold text-primary"
                     >
                       {{ mealName }}
                     </th>
@@ -67,7 +67,7 @@
                       <th
                         colspan="5"
                         scope="colgroup"
-                        class="bg-gray-50 px-4 py-2 text-left text-sm font-semibold text-gray-900 sm:px-6"
+                        class="bg-gray-50 px-4 py-2 text-left text-[18px]/[24px] font-semibold text-gray-900 sm:px-6"
                       >
                         {{ String(slotName) }}
                       </th>
@@ -77,34 +77,27 @@
                       :key="index"
                       :class="[index === 0 ? 'border-gray-300' : 'border-gray-200', 'border-t']"
                     >
-                      <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-primary sm:pl-6">
+                      <td class="whitespace-nowrap py-4 pl-4 pr-3 text-[18px]/[24px] font-medium text-primary sm:pl-6">
                         {{ String(participantName) }}
                       </td>
                       <td
                         v-for="(meal, mealId) in listData.meals"
                         :key="`${index}${String(mealId)}`"
-                        class="whitespace-nowrap px-3 py-4 text-center text-sm text-gray-500"
+                        class="whitespace-nowrap px-3 py-4 text-center text-[18px]/[24px] text-gray-500"
                       >
-                        <svg
+                        <div
                           v-if="participations.booked.includes(parseInt(String(mealId)))"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          fill="currentColor"
-                          class="m-auto block h-6 w-6 text-primary"
+                          class="h-full w-full text-primary"
                         >
-                          <path
-                            fill-rule="evenodd"
-                            d="M19.916 4.626a.75.75 0 01.208 1.04l-9 13.5a.75.75 0 01-1.154.114l-6-6a.75.75 0 011.06-1.06l5.353 5.353 8.493-12.739a.75.75 0 011.04-.208z"
-                            clip-rule="evenodd"
-                          />
-                        </svg>
+                          &#x2714;
+                        </div>
                       </td>
                     </tr>
                   </template>
                   <tr class="border-t border-gray-200">
                     <th
                       scope="colgroup"
-                      class="bg-gray-50 px-4 py-2 text-left text-sm font-semibold text-gray-900 sm:px-6"
+                      class="bg-gray-50 px-4 py-2 text-left text-[18px]/[24px] font-semibold text-gray-900 sm:px-6"
                     >
                       {{ t('printList.participations') }}
                     </th>
@@ -112,7 +105,7 @@
                       v-for="(totalSum, index) in participationCount"
                       :key="index"
                       scope="colgroup"
-                      class="bg-gray-50 px-4 py-2 text-center text-sm font-semibold text-gray-900 sm:px-6"
+                      class="bg-gray-50 px-4 py-2 text-center text-[18px]/[24px] font-semibold text-gray-900 sm:px-6"
                     >
                       {{ totalSum }}
                     </th>
@@ -130,6 +123,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import { type ListData } from '@/api/getPrintableListData';
+import { CheckIcon } from '@heroicons/vue/solid';
 
 const { t } = useI18n();
 

@@ -23,8 +23,13 @@
       <span class="mr-[5px] inline-block grow self-center break-words text-[12px] font-bold leading-[20px] tracking-[0.5px] text-primary-1 min-[380px]:text-note">
         {{ getEventById(day.event.eventId)?.title }}
       </span>
-      <ParticipationCounter
+      <EventPopup
         class="justify-self-end"
+        :event-title="getEventById(day.event.eventId)?.title"
+        :date="day.date.date"
+      />
+      <ParticipationCounter
+        class="mx-[5px] justify-self-end"
         :limit="0"
         :mealCSS="!day.isLocked ? 'bg-primary-4' : 'bg-[#80909F]'"
       >
@@ -49,6 +54,7 @@ import CheckBox from '../misc/CheckBox.vue';
 import EventIcon from '../misc/EventIcon.vue';
 import BannerSpacer from '../misc/BannerSpacer.vue';
 import { useI18n } from 'vue-i18n';
+import EventPopup from '@/components/eventParticipation/EventPopup.vue';
 
 defineProps<{
   day: Day

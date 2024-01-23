@@ -79,6 +79,9 @@
     "new": "new",
     "print": "Today's Participations",
     "show": "Show Participants",
+    "noParticipants": "No participants for event yet",
+    "participations": "Participations \"%EventTitle%\"",
+    "participationCount": "Es gibt %count% Teilnehmer",
     "popover": "Someone else can take your meal now.",
     "slot": {
       "timeslot": "Timeslot",

@@ -194,4 +194,38 @@ class EventControllerTest extends AbstractControllerTestCase
         $part = $partRepo->findOneBy(['event' => $eventPart->getId()]);
         $this->assertNull($part);
     }
+
+    public function testGetEventParticipants(): void
+    {
+        // Create an event and join it
+        $newEvent = $this->createEvent();
+        $this->persistAndFlushAll([$newEvent]);
+
+        $dayRepo = self::$container->get(DayRepository::class);
+
+        $criteria = new \Doctrine\Common\Collections\Criteria();
+        $criteria->where(\Doctrine\Common\Collections\Criteria::expr()->gt('lockParticipationDateTime', new DateTime()));
+
+        /** @var Day $day */
+        $day = $dayRepo->matching($criteria)->get(0);
+        $this->assertNotNull($day);
+
+        $eventParticipation = $this->createEventParticipation($day, $newEvent);
+
+        $date = $day->getDateTime()->format('Y-m-d') . '%20' . $day->getDateTime()->format('H:i:s');
+
+        // Verify no participants in new event
+        $this->client->request('GET', '/api/participations/event/' . $date);
+        $participants = json_decode($this->client->getResponse()->getContent());
+        $this->assertEquals(0, count($participants));
+
+        $this->client->request('POST', '/api/events/participation/' . $date);
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+
+        $this->client->request('GET', '/api/participations/event/' . $date);
+        $participants = json_decode($this->client->getResponse()->getContent());
+
+        $this->assertEquals(1, count($participants));
+        $this->assertEquals('Meals, Kochomi', $participants[0]);
+    }
 }

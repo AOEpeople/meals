@@ -17,6 +17,12 @@
         >
           {{ description }}
         </p>
+        <p
+          v-if="combiDescription.length > 0 && meal.dishSlug === 'combined-dish'"
+          class="m-0 break-words text-[12px] font-light leading-[20px] text-primary min-[380px]:text-[14px]"
+        >
+          {{ combiDescription.join(' - ') }}
+        </p>
       </div>
     </div>
     <PriceTag
@@ -46,10 +52,11 @@
 import ParticipationCounter from '@/components/menuCard/ParticipationCounter.vue';
 import MealCheckbox from '@/components/dashboard/MealCheckbox.vue';
 import {useI18n} from 'vue-i18n';
-import { computed } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { dashboardStore } from '@/stores/dashboardStore';
 import PriceTag from '@/components/dashboard/PriceTag.vue';
 import { Day, Meal } from '@/api/getDashboardData';
+import { useDishes } from '@/stores/dishesStore';
 
 const props = defineProps<{
   weekID: number | string,
@@ -62,10 +69,23 @@ const props = defineProps<{
 const meal = props.meal ? props.meal : dashboardStore.getMeal(props.weekID, props.dayID, props.mealID)
 
 const { t, locale } = useI18n();
+const { getCombiDishes } = useDishes();
 
 const title = computed(() => locale.value.substring(0, 2) === 'en' ? meal.title.en : meal.title.de);
 
 const description = computed(() => locale.value.substring(0, 2) === 'en' ? meal.description.en : meal.description.de);
+const combiDescription = ref<string[]>([]);
+
+onMounted(async () => {
+  if (combiDescription.value.length < 1) {
+    combiDescription.value = await getCombiDescription();
+  }
+});
+
+watch(
+  () => meal.isParticipating,
+  async () => combiDescription.value = await getCombiDescription()
+);
 
 const mealCSS = computed(() => {
   let css = 'flex content-center rounded-md h-[30px] xl:h-[20px] mr-[15px] '
@@ -90,6 +110,24 @@ const participationDisplayString = computed(() => {
   const fixedCount = Math.ceil(parseFloat(meal.participations.toFixed(1)));
   return meal.limit > 0 ? `${fixedCount}/${meal.limit}` : fixedCount;
 });
+
+async function getCombiDescription() {
+  if (props.meal.isParticipating !== null && props.meal.dishSlug === 'combined-dish' && dayHasVariations()) {
+    const combiDishes = await getCombiDishes(typeof(props.mealID) === 'string' ? parseInt(props.mealID) : props.mealID);
+    return combiDishes.map(dish => locale.value === 'de' ? dish.titleDe : dish.titleEn);
+  } else {
+    return [];
+  }
+}
+
+function dayHasVariations() {
+  for (const meal of Object.values(props.day.meals)) {
+    if ((meal as Meal).variations && Object.values((meal as Meal).variations).length > 0) {
+      return true;
+    }
+  }
+  return false;
+}
 </script>
 
 <style scoped>

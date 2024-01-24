@@ -6,6 +6,7 @@ import { beforeAll, beforeEach, describe, expect, it } from "@jest/globals";
 import Dishes from "../fixtures/getDishes.json";
 import Categories from "../fixtures/getCategories.json";
 import { CreateDishDTO } from "@/api/postCreateDish";
+import combiDishes from '../fixtures/combiDishes.json';
 
 const dish1: Dish = {
     id: 17,
@@ -53,6 +54,12 @@ const getMockedResponses = (method: string, url: string) => {
             request: asyncFunc,
             error: ref(false)
         }
+    } else if (url.includes('api/participations/combi/') && /\S*api\/participations\/combi\/\d*$/.test(url) && method === 'GET') {
+        return {
+            response: ref<Dish[]>(combiDishes),
+            request: asyncFunc,
+            error: ref(false)
+        }
     }
 }
 
@@ -61,7 +68,7 @@ const getMockedResponses = (method: string, url: string) => {
 useApi = jest.fn().mockImplementation((method: string, url: string) => getMockedResponses(method, url));
 
 describe('Test dishesStore', () => {
-    const { resetState, filterState, DishesState, fetchDishes, setFilter, filteredDishes, updateDish, getDishBySlug, getDishArrayBySlugs } = useDishes();
+    const { resetState, filterState, DishesState, fetchDishes, setFilter, filteredDishes, updateDish, getDishBySlug, getDishArrayBySlugs, getCombiDishes } = useDishes();
     const { fetchCategories } = useCategories();
 
     beforeAll(async () => {
@@ -153,4 +160,11 @@ describe('Test dishesStore', () => {
 
         expect(dishArrThree).toEqual(['testen']);
     });
+
+    it('should return an array of dishes containing the dishes from the fixtures', async () => {
+        const dishes = await getCombiDishes(1234);
+
+        expect(dishes).toHaveLength(2);
+        expect(dishes).toEqual(combiDishes);
+    })
 });

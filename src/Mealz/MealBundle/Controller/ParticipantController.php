@@ -378,7 +378,7 @@ class ParticipantController extends BaseController
     }
 
     /**
-     * Returns the dishes for a combi meal of a participant
+     * Returns the dishes for a combi meal of a participant.
      */
     public function getCombiForMeal(Meal $meal): JsonResponse
     {

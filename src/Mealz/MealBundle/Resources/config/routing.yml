@@ -316,6 +316,11 @@ MealzMealBundle_api_non_participating:
     defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::getProfilesWithoutParticipation }
     methods: [ GET ]
 
+MealzMealBundle_api_participation_combi:
+  path: /api/participations/combi/{meal}
+  defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::getCombiForMeal }
+  methods: [ GET ]
+
 MealzMealBundle_Show_participations:
     path: /show/participations
     defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }

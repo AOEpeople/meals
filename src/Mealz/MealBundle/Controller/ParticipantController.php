@@ -377,6 +377,24 @@ class ParticipantController extends BaseController
         return new JsonResponse($response, 200);
     }
 
+    /**
+     * Returns the dishes for a combi meal of a participant.
+     */
+    public function getCombiForMeal(Meal $meal): JsonResponse
+    {
+        $profile = $this->getProfile();
+        if (null === $profile) {
+            return new JsonResponse(null, 403);
+        }
+
+        $participant = $meal->getParticipant($profile);
+        if (null === $participant) {
+            return new JsonResponse(['message' => 'No participation found'], 404);
+        }
+
+        return new JsonResponse($participant->getCombinedDishes()->toArray(), 200);
+    }
+
     private function generateResponse(string $route, string $action, Participant $participant): JsonResponse
     {
         return new JsonResponse([

@@ -11,6 +11,8 @@ const testEvent: Event = {
     public: false
 }
 
+const userStrings = ['Test, User', 'Another, Testuser', 'abcxyz, User123'];
+
 const asyncFunc: () => Promise<void> = async () => {
     new Promise(resolve => resolve(undefined));
 };
@@ -40,6 +42,12 @@ const getMockedResponses = (method: string, url: string) => {
             request: asyncFunc,
             error: ref(false)
         }
+    } else if (url.includes('api/participations/event/') && method === 'GET') {
+        return {
+            response: ref(userStrings),
+            request: asyncFunc,
+            error: ref(false)
+        }
     }
 }
 
@@ -48,7 +56,7 @@ const getMockedResponses = (method: string, url: string) => {
 useApi = jest.fn().mockImplementation((method: string, url: string) => getMockedResponses(method, url));
 
 describe('Test EventsStore', () => {
-    const { EventsState, fetchEvents, setFilter, filteredEvents, updateEvent, deleteEventWithSlug, getEventBySlug, resetState } = useEvents();
+    const { EventsState, fetchEvents, setFilter, filteredEvents, updateEvent, deleteEventWithSlug, getEventBySlug, resetState, getParticipantsForEvent } = useEvents();
 
     beforeEach(() => {
         resetState();
@@ -132,5 +140,14 @@ describe('Test EventsStore', () => {
 
         expect(event).toBeUndefined();
         expect(EventsState.events).toHaveLength(1);
+    });
+
+    it('should fetch all the users that participate in an event and return a list of their names', async () => {
+        const users = await getParticipantsForEvent('2024-01-24 12:00:00.000000');
+
+        expect(users).toHaveLength(3);
+        for (const user of userStrings) {
+            expect(users).toContain(user);
+        }
     });
 });

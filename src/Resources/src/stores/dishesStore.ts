@@ -12,6 +12,7 @@ import { isResponseObjectOkay, isResponseArrayOkay } from '@/api/isResponseOkay'
 import useFlashMessage from '@/services/useFlashMessage';
 import { FlashMessageType } from '@/enums/FlashMessage';
 import { refThrottled } from '@vueuse/core';
+import getDishesForCombi from '@/api/getDishesForCombi';
 
 export interface Dish {
     id: number,
@@ -235,6 +236,22 @@ export function useDishes() {
     }
 
     /**
+     * Fetches the dishes a combi meal consists of
+     * @param mealId The id of the combi-meal
+     */
+    async function getCombiDishes(combiMealId: number) {
+        const { error, response } = await getDishesForCombi(combiMealId);
+
+        if (error.value === true) {
+            DishesState.error = 'Error on getting dishes for combi meal';
+            return [];
+        } else {
+            DishesState.error = '';
+            return response.value;
+        }
+    }
+
+    /**
      * Updates the DishesState with the new values of a dish
      */
     function updateDishesState(dish: Dish) {
@@ -360,6 +377,7 @@ export function useDishes() {
         resetState,
         getDishBySlug,
         getDishArrayBySlugs,
-        getDishById
+        getDishById,
+        getCombiDishes
     };
 }

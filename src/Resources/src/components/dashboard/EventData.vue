@@ -23,6 +23,14 @@
       <span class="mr-[5px] inline-block grow self-center break-words text-[12px] font-bold leading-[20px] tracking-[0.5px] text-primary-1 min-[380px]:text-note">
         {{ getEventById(day.event.eventId)?.title }}
       </span>
+      <GuestButton
+        v-if="!day.isLocked && day.event.isPublic"
+        :dayID="dayId"
+        :index="0"
+        :invitation="Invitation.EVENT"
+        :icon-white="false"
+        class="w-[24px] text-center"
+      />
       <EventPopup
         class="justify-self-end"
         :event-title="getEventById(day.event.eventId)?.title"
@@ -55,9 +63,12 @@ import EventIcon from '../misc/EventIcon.vue';
 import BannerSpacer from '../misc/BannerSpacer.vue';
 import { useI18n } from 'vue-i18n';
 import EventPopup from '@/components/eventParticipation/EventPopup.vue';
+import GuestButton from './GuestButton.vue';
+import { Invitation } from '@/enums/Invitation';
 
 defineProps<{
-  day: Day
+  day: Day,
+  dayId: string
 }>();
 
 const { t } = useI18n();

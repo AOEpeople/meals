@@ -40,7 +40,8 @@ export type EventParticipation = {
     eventId: number,
     participationId: number,
     participations: number,
-    isParticipating: boolean
+    isParticipating: boolean,
+    isPublic: boolean
 }
 
 export type Day = {

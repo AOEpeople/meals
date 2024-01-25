@@ -15,6 +15,8 @@
         v-if="!day.isLocked && !emptyDay && !guestData && day.isEnabled"
         :dayID="dayID"
         :index="index"
+        :invitation="Invitation.MEAL"
+        :icon-white="true"
         class="row-start-2 w-[24px] pl-[3px] text-center"
       />
     </div>
@@ -38,7 +40,7 @@
         v-for="(meal, mealID) in day.meals"
         :key="mealID"
         class="mx-[15px] border-b-[0.7px] last:border-b-0"
-        :class="isEventDay ? 'pt-[13px] pb-[13px] last:pb-0 last:pt-[21px]' : 'py-[13px]'"
+        :class="isEventDay && !guestData ? 'pt-[13px] pb-[13px] last:pb-0 last:pt-[21px]' : 'py-[13px]'"
       >
         <VariationsData
           v-if="meal.variations"
@@ -68,9 +70,10 @@
       </span>
     </div>
     <EventData
-      v-if="isEventDay"
+      v-if="isEventDay && !guestData"
       class="col-start-2 row-start-2"
       :day="day"
+      :dayId="dayID"
     />
   </div>
 </template>
@@ -86,6 +89,7 @@ import GuestButton from '@/components/dashboard/GuestButton.vue';
 import { translateWeekday } from 'tools/localeHelper';
 import { GuestDay } from '@/api/getInvitationData';
 import EventData from './EventData.vue';
+import { Invitation } from '@/enums/Invitation';
 
 const { t, locale } = useI18n()
 

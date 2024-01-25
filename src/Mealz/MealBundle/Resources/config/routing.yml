@@ -1,7 +1,3 @@
-MealzMealBundle_language_switch:
-    path:  /language-switch
-    defaults: { _controller: App\Mealz\MealBundle\Controller\LanguageController::switch }
-
 MealzMealBundle_api_dashboard:
     path: /api/dashboard
     defaults: { _controller: App\Mealz\MealBundle\Controller\ApiController::getDashboardData }
@@ -87,6 +83,11 @@ MealzMealBundle_Meal_guest:
   defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
   methods: [ GET, POST ]
 
+MealzMealBundle_Meal_guest_event:
+  path: /guest/event/{hash}
+  defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
+  methods: [ GET, POST ]
+
 MealzMealBundle_balance:
   path: /balance
   defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }
@@ -167,6 +168,11 @@ MealzMealBundle_api_invitationdata:
   defaults: { _controller: App\Mealz\MealBundle\Controller\ApiController::getGuestData }
   methods: [ GET ]
 
+MealzMealBundle_api_event_invitation_data:
+  path: /api/event/invitation/{invitationId}
+  defaults: { _controller: App\Mealz\MealBundle\Controller\MealGuestController::getEventInvitationData }
+  methods: [ GET ]
+
 MealzMealBundle_api_events:
   path: /api/events
   defaults: { _controller: App\Mealz\MealBundle\Controller\EventController::getEventList }
@@ -196,6 +202,12 @@ MealzMealBundle_api_events_leave:
   path: /api/events/participation/{date}
   defaults: { _controller: App\Mealz\MealBundle\Controller\EventController::leave }
   methods: [ DELETE ]
+
+MealzMealBundle_Meal_api_guest_event_invitation:
+    path:  /event/invitation/{dayId}
+    defaults: { _controller: App\Mealz\MealBundle\Controller\MealGuestController::newGuestEventInvitation }
+    requirements:
+        dayId: '[1-9][0-9]*'
 
 MealzMealBundle_Meal_offers:
     path: /menu/{date}/{dish}/offers

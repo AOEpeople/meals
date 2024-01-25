@@ -190,7 +190,7 @@
       "events": {
         "created": "The event was successfully created.",
         "deleted": "The event was succefully deleted.",
-        "updated": "The event was successfully updated."
+        "edited": "The event was successfully updated."
       },
       "finance": {
         "empty": "There are no transactions for the selected timeframe"
@@ -229,7 +229,12 @@
     "resolve_success": "Meals booked successfully!",
     "resolve_error": "Error booking the selected meals.",
     "title": "Lunch at AOE",
-    "description": "As our guest, we would like to invite you to lunch in the AOE Eatery. To order a meal, register no later than one day before your visit to AOE with your personal information and choose the desired dish. Your order will be forwarded to our cooks.\n\nWe hope that you enjoy your lunch\nAOE"
+    "description": "As our guest, we would like to invite you to lunch in the AOE Eatery. To order a meal, register no later than one day before your visit to AOE with your personal information and choose the desired dish. Your order will be forwarded to our cooks.\n\nWe hope that you enjoy your lunch\nAOE",
+    "event": {
+      "submit": "An Event teilnehmen",
+      "title": "Event bei AOE",
+      "description": "Hiermit laden wir Sie zu dem Event \"%EventTitle%\" bei uns ein."
+    }
   },
   "header": {
     "navigation": {

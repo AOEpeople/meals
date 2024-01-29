@@ -38,7 +38,8 @@ class WeekRepositoryTest extends AbstractDatabaseTestCase
         $currCalWeek = (int) $now->format('W');
 
         $lastCalWeek = (int) $now->modify('last day of December')->format('W');
-        $this->assertContains($lastCalWeek, [52, 53]);
+        // last day of the year can we in the 52, 53 and in the calendar week 1 of the next year
+        $this->assertContains($lastCalWeek, [52, 53, 1]);
 
         $nextWeek = $this->weekRepository->getNextWeek(DateTime::createFromImmutable($now));
         $this->assertInstanceOf(Week::class, $nextWeek);

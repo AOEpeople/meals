@@ -43,7 +43,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
       - name: Cache node_modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
@@ -104,7 +104,7 @@ jobs:
           mkdir -p /tmp/docker/buildx
           git log -n 10 --date=short --format=format:"%C(auto)%h %ad @%al %s" >> public/changelog.txt
       - name: Setup docker build caches
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           key: ${{ runner.os }}-buildx
           path: /tmp/docker/buildx

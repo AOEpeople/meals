@@ -1,5 +1,22 @@
 # Changelog
 
+## Version v2.3.13 (2024-01-29)
+
+### Fixes
+
+- Fix test (b5066831)
+
+### Other
+
+- Bump actions/setup-go from 4 to 5 (084bf0d8)
+- Bump github/codeql-action from 2 to 3 (665a13e8)
+- Bump actions/upload-artifact from 3 to 4 (3ca135af)
+- Bump actions/download-artifact from 3 to 4 (862f1a32)
+- Bump geekyeggo/delete-artifact from 2 to 4 (b2eaa3cf)
+- Bump follow-redirects from 1.15.2 to 1.15.4 in /src/Resources (23008036)
+- change price in fixtures (7fd58a36)
+- change prices (5d487d44)
+
 ## Version v2.3.12 (2023-11-16)
 
 ### Fixes

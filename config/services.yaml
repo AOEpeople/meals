@@ -46,10 +46,10 @@ parameters:
     app.secret: '%env(APP_SECRET)%'
 
     mealz.lock_toggle_participation_at: '-1 day 16:00'
-    mealz.meal.price: 3.60
+    mealz.meal.price: 4.13
     mealz.meal.search_timestamp: '2000-01-01'
     mealz.meal.new_flag_counter: 2
-    mealz.meal.combined.price: 5.60
+    mealz.meal.combined.price: 6.13
 
     # PDO Session Handler options
     # Define table and column names to store session data

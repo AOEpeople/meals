@@ -231,9 +231,9 @@
     "title": "Lunch at AOE",
     "description": "As our guest, we would like to invite you to lunch in the AOE Eatery. To order a meal, register no later than one day before your visit to AOE with your personal information and choose the desired dish. Your order will be forwarded to our cooks.\n\nWe hope that you enjoy your lunch\nAOE",
     "event": {
-      "submit": "An Event teilnehmen",
-      "title": "Event bei AOE",
-      "description": "Hiermit laden wir Sie zu dem Event \"%EventTitle%\" bei uns ein."
+      "submit": "Participate",
+      "title": "Event at AOE",
+      "description": "We would like to invite you to join us at the Event \"%EventTitle%\". To ensure we can plan ahead with you, please register for the event by %lockDate% at the latest.\n\nWe look forward to having you!"
     }
   },
   "header": {

@@ -1,9 +1,10 @@
 import { IMessage } from "@/interfaces/IMessage";
 import useApi from "./api";
+import { DateTime } from "./getDashboardData";
 
 export interface EventInvitationData {
-    date: string,
-    lockDate: string,
+    date: DateTime,
+    lockDate: DateTime,
     event: string
 }
 

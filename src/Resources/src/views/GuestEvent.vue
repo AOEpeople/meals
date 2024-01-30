@@ -1,44 +1,54 @@
 <template>
-  <h2>
-    {{ t('guest.event.title') }}
-  </h2>
-  <p>
-    {{ t('guest.event.description').replace('%EventTitle%', invitationData?.event) }}
-  </p>
-  <div>
-    <form
-      @submit.prevent="handleSubmit()"
-    >
-      <InputLabel
-        v-model="formData.firstname"
-        :required="true"
-        :labelText="t('guest.form.firstname')"
-      />
-      <InputLabel
-        v-model="formData.lastname"
-        :required="true"
-        :labelText="t('guest.form.lastname')"
-      />
-      <InputLabel
-        v-model="formData.company"
-        :labelText="t('guest.form.company')"
-      />
-      <SubmitButton
-        :btnText="t('guest.event.submit')"
-      />
-    </form>
+  <div
+    v-if="invitationData !== null"
+    class="mx-[5%] xl:mx-auto"
+  >
+    <h2 class="text-center text-primary xl:text-left">
+      {{ `${t('guest.event.title')} | ${eventDate}` }}
+    </h2>
+    <p class="whitespace-pre-line text-[18px] leading-[24px] text-primary-1">
+      {{ t('guest.event.description').replace('%EventTitle%', invitationData?.event).replace('%lockDate%', lockDate) }}
+    </p>
+    <div>
+      <form
+        @submit.prevent="handleSubmit()"
+      >
+        <InputLabel
+          v-model="formData.firstname"
+          :required="true"
+          :labelText="t('guest.form.firstname')"
+        />
+        <InputLabel
+          v-model="formData.lastname"
+          :required="true"
+          :labelText="t('guest.form.lastname')"
+        />
+        <InputLabel
+          v-model="formData.company"
+          :labelText="t('guest.form.company')"
+        />
+        <SubmitButton
+          :btnText="t('guest.event.submit')"
+        />
+      </form>
+    </div>
   </div>
+  <LoadingSpinner
+    v-else
+    :loaded="invitationData === null"
+  />
 </template>
 
 <script setup lang="ts">
 import getEventInvitationData, { EventInvitationData } from '@/api/getEventInvitionData';
 import InputLabel from '@/components/misc/InputLabel.vue';
+import LoadingSpinner from '@/components/misc/LoadingSpinner.vue';
 import SubmitButton from '@/components/misc/SubmitButton.vue';
 import { isMessage } from '@/interfaces/IMessage';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 
 const invitationData = ref<EventInvitationData | null>(null);
 
@@ -60,7 +70,28 @@ onMounted(async () => {
   }
 });
 
+const eventDate = computed(() => {
+  if (invitationData.value !== null) {
+    return getLocaleDateRepr(invitationData.value.date.date);
+  }
+  return 'unknown';
+});
+
+const lockDate = computed(() => {
+  if (invitationData.value !== null) {
+    return getLocaleDateRepr(invitationData.value.lockDate.date, true);
+  }
+  return 'unknown';
+});
+
 async function handleSubmit() {
   console.log('HUHU')
+}
+
+function getLocaleDateRepr(date: string, getTime = false) {
+  if (getTime === true) {
+    return new Date(date).toLocaleDateString(locale.value, { weekday: 'long', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+  }
+  return new Date(date).toLocaleDateString(locale.value, { weekday: 'long', month: 'numeric', day: 'numeric' });
 }
 </script>

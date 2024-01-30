@@ -63,7 +63,7 @@ class MealGuestController extends BaseController
     ): JsonResponse {
         $guestInvitation = $guestInvitationRepo->findOrCreateInvitation($this->getUser()->getProfile(), $mealDay);
 
-        return new JsonResponse(['url' => $this->generateInvitationUrl($guestInvitation),], 200);
+        return new JsonResponse(['url' => $this->generateInvitationUrl($guestInvitation)], 200);
     }
 
     /**
@@ -75,9 +75,9 @@ class MealGuestController extends BaseController
     ): JsonResponse {
         $eventInvitation = $guestInvitationRepo->findOrCreateInvitation($this->getUser()->getProfile(), $dayId);
 
-        return new JsonResponse(['url' => $this->generateInvitationUrl($eventInvitation, false),], 200);
+        return new JsonResponse(['url' => $this->generateInvitationUrl($eventInvitation, false)], 200);
     }
-    
+
     public function getEventInvitationData(
         string $invitationId,
         GuestInvitationRepositoryInterface $guestInvitationRepo

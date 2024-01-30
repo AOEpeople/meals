@@ -1,6 +1,4 @@
-import { find } from "cypress/types/lodash";
-
-describe.skip('Test TV ParticipationsList view', () => {
+describe('Test TV ParticipationsList view', () => {
   beforeEach(() => {
     cy.resetDB();
     cy.setCookie('locale', 'de');

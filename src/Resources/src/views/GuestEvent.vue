@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="invitationData !== null"
+    v-if="invitationData !== null && hasJoined === false"
     class="mx-[5%] xl:mx-auto"
   >
     <h2 class="text-center text-primary xl:text-left">
@@ -14,12 +14,12 @@
         @submit.prevent="handleSubmit()"
       >
         <InputLabel
-          v-model="formData.firstname"
+          v-model="formData.firstName"
           :required="true"
           :labelText="t('guest.form.firstname')"
         />
         <InputLabel
-          v-model="formData.lastname"
+          v-model="formData.lastName"
           :required="true"
           :labelText="t('guest.form.lastname')"
         />
@@ -33,6 +33,19 @@
       </form>
     </div>
   </div>
+  <div
+    v-else-if="invitationData !== null && hasJoined === true"
+    class="mx-[5%] xl:mx-auto"
+  >
+    <h2 class="text-center text-primary xl:text-left">
+      {{ `${t('guest.event.title')} | ${eventDate}` }}
+    </h2>
+    <p
+      class="whitespace-pre-line text-[18px] leading-[24px] text-primary-1"
+    >
+      {{ t('guest.event.joined').replace('%EventTitle%', invitationData?.event).replace('%eventDate%', eventDate) }}
+    </p>
+  </div>
   <LoadingSpinner
     v-else
     :loaded="invitationData === null"
@@ -41,22 +54,28 @@
 
 <script setup lang="ts">
 import getEventInvitationData, { EventInvitationData } from '@/api/getEventInvitionData';
+import postJoinEventGuest, { GuestEventData } from '@/api/postJoinEventGuest';
 import InputLabel from '@/components/misc/InputLabel.vue';
 import LoadingSpinner from '@/components/misc/LoadingSpinner.vue';
 import SubmitButton from '@/components/misc/SubmitButton.vue';
+import { FlashMessageType } from '@/enums/FlashMessage';
 import { isMessage } from '@/interfaces/IMessage';
+import useFlashMessage from '@/services/useFlashMessage';
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const { t, locale } = useI18n();
+const { sendFlashMessage } = useFlashMessage();
 
 const invitationData = ref<EventInvitationData | null>(null);
 
-const formData = ref({
-  firstname: '',
-  lastname: '',
+const formData = ref<GuestEventData>({
+  firstName: '',
+  lastName: '',
   company: ''
 });
+
+const hasJoined = ref(false);
 
 const props = defineProps<{
   hash: string
@@ -85,7 +104,26 @@ const lockDate = computed(() => {
 });
 
 async function handleSubmit() {
-  console.log('HUHU')
+  console.log('Trying to join');
+  const { error, response } = await postJoinEventGuest(props.hash, formData.value);
+
+  if (error.value === true && isMessage(response.value)) {
+    sendFlashMessage({
+      type: FlashMessageType.ERROR,
+      message: response.value.message
+    });
+  } else if (error.value === true) {
+    sendFlashMessage({
+      type: FlashMessageType.ERROR,
+      message: 'Error occured'
+    });
+  } else {
+    hasJoined.value = true;
+    sendFlashMessage({
+      type: FlashMessageType.INFO,
+      message: 'guest.joined'
+    });
+  }
 }
 
 function getLocaleDateRepr(date: string, getTime = false) {

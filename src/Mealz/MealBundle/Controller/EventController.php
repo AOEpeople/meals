@@ -159,13 +159,6 @@ class EventController extends BaseListController
             return new JsonResponse(['message' => 'Could not find day'], 404);
         }
 
-        $participants = $day->getEvent()->getParticipants();
-
-        $participantsNames = array_map(
-            fn (Participant $participant) => $participant->getProfile()->getFullName(),
-            $participants->toArray()
-        );
-
-        return new JsonResponse($participantsNames, 200);
+        return new JsonResponse($this->eventPartSrv->getParticipants($day), 200);
     }
 }

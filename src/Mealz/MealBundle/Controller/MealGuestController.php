@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Day;
+use App\Mealz\MealBundle\Entity\GuestInvitation;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
 use App\Mealz\MealBundle\Event\SlotAllocationUpdateEvent;
@@ -62,14 +63,38 @@ class MealGuestController extends BaseController
     ): JsonResponse {
         $guestInvitation = $guestInvitationRepo->findOrCreateInvitation($this->getUser()->getProfile(), $mealDay);
 
-        return new JsonResponse(
-            [
-                'url' => $this->generateUrl(
-                    'MealzMealBundle_Meal_guest',
-                    ['hash' => $guestInvitation->getId()],
-                    UrlGeneratorInterface::ABSOLUTE_URL),
-            ], 200
-        );
+        return new JsonResponse(['url' => $this->generateInvitationUrl($guestInvitation)], 200);
+    }
+
+    /**
+     * @Security("is_granted('ROLE_USER')")
+     */
+    public function newGuestEventInvitation(
+        Day $dayId,
+        GuestInvitationRepositoryInterface $guestInvitationRepo
+    ): JsonResponse {
+        $eventInvitation = $guestInvitationRepo->findOrCreateInvitation($this->getUser()->getProfile(), $dayId);
+
+        return new JsonResponse(['url' => $this->generateInvitationUrl($eventInvitation, false)], 200);
+    }
+
+    public function getEventInvitationData(
+        string $invitationId,
+        GuestInvitationRepositoryInterface $guestInvitationRepo
+    ): JsonResponse {
+        /** @var GuestInvitation $invitation */
+        $invitation = $guestInvitationRepo->find($invitationId);
+        if (null === $invitation) {
+            return new JsonResponse(['message' => '901: Could not find invitation for the given hash', 403]);
+        }
+
+        $guestData = [
+            'date' => $invitation->getDay()->getDateTime(),
+            'lockDate' => $invitation->getDay()->getLockParticipationDateTime(),
+            'event' => $invitation->getDay()->getEvent()->getEvent()->getTitle(),
+        ];
+
+        return new JsonResponse($guestData, 200);
     }
 
     /**
@@ -90,5 +115,14 @@ class MealGuestController extends BaseController
         if (null !== $slot) {
             $this->eventDispatcher->dispatch(new SlotAllocationUpdateEvent($participant->getMeal()->getDay(), $slot));
         }
+    }
+
+    private function generateInvitationUrl(GuestInvitation $invitation, bool $isMeal = true): string
+    {
+        return $this->generateUrl(
+            true === $isMeal ? 'MealzMealBundle_Meal_guest' : 'MealzMealBundle_Meal_guest_event',
+            ['hash' => $invitation->getId()],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
     }
 }

@@ -190,7 +190,7 @@
       "events": {
         "created": "Das Event wurde erfolgreich erstellt.",
         "deleted": "Das Event wurde erfolgreich gelöscht.",
-        "updated": "Das Event wurde erfolgreich bearbeitet."
+        "edited": "Das Event wurde erfolgreich bearbeitet."
       },
       "finance": {
         "empty": "Es gibt keine Transaktionen im ausgewählten Zeitraum"
@@ -229,7 +229,12 @@
     "resolve_success": "Essensbuchung erfolgreich!",
     "resolve_error": "Fehler bei der Essensbuchung.",
     "title": "Mittagessen bei AOE",
-    "description": "Als Gast in unserem Haus laden wir Sie gerne zu einem Mittagessen in der AOE Eatery ein. Für Ihre Bestellung tragen Sie sich bitte bis spätestens einen Tag vorher mit Ihren Daten ein und wählen das gewünschte Gericht aus, das dann an unsere Köche weitergeleitet wird.\n\nGuten Appetit wünscht Ihnen,\nAOE"
+    "description": "Als Gast in unserem Haus laden wir Sie gerne zu einem Mittagessen in der AOE Eatery ein. Für Ihre Bestellung tragen Sie sich bitte bis spätestens einen Tag vorher mit Ihren Daten ein und wählen das gewünschte Gericht aus, das dann an unsere Köche weitergeleitet wird.\n\nGuten Appetit wünscht Ihnen,\nAOE",
+    "event": {
+      "submit": "An Event teilnehmen",
+      "title": "Veranstaltung bei AOE",
+      "description": "Hiermit laden wir Sie zu der Veranstaltung \"%EventTitle%\" bei uns ein. Damit wir rechtzeitig mit Ihnen planen können tragen Sie sich bitte bis spätestens %lockDate% Uhr für das Event ein.\n\nWir freuen uns auf Sie!"
+    }
   },
   "header": {
     "navigation": {

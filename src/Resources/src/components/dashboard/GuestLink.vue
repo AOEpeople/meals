@@ -10,19 +10,22 @@
 
 <script setup lang="ts">
 import {useGuestLink} from '@/api/getGuestLink';
+import getEventGuestLink from '@/api/getEventGuestLink';
 import {useI18n} from 'vue-i18n';
 import { CheckIcon } from '@heroicons/vue/solid';
 import { onMounted, ref } from 'vue';
+import { Invitation } from '@/enums/Invitation';
 
 const props = defineProps<{
-  dayID: string
+  dayID: string,
+  invitation: Invitation
 }>();
 
 const { t } = useI18n()
 const url = ref('');
 
 onMounted(async () => {
-  const { link, error } = await useGuestLink(props.dayID)
+  const { link, error } = props.invitation === Invitation.MEAL ? await useGuestLink(props.dayID) : await getEventGuestLink(props.dayID)
   if (error.value === false) {
     copyTextToClipboard(link.value.url)
     url.value = link.value.url

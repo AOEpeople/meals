@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Event;
-use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Event\EventParticipationUpdateEvent;
 use App\Mealz\MealBundle\Repository\DayRepositoryInterface;
 use App\Mealz\MealBundle\Repository\EventRepositoryInterface;

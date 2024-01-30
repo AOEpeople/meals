@@ -8,9 +8,7 @@ use App\Mealz\MealBundle\Entity\EventParticipation;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Repository\EventParticipationRepositoryInterface;
 use App\Mealz\MealBundle\Repository\EventRepositoryInterface;
-use App\Mealz\MealBundle\Service\GuestParticipationService;
 use App\Mealz\UserBundle\Entity\Profile;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 
@@ -20,20 +18,20 @@ class EventParticipationService
     private EntityManagerInterface $em;
     private EventParticipationRepositoryInterface $eventPartRepo;
     private EventRepositoryInterface $eventRepo;
-    private GuestParticipationService $guestParticipationService;
+    private GuestParticipationService $guestPartSrv;
 
     public function __construct(
         Doorman $doorman,
         EntityManagerInterface $em,
         EventRepositoryInterface $eventRepo,
         EventParticipationRepositoryInterface $eventPartRepo,
-        GuestParticipationService $guestParticipationService
+        GuestParticipationService $guestPartSrv
     ) {
         $this->doorman = $doorman;
         $this->em = $em;
         $this->eventPartRepo = $eventPartRepo;
         $this->eventRepo = $eventRepo;
-        $this->guestParticipationService = $guestParticipationService;
+        $this->guestPartSrv = $guestPartSrv;
     }
 
     /**
@@ -94,7 +92,7 @@ class EventParticipationService
         string $company,
         Day $eventDay
     ): ?EventParticipation {
-        $guestProfile = $this->guestParticipationService->getCreateGuestProfile(
+        $guestProfile = $this->guestPartSrv->getCreateGuestProfile(
             $firstName,
             $lastName,
             $company,
@@ -112,6 +110,7 @@ class EventParticipationService
 
             $this->em->flush();
             $this->em->commit();
+
             return $eventParticiation;
         } catch (Exception $e) {
             $this->em->rollback();
@@ -174,6 +173,7 @@ class EventParticipationService
             $company = strlen($participant->getProfile()->getCompany()) > 0 ?
                 ' (' . $participant->getProfile()->getCompany() . ')' :
                 ' (Gast)';
+
             return $participant->getProfile()->getFullName() . $company;
         } else {
             return $participant->getProfile()->getFullName();

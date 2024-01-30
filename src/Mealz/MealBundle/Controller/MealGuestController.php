@@ -23,16 +23,16 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class MealGuestController extends BaseController
 {
-    private EventParticipationService $eventParticipationService;
+    private EventParticipationService $eventPartSrv;
     private GuestParticipationService $gps;
     private EventDispatcherInterface $eventDispatcher;
 
     public function __construct(
-        EventParticipationService $eventParticipationService,
+        EventParticipationService $eventPartSrv,
         GuestParticipationService $gps,
         EventDispatcherInterface $eventDispatcher
     ) {
-        $this->eventParticipationService = $eventParticipationService;
+        $this->eventPartSrv = $eventPartSrv;
         $this->gps = $gps;
         $this->eventDispatcher = $eventDispatcher;
     }
@@ -125,7 +125,7 @@ class MealGuestController extends BaseController
         }
 
         try {
-            $eventParticipation = $this->eventParticipationService->joinAsGuest(
+            $eventParticipation = $this->eventPartSrv->joinAsGuest(
                 $parameters['firstName'],
                 $parameters['lastName'],
                 $parameters['company'],

@@ -240,7 +240,7 @@ describe('Test Dashboard View', () => {
             .contains('Afterwork')
             .parent()
             .find('div')
-            .eq(3)
+            .eq(4)
             .children()
             .should('have.length', 0);
 
@@ -257,7 +257,7 @@ describe('Test Dashboard View', () => {
             .contains('Afterwork')
             .parent()
             .find('div')
-            .eq(3)
+            .eq(4)
             .click();
 
         // confirm event has been joined
@@ -273,7 +273,7 @@ describe('Test Dashboard View', () => {
             .contains('Afterwork')
             .parent()
             .find('div')
-            .eq(3)
+            .eq(4)
             .children()
             .should('have.length', 1);
 
@@ -290,7 +290,7 @@ describe('Test Dashboard View', () => {
             .contains('Afterwork')
             .parent()
             .find('div')
-            .eq(3)
+            .eq(4)
             .click();
 
         // confirm event has been left
@@ -306,7 +306,7 @@ describe('Test Dashboard View', () => {
             .contains('Afterwork')
             .parent()
             .find('div')
-            .eq(3)
+            .eq(4)
             .children()
             .should('have.length', 0);
     });
@@ -366,7 +366,7 @@ describe('Test Dashboard View', () => {
             .contains('Afterwork')
             .parent()
             .find('div')
-            .eq(3)
+            .eq(4)
             .click();
 
         // click on the info-icon
@@ -381,7 +381,7 @@ describe('Test Dashboard View', () => {
             .contains('Afterwork')
             .parent()
             .find('svg')
-            .eq(0)
+            .eq(1)
             .click();
 
         cy.wait('@getParticipants');
@@ -415,7 +415,7 @@ describe('Test Dashboard View', () => {
             .contains('Afterwork')
             .parent()
             .find('div')
-            .eq(3)
+            .eq(4)
             .click();
 
         // click on the info-icon
@@ -430,7 +430,7 @@ describe('Test Dashboard View', () => {
             .contains('Afterwork')
             .parent()
             .find('svg')
-            .eq(0)
+            .eq(1)
             .click();
 
         cy.wait('@getParticipants');

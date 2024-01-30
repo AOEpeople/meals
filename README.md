@@ -203,3 +203,5 @@ IDP_CLIENT_SECRET=client-secret
   * 803: User could not leave the event
 *MealGuestController 9xx*
   * 901: Could not find the Invitation for the given hash
+  * 902: Parameters were not provided (eg. firstname and lastname)
+  * 903: An unknown error occured on joining the event as a guest

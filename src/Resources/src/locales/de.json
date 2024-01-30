@@ -203,6 +203,9 @@
         "created": "Der Zeitslot wurde erfolgreich erstellt.",
         "deleted": "Der Zeitslot wurde erfolgreich gelöscht.",
         "updated": "Der Zeitslot wurde erfolgreich bearbeitet."
+      },
+      "guest": {
+        "joined": "Sie nehmen an der Veranstaltung teil. Wir freuen uns Sie dabei zu haben."
       }
     }
   },
@@ -232,6 +235,7 @@
     "description": "Als Gast in unserem Haus laden wir Sie gerne zu einem Mittagessen in der AOE Eatery ein. Für Ihre Bestellung tragen Sie sich bitte bis spätestens einen Tag vorher mit Ihren Daten ein und wählen das gewünschte Gericht aus, das dann an unsere Köche weitergeleitet wird.\n\nGuten Appetit wünscht Ihnen,\nAOE",
     "event": {
       "submit": "An Event teilnehmen",
+      "joined": "Sie nehmen am %eventDate% an \"%EventTitle%\" teil. Wir freuen uns Sie dabei zu haben.",
       "title": "Veranstaltung bei AOE",
       "description": "Hiermit laden wir Sie zu der Veranstaltung \"%EventTitle%\" bei uns ein. Damit wir rechtzeitig mit Ihnen planen können tragen Sie sich bitte bis spätestens %lockDate% Uhr für das Event ein.\n\nWir freuen uns auf Sie!"
     }

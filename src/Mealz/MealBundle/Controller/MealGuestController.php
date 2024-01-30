@@ -7,9 +7,11 @@ namespace App\Mealz\MealBundle\Controller;
 use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\GuestInvitation;
 use App\Mealz\MealBundle\Entity\Participant;
+use App\Mealz\MealBundle\Event\EventParticipationUpdateEvent;
 use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
 use App\Mealz\MealBundle\Event\SlotAllocationUpdateEvent;
 use App\Mealz\MealBundle\Repository\GuestInvitationRepositoryInterface;
+use App\Mealz\MealBundle\Service\EventParticipationService;
 use App\Mealz\MealBundle\Service\GuestParticipationService;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -21,11 +23,16 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class MealGuestController extends BaseController
 {
+    private EventParticipationService $eventParticipationService;
     private GuestParticipationService $gps;
     private EventDispatcherInterface $eventDispatcher;
 
-    public function __construct(GuestParticipationService $gps, EventDispatcherInterface $eventDispatcher)
-    {
+    public function __construct(
+        EventParticipationService $eventParticipationService,
+        GuestParticipationService $gps,
+        EventDispatcherInterface $eventDispatcher
+    ) {
+        $this->eventParticipationService = $eventParticipationService;
         $this->gps = $gps;
         $this->eventDispatcher = $eventDispatcher;
     }
@@ -95,6 +102,46 @@ class MealGuestController extends BaseController
         ];
 
         return new JsonResponse($guestData, 200);
+    }
+
+    // TODO: check for existing guest
+    public function joinEventAsGuest(
+        string $invitationId,
+        Request $request,
+        GuestInvitationRepositoryInterface $guestInvitationRepo
+    ): JsonResponse {
+        $parameters = json_decode($request->getContent(), true);
+
+        /** @var GuestInvitation $invitation */
+        $invitation = $guestInvitationRepo->find($invitationId);
+        if (null === $invitation) {
+            return new JsonResponse(['message' => '901: Could not find invitation for the given hash', 403]);
+        } elseif (false === isset($parameters['firstName']) || false === isset($parameters['lastName'])) {
+            return new JsonResponse(['message' => '902: Parameters were not provided'], 404);
+        }
+
+        if (false === isset($parameters['company'])) {
+            $parameters['company'] = '';
+        }
+
+        try {
+            $eventParticipation = $this->eventParticipationService->joinAsGuest(
+                $parameters['firstName'],
+                $parameters['lastName'],
+                $parameters['company'],
+                $invitation->getDay()
+            );
+
+            if (null === $eventParticipation) {
+                return new JsonResponse(['message' => '903: Unknown error occured while joining the event'], 500);
+            }
+
+            $this->eventDispatcher->dispatch(new EventParticipationUpdateEvent($eventParticipation));
+
+            return new JsonResponse(null, 200);
+        } catch (Exception $e) {
+            return new JsonResponse(['message' => '903: ' . $e->getMessage()], 500);
+        }
     }
 
     /**

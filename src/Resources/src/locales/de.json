@@ -164,7 +164,8 @@
       "701": "Es wurden noch nicht alle Details zu dem Event eingefügt",
       "801": "Keine Berechtigung zum beitreten oder verlassen",
       "802": "Dem Event konnte nicht beigetreten werden",
-      "803": "Das Event konnte nicht verlassen werden"
+      "803": "Das Event konnte nicht verlassen werden",
+      "903": "Sie haben sich schon angemeldet. Bei Fragen wenden Sie sich bitte an Ihren Ansprechpartner."
     },
     "success": {
       "menu": {
@@ -205,7 +206,7 @@
         "updated": "Der Zeitslot wurde erfolgreich bearbeitet."
       },
       "guest": {
-        "joined": "Sie nehmen an der Veranstaltung teil. Wir freuen uns Sie dabei zu haben."
+        "joined": "Wir freuen uns Sie dabei zu haben."
       }
     }
   },
@@ -237,7 +238,7 @@
       "submit": "An Event teilnehmen",
       "joined": "Sie nehmen am %eventDate% an \"%EventTitle%\" teil. Wir freuen uns Sie dabei zu haben.",
       "title": "Veranstaltung bei AOE",
-      "description": "Hiermit laden wir Sie zu der Veranstaltung \"%EventTitle%\" bei uns ein. Damit wir rechtzeitig mit Ihnen planen können tragen Sie sich bitte bis spätestens %lockDate% Uhr für das Event ein.\n\nWir freuen uns auf Sie!"
+      "description": "Hiermit laden wir Sie zu der Veranstaltung \"%EventTitle%\" ein. Damit wir mit Ihnen planen können tragen Sie sich bitte bis spätestens %lockDate% Uhr für das Event ein.\n\nWir freuen uns auf Sie!"
     }
   },
   "header": {

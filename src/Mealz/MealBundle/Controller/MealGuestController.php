@@ -104,7 +104,6 @@ class MealGuestController extends BaseController
         return new JsonResponse($guestData, 200);
     }
 
-    // TODO: check for existing guest
     public function joinEventAsGuest(
         string $invitationId,
         Request $request,

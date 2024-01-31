@@ -10,6 +10,7 @@ use App\Mealz\MealBundle\Repository\EventParticipationRepositoryInterface;
 use App\Mealz\MealBundle\Repository\EventRepositoryInterface;
 use App\Mealz\UserBundle\Entity\Profile;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 
 class EventParticipationService
 {
@@ -17,17 +18,20 @@ class EventParticipationService
     private EntityManagerInterface $em;
     private EventParticipationRepositoryInterface $eventPartRepo;
     private EventRepositoryInterface $eventRepo;
+    private GuestParticipationService $guestPartSrv;
 
     public function __construct(
         Doorman $doorman,
         EntityManagerInterface $em,
         EventRepositoryInterface $eventRepo,
-        EventParticipationRepositoryInterface $eventPartRepo
+        EventParticipationRepositoryInterface $eventPartRepo,
+        GuestParticipationService $guestPartSrv
     ) {
         $this->doorman = $doorman;
         $this->em = $em;
         $this->eventPartRepo = $eventPartRepo;
         $this->eventRepo = $eventRepo;
+        $this->guestPartSrv = $guestPartSrv;
     }
 
     /**
@@ -82,6 +86,38 @@ class EventParticipationService
         return null;
     }
 
+    public function joinAsGuest(
+        string $firstName,
+        string $lastName,
+        string $company,
+        Day $eventDay
+    ): ?EventParticipation {
+        $guestProfile = $this->guestPartSrv->getCreateGuestProfile(
+            $firstName,
+            $lastName,
+            $company,
+            $eventDay->getDateTime()
+        );
+
+        $this->em->beginTransaction();
+
+        try {
+            $this->em->persist($guestProfile);
+            $eventParticiation = $eventDay->getEvent();
+            $participation = $this->createEventParticipation($guestProfile, $eventParticiation);
+
+            $this->em->persist($participation);
+
+            $this->em->flush();
+            $this->em->commit();
+
+            return $eventParticiation;
+        } catch (Exception $e) {
+            $this->em->rollback();
+            throw $e;
+        }
+    }
+
     public function leave(Profile $profile, Day $day): ?EventParticipation
     {
         $eventParticipation = $day->getEvent();
@@ -101,7 +137,7 @@ class EventParticipationService
         }
 
         return array_map(
-            fn (Participant $participant) => $participant->getProfile()->getFullName(),
+            fn (Participant $participant) => $this->getParticipantName($participant),
             $day->getEvent()->getParticipants()->toArray()
         );
     }
@@ -129,5 +165,18 @@ class EventParticipationService
     private function createEventParticipation(Profile $profile, EventParticipation $eventParticiation): ?Participant
     {
         return new Participant($profile, null, $eventParticiation);
+    }
+
+    private function getParticipantName(Participant $participant): string
+    {
+        if ($participant->isGuest()) {
+            $company = strlen($participant->getProfile()->getCompany()) > 0 ?
+                ' (' . $participant->getProfile()->getCompany() . ')' :
+                ' (Gast)';
+
+            return $participant->getProfile()->getFullName() . $company;
+        } else {
+            return $participant->getProfile()->getFullName();
+        }
     }
 }

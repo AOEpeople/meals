@@ -203,6 +203,9 @@
         "created": "The timeslot was successfully created.",
         "deleted": "The timeslot was succefully deleted.",
         "updated": "The timeslot was successfully updated."
+      },
+      "guest": {
+        "joined": "You are participating in the Event. We are looking forward to meeting you."
       }
     }
   },
@@ -232,6 +235,7 @@
     "description": "As our guest, we would like to invite you to lunch in the AOE Eatery. To order a meal, register no later than one day before your visit to AOE with your personal information and choose the desired dish. Your order will be forwarded to our cooks.\n\nWe hope that you enjoy your lunch\nAOE",
     "event": {
       "submit": "Participate",
+      "joined": "You're participating at \"%EventTitle%\" on the %eventDate%.",
       "title": "Event at AOE",
       "description": "We would like to invite you to join us at the Event \"%EventTitle%\". To ensure we can plan ahead with you, please register for the event by %lockDate% at the latest.\n\nWe look forward to having you!"
     }

@@ -173,6 +173,11 @@ MealzMealBundle_api_event_invitation_data:
   defaults: { _controller: App\Mealz\MealBundle\Controller\MealGuestController::getEventInvitationData }
   methods: [ GET ]
 
+MealzMealBundle_api_event_invitation_join:
+  path: /api/event/invitation/{invitationId}
+  defaults: { _controller: App\Mealz\MealBundle\Controller\MealGuestController::joinEventAsGuest }
+  methods: [ POST ]
+
 MealzMealBundle_api_events:
   path: /api/events
   defaults: { _controller: App\Mealz\MealBundle\Controller\EventController::getEventList }

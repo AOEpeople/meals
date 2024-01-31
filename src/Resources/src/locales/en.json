@@ -164,7 +164,8 @@
       "701": "Event creation parameters are missing",
       "801": "No permission to enter or leave the event",
       "802": "Couldn't join the event",
-      "803": "Couldn't leave the event"
+      "803": "Couldn't leave the event",
+      "903": "You are already registered. If you have any questions please message your contact person."
     },
     "success": {
       "menu": {
@@ -205,7 +206,7 @@
         "updated": "The timeslot was successfully updated."
       },
       "guest": {
-        "joined": "You are participating in the Event. We are looking forward to meeting you."
+        "joined": "We are looking forward to meeting you."
       }
     }
   },

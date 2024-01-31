@@ -107,7 +107,7 @@ async function handleSubmit() {
   console.log('Trying to join');
   const { error, response } = await postJoinEventGuest(props.hash, formData.value);
 
-  if (error.value === true && isMessage(response.value)) {
+  if (error.value === true && isMessage(response.value) && response.value.message.includes('already joined')) {
     sendFlashMessage({
       type: FlashMessageType.ERROR,
       message: response.value.message

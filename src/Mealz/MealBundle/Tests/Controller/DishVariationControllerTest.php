@@ -37,7 +37,6 @@ class DishVariationControllerTest extends AbstractControllerTestCase
      */
     public function testNew(): void
     {
-        $this->markTestSkipped('irrelevant form');
         /** @var Dish $dish */
         $dish = $this->getDish();
 
@@ -63,7 +62,6 @@ class DishVariationControllerTest extends AbstractControllerTestCase
 
     public function testUpdate(): void
     {
-        $this->markTestSkipped('irrelevant form');
         /** @var Dish $dish */
         $dish = $this->getDish(null, true);
         $dishVariation = $dish->getVariations()->get(0);
@@ -85,7 +83,6 @@ class DishVariationControllerTest extends AbstractControllerTestCase
 
     public function testDeleteDishVariation(): void
     {
-        $this->markTestSkipped('irrelevant form');
         /** @var DishVariation $dishVariation */
         $dishVariation = $this->getDish(null, true)->getVariations()->get(0);
         $dishVariationId = $dishVariation->getId();

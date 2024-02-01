@@ -73,21 +73,6 @@ class SlotAllocationSubscriber implements EventSubscriberInterface
         ];
     }
 
-    private function addSlot(?Slot $slot, DateTime $dateTime): ?array
-    {
-        if (null !== $slot) {
-            $count = $this->slotSrv->getSlotsStatusOn($dateTime)[$slot->getSlug()];
-
-            return [
-                'slotId' => $slot->getId(),
-                'limit' => $slot->getLimit(),
-                'count' => $count,
-            ];
-        }
-
-        return null;
-    }
-
     private function eventInvolvesRestrictedSlot(SlotAllocationUpdateEvent $event): bool
     {
         $prevSlot = $event->getPreviousSlot();

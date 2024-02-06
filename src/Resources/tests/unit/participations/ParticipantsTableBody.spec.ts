@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import ParticipantsTableBody from "@/components/participations/ParticipantsTableBody.vue";
 import ParticipantsTableSlot from "@/components/participations/ParticipantsTableSlot.vue";
 import participations from '../fixtures/participations.json';
@@ -26,6 +27,7 @@ describe('Test functions of ParticipantsTableBody', () => {
     test('scrollAmount to return a positive number', () => {
         const wrapper = shallowMount(ParticipantsTableBody);
 
+        // @ts-ignore ts does not find conditionally exported values for testing i.e. scrollAmount
         expect(wrapper.vm.scrollAmount(16)).toBeGreaterThan(0);
     });
 
@@ -34,8 +36,10 @@ describe('Test functions of ParticipantsTableBody', () => {
 
         const htmlDummyElement = { scrollTop: 0, clientHeight: 300, scrollHeight: 600 }  as HTMLTableSectionElement;
 
+        // @ts-ignore ts does not find conditionally exported values for testing i.e. setScrollDirection
         wrapper.vm.setScrollDirection(htmlDummyElement);
 
+        // @ts-ignore ts does not find conditionally exported values for testing i.e. scrollDirectionDown
         expect(wrapper.vm.scrollDirectionDown).toBeTruthy();
     });
 
@@ -44,8 +48,10 @@ describe('Test functions of ParticipantsTableBody', () => {
 
         const htmlDummyElement = { scrollTop: 301, clientHeight: 300, scrollHeight: 600 }  as HTMLTableSectionElement;
 
+        // @ts-ignore ts does not find conditionally exported values for testing i.e. setScrollDirection
         wrapper.vm.setScrollDirection(htmlDummyElement);
 
+        // @ts-ignore ts does not find conditionally exported values for testing i.e. scrollDirectionDown
         expect(wrapper.vm.scrollDirectionDown).toBeFalsy();
     });
 
@@ -54,9 +60,13 @@ describe('Test functions of ParticipantsTableBody', () => {
 
         const htmlDummyElement = { scrollTop: 301, clientHeight: 300, scrollHeight: 600 }  as HTMLTableSectionElement;
 
+        // @ts-ignore ts does not find conditionally exported values for testing i.e. setScrollDirection
         wrapper.vm.setScrollDirection(htmlDummyElement);
+        // @ts-ignore ts does not find conditionally exported values for testing i.e. scrollDirectionDown
         expect(wrapper.vm.scrollDirectionDown).toBeFalsy();
+        // @ts-ignore ts does not find conditionally exported values for testing i.e. setScrollDirection
         wrapper.vm.setScrollDirection(htmlDummyElement);
+        // @ts-ignore ts does not find conditionally exported values for testing i.e. scrollDirectionDown
         expect(wrapper.vm.scrollDirectionDown).toBeFalsy();
     });
 
@@ -65,10 +75,14 @@ describe('Test functions of ParticipantsTableBody', () => {
 
         const htmlDummyElement = { scrollTop: 301, clientHeight: 300, scrollHeight: 600 }  as HTMLTableSectionElement;
 
+        // @ts-ignore ts does not find conditionally exported values for testing i.e. setScrollDirection
         wrapper.vm.setScrollDirection(htmlDummyElement);
+        // @ts-ignore ts does not find conditionally exported values for testing i.e. scrollDrectionDown
         expect(wrapper.vm.scrollDirectionDown).toBeFalsy();
         htmlDummyElement.scrollTop = 0;
+        // @ts-ignore ts does not find conditionally exported values for testing i.e. setScrollDirection
         wrapper.vm.setScrollDirection(htmlDummyElement);
+        // @ts-ignore ts does not find conditionally exported values for testing i.e. scrollDirectionDown
         expect(wrapper.vm.scrollDirectionDown).toBeTruthy();
     });
 });

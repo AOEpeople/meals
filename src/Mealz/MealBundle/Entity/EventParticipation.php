@@ -25,7 +25,7 @@ class EventParticipation
     private ?int $id = null;
 
     /**
-     * @ORM\OneToOne(targetEntity="Day", inversedBy="event")
+     * @ORM\OneToOne(targetEntity="Day", inversedBy="event", cascade={"persist"})
      * @ORM\JoinColumn(name="day", referencedColumnName="id")
      */
     private Day $day;

@@ -7,7 +7,7 @@
       <Icons
         icon="person"
         box="0 0 12 12"
-        class="mx-auto h-3 w-3 fill-white"
+        class="mx-auto size-3 fill-white"
       />
     </div>
     <div class="my-auto h-3 flex-auto min-[370px]:mr-[5px]">

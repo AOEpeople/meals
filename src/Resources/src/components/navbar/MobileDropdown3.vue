@@ -30,7 +30,7 @@
               >
                 <component
                   :is="item.icon"
-                  :class="[item.to === $route.path ? 'text-highlight' : 'text-primary group-hover:text-highlight', 'mr-3 h-6 w-6 shrink-0']"
+                  :class="[item.to === $route.path ? 'text-highlight' : 'text-primary group-hover:text-highlight', 'mr-3 size-6 shrink-0']"
                   aria-hidden="true"
                 />
                 <span class="flex-1">{{ t(item.name) }}</span>
@@ -46,7 +46,7 @@
             <div class="group flex items-center rounded-md p-2 text-sm font-medium text-gray-600">
               <Icons
                 icon="person-outline"
-                class="mr-3 h-6 w-6 shrink-0 fill-primary"
+                class="mr-3 size-6 shrink-0 fill-primary"
               />
               <span class="flex-1">{{ userName }}</span>
             </div>
@@ -60,7 +60,7 @@
                 @click="close()"
               >
                 <CurrencyEuroIcon
-                  :class="['/balance' === $route.path ? 'text-highlight' : 'text-primary group-hover:text-highlight', 'mr-3 h-6 w-6 shrink-0']"
+                  :class="['/balance' === $route.path ? 'text-highlight' : 'text-primary group-hover:text-highlight', 'mr-3 size-6 shrink-0']"
                   aria-hidden="true"
                 />
                 <span class="flex-1">{{ balance }}</span>
@@ -72,7 +72,7 @@
             >
               <Icons
                 icon="flag"
-                class="mr-3 h-6 w-6 shrink-0 fill-primary"
+                class="mr-3 size-6 shrink-0 fill-primary"
               />
               <span class="flex-1">{{ t('changeLanguage') }}</span>
             </div>
@@ -82,7 +82,7 @@
             >
               <Icons
                 icon="logout"
-                class="mr-3 h-6 w-6 shrink-0 fill-primary"
+                class="mr-3 size-6 shrink-0 fill-primary"
               />
               <span class="flex-1">{{ t('logout') }}</span>
             </div>

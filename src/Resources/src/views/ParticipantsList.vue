@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full w-full px-4">
+  <div class="size-full px-4">
     <MealsList
       v-if="Object.entries(participationsState.meals).length > 0"
       id="mealsList"

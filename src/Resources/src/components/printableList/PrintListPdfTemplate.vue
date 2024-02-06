@@ -87,7 +87,7 @@
                       >
                         <div
                           v-if="participations.booked.includes(parseInt(String(mealId)))"
-                          class="h-full w-full text-primary"
+                          class="size-full text-primary"
                         >
                           &#x2714;
                         </div>

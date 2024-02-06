@@ -21,7 +21,7 @@
           </span>
           <PencilIcon
             v-if="editRow === true"
-            class="m-auto block h-5 w-5 text-primary"
+            class="m-auto block size-5 text-primary"
           />
         </div>
       </td>

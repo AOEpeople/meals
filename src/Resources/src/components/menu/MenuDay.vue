@@ -11,7 +11,7 @@
       >
         <template #button="{ open }">
           <UserIcon
-            class="row-start-1 h-5 w-5 cursor-pointer text-white"
+            class="row-start-1 size-5 cursor-pointer text-white"
           />
         </template>
         <template #panel="{ close }">

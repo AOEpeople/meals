@@ -5,13 +5,13 @@
   >
     <PencilIcon
       v-if="action === Action.EDIT"
-      class="aspect-square h-8 w-8"
+      class="aspect-square size-8"
     />
     <XIcon
       v-if="action === Action.DELETE"
-      class="aspect-square h-10 w-10"
+      class="aspect-square size-10"
     />
-    <p class="m-0 flex h-full w-full place-items-center">
+    <p class="m-0 flex size-full place-items-center">
       {{ btnText }}
     </p>
   </button>

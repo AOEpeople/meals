@@ -5,32 +5,32 @@
   >
     <PencilIcon
       v-if="action === Action.EDIT"
-      class="z-[1] aspect-square h-8 w-8"
+      class="z-[1] aspect-square size-8"
       :class="{'mr-1': btnText !== ''}"
     />
     <XIcon
       v-if="action === Action.DELETE"
-      class="z-[1] aspect-square h-8 w-8"
+      class="z-[1] aspect-square size-8"
       :class="{'mr-1': btnText !== ''}"
     />
     <PlusIcon
       v-if="action === Action.CREATE"
-      class="z-[1] aspect-square h-8 w-8"
+      class="z-[1] aspect-square size-8"
       :class="{'mr-1': btnText !== ''}"
     />
     <ScaleIcon
       v-if="action === Action.BALANCE"
-      class="z-[1] aspect-square h-8 w-8"
+      class="z-[1] aspect-square size-8"
       :class="{'mr-1': btnText !== ''}"
     />
     <EyeOffIcon
       v-if="action === Action.HIDE"
-      class="z-[1] aspect-square h-8 w-8"
+      class="z-[1] aspect-square size-8"
       :class="{'mr-1': btnText !== ''}"
     />
     <DownloadIcon
       v-if="action === Action.DOWNLOAD"
-      class="z-[1] aspect-square h-8 w-8"
+      class="z-[1] aspect-square size-8"
       :class="{'mr-1': btnText !== ''}"
     />
     <p

@@ -58,7 +58,7 @@
               :class="{ 'bg-[#F4F4F4]': selected }"
             >
               <span
-                class="col-span-1 col-start-1 row-start-1 h-full w-full truncate px-4 py-2"
+                class="col-span-1 col-start-1 row-start-1 size-full truncate px-4 py-2"
                 :class="selected ? 'font-medium' : 'font-normal'"
               >
                 {{ event.title }}

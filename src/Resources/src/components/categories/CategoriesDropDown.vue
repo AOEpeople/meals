@@ -32,7 +32,7 @@
         class="cursor-pointer truncate text-[14px] text-[#9CA3AF] hover:bg-[#FAFAFA]"
       >
         <span
-          class="inline-block h-full w-full px-4 py-2"
+          class="inline-block size-full px-4 py-2"
           :class="selected ? 'bg-[#F4F4F4] font-medium' : 'font-normal'"
         >
           {{ locale === 'en' ? category.titleEn : category.titleDe }}

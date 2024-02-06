@@ -64,7 +64,7 @@ const {t, locale} = useI18n()
 
 withDefaults(defineProps<{
   transactions: Dictionary<Transaction[]>,
-  print: boolean
+  print?: boolean
 }>(),{
   print: false
 });

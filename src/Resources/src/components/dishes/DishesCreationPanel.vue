@@ -73,11 +73,11 @@ const { fetchCategories } = useCategories();
 const props = withDefaults(defineProps<{
   titleDe?: string,
   titleEn?: string,
-  descriptionDe?: string,
-  descriptionEn?: string,
-  categoryId?: number,
+  descriptionDe?: string | null,
+  descriptionEn?: string | null,
+  categoryId?: number | null,
   oneSizeServing?: boolean,
-  dishId?: number,
+  dishId?: number | null,
   edit?: boolean,
 }>(),{
   titleDe: '',

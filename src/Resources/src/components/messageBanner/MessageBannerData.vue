@@ -3,16 +3,16 @@
     class="grid w-full grid-cols-[50px_minmax(0,1fr)]"
   >
     <div
-      class="col-start-1 m-auto h-fit w-fit rounded-full border-2 border-solid border-white p-2"
+      class="col-start-1 m-auto size-fit rounded-full border-2 border-solid border-white p-2"
       :class="message.type !== FlashMessageType.INFO ? 'bg-[#E02927]' : 'bg-[#51B848]'"
     >
       <CheckIcon
         v-if="message.type === FlashMessageType.INFO"
-        class="h-8 w-8 text-white"
+        class="size-8 text-white"
       />
       <div
         v-else
-        class="grid h-8 w-8 place-content-center text-[24px] font-bold text-white"
+        class="grid size-8 place-content-center text-[24px] font-bold text-white"
       >
         !
       </div>

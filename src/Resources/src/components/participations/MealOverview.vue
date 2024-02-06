@@ -2,10 +2,10 @@
   <table
     id="mealsOverview"
     ref="mealsOverview"
-    class="h-full w-full table-fixed"
+    class="size-full table-fixed"
   >
     <tr>
-      <td class="h-full w-full pb-6 pr-4 align-top">
+      <td class="size-full pb-6 pr-4 align-top">
         <Transition
           name="summary"
           appear
@@ -17,7 +17,7 @@
           />
         </Transition>
       </td>
-      <td class="h-full w-full pb-6 pr-4 align-top">
+      <td class="size-full pb-6 pr-4 align-top">
         <Transition
           name="summary"
           appear
@@ -28,7 +28,7 @@
           />
         </Transition>
       </td>
-      <td class="h-full w-full pb-6 align-top">
+      <td class="size-full pb-6 align-top">
         <Transition
           name="summary"
           appear

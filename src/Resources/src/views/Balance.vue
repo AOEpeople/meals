@@ -65,7 +65,7 @@ transactionStore.fillStore();
 
 const transactions = computed(() => transactionStore.getState());
 const balance = computed(() => userDataStore.getState().balance);
-const balanceString = computed(() => userDataStore.balanceToLocalString());
+const balanceString = computed(() => userDataStore.balanceToLocalString(locale.value));
 const oldBalance = computed(() => balance.value - transactions.value.difference);
 const oldBalanceString = computed(() =>
     locale.value === 'en'

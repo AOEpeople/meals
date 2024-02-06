@@ -32,7 +32,7 @@ import { computed } from 'vue';
 const props = withDefaults(defineProps<{
   labels: string[],
   headerTextPosition?: string,
-  print: boolean
+  print?: boolean
 }>(), {
   headerTextPosition: 'left',
   print: false

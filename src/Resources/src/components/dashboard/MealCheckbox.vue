@@ -6,7 +6,7 @@
   >
     <CheckIcon
       v-if="isParticipating"
-      class="relative left-[10%] top-[10%] h-[80%] w-[80%] text-white"
+      class="relative left-[10%] top-[10%] size-[80%] text-white"
     />
   </span>
   <CombiModal
@@ -47,8 +47,8 @@ import { IMessage, isMessage } from '@/interfaces/IMessage';
 import { FlashMessageType } from '@/enums/FlashMessage';
 
 const props = defineProps<{
-  weekID: number | string,
-  dayID: number | string,
+  weekID: number | string | undefined,
+  dayID: number | string | undefined,
   mealID: number | string,
   variationID?: number | string | null,
   meal: Meal,
@@ -57,18 +57,18 @@ const props = defineProps<{
 const { sendFlashMessage } = useFlashMessage();
 
 const day = props.day ? props.day : dashboardStore.getDay(props.weekID, props.dayID)
-let meal: Meal;
+let mealOrVariation: Meal;
 let mealId: number | string;
 if (props.variationID) {
-  meal = props.meal ? props.meal : dashboardStore.getVariation(props.weekID, props.dayID, props.mealID, props.variationID)
+  mealOrVariation = props.meal ? props.meal : dashboardStore.getVariation(props.weekID, props.dayID, props.mealID, props.variationID)
   mealId = props.variationID
 } else {
-  meal = props.meal ? props.meal : dashboardStore.getMeal(props.weekID, props.dayID, props.mealID)
+  mealOrVariation = props.meal ? props.meal : dashboardStore.getMeal(props.weekID, props.dayID, props.mealID)
   mealId = props.mealID
 }
 
 const open = ref(false)
-const isParticipating = computed(() => meal.isParticipating !== null)
+const isParticipating = computed(() => mealOrVariation.isParticipating !== null)
 const isCombiBox = props.day.meals[props.mealID].dishSlug === 'combined-dish'
 
 const openPopover = ref(false)
@@ -83,10 +83,10 @@ const checkboxCSS = computed(() => {
   let cssResult = 'rounded-md h-[30px] w-[30px] xl:h-[20px] xl:w-[20px] '
 
   if (isParticipating.value === true) {
-    switch (meal.mealState) {
+    switch (mealOrVariation.mealState) {
       case 'disabled':
         cssResult += 'border-[0.5px] border-[#ABABAB]'
-        if (meal.isLocked === false) {
+        if (mealOrVariation.isLocked === false) {
           cssResult += ' bg-[#80909F] cursor-pointer'
         } else {
           cssResult += ' bg-[#B4C1CE]'
@@ -103,7 +103,7 @@ const checkboxCSS = computed(() => {
         return cssResult
     }
   } else if (isParticipating.value === false) {
-    switch (meal.mealState) {
+    switch (mealOrVariation.mealState) {
       case 'disabled':
         cssResult += 'bg-[#EDEDED] border-[0.5px] border-[#ABABAB]'
         return cssResult
@@ -118,13 +118,13 @@ const checkboxCSS = computed(() => {
 
 async function handle() {
   // Meal is not locked
-  if (meal.isLocked === false) {
+  if (mealOrVariation.isLocked === false) {
 
     // User is participating
     if (isParticipating.value) {
       await leaveMeal()
     } else {
-      let slugs = [meal.dishSlug]
+      let slugs = [mealOrVariation.dishSlug]
       if (isCombiBox === true) {
         slugs = getDishSlugs()
         if(slugs.length === 0) return
@@ -132,9 +132,9 @@ async function handle() {
       await joinMeal(slugs)
     }
   } else {
-    if (meal.mealState === 'offerable') {
+    if (mealOrVariation.mealState === 'offerable') {
       await sendOffer()
-    } else if (meal.mealState === 'offering') {
+    } else if (mealOrVariation.mealState === 'offering') {
       await cancelOffer()
     }
   }
@@ -162,7 +162,7 @@ async function joinMeal(dishSlugs) {
     const { emit } = useEventsBus()
     if (isCombiBox) emit('guestChosenCombi', dishSlugs)
     emit('guestChosenMeals', mealId)
-    meal.isParticipating = -1
+    mealOrVariation.isParticipating = -1
   } else {
     let data = {
       mealID: mealId,
@@ -173,8 +173,8 @@ async function joinMeal(dishSlugs) {
     const { response, error } = await useJoinMeal(JSON.stringify(data))
     if (error.value === false) {
       day.activeSlot = (response.value as JoinMeal).slotId
-      meal.isParticipating = (response.value as JoinMeal).participantId
-      meal.mealState = (response.value as JoinMeal).mealState
+      mealOrVariation.isParticipating = (response.value as JoinMeal).participantId
+      mealOrVariation.mealState = (response.value as JoinMeal).mealState
     } else if (isMessage(response.value) === true) {
       sendFlashMessage({
         type: FlashMessageType.ERROR,
@@ -191,7 +191,7 @@ async function leaveMeal() {
     const dishSlugs = getDishSlugs()
     if (isCombiBox) emit('guestChosenCombi', dishSlugs)
     emit('guestChosenMeals', props.mealID)
-    meal.isParticipating = null
+    mealOrVariation.isParticipating = null
   } else {
     const data = {
       mealId: mealId
@@ -200,8 +200,8 @@ async function leaveMeal() {
     const {response, error} = await useLeaveMeal(JSON.stringify(data))
     if (error.value === false) {
       day.activeSlot = response.value.slotId;
-      meal.mealState = response.value.mealState;
-      meal.isParticipating = null;
+      mealOrVariation.mealState = response.value.mealState;
+      mealOrVariation.isParticipating = null;
     }
   }
 }
@@ -213,7 +213,7 @@ async function sendOffer() {
 
   const { error } = await useOfferMeal(JSON.stringify(data))
   if (error.value === false) {
-    meal.mealState = 'offering'
+    mealOrVariation.mealState = 'offering'
     const { emit } = useEventsBus()
     emit('openOfferPanel_' + mealId)
   }
@@ -226,7 +226,7 @@ async function cancelOffer() {
 
   const { error } = await useCancelOffer(JSON.stringify(data))
   if (error.value === false) {
-    meal.mealState = 'offerable'
+    mealOrVariation.mealState = 'offerable'
   }
 }
 

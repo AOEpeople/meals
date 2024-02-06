@@ -16,12 +16,12 @@
               <span class="sr-only">Open menu</span>
               <MenuIcon
                 v-if="!open"
-                class="block h-6 w-6"
+                class="block size-6"
                 aria-hidden="true"
               />
               <XIcon
                 v-else
-                class="block h-6 w-6"
+                class="block size-6"
                 aria-hidden="true"
               />
             </MenuButton>
@@ -143,7 +143,7 @@
   import EventIcon from './misc/EventIcon.vue';
   import MealIcon from './menu/MealIcon.vue';
 
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
 
   withDefaults(defineProps<{
     guest?: boolean
@@ -162,7 +162,7 @@
 
   const getShowParticipationsError = computed(() => loadedState.error !== "");
 
-  const balanceString = computed(() => userDataStore.balanceToLocalString());
+  const balanceString = computed(() => userDataStore.balanceToLocalString(locale.value));
 
   const user = computed(() => userDataStore.getState().user);
   const isAuthenticated = computed(() => !userDataStore.getState().roles.includes('ROLE_GUEST'));

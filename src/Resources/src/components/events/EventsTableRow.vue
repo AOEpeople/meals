@@ -20,7 +20,7 @@
         data-cy="checkIcon"
       >
         <CheckIcon
-          class="aspect-square h-8 w-8"
+          class="aspect-square size-8"
         />
       </div>
       <div
@@ -28,7 +28,7 @@
         data-cy="xIcon"
       >
         <XIcon
-          class="aspect-square h-8 w-8"
+          class="aspect-square size-8"
         />
       </div>
     </td>

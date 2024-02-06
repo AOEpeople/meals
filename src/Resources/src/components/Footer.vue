@@ -16,7 +16,7 @@
         <Icons
           icon="flag"
           box="0 0 26 26"
-          class="inline-block h-[26px] w-[26px] fill-primary align-top"
+          class="inline-block size-[26px] fill-primary align-top"
         />
         <span class="self-center align-top text-[14px] leading-[20px] text-primary">
           {{ t('changeLanguage') }}

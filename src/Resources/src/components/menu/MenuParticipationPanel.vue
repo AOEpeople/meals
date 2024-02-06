@@ -5,7 +5,7 @@
         Limit
       </span>
       <XCircleIcon
-        class="h-8 w-8 cursor-pointer self-end text-white transition-transform hover:scale-[120%] hover:text-[#FAFAFA]"
+        class="size-8 cursor-pointer self-end text-white transition-transform hover:scale-[120%] hover:text-[#FAFAFA]"
         @click="close()"
       />
     </div>

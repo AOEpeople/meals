@@ -4,7 +4,7 @@
       <Icons
         icon="guest"
         box="0 0 13 13"
-        class="h-[13px] w-[13px]"
+        class="size-[13px]"
         :class="iconWhite ? 'fill-white' : 'fill-[#1c5298]'"
       />
     </PopoverButton>

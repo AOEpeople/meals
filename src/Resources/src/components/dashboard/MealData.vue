@@ -59,8 +59,8 @@ import { Day, Meal } from '@/api/getDashboardData';
 import { useDishes } from '@/stores/dishesStore';
 
 const props = defineProps<{
-  weekID: number | string,
-  dayID: number | string,
+  weekID: number | string | undefined,
+  dayID: number | string | undefined,
   mealID: number | string,
   meal: Meal,
   day: Day

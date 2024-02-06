@@ -108,7 +108,7 @@
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
                         fill="currentColor"
-                        class="m-auto block h-6 w-6 text-primary"
+                        class="m-auto block size-6 text-primary"
                       >
                         <path
                           fill-rule="evenodd"

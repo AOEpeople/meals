@@ -21,7 +21,7 @@
         </span>
         <CheckCircleIcon
           v-if="checked === true"
-          class="m-auto block h-6 w-6 self-end text-primary"
+          class="m-auto block size-6 self-end text-primary"
         />
       </div>
     </RadioGroupOption>

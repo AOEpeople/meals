@@ -1,7 +1,6 @@
 import { Store } from '@/stores/store';
 import { useUserData, UserData } from '@/api/getUserData';
 import router from '@/router';
-import { useI18n } from 'vue-i18n';
 
 class UserDataStore extends Store<UserData> {
     protected data(): UserData {
@@ -47,9 +46,8 @@ class UserDataStore extends Store<UserData> {
         this.state.balance += adjustAmount;
     }
 
-    balanceToLocalString(): string {
-        const { locale } = useI18n();
-        if (locale.value === 'en') {
+    balanceToLocalString(locale: string): string {
+        if (locale === 'en') {
             return this.state.balance.toFixed(2);
         } else {
             return this.state.balance.toFixed(2).replace(/\./g, ',');

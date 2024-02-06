@@ -4,7 +4,7 @@
     :class="{ 'cursor-pointer hover:bg-white hover:shadow-tb': edit }"
   >
     <div
-      class="flex h-full w-full"
+      class="flex size-full"
       @click="handleClick"
     >
       <span
@@ -12,7 +12,7 @@
         class="flex flex-1 place-content-center items-center"
       >
         <CheckCircleIcon
-          class="block h-6 w-6 text-primary"
+          class="block size-6 text-primary"
         />
       </span>
       <span
@@ -24,7 +24,7 @@
           fill-rule="evenodd"
           clip-rule="evenodd"
           viewBox="0 0 512 508.47"
-          class="block h-[22px] w-[22px] text-primary"
+          class="block size-[22px] text-primary"
         >
           <path
             fill-rule="nonzero"

@@ -5,6 +5,7 @@ RUN apt-get update \
         build-essential \
         nodejs
 WORKDIR var/www/html/src/Resources
+RUN chown -R node /var/www/html/src/Resources/node_modules
 COPY src/Resources/package.json src/Resources/yarn.lock ./
 RUN yarn install
 COPY src/Resources/ .

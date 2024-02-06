@@ -67,6 +67,7 @@ RUN \
     && find public -type f -not -name "*.php" -exec chmod 644 '{}' \+
 
 RUN echo "* * * * * /var/www/meals/bin/console meals:keep-alive-connection > /dev/stdout" >> /etc/crontabs/www-data
+RUN chmod +x "/container/entrypoint"
 
 ENTRYPOINT ["/container/entrypoint"]
 

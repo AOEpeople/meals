@@ -1,5 +1,12 @@
 # Changelog
 
+## Version v2.3.14 (2024-02-06)
+
+### Other
+
+- Bump actions/cache from 3 to 4 (e39ae580)
+- add perist to eventParticipation.day and day.week (ef9ed65b)
+
 ## Version v2.3.13 (2024-01-29)
 
 ### Fixes

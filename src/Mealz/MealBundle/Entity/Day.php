@@ -30,7 +30,7 @@ class Day extends AbstractMessage
     private DateTime $dateTime;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Week", inversedBy="days")
+     * @ORM\ManyToOne(targetEntity="Week", inversedBy="days", cascade={"persist"})
      * @ORM\JoinColumn(name="week_id", referencedColumnName="id")
      */
     private Week $week;

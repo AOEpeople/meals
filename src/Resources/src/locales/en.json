@@ -79,6 +79,9 @@
     "new": "new",
     "print": "Today's Participations",
     "show": "Show Participants",
+    "noParticipants": "No participants for event yet",
+    "participations": "Participations \"%EventTitle%\"",
+    "participationCount": "Es gibt %count% Teilnehmer",
     "popover": "Someone else can take your meal now.",
     "slot": {
       "timeslot": "Timeslot",
@@ -117,6 +120,24 @@
       }
     }
   },
+  "event": {
+    "header": "List of Events",
+    "table": {
+      "title": "Title",
+      "public": "Public",
+      "actions": "Actions"
+    },
+    "create": "+ create Event",
+    "search": "Search for event",
+    "popover": {
+      "create": "Create new event",
+      "update": "Edit event",
+      "submit": "Create",
+      "title": "Title",
+      "isPublic": "Public event?"
+    },
+    "event": "Event"
+  },
   "flashMessage": {
     "error": {
       "101": "The data sent did not meet the requirements. Therefore the request could not be processed.",
@@ -139,7 +160,12 @@
       "503": "The settlement request failed.",
       "504": "The profile for the settlement request could not be found.",
       "505": "The settlement request has either already been processed or the request is invalid.",
-      "601": "The amount to add to the account must be more than 0."
+      "601": "The amount to add to the account must be more than 0.",
+      "701": "Event creation parameters are missing",
+      "801": "No permission to enter or leave the event",
+      "802": "Couldn't join the event",
+      "803": "Couldn't leave the event",
+      "903": "You are already registered. If you have any questions please message your contact person."
     },
     "success": {
       "menu": {
@@ -162,6 +188,11 @@
         "deleted": "The dish was succefully deleted.",
         "updated": "The dish was successfully updated."
       },
+      "events": {
+        "created": "The event was successfully created.",
+        "deleted": "The event was succefully deleted.",
+        "edited": "The event was successfully updated."
+      },
       "finance": {
         "empty": "There are no transactions for the selected timeframe"
       },
@@ -173,6 +204,9 @@
         "created": "The timeslot was successfully created.",
         "deleted": "The timeslot was succefully deleted.",
         "updated": "The timeslot was successfully updated."
+      },
+      "guest": {
+        "joined": "We are looking forward to meeting you."
       }
     }
   },
@@ -199,7 +233,13 @@
     "resolve_success": "Meals booked successfully!",
     "resolve_error": "Error booking the selected meals.",
     "title": "Lunch at AOE",
-    "description": "As our guest, we would like to invite you to lunch in the AOE Eatery. To order a meal, register no later than one day before your visit to AOE with your personal information and choose the desired dish. Your order will be forwarded to our cooks.\n\nWe hope that you enjoy your lunch\nAOE"
+    "description": "As our guest, we would like to invite you to lunch in the AOE Eatery. To order a meal, register no later than one day before your visit to AOE with your personal information and choose the desired dish. Your order will be forwarded to our cooks.\n\nWe hope that you enjoy your lunch\nAOE",
+    "event": {
+      "submit": "Participate",
+      "joined": "You're participating at \"%EventTitle%\" on the %eventDate%.",
+      "title": "Event at AOE",
+      "description": "We would like to invite you to join us at the Event \"%EventTitle%\". To ensure we can plan ahead with you, please register for the event by %lockDate% at the latest.\n\nWe look forward to having you!"
+    }
   },
   "header": {
     "navigation": {
@@ -208,7 +248,8 @@
       "categories": "Categories",
       "slots": "Time Slots",
       "costs": "Costs",
-      "finance": "Finance"
+      "finance": "Finance",
+      "events": "Events"
     },
     "logged_in_text": "You are logged in as",
     "balance": "Balance"
@@ -219,6 +260,7 @@
     "list": "List of Weeks",
     "week": "Week",
     "noDishFound": "No dishes found.",
+    "noEventFound": "No events found.",
     "enableDay": "This day is active",
     "lockDate": "Booking possible until",
     "notify": "Announce in Mattermost",
@@ -234,7 +276,8 @@
   },
   "printList": {
     "title": "Participations on ",
-    "participations": "Participations"
+    "participations": "Participations",
+    "download": "Download pdf"
   },
   "session": {
     "expired": "Session expired!"

@@ -15,6 +15,8 @@ import MenuParticipations from './views/MenuParticipations.vue';
 import CostsSettlement from './views/CostsSettlement.vue';
 import CashRegister from './views/CashRegister.vue';
 import Login from '@/views/Login.vue';
+import Events from './views/Events.vue';
+import GuestEvent from './views/GuestEvent.vue';
 
 import { createRouter, createWebHistory } from 'vue-router';
 import { userDataStore }                  from '@/stores/userDataStore';
@@ -127,6 +129,15 @@ const router = createRouter({
             }
         },
         {
+            path: '/guest/event/:hash',
+            name: 'GuestEvent',
+            component: GuestEvent,
+            meta: {
+                allowedRoles: ['ROLE_KITCHEN_STAFF', 'ROLE_USER', 'ROLE_ADMIN', 'ROLE_FINANCE', 'ROLE_GUEST']
+            },
+            props: true
+        },
+        {
             path: '/notAllowed',
             name: 'NotAllowed',
             component: NotAllowed,
@@ -166,13 +177,21 @@ const router = createRouter({
                 allowedRoles: ['ROLE_KITCHEN_STAFF', 'ROLE_USER', 'ROLE_ADMIN', 'ROLE_FINANCE']
             },
             props: true
+        },
+        {
+            path: '/events',
+            name: 'Events',
+            component: Events,
+            meta: {
+                allowedRoles: ['ROLE_KITCHEN_STAFF', 'ROLE_ADMIN']
+            }
         }
     ],
 })
 
 router.beforeEach((to) => {
     if (userDataStore.getState().roles.includes('ROLE_GUEST') === true || userDataStore.getState().user === '') {
-        if (to.name !== 'Guest' && to.name !== 'Login' && to.name !== 'ParticipantList') {
+        if (to.name !== 'Guest' && to.name !== 'GuestEvent' && to.name !== 'Login' && to.name !== 'ParticipantList') {
             return { name: 'Login' }
         }
     } else {

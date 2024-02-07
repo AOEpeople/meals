@@ -16,10 +16,10 @@
       >
         <div :class="[index === 0 ? 'rounded-t-md' : '', index === dishes.length - 1 ? 'rounded-b-md' : '', checked ? 'z-10 border-indigo-200 bg-indigo-50' : 'border-gray-200', 'relative flex cursor-pointer border p-4 focus:outline-none']">
           <span
-            :class="[checked ? 'border-transparent bg-indigo-600' : 'border-gray-300 bg-white', active ? 'ring-2 ring-indigo-500 ring-offset-2' : '', 'mt-0.5 flex h-4 w-4 shrink-0 cursor-pointer items-center justify-center rounded-full border']"
+            :class="[checked ? 'border-transparent bg-indigo-600' : 'border-gray-300 bg-white', active ? 'ring-2 ring-indigo-500 ring-offset-2' : '', 'mt-0.5 flex size-4 shrink-0 cursor-pointer items-center justify-center rounded-full border']"
             aria-hidden="true"
           >
-            <span class="h-1.5 w-1.5 rounded-full bg-white" />
+            <span class="size-1.5 rounded-full bg-white" />
           </span>
           <span class="ml-3 flex flex-col">
             <RadioGroupLabel

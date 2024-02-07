@@ -70,6 +70,8 @@ describe('Test ParticipantsTable', () => {
 
     it('should produce the correct styles string for the height', () => {
         const wrapper = shallowMount(ParticipantsTable);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore ts does not find conditionally exported values for testing i.e. tableHeight
         expect(wrapper.vm.tableHeight).toEqual('300px');
     });
 

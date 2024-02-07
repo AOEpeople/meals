@@ -58,15 +58,18 @@ import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
 
-defineProps<{
-  firstname: string,
-  lastname: string,
+withDefaults(defineProps<{
+  firstname?: string,
+  lastname?: string,
   company: string,
   filled: boolean,
   firstNameMissing: boolean,
   lastNameMissing: boolean,
   companyMissing: boolean
-}>();
+}>(), {
+  firstname: '',
+  lastname: ''
+});
 
 const emit = defineEmits(['submitForm', 'update:modelValue', 'update:firstName', 'update:lastName', 'update:company'])
 </script>

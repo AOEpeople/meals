@@ -3,7 +3,7 @@
     <router-link to="/print/participations">
       <Icons
         icon="printer"
-        class="mr-[10px] inline h-[16px] w-[16px] fill-primary"
+        class="mr-[10px] inline size-[16px] fill-primary"
       />
       <span class="text-[11px] font-bold leading-4 tracking-[1.5px] text-primary">{{ t('dashboard.print') }}</span>
     </router-link>

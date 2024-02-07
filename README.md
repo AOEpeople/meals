@@ -122,11 +122,20 @@ Point your web browser to https://meals.test  :tada:
 
 :memo:  Don't forget to add `127.0.0.1 meals.test` to your local hosts file if not done automatically via ddev.
 
-To run End-to-End testing via cypress run te following command:
+To run End-to-End testing via cypress run the following command:
 ```
 make run-cypress
 ```
 You need to start the devbox before running any tests with cypress.
+
+## Component testing
+
+To run specific component tests with JEST in isolation:
+```
+ddev exec yarn --cwd=src/Resources test -- -t "<test-filename> <testname>"
+```
+`<test-filename>` for a file with the name `xyz.spec.ts` would be `xyz`
+`<testname>` is optional, if no testname is specified the whole file is run
 
 ## Troubleshooting
 
@@ -186,3 +195,13 @@ IDP_CLIENT_SECRET=client-secret
   * 505: The settlement request was already processed or the request is invalid
 *CashController 6xx*
   * 601: The amount of cash that will be added, has to be more than zero
+*EventController 7xx*
+  * 701: Event creation parameters are missing
+*EventParticipationController 8xx*
+  * 801: User has no permission to enter or leave
+  * 802: User could not join the event
+  * 803: User could not leave the event
+*MealGuestController 9xx*
+  * 901: Could not find the Invitation for the given hash
+  * 902: Parameters were not provided (eg. firstname and lastname)
+  * 903: An unknown error occured on joining the event as a guest

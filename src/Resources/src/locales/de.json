@@ -79,6 +79,9 @@
     "new": "neu",
     "print": "Heutige Teilnehmer",
     "show": "Zeige Teilnehmer",
+    "noParticipants": "Noch keine Teilnehmer für dieses Event",
+    "participations": "Teilnahmen \"%EventTitle%\"",
+    "participationCount": "Es gibt %count% Teilnehmer",
     "popover": "Jemand anderes kann jetzt dein Gericht nehmen.",
     "slot": {
       "timeslot": "Zeitfenster",
@@ -117,6 +120,24 @@
       }
     }
   },
+  "event": {
+    "header": "Liste der Events",
+    "table": {
+      "title": "Titel",
+      "public": "Öffentlich",
+      "actions": "Aktionen"
+    },
+    "create": "+ Event erstellen",
+    "search": "Suche nach Event",
+    "popover": {
+      "create": "Neues Event erstellen",
+      "update": "Event editieren",
+      "submit": "Erstellen",
+      "title": "Titel",
+      "isPublic": "Öffentliches Event?"
+    },
+    "event": "Event"
+  },
   "flashMessage": {
     "error": {
       "101": "Die abgeschickten Daten haben nicht den Anforderungen entsprochen. Deshalb konnte die Anfrage nicht bearbeitet werden.",
@@ -139,7 +160,12 @@
       "503": "Die Anfrage zum Ausgleich ist fehlgeschlagen.",
       "504": "Das Profil für den Ausgleich konnte nicht gefunden werden.",
       "505": "Diese Anfrage zum Ausgleich wurde entweder bereits bearbeitet, oder ist ungültig.",
-      "601": "Der Betrag der dem Konto hinzugefügt werden soll, muss mehr als 0 sein."
+      "601": "Der Betrag der dem Konto hinzugefügt werden soll, muss mehr als 0 sein.",
+      "701": "Es wurden noch nicht alle Details zu dem Event eingefügt",
+      "801": "Keine Berechtigung zum beitreten oder verlassen",
+      "802": "Dem Event konnte nicht beigetreten werden",
+      "803": "Das Event konnte nicht verlassen werden",
+      "903": "Sie haben sich schon angemeldet. Bei Fragen wenden Sie sich bitte an Ihren Ansprechpartner."
     },
     "success": {
       "menu": {
@@ -162,6 +188,11 @@
         "deleted": "Das Gericht wurde erfolgreich gelöscht.",
         "updated": "Das Gericht wurde erfolgreich bearbeitet."
       },
+      "events": {
+        "created": "Das Event wurde erfolgreich erstellt.",
+        "deleted": "Das Event wurde erfolgreich gelöscht.",
+        "edited": "Das Event wurde erfolgreich bearbeitet."
+      },
       "finance": {
         "empty": "Es gibt keine Transaktionen im ausgewählten Zeitraum"
       },
@@ -173,6 +204,9 @@
         "created": "Der Zeitslot wurde erfolgreich erstellt.",
         "deleted": "Der Zeitslot wurde erfolgreich gelöscht.",
         "updated": "Der Zeitslot wurde erfolgreich bearbeitet."
+      },
+      "guest": {
+        "joined": "Wir freuen uns Sie dabei zu haben."
       }
     }
   },
@@ -199,7 +233,13 @@
     "resolve_success": "Essensbuchung erfolgreich!",
     "resolve_error": "Fehler bei der Essensbuchung.",
     "title": "Mittagessen bei AOE",
-    "description": "Als Gast in unserem Haus laden wir Sie gerne zu einem Mittagessen in der AOE Eatery ein. Für Ihre Bestellung tragen Sie sich bitte bis spätestens einen Tag vorher mit Ihren Daten ein und wählen das gewünschte Gericht aus, das dann an unsere Köche weitergeleitet wird.\n\nGuten Appetit wünscht Ihnen,\nAOE"
+    "description": "Als Gast in unserem Haus laden wir Sie gerne zu einem Mittagessen in der AOE Eatery ein. Für Ihre Bestellung tragen Sie sich bitte bis spätestens einen Tag vorher mit Ihren Daten ein und wählen das gewünschte Gericht aus, das dann an unsere Köche weitergeleitet wird.\n\nGuten Appetit wünscht Ihnen,\nAOE",
+    "event": {
+      "submit": "An Event teilnehmen",
+      "joined": "Sie nehmen am %eventDate% an \"%EventTitle%\" teil. Wir freuen uns Sie dabei zu haben.",
+      "title": "Veranstaltung bei AOE",
+      "description": "Hiermit laden wir Sie zu der Veranstaltung \"%EventTitle%\" ein. Damit wir mit Ihnen planen können tragen Sie sich bitte bis spätestens %lockDate% Uhr für das Event ein.\n\nWir freuen uns auf Sie!"
+    }
   },
   "header": {
     "navigation": {
@@ -208,7 +248,8 @@
       "categories": "Kategorien",
       "slots": "Zeitslot",
       "costs": "Kosten",
-      "finance": "Finanzen"
+      "finance": "Finanzen",
+      "events": "Events"
     },
     "logged_in_text": "Eingeloggt als",
     "balance": "Kontostand"
@@ -219,6 +260,7 @@
     "list": "Liste der Wochen",
     "week": "Woche",
     "noDishFound": "Keine Gerichte gefunden.",
+    "noEventFound": "Keine Events gefunden.",
     "enableDay": "Dieser Tag ist aktiviert",
     "lockDate": "Buchung möglich bis",
     "notify": "In Mattermost bekanntgeben",
@@ -234,7 +276,8 @@
   },
   "printList": {
     "title": "Teilnahmen am ",
-    "participations": "Teilnahmen"
+    "participations": "Teilnahmen",
+    "download": "Pdf downloaden"
   },
   "session": {
     "expired": "Session abgelaufen!"

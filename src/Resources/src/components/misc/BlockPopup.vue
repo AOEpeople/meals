@@ -19,7 +19,7 @@
           leave-to="opacity-0"
         >
           <DialogPanel
-            class="relative grid h-full w-full place-content-center overflow-hidden p-4 text-left align-middle sm:my-8 sm:p-6"
+            class="relative grid size-full place-content-center overflow-hidden p-4 text-left align-middle sm:my-8 sm:p-6"
           >
             <p class="max-w-[300px] text-center align-middle font-bold sm:max-w-sm">
               {{ t('popup.processing') }}

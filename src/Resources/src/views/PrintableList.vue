@@ -1,4 +1,23 @@
 <template>
+  <Vue3Html2pdf
+    ref="html2pdf"
+    :html-to-pdf-options="{ filename: 'result.pdf', image: { type: 'png' }, margin: 10, jsPDF: { unit: 'mm' } }"
+    :pdf-quality="2"
+    pdf-format="a4"
+    pdf-orientation="portrait"
+    pdf-content-width="700px"
+    :manual-pagination="true"
+  >
+    <template #pdf-content>
+      <PrintListPdfTemplate
+        :date-string="dateString"
+        :list-data="// @ts-ignore
+          (listData as ListData)"
+        :meal-names="mealNames"
+        :participation-count="participationCount"
+      />
+    </template>
+  </Vue3Html2pdf>
   <div class="text-center">
     <svg
       class="mr-2 inline min-w-[36px] align-text-bottom text-primary"
@@ -32,7 +51,10 @@
       {{ t('printList.title') + dateString }}
     </h1>
   </div>
-  <div class="mb-20 px-4 sm:px-6 lg:px-8">
+  <div
+    class="mb-20 px-4 sm:px-6 lg:px-8"
+    data-cy="printTable"
+  >
     <div class="mt-8 flex flex-col">
       <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
@@ -86,7 +108,7 @@
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
                         fill="currentColor"
-                        class="m-auto block h-6 w-6 text-primary"
+                        class="m-auto block size-6 text-primary"
                       >
                         <path
                           fill-rule="evenodd"
@@ -120,18 +142,28 @@
       </div>
     </div>
   </div>
+  <ActionButton
+    :btn-text="t('printList.download')"
+    :action="Action.DOWNLOAD"
+    @click="download()"
+  />
 </template>
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
-import { usePrintableListData } from '@/api/getPrintableListData';
-import { computed } from 'vue';
+import { type ListData, usePrintableListData } from '@/api/getPrintableListData';
+import { computed, ref } from 'vue';
 import { useProgress } from '@marcoschulte/vue3-progress';
+import Vue3Html2pdf from 'vue3-html2pdf';
+import ActionButton from '@/components/misc/ActionButton.vue';
+import { Action } from '@/enums/Actions';
+import PrintListPdfTemplate from '@/components/printableList/PrintListPdfTemplate.vue';
 
 const progress = useProgress().start()
 const { t, locale } = useI18n()
 
 const { listData } = usePrintableListData();
+const html2pdf = ref(null);
 
 const mealNames = computed(() => {
   const names: string[] = [];
@@ -152,4 +184,12 @@ const participationCount = computed(() => {
 const dateString = computed(() => new Date(Date.parse(listData.day.date)).toLocaleDateString(locale.value, {weekday: 'long', month: 'numeric', day: 'numeric'}));
 
 progress.finish()
+
+function download() {
+  if (html2pdf.value) {
+    html2pdf.value.generatePdf();
+  } else {
+    console.log('Html2Pdf not found');
+  }
+}
 </script>

@@ -18,7 +18,7 @@
         </td>
         <td>
           <div
-            class="flex h-full w-full content-center justify-end text-primary"
+            class="flex size-full content-center justify-end text-primary"
           >
             <svg
               v-if="(transaction as IUserTransaction).paymethod !== null && (transaction as IUserTransaction).paymethod === '0'"
@@ -29,7 +29,7 @@
               y="0px"
               viewBox="0 0 1000 1000"
               xml:space="preserve"
-              class="h-[24px] w-[24px]"
+              class="size-[24px]"
             >
               <g>
                 <path d="M918,239.3c-9.2-11.4-20-21.8-31.9-31.1c1.6,29.5-1.1,61-8.3,94.2c-19.4,90.9-65.8,168.2-134.2,223.5c-68.4,55.2-153.7,84.4-246.8,84.4H361l-44,205.9c-8.6,40.4-44.9,69.7-86.2,69.7h-61.2l-11,50.6c-2.8,13,0.4,26.6,8.7,37c8.4,10.4,21,16.4,34.3,16.4h149.6c20.8,0,38.8-14.5,43.1-34.9l51.4-240.8h171.4c82.9,0,158.7-25.8,219.1-74.6c60.5-48.8,101.6-117.4,118.8-198.4C972.7,359.5,960.2,291.5,918,239.3z" />
@@ -38,7 +38,7 @@
             </svg>
             <CurrencyEuroIcon
               v-else
-              class="h-8 w-8"
+              class="size-8"
             />
           </div>
         </td>

@@ -80,7 +80,7 @@ class ApiController extends BaseController
                 'days' => [],
                 'isEnabled' => $week->isEnabled(),
             ];
-            /* @var Day $day */
+            /** @var Day $day */
             foreach ($week->getDays() as $day) {
                 $participationsPerDay = $partCountSrv->getParticipationByDay($day);
 
@@ -102,6 +102,7 @@ class ApiController extends BaseController
                     'slots' => [],
                     'meals' => [],
                     'isEnabled' => $day->isEnabled(),
+                    'event' => $this->apiSrv->getEventParticipationData($day, $profile),
                 ];
 
                 $this->addSlots($response[$week->getId()]['days'][$day->getId()]['slots'], $slots, $day, $activeParticipations);
@@ -167,6 +168,8 @@ class ApiController extends BaseController
         foreach ($meals as $meal) {
             $list['meals'] = $list['meals'] + $this->getDishData($meal);
         }
+
+        $list['event'] = $this->apiSrv->getEventParticipationInfo($day);
 
         $list['day'] = $day->getDateTime();
 

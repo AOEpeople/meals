@@ -3,7 +3,7 @@
     :to="'/cash-register'"
     class="flex flex-row items-center gap-2 text-[#173D7A] hover:text-highlight"
   >
-    <CurrencyEuroIcon class="h-6 w-6" />
+    <CurrencyEuroIcon class="size-6" />
     <span>{{ t('costs.cashRegister') }}</span>
   </router-link>
 </template>

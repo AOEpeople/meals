@@ -1,8 +1,8 @@
-import { FunctionalComponent } from 'vue';
+import { FunctionalComponent, Component } from 'vue';
 
 export interface INavigation {
     name: string,
     to: string,
-    icon: FunctionalComponent,
+    icon: FunctionalComponent | Component,
     access: boolean
 }

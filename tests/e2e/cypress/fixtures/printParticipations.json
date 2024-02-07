@@ -1,0 +1,78 @@
+{
+    "data": {
+        "Active w\/o limit": {
+            "Meals, Admin": {
+                "booked": [
+                    5474
+                ]
+            },
+            "Meals, Alice": {
+                "booked": [
+                    5476
+                ]
+            },
+            "Meals, Bob": {
+                "booked": [
+                    5474
+                ]
+            },
+            "Meals, Finance": {
+                "booked": [
+                    5474
+                ]
+            },
+            "Meals, Jane": {
+                "booked": [
+                    5476
+                ]
+            },
+            "Meals, Kochomi": {
+                "booked": [
+                    5476
+                ]
+            }
+        },
+        "Active w\/ limit": {
+            "Meals, John": {
+                "booked": [
+                    5474
+                ]
+            }
+        }
+    },
+    "meals": {
+        "5474": {
+            "title": {
+                "en": "Limbs",
+                "de": "Limbs DE"
+            },
+            "parent": null,
+            "participations": 7
+        },
+        "5476": {
+            "title": {
+                "en": "Limbs oh la la la (oven backed) + Finger food with a slimy sweet and sour sauce",
+                "de": "Limbs oh la la la (Ofen gebacken) + Finger food mit einer schlammigen S\u00fc\u00df-Sauer-So\u00dfe"
+            },
+            "parent": null,
+            "participations": 4
+        },
+        "5481": {
+            "title": {
+                "en": "Combined Dish",
+                "de": "Kombi-Gericht"
+            },
+            "parent": null,
+            "participations": 0
+        }
+    },
+    "event": {
+        "name": "Afterwork",
+        "participants": []
+    },
+    "day": {
+        "date": "2024-01-24 12:00:00.000000",
+        "timezone_type": 3,
+        "timezone": "Europe\/Berlin"
+    }
+}

@@ -29,4 +29,5 @@ export default defineConfig({
   viewportHeight: 800,
   screenshotOnRunFailure: false,
   video: false,
+  trashAssetsBeforeRuns: true
 })

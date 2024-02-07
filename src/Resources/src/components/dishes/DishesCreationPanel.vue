@@ -36,7 +36,7 @@
       />
       <SwitchGroup>
         <div class="col-span-1 col-start-2 row-start-5 flex flex-col items-start pt-2 sm:row-start-3">
-          <SwitchLabel class="w-fulltext-start px-4 text-xs font-medium text-[#173D7A]">
+          <SwitchLabel class="w-full px-4 text-start text-xs font-medium text-[#173D7A]">
             {{ t('dish.popover.oneSizeServing') }}
           </SwitchLabel>
           <Switch
@@ -73,11 +73,11 @@ const { fetchCategories } = useCategories();
 const props = withDefaults(defineProps<{
   titleDe?: string,
   titleEn?: string,
-  descriptionDe?: string,
-  descriptionEn?: string,
-  categoryId?: number,
+  descriptionDe?: string | null,
+  descriptionEn?: string | null,
+  categoryId?: number | null,
   oneSizeServing?: boolean,
-  dishId?: number,
+  dishId?: number | null,
   edit?: boolean,
 }>(),{
   titleDe: '',

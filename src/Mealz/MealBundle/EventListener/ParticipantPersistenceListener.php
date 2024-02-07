@@ -5,27 +5,30 @@ namespace App\Mealz\MealBundle\EventListener;
 use App\Mealz\MealBundle\Entity\Participant;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PrePersistEventArgs;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * listener that ensures that there won't be duplicate entries for the same participant in the database.
  */
 class ParticipantPersistenceListener
 {
-    public function prePersist(LifecycleEventArgs $args): void
+    public function prePersist(PrePersistEventArgs $args): void
     {
-        $entity = $args->getEntity();
-        $entityManager = $args->getEntityManager();
+        $entity = $args->getObject();
+        $entityManager = $args->getObjectManager();
 
         if ($entity instanceof Participant) {
             $this->checkUniqueParticipant($entity, $entityManager);
         }
     }
 
-    public function preUpdate(LifecycleEventArgs $args): void
+    public function preUpdate(PreUpdateEventArgs $args): void
     {
-        $entity = $args->getEntity();
-        $entityManager = $args->getEntityManager();
+        $entity = $args->getObject();
+        $entityManager = $args->getObjectManager();
 
         if ($entity instanceof Participant) {
             $this->checkUniqueParticipant($entity, $entityManager);
@@ -43,6 +46,19 @@ class ParticipantPersistenceListener
     {
         $queryBuilder = $entityManager->createQueryBuilder();
 
+        if (null !== $participant->getMeal()) {
+            $query = $this->buildQueryMealParticipantExists($participant, $queryBuilder);
+        } elseif (null !== $participant->getEvent()) {
+            $query = $this->buildQueryEventParticipantExists($participant, $queryBuilder);
+        } else {
+            return false;
+        }
+
+        return $query->execute(null, AbstractQuery::HYDRATE_SINGLE_SCALAR) > 0;
+    }
+
+    private function buildQueryMealParticipantExists(Participant $participant, QueryBuilder $queryBuilder): Query
+    {
         $queryBuilder
             ->select('COUNT(p.id)')
             ->from('MealzMealBundle:Participant', 'p')
@@ -58,8 +74,30 @@ class ParticipantPersistenceListener
         $query = $queryBuilder->getQuery();
         $query->setParameter('meal', $participant->getMeal()->getId());
         $query->setParameter('profile', $participant->getProfile()->getUsername());
-        $query->useResultCache(false);
+        $query->disableResultCache();
 
-        return $query->execute(null, AbstractQuery::HYDRATE_SINGLE_SCALAR) > 0;
+        return $query;
+    }
+
+    private function buildQueryEventParticipantExists(Participant $participant, QueryBuilder $queryBuilder): Query
+    {
+        $queryBuilder
+            ->select('COUNT(p.id)')
+            ->from('MealzMealBundle:Participant', 'p')
+            ->join('p.event', 'e')
+            ->join('p.profile', 'u')
+            ->where('e = :event AND u = :profile')
+        ;
+        if ($participant->getId()) {
+            $queryBuilder->andWhere('p.id != :id');
+            $queryBuilder->setParameter('id', $participant->getId());
+        }
+
+        $query = $queryBuilder->getQuery();
+        $query->setParameter('event', $participant->getEvent()->getId());
+        $query->setParameter('profile', $participant->getProfile()->getUsername());
+        $query->disableResultCache();
+
+        return $query;
     }
 }

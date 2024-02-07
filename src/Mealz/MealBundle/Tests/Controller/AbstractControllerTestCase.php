@@ -5,8 +5,12 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Tests\Controller;
 
 use App\Mealz\AccountingBundle\Entity\Transaction;
+use App\Mealz\MealBundle\Entity\Day;
+use App\Mealz\MealBundle\Entity\Event;
+use App\Mealz\MealBundle\Entity\EventParticipation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
+use App\Mealz\MealBundle\Repository\DayRepository;
 use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
 use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
 use App\Mealz\UserBundle\Entity\Profile;
@@ -153,6 +157,32 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         $this->persistAndFlushAll([$participant]);
 
         return $participant;
+    }
+
+    protected function createEventParticipation(Day $day, Event $event): EventParticipation
+    {
+        $eventParticipation = new EventParticipation($day, $event);
+        $day->setEvent($eventParticipation);
+        $this->persistAndFlushAll([$eventParticipation, $day]);
+
+        return $eventParticipation;
+    }
+
+    protected function createFutureEvent(): EventParticipation
+    {
+        $newEvent = $this->createEvent();
+        $this->persistAndFlushAll([$newEvent]);
+
+        $dayRepo = self::$container->get(DayRepository::class);
+
+        $criteria = new \Doctrine\Common\Collections\Criteria();
+        $criteria->where(\Doctrine\Common\Collections\Criteria::expr()->gt('lockParticipationDateTime', new DateTime()));
+
+        /** @var Day $day */
+        $day = $dayRepo->matching($criteria)->get(0);
+        $this->assertNotNull($day);
+
+        return $this->createEventParticipation($day, $newEvent);
     }
 
     /**

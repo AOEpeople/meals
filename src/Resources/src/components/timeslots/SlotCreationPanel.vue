@@ -46,12 +46,12 @@ const props = withDefaults(defineProps<{
   order?: string,
   submit: string,
   edit?: boolean,
-  id: number,
+  id: number | undefined,
 }>(),{
   title: '',
   limit: '0',
   order: '0',
-  edit: false,
+  edit: false
 });
 
 const titleInput = ref(props.title);
@@ -71,7 +71,7 @@ async function onSubmit() {
     enabled: true,
     slug: null
   }
-  if (props.edit === true) {
+  if (props.edit === true && props.id !== undefined) {
     await editSlot(props.id, timeSlot);
   } else {
     await createSlot(timeSlot);

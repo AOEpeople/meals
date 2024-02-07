@@ -5,7 +5,7 @@
   >
     <template #button="{ open }">
       <CalendarIcon
-        class="h-5 w-5 cursor-pointer text-white"
+        class="size-5 cursor-pointer text-white"
       />
     </template>
     <template #panel="{ close }">
@@ -15,7 +15,7 @@
             {{ t('menu.lock') }}
           </span>
           <XCircleIcon
-            class="h-8 w-8 cursor-pointer self-end text-white transition-transform hover:scale-[120%] hover:text-[#FAFAFA]"
+            class="size-8 cursor-pointer self-end text-white transition-transform hover:scale-[120%] hover:text-[#FAFAFA]"
             @click="close()"
           />
         </div>

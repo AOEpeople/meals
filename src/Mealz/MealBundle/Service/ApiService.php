@@ -17,17 +17,20 @@ class ApiService
     private TransactionRepositoryInterface $transactionRepo;
     private MealRepositoryInterface $mealRepo;
     private DayRepositoryInterface $dayRepo;
+    private EventParticipationService $eventPartSrv;
 
     public function __construct(
         ParticipantRepositoryInterface $participantRepo,
         TransactionRepositoryInterface $transactionRepo,
         MealRepositoryInterface $mealRepo,
-        DayRepositoryInterface $dayRepo
+        DayRepositoryInterface $dayRepo,
+        EventParticipationService $eventPartSrv
     ) {
         $this->participantRepo = $participantRepo;
         $this->transactionRepo = $transactionRepo;
         $this->mealRepo = $mealRepo;
         $this->dayRepo = $dayRepo;
+        $this->eventPartSrv = $eventPartSrv;
     }
 
     /**
@@ -113,5 +116,27 @@ class ApiService
         return isset($parameters[$key])
             && null !== $parameters[$key]
             && $type === gettype($parameters[$key]);
+    }
+
+    public function getEventParticipationData(Day $day, Profile $profile = null): ?array
+    {
+        return $this->eventPartSrv->getEventParticipationData($day, $profile);
+    }
+
+    public function getEventParticipationInfo(Day $day): ?array
+    {
+        if (null === $day->getEvent()) {
+            return null;
+        }
+
+        return [
+            'name' => $day->getEvent()->getEvent()->getTitle(),
+            'participants' => $this->getEventParticipants($day),
+        ];
+    }
+
+    private function getEventParticipants(Day $day): array
+    {
+        return $this->eventPartSrv->getParticipants($day);
     }
 }

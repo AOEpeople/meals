@@ -11,6 +11,7 @@ describe('Test Weeks View', () => {
         cy.intercept('PUT', '**/api/menu/*', { fixture: 'Success.json', statusCode: 200 }).as('putMenu');
         cy.intercept('GET', '**/api/categories', { fixture: 'categories.json', statusCode: 200 }).as('getCategories');
         cy.intercept('GET', '**/api/dishes', { fixture: 'dishes.json', statusCode: 200 }).as('getDishes');
+        cy.intercept('GET', '**/api/events', { fixture: 'events.json', statusCode: 200 }).as('getEvents');
     });
 
     it('should be able to browse to the menu page from the weekspage', () => {
@@ -20,7 +21,7 @@ describe('Test Weeks View', () => {
 
         cy.get('h4').contains('Woche #28').click();
 
-        cy.wait(['@getDishesCount', '@getCategories', '@getDishes']);
+        cy.wait(['@getDishesCount', '@getCategories', '@getDishes', '@getEvents']);
 
         cy.url().should('include', '/menu');
         cy.get('h2').should('contain', 'Woche bearbeiten #28 (08.07. - 12.07.)');
@@ -30,6 +31,7 @@ describe('Test Weeks View', () => {
             .first()
             .parent()
             .find('svg')
+            .eq(1)
             .click()
             .parent()
             .find('input')
@@ -39,6 +41,19 @@ describe('Test Weeks View', () => {
             .find('li').contains('Lammhaxxe in Biersoße mit Klößen')
             .click();
         cy.get('h2').should('contain', 'Woche bearbeiten #28 (08.07. - 12.07.)').click();
+
+        // change event
+        cy.get('input')
+            .eq(8)
+            .parent()
+            .find('input')
+            .click()
+            .parent().parent()
+            .find('li')
+            .contains('Alumni Afterwork')
+            .click();
+
+        cy.get('h2').should('contain', 'Woche').click();
 
         // change week enabled
         cy.get('span')
@@ -103,6 +118,7 @@ describe('Test Weeks View', () => {
             .eq(1)
             .parent()
             .find('svg')
+            .eq(1)
             .click()
             .parent()
             .find('input')

@@ -15,6 +15,10 @@
         class="flex w-full flex-row items-center overflow-hidden border-[#CAD6E1] bg-white text-left text-[14px] font-medium text-[#B4C1CE] focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2"
         :class="openProp ? 'rounded-t-[23px] border-x-2 border-t-2 border-b-[1px]' : 'rounded-full border-2'"
       >
+        <MealIcon
+          class="ml-4 aspect-square h-full"
+          :fill-colour="'fill-[#9CA3AF]'"
+        />
         <ComboboxInput
           :displayValue="// @ts-ignore
             (dish) => titleStringRepr"
@@ -39,7 +43,7 @@
             v-if="filteredDishes.length === 0"
             class="cursor-pointer truncate text-[14px] text-[#9CA3AF]"
           >
-            <span class="h-full w-full px-4 py-2">
+            <span class="size-full px-4 py-2">
               {{ t('menu.noDishFound') }}
             </span>
           </li>
@@ -55,7 +59,7 @@
               :class="{ 'bg-[#F4F4F4]': selected }"
             >
               <span
-                class="col-span-1 col-start-1 row-start-1 h-full w-full truncate px-4 py-2"
+                class="col-span-1 col-start-1 row-start-1 size-full truncate px-4 py-2"
                 :class="selected ? 'font-medium' : 'font-normal'"
               >
                 {{ locale === 'en' ? dish.titleEn : dish.titleDe }}
@@ -75,7 +79,7 @@
               </span>
               <div
                 v-if="MenuCountState.counts[dish.id] && MenuCountState.counts[dish.id] > 0"
-                class="col-start-2 row-start-1 mr-4 flex h-6 w-6 items-center justify-center self-center justify-self-end rounded-lg bg-[#029DF7] text-center text-white md:col-start-3"
+                class="col-start-2 row-start-1 mr-4 flex size-6 items-center justify-center self-center justify-self-end rounded-lg bg-[#029DF7] text-center text-white md:col-start-3"
                 aria-hidden="true"
               >
                 {{ MenuCountState.counts[dish.id] }}
@@ -97,6 +101,7 @@ import { WatchStopHandle, computed, onMounted, onUnmounted, ref, watch } from 'v
 import { XIcon } from '@heroicons/vue/solid';
 import useDetectClickOutside from '@/services/useDetectClickOutside';
 import MenuDishVariationsCombobox from './MenuDishVariationsCombobox.vue';
+import MealIcon from './MealIcon.vue';
 
 const { setFilter, filteredDishes } = useDishes();
 const { locale, t } = useI18n();

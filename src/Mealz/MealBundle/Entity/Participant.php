@@ -32,9 +32,9 @@ class Participant
      * @Assert\NotNull()
      * @Assert\Type(type="App\Mealz\MealBundle\Entity\Meal")
      * @ORM\ManyToOne(targetEntity="Meal",inversedBy="participants")
-     * @ORM\JoinColumn(name="meal_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="meal_id", referencedColumnName="id", nullable=true)
      */
-    private Meal $meal;
+    private ?Meal $meal;
 
     /**
      * @Assert\NotNull()
@@ -85,10 +85,11 @@ class Participant
      */
     private bool $confirmed = false;
 
-    public function __construct(Profile $profile, ?Meal $meal)
+    public function __construct(Profile $profile, ?Meal $meal, ?EventParticipation $eventParticipation = null)
     {
         $this->profile = $profile;
         $this->meal = $meal;
+        $this->event = $eventParticipation;
         $this->combinedDishes = new DishCollection();
     }
 
@@ -137,7 +138,7 @@ class Participant
         $this->meal = $meal;
     }
 
-    public function getMeal(): Meal
+    public function getMeal(): ?Meal
     {
         return $this->meal;
     }

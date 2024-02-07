@@ -44,7 +44,7 @@ class Day extends AbstractMessage implements JsonSerializable
     private Collection $meals;
 
     /**
-     * @ORM\OneToOne(targetEntity="EventParticipation", mappedBy="day")
+     * @ORM\OneToOne(targetEntity="EventParticipation", mappedBy="day", cascade={"all"})
      * @ORM\JoinColumn(name="event_id", referencedColumnName="id", nullable=true)
      */
     private ?EventParticipation $event = null;
@@ -174,6 +174,7 @@ class Day extends AbstractMessage implements JsonSerializable
             'lockParticipationDateTime' => $this->getLockParticipationDateTime(),
             'week' => $this->getWeek()->getId(),
             'meals' => $meals,
+            'event' => null !== $this->event ? $this->event->getEvent()->getId() : null,
             'enabled' => $this->isEnabled(),
         ];
     }

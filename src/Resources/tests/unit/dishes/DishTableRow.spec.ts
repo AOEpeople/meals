@@ -1,7 +1,7 @@
 import DishTableRow from "@/components/dishes/DishTableRow.vue";
-import { flushPromises, mount } from "@vue/test-utils";
+import { mount } from "@vue/test-utils";
 import { describe, it, expect } from "@jest/globals";
-import { defineComponent, ref } from "vue";
+import { ref } from "vue";
 import Dishes from "../fixtures/getDishes.json";
 import Categories from "../fixtures/getCategories.json";
 import useApi from "@/api/api";

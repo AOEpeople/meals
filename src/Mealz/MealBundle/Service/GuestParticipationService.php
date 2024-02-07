@@ -78,6 +78,28 @@ class GuestParticipationService
         return $this->register($guestProfile, $meals, $slot, $dishSlugs);
     }
 
+    public function getCreateGuestProfile(
+        string $firstName,
+        string $lastName,
+        string $company,
+        DateTime $mealDate
+    ): Profile {
+        $guestProfileID = sprintf('%s.%s_%s', $firstName, $lastName, $mealDate->format('Y-m-d'));
+        $guestProfile = $this->profileRepo->find($guestProfileID);
+        if (true === ($guestProfile instanceof Profile) && true === $guestProfile->isGuest()) {
+            return $guestProfile;
+        }
+
+        $profile = new Profile();
+        $profile->setUsername($guestProfileID);
+        $profile->setFirstName($firstName);
+        $profile->setName($lastName);
+        $profile->setCompany($company);
+        $profile->addRole($this->getGuestRole());
+
+        return $profile;
+    }
+
     /**
      * Registers user with $profile to given meals and slot.
      *
@@ -177,28 +199,6 @@ class GuestParticipationService
         }
 
         return $participants;
-    }
-
-    private function getCreateGuestProfile(
-        string $firstName,
-        string $lastName,
-        string $company,
-        DateTime $mealDate
-    ): Profile {
-        $guestProfileID = sprintf('%s.%s_%s', $firstName, $lastName, $mealDate->format('Y-m-d'));
-        $guestProfile = $this->profileRepo->find($guestProfileID);
-        if (true === ($guestProfile instanceof Profile) && true === $guestProfile->isGuest()) {
-            return $guestProfile;
-        }
-
-        $profile = new Profile();
-        $profile->setUsername($guestProfileID);
-        $profile->setFirstName($firstName);
-        $profile->setName($lastName);
-        $profile->setCompany($company);
-        $profile->addRole($this->getGuestRole());
-
-        return $profile;
     }
 
     private function getGuestRole(): Role

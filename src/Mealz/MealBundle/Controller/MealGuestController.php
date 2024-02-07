@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Day;
+use App\Mealz\MealBundle\Entity\GuestInvitation;
 use App\Mealz\MealBundle\Entity\Participant;
+use App\Mealz\MealBundle\Event\EventParticipationUpdateEvent;
 use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
 use App\Mealz\MealBundle\Event\SlotAllocationUpdateEvent;
 use App\Mealz\MealBundle\Repository\GuestInvitationRepositoryInterface;
+use App\Mealz\MealBundle\Service\EventParticipationService;
 use App\Mealz\MealBundle\Service\GuestParticipationService;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -20,12 +23,17 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class MealGuestController extends BaseController
 {
-    private GuestParticipationService $gps;
+    private EventParticipationService $eventPartSrv;
+    private GuestParticipationService $guestPartSrv;
     private EventDispatcherInterface $eventDispatcher;
 
-    public function __construct(GuestParticipationService $gps, EventDispatcherInterface $eventDispatcher)
-    {
-        $this->gps = $gps;
+    public function __construct(
+        EventParticipationService $eventPartSrv,
+        GuestParticipationService $guestPartSrv,
+        EventDispatcherInterface $eventDispatcher
+    ) {
+        $this->eventPartSrv = $eventPartSrv;
+        $this->guestPartSrv = $guestPartSrv;
         $this->eventDispatcher = $eventDispatcher;
     }
 
@@ -37,9 +45,9 @@ class MealGuestController extends BaseController
                 'meals' => $meals,
                 'slot' => $slot,
                 'dishSlugs' => $dishSlugs
-            ] = $this->gps->getGuestInvitationData($request);
+            ] = $this->guestPartSrv->getGuestInvitationData($request);
 
-            $participants = $this->gps->join($profile, $meals, $slot, $dishSlugs);
+            $participants = $this->guestPartSrv->join($profile, $meals, $slot, $dishSlugs);
             $this->triggerJoinEvents($participants);
         } catch (Exception $e) {
             $this->logException($e, 'guest registration error');
@@ -62,14 +70,77 @@ class MealGuestController extends BaseController
     ): JsonResponse {
         $guestInvitation = $guestInvitationRepo->findOrCreateInvitation($this->getUser()->getProfile(), $mealDay);
 
-        return new JsonResponse(
-            [
-                'url' => $this->generateUrl(
-                    'MealzMealBundle_Meal_guest',
-                    ['hash' => $guestInvitation->getId()],
-                    UrlGeneratorInterface::ABSOLUTE_URL),
-            ], 200
-        );
+        return new JsonResponse(['url' => $this->generateInvitationUrl($guestInvitation)], 200);
+    }
+
+    /**
+     * @Security("is_granted('ROLE_USER')")
+     */
+    public function newGuestEventInvitation(
+        Day $dayId,
+        GuestInvitationRepositoryInterface $guestInvitationRepo
+    ): JsonResponse {
+        $eventInvitation = $guestInvitationRepo->findOrCreateInvitation($this->getUser()->getProfile(), $dayId);
+
+        return new JsonResponse(['url' => $this->generateInvitationUrl($eventInvitation, false)], 200);
+    }
+
+    public function getEventInvitationData(
+        string $invitationId,
+        GuestInvitationRepositoryInterface $guestInvitationRepo
+    ): JsonResponse {
+        /** @var GuestInvitation $invitation */
+        $invitation = $guestInvitationRepo->find($invitationId);
+        if (null === $invitation) {
+            return new JsonResponse(['message' => '901: Could not find invitation for the given hash', 403]);
+        }
+
+        $guestData = [
+            'date' => $invitation->getDay()->getDateTime(),
+            'lockDate' => $invitation->getDay()->getLockParticipationDateTime(),
+            'event' => $invitation->getDay()->getEvent()->getEvent()->getTitle(),
+        ];
+
+        return new JsonResponse($guestData, 200);
+    }
+
+    public function joinEventAsGuest(
+        string $invitationId,
+        Request $request,
+        GuestInvitationRepositoryInterface $guestInvitationRepo
+    ): JsonResponse {
+        $parameters = json_decode($request->getContent(), true);
+
+        /** @var GuestInvitation $invitation */
+        $invitation = $guestInvitationRepo->find($invitationId);
+        if (null === $invitation) {
+            return new JsonResponse(['message' => '901: Could not find invitation for the given hash', 403]);
+        } elseif (false === isset($parameters['firstName']) || false === isset($parameters['lastName'])) {
+            return new JsonResponse(['message' => '902: Parameters were not provided'], 404);
+        }
+
+        if (false === isset($parameters['company'])) {
+            $parameters['company'] = '';
+        }
+
+        try {
+            $eventParticipation = $this->eventPartSrv->joinAsGuest(
+                $parameters['firstName'],
+                $parameters['lastName'],
+                $parameters['company'],
+                $invitation->getDay()
+            );
+
+            if (null === $eventParticipation) {
+                return new JsonResponse(['message' => '903: Unknown error occured while joining the event'], 500);
+            }
+
+            $this->eventDispatcher->dispatch(new EventParticipationUpdateEvent($eventParticipation));
+
+            return new JsonResponse(null, 200);
+        } catch (Exception $e) {
+            return new JsonResponse(['message' => '903: ' . $e->getMessage()], 500);
+        }
     }
 
     /**
@@ -90,5 +161,14 @@ class MealGuestController extends BaseController
         if (null !== $slot) {
             $this->eventDispatcher->dispatch(new SlotAllocationUpdateEvent($participant->getMeal()->getDay(), $slot));
         }
+    }
+
+    private function generateInvitationUrl(GuestInvitation $invitation, bool $isMeal = true): string
+    {
+        return $this->generateUrl(
+            true === $isMeal ? 'MealzMealBundle_Meal_guest' : 'MealzMealBundle_Meal_guest_event',
+            ['hash' => $invitation->getId()],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
     }
 }

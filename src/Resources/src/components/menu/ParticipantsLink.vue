@@ -3,7 +3,7 @@
     :to="`/participations/${weekId}/edit`"
     class="flex flex-row items-center gap-2"
   >
-    <UserGroupIcon class="h-6 w-6" />
+    <UserGroupIcon class="size-6" />
     <span>{{ t('printList.participations') }}</span>
   </router-link>
 </template>

@@ -43,7 +43,7 @@
             v-if="filteredProfiles.length === 0"
             class="truncate p-4 text-[14px] text-[#9CA3AF]"
           >
-            <span class="h-full w-full">
+            <span class="size-full">
               {{ t('menu.notFound') }}
             </span>
           </li>
@@ -57,7 +57,7 @@
               class="relative cursor-pointer px-4 py-1 text-left text-[14px] font-medium text-[#9CA3AF] hover:bg-[#FAFAFA]"
               @click="selectProfile(profile as IProfile)"
             >
-              <span class="h-full w-full truncate">
+              <span class="size-full truncate">
                 {{ getDisplayName(profile as IProfile) }}
               </span>
             </li>

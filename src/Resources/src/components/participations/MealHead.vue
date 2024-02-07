@@ -1,16 +1,16 @@
 <template>
-  <div class="flex h-full w-full flex-col px-2">
-    <div class="meal-header-test h-full w-full flex-1 truncate text-center">
+  <div class="flex size-full flex-col px-2">
+    <div class="meal-header-test size-full flex-1 truncate text-center">
       {{ getTitleForLocale(meal) }}
     </div>
     <div
       v-if="meal.variations.length > 0"
-      class="flex h-full w-full flex-1 flex-row pt-2"
+      class="flex size-full flex-1 flex-row pt-2"
     >
       <div
         v-for="variation in meal.variations"
         :key="variation.mealId"
-        class="meal-variations-test h-full w-full flex-1 truncate border-l-0 text-center first:pr-[10px] last:border-l-[1px]"
+        class="meal-variations-test size-full flex-1 truncate border-l-0 text-center first:pr-[10px] last:border-l-[1px]"
       >
         {{ getTitleForLocale(variation) }}
       </div>

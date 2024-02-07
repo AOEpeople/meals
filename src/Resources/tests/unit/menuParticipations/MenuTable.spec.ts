@@ -47,6 +47,8 @@ describe('Test MenuTable', () => {
         await flushPromises();
         setTimeout(async () => {
             await nextTick();
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore ts does not find conditionally exported values for testing i.e. loaded
             expect(wrapper.vm.loaded).toBe(true);
             expect(useApi).toHaveBeenCalledTimes(3);
             expect(wrapper.find('table').exists()).toBe(true);

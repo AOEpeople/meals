@@ -8,7 +8,7 @@
     :weeks="weeks"
   />
   <PrintLink
-    v-if="isAllowedToPrint"
+    v-if="userDataStore.roleAllowsRoute('PrintableList')"
     class="mr-[27px] text-right"
   />
 </template>
@@ -23,17 +23,25 @@ import { userDataStore } from '@/stores/userDataStore';
 import { onMounted, ref } from 'vue';
 import { Dictionary } from 'types/types';
 import { Week } from '@/api/getDashboardData';
+import { useEvents } from '@/stores/eventsStore';
+import useEventsBus from '@/tools/eventBus';
+import { EventParticipationResponse } from '@/api/postJoinEvent';
 
 const weeks = ref<Dictionary<Week>>({});
-const isAllowedToPrint = ref(false);
+const { fetchEvents } = useEvents();
+const { receive } = useEventsBus();
 
 onMounted(async () => {
   const progress = useProgress().start();
 
   await dashboardStore.fillStore();
   weeks.value = dashboardStore.getWeeks();
+  await fetchEvents();
 
-  isAllowedToPrint.value = userDataStore.roleAllowsRoute('PrintableList');
   progress.finish();
+});
+
+receive<EventParticipationResponse>('eventParticipationUpdate', (participationUpdate) => {
+  dashboardStore.setIsParticipatingEvent(participationUpdate.participationId, participationUpdate.isParticipating);
 });
 </script>

@@ -1,7 +1,7 @@
 import useApi from '@/api/api';
 import { ref } from 'vue';
 
-type Link = {
+export type Link = {
     url: string
 }
 

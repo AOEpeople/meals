@@ -15,6 +15,7 @@ describe('Test Creating a Menu', () => {
         cy.intercept('GET', '**/api/participations/*').as('getParticipations');
         cy.intercept('PUT', '**/api/participation/*/*').as('putParticipation');
         cy.intercept('DELETE', '**/api/participation/*/*').as('deleteParticipation');
+        cy.intercept('GET', '**/api/events').as('getEvents');
     });
 
     it('should create a week on submitting a valid menu', () => {
@@ -33,6 +34,7 @@ describe('Test Creating a Menu', () => {
             .first()
             .parent()
             .find('svg')
+            .eq(1)
             .click()
             .parent()
             .find('input')
@@ -48,6 +50,7 @@ describe('Test Creating a Menu', () => {
             .eq(1)
             .parent()
             .find('svg')
+            .eq(1)
             .click()
             .parent()
             .find('input')
@@ -60,7 +63,7 @@ describe('Test Creating a Menu', () => {
 
         // Tuesday
         cy.get('input')
-            .eq(2)
+            .eq(3)
             .parent()
             .find('input')
             .click()
@@ -71,7 +74,7 @@ describe('Test Creating a Menu', () => {
         cy.get('h2').should('contain', 'Woche').click();
 
         cy.get('input')
-            .eq(3)
+            .eq(4)
             .parent()
             .find('input')
             .click()
@@ -83,7 +86,7 @@ describe('Test Creating a Menu', () => {
 
         // Wednesday
         cy.get('input')
-            .eq(4)
+            .eq(6)
             .parent()
             .find('input')
             .click()
@@ -94,7 +97,7 @@ describe('Test Creating a Menu', () => {
         cy.get('h2').should('contain', 'Woche').click();
 
         cy.get('input')
-            .eq(5)
+            .eq(7)
             .parent()
             .find('input')
             .click()
@@ -105,9 +108,21 @@ describe('Test Creating a Menu', () => {
 
         cy.get('h2').should('contain', 'Woche').click();
 
+        cy.get('input')
+            .eq(8)
+            .parent()
+            .find('input')
+            .click()
+            .parent().parent()
+            .find('li')
+            .contains('Alumni Afterwork')
+            .click();
+
+        cy.get('h2').should('contain', 'Woche').click();
+
         // Thursday
         cy.get('input')
-            .eq(6)
+            .eq(9)
             .parent()
             .find('input')
             .click()
@@ -124,7 +139,7 @@ describe('Test Creating a Menu', () => {
         cy.get('h2').should('contain', 'Woche').click().click();
 
         cy.get('input')
-            .eq(7)
+            .eq(10)
             .parent()
             .find('input')
             .click()
@@ -137,7 +152,7 @@ describe('Test Creating a Menu', () => {
 
         // Friday
         cy.get('input')
-            .eq(8)
+            .eq(12)
             .parent()
             .find('input')
             .click()
@@ -152,21 +167,36 @@ describe('Test Creating a Menu', () => {
 
         cy.wait(['@postWeeks', '@getWeeks']);
 
+        cy.get('[data-cy="msgClose"]').click();
+
+        // Find the saved event
+        cy.get('input')
+            .eq(8)
+            .should('have.value', 'Alumni Afterwork');
+
         // Edit Menu
         cy.get('input')
-        .eq(8)
-        .parent()
-        .find('input')
-        .click()
-        .parent().parent()
-        .find('li').contains('Innards DE')
-        .click();
+            .eq(12)
+            .parent()
+            .find('input')
+            .click()
+            .parent().parent()
+            .find('li').contains('Innards DE')
+            .click();
 
-        cy.get('[data-cy="msgClose"]').click();
         cy.get('h2').should('contain', 'Woche').click();
 
         cy.get('input')
-            .eq(9)
+            .eq(8)
+            .parent()
+            .find('svg')
+            .eq(1)
+            .click()
+
+        cy.get('h2').should('contain', 'Woche').click();
+
+        cy.get('input')
+            .eq(13)
             .parent()
             .find('input')
             .click()
@@ -201,7 +231,7 @@ describe('Test Creating a Menu', () => {
 
         cy.get('[data-cy="msgClose"]').click();
 
-        // Check that all meals are saved
+        // Check that all meals and the event are saved
         cy.get('input')
             .eq(0)
             .should('have.value', 'Tasty Worms DE');
@@ -211,35 +241,39 @@ describe('Test Creating a Menu', () => {
             .should('have.value', 'Limbs DE');
 
         cy.get('input')
-            .eq(2)
+            .eq(3)
             .should('have.value', 'Braaaaaiiinnnzzzzzz DE');
 
         cy.get('input')
-            .eq(3)
+            .eq(4)
             .should('have.value', 'Fish (so juicy sweat) DE');
 
         cy.get('input')
-            .eq(4)
-            .should('have.value', 'Innards DE');
-
-        cy.get('input')
-            .eq(5)
-            .should('have.value', 'Limbs oh la la la (Ofen gebacken) + Finger food mit einer schlammigen Süß-Sauer-Soße');
-
-        cy.get('input')
             .eq(6)
-            .should('have.value', 'Innards DE, Innards DE #v1');
+            .should('have.value', 'Innards DE');
 
         cy.get('input')
             .eq(7)
-            .should('have.value', 'Limbs DE');
+            .should('have.value', 'Limbs oh la la la (Ofen gebacken) + Finger food mit einer schlammigen Süß-Sauer-Soße');
 
         cy.get('input')
             .eq(8)
-            .should('have.value', 'Innards DE');
+            .should('have.value', '');
 
         cy.get('input')
             .eq(9)
+            .should('have.value', 'Innards DE, Innards DE #v1');
+
+        cy.get('input')
+            .eq(10)
+            .should('have.value', 'Limbs DE');
+
+        cy.get('input')
+            .eq(12)
+            .should('have.value', 'Innards DE');
+
+        cy.get('input')
+            .eq(13)
             .should('have.value', 'Braaaaaiiinnnzzzzzz DE');
 
         // Test Participations
@@ -351,6 +385,7 @@ describe('Test Creating a Menu', () => {
             .first()
             .parent()
             .find('svg')
+            .eq(1)
             .click()
             .parent()
             .find('input')

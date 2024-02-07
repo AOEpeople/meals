@@ -38,7 +38,7 @@ module.exports = {
         ],
         'tailwindcss/no-custom-classname': 'off',
         'tailwindcss/enforces-negative-arbitrary-values': 'off',
-        'eqeqeq': 'always',
+        'eqeqeq': 'error',
         'no-regex-spaces': 'error',
         'no-var': 'error'
     },

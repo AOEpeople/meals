@@ -1,0 +1,11 @@
+**/.git
+**/.svn
+**/.hg
+**/node_modules
+**/js
+**/images
+**/coverage
+**/fonts
+**/sass
+**/screenshots
+**/style

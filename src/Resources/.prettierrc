@@ -1,0 +1,24 @@
+{
+    "plugins": ["prettier-plugin-tailwindcss"],
+    "semi": true,
+    "singleQuote": true,
+    "bracketSpacing": true,
+    "bracketSameLine": false,
+    "arrowParens": "always",
+    "vueIndentScriptAndStyle": false,
+    "singleAttributePerLine": true,
+    "overrides": [
+        {
+            "files": ["*.js", "*.ts"],
+            "options": {
+                "tabWidth": 4
+            }
+        },
+        {
+            "files": ["*.vue"],
+            "options": {
+                "tabWidth": 2
+            }
+        }
+    ]
+}

@@ -4,6 +4,7 @@ module.exports = {
         'plugin:vue/vue3-recommended',
         'plugin:@typescript-eslint/recommended',
         'plugin:tailwindcss/recommended',
+        'prettier'
     ],
 
     parser: "vue-eslint-parser",
@@ -36,7 +37,10 @@ module.exports = {
             }
         ],
         'tailwindcss/no-custom-classname': 'off',
-        'tailwindcss/enforces-negative-arbitrary-values': 'off'
+        'tailwindcss/enforces-negative-arbitrary-values': 'off',
+        'eqeqeq': 'always',
+        'no-regex-spaces': 'error',
+        'no-var': 'error'
     },
 
     ignorePatterns: ['node_modules/', 'dist/', 'src/**/*.d.ts', '*.config.js', 'js/'],

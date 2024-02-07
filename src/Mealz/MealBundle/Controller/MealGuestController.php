@@ -24,16 +24,16 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class MealGuestController extends BaseController
 {
     private EventParticipationService $eventPartSrv;
-    private GuestParticipationService $gps;
+    private GuestParticipationService $guestPartSrv;
     private EventDispatcherInterface $eventDispatcher;
 
     public function __construct(
         EventParticipationService $eventPartSrv,
-        GuestParticipationService $gps,
+        GuestParticipationService $guestPartSrv,
         EventDispatcherInterface $eventDispatcher
     ) {
         $this->eventPartSrv = $eventPartSrv;
-        $this->gps = $gps;
+        $this->guestPartSrv = $guestPartSrv;
         $this->eventDispatcher = $eventDispatcher;
     }
 
@@ -45,9 +45,9 @@ class MealGuestController extends BaseController
                 'meals' => $meals,
                 'slot' => $slot,
                 'dishSlugs' => $dishSlugs
-            ] = $this->gps->getGuestInvitationData($request);
+            ] = $this->guestPartSrv->getGuestInvitationData($request);
 
-            $participants = $this->gps->join($profile, $meals, $slot, $dishSlugs);
+            $participants = $this->guestPartSrv->join($profile, $meals, $slot, $dishSlugs);
             $this->triggerJoinEvents($participants);
         } catch (Exception $e) {
             $this->logException($e, 'guest registration error');

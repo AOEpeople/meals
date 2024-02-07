@@ -1,8 +1,8 @@
-import useApi from '@/api/api';
-import { ref } from 'vue';
-import Events from '../fixtures/getEvents.json';
-import { useEvents, Event } from '@/stores/eventsStore';
-import { flushPromises } from '@vue/test-utils';
+import useApi from "@/api/api";
+import { ref } from "vue";
+import Events from "../fixtures/getEvents.json";
+import { useEvents, Event } from "@/stores/eventsStore";
+import { flushPromises } from "@vue/test-utils";
 
 const testEvent: Event = {
     id: 7,

@@ -16,7 +16,7 @@ import CostsSettlement from './views/CostsSettlement.vue';
 import CashRegister from './views/CashRegister.vue';
 import Login from '@/views/Login.vue';
 import Events from './views/Events.vue';
-import GuestEvent    from './views/GuestEvent.vue';
+import GuestEvent from './views/GuestEvent.vue';
 
 import { createRouter, createWebHistory } from 'vue-router';
 import { userDataStore }                  from '@/stores/userDataStore';

@@ -104,7 +104,7 @@ trait ParticipationServiceTrait
      */
     private function createParticipation(Profile $profile, Meal $meal, ?Slot $slot = null, array $dishSlugs = []): Participant
     {
-        $participant = new Participant($profile, $meal, null);
+        $participant = new Participant($profile, $meal);
         if (null !== $slot) {
             $participant->setSlot($slot);
         }

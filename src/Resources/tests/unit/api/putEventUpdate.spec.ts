@@ -1,7 +1,7 @@
-import useApi from '@/api/api';
-import putEventUpdate from '@/api/putEventUpdate';
-import { Event } from '@/stores/eventsStore';
-import { ref } from 'vue';
+import useApi from "@/api/api";
+import putEventUpdate from "@/api/putEventUpdate";
+import { Event } from "@/stores/eventsStore";
+import { ref } from "vue";
 
 const testEvent: Event = {
     id: 0,

@@ -41,7 +41,7 @@ const EVENT_PARTICIPATION_UPDATE = 'eventParticipationUpdate';
 
 const EventsState = reactive<EventsState>({
     events: [],
-    error: "",
+    error: '',
     isLoading: false
 });
 

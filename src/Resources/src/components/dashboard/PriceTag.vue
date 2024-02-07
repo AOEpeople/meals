@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="h-5 min-[380px]:h-auto">
     <span class="whitespace-nowrap text-[11px] font-light text-primary min-[370px]:text-note">
       {{ localePrice }}
     </span>

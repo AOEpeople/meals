@@ -10,7 +10,7 @@
     :key="index"
     class="mb-1.5 flex w-auto flex-row justify-around gap-1 last:mb-0 min-[380px]:gap-2 xl:grid-cols-6"
   >
-    <div class="basis-10/12 items-center self-center xl:col-span-5">
+    <div class="basis-11/12 items-center self-center xl:col-span-5">
       <div class="self-center">
         <p class="m-0 text-[12px] font-light leading-5 text-primary min-[380px]:text-[14px]">
           {{ locale.substring(0, 2) === 'en' ? variation.title.en : variation.title.de }}
@@ -33,15 +33,15 @@
     >
       <OfferPopover v-if="openPopover" />
     </Transition>
-    <PriceTag
-      class="align-center my-auto flex"
-      :price="variation.price"
-    />
-    <div class="text-align-last flex flex-auto basis-2/12 items-center justify-end">
+    <div class="text-align-last flex flex-auto basis-1/12 flex-col justify-end gap-1 min-[380px]:flex-row min-[380px]:items-center">
+      <PriceTag
+        class="align-center my-auto flex"
+        :price="variation.price"
+      />
       <ParticipationCounter
         :limit="variation.limit"
         :mealCSS="mealCSS[String(variationID)]"
-        class="mr-[5px] min-[380px]:mr-[15px]"
+        class="min-[380px]:mr-[15px]"
       >
         {{ getParticipationDisplayString(variation) }}
       </ParticipationCounter>

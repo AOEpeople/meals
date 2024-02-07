@@ -9,7 +9,7 @@
       />
     </PopoverButton>
 
-    <PopoverPanel :class="[index === 4 ? '-top-12' : 'top-12' , 'absolute -left-6 z-[2]']">
+    <PopoverPanel :class="[index === 4 ? '-top-12' : 'top-12', 'absolute -left-6 z-[2]']">
       <GuestLink
         :dayID="String(dayID)"
         :invitation="invitation"
@@ -25,9 +25,9 @@ import GuestLink from '@/components/dashboard/GuestLink.vue';
 import { Invitation } from '@/enums/Invitation';
 
 defineProps<{
-  dayID: number | string,
-  index: number,
-  invitation: Invitation,
-  iconWhite: boolean
+  dayID: number | string;
+  index: number;
+  invitation: Invitation;
+  iconWhite: boolean;
 }>();
 </script>

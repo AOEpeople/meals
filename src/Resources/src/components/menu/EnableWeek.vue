@@ -6,7 +6,7 @@
     <Switch
       :sr="t('menu.enableWeek')"
       :initial="week.enabled"
-      @toggle="(value) => week.enabled = value"
+      @toggle="(value) => (week.enabled = value)"
     />
   </div>
 </template>
@@ -19,6 +19,6 @@ import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 
 defineProps<{
-  week: WeekDTO
+  week: WeekDTO;
 }>();
 </script>

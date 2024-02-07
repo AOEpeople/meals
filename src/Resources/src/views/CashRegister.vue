@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="mx-[5%] mb-8 xl:mx-auto"
-  >
+  <div class="mx-[5%] mb-8 xl:mx-auto">
     <CashRegisterTable
       v-if="loaded === true && TransactionState.transactions.usersLastMonth !== null"
       :transactions="TransactionState.transactions.usersLastMonth"
@@ -13,9 +11,7 @@
       :transactions="TransactionState.transactions.usersThisMonth"
       :date-range="TransactionState.transactions.thisMonth"
     />
-    <LoadingSpinner
-      :loaded="loaded"
-    />
+    <LoadingSpinner :loaded="loaded" />
   </div>
 </template>
 

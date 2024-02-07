@@ -52,13 +52,18 @@ import { Ref, computed, ref } from 'vue';
 const { t, locale } = useI18n();
 const { CategoriesState, getCategoryById } = useCategories();
 
-const props = withDefaults(defineProps<{
-  categoryId?: number
-}>(), {
-  categoryId: null
-});
+const props = withDefaults(
+  defineProps<{
+    categoryId?: number;
+  }>(),
+  {
+    categoryId: null
+  }
+);
 
-const initialCategory = computed(() => props.categoryId ? getCategoryById(props.categoryId) : CategoriesState.categories[0]);
+const initialCategory = computed(() =>
+  props.categoryId ? getCategoryById(props.categoryId) : CategoriesState.categories[0]
+);
 const selectedCategory: Ref<Category> = ref(initialCategory.value);
 
 defineExpose({ selectedCategory });

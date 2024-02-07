@@ -1,20 +1,20 @@
-import useApi from "@/api/api";
-import { ref } from "vue";
-import Events from "../fixtures/getEvents.json";
-import { useEvents, Event } from "@/stores/eventsStore";
-import { flushPromises } from "@vue/test-utils";
+import useApi from '@/api/api';
+import { ref } from 'vue';
+import Events from '../fixtures/getEvents.json';
+import { useEvents, Event } from '@/stores/eventsStore';
+import { flushPromises } from '@vue/test-utils';
 
 const testEvent: Event = {
     id: 7,
     title: 'Test1234',
     slug: 'test1234',
     public: false
-}
+};
 
 const userStrings = ['Test, User', 'Another, Testuser', 'abcxyz, User123'];
 
 const asyncFunc: () => Promise<void> = async () => {
-    new Promise(resolve => resolve(undefined));
+    new Promise((resolve) => resolve(undefined));
 };
 
 const getMockedResponses = (method: string, url: string) => {
@@ -23,40 +23,50 @@ const getMockedResponses = (method: string, url: string) => {
             response: ref(JSON.parse(JSON.stringify(Events))),
             request: asyncFunc,
             error: ref(false)
-        }
+        };
     } else if (/api\/events/.test(url) && method === 'POST') {
         return {
             response: ref(null),
             request: asyncFunc,
             error: ref(false)
-        }
+        };
     } else if (url.includes('api/events') && method === 'PUT') {
         return {
             response: ref(testEvent),
             request: asyncFunc,
             error: ref(false)
-        }
+        };
     } else if (url.includes('api/events') && method === 'DELETE') {
         return {
             response: ref(null),
             request: asyncFunc,
             error: ref(false)
-        }
+        };
     } else if (url.includes('api/participations/event/') && method === 'GET') {
         return {
             response: ref(userStrings),
             request: asyncFunc,
             error: ref(false)
-        }
+        };
     }
-}
+};
 
 // @ts-expect-error ts doesn't allow reassignig a import but we need that to mock that function
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 useApi = jest.fn().mockImplementation((method: string, url: string) => getMockedResponses(method, url));
 
 describe('Test EventsStore', () => {
-    const { EventsState, fetchEvents, setFilter, filteredEvents, updateEvent, deleteEventWithSlug, getEventBySlug, resetState, getParticipantsForEvent } = useEvents();
+    const {
+        EventsState,
+        fetchEvents,
+        setFilter,
+        filteredEvents,
+        updateEvent,
+        deleteEventWithSlug,
+        getEventBySlug,
+        resetState,
+        getParticipantsForEvent
+    } = useEvents();
 
     beforeEach(() => {
         resetState();
@@ -64,7 +74,7 @@ describe('Test EventsStore', () => {
 
     afterEach(() => {
         jest.clearAllMocks();
-    })
+    });
 
     it('should not contain data before fetching', () => {
         expect(EventsState.events).toEqual([]);
@@ -120,13 +130,13 @@ describe('Test EventsStore', () => {
 
         expect(EventsState.events).toHaveLength(2);
         expect(EventsState.events[0]).toEqual(Events[0]);
-        expect(Events[0].slug).toBe('afterwork')
+        expect(Events[0].slug).toBe('afterwork');
         expect(EventsState.events[0].slug).toBe('afterwork');
         const event = getEventBySlug('afterwork');
 
         expect(event).toBeDefined();
         expect(event.id).toBe(Events[0].id);
-        expect(event.public).toBe(Events[0].public)
+        expect(event.public).toBe(Events[0].public);
         expect(event.slug).toBe(Events[0].slug);
         expect(event.title).toBe(Events[0].title);
     });

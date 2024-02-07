@@ -1,28 +1,28 @@
-import getEvents from "@/api/getEvents";
-import { isResponseArrayOkay } from "@/api/isResponseOkay";
-import { computed, reactive, readonly, ref, watch } from "vue";
+import getEvents from '@/api/getEvents';
+import { isResponseArrayOkay } from '@/api/isResponseOkay';
+import { computed, reactive, readonly, ref, watch } from 'vue';
 import postCreateEvent from '@/api/postCreateEvent';
-import { IMessage, isMessage } from "@/interfaces/IMessage";
-import useFlashMessage from "@/services/useFlashMessage";
-import { FlashMessageType } from "@/enums/FlashMessage";
-import putEventUpdate from "@/api/putEventUpdate";
-import deleteEvent from "@/api/deleteEvent";
-import postJoinEvent from "@/api/postJoinEvent";
+import { IMessage, isMessage } from '@/interfaces/IMessage';
+import useFlashMessage from '@/services/useFlashMessage';
+import { FlashMessageType } from '@/enums/FlashMessage';
+import putEventUpdate from '@/api/putEventUpdate';
+import deleteEvent from '@/api/deleteEvent';
+import postJoinEvent from '@/api/postJoinEvent';
 import useEventsBus from '@/tools/eventBus';
-import { deleteLeaveEvent } from "@/api/deleteLeaveEvent";
-import getEventParticipants from "@/api/getEventParticipants";
+import { deleteLeaveEvent } from '@/api/deleteLeaveEvent';
+import getEventParticipants from '@/api/getEventParticipants';
 
 export interface Event {
-    id: number,
-    title: string,
-    slug: string,
-    public: boolean
+    id: number;
+    title: string;
+    slug: string;
+    public: boolean;
 }
 
 interface EventsState {
-    events: Event[],
-    error: string,
-    isLoading: boolean
+    events: Event[];
+    error: string;
+    isLoading: boolean;
 }
 
 function isEvent(event: Event): event is Event {
@@ -33,7 +33,7 @@ function isEvent(event: Event): event is Event {
         typeof (event as Event).title === 'string' &&
         typeof (event as Event).slug === 'string' &&
         typeof (event as Event).public === 'boolean'
-    )
+    );
 }
 
 const TIMEOUT_PERIOD = 10000;
@@ -58,17 +58,16 @@ watch(
             });
         }
     }
-)
+);
 
 export function useEvents() {
-
     const filterStr = ref('');
 
     /**
      * Returns a list of events whose titles contain the filter string
      */
     const filteredEvents = computed(() => {
-        return EventsState.events.filter((event) => event.title.toLowerCase().includes(filterStr.value.toLowerCase()))
+        return EventsState.events.filter((event) => event.title.toLowerCase().includes(filterStr.value.toLowerCase()));
     });
 
     /**
@@ -150,7 +149,10 @@ export function useEvents() {
         if (error.value === true && isMessage(response.value) === true) {
             EventsState.error = response.value?.message;
         } else {
-            EventsState.events.splice(EventsState.events.findIndex((event) => event.slug === slug), 1);
+            EventsState.events.splice(
+                EventsState.events.findIndex((event) => event.slug === slug),
+                1
+            );
             EventsState.error = '';
             sendFlashMessage({
                 type: FlashMessageType.INFO,
@@ -202,7 +204,7 @@ export function useEvents() {
             EventsState.error = 'Unknown error occured on getting participants for the event';
         } else {
             EventsState.error = '';
-            return (response.value as string[]);
+            return response.value as string[];
         }
     }
 
@@ -223,7 +225,7 @@ export function useEvents() {
     }
 
     function getEventById(eventId: number) {
-        return EventsState.events.find(event => event.id === eventId);
+        return EventsState.events.find((event) => event.id === eventId);
     }
 
     /**
@@ -249,5 +251,5 @@ export function useEvents() {
         joinEvent,
         leaveEvent,
         getParticipantsForEvent
-    }
+    };
 }

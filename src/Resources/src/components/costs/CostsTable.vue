@@ -46,28 +46,36 @@ const { t, locale } = useI18n();
 const { CostsState, getColumnNames } = useCosts();
 
 const props = defineProps<{
-  filter: string,
-  showHidden: boolean
+  filter: string;
+  showHidden: boolean;
 }>();
 
-const columnNames = computed(() => ['Name', t('costs.table.earlier'), ...getColumnNames(locale.value), t('costs.table.total'), t('costs.table.actions')]);
+const columnNames = computed(() => [
+  'Name',
+  t('costs.table.earlier'),
+  ...getColumnNames(locale.value),
+  t('costs.table.total'),
+  t('costs.table.actions')
+]);
 
 const filterRegex = computed(() => {
-  const filterStrings = props.filter.split(/[\s,.]+/).map(filterStr => filterStr.toLowerCase());
+  const filterStrings = props.filter.split(/[\s,.]+/).map((filterStr) => filterStr.toLowerCase());
   return createRegexForFilter(filterStrings);
 });
 
-const hiddenUsers = computed(() => Object.entries(CostsState.users).filter(user => {
-  const value = user[1];
-  return value.hidden === false || (value.hidden === true && props.showHidden === true);
-}));
+const hiddenUsers = computed(() =>
+  Object.entries(CostsState.users).filter((user) => {
+    const value = user[1];
+    return value.hidden === false || (value.hidden === true && props.showHidden === true);
+  })
+);
 
 const filteredUsers = computed(() => {
   if (props.filter === '') {
-    return hiddenUsers.value
+    return hiddenUsers.value;
   }
 
-  return hiddenUsers.value.filter(user => {
+  return hiddenUsers.value.filter((user) => {
     const value = user[1];
     const searchStrings = [value.firstName, value.name].join(' ');
     return filterRegex.value.test(searchStrings);
@@ -78,8 +86,8 @@ function createRegexForFilter(filterStrings: string[]): RegExp {
   let regexStr = '';
 
   for (let i = 0; i < filterStrings.length - 1; i++) {
-    regexStr += `(${filterStrings[i]}.*${filterStrings[i+1]})?`;
-    regexStr += `(${filterStrings[i+1]}.*${filterStrings[i]})?`;
+    regexStr += `(${filterStrings[i]}.*${filterStrings[i + 1]})?`;
+    regexStr += `(${filterStrings[i + 1]}.*${filterStrings[i]})?`;
   }
   regexStr += `(${filterStrings.join('|')})`;
 

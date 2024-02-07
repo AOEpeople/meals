@@ -6,10 +6,7 @@ import useApi from './api';
  * @param slug The identifier of the category
  */
 export default async function deleteCategory(slug: string) {
-    const { error, request, response } = useApi<IMessage | null>(
-        'DELETE',
-        `api/categories/${slug}`
-    );
+    const { error, request, response } = useApi<IMessage | null>('DELETE', `api/categories/${slug}`);
 
     await request();
 

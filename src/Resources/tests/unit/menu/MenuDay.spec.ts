@@ -1,22 +1,22 @@
-import MenuDay from "@/components/menu/MenuDay.vue";
-import { mount } from "@vue/test-utils";
-import { DayDTO } from "@/interfaces/DayDTO";
-import { Ref, ref } from "vue";
-import useApi from "@/api/api";
-import Weeks from "../fixtures/getWeeks.json";
-import DishesCount from "../fixtures/dishesCount.json";
-import Dishes from "../fixtures/getDishes.json";
-import Categories from "../fixtures/getCategories.json";
-import { useDishes } from "@/stores/dishesStore";
-import { useCategories } from "@/stores/categoriesStore";
-import { useWeeks } from "@/stores/weeksStore";
+import MenuDay from '@/components/menu/MenuDay.vue';
+import { mount } from '@vue/test-utils';
+import { DayDTO } from '@/interfaces/DayDTO';
+import { Ref, ref } from 'vue';
+import useApi from '@/api/api';
+import Weeks from '../fixtures/getWeeks.json';
+import DishesCount from '../fixtures/dishesCount.json';
+import Dishes from '../fixtures/getDishes.json';
+import Categories from '../fixtures/getCategories.json';
+import { useDishes } from '@/stores/dishesStore';
+import { useCategories } from '@/stores/categoriesStore';
+import { useWeeks } from '@/stores/weeksStore';
 
 const { fetchCategories } = useCategories();
 const { fetchDishes } = useDishes();
 const { fetchWeeks } = useWeeks();
 
 const asyncFunc: () => Promise<void> = async () => {
-    new Promise(resolve => resolve(undefined));
+    new Promise((resolve) => resolve(undefined));
 };
 
 const getMockedResponses = (method: string, url: string) => {
@@ -25,39 +25,39 @@ const getMockedResponses = (method: string, url: string) => {
             response: ref(Weeks),
             request: asyncFunc,
             error: false
-        }
+        };
     } else if (url.includes('api/meals/count') && method === 'GET') {
         return {
             response: ref(DishesCount),
             request: asyncFunc,
             error: false
-        }
-    } else if (url.includes('api/weeks/') && (method === 'POST')) {
+        };
+    } else if (url.includes('api/weeks/') && method === 'POST') {
         return {
             response: ref(null),
             request: asyncFunc,
             error: ref(false)
-        }
+        };
     } else if (url.includes('api/menu/') && method === 'PUT') {
         return {
             response: ref(null),
             request: asyncFunc,
             error: ref(false)
-        }
+        };
     } else if (url.includes('api/dishes') && method === 'GET') {
         return {
             response: ref(Dishes),
             request: asyncFunc,
             error: ref(false)
-        }
+        };
     } else if (url.includes('api/categories') && method === 'GET') {
         return {
             response: ref(Categories),
             request: asyncFunc,
             error: ref(false)
-        }
+        };
     }
-}
+};
 
 // @ts-expect-error ts doesn't allow reassignig a import but we need that to mock that function
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -76,7 +76,6 @@ const testDay: Ref<DayDTO> = ref({
 });
 
 describe('Test MenuDay', () => {
-
     beforeEach(async () => {
         await fetchCategories();
         await fetchDishes();
@@ -92,5 +91,4 @@ describe('Test MenuDay', () => {
         expect(wrapper.text()).toMatch(/Mon/);
         expect(wrapper.text()).toMatch(/menu.enableDay/);
     });
-
 });

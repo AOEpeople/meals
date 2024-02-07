@@ -7,7 +7,7 @@
       alt="paypal"
       width="21"
       height="21"
-    >
+    />
 
     <svg
       v-if="props.transaction.type === 'credit' && description !== '0'"
@@ -79,9 +79,11 @@
     </svg>
     <span class="ml-2 text-[12px] sm:text-[14px] xl:text-[18px]">
       {{
-        props.transaction.type === 'credit' ?
-          (description === '0' ? t('balance.paypal') : t('balance.cash')) :
-          description
+        props.transaction.type === 'credit'
+          ? description === '0'
+            ? t('balance.paypal')
+            : t('balance.cash')
+          : description
       }}
     </span>
   </td>
@@ -89,18 +91,18 @@
 
 <script setup lang="ts">
 import { Transaction } from '@/api/getTransactionData';
-import {computed} from 'vue';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const props = defineProps<{
-  transaction: Transaction
+  transaction: Transaction;
 }>();
 
 const { t, locale } = useI18n();
 
-let description = computed(() => locale.value === 'en' ? props.transaction.description_en : props.transaction.description_de);
+let description = computed(() =>
+  locale.value === 'en' ? props.transaction.description_en : props.transaction.description_de
+);
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -2,12 +2,7 @@ import useApi from '@/api/api';
 import { ref } from 'vue';
 
 export async function useCancelOffer(data: string) {
-    const { request, response, error } = useApi(
-        'DELETE',
-        'api/meal/offer',
-        'application/json',
-        data,
-    );
+    const { request, response, error } = useApi('DELETE', 'api/meal/offer', 'application/json', data);
 
     const loaded = ref(false);
 
@@ -16,5 +11,5 @@ export async function useCancelOffer(data: string) {
         loaded.value = true;
     }
 
-    return { response, error }
+    return { response, error };
 }

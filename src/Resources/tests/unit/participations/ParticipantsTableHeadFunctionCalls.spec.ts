@@ -1,11 +1,10 @@
-import ParticipantsTableHead from "@/components/participations/ParticipantsTableHead.vue";
-import { nextTick, reactive } from "vue";
-import { describe, expect, it } from "@jest/globals";
-import { shallowMount } from "@vue/test-utils";
-
+import ParticipantsTableHead from '@/components/participations/ParticipantsTableHead.vue';
+import { nextTick, reactive } from 'vue';
+import { describe, expect, it } from '@jest/globals';
+import { shallowMount } from '@vue/test-utils';
 
 let mockedGetShowParticipations = jest.fn(() => []);
-const loadMock = reactive({ loaded: true })
+const loadMock = reactive({ loaded: true });
 jest.mock('@/api/getShowParticipations', () => ({
     getShowParticipations: () => ({
         loadedState: loadMock,
@@ -14,7 +13,6 @@ jest.mock('@/api/getShowParticipations', () => ({
 }));
 
 describe('Test function call of ParticipantsTableHead', () => {
-
     beforeEach(() => {
         mockedGetShowParticipations = jest.fn(() => []);
         loadMock.loaded = true;

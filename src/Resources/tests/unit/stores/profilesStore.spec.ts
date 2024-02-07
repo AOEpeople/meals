@@ -1,13 +1,13 @@
-import { useProfiles } from "@/stores/profilesStore";
-import useApi from "@/api/api";
-import { ref } from "vue";
+import { useProfiles } from '@/stores/profilesStore';
+import useApi from '@/api/api';
+import { ref } from 'vue';
 import Profiles from '../fixtures/abstaining.json';
 import HashedProfile from '../fixtures/hashProfile.json';
 
 const WEEK_ID = 123;
 
 const asyncFunc: () => Promise<void> = async () => {
-    new Promise(resolve => resolve(undefined));
+    new Promise((resolve) => resolve(undefined));
 };
 
 const getMockedResponses = (method: string, url: string) => {
@@ -16,15 +16,15 @@ const getMockedResponses = (method: string, url: string) => {
             response: ref(Profiles),
             request: asyncFunc,
             error: ref(false)
-        }
+        };
     } else if (/api\/costs\/profile\/[a-zA-Z0-9]+/) {
         return {
             response: ref(HashedProfile.profile),
             request: asyncFunc,
             error: ref(false)
-        }
+        };
     }
-}
+};
 
 // @ts-expect-error ts doesn't allow reassignig a import but we need that to mock that function
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

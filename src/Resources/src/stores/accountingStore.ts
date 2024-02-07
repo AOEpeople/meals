@@ -6,27 +6,28 @@ import useFlashMessage from '@/services/useFlashMessage';
 import { FlashMessageType } from '@/enums/FlashMessage';
 
 export interface IUserTransaction {
-    firstName: string,
-    name: string,
-    amount: string,
-    paymethod: string | null
+    firstName: string;
+    name: string;
+    amount: string;
+    paymethod: string | null;
 }
 
 export interface ITransactionHistory {
-    lastMonth: string,
-    thisMonth: string,
-    usersLastMonth: Dictionary<IUserTransaction>,
-    usersThisMonth: Dictionary<IUserTransaction>
+    lastMonth: string;
+    thisMonth: string;
+    usersLastMonth: Dictionary<IUserTransaction>;
+    usersThisMonth: Dictionary<IUserTransaction>;
 }
 
 interface ITransactionHistoryState {
-    transactions: ITransactionHistory,
-    error: string,
-    isLoading: boolean
+    transactions: ITransactionHistory;
+    error: string;
+    isLoading: boolean;
 }
 
 function isTransactionHistory(transactionHistory: ITransactionHistory): transactionHistory is ITransactionHistory {
-    if (transactionHistory.usersLastMonth !== null &&
+    if (
+        transactionHistory.usersLastMonth !== null &&
         transactionHistory.usersLastMonth !== undefined &&
         transactionHistory.usersThisMonth !== null &&
         transactionHistory.usersThisMonth !== undefined
@@ -35,8 +36,10 @@ function isTransactionHistory(transactionHistory: ITransactionHistory): transact
         const thisMonth = Object.values(transactionHistory.usersThisMonth)[0];
 
         return (
-            lastMonth !== null && lastMonth !== undefined &&
-            thisMonth !== null && thisMonth !== undefined &&
+            lastMonth !== null &&
+            lastMonth !== undefined &&
+            thisMonth !== null &&
+            thisMonth !== undefined &&
             typeof (transactionHistory as ITransactionHistory).lastMonth === 'string' &&
             typeof (transactionHistory as ITransactionHistory).thisMonth === 'string' &&
             isUserTransaction(lastMonth) === true &&
@@ -59,7 +62,6 @@ function isUserTransaction(transaction: IUserTransaction): transaction is IUserT
 }
 
 export function useAccounting() {
-
     const TransactionState = reactive<ITransactionHistoryState>({
         transactions: undefined,
         error: '',
@@ -100,5 +102,5 @@ export function useAccounting() {
     return {
         TransactionState,
         fetchTransactionHistory
-    }
+    };
 }

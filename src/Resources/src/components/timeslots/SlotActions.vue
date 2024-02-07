@@ -56,12 +56,12 @@ const { changeDisabledState, deleteSlotWithSlug } = useTimeSlots();
 const { t } = useI18n();
 
 const props = defineProps<{
-  timeSlot: TimeSlot,
-  timeSlotId: number
+  timeSlot: TimeSlot;
+  timeSlotId: number;
 }>();
 
 const initial = ref(props.timeSlot.enabled);
-const enabled = ref(initial.value)
+const enabled = ref(initial.value);
 
 watch(enabled, async () => {
   await changeDisabledState(props.timeSlotId, enabled.value);

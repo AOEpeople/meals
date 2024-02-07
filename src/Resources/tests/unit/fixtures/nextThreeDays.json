@@ -13,20 +13,11 @@
       ]
     },
     "2023-05-11": {
-      "en": [
-        "Braaaaaiiinnnzzzzzz",
-        "Fish (so juicy sweat)"
-      ],
-      "de": [
-        "Braaaaaiiinnnzzzzzz DE",
-        "Fish (so juicy sweat) DE"
-      ]
+      "en": ["Braaaaaiiinnnzzzzzz", "Fish (so juicy sweat)"],
+      "de": ["Braaaaaiiinnnzzzzzz DE", "Fish (so juicy sweat) DE"]
     },
     "2023-05-12": {
-      "en": [
-        "Braaaaaiiinnnzzzzzz",
-        "Limbs oh la la la (oven backed) + Finger food with a slimy sweet and sour sauce"
-      ],
+      "en": ["Braaaaaiiinnnzzzzzz", "Limbs oh la la la (oven backed) + Finger food with a slimy sweet and sour sauce"],
       "de": [
         "Braaaaaiiinnnzzzzzz DE",
         "Limbs oh la la la (Ofen gebacken) + Finger food mit einer schlammigen Süß-Sauer-Soße"
@@ -35,28 +26,16 @@
   },
   "dataTwo": {
     "2023-05-12": {
-      "en": [
-        "Menü Surprise also for Take Away"
-      ],
-      "de": [
-        "Überraschungsessen auch zum mitnehmen"
-      ]
+      "en": ["Menü Surprise also for Take Away"],
+      "de": ["Überraschungsessen auch zum mitnehmen"]
     },
     "2023-05-15": {
       "en": [],
       "de": []
     },
     "2023-05-16": {
-      "en": [
-        "Tortellini with a tomato-ricotta-Sauce",
-        "Pasta with salmon",
-        "Combined Dish"
-      ],
-      "de": [
-        "Tortellini mit einer Tomaten-Ricotta - Sauce",
-        "Nudeln mit Lachs",
-        "Kombi-Gericht"
-      ]
+      "en": ["Tortellini with a tomato-ricotta-Sauce", "Pasta with salmon", "Combined Dish"],
+      "de": ["Tortellini mit einer Tomaten-Ricotta - Sauce", "Nudeln mit Lachs", "Kombi-Gericht"]
     }
   }
 }

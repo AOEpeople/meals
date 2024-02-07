@@ -13,6 +13,6 @@
 import { RefreshIcon } from '@heroicons/vue/outline';
 
 defineProps<{
-  loaded: boolean
+  loaded: boolean;
 }>();
 </script>

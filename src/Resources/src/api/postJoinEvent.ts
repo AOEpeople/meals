@@ -2,10 +2,10 @@ import useApi from '@/api/api';
 import { IMessage } from '@/interfaces/IMessage';
 
 export interface EventParticipationResponse {
-    eventId: number,
-    participationId: number,
-    participations: number,
-    isParticipating: boolean
+    eventId: number;
+    participationId: number;
+    participations: number;
+    isParticipating: boolean;
 }
 
 export default async function postJoinEvent(date: string) {

@@ -10,7 +10,7 @@
     >
       <ListboxButton
         class="relative w-full border-[#CAD6E1] bg-white px-4 py-2 text-center text-[14px] font-medium text-[#9CA3AF] focus:outline-none"
-        :class="open ? 'rounded-t-[23px] border-x-2 border-t-2 border-b-[1px]' : 'rounded-full border-2'"
+        :class="open ? 'rounded-t-[23px] border-x-2 border-b-[1px] border-t-2' : 'rounded-full border-2'"
       >
         Variation
       </ListboxButton>
@@ -29,9 +29,7 @@
             class="grid size-full grid-cols-[minmax(0,1fr)_24px]"
             :class="selected ? 'bg-[#F4F4F4] font-medium' : 'font-normal'"
           >
-            <span
-              class="col-start-1 inline-block size-full truncate px-4 py-2"
-            >
+            <span class="col-start-1 inline-block size-full truncate px-4 py-2">
               {{ locale === 'en' ? variation.titleEn : variation.titleDe }}
             </span>
             <div
@@ -58,13 +56,16 @@ import { useWeeks } from '@/stores/weeksStore';
 const { MenuCountState } = useWeeks();
 const { locale } = useI18n();
 
-const props = withDefaults(defineProps<{
-  modelValue: Dish[] | null;
-  dish: Dish;
-}>(), {
-  modelValue: null,
-  dish: null
-});
+const props = withDefaults(
+  defineProps<{
+    modelValue: Dish[] | null;
+    dish: Dish;
+  }>(),
+  {
+    modelValue: null,
+    dish: null
+  }
+);
 
 const emit = defineEmits(['update:modelValue']);
 

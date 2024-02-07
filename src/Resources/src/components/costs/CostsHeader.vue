@@ -1,6 +1,10 @@
 <template>
-  <div class="mb-8 grid w-full grid-cols-3 gap-6 sm:grid-rows-[minmax(0,1fr)_minmax(0,1fr)] min-[900px]:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-    <h2 class="col-span-3 col-start-1 row-span-1 row-start-1 m-0 w-full self-center justify-self-start max-[380px]:text-[24px] min-[900px]:col-span-1">
+  <div
+    class="mb-8 grid w-full grid-cols-3 gap-6 sm:grid-rows-[minmax(0,1fr)_minmax(0,1fr)] min-[900px]:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]"
+  >
+    <h2
+      class="col-span-3 col-start-1 row-span-1 row-start-1 m-0 w-full self-center justify-self-start max-[380px]:text-[24px] min-[900px]:col-span-1"
+    >
       {{ t('costs.header') }}
     </h2>
     <InputLabel
@@ -44,8 +48,8 @@ import { userDataStore } from '@/stores/userDataStore';
 const { t } = useI18n();
 
 const props = defineProps<{
-  modelValue: string,
-  showHidden: boolean
+  modelValue: string;
+  showHidden: boolean;
 }>();
 
 const emit = defineEmits(['update:modelValue', 'change:showHidden']);
@@ -57,5 +61,5 @@ const filter = computed({
   set(filter) {
     emit('update:modelValue', filter);
   }
-})
+});
 </script>

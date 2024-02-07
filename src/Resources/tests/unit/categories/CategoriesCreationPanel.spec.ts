@@ -1,8 +1,8 @@
-import { describe, expect, it } from "@jest/globals";
-import CategoriesCreationPanel from "@/components/categories/CategoriesCreationPanel.vue";
-import { mount } from "@vue/test-utils";
-import InputLabel from "@/components/misc/InputLabel.vue";
-import SubmitButton from "@/components/misc/SubmitButton.vue";
+import { describe, expect, it } from '@jest/globals';
+import CategoriesCreationPanel from '@/components/categories/CategoriesCreationPanel.vue';
+import { mount } from '@vue/test-utils';
+import InputLabel from '@/components/misc/InputLabel.vue';
+import SubmitButton from '@/components/misc/SubmitButton.vue';
 
 describe('Test CategoriesCrearionPanel', () => {
     it('should contain a header, two InputLabel-components and a submit input', () => {
@@ -25,7 +25,7 @@ describe('Test CategoriesCrearionPanel', () => {
         });
 
         expect(wrapper.find('h3').text()).toMatch(/category.popover.create/);
-        const labels = wrapper.findAll('label').map(ele => ele.text());
+        const labels = wrapper.findAll('label').map((ele) => ele.text());
         expect(labels).toContain('category.popover.german');
         expect(labels).toContain('category.popover.english');
     });
@@ -41,7 +41,7 @@ describe('Test CategoriesCrearionPanel', () => {
         });
 
         expect(wrapper.find('h3').text()).toMatch(/category.popover.edit/);
-        const inputs = wrapper.findAll('input').map(ele => ele.element.value);
+        const inputs = wrapper.findAll('input').map((ele) => ele.element.value);
         expect(inputs).toContain('TestDe123');
         expect(inputs).toContain('TestEn123');
     });

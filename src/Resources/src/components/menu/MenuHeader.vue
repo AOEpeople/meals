@@ -1,7 +1,11 @@
 <template>
-  <div class="mb-8 grid w-full grid-cols-3 gap-3 sm:grid-rows-[minmax(0,1fr)_30px] min-[900px]:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] min-[900px]:gap-1">
-    <h2 class="col-span-3 col-start-1 row-span-1 row-start-1 m-0 w-full self-center justify-self-start max-[380px]:text-[24px] min-[900px]:col-span-1">
-      {{ `${ t('menu.header')} #${calendarWeek} (${getFormattedDateRange()})` }}
+  <div
+    class="mb-8 grid w-full grid-cols-3 gap-3 sm:grid-rows-[minmax(0,1fr)_30px] min-[900px]:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] min-[900px]:gap-1"
+  >
+    <h2
+      class="col-span-3 col-start-1 row-span-1 row-start-1 m-0 w-full self-center justify-self-start max-[380px]:text-[24px] min-[900px]:col-span-1"
+    >
+      {{ `${t('menu.header')} #${calendarWeek} (${getFormattedDateRange()})` }}
     </h2>
     <ParticipantsLink
       v-if="create === false"
@@ -29,10 +33,10 @@ import ParticipantsLink from '@/components/menu/ParticipantsLink.vue';
 const { t, locale } = useI18n();
 
 const props = defineProps<{
-  week: WeekDTO,
-  dateRange: Date[],
-  calendarWeek: number,
-  create: boolean
+  week: WeekDTO;
+  dateRange: Date[];
+  calendarWeek: number;
+  create: boolean;
 }>();
 
 function getFormattedDateRange() {

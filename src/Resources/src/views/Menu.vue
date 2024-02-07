@@ -15,21 +15,15 @@
       v-model="menu.days[index]"
       class="mt-4"
     />
-    <LoadingSpinner
-      :loaded="loaded"
-    />
+    <LoadingSpinner :loaded="loaded" />
     <div class="mt-4 grid w-full grid-cols-2 items-center">
       <router-link
         to="/weeks"
         class="col-span-1 col-start-1 flex items-center justify-center"
       >
-        <CancelButton
-          :btn-text="t('button.cancel')"
-        />
+        <CancelButton :btn-text="t('button.cancel')" />
       </router-link>
-      <SubmitButton
-        class="col-span-1 col-start-2 m-0"
-      />
+      <SubmitButton class="col-span-1 col-start-2 m-0" />
     </div>
   </form>
 </template>
@@ -68,13 +62,15 @@ const { t } = useI18n();
 const router = useRouter();
 const { fetchEvents } = useEvents();
 
-
-const props = withDefaults(defineProps<{
-  week: string,
-  create?: string | null
-}>(), {
-  create: null
-});
+const props = withDefaults(
+  defineProps<{
+    week: string;
+    create?: string | null;
+  }>(),
+  {
+    create: null
+  }
+);
 
 const parseWeekId = ref(parseInt(props.week));
 const loaded = ref(false);
@@ -84,7 +80,8 @@ watch(
   () => {
     parseWeekId.value = parseInt(props.week);
     menu.id = parseWeekId.value;
-});
+  }
+);
 
 const menu = reactive<WeekDTO>({
   id: parseWeekId.value,
@@ -129,7 +126,7 @@ async function handleSubmit() {
     setUpDaysAndEnabled();
   } else {
     const weekId = await createWeek(getWeekByCalendarWeek(calendarWeek.value).year, calendarWeek.value, menu);
-    if (typeof(weekId) === 'number') {
+    if (typeof weekId === 'number') {
       parseWeekId.value = weekId;
       await router.push({ name: 'Menu', params: { week: weekId, create: null }, force: true, replace: true });
       await setUpDaysAndEnabled();
@@ -139,9 +136,12 @@ async function handleSubmit() {
 }
 
 async function setUpDaysAndEnabled() {
-  const week = (props.create === null || props.create !== 'create') ? getWeekById(parseWeekId.value) : getWeekByCalendarWeek(parseWeekId.value);
+  const week =
+    props.create === null || props.create !== 'create'
+      ? getWeekById(parseWeekId.value)
+      : getWeekByCalendarWeek(parseWeekId.value);
   const dayKeys = Object.keys(week.days);
-  menu.days = dayKeys.map(dayId => {
+  menu.days = dayKeys.map((dayId) => {
     if (props.create === null || props.create !== 'create') {
       return getMenuDay(dayId, menu.id);
     } else {

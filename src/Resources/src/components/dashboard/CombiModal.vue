@@ -31,7 +31,9 @@
             leave-from="opacity-100 translate-y-0 sm:scale-100"
             leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
-            <DialogPanel class="relative overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:p-6">
+            <DialogPanel
+              class="relative overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:p-6"
+            >
               <div>
                 <div class="mt-3 sm:mt-5">
                   <DialogTitle
@@ -86,43 +88,42 @@
 <script setup lang="ts">
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue';
 import CombiButtonGroup from '@/components/dashboard/CombiButtonGroup.vue';
-import {dashboardStore} from '@/stores/dashboardStore';
-import {computed, ref} from 'vue';
+import { dashboardStore } from '@/stores/dashboardStore';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Meal } from '@/api/getDashboardData';
 import { Dictionary } from 'types/types';
 
 const props = defineProps<{
-  open: boolean,
-  weekID?: number | string,
-  dayID?: number | string,
-  meals: Dictionary<Meal>
+  open: boolean;
+  weekID?: number | string;
+  dayID?: number | string;
+  meals: Dictionary<Meal>;
 }>();
 
-const { t } = useI18n()
-const emit = defineEmits(['closeCombiModal'])
-const meals = props.meals ? props.meals : dashboardStore.getMeals(props.weekID, props.dayID)
-let keys = Object.keys(meals).filter(mealID => meals[mealID].dishSlug !== 'combined-dish')
+const { t } = useI18n();
+const emit = defineEmits(['closeCombiModal']);
+const meals = props.meals ? props.meals : dashboardStore.getMeals(props.weekID, props.dayID);
+let keys = Object.keys(meals).filter((mealID) => meals[mealID].dishSlug !== 'combined-dish');
 const slugs = ref<string[]>([]);
-const bookingDisabled = computed(() => slugs.value.length < 2)
+const bookingDisabled = computed(() => slugs.value.length < 2);
 
 function resolveModal(mode: string) {
   if (mode === 'cancel') {
-    slugs.value = []
-    emit('closeCombiModal')
+    slugs.value = [];
+    emit('closeCombiModal');
   }
   if (mode === 'book') {
-    emit('closeCombiModal', slugs.value)
-    slugs.value = []
+    emit('closeCombiModal', slugs.value);
+    slugs.value = [];
   }
 }
 
 function removeEntry(slug: string) {
-  slugs.value = slugs.value.filter(entry => entry !== slug)
+  slugs.value = slugs.value.filter((entry) => entry !== slug);
 }
 
 function addEntry(slug: string) {
-  slugs.value.push(slug)
+  slugs.value.push(slug);
 }
-
 </script>

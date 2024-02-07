@@ -22,7 +22,13 @@
       >
         <td>
           <span class="text-[12px] xl:text-[18px]">
-            {{ new Date(transaction.date.date).toLocaleDateString(locale, { month: 'long', day: 'numeric', year: 'numeric' }) }}
+            {{
+              new Date(transaction.date.date).toLocaleDateString(locale, {
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric'
+              })
+            }}
           </span>
         </td>
         <td class="flex">
@@ -30,8 +36,11 @@
         </td>
         <td :class="[transaction.type === 'credit' ? 'text-green' : 'text-red', 'text-right']">
           <span class="whitespace-nowrap text-[14px] xl:text-[18px]">
-            {{ (transaction.type === 'credit' ? '+ ' : '- ') +
-              (locale === 'en' ? transaction.amount.toFixed(2) : transaction.amount.toFixed(2).replace(/\./g, ',')) }} €
+            {{
+              (transaction.type === 'credit' ? '+ ' : '- ') +
+              (locale === 'en' ? transaction.amount.toFixed(2) : transaction.amount.toFixed(2).replace(/\./g, ','))
+            }}
+            €
           </span>
         </td>
       </tr>
@@ -53,10 +62,10 @@ import Table from '@/components/misc/Table.vue';
 import BalanceDesc from '@/components/balance/BalanceDesc.vue';
 import BalanceHeader from '@/components/balance/BalanceHeader.vue';
 import { useI18n } from 'vue-i18n';
-import {useProgress} from '@marcoschulte/vue3-progress';
-import {transactionStore} from '@/stores/transactionStore';
+import { useProgress } from '@marcoschulte/vue3-progress';
+import { transactionStore } from '@/stores/transactionStore';
 import { computed } from 'vue';
-import {userDataStore} from '@/stores/userDataStore';
+import { userDataStore } from '@/stores/userDataStore';
 
 const progress = useProgress().start();
 
@@ -68,14 +77,14 @@ const balance = computed(() => userDataStore.getState().balance);
 const balanceString = computed(() => userDataStore.balanceToLocalString(locale.value));
 const oldBalance = computed(() => balance.value - transactions.value.difference);
 const oldBalanceString = computed(() =>
-    locale.value === 'en'
-        ? oldBalance.value.toFixed(2)
-        : oldBalance.value.toFixed(2).replace(/\./g, ',')
-)
+  locale.value === 'en' ? oldBalance.value.toFixed(2) : oldBalance.value.toFixed(2).replace(/\./g, ',')
+);
 
 let oldDate = new Date();
 oldDate.setDate(oldDate.getDate() - 28);
-const oldDateString = computed(() => oldDate.toLocaleDateString(locale.value, { month: 'long', day: 'numeric', year: 'numeric' }));
+const oldDateString = computed(() =>
+  oldDate.toLocaleDateString(locale.value, { month: 'long', day: 'numeric', year: 'numeric' })
+);
 
 progress.finish();
 </script>

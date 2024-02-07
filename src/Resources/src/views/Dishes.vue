@@ -8,14 +8,14 @@
       <DishTableRow
         v-for="(dish, index) in filteredDishes"
         :key="index"
-        :dish="// @ts-ignore
-          (dish as Dish)"
+        :dish="
+          // @ts-ignore
+          dish as Dish
+        "
         :index-in-list="index"
       />
     </Table>
-    <LoadingSpinner
-      :loaded="loaded"
-    />
+    <LoadingSpinner :loaded="loaded" />
   </div>
 </template>
 

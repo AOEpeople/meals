@@ -39,7 +39,11 @@ export function isResponseArrayOkay<T>(error: Ref<boolean>, response: Ref<T[]>, 
  * @param response      Ref with the response dictionary from the API call
  * @param typeChecker   Callback function to check the type of the response dictionary
  */
-export function isResponseDictOkay<T>(error: Ref<boolean>, response: Ref<Record<number | string, T>>, typeChecker?: (arg: T) => boolean) {
+export function isResponseDictOkay<T>(
+    error: Ref<boolean>,
+    response: Ref<Record<number | string, T>>,
+    typeChecker?: (arg: T) => boolean
+) {
     return (
         error.value === false &&
         response.value !== null &&
@@ -51,26 +55,22 @@ export function isResponseDictOkay<T>(error: Ref<boolean>, response: Ref<Record<
 function checkArray<T>(response: Ref<T[]>, typeChecker?: (arg: T) => boolean) {
     return (
         Array.isArray(response.value) &&
-        (
-            response.value.length > 0 ?
-            (typeof typeChecker === 'function' && typeChecker !== null && typeChecker !== undefined ? typeChecker(response.value[0]) : true) :
-            true
-        )
-    )
+        (response.value.length > 0
+            ? typeof typeChecker === 'function' && typeChecker !== null && typeChecker !== undefined
+                ? typeChecker(response.value[0])
+                : true
+            : true)
+    );
 }
 
 function checkObject<T>(response: Ref<T>, typeChecker?: (arg: T) => boolean) {
-    return (
-        typeof typeChecker === 'function' && typeChecker !== null && typeChecker !== undefined ?
-            typeChecker(response.value) :
-            true
-    )
+    return typeof typeChecker === 'function' && typeChecker !== null && typeChecker !== undefined
+        ? typeChecker(response.value)
+        : true;
 }
 
 function checkDict<T>(response: Ref<Record<number | string, T>>, typeChecker?: (arg: T) => boolean) {
-    return (
-        typeof typeChecker === 'function' && typeChecker !== null && typeChecker !== undefined ?
-            typeChecker(response.value[Object.keys(response.value)[0]]) :
-            true
-    )
+    return typeof typeChecker === 'function' && typeChecker !== null && typeChecker !== undefined
+        ? typeChecker(response.value[Object.keys(response.value)[0]])
+        : true;
 }

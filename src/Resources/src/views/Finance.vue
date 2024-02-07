@@ -6,7 +6,7 @@
   >
     <FinanceHeader
       :date-range="finance.heading"
-      :show-controls="index===0"
+      :show-controls="index === 0"
       @date-changed="handleDateChange"
       @generate-pdf="download()"
     />
@@ -33,14 +33,14 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, ref} from 'vue';
+import { onMounted, ref } from 'vue';
 import FinanceTable from '@/components/finance/FinanceTable.vue';
-import {useFinances} from '@/stores/financesStore';
+import { useFinances } from '@/stores/financesStore';
 import FinanceHeader from '@/components/finance/FinanceHeader.vue';
 import Vue3Html2pdf from 'vue3-html2pdf';
 import FinancePdfTemplate from '@/components/finance/FinancePdfTemplate.vue';
 
-const {fetchFinances, FinancesState} = useFinances();
+const { fetchFinances, FinancesState } = useFinances();
 const loaded = ref(false);
 
 const html2pdf = ref(null);
@@ -48,11 +48,11 @@ const html2pdf = ref(null);
 onMounted(async () => {
   await fetchFinances();
   loaded.value = true;
-})
+});
 
 const handleDateChange = (modelData: Date[]) => {
   fetchFinances(modelData);
-}
+};
 
 function download() {
   if (html2pdf.value) {

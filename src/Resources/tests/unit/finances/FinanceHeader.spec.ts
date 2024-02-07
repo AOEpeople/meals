@@ -10,7 +10,7 @@ describe('Test FinanceHeader (with controls)', () => {
     const wrapper = mount(FinanceHeader, {
         props: {
             dateRange: '01.09.-10.09.2023',
-            showControls: true,
+            showControls: true
         }
     });
 
@@ -24,7 +24,7 @@ describe('Test FinanceHeader (without controls)', () => {
     const wrapper = mount(FinanceHeader, {
         props: {
             dateRange: '01.09.-10.09.2023',
-            showControls: false,
+            showControls: false
         }
     });
 

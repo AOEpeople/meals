@@ -2,14 +2,13 @@ import WeekOverview from '@/components/weeks/WeekOverview.vue';
 import { Week } from '@/stores/weeksStore';
 import { mount } from '@vue/test-utils';
 
-
 const weekOne: Week = {
     id: 57,
     year: 2023,
     calendarWeek: 27,
     days: {},
     enabled: true
-}
+};
 
 const weekTwo: Week = {
     id: null,
@@ -17,7 +16,7 @@ const weekTwo: Week = {
     calendarWeek: 0,
     days: {},
     enabled: false
-}
+};
 
 describe('Test WeekOverview', () => {
     it('should render the PlusCircleIcon if week is null', () => {

@@ -1,10 +1,10 @@
-import { dashboardStore } from "@/stores/dashboardStore";
-import useApi from "@/api/api";
-import dashboardData from "../fixtures/getDashboard.json";
-import { ref } from "vue";
+import { dashboardStore } from '@/stores/dashboardStore';
+import useApi from '@/api/api';
+import dashboardData from '../fixtures/getDashboard.json';
+import { ref } from 'vue';
 
 const asyncFunc: () => Promise<void> = async () => {
-    new Promise(resolve => resolve(undefined));
+    new Promise((resolve) => resolve(undefined));
 };
 
 const getMockedResponses = (method: string, url: string) => {
@@ -13,9 +13,9 @@ const getMockedResponses = (method: string, url: string) => {
             response: ref(dashboardData),
             request: asyncFunc,
             error: ref(false)
-        }
+        };
     }
-}
+};
 
 // @ts-expect-error ts doesn't allow reassignig a import but we need that to mock that function
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -43,7 +43,9 @@ describe('Test dashboardStore', () => {
         for (let i = 0; i < Object.keys(dashboardData.weeks).length; i++) {
             const dayIds = Object.keys(dashboardData.weeks[weekIds[i]].days);
             for (let j = 0; j < Object.keys(dashboardData.weeks[weekIds[i]].days).length; j++) {
-                expect(dashboardStore.getDay(weekIds[i], dayIds[j])).toEqual(dashboardData.weeks[weekIds[i]].days[dayIds[j]]);
+                expect(dashboardStore.getDay(weekIds[i], dayIds[j])).toEqual(
+                    dashboardData.weeks[weekIds[i]].days[dayIds[j]]
+                );
             }
         }
     });

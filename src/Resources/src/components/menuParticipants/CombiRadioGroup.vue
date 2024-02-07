@@ -14,9 +14,7 @@
         class="m-2 flex w-full cursor-pointer flex-row gap-2 rounded-md border-2 border-transparent bg-white p-2 ring-2 focus:outline-none"
         :class="checked ? 'ring-indigo-600' : 'ring-gray-300 hover:bg-[#f4f7f9]'"
       >
-        <span
-          class="grow-[1] self-start justify-self-center text-primary"
-        >
+        <span class="grow-[1] self-start justify-self-center text-primary">
           {{ locale === 'en' ? getDishBySlug(meal.dishSlug).titleEn : getDishBySlug(meal.dishSlug).titleDe }}
         </span>
         <CheckCircleIcon
@@ -40,11 +38,11 @@ const { getDishBySlug } = useDishes();
 const { locale } = useI18n();
 
 const props = defineProps<{
-  modelValue: number,
-  meals: MealDTO[]
+  modelValue: number;
+  meals: MealDTO[];
 }>();
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue']);
 
 const mealId = computed({
   get() {

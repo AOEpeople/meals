@@ -39,20 +39,23 @@ import { ref } from 'vue';
 const { t } = useI18n();
 const { createSlot, editSlot } = useTimeSlots();
 
-const props = withDefaults(defineProps<{
-  header: string,
-  title?: string,
-  limit?: string,
-  order?: string,
-  submit: string,
-  edit?: boolean,
-  id: number | undefined,
-}>(),{
-  title: '',
-  limit: '0',
-  order: '0',
-  edit: false
-});
+const props = withDefaults(
+  defineProps<{
+    header: string;
+    title?: string;
+    limit?: string;
+    order?: string;
+    submit: string;
+    edit?: boolean;
+    id: number | undefined;
+  }>(),
+  {
+    title: '',
+    limit: '0',
+    order: '0',
+    edit: false
+  }
+);
 
 const titleInput = ref(props.title);
 const limitInput = ref(props.limit);
@@ -70,7 +73,7 @@ async function onSubmit() {
     order: parseInt(orderInput.value),
     enabled: true,
     slug: null
-  }
+  };
   if (props.edit === true && props.id !== undefined) {
     await editSlot(props.id, timeSlot);
   } else {

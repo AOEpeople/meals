@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="grid w-full grid-cols-[50px_minmax(0,1fr)]"
-  >
+  <div class="grid w-full grid-cols-[50px_minmax(0,1fr)]">
     <div
       class="col-start-1 m-auto size-fit rounded-full border-2 border-solid border-white p-2"
       :class="message.type !== FlashMessageType.INFO ? 'bg-[#E02927]' : 'bg-[#51B848]'"
@@ -17,9 +15,7 @@
         !
       </div>
     </div>
-    <p
-      class="col-start-2 m-auto self-center text-center"
-    >
+    <p class="col-start-2 m-auto self-center text-center">
       {{ messageToShow }}
     </p>
   </div>
@@ -33,7 +29,7 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const props = defineProps<{
-  message: FlashMessage
+  message: FlashMessage;
 }>();
 
 const { t } = useI18n();

@@ -1,8 +1,8 @@
-import { isResponseObjectOkay, isResponseArrayOkay, isResponseDictOkay } from "@/api/isResponseOkay";
-import { ref } from "vue";
-import { IMessage, isMessage } from "@/interfaces/IMessage";
-import { Dictionary } from "types/types";
-import { TimeSlot, isTimeSlot } from "@/stores/timeSlotStore";
+import { isResponseObjectOkay, isResponseArrayOkay, isResponseDictOkay } from '@/api/isResponseOkay';
+import { ref } from 'vue';
+import { IMessage, isMessage } from '@/interfaces/IMessage';
+import { Dictionary } from 'types/types';
+import { TimeSlot, isTimeSlot } from '@/stores/timeSlotStore';
 
 describe('Test isResponseOkay', () => {
     it('should return true if the response is defined, not null and there are no errors', () => {
@@ -42,7 +42,7 @@ describe('Test isResponseOkay', () => {
     it('should accept a callback to check for a specific type', () => {
         const msg: IMessage = {
             message: 'TestString123'
-        }
+        };
 
         const response = ref<IMessage>(msg);
         const error = ref(false);
@@ -50,10 +50,7 @@ describe('Test isResponseOkay', () => {
     });
 
     it('should accept a callback and check for an array', () => {
-        const msgs: IMessage[] = [
-            { message: 'testmsg1' },
-            { message: 'testmsg2' }
-        ];
+        const msgs: IMessage[] = [{ message: 'testmsg1' }, { message: 'testmsg2' }];
 
         const response = ref<IMessage[]>(msgs);
         const error = ref(false);
@@ -91,11 +88,11 @@ describe('Test isResponseOkay', () => {
 
     it('should accept a timeslot object', () => {
         const slot: TimeSlot = {
-            title: "Test",
+            title: 'Test',
             limit: 9,
             order: 1,
             enabled: true,
-            slug: "test"
+            slug: 'test'
         };
 
         const response = ref<TimeSlot>(slot);

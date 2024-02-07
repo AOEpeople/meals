@@ -13,16 +13,14 @@
       <template #button="{ open }">
         <CreateButton
           :open="open"
-          :btn-text="`+ ${ t('dish.create') }`"
+          :btn-text="`+ ${t('dish.create')}`"
         />
       </template>
       <template #panel="{ close }">
         <DishesCreationPanel />
       </template>
     </Popover>
-    <DishesSearchBar
-      class="row-span-1 row-start-3 md:col-start-1 md:row-start-2 md:justify-self-start"
-    />
+    <DishesSearchBar class="row-span-1 row-start-3 md:col-start-1 md:row-start-2 md:justify-self-start" />
   </div>
 </template>
 

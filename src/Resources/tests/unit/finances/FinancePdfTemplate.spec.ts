@@ -1,13 +1,13 @@
-import FinancePdfTemplate from "@/components/finance/FinancePdfTemplate.vue";
+import FinancePdfTemplate from '@/components/finance/FinancePdfTemplate.vue';
 import FinancesFixture from '../fixtures/finances.json';
-import FinanceTable from "@/components/finance/FinanceTable.vue";
-import { mount } from "@vue/test-utils";
-import { Finances, useFinances } from "@/stores/financesStore";
+import FinanceTable from '@/components/finance/FinanceTable.vue';
+import { mount } from '@vue/test-utils';
+import { Finances, useFinances } from '@/stores/financesStore';
 import useApi from '@/api/api';
-import { ref } from "vue";
+import { ref } from 'vue';
 
 const asyncFunc: () => Promise<void> = async () => {
-    new Promise(resolve => resolve(undefined));
+    new Promise((resolve) => resolve(undefined));
 };
 
 const mockedReturnValue = {
@@ -22,11 +22,10 @@ useApi.mockImplementation(() => mockedReturnValue);
 
 describe('Test FinancePdfTemplate', () => {
     it('should not render anything when finances.transactions are not defined', () => {
-
         const financeEmpty: Finances = {
             heading: 'Test1234',
             transactions: undefined
-        }
+        };
 
         const wrapper = mount(FinancePdfTemplate, {
             props: {

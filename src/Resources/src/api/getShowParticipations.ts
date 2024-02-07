@@ -11,43 +11,43 @@ const PERIODIC_TIMEOUT = 60000;
 const REFETCH_TIME_ON_ERROR = 10000;
 
 export interface IParticipationsState {
-    data: Dictionary<Dictionary<IBookedData>>,
-    meals: Dictionary<IMealData>,
-    event: IEventParticipations,
-    day: DateTime
+    data: Dictionary<Dictionary<IBookedData>>;
+    meals: Dictionary<IMealData>;
+    event: IEventParticipations;
+    day: DateTime;
 }
 
 export interface IBookedData {
-    booked: number[]
+    booked: number[];
 }
 
 export interface IEventParticipations {
-    name: string,
-    participants: string[]
+    name: string;
+    participants: string[];
 }
 
 export interface IMealData {
     title: {
-        en: string,
-        de: string
-    },
-    parent?: number | null,
-    participations?: number
+        en: string;
+        de: string;
+    };
+    parent?: number | null;
+    participations?: number;
 }
 
 interface ILoadedState {
-    loaded: boolean,
-    error: string
+    loaded: boolean;
+    error: string;
 }
 
 export interface IMealWithVariations {
     title: {
-        en: string,
-        de: string
-    },
-    variations: IMealWithVariations[],
-    participations: number,
-    mealId: number
+        en: string;
+        de: string;
+    };
+    variations: IMealWithVariations[];
+    participations: number;
+    mealId: number;
 }
 
 /**
@@ -79,10 +79,7 @@ const loadedState = reactive<ILoadedState>({
  * Function performs a GET request to '/api/print/participations' and sets the IParticipationsState accordingly
  */
 async function fetchParticipations() {
-    const { response: listData, request, error } = useApi<IParticipationsState>(
-        'GET',
-        '/api/print/participations',
-    );
+    const { response: listData, request, error } = useApi<IParticipationsState>('GET', '/api/print/participations');
 
     await request();
     if (listData.value !== null && listData.value !== undefined && error.value === false) {
@@ -103,7 +100,6 @@ async function fetchParticipations() {
 const { periodicFetchActive } = usePeriodicFetch(PERIODIC_TIMEOUT, fetchParticipations);
 
 export function getShowParticipations() {
-
     /**
      * Activates the periodic fetching of participations
      */
@@ -185,9 +181,9 @@ export function getShowParticipations() {
                 de: participationsState.meals[mealId].title.de
             },
             variations: [],
-            participations: numberOfParticipants  !== undefined ? numberOfParticipants : 0,
+            participations: numberOfParticipants !== undefined ? numberOfParticipants : 0,
             mealId: Number.parseInt(mealId)
-        }
+        };
 
         return mealWithVariations;
     }
@@ -206,7 +202,7 @@ export function getShowParticipations() {
             variations: getVariationsOfMeal(mealId),
             participations: 0,
             mealId: Number.parseInt(mealId)
-        }
+        };
         return mealWithVariations;
     }
 
@@ -242,5 +238,5 @@ export function getShowParticipations() {
         getCurrentDay,
         activatePeriodicFetch,
         disablePeriodicFetch
-    }
+    };
 }

@@ -3,12 +3,8 @@
     as="template"
     :show="isOpen"
   >
-    <Dialog
-      class="relative z-50"
-    >
-      <div
-        class="fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.1)]"
-      >
+    <Dialog class="relative z-50">
+      <div class="fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.1)]">
         <TransitionChild
           as="template"
           enter="duration-300 ease-out"
@@ -18,9 +14,7 @@
           leave-from="opacity-100"
           leave-to="opacity-0"
         >
-          <DialogPanel
-            class="relative overflow-hidden rounded-lg bg-white text-left shadow-xl"
-          >
+          <DialogPanel class="relative overflow-hidden rounded-lg bg-white text-left shadow-xl">
             <slot />
           </DialogPanel>
         </TransitionChild>
@@ -33,6 +27,6 @@
 import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue';
 
 defineProps<{
-  isOpen: boolean
+  isOpen: boolean;
 }>();
 </script>

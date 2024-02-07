@@ -6,9 +6,7 @@
     <h3 class="text-center">
       {{ edit ? t('event.popover.update') : t('event.popover.create') }}
     </h3>
-    <div
-      class="flex flex-col gap-4 md:flex-row"
-    >
+    <div class="flex flex-col gap-4 md:flex-row">
       <InputLabel
         v-model="eventTitle"
         :label-text="t('event.popover.title')"
@@ -23,7 +21,7 @@
             :sr="t('event.popover.isPublic')"
             :initial="isEventPublic"
             class="my-autot ml-4"
-            @toggle="(val) => isEventPublic = val"
+            @toggle="(val) => (isEventPublic = val)"
           />
         </div>
       </SwitchGroup>
@@ -44,17 +42,20 @@ import { useEvents } from '@/stores/eventsStore';
 const { t } = useI18n();
 const { createEvent, updateEvent } = useEvents();
 
-const props = withDefaults(defineProps<{
-  title?: string,
-  isPublic?: boolean,
-  edit?: boolean,
-  slug?: string
-}>(),{
-  title: '',
-  isPublic: false,
-  edit: false,
-  slug: ''
-});
+const props = withDefaults(
+  defineProps<{
+    title?: string;
+    isPublic?: boolean;
+    edit?: boolean;
+    slug?: string;
+  }>(),
+  {
+    title: '',
+    isPublic: false,
+    edit: false,
+    slug: ''
+  }
+);
 
 const eventTitle = ref(props.title);
 const isEventPublic = ref(props.isPublic);

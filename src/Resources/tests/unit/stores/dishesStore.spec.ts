@@ -1,18 +1,18 @@
-import { useDishes, Dish } from "@/stores/dishesStore";
-import { useCategories } from "@/stores/categoriesStore";
-import useApi from "@/api/api";
-import { ref } from "vue";
-import { beforeAll, beforeEach, describe, expect, it } from "@jest/globals";
-import Dishes from "../fixtures/getDishes.json";
-import Categories from "../fixtures/getCategories.json";
-import { CreateDishDTO } from "@/api/postCreateDish";
+import { useDishes, Dish } from '@/stores/dishesStore';
+import { useCategories } from '@/stores/categoriesStore';
+import useApi from '@/api/api';
+import { ref } from 'vue';
+import { beforeAll, beforeEach, describe, expect, it } from '@jest/globals';
+import Dishes from '../fixtures/getDishes.json';
+import Categories from '../fixtures/getCategories.json';
+import { CreateDishDTO } from '@/api/postCreateDish';
 import combiDishes from '../fixtures/combiDishes.json';
 
 const dish1: Dish = {
     id: 17,
-    slug: "limbs123",
-    titleDe: "Limbs DE 123",
-    titleEn: "Limbs 123",
+    slug: 'limbs123',
+    titleDe: 'Limbs DE 123',
+    titleEn: 'Limbs 123',
     categoryId: 6,
     oneServingSize: false,
     parentId: null,
@@ -20,13 +20,13 @@ const dish1: Dish = {
 };
 
 const dishUpdate: CreateDishDTO = {
-    titleDe: "Limbs DE 123",
-    titleEn: "Limbs 123",
+    titleDe: 'Limbs DE 123',
+    titleEn: 'Limbs 123',
     oneServingSize: false
 };
 
 const asyncFunc: () => Promise<void> = async () => {
-    new Promise(resolve => resolve(undefined));
+    new Promise((resolve) => resolve(undefined));
 };
 
 const getMockedResponses = (method: string, url: string) => {
@@ -35,40 +35,55 @@ const getMockedResponses = (method: string, url: string) => {
             response: ref(Categories),
             request: asyncFunc,
             error: ref(false)
-        }
+        };
     } else if (url.includes('api/dishes') && method === 'GET') {
         return {
             response: ref(Dishes),
             request: asyncFunc,
             error: ref(false)
-        }
+        };
     } else if (url.includes('api/dishes') && (method === 'POST' || method === 'DELETE')) {
         return {
             response: ref(null),
             request: asyncFunc,
             error: ref(false)
-        }
+        };
     } else if (url.includes('api/dishes') && method === 'PUT') {
         return {
             response: ref(dish1),
             request: asyncFunc,
             error: ref(false)
-        }
-    } else if (url.includes('api/participations/combi/') && /\S*api\/participations\/combi\/\d*$/.test(url) && method === 'GET') {
+        };
+    } else if (
+        url.includes('api/participations/combi/') &&
+        /\S*api\/participations\/combi\/\d*$/.test(url) &&
+        method === 'GET'
+    ) {
         return {
             response: ref<Dish[]>(combiDishes),
             request: asyncFunc,
             error: ref(false)
-        }
+        };
     }
-}
+};
 
 // @ts-expect-error ts doesn't allow reassignig a import but we need that to mock that function
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 useApi = jest.fn().mockImplementation((method: string, url: string) => getMockedResponses(method, url));
 
 describe('Test dishesStore', () => {
-    const { resetState, filterState, DishesState, fetchDishes, setFilter, filteredDishes, updateDish, getDishBySlug, getDishArrayBySlugs, getCombiDishes } = useDishes();
+    const {
+        resetState,
+        filterState,
+        DishesState,
+        fetchDishes,
+        setFilter,
+        filteredDishes,
+        updateDish,
+        getDishBySlug,
+        getDishArrayBySlugs,
+        getCombiDishes
+    } = useDishes();
     const { fetchCategories } = useCategories();
 
     beforeAll(async () => {
@@ -101,20 +116,20 @@ describe('Test dishesStore', () => {
         expect(filteredDishes.value).toEqual(DishesState.dishes);
 
         setFilter('testen');
-        await new Promise(r => setTimeout(r, 1100));
+        await new Promise((r) => setTimeout(r, 1100));
 
         expect(filteredDishes.value).toContainEqual(Dishes[0]);
         expect(filteredDishes.value).not.toContainEqual(Dishes[1]);
         expect(filterState.value).toEqual('testen');
 
         setFilter('Fish (so juicy sweat)');
-        await new Promise(r => setTimeout(r, 1100));
+        await new Promise((r) => setTimeout(r, 1100));
         expect(filteredDishes.value).toContainEqual(Dishes[3]);
         expect(filteredDishes.value).not.toContainEqual(Dishes[0]);
 
         setFilter('Vegetarisch');
-        await new Promise(r => setTimeout(r, 1100));
-        for(const dish of filteredDishes.value) {
+        await new Promise((r) => setTimeout(r, 1100));
+        for (const dish of filteredDishes.value) {
             expect(dish.categoryId).toBe(5);
         }
         expect(filteredDishes.value).not.toContainEqual(Dishes[3]);
@@ -143,12 +158,12 @@ describe('Test dishesStore', () => {
         const expectedSlugsTwo = ['testen', 'testvaren'];
 
         const slugArrOne = ['testvaren', 'testvaren123'];
-        const slugArrTwo= ['testvaren'];
+        const slugArrTwo = ['testvaren'];
         const slugArrThree = ['testen'];
 
-        const dishArrOne = getDishArrayBySlugs(slugArrOne).map(dish => dish.slug);
-        const dishArrTwo = getDishArrayBySlugs(slugArrTwo).map(dish => dish.slug);
-        const dishArrThree = getDishArrayBySlugs(slugArrThree).map(dish => dish.slug);
+        const dishArrOne = getDishArrayBySlugs(slugArrOne).map((dish) => dish.slug);
+        const dishArrTwo = getDishArrayBySlugs(slugArrTwo).map((dish) => dish.slug);
+        const dishArrThree = getDishArrayBySlugs(slugArrThree).map((dish) => dish.slug);
 
         for (const dishSlug of dishArrOne) {
             expect(expectedSlugsOne.includes(dishSlug)).toBeTruthy();
@@ -166,5 +181,5 @@ describe('Test dishesStore', () => {
 
         expect(dishes).toHaveLength(2);
         expect(dishes).toEqual(combiDishes);
-    })
+    });
 });

@@ -1,17 +1,17 @@
-import useApi from "@/api/api";
-import postSettlement from "@/api/postSettlement";
-import Profile from "../fixtures/hashProfile.json";
-import { ref } from "vue";
+import useApi from '@/api/api';
+import postSettlement from '@/api/postSettlement';
+import Profile from '../fixtures/hashProfile.json';
+import { ref } from 'vue';
 
 const asyncFunc: () => Promise<void> = async () => {
-    new Promise(resolve => resolve(undefined));
+    new Promise((resolve) => resolve(undefined));
 };
 
 const mockedReturnValue = {
     response: ref(null),
     request: asyncFunc,
     error: ref(false)
-}
+};
 
 // @ts-expect-error ts doesn't like mocking with jest.fn()
 useApi = jest.fn(useApi);

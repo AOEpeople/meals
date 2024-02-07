@@ -7,8 +7,10 @@
       v-for="(participants, slot) in participationsState.data"
       :key="slot"
       :slot-name="slot.toString()"
-      :participants="// @ts-ignore
-        convertToIBookedData(participants)"
+      :participants="
+        // @ts-ignore
+        convertToIBookedData(participants)
+      "
       :meals="mealsWithVariations"
     />
   </tbody>
@@ -29,7 +31,7 @@ const INTERVAL_DELAY = 16;
 const SCROLL_AMOUNT = 1;
 const TIMEOUT_AFTER_SCROLLING = 3000;
 
-let scrollProcessId:number;
+let scrollProcessId: number;
 let scrollingActive = true;
 let time: number;
 
@@ -50,7 +52,7 @@ onUnmounted(() => {
   if (scrollProcessId !== undefined && scrollProcessId !== null) {
     clearInterval(scrollProcessId);
   }
-})
+});
 
 /**
  * Scrolls the passed in element in the direction indicated by scrollDirection
@@ -59,7 +61,7 @@ onUnmounted(() => {
 function autoScroll(element: HTMLTableSectionElement | null) {
   const timeSinceLastScroll = Date.now() - time;
   if (scrollingActive === true && element !== null && element !== undefined) {
-    setScrollDirection(element)
+    setScrollDirection(element);
     element.scrollBy({
       top: scrollDirectionDown.value ? scrollAmount(timeSinceLastScroll) : -scrollAmount(timeSinceLastScroll)
     });
@@ -75,7 +77,7 @@ function autoScroll(element: HTMLTableSectionElement | null) {
 function setScrollDirection(element: HTMLTableSectionElement | null) {
   const cachedScrollDirection = scrollDirectionDown.value;
   if (element !== null && element !== undefined && scrollDirectionDown.value === true) {
-    scrollDirectionDown.value = (element.scrollTop + element.clientHeight) < element.scrollHeight;
+    scrollDirectionDown.value = element.scrollTop + element.clientHeight < element.scrollHeight;
   } else if (element !== null && element !== undefined && scrollDirectionDown.value === false) {
     scrollDirectionDown.value = element.scrollTop === 0;
   }
@@ -83,7 +85,6 @@ function setScrollDirection(element: HTMLTableSectionElement | null) {
   if (cachedScrollDirection !== scrollDirectionDown.value) {
     sleep(TIMEOUT_AFTER_SCROLLING);
   }
-
 }
 
 /**
@@ -93,7 +94,7 @@ function setScrollDirection(element: HTMLTableSectionElement | null) {
  */
 function sleep(ms: number) {
   scrollingActive = false;
-  setTimeout(() => scrollingActive = true, ms);
+  setTimeout(() => (scrollingActive = true), ms);
 }
 
 /**
@@ -115,7 +116,7 @@ function convertToIBookedData(participant: Dictionary<IBookedData>): Dictionary<
 
 // expose functions for testing
 if (process.env.NODE_ENV === 'TEST') {
-  defineExpose({scrollAmount, setScrollDirection, scrollDirectionDown, mealsWithVariations});
+  defineExpose({ scrollAmount, setScrollDirection, scrollDirectionDown, mealsWithVariations });
 }
 </script>
 

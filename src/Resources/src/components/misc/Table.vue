@@ -29,17 +29,20 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-const props = withDefaults(defineProps<{
-  labels: string[],
-  headerTextPosition?: string,
-  print?: boolean
-}>(), {
-  headerTextPosition: 'left',
-  print: false
-});
+const props = withDefaults(
+  defineProps<{
+    labels: string[];
+    headerTextPosition?: string;
+    print?: boolean;
+  }>(),
+  {
+    headerTextPosition: 'left',
+    print: false
+  }
+);
 
 const style = computed(() => {
-  switch(props.headerTextPosition) {
+  switch (props.headerTextPosition) {
     case 'left':
       return 'text-left';
     case 'lmr':
@@ -49,6 +52,5 @@ const style = computed(() => {
     default:
       return 'text-left';
   }
-
 });
 </script>

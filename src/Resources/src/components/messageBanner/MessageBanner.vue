@@ -20,7 +20,7 @@
         @click="() => clearMessages()"
       />
       <MessageBannerData
-        v-for="flashMessage, index in flashMessages"
+        v-for="(flashMessage, index) in flashMessages"
         :key="`${flashMessage.message}_${String(index)}`"
         :message="flashMessage"
       />
@@ -35,5 +35,4 @@ import MessageBannerData from './MessageBannerData.vue';
 import useFlashMessage from '@/services/useFlashMessage';
 
 const { flashMessages, clearMessages } = useFlashMessage();
-
 </script>

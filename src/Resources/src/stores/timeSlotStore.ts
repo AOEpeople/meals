@@ -10,17 +10,17 @@ import useFlashMessage from '@/services/useFlashMessage';
 import { FlashMessageType } from '@/enums/FlashMessage';
 
 interface ITimeSlotState {
-    timeSlots: Dictionary<TimeSlot>,
-    isLoading: boolean,
-    error: string
+    timeSlots: Dictionary<TimeSlot>;
+    isLoading: boolean;
+    error: string;
 }
 
 export interface TimeSlot {
-    title: string,
-    limit: number,
-    order: number,
-    enabled: boolean,
-    slug?: string
+    title: string;
+    limit: number;
+    order: number;
+    enabled: boolean;
+    slug?: string;
 }
 
 export function isTimeSlot(timeSlot: TimeSlot): timeSlot is TimeSlot {
@@ -31,7 +31,8 @@ export function isTimeSlot(timeSlot: TimeSlot): timeSlot is TimeSlot {
         typeof (timeSlot as TimeSlot).limit === 'number' &&
         typeof (timeSlot as TimeSlot).order === 'number' &&
         typeof (timeSlot as TimeSlot).enabled === 'boolean' &&
-        (Object.keys(timeSlot).length >= 4 && Object.keys(timeSlot).length <= 6)
+        Object.keys(timeSlot).length >= 4 &&
+        Object.keys(timeSlot).length <= 6
     );
 }
 
@@ -58,7 +59,6 @@ watch(
 );
 
 export function useTimeSlots() {
-
     /**
      * Calls getTimeSlots to fetch timeSlots and sets isLoading
      * in the TimeSlotState to true during the request
@@ -94,7 +94,10 @@ export function useTimeSlots() {
 
         const { error, response } = await updateSlotEnabled(TimeSlotState.timeSlots[id].slug, state);
 
-        if (isResponseObjectOkay<TimeSlot>(error, response, isTimeSlot) === true && response.value.enabled !== undefined) {
+        if (
+            isResponseObjectOkay<TimeSlot>(error, response, isTimeSlot) === true &&
+            response.value.enabled !== undefined
+        ) {
             updateTimeSlotEnabled(response.value, id);
         } else {
             TimeSlotState.error = 'Error on changing the slot state';
@@ -109,7 +112,7 @@ export function useTimeSlots() {
     async function editSlot(id: number, slot: TimeSlot) {
         const { updateTimeSlot } = useUpdateSlot();
 
-        if(slot.slug === null) {
+        if (slot.slug === null) {
             slot.slug = TimeSlotState.timeSlots[id].slug;
         }
 
@@ -198,5 +201,5 @@ export function useTimeSlots() {
         deleteSlotWithSlug,
         editSlot,
         resetState
-    }
+    };
 }

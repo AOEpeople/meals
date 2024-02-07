@@ -13,9 +13,7 @@
         />
       </template>
       <template #panel="{ close }">
-        <DishVariationCreationPanel
-          :parent-slug="dish.slug"
-        />
+        <DishVariationCreationPanel :parent-slug="dish.slug" />
       </template>
     </Popover>
     <Popover
@@ -67,7 +65,7 @@ const { t } = useI18n();
 const { deleteDishWithSlug } = useDishes();
 
 defineProps<{
-  dish: Dish,
-  index: number
+  dish: Dish;
+  index: number;
 }>();
 </script>

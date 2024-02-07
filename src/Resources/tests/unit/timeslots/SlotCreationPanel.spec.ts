@@ -1,7 +1,7 @@
-import SlotCreationPanel from "@/components/timeslots/SlotCreationPanel.vue";
-import InputLabel from "@/components/misc/InputLabel.vue";
-import { describe, it } from "@jest/globals";
-import { mount } from "@vue/test-utils";
+import SlotCreationPanel from '@/components/timeslots/SlotCreationPanel.vue';
+import InputLabel from '@/components/misc/InputLabel.vue';
+import { describe, it } from '@jest/globals';
+import { mount } from '@vue/test-utils';
 
 describe('Test SlotCreationPanel', () => {
     it('should contain a header, three InputLbel-components and a separate input field', () => {
@@ -31,7 +31,7 @@ describe('Test SlotCreationPanel', () => {
         expect(wrapper.find('h3').text()).toMatch(/test/);
         const inputs = wrapper.findAll('input').map((ele) => ele.element.value);
         expect(inputs).toContain('slot.save');
-        const labels = wrapper.findAll('label').map(ele => ele.text());
+        const labels = wrapper.findAll('label').map((ele) => ele.text());
         expect(labels).toContain('slot.slotTitle');
         expect(labels).toContain('slot.slotLimit');
         expect(labels).toContain('slot.slotOrder');
@@ -49,7 +49,7 @@ describe('Test SlotCreationPanel', () => {
             }
         });
 
-        const inputs = wrapper.findAll('input').map(ele => ele.element.value);
+        const inputs = wrapper.findAll('input').map((ele) => ele.element.value);
         expect(inputs).toContain('testTitle');
         expect(inputs).toContain('789');
         expect(inputs).toContain('456');

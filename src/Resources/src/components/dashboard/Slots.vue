@@ -4,9 +4,7 @@
     v-model="selectedSlot"
     :disabled="disabled"
   >
-    <div
-      class="relative w-full"
-    >
+    <div class="relative w-full">
       <ListboxButton
         :class="[open ? 'rounded-t-2xl border-x border-t' : 'rounded-3xl border', disabled ? '' : 'cursor-pointer']"
         class="focus-visible:ring-offset-orange-300 relative flex h-8 w-full items-center border-[#B4C1CE] bg-white pl-4 pr-2 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 min-[380px]:pr-10 sm:w-64"
@@ -55,78 +53,77 @@
 </template>
 
 <script setup lang="ts">
-import {computed, ref, watch} from 'vue';
-import {
-  Listbox,
-  ListboxButton,
-  ListboxOptions,
-  ListboxOption,
-} from '@headlessui/vue';
+import { computed, ref, watch } from 'vue';
+import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from '@headlessui/vue';
 
-import {useI18n} from 'vue-i18n';
-import {useUpdateSelectedSlot} from '@/api/putUpdateSelectedSlot';
+import { useI18n } from 'vue-i18n';
+import { useUpdateSelectedSlot } from '@/api/putUpdateSelectedSlot';
 import { ChevronDownIcon } from '@heroicons/vue/solid';
 import useEventsBus from 'tools/eventBus';
 import { Day } from '@/api/getDashboardData';
 
 const props = defineProps<{
-  dayID: number | string | undefined,
-  day: Day
+  dayID: number | string | undefined;
+  day: Day;
 }>();
 
-const { t } = useI18n()
+const { t } = useI18n();
 
-const selectedSlot = ref(props.day.slots[props.day.activeSlot] ?? props.day.slots['0'])
-const activeSlot = computed(() => props.day.slots[props.day.activeSlot])
-const disabled = computed(() => props.day.isLocked)
+const selectedSlot = ref(props.day.slots[props.day.activeSlot] ?? props.day.slots['0']);
+const activeSlot = computed(() => props.day.slots[props.day.activeSlot]);
+const disabled = computed(() => props.day.isLocked);
 
-let isParticipating = ref(false)
+let isParticipating = ref(false);
 
 watch(activeSlot, () => {
-  selectedSlot.value = activeSlot.value
-})
+  selectedSlot.value = activeSlot.value;
+});
 
 // if dayID is set the component comes from the dashboard
 if (props.dayID) {
-  isParticipating.value = checkIfParticipating()
+  isParticipating.value = checkIfParticipating();
 
-  watch(props.day.meals, () => {
-    isParticipating.value = checkIfParticipating()
-  }, { deep: true })
+  watch(
+    props.day.meals,
+    () => {
+      isParticipating.value = checkIfParticipating();
+    },
+    { deep: true }
+  );
 
   watch(activeSlot, () => {
-    selectedSlot.value = activeSlot.value
-  })
+    selectedSlot.value = activeSlot.value;
+  });
 
   watch(selectedSlot, () => {
-    props.day.activeSlot = selectedSlot.value.id
+    props.day.activeSlot = selectedSlot.value.id;
     if (isParticipating.value) {
       let data = {
         slotID: selectedSlot.value.id,
         dayID: props.dayID
-      }
-      useUpdateSelectedSlot(JSON.stringify(data))
+      };
+      useUpdateSelectedSlot(JSON.stringify(data));
     }
-  })
+  });
 
   function checkIfParticipating() {
     for (const mealId in props.day.meals) {
       if (props.day.meals[mealId].variations !== null) {
         for (const variationsId in props.day.meals[mealId].variations) {
           if (props.day.meals[mealId].variations[variationsId].isParticipating) {
-            return true
+            return true;
           }
         }
       }
       if (props.day.meals[mealId].isParticipating) {
-        return true
+        return true;
       }
     }
 
-    return false
+    return false;
   }
 } else {
-  const { emit } = useEventsBus()
-  watch(selectedSlot, () => emit('guestChosenSlot', selectedSlot.value.id))
+  const { emit } = useEventsBus();
+  watch(selectedSlot, () => emit('guestChosenSlot', selectedSlot.value.id));
 }
 </script>

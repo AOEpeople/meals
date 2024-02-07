@@ -11,16 +11,19 @@
 import { nextTick, ref } from 'vue';
 import { useIntersectionObserver } from '@vueuse/core';
 
-const props = withDefaults(defineProps<{
-  renderOnIdle?: boolean,
-  unrender?: boolean,
-  minHeight: number,
-  unrenderDelay?: number,
-}>(), {
-  renderOnIdle: false,
-  unrender: false,
-  unrenderDelay: 10000
-});
+const props = withDefaults(
+  defineProps<{
+    renderOnIdle?: boolean;
+    unrender?: boolean;
+    minHeight: number;
+    unrenderDelay?: number;
+  }>(),
+  {
+    renderOnIdle: false,
+    unrender: false,
+    unrenderDelay: 10000
+  }
+);
 
 const shouldRender = ref(false);
 const elementRef = ref<HTMLElement | null>(null);
@@ -35,10 +38,7 @@ const { stop } = useIntersectionObserver(
     if (isIntersecting === true) {
       clearTimeout(unrenderTimer);
       if (props.unrender) {
-        renderTimer = setTimeout(
-          () => shouldRender.value = true,
-          props.unrender === true ? 200 : 0
-        );
+        renderTimer = setTimeout(() => (shouldRender.value = true), props.unrender === true ? 200 : 0);
       } else {
         shouldRender.value = true;
       }
@@ -53,7 +53,8 @@ const { stop } = useIntersectionObserver(
         shouldRender.value = false;
       }, props.unrenderDelay);
     }
-  }, {
+  },
+  {
     rootMargin: '600px'
   }
 );

@@ -13,15 +13,15 @@
 import { useI18n } from 'vue-i18n';
 import Icons from '@/components/misc/Icons.vue';
 
-const { t } = useI18n()
+const { t } = useI18n();
 </script>
 
 <style scoped>
 #link:hover a svg {
-  @apply fill-secondary
+  @apply fill-secondary;
 }
 
 #link:hover a span {
-  @apply text-secondary
+  @apply text-secondary;
 }
 </style>

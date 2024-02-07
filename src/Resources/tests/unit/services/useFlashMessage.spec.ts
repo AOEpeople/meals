@@ -1,6 +1,6 @@
-import { FlashMessageType } from "@/enums/FlashMessage";
-import useFlashMessage from "@/services/useFlashMessage";
-import { flushPromises } from "@vue/test-utils";
+import { FlashMessageType } from '@/enums/FlashMessage';
+import useFlashMessage from '@/services/useFlashMessage';
+import { flushPromises } from '@vue/test-utils';
 
 const { flashMessages, sendFlashMessage, clearMessages } = useFlashMessage();
 
@@ -15,11 +15,11 @@ describe('Test useFlashMessage', () => {
         const testMessage = {
             type: FlashMessageType.INFO,
             message: 'test message 123'
-        }
+        };
 
         sendFlashMessage(testMessage);
 
-        await flushPromises()
+        await flushPromises();
 
         expect(flashMessages.value).toHaveLength(1);
         expect(flashMessages.value[0]).toEqual(testMessage);
@@ -29,7 +29,7 @@ describe('Test useFlashMessage', () => {
         const testMessage = {
             type: FlashMessageType.ERROR,
             message: '111: abcgtn'
-        }
+        };
 
         sendFlashMessage(testMessage);
 

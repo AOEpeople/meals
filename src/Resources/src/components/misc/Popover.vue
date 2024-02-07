@@ -1,11 +1,9 @@
 <template>
-  <Popover
-    v-slot="{ open }"
-  >
+  <Popover v-slot="{ open }">
     <PopoverButton class="h-full align-middle focus:outline-none">
       <slot
         name="button"
-        :open="(open)"
+        :open="open"
       />
     </PopoverButton>
 
@@ -37,23 +35,26 @@
 </template>
 
 <script setup lang="ts">
-import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
+import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue';
 import { computed, onMounted, onUnmounted } from 'vue';
 import { useComponentHeights } from '@/services/useComponentHeights';
 
 const { windowWidth, addWindowHeightListener, removeWindowHeightListener } = useComponentHeights();
 
-const props = withDefaults(defineProps<{
-  translateXMax?: string,
-  translateXMin?: string,
-  breakpointWidth?: number,
-  overflowHidden?: boolean
-}>(), {
-  translateXMax: 'default',
-  translateXMin: 'default',
-  breakpointWidth: 1200,
-  overflowHidden: true
-});
+const props = withDefaults(
+  defineProps<{
+    translateXMax?: string;
+    translateXMin?: string;
+    breakpointWidth?: number;
+    overflowHidden?: boolean;
+  }>(),
+  {
+    translateXMax: 'default',
+    translateXMin: 'default',
+    breakpointWidth: 1200,
+    overflowHidden: true
+  }
+);
 
 onMounted(() => {
   addWindowHeightListener();
@@ -61,13 +62,13 @@ onMounted(() => {
 
 onUnmounted(() => {
   removeWindowHeightListener();
-})
+});
 
 const translateXComputed = computed(() => {
-  if(windowWidth.value >= props.breakpointWidth) {
-    return props.translateXMax === 'default' ? '-80%' : props.translateXMax
+  if (windowWidth.value >= props.breakpointWidth) {
+    return props.translateXMax === 'default' ? '-80%' : props.translateXMax;
   } else {
-    return props.translateXMin === 'default' ? '-80%' : props.translateXMin
+    return props.translateXMin === 'default' ? '-80%' : props.translateXMin;
   }
 });
 </script>

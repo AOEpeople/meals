@@ -13,21 +13,21 @@ import useFlashMessage from '@/services/useFlashMessage';
 import { FlashMessageType } from '@/enums/FlashMessage';
 
 export interface Week {
-    id: number,
-    year: number,
-    calendarWeek: number,
-    days: Dictionary<SimpleDay>,
-    enabled: boolean
+    id: number;
+    year: number;
+    calendarWeek: number;
+    days: Dictionary<SimpleDay>;
+    enabled: boolean;
 }
 
 export interface SimpleDay {
-    id: number,
-    dateTime: DateTime,
-    lockParticipationDateTime: DateTime,
-    week: number,
-    meals: Dictionary<SimpleMeal[]>,
-    event: number | null,
-    enabled: boolean
+    id: number;
+    dateTime: DateTime;
+    lockParticipationDateTime: DateTime;
+    week: number;
+    meals: Dictionary<SimpleMeal[]>;
+    event: number | null;
+    enabled: boolean;
 }
 
 export interface SimpleMeal {
@@ -41,13 +41,13 @@ export interface SimpleMeal {
 }
 
 interface WeeksState {
-    weeks: Week[],
-    isLoading: boolean,
-    error: string
+    weeks: Week[];
+    isLoading: boolean;
+    error: string;
 }
 
 interface MenuCountState {
-    counts: Dictionary<number>
+    counts: Dictionary<number>;
 }
 
 /**
@@ -94,7 +94,6 @@ watch(
 );
 
 export function useWeeks() {
-
     /**
      * Calls getWeeks() and sets the isLoading flag to true while the request is pending.
      */
@@ -136,7 +135,7 @@ export function useWeeks() {
             for (let i = 0; i < WeeksState.weeks.length; i++) {
                 if (WeeksState.weeks[i].calendarWeek === response.value.calendarWeek) {
                     WeeksState.weeks[i] = response.value;
-                    break
+                    break;
                 }
             }
         }
@@ -173,7 +172,6 @@ export function useWeeks() {
      * @param week Data of the week to update.
      */
     async function updateWeek(week: WeekDTO) {
-
         const { error, response } = await putWeekUpdate(week);
         if (error.value === true || isMessage(response.value) === true) {
             WeeksState.error = response.value?.message;
@@ -221,9 +219,10 @@ export function useWeeks() {
      * @param calendarWeek  (optional) The iso week. Only used if the week is to be created.
      */
     function getMenuDay(dayId: string, weekId: number | null, calendarWeek?: number) {
-        const week = (weekId === null && calendarWeek !== undefined && calendarWeek !== null) ?
-            getWeekByCalendarWeek(calendarWeek) :
-            getWeekById(weekId);
+        const week =
+            weekId === null && calendarWeek !== undefined && calendarWeek !== null
+                ? getWeekByCalendarWeek(calendarWeek)
+                : getWeekById(weekId);
         const day = getDayById(week, dayId);
 
         const menuDay: DayDTO = {
@@ -237,7 +236,7 @@ export function useWeeks() {
 
         if (week !== undefined && week !== null && day !== undefined && day !== null) {
             for (const [key, meals] of Object.entries(day.meals)) {
-                menuDay.meals[key] = meals.map(meal => createMealDTO(meal));
+                menuDay.meals[key] = meals.map((meal) => createMealDTO(meal));
             }
             // make sure to have 2 meals
             const mealsLength = Object.keys(menuDay.meals).length;
@@ -260,11 +259,11 @@ export function useWeeks() {
             dishSlug: meal.dish,
             mealId: meal.id,
             participationLimit: meal.participationLimit
-        }
+        };
     }
 
     function getWeekById(weekId: number): Week | undefined {
-        return WeeksState.weeks.find(week => week.id === weekId);
+        return WeeksState.weeks.find((week) => week.id === weekId);
     }
 
     function getDayById(week: Week, dayId: string) {
@@ -276,7 +275,7 @@ export function useWeeks() {
     }
 
     function getWeekByCalendarWeek(isoWeek: number) {
-        return WeeksState.weeks.find(week => week.calendarWeek === isoWeek);
+        return WeeksState.weeks.find((week) => week.calendarWeek === isoWeek);
     }
 
     /**
@@ -306,5 +305,5 @@ export function useWeeks() {
         isWeek,
         createEmptyWeek,
         getWeekByCalendarWeek
-    }
+    };
 }

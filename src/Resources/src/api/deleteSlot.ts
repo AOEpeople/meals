@@ -6,11 +6,7 @@ import useApi from './api';
  * @param slug The identifier of the slot
  */
 export default async function deleteSlot(slug: string) {
-    const { error, request, response } = useApi<IMessage | null>(
-        'DELETE',
-        `api/slots/${slug}`,
-        'application/json'
-    );
+    const { error, request, response } = useApi<IMessage | null>('DELETE', `api/slots/${slug}`, 'application/json');
 
     await request();
 

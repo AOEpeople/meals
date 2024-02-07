@@ -1,6 +1,6 @@
-import { Event } from "@/stores/eventsStore";
-import useApi from "./api";
-import { IMessage } from "@/interfaces/IMessage";
+import { Event } from '@/stores/eventsStore';
+import useApi from './api';
+import { IMessage } from '@/interfaces/IMessage';
 
 /**
  * Updates an Event with an PUT request

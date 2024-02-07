@@ -1,12 +1,12 @@
-import { useParticipations } from "@/stores/participationsStore";
-import useApi from "@/api/api";
-import { ref } from "vue";
+import { useParticipations } from '@/stores/participationsStore';
+import useApi from '@/api/api';
+import { ref } from 'vue';
 import Participations from '../fixtures/menuParticipations.json';
 import Update from '../fixtures/participationUpdateResponse.json';
-import { IProfile } from "@/stores/profilesStore";
+import { IProfile } from '@/stores/profilesStore';
 
 const asyncFunc: () => Promise<void> = async () => {
-    new Promise(resolve => resolve(undefined));
+    new Promise((resolve) => resolve(undefined));
 };
 
 const getMockedResponses = (method: string, url: string) => {
@@ -15,21 +15,21 @@ const getMockedResponses = (method: string, url: string) => {
             response: ref(Participations),
             request: asyncFunc,
             error: ref(false)
-        }
-    } else if (/api\/participation\/.*\/\d+$/.test(url) === true && (method === 'PUT')) {
+        };
+    } else if (/api\/participation\/.*\/\d+$/.test(url) === true && method === 'PUT') {
         return {
             response: ref(Update.put),
             request: asyncFunc,
             error: ref(false)
-        }
+        };
     } else if (/api\/participation\/.*\/\d+$/.test(url) === true && method === 'DELETE') {
         return {
             response: ref(Update.delete),
             request: asyncFunc,
             error: ref(false)
-        }
+        };
     }
-}
+};
 
 // @ts-expect-error ts doesn't allow reassignig a import but we need that to mock that function
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -51,7 +51,7 @@ describe('Test participationsStore', () => {
     } = useParticipations(1);
 
     beforeEach(() => {
-        console.log('resetting states')
+        console.log('resetting states');
         resetStates();
     });
 
@@ -75,14 +75,14 @@ describe('Test participationsStore', () => {
         expect(menuParticipationsState.error).toEqual('');
         expect(menuParticipationsState.days['571']['Meals, Alice'].booked).toEqual([
             {
-                "mealId": 1516,
-                "dishId": 48,
-                "combinedDishes": []
+                mealId: 1516,
+                dishId: 48,
+                combinedDishes: []
             },
             {
-                "mealId": 1518,
-                "dishId": 52,
-                "combinedDishes": []
+                mealId: 1518,
+                dishId: 52,
+                combinedDishes: []
             }
         ]);
     });
@@ -94,9 +94,9 @@ describe('Test participationsStore', () => {
         expect(menuParticipationsState.error).toEqual('');
         expect(menuParticipationsState.days['571']['Meals, Alice'].booked).toEqual([
             {
-                "mealId": 1518,
-                "dishId": 52,
-                "combinedDishes": []
+                mealId: 1518,
+                dishId: 52,
+                combinedDishes: []
             }
         ]);
     });
@@ -104,10 +104,10 @@ describe('Test participationsStore', () => {
     it('should add an empty participation to the state', async () => {
         await fetchParticipations();
         const profile: IProfile = {
-            user: "jane.meals",
-            fullName: "Meals, Jane",
+            user: 'jane.meals',
+            fullName: 'Meals, Jane',
             roles: []
-        }
+        };
         addEmptyParticipationToState(profile);
 
         expect(menuParticipationsState.error).toEqual('');

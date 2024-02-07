@@ -1,12 +1,12 @@
-import { useTimeSlots } from "@/stores/timeSlotStore";
-import { beforeEach, describe } from "@jest/globals";
-import { ref } from "vue";
-import updatedSlot from "../fixtures/updatedSlot.json";
-import timeSlots from "../fixtures/getTimeSlots.json";
-import useApi from "@/api/api";
+import { useTimeSlots } from '@/stores/timeSlotStore';
+import { beforeEach, describe } from '@jest/globals';
+import { ref } from 'vue';
+import updatedSlot from '../fixtures/updatedSlot.json';
+import timeSlots from '../fixtures/getTimeSlots.json';
+import useApi from '@/api/api';
 
 const asyncFunc: () => Promise<void> = async () => {
-    new Promise(resolve => resolve(undefined));
+    new Promise((resolve) => resolve(undefined));
 };
 
 const getMockedResponses = (method: string, url: string) => {
@@ -15,34 +15,32 @@ const getMockedResponses = (method: string, url: string) => {
             response: ref(timeSlots.response),
             request: asyncFunc,
             error: ref(false)
-        }
+        };
     } else if (url.includes('api/slot') && (method === 'POST' || method === 'DELETE')) {
         return {
             response: ref(null),
             request: asyncFunc,
             error: ref(false)
-        }
+        };
     } else if (url.includes('api/slot') && method === 'PUT') {
         return {
             response: ref(updatedSlot.response),
             request: asyncFunc,
             error: ref(false)
-        }
+        };
     }
-}
+};
 
 // @ts-expect-error ts doesn't allow reassignig a import but we need that to mock that function
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 useApi = jest.fn().mockImplementation((method: string, url: string) => getMockedResponses(method, url));
 
-
 describe('Test timeSlotStore', () => {
-
     const { TimeSlotState, resetState, fetchTimeSlots, editSlot } = useTimeSlots();
 
     beforeEach(() => {
         resetState();
-    })
+    });
 
     it('should not contain slot data before fetching', () => {
         expect(TimeSlotState.timeSlots).toEqual({});

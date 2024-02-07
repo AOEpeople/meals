@@ -21,12 +21,8 @@
         class="max-[650px]:row-start-2 min-[650px]:col-start-3"
       />
     </div>
-    <div
-      class="z-10 my-8 max-w-screen-aoe overflow-x-auto"
-    >
-      <MenuTable
-        :week-id="parseInt(week)"
-      />
+    <div class="z-10 my-8 max-w-screen-aoe overflow-x-auto">
+      <MenuTable :week-id="parseInt(week)" />
     </div>
   </div>
 </template>
@@ -61,5 +57,4 @@ watch(
 function handleProfileSelect(profile: IProfile) {
   addEmptyParticipationToState(profile);
 }
-
 </script>

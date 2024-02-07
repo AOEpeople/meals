@@ -1,19 +1,19 @@
-import CostsTable from "@/components/costs/CostsTable.vue";
-import useApi from "@/api/api";
-import Costs from "../fixtures/getCosts.json";
-import { ref } from "vue";
-import { useCosts } from "@/stores/costsStore";
-import { mount } from "@vue/test-utils";
+import CostsTable from '@/components/costs/CostsTable.vue';
+import useApi from '@/api/api';
+import Costs from '../fixtures/getCosts.json';
+import { ref } from 'vue';
+import { useCosts } from '@/stores/costsStore';
+import { mount } from '@vue/test-utils';
 
 const asyncFunc: () => Promise<void> = async () => {
-    new Promise(resolve => resolve(undefined));
+    new Promise((resolve) => resolve(undefined));
 };
 
 const mockedReturnValue = {
     response: ref(Costs),
     request: asyncFunc,
     error: ref(false)
-}
+};
 
 // @ts-expect-error ts doesn't like mocking with jest.fn()
 useApi = jest.fn(useApi);

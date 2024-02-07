@@ -13,7 +13,6 @@
   </div>
 </template>
 
-
 <script setup lang="ts">
 import { computed, onMounted, onUpdated, ref, watch } from 'vue';
 import Meal from './Meal.vue';

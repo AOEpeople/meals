@@ -1,8 +1,6 @@
 <template>
   <div class="flex flex-row content-center items-center justify-end justify-items-end sm:gap-4">
-    <Popover
-      :translate-x-min="'-50%'"
-    >
+    <Popover :translate-x-min="'-50%'">
       <template #button="{ open }">
         <ActionButton
           :action="Action.EDIT"
@@ -42,8 +40,7 @@ const { t } = useI18n();
 const { deleteCategoryWithSlug } = useCategories();
 
 defineProps<{
-  category: Category,
-  index: number
+  category: Category;
+  index: number;
 }>();
-
 </script>

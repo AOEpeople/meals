@@ -3,9 +3,9 @@ import { TimeSlots, useTimeSlotData } from '@/api/getTimeSlotData';
 import { useUpdateSlot } from '@/api/putSlotUpdate';
 
 export type TimeSlot = {
-    slots: TimeSlots,
-    isLoading: boolean
-}
+    slots: TimeSlots;
+    isLoading: boolean;
+};
 
 class TimeSlotStore extends Store<TimeSlot> {
     protected data(): TimeSlot {
@@ -17,7 +17,7 @@ class TimeSlotStore extends Store<TimeSlot> {
 
     public async fillStore() {
         this.state.isLoading = true;
-        const {timeslots} = await useTimeSlotData();
+        const { timeslots } = await useTimeSlotData();
         if (timeslots.value) {
             this.state.slots = timeslots.value;
             this.state.isLoading = false;
@@ -33,10 +33,10 @@ class TimeSlotStore extends Store<TimeSlot> {
 
         if (error.value === false) {
             this.state.slots[slug].enabled = state;
-            return true
+            return true;
         }
-        return false
+        return false;
     }
 }
 
-export const timeSlotStore: TimeSlotStore = new TimeSlotStore()
+export const timeSlotStore: TimeSlotStore = new TimeSlotStore();

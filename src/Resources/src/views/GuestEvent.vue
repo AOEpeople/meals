@@ -10,9 +10,7 @@
       {{ t('guest.event.description').replace('%EventTitle%', invitationData?.event).replace('%lockDate%', lockDate) }}
     </p>
     <div>
-      <form
-        @submit.prevent="handleSubmit()"
-      >
+      <form @submit.prevent="handleSubmit()">
         <InputLabel
           v-model="formData.firstName"
           :required="true"
@@ -27,9 +25,7 @@
           v-model="formData.company"
           :labelText="t('guest.form.company')"
         />
-        <SubmitButton
-          :btnText="t('guest.event.submit')"
-        />
+        <SubmitButton :btnText="t('guest.event.submit')" />
       </form>
     </div>
   </div>
@@ -40,9 +36,7 @@
     <h2 class="text-center text-primary xl:text-left">
       {{ `${t('guest.event.title')} | ${eventDate}` }}
     </h2>
-    <p
-      class="whitespace-pre-line text-[18px] leading-[24px] text-primary-1"
-    >
+    <p class="whitespace-pre-line text-[18px] leading-[24px] text-primary-1">
       {{ t('guest.event.joined').replace('%EventTitle%', invitationData?.event).replace('%eventDate%', eventDate) }}
     </p>
   </div>
@@ -78,14 +72,14 @@ const formData = ref<GuestEventData>({
 const hasJoined = ref(false);
 
 const props = defineProps<{
-  hash: string
-}>()
+  hash: string;
+}>();
 
 onMounted(async () => {
   const { error, response } = await getEventInvitationData(props.hash);
 
   if (error.value === false && !isMessage(response)) {
-    invitationData.value = (response.value as EventInvitationData);
+    invitationData.value = response.value as EventInvitationData;
   }
 });
 
@@ -128,7 +122,13 @@ async function handleSubmit() {
 
 function getLocaleDateRepr(date: string, getTime = false) {
   if (getTime === true) {
-    return new Date(date).toLocaleDateString(locale.value, { weekday: 'long', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+    return new Date(date).toLocaleDateString(locale.value, {
+      weekday: 'long',
+      month: 'numeric',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   }
   return new Date(date).toLocaleDateString(locale.value, { weekday: 'long', month: 'numeric', day: 'numeric' });
 }

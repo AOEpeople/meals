@@ -18,6 +18,6 @@ import FinanceTable from './FinanceTable.vue';
 import { type Finances } from '@/stores/financesStore';
 
 defineProps<{
-  finances: Finances
+  finances: Finances;
 }>();
 </script>

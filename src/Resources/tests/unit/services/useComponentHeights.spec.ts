@@ -1,9 +1,8 @@
-import { describe, it } from "@jest/globals";
-import { mockComposableInApp } from "../test-utils";
-import { useComponentHeights } from "@/services/useComponentHeights";
+import { describe, it } from '@jest/globals';
+import { mockComposableInApp } from '../test-utils';
+import { useComponentHeights } from '@/services/useComponentHeights';
 
 describe('Test the composable useComponenetHeights', () => {
-
     beforeEach(() => {
         global.innerWidth = 1200;
         global.innerHeight = 1200;
@@ -34,5 +33,4 @@ describe('Test the composable useComponenetHeights', () => {
 
         expect(result?.maxTableHeight.value).toBe(1200 - listOfHeights.reduce((a, b) => a + b));
     });
-
 });

@@ -11,9 +11,7 @@
         v-if="bookedMeal === true"
         class="flex flex-1 place-content-center items-center"
       >
-        <CheckCircleIcon
-          class="block size-6 text-primary"
-        />
+        <CheckCircleIcon class="block size-6 text-primary" />
       </span>
       <span
         v-if="bookedCombi === true && isCombi === false"
@@ -57,20 +55,23 @@ import { computed, ref } from 'vue';
 const openCombi = ref<number | null>(null);
 
 const props = defineProps<{
-  edit: boolean,
-  participant: string,
-  dayId: string,
-  weekId: number,
-  meal: SimpleMeal
+  edit: boolean;
+  participant: string;
+  dayId: string;
+  weekId: number;
+  meal: SimpleMeal;
 }>();
 
 const { mealIdToDishIdDict } = useMealIdToDishId(props.weekId);
-const { addParticipantToMeal, removeParticipantFromMeal, hasParticipantBookedMeal, hasParticipantBookedCombiDish } = useParticipations(props.weekId);
+const { addParticipantToMeal, removeParticipantFromMeal, hasParticipantBookedMeal, hasParticipantBookedCombiDish } =
+  useParticipations(props.weekId);
 const { getDishById } = useDishes();
 
 const isCombi = computed(() => props.meal.dish === 'combined-dish');
-const bookedCombi = computed(() => hasParticipantBookedCombiDish(props.dayId, props.participant, mealIdToDishIdDict.get(props.meal.id)));
-const bookedMeal = computed(() => hasParticipantBookedMeal(props.dayId, props.participant, props.meal.id))
+const bookedCombi = computed(() =>
+  hasParticipantBookedCombiDish(props.dayId, props.participant, mealIdToDishIdDict.get(props.meal.id))
+);
+const bookedMeal = computed(() => hasParticipantBookedMeal(props.dayId, props.participant, props.meal.id));
 
 function handleClick() {
   if (props.edit === true && bookedMeal.value === true) {
@@ -91,7 +92,7 @@ function addParticipantOrOpenCombi(meal: SimpleMeal, participant: string, dayId:
 async function closeCombiModal(combiMeals: number[]) {
   openCombi.value = null;
   if (combiMeals !== undefined && combiMeals.length === 2) {
-    const dishSlugs = combiMeals.map(mealId => getDishById(mealIdToDishIdDict.get(mealId)).slug);
+    const dishSlugs = combiMeals.map((mealId) => getDishById(mealIdToDishIdDict.get(mealId)).slug);
     await addParticipantToMeal(props.meal.id, props.participant, props.dayId, dishSlugs);
   }
 }

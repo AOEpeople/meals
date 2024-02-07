@@ -7,7 +7,6 @@ import { Ref, ref, watch } from 'vue';
  * @returns ref-object periodicFetchActive
  */
 export function usePeriodicFetch(timeoutPeriod: number, fetchFunction: () => Promise<void>) {
-
     const periodicFetchActive = ref(false);
 
     const fetchID: Ref<number | null> = ref(null);
@@ -19,7 +18,7 @@ export function usePeriodicFetch(timeoutPeriod: number, fetchFunction: () => Pro
     watch(periodicFetchActive, (newPeriodicFetchActive, oldPeriodicFetchActive) => {
         if (newPeriodicFetchActive === true && newPeriodicFetchActive !== oldPeriodicFetchActive) {
             periodicFetch();
-        } else if(newPeriodicFetchActive === false && fetchID.value !== null) {
+        } else if (newPeriodicFetchActive === false && fetchID.value !== null) {
             window.clearTimeout(fetchID.value);
         }
     });
@@ -38,5 +37,5 @@ export function usePeriodicFetch(timeoutPeriod: number, fetchFunction: () => Pro
 
     return {
         periodicFetchActive
-    }
+    };
 }

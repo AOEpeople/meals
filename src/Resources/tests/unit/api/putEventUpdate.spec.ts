@@ -1,24 +1,24 @@
-import useApi from "@/api/api";
-import putEventUpdate from "@/api/putEventUpdate";
-import { Event } from "@/stores/eventsStore";
-import { ref } from "vue";
+import useApi from '@/api/api';
+import putEventUpdate from '@/api/putEventUpdate';
+import { Event } from '@/stores/eventsStore';
+import { ref } from 'vue';
 
 const testEvent: Event = {
     id: 0,
     title: 'Test',
     slug: 'test',
     public: false
-}
+};
 
 const asyncFunc: () => Promise<void> = async () => {
-    new Promise(resolve => resolve(undefined));
+    new Promise((resolve) => resolve(undefined));
 };
 
 const mockedReturnValue = {
     response: ref(testEvent),
     request: asyncFunc,
     error: ref(false)
-}
+};
 
 // @ts-expect-error ts doesn't like mocking with jest.fn()
 useApi = jest.fn(useApi);

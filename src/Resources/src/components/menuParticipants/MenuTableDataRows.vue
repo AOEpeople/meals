@@ -10,9 +10,7 @@
         :class="{ 'bg-tb-shadow shadow-tb': editRow }"
         @click="editRow = !editRow"
       >
-        <div
-          class="grid grid-cols-[1fr_30px]"
-        >
+        <div class="grid grid-cols-[1fr_30px]">
           <span
             class="pr-2 text-left"
             :class="{ 'font-bold': editRow }"
@@ -28,7 +26,7 @@
     </template>
     <template #dayMeals="{ dayId, meals }">
       <MenuTableData
-        v-for="meal, mealIndex in meals"
+        v-for="(meal, mealIndex) in meals"
         :key="`${String(meal.id)}.${String(mealIndex)}`"
         :edit="editRow"
         :participant="participant"
@@ -51,12 +49,9 @@ const editRow = ref<boolean>(false);
 const row = ref<HTMLElement | null>(null);
 
 defineProps<{
-  weekId: number,
-  participant: string
+  weekId: number;
+  participant: string;
 }>();
 
-watch(
-  editRow,
-  () => (editRow.value === true) && useDetectClickOutside(row, () => editRow.value = false)
-);
+watch(editRow, () => editRow.value === true && useDetectClickOutside(row, () => (editRow.value = false)));
 </script>

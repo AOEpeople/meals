@@ -1,6 +1,11 @@
 <template>
   <Table
-    :labels="[t('finance.table.date'), t('finance.table.name'), t('finance.table.amount'), t('finance.table.dailyClosing')]"
+    :labels="[
+      t('finance.table.date'),
+      t('finance.table.name'),
+      t('finance.table.amount'),
+      t('finance.table.dailyClosing')
+    ]"
     :print="print"
   >
     <div
@@ -56,22 +61,25 @@
 
 <script setup lang="ts">
 import Table from '@/components/misc/Table.vue';
-import {useI18n} from 'vue-i18n';
-import {Transaction} from '@/stores/financesStore';
-import {Dictionary} from '../../../types/types';
+import { useI18n } from 'vue-i18n';
+import { Transaction } from '@/stores/financesStore';
+import { Dictionary } from '../../../types/types';
 
-const {t, locale} = useI18n()
+const { t, locale } = useI18n();
 
-withDefaults(defineProps<{
-  transactions: Dictionary<Transaction[]>,
-  print?: boolean
-}>(),{
-  print: false
-});
+withDefaults(
+  defineProps<{
+    transactions: Dictionary<Transaction[]>;
+    print?: boolean;
+  }>(),
+  {
+    print: false
+  }
+);
 
 function getTotalAmount(transactions: Transaction[]) {
   return Object.values(transactions)
-  .map(transaction => transaction.amount)
-  .reduce((total, transaction) => total + transaction, 0);
+    .map((transaction) => transaction.amount)
+    .reduce((total, transaction) => total + transaction, 0);
 }
 </script>

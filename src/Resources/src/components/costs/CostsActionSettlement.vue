@@ -5,12 +5,8 @@
     class="relative z-50"
     @close="emit('confirm', false)"
   >
-    <div
-      class="fixed inset-0 flex items-center justify-center p-4"
-    >
-      <DialogPanel
-        class="relative overflow-hidden rounded-lg bg-white p-4 text-left shadow-xl sm:my-8 sm:p-6"
-      >
+    <div class="fixed inset-0 flex items-center justify-center p-4">
+      <DialogPanel class="relative overflow-hidden rounded-lg bg-white p-4 text-left shadow-xl sm:my-8 sm:p-6">
         <DialogTitle class="text-[18px]">
           {{ t('costs.settlement').replace('#name#', getFullNameByUser(username)) }}
         </DialogTitle>
@@ -45,8 +41,8 @@ const { t } = useI18n();
 const { getFullNameByUser } = useCosts();
 
 defineProps<{
-  open: boolean,
-  username: string
+  open: boolean;
+  username: string;
 }>();
 
 const emit = defineEmits(['confirm']);

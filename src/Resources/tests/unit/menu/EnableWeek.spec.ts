@@ -8,7 +8,7 @@ const testWeek: Ref<WeekDTO> = ref({
     notify: false,
     enabled: false,
     days: []
-})
+});
 
 describe('Test EnableWeek', () => {
     it('should contain the correct text', () => {

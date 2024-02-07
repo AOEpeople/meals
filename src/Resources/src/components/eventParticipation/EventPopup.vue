@@ -4,14 +4,14 @@
       class="size-[24px] text-primary hover:cursor-pointer"
       @click="showParticipations = true"
     />
-    <PopupModal
-      :isOpen="showParticipations"
-    >
+    <PopupModal :isOpen="showParticipations">
       <div
         class="grid max-h-[70vh] min-w-[300px] max-w-[310px] grid-cols-1 grid-rows-[auto_minmax(0,1fr)_auto] md:max-w-lg"
       >
         <div class="flex h-[48px] flex-row gap-2 rounded-t-lg bg-[#1c5298] p-2">
-          <span class="grow self-center justify-self-center truncate font-bold uppercase leading-4 tracking-[3px] text-white">
+          <span
+            class="grow self-center justify-self-center truncate font-bold uppercase leading-4 tracking-[3px] text-white"
+          >
             {{ t('dashboard.participations').replace('%EventTitle%', eventTitle) }}
           </span>
           <XCircleIcon
@@ -41,9 +41,7 @@
         >
           {{ t('dashboard.noParticipants') }}
         </span>
-        <span
-          class="w-full border-t-2 p-2 text-center font-bold"
-        >
+        <span class="w-full border-t-2 p-2 text-center font-bold">
           {{ t('dashboard.participationCount').replace('%count%', participations.length.toString()) }}
         </span>
       </div>
@@ -62,25 +60,25 @@ import { useEvents } from '@/stores/eventsStore';
 const { t } = useI18n();
 const { getParticipantsForEvent } = useEvents();
 
-const props = withDefaults(defineProps<{
-  eventTitle?: string,
-  date: string
-}>(), {
-  eventTitle: ''
-});
+const props = withDefaults(
+  defineProps<{
+    eventTitle?: string;
+    date: string;
+  }>(),
+  {
+    eventTitle: ''
+  }
+);
 
 const showParticipations = ref(false);
 const participations = ref([]);
 const isLoading = ref(false);
 
-watch(
-  showParticipations,
-  async () => {
-    if (showParticipations.value === true) {
-      isLoading.value = true;
-      participations.value = await getParticipantsForEvent(props.date);
-      isLoading.value = false;
-    }
+watch(showParticipations, async () => {
+  if (showParticipations.value === true) {
+    isLoading.value = true;
+    participations.value = await getParticipantsForEvent(props.date);
+    isLoading.value = false;
   }
-)
+});
 </script>

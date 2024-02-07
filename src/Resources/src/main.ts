@@ -25,19 +25,15 @@ const i18n = createI18n({
         en,
         de
     }
-})
+});
 
 // fill stores with data
-Promise.all([
-    userDataStore.fillStore(),
-    environmentStore.fillStore()
-])
-    .then(() => {
-        const MainApp = createApp(App)
-        MainApp.config.performance = true // enable Vue Devtools
-        MainApp.use(i18n)
-        MainApp.use(router)
-        MainApp.use(VueScreen)
-        MainApp.use(Vue3ProgressPlugin)
-        MainApp.mount('#app')
-    })
+Promise.all([userDataStore.fillStore(), environmentStore.fillStore()]).then(() => {
+    const MainApp = createApp(App);
+    MainApp.config.performance = true; // enable Vue Devtools
+    MainApp.use(i18n);
+    MainApp.use(router);
+    MainApp.use(VueScreen);
+    MainApp.use(Vue3ProgressPlugin);
+    MainApp.mount('#app');
+});

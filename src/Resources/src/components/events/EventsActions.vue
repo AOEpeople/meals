@@ -42,7 +42,6 @@ const { t } = useI18n();
 const { deleteEventWithSlug } = useEvents();
 
 defineProps<{
-  event: Event
+  event: Event;
 }>();
-
 </script>

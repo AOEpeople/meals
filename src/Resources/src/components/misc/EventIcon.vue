@@ -13,11 +13,14 @@
 </template>
 
 <script setup lang="ts">
-withDefaults(defineProps<{
-  fillColour?: string,
-  size?: number
-}>(), {
-  fillColour: 'fill-primary',
-  size: 24
-})
+withDefaults(
+  defineProps<{
+    fillColour?: string;
+    size?: number;
+  }>(),
+  {
+    fillColour: 'fill-primary',
+    size: 24
+  }
+);
 </script>

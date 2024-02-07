@@ -15,7 +15,7 @@ const mealOne: IMealWithVariations = {
     variations: [],
     participations: 3,
     mealId: 1
-}
+};
 const mealThree: IMealWithVariations = {
     title: {
         en: 'Test3',
@@ -24,7 +24,7 @@ const mealThree: IMealWithVariations = {
     variations: [],
     participations: 1,
     mealId: 3
-}
+};
 const mealFour: IMealWithVariations = {
     title: {
         en: 'Test4',
@@ -33,7 +33,7 @@ const mealFour: IMealWithVariations = {
     variations: [],
     participations: 2,
     mealId: 4
-}
+};
 const mealTwo: IMealWithVariations = {
     title: {
         en: 'Test2',
@@ -42,7 +42,7 @@ const mealTwo: IMealWithVariations = {
     variations: [mealThree, mealFour],
     participations: 5,
     mealId: 2
-}
+};
 
 describe('Test ParticipantsTableData', () => {
     it('should render a CheckCircleIcon and no variations', () => {

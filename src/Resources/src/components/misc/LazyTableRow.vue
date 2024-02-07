@@ -1,7 +1,5 @@
 <template>
-  <tr
-    ref="elementRef"
-  >
+  <tr ref="elementRef">
     <slot v-if="shouldRender === true" />
     <div
       v-else
@@ -15,7 +13,7 @@ import { nextTick, ref } from 'vue';
 import { useIntersectionObserver } from '@vueuse/core';
 
 defineProps<{
-  minHeight: number,
+  minHeight: number;
 }>();
 
 const shouldRender = ref(false);
@@ -29,7 +27,8 @@ const { stop } = useIntersectionObserver(
       shouldRender.value = true;
       stop();
     }
-  }, {
+  },
+  {
     rootMargin: '600px'
   }
 );

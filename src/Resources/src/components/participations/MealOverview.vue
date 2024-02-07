@@ -13,7 +13,7 @@
         >
           <MealsSummary
             v-if="nextThreeDaysState.days.length > 0"
-            :day="(nextThreeDaysState.days[0] as IDay)"
+            :day="nextThreeDaysState.days[0] as IDay"
           />
         </Transition>
       </td>
@@ -24,7 +24,7 @@
         >
           <MealsSummary
             v-if="nextThreeDaysState.days.length > 1"
-            :day="(nextThreeDaysState.days[1] as IDay)"
+            :day="nextThreeDaysState.days[1] as IDay"
           />
         </Transition>
       </td>
@@ -35,7 +35,7 @@
         >
           <MealsSummary
             v-if="nextThreeDaysState.days.length > 2"
-            :day="(nextThreeDaysState.days[2] as IDay)"
+            :day="nextThreeDaysState.days[2] as IDay"
           />
         </Transition>
       </td>
@@ -66,7 +66,7 @@ watch(windowWidth, () => {
   if (mealsOverview.value !== null && mealsOverview.value !== undefined) {
     setMealOverviewHeight(mealsOverview.value.offsetHeight, 'mealsOverview');
   }
-})
+});
 
 onUpdated(() => {
   if (mealsOverview.value !== null && mealsOverview.value !== undefined) {
@@ -79,7 +79,7 @@ onUnmounted(() => {
 });
 
 function onAfterEnter() {
-  if(mealsOverview.value !== null && mealsOverview.value !== undefined) {
+  if (mealsOverview.value !== null && mealsOverview.value !== undefined) {
     setMealOverviewHeight(mealsOverview.value.offsetHeight, 'mealsOverview');
   }
 }

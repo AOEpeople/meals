@@ -2,8 +2,8 @@ import { IMessage } from '@/interfaces/IMessage';
 import useApi from './api';
 
 export interface CreateDishVariationDTO {
-    titleDe?: string,
-    titleEn?: string
+    titleDe?: string;
+    titleEn?: string;
 }
 
 /**

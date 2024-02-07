@@ -1,9 +1,13 @@
 <template>
-  <div class="day-shadow mx-auto grid h-auto min-h-[153px] max-w-[414px] grid-cols-[auto_minmax(0,1fr)] grid-rows-[minmax(0,1fr)_auto] rounded bg-white sm:max-w-none">
+  <div
+    class="day-shadow mx-auto grid h-auto min-h-[153px] max-w-[414px] grid-cols-[auto_minmax(0,1fr)] grid-rows-[minmax(0,1fr)_auto] rounded bg-white sm:max-w-none"
+  >
     <div
       class="relative col-span-1 col-start-1 row-span-2 row-start-1 grid w-[24px] justify-center gap-2 rounded-l-[5px] py-[2px]"
-      :class="[day.isLocked || !day.isEnabled || (emptyDay && !isEventDay) ? 'bg-[#80909F]' : 'bg-primary-2',
-               !day.isLocked && !emptyDay && !guestData ? 'grid-rows-[minmax(0,1fr)_24px]' : '']"
+      :class="[
+        day.isLocked || !day.isEnabled || (emptyDay && !isEventDay) ? 'bg-[#80909F]' : 'bg-primary-2',
+        !day.isLocked && !emptyDay && !guestData ? 'grid-rows-[minmax(0,1fr)_24px]' : ''
+      ]"
     >
       <span
         class="row-start-1 rotate-180 place-self-center text-center text-[11px] font-bold uppercase leading-4 tracking-[3px] text-white [writing-mode:vertical-lr]"
@@ -40,7 +44,7 @@
         v-for="(meal, mealID) in day.meals"
         :key="mealID"
         class="mx-[15px] border-b-[0.7px] last:border-b-0"
-        :class="isEventDay && !guestData ? 'pt-[13px] pb-[13px] last:pb-0 last:pt-[21px]' : 'py-[13px]'"
+        :class="isEventDay && !guestData ? 'pb-[13px] pt-[13px] last:pb-0 last:pt-[21px]' : 'py-[13px]'"
       >
         <VariationsData
           v-if="meal.variations"
@@ -91,13 +95,13 @@ import { GuestDay } from '@/api/getInvitationData';
 import EventData from './EventData.vue';
 import { Invitation } from '@/enums/Invitation';
 
-const { t, locale } = useI18n()
+const { t, locale } = useI18n();
 
 const props = defineProps<{
-  weekID?: string,
-  dayID?: string,
-  index?: number,
-  guestData?: GuestDay | undefined
+  weekID?: string;
+  dayID?: string;
+  index?: number;
+  guestData?: GuestDay | undefined;
 }>();
 
 const day = props.guestData ? props.guestData : dashboardStore.getDay(props.weekID, props.dayID);
@@ -108,6 +112,8 @@ const isEventDay = day.event !== null;
 
 <style>
 .day-shadow {
-  box-shadow: 0 4px 0 hsla(0,0%,100%,.46),0 15px 35px rgba(216,225,233,.8);
+  box-shadow:
+    0 4px 0 hsla(0, 0%, 100%, 0.46),
+    0 15px 35px rgba(216, 225, 233, 0.8);
 }
 </style>

@@ -6,77 +6,81 @@ import { dashboardStore } from '@/stores/dashboardStore';
 import { environmentStore } from '@/stores/environmentStore';
 
 type Meal_Update = {
-    weekId: number,
-    dayId: number,
-    meals: Meal_Participation_Update[]
-}
+    weekId: number;
+    dayId: number;
+    meals: Meal_Participation_Update[];
+};
 
 type Meal_Participation_Update = {
-    mealId: number,
-    parentId: number,
-    limit: number,
-    reachedLimit: boolean,
-    isOpen: boolean,
-    isLocked: boolean,
-    participations: number,
-}
+    mealId: number;
+    parentId: number;
+    limit: number;
+    reachedLimit: boolean;
+    isOpen: boolean;
+    isLocked: boolean;
+    participations: number;
+};
 
 type Event_Participation_Update = {
-    weekId: number,
-    dayId: number,
+    weekId: number;
+    dayId: number;
     event: {
-        eventId: number,
-        participations: number
-    }
-}
+        eventId: number;
+        participations: number;
+    };
+};
 
 type Slot_Update = {
-    weekId: number,
-    dayId: number,
+    weekId: number;
+    dayId: number;
     newSlot: {
-        slotId: number,
-        limit: number,
-        count: number,
-    },
+        slotId: number;
+        limit: number;
+        count: number;
+    };
     prevSlot: {
-        slotId: number,
-        limit: number,
-        count: number,
-    }
-}
+        slotId: number;
+        limit: number;
+        count: number;
+    };
+};
 
-const OFFER_NEW = 0
-const OFFER_ACCEPTED = 1
-const OFFER_GONE = 2
+const OFFER_NEW = 0;
+const OFFER_ACCEPTED = 1;
+const OFFER_GONE = 2;
 
 type Offer_Update = {
-    type: number,
-    weekId: number,
-    dayId: number,
-    mealId: number,
-    parentId: number | null,
-    participantId: number | null,
-    lastOffer: boolean,
-}
+    type: number;
+    weekId: number;
+    dayId: number;
+    mealId: number;
+    parentId: number | null;
+    participantId: number | null;
+    lastOffer: boolean;
+};
 
 class MercureReceiver {
     public async init() {
-        await this.configureMealUpdateHandlers()
+        await this.configureMealUpdateHandlers();
     }
 
     private async configureMealUpdateHandlers(): Promise<void> {
-        const eventSrc = new EventSource(environmentStore.getState().mercureUrl + '?topic=participation-updates&topic=meal-offer-updates&topic=slot-allocation-updates&topic=event-participation-updates', {withCredentials: true});
+        const eventSrc = new EventSource(
+            environmentStore.getState().mercureUrl +
+                '?topic=participation-updates&topic=meal-offer-updates&topic=slot-allocation-updates&topic=event-participation-updates',
+            { withCredentials: true }
+        );
 
         eventSrc.addEventListener('participationUpdate', (event: MessageEvent) => {
-            MercureReceiver.handleParticipationUpdate(JSON.parse(event.data))
+            MercureReceiver.handleParticipationUpdate(JSON.parse(event.data));
         });
 
         eventSrc.addEventListener('mealOfferUpdate', (event: MessageEvent) => {
-            MercureReceiver.handleMealOfferUpdate(JSON.parse(event.data))
+            MercureReceiver.handleMealOfferUpdate(JSON.parse(event.data));
         });
 
         eventSrc.addEventListener('slotAllocationUpdate', (event: MessageEvent) => {
-            MercureReceiver.handleSlotAllocationUpdate(JSON.parse(event.data))
+            MercureReceiver.handleSlotAllocationUpdate(JSON.parse(event.data));
         });
 
         eventSrc.addEventListener('eventParticipationUpdate', (event: MessageEvent) => {
@@ -89,72 +93,73 @@ class MercureReceiver {
     }
 
     private static handleParticipationUpdate(data: Meal_Update): void {
-        for(const mealData of data.meals) {
+        for (const mealData of data.meals) {
             let meal: Meal;
             if (mealData.parentId !== null) {
-                meal = dashboardStore.getVariation(data.weekId, data.dayId, mealData.parentId, mealData.mealId) as Meal
+                meal = dashboardStore.getVariation(data.weekId, data.dayId, mealData.parentId, mealData.mealId) as Meal;
             } else {
-                meal = dashboardStore.getMeal(data.weekId, data.dayId, mealData.mealId) as Meal
+                meal = dashboardStore.getMeal(data.weekId, data.dayId, mealData.mealId) as Meal;
             }
 
             if (meal !== undefined) {
-                meal.limit = mealData.limit
-                meal.participations = mealData.participations
-                meal.isOpen = mealData.isOpen
-                meal.isLocked = mealData.isLocked
-                meal.reachedLimit = mealData.reachedLimit
+                meal.limit = mealData.limit;
+                meal.participations = mealData.participations;
+                meal.isOpen = mealData.isOpen;
+                meal.isLocked = mealData.isLocked;
+                meal.reachedLimit = mealData.reachedLimit;
             }
         }
     }
 
     private static handleMealOfferUpdate(data: Offer_Update): void {
-        const meal = data.parentId === null
-            ? dashboardStore.getMeal(data.weekId, data.dayId, data.mealId)
-            : dashboardStore.getVariation(data.weekId, data.dayId, data.parentId, data.mealId)
+        const meal =
+            data.parentId === null
+                ? dashboardStore.getMeal(data.weekId, data.dayId, data.mealId)
+                : dashboardStore.getVariation(data.weekId, data.dayId, data.parentId, data.mealId);
 
         if (meal !== undefined) {
             switch (data.type) {
                 case OFFER_NEW:
-                    meal.hasOffers = true
+                    meal.hasOffers = true;
                     if (!meal.isParticipating) {
-                        meal.mealState = 'tradeable'
+                        meal.mealState = 'tradeable';
                     }
-                    break
+                    break;
                 case OFFER_ACCEPTED:
                     if (data.participantId === meal.isParticipating) {
-                        meal.isParticipating = null
+                        meal.isParticipating = null;
                         if (data.lastOffer) {
-                            meal.mealState = 'disabled'
-                            meal.hasOffers = false
+                            meal.mealState = 'disabled';
+                            meal.hasOffers = false;
                         } else {
-                            meal.mealState = 'tradeable'
+                            meal.mealState = 'tradeable';
                         }
                     }
-                    break
+                    break;
                 case OFFER_GONE:
-                    meal.hasOffers = false
+                    meal.hasOffers = false;
                     if (!meal.isParticipating) {
-                        meal.mealState = 'disabled'
+                        meal.mealState = 'disabled';
                     }
-                    break
+                    break;
             }
         }
     }
 
     private static handleSlotAllocationUpdate(data: Slot_Update): void {
-        const newSlot = dashboardStore.getSlot(data.weekId, data.dayId, data.newSlot.slotId)
+        const newSlot = dashboardStore.getSlot(data.weekId, data.dayId, data.newSlot.slotId);
         if (newSlot !== undefined) {
-            newSlot.limit = data.newSlot.limit
-            newSlot.count = data.newSlot.count
+            newSlot.limit = data.newSlot.limit;
+            newSlot.count = data.newSlot.count;
         }
         if (data.prevSlot.slotId !== 0) {
-            const prevSlot = dashboardStore.getSlot(data.weekId, data.dayId, data.prevSlot.slotId)
+            const prevSlot = dashboardStore.getSlot(data.weekId, data.dayId, data.prevSlot.slotId);
             if (prevSlot !== undefined) {
-                prevSlot.limit = data.prevSlot.limit
-                prevSlot.count = data.prevSlot.count - 1
+                prevSlot.limit = data.prevSlot.limit;
+                prevSlot.count = data.prevSlot.count - 1;
             }
         }
     }
 }
 
-export const mercureReceiver: MercureReceiver = new MercureReceiver()
+export const mercureReceiver: MercureReceiver = new MercureReceiver();

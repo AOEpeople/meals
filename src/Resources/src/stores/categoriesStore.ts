@@ -9,16 +9,16 @@ import useFlashMessage from '@/services/useFlashMessage';
 import { FlashMessageType } from '@/enums/FlashMessage';
 
 export interface Category {
-    id: number,
-    titleDe: string,
-    titleEn: string,
-    slug: string
+    id: number;
+    titleDe: string;
+    titleEn: string;
+    slug: string;
 }
 
 interface CategoriesState {
-    categories: Category[],
-    isLoading: boolean,
-    error: string
+    categories: Category[];
+    isLoading: boolean;
+    error: string;
 }
 
 function isCategory(category: Category): category is Category {
@@ -56,7 +56,6 @@ watch(
 );
 
 export function useCategories() {
-
     /**
      * Calls getCategories and sets isLoading to true while fetching
      */
@@ -129,7 +128,10 @@ export function useCategories() {
     async function editCategory(index: number, titleDe: string, titleEn: string) {
         const { error, response } = await putCategoryUpdate(CategoriesState.categories[index].slug, titleDe, titleEn);
 
-        if (isMessage(response.value) === false && isResponseObjectOkay<Category>(error, response as Ref<Category>) === true) {
+        if (
+            isMessage(response.value) === false &&
+            isResponseObjectOkay<Category>(error, response as Ref<Category>) === true
+        ) {
             updateCategoryState(index, response.value as Category);
             sendFlashMessage({
                 type: FlashMessageType.INFO,
@@ -172,12 +174,12 @@ export function useCategories() {
      * Returns the category with the given id
      */
     function getCategoryById(id: number) {
-        return CategoriesState.categories.find(category => category.id === id);
+        return CategoriesState.categories.find((category) => category.id === id);
     }
 
     function getCategoryTitleById(id: number, locale = 'en') {
         const category = getCategoryById(id);
-        if(category !== undefined && category !== null) {
+        if (category !== undefined && category !== null) {
             return locale === 'en' ? category.titleEn : category.titleDe;
         }
         return '';
@@ -188,8 +190,8 @@ export function useCategories() {
      * @param title The title to search for
      */
     function getCategoryIdsByTitle(title: string) {
-        const categories = CategoriesState.categories.filter(category => categoryContainsString(category, title));
-        return categories.map(category => category.id);
+        const categories = CategoriesState.categories.filter((category) => categoryContainsString(category, title));
+        return categories.map((category) => category.id);
     }
 
     /**
@@ -197,8 +199,8 @@ export function useCategories() {
      */
     function categoryContainsString(category: Category, searchStr: string) {
         return (
-            category.titleDe.toLowerCase().includes(searchStr.toLowerCase())
-            || category.titleEn.toLowerCase().includes(searchStr.toLowerCase())
+            category.titleDe.toLowerCase().includes(searchStr.toLowerCase()) ||
+            category.titleEn.toLowerCase().includes(searchStr.toLowerCase())
         );
     }
 
@@ -211,6 +213,6 @@ export function useCategories() {
         resetState,
         getCategoryTitleById,
         getCategoryById,
-        getCategoryIdsByTitle,
-    }
+        getCategoryIdsByTitle
+    };
 }

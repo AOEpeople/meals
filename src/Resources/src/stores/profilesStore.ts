@@ -7,15 +7,15 @@ import useFlashMessage from '@/services/useFlashMessage';
 import { FlashMessageType } from '@/enums/FlashMessage';
 
 interface IProfilesState {
-    profiles: IProfile[],
-    error: string,
-    isLoading: boolean
+    profiles: IProfile[];
+    error: string;
+    isLoading: boolean;
 }
 
 export interface IProfile {
-    user: string,
-    fullName: string,
-    roles: string[]
+    user: string;
+    fullName: string;
+    roles: string[];
 }
 
 /**
@@ -34,7 +34,6 @@ function isProfile(profile: IProfile): profile is IProfile {
 }
 
 export function useProfiles(weekId: number) {
-
     const ProfilesState = reactive<IProfilesState>({
         profiles: [],
         error: '',
@@ -81,7 +80,7 @@ export function useProfiles(weekId: number) {
         if (error.value === true && isMessage(profile) === true) {
             ProfilesState.error = (profile.value as IMessage).message;
         } else if (isResponseObjectOkay(error, profile, isProfile)) {
-            return (profile.value as IProfile);
+            return profile.value as IProfile;
         }
 
         return null;

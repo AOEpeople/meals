@@ -1,7 +1,6 @@
 import { DateTime } from '@/api/getDashboardData';
 import { Dictionary } from 'types/types';
 
-
 export interface WeekDTO {
     id: number;
     notify: boolean;

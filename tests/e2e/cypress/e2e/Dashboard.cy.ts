@@ -34,7 +34,7 @@ describe('Test Dashboard View', () => {
             .find('span')
             .contains('Afterwork')
             .parent()
-            .find('div')
+            .find('div > div')
             .eq(1)
             .find('div')
             .eq(1)
@@ -239,7 +239,7 @@ describe('Test Dashboard View', () => {
             .find('span')
             .contains('Afterwork')
             .parent()
-            .find('div')
+            .find('div > div')
             .eq(6)
             .children()
             .should('have.length', 0);
@@ -256,7 +256,7 @@ describe('Test Dashboard View', () => {
             .find('span')
             .contains('Afterwork')
             .parent()
-            .find('div')
+            .find('div > div')
             .eq(6)
             .click();
 
@@ -272,7 +272,7 @@ describe('Test Dashboard View', () => {
             .find('span')
             .contains('Afterwork')
             .parent()
-            .find('div')
+            .find('div > div')
             .eq(6)
             .children()
             .should('have.length', 1);
@@ -289,7 +289,7 @@ describe('Test Dashboard View', () => {
             .find('span')
             .contains('Afterwork')
             .parent()
-            .find('div')
+            .find('div > div')
             .eq(6)
             .click();
 
@@ -305,7 +305,7 @@ describe('Test Dashboard View', () => {
             .find('span')
             .contains('Afterwork')
             .parent()
-            .find('div')
+            .find('div > div')
             .eq(6)
             .children()
             .should('have.length', 0);
@@ -365,7 +365,7 @@ describe('Test Dashboard View', () => {
             .find('span')
             .contains('Afterwork')
             .parent()
-            .find('div')
+            .find('div > div')
             .eq(6)
             .click();
 
@@ -414,7 +414,7 @@ describe('Test Dashboard View', () => {
             .find('span')
             .contains('Afterwork')
             .parent()
-            .find('div')
+            .find('div > div')
             .eq(6)
             .click();
 

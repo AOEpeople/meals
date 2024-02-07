@@ -14,7 +14,9 @@
     "build-watch": "concurrently \"yarn build-style-watch\" \"yarn build-dev-watch\"",
     "dev": "webpack serve --mode development --env development",
     "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\"",
-    "test": "jest --silent=false"
+    "test": "jest --silent=false",
+    "prettier-check": "prettier . --check",
+    "prettier": "prettier . --write"
   },
   "main": "./src/main.ts",
   "dependencies": {

@@ -17,6 +17,8 @@ help:
 	@echo "	poweroff           - Stop all related containers and projects"
 	@echo "	run-devbox         - Run devbox"
 	@echo "	run-lint           - Run code linter"
+	@echo "	run-prettier-check - Run prettier with the check option"
+	@echo "	run-prettier       - Run prettier to format frontend files"
 	@echo "	run-cs-fixer       - Run Coding Standards Fixer"
 	@echo "	run-phpmd          - Run PHP Mess Detector"
 	@echo "	run-psalm          - Run static code analysis"
@@ -50,6 +52,12 @@ build-yarn-watch:
 
 run-lint:
 	ddev exec yarn --cwd src/Resources lint
+
+run-prettier-check:
+	ddev exec yarn --cwd src/Resources prettier-check
+
+run-prettier:
+	ddev exec yarn --cwd src/Resources prettier
 
 run-phpmd:
 	ddev exec vendor/bin/phpmd src/Mealz text ./phpmd.xml --baseline-file ./phpmd.baseline.xml --exclude */Tests/*

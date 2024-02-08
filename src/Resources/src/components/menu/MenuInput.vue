@@ -62,6 +62,7 @@
             <li
               class="relative grid cursor-pointer grid-cols-[minmax(0,1fr)_36px] grid-rows-2 items-center text-left text-[14px] font-medium text-[#9CA3AF] hover:bg-[#FAFAFA] md:grid-cols-[minmax(0,1fr)_300px_36px] md:grid-rows-1"
               :class="{ 'bg-[#F4F4F4]': selected }"
+              @click="handleSelection(dish)"
             >
               <span
                 class="col-span-1 col-start-1 row-start-1 size-full truncate px-4 py-2"
@@ -200,6 +201,13 @@ const titleStringRepr = computed(() => {
 function handleClick() {
   openProp.value = true;
   useDetectClickOutside(combobox, () => (openProp.value = false));
+}
+
+function handleSelection(dish: Dish) {
+  selectedDish.value = dish;
+  if (dish.variations.length === 0) {
+    openProp.value = false;
+  }
 }
 </script>
 

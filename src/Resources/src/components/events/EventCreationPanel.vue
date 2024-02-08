@@ -16,13 +16,13 @@
       />
       <SwitchGroup>
         <div class="flex flex-col items-start pt-2">
-          <SwitchLabel class="w-full px-4 text-start text-xs font-medium text-[#173D7A]">
+          <SwitchLabel class="h-5 min-w-fit whitespace-nowrap text-nowrap text-start text-xs font-medium text-[#173D7A]">
             {{ t('event.popover.isPublic') }}
           </SwitchLabel>
           <Switch
             :sr="t('event.popover.isPublic')"
             :initial="isEventPublic"
-            class="my-autot ml-4"
+            class="my-auto"
             @toggle="(val) => isEventPublic = val"
           />
         </div>

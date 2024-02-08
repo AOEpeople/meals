@@ -14,12 +14,12 @@
       />
     </BannerSpacer>
     <div
-      class="flex w-full flex-row items-center px-[15px]"
+      class="flex w-full flex-col items-center px-[15px] min-[380px]:flex-row"
     >
-      <span class="inline-block grow self-center break-words text-[12px] font-bold leading-[20px] tracking-[0.5px] text-primary-1 max-[380px]:basis-9/12 min-[380px]:text-note">
+      <span class="inline-block grow self-start break-words text-[12px] font-bold leading-[20px] tracking-[0.5px] text-primary-1 max-[380px]:basis-9/12 min-[380px]:self-center min-[380px]:text-note">
         {{ getEventById(day.event.eventId)?.title }}
       </span>
-      <div class="grid w-fit grid-cols-2 grid-rows-2 items-center gap-1 justify-self-end max-[380px]:basis-3/12 min-[380px]:grid-cols-[auto_auto_auto_auto] min-[380px]:grid-rows-1">
+      <div class="flex w-fit flex-row items-center gap-1 self-end justify-self-end max-[380px]:basis-3/12">
         <GuestButton
           v-if="!day.isLocked && day.event.isPublic"
           :dayID="dayId"
@@ -29,19 +29,16 @@
           class="col-start-1 w-[24px] text-center"
         />
         <EventPopup
-          class="max-[380px]:col-start-1 max-[380px]:row-start-2"
           :event-title="getEventById(day.event.eventId)?.title"
           :date="day.date.date"
         />
         <ParticipationCounter
-          class="max-[380px]:col-start-2"
           :limit="0"
           :mealCSS="!day.isLocked ? 'bg-primary-4' : 'bg-[#80909F]'"
         >
           {{ day.event?.participations }}
         </ParticipationCounter>
         <CheckBox
-          class="max-[380px]:col-start-2 max-[380px]:row-start-2"
           :isActive="new Date(day.date.date) > new Date()"
           :isChecked="day.event?.isParticipating ?? false"
           @click="day.event?.isParticipating === false ? joinEvent(day.date.date) : leaveEvent(day.date.date)"

@@ -1,6 +1,6 @@
 <template>
-  <div class="flex w-auto flex-row justify-between gap-1 min-[380px]:gap-2 xl:grid-cols-6">
-    <div class="basis-11/12 items-center self-center xl:col-span-5">
+  <div class="flex w-auto flex-col justify-between gap-1 min-[380px]:flex-row min-[380px]:gap-2 xl:grid-cols-6">
+    <div class="basis-11/12 items-center self-start min-[380px]:self-center xl:col-span-5">
       <div class="self-center">
         <span
           class="inline-block break-words text-[12px] font-bold leading-[20px] tracking-[0.5px] text-primary-1 min-[380px]:text-note"
@@ -27,7 +27,7 @@
         </p>
       </div>
     </div>
-    <div class="text-align-last flex flex-auto basis-1/12 flex-col justify-end gap-1 min-[380px]:flex-row min-[380px]:items-center">
+    <div class="text-align-last flex flex-auto basis-1/12 flex-row justify-end gap-1 min-[380px]:items-center">
       <PriceTag
         class="align-center my-auto flex"
         :price="meal.price"
@@ -35,7 +35,6 @@
       <ParticipationCounter
         :mealCSS="mealCSS"
         :limit="meal.limit"
-        class="min-[380px]:mr-[15px]"
       >
         {{ participationDisplayString }}
       </ParticipationCounter>

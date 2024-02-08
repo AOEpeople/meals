@@ -73,7 +73,7 @@ class Doorman
             return false;
         }
 
-        return $this->isToggleParticipationAllowed($eventParticipation->getDay()->getLockParticipationDateTime());
+        return $this->isToggleParticipationAllowed($eventParticipation->getDay()->getDateTime()->setTime(16, 0));
     }
 
     public function isOfferAvailable(Meal $meal): bool

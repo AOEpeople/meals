@@ -1,5 +1,8 @@
 <template>
-  <div class="flex w-auto flex-col justify-between gap-1 min-[380px]:flex-row min-[380px]:gap-2 xl:grid-cols-6">
+  <div
+    class="flex w-auto justify-between gap-1 min-[380px]:flex-row min-[380px]:gap-2 xl:grid-cols-6"
+    :class="meal.dishSlug === 'combined-dish' ? 'flex-row' : 'flex-col'"
+  >
     <div class="basis-11/12 items-center self-start min-[380px]:self-center xl:col-span-5">
       <div class="self-center">
         <span

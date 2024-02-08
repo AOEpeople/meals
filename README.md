@@ -137,6 +137,44 @@ ddev exec yarn --cwd=src/Resources test -- -t "<test-filename> <testname>"
 `<test-filename>` for a file with the name `xyz.spec.ts` would be `xyz`
 `<testname>` is optional, if no testname is specified the whole file is run
 
+## Linting
+
+There are several lintig and formatting checks for the front- and backend. These are also executed in the GitHub-Actions workflows. Every check can be run manually and locally with the following make commands.
+
+#### ESLint
+Frontend asset linting
+```
+make run-lint
+```
+
+#### Prettier
+Frontend formatting check
+```
+make run-prettier-check
+```
+Frontend automated formatting
+```
+make run-prettier
+```
+
+#### Php-CS-Fixer
+Backend linting
+```
+make run-cs-fixer
+```
+
+#### Phpmd
+Backend linting
+```
+make run-phpmd
+```
+
+#### Psalm
+Backend linting
+```
+make run-psalm
+```
+
 ## Troubleshooting
 
 ### SQLSTATE[42S22]: Column not found: 1054 Unknown column

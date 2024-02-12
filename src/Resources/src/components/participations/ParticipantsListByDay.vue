@@ -8,7 +8,7 @@
       <DialogTitle
         class="inline-block h-6 flex-none align-middle text-[11px] font-bold uppercase tracking-[1.5px] text-primary"
       >
-        {{ t('dashboard.print') }}
+        {{ t('printList.title') }}
       </DialogTitle>
       <FilterInput
         v-model="filterInput"

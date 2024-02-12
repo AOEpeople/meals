@@ -1,8 +1,5 @@
 import { useParticipationsListData } from "@/api/getParticipationsByDay";
 import { Ref, computed, reactive } from "vue";
-// import { useI18n } from "vue-i18n";
-
-// const { t } = useI18n();
 
 interface ParticipantState {
   participants: Readonly<Ref<readonly string[]>>,
@@ -10,6 +7,7 @@ interface ParticipantState {
   isLoading: boolean,
   error: string
 }
+
 
 export function filterParticipantsList(date: string){
 
@@ -27,7 +25,7 @@ export function filterParticipantsList(date: string){
 
   const filteredParticipants = computed(() => {
     if (participations.participants.length===0){
-      return ["Heute gibt es keine Teilnehmer."]
+      return ["noParticipants"]
     }
     return participations.participants.filter(participant => participantsContainString(participant, participations.filterValue));
   });

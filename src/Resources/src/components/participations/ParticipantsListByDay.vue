@@ -32,7 +32,12 @@
             <td
               class="leading- h-6 whitespace-nowrap py-1 text-[12px] font-light text-primary"
             >
-              {{ participant }}
+              <div v-if="participant==='noParticipants'">
+                {{ t('flashMessage.success.participations.no') }}
+              </div>
+              <div v-else>
+                {{ participant }}
+              </div>
             </td>
           </tr>
         </template>

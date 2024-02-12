@@ -8,6 +8,7 @@ interface ParticipantState {
   error: string
 }
 
+
 export function filterParticipantsList(date: string){
 
   const {listData } = useParticipationsListData(date);
@@ -24,7 +25,7 @@ export function filterParticipantsList(date: string){
 
   const filteredParticipants = computed(() => {
     if (participations.participants.length===0){
-      return [];
+      return ["noParticipants"]
     }
     console.log(participations.participants);
     return participations.participants.filter(participant => participantsContainString(participant, participations.filterValue));

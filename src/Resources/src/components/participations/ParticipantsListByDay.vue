@@ -47,24 +47,24 @@
 </template>
 
 <script setup lang="ts">
-import { usePrintableListData } from '@/api/getPrintableListData';
 import { filterParticipantsList } from '@/services/filterParticipantsList';
 import { DialogTitle } from '@headlessui/vue';
 import { useProgress } from '@marcoschulte/vue3-progress';
-import { computed, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import FilterInput from '../misc/FilterInput.vue';
 
 
 const progress = useProgress().start()
-const { listData } = usePrintableListData();
 
 const props = defineProps<{
-  date: string
+  date: string,
+  dateString: string,
+  weekday: string
 }>();
 
 const { filteredParticipants, setFilter } = filterParticipantsList(props.date);
-const { t, locale } = useI18n();
+const { t } = useI18n();
 
 const filterInput = ref('');
 
@@ -72,10 +72,6 @@ watch(
   () => filterInput.value,
   () => setFilter(filterInput.value)
 );
-
-
-const dateString = computed(() => new Date(Date.parse(listData.day.date)).toLocaleDateString(locale.value, {weekday: 'long', month: 'numeric', day: 'numeric'}));
-
 
 progress.finish()
 </script>

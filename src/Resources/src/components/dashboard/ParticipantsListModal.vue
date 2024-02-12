@@ -17,6 +17,8 @@
         />
         <ParticipantsListByDay
           :date="date"
+          :dateString="dateString"
+          :weekday="weekday"
         />
       </DialogPanel>
     </div>
@@ -34,6 +36,8 @@ const { t } = useI18n();
 defineProps<{
   openParticipantsModal: boolean,
   date: string,
+  dateString: string,
+  weekday: string
 }>();
 
 const emit = defineEmits(['closeDialog','update:modelValue','update:filterValue']);

@@ -26,6 +26,8 @@
       <ParticipantsListModal
         :openParticipantsModal="openParticipantsModal"
         :date="date"
+        :weekday="weekday"
+        :dateString="dateString"
         @close-dialog="closeParticipantsModal"
       />
     </div>
@@ -108,6 +110,8 @@ const emptyDay = Object.keys(day.meals).length === 0;
 async function closeParticipantsModal() {
   openParticipantsModal.value = false;
 }
+
+const dateString = computed(() => new Date(Date.parse(day.date.date)).toLocaleDateString(locale.value, {weekday: 'long', month: 'numeric', day: 'numeric'}));
 function openModal(){
     // format date (2023-12-23) without time stamp
   date.value = day.date.date.split(' ')[0];

@@ -92,7 +92,7 @@ watch(
 );
 
 const mealCSS = computed(() => {
-  let css = 'flex content-center rounded-md h-[30px] xl:h-[20px] '
+  let css = 'flex content-center rounded-md h-[30px] xl:h-[20px] ';
   switch (meal.mealState) {
     case 'disabled':
     case 'offerable':

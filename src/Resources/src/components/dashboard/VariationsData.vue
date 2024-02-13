@@ -33,7 +33,9 @@
     >
       <OfferPopover v-if="openPopover" />
     </Transition>
-    <div class="text-align-last flex flex-auto basis-1/12 flex-row justify-end gap-1 min-[380px]:flex-row min-[380px]:items-center">
+    <div
+      class="text-align-last flex flex-auto basis-1/12 flex-row justify-end gap-1 min-[380px]:flex-row min-[380px]:items-center"
+    >
       <PriceTag
         class="align-center my-auto flex"
         :price="variation.price"

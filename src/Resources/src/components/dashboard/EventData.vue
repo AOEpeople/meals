@@ -13,10 +13,10 @@
         :size="20"
       />
     </BannerSpacer>
-    <div
-      class="flex w-full flex-col items-center px-[15px] min-[380px]:flex-row"
-    >
-      <span class="inline-block grow self-start break-words text-[12px] font-bold leading-[20px] tracking-[0.5px] text-primary-1 max-[380px]:basis-9/12 min-[380px]:self-center min-[380px]:text-note">
+    <div class="flex w-full flex-col items-center px-[15px] min-[380px]:flex-row">
+      <span
+        class="inline-block grow self-start break-words text-[12px] font-bold leading-[20px] tracking-[0.5px] text-primary-1 max-[380px]:basis-9/12 min-[380px]:self-center min-[380px]:text-note"
+      >
         {{ getEventById(day.event.eventId)?.title }}
       </span>
       <div class="flex w-fit flex-row items-center gap-1 self-end justify-self-end max-[380px]:basis-3/12">

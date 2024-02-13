@@ -2,16 +2,17 @@ import { useParticipationsListData } from "@/api/getParticipationsByDay";
 import { Ref, computed, reactive } from "vue";
 
 interface ParticipantState {
-  participants: Readonly<Ref<readonly string[]>>,
+  participants: Ref<string[]>,
   filterValue: string,
   isLoading: boolean,
   error: string
 }
 
 
-export function filterParticipantsList(date: string){
+export function filterParticipantsList(date: string) {
 
-  const {listData } = useParticipationsListData(date);
+  const { listData } = useParticipationsListData(date);
+
   const participations  = reactive<ParticipantState>({
     participants: listData,
     filterValue: '',

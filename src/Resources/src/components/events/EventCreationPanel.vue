@@ -20,7 +20,7 @@
           <Switch
             :sr="t('event.popover.isPublic')"
             :initial="isEventPublic"
-            class="my-autot ml-4"
+            class="my-auto ml-4"
             @toggle="(val) => (isEventPublic = val)"
           />
         </div>

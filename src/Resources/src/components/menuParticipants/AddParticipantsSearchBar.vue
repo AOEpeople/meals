@@ -48,6 +48,7 @@
           <ComboboxOption
             v-for="profile in filteredProfiles"
             :key="profile.user"
+            as="template"
             :value="profile"
           >
             <LazyListItem

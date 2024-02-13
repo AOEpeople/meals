@@ -9,11 +9,11 @@
     <div
       ref="combobox"
       class="relative w-full"
-      @click="handleClick"
     >
       <div
         class="flex w-full flex-row items-center overflow-hidden border-[#CAD6E1] bg-white text-left text-[14px] font-medium text-[#B4C1CE] focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2"
-        :class="openProp ? 'rounded-t-[23px] border-x-2 border-b-[1px] border-t-2' : 'rounded-full border-2'"
+        :class="openProp ? 'rounded-t-[23px] border-x-2 border-t-2 border-b-[1px]' : 'rounded-full border-2'"
+        @click="handleClick"
       >
         <MealIcon
           class="ml-4 aspect-square h-full"
@@ -62,6 +62,7 @@
             <li
               class="relative grid cursor-pointer grid-cols-[minmax(0,1fr)_36px] grid-rows-2 items-center text-left text-[14px] font-medium text-[#9CA3AF] hover:bg-[#FAFAFA] md:grid-cols-[minmax(0,1fr)_300px_36px] md:grid-rows-1"
               :class="{ 'bg-[#F4F4F4]': selected }"
+              @click="handleSelection(dish)"
             >
               <span
                 class="col-span-1 col-start-1 row-start-1 size-full truncate px-4 py-2"
@@ -200,6 +201,13 @@ const titleStringRepr = computed(() => {
 function handleClick() {
   openProp.value = true;
   useDetectClickOutside(combobox, () => (openProp.value = false));
+}
+
+function handleSelection(dish: Dish) {
+  selectedDish.value = dish;
+  if (dish.variations.length === 0) {
+    openProp.value = false;
+  }
 }
 </script>
 

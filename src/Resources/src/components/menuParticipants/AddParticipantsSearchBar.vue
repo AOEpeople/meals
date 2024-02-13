@@ -51,14 +51,16 @@
             as="template"
             :value="profile"
           >
-            <li
+            <LazyListItem
+              :min-height="34"
+              :render-on-idle="true"
               class="relative cursor-pointer px-4 py-1 text-left text-[14px] font-medium text-[#9CA3AF] hover:bg-[#FAFAFA]"
               @click="selectProfile(profile as IProfile)"
             >
               <span class="size-full truncate">
                 {{ getDisplayName(profile as IProfile) }}
               </span>
-            </li>
+            </LazyListItem>
           </ComboboxOption>
         </ComboboxOptions>
       </div>
@@ -74,6 +76,7 @@ import { computed, onMounted, ref, useSlots } from 'vue';
 import { XIcon } from '@heroicons/vue/solid';
 import { useI18n } from 'vue-i18n';
 import { refThrottled } from '@vueuse/core';
+import LazyListItem from '../misc/LazyListItem.vue';
 
 const props = defineProps<{
   weekId: number;

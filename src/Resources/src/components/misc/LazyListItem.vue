@@ -1,10 +1,10 @@
 <template>
-  <div
+  <li
     ref="elementRef"
     :style="`min-height: ${fixedMinHeight !== 0 ? fixedMinHeight : minHeight}px`"
   >
     <slot v-if="shouldRender === true" />
-  </div>
+  </li>
 </template>
 
 <script setup lang="ts">

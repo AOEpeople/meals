@@ -45,21 +45,22 @@
               {{ t('menu.notFound') }}
             </span>
           </li>
-          <ComboboxOption
-            v-for="profile in filteredProfiles"
-            :key="profile.user"
-            as="template"
-            :value="profile"
-          >
-            <li
-              class="relative cursor-pointer px-4 py-1 text-left text-[14px] font-medium text-[#9CA3AF] hover:bg-[#FAFAFA]"
-              @click="selectProfile(profile as IProfile)"
+            <ComboboxOption
+              v-for="profile in filteredProfiles"
+              :key="profile.user"
+              :value="profile"
             >
-              <span class="size-full truncate">
-                {{ getDisplayName(profile as IProfile) }}
-              </span>
-            </li>
-          </ComboboxOption>
+              <LazyListItem
+                :min-height="34"
+                :render-on-idle="true"
+                class="relative cursor-pointer px-4 py-1 text-left text-[14px] font-medium text-[#9CA3AF] hover:bg-[#FAFAFA]"
+                @click="selectProfile(profile as IProfile)"
+              >
+                <span class="size-full truncate">
+                  {{ getDisplayName(profile as IProfile) }}
+                </span>
+              </LazyListItem>
+            </ComboboxOption>
         </ComboboxOptions>
       </div>
     </div>
@@ -74,6 +75,7 @@ import { computed, onMounted, ref, useSlots } from 'vue';
 import { XIcon } from '@heroicons/vue/solid';
 import { useI18n } from 'vue-i18n';
 import { refThrottled } from '@vueuse/core';
+import LazyListItem from '../misc/LazyListItem.vue';
 
 const props = defineProps<{
   weekId: number;
@@ -132,6 +134,14 @@ function handleClick() {
 function selectProfile(profile: IProfile) {
   filter.value = '';
   emit('profileSelected', profile);
+}
+
+function generateRandProfile(): IProfile {
+  return {
+    user: 'sssar' + Math.random(),
+    fullName: 'seger' + Math.random(),
+    roles: ['USER']
+  }
 }
 </script>
 

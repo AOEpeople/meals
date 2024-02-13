@@ -1,29 +1,29 @@
 <template>
-  <template
+  <li
     ref="elementRef"
     :style="`min-height: ${fixedMinHeight !== 0 ? fixedMinHeight : minHeight}px`"
-    :as="tag"
   >
     <slot v-if="shouldRender === true" />
-  </template>
+  </li>
 </template>
 
 <script setup lang="ts">
 import { nextTick, ref } from 'vue';
 import { useIntersectionObserver } from '@vueuse/core';
 
-const props = withDefaults(defineProps<{
-  renderOnIdle?: boolean,
-  unrender?: boolean,
-  minHeight: number,
-  unrenderDelay?: number,
-  tag?: string
-}>(), {
-  renderOnIdle: false,
-  unrender: false,
-  unrenderDelay: 10000,
-  tag: "div"
-});
+const props = withDefaults(
+  defineProps<{
+    renderOnIdle?: boolean;
+    unrender?: boolean;
+    minHeight: number;
+    unrenderDelay?: number;
+  }>(),
+  {
+    renderOnIdle: false,
+    unrender: false,
+    unrenderDelay: 10000
+  }
+);
 
 const shouldRender = ref(false);
 const elementRef = ref<HTMLElement | null>(null);

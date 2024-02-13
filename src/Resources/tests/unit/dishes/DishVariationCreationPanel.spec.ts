@@ -1,6 +1,6 @@
-import DishVariationCreationPanel from "@/components/dishes/DishVariationCreationPanel.vue";
-import { mount } from "@vue/test-utils";
-import { describe, it, expect } from "@jest/globals";
+import DishVariationCreationPanel from '@/components/dishes/DishVariationCreationPanel.vue';
+import { mount } from '@vue/test-utils';
+import { describe, it, expect } from '@jest/globals';
 
 const mockCreateDishVariation = jest.fn();
 const mockUpdateDishVariation = jest.fn();

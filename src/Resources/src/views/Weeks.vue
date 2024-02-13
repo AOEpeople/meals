@@ -6,13 +6,13 @@
     <WeekOverview
       v-for="week in WeeksState.weeks"
       :key="week.calendarWeek"
-      :week="// @ts-ignore
-        (week as Week)"
+      :week="
+        // @ts-ignore
+        week as Week
+      "
     />
   </div>
-  <LoadingSpinner
-    :loaded="loaded"
-  />
+  <LoadingSpinner :loaded="loaded" />
 </template>
 
 <script setup lang="ts">

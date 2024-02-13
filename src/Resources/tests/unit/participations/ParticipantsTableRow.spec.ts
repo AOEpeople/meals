@@ -1,7 +1,7 @@
-import { IBookedData, IMealWithVariations } from "@/api/getShowParticipations";
-import ParticipantsTableRow from "@/components/participations/ParticipantsTableRow.vue";
-import { describe, expect, it } from "@jest/globals";
-import { mount } from "@vue/test-utils";
+import { IBookedData, IMealWithVariations } from '@/api/getShowParticipations';
+import ParticipantsTableRow from '@/components/participations/ParticipantsTableRow.vue';
+import { describe, expect, it } from '@jest/globals';
+import { mount } from '@vue/test-utils';
 
 const bookedDataOne: IBookedData = { booked: [1] };
 const bookedDataTwo: IBookedData = { booked: [1, 3, 5] };
@@ -14,7 +14,7 @@ const mealOne: IMealWithVariations = {
     variations: [],
     participations: 3,
     mealId: 1
-}
+};
 const mealThree: IMealWithVariations = {
     title: {
         en: 'Test3',
@@ -23,7 +23,7 @@ const mealThree: IMealWithVariations = {
     variations: [],
     participations: 1,
     mealId: 3
-}
+};
 const mealFour: IMealWithVariations = {
     title: {
         en: 'Test4',
@@ -32,7 +32,7 @@ const mealFour: IMealWithVariations = {
     variations: [],
     participations: 2,
     mealId: 4
-}
+};
 const mealTwo: IMealWithVariations = {
     title: {
         en: 'Test2',
@@ -41,26 +41,26 @@ const mealTwo: IMealWithVariations = {
     variations: [mealThree, mealFour],
     participations: 5,
     mealId: 2
-}
+};
 
 const mealFive: IMealWithVariations = {
     title: {
-        'en': 'Combined Dish',
-        'de': 'Kombi-Gericht'
+        en: 'Combined Dish',
+        de: 'Kombi-Gericht'
     },
     variations: [],
     participations: 1,
     mealId: 5
-}
+};
 
 describe('Test ParticipantsTableRow', () => {
     it('should contain three td-elements', () => {
         const wrapper = mount(ParticipantsTableRow, {
-           props: {
+            props: {
                 participantName: 'test-user',
                 bookedMeals: bookedDataOne,
                 meals: [mealOne, mealTwo]
-           }
+            }
         });
 
         expect(wrapper.findAll('td')).toHaveLength(3);
@@ -69,7 +69,7 @@ describe('Test ParticipantsTableRow', () => {
     it('should contain the participants name', () => {
         const wrapper = mount(ParticipantsTableRow, {
             props: {
-                participantName: "test-user",
+                participantName: 'test-user',
                 bookedMeals: bookedDataOne,
                 meals: [mealOne, mealTwo]
             }

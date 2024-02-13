@@ -1,10 +1,10 @@
-import { IMessage } from "@/interfaces/IMessage";
-import useApi from "./api";
+import { IMessage } from '@/interfaces/IMessage';
+import useApi from './api';
 
 export interface GuestEventData {
-    firstName: string,
-    lastName: string,
-    company: string
+    firstName: string;
+    lastName: string;
+    company: string;
 }
 
 export default async function postJoinEventGuest(invitationHash: string, guestData: GuestEventData) {

@@ -15,22 +15,22 @@ import { refThrottled } from '@vueuse/core';
 import getDishesForCombi from '@/api/getDishesForCombi';
 
 export interface Dish {
-    id: number,
-    slug: string,
-    titleDe: string,
-    titleEn: string,
-    descriptionDe?: string,
-    descriptionEn?: string,
-    categoryId: number,
-    oneServingSize: boolean,
-    parentId: number,
-    variations: Dish[]
+    id: number;
+    slug: string;
+    titleDe: string;
+    titleEn: string;
+    descriptionDe?: string;
+    descriptionEn?: string;
+    categoryId: number;
+    oneServingSize: boolean;
+    parentId: number;
+    variations: Dish[];
 }
 
 interface DishesState {
-    dishes: Dish[],
-    isLoading: boolean,
-    error: string
+    dishes: Dish[];
+    isLoading: boolean;
+    error: string;
 }
 
 function isDish(dish: Dish): dish is Dish {
@@ -44,8 +44,9 @@ function isDish(dish: Dish): dish is Dish {
         ((dish as Dish).categoryId === null || typeof (dish as Dish).categoryId === 'number') &&
         typeof (dish as Dish).oneServingSize === 'boolean' &&
         Array.isArray((dish as Dish).variations) &&
-        (Object.keys(dish).length >= 8 && Object.keys(dish).length <= 10)
-    )
+        Object.keys(dish).length >= 8 &&
+        Object.keys(dish).length <= 10
+    );
 }
 
 const TIMEOUT_PERIOD = 10000;
@@ -56,7 +57,7 @@ const DishesState = reactive<DishesState>({
     error: ''
 });
 
-const filterState = ref('')
+const filterState = ref('');
 const dishFilter = refThrottled(filterState, 1000);
 
 const { sendFlashMessage } = useFlashMessage();
@@ -74,7 +75,6 @@ watch(
 );
 
 export function useDishes() {
-
     /**
      * Updates the string to filter for in the DishesState
      */
@@ -88,17 +88,22 @@ export function useDishes() {
      */
     const filteredDishes = computed(() => {
         const { getCategoryIdsByTitle } = useCategories();
-        return DishesState.dishes.filter(dish => (dishContainsString(dish, dishFilter.value) || getCategoryIdsByTitle(dishFilter.value).includes(dish.categoryId)) && dish.slug !== 'combined-dish');
+        return DishesState.dishes.filter(
+            (dish) =>
+                (dishContainsString(dish, dishFilter.value) ||
+                    getCategoryIdsByTitle(dishFilter.value).includes(dish.categoryId)) &&
+                dish.slug !== 'combined-dish'
+        );
     });
 
     /**
      * Determines wether a dish contains the search string in its title or in the title of one of its variations
      */
-    function dishContainsString(dish: Dish ,searchStr: string) {
+    function dishContainsString(dish: Dish, searchStr: string) {
         return (
-            dish.titleDe.toLowerCase().includes(searchStr.toLowerCase())
-            || dish.titleEn.toLowerCase().includes(searchStr.toLowerCase())
-            || dish.variations.map(variation => dishContainsString(variation, searchStr)).includes(true)
+            dish.titleDe.toLowerCase().includes(searchStr.toLowerCase()) ||
+            dish.titleEn.toLowerCase().includes(searchStr.toLowerCase()) ||
+            dish.variations.map((variation) => dishContainsString(variation, searchStr)).includes(true)
         );
     }
 
@@ -205,7 +210,11 @@ export function useDishes() {
     async function updateDishVariation(slug: string, variation: CreateDishVariationDTO) {
         const { error, response } = await putDishVariationUpdate(slug, variation);
 
-        if (isMessage(response.value) === false && isResponseObjectOkay<Dish>(error, response as Ref<Dish>, isDish) === true && typeof (response.value as Dish).parentId === 'number') {
+        if (
+            isMessage(response.value) === false &&
+            isResponseObjectOkay<Dish>(error, response as Ref<Dish>, isDish) === true &&
+            typeof (response.value as Dish).parentId === 'number'
+        ) {
             updateDishVariationInState((response.value as Dish).parentId, response.value as Dish);
             sendFlashMessage({
                 type: FlashMessageType.INFO,
@@ -224,7 +233,10 @@ export function useDishes() {
     async function updateDish(id: number, dish: CreateDishDTO) {
         const { error, response } = await putDishUpdate(getDishById(id).slug, dish);
 
-        if (isMessage(response.value) === false && isResponseObjectOkay<Dish>(error, response as Ref<Dish>, isDish) === true) {
+        if (
+            isMessage(response.value) === false &&
+            isResponseObjectOkay<Dish>(error, response as Ref<Dish>, isDish) === true
+        ) {
             updateDishesState(response.value as Dish);
             sendFlashMessage({
                 type: FlashMessageType.INFO,
@@ -280,12 +292,12 @@ export function useDishes() {
     function getDishById(id: number) {
         let dishToReturn: Dish | null = null;
 
-        DishesState.dishes.forEach(dish => {
+        DishesState.dishes.forEach((dish) => {
             if (dish.id === id) {
                 dishToReturn = dish;
             }
 
-            dish.variations.forEach(variation => {
+            dish.variations.forEach((variation) => {
                 if (variation.id === id) {
                     dishToReturn = variation;
                 }
@@ -297,18 +309,18 @@ export function useDishes() {
 
     function getDishVariationByParentIdAndId(parentId: number, variationId: number) {
         const parentDish = getDishById(parentId);
-        return parentDish.variations.find(variation => variation.id === variationId);
+        return parentDish.variations.find((variation) => variation.id === variationId);
     }
 
     function getDishBySlug(slug: string) {
         let dishToReturn: Dish | null = null;
 
-        DishesState.dishes.forEach(dish => {
+        DishesState.dishes.forEach((dish) => {
             if (dish.slug === slug) {
                 dishToReturn = dish;
             }
 
-            dish.variations.forEach(variation => {
+            dish.variations.forEach((variation) => {
                 if (variation.slug === slug) {
                     dishToReturn = variation;
                 }
@@ -325,7 +337,7 @@ export function useDishes() {
      * @param slugs The slugs of the dishes to return
      */
     function getDishArrayBySlugs(slugs: string[]) {
-        const dishesFromSlugs: Dish[] = slugs.map(slug => getDishBySlug(slug));
+        const dishesFromSlugs: Dish[] = slugs.map((slug) => getDishBySlug(slug));
 
         const dishesWithParent: Dish[] = [];
 

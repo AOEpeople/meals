@@ -15,13 +15,15 @@
           :colspan="getColspanFromMeals(menuDayId)"
           class="sticky z-30 border-b-2 border-r-2 border-solid border-gray-200 bg-[#f4f7f9] p-2 text-center"
         >
-          {{ new Date(getDayByWeekIdAndDayId(weekId, menuDayId).dateTime.date).toLocaleDateString(locale, { weekday: 'long' }) }}
+          {{
+            new Date(getDayByWeekIdAndDayId(weekId, menuDayId).dateTime.date).toLocaleDateString(locale, {
+              weekday: 'long'
+            })
+          }}
         </th>
       </template>
     </tr>
-    <MenuTableRow
-      :week-id="weekId"
-    >
+    <MenuTableRow :week-id="weekId">
       <template #firstCell>
         <th
           class="sticky left-0 top-0 z-40 whitespace-nowrap border-b-2 border-r-2 border-solid border-gray-200 bg-[#f4f7f9] px-4 py-2 text-start"
@@ -29,7 +31,7 @@
       </template>
       <template #dayMeals="{ dayId, meals }">
         <th
-          v-for="meal, mealIndex in meals"
+          v-for="(meal, mealIndex) in meals"
           :key="`${String(meal.id)}_${String(mealIndex)}`"
           class="sticky top-0 z-20 border-b-2 border-r-2 border-solid border-gray-200 bg-[#f4f7f9] px-2 text-center"
         >
@@ -51,7 +53,7 @@ import MenuTableRow from './MenuTableRow.vue';
 import { useParticipations } from '@/stores/participationsStore';
 
 const props = defineProps<{
-  weekId: number
+  weekId: number;
 }>();
 
 const { locale } = useI18n();
@@ -61,7 +63,7 @@ const { menuParticipationsState } = useParticipations(props.weekId);
 
 function getColspanFromMeals(dayId: string) {
   let mealCount = 0;
-  for(const mealArr of Object.values(getDayByWeekIdAndDayId(props.weekId, dayId)?.meals)) {
+  for (const mealArr of Object.values(getDayByWeekIdAndDayId(props.weekId, dayId)?.meals)) {
     mealArr.forEach(() => mealCount++);
   }
   return mealCount;
@@ -70,12 +72,10 @@ function getColspanFromMeals(dayId: string) {
 const dateRangeStr = computed(() => {
   const week = getWeekById(props.weekId);
   if (isWeek(week) === true) {
-    return (
-      getDateRangeOfWeek(week.calendarWeek, week.year)
-        .map(date => date.toLocaleDateString(locale.value, { day: 'numeric', month: 'numeric' }))
-        .join(' - ')
-    );
+    return getDateRangeOfWeek(week.calendarWeek, week.year)
+      .map((date) => date.toLocaleDateString(locale.value, { day: 'numeric', month: 'numeric' }))
+      .join(' - ');
   }
-  return 'invalid date'
+  return 'invalid date';
 });
 </script>

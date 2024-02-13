@@ -12,7 +12,6 @@ jest.mock('@/stores/eventsStore', () => ({
 }));
 
 describe('Test EventCreationPanel', () => {
-
     afterEach(() => jest.clearAllMocks());
 
     it('should not call createEvent if title is empty', async () => {
@@ -22,7 +21,7 @@ describe('Test EventCreationPanel', () => {
 
         expect(mockCreateEvent).not.toHaveBeenCalled();
         expect(mockUpdateEvent).not.toHaveBeenCalled();
-    })
+    });
 
     it('should call createEvent on submit when edit prop is not set', async () => {
         const wrapper = mount(EventCreationPanel);

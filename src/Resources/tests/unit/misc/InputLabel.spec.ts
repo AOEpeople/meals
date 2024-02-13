@@ -1,7 +1,7 @@
-import InputLabel from "@/components/misc/InputLabel.vue";
-import { describe, expect, it } from "@jest/globals";
-import { mount } from "@vue/test-utils";
-import { ref } from "vue";
+import InputLabel from '@/components/misc/InputLabel.vue';
+import { describe, expect, it } from '@jest/globals';
+import { mount } from '@vue/test-utils';
+import { ref } from 'vue';
 
 describe('Test InputLabel', () => {
     it('should contain the labelText and modelValue from the props', () => {
@@ -17,7 +17,7 @@ describe('Test InputLabel', () => {
     });
 
     it('should emit an update event when input changes', async () => {
-        const inputValue = ref('TestText')
+        const inputValue = ref('TestText');
         const wrapper = mount(InputLabel, {
             props: {
                 labelText: 'TestText 1234',

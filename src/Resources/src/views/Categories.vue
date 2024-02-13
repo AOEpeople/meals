@@ -23,9 +23,7 @@
         </td>
       </tr>
     </Table>
-    <LoadingSpinner
-      :loaded="loaded"
-    />
+    <LoadingSpinner :loaded="loaded" />
   </div>
 </template>
 

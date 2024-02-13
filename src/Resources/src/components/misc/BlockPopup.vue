@@ -3,12 +3,8 @@
     as="template"
     :show="isOpen"
   >
-    <Dialog
-      class="relative z-50"
-    >
-      <div
-        class="fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.2)] p-4"
-      >
+    <Dialog class="relative z-50">
+      <div class="fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.2)] p-4">
         <TransitionChild
           as="template"
           enter="duration-300 ease-out"
@@ -36,7 +32,7 @@ import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessu
 import { useI18n } from 'vue-i18n';
 
 defineProps<{
-  isOpen: boolean
+  isOpen: boolean;
 }>();
 
 const { t } = useI18n();

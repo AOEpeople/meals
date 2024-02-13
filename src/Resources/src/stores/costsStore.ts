@@ -13,20 +13,20 @@ import useFlashMessage from '@/services/useFlashMessage';
 import { FlashMessageType } from '@/enums/FlashMessage';
 
 export interface ICosts {
-    columnNames: Dictionary<DateTime>,
-    users: Dictionary<UserCost>
+    columnNames: Dictionary<DateTime>;
+    users: Dictionary<UserCost>;
 }
 
 interface UserCost {
-    name: string,
-    firstName: string,
-    hidden: boolean,
-    costs: Dictionary<number>
+    name: string;
+    firstName: string;
+    hidden: boolean;
+    costs: Dictionary<number>;
 }
 
 interface ICostsState extends ICosts {
-    error: string,
-    isLoading: boolean
+    error: string;
+    isLoading: boolean;
 }
 
 const CostsState = reactive<ICostsState>({
@@ -51,8 +51,12 @@ watch(
 );
 
 function isCosts(costs: ICosts): costs is ICosts {
-
-    if (costs.columnNames !== null && costs.columnNames !== undefined && costs.users !== null && costs.users !== undefined) {
+    if (
+        costs.columnNames !== null &&
+        costs.columnNames !== undefined &&
+        costs.users !== null &&
+        costs.users !== undefined
+    ) {
         const cost = Object.values(costs.users)[0];
         const column = Object.values(costs.columnNames)[0];
 
@@ -75,7 +79,6 @@ function isCosts(costs: ICosts): costs is ICosts {
 }
 
 export function useCosts() {
-
     /**
      * Fetches a list of all users and their balances in the last three month, before that and the current month.
      */
@@ -121,7 +124,8 @@ export function useCosts() {
         const { error, response } = await postSettlement(username);
 
         if (error.value === true || isMessage(response.value)) {
-            CostsState.error = isMessage(response.value) === true ? response.value.message : 'Error on sending settlement';
+            CostsState.error =
+                isMessage(response.value) === true ? response.value.message : 'Error on sending settlement';
         } else {
             CostsState.error = '';
             sendFlashMessage({
@@ -140,7 +144,10 @@ export function useCosts() {
         const { error, response } = await postCashPayment(username, amount);
 
         if (error.value === true || isMessage(response.value)) {
-            CostsState.error = isMessage(response.value) === true ? (response.value as IMessage).message : 'Error on sending settlement';
+            CostsState.error =
+                isMessage(response.value) === true
+                    ? (response.value as IMessage).message
+                    : 'Error on sending settlement';
         } else if (typeof response.value === 'number') {
             CostsState.error = '';
             CostsState.users[username].costs['total'] += response.value;
@@ -159,7 +166,10 @@ export function useCosts() {
         const { error, response } = await postConfirmSettlement(hash);
 
         if (error.value === true || isMessage(response.value)) {
-            CostsState.error = isMessage(response.value) === true ? (response.value as IMessage).message : 'Error on confirming settlement';
+            CostsState.error =
+                isMessage(response.value) === true
+                    ? (response.value as IMessage).message
+                    : 'Error on confirming settlement';
             return false;
         } else {
             CostsState.error = '';
@@ -172,7 +182,7 @@ export function useCosts() {
     }
 
     function getColumnNames(locale: string) {
-        return Object.values(CostsState.columnNames).map(dateTime => {
+        return Object.values(CostsState.columnNames).map((dateTime) => {
             return translateMonth(dateTime, locale);
         });
     }
@@ -195,5 +205,5 @@ export function useCosts() {
         confirmSettlement,
         getColumnNames,
         getFullNameByUser
-    }
+    };
 }

@@ -1,15 +1,15 @@
-import EventsActions from "@/components/events/EventsActions.vue";
-import { Event } from "@/stores/eventsStore";
-import { mount } from "@vue/test-utils";
-import ActionButton from "@/components/misc/ActionButton.vue";
-import { Action }from "@/enums/Actions";
+import EventsActions from '@/components/events/EventsActions.vue';
+import { Event } from '@/stores/eventsStore';
+import { mount } from '@vue/test-utils';
+import ActionButton from '@/components/misc/ActionButton.vue';
+import { Action } from '@/enums/Actions';
 
 const testEvent: Event = {
     id: 17,
     title: 'TestEvent',
     slug: 'testevent',
     public: false
-}
+};
 
 describe('Test EventsActions', () => {
     it('should contain a EDIT ActionButton and a DELETE ActionButton', () => {
@@ -24,7 +24,7 @@ describe('Test EventsActions', () => {
         const actionButtons = wrapper.findAllComponents(ActionButton);
         expect(actionButtons).toHaveLength(2);
 
-        actionButtons.forEach(actionButton => {
+        actionButtons.forEach((actionButton) => {
             expect(actions).toContain(actionButton.props('action'));
         });
     });
@@ -38,7 +38,7 @@ describe('Test EventsActions', () => {
 
         const actionButtons = wrapper.findAllComponents(ActionButton);
 
-        for(const actionButton of actionButtons) {
+        for (const actionButton of actionButtons) {
             if (actionButton.props('action') === 'DELETE') {
                 await actionButton.trigger('click');
             }

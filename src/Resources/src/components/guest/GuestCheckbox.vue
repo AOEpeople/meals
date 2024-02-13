@@ -1,6 +1,9 @@
 <template>
   <span
-    :class="[enabled ? 'bg-primary-3' : '', 'size-[30px] cursor-pointer rounded-md border-[0.5px] border-gray-200 xl:size-[20px]']"
+    :class="[
+      enabled ? 'bg-primary-3' : '',
+      'size-[30px] cursor-pointer rounded-md border-[0.5px] border-gray-200 xl:size-[20px]'
+    ]"
     @click="handle"
   >
     <CheckIcon
@@ -25,48 +28,46 @@ import { Meal } from '@/api/getDashboardData';
 import { Dictionary } from 'types/types';
 
 const props = defineProps<{
-  meals: Dictionary<Meal>,
-  mealId: number | string
+  meals: Dictionary<Meal>;
+  mealId: number | string;
 }>();
 
-const enabled = ref(false)
-const open = ref(false)
-const { emit } = useEventsBus()
+const enabled = ref(false);
+const open = ref(false);
+const { emit } = useEventsBus();
 
-const isCombiBox = props.meals[props.mealId].dishSlug === 'combined-dish'
-let hasVariations = false
+const isCombiBox = props.meals[props.mealId].dishSlug === 'combined-dish';
+let hasVariations = false;
 
-Object.values(props.meals)
-    .forEach((meal) => meal.variations ? hasVariations = true : '')
+Object.values(props.meals).forEach((meal) => (meal.variations ? (hasVariations = true) : ''));
 
 function handle() {
   // Is a combi meal
   if (isCombiBox) {
     // has variations
     if (hasVariations) {
-      open.value = true
+      open.value = true;
     } else {
       let combiDishes = Object.values(props.meals)
-          .filter((meal) => meal.dishSlug !== 'combined-dish')
-          .map((meal) => meal.dishSlug)
+        .filter((meal) => meal.dishSlug !== 'combined-dish')
+        .map((meal) => meal.dishSlug);
 
-      emit('guestChosenCombi', combiDishes)
-      emit('guestChosenMeals', props.mealId)
-      enabled.value = !enabled.value
+      emit('guestChosenCombi', combiDishes);
+      emit('guestChosenMeals', props.mealId);
+      enabled.value = !enabled.value;
     }
   } else {
-    emit('guestChosenMeals', props.mealId)
-    enabled.value = !enabled.value
+    emit('guestChosenMeals', props.mealId);
+    enabled.value = !enabled.value;
   }
 }
 
 function handleCombiModal(dishes: string[]) {
   if (dishes !== undefined) {
-    emit('guestChosenCombi', dishes)
-    emit('guestChosenMeals', props.mealId)
-    enabled.value = !enabled.value
+    emit('guestChosenCombi', dishes);
+    emit('guestChosenMeals', props.mealId);
+    enabled.value = !enabled.value;
   }
-  open.value = false
+  open.value = false;
 }
-
 </script>

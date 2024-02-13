@@ -1,11 +1,11 @@
-import { useWeeks } from "@/stores/weeksStore";
-import useApi from "@/api/api";
-import { ref } from "vue";
-import Weeks from "../fixtures/getWeeks.json";
-import DishesCount from "../fixtures/dishesCount.json";
+import { useWeeks } from '@/stores/weeksStore';
+import useApi from '@/api/api';
+import { ref } from 'vue';
+import Weeks from '../fixtures/getWeeks.json';
+import DishesCount from '../fixtures/dishesCount.json';
 
 const asyncFunc: () => Promise<void> = async () => {
-    new Promise(resolve => resolve(undefined));
+    new Promise((resolve) => resolve(undefined));
 };
 
 const getMockedResponses = (method: string, url: string) => {
@@ -14,34 +14,43 @@ const getMockedResponses = (method: string, url: string) => {
             response: ref(Weeks),
             request: asyncFunc,
             error: ref(false)
-        }
+        };
     } else if (url.includes('api/meals/count') && method === 'GET') {
         return {
             response: ref(DishesCount),
             request: asyncFunc,
             error: ref(false)
-        }
-    } else if (url.includes('api/weeks/') && (method === 'POST')) {
+        };
+    } else if (url.includes('api/weeks/') && method === 'POST') {
         return {
             response: ref(null),
             request: asyncFunc,
             error: ref(false)
-        }
+        };
     } else if (url.includes('api/menu/') && method === 'PUT') {
         return {
             response: ref(null),
             request: asyncFunc,
             error: ref(false)
-        }
+        };
     }
-}
+};
 
 // @ts-expect-error ts doesn't allow reassignig a import but we need that to mock that function
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 useApi = jest.fn().mockImplementation((method: string, url: string) => getMockedResponses(method, url));
 
 describe('Test weeksStore', () => {
-    const { WeeksState, MenuCountState, fetchWeeks, getDishCountForWeek, resetStates, getDateRangeOfWeek, getMenuDay, getWeekById } = useWeeks();
+    const {
+        WeeksState,
+        MenuCountState,
+        fetchWeeks,
+        getDishCountForWeek,
+        resetStates,
+        getDateRangeOfWeek,
+        getMenuDay,
+        getWeekById
+    } = useWeeks();
 
     beforeEach(() => {
         resetStates();
@@ -84,7 +93,7 @@ describe('Test weeksStore', () => {
     it('should return the right menuday for a given weekId and dayId', async () => {
         await fetchWeeks();
 
-        const ids = { week: 57, day: "281" };
+        const ids = { week: 57, day: '281' };
 
         const menuDay = getMenuDay(ids.day, ids.week);
 

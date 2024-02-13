@@ -13,39 +13,15 @@
     "useDefineForClassFields": true,
     "sourceMap": true,
     "baseUrl": ".",
-    "types": [
-      "webpack-env",
-      "jest"
-    ],
+    "types": ["webpack-env", "jest"],
     "paths": {
-      "@/*": [
-        "src/*"
-      ],
-      "tools/*": [
-        "src/tools/*"
-      ],
-      "vue-i18n": [
-        "vue-i18n/dist/vue-i18n.runtime.esm-bundler.js"
-      ]
+      "@/*": ["src/*"],
+      "tools/*": ["src/tools/*"],
+      "vue-i18n": ["vue-i18n/dist/vue-i18n.runtime.esm-bundler.js"]
     },
-    "lib": [
-      "esnext",
-      "dom",
-      "dom.iterable",
-      "scripthost"
-    ]
+    "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
   },
-  "types": [
-    "jest"
-  ],
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "tests/**/*.ts",
-    "tests/**/*.tsx"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "types": ["jest"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "tests/**/*.ts", "tests/**/*.tsx"],
+  "exclude": ["node_modules"]
 }

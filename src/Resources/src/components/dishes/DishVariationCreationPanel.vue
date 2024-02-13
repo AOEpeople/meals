@@ -31,18 +31,21 @@ import { ref } from 'vue';
 const { t } = useI18n();
 const { createDishVariation, updateDishVariation } = useDishes();
 
-const props = withDefaults(defineProps<{
-  titleDe?: string,
-  titleEn?: string,
-  slug?: string,
-  parentSlug: string,
-  edit?: boolean
-}>(), {
-  titleDe: '',
-  titleEn: '',
-  slug: null,
-  edit: false
-});
+const props = withDefaults(
+  defineProps<{
+    titleDe?: string;
+    titleEn?: string;
+    slug?: string;
+    parentSlug: string;
+    edit?: boolean;
+  }>(),
+  {
+    titleDe: '',
+    titleEn: '',
+    slug: null,
+    edit: false
+  }
+);
 
 const titleDeInput = ref(props.titleDe);
 const titleEnInput = ref(props.titleEn);
@@ -63,6 +66,6 @@ function createDishVariationDtoObject(): CreateDishVariationDTO {
   return {
     titleDe: titleDeInput.value,
     titleEn: titleEnInput.value
-  }
+  };
 }
 </script>

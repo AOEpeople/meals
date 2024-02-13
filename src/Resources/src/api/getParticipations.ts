@@ -6,10 +6,11 @@ import { IMenuParticipationDays } from '@/stores/participationsStore';
  * @param weekId ID of the week
  */
 export default async function getParticipations(weekId: number) {
-    const { error, response: participations, request } = useApi<IMenuParticipationDays>(
-        'GET',
-        `api/participations/${weekId}`
-    );
+    const {
+        error,
+        response: participations,
+        request
+    } = useApi<IMenuParticipationDays>('GET', `api/participations/${weekId}`);
 
     await request();
 

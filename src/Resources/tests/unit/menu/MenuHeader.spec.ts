@@ -1,13 +1,13 @@
-import MenuHeader from "@/components/menu/MenuHeader.vue";
-import { WeekDTO } from "@/interfaces/DayDTO";
-import { shallowMount } from "@vue/test-utils";
+import MenuHeader from '@/components/menu/MenuHeader.vue';
+import { WeekDTO } from '@/interfaces/DayDTO';
+import { shallowMount } from '@vue/test-utils';
 
 const testWeek: WeekDTO = {
     id: 0,
     notify: false,
     enabled: false,
     days: []
-}
+};
 
 describe('Test MenuHeader', () => {
     it('should contain the correct text', () => {

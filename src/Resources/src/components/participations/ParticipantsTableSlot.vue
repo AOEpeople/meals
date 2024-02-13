@@ -28,9 +28,9 @@ import { IBookedData, IMealWithVariations } from '@/api/getShowParticipations';
 import { computed } from 'vue';
 
 const props = defineProps<{
-  slotName: string,
-  participants: Dictionary<IBookedData>,
-  meals: IMealWithVariations[]
+  slotName: string;
+  participants: Dictionary<IBookedData>;
+  meals: IMealWithVariations[];
 }>();
 
 const numberOfMeals = computed(() => {

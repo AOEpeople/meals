@@ -13,7 +13,7 @@
         <template #button="{ open }">
           <CreateButton
             :open="open"
-            :btn-text="`+ ${ t('slot.create') }`"
+            :btn-text="`+ ${t('slot.create')}`"
           />
         </template>
         <template #panel="{ close }">
@@ -34,5 +34,5 @@ import SlotCreationPanel from '@/components/timeslots/SlotCreationPanel.vue';
 import { useI18n } from 'vue-i18n';
 import CreateButton from '../misc/CreateButton.vue';
 
-const { t } = useI18n()
+const { t } = useI18n();
 </script>

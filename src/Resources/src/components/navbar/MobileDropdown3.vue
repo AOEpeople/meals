@@ -7,9 +7,7 @@
     leave-from-class="transform translate-x-0 opacity-100"
     leave-to-class="transform -translate-x-20 opacity-0"
   >
-    <MenuItems
-      class="absolute bg-white xl:hidden"
-    >
+    <MenuItems class="absolute bg-white xl:hidden">
       <div class="flex min-h-0 flex-1 flex-col border-r border-gray-200 bg-white">
         <div class="flex flex-1 flex-col overflow-y-auto pb-4 pt-5">
           <nav
@@ -25,12 +23,20 @@
               <router-link
                 v-if="item.access"
                 :to="item.to"
-                :class="[item.to === $route.path ? 'bg-gray-100 text-gray-900 hover:bg-gray-100 hover:text-gray-900' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900', 'group flex items-center rounded-md p-2 text-sm font-medium']"
+                :class="[
+                  item.to === $route.path
+                    ? 'bg-gray-100 text-gray-900 hover:bg-gray-100 hover:text-gray-900'
+                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
+                  'group flex items-center rounded-md p-2 text-sm font-medium'
+                ]"
                 @click="close()"
               >
                 <component
                   :is="item.icon"
-                  :class="[item.to === $route.path ? 'text-highlight' : 'text-primary group-hover:text-highlight', 'mr-3 size-6 shrink-0']"
+                  :class="[
+                    item.to === $route.path ? 'text-highlight' : 'text-primary group-hover:text-highlight',
+                    'mr-3 size-6 shrink-0'
+                  ]"
                   aria-hidden="true"
                 />
                 <span class="flex-1">{{ t(item.name) }}</span>
@@ -56,11 +62,19 @@
             >
               <router-link
                 to="/balance"
-                :class="['/balance' === $route.path ? 'bg-gray-100 text-gray-900 hover:bg-gray-100 hover:text-gray-900' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900', 'group flex items-center rounded-md p-2 text-sm font-medium']"
+                :class="[
+                  '/balance' === $route.path
+                    ? 'bg-gray-100 text-gray-900 hover:bg-gray-100 hover:text-gray-900'
+                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
+                  'group flex items-center rounded-md p-2 text-sm font-medium'
+                ]"
                 @click="close()"
               >
                 <CurrencyEuroIcon
-                  :class="['/balance' === $route.path ? 'text-highlight' : 'text-primary group-hover:text-highlight', 'mr-3 size-6 shrink-0']"
+                  :class="[
+                    '/balance' === $route.path ? 'text-highlight' : 'text-primary group-hover:text-highlight',
+                    'mr-3 size-6 shrink-0'
+                  ]"
                   aria-hidden="true"
                 />
                 <span class="flex-1">{{ balance }}</span>
@@ -103,13 +117,13 @@ import { INavigation } from '@/interfaces/INavigation';
 const { t, locale } = useI18n();
 
 const changeLocale = () => {
-locale.value = locale.value.substring(0, 2) === 'en' ? 'de' : 'en';
-}
+  locale.value = locale.value.substring(0, 2) === 'en' ? 'de' : 'en';
+};
 const emits = defineEmits(['logout']);
 
 defineProps<{
-  userName: string,
-  balance: string,
-  navigation: INavigation[]
+  userName: string;
+  balance: string;
+  navigation: INavigation[];
 }>();
 </script>

@@ -16,17 +16,15 @@
         </th>
       </tr>
     </thead>
-    <tbody
-      v-if="meal.variations.length > 0"
-    >
+    <tbody v-if="meal.variations.length > 0">
       <tr
         v-for="(variation, index) in meal.variations"
         :key="index"
       >
         <td
           class="p-4"
-          :class=" //@ts-ignore
-            [(meal.variations.length - 1) > index ? 'border-b-[1px] border-solid' : 'border-none']"
+          :class="//@ts-ignore
+          [meal.variations.length - 1 > index ? 'border-b-[1px] border-solid' : 'border-none']"
         >
           {{ getTitleForLocale(variation) }}
         </td>
@@ -34,7 +32,6 @@
     </tbody>
   </table>
 </template>
-
 
 <script setup lang="ts">
 import { computed } from 'vue';
@@ -44,7 +41,7 @@ import { IMealWithVariations, type IMealData } from '@/api/getShowParticipations
 const { locale } = useI18n();
 
 defineProps<{
-  meal: IMealWithVariations
+  meal: IMealWithVariations;
 }>();
 
 const languageIsEnglish = computed(() => locale.value === 'en');
@@ -52,5 +49,4 @@ const languageIsEnglish = computed(() => locale.value === 'en');
 function getTitleForLocale(variation: IMealData) {
   return languageIsEnglish.value ? variation.title.en : variation.title.de;
 }
-
 </script>

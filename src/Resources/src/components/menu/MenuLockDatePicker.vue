@@ -4,9 +4,7 @@
     :translate-x-min="'-5%'"
   >
     <template #button="{ open }">
-      <CalendarIcon
-        class="size-5 cursor-pointer text-white"
-      />
+      <CalendarIcon class="size-5 cursor-pointer text-white" />
     </template>
     <template #panel="{ close }">
       <div class="flex flex-col gap-2">
@@ -49,19 +47,19 @@ import { computed } from 'vue';
 const { t, locale } = useI18n();
 
 const props = defineProps<{
-  lockDate: DateTime
+  lockDate: DateTime;
 }>();
 
 const date = computed({
   get() {
-    return props.lockDate.date
+    return props.lockDate.date;
   },
   set(value: Date | string) {
-    if(typeof(value) !== 'string') {
-      props.lockDate.date = convertDateReprToLockDayFormat(getLockDateAsStrRepr(value))
+    if (typeof value !== 'string') {
+      props.lockDate.date = convertDateReprToLockDayFormat(getLockDateAsStrRepr(value));
     }
   }
-})
+});
 
 // output format: 2023-07-19T12:00
 function getLockDateAsStrRepr(date: Date) {

@@ -13,21 +13,24 @@
     >
       <div
         class="flex w-full flex-row items-center overflow-hidden border-[#CAD6E1] bg-white text-left text-[14px] font-medium text-[#B4C1CE] focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2"
-        :class="openProp ? 'rounded-t-[23px] border-x-2 border-t-2 border-b-[1px]' : 'rounded-full border-2'"
+        :class="openProp ? 'rounded-t-[23px] border-x-2 border-b-[1px] border-t-2' : 'rounded-full border-2'"
       >
         <EventIcon
           class="ml-4 aspect-square h-full"
           :fill-colour="'fill-[#9CA3AF]'"
         />
         <ComboboxInput
-          :displayValue="() => value ? value.title : ''"
+          :displayValue="() => (value ? value.title : '')"
           class="w-full truncate border-none px-4 py-2 text-[#9CA3AF] focus:outline-none"
           @change="setFilter($event.target.value)"
         />
         <XIcon
           class="mr-4 h-full w-10 cursor-pointer justify-self-end px-1 py-2 text-[#9CA3AF] transition-transform hover:scale-[120%]"
           aria-hidden="true"
-          @click="setFilter(''); value = null;"
+          @click="
+            setFilter('');
+            value = null;
+          "
         />
       </div>
       <div
@@ -83,11 +86,14 @@ import EventIcon from '../misc/EventIcon.vue';
 const { setFilter, filteredEvents } = useEvents();
 const { t } = useI18n();
 
-const props = withDefaults(defineProps<{
-  modelValue: Event | null
-}>(), {
-  modelValue: null
-});
+const props = withDefaults(
+  defineProps<{
+    modelValue: Event | null;
+  }>(),
+  {
+    modelValue: null
+  }
+);
 
 const emit = defineEmits(['update:modelValue']);
 
@@ -105,7 +111,7 @@ const value = computed({
 
 function handleClick() {
   openProp.value = true;
-  useDetectClickOutside(combobox, () => openProp.value = false);
+  useDetectClickOutside(combobox, () => (openProp.value = false));
 }
 </script>
 

@@ -1,7 +1,7 @@
-import { IMealWithVariations } from "@/api/getShowParticipations";
-import Meal from "@/components/participations/Meal.vue";
-import { describe, expect } from "@jest/globals";
-import { mount } from "@vue/test-utils";
+import { IMealWithVariations } from '@/api/getShowParticipations';
+import Meal from '@/components/participations/Meal.vue';
+import { describe, expect } from '@jest/globals';
+import { mount } from '@vue/test-utils';
 
 const mealOne: IMealWithVariations = {
     title: {
@@ -11,7 +11,7 @@ const mealOne: IMealWithVariations = {
     variations: [],
     participations: 3,
     mealId: 1
-}
+};
 const mealThree: IMealWithVariations = {
     title: {
         en: 'Test3',
@@ -20,7 +20,7 @@ const mealThree: IMealWithVariations = {
     variations: [],
     participations: 1,
     mealId: 3
-}
+};
 const mealFour: IMealWithVariations = {
     title: {
         en: 'Test4',
@@ -29,7 +29,7 @@ const mealFour: IMealWithVariations = {
     variations: [],
     participations: 2,
     mealId: 4
-}
+};
 const mealTwo: IMealWithVariations = {
     title: {
         en: 'Test2',
@@ -38,7 +38,7 @@ const mealTwo: IMealWithVariations = {
     variations: [mealThree, mealFour],
     participations: 5,
     mealId: 2
-}
+};
 
 const mealFive: IMealWithVariations = {
     title: {
@@ -48,7 +48,7 @@ const mealFive: IMealWithVariations = {
     variations: [],
     participations: 0,
     mealId: 5
-}
+};
 
 describe('Test Meal', () => {
     it('should render a th-eleent with the name of the meal and no variations', () => {
@@ -78,7 +78,7 @@ describe('Test Meal', () => {
 
         const variationNames = [mealTwo.variations[0].title.en, mealTwo.variations[1].title.en];
         const variationTds = wrapper.findAll('td');
-        for(const variationTd of variationTds) {
+        for (const variationTd of variationTds) {
             expect(variationNames.includes(variationTd.text()));
         }
     });

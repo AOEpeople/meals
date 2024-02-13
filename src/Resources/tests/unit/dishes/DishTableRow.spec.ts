@@ -1,14 +1,14 @@
-import DishTableRow from "@/components/dishes/DishTableRow.vue";
-import { mount } from "@vue/test-utils";
-import { describe, it, expect } from "@jest/globals";
-import { ref } from "vue";
-import Dishes from "../fixtures/getDishes.json";
-import Categories from "../fixtures/getCategories.json";
-import useApi from "@/api/api";
-import { useCategories } from "@/stores/categoriesStore";
+import DishTableRow from '@/components/dishes/DishTableRow.vue';
+import { mount } from '@vue/test-utils';
+import { describe, it, expect } from '@jest/globals';
+import { ref } from 'vue';
+import Dishes from '../fixtures/getDishes.json';
+import Categories from '../fixtures/getCategories.json';
+import useApi from '@/api/api';
+import { useCategories } from '@/stores/categoriesStore';
 
 const asyncFunc: () => Promise<void> = async () => {
-    new Promise(resolve => resolve(undefined));
+    new Promise((resolve) => resolve(undefined));
 };
 
 const mockedReturnValue = {
@@ -24,7 +24,6 @@ useApi.mockImplementation(() => mockedReturnValue);
 const { fetchCategories } = useCategories();
 
 describe('Test DishTableRow', () => {
-
     beforeAll(async () => {
         await fetchCategories();
     });
@@ -43,9 +42,9 @@ describe('Test DishTableRow', () => {
         expect(wrapper.findAll('tr').length).toBe(1);
         expect(tds.length).toBe(3);
         tds.forEach((td, index) => {
-            if(index === 0) {
+            if (index === 0) {
                 expect(td.text()).toBe(Dishes[4].titleEn);
-            } else if(index === 1) {
+            } else if (index === 1) {
                 expect(td.text()).toBe('Meat');
             }
         });
@@ -66,7 +65,7 @@ describe('Test DishTableRow', () => {
         const titles = [Dishes[0].titleEn, Dishes[0].variations[0].titleEn, Dishes[0].variations[1].titleEn];
         const spans = wrapper.findAll('span');
 
-        spans.forEach(span => {
+        spans.forEach((span) => {
             expect(titles).toContainEqual(span.text());
         });
     });

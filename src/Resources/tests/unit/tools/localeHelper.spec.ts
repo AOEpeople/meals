@@ -16,7 +16,7 @@ const computedLocale = computed({
     set(newValue) {
         localeRef.value = newValue;
     }
-})
+});
 
 describe('Test localeHelper', () => {
     it('should return the correct weekday representation', () => {
@@ -33,6 +33,8 @@ describe('Test localeHelper', () => {
         expect(translateMonth(dateTime, 'de')).toBe('Juli');
 
         dateTime.date = new Date().toISOString().split('T')[0];
-        expect(translateMonth(dateTime, 'en')).toBe(new Date().toLocaleString('en', { month: '2-digit', day: '2-digit' }));
+        expect(translateMonth(dateTime, 'en')).toBe(
+            new Date().toLocaleString('en', { month: '2-digit', day: '2-digit' })
+        );
     });
 });

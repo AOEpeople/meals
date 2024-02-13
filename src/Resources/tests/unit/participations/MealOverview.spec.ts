@@ -1,19 +1,19 @@
-import useApi from "@/api/api";
-import { describe, jest, it } from "@jest/globals";
-import { ref } from "vue";
-import nextThreeDays from "../fixtures/nextThreeDays.json";
-import participations from "../fixtures/participations.json";
-import { flushPromises, mount } from "@vue/test-utils";
+import useApi from '@/api/api';
+import { describe, jest, it } from '@jest/globals';
+import { ref } from 'vue';
+import nextThreeDays from '../fixtures/nextThreeDays.json';
+import participations from '../fixtures/participations.json';
+import { flushPromises, mount } from '@vue/test-utils';
 import MealOverView from '@/components/participations/MealOverview.vue';
-import { getShowParticipations } from "@/api/getShowParticipations";
-import MealsSummary from "@/components/participations/MealsSummary.vue";
+import { getShowParticipations } from '@/api/getShowParticipations';
+import MealsSummary from '@/components/participations/MealsSummary.vue';
 
 const asyncFunc: () => Promise<void> = async () => {
-    new Promise(resolve => resolve(undefined));
+    new Promise((resolve) => resolve(undefined));
 };
 
 const getMockedResponses = (url: string) => {
-    switch(url) {
+    switch (url) {
         case 'api/meals/nextThreeDays':
             return {
                 response: ref(nextThreeDays.dataOne),
@@ -25,18 +25,17 @@ const getMockedResponses = (url: string) => {
                 response: ref(participations),
                 request: asyncFunc,
                 error: ref(false)
-            }
+            };
         default:
-            return {}
+            return {};
     }
-}
+};
 
 // @ts-expect-error ts doesn't allow reassignig a import but we need that to mock that function
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 useApi = jest.fn().mockImplementation((method: string, url: string) => getMockedResponses(url));
 
 describe('Test MealOverView', () => {
-
     const { loadShowParticipations } = getShowParticipations();
 
     it('should render three MealSummaries', async () => {
@@ -52,7 +51,7 @@ describe('Test MealOverView', () => {
         const listOfHeaders = wrapper.findAll('th');
         expect(listOfHeaders).toHaveLength(3);
 
-        for(const th of listOfHeaders) {
+        for (const th of listOfHeaders) {
             expect(testNames.includes(th.text())).toBe(true);
         }
     });

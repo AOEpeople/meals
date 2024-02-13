@@ -14,7 +14,7 @@
       </template>
       <template #dayMeals="{ dayId, meals }">
         <td
-          v-for="meal, mealIndex in meals"
+          v-for="(meal, mealIndex) in meals"
           :key="`${String(meal.id)}.${String(mealIndex)}`"
           class="border-b-2 border-r-2 border-solid border-gray-200 p-2 text-center"
         >
@@ -34,7 +34,7 @@ import MenuTableDataRows from '@/components/menuParticipants/MenuTableDataRows.v
 import { computed } from 'vue';
 
 const props = defineProps<{
-  weekId: number
+  weekId: number;
 }>();
 
 const { countBookedMeal, getParticipants, getFilter } = useParticipations(props.weekId);
@@ -44,7 +44,6 @@ const participants = computed(() => getParticipants());
 
 const filteredParticipants = computed(() => {
   if (getFilter() === '') return participants.value;
-  return participants.value.filter(participant => participant.toLowerCase().includes(getFilter().toLowerCase()));
+  return participants.value.filter((participant) => participant.toLowerCase().includes(getFilter().toLowerCase()));
 });
-
 </script>

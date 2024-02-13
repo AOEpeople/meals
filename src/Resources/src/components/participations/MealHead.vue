@@ -26,7 +26,7 @@ import { useI18n } from 'vue-i18n';
 const { locale } = useI18n();
 
 defineProps<{
-  meal: IMealWithVariations
+  meal: IMealWithVariations;
 }>();
 
 const languageIsEnglish = computed(() => locale.value === 'en');

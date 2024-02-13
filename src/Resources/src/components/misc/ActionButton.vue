@@ -6,32 +6,32 @@
     <PencilIcon
       v-if="action === Action.EDIT"
       class="z-[1] aspect-square size-8"
-      :class="{'mr-1': btnText !== ''}"
+      :class="{ 'mr-1': btnText !== '' }"
     />
     <XIcon
       v-if="action === Action.DELETE"
       class="z-[1] aspect-square size-8"
-      :class="{'mr-1': btnText !== ''}"
+      :class="{ 'mr-1': btnText !== '' }"
     />
     <PlusIcon
       v-if="action === Action.CREATE"
       class="z-[1] aspect-square size-8"
-      :class="{'mr-1': btnText !== ''}"
+      :class="{ 'mr-1': btnText !== '' }"
     />
     <ScaleIcon
       v-if="action === Action.BALANCE"
       class="z-[1] aspect-square size-8"
-      :class="{'mr-1': btnText !== ''}"
+      :class="{ 'mr-1': btnText !== '' }"
     />
     <EyeOffIcon
       v-if="action === Action.HIDE"
       class="z-[1] aspect-square size-8"
-      :class="{'mr-1': btnText !== ''}"
+      :class="{ 'mr-1': btnText !== '' }"
     />
     <DownloadIcon
       v-if="action === Action.DOWNLOAD"
       class="z-[1] aspect-square size-8"
-      :class="{'mr-1': btnText !== ''}"
+      :class="{ 'mr-1': btnText !== '' }"
     />
     <p
       v-if="btnText !== ''"
@@ -48,17 +48,20 @@ import { Action } from '@/enums/Actions';
 import { XIcon, PencilIcon, PlusIcon, DownloadIcon } from '@heroicons/vue/outline';
 import { EyeOffIcon, ScaleIcon } from '@heroicons/vue/solid';
 
-withDefaults(defineProps<{
-  btnText: string,
-  action: Action,
-  row?: boolean,
-  widthFull?: boolean,
-  heightFull?: boolean,
-  hideTextOnMobile?: boolean
-}>(), {
-  row: true,
-  widthFull: true,
-  heightFull: true,
-  hideTextOnMobile: false
-});
+withDefaults(
+  defineProps<{
+    btnText: string;
+    action: Action;
+    row?: boolean;
+    widthFull?: boolean;
+    heightFull?: boolean;
+    hideTextOnMobile?: boolean;
+  }>(),
+  {
+    row: true,
+    widthFull: true,
+    heightFull: true,
+    hideTextOnMobile: false
+  }
+);
 </script>

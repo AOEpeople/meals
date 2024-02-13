@@ -12,30 +12,29 @@ class UserDataStore extends Store<UserData> {
     }
 
     async fillStore() {
-        await this.writeUserData()
+        await this.writeUserData();
     }
 
     private async writeUserData() {
-        const {userData, error} = await useUserData()
+        const { userData, error } = await useUserData();
         if (error.value === true) {
-            console.warn("couldn't receive User Data!")
+            console.warn("couldn't receive User Data!");
             return;
         }
         if (userData.value !== undefined) {
-            this.state.roles = userData.value.roles
-            this.state.user = userData.value.user
-            this.state.balance = userData.value.balance
+            this.state.roles = userData.value.roles;
+            this.state.user = userData.value.user;
+            this.state.balance = userData.value.balance;
         }
     }
 
-    public roleAllowsRoute(routeName: string) : boolean
-    {
-        const route = router.getRoutes().find(r => r.name === routeName)
+    public roleAllowsRoute(routeName: string): boolean {
+        const route = router.getRoutes().find((r) => r.name === routeName);
         if (route === undefined || route === null) {
             return false;
         }
 
-        return this.state.roles.some(role => route.meta.allowedRoles.includes(role))
+        return this.state.roles.some((role) => route.meta.allowedRoles.includes(role));
     }
 
     updateBalance(newAmount: number): void {
@@ -55,4 +54,4 @@ class UserDataStore extends Store<UserData> {
     }
 }
 
-export const userDataStore: UserDataStore = new UserDataStore()
+export const userDataStore: UserDataStore = new UserDataStore();

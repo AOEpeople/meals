@@ -1,34 +1,47 @@
-import { ref } from "vue";
-import nextThreeDays from "../fixtures/nextThreeDays.json";
-import useApi from "@/api/api";
-import { describe, expect } from "@jest/globals";
-import { IDay, getNextThreeDays } from "@/api/getMealsNextThreeDays";
+import { ref } from 'vue';
+import nextThreeDays from '../fixtures/nextThreeDays.json';
+import useApi from '@/api/api';
+import { describe, expect } from '@jest/globals';
+import { IDay, getNextThreeDays } from '@/api/getMealsNextThreeDays';
 
 const testDays: IDay[] = [
     {
         date: new Date('2023-05-10T00:00:00.000Z'),
-        de: ["Limbs oh la la la (Ofen gebacken) + Finger food mit einer schlammigen Süß-Sauer-Soße", "Tasty Worms DE", "Kombi-Gericht"],
-        en: ["Limbs oh la la la (oven backed) + Finger food with a slimy sweet and sour sauce", "Tasty Worms", "Combined Dish"]
-    }, {
+        de: [
+            'Limbs oh la la la (Ofen gebacken) + Finger food mit einer schlammigen Süß-Sauer-Soße',
+            'Tasty Worms DE',
+            'Kombi-Gericht'
+        ],
+        en: [
+            'Limbs oh la la la (oven backed) + Finger food with a slimy sweet and sour sauce',
+            'Tasty Worms',
+            'Combined Dish'
+        ]
+    },
+    {
         date: new Date('2023-05-11T00:00:00.000Z'),
-        de: ["Braaaaaiiinnnzzzzzz DE", "Fish (so juicy sweat) DE"],
-        en: ["Braaaaaiiinnnzzzzzz", "Fish (so juicy sweat)"]
-    }, {
+        de: ['Braaaaaiiinnnzzzzzz DE', 'Fish (so juicy sweat) DE'],
+        en: ['Braaaaaiiinnnzzzzzz', 'Fish (so juicy sweat)']
+    },
+    {
         date: new Date('2023-05-12T00:00:00.000Z'),
-        de: ["Braaaaaiiinnnzzzzzz DE", "Limbs oh la la la (Ofen gebacken) + Finger food mit einer schlammigen Süß-Sauer-Soße"],
-        en: ["Braaaaaiiinnnzzzzzz", "Limbs oh la la la (oven backed) + Finger food with a slimy sweet and sour sauce"]
+        de: [
+            'Braaaaaiiinnnzzzzzz DE',
+            'Limbs oh la la la (Ofen gebacken) + Finger food mit einer schlammigen Süß-Sauer-Soße'
+        ],
+        en: ['Braaaaaiiinnnzzzzzz', 'Limbs oh la la la (oven backed) + Finger food with a slimy sweet and sour sauce']
     }
 ];
 
 const asyncFunc: () => Promise<void> = async () => {
-    new Promise(resolve => resolve(undefined));
+    new Promise((resolve) => resolve(undefined));
 };
 
 const mockedReturnValue = {
     response: ref(nextThreeDays.dataOne),
     request: asyncFunc,
     error: ref(false)
-}
+};
 
 // @ts-expect-error ts doesn't like mocking with jest.fn()
 useApi = jest.fn(useApi);
@@ -36,7 +49,6 @@ useApi = jest.fn(useApi);
 useApi.mockReturnValue(mockedReturnValue);
 
 describe('Test getMealsNextThreeDays', () => {
-
     const { resetState } = getNextThreeDays();
 
     beforeEach(() => {
@@ -79,4 +91,4 @@ describe('Test getMealsNextThreeDays', () => {
 
         expect(nextThreeDaysState.days).toEqual(testDays);
     });
-})
+});

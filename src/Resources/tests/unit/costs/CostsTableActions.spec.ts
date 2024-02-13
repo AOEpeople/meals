@@ -1,10 +1,10 @@
-import CostsTableActions from "@/components/costs/CostsTableActions.vue";
-import ActionButton from "@/components/misc/ActionButton.vue";
-import CostsActionSettlement from "@/components/costs/CostsActionSettlement.vue";
-import { mount } from "@vue/test-utils";
+import CostsTableActions from '@/components/costs/CostsTableActions.vue';
+import ActionButton from '@/components/misc/ActionButton.vue';
+import CostsActionSettlement from '@/components/costs/CostsActionSettlement.vue';
+import { mount } from '@vue/test-utils';
 
 const asyncFunc1 = jest.fn(async () => {
-    new Promise(resolve => resolve(undefined));
+    new Promise((resolve) => resolve(undefined));
 });
 
 jest.mock('@/stores/costsStore', () => ({

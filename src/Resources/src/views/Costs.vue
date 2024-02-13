@@ -4,16 +4,14 @@
       v-model="filter"
       :show-hidden="showHidden"
       class="mb-4"
-      @change:show-hidden="(value) => showHidden = value"
+      @change:show-hidden="(value) => (showHidden = value)"
     />
     <CostsTable
       v-if="loaded === true"
       :filter="filter"
       :showHidden="showHidden"
     />
-    <LoadingSpinner
-      :loaded="loaded"
-    />
+    <LoadingSpinner :loaded="loaded" />
   </div>
 </template>
 

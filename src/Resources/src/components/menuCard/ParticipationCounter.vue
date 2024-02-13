@@ -11,7 +11,9 @@
       />
     </div>
     <div class="my-auto h-3 flex-auto min-[370px]:mr-[5px]">
-      <span class="block self-center text-center text-[10px] font-bold leading-[12px] tracking-[1.5px] text-white min-[370px]:text-[12px]">
+      <span
+        class="block self-center text-center text-[10px] font-bold leading-[12px] tracking-[1.5px] text-white min-[370px]:text-[12px]"
+      >
         <slot />
       </span>
     </div>
@@ -21,10 +23,13 @@
 <script setup lang="ts">
 import Icons from '@/components/misc/Icons.vue';
 
-withDefaults(defineProps<{
-  limit?: number,
-  mealCSS: string
-}>(), {
-  limit: 0
-});
+withDefaults(
+  defineProps<{
+    limit?: number;
+    mealCSS: string;
+  }>(),
+  {
+    limit: 0
+  }
+);
 </script>

@@ -5,7 +5,7 @@
     pattern="\d*([.,]?\d{0,2})"
     required
     class="h-[46px] rounded-full border-[2px] border-solid border-[#CAD6E1] bg-white text-center"
-  >
+  />
 </template>
 
 <script setup lang="ts">
@@ -13,7 +13,7 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 const props = defineProps<{
-  modelValue: number
+  modelValue: number;
 }>();
 
 const { locale } = useI18n();

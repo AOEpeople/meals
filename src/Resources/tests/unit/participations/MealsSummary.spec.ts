@@ -4,46 +4,28 @@ import { mount } from '@vue/test-utils';
 import { IDay } from '@/api/getMealsNextThreeDays';
 
 const dayOne: IDay = {
-    en: [
-        'Test111',
-        'Test112',
-        "Combined Dish"
-    ],
-    de: [
-        'Test111',
-        'Test112',
-        "Kombi-Gericht"
-    ],
+    en: ['Test111', 'Test112', 'Combined Dish'],
+    de: ['Test111', 'Test112', 'Kombi-Gericht'],
     date: new Date('2023-05-10')
-}
+};
 
 const dayTwo: IDay = {
-    en: [
-        'Test111',
-        'Test112',
-    ],
-    de: [
-        'Test111',
-        'Test112',
-    ],
+    en: ['Test111', 'Test112'],
+    de: ['Test111', 'Test112'],
     date: new Date('2023-05-11')
-}
+};
 
 const dayThree: IDay = {
-    en: [
-        'Test111'
-      ],
-    de: [
-        'Test111'
-    ],
+    en: ['Test111'],
+    de: ['Test111'],
     date: new Date('2023-05-12')
-}
+};
 
 const dayFour: IDay = {
     en: [],
     de: [],
     date: new Date('2023-05-15')
-}
+};
 
 describe('Test MealsSummary', () => {
     it('should display three meals and no empty rows', () => {
@@ -58,7 +40,7 @@ describe('Test MealsSummary', () => {
         expect(wrapper.findAll('th')).toHaveLength(1);
 
         expect(wrapper.find('th').text()).toBe('Wednesday');
-        for(const td of wrapper.findAll('td')) {
+        for (const td of wrapper.findAll('td')) {
             expect(testMeals.includes(td.text())).toBe(true);
         }
     });
@@ -75,7 +57,7 @@ describe('Test MealsSummary', () => {
         expect(wrapper.findAll('th')).toHaveLength(1);
 
         expect(wrapper.find('th').text()).toBe('Thursday');
-        for(const td of wrapper.findAll('td')) {
+        for (const td of wrapper.findAll('td')) {
             expect(testMeals.includes(td.text())).toBe(true);
         }
     });
@@ -92,7 +74,7 @@ describe('Test MealsSummary', () => {
         expect(wrapper.findAll('th')).toHaveLength(1);
 
         expect(wrapper.find('th').text()).toBe('Friday');
-        for(const td of wrapper.findAll('td')) {
+        for (const td of wrapper.findAll('td')) {
             expect(testMeals.includes(td.text())).toBe(true);
         }
     });
@@ -108,7 +90,7 @@ describe('Test MealsSummary', () => {
         expect(wrapper.findAll('th')).toHaveLength(1);
 
         expect(wrapper.find('th').text()).toBe('Monday');
-        for(const td of wrapper.findAll('td')) {
+        for (const td of wrapper.findAll('td')) {
             expect(td.text()).toBe('');
         }
     });

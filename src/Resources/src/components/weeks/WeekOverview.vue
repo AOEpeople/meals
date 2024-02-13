@@ -14,13 +14,13 @@
     />
     <h4
       class="row-start-1 m-auto px-2 pt-2"
-      :class="week.id ? 'col-start-2' : 'col-start-1 col-span-2'"
+      :class="week.id ? 'col-start-2' : 'col-span-2 col-start-1'"
     >
       {{ `${t('menu.week')} #${week.calendarWeek}` }}
     </h4>
     <h5
       class="row-start-2 m-auto px-2 pb-4 pt-2"
-      :class="week.id ? 'col-start-2' : 'col-start-1 col-span-2'"
+      :class="week.id ? 'col-start-2' : 'col-span-2 col-start-1'"
     >
       {{ `${dateRange[0]} - ${dateRange[1]}` }}
     </h5>
@@ -40,24 +40,23 @@ const { t, locale } = useI18n();
 const router = useRouter();
 
 const props = defineProps<{
-  week: Week,
+  week: Week;
 }>();
 
 const dateRange = computed(() => {
-  return (
-    getDateRangeOfWeek(props.week.calendarWeek, props.week.year)
-    .map(date => date.toLocaleDateString(locale.value, { day: 'numeric', month: 'numeric' }))
+  return getDateRangeOfWeek(props.week.calendarWeek, props.week.year).map((date) =>
+    date.toLocaleDateString(locale.value, { day: 'numeric', month: 'numeric' })
   );
 });
 
 async function handleClick() {
   if (props.week.id !== null && props.week.id !== undefined) {
-    router.push({ name: 'Menu', params: { week: props.week.id } })
+    router.push({ name: 'Menu', params: { week: props.week.id } });
   } else {
     const response = await createEmptyWeek(props.week.year, props.week.calendarWeek);
 
     if (typeof response === 'number') {
-      router.push({ name: 'Menu', params: { week: response, create: 'create' } })
+      router.push({ name: 'Menu', params: { week: response, create: 'create' } });
     }
   }
 }

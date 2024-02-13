@@ -14,7 +14,9 @@
     "build-watch": "concurrently \"yarn build-style-watch\" \"yarn build-dev-watch\"",
     "dev": "webpack serve --mode development --env development",
     "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\"",
-    "test": "jest --silent=false"
+    "test": "jest --silent=false",
+    "prettier-check": "prettier . --check",
+    "prettier": "prettier . --write"
   },
   "main": "./src/main.ts",
   "dependencies": {
@@ -76,6 +78,7 @@
     "cssnano-preset-advanced": "^5.1.3",
     "deepmerge": "^4.2.2",
     "eslint": "^8.28.0",
+    "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-tailwindcss": "^3.7.1",
     "eslint-plugin-vue": "^9.7.0",
     "expose-loader": "^3.1",
@@ -90,6 +93,8 @@
     "postcss-loader": "^6.2",
     "postcss-multiple-tailwind": "^1.0.1",
     "postcss-nested": "^5.0",
+    "prettier": "3.2.5",
+    "prettier-plugin-tailwindcss": "^0.5.11",
     "sass": "^1.44",
     "sass-loader": "^12.1.0",
     "style-loader": "^3.2.1",

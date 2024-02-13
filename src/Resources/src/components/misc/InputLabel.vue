@@ -19,7 +19,7 @@
         :min="min"
         :required="required"
         class="w-full truncate border-none bg-none text-[14px] font-medium text-[#9CA3AF] invalid:border-[#E02927] focus:outline-none"
-      >
+      />
       <XIcon
         v-if="value !== '' && xButtonActive === true"
         class="h-full w-10 cursor-pointer justify-self-end text-[#9CA3AF] transition-transform hover:scale-[120%]"
@@ -34,22 +34,25 @@
 import { computed } from 'vue';
 import { XIcon } from '@heroicons/vue/solid';
 
-const props = withDefaults(defineProps<{
-  labelText?: string,
-  modelValue: string,
-  type?: string,
-  min?: number,
-  labelVisible?: boolean,
-  required?: boolean,
-  xButtonActive?: boolean
-}>(), {
-  labelText: '',
-  type: 'text',
-  min: 0,
-  labelVisible: true,
-  required: false,
-  xButtonActive: false
-});
+const props = withDefaults(
+  defineProps<{
+    labelText?: string;
+    modelValue: string;
+    type?: string;
+    min?: number;
+    labelVisible?: boolean;
+    required?: boolean;
+    xButtonActive?: boolean;
+  }>(),
+  {
+    labelText: '',
+    type: 'text',
+    min: 0,
+    labelVisible: true,
+    required: false,
+    xButtonActive: false
+  }
+);
 
 const emit = defineEmits(['update:modelValue']);
 

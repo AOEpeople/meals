@@ -3,12 +3,8 @@
     as="template"
     :show="isOpen"
   >
-    <Dialog
-      class="relative z-50"
-    >
-      <div
-        class="fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.1)] p-4"
-      >
+    <Dialog class="relative z-50">
+      <div class="fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.1)] p-4">
         <TransitionChild
           as="template"
           enter="duration-300 ease-out"
@@ -18,14 +14,17 @@
           leave-from="opacity-100"
           leave-to="opacity-0"
         >
-          <DialogPanel
-            class="relative overflow-hidden rounded-lg bg-white p-4 text-left shadow-xl sm:my-8 sm:p-6"
-          >
+          <DialogPanel class="relative overflow-hidden rounded-lg bg-white p-4 text-left shadow-xl sm:my-8 sm:p-6">
             <p
               class="max-w-[300px] text-center align-middle font-bold sm:max-w-sm"
               data-cy="debtText"
             >
-              {{ t('debt.text').replace('#balance#', new Intl.NumberFormat(locale, { style: 'currency', currency: 'EUR' }).format(balance)) }}
+              {{
+                t('debt.text').replace(
+                  '#balance#',
+                  new Intl.NumberFormat(locale, { style: 'currency', currency: 'EUR' }).format(balance)
+                )
+              }}
             </p>
             <div class="flex flex-row">
               <CancelButton
@@ -80,6 +79,6 @@ function handlePayNow() {
 }
 
 function setOpenOrClosed() {
-  balance.value < BALANCE_LIMIT && route.path !== '/balance' ? isOpen.value = true : isOpen.value = false;
+  balance.value < BALANCE_LIMIT && route.path !== '/balance' ? (isOpen.value = true) : (isOpen.value = false);
 }
 </script>

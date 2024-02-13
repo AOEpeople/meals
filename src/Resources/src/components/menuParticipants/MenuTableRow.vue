@@ -1,12 +1,8 @@
 <template>
-  <LazyTableRow
-    :min-height="40"
-  >
-    <slot
-      name="firstCell"
-    />
+  <LazyTableRow :min-height="40">
+    <slot name="firstCell" />
     <template
-      v-for="menuDayId, menuIndex in Object.keys(menuParticipationsState.days)"
+      v-for="(menuDayId, menuIndex) in Object.keys(menuParticipationsState.days)"
       :key="`${menuIndex}-${menuDayId}`"
     >
       <slot
@@ -25,7 +21,7 @@ import { Dictionary } from 'types/types';
 import LazyTableRow from '../misc/LazyTableRow.vue';
 
 const props = defineProps<{
-  weekId: number
+  weekId: number;
 }>();
 
 const { menuParticipationsState } = useParticipations(props.weekId);

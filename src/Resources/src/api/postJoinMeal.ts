@@ -1,11 +1,11 @@
-import useApi from "@/api/api";
+import useApi from '@/api/api';
 import { IMessage } from '@/interfaces/IMessage';
-import { ref } from "vue";
+import { ref } from 'vue';
 
 export type JoinMeal = {
-    slotId: number,
-    participantId: number,
-    mealState: string,
+    slotId: number;
+    participantId: number;
+    mealState: string;
 };
 
 export async function useJoinMeal(data: string) {
@@ -13,7 +13,7 @@ export async function useJoinMeal(data: string) {
         'POST',
         'api/meal/participation',
         'application/json',
-        data,
+        data
     );
 
     const loaded = ref(false);
@@ -23,5 +23,5 @@ export async function useJoinMeal(data: string) {
         loaded.value = true;
     }
 
-    return { response, error }
+    return { response, error };
 }

@@ -1,19 +1,19 @@
-import ParticipantsTable from "@/components/participations/ParticipationsTable.vue";
-import ParticipantsTableHead from "@/components/participations/ParticipantsTableHead.vue";
-import ParticipantsTableBody from "@/components/participations/ParticipantsTableBody.vue";
-import { describe, it, beforeEach } from "@jest/globals";
-import dashboard from "../fixtures/dashboard.json";
-import participations from "../fixtures/participations.json";
-import { shallowMount } from "@vue/test-utils";
-import { computed, nextTick, ref } from "vue";
-import useApi from "@/api/api";
+import ParticipantsTable from '@/components/participations/ParticipationsTable.vue';
+import ParticipantsTableHead from '@/components/participations/ParticipantsTableHead.vue';
+import ParticipantsTableBody from '@/components/participations/ParticipantsTableBody.vue';
+import { describe, it, beforeEach } from '@jest/globals';
+import dashboard from '../fixtures/dashboard.json';
+import participations from '../fixtures/participations.json';
+import { shallowMount } from '@vue/test-utils';
+import { computed, nextTick, ref } from 'vue';
+import useApi from '@/api/api';
 
 const asyncFunc: () => Promise<void> = async () => {
-    new Promise(resolve => resolve(undefined));
+    new Promise((resolve) => resolve(undefined));
 };
 
 const getMockedResponses = (url: string) => {
-    switch(url) {
+    switch (url) {
         case 'api/dashboard':
             return {
                 response: ref(dashboard),
@@ -25,11 +25,11 @@ const getMockedResponses = (url: string) => {
                 response: ref(participations),
                 request: asyncFunc,
                 error: ref(false)
-            }
+            };
         default:
-            return {}
+            return {};
     }
-}
+};
 
 // @ts-expect-error ts doesn't allow reassignig a import but we need that to mock that function
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -47,11 +47,10 @@ jest.mock('@/services/useComponentHeights', () => ({
 }));
 
 describe('Test ParticipantsTable', () => {
-
     beforeEach(() => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         mockSetTableHeadHeight = jest.fn((height: number, elementId: string) => void 0);
-    })
+    });
 
     it('should call setTableHeight onMounted', () => {
         shallowMount(ParticipantsTable);

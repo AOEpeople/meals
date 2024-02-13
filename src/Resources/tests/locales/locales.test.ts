@@ -1,47 +1,45 @@
-import {describe, expect, test} from '@jest/globals';
+import { describe, expect, test } from '@jest/globals';
 
-import en from '../../src/locales/en.json'
-import de from '../../src/locales/de.json'
+import en from '../../src/locales/en.json';
+import de from '../../src/locales/de.json';
 
-type NestedStrings = NestedStringArray
-type NestedStringArray = Array<NestedStrings | string>
+type NestedStrings = NestedStringArray;
+type NestedStringArray = Array<NestedStrings | string>;
 
 describe('test locales', () => {
     test('all languages should contain the same keys', () => {
-        const localesDe: NestedStrings = getNestedKeys(de)
-        const localesEn: NestedStrings = getNestedKeys(en)
+        const localesDe: NestedStrings = getNestedKeys(de);
+        const localesEn: NestedStrings = getNestedKeys(en);
 
-        expect(localesEn).toStrictEqual(localesDe)
-    })
+        expect(localesEn).toStrictEqual(localesDe);
+    });
 
     test('all languages should not contain an empty field', () => {
-        expect(hasEmptyFields(de)).toBeFalsy()
-        expect(hasEmptyFields(en)).toBeFalsy()
-    })
-})
+        expect(hasEmptyFields(de)).toBeFalsy();
+        expect(hasEmptyFields(en)).toBeFalsy();
+    });
+});
 
 function getNestedKeys(locales: object): NestedStrings {
-    const result: NestedStrings = []
+    const result: NestedStrings = [];
 
     for (const [key, value] of Object.entries(locales)) {
-
-        result.push(key)
-        if (typeof value === "object") {
-            result.push(getNestedKeys(value))
+        result.push(key);
+        if (typeof value === 'object') {
+            result.push(getNestedKeys(value));
         }
     }
 
-    return result
+    return result;
 }
 
 function hasEmptyFields(locales: object): boolean {
     for (const [, value] of Object.entries(locales)) {
+        if (value === '') return true;
 
-        if (value === "") return true
-
-        if (typeof value === "object") {
-            if (hasEmptyFields(value)) return true
+        if (typeof value === 'object') {
+            if (hasEmptyFields(value)) return true;
         }
     }
-    return false
+    return false;
 }

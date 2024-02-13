@@ -41,7 +41,7 @@ const { t } = useI18n();
 const { deleteDishVariationWithSlug } = useDishes();
 
 defineProps<{
-  variation: Dish,
-  parentSlug: string
+  variation: Dish;
+  parentSlug: string;
 }>();
 </script>

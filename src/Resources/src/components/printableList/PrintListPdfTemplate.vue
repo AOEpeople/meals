@@ -126,12 +126,15 @@ import { type ListData } from '@/api/getPrintableListData';
 
 const { t } = useI18n();
 
-withDefaults(defineProps<{
-  dateString?: string,
-  mealNames: string[],
-  listData: ListData,
-  participationCount: number[]
-}>(), {
-  dateString: ''
-});
+withDefaults(
+  defineProps<{
+    dateString?: string;
+    mealNames: string[];
+    listData: ListData;
+    participationCount: number[];
+  }>(),
+  {
+    dateString: ''
+  }
+);
 </script>

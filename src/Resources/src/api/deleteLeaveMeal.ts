@@ -2,8 +2,8 @@ import useApi from '@/api/api';
 import { ref } from 'vue';
 
 export type LeaveMeal = {
-    slotId: number,
-    mealState: string
+    slotId: number;
+    mealState: string;
 };
 
 export async function useLeaveMeal(data: string) {
@@ -11,7 +11,7 @@ export async function useLeaveMeal(data: string) {
         'DELETE',
         'api/meal/participation',
         'application/json',
-        data,
+        data
     );
 
     const loaded = ref(false);
@@ -21,5 +21,5 @@ export async function useLeaveMeal(data: string) {
         loaded.value = true;
     }
 
-    return {error, response}
+    return { error, response };
 }

@@ -2,12 +2,12 @@ import { IMessage } from '@/interfaces/IMessage';
 import useApi from './api';
 
 export interface CreateDishDTO {
-    titleDe: string,
-    titleEn: string,
-    oneServingSize: boolean,
-    descriptionDe?: string,
-    descriptionEn?: string,
-    category?: number
+    titleDe: string;
+    titleEn: string;
+    oneServingSize: boolean;
+    descriptionDe?: string;
+    descriptionEn?: string;
+    category?: number;
 }
 
 /**

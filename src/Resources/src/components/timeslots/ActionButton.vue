@@ -21,11 +21,14 @@
 import { Action } from '@/enums/Actions';
 import { XIcon, PencilIcon } from '@heroicons/vue/outline';
 
-withDefaults(defineProps<{
-  btnText: string,
-  action: Action,
-  row?: boolean
-}>(), {
-  row: true
-});
+withDefaults(
+  defineProps<{
+    btnText: string;
+    action: Action;
+    row?: boolean;
+  }>(),
+  {
+    row: true
+  }
+);
 </script>

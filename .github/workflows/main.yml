@@ -54,6 +54,25 @@ jobs:
         working-directory: ./src/Resources
         run: yarn lint
 
+  format:
+    name: FE asset formatting check
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+      - name: Install npm packages
+        working-directory: ./src/Resources
+        run: yarn install
+      - name: Run prettier check
+        working-directory: ./src/Resources
+        run: yarn prettier-check
+
   phpmd:
     name: PHPMD
     runs-on: ubuntu-latest

@@ -31,17 +31,20 @@ import { Category, useCategories } from '@/stores/categoriesStore';
 const { t } = useI18n();
 const { createCategory, editCategory } = useCategories();
 
-const props = withDefaults(defineProps<{
-  titleDe?: string,
-  titleEn?: string,
-  index?: number,
-  edit?: boolean
-}>(),{
-  titleDe: '',
-  titleEn: '',
-  index: -1,
-  edit: false
-});
+const props = withDefaults(
+  defineProps<{
+    titleDe?: string;
+    titleEn?: string;
+    index?: number;
+    edit?: boolean;
+  }>(),
+  {
+    titleDe: '',
+    titleEn: '',
+    index: -1,
+    edit: false
+  }
+);
 
 const titleDeInput = ref(props.titleDe);
 const titleEnInput = ref(props.titleEn);
@@ -60,7 +63,7 @@ async function onSubmit() {
       titleDe: titleDeInput.value,
       titleEn: titleEnInput.value,
       slug: ''
-    }
+    };
     await createCategory(category);
   }
 }

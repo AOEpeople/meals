@@ -15,8 +15,8 @@ import { CheckIcon } from '@heroicons/vue/solid';
 import { computed } from 'vue';
 
 const props = defineProps<{
-  isChecked: boolean,
-  isActive: boolean
+  isChecked: boolean;
+  isActive: boolean;
 }>();
 
 const activeClass = computed(() => {

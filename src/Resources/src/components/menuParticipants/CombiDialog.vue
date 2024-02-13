@@ -4,17 +4,13 @@
     class="relative z-50"
     @close="closeCombi(false)"
   >
-    <div
-      class="fixed inset-0 flex items-center justify-center p-4"
-    >
-      <DialogPanel
-        class="relative overflow-hidden rounded-lg bg-white p-4 text-left shadow-xl sm:my-8 sm:p-6"
-      >
+    <div class="fixed inset-0 flex items-center justify-center p-4">
+      <DialogPanel class="relative overflow-hidden rounded-lg bg-white p-4 text-left shadow-xl sm:my-8 sm:p-6">
         <DialogTitle>
           {{ t('combiModal.title') }}
         </DialogTitle>
         <CombiRadioGroup
-          v-for="meals, key, index in menuOfTheDay"
+          v-for="(meals, key, index) in menuOfTheDay"
           :key="`${key}_${index}`"
           v-model="selectedCombi[index]"
           :meals="meals"
@@ -52,19 +48,21 @@ const { t } = useI18n();
 const { getMenuDay } = useWeeks();
 
 const props = defineProps<{
-  openCombi: number | null,
-  mealId: number,
-  dayId: string,
-  weekId: number
+  openCombi: number | null;
+  mealId: number;
+  dayId: string;
+  weekId: number;
 }>();
 
 const emit = defineEmits(['closeDialog']);
 
 const menuOfTheDay = computed(() => {
-  Object.entries(getMenuDay(props.dayId, props.weekId).meals).filter(meals => meals[1].find(meal => meal.dishSlug !== 'combined-dish') !== undefined)
+  Object.entries(getMenuDay(props.dayId, props.weekId).meals).filter(
+    (meals) => meals[1].find((meal) => meal.dishSlug !== 'combined-dish') !== undefined
+  );
   let menuDict: Dictionary<MealDTO[]> = {};
   for (const [key, meals] of Object.entries(getMenuDay(props.dayId, props.weekId).meals)) {
-    if (meals.find(meal => meal.dishSlug !== 'combined-dish') !== undefined) {
+    if (meals.find((meal) => meal.dishSlug !== 'combined-dish') !== undefined) {
       menuDict[key] = meals;
     }
   }

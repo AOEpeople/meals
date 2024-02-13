@@ -8,9 +8,7 @@
       <MenuTableBody :week-id="weekId" />
     </table>
   </div>
-  <LoadingSpinner
-    :loaded="loaded"
-  />
+  <LoadingSpinner :loaded="loaded" />
 </template>
 
 <script setup lang="ts">
@@ -24,7 +22,7 @@ import { useProgress } from '@marcoschulte/vue3-progress';
 import LoadingSpinner from '../misc/LoadingSpinner.vue';
 
 const props = defineProps<{
-  weekId: number
+  weekId: number;
 }>();
 
 const loaded = ref<boolean>(false);
@@ -51,6 +49,6 @@ onMounted(async () => {
 
 // expose functions for testing
 if (process.env.NODE_ENV === 'TEST') {
-  defineExpose({loaded});
+  defineExpose({ loaded });
 }
 </script>

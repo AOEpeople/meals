@@ -10,9 +10,7 @@
         :translate-x-max="'-5%'"
       >
         <template #button="{ open }">
-          <UserIcon
-            class="row-start-1 size-5 cursor-pointer text-white"
-          />
+          <UserIcon class="row-start-1 size-5 cursor-pointer text-white" />
         </template>
         <template #panel="{ close }">
           <MenuParticipationPanel
@@ -21,7 +19,9 @@
           />
         </template>
       </Popover>
-      <span class="row-start-2 rotate-180 text-center text-[11px] font-bold uppercase leading-4 tracking-[3px] text-white [writing-mode:vertical-lr]">
+      <span
+        class="row-start-2 rotate-180 text-center text-[11px] font-bold uppercase leading-4 tracking-[3px] text-white [writing-mode:vertical-lr]"
+      >
         {{ translateWeekdayWithoutRef(modelValue.date, locale) }}
       </span>
       <MenuLockDatePicker
@@ -43,14 +43,12 @@
       v-model="selectedEvent"
       class="col-start-2 row-span-1 row-start-3 border-t-[3px] px-2 py-[12px] md:px-4"
     />
-    <div
-      class="col-start-3 row-span-3 row-start-1 grid items-center rounded-r-lg border-l-2 sm:w-[72px]"
-    >
+    <div class="col-start-3 row-span-3 row-start-1 grid items-center rounded-r-lg border-l-2 sm:w-[72px]">
       <Switch
         :sr="t('menu.enableDay')"
         :initial="modelValue.enabled"
         class="m-auto"
-        @toggle="(value) => modelValue.enabled = value"
+        @toggle="(value) => (modelValue.enabled = value)"
       />
     </div>
   </div>
@@ -97,55 +95,52 @@ const selectedDishes = computed({
   }
 });
 
-watch(
-  selectedDishOne,
-  () => {
-    // meals that already exist in the backend can be changed to fit the new dishes
-    const mealIds = selectedDishes.value.meals[mealKeys.value[0]].map((meal: MealDTO) => meal.mealId);
-    // slugs of the dishes that were selected
-    const dishSlugs = getSlugsFromSelectedDishes(selectedDishOne);
-    // set the new dishes
-    selectedDishes.value.meals[mealKeys.value[0]] = dishSlugs.map(dishSlug => {
-      return {
-        dishSlug: dishSlug,
-        mealId: mealIds.length > 0 ? mealIds.shift() : null,
-        participationLimit: getParticipationLimitFromModel(dishSlug, mealKeys.value[0])
-      };
-    });
+watch(selectedDishOne, () => {
+  // meals that already exist in the backend can be changed to fit the new dishes
+  const mealIds = selectedDishes.value.meals[mealKeys.value[0]].map((meal: MealDTO) => meal.mealId);
+  // slugs of the dishes that were selected
+  const dishSlugs = getSlugsFromSelectedDishes(selectedDishOne);
+  // set the new dishes
+  selectedDishes.value.meals[mealKeys.value[0]] = dishSlugs.map((dishSlug) => {
+    return {
+      dishSlug: dishSlug,
+      mealId: mealIds.length > 0 ? mealIds.shift() : null,
+      participationLimit: getParticipationLimitFromModel(dishSlug, mealKeys.value[0])
+    };
+  });
 });
 
-watch(
-  selectedDishTwo,
-  () => {
-    // meals that already exist in the backend can be changed to fit the new dishes
-    const mealIds = selectedDishes.value.meals[mealKeys.value[1]].map((meal: MealDTO) => meal.mealId);
-    // slugs of the dishes that were selected
-    const dishSlugs = getSlugsFromSelectedDishes(selectedDishTwo);
-    // set the new dishes
-    selectedDishes.value.meals[mealKeys.value[1]] = dishSlugs.map(dishSlug => {
-      return {
-        dishSlug: dishSlug,
-        mealId: mealIds.length > 0 ? mealIds.shift() : null,
-        participationLimit: getParticipationLimitFromModel(dishSlug, mealKeys.value[1])
-      };
-    });
+watch(selectedDishTwo, () => {
+  // meals that already exist in the backend can be changed to fit the new dishes
+  const mealIds = selectedDishes.value.meals[mealKeys.value[1]].map((meal: MealDTO) => meal.mealId);
+  // slugs of the dishes that were selected
+  const dishSlugs = getSlugsFromSelectedDishes(selectedDishTwo);
+  // set the new dishes
+  selectedDishes.value.meals[mealKeys.value[1]] = dishSlugs.map((dishSlug) => {
+    return {
+      dishSlug: dishSlug,
+      mealId: mealIds.length > 0 ? mealIds.shift() : null,
+      participationLimit: getParticipationLimitFromModel(dishSlug, mealKeys.value[1])
+    };
+  });
 });
 
-watch(
-  selectedEvent,
-  () => {
-    if (selectedEvent.value !== null && selectedEvent.value !== undefined) {
-      props.modelValue.event = selectedEvent.value.id;
-    } else {
-      props.modelValue.event = null;
-    }
+watch(selectedEvent, () => {
+  if (selectedEvent.value !== null && selectedEvent.value !== undefined) {
+    props.modelValue.event = selectedEvent.value.id;
+  } else {
+    props.modelValue.event = null;
   }
-);
+});
 
 onMounted(() => {
   // get mealKeys
-  selectedDishOne.value = getDishArrayBySlugs(props.modelValue.meals[mealKeys.value[0]].map((meal: MealDTO) => meal.dishSlug));
-  selectedDishTwo.value = getDishArrayBySlugs(props.modelValue.meals[mealKeys.value[1]].map((meal: MealDTO) => meal.dishSlug));
+  selectedDishOne.value = getDishArrayBySlugs(
+    props.modelValue.meals[mealKeys.value[0]].map((meal: MealDTO) => meal.dishSlug)
+  );
+  selectedDishTwo.value = getDishArrayBySlugs(
+    props.modelValue.meals[mealKeys.value[1]].map((meal: MealDTO) => meal.dishSlug)
+  );
 
   // set Event from modelValue to be the initial value of the selectedEvent
   selectedEvent.value = getEventById(props.modelValue.event);
@@ -160,13 +155,17 @@ function getSlugsFromSelectedDishes(selectedDishRef: Ref<Dish[] | null>) {
   const meals: string[] = [];
 
   if (selectedDishRef.value !== null && selectedDishRef.value !== undefined && selectedDishRef.value.length === 1) {
-    selectedDishRef.value.forEach(dish => {
+    selectedDishRef.value.forEach((dish) => {
       if (dish !== null && dish !== undefined && dish.parentId === null) {
         meals.push(dish.slug);
       }
     });
-  } else if (selectedDishRef.value !== null && selectedDishRef.value !== undefined && selectedDishRef.value.length > 1) {
-    selectedDishRef.value.forEach(dish => {
+  } else if (
+    selectedDishRef.value !== null &&
+    selectedDishRef.value !== undefined &&
+    selectedDishRef.value.length > 1
+  ) {
+    selectedDishRef.value.forEach((dish) => {
       if (dish !== null && dish !== undefined && dish.parentId !== null) {
         meals.push(dish.slug);
       }

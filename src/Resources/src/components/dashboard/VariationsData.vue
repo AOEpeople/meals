@@ -1,6 +1,9 @@
 <template>
   <div class="mb-1">
-    <span class="inline-block break-words text-[12px] font-bold leading-[20px] tracking-[0.5px] text-primary-1 min-[380px]:text-note">{{ parentTitle }}</span><br>
+    <span
+      class="inline-block break-words text-[12px] font-bold leading-[20px] tracking-[0.5px] text-primary-1 min-[380px]:text-note"
+      >{{ parentTitle }}</span
+    ><br />
   </div>
   <div
     v-for="(variation, variationID, index) in meal.variations"
@@ -65,54 +68,54 @@ import OfferPopover from '@/components/dashboard/OfferPopover.vue';
 import PriceTag from '@/components/dashboard/PriceTag.vue';
 import { Day, Meal } from '@/api/getDashboardData';
 
-const { receive } = useEventsBus()
+const { receive } = useEventsBus();
 
-const { t, locale } = useI18n()
+const { t, locale } = useI18n();
 
 const props = defineProps<{
-  weekID: number | string,
-  dayID: number | string,
-  mealID: number | string,
-  meal: Meal,
-  day: Day
+  weekID: number | string;
+  dayID: number | string;
+  mealID: number | string;
+  meal: Meal;
+  day: Day;
 }>();
 
-const meal = props.meal ? props.meal : dashboardStore.getMeal(props.weekID, props.dayID, props.mealID)
+const meal = props.meal ? props.meal : dashboardStore.getMeal(props.weekID, props.dayID, props.mealID);
 
-const parentTitle = computed(() => locale.value.substring(0, 2) === 'en' ? meal.title.en : meal.title.de)
+const parentTitle = computed(() => (locale.value.substring(0, 2) === 'en' ? meal.title.en : meal.title.de));
 
 const mealCSS = computed(() => {
-  const array: string[] = []
+  const array: string[] = [];
   for (const variationId in meal.variations) {
-    array[variationId] = 'flex content-center rounded-md h-[30px] xl:h-[20px] '
+    array[variationId] = 'flex content-center rounded-md h-[30px] xl:h-[20px] ';
     switch (meal.variations[variationId].mealState) {
       case 'disabled':
       case 'offerable':
-        array[variationId] += 'bg-[#80909F]'
-        break
+        array[variationId] += 'bg-[#80909F]';
+        break;
       case 'open':
-        array[variationId] += 'bg-primary-4'
-        break
+        array[variationId] += 'bg-primary-4';
+        break;
       case 'tradeable':
       case 'offering':
-        array[variationId] += 'bg-highlight'
-        break
+        array[variationId] += 'bg-highlight';
+        break;
     }
   }
-  return array
-})
+  return array;
+});
 
-const openPopover = ref(false)
+const openPopover = ref(false);
 
 receive('openOfferPanel_' + props.mealID, () => {
-  openPopover.value = true
-  setTimeout(() => openPopover.value = false, 5000)
+  openPopover.value = true;
+  setTimeout(() => (openPopover.value = false), 5000);
 });
 
 const getParticipationDisplayString = (variation: Meal) => {
   const fixedCount = Math.ceil(parseFloat(variation.participations.toFixed(1)));
   return variation.limit > 0 ? `${fixedCount}/${variation.limit}` : fixedCount;
-}
+};
 </script>
 
 <style scoped>

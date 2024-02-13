@@ -21,7 +21,6 @@
   </div>
 </template>
 
-
 <script setup lang="ts">
 import ParticipationsTable from '@/components/participations/ParticipationsTable.vue';
 import MealOverview from '@/components/participations/MealOverview.vue';
@@ -34,7 +33,8 @@ import { useComponentHeights } from '@/services/useComponentHeights';
 
 const progress = useProgress().start();
 
-const { participationsState, loadShowParticipations, activatePeriodicFetch, disablePeriodicFetch, loadedState } = getShowParticipations();
+const { participationsState, loadShowParticipations, activatePeriodicFetch, disablePeriodicFetch, loadedState } =
+  getShowParticipations();
 const { addWindowHeightListener, removeWindowHeightListener } = useComponentHeights();
 
 onMounted(async () => {

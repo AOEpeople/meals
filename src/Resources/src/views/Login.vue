@@ -15,9 +15,7 @@
       :type="'password'"
       :label-text="t('password')"
     />
-    <SubmitButton
-      :btn-text="t('login')"
-    />
+    <SubmitButton :btn-text="t('login')" />
   </form>
 </template>
 
@@ -41,11 +39,7 @@ async function login() {
   if (username.value !== '' && password.value !== '') {
     const { error } = await postLogin(username.value, password.value);
     if (error.value === false) {
-      Promise.all([
-        userDataStore.fillStore(),
-        environmentStore.fillStore()
-      ])
-      .then(() => {
+      Promise.all([userDataStore.fillStore(), environmentStore.fillStore()]).then(() => {
         router.push({ name: 'Dashboard' });
       });
     }

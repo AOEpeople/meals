@@ -1,9 +1,9 @@
-import DishVariationActions from "@/components/dishes/DishVariationActions.vue";
-import { Action } from "@/enums/Actions";
-import ActionButton from "@/components/misc/ActionButton.vue";
-import { mount } from "@vue/test-utils";
-import { describe, it, expect } from "@jest/globals";
-import Dishes from "../fixtures/getDishes.json"
+import DishVariationActions from '@/components/dishes/DishVariationActions.vue';
+import { Action } from '@/enums/Actions';
+import ActionButton from '@/components/misc/ActionButton.vue';
+import { mount } from '@vue/test-utils';
+import { describe, it, expect } from '@jest/globals';
+import Dishes from '../fixtures/getDishes.json';
 
 const mockDeleteDishVariationWithSlug = jest.fn();
 
@@ -24,10 +24,10 @@ describe('Test DishVariationActions', () => {
             }
         });
 
-        const actionButtons =  wrapper.findAllComponents(ActionButton);
+        const actionButtons = wrapper.findAllComponents(ActionButton);
         expect(actionButtons).toHaveLength(2);
 
-        actionButtons.forEach(actionButton => {
+        actionButtons.forEach((actionButton) => {
             expect(actions).toContain(actionButton.props('action'));
         });
     });
@@ -40,10 +40,10 @@ describe('Test DishVariationActions', () => {
             }
         });
 
-        const actionButtons =  wrapper.findAllComponents(ActionButton);
+        const actionButtons = wrapper.findAllComponents(ActionButton);
 
-        for(const actionButton of actionButtons) {
-            if(actionButton.props('action') === 'DELETE') {
+        for (const actionButton of actionButtons) {
+            if (actionButton.props('action') === 'DELETE') {
                 await actionButton.trigger('click');
             }
         }

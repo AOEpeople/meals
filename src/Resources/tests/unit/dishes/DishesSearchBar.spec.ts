@@ -1,6 +1,6 @@
-import DishesSearchBar from "@/components/dishes/DishesSearchBar.vue";
-import { describe, it, expect } from "@jest/globals";
-import { mount } from "@vue/test-utils";
+import DishesSearchBar from '@/components/dishes/DishesSearchBar.vue';
+import { describe, it, expect } from '@jest/globals';
+import { mount } from '@vue/test-utils';
 
 const mockSetFilter = jest.fn();
 

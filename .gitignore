@@ -17,6 +17,8 @@ node_modules
 !.stylelintrc.json
 !.php-cs-fixer.dist
 !/migrations
+!.prettierrc
+!.prettierignore
 !/public/.htaccess
 
 ###> symfony/framework-bundle ###

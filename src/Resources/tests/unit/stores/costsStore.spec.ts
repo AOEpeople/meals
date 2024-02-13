@@ -1,12 +1,12 @@
-import { useCosts } from "@/stores/costsStore";
-import useApi from "@/api/api";
-import { ref } from "vue";
+import { useCosts } from '@/stores/costsStore';
+import useApi from '@/api/api';
+import { ref } from 'vue';
 import Costs from '../fixtures/getCosts.json';
 
 const PAYMENT_AMOUNT = 100;
 
 const asyncFunc: () => Promise<void> = async () => {
-    new Promise(resolve => resolve(undefined));
+    new Promise((resolve) => resolve(undefined));
 };
 
 const getMockedResponses = (method: string, url: string) => {
@@ -15,33 +15,33 @@ const getMockedResponses = (method: string, url: string) => {
             response: ref(null),
             request: asyncFunc,
             error: ref(false)
-        }
+        };
     } else if (/api\/costs\/settlement\/[a-z]+.[a-z]+/.test(url) && method === 'POST') {
         return {
             response: ref(null),
             request: asyncFunc,
             error: ref(false)
-        }
+        };
     } else if (/api\/payment\/cash\/[a-z]+.[a-z]+\?amount=[0-9]+/.test(url) && method === 'POST') {
         return {
             response: ref(PAYMENT_AMOUNT),
             request: asyncFunc,
             error: ref(false)
-        }
+        };
     } else if (/api\/costs\/settlement\/confirm\/[a-z]+/.test(url) && method === 'POST') {
         return {
             response: ref(null),
             request: asyncFunc,
             error: ref(false)
-        }
+        };
     } else if (/api\/costs/.test(url) && method === 'GET') {
         return {
             response: ref(Costs),
             request: asyncFunc,
             error: ref(false)
-        }
+        };
     }
-}
+};
 
 // @ts-expect-error ts doesn't allow reassignig a import but we need that to mock that function
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

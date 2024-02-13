@@ -47,9 +47,7 @@
           />
         </div>
       </SwitchGroup>
-      <SubmitButton
-        class="z-[1] col-span-2 row-start-6 sm:col-start-1 sm:row-start-4"
-      />
+      <SubmitButton class="z-[1] col-span-2 row-start-6 sm:col-start-1 sm:row-start-4" />
     </div>
   </form>
 </template>
@@ -70,25 +68,28 @@ const { t } = useI18n();
 const { createDish, updateDish } = useDishes();
 const { fetchCategories } = useCategories();
 
-const props = withDefaults(defineProps<{
-  titleDe?: string,
-  titleEn?: string,
-  descriptionDe?: string | null,
-  descriptionEn?: string | null,
-  categoryId?: number | null,
-  oneSizeServing?: boolean,
-  dishId?: number | null,
-  edit?: boolean,
-}>(),{
-  titleDe: '',
-  titleEn: '',
-  descriptionDe: null,
-  descriptionEn: null,
-  categoryId: null,
-  oneSizeServing: false,
-  dishId: null,
-  edit: false
-});
+const props = withDefaults(
+  defineProps<{
+    titleDe?: string;
+    titleEn?: string;
+    descriptionDe?: string | null;
+    descriptionEn?: string | null;
+    categoryId?: number | null;
+    oneSizeServing?: boolean;
+    dishId?: number | null;
+    edit?: boolean;
+  }>(),
+  {
+    titleDe: '',
+    titleEn: '',
+    descriptionDe: null,
+    descriptionEn: null,
+    categoryId: null,
+    oneSizeServing: false,
+    dishId: null,
+    edit: false
+  }
+);
 
 onMounted(async () => {
   await fetchCategories();
@@ -122,7 +123,7 @@ function createDishDtoObject() {
     descriptionDe: descriptionDeInput.value,
     descriptionEn: descriptionEnInput.value,
     category: categoryDropDown.value?.selectedCategory.id
-  }
+  };
   return dish;
 }
 

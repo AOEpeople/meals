@@ -29,9 +29,7 @@
         </td>
       </tr>
     </Table>
-    <LoadingSpinner
-      :loaded="!TimeSlotState.isLoading"
-    />
+    <LoadingSpinner :loaded="!TimeSlotState.isLoading" />
   </div>
 </template>
 

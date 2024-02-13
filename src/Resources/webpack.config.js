@@ -1,11 +1,11 @@
-const path = require('path')
-const webpack = require('webpack')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const path = require('path');
+const webpack = require('webpack');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
-const { WebpackManifestPlugin } = require('webpack-manifest-plugin')
+const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
 
-module.exports = function(env, argv) {
+module.exports = function (env, argv) {
     return {
         target: 'web',
         mode: 'development',
@@ -17,9 +17,9 @@ module.exports = function(env, argv) {
                     vendor: {
                         test: /[\\/]node_modules[\\/]/,
                         name: 'vendors',
-                        chunks: 'all',
-                    },
-                },
+                        chunks: 'all'
+                    }
+                }
             },
             minimize: !env.WEBPACK_SERVE,
             minimizer: [
@@ -27,16 +27,16 @@ module.exports = function(env, argv) {
                     terserOptions: {
                         ecma: 5,
                         compress: {
-                            drop_console: false,
+                            drop_console: false
                         },
                         mangle: true,
-                        module: false,
-                    },
-                }),
-            ],
+                        module: false
+                    }
+                })
+            ]
         },
         entry: {
-            app: './src/main.ts',
+            app: './src/main.ts'
         },
         output: {
             path: path.resolve(__dirname, '../../public/static/'),
@@ -44,22 +44,19 @@ module.exports = function(env, argv) {
             assetModuleFilename: 'assets/[name].[contenthash:4][ext][query]',
             clean: true,
             filename: '[name].js',
-            chunkFilename: env.WEBPACK_SERVE ? '[id].js' : 'chunks/[id].js',
+            chunkFilename: env.WEBPACK_SERVE ? '[id].js' : 'chunks/[id].js'
         },
         resolve: {
             preferRelative: true,
             extensions: ['.js', '.ts', '.json'],
             descriptionFiles: ['package.json'],
             aliasFields: ['browser', 'main'],
-            modules: [
-                path.resolve('./'),
-                'node_modules'
-            ],
+            modules: [path.resolve('./'), 'node_modules'],
             alias: {
                 jquery: path.resolve('./node_modules/jquery/dist/jquery.js'),
                 '@': path.resolve(__dirname, './src'),
                 'vue-i18n': 'vue-i18n/dist/vue-i18n.runtime.esm-bundler.js',
-                'tools': path.resolve(__dirname, './src/tools'),
+                tools: path.resolve(__dirname, './src/tools')
             }
         },
         module: {
@@ -68,46 +65,45 @@ module.exports = function(env, argv) {
                     test: /jquery\.js$/,
                     loader: 'expose-loader',
                     options: {
-                        exposes: ['$', 'jQuery'],
-                    },
+                        exposes: ['$', 'jQuery']
+                    }
                 },
                 {
                     test: /\.(js)$/,
                     use: ['babel-loader'],
-                    exclude: [/node_modules/],
+                    exclude: [/node_modules/]
                 },
                 {
                     test: /\.tsx?$/,
                     loader: 'ts-loader',
                     options: { appendTsSuffixTo: [/\.vue$/] },
-                    exclude: /node_modules/,
+                    exclude: /node_modules/
                 },
                 {
-                    test :/\.vue$/,
-                    use: [
-                        'vue-loader',
-                    ],
+                    test: /\.vue$/,
+                    use: ['vue-loader']
                 },
                 {
                     test: /\.(json5?|ya?ml)$/, // target json, json5, yaml and yml files
                     type: 'javascript/auto',
                     loader: '@intlify/vue-i18n-loader',
-                    include: [ // Use `Rule.include` to specify the files of locale messages to be pre-compiled
+                    include: [
+                        // Use `Rule.include` to specify the files of locale messages to be pre-compiled
                         path.resolve(__dirname, 'src/locales')
                     ]
                 },
                 {
                     test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2|otf)(\?v=[0-9]\.[0-9]\.[0-9])?$/i,
                     // More information here https://webpack.js.org/guides/asset-modules/
-                    type: 'asset/resource',
+                    type: 'asset/resource'
                 },
                 {
                     test: /\.css$/i,
                     use: [
                         env.WEBPACK_SERVE ? 'style-loader' : MiniCssExtractPlugin.loader,
                         'css-loader',
-                        'postcss-loader',
-                    ],
+                        'postcss-loader'
+                    ]
                 },
                 {
                     test: /\.s[ac]ss$/i,
@@ -123,33 +119,33 @@ module.exports = function(env, argv) {
                             loader: 'sass-loader',
                             options: {
                                 sassOptions: {
-                                    indentWidth: 4,
-                                },
-                            },
-                        },
-                    ],
+                                    indentWidth: 4
+                                }
+                            }
+                        }
+                    ]
                 },
                 {
                     // Load .html files as string
                     test: /\.html$/i,
-                    use: ['html-loader'],
-                },
-            ],
+                    use: ['html-loader']
+                }
+            ]
         },
         plugins: [
             new WebpackManifestPlugin(),
             new MiniCssExtractPlugin(),
             new webpack.BannerPlugin({
-                banner: 'name:[name], file:[file], fullhash:[fullhash], chunkhash:[chunkhash]',
+                banner: 'name:[name], file:[file], fullhash:[fullhash], chunkhash:[chunkhash]'
             }),
             new VueLoaderPlugin(),
             new webpack.IgnorePlugin({
                 resourceRegExp: /^\.\/locale$/,
-                contextRegExp: /moment$/,
+                contextRegExp: /moment$/
             }),
             new webpack.ProvidePlugin({
                 $: 'jquery',
-                jQuery: 'jquery',
+                jQuery: 'jquery'
             }),
             new webpack.DefinePlugin({
                 'process.browser': true,
@@ -166,13 +162,13 @@ module.exports = function(env, argv) {
         ],
         devServer: {
             open: true,
-            allowedHosts: [ 'meals.test' ],
+            allowedHosts: ['meals.test'],
             host: 'meals.test',
             port: 1338,
             proxy: {
                 '/': {
                     target: 'http://meals.test',
-                    secure: false,
+                    secure: false
                 }
             },
             hot: true,
@@ -180,14 +176,14 @@ module.exports = function(env, argv) {
             headers: {
                 'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
                 'Access-Control-Allow-Headers': 'X-Requested-With, content-type, Authorization',
-                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Origin': '*'
             },
             static: {
-                directory: path.resolve(__dirname, '../../public'),
+                directory: path.resolve(__dirname, '../../public')
             }
         },
         watchOptions: {
             poll: true
         }
-    }
-}
+    };
+};

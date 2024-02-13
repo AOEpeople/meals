@@ -40,7 +40,7 @@ import EventCreationPanel from './EventCreationPanel.vue';
 const { t } = useI18n();
 
 const props = defineProps<{
-  modelValue: string
+  modelValue: string;
 }>();
 
 const emit = defineEmits(['update:modelValue']);

@@ -1,11 +1,11 @@
-import { Category, useCategories } from "@/stores/categoriesStore";
-import Categories from "../fixtures/getCategories.json";
-import { ref } from "vue";
-import useApi from "@/api/api";
-import { describe, it } from "@jest/globals";
+import { Category, useCategories } from '@/stores/categoriesStore';
+import Categories from '../fixtures/getCategories.json';
+import { ref } from 'vue';
+import useApi from '@/api/api';
+import { describe, it } from '@jest/globals';
 
 const asyncFunc: () => Promise<void> = async () => {
-    new Promise(resolve => resolve(undefined));
+    new Promise((resolve) => resolve(undefined));
 };
 
 const getMockedResponses = (method: string, url: string) => {
@@ -14,42 +14,41 @@ const getMockedResponses = (method: string, url: string) => {
             response: ref(Categories),
             request: asyncFunc,
             error: ref(false)
-        }
+        };
     } else if (url.includes('api/categories') && (method === 'POST' || method === 'DELETE')) {
         return {
             response: ref(null),
             request: asyncFunc,
             error: ref(false)
-        }
+        };
     } else if (url.includes('api/categories') && method === 'PUT') {
         return {
             response: ref(category2),
             request: asyncFunc,
             error: ref(false)
-        }
+        };
     }
-}
+};
 
 // @ts-expect-error ts doesn't allow reassignig a import but we need that to mock that function
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 useApi = jest.fn().mockImplementation((method: string, url: string) => getMockedResponses(method, url));
 
 const category1: Category = {
-    'id': 4,
-    'titleDe': 'Sonstiges',
-    'titleEn': 'Others',
-    'slug': 'others'
+    id: 4,
+    titleDe: 'Sonstiges',
+    titleEn: 'Others',
+    slug: 'others'
 };
 
 const category2: Category = {
-    'id': 4,
-    'titleDe': 'Vegetarisch',
-    'titleEn': 'Vegetarian',
-    'slug': 'others'
+    id: 4,
+    titleDe: 'Vegetarisch',
+    titleEn: 'Vegetarian',
+    slug: 'others'
 };
 
 describe('Test categoriesStore', () => {
-
     const { resetState, CategoriesState, fetchCategories, editCategory } = useCategories();
 
     beforeEach(() => {
@@ -79,4 +78,4 @@ describe('Test categoriesStore', () => {
 
         expect(CategoriesState.categories[0]).toEqual(category2);
     });
-})
+});

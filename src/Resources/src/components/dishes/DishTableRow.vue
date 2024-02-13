@@ -62,19 +62,18 @@ import { useI18n } from 'vue-i18n';
 import { useCategories } from '@/stores/categoriesStore';
 import DishActions from './DishActions.vue';
 import DishVariationActions from './DishVariationActions.vue';
-import LazyTableRow from '../misc/LazyTableRow.vue'
+import LazyTableRow from '../misc/LazyTableRow.vue';
 
 const { locale } = useI18n();
 const { getCategoryTitleById } = useCategories();
 
 defineProps<{
-  dish: Dish,
-  indexInList: number
+  dish: Dish;
+  indexInList: number;
 }>();
 </script>
 
 <style scoped>
-
 .topShadow {
   background-color: #f4f6f9;
   box-shadow: inset 0px 8px 6px -6px #e5e7eb;
@@ -87,6 +86,10 @@ defineProps<{
 
 .topBottomShadow {
   background-color: #f4f6f9;
-  box-shadow:inset 0 0 0 0 #e5e7eb , inset 0px -8px 6px -6px #e5e7eb, inset 0 0 0 0 #e5e7eb, inset 0px 8px 6px -6px #e5e7eb;
+  box-shadow:
+    inset 0 0 0 0 #e5e7eb,
+    inset 0px -8px 6px -6px #e5e7eb,
+    inset 0 0 0 0 #e5e7eb,
+    inset 0px 8px 6px -6px #e5e7eb;
 }
 </style>

@@ -11,14 +11,12 @@
       class="relative w-full"
       @click="handleClick"
     >
-      <ComboboxLabel
-        v-if="slot.label"
-      >
+      <ComboboxLabel v-if="slot.label">
         <slot name="label" />
       </ComboboxLabel>
       <div
         class="flex w-full flex-row items-center overflow-hidden border-[#CAD6E1] bg-white text-left text-[14px] font-medium text-[#B4C1CE] focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2"
-        :class="openProp ? 'rounded-t-[23px] border-x-2 border-t-2 border-b-[1px]' : 'rounded-full border-2'"
+        :class="openProp ? 'rounded-t-[23px] border-x-2 border-b-[1px] border-t-2' : 'rounded-full border-2'"
       >
         <ComboboxInput
           class="w-full truncate border-none px-4 py-2 text-[#9CA3AF] focus:outline-none"
@@ -78,7 +76,7 @@ import { useI18n } from 'vue-i18n';
 import { refThrottled } from '@vueuse/core';
 
 const props = defineProps<{
-  weekId: number
+  weekId: number;
 }>();
 
 const { ProfilesState, fetchAbsentingProfiles } = useProfiles(props.weekId);
@@ -103,10 +101,13 @@ const filteredProfiles = computed(() => {
   if (profileFilter.value === '') {
     output.push(...ProfilesState.profiles);
   } else {
-    output.push(...ProfilesState.profiles.filter(profile => (
-      profile.fullName.toLowerCase().includes(profileFilter.value.toLowerCase()) ||
-      profile.roles.join(' ').toLowerCase().includes(profileFilter.value.toLowerCase())
-    )));
+    output.push(
+      ...ProfilesState.profiles.filter(
+        (profile) =>
+          profile.fullName.toLowerCase().includes(profileFilter.value.toLowerCase()) ||
+          profile.roles.join(' ').toLowerCase().includes(profileFilter.value.toLowerCase())
+      )
+    );
   }
 
   return output.sort((a, b) => {
@@ -125,7 +126,7 @@ function getDisplayName(profile: IProfile) {
 
 function handleClick() {
   openProp.value = true;
-  useDetectClickOutside(combobox, () => openProp.value = false);
+  useDetectClickOutside(combobox, () => (openProp.value = false));
 }
 
 function selectProfile(profile: IProfile) {

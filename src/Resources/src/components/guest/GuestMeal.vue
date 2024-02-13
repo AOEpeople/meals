@@ -9,8 +9,8 @@
             class="ml-1 h-[17px] w-[36px] bg-highlight py-[1px] pl-1 pr-[3px] align-text-bottom text-[11px] leading-[16px] tracking-[1.5px] text-white"
           >
             {{ t('dashboard.new') }}
-          </span>
-        </span><br>
+          </span> </span
+        ><br />
         <p
           v-if="description !== ''"
           class="description m-0 font-light text-primary"
@@ -36,18 +36,20 @@
 import ParticipationCounter from '@/components/menuCard/ParticipationCounter.vue';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import GuestCheckbox from '@/components/guest/GuestCheckbox.vue'
+import GuestCheckbox from '@/components/guest/GuestCheckbox.vue';
 import { Dictionary } from 'types/types';
 import { Meal } from '@/api/getDashboardData';
 
 const props = defineProps<{
-  meals: Dictionary<Meal>,
-  mealId: number | string
+  meals: Dictionary<Meal>;
+  mealId: number | string;
 }>();
 
 const { t, locale } = useI18n();
 
-const title = computed(() => locale.value.substring(0, 2) === 'en' ? props.meals[props.mealId].title.en : props.meals[props.mealId].title.de);
+const title = computed(() =>
+  locale.value.substring(0, 2) === 'en' ? props.meals[props.mealId].title.en : props.meals[props.mealId].title.de
+);
 const description = computed(() => {
   if (props.meals[props.mealId].description !== null) {
     if (locale.value.substring(0, 2) === 'en') {
@@ -59,16 +61,16 @@ const description = computed(() => {
 });
 
 const mealCSS = computed(() => {
-  let css = 'grid grid-cols-2 content-center rounded-md h-[30px] xl:h-[20px] mr-[15px] '
+  let css = 'grid grid-cols-2 content-center rounded-md h-[30px] xl:h-[20px] mr-[15px] ';
   switch (props.meals[props.mealId].mealState) {
     case 'disabled':
-      css += 'bg-[#80909F]'
-      return css
+      css += 'bg-[#80909F]';
+      return css;
     case 'open':
-      css += 'bg-primary-4'
-      return css
+      css += 'bg-primary-4';
+      return css;
     default:
-      return css
+      return css;
   }
 });
 </script>

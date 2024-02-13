@@ -1,16 +1,16 @@
-import Dashboard     from '@/views/Dashboard.vue';
-import Menu          from '@/views/Menu.vue';
-import Dishes        from '@/views/Dishes.vue';
-import Categories    from '@/views/Categories.vue';
-import TimeSlots     from '@/views/TimeSlots.vue';
-import Costs         from '@/views/Costs.vue';
-import Finance       from '@/views/Finance.vue';
-import Balance       from '@/views/Balance.vue';
-import Guest         from '@/views/Guest.vue';
-import NotAllowed    from '@/views/NotAllowed.vue';
+import Dashboard from '@/views/Dashboard.vue';
+import Menu from '@/views/Menu.vue';
+import Dishes from '@/views/Dishes.vue';
+import Categories from '@/views/Categories.vue';
+import TimeSlots from '@/views/TimeSlots.vue';
+import Costs from '@/views/Costs.vue';
+import Finance from '@/views/Finance.vue';
+import Balance from '@/views/Balance.vue';
+import Guest from '@/views/Guest.vue';
+import NotAllowed from '@/views/NotAllowed.vue';
 import PrintableList from '@/views/PrintableList.vue';
 import ParticipantList from '@/views/ParticipantsList.vue';
-import Weeks         from '@/views/Weeks.vue';
+import Weeks from '@/views/Weeks.vue';
 import MenuParticipations from './views/MenuParticipations.vue';
 import CostsSettlement from './views/CostsSettlement.vue';
 import CashRegister from './views/CashRegister.vue';
@@ -19,11 +19,11 @@ import Events from './views/Events.vue';
 import GuestEvent from './views/GuestEvent.vue';
 
 import { createRouter, createWebHistory } from 'vue-router';
-import { userDataStore }                  from '@/stores/userDataStore';
+import { userDataStore } from '@/stores/userDataStore';
 
 declare module 'vue-router' {
     interface RouteMeta {
-        allowedRoles: Array<string>
+        allowedRoles: Array<string>;
     }
 }
 
@@ -186,23 +186,23 @@ const router = createRouter({
                 allowedRoles: ['ROLE_KITCHEN_STAFF', 'ROLE_ADMIN']
             }
         }
-    ],
-})
+    ]
+});
 
 router.beforeEach((to) => {
     if (userDataStore.getState().roles.includes('ROLE_GUEST') === true || userDataStore.getState().user === '') {
         if (to.name !== 'Guest' && to.name !== 'GuestEvent' && to.name !== 'Login' && to.name !== 'ParticipantList') {
-            return { name: 'Login' }
+            return { name: 'Login' };
         }
     } else {
         if (to.name === 'Login') {
-            return false
+            return false;
         }
 
         if (userDataStore.roleAllowsRoute(String(to.name)) === false) {
-            return { name: 'NotAllowed' }
+            return { name: 'NotAllowed' };
         }
     }
-})
+});
 
-export default router
+export default router;

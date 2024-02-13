@@ -13,7 +13,10 @@
         appear
       >
         <CheckCircleIcon
-          v-if="(bookedMeals.booked.includes(variation.mealId) && !bookedCombinedMeal) || (bookedMeals.booked.includes(meal.mealId) && meal.title.en === 'Combined Dish')"
+          v-if="
+            (bookedMeals.booked.includes(variation.mealId) && !bookedCombinedMeal) ||
+            (bookedMeals.booked.includes(meal.mealId) && meal.title.en === 'Combined Dish')
+          "
           class="check-circle-icon m-auto block size-6 text-primary"
         />
       </Transition>
@@ -47,7 +50,10 @@
       appear
     >
       <CheckCircleIcon
-        v-if="(bookedMeals.booked.includes(meal.mealId) && !bookedCombinedMeal) || (bookedMeals.booked.includes(meal.mealId) && meal.title.en === 'Combined Dish')"
+        v-if="
+          (bookedMeals.booked.includes(meal.mealId) && !bookedCombinedMeal) ||
+          (bookedMeals.booked.includes(meal.mealId) && meal.title.en === 'Combined Dish')
+        "
         class="check-circle-icon m-auto block size-6 text-primary"
       />
     </Transition>
@@ -78,9 +84,9 @@ import { IBookedData, IMealWithVariations } from '@/api/getShowParticipations';
 import { CheckCircleIcon } from '@heroicons/vue/solid';
 
 defineProps<{
-  bookedMeals: IBookedData,
-  meal: IMealWithVariations,
-  bookedCombinedMeal: boolean
+  bookedMeals: IBookedData;
+  meal: IMealWithVariations;
+  bookedCombinedMeal: boolean;
 }>();
 </script>
 
@@ -94,5 +100,4 @@ defineProps<{
 .participations-data-leave-to {
   opacity: 0;
 }
-
 </style>

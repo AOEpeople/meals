@@ -6,7 +6,7 @@
     <Switch
       :sr="t('menu.notify')"
       :initial="week.notify"
-      @toggle="(value) => week.notify = value"
+      @toggle="(value) => (week.notify = value)"
     />
   </div>
 </template>
@@ -19,6 +19,6 @@ import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 
 defineProps<{
-  week: WeekDTO
+  week: WeekDTO;
 }>();
 </script>

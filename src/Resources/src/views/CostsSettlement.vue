@@ -1,10 +1,6 @@
 <template>
-  <div
-    class="mx-[5%] flex w-full flex-col xl:mx-auto"
-  >
-    <h2
-      class="w-full text-left max-[380px]:text-[24px]"
-    >
+  <div class="mx-[5%] flex w-full flex-col xl:mx-auto">
+    <h2 class="w-full text-left max-[380px]:text-[24px]">
       {{ t('costs.settlementTitle') }}
     </h2>
     <span
@@ -20,9 +16,7 @@
       class="ml-0 w-fit cursor-pointer justify-self-center"
       @click="handleClick"
     />
-    <span
-      v-else-if="profile === null && loaded === true && isConfirmed === false"
-    >
+    <span v-else-if="profile === null && loaded === true && isConfirmed === false">
       {{ t('costs.settlementNotPossible') }}
     </span>
     <span
@@ -31,9 +25,7 @@
     >
       {{ t('costs.success').replace('#name#', profile.fullName) }}
     </span>
-    <LoadingSpinner
-      :loaded="loaded"
-    />
+    <LoadingSpinner :loaded="loaded" />
   </div>
 </template>
 
@@ -50,7 +42,7 @@ const { confirmSettlement } = useCosts();
 const { t } = useI18n();
 
 const props = defineProps<{
-  hash: string
+  hash: string;
 }>();
 
 const profile = ref<IProfile>(null);
@@ -64,7 +56,7 @@ onMounted(async () => {
 });
 
 async function handleClick() {
-  if (isConfirmed.value === false && await confirmSettlement(props.hash) === true) {
+  if (isConfirmed.value === false && (await confirmSettlement(props.hash)) === true) {
     isConfirmed.value = true;
   }
 }

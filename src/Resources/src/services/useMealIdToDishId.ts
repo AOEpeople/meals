@@ -7,7 +7,6 @@ import { useDishes } from '@/stores/dishesStore';
  * @param weekId The id of the week to construct the map for.
  */
 export function useMealIdToDishId(weekId: number) {
-
     const { getDishBySlug, fetchDishes, DishesState } = useDishes();
     const { fetchWeeks, getWeekById, WeeksState } = useWeeks();
 
@@ -23,10 +22,10 @@ export function useMealIdToDishId(weekId: number) {
 
         const week = getWeekById(weekId);
 
-        for(const day of Object.values(week.days)) {
-            for(const meals of Object.values(day.meals)) {
-                meals.forEach(meal => {
-                    const dishId = getDishBySlug(meal.dish).id
+        for (const day of Object.values(week.days)) {
+            for (const meals of Object.values(day.meals)) {
+                meals.forEach((meal) => {
+                    const dishId = getDishBySlug(meal.dish).id;
                     mealIdToDishIdDict.set(meal.id, dishId);
                 });
             }

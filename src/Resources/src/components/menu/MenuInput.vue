@@ -13,22 +13,27 @@
     >
       <div
         class="flex w-full flex-row items-center overflow-hidden border-[#CAD6E1] bg-white text-left text-[14px] font-medium text-[#B4C1CE] focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2"
-        :class="openProp ? 'rounded-t-[23px] border-x-2 border-t-2 border-b-[1px]' : 'rounded-full border-2'"
+        :class="openProp ? 'rounded-t-[23px] border-x-2 border-b-[1px] border-t-2' : 'rounded-full border-2'"
       >
         <MealIcon
           class="ml-4 aspect-square h-full"
           :fill-colour="'fill-[#9CA3AF]'"
         />
         <ComboboxInput
-          :displayValue="// @ts-ignore
-            (dish) => titleStringRepr"
+          :displayValue="
+            // @ts-ignore
+            (dish) => titleStringRepr
+          "
           class="w-full truncate border-none px-4 py-2 text-[#9CA3AF] focus:outline-none"
           @change="setFilter($event.target.value)"
         />
         <XIcon
           class="mr-4 h-full w-10 cursor-pointer justify-self-end px-1 py-2 text-[#9CA3AF] transition-transform hover:scale-[120%]"
           aria-hidden="true"
-          @click="setFilter(''); selectedDish = null"
+          @click="
+            setFilter('');
+            selectedDish = null;
+          "
         />
       </div>
       <div
@@ -67,8 +72,10 @@
               <MenuDishVariationsCombobox
                 v-if="dish.variations.length > 0 && selected && loadingFinished"
                 v-model="selectedVariations"
-                :dish=" // @ts-ignore
-                  (dish as Dish)"
+                :dish="
+                  // @ts-ignore
+                  dish as Dish
+                "
                 class="col-span-2 col-start-1 row-start-2 justify-self-center md:col-span-1 md:col-start-2 md:row-start-1"
               />
               <span
@@ -107,11 +114,14 @@ const { setFilter, filteredDishes } = useDishes();
 const { locale, t } = useI18n();
 const { MenuCountState } = useWeeks();
 
-const props = withDefaults(defineProps<{
-  modelValue: Dish[] | null;
-}>(), {
-  modelValue: null
-});
+const props = withDefaults(
+  defineProps<{
+    modelValue: Dish[] | null;
+  }>(),
+  {
+    modelValue: null
+  }
+);
 
 const emit = defineEmits(['update:modelValue']);
 
@@ -125,13 +135,13 @@ let unwatch: WatchStopHandle = null;
 onMounted(() => {
   // set initial value for dish
   if (props.modelValue?.length > 0) {
-    props.modelValue.forEach(dish => {
+    props.modelValue.forEach((dish) => {
       if (dish.parentId === null) {
         selectedDish.value = dish;
       }
     });
     // set initial value for variations (after dish is set, otherwise the watcher empties the array)
-    props.modelValue.forEach(dish => {
+    props.modelValue.forEach((dish) => {
       if (dish.parentId !== null) {
         selectedVariations.value.push(dish);
       }
@@ -139,15 +149,16 @@ onMounted(() => {
   }
   loadingFinished.value = true;
 
-  unwatch = watch(
-    selectedDish,
-    (newSelectedDish, oldSelectedDish) => {
-      if (loadingFinished.value !== null && loadingFinished.value !== undefined && newSelectedDish?.id !== oldSelectedDish?.id) {
-        selectedVariations.value = [];
-        value.value = newSelectedDish ? [newSelectedDish] : [];
-      }
+  unwatch = watch(selectedDish, (newSelectedDish, oldSelectedDish) => {
+    if (
+      loadingFinished.value !== null &&
+      loadingFinished.value !== undefined &&
+      newSelectedDish?.id !== oldSelectedDish?.id
+    ) {
+      selectedVariations.value = [];
+      value.value = newSelectedDish ? [newSelectedDish] : [];
     }
-  );
+  });
 
   setFilter('');
 });
@@ -165,27 +176,30 @@ const value = computed({
   }
 });
 
-watch(
-  selectedVariations,
-  (newSelctedVariations, oldSelectedVariations) => {
-    if (loadingFinished.value !== null && loadingFinished.value !== undefined && newSelctedVariations.length !== oldSelectedVariations.length) {
-      value.value = [selectedDish.value, ...selectedVariations.value];
-    }
+watch(selectedVariations, (newSelctedVariations, oldSelectedVariations) => {
+  if (
+    loadingFinished.value !== null &&
+    loadingFinished.value !== undefined &&
+    newSelctedVariations.length !== oldSelectedVariations.length
+  ) {
+    value.value = [selectedDish.value, ...selectedVariations.value];
   }
-);
+});
 
 const titleStringRepr = computed(() => {
-  return value.value.map(dish => {
-    if (dish !== null && dish !== undefined) {
-      return locale.value === 'en' ? dish.titleEn : dish.titleDe
-    }
-    return '';
-  }).join(', ');
+  return value.value
+    .map((dish) => {
+      if (dish !== null && dish !== undefined) {
+        return locale.value === 'en' ? dish.titleEn : dish.titleDe;
+      }
+      return '';
+    })
+    .join(', ');
 });
 
 function handleClick() {
   openProp.value = true;
-  useDetectClickOutside(combobox, () => openProp.value = false);
+  useDetectClickOutside(combobox, () => (openProp.value = false));
 }
 </script>
 

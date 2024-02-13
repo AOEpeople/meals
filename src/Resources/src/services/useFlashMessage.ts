@@ -3,8 +3,8 @@ import { FlashMessageType } from '@/enums/FlashMessage';
 import { readonly, ref } from 'vue';
 
 export interface FlashMessage {
-    type: FlashMessageType,
-    message: string
+    type: FlashMessageType;
+    message: string;
 }
 
 const { receive, emit } = useEventsBus();
@@ -27,7 +27,6 @@ receive<FlashMessage>('flashmessage', (data) => {
 });
 
 export default function useFlashMessage() {
-
     /**
      * Emits a FlashMessage to the EventsBus.
      * @param flashmessage  The message to emit
@@ -47,5 +46,5 @@ export default function useFlashMessage() {
         flashMessages: readonly(flashMessages),
         sendFlashMessage,
         clearMessages
-    }
+    };
 }

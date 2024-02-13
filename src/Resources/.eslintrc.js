@@ -4,18 +4,16 @@ module.exports = {
         'plugin:vue/vue3-recommended',
         'plugin:@typescript-eslint/recommended',
         'plugin:tailwindcss/recommended',
+        'prettier'
     ],
 
-    parser: "vue-eslint-parser",
+    parser: 'vue-eslint-parser',
 
     parserOptions: {
-        parser: '@typescript-eslint/parser',
+        parser: '@typescript-eslint/parser'
     },
 
-    plugins: [
-        '@typescript-eslint',
-        'tailwindcss'
-    ],
+    plugins: ['@typescript-eslint', 'tailwindcss'],
 
     root: true,
 
@@ -31,25 +29,25 @@ module.exports = {
         '@typescript-eslint/no-this-alias': [
             'error',
             {
-                'allowDestructuring': true, // Allow `const { props, state } = this`; false by default
-                'allowedNames': ['vm'] // Allow `const vm= this`; `[]` by default
+                allowDestructuring: true, // Allow `const { props, state } = this`; false by default
+                allowedNames: ['vm'] // Allow `const vm= this`; `[]` by default
             }
         ],
         'tailwindcss/no-custom-classname': 'off',
-        'tailwindcss/enforces-negative-arbitrary-values': 'off'
+        'tailwindcss/enforces-negative-arbitrary-values': 'off',
+        eqeqeq: 'error',
+        'no-regex-spaces': 'error',
+        'no-var': 'error'
     },
 
     ignorePatterns: ['node_modules/', 'dist/', 'src/**/*.d.ts', '*.config.js', 'js/'],
 
     overrides: [
-      {
-        files: [
-          '**/__tests__/*.{j,t}s?(x)',
-          '**/tests/unit/**/*.spec.{j,t}s?(x)'
-        ],
-        env: {
-          jest: true
+        {
+            files: ['**/__tests__/*.{j,t}s?(x)', '**/tests/unit/**/*.spec.{j,t}s?(x)'],
+            env: {
+                jest: true
+            }
         }
-      }
     ]
-}
+};

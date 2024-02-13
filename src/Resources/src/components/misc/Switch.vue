@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import { Switch } from '@headlessui/vue'
+import { Switch } from '@headlessui/vue';
 import { computed, ref, watch } from 'vue';
 
 export interface Emits {
@@ -22,8 +22,8 @@ export interface Emits {
 }
 
 const props = defineProps<{
-  sr: string,
-  initial: boolean
+  sr: string;
+  initial: boolean;
 }>();
 
 const emits = defineEmits<Emits>();
@@ -31,5 +31,5 @@ const enabled = ref(props.initial);
 const re = computed(() => props.initial);
 
 watch(enabled, () => emits('toggle', enabled.value));
-watch(re, () => enabled.value = re.value)
+watch(re, () => (enabled.value = re.value));
 </script>

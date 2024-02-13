@@ -1,15 +1,11 @@
 <template>
-  <div
-    class="grid w-full grid-cols-1 grid-rows-[minmax(0,2fr)_auto_minmax(0,1fr)]"
-  >
+  <div class="grid w-full grid-cols-1 grid-rows-[minmax(0,2fr)_auto_minmax(0,1fr)]">
     <BannerSpacer>
       <EventIcon
         class="w-[20px] self-center"
         :size="20"
       />
-      <span
-        class="text-[14px] font-bold leading-[20px] tracking-[0.5px] text-primary-1"
-      >
+      <span class="text-[14px] font-bold leading-[20px] tracking-[0.5px] text-primary-1">
         {{ t('event.event') }}
       </span>
       <EventIcon
@@ -17,10 +13,10 @@
         :size="20"
       />
     </BannerSpacer>
-    <div
-      class="flex w-full flex-row items-center px-[15px]"
-    >
-      <span class="mr-[5px] inline-block grow self-center break-words text-[12px] font-bold leading-[20px] tracking-[0.5px] text-primary-1 min-[380px]:text-note">
+    <div class="flex w-full flex-row items-center px-[15px]">
+      <span
+        class="mr-[5px] inline-block grow self-center break-words text-[12px] font-bold leading-[20px] tracking-[0.5px] text-primary-1 min-[380px]:text-note"
+      >
         {{ getEventById(day.event.eventId)?.title }}
       </span>
       <GuestButton
@@ -67,8 +63,8 @@ import GuestButton from './GuestButton.vue';
 import { Invitation } from '@/enums/Invitation';
 
 defineProps<{
-  day: Day,
-  dayId: string
+  day: Day;
+  dayId: string;
 }>();
 
 const { t } = useI18n();

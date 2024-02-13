@@ -1,11 +1,5 @@
-<template>
-  not allowed
-</template>
+<template>not allowed</template>
 
-<script setup>
+<script setup></script>
 
-</script>
-
-<style scoped>
-
-</style>
+<style scoped></style>

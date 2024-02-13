@@ -11,7 +11,6 @@
   </table>
 </template>
 
-
 <script setup lang="ts">
 import { computed, onMounted, onUpdated, ref, watch } from 'vue';
 import ParticipantsTableBody from './ParticipantsTableBody.vue';
@@ -45,6 +44,6 @@ onUpdated(() => {
 });
 
 if (process.env.NODE_ENV === 'TEST') {
-  defineExpose({ tableHeight })
+  defineExpose({ tableHeight });
 }
 </script>

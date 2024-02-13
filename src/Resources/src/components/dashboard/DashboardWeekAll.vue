@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="inline-flex divide-x-2"
-  >
+  <div class="inline-flex divide-x-2">
     <div
       v-for="(week, weekID, index) in weeks"
       :key="index"
@@ -21,6 +19,6 @@ import WeekComp from './Week.vue';
 import { Week } from '@/api/getDashboardData';
 
 defineProps<{
-  weeks: Dictionary<Week>
+  weeks: Dictionary<Week>;
 }>();
 </script>

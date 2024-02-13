@@ -9,7 +9,7 @@
       :val="weekID"
       :label="t('dashboard.' + index)"
       :indicator="true"
-      :class="{'!border-b-[3px] !border-primary': weekID === selectedTab}"
+      :class="{ '!border-b-[3px] !border-primary': weekID === selectedTab }"
       class="cursor-pointer pb-2"
     >
       <div
@@ -39,17 +39,17 @@
 </template>
 <script setup lang="ts">
 import { Tabs, Tab, TabPanels, TabPanel } from 'vue3-tabs';
-import {useI18n} from 'vue-i18n';
-import {ref} from 'vue';
+import { useI18n } from 'vue-i18n';
+import { ref } from 'vue';
 import WeekComp from './Week.vue';
 import { Dictionary } from 'types/types';
 import { Week } from '@/api/getDashboardData';
 
 const props = defineProps<{
-  weeks: Dictionary<Week>
+  weeks: Dictionary<Week>;
 }>();
 
-const { t } = useI18n()
+const { t } = useI18n();
 
-const selectedTab = ref(Object.keys(props.weeks)[0])
+const selectedTab = ref(Object.keys(props.weeks)[0]);
 </script>

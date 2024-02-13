@@ -1,5 +1,5 @@
-import { IMessage } from "@/interfaces/IMessage";
-import useApi from "./api";
+import { IMessage } from '@/interfaces/IMessage';
+import useApi from './api';
 
 /**
  * Makes a POST-Request to create an Event

@@ -1,10 +1,6 @@
 <template>
-  <div
-    class="mx-[5%]"
-  >
-    <EventsHeader
-      v-model="filterInput"
-    />
+  <div class="mx-[5%]">
+    <EventsHeader v-model="filterInput" />
     <Table
       v-if="loaded"
       :labels="[t('event.table.title'), t('event.table.public'), t('event.table.actions')]"
@@ -16,9 +12,7 @@
       />
     </Table>
   </div>
-  <LoadingSpinner
-    :loaded="loaded"
-  />
+  <LoadingSpinner :loaded="loaded" />
 </template>
 
 <script setup lang="ts">
@@ -52,5 +46,5 @@ watch(
   () => {
     setFilter(filterInput.value);
   }
-)
+);
 </script>

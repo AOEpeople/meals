@@ -29,7 +29,7 @@ const { sendCashPayment, getFullNameByUser } = useCosts();
 const amount = ref('1');
 
 const props = defineProps<{
-  username: string
+  username: string;
 }>();
 
 async function onSubmit() {

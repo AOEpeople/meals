@@ -1,10 +1,10 @@
 import { ref } from 'vue';
 import useApi from '@/api/api';
-import Finances from '../fixtures/finances.json'
-import {useFinances} from '@/stores/financesStore';
+import Finances from '../fixtures/finances.json';
+import { useFinances } from '@/stores/financesStore';
 
 const asyncFunc: () => Promise<void> = async () => {
-    new Promise(resolve => resolve(undefined));
+    new Promise((resolve) => resolve(undefined));
 };
 
 const getMockedResponses = (method: string, url: string) => {
@@ -13,9 +13,9 @@ const getMockedResponses = (method: string, url: string) => {
             response: ref(Finances),
             request: asyncFunc,
             error: ref(false)
-        }
+        };
     }
-}
+};
 
 // @ts-expect-error ts doesn't allow reassignig a import but we need that to mock that function
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

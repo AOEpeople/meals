@@ -1,11 +1,11 @@
-import { IMessage } from "@/interfaces/IMessage";
-import useApi from "./api";
-import { DateTime } from "./getDashboardData";
+import { IMessage } from '@/interfaces/IMessage';
+import useApi from './api';
+import { DateTime } from './getDashboardData';
 
 export interface EventInvitationData {
-    date: DateTime,
-    lockDate: DateTime,
-    event: string
+    date: DateTime;
+    lockDate: DateTime;
+    event: string;
 }
 
 export default async function getEventInvitationData(invitationHash: string) {

@@ -1,6 +1,6 @@
-import SubmitButton from "@/components/misc/SubmitButton.vue";
-import { describe, expect, it } from "@jest/globals";
-import { mount } from "@vue/test-utils";
+import SubmitButton from '@/components/misc/SubmitButton.vue';
+import { describe, expect, it } from '@jest/globals';
+import { mount } from '@vue/test-utils';
 
 describe('Test SubmitButton', () => {
     it('should contain an input with an i18n-text', () => {

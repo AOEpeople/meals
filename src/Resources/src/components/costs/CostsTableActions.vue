@@ -5,9 +5,7 @@
       :btn-text="''"
       @click="hideUser(username)"
     />
-    <Popover
-      :translate-x-min="'-50%'"
-    >
+    <Popover :translate-x-min="'-50%'">
       <template #button="{ open }">
         <ActionButton
           :action="Action.CREATE"
@@ -49,8 +47,8 @@ const { hideUser, sendSettlement } = useCosts();
 const settlementOpen = ref(false);
 
 const props = defineProps<{
-  username: string,
-  balance: number
+  username: string;
+  balance: number;
 }>();
 
 async function handleSettlement(confirm: boolean) {

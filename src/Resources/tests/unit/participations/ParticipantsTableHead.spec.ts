@@ -1,23 +1,22 @@
-import ParticipantsTableHead from "@/components/participations/ParticipantsTableHead.vue";
+import ParticipantsTableHead from '@/components/participations/ParticipantsTableHead.vue';
 import participations from '../fixtures/participations.json';
-import useApi from "@/api/api";
-import { ref } from "vue";
-import { describe, expect, it } from "@jest/globals";
-import { flushPromises, mount, shallowMount } from "@vue/test-utils";
-import { getShowParticipations } from "@/api/getShowParticipations";
-import MealHead from "@/components/participations/MealHead.vue";
+import useApi from '@/api/api';
+import { ref } from 'vue';
+import { describe, expect, it } from '@jest/globals';
+import { flushPromises, mount, shallowMount } from '@vue/test-utils';
+import { getShowParticipations } from '@/api/getShowParticipations';
+import MealHead from '@/components/participations/MealHead.vue';
 
 describe('Test ParticipantsTableHead', () => {
-
     const asyncFunc: () => Promise<void> = async () => {
-        new Promise(resolve => resolve(undefined));
+        new Promise((resolve) => resolve(undefined));
     };
 
     const mockedReturnValue = {
         response: ref(participations),
         request: asyncFunc,
         error: ref(false)
-    }
+    };
 
     // @ts-expect-error ts doesn't like mocking with jest.fn()
     useApi = jest.fn(useApi);
@@ -58,7 +57,7 @@ describe('Test ParticipantsTableHead', () => {
         const foundMealTitles = wrapper.findAll('.meal-header-test');
 
         expect(foundMealTitles).toHaveLength(3);
-        for(const foundMealTitle of foundMealTitles) {
+        for (const foundMealTitle of foundMealTitles) {
             expect(testmealTitles.includes(foundMealTitle.text())).toBe(true);
         }
     });

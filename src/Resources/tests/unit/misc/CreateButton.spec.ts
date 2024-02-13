@@ -1,6 +1,6 @@
-import CreateButton from "@/components/misc/CreateButton.vue";
-import { describe, it } from "@jest/globals";
-import { mount } from "@vue/test-utils";
+import CreateButton from '@/components/misc/CreateButton.vue';
+import { describe, it } from '@jest/globals';
+import { mount } from '@vue/test-utils';
 
 describe('Test CreateButton', () => {
     it('should display the text from the props', () => {

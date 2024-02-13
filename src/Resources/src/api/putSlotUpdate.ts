@@ -9,12 +9,7 @@ import { TimeSlot } from '@/stores/timeSlotStore';
  * @returns The updated slot
  */
 async function putUpdateSlot(slug: string, data: string) {
-    const { error, request, response } = useApi<TimeSlot>(
-        'PUT',
-        `api/slots/${slug}`,
-        'application/json',
-        data,
-    );
+    const { error, request, response } = useApi<TimeSlot>('PUT', `api/slots/${slug}`, 'application/json', data);
 
     const loaded = ref(false);
 
@@ -23,11 +18,10 @@ async function putUpdateSlot(slug: string, data: string) {
         loaded.value = true;
     }
 
-    return { error, response }
+    return { error, response };
 }
 
 export function useUpdateSlot() {
-
     /**
      * Calls postSlotUpdate to enable or disable a slot
      * @param slug identifier of the slot to be changed
@@ -43,11 +37,11 @@ export function useUpdateSlot() {
      * @param slot The slot as it should look after updating
      */
     async function updateTimeSlot(slot: TimeSlot) {
-        return putUpdateSlot(slot.slug, JSON.stringify({ title: slot.title, limit: slot.limit, order: slot.order }))
+        return putUpdateSlot(slot.slug, JSON.stringify({ title: slot.title, limit: slot.limit, order: slot.order }));
     }
 
     return {
         updateSlotEnabled,
         updateTimeSlot
-    }
+    };
 }

@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="[ buttonPressed ? 'translate-y-0.5' : 'light-shadow' ]"
+    :class="[buttonPressed ? 'translate-y-0.5' : 'light-shadow']"
     class="mx-auto mb-6 mt-4 flex h-9 w-[132px] items-center justify-center rounded-btn bg-white px-[34px] text-center text-btn font-bold leading-[10px] text-[#1c5298] drop-shadow-btn transition-all duration-300 ease-out hover:text-[#029DF7] focus:outline-none"
     @mousedown="buttonPressed = true"
     @mouseup="buttonPressed = false"
@@ -13,7 +13,7 @@
 import { ref } from 'vue';
 
 defineProps<{
-  btnText: string,
+  btnText: string;
 }>();
 
 const buttonPressed = ref(false);
@@ -21,6 +21,9 @@ const buttonPressed = ref(false);
 
 <style scoped>
 .light-shadow {
-  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0), 0px 0px 0px 0px rgba(0, 0, 0, 0) , 0px 3px 0 0 rgba(192, 210, 226, 1);
+  box-shadow:
+    0px 0px 0px 0px rgba(0, 0, 0, 0),
+    0px 0px 0px 0px rgba(0, 0, 0, 0),
+    0px 3px 0 0 rgba(192, 210, 226, 1);
 }
 </style>

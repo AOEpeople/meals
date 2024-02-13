@@ -1,7 +1,7 @@
-import CategoriesHeader from "@/components/categories/CategoriesHeader.vue";
-import { describe, expect } from "@jest/globals";
-import { mount } from "@vue/test-utils";
-import CreateButton from "@/components/misc/CreateButton.vue";
+import CategoriesHeader from '@/components/categories/CategoriesHeader.vue';
+import { describe, expect } from '@jest/globals';
+import { mount } from '@vue/test-utils';
+import CreateButton from '@/components/misc/CreateButton.vue';
 
 describe('Test CategoriesHeader', () => {
     it('should have a Header with the correct i18n text', () => {

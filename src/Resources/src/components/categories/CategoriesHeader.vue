@@ -10,13 +10,11 @@
       <template #button="{ open }">
         <CreateButton
           :open="open"
-          :btn-text="`+ ${ t('category.create') }`"
+          :btn-text="`+ ${t('category.create')}`"
         />
       </template>
       <template #panel="{ close }">
-        <CategoriesCreationPanel
-          @closePanel="close()"
-        />
+        <CategoriesCreationPanel @closePanel="close()" />
       </template>
     </Popover>
   </div>

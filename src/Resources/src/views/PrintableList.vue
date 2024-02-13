@@ -11,8 +11,10 @@
     <template #pdf-content>
       <PrintListPdfTemplate
         :date-string="dateString"
-        :list-data="// @ts-ignore
-          (listData as ListData)"
+        :list-data="
+          // @ts-ignore
+          listData as ListData
+        "
         :meal-names="mealNames"
         :participation-count="participationCount"
       />
@@ -159,15 +161,15 @@ import ActionButton from '@/components/misc/ActionButton.vue';
 import { Action } from '@/enums/Actions';
 import PrintListPdfTemplate from '@/components/printableList/PrintListPdfTemplate.vue';
 
-const progress = useProgress().start()
-const { t, locale } = useI18n()
+const progress = useProgress().start();
+const { t, locale } = useI18n();
 
 const { listData } = usePrintableListData();
 const html2pdf = ref(null);
 
 const mealNames = computed(() => {
   const names: string[] = [];
-  Object.values(listData.meals).forEach(meal => {
+  Object.values(listData.meals).forEach((meal) => {
     names.push(locale.value === 'en' ? meal.title.en : meal.title.de);
   });
   return names;
@@ -175,15 +177,21 @@ const mealNames = computed(() => {
 
 const participationCount = computed(() => {
   const count: number[] = [];
-  Object.values(listData.meals).forEach(meal => {
+  Object.values(listData.meals).forEach((meal) => {
     count.push(meal.participations ? meal.participations : 0);
-  })
+  });
   return count;
-})
+});
 
-const dateString = computed(() => new Date(Date.parse(listData.day.date)).toLocaleDateString(locale.value, {weekday: 'long', month: 'numeric', day: 'numeric'}));
+const dateString = computed(() =>
+  new Date(Date.parse(listData.day.date)).toLocaleDateString(locale.value, {
+    weekday: 'long',
+    month: 'numeric',
+    day: 'numeric'
+  })
+);
 
-progress.finish()
+progress.finish();
 
 function download() {
   if (html2pdf.value) {

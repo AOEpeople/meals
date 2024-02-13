@@ -8,14 +8,14 @@ import { flushPromises, mount } from '@vue/test-utils';
 import useApi from '@/api/api';
 
 const asyncFunc: () => Promise<void> = async () => {
-    new Promise(resolve => resolve(undefined));
+    new Promise((resolve) => resolve(undefined));
 };
 
 const mockedReturnValue = {
     response: ref(participations),
     request: asyncFunc,
     error: ref(false)
-}
+};
 
 // @ts-expect-error ts doesn't like mocking with jest.fn()
 useApi = jest.fn(useApi);
@@ -51,5 +51,5 @@ describe('Test MealsList', () => {
         await flushPromises();
 
         expect(mockSetMealsListHeight).toHaveBeenCalled();
-    })
+    });
 });

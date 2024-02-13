@@ -4,9 +4,7 @@
       class="mx-auto"
       :class="[isShowParticipations ? 'max-w-full' : 'mt-10 max-w-screen-aoe']"
     >
-      <MessageBanner
-        v-if="isShowParticipations !== true"
-      />
+      <MessageBanner v-if="isShowParticipations !== true" />
       <Suspense>
         <template #default>
           <router-view v-slot="{ Component }">
@@ -14,9 +12,7 @@
           </router-view>
         </template>
         <template #fallback>
-          <LoadingSpinner
-            :loaded="false"
-          />
+          <LoadingSpinner :loaded="false" />
         </template>
       </Suspense>
     </div>

@@ -19,26 +19,20 @@
         v-if="event.public === true"
         data-cy="checkIcon"
       >
-        <CheckIcon
-          class="aspect-square size-8"
-        />
+        <CheckIcon class="aspect-square size-8" />
       </div>
       <div
         v-else
         data-cy="xIcon"
       >
-        <XIcon
-          class="aspect-square size-8"
-        />
+        <XIcon class="aspect-square size-8" />
       </div>
     </td>
     <td
       colspan="1"
       class="w-[40%]"
     >
-      <EventsActions
-        :event="event"
-      />
+      <EventsActions :event="event" />
     </td>
   </LazyTableRow>
 </template>
@@ -50,6 +44,6 @@ import { CheckIcon, XIcon } from '@heroicons/vue/outline';
 import EventsActions from './EventsActions.vue';
 
 defineProps<{
-  event: Event
+  event: Event;
 }>();
 </script>

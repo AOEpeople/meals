@@ -1,8 +1,8 @@
-import MealParticipationInput from "@/components/menu/MealParticipationInput.vue";
-import { Dish } from "@/stores/dishesStore";
-import { MealDTO } from "@/interfaces/DayDTO";
-import { Ref, ref } from "vue";
-import { mount } from "@vue/test-utils";
+import MealParticipationInput from '@/components/menu/MealParticipationInput.vue';
+import { Dish } from '@/stores/dishesStore';
+import { MealDTO } from '@/interfaces/DayDTO';
+import { Ref, ref } from 'vue';
+import { mount } from '@vue/test-utils';
 
 const testMeal: Ref<MealDTO> = ref({
     dishSlug: 'TestDish',
@@ -10,7 +10,7 @@ const testMeal: Ref<MealDTO> = ref({
     participationLimit: 0
 });
 
-const mockGetDishBySlug = jest.fn((slug: string)=> {
+const mockGetDishBySlug = jest.fn((slug: string) => {
     const mockDish: Dish = {
         id: 0,
         slug: slug,
@@ -20,8 +20,8 @@ const mockGetDishBySlug = jest.fn((slug: string)=> {
         oneServingSize: false,
         parentId: 0,
         variations: []
-    }
-    return mockDish
+    };
+    return mockDish;
 });
 
 jest.mock('@/stores/dishesStore', () => ({
@@ -38,7 +38,7 @@ describe('Test MealParticipationInput', () => {
             }
         });
 
-        expect(wrapper.find("span").text()).toEqual(`${testMeal.value.dishSlug}En`);
+        expect(wrapper.find('span').text()).toEqual(`${testMeal.value.dishSlug}En`);
     });
 
     it('should change the participationLimit on input', async () => {

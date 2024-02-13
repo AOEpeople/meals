@@ -15,6 +15,6 @@
 import { RefreshIcon, ExclamationCircleIcon } from '@heroicons/vue/outline';
 
 defineProps<{
-  errorStates: boolean[]
+  errorStates: boolean[];
 }>();
 </script>

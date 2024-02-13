@@ -32,7 +32,7 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
-import InputLabel from '../misc/InputLabel.vue';
+import InputLabel from '@/misc/InputLabel.vue';
 import { ref } from 'vue';
 import { SwitchGroup, SwitchLabel } from '@headlessui/vue';
 import Switch from '@/components/misc/Switch.vue';

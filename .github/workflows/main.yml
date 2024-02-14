@@ -23,7 +23,7 @@ jobs:
     env:
       PHP_CS_FIXER_FUTURE_MODE: 1
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Setup PHP environment
         uses: shivammathur/setup-php@v2
         with:
@@ -40,10 +40,10 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: false
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
       - name: Cache node_modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
@@ -59,10 +59,10 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: false
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
       - name: Cache node_modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
@@ -79,7 +79,7 @@ jobs:
     continue-on-error: true
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup PHP environment
         uses: shivammathur/setup-php@v2
         with:
@@ -94,7 +94,7 @@ jobs:
     continue-on-error: false
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup PHP environment
         uses: shivammathur/setup-php@v2
         with:
@@ -110,10 +110,10 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: false
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
       - name: Cache node_modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
@@ -130,11 +130,11 @@ jobs:
     needs: [test-cgl, psalm]
     steps:
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 10
       - name: Prepare build
@@ -142,12 +142,12 @@ jobs:
           mkdir -p /tmp/docker/buildx
           git log -n 10 --date=short --format=format:"%C(auto)%h %ad @%al %s" >> public/changelog.txt
       - name: Setup docker build caches
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           key: ${{ runner.os }}-buildx
           path: /tmp/docker/buildx
       - name: Login to DockerHub
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
@@ -179,7 +179,7 @@ jobs:
       # Development image
       - name: Get Docker meta for development
         id: devmeta
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v5
         with:
           images: aoepeople/meals:beta
           tags: |
@@ -187,7 +187,7 @@ jobs:
             type=ref,event=branch
       - name: Build and push development image
         id: build_dev
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
           file: Dockerfile
           push: false
@@ -202,7 +202,7 @@ jobs:
           outputs: type=docker,dest=/tmp/docker/dev.tar
       # Upload artifacts
       - name: Upload docker images
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: docker-images
           path: /tmp/docker/*.tar
@@ -222,11 +222,11 @@ jobs:
       COMPOSE_INTERACTIVE_NO_CLI: true
     steps:
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
       - name: Checkout
         uses: actions/checkout@v4
       - name: Download docker images
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: docker-images
           path: /tmp/docker
@@ -234,9 +234,9 @@ jobs:
         run: |
           docker load --input /tmp/docker/dev.tar
           docker image ls -a | grep aoepeople
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
       - name: Cache node_modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
@@ -278,10 +278,10 @@ jobs:
       COMPOSE_INTERACTIVE_NO_CLI: true
     steps:
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      - uses: actions/checkout@v3
+        uses: docker/setup-buildx-action@v3
+      - uses: actions/checkout@v4
       - name: Download docker images
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: docker-images
           path: /tmp/docker
@@ -296,7 +296,7 @@ jobs:
           docker-compose -f docker-compose-test.yaml up --abort-on-container-exit
           docker-compose -f docker-compose-test.yaml down --remove-orphans
       - name: Upload coverage report artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: reports

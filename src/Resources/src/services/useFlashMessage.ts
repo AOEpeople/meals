@@ -7,9 +7,12 @@ export interface FlashMessage {
     message: string;
 }
 
+const FLASHMESSAGE_LIFETIME = 7000;
+
 const { receive, emit } = useEventsBus();
 
 const flashMessages = ref<FlashMessage[]>([]);
+let shiftingActive = false;
 
 /**
  * Listens for new flashmessage events and either pushes them directly into the state
@@ -24,7 +27,25 @@ receive<FlashMessage>('flashmessage', (data) => {
     } else {
         flashMessages.value.push(data);
     }
+    shiftFlashMessages();
 });
+
+/**
+ * Shifts the flashMessages after a set delay and calls itself again.
+ * Ends when flashMessages are empty.
+ */
+function shiftFlashMessages() {
+    if (shiftingActive === false && flashMessages.value.length > 0) {
+        shiftingActive = true;
+        setTimeout(() => {
+            flashMessages.value.shift();
+            shiftingActive = false;
+            if (flashMessages.value.length > 0) {
+                shiftFlashMessages();
+            }
+        }, FLASHMESSAGE_LIFETIME);
+    }
+}
 
 export default function useFlashMessage() {
     /**

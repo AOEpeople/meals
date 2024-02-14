@@ -29,20 +29,21 @@ describe('Test Menu Participations View', () => {
         cy.get('h2').should('contain', 'Teilnahmen');
 
         // Test Add Search Bar
-        cy.get('input').first().click();
+        cy.get('input').first().click().type('meals');
+        cy.wait(500);
         cy.get('li').each(($el) => {
             expect($el.text()).to.match(/Meals, .*/);
         });
-        cy.get('input').first().type('bob');
+        cy.get('input').clear().first().type('bob');
         cy.get('li').should('have.length', 1);
         cy.get('li').should('contain', 'Meals, Bob');
         cy.get('input').first().clear();
-        cy.get('li').should('have.length', 5);
+        cy.get('li').should('have.length', 1);
         cy.get('input').first().type('John');
         cy.get('li').should('have.length', 1);
         cy.get('li').should('contain', 'Meals, John');
         cy.get('input').first().parent().find('svg').click();
-        cy.get('li').should('have.length', 5);
+        cy.get('li').should('have.length', 1);
 
         // Add participant
         cy.get('input').first().click().type('alice')

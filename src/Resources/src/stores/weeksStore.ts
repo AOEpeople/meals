@@ -21,7 +21,6 @@ export interface Week {
 }
 
 export interface SimpleDay {
-    id: number;
     dateTime: DateTime;
     lockParticipationDateTime: DateTime;
     week: number;

@@ -70,7 +70,7 @@ import MenuLockDatePicker from './MenuLockDatePicker.vue';
 import EventInput from './EventInput.vue';
 import { Event, useEvents } from '@/stores/eventsStore';
 
-const { getDishArrayBySlugs } = useDishes();
+const { getDishArrayBySlugs, getDishBySlug } = useDishes();
 const { locale, t } = useI18n();
 const { getEventById } = useEvents();
 
@@ -84,7 +84,13 @@ const selectedDishOne = ref<Dish[] | null>(null);
 const selectedDishTwo = ref<Dish[] | null>(null);
 const selectedEvent = ref<Event | null>(null);
 
-const mealKeys = computed(() => Object.keys(props.modelValue.meals));
+const mealKeys = computed(() => {
+  const combiDish = getDishBySlug('combined-dish');
+  if (combiDish !== null) {
+    return Object.keys(props.modelValue.meals).filter((key) => key !== combiDish.id.toString());
+  }
+  return Object.keys(props.modelValue.meals);
+});
 
 const selectedDishes = computed({
   get() {

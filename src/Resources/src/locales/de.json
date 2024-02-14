@@ -270,7 +270,8 @@
     "total": "Gesamt",
     "participations": "Teilnahmen",
     "add": "Teilnehmer hinzufügen",
-    "notFound": "No profiles found for this query",
+    "notFound": "Keine Profile für diese Anfrage gefunden",
+    "shortQuery": "Min. 3 Buchstaben für Suche eingeben",
     "search": "Teilnehmer filtern",
     "guest": "Gast"
   },

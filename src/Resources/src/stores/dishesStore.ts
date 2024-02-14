@@ -312,7 +312,7 @@ export function useDishes() {
         return parentDish.variations.find((variation) => variation.id === variationId);
     }
 
-    function getDishBySlug(slug: string) {
+    function getDishBySlug(slug: string): Dish | null {
         let dishToReturn: Dish | null = null;
 
         DishesState.dishes.forEach((dish) => {

@@ -64,6 +64,7 @@ describe('Test GuestEventInvitation', () => {
             .click();
 
         cy.wait('@getEventInvitation');
+        cy.wait(3000);
 
         cy.contains('span', 'In die Zwischenablage kopiert!')
             .parent()

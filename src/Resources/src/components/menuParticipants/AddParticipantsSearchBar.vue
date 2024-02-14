@@ -38,11 +38,19 @@
           static
         >
           <li
-            v-if="filteredProfiles.length === 0"
+            v-if="filteredProfiles.length === 0 && profileFilter.length > 2"
             class="truncate p-4 text-[14px] text-[#9CA3AF]"
           >
             <span class="size-full">
               {{ t('menu.notFound') }}
+            </span>
+          </li>
+          <li
+            v-else-if="filteredProfiles.length === 0 && profileFilter.length < 3"
+            class="truncate p-4 text-[14px] text-[#9CA3AF]"
+          >
+            <span class="size-full">
+              {{ t('menu.shortQuery') }}
             </span>
           </li>
           <ComboboxOption
@@ -93,7 +101,7 @@ const selectedProfile = ref<IProfile | null>(null);
 const openProp = ref(false);
 
 const filter = ref('');
-const profileFilter = refThrottled(filter, 1500);
+const profileFilter = refThrottled(filter, 350);
 
 onMounted(async () => {
   await fetchAbsentingProfiles();
@@ -101,8 +109,8 @@ onMounted(async () => {
 
 const filteredProfiles = computed(() => {
   const output = [];
-  if (profileFilter.value === '') {
-    output.push(...ProfilesState.profiles);
+  if (profileFilter.value.length < 3) {
+    return [];
   } else {
     output.push(
       ...ProfilesState.profiles.filter(

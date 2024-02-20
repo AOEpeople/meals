@@ -340,6 +340,7 @@ jobs:
               continue;
             fi
             docker push $tag;
+            echo "pushed app image: $tag"
           done
 
           for tag in $IMAGES_DEV; do
@@ -347,6 +348,7 @@ jobs:
               continue;
             fi
             docker push $tag;
+            echo "pushed dev image: $tag"
           done
       - name: Image digest
         id: image_digest

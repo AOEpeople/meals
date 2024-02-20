@@ -22,6 +22,7 @@ export const visitSettlementLinkFromMail = (times: number = 0) => {
                 const confirmationURL = replaced.split(Cypress.env('baseUrl'))[1];
                 cy.log(`V2:: confimartion URL: ${confirmationURL}`);
                 cy.visit(`${Cypress.env('baseUrl')}${confirmationURL}`);
+                return;
             }
         }
     });
@@ -43,6 +44,7 @@ export const visitSettlementLinkFromMail = (times: number = 0) => {
             const confirmationURL = replaced.split(Cypress.env('baseUrl'))[1];
             cy.log(`V1:: confimartion URL: ${confirmationURL}`);
             cy.visit(`${Cypress.env('baseUrl')}${confirmationURL}`);
+            return;
         }
     });
 }

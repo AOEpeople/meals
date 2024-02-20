@@ -181,17 +181,20 @@ jobs:
         id: devmeta
         uses: docker/metadata-action@v5
         with:
-          images: aoepeople/meals:beta
+          images: aoepeople/meals
           tags: |
             type=sha
             type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=edge,branch=beta
       - name: Build and push development image
         id: build_dev
         uses: docker/build-push-action@v5
         with:
           file: Dockerfile
           push: false
-          tags: aoepeople/meals:test
+          tags: ${{ steps.devmeta.outputs.tags }}
           labels: ${{ steps.devmeta.outputs.labels }}
           build-args: |
             BUILD_DEV="true"
@@ -210,6 +213,31 @@ jobs:
       image: ${{ fromJson(steps.meta.outputs.json).tags[0] }}
       images: ${{ join(steps.meta.outputs.tags, ' ') }}
       imageDev: ${{ fromJSON(steps.devmeta.outputs.json).tags[0] }}
+      imagesDev: ${{ join(steps.devmeta.outputs.tags, ' ') }}
+
+  debugStuff:
+    name: Debug image tag problems
+    needs: [ buildImages ]
+    runs-on: ubuntu-latest
+    env:
+      IMAGE: ${{ needs.buildImages.outputs.image }}
+      IMAGES: ${{ needs.buildImages.outputs.image }}
+      IMAGE_DEV: ${{ needs.buildImages.outputs.imageDev }}
+      IMAGES_DEV: ${{ needs.buildImages.outputs.imagesDev }}
+    steps:
+      - name: Print tags
+        run: |
+          echo "image_app tag: $IMAGE"
+          echo "images_app tag: $IMAGEs_APP"
+          for tag in $IMAGES_APP; do
+            echo "images_app tag: $tag"
+          done
+          echo "image_dev tag: $IMAGE_DEV"
+          echo "images_dev tag: $IMAGES_DEV"
+          for tag in $IMAGES_DEV; do
+            echo "images_dev tag: $tag"
+          done
+
 
   cypress:
     name: Run E2E-tests via Cypress

@@ -194,7 +194,7 @@ jobs:
         with:
           file: Dockerfile
           push: false
-          tags: ${{ steps.devmeta.outputs.tags }}
+          tags: aoepeople/meals:test
           labels: ${{ steps.devmeta.outputs.labels }}
           build-args: |
             BUILD_DEV="true"
@@ -212,8 +212,7 @@ jobs:
     outputs:
       image: ${{ fromJson(steps.meta.outputs.json).tags[0] }}
       images: ${{ join(steps.meta.outputs.tags, ' ') }}
-      imageDev: ${{ fromJSON(steps.devmeta.outputs.json).tags[0] }}
-      imagesDev: ${{ join(steps.devmeta.outputs.tags, ' ') }}
+      imageDev: aoepeople/meals:test
 
   debugStuff:
     name: Debug image tag problems
@@ -223,20 +222,15 @@ jobs:
       IMAGE: ${{ needs.buildImages.outputs.image }}
       IMAGES: ${{ needs.buildImages.outputs.image }}
       IMAGE_DEV: ${{ needs.buildImages.outputs.imageDev }}
-      IMAGES_DEV: ${{ needs.buildImages.outputs.imagesDev }}
     steps:
       - name: Print tags
         run: |
           echo "image_app tag: $IMAGE"
-          echo "images_app tag: $IMAGEs_APP"
+          echo "images_app tag: $IMAGES_APP"
           for tag in $IMAGES_APP; do
             echo "images_app tag: $tag"
           done
           echo "image_dev tag: $IMAGE_DEV"
-          echo "images_dev tag: $IMAGES_DEV"
-          for tag in $IMAGES_DEV; do
-            echo "images_dev tag: $tag"
-          done
 
 
   cypress:

@@ -335,6 +335,7 @@ jobs:
           docker image ls -a | grep aoepeople
       - name: Deploy images
         run: |
+          echo "starting to push app images"
           for tag in $IMAGES_APP; do
             if [[ $tag = *sha-* ]]; then
               continue;
@@ -342,7 +343,9 @@ jobs:
             docker push $tag;
             echo "pushed app image: $tag"
           done
+          echo "done pushing app images"
 
+          echo "starting to push dev images"
           for tag in $IMAGES_DEV; do
             if [[ $tag = *sha-* ]]; then
               continue;
@@ -350,6 +353,7 @@ jobs:
             docker push $tag;
             echo "pushed dev image: $tag"
           done
+          echo "done pushing dev images"
       - name: Image digest
         id: image_digest
         env:

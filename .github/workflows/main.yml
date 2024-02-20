@@ -344,9 +344,9 @@ jobs:
           done
           echo "done pushing app images"
 
-          echo "starting to push dev image: $IMAGES_DEV"
-          docker push $IMAGES_DEV;
-          echo "pushed dev image: $IMAGES_DEV"
+          echo "starting to push dev image: $IMAGE_DEV"
+          docker push $IMAGE_DEV;
+          echo "pushed dev image: $IMAGE_DEV"
           echo "done pushing dev images"
       - name: Image digest
         id: image_digest

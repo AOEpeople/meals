@@ -181,13 +181,10 @@ jobs:
         id: devmeta
         uses: docker/metadata-action@v5
         with:
-          images: aoepeople/meals
+          images: aoepeople/meals:beta
           tags: |
             type=sha
             type=ref,event=branch
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=edge,branch=beta
       - name: Build and push development image
         id: build_dev
         uses: docker/build-push-action@v5
@@ -213,25 +210,6 @@ jobs:
       image: ${{ fromJson(steps.meta.outputs.json).tags[0] }}
       images: ${{ join(steps.meta.outputs.tags, ' ') }}
       imageDev: aoepeople/meals:test
-
-  debugStuff:
-    name: Debug image tag problems
-    needs: [ buildImages ]
-    runs-on: ubuntu-latest
-    env:
-      IMAGE: ${{ needs.buildImages.outputs.image }}
-      IMAGES: ${{ needs.buildImages.outputs.image }}
-      IMAGE_DEV: ${{ needs.buildImages.outputs.imageDev }}
-    steps:
-      - name: Print tags
-        run: |
-          echo "image_app tag: $IMAGE"
-          echo "images_app tag: $IMAGES_APP"
-          for tag in $IMAGES_APP; do
-            echo "images_app tag: $tag"
-          done
-          echo "image_dev tag: $IMAGE_DEV"
-
 
   cypress:
     name: Run E2E-tests via Cypress

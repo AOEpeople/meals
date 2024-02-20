@@ -191,7 +191,7 @@ jobs:
         with:
           file: Dockerfile
           push: false
-          tags: aoepeople/meals:test
+          tags: ${{ steps.devmeta.outputs.tags }}
           labels: ${{ steps.devmeta.outputs.labels }}
           build-args: |
             BUILD_DEV="true"

@@ -67,7 +67,7 @@ class MercureReceiver {
     private async configureMealUpdateHandlers(): Promise<void> {
         const eventSrc = new EventSource(
             environmentStore.getState().mercureUrl +
-                '?topic=participation-updates&topic=meal-offer-updates&topic=slot-allocation-updates&topic=event-participation-updates',
+                '?topic=participation-updates&topic=meal-offer-updates&topic=slot-allocation-updates&topic=event-participation-updates&topic=keep-alive-connection',
             { withCredentials: true }
         );
 

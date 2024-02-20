@@ -42,7 +42,7 @@
 {% set userAgent = app.request.headers.get('User-Agent') %}
 <body>
 {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-{% set topics = ['participation-updates', 'meal-offer-updates', 'slot-allocation-updates', 'event-participation-updates'] -%}
+{% set topics = ['participation-updates', 'meal-offer-updates', 'slot-allocation-updates', 'event-participation-updates', 'keep-alive-connection'] -%}
 {% set mercure = mercure(topics, {subscribe: topics}) %}
 {% endif %}
 

@@ -1,7 +1,7 @@
 <template>
   <tr
     class="table w-full table-fixed border-b-[1px] text-center last:border-b-0"
-    :class="{ 'bg-highlight': bookedMeals.isOffering }"
+    :class="{ 'bg-highlight': bookedMeals.isOffering.find(bool => bool === true) }"
   >
     <td class="w-2/3 truncate py-4 pl-4 pr-0 text-left font-bold tracking-wider">
       {{ participantName }}

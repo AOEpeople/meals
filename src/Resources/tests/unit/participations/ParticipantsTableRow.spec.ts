@@ -3,8 +3,8 @@ import ParticipantsTableRow from '@/components/participations/ParticipantsTableR
 import { describe, expect, it } from '@jest/globals';
 import { mount } from '@vue/test-utils';
 
-const bookedDataOne: IBookedData = { booked: [1], isOffering: false };
-const bookedDataTwo: IBookedData = { booked: [1, 3, 5], isOffering: false };
+const bookedDataOne: IBookedData = { booked: [1], isOffering: [false] };
+const bookedDataTwo: IBookedData = { booked: [1, 3, 5], isOffering: [false] };
 
 const mealOne: IMealWithVariations = {
     title: {

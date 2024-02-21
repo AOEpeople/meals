@@ -1,5 +1,6 @@
 <template>
   <span
+    class="print:hidden"
     :class="checkboxCSS"
     data-cy="mealCheckbox"
     @click="handle"

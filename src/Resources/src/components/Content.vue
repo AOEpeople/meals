@@ -2,7 +2,7 @@
   <main>
     <div
       class="mx-auto"
-      :class="[isShowParticipations ? 'max-w-full' : 'mt-10 max-w-screen-aoe']"
+      :class="[isShowParticipations ? 'max-w-full' : 'mt-10 max-w-screen-aoe print:mt-0']"
     >
       <MessageBanner v-if="isShowParticipations !== true" />
       <Suspense>

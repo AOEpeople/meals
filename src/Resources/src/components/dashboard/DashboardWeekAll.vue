@@ -3,7 +3,7 @@
     <div
       v-for="(week, weekID, index) in weeks"
       :key="index"
-      class="w-[585px] flex-initial"
+      class="w-[585px] flex-initial print:w-full print:last:hidden"
     >
       <WeekComp
         :weekID="weekID"

@@ -9,7 +9,7 @@
   />
   <PrintLink
     v-if="userDataStore.roleAllowsRoute('PrintableList')"
-    class="mr-[27px] text-right"
+    class="mr-[27px] text-right print:hidden"
   />
 </template>
 

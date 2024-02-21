@@ -1,9 +1,9 @@
 <template>
   <div class="text-center">
-    <h2 class="m-0 text-primary-2">
+    <h2 class="m-0 text-primary-2 print:hidden">
       {{ t('dashboard.' + index) }}
     </h2>
-    <p class="description text-primary">
+    <p class="description text-primary print:hidden">
       {{ (startLocale + ' - ' + endLocale).replaceAll(',', '') }}
     </p>
   </div>
@@ -29,7 +29,7 @@
       :weekID="String(weekID)"
       :dayID="String(dayID)"
       :index="d_index"
-      class="mb-[2.5rem] w-[98%] sm:w-3/4"
+      class="mb-[2.5rem] w-[98%] sm:w-3/4 print:mb-3"
     />
   </div>
 </template>

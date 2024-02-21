@@ -1,5 +1,5 @@
 <template>
-  <div class="flex min-h-screen flex-col">
+  <div class="flex min-h-screen flex-col print:h-[29.7cm] print:w-[21cm]">
     <NavBar
       id="navibar"
       ref="navibar"

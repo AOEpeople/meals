@@ -19,6 +19,7 @@ export interface IParticipationsState {
 
 export interface IBookedData {
     booked: number[];
+    isOffering: boolean;
 }
 
 export interface IEventParticipations {

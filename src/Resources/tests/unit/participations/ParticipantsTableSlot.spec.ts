@@ -5,10 +5,10 @@ import { describe, it } from '@jest/globals';
 import { mount } from '@vue/test-utils';
 import { Dictionary } from 'types/types';
 
-const bookedDataOne: IBookedData = { booked: [1], isOffering: false };
-const bookedDataTwo: IBookedData = { booked: [1, 3], isOffering: false };
-const bookedDataThree: IBookedData = { booked: [4], isOffering: false };
-const bookedDataFour: IBookedData = { booked: [1, 4], isOffering: false };
+const bookedDataOne: IBookedData = { booked: [1], isOffering: [false] };
+const bookedDataTwo: IBookedData = { booked: [1, 3], isOffering: [false] };
+const bookedDataThree: IBookedData = { booked: [4], isOffering: [false] };
+const bookedDataFour: IBookedData = { booked: [1, 4], isOffering: [false] };
 
 const mealOne: IMealWithVariations = {
     title: {

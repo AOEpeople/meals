@@ -83,4 +83,15 @@ class LoadDishes extends Fixture implements OrderedFixtureInterface
         $this->objectManager->persist($dish);
         $this->addReference('dish-' . $this->counter++, $dish);
     }
+
+    protected function createRandomDish() {
+        $dishCookingMethod = ['Steamed', 'Cooked', 'Grilled', 'Roasted'];
+        $dishPrefix = [
+            'Pork', 'Chicken', 'Beef', 'Duck', 'Lamb', 'Deer', 'Crocodile',
+            'Vegetable', 'Potatoe', 'Broccoli',
+            'Fish', 'Tuna', 'Salmon', 'Crab', 'Turtle', 'Shark', 'Oyster',
+            'Sushi', 'Burger', 'Kebab', 'Chili',
+        ];
+        $dishSuffix = ['stew', 'soup', 'patty', 'salad', 'steak', ''];
+    }
 }

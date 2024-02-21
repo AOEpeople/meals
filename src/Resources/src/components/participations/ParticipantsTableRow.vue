@@ -45,7 +45,7 @@ const bookedCombinedMeal = computed(() => {
 
 const isOfferingMeal = computed(() => {
   if (props.bookedMeals.isOffering !== null && props.bookedMeals.isOffering !== undefined) {
-    return props.bookedMeals.isOffering.find(bool => bool === true);
+    return props.bookedMeals.isOffering.find((bool) => bool === true);
   }
   return false;
 });

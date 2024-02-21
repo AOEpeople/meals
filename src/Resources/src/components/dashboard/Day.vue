@@ -44,7 +44,11 @@
         v-for="(meal, mealID) in day.meals"
         :key="mealID"
         class="mx-[15px] border-b-[0.7px] last:border-b-0"
-        :class="isEventDay && !guestData ? 'pb-[13px] pt-[13px] last:pb-0 last:pt-[21px] print:last:pb-2 print:pt-2' : 'py-[13px] print:py-2'"
+        :class="
+          isEventDay && !guestData
+            ? 'pb-[13px] pt-[13px] last:pb-0 last:pt-[21px] print:pt-2 print:last:pb-2'
+            : 'py-[13px] print:py-2'
+        "
       >
         <VariationsData
           v-if="meal.variations"

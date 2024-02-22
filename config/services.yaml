@@ -273,6 +273,8 @@ services:
             - '../src/Mealz/UserBundle/Entity/*Repository.php'
             - '../src/Mealz/UserBundle/Resources/'
             - '../src/Mealz/UserBundle/Tests/'
+            - '../src/Mealz/UserBundle/DataFixtures/ORM/LoadAnonymousUsers.php'
+
 
 
     # add more service definitions when explicit configuration is needed

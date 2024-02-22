@@ -10,6 +10,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
+use Exception;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class LoadUsers extends Fixture implements OrderedFixtureInterface
@@ -48,6 +49,10 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
 
         foreach ($users as $user) {
             $this->addUser($user['username'], $user['password'], $user['firstName'], $user['lastName'], $user['roles']);
+        }
+
+        for ($i = 0; $i < 50; ++$i) {
+            $this->createRandUser();
         }
 
         $this->objectManager->flush();
@@ -95,5 +100,41 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
 
         $this->addReference('profile-' . $this->counter++, $profile);
         $this->addReference('login-' . $this->counter, $login);
+    }
+
+    protected function createRandUser()
+    {
+        $firstNames = [
+            'Felix', 'Maximilian', 'Alexander', 'Paul', 'Elias', 'Ben', 'Noah', 'Leon', 'Louis', 'Jonas',
+            'Marie', 'Sophie', 'Marian', 'Sophia', 'Emilia', 'Emma', 'Hannah', 'Anna', 'Mia', 'Luisa',
+            'Lukas', 'Tim', 'Niklas', 'Jan', 'Daniel', 'Kevin', 'Tobias', 'Philipp', 'Michael', 'Dennis',
+            'Maria', 'Anne', 'Laura', 'Michelle', 'Lea', 'Julia', 'Sarah', 'Lisa', 'Vanessa', 'Katharina',
+            'Noah', 'Matteo', 'Finn', 'Emil', 'Luca', 'Henry', 'Christian', 'Sebastian', 'Stefan', 'Benjamin',
+            'Lina', 'Mila', 'Ella', 'Klara', 'Stefanie', 'Kathrin', 'Melanie', 'Nadine', 'Nicole', 'Sandra',
+        ];
+        $lastNames = [
+            'Schmidt', 'Müller', 'Meyer', 'Schulz', 'Schneider', 'Hoffmann', 'Becker', 'Fischer', 'Wagner', 'Weber',
+            'Bauer', 'Lange', 'Wolf', 'Schäfer', 'Koch', 'Richter', 'Klein', 'Schröder', 'Neumann', 'Schwarz', 'Zimmermann',
+            'Braun', 'Krüger', 'Hartmann', 'Schmitt', 'Werner', 'Schmitz', 'Krause', 'Meier', 'Lehmann', 'Köhler', 'Herrmann',
+            'König', 'Huber', 'Kaiser', 'Fuchs', 'Peters', 'Lang', 'Möller', 'Weiß', 'Jung', 'Hahn', 'Friedrich', 'Vogel',
+        ];
+
+        $randFirstName = $firstNames[array_rand($firstNames)];
+        if (false === in_array($randFirstName, $firstNames)) {
+            throw new Exception('Unknown value for firstnames: ' . $randFirstName);
+        }
+        $randLastName = $lastNames[array_rand($lastNames)];
+        if (false === in_array($randLastName, $lastNames)) {
+            throw new Exception('Unknown value for lastnames: ' . $randLastName);
+        }
+        $randPass = (string) rand();
+        $username = strtolower($randFirstName) . '.' . strtolower($randLastName) . '.' . (string) rand();
+        $this->addUser(
+            $username,
+            $randPass,
+            $randFirstName,
+            $randLastName,
+            ['ROLE_USER']
+        );
     }
 }

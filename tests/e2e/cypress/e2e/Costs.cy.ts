@@ -44,11 +44,11 @@ describe('Test Cost View', () => {
 
         cy.get('input').first().clear();
 
-        cy.get('tr:visible').should('have.length', 7);
+        cy.get('tr:visible').should('have.length', 57);
 
         cy.get('label').contains('Ausgeblendete Benutzer anzeigen').click();
 
-        cy.get('tr:visible').should('have.length', 8);
+        cy.get('tr:visible').should('have.length', 58);
     });
 
     it('should be able to settle an account and add balance to it', () => {

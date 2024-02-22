@@ -120,13 +120,7 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
         ];
 
         $randFirstName = $firstNames[array_rand($firstNames)];
-        if (false === in_array($randFirstName, $firstNames)) {
-            throw new Exception('Unknown value for firstnames: ' . $randFirstName);
-        }
         $randLastName = $lastNames[array_rand($lastNames)];
-        if (false === in_array($randLastName, $lastNames)) {
-            throw new Exception('Unknown value for lastnames: ' . $randLastName);
-        }
         $randPass = (string) rand();
         $username = strtolower($randFirstName) . '.' . strtolower($randLastName) . '.' . (string) rand();
         $this->addUser(

@@ -1,4 +1,4 @@
-import { ref } from "vue";
+import { ref } from 'vue';
 
 const lockedIds = ref<Set<string>>(new Set());
 
@@ -7,7 +7,6 @@ const lockedIds = ref<Set<string>>(new Set());
  * that can be used to implement a locking mechanism.
  */
 export function useLockRequests() {
-
     function addLock(id: string) {
         lockedIds.value.add(id);
         console.log(`Added Lock: ${id}`);
@@ -28,5 +27,5 @@ export function useLockRequests() {
         addLock,
         removeLock,
         isLocked
-    }
+    };
 }

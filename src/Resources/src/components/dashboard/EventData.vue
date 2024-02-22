@@ -41,7 +41,7 @@
         <CheckBox
           :isActive="new Date(day.date.date) > new Date()"
           :isChecked="day.event?.isParticipating ?? false"
-          @click="day.event?.isParticipating === false ? joinEvent(day.date.date) : leaveEvent(day.date.date)"
+          @click="handleClick"
         />
       </div>
     </div>
@@ -60,12 +60,26 @@ import { useI18n } from 'vue-i18n';
 import EventPopup from '@/components/eventParticipation/EventPopup.vue';
 import GuestButton from './GuestButton.vue';
 import { Invitation } from '@/enums/Invitation';
+import { useLockRequests } from '@/services/useLockRequests';
 
-defineProps<{
+const props = defineProps<{
   day: Day;
   dayId: string;
 }>();
 
 const { t } = useI18n();
 const { getEventById, joinEvent, leaveEvent } = useEvents();
+const { addLock, isLocked } = useLockRequests();
+
+async function handleClick() {
+  if (isLocked(props.dayId) === true) {
+    return;
+  }
+  addLock(props.dayId);
+  if (props.day.event?.isParticipating === false) {
+    await joinEvent(props.day.date.date);
+  } else {
+    await leaveEvent(props.day.date.date);
+  }
+}
 </script>

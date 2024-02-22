@@ -46,6 +46,7 @@ import { Day, Meal } from '@/api/getDashboardData';
 import useFlashMessage from '@/services/useFlashMessage';
 import { IMessage, isMessage } from '@/interfaces/IMessage';
 import { FlashMessageType } from '@/enums/FlashMessage';
+import { useLockRequests } from '@/services/useLockRequests';
 
 const props = defineProps<{
   weekID: number | string | undefined;
@@ -56,6 +57,7 @@ const props = defineProps<{
   day: Day;
 }>();
 const { sendFlashMessage } = useFlashMessage();
+const { addLock, isLocked } = useLockRequests();
 
 const day = props.day ? props.day : dashboardStore.getDay(props.weekID, props.dayID);
 let mealOrVariation: Meal;
@@ -121,7 +123,8 @@ const checkboxCSS = computed(() => {
 
 async function handle() {
   // Meal is not locked
-  if (mealOrVariation.isLocked === false) {
+  if (mealOrVariation.isLocked === false && isLocked(String(props.dayID)) === false) {
+    addLock(String(props.dayID));
     // User is participating
     if (isParticipating.value) {
       await leaveMeal();
@@ -133,10 +136,12 @@ async function handle() {
       }
       await joinMeal(slugs);
     }
-  } else {
+  } else if (isLocked(String(props.dayID)) === false) {
     if (mealOrVariation.mealState === 'offerable') {
+      addLock(String(props.dayID));
       await sendOffer();
     } else if (mealOrVariation.mealState === 'offering') {
+      addLock(String(props.dayID));
       await cancelOffer();
     }
   }

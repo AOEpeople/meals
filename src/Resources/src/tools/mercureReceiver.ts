@@ -4,6 +4,7 @@
 import { Meal } from '@/api/getDashboardData';
 import { dashboardStore } from '@/stores/dashboardStore';
 import { environmentStore } from '@/stores/environmentStore';
+import { useLockRequests } from '@/services/useLockRequests';
 
 type Meal_Update = {
     weekId: number;
@@ -48,6 +49,7 @@ type Slot_Update = {
 const OFFER_NEW = 0;
 const OFFER_ACCEPTED = 1;
 const OFFER_GONE = 2;
+const { removeLock } = useLockRequests();
 
 type Offer_Update = {
     type: number;
@@ -90,6 +92,7 @@ class MercureReceiver {
 
     private static handleEventParticipationUpdate(data: Event_Participation_Update) {
         dashboardStore.updateEventParticipation(data.weekId, data.dayId, data.event.eventId, data.event.participations);
+        removeLock(String(data.dayId));
     }
 
     private static handleParticipationUpdate(data: Meal_Update): void {
@@ -109,6 +112,7 @@ class MercureReceiver {
                 meal.reachedLimit = mealData.reachedLimit;
             }
         }
+        removeLock(String(data.dayId));
     }
 
     private static handleMealOfferUpdate(data: Offer_Update): void {
@@ -144,6 +148,7 @@ class MercureReceiver {
                     break;
             }
         }
+        removeLock(String(data.dayId));
     }
 
     private static handleSlotAllocationUpdate(data: Slot_Update): void {

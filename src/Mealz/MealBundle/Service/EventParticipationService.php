@@ -129,6 +129,8 @@ class EventParticipationService
 
             return $eventParticipation;
         }
+
+        return null;
     }
 
     public function getParticipants(Day $day): array

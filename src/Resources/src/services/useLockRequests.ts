@@ -9,17 +9,13 @@ const lockedIds = ref<Set<string>>(new Set());
 export function useLockRequests() {
     function addLock(id: string) {
         lockedIds.value.add(id);
-        console.log(`Added Lock: ${id}`);
     }
 
     function removeLock(id: string) {
-        setTimeout(() => lockedIds.value.delete(id), 250);
-        // lockedIds.value.delete(id);
-        console.log(`removed Lock: ${id}`);
+        setTimeout(() => lockedIds.value.delete(id), 100);
     }
 
     function isLocked(id: string) {
-        console.log(`Check Lock: ${id}`);
         return lockedIds.value.has(id);
     }
 

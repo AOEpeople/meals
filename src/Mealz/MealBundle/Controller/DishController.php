@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Dish;
+use App\Mealz\MealBundle\Entity\DishCollection;
 use App\Mealz\MealBundle\Repository\CategoryRepository;
 use App\Mealz\MealBundle\Repository\CategoryRepositoryInterface;
 use App\Mealz\MealBundle\Repository\DishRepository;
@@ -58,6 +59,15 @@ class DishController extends BaseListController
 
         if (null !== $combiDish && 0 < count($combiDish)) {
             $dishes[] = $combiDish[0];
+        }
+
+        /** @var Dish $dish */
+        foreach ($dishes as $dish) {
+            $variations = array_filter(
+                $dish->getVariations()->toArray(),
+                fn ($variation) => $variation->isEnabled()
+            );
+            $dish->setVariations(new DishCollection($variations));
         }
 
         return new JsonResponse($dishes, 200);

@@ -128,6 +128,7 @@ describe('Test Dashboard View', () => {
                         .children()
                         .should('have.length', 0)
 
+                    cy.wait(600);
                     cy.get('h2')
                         .contains('Nächste Woche')
                         .parent()
@@ -165,6 +166,7 @@ describe('Test Dashboard View', () => {
                         .children()
                         .should('have.length', 1)
 
+                    cy.wait(600);
                     cy.get('h2')
                         .contains('Nächste Woche')
                         .parent()
@@ -277,7 +279,8 @@ describe('Test Dashboard View', () => {
             .children()
             .should('have.length', 1);
 
-        // leave afterwork
+        // leave afterwork after waiting for btn to debounce
+        cy.wait(600);
         cy.get('h2')
             .contains('Nächste Woche')
             .parent()
@@ -402,7 +405,8 @@ describe('Test Dashboard View', () => {
             .find('svg')
             .click()
 
-        // leave afterwork
+        // leave afterwork after waiting for btn to debounce
+        cy.wait(600);
         cy.get('h2')
             .contains('Nächste Woche')
             .parent()

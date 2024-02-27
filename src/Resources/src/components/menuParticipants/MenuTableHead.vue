@@ -36,7 +36,7 @@
           class="sticky top-0 z-20 border-b-2 border-r-2 border-solid border-gray-200 bg-[#f4f7f9] px-2 text-center"
         >
           <span class="block w-[100px] hyphens-auto break-words text-[14px]">
-            {{ locale === 'en' ? getDishBySlug(meal.dish).titleEn : getDishBySlug(meal.dish).titleDe }}
+            {{ locale === 'en' ? getDishBySlug(meal.dish)?.titleEn : getDishBySlug(meal.dish)?.titleDe }}
           </span>
         </th>
       </template>

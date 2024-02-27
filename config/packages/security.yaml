@@ -78,6 +78,7 @@ security:
         - { path: ^/api/print/participations, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/api/dashboard, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/api/guest-invitation, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/api/guest/meal/participation, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/api/environmentals, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/api/user, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/api/event/invitation/\S*, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }

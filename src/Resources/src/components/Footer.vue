@@ -1,5 +1,5 @@
 <template>
-  <footer class="mt-8 bg-[rgb(225,232,238)]">
+  <footer class="mt-8 bg-[rgb(225,232,238)] print:hidden">
     <div class="mx-auto grid max-w-screen-aoe xl:grid-cols-2">
       <div class="items-center py-4">
         <img

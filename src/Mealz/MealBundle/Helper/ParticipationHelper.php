@@ -185,6 +185,7 @@ class ParticipationHelper
     {
         $participantData = [];
         $participantData['booked'][] = $meal->getDish()->getId();
+        $participantData['isOffering'][] = $participant->isPending();
         if (true === $profile) {
             $participantData['profile'] = $participant->getProfile()->getUsername();
         }

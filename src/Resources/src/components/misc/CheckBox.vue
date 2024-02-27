@@ -1,6 +1,6 @@
 <template>
   <div
-    class="grid aspect-square h-[30px] rounded-md xl:h-[20px]"
+    class="grid aspect-square h-[30px] rounded-md xl:h-[20px] print:hidden"
     :class="isActive ? activeClass : inactiveClass"
   >
     <CheckIcon

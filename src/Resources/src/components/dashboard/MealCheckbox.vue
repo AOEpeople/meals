@@ -1,5 +1,6 @@
 <template>
   <span
+    class="print:hidden"
     :class="checkboxCSS"
     data-cy="mealCheckbox"
     @click="handle"
@@ -45,6 +46,7 @@ import { Day, Meal } from '@/api/getDashboardData';
 import useFlashMessage from '@/services/useFlashMessage';
 import { IMessage, isMessage } from '@/interfaces/IMessage';
 import { FlashMessageType } from '@/enums/FlashMessage';
+import { useLockRequests } from '@/services/useLockRequests';
 
 const props = defineProps<{
   weekID: number | string | undefined;
@@ -55,22 +57,23 @@ const props = defineProps<{
   day: Day;
 }>();
 const { sendFlashMessage } = useFlashMessage();
+const { addLock, isLocked, removeLock } = useLockRequests();
 
 const day = props.day ? props.day : dashboardStore.getDay(props.weekID, props.dayID);
-let mealOrVariation: Meal;
+const mealOrVariation = ref<Meal>(null);
 let mealId: number | string;
 if (props.variationID) {
-  mealOrVariation = props.meal
+  mealOrVariation.value = props.meal
     ? props.meal
     : dashboardStore.getVariation(props.weekID, props.dayID, props.mealID, props.variationID);
   mealId = props.variationID;
 } else {
-  mealOrVariation = props.meal ? props.meal : dashboardStore.getMeal(props.weekID, props.dayID, props.mealID);
+  mealOrVariation.value = props.meal ? props.meal : dashboardStore.getMeal(props.weekID, props.dayID, props.mealID);
   mealId = props.mealID;
 }
 
 const open = ref(false);
-const isParticipating = computed(() => mealOrVariation.isParticipating !== null);
+const isParticipating = computed(() => mealOrVariation.value.isParticipating !== null);
 const isCombiBox = props.day.meals[props.mealID].dishSlug === 'combined-dish';
 
 const openPopover = ref(false);
@@ -85,10 +88,10 @@ const checkboxCSS = computed(() => {
   let cssResult = 'rounded-md h-[30px] w-[30px] xl:h-[20px] xl:w-[20px] ';
 
   if (isParticipating.value === true) {
-    switch (mealOrVariation.mealState) {
+    switch (mealOrVariation.value.mealState) {
       case 'disabled':
         cssResult += 'border-[0.5px] border-[#ABABAB]';
-        if (mealOrVariation.isLocked === false) {
+        if (mealOrVariation.value.isLocked === false) {
           cssResult += ' bg-[#80909F] cursor-pointer';
         } else {
           cssResult += ' bg-[#B4C1CE]';
@@ -105,7 +108,7 @@ const checkboxCSS = computed(() => {
         return cssResult;
     }
   } else if (isParticipating.value === false) {
-    switch (mealOrVariation.mealState) {
+    switch (mealOrVariation.value.mealState) {
       case 'disabled':
         cssResult += 'bg-[#EDEDED] border-[0.5px] border-[#ABABAB]';
         return cssResult;
@@ -120,24 +123,30 @@ const checkboxCSS = computed(() => {
 
 async function handle() {
   // Meal is not locked
-  if (mealOrVariation.isLocked === false) {
+  if (mealOrVariation.value.isLocked === false && isLocked(String(props.dayID)) === false) {
+    addLock(String(props.dayID));
     // User is participating
     if (isParticipating.value) {
       await leaveMeal();
     } else {
-      let slugs = [mealOrVariation.dishSlug];
+      let slugs = [mealOrVariation.value.dishSlug];
       if (isCombiBox === true) {
         slugs = getDishSlugs();
         if (slugs.length === 0) return;
       }
       await joinMeal(slugs);
     }
-  } else {
-    if (mealOrVariation.mealState === 'offerable') {
+    removeLock(String(props.dayID));
+  } else if (isLocked(String(props.dayID)) === false) {
+    addLock(String(props.dayID));
+    if (mealOrVariation.value.mealState === 'offerable') {
+      addLock(String(props.dayID));
       await sendOffer();
-    } else if (mealOrVariation.mealState === 'offering') {
+    } else if (mealOrVariation.value.mealState === 'offering') {
+      addLock(String(props.dayID));
       await cancelOffer();
     }
+    removeLock(String(props.dayID));
   }
 }
 
@@ -163,7 +172,7 @@ async function joinMeal(dishSlugs) {
     const { emit } = useEventsBus();
     if (isCombiBox) emit('guestChosenCombi', dishSlugs);
     emit('guestChosenMeals', mealId);
-    mealOrVariation.isParticipating = -1;
+    mealOrVariation.value.isParticipating = -1;
   } else {
     let data = {
       mealID: mealId,
@@ -174,8 +183,8 @@ async function joinMeal(dishSlugs) {
     const { response, error } = await useJoinMeal(JSON.stringify(data));
     if (error.value === false) {
       day.activeSlot = (response.value as JoinMeal).slotId;
-      mealOrVariation.isParticipating = (response.value as JoinMeal).participantId;
-      mealOrVariation.mealState = (response.value as JoinMeal).mealState;
+      mealOrVariation.value.isParticipating = (response.value as JoinMeal).participantId;
+      mealOrVariation.value.mealState = (response.value as JoinMeal).mealState;
     } else if (isMessage(response.value) === true) {
       sendFlashMessage({
         type: FlashMessageType.ERROR,
@@ -192,7 +201,7 @@ async function leaveMeal() {
     const dishSlugs = getDishSlugs();
     if (isCombiBox) emit('guestChosenCombi', dishSlugs);
     emit('guestChosenMeals', props.mealID);
-    mealOrVariation.isParticipating = null;
+    mealOrVariation.value.isParticipating = null;
   } else {
     const data = {
       mealId: mealId
@@ -201,8 +210,8 @@ async function leaveMeal() {
     const { response, error } = await useLeaveMeal(JSON.stringify(data));
     if (error.value === false) {
       day.activeSlot = response.value.slotId;
-      mealOrVariation.mealState = response.value.mealState;
-      mealOrVariation.isParticipating = null;
+      mealOrVariation.value.mealState = response.value.mealState;
+      mealOrVariation.value.isParticipating = null;
     }
   }
 }
@@ -214,7 +223,7 @@ async function sendOffer() {
 
   const { error } = await useOfferMeal(JSON.stringify(data));
   if (error.value === false) {
-    mealOrVariation.mealState = 'offering';
+    mealOrVariation.value.mealState = 'offering';
     const { emit } = useEventsBus();
     emit('openOfferPanel_' + mealId);
   }
@@ -227,7 +236,7 @@ async function cancelOffer() {
 
   const { error } = await useCancelOffer(JSON.stringify(data));
   if (error.value === false) {
-    mealOrVariation.mealState = 'offerable';
+    mealOrVariation.value.mealState = 'offerable';
   }
 }
 

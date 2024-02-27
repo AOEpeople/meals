@@ -3,7 +3,7 @@
     class="day-shadow mx-auto grid h-auto min-h-[153px] max-w-[414px] grid-cols-[auto_minmax(0,1fr)] grid-rows-[minmax(0,1fr)_auto] rounded bg-white sm:max-w-none"
   >
     <div
-      class="relative col-span-1 col-start-1 row-span-2 row-start-1 grid w-[24px] justify-center gap-2 rounded-l-[5px] py-[2px]"
+      class="relative col-span-1 col-start-1 row-span-2 row-start-1 grid w-[24px] justify-center gap-2 rounded-l-[5px] py-[2px] print:bg-primary-2"
       :class="[
         day.isLocked || !day.isEnabled || (emptyDay && !isEventDay) ? 'bg-[#80909F]' : 'bg-primary-2',
         !day.isLocked && !emptyDay && !guestData ? 'grid-rows-[minmax(0,1fr)_24px]' : ''
@@ -30,7 +30,7 @@
     >
       <div
         v-if="day.slotsEnabled"
-        class="flex h-[54px] items-center border-b-[2px] px-[15px]"
+        class="flex h-[54px] items-center border-b-[2px] px-[15px] print:hidden"
       >
         <span class="mr-2 inline-block text-[11px] font-bold uppercase leading-4 tracking-[1.5px] text-primary">
           {{ t('dashboard.slot.timeslot') }}
@@ -44,7 +44,11 @@
         v-for="(meal, mealID) in day.meals"
         :key="mealID"
         class="mx-[15px] border-b-[0.7px] last:border-b-0"
-        :class="isEventDay && !guestData ? 'pb-[13px] pt-[13px] last:pb-0 last:pt-[21px]' : 'py-[13px]'"
+        :class="
+          isEventDay && !guestData
+            ? 'pb-[13px] pt-[13px] last:pb-0 last:pt-[21px] print:pt-2 print:last:pb-2'
+            : 'py-[13px] print:py-2'
+        "
       >
         <VariationsData
           v-if="meal.variations"
@@ -75,7 +79,7 @@
     </div>
     <EventData
       v-if="isEventDay && !guestData"
-      class="col-start-2 row-start-2"
+      class="col-start-2 row-start-2 print:hidden"
       :day="day"
       :dayId="dayID"
     />

@@ -1,9 +1,9 @@
 <template>
-  <div class="inline-flex divide-x-2">
+  <div class="inline-flex divide-x-2 print:block print:h-screen">
     <div
       v-for="(week, weekID, index) in weeks"
       :key="index"
-      class="w-[585px] flex-initial"
+      class="w-[585px] flex-initial print:mx-auto print:w-full print:last:hidden"
     >
       <WeekComp
         :weekID="weekID"

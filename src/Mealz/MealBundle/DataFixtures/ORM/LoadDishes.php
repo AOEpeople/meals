@@ -49,6 +49,10 @@ class LoadDishes extends Fixture implements OrderedFixtureInterface
             'Limbs oh la la la (Ofen gebacken) + Finger food mit einer schlammigen Süß-Sauer-Soße'
         );
 
+        for ($i = 0; $i < 150; ++$i) {
+            $this->createRandomDish();
+        }
+
         $this->objectManager->flush();
     }
 
@@ -82,5 +86,31 @@ class LoadDishes extends Fixture implements OrderedFixtureInterface
         $dish->setOneServingSize($oneSize);
         $this->objectManager->persist($dish);
         $this->addReference('dish-' . $this->counter++, $dish);
+    }
+
+    protected function createRandomDish()
+    {
+        $dishCookingMethod = ['Steamed', 'Cooked', 'Grilled', 'Roasted'];
+        $dishPrefix = [
+            'Pork', 'Chicken', 'Beef', 'Duck', 'Lamb', 'Deer', 'Crocodile',
+            'Vegetable', 'Potatoe', 'Broccoli', 'Omlette', 'Pancake',
+            'Fish', 'Tuna', 'Salmon', 'Crab', 'Turtle', 'Shark', 'Oyster',
+            'Sushi', 'Burger', 'Kebab', 'Chili',
+        ];
+        $dishSuffix = ['stew', 'soup', 'patty', 'salad', 'steak', 'filet', 'dumpling', 'taco', 'wrap'];
+        $sideDishes = ['noodles', 'rice', 'potatoes', 'salad', 'bread', 'sauce', 'dumplings', 'fries', 'chips'];
+
+        $dish = $dishPrefix[array_rand($dishPrefix)] . $dishSuffix[array_rand($dishSuffix)];
+        $description = $dishCookingMethod[array_rand($dishCookingMethod)] . ' ' . $dish . ' with ' . $sideDishes[array_rand($sideDishes)];
+        $oneSize = 0 === rand(0, 1) ? false : true;
+        $descActive = 0 === rand(0, 1) ? false : true;
+        $randNum = (string) rand(0, 1000);
+        $this->addDish(
+            $dish . $randNum . 'EN',
+            $dish . $randNum . 'DE',
+            $descActive ? $description . ' EN' : null,
+            $descActive ? $description . ' DE' : null,
+            $oneSize
+        );
     }
 }

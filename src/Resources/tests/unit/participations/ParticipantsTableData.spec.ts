@@ -3,9 +3,9 @@ import ParticipantsTableData from '@/components/participations/ParticipantsTable
 import { describe, it } from '@jest/globals';
 import { mount } from '@vue/test-utils';
 
-const bookedDataOne: IBookedData = { booked: [1] };
-const bookedDataTwo: IBookedData = { booked: [1, 3] };
-const bookedDataThree: IBookedData = { booked: [] };
+const bookedDataOne: IBookedData = { booked: [1], isOffering: [false] };
+const bookedDataTwo: IBookedData = { booked: [1, 3], isOffering: [false] };
+const bookedDataThree: IBookedData = { booked: [], isOffering: [false] };
 
 const mealOne: IMealWithVariations = {
     title: {

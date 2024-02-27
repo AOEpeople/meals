@@ -100,6 +100,7 @@ describe('Test Dashboard View', () => {
     it('should book a meal and cancel it', () => {
         cy.visitMeals();
 
+        cy.log('Starting process');
         cy.get('h2')
             .contains('Nächste Woche')
             .parent()
@@ -107,8 +108,10 @@ describe('Test Dashboard View', () => {
             .find('[data-cy="mealCheckbox"]')
             .eq(0)
             .then((ele) => {
+                cy.log('Then');
                 // if ele has children, the meal is booked
                 if (ele.children().length > 0) {
+                    cy.log('length > 0');
                     // cancel meal
                     cy.get('h2')
                         .contains('Nächste Woche')
@@ -118,6 +121,7 @@ describe('Test Dashboard View', () => {
                         .eq(0)
                         .click();
 
+                    cy.log('clicked cancel');
                     cy.wait(1000);
                     cy.get('h2')
                         .contains('Nächste Woche')
@@ -128,6 +132,8 @@ describe('Test Dashboard View', () => {
                         .children()
                         .should('have.length', 0)
 
+                    cy.wait(600);
+                    cy.log('has length 0 and waited 600ms');
                     cy.get('h2')
                         .contains('Nächste Woche')
                         .parent()
@@ -137,6 +143,7 @@ describe('Test Dashboard View', () => {
                         .click();
 
                     cy.wait(1000);
+                    cy.log('clicked to join again');
                     cy.get('h2')
                         .contains('Nächste Woche')
                         .parent()
@@ -144,8 +151,10 @@ describe('Test Dashboard View', () => {
                         .find('[data-cy="mealCheckbox"]')
                         .eq(0)
                         .children()
-                        .should('have.length', 1)
+                        .should('have.length', 1);
+                    cy.log('joined and verified');
                 } else {
+                    cy.log('length < 0');
                     // book meal
                     cy.get('h2')
                         .contains('Nächste Woche')
@@ -156,6 +165,7 @@ describe('Test Dashboard View', () => {
                         .click();
 
                     cy.wait(1000);
+                    cy.log('clicked to join initially');
                     cy.get('h2')
                         .contains('Nächste Woche')
                         .parent()
@@ -165,6 +175,8 @@ describe('Test Dashboard View', () => {
                         .children()
                         .should('have.length', 1)
 
+                    cy.wait(600);
+                    cy.log('verified join and waited 600');
                     cy.get('h2')
                         .contains('Nächste Woche')
                         .parent()
@@ -174,6 +186,7 @@ describe('Test Dashboard View', () => {
                         .click();
 
                     cy.wait(1000);
+                    cy.log('clicked to leave again');
                     cy.get('h2')
                         .contains('Nächste Woche')
                         .parent()
@@ -181,7 +194,8 @@ describe('Test Dashboard View', () => {
                         .find('[data-cy="mealCheckbox"]')
                         .eq(0)
                         .children()
-                        .should('have.length', 0)
+                        .should('have.length', 0);
+                    cy.log('verified left');
                 }
             });
     });
@@ -222,6 +236,7 @@ describe('Test Dashboard View', () => {
         cy.get('input')
             .eq(2)
             .should('have.value', 'Afterwork');
+        cy.log('found event')
 
         // go to dashboard
         cy.get('header > nav > div > a > svg').click();
@@ -243,6 +258,7 @@ describe('Test Dashboard View', () => {
             .eq(6)
             .children()
             .should('have.length', 0);
+        cy.log('event has not been joined yet');
 
         // join afterwork
         cy.get('h2')
@@ -259,6 +275,7 @@ describe('Test Dashboard View', () => {
             .find('div > div')
             .eq(6)
             .click();
+        cy.log('joined afterwork');
 
         // confirm event has been joined
         cy.get('h2')
@@ -276,8 +293,10 @@ describe('Test Dashboard View', () => {
             .eq(6)
             .children()
             .should('have.length', 1);
+        cy.log('verified joined afterwork');
 
-        // leave afterwork
+        // leave afterwork after waiting for btn to debounce
+        cy.wait(600);
         cy.get('h2')
             .contains('Nächste Woche')
             .parent()
@@ -292,6 +311,7 @@ describe('Test Dashboard View', () => {
             .find('div > div')
             .eq(6)
             .click();
+        cy.log('leaving afterwork');
 
         // confirm event has been left
         cy.get('h2')
@@ -309,6 +329,7 @@ describe('Test Dashboard View', () => {
             .eq(6)
             .children()
             .should('have.length', 0);
+        cy.log('verified left afterwork');
     });
 
     it('should join an event and be in the participants list', () => {
@@ -348,6 +369,7 @@ describe('Test Dashboard View', () => {
         cy.get('input')
             .eq(2)
             .should('have.value', 'Afterwork');
+        cy.log('found event afterwork');
 
         // go to dashboard
         cy.get('header > nav > div > a > svg').click();
@@ -368,6 +390,7 @@ describe('Test Dashboard View', () => {
             .find('div > div')
             .eq(6)
             .click();
+        cy.log('joined afterwork');
 
         // click on the info-icon
         cy.get('h2')
@@ -400,9 +423,11 @@ describe('Test Dashboard View', () => {
             .parent()
             .parent()
             .find('svg')
-            .click()
+            .click();
+        cy.log('verified joined afterwork');
 
-        // leave afterwork
+        // leave afterwork after waiting for btn to debounce
+        cy.wait(600);
         cy.get('h2')
             .contains('Nächste Woche')
             .parent()
@@ -417,6 +442,7 @@ describe('Test Dashboard View', () => {
             .find('div > div')
             .eq(6)
             .click();
+        cy.log('leaving afterwork')
 
         // click on the info-icon
         cy.get('h2')
@@ -450,5 +476,6 @@ describe('Test Dashboard View', () => {
             .parent()
             .find('svg')
             .click()
+        cy.log('verified left afterwork');
     });
 });

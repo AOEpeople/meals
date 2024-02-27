@@ -63,11 +63,13 @@ class DishController extends BaseListController
 
         /** @var Dish $dish */
         foreach ($dishes as $dish) {
-            $variations = array_filter(
-                $dish->getVariations()->toArray(),
-                fn ($variation) => $variation->isEnabled()
-            );
-            $dish->setVariations(new DishCollection($variations));
+            if (count($dish->getVariations()) > 0) {
+                $variations = array_values(array_filter(
+                    $dish->getVariations()->toArray(),
+                    fn ($variation) => $variation->isEnabled()
+                ));
+                $dish->setVariations(new DishCollection($variations));
+            }
         }
 
         return new JsonResponse($dishes, 200);

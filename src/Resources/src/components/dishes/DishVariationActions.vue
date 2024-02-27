@@ -15,6 +15,7 @@
           :title-en="variation.titleEn"
           :slug="variation.slug"
           :edit="true"
+          @close-panel="close()"
         />
       </template>
     </Popover>

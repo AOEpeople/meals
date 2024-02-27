@@ -47,6 +47,8 @@ const props = withDefaults(
   }
 );
 
+const emit = defineEmits(['closePanel']);
+
 const titleDeInput = ref(props.titleDe);
 const titleEnInput = ref(props.titleEn);
 const required = ref(false);
@@ -57,8 +59,10 @@ async function onSubmit() {
     return;
   } else if (props.edit === true && typeof props.slug === 'string') {
     await updateDishVariation(props.slug, createDishVariationDtoObject());
+    emit('closePanel');
   } else if (props.edit === false) {
     await createDishVariation(createDishVariationDtoObject(), props.parentSlug);
+    emit('closePanel');
   }
 }
 

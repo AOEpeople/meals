@@ -57,6 +57,8 @@ const props = withDefaults(
   }
 );
 
+const emit = defineEmits(['closePanel']);
+
 const titleInput = ref(props.title);
 const limitInput = ref(props.limit);
 const orderInput = ref(props.order);
@@ -79,5 +81,6 @@ async function onSubmit() {
   } else {
     await createSlot(timeSlot);
   }
+  emit('closePanel');
 }
 </script>

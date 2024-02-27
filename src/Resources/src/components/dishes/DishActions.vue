@@ -13,7 +13,10 @@
         />
       </template>
       <template #panel="{ close }">
-        <DishVariationCreationPanel :parent-slug="dish.slug" />
+        <DishVariationCreationPanel
+          :parent-slug="dish.slug"
+          @close-panel="close()"
+        />
       </template>
     </Popover>
     <Popover
@@ -38,6 +41,7 @@
           :dish-id="dish.id"
           :category-id="dish.categoryId"
           :one-size-serving="dish.oneServingSize"
+          @close-panel="close()"
         />
       </template>
     </Popover>

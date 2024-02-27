@@ -59,6 +59,8 @@ const props = withDefaults(
   }
 );
 
+const emit = defineEmits(['closePanel']);
+
 const eventTitle = ref(props.title);
 const isEventPublic = ref(props.isPublic);
 
@@ -68,8 +70,10 @@ async function onSubmit() {
   required.value = true;
   if (eventTitle.value !== '' && props.edit === false) {
     await createEvent(eventTitle.value, isEventPublic.value);
+    emit('closePanel');
   } else if (eventTitle.value !== '' && props.slug !== '') {
     await updateEvent(props.slug, eventTitle.value, isEventPublic.value);
+    emit('closePanel');
   }
 }
 </script>

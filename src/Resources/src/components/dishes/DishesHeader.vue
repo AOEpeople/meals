@@ -17,7 +17,9 @@
         />
       </template>
       <template #panel="{ close }">
-        <DishesCreationPanel />
+        <DishesCreationPanel
+          @close-panel="close()"
+        />
       </template>
     </Popover>
     <DishesSearchBar class="row-span-1 row-start-3 md:col-start-1 md:row-start-2 md:justify-self-start" />

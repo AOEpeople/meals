@@ -16,7 +16,9 @@
         />
       </template>
       <template #panel="{ close }">
-        <EventCreationPanel />
+        <EventCreationPanel
+          @close-panel="close()"
+        />
       </template>
     </Popover>
     <InputLabel

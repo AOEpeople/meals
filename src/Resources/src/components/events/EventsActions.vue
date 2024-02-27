@@ -18,6 +18,7 @@
           :is-public="event.public"
           :edit="true"
           :slug="event.slug"
+          @close-panel="close()"
         />
       </template>
     </Popover>

@@ -123,7 +123,10 @@ const checkboxCSS = computed(() => {
 
 async function handle() {
   // Meal is not locked
-  if (mealOrVariation.value.isLocked === false && isLocked(String(props.dayID)) === false) {
+  if (
+    (mealOrVariation.value.isLocked === false || mealOrVariation.value.mealState === 'tradeable') &&
+    isLocked(String(props.dayID)) === false
+  ) {
     addLock(String(props.dayID));
     // User is participating
     if (isParticipating.value) {
@@ -138,6 +141,7 @@ async function handle() {
     }
     removeLock(String(props.dayID));
   } else if (isLocked(String(props.dayID)) === false) {
+    console.log(`Attemting accept offer: mealstate: ${mealOrVariation.value.mealState}`);
     addLock(String(props.dayID));
     if (mealOrVariation.value.mealState === 'offerable') {
       addLock(String(props.dayID));

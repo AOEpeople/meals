@@ -136,6 +136,8 @@ class ParticipantController extends BaseController
             false === $this->getDoorman()->isKitchenStaff()
         ) {
             return new JsonResponse(null, 403);
+        } elseif (null === $participant) {
+            return new JsonResponse(null, 403);
         }
 
         $participant->setCombinedDishes(null);

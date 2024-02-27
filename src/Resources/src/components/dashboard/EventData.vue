@@ -69,7 +69,7 @@ const props = defineProps<{
 
 const { t } = useI18n();
 const { getEventById, joinEvent, leaveEvent } = useEvents();
-const { addLock, isLocked } = useLockRequests();
+const { addLock, isLocked, removeLock } = useLockRequests();
 
 async function handleClick() {
   if (isLocked(props.dayId) === true) {
@@ -81,5 +81,6 @@ async function handleClick() {
   } else {
     await leaveEvent(props.day.date.date);
   }
+  removeLock(props.dayId);
 }
 </script>

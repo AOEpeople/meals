@@ -123,10 +123,12 @@ class EventParticipationService
         $eventParticipation = $day->getEvent();
         $participation = $eventParticipation->getParticipant($profile);
 
-        $this->em->remove($participation);
-        $this->em->flush();
+        if (null !== $participation) {
+            $this->em->remove($participation);
+            $this->em->flush();
 
-        return $eventParticipation;
+            return $eventParticipation;
+        }
     }
 
     public function getParticipants(Day $day): array

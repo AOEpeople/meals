@@ -12,7 +12,7 @@ export function useLockRequests() {
     }
 
     function removeLock(id: string) {
-        setTimeout(() => lockedIds.value.delete(id), 100);
+        setTimeout(() => lockedIds.value.delete(id), 250);
     }
 
     function isLocked(id: string) {

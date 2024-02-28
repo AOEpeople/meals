@@ -1,7 +1,7 @@
 <template>
   <Popover
     :translate-x-max="'-5%'"
-    :translate-x-min="'-5%'"
+    :translate-x-min="'0%'"
   >
     <template #button="{ open }">
       <CalendarIcon class="size-5 cursor-pointer text-white" />

@@ -6,7 +6,7 @@
       class="col-start-1 row-span-3 row-start-1 grid w-[24px] grid-rows-[24px_minmax(0,1fr)_24px] justify-center rounded-l-lg bg-[#1c5298] py-1"
     >
       <Popover
-        :translate-x-min="'-5%'"
+        :translate-x-min="'0%'"
         :translate-x-max="'-5%'"
       >
         <template #button="{ open }">

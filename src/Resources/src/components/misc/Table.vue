@@ -1,7 +1,7 @@
 <template>
   <div
-    class="mx-auto flex flex-col overflow-x-auto"
-    :class="print === true ? 'w-[700px]' : 'max-w-screen-aoe'"
+    class="mx-auto flex flex-col"
+    :class="[print === true ? 'w-[700px]' : 'max-w-screen-aoe', { 'overflow-x-auto': overflowTable }]"
   >
     <div class="inline-block min-w-full py-2">
       <table class="min-w-full max-w-fit table-fixed border-spacing-0">
@@ -35,11 +35,13 @@ const props = withDefaults(
     headerTextPosition?: string;
     print?: boolean;
     addStyles?: string;
+    overflowTable?: boolean;
   }>(),
   {
     headerTextPosition: 'left',
     print: false,
-    addStyles: ''
+    addStyles: '',
+    overflowTable: false
   }
 );
 
@@ -48,12 +50,16 @@ const style = computed(() => {
   switch (props.headerTextPosition) {
     case 'left':
       returnStyle += ' text-left';
+      break;
     case 'lmr':
       returnStyle += ' first:text-left last:text-right text-center';
+      break;
     case 'lfr':
       returnStyle += ' first:text-left text-right';
+      break;
     default:
       returnStyle += ' text-left';
+      break;
   }
   return returnStyle.trimStart();
 });

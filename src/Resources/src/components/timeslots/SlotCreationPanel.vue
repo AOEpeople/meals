@@ -1,6 +1,6 @@
 <template>
   <form
-    class="relative grid w-[300px] grid-cols-6 grid-rows-4 gap-2 p-4 sm:w-[400px]"
+    class="grid w-[300px] grid-cols-6 grid-rows-4 gap-2 p-4 sm:w-[400px]"
     @submit.prevent="onSubmit()"
   >
     <h3 class="col-span-6 col-start-1 text-center">

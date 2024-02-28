@@ -3,6 +3,7 @@
     :labels="columnNames"
     :header-text-position="'lfr'"
     :add-styles="'first:sticky first:left-0 first:bg-[#f4f7f9] last:pl-4'"
+    :overflow-table="true"
   >
     <LazyTableRow
       v-for="[username, costs] in filteredUsers"

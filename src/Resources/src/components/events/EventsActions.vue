@@ -1,9 +1,7 @@
 <template>
   <div class="flex flex-row content-center items-center justify-end justify-items-end sm:gap-4">
     <Popover
-      :breakpoint-width="564"
-      :translate-x-min="'-60%'"
-      :translate-x-max="'-50%'"
+      :translate-x-min="'-71%'"
     >
       <template #button="{ open }">
         <ActionButton

@@ -60,7 +60,7 @@
             :value="dish"
           >
             <li
-              class="relative grid cursor-pointer grid-cols-[minmax(0,1fr)_36px] grid-rows-2 items-center text-left text-[14px] font-medium text-[#9CA3AF] hover:bg-[#FAFAFA] md:grid-cols-[minmax(0,1fr)_300px_36px] md:grid-rows-1"
+              class="relative grid cursor-pointer grid-cols-[minmax(0,1fr)_36px] grid-rows-[minmax(0,1fr)_auto] items-center text-left text-[14px] font-medium text-[#9CA3AF] hover:bg-[#FAFAFA] md:grid-cols-[minmax(0,1fr)_300px_36px] md:grid-rows-1"
               :class="{ 'bg-[#F4F4F4]': selected }"
               @click="handleSelection(dish)"
             >

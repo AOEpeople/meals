@@ -7,6 +7,8 @@
       t('finance.table.dailyClosing')
     ]"
     :print="print"
+    :add-styles="'first:sticky first:left-0 first:bg-[#f4f7f9] last:pl-4'"
+    :overflow-table="true"
   >
     <div
       v-for="([date, dateTransactions], index) in Object.entries(transactions)"

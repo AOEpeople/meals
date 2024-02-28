@@ -7,7 +7,7 @@
       t('finance.table.dailyClosing')
     ]"
     :print="print"
-    :add-styles="'first:sticky first:left-0 first:bg-[#f4f7f9] last:pl-4'"
+    :add-styles="'first:sticky first:left-0 first:bg-[#f4f7f9] last:pl-4 last:truncate'"
     :overflow-table="true"
   >
     <div
@@ -18,22 +18,22 @@
       <tr
         v-for="(transaction, i) in dateTransactions"
         :key="i"
-        class="border-b-2 border-gray-200"
+        class="border-b-2 border-gray-200 text-[12px] xl:text-[18px]"
       >
         <td
-          class="w-50% py-2"
+          class="w-50% p-2"
           colspan="1"
         >
           {{ (transaction as Transaction).date }}
         </td>
         <td
-          class="w-50% py-2"
+          class="w-50% p-2"
           colspan="1"
         >
           {{ (transaction as Transaction).name }} {{ (transaction as Transaction).firstName }}
         </td>
         <td
-          class="w-50% py-2"
+          class="w-50% p-2"
           colspan="1"
         >
           {{
@@ -44,7 +44,10 @@
           }}
         </td>
       </tr>
-      <tr :class="[index !== Object.keys(transactions).length - 1 ? 'border-b-2 border-gray-200' : '']">
+      <tr
+        class="text-[12px] xl:text-[18px]"
+        :class="[index !== Object.keys(transactions).length - 1 ? 'border-b-2 border-gray-200' : '']"
+      >
         <td
           class="py-2 text-right"
           colspan="4"

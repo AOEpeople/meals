@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="showControls === true"
-    class="mb-4 flex items-center gap-5 align-middle"
+    class="mb-8 flex items-center gap-5 align-middle"
   >
     <VueDatePicker
       v-model="date"

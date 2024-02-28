@@ -1,5 +1,5 @@
 <template>
-  <div class="grid grid-rows-2 items-center xl:my-[42px] xl:grid-cols-2">
+  <div class="grid grid-rows-2 items-center xl:my-[42px] xl:grid-cols-2 xl:grid-rows-1">
     <h2 class="text-center xl:justify-self-start">
       {{ t('category.header') }}
     </h2>

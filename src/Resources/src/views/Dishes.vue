@@ -4,6 +4,8 @@
     <Table
       v-if="loaded"
       :labels="[t('dish.table.title'), t('dish.table.category'), t('dish.table.actions')]"
+      :add-styles="'first:sticky first:left-0 first:bg-[#f4f7f9]'"
+      :overflow-table="true"
     >
       <DishTableRow
         v-for="(dish, index) in filteredDishes"

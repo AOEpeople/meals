@@ -2,7 +2,7 @@
   <div
     v-for="(finance, index) in FinancesState.finances"
     :key="index"
-    class="mx-[5%] my-6 xl:mx-auto"
+    class="mx-[5%] mt-6 xl:mx-auto"
   >
     <FinanceHeader
       :date-range="finance.heading"

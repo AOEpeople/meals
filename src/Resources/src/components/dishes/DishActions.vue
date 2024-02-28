@@ -1,9 +1,9 @@
 <template>
   <div class="flex flex-row content-center items-center justify-end justify-items-end sm:gap-4">
     <Popover
-      :breakpoint-width="564"
-      :translate-x-min="'-60%'"
-      :translate-x-max="'-50%'"
+      :popup-styles="'right-0'"
+      :translate-x-min="'-5%'"
+      :translate-x-max="'-5%'"
     >
       <template #button="{ open }">
         <ActionButton
@@ -20,9 +20,9 @@
       </template>
     </Popover>
     <Popover
-      :breakpoint-width="564"
-      :translate-x-min="'-75%'"
-      :translate-x-max="'-80%'"
+      :popup-styles="'right-0'"
+      :translate-x-min="'-5%'"
+      :translate-x-max="'-5%'"
     >
       <template #button="{ open }">
         <ActionButton

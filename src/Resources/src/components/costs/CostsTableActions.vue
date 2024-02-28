@@ -6,7 +6,11 @@
       :btn-text="''"
       @click="hideUser(username)"
     />
-    <Popover :translate-x-min="'-50%'">
+    <Popover
+      :overflow-hidden="false"
+      :translate-x-min="'-5%'"
+      :popup-styles="'right-0'"
+    >
       <template #button="{ open }">
         <ActionButton
           :action="Action.CREATE"

@@ -26,7 +26,7 @@ import { computed } from 'vue';
 import { XCircleIcon } from '@heroicons/vue/solid';
 
 const props = defineProps<{
-  meals: Dictionary<MealDTO[]>
+  meals: Dictionary<MealDTO[]>;
 }>();
 
 const emit = defineEmits(['closePanel']);

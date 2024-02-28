@@ -1,8 +1,6 @@
 <template>
   <div class="flex flex-row content-center items-center justify-end justify-items-end sm:gap-4">
-    <Popover
-      :translate-x-min="'-71%'"
-    >
+    <Popover :translate-x-min="'-71%'">
       <template #button="{ open }">
         <ActionButton
           :action="Action.EDIT"

@@ -88,10 +88,10 @@ const selectedDishTwo = ref<Dish[] | null>(null);
 const selectedEvent = ref<Event | null>(null);
 const participationLimitNotZero = computed(() => {
   let limitNotZero = false;
-  (Object.values(props.modelValue.meals) as MealDTO[][]).forEach(meals => {
-    meals.forEach(meal => {
+  (Object.values(props.modelValue.meals) as MealDTO[][]).forEach((meals) => {
+    meals.forEach((meal) => {
       if (meal.participationLimit !== 0) {
-        limitNotZero = true
+        limitNotZero = true;
       }
     });
   });

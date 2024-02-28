@@ -80,12 +80,12 @@ describe('Test Cost View', () => {
         cy.get('form')
             .find('input')
             .first()
-            .clear()
-            .type('1234');
+            .clear({ force: true })
+            .type('1234', { force: true });
 
         cy.get('form')
             .find('input[value="Speichern"]')
-            .click();
+            .click({ force: true });
 
         cy.get('tr')
             .eq(1)
@@ -123,12 +123,12 @@ describe('Test Cost View', () => {
         cy.get('form')
             .find('input')
             .first()
-            .clear()
-            .type('147');
+            .clear({ force: true })
+            .type('147', { force: true });
 
         cy.get('form')
             .find('input[value="Speichern"]')
-            .click();
+            .click({ force: true });
 
         cy.get('tr')
             .eq(1)

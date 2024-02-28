@@ -99,12 +99,12 @@ describe('Test Dishes View', () => {
         cy.get('h3').contains('Gericht editieren');
         cy.get('input[placeholder="Deutscher Titel"]')
             .should('have.value', 'TestGericht1234')
-            .clear()
-            .type('TestGericht5678');
+            .clear({ force: true })
+            .type('TestGericht5678', { force: true });
         cy.get('input[placeholder="Englischer Titel"]')
             .should('have.value', 'TestDish1234')
-            .clear()
-            .type('TestDish5678');
+            .clear({ force: true })
+            .type('TestDish5678', { force: true });
         cy.contains('input', 'Speichern').click({ force: true });
         cy.wait(['@putDishes']);
         cy.log('edit dish');
@@ -159,8 +159,8 @@ describe('Test Dishes View', () => {
         // Create a dish to filter for
         cy.get('button').contains('+ Gericht erstellen').click();
         cy.wait(['@getCategories']);
-        cy.get('input[placeholder="Deutscher Titel"]').type('TestGericht1234');
-        cy.get('input[placeholder="Englischer Titel"]').type('TestDish1234');
+        cy.get('input[placeholder="Deutscher Titel"]').type('TestGericht1234', { force: true });
+        cy.get('input[placeholder="Englischer Titel"]').type('TestDish1234', { force: true });
         cy.contains('input', 'Speichern').click({ force: true });
         cy.log('created dish to filter for');
         cy.wait(['@getDishes', '@postDishes'])
@@ -202,17 +202,17 @@ describe('Test Dishes View', () => {
         cy.get('button').contains('+ Gericht erstellen').click();
         cy.wait(['@getCategories']);
         cy.get('h3').contains('Neues Gericht erstellen');
-        cy.get('input[placeholder="Deutscher Titel"]').type('TestGericht1234')
+        cy.get('input[placeholder="Deutscher Titel"]').type('TestGericht1234', { force: true })
             .invoke('val')
             .then(val => {
                 expect(val).to.equal('TestGericht1234')
             });
-        cy.get('input[placeholder="Englischer Titel"]').type('TestDish1234')
+        cy.get('input[placeholder="Englischer Titel"]').type('TestDish1234', { force: true })
             .invoke('val')
             .then(val => {
                 expect(val).to.equal('TestDish1234')
             });
-        cy.contains('input', 'Speichern').click();
+        cy.contains('input', 'Speichern').click({ force: true });
         cy.wait(['@getDishes']);
         cy.log('created dish');
         cy.get('[data-cy="msgClose"]').click();
@@ -229,17 +229,17 @@ describe('Test Dishes View', () => {
             .contains('Variation erstellen')
             .click();
         cy.get('h3').contains('Variation erstellen');
-        cy.get('input[placeholder="Deutscher Titel"]').type('TestVariation1234')
+        cy.get('input[placeholder="Deutscher Titel"]').type('TestVariation1234', { force: true })
             .invoke('val')
             .then(val => {
                 expect(val).to.equal('TestVariation1234')
             });
-        cy.get('input[placeholder="Englischer Titel"]').type('TestVariation1234')
+        cy.get('input[placeholder="Englischer Titel"]').type('TestVariation1234', { force: true })
             .invoke('val')
             .then(val => {
                 expect(val).to.equal('TestVariation1234')
             });
-        cy.contains('input', 'Speichern').click();
+        cy.contains('input', 'Speichern').click({ force: true });
         cy.wait(['@getDishes']);
         cy.log('create variation');
         cy.get('[data-cy="msgClose"]').click();

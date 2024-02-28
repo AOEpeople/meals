@@ -1,6 +1,6 @@
 <template>
   <div
-    class="mx-auto flex flex-col"
+    class="mx-auto flex flex-col overflow-x-auto"
     :class="print === true ? 'w-[700px]' : 'max-w-screen-aoe'"
   >
     <div class="inline-block min-w-full py-2">
@@ -11,7 +11,7 @@
               v-for="label in labels"
               :key="label"
               scope="col"
-              class="text-[11px] font-bold uppercase leading-4 tracking-[1.5px] last:text-right"
+              class="px-1 text-[11px] font-bold uppercase leading-4 tracking-[1.5px] last:text-right"
               :class="style"
             >
               {{ label }}
@@ -34,23 +34,27 @@ const props = withDefaults(
     labels: string[];
     headerTextPosition?: string;
     print?: boolean;
+    addStyles?: string;
   }>(),
   {
     headerTextPosition: 'left',
-    print: false
+    print: false,
+    addStyles: ''
   }
 );
 
 const style = computed(() => {
+  let returnStyle = props.addStyles;
   switch (props.headerTextPosition) {
     case 'left':
-      return 'text-left';
+      returnStyle += ' text-left';
     case 'lmr':
-      return 'first:text-left last:text-right text-center';
+      returnStyle += ' first:text-left last:text-right text-center';
     case 'lfr':
-      return 'first:text-left text-right';
+      returnStyle += ' first:text-left text-right';
     default:
-      return 'text-left';
+      returnStyle += ' text-left';
   }
+  return returnStyle.trimStart();
 });
 </script>

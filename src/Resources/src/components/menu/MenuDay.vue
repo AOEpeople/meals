@@ -10,12 +10,15 @@
         :translate-x-max="'-5%'"
       >
         <template #button="{ open }">
-          <UserIcon class="row-start-1 size-5 cursor-pointer text-white" />
+          <UserIcon
+            class="row-start-1 size-5 cursor-pointer"
+            :class="participationLimitNotZero ? 'text-highlight' : 'text-white'"
+          />
         </template>
         <template #panel="{ close }">
           <MenuParticipationPanel
             :meals="modelValue.meals"
-            :close="close"
+            @close-panel="close()"
           />
         </template>
       </Popover>
@@ -83,6 +86,17 @@ const emit = defineEmits(['update:modelValue']);
 const selectedDishOne = ref<Dish[] | null>(null);
 const selectedDishTwo = ref<Dish[] | null>(null);
 const selectedEvent = ref<Event | null>(null);
+const participationLimitNotZero = computed(() => {
+  let limitNotZero = false;
+  (Object.values(props.modelValue.meals) as MealDTO[][]).forEach(meals => {
+    meals.forEach(meal => {
+      if (meal.participationLimit !== 0) {
+        limitNotZero = true
+      }
+    });
+  });
+  return limitNotZero;
+});
 
 const mealKeys = computed(() => {
   const combiDish = getDishBySlug('combined-dish');

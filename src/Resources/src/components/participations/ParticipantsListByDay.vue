@@ -48,7 +48,6 @@
 
 <script setup lang="ts">
 import { filterParticipantsList } from '@/services/filterParticipantsList';
-import { DialogTitle } from '@headlessui/vue';
 import { useProgress } from '@marcoschulte/vue3-progress';
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';

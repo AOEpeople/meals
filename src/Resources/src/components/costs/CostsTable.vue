@@ -2,6 +2,8 @@
   <Table
     :labels="columnNames"
     :header-text-position="'lfr'"
+    :add-styles="'first:sticky first:left-0 first:bg-[#f4f7f9] last:pl-4'"
+    :overflow-table="true"
   >
     <LazyTableRow
       v-for="[username, costs] in filteredUsers"
@@ -9,7 +11,7 @@
       :min-height="40"
       class="max-h-[62px] border-b-2 border-gray-200 text-right text-[12px] xl:text-[18px]"
     >
-      <td class="py-2 text-left">
+      <td class="sticky left-0 bg-[#f4f7f9] py-2 text-left">
         {{ `${costs.name}, ${costs.firstName}` }}
       </td>
       <td>
@@ -24,7 +26,7 @@
       <td>
         {{ new Intl.NumberFormat(locale, { style: 'currency', currency: 'EUR' }).format(costs.costs['total']) }}
       </td>
-      <td>
+      <td class="min-w-[100px] pl-2">
         <CostsTableActions
           :username="username"
           :balance="costs.costs['total']"

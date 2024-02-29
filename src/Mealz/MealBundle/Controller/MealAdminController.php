@@ -197,7 +197,11 @@ class MealAdminController extends BaseController
 
     private function setParticipationLimit(Meal $mealEntity, $meal): void
     {
-        if (true === isset($meal['participationLimit']) && 0 < $meal['participationLimit']) {
+        if (
+            true === isset($meal['participationLimit']) &&
+            0 < $meal['participationLimit'] &&
+            count($mealEntity->getParticipants()) < $meal['participationLimit']
+        ) {
             $mealEntity->setParticipationLimit($meal['participationLimit']);
         } else {
             $mealEntity->setParticipationLimit(0);

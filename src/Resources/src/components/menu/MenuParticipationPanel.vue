@@ -6,7 +6,7 @@
       </span>
       <XCircleIcon
         class="size-8 cursor-pointer self-end text-white transition-transform hover:scale-[120%] hover:text-[#FAFAFA]"
-        @click="close()"
+        @click="emit('closePanel')"
       />
     </div>
     <MealParticipationInput
@@ -27,8 +27,9 @@ import { XCircleIcon } from '@heroicons/vue/solid';
 
 const props = defineProps<{
   meals: Dictionary<MealDTO[]>;
-  close: () => void;
 }>();
+
+const emit = defineEmits(['closePanel']);
 
 const mealList = computed(() => {
   const keys = Object.keys(props.meals);

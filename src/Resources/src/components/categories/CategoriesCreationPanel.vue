@@ -46,6 +46,8 @@ const props = withDefaults(
   }
 );
 
+const emit = defineEmits(['closePanel']);
+
 const titleDeInput = ref(props.titleDe);
 const titleEnInput = ref(props.titleEn);
 const required = ref(false);
@@ -66,5 +68,6 @@ async function onSubmit() {
     };
     await createCategory(category);
   }
+  emit('closePanel');
 }
 </script>

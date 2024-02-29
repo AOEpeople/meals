@@ -15,7 +15,7 @@ describe('Test FinanceHeader (with controls)', () => {
     });
 
     it('should render correctly', () => {
-        expect(wrapper.find('h1').text()).toBe('01.09.-10.09.2023');
+        expect(wrapper.find('h2').text()).toBe('01.09.-10.09.2023');
         expect(wrapper.findComponent(VueDatePicker).exists()).toBe(true);
     });
 });
@@ -29,7 +29,7 @@ describe('Test FinanceHeader (without controls)', () => {
     });
 
     it('should render correctly', () => {
-        expect(wrapper.find('h1').text()).toBe('01.09.-10.09.2023');
+        expect(wrapper.find('h2').text()).toBe('01.09.-10.09.2023');
         expect(wrapper.findComponent(VueDatePicker).exists()).toBe(false);
     });
 });

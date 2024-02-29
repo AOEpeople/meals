@@ -1,15 +1,14 @@
 <template>
-  <div class="relative z-0 mx-[5%] xl:mx-auto">
+  <div class="mx-[5%] xl:mx-auto">
     <SlotHeader />
     <Table
       v-if="!TimeSlotState.isLoading"
       :labels="[t('slot.slotTitle'), t('slot.slotLimit'), t('slot.slotActions')]"
-      class="my-10"
     >
       <tr
         v-for="(timeSlot, id) in TimeSlotState.timeSlots"
         :key="id"
-        class="relative max-h-[62px] border-b-2 border-gray-200"
+        class="max-h-[62px] border-b-2 border-gray-200"
       >
         <td class="w-[60%]">
           <span class="text-[12px] xl:text-[18px]">

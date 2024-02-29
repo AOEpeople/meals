@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-[5%]">
+  <div class="mx-[5%] xl:mx-auto">
     <EventsHeader v-model="filterInput" />
     <Table
       v-if="loaded"

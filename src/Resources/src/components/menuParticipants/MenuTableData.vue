@@ -68,9 +68,9 @@ const { addParticipantToMeal, removeParticipantFromMeal, hasParticipantBookedMea
 const { getDishById } = useDishes();
 
 const isCombi = computed(() => props.meal.dish === 'combined-dish');
-const bookedCombi = computed(() =>
-  hasParticipantBookedCombiDish(props.dayId, props.participant, mealIdToDishIdDict.get(props.meal.id))
-);
+const bookedCombi = computed(() => {
+  return hasParticipantBookedCombiDish(props.dayId, props.participant, mealIdToDishIdDict.get(props.meal.id));
+});
 const bookedMeal = computed(() => hasParticipantBookedMeal(props.dayId, props.participant, props.meal.id));
 
 function handleClick() {
@@ -92,8 +92,13 @@ function addParticipantOrOpenCombi(meal: SimpleMeal, participant: string, dayId:
 async function closeCombiModal(combiMeals: number[]) {
   openCombi.value = null;
   if (combiMeals !== undefined && combiMeals.length === 2) {
-    const dishSlugs = combiMeals.map((mealId) => getDishById(mealIdToDishIdDict.get(mealId)).slug);
-    await addParticipantToMeal(props.meal.id, props.participant, props.dayId, dishSlugs);
+    const dishSlugs = combiMeals.map((mealId) => {
+      const dishId = mealIdToDishIdDict.get(mealId);
+      return dishId !== -1 ? getDishById(dishId).slug : null;
+    });
+    if (dishSlugs !== null) {
+      await addParticipantToMeal(props.meal.id, props.participant, props.dayId, dishSlugs);
+    }
   }
 }
 </script>

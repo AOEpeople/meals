@@ -19,6 +19,7 @@
         v-slot="{ close }"
         class="absolute z-[101] mx-auto mt-5 opacity-[99.9%]"
         :style="{ transform: `translateX(${translateXComputed})` }"
+        :class="popupStyles"
       >
         <div
           class="rounded-lg bg-[rgb(244,247,249)] shadow-lg ring-1 ring-black/5"
@@ -47,12 +48,14 @@ const props = withDefaults(
     translateXMin?: string;
     breakpointWidth?: number;
     overflowHidden?: boolean;
+    popupStyles?: string;
   }>(),
   {
     translateXMax: 'default',
     translateXMin: 'default',
     breakpointWidth: 1200,
-    overflowHidden: true
+    overflowHidden: true,
+    popupStyles: ''
   }
 );
 

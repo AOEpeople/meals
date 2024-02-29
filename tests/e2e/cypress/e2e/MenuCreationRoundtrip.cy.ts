@@ -229,8 +229,6 @@ describe('Test Creating a Menu', () => {
 
         cy.wait(['@putMenu', '@getWeeks']);
 
-        cy.get('[data-cy="msgClose"]').click();
-
         // Check that all meals and the event are saved
         cy.get('input')
             .eq(0)
@@ -320,8 +318,6 @@ describe('Test Creating a Menu', () => {
         // Add participant
         cy.get('input').first().click().clear().type('finance');
         cy.get('li').contains('Meals, Finance').click();
-        cy.get('[data-cy="msgClose"]').click();
-        cy.get('h2').contains('Teilnahmen').click();
         cy.get('table')
             .find('span')
             .contains('Meals, Finance')

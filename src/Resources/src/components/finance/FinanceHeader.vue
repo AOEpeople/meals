@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="showControls === true"
-    class="mb-4 flex items-center gap-5 align-middle"
+    class="mb-8 flex items-center gap-5 align-middle"
   >
     <VueDatePicker
       v-model="date"
@@ -13,9 +13,9 @@
     />
   </div>
   <div class="grid grid-rows-1 items-center xl:my-[24px] xl:grid-cols-2">
-    <h1 class="m-0 text-center xl:justify-self-start">
+    <h2 class="m-0 text-center max-[420px]:text-[24px] xl:justify-self-start">
       {{ dateRange }}
-    </h1>
+    </h2>
     <a
       v-if="showControls === true"
       class="cursor-pointer justify-self-end text-primary hover:text-secondary"

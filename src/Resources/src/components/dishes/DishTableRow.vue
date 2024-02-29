@@ -5,7 +5,7 @@
   >
     <td
       colspan="1"
-      class="w-[50%] py-2"
+      class="sticky left-0 w-[50%] bg-[#f4f7f9] py-2"
     >
       <span class="text-[12px] xl:text-[18px]">
         {{ locale === 'en' ? dish.titleEn : dish.titleDe }}
@@ -38,7 +38,7 @@
   >
     <td
       colspan="1"
-      class="w-[50%] py-2 pl-4"
+      class="sticky left-0 w-[50%] bg-[#f4f7f9] py-2 pl-4"
     >
       <span class="text-[12px] xl:text-[18px]">
         {{ locale === 'en' ? variation.titleEn : variation.titleDe }}

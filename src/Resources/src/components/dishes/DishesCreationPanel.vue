@@ -91,6 +91,8 @@ const props = withDefaults(
   }
 );
 
+const emit = defineEmits(['closePanel']);
+
 onMounted(async () => {
   await fetchCategories();
 });
@@ -113,6 +115,7 @@ async function onSubmit() {
   } else {
     await createDish(createDishDtoObject());
   }
+  emit('closePanel');
 }
 
 function createDishDtoObject() {

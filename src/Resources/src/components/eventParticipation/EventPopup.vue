@@ -71,7 +71,7 @@ const props = withDefaults(
 );
 
 const showParticipations = ref(false);
-const participations = ref([]);
+const participations = ref<string[]>([]);
 const isLoading = ref(false);
 
 watch(showParticipations, async () => {

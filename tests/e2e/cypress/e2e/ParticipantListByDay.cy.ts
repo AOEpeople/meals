@@ -113,7 +113,7 @@ describe("", () => {
 
   it ("should be scrollable for more than 20 participants" ,() => {
     // intercepts the api call, so far only works with a hard coded date, needs to be changed
-    cy.intercept('GET', '**/api/participations/day/2024-03-04*', { fixture: 'participantsList.json', statusCode: 200 }).as('getListData');
+    cy.intercept('GET', '**/api/participations/day/2024-03-04*', { fixture: 'participantsListFull.json', statusCode: 200 }).as('getListData');
     // opens the modal
     cy.get('h2')
       .contains('Nächste Woche')
@@ -125,6 +125,32 @@ describe("", () => {
       .find('svg')
       .eq(0)
       .click()
+      .wait(10)
+      // scroll doesn't work
       cy.scrollTo('bottom')
+  })
+
+  it ("should show message when participant list is empty" ,() => {
+    // intercepts the api call, so far only works with a hard coded date, needs to be changed
+    cy.intercept('GET', '**/api/participations/day/2024-03-04*', { fixture: 'participantsListEmpty.json', statusCode: 200 }).as('getListData');
+    // opens the modal
+    cy.get('h2')
+      .contains('Nächste Woche')
+      .parent()
+      .parent()
+      .find('span')
+      .contains('Montag')
+      .parent()
+      .find('svg')
+      .eq(0)
+      .click()
+      cy.get('title')
+      .contains('Teilnahmen am Montag')
+      .parent()
+      .parent()
+      .find('table')
+      .eq(0)
+      .find('div')
+      .contains('Heute gibt es keine Teilnehmer.')
   })
 });

@@ -6,7 +6,51 @@ describe("", () => {
     cy.visitMeals();
   });
 
-  it("should open the modal and click the button", () => {
+  it("should close the modal when button is clicked", () =>{
+    // opens the modal
+    cy.get('h2')
+      .contains('Nächste Woche')
+      .parent()
+      .parent()
+      .find('span')
+      .contains('Montag')
+      .parent()
+      .find('svg')
+      .eq(0)
+      .click()
+      // closes the modal when button is clicked
+      cy.get('title')
+      .contains('Teilnahmen am Montag')
+      .parent()
+      .parent()
+      .parent()
+      .find('svg')
+      .eq(0)
+      .click()
+})
+  it("should close the modal when outside the modal is clicked", () =>{
+    // opens the modal
+    cy.get('h2')
+      .contains('Nächste Woche')
+      .parent()
+      .parent()
+      .find('span')
+      .contains('Montag')
+      .parent()
+      .find('svg')
+      .eq(0)
+      .click()
+      // closes the modal when environment is clicked
+      cy.get('title')
+      .contains('Teilnahmen am Montag')
+      .parent()
+      .parent()
+      .parent()
+      .parent()
+      .click()
+  })
+
+  it("should book Kochomi and filter for her", () => {
     // books kochomi in for a meal if not already booked
     cy.get('h2')
       .contains('Nächste Woche')
@@ -52,7 +96,7 @@ describe("", () => {
       .find('div')
       .contains('Kochomi Meals')
       .should('exist')
-      
+
     // checks that Kochomi is not in the filter if filter input doesn't include her
     cy.get('title')
       .contains('Teilnahmen am Montag')
@@ -66,4 +110,5 @@ describe("", () => {
       .find('div')
       .should('not.exist')
   })
-})
+});
+

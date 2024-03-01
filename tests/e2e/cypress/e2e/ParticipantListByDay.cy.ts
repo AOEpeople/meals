@@ -6,7 +6,7 @@ describe("", () => {
     cy.visitMeals();
   });
 
-  it("should close the modal when button is clicked", () =>{
+  it ("should close the modal when button is clicked", () => {
     // opens the modal
     cy.get('h2')
       .contains('Nächste Woche')
@@ -28,7 +28,7 @@ describe("", () => {
       .eq(0)
       .click()
 })
-  it("should close the modal when outside the modal is clicked", () =>{
+  it ("should close the modal when outside the modal is clicked", () => {
     // opens the modal
     cy.get('h2')
       .contains('Nächste Woche')
@@ -50,7 +50,7 @@ describe("", () => {
       .click()
   })
 
-  it("should book Kochomi and filter for her", () => {
+  it ("should book Kochomi and filter for her", () => {
     // books kochomi in for a meal if not already booked
     cy.get('h2')
       .contains('Nächste Woche')
@@ -110,5 +110,21 @@ describe("", () => {
       .find('div')
       .should('not.exist')
   })
-});
 
+  it ("should be scrollable for more than 20 participants" ,() => {
+    // intercepts the api call, so far only works with a hard coded date, needs to be changed
+    cy.intercept('GET', '**/api/participations/day/2024-03-04*', { fixture: 'participantsList.json', statusCode: 200 }).as('getListData');
+    // opens the modal
+    cy.get('h2')
+      .contains('Nächste Woche')
+      .parent()
+      .parent()
+      .find('span')
+      .contains('Montag')
+      .parent()
+      .find('svg')
+      .eq(0)
+      .click()
+      cy.scrollTo('bottom')
+  })
+});

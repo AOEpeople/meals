@@ -11,7 +11,7 @@ interface ParticipantState {
 
 export function filterParticipantsList(date: string){
 
-  const { listData } = useParticipationsListData(date);
+  const {listData } = useParticipationsListData(date);
   const participations  = reactive<ParticipantState>({
     participants: listData,
     filterValue: '',

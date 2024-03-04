@@ -5,11 +5,11 @@
     <div
       :class="[0 ? 'border-gray-300' : 'border-gray-200', 'border-b', 'flex', 'items-center', 'gap-4', 'pb-2.5', 'h-12']"
     >
-      <DialogTitle
+      <title
         class="inline-block h-6 flex-none align-middle text-[11px] font-bold uppercase tracking-[1.5px] text-primary"
       >
         {{ t('printList.title') }} {{ dateString }}
-      </DialogTitle>
+      </title>
       <FilterInput
         v-model="filterInput"
         :label-text="t('menu.search')"
@@ -48,7 +48,6 @@
 
 <script setup lang="ts">
 import { filterParticipantsList } from '@/services/filterParticipantsList';
-import { DialogTitle } from '@headlessui/vue';
 import { useProgress } from '@marcoschulte/vue3-progress';
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -65,7 +64,6 @@ const props = defineProps<{
 
 const { filteredParticipants, setFilter } = filterParticipantsList(props.date);
 const { t } = useI18n();
-
 const filterInput = ref('');
 
 watch(

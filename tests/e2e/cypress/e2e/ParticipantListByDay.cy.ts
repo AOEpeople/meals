@@ -1,3 +1,7 @@
+import dayjs = require('dayjs')
+var weekday = require('dayjs/plugin/weekday')
+dayjs.extend(weekday)
+
 describe("", () => {
   beforeEach(() => {
     cy.resetDB();
@@ -111,9 +115,11 @@ describe("", () => {
       .should('not.exist')
   })
 
+  const nextMonday = dayjs().weekday(7) // next Monday
+
   it ("should be scrollable for more than 20 participants" ,() => {
-    // intercepts the api call, so far only works with a hard coded date, needs to be changed
-    cy.intercept('GET', '**/api/participations/day/2024-03-04*', { fixture: 'participantsListFull.json', statusCode: 200 }).as('getListData');
+    // intercepts the api call
+    cy.intercept('GET', '**/api/participations/day/{nextMonday}*', { fixture: 'participantsListFull.json', statusCode: 200 }).as('getListData');
     // opens the modal
     cy.get('h2')
       .contains('Nächste Woche')
@@ -131,8 +137,8 @@ describe("", () => {
   })
 
   it ("should show message when participant list is empty" ,() => {
-    // intercepts the api call, so far only works with a hard coded date, needs to be changed
-    cy.intercept('GET', '**/api/participations/day/2024-03-04*', { fixture: 'participantsListEmpty.json', statusCode: 200 }).as('getListData');
+    // intercepts the api call
+    cy.intercept('GET', '**/api/participations/day/{nextMonday}*', { fixture: 'participantsListEmpty.json', statusCode: 200 }).as('getListData');
     // opens the modal
     cy.get('h2')
       .contains('Nächste Woche')

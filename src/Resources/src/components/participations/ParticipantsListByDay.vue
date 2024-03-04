@@ -1,6 +1,6 @@
 <template>
   <div
-    class="grid grid-cols-1 divide-y"
+    class="grid max-h-96 grid-cols-1 divide-y"
   >
     <div
       :class="[0 ? 'border-gray-300' : 'border-gray-200', 'border-b', 'flex', 'items-center', 'gap-4', 'pb-2.5', 'h-12']"
@@ -19,7 +19,7 @@
     </div>
 
     <table
-      :class="'w-full overflow-auto'"
+      :class="'w-full, overflow-y-scroll, scroll-m-0.5'"
     >
       <tbody>
         <template

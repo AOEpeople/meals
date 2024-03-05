@@ -48,7 +48,7 @@
 
 {% block body %}{% endblock %}
 
-<script src="{{ assets_server }}/static/vendors.js"></script>
-<script src="{{ assets_server }}/static/app.js"></script>
+<script src="{{ assets_server }}{{ asset('static/vendors.js') }}"></script>
+<script src="{{ assets_server }}{{ asset('static/app.js') }}"></script>
 </body>
 </html>

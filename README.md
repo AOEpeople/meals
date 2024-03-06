@@ -30,7 +30,7 @@ In your transaction history you also can pay your debts with PayPal.
 Admin has access to all user features as well.
 
 ### Menu (List of weeks)
-**Route:** /menu
+**Route:** /weeks
 **Available at:** Choose "Menu" in admin navigation bar.
 **Actions:** Create new week and edit existing ones.
 
@@ -39,13 +39,22 @@ List of current and upcoming weeks. Already created / edited weeks are green.
 Weeks which haven't been created yet, are displayed with a grey background color.
 
 ### Menu (Week detail view)
-**Route:** /menu/{YYYY}W{KW}/new oder /menu/{week-id}/edit
+**Route:** /menu/{week-id}
 **Available at:** Choose "Menu" in admin navigation bar and click on one of the listed weeks.
 **Actions:** Disable whole week or some days.
 
 **Description:**
 Here you can select the desired dishes for the selected week.
 Additionally, you can disable some days or the whole week in case of (public) holiday.
+
+### Menu (Participations detail view)
+**Route:** /participations/{week-id}/edit
+**Available at:** Choose "participations" in the Menu
+**Actions:** Manage the participations of users
+
+**Description:**
+Lists all currently participating users for the menu of the week and their respective meals.
+You can change their filter them, change their participations and add currently not participating users.
 
 ### Dishes
 **Route:** /dish

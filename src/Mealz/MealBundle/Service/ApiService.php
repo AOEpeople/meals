@@ -135,6 +135,37 @@ class ApiService
         ];
     }
 
+    public function hasCombiReachedLimit(Day $day)
+    {
+        $hasReachedLimit = false;
+        $mealReachedLimits = [];
+        /** @var Meal $meal */
+        foreach ($day->getMeals() as $meal) {
+            $parent = $meal->getDish()->getParent();
+            if (null !== $parent) {
+                $mealReachedLimits[$parent->getId()] = isset($mealReachedLimits[$parent->getId()]) ?
+                    $meal->hasReachedParticipationLimit() && $mealReachedLimits[$parent->getId()] :
+                    $meal->hasReachedParticipationLimit();
+            }
+            $mealReachedLimits[$meal->getDish()->getId()] = $meal->hasReachedParticipationLimit();
+        }
+
+        foreach ($mealReachedLimits as $reachedLimit) {
+            $hasReachedLimit = $reachedLimit || $hasReachedLimit;
+        }
+
+        return $hasReachedLimit;
+    }
+
+    public function isMealOpen(Meal $meal)
+    {
+        return false === $meal->isLocked() &&
+            true === $meal->isOpen() &&
+            false === $meal->hasReachedParticipationLimit() &&
+            (false === $meal->isCombinedMeal() ||
+            false === $this->hasCombiReachedLimit($meal->getDay()));
+    }
+
     private function getEventParticipants(Day $day): array
     {
         return $this->eventPartSrv->getParticipants($day);

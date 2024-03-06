@@ -1,4 +1,4 @@
-![Meals app screenshot](https://raw.githubusercontent.com/AOEpeople/meals/master/src/Resources/images/meals_screenshot.png)
+![Meals app screenshot](https://raw.githubusercontent.com/AOEpeople/meals/main/src/Resources/images/meals_screenshot.png)
 
 # 🍽 [AOEpeople/meals](https://github.com/AOEpeople/meals)
 
@@ -11,10 +11,10 @@
 
 ## Features (User)
 
-### Meal enrollment
-Sign in with your login credentials and select your preferred meals on landing page.
+### Meal / event enrollment
+Sign in with your login credentials and select your preferred meals / events on landing page.
 
-### Invite guest for a meal
+### Invite guest for a meal / event
 As a logged-in user, you will see small share icon on each day in a week.
 You can send your guest the link, and he will be able to enroll for a particular day giving his First/Last name and Company information.
 
@@ -30,7 +30,7 @@ In your transaction history you also can pay your debts with PayPal.
 Admin has access to all user features as well.
 
 ### Menu (List of weeks)
-**Route:** /menu
+**Route:** /weeks
 **Available at:** Choose "Menu" in admin navigation bar.
 **Actions:** Create new week and edit existing ones.
 
@@ -39,13 +39,22 @@ List of current and upcoming weeks. Already created / edited weeks are green.
 Weeks which haven't been created yet, are displayed with a grey background color.
 
 ### Menu (Week detail view)
-**Route:** /menu/{YYYY}W{KW}/new oder /menu/{week-id}/edit
+**Route:** /menu/{week-id}
 **Available at:** Choose "Menu" in admin navigation bar and click on one of the listed weeks.
 **Actions:** Disable whole week or some days.
 
 **Description:**
 Here you can select the desired dishes for the selected week.
 Additionally, you can disable some days or the whole week in case of (public) holiday.
+
+### Menu (Participations detail view)
+**Route:** /participations/{week-id}/edit
+**Available at:** Choose "participations" in the Menu
+**Actions:** Manage the participations of users
+
+**Description:**
+Lists all currently participating users for the menu of the week and their respective meals.
+You can change their filter them, change their participations and add currently not participating users.
 
 ### Dishes
 **Route:** /dish
@@ -70,8 +79,18 @@ If you click on "ADD VARIATION" you can add new variation to some Dish.
 Lists all existing (dish) categories. You can edit and delete them.
 If you click on "CREATE CATEGORY" you can create a new one.
 
+### Timeslots
+**Route:** /time-slots
+**Available at:** Choose "Timeslot" in admin navigation bar.
+**Actions:** Activate, create, edit and delete timeslots.
+
+### Events
+**Route:** /events
+**Available at:** Choose "Events" in the admin navigation bar.
+**Actions:** Search, create, edit and delete events
+
 ### Costs
-**Route:** /print/costsheet
+**Route:** /costs
 **Available at:** Choose "Costs" in admin navigation bar.
 **Actions:** Book transaction for user, "CASH REGISTER" (Accounting book)
 
@@ -84,7 +103,7 @@ Also, you can request an account settlement if an employee leaves. You can find 
 The log for account settlements is in the **app/logs** Folder. If the account settlement is successful all future meal bookings that are associated with this account, will be canceled.
 
 ### Accounting book
-**Route:** /accounting/book
+**Route:** /cash-register
 **Available at:** Choose "Costs" in admin navigation bar. Click on button "CASH REGISTER".
 
 **Description:**
@@ -95,8 +114,7 @@ Lists all transactions booked for users in the last month.
 ### General
 Finance has access to all user features and the finance tab.
 
-### Dish variations
-**Route:** /api/accounting/book/finance/list
+**Route:** /finance
 **Available at:** Choose "Finance" in finance navigation bar.
 **Actions** Select Date to list all transaction and export as pdf.
 

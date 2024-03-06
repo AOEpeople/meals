@@ -259,6 +259,10 @@ class ApiController extends BaseController
 
         $reachedLimit = $meal->getParticipationLimit() > 0.0 ? $participationCount >= $meal->getParticipationLimit() : false;
 
+        if ($meal->isCombinedMeal()) {
+            $reachedLimit = $this->apiSrv->hasCombiReachedLimit($meal->getDay());
+        }
+
         return [
             'title' => [
                 'en' => $meal->getDish()->getTitleEn(),
@@ -314,7 +318,7 @@ class ApiController extends BaseController
                 return 'tradeable';
             }
         }
-        if (false === $meal->isLocked() && true === $meal->isOpen() && false === $meal->hasReachedParticipationLimit()) {
+        if ($this->apiSrv->isMealOpen($meal)) {
             return 'open';
         }
 

@@ -1,4 +1,4 @@
-![Meals app screenshot](https://raw.githubusercontent.com/AOEpeople/meals/master/src/Resources/images/meals_screenshot.png)
+![Meals app screenshot](https://raw.githubusercontent.com/AOEpeople/meals/main/src/Resources/images/meals_screenshot.png)
 
 # 🍽 [AOEpeople/meals](https://github.com/AOEpeople/meals)
 
@@ -11,10 +11,10 @@
 
 ## Features (User)
 
-### Meal enrollment
-Sign in with your login credentials and select your preferred meals on landing page.
+### Meal / event enrollment
+Sign in with your login credentials and select your preferred meals / events on landing page.
 
-### Invite guest for a meal
+### Invite guest for a meal / event
 As a logged-in user, you will see small share icon on each day in a week.
 You can send your guest the link, and he will be able to enroll for a particular day giving his First/Last name and Company information.
 
@@ -70,8 +70,18 @@ If you click on "ADD VARIATION" you can add new variation to some Dish.
 Lists all existing (dish) categories. You can edit and delete them.
 If you click on "CREATE CATEGORY" you can create a new one.
 
+### Timeslots
+**Route:** /time-slots
+**Available at:** Choose "Timeslot" in admin navigation bar.
+**Actions:** Activate, create, edit and delete timeslots.
+
+### Events
+**Route:** /events
+**Available at:** Choose "Events" in the admin navigation bar.
+**Actions:** Search, create, edit and delete events
+
 ### Costs
-**Route:** /print/costsheet
+**Route:** /costs
 **Available at:** Choose "Costs" in admin navigation bar.
 **Actions:** Book transaction for user, "CASH REGISTER" (Accounting book)
 
@@ -84,7 +94,7 @@ Also, you can request an account settlement if an employee leaves. You can find 
 The log for account settlements is in the **app/logs** Folder. If the account settlement is successful all future meal bookings that are associated with this account, will be canceled.
 
 ### Accounting book
-**Route:** /accounting/book
+**Route:** /cash-register
 **Available at:** Choose "Costs" in admin navigation bar. Click on button "CASH REGISTER".
 
 **Description:**
@@ -95,8 +105,7 @@ Lists all transactions booked for users in the last month.
 ### General
 Finance has access to all user features and the finance tab.
 
-### Dish variations
-**Route:** /api/accounting/book/finance/list
+**Route:** /finance
 **Available at:** Choose "Finance" in finance navigation bar.
 **Actions** Select Date to list all transaction and export as pdf.
 

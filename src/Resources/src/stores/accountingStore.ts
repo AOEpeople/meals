@@ -37,15 +37,15 @@ function isTransactionHistory(transactionHistory: ITransactionHistory): transact
 
         return (
             ((lastMonth !== null &&
-            lastMonth !== undefined &&
-            typeof (transactionHistory as ITransactionHistory).lastMonth === 'string' &&
-            isUserTransaction(lastMonth) === true) ||
-            Object.values(transactionHistory.usersLastMonth).length === 0) &&
+                lastMonth !== undefined &&
+                typeof (transactionHistory as ITransactionHistory).lastMonth === 'string' &&
+                isUserTransaction(lastMonth) === true) ||
+                Object.values(transactionHistory.usersLastMonth).length === 0) &&
             ((thisMonth !== null &&
-            thisMonth !== undefined &&
-            typeof (transactionHistory as ITransactionHistory).thisMonth === 'string' &&
-            isUserTransaction(thisMonth) === true) ||
-            Object.values(transactionHistory.usersThisMonth).length === 0)
+                thisMonth !== undefined &&
+                typeof (transactionHistory as ITransactionHistory).thisMonth === 'string' &&
+                isUserTransaction(thisMonth) === true) ||
+                Object.values(transactionHistory.usersThisMonth).length === 0)
         );
     }
 

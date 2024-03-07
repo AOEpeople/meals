@@ -44,7 +44,7 @@ class ParticipationService
     }
 
     /**
-     * @psalm-return array{participant: Participant, offerer: Participant|null, slot: Slot|null}|null
+     * @psalm-return array{participant: Participant, offerer: Profile|null, slot: Slot|null}|null
      *
      * @throws ParticipationException
      */
@@ -111,7 +111,7 @@ class ParticipationService
     /**
      * Reassigns $meal - offered by a participant - to $profile.
      *
-     * @psalm-return array{participant: Participant, offerer: Participant, slot: Slot|null}|null
+     * @psalm-return array{participant: Participant, offerer: Profile, slot: Slot|null}|null
      */
     private function reassignOfferedMeal(Meal $meal, Profile $profile, array $dishSlugs = []): ?array
     {

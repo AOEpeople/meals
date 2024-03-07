@@ -26,7 +26,7 @@
     "@paypal/paypal-js": "^5.0.6",
     "@vuepic/vue-datepicker": "^5.4.0",
     "@vueuse/core": "^10.6.1",
-    "axios": "^0.27.2",
+    "axios": "^0.28.0",
     "core-js": "^3.8.3",
     "datatables.net": "^1.11",
     "dotenv-webpack": "^7.1.0",

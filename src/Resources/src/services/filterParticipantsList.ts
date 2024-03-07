@@ -24,15 +24,10 @@ export function filterParticipantsList(date: string){
   }
 
   const filteredParticipants = computed(() => {
-    if (participations.participants.length===0){
-      return ["noParticipants"]
-    }
-    console.log(participations.participants);
     return participations.participants.filter(participant => participantsContainString(participant, participations.filterValue));
   });
 
   function participantsContainString(participant: string, filterInput: string) {
-    console.log(filterInput);
     return (
       participant.toLowerCase().includes(filterInput.toLowerCase())
     );

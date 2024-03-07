@@ -1,5 +1,5 @@
 import useApi from '@/api/api';
-import { onMounted, reactive, readonly, ref } from 'vue';
+import { onMounted, onUnmounted, reactive, readonly, ref } from 'vue';
 import type { Dictionary } from '../../types/types';
 import type { DateTime } from '@/api/getDashboardData';
 

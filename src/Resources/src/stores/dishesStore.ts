@@ -6,12 +6,13 @@ import postCreateDish, { CreateDishDTO } from '@/api/postCreateDish';
 import postCreateDishVariation, { CreateDishVariationDTO } from '@/api/postCreateDishVariation';
 import putDishUpdate from '@/api/putDishUpdate';
 import putDishVariationUpdate from '@/api/putDishVariationUpdate';
-import { FlashMessageType } from '@/enums/FlashMessage';
 import { isMessage } from '@/interfaces/IMessage';
 import useFlashMessage from '@/services/useFlashMessage';
 import { FlashMessageType } from '@/enums/FlashMessage';
 import { refThrottled } from '@vueuse/core';
 import getDishesForCombi from '@/api/getDishesForCombi';
+import { useCategories } from './categoriesStore';
+import { isResponseArrayOkay, isResponseObjectOkay } from '@/api/isResponseOkay';
 
 export interface Dish {
     id: number;

@@ -10,7 +10,7 @@ const listDataState = ref([])
  * @param date
  * @returns list of participants
  */
-export async function useParticipationsListData(date: string){
+export function useParticipationsListData(date: string){
 
     const loaded = ref(false)
     let useParticipationsError = false

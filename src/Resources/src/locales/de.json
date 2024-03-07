@@ -200,7 +200,7 @@
       "participations": {
         "added": "Ein Benutzer wurde zu einer Mahlzeit hinzugefügt.",
         "removed": "Ein Benutzer wurde aus einer Mahlzeit entfernt.",
-        "no": "Heute gibt es keine Teilnehmer."
+        "no": "Keine Teilnehmer gefunden."
       },
       "timeslot": {
         "created": "Der Zeitslot wurde erfolgreich erstellt.",

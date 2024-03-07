@@ -200,7 +200,7 @@
       "participations": {
         "added": "A user was successfully added a meal.",
         "removed": "A user was succefully removed fromm a meal.",
-        "no": "No participations today."
+        "no": "No participations found."
       },
       "timeslot": {
         "created": "The timeslot was successfully created.",

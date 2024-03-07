@@ -1,12 +1,13 @@
 <template>
   <div
-    class="grid grid-cols-1 divide-y"
+    class="grid max-h-96"
   >
     <div
-      :class="[0 ? 'border-gray-300' : 'border-gray-200', 'border-b', 'flex', 'items-center', 'gap-4', 'pb-2.5', 'h-12']"
+      class="padding-0 grid grid-cols-1 grid-rows-2 gap-1 sm:grid-cols-2 sm:grid-rows-1"
+      :class="[0 ? 'border-gray-300' : 'border-gray-200', 'border-b', 'sm:items-center', 'sm:gap-4', 'sm:pb-2.5']"
     >
       <DialogTitle
-        class="inline-block h-6 flex-none align-middle text-[11px] font-bold uppercase tracking-[1.5px] text-primary"
+        class="cols-start-1 margin-0 sm:margin=1.5 text-[7pt] font-bold uppercase tracking-[1.5px] text-primary sm:inline-block sm:h-6 sm:align-middle"
       >
         {{ t('dashboard.print') }}
       </DialogTitle>
@@ -14,12 +15,13 @@
         v-model="filterInput"
         :label-text="t('menu.search')"
         :label-visible="false"
-        class="col-span-3 row-start-2 mr-8 justify-self-center min-[400px]:grow sm:col-span-1 sm:col-start-1 sm:justify-self-start"
+        class="col-span-1 col-start-1 row-start-2 sm:min-[400px]:grow sm:col-start-2 sm:row-start-1 sm:mr-8 sm:justify-self-center"
       />
     </div>
 
+
     <table
-      :class="'w-full overflow-auto'"
+      :class="'w-full overflow-y-scroll scroll-m-0.5'"
     >
       <tbody>
         <template

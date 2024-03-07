@@ -120,7 +120,7 @@ class ParticipationService
             return null;
         }
 
-        $offerer = $participant;
+        $offerer = $participant->getProfile();
 
         $slot = $participant->getSlot();
 

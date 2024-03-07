@@ -1,5 +1,17 @@
 # Changelog
 
+## Version v3.0.2 (2024-03-07)
+
+### Fixes
+
+- fixed psalm return types (9ed6f4b0)
+- fixed a bug that cause offer accepted mails to be send to the participant and not the offerer (307466f9)
+
+### Other
+
+- Bump actions/setup-go from 4 to 5 (b292989e)
+- Bump semver from 7.5.0 to 7.6.0 in /tests/e2e (c9d30d17)
+
 ## Version v2.3.9 (2023-07-06)
 
 ### Fixes

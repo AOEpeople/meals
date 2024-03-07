@@ -6,6 +6,7 @@ use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Event\MealOfferAcceptedEvent;
 use App\Mealz\MealBundle\Event\ParticipationUpdateEvent;
 use App\Mealz\MealBundle\Event\SlotAllocationUpdateEvent;
+use App\Mealz\UserBundle\Entity\Profile;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class EventService
@@ -17,10 +18,10 @@ class EventService
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    public function triggerJoinEvents(Participant $participant, ?Participant $offerer): void
+    public function triggerJoinEvents(Participant $participant, ?Profile $offerer): void
     {
         if (null !== $offerer) {
-            $this->eventDispatcher->dispatch(new MealOfferAcceptedEvent($participant, $offerer->getProfile()));
+            $this->eventDispatcher->dispatch(new MealOfferAcceptedEvent($participant, $offerer));
 
             return;
         }

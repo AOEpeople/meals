@@ -1,7 +1,7 @@
 <template>
   <XIcon
     box="0 0 20 20"
-    class="h-[20px] w-[20px] flex-none fill-primary"
+    class="size-[20px] flex-none fill-primary"
     @mousedown="buttonPressed = true"
     @mouseup="buttonPressed = false"
   />
@@ -16,6 +16,9 @@ const buttonPressed = ref(false);
 
 <style scoped>
 .light-shadow {
-  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0), 0px 0px 0px 0px rgba(0, 0, 0, 0) , 0px 3px 0 0 rgba(192, 210, 226, 1);
+  box-shadow:
+    0px 0px 0px 0px rgba(0, 0, 0, 0),
+    0px 0px 0px 0px rgba(0, 0, 0, 0),
+    0px 3px 0 0 rgba(192, 210, 226, 1);
 }
 </style>

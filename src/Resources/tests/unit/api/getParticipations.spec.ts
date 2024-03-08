@@ -20,9 +20,8 @@ useApi.mockReturnValue(mockedReturnValue);
 
 describe('Test getParticipations', () => {
     it('should return a list of participations', async () => {
-        const { participations, error } = await getParticipations(1);
+        const { error } = await getParticipations(1);
 
         expect(error.value).toBeFalsy();
-       // expect(participations.value).toEqual(Participations);
     });
 });

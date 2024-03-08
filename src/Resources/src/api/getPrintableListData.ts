@@ -32,9 +32,8 @@ const listDataState = reactive<ListData>({
  * @param date
  * @returns list of participants
  */
-export function usePrintableListData(date?: string){
-
-    const loaded = ref(false)
+export function usePrintableListData(date?: string) {
+    const loaded = ref(false);
 
     onMounted(async () => {
         await getListData();
@@ -45,9 +44,13 @@ export function usePrintableListData(date?: string){
     });
 
     async function getListData() {
-        const { response: listData, request, error } = useApi<ListData>(
+        const {
+            response: listData,
+            request,
+            error
+        } = useApi<ListData>(
             'GET',
-    (date !== undefined && date !== null )? `/api/print/participations/${date}` : '/api/print/participations/'
+            date !== undefined && date !== null ? `/api/print/participations/${date}` : '/api/print/participations/'
         );
 
         if (loaded.value === false) {

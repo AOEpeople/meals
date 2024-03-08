@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="grid max-h-96"
-  >
+  <div class="grid max-h-96">
     <div
       class="padding-0 grid grid-cols-1 grid-rows-2 gap-1 sm:grid-cols-2 sm:grid-rows-1"
       :class="[0 ? 'border-gray-300' : 'border-gray-200', 'border-b', 'sm:items-center', 'sm:gap-4', 'sm:pb-2.5']"
@@ -19,22 +17,15 @@
       />
     </div>
 
-
-    <table
-      :class="'w-full overflow-y-scroll scroll-m-0.5'"
-    >
+    <table :class="'w-full scroll-m-0.5 overflow-y-scroll'">
       <tbody>
         <template
           v-for="(participant, index) in filteredParticipants"
           :key="index"
         >
-          <tr
-            :class="[0 ? 'border-gray-300' : 'border-gray-200', 'border-b']"
-          >
-            <td
-              class="leading- h-6 whitespace-nowrap py-1 text-[12px] font-light text-primary"
-            >
-              <div v-if="participant==='noParticipants'">
+          <tr :class="[0 ? 'border-gray-300' : 'border-gray-200', 'border-b']">
+            <td class="leading- h-6 whitespace-nowrap py-1 text-[12px] font-light text-primary">
+              <div v-if="participant === 'noParticipants'">
                 {{ t('flashMessage.success.participations.no') }}
               </div>
               <div v-else>
@@ -56,10 +47,10 @@ import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import FilterInput from '../misc/FilterInput.vue';
 
-const progress = useProgress().start()
+const progress = useProgress().start();
 
 const props = defineProps<{
-  date: string
+  date: string;
 }>();
 
 const { filteredParticipants, setFilter } = filterParticipantsList(props.date);
@@ -72,5 +63,5 @@ watch(
   () => setFilter(filterInput.value)
 );
 
-progress.finish()
+progress.finish();
 </script>

@@ -1,41 +1,38 @@
-import { useParticipationsListData } from "@/api/getParticipationsByDay";
-import { Ref, computed, reactive } from "vue";
+import { useParticipationsListData } from '@/api/getParticipationsByDay';
+import { Ref, computed, reactive } from 'vue';
 
 interface ParticipantState {
-  participants: Readonly<Ref<readonly string[]>>,
-  filterValue: string,
-  isLoading: boolean,
-  error: string
+    participants: Readonly<Ref<readonly string[]>>;
+    filterValue: string;
+    isLoading: boolean;
+    error: string;
 }
 
+export function filterParticipantsList(date: string) {
+    const { listData } = useParticipationsListData(date);
+    const participations = reactive<ParticipantState>({
+        participants: listData,
+        filterValue: '',
+        isLoading: false,
+        error: ''
+    });
 
-export function filterParticipantsList(date: string){
+    function setFilter(filterStr: string) {
+        participations.filterValue = filterStr;
+    }
 
-  const {listData } = useParticipationsListData(date);
-  const participations  = reactive<ParticipantState>({
-    participants: listData,
-    filterValue: '',
-    isLoading: false,
-    error: ''
-  });
+    const filteredParticipants = computed(() => {
+        return participations.participants.filter((participant) =>
+            participantsContainString(participant, participations.filterValue)
+        );
+    });
 
-  function setFilter(filterStr: string) {
-    participations.filterValue = filterStr;
-  }
+    function participantsContainString(participant: string, filterInput: string) {
+        return participant.toLowerCase().includes(filterInput.toLowerCase());
+    }
 
-  const filteredParticipants = computed(() => {
-    return participations.participants.filter(participant => participantsContainString(participant, participations.filterValue));
-  });
-
-  function participantsContainString(participant: string, filterInput: string) {
-    return (
-      participant.toLowerCase().includes(filterInput.toLowerCase())
-    );
-  }
-
-  return {
-      filteredParticipants,
-      setFilter
-  };
-
+    return {
+        filteredParticipants,
+        setFilter
+    };
 }

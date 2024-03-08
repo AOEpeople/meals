@@ -13,7 +13,7 @@
         v-if="!day.isLocked && !emptyDay && !guestData"
         :dayID="dayID"
         :index="index"
-        class="row-start-1 h-[24px] w-[24px] p-1 text-center"
+        class="row-start-1 size-[24px] p-1 text-center"
         @click="openModal"
       />
       <span
@@ -131,8 +131,8 @@ const isEventDay = day.event !== null;
 async function closeParticipantsModal() {
   openParticipantsModal.value = false;
 }
-function openModal(){
-    // format date (2023-12-23) without time stamp
+function openModal() {
+  // format date (2023-12-23) without time stamp
   date.value = day.date.date.split(' ')[0];
   openParticipantsModal.value = true;
 }

@@ -13,7 +13,7 @@
         v-if="!day.isLocked && !emptyDay && !guestData"
         :dayID="dayID"
         :index="index"
-        class="row-start-1 size-[24px] p-1 text-center"
+        class="hover: row-start-1 size-[24px] cursor-pointer p-1 text-center"
         @click="openModal"
       />
       <span
@@ -31,6 +31,7 @@
         class="row-start-3 w-[24px] pl-[3px] text-center"
       />
       <ParticipantsListModal
+        v-if="openParticipantsModal"
         :openParticipantsModal="openParticipantsModal"
         :date="date"
         @close-dialog="closeParticipantsModal"
@@ -115,7 +116,6 @@ import ParticipantsListModal from './ParticipantsListModal.vue';
 
 const { t, locale } = useI18n();
 const openParticipantsModal = ref<boolean | null>(false);
-const date = ref<string>();
 
 const props = defineProps<{
   weekID?: string;
@@ -128,12 +128,19 @@ const day = props.guestData ? props.guestData : dashboardStore.getDay(props.week
 const weekday = computed(() => translateWeekday(day.date, locale));
 const emptyDay = Object.keys(day.meals).length === 0;
 const isEventDay = day.event !== null;
+const date = computed( () => {
+  if(day===null || day=== undefined){
+    return ""
+  }
+  // format date (2023-12-23) without time stamp
+  return day.date.date.split(' ')[0]
+});
+
 async function closeParticipantsModal() {
   openParticipantsModal.value = false;
 }
+
 function openModal() {
-  // format date (2023-12-23) without time stamp
-  date.value = day.date.date.split(' ')[0];
   openParticipantsModal.value = true;
 }
 </script>

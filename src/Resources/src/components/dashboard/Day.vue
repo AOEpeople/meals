@@ -128,12 +128,12 @@ const day = props.guestData ? props.guestData : dashboardStore.getDay(props.week
 const weekday = computed(() => translateWeekday(day.date, locale));
 const emptyDay = Object.keys(day.meals).length === 0;
 const isEventDay = day.event !== null;
-const date = computed( () => {
-  if(day===null || day=== undefined){
-    return ""
+const date = computed(() => {
+  if (day === null || day === undefined) {
+    return '';
   }
   // format date (2023-12-23) without time stamp
-  return day.date.date.split(' ')[0]
+  return day.date.date.split(' ')[0];
 });
 
 async function closeParticipantsModal() {

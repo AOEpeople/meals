@@ -5,12 +5,13 @@ import putWeekUpdate from '@/api/putWeekUpdate';
 import getDishCount from '@/api/getDishCount';
 import { DayDTO, WeekDTO } from '@/interfaces/DayDTO';
 import { Dictionary } from 'types/types';
-import { reactive, readonly, watch } from 'vue';
+import { reactive, readonly, ref, watch } from 'vue';
 import { isMessage } from '@/interfaces/IMessage';
 import { isResponseArrayOkay } from '@/api/isResponseOkay';
 import getEmptyWeek from '@/api/getEmptyWeek';
 import useFlashMessage from '@/services/useFlashMessage';
 import { FlashMessageType } from '@/enums/FlashMessage';
+import getLockDatesForWeek from '@/api/getLockDatesForWeek';
 
 export interface Week {
     id: number;
@@ -93,6 +94,8 @@ watch(
 );
 
 export function useWeeks() {
+    const lockDates = ref<Dictionary<DateTime> | null>(null);
+
     /**
      * Calls getWeeks() and sets the isLoading flag to true while the request is pending.
      */
@@ -100,6 +103,13 @@ export function useWeeks() {
         WeeksState.isLoading = true;
         await getWeeks();
         WeeksState.isLoading = false;
+    }
+
+    async function fetchLockDatesForWeek(weekId: number) {
+        const { error, response } = await getLockDatesForWeek(weekId);
+        if (error.value === false) {
+            lockDates.value = response.value;
+        }
     }
 
     /**
@@ -291,6 +301,7 @@ export function useWeeks() {
     return {
         WeeksState: readonly(WeeksState),
         MenuCountState: readonly(MenuCountState),
+        lockDates,
         fetchWeeks,
         getDateRangeOfWeek,
         createWeek,
@@ -303,6 +314,7 @@ export function useWeeks() {
         getDayByWeekIdAndDayId,
         isWeek,
         createEmptyWeek,
-        getWeekByCalendarWeek
+        getWeekByCalendarWeek,
+        fetchLockDatesForWeek
     };
 }

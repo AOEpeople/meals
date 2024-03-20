@@ -29,6 +29,7 @@
       </span>
       <MenuLockDatePicker
         :lock-date="modelValue.lockDate"
+        :is-standard-lock-date="isStandardLockDate"
         class="row-start-3"
       />
     </div>
@@ -72,6 +73,8 @@ import MenuParticipationPanel from './MenuParticipationPanel.vue';
 import MenuLockDatePicker from './MenuLockDatePicker.vue';
 import EventInput from './EventInput.vue';
 import { Event, useEvents } from '@/stores/eventsStore';
+import { DateTime } from '@/api/getDashboardData';
+import { Dictionary } from 'types/types';
 
 const { getDishArrayBySlugs, getDishBySlug } = useDishes();
 const { locale, t } = useI18n();
@@ -79,6 +82,7 @@ const { getEventById } = useEvents();
 
 const props = defineProps<{
   modelValue: DayDTO;
+  lockDates: Dictionary<DateTime> | null;
 }>();
 
 const emit = defineEmits(['update:modelValue']);
@@ -113,6 +117,14 @@ const selectedDishes = computed({
   set(value) {
     emit('update:modelValue', value);
   }
+});
+
+const isStandardLockDate = computed(() => {
+  const dayIds = props.lockDates !== null && props.lockDates !== undefined ? Object.keys(props.lockDates) : [];
+  if (dayIds.length > 0 && dayIds.map((id) => String(id)).includes(String(props.modelValue.id))) {
+    return props.lockDates[props.modelValue.id].date === props.modelValue.lockDate.date;
+  }
+  return true;
 });
 
 watch(selectedDishOne, () => {

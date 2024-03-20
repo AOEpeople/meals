@@ -13,6 +13,7 @@
       v-for="(day, index) in menu.days"
       :key="day.id"
       v-model="menu.days[index]"
+      :lockDates="lockDates"
       class="mt-4"
     />
     <LoadingSpinner :loaded="loaded" />
@@ -48,6 +49,7 @@ const { DishesState, fetchDishes } = useDishes();
 const {
   WeeksState,
   MenuCountState,
+  lockDates,
   fetchWeeks,
   getMenuDay,
   getWeekById,
@@ -55,7 +57,8 @@ const {
   getDishCountForWeek,
   getWeekByCalendarWeek,
   getDateRangeOfWeek,
-  createWeek
+  createWeek,
+  fetchLockDatesForWeek
 } = useWeeks();
 const { CategoriesState, fetchCategories } = useCategories();
 const { t } = useI18n();
@@ -109,6 +112,7 @@ onMounted(async () => {
     await getDishCountForWeek();
   }
   await fetchEvents();
+  await fetchLockDatesForWeek(parseWeekId.value);
 
   setUpDaysAndEnabled();
 

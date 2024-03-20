@@ -4,7 +4,10 @@
     :translate-x-min="'0%'"
   >
     <template #button="{ open }">
-      <CalendarIcon class="size-5 cursor-pointer text-white" />
+      <CalendarIcon
+        class="size-5 cursor-pointer"
+        :class="isStandardLockDate ? 'text-white' : 'text-highlight'"
+      />
     </template>
     <template #panel="{ close }">
       <div class="flex flex-col gap-2">
@@ -48,6 +51,7 @@ const { t, locale } = useI18n();
 
 const props = defineProps<{
   lockDate: DateTime;
+  isStandardLockDate: boolean;
 }>();
 
 const date = computed({

@@ -125,14 +125,13 @@ async function handle() {
   // Meal is not locked
   if (
     (mealOrVariation.value.isLocked === false || mealOrVariation.value.mealState === 'tradeable') &&
-    isLocked(String(props.dayID)) === false &&
-    mealOrVariation.value.reachedLimit === false
+    isLocked(String(props.dayID)) === false
   ) {
     addLock(String(props.dayID));
     // User is participating
     if (isParticipating.value) {
       await leaveMeal();
-    } else {
+    } else if (mealOrVariation.value.reachedLimit === false) {
       let slugs = [mealOrVariation.value.dishSlug];
       if (isCombiBox === true) {
         slugs = getDishSlugs();

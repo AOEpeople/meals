@@ -7,13 +7,13 @@ use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Week;
 use App\Mealz\MealBundle\Event\WeekUpdateEvent;
+use App\Mealz\MealBundle\Helper\MealAdminHelper;
 use App\Mealz\MealBundle\Repository\DayRepositoryInterface;
 use App\Mealz\MealBundle\Repository\DishRepositoryInterface;
 use App\Mealz\MealBundle\Repository\MealRepositoryInterface;
 use App\Mealz\MealBundle\Repository\WeekRepositoryInterface;
 use App\Mealz\MealBundle\Service\DayService;
 use App\Mealz\MealBundle\Service\DishService;
-use App\Mealz\MealBundle\Service\EventParticipationService;
 use App\Mealz\MealBundle\Service\WeekService;
 use DateTime;
 use DateTimeZone;
@@ -36,8 +36,8 @@ class MealAdminController extends BaseController
     private DayRepositoryInterface $dayRepository;
     private DayService $dayService;
     private DishService $dishService;
-    private EventParticipationService $eventService;
     private EntityManagerInterface $em;
+    private MealAdminHelper $mealAdminHelper;
 
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
@@ -47,8 +47,8 @@ class MealAdminController extends BaseController
         DayRepositoryInterface $dayRepository,
         DayService $dayService,
         DishService $dishService,
-        EventParticipationService $eventService,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        MealAdminHelper $mealAdminHelper
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->weekRepository = $weekRepository;
@@ -57,8 +57,8 @@ class MealAdminController extends BaseController
         $this->dayRepository = $dayRepository;
         $this->dayService = $dayService;
         $this->dishService = $dishService;
-        $this->eventService = $eventService;
         $this->em = $em;
+        $this->mealAdminHelper = $mealAdminHelper;
     }
 
     public function getWeeks(): JsonResponse
@@ -195,17 +195,17 @@ class MealAdminController extends BaseController
         return new JsonResponse($dishCount, 200);
     }
 
-    private function setParticipationLimit(Meal $mealEntity, $meal): void
+    public function getLockDateTimeForWeek(Week $week): JsonResponse
     {
-        if (
-            true === isset($meal['participationLimit']) &&
-            0 < $meal['participationLimit'] &&
-            count($mealEntity->getParticipants()) <= $meal['participationLimit']
-        ) {
-            $mealEntity->setParticipationLimit($meal['participationLimit']);
-        } else {
-            $mealEntity->setParticipationLimit(0);
+        $dateTimeModifier = $this->getParameter('mealz.lock_toggle_participation_at');
+        $response = [];
+
+        /** @var Day $day */
+        foreach ($week->getDays() as $day) {
+            $response[(string) $day->getId()] = $day->getDateTime()->modify((string) $dateTimeModifier);
         }
+
+        return new JsonResponse($response, 200);
     }
 
     private function handleDay(array $day)
@@ -221,7 +221,7 @@ class MealAdminController extends BaseController
         }
 
         $this->setLockParticipationForDay($dayEntity, $day);
-        $this->eventService->handleEventParticipation($dayEntity, $day['event']);
+        $this->mealAdminHelper->handleEventParticipation($dayEntity, $day['event']);
 
         $mealCollection = $day['meals'];
         /*
@@ -253,7 +253,7 @@ class MealAdminController extends BaseController
         }
 
         $this->setLockParticipationForDay($day, $dayData);
-        $this->eventService->handleEventParticipation($day, $dayData['event']);
+        $this->mealAdminHelper->handleEventParticipation($day, $dayData['event']);
 
         $mealCollection = $dayData['meals'];
         // max 2 main meals allowed
@@ -303,7 +303,7 @@ class MealAdminController extends BaseController
     {
         $mealEntity = new Meal($dishEntity, $dayEntity);
         $mealEntity->setPrice($dishEntity->getPrice());
-        $this->setParticipationLimit($mealEntity, $meal);
+        $this->mealAdminHelper->setParticipationLimit($mealEntity, $meal);
         $dayEntity->addMeal($mealEntity);
     }
 
@@ -311,7 +311,7 @@ class MealAdminController extends BaseController
     {
         $mealEntity = $this->mealRepository->find($meal['mealId']);
 
-        $this->setParticipationLimit($mealEntity, $meal);
+        $this->mealAdminHelper->setParticipationLimit($mealEntity, $meal);
         // check if the requested dish is the same as before
         if ($mealEntity->getDish()->getId() === $dishEntity->getId()) {
             return;

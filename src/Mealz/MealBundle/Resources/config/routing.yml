@@ -118,6 +118,11 @@ MealzMealBundle_api_menu_edit:
     defaults: { _controller: App\Mealz\MealBundle\Controller\MealAdminController::edit }
     methods: [PUT]
 
+MealzMealBundle_api_week_lockDates:
+    path: /api/week/lockdates/{id}
+    defaults: { _controller: App\Mealz\MealBundle\Controller\MealAdminController::getLockDateTimeForWeek }
+    methods: [GET]
+
 MealzMealBundle_api_participant_add:
     path: /api/participation/{profile}/{meal}
     defaults: { _controller: App\Mealz\MealBundle\Controller\ParticipantController::add }

@@ -17,7 +17,7 @@ export default function useApi<T>(method: string, url: string, contentType = 'ap
             headers: { 'content-type': contentType }
         })
             .then((res) => {
-                response.value = res.data;
+                response.value = res.data as T;
             })
             .catch((err) => {
                 error.value = true;

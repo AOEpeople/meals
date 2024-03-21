@@ -180,7 +180,7 @@ class ApiController extends BaseController
     {
         $day = $this->apiSrv->getDayByDate($date);
         if (null === $day) {
-            return new JsonResponse('', 404);
+            return new JsonResponse(['message' => 'Day not found'], 404);
         }
         $list['data'] = $this->participationSrv->getParticipationListBySlots($day);
         $list['day'] = $day->getDateTime();
@@ -192,7 +192,7 @@ class ApiController extends BaseController
     {
         $day = $this->apiSrv->getDayByDate($date);
         if (null === $day) {
-            return new JsonResponse('', 404);
+            return new JsonResponse(['message' => 'Day not found'], 404);
         }
 
         $list = [];

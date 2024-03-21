@@ -1,7 +1,7 @@
 import useApi from '@/api/api';
 import { onMounted, onUnmounted, readonly, ref } from 'vue';
 
-export type ListData = [];
+export type ListData = string[];
 
 const listDataState = ref([]);
 

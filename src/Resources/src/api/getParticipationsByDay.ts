@@ -3,7 +3,7 @@ import { onMounted, onUnmounted, readonly, ref } from 'vue';
 
 export type ListData = string[];
 
-const listDataState = ref([]);
+const listDataState = ref<ListData>([]);
 
 /**
  * if date is passed participants list is specific to that date, if not it returns the list of today's participants

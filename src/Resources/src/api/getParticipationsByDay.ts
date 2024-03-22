@@ -12,7 +12,7 @@ const listDataState = ref<ListData>([]);
  */
 export function useParticipationsListData(date: string) {
     const loaded = ref(false);
-    let useParticipationsError = false;
+    const useParticipationsError = ref(false);
 
     onMounted(async () => {
         await getListData();
@@ -28,7 +28,7 @@ export function useParticipationsListData(date: string) {
         }
 
         const { error, response: listData, request } = useApi<ListData>('GET', `/api/participations/day/${date}`);
-        useParticipationsError = error.value;
+        useParticipationsError.value = error.value;
 
         if (loaded.value === false) {
             await request();

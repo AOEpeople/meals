@@ -10,7 +10,7 @@
       >
         <IconCancel
           :btn-text="t('combiModal.close')"
-          class="absolute right-4 top-4 z-10 flex-1 cursor-pointer"
+          class="absolute right-4 top-6 z-10 flex-1 cursor-pointer"
           @click="closeParticipantsModal(false)"
         />
         <ParticipantsListByDay :date="date" />

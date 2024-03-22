@@ -23,7 +23,7 @@ export function useParticipationsListData(date: string) {
     });
 
     async function getListData() {
-        if (undefined === date) {
+        if (date === undefined) {
             return;
         }
 

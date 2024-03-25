@@ -2,7 +2,7 @@
   <Dialog
     :open="openParticipantsModal"
     class="relative z-50"
-    @close="closeParticipantsModal(false)"
+    @close="closeParticipantsModal()"
   >
     <div class="fixed inset-0 flex items-center justify-center bg-black/30 p-4">
       <DialogPanel
@@ -11,7 +11,7 @@
         <IconCancel
           :btn-text="t('combiModal.close')"
           class="absolute right-4 top-6 z-10 flex-1 cursor-pointer"
-          @click="closeParticipantsModal(false)"
+          @click="closeParticipantsModal()"
         />
         <ParticipantsListByDay :date="date" />
       </DialogPanel>
@@ -34,9 +34,7 @@ defineProps<{
 
 const emit = defineEmits(['closeDialog', 'update:modelValue', 'update:filterValue']);
 
-function closeParticipantsModal(doSubmit: boolean) {
-  if (doSubmit === false) {
+function closeParticipantsModal() {
     emit('closeDialog');
-  }
 }
 </script>

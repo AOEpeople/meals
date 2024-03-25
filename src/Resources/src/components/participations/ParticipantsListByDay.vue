@@ -9,11 +9,11 @@
       >
         {{ t('dashboard.print') }}
       </DialogTitle>
-      <FilterInput
+      <InputLabel
         v-model="filterInput"
         :label-text="t('menu.search')"
         :label-visible="false"
-        class="col-span-1 col-start-1 row-start-2 sm:min-[400px]:grow sm:col-start-2 sm:row-start-1 sm:mr-8 sm:justify-self-center"
+        overwrite-input-style="focus-visible:ring-offset-orange-300 relative flex h-8 w-full items-center rounded-3xl border border-[#B4C1CE] bg-white pl-4 pr-2 text-left text-[12px] leading-5 text-[#9CA3AF] focus:outline-none focus-visible:border-[#FF890E] focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 min-[380px]:pr-10 sm:w-64"
       />
     </div>
 
@@ -45,7 +45,7 @@ import { DialogTitle } from '@headlessui/vue';
 import { useProgress } from '@marcoschulte/vue3-progress';
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import FilterInput from '../misc/FilterInput.vue';
+import InputLabel from '../misc/InputLabel.vue';
 
 const progress = useProgress().start();
 

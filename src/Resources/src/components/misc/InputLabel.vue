@@ -18,7 +18,7 @@
         :placeholder="labelText"
         :min="min"
         :required="required"
-        class="w-full truncate border-none bg-none text-[14px] font-medium text-[#9CA3AF] invalid:border-[#E02927] focus:outline-none"
+        :class="overwriteInputStyle ===''? 'w-full truncate border-none bg-none text-[14px] font-medium text-[#9CA3AF] invalid:border-[#E02927] focus:outline-none': overwriteInputStyle"
       />
       <XIcon
         v-if="value !== '' && xButtonActive === true"
@@ -31,8 +31,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
 import { XIcon } from '@heroicons/vue/solid';
+import { computed } from 'vue';
 
 const props = withDefaults(
   defineProps<{
@@ -43,6 +43,7 @@ const props = withDefaults(
     labelVisible?: boolean;
     required?: boolean;
     xButtonActive?: boolean;
+    overwriteInputStyle?: string;
   }>(),
   {
     labelText: '',
@@ -50,7 +51,8 @@ const props = withDefaults(
     min: 0,
     labelVisible: true,
     required: false,
-    xButtonActive: false
+    xButtonActive: false,
+    overwriteInputStyle: ''
   }
 );
 

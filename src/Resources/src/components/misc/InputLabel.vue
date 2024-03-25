@@ -8,7 +8,11 @@
       {{ labelText }}
     </label>
     <div
-      class="invalid flex h-[46px] w-full flex-row items-center overflow-hidden rounded-full border-2 border-solid border-[#CAD6E1] bg-white px-4 py-2 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2"
+      :class="
+        overwriteInputStyle=== ''
+          ? 'invalid flex h-[46px] w-full flex-row items-center overflow-hidden rounded-full border-2 border-solid border-[#CAD6E1] bg-white px-4 py-2 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2'
+          : overwriteContainerStyles
+      "
     >
       <input
         :id="labelText"
@@ -18,7 +22,11 @@
         :placeholder="labelText"
         :min="min"
         :required="required"
-        :class="overwriteInputStyle ===''? 'w-full truncate border-none bg-none text-[14px] font-medium text-[#9CA3AF] invalid:border-[#E02927] focus:outline-none': overwriteInputStyle"
+        :class="
+          overwriteInputStyle === ''
+            ? 'w-full truncate border-none bg-none text-[14px] font-medium text-[#9CA3AF] invalid:border-[#E02927] focus:outline-none'
+            : overwriteInputStyle
+        "
       />
       <XIcon
         v-if="value !== '' && xButtonActive === true"
@@ -44,6 +52,7 @@ const props = withDefaults(
     required?: boolean;
     xButtonActive?: boolean;
     overwriteInputStyle?: string;
+    overwriteContainerStyles?: string;
   }>(),
   {
     labelText: '',
@@ -52,7 +61,8 @@ const props = withDefaults(
     labelVisible: true,
     required: false,
     xButtonActive: false,
-    overwriteInputStyle: ''
+    overwriteInputStyle: '',
+    overwriteContainerStyle: ''
   }
 );
 

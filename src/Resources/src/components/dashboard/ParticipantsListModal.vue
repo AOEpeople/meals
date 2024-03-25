@@ -4,9 +4,9 @@
     class="relative z-50"
     @close="closeParticipantsModal()"
   >
-    <div class="fixed inset-0 flex items-center justify-center bg-black/30 p-4">
+    <div class="fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.1)] p-4">
       <DialogPanel
-        class="day-shadow relative inset-0 mx-auto h-auto w-max overflow-auto rounded-lg bg-white px-4 pb-4 pt-2.5 text-left drop-shadow-2xl"
+        class="relative inset-0 mx-auto h-auto w-max overflow-auto rounded-lg border-r-8 border-white bg-white px-4 pb-4 pt-2.5 text-left shadow-xl"
       >
         <IconCancel
           :btn-text="t('combiModal.close')"

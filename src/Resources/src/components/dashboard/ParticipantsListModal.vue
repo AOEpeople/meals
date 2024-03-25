@@ -36,6 +36,6 @@ defineProps<{
 const emit = defineEmits(['closeDialog', 'update:modelValue', 'update:filterValue']);
 
 function closeParticipantsModal() {
-    emit('closeDialog');
+  emit('closeDialog');
 }
 </script>

@@ -6,7 +6,7 @@
   >
     <div class="fixed inset-0 flex items-center justify-center bg-[rgba(0,0,0,0.1)] p-4">
       <DialogPanel
-        class="relative inset-0 mx-auto h-auto w-max overflow-auto rounded-lg border-r-8 border-white bg-white px-4 pb-4 pt-2.5 text-left shadow-xl"
+        class="relative inset-0 h-auto max-w-[414px] overflow-auto rounded-lg border-r-8 border-white bg-white px-4 pb-4 pt-2.5 text-left shadow-xl"
       >
         <XIcon
           box="0 0 20 20"

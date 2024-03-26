@@ -22,7 +22,7 @@ describe('Test getParticipations', () => {
     it('should return a list of participations', async () => {
         const { useParticipationsError, listData, getListData } = await useParticipationsListData('2024-01-16');
         await getListData();
-        expect(useParticipationsError).toBeFalsy();
+        expect(useParticipationsError.value).toBeFalsy();
         expect(listData.value).toEqual(Participations);
     });
 });

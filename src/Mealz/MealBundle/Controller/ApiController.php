@@ -176,6 +176,37 @@ class ApiController extends BaseController
         return new JsonResponse($list, 200);
     }
 
+    public function listByDate(DateTime $date): JSONResponse
+    {
+        $day = $this->apiSrv->getDayByDate($date);
+        if (null === $day) {
+            return new JsonResponse(['message' => 'Day not found'], 404);
+        }
+        $list['data'] = $this->participationSrv->getParticipationListBySlots($day);
+        $list['day'] = $day->getDateTime();
+
+        return new JsonResponse($list, 200);
+    }
+
+    public function listParticipantsByDate(DateTime $date): JSONResponse
+    {
+        $day = $this->apiSrv->getDayByDate($date);
+        if (null === $day) {
+            return new JsonResponse(['message' => 'Day not found'], 404);
+        }
+
+        $list = [];
+        $data = $this->participationSrv->getParticipationList($day);
+
+        foreach ($data as $participant) {
+            $list[] = $participant->getProfile()->getFirstName() . ' ' . $participant->getProfile()->getName();
+        }
+
+        $uniqueArray = array_unique($list);
+
+        return new JsonResponse(array_values($uniqueArray), 200);
+    }
+
     private function addSlots(array &$slotArray, array $slots, Day $day, ?int $activeParticipations): void
     {
         $disabled = false;

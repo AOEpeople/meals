@@ -6,12 +6,19 @@
       class="relative col-span-1 col-start-1 row-span-2 row-start-1 grid w-[24px] justify-center gap-2 rounded-l-[5px] py-[2px] print:bg-primary-2"
       :class="[
         day.isLocked || !day.isEnabled || (emptyDay && !isEventDay) ? 'bg-[#80909F]' : 'bg-primary-2',
-        !day.isLocked && !emptyDay && !guestData ? 'grid-rows-[minmax(0,1fr)_24px]' : ''
+        !day.isLocked && !emptyDay && !guestData ? 'grid-rows-[24px_minmax(0,1fr)_24px]' : ''
       ]"
     >
+      <InformationButton
+        v-if="!day.isLocked && !emptyDay && !guestData"
+        :dayID="dayID"
+        :index="index"
+        class="hover: row-start-1 size-[24px] cursor-pointer p-1 text-center"
+        @click="openModal"
+      />
       <span
-        class="row-start-1 rotate-180 place-self-center text-center text-[11px] font-bold uppercase leading-4 tracking-[3px] text-white [writing-mode:vertical-lr]"
-        :class="day.isLocked || emptyDay || guestData ? 'py-[24px]' : 'pb-[24px]'"
+        class="row-start-2 rotate-180 place-self-center text-center text-[11px] font-bold uppercase leading-4 tracking-[3px] text-white [writing-mode:vertical-lr]"
+        :class="day.isLocked || emptyDay || guestData ? 'py-[60px]' : 'pb-[0px]'"
       >
         {{ weekday }}
       </span>
@@ -21,7 +28,13 @@
         :index="index"
         :invitation="Invitation.MEAL"
         :icon-white="true"
-        class="row-start-2 w-[24px] pl-[3px] text-center"
+        class="row-start-3 w-[24px] pl-[3px] text-center"
+      />
+      <ParticipantsListModal
+        v-if="openParticipantsModal"
+        :openParticipantsModal="openParticipantsModal"
+        :date="date"
+        @close-dialog="closeParticipantsModal"
       />
     </div>
     <div
@@ -87,19 +100,22 @@
 </template>
 
 <script setup lang="ts">
+import { GuestDay } from '@/api/getInvitationData';
+import GuestButton from '@/components/dashboard/GuestButton.vue';
+import InformationButton from '@/components/dashboard/InformationButton.vue';
 import MealData from '@/components/dashboard/MealData.vue';
 import Slots from '@/components/dashboard/Slots.vue';
-import { useI18n } from 'vue-i18n';
 import VariationsData from '@/components/dashboard/VariationsData.vue';
-import { computed } from 'vue';
 import { dashboardStore } from '@/stores/dashboardStore';
-import GuestButton from '@/components/dashboard/GuestButton.vue';
 import { translateWeekday } from 'tools/localeHelper';
-import { GuestDay } from '@/api/getInvitationData';
+import { computed, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import EventData from './EventData.vue';
 import { Invitation } from '@/enums/Invitation';
+import ParticipantsListModal from './ParticipantsListModal.vue';
 
 const { t, locale } = useI18n();
+const openParticipantsModal = ref<boolean | null>(false);
 
 const props = defineProps<{
   weekID?: string;
@@ -112,6 +128,21 @@ const day = props.guestData ? props.guestData : dashboardStore.getDay(props.week
 const weekday = computed(() => translateWeekday(day.date, locale));
 const emptyDay = Object.keys(day.meals).length === 0;
 const isEventDay = day.event !== null;
+const date = computed(() => {
+  if (day === null || day === undefined) {
+    return '';
+  }
+  // format date (2023-12-23) without time stamp
+  return day.date.date.split(' ')[0];
+});
+
+async function closeParticipantsModal() {
+  openParticipantsModal.value = false;
+}
+
+function openModal() {
+  openParticipantsModal.value = true;
+}
 </script>
 
 <style>

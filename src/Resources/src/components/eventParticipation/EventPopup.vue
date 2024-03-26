@@ -29,10 +29,10 @@
         >
           <li
             v-for="(participation, index) in participations"
-            :key="`${participation}_${index}`"
+            :key="`${String(participation)}_${index}`"
             class="border-b-2 p-2 last:border-b-0"
           >
-            {{ participation }}
+            {{ String(participation) }}
           </li>
         </ul>
         <span

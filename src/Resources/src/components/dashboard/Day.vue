@@ -18,7 +18,7 @@
       />
       <span
         class="row-start-2 rotate-180 place-self-center text-center text-[11px] font-bold uppercase leading-4 tracking-[3px] text-white [writing-mode:vertical-lr]"
-        :class="day.isLocked || emptyDay || guestData ? 'py-[24px]' : 'pb-[0px]'"
+        :class="day.isLocked || emptyDay || guestData ? 'py-[60px]' : 'pb-[0px]'"
       >
         {{ weekday }}
       </span>

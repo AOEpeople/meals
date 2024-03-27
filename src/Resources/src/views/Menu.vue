@@ -18,12 +18,13 @@
     />
     <LoadingSpinner :loaded="loaded" />
     <div class="mt-4 grid w-full grid-cols-2 items-center">
-      <router-link
-        to="/weeks"
-        class="col-span-1 col-start-1 flex items-center justify-center"
-      >
-        <CancelButton :btn-text="t('button.cancel')" />
-      </router-link>
+      <div class="col-span-1 col-start-1 flex items-center justify-center">
+        <CancelButton
+          :btn-text="t('button.cancel')"
+          class="cursor-pointer"
+          @click="router.push('/weeks')"
+        />
+      </div>
       <SubmitButton class="col-span-1 col-start-2 m-0" />
     </div>
   </form>

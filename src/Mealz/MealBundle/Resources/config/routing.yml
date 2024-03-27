@@ -319,6 +319,11 @@ MealzMealBundle_Print_participations_api:
   defaults: { _controller: App\Mealz\MealBundle\Controller\ApiController::list }
   methods: [ GET ]
 
+MealzMealBundle_api_meal_mealstate:
+  path: /api/mealstate/{meal}
+  defaults: { _controller: App\Mealz\MealBundle\Controller\ApiController::getMealStateOnDay }
+  methods: [ GET ]
+
 mealz_meal_edit_participations:
     path: /participations/{week}/edit
     defaults: { _controller: App\Mealz\MealBundle\Controller\FrontendController::renderIndex }

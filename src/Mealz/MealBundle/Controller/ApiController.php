@@ -231,6 +231,17 @@ class ApiController extends BaseController
         ]);
     }
 
+    /**
+     * @Security("is_granted('ROLE_USER')")
+     */
+    public function getMealStateOnDay(Meal $meal): JsonResponse
+    {
+        $profile = $this->getProfile();
+        $participant = $this->participationSrv->getParticipationByMealAndUser($meal, $profile);
+
+        return new JsonResponse($this->getMealState($meal, $profile, $participant), 200);
+    }
+
     private function convertMealForDashboard(Meal $meal, float $participationCount, ?Profile $profile): array
     {
         $description = null;
@@ -318,8 +329,16 @@ class ApiController extends BaseController
                 return 'tradeable';
             }
         }
+
+        return $this->getMealStateForOpenMeal($meal, $participant);
+    }
+
+    private function getMealStateForOpenMeal(Meal $meal, ?Participant $participant): string
+    {
         if ($this->apiSrv->isMealOpen($meal)) {
             return 'open';
+        } elseif (false === $meal->isLocked() && true === $meal->isOpen() && null !== $participant) {
+            return 'offerable';
         }
 
         return 'disabled';

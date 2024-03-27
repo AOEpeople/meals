@@ -5,6 +5,7 @@ import { Meal } from '@/api/getDashboardData';
 import { dashboardStore } from '@/stores/dashboardStore';
 import { environmentStore } from '@/stores/environmentStore';
 import { useLockRequests } from '@/services/useLockRequests';
+import getMealState from '@/api/getMealState';
 
 type Meal_Update = {
     weekId: number;
@@ -95,8 +96,9 @@ class MercureReceiver {
         removeLock(String(data.dayId));
     }
 
-    private static handleParticipationUpdate(data: Meal_Update): void {
+    private static async handleParticipationUpdate(data: Meal_Update): Promise<void> {
         for (const mealData of data.meals) {
+            const { error, mealstate } = await getMealState(mealData.mealId);
             let meal: Meal;
             if (mealData.parentId !== null) {
                 meal = dashboardStore.getVariation(data.weekId, data.dayId, mealData.parentId, mealData.mealId) as Meal;
@@ -110,6 +112,9 @@ class MercureReceiver {
                 meal.isOpen = mealData.isOpen;
                 meal.isLocked = mealData.isLocked;
                 meal.reachedLimit = mealData.reachedLimit;
+                if (error.value === false) {
+                    meal.mealState = mealstate.value;
+                }
             }
         }
         removeLock(String(data.dayId));

@@ -148,6 +148,13 @@ class DashboardStore extends Store<Dashboard> {
         }
     }
 
+    public updateMealState(weekId: number, dayId: number, mealId: number, mealState: string) {
+        const meal = this.getMeal(weekId, dayId, mealId);
+        if (meal !== undefined && meal !== null) {
+            meal.mealState = mealState;
+        }
+    }
+
     /**
      * Only for testing purposes
      */

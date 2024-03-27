@@ -122,6 +122,16 @@ const checkboxCSS = computed(() => {
 });
 
 async function handle() {
+  // Meal is being offered by someone to be taken over
+  if (mealOrVariation.value.hasOffers === true && mealOrVariation.value.mealState === 'tradeable') {
+    let slugs = [mealOrVariation.value.dishSlug];
+      if (isCombiBox === true) {
+        slugs = getDishSlugs();
+        if (slugs.length === 0) return;
+      }
+      await joinMeal(slugs);
+      return;
+  }
   // Meal is not locked
   if (
     (mealOrVariation.value.isLocked === false || mealOrVariation.value.mealState === 'tradeable') &&

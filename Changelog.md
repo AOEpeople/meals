@@ -1,5 +1,28 @@
 # Changelog
 
+## Version v3.0.3 (2024-03-27)
+
+### Fixes
+
+- fixed prettier linting (fcd94302)
+- fixed a bug that caused the visible and the logic state of a meal to divert on meals that reached the max participants (2e37911a)
+- fixed prettier linting (ff9cc0ac)
+- fixed a bug that prevented meals with offers from being taken in some circumstances (e0812851)
+- fixed a bug that prevented people from leaving meals that reached their limit (421ad9d6)
+- fixed prettier linting (6d0ec2c8)
+- fixed a bug that could trigger a click event, when clicking outside of the cancel button in menu (b2e9ab15)
+
+### Other
+
+- Bump express from 4.18.2 to 4.19.2 in /src/Resources (29ff9edb)
+- Bump webpack-dev-middleware from 5.3.3 to 5.3.4 in /src/Resources (08738311)
+- possible fix for mistyped axios response (9308d5d1)
+- Bump ip from 2.0.0 to 2.0.1 in /src/Resources (2928ff06)
+- added indicator coloring for lockdates that are not the standard locktime in the menu view (5a4238f5)
+- Bump follow-redirects from 1.15.5 to 1.15.6 in /src/Resources (ff4e1825)
+- Bump geekyeggo/delete-artifact from 4 to 5 (661e9960)
+- Bump axios from 0.27.2 to 0.28.0 in /src/Resources (dddece80)
+
 ## Version v3.0.2 (2024-03-07)
 
 ### Fixes

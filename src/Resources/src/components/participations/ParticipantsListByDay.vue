@@ -5,7 +5,7 @@
       :class="[0 ? 'border-gray-300' : 'border-gray-200', 'border-b', 'sm:items-center', 'sm:gap-4', 'sm:pb-2.5']"
     >
       <DialogTitle
-        class="cols-start-1 margin-0 sm:padding-0 padding-right-1 sm:margin=1.5 text-[10px] font-bold uppercase tracking-[1.5px] text-primary sm:inline-block sm:h-6 sm:align-middle sm:text-[12px]"
+        class="cols-start-1 margin-0 sm:padding-0 padding-right-1 sm:margin=1.5 whitespace-nowrap text-[10px] font-bold uppercase tracking-[1.5px] text-primary sm:inline-block sm:h-6 sm:align-middle sm:text-[12px]"
       >
         {{ t('dashboard.print') }}
       </DialogTitle>

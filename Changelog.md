@@ -1,5 +1,11 @@
 # Changelog
 
+## Version v3.0.4 (2024-04-03)
+
+### Chores and tidying
+
+- updated paypal plugin to a newer version and adjusted TransactionPanel to work with the updated packages (fbfc5e3a)
+
 ## Version v3.0.3 (2024-03-27)
 
 ### Fixes

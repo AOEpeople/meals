@@ -47,7 +47,7 @@ onMounted(async () => {
   amountFieldValue.value = balance.value < 0 ? Math.abs(balance.value) : 0.0;
   try {
     const paypal = await loadScript({
-      'client-id': environmentStore.getState().paypalId,
+      clientId: environmentStore.getState().paypalId,
       currency: 'EUR'
     });
 
@@ -76,10 +76,12 @@ onMounted(async () => {
             purchase_units: [
               {
                 amount: {
-                  value: formatCurrency(amountFieldValue.value)
+                  value: formatCurrency(amountFieldValue.value),
+                  currency_code: 'EUR'
                 }
               }
-            ]
+            ],
+            intent: 'CAPTURE'
           });
         },
         onShippingChange: function (data, actions) {

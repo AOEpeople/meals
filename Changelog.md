@@ -1,5 +1,11 @@
 # Changelog
 
+## Version v3.0.5 (2024-04-10)
+
+### Fixes
+
+- fixed a bug that could show combined-meal in the MenuPaticipationPanel (735b6415)
+
 ## Version v3.0.4 (2024-04-03)
 
 ### Chores and tidying

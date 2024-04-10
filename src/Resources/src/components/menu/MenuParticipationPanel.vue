@@ -33,6 +33,25 @@ const emit = defineEmits(['closePanel']);
 
 const mealList = computed(() => {
   const keys = Object.keys(props.meals);
-  return [...props.meals[keys[0]], ...props.meals[keys[1]]];
+  removeCombinedMealKey(keys);
+  const returnMealDTOs = [];
+  keys.forEach((key) => {
+    if (parseInt(key) > 0) {
+      returnMealDTOs.push(...props.meals[key]);
+    }
+  });
+  return returnMealDTOs;
 });
+
+function removeCombinedMealKey(keys: string[]) {
+  let indexToRemove = -1;
+  keys.forEach((mealId) => {
+    if (parseInt(mealId) > 0 && props.meals[mealId][0].dishSlug === 'combined-dish') {
+      indexToRemove = keys.indexOf(mealId);
+    }
+  });
+  if (indexToRemove !== -1) {
+    keys.splice(indexToRemove, 1);
+  }
+}
 </script>

@@ -28,7 +28,35 @@
 <script setup lang="ts">
 import Popover from '@/components/misc/Popover.vue';
 import TransactionPanel from '@/components/balance/TransactionPanel.vue';
-
+import { userDataStore } from '@/stores/userDataStore';
+import useSessionStorage from '@/services/useSessionStorage';
 import { useI18n } from 'vue-i18n';
+import { onMounted } from 'vue';
+import postPaypalOrder from '@/api/postPaypalOrder';
+import { transactionStore } from '@/stores/transactionStore';
+import useFlashMessage from '@/services/useFlashMessage';
+import { FlashMessageType } from '@/enums/FlashMessage';
+
 const { t } = useI18n();
+
+onMounted(async () => {
+  await checkForFailedOrder();
+});
+
+async function checkForFailedOrder() {
+  const prevOrder = useSessionStorage().getAndClearData();
+  if (prevOrder !== null) {
+    const data = JSON.parse(prevOrder);
+    const response = await postPaypalOrder(data.amount, data.orderId);
+    if (response.ok) {
+      userDataStore.adjustBalance(data.amount);
+      transactionStore.fillStore();
+    } else {
+      useFlashMessage().sendFlashMessage({
+        type: FlashMessageType.ERROR,
+        message: t('balance.paypal_error')
+      });
+    }
+  }
+}
 </script>

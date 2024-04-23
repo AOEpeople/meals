@@ -18,7 +18,8 @@
       "date": "Datum",
       "description": "Beschreibung",
       "amount": "Betrag"
-    }
+    },
+    "paypal_error": "Bei der Verarbeitung der Einzahlung ist ein Fehler aufgetreten. Bitte wenden Sie sich an den Support."
   },
   "button": {
     "ok": "OK",

@@ -18,7 +18,8 @@
       "date": "Date",
       "description": "Description",
       "amount": "Amount"
-    }
+    },
+    "paypal_error": "There was an error while processing your payment. Please contact the support."
   },
   "button": {
     "ok": "OK",

@@ -24,14 +24,29 @@ import { useRoute } from 'vue-router';
 import { computed, onMounted, onUpdated, ref, watch } from 'vue';
 import { useComponentHeights } from '@/services/useComponentHeights';
 import DebtPopup from './components/debtPopup/DebtPopup.vue';
+import { usePeriodicFetch } from './services/usePeriodicFetch';
+import { onUnmounted } from 'vue';
 
 const route = useRoute();
 const { setNavBarHeight, windowWidth } = useComponentHeights();
 
 const navibar = ref(null);
+// 300.000ms is 5min
+const KEEP_ALIVE_INTERVAL_MILLIS = 300000;
 
 const showParticipations = computed(() => {
   return route.path === '/show/participations';
+});
+
+const { periodicFetchActive } = usePeriodicFetch(KEEP_ALIVE_INTERVAL_MILLIS, async () => {
+  try {
+    const response = await fetch(window.location.href);
+    if (response.status !== 200) {
+      window.location.reload();
+    }
+  } catch (error) {
+    window.location.reload();
+  }
 });
 
 watch(windowWidth, () => {
@@ -44,12 +59,18 @@ onMounted(() => {
   if (navibar.value !== null && navibar.value !== undefined) {
     setNavBarHeight(navibar.value.$el.offsetHeight, 'navibar');
   }
+
+  periodicFetchActive.value = true;
 });
 
 onUpdated(() => {
   if (navibar.value !== null && navibar.value !== undefined) {
     setNavBarHeight(navibar.value.$el.offsetHeight, 'navibar');
   }
+});
+
+onUnmounted(() => {
+  periodicFetchActive.value = false;
 });
 </script>
 

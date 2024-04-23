@@ -21,7 +21,12 @@ export default function useApi<T>(method: string, url: string, contentType = 'ap
             })
             .catch((err) => {
                 error.value = true;
-                if (err.response.data !== null && err.response.data !== undefined) {
+                if (
+                    err.response !== null &&
+                    err.response !== undefined &&
+                    err.response.data !== null &&
+                    err.response.data !== undefined
+                ) {
                     response.value = err.response.data;
                 }
             });

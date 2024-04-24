@@ -1,5 +1,12 @@
 # Changelog
 
+## Version v3.0.6 (2024-04-15)
+
+### Other
+
+- Bump tecnickcom/tcpdf from 6.6.2 to 6.7.4 (26049fd8)
+- Bump tar from 6.2.0 to 6.2.1 in /src/Resources (ed2d5405)
+
 ## Version v3.0.5 (2024-04-10)
 
 ### Fixes

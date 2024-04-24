@@ -7,7 +7,7 @@ class UserDataStore extends Store<UserData> {
         return {
             roles: [],
             user: '',
-            balance: 0
+            balance: 0.0
         };
     }
 
@@ -42,6 +42,9 @@ class UserDataStore extends Store<UserData> {
     }
 
     adjustBalance(adjustAmount: number): void {
+        if (typeof adjustAmount === 'string') {
+            adjustAmount = parseFloat(adjustAmount);
+        }
         this.state.balance += adjustAmount;
     }
 

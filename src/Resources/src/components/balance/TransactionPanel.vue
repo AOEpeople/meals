@@ -32,8 +32,13 @@ import { environmentStore } from '@/stores/environmentStore';
 import postPaypalOrder from '@/api/postPaypalOrder';
 import MoneyInput from '../misc/MoneyInput.vue';
 import BlockPopup from '../misc/BlockPopup.vue';
+import checkActiveSession from '@/tools/checkActiveSession';
+import { usePeriodicFetch } from '@/services/usePeriodicFetch';
+
+const KEEP_ALIVE_INTERVAL_MILLIS = 40000;
 
 const { t } = useI18n();
+const { periodicFetchActive } = usePeriodicFetch(KEEP_ALIVE_INTERVAL_MILLIS, () => checkActiveSession());
 
 const balance = computed(() => userDataStore.getState().balance);
 const amountFieldValue = ref(0.0);
@@ -44,6 +49,7 @@ const actionsWatcher = ref<WatchStopHandle | null>(null);
 const emit = defineEmits(['closePanel']);
 
 onMounted(async () => {
+  await checkActiveSession();
   amountFieldValue.value = balance.value < 0 ? Math.abs(balance.value) : 0.0;
   try {
     const paypal = await loadScript({
@@ -54,6 +60,7 @@ onMounted(async () => {
     paypal
       .Buttons({
         onInit: function (data, actions) {
+          periodicFetchActive.value = true;
           if (amountFieldValue.value > 0.0) {
             actions.enable();
           } else {
@@ -72,6 +79,7 @@ onMounted(async () => {
           );
         },
         createOrder: function (data, actions) {
+          checkActiveSession();
           return actions.order.create({
             purchase_units: [
               {
@@ -92,6 +100,13 @@ onMounted(async () => {
           try {
             await actions.order.capture();
 
+            checkActiveSession(
+              JSON.stringify({
+                amount: amountFieldValue.value.toFixed(2),
+                orderId: data.orderID
+              })
+            );
+
             const response = await postPaypalOrder(amountFieldValue.value.toFixed(2), data.orderID);
 
             if (response.ok) {
@@ -99,8 +114,6 @@ onMounted(async () => {
               transactionStore.fillStore();
               // disable gray out and show spinner
               emit('closePanel');
-            } else {
-              console.log('Error from Backend');
             }
             isLoading.value = false;
           } catch (error) {
@@ -125,6 +138,7 @@ onUnmounted(() => {
   if (actionsWatcher.value !== null) {
     actionsWatcher.value();
   }
+  periodicFetchActive.value = false;
 });
 
 function formatCurrency(total: number) {

@@ -43,7 +43,7 @@ class SlotController extends BaseListController
     {
         $slots = $this->slotRepo->findBy(['deleted' => 0]);
 
-        return new JsonResponse($slots, 200);
+        return new JsonResponse($slots, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
     }
 
     public function update(Request $request, Slot $slot): JsonResponse
@@ -71,11 +71,11 @@ class SlotController extends BaseListController
             $this->em->persist($slot);
             $this->em->flush();
 
-            return new JsonResponse($slot, 200);
+            return new JsonResponse($slot, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
         } catch (Exception $e) {
             $this->logException($e);
 
-            return new JsonResponse(['message' => $e->getMessage()], 405);
+            return new JsonResponse(['message' => $e->getMessage()], \Symfony\Component\HttpFoundation\Response::HTTP_METHOD_NOT_ALLOWED);
         }
     }
 
@@ -89,10 +89,10 @@ class SlotController extends BaseListController
         } catch (Exception $e) {
             $this->logException($e);
 
-            return new JsonResponse(['message' => $e->getMessage()], 405);
+            return new JsonResponse(['message' => $e->getMessage()], \Symfony\Component\HttpFoundation\Response::HTTP_METHOD_NOT_ALLOWED);
         }
 
-        return new JsonResponse(null, 200);
+        return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
     }
 
     /**
@@ -121,9 +121,9 @@ class SlotController extends BaseListController
         } catch (Exception $e) {
             $this->logException($e);
 
-            return new JsonResponse(['message' => $e->getMessage()], 500);
+            return new JsonResponse(['message' => $e->getMessage()], \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return new JsonResponse(null, 200);
+        return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
     }
 }

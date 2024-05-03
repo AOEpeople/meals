@@ -23,10 +23,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
  * @Security("is_granted('ROLE_KITCHEN_STAFF')")
  */
+#[IsGranted('ROLE_KITCHEN_STAFF')]
 class MealAdminController extends BaseController
 {
     private EventDispatcherInterface $eventDispatcher;
@@ -85,7 +87,7 @@ class MealAdminController extends BaseController
             $weeks[] = $week;
         }
 
-        return new JsonResponse($weeks, 200);
+        return new JsonResponse($weeks, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
     }
 
     public function new(DateTime $date, Request $request): JsonResponse
@@ -96,7 +98,7 @@ class MealAdminController extends BaseController
         ]);
 
         if (null !== $week) {
-            return new JsonResponse(['message' => '102: week already exists'], 500);
+            return new JsonResponse(['message' => '102: week already exists'], \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $dateTimeModifier = $this->getParameter('mealz.lock_toggle_participation_at');
@@ -104,7 +106,7 @@ class MealAdminController extends BaseController
 
         $data = json_decode($request->getContent(), true);
         if (false === isset($data) || false === isset($data['days']) || false === isset($data['enabled'])) {
-            return new JsonResponse(['message' => '101: invalid json'], 500);
+            return new JsonResponse(['message' => '101: invalid json'], \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $days = $data['days'];
@@ -117,14 +119,14 @@ class MealAdminController extends BaseController
                 $this->handleNewDay($dayData, $weekDays[$dayIndex++]);
             }
         } catch (Exception $e) {
-            return new JsonResponse(['message' => 'NoErrorNumber: ' . $e->getMessage()], 500);
+            return new JsonResponse(['message' => 'NoErrorNumber: ' . $e->getMessage()], \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $this->em->persist($week);
         $this->em->flush();
         $this->eventDispatcher->dispatch(new WeekUpdateEvent($week, $data['notify']));
 
-        return new JsonResponse($week->getId(), 200);
+        return new JsonResponse($week->getId(), \Symfony\Component\HttpFoundation\Response::HTTP_OK);
     }
 
     public function getEmptyWeek(DateTime $date): JsonResponse
@@ -135,17 +137,17 @@ class MealAdminController extends BaseController
         ]);
 
         if (null !== $week) {
-            return new JsonResponse(['message' => '103: week already exists'], 500);
+            return new JsonResponse(['message' => '103: week already exists'], \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $dateTimeModifier = $this->getParameter('mealz.lock_toggle_participation_at');
         if (is_string($dateTimeModifier)) {
             $week = WeekService::generateEmptyWeek($date, $dateTimeModifier);
 
-            return new JsonResponse($week, 200);
+            return new JsonResponse($week, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
         }
 
-        return new JsonResponse(['message' => '104: Error on generating empty week'], 500);
+        return new JsonResponse(['message' => '104: Error on generating empty week'], \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     public function edit(Request $request, Week $week): JsonResponse
@@ -159,7 +161,7 @@ class MealAdminController extends BaseController
             $data['id'] !== $week->getId() ||
             false === isset($data['enabled'])
         ) {
-            return new JsonResponse(['message' => '101: invalid json'], 500);
+            return new JsonResponse(['message' => '101: invalid json'], \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $days = $data['days'];
@@ -170,14 +172,14 @@ class MealAdminController extends BaseController
                 $this->handleDay($day);
             }
         } catch (Exception $e) {
-            return new JsonResponse(['message' => $e->getMessage()], 500);
+            return new JsonResponse(['message' => $e->getMessage()], \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $this->em->persist($week);
         $this->em->flush();
         $this->eventDispatcher->dispatch(new WeekUpdateEvent($week, $data['notify']));
 
-        return new JsonResponse(null, 200);
+        return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
     }
 
     /**
@@ -192,7 +194,7 @@ class MealAdminController extends BaseController
             return new JsonResponse(['message' => $e->getMessage(), 500]);
         }
 
-        return new JsonResponse($dishCount, 200);
+        return new JsonResponse($dishCount, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
     }
 
     public function getLockDateTimeForWeek(Week $week): JsonResponse
@@ -205,7 +207,7 @@ class MealAdminController extends BaseController
             $response[(string) $day->getId()] = $day->getDateTime()->modify((string) $dateTimeModifier);
         }
 
-        return new JsonResponse($response, 200);
+        return new JsonResponse($response, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
     }
 
     private function handleDay(array $day)

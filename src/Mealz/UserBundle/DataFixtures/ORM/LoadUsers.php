@@ -10,7 +10,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class LoadUsers extends Fixture implements OrderedFixtureInterface
 {
@@ -21,13 +21,13 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
 
     protected ObjectManager $objectManager;
 
-    protected UserPasswordEncoderInterface $passwordEncoder;
+    protected UserPasswordHasherInterface $passwordHasher;
 
     protected int $counter = 0;
 
-    public function __construct(UserPasswordEncoderInterface $encoder)
+    public function __construct(UserPasswordHasherInterface $passwordHasher)
     {
-        $this->passwordEncoder = $encoder;
+        $this->passwordHasher = $passwordHasher;
     }
 
     /**
@@ -75,9 +75,8 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
     ): void {
         $login = new Login();
         $login->setUsername($username);
-        $login->setSalt(md5(uniqid('', true)));
 
-        $hashedPassword = $this->passwordEncoder->encodePassword($login, $password);
+        $hashedPassword = $this->passwordHasher->hashPassword($login, $password);
         $login->setPassword($hashedPassword);
 
         $profile = new Profile();
@@ -101,7 +100,7 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
         $this->addReference('login-' . $this->counter, $login);
     }
 
-    protected function createRandUser()
+    protected function createRandUser(): void
     {
         $firstNames = [
             'Felix', 'Maximilian', 'Alexander', 'Paul', 'Elias', 'Ben', 'Noah', 'Leon', 'Louis', 'Jonas',

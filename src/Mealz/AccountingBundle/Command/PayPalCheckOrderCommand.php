@@ -7,12 +7,14 @@ namespace App\Mealz\AccountingBundle\Command;
 use App\Mealz\AccountingBundle\Service\PayPal\PayPalService;
 use Exception;
 use RuntimeException;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+#[AsCommand(name: 'meals:payment:check-paypal-order')]
 class PayPalCheckOrderCommand extends Command
 {
     private PayPalService $paypalService;
@@ -32,7 +34,6 @@ class PayPalCheckOrderCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('meals:payment:check-paypal-order')
             ->setDescription('Get details of a meals payment done via PayPal.')
             ->addOption('order-id', 'o', InputOption::VALUE_REQUIRED, 'PayPal Order-ID.');
     }

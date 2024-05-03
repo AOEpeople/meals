@@ -60,7 +60,7 @@ class CategoryControllerTest extends AbstractControllerTestCase
             ],
         ];
 
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertEquals($expectedCategories, $response);
     }
 
@@ -69,7 +69,7 @@ class CategoryControllerTest extends AbstractControllerTestCase
         $parameters = json_encode(['titleDe' => 'testDe987', 'titleEn' => 'testEn987']);
         $this->client->request('POST', '/api/categories', [], [], [], $parameters);
 
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
 
     public function testCreateCategoryFail(): void
@@ -77,7 +77,7 @@ class CategoryControllerTest extends AbstractControllerTestCase
         $parameters = json_encode(['titleEn' => 'testEn987']);
         $this->client->request('POST', '/api/categories', [], [], [], $parameters);
 
-        $this->assertEquals(500, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(['message' => '301: Category titles not set or they already exist'], json_decode($this->client->getResponse()->getContent(), true));
     }
 
@@ -90,7 +90,7 @@ class CategoryControllerTest extends AbstractControllerTestCase
         $category = $this->categoryRepo->findOneBy(['slug' => 'others']);
 
         $this->assertNull($category);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
 
     public function testEditCategory(): void
@@ -104,7 +104,7 @@ class CategoryControllerTest extends AbstractControllerTestCase
 
         $category = $this->categoryRepo->find($categoryId);
         $this->assertInstanceOf(Category::class, $category);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(json_encode($category), $this->client->getResponse()->getContent());
     }
 }

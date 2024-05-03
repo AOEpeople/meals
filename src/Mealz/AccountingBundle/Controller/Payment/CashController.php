@@ -6,6 +6,7 @@ use App\Mealz\AccountingBundle\Entity\Transaction;
 use App\Mealz\MealBundle\Controller\BaseController;
 use App\Mealz\UserBundle\Entity\Profile;
 use Exception;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,6 +16,11 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class CashController extends BaseController
 {
+    private LoggerInterface $logger;
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
     /**
      * @Security("is_granted('ROLE_KITCHEN_STAFF')")
      */
@@ -32,22 +38,22 @@ class CashController extends BaseController
                 $entityManager->persist($transaction);
                 $entityManager->flush();
 
-                $logger = $this->get('monolog.logger.balance');
+                $logger = $this->logger;
                 $logger->info('admin added {amount}€ into wallet of {profile} (Transaction: {transactionId})', [
                     'profile' => $transaction->getProfile(),
                     'amount' => $transaction->getAmount(),
                     'transactionId' => $transaction->getId(),
                 ]);
 
-                return new JsonResponse($transaction->getAmount(), 200);
+                return new JsonResponse($transaction->getAmount(), \Symfony\Component\HttpFoundation\Response::HTTP_OK);
             } else {
                 throw new Exception('601: Amount less than 0');
             }
         } catch (Exception $e) {
-            $logger = $this->get('monolog.logger.balance');
+            $logger = $this->logger;
             $logger->info($e->getMessage());
 
-            return new JsonResponse(['message' => $e->getMessage()], 500);
+            return new JsonResponse(['message' => $e->getMessage()], \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

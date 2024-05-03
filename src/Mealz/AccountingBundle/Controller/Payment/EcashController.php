@@ -10,6 +10,7 @@ use App\Mealz\AccountingBundle\Service\Wallet;
 use App\Mealz\MealBundle\Controller\BaseController;
 use App\Mealz\UserBundle\Entity\Profile;
 use Exception;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,6 +21,11 @@ use Throwable;
 
 class EcashController extends BaseController
 {
+    private LoggerInterfacer $logger;
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
     /* public function getPaymentFormForProfile(Profile $profile, Wallet $wallet): Response
     {
         // Default value for E-Cash payment overlay
@@ -79,7 +85,7 @@ class EcashController extends BaseController
 
     private function logPostPaymentException(Throwable $exc, string $message, Request $request): void
     {
-        $this->get('logger')->logException(
+        $this->logger->logException(
             $exc,
             $message,
             [

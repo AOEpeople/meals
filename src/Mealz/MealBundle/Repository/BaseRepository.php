@@ -59,7 +59,7 @@ abstract class BaseRepository implements ObjectRepository, Selectable
     /**
      * @psalm-return ?T
      */
-    public function find($id)
+    public function find($id): ?object
     {
         return $this->objectRepository->find($id);
     }
@@ -75,7 +75,7 @@ abstract class BaseRepository implements ObjectRepository, Selectable
     /**
      * {@inheritDoc}
      */
-    public function findOneBy(array $criteria)
+    public function findOneBy(array $criteria): ?object
     {
         return $this->objectRepository->findOneBy($criteria);
     }

@@ -13,6 +13,7 @@ use ReflectionException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Security("is_granted('ROLE_KITCHEN_STAFF')")
@@ -48,7 +49,7 @@ class AccountingBookController extends BaseController
             'thisMonth' => $heading,
             'usersLastMonth' => $usersFirst,
             'usersThisMonth' => $users,
-        ], 200);
+        ], Response::HTTP_OK);
     }
 
     /**
@@ -96,7 +97,7 @@ class AccountingBookController extends BaseController
             'transactions' => $transactions,
         ];
 
-        return new JsonResponse($response, 200);
+        return new JsonResponse($response, Response::HTTP_OK);
     }
 
     /**
@@ -108,7 +109,8 @@ class AccountingBookController extends BaseController
     public function exportPDF(
         ?string $dateRange,
         TCPDFController $pdfGen,
-        TransactionRepositoryInterface $transactionRepo
+        TransactionRepositoryInterface $transactionRepo,
+        TranslatorInterface $translator
     ): Response {
         // Get date range set with date range picker by user
         $dateRange = str_replace('-', '/', $dateRange);
@@ -126,7 +128,7 @@ class AccountingBookController extends BaseController
         $pdf->setPrintFooter(false);
         $pdf->AddPage();
 
-        $filename = $this->get('translator')->trans('payment.transaction_history.finances.pdf') . '-' . $minDate->format('d.m.Y') . '-' . $maxDate->format('d.m.Y');
+        $filename = $translator->trans('payment.transaction_history.finances.pdf') . '-' . $minDate->format('d.m.Y') . '-' . $maxDate->format('d.m.Y');
         $pdf->SetTitle($filename);
 
         $cssFile = file_get_contents(__DIR__ . '/../Resources/css/transaction-export.css');
@@ -147,7 +149,7 @@ class AccountingBookController extends BaseController
         $content = $pdf->Output($filename . '.pdf', 'S');
         $now = gmdate('D, d M Y H:i:s') . ' GMT';
 
-        return new Response($content, 200, [
+        return new Response($content, Response::HTTP_OK, [
             'Content-Type' => 'application/pdf',
             'Expires' => $now,
             'Last-Modified' => $now,

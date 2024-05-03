@@ -18,11 +18,11 @@ use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
 use Prophecy\PhpUnit\ProphecyTrait;
 use RuntimeException;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
-use Symfony\Component\Security\Core\Security;
 
 class TransactionServiceTest extends AbstractDatabaseTestCase
 {
@@ -64,7 +64,7 @@ class TransactionServiceTest extends AbstractDatabaseTestCase
         $transactionService = new TransactionService($paypalServiceMock, $entityManager, $securityServiceMock);
 
         // call test method
-        $request = Request::create('', 'POST', [], [], [], [], $this->createTxReqPayLoad($orderID));
+        $request = Request::create('', \Symfony\Component\HttpFoundation\Request::METHOD_POST, [], [], [], [], $this->createTxReqPayLoad($orderID));
         $transactionService->createFromRequest($request);
 
         // verify transaction
@@ -95,7 +95,7 @@ class TransactionServiceTest extends AbstractDatabaseTestCase
         $this->expectExceptionMessage('login required');
 
         // call test method
-        $request = Request::create('', 'POST');
+        $request = Request::create('', \Symfony\Component\HttpFoundation\Request::METHOD_POST);
         $transactionService->createFromRequest($request);
     }
 
@@ -117,7 +117,7 @@ class TransactionServiceTest extends AbstractDatabaseTestCase
         $this->expectException(BadRequestHttpException::class);
 
         // call test method
-        $request = Request::create('', 'POST', [], [], [], [], $data);
+        $request = Request::create('', \Symfony\Component\HttpFoundation\Request::METHOD_POST, [], [], [], [], $data);
         $transactionService->createFromRequest($request);
     }
 
@@ -150,7 +150,7 @@ class TransactionServiceTest extends AbstractDatabaseTestCase
         $this->expectExceptionCode(1633509057);
 
         // call test method
-        $request = Request::create('', 'POST', [], [], [], [], $this->createTxReqPayLoad($orderID));
+        $request = Request::create('', \Symfony\Component\HttpFoundation\Request::METHOD_POST, [], [], [], [], $this->createTxReqPayLoad($orderID));
         $transactionService->createFromRequest($request);
     }
 
@@ -177,7 +177,7 @@ class TransactionServiceTest extends AbstractDatabaseTestCase
         $this->expectExceptionCode(1633513408);
 
         // call test method
-        $request = Request::create('', 'POST', [], [], [], [], $this->createTxReqPayLoad($orderID));
+        $request = Request::create('', \Symfony\Component\HttpFoundation\Request::METHOD_POST, [], [], [], [], $this->createTxReqPayLoad($orderID));
         $transactionService->createFromRequest($request);
     }
 

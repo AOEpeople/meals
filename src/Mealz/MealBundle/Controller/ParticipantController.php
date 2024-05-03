@@ -23,6 +23,7 @@ use App\Mealz\MealBundle\Service\ParticipationService;
 use App\Mealz\UserBundle\Entity\Profile;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use stdClass;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -42,6 +43,7 @@ class ParticipantController extends BaseController
     private SlotRepositoryInterface $slotRepo;
     private DayRepositoryInterface $dayRepo;
     private ParticipantRepositoryInterface $participantRepo;
+    private LoggerInterface $logger;
 
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
@@ -51,7 +53,8 @@ class ParticipantController extends BaseController
         MealRepositoryInterface $mealRepo,
         SlotRepositoryInterface $slotRepo,
         DayRepositoryInterface $dayRepo,
-        ParticipantRepositoryInterface $participantRepo
+        ParticipantRepositoryInterface $participantRepo,
+        LoggerInterface $logger
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->eventSrv = $eventSrv;
@@ -61,6 +64,7 @@ class ParticipantController extends BaseController
         $this->dayRepo = $dayRepo;
         $this->participantRepo = $participantRepo;
         $this->participationHelper = $participationHelper;
+        $this->logger = $logger;
     }
 
     /**
@@ -72,7 +76,7 @@ class ParticipantController extends BaseController
     {
         $profile = $this->getProfile();
         if (null === $profile) {
-            return new JsonResponse(null, 403);
+            return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN);
         }
 
         $parameters = json_decode($request->getContent(), true);
@@ -87,11 +91,11 @@ class ParticipantController extends BaseController
         } catch (Exception $e) {
             $this->logException($e);
 
-            return new JsonResponse(['message' => '402: ' . $e->getMessage()], 500);
+            return new JsonResponse(['message' => '402: ' . $e->getMessage()], \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         if (null === $result) {
-            return new JsonResponse(['message' => '403: User is not allowed to join meal'], 500);
+            return new JsonResponse(['message' => '403: User is not allowed to join meal'], \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $this->eventSrv->triggerJoinEvents($result['participant'], $result['offerer']);
@@ -112,7 +116,7 @@ class ParticipantController extends BaseController
                 'participantId' => $result['participant']->getId(),
                 'mealState' => $this->participationHelper->getMealState($meal),
             ],
-            200
+            \Symfony\Component\HttpFoundation\Response::HTTP_OK
         );
     }
 
@@ -125,16 +129,16 @@ class ParticipantController extends BaseController
     {
         $profile = $this->getProfile();
         if (null === $profile) {
-            return new JsonResponse(null, 403);
+            return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN);
         }
         $parameters = json_decode($request->getContent(), true);
         $meal = $this->mealRepo->find($parameters['mealId']);
         $participant = $this->participationSrv->getParticipationByMealAndUser($meal, $profile);
 
         if (false === $this->getDoorman()->isUserAllowedToLeave($meal)) {
-            return new JsonResponse(null, 403);
+            return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN);
         } elseif (null === $participant) {
-            return new JsonResponse(null, 403);
+            return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN);
         }
 
         $participant->setCombinedDishes(null);
@@ -156,7 +160,7 @@ class ParticipantController extends BaseController
         return new JsonResponse([
             'slotId' => $slotID,
             'mealState' => $this->participationHelper->getMealState($meal),
-        ], 200);
+        ], \Symfony\Component\HttpFoundation\Response::HTTP_OK);
     }
 
     public function updateCombinedMeal(
@@ -169,11 +173,11 @@ class ParticipantController extends BaseController
         try {
             $participationSrv->updateCombinedMeal($participant, $dishSlugs);
         } catch (ParticipationException $pex) {
-            return new JsonResponse(['message' => $pex->getMessage()], 422);
+            return new JsonResponse(['message' => $pex->getMessage()], \Symfony\Component\HttpFoundation\Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (Exception $exc) {
             $this->logException($exc);
 
-            return new JsonResponse(['message' => 'unexpected error'], 500);
+            return new JsonResponse(['message' => 'unexpected error'], \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $this->eventDispatcher->dispatch(new ParticipationUpdateEvent($participant));
@@ -186,7 +190,7 @@ class ParticipantController extends BaseController
                     $participant->getCombinedDishes()->toArray()
                 ),
             ],
-            200
+            \Symfony\Component\HttpFoundation\Response::HTTP_OK
         );
     }
 
@@ -203,13 +207,13 @@ class ParticipantController extends BaseController
 
         $participant = $this->getParticipantFromRequest($request);
         if (null === $participant) {
-            return new JsonResponse(null, 403);
+            return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN);
         }
         $meal = $participant->getMeal();
 
         if ($this->getProfile() !== $participant->getProfile()
             || false === $this->getDoorman()->isUserAllowedToSwap($meal)) {
-            return new JsonResponse(null, 403);
+            return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN);
         }
 
         $participant->setOfferedAt(time());
@@ -221,7 +225,7 @@ class ParticipantController extends BaseController
         // trigger meal-offered event
         $this->eventDispatcher->dispatch(new MealOfferedEvent($participant));
 
-        return new JsonResponse(null, 200);
+        return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
     }
 
     /**
@@ -234,12 +238,12 @@ class ParticipantController extends BaseController
         $parameters = json_decode($request->getContent(), true);
 
         if (null === $parameters['mealId']) {
-            return new JsonResponse(null, 403);
+            return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN);
         }
 
         $participant = $this->getParticipantFromRequest($request);
         if (null === $participant) {
-            return new JsonResponse(null, 403);
+            return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN);
         }
 
         $participant->setOfferedAt(0);
@@ -284,7 +288,7 @@ class ParticipantController extends BaseController
             $response = $this->addParticipationInfo($response, $participants, $day);
         }
 
-        return new JsonResponse($response, 200);
+        return new JsonResponse($response, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
     }
 
     /**
@@ -322,11 +326,11 @@ class ParticipantController extends BaseController
                 'day' => $meal->getDay()->getId(),
                 'profile' => $profile->getUsername(),
                 'booked' => $participationData,
-            ], 200);
+            ], \Symfony\Component\HttpFoundation\Response::HTTP_OK);
         } catch (Exception $e) {
             $this->logException($e);
 
-            return new JsonResponse(['message' => $e->getMessage()], 500);
+            return new JsonResponse(['message' => $e->getMessage()], \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -357,11 +361,11 @@ class ParticipantController extends BaseController
                 'day' => $meal->getDay()->getId(),
                 'profile' => $profile->getUsername(),
                 'booked' => $participationData,
-            ], 200);
+            ], \Symfony\Component\HttpFoundation\Response::HTTP_OK);
         } catch (Exception $e) {
             $this->logException($e);
 
-            return new JsonResponse(['message' => $e->getMessage()], 500);
+            return new JsonResponse(['message' => $e->getMessage()], \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -373,7 +377,7 @@ class ParticipantController extends BaseController
         $participations = $this->participantRepo->getParticipantsOnDays($week->getStartTime(), $week->getEndTime());
         $response = $this->participationHelper->getNonParticipatingProfilesByWeek($participations);
 
-        return new JsonResponse($response, 200);
+        return new JsonResponse($response, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
     }
 
     /**
@@ -383,15 +387,15 @@ class ParticipantController extends BaseController
     {
         $profile = $this->getProfile();
         if (null === $profile) {
-            return new JsonResponse(null, 403);
+            return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN);
         }
 
         $participant = $meal->getParticipant($profile);
         if (null === $participant) {
-            return new JsonResponse(['message' => 'No participation found'], 404);
+            return new JsonResponse(['message' => 'No participation found'], \Symfony\Component\HttpFoundation\Response::HTTP_NOT_FOUND);
         }
 
-        return new JsonResponse($participant->getCombinedDishes()->toArray(), 200);
+        return new JsonResponse($participant->getCombinedDishes()->toArray(), \Symfony\Component\HttpFoundation\Response::HTTP_OK);
     }
 
     private function generateResponse(string $route, string $action, Participant $participant): JsonResponse
@@ -423,7 +427,7 @@ class ParticipantController extends BaseController
             return;
         }
 
-        $logger = $this->get('monolog.logger.balance');
+        $logger = $this->logger;
         $logger->info(
             'admin added {profile} to {meal} (Participant: {participantId})',
             [
@@ -437,7 +441,7 @@ class ParticipantController extends BaseController
     private function logRemove(Meal $meal, Participant $participant): void
     {
         if (true === $this->getDoorman()->isKitchenStaff()) {
-            $logger = $this->get('monolog.logger.balance');
+            $logger = $this->logger;
             $logger->info(
                 'admin removed {profile} from {meal} (Meal: {mealId})',
                 [

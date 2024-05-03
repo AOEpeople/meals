@@ -11,6 +11,7 @@ use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthAwareUserProviderInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
@@ -46,15 +47,21 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
     /**
      * {@inheritdoc}
      */
-    public function loadUserByUsername($username)
+    public function loadUserByUsername($username): UserInterface
     {
-        $user = $this->entityManager->find(Profile::class, $username);
+        // TODO: deprecated; remove in 6.4
+        throw new \Exception('loadUserByUsername is deprecated; use loadUserByIdentifier instead', 1129778235);
+    }
+
+    public function loadUserByIdentifier(string $identifier): UserInterface
+    {
+        $user = $this->entityManager->find(Profile::class, $identifier);
         if ($user instanceof UserInterface) {
             return $user;
         }
 
-        $exception = new UsernameNotFoundException($username . ': user not found', 1629778235);
-        $exception->setUsername($username);
+        $exception = new UserNotFoundException($identifier . ': user not found', 1629778235);
+        $exception->setUserIdentifier($identifier);
         throw $exception;
     }
 
@@ -73,8 +80,8 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
         $roles = (null === $role) ? [] : [$role];
 
         try {
-            $user = $this->loadUserByUsername($username);
-        } catch (UsernameNotFoundException $exception) {
+            $user = $this->loadUserByIdentifier($username);
+        } catch (UserNotFoundException $exception) {
             return $this->createProfile($username, $firstName, $lastName, $email, $roles);
         }
 
@@ -84,13 +91,13 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
     /**
      * {@inheritdoc}
      */
-    public function refreshUser(UserInterface $user)
+    public function refreshUser(UserInterface $user): UserInterface
     {
         if (false === $this->supportsClass(get_class($user))) {
             throw new UnsupportedUserException(sprintf('Unsupported user class "%s"', get_class($user)));
         }
 
-        return $this->loadUserByUsername($user->getUsername());
+        return $this->loadUserByIdentifier($user->getUsername());
     }
 
     /**

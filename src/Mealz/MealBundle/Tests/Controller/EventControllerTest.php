@@ -37,7 +37,7 @@ class EventControllerTest extends AbstractControllerTestCase
     public function testGetEventList(): void
     {
         $this->client->request('GET', '/api/events');
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         /** @var EntityManager $entityManager */
         $entityManager = $this->client->getContainer()->get('doctrine')->getManager();
@@ -73,7 +73,7 @@ class EventControllerTest extends AbstractControllerTestCase
         ]);
 
         $this->client->request('POST', '/api/events', [], [], [], $data);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         /** @var EntityManager $entityManager */
         $entityManager = $this->client->getContainer()->get('doctrine')->getManager();
@@ -96,7 +96,7 @@ class EventControllerTest extends AbstractControllerTestCase
         ]);
 
         $this->client->request('PUT', '/api/events/' . $newEvent->getSlug(), [], [], [], $data);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         /** @var EntityManager $entityManager */
         $entityManager = $this->client->getContainer()->get('doctrine')->getManager();
@@ -114,7 +114,7 @@ class EventControllerTest extends AbstractControllerTestCase
         $this->persistAndFlushAll([$newEvent]);
 
         $this->client->request('DELETE', '/api/events/' . $newEvent->getSlug());
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         /** @var EntityManager $entityManager */
         $entityManager = $this->client->getContainer()->get('doctrine')->getManager();
@@ -142,7 +142,7 @@ class EventControllerTest extends AbstractControllerTestCase
 
         $url = '/api/events/participation/' . $day->getDateTime()->format('Y-m-d') . '%20' . $day->getDateTime()->format('H:i:s');
         $this->client->request('POST', $url);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $content = json_decode($this->client->getResponse()->getContent());
         $this->assertNotNull($content);
@@ -179,7 +179,7 @@ class EventControllerTest extends AbstractControllerTestCase
 
         $url = '/api/events/participation/' . $day->getDateTime()->format('Y-m-d') . '%20' . $day->getDateTime()->format('H:i:s');
         $this->client->request('DELETE', $url);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $content = json_decode($this->client->getResponse()->getContent());
         $this->assertNotNull($content);
@@ -220,7 +220,7 @@ class EventControllerTest extends AbstractControllerTestCase
         $this->assertEquals(0, count($participants));
 
         $this->client->request('POST', '/api/events/participation/' . $date);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $this->client->request('GET', '/api/participations/event/' . $date);
         $participants = json_decode($this->client->getResponse()->getContent());

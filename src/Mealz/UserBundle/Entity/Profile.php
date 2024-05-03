@@ -13,44 +13,43 @@ use Symfony\Component\Validator\Constraints as Assert;
  * A profile is some kind of user record in the database that does not know anything about logins.
  *
  * The name "profile" was chosen because in Symfony a "User" is someone who is allowed to log in.
- *
- * @ORM\Entity
- * @ORM\Table(name="profile")
  */
+
+#[ORM\Entity]
+#[ORM\Table(name: 'profile')]
 class Profile implements UserInterface, JsonSerializable
 {
-    /**
-     * @ORM\Column(name="id", type="string", length=255, nullable=FALSE)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
-     */
+    #[ORM\Id, ORM\GeneratedValue(strategy: 'NONE'), ORM\Column(name: 'id', type: 'string', length: 255, nullable: false)]
     private string $username = '';
 
     /**
      * @Assert\NotBlank()
      * @ORM\Column(type="string", length=255, nullable=TRUE)
      */
+    #[Assert\NotBlank]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private string $name = '';
 
     /**
      * @Assert\NotBlank()
      * @ORM\Column(type="string", length=255, nullable=TRUE)
      */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private string $firstName = '';
 
     /**
      * @ORM\Column(type="string", length=255, nullable=TRUE)
      */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $email = null;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=false, options={"default": false})
-     */
+    #[ORM\Column(type: 'boolean', nullable: false, options: ['default' => false])]
     private bool $hidden = false;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=TRUE)
      */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $company = '';
 
     /**
@@ -58,11 +57,13 @@ class Profile implements UserInterface, JsonSerializable
      *
      * @var Collection<int, Role>|null
      */
+    #[ORM\ManyToMany(targetEntity: 'Role', inversedBy: 'profiles')]
     private ?Collection $roles = null;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=TRUE)
      */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $settlementHash = null;
 
     public function setUsername(string $username): void
@@ -229,5 +230,13 @@ class Profile implements UserInterface, JsonSerializable
             'user' => $this->username,
             'roles' => $this->getRoles(),
         ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getUserIdentifier(): string
+    {
+        return $this->username;
     }
 }

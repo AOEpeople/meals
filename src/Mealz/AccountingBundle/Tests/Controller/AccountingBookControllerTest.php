@@ -63,7 +63,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
     {
         $this->loginAs(self::USER_FINANCE);
         $this->client->request('GET', '/api/accounting/book');
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode(), 'Cash register page accessible by finance staff');
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode(), 'Cash register page accessible by finance staff');
 
         // Test if default users can access the cash register page
         $this->loginAs(self::USER_STANDARD);

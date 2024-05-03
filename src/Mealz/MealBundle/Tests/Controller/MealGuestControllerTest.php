@@ -44,7 +44,7 @@ class MealGuestControllerTest extends AbstractControllerTestCase
         $url = '/event/invitation/' . $eventParticipation->getDay()->getId();
 
         $this->client->request('GET', $url);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $guestLink = json_decode($this->client->getResponse()->getContent())->url;
         $prefix = 'http://localhost/guest/event/';
@@ -67,7 +67,7 @@ class MealGuestControllerTest extends AbstractControllerTestCase
         $eventInvitation = $guestInvitationRepo->findOrCreateInvitation($profile, $eventParticipation->getDay());
 
         $this->client->request('GET', '/api/event/invitation/' . $eventInvitation->getId());
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $content = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(
@@ -105,7 +105,7 @@ class MealGuestControllerTest extends AbstractControllerTestCase
                 'company' => 'District 9',
             ])
         );
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         // without company
         $this->client->request(
@@ -120,7 +120,7 @@ class MealGuestControllerTest extends AbstractControllerTestCase
                 'company' => null,
             ])
         );
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         // without firstName
         $this->client->request(
@@ -135,6 +135,6 @@ class MealGuestControllerTest extends AbstractControllerTestCase
                 'company' => 'District 9',
             ])
         );
-        $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_NOT_FOUND, $this->client->getResponse()->getStatusCode());
     }
 }

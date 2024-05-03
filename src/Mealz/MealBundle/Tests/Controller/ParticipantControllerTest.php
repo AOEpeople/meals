@@ -110,7 +110,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
 
         $this->client->request('GET', '/api/participations/' . $weekEntity->getId());
         $response = $this->client->getResponse();
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
         foreach ($weekEntity->getDays() as $day) {
             $this->assertArrayHasKey($day->getId(), $responseData);
@@ -129,7 +129,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $this->client->request('PUT', $routeStr);
 
         $response = $this->client->getResponse();
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
 
         $this->assertEquals($profileToAdd->getUsername(), $responseData['profile']);
@@ -151,7 +151,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $this->client->request('DELETE', $routeStr);
 
         $response = $this->client->getResponse();
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $response->getStatusCode());
 
         $this->assertNull($participantRepo->findOneBy(['id' => $participantToRemove->getId()]));
     }
@@ -172,7 +172,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $this->client->request('GET', $routeStr);
 
         $response = $this->client->getResponse();
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $response->getStatusCode());
 
         $responseData = json_decode($response->getContent(), true);
 
@@ -189,7 +189,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $this->client->request('GET', $routeStr);
 
         $response = $this->client->getResponse();
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $response->getStatusCode());
 
         $found = false;
         $responseData = json_decode($response->getContent(), true);

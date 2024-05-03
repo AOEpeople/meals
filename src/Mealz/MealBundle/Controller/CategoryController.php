@@ -35,7 +35,7 @@ class CategoryController extends BaseListController
     {
         $categories = $this->categoryRepo->findAll();
 
-        return new JsonResponse($categories, 200);
+        return new JsonResponse($categories, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
     }
 
     /**
@@ -56,11 +56,11 @@ class CategoryController extends BaseListController
             $this->em->persist($category);
             $this->em->flush();
 
-            return new JsonResponse($category, 200);
+            return new JsonResponse($category, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
         } catch (Exception $e) {
             $this->logException($e);
 
-            return new JsonResponse(['message' => $e->getMessage()], 500);
+            return new JsonResponse(['message' => $e->getMessage()], \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -75,10 +75,10 @@ class CategoryController extends BaseListController
         } catch (Exception $e) {
             $this->logException($e);
 
-            return new JsonResponse(['message' => $e->getMessage()], 500);
+            return new JsonResponse(['message' => $e->getMessage()], \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return new JsonResponse(null, 200);
+        return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
     }
 
     /**
@@ -100,10 +100,10 @@ class CategoryController extends BaseListController
             $this->em->persist($category);
             $this->em->flush();
         } else {
-            return new JsonResponse(['message' => '301: Category titles not set or they already exist'], 500);
+            return new JsonResponse(['message' => '301: Category titles not set or they already exist'], \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return new JsonResponse(null, 200);
+        return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
     }
 
     private function getCategoryByTitleEn(string $title): ?Category

@@ -31,7 +31,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
 
         $exception = $event->getThrowable();
         if ($exception instanceof AuthenticationException || $exception instanceof AccessDeniedException) {
-            $event->setResponse(new JsonResponse(null, 401));
+            $event->setResponse(new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_UNAUTHORIZED));
         }
     }
 }

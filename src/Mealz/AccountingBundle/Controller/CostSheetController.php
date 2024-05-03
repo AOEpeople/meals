@@ -12,19 +12,27 @@ use App\Mealz\MealBundle\Service\Mailer\MailerInterface;
 use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
 use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CostSheetController extends BaseController
 {
     private MailerInterface $mailer;
     private EventDispatcherInterface $eventDispatcher;
+    private LoggerInterface $logger;
+    private TranslatorInterface $translator;
 
-    public function __construct(MailerInterface $mailer, EventDispatcherInterface $eventDispatcher)
+    public function __construct(MailerInterface $mailer, EventDispatcherInterface $eventDispatcher,LoggerInterface $logger, TranslatorInterface $translator)
     {
         $this->mailer = $mailer;
         $this->eventDispatcher = $eventDispatcher;
+        $this->logger = $logger;
+        $this->translator = $translator;
     }
 
     /**
@@ -84,21 +92,20 @@ class CostSheetController extends BaseController
     /**
      * @Security("is_granted('ROLE_KITCHEN_STAFF')")
      */
-    public function hideUser(Profile $profile): JsonResponse
+    public function hideUser(Profile $profile, EntityManagerInterface $entityManager): JsonResponse
     {
         if (!$profile->isHidden()) {
-            $entityManager = $this->getDoctrine()->getManager();
             $profile->setHidden(true);
             $entityManager->persist($profile);
             $entityManager->flush();
 
-            return new JsonResponse(null, 200);
+            return new JsonResponse(null, Response::HTTP_OK);
         } else {
-            return new JsonResponse(['message' => '501: Profile is already hidden'], 500);
+            return new JsonResponse(['message' => '501: Profile is already hidden'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    private function getRemainingCosts($costs, &$transactions)
+    private function getRemainingCosts($costs, &$transactions): float
     {
         $result = bcsub($costs, $transactions, 4);
         $transactions = abs($result);
@@ -129,11 +136,11 @@ class CostSheetController extends BaseController
 
             $this->sendSettlementRequestMail($profile, $urlEncodedHash);
 
-            return new JsonResponse(null, 200);
+            return new JsonResponse(null, Response::HTTP_OK);
         } elseif (null !== $profile->getSettlementHash() && $wallet->getBalance($profile) > 0.00) {
-            return new JsonResponse(['message' => '502: Settlement request already send'], 500);
+            return new JsonResponse(['message' => '502: Settlement request already send'], Response::HTTP_INTERNAL_SERVER_ERROR);
         } else {
-            return new JsonResponse(['message' => '503: Settlement request failed'], 500);
+            return new JsonResponse(['message' => '503: Settlement request failed'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -146,14 +153,14 @@ class CostSheetController extends BaseController
         $profile = $queryResult[0];
 
         if (null === $profile) {
-            return new JsonResponse(['message' => '504: Not found'], 404);
+            return new JsonResponse(['message' => '504: Not found'], Response::HTTP_NOT_FOUND);
         }
 
         return new JsonResponse([
             'user' => $profile->getUsername(),
             'fullName' => $profile->getFullName(),
             'roles' => $profile->getRoles(),
-        ], 200);
+        ], Response::HTTP_OK);
     }
 
     /**
@@ -183,7 +190,7 @@ class CostSheetController extends BaseController
             $entityManager->persist($transaction);
             $entityManager->flush();
 
-            $logger = $this->get('monolog.logger.balance');
+            $logger = $this->logger;
             $logger->info(
                 '{hr_member} settled {users} Balance.',
                 [
@@ -192,10 +199,10 @@ class CostSheetController extends BaseController
                 ]
             );
         } else {
-            return new JsonResponse(['message' => '505: Settlement request invalid or already processed'], 500);
+            return new JsonResponse(['message' => '505: Settlement request invalid or already processed'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return new JsonResponse(null, 200);
+        return new JsonResponse(null, Response::HTTP_OK);
     }
 
     /**
@@ -203,7 +210,7 @@ class CostSheetController extends BaseController
      */
     private function sendSettlementRequestMail(Profile $profile, string $urlEncodedHash): void
     {
-        $translator = $this->get('translator');
+        $translator = $this->translator;
 
         $receiver = (string) $this->getParameter('app.email.settlement_request.receiver');
         $subject = $translator->trans('payment.costsheet.mail.subject', [], 'messages');

@@ -8,11 +8,13 @@ use App\Mealz\AccountingBundle\Service\TransactionService;
 use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
 use Exception;
 use RuntimeException;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(name: 'mealz:accounting:paypal:add')]
 class PayPalAddTransCommand extends Command
 {
     private ProfileRepositoryInterface $profileRepo;
@@ -32,7 +34,6 @@ class PayPalAddTransCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('meals:payment:add-paypal-trans')
             ->setDescription('Add a transaction for meals payment done via PayPal.')
             ->addOption('order-id', 'o', InputOption::VALUE_REQUIRED, 'PayPal Order-ID.')
             ->addOption('user-id', 'u', InputOption::VALUE_REQUIRED, 'User-ID.');

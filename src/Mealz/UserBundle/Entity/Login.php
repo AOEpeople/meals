@@ -3,8 +3,7 @@
 namespace App\Mealz\UserBundle\Entity;
 
 use App\Mealz\UserBundle\User\UserInterface as MealzUserInterface;
-use Doctrine\ORM\Mapping as ORM;
-use Serializable;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
 
 /**
@@ -16,7 +15,7 @@ use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
  * @ORM\Table(name="login")
  * @ORM\Entity
  */
-class Login implements SymfonyUserInterface, Serializable, MealzUserInterface
+class Login implements SymfonyUserInterface, MealzUserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * @ORM\Column(name="id", type="string", length=255, nullable=FALSE)
@@ -90,40 +89,23 @@ class Login implements SymfonyUserInterface, Serializable, MealzUserInterface
     }
 
     /**
-     * (PHP 5 &gt;= 5.1.0)<br/>
-     * String representation of object.
-     *
-     * @see http://php.net/manual/en/serializable.serialize.php
-     *
-     * @return string the string representation of the object or null
+     * @return array Serialized form of the Login object.
      */
-    public function serialize(): string
+    public function __serialize(): array
     {
-        return serialize(
-            [
-                $this->username,
-                $this->salt,
-                $this->password,
-            ]
-        );
+        return [
+            'username' => $this->username,
+            'password' => $this->password,
+        ];
     }
 
     /**
-     * (PHP 5 &gt;= 5.1.0)<br/>
-     * Constructs the object.
-     *
-     * @see http://php.net/manual/en/serializable.unserialize.php
-     *
-     * @param string $serialized <p>
-     *                           The string representation of the object.
-     *                           </p>
+     * @param array $data Serialized form of the Login object.
      */
-    public function unserialize($serialized): void
+    public function __unserialize(array $data): void
     {
-        list(
-            $this->username,
-            $this->salt,
-            $this->password) = unserialize($serialized);
+            $this->username = $data['username'];
+            $this->password = $data['password'];
     }
 
     /**
@@ -143,5 +125,13 @@ class Login implements SymfonyUserInterface, Serializable, MealzUserInterface
     public function eraseCredentials(): void
     {
         // nothing to do here
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getUserIdentifier(): string
+    {
+        return $this->username;
     }
 }

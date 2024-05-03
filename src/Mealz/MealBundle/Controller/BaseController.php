@@ -16,6 +16,15 @@ use Throwable;
 
 abstract class BaseController extends AbstractController
 {
+    private \App\Mealz\MealBundle\Service\Doorman $doorman;
+    private TranslatorInterface $dataCollectorTranslator;
+    private LoggerInterface $logger;
+    public function __construct(Doorman $doorman, TranslatorInterface $dataCollectorTranslator, LoggerInterface $logger)
+    {
+        $this->doorman = $doorman;
+        $this->dataCollectorTranslator = $dataCollectorTranslator;
+        $this->logger = $logger;
+    }
     public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();
@@ -32,7 +41,7 @@ abstract class BaseController extends AbstractController
      */
     protected function getDoorman()
     {
-        return $this->get('mealz_meal.doorman');
+        return $this->doorman;
     }
 
     protected function getProfile(): ?Profile
@@ -51,7 +60,7 @@ abstract class BaseController extends AbstractController
 
     protected function ajaxSessionExpiredRedirect(): JsonResponse
     {
-        $message = $this->get('translator')->trans('session.expired', [], 'messages');
+        $message = $this->dataCollectorTranslator->trans('session.expired', [], 'messages');
         $this->addFlashMessage($message, 'info');
         $response = [
             'redirect' => $this->generateUrl('MealzUserBundle_login'),
@@ -67,6 +76,6 @@ abstract class BaseController extends AbstractController
      */
     protected function logException(Throwable $exc, string $message = '', array $context = []): void
     {
-        $this->get('logger')->logException($exc, $message, $context);
+        $this->logger->logException($exc, $message, $context);
     }
 }

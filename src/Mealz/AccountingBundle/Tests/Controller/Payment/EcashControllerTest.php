@@ -92,7 +92,7 @@ class EcashControllerTest extends AbstractControllerTestCase
         $txServiceMock = $txServiceProphet->reveal();
         $translatorMock = $this->prophesize(TranslatorInterface::class)->reveal();
 
-        $request = Request::create('', 'POST');
+        $request = Request::create('', \Symfony\Component\HttpFoundation\Request::METHOD_POST);
         $controller = self::$container->get(EcashController::class);
 
         $response = $controller->postPayment($request, $txServiceMock, $translatorMock);
@@ -115,7 +115,7 @@ class EcashControllerTest extends AbstractControllerTestCase
     public function testPostPaymentSuccess(): void
     {
         $this->markTestSkipped('Frontend Test');
-        $request = Request::create('', 'POST');
+        $request = Request::create('', \Symfony\Component\HttpFoundation\Request::METHOD_POST);
         $txServiceProphet = $this->prophesize(TransactionService::class);
         $txServiceProphet->createFromRequest(Argument::type(Request::class))->shouldBeCalledOnce();
         $txServiceMock = $txServiceProphet->reveal();

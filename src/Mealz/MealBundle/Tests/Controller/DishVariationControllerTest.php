@@ -46,7 +46,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         ]);
 
         $this->client->request('POST', '/api/dishes/' . $dish->getSlug() . '/variation', [], [], [], $data);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $found = false;
 
@@ -72,7 +72,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         ]);
 
         $this->client->request('PUT', '/api/dishes/variation/' . $dishVariation->getSlug(), [], [], [], $data);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $updatedDishVariation = $this->getDishVariationBy('id', $dishVariation->getId(), false);
         $this->assertNotNull($updatedDishVariation);
@@ -89,7 +89,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         $this->assertTrue($dishVariation->isEnabled());
 
         $this->client->request('DELETE', '/api/dishes/variation/' . $dishVariation->getSlug());
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $updatedDishVariation = $this->getDishVariationBy('id', $dishVariationId, false);
         if ($updatedDishVariation instanceof DishVariation) {
@@ -102,7 +102,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
     public function testDeleteNonExistingDishVariation(): void
     {
         $this->client->request('DELETE', '/api/dishes/variation/non-existent-dish-variation');
-        $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_NOT_FOUND, $this->client->getResponse()->getStatusCode());
     }
 
     /**
@@ -111,7 +111,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
     public function testUpdateActionOfNonExistingDishVariation(): void
     {
         $this->client->request('PUT', '/api/dishes/variation/non-existing-dishvariation');
-        $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_NOT_FOUND, $this->client->getResponse()->getStatusCode());
     }
 
     /**

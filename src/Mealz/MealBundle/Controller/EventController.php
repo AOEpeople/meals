@@ -46,7 +46,7 @@ class EventController extends BaseListController
     {
         $events = $this->eventRepo->findBy(['deleted' => 0]);
 
-        return new JsonResponse($events, 200);
+        return new JsonResponse($events, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
     }
 
     /**
@@ -56,14 +56,14 @@ class EventController extends BaseListController
     {
         $parameters = json_decode($request->getContent(), true);
         if (false === isset($parameters['title']) || false === isset($parameters['public'])) {
-            return new JsonResponse(['message' => '701: Event creation parameters are not set'], 500);
+            return new JsonResponse(['message' => '701: Event creation parameters are not set'], \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $event = new Event($parameters['title'], $parameters['public']);
         $this->em->persist($event);
         $this->em->flush();
 
-        return new JsonResponse(null, 200);
+        return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
     }
 
     /**
@@ -85,7 +85,7 @@ class EventController extends BaseListController
             $this->em->persist($event);
             $this->em->flush();
 
-            return new JsonResponse($event, 200);
+            return new JsonResponse($event, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
         } catch (Exception $e) {
             $this->logException($e);
 
@@ -104,7 +104,7 @@ class EventController extends BaseListController
             $this->em->persist($event);
             $this->em->flush();
 
-            return new JsonResponse(null, 200);
+            return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
         } catch (Exception $e) {
             $this->logException($e);
 
@@ -116,38 +116,38 @@ class EventController extends BaseListController
     {
         $profile = $this->getProfile();
         if (null === $profile) {
-            return new JsonResponse(['message' => '801: User is not allowed to join'], 403);
+            return new JsonResponse(['message' => '801: User is not allowed to join'], \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN);
         }
 
         $day = $this->dayRepo->getDayByDate($date);
 
         $eventParticipation = $this->eventPartSrv->join($profile, $day);
         if (null === $eventParticipation) {
-            return new JsonResponse(['message' => '802: User could not join the event'], 500);
+            return new JsonResponse(['message' => '802: User could not join the event'], \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $this->eventDispatcher->dispatch(new EventParticipationUpdateEvent($eventParticipation));
 
-        return new JsonResponse($this->eventPartSrv->getEventParticipationData($day, $profile), 200);
+        return new JsonResponse($this->eventPartSrv->getEventParticipationData($day, $profile), \Symfony\Component\HttpFoundation\Response::HTTP_OK);
     }
 
     public function leave(DateTime $date): JsonResponse
     {
         $profile = $this->getProfile();
         if (null === $profile) {
-            return new JsonResponse(['message' => '801: User is not allowed to leave'], 403);
+            return new JsonResponse(['message' => '801: User is not allowed to leave'], \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN);
         }
 
         $day = $this->dayRepo->getDayByDate($date);
 
         $eventParticipation = $this->eventPartSrv->leave($profile, $day);
         if (null === $eventParticipation) {
-            return new JsonResponse(['message' => '802: User could not leave the event'], 500);
+            return new JsonResponse(['message' => '802: User could not leave the event'], \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $this->eventDispatcher->dispatch(new EventParticipationUpdateEvent($eventParticipation));
 
-        return new JsonResponse($this->eventPartSrv->getEventParticipationData($day, $profile), 200);
+        return new JsonResponse($this->eventPartSrv->getEventParticipationData($day, $profile), \Symfony\Component\HttpFoundation\Response::HTTP_OK);
     }
 
     public function getEventParticipants(DateTime $date): JsonResponse
@@ -155,9 +155,9 @@ class EventController extends BaseListController
         $day = $this->dayRepo->getDayByDate($date);
 
         if (null === $day) {
-            return new JsonResponse(['message' => 'Could not find day'], 404);
+            return new JsonResponse(['message' => 'Could not find day'], \Symfony\Component\HttpFoundation\Response::HTTP_NOT_FOUND);
         }
 
-        return new JsonResponse($this->eventPartSrv->getParticipants($day), 200);
+        return new JsonResponse($this->eventPartSrv->getParticipants($day), \Symfony\Component\HttpFoundation\Response::HTTP_OK);
     }
 }

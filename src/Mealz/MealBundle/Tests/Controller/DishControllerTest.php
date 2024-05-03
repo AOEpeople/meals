@@ -72,7 +72,7 @@ class DishControllerTest extends AbstractControllerTestCase
 
         // Request
         $this->client->request('GET', '/api/dishes');
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         // Get data for assertions from response
         $response = json_decode($this->client->getResponse()->getContent(), true);
@@ -106,7 +106,7 @@ class DishControllerTest extends AbstractControllerTestCase
         ]);
 
         $this->client->request('PUT', '/api/dishes/' . $dish->getSlug(), [], [], [], $data);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $dishRepository = $this->getDoctrine()->getRepository(Dish::class);
         $editedDish = $dishRepository->findOneBy([
@@ -124,7 +124,7 @@ class DishControllerTest extends AbstractControllerTestCase
     public function testEditActionOfNonExistingDish(): void
     {
         $this->client->request('PUT', '/api/dishes/non-existing-dish');
-        $this->assertSame(404, $this->client->getResponse()->getStatusCode());
+        $this->assertSame(\Symfony\Component\HttpFoundation\Response::HTTP_NOT_FOUND, $this->client->getResponse()->getStatusCode(), $this->client->getResponse()->getContent());
     }
 
     /**
@@ -137,7 +137,7 @@ class DishControllerTest extends AbstractControllerTestCase
 
         $dishId = $dish->getId();
         $this->client->request('DELETE', '/api/dishes/' . $dish->getSlug());
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $dishRepository = $this->getDoctrine()->getRepository(Dish::class);
         $queryResult = $dishRepository->find($dishId);
@@ -151,7 +151,7 @@ class DishControllerTest extends AbstractControllerTestCase
     public function testDeleteOfNonExistingDish(): void
     {
         $this->client->request('DELETE', '/api/dishes/non-existing-dish');
-        $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_NOT_FOUND, $this->client->getResponse()->getStatusCode());
     }
 
     /**

@@ -24,7 +24,7 @@ class ParticipationUpdateController extends BaseController
     ): JsonResponse {
         $profile = $this->getProfile();
         if (null === $profile) {
-            return new JsonResponse(null, 403);
+            return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN);
         }
 
         $parameters = json_decode($request->getContent(), true);
@@ -33,7 +33,7 @@ class ParticipationUpdateController extends BaseController
         $day = $dayRepo->find($parameters['dayID']);
 
         if (null === $day) {
-            return new JsonResponse(null, 422);
+            return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $newSlot = $slotRepo->find($parameters['slotID']);
@@ -45,6 +45,6 @@ class ParticipationUpdateController extends BaseController
         }
         $eventDispatcher->dispatch(new SlotAllocationUpdateEvent($day, $newSlot, $prevSlot));
 
-        return new JsonResponse(null, 200);
+        return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
     }
 }

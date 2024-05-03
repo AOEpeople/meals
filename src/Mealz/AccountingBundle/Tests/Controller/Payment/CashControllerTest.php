@@ -66,7 +66,7 @@ class CashControllerTest extends AbstractControllerTestCase
 
         // Request
         $this->client->request('POST', '/api/payment/cash/' . self::USER_STANDARD . '?amount=' . $amount);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $response = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertEquals($amount, $response);

@@ -1,6 +1,6 @@
 MealzUserBundle_login:
     path:  /login
-    defaults: { _controller: "MealzUserBundle:Security:login" }
+    defaults: { _controller: App\Mealz\UserBundle\Controller\SecurityController::loginAction }
     methods:  [GET, POST]
 
 MealzUserBundle_logout:

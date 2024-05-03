@@ -54,11 +54,11 @@ class DishVariationController extends BaseController
             $this->em->persist($dishVariation);
             $this->em->flush();
 
-            return new JsonResponse(null, 200);
+            return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
         } catch (Exception $e) {
             $this->logException($e);
 
-            return new JsonResponse(['message' => $e->getMessage()], 500);
+            return new JsonResponse(['message' => $e->getMessage()], \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -79,11 +79,11 @@ class DishVariationController extends BaseController
             $this->em->persist($dishVariation);
             $this->em->flush();
 
-            return new JsonResponse($dishVariation, 200);
+            return new JsonResponse($dishVariation, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
         } catch (Exception $e) {
             $this->logException($e);
 
-            return new JsonResponse(['message' => $e->getMessage()], 500);
+            return new JsonResponse(['message' => $e->getMessage()], \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -102,11 +102,11 @@ class DishVariationController extends BaseController
             }
             $this->em->flush();
 
-            return new JsonResponse(null, 200);
+            return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
         } catch (Exception $e) {
             $this->logException($e);
 
-            return new JsonResponse(['message' => $e->getMessage()], 500);
+            return new JsonResponse(['message' => $e->getMessage()], \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

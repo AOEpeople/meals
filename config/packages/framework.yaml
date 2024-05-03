@@ -13,12 +13,10 @@ framework:
         handler_id: session.handler.pdo
         cookie_secure: auto
         cookie_samesite: lax
+        storage_factory_id: session.storage.factory.native
 
     php_errors:
         log: true
-
-    templating:
-        engines: ['twig']
 
     assets:
         version_strategy: 'App\Mealz\MealBundle\Asset\VersionStrategy\HashVersionStrategy'

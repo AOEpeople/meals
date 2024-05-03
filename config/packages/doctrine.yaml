@@ -4,15 +4,23 @@ doctrine:
 
         # IMPORTANT: You MUST configure your server version,
         # either here or in the DATABASE_URL env var (see .env file)
-        #server_version: '13'
+        #server_version: '16'
+        use_savepoints: true
     orm:
+        enable_lazy_ghost_objects: true
         auto_generate_proxy_classes: true
         naming_strategy: doctrine.orm.naming_strategy.default
         auto_mapping: true
         mappings:
             App\Mealz\MealBundle:
                 is_bundle: false
-                type: annotation
+                type: attribute
                 dir: '%kernel.project_dir%/src/Mealz/MealBundle/Entity'
                 prefix: 'App\Mealz\MealBundle\Entity'
                 alias: App\Mealz\MealBundle
+
+#when@test:
+#    doctrine:
+#        dbal:
+#            # "TEST_TOKEN" is typically set by ParaTest
+#            dbname_suffix: '_test%env(default::TEST_TOKEN)%'

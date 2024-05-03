@@ -1,7 +1,4 @@
 hwi_oauth:
-    # list of names of the firewalls in which this bundle is active, this setting MUST be set
-    firewall_names: [main]
-
     # https://github.com/hwi/HWIOAuthBundle/blob/master/Resources/doc/2-configuring_resource_owners.md
     resource_owners:
         meals:
@@ -22,5 +19,4 @@ hwi_oauth:
                 email: email
             options:
                 use_bearer_authorization: true
-    http:
-        client: httplug.client.hwi_special
+#    http_client: httplug.client.hwi_special

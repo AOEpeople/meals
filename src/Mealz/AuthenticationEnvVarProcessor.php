@@ -6,23 +6,24 @@ use Symfony\Component\DependencyInjection\EnvVarProcessorInterface;
 
 class AuthenticationEnvVarProcessor implements EnvVarProcessorInterface
 {
-    public function getEnv($prefix, $name, \Closure $getEnv)
+    public function getEnv($prefix, $name, \Closure $getEnv): ?string
     {
         if ('auth-mode' !== $prefix) {
-            return;
+            return null;
         }
 
         $env = $getEnv($name);
 
-        switch ($env) {
-            case 'oauth':
-                return 'ROLE_USER';
-            default:
-                return 'IS_AUTHENTICATED_ANONYMOUSLY';
-        }
+        return match ($env) {
+            'oauth' => 'ROLE_USER',
+            default => 'IS_AUTHENTICATED_ANONYMOUSLY',
+        };
     }
 
-    public static function getProvidedTypes()
+    /**
+     * @inheritDoc
+     */
+    public static function getProvidedTypes(): array
     {
         return [
             'auth-mode' => 'string',

@@ -72,7 +72,7 @@ class DishController extends BaseListController
             }
         }
 
-        return new JsonResponse($dishes, 200);
+        return new JsonResponse($dishes, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
     }
 
     /**
@@ -109,11 +109,11 @@ class DishController extends BaseListController
             $this->em->persist($dish);
             $this->em->flush();
 
-            return new JsonResponse(null, 200);
+            return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
         } catch (Exception $e) {
             $this->logException($e);
 
-            return new JsonResponse(['message' => $e->getMessage()], 500);
+            return new JsonResponse(['message' => $e->getMessage()], \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -132,11 +132,11 @@ class DishController extends BaseListController
             }
             $this->em->flush();
 
-            return new JsonResponse(null, 200);
+            return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
         } catch (Exception $e) {
             $this->logException($e);
 
-            return new JsonResponse(['message' => $e->getMessage()], 500);
+            return new JsonResponse(['message' => $e->getMessage()], \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -153,11 +153,11 @@ class DishController extends BaseListController
             $this->em->persist($dish);
             $this->em->flush();
 
-            return new JsonResponse($dish, 200);
+            return new JsonResponse($dish, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
         } catch (Exception $e) {
             $this->logException($e);
 
-            return new JsonResponse(['message' => $e->getMessage()], 500);
+            return new JsonResponse(['message' => $e->getMessage()], \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

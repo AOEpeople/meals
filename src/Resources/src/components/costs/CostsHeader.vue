@@ -9,7 +9,7 @@
       <ActionButton
         :btn-text="''"
         :action="Action.DOWNLOAD"
-        :class="printActive === false ? 'text-gray': ''"
+        :class="printActive === false ? 'text-gray' : ''"
         @click="printActive && emit('printCosts')"
       />
     </h2>

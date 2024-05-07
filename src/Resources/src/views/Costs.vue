@@ -2,7 +2,13 @@
   <Vue3Html2pdf
     v-if="loaded === true"
     ref="html2pdf"
-    :html-to-pdf-options="{ filename: 'kosten.pdf', image: { type: 'jpeg', quality: 0.98 }, margin: 10, jsPDF: { unit: 'mm' }, html2canvas: { dpi: 192, letterRendering: true } }"
+    :html-to-pdf-options="{
+      filename: 'kosten.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      margin: 10,
+      jsPDF: { unit: 'mm' },
+      html2canvas: { dpi: 192, letterRendering: true }
+    }"
     :pdf-quality="2"
     pdf-format="a4"
     pdf-orientation="portrait"

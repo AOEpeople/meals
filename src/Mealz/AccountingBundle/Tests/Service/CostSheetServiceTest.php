@@ -20,7 +20,7 @@ class CostSheetServiceTest extends TestCase
             '1234567892' => 0,
             '1234567894' => -1,
             '1234567895' => -2.17,
-            'total' => 17.05
+            'total' => 17.05,
         ];
 
         $testArrTwo = [
@@ -30,7 +30,7 @@ class CostSheetServiceTest extends TestCase
             '1234567892' => 3.37,
             '1234567894' => -5,
             '1234567895' => -3.72,
-            'total' => 9.8
+            'total' => 9.8,
         ];
 
         $expectedArr = [
@@ -40,12 +40,11 @@ class CostSheetServiceTest extends TestCase
             '1234567892' => 3.37,
             '1234567894' => -6.00,
             '1234567895' => -5.89,
-            'total' => 26.85
+            'total' => 26.85,
         ];
 
         $fncOutput = $costSheetService->mergeArrayByKey($testArrOne, $testArrTwo);
 
-        $this->assertIsArray($fncOutput, 'No array output');
         $this->assertEquals($expectedArr, $fncOutput, 'Arrays are not equal');
     }
 
@@ -66,8 +65,8 @@ class CostSheetServiceTest extends TestCase
                         '1234567892' => 0,
                         '1234567894' => -1,
                         '1234567895' => -2.17,
-                        'total' => 17.05
-                    ]
+                        'total' => 17.05,
+                    ],
                 ],
                 'admin.meals@aoe.com' => [
                     'name' => 'Meals',
@@ -80,8 +79,8 @@ class CostSheetServiceTest extends TestCase
                         '1234567892' => 3.37,
                         '1234567894' => -5,
                         '1234567895' => -3.72,
-                        'total' => 9.8
-                    ]
+                        'total' => 9.8,
+                    ],
                 ],
                 'test.meals' => [
                     'name' => 'Meals',
@@ -94,10 +93,10 @@ class CostSheetServiceTest extends TestCase
                         '1234567892' => 0.37,
                         '1234567894' => -3.29,
                         '1234567895' => 6.72,
-                        'total' => 28.43
-                    ]
-                ]
-            ]
+                        'total' => 28.43,
+                    ],
+                ],
+            ],
         ];
 
         $expectedArr = [
@@ -113,8 +112,8 @@ class CostSheetServiceTest extends TestCase
                         '1234567892' => 3.37,
                         '1234567894' => -6.00,
                         '1234567895' => -5.89,
-                        'total' => 26.85
-                    ]
+                        'total' => 26.85,
+                    ],
                 ],
                 'test.meals' => [
                     'name' => 'Meals',
@@ -127,15 +126,14 @@ class CostSheetServiceTest extends TestCase
                         '1234567892' => 0.37,
                         '1234567894' => -3.29,
                         '1234567895' => 6.72,
-                        'total' => 28.43
-                    ]
-                ]
-            ]
+                        'total' => 28.43,
+                    ],
+                ],
+            ],
         ];
 
         $fncOutput['users'] = $costSheetService->mergeDoubleUserTransactions($testArr['users']);
 
-        $this->assertIsArray($fncOutput);
         $this->assertEquals($expectedArr, $fncOutput);
     }
 }

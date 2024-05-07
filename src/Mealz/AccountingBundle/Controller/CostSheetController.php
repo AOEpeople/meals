@@ -5,8 +5,8 @@ namespace App\Mealz\AccountingBundle\Controller;
 use App\Mealz\AccountingBundle\Entity\Transaction;
 use App\Mealz\AccountingBundle\Event\ProfileSettlementEvent;
 use App\Mealz\AccountingBundle\Repository\TransactionRepositoryInterface;
-use App\Mealz\AccountingBundle\Service\Wallet;
 use App\Mealz\AccountingBundle\Service\CostSheetService;
+use App\Mealz\AccountingBundle\Service\Wallet;
 use App\Mealz\MealBundle\Controller\BaseController;
 use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\MealBundle\Service\Mailer\MailerInterface;
@@ -27,7 +27,7 @@ class CostSheetController extends BaseController
         CostSheetService $costSheetService,
         MailerInterface $mailer,
         EventDispatcherInterface $eventDispatcher
-    ){
+    ) {
         $this->costSheetService = $costSheetService;
         $this->mailer = $mailer;
         $this->eventDispatcher = $eventDispatcher;

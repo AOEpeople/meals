@@ -6,6 +6,7 @@ use App\Mealz\AccountingBundle\Entity\Transaction;
 use App\Mealz\AccountingBundle\Event\ProfileSettlementEvent;
 use App\Mealz\AccountingBundle\Repository\TransactionRepositoryInterface;
 use App\Mealz\AccountingBundle\Service\Wallet;
+use App\Mealz\AccountingBundle\Service\CostSheetService;
 use App\Mealz\MealBundle\Controller\BaseController;
 use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\MealBundle\Service\Mailer\MailerInterface;
@@ -20,9 +21,14 @@ class CostSheetController extends BaseController
 {
     private MailerInterface $mailer;
     private EventDispatcherInterface $eventDispatcher;
+    private CostSheetService $costSheetService;
 
-    public function __construct(MailerInterface $mailer, EventDispatcherInterface $eventDispatcher)
-    {
+    public function __construct(
+        CostSheetService $costSheetService,
+        MailerInterface $mailer,
+        EventDispatcherInterface $eventDispatcher
+    ){
+        $this->costSheetService = $costSheetService;
         $this->mailer = $mailer;
         $this->eventDispatcher = $eventDispatcher;
     }
@@ -70,6 +76,8 @@ class CostSheetController extends BaseController
                 unset($users[$username]);
             }
         }
+
+        $users = $this->costSheetService->mergeDoubleUserTransactions($users);
 
         ksort($users, SORT_STRING);
         unset($columnNames['total']);

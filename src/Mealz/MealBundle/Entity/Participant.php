@@ -9,80 +9,58 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="participant")
- */
+#[ORM\Entity]
+#[ORM\Table(name: 'participant')]
 class Participant
 {
-    /**
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private ?int $id = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Mealz\MealBundle\Entity\EventParticipation", inversedBy="participants")
-     * @ORM\JoinColumn(name="event", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\ManyToOne(targetEntity: EventParticipation::class, inversedBy: 'participants')]
+    #[ORM\JoinColumn(name: 'event', referencedColumnName: 'id', nullable: true)]
     private ?EventParticipation $event = null;
 
-    /**
-     * @Assert\NotNull()
-     * @Assert\Type(type="App\Mealz\MealBundle\Entity\Meal")
-     * @ORM\ManyToOne(targetEntity="Meal",inversedBy="participants")
-     * @ORM\JoinColumn(name="meal_id", referencedColumnName="id", nullable=true)
-     */
+    #[Assert\NotNull]
+    #[ORM\ManyToOne(targetEntity: Meal::class, inversedBy: 'participants')]
+    #[ORM\JoinColumn(name: 'meal_id', referencedColumnName: 'id', nullable: true)]
     private ?Meal $meal;
 
-    /**
-     * @Assert\NotNull()
-     * @ORM\ManyToOne(targetEntity="App\Mealz\MealBundle\Entity\Slot", inversedBy="participants")
-     * @ORM\JoinColumn(name="slot_id", referencedColumnName="id", nullable=true)
-     */
+    #[Assert\NotNull]
+    #[ORM\ManyToOne(targetEntity: Slot::class, inversedBy: 'participants')]
+    #[ORM\JoinColumn(name: 'slot_id', referencedColumnName: 'id', nullable: true)]
     private ?Slot $slot = null;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Dish")
-     *
      * @var Collection<int, Dish>|null
      */
+    #[ORM\ManyToMany(targetEntity: Dish::class)]
     private ?Collection $combinedDishes;
 
-    /**
-     * @Assert\NotNull()
-     * @Assert\Type(type="App\Mealz\UserBundle\Entity\Profile")
-     * @ORM\ManyToOne(targetEntity="App\Mealz\UserBundle\Entity\Profile")
-     * @ORM\JoinColumn(name="profile_id", referencedColumnName="id")
-     */
+    #[Assert\NotNull]
+    #[ORM\ManyToOne(targetEntity: Profile::class)]
+    #[ORM\JoinColumn(name: 'profile_id', referencedColumnName: 'id', nullable: false)]
     private Profile $profile;
 
-    /**
-     * @Assert\Length(min=3, max=2048)
-     * @ORM\Column(type="string", length=2048, nullable=TRUE)
-     */
+    #[Assert\Length(min: 3, max: 2048)]
+    #[ORM\Column(type: 'string', length: 2048, nullable: true)]
     private ?string $comment = null;
 
-    /**
-     * @Assert\Length(min=3, max=255)
-     * @ORM\Column(type="string", length=255, nullable=TRUE)
-     */
+    #[Assert\Length(min: 3, max: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $guestName = null;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=false, options={"default": false})
-     */
+    #[ORM\Column(type: 'boolean', nullable: false, options: ['default' => false])]
     private bool $costAbsorbed = false;
 
     /**
-     * @ORM\Column(type="integer", nullable=false, name="offeredAt")
+     * Time (as timestamp) at which participant offered his/her meal.
      */
+    #[ORM\Column(name: 'offeredAt', type: 'integer', nullable: false)]
     private int $offeredAt = 0;
 
-    /**
-     * @ORM\Column(type="boolean", nullable=false, options={"default": false})
-     */
+    #[ORM\Column(type: 'boolean', nullable: false, options: ['default' => false])]
     private bool $confirmed = false;
 
     public function __construct(Profile $profile, ?Meal $meal, ?EventParticipation $eventParticipation = null)

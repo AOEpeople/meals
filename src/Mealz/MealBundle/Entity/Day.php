@@ -9,50 +9,34 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
-use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="day")
- */
+#[ORM\Entity]
+#[ORM\Table(name: 'day')]
 class Day extends AbstractMessage implements JsonSerializable
 {
-    /**
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id]
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private ?int $id = null;
 
-    /**
-     * @Assert\Type(type="DateTime")
-     * @ORM\Column(type="datetime", nullable=FALSE)
-     */
+    #[ORM\Column(type: 'datetime', nullable: false)]
     private DateTime $dateTime;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Week", inversedBy="days")
-     * @ORM\JoinColumn(name="week_id", referencedColumnName="id")
-     */
+    #[ORM\ManyToOne(targetEntity: Week::class, inversedBy: 'days')]
+    #[ORM\JoinColumn(name: 'week_id', referencedColumnName: 'id')]
     private Week $week;
 
     /**
-     * @ORM\OneToMany(targetEntity="Meal", mappedBy="day", cascade={"all"})
-     *
      * @var Collection<int, Meal>
      */
+    #[ORM\OneToMany(mappedBy: 'day', targetEntity: Meal::class, cascade: ['all'])]
     private Collection $meals;
 
-    /**
-     * @ORM\OneToOne(targetEntity="EventParticipation", mappedBy="day", cascade={"all"})
-     * @ORM\JoinColumn(name="event_id", referencedColumnName="id", nullable=true)
-     */
+    #[ORM\OneToOne(mappedBy: 'day', targetEntity: EventParticipation::class, cascade: ['all'])]
+    #[ORM\JoinColumn(name: 'event_id', referencedColumnName: 'id', nullable: true)]
     private ?EventParticipation $event = null;
 
-    /**
-     * @Assert\Type(type="DateTime")
-     * @ORM\Column(type="datetime", nullable=TRUE)
-     */
+    #[ORM\Column(type: 'datetime', nullable: true)]
     private DateTime $lockParticipationDateTime;
 
     public function __construct()

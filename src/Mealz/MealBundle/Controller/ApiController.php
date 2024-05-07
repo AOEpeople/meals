@@ -19,7 +19,6 @@ use App\Mealz\MealBundle\Service\SlotService;
 use App\Mealz\MealBundle\Service\WeekService;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 

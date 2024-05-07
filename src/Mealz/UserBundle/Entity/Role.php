@@ -4,58 +4,43 @@ declare(strict_types=1);
 
 namespace App\Mealz\UserBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * Role entity.
- *
- * @ORM\Entity
- * @ORM\Table(name="role")
- */
+#[ORM\Entity]
+#[ORM\Table(name: 'role')]
 class Role
 {
     /**
      * Constants for default roles.
      */
-    public const ROLE_KITCHEN_STAFF = 'ROLE_KITCHEN_STAFF';
-    public const ROLE_USER = 'ROLE_USER';
-    public const ROLE_GUEST = 'ROLE_GUEST';
-    public const ROLE_FINANCE = 'ROLE_FINANCE';
+    public const string ROLE_KITCHEN_STAFF = 'ROLE_KITCHEN_STAFF';
+    public const string ROLE_USER = 'ROLE_USER';
+    public const string ROLE_GUEST = 'ROLE_GUEST';
+    public const string ROLE_FINANCE = 'ROLE_FINANCE';
 
     /**
      * Role ID.
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Id]
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private int $id = 0;
 
     /**
      * Role name.
-     *
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank
      */
+    #[Assert\NotBlank]
+    #[ORM\Column(type: 'string')]
     private string $title = '';
 
     /**
      * Role string identifier.
-     *
-     * @ORM\Column(type="string", unique=true)
-     * @Assert\NotBlank
      */
+    #[Assert\NotBlank]
+    #[ORM\Column(type: 'string', unique: true)]
     private string $sid = '';
-
-    /**
-     * @ORM\ManyToMany(targetEntity="Profile", mappedBy="roles")
-     *
-     * @var Collection<int, Profile>|null
-     */
-    private ?Collection $profiles = null;
 
     public function getId(): int
     {
@@ -89,18 +74,6 @@ class Role
     public function setSid(string $sid): self
     {
         $this->sid = $sid;
-
-        return $this;
-    }
-
-    public function getProfiles(): Collection
-    {
-        return $this->profiles ?? new ArrayCollection();
-    }
-
-    public function setProfiles(Collection $profiles): self
-    {
-        $this->profiles = $profiles;
 
         return $this;
     }

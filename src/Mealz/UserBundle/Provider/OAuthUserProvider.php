@@ -10,17 +10,16 @@ use Doctrine\ORM\EntityManagerInterface;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthAwareUserProviderInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProviderInterface
 {
-    private const ROLE_ADMIN = 'ROLE_ADMIN';
-    private const ROLE_KITCHEN_STAFF = 'ROLE_KITCHEN_STAFF';
-    private const ROLE_FINANCE = 'ROLE_FINANCE';
-    private const ROLE_USER = 'ROLE_USER';
+    private const string ROLE_ADMIN = 'ROLE_ADMIN';
+    private const string ROLE_KITCHEN_STAFF = 'ROLE_KITCHEN_STAFF';
+    private const string ROLE_FINANCE = 'ROLE_FINANCE';
+    private const string ROLE_USER = 'ROLE_USER';
 
     /**
      * Map Keycloak Roles to Meals ones.
@@ -42,15 +41,6 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
     {
         $this->entityManager = $entityManager;
         $this->roleRepo = $roleRepo;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function loadUserByUsername($username): UserInterface
-    {
-        // TODO: deprecated; remove in 6.4
-        throw new \Exception('loadUserByUsername is deprecated; use loadUserByIdentifier instead', 1129778235);
     }
 
     public function loadUserByIdentifier(string $identifier): UserInterface

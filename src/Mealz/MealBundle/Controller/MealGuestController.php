@@ -16,10 +16,12 @@ use App\Mealz\MealBundle\Service\GuestParticipationService;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class MealGuestController extends BaseController
 {
@@ -62,9 +64,10 @@ class MealGuestController extends BaseController
      * @param Day $mealDay meal day for which to generate the invitation
      *
      * @ParamConverter("mealDay", options={"mapping": {"dayId": "id"}})
-     * @Security("is_granted('ROLE_USER')")
      */
+    #[IsGranted("ROLE_USER")]
     public function newGuestInvitation(
+        #[MapEntity(id: 'dayId')]
         Day $mealDay,
         GuestInvitationRepositoryInterface $guestInvitationRepo
     ): JsonResponse {

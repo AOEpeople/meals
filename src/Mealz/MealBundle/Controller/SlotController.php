@@ -10,30 +10,22 @@ use App\Mealz\MealBundle\Repository\SlotRepositoryInterface;
 use App\Mealz\MealBundle\Service\ParticipationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-/**
- * @Security("is_granted('ROLE_KITCHEN_STAFF')")
- */
+#[IsGranted('ROLE_KITCHEN_STAFF')]
 class SlotController extends BaseListController
 {
-    private EntityManagerInterface $em;
-    private SlotRepositoryInterface $slotRepo;
-    private ParticipantRepositoryInterface $participantRepo;
-    private ParticipationService $participationSrv;
-
     public function __construct(
-        EntityManagerInterface $em,
-        SlotRepositoryInterface $slotRepo,
-        ParticipantRepositoryInterface $participantRepo,
-        ParticipationService $participationSrv
+        private readonly EntityManagerInterface $em,
+        private readonly SlotRepositoryInterface $slotRepo,
+        private readonly ParticipantRepositoryInterface $participantRepo,
+        private readonly ParticipationService $participationSrv,
+        private readonly LoggerInterface $logger
     ) {
-        $this->em = $em;
-        $this->slotRepo = $slotRepo;
-        $this->participantRepo = $participantRepo;
-        $this->participationSrv = $participationSrv;
     }
 
     /**
@@ -43,7 +35,7 @@ class SlotController extends BaseListController
     {
         $slots = $this->slotRepo->findBy(['deleted' => 0]);
 
-        return new JsonResponse($slots, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
+        return new JsonResponse($slots, Response::HTTP_OK);
     }
 
     public function update(Request $request, Slot $slot): JsonResponse
@@ -71,11 +63,11 @@ class SlotController extends BaseListController
             $this->em->persist($slot);
             $this->em->flush();
 
-            return new JsonResponse($slot, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
+            return new JsonResponse($slot, Response::HTTP_OK);
         } catch (Exception $e) {
-            $this->logException($e);
+            $this->logger->error('slot update error', $this->getTrace($e));
 
-            return new JsonResponse(['message' => $e->getMessage()], \Symfony\Component\HttpFoundation\Response::HTTP_METHOD_NOT_ALLOWED);
+            return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_METHOD_NOT_ALLOWED);
         }
     }
 
@@ -87,12 +79,12 @@ class SlotController extends BaseListController
             $this->em->persist($slot);
             $this->em->flush();
         } catch (Exception $e) {
-            $this->logException($e);
+            $this->logger->error('slot delete error', $this->getTrace($e));
 
-            return new JsonResponse(['message' => $e->getMessage()], \Symfony\Component\HttpFoundation\Response::HTTP_METHOD_NOT_ALLOWED);
+            return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_METHOD_NOT_ALLOWED);
         }
 
-        return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
+        return new JsonResponse(null, Response::HTTP_OK);
     }
 
     /**
@@ -119,11 +111,11 @@ class SlotController extends BaseListController
             $this->em->persist($slot);
             $this->em->flush();
         } catch (Exception $e) {
-            $this->logException($e);
+            $this->logger->error('slot create error', $this->getTrace($e));
 
-            return new JsonResponse(['message' => $e->getMessage()], \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
+        return new JsonResponse(null, Response::HTTP_OK);
     }
 }

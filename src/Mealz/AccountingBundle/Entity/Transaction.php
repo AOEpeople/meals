@@ -8,58 +8,33 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="transaction")
- */
+#[ORM\Entity]
+#[ORM\Table(name: 'transaction')]
 class Transaction
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    private int $id;
 
-    /**
-     * @var Profile
-     *
-     * @Assert\NotBlank()
-     * @Assert\Type(type="App\Mealz\UserBundle\Entity\Profile")
-     * @ORM\ManyToOne(targetEntity="App\Mealz\UserBundle\Entity\Profile", cascade={"persist"})
-     * @ORM\JoinColumn(name="profile", referencedColumnName="id", nullable=FALSE)
-     */
-    private $profile;
+    #[Assert\NotNull]
+    #[ORM\ManyToOne(targetEntity: Profile::class, cascade: ['persist'])]
+    #[ORM\JoinColumn(name: 'profile', referencedColumnName: 'id', nullable: false)]
+    private Profile $profile;
 
-    /**
-     * @var DateTime
-     *
-     * @ORM\Column(type="datetime")
-     * @Gedmo\Timestampable(on="create")
-     */
-    private $date;
+    #[ORM\Column(type: 'datetime')]
+    #[Gedmo\Timestampable(on: 'create')]
+    private DateTime $date;
 
-    /**
-     * @var float
-     *
-     * @Assert\NotBlank()
-     * @ORM\Column(type="decimal", precision=10, scale=4, nullable=FALSE)
-     */
-    private $amount;
+    #[Assert\NotBlank]
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 4, nullable: false)]
+    private float $amount;
 
-    /**
-     * @Assert\Length(min=3, max=2048)
-     * @ORM\Column(type="string", length=2048, nullable=TRUE)
-     *
-     * @var string
-     */
-    private $paymethod;
+    #[Assert\Length(min: 3, max: 2048)]
+    #[ORM\Column(type: 'string', length: 2048, nullable: true)]
+    private string $paymethod;
 
-    /**
-     * @ORM\Column(type="string", length=24, unique=TRUE, nullable=TRUE)
-     */
+    #[ORM\Column(type: 'string', length: 24, unique: true, nullable: true)]
     private ?string $orderId = null;
 
     public function getId(): int
@@ -80,12 +55,7 @@ class Transaction
         return $this->date;
     }
 
-    /**
-     * @param float $amount
-     *
-     * @return Transaction
-     */
-    public function setAmount($amount)
+    public function setAmount(float $amount): self
     {
         $this->amount = $amount;
 
@@ -104,17 +74,7 @@ class Transaction
         return $this;
     }
 
-    public function getOrderId(): ?string
-    {
-        return $this->orderId;
-    }
-
-    /**
-     * @param string $paymethod
-     *
-     * @return Transaction
-     */
-    public function setPaymethod($paymethod)
+    public function setPaymethod(string $paymethod): self
     {
         $this->paymethod = $paymethod;
 
@@ -139,10 +99,7 @@ class Transaction
         return $this;
     }
 
-    /**
-     * @return Profile
-     */
-    public function getProfile()
+    public function getProfile(): Profile
     {
         return $this->profile;
     }

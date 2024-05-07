@@ -74,16 +74,16 @@ security:
         - { path: ^/login, roles: ['%env(auth-mode:APP_AUTH_MODE)%'] }
         - { path: ^/api/login, roles: ['%env(auth-mode:APP_AUTH_MODE)%'] }
         - { path: ^/connect, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
-        - { path: ^/guest, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/guest, roles: [PUBLIC_ACCESS] }
         - { path: ^/guest/api/dashboard, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/show/participations, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/api/meals/nextThreeDays, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/api/print/participations, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
-        - { path: ^/api/dashboard, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
-        - { path: ^/api/guest-invitation, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
-        - { path: ^/api/guest/meal/participation, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
-        - { path: ^/api/environmentals, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
-        - { path: ^/api/user, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/api/dashboard, roles: [ROLE_USER] }
+        - { path: ^/api/guest-invitation, roles: [PUBLIC_ACCESS] }
+        - { path: ^/api/guest/meal/participation, roles: [PUBLIC_ACCESS] }
+        - { path: ^/api/environmentals, roles: [PUBLIC_ACCESS] }
+        - { path: ^/api/user, roles: [] }
         - { path: ^/api/event/invitation/\S*, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: '^/participation/slots-status/\d{4}-\d{2}-\d{2}$', roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: '^/participation/count-status/\d{4}-\d{2}-\d{2}$', roles: [IS_AUTHENTICATED_ANONYMOUSLY] }

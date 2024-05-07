@@ -22,47 +22,28 @@ class Profile implements UserInterface, JsonSerializable
     #[ORM\Id, ORM\GeneratedValue(strategy: 'NONE'), ORM\Column(name: 'id', type: 'string', length: 255, nullable: false)]
     private string $username = '';
 
-    /**
-     * @Assert\NotBlank()
-     * @ORM\Column(type="string", length=255, nullable=TRUE)
-     */
     #[Assert\NotBlank]
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private string $name = '';
 
-    /**
-     * @Assert\NotBlank()
-     * @ORM\Column(type="string", length=255, nullable=TRUE)
-     */
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private string $firstName = '';
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=TRUE)
-     */
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $email = null;
 
     #[ORM\Column(type: 'boolean', nullable: false, options: ['default' => false])]
     private bool $hidden = false;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=TRUE)
-     */
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $company = '';
 
     /**
-     * @ORM\ManyToMany(targetEntity="Role", inversedBy="profiles")
-     *
      * @var Collection<int, Role>|null
      */
     #[ORM\ManyToMany(targetEntity: 'Role', inversedBy: 'profiles')]
     private ?Collection $roles = null;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=TRUE)
-     */
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $settlementHash = null;
 

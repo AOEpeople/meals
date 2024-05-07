@@ -16,7 +16,7 @@ use Throwable;
 
 abstract class BaseController extends AbstractController
 {
-    private \App\Mealz\MealBundle\Service\Doorman $doorman;
+    private Doorman $doorman;
     private TranslatorInterface $dataCollectorTranslator;
     private LoggerInterface $logger;
     public function __construct(Doorman $doorman, TranslatorInterface $dataCollectorTranslator, LoggerInterface $logger)
@@ -77,5 +77,34 @@ abstract class BaseController extends AbstractController
     protected function logException(Throwable $exc, string $message = '', array $context = []): void
     {
         $this->logger->logException($exc, $message, $context);
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    protected function getTrace(Throwable $exc): array
+    {
+        $excChain = [];
+
+        for ($i = 0; $exc; ++$i) {
+            $excLog = ['exception' => get_class($exc)];
+
+            if (0 < $exc->getCode()) {
+                $excLog['code'] = $exc->getCode();
+            }
+
+            $excLog['message'] = $exc->getMessage();
+            $excLog['file'] = $exc->getFile() . ':' . $exc->getLine();
+
+            $prev = $exc->getPrevious();
+            if (null === $prev) {
+                $excLog['stacktrace'] = $exc->getTraceAsString();
+            }
+
+            $exc = $prev;
+            $excChain['caused by [#' . $i . ']'] = $excLog;
+        }
+
+        return $excChain;
     }
 }

@@ -5,19 +5,15 @@ namespace App\Mealz\MealBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/** @ORM\MappedSuperclass */
+#[ORM\MappedSuperclass]
 abstract class AbstractMessage
 {
-    /**
-     * @Assert\NotNull()
-     * @ORM\Column(type="boolean", nullable=FALSE)
-     */
+    #[Assert\NotNull]
+    #[ORM\Column(type: 'boolean', nullable: false)]
     private bool $enabled = true;
 
-    /**
-     * @Assert\Length(min=8, max=255)
-     * @ORM\Column(type="string", length=255, nullable=TRUE)
-     */
+    #[Assert\Length(min: 8, max: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private string $message;
 
     public function isEnabled(): bool

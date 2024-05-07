@@ -6,7 +6,7 @@ namespace App\Mealz\UserBundle\Repository;
 
 use App\Mealz\MealBundle\Repository\BaseRepository;
 use App\Mealz\UserBundle\Entity\Role;
-use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ArrayParameterType;
 
 /**
  * @extends BaseRepository<Role>
@@ -20,7 +20,7 @@ class RoleRepository extends BaseRepository implements RoleRepositoryInterface
     {
         $queryBuilder = $this->createQueryBuilder('r');
         $queryBuilder->where($queryBuilder->expr()->in('r.sid', ':sids'));
-        $queryBuilder->setParameter('sids', $sids, Connection::PARAM_STR_ARRAY);
+        $queryBuilder->setParameter('sids', $sids, ArrayParameterType::STRING);
 
         $roles = $queryBuilder->getQuery()->getResult();
 

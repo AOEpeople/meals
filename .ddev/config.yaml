@@ -11,12 +11,15 @@ additional_fqdns:
     - meals.test
 database:
     type: mariadb
-    version: "10.2"
+    version: "10.11"
+nfs_mount_enabled: false
+mutagen_enabled: false
 performance_mode: none
 hooks:
     post-start:
         - exec: echo 'export PHP_IDE_CONFIG='serverName=meals.test'' >> ~/.bashrc
         - exec: sudo service ssh start
+omit_containers: [dba]
 webimage_extra_packages: [ssh]
 use_dns_when_possible: true
 timezone: Europe/Berlin

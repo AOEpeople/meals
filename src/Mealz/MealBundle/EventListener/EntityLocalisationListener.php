@@ -6,7 +6,7 @@ use App\Mealz\MealBundle\Entity\Category;
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\DishVariation;
 use App\Mealz\MealBundle\Service\HttpHeaderUtility;
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PostLoadEventArgs;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class EntityLocalisationListener extends LocalisationListener
@@ -22,9 +22,9 @@ class EntityLocalisationListener extends LocalisationListener
     /**
      * set localisation for dish and category objects.
      */
-    public function postLoad(LifecycleEventArgs $args): void
+    public function postLoad(PostLoadEventArgs $args): void
     {
-        $entity = $args->getEntity();
+        $entity = $args->getObject();
 
         /*
          * @TODO: Refactor to use an interface or abstract class, which all the 3 classes below have in common

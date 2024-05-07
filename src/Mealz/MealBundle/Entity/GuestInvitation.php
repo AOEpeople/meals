@@ -6,43 +6,25 @@ use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="guest_invitation")
- * @ORM\HasLifecycleCallbacks
- */
+#[ORM\Entity]
+#[ORM\Table(name: 'guest_invitation')]
+#[ORM\HasLifecycleCallbacks]
 class GuestInvitation
 {
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="id", type="string")
-     * @ORM\Id
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\Column(type: 'string')]
+    private string $id;
 
-    /**
-     * @var DateTime
-     *
-     * @ORM\Column(name="created_on", type="datetime")
-     */
-    private $createdOn;
+    #[ORM\Column(name: 'created_on', type: 'datetime')]
+    private DateTime $createdOn;
 
-    /**
-     * @var Profile
-     *
-     * @ORM\ManyToOne(targetEntity="App\Mealz\UserBundle\Entity\Profile")
-     * @ORM\JoinColumn(name="host_id", referencedColumnName="id", nullable=FALSE, onDelete="NO ACTION")
-     */
-    private $host;
+    #[ORM\ManyToOne(targetEntity: Profile::class)]
+    #[ORM\JoinColumn(name: 'host_id', referencedColumnName: 'id', nullable: false, onDelete: 'NO ACTION')]
+    private Profile $host;
 
-    /**
-     * @var Day
-     *
-     * @ORM\ManyToOne(targetEntity="Day")
-     * @ORM\JoinColumn(name="meal_day_id", referencedColumnName="id", nullable=FALSE, onDelete="NO ACTION")
-     */
-    private $day;
+    #[ORM\ManyToOne(targetEntity: Day::class)]
+    #[ORM\JoinColumn(name: 'meal_day_id', referencedColumnName: 'id', nullable: false, onDelete: 'NO ACTION')]
+    private Day $day;
 
     /**
      * Initializes class instance.
@@ -53,10 +35,7 @@ class GuestInvitation
         $this->day = $day;
     }
 
-    /**
-     * @param string $id
-     */
-    public function setId($id): GuestInvitation
+    public function setId(string $id): GuestInvitation
     {
         $this->id = $id;
 
@@ -71,59 +50,27 @@ class GuestInvitation
         return $this->id;
     }
 
-    public function setCreatedOn(DateTime $createdOn): GuestInvitation
-    {
-        $this->createdOn = $createdOn;
-
-        return $this;
-    }
-
-    /**
-     * @return DateTime
-     */
-    public function getCreatedOn()
-    {
-        return $this->createdOn;
-    }
-
-    /**
-     * @return GuestInvitation
-     */
-    public function setHost(Profile $host)
+    public function setHost(Profile $host): self
     {
         $this->host = $host;
 
         return $this;
     }
 
-    /**
-     * @return Profile
-     */
-    public function getHost()
+    public function getHost(): Profile
     {
         return $this->host;
     }
 
-    public function setDay(Day $day): GuestInvitation
-    {
-        $this->day = $day;
-
-        return $this;
-    }
-
     /**
      * Get meal day.
-     *
-     * @return Day
      */
-    public function getDay()
+    public function getDay(): Day
     {
         return $this->day;
     }
 
-    /**
-     * @ORM\PrePersist ()
-     */
+    #[ORM\PrePersist]
     public function beforeCreate(): void
     {
         $this->id = md5($this->host->getUsername() . $this->day->getId());

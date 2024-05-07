@@ -5,16 +5,15 @@
     "description": "",
     "autoload": {
         "psr-4": {
-            "App\\": "src/"
+            "App\\": ["src/", "src/Mealz/MealBundle/"]
         }
     },
     "require": {
-        "php": ">=8.1",
+        "php": ">=8.3",
         "ext-bcmath": "*",
         "ext-calendar": "*",
         "ext-json": "*",
         "ext-pdo": "*",
-        "doctrine/annotations": "*",
         "doctrine/dbal": "^3",
         "doctrine/doctrine-bundle": "^2.12",
         "doctrine/doctrine-migrations-bundle": "^3.3",
@@ -31,11 +30,12 @@
         "psr/link": "^1.0",
         "psr/log": "^1|^2",
         "qipsius/tcpdf-bundle": "^2.0",
-        "sensio/framework-extra-bundle": "^6.2",
         "stof/doctrine-extensions-bundle": "^1.6",
         "symfony/asset": "^6.4",
+        "symfony/config": "^6.4",
         "symfony/console": "^6.4",
         "symfony/contracts": "^3.5.0",
+        "symfony/dependency-injection": "^6.4",
         "symfony/dotenv": "^6.4",
         "symfony/expression-language": "^6.4",
         "symfony/flex": "^1.18",
@@ -60,6 +60,7 @@
         "symfony/property-info": "^6.4",
         "symfony/proxy-manager-bridge": "^6.4",
         "symfony/routing": "^6.4",
+        "symfony/runtime": "^6.4",
         "symfony/security-csrf": "^6.4",
         "symfony/translation": "^6.4",
         "symfony/twig-bridge": "^6.4",
@@ -101,7 +102,8 @@
             "@auto-scripts"
         ],
         "auto-scripts": {
-            "cache:clear": "symfony-cmd"
+            "cache:clear": "symfony-cmd",
+            "assets:install %PUBLIC_DIR%": "symfony-cmd"
         },
         "tests": [
             "mkdir -p build/artifacts/qa/",
@@ -112,10 +114,8 @@
         "sort-packages": true,
         "allow-plugins": {
             "symfony/flex": true,
-            "php-http/discovery": true
+            "php-http/discovery": true,
+            "symfony/runtime": true
         }
-    },
-    "extra": {
-        "src-dir": "src/Mealz/MealBundle"
     }
 }

@@ -14,29 +14,23 @@ use App\Mealz\MealBundle\Repository\GuestInvitationRepositoryInterface;
 use App\Mealz\MealBundle\Service\EventParticipationService;
 use App\Mealz\MealBundle\Service\GuestParticipationService;
 use Exception;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class MealGuestController extends BaseController
 {
-    private EventParticipationService $eventPartSrv;
-    private GuestParticipationService $guestPartSrv;
-    private EventDispatcherInterface $eventDispatcher;
-
     public function __construct(
-        EventParticipationService $eventPartSrv,
-        GuestParticipationService $guestPartSrv,
-        EventDispatcherInterface $eventDispatcher
+        private readonly EventParticipationService $eventPartSrv,
+        private readonly GuestParticipationService $guestPartSrv,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly LoggerInterface $logger
     ) {
-        $this->eventPartSrv = $eventPartSrv;
-        $this->guestPartSrv = $guestPartSrv;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function joinAsGuest(Request $request): JsonResponse
@@ -52,18 +46,16 @@ class MealGuestController extends BaseController
             $participants = $this->guestPartSrv->join($profile, $meals, $slot, $dishSlugs);
             $this->triggerJoinEvents($participants);
         } catch (Exception $e) {
-            $this->logException($e, 'guest registration error');
+            $this->logger->error('guest join error', $this->getTrace($e));
 
-            return new JsonResponse($e->getMessage(), \Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST);
+            return new JsonResponse($e->getMessage(), Response::HTTP_BAD_REQUEST);
         }
 
-        return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
+        return new JsonResponse(null, Response::HTTP_OK);
     }
 
     /**
      * @param Day $mealDay meal day for which to generate the invitation
-     *
-     * @ParamConverter("mealDay", options={"mapping": {"dayId": "id"}})
      */
     #[IsGranted("ROLE_USER")]
     public function newGuestInvitation(
@@ -73,19 +65,17 @@ class MealGuestController extends BaseController
     ): JsonResponse {
         $guestInvitation = $guestInvitationRepo->findOrCreateInvitation($this->getUser()->getProfile(), $mealDay);
 
-        return new JsonResponse(['url' => $this->generateInvitationUrl($guestInvitation)], \Symfony\Component\HttpFoundation\Response::HTTP_OK);
+        return new JsonResponse(['url' => $this->generateInvitationUrl($guestInvitation)], Response::HTTP_OK);
     }
 
-    /**
-     * @Security("is_granted('ROLE_USER')")
-     */
+    #[IsGranted("ROLE_USER")]
     public function newGuestEventInvitation(
         Day $dayId,
         GuestInvitationRepositoryInterface $guestInvitationRepo
     ): JsonResponse {
         $eventInvitation = $guestInvitationRepo->findOrCreateInvitation($this->getUser()->getProfile(), $dayId);
 
-        return new JsonResponse(['url' => $this->generateInvitationUrl($eventInvitation, false)], \Symfony\Component\HttpFoundation\Response::HTTP_OK);
+        return new JsonResponse(['url' => $this->generateInvitationUrl($eventInvitation, false)], Response::HTTP_OK);
     }
 
     public function getEventInvitationData(
@@ -104,7 +94,7 @@ class MealGuestController extends BaseController
             'event' => $invitation->getDay()->getEvent()->getEvent()->getTitle(),
         ];
 
-        return new JsonResponse($guestData, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
+        return new JsonResponse($guestData, Response::HTTP_OK);
     }
 
     public function joinEventAsGuest(
@@ -119,7 +109,7 @@ class MealGuestController extends BaseController
         if (null === $invitation) {
             return new JsonResponse(['message' => '901: Could not find invitation for the given hash', 403]);
         } elseif (false === isset($parameters['firstName']) || false === isset($parameters['lastName'])) {
-            return new JsonResponse(['message' => '902: Parameters were not provided'], \Symfony\Component\HttpFoundation\Response::HTTP_NOT_FOUND);
+            return new JsonResponse(['message' => '902: Parameters were not provided'], Response::HTTP_NOT_FOUND);
         }
 
         if (false === isset($parameters['company'])) {
@@ -135,14 +125,14 @@ class MealGuestController extends BaseController
             );
 
             if (null === $eventParticipation) {
-                return new JsonResponse(['message' => '903: Unknown error occured while joining the event'], \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR);
+                return new JsonResponse(['message' => '903: Unknown error occured while joining the event'], Response::HTTP_INTERNAL_SERVER_ERROR);
             }
 
             $this->eventDispatcher->dispatch(new EventParticipationUpdateEvent($eventParticipation));
 
-            return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
+            return new JsonResponse(null, Response::HTTP_OK);
         } catch (Exception $e) {
-            return new JsonResponse(['message' => '903: ' . $e->getMessage()], \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(['message' => '903: ' . $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 

@@ -21,19 +21,9 @@ class Dish implements JsonSerializable
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
-    private $id;
+    private ?int $id = null;
 
-    /**
-     * @TODO: CHECK IF THIS WORKS. Add 'title_de' to the update field list 'fields={"title_en"}', check with Jonathan
-     * @Gedmo\Slug(handlers={
-     *   @Gedmo\SlugHandler(class="Gedmo\Sluggable\Handler\InversedRelativeSlugHandler", options={
-     *       @Gedmo\SlugHandlerOption(name="relationClass", value="App\Mealz\MealBundle\Entity\Dish"),
-     *       @Gedmo\SlugHandlerOption(name="mappedBy", value="parent"),
-     *       @Gedmo\SlugHandlerOption(name="inverseSlugField", value="slug")
-     *      })
-     *   }, fields={"title_en"})
-     * @ORM\Column(length=128, unique=true)
-     */
+    #[Gedmo\Slug(fields: ['title_en'])]
     #[ORM\Column(type: 'string', length: 128, unique: true)]
     protected string $slug;
 
@@ -97,10 +87,7 @@ class Dish implements JsonSerializable
         $this->parent = $parent;
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }

@@ -4,30 +4,24 @@ namespace App\Mealz\MealBundle\Controller;
 
 use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\Entity\DishVariation;
-use App\Mealz\MealBundle\Repository\DishRepository;
+use App\Mealz\MealBundle\Repository\DishRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-/**
- * @Security("is_granted('ROLE_KITCHEN_STAFF')")
- */
+#[IsGranted('ROLE_KITCHEN_STAFF')]
 class DishVariationController extends BaseController
 {
-    private float $defaultPrice;
-    private DishRepository $dishRepository;
-    private EntityManagerInterface $em;
-
     public function __construct(
-        float $price,
-        DishRepository $dishRepository,
-        EntityManagerInterface $em
+        private readonly float $price,
+        private readonly DishRepositoryInterface $dishRepository,
+        private readonly EntityManagerInterface $em,
+        private readonly LoggerInterface $logger,
     ) {
-        $this->defaultPrice = $price;
-        $this->dishRepository = $dishRepository;
-        $this->em = $em;
     }
 
     /**
@@ -41,7 +35,7 @@ class DishVariationController extends BaseController
             $dishVariation = new DishVariation();
             $dishVariation->setParent($dish);
             $dishVariation->setOneServingSize($dish->hasOneServingSize());
-            $dishVariation->setPrice($this->defaultPrice);
+            $dishVariation->setPrice($this->price);
             $dishVariation->setCategory($dish->getCategory());
 
             if (true === isset($parameters['titleDe']) && true === isset($parameters['titleEn'])) {
@@ -54,11 +48,11 @@ class DishVariationController extends BaseController
             $this->em->persist($dishVariation);
             $this->em->flush();
 
-            return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
+            return new JsonResponse(null, Response::HTTP_OK);
         } catch (Exception $e) {
-            $this->logException($e);
+            $this->logger->error('dish variation create error', $this->getTrace($e));
 
-            return new JsonResponse(['message' => $e->getMessage()], \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -79,11 +73,11 @@ class DishVariationController extends BaseController
             $this->em->persist($dishVariation);
             $this->em->flush();
 
-            return new JsonResponse($dishVariation, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
+            return new JsonResponse($dishVariation, Response::HTTP_OK);
         } catch (Exception $e) {
-            $this->logException($e);
+            $this->logger->error('dish variation update error', $this->getTrace($e));
 
-            return new JsonResponse(['message' => $e->getMessage()], \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -102,11 +96,11 @@ class DishVariationController extends BaseController
             }
             $this->em->flush();
 
-            return new JsonResponse(null, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
+            return new JsonResponse(null, Response::HTTP_OK);
         } catch (Exception $e) {
-            $this->logException($e);
+            $this->logger->error('dish variation delete error', $this->getTrace($e));
 
-            return new JsonResponse(['message' => $e->getMessage()], \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

@@ -15,13 +15,13 @@ class Week extends AbstractMessage implements JsonSerializable
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
-    private int $id;
+    private ?int $id = null;
 
     #[ORM\Column(type: 'smallint', nullable: false)]
-    private int $year;
+    private int $year = 1970;
 
     #[ORM\Column(type: 'smallint', nullable: false)]
-    private int $calendarWeek;
+    private int $calendarWeek = 0;
 
     #[ORM\OneToMany(mappedBy: 'week', targetEntity: Day::class, cascade: ['all'])]
     #[ORM\OrderBy(['dateTime' => 'ASC'])]
@@ -32,10 +32,7 @@ class Week extends AbstractMessage implements JsonSerializable
         $this->days = new ArrayCollection();
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -50,10 +47,7 @@ class Week extends AbstractMessage implements JsonSerializable
         $this->days = $days;
     }
 
-    /**
-     * @return int
-     */
-    public function getYear()
+    public function getYear(): int
     {
         return $this->year;
     }
@@ -109,8 +103,8 @@ class Week extends AbstractMessage implements JsonSerializable
 
         return [
             'id' => $this->getId(),
-            'year' => (int) $this->getYear(),
-            'calendarWeek' => (int) $this->getCalendarWeek(),
+            'year' => $this->getYear(),
+            'calendarWeek' => $this->getCalendarWeek(),
             'days' => $days,
             'enabled' => $this->isEnabled(),
         ];

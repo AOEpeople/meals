@@ -53,7 +53,6 @@ class ParticipantController extends BaseController
     /**
      * Lets the currently logged-in user either join a meal, or accept an already booked meal offered by a participant.
      */
-    #[IsGranted('ROLE_USER')]
     public function joinMeal(Request $request): JsonResponse
     {
         $profile = $this->getProfile();
@@ -71,7 +70,7 @@ class ParticipantController extends BaseController
         try {
             $result = $this->participationSrv->join($profile, $meal, $slot, $parameters['dishSlugs']);
         } catch (Exception $e) {
-            $this->logException($e);
+            $this->logger->error('join meal error', $this->getTrace($e));
 
             return new JsonResponse(['message' => '402: ' . $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -105,7 +104,6 @@ class ParticipantController extends BaseController
     /**
      * Lets the currently logged-in user either leave a meal, or put it up for offer.
      */
-    #[IsGranted('ROLE_USER')]
     public function leaveMeal(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $profile = $this->getProfile();
@@ -154,8 +152,8 @@ class ParticipantController extends BaseController
             $participationSrv->updateCombinedMeal($participant, $dishSlugs);
         } catch (ParticipationException $pex) {
             return new JsonResponse(['message' => $pex->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
-        } catch (Exception $exc) {
-            $this->logException($exc);
+        } catch (Exception $e) {
+            $this->logger->error('update combined meal error', $this->getTrace($e));
 
             return new JsonResponse(['message' => 'unexpected error'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -177,13 +175,8 @@ class ParticipantController extends BaseController
     /**
      * Makes a booked meal by a participant to be available for taken over.
      */
-    #[IsGranted('ROLE_USER')]
-    public function offerMeal(Request $request): JsonResponse
+    public function offerMeal(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
-        if (false === is_object($this->getUser())) {
-            return $this->ajaxSessionExpiredRedirect();
-        }
-
         $participant = $this->getParticipantFromRequest($request);
         if (null === $participant) {
             return new JsonResponse(null, Response::HTTP_FORBIDDEN);
@@ -197,7 +190,6 @@ class ParticipantController extends BaseController
 
         $participant->setOfferedAt(time());
 
-        $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($participant);
         $entityManager->flush();
 
@@ -210,7 +202,6 @@ class ParticipantController extends BaseController
     /**
      * Cancels an offered meal by a participant, so it can no longer be taken over by other users.
      */
-    #[IsGranted('ROLE_USER')]
     public function cancelOfferedMeal(Request $request): JsonResponse
     {
         $parameters = json_decode($request->getContent(), true);
@@ -271,7 +262,6 @@ class ParticipantController extends BaseController
     public function add(Profile $profile, Meal $meal, Request $request): JsonResponse
     {
         $parameters = json_decode($request->getContent(), true);
-        $result = null;
 
         try {
             if (true === $meal->isCombinedMeal() && false === isset($parameters['combiDishes'])) {
@@ -302,7 +292,7 @@ class ParticipantController extends BaseController
                 'booked' => $participationData,
             ], Response::HTTP_OK);
         } catch (Exception $e) {
-            $this->logException($e);
+            $this->logger->error('error adding participant to meal', $this->getTrace($e));
 
             return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -335,7 +325,7 @@ class ParticipantController extends BaseController
                 'booked' => $participationData,
             ], Response::HTTP_OK);
         } catch (Exception $e) {
-            $this->logException($e);
+            $this->logger->error('error removing participant from meal', $this->getTrace($e));
 
             return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -397,8 +387,7 @@ class ParticipantController extends BaseController
             return;
         }
 
-        $logger = $this->logger;
-        $logger->info(
+        $this->logger->info(
             'admin added {profile} to {meal} (Participant: {participantId})',
             [
                 'participantId' => $participant->getId(),
@@ -411,8 +400,7 @@ class ParticipantController extends BaseController
     private function logRemove(Meal $meal, Participant $participant): void
     {
         if (true === $this->doorman->isKitchenStaff()) {
-            $logger = $this->logger;
-            $logger->info(
+            $this->logger->info(
                 'admin removed {profile} from {meal} (Meal: {mealId})',
                 [
                     'profile' => $participant->getProfile(),

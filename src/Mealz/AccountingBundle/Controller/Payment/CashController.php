@@ -5,26 +5,26 @@ namespace App\Mealz\AccountingBundle\Controller\Payment;
 use App\Mealz\AccountingBundle\Entity\Transaction;
 use App\Mealz\MealBundle\Controller\BaseController;
 use App\Mealz\UserBundle\Entity\Profile;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-/**
- * @Security("is_granted('ROLE_KITCHEN_STAFF')")
- */
+#[IsGranted('ROLE_KITCHEN_STAFF')]
 class CashController extends BaseController
 {
-    private LoggerInterface $logger;
-    public function __construct(LoggerInterface $logger)
+    public function __construct(private readonly LoggerInterface $logger)
     {
-        $this->logger = $logger;
     }
-    /**
-     * @Security("is_granted('ROLE_KITCHEN_STAFF')")
-     */
-    public function postPaymentCash(Profile $profile, Request $request): JsonResponse
+
+    public function postPaymentCash(
+        Profile $profile,
+        Request $request,
+        EntityManagerInterface $entityManager,
+    ): JsonResponse
     {
         try {
             $transaction = new Transaction();
@@ -34,26 +34,23 @@ class CashController extends BaseController
             if ($amount > 0) {
                 $transaction->setAmount($amount);
 
-                $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($transaction);
                 $entityManager->flush();
 
-                $logger = $this->logger;
-                $logger->info('admin added {amount}€ into wallet of {profile} (Transaction: {transactionId})', [
+                $this->logger->info('admin added {amount}€ into wallet of {profile} (Transaction: {transactionId})', [
                     'profile' => $transaction->getProfile(),
                     'amount' => $transaction->getAmount(),
                     'transactionId' => $transaction->getId(),
                 ]);
 
-                return new JsonResponse($transaction->getAmount(), \Symfony\Component\HttpFoundation\Response::HTTP_OK);
+                return new JsonResponse($transaction->getAmount(), Response::HTTP_OK);
             } else {
                 throw new Exception('601: Amount less than 0');
             }
         } catch (Exception $e) {
-            $logger = $this->logger;
-            $logger->info($e->getMessage());
+            $this->logger->error('transaction create error', $this->getTrace($e));
 
-            return new JsonResponse(['message' => $e->getMessage()], \Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(['message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

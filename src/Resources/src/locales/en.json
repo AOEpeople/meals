@@ -69,7 +69,8 @@
   "combiModal": {
     "title": "Choose a combination for your combined dish",
     "submit": "Select meals",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "close": "Close"
   },
   "copyright": "All rights reserved.",
   "dashboard": {
@@ -199,7 +200,8 @@
       },
       "participations": {
         "added": "A user was successfully added a meal.",
-        "removed": "A user was succefully removed fromm a meal."
+        "removed": "A user was succefully removed fromm a meal.",
+        "no": "No participations found."
       },
       "timeslot": {
         "created": "The timeslot was successfully created.",

@@ -1,7 +1,7 @@
 import useApi from '@/api/api';
-import Participations from '../fixtures/menuParticipations.json';
-import getParticipations from '@/api/getParticipations';
+import { useParticipationsListData } from '@/api/getParticipationsByDay';
 import { ref } from 'vue';
+import Participations from '../fixtures/participationsByDate.json';
 
 const asyncFunc: () => Promise<void> = async () => {
     new Promise((resolve) => resolve(undefined));
@@ -20,8 +20,9 @@ useApi.mockReturnValue(mockedReturnValue);
 
 describe('Test getParticipations', () => {
     it('should return a list of participations', async () => {
-        const { error } = await getParticipations(1);
-
-        expect(error.value).toBeFalsy();
+        const { useParticipationsError, listData, getListData } = await useParticipationsListData('2024-01-16');
+        await getListData();
+        expect(useParticipationsError.value).toBeFalsy();
+        expect(listData.value).toEqual(Participations);
     });
 });

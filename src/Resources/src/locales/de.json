@@ -69,7 +69,8 @@
   "combiModal": {
     "title": "Wähle eine Kombination für dein Kombi-Meal",
     "submit": "Gerichte auswählen",
-    "cancel": "Abbrechen"
+    "cancel": "Abbrechen",
+    "close": "Schließen"
   },
   "copyright": "Alle Rechte vorbehalten.",
   "dashboard": {
@@ -199,7 +200,8 @@
       },
       "participations": {
         "added": "Ein Benutzer wurde zu einer Mahlzeit hinzugefügt.",
-        "removed": "Ein Benutzer wurde aus einer Mahlzeit entfernt."
+        "removed": "Ein Benutzer wurde aus einer Mahlzeit entfernt.",
+        "no": "Keine Teilnehmer gefunden."
       },
       "timeslot": {
         "created": "Der Zeitslot wurde erfolgreich erstellt.",

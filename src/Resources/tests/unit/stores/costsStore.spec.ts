@@ -1,5 +1,5 @@
-import { useCosts } from '@/stores/costsStore';
 import useApi from '@/api/api';
+import { useCosts } from '@/stores/costsStore';
 import { ref } from 'vue';
 import Costs from '../fixtures/getCosts.json';
 
@@ -48,6 +48,15 @@ const getMockedResponses = (method: string, url: string) => {
 useApi = jest.fn().mockImplementation((method: string, url: string) => getMockedResponses(method, url));
 
 describe('Test CostsStore', () => {
+    beforeAll(() => {
+        jest.useFakeTimers();
+        jest.setSystemTime(new Date(2023, 3, 1));
+    });
+
+    afterAll(() => {
+        jest.useRealTimers();
+    });
+
     const { CostsState, fetchCosts, hideUser, sendCashPayment, getColumnNames, getFullNameByUser } = useCosts();
 
     it('should not contain data before fetching', () => {

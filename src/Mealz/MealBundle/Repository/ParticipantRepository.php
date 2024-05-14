@@ -205,6 +205,30 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
     /**
      * @return Participant[]
      */
+    public function getParticipantsByDay(DateTime $date, array $options = []): array
+    {
+        $options = array_merge(
+            [
+                'load_meal' => true,
+                'load_profile' => true,
+            ],
+            $options,
+        );
+
+        $queryBuilder = $this->getQueryBuilderWithOptions($options);
+        $queryBuilder->andWhere('m.dateTime LIKE :date');
+        $queryBuilder->setParameter(':date', $date, Types::DATETIME_MUTABLE);
+
+        $queryBuilder->orderBy('u.name', 'ASC');
+
+        $participants = $queryBuilder->getQuery()->execute();
+
+        return $participants;
+    }
+
+    /**
+     * @return Participant[]
+     */
     public function getParticipantsOnCurrentDay(array $options = []): array
     {
         $options = array_merge(
@@ -234,7 +258,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
 
         // SELECT
         $select = 'p';
-        if (true === array_key_exists('load_meal', $options)) {
+        if (true === array_key_exists('load_meal', $options) && true === $options['load_meal']) {
             $select .= ',m,d';
         }
         if (true === array_key_exists('load_profile', $options)) {

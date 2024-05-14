@@ -1,5 +1,5 @@
 import useApi from '@/api/api';
-import { onMounted, reactive, readonly, ref } from 'vue';
+import { onMounted, onUnmounted, reactive, readonly, ref } from 'vue';
 import type { Dictionary } from '../../types/types';
 import type { DateTime } from '@/api/getDashboardData';
 
@@ -27,16 +27,31 @@ const listDataState = reactive<ListData>({
         timezone: ''
     }
 });
-
-export function usePrintableListData() {
+/**
+ * if date is passed participants list is specific to that date, if not it returns the list of today's participants
+ * @param date
+ * @returns list of participants
+ */
+export function usePrintableListData(date?: string) {
     const loaded = ref(false);
 
     onMounted(async () => {
         await getListData();
     });
 
+    onUnmounted(() => {
+        listDataState.data = {};
+    });
+
     async function getListData() {
-        const { response: listData, request, error } = useApi<ListData>('GET', '/api/print/participations');
+        const {
+            response: listData,
+            request,
+            error
+        } = useApi<ListData>(
+            'GET',
+            date !== undefined && date !== null ? `/api/print/participations/${date}` : '/api/print/participations/'
+        );
 
         if (loaded.value === false) {
             await request();

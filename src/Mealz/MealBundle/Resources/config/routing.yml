@@ -319,10 +319,21 @@ MealzMealBundle_Print_participations_api:
   defaults: { _controller: App\Mealz\MealBundle\Controller\ApiController::list }
   methods: [ GET ]
 
-MealzMealBundle_api_meal_mealstate:
-  path: /api/mealstate/{meal}
-  defaults: { _controller: App\Mealz\MealBundle\Controller\ApiController::getMealStateOnDay }
+MealzMealBundle_Print_participations_api_date:
+  path: /api/print/participations/{date}
+  defaults: { _controller: App\Mealz\MealBundle\Controller\ApiController::listByDate }
   methods: [ GET ]
+  requirements:
+        # format yyyy-mm-dd with
+        date: ^(20)\d\d-\d\d-\d\d$
+
+MealzMealBundle_participations_api_date:
+  path: /api/participations/day/{date}
+  defaults: { _controller: App\Mealz\MealBundle\Controller\ApiController::listParticipantsByDate }
+  methods: [ GET ]
+  requirements:
+        # format yyyy-mm-dd with
+        date: ^(20)\d\d-\d\d-\d\d$
 
 mealz_meal_edit_participations:
     path: /participations/{week}/edit

@@ -7,6 +7,7 @@ use App\Mealz\UserBundle\Entity\Role;
 use App\Mealz\UserBundle\Repository\RoleRepositoryInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthAwareUserProviderInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -50,15 +51,16 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
             return $user;
         }
 
-        $exception = new UserNotFoundException($identifier . ': user not found', 1629778235);
+        $exception = new UserNotFoundException($identifier.': user not found', 1629778235);
         $exception->setUserIdentifier($identifier);
         throw $exception;
     }
 
     /**
      * {@inheritdoc}
+     * @throws Exception
      */
-    public function loadUserByOAuthUserResponse(UserResponseInterface $response)
+    public function loadUserByOAuthUserResponse(UserResponseInterface $response): UserInterface
     {
         $username = $response->getNickname();
         $firstName = $response->getFirstName();
@@ -73,6 +75,10 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
             $user = $this->loadUserByIdentifier($username);
         } catch (UserNotFoundException $exception) {
             return $this->createProfile($username, $firstName, $lastName, $email, $roles);
+        }
+
+        if (!($user instanceof Profile)) {
+            throw new Exception("invalid user instance, expected instance of Profile, got %s", gettype($user));
         }
 
         return $this->updateProfile($user, $firstName, $lastName, $email, $roles);

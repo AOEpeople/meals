@@ -3,6 +3,7 @@
 namespace App\Mealz\UserBundle\Entity;
 
 use App\Mealz\UserBundle\User\UserInterface as MealzUserInterface;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
 
@@ -11,61 +12,29 @@ use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
  *
  * This can be used for development (easier to set up then LDAP) and special roles
  * like login for a special app in the kitchen where you can check people as participated.
- *
- * @ORM\Table(name="login")
- * @ORM\Entity
  */
+#[ORM\Entity]
+#[ORM\Table(name: 'login')]
 class Login implements SymfonyUserInterface, MealzUserInterface, PasswordAuthenticatedUserInterface
 {
-    /**
-     * @ORM\Column(name="id", type="string", length=255, nullable=FALSE)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
-     */
+    #[ORM\Id, ORM\GeneratedValue(strategy: 'NONE'), ORM\Column(name: 'id', type: 'string', length: 255, nullable: false)]
     private string $username = '';
 
-    /**
-     * @ORM\Column(type="string", length=32)
-     */
-    protected string $salt = '';
-
-    /**
-     * @ORM\Column(type="string", length=128)
-     */
+    #[ORM\Column(type: 'string', length: 128)]
     protected string $password = '';
 
-    /**
-     * @ORM\OneToOne(targetEntity="Profile")
-     * @ORM\JoinColumn(name="profile_id", referencedColumnName="id")
-     */
+    #[ORM\OneToOne(targetEntity: Profile::class)]
+    #[ORM\JoinColumn(name: 'profile_id', referencedColumnName: 'id')]
     protected ?Profile $profile = null;
-
-    public function setUsername(string $username): void
-    {
-        $this->username = $username;
-    }
 
     public function getUsername(): string
     {
         return $this->username;
     }
 
-    public function setProfile(Profile $profile = null): void
+    public function setUsername(string $username): void
     {
-        $this->profile = $profile;
-    }
-
-    /**
-     * @return Profile
-     */
-    public function getProfile(): ?Profile
-    {
-        return $this->profile;
-    }
-
-    public function setPassword(string $password): void
-    {
-        $this->password = $password;
+        $this->username = $username;
     }
 
     public function getPassword(): string
@@ -73,14 +42,29 @@ class Login implements SymfonyUserInterface, MealzUserInterface, PasswordAuthent
         return $this->password;
     }
 
-    public function setSalt(string $salt): void
+    public function setPassword(string $password): void
     {
-        $this->salt = $salt;
+        $this->password = $password;
     }
 
-    public function getSalt(): string
+//    public function getSalt(): string
+//    {
+//        return $this->salt;
+//    }
+
+//    public function setSalt(string $salt): void
+//    {
+//        $this->salt = $salt;
+//    }
+
+    public function getProfile(): ?Profile
     {
-        return $this->salt;
+        return $this->profile;
+    }
+
+    public function setProfile(Profile $profile = null): void
+    {
+        $this->profile = $profile;
     }
 
     public function __toString()
@@ -104,8 +88,8 @@ class Login implements SymfonyUserInterface, MealzUserInterface, PasswordAuthent
      */
     public function __unserialize(array $data): void
     {
-            $this->username = $data['username'];
-            $this->password = $data['password'];
+        $this->username = $data['username'];
+        $this->password = $data['password'];
     }
 
     /**

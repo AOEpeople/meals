@@ -17,15 +17,8 @@ class Configuration implements ConfigurationInterface
      *
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder('mealz_accounting');
-        $rootNode = $treeBuilder->getRootNode();
-
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
-
-        return $treeBuilder;
+        return new TreeBuilder('mealz_accounting');
     }
 }

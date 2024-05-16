@@ -31,14 +31,14 @@ class PayPalService
         $request = new OrdersGetRequest($orderID);
         $response = $this->sendRequest($request);
 
-        switch ($response->statusCode) {
-            case 200:
-                return $this->toPayPalOrder($response->result);
-            case 404:
-                return null;
-            default:
-                throw new RuntimeException(sprintf('unexpected api response, status: %d, path: %s, method: %s', $response->statusCode, $request->path, $request->verb), 1633425374);
-        }
+        return match ($response->statusCode) {
+            200 => $this->toPayPalOrder($response->result),
+            404 => null,
+            default => throw new RuntimeException(
+                sprintf('unexpected api response, status: %d, path: %s, method: %s', $response->statusCode, $request->path, $request->verb),
+                1633425374
+            ),
+        };
     }
 
     /**
@@ -49,14 +49,18 @@ class PayPalService
         try {
             return $this->client->execute($request);
         } catch (Exception $e) {
-            throw new RuntimeException(sprintf('api request error; path: %s, method: %s', $request->path, $request->verb), 1633507746, $e);
+            throw new RuntimeException(
+                sprintf('api request error; path: %s, method: %s', $request->path, $request->verb),
+                1633507746,
+                $e
+            );
         }
     }
 
     private function toPayPalOrder($orderResp): PayPalOrder
     {
         if (!is_object($orderResp)) {
-            throw new RuntimeException('invalid order response, expected object, got ' . gettype($orderResp));
+            throw new RuntimeException('invalid order response, expected object, got '.gettype($orderResp));
         }
         if (!property_exists($orderResp, 'id')) {
             throw new RuntimeException('invalid order response; order-id not found');
@@ -80,7 +84,7 @@ class PayPalService
 
         $orderDateTime = DateTime::createFromFormat(DateTimeInterface::ATOM, $orderResp->update_time);
         if (false === $orderDateTime) {
-            throw new RuntimeException('invalid order response; invalid date-time format; expected 2021-10-01T08:51:14Z, got ' . $orderResp->update_time);
+            throw new RuntimeException('invalid order response; invalid date-time format; expected 2021-10-01T08:51:14Z, got '.$orderResp->update_time);
         }
 
         return new PayPalOrder($orderResp->id, $grossAmount, $orderDateTime, $orderResp->status);
@@ -92,12 +96,12 @@ class PayPalService
             throw new RuntimeException('invalid order response; purchase units not found');
         }
         if (!is_object($purchaseUnits[0]->amount)) {
-            throw new RuntimeException('invalid order response; invalid amount type; expected object, got ' . gettype($purchaseUnits[0]->amount));
+            throw new RuntimeException('invalid order response; invalid amount type; expected object, got '.gettype($purchaseUnits[0]->amount));
         }
         if (!property_exists($purchaseUnits[0]->amount, 'value')) {
             throw new RuntimeException('invalid order response; order amount not found');
         }
 
-        return (float) $purchaseUnits[0]->amount->value;
+        return (float)$purchaseUnits[0]->amount->value;
     }
 }

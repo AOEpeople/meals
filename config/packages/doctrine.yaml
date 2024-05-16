@@ -9,17 +9,12 @@ doctrine:
   orm:
     enable_lazy_ghost_objects: true
     auto_generate_proxy_classes: true
-    #    naming_strategy: doctrine.orm.naming_strategy.default
-    #    auto_mapping: true
-    #    mappings:
-    #      App\Mealz\MealBundle:
-    #        is_bundle: false
-    #        type: attribute
-    #        dir: '%kernel.project_dir%/src/Mealz/MealBundle/Entity'
-    #        prefix: 'App\Mealz\MealBundle\Entity'
-    #        alias: App\Mealz\MealBundle
     controller_resolver:
-      auto_mapping: false
+      # Auto resolve entity in action arguments using the route parameter.
+      # Ex.: use "id" parameter in /user/{id}/edit to fetch the User entity,
+      #      and pass it as $user argument to UserController::edit(User $user) action.
+      # The route and entity property (like id above) must match for mapping to succeed.
+      auto_mapping: true
     entity_managers:
       default:
         auto_mapping: true

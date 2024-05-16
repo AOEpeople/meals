@@ -158,9 +158,6 @@
     "laminas/laminas-code": {
         "version": "4.4.2"
     },
-    "laminas/laminas-zendframework-bridge": {
-        "version": "1.3.0"
-    },
     "lcobucci/clock": {
         "version": "2.0.0"
     },

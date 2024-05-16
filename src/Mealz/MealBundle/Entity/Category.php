@@ -19,7 +19,7 @@ class Category implements JsonSerializable
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
-    private int $id;
+    private ?int $id = null;
 
     #[Gedmo\Slug(fields: ['title_en'])]
     #[ORM\Column(type: 'string', length: 128, unique: true)]
@@ -28,19 +28,16 @@ class Category implements JsonSerializable
     #[Assert\NotBlank]
     #[Assert\Length(max: 255)]
     #[ORM\Column(type: 'string', length: 255, nullable: false)]
-    protected string $title_en;
+    private string $title_en;
 
     #[Assert\NotBlank]
     #[Assert\Length(max: 255)]
     #[ORM\Column(type: 'string', length: 255, nullable: false)]
-    protected string $title_de;
+    private string $title_de;
 
-    protected string $currentLocale = 'en';
+    private string $currentLocale = 'en';
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }

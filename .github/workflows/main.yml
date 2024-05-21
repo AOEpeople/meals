@@ -32,7 +32,7 @@ jobs:
       - name: Check code formatting with PHP-CS-Fixer
         run: |
           rm composer.json composer.lock
-          composer require friendsofphp/php-cs-fixer:3.4
+          composer require friendsofphp/php-cs-fixer:^3.57
           vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist --diff --dry-run -v
 
   lint:

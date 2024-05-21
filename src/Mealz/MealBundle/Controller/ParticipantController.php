@@ -72,7 +72,7 @@ class ParticipantController extends BaseController
         } catch (Exception $e) {
             $this->logger->error('join meal error', $this->getTrace($e));
 
-            return new JsonResponse(['message' => '402: '.$e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(['message' => '402: ' . $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         if (null === $result) {
@@ -164,7 +164,7 @@ class ParticipantController extends BaseController
             [
                 'actionText' => 'updated',
                 'bookedDishSlugs' => array_map(
-                    static fn(Dish $dish) => $dish->getSlug(),
+                    static fn (Dish $dish) => $dish->getSlug(),
                     $participant->getCombinedDishes()->toArray()
                 ),
             ],
@@ -257,7 +257,7 @@ class ParticipantController extends BaseController
         return new JsonResponse($response, Response::HTTP_OK);
     }
 
-    #[IsGranted("ROLE_KITCHEN_STAFF")]
+    #[IsGranted('ROLE_KITCHEN_STAFF')]
     public function add(Profile $profile, Meal $meal, Request $request): JsonResponse
     {
         $parameters = json_decode($request->getContent(), true);

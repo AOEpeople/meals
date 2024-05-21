@@ -18,8 +18,6 @@ use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 class MealzMealExtension extends ConfigurableExtension
 {
     /**
-     * {@inheritDoc}
-     *
      * @throws Exception
      */
     public function loadInternal(array $mergedConfig, ContainerBuilder $container): void

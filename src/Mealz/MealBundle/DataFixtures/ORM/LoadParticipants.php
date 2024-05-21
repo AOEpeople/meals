@@ -49,8 +49,6 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
     protected array $slotIndex = [];
 
     /**
-     * {@inheritDoc}
-     *
      * @throws Exception
      */
     public function load(ObjectManager $manager): void

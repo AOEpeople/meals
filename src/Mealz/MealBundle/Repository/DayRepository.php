@@ -37,9 +37,6 @@ class DayRepository extends BaseRepository implements DayRepositoryInterface
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function findAllActive(DateTime $startDate, DateTime $endDate): array
     {
         $queryBuilder = $this->createQueryBuilder('d');

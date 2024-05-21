@@ -28,9 +28,6 @@ class PayPalCheckOrderCommand extends Command
         $this->translator = $translator;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     protected function configure(): void
     {
         $this
@@ -38,9 +35,6 @@ class PayPalCheckOrderCommand extends Command
             ->addOption('order-id', 'o', InputOption::VALUE_REQUIRED, 'PayPal Order-ID.');
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $orderID = $input->getOption('order-id');

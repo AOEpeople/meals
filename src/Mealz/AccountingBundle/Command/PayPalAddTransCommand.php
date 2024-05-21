@@ -28,9 +28,6 @@ class PayPalAddTransCommand extends Command
         $this->transService = $transService;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     protected function configure(): void
     {
         $this
@@ -39,9 +36,6 @@ class PayPalAddTransCommand extends Command
             ->addOption('user-id', 'u', InputOption::VALUE_REQUIRED, 'User-ID.');
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $profileID = $input->getOption('user-id');

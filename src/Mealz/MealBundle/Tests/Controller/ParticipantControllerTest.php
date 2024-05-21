@@ -140,6 +140,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
 
     public function testRemoveParticipant(): void
     {
+        $this->client->catchExceptions(false);
         $participantRepo = self::getContainer()->get(ParticipantRepositoryInterface::class);
         $mealRepo = self::getContainer()->get(MealRepositoryInterface::class);
         $meal = $mealRepo->getFutureMeals()[0];

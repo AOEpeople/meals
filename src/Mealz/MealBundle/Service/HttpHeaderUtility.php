@@ -2,6 +2,8 @@
 
 namespace App\Mealz\MealBundle\Service;
 
+use InvalidArgumentException;
+
 class HttpHeaderUtility
 {
     /**
@@ -17,14 +19,12 @@ class HttpHeaderUtility
     /**
      * parse an Accept-Language header and returns the best matching locale from $this->locales.
      *
-     * @return mixed
-     *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function getLocaleFromAcceptLanguageHeader(?string $headerString)
     {
         if (true === empty($this->locales)) {
-            throw new \InvalidArgumentException(sprintf('%s::locales is empty. Set some using the setLocales method.', get_class($this)));
+            throw new InvalidArgumentException(sprintf('%s::locales is empty. Set some using the setLocales method.', get_class($this)));
         }
 
         if (null === $headerString || true === empty(trim($headerString))) {
@@ -40,8 +40,6 @@ class HttpHeaderUtility
     /**
      * filter an Accept-Language header string according to the given quality and drop
      * languages that are not supported in $this->locales.
-     *
-     * @param $acceptLanguages
      *
      * @return array
      */
@@ -78,8 +76,6 @@ class HttpHeaderUtility
     /**
      * get the part before the first hyphen ("-") in a language string.
      *
-     * @param $acceptLanguage
-     *
      * @return string
      */
     protected function parseShortAcceptLanguage($acceptLanguage)
@@ -95,15 +91,13 @@ class HttpHeaderUtility
     /**
      * parse the quality string after a language string.
      *
-     * @param $qualityString
-     *
      * @return float|int
      */
     protected function parseQuality($qualityString)
     {
         $rpos = strrpos($qualityString, '=');
         if (false !== $rpos) {
-            return (float)substr($qualityString, $rpos + 1);
+            return (float) substr($qualityString, $rpos + 1);
         }
 
         return 1;

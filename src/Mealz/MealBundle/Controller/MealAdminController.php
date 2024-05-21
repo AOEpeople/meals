@@ -133,11 +133,11 @@ class MealAdminController extends BaseController
         $data = json_decode($request->getContent(), true);
 
         if (
-            false === isset($data) ||
-            false === isset($data['days']) ||
-            false === isset($data['id']) ||
-            $data['id'] !== $week->getId() ||
-            false === isset($data['enabled'])
+            false === isset($data)
+            || false === isset($data['days'])
+            || false === isset($data['id'])
+            || $data['id'] !== $week->getId()
+            || false === isset($data['enabled'])
         ) {
             return new JsonResponse(['message' => '101: invalid json'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -250,9 +250,9 @@ class MealAdminController extends BaseController
     private function setLockParticipationForDay(Day $dayEntity, array $day)
     {
         if (
-            null !== $day['lockDate'] &&
-            true === isset($day['lockDate']['date']) &&
-            true === isset($day['lockDate']['timezone'])
+            null !== $day['lockDate']
+            && true === isset($day['lockDate']['date'])
+            && true === isset($day['lockDate']['timezone'])
         ) {
             $newDateStr = str_replace(' ', 'T', $day['lockDate']['date']) . '+00:00';
             $newDate = DateTime::createFromFormat('Y-m-d\TH:i:s.uP', $newDateStr, new DateTimeZone($day['lockDate']['timezone']));

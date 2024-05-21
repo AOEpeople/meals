@@ -143,8 +143,6 @@ class TransactionService
     }
 
     /**
-     * @param mixed $json
-     *
      * @return array<string, mixed>
      *
      * @throws BadDataException

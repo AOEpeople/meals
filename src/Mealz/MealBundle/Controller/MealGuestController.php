@@ -57,7 +57,7 @@ class MealGuestController extends BaseController
     /**
      * @param Day $mealDay meal day for which to generate the invitation
      */
-    #[IsGranted("ROLE_USER")]
+    #[IsGranted('ROLE_USER')]
     public function newGuestInvitation(
         #[MapEntity(id: 'dayId')]
         Day $mealDay,
@@ -68,7 +68,7 @@ class MealGuestController extends BaseController
         return new JsonResponse(['url' => $this->generateInvitationUrl($guestInvitation)], Response::HTTP_OK);
     }
 
-    #[IsGranted("ROLE_USER")]
+    #[IsGranted('ROLE_USER')]
     public function newGuestEventInvitation(
         Day $dayId,
         GuestInvitationRepositoryInterface $guestInvitationRepo

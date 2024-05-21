@@ -13,9 +13,6 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 class ExceptionSubscriber implements EventSubscriberInterface
 {
-    /**
-     * {@inheritDoc}
-     */
     public static function getSubscribedEvents(): array
     {
         return [

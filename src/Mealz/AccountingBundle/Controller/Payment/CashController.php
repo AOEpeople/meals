@@ -24,8 +24,7 @@ class CashController extends BaseController
         Profile $profile,
         Request $request,
         EntityManagerInterface $entityManager,
-    ): JsonResponse
-    {
+    ): JsonResponse {
         try {
             $transaction = new Transaction();
             $transaction->setProfile($profile);

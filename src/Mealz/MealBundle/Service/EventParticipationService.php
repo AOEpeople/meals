@@ -39,7 +39,7 @@ class EventParticipationService
      * if an eventId is passed in as a parameter. If no eventId is present
      * the eventparticipation will get removed from the day.
      */
-    public function handleEventParticipation(Day $day, int $eventId = null)
+    public function handleEventParticipation(Day $day, ?int $eventId = null)
     {
         if (null === $eventId) {
             $this->removeEventFromDay($day);
@@ -49,7 +49,7 @@ class EventParticipationService
         }
     }
 
-    public function getEventParticipationData(Day $day, Profile $profile = null): ?array
+    public function getEventParticipationData(Day $day, ?Profile $profile = null): ?array
     {
         $eventParticipation = $day->getEvent();
         if (null === $eventParticipation) {

@@ -42,7 +42,7 @@ class MealGuestControllerTest extends AbstractControllerTestCase
     {
         $guestInvitationRepo = self::getContainer()->get(GuestInvitationRepository::class);
         $eventParticipation = $this->createFutureEvent();
-        $url = '/event/invitation/'.$eventParticipation->getDay()->getId();
+        $url = '/event/invitation/' . $eventParticipation->getDay()->getId();
 
         $this->client->request('GET', $url);
         $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
@@ -63,11 +63,11 @@ class MealGuestControllerTest extends AbstractControllerTestCase
     {
         $guestInvitationRepo = self::getContainer()->get(GuestInvitationRepository::class);
         $eventParticipation = $this->createFutureEvent();
-        $profile = $this->createProfile('Max', 'Mustermann'.time());
+        $profile = $this->createProfile('Max', 'Mustermann' . time());
         $this->persistAndFlushAll([$profile]);
         $eventInvitation = $guestInvitationRepo->findOrCreateInvitation($profile, $eventParticipation->getDay());
 
-        $this->client->request('GET', '/api/event/invitation/'.$eventInvitation->getId());
+        $this->client->request('GET', '/api/event/invitation/' . $eventInvitation->getId());
         $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $content = json_decode($this->client->getResponse()->getContent());
@@ -89,14 +89,14 @@ class MealGuestControllerTest extends AbstractControllerTestCase
     {
         $guestInvitationRepo = self::getContainer()->get(GuestInvitationRepository::class);
         $eventParticipation = $this->createFutureEvent();
-        $profile = $this->createProfile('Max', 'Mustermann'.time());
+        $profile = $this->createProfile('Max', 'Mustermann' . time());
         $this->persistAndFlushAll([$profile]);
         $eventInvitation = $guestInvitationRepo->findOrCreateInvitation($profile, $eventParticipation->getDay());
 
         // with company
         $this->client->request(
             'POST',
-            '/api/event/invitation/'.$eventInvitation->getId(),
+            '/api/event/invitation/' . $eventInvitation->getId(),
             [],
             [],
             [],
@@ -111,7 +111,7 @@ class MealGuestControllerTest extends AbstractControllerTestCase
         // without company
         $this->client->request(
             'POST',
-            '/api/event/invitation/'.$eventInvitation->getId(),
+            '/api/event/invitation/' . $eventInvitation->getId(),
             [],
             [],
             [],
@@ -126,7 +126,7 @@ class MealGuestControllerTest extends AbstractControllerTestCase
         // without firstName
         $this->client->request(
             'POST',
-            '/api/event/invitation/'.$eventInvitation->getId(),
+            '/api/event/invitation/' . $eventInvitation->getId(),
             [],
             [],
             [],

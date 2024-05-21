@@ -27,9 +27,6 @@ class Mailer implements MailerInterface
         $this->senderEmail = $senderEmail;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function send(string $recipient, string $subject, string $content, bool $isHTML = false): void
     {
         $email = (new Email())

@@ -8,9 +8,6 @@ use PHPUnit\Framework\TestCase;
 class WorkdayTest extends TestCase
 {
     /**
-     * @param $givenDate
-     * @param $expectedDate
-     *
      * @dataProvider getDataForTestBasic
      */
     public function testBasic($givenDate, $expectedDate): void

@@ -126,7 +126,7 @@ class Participant
         return $this->slot;
     }
 
-    public function setSlot(Slot $slot = null): void
+    public function setSlot(?Slot $slot = null): void
     {
         $this->slot = $slot;
     }

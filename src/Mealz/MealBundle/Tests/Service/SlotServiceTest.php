@@ -17,9 +17,6 @@ class SlotServiceTest extends AbstractDatabaseTestCase
     private SlotRepositoryInterface $slotRepo;
     private SlotService $sut;
 
-    /**
-     * {@inheritDoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();

@@ -27,11 +27,6 @@ class ParticipationHelper
 
     /**
      * helper function to sort participants by their name or guest name.
-     *
-     * @param mixed $participantRepo
-     * @param mixed $participants
-     *
-     * @return mixed
      */
     public function sortParticipantsByName($participantRepo, $participants)
     {

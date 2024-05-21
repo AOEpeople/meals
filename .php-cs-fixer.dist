@@ -23,7 +23,7 @@ return $config
             ],
         ],
         'single_line_throw' => false,
-        'no_leading_import_slash' => true
+        'global_namespace_import' => true
     ])
     ->setUsingCache(false)
     ->setFinder($finder);

@@ -127,7 +127,7 @@ class ApiController extends BaseController
         return new JsonResponse(['weeks' => $response]);
     }
 
-    public function getNextThreeDays(): JSONResponse
+    public function getNextThreeDays(): JsonResponse
     {
         $result = [];
 
@@ -151,7 +151,7 @@ class ApiController extends BaseController
         return new JsonResponse($result, Response::HTTP_OK);
     }
 
-    public function list(): JSONResponse
+    public function list(): JsonResponse
     {
         $day = $this->apiSrv->getDayByDate(new DateTime('today'));
 

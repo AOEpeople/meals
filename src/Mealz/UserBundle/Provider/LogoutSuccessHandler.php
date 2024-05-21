@@ -19,7 +19,7 @@ class LogoutSuccessHandler implements EventSubscriberInterface
 
     public function __construct(string $logoutUrl, string $baseUri)
     {
-        $this->logoutUrl = $logoutUrl.'?redirect_uri='.$baseUri;
+        $this->logoutUrl = $logoutUrl . '?redirect_uri=' . $baseUri;
     }
 
     /**
@@ -46,7 +46,6 @@ class LogoutSuccessHandler implements EventSubscriberInterface
     }
 
     /**
-     * {@inheritdoc}
      * @return string[]
      */
     public static function getSubscribedEvents(): array

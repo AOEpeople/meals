@@ -2,11 +2,12 @@
 
 namespace App\Mealz;
 
+use Closure;
 use Symfony\Component\DependencyInjection\EnvVarProcessorInterface;
 
 class AuthenticationEnvVarProcessor implements EnvVarProcessorInterface
 {
-    public function getEnv($prefix, $name, \Closure $getEnv): ?string
+    public function getEnv($prefix, $name, Closure $getEnv): ?string
     {
         if ('auth-mode' !== $prefix) {
             return null;
@@ -20,9 +21,6 @@ class AuthenticationEnvVarProcessor implements EnvVarProcessorInterface
         };
     }
 
-    /**
-     * @inheritDoc
-     */
     public static function getProvidedTypes(): array
     {
         return [

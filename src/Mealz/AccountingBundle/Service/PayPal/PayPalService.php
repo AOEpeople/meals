@@ -60,7 +60,7 @@ class PayPalService
     private function toPayPalOrder($orderResp): PayPalOrder
     {
         if (!is_object($orderResp)) {
-            throw new RuntimeException('invalid order response, expected object, got '.gettype($orderResp));
+            throw new RuntimeException('invalid order response, expected object, got ' . gettype($orderResp));
         }
         if (!property_exists($orderResp, 'id')) {
             throw new RuntimeException('invalid order response; order-id not found');
@@ -84,7 +84,7 @@ class PayPalService
 
         $orderDateTime = DateTime::createFromFormat(DateTimeInterface::ATOM, $orderResp->update_time);
         if (false === $orderDateTime) {
-            throw new RuntimeException('invalid order response; invalid date-time format; expected 2021-10-01T08:51:14Z, got '.$orderResp->update_time);
+            throw new RuntimeException('invalid order response; invalid date-time format; expected 2021-10-01T08:51:14Z, got ' . $orderResp->update_time);
         }
 
         return new PayPalOrder($orderResp->id, $grossAmount, $orderDateTime, $orderResp->status);
@@ -96,12 +96,12 @@ class PayPalService
             throw new RuntimeException('invalid order response; purchase units not found');
         }
         if (!is_object($purchaseUnits[0]->amount)) {
-            throw new RuntimeException('invalid order response; invalid amount type; expected object, got '.gettype($purchaseUnits[0]->amount));
+            throw new RuntimeException('invalid order response; invalid amount type; expected object, got ' . gettype($purchaseUnits[0]->amount));
         }
         if (!property_exists($purchaseUnits[0]->amount, 'value')) {
             throw new RuntimeException('invalid order response; order amount not found');
         }
 
-        return (float)$purchaseUnits[0]->amount->value;
+        return (float) $purchaseUnits[0]->amount->value;
     }
 }

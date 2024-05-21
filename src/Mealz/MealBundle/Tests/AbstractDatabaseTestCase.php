@@ -23,9 +23,6 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 abstract class AbstractDatabaseTestCase extends WebTestCase
 {
-    /**
-     * {@inheritDoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -79,7 +76,7 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
         return static::$kernel->getContainer()->get('doctrine');
     }
 
-    protected function createDishVariation(Dish $parent = null, Category $category = null): DishVariation
+    protected function createDishVariation(?Dish $parent = null, ?Category $category = null): DishVariation
     {
         $dishVariation = new DishVariation();
         $dishVariation->setParent($parent ?? $this->createDish());
@@ -94,7 +91,7 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
         return $dishVariation;
     }
 
-    protected function createDish(Category $category = null): Dish
+    protected function createDish(?Category $category = null): Dish
     {
         $dish = new Dish();
         $dish->setTitleEn('Test EN ' . mt_rand());
@@ -107,7 +104,7 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
         return $dish;
     }
 
-    protected function createMeal(Dish $dish = null, Day $day = null): Meal
+    protected function createMeal(?Dish $dish = null, ?Day $day = null): Meal
     {
         $dish = $dish ?: $this->createDish();
         $day = $day ?: new Day();

@@ -40,9 +40,6 @@ abstract class AbstractParticipationServiceTestCase extends AbstractDatabaseTest
     /** @var ParticipationService|GuestParticipationService */
     private $sut;
 
-    /**
-     * {@inheritDoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -158,7 +155,7 @@ abstract class AbstractParticipationServiceTestCase extends AbstractDatabaseTest
     protected function getMeal(
         bool $locked = false, bool $expired = false, array $profiles = [], bool $offering = true, ?Dish $dish = null
     ): Meal {
-        $zeroMinAndSec = static fn(DateTime $date): DateTime => $date->setTime((int)$date->format('H'), 0);
+        $zeroMinAndSec = static fn (DateTime $date): DateTime => $date->setTime((int) $date->format('H'), 0);
 
         if ($expired) {
             $mealDate = $zeroMinAndSec(new DateTime('-1 hour'));
@@ -199,7 +196,7 @@ abstract class AbstractParticipationServiceTestCase extends AbstractDatabaseTest
         $profileRepo = $this->entityManager->getRepository(Profile::class);
         $profile = $profileRepo->find($username);
         if (null === $profile) {
-            throw new RuntimeException('profile not found: '.$username);
+            throw new RuntimeException('profile not found: ' . $username);
         }
 
         return $profile;

@@ -118,7 +118,7 @@ class ApiService
             && $type === gettype($parameters[$key]);
     }
 
-    public function getEventParticipationData(Day $day, Profile $profile = null): ?array
+    public function getEventParticipationData(Day $day, ?Profile $profile = null): ?array
     {
         return $this->eventPartSrv->getEventParticipationData($day, $profile);
     }
@@ -159,11 +159,11 @@ class ApiService
 
     public function isMealOpen(Meal $meal)
     {
-        return false === $meal->isLocked() &&
-            true === $meal->isOpen() &&
-            false === $meal->hasReachedParticipationLimit() &&
-            (false === $meal->isCombinedMeal() ||
-            false === $this->hasCombiReachedLimit($meal->getDay()));
+        return false === $meal->isLocked()
+            && true === $meal->isOpen()
+            && false === $meal->hasReachedParticipationLimit()
+            && (false === $meal->isCombinedMeal()
+            || false === $this->hasCombiReachedLimit($meal->getDay()));
     }
 
     private function getEventParticipants(Day $day): array

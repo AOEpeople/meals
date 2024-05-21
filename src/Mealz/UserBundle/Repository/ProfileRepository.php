@@ -8,9 +8,6 @@ use App\Mealz\MealBundle\Repository\BaseRepository;
 
 class ProfileRepository extends BaseRepository implements ProfileRepositoryInterface
 {
-    /**
-     * {@inheritDoc}
-     */
     public function findAllExcept($usernames): array
     {
         $queryBuilder = $this->createQueryBuilder('p');

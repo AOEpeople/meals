@@ -109,10 +109,10 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
 
         switch (strtolower($month)) {
             case 'last':
-                $dateTime->sub(new DateInterval('P'.$subDays.'D'));
+                $dateTime->sub(new DateInterval('P' . $subDays . 'D'));
                 break;
             case 'penultimate':
-                $dateTime->sub(new DateInterval('P1M'.$subDays.'D'));
+                $dateTime->sub(new DateInterval('P1M' . $subDays . 'D'));
                 break;
             default:
                 break;
@@ -170,7 +170,7 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
     /**
      * Filter transactions from an array that date is NOT within the last month.
      *
-     * @param $item     Transaction object
+     * @param $item Transaction object
      *
      * @see getAssumedTotalAmountForTransactionsFromLastMonth()
      *

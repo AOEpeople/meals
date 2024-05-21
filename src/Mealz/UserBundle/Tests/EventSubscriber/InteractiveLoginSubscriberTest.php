@@ -19,9 +19,6 @@ class InteractiveLoginSubscriberTest extends AbstractControllerTestCase
 {
     private InteractiveLoginSubscriber $iaLoginSubscriber;
 
-    /**
-     * {@inheritDoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();

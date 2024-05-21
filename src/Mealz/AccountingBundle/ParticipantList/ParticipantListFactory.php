@@ -17,7 +17,7 @@ class ParticipantListFactory
         $this->participantRepository = $participantRepository;
     }
 
-    public function getList(DateTime $minDate, DateTime $maxDate, Profile $profile = null): ParticipantList
+    public function getList(DateTime $minDate, DateTime $maxDate, ?Profile $profile = null): ParticipantList
     {
         $participants = $this->participantRepository->getParticipantsOnDays($minDate, $maxDate, $profile);
 

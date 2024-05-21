@@ -22,13 +22,13 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class DishController extends BaseListController
 {
     public function __construct(
-        private readonly float                       $price,
-        private readonly ApiService                  $apiService,
+        private readonly float $price,
+        private readonly ApiService $apiService,
         private readonly CategoryRepositoryInterface $categoryRepository,
-        private readonly DishRepositoryInterface     $dishRepository,
-        private readonly DishService                 $dishService,
-        private readonly EntityManagerInterface      $em,
-        private readonly LoggerInterface             $logger
+        private readonly DishRepositoryInterface $dishRepository,
+        private readonly DishService $dishService,
+        private readonly EntityManagerInterface $em,
+        private readonly LoggerInterface $logger
     ) {
     }
 
@@ -66,9 +66,9 @@ class DishController extends BaseListController
         try {
             $parameters = json_decode($request->getContent(), true);
             if (
-                false === isset($parameters['titleDe']) ||
-                false === isset($parameters['titleEn']) ||
-                false === isset($parameters['oneServingSize'])
+                false === isset($parameters['titleDe'])
+                || false === isset($parameters['titleEn'])
+                || false === isset($parameters['oneServingSize'])
             ) {
                 throw new Exception('201: Missing parameters');
             }

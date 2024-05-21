@@ -7,6 +7,7 @@ use App\Mealz\MealBundle\Entity\Dish;
 use App\Mealz\MealBundle\EventListener\LocalisationListener;
 use App\Mealz\MealBundle\Repository\DishRepository;
 use App\Mealz\MealBundle\Tests\AbstractDatabaseTestCase;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Prophecy\PhpUnit\ProphecyTrait;
 
@@ -134,7 +135,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
         $dish = $this->createDish();
         $meal = $this->createMeal($dish);
         $day = new Day();
-        $day->setDateTime(new \DateTime('2 weeks ago'));
+        $day->setDateTime(new DateTime('2 weeks ago'));
         $meal2 = $this->createMeal($dish, $day);
         $this->persistAndFlushAll([$meal, $meal2]);
         $result = $this->dishRepository->countNumberDishWasTaken($dish, '4 weeks ago');
@@ -146,7 +147,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
         $dish = $this->createDish();
         $meal = $this->createMeal($dish);
         $day = new Day();
-        $day->setDateTime(new \DateTime('30 weeks ago'));
+        $day->setDateTime(new DateTime('30 weeks ago'));
         $meal2 = $this->createMeal($dish, $day);
         $this->persistAndFlushAll([$meal, $meal2]);
         $result = $this->dishRepository->countNumberDishWasTaken($dish, '4 weeks ago');

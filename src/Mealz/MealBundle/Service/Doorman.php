@@ -6,6 +6,7 @@ use App\Mealz\MealBundle\Entity\EventParticipation;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\UserBundle\Entity\Profile;
+use DateTime;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 
@@ -53,8 +54,8 @@ class Doorman
             $mealIsAvailable = $mealAvailability;
         } else {
             $mealIsAvailable =
-                (true === $mealAvailability['available']) &&
-                ((1 > count($dishSlugs)) || (0 === count(array_diff($mealAvailability['availableWith'], $dishSlugs))));
+                (true === $mealAvailability['available'])
+                && ((1 > count($dishSlugs)) || (0 === count(array_diff($mealAvailability['availableWith'], $dishSlugs))));
         }
 
         if (false === $this->security->getUser()->getProfile() instanceof Profile || false === $mealIsAvailable) {
@@ -123,7 +124,7 @@ class Doorman
         return $this->security->isGranted('ROLE_KITCHEN_STAFF');
     }
 
-    public function isToggleParticipationAllowed(\DateTime $lockPartDateTime): bool
+    public function isToggleParticipationAllowed(DateTime $lockPartDateTime): bool
     {
         // is it still allowed to participate in the meal by now?
         return $lockPartDateTime->getTimestamp() > $this->now;

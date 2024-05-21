@@ -15,8 +15,8 @@ abstract class BaseController extends AbstractController
     public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();
-        $services['monolog.logger.balance'] = '?'.LoggerInterface::class;
-        $services['translator'] = '?'.TranslatorInterface::class;
+        $services['monolog.logger.balance'] = '?' . LoggerInterface::class;
+        $services['translator'] = '?' . TranslatorInterface::class;
 
         return $services;
     }
@@ -41,7 +41,7 @@ abstract class BaseController extends AbstractController
             }
 
             $excLog['message'] = $exc->getMessage();
-            $excLog['file'] = $exc->getFile().':'.$exc->getLine();
+            $excLog['file'] = $exc->getFile() . ':' . $exc->getLine();
 
             $prev = $exc->getPrevious();
             if (null === $prev) {
@@ -49,7 +49,7 @@ abstract class BaseController extends AbstractController
             }
 
             $exc = $prev;
-            $excChain['caused by [#'.$i.']'] = $excLog;
+            $excChain['caused by [#' . $i . ']'] = $excLog;
         }
 
         return $excChain;

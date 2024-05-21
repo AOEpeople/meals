@@ -297,8 +297,8 @@ class ParticipantController extends BaseController
         }
     }
 
-    #[IsGranted("ROLE_KITCHEN_STAFF")]
-    public function remove(Profile $profile, Meal $meal, EntityManagerInterface $entityManager): JsonResponse
+    #[IsGranted('ROLE_KITCHEN_STAFF')]
+    public function remove(EntityManagerInterface $entityManager, Profile $profile, Meal $meal): JsonResponse
     {
         try {
             $participation = $this->participationSrv->getParticipationByMealAndUser($meal, $profile);
@@ -329,7 +329,7 @@ class ParticipantController extends BaseController
         }
     }
 
-    #[IsGranted("ROLE_KITCHEN_STAFF")]
+    #[IsGranted('ROLE_KITCHEN_STAFF')]
     public function getProfilesWithoutParticipation(Week $week): JsonResponse
     {
         $participations = $this->participantRepo->getParticipantsOnDays($week->getStartTime(), $week->getEndTime());

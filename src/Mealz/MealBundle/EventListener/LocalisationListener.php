@@ -45,9 +45,6 @@ class LocalisationListener implements EventSubscriberInterface
         return $this->locale;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public static function getSubscribedEvents(): array
     {
         return [

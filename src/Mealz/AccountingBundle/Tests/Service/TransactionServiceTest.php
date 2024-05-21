@@ -28,9 +28,6 @@ class TransactionServiceTest extends AbstractDatabaseTestCase
 {
     use ProphecyTrait;
 
-    /**
-     * {@inheritDoc}
-     */
     protected function setUp(): void
     {
         self::bootKernel();
@@ -64,7 +61,7 @@ class TransactionServiceTest extends AbstractDatabaseTestCase
         $transactionService = new TransactionService($paypalServiceMock, $entityManager, $securityServiceMock);
 
         // call test method
-        $request = Request::create('', \Symfony\Component\HttpFoundation\Request::METHOD_POST, [], [], [], [], $this->createTxReqPayLoad($orderID));
+        $request = Request::create('', Request::METHOD_POST, [], [], [], [], $this->createTxReqPayLoad($orderID));
         $transactionService->createFromRequest($request);
 
         // verify transaction
@@ -95,7 +92,7 @@ class TransactionServiceTest extends AbstractDatabaseTestCase
         $this->expectExceptionMessage('login required');
 
         // call test method
-        $request = Request::create('', \Symfony\Component\HttpFoundation\Request::METHOD_POST);
+        $request = Request::create('', Request::METHOD_POST);
         $transactionService->createFromRequest($request);
     }
 
@@ -117,7 +114,7 @@ class TransactionServiceTest extends AbstractDatabaseTestCase
         $this->expectException(BadRequestHttpException::class);
 
         // call test method
-        $request = Request::create('', \Symfony\Component\HttpFoundation\Request::METHOD_POST, [], [], [], [], $data);
+        $request = Request::create('', Request::METHOD_POST, [], [], [], [], $data);
         $transactionService->createFromRequest($request);
     }
 
@@ -150,7 +147,7 @@ class TransactionServiceTest extends AbstractDatabaseTestCase
         $this->expectExceptionCode(1633509057);
 
         // call test method
-        $request = Request::create('', \Symfony\Component\HttpFoundation\Request::METHOD_POST, [], [], [], [], $this->createTxReqPayLoad($orderID));
+        $request = Request::create('', Request::METHOD_POST, [], [], [], [], $this->createTxReqPayLoad($orderID));
         $transactionService->createFromRequest($request);
     }
 
@@ -177,7 +174,7 @@ class TransactionServiceTest extends AbstractDatabaseTestCase
         $this->expectExceptionCode(1633513408);
 
         // call test method
-        $request = Request::create('', \Symfony\Component\HttpFoundation\Request::METHOD_POST, [], [], [], [], $this->createTxReqPayLoad($orderID));
+        $request = Request::create('', Request::METHOD_POST, [], [], [], [], $this->createTxReqPayLoad($orderID));
         $transactionService->createFromRequest($request);
     }
 
@@ -188,7 +185,7 @@ class TransactionServiceTest extends AbstractDatabaseTestCase
         $profile = $profileRepo->find($username);
 
         if (null === $profile) {
-            throw new RuntimeException($username.': profile not found');
+            throw new RuntimeException($username . ': profile not found');
         }
 
         return $profile;

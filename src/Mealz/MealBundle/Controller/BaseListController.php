@@ -36,8 +36,6 @@ abstract class BaseListController extends BaseController
     }
 
     /**
-     * @param $slug
-     *
      * @return object
      *
      * @throws NotFoundHttpException if entity not found

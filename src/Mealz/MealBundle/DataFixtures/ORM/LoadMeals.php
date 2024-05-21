@@ -46,8 +46,6 @@ class LoadMeals extends Fixture implements OrderedFixtureInterface
     private int $counter = 0;
 
     /**
-     * {@inheritDoc}
-     *
      * @throws Exception
      */
     public function load(ObjectManager $manager): void

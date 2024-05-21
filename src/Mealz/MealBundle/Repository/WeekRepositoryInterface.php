@@ -10,7 +10,7 @@ interface WeekRepositoryInterface extends ObjectRepository
 {
     public function getCurrentWeek(array $options = []): ?Week;
 
-    public function getNextWeek(DateTime $date = null, array $options = []): ?Week;
+    public function getNextWeek(?DateTime $date = null, array $options = []): ?Week;
 
     public function getWeeksMealCount(Week $week): int;
 

@@ -29,15 +29,15 @@ class WeekRepositoryTest extends AbstractDatabaseTestCase
     {
         $now = new DateTime();
         $currentWeek = $this->weekRepository->getCurrentWeek();
-        $this->assertSame((int)$now->format('W'), $currentWeek->getCalendarWeek());
+        $this->assertSame((int) $now->format('W'), $currentWeek->getCalendarWeek());
     }
 
     public function testGetNextWeek(): void
     {
         $now = new DateTimeImmutable();
-        $currCalWeek = (int)$now->format('W');
+        $currCalWeek = (int) $now->format('W');
 
-        $lastCalWeek = (int)$now->modify('last day of December')->format('W');
+        $lastCalWeek = (int) $now->modify('last day of December')->format('W');
         $this->assertContains($lastCalWeek, [52, 53, 1]);
 
         $nextWeek = $this->weekRepository->getNextWeek(DateTime::createFromImmutable($now));

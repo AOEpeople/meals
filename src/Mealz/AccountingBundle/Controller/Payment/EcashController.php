@@ -25,7 +25,7 @@ class EcashController extends BaseController
     {
         $this->logger = $logger;
     }
-    
+
     /* public function getPaymentFormForProfile(Profile $profile, Wallet $wallet): Response
     {
         // Default value for E-Cash payment overlay

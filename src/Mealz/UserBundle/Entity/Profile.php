@@ -212,9 +212,6 @@ class Profile implements UserInterface, JsonSerializable
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getUserIdentifier(): string
     {
         return $this->username;

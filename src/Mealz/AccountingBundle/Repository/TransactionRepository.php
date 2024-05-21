@@ -70,9 +70,9 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
      * @psalm-return array<string, array{firstName: string, name: string, amount: float, paymethod: string|null}>
      */
     public function findUserDataAndTransactionAmountForGivenPeriod(
-        DateTime $minDate = null,
-        DateTime $maxDate = null,
-        Profile $profile = null
+        ?DateTime $minDate = null,
+        ?DateTime $maxDate = null,
+        ?Profile $profile = null
     ): array {
         $queryBuilder = $this->createQueryBuilder('t');
         $queryBuilder->select('p.username, p.firstName, p.name, t.paymethod, SUM(t.amount) AS amount');
@@ -180,7 +180,7 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
 
         $result = [];
         foreach ($queryResult as $item) {
-            //TODO: should not be floatval
+            // TODO: should not be floatval
             $result[] = [
                 'amount' => floatval($item['amount']),
                 'date' => $item['date']->format('d.m.Y'),

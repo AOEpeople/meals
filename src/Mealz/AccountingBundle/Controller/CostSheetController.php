@@ -55,11 +55,11 @@ class CostSheetController extends BaseController
             foreach ($user['costs'] as $cost) {
                 $monthCosts = $this->getRemainingCosts($cost['costs'], $transactionsPerUser[$username]['amount']);
                 if ($cost['timestamp'] < $earlierTimestamp) {
-                    $userCosts['earlier'] = (float)bcadd($userCosts['earlier'], $monthCosts, 4);
+                    $userCosts['earlier'] = (float) bcadd($userCosts['earlier'], $monthCosts, 4);
                 } else {
                     $userCosts[$cost['timestamp']] = $monthCosts;
                 }
-                $userCosts['total'] = (float)bcadd($userCosts['total'], $monthCosts, 4);
+                $userCosts['total'] = (float) bcadd($userCosts['total'], $monthCosts, 4);
             }
             if ($transactionsPerUser[$username]['amount'] > 0) {
                 $userCosts['total'] = $transactionsPerUser[$username]['amount'];
@@ -142,17 +142,17 @@ class CostSheetController extends BaseController
     {
         $translator = $this->translator;
 
-        $receiver = (string)$this->getParameter('app.email.settlement_request.receiver');
+        $receiver = (string) $this->getParameter('app.email.settlement_request.receiver');
         $subject = $translator->trans('payment.costsheet.mail.subject', [], 'messages');
         $body = $translator->trans(
             'payment.costsheet.mail.body',
             [
                 '%admin%' => $this->getProfile()->getFullName(),
                 '%fullname%' => $profile->getFullName(),
-                '%link%' => rtrim($this->getParameter('app.base_url'), '/').$this->generateUrl(
-                        'MealzMealBundle_costs_settlement_confirm',
-                        ['hash' => $urlEncodedHash]
-                    ),
+                '%link%' => rtrim($this->getParameter('app.base_url'), '/') . $this->generateUrl(
+                    'MealzMealBundle_costs_settlement_confirm',
+                    ['hash' => $urlEncodedHash]
+                ),
             ],
             'messages'
         );

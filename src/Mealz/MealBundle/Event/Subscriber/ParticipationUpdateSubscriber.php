@@ -24,9 +24,6 @@ class ParticipationUpdateSubscriber implements EventSubscriberInterface
         $this->partCountSrv = $partCountSrv;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public static function getSubscribedEvents(): array
     {
         return [

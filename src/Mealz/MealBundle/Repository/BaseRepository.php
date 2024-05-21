@@ -48,9 +48,6 @@ abstract class BaseRepository implements ObjectRepository, Selectable
             ->from($this->entityClass, $alias, $indexBy);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function findAll(): array
     {
         return $this->objectRepository->findBy([]);
@@ -64,25 +61,16 @@ abstract class BaseRepository implements ObjectRepository, Selectable
         return $this->objectRepository->find($id);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function findBy(array $criteria, ?array $orderBy = null, $limit = null, $offset = null): array
     {
         return $this->objectRepository->findBy($criteria, $orderBy, $limit, $offset);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function findOneBy(array $criteria): ?object
     {
         return $this->objectRepository->findOneBy($criteria);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getClassName(): string
     {
         return $this->entityClass;

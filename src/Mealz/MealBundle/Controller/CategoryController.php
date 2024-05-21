@@ -85,10 +85,10 @@ class CategoryController extends BaseListController
         $parameters = json_decode($request->getContent(), true);
 
         if (
-            true === isset($parameters['titleDe']) &&
-            true === isset($parameters['titleEn']) &&
-            null === $this->getCategoryByTitleEn($parameters['titleEn']) &&
-            null === $this->getCategoryByTitleDe($parameters['titleDe'])
+            true === isset($parameters['titleDe'])
+            && true === isset($parameters['titleEn'])
+            && null === $this->getCategoryByTitleEn($parameters['titleEn'])
+            && null === $this->getCategoryByTitleDe($parameters['titleDe'])
         ) {
             $category = new Category();
             $category->setTitleEn($parameters['titleEn']);

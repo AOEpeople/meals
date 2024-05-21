@@ -16,7 +16,7 @@ interface ParticipantRepositoryInterface extends ObjectRepository
     /**
      * @return Participant[]
      */
-    public function getParticipantsOnDays(DateTime $startDate, DateTime $endDate, Profile $profile = null): array;
+    public function getParticipantsOnDays(DateTime $startDate, DateTime $endDate, ?Profile $profile = null): array;
 
     public function getTotalCost(string $username): float;
 

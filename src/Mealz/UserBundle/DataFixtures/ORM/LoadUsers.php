@@ -30,9 +30,6 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
         $this->passwordHasher = $passwordHasher;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function load(ObjectManager $manager): void
     {
         $this->objectManager = $manager;

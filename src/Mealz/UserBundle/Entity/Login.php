@@ -47,22 +47,22 @@ class Login implements SymfonyUserInterface, MealzUserInterface, PasswordAuthent
         $this->password = $password;
     }
 
-//    public function getSalt(): string
-//    {
-//        return $this->salt;
-//    }
+    //    public function getSalt(): string
+    //    {
+    //        return $this->salt;
+    //    }
 
-//    public function setSalt(string $salt): void
-//    {
-//        $this->salt = $salt;
-//    }
+    //    public function setSalt(string $salt): void
+    //    {
+    //        $this->salt = $salt;
+    //    }
 
     public function getProfile(): ?Profile
     {
         return $this->profile;
     }
 
-    public function setProfile(Profile $profile = null): void
+    public function setProfile(?Profile $profile = null): void
     {
         $this->profile = $profile;
     }
@@ -73,7 +73,7 @@ class Login implements SymfonyUserInterface, MealzUserInterface, PasswordAuthent
     }
 
     /**
-     * @return array serialized form of the Login object.
+     * @return array serialized form of the Login object
      */
     public function __serialize(): array
     {
@@ -84,7 +84,7 @@ class Login implements SymfonyUserInterface, MealzUserInterface, PasswordAuthent
     }
 
     /**
-     * @param array $data serialized form of the Login object.
+     * @param array $data serialized form of the Login object
      */
     public function __unserialize(array $data): void
     {
@@ -92,9 +92,6 @@ class Login implements SymfonyUserInterface, MealzUserInterface, PasswordAuthent
         $this->password = $data['password'];
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function getRoles(): array
     {
         return $this->profile->getRoles();
@@ -111,9 +108,6 @@ class Login implements SymfonyUserInterface, MealzUserInterface, PasswordAuthent
         // nothing to do here
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getUserIdentifier(): string
     {
         return $this->username;

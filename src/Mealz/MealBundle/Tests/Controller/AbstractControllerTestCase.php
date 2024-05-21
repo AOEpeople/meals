@@ -38,13 +38,8 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
 
     protected KernelBrowser $client;
 
-    /**
-     * {@inheritDoc}
-     */
     protected function setUp(): void
     {
-//        parent::setUp();
-
         $this->client = static::createClient();
     }
 
@@ -54,7 +49,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         $user = $repo->find($username);
 
         if (!($user instanceof Profile)) {
-            throw new RuntimeException($username.': user not found');
+            throw new RuntimeException($username . ': user not found');
         }
 
         $this->client->loginUser($user);
@@ -68,7 +63,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         $token = $crawler->filter($tokenFieldSelector)->attr('value');
 
         if ('' === $token || null === $token) {
-            throw new RuntimeException('token fetch error, path: '.$uri.', fieldSelector: '.$tokenFieldSelector);
+            throw new RuntimeException('token fetch error, path: ' . $uri . ', fieldSelector: ' . $tokenFieldSelector);
         }
 
         return $token;
@@ -81,7 +76,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         $userProfile = $profileRepository->findOneBy(['username' => $username]);
 
         if (!($userProfile instanceof Profile)) {
-            $this->fail('user profile not found: '.$username);
+            $this->fail('user profile not found: ' . $username);
         }
 
         return $userProfile;
@@ -108,7 +103,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         $roleRepository = self::getContainer()->get(RoleRepositoryInterface::class);
         $role = $roleRepository->findOneBy(['sid' => $roleType]);
         if (!($role instanceof Role)) {
-            $this->fail('user role not found:  "'.$roleType);
+            $this->fail('user role not found:  "' . $roleType);
         }
 
         return $role;
@@ -118,16 +113,16 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
      * Helper method to create a new user profile object.
      *
      * @param string $firstName User first name
-     * @param string $lastName User last name
-     * @param string $company User company
+     * @param string $lastName  User last name
+     * @param string $company   User company
      */
     protected function createProfile(string $firstName = '', string $lastName = '', string $company = ''): Profile
     {
         $firstName = ('' !== $firstName) ? $firstName : 'Test';
-        $lastName = ('' !== $lastName) ? $lastName : 'User'.mt_rand();
+        $lastName = ('' !== $lastName) ? $lastName : 'User' . mt_rand();
 
         $profile = new Profile();
-        $profile->setUsername($firstName.'.'.$lastName);
+        $profile->setUsername($firstName . '.' . $lastName);
         $profile->setFirstName($firstName);
         $profile->setName($lastName);
 
@@ -165,8 +160,8 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
 
         $dayRepo = self::getContainer()->get(DayRepository::class);
 
-        $criteria = new \Doctrine\Common\Collections\Criteria();
-        $criteria->where(\Doctrine\Common\Collections\Criteria::expr()->gt('lockParticipationDateTime', new DateTime()));
+        $criteria = new Criteria();
+        $criteria->where(Criteria::expr()->gt('lockParticipationDateTime', new DateTime()));
 
         /** @var Day $day */
         $day = $dayRepo->matching($criteria)->get(0);
@@ -178,7 +173,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
     /**
      * Helper method to get the recent meal.
      */
-    protected function getRecentMeal(DateTime $dateTime = null): Meal
+    protected function getRecentMeal(?DateTime $dateTime = null): Meal
     {
         if (null === $dateTime) {
             $dateTime = new DateTime();

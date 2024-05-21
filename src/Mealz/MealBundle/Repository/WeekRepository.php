@@ -24,7 +24,7 @@ class WeekRepository extends BaseRepository implements WeekRepositoryInterface
         return $this->findWeekByDate(new DateTime(), $options);
     }
 
-    public function getNextWeek(DateTime $date = null, array $options = []): ?Week
+    public function getNextWeek(?DateTime $date = null, array $options = []): ?Week
     {
         $date = (($date instanceof DateTime) === false) ? new DateTime() : $date;
         $nextWeek = $date->modify('next monday');

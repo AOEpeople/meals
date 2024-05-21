@@ -19,19 +19,16 @@ class LoadWeeks extends Fixture implements OrderedFixtureInterface
 
     protected int $counter = 0;
 
-    /**
-     * {@inheritDoc}
-     */
     public function load(ObjectManager $manager): void
     {
         $weeks = $this->getCurrentTestWeeks();
 
         foreach ($weeks as $weekDataSet) {
             $week = new Week();
-            $week->setYear((int)$weekDataSet['year']);
-            $week->setCalendarWeek((int)$weekDataSet['calendarWeek']);
+            $week->setYear((int) $weekDataSet['year']);
+            $week->setCalendarWeek((int) $weekDataSet['calendarWeek']);
             $manager->persist($week);
-            $this->addReference('week-'.$this->counter++, $week);
+            $this->addReference('week-' . $this->counter++, $week);
         }
 
         $manager->flush();
@@ -57,7 +54,7 @@ class LoadWeeks extends Fixture implements OrderedFixtureInterface
         while ($date < $maxDate) {
             $year = $date->format('o');
             $week = $date->format('W');
-            $currentWeeks[$year.'-'.$week] = ['year' => $year, 'calendarWeek' => $week];
+            $currentWeeks[$year . '-' . $week] = ['year' => $year, 'calendarWeek' => $week];
             $date->modify('+1 week');
         }
 

@@ -279,7 +279,7 @@ class OfferServiceTestCase extends AbstractParticipationServiceTestCase
         $offerers = [];
         $bookedCombinations = [];
         /**
-         * @var int $idx
+         * @var int     $idx
          * @var Profile $profile
          */
         foreach ($profiles as $idx => $profile) {

@@ -15,9 +15,6 @@ class LoadRoles extends Fixture
      */
     private const ORDER_NUMBER = 1;
 
-    /**
-     * {@inheritDoc}
-     */
     public function load(ObjectManager $manager): void
     {
         foreach ($this->getRoles() as $role) {

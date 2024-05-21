@@ -47,7 +47,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
     public function getParticipantsOnDays(
         DateTime $startDate,
         DateTime $endDate,
-        Profile $profile = null
+        ?Profile $profile = null
     ): array {
         $queryBuilder = $this->createQueryBuilder('p');
         $queryBuilder

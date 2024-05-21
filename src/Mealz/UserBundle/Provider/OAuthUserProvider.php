@@ -51,13 +51,12 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
             return $user;
         }
 
-        $exception = new UserNotFoundException($identifier.': user not found', 1629778235);
+        $exception = new UserNotFoundException($identifier . ': user not found', 1629778235);
         $exception->setUserIdentifier($identifier);
         throw $exception;
     }
 
     /**
-     * {@inheritdoc}
      * @throws Exception
      */
     public function loadUserByOAuthUserResponse(UserResponseInterface $response): UserInterface
@@ -78,15 +77,12 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
         }
 
         if (!($user instanceof Profile)) {
-            throw new Exception("invalid user instance, expected instance of Profile, got %s", gettype($user));
+            throw new Exception('invalid user instance, expected instance of Profile, got %s', gettype($user));
         }
 
         return $this->updateProfile($user, $firstName, $lastName, $email, $roles);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function refreshUser(UserInterface $user): UserInterface
     {
         if (false === $this->supportsClass(get_class($user))) {
@@ -96,9 +92,6 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
         return $this->loadUserByIdentifier($user->getUsername());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supportsClass($class): bool
     {
         return Profile::class === $class || is_subclass_of($class, Profile::class);

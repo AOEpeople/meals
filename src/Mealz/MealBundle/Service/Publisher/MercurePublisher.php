@@ -21,9 +21,6 @@ class MercurePublisher implements PublisherInterface
         $this->logger = $logger;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function publish(string $topic, array $data, string $type): bool
     {
         $result = '';

@@ -17,9 +17,6 @@ use App\Mealz\UserBundle\Entity\Role;
  */
 class PrintControllerTest extends AbstractControllerTestCase
 {
-    /**
-     * {@inheritDoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -48,16 +45,16 @@ class PrintControllerTest extends AbstractControllerTestCase
         $time = time();
 
         // Create guest profile
-        $guestFirstName = 'Jon:'.$time;
-        $guestLastName = 'Doe:'.$time;
-        $guestCompany = 'Test Company:'.$time;
+        $guestFirstName = 'Jon:' . $time;
+        $guestLastName = 'Doe:' . $time;
+        $guestCompany = 'Test Company:' . $time;
 
         $guest = $this->createProfile($guestFirstName, $guestLastName, $guestCompany);
         $guest->addRole($this->getRole(Role::ROLE_GUEST));
 
         // Create profile for normal user
-        $userFirstName = 'Max:'.$time;
-        $userLastName = 'Mustermann:'.$time;
+        $userFirstName = 'Max:' . $time;
+        $userLastName = 'Mustermann:' . $time;
         $user = $this->createProfile($userFirstName, $userLastName);
 
         $this->persistAndFlushAll([$guest, $user]);
@@ -71,12 +68,12 @@ class PrintControllerTest extends AbstractControllerTestCase
         $this->assertTrue($this->client->getResponse()->isSuccessful());
 
         // Ensure that guest does not appear in the listing
-        $this->assertEquals(0, $crawler->filter('html:contains("'.$guestFirstName.'")')->count());
-        $this->assertEquals(0, $crawler->filter('html:contains("'.$guestLastName.'")')->count());
-        $this->assertEquals(0, $crawler->filter('html:contains("'.$guestCompany.'")')->count());
+        $this->assertEquals(0, $crawler->filter('html:contains("' . $guestFirstName . '")')->count());
+        $this->assertEquals(0, $crawler->filter('html:contains("' . $guestLastName . '")')->count());
+        $this->assertEquals(0, $crawler->filter('html:contains("' . $guestCompany . '")')->count());
 
         // Ensure that rendering is correct and non guest users do appear in the listing
-        $this->assertEquals(1, $crawler->filter('html:contains("'.$userFirstName.'")')->count());
-        $this->assertEquals(1, $crawler->filter('html:contains("'.$userLastName.'")')->count());
+        $this->assertEquals(1, $crawler->filter('html:contains("' . $userFirstName . '")')->count());
+        $this->assertEquals(1, $crawler->filter('html:contains("' . $userLastName . '")')->count());
     }
 }

@@ -23,9 +23,6 @@ class CombinedMealServiceTest extends AbstractDatabaseTestCase
     private CombinedMealService $cms;
     private Dish $combinedDish;
 
-    /**
-     * {@inheritDoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();

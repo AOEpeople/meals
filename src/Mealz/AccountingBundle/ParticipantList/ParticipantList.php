@@ -15,7 +15,7 @@ class ParticipantList
     /**
      * @var Profile[]
      */
-    protected $profiles = null;
+    protected $profiles;
 
     /**
      * @param \App\Mealz\MealBundle\Entity\Participant[] $participations

@@ -22,9 +22,6 @@ class EcashControllerTest extends AbstractControllerTestCase
 {
     use ProphecyTrait;
 
-    /**
-     * {@inheritDoc}
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -92,7 +89,7 @@ class EcashControllerTest extends AbstractControllerTestCase
         $txServiceMock = $txServiceProphet->reveal();
         $translatorMock = $this->prophesize(TranslatorInterface::class)->reveal();
 
-        $request = Request::create('', \Symfony\Component\HttpFoundation\Request::METHOD_POST);
+        $request = Request::create('', Request::METHOD_POST);
         $controller = self::getContainer()->get(EcashController::class);
 
         $response = $controller->postPayment($request, $txServiceMock, $translatorMock);
@@ -115,7 +112,7 @@ class EcashControllerTest extends AbstractControllerTestCase
     public function testPostPaymentSuccess(): void
     {
         $this->markTestSkipped('Frontend Test');
-        $request = Request::create('', \Symfony\Component\HttpFoundation\Request::METHOD_POST);
+        $request = Request::create('', Request::METHOD_POST);
         $txServiceProphet = $this->prophesize(TransactionService::class);
         $txServiceProphet->createFromRequest(Argument::type(Request::class))->shouldBeCalledOnce();
         $txServiceMock = $txServiceProphet->reveal();

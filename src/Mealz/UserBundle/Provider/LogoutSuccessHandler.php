@@ -7,6 +7,7 @@ namespace App\Mealz\UserBundle\Provider;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Event\LogoutEvent;
 
 /**
@@ -18,7 +19,7 @@ class LogoutSuccessHandler implements EventSubscriberInterface
 
     public function __construct(string $logoutUrl, string $baseUri)
     {
-        $this->logoutUrl = $logoutUrl . '?redirect_uri=' . $baseUri;
+        $this->logoutUrl = $logoutUrl.'?redirect_uri='.$baseUri;
     }
 
     /**
@@ -34,7 +35,7 @@ class LogoutSuccessHandler implements EventSubscriberInterface
                 'error' => [],
                 'redirect' => $this->logoutUrl,
             ]);
-            $response->setStatusCode(\Symfony\Component\HttpFoundation\Response::HTTP_FOUND);
+            $response->setStatusCode(Response::HTTP_FOUND);
             $event->setResponse($response);
 
             return;
@@ -45,7 +46,7 @@ class LogoutSuccessHandler implements EventSubscriberInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      * @return string[]
      */
     public static function getSubscribedEvents(): array

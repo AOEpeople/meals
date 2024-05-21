@@ -14,7 +14,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * The name "profile" was chosen because in Symfony a "User" is someone who is allowed to log in.
  */
-
 #[ORM\Entity]
 #[ORM\Table(name: 'profile')]
 class Profile implements UserInterface, JsonSerializable
@@ -214,7 +213,7 @@ class Profile implements UserInterface, JsonSerializable
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getUserIdentifier(): string
     {

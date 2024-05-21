@@ -4,28 +4,28 @@ declare(strict_types=1);
 
 namespace App\Mealz\AccountingBundle\Controller\Payment;
 
-use App\Mealz\AccountingBundle\Entity\Transaction;
 use App\Mealz\AccountingBundle\Service\TransactionService;
-use App\Mealz\AccountingBundle\Service\Wallet;
 use App\Mealz\MealBundle\Controller\BaseController;
-use App\Mealz\UserBundle\Entity\Profile;
 use Exception;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Throwable;
 
+#[IsGranted('ROLE_USER')]
 class EcashController extends BaseController
 {
-    private LoggerInterfacer $logger;
+    private LoggerInterface $logger;
+
     public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }
+    
     /* public function getPaymentFormForProfile(Profile $profile, Wallet $wallet): Response
     {
         // Default value for E-Cash payment overlay
@@ -51,8 +51,6 @@ class EcashController extends BaseController
 
     /**
      * Triggers actions after a PayPal transaction (payment) is successfully completed.
-     *
-     * @Security("is_granted('ROLE_USER')")
      */
     public function postPayment(
         Request $request,

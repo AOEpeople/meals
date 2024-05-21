@@ -73,7 +73,7 @@ class Login implements SymfonyUserInterface, MealzUserInterface, PasswordAuthent
     }
 
     /**
-     * @return array Serialized form of the Login object.
+     * @return array serialized form of the Login object.
      */
     public function __serialize(): array
     {
@@ -84,7 +84,7 @@ class Login implements SymfonyUserInterface, MealzUserInterface, PasswordAuthent
     }
 
     /**
-     * @param array $data Serialized form of the Login object.
+     * @param array $data serialized form of the Login object.
      */
     public function __unserialize(array $data): void
     {
@@ -112,7 +112,7 @@ class Login implements SymfonyUserInterface, MealzUserInterface, PasswordAuthent
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getUserIdentifier(): string
     {

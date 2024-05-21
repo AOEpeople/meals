@@ -27,7 +27,7 @@ jobs:
       - name: Setup PHP environment
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'
+          php-version: '8.3'
           tools: composer:v2
       - name: Check code formatting with PHP-CS-Fixer
         run: |
@@ -98,7 +98,7 @@ jobs:
       - name: Setup PHP environment
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'
+          php-version: '8.3'
           tools: composer
       - name: Run composer install
         run: composer install -n --prefer-dist
@@ -127,7 +127,7 @@ jobs:
   buildImages:
     name: Build Docker Images
     runs-on: ubuntu-latest
-    needs: [test-cgl, psalm, phpmd, format, lint, testFrontendUnitFunctional]
+    needs: [ test-cgl, psalm, phpmd, format, lint, testFrontendUnitFunctional ]
     steps:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -328,7 +328,7 @@ jobs:
           name: docker-images
           path: /tmp/docker
       - name: Import docker image
-        run:  |
+        run: |
           docker load --input /tmp/docker/app.tar
           docker load --input /tmp/docker/dev.tar
           docker image ls -a | grep aoepeople

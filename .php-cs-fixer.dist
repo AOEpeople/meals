@@ -23,6 +23,7 @@ return $config
             ],
         ],
         'single_line_throw' => false,
+        'no_leading_import_slash' => true
     ])
     ->setUsingCache(false)
     ->setFinder($finder);

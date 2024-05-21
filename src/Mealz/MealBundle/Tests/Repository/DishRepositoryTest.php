@@ -24,7 +24,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
     {
         parent::setUp();
 
-        $this->dishRepository = self::$container->get(DishRepository::class);
+        $this->dishRepository = self::getContainer()->get(DishRepository::class);
         $this->locale = 'en';
         $this->clearAllTables();
     }
@@ -225,7 +225,7 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
 
     private function getDishRepository(LocalisationListener $listener): DishRepository
     {
-        $em = self::$container->get(EntityManagerInterface::class);
+        $em = self::getContainer()->get(EntityManagerInterface::class);
 
         return new DishRepository($em, Dish::class, $listener);
     }

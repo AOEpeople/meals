@@ -28,7 +28,7 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use RuntimeException;
 
-abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
+abstract class AbstractParticipationServiceTestCase extends AbstractDatabaseTestCase
 {
     use ProphecyTrait;
 
@@ -50,8 +50,8 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
         /* @var EntityManagerInterface $entityManager */
         $this->entityManager = $this->getDoctrine()->getManager();
 
-        $this->participantRepo = self::$container->get(ParticipantRepositoryInterface::class);
-        $this->slotRepo = self::$container->get(SlotRepository::class);
+        $this->participantRepo = self::getContainer()->get(ParticipantRepositoryInterface::class);
+        $this->slotRepo = self::getContainer()->get(SlotRepository::class);
     }
 
     protected function checkJoinMealWithDishSlugsSuccess(Profile $profile)
@@ -155,9 +155,10 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
         $this->sut->join($profile, $profile->isGuest() ? new MealCollection([$combinedMeal]) : $combinedMeal, $slot, $dishSlugs);
     }
 
-    protected function getMeal(bool $locked = false, bool $expired = false, array $profiles = [], bool $offering = true, ?Dish $dish = null): Meal
-    {
-        $zeroMinAndSec = static fn (DateTime $date): DateTime => $date->setTime((int) $date->format('H'), 0);
+    protected function getMeal(
+        bool $locked = false, bool $expired = false, array $profiles = [], bool $offering = true, ?Dish $dish = null
+    ): Meal {
+        $zeroMinAndSec = static fn(DateTime $date): DateTime => $date->setTime((int)$date->format('H'), 0);
 
         if ($expired) {
             $mealDate = $zeroMinAndSec(new DateTime('-1 hour'));
@@ -198,7 +199,7 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
         $profileRepo = $this->entityManager->getRepository(Profile::class);
         $profile = $profileRepo->find($username);
         if (null === $profile) {
-            throw new RuntimeException('profile not found: ' . $username);
+            throw new RuntimeException('profile not found: '.$username);
         }
 
         return $profile;
@@ -279,7 +280,7 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
         $this->cms->update($day->getWeek());
 
         /** @var MealRepositoryInterface $mealRepo */
-        $mealRepo = self::$container->get(MealRepositoryInterface::class);
+        $mealRepo = self::getContainer()->get(MealRepositoryInterface::class);
         $combinedMeal = $mealRepo->findOneByDateAndDish($day->getDateTime(), Dish::COMBINED_DISH_SLUG);
         $this->assertNotNull($combinedMeal);
 
@@ -324,5 +325,7 @@ abstract class AbstractParticipationServiceTest extends AbstractDatabaseTestCase
         return $prophet->reveal();
     }
 
-    abstract protected function validateParticipant(Participant $participant, Profile $profile, Meal $meal, ?Slot $slot = null);
+    abstract protected function validateParticipant(
+        Participant $participant, Profile $profile, Meal $meal, ?Slot $slot = null
+    );
 }

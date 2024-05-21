@@ -17,7 +17,7 @@ use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use App\Mealz\UserBundle\Entity\Profile;
 
-class ParticipationServiceTest extends AbstractParticipationServiceTest
+class ParticipationServiceTestCase extends AbstractParticipationServiceTestCase
 {
     private DayRepository $dayRepo;
 
@@ -28,25 +28,27 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
         $this->clearAllTables();
         $this->loadFixtures([
             new LoadRoles(),
-            new LoadUsers(static::$container->get('security.user_password_encoder.generic')),
+            new LoadUsers(static::getContainer()->get('security.user_password_hasher')),
         ]);
 
         $doorman = $this->getDoormanMock(true, false);
-        $this->dayRepo = self::$container->get(DayRepository::class);
+        $this->dayRepo = self::getContainer()->get(DayRepository::class);
 
-        $this->setParticipationService(new ParticipationService(
-            $this->entityManager,
-            $doorman,
-            $this->dayRepo,
-            $this->participantRepo,
-            $this->slotRepo
-        ));
+        $this->setParticipationService(
+            new ParticipationService(
+                $this->entityManager,
+                $doorman,
+                $this->dayRepo,
+                $this->participantRepo,
+                $this->slotRepo
+            )
+        );
 
         /* https://stackoverflow.com/questions/73209831/unitenum-cannot-be-cast-to-string */
         $price = self::$kernel->getContainer()->getParameter('mealz.meal.combined.price');
         $price = is_float($price) ? $price : 0;
 
-        $dishRepo = static::$container->get(DishRepository::class);
+        $dishRepo = static::getContainer()->get(DishRepository::class);
         $this->cms = new CombinedMealService($price, $this->entityManager, $dishRepo);
     }
 
@@ -395,8 +397,8 @@ class ParticipationServiceTest extends AbstractParticipationServiceTest
         }
     }
 
-    protected function validateParticipant(Participant $participant, Profile $profile, Meal $meal, ?Slot $slot = null): void
-    {
+    protected function validateParticipant(Participant $participant, Profile $profile, Meal $meal, ?Slot $slot = null
+    ): void {
         $this->assertSame($meal->getId(), $participant->getMeal()->getId());
 
         $partMealSlot = $participant->getSlot();

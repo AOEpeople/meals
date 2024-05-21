@@ -10,14 +10,12 @@ use DateTime;
 use Exception;
 use Qipsius\TCPDFBundle\Controller\TCPDFController;
 use ReflectionException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * @Security("is_granted('ROLE_KITCHEN_STAFF')")
- */
+#[IsGranted('ROLE_KITCHEN_STAFF')]
 class AccountingBookController extends BaseController
 {
     public function list(TransactionRepositoryInterface $transactionRepo): JsonResponse
@@ -35,8 +33,8 @@ class AccountingBookController extends BaseController
         $maxDate->setTime(23, 59, 59);
 
         // Create headline for twig template
-        $headingFirst = $minDateFirst->format('d.m.-') . $maxDateFirst->format('d.m.Y');
-        $heading = $minDate->format('d.m.-') . $maxDate->format('d.m.Y');
+        $headingFirst = $minDateFirst->format('d.m.-').$maxDateFirst->format('d.m.Y');
+        $heading = $minDate->format('d.m.-').$maxDate->format('d.m.Y');
 
         // Get array of users with their amount of transactions in previous month
         $usersFirst = $transactionRepo->findUserDataAndTransactionAmountForGivenPeriod($minDateFirst, $maxDateFirst);
@@ -57,8 +55,8 @@ class AccountingBookController extends BaseController
      *
      * @throws Exception
      */
-    public function listAllTransactions(?string $dateRange, TransactionRepositoryInterface $transactionRepo): JsonResponse
-    {
+    public function listAllTransactions(?string $dateRange, TransactionRepositoryInterface $transactionRepo
+    ): JsonResponse {
         $response = [];
 
         if (null === $dateRange) {
@@ -69,7 +67,7 @@ class AccountingBookController extends BaseController
             $maxDateFirst->setTime(23, 59, 59);
 
             // Create headline for twig template
-            $headingFirst = $minDateFirst->format('d.m.') . ' - ' . $maxDateFirst->format('d.m.Y');
+            $headingFirst = $minDateFirst->format('d.m.').' - '.$maxDateFirst->format('d.m.Y');
 
             // Get first and last day of actual month
             $minDate = new DateTime('first day of this month');
@@ -89,7 +87,7 @@ class AccountingBookController extends BaseController
             $maxDate = new DateTime($dateRangeArray[1]);
         }
 
-        $heading = $minDate->format('d.m.') . ' - ' . $maxDate->format('d.m.Y');
+        $heading = $minDate->format('d.m.').' - '.$maxDate->format('d.m.Y');
 
         $transactions = $transactionRepo->findAllTransactionsInDateRange($minDate, $maxDate);
         $response[] = [
@@ -118,7 +116,7 @@ class AccountingBookController extends BaseController
         $minDate = new DateTime($dateRangeArray[0]);
         $maxDate = new DateTime($dateRangeArray[1]);
 
-        $heading = $minDate->format('d.m.') . ' - ' . $maxDate->format('d.m.Y');
+        $heading = $minDate->format('d.m.').' - '.$maxDate->format('d.m.Y');
         $transactions = $transactionRepo->findAllTransactionsInDateRange($minDate, $maxDate);
 
         // Create PDF file
@@ -128,12 +126,12 @@ class AccountingBookController extends BaseController
         $pdf->setPrintFooter(false);
         $pdf->AddPage();
 
-        $filename = $translator->trans('payment.transaction_history.finances.pdf') . '-' . $minDate->format('d.m.Y') . '-' . $maxDate->format('d.m.Y');
+        $filename = $translator->trans('payment.transaction_history.finances.pdf').'-'.$minDate->format('d.m.Y').'-'.$maxDate->format('d.m.Y');
         $pdf->SetTitle($filename);
 
-        $cssFile = file_get_contents(__DIR__ . '/../Resources/css/transaction-export.css');
+        $cssFile = file_get_contents(__DIR__.'/../Resources/css/transaction-export.css');
 
-        $includeCSS = '<style>' . $cssFile . '</style>';
+        $includeCSS = '<style>'.$cssFile.'</style>';
 
         $html = $this->renderView('MealzAccountingBundle:Accounting/Finance:print_finances.html.twig', [
             'headingFirst' => null,
@@ -144,16 +142,16 @@ class AccountingBookController extends BaseController
             'maxDate' => $maxDate->format('m/d/Y'),
         ]);
 
-        $pdf->writeHTML($includeCSS . $html);
+        $pdf->writeHTML($includeCSS.$html);
 
-        $content = $pdf->Output($filename . '.pdf', 'S');
-        $now = gmdate('D, d M Y H:i:s') . ' GMT';
+        $content = $pdf->Output($filename.'.pdf', 'S');
+        $now = gmdate('D, d M Y H:i:s').' GMT';
 
         return new Response($content, Response::HTTP_OK, [
             'Content-Type' => 'application/pdf',
             'Expires' => $now,
             'Last-Modified' => $now,
-            'Content-Disposition' => 'inline; filename="' . basename($filename) . '"',
+            'Content-Disposition' => 'inline; filename="'.basename($filename).'"',
         ]);
     }
 }

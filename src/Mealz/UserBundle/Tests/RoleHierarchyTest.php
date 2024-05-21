@@ -21,7 +21,7 @@ class RoleHierarchyTest extends KernelTestCase
      */
     public function testAdminRole(): void
     {
-        $roleHierarchyService = self::$container->get('security.role_hierarchy');
+        $roleHierarchyService = self::getContainer()->get('security.role_hierarchy');
         $roleHierarchy = $roleHierarchyService->getReachableRoleNames(['ROLE_ADMIN']);
 
         $this->assertCount(4, $roleHierarchy);
@@ -36,7 +36,7 @@ class RoleHierarchyTest extends KernelTestCase
      */
     public function testKitchenStaffRole(): void
     {
-        $roleHierarchyService = self::$container->get('security.role_hierarchy');
+        $roleHierarchyService = self::getContainer()->get('security.role_hierarchy');
         $roleHierarchy = $roleHierarchyService->getReachableRoleNames(['ROLE_KITCHEN_STAFF']);
 
         $this->assertCount(2, $roleHierarchy);
@@ -49,7 +49,7 @@ class RoleHierarchyTest extends KernelTestCase
      */
     public function testFinanceRole(): void
     {
-        $roleHierarchyService = self::$container->get('security.role_hierarchy');
+        $roleHierarchyService = self::getContainer()->get('security.role_hierarchy');
         $roleHierarchy = $roleHierarchyService->getReachableRoleNames(['ROLE_FINANCE']);
 
         $this->assertCount(2, $roleHierarchy);

@@ -32,7 +32,7 @@ class EcashControllerTest extends AbstractControllerTestCase
         $this->clearAllTables();
         $this->loadFixtures([
             new LoadRoles(),
-            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
+            new LoadUsers(self::getContainer()->get('security.user_password_hasher')),
         ]);
     }
 
@@ -93,7 +93,7 @@ class EcashControllerTest extends AbstractControllerTestCase
         $translatorMock = $this->prophesize(TranslatorInterface::class)->reveal();
 
         $request = Request::create('', \Symfony\Component\HttpFoundation\Request::METHOD_POST);
-        $controller = self::$container->get(EcashController::class);
+        $controller = self::getContainer()->get(EcashController::class);
 
         $response = $controller->postPayment($request, $txServiceMock, $translatorMock);
         $this->assertSame($expRespStatusCode, $response->getStatusCode());
@@ -121,7 +121,7 @@ class EcashControllerTest extends AbstractControllerTestCase
         $txServiceMock = $txServiceProphet->reveal();
         $translatorMock = $this->prophesize(TranslatorInterface::class)->reveal();
 
-        $controller = self::$container->get(EcashController::class);
+        $controller = self::getContainer()->get(EcashController::class);
 
         $response = $controller->postPayment($request, $txServiceMock, $translatorMock);
 

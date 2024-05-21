@@ -1,0 +1,4 @@
+security:
+  password_hashers:
+    App\Mealz\UserBundle\Entity\Login:
+      algorithm: plaintext

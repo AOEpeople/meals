@@ -23,6 +23,7 @@ use App\Mealz\UserBundle\Entity\Role;
 use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
 use DateTime;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\HttpFoundation\Response;
 
 class ParticipantControllerTest extends AbstractControllerTestCase
 {
@@ -48,7 +49,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
             new LoadDishVariations(),
             new LoadMeals(),
             new LoadRoles(),
-            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
+            new LoadUsers(self::getContainer()->get('security.user_password_hasher')),
         ]);
 
         $this->loginAs(self::USER_KITCHEN_STAFF);
@@ -60,7 +61,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
 
         // Create profile for participant
         self::$participantFirstName = 'Max';
-        self::$participantLastName = 'Mustermann' . $time;
+        self::$participantLastName = 'Mustermann'.$time;
         $participant = $this->createEmployeeProfileAndParticipation(
             self::$participantFirstName,
             self::$participantLastName,
@@ -69,7 +70,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
 
         // Create profile for guest participant
         self::$guestFirstName = 'Jon';
-        self::$guestLastName = 'Doe' . $time;
+        self::$guestLastName = 'Doe'.$time;
         self::$guestCompany = 'Company';
         $guestParticipant = $this->createGuestProfileAndParticipation(
             self::$guestFirstName,
@@ -80,7 +81,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
 
         // Create profile for user (non participant)
         self::$userFirstName = 'Karl';
-        self::$userLastName = 'Schmidt' . $time;
+        self::$userLastName = 'Schmidt'.$time;
         $user = $this->createProfile(self::$userFirstName, self::$userLastName);
         $this->persistAndFlushAll([$user]);
 
@@ -99,7 +100,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     public function testGetParticipationsForWeek(): void
     {
         $date = new DateTime('today 23:59:59');
-        $week = (int) $date->format('W');
+        $week = (int)$date->format('W');
 
         $weekRepository = $this->getDoctrine()->getRepository(Week::class);
         $weekEntity = $weekRepository->findOneBy([
@@ -108,9 +109,9 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         ]);
         $this->assertNotNull($weekEntity);
 
-        $this->client->request('GET', '/api/participations/' . $weekEntity->getId());
+        $this->client->request('GET', '/api/participations/'.$weekEntity->getId());
         $response = $this->client->getResponse();
-        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
         foreach ($weekEntity->getDays() as $day) {
             $this->assertArrayHasKey($day->getId(), $responseData);
@@ -119,17 +120,17 @@ class ParticipantControllerTest extends AbstractControllerTestCase
 
     public function testAddParticipant(): void
     {
-        $mealRepo = self::$container->get(MealRepositoryInterface::class);
+        $mealRepo = self::getContainer()->get(MealRepositoryInterface::class);
 
         $profileToAdd = $this->getUserProfile(self::USER_STANDARD);
         $mealToAdd = $mealRepo->getFutureMeals()[0];
         $this->assertNotNull($mealToAdd);
 
-        $routeStr = '/api/participation/' . $profileToAdd->getUsername() . '/' . $mealToAdd->getId();
+        $routeStr = '/api/participation/'.$profileToAdd->getUsername().'/'.$mealToAdd->getId();
         $this->client->request('PUT', $routeStr);
 
         $response = $this->client->getResponse();
-        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
         $responseData = json_decode($response->getContent(), true);
 
         $this->assertEquals($profileToAdd->getUsername(), $responseData['profile']);
@@ -139,19 +140,19 @@ class ParticipantControllerTest extends AbstractControllerTestCase
 
     public function testRemoveParticipant(): void
     {
-        $participantRepo = self::$container->get(ParticipantRepositoryInterface::class);
-        $mealRepo = self::$container->get(MealRepositoryInterface::class);
+        $participantRepo = self::getContainer()->get(ParticipantRepositoryInterface::class);
+        $mealRepo = self::getContainer()->get(MealRepositoryInterface::class);
         $meal = $mealRepo->getFutureMeals()[0];
         $profile = $this->getUserProfile(self::USER_STANDARD);
 
         $participantToRemove = self::createParticipant($profile, $meal);
         $this->assertNotNull($participantRepo->findOneBy(['id' => $participantToRemove->getId()]));
 
-        $routeStr = '/api/participation/' . $profile->getUsername() . '/' . $meal->getId();
+        $routeStr = '/api/participation/'.$profile->getUsername().'/'.$meal->getId();
         $this->client->request('DELETE', $routeStr);
 
         $response = $this->client->getResponse();
-        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
 
         $this->assertNull($participantRepo->findOneBy(['id' => $participantToRemove->getId()]));
     }
@@ -164,15 +165,15 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $weekRepository = $this->getDoctrine()->getRepository(Week::class);
         $weekEntity = $weekRepository->findOneBy([
             'year' => $date->format('o'),
-            'calendarWeek' => (int) $date->format('W'),
+            'calendarWeek' => (int)$date->format('W'),
         ]);
         $this->assertNotNull($weekEntity);
 
-        $routeStr = '/api/participations/' . $weekEntity->getId() . '/abstaining';
+        $routeStr = '/api/participations/'.$weekEntity->getId().'/abstaining';
         $this->client->request('GET', $routeStr);
 
         $response = $this->client->getResponse();
-        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
 
         $responseData = json_decode($response->getContent(), true);
 
@@ -180,16 +181,16 @@ class ParticipantControllerTest extends AbstractControllerTestCase
         $this->assertNotEmpty($responseData);
 
         $profileToParticipate = $responseData[0]['user'];
-        $profileRepo = self::$container->get(ProfileRepositoryInterface::class);
+        $profileRepo = self::getContainer()->get(ProfileRepositoryInterface::class);
         $profile = $profileRepo->findOneBy(['username' => $profileToParticipate]);
         $meal = $weekEntity->getDays()[0]->getMeals()[0];
         self::createParticipant($profile, $meal);
 
-        $routeStr = '/api/participations/' . $weekEntity->getId() . '/abstaining';
+        $routeStr = '/api/participations/'.$weekEntity->getId().'/abstaining';
         $this->client->request('GET', $routeStr);
 
         $response = $this->client->getResponse();
-        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
 
         $found = false;
         $responseData = json_decode($response->getContent(), true);
@@ -208,7 +209,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     protected function getCurrentWeekParticipations(): Crawler
     {
         $currentWeek = $this->getCurrentWeek();
-        $crawler = $this->client->request('GET', '/participations/' . $currentWeek->getId() . '/edit');
+        $crawler = $this->client->request('GET', '/participations/'.$currentWeek->getId().'/edit');
         $this->assertTrue($this->client->getResponse()->isSuccessful());
 
         return $crawler;
@@ -220,7 +221,7 @@ class ParticipantControllerTest extends AbstractControllerTestCase
     protected function getCurrentWeek(): ?Week
     {
         /** @var WeekRepositoryInterface $weekRepository */
-        $weekRepository = self::$container->get(WeekRepositoryInterface::class);
+        $weekRepository = self::getContainer()->get(WeekRepositoryInterface::class);
 
         return $weekRepository->getCurrentWeek();
     }

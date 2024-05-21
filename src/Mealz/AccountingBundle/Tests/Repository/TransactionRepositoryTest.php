@@ -35,13 +35,13 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
     {
         parent::setUp();
 
-        $this->transactionRepo = self::$container->get(TransactionRepositoryInterface::class);
+        $this->transactionRepo = self::getContainer()->get(TransactionRepositoryInterface::class);
         $this->locale = 'en';
 
         $this->clearAllTables();
         $this->loadFixtures([
             new LoadRoles(),
-            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
+            new LoadUsers(self::getContainer()->get('security.user_password_hasher')),
             new LoadWeeks(),
             new LoadDays(),
             new LoadCategories(),
@@ -49,7 +49,7 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
             new LoadDishVariations(),
             new LoadMeals(),
             new LoadSlots(),
-            new LoadCombinations(self::$container->get(EventDispatcherInterface::class)),
+            new LoadCombinations(self::getContainer()->get(EventDispatcherInterface::class)),
             new LoadParticipants(),
         ]);
     }
@@ -109,10 +109,10 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
 
         switch (strtolower($month)) {
             case 'last':
-                $dateTime->sub(new DateInterval('P' . $subDays . 'D'));
+                $dateTime->sub(new DateInterval('P'.$subDays.'D'));
                 break;
             case 'penultimate':
-                $dateTime->sub(new DateInterval('P1M' . $subDays . 'D'));
+                $dateTime->sub(new DateInterval('P1M'.$subDays.'D'));
                 break;
             default:
                 break;

@@ -18,7 +18,7 @@ class MealRepositoryTest extends AbstractDatabaseTestCase
     {
         parent::setUp();
 
-        $this->mealRepository = self::$container->get(MealRepositoryInterface::class);
+        $this->mealRepository = self::getContainer()->get(MealRepositoryInterface::class);
         $this->clearAllTables();
     }
 

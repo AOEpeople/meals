@@ -10,6 +10,7 @@ use App\Mealz\MealBundle\Repository\CategoryRepositoryInterface;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class CategoryAbstractControllerTest.
@@ -26,12 +27,12 @@ class CategoryControllerTest extends AbstractControllerTestCase
         $this->clearAllTables();
         $this->loadFixtures([
             new LoadRoles(),
-            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
+            new LoadUsers(self::getContainer()->get('security.user_password_hasher')),
             new LoadCategories(),
         ]);
 
-        $this->categoryRepo = static::$container->get(CategoryRepositoryInterface::class);
-        $this->em = static::$container->get(EntityManagerInterface::class);
+        $this->categoryRepo = static::getContainer()->get(CategoryRepositoryInterface::class);
+        $this->em = static::getContainer()->get(EntityManagerInterface::class);
 
         $this->loginAs(self::USER_KITCHEN_STAFF);
     }
@@ -47,12 +48,14 @@ class CategoryControllerTest extends AbstractControllerTestCase
                 'titleDe' => 'Sonstiges',
                 'titleEn' => 'Others',
                 'slug' => 'others',
-            ], [
+            ],
+            [
                 'id' => $response[1]['id'],
                 'titleDe' => 'Vegetarisch',
                 'titleEn' => 'Vegetarian',
                 'slug' => 'vegetarian',
-            ], [
+            ],
+            [
                 'id' => $response[2]['id'],
                 'titleDe' => 'Fleisch',
                 'titleEn' => 'Meat',
@@ -60,7 +63,7 @@ class CategoryControllerTest extends AbstractControllerTestCase
             ],
         ];
 
-        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertEquals($expectedCategories, $response);
     }
 
@@ -69,7 +72,7 @@ class CategoryControllerTest extends AbstractControllerTestCase
         $parameters = json_encode(['titleDe' => 'testDe987', 'titleEn' => 'testEn987']);
         $this->client->request('POST', '/api/categories', [], [], [], $parameters);
 
-        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
 
     public function testCreateCategoryFail(): void
@@ -77,7 +80,7 @@ class CategoryControllerTest extends AbstractControllerTestCase
         $parameters = json_encode(['titleEn' => 'testEn987']);
         $this->client->request('POST', '/api/categories', [], [], [], $parameters);
 
-        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_INTERNAL_SERVER_ERROR, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(['message' => '301: Category titles not set or they already exist'], json_decode($this->client->getResponse()->getContent(), true));
     }
 
@@ -90,7 +93,7 @@ class CategoryControllerTest extends AbstractControllerTestCase
         $category = $this->categoryRepo->findOneBy(['slug' => 'others']);
 
         $this->assertNull($category);
-        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
 
     public function testEditCategory(): void
@@ -104,7 +107,7 @@ class CategoryControllerTest extends AbstractControllerTestCase
 
         $category = $this->categoryRepo->find($categoryId);
         $this->assertInstanceOf(Category::class, $category);
-        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(json_encode($category), $this->client->getResponse()->getContent());
     }
 }

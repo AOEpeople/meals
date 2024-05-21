@@ -28,12 +28,12 @@ class CostSheetControllerTest extends AbstractControllerTestCase
         $this->clearAllTables();
         $this->loadFixtures([
             new LoadRoles(),
-            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
+            new LoadUsers(self::getContainer()->get('security.user_password_hasher')),
             new LoadTransactions(),
         ]);
 
-        $participantRepo = self::$container->get(ParticipantRepositoryInterface::class);
-        $transactionRepo = self::$container->get(TransactionRepositoryInterface::class);
+        $participantRepo = self::getContainer()->get(ParticipantRepositoryInterface::class);
+        $transactionRepo = self::getContainer()->get(TransactionRepositoryInterface::class);
         $this->wallet = new Wallet($participantRepo, $transactionRepo);
 
         $this->loginAs(self::USER_KITCHEN_STAFF);
@@ -51,7 +51,7 @@ class CostSheetControllerTest extends AbstractControllerTestCase
         $balance = $this->wallet->getBalance($profile);
         $this->assertGreaterThan(0.00, $balance);
 
-        $this->client->request('POST', '/api/costs/settlement/' . $profile->getUsername());
+        $this->client->request('POST', '/api/costs/settlement/'.$profile->getUsername());
         self::assertResponseIsSuccessful();
 
         $this->assertNotNull($profile->getSettlementHash(), 'SettlementHash was not set');
@@ -69,7 +69,7 @@ class CostSheetControllerTest extends AbstractControllerTestCase
         $balance = $this->wallet->getBalance($profile);
         $this->assertEquals(0.00, $balance);
 
-        $this->client->request('POST', '/api/costs/settlement/' . $profile->getUsername());
+        $this->client->request('POST', '/api/costs/settlement/'.$profile->getUsername());
         $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR, $this->client->getResponse()->getStatusCode());
 
         $this->assertNull($profile->getSettlementHash(), 'Settlement was set');
@@ -94,7 +94,7 @@ class CostSheetControllerTest extends AbstractControllerTestCase
         $entityManager->persist($transaction);
         $entityManager->flush();
 
-        $transactionRepo = self::$container->get(TransactionRepositoryInterface::class);
+        $transactionRepo = self::getContainer()->get(TransactionRepositoryInterface::class);
         $balanceBefore = $transactionRepo->getTotalAmount($profile->getUsername());
 
         // Pre-action tests
@@ -102,7 +102,7 @@ class CostSheetControllerTest extends AbstractControllerTestCase
         $this->assertNotNull($profile->getSettlementHash());
 
         // Trigger action
-        $this->client->request('POST', '/api/costs/settlement/confirm/' . $hash);
+        $this->client->request('POST', '/api/costs/settlement/confirm/'.$hash);
         $this->assertResponseIsSuccessful();
 
         // Check new balance
@@ -121,7 +121,7 @@ class CostSheetControllerTest extends AbstractControllerTestCase
         $this->assertFalse($profile->isHidden());
 
         // Trigger action
-        $this->client->request('POST', '/api/costs/hideuser/' . $profile->getUsername());
+        $this->client->request('POST', '/api/costs/hideuser/'.$profile->getUsername());
         $this->assertResponseIsSuccessful();
 
         // Check after action
@@ -144,7 +144,7 @@ class CostSheetControllerTest extends AbstractControllerTestCase
         $this->assertTrue($profile->isHidden());
 
         // Trigger action
-        $this->client->request('POST', '/api/costs/hideuser/' . $profile->getUsername());
+        $this->client->request('POST', '/api/costs/hideuser/'.$profile->getUsername());
         $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_INTERNAL_SERVER_ERROR, $this->client->getResponse()->getStatusCode());
 
         // Check after action

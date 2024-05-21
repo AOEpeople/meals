@@ -17,20 +17,17 @@ class HttpHeaderUtility
     /**
      * parse an Accept-Language header and returns the best matching locale from $this->locales.
      *
-     * @param $headerString
-     *
      * @return mixed
      *
      * @throws \InvalidArgumentException
      */
-    public function getLocaleFromAcceptLanguageHeader($headerString)
+    public function getLocaleFromAcceptLanguageHeader(?string $headerString)
     {
         if (true === empty($this->locales)) {
             throw new \InvalidArgumentException(sprintf('%s::locales is empty. Set some using the setLocales method.', get_class($this)));
         }
-        $headerString = trim($headerString);
 
-        if (true === empty($headerString)) {
+        if (null === $headerString || true === empty(trim($headerString))) {
             return reset($this->locales);
         }
         $acceptLanguages = explode(',', $headerString);
@@ -106,7 +103,7 @@ class HttpHeaderUtility
     {
         $rpos = strrpos($qualityString, '=');
         if (false !== $rpos) {
-            return (float) substr($qualityString, $rpos + 1);
+            return (float)substr($qualityString, $rpos + 1);
         }
 
         return 1;

@@ -38,7 +38,7 @@ class TransactionServiceTest extends AbstractDatabaseTestCase
         $this->clearAllTables();
         $this->loadFixtures([
             new LoadRoles(),
-            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
+            new LoadUsers(self::getContainer()->get('security.user_password_hasher')),
         ]);
     }
 
@@ -184,11 +184,11 @@ class TransactionServiceTest extends AbstractDatabaseTestCase
     private function getProfile(string $username): Profile
     {
         /** @var ProfileRepositoryInterface $profileRepo */
-        $profileRepo = self::$container->get(ProfileRepositoryInterface::class);
+        $profileRepo = self::getContainer()->get(ProfileRepositoryInterface::class);
         $profile = $profileRepo->find($username);
 
         if (null === $profile) {
-            throw new RuntimeException($username . ': profile not found');
+            throw new RuntimeException($username.': profile not found');
         }
 
         return $profile;

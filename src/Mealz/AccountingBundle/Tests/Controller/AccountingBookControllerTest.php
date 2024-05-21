@@ -10,6 +10,7 @@ use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Exception;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class AccountingBookControllerTest.
@@ -27,7 +28,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
         $this->loadFixtures([
             new LoadMeals(),
             new LoadRoles(),
-            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
+            new LoadUsers(self::getContainer()->get('security.user_password_hasher')),
         ]);
 
         $this->loginAs(self::USER_KITCHEN_STAFF);
@@ -36,22 +37,22 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
 
         // Create profile for user1
         $user1FirstName = 'Max';
-        $user1LastName = 'Mustermann' . $time;
+        $user1LastName = 'Mustermann'.$time;
         $user1 = $this->createProfile($user1FirstName, $user1LastName);
 
         // Create profile for user2
         $user2FirstName = 'John';
-        $user2LastName = 'Doe' . $time;
+        $user2LastName = 'Doe'.$time;
         $user2 = $this->createProfile($user2FirstName, $user2LastName);
 
         $this->persistAndFlushAll([$user1, $user2]);
 
         // Create transactions for users if they're persisted
-        if (($this->getUserProfile($user1FirstName . '.' . $user1LastName) instanceof Profile) === true) {
+        if (($this->getUserProfile($user1FirstName.'.'.$user1LastName) instanceof Profile) === true) {
             $this->createTransactions($user1, 10.50, new DateTime('first day of previous month'));
         }
 
-        if (($this->getUserProfile($user2FirstName . '.' . $user2LastName) instanceof Profile) === true) {
+        if (($this->getUserProfile($user2FirstName.'.'.$user2LastName) instanceof Profile) === true) {
             $this->createTransactions($user2, 11.50, new DateTime('first day of previous month'));
         }
     }
@@ -63,7 +64,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
     {
         $this->loginAs(self::USER_FINANCE);
         $this->client->request('GET', '/api/accounting/book');
-        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode(), 'Cash register page accessible by finance staff');
+        $this->assertEquals(Response::HTTP_FORBIDDEN, $this->client->getResponse()->getStatusCode(), 'Cash register page accessible by finance staff');
 
         // Test if default users can access the cash register page
         $this->loginAs(self::USER_STANDARD);
@@ -99,7 +100,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
 
         $this->loginAs(self::USER_FINANCE);
 
-        $crawler = $this->client->request('GET', '/api/accounting/book/finance/list/' . $dateFormatted . '&' . $dateFormatted);
+        $crawler = $this->client->request('GET', '/api/accounting/book/finance/list/'.$dateFormatted.'&'.$dateFormatted);
 
         $date = $crawler->filterXPath('//*[@class="table-data date"]/text()')->getNode(0)->textContent;
         $this->assertEquals($transactionDate->format('d.m.Y'), trim($date), 'Date displayed incorrectly');
@@ -137,7 +138,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
 
         $this->loginAs(self::USER_FINANCE);
 
-        $crawler = $this->client->request('GET', '/api/accounting/book/finance/list/' . $dateFormatted . '&' . $dateFormatted);
+        $crawler = $this->client->request('GET', '/api/accounting/book/finance/list/'.$dateFormatted.'&'.$dateFormatted);
 
         $nodes = $crawler->filterXPath('//*[@class="table-data amount"]/text()');
         $this->assertEquals(0, $nodes->count(), 'PayPal payment listed on finances page');
@@ -175,7 +176,7 @@ class AccountingBookControllerTest extends AbstractControllerTestCase
 
         $this->loginAs(self::USER_FINANCE);
 
-        $crawler = $this->client->request('GET', '/api/accounting/book/finance/list/' . $dateFormatted . '&' . $dateFormatted);
+        $crawler = $this->client->request('GET', '/api/accounting/book/finance/list/'.$dateFormatted.'&'.$dateFormatted);
 
         $dailyClosing = $crawler->filterXPath('//*[@class="table-data daily-closing"]/text()')->getNode(0)->textContent;
         $this->assertEquals('100.00', trim($dailyClosing), 'Daily closing calculated incorrectly');

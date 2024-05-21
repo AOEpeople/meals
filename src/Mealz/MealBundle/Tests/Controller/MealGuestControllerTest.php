@@ -14,6 +14,7 @@ use App\Mealz\MealBundle\DataFixtures\ORM\LoadWeeks;
 use App\Mealz\MealBundle\Repository\GuestInvitationRepository;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
+use Symfony\Component\HttpFoundation\Response;
 
 class MealGuestControllerTest extends AbstractControllerTestCase
 {
@@ -31,7 +32,7 @@ class MealGuestControllerTest extends AbstractControllerTestCase
             new LoadEvents(),
             new LoadMeals(),
             new LoadRoles(),
-            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
+            new LoadUsers(self::getContainer()->get('security.user_password_hasher')),
         ]);
 
         $this->loginAs(self::USER_KITCHEN_STAFF);
@@ -39,12 +40,12 @@ class MealGuestControllerTest extends AbstractControllerTestCase
 
     public function testnewGuestEventInvitation(): void
     {
-        $guestInvitationRepo = self::$container->get(GuestInvitationRepository::class);
+        $guestInvitationRepo = self::getContainer()->get(GuestInvitationRepository::class);
         $eventParticipation = $this->createFutureEvent();
-        $url = '/event/invitation/' . $eventParticipation->getDay()->getId();
+        $url = '/event/invitation/'.$eventParticipation->getDay()->getId();
 
         $this->client->request('GET', $url);
-        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $guestLink = json_decode($this->client->getResponse()->getContent())->url;
         $prefix = 'http://localhost/guest/event/';
@@ -60,14 +61,14 @@ class MealGuestControllerTest extends AbstractControllerTestCase
 
     public function testGetEventInvitationData(): void
     {
-        $guestInvitationRepo = self::$container->get(GuestInvitationRepository::class);
+        $guestInvitationRepo = self::getContainer()->get(GuestInvitationRepository::class);
         $eventParticipation = $this->createFutureEvent();
-        $profile = $this->createProfile('Max', 'Mustermann' . time());
+        $profile = $this->createProfile('Max', 'Mustermann'.time());
         $this->persistAndFlushAll([$profile]);
         $eventInvitation = $guestInvitationRepo->findOrCreateInvitation($profile, $eventParticipation->getDay());
 
-        $this->client->request('GET', '/api/event/invitation/' . $eventInvitation->getId());
-        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->client->request('GET', '/api/event/invitation/'.$eventInvitation->getId());
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $content = json_decode($this->client->getResponse()->getContent());
         $this->assertEquals(
@@ -86,16 +87,16 @@ class MealGuestControllerTest extends AbstractControllerTestCase
 
     public function testJoinEventAsGuest(): void
     {
-        $guestInvitationRepo = self::$container->get(GuestInvitationRepository::class);
+        $guestInvitationRepo = self::getContainer()->get(GuestInvitationRepository::class);
         $eventParticipation = $this->createFutureEvent();
-        $profile = $this->createProfile('Max', 'Mustermann' . time());
+        $profile = $this->createProfile('Max', 'Mustermann'.time());
         $this->persistAndFlushAll([$profile]);
         $eventInvitation = $guestInvitationRepo->findOrCreateInvitation($profile, $eventParticipation->getDay());
 
         // with company
         $this->client->request(
             'POST',
-            '/api/event/invitation/' . $eventInvitation->getId(),
+            '/api/event/invitation/'.$eventInvitation->getId(),
             [],
             [],
             [],
@@ -105,12 +106,12 @@ class MealGuestControllerTest extends AbstractControllerTestCase
                 'company' => 'District 9',
             ])
         );
-        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         // without company
         $this->client->request(
             'POST',
-            '/api/event/invitation/' . $eventInvitation->getId(),
+            '/api/event/invitation/'.$eventInvitation->getId(),
             [],
             [],
             [],
@@ -120,12 +121,12 @@ class MealGuestControllerTest extends AbstractControllerTestCase
                 'company' => null,
             ])
         );
-        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         // without firstName
         $this->client->request(
             'POST',
-            '/api/event/invitation/' . $eventInvitation->getId(),
+            '/api/event/invitation/'.$eventInvitation->getId(),
             [],
             [],
             [],
@@ -135,6 +136,6 @@ class MealGuestControllerTest extends AbstractControllerTestCase
                 'company' => 'District 9',
             ])
         );
-        $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_NOT_FOUND, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $this->client->getResponse()->getStatusCode());
     }
 }

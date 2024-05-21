@@ -28,7 +28,7 @@ class DishControllerTest extends AbstractControllerTestCase
             new LoadDishVariations(),
             new LoadMeals(),
             new LoadRoles(),
-            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
+            new LoadUsers(self::getContainer()->get('security.user_password_hasher')),
         ]);
 
         $this->loginAs(self::USER_KITCHEN_STAFF);
@@ -105,7 +105,7 @@ class DishControllerTest extends AbstractControllerTestCase
             'descriptionEn' => 'Test En Description',
         ]);
 
-        $this->client->request('PUT', '/api/dishes/' . $dish->getSlug(), [], [], [], $data);
+        $this->client->request('PUT', '/api/dishes/'.$dish->getSlug(), [], [], [], $data);
         $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $dishRepository = $this->getDoctrine()->getRepository(Dish::class);
@@ -136,7 +136,7 @@ class DishControllerTest extends AbstractControllerTestCase
         $this->persistAndFlushAll([$dish]);
 
         $dishId = $dish->getId();
-        $this->client->request('DELETE', '/api/dishes/' . $dish->getSlug());
+        $this->client->request('DELETE', '/api/dishes/'.$dish->getSlug());
         $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $dishRepository = $this->getDoctrine()->getRepository(Dish::class);
@@ -185,7 +185,7 @@ class DishControllerTest extends AbstractControllerTestCase
         ]);
 
         $this->assertNotNull($dish);
-        $dishService = self::$container->get('mealz_meal.service.dish_service');
+        $dishService = self::getContainer()->get('mealz_meal.service.dish_service');
         $this->assertTrue($dishService->isNew($dish));
     }
 }

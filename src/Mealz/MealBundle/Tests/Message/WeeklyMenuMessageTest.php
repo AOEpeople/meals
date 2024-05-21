@@ -23,7 +23,7 @@ class WeeklyMenuMessageTest extends WebTestCase
     {
         self::bootKernel();
 
-        $this->translator = self::$container->get('translator');
+        $this->translator = self::getContainer()->get('translator');
     }
 
     /**

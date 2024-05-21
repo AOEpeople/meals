@@ -72,7 +72,7 @@ class ParticipantController extends BaseController
         } catch (Exception $e) {
             $this->logger->error('join meal error', $this->getTrace($e));
 
-            return new JsonResponse(['message' => '402: ' . $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(['message' => '402: '.$e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         if (null === $result) {
@@ -164,7 +164,7 @@ class ParticipantController extends BaseController
             [
                 'actionText' => 'updated',
                 'bookedDishSlugs' => array_map(
-                    static fn (Dish $dish) => $dish->getSlug(),
+                    static fn(Dish $dish) => $dish->getSlug(),
                     $participant->getCombinedDishes()->toArray()
                 ),
             ],
@@ -202,7 +202,7 @@ class ParticipantController extends BaseController
     /**
      * Cancels an offered meal by a participant, so it can no longer be taken over by other users.
      */
-    public function cancelOfferedMeal(Request $request): JsonResponse
+    public function cancelOfferedMeal(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $parameters = json_decode($request->getContent(), true);
 
@@ -217,7 +217,6 @@ class ParticipantController extends BaseController
 
         $participant->setOfferedAt(0);
 
-        $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($participant);
         $entityManager->flush();
 
@@ -299,13 +298,12 @@ class ParticipantController extends BaseController
     }
 
     #[IsGranted("ROLE_KITCHEN_STAFF")]
-    public function remove(Profile $profile, Meal $meal): JsonResponse
+    public function remove(Profile $profile, Meal $meal, EntityManagerInterface $entityManager): JsonResponse
     {
         try {
             $participation = $this->participationSrv->getParticipationByMealAndUser($meal, $profile);
             $participation->setCombinedDishes(null);
 
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($participation);
             $entityManager->flush();
 

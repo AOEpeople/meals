@@ -1,93 +1,93 @@
 security:
-    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+  # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
 
-    # required to hash user passwords
-    password_hashers:
-        # auto hasher with default options for the User class (and children)
-        App\Mealz\UserBundle\Entity\Login: 'auto'
+  # required to hash user passwords
+  password_hashers:
+    # auto hasher with default options for the User class (and children)
+    App\Mealz\UserBundle\Entity\Login: 'auto'
 
-        # auto hasher with custom options for all PasswordAuthenticatedUserInterface instances
-        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
-            algorithm: auto
-            cost: 4
-            time_cost: 3
-            memory_cost: 10
+    # auto hasher with custom options for all PasswordAuthenticatedUserInterface instances
+    Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+      algorithm: auto
+      cost: 4
+      time_cost: 3
+      memory_cost: 10
 
-    providers:
+  providers:
+    oauth_user_provider:
+      id: mealz.oauthuserprovider
+
+    database:
+      entity: { class: App\Mealz\UserBundle\Entity\Login, property: username }
+
+  firewalls:
+    assets:
+      pattern: ^/(_(profiler|wdt)|css|images|js)/
+      security: false
+
+      # disable, i.e. comment out the complete 'dev' firewall config to use oauth authenticator on devbox
+      # dev:
+      # host: ^meals\.test$
+      # provider: database
+      # anonymous: lazy
+      # form_login:
+      #     login_path: /login
+      #     check_path: /login
+
+    main:
+      lazy: true
+      oauth:
+        provider: oauth_user_provider
+        resource_owners:
+          meals: meals_login
+        login_path: /connect/meals
+        use_forward: true
+        failure_path: /connect/meals
         oauth_user_provider:
-            id: mealz.oauthuserprovider
+          service: mealz.oauthuserprovider
+      json_login:
+        provider: database
+        check_path: /api/login
+      logout:
+        path: MealzUserBundle_logout
+        target: /
 
-        database:
-            entity: { class: App\Mealz\UserBundle\Entity\Login, property: username }
+      # activate different ways to authenticate
+      # https://symfony.com/doc/current/security.html#firewalls-authentication
 
-    firewalls:
-        assets:
-            pattern: ^/(_(profiler|wdt)|css|images|js)/
-            security: false
+      # https://symfony.com/doc/current/security/impersonating_user.html
+      # switch_user: true
 
-        # disable, i.e. comment out the complete 'dev' firewall config to use oauth authenticator on devbox
-        # dev:
-            # host: ^meals\.test$
-            # provider: database
-            # anonymous: lazy
-            # form_login:
-            #     login_path: /login
-            #     check_path: /login
+  # Define role compositions, e.g. role ROLE_KITCHEN_STAFF includes ROLE_USER role
+  # https://symfony.com/doc/4.4/security.html#hierarchical-roles
+  role_hierarchy:
+    ROLE_ADMIN: [ ROLE_KITCHEN_STAFF, ROLE_FINANCE ]
+    ROLE_KITCHEN_STAFF: ROLE_USER
+    ROLE_FINANCE: ROLE_USER
 
-        main:
-            lazy: true
-            oauth:
-                provider: oauth_user_provider
-                resource_owners:
-                    meals: meals_login
-                login_path: /connect/meals
-                use_forward: true
-                failure_path: /connect/meals
-                oauth_user_provider:
-                    service: mealz.oauthuserprovider
-            json_login:
-                provider: database
-                check_path: /api/login
-            logout:
-                path: MealzUserBundle_logout
-                target: /
-
-        # activate different ways to authenticate
-        # https://symfony.com/doc/current/security.html#firewalls-authentication
-
-        # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
-
-    # Define role compositions, e.g. role ROLE_KITCHEN_STAFF includes ROLE_USER role
-    # https://symfony.com/doc/4.4/security.html#hierarchical-roles
-    role_hierarchy:
-        ROLE_ADMIN: [ROLE_KITCHEN_STAFF, ROLE_FINANCE]
-        ROLE_KITCHEN_STAFF: ROLE_USER
-        ROLE_FINANCE: ROLE_USER
-
-    # Easy way to control access for large sections of your site
-    # Note: Only the *first* access control that matches will be used
-    #
-    # Anonymous access will only work if enabled in authentication listener
-    # config, e.g. anonymous: ~, anonymous: lazy
-    access_control:
-        - { path: ^/login, roles: ['%env(auth-mode:APP_AUTH_MODE)%'] }
-        - { path: ^/api/login, roles: ['%env(auth-mode:APP_AUTH_MODE)%'] }
-        - { path: ^/connect, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
-        - { path: ^/guest, roles: [PUBLIC_ACCESS] }
-        - { path: ^/guest/api/dashboard, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
-        - { path: ^/show/participations, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
-        - { path: ^/api/meals/nextThreeDays, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
-        - { path: ^/api/print/participations, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
-        - { path: ^/api/dashboard, roles: [ROLE_USER] }
-        - { path: ^/api/guest-invitation, roles: [PUBLIC_ACCESS] }
-        - { path: ^/api/guest/meal/participation, roles: [PUBLIC_ACCESS] }
-        - { path: ^/api/environmentals, roles: [PUBLIC_ACCESS] }
-        - { path: ^/api/user, roles: [] }
-        - { path: ^/api/event/invitation/\S*, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
-        - { path: '^/participation/slots-status/\d{4}-\d{2}-\d{2}$', roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
-        - { path: '^/participation/count-status/\d{4}-\d{2}-\d{2}$', roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
-        - { path: ^/css, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
-        - { path: ^/js, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
-        - { path: ^/images, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
-        - { path: ^/, roles: ['%env(auth-mode:APP_AUTH_MODE)%'] }
+  # Easy way to control access for large sections of your site
+  # Note: Only the *first* access control that matches will be used
+  #
+  # Anonymous access will only work if enabled in authentication listener
+  # config, e.g. anonymous: ~, anonymous: lazy
+  access_control:
+    - { path: ^/login, roles: [ '%env(auth-mode:APP_AUTH_MODE)%' ] }
+    - { path: ^/api/login, roles: [ '%env(auth-mode:APP_AUTH_MODE)%' ] }
+    - { path: ^/connect, roles: [ PUBLIC_ACCESS ] }
+    - { path: ^/guest, roles: [ PUBLIC_ACCESS ] }
+    - { path: ^/guest/api/dashboard, roles: [ PUBLIC_ACCESS ] }
+    - { path: ^/show/participations, roles: [ PUBLIC_ACCESS ] }
+    - { path: ^/api/meals/nextThreeDays, roles: [ PUBLIC_ACCESS ] }
+    - { path: ^/api/print/participations, roles: [ PUBLIC_ACCESS ] }
+    - { path: ^/api/dashboard, roles: [ ROLE_USER ] }
+    - { path: ^/api/guest-invitation, roles: [ PUBLIC_ACCESS ] }
+    - { path: ^/api/guest/meal/participation, roles: [ PUBLIC_ACCESS ] }
+    - { path: ^/api/environmentals, roles: [ PUBLIC_ACCESS ] }
+    - { path: ^/api/user, roles: [ ] }
+    - { path: ^/api/event/invitation/\S*, roles: [ PUBLIC_ACCESS ] }
+    - { path: '^/participation/slots-status/\d{4}-\d{2}-\d{2}$', roles: [ PUBLIC_ACCESS ] }
+    - { path: '^/participation/count-status/\d{4}-\d{2}-\d{2}$', roles: [ PUBLIC_ACCESS ] }
+    - { path: ^/css, roles: [ PUBLIC_ACCESS ] }
+    - { path: ^/js, roles: [ PUBLIC_ACCESS ] }
+    - { path: ^/images, roles: [ PUBLIC_ACCESS ] }
+    - { path: ^/, roles: [ '%env(auth-mode:APP_AUTH_MODE)%' ] }

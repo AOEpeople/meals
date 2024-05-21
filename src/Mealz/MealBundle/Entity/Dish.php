@@ -25,7 +25,7 @@ class Dish implements JsonSerializable
 
     #[Gedmo\Slug(fields: ['title_en'])]
     #[ORM\Column(type: 'string', length: 128, unique: true)]
-    protected string $slug;
+    protected ?string $slug = null;
 
     #[Assert\NotBlank]
     #[Assert\Length(max: 255)]
@@ -92,7 +92,7 @@ class Dish implements JsonSerializable
         return $this->id;
     }
 
-    public function getSlug(): string
+    public function getSlug(): ?string
     {
         return $this->slug;
     }

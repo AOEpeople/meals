@@ -34,7 +34,7 @@ class CashControllerTest extends AbstractControllerTestCase
         $this->clearAllTables();
         $this->loadFixtures([
             new LoadRoles(),
-            new LoadUsers(self::$container->get('security.user_password_encoder.generic')),
+            new LoadUsers(self::getContainer()->get('security.user_password_hasher')),
             new LoadCategories(),
             new LoadWeeks(),
             new LoadDays(),
@@ -42,13 +42,13 @@ class CashControllerTest extends AbstractControllerTestCase
             new LoadDishVariations(),
             new LoadMeals(),
             new LoadSlots(),
-            new LoadCombinations(self::$container->get(EventDispatcherInterface::class)),
+            new LoadCombinations(self::getContainer()->get(EventDispatcherInterface::class)),
             new LoadParticipants(),
             new LoadTransactions(),
         ]);
 
-        $participantRepo = self::$container->get(ParticipantRepositoryInterface::class);
-        $transactionRepo = self::$container->get(TransactionRepositoryInterface::class);
+        $participantRepo = self::getContainer()->get(ParticipantRepositoryInterface::class);
+        $transactionRepo = self::getContainer()->get(TransactionRepositoryInterface::class);
         $this->wallet = new Wallet($participantRepo, $transactionRepo);
     }
 
@@ -65,7 +65,7 @@ class CashControllerTest extends AbstractControllerTestCase
         $balanceBefore = $this->wallet->getBalance($janeProfile);
 
         // Request
-        $this->client->request('POST', '/api/payment/cash/' . self::USER_STANDARD . '?amount=' . $amount);
+        $this->client->request('POST', '/api/payment/cash/'.self::USER_STANDARD.'?amount='.$amount);
         $this->assertEquals(\Symfony\Component\HttpFoundation\Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $response = json_decode($this->client->getResponse()->getContent(), true);

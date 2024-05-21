@@ -12,7 +12,7 @@ services:
       - DB_NAME=db_test
       - DB_USER=db
       - DB_PASS=db
-      - DB_VERS=5.7
+      - DB_VERS=8.0.37
       - SMTP_HOST=mail
       - SMTP_PORT=1025
       - SMTP_AUTH=off
@@ -24,7 +24,7 @@ services:
       - ./build:/var/www/html/build
 
   db:
-    image: "mysql:5.7"
+    image: "mysql:8.0.37"
     command: --sql-mode="STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"
     healthcheck:
       test: out=$$(mysqladmin ping -h localhost -P 3306 -u db --password=db 2>&1); echo $$out | grep 'mysqld is alive' || { echo $$out; exit 1; }

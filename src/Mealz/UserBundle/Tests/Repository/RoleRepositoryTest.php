@@ -22,7 +22,7 @@ class RoleRepositoryTest extends AbstractDatabaseTestCase
             new LoadRoles(),
         ]);
 
-        $this->roleRepository = self::$container->get(RoleRepositoryInterface::class);
+        $this->roleRepository = self::getContainer()->get(RoleRepositoryInterface::class);
     }
 
     /**

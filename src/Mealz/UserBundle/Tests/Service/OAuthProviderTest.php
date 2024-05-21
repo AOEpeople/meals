@@ -27,7 +27,7 @@ class OAuthProviderTest extends AbstractControllerTestCase
 
         $this->sut = new OAuthUserProvider(
             $this->getDoctrine()->getManager(),
-            self::$container->get(RoleRepositoryInterface::class)
+            self::getContainer()->get(RoleRepositoryInterface::class)
         );
     }
 
@@ -120,8 +120,9 @@ class OAuthProviderTest extends AbstractControllerTestCase
     /**
      * Returns the mocked response from identity provider.
      */
-    private function getMockedUserResponse(string $username, string $firstName, string $lastName, ?string $email, array $roles): object
-    {
+    private function getMockedUserResponse(
+        string $username, string $firstName, string $lastName, ?string $email, array $roles
+    ): object {
         $userData = [
             'preferred_username' => $username,
             'family_name' => $lastName,

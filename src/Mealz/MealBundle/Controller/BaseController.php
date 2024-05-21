@@ -4,15 +4,9 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Controller;
 
-use App\Mealz\MealBundle\Service\Doorman;
-use App\Mealz\MealBundle\Service\Logger\MealsLoggerInterface;
 use App\Mealz\UserBundle\Entity\Profile;
-use Exception;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
 
@@ -21,8 +15,8 @@ abstract class BaseController extends AbstractController
     public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();
-        $services['monolog.logger.balance'] = '?' . LoggerInterface::class;
-        $services['translator'] = '?' . TranslatorInterface::class;
+        $services['monolog.logger.balance'] = '?'.LoggerInterface::class;
+        $services['translator'] = '?'.TranslatorInterface::class;
 
         return $services;
     }
@@ -47,7 +41,7 @@ abstract class BaseController extends AbstractController
             }
 
             $excLog['message'] = $exc->getMessage();
-            $excLog['file'] = $exc->getFile() . ':' . $exc->getLine();
+            $excLog['file'] = $exc->getFile().':'.$exc->getLine();
 
             $prev = $exc->getPrevious();
             if (null === $prev) {
@@ -55,7 +49,7 @@ abstract class BaseController extends AbstractController
             }
 
             $exc = $prev;
-            $excChain['caused by [#' . $i . ']'] = $excLog;
+            $excChain['caused by [#'.$i.']'] = $excLog;
         }
 
         return $excChain;

@@ -165,7 +165,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
      * @param string $attribute
      * @param bool $throwError
      */
-    private function getDishVariationBy($attribute, $value, $throwError = true): DishVariation
+    private function getDishVariationBy(string $attribute, $value, bool $throwError = true): ?DishVariation
     {
         $dishVariationRepo = $this->getDoctrine()->getRepository(DishVariation::class);
 

@@ -189,7 +189,7 @@ services:
 
   App\Mealz\MealBundle\Event\Subscriber\WeekUpdateSubscriber:
     arguments:
-      $weeklyMenuNotifier: '@mealz_meal.notifier.mattermost.weekly_menu_notifier'
+      $notifier: '@mealz_meal.notifier.mattermost.weekly_menu_notifier'
 
   App\Mealz\MealBundle\Service\HttpHeaderUtility:
     arguments:

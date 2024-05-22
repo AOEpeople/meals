@@ -7,6 +7,11 @@ use Symfony\Component\DependencyInjection\EnvVarProcessorInterface;
 
 class AuthenticationEnvVarProcessor implements EnvVarProcessorInterface
 {
+    /**
+     * @return null|string
+     *
+     * @psalm-return 'PUBLIC_ACCESS'|'ROLE_USER'|null
+     */
     public function getEnv($prefix, $name, Closure $getEnv): ?string
     {
         if ('auth-mode' !== $prefix) {
@@ -17,10 +22,15 @@ class AuthenticationEnvVarProcessor implements EnvVarProcessorInterface
 
         return match ($env) {
             'oauth' => 'ROLE_USER',
-            default => 'IS_AUTHENTICATED_ANONYMOUSLY',
+            default => 'PUBLIC_ACCESS',
         };
     }
 
+    /**
+     * @return string[]
+     *
+     * @psalm-return array{'auth-mode': 'string'}
+     */
     public static function getProvidedTypes(): array
     {
         return [

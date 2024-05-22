@@ -119,7 +119,7 @@ class Workday
      *
      * @return DateTime
      */
-    private function getEasterDate($year)
+    private function getEasterDate($year): DateTime
     {
         $base = new DateTime($year . '-03-21');
         $days = easter_days($year);

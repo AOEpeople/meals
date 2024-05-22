@@ -140,6 +140,11 @@ class Day extends AbstractMessage implements JsonSerializable
         return $week;
     }
 
+    /**
+     * @return (DateTime|array[][]|bool|int|null)[]
+     *
+     * @psalm-return array{dateTime: DateTime, lockParticipationDateTime: DateTime, week: int|null, meals: array<''|int, non-empty-list<array>>, event: int|null, enabled: bool}
+     */
     public function jsonSerialize(): array
     {
         $meals = [];

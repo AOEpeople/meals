@@ -116,8 +116,8 @@ class Link
     public function linkCategory(
         Category $category,
         $action = null,
-        $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH
-    ) {
+        int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH
+    ): string {
         $parameters = ['slug' => $category->getSlug()];
         if ('edit' === $action) {
             return $this->router->generate(

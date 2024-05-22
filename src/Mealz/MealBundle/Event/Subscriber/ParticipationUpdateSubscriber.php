@@ -24,6 +24,11 @@ class ParticipationUpdateSubscriber implements EventSubscriberInterface
         $this->partCountSrv = $partCountSrv;
     }
 
+    /**
+     * @return string[]
+     *
+     * @psalm-return array{'App\\Mealz\\MealBundle\\Event\\ParticipationUpdateEvent'::class: 'onUpdate'}
+     */
     public static function getSubscribedEvents(): array
     {
         return [
@@ -57,6 +62,11 @@ class ParticipationUpdateSubscriber implements EventSubscriberInterface
         $this->publisher->publish(self::PUBLISH_TOPIC, $data, self::PUBLISH_MSG_TYPE);
     }
 
+    /**
+     * @return (bool|int|mixed|null)[]
+     *
+     * @psalm-return array{mealId: int|null, parentId: int|null, limit: int, reachedLimit: bool, isOpen: bool, isLocked: bool, participations: int<0, max>|mixed}
+     */
     private function getMealInfo(Meal $meal, array $participationsPerDay): array
     {
         $participationCount = null;

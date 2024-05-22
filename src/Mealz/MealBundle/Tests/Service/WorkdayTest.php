@@ -22,7 +22,12 @@ class WorkdayTest extends TestCase
         );
     }
 
-    public function getDataForTestBasic()
+    /**
+     * @return string[][]
+     *
+     * @psalm-return array<string, array{0: string, 1: string, 2: string}>
+     */
+    public function getDataForTestBasic(): array
     {
         $data = [
             // thursday

@@ -63,7 +63,9 @@ class Login implements SymfonyUserInterface, MealzUserInterface, PasswordAuthent
     }
 
     /**
-     * @return array serialized form of the Login object
+     * @return string[] serialized form of the Login object
+     *
+     * @psalm-return array{username: string, password: string}
      */
     public function __serialize(): array
     {

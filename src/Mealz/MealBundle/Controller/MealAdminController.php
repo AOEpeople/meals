@@ -48,7 +48,7 @@ class MealAdminController extends BaseController
 
         for ($i = 0; $i < 8; ++$i) {
             $modifiedDateTime = clone $dateTime;
-            $modifiedDateTime->modify('+' . $i . ' weeks');
+            $modifiedDateTime->modify('+'.$i.' weeks');
             $week = $this->weekRepository->findOneBy(
                 [
                     'year' => $modifiedDateTime->format('o'),
@@ -97,7 +97,7 @@ class MealAdminController extends BaseController
                 $this->handleNewDay($dayData, $weekDays[$dayIndex++]);
             }
         } catch (Exception $e) {
-            return new JsonResponse(['message' => 'NoErrorNumber: ' . $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(['message' => 'NoErrorNumber: '.$e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $this->em->persist($week);
@@ -182,13 +182,13 @@ class MealAdminController extends BaseController
 
         /** @var Day $day */
         foreach ($week->getDays() as $day) {
-            $response[(string) $day->getId()] = $day->getDateTime()->modify((string) $dateTimeModifier);
+            $response[(string)$day->getId()] = $day->getDateTime()->modify((string)$dateTimeModifier);
         }
 
         return new JsonResponse($response, Response::HTTP_OK);
     }
 
-    private function handleDay(array $day)
+    private function handleDay(array $day): void
     {
         // check if day exists
         $dayEntity = $this->dayRepository->find($day['id']);
@@ -221,7 +221,7 @@ class MealAdminController extends BaseController
         }
     }
 
-    private function handleNewDay($dayData, Day $day)
+    private function handleNewDay($dayData, Day $day): void
     {
         // check for negative id
         if (0 < $dayData['id'] && $dayData['date'] === $day->getDateTime()) {
@@ -247,20 +247,20 @@ class MealAdminController extends BaseController
         }
     }
 
-    private function setLockParticipationForDay(Day $dayEntity, array $day)
+    private function setLockParticipationForDay(Day $dayEntity, array $day): void
     {
         if (
             null !== $day['lockDate']
             && true === isset($day['lockDate']['date'])
             && true === isset($day['lockDate']['timezone'])
         ) {
-            $newDateStr = str_replace(' ', 'T', $day['lockDate']['date']) . '+00:00';
+            $newDateStr = str_replace(' ', 'T', $day['lockDate']['date']).'+00:00';
             $newDate = DateTime::createFromFormat('Y-m-d\TH:i:s.uP', $newDateStr, new DateTimeZone($day['lockDate']['timezone']));
             $dayEntity->setLockParticipationDateTime($newDate);
         }
     }
 
-    private function handleMealArray(array $mealArr, Day $dayEntity)
+    private function handleMealArray(array $mealArr, Day $dayEntity): void
     {
         foreach ($mealArr as $meal) {
             if (false === isset($meal['dishSlug'])) {
@@ -268,7 +268,7 @@ class MealAdminController extends BaseController
             }
             $dishEntity = $this->dishRepository->findOneBy(['slug' => $meal['dishSlug']]);
             if (null === $dishEntity) {
-                throw new Exception('107: dish not found for slug: ' . $meal['dishSlug']);
+                throw new Exception('107: dish not found for slug: '.$meal['dishSlug']);
             }
             // if mealId is null create meal
             if (false === isset($meal['mealId'])) {
@@ -279,7 +279,7 @@ class MealAdminController extends BaseController
         }
     }
 
-    private function createMeal(Dish $dishEntity, Day $dayEntity, array $meal)
+    private function createMeal(Dish $dishEntity, Day $dayEntity, array $meal): void
     {
         $mealEntity = new Meal($dishEntity, $dayEntity);
         $mealEntity->setPrice($dishEntity->getPrice());
@@ -287,7 +287,7 @@ class MealAdminController extends BaseController
         $dayEntity->addMeal($mealEntity);
     }
 
-    private function modifyMeal(array $meal, Dish $dishEntity, Day $dayEntity)
+    private function modifyMeal(array $meal, Dish $dishEntity, Day $dayEntity): void
     {
         $mealEntity = $this->mealRepository->find($meal['mealId']);
 
@@ -307,7 +307,7 @@ class MealAdminController extends BaseController
             $mealEntity->setPrice($dishEntity->getPrice());
             $dayEntity->addMeal($mealEntity);
         } else {
-            throw new Exception('108: meal has participations for id: ' . $meal['mealId']);
+            throw new Exception('108: meal has participations for id: '.$meal['mealId']);
         }
     }
 }

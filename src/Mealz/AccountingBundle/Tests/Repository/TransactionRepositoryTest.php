@@ -126,7 +126,7 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
      *
      * @param $transactionsArray array holding Transaction objects
      */
-    private function getAssumedTotalAmountForTransactionsFromLastMonth($transactionsArray): float
+    private function getAssumedTotalAmountForTransactionsFromLastMonth(array $transactionsArray): float
     {
         $result = 0;
         $transactions = array_filter($transactionsArray, ['self', 'isTransactionFromLastMonth']);
@@ -140,9 +140,11 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
     /**
      * Create and persist a bunch of transactions and return them in an array.
      *
-     * @return array of transactions
+     * @return Transaction[] of transactions
      *
      * @throws Exception
+     *
+     * @psalm-return non-empty-list<Transaction>
      */
     private function createTemporaryTransactions(): array
     {

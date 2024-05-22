@@ -27,6 +27,11 @@ class WeekUpdateSubscriber implements EventSubscriberInterface
         $this->translator = $translator;
     }
 
+    /**
+     * @return string[]
+     *
+     * @psalm-return array{'App\\Mealz\\MealBundle\\Event\\WeekUpdateEvent'::class: 'onWeekUpdate'}
+     */
     public static function getSubscribedEvents(): array
     {
         return [

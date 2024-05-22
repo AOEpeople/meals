@@ -46,7 +46,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
             'titleEn' => 'Test En Var123',
         ]);
 
-        $this->client->request('POST', '/api/dishes/' . $dish->getSlug() . '/variation', [], [], [], $data);
+        $this->client->request('POST', '/api/dishes/'.$dish->getSlug().'/variation', [], [], [], $data);
         $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $found = false;
@@ -72,7 +72,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
             'titleEn' => 'Test En Var123',
         ]);
 
-        $this->client->request('PUT', '/api/dishes/variation/' . $dishVariation->getSlug(), [], [], [], $data);
+        $this->client->request('PUT', '/api/dishes/variation/'.$dishVariation->getSlug(), [], [], [], $data);
         $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $updatedDishVariation = $this->getDishVariationBy('id', $dishVariation->getId(), false);
@@ -89,7 +89,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         $dishVariationId = $dishVariation->getId();
         $this->assertTrue($dishVariation->isEnabled());
 
-        $this->client->request('DELETE', '/api/dishes/variation/' . $dishVariation->getSlug());
+        $this->client->request('DELETE', '/api/dishes/variation/'.$dishVariation->getSlug());
         $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
 
         $updatedDishVariation = $this->getDishVariationBy('id', $dishVariationId, false);
@@ -120,11 +120,11 @@ class DishVariationControllerTest extends AbstractControllerTestCase
      *
      * If no dish-identifier is specified then it returns the test dish with lowest identifier.
      *
-     * @param int|null $identifier      Dish ID
-     * @param bool     $dishVarRequired if TRUE and no identifier is given the method returns the first dish
+     * @param int|null $identifier Dish ID
+     * @param bool $dishVarRequired if TRUE and no identifier is given the method returns the first dish
      *                                  having at least ONE variation
      */
-    private function getDish(?int $identifier = null, bool $dishVarRequired = false): ?Dish
+    private function getDish(?int $identifier = null, bool $dishVarRequired = false): Dish
     {
         /** @var DishRepository $dishRepository */
         $dishRepository = self::getContainer()->get(DishRepository::class);
@@ -163,11 +163,9 @@ class DishVariationControllerTest extends AbstractControllerTestCase
 
     /**
      * @param string $attribute
-     * @param bool   $throwError
-     *
-     * @return DishVariation
+     * @param bool $throwError
      */
-    private function getDishVariationBy($attribute, $value, $throwError = true)
+    private function getDishVariationBy($attribute, $value, $throwError = true): DishVariation
     {
         $dishVariationRepo = $this->getDoctrine()->getRepository(DishVariation::class);
 

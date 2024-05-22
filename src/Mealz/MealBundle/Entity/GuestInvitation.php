@@ -35,7 +35,7 @@ class GuestInvitation
         $this->day = $day;
     }
 
-    public function setId(string $id): GuestInvitation
+    public function setId(string $id): static
     {
         $this->id = $id;
 
@@ -50,7 +50,7 @@ class GuestInvitation
         return $this->id;
     }
 
-    public function setHost(Profile $host): self
+    public function setHost(Profile $host): static
     {
         $this->host = $host;
 

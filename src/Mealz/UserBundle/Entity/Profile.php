@@ -101,7 +101,7 @@ class Profile implements UserInterface, JsonSerializable
         return "$this->name, $this->firstName";
     }
 
-    public function addRole(Role $role): self
+    public function addRole(Role $role): static
     {
         if (null === $this->roles) {
             $this->roles = new ArrayCollection();
@@ -180,17 +180,15 @@ class Profile implements UserInterface, JsonSerializable
         $this->settlementHash = $settlementHash;
     }
 
-    public function getProfile(): self
+    public function getProfile(): static
     {
         return $this;
     }
 
+    /**
+     * @return null
+     */
     public function getPassword(): ?string
-    {
-        return null;
-    }
-
-    public function getSalt(): ?string
     {
         return null;
     }
@@ -204,6 +202,11 @@ class Profile implements UserInterface, JsonSerializable
         return $this->getUsername();
     }
 
+    /**
+     * @return (string|string[])[]
+     *
+     * @psalm-return array{user: string, roles: array<string>}
+     */
     public function jsonSerialize(): array
     {
         return [

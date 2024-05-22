@@ -101,7 +101,7 @@ class TransactionService
     /**
      * @throws BadDataException
      */
-    private function getOrderID($jsonPayload): string
+    private function getOrderID(string $jsonPayload): string
     {
         $data = [];
         $payload = $this->jsonDecode($jsonPayload);

@@ -5,8 +5,8 @@ namespace App\Mealz\UserBundle\Controller;
 use Error;
 use HWI\Bundle\OAuthBundle\Security\Core\Authentication\Token\OAuthToken;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
 
@@ -19,7 +19,7 @@ class SecurityController extends AbstractController
         $this->tokenStorage = $tokenStorage;
     }
 
-    public function login(Request $request): Response
+    public function login(Request $request): RedirectResponse
     {
         // If Keycloak is enabled, redirect to the Meals home
         $token = $this->tokenStorage->getToken();

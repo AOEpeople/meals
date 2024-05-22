@@ -53,7 +53,7 @@ class MealControllerTest extends AbstractControllerTestCase
         $this->loginAs(self::USER_STANDARD);
 
         // create a test profile
-        $profile = $this->createProfile('Max', 'Mustermann' . time());
+        $profile = $this->createProfile('Max', 'Mustermann'.time());
         $this->persistAndFlushAll([$profile]);
 
         // get first locked meal and make it an available offer
@@ -68,7 +68,7 @@ class MealControllerTest extends AbstractControllerTestCase
         $dish = $firstLockedMeal->getDish()->getSlug();
 
         // first case: accept available offer
-        $this->client->request('GET', '/menu/' . $date . '/' . $dish . '/accept-offer');
+        $this->client->request('GET', '/menu/'.$date.'/'.$dish.'/accept-offer');
         $this->assertTrue($this->client->getResponse()->isSuccessful(), 'accepting offer failed');
     }
 
@@ -81,10 +81,10 @@ class MealControllerTest extends AbstractControllerTestCase
         $this->loginAs(self::USER_STANDARD);
 
         // create a test profile
-        $profile = $this->createProfile('Max', 'Mustermann' . time());
+        $profile = $this->createProfile('Max', 'Mustermann'.time());
 
         // create second test profile
-        $secondProfile = $this->createProfile('Meike', 'Musterfrau' . time());
+        $secondProfile = $this->createProfile('Meike', 'Musterfrau'.time());
         $this->persistAndFlushAll([$profile, $secondProfile]);
 
         // get first locked meal and make it an available offer
@@ -104,7 +104,7 @@ class MealControllerTest extends AbstractControllerTestCase
         $dish = $lockedMeal->getDish()->getSlug();
 
         // first case: accept available offer
-        $this->client->request('GET', '/menu/' . $date . '/' . $dish . '/accept-offer');
+        $this->client->request('GET', '/menu/'.$date.'/'.$dish.'/accept-offer');
         $this->assertTrue($this->client->getResponse()->isSuccessful(), 'accepting offer failed');
 
         // verification by checking the database
@@ -125,7 +125,7 @@ class MealControllerTest extends AbstractControllerTestCase
         $this->loginAs(self::USER_STANDARD);
 
         // create a test profile
-        $profile = $this->createProfile('Max', 'Mustermann' . time());
+        $profile = $this->createProfile('Max', 'Mustermann'.time());
         $this->persistAndFlushAll([$profile]);
 
         // variables for third case
@@ -137,7 +137,7 @@ class MealControllerTest extends AbstractControllerTestCase
         $dish = $outdatedMeal->getDish();
 
         // third case: accepting outdated offer
-        $this->client->request('GET', '/menu/' . $date . '/' . $dish . '/accept-offer');
+        $this->client->request('GET', '/menu/'.$date.'/'.$dish.'/accept-offer');
         $statusCode = $this->client->getResponse()->getStatusCode();
         $this->assertGreaterThanOrEqual(403, $statusCode, 'user accepted outdated offer');
         $this->assertLessThanOrEqual(404, $statusCode, 'user accepted outdated offer');
@@ -190,6 +190,10 @@ class MealControllerTest extends AbstractControllerTestCase
     /**
      * Searching a Day with 3 options. I adapted fixtures so we always have 1 day with 3 options
      * (1 Dish without variations and 1 Dish with 2 variations).
+     *
+     * @return (Meal|string)[][]
+     *
+     * @psalm-return list<array{0: string, 1: Meal}>
      */
     private function getJoinAMealData(): array
     {
@@ -224,7 +228,7 @@ class MealControllerTest extends AbstractControllerTestCase
         $this->persistAndFlushAll([$guestInvitation]);
 
         // Enroll as guest
-        $guestEnrollmentUrl = '/menu/guest/' . $guestInvitation->getId();
+        $guestEnrollmentUrl = '/menu/guest/'.$guestInvitation->getId();
         $crawler = $this->client->request('GET', $guestEnrollmentUrl);
         $this->assertTrue($this->client->getResponse()->isSuccessful());
 
@@ -261,17 +265,22 @@ class MealControllerTest extends AbstractControllerTestCase
         }
     }
 
+    /**
+     * @return (bool|string)[][]
+     *
+     * @psalm-return array{0: array{0: string, 1: string, 2: string, 3: false, 4: false}, 1: array{0: '', 1: string, 2: string, 3: true, 4: false}, 2: array{0: string, 1: '', 2: string, 3: true, 4: false}, 3: array{0: string, 1: string, 2: '', 3: true, 4: true}, 4: array{0: string, 1: string, 2: string, 3: true, 4: true}}
+     */
     public function getGuestEnrollmentData(): array
     {
         $time = time();
 
         return [
             // [FirstName, LastName, Company, Select Dish, Enrollment Status]
-            ['Max01:' . $time, 'Mustermann01' . $time, 'Test Comapany01' . $time, false, false],
-            ['', 'Mustermann02' . $time, 'Test Comapany02' . $time, true, false],
-            ['Max03:' . $time, '', 'Test Comapany03' . $time, true, false],
-            ['Max04:' . $time, 'Mustermann04' . $time, '', true, true], // allow empty company
-            ['Max05:' . $time, 'Mustermann05' . $time, 'Test Comapany05' . $time, true, true],
+            ['Max01:'.$time, 'Mustermann01'.$time, 'Test Comapany01'.$time, false, false],
+            ['', 'Mustermann02'.$time, 'Test Comapany02'.$time, true, false],
+            ['Max03:'.$time, '', 'Test Comapany03'.$time, true, false],
+            ['Max04:'.$time, 'Mustermann04'.$time, '', true, true], // allow empty company
+            ['Max05:'.$time, 'Mustermann05'.$time, 'Test Comapany05'.$time, true, true],
         ];
     }
 

@@ -55,7 +55,7 @@ class Transaction
         return $this->date;
     }
 
-    public function setAmount(float $amount): self
+    public function setAmount(float $amount): static
     {
         $this->amount = $amount;
 
@@ -67,14 +67,14 @@ class Transaction
         return $this->amount;
     }
 
-    public function setOrderId(string $orderId): self
+    public function setOrderId(string $orderId): static
     {
         $this->orderId = $orderId;
 
         return $this;
     }
 
-    public function setPaymethod(string $paymethod): self
+    public function setPaymethod(string $paymethod): static
     {
         $this->paymethod = $paymethod;
 
@@ -89,10 +89,7 @@ class Transaction
         return $this->paymethod;
     }
 
-    /**
-     * @return Transaction
-     */
-    public function setProfile(Profile $profile)
+    public function setProfile(Profile $profile): static
     {
         $this->profile = $profile;
 

@@ -35,6 +35,11 @@ class PayPalCheckOrderCommand extends Command
             ->addOption('order-id', 'o', InputOption::VALUE_REQUIRED, 'PayPal Order-ID.');
     }
 
+    /**
+     * @return int
+     *
+     * @psalm-return 0|1
+     */
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $orderID = $input->getOption('order-id');

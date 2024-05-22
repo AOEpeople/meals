@@ -118,6 +118,11 @@ class TransactionServiceTest extends AbstractDatabaseTestCase
         $transactionService->createFromRequest($request);
     }
 
+    /**
+     * @return string[][]
+     *
+     * @psalm-return array{'no json payload': array{0: ''}, 'wrong data': array{0: '["lorem", "ipsum"]'}, 'no order-id': array{0: string}}
+     */
     public function createFromRequestInvalidData(): array
     {
         return [

@@ -52,6 +52,11 @@ class DayRepository extends BaseRepository implements DayRepositoryInterface
         return $queryBuilder->getQuery()->getResult();
     }
 
+    /**
+     * @return string
+     *
+     * @psalm-return Day::class
+     */
     public function getClassName(): string
     {
         return Day::class;

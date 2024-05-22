@@ -94,6 +94,9 @@ class Meal implements JsonSerializable
         return $this->dish;
     }
 
+    /**
+     * @psalm-return ArrayCollection<int, Participant>
+     */
     public function getParticipants(): ArrayCollection
     {
         if (null === $this->participants) {
@@ -189,6 +192,11 @@ class Meal implements JsonSerializable
         return $this->getDateTime()->format('Y-m-d H:i:s') . ' ' . $this->getDish();
     }
 
+    /**
+     * @return (DateTime|int|null|string)[]
+     *
+     * @psalm-return array{id: int|null, dish: null|string, participationLimit: int, day: int|null, dateTime: DateTime, lockTime: DateTime}
+     */
     public function jsonSerialize(): array
     {
         return [

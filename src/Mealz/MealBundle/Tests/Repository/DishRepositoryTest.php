@@ -182,7 +182,12 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
         );
     }
 
-    protected function createMultipleDishes($count)
+    /**
+     * @return Dish[]
+     *
+     * @psalm-return list<Dish>
+     */
+    protected function createMultipleDishes(int $count): array
     {
         $dishes = [];
         $categories = $this->createMultipleCategories($count / 2);
@@ -196,7 +201,12 @@ class DishRepositoryTest extends AbstractDatabaseTestCase
         return $dishes;
     }
 
-    protected function createMultipleCategories($count)
+    /**
+     * @return \App\Mealz\MealBundle\Entity\Category[]
+     *
+     * @psalm-return list<\App\Mealz\MealBundle\Entity\Category>
+     */
+    protected function createMultipleCategories($count): array
     {
         $categories = [];
         for ($i = 0; $i < $count; ++$i) {

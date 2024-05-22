@@ -11,6 +11,7 @@ use App\Mealz\UserBundle\EventSubscriber\InteractiveLoginSubscriber;
 use App\Mealz\UserBundle\Repository\ProfileRepositoryInterface;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
@@ -27,9 +28,12 @@ class InteractiveLoginSubscriberTest extends AbstractControllerTestCase
         parent::setUp();
 
         $this->clearAllTables();
+
+        /** @var UserPasswordHasherInterface $passwordHasher */
+        $passwordHasher = self::getContainer()->get('security.user_password_hasher');
         $this->loadFixtures([
             new LoadRoles(),
-            new LoadUsers(self::getContainer()->get('security.user_password_hasher')),
+            new LoadUsers($passwordHasher),
         ]);
 
         /** @var EntityManager $entityManager */

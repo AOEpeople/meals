@@ -327,8 +327,8 @@ class ApiController extends BaseController
         ];
     }
 
-    private function addMealWithVariations(Meal $meal, float $participationCount, ?Profile $profile, array &$meals): void
-    {
+    private function addMealWithVariations(Meal $meal, float $participationCount, ?Profile $profile, array &$meals
+    ): void {
         $parent = $meal->getDish()->getParent();
         $parentExistsInArray = array_key_exists($parent->getId(), $meals);
 
@@ -417,6 +417,11 @@ class ApiController extends BaseController
         return new JsonResponse($guestData, Response::HTTP_OK);
     }
 
+    /**
+     * @return ((int|null|string[])[]|mixed)[]
+     *
+     * @psalm-return array<array{title: array{en: string, de: string}, parent?: int|null, participations?: int}|mixed>
+     */
     private function getDishData(Meal $meal): array
     {
         $collection[$meal->getDish()->getId()] = [

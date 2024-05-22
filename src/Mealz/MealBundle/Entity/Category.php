@@ -91,6 +91,11 @@ class Category implements JsonSerializable
         $this->currentLocale = $locale;
     }
 
+    /**
+     * @return (int|null|string)[]
+     *
+     * @psalm-return array{id: int|null, titleDe: string, titleEn: string, slug: null|string}
+     */
     public function jsonSerialize(): array
     {
         return [

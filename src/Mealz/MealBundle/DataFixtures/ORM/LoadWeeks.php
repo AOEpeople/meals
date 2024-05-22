@@ -25,10 +25,10 @@ class LoadWeeks extends Fixture implements OrderedFixtureInterface
 
         foreach ($weeks as $weekDataSet) {
             $week = new Week();
-            $week->setYear((int) $weekDataSet['year']);
-            $week->setCalendarWeek((int) $weekDataSet['calendarWeek']);
+            $week->setYear((int)$weekDataSet['year']);
+            $week->setCalendarWeek((int)$weekDataSet['calendarWeek']);
             $manager->persist($week);
-            $this->addReference('week-' . $this->counter++, $week);
+            $this->addReference('week-'.$this->counter++, $week);
         }
 
         $manager->flush();
@@ -44,6 +44,10 @@ class LoadWeeks extends Fixture implements OrderedFixtureInterface
      * Gets the current test weeks.
      *
      * They are meant to be used as dummy data on integration systems.
+     *
+     * @return string[][]
+     *
+     * @psalm-return array<string, array{year: string, calendarWeek: string}>
      */
     private function getCurrentTestWeeks(): array
     {
@@ -54,7 +58,7 @@ class LoadWeeks extends Fixture implements OrderedFixtureInterface
         while ($date < $maxDate) {
             $year = $date->format('o');
             $week = $date->format('W');
-            $currentWeeks[$year . '-' . $week] = ['year' => $year, 'calendarWeek' => $week];
+            $currentWeeks[$year.'-'.$week] = ['year' => $year, 'calendarWeek' => $week];
             $date->modify('+1 week');
         }
 

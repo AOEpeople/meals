@@ -131,6 +131,11 @@ class Slot implements JsonSerializable
         return new ArrayCollection($this->participants->toArray());
     }
 
+    /**
+     * @return (bool|int|null|string)[]
+     *
+     * @psalm-return array{id: int|null, title: string, limit: int, order: int, enabled: bool, slug: null|string}
+     */
     public function jsonSerialize(): array
     {
         return [

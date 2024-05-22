@@ -27,6 +27,11 @@ class SlotAllocationSubscriber implements EventSubscriberInterface
         $this->slotSrv = $slotSrv;
     }
 
+    /**
+     * @return string[]
+     *
+     * @psalm-return array{'App\\Mealz\\MealBundle\\Event\\SlotAllocationUpdateEvent'::class: 'onSlotAllocationUpdate'}
+     */
     public static function getSubscribedEvents(): array
     {
         return [
@@ -54,7 +59,12 @@ class SlotAllocationSubscriber implements EventSubscriberInterface
         }
     }
 
-    private function addSlot(?Slot $slot, DateTime $dateTime): ?array
+    /**
+     * @return (int|null)[]
+     *
+     * @psalm-return array{slotId: int|null, limit: int, count: int}
+     */
+    private function addSlot(?Slot $slot, DateTime $dateTime): array
     {
         if (null !== $slot) {
             $count = $this->slotSrv->getSlotsStatusOn($dateTime)[$slot->getSlug()];

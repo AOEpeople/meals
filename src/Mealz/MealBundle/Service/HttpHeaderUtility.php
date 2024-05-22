@@ -40,10 +40,8 @@ class HttpHeaderUtility
     /**
      * filter an Accept-Language header string according to the given quality and drop
      * languages that are not supported in $this->locales.
-     *
-     * @return array
      */
-    protected function filterAndOrderAcceptLanguages($acceptLanguages)
+    protected function filterAndOrderAcceptLanguages(array $acceptLanguages): array
     {
         $orderedAcceptLangs = [];
         foreach ($acceptLanguages as $acceptLanguage) {
@@ -97,7 +95,7 @@ class HttpHeaderUtility
     {
         $rpos = strrpos($qualityString, '=');
         if (false !== $rpos) {
-            return (float) substr($qualityString, $rpos + 1);
+            return (float)substr($qualityString, $rpos + 1);
         }
 
         return 1;

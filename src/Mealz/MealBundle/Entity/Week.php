@@ -91,6 +91,11 @@ class Week extends AbstractMessage implements JsonSerializable
         return $dateTime;
     }
 
+    /**
+     * @return (array|bool|int|null)[]
+     *
+     * @psalm-return array{id: int|null, year: int, calendarWeek: int, days: array<array-key|mixed, mixed>, enabled: bool}
+     */
     public function jsonSerialize(): array
     {
         $days = [];

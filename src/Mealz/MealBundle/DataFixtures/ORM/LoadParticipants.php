@@ -81,7 +81,7 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
                     $participant->setOfferedAt(0);
                 }
 
-                $indexString = $user->getUsername() . '_' . $meal->getDay()->getId();
+                $indexString = $user->getUsername().'_'.$meal->getDay()->getId();
 
                 if (!array_key_exists($indexString, $this->slotIndex)) {
                     $randomSlot = $this->getRandomActiveSlot();
@@ -110,7 +110,7 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
                 $participant = new Participant($profile, $combinedMeal);
                 $participant->setCombinedDishes($combinedMealDishes);
 
-                $indexString = $username . '_' . $day->getId();
+                $indexString = $username.'_'.$day->getId();
 
                 if (!array_key_exists($indexString, $this->slotIndex)) {
                     $randomSlot = $this->getRandomActiveSlot();
@@ -128,6 +128,8 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
      * Get days when meals with dish variations are offered.
      *
      * @return Day[]
+     *
+     * @psalm-return list<Day>
      */
     private function getDaysWithDishVariations(): array
     {
@@ -162,7 +164,7 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
             }
         }
 
-        throw new RuntimeException('no combined meal found on ' . $day->getDateTime()->format('Y-m-d'));
+        throw new RuntimeException('no combined meal found on '.$day->getDateTime()->format('Y-m-d'));
     }
 
     /**
@@ -171,13 +173,15 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
     private function getRandomActiveSlot(): Slot
     {
         // only use active slots
-        $slots = array_filter($this->slots, fn ($slot) => $slot->isEnabled() && !$slot->isDeleted());
+        $slots = array_filter($this->slots, fn($slot) => $slot->isEnabled() && !$slot->isDeleted());
 
         return $slots[array_rand($slots)];
     }
 
     /**
      * @return Dish[]
+     *
+     * @psalm-return list<Dish>
      */
     private function getRandomCombinedMealDishes(Day $day): array
     {
@@ -198,11 +202,13 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
         }
 
         if (2 > count($opts)) {
-            throw new RuntimeException(sprintf(
-                'insufficient dishes on %s; required: 2, got: %d',
-                $day->getDateTime()->format('Y-m-d'),
-                count($opts)
-            ));
+            throw new RuntimeException(
+                sprintf(
+                    'insufficient dishes on %s; required: 2, got: %d',
+                    $day->getDateTime()->format('Y-m-d'),
+                    count($opts)
+                )
+            );
         }
 
         foreach (array_slice($opts, 0, 2) as $opt) {
@@ -242,6 +248,8 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
      * @return Profile[]
      *
      * @throws Exception
+     *
+     * @psalm-return list<Profile>
      */
     protected function getRandomUsers(): array
     {
@@ -267,6 +275,6 @@ class LoadParticipants extends Fixture implements OrderedFixtureInterface
             }
         }
 
-        throw new RuntimeException($username . ': profile not found');
+        throw new RuntimeException($username.': profile not found');
     }
 }

@@ -56,6 +56,11 @@ class ParticipationCountService
                 && $participation[self::LIMIT_KEY] >= ($participation[self::COUNT_KEY] + $participationCount));
     }
 
+    /**
+     * @return array[]
+     *
+     * @psalm-return array<string, array>
+     */
     public function getParticipationByDays(Week $week, bool $onlyFutureMeals = false): array
     {
         $now = new DateTime();
@@ -173,7 +178,7 @@ class ParticipationCountService
         }
     }
 
-    private static function calculateLimit(int $configuredLimit, float $totalCount, float $currentCount)
+    private static function calculateLimit(int $configuredLimit, float $totalCount, float $currentCount): float
     {
         return $configuredLimit - ($totalCount - $currentCount);
     }

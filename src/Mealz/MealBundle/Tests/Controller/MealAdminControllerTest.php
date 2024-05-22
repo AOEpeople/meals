@@ -203,7 +203,7 @@ class MealAdminControllerTest extends AbstractControllerTestCase
         $this->assertEquals($testDish->getId(), $foundMeal->getDish()->getId());
     }
 
-    private function createFutureEmptyWeek(DateTime $date)
+    private function createFutureEmptyWeek(DateTime $date): void
     {
         $year = $date->format('o');
         $week = $date->format('W');

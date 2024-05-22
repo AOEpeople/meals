@@ -12,6 +12,11 @@ use Throwable;
 
 abstract class BaseController extends AbstractController
 {
+    /**
+     * @return (\Symfony\Contracts\Service\Attribute\SubscribedService|string)[]
+     *
+     * @psalm-return array<\Symfony\Contracts\Service\Attribute\SubscribedService|string>
+     */
     public static function getSubscribedServices(): array
     {
         $services = parent::getSubscribedServices();

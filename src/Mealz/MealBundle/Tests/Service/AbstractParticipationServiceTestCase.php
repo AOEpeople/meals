@@ -74,7 +74,7 @@ abstract class AbstractParticipationServiceTestCase extends AbstractDatabaseTest
         $this->assertEmpty($participant->getCombinedDishes());
     }
 
-    protected function checkJoinCombinedMealSuccess(Profile $profile)
+    protected function checkJoinCombinedMealSuccess(Profile $profile): void
     {
         $meals = new MealCollection([
             $this->getMeal(),
@@ -99,7 +99,7 @@ abstract class AbstractParticipationServiceTestCase extends AbstractDatabaseTest
         $this->validateParticipant($participant, $profile, $combinedMeal, $slot);
     }
 
-    protected function checkJoinCombinedMealWithThreeMealsFail(Profile $profile)
+    protected function checkJoinCombinedMealWithThreeMealsFail(Profile $profile): void
     {
         $meals = new MealCollection([
             $this->getMeal(),
@@ -120,7 +120,7 @@ abstract class AbstractParticipationServiceTestCase extends AbstractDatabaseTest
         $this->sut->join($profile, $profile->isGuest() ? new MealCollection([$combinedMeal]) : $combinedMeal, $slot, $dishSlugs);
     }
 
-    protected function checkJoinCombinedMealWithWrongSlugFail(Profile $profile)
+    protected function checkJoinCombinedMealWithWrongSlugFail(Profile $profile): void
     {
         $meals = new MealCollection([
             $this->getMeal(),
@@ -136,7 +136,7 @@ abstract class AbstractParticipationServiceTestCase extends AbstractDatabaseTest
         $this->sut->join($profile, $profile->isGuest() ? new MealCollection([$combinedMeal]) : $combinedMeal, $slot, $dishSlugs);
     }
 
-    protected function checkJoinCombinedMealWithEmptySlugFail(Profile $profile)
+    protected function checkJoinCombinedMealWithEmptySlugFail(Profile $profile): void
     {
         $meals = new MealCollection([
             $this->getMeal(),
@@ -155,7 +155,7 @@ abstract class AbstractParticipationServiceTestCase extends AbstractDatabaseTest
     protected function getMeal(
         bool $locked = false, bool $expired = false, array $profiles = [], bool $offering = true, ?Dish $dish = null
     ): Meal {
-        $zeroMinAndSec = static fn (DateTime $date): DateTime => $date->setTime((int) $date->format('H'), 0);
+        $zeroMinAndSec = static fn(DateTime $date): DateTime => $date->setTime((int)$date->format('H'), 0);
 
         if ($expired) {
             $mealDate = $zeroMinAndSec(new DateTime('-1 hour'));
@@ -196,7 +196,7 @@ abstract class AbstractParticipationServiceTestCase extends AbstractDatabaseTest
         $profileRepo = $this->entityManager->getRepository(Profile::class);
         $profile = $profileRepo->find($username);
         if (null === $profile) {
-            throw new RuntimeException('profile not found: ' . $username);
+            throw new RuntimeException('profile not found: '.$username);
         }
 
         return $profile;
@@ -300,7 +300,10 @@ abstract class AbstractParticipationServiceTestCase extends AbstractDatabaseTest
         return $combinedMeal;
     }
 
-    protected function getParticipationService()
+    /**
+     * @return GuestParticipationService|ParticipationService
+     */
+    protected function getParticipationService(): GuestParticipationService|ParticipationService
     {
         return $this->sut;
     }

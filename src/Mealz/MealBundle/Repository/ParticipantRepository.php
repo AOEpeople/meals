@@ -124,6 +124,11 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
         return $queryBuilder->getQuery()->execute();
     }
 
+    /**
+     * @return ((false|int|mixed)[][]|mixed)[][]
+     *
+     * @psalm-return array<array{name?: mixed, firstName?: mixed, hidden?: mixed, costs: list<array{timestamp: false|int, costs: mixed}>}>
+     */
     public function findCostsGroupedByUserGroupedByMonth(): array
     {
         $costs = $this->findCostsPerMonthPerUser();
@@ -424,6 +429,10 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
 
     /**
      * Gets number of participants booked for a slot on a given day.
+     *
+     * @return int
+     *
+     * @psalm-return 0|positive-int
      */
     public function getCountBySlot(Slot $slot, DateTime $date): int
     {
@@ -445,6 +454,10 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
 
     /**
      * Gets number of participants booked for a certain meal.
+     *
+     * @return int
+     *
+     * @psalm-return 0|positive-int
      */
     public function getCountByMeal(Meal $meal): int
     {

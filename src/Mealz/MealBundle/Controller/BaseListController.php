@@ -28,9 +28,11 @@ abstract class BaseListController extends BaseController
     }
 
     /**
-     * @return array
+     * @return object[]
+     *
+     * @psalm-return array<object>
      */
-    protected function getEntities()
+    protected function getEntities(): array
     {
         return $this->repository->findAll();
     }

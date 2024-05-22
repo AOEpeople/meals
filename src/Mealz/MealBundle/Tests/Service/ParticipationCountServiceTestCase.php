@@ -539,6 +539,11 @@ class ParticipationCountServiceTestCase extends AbstractParticipationServiceTest
         return new MealCollection($meals);
     }
 
+    /**
+     * @return Meal[]
+     *
+     * @psalm-return array{0: Meal, 1: Meal, 2: Meal}
+     */
     private function getMixedMealsWithLimitReached(): array
     {
         $profileRepo = $this->entityManager->getRepository(Profile::class);
@@ -615,7 +620,7 @@ class ParticipationCountServiceTestCase extends AbstractParticipationServiceTest
         // Note: we need a week otherwise participation count is empty
         $week = $this->createWeek($meals);
 
-        $weekDay = $week->getDays()->filter(fn (Day $day) => $day->getDateTime()->format('Y-m-d') === $date)->first();
+        $weekDay = $week->getDays()->filter(fn(Day $day) => $day->getDateTime()->format('Y-m-d') === $date)->first();
         $this->assertNotNull($weekDay);
 
         return $weekDay;
@@ -669,8 +674,8 @@ class ParticipationCountServiceTestCase extends AbstractParticipationServiceTest
         }
     }
 
-    protected function validateParticipant(Participant $participant, Profile $profile, Meal $meal, ?Slot $slot = null)
-    {
+    protected function validateParticipant(Participant $participant, Profile $profile, Meal $meal, ?Slot $slot = null
+    ): void {
         echo 'not implemented.';
     }
 }

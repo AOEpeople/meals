@@ -57,7 +57,10 @@ class PayPalService
         }
     }
 
-    private function toPayPalOrder($orderResp): PayPalOrder
+    /**
+     * @param array|object|string $orderResp
+     */
+    private function toPayPalOrder(array|string|object $orderResp): PayPalOrder
     {
         if (!is_object($orderResp)) {
             throw new RuntimeException('invalid order response, expected object, got ' . gettype($orderResp));

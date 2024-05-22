@@ -95,7 +95,7 @@ class WeekServiceTest extends TestCase
         $this->checkWeek($week, $startDateTime, $endDateTime);
     }
 
-    private function checkWeek(Week $week, DateTime $startDateTime, DateTime $endDateTime)
+    private function checkWeek(Week $week, DateTime $startDateTime, DateTime $endDateTime): void
     {
         $this->assertEquals(intval($startDateTime->format('o')), $week->getYear());
         $this->assertEquals(intval($startDateTime->format('W')), $week->getCalendarWeek());

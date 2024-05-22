@@ -139,7 +139,7 @@ class GuestParticipationServiceTestCase extends AbstractParticipationServiceTest
      *
      * @testdox An anonymous user (Profile) can't join a combined meal with more than 2 slugs.
      */
-    public function joinCombinedMealWithThreeMealsSuccess()
+    public function joinCombinedMealWithThreeMealsSuccess(): void
     {
         $this->checkJoinCombinedMealWithThreeMealsFail($this->profile);
     }

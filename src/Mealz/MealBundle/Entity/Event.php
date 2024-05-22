@@ -86,6 +86,11 @@ class Event implements JsonSerializable
         return $this->slug = $slug;
     }
 
+    /**
+     * @return (bool|int|null|string)[]
+     *
+     * @psalm-return array{id: int, title: string, slug: null|string, public: bool}
+     */
     public function jsonSerialize(): array
     {
         return [

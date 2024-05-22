@@ -39,7 +39,7 @@ class EventParticipationService
      * if an eventId is passed in as a parameter. If no eventId is present
      * the eventparticipation will get removed from the day.
      */
-    public function handleEventParticipation(Day $day, ?int $eventId = null)
+    public function handleEventParticipation(Day $day, ?int $eventId = null): void
     {
         if (null === $eventId) {
             $this->removeEventFromDay($day);
@@ -49,7 +49,12 @@ class EventParticipationService
         }
     }
 
-    public function getEventParticipationData(Day $day, ?Profile $profile = null): ?array
+    /**
+     * @return (bool|int|null)[]|null
+     *
+     * @psalm-return array{eventId: int, participationId: int|null, participations: int, isPublic: bool, isParticipating?: bool}|null
+     */
+    public function getEventParticipationData(Day $day, ?Profile $profile = null): array|null
     {
         $eventParticipation = $day->getEvent();
         if (null === $eventParticipation) {
@@ -91,7 +96,7 @@ class EventParticipationService
         string $lastName,
         string $company,
         Day $eventDay
-    ): ?EventParticipation {
+    ): EventParticipation {
         $guestProfile = $this->guestPartSrv->getCreateGuestProfile(
             $firstName,
             $lastName,
@@ -133,6 +138,11 @@ class EventParticipationService
         return null;
     }
 
+    /**
+     * @return string[]
+     *
+     * @psalm-return array<string>
+     */
     public function getParticipants(Day $day): array
     {
         $eventParticipation = $day->getEvent();
@@ -146,7 +156,7 @@ class EventParticipationService
         );
     }
 
-    private function addEventToDay(Day $day, ?Event $event)
+    private function addEventToDay(Day $day, ?Event $event): void
     {
         // new eventparticipation
         if (null !== $event && null === $day->getEvent()) {
@@ -158,7 +168,7 @@ class EventParticipationService
         }
     }
 
-    private function removeEventFromDay(Day $day)
+    private function removeEventFromDay(Day $day): void
     {
         if (null !== $day->getEvent()) {
             $this->em->remove($day->getEvent());
@@ -166,7 +176,7 @@ class EventParticipationService
         }
     }
 
-    private function createEventParticipation(Profile $profile, EventParticipation $eventParticiation): ?Participant
+    private function createEventParticipation(Profile $profile, EventParticipation $eventParticiation): Participant
     {
         return new Participant($profile, null, $eventParticiation);
     }

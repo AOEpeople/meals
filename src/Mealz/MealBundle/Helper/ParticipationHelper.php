@@ -27,8 +27,12 @@ class ParticipationHelper
 
     /**
      * helper function to sort participants by their name or guest name.
+     *
+     * @return mixed[]
+     *
+     * @psalm-return list<T>
      */
-    public function sortParticipantsByName($participantRepo, $participants)
+    public function sortParticipantsByName(\App\Mealz\MealBundle\Repository\ParticipantRepository $participantRepo, $participants): array
     {
         usort($participants, [$participantRepo, 'compareNameOfParticipants']);
 
@@ -58,6 +62,11 @@ class ParticipationHelper
         return $groupedParticipants;
     }
 
+    /**
+     * @return (string|string[])[][]
+     *
+     * @psalm-return array<array{user: string, fullName: string, roles: array<string>}>
+     */
     public function getNonParticipatingProfilesByWeek(array $participations): array
     {
         $profiles = new Set(array_map(
@@ -109,7 +118,7 @@ class ParticipationHelper
         return $participationData;
     }
 
-    public function getMealState(Meal $meal)
+    public function getMealState(Meal $meal): string
     {
         $mealState = 'open';
         if (true === $meal->isLocked() && true === $meal->isOpen()) {
@@ -136,6 +145,11 @@ class ParticipationHelper
         return 0;
     }
 
+    /**
+     * @return array[][]
+     *
+     * @psalm-return array<string, array<string, array>>
+     */
     private function getParticipationbySlot(Participant $participant, ?Slot $slot, bool $profile = false): array
     {
         $slots = [];
@@ -176,6 +190,11 @@ class ParticipationHelper
         return new DishCollection([]);
     }
 
+    /**
+     * @return ((bool|int|null)[]|string)[]
+     *
+     * @psalm-return array{booked: non-empty-list<int|null>, isOffering: non-empty-list<bool>, profile?: string}
+     */
     private function getParticipationData(Meal $meal, bool $profile, Participant $participant, DishCollection $combinedDishes): array
     {
         $participantData = [];

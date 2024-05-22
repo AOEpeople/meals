@@ -279,7 +279,7 @@ class OfferServiceTestCase extends AbstractParticipationServiceTestCase
         $offerers = [];
         $bookedCombinations = [];
         /**
-         * @var int     $idx
+         * @var int $idx
          * @var Profile $profile
          */
         foreach ($profiles as $idx => $profile) {
@@ -347,6 +347,11 @@ class OfferServiceTestCase extends AbstractParticipationServiceTestCase
         return $dishVariations;
     }
 
+    /**
+     * @return Participant[]
+     *
+     * @psalm-return list<Participant>
+     */
     private function addCombinedMealOfferers(Meal $combinedMeal, array $profiles, array $bookedDishes): array
     {
         $participants = [];
@@ -364,8 +369,8 @@ class OfferServiceTestCase extends AbstractParticipationServiceTestCase
         return $participants;
     }
 
-    protected function validateParticipant(Participant $participant, Profile $profile, Meal $meal, ?Slot $slot = null)
-    {
+    protected function validateParticipant(Participant $participant, Profile $profile, Meal $meal, ?Slot $slot = null
+    ): void {
         echo 'not implemented.';
     }
 }

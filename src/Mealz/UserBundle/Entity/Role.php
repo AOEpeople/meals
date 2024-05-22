@@ -46,7 +46,7 @@ class Role
         return $this->id;
     }
 
-    public function setId(int $id): self
+    public function setId(int $id): static
     {
         $this->id = $id;
 
@@ -58,7 +58,7 @@ class Role
         return $this->title;
     }
 
-    public function setTitle(string $title): self
+    public function setTitle(string $title): static
     {
         $this->title = $title;
 
@@ -70,7 +70,7 @@ class Role
         return $this->sid;
     }
 
-    public function setSid(string $sid): self
+    public function setSid(string $sid): static
     {
         $this->sid = $sid;
 

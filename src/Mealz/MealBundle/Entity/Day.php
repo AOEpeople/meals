@@ -37,13 +37,13 @@ class Day extends AbstractMessage implements JsonSerializable
     private ?EventParticipation $event = null;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
-    private DateTime $lockParticipationDateTime;
+    private DateTime $lockParticipationOn;
 
     public function __construct()
     {
         $this->dateTime = new DateTime();
         $this->week = $this->getDefaultWeek($this->dateTime);
-        $this->lockParticipationDateTime = $this->dateTime;
+        $this->lockParticipationOn = $this->dateTime;
         $this->meals = new MealCollection();
     }
 
@@ -114,12 +114,12 @@ class Day extends AbstractMessage implements JsonSerializable
 
     public function getLockParticipationDateTime(): DateTime
     {
-        return $this->lockParticipationDateTime;
+        return $this->lockParticipationOn;
     }
 
     public function setLockParticipationDateTime(DateTime $lockDateTime): void
     {
-        $this->lockParticipationDateTime = $lockDateTime;
+        $this->lockParticipationOn = $lockDateTime;
     }
 
     public function __toString(): string

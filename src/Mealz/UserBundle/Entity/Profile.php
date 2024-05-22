@@ -112,13 +112,6 @@ class Profile implements UserInterface, JsonSerializable
         return $this;
     }
 
-    public function removeRole(Role $role): void
-    {
-        if (null !== $this->roles) {
-            $this->roles->removeElement($role);
-        }
-    }
-
     private function roles(): Collection
     {
         if (null === $this->roles) {
@@ -150,6 +143,9 @@ class Profile implements UserInterface, JsonSerializable
         $this->roles = $roles;
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function isGuest(): bool
     {
         return $this->roles()->exists(
@@ -185,9 +181,6 @@ class Profile implements UserInterface, JsonSerializable
         return $this;
     }
 
-    /**
-     * @return null
-     */
     public function getPassword(): ?string
     {
         return null;

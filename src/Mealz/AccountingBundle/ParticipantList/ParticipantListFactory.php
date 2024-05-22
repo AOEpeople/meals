@@ -10,16 +10,16 @@ use DateTime;
 
 class ParticipantListFactory
 {
-    private ParticipantRepositoryInterface $participantRepository;
+    private ParticipantRepositoryInterface $participantRepo;
 
-    public function __construct(ParticipantRepositoryInterface $participantRepository)
+    public function __construct(ParticipantRepositoryInterface $participantRepo)
     {
-        $this->participantRepository = $participantRepository;
+        $this->participantRepo = $participantRepo;
     }
 
     public function getList(DateTime $minDate, DateTime $maxDate, ?Profile $profile = null): ParticipantList
     {
-        $participants = $this->participantRepository->getParticipantsOnDays($minDate, $maxDate, $profile);
+        $participants = $this->participantRepo->getParticipantsOnDays($minDate, $maxDate, $profile);
 
         return new ParticipantList($participants);
     }

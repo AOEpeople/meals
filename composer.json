@@ -111,7 +111,8 @@
     "tests": [
       "mkdir -p build/artifacts/qa/",
       "vendor/bin/phpunit -d memory_limit=-1 -c tests/phpunit.xml.dist"
-    ]
+    ],
+    "php-cs-fixer": "vendor/bin/php-cs-fixer --config=./.php_cs-fixer.dist"
   },
   "config": {
     "sort-packages": true,

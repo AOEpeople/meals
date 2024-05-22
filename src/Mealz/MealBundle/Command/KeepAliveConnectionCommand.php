@@ -22,6 +22,9 @@ class KeepAliveConnectionCommand extends Command
         $this->eventDispatcher = $eventDispatcher;
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->eventDispatcher->dispatch(new KeepAliveConnectionEvent());

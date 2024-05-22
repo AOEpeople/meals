@@ -19,6 +19,8 @@ class MealzMealExtension extends ConfigurableExtension
 {
     /**
      * @throws Exception
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function loadInternal(array $mergedConfig, ContainerBuilder $container): void
     {

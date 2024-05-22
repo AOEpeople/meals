@@ -10,15 +10,12 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class KeepAliveConnectionSubscriber implements EventSubscriberInterface
 {
-    private const PUBLISH_TOPIC = 'keep-alive-connection';
-    private const PUBLISH_MSG_TYPE = 'keepAliveConnection';
-
-    private PublisherInterface $publisher;
+    private const string PUBLISH_TOPIC = 'keep-alive-connection';
+    private const string PUBLISH_MSG_TYPE = 'keepAliveConnection';
 
     public function __construct(
-        PublisherInterface $publisher
+        private readonly PublisherInterface $publisher
     ) {
-        $this->publisher = $publisher;
     }
 
     public static function getSubscribedEvents(): array
@@ -28,6 +25,9 @@ class KeepAliveConnectionSubscriber implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function onKeepAliveConnection(KeepAliveConnectionEvent $event): void
     {
         $this->publisher->publish(

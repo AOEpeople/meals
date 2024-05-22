@@ -15,6 +15,9 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
+/**
+ * @psalm-suppress PropertyNotSetInConstructor
+ */
 class InteractiveLoginSubscriberTest extends AbstractControllerTestCase
 {
     private InteractiveLoginSubscriber $iaLoginSubscriber;

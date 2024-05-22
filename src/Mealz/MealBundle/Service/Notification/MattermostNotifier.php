@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Service\Notification;
 
-use App\Mealz\MealBundle\Service\Logger\MealsLoggerInterface;
 use Exception;
+use Psr\Log\LoggerInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -14,40 +14,20 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  */
 class MattermostNotifier implements NotifierInterface
 {
-    private const HTTP_STATUS_SUCCESS = 200;
-
-    private HttpClientInterface $httpClient;
-    private MealsLoggerInterface $logger;
-
-    /**
-     * Flag to enable/disable notifications.
-     */
-    private bool $enabled;
-
-    private string $webhookURL;
-
-    /**
-     * User-friendly bot name that will be displayed in the notification message.
-     */
-    private string $username;
-
-    private string $appName;
+    private const int HTTP_STATUS_SUCCESS = 200;
 
     public function __construct(
-        HttpClientInterface $httpClient,
-        MealsLoggerInterface $logger,
-        bool $enabled,
-        string $webhookURL,
-        string $username,
-        string $appName
-    ) {
-        $this->httpClient = $httpClient;
-        $this->logger = $logger;
+        private readonly HttpClientInterface $httpClient,
+        private readonly LoggerInterface $logger,
 
-        $this->enabled = $enabled;
-        $this->webhookURL = $webhookURL;
-        $this->username = $username;
-        $this->appName = $appName;
+        // Flag to enable/disable notifications
+        private readonly bool $enabled,
+        private readonly string $webhookURL,
+
+        // User-friendly bot name that will be displayed in the notification message
+        private readonly string $username,
+        private readonly string $appName
+    ) {
     }
 
     /**
@@ -64,10 +44,12 @@ class MattermostNotifier implements NotifierInterface
         $requestOptions = [
             'json' => [
                 'username' => $this->username,
-                'attachments' => [[
-                    'text' => $message->getContent(),
-                    'title' => $this->appName,
-                ]],
+                'attachments' => [
+                    [
+                        'text' => $message->getContent(),
+                        'title' => $this->appName,
+                    ],
+                ],
             ],
         ];
 
@@ -75,7 +57,7 @@ class MattermostNotifier implements NotifierInterface
             $response = $this->httpClient->request('POST', $this->webhookURL, $requestOptions);
             $responseStatus = $response->getStatusCode();
         } catch (TransportExceptionInterface|Exception $e) {
-            $this->logger->logException($e, 'message send error');
+            $this->logger->error('message send error', ['trace' => $e->getTraceAsString()]);
 
             return false;
         }

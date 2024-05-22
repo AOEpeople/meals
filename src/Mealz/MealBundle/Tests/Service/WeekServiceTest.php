@@ -12,7 +12,7 @@ class WeekServiceTest extends TestCase
     /**
      * @test
      */
-    public function generateEmptyWeekOnMonday()
+    public function generateEmptyWeekOnMonday(): void
     {
         $startDateTime = new DateTime('2022-01-24 00:00:00');
         $monday = clone $startDateTime;
@@ -25,7 +25,7 @@ class WeekServiceTest extends TestCase
     /**
      * @test
      */
-    public function generateEmptyWeekOnFriday()
+    public function generateEmptyWeekOnFriday(): void
     {
         $endDateTime = new DateTime('2022-01-28 23:59:59');
         $friday = clone $endDateTime;
@@ -40,7 +40,7 @@ class WeekServiceTest extends TestCase
      *
      * TODO this behavior is unexpected, needs to be fixed. When you a generate week on a weekend and should be the upcoming not the past week!
      */
-    public function generateEmptyWeekOnSaturdayBefore()
+    public function generateEmptyWeekOnSaturdayBefore(): void
     {
         $saturdayBefore = new DateTime('2022-01-22 12:00:00');
         $week = WeekService::generateEmptyWeek($saturdayBefore, '-1 day 16:00');
@@ -55,7 +55,7 @@ class WeekServiceTest extends TestCase
      *
      * TODO this behavior is unexpected, needs to be fixed. When you a generate week on a weekend and should be the upcoming not the past week!
      */
-    public function generateEmptyWeekOnSundayBefore()
+    public function generateEmptyWeekOnSundayBefore(): void
     {
         $saturdayBefore = new DateTime('2022-01-23 12:00:00');
         $week = WeekService::generateEmptyWeek($saturdayBefore, '-1 day 16:00');
@@ -70,7 +70,7 @@ class WeekServiceTest extends TestCase
      *
      * TODO this behavior is unexpected, needs to be fixed. When you a generate week on a weekend and should be the upcoming not the past week!
      */
-    public function generateEmptyWeekOnSaturdayAfter()
+    public function generateEmptyWeekOnSaturdayAfter(): void
     {
         $saturdayBefore = new DateTime('2022-01-29 12:00:00');
         $week = WeekService::generateEmptyWeek($saturdayBefore, '-1 day 16:00');
@@ -85,7 +85,7 @@ class WeekServiceTest extends TestCase
      *
      * TODO this behavior is unexpected, needs to be fixed. When you a generate week on a weekend and should be the upcoming not the past week!
      */
-    public function generateEmptyWeekOnSundayAfter()
+    public function generateEmptyWeekOnSundayAfter(): void
     {
         $saturdayBefore = new DateTime('2022-01-30 12:00:00');
         $week = WeekService::generateEmptyWeek($saturdayBefore, '-1 day 16:00');

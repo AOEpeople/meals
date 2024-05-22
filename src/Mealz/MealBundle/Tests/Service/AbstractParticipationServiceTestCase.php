@@ -51,15 +51,15 @@ abstract class AbstractParticipationServiceTestCase extends AbstractDatabaseTest
         $this->slotRepo = self::getContainer()->get(SlotRepository::class);
     }
 
-    protected function checkJoinMealWithDishSlugsSuccess(Profile $profile)
+    protected function checkJoinMealWithDishSlugsSuccess(Profile $profile): void
     {
-        $meals = new MealCollection([
+        $meals = [
             $this->getMeal(),
             $this->getMeal(),
-        ]);
+        ];
         $slot = null;
         $dishSlugs = null;
-        /** @var Meal $meal */
+
         foreach ($meals as $meal) {
             $dishSlugs[] = $meal->getDish()->getSlug();
         }

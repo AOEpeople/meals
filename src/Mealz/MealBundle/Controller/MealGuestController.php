@@ -40,7 +40,7 @@ class MealGuestController extends BaseController
                 'profile' => $profile,
                 'meals' => $meals,
                 'slot' => $slot,
-                'dishSlugs' => $dishSlugs
+                'dishSlugs' => $dishSlugs,
             ] = $this->guestPartSrv->getGuestInvitationData($request);
 
             $participants = $this->guestPartSrv->join($profile, $meals, $slot, $dishSlugs);
@@ -63,7 +63,12 @@ class MealGuestController extends BaseController
         Day $mealDay,
         GuestInvitationRepositoryInterface $guestInvitationRepo
     ): JsonResponse {
-        $guestInvitation = $guestInvitationRepo->findOrCreateInvitation($this->getUser()->getProfile(), $mealDay);
+        $userProfile = $this->getProfile();
+        if (null === $userProfile) {
+            return new JsonResponse(null, Response::HTTP_FORBIDDEN);
+        }
+
+        $guestInvitation = $guestInvitationRepo->findOrCreateInvitation($userProfile, $mealDay);
 
         return new JsonResponse(['url' => $this->generateInvitationUrl($guestInvitation)], Response::HTTP_OK);
     }
@@ -73,7 +78,12 @@ class MealGuestController extends BaseController
         Day $dayId,
         GuestInvitationRepositoryInterface $guestInvitationRepo
     ): JsonResponse {
-        $eventInvitation = $guestInvitationRepo->findOrCreateInvitation($this->getUser()->getProfile(), $dayId);
+        $userProfile = $this->getProfile();
+        if (null === $userProfile) {
+            return new JsonResponse(null, Response::HTTP_FORBIDDEN);
+        }
+
+        $eventInvitation = $guestInvitationRepo->findOrCreateInvitation($userProfile, $dayId);
 
         return new JsonResponse(['url' => $this->generateInvitationUrl($eventInvitation, false)], Response::HTTP_OK);
     }

@@ -12,12 +12,15 @@ use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
+/**
+ * @psalm-suppress PropertyNotSetInConstructor
+ */
 class LoadUsers extends Fixture implements OrderedFixtureInterface
 {
     /**
      * Constant to declare load order of fixture.
      */
-    private const ORDER_NUMBER = 1;
+    private const int ORDER_NUMBER = 1;
 
     protected ObjectManager $objectManager;
 
@@ -34,13 +37,55 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
     {
         $this->objectManager = $manager;
         $users = [
-            ['username' => 'alice.meals', 'password' => 'Chee7ieRahqu', 'firstName' => 'Alice', 'lastName' => 'Meals', 'roles' => ['ROLE_USER']],
-            ['username' => 'bob.meals', 'password' => 'ON2za5OoJohn', 'firstName' => 'Bob', 'lastName' => 'Meals', 'roles' => ['ROLE_USER']],
-            ['username' => 'finance.meals', 'password' => 'IUn4d9NKMt', 'firstName' => 'Finance', 'lastName' => 'Meals', 'roles' => ['ROLE_FINANCE']],
-            ['username' => 'jane.meals', 'password' => 'heabahW6ooki', 'firstName' => 'Jane', 'lastName' => 'Meals', 'roles' => ['ROLE_USER']],
-            ['username' => 'john.meals', 'password' => 'aef9xoo2hieY', 'firstName' => 'John', 'lastName' => 'Meals', 'roles' => ['ROLE_USER']],
-            ['username' => 'kochomi.meals', 'password' => 'f8400YzaOd', 'firstName' => 'Kochomi', 'lastName' => 'Meals', 'roles' => ['ROLE_KITCHEN_STAFF']],
-            ['username' => 'admin.meals', 'password' => 'x3pAsFoq8d', 'firstName' => 'Admin', 'lastName' => 'Meals', 'roles' => ['ROLE_ADMIN']],
+            [
+                'username' => 'alice.meals',
+                'password' => 'Chee7ieRahqu',
+                'firstName' => 'Alice',
+                'lastName' => 'Meals',
+                'roles' => ['ROLE_USER'],
+            ],
+            [
+                'username' => 'bob.meals',
+                'password' => 'ON2za5OoJohn',
+                'firstName' => 'Bob',
+                'lastName' => 'Meals',
+                'roles' => ['ROLE_USER'],
+            ],
+            [
+                'username' => 'finance.meals',
+                'password' => 'IUn4d9NKMt',
+                'firstName' => 'Finance',
+                'lastName' => 'Meals',
+                'roles' => ['ROLE_FINANCE'],
+            ],
+            [
+                'username' => 'jane.meals',
+                'password' => 'heabahW6ooki',
+                'firstName' => 'Jane',
+                'lastName' => 'Meals',
+                'roles' => ['ROLE_USER'],
+            ],
+            [
+                'username' => 'john.meals',
+                'password' => 'aef9xoo2hieY',
+                'firstName' => 'John',
+                'lastName' => 'Meals',
+                'roles' => ['ROLE_USER'],
+            ],
+            [
+                'username' => 'kochomi.meals',
+                'password' => 'f8400YzaOd',
+                'firstName' => 'Kochomi',
+                'lastName' => 'Meals',
+                'roles' => ['ROLE_KITCHEN_STAFF'],
+            ],
+            [
+                'username' => 'admin.meals',
+                'password' => 'x3pAsFoq8d',
+                'firstName' => 'Admin',
+                'lastName' => 'Meals',
+                'roles' => ['ROLE_ADMIN'],
+            ],
         ];
 
         foreach ($users as $user) {
@@ -100,18 +145,112 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
     protected function createRandUser(): void
     {
         $firstNames = [
-            'Felix', 'Maximilian', 'Alexander', 'Paul', 'Elias', 'Ben', 'Noah', 'Leon', 'Louis', 'Jonas',
-            'Marie', 'Sophie', 'Marian', 'Sophia', 'Emilia', 'Emma', 'Hannah', 'Anna', 'Mia', 'Luisa',
-            'Lukas', 'Tim', 'Niklas', 'Jan', 'Daniel', 'Kevin', 'Tobias', 'Philipp', 'Michael', 'Dennis',
-            'Maria', 'Anne', 'Laura', 'Michelle', 'Lea', 'Julia', 'Sarah', 'Lisa', 'Vanessa', 'Katharina',
-            'Noah', 'Matteo', 'Finn', 'Emil', 'Luca', 'Henry', 'Christian', 'Sebastian', 'Stefan', 'Benjamin',
-            'Lina', 'Mila', 'Ella', 'Klara', 'Stefanie', 'Kathrin', 'Melanie', 'Nadine', 'Nicole', 'Sandra',
+            'Felix',
+            'Maximilian',
+            'Alexander',
+            'Paul',
+            'Elias',
+            'Ben',
+            'Noah',
+            'Leon',
+            'Louis',
+            'Jonas',
+            'Marie',
+            'Sophie',
+            'Marian',
+            'Sophia',
+            'Emilia',
+            'Emma',
+            'Hannah',
+            'Anna',
+            'Mia',
+            'Luisa',
+            'Lukas',
+            'Tim',
+            'Niklas',
+            'Jan',
+            'Daniel',
+            'Kevin',
+            'Tobias',
+            'Philipp',
+            'Michael',
+            'Dennis',
+            'Maria',
+            'Anne',
+            'Laura',
+            'Michelle',
+            'Lea',
+            'Julia',
+            'Sarah',
+            'Lisa',
+            'Vanessa',
+            'Katharina',
+            'Noah',
+            'Matteo',
+            'Finn',
+            'Emil',
+            'Luca',
+            'Henry',
+            'Christian',
+            'Sebastian',
+            'Stefan',
+            'Benjamin',
+            'Lina',
+            'Mila',
+            'Ella',
+            'Klara',
+            'Stefanie',
+            'Kathrin',
+            'Melanie',
+            'Nadine',
+            'Nicole',
+            'Sandra',
         ];
         $lastNames = [
-            'Schmidt', 'Müller', 'Meyer', 'Schulz', 'Schneider', 'Hoffmann', 'Becker', 'Fischer', 'Wagner', 'Weber',
-            'Bauer', 'Lange', 'Wolf', 'Schäfer', 'Koch', 'Richter', 'Klein', 'Schröder', 'Neumann', 'Schwarz', 'Zimmermann',
-            'Braun', 'Krüger', 'Hartmann', 'Schmitt', 'Werner', 'Schmitz', 'Krause', 'Meier', 'Lehmann', 'Köhler', 'Herrmann',
-            'König', 'Huber', 'Kaiser', 'Fuchs', 'Peters', 'Lang', 'Möller', 'Weiß', 'Jung', 'Hahn', 'Friedrich', 'Vogel',
+            'Schmidt',
+            'Müller',
+            'Meyer',
+            'Schulz',
+            'Schneider',
+            'Hoffmann',
+            'Becker',
+            'Fischer',
+            'Wagner',
+            'Weber',
+            'Bauer',
+            'Lange',
+            'Wolf',
+            'Schäfer',
+            'Koch',
+            'Richter',
+            'Klein',
+            'Schröder',
+            'Neumann',
+            'Schwarz',
+            'Zimmermann',
+            'Braun',
+            'Krüger',
+            'Hartmann',
+            'Schmitt',
+            'Werner',
+            'Schmitz',
+            'Krause',
+            'Meier',
+            'Lehmann',
+            'Köhler',
+            'Herrmann',
+            'König',
+            'Huber',
+            'Kaiser',
+            'Fuchs',
+            'Peters',
+            'Lang',
+            'Möller',
+            'Weiß',
+            'Jung',
+            'Hahn',
+            'Friedrich',
+            'Vogel',
         ];
 
         $randFirstName = $firstNames[array_rand($firstNames)];

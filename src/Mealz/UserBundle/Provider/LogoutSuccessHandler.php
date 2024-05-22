@@ -45,9 +45,6 @@ class LogoutSuccessHandler implements EventSubscriberInterface
         $event->setResponse($response);
     }
 
-    /**
-     * @return string[]
-     */
     public static function getSubscribedEvents(): array
     {
         return [

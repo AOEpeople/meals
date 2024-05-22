@@ -23,11 +23,16 @@ abstract class BaseController extends AbstractController
 
     protected function getProfile(): ?Profile
     {
-        return $this->getUser() ? $this->getUser()->getProfile() : null;
+        $user = $this->getUser();
+        if ($user instanceof Profile) {
+            return $user->getProfile();
+        }
+
+        return null;
     }
 
     /**
-     * @return array<string, string>
+     * @return array<string, array{code?: int, exception: string, file: string, message: string, stacktrace?: string}>
      */
     protected function getTrace(Throwable $exc): array
     {

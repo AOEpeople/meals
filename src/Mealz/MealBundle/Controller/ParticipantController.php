@@ -146,10 +146,10 @@ class ParticipantController extends BaseController
         Participant $participant,
         ParticipationService $participationSrv
     ): JsonResponse {
-        $dishSlugs = $request->request->get('dishes', []);
+        $dishSlugs = $request->request->get('dishes', null);
 
         try {
-            $participationSrv->updateCombinedMeal($participant, $dishSlugs);
+            $participationSrv->updateCombinedMeal($participant, $dishSlugs ?? []);
         } catch (ParticipationException $pex) {
             return new JsonResponse(['message' => $pex->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (Exception $e) {

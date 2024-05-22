@@ -13,6 +13,9 @@ use Doctrine\DBAL\ArrayParameterType;
  */
 class RoleRepository extends BaseRepository implements RoleRepositoryInterface
 {
+    /**
+     * @return Role[]
+     */
     public function findBySID(array $sids): array
     {
         $queryBuilder = $this->createQueryBuilder('r');

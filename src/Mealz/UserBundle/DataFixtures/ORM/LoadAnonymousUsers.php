@@ -8,26 +8,30 @@ use App\Mealz\UserBundle\Entity\Login;
 use App\Mealz\UserBundle\Entity\Profile;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
 use Exception;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
+/**
+ * @psalm-suppress PropertyNotSetInConstructor
+ */
 class LoadAnonymousUsers extends Fixture implements OrderedFixtureInterface
 {
     /**
      * Constant to declare load order of fixture.
      */
-    private const ORDER_NUMBER = 10;
+    private const int ORDER_NUMBER = 10;
 
-    protected ObjectManager $objectManager;
+    protected EntityManagerInterface $objectManager;
 
-    protected UserPasswordEncoderInterface $passwordEncoder;
+    protected UserPasswordHasherInterface $passwordHasher;
 
     protected int $counter = 0;
 
-    public function __construct(UserPasswordEncoderInterface $encoder)
+    public function __construct(UserPasswordHasherInterface $encoder)
     {
-        $this->passwordEncoder = $encoder;
+        $this->passwordHasher = $encoder;
     }
 
     /**
@@ -37,18 +41,29 @@ class LoadAnonymousUsers extends Fixture implements OrderedFixtureInterface
      */
     public function load(ObjectManager $manager): void
     {
+        if (!($manager instanceof EntityManagerInterface)) {
+            throw new Exception('Expected EntityManagerInterface, got ' . get_class($manager));
+        }
+
         $this->objectManager = $manager;
 
         $connection = $this->objectManager->getConnection();
-        $connection->connect();
         $connection->beginTransaction();
 
         // List of protected Users, which should not be touched
-        $protectedUsers = ['alice.meals', 'bob.meals', 'finance.meals', 'jane.meals', 'john.meals', 'kochomi.meals', 'admin.meals'];
+        $protectedUsers = [
+            'alice.meals',
+            'bob.meals',
+            'finance.meals',
+            'jane.meals',
+            'john.meals',
+            'kochomi.meals',
+            'admin.meals',
+        ];
 
         try {
             // disable consistency check (We need because dependet foreign and primary keys)
-            $connection->query('SET FOREIGN_KEY_CHECKS=0;');
+            $connection->executeQuery('SET FOREIGN_KEY_CHECKS=0;');
 
             // Anonymize all participant, guest_invitation, transaction and profile Names
             foreach ($this->getAllUsers() as $key => $user) {
@@ -56,16 +71,16 @@ class LoadAnonymousUsers extends Fixture implements OrderedFixtureInterface
                     continue;
                 }
 
-                $connection->query(
+                $connection->executeQuery(
                     "UPDATE participant SET profile_id='" . $key . "XXX' WHERE profile_id='" . $user->getUsername() . "';"
                 );
-                $connection->query(
+                $connection->executeQuery(
                     "UPDATE guest_invitation SET host_id='" . $key . "XXX' WHERE host_id='" . $user->getUsername() . "';"
                 );
-                $connection->query(
+                $connection->executeQuery(
                     "UPDATE transaction SET profile='" . $key . "XXX' WHERE profile='" . $user->getUsername() . "';"
                 );
-                $connection->query(
+                $connection->executeQuery(
                     "UPDATE profile SET id='" . $key . "XXX', name='" . $key . "Surname', firstname='" . $key . "Firstname' " .
                     "WHERE id='" . $user->getUsername() . "';"
                 );
@@ -77,7 +92,6 @@ class LoadAnonymousUsers extends Fixture implements OrderedFixtureInterface
 
             // create a new Connection
             $connection = $this->objectManager->getConnection();
-            $connection->connect();
             $connection->beginTransaction();
 
             foreach ($this->getAllUsers() as $key => $user) {
@@ -91,15 +105,14 @@ class LoadAnonymousUsers extends Fixture implements OrderedFixtureInterface
                 $this->objectManager->persist($user);
 
                 $login->setProfile($user);
-                $login->setSalt(md5(uniqid('', true)));
 
-                $hashedPassword = $this->passwordEncoder->encodePassword($login, $anonymousUsername);
+                $hashedPassword = $this->passwordHasher->hashPassword($login, $anonymousUsername);
                 $login->setPassword($hashedPassword);
                 $this->objectManager->persist($login);
             }
 
             /* enable consistency checks */
-            $connection->query('SET FOREIGN_KEY_CHECKS=1;');
+            $connection->executeQuery('SET FOREIGN_KEY_CHECKS=1;');
 
             /* commit DB changes and close Connection */
             $this->objectManager->flush();
@@ -117,6 +130,9 @@ class LoadAnonymousUsers extends Fixture implements OrderedFixtureInterface
         return self::ORDER_NUMBER;
     }
 
+    /**
+     * @return list<Profile>
+     */
     protected function getAllUsers(): array
     {
         return $this->objectManager->getRepository(Profile::class)->findAll();

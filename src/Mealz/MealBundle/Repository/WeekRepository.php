@@ -45,7 +45,7 @@ class WeekRepository extends BaseRepository implements WeekRepositoryInterface
         $query->where('w.id = ?1')
             ->setParameter(1, $week->getId());
 
-        return $query->getQuery()->getSingleScalarResult();
+        return (int) $query->getQuery()->getSingleScalarResult();
     }
 
     public function findWeekByDate(DateTime $date, array $options = []): ?Week

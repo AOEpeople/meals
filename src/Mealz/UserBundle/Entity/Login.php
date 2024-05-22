@@ -47,16 +47,6 @@ class Login implements SymfonyUserInterface, MealzUserInterface, PasswordAuthent
         $this->password = $password;
     }
 
-    //    public function getSalt(): string
-    //    {
-    //        return $this->salt;
-    //    }
-
-    //    public function setSalt(string $salt): void
-    //    {
-    //        $this->salt = $salt;
-    //    }
-
     public function getProfile(): ?Profile
     {
         return $this->profile;
@@ -92,9 +82,12 @@ class Login implements SymfonyUserInterface, MealzUserInterface, PasswordAuthent
         $this->password = $data['password'];
     }
 
+    /**
+     * @return string[]
+     */
     public function getRoles(): array
     {
-        return $this->profile->getRoles();
+        return $this->profile ? $this->profile->getRoles() : [];
     }
 
     /**

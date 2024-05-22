@@ -83,12 +83,12 @@ class EcashController extends BaseController
 
     private function logPostPaymentException(Throwable $exc, string $message, Request $request): void
     {
-        $this->logger->logException(
-            $exc,
+        $this->logger->error(
             $message,
             [
                 'request_method' => $request->getMethod(),
                 'request_content' => $request->getContent(),
+                'trace' => $this->getTrace($exc),
             ]
         );
     }

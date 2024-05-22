@@ -62,8 +62,8 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
     public function loadUserByOAuthUserResponse(UserResponseInterface $response): UserInterface
     {
         $username = $response->getNickname();
-        $firstName = $response->getFirstName();
-        $lastName = $response->getLastName();
+        $firstName = $response->getFirstName() ?? '';
+        $lastName = $response->getLastName() ?? '';
         $email = $response->getEmail();
 
         $idpUserRoles = $response->getData()['roles'] ?? [];
@@ -77,7 +77,7 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
         }
 
         if (!($user instanceof Profile)) {
-            throw new Exception('invalid user instance, expected instance of Profile, got %s', gettype($user));
+            throw new Exception('invalid user instance, expected instance of Profile, got' . gettype($user), 1716299772);
         }
 
         return $this->updateProfile($user, $firstName, $lastName, $email, $roles);
@@ -86,13 +86,13 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
     public function refreshUser(UserInterface $user): UserInterface
     {
         if (false === $this->supportsClass(get_class($user))) {
-            throw new UnsupportedUserException(sprintf('Unsupported user class "%s"', get_class($user)));
+            throw new UnsupportedUserException(sprintf('Unsupported user class "%s"', get_class($user)), 1716299773);
         }
 
-        return $this->loadUserByIdentifier($user->getUsername());
+        return $this->loadUserByIdentifier($user->getUserIdentifier());
     }
 
-    public function supportsClass($class): bool
+    public function supportsClass(string $class): bool
     {
         return Profile::class === $class || is_subclass_of($class, Profile::class);
     }

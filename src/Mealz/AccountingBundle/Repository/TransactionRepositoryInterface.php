@@ -34,7 +34,7 @@ interface TransactionRepositoryInterface extends ObjectRepository
      * @param DateTime|null $maxDate End Date
      * @param Profile|null  $profile User profile
      *
-     * @psalm-return array<string, array{firstName: string, name: string, amount: float, paymethod: string|null}>
+     * @psalm-return array<string, array{firstName: string, name: string, amount: string, paymethod: string|null}>
      */
     public function findUserDataAndTransactionAmountForGivenPeriod(
         ?DateTime $minDate = null,

@@ -9,9 +9,13 @@ use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\Entity\Profile;
 use App\Mealz\UserBundle\Provider\OAuthUserProvider;
 use App\Mealz\UserBundle\Repository\RoleRepositoryInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use Prophecy\PhpUnit\ProphecyTrait;
 
+/**
+ * @psalm-suppress PropertyNotSetInConstructor
+ */
 class OAuthProviderTest extends AbstractControllerTestCase
 {
     use ProphecyTrait;
@@ -25,8 +29,11 @@ class OAuthProviderTest extends AbstractControllerTestCase
         $this->clearAllTables();
         $this->loadFixtures([new LoadRoles()]);
 
+        /** @var EntityManagerInterface $em */
+        $em = $this->getDoctrine()->getManager();
+
         $this->sut = new OAuthUserProvider(
-            $this->getDoctrine()->getManager(),
+            $em,
             self::getContainer()->get(RoleRepositoryInterface::class)
         );
     }
@@ -52,6 +59,7 @@ class OAuthProviderTest extends AbstractControllerTestCase
 
         // check if new valid Profile is written in Database
         $newCreatedProfile = $this->getDoctrine()->getManager()->find(Profile::class, $username);
+        $this->assertNotNull($newCreatedProfile);
         $this->assertEquals($username, $newCreatedProfile->getUsername());
 
         // check role mapping

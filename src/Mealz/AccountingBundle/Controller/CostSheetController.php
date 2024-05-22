@@ -55,11 +55,11 @@ class CostSheetController extends BaseController
             foreach ($user['costs'] as $cost) {
                 $monthCosts = $this->getRemainingCosts($cost['costs'], $transactionsPerUser[$username]['amount']);
                 if ($cost['timestamp'] < $earlierTimestamp) {
-                    $userCosts['earlier'] = (float) bcadd($userCosts['earlier'], $monthCosts, 4);
+                    $userCosts['earlier'] = bcadd($userCosts['earlier'], $monthCosts, 4);
                 } else {
                     $userCosts[$cost['timestamp']] = $monthCosts;
                 }
-                $userCosts['total'] = (float) bcadd($userCosts['total'], $monthCosts, 4);
+                $userCosts['total'] = bcadd($userCosts['total'], $monthCosts, 4);
             }
             if ($transactionsPerUser[$username]['amount'] > 0) {
                 $userCosts['total'] = $transactionsPerUser[$username]['amount'];
@@ -82,17 +82,16 @@ class CostSheetController extends BaseController
         ]);
     }
 
-    private function getRemainingCosts($costs, &$transactions): float
+    private function getRemainingCosts(string $costs, string &$transactions): string
     {
-        $result = bcsub($costs, $transactions, 4);
-        $transactions = abs($result);
+        $result = (float) bcsub($costs, $transactions, 4);
         if ($result < 0) {
-            $transactions = abs($result);
+            $transactions = strval(abs($result));
         } else {
-            $transactions = 0;
+            $transactions = '0';
         }
 
-        return ($result < 0) ? 0 : $result * -1;
+        return ($result < 0) ? '0' : strval($result * -1);
     }
 
     #[IsGranted('ROLE_KITCHEN_STAFF')]

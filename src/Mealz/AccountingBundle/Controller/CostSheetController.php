@@ -82,9 +82,14 @@ class CostSheetController extends BaseController
         ]);
     }
 
-    private function getRemainingCosts(string $costs, string &$transactions): string
+    private function getRemainingCosts(string $costs, ?string &$transactions): string
     {
-        $result = (float) bcsub($costs, $transactions, 4);
+        if (null !== $transactions) {
+            $result = (float) bcsub($costs, $transactions, 4);
+        } else {
+            $result = (float) $costs;
+        }
+
         if ($result < 0) {
             $transactions = strval(abs($result));
         } else {

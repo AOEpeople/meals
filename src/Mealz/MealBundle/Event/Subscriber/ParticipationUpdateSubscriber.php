@@ -12,22 +12,19 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ParticipationUpdateSubscriber implements EventSubscriberInterface
 {
-    private const PUBLISH_TOPIC = 'participation-updates';
-    private const PUBLISH_MSG_TYPE = 'participationUpdate';
+    private const string PUBLISH_TOPIC = 'participation-updates';
+    private const string PUBLISH_MSG_TYPE = 'participationUpdate';
 
-    private PublisherInterface $publisher;
-    private ParticipationCountService $partCountSrv;
-
-    public function __construct(PublisherInterface $publisher, ParticipationCountService $partCountSrv)
-    {
-        $this->publisher = $publisher;
-        $this->partCountSrv = $partCountSrv;
+    public function __construct(
+        private readonly PublisherInterface $publisher,
+        private readonly ParticipationCountService $partCountSrv
+    ) {
     }
 
     /**
      * @return string[]
      *
-     * @psalm-return array{'App\\Mealz\\MealBundle\\Event\\ParticipationUpdateEvent'::class: 'onUpdate'}
+     * @psalm-return array{ParticipationUpdateEvent::class: 'onUpdate'}
      */
     public static function getSubscribedEvents(): array
     {

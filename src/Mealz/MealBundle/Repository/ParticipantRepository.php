@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Mealz\MealBundle\Repository;
 
-use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Meal;
 use App\Mealz\MealBundle\Entity\Participant;
 use App\Mealz\MealBundle\Entity\Slot;
@@ -34,8 +33,9 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
 
     protected ParticipationHelper $participationHelper;
 
-    public function __construct(EntityManagerInterface $entityManager, string $entityClass, ParticipationHelper $participationHelper)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager, string $entityClass, ParticipationHelper $participationHelper
+    ) {
         parent::__construct($entityManager, $entityClass);
 
         $this->participationHelper = $participationHelper;
@@ -252,7 +252,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
 
         $participants = $queryBuilder->getQuery()->execute();
 
-        return $this->participationHelper->sortParticipantsByName($this, $participants);
+        return $this->participationHelper->sortParticipantsByName($participants);
     }
 
     protected function getQueryBuilderWithOptions(array $options): QueryBuilder

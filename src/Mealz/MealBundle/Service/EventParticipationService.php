@@ -80,17 +80,18 @@ class EventParticipationService
         $eventParticipation = $day->getEvent();
         if (null !== $eventParticipation && true === $this->doorman->isUserAllowedToJoinEvent($eventParticipation)) {
             $participation = $this->createEventParticipation($profile, $eventParticipation);
-            if (null !== $participation) {
-                $this->em->persist($participation);
-                $this->em->flush();
+            $this->em->persist($participation);
+            $this->em->flush();
 
-                return $eventParticipation;
-            }
+            return $eventParticipation;
         }
 
         return null;
     }
 
+    /**
+     * @throws Exception
+     */
     public function joinAsGuest(
         string $firstName,
         string $lastName,
@@ -108,15 +109,15 @@ class EventParticipationService
 
         try {
             $this->em->persist($guestProfile);
-            $eventParticiation = $eventDay->getEvent();
-            $participation = $this->createEventParticipation($guestProfile, $eventParticiation);
+            $eventParticipation = $eventDay->getEvent();
+            $participation = $this->createEventParticipation($guestProfile, $eventParticipation);
 
             $this->em->persist($participation);
 
             $this->em->flush();
             $this->em->commit();
 
-            return $eventParticiation;
+            return $eventParticipation;
         } catch (Exception $e) {
             $this->em->rollback();
             throw $e;

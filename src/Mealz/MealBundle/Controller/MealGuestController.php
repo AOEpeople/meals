@@ -134,10 +134,6 @@ class MealGuestController extends BaseController
                 $invitation->getDay()
             );
 
-            if (null === $eventParticipation) {
-                return new JsonResponse(['message' => '903: Unknown error occured while joining the event'], Response::HTTP_INTERNAL_SERVER_ERROR);
-            }
-
             $this->eventDispatcher->dispatch(new EventParticipationUpdateEvent($eventParticipation));
 
             return new JsonResponse(null, Response::HTTP_OK);

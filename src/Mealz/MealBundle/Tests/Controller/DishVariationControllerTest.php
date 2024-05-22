@@ -96,6 +96,7 @@ class DishVariationControllerTest extends AbstractControllerTestCase
         if ($updatedDishVariation instanceof DishVariation) {
             $this->assertFalse($updatedDishVariation->isEnabled());
         } else {
+            /** @psalm-suppress RedundantCondition */
             $this->assertNull($updatedDishVariation);
         }
     }

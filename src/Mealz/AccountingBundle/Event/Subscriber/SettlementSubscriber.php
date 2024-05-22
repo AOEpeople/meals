@@ -20,7 +20,7 @@ class SettlementSubscriber implements EventSubscriberInterface
     /**
      * @return string[]
      *
-     * @psalm-return array{'App\\Mealz\\AccountingBundle\\Event\\ProfileSettlementEvent'::class: 'onProfileSettlement'}
+     * @psalm-return array{ProfileSettlementEvent::class: 'onProfileSettlement'}
      */
     public static function getSubscribedEvents(): array
     {

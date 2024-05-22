@@ -13,24 +13,19 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class SlotAllocationSubscriber implements EventSubscriberInterface
 {
-    private const PUBLISH_TOPIC = 'slot-allocation-updates';
-    private const PUBLISH_MSG_TYPE = 'slotAllocationUpdate';
-
-    private PublisherInterface $publisher;
-    private SlotService $slotSrv;
+    private const string PUBLISH_TOPIC = 'slot-allocation-updates';
+    private const string PUBLISH_MSG_TYPE = 'slotAllocationUpdate';
 
     public function __construct(
-        PublisherInterface $publisher,
-        SlotService $slotSrv
+        private readonly PublisherInterface $publisher,
+        private readonly SlotService $slotSrv
     ) {
-        $this->publisher = $publisher;
-        $this->slotSrv = $slotSrv;
     }
 
     /**
      * @return string[]
      *
-     * @psalm-return array{'App\\Mealz\\MealBundle\\Event\\SlotAllocationUpdateEvent'::class: 'onSlotAllocationUpdate'}
+     * @psalm-return array{SlotAllocationUpdateEvent::class: 'onSlotAllocationUpdate'}
      */
     public static function getSubscribedEvents(): array
     {

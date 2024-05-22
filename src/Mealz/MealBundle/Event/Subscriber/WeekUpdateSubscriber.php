@@ -13,24 +13,18 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class WeekUpdateSubscriber implements EventSubscriberInterface
 {
-    private CombinedMealService $combinedMealService;
-    private NotifierInterface $notifier;
-    private TranslatorInterface $translator;
-
     public function __construct(
-        CombinedMealService $combinedMealService,
-        NotifierInterface $weeklyMenuNotifier,
-        TranslatorInterface $translator
+        private readonly CombinedMealService $combinedMealService,
+        // Weekly menu notifier
+        private readonly NotifierInterface $notifier,
+        private readonly TranslatorInterface $translator
     ) {
-        $this->notifier = $weeklyMenuNotifier;
-        $this->combinedMealService = $combinedMealService;
-        $this->translator = $translator;
     }
 
     /**
      * @return string[]
      *
-     * @psalm-return array{'App\\Mealz\\MealBundle\\Event\\WeekUpdateEvent'::class: 'onWeekUpdate'}
+     * @psalm-return array{WeekUpdateEvent::class: 'onWeekUpdate'}
      */
     public static function getSubscribedEvents(): array
     {

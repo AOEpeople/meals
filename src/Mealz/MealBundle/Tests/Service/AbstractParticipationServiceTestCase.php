@@ -300,14 +300,11 @@ abstract class AbstractParticipationServiceTestCase extends AbstractDatabaseTest
         return $combinedMeal;
     }
 
-    protected function getParticipationService(): GuestParticipationService|ParticipationService
+    protected function getParticipationService()
     {
         return $this->sut;
     }
 
-    /**
-     * @param ParticipationService|GuestParticipationService $service
-     */
     protected function setParticipationService($service): void
     {
         $this->sut = $service;

@@ -28,13 +28,13 @@ class ParticipationHelper
     /**
      * helper function to sort participants by their name or guest name.
      *
-     * @return mixed[]
+     * @return Participant[]
      *
-     * @psalm-return list<T>
+     * @psalm-return list<Participant>
      */
-    public function sortParticipantsByName(\App\Mealz\MealBundle\Repository\ParticipantRepository $participantRepo, $participants): array
+    public function sortParticipantsByName($participants): array
     {
-        usort($participants, [$participantRepo, 'compareNameOfParticipants']);
+        usort($participants, [$this, 'compareNameOfParticipants']);
 
         return $participants;
     }
@@ -48,7 +48,6 @@ class ParticipationHelper
     {
         $groupedParticipants = [];
 
-        /** @var Participant $participant */
         foreach ($participants as $participant) {
             $slot = $participant->getSlot();
 
@@ -69,10 +68,12 @@ class ParticipationHelper
      */
     public function getNonParticipatingProfilesByWeek(array $participations): array
     {
-        $profiles = new Set(array_map(
-            fn ($participant) => $participant->getProfile()->getUserName(),
-            $participations
-        ));
+        $profiles = new Set(
+            array_map(
+                fn ($participant) => $participant->getProfile()->getUserName(),
+                $participations
+            )
+        );
         $profiles = $profiles->all();
 
         if (0 === count($profiles)) {
@@ -195,8 +196,9 @@ class ParticipationHelper
      *
      * @psalm-return array{booked: non-empty-list<int|null>, isOffering: non-empty-list<bool>, profile?: string}
      */
-    private function getParticipationData(Meal $meal, bool $profile, Participant $participant, DishCollection $combinedDishes): array
-    {
+    private function getParticipationData(
+        Meal $meal, bool $profile, Participant $participant, DishCollection $combinedDishes
+    ): array {
         $participantData = [];
         $participantData['booked'][] = $meal->getDish()->getId();
         $participantData['isOffering'][] = $participant->isPending();

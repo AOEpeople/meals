@@ -48,7 +48,7 @@ class MealAdminController extends BaseController
 
         for ($i = 0; $i < 8; ++$i) {
             $modifiedDateTime = clone $dateTime;
-            $modifiedDateTime->modify('+'.$i.' weeks');
+            $modifiedDateTime->modify('+' . $i . ' weeks');
             $week = $this->weekRepository->findOneBy(
                 [
                     'year' => $modifiedDateTime->format('o'),
@@ -97,7 +97,7 @@ class MealAdminController extends BaseController
                 $this->handleNewDay($dayData, $weekDays[$dayIndex++]);
             }
         } catch (Exception $e) {
-            return new JsonResponse(['message' => 'NoErrorNumber: '.$e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return new JsonResponse(['message' => 'NoErrorNumber: ' . $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $this->em->persist($week);
@@ -182,7 +182,7 @@ class MealAdminController extends BaseController
 
         /** @var Day $day */
         foreach ($week->getDays() as $day) {
-            $response[(string)$day->getId()] = $day->getDateTime()->modify((string)$dateTimeModifier);
+            $response[(string) $day->getId()] = $day->getDateTime()->modify((string) $dateTimeModifier);
         }
 
         return new JsonResponse($response, Response::HTTP_OK);
@@ -254,7 +254,7 @@ class MealAdminController extends BaseController
             && true === isset($day['lockDate']['date'])
             && true === isset($day['lockDate']['timezone'])
         ) {
-            $newDateStr = str_replace(' ', 'T', $day['lockDate']['date']).'+00:00';
+            $newDateStr = str_replace(' ', 'T', $day['lockDate']['date']) . '+00:00';
             $newDate = DateTime::createFromFormat('Y-m-d\TH:i:s.uP', $newDateStr, new DateTimeZone($day['lockDate']['timezone']));
             $dayEntity->setLockParticipationDateTime($newDate);
         }
@@ -268,7 +268,7 @@ class MealAdminController extends BaseController
             }
             $dishEntity = $this->dishRepository->findOneBy(['slug' => $meal['dishSlug']]);
             if (null === $dishEntity) {
-                throw new Exception('107: dish not found for slug: '.$meal['dishSlug']);
+                throw new Exception('107: dish not found for slug: ' . $meal['dishSlug']);
             }
             // if mealId is null create meal
             if (false === isset($meal['mealId'])) {
@@ -307,7 +307,7 @@ class MealAdminController extends BaseController
             $mealEntity->setPrice($dishEntity->getPrice());
             $dayEntity->addMeal($mealEntity);
         } else {
-            throw new Exception('108: meal has participations for id: '.$meal['mealId']);
+            throw new Exception('108: meal has participations for id: ' . $meal['mealId']);
         }
     }
 }

@@ -19,8 +19,6 @@ class NullDish extends Dish
     }
 
     /**
-     * @return string
-     *
      * @psalm-return ''
      */
     public function getSlug(): string
@@ -29,8 +27,6 @@ class NullDish extends Dish
     }
 
     /**
-     * @return string
-     *
      * @psalm-return ''
      */
     public function getDescription(): ?string
@@ -38,17 +34,12 @@ class NullDish extends Dish
         return '';
     }
 
-    /**
-     * @return float
-     */
     public function getPrice(): float
     {
         return 0.0;
     }
 
     /**
-     * @return string
-     *
      * @psalm-return ''
      */
     public function getTitle(): string
@@ -73,8 +64,6 @@ class NullDish extends Dish
     }
 
     /**
-     * @return string
-     *
      * @psalm-return ''
      */
     public function getCurrentLocale(): string
@@ -99,8 +88,6 @@ class NullDish extends Dish
     }
 
     /**
-     * @return string
-     *
      * @psalm-return ''
      */
     public function getTitleDe(): string
@@ -109,8 +96,6 @@ class NullDish extends Dish
     }
 
     /**
-     * @return string
-     *
      * @psalm-return ''
      */
     public function getTitleEn(): string

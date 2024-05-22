@@ -36,8 +36,6 @@ class PayPalCheckOrderCommand extends Command
     }
 
     /**
-     * @return int
-     *
      * @psalm-return 0|1
      */
     public function execute(InputInterface $input, OutputInterface $output): int

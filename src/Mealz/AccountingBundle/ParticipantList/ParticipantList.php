@@ -55,9 +55,6 @@ class ParticipantList
         return $participations;
     }
 
-    /**
-     * @return int
-     */
     public function countParticipations(Profile $profile): int
     {
         return count($this->getParticipations($profile));

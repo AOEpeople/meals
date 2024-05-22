@@ -87,7 +87,7 @@ class Event implements JsonSerializable
     }
 
     /**
-     * @return (bool|int|null|string)[]
+     * @return (bool|int|string|null)[]
      *
      * @psalm-return array{id: int, title: string, slug: null|string, public: bool}
      */

@@ -418,7 +418,7 @@ class ApiController extends BaseController
     }
 
     /**
-     * @return ((int|null|string[])[]|mixed)[]
+     * @return ((int|string[]|null)[]|mixed)[]
      *
      * @psalm-return array<array{title: array{en: string, de: string}, parent?: int|null, participations?: int}|mixed>
      */

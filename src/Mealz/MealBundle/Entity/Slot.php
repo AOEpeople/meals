@@ -132,7 +132,7 @@ class Slot implements JsonSerializable
     }
 
     /**
-     * @return (bool|int|null|string)[]
+     * @return (bool|int|string|null)[]
      *
      * @psalm-return array{id: int|null, title: string, limit: int, order: int, enabled: bool, slug: null|string}
      */

@@ -193,7 +193,7 @@ class Meal implements JsonSerializable
     }
 
     /**
-     * @return (DateTime|int|null|string)[]
+     * @return (DateTime|int|string|null)[]
      *
      * @psalm-return array{id: int|null, dish: null|string, participationLimit: int, day: int|null, dateTime: DateTime, lockTime: DateTime}
      */

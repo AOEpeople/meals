@@ -57,9 +57,6 @@ class PayPalService
         }
     }
 
-    /**
-     * @param array|object|string $orderResp
-     */
     private function toPayPalOrder(array|string|object $orderResp): PayPalOrder
     {
         if (!is_object($orderResp)) {

@@ -92,7 +92,7 @@ class Category implements JsonSerializable
     }
 
     /**
-     * @return (int|null|string)[]
+     * @return (int|string|null)[]
      *
      * @psalm-return array{id: int|null, titleDe: string, titleEn: string, slug: null|string}
      */

@@ -11,6 +11,7 @@ use App\Mealz\MealBundle\Entity\Slot;
 use App\Mealz\MealBundle\Repository\DayRepositoryInterface;
 use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\MealBundle\Repository\SlotRepositoryInterface;
+use Closure;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
@@ -126,7 +127,7 @@ class SlotService
      *
      * @psalm-return \Closure(DateTime, Slot):int
      */
-    private function getBookedSlotCountProvider(DateTime $startDate, DateTime $endDate): \Closure
+    private function getBookedSlotCountProvider(DateTime $startDate, DateTime $endDate): Closure
     {
         $slotBookingStatus = [];
         $bookedSlotsStatus = $this->participantRepo->getCountBySlots($startDate, $endDate);

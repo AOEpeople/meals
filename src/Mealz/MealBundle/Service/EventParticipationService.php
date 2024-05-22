@@ -54,7 +54,7 @@ class EventParticipationService
      *
      * @psalm-return array{eventId: int, participationId: int|null, participations: int, isPublic: bool, isParticipating?: bool}|null
      */
-    public function getEventParticipationData(Day $day, ?Profile $profile = null): array|null
+    public function getEventParticipationData(Day $day, ?Profile $profile = null): ?array
     {
         $eventParticipation = $day->getEvent();
         if (null === $eventParticipation) {

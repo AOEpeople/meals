@@ -116,8 +116,6 @@ class Workday
      * @see https://www.php.net/manual/de/function.easter-date.php
      *
      * @param string $year
-     *
-     * @return DateTime
      */
     private function getEasterDate($year): DateTime
     {

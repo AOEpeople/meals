@@ -620,7 +620,7 @@ class ParticipationCountServiceTestCase extends AbstractParticipationServiceTest
         // Note: we need a week otherwise participation count is empty
         $week = $this->createWeek($meals);
 
-        $weekDay = $week->getDays()->filter(fn(Day $day) => $day->getDateTime()->format('Y-m-d') === $date)->first();
+        $weekDay = $week->getDays()->filter(fn (Day $day) => $day->getDateTime()->format('Y-m-d') === $date)->first();
         $this->assertNotNull($weekDay);
 
         return $weekDay;

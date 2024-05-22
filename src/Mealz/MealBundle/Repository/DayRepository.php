@@ -53,8 +53,6 @@ class DayRepository extends BaseRepository implements DayRepositoryInterface
     }
 
     /**
-     * @return string
-     *
      * @psalm-return Day::class
      */
     public function getClassName(): string

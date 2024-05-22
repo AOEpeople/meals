@@ -132,7 +132,7 @@ class ApiService
      *
      * @psalm-return array{name: string, participants: array}|null
      */
-    public function getEventParticipationInfo(Day $day): array|null
+    public function getEventParticipationInfo(Day $day): ?array
     {
         if (null === $day->getEvent()) {
             return null;

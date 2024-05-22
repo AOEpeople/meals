@@ -8,8 +8,6 @@ use Symfony\Component\DependencyInjection\EnvVarProcessorInterface;
 class AuthenticationEnvVarProcessor implements EnvVarProcessorInterface
 {
     /**
-     * @return null|string
-     *
      * @psalm-return 'PUBLIC_ACCESS'|'ROLE_USER'|null
      */
     public function getEnv($prefix, $name, Closure $getEnv): ?string

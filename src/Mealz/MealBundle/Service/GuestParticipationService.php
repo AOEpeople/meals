@@ -219,10 +219,10 @@ class GuestParticipationService
     }
 
     /**
+     * @return (mixed|object|null)[]
+     *
      * @throws ParticipationException
      * @throws Exception
-     *
-     * @return (mixed|null|object)[]
      *
      * @psalm-return array{profile: Profile, meals: MealCollection, slot: null|object, dishSlugs: mixed}
      */

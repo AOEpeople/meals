@@ -60,6 +60,7 @@ abstract class BaseRepository implements ObjectRepository, Selectable
 
     /**
      * @psalm-return ?T
+     *
      * @psalm-param positive-int|string $id
      */
     public function find($id): ?object
@@ -90,8 +91,6 @@ abstract class BaseRepository implements ObjectRepository, Selectable
     /**
      * Select all elements from a selectable that match the expression and
      * return a new collection containing these elements.
-     *
-     * @return AbstractLazyCollection
      *
      * @psalm-return AbstractLazyCollection<int, T>
      */

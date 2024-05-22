@@ -95,7 +95,7 @@ class HttpHeaderUtility
     {
         $rpos = strrpos($qualityString, '=');
         if (false !== $rpos) {
-            return (float)substr($qualityString, $rpos + 1);
+            return (float) substr($qualityString, $rpos + 1);
         }
 
         return 1;

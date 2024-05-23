@@ -36,7 +36,7 @@ class Day extends AbstractMessage implements JsonSerializable
     #[ORM\JoinColumn(name: 'event_id', referencedColumnName: 'id', nullable: true)]
     private ?EventParticipation $event = null;
 
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(name: 'lockParticipationDateTime', type: 'datetime', nullable: true)]
     private DateTime $lockParticipationOn;
 
     public function __construct()

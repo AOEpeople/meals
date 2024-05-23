@@ -246,6 +246,11 @@ class ParticipationService
         return (int) ceil($participation['totalCountByDishSlugs'][$meal->getDish()->getSlug()]['count'] ?? 0);
     }
 
+    public function getParticipationList(Day $day): array
+    {
+        return $this->participantRepo->getParticipantsByDay($day->getDateTime(), ['load_meal' => false]);
+    }
+
     /**
      * @return int[][][][]
      *

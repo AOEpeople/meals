@@ -176,7 +176,7 @@ class ApiController extends BaseController
         return new JsonResponse($list, Response::HTTP_OK);
     }
 
-    public function listByDate(DateTime $date): JSONResponse
+    public function listByDate(DateTime $date): JsonResponse
     {
         $day = $this->apiSrv->getDayByDate($date);
         if (null === $day) {
@@ -188,7 +188,7 @@ class ApiController extends BaseController
         return new JsonResponse($list, 200);
     }
 
-    public function listParticipantsByDate(DateTime $date): JSONResponse
+    public function listParticipantsByDate(DateTime $date): JsonResponse
     {
         $day = $this->apiSrv->getDayByDate($date);
         if (null === $day) {

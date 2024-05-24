@@ -161,7 +161,7 @@ abstract class AbstractControllerTestCase extends AbstractDatabaseTestCase
         $dayRepo = self::getContainer()->get(DayRepository::class);
 
         $criteria = new Criteria();
-        $criteria->where(Criteria::expr()->gt('lockParticipationDateTime', new DateTime()));
+        $criteria->where(Criteria::expr()->gt('lockParticipationOn', new DateTime()));
 
         /** @var Day $day */
         $day = $dayRepo->matching($criteria)->get(0);

@@ -23,7 +23,6 @@
     "doctrine/orm": "^2.19",
     "friendsofphp/proxy-manager-lts": "^1.0.2",
     "hwi/oauth-bundle": "^2.2.0",
-    "jms/serializer-bundle": "^5.4.0",
     "lcobucci/jwt": "^4.1",
     "paypal/paypal-checkout-sdk": "^1.0.0",
     "psr/cache": "^3.0.0",

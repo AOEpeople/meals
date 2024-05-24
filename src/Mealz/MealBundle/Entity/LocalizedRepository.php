@@ -7,6 +7,11 @@ namespace App\Mealz\MealBundle\Entity;
 use App\Mealz\MealBundle\EventListener\LocalisationListener;
 use Doctrine\ORM\EntityRepository;
 
+/**
+ * @template T of object
+ *
+ * @extends EntityRepository<T>
+ */
 abstract class LocalizedRepository extends EntityRepository
 {
     protected ?LocalisationListener $localizationListener = null;

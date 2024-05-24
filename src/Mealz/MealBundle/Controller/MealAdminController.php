@@ -287,9 +287,21 @@ class MealAdminController extends BaseController
         $dayEntity->addMeal($mealEntity);
     }
 
+    /**
+     * @throws Exception
+     */
     private function modifyMeal(array $meal, Dish $dishEntity, Day $dayEntity): void
     {
         $mealEntity = $this->mealRepository->find($meal['mealId']);
+        if (null === $mealEntity) {
+            // this happens because meals without participations are deleted, even though they
+            // could be modified later on (this shouldn't happen but might)
+            $mealEntity = new Meal($dishEntity, $dayEntity);
+            $mealEntity->setPrice($dishEntity->getPrice());
+            $dayEntity->addMeal($mealEntity);
+
+            return;
+        }
 
         $this->mealAdminHelper->setParticipationLimit($mealEntity, $meal);
         // check if the requested dish is the same as before
@@ -298,16 +310,11 @@ class MealAdminController extends BaseController
         }
 
         // check if meal already exists and can be modified (aka has no participations)
-        if (null !== $mealEntity && false === $mealEntity->hasParticipations()) {
+        if (!$mealEntity->hasParticipations()) {
             $mealEntity->setDish($dishEntity);
             $mealEntity->setPrice($dishEntity->getPrice());
-        } elseif (null === $mealEntity) {
-            // this happens because meals without participations are deleted, even though they could be modified later on (this shouldn't happen but might)
-            $mealEntity = new Meal($dishEntity, $dayEntity);
-            $mealEntity->setPrice($dishEntity->getPrice());
-            $dayEntity->addMeal($mealEntity);
-        } else {
-            throw new Exception('108: meal has participations for id: ' . $meal['mealId']);
         }
+
+        throw new Exception('108: meal has participations for id: ' . $meal['mealId']);
     }
 }

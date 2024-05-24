@@ -8,6 +8,9 @@ use App\Mealz\MealBundle\Entity\Dish;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ObjectRepository;
 
+/**
+ * @template-extends ObjectRepository<Dish>
+ */
 interface DishRepositoryInterface extends ObjectRepository
 {
     public function getSortedDishesQueryBuilder(array $options = []): QueryBuilder;

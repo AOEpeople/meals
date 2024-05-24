@@ -167,8 +167,7 @@ class CostSheetController extends BaseController
     #[IsGranted('ROLE_USER')]
     public function getProfileFromHash(string $hash, ProfileRepositoryInterface $profileRepository): JsonResponse
     {
-        $queryResult = $profileRepository->findBy(['settlementHash' => urldecode($hash)]);
-        $profile = $queryResult[0];
+        $profile = $profileRepository->findOneBy(['settlementHash' => urldecode($hash)]);
 
         if (null === $profile) {
             return new JsonResponse(['message' => '504: Not found'], Response::HTTP_NOT_FOUND);

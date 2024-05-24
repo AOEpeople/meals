@@ -12,6 +12,9 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 
+/**
+ * @extends BaseRepository<int, Transaction>
+ */
 class TransactionRepository extends BaseRepository implements TransactionRepositoryInterface
 {
     /**

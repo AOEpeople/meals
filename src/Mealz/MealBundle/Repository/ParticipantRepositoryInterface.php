@@ -11,6 +11,9 @@ use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Doctrine\Persistence\ObjectRepository;
 
+/**
+ * @template-extends ObjectRepository<Participant>
+ */
 interface ParticipantRepositoryInterface extends ObjectRepository
 {
     /**

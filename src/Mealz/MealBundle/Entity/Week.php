@@ -42,6 +42,9 @@ class Week extends AbstractMessage implements JsonSerializable
         return $this->days;
     }
 
+    /**
+     * @param Collection<int, Day> $days
+     */
     public function setDays(Collection $days): void
     {
         $this->days = $days;

@@ -8,6 +8,9 @@ use App\Mealz\MealBundle\Entity\Day;
 use DateTime;
 use Doctrine\Persistence\ObjectRepository;
 
+/**
+ * @template-extends ObjectRepository<Day>
+ */
 interface DayRepositoryInterface extends ObjectRepository
 {
     public function getCurrentDay(): ?Day;

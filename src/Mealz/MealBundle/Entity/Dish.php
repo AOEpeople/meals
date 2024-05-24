@@ -66,6 +66,9 @@ class Dish implements JsonSerializable
 
     protected string $currentLocale = 'en';
 
+    /**
+     * @var Collection<int, DishVariation>|null
+     */
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: DishVariation::class, cascade: ['persist'])]
     protected ?Collection $variations = null;
 
@@ -219,6 +222,9 @@ class Dish implements JsonSerializable
         return new DishCollection($this->variations->toArray());
     }
 
+    /**
+     * @param Collection<int, DishVariation> $dishVariations
+     */
     public function setVariations(Collection $dishVariations): void
     {
         $this->variations = $dishVariations;

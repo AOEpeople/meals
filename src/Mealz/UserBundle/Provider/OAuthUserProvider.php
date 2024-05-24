@@ -15,6 +15,9 @@ use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
+/**
+ * @implements UserProviderInterface<Profile>
+ */
 class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProviderInterface
 {
     private const string ROLE_ADMIN = 'ROLE_ADMIN';

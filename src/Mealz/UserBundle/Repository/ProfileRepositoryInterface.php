@@ -7,6 +7,9 @@ namespace App\Mealz\UserBundle\Repository;
 use App\Mealz\UserBundle\Entity\Profile;
 use Doctrine\Persistence\ObjectRepository;
 
+/**
+ * @template-extends ObjectRepository<Profile>
+ */
 interface ProfileRepositoryInterface extends ObjectRepository
 {
     /**

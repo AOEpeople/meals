@@ -9,6 +9,9 @@ use App\Mealz\UserBundle\Entity\Profile;
 use DateTime;
 use Doctrine\Persistence\ObjectRepository;
 
+/**
+ * @template-extends ObjectRepository<Transaction>
+ */
 interface TransactionRepositoryInterface extends ObjectRepository
 {
     /**

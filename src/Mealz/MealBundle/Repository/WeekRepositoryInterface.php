@@ -6,6 +6,9 @@ use App\Mealz\MealBundle\Entity\Week;
 use DateTime;
 use Doctrine\Persistence\ObjectRepository;
 
+/**
+ * @template-extends ObjectRepository<Week>
+ */
 interface WeekRepositoryInterface extends ObjectRepository
 {
     public function getCurrentWeek(array $options = []): ?Week;

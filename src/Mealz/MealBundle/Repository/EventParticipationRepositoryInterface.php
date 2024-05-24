@@ -9,6 +9,9 @@ use App\Mealz\MealBundle\Entity\Event;
 use App\Mealz\MealBundle\Entity\EventParticipation;
 use Doctrine\Persistence\ObjectRepository;
 
+/**
+ * @template-extends ObjectRepository<EventParticipation>
+ */
 interface EventParticipationRepositoryInterface extends ObjectRepository
 {
     public function add($eventParticipation): void;

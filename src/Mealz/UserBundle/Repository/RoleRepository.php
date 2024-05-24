@@ -9,7 +9,7 @@ use App\Mealz\UserBundle\Entity\Role;
 use Doctrine\DBAL\ArrayParameterType;
 
 /**
- * @extends BaseRepository<Role>
+ * @extends BaseRepository<int, Role>
  */
 class RoleRepository extends BaseRepository implements RoleRepositoryInterface
 {

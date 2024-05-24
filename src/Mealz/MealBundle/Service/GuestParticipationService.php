@@ -56,6 +56,8 @@ class GuestParticipationService
     }
 
     /**
+     * @param Collection<int, Meal> $meals
+     *
      * @return Participant[]
      *
      * @throws ParticipationException

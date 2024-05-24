@@ -6,6 +6,7 @@ namespace App\Mealz\UserBundle\DataFixtures\ORM;
 
 use App\Mealz\UserBundle\Entity\Login;
 use App\Mealz\UserBundle\Entity\Profile;
+use App\Mealz\UserBundle\Entity\Role;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
@@ -127,6 +128,7 @@ class LoadUsers extends Fixture implements OrderedFixtureInterface
         $profile->setFirstName($firstName);
 
         // set roles
+        /** @var Role[] $roleObjs */
         $roleObjs = [];
         foreach ($roles as $role) {
             $roleObjs[] = $this->getReference($role);

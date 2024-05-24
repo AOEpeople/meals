@@ -25,6 +25,7 @@ services:
 
   db:
     image: "mysql:8.0.37"
+    command: --sql-mode="STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION"
     healthcheck:
       test: out=$$(mysqladmin ping -h localhost -P 3306 -u db --password=db 2>&1); echo $$out | grep 'mysqld is alive' || { echo $$out; exit 1; }
     environment:

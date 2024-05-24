@@ -134,7 +134,7 @@ class EventControllerTest extends AbstractControllerTestCase
         $dayRepo = self::getContainer()->get(DayRepository::class);
 
         $criteria = new Criteria();
-        $criteria->where(Criteria::expr()->gt('lockParticipationDateTime', new DateTime()));
+        $criteria->where(Criteria::expr()->gt('lockParticipationOn', new DateTime()));
 
         /** @var Day $day */
         $day = $dayRepo->matching($criteria)->get(0);
@@ -170,7 +170,7 @@ class EventControllerTest extends AbstractControllerTestCase
         $dayRepo = self::getContainer()->get(DayRepository::class);
 
         $criteria = new Criteria();
-        $criteria->where(Criteria::expr()->gt('lockParticipationDateTime', new DateTime()));
+        $criteria->where(Criteria::expr()->gt('lockParticipationOn', new DateTime()));
 
         $day = $dayRepo->matching($criteria)->get(0);
 
@@ -207,7 +207,7 @@ class EventControllerTest extends AbstractControllerTestCase
         $dayRepo = self::getContainer()->get(DayRepository::class);
 
         $criteria = new Criteria();
-        $criteria->where(Criteria::expr()->gt('lockParticipationDateTime', new DateTime()));
+        $criteria->where(Criteria::expr()->gt('lockParticipationOn', new DateTime()));
 
         /** @var Day $day */
         $day = $dayRepo->matching($criteria)->get(0);

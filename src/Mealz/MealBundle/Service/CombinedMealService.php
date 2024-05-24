@@ -13,7 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class CombinedMealService
 {
-    private const COMBINED_DISH_TITLE_EN = 'Combined Dish'; // NOTE: important for slug generation, do not change
+    private const string COMBINED_DISH_TITLE_EN = 'Combined Dish'; // NOTE: important for slug generation, do not change
 
     private float $defaultPrice;
 
@@ -36,7 +36,7 @@ class CombinedMealService
         $update = false;
         /** @var Day $day */
         foreach ($week->getDays() as $day) {
-            if (true === empty($day->getMeals())) {
+            if ($day->getMeals()->count() < 1) {
                 continue;
             }
 

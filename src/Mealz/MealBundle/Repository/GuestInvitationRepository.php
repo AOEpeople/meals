@@ -11,7 +11,7 @@ use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\OptimisticLockException;
 
 /**
- * @extends BaseRepository<GuestInvitation>
+ * @extends BaseRepository<int, GuestInvitation>
  */
 class GuestInvitationRepository extends BaseRepository implements GuestInvitationRepositoryInterface
 {

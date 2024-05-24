@@ -135,6 +135,8 @@ class Day extends AbstractMessage implements JsonSerializable
         $week = new Week();
         $week->setYear($year);
         $week->setCalendarWeek($calWeek);
+        /** @psalm-suppress InvalidArgument */
+        // TODO: check if future versions of psalm can deal with it
         $week->setDays(new ArrayCollection([$this]));
 
         return $week;

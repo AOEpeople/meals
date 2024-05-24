@@ -10,7 +10,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 
 /**
- * Class WeekRepository.
+ * @extends BaseRepository<int, Week>
  */
 class WeekRepository extends BaseRepository implements WeekRepositoryInterface
 {

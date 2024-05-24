@@ -18,7 +18,7 @@ use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 
 /**
- * @extends BaseRepository<Participant>
+ * @extends BaseRepository<int, Participant>
  */
 class ParticipantRepository extends BaseRepository implements ParticipantRepositoryInterface
 {
@@ -90,7 +90,7 @@ class ParticipantRepository extends BaseRepository implements ParticipantReposit
         $queryBuilder->setParameter('now', new DateTime(), Types::DATETIME_MUTABLE);
 
         $result = $queryBuilder->getQuery()->getResult();
-        if ($result && is_array($result) && count($result) >= 1) {
+        if (is_array($result) && count($result) >= 1) {
             return (float) ($result[0]['total_cost'] ?? 0.0);
         }
 

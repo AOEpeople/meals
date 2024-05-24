@@ -8,6 +8,9 @@ use App\Mealz\MealBundle\Entity\Day;
 use App\Mealz\MealBundle\Entity\Event;
 use App\Mealz\MealBundle\Entity\EventParticipation;
 
+/**
+ * @extends BaseRepository<int, EventParticipation>
+ */
 class EventParticipationRepository extends BaseRepository implements EventParticipationRepositoryInterface
 {
     public function add($eventParticipation): void

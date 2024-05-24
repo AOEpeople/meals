@@ -14,6 +14,7 @@ use App\Mealz\MealBundle\Repository\ParticipantRepositoryInterface;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadRoles;
 use App\Mealz\UserBundle\DataFixtures\ORM\LoadUsers;
 use DateTime;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -132,8 +133,8 @@ class EventControllerTest extends AbstractControllerTestCase
 
         $dayRepo = self::getContainer()->get(DayRepository::class);
 
-        $criteria = new \Doctrine\Common\Collections\Criteria();
-        $criteria->where(\Doctrine\Common\Collections\Criteria::expr()->gt('lockParticipationDateTime', new DateTime()));
+        $criteria = new Criteria();
+        $criteria->where(Criteria::expr()->gt('lockParticipationDateTime', new DateTime()));
 
         /** @var Day $day */
         $day = $dayRepo->matching($criteria)->get(0);
@@ -168,8 +169,8 @@ class EventControllerTest extends AbstractControllerTestCase
 
         $dayRepo = self::getContainer()->get(DayRepository::class);
 
-        $criteria = new \Doctrine\Common\Collections\Criteria();
-        $criteria->where(\Doctrine\Common\Collections\Criteria::expr()->gt('lockParticipationDateTime', new DateTime()));
+        $criteria = new Criteria();
+        $criteria->where(Criteria::expr()->gt('lockParticipationDateTime', new DateTime()));
 
         $day = $dayRepo->matching($criteria)->get(0);
 
@@ -202,10 +203,11 @@ class EventControllerTest extends AbstractControllerTestCase
         $newEvent = $this->createEvent();
         $this->persistAndFlushAll([$newEvent]);
 
+        /** @var DayRepository $dayRepo */
         $dayRepo = self::getContainer()->get(DayRepository::class);
 
-        $criteria = new \Doctrine\Common\Collections\Criteria();
-        $criteria->where(\Doctrine\Common\Collections\Criteria::expr()->gt('lockParticipationDateTime', new DateTime()));
+        $criteria = new Criteria();
+        $criteria->where(Criteria::expr()->gt('lockParticipationDateTime', new DateTime()));
 
         /** @var Day $day */
         $day = $dayRepo->matching($criteria)->get(0);

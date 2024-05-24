@@ -18,7 +18,6 @@ use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
-use Iterator;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 abstract class AbstractDatabaseTestCase extends WebTestCase
@@ -33,29 +32,13 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
     /**
      * empty the test database and load fixtures from a class.
      *
-     * @param FixtureInterface|array|null $fixtures
+     * @param FixtureInterface[]|null $fixtures
      *
      * @throws InvalidArgumentException
      */
-    protected function loadFixtures($fixtures): void
+    protected function loadFixtures(?array $fixtures = null): void
     {
         $loader = new Loader();
-
-        if (is_array($fixtures) || $fixtures instanceof Iterator) {
-            foreach ($fixtures as $fixture) {
-                $loader->addFixture($fixture);
-            }
-            $this->push($loader);
-
-            return;
-        }
-
-        if ($fixtures instanceof FixtureInterface) {
-            $loader->addFixture($fixtures);
-            $this->push($loader);
-
-            return;
-        }
 
         if (null === $fixtures) {
             $this->push($loader);
@@ -63,7 +46,15 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
             return;
         }
 
-        throw new InvalidArgumentException(sprintf('%s expects first parameter to be a FixtureInterface or array. %s given.', __METHOD__, get_class($fixtures)));
+        foreach ($fixtures as $fixture) {
+            if (!($fixtures instanceof FixtureInterface)) {
+                throw new InvalidArgumentException(sprintf('Expected "%s", got "%s".', FixtureInterface::class, gettype($fixture)));
+            }
+
+            $loader->addFixture($fixture);
+        }
+
+        $this->push($loader);
     }
 
     protected function clearAllTables(): void

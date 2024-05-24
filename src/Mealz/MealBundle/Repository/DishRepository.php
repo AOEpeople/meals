@@ -16,7 +16,7 @@ use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\QueryBuilder;
 
 /**
- * @extends BaseRepository<Dish>
+ * @extends BaseRepository<int, Dish>
  */
 class DishRepository extends BaseRepository implements DishRepositoryInterface
 {

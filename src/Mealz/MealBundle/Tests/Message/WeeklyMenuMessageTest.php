@@ -31,7 +31,7 @@ class WeeklyMenuMessageTest extends WebTestCase
      */
     public function testContainsDish(): void
     {
-        $days = new ArrayCollection([$this->generateDay(['dish'], new DateTime('Monday'))]);
+        $days = [$this->generateDay(['dish'], new DateTime('Monday'))];
         $week = $this->generateWeek($days);
 
         $message = new WeeklyMenuMessage($week, $this->translator);
@@ -44,10 +44,10 @@ class WeeklyMenuMessageTest extends WebTestCase
      */
     public function testWeekDisabled(): void
     {
-        $days = new ArrayCollection([
+        $days = [
             $this->generateDay(['dish'], new DateTime('Monday')),
             $this->generateDay(['fish'], new DateTime('Tuesday')),
-        ]);
+        ];
         $week = $this->generateWeek($days);
         $week->setEnabled(false);
 
@@ -63,11 +63,11 @@ class WeeklyMenuMessageTest extends WebTestCase
      */
     public function testDayDisabled(): void
     {
-        $days = new ArrayCollection([
+        $days = [
             $this->generateDay(['Fish'], new DateTime('Monday')),
             $this->generateDay(['Chips'], new DateTime('Tuesday')),
-        ]);
-        $days->first()->setEnabled(false);
+        ];
+        $days[0]->setEnabled(false);
         $week = $this->generateWeek($days);
 
         $message = new WeeklyMenuMessage($week, $this->translator);
@@ -82,9 +82,7 @@ class WeeklyMenuMessageTest extends WebTestCase
      */
     public function testVariationsAddParent(): void
     {
-        $days = new ArrayCollection([
-            $this->generateDay(['Fish'], new DateTime('Monday')),
-        ]);
+        $day = $this->generateDay(['Fish'], new DateTime('Monday'));
 
         $dishVariationA = new DishVariation();
         $dishVariationB = new DishVariation();
@@ -98,14 +96,13 @@ class WeeklyMenuMessageTest extends WebTestCase
         $dishVariationA->setParent($dishParent);
         $dishVariationB->setParent($dishParent);
 
-        $day = $days->first();
         $mealA = new Meal($dishVariationA, $day);
         $mealB = new Meal($dishVariationB, $day);
 
         $day->addMeal($mealA);
         $day->addMeal($mealB);
 
-        $week = $this->generateWeek($days);
+        $week = $this->generateWeek([$day]);
 
         $message = new WeeklyMenuMessage($week, $this->translator);
         $content = $message->getContent();
@@ -114,10 +111,13 @@ class WeeklyMenuMessageTest extends WebTestCase
         self::assertStringContainsString('(VariationA, VariationB)', $content);
     }
 
-    private function generateWeek(ArrayCollection $days): Week
+    /**
+     * @param Day[] $days
+     */
+    private function generateWeek(array $days): Week
     {
         $week = new Week();
-        $week->setDays($days);
+        $week->setDays(new ArrayCollection($days));
 
         return $week;
     }

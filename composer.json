@@ -89,7 +89,8 @@
     "symfony/stopwatch": "^6.4",
     "symfony/var-dumper": "^6.4",
     "symfony/web-profiler-bundle": "^6.4",
-    "vimeo/psalm": "^5.24"
+    "vimeo/psalm": "^5.24",
+    "weirdan/doctrine-psalm-plugin": "^2.9"
   },
   "conflict": {
     "symfony/symfony": "*"

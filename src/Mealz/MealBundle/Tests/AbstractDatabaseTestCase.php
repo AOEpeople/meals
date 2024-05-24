@@ -47,7 +47,7 @@ abstract class AbstractDatabaseTestCase extends WebTestCase
         }
 
         foreach ($fixtures as $fixture) {
-            if (!($fixtures instanceof FixtureInterface)) {
+            if (!($fixture instanceof FixtureInterface)) {
                 throw new InvalidArgumentException(sprintf('Expected "%s", got "%s".', FixtureInterface::class, gettype($fixture)));
             }
 

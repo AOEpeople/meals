@@ -3,7 +3,7 @@ services:
     image: aoepeople/meals:test
     container_name: app
     environment:
-      - APP_DEBUG=1
+      - APP_DEBUG=0
       - APP_ENV=staging
       - APP_SECRET=98414ca3612ebba3061cf8c92c4a984e
       - APP_EMAIL_SENDER="Meals Bot <noreply@localhost>"
@@ -13,7 +13,7 @@ services:
       - DB_NAME=db_test
       - DB_USER=db
       - DB_PASS=db
-      - DB_VERS=5.7
+      - DB_VERS=8.0.37
       - SMTP_HOST=mailhog
       - SMTP_PORT=1025
       - SMTP_AUTH=off
@@ -22,7 +22,6 @@ services:
       - SETTLEMENT_REQ_EMAIL_RECEIVER=jon.doe@localhost
       - APP_NAME=Meals
       - APP_BASE_URL=http://localhost
-      - DB_URL=mysql://db:db@db:3306/db_test?serverVersion=5.7&charset=utf8
       - MERCURE_URL=http://mercure:8080/.well-known/mercure
       - MERCURE_PUBLIC_URL=http://localhost:8080/.well-known/mercure
       - MERCURE_PUBLISH_URL=http://mercure:8080/.well-known/mercure
@@ -38,8 +37,8 @@ services:
       - mailhog
 
   db:
-    image: "mysql:5.7"
-    command: --sql-mode="STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"
+    image: "mysql:8.0.37"
+    command: --sql-mode="STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION"
     healthcheck:
       test: out=$$(mysqladmin ping -h localhost -P 3306 -u db --password=db 2>&1); echo $$out | grep 'mysqld is alive' || { echo $$out; exit 1; }
     environment:

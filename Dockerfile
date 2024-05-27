@@ -42,7 +42,6 @@ USER www-data:www-data
 # add composer dependencies
 COPY --chown=www-data:www-data composer.json composer.lock ./
 RUN composer install \
-        --no-plugins \
         --no-scripts \
         --optimize-autoloader \
         --prefer-dist

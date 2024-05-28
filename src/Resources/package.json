@@ -67,7 +67,7 @@
     "@vue/server-renderer": "^3.2.47",
     "@vue/test-utils": "^2.3.2",
     "@vue/vue3-jest": "^29.2.4",
-    "aoe-group-web-cd": "git+https://aoe-group-web-cd:xsaXc7zxEcsZFHtkLJAP@gitlab.aoe.com/project/aoe-internal/aoe-group-web-cd.git",
+    "aoe-group-web-cd": "git+https://aoe-group-web-cd:VB8F3WcfJ_hUcspHuuFH@gitlab.aoe.com/project/aoe-internal/aoe-group-web-cd.git",
     "autoprefixer": "^10.3.1",
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^29.5.0",

@@ -32,6 +32,7 @@
       v-if="loaded === true"
       :filter="filter"
       :showHidden="showHidden"
+      data-cy="costsTable"
     />
     <LoadingSpinner :loaded="loaded" />
   </div>

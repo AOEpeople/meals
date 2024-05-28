@@ -313,6 +313,8 @@ class MealAdminController extends BaseController
         if (!$mealEntity->hasParticipations()) {
             $mealEntity->setDish($dishEntity);
             $mealEntity->setPrice($dishEntity->getPrice());
+
+            return;
         }
 
         throw new Exception('108: meal has participations for id: ' . $meal['mealId']);

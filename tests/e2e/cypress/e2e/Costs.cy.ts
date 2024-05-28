@@ -20,7 +20,8 @@ describe('Test Cost View', () => {
         cy.get('input[placeholder="Benutzer filtern"]').type('Admin');
 
         // find the test user and assert that the table has the right dimensions
-        cy.get('tr')
+        cy.get('[data-cy="costsTable"]')
+            .find('tr')
             .eq(1)
             .find('td')
             .eq(0)
@@ -29,7 +30,8 @@ describe('Test Cost View', () => {
             .find('td')
             .should('have.length', 8);
 
-        cy.get('tr')
+        cy.get('[data-cy="costsTable"]')
+            .find('tr')
             .eq(1)
             .find('td')
             .eq(7)
@@ -60,7 +62,8 @@ describe('Test Cost View', () => {
 
         cy.get('input[placeholder="Benutzer filtern"]').type('Alice');
 
-        cy.get('tr')
+        cy.get('[data-cy="costsTable"]')
+            .find('tr')
             .eq(1)
             .find('td')
             .eq(0)
@@ -69,7 +72,8 @@ describe('Test Cost View', () => {
             .find('td')
             .should('have.length', 8);
 
-        cy.get('tr')
+        cy.get('[data-cy="costsTable"]')
+            .find('tr')
             .eq(1)
             .find('td')
             .eq(7)
@@ -87,7 +91,8 @@ describe('Test Cost View', () => {
             .find('input[value="Speichern"]')
             .click({ force: true });
 
-        cy.get('tr')
+        cy.get('[data-cy="costsTable"]')
+            .find('tr')
             .eq(1)
             .find('td')
             .eq(7)
@@ -106,13 +111,15 @@ describe('Test Cost View', () => {
 
         cy.get('input[placeholder="Benutzer filtern"]').type('Alice');
 
-        cy.get('tr')
+        cy.get('[data-cy="costsTable"]')
+            .find('tr')
             .eq(1)
             .find('td')
             .eq(6)
             .contains('0,00 €');
 
-        cy.get('tr')
+        cy.get('[data-cy="costsTable"]')
+            .find('tr')
             .eq(1)
             .find('td')
             .eq(7)
@@ -130,7 +137,8 @@ describe('Test Cost View', () => {
             .find('input[value="Speichern"]')
             .click({ force: true });
 
-        cy.get('tr')
+        cy.get('[data-cy="costsTable"]')
+            .find('tr')
             .eq(1)
             .find('td')
             .eq(6)

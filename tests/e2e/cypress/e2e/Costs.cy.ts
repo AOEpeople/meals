@@ -149,7 +149,7 @@ describe('Test Cost View', () => {
             .as('cost');
 
         cy.get<string>('@cost').then((cost) => {
-            const parsedCost = parseFloat(cost.replace(' €', '').replace('.', '').replace(',', '.'));
+            const parsedCost = parseFloat(parseFloat(cost.replace(' €', '').replace('.', '').replace(',', '.')).toFixed(2));
             const balanceToAdd: number = 147.00
             const balanceToSearch: number = parsedCost + balanceToAdd
             const searchString: string = `${balanceToSearch.toLocaleString()} €`;

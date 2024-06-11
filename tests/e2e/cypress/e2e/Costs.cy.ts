@@ -8,6 +8,7 @@ describe('Test Cost View', () => {
         cy.intercept('GET', '**/api/costs').as('getCosts');
         cy.intercept('POST', '**/api/costs/hideuser/**').as('hideUser');
         cy.intercept('POST', '**/api/costs/settlement/confirm/**').as('confirmSettlement');
+        cy.intercept('POST', '**/api/payment/cash/**').as('postBalance');
     });
 
     it('should visit /costs and filter for a user and hide it', () => {
@@ -53,7 +54,7 @@ describe('Test Cost View', () => {
         cy.get('tr:visible').should('have.length', 58);
     });
 
-    it('should be able to settle an account and add balance to it', () => {
+    it('should be able to settle an account', () => {
         cy.get('span > a').contains('Kosten').click();
 
         cy.wait('@getCosts');
@@ -109,39 +110,81 @@ describe('Test Cost View', () => {
         cy.get('span > a').contains('Kosten').click();
         cy.wait('@getCosts');
 
+        cy.get('input[placeholder="Benutzer filtern"]').type('Meals, Alice');
+
+        cy.get('[data-cy="costsTable"]')
+            .find('tr')
+            .should('have.length', 1);
+    });
+
+    it('should be able to add balance to a user', () => {
+        cy.get('span > a').contains('Kosten').click();
+
+        cy.wait('@getCosts');
+
+        cy.get('h2').contains('Liste der Kosten');
+
         cy.get('input[placeholder="Benutzer filtern"]').type('Alice');
 
         cy.get('[data-cy="costsTable"]')
             .find('tr')
             .eq(1)
             .find('td')
-            .eq(6)
-            .contains('0,00 €');
+            .eq(0)
+            .contains('Meals, Alice')
+            .parent()
+            .find('td')
+            .should('have.length', 8);
 
         cy.get('[data-cy="costsTable"]')
             .find('tr')
             .eq(1)
             .find('td')
-            .eq(7)
-            .find('button')
-            .last()
-            .click();
-
-        cy.get('form')
-            .find('input')
-            .first()
-            .clear({ force: true })
-            .type('147', { force: true });
-
-        cy.get('form')
-            .find('input[value="Speichern"]')
-            .click({ force: true });
-
-        cy.get('[data-cy="costsTable"]')
-            .find('tr')
-            .eq(1)
+            .eq(0)
+            .contains('Meals, Alice')
+            .parent()
             .find('td')
             .eq(6)
-            .contains('147,00 €');
-    });
+            .invoke('text')
+            .as('cost');
+
+        cy.get<string>('@cost').then((cost) => {
+            const parsedCost = parseFloat(cost.replace(' €', '').replace('.', '').replace(',', '.'));
+            const balanceToAdd: number = 147.00
+            const balanceToSearch: number = parsedCost + balanceToAdd
+            const searchString: string = `${balanceToSearch.toLocaleString()} €`;
+
+
+            cy.get('[data-cy="costsTable"]')
+                .find('tr')
+                .eq(1)
+                .find('td')
+                .eq(7)
+                .find('button')
+                .eq(1)
+                .click();
+
+            cy.get('form')
+                .find('input')
+                .first()
+                .clear({ force: true })
+                .type('147', { force: true });
+
+            cy.get('form')
+                .find('input[value="Speichern"]')
+                .click({ force: true });
+
+            cy.wait('@postBalance');
+            cy.get('h2')
+                .contains('Liste der Kosten')
+                .click();
+
+            cy.get('[data-cy="costsTable"]')
+                .find('tr')
+                .eq(1)
+                .find('td')
+                .eq(6)
+                .contains(searchString);
+        })
+    })
 });

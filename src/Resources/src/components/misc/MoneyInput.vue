@@ -33,7 +33,6 @@ function selectAllAndPlaceCursor(element: HTMLInputElement) {
   element.focus();
   element.setSelectionRange(0, 0);
 }
-
 </script>
 
 <style scoped>
@@ -43,7 +42,7 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
-input[type=number] {
+input[type='number'] {
   -moz-appearance: textfield;
 }
 </style>

@@ -72,7 +72,7 @@ class CostSheetController extends BaseController
             $user['costs'] = $userCosts;
 
             // if total amount is zero, remove user from rendered items
-            if ('0.0000' === $userCosts['total']) {
+            if ('0.0000' === $userCosts['total'] || '0.0' == $userCosts['total']) {
                 unset($users[$username]);
             }
         }

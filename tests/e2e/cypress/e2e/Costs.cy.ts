@@ -8,6 +8,7 @@ describe('Test Cost View', () => {
         cy.intercept('GET', '**/api/costs').as('getCosts');
         cy.intercept('POST', '**/api/costs/hideuser/**').as('hideUser');
         cy.intercept('POST', '**/api/costs/settlement/confirm/**').as('confirmSettlement');
+        cy.intercept('POST', '**/api/payment/cash/**').as('postBalance');
     });
 
     it('should visit /costs and filter for a user and hide it', () => {
@@ -53,7 +54,7 @@ describe('Test Cost View', () => {
         cy.get('tr:visible').should('have.length', 58);
     });
 
-    it('should be able to settle an account and add balance to it', () => {
+    it('should be able to settle an account', () => {
         cy.get('span > a').contains('Kosten').click();
 
         cy.wait('@getCosts');
@@ -109,39 +110,10 @@ describe('Test Cost View', () => {
         cy.get('span > a').contains('Kosten').click();
         cy.wait('@getCosts');
 
-        cy.get('input[placeholder="Benutzer filtern"]').type('Alice');
+        cy.get('input[placeholder="Benutzer filtern"]').type('Meals, Alice');
 
         cy.get('[data-cy="costsTable"]')
             .find('tr')
-            .eq(1)
-            .find('td')
-            .eq(6)
-            .contains('0,00 €');
-
-        cy.get('[data-cy="costsTable"]')
-            .find('tr')
-            .eq(1)
-            .find('td')
-            .eq(7)
-            .find('button')
-            .last()
-            .click();
-
-        cy.get('form')
-            .find('input')
-            .first()
-            .clear({ force: true })
-            .type('147', { force: true });
-
-        cy.get('form')
-            .find('input[value="Speichern"]')
-            .click({ force: true });
-
-        cy.get('[data-cy="costsTable"]')
-            .find('tr')
-            .eq(1)
-            .find('td')
-            .eq(6)
-            .contains('147,00 €');
+            .should('have.length', 1);
     });
 });

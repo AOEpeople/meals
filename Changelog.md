@@ -1,5 +1,22 @@
 # Changelog
 
+## Version v3.0.7 (2024-06-11)
+
+### Fixes
+
+- fixed tests (b6a2e668)
+- fixed formatting (f7ba4fe7)
+- fixed a test (f2b9a3b5)
+- fixed a bug that caused profiles with 0€ as a balance to be displayed on the cost list. Also fixed tests, that were no longer functioning after the first fix (3d99f507)
+- fixed failing costs cypress tests (1f56797e)
+- fixed code smells and a test that broke on a specific date (07.05) (ad40428c)
+
+### Other
+
+- changed token to fix pipeline (6c35e1d2)
+- initial fix for weird input behaviour (e5399249)
+- added felix comitt to fix test bug (d10b382a)
+
 ## Version v3.0.6 (2024-04-15)
 
 ### Other

@@ -28,6 +28,6 @@ class Wallet
         $costs = $this->participantRepo->getTotalCost($username);
         $transactions = $this->transactionRepo->getTotalAmount($username);
 
-        return $transactions - $costs;
+        return round($transactions - $costs, 2);
     }
 }

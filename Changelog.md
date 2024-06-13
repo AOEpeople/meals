@@ -1,5 +1,11 @@
 # Changelog
 
+## Version v3.0.8 (2024-06-13)
+
+### Fixes
+
+- Fix wrong balance format in prefilled payment field (292ee611)
+
 ## Version v3.0.7 (2024-06-11)
 
 ### Fixes

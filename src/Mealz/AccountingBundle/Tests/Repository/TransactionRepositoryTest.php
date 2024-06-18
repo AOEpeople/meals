@@ -129,7 +129,7 @@ class TransactionRepositoryTest extends AbstractDatabaseTestCase
     private function getAssumedTotalAmountForTransactionsFromLastMonth(array $transactionsArray): float
     {
         $result = 0;
-        $transactions = array_filter($transactionsArray, ['self', 'isTransactionFromLastMonth']);
+        $transactions = array_filter($transactionsArray, [$this, 'isTransactionFromLastMonth']);
         foreach ($transactions as $transaction) {
             $result += $transaction->getAmount();
         }

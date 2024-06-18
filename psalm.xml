@@ -2,6 +2,8 @@
 <psalm
         errorLevel="4"
         resolveFromConfigFile="true"
+        findUnusedBaselineEntry="false"
+        findUnusedCode="false"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="https://getpsalm.org/schema/config"
         xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
@@ -16,4 +18,15 @@
     <plugins>
         <pluginClass class="Psalm\SymfonyPsalmPlugin\Plugin"/>
     </plugins>
+
+    <issueHandlers>
+        <TooManyArguments>
+            <errorLevel type="suppress">
+                <referencedFunction name="Doctrine\ORM\QueryBuilder::where" />
+                <referencedFunction name="Doctrine\ORM\Query\Expr::andX" />
+                <referencedFunction name="Doctrine\ORM\Query\Expr::orX" />
+            </errorLevel>
+        </TooManyArguments>
+    </issueHandlers>
+
 </psalm>

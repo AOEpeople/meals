@@ -6,7 +6,10 @@ namespace App\Mealz\AccountingBundle\Service;
 
 class CostSheetService
 {
-    public function mergeDoubleUserTransactions(array $users): array
+    /**
+     * @psalm-return array{?array}
+     */
+    public function mergeDoubleUserTransactions(array $users)
     {
         $mergedUsers = [];
 

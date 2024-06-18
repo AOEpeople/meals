@@ -13,6 +13,7 @@ use Symfony\Component\Security\Http\SecurityRequestAttributes;
 class SecurityController extends AbstractController
 {
     private TokenStorageInterface $tokenStorage;
+
     public function __construct(TokenStorageInterface $tokenStorage)
     {
         $this->tokenStorage = $tokenStorage;

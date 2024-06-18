@@ -24,6 +24,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class CostSheetController extends BaseController
 {
     public function __construct(
+        private readonly CostSheetService $costSheetService,
         private readonly MailerInterface $mailer,
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly LoggerInterface $logger,

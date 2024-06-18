@@ -5,16 +5,16 @@
       :class="[0 ? 'border-gray-300' : 'border-gray-200', 'border-b', 'sm:items-center', 'sm:gap-4', 'sm:pb-2.5']"
     >
       <DialogTitle
-        class="cols-start-1 margin-0 sm:padding-0 padding-right-1 sm:margin=1.5 whitespace-nowrap text-[10px] font-bold uppercase tracking-[1.5px] text-primary sm:inline-block sm:h-6 sm:align-middle sm:text-[12px]"
+        class="cols-start-1 margin-0 sm:padding-right-2 padding-right-1 sm:margin=1.5 whitespace-nowrap text-[10px] font-bold uppercase tracking-[1.5px] text-primary sm:inline-block sm:h-6 sm:align-middle sm:text-[12px]"
       >
-        {{ t('dashboard.print') }}
+        {{ t('printList.title') }} {{ dateString }}
       </DialogTitle>
       <InputLabel
         v-model="filterInput"
         :label-text="t('menu.search')"
         :label-visible="false"
         overwrite-container-styles="flex-row item-center"
-        overwrite-input-style="focus-visible:ring-offset-orange-300 relative flex h-8 items-center rounded-3xl border border-[#B4C1CE] bg-white mr-0 pl-4 pr-4 text-left text-[12px] leading-5 text-[#9CA3AF] focus:outline-none focus-visible:border-[#FF890E] focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 min-[380px]: sm:w-32 sm:mr-6"
+        overwrite-input-style="focus-visible:ring-offset-orange-300 relative flex h-8 items-center rounded-3xl border border-[#B4C1CE] bg-white mr-0 pl-4 pr-4 text-left text-[12px] leading-5 text-[#9CA3AF] focus:outline-none focus-visible:border-[#FF890E] focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 min-[380px]"
       />
     </div>
 
@@ -52,6 +52,8 @@ const progress = useProgress().start();
 
 const props = defineProps<{
   date: string;
+  dateString: string;
+  weekday: string;
 }>();
 
 const { filteredParticipants, setFilter } = filterParticipantsList(props.date);

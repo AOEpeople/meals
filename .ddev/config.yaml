@@ -6,37 +6,34 @@ webserver_type: nginx-fpm
 router_http_port: "80"
 router_https_port: "443"
 xdebug_enabled: false
-additional_hostnames: [ ]
+additional_hostnames: []
 additional_fqdns:
-  - meals.test
+    - meals.test
 database:
-  type: mariadb
-  version: "10.11"
-nfs_mount_enabled: false
-mutagen_enabled: false
+    type: mariadb
+    version: "10.11"
 performance_mode: none
 hooks:
-  post-start:
-    - exec: echo 'export PHP_IDE_CONFIG='serverName=meals.test'' >> ~/.bashrc
-    - exec: sudo service ssh start
-omit_containers: [ dba ]
-webimage_extra_packages: [ ssh ]
+    post-start:
+        - exec: echo 'export PHP_IDE_CONFIG='serverName=meals.test'' >> ~/.bashrc
+        - exec: sudo service ssh start
+webimage_extra_packages: [ssh]
 use_dns_when_possible: true
 timezone: Europe/Berlin
 composer_version: "2"
 web_environment:
-  - FINAL_RELEASEFOLDER=/var/www/html
-  - APP_DEBUG=1
-  - APP_ENV=dev
-  - DB_HOST=db
-  - DB_PORT=3306
-  - DB_NAME=db
-  - DB_USER=db
-  - DB_PASS=db
-  - DB_VERS=10.11.7-MariaDB
-  - MERCURE_JWT_SECRET=testing-testing-testing-testing!
-  - MERCURE_URL=http://mercure:8080/.well-known/mercure
-  - MERCURE_PUBLIC_URL=https://meals.test:8081/.well-known/mercure
+    - FINAL_RELEASEFOLDER=/var/www/html
+    - APP_DEBUG=1
+    - APP_ENV=dev
+    - DB_HOST=db
+    - DB_PORT=3306
+    - DB_NAME=db
+    - DB_USER=db
+    - DB_PASS=db
+    - DB_VERS=10.11.7-MariaDB
+    - MERCURE_JWT_SECRET=testing-testing-testing-testing!
+    - MERCURE_URL=http://mercure:8080/.well-known/mercure
+    - MERCURE_PUBLIC_URL=https://meals.test:8081/.well-known/mercure
 nodejs_version: "20"
 
 # Key features of DDEV's config.yaml:

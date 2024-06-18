@@ -6,7 +6,7 @@
       class="relative col-span-1 col-start-1 row-span-2 row-start-1 grid w-[24px] justify-center gap-2 rounded-l-[5px] py-[2px] print:bg-primary-2"
       :class="[
         day.isLocked || !day.isEnabled || (emptyDay && !isEventDay) ? 'bg-[#80909F]' : 'bg-primary-2',
-        !day.isLocked && !emptyDay && !guestData ? 'grid-rows-[24px_minmax(0,1fr)_24px]' : ''
+        !day.isLocked && !emptyDay && !guestData ? '' : ''
       ]"
     >
       <InformationButton
@@ -108,12 +108,12 @@ import InformationButton from '@/components/dashboard/InformationButton.vue';
 import MealData from '@/components/dashboard/MealData.vue';
 import Slots from '@/components/dashboard/Slots.vue';
 import VariationsData from '@/components/dashboard/VariationsData.vue';
+import { Invitation } from '@/enums/Invitation';
 import { dashboardStore } from '@/stores/dashboardStore';
 import { translateWeekday } from 'tools/localeHelper';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import EventData from './EventData.vue';
-import { Invitation } from '@/enums/Invitation';
 import ParticipantsListModal from './ParticipantsListModal.vue';
 
 const { t, locale } = useI18n();

@@ -6,7 +6,7 @@
       class="relative col-span-1 col-start-1 row-span-2 row-start-1 grid w-[24px] justify-center gap-2 rounded-l-[5px] py-[2px] print:bg-primary-2"
       :class="[
         day.isLocked || !day.isEnabled || (emptyDay && !isEventDay) ? 'bg-[#80909F]' : 'bg-primary-2',
-        !day.isLocked && !emptyDay && !guestData ? '' : ''
+        !day.isLocked && !emptyDay && !guestData ? 'grid-rows-[24px_minmax(0,1fr)_24px]' : 'grid-rows-[24px_minmax(0,1fr)_24px]'
       ]"
     >
       <InformationButton

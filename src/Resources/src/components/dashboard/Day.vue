@@ -6,7 +6,9 @@
       class="relative col-span-1 col-start-1 row-span-2 row-start-1 grid w-[24px] justify-center gap-2 rounded-l-[5px] py-[2px] print:bg-primary-2"
       :class="[
         day.isLocked || !day.isEnabled || (emptyDay && !isEventDay) ? 'bg-[#80909F]' : 'bg-primary-2',
-        !day.isLocked && !emptyDay && !guestData ? 'grid-rows-[24px_minmax(0,1fr)_24px]' : 'grid-rows-[24px_minmax(0,1fr)_24px]'
+        !day.isLocked && !emptyDay && !guestData
+          ? 'grid-rows-[24px_minmax(0,1fr)_24px]'
+          : 'grid-rows-[24px_minmax(0,1fr)_24px]'
       ]"
     >
       <InformationButton
@@ -137,7 +139,13 @@ const date = computed(() => {
   // format date (2023-12-23) without time stamp
   return day.date.date.split(' ')[0];
 });
-const dateString = computed(() => new Date(Date.parse(day.date.date)).toLocaleDateString(locale.value, {weekday: 'long', month: 'numeric', day: 'numeric'}));
+const dateString = computed(() =>
+  new Date(Date.parse(day.date.date)).toLocaleDateString(locale.value, {
+    weekday: 'long',
+    month: 'numeric',
+    day: 'numeric'
+  })
+);
 
 async function closeParticipantsModal() {
   openParticipantsModal.value = false;

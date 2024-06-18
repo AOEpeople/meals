@@ -7,7 +7,7 @@
       <DialogTitle
         class="cols-start-1 margin-0 sm:padding-right-2 padding-right-1 sm:margin=1.5 whitespace-nowrap text-[10px] font-bold uppercase tracking-[1.5px] text-primary sm:inline-block sm:h-6 sm:align-middle sm:text-[12px]"
       >
-      {{ t('printList.title') }} {{ dateString }}
+        {{ t('printList.title') }} {{ dateString }}
       </DialogTitle>
       <InputLabel
         v-model="filterInput"
@@ -52,8 +52,8 @@ const progress = useProgress().start();
 
 const props = defineProps<{
   date: string;
-  dateString: string,
-  weekday: string
+  dateString: string;
+  weekday: string;
 }>();
 
 const { filteredParticipants, setFilter } = filterParticipantsList(props.date);

@@ -8,12 +8,11 @@
       <DialogPanel
         class="day-shadow relative inset-0 mx-auto h-auto w-96 overflow-auto rounded-lg bg-white px-4 pb-4 pt-2.5 text-left drop-shadow-2xl sm:w-max"
       >
-
-      <IconCancel
-      :btn-text="t('combiModal.close')"
-      class="absolute right-4 top-5 z-10 flex-1 cursor-pointer"
-      @click="closeParticipantsModal(false)"
-    />
+        <IconCancel
+          :btn-text="t('combiModal.close')"
+          class="absolute right-4 top-5 z-10 flex-1 cursor-pointer"
+          @click="closeParticipantsModal(false)"
+        />
         <ParticipantsListByDay
           :date="date"
           :dateString="dateString"
@@ -35,8 +34,8 @@ const { t } = useI18n();
 defineProps<{
   openParticipantsModal: boolean;
   date: string;
-  dateString: string,
-  weekday: string
+  dateString: string;
+  weekday: string;
 }>();
 
 const emit = defineEmits(['closeDialog', 'update:modelValue', 'update:filterValue']);

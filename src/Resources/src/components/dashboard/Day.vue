@@ -34,6 +34,8 @@
         v-if="openParticipantsModal"
         :openParticipantsModal="openParticipantsModal"
         :date="date"
+        :weekday="weekday"
+        :dateString="dateString"
         @close-dialog="closeParticipantsModal"
       />
     </div>
@@ -135,6 +137,7 @@ const date = computed(() => {
   // format date (2023-12-23) without time stamp
   return day.date.date.split(' ')[0];
 });
+const dateString = computed(() => new Date(Date.parse(day.date.date)).toLocaleDateString(locale.value, {weekday: 'long', month: 'numeric', day: 'numeric'}));
 
 async function closeParticipantsModal() {
   openParticipantsModal.value = false;
